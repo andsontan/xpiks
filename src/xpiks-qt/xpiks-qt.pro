@@ -3,7 +3,8 @@ TEMPLATE = app
 QT += qml quick widgets
 
 SOURCES += main.cpp \
-    Models/keywordssource.cpp
+    Models/keywordssource.cpp \
+    Models/keywordsrepository.cpp
 
 RESOURCES += qml.qrc
 
@@ -14,4 +15,5 @@ QML_IMPORT_PATH =
 include(deployment.pri)
 
 HEADERS += \
-    Models/keywordssource.h
+    Models/keywordssource.h \
+    Models/keywordsrepository.h

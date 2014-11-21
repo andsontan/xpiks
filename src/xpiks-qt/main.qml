@@ -1,10 +1,11 @@
 import QtQuick 2.3
 import QtQuick.Controls 1.2
+import QtQuick.Layouts 1.1
 
 ApplicationWindow {
     visible: true
-    width: 640
-    height: 480
+    width: 800
+    height: 640
     title: qsTr("Hello World")
 
     menuBar: MenuBar {
@@ -21,8 +22,17 @@ ApplicationWindow {
         }
     }
 
-    Text {
-        text: qsTr("Hello World")
-        anchors.centerIn: parent
+    SplitView {
+        id: mainGrid
+        orientation: Qt.Horizontal
+
+        SplitView {
+            Layout.maximumWidth: 400
+            orientation: Qt.Vertical
+        }
+
+        ListView {
+            Layout.fillWidth: true
+        }
     }
 }

@@ -1,5 +1,6 @@
 #include "keywordssource.h"
 
-KeywordsSource::KeywordsSource()
+KeywordsSource::KeywordsSource(QString filePath)
 {
+    m_FilePath = filePath;
 }
