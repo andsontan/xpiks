@@ -2,8 +2,8 @@
 
 namespace Models
 {
-    ImageMetadata::ImageMetadata(const QString &imageDescription, const QString &imageFileName, const QString &rawKeywords,
-                                 const QString &rawCategories, const QString &shutterstockID)
+    ImageMetadata::ImageMetadata(const QString &imageDescription, const QString &imageFileName,
+                                 const QString &rawKeywords, const QString &rawCategories)
     {
         m_ImageFileName = imageFileName;
         m_ImageDescription = imageDescription;
@@ -15,11 +15,6 @@ namespace Models
         {
             const QString &keyword = keywordsList[i];
             m_KeywordsSet.insert(keyword.trimmed().toLower());
-        }
-
-        if (shutterstockID.length() > 0)
-        {
-            m_ShutterstockID = shutterstockID.toULongLong();
         }
     }
 }
