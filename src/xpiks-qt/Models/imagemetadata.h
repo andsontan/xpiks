@@ -1,5 +1,4 @@
 #include <QStringList>
-#include <QJsonObject>
 #include <QString>
 #include <QSet>
 
@@ -12,12 +11,11 @@ namespace Models
     {
     public:
         ImageMetadata(const QString &imageDescription, const QString &imageFileName, const QString &rawKeywords,
-                      const QString &rawCategories, const QString &shutterstockID);
+                      const QString &rawCategories);
 
     private:
         QSet<QString> m_KeywordsSet;
         QStringList m_Categories;
-        qulonglong m_ShutterstockID; // optional
         QString m_ImageFileName;
         QString m_ImageDescription;
     };
