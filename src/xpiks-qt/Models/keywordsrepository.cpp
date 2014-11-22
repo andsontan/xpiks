@@ -1,5 +1,8 @@
 #include "keywordsrepository.h"
 
-KeywordsRepository::KeywordsRepository()
+namespace Models
 {
+    KeywordsRepository::KeywordsRepository()
+    {
+    }
 }

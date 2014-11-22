@@ -1,5 +1,6 @@
 #include <QAbstractListModel>
 #include <QList>
+#include "keywordsfile.h"
 
 #ifndef KEYWORDSREPOSITORY_H
 #define KEYWORDSREPOSITORY_H
@@ -12,7 +13,7 @@ namespace Models
         KeywordsRepository();
 
     private:
-        QList<KeywordsSource> m_KeywordsSources;
+        QList<KeywordsFile> m_KeywordsSources;
     };
 }
 
