@@ -22,16 +22,28 @@ ApplicationWindow {
         }
     }
 
+    Component {
+        id: addDirectoryComponent
+
+        Button {
+            text: qsTr("Add directory")
+            onClicked: mainModel.addDirectoryButtonClicked
+        }
+    }
+
     SplitView {
         id: mainGrid
         orientation: Qt.Horizontal
 
-        SplitView {
+        ListView {
+            id: sourcesListView
             Layout.maximumWidth: 400
-            orientation: Qt.Vertical
+
+            header: addDirectoryComponent
         }
 
         ListView {
+            id: imagesListView
             Layout.fillWidth: true
         }
     }

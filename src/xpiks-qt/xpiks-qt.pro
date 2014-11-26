@@ -3,8 +3,9 @@ TEMPLATE = app
 QT += qml quick widgets
 
 SOURCES += main.cpp \
-    Models/imagemetadata.cpp \
-    Models/artitemsmodel.cpp
+    Models/artitemsmodel.cpp \
+    Models/keywordsmodel.cpp \
+    Models/artworkmetadata.cpp
 
 RESOURCES += qml.qrc
 
@@ -15,5 +16,6 @@ QML_IMPORT_PATH =
 include(deployment.pri)
 
 HEADERS += \
-    Models/imagemetadata.h \
-    Models/artitemsmodel.h
+    Models/artitemsmodel.h \
+    Models/keywordsmodel.h \
+    Models/artworkmetadata.h

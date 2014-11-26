@@ -1,11 +1,12 @@
 #include <QApplication>
 #include <QQmlApplicationEngine>
 #include <QtDebug>
+#include <QQmlContext>
 #include <QFile>
 #include <QTextStream>
+#include "Models/artitemsmodel.h"
 
-void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
-{
+void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg) {
     QString txt;
     switch (type) {
     case QtDebugMsg:
@@ -27,19 +28,20 @@ void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const Q
     QTextStream ts(&outFile);
     ts << txt << endl;
 
-    if (type == QtFatalMsg)
-    {
+    if (type == QtFatalMsg) {
         abort();
     }
 }
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
 
     qInstallMessageHandler(myMessageHandler);
 
+    Models::ArtItemsModel mainModel;
     QQmlApplicationEngine engine;
+
+    engine.rootContext()->setContextProperty("mainModel", &mainModel);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
     return app.exec();
