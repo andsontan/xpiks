@@ -3,6 +3,7 @@
 
 #include <QAbstractListModel>
 #include <QStringList>
+#include <QMetaType>
 #include <QString>
 #include <QSet>
 
@@ -12,6 +13,8 @@ namespace Models {
         Q_OBJECT
     public:
         KeywordsModel(QObject *parent = 0);
+        KeywordsModel(const KeywordsModel &) {}
+        ~KeywordsModel() {}
 
     public:
         void parseKeywords(const QString& rawKeywords);
@@ -33,5 +36,7 @@ namespace Models {
         QStringList m_KeywordsList;
     };
 }
+
+Q_DECLARE_METATYPE (Models::KeywordsModel)
 
 #endif // KEYWORDSMODEL_H
