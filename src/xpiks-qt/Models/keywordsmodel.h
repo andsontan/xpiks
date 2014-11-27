@@ -13,7 +13,8 @@ namespace Models {
         Q_OBJECT
     public:
         KeywordsModel(QObject *parent = 0);
-        KeywordsModel(const KeywordsModel &) {}
+        KeywordsModel(const KeywordsModel &copy):
+            m_KeywordsSet(copy.m_KeywordsSet), m_KeywordsList(copy.m_KeywordsList) {}
         ~KeywordsModel() {}
 
     public:
