@@ -54,7 +54,7 @@ namespace Models {
 
     void ArtItemsModel::addDirectory(const QString &directory)
     {
-        if (!m_DirectorySet.contains(directory))
+        if (!directory.isEmpty() && !m_DirectorySet.contains(directory))
         {
             m_DirectorySet.insert(directory);
             m_DirectoryList.append(directory);

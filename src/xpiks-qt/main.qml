@@ -41,6 +41,7 @@ ApplicationWindow {
         ListView {
             id: sourcesListView
             model: mainModel.directoryList
+
             Layout.minimumWidth: 250
             Layout.maximumWidth: 400
 
@@ -49,58 +50,22 @@ ApplicationWindow {
 
             delegate: RowLayout {
                 property int indexOfThisDelegate: index
+                width: parent.width
+                spacing: 10
+                height: 20
 
-                Rectangle {
-                    id: containing_rect
-                    property string text
-                    color: "transparent"
-
+                Text {
+                    id: directoryPath
+                    height: 20
+                    Layout.fillWidth: true
                     text: modelData
-
-                    Text {
-                        id: text_field
-                        anchors.top: parent.top
-                        anchors.left: parent.left
-
-                        height: parent.height
-                        width: parent.width
-                        text: parent.text
-                        anchors.margins: 10
-                        wrapMode: Text.WordWrap
-                    }
-
-                    Text {
-                        id: dummy_text
-                        text: parent.text
-                        visible: false
-                        anchors.margins: 10
-                    }
-
-                    states: [
-                        State {
-                            name: "wide text"
-                            when: containing_rect.text.length > 20
-                            PropertyChanges {
-                                target: containing_rect
-                                width: 200
-                                height: text_field.paintedHeight
-                            }
-                        },
-                        State {
-                            name: "not wide text"
-                            when: containing_rect.text.length <= 20
-                            PropertyChanges {
-                                target: containing_rect
-                                width: dummy_text.paintedWidth
-                                height: text_field.paintedHeight
-                            }
-                        }
-                    ]
+                    elide: Text.ElideMiddle
                 }
 
                 Button {
-                    width: 5
-                    height: 5
+                    id: removeItemButton
+                    width: 20
+                    height: directoryPath.height
                     text: "X"
                     onClicked: mainModel.removeDirectory(indexOfThisDelegate)
                 }
