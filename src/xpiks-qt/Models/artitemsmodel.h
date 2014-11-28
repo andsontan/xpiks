@@ -1,13 +1,15 @@
-#include <QAbstractListModel>
-#include "artworkmetadata.h"
-#include "keywordsmodel.h"
-
 #ifndef ARTSITEMSMODEL_H
 #define ARTSITEMSMODEL_H
+
+#include <QAbstractListModel>
+#include <QStringList>
+#include "artworkmetadata.h"
+#include "keywordsmodel.h"
 
 namespace Models {
     class ArtItemsModel : public QAbstractListModel {
         Q_OBJECT
+        Q_PROPERTY(QStringList directoryList READ getDirectoryList WRITE setDirectoryList NOTIFY directoryListChanged)
     public:
         ArtItemsModel(QObject *parent = 0);
 
@@ -17,6 +19,12 @@ namespace Models {
             ImageFilenameRole,
             KeywordsRole
         };
+
+    public:
+        const QStringList getDirectoryList() const { return m_DirectoryList; }
+        void setDirectoryList(const QStringList& copy);
+    signals:
+        void directoryListChanged();
 
     public:
         int rowCount(const QModelIndex & parent = QModelIndex()) const;
@@ -33,6 +41,7 @@ namespace Models {
 
     private:
         QList<ArtworkMetadata> m_ArtworkList;
+        QStringList m_DirectoryList;
     };
 }
 

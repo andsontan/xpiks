@@ -5,6 +5,13 @@ namespace Models {
     ArtItemsModel::ArtItemsModel(QObject *parent) {
     }
 
+    void ArtItemsModel::setDirectoryList(const QStringList &copy) {
+        if (m_DirectoryList != copy) {
+            m_DirectoryList = copy;
+            emit directoryListChanged();
+        }
+    }
+
     int ArtItemsModel::rowCount(const QModelIndex &parent) const {
         Q_UNUSED(parent);
         return m_ArtworkList.count();
@@ -33,12 +40,14 @@ namespace Models {
         dialog.setFileMode(QFileDialog::Directory);
         dialog.setOption(QFileDialog::ShowDirsOnly);
 
-        QString filename = dialog.getOpenFileName();
+        QString filename = dialog.getExistingDirectory();
+        addDirectory(filename);
     }
 
     void ArtItemsModel::addDirectory(const QString &directory)
     {
-        // TODO: implement this
+        m_DirectoryList.append(directory);
+        emit directoryListChanged();
     }
 
     QHash<int, QByteArray> ArtItemsModel::roleNames() const {
