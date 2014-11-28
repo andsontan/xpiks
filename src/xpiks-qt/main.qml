@@ -47,7 +47,10 @@ ApplicationWindow {
             spacing: 10
             header: addDirectoryComponent
 
-            delegate: Rectangle {
+            delegate: RowLayout {
+                property int indexOfThisDelegate: index
+
+                Rectangle {
                     id: containing_rect
                     property string text
                     color: "transparent"
@@ -76,23 +79,31 @@ ApplicationWindow {
                     states: [
                         State {
                             name: "wide text"
-                                when: containing_rect.text.length > 20
-                                PropertyChanges {
-                                    target: containing_rect
-                                    width: 200
-                                    height: text_field.paintedHeight
-                                }
+                            when: containing_rect.text.length > 20
+                            PropertyChanges {
+                                target: containing_rect
+                                width: 200
+                                height: text_field.paintedHeight
+                            }
                         },
                         State {
                             name: "not wide text"
-                                when: containing_rect.text.length <= 20
-                                PropertyChanges {
-                                    target: containing_rect
-                                    width: dummy_text.paintedWidth
-                                    height: text_field.paintedHeight
-                                }
+                            when: containing_rect.text.length <= 20
+                            PropertyChanges {
+                                target: containing_rect
+                                width: dummy_text.paintedWidth
+                                height: text_field.paintedHeight
+                            }
                         }
                     ]
+                }
+
+                Button {
+                    width: 5
+                    height: 5
+                    text: "X"
+                    onClicked: mainModel.removeDirectory(indexOfThisDelegate)
+                }
             }
         }
 

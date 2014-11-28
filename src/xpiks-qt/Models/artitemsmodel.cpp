@@ -12,6 +12,14 @@ namespace Models {
         }
     }
 
+    void ArtItemsModel::removeDirectory(int index)
+    {
+        const QString &directory = m_DirectoryList.at(index);
+        m_DirectorySet.remove(directory);
+        m_DirectoryList.removeAt(index);
+        emit directoryListChanged();
+    }
+
     int ArtItemsModel::rowCount(const QModelIndex &parent) const {
         Q_UNUSED(parent);
         return m_ArtworkList.count();
@@ -46,8 +54,12 @@ namespace Models {
 
     void ArtItemsModel::addDirectory(const QString &directory)
     {
-        m_DirectoryList.append(directory);
-        emit directoryListChanged();
+        if (!m_DirectorySet.contains(directory))
+        {
+            m_DirectorySet.insert(directory);
+            m_DirectoryList.append(directory);
+            emit directoryListChanged();
+        }
     }
 
     QHash<int, QByteArray> ArtItemsModel::roleNames() const {

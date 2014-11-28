@@ -27,6 +27,9 @@ namespace Models {
         void directoryListChanged();
 
     public:
+        Q_INVOKABLE void removeDirectory(int index);
+
+    public:
         int rowCount(const QModelIndex & parent = QModelIndex()) const;
         QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
 
@@ -42,6 +45,7 @@ namespace Models {
     private:
         QList<ArtworkMetadata> m_ArtworkList;
         QStringList m_DirectoryList;
+        QSet<QString> m_DirectorySet;
     };
 }
 
