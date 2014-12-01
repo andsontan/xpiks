@@ -4,6 +4,7 @@
 #include <QQmlContext>
 #include <QFile>
 #include <QTextStream>
+#include "Helpers/globalimageprovider.h"
 #include "Models/artitemsmodel.h"
 
 void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg) {
@@ -40,8 +41,10 @@ int main(int argc, char *argv[]) {
 
     Models::ArtItemsModel mainModel;
     QQmlApplicationEngine engine;
+    Helpers::GlobalImageProvider *globalProvider = new Helpers::GlobalImageProvider(QQmlImageProviderBase::Image);
 
     engine.rootContext()->setContextProperty("mainModel", &mainModel);
+    engine.addImageProvider("global", globalProvider);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
     return app.exec();

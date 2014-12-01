@@ -25,11 +25,13 @@ ApplicationWindow {
     Component {
         id: addDirectoryComponent
 
-        Button {
-            width: 100
-            text: qsTr("Add directory")
-            anchors.right: parent.right
-            onClicked: mainModel.addDirectoryButtonClicked()
+        RowLayout {
+            Button {
+                width: 100
+                text: qsTr("Add directory")
+                anchors.right: parent.right
+                onClicked: mainModel.addArtworkSourceClicked()
+            }
         }
     }
 
@@ -75,6 +77,53 @@ ApplicationWindow {
         ListView {
             id: imagesListView
             Layout.fillWidth: true
+            model: mainModel
+            spacing: 10
+
+            delegate: RowLayout {
+                property int indexOfThisDelegate: index
+                height: 200
+                width: parent.widht
+
+                ColumnLayout {
+                    width: 150
+                    Layout.fillHeight: true
+
+                    Image {
+                        source: "image://global/" + filename
+                        width: 150
+                        height: 200
+                        sourceSize.width: 200
+                        sourceSize.height: 200
+                        fillMode: Image.PreserveAspectFit
+                        asynchronous: true
+                    }
+
+                    Text {
+                        text: filename.split(/[\\/]/).pop()
+                    }
+                }
+
+                GridLayout {
+                    Layout.fillWidth: true
+                    columns: 2
+                    rows: 2
+                    rowSpacing: 5
+                    columnSpacing: 5
+
+                    Text { text: qsTr("Description:") }
+
+                    TextInput { text: description }
+
+                    Text { text: qsTr("Keywords:") }
+
+                    TextEdit {
+                        text: keywords
+                        Layout.fillHeight: true
+                        wrapMode: TextEdit.Wrap
+                    }
+                }
+            }
         }
     }
 }

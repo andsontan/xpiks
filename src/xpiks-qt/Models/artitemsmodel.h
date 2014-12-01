@@ -9,9 +9,10 @@
 namespace Models {
     class ArtItemsModel : public QAbstractListModel {
         Q_OBJECT
-        Q_PROPERTY(QStringList directoryList READ getDirectoryList WRITE setDirectoryList NOTIFY directoryListChanged)
+        Q_PROPERTY(QStringList artworkSources READ getArtworkSources WRITE setArtworkSources NOTIFY artworkSourcesChanged)
     public:
         ArtItemsModel(QObject *parent = 0);
+        ~ArtItemsModel();
 
     public:
         enum ArtItemsRoles {
@@ -21,13 +22,13 @@ namespace Models {
         };
 
     public:
-        const QStringList getDirectoryList() const { return m_DirectoryList; }
-        void setDirectoryList(const QStringList& copy);
+        const QStringList getArtworkSources() const { return m_ArtworksSources; }
+        void setArtworkSources(const QStringList& copy);
     signals:
-        void directoryListChanged();
+        void artworkSourcesChanged();
 
     public:
-        Q_INVOKABLE void removeDirectory(int index);
+        Q_INVOKABLE void removeArtworkSource(int index);
 
     public:
         int rowCount(const QModelIndex & parent = QModelIndex()) const;
@@ -35,17 +36,19 @@ namespace Models {
 
     public slots:
         void addDirectoryButtonClicked();
+        void addFilesButtonClicked();
 
     private:
         void addDirectory(const QString &directory);
+        void addFiles(const QString &filepath);
 
     protected:
         QHash<int, QByteArray> roleNames() const;
 
     private:
-        QList<ArtworkMetadata> m_ArtworkList;
-        QStringList m_DirectoryList;
-        QSet<QString> m_DirectorySet;
+        QList<ArtworkMetadata*> m_ArtworkList;
+        QStringList m_ArtworksSources;
+        QSet<QString> m_ArtworksSourcesSet;
     };
 }
 

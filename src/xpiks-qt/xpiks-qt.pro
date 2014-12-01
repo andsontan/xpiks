@@ -5,7 +5,8 @@ QT += qml quick widgets
 SOURCES += main.cpp \
     Models/artitemsmodel.cpp \
     Models/keywordsmodel.cpp \
-    Models/artworkmetadata.cpp
+    Models/artworkmetadata.cpp \
+    Helpers/globalimageprovider.cpp
 
 RESOURCES += qml.qrc
 
@@ -18,4 +19,5 @@ include(deployment.pri)
 HEADERS += \
     Models/artitemsmodel.h \
     Models/keywordsmodel.h \
-    Models/artworkmetadata.h
+    Models/artworkmetadata.h \
+    Helpers/globalimageprovider.h
