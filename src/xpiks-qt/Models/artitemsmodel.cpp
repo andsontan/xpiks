@@ -17,19 +17,19 @@ namespace Models {
         m_ArtworkList.clear();
     }
 
-    void ArtItemsModel::setArtworkSources(const QStringList &copy) {
-        if (m_ArtworksSources != copy) {
-            m_ArtworksSources = copy;
-            emit artworkSourcesChanged();
+    void ArtItemsModel::setArtwork(const QStringList &copy) {
+        if (m_ArtworksDirectories != copy) {
+            m_ArtworksDirectories = copy;
+            emit artworksDirectoriesChanged();
         }
     }
 
-    void ArtItemsModel::removeArtworkSource(int index)
+    void ArtItemsModel::removeArtworksDirectory(int index)
     {
-        const QString &directory = m_ArtworksSources.at(index);
-        m_ArtworksSourcesSet.remove(directory);
-        m_ArtworksSources.removeAt(index);
-        emit artworkSourcesChanged();
+        const QString &directory = m_ArtworksDirectories.at(index);
+        m_ArtworksDirectoriesSet.remove(directory);
+        m_ArtworksDirectories.removeAt(index);
+        emit artworksDirectoriesChanged();
     }
 
     int ArtItemsModel::rowCount(const QModelIndex &parent) const {
@@ -74,11 +74,11 @@ namespace Models {
 
     void ArtItemsModel::addDirectory(const QString &directory)
     {
-        if (!directory.isEmpty() && !m_ArtworksSourcesSet.contains(directory))
+        if (!directory.isEmpty() && !m_ArtworksDirectoriesSet.contains(directory))
         {
-            m_ArtworksSourcesSet.insert(directory);
-            m_ArtworksSources.append(directory);
-            emit artworkSourcesChanged();
+            m_ArtworksDirectoriesSet.insert(directory);
+            m_ArtworksDirectories.append(directory);
+            emit artworksDirectoriesChanged();
         }
     }
 
@@ -89,15 +89,15 @@ namespace Models {
         int count = filenames.count();
         for (int i = 0; i < count; ++i) {
             const QString &filename = filenames[i];
-            if (!m_ArtworksSourcesSet.contains(filename))
+            if (!m_ArtworksDirectoriesSet.contains(filename))
             {
                 // TODO: grab keywords here
                 ArtworkMetadata *metadata = new ArtworkMetadata("my description", filenames[i], "test1,test2");
                 m_ArtworkList.append(metadata);
-                m_ArtworksSourcesSet.insert(filename);
+                m_ArtworksDirectoriesSet.insert(filename);
 
                 // TODO: create tree-like structure here
-                m_ArtworksSources.append(filename);
+                m_Artworks(filename);
             }
         }
 

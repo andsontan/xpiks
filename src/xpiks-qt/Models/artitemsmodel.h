@@ -5,11 +5,12 @@
 #include <QStringList>
 #include "artworkmetadata.h"
 #include "keywordsmodel.h"
+#include "Models/artworksdirectories.h"
 
 namespace Models {
     class ArtItemsModel : public QAbstractListModel {
         Q_OBJECT
-        Q_PROPERTY(QStringList artworkSources READ getArtworkSources WRITE setArtworkSources NOTIFY artworkSourcesChanged)
+        Q_PROPERTY(ArtworksDirectories artworksDirectories READ getArtworksDirectories WRITE setArtworksDirectoires NOTIFY artworksDirectoriesChanged)
     public:
         ArtItemsModel(QObject *parent = 0);
         ~ArtItemsModel();
@@ -22,13 +23,13 @@ namespace Models {
         };
 
     public:
-        const QStringList getArtworkSources() const { return m_ArtworksSources; }
-        void setArtworkSources(const QStringList& copy);
+        const ArtworksDirectories &getArtworksDirectories() const { return m_ArtworksDirectories; }
+        void setArtworksDirectories(const ArtworksDirectories& copy);
     signals:
-        void artworkSourcesChanged();
+        void artworksDirectoriesChanged();
 
     public:
-        Q_INVOKABLE void removeArtworkSource(int index);
+        Q_INVOKABLE void removeArtworksDirectory(int index);
 
     public:
         int rowCount(const QModelIndex & parent = QModelIndex()) const;
@@ -47,8 +48,7 @@ namespace Models {
 
     private:
         QList<ArtworkMetadata*> m_ArtworkList;
-        QStringList m_ArtworksSources;
-        QSet<QString> m_ArtworksSourcesSet;
+        ArtworksDirectories m_ArtworksDirectories;
     };
 }
 

@@ -22,6 +22,8 @@ namespace Models {
 
     public:
         void accountFile(const QString &filepath);
+        void removeFile(const QString &filepath);
+        void removeDirectory(const QString &directory);
 
     public:
         int rowCount(const QModelIndex & parent = QModelIndex()) const;

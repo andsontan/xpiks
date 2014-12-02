@@ -1,5 +1,6 @@
 #include "artworksdirectories.h"
 #include <QFileInfo>
+#include <QRegExp>
 
 namespace Models {
     ArtworksDirectories::ArtworksDirectories(QObject *parent) {
@@ -24,6 +25,35 @@ namespace Models {
             m_DirectoriesHash[absolutePath] = occurances + 1;
 
             endInsertRows();
+        }
+    }
+
+    void ArtworksDirectories::removeFile(const QString &filepath) {
+        QFileInfo fi(filepath);
+        const QString absolutePath = fi.absolutePath();
+
+        if (m_DirectoriesHash.contains(absolutePath)) {
+            int occurances;
+            occurances = m_DirectoriesHash[absolutePath] - 1;
+
+            if (occurances > 0) {
+                m_DirectoriesHash[absolutePath] = occurances;
+            }
+            else {
+                removeDirectory(absolutePath);
+            }
+        }
+    }
+
+    void ArtworksDirectories::removeDirectory(const QString &directory)
+    {
+        if (m_DirectoriesHash.contains(directory)) {
+            m_DirectoriesHash.remove(directory);
+            int index = m_DirectoriesList.indexOf(QRegExp(directory));
+
+            beginRemoveRows(QModelIndex(), index, index);
+            m_DirectoriesList.removeAt(index);
+            endRemoveRows();
         }
     }
 
