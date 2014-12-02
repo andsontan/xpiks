@@ -6,7 +6,9 @@ namespace Models {
     ArtworksDirectories::ArtworksDirectories(QObject *parent) {
     }
 
-    void ArtworksDirectories::accountFile(const QString &filepath) {
+    bool ArtworksDirectories::accountFile(const QString &filepath) {
+        bool wasModified = false;
+
         QFileInfo fi(filepath);
 
         if (fi.exists()) {
@@ -23,9 +25,12 @@ namespace Models {
             }
 
             m_DirectoriesHash[absolutePath] = occurances + 1;
+            wasModified = true;
 
             endInsertRows();
         }
+
+        return wasModified;
     }
 
     void ArtworksDirectories::removeFile(const QString &filepath) {
@@ -55,6 +60,16 @@ namespace Models {
             m_DirectoriesList.removeAt(index);
             endRemoveRows();
         }
+    }
+
+    void ArtworksDirectories::removeDirectory(int index)
+    {
+        const QString &directory = m_DirectoriesList[index];
+        m_DirectoriesHash.remove(directory);
+
+        beginRemoveRows(QModelIndex(), index, index);
+        m_DirectoriesList.removeAt(index);
+        endRemoveRows();
     }
 
     int ArtworksDirectories::rowCount(const QModelIndex &parent) const {

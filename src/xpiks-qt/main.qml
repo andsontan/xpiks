@@ -1,6 +1,7 @@
 import QtQuick 2.3
 import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.1
+import "ShavToolTip.qml"
 
 ApplicationWindow {
     visible: true
@@ -62,6 +63,11 @@ ApplicationWindow {
                     Layout.fillWidth: true
                     text: modelData
                     elide: Text.ElideMiddle
+
+                    ToolTip {
+                        target: directoryPath
+                        text: modelData
+                    }
                 }
 
                 Button {

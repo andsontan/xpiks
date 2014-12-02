@@ -17,19 +17,9 @@ namespace Models {
         m_ArtworkList.clear();
     }
 
-    void ArtItemsModel::setArtwork(const QStringList &copy) {
-        if (m_ArtworksDirectories != copy) {
-            m_ArtworksDirectories = copy;
-            emit artworksDirectoriesChanged();
-        }
-    }
-
     void ArtItemsModel::removeArtworksDirectory(int index)
     {
-        const QString &directory = m_ArtworksDirectories.at(index);
-        m_ArtworksDirectoriesSet.remove(directory);
-        m_ArtworksDirectories.removeAt(index);
-        emit artworksDirectoriesChanged();
+        m_ArtworksDirectories.removeDirectory(index);
     }
 
     int ArtItemsModel::rowCount(const QModelIndex &parent) const {
@@ -74,12 +64,7 @@ namespace Models {
 
     void ArtItemsModel::addDirectory(const QString &directory)
     {
-        if (!directory.isEmpty() && !m_ArtworksDirectoriesSet.contains(directory))
-        {
-            m_ArtworksDirectoriesSet.insert(directory);
-            m_ArtworksDirectories.append(directory);
-            emit artworksDirectoriesChanged();
-        }
+        // TODO: implement this
     }
 
     void ArtItemsModel::addFiles(const QStringList &filenames)
@@ -89,15 +74,11 @@ namespace Models {
         int count = filenames.count();
         for (int i = 0; i < count; ++i) {
             const QString &filename = filenames[i];
-            if (!m_ArtworksDirectoriesSet.contains(filename))
+            if (m_ArtworksDirectories.accountFile(filename))
             {
                 // TODO: grab keywords here
                 ArtworkMetadata *metadata = new ArtworkMetadata("my description", filenames[i], "test1,test2");
                 m_ArtworkList.append(metadata);
-                m_ArtworksDirectoriesSet.insert(filename);
-
-                // TODO: create tree-like structure here
-                m_Artworks(filename);
             }
         }
 

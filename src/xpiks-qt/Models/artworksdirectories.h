@@ -1,6 +1,7 @@
 #ifndef ARTWORKSDIRECTORIES_H
 #define ARTWORKSDIRECTORIES_H
 
+#include <QAbstractListModel>
 #include <QStringList>
 #include <QPair>
 #include <QSet>
@@ -21,9 +22,10 @@ namespace Models {
         };
 
     public:
-        void accountFile(const QString &filepath);
+        bool accountFile(const QString &filepath);
         void removeFile(const QString &filepath);
         void removeDirectory(const QString &directory);
+        void removeDirectory(int index);
 
     public:
         int rowCount(const QModelIndex & parent = QModelIndex()) const;

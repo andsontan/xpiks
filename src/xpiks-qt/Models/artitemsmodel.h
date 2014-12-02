@@ -10,7 +10,7 @@
 namespace Models {
     class ArtItemsModel : public QAbstractListModel {
         Q_OBJECT
-        Q_PROPERTY(ArtworksDirectories artworksDirectories READ getArtworksDirectories WRITE setArtworksDirectoires NOTIFY artworksDirectoriesChanged)
+        Q_PROPERTY(ArtworksDirectories artworksDirectories READ getArtworksDirectories)
     public:
         ArtItemsModel(QObject *parent = 0);
         ~ArtItemsModel();
@@ -24,9 +24,6 @@ namespace Models {
 
     public:
         const ArtworksDirectories &getArtworksDirectories() const { return m_ArtworksDirectories; }
-        void setArtworksDirectories(const ArtworksDirectories& copy);
-    signals:
-        void artworksDirectoriesChanged();
 
     public:
         Q_INVOKABLE void removeArtworksDirectory(int index);
@@ -41,7 +38,7 @@ namespace Models {
 
     private:
         void addDirectory(const QString &directory);
-        void addFiles(const QString &filepath);
+        void addFiles(const QStringList &filepath);
 
     protected:
         QHash<int, QByteArray> roleNames() const;
