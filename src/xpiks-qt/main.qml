@@ -50,7 +50,7 @@ ApplicationWindow {
 
         ListView {
             id: sourcesListView
-            model: mainModel.getArtworksDirectories()
+            model: mainModel.getArtworksRepository()
 
             Layout.minimumWidth: 250
             Layout.maximumWidth: 400

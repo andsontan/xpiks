@@ -7,7 +7,7 @@ SOURCES += main.cpp \
     Models/keywordsmodel.cpp \
     Models/artworkmetadata.cpp \
     Helpers/globalimageprovider.cpp \
-    Models/artworksdirectories.cpp
+    Models/artworksrepository.cpp
 
 RESOURCES += qml.qrc
 
@@ -22,4 +22,4 @@ HEADERS += \
     Models/keywordsmodel.h \
     Models/artworkmetadata.h \
     Helpers/globalimageprovider.h \
-    Models/artworksdirectories.h
+    Models/artworksrepository.h

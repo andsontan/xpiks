@@ -5,13 +5,13 @@
 #include <QStringList>
 #include "artworkmetadata.h"
 #include "keywordsmodel.h"
-#include "artworksdirectories.h"
+#include "artworksrepository.h"
 
 namespace Models {
     class ArtItemsModel : public QAbstractListModel {
         Q_OBJECT
     public:
-        ArtItemsModel(QObject *parent = 0) : m_ArtworksDirectories(new ArtworksDirectories()) {}
+        ArtItemsModel(QObject *parent = 0) : m_ArtworksRepository(new ArtworksRepository()) {}
         ~ArtItemsModel();
 
     public:
@@ -22,9 +22,9 @@ namespace Models {
         };
 
     public:
-        Q_INVOKABLE QObject* getArtworksDirectories()
+        Q_INVOKABLE QObject* getArtworksRepository()
         {
-            return m_ArtworksDirectories;
+            return m_ArtworksRepository;
         }
 
     public:
@@ -47,7 +47,7 @@ namespace Models {
 
     private:
         QList<ArtworkMetadata*> m_ArtworkList;
-        ArtworksDirectories *m_ArtworksDirectories;
+        ArtworksRepository *m_ArtworksRepository;
     };
 }
 

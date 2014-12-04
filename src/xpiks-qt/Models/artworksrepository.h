@@ -7,13 +7,14 @@
 #include <QSet>
 
 namespace Models {
-    class ArtworksDirectories : public QAbstractListModel {
+    class ArtworksRepository : public QAbstractListModel {
         Q_OBJECT
     public:
-        ArtworksDirectories(QObject *parent = 0);
-        ArtworksDirectories(const ArtworksDirectories &copy):
-            m_DirectoriesList(copy.m_DirectoriesList), m_DirectoriesHash(copy.m_DirectoriesHash) {}
-        ~ArtworksDirectories() {}
+        ArtworksRepository(QObject *parent = 0);
+        ArtworksRepository(const ArtworksRepository &copy):
+            m_DirectoriesList(copy.m_DirectoriesList), m_DirectoriesHash(copy.m_DirectoriesHash),
+        m_FilesSet(copy.m_FilesSet) {}
+        ~ArtworksRepository() {}
 
     public:
         enum ArtworksDirectoriesRoles {
@@ -28,7 +29,10 @@ namespace Models {
         void beginAccountingFiles(const QStringList &items);
         void endAccountingFiles();
     public:
-        int getNewItemsCount(const QStringList &items) const;
+        int getNewDirectoriesCount(const QStringList &items) const;
+        int getNewFilesCount(const QStringList &items) const;
+
+    public:
         bool accountFile(const QString &filepath);
         void removeFile(const QString &filepath);
         void removeDirectory(const QString &directory);
@@ -51,9 +55,8 @@ namespace Models {
     private:
         QStringList m_DirectoriesList;
         QHash<QString, int> m_DirectoriesHash;
+        QSet<QString> m_FilesSet;
     };
 }
-
-Q_DECLARE_METATYPE (Models::ArtworksDirectories)
 
 #endif // ARTWORKSDIRECTORIES_H

@@ -20,7 +20,7 @@ namespace Models {
 
     void ArtItemsModel::removeArtworksDirectory(int index)
     {
-        m_ArtworksDirectories->removeDirectory(index);
+        m_ArtworksRepository->removeDirectory(index);
     }
 
     int ArtItemsModel::rowCount(const QModelIndex &parent) const {
@@ -81,13 +81,14 @@ namespace Models {
     void ArtItemsModel::addFiles(const QStringList &filenames)
     {
         int count = filenames.count();
+        int newFilesCount = m_ArtworksRepository->getNewFilesCount(filenames);
 
-        m_ArtworksDirectories->beginAccountingFiles(filenames);
-        beginInsertRows(QModelIndex(), rowCount(), rowCount() + count - 1);
+        m_ArtworksRepository->beginAccountingFiles(filenames);
+        beginInsertRows(QModelIndex(), rowCount(), rowCount() + newFilesCount - 1);
 
         for (int i = 0; i < count; ++i) {
             const QString &filename = filenames[i];
-            if (m_ArtworksDirectories->accountFile(filename))
+            if (m_ArtworksRepository->accountFile(filename))
             {
                 // TODO: grab keywords here
                 ArtworkMetadata *metadata = new ArtworkMetadata("my description", filenames[i], "test1,test2");
@@ -96,9 +97,9 @@ namespace Models {
         }
 
         endInsertRows();
-        m_ArtworksDirectories->endAccountingFiles();
+        m_ArtworksRepository->endAccountingFiles();
 
-        m_ArtworksDirectories->updateCounts();
+        m_ArtworksRepository->updateCounts();
     }
 
     QHash<int, QByteArray> ArtItemsModel::roleNames() const {

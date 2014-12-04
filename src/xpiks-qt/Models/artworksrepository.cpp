@@ -1,56 +1,77 @@
-#include "artworksdirectories.h"
+#include "artworksrepository.h"
 #include <QSet>
 #include <QFileInfo>
 #include <QRegExp>
 
 namespace Models {
-    ArtworksDirectories::ArtworksDirectories(QObject *parent) {
+    ArtworksRepository::ArtworksRepository(QObject *parent) {
     }
 
-    void ArtworksDirectories::updateCounts()
+    void ArtworksRepository::updateCounts()
     {
         emit dataChanged(index(0), index(rowCount() - 1), QVector<int>() << UsedImagesCountRole);
     }
 
-    void ArtworksDirectories::beginAccountingFiles(const QStringList &items)
+    void ArtworksRepository::beginAccountingFiles(const QStringList &items)
     {
-        int count = getNewItemsCount(items);
+        int count = getNewDirectoriesCount(items);
         beginInsertRows(QModelIndex(), rowCount(), rowCount() + count - 1);
     }
 
-    void ArtworksDirectories::endAccountingFiles()
+    void ArtworksRepository::endAccountingFiles()
     {
         endInsertRows();
     }
 
-    int ArtworksDirectories::getNewItemsCount(const QStringList &items) const
+    int ArtworksRepository::getNewDirectoriesCount(const QStringList &items) const
     {
         int count = 0;
-        QSet<QString> itemsSet;
+        QSet<QString> filteredFiles;
 
-        foreach (const QString &value, items) {
-            QFileInfo fi(value);
-
-            if (fi.exists()) {
-                itemsSet.insert(fi.absolutePath());
+        foreach (const QString &filepath, items) {
+            if (!m_FilesSet.contains(filepath)) {
+                filteredFiles.insert(filepath);
             }
         }
 
-         foreach (const QString &value, itemsSet) {
-             if (!m_DirectoriesHash.contains(value)) {
-                 count++;
-             }
-         }
+        QSet<QString> filteredDirectories;
+
+        foreach (const QString &filepath, filteredFiles) {
+            QFileInfo fi(filepath);
+            if (fi.exists()) {
+                filteredDirectories.insert(fi.absolutePath());
+            }
+        }
+
+        foreach (const QString &directory, filteredDirectories) {
+            if (!m_DirectoriesHash.contains(directory)) {
+                count++;
+            }
+        }
 
         return count;
     }
 
-    bool ArtworksDirectories::accountFile(const QString &filepath) {
+    int ArtworksRepository::getNewFilesCount(const QStringList &items) const
+    {
+        int count = 0;
+        QSet<QString> itemsSet = QSet<QString>::fromList(items);
+
+        foreach (const QString &filepath, itemsSet) {
+            if (!m_FilesSet.contains(filepath)) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    bool ArtworksRepository::accountFile(const QString &filepath) {
         bool wasModified = false;
 
         QFileInfo fi(filepath);
 
-        if (fi.exists()) {
+        if (fi.exists() && !m_FilesSet.contains(filepath)) {
             const QString absolutePath = fi.absolutePath();
 
             int occurances = 0;
@@ -61,6 +82,7 @@ namespace Models {
                 occurances = m_DirectoriesHash[absolutePath];
             }
 
+            m_FilesSet.insert(filepath);
             m_DirectoriesHash[absolutePath] = occurances + 1;
             wasModified = true;
         }
@@ -68,7 +90,7 @@ namespace Models {
         return wasModified;
     }
 
-    void ArtworksDirectories::removeFile(const QString &filepath) {
+    void ArtworksRepository::removeFile(const QString &filepath) {
         QFileInfo fi(filepath);
         const QString absolutePath = fi.absolutePath();
 
@@ -83,9 +105,11 @@ namespace Models {
                 removeDirectory(absolutePath);
             }
         }
+
+        m_FilesSet.remove(filepath);
     }
 
-    void ArtworksDirectories::removeDirectory(const QString &directory)
+    void ArtworksRepository::removeDirectory(const QString &directory)
     {
         if (m_DirectoriesHash.contains(directory)) {
             m_DirectoriesHash.remove(directory);
@@ -97,12 +121,12 @@ namespace Models {
         }
     }
 
-    int ArtworksDirectories::rowCount(const QModelIndex &parent) const {
+    int ArtworksRepository::rowCount(const QModelIndex &parent) const {
         Q_UNUSED(parent);
         return m_DirectoriesList.count();
     }
 
-    QVariant ArtworksDirectories::data(const QModelIndex &index, int role) const {
+    QVariant ArtworksRepository::data(const QModelIndex &index, int role) const {
         if (index.row() < 0 || index.row() >= m_DirectoriesList.count())
             return QVariant();
 
@@ -118,7 +142,7 @@ namespace Models {
         }
     }
 
-    QHash<int, QByteArray> ArtworksDirectories::roleNames() const {
+    QHash<int, QByteArray> ArtworksRepository::roleNames() const {
         QHash<int, QByteArray> roles;
         roles[PathRole] = "path";
         roles[UsedImagesCountRole] = "usedimagescount";
