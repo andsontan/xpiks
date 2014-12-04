@@ -43,7 +43,7 @@ ApplicationWindow {
 
         ListView {
             id: sourcesListView
-            model: mainModel.directoryList
+            model: mainModel.artworksDirectories
 
             Layout.minimumWidth: 250
             Layout.maximumWidth: 400
@@ -61,13 +61,13 @@ ApplicationWindow {
                     id: directoryPath
                     height: 20
                     Layout.fillWidth: true
-                    text: modelData
+                    text: path + "(" + usedimagescount + ")"
                     elide: Text.ElideMiddle
 
-                    ToolTip {
+                    /*ToolTip {
                         target: directoryPath
                         text: modelData
-                    }
+                    }*/
                 }
 
                 Button {
