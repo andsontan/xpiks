@@ -97,6 +97,8 @@ namespace Models {
 
         endInsertRows();
         m_ArtworksDirectories->endAccountingFiles();
+
+        m_ArtworksDirectories->updateCounts();
     }
 
     QHash<int, QByteArray> ArtItemsModel::roleNames() const {

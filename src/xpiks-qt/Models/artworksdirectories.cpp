@@ -7,6 +7,11 @@ namespace Models {
     ArtworksDirectories::ArtworksDirectories(QObject *parent) {
     }
 
+    void ArtworksDirectories::updateCounts()
+    {
+        emit dataChanged(index(0), index(rowCount() - 1), QVector<int>() << UsedImagesCountRole);
+    }
+
     void ArtworksDirectories::beginAccountingFiles(const QStringList &items)
     {
         int count = getNewItemsCount(items);

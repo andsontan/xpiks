@@ -22,6 +22,9 @@ namespace Models {
         };
 
     public:
+        void updateCounts();
+
+    public:
         void beginAccountingFiles(const QStringList &items);
         void endAccountingFiles();
     public:
