@@ -1,9 +1,43 @@
 #include "artworksdirectories.h"
+#include <QSet>
 #include <QFileInfo>
 #include <QRegExp>
 
 namespace Models {
     ArtworksDirectories::ArtworksDirectories(QObject *parent) {
+    }
+
+    void ArtworksDirectories::beginAccountingFiles(const QStringList &items)
+    {
+        int count = getNewItemsCount(items);
+        beginInsertRows(QModelIndex(), rowCount(), rowCount() + count - 1);
+    }
+
+    void ArtworksDirectories::endAccountingFiles()
+    {
+        endInsertRows();
+    }
+
+    int ArtworksDirectories::getNewItemsCount(const QStringList &items) const
+    {
+        int count = 0;
+        QSet<QString> itemsSet;
+
+        foreach (const QString &value, items) {
+            QFileInfo fi(value);
+
+            if (fi.exists()) {
+                itemsSet.insert(fi.absolutePath());
+            }
+        }
+
+         foreach (const QString &value, itemsSet) {
+             if (!m_DirectoriesHash.contains(value)) {
+                 count++;
+             }
+         }
+
+        return count;
     }
 
     bool ArtworksDirectories::accountFile(const QString &filepath) {
@@ -13,8 +47,6 @@ namespace Models {
 
         if (fi.exists()) {
             const QString absolutePath = fi.absolutePath();
-
-            beginInsertRows(QModelIndex(), rowCount(), rowCount());
 
             int occurances = 0;
             if (!m_DirectoriesHash.contains(absolutePath)) {
@@ -26,8 +58,6 @@ namespace Models {
 
             m_DirectoriesHash[absolutePath] = occurances + 1;
             wasModified = true;
-
-            endInsertRows();
         }
 
         return wasModified;
@@ -60,16 +90,6 @@ namespace Models {
             m_DirectoriesList.removeAt(index);
             endRemoveRows();
         }
-    }
-
-    void ArtworksDirectories::removeDirectory(int index)
-    {
-        const QString &directory = m_DirectoriesList[index];
-        m_DirectoriesHash.remove(directory);
-
-        beginRemoveRows(QModelIndex(), index, index);
-        m_DirectoriesList.removeAt(index);
-        endRemoveRows();
     }
 
     int ArtworksDirectories::rowCount(const QModelIndex &parent) const {

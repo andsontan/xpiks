@@ -10,9 +10,8 @@
 namespace Models {
     class ArtItemsModel : public QAbstractListModel {
         Q_OBJECT
-        Q_PROPERTY(ArtworksDirectories* artworksDirectories READ getArtworksDirectories)
     public:
-        ArtItemsModel(QObject *parent = 0);
+        ArtItemsModel(QObject *parent = 0) : m_ArtworksDirectories(new ArtworksDirectories()) {}
         ~ArtItemsModel();
 
     public:
@@ -23,7 +22,10 @@ namespace Models {
         };
 
     public:
-        ArtworksDirectories *getArtworksDirectories() { return &m_ArtworksDirectories; }
+        Q_INVOKABLE QObject* getArtworksDirectories()
+        {
+            return m_ArtworksDirectories;
+        }
 
     public:
         Q_INVOKABLE void removeArtworksDirectory(int index);
@@ -45,7 +47,7 @@ namespace Models {
 
     private:
         QList<ArtworkMetadata*> m_ArtworkList;
-        ArtworksDirectories m_ArtworksDirectories;
+        ArtworksDirectories *m_ArtworksDirectories;
     };
 }
 

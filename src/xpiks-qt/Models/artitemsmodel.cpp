@@ -4,8 +4,6 @@
 #include "artitemsmodel.h"
 
 namespace Models {
-    ArtItemsModel::ArtItemsModel(QObject *parent) {
-    }
 
     ArtItemsModel::~ArtItemsModel() {
         int count = m_ArtworkList.count();
@@ -15,11 +13,14 @@ namespace Models {
         }
 
         m_ArtworkList.clear();
+
+        // being freed in gui
+        //delete m_ArtworksDirectories;
     }
 
     void ArtItemsModel::removeArtworksDirectory(int index)
     {
-        m_ArtworksDirectories.removeDirectory(index);
+        m_ArtworksDirectories->removeDirectory(index);
     }
 
     int ArtItemsModel::rowCount(const QModelIndex &parent) const {
@@ -64,17 +65,29 @@ namespace Models {
 
     void ArtItemsModel::addDirectory(const QString &directory)
     {
-        // TODO: implement this
+        QDir dir(directory);
+
+        dir.setFilter(QDir::NoDotAndDotDot | QDir::Files);
+        dir.setNameFilters(QStringList() << "*.jpg" << "*.JPG");
+
+        QStringList items = dir.entryList();
+        for (int i = 0; i < items.size(); ++i) {
+            items[i] = dir.filePath(items[i]);
+        }
+
+        addFiles(items);
     }
 
     void ArtItemsModel::addFiles(const QStringList &filenames)
     {
-        beginInsertRows(QModelIndex(), rowCount(), rowCount());
-
         int count = filenames.count();
+
+        m_ArtworksDirectories->beginAccountingFiles(filenames);
+        beginInsertRows(QModelIndex(), rowCount(), rowCount() + count - 1);
+
         for (int i = 0; i < count; ++i) {
             const QString &filename = filenames[i];
-            if (m_ArtworksDirectories.accountFile(filename))
+            if (m_ArtworksDirectories->accountFile(filename))
             {
                 // TODO: grab keywords here
                 ArtworkMetadata *metadata = new ArtworkMetadata("my description", filenames[i], "test1,test2");
@@ -83,6 +96,7 @@ namespace Models {
         }
 
         endInsertRows();
+        m_ArtworksDirectories->endAccountingFiles();
     }
 
     QHash<int, QByteArray> ArtItemsModel::roleNames() const {

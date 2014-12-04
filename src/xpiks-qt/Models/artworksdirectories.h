@@ -22,10 +22,22 @@ namespace Models {
         };
 
     public:
+        void beginAccountingFiles(const QStringList &items);
+        void endAccountingFiles();
+    public:
+        int getNewItemsCount(const QStringList &items) const;
         bool accountFile(const QString &filepath);
         void removeFile(const QString &filepath);
         void removeDirectory(const QString &directory);
-        void removeDirectory(int index);
+        void removeDirectory(int index)
+        {
+            const QString &directory = m_DirectoriesList[index];
+            m_DirectoriesHash.remove(directory);
+
+            beginRemoveRows(QModelIndex(), index, index);
+            m_DirectoriesList.removeAt(index);
+            endRemoveRows();
+        }
 
     public:
         int rowCount(const QModelIndex & parent = QModelIndex()) const;

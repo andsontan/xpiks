@@ -1,7 +1,6 @@
 import QtQuick 2.3
 import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.1
-import "ShavToolTip.qml"
 
 ApplicationWindow {
     visible: true
@@ -27,11 +26,19 @@ ApplicationWindow {
         id: addDirectoryComponent
 
         RowLayout {
+            spacing: 20
+
             Button {
                 width: 100
                 text: qsTr("Add directory")
+                onClicked: mainModel.addDirectoryButtonClicked()
+            }
+
+            Button {
+                width: 100
+                text: qsTr("Add files")
                 anchors.right: parent.right
-                onClicked: mainModel.addArtworkSourceClicked()
+                onClicked: mainModel.addFilesButtonClicked()
             }
         }
     }
@@ -43,7 +50,7 @@ ApplicationWindow {
 
         ListView {
             id: sourcesListView
-            model: mainModel.artworksDirectories
+            model: mainModel.getArtworksDirectories()
 
             Layout.minimumWidth: 250
             Layout.maximumWidth: 400
@@ -63,11 +70,6 @@ ApplicationWindow {
                     Layout.fillWidth: true
                     text: path + "(" + usedimagescount + ")"
                     elide: Text.ElideMiddle
-
-                    /*ToolTip {
-                        target: directoryPath
-                        text: modelData
-                    }*/
                 }
 
                 Button {
