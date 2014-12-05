@@ -15,7 +15,9 @@ namespace Models {
     void ArtworksRepository::beginAccountingFiles(const QStringList &items)
     {
         int count = getNewDirectoriesCount(items);
-        beginInsertRows(QModelIndex(), rowCount(), rowCount() + count - 1);
+        if (count > 0) {
+            beginInsertRows(QModelIndex(), rowCount(), rowCount() + count - 1);
+        }
     }
 
     void ArtworksRepository::endAccountingFiles()

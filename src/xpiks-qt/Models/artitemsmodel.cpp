@@ -75,16 +75,20 @@ namespace Models {
             items[i] = dir.filePath(items[i]);
         }
 
-        addFiles(items);
+        if (items.count() > 0) {
+            addFiles(items);
+        }
     }
 
     void ArtItemsModel::addFiles(const QStringList &filenames)
     {
         int count = filenames.count();
-        int newFilesCount = m_ArtworksRepository->getNewFilesCount(filenames);
+        const int newFilesCount = m_ArtworksRepository->getNewFilesCount(filenames);
 
-        m_ArtworksRepository->beginAccountingFiles(filenames);
-        beginInsertRows(QModelIndex(), rowCount(), rowCount() + newFilesCount - 1);
+        if (newFilesCount > 0) {
+            m_ArtworksRepository->beginAccountingFiles(filenames);
+            beginInsertRows(QModelIndex(), rowCount(), rowCount() + newFilesCount - 1);
+        }
 
         for (int i = 0; i < count; ++i) {
             const QString &filename = filenames[i];
@@ -96,10 +100,12 @@ namespace Models {
             }
         }
 
-        endInsertRows();
-        m_ArtworksRepository->endAccountingFiles();
+        if (newFilesCount) {
+            endInsertRows();
+            m_ArtworksRepository->endAccountingFiles();
 
-        m_ArtworksRepository->updateCounts();
+            m_ArtworksRepository->updateCounts();
+        }
     }
 
     QHash<int, QByteArray> ArtItemsModel::roleNames() const {
