@@ -58,6 +58,7 @@ namespace Models {
     void ArtItemsModel::addFilesButtonClicked()
     {
         QFileDialog dialog;
+        dialog.setNameFilters(QStringList() << "*.jpg" << "*.JPG");
 
         QStringList filenames = dialog.getOpenFileNames();
         addFiles(filenames);
@@ -68,7 +69,6 @@ namespace Models {
         QDir dir(directory);
 
         dir.setFilter(QDir::NoDotAndDotDot | QDir::Files);
-        dir.setNameFilters(QStringList() << "*.jpg" << "*.JPG");
 
         QStringList items = dir.entryList();
         for (int i = 0; i < items.size(); ++i) {
@@ -80,8 +80,10 @@ namespace Models {
         }
     }
 
-    void ArtItemsModel::addFiles(const QStringList &filenames)
+    void ArtItemsModel::addFiles(const QStringList &rawFilenames)
     {
+        QStringList filenames = rawFilenames.filter(QRegExp("^.*[.]jpg$", Qt::CaseInsensitive));
+
         int count = filenames.count();
         const int newFilesCount = m_ArtworksRepository->getNewFilesCount(filenames);
 
