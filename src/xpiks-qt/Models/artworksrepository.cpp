@@ -7,22 +7,27 @@ namespace Models {
     ArtworksRepository::ArtworksRepository(QObject *parent) {
     }
 
-    void ArtworksRepository::updateCounts()
+    void ArtworksRepository::updateCountsForExistingDirectories()
     {
         emit dataChanged(index(0), index(rowCount() - 1), QVector<int>() << UsedImagesCountRole);
     }
 
-    void ArtworksRepository::beginAccountingFiles(const QStringList &items)
+    bool ArtworksRepository::beginAccountingFiles(const QStringList &items)
     {
         int count = getNewDirectoriesCount(items);
-        if (count > 0) {
+        bool shouldAccountFiles = count > 0;
+        if (shouldAccountFiles) {
             beginInsertRows(QModelIndex(), rowCount(), rowCount() + count - 1);
         }
+
+        return shouldAccountFiles;
     }
 
-    void ArtworksRepository::endAccountingFiles()
+    void ArtworksRepository::endAccountingFiles(bool filesWereAccounted)
     {
-        endInsertRows();
+        if (filesWereAccounted) {
+            endInsertRows();
+        }
     }
 
     int ArtworksRepository::getNewDirectoriesCount(const QStringList &items) const

@@ -23,11 +23,11 @@ namespace Models {
         };
 
     public:
-        void updateCounts();
+        void updateCountsForExistingDirectories();
 
     public:
-        void beginAccountingFiles(const QStringList &items);
-        void endAccountingFiles();
+        bool beginAccountingFiles(const QStringList &items);
+        void endAccountingFiles(bool filesWereAccounted);
     public:
         int getNewDirectoriesCount(const QStringList &items) const;
         int getNewFilesCount(const QStringList &items) const;

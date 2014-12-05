@@ -85,26 +85,28 @@ namespace Models {
         int count = filenames.count();
         const int newFilesCount = m_ArtworksRepository->getNewFilesCount(filenames);
 
+        bool filesWereAccounted = m_ArtworksRepository->beginAccountingFiles(filenames);
+
         if (newFilesCount > 0) {
-            m_ArtworksRepository->beginAccountingFiles(filenames);
             beginInsertRows(QModelIndex(), rowCount(), rowCount() + newFilesCount - 1);
-        }
 
-        for (int i = 0; i < count; ++i) {
-            const QString &filename = filenames[i];
-            if (m_ArtworksRepository->accountFile(filename))
-            {
-                // TODO: grab keywords here
-                ArtworkMetadata *metadata = new ArtworkMetadata("my description", filenames[i], "test1,test2");
-                m_ArtworkList.append(metadata);
+            for (int i = 0; i < count; ++i) {
+                const QString &filename = filenames[i];
+                if (m_ArtworksRepository->accountFile(filename))
+                {
+                    // TODO: grab keywords here
+                    ArtworkMetadata *metadata = new ArtworkMetadata("my description", filenames[i], "test1,test2");
+                    m_ArtworkList.append(metadata);
+                }
             }
+
+            endInsertRows();
         }
 
-        if (newFilesCount) {
-            endInsertRows();
-            m_ArtworksRepository->endAccountingFiles();
+        m_ArtworksRepository->endAccountingFiles(filesWereAccounted);
 
-            m_ArtworksRepository->updateCounts();
+        if (newFilesCount > 0) {
+            m_ArtworksRepository->updateCountsForExistingDirectories();
         }
     }
 
