@@ -24,7 +24,7 @@ namespace Models {
             return QVariant();
         }
 
-        const QString &keyword = m_KeywordsList[index.row()];
+        QString keyword = m_KeywordsList[index.row()];
         if (role == KeywordRole) {
             return keyword;
         }

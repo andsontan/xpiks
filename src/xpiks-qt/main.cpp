@@ -39,11 +39,16 @@ int main(int argc, char *argv[]) {
 
     qInstallMessageHandler(myMessageHandler);
 
+    Models::ArtworksRepository artworkRepository;
     Models::ArtItemsModel mainModel;
+
+    mainModel.setArtworksRepository(&artworkRepository);
+
     QQmlApplicationEngine engine;
     Helpers::GlobalImageProvider *globalProvider = new Helpers::GlobalImageProvider(QQmlImageProviderBase::Image);
 
     engine.rootContext()->setContextProperty("mainModel", &mainModel);
+    engine.rootContext()->setContextProperty("artworkRepository", &artworkRepository);
     engine.addImageProvider("global", globalProvider);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 

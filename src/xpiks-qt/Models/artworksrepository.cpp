@@ -32,7 +32,6 @@ namespace Models {
 
     int ArtworksRepository::getNewDirectoriesCount(const QStringList &items) const
     {
-        int count = 0;
         QSet<QString> filteredFiles;
 
         foreach (const QString &filepath, items) {
@@ -50,6 +49,7 @@ namespace Models {
             }
         }
 
+        int count = 0;
         foreach (const QString &directory, filteredDirectories) {
             if (!m_DirectoriesHash.contains(directory)) {
                 count++;
@@ -102,8 +102,7 @@ namespace Models {
         const QString absolutePath = fi.absolutePath();
 
         if (m_DirectoriesHash.contains(absolutePath)) {
-            int occurances;
-            occurances = m_DirectoriesHash[absolutePath] - 1;
+            int occurances = m_DirectoriesHash[absolutePath] - 1;
 
             if (occurances > 0) {
                 m_DirectoriesHash[absolutePath] = occurances;
@@ -120,12 +119,30 @@ namespace Models {
     {
         if (m_DirectoriesHash.contains(directory)) {
             m_DirectoriesHash.remove(directory);
-            int index = m_DirectoriesList.indexOf(QRegExp(directory));
+            //int index = m_DirectoriesList.indexOf(QRegExp(directory));
 
-            beginRemoveRows(QModelIndex(), index, index);
-            m_DirectoriesList.removeAt(index);
-            endRemoveRows();
+            //if (index != -1) {
+            //    beginRemoveRows(QModelIndex(), index, index);
+            //    m_DirectoriesList.removeAt(index);
+            //    endRemoveRows();
+            //}
         }
+    }
+
+    void ArtworksRepository::removeDirectory(int index)
+    {
+        // TODO: assert index is in range
+        //const QString &directory = m_DirectoriesList[index];
+        //m_DirectoriesHash.remove(directory);
+
+        beginRemoveRows(QModelIndex(), index, index);
+        m_DirectoriesList.removeAt(index);
+        endRemoveRows();
+    }
+
+    void ArtworksRepository::eraseFile(const QString &filepath)
+    {
+        m_FilesSet.remove(filepath);
     }
 
     int ArtworksRepository::rowCount(const QModelIndex &parent) const {
@@ -137,13 +154,13 @@ namespace Models {
         if (index.row() < 0 || index.row() >= m_DirectoriesList.count())
             return QVariant();
 
-        const QString &directory = m_DirectoriesList[index.row()];
+        const QString &directory = m_DirectoriesList.at(index.row());
 
         switch (role) {
         case PathRole:
-            return directory;
+            return QString(directory);
         case UsedImagesCountRole:
-            return m_DirectoriesHash[directory];
+            return QVariant(m_DirectoriesHash[directory]);
         default:
             return QVariant();
         }

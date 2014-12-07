@@ -22,4 +22,5 @@ HEADERS += \
     Models/keywordsmodel.h \
     Models/artworkmetadata.h \
     Helpers/globalimageprovider.h \
-    Models/artworksrepository.h
+    Models/artworksrepository.h \
+    Helpers/indiceshelper.h

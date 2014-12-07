@@ -36,15 +36,10 @@ namespace Models {
         bool accountFile(const QString &filepath);
         void removeFile(const QString &filepath);
         void removeDirectory(const QString &directory);
-        void removeDirectory(int index)
-        {
-            const QString &directory = m_DirectoriesList[index];
-            m_DirectoriesHash.remove(directory);
+        void removeDirectory(int index);
+        void eraseFile(const QString &filepath);
 
-            beginRemoveRows(QModelIndex(), index, index);
-            m_DirectoriesList.removeAt(index);
-            endRemoveRows();
-        }
+        const QString &getDirectory(int index) const { return m_DirectoriesList[index]; }
 
     public:
         int rowCount(const QModelIndex & parent = QModelIndex()) const;

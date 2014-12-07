@@ -1,7 +1,9 @@
 #include <QFileDialog>
 #include <QStringList>
 #include <QDirIterator>
+#include <QList>
 #include "artitemsmodel.h"
+#include "Helpers/indiceshelper.h"
 
 namespace Models {
 
@@ -20,7 +22,24 @@ namespace Models {
 
     void ArtItemsModel::removeArtworksDirectory(int index)
     {
+        const QString &directory = m_ArtworksRepository->getDirectory(index);
+
+        QList<int> indicesToRemove;
+
+        QList<ArtworkMetadata*>::const_iterator it = m_ArtworkList.constBegin();
+        for (int i = 0; it < m_ArtworkList.constEnd(); ++it, ++i) {
+            if ((*it)->isInDirectory(directory)) {
+                indicesToRemove.append(i);
+                m_ArtworksRepository->eraseFile((*it)->GetImageFileName());
+            }
+        }
+
+        QList<QPair<int, int> > rangesToRemove;
+        Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
+
+        removeItems(rangesToRemove);
         m_ArtworksRepository->removeDirectory(index);
+        m_ArtworksRepository->removeDirectory(directory);
     }
 
     int ArtItemsModel::rowCount(const QModelIndex &parent) const {
@@ -32,14 +51,14 @@ namespace Models {
         if (index.row() < 0 || index.row() >= m_ArtworkList.count())
             return QVariant();
 
-        ArtworkMetadata *metadata = m_ArtworkList[index.row()];
+        ArtworkMetadata *metadata = m_ArtworkList.at(index.row());
         switch (role) {
         case ImageDescriptionRole:
-            return metadata->GetImageDescription();
+            return QString(metadata->GetImageDescription());
         case ImageFilenameRole:
-            return metadata->GetImageFileName();
-        case KeywordsRole:
-            return QVariant::fromValue(metadata->GetKeywords());
+            return QString(metadata->GetImageFileName());
+            //case KeywordsRole:
+            //    return QVariant::fromValue(metadata->GetKeywords());
         default:
             return QVariant();
         }
@@ -47,21 +66,36 @@ namespace Models {
 
     void ArtItemsModel::addDirectoryButtonClicked()
     {
-        QFileDialog dialog;
-        dialog.setFileMode(QFileDialog::Directory);
-        dialog.setOption(QFileDialog::ShowDirsOnly);
+        setCanAddFiles(false);
+        {
+            QFileDialog dialog;
+            dialog.setFileMode(QFileDialog::Directory);
+            dialog.setOption(QFileDialog::ShowDirsOnly);
+            dialog.setOption(QFileDialog::DontUseNativeDialog, true);
 
-        QString directory = dialog.getExistingDirectory();
-        addDirectory(directory);
+            if (dialog.exec()) {
+                QString directory = dialog.selectedFiles().at(0);
+                addDirectory(directory);
+            }
+        }
+        setCanAddFiles(true);
     }
 
     void ArtItemsModel::addFilesButtonClicked()
     {
-        QFileDialog dialog;
-        dialog.setNameFilters(QStringList() << "*.jpg" << "*.JPG");
+        setCanAddFiles(false);
+        {
+            QFileDialog dialog;
+            dialog.setNameFilters(QStringList() << "*.jpg" << "*.JPG");
+            dialog.setFileMode(QFileDialog::ExistingFiles);
+            dialog.setOption(QFileDialog::DontUseNativeDialog, true);
 
-        QStringList filenames = dialog.getOpenFileNames();
-        addFiles(filenames);
+            if (dialog.exec()) {
+                QStringList filenames = dialog.selectedFiles();
+                addFiles(filenames);
+            }
+        }
+        setCanAddFiles(true);
     }
 
     void ArtItemsModel::addDirectory(const QString &directory)
@@ -84,7 +118,7 @@ namespace Models {
     {
         QStringList filenames = rawFilenames.filter(QRegExp("^.*[.]jpg$", Qt::CaseInsensitive));
 
-        int count = filenames.count();
+        const int count = filenames.count();
         const int newFilesCount = m_ArtworksRepository->getNewFilesCount(filenames);
 
         bool filesWereAccounted = m_ArtworksRepository->beginAccountingFiles(filenames);
@@ -109,6 +143,23 @@ namespace Models {
 
         if (newFilesCount > 0) {
             m_ArtworksRepository->updateCountsForExistingDirectories();
+        }
+    }
+
+    void ArtItemsModel::removeItems(const QList<QPair<int, int> > &ranges)
+    {
+        int removedCount = 0;
+        int rangesCount = ranges.count();
+        for (int i = 0; i < rangesCount; ++i) {
+            int startRow = ranges[i].first - removedCount;
+            int endRow = ranges[i].second - removedCount;
+
+            beginRemoveRows(QModelIndex(), startRow, endRow);
+            int count = endRow - startRow + 1;
+            for (int j = 0; j < count; ++j) { m_ArtworkList.removeAt(startRow); }
+            endRemoveRows();
+
+            removedCount += (endRow - startRow + 1);
         }
     }
 

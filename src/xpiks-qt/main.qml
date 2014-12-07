@@ -22,62 +22,66 @@ ApplicationWindow {
         }
     }
 
-    Component {
-        id: addDirectoryComponent
-
-        RowLayout {
-            spacing: 20
-
-            Button {
-                width: 100
-                text: qsTr("Add directory")
-                onClicked: mainModel.addDirectoryButtonClicked()
-            }
-
-            Button {
-                width: 100
-                text: qsTr("Add files")
-                anchors.right: parent.right
-                onClicked: mainModel.addFilesButtonClicked()
-            }
-        }
-    }
-
     SplitView {
         id: mainGrid
         anchors.fill: parent
         orientation: Qt.Horizontal
 
-        ListView {
-            id: sourcesListView
-            model: mainModel.getArtworksRepository()
-
+        ColumnLayout {
             Layout.minimumWidth: 250
             Layout.maximumWidth: 400
 
-            spacing: 10
-            header: addDirectoryComponent
+            RowLayout {
+                spacing: 20
+                height: 30
 
-            delegate: RowLayout {
-                property int indexOfThisDelegate: index
-                width: parent.width
-                spacing: 10
-                height: 20
-
-                Text {
-                    id: directoryPath
-                    height: 20
-                    Layout.fillWidth: true
-                    text: path + "(" + usedimagescount + ")"
-                    elide: Text.ElideMiddle
+                Button {
+                    width: 100
+                    enabled: mainModel.canAddFiles
+                    text: qsTr("Add directory")
+                    onClicked: mainModel.addDirectoryButtonClicked()
                 }
 
                 Button {
-                    id: removeItemButton
-                    width: 20
-                    height: directoryPath.height
-                    text: "X"
-                    onClicked: mainModel.removeDirectory(indexOfThisDelegate)
+                    width: 100
+                    text: qsTr("Add files")
+                    enabled: mainModel.canAddFiles
+                    anchors.right: parent.right
+                    onClicked: mainModel.addFilesButtonClicked()
+                }
+            }
+
+            ListView {
+                id: sourcesListView
+                model: artworkRepository
+                Layout.fillHeight: true
+                width: parent.width
+
+                spacing: 10
+
+                delegate: RowLayout {
+                    property int indexOfThisDelegate: index
+                    spacing: 10
+                    height: 20
+                    width: parent.width
+
+                    Text {
+                        id: directoryPath
+                        height: 20
+                        anchors.left: parent.left
+                        anchors.right: removeItemButton.right
+                        text: path + "(" + usedimagescount + ")"
+                        elide: Text.ElideMiddle
+                    }
+
+                    Button {
+                        id: removeItemButton
+                        width: 20
+                        height: directoryPath.height
+                        text: "X"
+                        anchors.right: parent.right
+                        onClicked: mainModel.removeArtworksDirectory(indexOfThisDelegate)
+                    }
                 }
             }
         }
@@ -95,7 +99,8 @@ ApplicationWindow {
 
                 ColumnLayout {
                     width: 150
-                    Layout.fillHeight: true
+                    height: parent.height
+                    Layout.maximumWidth: 250
 
                     Image {
                         source: "image://global/" + filename
@@ -126,7 +131,7 @@ ApplicationWindow {
                     Text { text: qsTr("Keywords:") }
 
                     TextEdit {
-                        text: keywords
+                        //text: keywords
                         Layout.fillHeight: true
                         wrapMode: TextEdit.Wrap
                     }
