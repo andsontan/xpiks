@@ -1,5 +1,5 @@
-import QtQuick 2.3
-import QtQuick.Controls 1.2
+import QtQuick 2.4
+import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
 
 ApplicationWindow {
@@ -68,8 +68,7 @@ ApplicationWindow {
                     Text {
                         id: directoryPath
                         height: 20
-                        anchors.left: parent.left
-                        anchors.right: removeItemButton.right
+                        width: parent.width - removeItemButton.width
                         text: path + "(" + usedimagescount + ")"
                         elide: Text.ElideMiddle
                     }
