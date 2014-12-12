@@ -28,11 +28,12 @@ ApplicationWindow {
         orientation: Qt.Horizontal
 
         ColumnLayout {
-            Layout.minimumWidth: 250
+            Layout.minimumWidth: 200
             Layout.maximumWidth: 400
 
             RowLayout {
-                spacing: 20
+                Layout.fillWidth: true
+                spacing: 50
                 height: 30
 
                 Button {
@@ -46,7 +47,6 @@ ApplicationWindow {
                     width: 100
                     text: qsTr("Add files")
                     enabled: mainModel.canAddFiles
-                    anchors.right: parent.right
                     onClicked: mainModel.addFilesButtonClicked()
                 }
             }
@@ -55,30 +55,33 @@ ApplicationWindow {
                 id: sourcesListView
                 model: artworkRepository
                 Layout.fillHeight: true
-                width: parent.width
+                Layout.fillWidth: true
+                anchors.leftMargin: 10
+                anchors.rightMargin: 10
 
                 spacing: 10
 
                 delegate: RowLayout {
-                    property int indexOfThisDelegate: index
-                    spacing: 10
+                    property int indexOfThixpisDelxpiegate: index
                     height: 20
+                    spacing: 10
                     width: parent.width
 
                     Text {
                         id: directoryPath
+                        Layout.fillWidth: true
+                        Layout.minimumWidth: 150
                         height: 20
-                        width: parent.width - removeItemButton.width
                         text: path + "(" + usedimagescount + ")"
                         elide: Text.ElideMiddle
                     }
 
                     Button {
                         id: removeItemButton
-                        width: 20
-                        height: directoryPath.height
+                        Layout.maximumWidth: 20
+                        Layout.minimumWidth: 20
+                        height: 20
                         text: "X"
-                        anchors.right: parent.right
                         onClicked: mainModel.removeArtworksDirectory(indexOfThisDelegate)
                     }
                 }
