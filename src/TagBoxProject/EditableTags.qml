@@ -17,10 +17,13 @@ Flickable {
         currentItem = model.get(currentIndex)
     }*/
 
+    signal commaEntered(string text)
+
     Flow {
         id: flow
         width: parent.width
         spacing: 5
+
 
         Repeater {
             id: repeater
@@ -34,9 +37,32 @@ Flickable {
             }
         }
 
-        TextInput {
-            width: 50
+        Item {
+            width: 150
+            height: 30
+            TextInput {
+                maximumLength: 30
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
+                id: nextTagTextInput
+                color: "black"
+                focus: true
+            }
 
+            states: [
+                State {
+                    when: nextTagTextInput.text[nextTagTextInput.text.length - 1] === ','
+                    StateChangeScript {
+                        name: "commaEnteredHandler"
+                        script: {
+                            var tagText = nextTagTextInput.text;
+                            commaEntered(tagText.slice(0, tagText.length - 1));
+                            nextTagTextInput.text = ''
+                        }
+                    }
+                }
+
+            ]
         }
     }
 }

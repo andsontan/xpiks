@@ -6,6 +6,7 @@ ApplicationWindow {
     visible: true
     width: 800
     height: 600
+    color: "white"
 
     ListModel {
         id: myModel
@@ -36,6 +37,8 @@ ApplicationWindow {
         anchors.fill: parent
 
         delegate: Rectangle {
+            id: itemWrapper
+            property int indexOfThisDelegate: index
             border.width: 1
             border.color: "black"
             color: "#cccccc"
@@ -67,7 +70,7 @@ ApplicationWindow {
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            // remove current item from flow
+                            myModel.remove(itemWrapper.indexOfThisDelegate, 1)
                         }
                     }
                 }
@@ -76,6 +79,10 @@ ApplicationWindow {
                     width: 5
                 }
             }
+        }
+
+        onCommaEntered: {
+            myModel.append({ itemText: text })
         }
 
         onCurrentItemChanged: {
