@@ -1,6 +1,7 @@
 import QtQuick 2.4
 import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
+import TagBoxProject 1.0
 
 Flickable {
     id: flowListView
@@ -47,22 +48,31 @@ Flickable {
                 id: nextTagTextInput
                 color: "black"
                 focus: true
-            }
 
-            states: [
-                State {
-                    when: nextTagTextInput.text[nextTagTextInput.text.length - 1] === ','
-                    StateChangeScript {
-                        name: "commaEnteredHandler"
-                        script: {
-                            var tagText = nextTagTextInput.text;
-                            commaEntered(tagText.slice(0, tagText.length - 1));
-                            nextTagTextInput.text = ''
+                Keys.onPressed: {
+                    if(event.matches(StandardKey.Paste)) {
+                        var clipboardText = clipboard.getText();
+
+                        var words = clipboardText.split(',');
+                        for (var i = 0; i < words.length; i++) {
+                            commaEntered(words[i].replace(/^\s+|\s+$/g, ''));
                         }
+
+                        event.accepted = true;
+                    }
+                    else if (event.key === Qt.Key_Comma) {
+                        var tagText = nextTagTextInput.text;
+                        commaEntered(tagText);
+                        nextTagTextInput.text = ''
+
+                        event.accepted = true;
                     }
                 }
+            }
+        }
 
-            ]
+        ClipboardHelper {
+            id: clipboard
         }
     }
 }
