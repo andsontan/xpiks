@@ -6,7 +6,6 @@
 #include <QList>
 #include <QPair>
 #include "artworkmetadata.h"
-#include "keywordsmodel.h"
 #include "artworksrepository.h"
 
 namespace Models {
@@ -20,8 +19,11 @@ namespace Models {
     public:
         enum ArtItemsRoles {
             ImageDescriptionRole = Qt::UserRole + 1,
+            EditImageDescriptionRole,
             ImageFilenameRole,
-            KeywordsRole
+            KeywordsRole,
+            IsModifiedRole,
+            IsSelectedRole
         };
 
     public:
@@ -33,6 +35,8 @@ namespace Models {
     public:
         int rowCount(const QModelIndex & parent = QModelIndex()) const;
         QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+        Qt::ItemFlags flags(const QModelIndex &index) const;
+        bool setData(const QModelIndex &index, const QVariant & value, int role = Qt::EditRole);
 
     public slots:
         void addDirectoryButtonClicked();

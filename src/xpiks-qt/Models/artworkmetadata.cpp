@@ -5,6 +5,7 @@ namespace Models {
                                  const QString &rawKeywords) {
         m_ImageFileName = imageFileName;
         m_ImageDescription = imageDescription;
+        m_IsModified = false;
         parseKeywords(rawKeywords);
     }
 

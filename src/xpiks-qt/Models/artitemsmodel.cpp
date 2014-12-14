@@ -30,7 +30,7 @@ namespace Models {
         for (int i = 0; it < m_ArtworkList.constEnd(); ++it, ++i) {
             if ((*it)->isInDirectory(directory)) {
                 indicesToRemove.append(i);
-                m_ArtworksRepository->eraseFile((*it)->GetImageFileName());
+                m_ArtworksRepository->eraseFile((*it)->getImageFileName());
             }
         }
 
@@ -54,14 +54,49 @@ namespace Models {
         ArtworkMetadata *metadata = m_ArtworkList.at(index.row());
         switch (role) {
         case ImageDescriptionRole:
-            return QString(metadata->GetImageDescription());
+            return QString(metadata->getImageDescription());
         case ImageFilenameRole:
-            return QString(metadata->GetImageFileName());
-            case KeywordsRole:
-                return QVariant::fromValue(metadata->GetKeywords());
+            return QString(metadata->getImageFileName());
+        case KeywordsRole:
+            return QVariant::fromValue(metadata->getKeywords());
+        case IsModifiedRole:
+            return metadata->isModified();
+        case IsSelectedRole:
+            return metadata->getIsSelected();
         default:
             return QVariant();
         }
+    }
+
+    Qt::ItemFlags ArtItemsModel::flags(const QModelIndex &index) const
+    {
+        if (!index.isValid()) {
+            return Qt::ItemIsEnabled;
+        }
+
+        return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
+    }
+
+    bool ArtItemsModel::setData(const QModelIndex &index, const QVariant &value, int role)
+    {
+        if (!index.isValid()) {
+            return false;
+        }
+
+        ArtworkMetadata *metadata = m_ArtworkList.at(index.row());
+        switch (role) {
+        case EditImageDescriptionRole:
+            metadata->setImageDescription(value.toString());
+            break;
+        case IsSelectedRole:
+            metadata->setIsSelected(value.toBool());
+            break;
+        default:
+            return false;
+        }
+
+        emit dataChanged(index, index);
+        return true;
     }
 
     void ArtItemsModel::addDirectoryButtonClicked()
@@ -168,8 +203,11 @@ namespace Models {
     QHash<int, QByteArray> ArtItemsModel::roleNames() const {
         QHash<int, QByteArray> roles;
         roles[ImageDescriptionRole] = "description";
+        roles[EditImageDescriptionRole] = "editdescription";
         roles[ImageFilenameRole] = "filename";
         roles[KeywordsRole] = "keywords";
+        roles[IsModifiedRole] = "ismodified";
+        roles[IsSelectedRole] = "isselected";
         return roles;
     }
 }

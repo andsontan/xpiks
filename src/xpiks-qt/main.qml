@@ -178,12 +178,13 @@ ApplicationWindow {
 
                         Rectangle {
                             id: isModifiedRectangle
-                            color: "green"
+                            color: ismodified ? "orange" : "green"
                             width: 3
                             Layout.fillHeight: true
                         }
 
                         CheckBox {
+                            checked: isselected
                         }
 
                         ColumnLayout {
@@ -237,11 +238,14 @@ ApplicationWindow {
 
                                 TextInput {
                                     anchors.left: parent.left
+                                    anchors.right: parent.right
                                     anchors.leftMargin: 5
+                                    anchors.rightMargin: 5
                                     anchors.verticalCenter: parent.verticalCenter
                                     maximumLength: 250
                                     text: description
                                     focus: true
+                                    onTextChanged: model.editdescription = text
                                 }
                             }
 
@@ -253,8 +257,10 @@ ApplicationWindow {
 
                             Rectangle {
                                 color: "#dddddd"
-                                Layout.fillHeight: true
-                                Layout.fillWidth: true
+                                anchors.bottom: parent.bottom
+                                anchors.top: keywordsLabel.bottom
+                                anchors.left: parent.left
+                                anchors.right: parent.right
 
                                 EditableTags {
                                     id: flv
