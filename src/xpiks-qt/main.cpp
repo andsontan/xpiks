@@ -7,6 +7,8 @@
 #include "Helpers/globalimageprovider.h"
 #include "Models/artitemsmodel.h"
 
+#ifdef QT_NO_DEBUG
+
 void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg) {
     QString txt;
     switch (type) {
@@ -34,10 +36,14 @@ void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const Q
     }
 }
 
+#endif
+
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
 
+#ifdef QT_NO_DEBUG
     qInstallMessageHandler(myMessageHandler);
+#endif
 
     Models::ArtworksRepository artworkRepository;
     Models::ArtItemsModel mainModel;

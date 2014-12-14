@@ -72,6 +72,7 @@ namespace Models {
             dialog.setFileMode(QFileDialog::Directory);
             dialog.setOption(QFileDialog::ShowDirsOnly);
             dialog.setOption(QFileDialog::DontUseNativeDialog, true);
+            dialog.setDirectory(QDir::homePath());
 
             if (dialog.exec()) {
                 QString directory = dialog.selectedFiles().at(0);
@@ -89,6 +90,7 @@ namespace Models {
             dialog.setNameFilters(QStringList() << "*.jpg" << "*.JPG");
             dialog.setFileMode(QFileDialog::ExistingFiles);
             dialog.setOption(QFileDialog::DontUseNativeDialog, true);
+            dialog.setDirectory(QDir::homePath());
 
             if (dialog.exec()) {
                 QStringList filenames = dialog.selectedFiles();

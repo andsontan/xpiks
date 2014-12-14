@@ -28,26 +28,34 @@ ApplicationWindow {
         orientation: Qt.Horizontal
 
         ColumnLayout {
-            Layout.minimumWidth: 200
-            Layout.maximumWidth: 400
+            Layout.minimumWidth: 250
+            Layout.preferredWidth: 250
+            Layout.maximumWidth: 350
 
             RowLayout {
-                Layout.fillWidth: true
-                spacing: 50
+                spacing: 10
                 height: 30
+                anchors.left: parent.left
+                width: parent.width
+
+                Item {
+                    width: 1
+                }
 
                 Button {
-                    width: 100
+                    width: 50
                     enabled: mainModel.canAddFiles
                     text: qsTr("Add directory")
                     onClicked: mainModel.addDirectoryButtonClicked()
                 }
 
                 Button {
-                    width: 100
+                    width: 50
                     text: qsTr("Add files")
                     enabled: mainModel.canAddFiles
-                    onClicked: mainModel.addFilesButtonClicked()
+                    onClicked: {
+                        mainModel.addFilesButtonClicked()
+                    }
                 }
             }
 
@@ -56,33 +64,66 @@ ApplicationWindow {
                 model: artworkRepository
                 Layout.fillHeight: true
                 Layout.fillWidth: true
-                anchors.leftMargin: 10
-                anchors.rightMargin: 10
+                Layout.minimumWidth: 250
+                Layout.maximumWidth: 350
 
                 spacing: 10
 
-                delegate: RowLayout {
-                    property int indexOfThixpisDelxpiegate: index
-                    height: 20
-                    spacing: 10
+                delegate: Rectangle {
+                    property int indexOfThisDelxpiegate: index
+                    color: "white"
                     width: parent.width
+                    height: 20
+                    Layout.minimumWidth: 250
+                    id: wrapperRect
 
-                    Text {
-                        id: directoryPath
-                        Layout.fillWidth: true
-                        Layout.minimumWidth: 150
-                        height: 20
-                        text: path + "(" + usedimagescount + ")"
-                        elide: Text.ElideMiddle
-                    }
+                    RowLayout {
+                        spacing: 10
+                        anchors.fill: parent
 
-                    Button {
-                        id: removeItemButton
-                        Layout.maximumWidth: 20
-                        Layout.minimumWidth: 20
-                        height: 20
-                        text: "X"
-                        onClicked: mainModel.removeArtworksDirectory(indexOfThisDelegate)
+                        Item {
+                            id: placeholder1
+                            width: 1
+                        }
+
+                        Text {
+                            id: directoryPath
+                            Layout.fillWidth: true
+                            anchors.verticalCenter: parent.verticalCenter
+                            height: 20
+                            text: path + "(" + usedimagescount + ")"
+                            elide: Text.ElideMiddle
+                        }
+
+                        Rectangle {
+                            width: 15
+                            height: 15
+                            color: "transparent"
+                            Image {
+                                anchors.fill: parent
+                                source: "qrc:/RemoveDirectoryIcon.svg"
+                                sourceSize.width: 100
+                                sourceSize.height: 100
+                                fillMode: Image.PreserveAspectFit
+                                opacity: removeDirectoryMouseArea.containsMouse ? 1 : 0.5
+                                scale: removeDirectoryMouseArea.pressed ? 0.8 : 1
+
+                                MouseArea {
+                                    id: removeDirectoryMouseArea
+                                    anchors.fill: parent
+                                    hoverEnabled: true
+
+                                    onClicked: {
+                                        mainModel.removeArtworksDirectory(wrapperRect.indexOfThisDelegate)
+                                    }
+                                }
+                            }
+                        }
+
+                        Item {
+                            id: placeholder2
+                            width: 1
+                        }
                     }
                 }
             }
