@@ -92,8 +92,12 @@ ApplicationWindow {
             }
         }
 
-        onCommaEntered: {
+        onTagAdded: {
             myModel.append({ itemText: text })
+        }
+
+        onRemoveLast: {
+            myModel.remove(myModel.count - 1, 1);
         }
 
         onCurrentItemChanged: {
