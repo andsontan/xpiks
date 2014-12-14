@@ -42,6 +42,41 @@ namespace Models {
         m_ArtworksRepository->removeDirectory(directory);
     }
 
+    void ArtItemsModel::removeKeywordAt(int metadataIndex, int keywordIndex)
+    {
+        if (metadataIndex >= 0 && metadataIndex < m_ArtworkList.length()) {
+            ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
+
+            if (metadata->removeKeywordAt(keywordIndex)) {
+                QModelIndex index = this->index(metadataIndex);
+                emit dataChanged(index, index);
+            }
+        }
+    }
+
+    void ArtItemsModel::removeLastKeyword(int metadataIndex)
+    {
+        if (metadataIndex >= 0 && metadataIndex < m_ArtworkList.length()) {
+            ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
+
+            if (metadata->removeLastKeyword()) {
+                QModelIndex index = this->index(metadataIndex);
+                emit dataChanged(index, index);
+            }
+        }
+    }
+
+    void ArtItemsModel::appendKeyword(int metadataIndex, const QString &keyword)
+    {
+        if (metadataIndex >= 0 && metadataIndex < m_ArtworkList.length()) {
+            ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
+            if (metadata->appendKeyword(keyword)) {
+                QModelIndex index = this->index(metadataIndex);
+                emit dataChanged(index, index);
+            }
+        }
+    }
+
     int ArtItemsModel::rowCount(const QModelIndex &parent) const {
         Q_UNUSED(parent);
         return m_ArtworkList.count();
@@ -58,7 +93,7 @@ namespace Models {
         case ImageFilenameRole:
             return QString(metadata->getImageFileName());
         case KeywordsRole:
-            return QVariant::fromValue(metadata->getKeywords());
+            return metadata->getKeywords();
         case IsModifiedRole:
             return metadata->isModified();
         case IsSelectedRole:

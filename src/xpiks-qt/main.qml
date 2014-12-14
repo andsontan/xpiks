@@ -132,29 +132,36 @@ ApplicationWindow {
         ColumnLayout {
             spacing: 5
 
-            RowLayout {
+            Rectangle {
+                color: "#dddddd"
+                z: 10000
                 Layout.fillWidth: true
-                spacing: 5
+                height: 30
 
-                Button {
-                    text: qsTr("Remove All")
-                }
+                RowLayout {
+                    spacing: 5
+                    anchors.fill: parent
 
-                Button {
-                    text: qsTr("Edit Selected")
-                }
+                    Button {
+                        text: qsTr("Remove All")
+                    }
 
-                // TODO: status line like reshaper (X items modified)
-                Item {
-                    Layout.fillWidth: true
-                }
+                    Button {
+                        text: qsTr("Edit Selected")
+                    }
 
-                Button {
-                    text: qsTr("Save All")
-                }
+                    // TODO: status line like reshaper (X items modified)
+                    Item {
+                        Layout.fillWidth: true
+                    }
 
-                Button {
-                    text: qsTr("Reset All")
+                    Button {
+                        text: qsTr("Save All")
+                    }
+
+                    Button {
+                        text: qsTr("Reset All")
+                    }
                 }
             }
 
@@ -166,11 +173,14 @@ ApplicationWindow {
                 spacing: 2
 
                 delegate: Rectangle {
+                    z:1000
                     id: wrapperRectangle
                     color: "#dddddd"
                     property int indexOfThisDelegate: index
 
                     Layout.fillWidth: true
+                    Layout.minimumHeight: 200
+                    Layout.maximumHeight: 200
                     height: 200
 
                     RowLayout {
@@ -221,31 +231,38 @@ ApplicationWindow {
                         }
 
                         ColumnLayout {
+                            id: columnLayout
+                            spacing: 2
+
                             Layout.fillWidth: true
                             Layout.fillHeight: true
-                            spacing: 2
 
                             Text {
                                 text: qsTr("Description:")
                                 anchors.left: parent.left
                             }
 
-                            Rectangle {
-                                width: 300
-                                height: 25
-                                color: "white"
-                                anchors.left: parent.left
+                            FocusScope {
+                                width: rect.width
+                                height: rect.height
 
-                                TextInput {
+                                Rectangle {
+                                    id: rect
+                                    width: 300
+                                    height: 25
+                                    color: "white"
                                     anchors.left: parent.left
-                                    anchors.right: parent.right
-                                    anchors.leftMargin: 5
-                                    anchors.rightMargin: 5
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    maximumLength: 250
-                                    text: description
-                                    focus: true
-                                    onTextChanged: model.editdescription = text
+
+                                    TextInput {
+                                        anchors.left: parent.left
+                                        anchors.right: parent.right
+                                        anchors.leftMargin: 5
+                                        anchors.rightMargin: 5
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        maximumLength: 250
+                                        text: description
+                                        onTextChanged: model.editdescription = text
+                                    }
                                 }
                             }
 
@@ -256,79 +273,97 @@ ApplicationWindow {
                             }
 
                             Rectangle {
+                                id: keywordsWrapper
                                 color: "#dddddd"
-                                anchors.bottom: parent.bottom
-                                anchors.top: keywordsLabel.bottom
-                                anchors.left: parent.left
-                                anchors.right: parent.right
+                                Layout.fillHeight: true
+                                Layout.fillWidth: true
 
-                                EditableTags {
-                                    id: flv
+                                function removeKeyword(index) {
+                                    mainModel.removeKeywordAt(wrapperRectangle.indexOfThisDelegate, index)
+                                }
+
+                                function removeLastKeyword() {
+                                    mainModel.removeLastKeyword(wrapperRectangle.indexOfThisDelegate)
+                                }
+
+                                function appendKeyword(keyword) {
+                                    mainModel.appendKeyword(wrapperRectangle.indexOfThisDelegate, keyword)
+                                }
+
+                                ScrollView {
+                                    id: scroller
                                     anchors.fill: parent
-                                    model: keywords
+                                    highlightOnFocus: true
 
-                                    delegate: Rectangle {
-                                        id: itemWrapper
-                                        property int indexOfThisDelegate: index
-                                        border.width: 1
-                                        border.color: "black"
-                                        color: "#cccccc"
 
-                                        width: childrenRect.width
-                                        height: childrenRect.height
+                                    EditableTags {
+                                        id: flv
+                                        anchors.margins: 5
+                                        model: keywords
 
-                                        RowLayout {
-                                            Rectangle {
-                                                color: "transparent"
-                                                width: childrenRect.width + 15
-                                                height: 30
+                                        delegate: Rectangle {
+                                            id: itemWrapper
+                                            property int indexOfThisDelegate: index
+                                            border.width: 1
+                                            border.color: "black"
+                                            color: "#cccccc"
 
-                                                Text {
-                                                    anchors.left: parent.left
-                                                    anchors.leftMargin: 10
-                                                    anchors.top: parent.top
-                                                    anchors.bottom: parent.bottom
-                                                    verticalAlignment: Text.AlignVCenter
-                                                    text: modelData
+                                            width: childrenRect.width
+                                            height: childrenRect.height
+
+                                            RowLayout {
+                                                Rectangle {
+                                                    color: "transparent"
+                                                    width: childrenRect.width + 15
+                                                    height: 30
+
+                                                    Text {
+                                                        anchors.left: parent.left
+                                                        anchors.leftMargin: 10
+                                                        anchors.top: parent.top
+                                                        anchors.bottom: parent.bottom
+                                                        verticalAlignment: Text.AlignVCenter
+                                                        text: modelData
+                                                    }
                                                 }
-                                            }
 
-                                            Rectangle {
-                                                width: 15
-                                                height: 15
-                                                color: "transparent"
-                                                Image {
-                                                    anchors.fill: parent
-                                                    source: "qrc:/CloseIcon.svg"
-                                                    sourceSize.width: 100
-                                                    sourceSize.height: 100
-                                                    fillMode: Image.PreserveAspectFit
-                                                    opacity: mouseArea.containsMouse ? 1 : 0.5
-                                                    scale: mouseArea.pressed ? 0.8 : 1
-
-                                                    MouseArea {
-                                                        id: mouseArea
+                                                Rectangle {
+                                                    width: 15
+                                                    height: 15
+                                                    color: "transparent"
+                                                    Image {
                                                         anchors.fill: parent
-                                                        hoverEnabled: true
-                                                        onClicked: {
-                                                            //myModel.remove(itemWrapper.indexOfThisDelegate, 1)
+                                                        source: "qrc:/CloseIcon.svg"
+                                                        sourceSize.width: 100
+                                                        sourceSize.height: 100
+                                                        fillMode: Image.PreserveAspectFit
+                                                        opacity: mouseArea.containsMouse ? 1 : 0.5
+                                                        scale: mouseArea.pressed ? 0.8 : 1
+
+                                                        MouseArea {
+                                                            id: mouseArea
+                                                            anchors.fill: parent
+                                                            hoverEnabled: true
+                                                            onClicked: {
+                                                                keywordsWrapper.removeKeyword(itemWrapper.indexOfThisDelegate)
+                                                            }
                                                         }
                                                     }
                                                 }
-                                            }
 
-                                            Item {
-                                                width: 5
+                                                Item {
+                                                    width: 5
+                                                }
                                             }
                                         }
-                                    }
 
-                                    onTagAdded: {
-                                        //myModel.append({ itemText: text })
-                                    }
+                                        onTagAdded: {
+                                            keywordsWrapper.appendKeyword(text)
+                                        }
 
-                                    onRemoveLast: {
-                                        //myModel.remove(myModel.count - 1, 1);
+                                        onRemoveLast: {
+                                            keywordsWrapper.removeLastKeyword()
+                                        }
                                     }
                                 }
                             }

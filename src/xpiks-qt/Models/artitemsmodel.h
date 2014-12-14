@@ -31,6 +31,9 @@ namespace Models {
 
     public:
         Q_INVOKABLE void removeArtworksDirectory(int index);
+        Q_INVOKABLE void removeKeywordAt(int metadataIndex, int keywordIndex);
+        Q_INVOKABLE void removeLastKeyword(int metadataIndex);
+        Q_INVOKABLE void appendKeyword(int metadataIndex, const QString &keyword);
 
     public:
         int rowCount(const QModelIndex & parent = QModelIndex()) const;

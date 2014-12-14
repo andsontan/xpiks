@@ -31,77 +31,83 @@ ApplicationWindow {
         ListElement { itemText: "tag1" }
     }
 
-    EditableTags {
-        id: flv
-        model: myModel
-        anchors.fill: parent
+    Rectangle {
+        width: 300
+        height: 200
 
-        delegate: Rectangle {
-            id: itemWrapper
-            property int indexOfThisDelegate: index
-            border.width: 1
-            border.color: "black"
-            color: "#cccccc"
+        EditableTags {
+            id: flv
+            model: myModel
+            anchors.fill: parent
 
-            width: childrenRect.width
-            height: childrenRect.height
+            delegate: Rectangle {
+                id: itemWrapper
+                property int indexOfThisDelegate: index
+                border.width: 1
+                border.color: "black"
+                color: "#cccccc"
 
-            RowLayout {
-                Rectangle {
-                    color: "transparent"
-                    width: childrenRect.width + 15
-                    height: 30
+                width: childrenRect.width
+                height: childrenRect.height
 
-                    Text {
-                        anchors.left: parent.left
-                        anchors.leftMargin: 10
-                        anchors.top: parent.top
-                        anchors.bottom: parent.bottom
-                        verticalAlignment: Text.AlignVCenter
-                        text: itemText
+                RowLayout {
+                    Rectangle {
+                        color: "transparent"
+                        width: childrenRect.width + 15
+                        height: 30
+
+                        Text {
+                            anchors.left: parent.left
+                            anchors.leftMargin: 10
+                            anchors.top: parent.top
+                            anchors.bottom: parent.bottom
+                            verticalAlignment: Text.AlignVCenter
+                            text: itemText
+                        }
                     }
-                }
 
-                Rectangle {
-                    width: 15
-                    height: 15
-                    color: "transparent"
-                    Image {
-                        anchors.fill: parent
-                        source: "qrc:/CloseIcon.svg"
-                        sourceSize.width: 100
-                        sourceSize.height: 100
-                        fillMode: Image.PreserveAspectFit
-                        opacity: mouseArea.containsMouse ? 1 : 0.5
-                        scale: mouseArea.pressed ? 0.8 : 1
-
-                        MouseArea {
-                            id: mouseArea
+                    Rectangle {
+                        width: 15
+                        height: 15
+                        color: "transparent"
+                        Image {
                             anchors.fill: parent
-                            hoverEnabled: true
-                            onClicked: {
-                                myModel.remove(itemWrapper.indexOfThisDelegate, 1)
+                            source: "qrc:/CloseIcon.svg"
+                            sourceSize.width: 100
+                            sourceSize.height: 100
+                            fillMode: Image.PreserveAspectFit
+                            opacity: mouseArea.containsMouse ? 1 : 0.5
+                            scale: mouseArea.pressed ? 0.8 : 1
+
+                            MouseArea {
+                                id: mouseArea
+                                anchors.fill: parent
+                                hoverEnabled: true
+                                onClicked: {
+                                    myModel.remove(itemWrapper.indexOfThisDelegate, 1)
+                                }
                             }
                         }
                     }
-                }
 
-                Item {
-                    width: 5
+                    Item {
+                        width: 5
+                    }
                 }
             }
-        }
 
-        onTagAdded: {
-            myModel.append({ itemText: text })
-        }
+            onTagAdded: {
+                myModel.append({ itemText: text })
+            }
 
-        onRemoveLast: {
-            myModel.remove(myModel.count - 1, 1);
-        }
+            onRemoveLast: {
+                myModel.remove(myModel.count - 1, 1);
+            }
 
-        onCurrentItemChanged: {
-            console.log(currentItem.foo)
+            onCurrentItemChanged: {
+                console.log(currentItem.foo)
+            }
         }
     }
+
 }

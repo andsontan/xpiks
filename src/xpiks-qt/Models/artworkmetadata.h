@@ -1,6 +1,7 @@
 #ifndef IMAGEMETADATA_H
 #define IMAGEMETADATA_H
 
+#include <QStringListModel>
 #include <QStringList>
 #include <QString>
 #include <QSet>
@@ -28,6 +29,11 @@ namespace Models {
         }
         void resetModified() { m_IsModified = false; }
         void setIsSelected(bool isSelected) { m_IsSelected = isSelected; }
+
+    public:
+        bool removeKeywordAt(int index);
+        bool removeLastKeyword() { return removeKeywordAt(m_KeywordsList.length() - 1); }
+        bool appendKeyword(const QString &keyword);
 
     private:
         void parseKeywords(const QString& rawKeywords);

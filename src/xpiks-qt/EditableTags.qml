@@ -34,6 +34,12 @@ Flickable {
         return (text.match(/[a-zA-Z]/g) || []).length
     }
 
+    function scrollToBottom() {
+        if (flowListView.contentHeight >= flowListView.height) {
+            flowListView.contentY = flow.height - flowListView.height
+        }
+    }
+
     Flow {
         id: flow
         width: parent.width
@@ -42,6 +48,7 @@ Flickable {
         Repeater {
             id: repeater
             onCountChanged: {
+                scrollToBottom()
                 if (flowListView.currentIndex === -1 && count > 0) {
                     flowListView.currentIndex = 0
                 }
@@ -52,13 +59,15 @@ Flickable {
         }
 
         Item {
+            id: item
             width: 150
             height: 30
+
             TextInput {
+                id: nextTagTextInput
                 maximumLength: 30
                 anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
-                id: nextTagTextInput
                 color: "black"
                 focus: true
 
@@ -101,6 +110,8 @@ Flickable {
                             event.accepted = true;
                         }
                     }
+
+                    flowListView.scrollToBottom()
                 }
             }
         }
@@ -108,5 +119,15 @@ Flickable {
         ClipboardHelper {
             id: clipboard
         }
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        onClicked: {
+            nextTagTextInput.forceActiveFocus()
+            mouse.accepted = false
+        }
+
+        propagateComposedEvents: true
     }
 }
