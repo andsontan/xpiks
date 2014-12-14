@@ -62,15 +62,26 @@ ApplicationWindow {
                     }
                 }
 
-                Image {
-                    source: "qrc:/CloseIcon.svg"
-                    sourceSize.width: 15
-                    sourceSize.height: 15
-
-                    MouseArea {
+                Rectangle {
+                    width: 15
+                    height: 15
+                    color: "transparent"
+                    Image {
                         anchors.fill: parent
-                        onClicked: {
-                            myModel.remove(itemWrapper.indexOfThisDelegate, 1)
+                        source: "qrc:/CloseIcon.svg"
+                        sourceSize.width: 100
+                        sourceSize.height: 100
+                        fillMode: Image.PreserveAspectFit
+                        opacity: mouseArea.containsMouse ? 1 : 0.5
+                        scale: mouseArea.pressed ? 0.8 : 1
+
+                        MouseArea {
+                            id: mouseArea
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            onClicked: {
+                                myModel.remove(itemWrapper.indexOfThisDelegate, 1)
+                            }
                         }
                     }
                 }
