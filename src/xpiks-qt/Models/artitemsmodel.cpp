@@ -57,8 +57,8 @@ namespace Models {
             return QString(metadata->GetImageDescription());
         case ImageFilenameRole:
             return QString(metadata->GetImageFileName());
-            //case KeywordsRole:
-            //    return QVariant::fromValue(metadata->GetKeywords());
+            case KeywordsRole:
+                return QVariant::fromValue(metadata->GetKeywords());
         default:
             return QVariant();
         }

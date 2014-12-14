@@ -4,15 +4,7 @@ namespace Models {
     KeywordsModel::KeywordsModel(QObject *parent) {
     }
 
-    void KeywordsModel::parseKeywords(const QString &rawKeywords) {
-        QStringList keywordsList = rawKeywords.split(",", QString::SkipEmptyParts);
 
-        for (int i = 0; i < keywordsList.size(); ++i) {
-            const QString &keyword = keywordsList[i].trimmed().toLower();
-            m_KeywordsList.append(keyword);
-            m_KeywordsSet.insert(keyword.trimmed().toLower());
-        }
-    }
 
     int KeywordsModel::rowCount(const QModelIndex &parent) const {
         Q_UNUSED(parent);

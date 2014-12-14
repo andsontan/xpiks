@@ -129,54 +129,204 @@ ApplicationWindow {
             }
         }
 
-        ListView {
-            id: imagesListView
-            Layout.fillWidth: true
-            model: mainModel
-            spacing: 10
+        ColumnLayout {
+            spacing: 5
 
-            delegate: RowLayout {
-                property int indexOfThisDelegate: index
-                height: 200
-                width: parent.widht
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: 5
 
-                ColumnLayout {
-                    width: 150
-                    height: parent.height
-                    Layout.maximumWidth: 250
-
-                    Image {
-                        source: "image://global/" + filename
-                        width: 150
-                        height: 200
-                        sourceSize.width: 200
-                        sourceSize.height: 200
-                        fillMode: Image.PreserveAspectFit
-                        asynchronous: true
-                    }
-
-                    Text {
-                        text: filename.split(/[\\/]/).pop()
-                    }
+                Button {
+                    text: qsTr("Remove All")
                 }
 
-                GridLayout {
+                Button {
+                    text: qsTr("Edit Selected")
+                }
+
+                // TODO: status line like reshaper (X items modified)
+                Item {
                     Layout.fillWidth: true
-                    columns: 2
-                    rows: 2
-                    rowSpacing: 5
-                    columnSpacing: 5
+                }
 
-                    Text { text: qsTr("Description:") }
+                Button {
+                    text: qsTr("Save All")
+                }
 
-                    TextInput { text: description }
+                Button {
+                    text: qsTr("Reset All")
+                }
+            }
 
-                    Text { text: qsTr("Keywords:") }
+            ListView {
+                id: imagesListView
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                model: mainModel
+                spacing: 2
 
-                    TextEdit {
-                        //text: keywords
-                        Layout.fillHeight: true
-                        wrapMode: TextEdit.Wrap
+                delegate: Rectangle {
+                    id: wrapperRectangle
+                    color: "#dddddd"
+                    property int indexOfThisDelegate: index
+
+                    Layout.fillWidth: true
+                    height: 200
+
+                    RowLayout {
+                        anchors.fill: parent
+
+                        Rectangle {
+                            id: isModifiedRectangle
+                            color: "green"
+                            width: 3
+                            Layout.fillHeight: true
+                        }
+
+                        CheckBox {
+                        }
+
+                        ColumnLayout {
+                            Layout.maximumWidth: 150
+                            Layout.minimumWidth: 150
+                            Layout.fillHeight: true
+                            spacing: 5
+
+                            Item {
+                                Layout.fillHeight: true
+                            }
+
+                            Rectangle {
+                                width: 100
+                                height: 150
+                                color: "transparent"
+                                Image {
+                                    anchors.fill: parent
+                                    source: "image://global/" + filename
+                                    sourceSize.width: 100
+                                    sourceSize.height: 100
+                                    fillMode: Image.PreserveAspectFit
+                                    asynchronous: true
+                                }
+                            }
+
+                            Text {
+                                text: filename.split(/[\\/]/).pop()
+                            }
+
+                            Item {
+                                Layout.fillHeight: true
+                            }
+                        }
+
+                        ColumnLayout {
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
+                            spacing: 2
+
+                            Text {
+                                text: qsTr("Description:")
+                                anchors.left: parent.left
+                            }
+
+                            Rectangle {
+                                width: 300
+                                height: 25
+                                color: "white"
+                                anchors.left: parent.left
+
+                                TextInput {
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: 5
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    maximumLength: 250
+                                    text: description
+                                    focus: true
+                                }
+                            }
+
+                            Text {
+                                id: keywordsLabel
+                                anchors.left: parent.left
+                                text: qsTr("Keywords:")
+                            }
+
+                            Rectangle {
+                                color: "#dddddd"
+                                Layout.fillHeight: true
+                                Layout.fillWidth: true
+
+                                EditableTags {
+                                    id: flv
+                                    anchors.fill: parent
+                                    model: keywords
+
+                                    delegate: Rectangle {
+                                        id: itemWrapper
+                                        property int indexOfThisDelegate: index
+                                        border.width: 1
+                                        border.color: "black"
+                                        color: "#cccccc"
+
+                                        width: childrenRect.width
+                                        height: childrenRect.height
+
+                                        RowLayout {
+                                            Rectangle {
+                                                color: "transparent"
+                                                width: childrenRect.width + 15
+                                                height: 30
+
+                                                Text {
+                                                    anchors.left: parent.left
+                                                    anchors.leftMargin: 10
+                                                    anchors.top: parent.top
+                                                    anchors.bottom: parent.bottom
+                                                    verticalAlignment: Text.AlignVCenter
+                                                    text: modelData
+                                                }
+                                            }
+
+                                            Rectangle {
+                                                width: 15
+                                                height: 15
+                                                color: "transparent"
+                                                Image {
+                                                    anchors.fill: parent
+                                                    source: "qrc:/CloseIcon.svg"
+                                                    sourceSize.width: 100
+                                                    sourceSize.height: 100
+                                                    fillMode: Image.PreserveAspectFit
+                                                    opacity: mouseArea.containsMouse ? 1 : 0.5
+                                                    scale: mouseArea.pressed ? 0.8 : 1
+
+                                                    MouseArea {
+                                                        id: mouseArea
+                                                        anchors.fill: parent
+                                                        hoverEnabled: true
+                                                        onClicked: {
+                                                            //myModel.remove(itemWrapper.indexOfThisDelegate, 1)
+                                                        }
+                                                    }
+                                                }
+                                            }
+
+                                            Item {
+                                                width: 5
+                                            }
+                                        }
+                                    }
+
+                                    onTagAdded: {
+                                        //myModel.append({ itemText: text })
+                                    }
+
+                                    onRemoveLast: {
+                                        //myModel.remove(myModel.count - 1, 1);
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }

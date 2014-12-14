@@ -2,9 +2,11 @@
 #include <QQmlApplicationEngine>
 #include <QtDebug>
 #include <QQmlContext>
+#include <QtQml>
 #include <QFile>
 #include <QTextStream>
 #include "Helpers/globalimageprovider.h"
+#include "Helpers/clipboardhelper.h"
 #include "Models/artitemsmodel.h"
 
 #ifdef QT_NO_DEBUG
@@ -49,6 +51,8 @@ int main(int argc, char *argv[]) {
     Models::ArtItemsModel mainModel;
 
     mainModel.setArtworksRepository(&artworkRepository);
+
+    qmlRegisterType<Helpers::ClipboardHelper>("xpiks", 1, 0, "ClipboardHelper");
 
     QQmlApplicationEngine engine;
     Helpers::GlobalImageProvider *globalProvider = new Helpers::GlobalImageProvider(QQmlImageProviderBase::Image);

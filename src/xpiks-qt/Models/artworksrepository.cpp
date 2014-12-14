@@ -119,21 +119,12 @@ namespace Models {
     {
         if (m_DirectoriesHash.contains(directory)) {
             m_DirectoriesHash.remove(directory);
-            //int index = m_DirectoriesList.indexOf(QRegExp(directory));
-
-            //if (index != -1) {
-            //    beginRemoveRows(QModelIndex(), index, index);
-            //    m_DirectoriesList.removeAt(index);
-            //    endRemoveRows();
-            //}
         }
     }
 
     void ArtworksRepository::removeDirectory(int index)
     {
         // TODO: assert index is in range
-        //const QString &directory = m_DirectoriesList[index];
-        //m_DirectoriesHash.remove(directory);
 
         beginRemoveRows(QModelIndex(), index, index);
         m_DirectoriesList.removeAt(index);

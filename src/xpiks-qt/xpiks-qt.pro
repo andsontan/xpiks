@@ -23,4 +23,5 @@ HEADERS += \
     Models/artworkmetadata.h \
     Helpers/globalimageprovider.h \
     Models/artworksrepository.h \
-    Helpers/indiceshelper.h
+    Helpers/indiceshelper.h \
+    Helpers/clipboardhelper.h
