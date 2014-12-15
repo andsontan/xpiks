@@ -187,6 +187,7 @@ ApplicationWindow {
 
                     RowLayout {
                         anchors.fill: parent
+                        spacing: 5
 
                         Rectangle {
                             id: isModifiedRectangle
@@ -200,8 +201,7 @@ ApplicationWindow {
                         }
 
                         ColumnLayout {
-                            Layout.minimumWidth: 150
-                            Layout.maximumWidth: 150
+                            width: 150
                             spacing: 1
 
                             Item {
@@ -211,8 +211,9 @@ ApplicationWindow {
                             Rectangle {
                                 width: 150
                                 height: 150
+                                anchors.horizontalCenter: parent.horizontalCenter
                                 color: "transparent"
-                                Image {
+                                Image {                                    
                                     anchors.fill: parent
                                     source: "image://global/" + filename
                                     sourceSize.width: 150
@@ -224,6 +225,7 @@ ApplicationWindow {
 
                             Text {
                                 Layout.fillWidth: true
+                                elide: Text.ElideMiddle
                                 horizontalAlignment: Text.AlignHCenter
                                 text: filename.split(/[\\/]/).pop()
                             }
