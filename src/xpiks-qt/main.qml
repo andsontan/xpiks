@@ -151,6 +151,10 @@ ApplicationWindow {
                     spacing: 5
                     anchors.fill: parent
 
+                    Item {
+                        width: 1
+                    }
+
                     Button {
                         text: qsTr("Remove All")
                     }
@@ -170,6 +174,10 @@ ApplicationWindow {
 
                     Button {
                         text: qsTr("Reset All")
+                    }
+
+                    Item {
+                        width: 1
                     }
                 }
             }
@@ -207,7 +215,7 @@ ApplicationWindow {
 
                         ColumnLayout {
                             width: 150
-                            spacing: 1
+                            spacing: 5
 
                             Item {
                                 Layout.fillHeight: true
@@ -215,7 +223,8 @@ ApplicationWindow {
 
                             Rectangle {
                                 width: 150
-                                height: 150
+                                Layout.minimumHeight: 100
+                                Layout.maximumHeight: 150
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 color: "transparent"
                                 Image {                                    
@@ -233,6 +242,7 @@ ApplicationWindow {
                                 elide: Text.ElideMiddle
                                 horizontalAlignment: Text.AlignHCenter
                                 text: filename.split(/[\\/]/).pop()
+                                renderType: Text.NativeRendering
                             }
 
                             Item {
@@ -250,6 +260,7 @@ ApplicationWindow {
                             Text {
                                 text: qsTr("Description:")
                                 anchors.left: parent.left
+                                renderType: Text.NativeRendering
                             }
 
                             Rectangle {
@@ -268,6 +279,7 @@ ApplicationWindow {
                                     maximumLength: 250
                                     text: description
                                     onTextChanged: model.editdescription = text
+                                    renderType: TextInput.NativeRendering
                                 }
                             }
 
@@ -330,6 +342,7 @@ ApplicationWindow {
                                                         anchors.bottom: parent.bottom
                                                         verticalAlignment: Text.AlignVCenter
                                                         text: modelData
+                                                        renderType: Text.NativeRendering
                                                     }
                                                 }
 
