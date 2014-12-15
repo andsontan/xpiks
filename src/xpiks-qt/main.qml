@@ -40,7 +40,8 @@ ApplicationWindow {
                 color: "#dddddd"
 
                 RowLayout {
-                    spacing: 10
+                    spacing: 5
+                    anchors.fill: parent
 
                     Item {
                         width: 1
@@ -58,6 +59,10 @@ ApplicationWindow {
                         onClicked: {
                             mainModel.addFilesButtonClicked()
                         }
+                    }
+
+                    Item {
+                        Layout.fillWidth: true
                     }
                 }
 
