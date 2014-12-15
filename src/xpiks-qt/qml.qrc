@@ -4,5 +4,6 @@
         <file>RemoveDirectoryIcon.svg</file>
         <file>EditableTags.qml</file>
         <file>CloseIcon.svg</file>
+        <file>CombinedArtworksDialog.qml</file>
     </qresource>
 </RCC>

@@ -16,6 +16,7 @@ namespace Models {
         const QString &getImageDescription() const { return m_ImageDescription; }
         const QString &getImageFileName() const { return m_ImageFileName; }
         const QStringList &getKeywords() const { return m_KeywordsList; }
+        const QSet<QString> &getKeywordsSet() const { return m_KeywordsSet; }
         bool isInDirectory(const QString &directory) const { return m_ImageFileName.startsWith(directory); }
         bool isModified() const { return m_IsModified; }
         bool getIsSelected() const { return m_IsSelected; }

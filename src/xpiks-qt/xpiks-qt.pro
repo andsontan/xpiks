@@ -6,7 +6,8 @@ SOURCES += main.cpp \
     Models/artitemsmodel.cpp \
     Models/artworkmetadata.cpp \
     Helpers/globalimageprovider.cpp \
-    Models/artworksrepository.cpp
+    Models/artworksrepository.cpp \
+    Models/combinedartworksmodel.cpp
 
 RESOURCES += qml.qrc
 
@@ -22,4 +23,5 @@ HEADERS += \
     Helpers/globalimageprovider.h \
     Models/artworksrepository.h \
     Helpers/indiceshelper.h \
-    Helpers/clipboardhelper.h
+    Helpers/clipboardhelper.h \
+    Models/combinedartworksmodel.h

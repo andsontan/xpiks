@@ -7,6 +7,7 @@
 #include <QPair>
 #include "artworkmetadata.h"
 #include "artworksrepository.h"
+#include "combinedartworksmodel.h"
 
 namespace Models {
     class ArtItemsModel : public QAbstractListModel {
@@ -53,6 +54,10 @@ namespace Models {
     public:
         bool getCanAddFiles () const { return m_CanAddFiles; }
         void setCanAddFiles(bool value) { m_CanAddFiles = value; emit canAddFilesChanged(); }
+
+    private:
+        void combineSelectedImages(CombinedArtworksModel *combinedModel) const;
+
     signals:
         void canAddFilesChanged();
 

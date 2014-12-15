@@ -3,7 +3,7 @@
 #include <QDirIterator>
 #include <QList>
 #include "artitemsmodel.h"
-#include "Helpers/indiceshelper.h"
+#include "../Helpers/indiceshelper.h"
 
 namespace Models {
 
@@ -233,6 +233,40 @@ namespace Models {
 
             removedCount += (endRow - startRow + 1);
         }
+    }
+
+    void ArtItemsModel::combineSelectedImages(CombinedArtworksModel *combinedModel) const
+    {
+        bool anyItemsProcessed = false;
+        bool descriptionsDiffer = false;
+        QString description;
+        QStringList filenamesList;
+        QSet<QString> commonKeywords;
+
+        int artworksCount = m_ArtworkList.length();
+        for (int i = 0; i < artworksCount; ++i) {
+            ArtworkMetadata *metadata = m_ArtworkList[i];
+
+            if (!metadata->getIsSelected()) {
+                continue;
+            }
+
+            filenamesList.append(metadata->getImageFileName());
+
+            if (!anyItemsProcessed) {
+                description = metadata->getImageDescription();
+                commonKeywords.unite(metadata->getKeywordsSet());
+                anyItemsProcessed = true;
+                continue;
+            }
+
+            descriptionsDiffer = description == metadata->getImageDescription();
+            commonKeywords.intersect(metadata->getKeywordsSet());
+        }
+
+        combinedModel->initDescription(description);
+        combinedModel->initImages(filenamesList);
+        combinedModel->initKeywords(commonKeywords);
     }
 
     QHash<int, QByteArray> ArtItemsModel::roleNames() const {
