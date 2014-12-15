@@ -6,8 +6,8 @@ import xpiks 1.0
 Flickable {
     id: flowListView
     anchors.fill: parent
-    contentWidth: parent.width;
-    contentHeight: flow.childrenRect.height
+    contentWidth: parent.width
+    contentHeight: flow.childrenRect.height + 10
     property alias count: repeater.count
     property int currentIndex: -1
     property variant currentItem;
@@ -36,7 +36,13 @@ Flickable {
 
     function scrollToBottom() {
         if (flowListView.contentHeight >= flowListView.height) {
-            flowListView.contentY = flow.height - flowListView.height
+            flowListView.contentY = flowListView.contentHeight - flowListView.height
+        }
+    }
+
+    function adjustEdit() {
+        if (Math.abs(editWrapper.y - flowListView.contentY) <= editWrapper.height + flowListView.height)  {
+            flowListView.scrollToBottom()
         }
     }
 
@@ -45,22 +51,33 @@ Flickable {
         width: parent.width
         spacing: 5
 
+        property real lastHeight
+
+        onHeightChanged: {
+            if (!lastHeight) {
+                lastHeight = height
+            }
+
+            if (height > lastHeight) {
+                flowListView.scrollToBottom()
+            }
+
+            adjustEdit()
+
+            lastHeight = height
+        }
+
         Repeater {
             id: repeater
-            onCountChanged: {
-                scrollToBottom()
-                if (flowListView.currentIndex === -1 && count > 0) {
-                    flowListView.currentIndex = 0
-                }
-                if (flowListView.currentIndex >= count) {
-                    flowListView.currentIndex = count - 1
-                }
+
+            onItemRemoved: {
+                adjustEdit()
             }
         }
 
         Item {
-            id: item
-            width: 150
+            id: editWrapper
+            width: 100
             height: 30
 
             TextInput {
@@ -111,7 +128,7 @@ Flickable {
                         }
                     }
 
-                    flowListView.scrollToBottom()
+                    scrollToBottom()
                 }
             }
         }

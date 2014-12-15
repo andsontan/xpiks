@@ -32,31 +32,35 @@ ApplicationWindow {
             Layout.preferredWidth: 250
             Layout.maximumWidth: 350
 
-            RowLayout {
-                spacing: 10
+            spacing: 5
+
+            Rectangle {
+                Layout.fillWidth: true
                 height: 30
-                anchors.left: parent.left
-                width: parent.width
+                color: "#dddddd"
 
-                Item {
-                    width: 1
-                }
+                RowLayout {
+                    spacing: 10
 
-                Button {
-                    width: 50
-                    enabled: mainModel.canAddFiles
-                    text: qsTr("Add directory")
-                    onClicked: mainModel.addDirectoryButtonClicked()
-                }
+                    Item {
+                        width: 1
+                    }
 
-                Button {
-                    width: 50
-                    text: qsTr("Add files")
-                    enabled: mainModel.canAddFiles
-                    onClicked: {
-                        mainModel.addFilesButtonClicked()
+                    Button {
+                        enabled: mainModel.canAddFiles
+                        text: qsTr("Add directory")
+                        onClicked: mainModel.addDirectoryButtonClicked()
+                    }
+
+                    Button {
+                        text: qsTr("Add files")
+                        enabled: mainModel.canAddFiles
+                        onClicked: {
+                            mainModel.addFilesButtonClicked()
+                        }
                     }
                 }
+
             }
 
             ListView {
@@ -178,9 +182,7 @@ ApplicationWindow {
                     color: "#dddddd"
                     property int indexOfThisDelegate: index
 
-                    Layout.fillWidth: true
-                    Layout.minimumHeight: 200
-                    Layout.maximumHeight: 200
+                    width: parent.width
                     height: 200
 
                     RowLayout {
@@ -198,30 +200,31 @@ ApplicationWindow {
                         }
 
                         ColumnLayout {
-                            Layout.maximumWidth: 150
                             Layout.minimumWidth: 150
-                            Layout.fillHeight: true
-                            spacing: 5
+                            Layout.maximumWidth: 150
+                            spacing: 1
 
                             Item {
                                 Layout.fillHeight: true
                             }
 
                             Rectangle {
-                                width: 100
+                                width: 150
                                 height: 150
                                 color: "transparent"
                                 Image {
                                     anchors.fill: parent
                                     source: "image://global/" + filename
-                                    sourceSize.width: 100
-                                    sourceSize.height: 100
+                                    sourceSize.width: 150
+                                    sourceSize.height: 150
                                     fillMode: Image.PreserveAspectFit
                                     asynchronous: true
                                 }
                             }
 
                             Text {
+                                Layout.fillWidth: true
+                                horizontalAlignment: Text.AlignHCenter
                                 text: filename.split(/[\\/]/).pop()
                             }
 
@@ -242,27 +245,22 @@ ApplicationWindow {
                                 anchors.left: parent.left
                             }
 
-                            FocusScope {
-                                width: rect.width
-                                height: rect.height
+                            Rectangle {
+                                id: rect
+                                width: 300
+                                height: 25
+                                color: "white"
+                                anchors.left: parent.left
 
-                                Rectangle {
-                                    id: rect
-                                    width: 300
-                                    height: 25
-                                    color: "white"
+                                TextInput {
                                     anchors.left: parent.left
-
-                                    TextInput {
-                                        anchors.left: parent.left
-                                        anchors.right: parent.right
-                                        anchors.leftMargin: 5
-                                        anchors.rightMargin: 5
-                                        anchors.verticalCenter: parent.verticalCenter
-                                        maximumLength: 250
-                                        text: description
-                                        onTextChanged: model.editdescription = text
-                                    }
+                                    anchors.right: parent.right
+                                    anchors.leftMargin: 5
+                                    anchors.rightMargin: 5
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    maximumLength: 250
+                                    text: description
+                                    onTextChanged: model.editdescription = text
                                 }
                             }
 
@@ -274,7 +272,7 @@ ApplicationWindow {
 
                             Rectangle {
                                 id: keywordsWrapper
-                                color: "#dddddd"
+                                color: "#adadad"
                                 Layout.fillHeight: true
                                 Layout.fillWidth: true
 
@@ -294,7 +292,7 @@ ApplicationWindow {
                                     id: scroller
                                     anchors.fill: parent
                                     highlightOnFocus: true
-
+                                    verticalScrollBarPolicy: Qt.ScrollBarAlwaysOn
 
                                     EditableTags {
                                         id: flv
@@ -304,6 +302,7 @@ ApplicationWindow {
                                         delegate: Rectangle {
                                             id: itemWrapper
                                             property int indexOfThisDelegate: index
+                                            property string keyword: modelData
                                             border.width: 1
                                             border.color: "black"
                                             color: "#cccccc"
@@ -366,6 +365,10 @@ ApplicationWindow {
                                         }
                                     }
                                 }
+                            }
+
+                            Item {
+                                height: 1
                             }
                         }
                     }
