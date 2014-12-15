@@ -266,7 +266,7 @@ namespace Models {
 
         combinedModel->initDescription(description);
         combinedModel->initImages(filenamesList);
-        combinedModel->initKeywords(commonKeywords);
+        combinedModel->initKeywords(commonKeywords.toList());
     }
 
     QHash<int, QByteArray> ArtItemsModel::roleNames() const {

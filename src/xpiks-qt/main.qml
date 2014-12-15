@@ -71,6 +71,7 @@ ApplicationWindow {
             ListView {
                 id: sourcesListView
                 model: artworkRepository
+                boundsBehavior: Flickable.StopAtBounds
                 Layout.fillHeight: true
                 Layout.fillWidth: true
                 Layout.minimumWidth: 250
@@ -187,6 +188,7 @@ ApplicationWindow {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 model: mainModel
+                boundsBehavior: Flickable.StopAtBounds
                 spacing: 2
 
                 delegate: Rectangle {
