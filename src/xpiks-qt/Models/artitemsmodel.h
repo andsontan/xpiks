@@ -29,12 +29,16 @@ namespace Models {
 
     public:
         void setArtworksRepository(ArtworksRepository *repository) { m_ArtworksRepository = repository; }
+        void setCombinedArtworksModel(CombinedArtworksModel *combinedArtworksModel) { m_CombinedArtworks = combinedArtworksModel; }
 
     public:
         Q_INVOKABLE void removeArtworksDirectory(int index);
         Q_INVOKABLE void removeKeywordAt(int metadataIndex, int keywordIndex);
         Q_INVOKABLE void removeLastKeyword(int metadataIndex);
         Q_INVOKABLE void appendKeyword(int metadataIndex, const QString &keyword);
+        Q_INVOKABLE void combineSelectedArtworks() { doCombineSelectedImages(m_CombinedArtworks); }
+        Q_INVOKABLE void selectAllArtworks() { setAllItemsSelected(true); }
+        Q_INVOKABLE void unselectAllArtworks() { setAllItemsSelected(false); }
 
     public:
         int rowCount(const QModelIndex & parent = QModelIndex()) const;
@@ -50,13 +54,14 @@ namespace Models {
         void addDirectory(const QString &directory);
         void addFiles(const QStringList &filepath);
         void removeItems(const QList<QPair<int, int> > &ranges);
+        void setAllItemsSelected(bool selected);
 
     public:
         bool getCanAddFiles () const { return m_CanAddFiles; }
         void setCanAddFiles(bool value) { m_CanAddFiles = value; emit canAddFilesChanged(); }
 
     private:
-        void combineSelectedImages(CombinedArtworksModel *combinedModel) const;
+        void doCombineSelectedImages(CombinedArtworksModel *combinedModel) const;
 
     signals:
         void canAddFilesChanged();
@@ -66,6 +71,7 @@ namespace Models {
 
     private:
         QList<ArtworkMetadata*> m_ArtworkList;
+        CombinedArtworksModel *m_CombinedArtworks;
         ArtworksRepository *m_ArtworksRepository;
         bool m_CanAddFiles;
     };

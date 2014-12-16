@@ -235,7 +235,22 @@ namespace Models {
         }
     }
 
-    void ArtItemsModel::combineSelectedImages(CombinedArtworksModel *combinedModel) const
+    void ArtItemsModel::setAllItemsSelected(bool selected)
+    {
+        int length = m_ArtworkList.length();
+        for (int i = 0; i < length; ++i) {
+            ArtworkMetadata *metadata = m_ArtworkList[i];
+            metadata->setIsSelected(selected);
+        }
+
+        if (length > 0) {
+            QModelIndex startIndex = index(0);
+            QModelIndex endIndex = index(length - 1);
+            emit dataChanged(startIndex, endIndex);
+        }
+    }
+
+    void ArtItemsModel::doCombineSelectedImages(CombinedArtworksModel *combinedModel) const
     {
         bool anyItemsProcessed = false;
         bool descriptionsDiffer = false;

@@ -63,6 +63,7 @@ Item {
                     anchors.margins: 5
                     orientation: Qt.Horizontal
                     spacing: 3
+                    model: combinedArtworks
 
                     delegate: Rectangle {
                         id: imageWrapper
@@ -167,7 +168,7 @@ Item {
                     EditableTags {
                         id: flv
                         anchors.margins: 5
-                        //model: keywords
+                        //model: combinedArtworks
 
                         delegate: Rectangle {
                             id: itemWrapper

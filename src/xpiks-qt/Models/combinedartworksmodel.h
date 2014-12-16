@@ -7,7 +7,7 @@
 #include <QList>
 
 namespace Models {
-    class CombinedArtworksModel : QAbstractListModel
+    class CombinedArtworksModel : public QAbstractListModel
     {
         Q_OBJECT
     public:
@@ -18,6 +18,9 @@ namespace Models {
         void initKeywords(const QStringList &ek) { std::copy(ek.begin(), ek.end(), std::back_inserter(m_CommonKeywords)); }
         void initDescription(const QString &description) { m_ImageDescription = description; }
         void initImages(const QStringList &fp) { std::copy(fp.begin(), fp.end(), std::back_inserter(m_ImagesFilenames)); }
+
+    public:
+        void resetModelData();
 
     public:
         Q_INVOKABLE void setDescription(const QString &description);

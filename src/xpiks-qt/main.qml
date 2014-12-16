@@ -49,16 +49,16 @@ ApplicationWindow {
                     }
 
                     Button {
-                        enabled: mainModel.canAddFiles
+                        enabled: artItemsModel.canAddFiles
                         text: qsTr("Add directory")
-                        onClicked: mainModel.addDirectoryButtonClicked()
+                        onClicked: artItemsModel.addDirectoryButtonClicked()
                     }
 
                     Button {
                         text: qsTr("Add files")
-                        enabled: mainModel.canAddFiles
+                        enabled: artItemsModel.canAddFiles
                         onClicked: {
-                            mainModel.addFilesButtonClicked()
+                            artItemsModel.addFilesButtonClicked()
                         }
                     }
 
@@ -125,7 +125,7 @@ ApplicationWindow {
                                     hoverEnabled: true
 
                                     onClicked: {
-                                        mainModel.removeArtworksDirectory(wrapperRect.indexOfThisDelegate)
+                                        artItemsModel.removeArtworksDirectory(wrapperRect.indexOfThisDelegate)
                                     }
                                 }
                             }
@@ -154,7 +154,19 @@ ApplicationWindow {
                     anchors.fill: parent
 
                     Item {
-                        width: 1
+                        width: 3
+                    }
+
+                    CheckBox {
+                        id: selectAllCheckbox
+
+                        onCheckedChanged: {
+                            if (checked) {
+                                artItemsModel.selectAllArtworks();
+                            } else {
+                                artItemsModel.unselectAllArtworks();
+                            }
+                        }
                     }
 
                     Button {
@@ -164,6 +176,7 @@ ApplicationWindow {
                     Button {
                         text: qsTr("Edit Selected")
                         onClicked: {
+                            artItemsModel.combineSelectedArtworks();
                             Qt.createComponent("CombinedArtworksDialog.qml").createObject(applicationWindow, {});
                         }
                     }
@@ -191,7 +204,7 @@ ApplicationWindow {
                 id: imagesListView
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                model: mainModel
+                model: artItemsModel
                 boundsBehavior: Flickable.StopAtBounds
                 spacing: 2
 
@@ -302,15 +315,15 @@ ApplicationWindow {
                                 Layout.fillWidth: true
 
                                 function removeKeyword(index) {
-                                    mainModel.removeKeywordAt(wrapperRectangle.indexOfThisDelegate, index)
+                                    artItemsModel.removeKeywordAt(wrapperRectangle.indexOfThisDelegate, index)
                                 }
 
                                 function removeLastKeyword() {
-                                    mainModel.removeLastKeyword(wrapperRectangle.indexOfThisDelegate)
+                                    artItemsModel.removeLastKeyword(wrapperRectangle.indexOfThisDelegate)
                                 }
 
                                 function appendKeyword(keyword) {
-                                    mainModel.appendKeyword(wrapperRectangle.indexOfThisDelegate, keyword)
+                                    artItemsModel.appendKeyword(wrapperRectangle.indexOfThisDelegate, keyword)
                                 }
 
                                 MouseArea {

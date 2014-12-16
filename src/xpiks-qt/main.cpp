@@ -48,17 +48,20 @@ int main(int argc, char *argv[]) {
 #endif
 
     Models::ArtworksRepository artworkRepository;
-    Models::ArtItemsModel mainModel;
+    Models::ArtItemsModel artItemsModel;
+    Models::CombinedArtworksModel combinedArtworksModel;
 
-    mainModel.setArtworksRepository(&artworkRepository);
+    artItemsModel.setArtworksRepository(&artworkRepository);
+    artItemsModel.setCombinedArtworksModel(&combinedArtworksModel);
 
     qmlRegisterType<Helpers::ClipboardHelper>("xpiks", 1, 0, "ClipboardHelper");
 
     QQmlApplicationEngine engine;
     Helpers::GlobalImageProvider *globalProvider = new Helpers::GlobalImageProvider(QQmlImageProviderBase::Image);
 
-    engine.rootContext()->setContextProperty("mainModel", &mainModel);
+    engine.rootContext()->setContextProperty("artItemsModel", &artItemsModel);
     engine.rootContext()->setContextProperty("artworkRepository", &artworkRepository);
+    engine.rootContext()->setContextProperty("combinedArtworks", &combinedArtworksModel);
     engine.addImageProvider("global", globalProvider);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 

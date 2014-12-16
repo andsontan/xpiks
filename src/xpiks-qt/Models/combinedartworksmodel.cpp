@@ -3,7 +3,13 @@
 namespace Models {
     CombinedArtworksModel::CombinedArtworksModel(QObject *parent)
     {
+    }
 
+    void CombinedArtworksModel::resetModelData()
+    {
+        m_ImageDescription = "";
+        m_ImagesFilenames.clear();
+        m_ImagesFilenames.clear();
     }
 
     void CombinedArtworksModel::setDescription(const QString &description)
