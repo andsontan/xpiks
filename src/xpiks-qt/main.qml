@@ -3,6 +3,7 @@ import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
 
 ApplicationWindow {
+    id: applicationWindow
     visible: true
     width: 800
     height: 640
@@ -162,6 +163,9 @@ ApplicationWindow {
 
                     Button {
                         text: qsTr("Edit Selected")
+                        onClicked: {
+                            Qt.createComponent("CombinedArtworksDialog.qml").createObject(applicationWindow, {});
+                        }
                     }
 
                     // TODO: status line like reshaper (X items modified)
@@ -229,7 +233,7 @@ ApplicationWindow {
                                 Layout.maximumHeight: 150
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 color: "transparent"
-                                Image {                                    
+                                Image {
                                     anchors.fill: parent
                                     source: "image://global/" + filename
                                     sourceSize.width: 150
