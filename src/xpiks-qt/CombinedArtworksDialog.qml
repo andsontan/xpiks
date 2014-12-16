@@ -82,8 +82,8 @@ Item {
                             anchors.fill: parent
                             anchors.margins: 1
                             source: "image://global/" + path
-                            sourceSize.width: 50
-                            sourceSize.height: 50
+                            sourceSize.width: 150
+                            sourceSize.height: 150
                             fillMode: Image.PreserveAspectFit
                             asynchronous: true
                         }
