@@ -309,11 +309,19 @@ ApplicationWindow {
                                     mainModel.appendKeyword(wrapperRectangle.indexOfThisDelegate, keyword)
                                 }
 
+                                MouseArea {
+                                    anchors.fill: parent
+                                    propagateComposedEvents: true
+                                    onClicked: {
+                                        flv.activateEdit()
+                                        mouse.accepted = false
+                                    }
+                                }
+
                                 ScrollView {
                                     id: scroller
                                     anchors.fill: parent
                                     highlightOnFocus: true
-                                    verticalScrollBarPolicy: Qt.ScrollBarAlwaysOn
 
                                     EditableTags {
                                         id: flv
@@ -365,6 +373,7 @@ ApplicationWindow {
                                                             id: mouseArea
                                                             anchors.fill: parent
                                                             hoverEnabled: true
+                                                            preventStealing: true
                                                             onClicked: {
                                                                 keywordsWrapper.removeKeyword(itemWrapper.indexOfThisDelegate)
                                                             }

@@ -9,6 +9,7 @@ Flickable {
     contentWidth: parent.width
     contentHeight: flow.childrenRect.height + 10
     boundsBehavior: Flickable.StopAtBounds
+
     property alias count: repeater.count
     property int currentIndex: -1
     property variant currentItem;
@@ -18,6 +19,10 @@ Flickable {
 
     signal tagAdded(string text)
     signal removeLast()
+
+    function activateEdit() {
+        nextTagTextInput.forceActiveFocus()
+    }
 
     function getEditedText() {
         var tagText = nextTagTextInput.text;
@@ -84,6 +89,7 @@ Flickable {
             TextInput {
                 id: nextTagTextInput
                 maximumLength: 30
+                selectByMouse: true
                 anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
                 color: "black"
@@ -137,15 +143,5 @@ Flickable {
         ClipboardHelper {
             id: clipboard
         }
-    }
-
-    MouseArea {
-        anchors.fill: parent
-        onClicked: {
-            nextTagTextInput.forceActiveFocus()
-            mouse.accepted = false
-        }
-
-        propagateComposedEvents: true
     }
 }
