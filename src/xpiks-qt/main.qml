@@ -209,7 +209,6 @@ ApplicationWindow {
                 spacing: 2
 
                 delegate: Rectangle {
-                    z:1000
                     id: wrapperRectangle
                     color: "#dddddd"
                     property int indexOfThisDelegate: index
@@ -296,6 +295,7 @@ ApplicationWindow {
                                     anchors.rightMargin: 5
                                     anchors.verticalCenter: parent.verticalCenter
                                     maximumLength: 250
+                                    clip: true
                                     text: description
                                     onTextChanged: model.editdescription = text
                                     renderType: TextInput.NativeRendering

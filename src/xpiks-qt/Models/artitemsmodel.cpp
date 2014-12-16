@@ -275,8 +275,12 @@ namespace Models {
                 continue;
             }
 
-            descriptionsDiffer = description == metadata->getImageDescription();
+            descriptionsDiffer = description != metadata->getImageDescription();
             commonKeywords.intersect(metadata->getKeywordsSet());
+        }
+
+        if (descriptionsDiffer) {
+            description = "";
         }
 
         combinedModel->initDescription(description);

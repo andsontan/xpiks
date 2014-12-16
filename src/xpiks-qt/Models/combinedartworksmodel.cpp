@@ -12,21 +12,18 @@ namespace Models {
         m_ImagesFilenames.clear();
     }
 
-    void CombinedArtworksModel::setDescription(const QString &description)
-    {
-        m_ImageDescription = description;
-    }
-
     void CombinedArtworksModel::removeKeywordAt(int keywordIndex)
     {
         if (keywordIndex >= 0 && keywordIndex < m_CommonKeywords.length()) {
             m_CommonKeywords.removeAt(keywordIndex);
+            emit keywordsChanged();
         }
     }
 
     void CombinedArtworksModel::appendKeyword(const QString &keyword)
     {
         m_CommonKeywords.append(keyword);
+        emit keywordsChanged();
     }
 
     int CombinedArtworksModel::rowCount(const QModelIndex &parent) const
