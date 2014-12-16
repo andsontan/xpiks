@@ -7,9 +7,12 @@ namespace Models {
 
     void CombinedArtworksModel::resetModelData()
     {
-        m_ImageDescription = "";
+        this->beginResetModel();
         m_ImagesFilenames.clear();
-        m_ImagesFilenames.clear();
+        this->endResetModel();
+
+        setDescription("");
+        setKeywords(QStringList());
     }
 
     void CombinedArtworksModel::removeKeywordAt(int keywordIndex)

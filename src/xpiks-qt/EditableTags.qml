@@ -26,11 +26,11 @@ Flickable {
 
     function getEditedText() {
         var tagText = nextTagTextInput.text;
-        return tagText.replace(/^\s+|\s+|-$/g, '');
+        return tagText.replace(/^\s+|\s+$|-$/g, '');
     }
 
     function raiseAddTag(text) {
-        var sanitizedTagText = text.replace(/^\s+|\s+|-$/g, '');
+        var sanitizedTagText = text.replace(/^\s+|\s+$|-$/g, '');
         if (getCharsCount(sanitizedTagText) > 2) {
             tagAdded(sanitizedTagText);
         }

@@ -17,12 +17,16 @@ namespace Models {
         ~CombinedArtworksModel() {}
 
     public:
-        void initKeywords(const QStringList &ek) { std::copy(ek.begin(), ek.end(), std::back_inserter(m_CommonKeywords)); }
-        void initDescription(const QString &description) { m_ImageDescription = description; }
-        void initImages(const QStringList &fp) { std::copy(fp.begin(), fp.end(), std::back_inserter(m_ImagesFilenames)); }
+        void initKeywords(const QStringList &ek) { std::copy(ek.begin(), ek.end(), std::back_inserter(m_CommonKeywords)); emit keywordsChanged(); }
+        void initDescription(const QString &description) { setDescription(description); }
+        void initImages(const QStringList &fp) {
+            beginInsertRows(QModelIndex(), 0, fp.length() - 1);
+            std::copy(fp.begin(), fp.end(), std::back_inserter(m_ImagesFilenames));
+            endInsertRows();
+        }
 
     public:
-        void resetModelData();
+        Q_INVOKABLE void resetModelData();
 
     public:
         const QStringList &getKeywords() const { return m_CommonKeywords; }

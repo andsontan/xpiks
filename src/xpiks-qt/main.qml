@@ -176,6 +176,7 @@ ApplicationWindow {
                     Button {
                         text: qsTr("Edit Selected")
                         onClicked: {
+                            combinedArtworks.resetModelData();
                             artItemsModel.combineSelectedArtworks();
                             Qt.createComponent("CombinedArtworksDialog.qml").createObject(applicationWindow, {});
                         }

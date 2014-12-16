@@ -275,7 +275,8 @@ namespace Models {
                 continue;
             }
 
-            descriptionsDiffer = description != metadata->getImageDescription();
+            const QString &currDescription = metadata->getImageDescription();
+            descriptionsDiffer = descriptionsDiffer || description != currDescription;
             commonKeywords.intersect(metadata->getKeywordsSet());
         }
 
