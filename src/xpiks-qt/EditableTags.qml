@@ -8,6 +8,7 @@ Flickable {
     anchors.fill: parent
     contentWidth: parent.width
     contentHeight: flow.childrenRect.height + 10
+    boundsBehavior: Flickable.StopAtBounds
     property alias count: repeater.count
     property int currentIndex: -1
     property variant currentItem;
@@ -35,13 +36,13 @@ Flickable {
     }
 
     function scrollToBottom() {
-        if (flowListView.contentHeight >= flowListView.height) {
-            flowListView.contentY = flowListView.contentHeight - flowListView.height
+        if (flowListView.contentHeight - 10 >= flowListView.height) {
+            flowListView.contentY = flowListView.contentHeight - 10 - flowListView.height
         }
     }
 
     function adjustEdit() {
-        if (Math.abs(editWrapper.y - flowListView.contentY) <= editWrapper.height + flowListView.height)  {
+        if (Math.abs(editWrapper.y - flowListView.contentY) <= flowListView.height)  {
             flowListView.scrollToBottom()
         }
     }
