@@ -5,12 +5,13 @@
 #include <QStringList>
 #include <QList>
 #include <QPair>
+#include "abstractlistmodel.h"
 #include "artworkmetadata.h"
 #include "artworksrepository.h"
 #include "combinedartworksmodel.h"
 
 namespace Models {
-    class ArtItemsModel : public QAbstractListModel {
+    class ArtItemsModel : public AbstractListModel {
         Q_OBJECT
         Q_PROPERTY(bool canAddFiles READ getCanAddFiles WRITE setCanAddFiles NOTIFY canAddFilesChanged)
     public:
@@ -39,6 +40,7 @@ namespace Models {
         Q_INVOKABLE void combineSelectedArtworks() { doCombineSelectedImages(m_CombinedArtworks); }
         Q_INVOKABLE void selectAllArtworks() { setAllItemsSelected(true); }
         Q_INVOKABLE void unselectAllArtworks() { setAllItemsSelected(false); }
+        Q_INVOKABLE int getSelectedItemsCount();
 
     public:
         int rowCount(const QModelIndex & parent = QModelIndex()) const;
@@ -53,7 +55,6 @@ namespace Models {
     private:
         void addDirectory(const QString &directory);
         void addFiles(const QStringList &filepath);
-        void removeItems(const QList<QPair<int, int> > &ranges);
         void setAllItemsSelected(bool selected);
 
     public:
@@ -68,6 +69,9 @@ namespace Models {
 
     protected:
         QHash<int, QByteArray> roleNames() const;
+
+    protected:
+        void removeInnerItem(int row);
 
     private:
         QList<ArtworkMetadata*> m_ArtworkList;

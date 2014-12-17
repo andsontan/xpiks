@@ -176,9 +176,11 @@ ApplicationWindow {
                     Button {
                         text: qsTr("Edit Selected")
                         onClicked: {
-                            combinedArtworks.resetModelData();
-                            artItemsModel.combineSelectedArtworks();
-                            Qt.createComponent("CombinedArtworksDialog.qml").createObject(applicationWindow, {});
+                            if (artItemsModel.getSelectedItemsCount() > 0) {
+                                combinedArtworks.resetModelData();
+                                artItemsModel.combineSelectedArtworks();
+                                Qt.createComponent("CombinedArtworksDialog.qml").createObject(applicationWindow, {});
+                            }
                         }
                     }
 
@@ -230,6 +232,9 @@ ApplicationWindow {
 
                         CheckBox {
                             checked: isselected
+                            onCheckedChanged: {
+                                model.isselected = checked
+                            }
                         }
 
                         ColumnLayout {

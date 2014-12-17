@@ -52,6 +52,7 @@ Item {
 
                     Button {
                         text: qsTr("Remove selected")
+                        onClicked: combinedArtworks.removeSelectedArtworks()
                     }
                 }
 
@@ -70,6 +71,7 @@ Item {
                         model: combinedArtworks
 
                         delegate: Rectangle {
+                            property int indexOfThisDelegate: index
                             id: imageWrapper
                             height: parent.height
                             width: height
@@ -79,7 +81,10 @@ Item {
                             MouseArea {
                                 id: mouseArea
                                 anchors.fill: parent
-                                onClicked: imageWrapper.state == 'clicked' ? imageWrapper.state = "" : imageWrapper.state = 'clicked';
+                                onClicked: {
+                                    imageWrapper.state == 'clicked' ? imageWrapper.state = "" : imageWrapper.state = 'clicked';
+                                    combinedArtworks.selectArtwork(indexOfThisDelegate)
+                                }
                             }
 
                             Image {

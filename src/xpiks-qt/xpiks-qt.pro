@@ -8,7 +8,8 @@ SOURCES += main.cpp \
     Helpers/globalimageprovider.cpp \
     Models/artworksrepository.cpp \
     Models/combinedartworksmodel.cpp \
-    Models/artiteminfo.cpp
+    Models/artiteminfo.cpp \
+    Helpers/indiceshelper.cpp
 
 RESOURCES += qml.qrc
 
@@ -26,4 +27,5 @@ HEADERS += \
     Helpers/indiceshelper.h \
     Helpers/clipboardhelper.h \
     Models/combinedartworksmodel.h \
-    Models/artiteminfo.h
+    Models/artiteminfo.h \
+    Models/abstractlistmodel.h

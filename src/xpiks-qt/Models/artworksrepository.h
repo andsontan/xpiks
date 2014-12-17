@@ -5,9 +5,10 @@
 #include <QStringList>
 #include <QPair>
 #include <QSet>
+#include "abstractlistmodel.h"
 
 namespace Models {
-    class ArtworksRepository : public QAbstractListModel {
+    class ArtworksRepository : public AbstractListModel {
         Q_OBJECT
     public:
         ArtworksRepository(QObject *parent = 0);
@@ -47,6 +48,10 @@ namespace Models {
 
     protected:
         QHash<int, QByteArray> roleNames() const;
+
+    protected:
+        void removeInnerItem(int) { /* nothing */ }
+
     private:
         QStringList m_DirectoriesList;
         QHash<QString, int> m_DirectoriesHash;

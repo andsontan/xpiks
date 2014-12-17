@@ -3,17 +3,13 @@
 #include <QDirIterator>
 #include <QList>
 #include "artitemsmodel.h"
+#include "artiteminfo.h"
 #include "../Helpers/indiceshelper.h"
 
 namespace Models {
 
     ArtItemsModel::~ArtItemsModel() {
-        int count = m_ArtworkList.count();
-        for (int i = 0; i < count; ++i) {
-            ArtworkMetadata *metadata = m_ArtworkList[i];
-            delete metadata;
-        }
-
+        qDeleteAll(m_ArtworkList);
         m_ArtworkList.clear();
 
         // being freed in gui
@@ -31,13 +27,14 @@ namespace Models {
             if ((*it)->isInDirectory(directory)) {
                 indicesToRemove.append(i);
                 m_ArtworksRepository->eraseFile((*it)->getImageFileName());
+                delete *it;
             }
         }
 
         QList<QPair<int, int> > rangesToRemove;
         Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
+        removeItemsAtIndices(rangesToRemove);
 
-        removeItems(rangesToRemove);
         m_ArtworksRepository->removeDirectory(index);
         m_ArtworksRepository->removeDirectory(directory);
     }
@@ -75,6 +72,21 @@ namespace Models {
                 emit dataChanged(index, index);
             }
         }
+    }
+
+    int ArtItemsModel::getSelectedItemsCount()
+    {
+        int selectedItemsCount = 0;
+        int artworksCount = m_ArtworkList.length();
+        for (int i = 0; i < artworksCount; ++i) {
+            ArtworkMetadata *metadata = m_ArtworkList[i];
+
+            if (metadata->getIsSelected()) {
+                selectedItemsCount++;
+            }
+        }
+
+        return selectedItemsCount;
     }
 
     int ArtItemsModel::rowCount(const QModelIndex &parent) const {
@@ -218,23 +230,6 @@ namespace Models {
         }
     }
 
-    void ArtItemsModel::removeItems(const QList<QPair<int, int> > &ranges)
-    {
-        int removedCount = 0;
-        int rangesCount = ranges.count();
-        for (int i = 0; i < rangesCount; ++i) {
-            int startRow = ranges[i].first - removedCount;
-            int endRow = ranges[i].second - removedCount;
-
-            beginRemoveRows(QModelIndex(), startRow, endRow);
-            int count = endRow - startRow + 1;
-            for (int j = 0; j < count; ++j) { m_ArtworkList.removeAt(startRow); }
-            endRemoveRows();
-
-            removedCount += (endRow - startRow + 1);
-        }
-    }
-
     void ArtItemsModel::setAllItemsSelected(bool selected)
     {
         int length = m_ArtworkList.length();
@@ -252,41 +247,20 @@ namespace Models {
 
     void ArtItemsModel::doCombineSelectedImages(CombinedArtworksModel *combinedModel) const
     {
-        bool anyItemsProcessed = false;
-        bool descriptionsDiffer = false;
-        QString description;
-        QStringList filenamesList;
-        QSet<QString> commonKeywords;
+        QList<ArtItemInfo*> artworksList;
 
         int artworksCount = m_ArtworkList.length();
         for (int i = 0; i < artworksCount; ++i) {
             ArtworkMetadata *metadata = m_ArtworkList[i];
 
-            if (!metadata->getIsSelected()) {
-                continue;
+            if (metadata->getIsSelected()) {
+                ArtItemInfo *info = new ArtItemInfo(i, metadata);
+                artworksList.append(info);
             }
-
-            filenamesList.append(metadata->getImageFileName());
-
-            if (!anyItemsProcessed) {
-                description = metadata->getImageDescription();
-                commonKeywords.unite(metadata->getKeywordsSet());
-                anyItemsProcessed = true;
-                continue;
-            }
-
-            const QString &currDescription = metadata->getImageDescription();
-            descriptionsDiffer = descriptionsDiffer || description != currDescription;
-            commonKeywords.intersect(metadata->getKeywordsSet());
         }
 
-        if (descriptionsDiffer) {
-            description = "";
-        }
-
-        combinedModel->initDescription(description);
-        combinedModel->initImages(filenamesList);
-        combinedModel->initKeywords(commonKeywords.toList());
+        combinedModel->initArtworks(artworksList);
+        combinedModel->recombineArtworks();
     }
 
     QHash<int, QByteArray> ArtItemsModel::roleNames() const {
@@ -298,5 +272,13 @@ namespace Models {
         roles[IsModifiedRole] = "ismodified";
         roles[IsSelectedRole] = "isselected";
         return roles;
+    }
+
+    void ArtItemsModel::removeInnerItem(int row)
+    {
+        // TODO: add assert for row
+        ArtworkMetadata *metadata = m_ArtworkList[row];
+        delete metadata;
+        m_ArtworkList.removeAt(row);
     }
 }

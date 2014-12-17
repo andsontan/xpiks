@@ -29,7 +29,7 @@ namespace Models {
             }
         }
         void resetModified() { m_IsModified = false; }
-        void setIsSelected(bool isSelected) { m_IsSelected = isSelected; }
+        void setIsSelected(bool value) { m_IsSelected = value; }
 
     public:
         bool removeKeywordAt(int index);

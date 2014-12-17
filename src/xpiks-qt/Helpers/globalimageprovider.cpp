@@ -2,7 +2,7 @@
 
 namespace Helpers
 {
-    QImage Helpers::GlobalImageProvider::requestImage(const QString &id, QSize *size, const QSize &requestedSize)
+    QImage GlobalImageProvider::requestImage(const QString &id, QSize *size, const QSize &requestedSize)
     {
         QImage image(id);
         QImage result;
@@ -18,7 +18,7 @@ namespace Helpers
         return result;
     }
 
-    QPixmap Helpers::GlobalImageProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize)
+    QPixmap GlobalImageProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize)
     {
         QPixmap image(id);
         QPixmap result;
