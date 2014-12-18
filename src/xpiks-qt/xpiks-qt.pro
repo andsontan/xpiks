@@ -28,4 +28,6 @@ HEADERS += \
     Helpers/clipboardhelper.h \
     Models/combinedartworksmodel.h \
     Models/artiteminfo.h \
-    Models/abstractlistmodel.h
+    Models/abstractlistmodel.h \
+    Helpers/constants.h \
+    Helpers/appsettings.h

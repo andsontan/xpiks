@@ -4,10 +4,13 @@
 #include <QQmlContext>
 #include <QtQml>
 #include <QFile>
+#include <QSettings>
 #include <QTextStream>
 #include "Helpers/globalimageprovider.h"
 #include "Helpers/clipboardhelper.h"
 #include "Models/artitemsmodel.h"
+#include "Helpers/appsettings.h"
+#include "Helpers/constants.h"
 
 #ifdef QT_NO_DEBUG
 
@@ -40,7 +43,15 @@ void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const Q
 
 #endif
 
+void initQSettings() {
+    QCoreApplication::setOrganizationName(Constants::ORGANIZATION_NAME);
+    QCoreApplication::setOrganizationDomain(Constants::ORGANIZATION_DOMAIN);
+    QCoreApplication::setApplicationName(Constants::APPLICATION_NAME);
+}
+
 int main(int argc, char *argv[]) {
+    initQSettings();
+
     QApplication app(argc, argv);
 
 #ifdef QT_NO_DEBUG
@@ -54,6 +65,8 @@ int main(int argc, char *argv[]) {
     artItemsModel.setArtworksRepository(&artworkRepository);
     artItemsModel.setCombinedArtworksModel(&combinedArtworksModel);
 
+    AppSettings appSettings;
+
     qmlRegisterType<Helpers::ClipboardHelper>("xpiks", 1, 0, "ClipboardHelper");
 
     QQmlApplicationEngine engine;
@@ -62,6 +75,7 @@ int main(int argc, char *argv[]) {
     engine.rootContext()->setContextProperty("artItemsModel", &artItemsModel);
     engine.rootContext()->setContextProperty("artworkRepository", &artworkRepository);
     engine.rootContext()->setContextProperty("combinedArtworks", &combinedArtworksModel);
+    engine.rootContext()->setContextProperty("appSettings", &appSettings);
     engine.addImageProvider("global", globalProvider);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 

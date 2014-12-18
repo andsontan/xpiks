@@ -15,8 +15,13 @@ ApplicationWindow {
         Menu {
             title: qsTr("File")
             MenuItem {
-                text: qsTr("&Open")
-                onTriggered: console.log("Open action triggered");
+                text: qsTr("&Settings")
+                onTriggered: {
+                    console.log("Settings action triggered");
+                    var component = Qt.createComponent("SettingsWindow.qml");
+                    var window = component.createObject(applicationWindow);
+                    window.show();
+                }
             }
             MenuItem {
                 text: qsTr("Exit")
