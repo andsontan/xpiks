@@ -1,9 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>RemoveDirectoryIcon.svg</file>
         <file>EditableTags.qml</file>
-        <file>CloseIcon.svg</file>
         <file>CombinedArtworksDialog.qml</file>
         <file>SettingsWindow.qml</file>
     </qresource>

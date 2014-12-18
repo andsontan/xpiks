@@ -135,29 +135,39 @@ ApplicationWindow {
                             elide: Text.ElideMiddle
                         }
 
-                        Rectangle {
-                            width: 15
-                            height: 15
-                            color: "transparent"
-                            Image {
+                        Item {
+                            width: 14
+                            height: 14
+
+                            Rectangle {
                                 anchors.fill: parent
-                                source: "qrc:/RemoveDirectoryIcon.svg"
-                                sourceSize.width: 100
-                                sourceSize.height: 100
-                                fillMode: Image.PreserveAspectFit
-                                opacity: removeDirectoryMouseArea.containsMouse ? 1 : 0.5
-                                scale: removeDirectoryMouseArea.pressed ? 0.8 : 1
+                                radius: 7
+                                border.width: 1
+                                color: "#dddddd"
+                                border.color: "black"
 
-                                MouseArea {
-                                    id: removeDirectoryMouseArea
-                                    anchors.fill: parent
-                                    hoverEnabled: true
+                                Rectangle {
+                                    width: parent.width - 4
+                                    anchors.centerIn: parent
+                                    height: 2
+                                    radius: 1
+                                    border.color: "black"
+                                    border.width: 1
+                                }
+                            }
 
-                                    onClicked: {
-                                        confirmRemoveDirectoryDialog.directoryIndex = wrapperRect.indexOfThisDelegate
-                                        confirmRemoveDirectoryDialog.open()
+                            opacity: removeDirectoryMouseArea.containsMouse ? 1 : 0.5
+                            scale: removeDirectoryMouseArea.pressed ? 0.8 : 1
 
-                                    }
+                            MouseArea {
+                                id: removeDirectoryMouseArea
+                                anchors.fill: parent
+                                hoverEnabled: true
+
+                                onClicked: {
+                                    confirmRemoveDirectoryDialog.directoryIndex = wrapperRect.indexOfThisDelegate
+                                    confirmRemoveDirectoryDialog.open()
+
                                 }
                             }
                         }
@@ -437,17 +447,40 @@ ApplicationWindow {
                                                     }
                                                 }
 
-                                                Rectangle {
-                                                    width: 15
-                                                    height: 15
-                                                    color: "transparent"
-                                                    Image {
+                                                Item {
+                                                    width: 16
+                                                    height: 16
+
+                                                    Rectangle {
                                                         anchors.fill: parent
-                                                        source: "qrc:/CloseIcon.svg"
-                                                        sourceSize.width: 100
-                                                        sourceSize.height: 100
-                                                        fillMode: Image.PreserveAspectFit
-                                                        opacity: mouseArea.containsMouse ? 1 : 0.5
+                                                        border.color: black
+                                                        border.width: 1
+                                                        radius: 8
+
+                                                        Rectangle {
+                                                            color: "black"
+                                                            width: parent.width - 2
+                                                            height: 2
+                                                            radius: 1
+                                                            border.width: 1
+                                                            border.color: "black"
+                                                            transformOrigin: Item.Center
+                                                            rotation: 45
+                                                            anchors.centerIn: parent
+                                                        }
+
+                                                        Rectangle {
+                                                            color: "black"
+                                                            width: parent.width - 2
+                                                            height: 2
+                                                            radius: 1
+                                                            border.width: 1
+                                                            border.color: "black"
+                                                            transformOrigin: Item.Center
+                                                            rotation: 135
+                                                            anchors.centerIn: parent
+                                                        }
+
                                                         scale: mouseArea.pressed ? 0.8 : 1
 
                                                         MouseArea {
