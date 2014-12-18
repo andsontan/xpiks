@@ -1,4 +1,5 @@
 import QtQuick 2.4
+import QtQuick.Dialogs 1.2
 import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
 import xpiks 1.0
@@ -21,6 +22,28 @@ ApplicationWindow {
                 text: qsTr("Exit")
                 onTriggered: Qt.quit();
             }
+        }
+    }
+
+    MessageDialog {
+        id: confirmRemoveSelectedDialog
+        property int itemsCount
+        title: "Confirmation"
+        text: "Are you sure you want to remove " + itemsCount + " item(s)?"
+        standardButtons: StandardButton.Yes | StandardButton.No
+        onYes: {
+            artItemsModel.removeSelectedArtworks()
+        }
+    }
+
+    MessageDialog {
+        id: confirmRemoveDirectoryDialog
+        property int directoryIndex
+        title: "Confirmation"
+        text: qsTr("Are you sure you want to remove this directory?")
+        standardButtons: StandardButton.Yes | StandardButton.No
+        onYes: {
+            artItemsModel.removeArtworksDirectory(directoryIndex)
         }
     }
 
@@ -82,12 +105,12 @@ ApplicationWindow {
                 spacing: 10
 
                 delegate: Rectangle {
-                    property int indexOfThisDelxpiegate: index
+                    id: wrapperRect
+                    property int indexOfThisDelegate: index
                     color: "white"
                     width: parent.width
                     height: 20
                     Layout.minimumWidth: 250
-                    id: wrapperRect
 
                     RowLayout {
                         spacing: 10
@@ -126,7 +149,9 @@ ApplicationWindow {
                                     hoverEnabled: true
 
                                     onClicked: {
-                                        artItemsModel.removeArtworksDirectory(wrapperRect.indexOfThisDelegate)
+                                        confirmRemoveDirectoryDialog.directoryIndex = wrapperRect.indexOfThisDelegate
+                                        confirmRemoveDirectoryDialog.open()
+
                                     }
                                 }
                             }
@@ -172,7 +197,13 @@ ApplicationWindow {
 
                     Button {
                         text: qsTr("Remove Selected")
-                        onClicked: artItemsModel.removeSelectedArtworks()
+                        onClicked: {
+                            var itemsCount = artItemsModel.getSelectedItemsCount()
+                            if (itemsCount > 0) {
+                                confirmRemoveSelectedDialog.itemsCount = itemsCount
+                                confirmRemoveSelectedDialog.open()
+                            }
+                        }
                     }
 
                     Button {
