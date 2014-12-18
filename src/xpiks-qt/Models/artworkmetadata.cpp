@@ -38,15 +38,26 @@ namespace Models {
         return added;
     }
 
+    void ArtworkMetadata::appendKeywords(const QStringList &keywordsList)
+    {
+        foreach (const QString &keyword, keywordsList) {
+            appendKeyword(keyword);
+        }
+    }
+
+    void ArtworkMetadata::resetKeywords()
+    {
+        m_KeywordsList.clear();
+        m_KeywordsSet.clear();
+        setModified();
+    }
+
     void ArtworkMetadata::parseKeywords(const QString &rawKeywords) {
         QStringList keywordsList = rawKeywords.split(",", QString::SkipEmptyParts);
-        //QStringList sanitizedKeywords;
         for (int i = 0; i < keywordsList.size(); ++i) {
             const QString &keyword = keywordsList[i];
             m_KeywordsList.append(keyword);
             m_KeywordsSet.insert(keyword.trimmed().toLower());
         }
-
-        //m_KeywordsList.setStringList(sanitizedKeywords);
     }
 }

@@ -119,6 +119,22 @@ namespace Models {
         return selectedCount;
     }
 
+    void CombinedArtworksModel::saveSetKeywords()
+    {
+        foreach (ArtItemInfo* info, m_ArtworksList) {
+            info->setKeywordsToOrigin(m_CommonKeywords);
+            info->setDescriptionToOrigin(m_ImageDescription);
+        }
+    }
+
+    void CombinedArtworksModel::saveAddKeywords()
+    {
+        foreach (ArtItemInfo* info, m_ArtworksList) {
+            info->addKeywordsToOrigin(m_CommonKeywords);
+            info->setDescriptionToOrigin(m_ImageDescription);
+        }
+    }
+
     int CombinedArtworksModel::rowCount(const QModelIndex &parent) const
     {
         Q_UNUSED(parent);

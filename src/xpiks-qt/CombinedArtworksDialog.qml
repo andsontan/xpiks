@@ -8,6 +8,10 @@ Item {
     id: dialogComponent
     anchors.fill: parent
 
+    function closePopup() {
+        dialogComponent.destroy()
+    }
+
     PropertyAnimation { target: dialogComponent; property: "opacity";
         duration: 400; from: 0; to: 1;
         easing.type: Easing.InOutQuad ; running: true }
@@ -325,17 +329,35 @@ Item {
                         }
 
                         Button {
-                            text: qsTr("Save all")
+                            text: qsTr("Save and append")
                             onClicked: {
-                                dialogComponent.destroy()
+                                combinedArtworks.saveAddKeywords()
+                                closePopup()
+                                artItemsModel.updateSelectedArtworks()
                             }
+
+                            tooltip: "Sets description and appends keywords in edited files"
+                        }
+
+                        Button {
+                            text: qsTr("Save and replace")
+                            onClicked: {
+                                combinedArtworks.saveSetKeywords()
+                                closePopup()
+                                artItemsModel.updateSelectedArtworks()
+                            }
+
+                            tooltip: "Sets description and replaces keywords in edited files"
                         }
 
                         Button {
                             text: qsTr("Cancel")
+
                             onClicked: {
-                                dialogComponent.destroy()
+                                closePopup()
                             }
+
+                            tooltip: "Exits with no changes"
                         }
                     }
                 }

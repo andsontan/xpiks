@@ -50,6 +50,8 @@ namespace Models {
         Q_INVOKABLE void selectArtwork(int index);
         Q_INVOKABLE void removeSelectedArtworks();
         Q_INVOKABLE int getSelectedArtworksCount();
+        Q_INVOKABLE void saveSetKeywords();
+        Q_INVOKABLE void saveAddKeywords();
 
     public:
         enum CombinedArtworksModelRoles {

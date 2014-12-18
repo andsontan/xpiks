@@ -24,6 +24,11 @@ namespace Models {
         void select() { m_IsSelected = true; }
         void deselect() { m_IsSelected = false; }
 
+    public:
+        void addKeywordsToOrigin(const QStringList &keywordsList) { m_ArtworkMetadata->appendKeywords(keywordsList); }
+        void setKeywordsToOrigin(const QStringList &keyowrdsList) { m_ArtworkMetadata->setKeywords(keyowrdsList); }
+        void setDescriptionToOrigin(const QString &description) { m_ArtworkMetadata->setImageDescription(description); }
+
     private:
         ArtworkMetadata *m_ArtworkMetadata;
         // index in main viewmodel of artworks

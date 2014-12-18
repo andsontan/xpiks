@@ -37,7 +37,12 @@ namespace Models {
         bool removeLastKeyword() { return removeKeywordAt(m_KeywordsList.length() - 1); }
         bool appendKeyword(const QString &keyword);
 
+    public:
+        void setKeywords(const QStringList &keywordsList) { resetKeywords(); appendKeywords(keywordsList); }
+        void appendKeywords(const QStringList &keywordsList);
+
     private:
+        void resetKeywords();
         void parseKeywords(const QString& rawKeywords);
         void setModified() { m_IsModified = true; }
 

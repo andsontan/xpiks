@@ -68,31 +68,25 @@ namespace Models {
 
     int ArtItemsModel::getSelectedItemsCount()
     {
-        int selectedItemsCount = 0;
-        int artworksCount = m_ArtworkList.length();
-        for (int i = 0; i < artworksCount; ++i) {
-            ArtworkMetadata *metadata = m_ArtworkList[i];
-
-            if (metadata->getIsSelected()) {
-                selectedItemsCount++;
-            }
-        }
-
-        return selectedItemsCount;
+        QList<int> selectedIndices;
+        getSelectedItemsIndices(selectedIndices);
+        return selectedIndices.length();
     }
 
     void ArtItemsModel::removeSelectedArtworks()
     {
-        int count = m_ArtworkList.length();
         QList<int> indicesToRemove;
-        for (int i = 0; i < count; ++i) {
-            ArtworkMetadata *metadata = m_ArtworkList[i];
-            if (metadata->getIsSelected()) {
-                indicesToRemove.append(i);
-            }
-        }
-
+        getSelectedItemsIndices(indicesToRemove);
         doRemoveItemsAtIndices(indicesToRemove);
+    }
+
+    void ArtItemsModel::updateSelectedArtworks()
+    {
+        QList<int> selectedIndices;
+        getSelectedItemsIndices(selectedIndices);
+        QList<QPair<int, int> > rangesToUpdate;
+        Helpers::indicesToRanges(selectedIndices, rangesToUpdate);
+        updateItemsAtIndices(rangesToUpdate, QVector<int>() << ImageDescriptionRole << KeywordsRole << IsModifiedRole);
     }
 
     int ArtItemsModel::rowCount(const QModelIndex &parent) const {
@@ -301,5 +295,16 @@ namespace Models {
 
         m_ArtworksRepository->cleanupEmptyDirectories();
         m_ArtworksRepository->updateCountsForExistingDirectories();
+    }
+
+    void ArtItemsModel::getSelectedItemsIndices(QList<int> &indices)
+    {
+        int count = m_ArtworkList.length();
+        for (int i = 0; i < count; ++i) {
+            ArtworkMetadata *metadata = m_ArtworkList[i];
+            if (metadata->getIsSelected()) {
+                indices.append(i);
+            }
+        }
     }
 }
