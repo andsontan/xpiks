@@ -49,7 +49,8 @@ namespace Models {
         Q_INVOKABLE void appendKeyword(const QString &keyword);
         Q_INVOKABLE void selectArtwork(int index);
         Q_INVOKABLE void removeSelectedArtworks();
-        Q_INVOKABLE int getSelectedArtworksCount();
+        Q_INVOKABLE int getSelectedArtworksCount() const;
+        Q_INVOKABLE int getArtworksCount() const { return m_ArtworksList.length(); }
         Q_INVOKABLE void saveSetKeywords();
         Q_INVOKABLE void saveAddKeywords();
 

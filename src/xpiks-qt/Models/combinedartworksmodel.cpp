@@ -105,7 +105,7 @@ namespace Models {
         recombineArtworks();
     }
 
-    int CombinedArtworksModel::getSelectedArtworksCount()
+    int CombinedArtworksModel::getSelectedArtworksCount() const
     {
         int selectedCount = 0;
         int count = m_ArtworksList.length();

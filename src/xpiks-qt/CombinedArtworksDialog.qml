@@ -24,6 +24,9 @@ Item {
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
             combinedArtworks.removeSelectedArtworks()
+            if (combinedArtworks.getArtworksCount() == 0) {
+                closePopup()
+            }
         }
     }
 
