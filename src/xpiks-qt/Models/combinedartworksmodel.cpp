@@ -72,7 +72,7 @@ namespace Models {
 
         m_ArtworksList[index]->select();
         QModelIndex qIndex = this->index(index);
-        emit dataChanged(qIndex, qIndex);
+        emit dataChanged(qIndex, qIndex, QVector<int>() << IsSelectedRole);
     }
 
     void CombinedArtworksModel::removeSelectedArtworks()

@@ -171,7 +171,8 @@ ApplicationWindow {
                     }
 
                     Button {
-                        text: qsTr("Remove All")
+                        text: qsTr("Remove Selected")
+                        onClicked: artItemsModel.removeSelectedArtworks()
                     }
 
                     Button {

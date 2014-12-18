@@ -19,24 +19,16 @@ namespace Models {
     void ArtItemsModel::removeArtworksDirectory(int index)
     {
         const QString &directory = m_ArtworksRepository->getDirectory(index);
-
         QList<int> indicesToRemove;
 
         QList<ArtworkMetadata*>::const_iterator it = m_ArtworkList.constBegin();
         for (int i = 0; it < m_ArtworkList.constEnd(); ++it, ++i) {
             if ((*it)->isInDirectory(directory)) {
                 indicesToRemove.append(i);
-                m_ArtworksRepository->eraseFile((*it)->getImageFileName());
-                delete *it;
             }
         }
 
-        QList<QPair<int, int> > rangesToRemove;
-        Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
-        removeItemsAtIndices(rangesToRemove);
-
-        m_ArtworksRepository->removeDirectory(index);
-        m_ArtworksRepository->removeDirectory(directory);
+        doRemoveItemsAtIndices(indicesToRemove);
     }
 
     void ArtItemsModel::removeKeywordAt(int metadataIndex, int keywordIndex)
@@ -46,7 +38,7 @@ namespace Models {
 
             if (metadata->removeKeywordAt(keywordIndex)) {
                 QModelIndex index = this->index(metadataIndex);
-                emit dataChanged(index, index);
+                emit dataChanged(index, index, QVector<int>() << KeywordsRole);
             }
         }
     }
@@ -58,7 +50,7 @@ namespace Models {
 
             if (metadata->removeLastKeyword()) {
                 QModelIndex index = this->index(metadataIndex);
-                emit dataChanged(index, index);
+                emit dataChanged(index, index, QVector<int>() << KeywordsRole);
             }
         }
     }
@@ -69,7 +61,7 @@ namespace Models {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
             if (metadata->appendKeyword(keyword)) {
                 QModelIndex index = this->index(metadataIndex);
-                emit dataChanged(index, index);
+                emit dataChanged(index, index, QVector<int>() << KeywordsRole);
             }
         }
     }
@@ -87,6 +79,20 @@ namespace Models {
         }
 
         return selectedItemsCount;
+    }
+
+    void ArtItemsModel::removeSelectedArtworks()
+    {
+        int count = m_ArtworkList.length();
+        QList<int> indicesToRemove;
+        for (int i = 0; i < count; ++i) {
+            ArtworkMetadata *metadata = m_ArtworkList[i];
+            if (metadata->getIsSelected()) {
+                indicesToRemove.append(i);
+            }
+        }
+
+        doRemoveItemsAtIndices(indicesToRemove);
     }
 
     int ArtItemsModel::rowCount(const QModelIndex &parent) const {
@@ -144,7 +150,7 @@ namespace Models {
             return false;
         }
 
-        emit dataChanged(index, index);
+        emit dataChanged(index, index, QVector<int>() << IsModifiedRole << role);
         return true;
     }
 
@@ -243,7 +249,7 @@ namespace Models {
         if (length > 0) {
             QModelIndex startIndex = index(0);
             QModelIndex endIndex = index(length - 1);
-            emit dataChanged(startIndex, endIndex);
+            emit dataChanged(startIndex, endIndex, QVector<int>() << IsSelectedRole);
         }
     }
 
@@ -281,7 +287,19 @@ namespace Models {
     {
         // TODO: add assert for row
         ArtworkMetadata *metadata = m_ArtworkList[row];
+        m_ArtworksRepository->removeFile(metadata->getImageFileName());
+
         delete metadata;
         m_ArtworkList.removeAt(row);
+    }
+
+    void ArtItemsModel::doRemoveItemsAtIndices(const QList<int> &indicesToRemove)
+    {
+        QList<QPair<int, int> > rangesToRemove;
+        Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
+        removeItemsAtIndices(rangesToRemove);
+
+        m_ArtworksRepository->cleanupEmptyDirectories();
+        m_ArtworksRepository->updateCountsForExistingDirectories();
     }
 }

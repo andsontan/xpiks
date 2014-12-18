@@ -2,6 +2,7 @@
 #include <QSet>
 #include <QFileInfo>
 #include <QRegExp>
+#include "../Helpers/indiceshelper.h"
 
 namespace Models {
     ArtworksRepository::ArtworksRepository(QObject *parent) {
@@ -10,6 +11,22 @@ namespace Models {
     void ArtworksRepository::updateCountsForExistingDirectories()
     {
         emit dataChanged(index(0), index(rowCount() - 1), QVector<int>() << UsedImagesCountRole);
+    }
+
+    void ArtworksRepository::cleanupEmptyDirectories()
+    {
+        int count = m_DirectoriesList.length();
+        QList<int> indicesToRemove;
+        for (int i = 0; i < count; ++i) {
+            const QString &directory = m_DirectoriesList[i];
+            if (m_DirectoriesHash[directory] == 0) {
+                indicesToRemove.append(i);
+            }
+        }
+
+        QList<QPair<int, int> > rangesToRemove;
+        Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
+        removeItemsAtIndices(rangesToRemove);
     }
 
     bool ArtworksRepository::beginAccountingFiles(const QStringList &items)
@@ -104,35 +121,9 @@ namespace Models {
         if (m_DirectoriesHash.contains(absolutePath)) {
             int occurances = m_DirectoriesHash[absolutePath] - 1;
 
-            if (occurances > 0) {
-                m_DirectoriesHash[absolutePath] = occurances;
-            }
-            else {
-                removeDirectory(absolutePath);
-            }
+            m_DirectoriesHash[absolutePath] = occurances;
         }
 
-        m_FilesSet.remove(filepath);
-    }
-
-    void ArtworksRepository::removeDirectory(const QString &directory)
-    {
-        if (m_DirectoriesHash.contains(directory)) {
-            m_DirectoriesHash.remove(directory);
-        }
-    }
-
-    void ArtworksRepository::removeDirectory(int index)
-    {
-        // TODO: assert index is in range
-
-        beginRemoveRows(QModelIndex(), index, index);
-        m_DirectoriesList.removeAt(index);
-        endRemoveRows();
-    }
-
-    void ArtworksRepository::eraseFile(const QString &filepath)
-    {
         m_FilesSet.remove(filepath);
     }
 

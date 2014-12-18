@@ -25,6 +25,7 @@ namespace Models {
 
     public:
         void updateCountsForExistingDirectories();
+        void cleanupEmptyDirectories();
 
     public:
         bool beginAccountingFiles(const QStringList &items);
@@ -36,9 +37,6 @@ namespace Models {
     public:
         bool accountFile(const QString &filepath);
         void removeFile(const QString &filepath);
-        void removeDirectory(const QString &directory);
-        void removeDirectory(int index);
-        void eraseFile(const QString &filepath);
 
         const QString &getDirectory(int index) const { return m_DirectoriesList[index]; }
 
@@ -50,7 +48,7 @@ namespace Models {
         QHash<int, QByteArray> roleNames() const;
 
     protected:
-        void removeInnerItem(int) { /* nothing */ }
+        void removeInnerItem(int index) { m_DirectoriesHash.remove(m_DirectoriesList.takeAt(index)); }
 
     private:
         QStringList m_DirectoriesList;

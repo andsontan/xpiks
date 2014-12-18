@@ -42,6 +42,7 @@ namespace Models {
         Q_INVOKABLE void selectAllArtworks() { setAllItemsSelected(true); }
         Q_INVOKABLE void unselectAllArtworks() { setAllItemsSelected(false); }
         Q_INVOKABLE int getSelectedItemsCount();
+        Q_INVOKABLE void removeSelectedArtworks();
 
     public:
         int rowCount(const QModelIndex & parent = QModelIndex()) const;
@@ -73,6 +74,9 @@ namespace Models {
 
     protected:
         void removeInnerItem(int row);
+
+    private:
+        void doRemoveItemsAtIndices(const QList<int> &indices);
 
     private:
         QList<ArtworkMetadata*> m_ArtworkList;
