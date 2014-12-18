@@ -16,6 +16,18 @@ namespace Models {
         //delete m_ArtworksDirectories;
     }
 
+    int ArtItemsModel::getModifiedArtworksCount()
+    {
+        int modifiedCount = 0;
+        foreach (ArtworkMetadata *metadata, m_ArtworkList) {
+            if (metadata->isModified()) {
+                modifiedCount++;
+            }
+        }
+
+        return modifiedCount;
+    }
+
     void ArtItemsModel::removeArtworksDirectory(int index)
     {
         const QString &directory = m_ArtworksRepository->getDirectory(index);
@@ -38,7 +50,7 @@ namespace Models {
 
             if (metadata->removeKeywordAt(keywordIndex)) {
                 QModelIndex index = this->index(metadataIndex);
-                emit dataChanged(index, index, QVector<int>() << KeywordsRole);
+                emit dataChanged(index, index, QVector<int>() << KeywordsRole << IsModifiedRole);
             }
         }
     }
@@ -50,7 +62,7 @@ namespace Models {
 
             if (metadata->removeLastKeyword()) {
                 QModelIndex index = this->index(metadataIndex);
-                emit dataChanged(index, index, QVector<int>() << KeywordsRole);
+                emit dataChanged(index, index, QVector<int>() << KeywordsRole << IsModifiedRole);
             }
         }
     }
@@ -61,7 +73,7 @@ namespace Models {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
             if (metadata->appendKeyword(keyword)) {
                 QModelIndex index = this->index(metadataIndex);
-                emit dataChanged(index, index, QVector<int>() << KeywordsRole);
+                emit dataChanged(index, index, QVector<int>() << KeywordsRole << IsModifiedRole);
             }
         }
     }
@@ -218,6 +230,8 @@ namespace Models {
                 {
                     // TODO: grab keywords here
                     ArtworkMetadata *metadata = new ArtworkMetadata("my description", filenames[i], "test1,test2");
+                    QObject::connect(metadata, SIGNAL(modifiedChanged(bool)),
+                                     this, SLOT(itemModifiedChanged(bool)));
                     m_ArtworkList.append(metadata);
                 }
             }

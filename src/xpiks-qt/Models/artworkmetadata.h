@@ -7,7 +7,8 @@
 #include <QSet>
 
 namespace Models {
-    class ArtworkMetadata {
+    class ArtworkMetadata : public QObject {
+        Q_OBJECT
     public:
         ArtworkMetadata(const QString &imageDescription, const QString &imageFileName,
                       const QString &rawKeywords);
@@ -29,7 +30,7 @@ namespace Models {
                 setModified();
             }
         }
-        void resetModified() { m_IsModified = false; }
+        void resetModified() { m_IsModified = false; emit modifiedChanged(m_IsModified); }
         void setIsSelected(bool value) { m_IsSelected = value; }
 
     public:
@@ -44,7 +45,10 @@ namespace Models {
     private:
         void resetKeywords();
         void parseKeywords(const QString& rawKeywords);
-        void setModified() { m_IsModified = true; }
+        void setModified() { m_IsModified = true; emit modifiedChanged(m_IsModified); }
+
+    signals:
+         void modifiedChanged(bool newValue);
 
     private:
         QStringList m_KeywordsList;

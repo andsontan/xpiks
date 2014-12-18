@@ -20,11 +20,11 @@ Item {
         id: confirmRemoveArtworksDialog
         property int itemsCount
         title: "Confirmation"
-        text: "Are you sure you want to remove " + itemsCount + " item(s)?"
+        text: qsTr("Are you sure you want to remove %1 item(s)?").arg(itemsCount)
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
             combinedArtworks.removeSelectedArtworks()
-            if (combinedArtworks.getArtworksCount() == 0) {
+            if (combinedArtworks.getArtworksCount() === 0) {
                 closePopup()
             }
         }

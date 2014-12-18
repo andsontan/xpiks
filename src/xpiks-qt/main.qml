@@ -29,7 +29,7 @@ ApplicationWindow {
         id: confirmRemoveSelectedDialog
         property int itemsCount
         title: "Confirmation"
-        text: "Are you sure you want to remove " + itemsCount + " item(s)?"
+        text: qsTr("Are you sure you want to remove %1 item(s)?").arg(itemsCount)
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
             artItemsModel.removeSelectedArtworks()
@@ -484,6 +484,22 @@ ApplicationWindow {
 
             ClipboardHelper {
                 id: clipboard
+            }
+        }
+    }
+
+    statusBar: StatusBar {
+        RowLayout {
+            implicitHeight: 13
+            width: parent.width
+            spacing: 5
+
+            Item {
+                Layout.fillWidth: true
+            }
+
+            Text {
+                text: qsTr("(%1) item(s) modified").arg(artItemsModel.modifiedArtworksCount)
             }
         }
     }

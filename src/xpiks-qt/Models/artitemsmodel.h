@@ -14,6 +14,7 @@ namespace Models {
     class ArtItemsModel : public AbstractListModel {
         Q_OBJECT
         Q_PROPERTY(bool canAddFiles READ getCanAddFiles WRITE setCanAddFiles NOTIFY canAddFilesChanged)
+        Q_PROPERTY(int modifiedArtworksCount READ getModifiedArtworksCount NOTIFY modifiedArtworksCountChanged)
     public:
         ArtItemsModel(QObject *parent = 0) : m_ArtworksRepository(NULL), m_CanAddFiles(true) {}
         ~ArtItemsModel();
@@ -28,6 +29,10 @@ namespace Models {
             IsModifiedRole,
             IsSelectedRole
         };
+
+    public:
+        int getModifiedArtworksCount();
+        void updateModifiedCount() { emit modifiedArtworksCountChanged(); }
 
     public:
         void setArtworksRepository(ArtworksRepository *repository) { m_ArtworksRepository = repository; }
@@ -54,6 +59,7 @@ namespace Models {
     public slots:
         void addDirectoryButtonClicked();
         void addFilesButtonClicked();
+        void itemModifiedChanged(bool) { updateModifiedCount(); }
 
     private:
         void addDirectory(const QString &directory);
@@ -69,6 +75,7 @@ namespace Models {
 
     signals:
         void canAddFilesChanged();
+        void modifiedArtworksCountChanged();
 
     protected:
         QHash<int, QByteArray> roleNames() const;
