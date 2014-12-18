@@ -93,6 +93,20 @@ namespace Models {
         recombineArtworks();
     }
 
+    int CombinedArtworksModel::getSelectedArtworksCount()
+    {
+        int selectedCount = 0;
+        int count = m_ArtworksList.length();
+        for (int i = 0; i < count; ++i) {
+            ArtItemInfo *item = m_ArtworksList[i];
+            if (item->isSelected()) {
+                selectedCount++;
+            }
+        }
+
+        return selectedCount;
+    }
+
     int CombinedArtworksModel::rowCount(const QModelIndex &parent) const
     {
         Q_UNUSED(parent);

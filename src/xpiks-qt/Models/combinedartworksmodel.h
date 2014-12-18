@@ -53,6 +53,7 @@ namespace Models {
         Q_INVOKABLE void appendKeyword(const QString &keyword);
         Q_INVOKABLE void selectArtwork(int index);
         Q_INVOKABLE void removeSelectedArtworks();
+        Q_INVOKABLE int getSelectedArtworksCount();
 
     public:
         enum CombinedArtworksModelRoles {

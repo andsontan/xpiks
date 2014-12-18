@@ -1,6 +1,7 @@
 import QtQuick 2.4
 import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
+import QtQuick.Dialogs 1.2
 
 Item {
     id: dialogComponent
@@ -9,6 +10,17 @@ Item {
     PropertyAnimation { target: dialogComponent; property: "opacity";
         duration: 400; from: 0; to: 1;
         easing.type: Easing.InOutQuad ; running: true }
+
+    MessageDialog {
+        id: confirmRemoveArtworksDialog
+        property int itemsCount
+        title: "Confirmation"
+        text: "Are you sure you want to remove " + itemsCount + " item(s)?"
+        standardButtons: StandardButton.Yes | StandardButton.No
+        onYes: {
+            combinedArtworks.removeSelectedArtworks()
+        }
+    }
 
     // This rectange is the a overlay to partially show the parent through it
     // and clicking outside of the 'dialog' popup will do 'nothing'
@@ -52,7 +64,13 @@ Item {
 
                     Button {
                         text: qsTr("Remove selected")
-                        onClicked: combinedArtworks.removeSelectedArtworks()
+                        onClicked: {
+                            var itemsCount = combinedArtworks.getSelectedArtworksCount()
+                            if (itemsCount > 0) {
+                                confirmRemoveArtworksDialog.itemsCount = itemsCount
+                                confirmRemoveArtworksDialog.open()
+                            }
+                        }
                     }
                 }
 
