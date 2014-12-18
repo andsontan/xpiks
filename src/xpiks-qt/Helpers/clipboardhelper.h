@@ -18,6 +18,10 @@ namespace Helpers {
             return clipboard->text(QClipboard::Clipboard);
         }
 
+        Q_INVOKABLE void setText(const QString &text) {
+            clipboard->setText(text, QClipboard::Clipboard);
+        }
+
     private:
         QClipboard *clipboard;
     };

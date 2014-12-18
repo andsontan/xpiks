@@ -1,6 +1,7 @@
 import QtQuick 2.4
 import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
+import xpiks 1.0
 
 ApplicationWindow {
     id: applicationWindow
@@ -221,6 +222,7 @@ ApplicationWindow {
 
                     RowLayout {
                         anchors.fill: parent
+                        anchors.rightMargin: 5
                         spacing: 5
 
                         Rectangle {
@@ -308,10 +310,29 @@ ApplicationWindow {
                                 }
                             }
 
-                            Text {
-                                id: keywordsLabel
-                                anchors.left: parent.left
-                                text: qsTr("Keywords:")
+                            RowLayout {
+                                Layout.fillWidth: true
+
+                                Text {
+                                    id: keywordsLabel
+                                    anchors.left: parent.left
+                                    text: qsTr("Keywords:")
+                                }
+
+                                Item {
+                                    Layout.fillWidth: true
+                                }
+
+                                Text {
+                                    text: "<a href=\"#\">" + qsTr("Copy keywords") + "</a>"
+                                    linkColor: "blue"
+
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        cursorShape: Qt.PointingHandCursor
+                                        onClicked: clipboard.setText(keywordsstring)
+                                    }
+                                }
                             }
 
                             Rectangle {
@@ -427,6 +448,10 @@ ApplicationWindow {
                         }
                     }
                 }
+            }
+
+            ClipboardHelper {
+                id: clipboard
             }
         }
     }

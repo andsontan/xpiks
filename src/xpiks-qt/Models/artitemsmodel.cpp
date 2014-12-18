@@ -106,6 +106,8 @@ namespace Models {
             return QString(metadata->getImageFileName());
         case KeywordsRole:
             return metadata->getKeywords();
+        case KeywordsStringRole:
+            return metadata->getKeywordsString();
         case IsModifiedRole:
             return metadata->isModified();
         case IsSelectedRole:
@@ -269,6 +271,7 @@ namespace Models {
         roles[EditImageDescriptionRole] = "editdescription";
         roles[ImageFilenameRole] = "filename";
         roles[KeywordsRole] = "keywords";
+        roles[KeywordsStringRole] = "keywordsstring";
         roles[IsModifiedRole] = "ismodified";
         roles[IsSelectedRole] = "isselected";
         return roles;

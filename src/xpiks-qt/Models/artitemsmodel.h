@@ -24,6 +24,7 @@ namespace Models {
             EditImageDescriptionRole,
             ImageFilenameRole,
             KeywordsRole,
+            KeywordsStringRole,
             IsModifiedRole,
             IsSelectedRole
         };
