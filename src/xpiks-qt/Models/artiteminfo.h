@@ -9,9 +9,8 @@ namespace Models {
     class ArtItemInfo
     {
     public:
-        ArtItemInfo(int index, ArtworkMetadata *metadata) :
+        ArtItemInfo(ArtworkMetadata *metadata) :
             m_ArtworkMetadata(metadata),
-            m_DependentIndex(index),
             m_IsSelected(false)
         {}
         ~ArtItemInfo() {}
@@ -31,8 +30,6 @@ namespace Models {
 
     private:
         ArtworkMetadata *m_ArtworkMetadata;
-        // index in main viewmodel of artworks
-        int m_DependentIndex;
         bool m_IsSelected;
     };
 }

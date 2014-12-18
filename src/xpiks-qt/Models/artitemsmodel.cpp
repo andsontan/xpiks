@@ -265,12 +265,9 @@ namespace Models {
     {
         QList<ArtItemInfo*> artworksList;
 
-        int artworksCount = m_ArtworkList.length();
-        for (int i = 0; i < artworksCount; ++i) {
-            ArtworkMetadata *metadata = m_ArtworkList[i];
-
+        foreach (ArtworkMetadata *metadata, m_ArtworkList) {
             if (metadata->getIsSelected()) {
-                ArtItemInfo *info = new ArtItemInfo(i, metadata);
+                ArtItemInfo *info = new ArtItemInfo(metadata);
                 artworksList.append(info);
             }
         }
