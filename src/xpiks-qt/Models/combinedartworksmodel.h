@@ -19,11 +19,7 @@ namespace Models {
         ~CombinedArtworksModel() { qDeleteAll(m_ArtworksList); }
 
     public:
-        void initArtworks(const QList<ArtItemInfo*> &fp) {
-            beginInsertRows(QModelIndex(), 0, fp.length() - 1);
-            std::copy(fp.begin(), fp.end(), std::back_inserter(m_ArtworksList));
-            endInsertRows();
-        }
+        void initArtworks(const QList<ArtItemInfo*> &artworks);
 
     private:
         void initKeywords(const QStringList &ek) { m_CommonKeywords.clear(); std::copy(ek.begin(), ek.end(), std::back_inserter(m_CommonKeywords)); emit keywordsChanged(); }

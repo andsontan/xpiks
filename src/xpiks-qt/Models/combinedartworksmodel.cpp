@@ -6,6 +6,18 @@ namespace Models {
     {
     }
 
+    void CombinedArtworksModel::initArtworks(const QList<ArtItemInfo *> &artworks)
+    {
+        int innerLength = m_ArtworksList.length();
+        int start = innerLength == 0 ? 0 : innerLength - 1;
+        int paramLength = artworks.length();
+        if (paramLength > 0) {
+            beginInsertRows(QModelIndex(), start, start + paramLength - 1);
+            m_ArtworksList.append(artworks);
+            endInsertRows();
+        }
+    }
+
     void CombinedArtworksModel::recombineArtworks()
     {
         bool anyItemsProcessed = false;
@@ -41,10 +53,10 @@ namespace Models {
 
     void CombinedArtworksModel::resetModelData()
     {
-        this->beginResetModel();
+        beginResetModel();
         qDeleteAll(m_ArtworksList);
         m_ArtworksList.clear();
-        this->endResetModel();
+        endResetModel();
 
         setDescription("");
         setKeywords(QStringList());

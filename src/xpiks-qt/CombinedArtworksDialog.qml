@@ -2,6 +2,7 @@ import QtQuick 2.4
 import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.2
+import QtQuick.Controls.Styles 1.3
 
 Item {
     id: dialogComponent
@@ -77,53 +78,96 @@ Item {
                 Rectangle {
                     border.color: "black"
                     border.width: 1
-                    height: 50
+                    height: 60
                     width: parent.width
 
-                    ListView {
-                        boundsBehavior: Flickable.StopAtBounds
+                    ScrollView {
+                        id: imagesScrollView
                         anchors.fill: parent
-                        anchors.margins: 5
-                        orientation: Qt.Horizontal
-                        spacing: 3
-                        model: combinedArtworks
+                        anchors.margins: 2
 
-                        delegate: Rectangle {
-                            property int indexOfThisDelegate: index
-                            id: imageWrapper
-                            height: parent.height
-                            width: height
-                            border.width: 0
-                            border.color: "black"
+                        style: ScrollViewStyle {
+                            //transientScrollBars: true
+                            minimumHandleLength: 20
 
-                            MouseArea {
-                                id: mouseArea
-                                anchors.fill: parent
-                                onClicked: {
-                                    imageWrapper.state == 'clicked' ? imageWrapper.state = "" : imageWrapper.state = 'clicked';
-                                    combinedArtworks.selectArtwork(indexOfThisDelegate)
+                            handle: Item {
+                                implicitHeight: 3
+                                implicitWidth: 10
+
+                                Rectangle {
+                                    anchors.fill: parent
+                                    color: "black"
+                                    opacity: styleData.pressed ? 1 : (styleData.hovered ? 0.8 : 0.5)
                                 }
                             }
 
-                            Image {
-                                anchors.fill: parent
-                                anchors.margins: 1
-                                source: "image://global/" + path
-                                sourceSize.width: 150
-                                sourceSize.height: 150
-                                fillMode: Image.PreserveAspectFit
-                                asynchronous: true
+                            scrollBarBackground: Item {
+                                property bool sticky: false
+                                property bool hovered: styleData.hovered
+                                implicitWidth: 3
+                                implicitHeight: 3
+                                clip: true
+
+                                Rectangle {
+                                    anchors.fill: parent
+                                    anchors.leftMargin: 3
+                                    anchors.rightMargin: 3
+                                    color: "#dddddd"
+                                    opacity: styleData.hovered ? 1 : 0.8
+                                }
+
+                                onHoveredChanged: if (hovered) sticky = true
                             }
 
-                            states: [
-                                State {
-                                    name: "clicked"
-                                    PropertyChanges {
-                                        target: imageWrapper;
-                                        border.width: 1
+                            corner: Item {}
+                            decrementControl: Item {}
+                            incrementControl: Item {}
+                        }
+
+                        ListView {
+                            boundsBehavior: Flickable.StopAtBounds
+                            anchors.fill: parent
+                            orientation: Qt.Horizontal
+                            spacing: 3
+                            model: combinedArtworks
+
+                            delegate: Rectangle {
+                                property int indexOfThisDelegate: index
+                                id: imageWrapper
+                                height: 50
+                                width: height
+                                border.width: 0
+                                border.color: "black"
+
+                                MouseArea {
+                                    id: mouseArea
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        imageWrapper.state == 'clicked' ? imageWrapper.state = "" : imageWrapper.state = 'clicked';
+                                        combinedArtworks.selectArtwork(indexOfThisDelegate)
                                     }
                                 }
-                            ]
+
+                                Image {
+                                    anchors.fill: parent
+                                    anchors.margins: 1
+                                    source: "image://global/" + path
+                                    sourceSize.width: 150
+                                    sourceSize.height: 150
+                                    fillMode: Image.PreserveAspectFit
+                                    asynchronous: true
+                                }
+
+                                states: [
+                                    State {
+                                        name: "clicked"
+                                        PropertyChanges {
+                                            target: imageWrapper;
+                                            border.width: 1
+                                        }
+                                    }
+                                ]
+                            }
                         }
                     }
                 }
