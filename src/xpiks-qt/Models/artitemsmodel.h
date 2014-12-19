@@ -57,6 +57,7 @@ namespace Models {
         bool setData(const QModelIndex &index, const QVariant & value, int role = Qt::EditRole);
 
     public slots:
+        void addArtworks(QVariantList artworksPaths);
         void addDirectoryButtonClicked();
         void addFilesButtonClicked();
         void itemModifiedChanged(bool) { updateModifiedCount(); }

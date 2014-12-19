@@ -52,6 +52,23 @@ ApplicationWindow {
         }
     }
 
+    FileDialog {
+        id: chooseArtworksDialog
+        title: "Please choose artworks"
+        selectExisting: true
+        selectMultiple: true
+        nameFilters: [ "Jpeg images (*.jpg), All files (*)" ]
+
+        onAccepted: {
+            console.log("You chose: " + chooseArtworksDialog.fileUrls)
+            artItemsModel.addArtworks(chooseArtworksDialog.fileUrls)
+        }
+
+        onRejected: {
+            console.log("File dialog canceled")
+        }
+    }
+
     SplitView {
         id: mainGrid
         anchors.fill: parent
@@ -86,9 +103,7 @@ ApplicationWindow {
                     Button {
                         text: qsTr("Add files")
                         enabled: artItemsModel.canAddFiles
-                        onClicked: {
-                            artItemsModel.addFilesButtonClicked()
-                        }
+                        onClicked: chooseArtworksDialog.open()
                     }
 
                     Item {

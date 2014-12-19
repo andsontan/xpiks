@@ -160,6 +160,11 @@ namespace Models {
         return true;
     }
 
+    void ArtItemsModel::addArtworks(QVariantList artworksPaths)
+    {
+
+    }
+
     void ArtItemsModel::addDirectoryButtonClicked()
     {
         setCanAddFiles(false);
