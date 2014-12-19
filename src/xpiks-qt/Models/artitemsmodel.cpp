@@ -1,6 +1,6 @@
-#include <QFileDialog>
 #include <QStringList>
 #include <QDirIterator>
+#include <QDebug>
 #include <QList>
 #include "artitemsmodel.h"
 #include "artiteminfo.h"
@@ -160,45 +160,21 @@ namespace Models {
         return true;
     }
 
-    void ArtItemsModel::addArtworks(QVariantList artworksPaths)
+    void ArtItemsModel::addLocalArtworks(const QList<QUrl> &artworksPaths)
     {
+        qDebug() << artworksPaths;
+        QStringList fileList;
+        foreach (const QUrl &url, artworksPaths) {
+            fileList.append(url.toLocalFile());
+        }
 
+        addFiles(fileList);
     }
 
-    void ArtItemsModel::addDirectoryButtonClicked()
+    void ArtItemsModel::addLocalDirectory(const QUrl &directory)
     {
-        setCanAddFiles(false);
-        {
-            QFileDialog dialog;
-            dialog.setFileMode(QFileDialog::Directory);
-            dialog.setOption(QFileDialog::ShowDirsOnly);
-            dialog.setOption(QFileDialog::DontUseNativeDialog, true);
-            dialog.setDirectory(QDir::homePath());
-
-            if (dialog.exec()) {
-                QString directory = dialog.selectedFiles().at(0);
-                addDirectory(directory);
-            }
-        }
-        setCanAddFiles(true);
-    }
-
-    void ArtItemsModel::addFilesButtonClicked()
-    {
-        setCanAddFiles(false);
-        {
-            QFileDialog dialog;
-            dialog.setNameFilters(QStringList() << "*.jpg" << "*.JPG");
-            dialog.setFileMode(QFileDialog::ExistingFiles);
-            dialog.setOption(QFileDialog::DontUseNativeDialog, true);
-            dialog.setDirectory(QDir::homePath());
-
-            if (dialog.exec()) {
-                QStringList filenames = dialog.selectedFiles();
-                addFiles(filenames);
-            }
-        }
-        setCanAddFiles(true);
+        qDebug() << directory;
+        addDirectory(directory.toLocalFile());
     }
 
     void ArtItemsModel::addDirectory(const QString &directory)

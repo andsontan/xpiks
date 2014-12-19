@@ -5,6 +5,7 @@
 #include <QStringList>
 #include <QList>
 #include <QPair>
+#include <QUrl>
 #include "abstractlistmodel.h"
 #include "artworkmetadata.h"
 #include "artworksrepository.h"
@@ -13,10 +14,9 @@
 namespace Models {
     class ArtItemsModel : public AbstractListModel {
         Q_OBJECT
-        Q_PROPERTY(bool canAddFiles READ getCanAddFiles WRITE setCanAddFiles NOTIFY canAddFilesChanged)
         Q_PROPERTY(int modifiedArtworksCount READ getModifiedArtworksCount NOTIFY modifiedArtworksCountChanged)
     public:
-        ArtItemsModel(QObject *parent = 0) : m_ArtworksRepository(NULL), m_CanAddFiles(true) {}
+        ArtItemsModel(QObject *parent = 0) : m_ArtworksRepository(NULL) {}
         ~ArtItemsModel();
 
     public:
@@ -57,9 +57,8 @@ namespace Models {
         bool setData(const QModelIndex &index, const QVariant & value, int role = Qt::EditRole);
 
     public slots:
-        void addArtworks(QVariantList artworksPaths);
-        void addDirectoryButtonClicked();
-        void addFilesButtonClicked();
+        void addLocalArtworks(const QList<QUrl> &artworksPaths);
+        void addLocalDirectory(const QUrl &directory);
         void itemModifiedChanged(bool) { updateModifiedCount(); }
 
     private:
@@ -67,15 +66,10 @@ namespace Models {
         void addFiles(const QStringList &filepath);
         void setAllItemsSelected(bool selected);
 
-    public:
-        bool getCanAddFiles () const { return m_CanAddFiles; }
-        void setCanAddFiles(bool value) { m_CanAddFiles = value; emit canAddFilesChanged(); }
-
     private:
         void doCombineSelectedImages(CombinedArtworksModel *combinedModel) const;
 
     signals:
-        void canAddFilesChanged();
         void modifiedArtworksCountChanged();
 
     protected:
@@ -92,7 +86,6 @@ namespace Models {
         QList<ArtworkMetadata*> m_ArtworkList;
         CombinedArtworksModel *m_CombinedArtworks;
         ArtworksRepository *m_ArtworksRepository;
-        bool m_CanAddFiles;
     };
 }
 

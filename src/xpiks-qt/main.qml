@@ -61,11 +61,28 @@ ApplicationWindow {
 
         onAccepted: {
             console.log("You chose: " + chooseArtworksDialog.fileUrls)
-            artItemsModel.addArtworks(chooseArtworksDialog.fileUrls)
+            artItemsModel.addLocalArtworks(chooseArtworksDialog.fileUrls)
         }
 
         onRejected: {
-            console.log("File dialog canceled")
+            console.log("Artworks dialog canceled")
+        }
+    }
+
+    FileDialog {
+        id: chooseDirectoryDialog
+        title: "Please choose artworks"
+        selectExisting: true
+        selectMultiple: false
+        selectFolder: true
+
+        onAccepted: {
+            console.log("You chose: " + chooseDirectoryDialog.fileUrl)
+            artItemsModel.addLocalDirectory(chooseDirectoryDialog.fileUrl)
+        }
+
+        onRejected: {
+            console.log("Directory dialog canceled")
         }
     }
 
@@ -95,14 +112,12 @@ ApplicationWindow {
                     }
 
                     Button {
-                        enabled: artItemsModel.canAddFiles
                         text: qsTr("Add directory")
-                        onClicked: artItemsModel.addDirectoryButtonClicked()
+                        onClicked: chooseDirectoryDialog.open()
                     }
 
                     Button {
                         text: qsTr("Add files")
-                        enabled: artItemsModel.canAddFiles
                         onClicked: chooseArtworksDialog.open()
                     }
 
@@ -468,7 +483,7 @@ ApplicationWindow {
 
                                                     Rectangle {
                                                         anchors.fill: parent
-                                                        border.color: black
+                                                        border.color: "black"
                                                         border.width: 1
                                                         radius: 8
 
