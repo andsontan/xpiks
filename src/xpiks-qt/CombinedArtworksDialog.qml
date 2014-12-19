@@ -277,29 +277,8 @@ Item {
                                         }
                                     }
 
-                                    Rectangle {
-                                        width: 15
-                                        height: 15
-                                        color: "transparent"
-                                        Image {
-                                            anchors.fill: parent
-                                            source: "qrc:/CloseIcon.svg"
-                                            sourceSize.width: 100
-                                            sourceSize.height: 100
-                                            fillMode: Image.PreserveAspectFit
-                                            opacity: closeIconMouseArea.containsMouse ? 1 : 0.5
-                                            scale: closeIconMouseArea.pressed ? 0.8 : 1
-
-                                            MouseArea {
-                                                id: closeIconMouseArea
-                                                anchors.fill: parent
-                                                hoverEnabled: true
-                                                preventStealing: true
-                                                onClicked: {
-                                                    keywordsWrapper.removeKeyword(itemWrapper.indexOfThisDelegate)
-                                                }
-                                            }
-                                        }
+                                    CloseIcon {
+                                        onItemClicked: keywordsWrapper.removeKeyword(itemWrapper.indexOfThisDelegate)
                                     }
 
                                     Item {

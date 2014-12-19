@@ -4,5 +4,6 @@
         <file>EditableTags.qml</file>
         <file>CombinedArtworksDialog.qml</file>
         <file>SettingsWindow.qml</file>
+        <file>CloseIcon.qml</file>
     </qresource>
 </RCC>
