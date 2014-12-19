@@ -1,6 +1,6 @@
 TEMPLATE = app
 
-QT += qml quick widgets
+QT += qml quick widgets concurrent
 
 SOURCES += main.cpp \
     Models/artitemsmodel.cpp \
@@ -9,7 +9,9 @@ SOURCES += main.cpp \
     Models/artworksrepository.cpp \
     Models/combinedartworksmodel.cpp \
     Models/artiteminfo.cpp \
-    Helpers/indiceshelper.cpp
+    Helpers/indiceshelper.cpp \
+    Models/iptcprovider.cpp \
+    Helpers/externaltoolsprovider.cpp
 
 RESOURCES += qml.qrc
 
@@ -30,4 +32,7 @@ HEADERS += \
     Models/artiteminfo.h \
     Models/abstractlistmodel.h \
     Helpers/constants.h \
-    Helpers/appsettings.h
+    Helpers/appsettings.h \
+    Models/iptcprovider.h \
+    Helpers/patcher.h \
+    Helpers/externaltoolsprovider.h

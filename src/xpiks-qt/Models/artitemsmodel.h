@@ -10,6 +10,7 @@
 #include "artworkmetadata.h"
 #include "artworksrepository.h"
 #include "combinedartworksmodel.h"
+#include "iptcprovider.h"
 
 namespace Models {
     class ArtItemsModel : public AbstractListModel {
@@ -41,6 +42,7 @@ namespace Models {
     public:
         void setArtworksRepository(ArtworksRepository *repository) { m_ArtworksRepository = repository; }
         void setCombinedArtworksModel(CombinedArtworksModel *combinedArtworksModel) { m_CombinedArtworks = combinedArtworksModel; }
+        void setIptcProvider(IptcProvider *provider) { m_IptcProvider = provider; }
 
     public:
         Q_INVOKABLE void removeArtworksDirectory(int index);
@@ -50,9 +52,11 @@ namespace Models {
         Q_INVOKABLE void combineSelectedArtworks() { doCombineSelectedImages(m_CombinedArtworks); }
         Q_INVOKABLE void selectAllArtworks() { setAllItemsSelected(true); }
         Q_INVOKABLE void unselectAllArtworks() { setAllItemsSelected(false); }
+        Q_INVOKABLE void setSelectedItemsSaved();
         Q_INVOKABLE int getSelectedItemsCount();
         Q_INVOKABLE void removeSelectedArtworks();
         Q_INVOKABLE void updateSelectedArtworks();
+        Q_INVOKABLE void patchSelectedArtworks();
 
     public:
         int rowCount(const QModelIndex & parent = QModelIndex()) const;
@@ -90,6 +94,7 @@ namespace Models {
         QList<ArtworkMetadata*> m_ArtworkList;
         CombinedArtworksModel *m_CombinedArtworks;
         ArtworksRepository *m_ArtworksRepository;
+        IptcProvider *m_IptcProvider;
     };
 }
 

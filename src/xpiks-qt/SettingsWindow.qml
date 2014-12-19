@@ -7,7 +7,7 @@ ApplicationWindow {
     id: settingsWindow
     modality: "ApplicationModal"
     width: 640
-    height: 480
+    height: 180
     property string exiftoolpathkey: appSettings.exifToolPathKey
     property string exifToolPath: appSettings.value(exiftoolpathkey, "")
 
@@ -22,7 +22,7 @@ ApplicationWindow {
             console.log("You chose: " + fileDialog.fileUrl)
             var path = fileDialog.fileUrl.toString().replace(/^(file:\/{3})/,"");
             exifToolPath = decodeURIComponent(path);
-            appSettings.setValue(exiftoolpathkey, exifToolPath)
+            exifToolText.text = exifToolPath;
         }
 
         onRejected: {
@@ -48,11 +48,11 @@ ApplicationWindow {
                 width: childrenRect.width + 5
                 color: "#dddddd"
 
-                Text {
+                TextInput {
                     id: exifToolText
                     width: 300
                     height: 20
-                    elide: Text.ElideMiddle
+                    clip: true
                     text: exifToolPath
                     anchors.left: parent.left
                     anchors.leftMargin: 5
@@ -65,6 +65,11 @@ ApplicationWindow {
                 text: qsTr("Select...")
                 onClicked: fileDialog.open()
             }
+
+            Button {
+                text: qsTr("Reset")
+                onClicked: exifToolPath = "exiftool"
+            }
         }
 
         RowLayout {
@@ -76,7 +81,10 @@ ApplicationWindow {
 
             Button {
                 text: qsTr("Save")
-                onClicked: appSettings.setValue(exiftoolpathkey, exifToolPath)
+                onClicked: {
+                    exifToolPath = exifToolText.text
+                    appSettings.setValue(exiftoolpathkey, exifToolPath)
+                }
             }
 
             Button {

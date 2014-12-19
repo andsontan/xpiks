@@ -268,11 +268,18 @@ ApplicationWindow {
                     }
 
                     Button {
-                        text: qsTr("Save All")
+                        text: qsTr("Save Selected")
+                        onClicked: {
+                            if (artItemsModel.getSelectedItemsCount() > 0) {
+                                iptcProvider.resetModel()
+                                artItemsModel.patchSelectedArtworks()
+                                Qt.createComponent("ArtworkPatcher.qml").createObject(applicationWindow, {})
+                            }
+                        }
                     }
 
                     Button {
-                        text: qsTr("Reset All")
+                        text: qsTr("Upload Selected")
                     }
 
                     Item {

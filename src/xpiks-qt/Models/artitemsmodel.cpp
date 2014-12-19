@@ -78,6 +78,20 @@ namespace Models {
         }
     }
 
+    void ArtItemsModel::setSelectedItemsSaved()
+    {
+        QList<int> selectedIndices;
+        getSelectedItemsIndices(selectedIndices);
+
+        foreach (int index, selectedIndices) {
+            m_ArtworkList[index]->unsetModified();
+        }
+
+        QList<QPair<int, int> > rangesToUpdate;
+        Helpers::indicesToRanges(selectedIndices, rangesToUpdate);
+        updateItemsAtIndices(rangesToUpdate, QVector<int>() << IsModifiedRole);
+    }
+
     int ArtItemsModel::getSelectedItemsCount()
     {
         QList<int> selectedIndices;
@@ -99,6 +113,22 @@ namespace Models {
         QList<QPair<int, int> > rangesToUpdate;
         Helpers::indicesToRanges(selectedIndices, rangesToUpdate);
         updateItemsAtIndices(rangesToUpdate, QVector<int>() << ImageDescriptionRole << KeywordsRole << IsModifiedRole);
+    }
+
+    void ArtItemsModel::patchSelectedArtworks()
+    {
+        QList<ArtworkMetadata*> selectedArtworks;
+        int count = m_ArtworkList.length();
+        for (int i = 0; i < count; ++i) {
+            ArtworkMetadata *metadata = m_ArtworkList[i];
+            if (metadata->getIsSelected()) {
+                selectedArtworks.append(metadata);
+            }
+        }
+
+        // TODO: assert iptc provider is not null
+        // TODO: remove this two times copying
+        m_IptcProvider->setArtworks(selectedArtworks);
     }
 
     int ArtItemsModel::rowCount(const QModelIndex &parent) const {

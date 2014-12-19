@@ -47,6 +47,9 @@ namespace Models {
         void parseKeywords(const QString& rawKeywords);
         void setModified() { m_IsModified = true; emit modifiedChanged(m_IsModified); }
 
+    public:
+        void unsetModified() { m_IsModified = false; emit modifiedChanged(m_IsModified); }
+
     signals:
          void modifiedChanged(bool newValue);
 

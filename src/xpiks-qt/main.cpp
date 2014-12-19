@@ -9,6 +9,7 @@
 #include "Helpers/globalimageprovider.h"
 #include "Helpers/clipboardhelper.h"
 #include "Models/artitemsmodel.h"
+#include "Models/iptcprovider.h"
 #include "Helpers/appsettings.h"
 #include "Helpers/constants.h"
 
@@ -61,21 +62,26 @@ int main(int argc, char *argv[]) {
     Models::ArtworksRepository artworkRepository;
     Models::ArtItemsModel artItemsModel;
     Models::CombinedArtworksModel combinedArtworksModel;
+    Models::IptcProvider iptcProvider;
 
     artItemsModel.setArtworksRepository(&artworkRepository);
     artItemsModel.setCombinedArtworksModel(&combinedArtworksModel);
+    artItemsModel.setIptcProvider(&iptcProvider);
 
-    AppSettings appSettings;
+    Helpers::AppSettings appSettings;
 
     qmlRegisterType<Helpers::ClipboardHelper>("xpiks", 1, 0, "ClipboardHelper");
 
     QQmlApplicationEngine engine;
     Helpers::GlobalImageProvider *globalProvider = new Helpers::GlobalImageProvider(QQmlImageProviderBase::Image);
 
-    engine.rootContext()->setContextProperty("artItemsModel", &artItemsModel);
-    engine.rootContext()->setContextProperty("artworkRepository", &artworkRepository);
-    engine.rootContext()->setContextProperty("combinedArtworks", &combinedArtworksModel);
-    engine.rootContext()->setContextProperty("appSettings", &appSettings);
+    QQmlContext *rootContext = engine.rootContext();
+    rootContext->setContextProperty("artItemsModel", &artItemsModel);
+    rootContext->setContextProperty("artworkRepository", &artworkRepository);
+    rootContext->setContextProperty("combinedArtworks", &combinedArtworksModel);
+    rootContext->setContextProperty("appSettings", &appSettings);
+    rootContext->setContextProperty("iptcProvider", &iptcProvider);
+
     engine.addImageProvider("global", globalProvider);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
