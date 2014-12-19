@@ -15,7 +15,10 @@ namespace Models {
         Q_PROPERTY(QStringList keywords READ getKeywords WRITE setKeywords NOTIFY keywordsChanged)
         Q_PROPERTY(QString description READ getDescription WRITE setDescription NOTIFY descriptionChanged)
     public:
-        CombinedArtworksModel(QObject *parent = 0);
+        CombinedArtworksModel(QObject *parent = 0) :
+            AbstractListModel(parent)
+        {}
+
         ~CombinedArtworksModel() { qDeleteAll(m_ArtworksList); }
 
     public:

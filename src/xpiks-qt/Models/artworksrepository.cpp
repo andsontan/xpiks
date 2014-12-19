@@ -5,9 +5,6 @@
 #include "../Helpers/indiceshelper.h"
 
 namespace Models {
-    ArtworksRepository::ArtworksRepository(QObject *parent) {
-    }
-
     void ArtworksRepository::updateCountsForExistingDirectories()
     {
         emit dataChanged(index(0), index(rowCount() - 1), QVector<int>() << UsedImagesCountRole);

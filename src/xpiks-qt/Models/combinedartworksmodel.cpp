@@ -2,10 +2,6 @@
 #include "../Helpers/indiceshelper.h"
 
 namespace Models {
-    CombinedArtworksModel::CombinedArtworksModel(QObject *parent)
-    {
-    }
-
     void CombinedArtworksModel::initArtworks(const QList<ArtItemInfo *> &artworks)
     {
         int innerLength = m_ArtworksList.length();

@@ -16,7 +16,11 @@ namespace Models {
         Q_OBJECT
         Q_PROPERTY(int modifiedArtworksCount READ getModifiedArtworksCount NOTIFY modifiedArtworksCountChanged)
     public:
-        ArtItemsModel(QObject *parent = 0) : m_ArtworksRepository(NULL) {}
+        ArtItemsModel(QObject *parent = 0) :
+            AbstractListModel(parent),
+            m_ArtworksRepository(NULL)
+        {}
+
         ~ArtItemsModel();
 
     public:

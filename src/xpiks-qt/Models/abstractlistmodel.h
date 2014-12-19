@@ -7,6 +7,9 @@
 
 namespace Models {
     class AbstractListModel : public QAbstractListModel {
+    public:
+        AbstractListModel(QObject *parent = 0) : QAbstractListModel(parent) {}
+
     protected:
         void removeItemsAtIndices(const QList<QPair<int, int> > &ranges) {
             int removedCount = 0;

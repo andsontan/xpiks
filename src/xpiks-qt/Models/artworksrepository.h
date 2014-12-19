@@ -11,7 +11,10 @@ namespace Models {
     class ArtworksRepository : public AbstractListModel {
         Q_OBJECT
     public:
-        ArtworksRepository(QObject *parent = 0);
+        ArtworksRepository(QObject *parent = 0) :
+            AbstractListModel(parent)
+        {}
+
         ArtworksRepository(const ArtworksRepository &copy):
             m_DirectoriesList(copy.m_DirectoriesList), m_DirectoriesHash(copy.m_DirectoriesHash),
         m_FilesSet(copy.m_FilesSet) {}
