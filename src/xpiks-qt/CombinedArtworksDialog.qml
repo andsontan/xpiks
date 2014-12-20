@@ -143,15 +143,18 @@ Item {
                                 id: imageWrapper
                                 height: 50
                                 width: height
-                                border.width: 0
+                                border.width: isselected ? 1 : 0
                                 border.color: "black"
 
                                 MouseArea {
                                     id: mouseArea
                                     anchors.fill: parent
                                     onClicked: {
-                                        imageWrapper.state == 'clicked' ? imageWrapper.state = "" : imageWrapper.state = 'clicked';
-                                        combinedArtworks.selectArtwork(indexOfThisDelegate)
+                                        if (isselected) {
+                                            combinedArtworks.deselectArtwork(indexOfThisDelegate)
+                                        } else {
+                                            combinedArtworks.selectArtwork(indexOfThisDelegate)
+                                        }
                                     }
                                 }
 
@@ -164,16 +167,6 @@ Item {
                                     fillMode: Image.PreserveAspectFit
                                     asynchronous: true
                                 }
-
-                                states: [
-                                    State {
-                                        name: "clicked"
-                                        PropertyChanges {
-                                            target: imageWrapper;
-                                            border.width: 1
-                                        }
-                                    }
-                                ]
                             }
                         }
                     }

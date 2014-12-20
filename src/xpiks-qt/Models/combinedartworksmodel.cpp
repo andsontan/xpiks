@@ -83,6 +83,17 @@ namespace Models {
         emit dataChanged(qIndex, qIndex, QVector<int>() << IsSelectedRole);
     }
 
+    void CombinedArtworksModel::deselectArtwork(int index)
+    {
+        if (index < 0 || index >= m_ArtworksList.length()) {
+            return;
+        }
+
+        m_ArtworksList[index]->deselect();
+        QModelIndex qIndex = this->index(index);
+        emit dataChanged(qIndex, qIndex, QVector<int>() << IsSelectedRole);
+    }
+
     void CombinedArtworksModel::removeSelectedArtworks()
     {
         int count = m_ArtworksList.length();
