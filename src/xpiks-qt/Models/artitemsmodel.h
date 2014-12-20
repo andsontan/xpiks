@@ -10,16 +10,19 @@
 #include "artworkmetadata.h"
 #include "artworksrepository.h"
 #include "combinedartworksmodel.h"
+#include "artworkuploader.h"
 #include "iptcprovider.h"
 
 namespace Models {
     class ArtItemsModel : public AbstractListModel {
         Q_OBJECT
         Q_PROPERTY(int modifiedArtworksCount READ getModifiedArtworksCount NOTIFY modifiedArtworksCountChanged)
+        Q_PROPERTY(int selectedArtworksCount READ getSelectedArtworksCount NOTIFY selectedArtworksCountChanged)
     public:
         ArtItemsModel(QObject *parent = 0) :
             AbstractListModel(parent),
-            m_ArtworksRepository(NULL)
+            m_ArtworksRepository(NULL),
+            m_SelectedItemsCount(0)
         {}
 
         ~ArtItemsModel();
@@ -41,12 +44,15 @@ namespace Models {
 
     public:
         int getModifiedArtworksCount();
+        int getSelectedArtworksCount() { return m_SelectedItemsCount; }
         void updateModifiedCount() { emit modifiedArtworksCountChanged(); }
+        void updateSelectedCount() { emit selectedArtworksCountChanged(); }
 
     public:
         void setArtworksRepository(ArtworksRepository *repository) { m_ArtworksRepository = repository; }
         void setCombinedArtworksModel(CombinedArtworksModel *combinedArtworksModel) { m_CombinedArtworks = combinedArtworksModel; }
         void setIptcProvider(IptcProvider *provider) { m_IptcProvider = provider; }
+        void setArtworkUploader(ArtworkUploader *uploader) { m_ArtworkUploader = uploader; }
 
     public:
         Q_INVOKABLE void updateAllProperties();
@@ -58,10 +64,11 @@ namespace Models {
         Q_INVOKABLE void selectAllArtworks() { setAllItemsSelected(true); }
         Q_INVOKABLE void unselectAllArtworks() { setAllItemsSelected(false); }
         Q_INVOKABLE void setSelectedItemsSaved();
-        Q_INVOKABLE int getSelectedItemsCount();
         Q_INVOKABLE void removeSelectedArtworks();
         Q_INVOKABLE void updateSelectedArtworks();
         Q_INVOKABLE void patchSelectedArtworks();
+        Q_INVOKABLE void uploadSelectedArtworks();
+        Q_INVOKABLE bool areSelectedArtworksSaved();
 
     public:
         int rowCount(const QModelIndex & parent = QModelIndex()) const;
@@ -84,6 +91,7 @@ namespace Models {
 
     signals:
         void modifiedArtworksCountChanged();
+        void selectedArtworksCountChanged();
 
     protected:
         QHash<int, QByteArray> roleNames() const;
@@ -100,6 +108,8 @@ namespace Models {
         CombinedArtworksModel *m_CombinedArtworks;
         ArtworksRepository *m_ArtworksRepository;
         IptcProvider *m_IptcProvider;
+        ArtworkUploader *m_ArtworkUploader;
+        int m_SelectedItemsCount;
     };
 }
 

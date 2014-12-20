@@ -19,8 +19,10 @@ namespace Helpers {
         {}
 
         Q_PROPERTY(QString exifToolPathKey READ getExifToolPathKey)
-
         QString getExifToolPathKey() const { return Constants::PATH_TO_EXIFTOOL; }
+
+        Q_PROPERTY(QString curlPathKey READ getCurlPathKey)
+        QString getCurlPathKey() const { return Constants::PATH_TO_CURL; }
 
         Q_INVOKABLE inline void setValue(const QString &key, const QVariant &value) {
             QSettings::setValue(key, value);

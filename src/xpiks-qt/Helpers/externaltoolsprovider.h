@@ -14,9 +14,11 @@ namespace Helpers {
 
     public:
         static QString getExifToolPath();
+        static QString getCurlPath();
 
     public:
         static QString defaultExifToolPath;
+        static QString defaultCurlPath;
         static ExternalToolsProvider &getInstance() {
             static ExternalToolsProvider instance;
             return instance;

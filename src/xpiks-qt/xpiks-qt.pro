@@ -11,7 +11,9 @@ SOURCES += main.cpp \
     Models/artiteminfo.cpp \
     Helpers/indiceshelper.cpp \
     Models/iptcprovider.cpp \
-    Helpers/externaltoolsprovider.cpp
+    Helpers/externaltoolsprovider.cpp \
+    Models/artworkuploader.cpp \
+    Models/artworksprocessor.cpp
 
 RESOURCES += qml.qrc
 
@@ -35,4 +37,8 @@ HEADERS += \
     Helpers/appsettings.h \
     Models/iptcprovider.h \
     Helpers/externaltoolsprovider.h \
-    Helpers/exiftoolwrapper.h
+    Helpers/exiftoolwrapper.h \
+    Models/artworkuploader.h \
+    Helpers/curlwrapper.h \
+    Models/artworksprocessor.h \
+    Models/ftpcredentials.h

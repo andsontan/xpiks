@@ -58,6 +58,16 @@ Item {
                     height: 20
                     color: iptcProvider.isError ? "red" : "#77B753"
                     value: iptcProvider.percent
+
+                    onValueChanged: {
+                        if (value == 100) {
+                            importButton.text = qsTr("Start Import")
+                            artItemsModel.updateAllProperties()
+                            if (!iptcProvider.isError) {
+                                closePopup()
+                            }
+                        }
+                    }
                 }
 
                 RowLayout {
@@ -66,9 +76,11 @@ Item {
                     }
 
                     Button {
+                        id: importButton
                         text: qsTr("Start Import")
                         enabled: !iptcProvider.inProgress
                         onClicked: {
+                            text = qsTr("Importing...")
                             iptcProvider.resetModel()
                             iptcProvider.importMetadata()
                         }
@@ -78,7 +90,6 @@ Item {
                         text: qsTr("Close")
                         enabled: !iptcProvider.inProgress
                         onClicked: {
-                            artItemsModel.updateAllProperties()
                             closePopup()
                         }
                     }

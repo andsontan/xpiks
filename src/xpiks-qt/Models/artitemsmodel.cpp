@@ -99,13 +99,8 @@ namespace Models {
         QList<QPair<int, int> > rangesToUpdate;
         Helpers::indicesToRanges(selectedIndices, rangesToUpdate);
         updateItemsAtIndices(rangesToUpdate, QVector<int>() << IsModifiedRole);
-    }
 
-    int ArtItemsModel::getSelectedItemsCount()
-    {
-        QList<int> selectedIndices;
-        getSelectedItemsIndices(selectedIndices);
-        return selectedIndices.length();
+        updateModifiedCount();
     }
 
     void ArtItemsModel::removeSelectedArtworks()
@@ -142,6 +137,38 @@ namespace Models {
         m_IptcProvider->setArtworks(selectedArtworks);
     }
 
+    void ArtItemsModel::uploadSelectedArtworks()
+    {
+        QList<ArtworkMetadata*> selectedArtworks;
+        int count = m_ArtworkList.length();
+        for (int i = 0; i < count; ++i) {
+            ArtworkMetadata *metadata = m_ArtworkList[i];
+            if (metadata->getIsSelected()) {
+                selectedArtworks.append(metadata);
+            }
+        }
+
+        // TODO: assert uploader is not null
+        // TODO: remove this two times copying
+        m_ArtworkUploader->setArtworks(selectedArtworks);
+    }
+
+    bool ArtItemsModel::areSelectedArtworksSaved()
+    {
+        bool areModified = false;
+
+        foreach(ArtworkMetadata *metadata, m_ArtworkList) {
+            if (metadata->getIsSelected()) {
+                if (metadata->isModified()) {
+                    areModified = true;
+                    break;
+                }
+            }
+        }
+
+        return !areModified;
+    }
+
     int ArtItemsModel::rowCount(const QModelIndex &parent) const {
         Q_UNUSED(parent);
         return m_ArtworkList.count();
@@ -156,7 +183,7 @@ namespace Models {
         case ArtworkDescriptionRole:
             return metadata->getDescription();
         case ArtworkFilenameRole:
-            return metadata->getArtworkFilepath();
+            return metadata->getFilepath();
         case ArtworkAuthorRole:
             return metadata->getAuthor();
         case ArtworkTitleRole:
@@ -190,6 +217,7 @@ namespace Models {
         }
 
         ArtworkMetadata *metadata = m_ArtworkList.at(index.row());
+        bool isSelected = false;
         switch (role) {
         case EditArtworkDescriptionRole:
             metadata->setDescription(value.toString());
@@ -201,7 +229,11 @@ namespace Models {
             metadata->setAuthor(value.toString());
             break;
         case IsSelectedRole:
-            metadata->setIsSelected(value.toBool());
+            isSelected = value.toBool();
+            metadata->setIsSelected(isSelected);
+            if (isSelected) m_SelectedItemsCount++;
+            else m_SelectedItemsCount--;
+            updateSelectedCount();
             break;
         default:
             return false;
@@ -293,6 +325,10 @@ namespace Models {
             QModelIndex endIndex = index(length - 1);
             emit dataChanged(startIndex, endIndex, QVector<int>() << IsSelectedRole);
         }
+
+        if (selected) m_SelectedItemsCount = m_ArtworkList.length();
+        else m_SelectedItemsCount = 0;
+        updateSelectedCount();
     }
 
     void ArtItemsModel::doCombineSelectedImages(CombinedArtworksModel *combinedModel) const
@@ -330,7 +366,12 @@ namespace Models {
     {
         // TODO: add assert for row
         ArtworkMetadata *metadata = m_ArtworkList[row];
-        m_ArtworksRepository->removeFile(metadata->getArtworkFilepath());
+        m_ArtworksRepository->removeFile(metadata->getFilepath());
+
+        if (metadata->getIsSelected()) {
+            m_SelectedItemsCount--;
+            updateSelectedCount();
+        }
 
         delete metadata;
         m_ArtworkList.removeAt(row);

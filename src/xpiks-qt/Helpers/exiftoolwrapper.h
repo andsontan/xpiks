@@ -1,5 +1,5 @@
-#ifndef PATCHER
-#define PATCHER
+#ifndef EXIFTOOLWRAPPER
+#define EXIFTOOLWRAPPER
 
 #include <QByteArray>
 #include <QProcess>
@@ -23,6 +23,7 @@ Models::ArtworkMetadata *writeArtworkMetadata(Models::ArtworkMetadata *metadata)
     arguments << QString("-IPTC:ObjectName=\"%1\"").arg(title);
     arguments << QString("-XMP:Title=\"%1\"").arg(title);
     arguments << QString("-EXIF:ImageDescription=\"%1\"").arg(description);
+    arguments << QString("-IPTC:LocalCaption=\"%1\"").arg(description);
     arguments << QString("-IPTC:Caption-Abstract=\"%1\"").arg(description);
     arguments << QString("-XMP:Caption=\"%1\"").arg(description);
     arguments << QString("-XMP:Description=\"%1\"").arg(description);
@@ -30,7 +31,7 @@ Models::ArtworkMetadata *writeArtworkMetadata(Models::ArtworkMetadata *metadata)
     arguments << QString("-XMP:Keywords=\"%1\"").arg(keywords);
     arguments << QString("-XMP:Subject=\"%1\"").arg(keywords);
     arguments << "-overwrite_original" << "-quiet" << "-ignoreMinorErrors";
-    arguments << metadata->getArtworkFilepath();
+    arguments << metadata->getFilepath();
 
     const QString exiftoolPath = Helpers::ExternalToolsProvider::getExifToolPath();
 
@@ -55,7 +56,7 @@ Models::ArtworkMetadata *readArtworkMetadata(Models::ArtworkMetadata *metadata) 
 
     QStringList arguments;
     arguments << "-s" << "-e" << "-n" << "-EXIF:all" << "-IPTC:all" << "-XMP:all";
-    arguments << metadata->getArtworkFilepath();
+    arguments << metadata->getFilepath();
 
     QProcess process;
     process.start(exiftoolPath, arguments);
@@ -90,19 +91,19 @@ void grabMetadata(const QStringList &items, Models::ArtworkMetadata *metadata) {
         const QString &first = parts.first();
 
         if (!authorSet && first.contains(authorRegExp)) {
-            author = parts.at(1).trimmed();
+            author = parts.at(1).trimmed().remove("\"");
             authorSet = true;
         }
         else if (!titleSet && first.contains(titleRegExp)) {
-            title = parts.at(1).trimmed();
+            title = parts.at(1).trimmed().remove("\"");
             titleSet = true;
         }
         else if (!descriptionSet && first.contains(descriptionRegExp)) {
-            description = parts.at(1).trimmed();
+            description = parts.at(1).trimmed().remove("\"");
             descriptionSet = true;
         }
         else if (!keywordsSet && first.contains(keywordsRegExp)) {
-            keywords = parts.at(1).trimmed();
+            keywords = parts.at(1).trimmed().remove("\"");
             keywordsSet = true;
         }
     }
@@ -110,5 +111,5 @@ void grabMetadata(const QStringList &items, Models::ArtworkMetadata *metadata) {
     metadata->initialize(author, title, description, keywords);
 }
 
-#endif // PATCHER
+#endif // EXIFTOOLWRAPPER
 

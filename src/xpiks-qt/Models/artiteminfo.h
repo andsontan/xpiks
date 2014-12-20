@@ -17,7 +17,7 @@ namespace Models {
 
     public:
         const QSet<QString> &getKeywords() const { return m_ArtworkMetadata->getKeywordsSet(); }
-        const QString &getFilePath() const { return m_ArtworkMetadata->getArtworkFilepath(); }
+        const QString &getFilePath() const { return m_ArtworkMetadata->getFilepath(); }
         const QString &getDescription() const { return m_ArtworkMetadata->getDescription(); }
         bool isSelected() const { return m_IsSelected; }
         void select() { m_IsSelected = true; }

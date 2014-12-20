@@ -5,11 +5,7 @@
 
 namespace Models {
     IptcProvider::IptcProvider():
-        m_MetadataWriter(0),
-        m_ProcessedArtworksCount(0),
-        m_ArtworksCount(0),
-        m_IsInProgress(false),
-        m_IsError(false)
+        ArtworksProcessor()
     {
         m_MetadataWriter = new QFutureWatcher<ArtworkMetadata*>(this);
         connect(m_MetadataWriter, SIGNAL(resultReadyAt(int)), SLOT(metadataExported(int)));
@@ -24,46 +20,37 @@ namespace Models {
     {
         qDebug() << "Metadata exported at " << index;
         ArtworkMetadata *metadata = m_MetadataReader->resultAt(index);
-        metadataImported(metadata);
+        metadataImportedHandler(metadata);
     }
 
     void IptcProvider::metadataExported(int index) {
         qDebug() << "Metadata exported at " << index;
         ArtworkMetadata *metadata = m_MetadataWriter->resultAt(index);
-        metadataExported(metadata);
+        metadataExportedHandler(metadata);
     }
 
     void IptcProvider::allFinished() {
-        setInProgress(false);
+        endProcessing();
     }
 
-    void IptcProvider::metadataImported(ArtworkMetadata *metadata)
+    void IptcProvider::metadataImportedHandler(ArtworkMetadata *metadata)
     {
         incProgress();
 
         // TODO: handle bad results
         if (NULL != metadata) {
-            qDebug() << metadata->getArtworkFilepath();
+            qDebug() << metadata->getFilepath();
         }
     }
 
-    void IptcProvider::metadataExported(ArtworkMetadata *metadata)
+    void IptcProvider::metadataExportedHandler(ArtworkMetadata *metadata)
     {
         incProgress();
 
         // TODO: handle bad results
         if (NULL != metadata) {
-            qDebug() << metadata->getArtworkFilepath();
+            qDebug() << metadata->getFilepath();
         }
-    }
-
-    void IptcProvider::resetModel()
-    {
-        setInProgress(false);
-        setIsError(false);
-        m_ArtworksCount = 0;
-        m_ProcessedArtworksCount = 0;
-        updateProgress();
     }
 
     void IptcProvider::doReadMetadata(const QList<ArtworkMetadata *> &artworkList)
@@ -73,9 +60,7 @@ namespace Models {
             return;
         }
 
-        m_ArtworksCount = artworksCount;
-        m_ProcessedArtworksCount = 0;
-        setInProgress(true);
+        beginProcessing();
 
         ArtworkMetadata *firstMetadata = artworkList.first();
         if (!readArtworkMetadata(firstMetadata)) {
@@ -85,7 +70,7 @@ namespace Models {
             return;
         }
         else {
-            metadataImported(firstMetadata);
+            metadataImportedHandler(firstMetadata);
         }
 
         m_MetadataWriter->setFuture(QtConcurrent::mapped(artworkList.begin() + 1, artworkList.end(), readArtworkMetadata));
@@ -97,19 +82,15 @@ namespace Models {
             return;
         }
 
-        m_ArtworksCount = artworksCount;
-        m_ProcessedArtworksCount = 0;
-        setInProgress(true);
+        beginProcessing();
 
         ArtworkMetadata *firstMetadata = artworkList.first();
         if (!writeArtworkMetadata(firstMetadata)) {
-            setIsError(true);
-            incProgress();
-            allFinished();
+            endAfterFirstError();
             return;
         }
         else {
-            metadataExported(firstMetadata);
+            metadataExportedHandler(firstMetadata);
         }
 
         m_MetadataWriter->setFuture(QtConcurrent::mapped(artworkList.begin() + 1, artworkList.end(), writeArtworkMetadata));

@@ -11,6 +11,9 @@ ApplicationWindow {
     property string exiftoolpathkey: appSettings.exifToolPathKey
     property string exifToolPath: appSettings.value(exiftoolpathkey, "")
 
+    property string curlpathkey: appSettings.curlPathKey
+    property string curlPath: appSettings.value(curlpathkey, "")
+
     FileDialog {
         id: fileDialog
         title: "Please choose ExifTool"
@@ -73,6 +76,44 @@ ApplicationWindow {
         }
 
         RowLayout {
+            width: parent.width
+            height: 30
+            spacing: 5
+
+            Text {
+                text: "Curl path: "
+            }
+
+            Rectangle {
+                height: childrenRect.height
+                width: childrenRect.width + 5
+                color: "#dddddd"
+
+                TextInput {
+                    id: curlText
+                    width: 300
+                    height: 20
+                    clip: true
+                    text: curlPath
+                    anchors.left: parent.left
+                    anchors.leftMargin: 5
+                    verticalAlignment: Text.AlignVCenter
+                    renderType: Text.NativeRendering
+                }
+            }
+
+            Button {
+                text: qsTr("Select...")
+                onClicked: fileDialog.open()
+            }
+
+            Button {
+                text: qsTr("Reset")
+                onClicked: curlPath = "curl"
+            }
+        }
+
+        RowLayout {
             height: 30
 
             Item {
@@ -84,6 +125,9 @@ ApplicationWindow {
                 onClicked: {
                     exifToolPath = exifToolText.text
                     appSettings.setValue(exiftoolpathkey, exifToolPath)
+
+                    curlPath = curlText.text
+                    appSettings.setValue(curlpathkey, curlPath)
                 }
             }
 

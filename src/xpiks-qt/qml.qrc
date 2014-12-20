@@ -8,5 +8,6 @@
         <file>ExportMetadata.qml</file>
         <file>SimpleProgressBar.qml</file>
         <file>ImportMetadata.qml</file>
+        <file>UploadArtworks.qml</file>
     </qresource>
 </RCC>

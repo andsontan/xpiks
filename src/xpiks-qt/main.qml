@@ -9,6 +9,8 @@ ApplicationWindow {
     visible: true
     width: 900
     height: 640
+    minimumHeight: 640
+    minimumWidth: 800
     title: qsTr("Hello World")
 
     menuBar: MenuBar {
@@ -86,6 +88,12 @@ ApplicationWindow {
         onRejected: {
             console.log("Directory dialog canceled")
         }
+    }
+
+    MessageDialog {
+        id: mustSaveWarning
+        title: "Warning"
+        text: "Please, save selected items before upload"
     }
 
     SplitView {
@@ -245,7 +253,7 @@ ApplicationWindow {
                     Button {
                         text: qsTr("Remove Selected")
                         onClicked: {
-                            var itemsCount = artItemsModel.getSelectedItemsCount()
+                            var itemsCount = artItemsModel.selectedArtworksCount
                             if (itemsCount > 0) {
                                 confirmRemoveSelectedDialog.itemsCount = itemsCount
                                 confirmRemoveSelectedDialog.open()
@@ -256,7 +264,7 @@ ApplicationWindow {
                     Button {
                         text: qsTr("Edit Selected")
                         onClicked: {
-                            if (artItemsModel.getSelectedItemsCount() > 0) {
+                            if (artItemsModel.selectedArtworksCount > 0) {
                                 combinedArtworks.resetModelData();
                                 artItemsModel.combineSelectedArtworks();
                                 Qt.createComponent("CombinedArtworksDialog.qml").createObject(applicationWindow, {});
@@ -272,7 +280,7 @@ ApplicationWindow {
                     Button {
                         text: qsTr("Save Selected")
                         onClicked: {
-                            if (artItemsModel.getSelectedItemsCount() > 0) {
+                            if (artItemsModel.selectedArtworksCount > 0) {
                                 iptcProvider.resetModel()
                                 artItemsModel.patchSelectedArtworks()
                                 Qt.createComponent("ExportMetadata.qml").createObject(applicationWindow, {})
@@ -282,6 +290,15 @@ ApplicationWindow {
 
                     Button {
                         text: qsTr("Upload Selected")
+                        onClicked: {
+                            if (artItemsModel.areSelectedArtworksSaved()) {
+                                artworkUploader.resetModel()
+                                artItemsModel.uploadSelectedArtworks()
+                                Qt.createComponent("UploadArtworks.qml").createObject(applicationWindow, {})
+                            } else {
+                                mustSaveWarning.open()
+                            }
+                        }
                     }
 
                     Item {
@@ -393,6 +410,9 @@ ApplicationWindow {
                                     text: description
                                     onTextChanged: model.editdescription = text
                                     renderType: TextInput.NativeRendering
+                                    Keys.onTabPressed: {
+                                        flv.activateEdit()
+                                    }
                                 }
                             }
 

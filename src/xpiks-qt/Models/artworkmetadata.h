@@ -24,7 +24,7 @@ namespace Models {
         const QString &getAuthor() const { return m_ArtworkAuthor; }
         const QString &getTitle() const { return m_ArtworkTitle; }
         const QString &getDescription() const { return m_ArtworkDescription; }
-        const QString &getArtworkFilepath() const { return m_ArtworkFilepath; }
+        const QString &getFilepath() const { return m_ArtworkFilepath; }
         const QStringList &getKeywords() const { return m_KeywordsList; }
         const QSet<QString> &getKeywordsSet() const { return m_KeywordsSet; }
         QString getKeywordsString() const { return m_KeywordsList.join(','); }
@@ -72,7 +72,7 @@ namespace Models {
 
     public:
         void addKeywords(const QString& rawKeywords);
-        void unsetModified() { m_IsModified = false; emit modifiedChanged(m_IsModified); }
+        void unsetModified() { m_IsModified = false; }
 
     signals:
          void modifiedChanged(bool newValue);
