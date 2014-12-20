@@ -5,14 +5,14 @@ import QtQuick.Dialogs 1.2
 import QtQuick.Controls.Styles 1.3
 
 Item {
-    id: artworkPatcherComponent
+    id: metadataExportComponent
     anchors.fill: parent
 
     function closePopup() {
-        artworkPatcherComponent.destroy()
+        metadataExportComponent.destroy()
     }
 
-    PropertyAnimation { target: artworkPatcherComponent; property: "opacity";
+    PropertyAnimation { target: metadataExportComponent; property: "opacity";
         duration: 400; from: 0; to: 1;
         easing.type: Easing.InOutQuad ; running: true }
 
@@ -37,7 +37,7 @@ Item {
         Rectangle {
             id: dialogWindow
             width: 480
-            height: 100
+            height: 150
             radius: 10
             color: "#eeeeee"
             anchors.centerIn: parent
@@ -46,6 +46,10 @@ Item {
                 spacing: 10
                 anchors.fill: parent
                 anchors.margins: 20
+
+                Text {
+                    text: qsTr("Export metadata")
+                }
 
                 SimpleProgressBar {
                     id: progress
@@ -62,11 +66,11 @@ Item {
                     }
 
                     Button {
-                        text: qsTr("Run")
+                        text: qsTr("Start Export")
                         enabled: !iptcProvider.inProgress
                         onClicked: {
                             iptcProvider.resetModel()
-                            iptcProvider.patchArtworks()
+                            iptcProvider.exportMetadata()
                         }
                     }
 

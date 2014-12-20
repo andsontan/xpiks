@@ -10,26 +10,50 @@ namespace Models {
     class ArtworkMetadata : public QObject {
         Q_OBJECT
     public:
-        ArtworkMetadata(const QString &imageDescription, const QString &imageFileName,
-                      const QString &rawKeywords);
+        ArtworkMetadata(const QString &filepath) :
+            m_ArtworkFilepath(filepath),
+            m_IsModified(false),
+            m_IsSelected(false)
+        { }
 
     public:
-        const QString &getImageDescription() const { return m_ImageDescription; }
-        const QString &getImageFileName() const { return m_ImageFileName; }
+        void initialize(const QString &author, const QString &title,
+                        const QString &description, const QString &rawKeywords);
+
+    public:
+        const QString &getAuthor() const { return m_ArtworkAuthor; }
+        const QString &getTitle() const { return m_ArtworkTitle; }
+        const QString &getDescription() const { return m_ArtworkDescription; }
+        const QString &getArtworkFilepath() const { return m_ArtworkFilepath; }
         const QStringList &getKeywords() const { return m_KeywordsList; }
         const QSet<QString> &getKeywordsSet() const { return m_KeywordsSet; }
         QString getKeywordsString() const { return m_KeywordsList.join(','); }
-        bool isInDirectory(const QString &directory) const { return m_ImageFileName.startsWith(directory); }
+        bool isInDirectory(const QString &directory) const { return m_ArtworkFilepath.startsWith(directory); }
         bool isModified() const { return m_IsModified; }
         bool getIsSelected() const { return m_IsSelected; }
 
     public:
-        void setImageDescription(const QString &value) {
-            if (m_ImageDescription != value) {
-                m_ImageDescription = value;
+        void setDescription(const QString &value) {
+            if (m_ArtworkDescription != value) {
+                m_ArtworkDescription = value;
                 setModified();
             }
         }
+
+        void setAuthor(const QString &value) {
+            if (m_ArtworkAuthor != value) {
+                m_ArtworkAuthor = value;
+                setModified();
+            }
+        }
+
+        void setTitle(const QString &value) {
+            if (m_ArtworkTitle != value) {
+                m_ArtworkTitle = value;
+                setModified();
+            }
+        }
+
         void resetModified() { m_IsModified = false; emit modifiedChanged(m_IsModified); }
         void setIsSelected(bool value) { m_IsSelected = value; }
 
@@ -44,10 +68,10 @@ namespace Models {
 
     private:
         void resetKeywords();
-        void parseKeywords(const QString& rawKeywords);
         void setModified() { m_IsModified = true; emit modifiedChanged(m_IsModified); }
 
     public:
+        void addKeywords(const QString& rawKeywords);
         void unsetModified() { m_IsModified = false; emit modifiedChanged(m_IsModified); }
 
     signals:
@@ -56,8 +80,10 @@ namespace Models {
     private:
         QStringList m_KeywordsList;
         QSet<QString> m_KeywordsSet;
-        QString m_ImageFileName;
-        QString m_ImageDescription;
+        QString m_ArtworkFilepath;
+        QString m_ArtworkDescription;
+        QString m_ArtworkTitle;
+        QString m_ArtworkAuthor;
         bool m_IsModified;
         bool m_IsSelected;
     };

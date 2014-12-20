@@ -28,6 +28,15 @@ namespace Models {
         return modifiedCount;
     }
 
+    void ArtItemsModel::updateAllProperties()
+    {
+        QList<QPair<int, int> > ranges;
+        ranges << qMakePair(0, m_ArtworkList.length() - 1);
+        QVector<int> roles;
+        roles << ArtworkDescriptionRole << KeywordsRole << IsModifiedRole << ArtworkAuthorRole << ArtworkTitleRole;
+        updateItemsAtIndices(ranges, roles);
+    }
+
     void ArtItemsModel::removeArtworksDirectory(int index)
     {
         const QString &directory = m_ArtworksRepository->getDirectory(index);
@@ -112,7 +121,9 @@ namespace Models {
         getSelectedItemsIndices(selectedIndices);
         QList<QPair<int, int> > rangesToUpdate;
         Helpers::indicesToRanges(selectedIndices, rangesToUpdate);
-        updateItemsAtIndices(rangesToUpdate, QVector<int>() << ImageDescriptionRole << KeywordsRole << IsModifiedRole);
+        QVector<int> roles;
+        roles << ArtworkDescriptionRole << KeywordsRole << IsModifiedRole << ArtworkAuthorRole << ArtworkTitleRole;
+        updateItemsAtIndices(rangesToUpdate, roles);
     }
 
     void ArtItemsModel::patchSelectedArtworks()
@@ -142,10 +153,14 @@ namespace Models {
 
         ArtworkMetadata *metadata = m_ArtworkList.at(index.row());
         switch (role) {
-        case ImageDescriptionRole:
-            return QString(metadata->getImageDescription());
-        case ImageFilenameRole:
-            return QString(metadata->getImageFileName());
+        case ArtworkDescriptionRole:
+            return metadata->getDescription();
+        case ArtworkFilenameRole:
+            return metadata->getArtworkFilepath();
+        case ArtworkAuthorRole:
+            return metadata->getAuthor();
+        case ArtworkTitleRole:
+            return metadata->getTitle();
         case KeywordsRole:
             return metadata->getKeywords();
         case KeywordsStringRole:
@@ -176,8 +191,14 @@ namespace Models {
 
         ArtworkMetadata *metadata = m_ArtworkList.at(index.row());
         switch (role) {
-        case EditImageDescriptionRole:
-            metadata->setImageDescription(value.toString());
+        case EditArtworkDescriptionRole:
+            metadata->setDescription(value.toString());
+            break;
+        case EditArtworkTitleRole:
+            metadata->setTitle(value.toString());
+            break;
+        case EditArtworkAuthorRole:
+            metadata->setAuthor(value.toString());
             break;
         case IsSelectedRole:
             metadata->setIsSelected(value.toBool());
@@ -239,8 +260,7 @@ namespace Models {
                 const QString &filename = filenames[i];
                 if (m_ArtworksRepository->accountFile(filename))
                 {
-                    // TODO: grab keywords here
-                    ArtworkMetadata *metadata = new ArtworkMetadata("my description", filenames[i], "test1,test2");
+                    ArtworkMetadata *metadata = new ArtworkMetadata(filename);
                     QObject::connect(metadata, SIGNAL(modifiedChanged(bool)),
                                      this, SLOT(itemModifiedChanged(bool)));
                     m_ArtworkList.append(metadata);
@@ -255,6 +275,9 @@ namespace Models {
         if (newFilesCount > 0) {
             m_ArtworksRepository->updateCountsForExistingDirectories();
         }
+
+        // set artworks for initial import
+        m_IptcProvider->setArtworks(m_ArtworkList);
     }
 
     void ArtItemsModel::setAllItemsSelected(bool selected)
@@ -289,9 +312,13 @@ namespace Models {
 
     QHash<int, QByteArray> ArtItemsModel::roleNames() const {
         QHash<int, QByteArray> roles;
-        roles[ImageDescriptionRole] = "description";
-        roles[EditImageDescriptionRole] = "editdescription";
-        roles[ImageFilenameRole] = "filename";
+        roles[ArtworkDescriptionRole] = "description";
+        roles[EditArtworkDescriptionRole] = "editdescription";
+        roles[ArtworkAuthorRole] = "author";
+        roles[EditArtworkAuthorRole] = "editauthor";
+        roles[ArtworkTitleRole] = "title";
+        roles[EditArtworkTitleRole] = "edittitle";
+        roles[ArtworkFilenameRole] = "filename";
         roles[KeywordsRole] = "keywords";
         roles[KeywordsStringRole] = "keywordsstring";
         roles[IsModifiedRole] = "ismodified";
@@ -303,7 +330,7 @@ namespace Models {
     {
         // TODO: add assert for row
         ArtworkMetadata *metadata = m_ArtworkList[row];
-        m_ArtworksRepository->removeFile(metadata->getImageFileName());
+        m_ArtworksRepository->removeFile(metadata->getArtworkFilepath());
 
         delete metadata;
         m_ArtworkList.removeAt(row);

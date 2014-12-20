@@ -1,38 +1,59 @@
 #include "iptcprovider.h"
 #include <QtConcurrent>
 #include <QDebug>
-#include "../Helpers/patcher.h"
+#include "../Helpers/exiftoolwrapper.h"
 
 namespace Models {
     IptcProvider::IptcProvider():
-        m_ArtworksPatching(0),
+        m_MetadataWriter(0),
         m_ProcessedArtworksCount(0),
         m_ArtworksCount(0),
         m_IsInProgress(false),
         m_IsError(false)
     {
-        m_ArtworksPatching = new QFutureWatcher<ArtworkMetadata*>(this);
-        connect(m_ArtworksPatching, SIGNAL(resultReadyAt(int)), SLOT(artworkPatched(int)));
-        connect(m_ArtworksPatching, SIGNAL(finished()), SLOT(allFinished()));
+        m_MetadataWriter = new QFutureWatcher<ArtworkMetadata*>(this);
+        connect(m_MetadataWriter, SIGNAL(resultReadyAt(int)), SLOT(metadataExported(int)));
+        connect(m_MetadataWriter, SIGNAL(finished()), SLOT(allFinished()));
+
+        m_MetadataReader = new QFutureWatcher<ArtworkMetadata*>(this);
+        connect(m_MetadataReader, SIGNAL(resultReadyAt(int)), SLOT(metadataImported(int)));
+        connect(m_MetadataReader, SIGNAL(finished()), SLOT(allFinished()));
     }
 
-    void IptcProvider::artworkPatched(int index) {
-        qDebug() << "Result ready at " << index;
-        ArtworkMetadata *metadata = m_ArtworksPatching->resultAt(index);
-        artworkPatched(metadata);
+    void IptcProvider::metadataImported(int index)
+    {
+        qDebug() << "Metadata exported at " << index;
+        ArtworkMetadata *metadata = m_MetadataReader->resultAt(index);
+        metadataImported(metadata);
+    }
+
+    void IptcProvider::metadataExported(int index) {
+        qDebug() << "Metadata exported at " << index;
+        ArtworkMetadata *metadata = m_MetadataWriter->resultAt(index);
+        metadataExported(metadata);
     }
 
     void IptcProvider::allFinished() {
         setInProgress(false);
     }
 
-    void IptcProvider::artworkPatched(ArtworkMetadata *metadata)
+    void IptcProvider::metadataImported(ArtworkMetadata *metadata)
     {
         incProgress();
 
         // TODO: handle bad results
         if (NULL != metadata) {
-            qDebug() << metadata->getImageFileName();
+            qDebug() << metadata->getArtworkFilepath();
+        }
+    }
+
+    void IptcProvider::metadataExported(ArtworkMetadata *metadata)
+    {
+        incProgress();
+
+        // TODO: handle bad results
+        if (NULL != metadata) {
+            qDebug() << metadata->getArtworkFilepath();
         }
     }
 
@@ -45,7 +66,8 @@ namespace Models {
         updateProgress();
     }
 
-    void IptcProvider::doPatchArtworks(const QList<ArtworkMetadata *> &artworkList) {
+    void IptcProvider::doReadMetadata(const QList<ArtworkMetadata *> &artworkList)
+    {
         int artworksCount = artworkList.length();
         if (artworksCount == 0) {
             return;
@@ -56,16 +78,40 @@ namespace Models {
         setInProgress(true);
 
         ArtworkMetadata *firstMetadata = artworkList.first();
-        if (!patchArtwork(firstMetadata)) {
+        if (!readArtworkMetadata(firstMetadata)) {
             setIsError(true);
             incProgress();
             allFinished();
             return;
         }
         else {
-            artworkPatched(firstMetadata);
+            metadataImported(firstMetadata);
         }
 
-        m_ArtworksPatching->setFuture(QtConcurrent::mapped(artworkList.begin() + 1, artworkList.end(), patchArtwork));
+        m_MetadataWriter->setFuture(QtConcurrent::mapped(artworkList.begin() + 1, artworkList.end(), readArtworkMetadata));
+    }
+
+    void IptcProvider::doWriteMetadata(const QList<ArtworkMetadata *> &artworkList) {
+        int artworksCount = artworkList.length();
+        if (artworksCount == 0) {
+            return;
+        }
+
+        m_ArtworksCount = artworksCount;
+        m_ProcessedArtworksCount = 0;
+        setInProgress(true);
+
+        ArtworkMetadata *firstMetadata = artworkList.first();
+        if (!writeArtworkMetadata(firstMetadata)) {
+            setIsError(true);
+            incProgress();
+            allFinished();
+            return;
+        }
+        else {
+            metadataExported(firstMetadata);
+        }
+
+        m_MetadataWriter->setFuture(QtConcurrent::mapped(artworkList.begin() + 1, artworkList.end(), writeArtworkMetadata));
     }
 }

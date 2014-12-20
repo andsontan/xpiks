@@ -14,14 +14,16 @@ namespace Models {
         Q_PROPERTY(int percent READ getPercent NOTIFY percentChanged)
     public:
         IptcProvider();
-        ~IptcProvider() { delete m_ArtworksPatching; }
+        ~IptcProvider() { delete m_MetadataWriter; delete m_MetadataReader; }
 
     public slots:
-        void artworkPatched(int);
+        void metadataImported(int);
+        void metadataExported(int);
         void allFinished();
 
     private:
-        void artworkPatched(ArtworkMetadata *metadata);
+        void metadataImported(ArtworkMetadata *metadata);
+        void metadataExported(ArtworkMetadata *metadata);
         void incProgress() { m_ProcessedArtworksCount++; updateProgress(); }
 
     public:
@@ -39,19 +41,22 @@ namespace Models {
 
     public:
         void setArtworks(const QList<ArtworkMetadata*> &artworkList) { resetArtworks(); addArtworks(artworkList); }
-        void addArtworks(const QList<ArtworkMetadata*> &artworkList) { m_ArtworksToBePatched.append(artworkList); }
-        void resetArtworks() { m_ArtworksToBePatched.clear(); }
+        void addArtworks(const QList<ArtworkMetadata*> &artworkList) { m_ArtworkList.append(artworkList); }
+        void resetArtworks() { m_ArtworkList.clear(); }
 
     public:
-        Q_INVOKABLE void patchArtworks() { doPatchArtworks(m_ArtworksToBePatched); }
+        Q_INVOKABLE void importMetadata() { doReadMetadata(m_ArtworkList); }
+        Q_INVOKABLE void exportMetadata() { doWriteMetadata(m_ArtworkList); }
         Q_INVOKABLE void resetModel();
 
     private:
-        void doPatchArtworks(const QList<ArtworkMetadata*> &artworkList);
+        void doReadMetadata(const QList<ArtworkMetadata*> &artworkList);
+        void doWriteMetadata(const QList<ArtworkMetadata*> &artworkList);
 
     private:
-        QList<ArtworkMetadata*> m_ArtworksToBePatched;
-        QFutureWatcher<ArtworkMetadata*> *m_ArtworksPatching;
+        QList<ArtworkMetadata*> m_ArtworkList;
+        QFutureWatcher<ArtworkMetadata*> *m_MetadataReader;
+        QFutureWatcher<ArtworkMetadata*> *m_MetadataWriter;
         volatile int m_ProcessedArtworksCount;
         volatile int m_ArtworksCount;
         bool m_IsInProgress;

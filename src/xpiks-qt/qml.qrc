@@ -5,7 +5,8 @@
         <file>CombinedArtworksDialog.qml</file>
         <file>SettingsWindow.qml</file>
         <file>CloseIcon.qml</file>
-        <file>ArtworkPatcher.qml</file>
+        <file>ExportMetadata.qml</file>
         <file>SimpleProgressBar.qml</file>
+        <file>ImportMetadata.qml</file>
     </qresource>
 </RCC>

@@ -1,13 +1,13 @@
 #include "artworkmetadata.h"
 
 namespace Models {
-    ArtworkMetadata::ArtworkMetadata(const QString &imageDescription, const QString &imageFileName,
-                                 const QString &rawKeywords) {
-        m_ImageFileName = imageFileName;
-        m_ImageDescription = imageDescription;
-        m_IsModified = false;
-        m_IsSelected = false;
-        parseKeywords(rawKeywords);
+    void ArtworkMetadata::initialize(const QString &author, const QString &title,
+                                     const QString &description, const QString &rawKeywords)
+    {
+        m_ArtworkAuthor = author;
+        m_ArtworkTitle = title;
+        m_ArtworkDescription = description;
+        addKeywords(rawKeywords);
     }
 
     bool ArtworkMetadata::removeKeywordAt(int index)
@@ -52,7 +52,7 @@ namespace Models {
         setModified();
     }
 
-    void ArtworkMetadata::parseKeywords(const QString &rawKeywords) {
+    void ArtworkMetadata::addKeywords(const QString &rawKeywords) {
         QStringList keywordsList = rawKeywords.split(",", QString::SkipEmptyParts);
         for (int i = 0; i < keywordsList.size(); ++i) {
             const QString &keyword = keywordsList[i];

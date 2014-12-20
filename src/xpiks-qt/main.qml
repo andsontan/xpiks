@@ -7,7 +7,7 @@ import xpiks 1.0
 ApplicationWindow {
     id: applicationWindow
     visible: true
-    width: 800
+    width: 900
     height: 640
     title: qsTr("Hello World")
 
@@ -62,6 +62,7 @@ ApplicationWindow {
         onAccepted: {
             console.log("You chose: " + chooseArtworksDialog.fileUrls)
             artItemsModel.addLocalArtworks(chooseArtworksDialog.fileUrls)
+            Qt.createComponent("ImportMetadata.qml").createObject(applicationWindow, {})
         }
 
         onRejected: {
@@ -79,6 +80,7 @@ ApplicationWindow {
         onAccepted: {
             console.log("You chose: " + chooseDirectoryDialog.fileUrl)
             artItemsModel.addLocalDirectory(chooseDirectoryDialog.fileUrl)
+            Qt.createComponent("ImportMetadata.qml").createObject(applicationWindow, {})
         }
 
         onRejected: {
@@ -273,7 +275,7 @@ ApplicationWindow {
                             if (artItemsModel.getSelectedItemsCount() > 0) {
                                 iptcProvider.resetModel()
                                 artItemsModel.patchSelectedArtworks()
-                                Qt.createComponent("ArtworkPatcher.qml").createObject(applicationWindow, {})
+                                Qt.createComponent("ExportMetadata.qml").createObject(applicationWindow, {})
                             }
                         }
                     }

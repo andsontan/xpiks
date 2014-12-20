@@ -34,5 +34,5 @@ HEADERS += \
     Helpers/constants.h \
     Helpers/appsettings.h \
     Models/iptcprovider.h \
-    Helpers/patcher.h \
-    Helpers/externaltoolsprovider.h
+    Helpers/externaltoolsprovider.h \
+    Helpers/exiftoolwrapper.h

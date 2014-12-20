@@ -26,9 +26,13 @@ namespace Models {
 
     public:
         enum ArtItemsRoles {
-            ImageDescriptionRole = Qt::UserRole + 1,
-            EditImageDescriptionRole,
-            ImageFilenameRole,
+            ArtworkDescriptionRole = Qt::UserRole + 1,
+            EditArtworkDescriptionRole,
+            ArtworkFilenameRole,
+            ArtworkAuthorRole,
+            EditArtworkAuthorRole,
+            ArtworkTitleRole,
+            EditArtworkTitleRole,
             KeywordsRole,
             KeywordsStringRole,
             IsModifiedRole,
@@ -45,6 +49,7 @@ namespace Models {
         void setIptcProvider(IptcProvider *provider) { m_IptcProvider = provider; }
 
     public:
+        Q_INVOKABLE void updateAllProperties();
         Q_INVOKABLE void removeArtworksDirectory(int index);
         Q_INVOKABLE void removeKeywordAt(int metadataIndex, int keywordIndex);
         Q_INVOKABLE void removeLastKeyword(int metadataIndex);

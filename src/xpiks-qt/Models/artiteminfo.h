@@ -17,8 +17,8 @@ namespace Models {
 
     public:
         const QSet<QString> &getKeywords() const { return m_ArtworkMetadata->getKeywordsSet(); }
-        const QString &getFilePath() const { return m_ArtworkMetadata->getImageFileName(); }
-        const QString &getDescription() const { return m_ArtworkMetadata->getImageDescription(); }
+        const QString &getFilePath() const { return m_ArtworkMetadata->getArtworkFilepath(); }
+        const QString &getDescription() const { return m_ArtworkMetadata->getDescription(); }
         bool isSelected() const { return m_IsSelected; }
         void select() { m_IsSelected = true; }
         void deselect() { m_IsSelected = false; }
@@ -26,7 +26,7 @@ namespace Models {
     public:
         void addKeywordsToOrigin(const QStringList &keywordsList) { m_ArtworkMetadata->appendKeywords(keywordsList); }
         void setKeywordsToOrigin(const QStringList &keyowrdsList) { m_ArtworkMetadata->setKeywords(keyowrdsList); }
-        void setDescriptionToOrigin(const QString &description) { m_ArtworkMetadata->setImageDescription(description); }
+        void setDescriptionToOrigin(const QString &description) { m_ArtworkMetadata->setDescription(description); }
 
     private:
         ArtworkMetadata *m_ArtworkMetadata;
