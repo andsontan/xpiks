@@ -96,14 +96,14 @@ ApplicationWindow {
                 }
             }
 
-            Button {
+            StyledButton {
                 Layout.row: 0
                 Layout.column: 2
                 text: qsTr("Select...")
                 onClicked: fileDialog.open()
             }
 
-            Button {
+            StyledButton {
                 Layout.row: 0
                 Layout.column: 3
                 text: qsTr("Reset")
@@ -139,14 +139,14 @@ ApplicationWindow {
                 }
             }
 
-            Button {
+            StyledButton {
                 Layout.row: 1
                 Layout.column: 2
                 text: qsTr("Select...")
                 onClicked: fileDialog.open()
             }
 
-            Button {
+            StyledButton {
                 Layout.row: 1
                 Layout.column: 3
                 text: qsTr("Reset")
@@ -161,7 +161,7 @@ ApplicationWindow {
                 Layout.fillWidth: true
             }
 
-            Button {
+            StyledButton {
                 text: qsTr("Save")
                 onClicked: {
                     exifToolPath = exifToolText.text
@@ -172,7 +172,7 @@ ApplicationWindow {
                 }
             }
 
-            Button {
+            StyledButton {
                 text: qsTr("Exit")
                 onClicked: settingsWindow.destroy()
             }

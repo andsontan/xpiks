@@ -91,7 +91,7 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    Button {
+                    StyledButton {
                         text: qsTr("Remove selected")
                         onClicked: {
                             var itemsCount = combinedArtworks.getSelectedArtworksCount()
@@ -351,7 +351,7 @@ Item {
                             Layout.fillWidth: true
                         }
 
-                        Button {
+                        StyledButton {
                             text: qsTr("Save and append")
                             onClicked: {
                                 combinedArtworks.saveAddKeywords()
@@ -362,7 +362,7 @@ Item {
                             tooltip: "Sets description and appends keywords in edited files"
                         }
 
-                        Button {
+                        StyledButton {
                             text: qsTr("Save and replace")
                             onClicked: {
                                 combinedArtworks.saveSetKeywords()
@@ -373,7 +373,7 @@ Item {
                             tooltip: "Sets description and replaces keywords in edited files"
                         }
 
-                        Button {
+                        StyledButton {
                             text: qsTr("Cancel")
 
                             onClicked: {

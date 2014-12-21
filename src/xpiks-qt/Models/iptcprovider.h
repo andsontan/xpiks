@@ -51,6 +51,9 @@ namespace Models {
         void doReadMetadata(const QList<ArtworkMetadata*> &artworkList);
         void doWriteMetadata(const QList<ArtworkMetadata*> &artworkList);
 
+    protected:
+        void cancelProcessing();
+
     private:
         QFutureWatcher<ArtworkMetadata*> *m_MetadataReader;
         QFutureWatcher<ArtworkMetadata*> *m_MetadataWriter;

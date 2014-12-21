@@ -56,6 +56,7 @@ namespace Models {
 
     public:
         Q_INVOKABLE void resetModel();
+        Q_INVOKABLE void cancelOperation() { cancelProcessing(); }
 
     signals:
         void inProgressChanged();
@@ -69,6 +70,7 @@ namespace Models {
 
     protected:
         const QList<ArtworkMetadata*> getArtworkList() const { return m_ArtworkList; }
+        virtual void cancelProcessing() = 0;
         void beginProcessing();
         void endProcessing();
         void endAfterFirstError();

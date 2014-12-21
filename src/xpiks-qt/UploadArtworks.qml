@@ -170,7 +170,7 @@ Item {
                     }
                 }
 
-                CheckBox {
+                StyledCheckbox {
                     text: qsTr("Include EPS (for illustrations)")
                     checked: artworkUploader.includeEPS
                     onCheckedChanged: artworkUploader.includeEPS = checked
@@ -196,7 +196,7 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    Button {
+                    StyledButton {
                         id: uploadButton
                         text: qsTr("Start Upload")
                         enabled: !(artworkUploader.inProgress || ftpHost.length == 0 || ftpUsername.length == 0)
@@ -207,7 +207,7 @@ Item {
                         }
                     }
 
-                    Button {
+                    StyledButton {
                         text: qsTr("Close")
                         enabled: !artworkUploader.inProgress
                         onClicked: {

@@ -74,4 +74,9 @@ namespace Models {
 
         m_ArtworksUploader->setFuture(QtConcurrent::mapped(pairs, uploadViaCurl));
     }
+
+    void ArtworkUploader::cancelProcessing()
+    {
+        m_ArtworksUploader->cancel();
+    }
 }

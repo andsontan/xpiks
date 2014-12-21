@@ -70,6 +70,9 @@ namespace Models {
      private:
          void doUploadArtworks(const QList<ArtworkMetadata*> &artworkList);
 
+    protected:
+        void cancelProcessing();
+
      private:
          QFutureWatcher<QPair<Models::ArtworkMetadata*, Models::UploadInfo*> > *m_ArtworksUploader;
          UploadInfo m_UploadInfo;

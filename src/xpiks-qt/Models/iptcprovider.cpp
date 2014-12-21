@@ -116,4 +116,10 @@ namespace Models {
 
         m_MetadataWriter->setFuture(QtConcurrent::mapped(artworkList.begin() + 1, artworkList.end(), writeArtworkMetadata));
     }
+
+    void IptcProvider::cancelProcessing()
+    {
+        m_MetadataWriter->cancel();
+        m_MetadataReader->cancel();
+    }
 }

@@ -93,7 +93,7 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    Button {
+                    StyledButton {
                         id: exportButton
                         text: qsTr("Start Export")
                         enabled: !iptcProvider.inProgress
@@ -104,7 +104,7 @@ Item {
                         }
                     }
 
-                    Button {
+                    StyledButton {
                         text: qsTr("Close")
                         enabled: !iptcProvider.inProgress
                         onClicked: {

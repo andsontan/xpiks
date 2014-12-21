@@ -9,5 +9,8 @@
         <file>SimpleProgressBar.qml</file>
         <file>ImportMetadata.qml</file>
         <file>UploadArtworks.qml</file>
+        <file>Colors.js</file>
+        <file>StyledButton.qml</file>
+        <file>StyledCheckbox.qml</file>
     </qresource>
 </RCC>

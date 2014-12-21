@@ -96,7 +96,7 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    Button {
+                    StyledButton {
                         id: importButton
                         text: qsTr("Start Import")
                         enabled: !iptcProvider.inProgress
@@ -107,7 +107,7 @@ Item {
                         }
                     }
 
-                    Button {
+                    StyledButton {
                         text: qsTr("Close")
                         enabled: !iptcProvider.inProgress
                         onClicked: {
