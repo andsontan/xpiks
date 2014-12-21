@@ -18,7 +18,9 @@ namespace Models {
     {
         bool anyItemsProcessed = false;
         bool descriptionsDiffer = false;
+        bool titleDiffer = false;
         QString description;
+        QString title;
         QSet<QString> commonKeywords;
 
         int artworksCount = m_ArtworksList.length();
@@ -27,13 +29,16 @@ namespace Models {
 
             if (!anyItemsProcessed) {
                 description = info->getDescription();
+                title = info->getTitle();
                 commonKeywords.unite(info->getKeywords());
                 anyItemsProcessed = true;
                 continue;
             }
 
             const QString &currDescription = info->getDescription();
+            const QString &currTitle = info->getTitle();
             descriptionsDiffer = descriptionsDiffer || description != currDescription;
+            titleDiffer = titleDiffer || title != currTitle;
             commonKeywords.intersect(info->getKeywords());
         }
 
@@ -42,7 +47,12 @@ namespace Models {
                 description = "";
             }
 
+            if (titleDiffer) {
+                title = "";
+            }
+
             initDescription(description);
+            initTitle(title);
             initKeywords(commonKeywords.toList());
         }
     }
@@ -130,7 +140,8 @@ namespace Models {
     {
         foreach (ArtItemInfo* info, m_ArtworksList) {
             info->setKeywordsToOrigin(m_CommonKeywords);
-            info->setDescriptionToOrigin(m_ImageDescription);
+            info->setDescriptionToOrigin(m_ArtworkDescription);
+            info->setTitleToOrigin(m_ArtworkTitle);
         }
     }
 
@@ -138,7 +149,8 @@ namespace Models {
     {
         foreach (ArtItemInfo* info, m_ArtworksList) {
             info->addKeywordsToOrigin(m_CommonKeywords);
-            info->setDescriptionToOrigin(m_ImageDescription);
+            info->setDescriptionToOrigin(m_ArtworkDescription);
+            info->setTitleToOrigin(m_ArtworkTitle);
         }
     }
 

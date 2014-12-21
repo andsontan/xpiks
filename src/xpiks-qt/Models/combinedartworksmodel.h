@@ -14,6 +14,7 @@ namespace Models {
         Q_OBJECT
         Q_PROPERTY(QStringList keywords READ getKeywords WRITE setKeywords NOTIFY keywordsChanged)
         Q_PROPERTY(QString description READ getDescription WRITE setDescription NOTIFY descriptionChanged)
+        Q_PROPERTY(QString title READ getTitle WRITE setTitle NOTIFY titleChanged)
     public:
         CombinedArtworksModel(QObject *parent = 0) :
             AbstractListModel(parent)
@@ -27,6 +28,7 @@ namespace Models {
     private:
         void initKeywords(const QStringList &ek) { m_CommonKeywords.clear(); std::copy(ek.begin(), ek.end(), std::back_inserter(m_CommonKeywords)); emit keywordsChanged(); }
         void initDescription(const QString &description) { setDescription(description); }
+        void initTitle(const QString &title) { setTitle(title); }
 
     public:
         void recombineArtworks();
@@ -39,12 +41,15 @@ namespace Models {
         void setKeywords(const QStringList& keywords) { m_CommonKeywords = keywords; emit keywordsChanged(); }
 
     public:
-        const QString &getDescription() const { return m_ImageDescription; }
-        void setDescription(const QString &description) { m_ImageDescription = description; emit descriptionChanged(); }
+        const QString &getDescription() const { return m_ArtworkDescription; }
+        void setDescription(const QString &description) { m_ArtworkDescription = description; emit descriptionChanged(); }
+        const QString &getTitle() const { return m_ArtworkTitle; }
+        void setTitle(const QString &title) { m_ArtworkTitle = title; emit titleChanged(); }
 
     signals:
         void keywordsChanged();
         void descriptionChanged();
+        void titleChanged();
 
     public:
         Q_INVOKABLE void removeKeywordAt(int keywordIndex);
@@ -77,7 +82,8 @@ namespace Models {
     private:
         QList<ArtItemInfo*> m_ArtworksList;
         QStringList m_CommonKeywords;
-        QString m_ImageDescription;
+        QString m_ArtworkDescription;
+        QString m_ArtworkTitle;
     };
 }
 

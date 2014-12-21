@@ -52,7 +52,7 @@ Item {
         Rectangle {
             id: dialogWindow
             width: 640
-            height: 480
+            height: 520
             radius: 10
             color: "#eeeeee"
             anchors.centerIn: parent
@@ -169,6 +169,33 @@ Item {
                                 }
                             }
                         }
+                    }
+                }
+
+                Text {
+                    text: qsTr("Title:")
+                    anchors.left: parent.left
+                    renderType: Text.NativeRendering
+                }
+
+                Rectangle {
+                    id: anotherRect
+                    width: 300
+                    height: 25
+                    color: "white"
+                    anchors.left: parent.left
+
+                    TextInput {
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.leftMargin: 5
+                        anchors.rightMargin: 5
+                        anchors.verticalCenter: parent.verticalCenter
+                        maximumLength: 250
+                        clip: true
+                        text: combinedArtworks.title
+                        onTextChanged: combinedArtworks.title = text
+                        renderType: TextInput.NativeRendering
                     }
                 }
 
