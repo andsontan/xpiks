@@ -47,20 +47,21 @@ namespace Models {
         int artworksCount = m_ArtworksList.length();
         for (int i = 0; i < artworksCount; ++i) {
             ArtItemInfo *info = m_ArtworksList[i];
+            ArtworkMetadata *metadata = info->getOrigin();
 
             if (!anyItemsProcessed) {
-                description = info->getDescription();
-                title = info->getTitle();
-                commonKeywords.unite(info->getKeywords());
+                description = metadata->getDescription();
+                title = metadata->getTitle();
+                commonKeywords.unite(metadata->getKeywordsSet());
                 anyItemsProcessed = true;
                 continue;
             }
 
-            const QString &currDescription = info->getDescription();
-            const QString &currTitle = info->getTitle();
+            const QString &currDescription = metadata->getDescription();
+            const QString &currTitle = metadata->getTitle();
             descriptionsDiffer = descriptionsDiffer || description != currDescription;
             titleDiffer = titleDiffer || title != currTitle;
-            commonKeywords.intersect(info->getKeywords());
+            commonKeywords.intersect(metadata->getKeywordsSet());
         }
 
         if (artworksCount > 0) {
@@ -160,18 +161,20 @@ namespace Models {
     void CombinedArtworksModel::saveSetKeywords()
     {
         foreach (ArtItemInfo* info, m_ArtworksList) {
-            info->setKeywordsToOrigin(m_CommonKeywords);
-            info->setDescriptionToOrigin(m_ArtworkDescription);
-            info->setTitleToOrigin(m_ArtworkTitle);
+            ArtworkMetadata *metadata = info->getOrigin();
+            metadata->setKeywords(m_CommonKeywords);
+            metadata->setDescription(m_ArtworkDescription);
+            metadata->setTitle(m_ArtworkTitle);
         }
     }
 
     void CombinedArtworksModel::saveAddKeywords()
     {
         foreach (ArtItemInfo* info, m_ArtworksList) {
-            info->addKeywordsToOrigin(m_CommonKeywords);
-            info->setDescriptionToOrigin(m_ArtworkDescription);
-            info->setTitleToOrigin(m_ArtworkTitle);
+            ArtworkMetadata *metadata = info->getOrigin();
+            metadata->appendKeywords(m_CommonKeywords);
+            metadata->setDescription(m_ArtworkDescription);
+            metadata->setTitle(m_ArtworkTitle);
         }
     }
 
@@ -190,7 +193,7 @@ namespace Models {
 
         switch (role) {
         case PathRole:
-            return artItemInfo->getFilePath();
+            return artItemInfo->getOrigin()->getFilepath();
         case IsSelectedRole:
             return artItemInfo->isSelected();
         default:
