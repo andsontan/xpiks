@@ -1,7 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>main.qml</file>
-        <file>EditableTags.qml</file>
-        <file>CloseIcon.svg</file>
-    </qresource>
-</RCC>
