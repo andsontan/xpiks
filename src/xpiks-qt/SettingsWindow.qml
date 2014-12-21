@@ -6,13 +6,16 @@ import QtQuick.Layouts 1.1
 ApplicationWindow {
     id: settingsWindow
     modality: "ApplicationModal"
-    width: 640
+    width: 600
     height: 180
+    property string defaultExifTool: "exiftool"
+    property string defaultCurl: "curl"
+
     property string exiftoolpathkey: appSettings.exifToolPathKey
-    property string exifToolPath: appSettings.value(exiftoolpathkey, "")
+    property string exifToolPath: appSettings.value(exiftoolpathkey, defaultExifTool)
 
     property string curlpathkey: appSettings.curlPathKey
-    property string curlPath: appSettings.value(curlpathkey, "")
+    property string curlPath: appSettings.value(curlpathkey, defaultCurl)
 
     FileDialog {
         id: fileDialog
@@ -37,16 +40,24 @@ ApplicationWindow {
         anchors.fill: parent
         anchors.margins: 5
 
-        RowLayout {
+        GridLayout {
             width: parent.width
-            height: 30
-            spacing: 5
+            rows: 2
+            columns: 4
 
             Text {
-                text: "ExifTool path: "
+                Layout.row: 0
+                Layout.column: 0
+                Layout.fillWidth: true
+                Layout.maximumWidth: 150
+
+                horizontalAlignment: Text.AlignRight
+                text: "ExifTool path:"
             }
 
             Rectangle {
+                Layout.row: 0
+                Layout.column: 1
                 height: childrenRect.height
                 width: childrenRect.width + 5
                 color: "#dddddd"
@@ -65,26 +76,31 @@ ApplicationWindow {
             }
 
             Button {
+                Layout.row: 0
+                Layout.column: 2
                 text: qsTr("Select...")
                 onClicked: fileDialog.open()
             }
 
             Button {
+                Layout.row: 0
+                Layout.column: 3
                 text: qsTr("Reset")
-                onClicked: exifToolPath = "exiftool"
+                onClicked: exifToolPath = defaultExifTool
             }
-        }
-
-        RowLayout {
-            width: parent.width
-            height: 30
-            spacing: 5
 
             Text {
-                text: "Curl path: "
+                Layout.row: 1
+                Layout.column: 0
+                Layout.fillWidth: true
+                Layout.maximumWidth: 150
+                horizontalAlignment: Text.AlignRight
+                text: "Curl path:"
             }
 
             Rectangle {
+                Layout.row: 1
+                Layout.column: 1
                 height: childrenRect.height
                 width: childrenRect.width + 5
                 color: "#dddddd"
@@ -103,13 +119,17 @@ ApplicationWindow {
             }
 
             Button {
+                Layout.row: 1
+                Layout.column: 2
                 text: qsTr("Select...")
                 onClicked: fileDialog.open()
             }
 
             Button {
+                Layout.row: 1
+                Layout.column: 3
                 text: qsTr("Reset")
-                onClicked: curlPath = "curl"
+                onClicked: curlPath = defaultCurl
             }
         }
 
