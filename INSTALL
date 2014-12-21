@@ -1,0 +1,3 @@
+Xpiks does not require anything special to be installed. You can just copy it to
+whatever directory you like.
+To run correctly, Xpiks requires curl and exiftool available in your PATH.
