@@ -32,7 +32,7 @@ ApplicationWindow {
     height: 640
     minimumHeight: 640
     minimumWidth: 800
-    title: qsTr("Hello World")
+    title: qsTr("Xpiks")
 
     onClosing: {
         if (artItemsModel.modifiedArtworksCount > 0) {
