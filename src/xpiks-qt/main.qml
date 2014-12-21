@@ -258,12 +258,21 @@ ApplicationWindow {
 
                     CheckBox {
                         id: selectAllCheckbox
+                        checked: artItemsModel.selectedArtworksCount > 0
 
-                        onCheckedChanged: {
+                        onClicked: {
                             if (checked) {
                                 artItemsModel.selectAllArtworks();
-                            } else {
+                            }
+                            else {
                                 artItemsModel.unselectAllArtworks();
+                            }
+                        }
+
+                        Connections {
+                            target: artItemsModel
+                            onSelectedArtworksCountChanged: {
+                                selectAllCheckbox.checked = artItemsModel.selectedArtworksCount > 0
                             }
                         }
                     }
@@ -354,9 +363,15 @@ ApplicationWindow {
                         }
 
                         CheckBox {
+                            id: itemCheckedCheckbox
                             checked: isselected
-                            onCheckedChanged: {
-                                model.isselected = checked
+                            onClicked: editisselected = checked
+                            Component.onCompleted: itemCheckedCheckbox.checked = isselected
+                            Connections {
+                                target: artItemsModel
+                                onSelectedArtworksCountChanged: {
+                                    itemCheckedCheckbox.checked = isselected
+                                }
                             }
                         }
 
@@ -567,6 +582,14 @@ ApplicationWindow {
 
             Item {
                 Layout.fillWidth: true
+            }
+
+            Text {
+                text: qsTr("(%1) item(s) selected").arg(artItemsModel.selectedArtworksCount)
+            }
+
+            Text {
+                text: "|"
             }
 
             Text {

@@ -217,7 +217,6 @@ namespace Models {
         }
 
         ArtworkMetadata *metadata = m_ArtworkList.at(index.row());
-        bool isSelected = false;
         switch (role) {
         case EditArtworkDescriptionRole:
             metadata->setDescription(value.toString());
@@ -228,12 +227,8 @@ namespace Models {
         case EditArtworkAuthorRole:
             metadata->setAuthor(value.toString());
             break;
-        case IsSelectedRole:
-            isSelected = value.toBool();
-            metadata->setIsSelected(isSelected);
-            if (isSelected) m_SelectedItemsCount++;
-            else m_SelectedItemsCount--;
-            updateSelectedCount();
+        case EditIsSelectedRole:
+            metadata->setIsSelected(value.toBool());
             break;
         default:
             return false;
@@ -258,6 +253,13 @@ namespace Models {
     {
         qDebug() << directory;
         addDirectory(directory.toLocalFile());
+    }
+
+    void ArtItemsModel::itemSelectedChanged(bool value)
+    {
+        int plus = value ? +1 : -1;
+        m_SelectedArtworksCount += plus;
+        emit selectedArtworksCountChanged();
     }
 
     void ArtItemsModel::addDirectory(const QString &directory)
@@ -295,6 +297,9 @@ namespace Models {
                     ArtworkMetadata *metadata = new ArtworkMetadata(filename);
                     QObject::connect(metadata, SIGNAL(modifiedChanged(bool)),
                                      this, SLOT(itemModifiedChanged(bool)));
+                    QObject::connect(metadata, SIGNAL(selectedChanged(bool)),
+                                     this, SLOT(itemSelectedChanged(bool)));
+
                     m_ArtworkList.append(metadata);
                 }
             }
@@ -314,6 +319,7 @@ namespace Models {
 
     void ArtItemsModel::setAllItemsSelected(bool selected)
     {
+        qDebug() << "Setting all items selected (" << selected << ")";
         int length = m_ArtworkList.length();
         for (int i = 0; i < length; ++i) {
             ArtworkMetadata *metadata = m_ArtworkList[i];
@@ -325,10 +331,6 @@ namespace Models {
             QModelIndex endIndex = index(length - 1);
             emit dataChanged(startIndex, endIndex, QVector<int>() << IsSelectedRole);
         }
-
-        if (selected) m_SelectedItemsCount = m_ArtworkList.length();
-        else m_SelectedItemsCount = 0;
-        updateSelectedCount();
     }
 
     void ArtItemsModel::doCombineSelectedImages(CombinedArtworksModel *combinedModel) const
@@ -359,6 +361,7 @@ namespace Models {
         roles[KeywordsStringRole] = "keywordsstring";
         roles[IsModifiedRole] = "ismodified";
         roles[IsSelectedRole] = "isselected";
+        roles[EditIsSelectedRole] = "editisselected";
         return roles;
     }
 
@@ -369,8 +372,8 @@ namespace Models {
         m_ArtworksRepository->removeFile(metadata->getFilepath());
 
         if (metadata->getIsSelected()) {
-            m_SelectedItemsCount--;
-            updateSelectedCount();
+            m_SelectedArtworksCount--;
+            emit selectedArtworksCountChanged();
         }
 
         delete metadata;

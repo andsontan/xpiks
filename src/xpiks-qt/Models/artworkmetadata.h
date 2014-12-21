@@ -55,7 +55,12 @@ namespace Models {
         }
 
         void resetModified() { m_IsModified = false; emit modifiedChanged(m_IsModified); }
-        void setIsSelected(bool value) { m_IsSelected = value; }
+        void setIsSelected(bool value) {
+            if (m_IsSelected != value) {
+                m_IsSelected = value;
+                selectedChanged(value);
+            }
+        }
 
     public:
         bool removeKeywordAt(int index);
@@ -76,6 +81,7 @@ namespace Models {
 
     signals:
          void modifiedChanged(bool newValue);
+         void selectedChanged(bool newValue);
 
     private:
         QStringList m_KeywordsList;
@@ -84,8 +90,8 @@ namespace Models {
         QString m_ArtworkDescription;
         QString m_ArtworkTitle;
         QString m_ArtworkAuthor;
-        bool m_IsModified;
-        bool m_IsSelected;
+        volatile bool m_IsModified;
+        volatile bool m_IsSelected;
     };
 }
 
