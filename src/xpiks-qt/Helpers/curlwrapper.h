@@ -25,7 +25,7 @@ UploadPair uploadViaCurl(UploadPair pair) {
     process.start(curlPath, arguments);
     // wait each for 10 minutes
     // TODO: move to config
-    if (process.waitForFinished(100000) &&
+    if (process.waitForFinished(600000) &&
             process.exitStatus() == QProcess::NormalExit &&
             process.exitCode() == 0) {
         resultMetadata = metadata;
