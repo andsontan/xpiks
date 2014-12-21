@@ -24,7 +24,7 @@
 
 #include <QFutureWatcher>
 #include "artworksprocessor.h"
-#include "ftpcredentials.h"
+#include "uploadinfo.h"
 
 namespace Models {
     class ArtworkUploader : public ArtworksProcessor
@@ -38,20 +38,24 @@ namespace Models {
          Q_PROPERTY(QString host READ getHost WRITE setHost NOTIFY hostChanged)
          Q_PROPERTY(QString username READ getUsername WRITE setUsername NOTIFY usernameChanged)
          Q_PROPERTY(QString password READ getPassword WRITE setPassword NOTIFY passwordChanged)
+         Q_PROPERTY(bool includeEPS READ getIncludeEPS WRITE setIncludeEPS NOTIFY includeEPSChanged)
 
     signals:
          void hostChanged(QString);
          void usernameChanged(QString);
          void passwordChanged(QString);
+         void includeEPSChanged(bool);
 
     public:
-         const QString &getHost() const { return m_FtpCredentials.getHost(); }
-         const QString &getUsername() const { return m_FtpCredentials.getUsername(); }
-         const QString &getPassword() const { return m_FtpCredentials.getPassword(); }
+         const QString &getHost() const { return m_UploadInfo.getHost(); }
+         const QString &getUsername() const { return m_UploadInfo.getUsername(); }
+         const QString &getPassword() const { return m_UploadInfo.getPassword(); }
+         bool getIncludeEPS() const { return m_UploadInfo.getIncludeEPS(); }
 
-         void setHost(const QString &value) { m_FtpCredentials.setHost(value); }
-         void setUsername(const QString &value) { m_FtpCredentials.setUsername(value); }
-         void setPassword(const QString &value) { m_FtpCredentials.setPassword(value); }
+         void setHost(const QString &value) { m_UploadInfo.setHost(value); }
+         void setUsername(const QString &value) { m_UploadInfo.setUsername(value); }
+         void setPassword(const QString &value) { m_UploadInfo.setPassword(value); }
+         void setIncludeEPS(bool value) { m_UploadInfo.setIncludeEPS(value); }
 
      public slots:
          void artworkUploaded(int);
@@ -67,8 +71,8 @@ namespace Models {
          void doUploadArtworks(const QList<ArtworkMetadata*> &artworkList);
 
      private:
-         QFutureWatcher<QPair<Models::ArtworkMetadata*, Models::FtpCredentials*> > *m_ArtworksUploader;
-         FtpCredentials m_FtpCredentials;
+         QFutureWatcher<QPair<Models::ArtworkMetadata*, Models::UploadInfo*> > *m_ArtworksUploader;
+         UploadInfo m_UploadInfo;
     };
 }
 

@@ -41,4 +41,4 @@ HEADERS += \
     Models/artworkuploader.h \
     Helpers/curlwrapper.h \
     Models/artworksprocessor.h \
-    Models/ftpcredentials.h
+    Models/uploadinfo.h

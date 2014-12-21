@@ -19,32 +19,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef FTPCREDENTIALS
-#define FTPCREDENTIALS
+#ifndef UPLOADINFO
+#define UPLOADINFO
 
 #include <QString>
 
 namespace Models {
-    class FtpCredentials {
+    class UploadInfo {
     public:
-        FtpCredentials() {}
+        UploadInfo():
+            m_IncludeEPS(false)
+        {}
 
     public:
         const QString &getHost() const { return m_Host; }
         const QString &getUsername() const { return m_Username; }
         const QString &getPassword() const { return m_Password; }
+        bool getIncludeEPS() const { return m_IncludeEPS; }
 
     public:
         void setHost(const QString &value) { m_Host = value; }
         void setUsername(const QString &value) { m_Username = value; }
         void setPassword(const QString &value) { m_Password = value; }
+        void setIncludeEPS(bool value) { m_IncludeEPS = value; }
 
     private:
         QString m_Host;
         QString m_Username;
         QString m_Password;
+        bool m_IncludeEPS;
     };
 }
 
-#endif // FTPCREDENTIALS
+#endif // UPLOADINFO
 

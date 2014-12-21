@@ -24,23 +24,35 @@
 
 #include <QStringList>
 #include <QProcess>
+#include <QRegExp>
 #include <QString>
 #include <QPair>
 #include "externaltoolsprovider.h"
-#include "../Models/ftpcredentials.h"
+#include "../Models/uploadinfo.h"
 #include "../Models/artworkmetadata.h"
 
-typedef QPair<Models::ArtworkMetadata*, Models::FtpCredentials*> UploadPair;
+typedef QPair<Models::ArtworkMetadata*, Models::UploadInfo*> UploadPair;
 
 UploadPair uploadViaCurl(UploadPair pair) {
     Models::ArtworkMetadata *metadata = pair.first, *resultMetadata = NULL;
-    Models::FtpCredentials *ftp = pair.second;
+    Models::UploadInfo *uploadInfo = pair.second;
 
     const QString curlPath = Helpers::ExternalToolsProvider::getCurlPath();
 
+    QStringList filesToUpload;
+    QString filepath = metadata->getFilepath();
+    filesToUpload << filepath;
+
+    if (uploadInfo->getIncludeEPS()) {
+        QString epsFilepath = filepath.replace(QRegExp("(.*)[.]jpg", Qt::CaseInsensitive), "\\1.eps");
+        qDebug() << epsFilepath;
+        filesToUpload << epsFilepath;
+    }
+
     QStringList arguments;
-    arguments << "-T" << metadata->getFilepath();
-    arguments << ftp->getHost() << "--user" << QString("%1:%2").arg(ftp->getUsername(), ftp->getPassword());
+    arguments << "--retry 1";
+    arguments << QString("-T {%1}").arg(filesToUpload.join(','));
+    arguments << uploadInfo->getHost() << "--user" << QString("%1:%2").arg(uploadInfo->getUsername(), uploadInfo->getPassword());
 
     QProcess process;
     process.start(curlPath, arguments);
@@ -52,7 +64,7 @@ UploadPair uploadViaCurl(UploadPair pair) {
         resultMetadata = metadata;
     }
 
-    return qMakePair(resultMetadata, ftp);
+    return qMakePair(resultMetadata, uploadInfo);
 }
 
 #endif // CURLWRAPPER

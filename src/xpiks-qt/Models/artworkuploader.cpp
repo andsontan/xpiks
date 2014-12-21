@@ -69,7 +69,7 @@ namespace Models {
 
         QList<UploadPair> pairs;
         foreach(ArtworkMetadata *metadata, artworkList) {
-            pairs.append(qMakePair(metadata, &m_FtpCredentials));
+            pairs.append(qMakePair(metadata, &m_UploadInfo));
         }
 
         m_ArtworksUploader->setFuture(QtConcurrent::mapped(pairs, uploadViaCurl));

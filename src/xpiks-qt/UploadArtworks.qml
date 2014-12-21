@@ -170,6 +170,12 @@ Item {
                     }
                 }
 
+                CheckBox {
+                    text: qsTr("Include EPS (for illustrations)")
+                    checked: artworkUploader.includeEPS
+                    onCheckedChanged: artworkUploader.includeEPS = checked
+                }
+
                 SimpleProgressBar {
                     id: progress
                     anchors.horizontalCenter: parent.horizontalCenter
