@@ -13,6 +13,13 @@ ApplicationWindow {
     minimumWidth: 800
     title: qsTr("Hello World")
 
+    onClosing: {
+        if (artItemsModel.modifiedArtworksCount > 0) {
+            close.accepted = false
+            configExitDialog.open()
+        }
+    }
+
     menuBar: MenuBar {
         Menu {
             title: qsTr("File")
@@ -29,6 +36,17 @@ ApplicationWindow {
                 text: qsTr("Exit")
                 onTriggered: Qt.quit();
             }
+        }
+    }
+
+    MessageDialog {
+        id: configExitDialog
+
+        title: "Confirmation"
+        text: qsTr("You have some artworks modified. Really exit?")
+        standardButtons: StandardButton.Yes | StandardButton.No
+        onYes: {
+            Qt.quit()
         }
     }
 
