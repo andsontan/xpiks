@@ -40,6 +40,7 @@ Button {
             verticalAlignment: Text.AlignVCenter
             color: control.enabled ? (control.pressed ? Colors.buttonPressedForeground : Colors.buttonForeground) : Colors.buttonDisabledForeground
             text: control.text
+            renderType: Text.NativeRendering
         }
     }
 }

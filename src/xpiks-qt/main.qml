@@ -155,7 +155,7 @@ ApplicationWindow {
 
                 Rectangle {
                     width: parent.width
-                    height: 30
+                    height: 45
                     color: Colors.appBackground
 
                     RowLayout {
@@ -179,10 +179,6 @@ ApplicationWindow {
                             Layout.fillWidth: true
                         }
                     }
-                }
-
-                Item {
-                    height: 5
                 }
 
                 Rectangle {
@@ -281,7 +277,7 @@ ApplicationWindow {
                 spacing: 5
 
                 Rectangle {
-                    height: 30
+                    height: 45
                     color: Colors.appBackground
                     z: 10000
                     Layout.fillWidth: true
@@ -370,10 +366,6 @@ ApplicationWindow {
                             }
                         }
                     }
-                }
-
-                Item {
-                    height: 5
                 }
 
                 Rectangle {
