@@ -475,6 +475,7 @@ ApplicationWindow {
                                 }
 
                                 Rectangle {
+                                    id: columnRectangle
                                     height: parent.height
                                     Layout.fillWidth: true
                                     color: isselected ? Colors.selectedMetadataColor : Colors.artworkBackground
@@ -501,6 +502,7 @@ ApplicationWindow {
                                             color: Colors.defaultInputBackground
 
                                             TextInput {
+                                                id: descriptionTextInput
                                                 anchors.left: parent.left
                                                 anchors.right: parent.right
                                                 anchors.leftMargin: 5
@@ -550,7 +552,7 @@ ApplicationWindow {
 
                                         Rectangle {
                                             id: keywordsWrapper
-                                            color: Colors.defaultInputBackground
+                                            color: (isselected || descriptionTextInput.activeFocus || flv.isFocused) ? Colors.defaultInputBackground : Colors.artworkBackground
                                             Layout.fillWidth: true
                                             height: 80
 

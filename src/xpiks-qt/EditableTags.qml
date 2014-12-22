@@ -37,6 +37,7 @@ Flickable {
     property alias delegate: repeater.delegate
     property alias flow: flow.flow
     property alias model: repeater.model
+    property alias isFocused: nextTagTextInput.activeFocus
 
     signal tagAdded(string text)
     signal removeLast()

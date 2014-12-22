@@ -42,3 +42,5 @@ var selectedMetadataColor = "#5d5d5d";
 var checkboxCheckedColor = "#ffffff";
 var imageFilenameForeground = "#e6e6e6";
 var defaultInputBackground = "#999999";
+
+var desctuctiveColor = "#ff1111";

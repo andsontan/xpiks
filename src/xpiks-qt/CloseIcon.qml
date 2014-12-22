@@ -20,6 +20,7 @@
  */
 
 import QtQuick 2.3
+import "Colors.js" as Colors
 
 Item {
     width: 16
@@ -29,29 +30,29 @@ Item {
 
     Rectangle {
         anchors.fill: parent
-        border.color: "black"
-        border.width: 1
-        radius: 8
+        color: "transparent"
 
         Rectangle {
-            color: "black"
+            color: mouseArea.pressed ? Colors.desctuctiveColor : Colors.buttonBackground
+            opacity: mouseArea.containsMouse ? 1 : 0.8
             width: parent.width - 2
-            height: 2
-            radius: 1
+            height: 3
             border.width: 1
-            border.color: "black"
+            border.color: color
+            radius: 2
             transformOrigin: Item.Center
             rotation: 45
             anchors.centerIn: parent
         }
 
         Rectangle {
-            color: "black"
+            color: mouseArea.pressed ? Colors.desctuctiveColor : Colors.buttonBackground
+            opacity: mouseArea.containsMouse ? 1 : 0.8
             width: parent.width - 2
-            height: 2
-            radius: 1
+            height: 3
+            radius: 2
             border.width: 1
-            border.color: "black"
+            border.color: color
             transformOrigin: Item.Center
             rotation: 135
             anchors.centerIn: parent
