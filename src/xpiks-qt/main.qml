@@ -138,7 +138,7 @@ ApplicationWindow {
     }
 
     Rectangle {
-        color: Colors.appBackground
+        color: Colors.defaultDarkColor
         anchors.fill: parent
 
         SplitView {
@@ -149,7 +149,7 @@ ApplicationWindow {
             handleDelegate: Rectangle {
                 height: parent.height
                 width: 2
-                color: Colors.appBackground
+                color: Colors.defaultDarkColor
             }
 
             ColumnLayout {
@@ -162,7 +162,7 @@ ApplicationWindow {
                 Rectangle {
                     width: parent.width
                     height: 45
-                    color: Colors.appBackground
+                    color: Colors.defaultDarkColor
 
                     RowLayout {
                         spacing: 10
@@ -193,7 +193,7 @@ ApplicationWindow {
                     Layout.minimumWidth: 250
                     Layout.maximumWidth: 350
 
-                    color: Colors.buttonBackground
+                    color: Colors.defaultControlColor
 
                     ListView {
                         id: sourcesListView
@@ -283,7 +283,7 @@ ApplicationWindow {
 
                 Rectangle {
                     height: 45
-                    color: Colors.appBackground
+                    color: Colors.defaultDarkColor
                     z: 10000
                     Layout.fillWidth: true
 
@@ -376,7 +376,7 @@ ApplicationWindow {
                 Rectangle {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    color: Colors.buttonBackground
+                    color: Colors.defaultControlColor
 
                     ListView {
                         id: imagesListView
@@ -401,7 +401,7 @@ ApplicationWindow {
 
                                 Rectangle {
                                     id: isModifiedRectangle
-                                    color: ismodified ? Colors.artworkModifiedColor : Colors.artworkNormalColor
+                                    color: ismodified ? Colors.artworkModifiedColor : Colors.artworkSavedColor
                                     width: 6
                                     Layout.fillHeight: true
                                 }
@@ -679,7 +679,7 @@ ApplicationWindow {
 
         style: StatusBarStyle {
             background: Rectangle {
-                color: Colors.appBackground
+                color: Colors.defaultDarkColor
                 anchors.fill: parent
             }
         }

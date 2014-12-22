@@ -27,7 +27,7 @@ import "Colors.js" as Colors;
 Button {
     style: ButtonStyle {
         background: Rectangle {
-            color: control.enabled ? (control.hovered ? Colors.buttonHoverBackground : Colors.buttonBackground) : Colors.buttonBackground
+            color: control.enabled ? (control.hovered ? Colors.buttonHoverBackground : Colors.defaultControlColor) : Colors.defaultControlColor
             implicitWidth: control.width
             implicitHeight: 24
         }

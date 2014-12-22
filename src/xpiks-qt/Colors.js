@@ -19,12 +19,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-var appBackground = "#000e11";
+var defaultDarkColor = "#000e11";
+var defaultControlColor = "#1e1e1e";
 
 var itemsSourceBackground = "#232323";
 var itemsSourceForeground = "#e6e6e6";
 
-var buttonBackground = "#1e1e1e";
 var buttonForeground = "#fefffd";
 var buttonHoverBackground = "#12b9bc";
 var buttonPressedBackground = "#41b1b7";
@@ -34,7 +34,7 @@ var buttonPressedForeground = "#283c3f";
 var artworkBackground = "#031619";
 var artworkImageBackground = "#071215";
 var artworkModifiedColor = "#f49c12";
-var artworkNormalColor = "#435151";
+var artworkSavedColor = "#435151";
 var artworkActiveColor = "#12b9bc"
 
 var selectedArtworkColor = "#545456";

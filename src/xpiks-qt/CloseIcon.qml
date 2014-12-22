@@ -33,7 +33,7 @@ Item {
         color: "transparent"
 
         Rectangle {
-            color: mouseArea.pressed ? Colors.desctuctiveColor : Colors.buttonBackground
+            color: mouseArea.pressed ? Colors.desctuctiveColor : Colors.defaultControlColor
             opacity: mouseArea.containsMouse ? 1 : 0.8
             width: parent.width - 2
             height: 3
@@ -46,7 +46,7 @@ Item {
         }
 
         Rectangle {
-            color: mouseArea.pressed ? Colors.desctuctiveColor : Colors.buttonBackground
+            color: mouseArea.pressed ? Colors.desctuctiveColor : Colors.defaultControlColor
             opacity: mouseArea.containsMouse ? 1 : 0.8
             width: parent.width - 2
             height: 3
