@@ -33,7 +33,7 @@ ApplicationWindow {
     width: 900
     height: 640
     minimumHeight: 640
-    minimumWidth: 800
+    minimumWidth: 900
     title: qsTr("Xpiks")
 
     onClosing: {
@@ -227,44 +227,23 @@ ApplicationWindow {
                                     anchors.verticalCenter: parent.verticalCenter
                                     height: 31
                                     color: Colors.itemsSourceForeground
-                                    text: path + "(" + usedimagescount + ")"
+                                    text: path + " (" + usedimagescount + ")"
                                     elide: Text.ElideMiddle
+                                    font.family: "Helvetica"
+                                    font.pixelSize: 12
+                                    font.bold: true
                                 }
 
-                                Item {
+                                CloseIcon {
                                     width: 14
                                     height: 14
+                                    anchors.verticalCenter: directoryPath.verticalCenter
+                                    anchors.verticalCenterOffset: 1
+                                    isActive: false
 
-                                    Rectangle {
-                                        anchors.fill: parent
-                                        radius: 7
-                                        border.width: 1
-                                        color: "#dddddd"
-                                        border.color: "black"
-
-                                        Rectangle {
-                                            width: parent.width - 4
-                                            anchors.centerIn: parent
-                                            height: 2
-                                            radius: 1
-                                            border.color: "black"
-                                            border.width: 1
-                                        }
-                                    }
-
-                                    opacity: removeDirectoryMouseArea.containsMouse ? 1 : 0.5
-                                    scale: removeDirectoryMouseArea.pressed ? 0.8 : 1
-
-                                    MouseArea {
-                                        id: removeDirectoryMouseArea
-                                        anchors.fill: parent
-                                        hoverEnabled: true
-
-                                        onClicked: {
-                                            confirmRemoveDirectoryDialog.directoryIndex = wrapperRect.indexOfThisDelegate
-                                            confirmRemoveDirectoryDialog.open()
-
-                                        }
+                                    onItemClicked: {
+                                        confirmRemoveDirectoryDialog.directoryIndex = wrapperRect.indexOfThisDelegate
+                                        confirmRemoveDirectoryDialog.open()
                                     }
                                 }
 
@@ -323,7 +302,7 @@ ApplicationWindow {
 
                         StyledButton {
                             text: qsTr("Remove")
-                            width: 105
+                            width: 90
                             onClicked: {
                                 var itemsCount = artItemsModel.selectedArtworksCount
                                 if (itemsCount > 0) {
@@ -335,7 +314,7 @@ ApplicationWindow {
 
                         StyledButton {
                             text: qsTr("Edit")
-                            width: 90
+                            width: 80
                             onClicked: {
                                 if (artItemsModel.selectedArtworksCount > 0) {
                                     combinedArtworks.resetModelData();
@@ -370,6 +349,10 @@ ApplicationWindow {
                                 }
                             }
                         }
+
+                        Item {
+                            width: 10
+                        }
                     }
                 }
 
@@ -387,12 +370,13 @@ ApplicationWindow {
                         spacing: 4
 
                         delegate: Rectangle {
-                            id: wrapperRectangle
-                            color: isselected ? Colors.selectedArtworkColor : Colors.artworkImageBackground
+                            id: rowWrapper
+                            property bool isHighlighted: (isselected || descriptionTextInput.activeFocus || flv.isFocused)
+                            color: isHighlighted ? Colors.selectedArtworkColor : Colors.artworkImageBackground
                             property int indexOfThisDelegate: index
 
                             width: parent.width
-                            height: 180
+                            height: 190
 
                             RowLayout {
                                 anchors.fill: parent
@@ -463,7 +447,7 @@ ApplicationWindow {
                                             horizontalAlignment: Text.AlignHCenter
                                             text: filename.split(/[\\/]/).pop()
                                             renderType: Text.NativeRendering
-                                            color: Colors.imageFilenameForeground
+                                            color: Colors.defaultLightColor
                                             font.family: "Helvetica"
                                             font.pixelSize: 12
                                         }
@@ -478,28 +462,30 @@ ApplicationWindow {
                                     id: columnRectangle
                                     height: parent.height
                                     Layout.fillWidth: true
-                                    color: isselected ? Colors.selectedMetadataColor : Colors.artworkBackground
+                                    color: rowWrapper.isHighlighted  ? Colors.selectedMetadataColor : Colors.artworkBackground
 
                                     ColumnLayout {
                                         id: columnLayout
                                         spacing: 3
                                         anchors.fill: parent
-                                        anchors.margins: { left: 20; right: 10 }
+                                        anchors.margins: { left: 20; right: 20 }
 
                                         Text {
                                             text: qsTr("Description:")
                                             anchors.left: parent.left
                                             renderType: Text.NativeRendering
-                                            color: Colors.imageFilenameForeground
+                                            color: Colors.defaultLightColor
                                             font.family: "Helvetica"
-                                            font.pixelSize: 13
+                                            font.pixelSize: 12
                                         }
 
                                         Rectangle {
                                             id: rect
                                             Layout.fillWidth: true
                                             height: 30
-                                            color: Colors.defaultInputBackground
+                                            color: rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.defaultControlColor
+                                            border.color: Colors.artworkActiveColor
+                                            border.width: descriptionTextInput.activeFocus ? 1 : 0
 
                                             TextInput {
                                                 id: descriptionTextInput
@@ -511,7 +497,7 @@ ApplicationWindow {
                                                 maximumLength: 250
                                                 clip: true
                                                 text: description
-                                                color: Colors.imageFilenameForeground
+                                                color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.artworkActiveColor
                                                 font.family: "Helvetica"
                                                 font.pixelSize: 12
                                                 onTextChanged: model.editdescription = text
@@ -522,50 +508,40 @@ ApplicationWindow {
                                             }
                                         }
 
-                                        RowLayout {
-                                            Layout.fillWidth: true
+                                        Item {
+                                            height: 1
+                                        }
 
-                                            Text {
-                                                id: keywordsLabel
-                                                anchors.left: parent.left
-                                                text: qsTr("Keywords:")
-                                                color: Colors.imageFilenameForeground
-                                                font.family: "Helvetica"
-                                                font.pixelSize: 12
-                                            }
-
-                                            Item {
-                                                Layout.fillWidth: true
-                                            }
-
-                                            Text {
-                                                text: "<a href=\"#\">" + qsTr("Copy keywords") + "</a>"
-                                                linkColor: "blue"
-
-                                                MouseArea {
-                                                    anchors.fill: parent
-                                                    cursorShape: Qt.PointingHandCursor
-                                                    onClicked: clipboard.setText(keywordsstring)
-                                                }
-                                            }
+                                        Text {
+                                            id: keywordsLabel
+                                            anchors.left: parent.left
+                                            text: qsTr("Keywords:")
+                                            color: Colors.defaultLightColor
+                                            font.family: "Helvetica"
+                                            font.pixelSize: 12
+                                            renderType: Text.NativeRendering
                                         }
 
                                         Rectangle {
                                             id: keywordsWrapper
-                                            color: (isselected || descriptionTextInput.activeFocus || flv.isFocused) ? Colors.defaultInputBackground : Colors.artworkBackground
                                             Layout.fillWidth: true
                                             height: 80
+                                            anchors.rightMargin: 20
+                                            border.color: Colors.artworkActiveColor
+                                            border.width: flv.isFocused ? 1 : 0
+                                            color: rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.defaultControlColor
+
 
                                             function removeKeyword(index) {
-                                                artItemsModel.removeKeywordAt(wrapperRectangle.indexOfThisDelegate, index)
+                                                artItemsModel.removeKeywordAt(rowWrapper.indexOfThisDelegate, index)
                                             }
 
                                             function removeLastKeyword() {
-                                                artItemsModel.removeLastKeyword(wrapperRectangle.indexOfThisDelegate)
+                                                artItemsModel.removeLastKeyword(rowWrapper.indexOfThisDelegate)
                                             }
 
                                             function appendKeyword(keyword) {
-                                                artItemsModel.appendKeyword(wrapperRectangle.indexOfThisDelegate, keyword)
+                                                artItemsModel.appendKeyword(rowWrapper.indexOfThisDelegate, keyword)
                                             }
 
                                             MouseArea {
@@ -577,51 +553,58 @@ ApplicationWindow {
                                                 }
                                             }
 
-                                            ScrollView {
+                                            StyledScrollView {
                                                 id: scroller
-                                                anchors.fill: parent
+                                                height: 80
+                                                width: parent.width + 15
                                                 highlightOnFocus: true
-
 
                                                 EditableTags {
                                                     id: flv
-                                                    anchors.margins: 5
                                                     model: keywords
+                                                    anchors.margins: { left: 5; top: 5; right: 0; bottom: 5 }
 
                                                     delegate: Rectangle {
                                                         id: itemWrapper
                                                         property int indexOfThisDelegate: index
                                                         property string keyword: modelData
-                                                        border.width: 1
-                                                        border.color: Colors.artworkActiveColor
-                                                        color: "transparent"
+                                                        color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.artworkActiveColor
 
                                                         width: childrenRect.width
                                                         height: childrenRect.height
 
                                                         RowLayout {
+                                                            spacing: 1
+
                                                             Rectangle {
+                                                                id: tagTextRect
+                                                                width: childrenRect.width + 5
+                                                                height: 20
                                                                 color: "transparent"
-                                                                width: childrenRect.width + 15
-                                                                height: 30
 
                                                                 Text {
                                                                     anchors.left: parent.left
-                                                                    anchors.leftMargin: 10
+                                                                    anchors.leftMargin: 5
                                                                     anchors.top: parent.top
                                                                     anchors.bottom: parent.bottom
                                                                     verticalAlignment: Text.AlignVCenter
                                                                     text: modelData
                                                                     renderType: Text.NativeRendering
+                                                                    color: rowWrapper.isHighlighted ? Colors.defaultControlColor : Colors.defaultLightColor
                                                                 }
                                                             }
 
                                                             CloseIcon {
+                                                                width: 14
+                                                                height: 14
+                                                                isActive: rowWrapper.isHighlighted
+                                                                anchors.verticalCenter: tagTextRect.verticalCenter
+                                                                anchors.verticalCenterOffset: 1
                                                                 onItemClicked: keywordsWrapper.removeKeyword(itemWrapper.indexOfThisDelegate)
                                                             }
 
                                                             Item {
-                                                                width: 5
+                                                                width: 1
                                                             }
                                                         }
                                                     }
@@ -633,6 +616,28 @@ ApplicationWindow {
                                                     onRemoveLast: {
                                                         keywordsWrapper.removeLastKeyword()
                                                     }
+                                                }
+                                            }
+                                        }
+
+                                        RowLayout {
+                                            Text {
+                                                text: keywordscount
+                                                color: rowWrapper.isHighlighted ? Colors.defaultControlColor : Colors.selectedArtworkColor
+                                            }
+
+                                            Item {
+                                                Layout.fillWidth: true
+                                            }
+
+                                            Text {
+                                                text: qsTr("Copy keywords")
+                                                color: Colors.artworkActiveColor
+
+                                                MouseArea {
+                                                    anchors.fill: parent
+                                                    cursorShape: Qt.PointingHandCursor
+                                                    onClicked: clipboard.setText(keywordsstring)
                                                 }
                                             }
                                         }
@@ -657,7 +662,8 @@ ApplicationWindow {
     statusBar: StatusBar {
         RowLayout {
             width: parent.width
-            implicitHeight: 13
+            height: 20
+            implicitHeight: 20
             spacing: 5
 
             Item {
@@ -666,21 +672,41 @@ ApplicationWindow {
 
             Text {
                 text: qsTr("(%1) item(s) selected").arg(artItemsModel.selectedArtworksCount)
+                font.family: "Helvetica"
+                font.pixelSize: 12
+                renderType: Text.NativeRendering
+                color: Colors.selectedMetadataColor
+                verticalAlignment: Text.AlignVCenter
             }
 
             Text {
                 text: "|"
+                font.family: "Helvetica"
+                font.pixelSize: 12
+                renderType: Text.NativeRendering
+                color: Colors.selectedMetadataColor
+                verticalAlignment: Text.AlignVCenter
             }
 
             Text {
                 text: qsTr("(%1) item(s) modified").arg(artItemsModel.modifiedArtworksCount)
+                font.family: "Helvetica"
+                font.pixelSize: 12
+                renderType: Text.NativeRendering
+                verticalAlignment: Text.AlignVCenter
+                color: artItemsModel.modifiedArtworksCount > 0 ? Colors.artworkModifiedColor : Colors.selectedMetadataColor
+            }
+
+            Item {
+                width: 20
             }
         }
 
         style: StatusBarStyle {
             background: Rectangle {
+                implicitHeight: 20
+                implicitWidth: 200
                 color: Colors.defaultDarkColor
-                anchors.fill: parent
             }
         }
     }

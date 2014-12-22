@@ -56,7 +56,7 @@ CheckBox {
 
         label: Text {
             text: control.text
-            color: Colors.imageFilenameForeground
+            color: Colors.defaultLightColor
             font.family: "Helvetica"
             font.pixelSize: 12
         }

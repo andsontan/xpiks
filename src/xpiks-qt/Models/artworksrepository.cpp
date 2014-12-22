@@ -20,6 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <QDir>
 #include <QSet>
 #include <QFileInfo>
 #include <QRegExp>
@@ -155,10 +156,11 @@ namespace Models {
             return QVariant();
 
         const QString &directory = m_DirectoriesList.at(index.row());
+        QDir dir(directory);
 
         switch (role) {
         case PathRole:
-            return QString(directory);
+            return dir.dirName();
         case UsedImagesCountRole:
             return QVariant(m_DirectoriesHash[directory]);
         default:

@@ -59,6 +59,7 @@ namespace Models {
             EditArtworkTitleRole,
             KeywordsRole,
             KeywordsStringRole,
+            KeywordsCountRole,
             IsModifiedRole,
             IsSelectedRole,
             EditIsSelectedRole

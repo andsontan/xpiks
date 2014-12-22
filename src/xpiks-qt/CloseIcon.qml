@@ -23,18 +23,18 @@ import QtQuick 2.3
 import "Colors.js" as Colors
 
 Item {
-    width: 16
-    height: 16
+    id: item
+    property bool isActive
 
     signal itemClicked();
 
     Rectangle {
         anchors.fill: parent
         color: "transparent"
+        opacity: mouseArea.containsMouse ? 1 : 0.8
 
         Rectangle {
-            color: mouseArea.pressed ? Colors.desctuctiveColor : Colors.defaultControlColor
-            opacity: mouseArea.containsMouse ? 1 : 0.8
+            color: mouseArea.pressed ? Colors.artworkModifiedColor : (isActive ? Colors.defaultControlColor : Colors.defaultLightColor)
             width: parent.width - 2
             height: 3
             border.width: 1
@@ -46,8 +46,7 @@ Item {
         }
 
         Rectangle {
-            color: mouseArea.pressed ? Colors.desctuctiveColor : Colors.defaultControlColor
-            opacity: mouseArea.containsMouse ? 1 : 0.8
+            color: mouseArea.pressed ? Colors.artworkModifiedColor : (isActive ? Colors.defaultControlColor : Colors.defaultLightColor)
             width: parent.width - 2
             height: 3
             radius: 2

@@ -46,6 +46,7 @@ namespace Models {
         const QString &getTitle() const { return m_ArtworkTitle; }
         const QString &getDescription() const { return m_ArtworkDescription; }
         const QString &getFilepath() const { return m_ArtworkFilepath; }
+        int getKeywordsCount() const { return m_KeywordsSet.count(); }
         const QStringList &getKeywords() const { return m_KeywordsList; }
         const QSet<QString> &getKeywordsSet() const { return m_KeywordsSet; }
         QString getKeywordsString() const { return m_KeywordsList.join(','); }

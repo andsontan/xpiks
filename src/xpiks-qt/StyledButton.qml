@@ -38,7 +38,7 @@ Button {
             font.bold: true
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
-            color: control.enabled ? (control.pressed ? Colors.buttonPressedForeground : Colors.buttonForeground) : Colors.buttonDisabledForeground
+            color: control.enabled ? (control.pressed ? Colors.buttonPressedForeground : Colors.defaultLightColor) : Colors.buttonDisabledForeground
             text: control.text
             renderType: Text.NativeRendering
         }

@@ -19,13 +19,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-var defaultDarkColor = "#000e11";
-var defaultControlColor = "#1e1e1e";
+var defaultDarkColor = "#1e1e1e";
+var defaultControlColor = "#292929";
+
+var defaultLightColor = "#E0E0E0";
 
 var itemsSourceBackground = "#232323";
 var itemsSourceForeground = "#e6e6e6";
 
-var buttonForeground = "#fefffd";
 var buttonHoverBackground = "#12b9bc";
 var buttonPressedBackground = "#41b1b7";
 var buttonDisabledForeground = "#283c3f";
@@ -40,7 +41,6 @@ var artworkActiveColor = "#12b9bc"
 var selectedArtworkColor = "#545456";
 var selectedMetadataColor = "#5d5d5d";
 var checkboxCheckedColor = "#ffffff";
-var imageFilenameForeground = "#e6e6e6";
 var defaultInputBackground = "#999999";
 
 var desctuctiveColor = "#ff1111";

@@ -23,11 +23,13 @@ import QtQuick 2.4
 import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
 import xpiks 1.0
+import "Colors.js" as Colors
 
 Flickable {
     id: flowListView
     anchors.fill: parent
-    contentWidth: parent.width
+    anchors.rightMargin: 20
+    contentWidth: parent.width - 10
     contentHeight: flow.childrenRect.height + 10
     boundsBehavior: Flickable.StopAtBounds
 
@@ -106,7 +108,7 @@ Flickable {
         Item {
             id: editWrapper
             width: 100
-            height: 30
+            height: 20
 
             TextInput {
                 id: nextTagTextInput
@@ -114,7 +116,7 @@ Flickable {
                 selectByMouse: true
                 anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
-                color: "black"
+                color: Colors.defaultLightColor
                 focus: true
 
                 validator: RegExpValidator {

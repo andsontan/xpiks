@@ -80,7 +80,7 @@ namespace Models {
 
             if (metadata->removeKeywordAt(keywordIndex)) {
                 QModelIndex index = this->index(metadataIndex);
-                emit dataChanged(index, index, QVector<int>() << KeywordsRole << IsModifiedRole);
+                emit dataChanged(index, index, QVector<int>() << KeywordsRole << IsModifiedRole << KeywordsCountRole);
             }
         }
     }
@@ -92,7 +92,7 @@ namespace Models {
 
             if (metadata->removeLastKeyword()) {
                 QModelIndex index = this->index(metadataIndex);
-                emit dataChanged(index, index, QVector<int>() << KeywordsRole << IsModifiedRole);
+                emit dataChanged(index, index, QVector<int>() << KeywordsRole << IsModifiedRole << KeywordsCountRole);
             }
         }
     }
@@ -103,7 +103,7 @@ namespace Models {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
             if (metadata->appendKeyword(keyword)) {
                 QModelIndex index = this->index(metadataIndex);
-                emit dataChanged(index, index, QVector<int>() << KeywordsRole << IsModifiedRole);
+                emit dataChanged(index, index, QVector<int>() << KeywordsRole << IsModifiedRole << KeywordsCountRole);
             }
         }
     }
@@ -217,6 +217,8 @@ namespace Models {
             return metadata->isModified();
         case IsSelectedRole:
             return metadata->getIsSelected();
+        case KeywordsCountRole:
+            return metadata->getKeywordsCount();
         default:
             return QVariant();
         }
@@ -388,6 +390,7 @@ namespace Models {
         roles[IsModifiedRole] = "ismodified";
         roles[IsSelectedRole] = "isselected";
         roles[EditIsSelectedRole] = "editisselected";
+        roles[KeywordsCountRole] = "keywordscount";
         return roles;
     }
 

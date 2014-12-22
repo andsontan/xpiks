@@ -12,5 +12,6 @@
         <file>Colors.js</file>
         <file>StyledButton.qml</file>
         <file>StyledCheckbox.qml</file>
+        <file>StyledScrollView.qml</file>
     </qresource>
 </RCC>
