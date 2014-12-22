@@ -20,6 +20,7 @@
  */
 
 import QtQuick 2.3
+import "Colors.js" as Colors
 
 Item {
     id: progressbar
@@ -36,10 +37,8 @@ Item {
     Rectangle {
         id: border
         anchors.fill: parent
-        anchors.bottomMargin: 1
-        anchors.rightMargin: 1
-        color: "transparent"
-        border.width: 1
+        color: Colors.defaultControlColor
+        border.width: 0
         border.color: parent.color
     }
 
@@ -47,6 +46,7 @@ Item {
         id: highlight
         property int widthDest: ( ( progressbar.width * ( value - minimum ) ) / ( maximum - minimum ) - 4 )
         width: highlight.widthDest
+        radius: height / 2
 
         Behavior on width {
             SmoothedAnimation {
@@ -58,8 +58,9 @@ Item {
             left: parent.left
             top: parent.top
             bottom: parent.bottom
-            margins: 2
+            //margins: 1
         }
+
         color: parent.color
     }
 }

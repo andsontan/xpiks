@@ -23,12 +23,14 @@ import QtQuick 2.4
 import QtQuick.Dialogs 1.2
 import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
+import "Colors.js" as Colors
 
 ApplicationWindow {
     id: settingsWindow
     modality: "ApplicationModal"
     width: 600
     height: 180
+
     property string defaultExifTool: "exiftool"
     property string defaultCurl: "curl"
 
@@ -57,124 +59,160 @@ ApplicationWindow {
         }
     }
 
-    ColumnLayout {
+    Rectangle {
+        color: Colors.selectedArtworkColor
         anchors.fill: parent
-        anchors.margins: 5
 
-        GridLayout {
-            width: parent.width
-            rows: 2
-            columns: 4
+        ColumnLayout {
+            anchors.fill: parent
+            anchors.margins: 5
 
-            Text {
-                Layout.row: 0
-                Layout.column: 0
-                Layout.fillWidth: true
-                Layout.maximumWidth: 150
+            GridLayout {
+                width: parent.width
+                rows: 2
+                columns: 4
+                rowSpacing: 10
+                columnSpacing: 5
 
-                horizontalAlignment: Text.AlignRight
-                text: "ExifTool path:"
-            }
+                Text {
+                    Layout.row: 0
+                    Layout.column: 0
+                    Layout.fillWidth: true
+                    Layout.maximumWidth: 100
 
-            Rectangle {
-                Layout.row: 0
-                Layout.column: 1
-                height: childrenRect.height
-                width: childrenRect.width + 5
-                color: "#dddddd"
-
-                TextInput {
-                    id: exifToolText
-                    width: 300
-                    height: 20
-                    clip: true
-                    text: exifToolPath
-                    anchors.left: parent.left
-                    anchors.leftMargin: 5
-                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignRight
+                    text: "ExifTool path:"
+                    color: Colors.defaultLightColor
+                    font.family: "Helvetica"
+                    font.pixelSize: 12
                     renderType: Text.NativeRendering
                 }
-            }
 
-            StyledButton {
-                Layout.row: 0
-                Layout.column: 2
-                text: qsTr("Select...")
-                onClicked: fileDialog.open()
-            }
+                Rectangle {
+                    Layout.row: 0
+                    Layout.column: 1
+                    height: childrenRect.height
+                    width: childrenRect.width + 5
+                    color: Colors.defaultInputBackground
+                    border.color: Colors.artworkActiveColor
+                    border.width: exifToolText.activeFocus ? 1 : 0
 
-            StyledButton {
-                Layout.row: 0
-                Layout.column: 3
-                text: qsTr("Reset")
-                onClicked: exifToolPath = defaultExifTool
-            }
+                    TextInput {
+                        id: exifToolText
+                        width: 300
+                        height: 20
+                        clip: true
+                        text: exifToolPath
+                        anchors.left: parent.left
+                        anchors.leftMargin: 5
+                        verticalAlignment: Text.AlignVCenter
+                        color: Colors.defaultLightColor
+                        font.family: "Helvetica"
+                        font.pixelSize: 12
+                        renderType: Text.NativeRendering
+                    }
+                }
 
-            Text {
-                Layout.row: 1
-                Layout.column: 0
-                Layout.fillWidth: true
-                Layout.maximumWidth: 150
-                horizontalAlignment: Text.AlignRight
-                text: "Curl path:"
-            }
+                StyledButton {
+                    Layout.row: 0
+                    Layout.column: 2
+                    text: qsTr("Select...")
+                    width: 50
+                    Layout.preferredWidth: 50
+                    onClicked: fileDialog.open()
+                }
 
-            Rectangle {
-                Layout.row: 1
-                Layout.column: 1
-                height: childrenRect.height
-                width: childrenRect.width + 5
-                color: "#dddddd"
+                StyledButton {
+                    Layout.row: 0
+                    Layout.column: 3
+                    text: qsTr("Reset")
+                    width: 50
+                    Layout.preferredWidth: 50
+                    onClicked: exifToolPath = defaultExifTool
+                }
 
-                TextInput {
-                    id: curlText
-                    width: 300
-                    height: 20
-                    clip: true
-                    text: curlPath
-                    anchors.left: parent.left
-                    anchors.leftMargin: 5
-                    verticalAlignment: Text.AlignVCenter
+                Text {
+                    Layout.row: 1
+                    Layout.column: 0
+                    Layout.fillWidth: true
+                    Layout.maximumWidth: 100
+                    horizontalAlignment: Text.AlignRight
+                    text: "Curl path:"
+                    color: Colors.defaultLightColor
+                    font.family: "Helvetica"
+                    font.pixelSize: 12
                     renderType: Text.NativeRendering
                 }
-            }
 
-            StyledButton {
-                Layout.row: 1
-                Layout.column: 2
-                text: qsTr("Select...")
-                onClicked: fileDialog.open()
-            }
+                Rectangle {
+                    Layout.row: 1
+                    Layout.column: 1
+                    height: childrenRect.height
+                    width: childrenRect.width + 5
+                    color: Colors.defaultInputBackground
+                    border.color: Colors.artworkActiveColor
+                    border.width: curlText.activeFocus ? 1 : 0
 
-            StyledButton {
-                Layout.row: 1
-                Layout.column: 3
-                text: qsTr("Reset")
-                onClicked: curlPath = defaultCurl
-            }
-        }
+                    TextInput {
+                        id: curlText
+                        width: 300
+                        height: 20
+                        clip: true
+                        text: curlPath
+                        anchors.left: parent.left
+                        anchors.leftMargin: 5
+                        verticalAlignment: Text.AlignVCenter
+                        color: Colors.defaultLightColor
+                        font.family: "Helvetica"
+                        font.pixelSize: 12
+                        renderType: Text.NativeRendering
+                    }
+                }
 
-        RowLayout {
-            height: 30
+                StyledButton {
+                    Layout.row: 1
+                    Layout.column: 2
+                    text: qsTr("Select...")
+                    width: 50
+                    Layout.preferredWidth: 50
+                    onClicked: fileDialog.open()
+                }
 
-            Item {
-                Layout.fillWidth: true
-            }
-
-            StyledButton {
-                text: qsTr("Save")
-                onClicked: {
-                    exifToolPath = exifToolText.text
-                    appSettings.setValue(exiftoolpathkey, exifToolPath)
-
-                    curlPath = curlText.text
-                    appSettings.setValue(curlpathkey, curlPath)
+                StyledButton {
+                    Layout.row: 1
+                    Layout.column: 3
+                    text: qsTr("Reset")
+                    width: 50
+                    Layout.preferredWidth: 50
+                    onClicked: curlPath = defaultCurl
                 }
             }
 
-            StyledButton {
-                text: qsTr("Exit")
-                onClicked: settingsWindow.destroy()
+            RowLayout {
+                height: 24
+                spacing: 10
+
+                Item {
+                    Layout.fillWidth: true
+                }
+
+                StyledButton {
+                    text: qsTr("Save")
+                    width: 100
+                    onClicked: {
+                        exifToolPath = exifToolText.text
+                        appSettings.setValue(exiftoolpathkey, exifToolPath)
+
+                        curlPath = curlText.text
+                        appSettings.setValue(curlpathkey, curlPath)
+                    }
+                }
+
+                StyledButton {
+                    text: qsTr("Exit")
+                    width: 100
+                    onClicked: settingsWindow.destroy()
+                }
             }
         }
     }

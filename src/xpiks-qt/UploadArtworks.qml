@@ -24,6 +24,7 @@ import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.2
 import QtQuick.Controls.Styles 1.3
+import "Colors.js" as Colors
 
 Item {
     id: uploadArtworksComponent
@@ -59,8 +60,7 @@ Item {
             id: dialogWindow
             width: 480
             height: 300
-            radius: 10
-            color: "#eeeeee"
+            color: Colors.selectedArtworkColor
             anchors.centerIn: parent
 
             ColumnLayout {
@@ -70,6 +70,10 @@ Item {
 
                 Text {
                     text: qsTr("Upload artworks")
+                    color: Colors.defaultLightColor
+                    font.family: "Helvetica"
+                    font.pixelSize: 12
+                    renderType: Text.NativeRendering
                 }
 
                 GridLayout {
@@ -84,17 +88,24 @@ Item {
                         Layout.fillWidth: true
                         Layout.maximumWidth: 150
                         horizontalAlignment: Text.AlignRight
-                        text: qsTr("FTP host:")
+                        text: qsTr("FTP host:")                        
+                        color: Colors.defaultLightColor
+                        font.family: "Helvetica"
+                        font.pixelSize: 12
+                        renderType: Text.NativeRendering
                     }
 
                     Rectangle {
                         Layout.row: 0
                         Layout.column: 1
+                        color: Colors.defaultInputBackground
+                        border.color: Colors.artworkActiveColor
+                        border.width: ftpHost.activeFocus ? 1 : 0
 
                         width: 200
                         height: 20
 
-                        TextEdit {
+                        TextInput {
                             id: ftpHost
                             clip: true
                             anchors.fill: parent
@@ -105,6 +116,10 @@ Item {
                             onTextChanged: artworkUploader.host = text
                             KeyNavigation.tab: ftpUsername
                             KeyNavigation.priority: KeyNavigation.BeforeItem
+                            color: Colors.defaultLightColor
+                            font.family: "Helvetica"
+                            font.pixelSize: 12
+                            renderType: Text.NativeRendering
                         }
                     }
 
@@ -114,12 +129,19 @@ Item {
                         Layout.fillWidth: true
                         Layout.maximumWidth: 150
                         text: qsTr("FTP User name:")
-                        horizontalAlignment: Text.AlignRight
+                        horizontalAlignment: Text.AlignRight                        
+                        color: Colors.defaultLightColor
+                        font.family: "Helvetica"
+                        font.pixelSize: 12
+                        renderType: Text.NativeRendering
                     }
 
                     Rectangle {
                         Layout.row: 1
                         Layout.column: 1
+                        color: Colors.defaultInputBackground
+                        border.color: Colors.artworkActiveColor
+                        border.width: ftpUsername.activeFocus ? 1 : 0
 
                         width: 200
                         height: 20
@@ -135,7 +157,11 @@ Item {
                             onTextChanged: artworkUploader.username = text
                             KeyNavigation.tab: ftpPassword
                             KeyNavigation.backtab: ftpHost
-                            KeyNavigation.priority: KeyNavigation.BeforeItem
+                            KeyNavigation.priority: KeyNavigation.BeforeItem                            
+                            color: Colors.defaultLightColor
+                            font.family: "Helvetica"
+                            font.pixelSize: 12
+                            renderType: Text.NativeRendering
                         }
                     }
 
@@ -146,11 +172,18 @@ Item {
                         Layout.fillWidth: true
                         Layout.maximumWidth: 150
                         horizontalAlignment: Text.AlignRight
+                        color: Colors.defaultLightColor
+                        font.family: "Helvetica"
+                        font.pixelSize: 12
+                        renderType: Text.NativeRendering
                     }
 
                     Rectangle {
                         Layout.row: 2
                         Layout.column: 1
+                        color: Colors.defaultInputBackground
+                        border.color: Colors.artworkActiveColor
+                        border.width: ftpPassword.activeFocus ? 1 : 0
 
                         width: 200
                         height: 20
@@ -166,6 +199,10 @@ Item {
                             onTextChanged: artworkUploader.password = text
                             KeyNavigation.backtab: ftpUsername
                             KeyNavigation.priority: KeyNavigation.BeforeItem
+                            color: Colors.defaultLightColor
+                            font.family: "Helvetica"
+                            font.pixelSize: 12
+                            renderType: Text.NativeRendering
                         }
                     }
                 }
@@ -192,6 +229,7 @@ Item {
                 }
 
                 RowLayout {
+                    height: 24
                     Item {
                         Layout.fillWidth: true
                     }
@@ -199,6 +237,7 @@ Item {
                     StyledButton {
                         id: uploadButton
                         text: qsTr("Start Upload")
+                        width: 130
                         enabled: !(artworkUploader.inProgress || ftpHost.length == 0 || ftpUsername.length == 0)
                         onClicked: {
                             text = qsTr("Uploading...")
@@ -209,6 +248,7 @@ Item {
 
                     StyledButton {
                         text: qsTr("Close")
+                        width: 100
                         enabled: !artworkUploader.inProgress
                         onClicked: {
                             artItemsModel.updateAllProperties()

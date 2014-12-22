@@ -24,6 +24,7 @@ import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.2
 import QtQuick.Controls.Styles 1.3
+import "Colors.js" as Colors
 
 Item {
     id: metadataExportComponent
@@ -59,8 +60,7 @@ Item {
             id: dialogWindow
             width: 480
             height: 150
-            radius: 10
-            color: "#eeeeee"
+            color: Colors.selectedArtworkColor
             anchors.centerIn: parent
 
             ColumnLayout {
@@ -70,6 +70,10 @@ Item {
 
                 Text {
                     text: qsTr("Export metadata")
+                    color: Colors.defaultLightColor
+                    font.family: "Helvetica"
+                    font.pixelSize: 12
+                    renderType: Text.NativeRendering
                 }
 
                 SimpleProgressBar {
@@ -77,7 +81,7 @@ Item {
                     anchors.horizontalCenter: parent.horizontalCenter
                     width: parent.width
                     height: 20
-                    color: iptcProvider.isError ? "red" : "#77B753"
+                    color: iptcProvider.isError ? Colors.desctuctiveColor : Colors.artworkActiveColor
                     value: iptcProvider.percent
 
                     onValueChanged: {
@@ -89,6 +93,8 @@ Item {
                 }
 
                 RowLayout {
+                    height: 24
+
                     Item {
                         Layout.fillWidth: true
                     }
@@ -96,6 +102,7 @@ Item {
                     StyledButton {
                         id: exportButton
                         text: qsTr("Start Export")
+                        width: 130
                         enabled: !iptcProvider.inProgress
                         onClicked: {
                             text = qsTr("Exporting...")
@@ -106,6 +113,7 @@ Item {
 
                     StyledButton {
                         text: qsTr("Close")
+                        width: 100
                         enabled: !iptcProvider.inProgress
                         onClicked: {
                             if (!iptcProvider.isError) {

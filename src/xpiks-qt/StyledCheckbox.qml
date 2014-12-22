@@ -29,7 +29,7 @@ CheckBox {
         indicator: Rectangle {
             implicitHeight: 17
             implicitWidth: 17
-            color: control.checked ? Colors.artworkActiveColor : (control.hovered ? Colors.selectedArtworkColor : Colors.defaultControlColor)
+            color: control.checked ? Colors.artworkActiveColor : (control.hovered ? Colors.selectedMetadataColor : Colors.defaultControlColor)
 
             Rectangle {
                 visible: control.checked
