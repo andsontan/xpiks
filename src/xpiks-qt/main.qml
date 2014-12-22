@@ -146,12 +146,18 @@ ApplicationWindow {
             anchors.fill: parent
             orientation: Qt.Horizontal
 
+            handleDelegate: Rectangle {
+                height: parent.height
+                width: 2
+                color: Colors.appBackground
+            }
+
             ColumnLayout {
-                Layout.minimumWidth: 237
-                Layout.preferredWidth: 237
+                Layout.minimumWidth: 250
+                Layout.preferredWidth: 250
                 Layout.maximumWidth: 350
 
-                spacing: 5
+                spacing: 0
 
                 Rectangle {
                     width: parent.width
@@ -165,13 +171,13 @@ ApplicationWindow {
 
                         StyledButton {
                             text: qsTr("Add directory")
-                            width: 111
+                            width: 120
                             onClicked: chooseDirectoryDialog.open()
                         }
 
                         StyledButton {
                             text: qsTr("Add files")
-                            width: 95
+                            width: 100
                             onClicked: chooseArtworksDialog.open()
                         }
 
@@ -194,8 +200,7 @@ ApplicationWindow {
                         model: artworkRepository
                         boundsBehavior: Flickable.StopAtBounds
                         anchors.fill: parent
-                        anchors.leftMargin: 10
-                        anchors.topMargin: 10
+                        anchors.margins: { left: 10; top: 5; right: 10 }
 
                         spacing: 10
 
@@ -274,7 +279,7 @@ ApplicationWindow {
             }
 
             ColumnLayout {
-                spacing: 5
+                spacing: 0
 
                 Rectangle {
                     height: 45
@@ -376,6 +381,7 @@ ApplicationWindow {
                     ListView {
                         id: imagesListView
                         anchors.fill: parent
+                        anchors.topMargin: 5
                         model: artItemsModel
                         boundsBehavior: Flickable.StopAtBounds
                         spacing: 4

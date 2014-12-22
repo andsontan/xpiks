@@ -28,7 +28,7 @@ Button {
     style: ButtonStyle {
         background: Rectangle {
             color: control.enabled ? (control.hovered ? Colors.buttonHoverBackground : Colors.buttonBackground) : Colors.buttonBackground
-            implicitWidth: 100
+            implicitWidth: control.width
             implicitHeight: 24
         }
 
