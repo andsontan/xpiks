@@ -95,6 +95,7 @@ namespace Models {
         if (keywordIndex >= 0 && keywordIndex < m_CommonKeywords.length()) {
             m_CommonKeywords.removeAt(keywordIndex);
             emit keywordsChanged();
+            emit keywordsCountChanged();
         }
     }
 
@@ -102,6 +103,7 @@ namespace Models {
     {
         m_CommonKeywords.append(keyword);
         emit keywordsChanged();
+        emit keywordsCountChanged();
     }
 
     void CombinedArtworksModel::selectArtwork(int index)

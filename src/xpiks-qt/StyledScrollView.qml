@@ -32,7 +32,7 @@ ScrollView {
         minimumHandleLength: 20
 
         handle: Item {
-            implicitHeight: 5
+            implicitHeight: 10
             implicitWidth: 10
 
             Rectangle {
@@ -47,7 +47,7 @@ ScrollView {
             property bool sticky: false
             property bool hovered: styleData.hovered
             implicitWidth: 10
-            implicitHeight: 3
+            implicitHeight: 10
             clip: true
 
             Rectangle {
@@ -62,7 +62,7 @@ ScrollView {
         }
 
         corner: Item {}
-        decrementControl: Item { width: 5; height: 1 }
-        incrementControl: Item { width: 5; height: 1 }
+        decrementControl: Item { width: 1; height: 1 }
+        incrementControl: Item { width: 1; height: 1 }
     }
 }

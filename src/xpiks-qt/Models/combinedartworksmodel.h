@@ -36,6 +36,7 @@ namespace Models {
         Q_PROPERTY(QStringList keywords READ getKeywords WRITE setKeywords NOTIFY keywordsChanged)
         Q_PROPERTY(QString description READ getDescription WRITE setDescription NOTIFY descriptionChanged)
         Q_PROPERTY(QString title READ getTitle WRITE setTitle NOTIFY titleChanged)
+        Q_PROPERTY(int keywordsCount READ getKeywordsCount NOTIFY keywordsCountChanged)
     public:
         CombinedArtworksModel(QObject *parent = 0) :
             AbstractListModel(parent)
@@ -55,22 +56,19 @@ namespace Models {
         void recombineArtworks();
 
     public:
-        Q_INVOKABLE void resetModelData();
-
-    public:
         const QStringList &getKeywords() const { return m_CommonKeywords; }
         void setKeywords(const QStringList& keywords) { m_CommonKeywords = keywords; emit keywordsChanged(); }
-
-    public:
         const QString &getDescription() const { return m_ArtworkDescription; }
         void setDescription(const QString &description) { m_ArtworkDescription = description; emit descriptionChanged(); }
         const QString &getTitle() const { return m_ArtworkTitle; }
         void setTitle(const QString &title) { m_ArtworkTitle = title; emit titleChanged(); }
+        int getKeywordsCount() const { return m_CommonKeywords.length(); }
 
     signals:
         void keywordsChanged();
         void descriptionChanged();
         void titleChanged();
+        void keywordsCountChanged();
 
     public:
         Q_INVOKABLE void removeKeywordAt(int keywordIndex);
@@ -83,6 +81,8 @@ namespace Models {
         Q_INVOKABLE int getArtworksCount() const { return m_ArtworksList.length(); }
         Q_INVOKABLE void saveSetKeywords();
         Q_INVOKABLE void saveAddKeywords();
+        Q_INVOKABLE void resetModelData();
+        Q_INVOKABLE QString getKeywordsString() { return m_CommonKeywords.join(','); }
 
     public:
         enum CombinedArtworksModelRoles {

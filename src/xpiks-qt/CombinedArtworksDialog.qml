@@ -24,6 +24,8 @@ import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.2
 import QtQuick.Controls.Styles 1.3
+import xpiks 1.0
+import "Colors.js" as Colors
 
 Item {
     id: dialogComponent
@@ -72,27 +74,28 @@ Item {
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
-            width: 640
-            height: 520
-            radius: 10
-            color: "#eeeeee"
+            width: 730
+            height: 530
+            color: Colors.selectedArtworkColor
             anchors.centerIn: parent
 
             ColumnLayout {
                 anchors.fill: parent
-                anchors.margins: 10
-                spacing: 5
+                anchors.margins: 30
+                spacing: 3
 
                 RowLayout {
                     spacing: 5
                     Layout.fillWidth: true
+                    height: 40
 
                     Item {
                         Layout.fillWidth: true
                     }
 
                     StyledButton {
-                        text: qsTr("Remove selected")
+                        text: qsTr("Remove")
+                        width: 100
                         onClicked: {
                             var itemsCount = combinedArtworks.getSelectedArtworksCount()
                             if (itemsCount > 0) {
@@ -103,69 +106,58 @@ Item {
                     }
                 }
 
+                Item {
+                    height: 1
+                }
+
                 Rectangle {
-                    border.color: "black"
-                    border.width: 1
-                    height: 60
+                    height: 130
                     width: parent.width
+                    color: Colors.defaultControlColor
 
-                    ScrollView {
+                    StyledScrollView {
                         id: imagesScrollView
-                        anchors.fill: parent
-                        anchors.margins: 2
-
-                        style: ScrollViewStyle {
-                            //transientScrollBars: true
-                            minimumHandleLength: 20
-
-                            handle: Item {
-                                implicitHeight: 3
-                                implicitWidth: 10
-
-                                Rectangle {
-                                    anchors.fill: parent
-                                    color: "black"
-                                    opacity: styleData.pressed ? 1 : (styleData.hovered ? 0.8 : 0.5)
-                                }
-                            }
-
-                            scrollBarBackground: Item {
-                                property bool sticky: false
-                                property bool hovered: styleData.hovered
-                                implicitWidth: 3
-                                implicitHeight: 3
-                                clip: true
-
-                                Rectangle {
-                                    anchors.fill: parent
-                                    anchors.leftMargin: 3
-                                    anchors.rightMargin: 3
-                                    color: "#dddddd"
-                                    opacity: styleData.hovered ? 1 : 0.8
-                                }
-
-                                onHoveredChanged: if (hovered) sticky = true
-                            }
-
-                            corner: Item {}
-                            decrementControl: Item {}
-                            incrementControl: Item {}
-                        }
+                        height: parent.height + 15
+                        width: parent.width
+                        anchors.margins: 10
 
                         ListView {
                             boundsBehavior: Flickable.StopAtBounds
                             anchors.fill: parent
+                            anchors.margins: 10
                             orientation: Qt.Horizontal
-                            spacing: 3
+                            spacing: 10
                             model: combinedArtworks
 
                             delegate: Rectangle {
                                 property int indexOfThisDelegate: index
                                 id: imageWrapper
-                                height: 50
+                                height: 110
                                 width: height
-                                border.width: isselected ? 1 : 0
-                                border.color: "black"
+                                color: "transparent"
+
+                                Image {
+                                    anchors.fill: parent
+                                    anchors.margins: 1
+                                    source: "image://global/" + path
+                                    sourceSize.width: 150
+                                    sourceSize.height: 150
+                                    fillMode: Image.PreserveAspectFit
+                                    asynchronous: true
+                                }
+
+                                Rectangle {
+                                    anchors.fill: parent
+                                    visible: isselected
+                                    color: Colors.defaultControlColor
+                                    opacity: 0.7
+                                }
+
+                                LargeRemoveIcon {
+                                    visible: isselected
+                                    width: parent.width
+                                    height: parent.height
+                                }
 
                                 MouseArea {
                                     id: mouseArea
@@ -178,24 +170,21 @@ Item {
                                         }
                                     }
                                 }
-
-                                Image {
-                                    anchors.fill: parent
-                                    anchors.margins: 1
-                                    source: "image://global/" + path
-                                    sourceSize.width: 150
-                                    sourceSize.height: 150
-                                    fillMode: Image.PreserveAspectFit
-                                    asynchronous: true
-                                }
                             }
                         }
                     }
                 }
 
+                Item {
+                    height: 30
+                }
+
                 Text {
                     text: qsTr("Title:")
                     anchors.left: parent.left
+                    color: Colors.defaultLightColor
+                    font.family: "Helvetica"
+                    font.pixelSize: 12
                     renderType: Text.NativeRendering
                 }
 
@@ -203,10 +192,13 @@ Item {
                     id: anotherRect
                     width: 300
                     height: 25
-                    color: "white"
                     anchors.left: parent.left
+                    color: Colors.defaultInputBackground
+                    border.color: Colors.artworkActiveColor
+                    border.width: titleTextInput.activeFocus ? 1 : 0
 
                     TextInput {
+                        id: titleTextInput
                         anchors.left: parent.left
                         anchors.right: parent.right
                         anchors.leftMargin: 5
@@ -214,15 +206,25 @@ Item {
                         anchors.verticalCenter: parent.verticalCenter
                         maximumLength: 250
                         clip: true
+                        color: Colors.defaultLightColor
                         text: combinedArtworks.title
                         onTextChanged: combinedArtworks.title = text
                         renderType: TextInput.NativeRendering
+                        KeyNavigation.tab: descriptionTextInput
+                        KeyNavigation.priority: KeyNavigation.BeforeItem
                     }
+                }
+
+                Item {
+                    height: 5
                 }
 
                 Text {
                     text: qsTr("Description:")
                     anchors.left: parent.left
+                    color: Colors.defaultLightColor
+                    font.family: "Helvetica"
+                    font.pixelSize: 12
                     renderType: Text.NativeRendering
                 }
 
@@ -230,10 +232,13 @@ Item {
                     id: rect
                     width: 300
                     height: 25
-                    color: "white"
+                    color: Colors.defaultInputBackground
+                    border.color: Colors.artworkActiveColor
+                    border.width: descriptionTextInput.activeFocus ? 1 : 0
                     anchors.left: parent.left
 
                     TextInput {
+                        id: descriptionTextInput
                         anchors.left: parent.left
                         anchors.right: parent.right
                         anchors.leftMargin: 5
@@ -241,23 +246,40 @@ Item {
                         anchors.verticalCenter: parent.verticalCenter
                         maximumLength: 250
                         clip: true
+                        color: Colors.defaultLightColor
                         text: combinedArtworks.description
                         onTextChanged: combinedArtworks.description = text
                         renderType: TextInput.NativeRendering
+                        Keys.onTabPressed: {
+                            flv.activateEdit()
+                        }
+                        KeyNavigation.backtab: titleTextInput
+                        KeyNavigation.priority: KeyNavigation.BeforeItem
                     }
+                }
+
+                Item {
+                    height: 5
                 }
 
                 Text {
                     id: keywordsLabel
                     anchors.left: parent.left
                     text: qsTr("Keywords:")
+                    color: Colors.defaultLightColor
+                    font.family: "Helvetica"
+                    font.pixelSize: 12
+                    renderType: Text.NativeRendering
                 }
 
                 Rectangle {
                     id: keywordsWrapper
-                    color: "#adadad"
-                    Layout.fillHeight: true
+                    border.color: Colors.artworkActiveColor
+                    border.width: flv.isFocused ? 1 : 0
+                    height: 100
+                    anchors.rightMargin: 20
                     Layout.fillWidth: true
+                    color: Colors.defaultInputBackground
 
                     function removeKeyword(index) {
                         combinedArtworks.removeKeywordAt(index)
@@ -280,50 +302,58 @@ Item {
                         }
                     }
 
-                    ScrollView {
+                    StyledScrollView {
                         id: scroller
-                        anchors.fill: parent
+                        width: parent.width + 15
+                        height: parent.height
                         highlightOnFocus: true
 
                         EditableTags {
                             id: flv
-                            anchors.margins: 5
+                            anchors.margins: { left: 5; top: 5; right: 0; bottom: 5 }
                             model: combinedArtworks.keywords
 
                             delegate: Rectangle {
                                 id: itemWrapper
                                 property int indexOfThisDelegate: index
                                 property string keyword: modelData
-                                border.width: 1
-                                border.color: "black"
-                                color: "#cccccc"
+                                color: Colors.defaultLightColor
 
                                 width: childrenRect.width
                                 height: childrenRect.height
 
                                 RowLayout {
+                                    spacing: 1
+
                                     Rectangle {
+                                        id: tagTextRect
+                                        width: childrenRect.width + 5
+                                        height: 20
                                         color: "transparent"
-                                        width: childrenRect.width + 15
-                                        height: 30
 
                                         Text {
                                             anchors.left: parent.left
-                                            anchors.leftMargin: 10
+                                            anchors.leftMargin: 5
                                             anchors.top: parent.top
                                             anchors.bottom: parent.bottom
                                             verticalAlignment: Text.AlignVCenter
                                             text: modelData
                                             renderType: Text.NativeRendering
+                                            color: Colors.defaultControlColor
                                         }
                                     }
 
                                     CloseIcon {
+                                        width: 14
+                                        height: 14
+                                        isActive: true
+                                        anchors.verticalCenter: tagTextRect.verticalCenter
+                                        anchors.verticalCenterOffset: 1
                                         onItemClicked: keywordsWrapper.removeKeyword(itemWrapper.indexOfThisDelegate)
                                     }
 
                                     Item {
-                                        width: 5
+                                        width: 1
                                     }
                                 }
                             }
@@ -339,19 +369,57 @@ Item {
                     }
                 }
 
+                RowLayout {
+                    Text {
+                        text: combinedArtworks.keywordsCount
+                        font.family: "Helvetica"
+                        font.pixelSize: 12
+                        renderType: TextInput.NativeRendering
+                        color: Colors.defaultControlColor
+                    }
+
+                    Item {
+                        Layout.fillWidth: true
+                    }
+
+                    Text {
+                        text: qsTr("Copy keywords")
+                        color: Colors.artworkActiveColor
+                        renderType: TextInput.NativeRendering
+                        font.family: "Helvetica"
+                        font.pixelSize: 12
+
+                        MouseArea {
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: combinedClipboard.setText(combinedArtworks.getKeywordsString())
+                        }
+                    }
+
+                    ClipboardHelper {
+                        id: combinedClipboard
+                    }
+                }
+
+                Item {
+                    height: 5
+                }
+
                 Rectangle {
                     width: parent.width
-                    height: 30
+                    color: "transparent"
+                    height: 24
 
                     RowLayout {
                         anchors.fill: parent
-                        spacing: 5
+                        spacing: 10
 
                         Item {
                             Layout.fillWidth: true
                         }
 
                         StyledButton {
+                            width: 130
                             text: qsTr("Save and append")
                             onClicked: {
                                 combinedArtworks.saveAddKeywords()
@@ -364,6 +432,7 @@ Item {
 
                         StyledButton {
                             text: qsTr("Save and replace")
+                            width: 130
                             onClicked: {
                                 combinedArtworks.saveSetKeywords()
                                 closePopup()
@@ -375,7 +444,7 @@ Item {
 
                         StyledButton {
                             text: qsTr("Cancel")
-
+                            width: 100
                             onClicked: {
                                 closePopup()
                             }

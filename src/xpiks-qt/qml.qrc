@@ -13,5 +13,6 @@
         <file>StyledButton.qml</file>
         <file>StyledCheckbox.qml</file>
         <file>StyledScrollView.qml</file>
+        <file>LargeRemoveIcon.qml</file>
     </qresource>
 </RCC>

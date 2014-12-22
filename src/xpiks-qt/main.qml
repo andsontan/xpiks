@@ -272,7 +272,7 @@ ApplicationWindow {
                         anchors.margins: { top: 10; left: 10; right: 10 }
 
                         Item {
-                            width: 3
+                            width: 1
                         }
 
                         StyledCheckbox {
@@ -555,7 +555,7 @@ ApplicationWindow {
 
                                             StyledScrollView {
                                                 id: scroller
-                                                height: 80
+                                                height: parent.height
                                                 width: parent.width + 15
                                                 highlightOnFocus: true
 
@@ -623,6 +623,9 @@ ApplicationWindow {
                                         RowLayout {
                                             Text {
                                                 text: keywordscount
+                                                renderType: TextInput.NativeRendering
+                                                font.family: "Helvetica"
+                                                font.pixelSize: 12
                                                 color: rowWrapper.isHighlighted ? Colors.defaultControlColor : Colors.selectedArtworkColor
                                             }
 
@@ -632,6 +635,9 @@ ApplicationWindow {
 
                                             Text {
                                                 text: qsTr("Copy keywords")
+                                                renderType: TextInput.NativeRendering
+                                                font.family: "Helvetica"
+                                                font.pixelSize: 12
                                                 color: Colors.artworkActiveColor
 
                                                 MouseArea {
