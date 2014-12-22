@@ -87,8 +87,8 @@ Models::ArtworkMetadata *readArtworkMetadata(Models::ArtworkMetadata *metadata) 
     }
 
     QByteArray stdoutByteArray = process.readAll();
-    QString stdout(stdoutByteArray);
-    QStringList items = stdout.split(QRegExp("[\r\n]"), QString::SkipEmptyParts);
+    QString stdoutTextText(stdoutByteArray);
+    QStringList items = stdoutTextText.split(QRegExp("[\r\n]"), QString::SkipEmptyParts);
     grabMetadata(items, metadata);
 
     return metadata;
