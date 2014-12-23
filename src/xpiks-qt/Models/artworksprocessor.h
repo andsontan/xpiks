@@ -62,6 +62,7 @@ namespace Models {
         void inProgressChanged();
         void isErrorChanged();
         void percentChanged();
+        void finishedProcessing();
 
     public:
         void setArtworks(const QList<ArtworkMetadata*> &artworkList) { resetArtworks(); addArtworks(artworkList); }

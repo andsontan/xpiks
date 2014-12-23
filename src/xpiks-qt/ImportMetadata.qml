@@ -83,16 +83,6 @@ Item {
                     height: 20
                     color: iptcProvider.isError ? Colors.desctuctiveColor : Colors.artworkActiveColor
                     value: iptcProvider.percent
-
-                    onValueChanged: {
-                        if (value == 100) {
-                            importButton.text = qsTr("Start Import")
-                            artItemsModel.updateAllProperties()
-                            if (!iptcProvider.isError) {
-                                closePopup()
-                            }
-                        }
-                    }
                 }
 
                 RowLayout {
@@ -111,6 +101,17 @@ Item {
                             text = qsTr("Importing...")
                             iptcProvider.resetModel()
                             iptcProvider.importMetadata()
+                        }
+
+                        Connections {
+                            target: iptcProvider
+                            onFinishedProcessing: {
+                                importButton.text = qsTr("Start Import")
+                                artItemsModel.updateAllProperties()
+                                if (!iptcProvider.isError) {
+                                    closePopup()
+                                }
+                            }
                         }
                     }
 

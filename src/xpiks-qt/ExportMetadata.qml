@@ -83,13 +83,6 @@ Item {
                     height: 20
                     color: iptcProvider.isError ? Colors.desctuctiveColor : Colors.artworkActiveColor
                     value: iptcProvider.percent
-
-                    onValueChanged: {
-                        if (value == 100) {
-                            exportButton.text = qsTr("Start Export")
-                            artItemsModel.updateAllProperties()
-                        }
-                    }
                 }
 
                 RowLayout {
@@ -108,6 +101,14 @@ Item {
                             text = qsTr("Exporting...")
                             iptcProvider.resetModel()
                             iptcProvider.exportMetadata()
+                        }
+
+                        Connections {
+                            target: iptcProvider
+                            onFinishedProcessing: {
+                                exportButton.text = qsTr("Start Export")
+                                artItemsModel.updateAllProperties()
+                            }
                         }
                     }
 

@@ -220,12 +220,6 @@ Item {
                     height: 20
                     color: artworkUploader.isError ? "red" : "#77B753"
                     value: artworkUploader.percent
-
-                    onValueChanged: {
-                        if (value == 100) {
-                            uploadButton.text = qsTr("Start Upload")
-                        }
-                    }
                 }
 
                 RowLayout {
@@ -243,6 +237,13 @@ Item {
                             text = qsTr("Uploading...")
                             artworkUploader.resetModel()
                             artworkUploader.uploadArtworks()
+                        }
+
+                        Connections {
+                            target: artworkUploader
+                            onFinishedProcessing: {
+                                uploadButton.text = qsTr("Start Upload")
+                            }
                         }
                     }
 

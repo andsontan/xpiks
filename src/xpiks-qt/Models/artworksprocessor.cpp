@@ -41,6 +41,7 @@ namespace Models {
     void ArtworksProcessor::endProcessing()
     {
         setInProgress(false);
+        emit finishedProcessing();
     }
 
     void ArtworksProcessor::endAfterFirstError()
