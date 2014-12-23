@@ -278,6 +278,7 @@ ApplicationWindow {
 
                         StyledCheckbox {
                             id: selectAllCheckbox
+                            text: qsTr("Select all")
                             checked: artItemsModel.selectedArtworksCount > 0
 
                             onClicked: {
@@ -704,7 +705,8 @@ ApplicationWindow {
                 font.family: "Helvetica"
                 font.pixelSize: 12
                 renderType: Text.NativeRendering
-                color: Colors.selectedMetadataColor
+                color: rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.defaultControlColor
+
                 verticalAlignment: Text.AlignVCenter
             }
 

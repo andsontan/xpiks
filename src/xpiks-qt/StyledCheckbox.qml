@@ -26,6 +26,8 @@ import "Colors.js" as Colors;
 
 CheckBox {
     style: CheckBoxStyle {
+        spacing: 8
+
         indicator: Rectangle {
             implicitHeight: 17
             implicitWidth: 17
@@ -56,9 +58,10 @@ CheckBox {
 
         label: Text {
             text: control.text
-            color: Colors.defaultLightColor
+            color: control.enabled ? Colors.defaultInputBackground : Colors.selectedArtworkColor
             font.family: "Helvetica"
             font.pixelSize: 12
+            renderType: Text.NativeRendering
         }
     }
 }
