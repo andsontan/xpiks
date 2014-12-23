@@ -28,7 +28,7 @@ namespace Models {
     IptcProvider::IptcProvider():
         ArtworksProcessor()
     {
-        m_MetadataWriter = new QFutureWatcher<ArtworkMetadata*>(this);
+        m_MetadataWriter = new QFutureWatcher<ExportPair>(this);
         connect(m_MetadataWriter, SIGNAL(resultReadyAt(int)), SLOT(metadataExported(int)));
         connect(m_MetadataWriter, SIGNAL(finished()), SLOT(allFinished()));
 
@@ -46,7 +46,8 @@ namespace Models {
 
     void IptcProvider::metadataExported(int index) {
         qDebug() << "Metadata exported at " << index;
-        ArtworkMetadata *metadata = m_MetadataWriter->resultAt(index);
+        ExportPair pair = m_MetadataWriter->resultAt(index);
+        ArtworkMetadata *metadata = pair.first;
         metadataExportedHandler(metadata);
     }
 
@@ -94,7 +95,7 @@ namespace Models {
             metadataImportedHandler(firstMetadata);
         }
 
-        m_MetadataWriter->setFuture(QtConcurrent::mapped(artworkList.begin() + 1, artworkList.end(), readArtworkMetadata));
+        m_MetadataReader->setFuture(QtConcurrent::mapped(artworkList.begin() + 1, artworkList.end(), readArtworkMetadata));
     }
 
     void IptcProvider::doWriteMetadata(const QList<ArtworkMetadata *> &artworkList) {
@@ -105,16 +106,20 @@ namespace Models {
 
         beginProcessing();
 
-        ArtworkMetadata *firstMetadata = artworkList.first();
-        if (!writeArtworkMetadata(firstMetadata)) {
+        QList<ExportPair> pairs;
+        foreach(ArtworkMetadata *metadata, artworkList) {
+            pairs.append(qMakePair(metadata, &m_ExportInfo));
+        }
+
+        if (!writeArtworkMetadata(pairs.first()).first) {
             endAfterFirstError();
             return;
         }
         else {
-            metadataExportedHandler(firstMetadata);
+            metadataExportedHandler(pairs.first().first);
         }
 
-        m_MetadataWriter->setFuture(QtConcurrent::mapped(artworkList.begin() + 1, artworkList.end(), writeArtworkMetadata));
+        m_MetadataWriter->setFuture(QtConcurrent::mapped(pairs.begin() + 1, pairs.end(), writeArtworkMetadata));
     }
 
     void IptcProvider::cancelProcessing()

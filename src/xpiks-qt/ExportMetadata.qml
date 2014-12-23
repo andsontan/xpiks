@@ -76,6 +76,12 @@ Item {
                     renderType: Text.NativeRendering
                 }
 
+                StyledCheckbox {
+                    text: qsTr("Save original images")
+                    checked: iptcProvider.mustSaveOriginal
+                    onCheckedChanged: iptcProvider.mustSaveOriginal = checked
+                }
+
                 SimpleProgressBar {
                     id: progress
                     anchors.horizontalCenter: parent.horizontalCenter

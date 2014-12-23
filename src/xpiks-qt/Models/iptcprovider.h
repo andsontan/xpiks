@@ -23,13 +23,16 @@
 #define IPTCPROVIDER_H
 
 #include <QFutureWatcher>
+#include <QPair>
 #include "artworksprocessor.h"
 #include "artworkmetadata.h"
+#include "exportinfo.h"
 
 namespace Models {
     class IptcProvider : public ArtworksProcessor
     {
         Q_OBJECT
+        Q_PROPERTY(bool mustSaveOriginal READ getMustSaveOriginal WRITE setMustSaveOriginal NOTIFY mustSaveOriginalChanged)
    public:
         IptcProvider();
         ~IptcProvider() { delete m_MetadataWriter; delete m_MetadataReader; }
@@ -44,6 +47,13 @@ namespace Models {
         void metadataExportedHandler(ArtworkMetadata *metadata);
 
     public:
+        bool getMustSaveOriginal() const { return m_ExportInfo.getMustSaveOriginal(); }
+        void setMustSaveOriginal(bool value) { m_ExportInfo.setMustSaveOriginal(value); }
+
+    signals:
+        void mustSaveOriginalChanged();
+
+    public:
         Q_INVOKABLE void importMetadata() { doReadMetadata(getArtworkList()); }
         Q_INVOKABLE void exportMetadata() { doWriteMetadata(getArtworkList()); }
 
@@ -56,7 +66,8 @@ namespace Models {
 
     private:
         QFutureWatcher<ArtworkMetadata*> *m_MetadataReader;
-        QFutureWatcher<ArtworkMetadata*> *m_MetadataWriter;
+        QFutureWatcher<QPair<ArtworkMetadata*, ExportInfo*> > *m_MetadataWriter;
+        ExportInfo m_ExportInfo;
     };
 }
 

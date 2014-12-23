@@ -26,11 +26,18 @@
 #include <QProcess>
 #include <QRegExp>
 #include <QString>
+#include <QPair>
 #include "externaltoolsprovider.h"
 #include "../Models/artworkmetadata.h"
+#include "../Models/exportinfo.h"
+
+typedef QPair<Models::ArtworkMetadata*, Models::ExportInfo*> ExportPair;
 
 // returns NULL if patching wasn't successfull
-Models::ArtworkMetadata *writeArtworkMetadata(Models::ArtworkMetadata *metadata) {
+ExportPair writeArtworkMetadata(ExportPair pair) {
+    Models::ArtworkMetadata *metadata = pair.first;
+    Models::ExportInfo *exportInfo = pair.second;
+
     const QString &author = metadata->getAuthor();
     const QString &title = metadata->getTitle();
     const QString &description = metadata->getDescription();
@@ -52,23 +59,28 @@ Models::ArtworkMetadata *writeArtworkMetadata(Models::ArtworkMetadata *metadata)
     arguments << QString("-IPTC:Keywords=%1").arg(keywords);
     arguments << QString("-XMP:Keywords=%1").arg(keywords);
     arguments << QString("-XMP:Subject=%1").arg(keywords);
-    arguments << "-overwrite_original";
+
+    if (!exportInfo->getMustSaveOriginal()) {
+        arguments << "-overwrite_original";
+    }
+
     arguments << metadata->getFilepath();
 
     const QString exiftoolPath = Helpers::ExternalToolsProvider::getExifToolPath();
 
+    Models::ArtworkMetadata *resultMetadata = NULL;
+
     QProcess process;
     process.start(exiftoolPath, arguments);
     if (!process.waitForFinished()) {
-        return NULL;
+        return qMakePair(resultMetadata, exportInfo);
     }
 
-    Models::ArtworkMetadata *resultMetadata = NULL;
     if (process.exitStatus() == QProcess::NormalExit) {
         resultMetadata = metadata;
     }
 
-    return resultMetadata;
+    return qMakePair(resultMetadata, exportInfo);
 }
 
 void grabMetadata(const QStringList &items, Models::ArtworkMetadata *metadata);

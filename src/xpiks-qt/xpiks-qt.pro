@@ -41,4 +41,5 @@ HEADERS += \
     Models/artworkuploader.h \
     Helpers/curlwrapper.h \
     Models/artworksprocessor.h \
-    Models/uploadinfo.h
+    Models/uploadinfo.h \
+    Models/exportinfo.h
