@@ -115,6 +115,7 @@ namespace Models {
         m_ArtworksList[index]->select();
         QModelIndex qIndex = this->index(index);
         emit dataChanged(qIndex, qIndex, QVector<int>() << IsSelectedRole);
+        emit selectedArtworksCountChanged();
     }
 
     void CombinedArtworksModel::deselectArtwork(int index)
@@ -126,6 +127,7 @@ namespace Models {
         m_ArtworksList[index]->deselect();
         QModelIndex qIndex = this->index(index);
         emit dataChanged(qIndex, qIndex, QVector<int>() << IsSelectedRole);
+        emit selectedArtworksCountChanged();
     }
 
     void CombinedArtworksModel::removeSelectedArtworks()

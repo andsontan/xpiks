@@ -89,6 +89,14 @@ Item {
                     Layout.fillWidth: true
                     height: 40
 
+                    Text {
+                        text: qsTr("Select to remove")
+                        color: Colors.defaultInputBackground
+                        font.family: "Helvetica"
+                        font.pixelSize: 12
+                        renderType: Text.NativeRendering
+                    }
+
                     Item {
                         Layout.fillWidth: true
                     }
@@ -96,12 +104,10 @@ Item {
                     StyledButton {
                         text: qsTr("Remove")
                         width: 100
+                        enabled: combinedArtworks.selectedArtworksCount > 0
                         onClicked: {
-                            var itemsCount = combinedArtworks.getSelectedArtworksCount()
-                            if (itemsCount > 0) {
-                                confirmRemoveArtworksDialog.itemsCount = itemsCount
-                                confirmRemoveArtworksDialog.open()
-                            }
+                            confirmRemoveArtworksDialog.itemsCount = combinedArtworks.selectedArtworksCount
+                            confirmRemoveArtworksDialog.open()
                         }
                     }
                 }
@@ -148,9 +154,8 @@ Item {
 
                                 Rectangle {
                                     anchors.fill: parent
-                                    visible: isselected
                                     color: Colors.defaultControlColor
-                                    opacity: 0.7
+                                    opacity: mouseArea.containsMouse ? 0.4 : (isselected ? 0.7 : 0)
                                 }
 
                                 LargeRemoveIcon {
@@ -162,6 +167,7 @@ Item {
                                 MouseArea {
                                     id: mouseArea
                                     anchors.fill: parent
+                                    hoverEnabled: true
                                     onClicked: {
                                         if (isselected) {
                                             combinedArtworks.deselectArtwork(indexOfThisDelegate)
