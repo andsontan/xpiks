@@ -44,7 +44,7 @@ Item {
 
     Rectangle {
         id: highlight
-        property int widthDest: ( ( progressbar.width * ( value - minimum ) ) / ( maximum - minimum ) - 4 )
+        property int widthDest: ( ( (progressbar.width + 20) * ( value - minimum ) ) / ( maximum - minimum ) - 4 )
         width: highlight.widthDest
         radius: height / 2
 
@@ -58,6 +58,7 @@ Item {
             left: parent.left
             top: parent.top
             bottom: parent.bottom
+            leftMargin: -10
             //margins: 1
         }
 
