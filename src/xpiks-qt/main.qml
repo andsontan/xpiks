@@ -137,6 +137,12 @@ ApplicationWindow {
         text: "Please, save selected items before upload"
     }
 
+    MessageDialog {
+        id: mustSelectDialog
+        title: "Warning"
+        text: "Please, select some artworks first"
+    }
+
     Rectangle {
         color: Colors.defaultDarkColor
         anchors.fill: parent
@@ -306,10 +312,15 @@ ApplicationWindow {
                             text: qsTr("Remove")
                             width: 90
                             onClicked: {
-                                var itemsCount = artItemsModel.selectedArtworksCount
-                                if (itemsCount > 0) {
-                                    confirmRemoveSelectedDialog.itemsCount = itemsCount
-                                    confirmRemoveSelectedDialog.open()
+                                if (artItemsModel.selectedArtworksCount == 0) {
+                                    mustSelectDialog.open()
+                                }
+                                else {
+                                    var itemsCount = artItemsModel.selectedArtworksCount
+                                    if (itemsCount > 0) {
+                                        confirmRemoveSelectedDialog.itemsCount = itemsCount
+                                        confirmRemoveSelectedDialog.open()
+                                    }
                                 }
                             }
                         }
@@ -318,10 +329,15 @@ ApplicationWindow {
                             text: qsTr("Edit")
                             width: 80
                             onClicked: {
-                                if (artItemsModel.selectedArtworksCount > 0) {
-                                    combinedArtworks.resetModelData();
-                                    artItemsModel.combineSelectedArtworks();
-                                    Qt.createComponent("CombinedArtworksDialog.qml").createObject(applicationWindow, {});
+                                if (artItemsModel.selectedArtworksCount == 0) {
+                                    mustSelectDialog.open()
+                                }
+                                else {
+                                    if (artItemsModel.selectedArtworksCount > 0) {
+                                        combinedArtworks.resetModelData();
+                                        artItemsModel.combineSelectedArtworks();
+                                        Qt.createComponent("CombinedArtworksDialog.qml").createObject(applicationWindow, {});
+                                    }
                                 }
                             }
                         }
@@ -330,10 +346,15 @@ ApplicationWindow {
                             text: qsTr("Save")
                             width: 80
                             onClicked: {
-                                if (artItemsModel.selectedArtworksCount > 0) {
-                                    iptcProvider.resetModel()
-                                    artItemsModel.patchSelectedArtworks()
-                                    Qt.createComponent("ExportMetadata.qml").createObject(applicationWindow, {})
+                                if (artItemsModel.selectedArtworksCount == 0) {
+                                    mustSelectDialog.open()
+                                }
+                                else {
+                                    if (artItemsModel.selectedArtworksCount > 0) {
+                                        iptcProvider.resetModel()
+                                        artItemsModel.patchSelectedArtworks()
+                                        Qt.createComponent("ExportMetadata.qml").createObject(applicationWindow, {})
+                                    }
                                 }
                             }
                         }
@@ -342,12 +363,17 @@ ApplicationWindow {
                             text: qsTr("Upload")
                             width: 90
                             onClicked: {
-                                if (artItemsModel.areSelectedArtworksSaved()) {
-                                    artworkUploader.resetModel()
-                                    artItemsModel.uploadSelectedArtworks()
-                                    Qt.createComponent("UploadArtworks.qml").createObject(applicationWindow, {})
-                                } else {
-                                    mustSaveWarning.open()
+                                if (artItemsModel.selectedArtworksCount == 0) {
+                                    mustSelectDialog.open()
+                                }
+                                else {
+                                    if (artItemsModel.areSelectedArtworksSaved()) {
+                                        artworkUploader.resetModel()
+                                        artItemsModel.uploadSelectedArtworks()
+                                        Qt.createComponent("UploadArtworks.qml").createObject(applicationWindow, {})
+                                    } else {
+                                        mustSaveWarning.open()
+                                    }
                                 }
                             }
                         }
