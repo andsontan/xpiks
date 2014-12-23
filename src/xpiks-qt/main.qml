@@ -651,7 +651,7 @@ ApplicationWindow {
                                             }
 
                                             Text {
-                                                text: qsTr("Advanced Edit")
+                                                text: qsTr("More Edits")
                                                 renderType: TextInput.NativeRendering
                                                 font.family: "Helvetica"
                                                 font.pixelSize: 12

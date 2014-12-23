@@ -212,6 +212,7 @@ Item {
                         anchors.verticalCenter: parent.verticalCenter
                         maximumLength: 250
                         clip: true
+                        focus: true
                         color: Colors.defaultLightColor
                         text: combinedArtworks.title
                         onTextChanged: combinedArtworks.title = text
@@ -474,4 +475,6 @@ Item {
             }
         }
     }
+
+    Component.onCompleted: titleTextInput.forceActiveFocus()
 }

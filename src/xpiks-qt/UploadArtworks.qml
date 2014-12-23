@@ -260,4 +260,6 @@ Item {
             }
         }
     }
+
+    Component.onCompleted: ftpHost.forceActiveFocus()
 }
