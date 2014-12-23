@@ -120,6 +120,7 @@ namespace Models {
             int occurances = 0;
             if (!m_DirectoriesHash.contains(absolutePath)) {
                 m_DirectoriesList.append(absolutePath);
+                emit artworksSourcesCountChanged();
             }
             else {
                 occurances = m_DirectoriesHash[absolutePath];

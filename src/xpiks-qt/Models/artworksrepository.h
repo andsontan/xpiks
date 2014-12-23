@@ -31,6 +31,7 @@
 namespace Models {
     class ArtworksRepository : public AbstractListModel {
         Q_OBJECT
+        Q_PROPERTY(int artworksSourcesCount READ getArtworksSourcesCount NOTIFY artworksSourcesCountChanged)
     public:
         ArtworksRepository(QObject *parent = 0) :
             AbstractListModel(parent)
@@ -54,9 +55,14 @@ namespace Models {
     public:
         bool beginAccountingFiles(const QStringList &items);
         void endAccountingFiles(bool filesWereAccounted);
+
     public:
         int getNewDirectoriesCount(const QStringList &items) const;
         int getNewFilesCount(const QStringList &items) const;
+        int getArtworksSourcesCount() const { return m_DirectoriesList.length(); }
+
+    signals:
+        void artworksSourcesCountChanged();
 
     public:
         bool accountFile(const QString &filepath);
@@ -72,7 +78,10 @@ namespace Models {
         QHash<int, QByteArray> roleNames() const;
 
     protected:
-        void removeInnerItem(int index) { m_DirectoriesHash.remove(m_DirectoriesList.takeAt(index)); }
+        void removeInnerItem(int index) {
+            m_DirectoriesHash.remove(m_DirectoriesList.takeAt(index));
+            emit artworksSourcesCountChanged();
+        }
 
     private:
         QStringList m_DirectoriesList;

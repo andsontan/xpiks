@@ -270,6 +270,7 @@ ApplicationWindow {
                         spacing: 10
                         anchors.fill: parent
                         anchors.margins: { top: 10; left: 10; right: 10 }
+                        enabled: artworkRepository.artworksSourcesCount > 0
 
                         Item {
                             width: 1
