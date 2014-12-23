@@ -378,7 +378,7 @@ ApplicationWindow {
                             property int indexOfThisDelegate: index
 
                             width: parent.width
-                            height: 190
+                            height: 200
 
                             RowLayout {
                                 anchors.fill: parent
@@ -636,6 +636,8 @@ ApplicationWindow {
                                         }
 
                                         RowLayout {
+                                            spacing: 15
+
                                             Text {
                                                 text: keywordscount
                                                 renderType: TextInput.NativeRendering
@@ -646,6 +648,24 @@ ApplicationWindow {
 
                                             Item {
                                                 Layout.fillWidth: true
+                                            }
+
+                                            Text {
+                                                text: qsTr("Advanced Edit")
+                                                renderType: TextInput.NativeRendering
+                                                font.family: "Helvetica"
+                                                font.pixelSize: 12
+                                                color: Colors.artworkActiveColor
+
+                                                MouseArea {
+                                                    anchors.fill: parent
+                                                    cursorShape: Qt.PointingHandCursor
+                                                    onClicked: {
+                                                        combinedArtworks.resetModelData();
+                                                        artItemsModel.combineArtwork(rowWrapper.indexOfThisDelegate);
+                                                        Qt.createComponent("CombinedArtworksDialog.qml").createObject(applicationWindow, {});
+                                                    }
+                                                }
                                             }
 
                                             Text {
@@ -705,7 +725,7 @@ ApplicationWindow {
                 font.family: "Helvetica"
                 font.pixelSize: 12
                 renderType: Text.NativeRendering
-                color: rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.defaultControlColor
+                color: Colors.selectedMetadataColor
 
                 verticalAlignment: Text.AlignVCenter
             }

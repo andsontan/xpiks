@@ -376,6 +376,24 @@ namespace Models {
         combinedModel->recombineArtworks();
     }
 
+    void ArtItemsModel::doCombineArtwork(int index, CombinedArtworksModel *combinedModel)
+    {
+        if (index >= 0 && index < m_ArtworkList.length()) {
+            QList<ArtItemInfo*> artworksList;
+
+            ArtworkMetadata *metadata = m_ArtworkList.at(index);
+            metadata->setIsSelected(true);
+            QModelIndex qmIndex = this->index(index);
+            emit dataChanged(qmIndex, qmIndex, QVector<int>() << IsSelectedRole);
+
+            ArtItemInfo *info = new ArtItemInfo(metadata);
+            artworksList.append(info);
+
+            combinedModel->initArtworks(artworksList);
+            combinedModel->recombineArtworks();
+        }
+    }
+
     QHash<int, QByteArray> ArtItemsModel::roleNames() const {
         QHash<int, QByteArray> roles;
         roles[ArtworkDescriptionRole] = "description";
