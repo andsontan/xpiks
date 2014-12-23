@@ -513,14 +513,27 @@ ApplicationWindow {
                                             height: 1
                                         }
 
-                                        Text {
-                                            id: keywordsLabel
+                                        RowLayout {
                                             anchors.left: parent.left
-                                            text: qsTr("Keywords:")
-                                            color: Colors.defaultLightColor
-                                            font.family: "Helvetica"
-                                            font.pixelSize: 12
-                                            renderType: Text.NativeRendering
+                                            spacing: 5
+
+                                            Text {
+                                                id: keywordsLabel
+                                                text: qsTr("Keywords:")
+                                                color: Colors.defaultLightColor
+                                                font.family: "Helvetica"
+                                                font.pixelSize: 12
+                                                renderType: Text.NativeRendering
+                                            }
+
+                                            Text {
+                                                text: qsTr("(comma-separated)")
+                                                visible: rowWrapper.isHighlighted
+                                                color: Colors.defaultInputBackground
+                                                font.family: "Helvetica"
+                                                font.pixelSize: 12
+                                                renderType: Text.NativeRendering
+                                            }
                                         }
 
                                         Rectangle {
