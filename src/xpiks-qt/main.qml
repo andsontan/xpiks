@@ -278,7 +278,7 @@ ApplicationWindow {
 
                         StyledCheckbox {
                             id: selectAllCheckbox
-                            text: qsTr("Select all")
+                            text: artItemsModel.selectedArtworksCount == 0 ? qsTr("Select all") : qsTr("Select none")
                             checked: artItemsModel.selectedArtworksCount > 0
 
                             onClicked: {
