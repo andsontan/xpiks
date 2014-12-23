@@ -94,7 +94,7 @@ namespace Models {
             metadataImportedHandler(firstMetadata);
         }
 
-        m_MetadataWriter->setFuture(QtConcurrent::mapped(artworkList.begin() + 1, artworkList.end(), readArtworkMetadata));
+        m_MetadataReader->setFuture(QtConcurrent::mapped(artworkList.begin() + 1, artworkList.end(), readArtworkMetadata));
     }
 
     void IptcProvider::doWriteMetadata(const QList<ArtworkMetadata *> &artworkList) {
