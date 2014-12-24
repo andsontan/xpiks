@@ -70,7 +70,7 @@ namespace Models {
         void resetArtworks() { m_ArtworkList.clear(); }
 
     protected:
-        const QList<ArtworkMetadata*> getArtworkList() const { return m_ArtworkList; }
+        const QList<ArtworkMetadata*> &getArtworkList() const { return m_ArtworkList; }
         virtual void cancelProcessing() = 0;
         void beginProcessing();
         void endProcessing();

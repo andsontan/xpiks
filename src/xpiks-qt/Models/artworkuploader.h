@@ -61,6 +61,7 @@ namespace Models {
 
      private:
          void doUploadArtworks(const QList<ArtworkMetadata*> &artworkList);
+         QStringList *getAllFilepathes() const;
 
     protected:
         void cancelProcessing();
@@ -68,6 +69,7 @@ namespace Models {
      private:
          QFutureWatcher<QPair<QStringList*, Models::UploadInfo*> > *m_ArtworksUploader;
          UploadInfoRepository *m_InfoRepository;
+         QStringList *m_ActiveUploads;
          bool m_IncludeEPS;
     };
 }

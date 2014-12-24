@@ -62,8 +62,7 @@ namespace Models {
         const QStringList &getKeywords() const { return m_CommonKeywords; }
         void setKeywords(const QStringList& keywords) { m_CommonKeywords = keywords; emit keywordsChanged(); }
         const QString &getDescription() const { return m_ArtworkDescription; }
-        void setDescription(const QString &description) {
-            const QString value = description.trimmed();
+        void setDescription(const QString &value) {
             if (m_ArtworkDescription != value) {
                 m_ArtworkDescription = value;
                 emit descriptionChanged();
@@ -71,15 +70,13 @@ namespace Models {
         }
         const QString &getTitle() const { return m_ArtworkTitle; }
         const QString &getAuthor() const { return m_ArtworkAuthor; }
-        void setTitle(const QString &title) {
-            const QString value = title.trimmed();
+        void setTitle(const QString &value) {
             if (m_ArtworkTitle != value) {
                 m_ArtworkTitle = value;
                 emit titleChanged();
             }
         }
-        void setAuthor(const QString &author) {
-            const QString value = author.trimmed();
+        void setAuthor(const QString &value) {
             if (m_ArtworkAuthor != value) {
                 m_ArtworkAuthor = value;
                 emit authorChanged();

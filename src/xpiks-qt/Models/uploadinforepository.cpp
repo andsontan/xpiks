@@ -1,6 +1,15 @@
 #include "uploadinforepository.h"
 
 namespace Models {
+    void UploadInfoRepository::initFromString(const QString &savedString)
+    {
+        QStringList items = savedString.split('|', QString::SkipEmptyParts);
+        foreach (const QString &item, items) {
+            UploadInfo *info = new UploadInfo(item);
+            m_UploadInfos.append(info);
+        }
+    }
+
     int UploadInfoRepository::rowCount(const QModelIndex &parent) const
     {
         Q_UNUSED(parent);

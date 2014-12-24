@@ -33,9 +33,11 @@ namespace Models {
         }
 
         UploadInfo(const QString& line) {
-            m_Title = line.section(',', 0, 0);
-            m_Host = line.section(',', 1, 1);
-            m_Username = line.section(',', 2, 2);
+            if (line.length() > 2) {
+                m_Title = line.section(',', 0, 0);
+                m_Host = line.section(',', 1, 1);
+                m_Username = line.section(',', 2, 2);
+            }
         }
 
     public:

@@ -38,9 +38,9 @@ ExportPair writeArtworkMetadata(ExportPair pair) {
     Models::ArtworkMetadata *metadata = pair.first;
     Models::ExportInfo *exportInfo = pair.second;
 
-    const QString &author = metadata->getAuthor();
-    QString title = metadata->getTitle();
-    const QString &description = metadata->getDescription();
+    QString author = metadata->getAuthor().trimmed();
+    QString title = metadata->getTitle().trimmed();
+    QString description = metadata->getDescription().trimmed();
     const QString &keywords = metadata->getKeywordsString();
 
     if (title.isEmpty()) {

@@ -17,6 +17,8 @@ namespace Models {
 
         ~UploadInfoRepository() { qDeleteAll(m_UploadInfos); m_UploadInfos.clear();  }
 
+        void initFromString(const QString &savedString);
+
     public:
         enum UploadInfoRepositoryRoles {
             TitleRole = Qt::UserRole + 1,
@@ -52,8 +54,17 @@ namespace Models {
             emit infosCountChanged();
         }
 
+        Q_INVOKABLE QString getInfoString() const {
+            QStringList items;
+            foreach (UploadInfo *info, m_UploadInfos) {
+                items.append(info->toString());
+            }
+
+            return items.join("|");
+        }
+
     public:
-        QList<UploadInfo*> &getUploadInfos() { return m_UploadInfos; }
+        const QList<UploadInfo*> &getUploadInfos() const { return m_UploadInfos; }
 
     public:
         int rowCount(const QModelIndex & parent = QModelIndex()) const;

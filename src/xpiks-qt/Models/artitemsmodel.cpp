@@ -71,6 +71,8 @@ namespace Models {
         }
 
         doRemoveItemsAtIndices(indicesToRemove);
+        emit selectedArtworksCountChanged();
+        emit modifiedArtworksCountChanged();
     }
 
     void ArtItemsModel::removeKeywordAt(int metadataIndex, int keywordIndex)
@@ -263,15 +265,15 @@ namespace Models {
         int roleToUpdate = 0;
         switch (role) {
         case EditArtworkDescriptionRole:
-            metadata->setDescription(value.toString().trimmed());
+            metadata->setDescription(value.toString());
             roleToUpdate = ArtworkDescriptionRole;
             break;
         case EditArtworkTitleRole:
-            metadata->setTitle(value.toString().trimmed());
+            metadata->setTitle(value.toString());
             roleToUpdate = ArtworkTitleRole;
             break;
         case EditArtworkAuthorRole:
-            metadata->setAuthor(value.toString().trimmed());
+            metadata->setAuthor(value.toString());
             roleToUpdate = ArtworkAuthorRole;
             break;
         case EditIsSelectedRole:

@@ -39,12 +39,12 @@ namespace Models {
         UploadPair pair = m_ArtworksUploader->resultAt(index);
         UploadInfo *info = pair.second;
         artworkUploadedHandler(info);
-        delete pair.first;
     }
 
     void ArtworkUploader::allFinished()
     {
         endProcessing();
+        delete m_ActiveUploads;
     }
 
     void ArtworkUploader::artworkUploadedHandler(UploadInfo *info)
@@ -68,24 +68,36 @@ namespace Models {
         }
 
         beginProcessing();
+        QList<UploadPair> pairs;
 
+        const QList<UploadInfo *> &infos = m_InfoRepository->getUploadInfos();
+        m_ActiveUploads = getAllFilepathes();
+
+        foreach (UploadInfo *info, infos) {
+            if (info->getIsSelected()) {
+                pairs.append(qMakePair(filesList, info));
+            }
+        }
+
+        m_ArtworksUploader->setFuture(QtConcurrent::mapped(pairs, uploadViaCurl));
+    }
+
+    QStringList *ArtworkUploader::getAllFilepathes() const
+    {
         QStringList *filesList = new QStringList();
-        foreach(ArtworkMetadata *metadata, artworkList) {
+        const QList<ArtworkMetadata*> &artworksList = this->getArtworkList();
+
+        foreach(ArtworkMetadata *metadata, artworksList) {
             QString filepath = metadata->getFilepath();
             filesList->append(filepath);
 
             if (m_IncludeEPS) {
                 QString epsFilepath = filepath.replace(QRegExp("(.*)[.]jpg", Qt::CaseInsensitive), "\\1.eps");
-                qDebug() << epsFilepath;
                 filesList->append(epsFilepath);
             }
         }
 
-        QList<UploadPair> pairs;
-        UploadInfo *info = m_InfoRepository->getUploadInfos().first();
-        pairs.append(qMakePair(filesList, info));
-
-        m_ArtworksUploader->setFuture(QtConcurrent::mapped(pairs, uploadViaCurl));
+        return filesList;
     }
 
     void ArtworkUploader::cancelProcessing()

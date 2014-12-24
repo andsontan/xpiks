@@ -32,9 +32,14 @@ import "../StyledControls"
 Item {
     id: uploadArtworksComponent
     anchors.fill: parent
+    property string uploadhostskey: appSettings.uploadHostsKey
 
     function closePopup() {
         uploadArtworksComponent.destroy()
+    }
+
+    function saveSettings() {
+        appSettings.setValue(uploadhostskey, uploadInfos.getInfoString())
     }
 
     PropertyAnimation { target: uploadArtworksComponent; property: "opacity";
@@ -367,6 +372,7 @@ Item {
                             text = qsTr("Uploading...")
                             artworkUploader.resetModel()
                             artworkUploader.uploadArtworks()
+                            saveSettings()
                         }
 
                         Connections {
@@ -382,6 +388,7 @@ Item {
                         width: 120
                         enabled: !artworkUploader.inProgress
                         onClicked: {
+                            saveSettings()
                             artItemsModel.updateAllProperties()
                             closePopup()
                         }

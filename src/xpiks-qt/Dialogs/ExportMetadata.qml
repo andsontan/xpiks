@@ -75,12 +75,6 @@ Item {
                     text: qsTr("Export metadata")
                 }
 
-                StyledCheckbox {
-                    text: qsTr("Save original images")
-                    checked: iptcProvider.mustSaveOriginal
-                    onCheckedChanged: iptcProvider.mustSaveOriginal = checked
-                }
-
                 SimpleProgressBar {
                     id: progress
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -92,6 +86,12 @@ Item {
 
                 RowLayout {
                     height: 24
+
+                    StyledCheckbox {
+                        text: qsTr("Save original images")
+                        checked: iptcProvider.mustSaveOriginal
+                        onCheckedChanged: iptcProvider.mustSaveOriginal = checked
+                    }
 
                     Item {
                         Layout.fillWidth: true

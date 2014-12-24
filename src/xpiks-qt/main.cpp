@@ -98,6 +98,7 @@ int main(int argc, char *argv[]) {
     Models::IptcProvider iptcProvider;
     Models::ArtworkUploader artworkUploader;
     Models::UploadInfoRepository uploadInfoRepository;
+    Helpers::AppSettings appSettings;
 
     // injecting dependencies
     artworkUploader.setUploadInfoRepository(&uploadInfoRepository);
@@ -106,7 +107,7 @@ int main(int argc, char *argv[]) {
     artItemsModel.setIptcProvider(&iptcProvider);
     artItemsModel.setArtworkUploader(&artworkUploader);
 
-    Helpers::AppSettings appSettings;
+    uploadInfoRepository.initFromString(appSettings.value(Constants::UPLOAD_HOSTS, "").toString());
 
     qmlRegisterType<Helpers::ClipboardHelper>("xpiks", 1, 0, "ClipboardHelper");
 
