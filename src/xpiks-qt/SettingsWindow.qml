@@ -29,7 +29,7 @@ ApplicationWindow {
     id: settingsWindow
     modality: "ApplicationModal"
     width: 600
-    height: 180
+    height: 150
 
     property string defaultExifTool: "exiftool"
     property string defaultCurl: "curl"
@@ -41,17 +41,36 @@ ApplicationWindow {
     property string curlPath: appSettings.value(curlpathkey, defaultCurl)
 
     FileDialog {
-        id: fileDialog
-        title: "Please choose ExifTool"
+        id: exifToolFileDialog
+        title: "Please choose ExifTool location"
         selectExisting: true
         selectMultiple: false
         nameFilters: [ "All files (*)" ]
 
         onAccepted: {
-            console.log("You chose: " + fileDialog.fileUrl)
-            var path = fileDialog.fileUrl.toString().replace(/^(file:\/{3})/,"");
+            console.log("You chose: " + exifToolFileDialog.fileUrl)
+            var path = exifToolFileDialog.fileUrl.toString().replace(/^(file:\/{3})/,"");
             exifToolPath = decodeURIComponent(path);
             exifToolText.text = exifToolPath;
+        }
+
+        onRejected: {
+            console.log("File dialog canceled")
+        }
+    }
+
+    FileDialog {
+        id: curlFileDialog
+        title: "Please choose curl location"
+        selectExisting: true
+        selectMultiple: false
+        nameFilters: [ "All files (*)" ]
+
+        onAccepted: {
+            console.log("You chose: " + curlFileDialog.fileUrl)
+            var path = curlFileDialog.fileUrl.toString().replace(/^(file:\/{3})/,"");
+            curlPath = decodeURIComponent(path);
+            curlText.text = curlPath;
         }
 
         onRejected: {
@@ -65,16 +84,18 @@ ApplicationWindow {
 
         ColumnLayout {
             anchors.fill: parent
-            anchors.margins: 5
+            anchors.margins: 20
+            spacing: 20
 
             GridLayout {
                 width: parent.width
+                Layout.fillHeight: true
                 rows: 2
                 columns: 4
-                rowSpacing: 10
+                rowSpacing: 15
                 columnSpacing: 5
 
-                StyledText {
+                Text {
                     Layout.row: 0
                     Layout.column: 0
                     Layout.fillWidth: true
@@ -82,6 +103,10 @@ ApplicationWindow {
 
                     horizontalAlignment: Text.AlignRight
                     text: "ExifTool path:"
+                    color: Colors.defaultLightColor
+                    font.family: "Helvetica"
+                    font.pixelSize: 12
+                    renderType: Text.NativeRendering
                 }
 
                 Rectangle {
@@ -93,41 +118,53 @@ ApplicationWindow {
                     border.color: Colors.artworkActiveColor
                     border.width: exifToolText.activeFocus ? 1 : 0
 
-                    StyledTextInput {
+                    TextInput {
                         id: exifToolText
                         width: 300
-                        height: 20
+                        height: 24
+                        clip: true
                         text: exifToolPath
                         anchors.left: parent.left
                         anchors.leftMargin: 5
+                        verticalAlignment: Text.AlignVCenter
+                        color: Colors.defaultLightColor
+                        font.family: "Helvetica"
+                        font.pixelSize: 12
+                        renderType: Text.NativeRendering
                     }
                 }
 
                 StyledButton {
                     Layout.row: 0
                     Layout.column: 2
+                    Layout.fillWidth: true
                     text: qsTr("Select...")
                     width: 50
                     Layout.preferredWidth: 50
-                    onClicked: fileDialog.open()
+                    onClicked: exifToolFileDialog.open()
                 }
 
                 StyledButton {
                     Layout.row: 0
-                    Layout.column: 3
+                    Layout.column: 3                    
+                    Layout.fillWidth: true
                     text: qsTr("Reset")
                     width: 50
                     Layout.preferredWidth: 50
-                    onClicked: exifToolPath = defaultExifTool
+                    onClicked: exifToolText.text = defaultExifTool
                 }
 
-                StyledText {
+                Text {
                     Layout.row: 1
                     Layout.column: 0
                     Layout.fillWidth: true
                     Layout.maximumWidth: 100
                     horizontalAlignment: Text.AlignRight
                     text: "Curl path:"
+                    color: Colors.defaultLightColor
+                    font.family: "Helvetica"
+                    font.pixelSize: 12
+                    renderType: Text.NativeRendering
                 }
 
                 Rectangle {
@@ -142,14 +179,13 @@ ApplicationWindow {
                     TextInput {
                         id: curlText
                         width: 300
-                        height: 20
+                        height: 24
                         clip: true
                         text: curlPath
                         anchors.left: parent.left
                         anchors.leftMargin: 5
                         verticalAlignment: Text.AlignVCenter
                         color: Colors.defaultLightColor
-                        selectByMouse: true
                         font.family: "Helvetica"
                         font.pixelSize: 12
                         renderType: Text.NativeRendering
@@ -159,19 +195,21 @@ ApplicationWindow {
                 StyledButton {
                     Layout.row: 1
                     Layout.column: 2
+                    Layout.fillWidth: true
                     text: qsTr("Select...")
                     width: 50
                     Layout.preferredWidth: 50
-                    onClicked: fileDialog.open()
+                    onClicked: curlFileDialog.open()
                 }
 
                 StyledButton {
                     Layout.row: 1
                     Layout.column: 3
+                    Layout.fillWidth: true
                     text: qsTr("Reset")
                     width: 50
                     Layout.preferredWidth: 50
-                    onClicked: curlPath = defaultCurl
+                    onClicked: curlText.text = defaultCurl
                 }
             }
 
@@ -203,5 +241,7 @@ ApplicationWindow {
             }
         }
     }
+
+    Component.onCompleted: exifToolText.forceActiveFocus()
 }
 
