@@ -27,6 +27,7 @@
 #include <QFile>
 #include <QSettings>
 #include <QTextStream>
+#include <QTranslator>
 #include "Helpers/globalimageprovider.h"
 #include "Helpers/clipboardhelper.h"
 #include "Models/artworkuploader.h"
@@ -76,6 +77,15 @@ int main(int argc, char *argv[]) {
     initQSettings();
 
     QApplication app(argc, argv);
+
+    QTranslator qtTranslator;
+    qtTranslator.load("qt_" + QLocale::system().name(),
+                      QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+    app.installTranslator(&qtTranslator);
+
+    QTranslator myappTranslator;
+    myappTranslator.load("xpiks_" + QLocale::system().name());
+    app.installTranslator(&myappTranslator);
 
 #ifdef QT_NO_DEBUG
     qInstallMessageHandler(myMessageHandler);
