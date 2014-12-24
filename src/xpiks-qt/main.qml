@@ -54,7 +54,7 @@ ApplicationWindow {
                 text: qsTr("&Settings")
                 onTriggered: {
                     console.log("Settings action triggered");
-                    var component = Qt.createComponent("SettingsWindow.qml");
+                    var component = Qt.createComponent("Dialogs/SettingsWindow.qml");
                     var window = component.createObject(applicationWindow);
                     window.show();
                 }
@@ -109,7 +109,7 @@ ApplicationWindow {
         onAccepted: {
             console.log("You chose: " + chooseArtworksDialog.fileUrls)
             artItemsModel.addLocalArtworks(chooseArtworksDialog.fileUrls)
-            Qt.createComponent("ImportMetadata.qml").createObject(applicationWindow, {})
+            Qt.createComponent("Dialogs/ImportMetadata.qml").createObject(applicationWindow, {})
         }
 
         onRejected: {
@@ -127,7 +127,7 @@ ApplicationWindow {
         onAccepted: {
             console.log("You chose: " + chooseDirectoryDialog.fileUrl)
             artItemsModel.addLocalDirectory(chooseDirectoryDialog.fileUrl)
-            Qt.createComponent("ImportMetadata.qml").createObject(applicationWindow, {})
+            Qt.createComponent("Dialogs/ImportMetadata.qml").createObject(applicationWindow, {})
         }
 
         onRejected: {
@@ -215,12 +215,19 @@ ApplicationWindow {
                         spacing: 10
 
                         delegate: Rectangle {
-                            id: wrapperRect
+                            id: sourceWrapper
                             property int indexOfThisDelegate: index
-                            color: Colors.itemsSourceBackground
+                            color: isselected ? Colors.itemsSourceSelected : Colors.itemsSourceBackground
                             width: parent.width
                             height: 31
                             Layout.minimumWidth: 237
+
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    artItemsModel.selectDirectory(sourceWrapper.indexOfThisDelegate)
+                                }
+                            }
 
                             RowLayout {
                                 spacing: 10
@@ -250,7 +257,7 @@ ApplicationWindow {
                                     isActive: false
 
                                     onItemClicked: {
-                                        confirmRemoveDirectoryDialog.directoryIndex = wrapperRect.indexOfThisDelegate
+                                        confirmRemoveDirectoryDialog.directoryIndex = sourceWrapper.indexOfThisDelegate
                                         confirmRemoveDirectoryDialog.open()
                                     }
                                 }
@@ -338,7 +345,7 @@ ApplicationWindow {
                                     if (artItemsModel.selectedArtworksCount > 0) {
                                         combinedArtworks.resetModelData();
                                         artItemsModel.combineSelectedArtworks();
-                                        Qt.createComponent("CombinedArtworksDialog.qml").createObject(applicationWindow, {});
+                                        Qt.createComponent("Dialogs/CombinedArtworksDialog.qml").createObject(applicationWindow, {});
                                     }
                                 }
                             }
@@ -355,7 +362,7 @@ ApplicationWindow {
                                     if (artItemsModel.selectedArtworksCount > 0) {
                                         iptcProvider.resetModel()
                                         artItemsModel.patchSelectedArtworks()
-                                        Qt.createComponent("ExportMetadata.qml").createObject(applicationWindow, {})
+                                        Qt.createComponent("Dialogs/ExportMetadata.qml").createObject(applicationWindow, {})
                                     }
                                 }
                             }
@@ -372,7 +379,7 @@ ApplicationWindow {
                                     if (artItemsModel.areSelectedArtworksSaved()) {
                                         artworkUploader.resetModel()
                                         artItemsModel.uploadSelectedArtworks()
-                                        Qt.createComponent("UploadArtworks.qml").createObject(applicationWindow, {})
+                                        Qt.createComponent("Dialogs/UploadArtworks.qml").createObject(applicationWindow, {})
                                     } else {
                                         mustSaveWarning.open()
                                     }
@@ -667,7 +674,7 @@ ApplicationWindow {
                                                     onClicked: {
                                                         combinedArtworks.resetModelData();
                                                         artItemsModel.combineArtwork(rowWrapper.indexOfThisDelegate);
-                                                        Qt.createComponent("CombinedArtworksDialog.qml").createObject(applicationWindow, {});
+                                                        Qt.createComponent("Dialogs/CombinedArtworksDialog.qml").createObject(applicationWindow, {});
                                                     }
                                                 }
                                             }

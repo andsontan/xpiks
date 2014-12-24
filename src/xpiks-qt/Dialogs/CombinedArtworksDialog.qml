@@ -93,7 +93,9 @@ Item {
                     height: 40
 
                     StyledText {
+                        height: parent.height
                         text: qsTr("Select to remove")
+                        verticalAlignment: Text.AlignBottom
                         color: Colors.defaultInputBackground
                     }
 

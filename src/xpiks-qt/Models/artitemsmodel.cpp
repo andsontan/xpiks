@@ -190,6 +190,26 @@ namespace Models {
         return !areModified;
     }
 
+    void ArtItemsModel::selectDirectory(int directoryIndex)
+    {
+        QList<int> directoryItems;
+        const QString directory = m_ArtworksRepository->getDirectory(directoryIndex);
+
+        int i = 0;
+        foreach (ArtworkMetadata *metadata, m_ArtworkList) {
+            if (metadata->isInDirectory(directory)) {
+                directoryItems.append(i);
+                metadata->setIsSelected(!metadata->getIsSelected());
+            }
+
+            i++;
+        }
+
+        QList<QPair<int, int> > rangesToUpdate;
+        Helpers::indicesToRanges(directoryItems, rangesToUpdate);
+        updateItemsAtIndices(rangesToUpdate, QVector<int>() << IsSelectedRole);
+    }
+
     int ArtItemsModel::rowCount(const QModelIndex &parent) const {
         Q_UNUSED(parent);
         return m_ArtworkList.count();
@@ -326,7 +346,9 @@ namespace Models {
                     QObject::connect(metadata, SIGNAL(modifiedChanged(bool)),
                                      this, SLOT(itemModifiedChanged(bool)));
                     QObject::connect(metadata, SIGNAL(selectedChanged(bool)),
-                                     this, SLOT(itemSelectedChanged(bool)));
+                                     this, SLOT(itemSelectedChanged(bool)));                    
+                    QObject::connect(metadata, SIGNAL(fileSelectedChanged(QString,bool)),
+                                     m_ArtworksRepository, SLOT(fileSelectedChanged(QString,bool)));
 
                     m_ArtworkList.append(metadata);
                 }

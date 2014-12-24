@@ -24,6 +24,7 @@
 
 #include <QAbstractListModel>
 #include <QStringList>
+#include <QList>
 #include <QPair>
 #include <QSet>
 #include "abstractlistmodel.h"
@@ -45,7 +46,8 @@ namespace Models {
     public:
         enum ArtworksDirectoriesRoles {
             PathRole = Qt::UserRole + 1,
-            UsedImagesCountRole
+            UsedImagesCountRole,
+            IsSelectedRole
         };
 
     public:
@@ -64,9 +66,13 @@ namespace Models {
     signals:
         void artworksSourcesCountChanged();
 
+    public slots:
+        void fileSelectedChanged(const QString &filepath, bool isSelected) { setFileSelected(filepath, isSelected); }
+
     public:
         bool accountFile(const QString &filepath);
         void removeFile(const QString &filepath);
+        void setFileSelected(const QString &filepath, bool selected);
 
         const QString &getDirectory(int index) const { return m_DirectoriesList[index]; }
 
@@ -79,7 +85,9 @@ namespace Models {
 
     protected:
         void removeInnerItem(int index) {
-            m_DirectoriesHash.remove(m_DirectoriesList.takeAt(index));
+            QString directoryToRemove = m_DirectoriesList.takeAt(index);
+            m_DirectoriesSelectedHash.remove(directoryToRemove);
+            m_DirectoriesHash.remove(directoryToRemove);
             emit artworksSourcesCountChanged();
         }
 
@@ -87,6 +95,7 @@ namespace Models {
         QStringList m_DirectoriesList;
         QHash<QString, int> m_DirectoriesHash;
         QSet<QString> m_FilesSet;
+        QHash<QString, int> m_DirectoriesSelectedHash;
     };
 }
 

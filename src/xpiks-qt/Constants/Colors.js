@@ -25,6 +25,7 @@ var defaultControlColor = "#292929";
 var defaultLightColor = "#E0E0E0";
 
 var itemsSourceBackground = "#232323";
+var itemsSourceSelected = "#333333";
 var itemsSourceForeground = "#e6e6e6";
 
 var buttonHoverBackground = "#12b9bc";

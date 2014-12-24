@@ -93,6 +93,7 @@ namespace Models {
         Q_INVOKABLE void uploadSelectedArtworks();
         Q_INVOKABLE bool areSelectedArtworksSaved();
         Q_INVOKABLE bool allArtworksSelected() const { return m_SelectedArtworksCount == m_ArtworkList.length(); }
+        Q_INVOKABLE void selectDirectory(int directoryIndex);
 
     public:
         int rowCount(const QModelIndex & parent = QModelIndex()) const;
@@ -105,7 +106,6 @@ namespace Models {
         void addLocalDirectory(const QUrl &directory);
         void itemModifiedChanged(bool) { updateModifiedCount(); }
         void itemSelectedChanged(bool);
-
 
     private:
         void addDirectory(const QString &directory);

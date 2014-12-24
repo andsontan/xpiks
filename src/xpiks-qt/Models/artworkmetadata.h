@@ -81,6 +81,7 @@ namespace Models {
             if (m_IsSelected != value) {
                 m_IsSelected = value;
                 selectedChanged(value);
+                fileSelectedChanged(m_ArtworkFilepath, value);
             }
         }
 
@@ -104,6 +105,7 @@ namespace Models {
     signals:
          void modifiedChanged(bool newValue);
          void selectedChanged(bool newValue);
+         void fileSelectedChanged(const QString &filepath, bool newValue);
 
     private:
         QStringList m_KeywordsList;

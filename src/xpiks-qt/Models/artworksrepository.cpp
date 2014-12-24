@@ -29,7 +29,7 @@
 namespace Models {
     void ArtworksRepository::updateCountsForExistingDirectories()
     {
-        emit dataChanged(index(0), index(rowCount() - 1), QVector<int>() << UsedImagesCountRole);
+        emit dataChanged(index(0), index(rowCount() - 1), QVector<int>() << UsedImagesCountRole << IsSelectedRole);
     }
 
     void ArtworksRepository::cleanupEmptyDirectories()
@@ -120,6 +120,7 @@ namespace Models {
             int occurances = 0;
             if (!m_DirectoriesHash.contains(absolutePath)) {
                 m_DirectoriesList.append(absolutePath);
+                m_DirectoriesSelectedHash.insert(absolutePath, 0);
                 emit artworksSourcesCountChanged();
             }
             else {
@@ -140,11 +141,28 @@ namespace Models {
 
         if (m_DirectoriesHash.contains(absolutePath)) {
             int occurances = m_DirectoriesHash[absolutePath] - 1;
+            int selectedCount = m_DirectoriesSelectedHash[absolutePath] - 1;
 
             m_DirectoriesHash[absolutePath] = occurances;
+            m_DirectoriesSelectedHash[absolutePath] = selectedCount;
         }
 
         m_FilesSet.remove(filepath);
+    }
+
+    void ArtworksRepository::setFileSelected(const QString &filepath, bool selected)
+    {
+        QFileInfo fi(filepath);
+        const QString absolutePath = fi.absolutePath();
+
+        if (m_DirectoriesSelectedHash.contains(absolutePath)) {
+            int plus = selected ? +1 : -1;
+            m_DirectoriesSelectedHash[absolutePath] = m_DirectoriesSelectedHash[absolutePath] + plus;
+
+            int directoryIndex = m_DirectoriesList.indexOf(QRegExp(absolutePath));
+            QModelIndex index = this->index(directoryIndex);
+            emit dataChanged(index, index, QVector<int>() << IsSelectedRole);
+        }
     }
 
     int ArtworksRepository::rowCount(const QModelIndex &parent) const {
@@ -164,6 +182,8 @@ namespace Models {
             return dir.dirName();
         case UsedImagesCountRole:
             return QVariant(m_DirectoriesHash[directory]);
+        case IsSelectedRole:
+            return m_DirectoriesSelectedHash[directory] > 0;
         default:
             return QVariant();
         }
@@ -173,6 +193,7 @@ namespace Models {
         QHash<int, QByteArray> roles;
         roles[PathRole] = "path";
         roles[UsedImagesCountRole] = "usedimagescount";
+        roles[IsSelectedRole] = "isselected";
         return roles;
     }
 }
