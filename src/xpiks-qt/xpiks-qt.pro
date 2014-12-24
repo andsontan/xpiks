@@ -43,3 +43,20 @@ HEADERS += \
     Models/artworksprocessor.h \
     Models/uploadinfo.h \
     Models/exportinfo.h
+
+DISTFILES += \
+    Components/CloseIcon.qml \
+    Components/EditableTags.qml \
+    Components/LargeRemoveIcon.qml \
+    Constants/Colors.js \
+    StyledControls/SimpleProgressBar.qml \
+    StyledControls/StyledButton.qml \
+    StyledControls/StyledCheckbox.qml \
+    StyledControls/StyledScrollView.qml \
+    StyledControls/StyledText.qml \
+    StyledControls/StyledTextInput.qml \
+    Dialogs/CombinedArtworksDialog.qml \
+    Dialogs/ExportMetadata.qml \
+    Dialogs/ImportMetadata.qml \
+    Dialogs/SettingsWindow.qml \
+    Dialogs/UploadArtworks.qml

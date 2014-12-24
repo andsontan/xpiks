@@ -1,20 +1,20 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>EditableTags.qml</file>
-        <file>CombinedArtworksDialog.qml</file>
-        <file>SettingsWindow.qml</file>
-        <file>CloseIcon.qml</file>
-        <file>ExportMetadata.qml</file>
-        <file>SimpleProgressBar.qml</file>
-        <file>ImportMetadata.qml</file>
-        <file>UploadArtworks.qml</file>
-        <file>Colors.js</file>
-        <file>StyledButton.qml</file>
-        <file>StyledCheckbox.qml</file>
-        <file>StyledScrollView.qml</file>
-        <file>LargeRemoveIcon.qml</file>
-        <file>StyledTextInput.qml</file>
-        <file>StyledText.qml</file>
+        <file>Components/CloseIcon.qml</file>
+        <file>Components/EditableTags.qml</file>
+        <file>Components/LargeRemoveIcon.qml</file>
+        <file>Constants/Colors.js</file>
+        <file>Dialogs/CombinedArtworksDialog.qml</file>
+        <file>Dialogs/ExportMetadata.qml</file>
+        <file>Dialogs/ImportMetadata.qml</file>
+        <file>Dialogs/SettingsWindow.qml</file>
+        <file>Dialogs/UploadArtworks.qml</file>
+        <file>StyledControls/SimpleProgressBar.qml</file>
+        <file>StyledControls/StyledButton.qml</file>
+        <file>StyledControls/StyledCheckbox.qml</file>
+        <file>StyledControls/StyledScrollView.qml</file>
+        <file>StyledControls/StyledText.qml</file>
+        <file>StyledControls/StyledTextInput.qml</file>
     </qresource>
 </RCC>

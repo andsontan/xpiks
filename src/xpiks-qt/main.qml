@@ -25,7 +25,11 @@ import QtQuick.Controls 1.3
 import QtQuick.Controls.Styles 1.2
 import QtQuick.Layouts 1.1
 import xpiks 1.0
-import "Colors.js" as Colors;
+import "Constants"
+import "Constants/Colors.js" as Colors
+import "Components"
+import "StyledControls"
+import "Dialogs"
 
 ApplicationWindow {
     id: applicationWindow

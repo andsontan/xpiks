@@ -24,7 +24,8 @@ import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.2
 import QtQuick.Controls.Styles 1.3
-import "Colors.js" as Colors
+import "../Constants"
+import "../Constants/Colors.js" as Colors
 
 ScrollView {
     style: ScrollViewStyle {

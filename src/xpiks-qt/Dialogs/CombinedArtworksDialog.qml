@@ -25,7 +25,10 @@ import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.2
 import QtQuick.Controls.Styles 1.3
 import xpiks 1.0
-import "Colors.js" as Colors
+import "../Constants"
+import "../Constants/Colors.js" as Colors;
+import "../Components"
+import "../StyledControls"
 
 Item {
     id: dialogComponent

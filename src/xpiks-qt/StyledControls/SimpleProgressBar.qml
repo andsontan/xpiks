@@ -19,8 +19,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import QtQuick 2.3
-import "Colors.js" as Colors
+import QtQuick 2.4
+import "../Constants"
+import "../Constants/Colors.js" as Colors
 
 Item {
     id: progressbar
