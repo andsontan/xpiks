@@ -29,6 +29,7 @@
 #include <QTextStream>
 #include <QTranslator>
 #include "Helpers/globalimageprovider.h"
+#include "Models/uploadinforepository.h"
 #include "Helpers/clipboardhelper.h"
 #include "Models/artworkuploader.h"
 #include "Models/artitemsmodel.h"
@@ -96,7 +97,10 @@ int main(int argc, char *argv[]) {
     Models::CombinedArtworksModel combinedArtworksModel;
     Models::IptcProvider iptcProvider;
     Models::ArtworkUploader artworkUploader;
+    Models::UploadInfoRepository uploadInfoRepository;
 
+    // injecting dependencies
+    artworkUploader.setUploadInfoRepository(&uploadInfoRepository);
     artItemsModel.setArtworksRepository(&artworkRepository);
     artItemsModel.setCombinedArtworksModel(&combinedArtworksModel);
     artItemsModel.setIptcProvider(&iptcProvider);
@@ -116,6 +120,7 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("appSettings", &appSettings);
     rootContext->setContextProperty("iptcProvider", &iptcProvider);
     rootContext->setContextProperty("artworkUploader", &artworkUploader);
+    rootContext->setContextProperty("uploadInfos", &uploadInfoRepository);
 
     engine.addImageProvider("global", globalProvider);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));

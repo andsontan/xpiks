@@ -37,12 +37,12 @@ CheckBox {
             Rectangle {
                 visible: control.checked
                 color: Colors.checkboxCheckedColor
-                width: parent.width * 0.85
+                width: parent.width * 0.7
                 height: 2
                 radius: 1
                 transformOrigin: Item.Center
-                rotation: 125
-                transform: Translate { x: parent.width * 0.2; y: parent.height * 0.45 }
+                rotation: 120
+                transform: Translate { x: parent.width * 0.3; y: parent.height * 0.45 }
             }
 
             Rectangle {
@@ -53,7 +53,7 @@ CheckBox {
                 height: 2
                 transformOrigin: Item.Center
                 rotation: 65
-                transform: Translate { x: parent.width * 0.05; y: parent.height * 0.55 }
+                transform: Translate { x: parent.width * 0.15; y: parent.height * 0.55 }
             }
         }
 

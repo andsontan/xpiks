@@ -55,14 +55,25 @@ Item {
         }
     }
 
+    MessageDialog {
+        id: confirmRemoveItemDialog
+        property int itemIndex
+        title: "Confirmation"
+        text: qsTr("Are you sure you want to remove this item?")
+        standardButtons: StandardButton.Yes | StandardButton.No
+        onYes: {
+            uploadInfos.removeItem(itemIndex)
+        }
+    }
+
     FocusScope {
         anchors.fill: parent
 
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
-            width: 480
-            height: 300
+            width: 580
+            height: 350
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
 
@@ -71,128 +82,278 @@ Item {
                 anchors.fill: parent
                 anchors.margins: 20
 
-                StyledText {
-                    text: qsTr("Upload artworks")
-                }
+                SplitView {
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    orientation: Qt.Horizontal
+                    enabled: !artworkUploader.inProgress
 
-                GridLayout {
-                    rows: 3
-                    columns: 2
-                    rowSpacing: 5
-                    columnSpacing: 10
-
-                    StyledText {
-                        Layout.row: 0
-                        Layout.column: 0
-                        Layout.fillWidth: true
-                        Layout.maximumWidth: 150
-                        horizontalAlignment: Text.AlignRight
-                        text: qsTr("FTP host:")
+                    handleDelegate: Rectangle {
+                        height: parent.height - 29
+                        width: 0
+                        color: Colors.defaultDarkColor
                     }
 
-                    Rectangle {
-                        Layout.row: 0
-                        Layout.column: 1
-                        color: Colors.defaultInputBackground
-                        border.color: Colors.artworkActiveColor
-                        border.width: ftpHost.activeFocus ? 1 : 0
+                    ColumnLayout {
+                        Layout.minimumWidth: 250
+                        Layout.preferredWidth: 250
+                        Layout.maximumWidth: 300
 
-                        width: 200
-                        height: 20
+                        Rectangle {
+                            Layout.fillHeight: true
+                            Layout.fillWidth: true
+                            Layout.minimumWidth: 250
+                            Layout.maximumWidth: 300
 
-                        StyledTextInput {
-                            id: ftpHost
-                            anchors.fill: parent
-                            text: artworkUploader.host
-                            enabled: !artworkUploader.inProgress
-                            anchors.leftMargin: 5
-                            onTextChanged: artworkUploader.host = text
-                            verticalAlignment: TextInput.AlignVCenter
-                            KeyNavigation.tab: ftpUsername
-                            KeyNavigation.priority: KeyNavigation.BeforeItem
+                            color: Colors.defaultControlColor
+
+                            ListView {
+                                id: uploadHostsListView
+                                model: uploadInfos
+
+                                boundsBehavior: Flickable.StopAtBounds
+                                anchors.fill: parent
+                                anchors.margins: { left: 10; top: 5; right: 10 }
+
+                                spacing: 10
+
+                                delegate: Rectangle {
+                                    id: sourceWrapper
+                                    property variant myData: model
+                                    property int indexOfThisDelegate: index
+                                    color: ListView.isCurrentItem ? Colors.itemsSourceSelected : Colors.itemsSourceBackground
+                                    width: parent.width
+                                    height: 31
+                                    Layout.minimumWidth: 250
+
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        onClicked: {
+                                            uploadHostsListView.currentIndex = sourceWrapper.indexOfThisDelegate
+                                        }
+                                    }
+
+                                    RowLayout {
+                                        spacing: 10
+                                        anchors.fill: parent
+
+                                        Item {
+                                            width: 1
+                                        }
+
+                                        StyledCheckbox {
+                                            id: itemCheckedCheckbox
+                                            onClicked: editisselected = checked
+                                            Component.onCompleted: itemCheckedCheckbox.checked = isselected
+                                        }
+
+                                        StyledText {
+                                            id: infoTitle
+                                            Layout.fillWidth: true
+                                            anchors.verticalCenter: parent.verticalCenter
+                                            height: 31
+                                            color: Colors.itemsSourceForeground
+                                            text: title
+                                            elide: Text.ElideMiddle
+                                            font.bold: true
+                                        }
+
+                                        CloseIcon {
+                                            width: 14
+                                            height: 14
+                                            anchors.verticalCenterOffset: 1
+                                            isActive: false
+
+                                            onItemClicked: {
+                                                confirmRemoveItemDialog.itemIndex = sourceWrapper.indexOfThisDelegate
+                                                confirmRemoveItemDialog.open()
+                                            }
+                                        }
+
+                                        Item {
+                                            id: placeholder2
+                                            width: 1
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
 
-                    StyledText {
-                        Layout.row: 1
-                        Layout.column: 0
+                    RowLayout {
                         Layout.fillWidth: true
-                        Layout.maximumWidth: 150
-                        text: qsTr("FTP User name:")
-                        horizontalAlignment: Text.AlignRight
-                    }
 
-                    Rectangle {
-                        Layout.row: 1
-                        Layout.column: 1
-                        color: Colors.defaultInputBackground
-                        border.color: Colors.artworkActiveColor
-                        border.width: ftpUsername.activeFocus ? 1 : 0
-
-                        width: 200
-                        height: 20
-
-                        StyledTextInput {
-                            id: ftpUsername
-                            anchors.fill: parent
-                            text: artworkUploader.username
-                            enabled: !artworkUploader.inProgress
-                            anchors.leftMargin: 5
-                            onTextChanged: artworkUploader.username = text
-                            KeyNavigation.tab: ftpPassword
-                            KeyNavigation.backtab: ftpHost
+                        Item {
+                            width: 20
                         }
-                    }
 
-                    StyledText {
-                        Layout.row: 2
-                        Layout.column: 0
-                        text: qsTr("FTP User password:")
-                        Layout.fillWidth: true
-                        Layout.maximumWidth: 150
-                        horizontalAlignment: Text.AlignRight
-                    }
+                        ColumnLayout {
+                            spacing: 3
 
-                    Rectangle {
-                        Layout.row: 2
-                        Layout.column: 1
-                        color: Colors.defaultInputBackground
-                        border.color: Colors.artworkActiveColor
-                        border.width: ftpPassword.activeFocus ? 1 : 0
+                            StyledText {
+                                text: qsTr("Title:")
+                            }
 
-                        width: 200
-                        height: 20
+                            Rectangle {
+                                color: Colors.defaultInputBackground
+                                border.color: Colors.artworkActiveColor
+                                border.width: titleText.activeFocus ? 1 : 0
+                                width: 300
+                                height: 30
 
-                        StyledTextInput {
-                            id: ftpPassword
-                            anchors.fill: parent
-                            enabled: !artworkUploader.inProgress
-                            anchors.leftMargin: 5
-                            echoMode: TextInput.Password
-                            text: artworkUploader.password
-                            onTextChanged: artworkUploader.password = text
-                            KeyNavigation.backtab: ftpUsername
+                                StyledTextInput {
+                                    id: titleText
+                                    anchors.fill: parent
+                                    enabled: uploadInfos.infosCount > 0
+                                    text: uploadHostsListView.currentItem.myData.title
+                                    anchors.leftMargin: 5
+                                    onTextChanged: uploadHostsListView.currentItem.myData.edittitle = text
+                                    KeyNavigation.tab: ftpHost
+                                }
+                            }
+
+                            Item {
+                                height: 5
+                            }
+
+                            StyledText {
+                                text: qsTr("Host:")
+                            }
+
+                            Rectangle {
+                                color: Colors.defaultInputBackground
+                                border.color: Colors.artworkActiveColor
+                                border.width: ftpHost.activeFocus ? 1 : 0
+                                width: 300
+                                height: 30
+
+                                StyledTextInput {
+                                    id: ftpHost
+                                    anchors.fill: parent
+                                    enabled: uploadInfos.infosCount > 0
+                                    text: uploadHostsListView.currentItem.myData.host
+                                    anchors.leftMargin: 5
+                                    onTextChanged: uploadHostsListView.currentItem.myData.edithost = text
+                                    KeyNavigation.tab: ftpUsername
+                                    KeyNavigation.backtab: titleText
+                                }
+                            }
+
+                            Item {
+                                height: 5
+                            }
+
+                            StyledText {
+                                text: qsTr("Username:")
+                            }
+
+                            Rectangle {
+                                color: Colors.defaultInputBackground
+                                border.color: Colors.artworkActiveColor
+                                border.width: ftpUsername.activeFocus ? 1 : 0
+                                width: 300
+                                height: 30
+
+                                StyledTextInput {
+                                    id: ftpUsername
+                                    anchors.fill: parent
+                                    enabled: uploadInfos.infosCount > 0
+                                    text: uploadHostsListView.currentItem.myData.username
+                                    anchors.leftMargin: 5
+                                    onTextChanged: uploadHostsListView.currentItem.myData.editusername = text
+                                    KeyNavigation.tab: ftpPassword
+                                    KeyNavigation.backtab: ftpHost
+                                }
+                            }
+
+                            Item {
+                                height: 5
+                            }
+
+                            StyledText {
+                                text: qsTr("Password:")
+                            }
+
+                            Rectangle {
+                                color: Colors.defaultInputBackground
+                                border.color: Colors.artworkActiveColor
+                                border.width: ftpPassword.activeFocus ? 1 : 0
+                                width: 300
+                                height: 30
+
+                                StyledTextInput {
+                                    id: ftpPassword
+                                    anchors.fill: parent
+                                    enabled: uploadInfos.infosCount > 0
+                                    anchors.leftMargin: 5
+                                    echoMode: TextInput.Password
+                                    text: uploadHostsListView.currentItem.myData.password
+                                    onTextChanged: uploadHostsListView.currentItem.myData.editpassword = text
+                                    KeyNavigation.backtab: ftpUsername
+                                }
+                            }
+
+                            Item {
+                                height: 5
+                            }
+
+                            StyledButton {
+                                text: qsTr("Add FTP host")
+                                width: 90
+                                anchors.left: parent.left
+                                onClicked: uploadInfos.addItem()
+                            }
                         }
                     }
                 }
 
-                StyledCheckbox {
-                    text: qsTr("Include EPS (for illustrations)")
-                    checked: artworkUploader.includeEPS
-                    onCheckedChanged: artworkUploader.includeEPS = checked
-                }
-
-                SimpleProgressBar {
+                ProgressBar {
                     id: progress
                     anchors.horizontalCenter: parent.horizontalCenter
                     width: parent.width
                     height: 20
-                    color: artworkUploader.isError ? "red" : "#77B753"
                     value: artworkUploader.percent
+
+                    style: ProgressBarStyle {
+                        background: Rectangle {
+                            border.color: Colors.artworkActiveColor
+                            color: artworkUploader.isError ? Colors.desctuctiveColor : Colors.artworkActiveColor
+
+                            // Indeterminate animation by animating alternating stripes:
+                            Item {
+                                anchors.fill: parent
+                                anchors.margins: 1
+                                visible: control.indeterminate
+                                clip: true
+                                Row {
+                                    Repeater {
+                                        Rectangle {
+                                            color: index % 2 ? Colors.artworkActiveColor : Colors.defaultLightColor
+                                            width: 20 ; height: control.height
+                                        }
+                                        model: control.width / 20 + 2
+                                    }
+                                    XAnimator on x {
+                                        from: 0 ; to: -40
+                                        loops: Animation.Infinite
+                                        running: control.indeterminate
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
 
                 RowLayout {
                     height: 24
+                    spacing: 15
+
+                    StyledCheckbox {
+                        text: qsTr("Include EPS (for illustrations)")
+                        checked: artworkUploader.includeEPS
+                        onCheckedChanged: artworkUploader.includeEPS = checked
+                    }
+
                     Item {
                         Layout.fillWidth: true
                     }
@@ -201,14 +362,8 @@ Item {
                         id: uploadButton
                         text: qsTr("Start Upload")
                         width: 130
-                        enabled: !(artworkUploader.inProgress || ftpHost.length == 0 || ftpUsername.length == 0)
+                        enabled: !artworkUploader.inProgress
                         onClicked: {
-                            var ftpString = ftpHost.text.substring(0, 6)
-                            var ftpsString = ftpHost.text.substring(0, 7)
-                            if (ftpString != "ftp://" && ftpsString != "ftps://") {
-                                ftpHost.text = "ftp://" + ftpHost.text
-                            }
-
                             text = qsTr("Uploading...")
                             artworkUploader.resetModel()
                             artworkUploader.uploadArtworks()
@@ -224,7 +379,7 @@ Item {
 
                     StyledButton {
                         text: qsTr("Close")
-                        width: 100
+                        width: 120
                         enabled: !artworkUploader.inProgress
                         onClicked: {
                             artItemsModel.updateAllProperties()
@@ -235,6 +390,4 @@ Item {
             }
         }
     }
-
-    Component.onCompleted: ftpHost.forceActiveFocus()
 }

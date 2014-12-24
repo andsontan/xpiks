@@ -31,29 +31,20 @@
 #include "../Models/uploadinfo.h"
 #include "../Models/artworkmetadata.h"
 
-typedef QPair<Models::ArtworkMetadata*, Models::UploadInfo*> UploadPair;
+typedef QPair<QStringList*, Models::UploadInfo*> UploadPair;
 
 UploadPair uploadViaCurl(UploadPair pair) {
-    Models::ArtworkMetadata *metadata = pair.first, *resultMetadata = NULL;
+    QStringList *filesToUpload = pair.first;
     Models::UploadInfo *uploadInfo = pair.second;
 
     const QString curlPath = Helpers::ExternalToolsProvider::getCurlPath();
 
-    QStringList filesToUpload;
-    QString filepath = metadata->getFilepath();
-    filesToUpload << filepath;
-
-    if (uploadInfo->getIncludeEPS()) {
-        QString epsFilepath = filepath.replace(QRegExp("(.*)[.]jpg", Qt::CaseInsensitive), "\\1.eps");
-        qDebug() << epsFilepath;
-        filesToUpload << epsFilepath;
-    }
-
     QStringList arguments;
     arguments << "--retry 1";
-    arguments << QString("-T {%1}").arg(filesToUpload.join(','));
+    arguments << QString("-T {%1}").arg(filesToUpload->join(','));
     arguments << uploadInfo->getHost() << "--user" << QString("%1:%2").arg(uploadInfo->getUsername(), uploadInfo->getPassword());
 
+    Models::UploadInfo *resultInfo = NULL;
     QProcess process;
     process.start(curlPath, arguments);
     // wait each for 10 minutes
@@ -61,10 +52,10 @@ UploadPair uploadViaCurl(UploadPair pair) {
     if (process.waitForFinished(600000) &&
             process.exitStatus() == QProcess::NormalExit &&
             process.exitCode() == 0) {
-        resultMetadata = metadata;
+        resultInfo = uploadInfo;
     }
 
-    return qMakePair(resultMetadata, uploadInfo);
+    return qMakePair(filesToUpload, resultInfo);
 }
 
 #endif // CURLWRAPPER

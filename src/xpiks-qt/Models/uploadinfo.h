@@ -27,27 +27,42 @@
 namespace Models {
     class UploadInfo {
     public:
-        UploadInfo():
-            m_IncludeEPS(false)
-        {}
+        UploadInfo()
+        {
+            m_Title = "Untitled";
+        }
+
+        UploadInfo(const QString& line) {
+            m_Title = line.section(',', 0, 0);
+            m_Host = line.section(',', 1, 1);
+            m_Username = line.section(',', 2, 2);
+        }
 
     public:
+        const QString &getTitle() const { return m_Title; }
         const QString &getHost() const { return m_Host; }
         const QString &getUsername() const { return m_Username; }
         const QString &getPassword() const { return m_Password; }
-        bool getIncludeEPS() const { return m_IncludeEPS; }
+        bool getIsSelected() const { return m_IsSelected; }
 
     public:
+        void setTitle(const QString &value) { m_Title = value; }
         void setHost(const QString &value) { m_Host = value; }
         void setUsername(const QString &value) { m_Username = value; }
         void setPassword(const QString &value) { m_Password = value; }
-        void setIncludeEPS(bool value) { m_IncludeEPS = value; }
+        void setIsSelected(bool value) { m_IsSelected = value; }
+
+    public:
+        QString toString() {
+            return QString("%1,%2,%3").arg(m_Title, m_Host, m_Username, m_Password);
+        }
 
     private:
+        QString m_Title;
         QString m_Host;
         QString m_Username;
         QString m_Password;
-        bool m_IncludeEPS;
+        bool m_IsSelected;
     };
 }
 

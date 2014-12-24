@@ -22,9 +22,12 @@
 #ifndef ARTWORKUPLOADER_H
 #define ARTWORKUPLOADER_H
 
+#include <QAbstractListModel>
+#include <QStringList>
 #include <QFutureWatcher>
 #include "artworksprocessor.h"
 #include "uploadinfo.h"
+#include "uploadinforepository.h"
 
 namespace Models {
     class ArtworkUploader : public ArtworksProcessor
@@ -34,35 +37,24 @@ namespace Models {
          ArtworkUploader();
          ~ArtworkUploader() { delete m_ArtworksUploader; }
 
+         void setUploadInfoRepository(UploadInfoRepository *infoRepository) { m_InfoRepository = infoRepository; }
+
     public:
-         Q_PROPERTY(QString host READ getHost WRITE setHost NOTIFY hostChanged)
-         Q_PROPERTY(QString username READ getUsername WRITE setUsername NOTIFY usernameChanged)
-         Q_PROPERTY(QString password READ getPassword WRITE setPassword NOTIFY passwordChanged)
          Q_PROPERTY(bool includeEPS READ getIncludeEPS WRITE setIncludeEPS NOTIFY includeEPSChanged)
 
     signals:
-         void hostChanged(QString);
-         void usernameChanged(QString);
-         void passwordChanged(QString);
          void includeEPSChanged(bool);
 
     public:
-         const QString &getHost() const { return m_UploadInfo.getHost(); }
-         const QString &getUsername() const { return m_UploadInfo.getUsername(); }
-         const QString &getPassword() const { return m_UploadInfo.getPassword(); }
-         bool getIncludeEPS() const { return m_UploadInfo.getIncludeEPS(); }
-
-         void setHost(const QString &value) { m_UploadInfo.setHost(value); }
-         void setUsername(const QString &value) { m_UploadInfo.setUsername(value); }
-         void setPassword(const QString &value) { m_UploadInfo.setPassword(value); }
-         void setIncludeEPS(bool value) { m_UploadInfo.setIncludeEPS(value); }
+         bool getIncludeEPS() const { return m_IncludeEPS; }
+         void setIncludeEPS(bool value) { m_IncludeEPS = value; }
 
      public slots:
          void artworkUploaded(int);
          void allFinished();
 
      private:
-         void artworkUploadedHandler(ArtworkMetadata *metadata);
+         void artworkUploadedHandler(UploadInfo *info);
 
      public:
          Q_INVOKABLE void uploadArtworks() { doUploadArtworks(getArtworkList()); }
@@ -74,8 +66,9 @@ namespace Models {
         void cancelProcessing();
 
      private:
-         QFutureWatcher<QPair<Models::ArtworkMetadata*, Models::UploadInfo*> > *m_ArtworksUploader;
-         UploadInfo m_UploadInfo;
+         QFutureWatcher<QPair<QStringList*, Models::UploadInfo*> > *m_ArtworksUploader;
+         UploadInfoRepository *m_InfoRepository;
+         bool m_IncludeEPS;
     };
 }
 

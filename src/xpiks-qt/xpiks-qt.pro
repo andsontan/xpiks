@@ -13,7 +13,8 @@ SOURCES += main.cpp \
     Models/iptcprovider.cpp \
     Helpers/externaltoolsprovider.cpp \
     Models/artworkuploader.cpp \
-    Models/artworksprocessor.cpp
+    Models/artworksprocessor.cpp \
+    Models/uploadinforepository.cpp
 
 RESOURCES += qml.qrc
 
@@ -44,7 +45,8 @@ HEADERS += \
     Helpers/curlwrapper.h \
     Models/artworksprocessor.h \
     Models/uploadinfo.h \
-    Models/exportinfo.h
+    Models/exportinfo.h \
+    Models/uploadinforepository.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

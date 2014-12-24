@@ -41,7 +41,7 @@ namespace Models {
             m_IsError(false)
         {}
 
-        ~ArtworksProcessor() {}
+        virtual ~ArtworksProcessor() {}
 
     protected:
         void incProgress() { m_ProcessedArtworksCount++; updateProgress(); }
