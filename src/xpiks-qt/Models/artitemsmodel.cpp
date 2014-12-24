@@ -243,15 +243,15 @@ namespace Models {
         int roleToUpdate = 0;
         switch (role) {
         case EditArtworkDescriptionRole:
-            metadata->setDescription(value.toString());
+            metadata->setDescription(value.toString().trimmed());
             roleToUpdate = ArtworkDescriptionRole;
             break;
         case EditArtworkTitleRole:
-            metadata->setTitle(value.toString());
+            metadata->setTitle(value.toString().trimmed());
             roleToUpdate = ArtworkTitleRole;
             break;
         case EditArtworkAuthorRole:
-            metadata->setAuthor(value.toString());
+            metadata->setAuthor(value.toString().trimmed());
             roleToUpdate = ArtworkAuthorRole;
             break;
         case EditIsSelectedRole:

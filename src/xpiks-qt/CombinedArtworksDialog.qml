@@ -185,40 +185,104 @@ Item {
                     height: 30
                 }
 
-                Text {
-                    text: qsTr("Title:")
-                    anchors.left: parent.left
-                    color: Colors.defaultLightColor
-                    font.family: "Helvetica"
-                    font.pixelSize: 12
-                    renderType: Text.NativeRendering
-                }
+                RowLayout {
+                    width: parent.width
+                    spacing: 20
 
-                Rectangle {
-                    id: anotherRect
-                    width: 300
-                    height: 25
-                    anchors.left: parent.left
-                    color: Colors.defaultInputBackground
-                    border.color: Colors.artworkActiveColor
-                    border.width: titleTextInput.activeFocus ? 1 : 0
+                    ColumnLayout {
+                        spacing: 3
+                        width: 325
 
-                    TextInput {
-                        id: titleTextInput
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        anchors.leftMargin: 5
-                        anchors.rightMargin: 5
-                        anchors.verticalCenter: parent.verticalCenter
-                        maximumLength: 250
-                        clip: true
-                        focus: true
-                        color: Colors.defaultLightColor
-                        text: combinedArtworks.title
-                        onTextChanged: combinedArtworks.title = text
-                        renderType: TextInput.NativeRendering
-                        KeyNavigation.tab: descriptionTextInput
-                        KeyNavigation.priority: KeyNavigation.BeforeItem
+                        RowLayout {
+                            spacing: 5
+
+                            Text {
+                                text: qsTr("Title:")
+                                color: Colors.defaultLightColor
+                                font.family: "Helvetica"
+                                font.pixelSize: 12
+                                renderType: Text.NativeRendering
+                            }
+
+                            Text {
+                                text: qsTr("(same as Description if empty)")
+                                color: Colors.defaultInputBackground
+                                font.family: "Helvetica"
+                                font.pixelSize: 12
+                                renderType: Text.NativeRendering
+                            }
+                        }
+
+                        Rectangle {
+                            id: anotherRect
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            height: 25
+                            color: Colors.defaultInputBackground
+                            border.color: Colors.artworkActiveColor
+                            border.width: titleTextInput.activeFocus ? 1 : 0
+
+                            TextInput {
+                                id: titleTextInput
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                anchors.leftMargin: 5
+                                anchors.rightMargin: 5
+                                anchors.verticalCenter: parent.verticalCenter
+                                maximumLength: 200
+                                clip: true
+                                focus: true
+                                color: Colors.defaultLightColor
+                                text: combinedArtworks.author
+                                onTextChanged: combinedArtworks.author = text
+                                renderType: TextInput.NativeRendering
+                                KeyNavigation.tab: authorTextInput
+                                KeyNavigation.priority: KeyNavigation.BeforeItem
+                            }
+                        }
+                    }
+
+                    ColumnLayout {
+                        spacing: 3
+                        width: 325
+
+                        Text {
+                            text: qsTr("Author:")
+                            anchors.left: parent.left
+                            color: Colors.defaultLightColor
+                            font.family: "Helvetica"
+                            font.pixelSize: 12
+                            renderType: Text.NativeRendering
+                        }
+
+                        Rectangle {
+                            id: yetAnotherRect
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            height: 25
+                            color: Colors.defaultInputBackground
+                            border.color: Colors.artworkActiveColor
+                            border.width: authorTextInput.activeFocus ? 1 : 0
+
+                            TextInput {
+                                id: authorTextInput
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                anchors.leftMargin: 5
+                                anchors.rightMargin: 5
+                                anchors.verticalCenter: parent.verticalCenter
+                                maximumLength: 200
+                                clip: true
+                                focus: true
+                                color: Colors.defaultLightColor
+                                text: combinedArtworks.title
+                                onTextChanged: combinedArtworks.title = text
+                                renderType: TextInput.NativeRendering
+                                KeyNavigation.backtab: titleTextInput
+                                KeyNavigation.tab: descriptionTextInput
+                                KeyNavigation.priority: KeyNavigation.BeforeItem
+                            }
+                        }
                     }
                 }
 
@@ -237,7 +301,7 @@ Item {
 
                 Rectangle {
                     id: rect
-                    width: 300
+                    width: parent.width
                     height: 25
                     color: Colors.defaultInputBackground
                     border.color: Colors.artworkActiveColor
@@ -260,7 +324,7 @@ Item {
                         Keys.onTabPressed: {
                             flv.activateEdit()
                         }
-                        KeyNavigation.backtab: titleTextInput
+                        KeyNavigation.backtab: authorTextInput
                         KeyNavigation.priority: KeyNavigation.BeforeItem
                     }
                 }
