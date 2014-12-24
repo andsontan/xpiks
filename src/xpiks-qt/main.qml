@@ -221,7 +221,7 @@ ApplicationWindow {
                                     width: 1
                                 }
 
-                                Text {
+                                StyledText {
                                     id: directoryPath
                                     Layout.fillWidth: true
                                     anchors.verticalCenter: parent.verticalCenter
@@ -229,8 +229,6 @@ ApplicationWindow {
                                     color: Colors.itemsSourceForeground
                                     text: path + " (" + usedimagescount + ")"
                                     elide: Text.ElideMiddle
-                                    font.family: "Helvetica"
-                                    font.pixelSize: 12
                                     font.bold: true
                                 }
 
@@ -443,15 +441,11 @@ ApplicationWindow {
                                             height: 5
                                         }
 
-                                        Text {
+                                        StyledText {
                                             Layout.fillWidth: true
                                             elide: Text.ElideMiddle
                                             horizontalAlignment: Text.AlignHCenter
                                             text: filename.split(/[\\/]/).pop()
-                                            renderType: Text.NativeRendering
-                                            color: Colors.defaultLightColor
-                                            font.family: "Helvetica"
-                                            font.pixelSize: 12
                                         }
 
                                         Item {
@@ -472,13 +466,9 @@ ApplicationWindow {
                                         anchors.fill: parent
                                         anchors.margins: { left: 20; right: 20 }
 
-                                        Text {
+                                        StyledText {
                                             text: qsTr("Description:")
                                             anchors.left: parent.left
-                                            renderType: Text.NativeRendering
-                                            color: Colors.defaultLightColor
-                                            font.family: "Helvetica"
-                                            font.pixelSize: 12
                                         }
 
                                         Rectangle {
@@ -489,7 +479,7 @@ ApplicationWindow {
                                             border.color: Colors.artworkActiveColor
                                             border.width: descriptionTextInput.activeFocus ? 1 : 0
 
-                                            TextInput {
+                                            StyledTextInput {
                                                 id: descriptionTextInput
                                                 anchors.left: parent.left
                                                 anchors.right: parent.right
@@ -497,13 +487,11 @@ ApplicationWindow {
                                                 anchors.rightMargin: 5
                                                 anchors.verticalCenter: parent.verticalCenter
                                                 maximumLength: 250
-                                                clip: true
                                                 text: description
                                                 color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.artworkActiveColor
                                                 font.family: "Helvetica"
                                                 font.pixelSize: 12
                                                 onTextChanged: model.editdescription = text
-                                                renderType: TextInput.NativeRendering
                                                 Keys.onTabPressed: {
                                                     flv.activateEdit()
                                                 }
@@ -518,22 +506,15 @@ ApplicationWindow {
                                             anchors.left: parent.left
                                             spacing: 5
 
-                                            Text {
+                                            StyledText {
                                                 id: keywordsLabel
                                                 text: qsTr("Keywords:")
-                                                color: Colors.defaultLightColor
-                                                font.family: "Helvetica"
-                                                font.pixelSize: 12
-                                                renderType: Text.NativeRendering
                                             }
 
-                                            Text {
+                                            StyledText {
                                                 text: qsTr("(comma-separated)")
                                                 visible: rowWrapper.isHighlighted
                                                 color: Colors.defaultInputBackground
-                                                font.family: "Helvetica"
-                                                font.pixelSize: 12
-                                                renderType: Text.NativeRendering
                                             }
                                         }
 
@@ -597,14 +578,13 @@ ApplicationWindow {
                                                                 height: 20
                                                                 color: "transparent"
 
-                                                                Text {
+                                                                StyledText {
                                                                     anchors.left: parent.left
                                                                     anchors.leftMargin: 5
                                                                     anchors.top: parent.top
                                                                     anchors.bottom: parent.bottom
                                                                     verticalAlignment: Text.AlignVCenter
                                                                     text: modelData
-                                                                    renderType: Text.NativeRendering
                                                                     color: rowWrapper.isHighlighted ? Colors.defaultControlColor : Colors.defaultLightColor
                                                                 }
                                                             }
@@ -638,11 +618,8 @@ ApplicationWindow {
                                         RowLayout {
                                             spacing: 15
 
-                                            Text {
+                                            StyledText {
                                                 text: keywordscount
-                                                renderType: TextInput.NativeRendering
-                                                font.family: "Helvetica"
-                                                font.pixelSize: 12
                                                 color: rowWrapper.isHighlighted ? Colors.defaultControlColor : Colors.selectedArtworkColor
                                             }
 
@@ -650,11 +627,8 @@ ApplicationWindow {
                                                 Layout.fillWidth: true
                                             }
 
-                                            Text {
+                                            StyledText {
                                                 text: qsTr("More Edits")
-                                                renderType: TextInput.NativeRendering
-                                                font.family: "Helvetica"
-                                                font.pixelSize: 12
                                                 color: Colors.artworkActiveColor
 
                                                 MouseArea {
@@ -668,11 +642,8 @@ ApplicationWindow {
                                                 }
                                             }
 
-                                            Text {
+                                            StyledText {
                                                 text: qsTr("Copy keywords")
-                                                renderType: TextInput.NativeRendering
-                                                font.family: "Helvetica"
-                                                font.pixelSize: 12
                                                 color: Colors.artworkActiveColor
 
                                                 MouseArea {
@@ -711,30 +682,20 @@ ApplicationWindow {
                 Layout.fillWidth: true
             }
 
-            Text {
+            StyledText {
                 text: qsTr("(%1) item(s) selected").arg(artItemsModel.selectedArtworksCount)
-                font.family: "Helvetica"
-                font.pixelSize: 12
-                renderType: Text.NativeRendering
                 color: Colors.selectedMetadataColor
                 verticalAlignment: Text.AlignVCenter
             }
 
-            Text {
+            StyledText {
                 text: "|"
-                font.family: "Helvetica"
-                font.pixelSize: 12
-                renderType: Text.NativeRendering
                 color: Colors.selectedMetadataColor
-
                 verticalAlignment: Text.AlignVCenter
             }
 
-            Text {
+            StyledText {
                 text: qsTr("(%1) item(s) modified").arg(artItemsModel.modifiedArtworksCount)
-                font.family: "Helvetica"
-                font.pixelSize: 12
-                renderType: Text.NativeRendering
                 verticalAlignment: Text.AlignVCenter
                 color: artItemsModel.modifiedArtworksCount > 0 ? Colors.artworkModifiedColor : Colors.selectedMetadataColor
             }

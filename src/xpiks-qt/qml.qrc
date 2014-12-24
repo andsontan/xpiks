@@ -14,5 +14,7 @@
         <file>StyledCheckbox.qml</file>
         <file>StyledScrollView.qml</file>
         <file>LargeRemoveIcon.qml</file>
+        <file>StyledTextInput.qml</file>
+        <file>StyledText.qml</file>
     </qresource>
 </RCC>

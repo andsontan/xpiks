@@ -118,6 +118,9 @@ Flickable {
                 anchors.verticalCenter: parent.verticalCenter
                 color: Colors.defaultLightColor
                 focus: true
+                font.family: "Helvetica"
+                font.pixelSize: 12
+                renderType: TextInput.NativeRendering
 
                 validator: RegExpValidator {
                     regExp: /^(?:[a-zA-Z]+(?:-| |$))+$/

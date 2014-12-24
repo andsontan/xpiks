@@ -89,12 +89,9 @@ Item {
                     Layout.fillWidth: true
                     height: 40
 
-                    Text {
+                    StyledText {
                         text: qsTr("Select to remove")
                         color: Colors.defaultInputBackground
-                        font.family: "Helvetica"
-                        font.pixelSize: 12
-                        renderType: Text.NativeRendering
                     }
 
                     Item {
@@ -196,20 +193,13 @@ Item {
                         RowLayout {
                             spacing: 5
 
-                            Text {
+                            StyledText {
                                 text: qsTr("Title:")
-                                color: Colors.defaultLightColor
-                                font.family: "Helvetica"
-                                font.pixelSize: 12
-                                renderType: Text.NativeRendering
                             }
 
-                            Text {
+                            StyledText {
                                 text: qsTr("(same as Description if empty)")
                                 color: Colors.defaultInputBackground
-                                font.family: "Helvetica"
-                                font.pixelSize: 12
-                                renderType: Text.NativeRendering
                             }
                         }
 
@@ -222,7 +212,7 @@ Item {
                             border.color: Colors.artworkActiveColor
                             border.width: titleTextInput.activeFocus ? 1 : 0
 
-                            TextInput {
+                            StyledTextInput {
                                 id: titleTextInput
                                 anchors.left: parent.left
                                 anchors.right: parent.right
@@ -230,14 +220,10 @@ Item {
                                 anchors.rightMargin: 5
                                 anchors.verticalCenter: parent.verticalCenter
                                 maximumLength: 200
-                                clip: true
                                 focus: true
-                                color: Colors.defaultLightColor
                                 text: combinedArtworks.author
                                 onTextChanged: combinedArtworks.author = text
-                                renderType: TextInput.NativeRendering
                                 KeyNavigation.tab: authorTextInput
-                                KeyNavigation.priority: KeyNavigation.BeforeItem
                             }
                         }
                     }
@@ -246,13 +232,9 @@ Item {
                         spacing: 3
                         width: 325
 
-                        Text {
+                        StyledText {
                             text: qsTr("Author:")
                             anchors.left: parent.left
-                            color: Colors.defaultLightColor
-                            font.family: "Helvetica"
-                            font.pixelSize: 12
-                            renderType: Text.NativeRendering
                         }
 
                         Rectangle {
@@ -264,7 +246,7 @@ Item {
                             border.color: Colors.artworkActiveColor
                             border.width: authorTextInput.activeFocus ? 1 : 0
 
-                            TextInput {
+                            StyledTextInput {
                                 id: authorTextInput
                                 anchors.left: parent.left
                                 anchors.right: parent.right
@@ -272,15 +254,11 @@ Item {
                                 anchors.rightMargin: 5
                                 anchors.verticalCenter: parent.verticalCenter
                                 maximumLength: 200
-                                clip: true
                                 focus: true
-                                color: Colors.defaultLightColor
                                 text: combinedArtworks.title
                                 onTextChanged: combinedArtworks.title = text
-                                renderType: TextInput.NativeRendering
                                 KeyNavigation.backtab: titleTextInput
                                 KeyNavigation.tab: descriptionTextInput
-                                KeyNavigation.priority: KeyNavigation.BeforeItem
                             }
                         }
                     }
@@ -290,13 +268,9 @@ Item {
                     height: 5
                 }
 
-                Text {
+                StyledText {
                     text: qsTr("Description:")
                     anchors.left: parent.left
-                    color: Colors.defaultLightColor
-                    font.family: "Helvetica"
-                    font.pixelSize: 12
-                    renderType: Text.NativeRendering
                 }
 
                 Rectangle {
@@ -308,7 +282,7 @@ Item {
                     border.width: descriptionTextInput.activeFocus ? 1 : 0
                     anchors.left: parent.left
 
-                    TextInput {
+                    StyledTextInput {
                         id: descriptionTextInput
                         anchors.left: parent.left
                         anchors.right: parent.right
@@ -316,16 +290,12 @@ Item {
                         anchors.rightMargin: 5
                         anchors.verticalCenter: parent.verticalCenter
                         maximumLength: 250
-                        clip: true
-                        color: Colors.defaultLightColor
                         text: combinedArtworks.description
                         onTextChanged: combinedArtworks.description = text
-                        renderType: TextInput.NativeRendering
                         Keys.onTabPressed: {
                             flv.activateEdit()
                         }
                         KeyNavigation.backtab: authorTextInput
-                        KeyNavigation.priority: KeyNavigation.BeforeItem
                     }
                 }
 
@@ -337,21 +307,14 @@ Item {
                     anchors.left: parent.left
                     spacing: 5
 
-                    Text {
+                    StyledText {
                         id: keywordsLabel
                         text: qsTr("Keywords:")
-                        color: Colors.defaultLightColor
-                        font.family: "Helvetica"
-                        font.pixelSize: 12
-                        renderType: Text.NativeRendering
                     }
 
-                    Text {
+                    StyledText {
                         text: qsTr("(comma-separated)")
                         color: Colors.defaultInputBackground
-                        font.family: "Helvetica"
-                        font.pixelSize: 12
-                        renderType: Text.NativeRendering
                     }
                 }
 
@@ -414,14 +377,13 @@ Item {
                                         height: 20
                                         color: "transparent"
 
-                                        Text {
+                                        StyledText {
                                             anchors.left: parent.left
                                             anchors.leftMargin: 5
                                             anchors.top: parent.top
                                             anchors.bottom: parent.bottom
                                             verticalAlignment: Text.AlignVCenter
                                             text: modelData
-                                            renderType: Text.NativeRendering
                                             color: Colors.defaultControlColor
                                         }
                                     }
@@ -453,11 +415,8 @@ Item {
                 }
 
                 RowLayout {
-                    Text {
+                    StyledText {
                         text: combinedArtworks.keywordsCount
-                        font.family: "Helvetica"
-                        font.pixelSize: 12
-                        renderType: TextInput.NativeRendering
                         color: Colors.defaultControlColor
                     }
 
@@ -465,12 +424,9 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    Text {
+                    StyledText {
                         text: qsTr("Copy keywords")
                         color: Colors.artworkActiveColor
-                        renderType: TextInput.NativeRendering
-                        font.family: "Helvetica"
-                        font.pixelSize: 12
 
                         MouseArea {
                             anchors.fill: parent

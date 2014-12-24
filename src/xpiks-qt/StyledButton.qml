@@ -32,15 +32,12 @@ Button {
             implicitHeight: 24
         }
 
-        label: Text {
-            font.family: "Helvetica"
-            font.pixelSize: 12
+        label: StyledText {
             font.bold: true
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             color: control.enabled ? (control.pressed ? Colors.buttonPressedForeground : Colors.defaultLightColor) : Colors.buttonDisabledForeground
             text: control.text
-            renderType: Text.NativeRendering
         }
     }
 }

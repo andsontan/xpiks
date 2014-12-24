@@ -68,12 +68,8 @@ Item {
                 anchors.fill: parent
                 anchors.margins: 20
 
-                Text {
+                StyledText {
                     text: qsTr("Import existing metadata")
-                    color: Colors.defaultLightColor
-                    font.family: "Helvetica"
-                    font.pixelSize: 12
-                    renderType: Text.NativeRendering
                 }
 
                 SimpleProgressBar {

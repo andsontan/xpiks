@@ -74,7 +74,7 @@ ApplicationWindow {
                 rowSpacing: 10
                 columnSpacing: 5
 
-                Text {
+                StyledText {
                     Layout.row: 0
                     Layout.column: 0
                     Layout.fillWidth: true
@@ -82,10 +82,6 @@ ApplicationWindow {
 
                     horizontalAlignment: Text.AlignRight
                     text: "ExifTool path:"
-                    color: Colors.defaultLightColor
-                    font.family: "Helvetica"
-                    font.pixelSize: 12
-                    renderType: Text.NativeRendering
                 }
 
                 Rectangle {
@@ -97,19 +93,13 @@ ApplicationWindow {
                     border.color: Colors.artworkActiveColor
                     border.width: exifToolText.activeFocus ? 1 : 0
 
-                    TextInput {
+                    StyledTextInput {
                         id: exifToolText
                         width: 300
                         height: 20
-                        clip: true
                         text: exifToolPath
                         anchors.left: parent.left
                         anchors.leftMargin: 5
-                        verticalAlignment: Text.AlignVCenter
-                        color: Colors.defaultLightColor
-                        font.family: "Helvetica"
-                        font.pixelSize: 12
-                        renderType: Text.NativeRendering
                     }
                 }
 
@@ -131,17 +121,13 @@ ApplicationWindow {
                     onClicked: exifToolPath = defaultExifTool
                 }
 
-                Text {
+                StyledText {
                     Layout.row: 1
                     Layout.column: 0
                     Layout.fillWidth: true
                     Layout.maximumWidth: 100
                     horizontalAlignment: Text.AlignRight
                     text: "Curl path:"
-                    color: Colors.defaultLightColor
-                    font.family: "Helvetica"
-                    font.pixelSize: 12
-                    renderType: Text.NativeRendering
                 }
 
                 Rectangle {
@@ -163,6 +149,7 @@ ApplicationWindow {
                         anchors.leftMargin: 5
                         verticalAlignment: Text.AlignVCenter
                         color: Colors.defaultLightColor
+                        selectByMouse: true
                         font.family: "Helvetica"
                         font.pixelSize: 12
                         renderType: Text.NativeRendering

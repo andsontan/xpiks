@@ -56,12 +56,9 @@ CheckBox {
             }
         }
 
-        label: Text {
+        label: StyledText {
             text: control.text
             color: control.enabled ? Colors.defaultInputBackground : Colors.selectedArtworkColor
-            font.family: "Helvetica"
-            font.pixelSize: 12
-            renderType: Text.NativeRendering
         }
     }
 }

@@ -68,12 +68,8 @@ Item {
                 anchors.fill: parent
                 anchors.margins: 20
 
-                Text {
+                StyledText {
                     text: qsTr("Upload artworks")
-                    color: Colors.defaultLightColor
-                    font.family: "Helvetica"
-                    font.pixelSize: 12
-                    renderType: Text.NativeRendering
                 }
 
                 GridLayout {
@@ -82,17 +78,13 @@ Item {
                     rowSpacing: 5
                     columnSpacing: 10
 
-                    Text {
+                    StyledText {
                         Layout.row: 0
                         Layout.column: 0
                         Layout.fillWidth: true
                         Layout.maximumWidth: 150
                         horizontalAlignment: Text.AlignRight
-                        text: qsTr("FTP host:")                        
-                        color: Colors.defaultLightColor
-                        font.family: "Helvetica"
-                        font.pixelSize: 12
-                        renderType: Text.NativeRendering
+                        text: qsTr("FTP host:")
                     }
 
                     Rectangle {
@@ -105,9 +97,8 @@ Item {
                         width: 200
                         height: 20
 
-                        TextInput {
+                        StyledTextInput {
                             id: ftpHost
-                            clip: true
                             anchors.fill: parent
                             text: artworkUploader.host
                             enabled: !artworkUploader.inProgress
@@ -116,25 +107,16 @@ Item {
                             verticalAlignment: TextInput.AlignVCenter
                             KeyNavigation.tab: ftpUsername
                             KeyNavigation.priority: KeyNavigation.BeforeItem
-                            color: Colors.defaultLightColor
-                            font.family: "Helvetica"
-                            font.pixelSize: 12
-                            renderType: Text.NativeRendering
-                            selectByMouse: true
                         }
                     }
 
-                    Text {
+                    StyledText {
                         Layout.row: 1
                         Layout.column: 0
                         Layout.fillWidth: true
                         Layout.maximumWidth: 150
                         text: qsTr("FTP User name:")
-                        horizontalAlignment: Text.AlignRight                        
-                        color: Colors.defaultLightColor
-                        font.family: "Helvetica"
-                        font.pixelSize: 12
-                        renderType: Text.NativeRendering
+                        horizontalAlignment: Text.AlignRight
                     }
 
                     Rectangle {
@@ -147,37 +129,25 @@ Item {
                         width: 200
                         height: 20
 
-                        TextInput {
+                        StyledTextInput {
                             id: ftpUsername
                             anchors.fill: parent
-                            clip: true
                             text: artworkUploader.username
                             enabled: !artworkUploader.inProgress
                             anchors.leftMargin: 5
-                            verticalAlignment: TextInput.AlignVCenter
                             onTextChanged: artworkUploader.username = text
                             KeyNavigation.tab: ftpPassword
                             KeyNavigation.backtab: ftpHost
-                            KeyNavigation.priority: KeyNavigation.BeforeItem                            
-                            color: Colors.defaultLightColor
-                            font.family: "Helvetica"
-                            font.pixelSize: 12
-                            renderType: Text.NativeRendering
-                            selectByMouse: true
                         }
                     }
 
-                    Text {
+                    StyledText {
                         Layout.row: 2
                         Layout.column: 0
                         text: qsTr("FTP User password:")
                         Layout.fillWidth: true
                         Layout.maximumWidth: 150
                         horizontalAlignment: Text.AlignRight
-                        color: Colors.defaultLightColor
-                        font.family: "Helvetica"
-                        font.pixelSize: 12
-                        renderType: Text.NativeRendering
                     }
 
                     Rectangle {
@@ -190,22 +160,15 @@ Item {
                         width: 200
                         height: 20
 
-                        TextInput {
+                        StyledTextInput {
                             id: ftpPassword
                             anchors.fill: parent
                             enabled: !artworkUploader.inProgress
                             anchors.leftMargin: 5
-                            verticalAlignment: TextInput.AlignVCenter
                             echoMode: TextInput.Password
                             text: artworkUploader.password
                             onTextChanged: artworkUploader.password = text
                             KeyNavigation.backtab: ftpUsername
-                            KeyNavigation.priority: KeyNavigation.BeforeItem
-                            color: Colors.defaultLightColor
-                            font.family: "Helvetica"
-                            font.pixelSize: 12
-                            renderType: Text.NativeRendering
-                            selectByMouse: true
                         }
                     }
                 }
