@@ -112,14 +112,15 @@ Item {
                             text: artworkUploader.host
                             enabled: !artworkUploader.inProgress
                             anchors.leftMargin: 5
-                            verticalAlignment: TextInput.AlignVCenter
                             onTextChanged: artworkUploader.host = text
+                            verticalAlignment: TextInput.AlignVCenter
                             KeyNavigation.tab: ftpUsername
                             KeyNavigation.priority: KeyNavigation.BeforeItem
                             color: Colors.defaultLightColor
                             font.family: "Helvetica"
                             font.pixelSize: 12
                             renderType: Text.NativeRendering
+                            selectByMouse: true
                         }
                     }
 
@@ -162,6 +163,7 @@ Item {
                             font.family: "Helvetica"
                             font.pixelSize: 12
                             renderType: Text.NativeRendering
+                            selectByMouse: true
                         }
                     }
 
@@ -203,6 +205,7 @@ Item {
                             font.family: "Helvetica"
                             font.pixelSize: 12
                             renderType: Text.NativeRendering
+                            selectByMouse: true
                         }
                     }
                 }
@@ -234,6 +237,12 @@ Item {
                         width: 130
                         enabled: !(artworkUploader.inProgress || ftpHost.length == 0 || ftpUsername.length == 0)
                         onClicked: {
+                            var ftpString = ftpHost.text.substring(0, 6)
+                            var ftpsString = ftpHost.text.substring(0, 7)
+                            if (ftpString != "ftp://" && ftpsString != "ftps://") {
+                                ftpHost.text = "ftp://" + ftpHost.text
+                            }
+
                             text = qsTr("Uploading...")
                             artworkUploader.resetModel()
                             artworkUploader.uploadArtworks()
