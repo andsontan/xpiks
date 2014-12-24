@@ -56,7 +56,9 @@ namespace Models {
 
     public:
         QString toString() {
-            return QString("%1,%2,%3").arg(m_Title, m_Host, m_Username, m_Password);
+            return QString("%1,%2,%3").arg(
+                        m_Title.trimmed().isEmpty() ? "Untitled" : m_Title,
+                        m_Host, m_Username, m_Password);
         }
 
     private:

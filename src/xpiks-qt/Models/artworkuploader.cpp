@@ -75,7 +75,7 @@ namespace Models {
 
         foreach (UploadInfo *info, infos) {
             if (info->getIsSelected()) {
-                pairs.append(qMakePair(filesList, info));
+                pairs.append(qMakePair(m_ActiveUploads, info));
             }
         }
 

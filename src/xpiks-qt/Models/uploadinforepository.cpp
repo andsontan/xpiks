@@ -60,8 +60,7 @@ namespace Models {
         switch (role) {
         case EditTitleRole:
             roleToUpdate = TitleRole;
-            title = value.toString().trimmed();
-            if (title.isEmpty()) title = "Untitled";
+            title = value.toString();
             uploadInfo->setTitle(title);
             break;
         case EditHostRole:
@@ -74,7 +73,7 @@ namespace Models {
             break;
         case EditPasswordRole:
             roleToUpdate = PasswordRole;
-            uploadInfo->setPassword(value.toString().trimmed());
+            uploadInfo->setPassword(value.toString());
             break;
         case EditIsSelectedRole:
             roleToUpdate = IsSelectedRole;
