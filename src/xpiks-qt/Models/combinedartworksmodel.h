@@ -50,7 +50,7 @@ namespace Models {
         void initArtworks(const QList<ArtItemInfo*> &artworks);
 
     private:
-        void initKeywords(const QStringList &ek) { m_CommonKeywords.clear(); std::copy(ek.begin(), ek.end(), std::back_inserter(m_CommonKeywords)); emit keywordsChanged(); }
+        void initKeywords(const QStringList &ek) { m_CommonKeywords.clear(); std::copy(ek.begin(), ek.end(), std::back_inserter(m_CommonKeywords)); m_CommonKeywordsSet.unite(QSet<QString>::fromList(m_CommonKeywords)); emit keywordsChanged(); }
         void initDescription(const QString &description) { setDescription(description); }
         void initTitle(const QString &title) { setTitle(title); }
         void initAuthor(const QString &author) { setAuthor(author); }
@@ -127,6 +127,7 @@ namespace Models {
     private:
         QList<ArtItemInfo*> m_ArtworksList;
         QStringList m_CommonKeywords;
+        QSet<QString> m_CommonKeywordsSet;
         QString m_ArtworkDescription;
         QString m_ArtworkTitle;
         QString m_ArtworkAuthor;

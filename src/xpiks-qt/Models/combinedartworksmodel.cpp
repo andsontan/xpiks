@@ -100,22 +100,27 @@ namespace Models {
         setAuthor("");
         setTitle("");
         setKeywords(QStringList());
+        m_CommonKeywordsSet.clear();
     }
 
     void CombinedArtworksModel::removeKeywordAt(int keywordIndex)
     {
         if (keywordIndex >= 0 && keywordIndex < m_CommonKeywords.length()) {
-            m_CommonKeywords.removeAt(keywordIndex);
+            m_CommonKeywordsSet.remove(m_CommonKeywords.takeAt(keywordIndex));
             emit keywordsChanged();
             emit keywordsCountChanged();
         }
     }
 
-    void CombinedArtworksModel::appendKeyword(const QString &keyword)
+    void CombinedArtworksModel::appendKeyword(const QString &word)
     {
-        m_CommonKeywords.append(keyword);
-        emit keywordsChanged();
-        emit keywordsCountChanged();
+        QString keyword = word.simplified();
+        if (!m_CommonKeywordsSet.contains(keyword)) {
+            m_CommonKeywords.append(keyword);
+            m_CommonKeywordsSet.insert(keyword);
+            emit keywordsChanged();
+            emit keywordsCountChanged();
+        }
     }
 
     void CombinedArtworksModel::selectArtwork(int index)
