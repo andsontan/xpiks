@@ -413,6 +413,7 @@ ApplicationWindow {
                                 property bool isHighlighted: (isselected || descriptionTextInput.activeFocus || flv.isFocused)
                                 color: isHighlighted ? Colors.selectedArtworkColor : Colors.artworkImageBackground
                                 property int indexOfThisDelegate: index
+                                property variant myData: model
 
                                 width: parent.width
                                 height: 200
@@ -441,7 +442,7 @@ ApplicationWindow {
                                         Connections {
                                             target: artItemsModel
                                             onSelectedArtworksCountChanged: {
-                                                itemCheckedCheckbox.checked = isselected
+                                                itemCheckedCheckbox.checked = rowWrapper.myData.isselected
                                             }
                                         }
                                     }

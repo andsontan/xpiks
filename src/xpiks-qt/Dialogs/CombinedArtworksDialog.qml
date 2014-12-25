@@ -467,8 +467,8 @@ Item {
                             text: qsTr("Save and append")
                             onClicked: {
                                 combinedArtworks.saveAddKeywords()
-                                closePopup()
                                 artItemsModel.updateSelectedArtworks()
+                                closePopup()
                             }
 
                             tooltip: "Sets description and appends keywords in edited files"
@@ -479,8 +479,8 @@ Item {
                             width: 130
                             onClicked: {
                                 combinedArtworks.saveSetKeywords()
-                                closePopup()
                                 artItemsModel.updateSelectedArtworks()
+                                closePopup()
                             }
 
                             tooltip: "Sets description and replaces keywords in edited files"
