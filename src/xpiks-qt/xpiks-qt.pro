@@ -23,6 +23,8 @@ QML_IMPORT_PATH =
 
 ICON = xpiks-qt.icns
 
+RC_ICONS = xpiks-qt.ico
+
 # Default rules for deployment.
 include(deployment.pri)
 
