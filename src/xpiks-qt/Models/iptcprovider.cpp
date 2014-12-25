@@ -111,15 +111,17 @@ namespace Models {
             pairs.append(qMakePair(metadata, &m_ExportInfo));
         }
 
-        if (!writeArtworkMetadata(pairs.first()).first) {
+        ExportPair firstPair = pairs.takeFirst();
+
+        if (!writeArtworkMetadata(firstPair).first) {
             endAfterFirstError();
             return;
         }
         else {
-            metadataExportedHandler(pairs.first().first);
+            metadataExportedHandler(firstPair.first);
         }
 
-        m_MetadataWriter->setFuture(QtConcurrent::mapped(pairs.begin() + 1, pairs.end(), writeArtworkMetadata));
+        m_MetadataWriter->setFuture(QtConcurrent::mapped(pairs, writeArtworkMetadata));
     }
 
     void IptcProvider::cancelProcessing()

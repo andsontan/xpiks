@@ -45,8 +45,8 @@ namespace Helpers {
         Q_PROPERTY(QString curlPathKey READ getCurlPathKey)
         QString getCurlPathKey() const { return Constants::PATH_TO_CURL; }
 
-        Q_PROPERTY(QString uploadHostsKey READ getuploadHostsKey)
-        QString getuploadHostsKey() const { return Constants::UPLOAD_HOSTS; }
+        Q_PROPERTY(QString uploadHostsKey READ getUploadHostsKey)
+        QString getUploadHostsKey() const { return Constants::UPLOAD_HOSTS; }
 
         Q_INVOKABLE inline void setValue(const QString &key, const QVariant &value) {
             QSettings::setValue(key, value);

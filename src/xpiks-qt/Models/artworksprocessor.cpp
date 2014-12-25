@@ -40,6 +40,8 @@ namespace Models {
 
     void ArtworksProcessor::endProcessing()
     {
+        m_ProcessedArtworksCount = 0;
+        m_ArtworksCount = 0;
         setInProgress(false);
         emit finishedProcessing();
     }

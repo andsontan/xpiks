@@ -27,12 +27,15 @@
 namespace Models {
     class UploadInfo {
     public:
-        UploadInfo()
+        UploadInfo():
+            m_IsSelected(false)
         {
             m_Title = "Untitled";
         }
 
-        UploadInfo(const QString& line) {
+        UploadInfo(const QString& line) :
+            m_IsSelected(false)
+        {
             if (line.length() > 2) {
                 m_Title = line.section(',', 0, 0);
                 m_Host = line.section(',', 1, 1);
@@ -58,7 +61,7 @@ namespace Models {
         QString toString() {
             return QString("%1,%2,%3").arg(
                         m_Title.trimmed().isEmpty() ? "Untitled" : m_Title,
-                        m_Host, m_Username, m_Password);
+                        m_Host, m_Username);
         }
 
     private:

@@ -26,6 +26,7 @@
 #include <QProcess>
 #include <QRegExp>
 #include <QString>
+#include <QDebug>
 #include <QPair>
 #include "externaltoolsprovider.h"
 #include "../Models/uploadinfo.h"
@@ -39,14 +40,13 @@ UploadPair uploadViaCurl(UploadPair pair) {
 
     const QString curlPath = Helpers::ExternalToolsProvider::getCurlPath();
 
-    QStringList arguments;
-    arguments << "--retry 1";
-    arguments << QString("-T {%1}").arg(filesToUpload->join(','));
-    arguments << uploadInfo->getHost() << "--user" << QString("%1:%2").arg(uploadInfo->getUsername(), uploadInfo->getPassword());
+    QString command = QString("%1 --retry 1 -T \"{%2}\" %3 --user %4:%5").
+            arg(curlPath, filesToUpload->join(','), uploadInfo->getHost(), uploadInfo->getUsername(), uploadInfo->getPassword());
+    qDebug() << command;
 
     Models::UploadInfo *resultInfo = NULL;
     QProcess process;
-    process.start(curlPath, arguments);
+    process.start(command);
     // wait each for 10 minutes
     // TODO: move to config
     if (process.waitForFinished(600000) &&
@@ -54,6 +54,10 @@ UploadPair uploadViaCurl(UploadPair pair) {
             process.exitCode() == 0) {
         resultInfo = uploadInfo;
     }
+
+    QByteArray stdoutByteArray = process.readAll();
+    QString stdoutTextText(stdoutByteArray);
+    qDebug() << stdoutTextText;
 
     return qMakePair(filesToUpload, resultInfo);
 }
