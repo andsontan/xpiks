@@ -40,6 +40,8 @@
 #ifdef QT_NO_DEBUG
 
 void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg) {
+    Q_UNUSED(context);
+
     QString txt;
     switch (type) {
     case QtDebugMsg:

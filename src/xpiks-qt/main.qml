@@ -398,301 +398,304 @@ ApplicationWindow {
                     Layout.fillHeight: true
                     color: Colors.defaultControlColor
 
-                    ListView {
-                        id: imagesListView
+                    StyledScrollView {
                         anchors.fill: parent
                         anchors.topMargin: 5
-                        model: artItemsModel
-                        boundsBehavior: Flickable.StopAtBounds
-                        spacing: 4
 
-                        delegate: Rectangle {
-                            id: rowWrapper
-                            property bool isHighlighted: (isselected || descriptionTextInput.activeFocus || flv.isFocused)
-                            color: isHighlighted ? Colors.selectedArtworkColor : Colors.artworkImageBackground
-                            property int indexOfThisDelegate: index
+                        ListView {
+                            id: imagesListView
+                            model: artItemsModel
+                            boundsBehavior: Flickable.StopAtBounds
+                            spacing: 4
 
-                            width: parent.width
-                            height: 200
+                            delegate: Rectangle {
+                                id: rowWrapper
+                                property bool isHighlighted: (isselected || descriptionTextInput.activeFocus || flv.isFocused)
+                                color: isHighlighted ? Colors.selectedArtworkColor : Colors.artworkImageBackground
+                                property int indexOfThisDelegate: index
 
-                            RowLayout {
-                                anchors.fill: parent
-                                anchors.rightMargin: 10
-                                spacing: 5
+                                width: parent.width
+                                height: 200
 
-                                Rectangle {
-                                    id: isModifiedRectangle
-                                    color: ismodified ? Colors.artworkModifiedColor : Colors.artworkSavedColor
-                                    width: 6
-                                    Layout.fillHeight: true
-                                }
+                                RowLayout {
+                                    anchors.fill: parent
+                                    anchors.rightMargin: 10
+                                    spacing: 5
 
-                                Item {
-                                    width: 5
-                                }
-
-                                StyledCheckbox {
-                                    id: itemCheckedCheckbox
-                                    //checked: isselected
-                                    onClicked: editisselected = checked
-                                    Component.onCompleted: itemCheckedCheckbox.checked = isselected
-                                    Connections {
-                                        target: artItemsModel
-                                        onSelectedArtworksCountChanged: {
-                                            itemCheckedCheckbox.checked = isselected
-                                        }
+                                    Rectangle {
+                                        id: isModifiedRectangle
+                                        color: ismodified ? Colors.artworkModifiedColor : Colors.artworkSavedColor
+                                        width: 6
+                                        Layout.fillHeight: true
                                     }
-                                }
 
-                                Rectangle {
-                                    width: 180
-                                    height: parent.height
-                                    color: "transparent"
+                                    Item {
+                                        width: 5
+                                    }
 
-                                    ColumnLayout {
-                                        anchors.fill: parent
-                                        anchors.margins: { left: 15; right: 15 }
-                                        spacing: 5
-
-                                        Item {
-                                            height: 8
-                                        }
-
-                                        Rectangle {
-                                            width: 150
-                                            Layout.minimumHeight: 100
-                                            Layout.maximumHeight: 150
-                                            anchors.horizontalCenter: parent.horizontalCenter
-                                            color: "transparent"
-                                            Image {
-                                                anchors.fill: parent
-                                                source: "image://global/" + filename
-                                                sourceSize.width: 150
-                                                sourceSize.height: 150
-                                                fillMode: Image.PreserveAspectFit
-                                                asynchronous: true
+                                    StyledCheckbox {
+                                        id: itemCheckedCheckbox
+                                        //checked: isselected
+                                        onClicked: editisselected = checked
+                                        Component.onCompleted: itemCheckedCheckbox.checked = isselected
+                                        Connections {
+                                            target: artItemsModel
+                                            onSelectedArtworksCountChanged: {
+                                                itemCheckedCheckbox.checked = isselected
                                             }
                                         }
-
-                                        Item {
-                                            height: 5
-                                        }
-
-                                        StyledText {
-                                            Layout.fillWidth: true
-                                            elide: Text.ElideMiddle
-                                            horizontalAlignment: Text.AlignHCenter
-                                            text: filename.split(/[\\/]/).pop()
-                                        }
-
-                                        Item {
-                                            Layout.fillHeight: true
-                                        }
                                     }
-                                }
 
-                                Rectangle {
-                                    id: columnRectangle
-                                    height: parent.height
-                                    Layout.fillWidth: true
-                                    color: rowWrapper.isHighlighted  ? Colors.selectedMetadataColor : Colors.artworkBackground
+                                    Rectangle {
+                                        width: 180
+                                        height: parent.height
+                                        color: "transparent"
 
-                                    ColumnLayout {
-                                        id: columnLayout
-                                        spacing: 3
-                                        anchors.fill: parent
-                                        anchors.margins: { left: 20; right: 20 }
-
-                                        StyledText {
-                                            text: qsTr("Description:")
-                                            anchors.left: parent.left
-                                        }
-
-                                        Rectangle {
-                                            id: rect
-                                            Layout.fillWidth: true
-                                            height: 30
-                                            color: rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.defaultControlColor
-                                            border.color: Colors.artworkActiveColor
-                                            border.width: descriptionTextInput.activeFocus ? 1 : 0
-
-                                            StyledTextInput {
-                                                id: descriptionTextInput
-                                                anchors.left: parent.left
-                                                anchors.right: parent.right
-                                                anchors.leftMargin: 5
-                                                anchors.rightMargin: 5
-                                                anchors.verticalCenter: parent.verticalCenter
-                                                maximumLength: 250
-                                                text: description
-                                                color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.artworkActiveColor
-                                                font.family: "Helvetica"
-                                                font.pixelSize: 12
-                                                onTextChanged: model.editdescription = text
-                                                Keys.onTabPressed: {
-                                                    flv.activateEdit()
-                                                }
-                                            }
-                                        }
-
-                                        Item {
-                                            height: 1
-                                        }
-
-                                        RowLayout {
-                                            anchors.left: parent.left
+                                        ColumnLayout {
+                                            anchors.fill: parent
+                                            anchors.margins: { left: 15; right: 15 }
                                             spacing: 5
 
-                                            StyledText {
-                                                id: keywordsLabel
-                                                text: qsTr("Keywords:")
+                                            Item {
+                                                height: 8
                                             }
 
-                                            StyledText {
-                                                text: qsTr("(comma-separated)")
-                                                visible: rowWrapper.isHighlighted
-                                                color: Colors.defaultInputBackground
-                                            }
-                                        }
-
-                                        Rectangle {
-                                            id: keywordsWrapper
-                                            Layout.fillWidth: true
-                                            height: 80
-                                            anchors.rightMargin: 20
-                                            border.color: Colors.artworkActiveColor
-                                            border.width: flv.isFocused ? 1 : 0
-                                            color: rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.defaultControlColor
-
-
-                                            function removeKeyword(index) {
-                                                artItemsModel.removeKeywordAt(rowWrapper.indexOfThisDelegate, index)
-                                            }
-
-                                            function removeLastKeyword() {
-                                                artItemsModel.removeLastKeyword(rowWrapper.indexOfThisDelegate)
-                                            }
-
-                                            function appendKeyword(keyword) {
-                                                artItemsModel.appendKeyword(rowWrapper.indexOfThisDelegate, keyword)
-                                            }
-
-                                            MouseArea {
-                                                anchors.fill: parent
-                                                propagateComposedEvents: true
-                                                onClicked: {
-                                                    flv.activateEdit()
-                                                    mouse.accepted = false
+                                            Rectangle {
+                                                width: 150
+                                                Layout.minimumHeight: 100
+                                                Layout.maximumHeight: 150
+                                                anchors.horizontalCenter: parent.horizontalCenter
+                                                color: "transparent"
+                                                Image {
+                                                    anchors.fill: parent
+                                                    source: "image://global/" + filename
+                                                    sourceSize.width: 150
+                                                    sourceSize.height: 150
+                                                    fillMode: Image.PreserveAspectFit
+                                                    asynchronous: true
                                                 }
-                                            }
-
-                                            StyledScrollView {
-                                                id: scroller
-                                                height: parent.height
-                                                width: parent.width + 15
-                                                highlightOnFocus: true
-
-                                                EditableTags {
-                                                    id: flv
-                                                    model: keywords
-                                                    anchors.margins: { left: 5; top: 5; right: 0; bottom: 5 }
-
-                                                    delegate: Rectangle {
-                                                        id: itemWrapper
-                                                        property int indexOfThisDelegate: index
-                                                        property string keyword: modelData
-                                                        color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.artworkActiveColor
-
-                                                        width: childrenRect.width
-                                                        height: childrenRect.height
-
-                                                        RowLayout {
-                                                            spacing: 1
-
-                                                            Rectangle {
-                                                                id: tagTextRect
-                                                                width: childrenRect.width + 5
-                                                                height: 20
-                                                                color: "transparent"
-
-                                                                StyledText {
-                                                                    anchors.left: parent.left
-                                                                    anchors.leftMargin: 5
-                                                                    anchors.top: parent.top
-                                                                    anchors.bottom: parent.bottom
-                                                                    verticalAlignment: Text.AlignVCenter
-                                                                    text: modelData
-                                                                    color: rowWrapper.isHighlighted ? Colors.defaultControlColor : Colors.defaultLightColor
-                                                                }
-                                                            }
-
-                                                            CloseIcon {
-                                                                width: 14
-                                                                height: 14
-                                                                isActive: rowWrapper.isHighlighted
-                                                                anchors.verticalCenter: tagTextRect.verticalCenter
-                                                                anchors.verticalCenterOffset: 1
-                                                                onItemClicked: keywordsWrapper.removeKeyword(itemWrapper.indexOfThisDelegate)
-                                                            }
-
-                                                            Item {
-                                                                width: 1
-                                                            }
-                                                        }
-                                                    }
-
-                                                    onTagAdded: {
-                                                        keywordsWrapper.appendKeyword(text)
-                                                    }
-
-                                                    onRemoveLast: {
-                                                        keywordsWrapper.removeLastKeyword()
-                                                    }
-                                                }
-                                            }
-                                        }
-
-                                        RowLayout {
-                                            spacing: 15
-
-                                            StyledText {
-                                                text: keywordscount
-                                                color: rowWrapper.isHighlighted ? Colors.defaultControlColor : Colors.selectedArtworkColor
                                             }
 
                                             Item {
-                                                Layout.fillWidth: true
+                                                height: 5
                                             }
 
                                             StyledText {
-                                                text: qsTr("More Edits")
-                                                color: Colors.artworkActiveColor
+                                                Layout.fillWidth: true
+                                                elide: Text.ElideMiddle
+                                                horizontalAlignment: Text.AlignHCenter
+                                                text: filename.split(/[\\/]/).pop()
+                                            }
 
-                                                MouseArea {
-                                                    anchors.fill: parent
-                                                    cursorShape: Qt.PointingHandCursor
-                                                    onClicked: {
-                                                        combinedArtworks.resetModelData();
-                                                        artItemsModel.combineArtwork(rowWrapper.indexOfThisDelegate);
-                                                        Qt.createComponent("Dialogs/CombinedArtworksDialog.qml").createObject(applicationWindow, {});
+                                            Item {
+                                                Layout.fillHeight: true
+                                            }
+                                        }
+                                    }
+
+                                    Rectangle {
+                                        id: columnRectangle
+                                        height: parent.height
+                                        Layout.fillWidth: true
+                                        color: rowWrapper.isHighlighted  ? Colors.selectedMetadataColor : Colors.artworkBackground
+
+                                        ColumnLayout {
+                                            id: columnLayout
+                                            spacing: 3
+                                            anchors.fill: parent
+                                            anchors.margins: { left: 20; right: 20 }
+
+                                            StyledText {
+                                                text: qsTr("Description:")
+                                                anchors.left: parent.left
+                                            }
+
+                                            Rectangle {
+                                                id: rect
+                                                Layout.fillWidth: true
+                                                height: 30
+                                                color: rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.defaultControlColor
+                                                border.color: Colors.artworkActiveColor
+                                                border.width: descriptionTextInput.activeFocus ? 1 : 0
+
+                                                StyledTextInput {
+                                                    id: descriptionTextInput
+                                                    anchors.left: parent.left
+                                                    anchors.right: parent.right
+                                                    anchors.leftMargin: 5
+                                                    anchors.rightMargin: 5
+                                                    anchors.verticalCenter: parent.verticalCenter
+                                                    maximumLength: 250
+                                                    text: description
+                                                    color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.artworkActiveColor
+                                                    font.family: "Helvetica"
+                                                    font.pixelSize: 12
+                                                    onTextChanged: model.editdescription = text
+                                                    Keys.onTabPressed: {
+                                                        flv.activateEdit()
                                                     }
                                                 }
                                             }
 
-                                            StyledText {
-                                                text: qsTr("Copy keywords")
-                                                color: Colors.artworkActiveColor
+                                            Item {
+                                                height: 1
+                                            }
+
+                                            RowLayout {
+                                                anchors.left: parent.left
+                                                spacing: 5
+
+                                                StyledText {
+                                                    id: keywordsLabel
+                                                    text: qsTr("Keywords:")
+                                                }
+
+                                                StyledText {
+                                                    text: qsTr("(comma-separated)")
+                                                    visible: rowWrapper.isHighlighted
+                                                    color: Colors.defaultInputBackground
+                                                }
+                                            }
+
+                                            Rectangle {
+                                                id: keywordsWrapper
+                                                Layout.fillWidth: true
+                                                height: 80
+                                                anchors.rightMargin: 20
+                                                border.color: Colors.artworkActiveColor
+                                                border.width: flv.isFocused ? 1 : 0
+                                                color: rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.defaultControlColor
+
+
+                                                function removeKeyword(index) {
+                                                    artItemsModel.removeKeywordAt(rowWrapper.indexOfThisDelegate, index)
+                                                }
+
+                                                function removeLastKeyword() {
+                                                    artItemsModel.removeLastKeyword(rowWrapper.indexOfThisDelegate)
+                                                }
+
+                                                function appendKeyword(keyword) {
+                                                    artItemsModel.appendKeyword(rowWrapper.indexOfThisDelegate, keyword)
+                                                }
 
                                                 MouseArea {
                                                     anchors.fill: parent
-                                                    cursorShape: Qt.PointingHandCursor
-                                                    onClicked: clipboard.setText(keywordsstring)
+                                                    propagateComposedEvents: true
+                                                    onClicked: {
+                                                        flv.activateEdit()
+                                                        mouse.accepted = false
+                                                    }
+                                                }
+
+                                                StyledScrollView {
+                                                    id: scroller
+                                                    height: parent.height
+                                                    width: parent.width + 15
+                                                    highlightOnFocus: true
+
+                                                    EditableTags {
+                                                        id: flv
+                                                        model: keywords
+                                                        anchors.margins: { left: 5; top: 5; right: 0; bottom: 5 }
+
+                                                        delegate: Rectangle {
+                                                            id: itemWrapper
+                                                            property int indexOfThisDelegate: index
+                                                            property string keyword: modelData
+                                                            color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.artworkActiveColor
+
+                                                            width: childrenRect.width
+                                                            height: childrenRect.height
+
+                                                            RowLayout {
+                                                                spacing: 1
+
+                                                                Rectangle {
+                                                                    id: tagTextRect
+                                                                    width: childrenRect.width + 5
+                                                                    height: 20
+                                                                    color: "transparent"
+
+                                                                    StyledText {
+                                                                        anchors.left: parent.left
+                                                                        anchors.leftMargin: 5
+                                                                        anchors.top: parent.top
+                                                                        anchors.bottom: parent.bottom
+                                                                        verticalAlignment: Text.AlignVCenter
+                                                                        text: modelData
+                                                                        color: rowWrapper.isHighlighted ? Colors.defaultControlColor : Colors.defaultLightColor
+                                                                    }
+                                                                }
+
+                                                                CloseIcon {
+                                                                    width: 14
+                                                                    height: 14
+                                                                    isActive: rowWrapper.isHighlighted
+                                                                    anchors.verticalCenter: tagTextRect.verticalCenter
+                                                                    anchors.verticalCenterOffset: 1
+                                                                    onItemClicked: keywordsWrapper.removeKeyword(itemWrapper.indexOfThisDelegate)
+                                                                }
+
+                                                                Item {
+                                                                    width: 1
+                                                                }
+                                                            }
+                                                        }
+
+                                                        onTagAdded: {
+                                                            keywordsWrapper.appendKeyword(text)
+                                                        }
+
+                                                        onRemoveLast: {
+                                                            keywordsWrapper.removeLastKeyword()
+                                                        }
+                                                    }
                                                 }
                                             }
-                                        }
 
-                                        Item {
-                                            height: 1
+                                            RowLayout {
+                                                spacing: 15
+
+                                                StyledText {
+                                                    text: keywordscount
+                                                    color: rowWrapper.isHighlighted ? Colors.defaultControlColor : Colors.selectedArtworkColor
+                                                }
+
+                                                Item {
+                                                    Layout.fillWidth: true
+                                                }
+
+                                                StyledText {
+                                                    text: qsTr("More Edits")
+                                                    color: Colors.artworkActiveColor
+
+                                                    MouseArea {
+                                                        anchors.fill: parent
+                                                        cursorShape: Qt.PointingHandCursor
+                                                        onClicked: {
+                                                            combinedArtworks.resetModelData();
+                                                            artItemsModel.combineArtwork(rowWrapper.indexOfThisDelegate);
+                                                            Qt.createComponent("Dialogs/CombinedArtworksDialog.qml").createObject(applicationWindow, {});
+                                                        }
+                                                    }
+                                                }
+
+                                                StyledText {
+                                                    text: qsTr("Copy keywords")
+                                                    color: Colors.artworkActiveColor
+
+                                                    MouseArea {
+                                                        anchors.fill: parent
+                                                        cursorShape: Qt.PointingHandCursor
+                                                        onClicked: clipboard.setText(keywordsstring)
+                                                    }
+                                                }
+                                            }
+
+                                            Item {
+                                                height: 1
+                                            }
                                         }
                                     }
                                 }
