@@ -48,9 +48,9 @@ namespace Models {
     bool ArtworkMetadata::appendKeyword(const QString &keyword)
     {
         bool added = false;
-        const QString &sanitizedKeyword = keyword.trimmed().toLower();
+        const QString &sanitizedKeyword = keyword.simplified().toLower();
         if (!m_KeywordsSet.contains(sanitizedKeyword)) {
-            m_KeywordsList.append(keyword);
+            m_KeywordsList.append(sanitizedKeyword);
             m_KeywordsSet.insert(sanitizedKeyword);
             setModified();
             added = true;
