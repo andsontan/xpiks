@@ -329,7 +329,8 @@ Item {
                     style: ProgressBarStyle {
                         background: Rectangle {
                             border.color: Colors.artworkActiveColor
-                            color: artworkUploader.isError ? Colors.desctuctiveColor : Colors.artworkActiveColor
+                            border.width: control.indeterminate ? 1 : 0
+                            color: artworkUploader.isError ? Colors.desctuctiveColor : (control.indeterminate ? Colors.artworkActiveColor : Colors.defaultInputBackground)
 
                             // Indeterminate animation by animating alternating stripes:
                             Item {

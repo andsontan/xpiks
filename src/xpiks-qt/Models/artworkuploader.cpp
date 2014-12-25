@@ -79,7 +79,14 @@ namespace Models {
             }
         }
 
-        m_ArtworksUploader->setFuture(QtConcurrent::mapped(pairs, uploadViaCurl));
+        qDebug() << "Uploading " << pairs.length() << " items";
+
+        if (pairs.length() > 0) {
+            m_ArtworksUploader->setFuture(QtConcurrent::mapped(pairs, uploadViaCurl));
+        }
+        else {
+            endProcessing();
+        }
     }
 
     QStringList *ArtworkUploader::getAllFilepathes() const

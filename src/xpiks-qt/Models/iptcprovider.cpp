@@ -95,7 +95,12 @@ namespace Models {
             metadataImportedHandler(firstMetadata);
         }
 
-        m_MetadataReader->setFuture(QtConcurrent::mapped(artworkList.begin() + 1, artworkList.end(), readArtworkMetadata));
+        if (artworkList.length() > 1) {
+            m_MetadataReader->setFuture(QtConcurrent::mapped(artworkList.begin() + 1, artworkList.end(), readArtworkMetadata));
+        }
+        else {
+            endProcessing();
+        }
     }
 
     void IptcProvider::doWriteMetadata(const QList<ArtworkMetadata *> &artworkList) {
@@ -121,7 +126,12 @@ namespace Models {
             metadataExportedHandler(firstPair.first);
         }
 
-        m_MetadataWriter->setFuture(QtConcurrent::mapped(pairs, writeArtworkMetadata));
+        if (pairs.length() > 0) {
+            m_MetadataWriter->setFuture(QtConcurrent::mapped(pairs, writeArtworkMetadata));
+        }
+        else {
+            endProcessing();
+        }
     }
 
     void IptcProvider::cancelProcessing()
