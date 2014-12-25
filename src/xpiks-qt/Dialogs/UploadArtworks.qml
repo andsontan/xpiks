@@ -323,7 +323,8 @@ Item {
                     anchors.horizontalCenter: parent.horizontalCenter
                     width: parent.width
                     height: 20
-                    value: artworkUploader.percent
+                    //value: artworkUploader.percent
+                    indeterminate: false
 
                     style: ProgressBarStyle {
                         background: Rectangle {
@@ -339,7 +340,7 @@ Item {
                                 Row {
                                     Repeater {
                                         Rectangle {
-                                            color: index % 2 ? Colors.artworkActiveColor : Colors.defaultLightColor
+                                            color: index % 2 ? Colors.artworkActiveColor : Colors.defaultControlColor
                                             width: 20 ; height: control.height
                                         }
                                         model: control.width / 20 + 2
@@ -375,6 +376,7 @@ Item {
                         width: 130
                         enabled: !artworkUploader.inProgress
                         onClicked: {
+                            progress.indeterminate = true
                             text = qsTr("Uploading...")
                             artworkUploader.resetModel()
                             artworkUploader.uploadArtworks()
@@ -384,6 +386,7 @@ Item {
                         Connections {
                             target: artworkUploader
                             onFinishedProcessing: {
+                                progress.indeterminate = false
                                 uploadButton.text = qsTr("Start Upload")
                             }
                         }
