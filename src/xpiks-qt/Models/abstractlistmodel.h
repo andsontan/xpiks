@@ -1,7 +1,3 @@
-#ifndef ABSTRACTLISTMODEL
-#define ABSTRACTLISTMODEL
-
-#include <QAbstractListModel>
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
@@ -22,6 +18,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+#ifndef ABSTRACTLISTMODEL
+#define ABSTRACTLISTMODEL
+
+#include <QAbstractListModel>
 
 #include <QVector>
 #include <QList>

@@ -1,4 +1,3 @@
-#include "artworksrepository.h"
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
@@ -20,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "artworksrepository.h"
 #include <QDir>
 #include <QSet>
 #include <QFileInfo>

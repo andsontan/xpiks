@@ -1,6 +1,3 @@
-#ifndef COMBINEDARTWORKSMODEL_H
-#define COMBINEDARTWORKSMODEL_H
-
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
@@ -21,6 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+#ifndef COMBINEDARTWORKSMODEL_H
+#define COMBINEDARTWORKSMODEL_H
 
 #include <QAbstractListModel>
 #include <QStringList>
