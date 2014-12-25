@@ -55,9 +55,13 @@ UploadPair uploadViaCurl(UploadPair pair) {
         resultInfo = uploadInfo;
     }
 
-    QByteArray stdoutByteArray = process.readAll();
-    QString stdoutTextText(stdoutByteArray);
-    qDebug() << stdoutTextText;
+    QByteArray stdoutByteArray = process.readAllStandardOutput();
+    QString stdoutText(stdoutByteArray);
+    qDebug() << "STDOUT: " << stdoutText;
+
+    QByteArray stderrByteArray = process.readAllStandardError();
+    QString stderrText(stderrByteArray);
+    qDebug() << "STDERR: " << stderrText;
 
     return qMakePair(filesToUpload, resultInfo);
 }
