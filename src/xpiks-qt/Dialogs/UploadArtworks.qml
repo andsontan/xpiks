@@ -78,7 +78,7 @@ Item {
         Rectangle {
             id: dialogWindow
             width: 580
-            height: 350
+            height: 360
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
 
@@ -214,6 +214,11 @@ Item {
                                     anchors.leftMargin: 5
                                     onTextChanged: uploadHostsListView.currentItem.myData.edittitle = text
                                     KeyNavigation.tab: ftpHost
+                                    onEditingFinished: {
+                                        if (text.length == 0) {
+                                            uploadHostsListView.currentItem.myData.edittitle = "Untitled"
+                                        }
+                                    }
                                 }
                             }
 
@@ -305,6 +310,7 @@ Item {
                             StyledButton {
                                 text: qsTr("Add FTP host")
                                 width: 90
+                                height: 24
                                 anchors.left: parent.left
                                 onClicked: uploadInfos.addItem()
                             }
