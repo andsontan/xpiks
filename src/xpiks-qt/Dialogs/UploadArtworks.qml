@@ -71,6 +71,12 @@ Item {
         }
     }
 
+    MessageDialog {
+        id: selectHostsMessageBox
+        title: "Warning"
+        text: qsTr("Please, select some hosts first")
+    }
+
     FocusScope {
         anchors.fill: parent
 
@@ -377,11 +383,15 @@ Item {
                         width: 130
                         enabled: !artworkUploader.inProgress
                         onClicked: {
-                            progress.indeterminate = true
-                            text = qsTr("Uploading...")
-                            artworkUploader.resetModel()
-                            artworkUploader.uploadArtworks()
-                            saveSettings()
+                            if (uploadInfos.getSelectedInfosCount() === 0) {
+                                selectHostsMessageBox.open()
+                            } else {
+                                progress.indeterminate = true
+                                text = qsTr("Uploading...")
+                                artworkUploader.resetModel()
+                                artworkUploader.uploadArtworks()
+                                saveSettings()
+                            }
                         }
 
                         Connections {

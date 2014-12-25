@@ -138,13 +138,13 @@ ApplicationWindow {
     MessageDialog {
         id: mustSaveWarning
         title: "Warning"
-        text: "Please, save selected items before upload"
+        text: qsTr("Please, save selected items before upload")
     }
 
     MessageDialog {
         id: mustSelectDialog
         title: "Warning"
-        text: "Please, select some artworks first"
+        text: qsTr("Please, select some artworks first")
     }
 
     Rectangle {

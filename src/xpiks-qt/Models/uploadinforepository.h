@@ -84,6 +84,14 @@ namespace Models {
             return items.join("|");
         }
 
+        Q_INVOKABLE int getSelectedInfosCount() const {
+            int count = 0;
+            foreach (UploadInfo *info, m_UploadInfos) {
+                if (info->getIsSelected()) count++;
+            }
+            return count;
+        }
+
     public:
         const QList<UploadInfo*> &getUploadInfos() const { return m_UploadInfos; }
 
