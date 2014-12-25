@@ -26,6 +26,7 @@
 #include <QProcess>
 #include <QRegExp>
 #include <QString>
+#include <QDebug>
 #include <QPair>
 #include "externaltoolsprovider.h"
 #include "../Models/artworkmetadata.h"
@@ -47,35 +48,38 @@ ExportPair writeArtworkMetadata(ExportPair pair) {
         title = description;
     }
 
+    const QString exiftoolPath = Helpers::ExternalToolsProvider::getExifToolPath();
+
     QStringList arguments;
+    arguments << exiftoolPath;
     arguments << "-quiet" << "-ignoreMinorErrors";
-    arguments << QString("-EXIF:Artist=%1").arg(author);
-    arguments << QString("-IPTC:By-line=%1").arg(author);
-    arguments << QString("-XMP:Author=%1").arg(author);
-    arguments << QString("-XMP:Creator=%1").arg(author);
-    arguments << QString("-IPTC:ObjectName=%1").arg(title);
-    arguments << QString("-XMP:Title=%1").arg(title);
-    arguments << QString("-EXIF:ImageDescription=%1").arg(description);
-    arguments << QString("-IPTC:LocalCaption=%1").arg(description);
-    arguments << QString("-IPTC:Caption-Abstract=%1").arg(description);
-    arguments << QString("-XMP:Caption=%1").arg(description);
-    arguments << QString("-XMP:Description=%1").arg(description);
-    arguments << QString("-IPTC:Keywords=%1").arg(keywords);
-    arguments << QString("-XMP:Keywords=%1").arg(keywords);
-    arguments << QString("-XMP:Subject=%1").arg(keywords);
+    arguments << QString("-EXIF:Artist=\"%1\"").arg(author);
+    arguments << QString("-IPTC:By-line=\"%1\"").arg(author);
+    arguments << QString("-XMP:Author=\"%1\"").arg(author);
+    arguments << QString("-XMP:Creator=\"%1\"").arg(author);
+    arguments << QString("-IPTC:ObjectName=\"%1\"").arg(title);
+    arguments << QString("-XMP:Title=\"%1\"").arg(title);
+    arguments << QString("-EXIF:ImageDescription=\"%1\"").arg(description);
+    arguments << QString("-IPTC:LocalCaption=\"%1\"").arg(description);
+    arguments << QString("-IPTC:Caption-Abstract=\"%1\"").arg(description);
+    arguments << QString("-XMP:Caption=\"%1\"").arg(description);
+    arguments << QString("-XMP:Description=\"%1\"").arg(description);
+    arguments << QString("-IPTC:Keywords=\"%1\"").arg(keywords);
+    arguments << QString("-XMP:Keywords=\"%1\"").arg(keywords);
+    arguments << QString("-XMP:Subject=\"%1\"").arg(keywords);
 
     if (!exportInfo->getMustSaveOriginal()) {
         arguments << "-overwrite_original";
     }
 
-    arguments << metadata->getFilepath();
-
-    const QString exiftoolPath = Helpers::ExternalToolsProvider::getExifToolPath();
+    arguments << QString("\"%1\"").arg(metadata->getFilepath());
 
     Models::ArtworkMetadata *resultMetadata = NULL;
 
     QProcess process;
-    process.start(exiftoolPath, arguments);
+    QString command = arguments.join(' ');
+    qDebug() << command;
+    process.start(command);
     if (!process.waitForFinished()) {
         return qMakePair(resultMetadata, exportInfo);
     }

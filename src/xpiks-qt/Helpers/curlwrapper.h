@@ -49,7 +49,7 @@ UploadPair uploadViaCurl(UploadPair pair) {
     process.start(command);
     // wait each for 10 minutes
     // TODO: move to config
-    if (process.waitForFinished(600000) &&
+    if (process.waitForFinished(300000 * filesToUpload->length()) &&
             process.exitStatus() == QProcess::NormalExit &&
             process.exitCode() == 0) {
         resultInfo = uploadInfo;

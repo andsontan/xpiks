@@ -226,8 +226,8 @@ Item {
                                 anchors.verticalCenter: parent.verticalCenter
                                 maximumLength: 200
                                 focus: true
-                                text: combinedArtworks.author
-                                onTextChanged: combinedArtworks.author = text
+                                text: combinedArtworks.title
+                                onTextChanged: combinedArtworks.title = text
                                 KeyNavigation.tab: authorTextInput
                             }
                         }
@@ -260,8 +260,8 @@ Item {
                                 anchors.verticalCenter: parent.verticalCenter
                                 maximumLength: 200
                                 focus: true
-                                text: combinedArtworks.title
-                                onTextChanged: combinedArtworks.title = text
+                                text: combinedArtworks.author
+                                onTextChanged: combinedArtworks.author = text
                                 KeyNavigation.backtab: titleTextInput
                                 KeyNavigation.tab: descriptionTextInput
                             }
