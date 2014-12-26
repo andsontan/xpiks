@@ -398,7 +398,6 @@ Item {
                                         height: 14
                                         isActive: true
                                         anchors.verticalCenter: tagTextRect.verticalCenter
-                                        anchors.verticalCenterOffset: 1
                                         onItemClicked: keywordsWrapper.removeKeyword(itemWrapper.indexOfThisDelegate)
                                     }
 

@@ -241,7 +241,7 @@ ApplicationWindow {
                                 StyledText {
                                     id: directoryPath
                                     Layout.fillWidth: true
-                                    anchors.verticalCenter: parent.verticalCenter
+                                    anchors.verticalCenter: sourceWrapper.verticalCenter
                                     height: 31
                                     color: Colors.itemsSourceForeground
                                     text: path + " (" + usedimagescount + ")"
@@ -252,8 +252,7 @@ ApplicationWindow {
                                 CloseIcon {
                                     width: 14
                                     height: 14
-                                    anchors.verticalCenter: directoryPath.verticalCenter
-                                    anchors.verticalCenterOffset: 1
+                                    anchors.verticalCenter: sourceWrapper.verticalCenter
                                     isActive: false
 
                                     onItemClicked: {
@@ -635,7 +634,6 @@ ApplicationWindow {
                                                                     height: 14
                                                                     isActive: rowWrapper.isHighlighted
                                                                     anchors.verticalCenter: tagTextRect.verticalCenter
-                                                                    anchors.verticalCenterOffset: 1
                                                                     onItemClicked: keywordsWrapper.removeKeyword(itemWrapper.indexOfThisDelegate)
                                                                 }
 
