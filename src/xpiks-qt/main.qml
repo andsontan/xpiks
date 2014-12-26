@@ -458,13 +458,12 @@ ApplicationWindow {
                                             spacing: 5
 
                                             Item {
-                                                height: 8
+                                                height: 15
                                             }
 
                                             Rectangle {
                                                 width: 150
-                                                Layout.minimumHeight: 100
-                                                Layout.maximumHeight: 150
+                                                height: 130
                                                 anchors.horizontalCenter: parent.horizontalCenter
                                                 color: "transparent"
                                                 Image {
@@ -475,15 +474,17 @@ ApplicationWindow {
                                                     fillMode: Image.PreserveAspectCrop
                                                     asynchronous: true
                                                 }
-                                            }
 
-                                            Item {
-                                                height: 5
+                                                MouseArea {
+                                                    anchors.fill: parent
+                                                    onClicked: editisselected = !isselected
+                                                }
                                             }
 
                                             StyledText {
                                                 Layout.fillWidth: true
                                                 elide: Text.ElideMiddle
+                                                color: Colors.defaultInputBackground
                                                 horizontalAlignment: Text.AlignHCenter
                                                 text: filename.split(/[\\/]/).pop()
                                             }
