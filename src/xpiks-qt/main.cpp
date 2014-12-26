@@ -37,39 +37,6 @@
 #include "Helpers/appsettings.h"
 #include "Helpers/constants.h"
 
-#ifdef QT_NO_DEBUG
-
-void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg) {
-    Q_UNUSED(context);
-
-    QString txt;
-    switch (type) {
-    case QtDebugMsg:
-        txt = QString("Debug: %1").arg(msg);
-        break;
-    case QtWarningMsg:
-        txt = QString("Warning: %1").arg(msg);
-        break;
-    case QtCriticalMsg:
-        txt = QString("Critical: %1").arg(msg);
-        break;
-    case QtFatalMsg:
-        txt = QString("Fatal: %1").arg(msg);
-        break;
-    }
-
-    QFile outFile("xpiks.log");
-    outFile.open(QIODevice::WriteOnly | QIODevice::Append);
-    QTextStream ts(&outFile);
-    ts << txt << endl;
-
-    if (type == QtFatalMsg) {
-        abort();
-    }
-}
-
-#endif
-
 void initQSettings() {
     QCoreApplication::setOrganizationName(Constants::ORGANIZATION_NAME);
     QCoreApplication::setOrganizationDomain(Constants::ORGANIZATION_DOMAIN);
@@ -89,10 +56,6 @@ int main(int argc, char *argv[]) {
     QTranslator myappTranslator;
     myappTranslator.load("xpiks_" + QLocale::system().name());
     app.installTranslator(&myappTranslator);
-
-#ifdef QT_NO_DEBUG
-    qInstallMessageHandler(myMessageHandler);
-#endif
 
     Models::ArtworksRepository artworkRepository;
     Models::ArtItemsModel artItemsModel;
