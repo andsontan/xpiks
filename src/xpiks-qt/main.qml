@@ -472,7 +472,7 @@ ApplicationWindow {
                                                     source: "image://global/" + filename
                                                     sourceSize.width: 150
                                                     sourceSize.height: 150
-                                                    fillMode: Image.PreserveAspectFit
+                                                    fillMode: Image.PreserveAspectCrop
                                                     asynchronous: true
                                                 }
                                             }
