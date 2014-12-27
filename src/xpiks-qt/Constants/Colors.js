@@ -23,6 +23,7 @@ var defaultDarkColor = "#1e1e1e";
 var defaultControlColor = "#292929";
 
 var defaultLightColor = "#E0E0E0";
+var defaultLightGrayColor = "#D0D0D0";
 
 var itemsSourceBackground = "#232323";
 var itemsSourceSelected = "#333333";

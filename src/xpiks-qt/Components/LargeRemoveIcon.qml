@@ -32,7 +32,7 @@ Item {
         color: "transparent"
 
         Rectangle {
-            color: Colors.defaultLightColor
+            color: Colors.defaultLightGrayColor
             width: parent.width - 2
             height: 8
             border.width: 4
@@ -44,7 +44,7 @@ Item {
         }
 
         Rectangle {
-            color: Colors.defaultLightColor
+            color: Colors.defaultLightGrayColor
             width: parent.width - 2
             height: 8
             radius: 4
