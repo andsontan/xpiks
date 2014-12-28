@@ -20,9 +20,9 @@ If you'd like to build Xpiks for your own platform, please, refer to <a href="{{
 If you like Xpiks and you wish to support its development and progress, consider donation any sum
 </p>
 <form action="https://www.moneybookers.com/app/payment.pl" method="post" target="_blank">
-    <input type="hidden" name="pay_to_email" value="mynamerafi@gmail.com" />
+    <input type="hidden" name="pay_to_email" value="kushnirTV@gmail.com" />
     <input type="hidden" name="language" value="EN" />
-    <select name="currency" size="1">
+    Currency: <select name="currency" size="1" style="width: 50px">
     <option />Select a currency
     <option value="USD" />US dollar
     <option value="GBP" />GB pound
@@ -31,8 +31,8 @@ If you like Xpiks and you wish to support its development and progress, consider
     <option value="CAD" />Canadian $
     <option value="AUD" />Australian $
     </select>
-    amount:><input type="text" name="amount" value="5.00" size="10" />
-    <input type="submit" text="Donate" />
+    Select amount: <input type="text" name="amount" value="5.00" size="10" />
+    <input type="submit" value="Donate" />
     <input type="hidden" name="detail1_description" value="Donate to support Xpiks development" />
 <input type="hidden" name="detail1_text" value="donate to support Xpiks development" />
     </form>
