@@ -17,7 +17,7 @@ Package for Windows has ExifTool and Curl supplied inside, while package for OS 
 If you'd like to build Xpiks for your own platform, please, refer to <a href="{{site.url}}/blog/2014/building-xpiks-alone">this post</a>.
 </p>
 <p>
-<strong>If you like Xpiks and you wish to support its development and progress, consider donation any sum via Moneybookers (Skrill)</strong>
+<strong>If you like Xpiks and you wish to support it's development and progress, consider donation any sum via Moneybookers (Skrill)</strong>
 </p>
 <form action="https://www.moneybookers.com/app/payment.pl" method="post" target="_blank">
     <input type="hidden" name="pay_to_email" value="kushnirTV@gmail.com" />
