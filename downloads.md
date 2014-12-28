@@ -22,7 +22,7 @@ If you'd like to build Xpiks for your own platform, please, refer to <a href="{{
 <form action="https://www.moneybookers.com/app/payment.pl" method="post" target="_blank">
     <input type="hidden" name="pay_to_email" value="kushnirTV@gmail.com" />
     <input type="hidden" name="language" value="EN" />
-    Currency: <select name="currency" size="1" style="width: 100px">
+    Currency: <select name="currency" size="1" style="width: 150px">
     <option />Select a currency
     <option value="USD" />US dollar
     <option value="GBP" />GB pound
@@ -30,8 +30,8 @@ If you'd like to build Xpiks for your own platform, please, refer to <a href="{{
     <option value="JPY" />Yen
     <option value="CAD" />Canadian $
     <option value="AUD" />Australian $
-    </select>
-    amount: <input type="text" name="amount" value="5.00" size="10" />
+    </select><br />
+    amount: <input type="text" name="amount" value="5.00" size="10" /><br />
     <input type="submit" value="Donate" />
     <input type="hidden" name="detail1_description" value="Donate to support Xpiks development" />
 <input type="hidden" name="detail1_text" value="donate to support Xpiks development" />
