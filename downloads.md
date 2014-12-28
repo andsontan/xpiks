@@ -31,7 +31,7 @@ If you'd like to build Xpiks for your own platform, please, refer to <a href="{{
     <option value="CAD" />Canadian $
     <option value="AUD" />Australian $
     </select>
-    Select amount: <input type="text" name="amount" value="5.00" size="10" />
+    amount: <input type="text" name="amount" value="5.00" size="10" />
     <input type="submit" value="Donate" />
     <input type="hidden" name="detail1_description" value="Donate to support Xpiks development" />
 <input type="hidden" name="detail1_text" value="donate to support Xpiks development" />
