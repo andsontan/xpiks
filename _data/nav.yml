@@ -1,0 +1,11 @@
+- title: "home"
+  href: "/"
+
+- title: "blog"
+  href: "/blog/"
+
+- title: "screenshots"
+  href: "/screenshots/"
+
+- title: "downloads"
+  href: "/downloads/"

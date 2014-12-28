@@ -1,2 +1,7 @@
 src/build*
 *.pro.user
+vendor/
+.DS_Store
+Gemfile.lock
+_site/
+.sass-cache/

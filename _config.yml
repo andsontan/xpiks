@@ -1,0 +1,35 @@
+# Site settings
+title: Xpiks
+email:
+
+description: > # this means to ignore newlines until "baseurl:"
+  Cross-platform image keywording software
+
+url: //ribtoks.github.io/xpiks-qt
+
+header: yes
+header_sm: /images/banner-small.jpg
+header_med: /images/banner-med.jpg
+header_large: /images/banner-large.jpg
+header_xl: /images/banner-xl.jpg
+
+
+# Exclude our ruby stuff
+exclude: [.bundle, bin, vendor, Gemfile, Gemfile.lock, Rakefile, s3_website.yml, .last_optimized]
+
+# Google Analytics
+google_universal_analytics: UA-10412407-8
+google_universal_analytics_cookiedomain: auto
+
+# Build settings
+markdown: kramdown
+kramdown:
+  input: GFM
+
+destination: _site
+
+# Compress our Css
+#sass:
+#    style: :compressed
+
+permalink: /blog/:year/:title
