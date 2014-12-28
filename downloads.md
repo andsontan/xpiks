@@ -22,8 +22,10 @@ If you'd like to build Xpiks for your own platform, please, refer to <a href="{{
 <form action="https://www.moneybookers.com/app/payment.pl" method="post" target="_blank">
     <input type="hidden" name="pay_to_email" value="kushnirTV@gmail.com" />
     <input type="hidden" name="language" value="EN" />
-    Select currency: <select name="currency" size="1" style="width: 150px">
-    <option />Select currency<br />
+    Select currency:
+    <br />
+    <select name="currency" size="1" style="width: 150px">
+    <option />Select currency
     <option value="USD" />US dollar
     <option value="GBP" />GB pound
     <option value="EUR" />Euro
