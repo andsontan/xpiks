@@ -22,3 +22,9 @@ First of all, open Xpiks. You'll see main window with no added images:
 Then you can add files via "Add files" or "Add directory" button. Both can add only JPG files. Let's add some files. When you select files or directories and open them an import dialog launches. It helps to import existing IPTC metadata into Xpiks.
 
 ![Adding images]({{site.url}}/images/howto/xpiks-qt-startimport.jpg)
+
+Press "Start import" to actually start importing metadata or just "Close" to skip this step. In current version of Xpiks you won't be able to import metadata later. If import finishes with success, progress bar will remain blue and in case of errors it becomes red.
+
+Now you can proceed to editing metadata.
+
+![Import finished]({{site.url}}/images/howto/xpiks-qt-imported.jpg)
