@@ -39,6 +39,6 @@ After upload finished, you can go and check stocks. In this example I've uploade
 
 <img alt="Depositphotos" src="{{site.url}}/images/howto/depositphotos-success.jpg" class="small-12 large-8" />
 
-<img alt="Shuterstock" src="{{site.url}}/images/howto/shuttestock-success.jpg" class="small-12 large-8" />
+<img alt="Shuterstock" src="{{site.url}}/images/howto/shutterstock-success.jpg" class="small-12 large-8" />
 
 You can note, that no stock has selected categories. That's because all they use different categories and you still have to enter them manually.
