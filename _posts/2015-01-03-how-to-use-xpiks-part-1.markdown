@@ -36,3 +36,7 @@ If you have images which would have many similar keywords, you can process them 
 The following popup will appear:
 
 <img alt="Combined edit" src="{{site.url}}/images/howto/xpiks-qt-combinededit.jpg" class="small-12 large-8 columns page-content" />
+
+Now you can open keywords suggestion service in Shutterstock, in Yuri Arcurs blog or any other you prefer, get some keywords for your images and type them in appropriate fields.
+
+<img alt="Combined edit" src="{{site.url}}/images/howto/xpiks-qt-combinededit-finished.jpg" class="small-12 large-8 columns page-content" />
