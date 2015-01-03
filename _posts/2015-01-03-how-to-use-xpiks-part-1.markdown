@@ -39,14 +39,14 @@ The following popup will appear:
 
 Now you can open keywords suggestion service in Shutterstock, in Yuri Arcurs blog or any other you prefer, get some keywords for your images and type them in appropriate fields.
 
-<img alt="Combined edit" src="{{site.url}}/images/howto/xpiks-qt-combinededit-finished.jpg" class="small-12 large-8" />
+<img alt="Combined edit finished" src="{{site.url}}/images/howto/xpiks-qt-combinededit-finished.jpg" class="small-12 large-8" />
 
 Now you have choise to append written keywords to images you edit or to replace keywords with those you entered. Press appropriate button and you'll see keywords in main window. When an item is modified in any way, you'll see yellow sign near it until you'll save it. Also, you can track modified artworks count in status bar in the bottom line of Xpiks.
 
-<img alt="Combined edit" src="{{site.url}}/images/howto/xpiks-qt-combinededit-applied.jpg" class="small-12 large-8" />
+<img alt="Applied changes in images" src="{{site.url}}/images/howto/xpiks-qt-combinededit-applied.jpg" class="small-12 large-8" />
 
 Now you can fine-tune images edited in combined mode and to add some specific keywords for each image (in this example, I added some black-and-white keywords).
 
-<img alt="Combined edit" src="{{site.url}}/images/howto/xpiks-qt-combined-edit-fine-tuning.jpg" class="small-12 large-8" />
+<img alt="Post editing" src="{{site.url}}/images/howto/xpiks-qt-combined-edit-fine-tuning.jpg" class="small-12 large-8" />
 
-Now this part is over. You can read about how to save metadata and upload artworks to microstock agencies in next post.
+Now this part is over. You can read about how to save metadata and upload artworks to microstock agencies in <a href="{{site.url}}/blog/2015/how-to-use-xpiks-part-2">next post</a>.

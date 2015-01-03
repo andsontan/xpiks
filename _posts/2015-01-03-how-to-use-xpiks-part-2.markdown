@@ -21,16 +21,24 @@ As you can recall from <a href="{{site.url}}/blog/2015/how-to-use-xpiks-part-1">
 
 So let's save them. In order to do that, just select images you want to save and press "Save" button. An export dialog will pop up. You have an option to save a backup for each artworks (keyword are being written to same file you've opened).
 
-<img alt="Main window" src="{{site.url}}/images/howto/xpiks-qt-saving-images.jpg" class="small-12 large-8" />
+<img alt="Saving images" src="{{site.url}}/images/howto/xpiks-qt-saving-images.jpg" class="small-12 large-8" />
 
 After export finished, press "Close" and proceed to upload. Select artworks you wish to upload and press "Upload" button.
 
-<img alt="Main window" src="{{site.url}}/images/howto/xpiks-qt-upload-started.jpg" class="small-12 large-8" />
+<img alt="Upload started" src="{{site.url}}/images/howto/xpiks-qt-upload-started.jpg" class="small-12 large-8" />
 
 Most microstocks allow FTP uploading of your works. To proceed with upload, add some hosts of agencies. Usually you can find FTP credentials in your stock's upload section. Just look for FTP host, username and password and enter them in appropriate fields in Xpiks hosts edit dialog. Please, note, that **Xpiks does not save passwords**, what means you'll have to enter all passwords each time you're uploading content. Title, host and username are automatically saved for you.
 
-<img alt="Main window" src="{{site.url}}/images/howto/xpiks-qt-upload-hosts.jpg" class="small-12 large-8" />
+<img alt="Adding upload hosts" src="{{site.url}}/images/howto/xpiks-qt-upload-hosts.jpg" class="small-12 large-8" />
 
-You can add as many hosts as you wish and before each upload you can select stocks where you wish to upload this time. When everything is ready, just press "Start upload" and wait until "Close" button becomes available again.
+You can add as many hosts as you wish and before each upload you can select stocks where you wish to upload this time. When everything is ready, just press "Start Upload" and wait until "Close" button becomes available again. When uploading, you have an option to upload EPS files along with JPG files (it's useful for illustrators, which have to keyword jpg's but upload both).
 
-<img alt="Main window" src="{{site.url}}/images/howto/xpiks-qt-uploading-items.jpg" class="small-12 large-8" />
+<img alt="Uploading items" src="{{site.url}}/images/howto/xpiks-qt-uploading-items.jpg" class="small-12 large-8" />
+
+After upload finished, you can go and check stocks. In this example I've uploaded photos to Shutterstock and Depositphotos. Depositphotos processed FTP items almost immediately while Shutterstock had some delay (30 minutes) so be patient. If any error happens, you'll be notified about this by color of progress bar.
+
+<img alt="Depositphotos" src="{{site.url}}/images/howto/depositphotos-success.jpg" class="small-12 large-8" />
+
+<img alt="Shuterstock" src="{{site.url}}/images/howto/shuttestock-success.jpg" class="small-12 large-8" />
+
+You can note, that no stock has selected categories. That's because all they use different categories and you still have to enter them manually.
