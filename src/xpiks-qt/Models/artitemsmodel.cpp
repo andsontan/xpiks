@@ -140,7 +140,8 @@ namespace Models {
         QList<QPair<int, int> > rangesToUpdate;
         Helpers::indicesToRanges(selectedIndices, rangesToUpdate);
         QVector<int> roles;
-        roles << ArtworkDescriptionRole << KeywordsRole << IsModifiedRole << ArtworkAuthorRole << ArtworkTitleRole;
+        roles << ArtworkDescriptionRole << KeywordsRole << IsModifiedRole <<
+                 ArtworkAuthorRole << ArtworkTitleRole << KeywordsCountRole;
         updateItemsAtIndices(rangesToUpdate, roles);
     }
 
