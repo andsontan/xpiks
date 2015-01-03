@@ -7,10 +7,10 @@ date: 2015-01-03T22:17:01+02:00
 This serie of posts will describe typical use case of Xpiks.
 
 You will learn how:
-- add images to flow
-- keyword images
-- save XMP/IPTC metadata
-- upload images to selected microstocks
+* add images to flow
+* keyword images
+* save XMP/IPTC metadata
+* upload images to selected microstocks
 
 In this post you will learn how to add images for keywording or upload.
 
