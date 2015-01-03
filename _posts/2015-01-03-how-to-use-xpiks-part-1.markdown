@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "How to use Xpiks. Part 1: adding and keywording"
+title: "How to use Xpiks. Part 1: adding and keywording artworks"
 date: 2015-01-03T22:17:01+02:00
 ---
 
@@ -8,10 +8,10 @@ This serie of posts will describe typical use case of Xpiks. Xpiks was created f
 
 You will learn how:
 
-- add images to flow
-- keyword images
+- add artworks to flow
+- keyword artworks
 - save XMP/IPTC metadata
-- upload images to selected microstocks
+- upload artworks to microstocks
 
 In this post you will learn how to add images for keywording or upload and to add keywords and other metadata to existing images.
 
@@ -41,10 +41,12 @@ Now you can open keywords suggestion service in Shutterstock, in Yuri Arcurs blo
 
 <img alt="Combined edit" src="{{site.url}}/images/howto/xpiks-qt-combinededit-finished.jpg" class="small-12 large-8" />
 
-Now you have choise to append written keywords to images you edit or to replace keywords with those you entered. Press appropriate button and you'll see keywords in main window.
+Now you have choise to append written keywords to images you edit or to replace keywords with those you entered. Press appropriate button and you'll see keywords in main window. When an item is modified in any way, you'll see yellow sign near it until you'll save it. Also, you can track modified artworks count in status bar in the bottom line of Xpiks.
 
 <img alt="Combined edit" src="{{site.url}}/images/howto/xpiks-qt-combinededit-applied.jpg" class="small-12 large-8" />
 
 Now you can fine-tune images edited in combined mode and to add some specific keywords for each image (in this example, I added some black-and-white keywords).
 
 <img alt="Combined edit" src="{{site.url}}/images/howto/xpiks-qt-combined-edit-fine-tuning.jpg" class="small-12 large-8" />
+
+Now this part is over. You can read about how to save metadata and upload artworks to microstock agencies in next post.
