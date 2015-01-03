@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "How to use Xpiks. Part 1"
+title: "How to use Xpiks. Part 1: adding and keywording"
 date: 2015-01-03T22:17:01+02:00
 ---
 
@@ -39,4 +39,12 @@ The following popup will appear:
 
 Now you can open keywords suggestion service in Shutterstock, in Yuri Arcurs blog or any other you prefer, get some keywords for your images and type them in appropriate fields.
 
-<img alt="Combined edit" src="{{site.url}}/images/howto/xpiks-qt-combinededit-finished.jpg" class="small-12 large-8 columns" />
+<img alt="Combined edit" src="{{site.url}}/images/howto/xpiks-qt-combinededit-finished.jpg" class="small-12 large-8" />
+
+Now you have choise to append written keywords to images you edit or to replace keywords with those you entered. Press appropriate button and you'll see keywords in main window.
+
+<img alt="Combined edit" src="{{site.url}}/images/howto/xpiks-qt-combinededit-applied.jpg" class="small-12 large-8" />
+
+Now you can fine-tune images edited in combined mode and to add some specific keywords for each image (in this example, I added some black-and-white keywords).
+
+<img alt="Combined edit" src="{{site.url}}/images/howto/xpiks-qt-combined-edit-fine-tuning.jpg" class="small-12 large-8" />
