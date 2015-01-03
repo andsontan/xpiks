@@ -37,8 +37,8 @@ You can add as many hosts as you wish and before each upload you can select stoc
 
 After upload finished, you can go and check stocks. In this example I've uploaded photos to Shutterstock and Depositphotos. Depositphotos processed FTP items almost immediately while Shutterstock had some delay (30 minutes) so be patient. If any error happens, you'll be notified about this by color of progress bar.
 
+You can note, that no stock has selected categories. That's because all they use different categories and you still have to enter them manually.
+
 <img alt="Depositphotos" src="{{site.url}}/images/howto/depositphotos-success.jpg" class="small-12 large-8" />
 
 <img alt="Shuterstock" src="{{site.url}}/images/howto/shutterstock-success.jpg" class="small-12 large-8" />
-
-You can note, that no stock has selected categories. That's because all they use different categories and you still have to enter them manually.
