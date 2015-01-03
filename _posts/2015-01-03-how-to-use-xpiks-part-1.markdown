@@ -17,11 +17,11 @@ In this post you will learn how to add images for keywording or upload and to ad
 
 First of all, open Xpiks. You'll see main window with no added images:
 
-<img alt="Main window" src="{{site.url}}/images/howto/xpiks-qt-justopened.jpg" class="row" />
+<img alt="Main window" src="{{site.url}}/images/howto/xpiks-qt-justopened.jpg" />
 
 Then you can add files via "Add files" or "Add directory" button. Both can add only JPG files. Let's add some files. When you select files or directories and open them an import dialog launches. It helps to import existing IPTC metadata into Xpiks.
 
-<img alt="Adding images" src="{{site.url}}/images/howto/xpiks-qt-startimport.jpg" class="row" />
+<img alt="Adding images" src="{{site.url}}/images/howto/xpiks-qt-startimport.jpg" />
 
 Press "Start import" to actually start importing metadata or just "Close" to skip this step.
 
@@ -29,4 +29,12 @@ In current version of Xpiks you won't be able to import metadata later. If impor
 
 Now you can proceed to editing metadata.
 
-<img alt="Import finished" src="{{site.url}}/images/howto/xpiks-qt-imported.jpg" class="row" />
+<img alt="Import finished" src="{{site.url}}/images/howto/xpiks-qt-imported.jpg" />
+
+<br />
+
+If you have images which would have many similar keywords, you can process them using combined edit. To do that, just select similar images and press "Edit" button in top right control box.
+
+The following popup will appear:
+
+<img alt="Combined edit" src="{{site.url}}/images/howto/xpiks-qt-combinededit.jpg" />
