@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "How to build xpiks for your platform"
+title: "How to use Xpiks. Part 1"
 date: 2015-01-03T22:17:01+02:00
 ---
 
