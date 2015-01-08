@@ -10,13 +10,21 @@ permalink: /downloads/
 <p>
 You can find package for OS X and zip archive for Windows below:
 </p>
+
+<div style="float: left; margin-right: 50px;">
+<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.0-beta.1/xpiks-qt-v1.0-beta.1.dmg">
 <div>
-<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.0-beta.1/xpiks-qt-v1.0-beta.1.dmg"><img src="{{site.url}}/images/os_x_installer.jpg" style="vertical-align: middle;width:70px;" /></a>
-<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.0-beta.1/xpiks-qt-v1.0-beta.1.dmg"><span style="vertical-align: middle;">Package for OS X</span></a>
+<img src="{{site.url}}/images/os_x_installer.jpg" style="vertical-align: middle;width:70px;" />
+<span style="vertical-align: middle;">Package for OS X</span>
+</div>
+</a>
 </div>
 <div>
-<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.0-beta.1/xpiks-qt-v1.0-beta.1.zip"><img src="{{site.url}}/images/windows_installer.jpg" style="vertical-align: middle;width:70px;" /></a>
-<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.0-beta.1/xpiks-qt-v1.0-beta.1.zip"><span style="vertical-align: middle;">Package for Windows</span></a>
+<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.0-beta.1/xpiks-qt-v1.0-beta.1.zip">
+<div><img src="{{site.url}}/images/windows_installer.jpg" style="vertical-align: middle;width:70px;" />
+<span style="vertical-align: middle;">Package for Windows</span>
+</div>
+</a>
 </div>
 <br />
 <p>
