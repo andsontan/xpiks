@@ -88,7 +88,7 @@ Item {
                     height: 24
 
                     StyledCheckbox {
-                        text: qsTr("Save original images")
+                        text: qsTr("Backup each image")
                         checked: iptcProvider.mustSaveOriginal
                         onCheckedChanged: iptcProvider.mustSaveOriginal = checked
                     }
