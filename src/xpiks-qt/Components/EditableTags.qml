@@ -58,7 +58,10 @@ Flickable {
     function raiseAddTag(text) {
         var sanitizedTagText = text.replace(/^\s+|\s+$|-$/g, '');
         if (getCharsCount(sanitizedTagText) > 2) {
-            tagAdded(sanitizedTagText);
+            // same regexp as in validator
+            if (sanitizedTagText.match(/^(?:[a-zA-Z]+(?:-| |$))+$/)) {
+                tagAdded(sanitizedTagText);
+            }
         }
     }
 
@@ -125,6 +128,7 @@ Flickable {
                 renderType: TextInput.NativeRendering
 
                 validator: RegExpValidator {
+                    // copy paste in keys.onpressed Paste
                     regExp: /^(?:[a-zA-Z]+(?:-| |$))+$/
                 }
 
