@@ -7,7 +7,7 @@
 #include <QDebug>
 #include <QTextStream>
 #include <QStandardPaths>
-#include "Helpers/constants.h"
+#include "../Helpers/constants.h"
 
 namespace Models {
     class LogsModel : public QObject {
