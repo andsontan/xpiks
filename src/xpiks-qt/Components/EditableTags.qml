@@ -31,7 +31,7 @@ Flickable {
     id: flowListView
     anchors.fill: parent
     anchors.rightMargin: 20
-    contentWidth: parent.width - 10
+    contentWidth: parent.width - 20
     contentHeight: flow.childrenRect.height + 10
     boundsBehavior: Flickable.StopAtBounds
 

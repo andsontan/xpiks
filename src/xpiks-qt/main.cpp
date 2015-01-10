@@ -41,7 +41,7 @@
 #include "Helpers/appsettings.h"
 #include "Helpers/constants.h"
 
-//#ifdef QT_NO_DEBUG
+#ifdef QT_NO_DEBUG
 
 void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg) {
     Q_UNUSED(context);
@@ -79,7 +79,7 @@ void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const Q
     }
 }
 
-//#endif
+#endif
 
 void initQSettings() {
     QCoreApplication::setOrganizationName(Constants::ORGANIZATION_NAME);
@@ -90,7 +90,7 @@ void initQSettings() {
 int main(int argc, char *argv[]) {    
     initQSettings();
 
-//#ifdef QT_NO_DEBUG
+#ifdef QT_NO_DEBUG
     QString logFileDir = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
     if (!logFileDir.isEmpty()) {
         QDir dir(logFileDir);
@@ -101,7 +101,9 @@ int main(int argc, char *argv[]) {
     }
 
     qInstallMessageHandler(myMessageHandler);
-//#endif
+    qDebug() << "Log started";
+#endif
+
 
     QApplication app(argc, argv);
 
