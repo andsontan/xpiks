@@ -48,7 +48,8 @@ HEADERS += \
     Models/artworksprocessor.h \
     Models/uploadinfo.h \
     Models/exportinfo.h \
-    Models/uploadinforepository.h
+    Models/uploadinforepository.h \
+    Models/logsmodel.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
@@ -65,4 +66,6 @@ DISTFILES += \
     Dialogs/ExportMetadata.qml \
     Dialogs/ImportMetadata.qml \
     Dialogs/SettingsWindow.qml \
-    Dialogs/UploadArtworks.qml
+    Dialogs/UploadArtworks.qml \
+    Dialogs/LogsDialog.qml \
+    StyledControls/StyledTextEdit.qml

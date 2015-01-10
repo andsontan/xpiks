@@ -719,6 +719,24 @@ ApplicationWindow {
             spacing: 5
 
             Item {
+                width: 20
+            }
+
+            StyledText {
+                text: "Show logs"
+                color: Colors.selectedMetadataColor
+
+                MouseArea {
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                        var component = Qt.createComponent("Dialogs/LogsDialog.qml");
+                        component.createObject(applicationWindow, {logText: logsModel.getAllLogsText()});
+                    }
+                }
+            }
+
+            Item {
                 Layout.fillWidth: true
             }
 

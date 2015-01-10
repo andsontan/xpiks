@@ -25,17 +25,61 @@
 #include <QQmlContext>
 #include <QtQml>
 #include <QFile>
+#include <QDir>
+#include <QDateTime>
 #include <QSettings>
 #include <QTextStream>
 #include <QTranslator>
+#include <QStandardPaths>
 #include "Helpers/globalimageprovider.h"
 #include "Models/uploadinforepository.h"
 #include "Helpers/clipboardhelper.h"
 #include "Models/artworkuploader.h"
 #include "Models/artitemsmodel.h"
 #include "Models/iptcprovider.h"
+#include "Models/logsmodel.h"
 #include "Helpers/appsettings.h"
 #include "Helpers/constants.h"
+
+//#ifdef QT_NO_DEBUG
+
+void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg) {
+    Q_UNUSED(context);
+
+    QString txt;
+    switch (type) {
+    case QtDebugMsg:
+        txt = QString("Debug: %1").arg(msg);
+        break;
+    case QtWarningMsg:
+        txt = QString("Warning: %1").arg(msg);
+        break;
+    case QtCriticalMsg:
+        txt = QString("Critical: %1").arg(msg);
+        break;
+    case QtFatalMsg:
+        txt = QString("Fatal: %1").arg(msg);
+        break;
+    }
+
+    QString appDataPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+    if (!appDataPath.isEmpty()) {
+        QDir logFileDir(appDataPath);
+        QString logFilePath = logFileDir.filePath(Constants::LOG_FILENAME);
+
+        QFile outFile(logFilePath);
+        if (outFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append)) {
+            QTextStream ts(&outFile);
+            ts << QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss.zzz") << " - " << txt << endl;
+        }
+    }
+
+    if (type == QtFatalMsg) {
+        abort();
+    }
+}
+
+//#endif
 
 void initQSettings() {
     QCoreApplication::setOrganizationName(Constants::ORGANIZATION_NAME);
@@ -43,8 +87,21 @@ void initQSettings() {
     QCoreApplication::setApplicationName(Constants::APPLICATION_NAME);
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {    
     initQSettings();
+
+//#ifdef QT_NO_DEBUG
+    QString logFileDir = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+    if (!logFileDir.isEmpty()) {
+        QDir dir(logFileDir);
+        if (!dir.exists()) {
+            bool created = QDir().mkpath(logFileDir);
+            Q_UNUSED(created);
+        }
+    }
+
+    qInstallMessageHandler(myMessageHandler);
+//#endif
 
     QApplication app(argc, argv);
 
@@ -63,6 +120,7 @@ int main(int argc, char *argv[]) {
     Models::IptcProvider iptcProvider;
     Models::ArtworkUploader artworkUploader;
     Models::UploadInfoRepository uploadInfoRepository;
+    Models::LogsModel logsModel;
     Helpers::AppSettings appSettings;
 
     // injecting dependencies
@@ -87,6 +145,7 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("iptcProvider", &iptcProvider);
     rootContext->setContextProperty("artworkUploader", &artworkUploader);
     rootContext->setContextProperty("uploadInfos", &uploadInfoRepository);
+    rootContext->setContextProperty("logsModel", &logsModel);
 
     engine.addImageProvider("global", globalProvider);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));

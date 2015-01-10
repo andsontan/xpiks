@@ -16,5 +16,7 @@
         <file>StyledControls/StyledScrollView.qml</file>
         <file>StyledControls/StyledText.qml</file>
         <file>StyledControls/StyledTextInput.qml</file>
+        <file>Dialogs/LogsDialog.qml</file>
+        <file>StyledControls/StyledTextEdit.qml</file>
     </qresource>
 </RCC>
