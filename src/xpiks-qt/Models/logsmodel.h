@@ -15,7 +15,7 @@ namespace Models {
     public:
         Q_INVOKABLE QString getAllLogsText() {
             QString result;
-#ifdef Q_NO_DEBUG
+#ifdef QT_NO_DEBUG
             QDir logFileDir(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));
             QString logFilePath = logFileDir.filePath(Constants::LOG_FILENAME);
             QFile f(logFilePath);
