@@ -54,7 +54,7 @@ namespace Models {
         QList<QPair<int, int> > ranges;
         ranges << qMakePair(0, m_ArtworkList.length() - 1);
         QVector<int> roles;
-        roles << ArtworkDescriptionRole << KeywordsRole << IsModifiedRole << ArtworkAuthorRole << ArtworkTitleRole;
+        roles << ArtworkDescriptionRole << KeywordsRole << IsModifiedRole << ArtworkAuthorRole << ArtworkTitleRole << KeywordsCountRole;
         updateItemsAtIndices(ranges, roles);
     }
 
