@@ -20,7 +20,7 @@ You can find lastest package for OS X and zip archive for Windows below:
 </a>
 </div>
 <div>
-<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.0-beta.2/xpiks-qt-v1.0-beta.2.zip">
+<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.0-beta.2/xpiks-qt-v1.0-beta.3.zip">
 <div><img src="{{site.url}}/images/windows_installer.jpg" style="vertical-align: middle;width:70px;" />
 <span style="vertical-align: middle;">Package for Windows</span>
 </div>
