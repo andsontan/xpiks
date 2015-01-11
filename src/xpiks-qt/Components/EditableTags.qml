@@ -45,6 +45,7 @@ Flickable {
 
     signal tagAdded(string text)
     signal removeLast()
+    signal focusLost()
 
     function activateEdit() {
         nextTagTextInput.forceActiveFocus()
@@ -139,6 +140,8 @@ Flickable {
                     if (getCharsCount(tagText) > 2) {
                         nextTagTextInput.text = '';
                     }
+
+                    focusLost()
                 }
 
                 Keys.onPressed: {

@@ -83,7 +83,6 @@ namespace Models {
             if (metadata->removeKeywordAt(keywordIndex)) {
                 QModelIndex index = this->index(metadataIndex);
                 emit dataChanged(index, index, QVector<int>() << KeywordsRole << IsModifiedRole << KeywordsCountRole);
-                metadata->saveBackup();
             }
         }
     }
@@ -96,7 +95,6 @@ namespace Models {
             if (metadata->removeLastKeyword()) {
                 QModelIndex index = this->index(metadataIndex);
                 emit dataChanged(index, index, QVector<int>() << KeywordsRole << IsModifiedRole << KeywordsCountRole);
-                metadata->saveBackup();
             }
         }
     }
@@ -108,8 +106,15 @@ namespace Models {
             if (metadata->appendKeyword(keyword)) {
                 QModelIndex index = this->index(metadataIndex);
                 emit dataChanged(index, index, QVector<int>() << KeywordsRole << IsModifiedRole << KeywordsCountRole);
-                metadata->saveBackup();
             }
+        }
+    }
+
+    void ArtItemsModel::backupItem(int metadataIndex)
+    {
+        if (metadataIndex >= 0 && metadataIndex < m_ArtworkList.length()) {
+            ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
+            metadata->saveBackup();
         }
     }
 

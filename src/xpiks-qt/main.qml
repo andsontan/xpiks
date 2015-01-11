@@ -579,6 +579,10 @@ ApplicationWindow {
                                                     artItemsModel.appendKeyword(rowWrapper.indexOfThisDelegate, keyword)
                                                 }
 
+                                                function saveKeywords() {
+                                                    artItemsModel.backupItem(rowWrapper.indexOfThisDelegate)
+                                                }
+
                                                 MouseArea {
                                                     anchors.fill: parent
                                                     propagateComposedEvents: true
@@ -649,6 +653,8 @@ ApplicationWindow {
                                                         onRemoveLast: {
                                                             keywordsWrapper.removeLastKeyword()
                                                         }
+
+                                                        onFocusLost: keywordsWrapper.saveKeywords()
                                                     }
                                                 }
                                             }

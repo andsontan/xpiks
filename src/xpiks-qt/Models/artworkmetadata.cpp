@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <QDebug>
 #include "artworkmetadata.h"
 #include "../Helpers/tempmetadatadb.h"
 
@@ -85,6 +86,7 @@ namespace Models {
 
     void ArtworkMetadata::saveBackup()
     {
+        qDebug() << "Backing up item... " << this->getFilepath();
         Helpers::TempMetadataDb(this).flush();
     }
 }
