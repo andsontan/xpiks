@@ -80,6 +80,11 @@ Item {
     FocusScope {
         anchors.fill: parent
 
+        MouseArea {
+            anchors.fill: parent
+            onWheel: wheel.accepted = true
+        }
+
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
@@ -128,12 +133,12 @@ Item {
                             StyledScrollView {
                                 anchors.fill: parent
                                 anchors.margins: { left: 5; top: 5; right: 5; bottom: 5 }
-                                focus: true
 
                                 ListView {
                                     id: uploadHostsListView
                                     model: uploadInfos
                                     boundsBehavior: Flickable.StopAtBounds
+                                    interactive: false
 
                                     spacing: 10
 

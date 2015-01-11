@@ -70,9 +70,13 @@ Item {
         }
     }
 
-
     FocusScope {
         anchors.fill: parent
+
+        MouseArea {
+            anchors.fill: parent
+            onWheel: wheel.accepted = true
+        }
 
         // This rectangle is the actual popup
         Rectangle {
