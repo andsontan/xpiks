@@ -138,7 +138,6 @@ Item {
                                     id: uploadHostsListView
                                     model: uploadInfos
                                     boundsBehavior: Flickable.StopAtBounds
-                                    interactive: false
 
                                     spacing: 10
 
