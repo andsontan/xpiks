@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Second beta version of Xpiks released!"
+title: "Beta version 0.2 of Xpiks released!"
 date: 2015-01-10T16:49:01+02:00
 ---
 
