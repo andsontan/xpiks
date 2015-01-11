@@ -61,6 +61,8 @@ namespace Helpers {
                     dict["title"],
                     dict["description"],
                     dict["keywords"]);
+
+            m_ArtworkMetadata->setModified();
         }
     }
 }

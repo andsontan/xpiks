@@ -206,12 +206,8 @@ Item {
                             }
                         }
 
-                        Rectangle {
+                        Item {
                             height: 1
-                            Layout.fillWidth: true
-                            border.color: Colors.defaultInputBackground
-                            opacity: 0.5
-                            border.width: 1
                         }
 
                         StyledButton {
