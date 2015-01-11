@@ -32,6 +32,7 @@ namespace Models {
         Q_PROPERTY(bool inProgress READ getInProgress WRITE setInProgress NOTIFY inProgressChanged)
         Q_PROPERTY(bool isError READ getIsError WRITE setIsError NOTIFY isErrorChanged)
         Q_PROPERTY(int percent READ getPercent NOTIFY percentChanged)
+        Q_PROPERTY(int itemsCount READ getItemsCount NOTIFY itemsCountChanged)
 
     public:
         ArtworksProcessor() :
@@ -53,6 +54,7 @@ namespace Models {
         void updateProgress() { emit percentChanged(); }
         bool getIsError() const { return m_IsError; }
         void setIsError(bool value) { m_IsError = value; emit isErrorChanged(); }
+        int getItemsCount() const { return m_ArtworkList.length(); }
 
     public:
         Q_INVOKABLE void resetModel();
@@ -63,6 +65,7 @@ namespace Models {
         void isErrorChanged();
         void percentChanged();
         void finishedProcessing();
+        void itemsCountChanged();
 
     public:
         void setArtworks(const QList<ArtworkMetadata*> &artworkList) { resetArtworks(); addArtworks(artworkList); }

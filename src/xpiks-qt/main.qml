@@ -521,6 +521,7 @@ ApplicationWindow {
 
                                                 StyledTextInput {
                                                     id: descriptionTextInput
+                                                    height: 30
                                                     anchors.left: parent.left
                                                     anchors.right: parent.right
                                                     anchors.leftMargin: 5
@@ -529,8 +530,6 @@ ApplicationWindow {
                                                     maximumLength: 250
                                                     text: description
                                                     color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.artworkActiveColor
-                                                    font.family: "Helvetica"
-                                                    font.pixelSize: 12
                                                     onTextChanged: model.editdescription = text
                                                     Keys.onTabPressed: {
                                                         flv.activateEdit()

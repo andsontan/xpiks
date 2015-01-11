@@ -71,8 +71,21 @@ Item {
                 anchors.fill: parent
                 anchors.margins: 20
 
-                StyledText {
-                    text: qsTr("Export metadata")
+                RowLayout {
+                    Layout.fillWidth: true
+
+                    StyledText {
+                        text: qsTr("Export metadata")
+                    }
+
+                    Item {
+                        Layout.fillWidth: true
+                    }
+
+                    StyledText {
+                        text: qsTr("%1 modified image(s) selected").arg(iptcProvider.itemsCount)
+                        color: Colors.defaultInputBackground
+                    }
                 }
 
                 SimpleProgressBar {
@@ -112,7 +125,11 @@ Item {
                             target: iptcProvider
                             onFinishedProcessing: {
                                 exportButton.text = qsTr("Start Export")
-                                artItemsModel.updateAllProperties()
+                                if (!iptcProvider.isError) {
+                                    artItemsModel.updateAllProperties()
+                                    artItemsModel.setSelectedItemsSaved()
+                                    closePopup()
+                                }
                             }
                         }
                     }
@@ -122,10 +139,6 @@ Item {
                         width: 100
                         enabled: !iptcProvider.inProgress
                         onClicked: {
-                            if (!iptcProvider.isError) {
-                                artItemsModel.setSelectedItemsSaved()
-                            }
-
                             closePopup()
                         }
                     }

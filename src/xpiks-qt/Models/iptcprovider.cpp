@@ -53,6 +53,7 @@ namespace Models {
 
     void IptcProvider::allFinished() {
         endProcessing();
+        qDebug() << "Metadata export finished (with Error = " << getIsError() << ")";
     }
 
     void IptcProvider::metadataImportedHandler(ArtworkMetadata *metadata)

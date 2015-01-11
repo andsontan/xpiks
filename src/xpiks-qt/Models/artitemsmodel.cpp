@@ -147,18 +147,19 @@ namespace Models {
 
     void ArtItemsModel::patchSelectedArtworks()
     {
-        QList<ArtworkMetadata*> selectedArtworks;
+        QList<ArtworkMetadata*> modifiedSelectedArtworks;
         int count = m_ArtworkList.length();
         for (int i = 0; i < count; ++i) {
             ArtworkMetadata *metadata = m_ArtworkList[i];
-            if (metadata->getIsSelected()) {
-                selectedArtworks.append(metadata);
+            if (metadata->getIsSelected() &&
+                    metadata->isModified()) {
+                modifiedSelectedArtworks.append(metadata);
             }
         }
 
         // TODO: assert iptc provider is not null
         // TODO: remove this two times copying
-        m_IptcProvider->setArtworks(selectedArtworks);
+        m_IptcProvider->setArtworks(modifiedSelectedArtworks);
     }
 
     void ArtItemsModel::uploadSelectedArtworks()
