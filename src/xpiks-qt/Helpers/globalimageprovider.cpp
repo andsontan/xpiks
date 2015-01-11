@@ -29,7 +29,7 @@ namespace Helpers
         QImage result;
 
         if (requestedSize.isValid()) {
-            result = image.scaled(requestedSize, Qt::KeepAspectRatio);
+            result = image.scaled(requestedSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
         }
         else {
             result = image;
@@ -45,7 +45,7 @@ namespace Helpers
         QPixmap result;
 
         if (requestedSize.isValid()) {
-            result = image.scaled(requestedSize, Qt::KeepAspectRatio);
+            result = image.scaled(requestedSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
         }
         else {
             result = image;
