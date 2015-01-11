@@ -76,8 +76,21 @@ Item {
                 anchors.fill: parent
                 anchors.margins: 20
 
-                StyledText {
-                    text: qsTr("Import existing metadata")
+                RowLayout {
+                    Layout.fillWidth: true
+
+                    StyledText {
+                        text: qsTr("Import existing metadata")
+                    }
+
+                    Item {
+                        Layout.fillWidth: true
+                    }
+
+                    StyledText {
+                        text: qsTr("from %1 image(s)").arg(iptcProvider.itemsCount)
+                        color: Colors.defaultInputBackground
+                    }
                 }
 
                 SimpleProgressBar {

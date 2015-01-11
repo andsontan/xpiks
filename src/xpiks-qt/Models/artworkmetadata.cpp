@@ -20,6 +20,7 @@
  */
 
 #include "artworkmetadata.h"
+#include "../Helpers/tempmetadatadb.h"
 
 namespace Models {
     void ArtworkMetadata::initialize(const QString &author, const QString &title,
@@ -80,5 +81,10 @@ namespace Models {
             m_KeywordsList.append(keyword);
             m_KeywordsSet.insert(keyword.trimmed().toLower());
         }
+    }
+
+    void ArtworkMetadata::saveBackup()
+    {
+        Helpers::TempMetadataDb(this).flush();
     }
 }

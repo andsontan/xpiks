@@ -187,6 +187,7 @@ namespace Models {
             metadata->setDescription(m_ArtworkDescription);
             metadata->setTitle(m_ArtworkTitle);
             metadata->setAuthor(m_ArtworkAuthor);
+            metadata->saveBackup();
         }
     }
 
@@ -198,6 +199,7 @@ namespace Models {
             metadata->setDescription(m_ArtworkDescription);
             metadata->setTitle(m_ArtworkTitle);
             metadata->setAuthor(m_ArtworkAuthor);
+            metadata->saveBackup();
         }
     }
 

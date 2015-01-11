@@ -76,7 +76,6 @@ namespace Models {
             }
         }
 
-        void resetModified() { m_IsModified = false; emit modifiedChanged(m_IsModified); }
         void setIsSelected(bool value) {
             if (m_IsSelected != value) {
                 m_IsSelected = value;
@@ -101,6 +100,7 @@ namespace Models {
     public:
         void addKeywords(const QString& rawKeywords);
         void unsetModified() { m_IsModified = false; }
+        void saveBackup();
 
     signals:
          void modifiedChanged(bool newValue);

@@ -14,7 +14,8 @@ SOURCES += main.cpp \
     Helpers/externaltoolsprovider.cpp \
     Models/artworkuploader.cpp \
     Models/artworksprocessor.cpp \
-    Models/uploadinforepository.cpp
+    Models/uploadinforepository.cpp \
+    Helpers/tempmetadatadb.cpp
 
 RESOURCES += qml.qrc
 
@@ -49,7 +50,8 @@ HEADERS += \
     Models/uploadinfo.h \
     Models/exportinfo.h \
     Models/uploadinforepository.h \
-    Models/logsmodel.h
+    Models/logsmodel.h \
+    Helpers/tempmetadatadb.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

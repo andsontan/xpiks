@@ -31,6 +31,7 @@
 #include "externaltoolsprovider.h"
 #include "../Models/artworkmetadata.h"
 #include "../Models/exportinfo.h"
+#include "tempmetadatadb.h"
 
 typedef QPair<Models::ArtworkMetadata*, Models::ExportInfo*> ExportPair;
 
@@ -91,7 +92,7 @@ ExportPair writeArtworkMetadata(ExportPair pair) {
     return qMakePair(resultMetadata, exportInfo);
 }
 
-void grabMetadata(const QStringList &items, Models::ArtworkMetadata *metadata);
+bool grabMetadata(const QStringList &items, Models::ArtworkMetadata *metadata);
 
 Models::ArtworkMetadata *readArtworkMetadata(Models::ArtworkMetadata *metadata) {
     const QString exiftoolPath = Helpers::ExternalToolsProvider::getExifToolPath();
@@ -109,12 +110,15 @@ Models::ArtworkMetadata *readArtworkMetadata(Models::ArtworkMetadata *metadata) 
     QByteArray stdoutByteArray = process.readAll();
     QString stdoutTextText(stdoutByteArray);
     QStringList items = stdoutTextText.split(QRegExp("[\r\n]"), QString::SkipEmptyParts);
-    grabMetadata(items, metadata);
+
+    if (!grabMetadata(items, metadata)) {
+        Helpers::TempMetadataDb(metadata).load();
+    }
 
     return metadata;
 }
 
-void grabMetadata(const QStringList &items, Models::ArtworkMetadata *metadata) {
+bool grabMetadata(const QStringList &items, Models::ArtworkMetadata *metadata) {
     bool authorSet = false, titleSet = false, descriptionSet = false, keywordsSet = false;
 
     QRegExp authorRegExp("^Artist\\s|^By-line\\s|^Creator\\s");
@@ -151,6 +155,9 @@ void grabMetadata(const QStringList &items, Models::ArtworkMetadata *metadata) {
     }
 
     metadata->initialize(author, title, description, keywords);
+
+    bool allEmpty = author.isEmpty() && title.isEmpty() && description.isEmpty() && keywords.isEmpty();
+    return !allEmpty;
 }
 
 #endif // EXIFTOOLWRAPPER
