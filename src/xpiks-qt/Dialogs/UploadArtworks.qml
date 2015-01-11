@@ -107,87 +107,113 @@ Item {
 
                     ColumnLayout {
                         Layout.minimumWidth: 250
-                        Layout.preferredWidth: 250
                         Layout.maximumWidth: 300
+                        spacing: 0
 
                         Rectangle {
-                            Layout.fillHeight: true
+                            height: 5
                             Layout.fillWidth: true
+                            color: Colors.defaultControlColor
+                        }
+
+                        Rectangle {
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
                             Layout.minimumWidth: 250
+                            Layout.preferredWidth: 250
                             Layout.maximumWidth: 300
 
                             color: Colors.defaultControlColor
 
-                            ListView {
-                                id: uploadHostsListView
-                                model: uploadInfos
-
-                                boundsBehavior: Flickable.StopAtBounds
+                            StyledScrollView {
                                 anchors.fill: parent
-                                anchors.margins: { left: 10; top: 5; right: 10 }
+                                anchors.margins: { left: 5; top: 5; right: 5; bottom: 5 }
+                                focus: true
 
-                                spacing: 10
+                                ListView {
+                                    id: uploadHostsListView
+                                    model: uploadInfos
+                                    boundsBehavior: Flickable.StopAtBounds
 
-                                delegate: Rectangle {
-                                    id: sourceWrapper
-                                    property variant myData: model
-                                    property int indexOfThisDelegate: index
-                                    color: ListView.isCurrentItem ? Colors.itemsSourceSelected : Colors.itemsSourceBackground
-                                    width: parent.width
-                                    height: 31
-                                    Layout.minimumWidth: 250
+                                    spacing: 10
 
-                                    MouseArea {
-                                        anchors.fill: parent
-                                        onClicked: {
-                                            uploadHostsListView.currentIndex = sourceWrapper.indexOfThisDelegate
-                                        }
-                                    }
+                                    delegate: Rectangle {
+                                        id: sourceWrapper
+                                        property variant myData: model
+                                        property int indexOfThisDelegate: index
+                                        color: ListView.isCurrentItem ? Colors.itemsSourceSelected : Colors.itemsSourceBackground
+                                        width: parent.width - 10
+                                        anchors.left: parent.left
+                                        anchors.leftMargin: 5
+                                        height: 31
+                                        Layout.minimumWidth: 250
 
-                                    RowLayout {
-                                        spacing: 10
-                                        anchors.fill: parent
-
-                                        Item {
-                                            width: 1
-                                        }
-
-                                        StyledCheckbox {
-                                            id: itemCheckedCheckbox
-                                            onClicked: editisselected = checked
-                                            Component.onCompleted: itemCheckedCheckbox.checked = isselected
-                                        }
-
-                                        StyledText {
-                                            id: infoTitle
-                                            Layout.fillWidth: true
-                                            anchors.verticalCenter: parent.verticalCenter
-                                            height: 31
-                                            color: Colors.itemsSourceForeground
-                                            text: title
-                                            elide: Text.ElideMiddle
-                                            font.bold: true
-                                        }
-
-                                        CloseIcon {
-                                            width: 14
-                                            height: 14
-                                            anchors.verticalCenterOffset: 1
-                                            isActive: false
-
-                                            onItemClicked: {
-                                                confirmRemoveItemDialog.itemIndex = sourceWrapper.indexOfThisDelegate
-                                                confirmRemoveItemDialog.open()
+                                        MouseArea {
+                                            anchors.fill: parent
+                                            onClicked: {
+                                                uploadHostsListView.currentIndex = sourceWrapper.indexOfThisDelegate
                                             }
                                         }
 
-                                        Item {
-                                            id: placeholder2
-                                            width: 1
+                                        RowLayout {
+                                            spacing: 10
+                                            anchors.fill: parent
+
+                                            Item {
+                                                width: 1
+                                            }
+
+                                            StyledCheckbox {
+                                                id: itemCheckedCheckbox
+                                                onClicked: editisselected = checked
+                                                Component.onCompleted: itemCheckedCheckbox.checked = isselected
+                                            }
+
+                                            StyledText {
+                                                id: infoTitle
+                                                Layout.fillWidth: true
+                                                anchors.verticalCenter: parent.verticalCenter
+                                                height: 31
+                                                color: Colors.itemsSourceForeground
+                                                text: title
+                                                elide: Text.ElideMiddle
+                                                font.bold: true
+                                            }
+
+                                            CloseIcon {
+                                                width: 14
+                                                height: 14
+                                                anchors.verticalCenterOffset: 1
+                                                isActive: false
+
+                                                onItemClicked: {
+                                                    confirmRemoveItemDialog.itemIndex = sourceWrapper.indexOfThisDelegate
+                                                    confirmRemoveItemDialog.open()
+                                                }
+                                            }
+
+                                            Item {
+                                                id: placeholder2
+                                                width: 1
+                                            }
                                         }
                                     }
                                 }
                             }
+                        }
+
+                        Rectangle {
+                            height: 1
+                            Layout.fillWidth: true
+                            border.color: Colors.defaultInputBackground
+                            opacity: 0.5
+                            border.width: 1
+                        }
+
+                        StyledButton {
+                            Layout.fillWidth: true
+                            onClicked: uploadInfos.addItem()
+                            text: qsTr("Add FTP host")
                         }
                     }
 
@@ -302,7 +328,7 @@ Item {
                                     anchors.fill: parent
                                     enabled: uploadInfos.infosCount > 0
                                     anchors.leftMargin: 5
-                                    echoMode: TextInput.Password
+                                    echoMode: showPasswordCheckBox.checked ? TextInput.Normal : TextInput.Password
                                     text: uploadHostsListView.currentItem.myData.password
                                     onTextChanged: uploadHostsListView.currentItem.myData.editpassword = text
                                     KeyNavigation.backtab: ftpUsername
@@ -313,13 +339,18 @@ Item {
                                 height: 5
                             }
 
-                            StyledButton {
-                                text: qsTr("Add FTP host")
-                                width: 90
-                                height: 24
-                                anchors.left: parent.left
-                                onClicked: uploadInfos.addItem()
+                            StyledCheckbox {
+                                enabled: uploadInfos.infosCount > 0
+                                id: showPasswordCheckBox
+                                text: qsTr("Show password")
                             }
+                        }
+
+                        Rectangle {
+                            anchors.fill: parent
+                            color: Colors.selectedArtworkColor
+                            opacity: 0.8
+                            visible: uploadInfos.infosCount == 0
                         }
                     }
                 }
