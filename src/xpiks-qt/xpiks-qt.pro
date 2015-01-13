@@ -15,7 +15,9 @@ SOURCES += main.cpp \
     Models/artworkuploader.cpp \
     Models/artworksprocessor.cpp \
     Models/uploadinforepository.cpp \
-    Helpers/tempmetadatadb.cpp
+    Helpers/tempmetadatadb.cpp \
+    Models/warningsinfo.cpp \
+    Models/warningsmanager.cpp
 
 RESOURCES += qml.qrc
 
@@ -51,7 +53,9 @@ HEADERS += \
     Models/exportinfo.h \
     Models/uploadinforepository.h \
     Models/logsmodel.h \
-    Helpers/tempmetadatadb.h
+    Helpers/tempmetadatadb.h \
+    Models/warningsinfo.h \
+    Models/warningsmanager.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
@@ -70,4 +74,5 @@ DISTFILES += \
     Dialogs/SettingsWindow.qml \
     Dialogs/UploadArtworks.qml \
     Dialogs/LogsDialog.qml \
-    StyledControls/StyledTextEdit.qml
+    StyledControls/StyledTextEdit.qml \
+    Dialogs/WarningsDialog.qml

@@ -18,5 +18,6 @@
         <file>StyledControls/StyledTextInput.qml</file>
         <file>Dialogs/LogsDialog.qml</file>
         <file>StyledControls/StyledTextEdit.qml</file>
+        <file>Dialogs/WarningsDialog.qml</file>
     </qresource>
 </RCC>

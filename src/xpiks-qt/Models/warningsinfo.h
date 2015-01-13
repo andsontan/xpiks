@@ -19,37 +19,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef GLOBALIMAGEPROVIDER_H
-#define GLOBALIMAGEPROVIDER_H
+#ifndef WARNINGSINFO_H
+#define WARNINGSINFO_H
 
-#include <QQuickImageProvider>
-#include <QHash>
+#include <QStringList>
+#include <QString>
 
-namespace Helpers
-{
-    class GlobalImageProvider : public QObject, public QQuickImageProvider
+namespace Models {
+    class WarningsInfo
     {
-        Q_OBJECT
     public:
-        GlobalImageProvider(ImageType type, Flags flags = 0) : QQuickImageProvider(type, flags) {}
-        ~GlobalImageProvider() {}
+        WarningsInfo(const QString &filePath) :
+            m_Filepath(filePath)
+        {}
 
-        QImage requestImage(const QString& id, QSize* size, const QSize& requestedSize);
-        QPixmap requestPixmap(const QString& id, QSize* size, const QSize& requestedSize);
+        ~WarningsInfo() {}
 
     public:
-        bool tryGetOriginalSize(const QString &filePath, QSize &size) const {
-            bool result = false;
-            if (m_OriginalSizes.contains(filePath)) {
-                size = m_OriginalSizes[filePath];
-                result = true;
-            }
+        void addWarning(const QString &warning) { m_WarningsList.append(warning); }
 
-            return result;
-        }
+    public:
+        const QString &getFilePath() const { return m_Filepath; }
+        const QStringList &getWarnings() const { return m_WarningsList; }
 
     private:
-        QHash<QString, QSize> m_OriginalSizes;
+        QStringList m_WarningsList;
+        QString m_Filepath;
     };
 }
-#endif // GLOBALIMAGEPROVIDER_H
+
+#endif // WARNINGSINFO_H

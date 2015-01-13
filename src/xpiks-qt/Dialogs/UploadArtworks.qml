@@ -33,6 +33,7 @@ Item {
     id: uploadArtworksComponent
     anchors.fill: parent
     property string uploadhostskey: appSettings.uploadHostsKey
+    property variant componentParent
 
     function closePopup() {
         uploadArtworksComponent.destroy()
@@ -88,7 +89,7 @@ Item {
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
-            width: 580
+            width: 600
             height: 360
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
@@ -406,6 +407,22 @@ Item {
 
                     Item {
                         Layout.fillWidth: true
+                    }
+
+                    StyledText {
+                        text: qsTr("%1 warning(s)").arg(warningsManager.warningsCount)
+                        color: warningsManager.warningsCount > 0 ? Colors.artworkModifiedColor : Colors.selectedMetadataColor
+
+                        MouseArea {
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: {
+                                if (warningsManager.warningsCount > 0) {
+                                    var component = Qt.createComponent("WarningsDialog.qml");
+                                    component.createObject(uploadArtworksComponent.componentParent);
+                                }
+                            }
+                        }
                     }
 
                     StyledButton {

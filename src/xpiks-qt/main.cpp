@@ -35,6 +35,7 @@
 #include "Models/uploadinforepository.h"
 #include "Helpers/clipboardhelper.h"
 #include "Models/artworkuploader.h"
+#include "Models/warningsmanager.h"
 #include "Models/artitemsmodel.h"
 #include "Models/iptcprovider.h"
 #include "Models/logsmodel.h"
@@ -123,6 +124,7 @@ int main(int argc, char *argv[]) {
     Models::ArtworkUploader artworkUploader;
     Models::UploadInfoRepository uploadInfoRepository;
     Models::LogsModel logsModel;
+    Models::WarningsManager warningsManager;
     Helpers::AppSettings appSettings;
 
     // injecting dependencies
@@ -131,6 +133,7 @@ int main(int argc, char *argv[]) {
     artItemsModel.setCombinedArtworksModel(&combinedArtworksModel);
     artItemsModel.setIptcProvider(&iptcProvider);
     artItemsModel.setArtworkUploader(&artworkUploader);
+    artItemsModel.setWarningsManager(&warningsManager);
 
     uploadInfoRepository.initFromString(appSettings.value(Constants::UPLOAD_HOSTS, "").toString());
 
@@ -138,6 +141,8 @@ int main(int argc, char *argv[]) {
 
     QQmlApplicationEngine engine;
     Helpers::GlobalImageProvider *globalProvider = new Helpers::GlobalImageProvider(QQmlImageProviderBase::Image);
+
+    warningsManager.setImageProvider(globalProvider);
 
     QQmlContext *rootContext = engine.rootContext();
     rootContext->setContextProperty("artItemsModel", &artItemsModel);
@@ -148,6 +153,7 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("artworkUploader", &artworkUploader);
     rootContext->setContextProperty("uploadInfos", &uploadInfoRepository);
     rootContext->setContextProperty("logsModel", &logsModel);
+    rootContext->setContextProperty("warningsManager", &warningsManager);
 
     engine.addImageProvider("global", globalProvider);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));

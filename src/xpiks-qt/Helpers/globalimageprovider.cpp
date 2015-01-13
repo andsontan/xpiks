@@ -35,6 +35,9 @@ namespace Helpers
             result = image;
         }
 
+        const QSize &originalSize = image.size();
+        m_OriginalSizes.insert(id, QSize(originalSize.width(), originalSize.height()));
+
         *size = result.size();
         return result;
     }

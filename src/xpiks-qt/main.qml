@@ -378,7 +378,7 @@ ApplicationWindow {
                                     if (artItemsModel.areSelectedArtworksSaved()) {
                                         artworkUploader.resetModel()
                                         artItemsModel.uploadSelectedArtworks()
-                                        Qt.createComponent("Dialogs/UploadArtworks.qml").createObject(applicationWindow, {})
+                                        Qt.createComponent("Dialogs/UploadArtworks.qml").createObject(applicationWindow, {componentParent: applicationWindow})
                                     } else {
                                         mustSaveWarning.open()
                                     }

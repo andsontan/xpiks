@@ -184,6 +184,7 @@ namespace Models {
         // TODO: assert uploader is not null
         // TODO: remove this two times copying
         m_ArtworkUploader->setArtworks(selectedArtworks);
+        m_WarningsManager->checkForWarnings(selectedArtworks);
     }
 
     bool ArtItemsModel::areSelectedArtworksSaved()

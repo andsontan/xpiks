@@ -31,6 +31,7 @@
 #include "artworkmetadata.h"
 #include "artworksrepository.h"
 #include "combinedartworksmodel.h"
+#include "warningsmanager.h"
 #include "artworkuploader.h"
 #include "iptcprovider.h"
 
@@ -75,6 +76,7 @@ namespace Models {
         void setCombinedArtworksModel(CombinedArtworksModel *combinedArtworksModel) { m_CombinedArtworks = combinedArtworksModel; }
         void setIptcProvider(IptcProvider *provider) { m_IptcProvider = provider; }
         void setArtworkUploader(ArtworkUploader *uploader) { m_ArtworkUploader = uploader; }
+        void setWarningsManager(WarningsManager *manager) { m_WarningsManager = manager; }
 
     public:
         Q_INVOKABLE void updateAllProperties();
@@ -137,6 +139,7 @@ namespace Models {
         ArtworksRepository *m_ArtworksRepository;
         IptcProvider *m_IptcProvider;
         ArtworkUploader *m_ArtworkUploader;
+        WarningsManager *m_WarningsManager;
         int m_SelectedArtworksCount;
     };
 }
