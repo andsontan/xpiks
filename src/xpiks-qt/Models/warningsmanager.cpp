@@ -60,8 +60,9 @@ namespace Models {
             size = reader.size();
         }
 
-        if (size.width() <= m_MinimalSize.width() ||
-                size.height() <= m_MinimalSize.height()) {
+        qlonglong currentProd = size.width() * size.height();
+        qlonglong minimalProd = m_MinimalSize.width() * m_MinimalSize.height();
+        if (currentProd < minimalProd) {
             QString warning = QString("Image size (%1 x %2) is less than minimum (%3 x %4)")
                     .arg(size.width())
                     .arg(size.height())
