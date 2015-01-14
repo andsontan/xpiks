@@ -27,6 +27,10 @@
 #include "artiteminfo.h"
 #include "../Helpers/indiceshelper.h"
 
+#ifdef Q_OS_OSX
+#include "../Helpers/osxnsurlhelper.h"
+#endif
+
 namespace Models {
 
     ArtItemsModel::~ArtItemsModel() {
@@ -116,6 +120,21 @@ namespace Models {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
             metadata->saveBackup();
         }
+    }
+
+    void ArtItemsModel::dropFiles(const QList<QUrl> &urls)
+    {
+#ifdef Q_OS_MAC
+        QList<QUrl> localUrls;
+        foreach (const QUrl &url, urls) {
+            QUrl localUrl = Helpers::fromNSUrl(url);
+            localUrls.append(localUrl);
+        }
+
+        addLocalArtworks(localUrls);
+#else
+        addLocalArtworks(urls);
+#endif
     }
 
     void ArtItemsModel::setSelectedItemsSaved()

@@ -1,6 +1,6 @@
 TEMPLATE = app
 
-QT += qml quick widgets concurrent
+QT += qml quick widgets concurrent macextras
 
 SOURCES += main.cpp \
     Models/artitemsmodel.cpp \
@@ -55,7 +55,8 @@ HEADERS += \
     Models/logsmodel.h \
     Helpers/tempmetadatadb.h \
     Models/warningsinfo.h \
-    Models/warningsmanager.h
+    Models/warningsmanager.h \
+    Helpers/osxnsurlhelper.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
@@ -76,3 +77,8 @@ DISTFILES += \
     Dialogs/LogsDialog.qml \
     StyledControls/StyledTextEdit.qml \
     Dialogs/WarningsDialog.qml
+
+OBJECTIVE_SOURCES += \
+    Helpers/osxnsurlhelper.mm
+
+LIBS += -framework Foundation

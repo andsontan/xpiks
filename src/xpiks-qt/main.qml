@@ -151,6 +151,16 @@ ApplicationWindow {
         color: Colors.defaultDarkColor
         anchors.fill: parent
 
+        DropArea {
+            anchors.fill: parent
+            onDropped: {
+                if (drop.hasUrls) {
+                    artItemsModel.dropFiles(drop.urls);
+                    Qt.createComponent("Dialogs/ImportMetadata.qml").createObject(applicationWindow, {})
+                }
+            }
+        }
+
         SplitView {
             id: mainGrid
             anchors.fill: parent
