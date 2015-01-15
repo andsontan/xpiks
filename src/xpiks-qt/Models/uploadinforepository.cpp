@@ -31,6 +31,18 @@ namespace Models {
         }
     }
 
+    QString UploadInfoRepository::getAgenciesWithMissingDetails()
+    {
+        QStringList items;
+        foreach (UploadInfo *info, m_UploadInfos) {
+            if (info->isSomethingMissing()) {
+                items.append(info->getTitle());
+            }
+        }
+
+        return items.join(',');
+    }
+
     int UploadInfoRepository::rowCount(const QModelIndex &parent) const
     {
         Q_UNUSED(parent);

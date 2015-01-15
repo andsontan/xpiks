@@ -92,6 +92,8 @@ namespace Models {
             return count;
         }
 
+        Q_INVOKABLE QString getAgenciesWithMissingDetails();
+
     public:
         const QList<UploadInfo*> &getUploadInfos() const { return m_UploadInfos; }
 

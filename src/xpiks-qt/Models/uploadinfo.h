@@ -49,6 +49,7 @@ namespace Models {
         const QString &getUsername() const { return m_Username; }
         const QString &getPassword() const { return m_Password; }
         bool getIsSelected() const { return m_IsSelected; }
+        bool isSomethingMissing() const { return m_Password.isEmpty() || m_Host.isEmpty() || m_Username.isEmpty(); }
 
     public:
         void setTitle(const QString &value) { m_Title = value; }

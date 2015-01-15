@@ -43,6 +43,14 @@ Item {
         appSettings.setValue(uploadhostskey, uploadInfos.getInfoString())
     }
 
+    function startUpload() {
+        progress.indeterminate = true
+        uploadButton.text = qsTr("Uploading...")
+        artworkUploader.resetModel()
+        artworkUploader.uploadArtworks()
+        saveSettings()
+    }
+
     PropertyAnimation { target: uploadArtworksComponent; property: "opacity";
         duration: 400; from: 0; to: 1;
         easing.type: Easing.InOutQuad ; running: true }
@@ -69,6 +77,17 @@ Item {
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
             uploadInfos.removeItem(itemIndex)
+        }
+    }
+
+    MessageDialog {
+        id: noPasswordDialog
+        property string agenciesList
+        title: "Warning"
+        text: qsTr("Some agencies (%1) miss FTP credentials. Start upload anyway?").arg(agenciesList)
+        standardButtons: StandardButton.Yes | StandardButton.No
+        onYes: {
+            startUpload()
         }
     }
 
@@ -403,6 +422,7 @@ Item {
                         text: qsTr("Include EPS (for illustrations)")
                         checked: artworkUploader.includeEPS
                         onCheckedChanged: artworkUploader.includeEPS = checked
+                        enabled: !artworkUploader.inProgress
                     }
 
                     Item {
@@ -434,11 +454,13 @@ Item {
                             if (uploadInfos.getSelectedInfosCount() === 0) {
                                 selectHostsMessageBox.open()
                             } else {
-                                progress.indeterminate = true
-                                text = qsTr("Uploading...")
-                                artworkUploader.resetModel()
-                                artworkUploader.uploadArtworks()
-                                saveSettings()
+                                var agencies = uploadInfos.getAgenciesWithMissingDetails();
+                                if (agencies.length !== 0) {
+                                    noPasswordDialog.agenciesList = agencies
+                                    noPasswordDialog.open()
+                                } else {
+                                    startUpload()
+                                }
                             }
                         }
 

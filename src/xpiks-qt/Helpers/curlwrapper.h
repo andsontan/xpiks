@@ -39,17 +39,18 @@ UploadPair uploadViaCurl(UploadPair pair) {
     Models::UploadInfo *uploadInfo = pair.second;
 
     const QString curlPath = Helpers::ExternalToolsProvider::getCurlPath();
+    // 10 minutes for each
+    int maxSeconds = 10*60*filesToUpload->length();
 
-    QString command = QString("%1 --retry 1 -T \"{%2}\" %3 --user %4:%5").
-            arg(curlPath, filesToUpload->join(','), uploadInfo->getHost(), uploadInfo->getUsername(), uploadInfo->getPassword());
+    QString command = QString("%1 --connect-timeout 10 --max-time %6 --retry 1 -T \"{%2}\" %3 --user %4:%5").
+            arg(curlPath, filesToUpload->join(','), uploadInfo->getHost(), uploadInfo->getUsername(), uploadInfo->getPassword(), QString::number(maxSeconds));
     qDebug() << command;
 
     Models::UploadInfo *resultInfo = NULL;
     QProcess process;
     process.start(command);
-    // wait each for 10 minutes
     // TODO: move to config
-    if (process.waitForFinished(300000 * filesToUpload->length()) &&
+    if (process.waitForFinished(maxSeconds * 1000) &&
             process.exitStatus() == QProcess::NormalExit &&
             process.exitCode() == 0) {
         resultInfo = uploadInfo;
