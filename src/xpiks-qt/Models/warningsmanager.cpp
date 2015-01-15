@@ -21,10 +21,13 @@
 
 #include "warningsmanager.h"
 #include <QImageReader>
+#include "../Helpers/appsettings.h"
 
 namespace Models {
     void WarningsManager::checkForWarnings(const QList<ArtworkMetadata *> &artworks)
     {
+        initConstraintsFromSettings();
+
         beginResetModel();
 
         qDeleteAll(m_WarningsList);
@@ -60,14 +63,11 @@ namespace Models {
             size = reader.size();
         }
 
-        qlonglong currentProd = size.width() * size.height();
-        qlonglong minimalProd = m_MinimalSize.width() * m_MinimalSize.height();
-        if (currentProd < minimalProd) {
-            QString warning = QString("Image size (%1 x %2) is less than minimum (%3 x %4)")
-                    .arg(size.width())
-                    .arg(size.height())
-                    .arg(m_MinimalSize.width())
-                    .arg(m_MinimalSize.height());
+        double currentProd = size.width() * size.height() / 1000000.0;
+        if (currentProd < m_MinimumMegapixels) {
+            QString warning = QString("Image size (%1 Megapixels) is less than minimum (%2 Megapixels)")
+                    .arg(currentProd, 2)
+                    .arg(m_MinimumMegapixels);
             wi->addWarning(warning);
         }
     }
@@ -101,6 +101,14 @@ namespace Models {
                     .arg(m_MaximumDescriptionLength);
             wi->addWarning(warning);
         }
+    }
+
+    void WarningsManager::initConstraintsFromSettings()
+    {
+        Helpers::AppSettings settings;
+        m_MaximumDescriptionLength = settings.value(Constants::MAX_DESCRIPTION_LENGTH, 200).toInt();
+        m_MinimumMegapixels = settings.value(Constants::MIN_MEGAPIXEL_COUNT, 4.0).toDouble();
+        m_MaximumKeywordsCount = settings.value(Constants::MAX_KEYWORD_COUNT, 50).toInt();
     }
 
     int WarningsManager::rowCount(const QModelIndex &parent) const

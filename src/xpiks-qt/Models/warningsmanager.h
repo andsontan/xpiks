@@ -36,9 +36,7 @@ namespace Models {
         WarningsManager(QObject *parent = 0) :
             QAbstractListModel(parent)
         {
-            m_MinimalSize.setHeight(2000);
-            m_MinimalSize.setWidth(2000);
-
+            m_MinimumMegapixels = 4.0;
             m_MaximumKeywordsCount = 200;
             m_MaximumKeywordsCount = 50;
         }
@@ -64,6 +62,7 @@ namespace Models {
         void checkDimensions(WarningsInfo *wi, ArtworkMetadata *am) const;
         void checkKeywordsCount(WarningsInfo *wi, ArtworkMetadata *am) const;
         void checkDescriptionLength(WarningsInfo *wi, ArtworkMetadata *am) const;
+        void initConstraintsFromSettings();
 
     public:
         int rowCount(const QModelIndex & parent = QModelIndex()) const;
@@ -75,7 +74,7 @@ namespace Models {
     private:
         QList<WarningsInfo*> m_WarningsList;
         Helpers::GlobalImageProvider *m_ImageProvider;
-        QSize m_MinimalSize;
+        double m_MinimumMegapixels;
         int m_MaximumKeywordsCount;
         int m_MaximumDescriptionLength;
     };

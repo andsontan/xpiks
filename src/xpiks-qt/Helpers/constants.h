@@ -26,6 +26,9 @@ namespace Constants {
     const char PATH_TO_EXIFTOOL[] = "PATH_TO_EXIF_TOOL";
     const char PATH_TO_CURL[] = "PATH_TO_CURL";
     const char UPLOAD_HOSTS[] = "UPLOAD_HOSTS";
+    const char MAX_KEYWORD_COUNT[] = "MAX_KEYWORD_COUNT";
+    const char MAX_DESCRIPTION_LENGTH[] = "MAX_DESCRIPTION_LENGTH";
+    const char MIN_MEGAPIXEL_COUNT[] = "MIN_MEGAPIXEL_COUNT";
     const char ORGANIZATION_NAME[] = "Xpiks";
     const char ORGANIZATION_DOMAIN[] = "ribtoks.github.io/xpiks";
     const char APPLICATION_NAME[] = "Xpiks";

@@ -48,6 +48,15 @@ namespace Helpers {
         Q_PROPERTY(QString uploadHostsKey READ getUploadHostsKey)
         QString getUploadHostsKey() const { return Constants::UPLOAD_HOSTS; }
 
+        Q_PROPERTY(QString minMegapixelCount READ getMinMegapixelCount)
+        QString getMinMegapixelCount() const { return Constants::MIN_MEGAPIXEL_COUNT; }
+
+        Q_PROPERTY(QString maxDescriptionLength READ getMaxDescriptionLength)
+        QString getMaxDescriptionLength() const { return Constants::MAX_DESCRIPTION_LENGTH; }
+
+        Q_PROPERTY(QString maxKeywordsCount READ getMaxKeywordsCount)
+        QString getMaxKeywordsCount() const { return Constants::MAX_KEYWORD_COUNT; }
+
         Q_INVOKABLE inline void setValue(const QString &key, const QVariant &value) {
             QSettings::setValue(key, value);
         }
