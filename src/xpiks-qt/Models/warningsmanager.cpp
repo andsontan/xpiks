@@ -21,37 +21,56 @@
 
 #include "warningsmanager.h"
 #include <QImageReader>
+#include <QDebug>
 #include "../Helpers/appsettings.h"
 
 namespace Models {
+    int WarningsManager::getWarningsCount()
+    {
+        int count = 0;
+
+        foreach(WarningsInfo *info, m_WarningsList) {
+            if (info->hasWarnings()) count++;
+        }
+
+        return count;
+    }
+
     void WarningsManager::checkForWarnings(const QList<ArtworkMetadata *> &artworks)
+    {
+        beginResetModel();
+        {
+            qDeleteAll(m_WarningsList);
+            m_WarningsList.clear();
+
+            foreach (ArtworkMetadata *metadata, artworks) {
+                m_WarningsList.append(new WarningsInfo(metadata));
+            }
+
+            recheckItems();
+        }
+        endResetModel();
+    }
+
+    void WarningsManager::recheckItems()
     {
         initConstraintsFromSettings();
 
-        beginResetModel();
-
-        qDeleteAll(m_WarningsList);
-        m_WarningsList.clear();
-
-        foreach (ArtworkMetadata *metadata, artworks) {
-            checkItem(metadata);
+        foreach(WarningsInfo *info, m_WarningsList) {
+            info->clearWarnings();
+            checkItem(info);
         }
-
-        endResetModel();
 
         emit warningsCountChanged();
     }
 
-    void WarningsManager::checkItem(ArtworkMetadata *metadata)
+    void WarningsManager::checkItem(WarningsInfo *wi)
     {
-        const QString &filePath = metadata->getFilepath();
-        WarningsInfo *wi = new WarningsInfo(filePath);
+        ArtworkMetadata *metadata = wi->getArtworkMetadata();
 
         checkDimensions(wi, metadata);
         checkKeywordsCount(wi, metadata);
         checkDescriptionLength(wi, metadata);
-
-        m_WarningsList.append(wi);
     }
 
     void WarningsManager::checkDimensions(WarningsInfo *wi, ArtworkMetadata *am) const

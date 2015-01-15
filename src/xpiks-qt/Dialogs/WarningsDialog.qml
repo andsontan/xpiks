@@ -67,7 +67,7 @@ Item {
         Rectangle {
             id: dialogWindow
             width: 700
-            height: 600
+            height: 580
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
 

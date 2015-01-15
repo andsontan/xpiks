@@ -98,6 +98,7 @@ namespace Models {
         Q_INVOKABLE bool areSelectedArtworksSaved();
         Q_INVOKABLE bool allArtworksSelected() const { return m_SelectedArtworksCount == m_ArtworkList.length(); }
         Q_INVOKABLE void selectDirectory(int directoryIndex);
+        Q_INVOKABLE void checkForWarnings();
 
     public:
         int rowCount(const QModelIndex & parent = QModelIndex()) const;
@@ -115,6 +116,7 @@ namespace Models {
         void addDirectory(const QString &directory);
         void addFiles(const QStringList &filepath);
         void setAllItemsSelected(bool selected);
+        void getSelectedArtworks(QList<ArtworkMetadata *> &selectedArtworks) const;
 
     private:
         void doCombineSelectedImages(CombinedArtworksModel *combinedModel) const;

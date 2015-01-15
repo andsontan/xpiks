@@ -192,13 +192,7 @@ namespace Models {
     void ArtItemsModel::uploadSelectedArtworks()
     {
         QList<ArtworkMetadata*> selectedArtworks;
-        int count = m_ArtworkList.length();
-        for (int i = 0; i < count; ++i) {
-            ArtworkMetadata *metadata = m_ArtworkList[i];
-            if (metadata->getIsSelected()) {
-                selectedArtworks.append(metadata);
-            }
-        }
+        getSelectedArtworks(selectedArtworks);
 
         // TODO: assert uploader is not null
         // TODO: remove this two times copying
@@ -240,6 +234,20 @@ namespace Models {
         QList<QPair<int, int> > rangesToUpdate;
         Helpers::indicesToRanges(directoryItems, rangesToUpdate);
         updateItemsAtIndices(rangesToUpdate, QVector<int>() << IsSelectedRole);
+    }
+
+    void ArtItemsModel::checkForWarnings()
+    {
+        if (this->getSelectedArtworksCount() == 0) {
+            m_WarningsManager->checkForWarnings(m_ArtworkList);
+            qDebug() << "Checking all items for upload warnings...";
+        } else {
+            QList<ArtworkMetadata*> selectedArtworks;
+            getSelectedArtworks(selectedArtworks);
+            qDebug() << "Selected items: " << selectedArtworks.length();
+            m_WarningsManager->checkForWarnings(selectedArtworks);
+            qDebug() << "Checking selected items for upload warnings...";
+        }
     }
 
     int ArtItemsModel::rowCount(const QModelIndex &parent) const {
@@ -413,6 +421,15 @@ namespace Models {
             QModelIndex startIndex = index(0);
             QModelIndex endIndex = index(length - 1);
             emit dataChanged(startIndex, endIndex, QVector<int>() << IsSelectedRole);
+        }
+    }
+
+    void ArtItemsModel::getSelectedArtworks(QList<ArtworkMetadata *> &selectedArtworks) const
+    {
+        foreach (ArtworkMetadata *metadata, m_ArtworkList) {
+            if (metadata->getIsSelected()) {
+                selectedArtworks.append(metadata);
+            }
         }
     }
 

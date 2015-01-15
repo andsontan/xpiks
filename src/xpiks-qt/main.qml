@@ -738,7 +738,7 @@ ApplicationWindow {
             }
 
             StyledText {
-                text: "Show logs"
+                text: qsTr("Show logs")
                 color: Colors.selectedMetadataColor
 
                 MouseArea {
@@ -751,12 +751,33 @@ ApplicationWindow {
                 }
             }
 
+            StyledText {
+                text: "|"
+                color: Colors.selectedMetadataColor
+                verticalAlignment: Text.AlignVCenter
+            }
+
+            StyledText {
+                text: qsTr("Check warnings")
+                color: warningsManager.warningsCount > 0 ? Colors.artworkModifiedColor : Colors.selectedMetadataColor
+
+                MouseArea {
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                        artItemsModel.checkForWarnings()
+                        var component = Qt.createComponent("Dialogs/WarningsDialog.qml");
+                        component.createObject(applicationWindow);
+                    }
+                }
+            }
+
             Item {
                 Layout.fillWidth: true
             }
 
             StyledText {
-                text: qsTr("(%1) item(s) selected").arg(artItemsModel.selectedArtworksCount)
+                text: artItemsModel.selectedArtworksCount > 0 ? qsTr("%1 selected item(s)").arg(artItemsModel.selectedArtworksCount) : qsTr("No selected items")
                 color: Colors.selectedMetadataColor
                 verticalAlignment: Text.AlignVCenter
             }
@@ -768,7 +789,7 @@ ApplicationWindow {
             }
 
             StyledText {
-                text: qsTr("(%1) item(s) modified").arg(artItemsModel.modifiedArtworksCount)
+                text: artItemsModel.modifiedArtworksCount > 0 ? qsTr("%1 modified item(s)").arg(artItemsModel.modifiedArtworksCount) : qsTr("No modified items")
                 verticalAlignment: Text.AlignVCenter
                 color: artItemsModel.modifiedArtworksCount > 0 ? Colors.artworkModifiedColor : Colors.selectedMetadataColor
             }

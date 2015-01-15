@@ -75,7 +75,8 @@ DISTFILES += \
     Dialogs/UploadArtworks.qml \
     Dialogs/LogsDialog.qml \
     StyledControls/StyledTextEdit.qml \
-    Dialogs/WarningsDialog.qml
+    Dialogs/WarningsDialog.qml \
+    xpiks-qt.ico
 
 macx {
 OBJECTIVE_SOURCES += \

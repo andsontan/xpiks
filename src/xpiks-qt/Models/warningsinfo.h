@@ -24,27 +24,31 @@
 
 #include <QStringList>
 #include <QString>
+#include "artworkmetadata.h"
 
 namespace Models {
     class WarningsInfo
     {
     public:
-        WarningsInfo(const QString &filePath) :
-            m_Filepath(filePath)
+        WarningsInfo(ArtworkMetadata *metadata) :
+            m_ArtworkMetadata(metadata)
         {}
 
         ~WarningsInfo() {}
 
     public:
         void addWarning(const QString &warning) { m_WarningsList.append(warning); }
+        ArtworkMetadata *getArtworkMetadata() const { return m_ArtworkMetadata; }
+        void clearWarnings() { m_WarningsList.clear(); }
+        bool hasWarnings() const { return m_WarningsList.length() > 0; }
 
     public:
-        const QString &getFilePath() const { return m_Filepath; }
+        const QString &getFilePath() const { return m_ArtworkMetadata->getFilepath(); }
         const QStringList &getWarnings() const { return m_WarningsList; }
 
     private:
         QStringList m_WarningsList;
-        QString m_Filepath;
+        ArtworkMetadata *m_ArtworkMetadata;
     };
 }
 

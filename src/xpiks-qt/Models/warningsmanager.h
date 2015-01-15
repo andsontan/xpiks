@@ -35,11 +35,7 @@ namespace Models {
     public:
         WarningsManager(QObject *parent = 0) :
             QAbstractListModel(parent)
-        {
-            m_MinimumMegapixels = 4.0;
-            m_MaximumKeywordsCount = 200;
-            m_MaximumKeywordsCount = 50;
-        }
+        { }
 
         ~WarningsManager() {}
 
@@ -53,12 +49,13 @@ namespace Models {
         void warningsCountChanged();
 
     public:
-        int getWarningsCount() const { return m_WarningsList.length(); }
+        int getWarningsCount();
         void checkForWarnings(const QList<ArtworkMetadata*> &artworks);
+        void recheckItems();
         void setImageProvider(Helpers::GlobalImageProvider *imageProvider) { m_ImageProvider = imageProvider; }
 
     private:
-        void checkItem(ArtworkMetadata *metadata);
+        void checkItem(WarningsInfo *metadata);
         void checkDimensions(WarningsInfo *wi, ArtworkMetadata *am) const;
         void checkKeywordsCount(WarningsInfo *wi, ArtworkMetadata *am) const;
         void checkDescriptionLength(WarningsInfo *wi, ArtworkMetadata *am) const;
