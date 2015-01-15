@@ -5,3 +5,10 @@ date: 2014-12-28T09:54:01+02:00
 ---
 
 I'm proud to announce first release of Cross-platform image keywording software v1.0-beta1! Development took 1.5 month and now you have nice gui wrapper over exiftool and curl. Enjoy!
+
+Main features:
+- ability to keyword your images as well as setting additional XMP/IPTC metadata (title, description, author)
+- work with separate images as well as directories
+- reading/writing of metadata with ExifTool
+- uploading selected images to list of FTP hosts (created by user) (upload uses Curl inside)
+- ability to upload vector eps files with images with same name (useful for illustrators)
