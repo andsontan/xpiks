@@ -8,7 +8,7 @@ permalink: /downloads/
 <section class="small-12 large-8 columns page-content">
 
 <p>
-You can find lastest package for OS X and zip archive for Windows below:
+You can find lastest package for OS X 10.10 and zip archive for Windows 8 x64 below:
 </p>
 
 <div style="float: left; margin-right: 50px;">
