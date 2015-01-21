@@ -156,8 +156,8 @@ bool grabMetadata(const QStringList &items, Models::ArtworkMetadata *metadata) {
 
     metadata->initialize(author, title, description, keywords);
 
-    bool allEmpty = author.isEmpty() && title.isEmpty() && description.isEmpty() && keywords.isEmpty();
-    return !allEmpty;
+    bool anyEmpty = author.isEmpty() || title.isEmpty() || description.isEmpty() || keywords.isEmpty();
+    return !anyEmpty;
 }
 
 #endif // EXIFTOOLWRAPPER

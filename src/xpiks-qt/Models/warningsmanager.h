@@ -56,9 +56,9 @@ namespace Models {
 
     private:
         void checkItem(WarningsInfo *metadata);
-        void checkDimensions(WarningsInfo *wi, ArtworkMetadata *am) const;
-        void checkKeywordsCount(WarningsInfo *wi, ArtworkMetadata *am) const;
-        void checkDescriptionLength(WarningsInfo *wi, ArtworkMetadata *am) const;
+        bool checkDimensions(WarningsInfo *wi, ArtworkMetadata *am) const;
+        bool checkKeywordsCount(WarningsInfo *wi, ArtworkMetadata *am) const;
+        bool checkDescriptionLength(WarningsInfo *wi, ArtworkMetadata *am) const;
         void initConstraintsFromSettings();
 
     public:
@@ -70,6 +70,7 @@ namespace Models {
 
     private:
         QList<WarningsInfo*> m_WarningsList;
+        QList<WarningsInfo*> m_WarningsBufferList;
         Helpers::GlobalImageProvider *m_ImageProvider;
         double m_MinimumMegapixels;
         int m_MaximumKeywordsCount;

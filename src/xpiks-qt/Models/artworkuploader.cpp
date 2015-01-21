@@ -100,7 +100,9 @@ namespace Models {
 
             if (m_IncludeEPS) {
                 QString epsFilepath = filepath.replace(QRegExp("(.*)[.]jpg", Qt::CaseInsensitive), "\\1.eps");
-                filesList->append(epsFilepath);
+                if (QFileInfo(epsFilepath).exists()) {
+                    filesList->append(epsFilepath);
+                }
             }
         }
 

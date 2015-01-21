@@ -715,6 +715,14 @@ ApplicationWindow {
                                     }
                                 }
                             }
+
+                            Connections {
+                                target: artItemsModel
+                                onArtworksChanged: {
+                                    console.log("Force layout for artworks list view")
+                                    imagesListView.forceLayout()
+                                }
+                            }
                         }
                     }
                 }

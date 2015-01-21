@@ -39,7 +39,7 @@ namespace Models {
 
     public:
         void initialize(const QString &author, const QString &title,
-                        const QString &description, const QString &rawKeywords);
+                        const QString &description, const QString &rawKeywords, bool overwrite = true);
 
     public:
         const QString &getAuthor() const { return m_ArtworkAuthor; }

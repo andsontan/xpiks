@@ -125,6 +125,7 @@ namespace Models {
     signals:
         void modifiedArtworksCountChanged();
         void selectedArtworksCountChanged();
+        void artworksChanged();
 
     protected:
         QHash<int, QByteArray> roleNames() const;

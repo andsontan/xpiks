@@ -151,6 +151,7 @@ namespace Models {
         updateItemsAtIndices(rangesToUpdate, QVector<int>() << IsModifiedRole);
 
         updateModifiedCount();
+        emit artworksChanged();
     }
 
     void ArtItemsModel::removeSelectedArtworks()
@@ -170,6 +171,8 @@ namespace Models {
         roles << ArtworkDescriptionRole << KeywordsRole << IsModifiedRole <<
                  ArtworkAuthorRole << ArtworkTitleRole << KeywordsCountRole;
         updateItemsAtIndices(rangesToUpdate, roles);
+
+        emit artworksChanged();
     }
 
     void ArtItemsModel::patchSelectedArtworks()

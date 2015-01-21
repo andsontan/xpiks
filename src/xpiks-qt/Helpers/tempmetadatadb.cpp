@@ -60,7 +60,8 @@ namespace Helpers {
                     dict["author"],
                     dict["title"],
                     dict["description"],
-                    dict["keywords"]);
+                    dict["keywords"],
+                    false);
 
             m_ArtworkMetadata->setModified();
         }

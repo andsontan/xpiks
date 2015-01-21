@@ -25,12 +25,23 @@
 
 namespace Models {
     void ArtworkMetadata::initialize(const QString &author, const QString &title,
-                                     const QString &description, const QString &rawKeywords)
+                                     const QString &description, const QString &rawKeywords, bool overwrite)
     {
-        m_ArtworkAuthor = author;
-        m_ArtworkTitle = title;
-        m_ArtworkDescription = description;
-        addKeywords(rawKeywords);
+        if (overwrite || m_ArtworkAuthor.trimmed().isEmpty()) {
+            m_ArtworkAuthor = author;
+        }
+
+        if (overwrite || m_ArtworkTitle.trimmed().isEmpty()) {
+            m_ArtworkTitle = title;
+        }
+
+        if (overwrite || m_ArtworkDescription.trimmed().isEmpty()) {
+            m_ArtworkDescription = description;
+        }
+
+        if (overwrite || m_KeywordsList.length() == 0) {
+            addKeywords(rawKeywords);
+        }
     }
 
     bool ArtworkMetadata::removeKeywordAt(int index)

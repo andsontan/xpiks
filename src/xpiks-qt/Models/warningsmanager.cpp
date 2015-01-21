@@ -29,7 +29,7 @@ namespace Models {
     {
         int count = 0;
 
-        foreach(WarningsInfo *info, m_WarningsList) {
+        foreach(WarningsInfo *info, m_WarningsBufferList) {
             if (info->hasWarnings()) count++;
         }
 
@@ -40,11 +40,11 @@ namespace Models {
     {
         beginResetModel();
         {
-            qDeleteAll(m_WarningsList);
-            m_WarningsList.clear();
+            qDeleteAll(m_WarningsBufferList);
+            m_WarningsBufferList.clear();
 
             foreach (ArtworkMetadata *metadata, artworks) {
-                m_WarningsList.append(new WarningsInfo(metadata));
+                m_WarningsBufferList.append(new WarningsInfo(metadata));
             }
 
             recheckItems();
@@ -56,7 +56,9 @@ namespace Models {
     {
         initConstraintsFromSettings();
 
-        foreach(WarningsInfo *info, m_WarningsList) {
+        m_WarningsList.clear();
+
+        foreach(WarningsInfo *info, m_WarningsBufferList) {
             info->clearWarnings();
             checkItem(info);
         }
@@ -68,13 +70,21 @@ namespace Models {
     {
         ArtworkMetadata *metadata = wi->getArtworkMetadata();
 
-        checkDimensions(wi, metadata);
-        checkKeywordsCount(wi, metadata);
-        checkDescriptionLength(wi, metadata);
+        bool hasWarnings = false;
+
+        hasWarnings = checkDimensions(wi, metadata) || hasWarnings;
+        hasWarnings = checkKeywordsCount(wi, metadata) || hasWarnings;
+        hasWarnings = checkDescriptionLength(wi, metadata) || hasWarnings;
+
+        if (hasWarnings) {
+            m_WarningsList.append(wi);
+        }
     }
 
-    void WarningsManager::checkDimensions(WarningsInfo *wi, ArtworkMetadata *am) const
+    bool WarningsManager::checkDimensions(WarningsInfo *wi, ArtworkMetadata *am) const
     {
+        bool hasWarnings = false;
+
         const QString &filePath = am->getFilepath();
         QSize size;
         if (!m_ImageProvider->tryGetOriginalSize(filePath, size)) {
@@ -88,15 +98,20 @@ namespace Models {
                     .arg(currentProd, 2)
                     .arg(m_MinimumMegapixels);
             wi->addWarning(warning);
+            hasWarnings = true;
         }
+
+        return hasWarnings;
     }
 
-    void WarningsManager::checkKeywordsCount(WarningsInfo *wi, ArtworkMetadata *am) const
+    bool WarningsManager::checkKeywordsCount(WarningsInfo *wi, ArtworkMetadata *am) const
     {
+        bool hasWarnings = false;
         int keywordsCount = am->getKeywordsCount();
 
         if (keywordsCount == 0) {
             wi->addWarning("Image has no keywords");
+            hasWarnings = true;
         }
 
         if (keywordsCount > m_MaximumKeywordsCount) {
@@ -104,14 +119,20 @@ namespace Models {
                     .arg(keywordsCount)
                     .arg(m_MaximumKeywordsCount);
             wi->addWarning(warning);
+            hasWarnings = true;
         }
+
+        return hasWarnings;
     }
 
-    void WarningsManager::checkDescriptionLength(WarningsInfo *wi, ArtworkMetadata *am) const
+    bool WarningsManager::checkDescriptionLength(WarningsInfo *wi, ArtworkMetadata *am) const
     {
+        bool hasWarnings = false;
+
         int descriptionLength = am->getDescription().length();
         if (descriptionLength == 0) {
             wi->addWarning("Description is empty");
+            hasWarnings = true;
         }
 
         if (descriptionLength > m_MaximumDescriptionLength) {
@@ -119,7 +140,10 @@ namespace Models {
                     .arg(descriptionLength)
                     .arg(m_MaximumDescriptionLength);
             wi->addWarning(warning);
+            hasWarnings = true;
         }
+
+        return hasWarnings;
     }
 
     void WarningsManager::initConstraintsFromSettings()
