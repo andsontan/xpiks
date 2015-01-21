@@ -121,6 +121,7 @@ Models::ArtworkMetadata *readArtworkMetadata(Models::ArtworkMetadata *metadata) 
 bool grabMetadata(const QStringList &items, Models::ArtworkMetadata *metadata) {
     bool authorSet = false, titleSet = false, descriptionSet = false, keywordsSet = false;
 
+    // TODO: move initializations somewhere upper
     QRegExp authorRegExp("^Artist\\s|^By-line\\s|^Creator\\s");
     QRegExp titleRegExp("^ObjectName\\s|^Title\\s");
     QRegExp descriptionRegExp("^ImageDescription\\s|^Caption-Abstract\\s|^Description\\s");
@@ -156,7 +157,7 @@ bool grabMetadata(const QStringList &items, Models::ArtworkMetadata *metadata) {
 
     metadata->initialize(author, title, description, keywords);
 
-    bool anyEmpty = author.isEmpty() || title.isEmpty() || description.isEmpty() || keywords.isEmpty();
+    bool anyEmpty = description.isEmpty() || keywords.isEmpty();
     return !anyEmpty;
 }
 
