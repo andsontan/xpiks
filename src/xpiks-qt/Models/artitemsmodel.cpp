@@ -21,6 +21,7 @@
 
 #include <QStringList>
 #include <QDirIterator>
+#include <QImageReader>
 #include <QDebug>
 #include <QList>
 #include "artitemsmodel.h"
@@ -122,7 +123,7 @@ namespace Models {
         }
     }
 
-    void ArtItemsModel::dropFiles(const QList<QUrl> &urls)
+    int ArtItemsModel::dropFiles(const QList<QUrl> &urls)
     {
 #ifdef Q_OS_MAC
         QList<QUrl> localUrls;
@@ -131,9 +132,11 @@ namespace Models {
             localUrls.append(localUrl);
         }
 
-        addLocalArtworks(localUrls);
+        int count = addLocalArtworks(localUrls);
+        return count;
 #else
-        addLocalArtworks(urls);
+        int count = addLocalArtworks(urls);
+        return count;
 #endif
     }
 
@@ -330,7 +333,7 @@ namespace Models {
         return true;
     }
 
-    void ArtItemsModel::addLocalArtworks(const QList<QUrl> &artworksPaths)
+    int ArtItemsModel::addLocalArtworks(const QList<QUrl> &artworksPaths)
     {
         qDebug() << artworksPaths;
         QStringList fileList;
@@ -338,13 +341,15 @@ namespace Models {
             fileList.append(url.toLocalFile());
         }
 
-        addFiles(fileList);
+        int filesAddedCount = addFiles(fileList);
+        return filesAddedCount;
     }
 
-    void ArtItemsModel::addLocalDirectory(const QUrl &directory)
+    int ArtItemsModel::addLocalDirectory(const QUrl &directory)
     {
         qDebug() << directory;
-        addDirectory(directory.toLocalFile());
+        int addedFilesCount = addDirectory(directory.toLocalFile());
+        return addedFilesCount;
     }
 
     void ArtItemsModel::itemSelectedChanged(bool value)
@@ -354,8 +359,10 @@ namespace Models {
         emit selectedArtworksCountChanged();
     }
 
-    void ArtItemsModel::addDirectory(const QString &directory)
+    int ArtItemsModel::addDirectory(const QString &directory)
     {
+        int filesCount = 0;
+
         QDir dir(directory);
 
         dir.setFilter(QDir::NoDotAndDotDot | QDir::Files);
@@ -366,13 +373,22 @@ namespace Models {
         }
 
         if (items.count() > 0) {
-            addFiles(items);
+            filesCount = addFiles(items);
         }
+
+        return filesCount;
     }
 
-    void ArtItemsModel::addFiles(const QStringList &rawFilenames)
+    int ArtItemsModel::addFiles(const QStringList &rawFilenames)
     {
-        QStringList filenames = rawFilenames.filter(QRegExp("^.*[.]jpg$", Qt::CaseInsensitive));
+        QStringList filenames;
+
+        foreach (const QString &filepath, rawFilenames) {
+            QImageReader imageReader(filepath);
+            if (imageReader.format() == "jpeg") {
+                filenames.append(filepath);
+            }
+        }
 
         const int count = filenames.count();
         const int newFilesCount = m_ArtworksRepository->getNewFilesCount(filenames);
@@ -409,6 +425,8 @@ namespace Models {
 
         // set artworks for initial import
         m_IptcProvider->setArtworks(m_ArtworkList);
+
+        return newFilesCount;
     }
 
     void ArtItemsModel::setAllItemsSelected(bool selected)

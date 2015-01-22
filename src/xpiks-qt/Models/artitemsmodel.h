@@ -89,7 +89,7 @@ namespace Models {
         Q_INVOKABLE void combineArtwork(int index) { doCombineArtwork(index, m_CombinedArtworks); }
         Q_INVOKABLE void selectAllArtworks() { setAllItemsSelected(true); }
         Q_INVOKABLE void unselectAllArtworks() { setAllItemsSelected(false); }
-        Q_INVOKABLE void dropFiles(const QList<QUrl> &urls);
+        Q_INVOKABLE int dropFiles(const QList<QUrl> &urls);
         Q_INVOKABLE void setSelectedItemsSaved();
         Q_INVOKABLE void removeSelectedArtworks();
         Q_INVOKABLE void updateSelectedArtworks();
@@ -107,14 +107,14 @@ namespace Models {
         bool setData(const QModelIndex &index, const QVariant & value, int role = Qt::EditRole);
 
     public slots:
-        void addLocalArtworks(const QList<QUrl> &artworksPaths);
-        void addLocalDirectory(const QUrl &directory);
+        int addLocalArtworks(const QList<QUrl> &artworksPaths);
+        int addLocalDirectory(const QUrl &directory);
         void itemModifiedChanged(bool) { updateModifiedCount(); }
         void itemSelectedChanged(bool);
 
     private:
-        void addDirectory(const QString &directory);
-        void addFiles(const QStringList &filepath);
+        int addDirectory(const QString &directory);
+        int addFiles(const QStringList &filepath);
         void setAllItemsSelected(bool selected);
         void getSelectedArtworks(QList<ArtworkMetadata *> &selectedArtworks) const;
 

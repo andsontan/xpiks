@@ -35,7 +35,7 @@ namespace Models {
     {
         QStringList items;
         foreach (UploadInfo *info, m_UploadInfos) {
-            if (info->isSomethingMissing()) {
+            if (info->getIsSelected() && info->isSomethingMissing()) {
                 items.append(info->getTitle());
             }
         }

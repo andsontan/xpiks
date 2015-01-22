@@ -108,8 +108,10 @@ ApplicationWindow {
 
         onAccepted: {
             console.log("You chose: " + chooseArtworksDialog.fileUrls)
-            artItemsModel.addLocalArtworks(chooseArtworksDialog.fileUrls)
-            Qt.createComponent("Dialogs/ImportMetadata.qml").createObject(applicationWindow, {})
+            var filesAdded = artItemsModel.addLocalArtworks(chooseArtworksDialog.fileUrls)
+            if (filesAdded > 0) {
+                Qt.createComponent("Dialogs/ImportMetadata.qml").createObject(applicationWindow, {})
+            }
         }
 
         onRejected: {
@@ -126,8 +128,10 @@ ApplicationWindow {
 
         onAccepted: {
             console.log("You chose: " + chooseDirectoryDialog.fileUrl)
-            artItemsModel.addLocalDirectory(chooseDirectoryDialog.fileUrl)
-            Qt.createComponent("Dialogs/ImportMetadata.qml").createObject(applicationWindow, {})
+            var filesAdded = artItemsModel.addLocalDirectory(chooseDirectoryDialog.fileUrl)
+            if (filesAdded > 0) {
+                Qt.createComponent("Dialogs/ImportMetadata.qml").createObject(applicationWindow, {})
+            }
         }
 
         onRejected: {
@@ -155,8 +159,10 @@ ApplicationWindow {
             anchors.fill: parent
             onDropped: {
                 if (drop.hasUrls) {
-                    artItemsModel.dropFiles(drop.urls);
-                    Qt.createComponent("Dialogs/ImportMetadata.qml").createObject(applicationWindow, {})
+                    var filesCount = artItemsModel.dropFiles(drop.urls)
+                    if (filesCount > 0) {
+                        Qt.createComponent("Dialogs/ImportMetadata.qml").createObject(applicationWindow, {})
+                    }
                 }
             }
         }
