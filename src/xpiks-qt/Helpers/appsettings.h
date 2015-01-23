@@ -57,6 +57,9 @@ namespace Helpers {
         Q_PROPERTY(QString maxKeywordsCount READ getMaxKeywordsCount)
         QString getMaxKeywordsCount() const { return Constants::MAX_KEYWORD_COUNT; }
 
+        Q_PROPERTY(QString appVersion READ getAppVersion)
+        QString getAppVersion() const { return QCoreApplication::applicationVersion(); }
+
         Q_INVOKABLE inline void setValue(const QString &key, const QVariant &value) {
             QSettings::setValue(key, value);
         }

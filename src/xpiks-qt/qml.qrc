@@ -19,5 +19,6 @@
         <file>Dialogs/LogsDialog.qml</file>
         <file>StyledControls/StyledTextEdit.qml</file>
         <file>Dialogs/WarningsDialog.qml</file>
+        <file>Dialogs/AboutWindow.qml</file>
     </qresource>
 </RCC>

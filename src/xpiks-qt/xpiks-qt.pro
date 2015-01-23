@@ -21,6 +21,9 @@ SOURCES += main.cpp \
 
 RESOURCES += qml.qrc
 
+BUILDNO = $$system(git log -n 1 --pretty=format:"%H")
+DEFINES += BUILDNUMBER=$${BUILDNO}
+
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
 
@@ -76,7 +79,8 @@ DISTFILES += \
     Dialogs/LogsDialog.qml \
     StyledControls/StyledTextEdit.qml \
     Dialogs/WarningsDialog.qml \
-    xpiks-qt.ico
+    xpiks-qt.ico \
+    Dialogs/AboutWindow.qml
 
 macx {
 OBJECTIVE_SOURCES += \

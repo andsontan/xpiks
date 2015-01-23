@@ -82,10 +82,15 @@ void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const Q
 
 #endif
 
+#define STRINGIZE_(x) #x
+#define STRINGIZE(x) STRINGIZE_(x)
+
 void initQSettings() {
     QCoreApplication::setOrganizationName(Constants::ORGANIZATION_NAME);
     QCoreApplication::setOrganizationDomain(Constants::ORGANIZATION_DOMAIN);
     QCoreApplication::setApplicationName(Constants::APPLICATION_NAME);
+    QString appVersion(STRINGIZE(BUILDNUMBER));
+    QCoreApplication::setApplicationVersion("1.0beta-" + appVersion.left(10));
 }
 
 int main(int argc, char *argv[]) {    

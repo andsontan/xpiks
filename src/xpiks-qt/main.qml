@@ -60,6 +60,15 @@ ApplicationWindow {
                 }
             }
             MenuItem {
+                text: qsTr("&About")
+                onTriggered: {
+                    var component = Qt.createComponent("Dialogs/AboutWindow.qml");
+                    var window = component.createObject(applicationWindow);
+                    window.show();
+                }
+            }
+
+            MenuItem {
                 text: qsTr("Exit")
                 onTriggered: Qt.quit();
             }
