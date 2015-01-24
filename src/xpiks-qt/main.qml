@@ -736,6 +736,7 @@ ApplicationWindow {
                                 onArtworksChanged: {
                                     console.log("Force layout for artworks list view")
                                     imagesListView.forceLayout()
+                                    imagesListView.update()
                                 }
                             }
                         }

@@ -6,6 +6,7 @@
 #include <QDir>
 #include <QDebug>
 #include <QTextStream>
+#include <QDateTime>
 #include <QStandardPaths>
 #include "../Helpers/constants.h"
 
@@ -30,6 +31,19 @@ namespace Models {
 #endif
             return result;
 
+        }
+
+        Q_INVOKABLE void clearLogs() {
+#ifdef QT_NO_DEBUG
+            QDir logFileDir(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));
+            QString logFilePath = logFileDir.filePath(Constants::LOG_FILENAME);
+
+            QFile outFile(logFilePath);
+            if (outFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
+                QTextStream ts(&outFile);
+                ts << QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss.zzz") << " - cleared log" << endl;
+            }
+#endif
         }
     };
 }

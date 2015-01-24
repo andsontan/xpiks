@@ -22,7 +22,7 @@
 #ifndef IMAGEMETADATA_H
 #define IMAGEMETADATA_H
 
-#include <QStringListModel>
+#include <QAbstractListModel>
 #include <QStringList>
 #include <QString>
 #include <QSet>
@@ -108,14 +108,14 @@ namespace Models {
          void fileSelectedChanged(const QString &filepath, bool newValue);
 
     private:
-        QStringList m_KeywordsList;
-        QSet<QString> m_KeywordsSet;
-        QString m_ArtworkFilepath;
-        QString m_ArtworkDescription;
-        QString m_ArtworkTitle;
-        QString m_ArtworkAuthor;
-        volatile bool m_IsModified;
-        volatile bool m_IsSelected;
+         QStringList m_KeywordsList;
+         QSet<QString> m_KeywordsSet;
+         QString m_ArtworkFilepath;
+         QString m_ArtworkDescription;
+         QString m_ArtworkTitle;
+         QString m_ArtworkAuthor;
+         volatile bool m_IsModified;
+         volatile bool m_IsSelected;
     };
 }
 

@@ -82,6 +82,10 @@ Flickable {
         }
     }
 
+    function forceRefreshRepeater() {
+        repeater.update()
+    }
+
     Flow {
         id: flow
         width: parent.width
