@@ -76,6 +76,7 @@ Item {
         MouseArea {
             anchors.fill: parent
             onWheel: wheel.accepted = true
+            onClicked: mouse.accepted = true
         }
 
         // This rectangle is the actual popup
@@ -434,9 +435,10 @@ Item {
 
                     StyledText {
                         text: qsTr("Copy keywords")
-                        color: Colors.artworkActiveColor
+                        color: combinedCopyKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
 
                         MouseArea {
+                            id: combinedCopyKeywordsMA
                             anchors.fill: parent
                             cursorShape: Qt.PointingHandCursor
                             onClicked: combinedClipboard.setText(combinedArtworks.getKeywordsString())

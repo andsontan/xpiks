@@ -698,9 +698,10 @@ ApplicationWindow {
 
                                                 StyledText {
                                                     text: qsTr("More Edits")
-                                                    color: Colors.artworkActiveColor
+                                                    color: moreEditsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
 
                                                     MouseArea {
+                                                        id: moreEditsMA
                                                         anchors.fill: parent
                                                         cursorShape: Qt.PointingHandCursor
                                                         onClicked: {
@@ -713,9 +714,10 @@ ApplicationWindow {
 
                                                 StyledText {
                                                     text: qsTr("Copy keywords")
-                                                    color: Colors.artworkActiveColor
+                                                    color: copyKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
 
                                                     MouseArea {
+                                                        id: copyKeywordsMA
                                                         anchors.fill: parent
                                                         cursorShape: Qt.PointingHandCursor
                                                         onClicked: clipboard.setText(keywordsstring)

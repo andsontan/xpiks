@@ -61,6 +61,7 @@ Item {
         MouseArea {
             anchors.fill: parent
             onWheel: wheel.accepted = true
+            onClicked: mouse.accepted = true
         }
 
         // This rectangle is the actual popup
