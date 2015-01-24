@@ -395,6 +395,8 @@ namespace Models {
 
         bool filesWereAccounted = m_ArtworksRepository->beginAccountingFiles(filenames);
 
+        QList<ArtworkMetadata*> artworksToImport;
+
         if (newFilesCount > 0) {
             beginInsertRows(QModelIndex(), rowCount(), rowCount() + newFilesCount - 1);
 
@@ -411,6 +413,7 @@ namespace Models {
                                      m_ArtworksRepository, SLOT(fileSelectedChanged(QString,bool)));
 
                     m_ArtworkList.append(metadata);
+                    artworksToImport.append(metadata);
                 }
             }
 
@@ -424,7 +427,7 @@ namespace Models {
         }
 
         // set artworks for initial import
-        m_IptcProvider->setArtworks(m_ArtworkList);
+        m_IptcProvider->setArtworks(artworksToImport);
 
         return newFilesCount;
     }
