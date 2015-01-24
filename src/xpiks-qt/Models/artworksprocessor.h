@@ -69,7 +69,7 @@ namespace Models {
 
     public:
         void setArtworks(const QList<ArtworkMetadata*> &artworkList) { resetArtworks(); addArtworks(artworkList); }
-        void addArtworks(const QList<ArtworkMetadata*> &artworkList) { m_ArtworkList.append(artworkList); }
+        void addArtworks(const QList<ArtworkMetadata*> &artworkList) { m_ArtworkList.append(artworkList); emit itemsCountChanged(); }
         void resetArtworks() { m_ArtworkList.clear(); }
 
     protected:

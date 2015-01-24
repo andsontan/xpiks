@@ -38,7 +38,7 @@ namespace Models {
         { }
 
     public:
-        void initialize(const QString &author, const QString &title,
+        bool initialize(const QString &author, const QString &title,
                         const QString &description, const QString &rawKeywords, bool overwrite = true);
 
     public:

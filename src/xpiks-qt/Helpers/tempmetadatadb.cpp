@@ -56,14 +56,14 @@ namespace Helpers {
             in >> dict;
             file.close();
 
-            m_ArtworkMetadata->initialize(
+            if (m_ArtworkMetadata->initialize(
                     dict["author"],
                     dict["title"],
                     dict["description"],
                     dict["keywords"],
-                    false);
-
-            m_ArtworkMetadata->setModified();
+                    false)) {
+                m_ArtworkMetadata->setModified();
+            }
         }
     }
 }

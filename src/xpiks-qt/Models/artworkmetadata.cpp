@@ -24,24 +24,32 @@
 #include "../Helpers/tempmetadatadb.h"
 
 namespace Models {
-    void ArtworkMetadata::initialize(const QString &author, const QString &title,
+    bool ArtworkMetadata::initialize(const QString &author, const QString &title,
                                      const QString &description, const QString &rawKeywords, bool overwrite)
     {
-        if (overwrite || m_ArtworkAuthor.trimmed().isEmpty()) {
+        bool anythingModified = false;
+
+        if (overwrite || (m_ArtworkAuthor.trimmed().isEmpty() && !author.isEmpty())) {
+            anythingModified = true;
             m_ArtworkAuthor = author;
         }
 
-        if (overwrite || m_ArtworkTitle.trimmed().isEmpty()) {
+        if (overwrite || (m_ArtworkTitle.trimmed().isEmpty() && !title.isEmpty())) {
+            anythingModified = true;
             m_ArtworkTitle = title;
         }
 
-        if (overwrite || m_ArtworkDescription.trimmed().isEmpty()) {
+        if (overwrite || (m_ArtworkDescription.trimmed().isEmpty() && !description.isEmpty())) {
+            anythingModified = true;
             m_ArtworkDescription = description;
         }
 
-        if (overwrite || m_KeywordsList.length() == 0) {
+        if (overwrite || (m_KeywordsList.empty() && !rawKeywords.isEmpty())) {
+            anythingModified = true;
             addKeywords(rawKeywords);
         }
+
+        return anythingModified;
     }
 
     bool ArtworkMetadata::removeKeywordAt(int index)
