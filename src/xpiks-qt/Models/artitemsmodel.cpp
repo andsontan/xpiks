@@ -327,7 +327,13 @@ namespace Models {
         }
 
         emit dataChanged(index, index, QVector<int>() << IsModifiedRole << role << roleToUpdate);
-        metadata->saveBackup();
+
+        if (role == EditArtworkDescriptionRole ||
+                role == EditArtworkTitleRole ||
+                role == EditArtworkAuthorRole) {
+            metadata->saveBackup();
+        }
+
         return true;
     }
 
