@@ -39,25 +39,25 @@ namespace Helpers {
                                                               parent)
         {}
 
-        Q_PROPERTY(QString exifToolPathKey READ getExifToolPathKey)
+        Q_PROPERTY(QString exifToolPathKey READ getExifToolPathKey CONSTANT)
         QString getExifToolPathKey() const { return Constants::PATH_TO_EXIFTOOL; }
 
-        Q_PROPERTY(QString curlPathKey READ getCurlPathKey)
+        Q_PROPERTY(QString curlPathKey READ getCurlPathKey CONSTANT)
         QString getCurlPathKey() const { return Constants::PATH_TO_CURL; }
 
-        Q_PROPERTY(QString uploadHostsKey READ getUploadHostsKey)
+        Q_PROPERTY(QString uploadHostsKey READ getUploadHostsKey CONSTANT)
         QString getUploadHostsKey() const { return Constants::UPLOAD_HOSTS; }
 
-        Q_PROPERTY(QString minMegapixelCount READ getMinMegapixelCount)
+        Q_PROPERTY(QString minMegapixelCount READ getMinMegapixelCount CONSTANT)
         QString getMinMegapixelCount() const { return Constants::MIN_MEGAPIXEL_COUNT; }
 
-        Q_PROPERTY(QString maxDescriptionLength READ getMaxDescriptionLength)
+        Q_PROPERTY(QString maxDescriptionLength READ getMaxDescriptionLength CONSTANT)
         QString getMaxDescriptionLength() const { return Constants::MAX_DESCRIPTION_LENGTH; }
 
-        Q_PROPERTY(QString maxKeywordsCount READ getMaxKeywordsCount)
+        Q_PROPERTY(QString maxKeywordsCount READ getMaxKeywordsCount CONSTANT)
         QString getMaxKeywordsCount() const { return Constants::MAX_KEYWORD_COUNT; }
 
-        Q_PROPERTY(QString appVersion READ getAppVersion)
+        Q_PROPERTY(QString appVersion READ getAppVersion CONSTANT)
         QString getAppVersion() const { return QCoreApplication::applicationVersion(); }
 
         Q_INVOKABLE inline void setValue(const QString &key, const QVariant &value) {
