@@ -63,8 +63,8 @@ Item {
         text: qsTr("Are you sure you want to clear logs?")
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
-
             logsModel.clearLogs()
+            logsComponent.logText = logsModel.getAllLogsText()
         }
     }
 
