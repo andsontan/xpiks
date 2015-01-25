@@ -166,7 +166,7 @@ Item {
                                         id: sourceWrapper
                                         property variant myData: model
                                         property int indexOfThisDelegate: index
-                                        color: ListView.isCurrentItem ? Colors.itemsSourceSelected : Colors.itemsSourceBackground
+                                        color: ListView.isCurrentItem ? Colors.itemsSourceSelected : Colors.defaultDarkColor
                                         width: parent.width - 10
                                         anchors.left: parent.left
                                         anchors.leftMargin: 5
@@ -199,7 +199,7 @@ Item {
                                                 Layout.fillWidth: true
                                                 anchors.verticalCenter: parent.verticalCenter
                                                 height: 31
-                                                color: Colors.itemsSourceForeground
+                                                color: Colors.defaultLightGrayColor
                                                 text: title
                                                 elide: Text.ElideMiddle
                                                 font.bold: true
@@ -227,14 +227,31 @@ Item {
                             }
                         }
 
-                        Item {
-                            height: 1
-                        }
-
-                        StyledButton {
+                        Rectangle {
+                            color: Colors.defaultControlColor
+                            height: 40
                             Layout.fillWidth: true
-                            onClicked: uploadInfos.addItem()
-                            text: qsTr("Add FTP host")
+
+                            RowLayout {
+                                anchors.fill: parent
+                                anchors.bottomMargin: 5
+                                anchors.topMargin: 5
+                                spacing: 0
+
+                                Item {
+                                    width: 10
+                                }
+
+                                StyledAddHostButton {
+                                    Layout.fillWidth: true
+                                    onClicked: uploadInfos.addItem()
+                                    text: qsTr("Add FTP host")
+                                }
+
+                                Item {
+                                    width: 10
+                                }
+                            }
                         }
                     }
 

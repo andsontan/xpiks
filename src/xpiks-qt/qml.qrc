@@ -20,5 +20,6 @@
         <file>StyledControls/StyledTextEdit.qml</file>
         <file>Dialogs/WarningsDialog.qml</file>
         <file>Dialogs/AboutWindow.qml</file>
+        <file>StyledControls/StyledAddHostButton.qml</file>
     </qresource>
 </RCC>

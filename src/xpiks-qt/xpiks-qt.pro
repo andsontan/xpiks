@@ -80,7 +80,8 @@ DISTFILES += \
     StyledControls/StyledTextEdit.qml \
     Dialogs/WarningsDialog.qml \
     xpiks-qt.ico \
-    Dialogs/AboutWindow.qml
+    Dialogs/AboutWindow.qml \
+    StyledControls/StyledAddHostButton.qml
 
 macx {
 OBJECTIVE_SOURCES += \

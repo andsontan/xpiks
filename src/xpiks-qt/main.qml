@@ -775,9 +775,10 @@ ApplicationWindow {
 
             StyledText {
                 text: qsTr("Show logs")
-                color: Colors.selectedMetadataColor
+                color: logsMA.pressed ? Colors.defaultInputBackground : Colors.selectedMetadataColor
 
                 MouseArea {
+                    id: logsMA
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
@@ -795,9 +796,10 @@ ApplicationWindow {
 
             StyledText {
                 text: qsTr("Check warnings")
-                color: warningsManager.warningsCount > 0 ? Colors.artworkModifiedColor : Colors.selectedMetadataColor
+                color: warningsMA.pressed ? Colors.defaultInputBackground : warningsManager.warningsCount > 0 ? Colors.artworkModifiedColor : Colors.selectedMetadataColor
 
                 MouseArea {
+                    id: warningsMA
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
