@@ -41,18 +41,7 @@ namespace Models {
     {
         qDebug() << "Metadata imported at " << index;
         ImportPair importPair = m_MetadataReader->resultAt(index);
-        ArtworkMetadata *metadata = importPair.first;
-        Models::ImportData *importData = importPair.second;
-
-        if (metadata != NULL && importData != NULL) {
-            metadata->initialize(importData->Author, importData->Title, importData->Description, importData->Description);
-
-            if (importData->Description.isEmpty() || importData->Keywords.isEmpty()) {
-                Helpers::TempMetadataDb(metadata).load();
-            }
-        }
-
-        metadataImportedHandler(metadata);
+        metadataImportedHandler(importPair);
     }
 
     void IptcProvider::metadataExported(int index) {
@@ -67,8 +56,19 @@ namespace Models {
         qDebug() << "Metadata processing finished (with Error = " << getIsError() << ")";
     }
 
-    void IptcProvider::metadataImportedHandler(ArtworkMetadata *metadata)
+    void IptcProvider::metadataImportedHandler(QPair<ArtworkMetadata *, ImportData *> importPair)
     {
+        ArtworkMetadata *metadata = importPair.first;
+        Models::ImportData *importData = importPair.second;
+
+        if (metadata != NULL && importData != NULL) {
+            metadata->initialize(importData->Author, importData->Title, importData->Description, importData->Description);
+
+            if (importData->Description.isEmpty() || importData->Keywords.isEmpty()) {
+                Helpers::TempMetadataDb(metadata).load();
+            }
+        }
+
         incProgress();
 
         if (NULL != metadata) {
@@ -109,7 +109,7 @@ namespace Models {
             return;
         }
         else {
-            metadataImportedHandler(firstPair.first);
+            metadataImportedHandler(firstPair);
         }
 
         if (pairs.length() > 0) {

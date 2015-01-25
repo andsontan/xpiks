@@ -43,7 +43,7 @@ namespace Models {
         void allFinished();
 
     private:
-        void metadataImportedHandler(ArtworkMetadata *metadata);
+        void metadataImportedHandler(QPair<Models::ArtworkMetadata*, Models::ImportData*> importPair);
         void metadataExportedHandler(ArtworkMetadata *metadata);
 
     public:
