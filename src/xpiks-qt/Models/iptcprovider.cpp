@@ -56,7 +56,7 @@ namespace Models {
         qDebug() << "Metadata processing finished (with Error = " << getIsError() << ")";
     }
 
-    void IptcProvider::metadataImportedHandler(QPair<ArtworkMetadata *, ImportData *> importPair)
+    void IptcProvider::metadataImportedHandler(ImportPair importPair)
     {
         ArtworkMetadata *metadata = importPair.first;
         Models::ImportData *importData = importPair.second;
