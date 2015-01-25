@@ -160,6 +160,12 @@ ApplicationWindow {
         text: qsTr("Please, select some artworks first")
     }
 
+    MessageDialog {
+        id: alreadySavedDialog
+        title: "Information"
+        text: qsTr("All selected items are already saved")
+    }
+
     Rectangle {
         color: Colors.defaultDarkColor
         anchors.fill: parent
@@ -383,10 +389,15 @@ ApplicationWindow {
                                     mustSelectDialog.open()
                                 }
                                 else {
-                                    if (artItemsModel.selectedArtworksCount > 0) {
+                                    if (artItemsModel.selectedArtworksCount > 0 &&
+                                            artItemsModel.modifiedArtworksCount > 0) {
                                         iptcProvider.resetModel()
                                         artItemsModel.patchSelectedArtworks()
                                         Qt.createComponent("Dialogs/ExportMetadata.qml").createObject(applicationWindow, {})
+                                    } else {
+                                        if (artItemsModel.modifiedArtworksCount == 0) {
+                                            alreadySavedDialog.open()
+                                        }
                                     }
                                 }
                             }
