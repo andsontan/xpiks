@@ -62,6 +62,27 @@ Item {
             anchors.fill: parent
             onWheel: wheel.accepted = true
             onClicked: mouse.accepted = true
+
+            property real old_x : 0
+            property real old_y : 0
+
+            onPressed:{
+                //            var tmp = root.mapToItem(img,mouse.x,mouse.y);
+                var tmp = mapToItem(warningsComponent, mouse.x, mouse.y);
+                old_x = tmp.x;
+                old_y = tmp.y;
+            }
+
+            onPositionChanged: {
+                //            var tmp = root.mapToItem(img,mouse.x,mouse.y);
+                var tmp = mapToItem(warningsComponent, mouse.x, mouse.y);
+                var delta_x = tmp.x - old_x;
+                var delta_y = tmp.y - old_y;
+                dialogWindow.x += delta_x;
+                dialogWindow.y += delta_y;
+                old_x = tmp.x;
+                old_y = tmp.y;
+            }
         }
 
         // This rectangle is the actual popup
@@ -71,6 +92,7 @@ Item {
             height: 580
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
+            Component.onCompleted: anchors.centerIn = undefined
 
             ColumnLayout {
                 spacing: 10
