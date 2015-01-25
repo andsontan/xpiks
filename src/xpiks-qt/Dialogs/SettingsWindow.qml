@@ -33,6 +33,11 @@ ApplicationWindow {
     modality: "ApplicationModal"
     width: 640
     height: 265
+    minimumWidth: width
+    maximumWidth: width
+    minimumHeight: height
+    maximumHeight: height
+    flags: Qt.Tool
 
     function closeSettings() {
         settingsWindow.destroy();

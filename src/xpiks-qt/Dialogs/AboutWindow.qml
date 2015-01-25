@@ -33,10 +33,11 @@ ApplicationWindow {
     modality: "ApplicationModal"
     width: 200
     height: 100
-    minimumHeight: height
-    maximumHeight: height
     minimumWidth: width
     maximumWidth: width
+    minimumHeight: height
+    maximumHeight: height
+    flags: Qt.Tool | Qt.CustomizeWindowHint | Qt.WindowCloseButtonHint
 
     function closeAbout() {
         aboutWindow.destroy();
@@ -50,14 +51,17 @@ ApplicationWindow {
             anchors.centerIn: parent
 
             StyledText {
+                anchors.horizontalCenter: parent.horizontalCenter
                 text: qsTr("Version: %1").arg(appSettings.appVersion)
             }
 
             StyledText {
+                anchors.horizontalCenter: parent.horizontalCenter
                 text: qsTr("<u>Home webpage of Xpiks</u>")
-                color: Colors.artworkActiveColor
+                color: aboutMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
 
                 MouseArea {
+                    id: aboutMA
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
