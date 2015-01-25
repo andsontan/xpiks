@@ -28,14 +28,20 @@
 #include <QSet>
 
 namespace Models {
-    class ArtworkMetadata : public QObject {
+    class ArtworkMetadata : public QAbstractListModel {
         Q_OBJECT
     public:
         ArtworkMetadata(const QString &filepath) :
+            QAbstractListModel(),
             m_ArtworkFilepath(filepath),
             m_IsModified(false),
             m_IsSelected(false)
         { }
+
+    public:
+        enum ArtworkMetadataRoles {
+            KeywordRole = Qt::UserRole + 1
+        };
 
     public:
         bool initialize(const QString &author, const QString &title,
@@ -107,6 +113,13 @@ namespace Models {
          void selectedChanged(bool newValue);
          void fileSelectedChanged(const QString &filepath, bool newValue);
 
+    public:
+        int rowCount(const QModelIndex & parent = QModelIndex()) const;
+        QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+
+    protected:
+        QHash<int, QByteArray> roleNames() const;
+
     private:
          QStringList m_KeywordsList;
          QSet<QString> m_KeywordsSet;
@@ -118,5 +131,7 @@ namespace Models {
          volatile bool m_IsSelected;
     };
 }
+
+Q_DECLARE_METATYPE(Models::ArtworkMetadata*)
 
 #endif // IMAGEMETADATA_H

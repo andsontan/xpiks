@@ -59,7 +59,7 @@ namespace Models {
         QList<QPair<int, int> > ranges;
         ranges << qMakePair(0, m_ArtworkList.length() - 1);
         QVector<int> roles;
-        roles << ArtworkDescriptionRole << KeywordsRole << IsModifiedRole << ArtworkAuthorRole << ArtworkTitleRole << KeywordsCountRole;
+        roles << ArtworkDescriptionRole << IsModifiedRole << ArtworkAuthorRole << ArtworkTitleRole << KeywordsCountRole;
         updateItemsAtIndices(ranges, roles);
     }
 
@@ -87,7 +87,7 @@ namespace Models {
 
             if (metadata->removeKeywordAt(keywordIndex)) {
                 QModelIndex index = this->index(metadataIndex);
-                emit dataChanged(index, index, QVector<int>() << KeywordsRole << IsModifiedRole << KeywordsCountRole);
+                emit dataChanged(index, index, QVector<int>() << IsModifiedRole << KeywordsCountRole);
             }
         }
     }
@@ -99,7 +99,7 @@ namespace Models {
 
             if (metadata->removeLastKeyword()) {
                 QModelIndex index = this->index(metadataIndex);
-                emit dataChanged(index, index, QVector<int>() << KeywordsRole << IsModifiedRole << KeywordsCountRole);
+                emit dataChanged(index, index, QVector<int>() << IsModifiedRole << KeywordsCountRole);
             }
         }
     }
@@ -110,7 +110,7 @@ namespace Models {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
             if (metadata->appendKeyword(keyword)) {
                 QModelIndex index = this->index(metadataIndex);
-                emit dataChanged(index, index, QVector<int>() << KeywordsRole << IsModifiedRole << KeywordsCountRole);
+                emit dataChanged(index, index, QVector<int>() << IsModifiedRole << KeywordsCountRole);
             }
         }
     }
@@ -171,7 +171,7 @@ namespace Models {
         QList<QPair<int, int> > rangesToUpdate;
         Helpers::indicesToRanges(selectedIndices, rangesToUpdate);
         QVector<int> roles;
-        roles << ArtworkDescriptionRole << KeywordsRole << IsModifiedRole <<
+        roles << ArtworkDescriptionRole << IsModifiedRole <<
                  ArtworkAuthorRole << ArtworkTitleRole << KeywordsCountRole;
         updateItemsAtIndices(rangesToUpdate, roles);
 
@@ -275,8 +275,6 @@ namespace Models {
             return metadata->getAuthor();
         case ArtworkTitleRole:
             return metadata->getTitle();
-        case KeywordsRole:
-            return metadata->getKeywords();
         case KeywordsStringRole:
             return metadata->getKeywordsString();
         case IsModifiedRole:
@@ -499,7 +497,6 @@ namespace Models {
         roles[ArtworkTitleRole] = "title";
         roles[EditArtworkTitleRole] = "edittitle";
         roles[ArtworkFilenameRole] = "filename";
-        roles[KeywordsRole] = "keywords";
         roles[KeywordsStringRole] = "keywordsstring";
         roles[IsModifiedRole] = "ismodified";
         roles[IsSelectedRole] = "isselected";

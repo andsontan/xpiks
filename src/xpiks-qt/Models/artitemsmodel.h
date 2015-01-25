@@ -58,7 +58,6 @@ namespace Models {
             EditArtworkAuthorRole,
             ArtworkTitleRole,
             EditArtworkTitleRole,
-            KeywordsRole,
             KeywordsStringRole,
             KeywordsCountRole,
             IsModifiedRole,
@@ -99,6 +98,12 @@ namespace Models {
         Q_INVOKABLE bool allArtworksSelected() const { return m_SelectedArtworksCount == m_ArtworkList.length(); }
         Q_INVOKABLE void selectDirectory(int directoryIndex);
         Q_INVOKABLE void checkForWarnings();
+        Q_INVOKABLE QObject *getArtworkItself(int index) const {
+            QObject *item = m_ArtworkList[index];
+            QQmlEngine::setObjectOwnership(item, QQmlEngine::CppOwnership);
+            qDebug() << "Binding to keywords list... " << m_ArtworkList[index]->getFilepath();
+            return item;
+        }
 
     public:
         int rowCount(const QModelIndex & parent = QModelIndex()) const;

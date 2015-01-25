@@ -143,6 +143,8 @@ int main(int argc, char *argv[]) {
     uploadInfoRepository.initFromString(appSettings.value(Constants::UPLOAD_HOSTS, "").toString());
 
     qmlRegisterType<Helpers::ClipboardHelper>("xpiks", 1, 0, "ClipboardHelper");
+    qmlRegisterType<QAbstractListModel>();
+    qmlRegisterType<Models::ArtworkMetadata>();
 
     QQmlApplicationEngine engine;
     Helpers::GlobalImageProvider *globalProvider = new Helpers::GlobalImageProvider(QQmlImageProviderBase::Image);

@@ -65,7 +65,7 @@ namespace Models {
         void cancelProcessing();
 
     private:
-        QFutureWatcher<ArtworkMetadata*> *m_MetadataReader;
+        QFutureWatcher<QPair<Models::ArtworkMetadata*, Models::ImportData*> > *m_MetadataReader;
         QFutureWatcher<QPair<ArtworkMetadata*, ExportInfo*> > *m_MetadataWriter;
         ExportInfo m_ExportInfo;
     };

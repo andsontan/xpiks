@@ -46,7 +46,10 @@ namespace Models {
 
         if (overwrite || (m_KeywordsList.empty() && !rawKeywords.isEmpty())) {
             anythingModified = true;
+            beginResetModel();
+            m_KeywordsList.clear();
             addKeywords(rawKeywords);
+            endResetModel();
         }
 
         return anythingModified;
@@ -58,7 +61,11 @@ namespace Models {
         if (index >= 0 && index < m_KeywordsList.length()) {
             const QString &keyword = m_KeywordsList.at(index);
             m_KeywordsSet.remove(keyword);
+
+            beginRemoveRows(QModelIndex(), index, index);
             m_KeywordsList.removeAt(index);
+            endRemoveRows();
+
             setModified();
             removed = true;
         }
@@ -71,7 +78,12 @@ namespace Models {
         bool added = false;
         const QString &sanitizedKeyword = keyword.simplified().toLower();
         if (!m_KeywordsSet.contains(sanitizedKeyword)) {
+            int keywordsCount = m_KeywordsList.length();
+
+            beginInsertRows(QModelIndex(), keywordsCount, keywordsCount);
             m_KeywordsList.append(sanitizedKeyword);
+            endInsertRows();
+
             m_KeywordsSet.insert(sanitizedKeyword);
             setModified();
             added = true;
@@ -89,13 +101,17 @@ namespace Models {
 
     void ArtworkMetadata::resetKeywords()
     {
+        beginResetModel();
         m_KeywordsList.clear();
+        endResetModel();
+
         m_KeywordsSet.clear();
         setModified();
     }
 
     void ArtworkMetadata::addKeywords(const QString &rawKeywords) {
         QStringList keywordsList = rawKeywords.split(",", QString::SkipEmptyParts);
+
         for (int i = 0; i < keywordsList.size(); ++i) {
             const QString &keyword = keywordsList[i];
             m_KeywordsList.append(keyword);
@@ -107,5 +123,31 @@ namespace Models {
     {
         qDebug() << "Backing up item... " << this->getFilepath();
         Helpers::TempMetadataDb(this).flush();
+    }
+
+    int ArtworkMetadata::rowCount(const QModelIndex &parent) const
+    {
+        Q_UNUSED(parent);
+        return m_KeywordsList.count();
+    }
+
+    QVariant ArtworkMetadata::data(const QModelIndex &index, int role) const
+    {
+        if (index.row() < 0 || index.row() >= m_KeywordsList.count())
+            return QVariant();
+
+        switch (role) {
+        case KeywordRole:
+            return m_KeywordsList.at(index.row());
+        default:
+            return QVariant();
+        }
+    }
+
+    QHash<int, QByteArray> ArtworkMetadata::roleNames() const
+    {
+        QHash<int, QByteArray> roles;
+        roles[KeywordRole] = "keyword";
+        return roles;
     }
 }

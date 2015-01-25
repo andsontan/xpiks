@@ -625,13 +625,12 @@ ApplicationWindow {
 
                                                     EditableTags {
                                                         id: flv
-                                                        model: keywords
+                                                        model: artItemsModel.getArtworkItself(rowWrapper.indexOfThisDelegate)
                                                         anchors.margins: { left: 5; top: 5; right: 0; bottom: 5 }
 
                                                         delegate: Rectangle {
                                                             id: itemWrapper
                                                             property int indexOfThisDelegate: index
-                                                            property string keyword: modelData
                                                             color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.artworkActiveColor
 
                                                             width: childrenRect.width
@@ -652,7 +651,7 @@ ApplicationWindow {
                                                                         anchors.top: parent.top
                                                                         anchors.bottom: parent.bottom
                                                                         verticalAlignment: Text.AlignVCenter
-                                                                        text: modelData
+                                                                        text: keyword
                                                                         color: rowWrapper.isHighlighted ? Colors.defaultControlColor : Colors.defaultLightColor
                                                                     }
                                                                 }

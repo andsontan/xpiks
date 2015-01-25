@@ -32,15 +32,26 @@ namespace Models {
         connect(m_MetadataWriter, SIGNAL(resultReadyAt(int)), SLOT(metadataExported(int)));
         connect(m_MetadataWriter, SIGNAL(finished()), SLOT(allFinished()));
 
-        m_MetadataReader = new QFutureWatcher<ArtworkMetadata*>(this);
+        m_MetadataReader = new QFutureWatcher<ImportPair>(this);
         connect(m_MetadataReader, SIGNAL(resultReadyAt(int)), SLOT(metadataImported(int)));
         connect(m_MetadataReader, SIGNAL(finished()), SLOT(allFinished()));
     }
 
     void IptcProvider::metadataImported(int index)
     {
-        qDebug() << "Metadata exported at " << index;
-        ArtworkMetadata *metadata = m_MetadataReader->resultAt(index);
+        qDebug() << "Metadata imported at " << index;
+        ImportPair importPair = m_MetadataReader->resultAt(index);
+        ArtworkMetadata *metadata = importPair.first;
+        Models::ImportData *importData = importPair.second;
+
+        if (metadata != NULL && importData != NULL) {
+            metadata->initialize(importData->Author, importData->Title, importData->Description, importData->Description);
+
+            if (importData->Description.isEmpty() || importData->Keywords.isEmpty()) {
+                Helpers::TempMetadataDb(metadata).load();
+            }
+        }
+
         metadataImportedHandler(metadata);
     }
 
@@ -53,16 +64,17 @@ namespace Models {
 
     void IptcProvider::allFinished() {
         endProcessing();
-        qDebug() << "Metadata export finished (with Error = " << getIsError() << ")";
+        qDebug() << "Metadata processing finished (with Error = " << getIsError() << ")";
     }
 
     void IptcProvider::metadataImportedHandler(ArtworkMetadata *metadata)
     {
         incProgress();
 
-        // TODO: handle bad results
         if (NULL != metadata) {
             qDebug() << metadata->getFilepath();
+        } else {
+            setIsError(true);
         }
     }
 
@@ -70,9 +82,10 @@ namespace Models {
     {
         incProgress();
 
-        // TODO: handle bad results
         if (NULL != metadata) {
             qDebug() << metadata->getFilepath();
+        } else {
+            setIsError(true);
         }
     }
 
@@ -83,21 +96,24 @@ namespace Models {
             return;
         }
 
+        QList<ImportPair> pairs;
+        foreach(ArtworkMetadata *metadata, artworkList) {
+            pairs.append(qMakePair(metadata, new Models::ImportData()));
+        }
+
         beginProcessing();
 
-        ArtworkMetadata *firstMetadata = artworkList.first();
-        if (!readArtworkMetadata(firstMetadata)) {
-            setIsError(true);
-            incProgress();
-            allFinished();
+        ImportPair firstPair = pairs.takeFirst();
+        if (!(readArtworkMetadata(firstPair).first)) {
+            endAfterFirstError();
             return;
         }
         else {
-            metadataImportedHandler(firstMetadata);
+            metadataImportedHandler(firstPair.first);
         }
 
-        if (artworkList.length() > 1) {
-            m_MetadataReader->setFuture(QtConcurrent::mapped(artworkList.begin() + 1, artworkList.end(), readArtworkMetadata));
+        if (pairs.length() > 0) {
+            m_MetadataReader->setFuture(QtConcurrent::mapped(pairs, readArtworkMetadata));
         }
         else {
             endProcessing();

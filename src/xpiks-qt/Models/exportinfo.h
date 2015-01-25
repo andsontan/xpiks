@@ -22,7 +22,17 @@
 #ifndef EXPORTINFO_H
 #define EXPORTINFO_H
 
-namespace Models {
+#include <QString>
+
+namespace Models {    
+    class ImportData {
+    public:
+        QString Author;
+        QString Title;
+        QString Description;
+        QString Keywords;
+    };
+
     class ExportInfo {
     public:
         ExportInfo() :

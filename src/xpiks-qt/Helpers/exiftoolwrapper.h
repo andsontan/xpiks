@@ -33,6 +33,7 @@
 #include "../Models/exportinfo.h"
 #include "tempmetadatadb.h"
 
+typedef QPair<Models::ArtworkMetadata*, Models::ImportData*> ImportPair;
 typedef QPair<Models::ArtworkMetadata*, Models::ExportInfo*> ExportPair;
 
 // returns NULL if patching wasn't successfull
@@ -92,10 +93,17 @@ ExportPair writeArtworkMetadata(ExportPair pair) {
     return qMakePair(resultMetadata, exportInfo);
 }
 
-bool grabMetadata(const QStringList &items, Models::ArtworkMetadata *metadata);
+void grabMetadata(const QStringList &items, Models::ImportData *importData,
+                  QRegExp authorRegExp,
+                  QRegExp titleRegExp,
+                  QRegExp descriptionRegExp,
+                  QRegExp keywordsRegExp);
 
-Models::ArtworkMetadata *readArtworkMetadata(Models::ArtworkMetadata *metadata) {
+ImportPair readArtworkMetadata(ImportPair pair) {
     const QString exiftoolPath = Helpers::ExternalToolsProvider::getExifToolPath();
+
+    Models::ImportData *importData = pair.second;
+    Models::ArtworkMetadata *metadata = pair.first;
 
     QStringList arguments;
     arguments << "-s" << "-e" << "-n" << "-EXIF:all" << "-IPTC:all" << "-XMP:all";
@@ -104,30 +112,29 @@ Models::ArtworkMetadata *readArtworkMetadata(Models::ArtworkMetadata *metadata) 
     QProcess process;
     process.start(exiftoolPath, arguments);
     if (!process.waitForFinished()) {
-        return NULL;
+        return ImportPair(NULL, NULL);
     }
 
     QByteArray stdoutByteArray = process.readAll();
     QString stdoutTextText(stdoutByteArray);
     QStringList items = stdoutTextText.split(QRegExp("[\r\n]"), QString::SkipEmptyParts);
 
-    if (!grabMetadata(items, metadata)) {
-        Helpers::TempMetadataDb(metadata).load();
-    }
-
-    return metadata;
-}
-
-bool grabMetadata(const QStringList &items, Models::ArtworkMetadata *metadata) {
-    bool authorSet = false, titleSet = false, descriptionSet = false, keywordsSet = false;
-
-    // TODO: move initializations somewhere upper
     QRegExp authorRegExp("^Artist\\s|^By-line\\s|^Creator\\s");
     QRegExp titleRegExp("^ObjectName\\s|^Title\\s");
     QRegExp descriptionRegExp("^ImageDescription\\s|^Caption-Abstract\\s|^Description\\s");
     QRegExp keywordsRegExp("^Keywords\\s|^Subject\\s");
 
-    QString author, title, description, keywords;
+    grabMetadata(items, importData, authorRegExp, titleRegExp, descriptionRegExp, keywordsRegExp);
+
+    return pair;
+}
+
+void grabMetadata(const QStringList &items, Models::ImportData *importData,
+                  QRegExp authorRegExp,
+                  QRegExp titleRegExp,
+                  QRegExp descriptionRegExp,
+                  QRegExp keywordsRegExp) {
+    bool authorSet = false, titleSet = false, descriptionSet = false, keywordsSet = false;
 
     foreach (const QString &item, items) {
         QStringList parts = item.split(':', QString::SkipEmptyParts);
@@ -138,27 +145,22 @@ bool grabMetadata(const QStringList &items, Models::ArtworkMetadata *metadata) {
         const QString &first = parts.first();
 
         if (!authorSet && first.contains(authorRegExp)) {
-            author = parts.at(1).trimmed();
+            importData->Author = parts.at(1).trimmed();
             authorSet = true;
         }
         else if (!titleSet && first.contains(titleRegExp)) {
-            title = parts.at(1).trimmed();
+            importData->Title = parts.at(1).trimmed();
             titleSet = true;
         }
         else if (!descriptionSet && first.contains(descriptionRegExp)) {
-            description = parts.at(1).trimmed();
+            importData->Description = parts.at(1).trimmed();
             descriptionSet = true;
         }
         else if (!keywordsSet && first.contains(keywordsRegExp)) {
-            keywords = parts.at(1).trimmed();
+            importData->Keywords = parts.at(1).trimmed();
             keywordsSet = true;
         }
     }
-
-    metadata->initialize(author, title, description, keywords);
-
-    bool anyEmpty = description.isEmpty() || keywords.isEmpty();
-    return !anyEmpty;
 }
 
 #endif // EXIFTOOLWRAPPER
