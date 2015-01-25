@@ -54,9 +54,16 @@ ApplicationWindow {
             }
 
             StyledText {
-                textFormat: Text.RichText
-                text: "<a href=\"http://ribtoks.github.io/xpiks/\">Home page of Xpiks</a>"
-                onLinkActivated: Qt.openUrlExternally(link)
+                text: qsTr("<u>Home webpage of Xpiks</u>")
+                color: Colors.artworkActiveColor
+
+                MouseArea {
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                        Qt.openUrlExternally("http://ribtoks.github.io/xpiks/")
+                    }
+                }
             }
         }
     }

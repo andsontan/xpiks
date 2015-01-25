@@ -110,12 +110,12 @@ Item {
         Rectangle {
             id: dialogWindow
             width: 600
-            height: 360
+            height: 370
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
 
             ColumnLayout {
-                spacing: 10
+                spacing: 15
                 anchors.fill: parent
                 anchors.margins: 20
 
@@ -263,7 +263,7 @@ Item {
                         }
 
                         ColumnLayout {
-                            spacing: 3
+                            spacing: 4
 
                             StyledText {
                                 text: qsTr("Title:")
@@ -320,7 +320,7 @@ Item {
                             }
 
                             Item {
-                                height: 5
+                                height: 6
                             }
 
                             StyledText {
@@ -449,9 +449,10 @@ Item {
 
                     StyledText {
                         text: qsTr("%1 warning(s)").arg(warningsManager.warningsCount)
-                        color: warningsManager.warningsCount > 0 ? Colors.artworkModifiedColor : Colors.selectedMetadataColor
+                        color: uploadWarmingsMA.pressed ? Colors.defaultLightGrayColor : warningsManager.warningsCount > 0 ? Colors.artworkModifiedColor : Colors.defaultInputBackground
 
                         MouseArea {
+                            id: uploadWarmingsMA
                             anchors.fill: parent
                             cursorShape: Qt.PointingHandCursor
                             onClicked: {
