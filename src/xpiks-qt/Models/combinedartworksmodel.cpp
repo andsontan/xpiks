@@ -33,6 +33,7 @@ namespace Models {
             m_ArtworksList.append(artworks);
             endInsertRows();
         }
+        m_IsModified = false;
     }
 
     void CombinedArtworksModel::recombineArtworks()
@@ -85,7 +86,10 @@ namespace Models {
             initDescription(description);
             initTitle(title);
             initAuthor(author);
-            initKeywords(commonKeywords.toList());
+
+            if (!m_IsModified) {
+                initKeywords(commonKeywords.toList());
+            }
         }
     }
 
@@ -105,10 +109,21 @@ namespace Models {
 
     void CombinedArtworksModel::removeKeywordAt(int keywordIndex)
     {
-        if (keywordIndex >= 0 && keywordIndex < m_CommonKeywords.length()) {
-            m_CommonKeywordsSet.remove(m_CommonKeywords.takeAt(keywordIndex));
-            emit keywordsChanged();
+        QString keyword;
+        if (m_CommonKeywordsModel.removeKeyword(keywordIndex, keyword)) {
+            m_CommonKeywordsSet.remove(keyword);
             emit keywordsCountChanged();
+            m_IsModified = true;
+        }
+    }
+
+    void CombinedArtworksModel::removeLastKeyword()
+    {
+        QString keyword;
+        if (m_CommonKeywordsModel.removeLastKeyword(keyword)) {
+            m_CommonKeywordsSet.remove(keyword);
+            emit keywordsCountChanged();
+            m_IsModified = true;
         }
     }
 
@@ -116,10 +131,10 @@ namespace Models {
     {
         QString keyword = word.simplified();
         if (!m_CommonKeywordsSet.contains(keyword)) {
-            m_CommonKeywords.append(keyword);
+            m_CommonKeywordsModel.appendKeyword(keyword);
             m_CommonKeywordsSet.insert(keyword);
-            emit keywordsChanged();
             emit keywordsCountChanged();
+            m_IsModified = true;
         }
     }
 
@@ -183,7 +198,7 @@ namespace Models {
     {
         foreach (ArtItemInfo* info, m_ArtworksList) {
             ArtworkMetadata *metadata = info->getOrigin();
-            metadata->setKeywords(m_CommonKeywords);
+            metadata->setKeywords(m_CommonKeywordsModel.getKeywords());
             metadata->setDescription(m_ArtworkDescription);
             metadata->setTitle(m_ArtworkTitle);
             metadata->setAuthor(m_ArtworkAuthor);
@@ -195,7 +210,7 @@ namespace Models {
     {
         foreach (ArtItemInfo* info, m_ArtworksList) {
             ArtworkMetadata *metadata = info->getOrigin();
-            metadata->appendKeywords(m_CommonKeywords);
+            metadata->appendKeywords(m_CommonKeywordsModel.getKeywords());
             metadata->setDescription(m_ArtworkDescription);
             metadata->setTitle(m_ArtworkTitle);
             metadata->setAuthor(m_ArtworkAuthor);

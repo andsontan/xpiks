@@ -389,7 +389,7 @@ Item {
                         EditableTags {
                             id: flv
                             anchors.margins: { left: 5; top: 5; right: 0; bottom: 5 }
-                            model: combinedArtworks.keywords
+                            model: combinedArtworks.getKeywordsModel()
 
                             delegate: Rectangle {
                                 id: itemWrapper

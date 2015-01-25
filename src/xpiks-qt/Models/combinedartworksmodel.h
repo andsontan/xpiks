@@ -23,6 +23,7 @@
 #define COMBINEDARTWORKSMODEL_H
 
 #include <QAbstractListModel>
+#include <QQmlEngine>
 #include <QStringList>
 #include <QString>
 #include <QList>
@@ -30,10 +31,47 @@
 #include "abstractlistmodel.h"
 
 namespace Models {
+    class MiniKeywordsModel : public QAbstractListModel {
+        Q_OBJECT
+    public:
+        MiniKeywordsModel(QObject *parent) :
+            QAbstractListModel(parent)
+        { }
+
+    public:
+        enum CombinedArtworksModelRoles {
+            KeywordRole = Qt::UserRole + 1
+        };
+
+    public:
+        int rowCount(const QModelIndex & parent = QModelIndex()) const { Q_UNUSED(parent); return m_KeywordsList.length(); }
+        QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const {
+            if (index.row() < 0 || index.row() >= m_KeywordsList.count()) return QVariant();
+            if (role == KeywordRole) { return m_KeywordsList[index.row()]; }
+            return QVariant();
+        }
+        const QStringList &getKeywords() const { return m_KeywordsList; }
+        void reset(const QStringList &items) { beginResetModel(); m_KeywordsList.clear(); m_KeywordsList.append(items); endResetModel(); }
+        void appendKeyword(const QString &keyword) { beginInsertRows(QModelIndex(), rowCount(), rowCount());
+                                                    m_KeywordsList.append(keyword); endInsertRows(); }
+        bool removeKeyword(int index, QString &keyword) { bool indexValid = index >= 0 && index < m_KeywordsList.length(); if (indexValid) {
+                beginRemoveRows(QModelIndex(), index, index); keyword = m_KeywordsList.takeAt(index); endRemoveRows(); }
+                return indexValid;
+            }
+        bool removeLastKeyword(QString &keyword) { return removeKeyword(m_KeywordsList.length() - 1, keyword); }
+
+    protected:
+        QHash<int, QByteArray> roleNames() const {
+            QHash<int, QByteArray> roles; roles[KeywordRole] = "keyword"; return roles;
+        }
+
+    private:
+        QStringList m_KeywordsList;
+    };
+
     class CombinedArtworksModel : public AbstractListModel
     {
         Q_OBJECT
-        Q_PROPERTY(QStringList keywords READ getKeywords WRITE setKeywords NOTIFY keywordsChanged)
         Q_PROPERTY(QString description READ getDescription WRITE setDescription NOTIFY descriptionChanged)
         Q_PROPERTY(QString title READ getTitle WRITE setTitle NOTIFY titleChanged)
         Q_PROPERTY(QString author READ getAuthor WRITE setAuthor NOTIFY authorChanged)
@@ -41,7 +79,8 @@ namespace Models {
         Q_PROPERTY(int selectedArtworksCount READ getSelectedArtworksCount NOTIFY selectedArtworksCountChanged)
     public:
         CombinedArtworksModel(QObject *parent = 0) :
-            AbstractListModel(parent)
+            AbstractListModel(parent),
+            m_CommonKeywordsModel(parent)
         {}
 
         ~CombinedArtworksModel() { qDeleteAll(m_ArtworksList); }
@@ -50,7 +89,7 @@ namespace Models {
         void initArtworks(const QList<ArtItemInfo*> &artworks);
 
     private:
-        void initKeywords(const QStringList &ek) { m_CommonKeywords.clear(); std::copy(ek.begin(), ek.end(), std::back_inserter(m_CommonKeywords)); m_CommonKeywordsSet.unite(QSet<QString>::fromList(m_CommonKeywords)); emit keywordsChanged(); }
+        void initKeywords(const QStringList &ek) { m_CommonKeywordsModel.reset(ek); m_CommonKeywordsSet.unite(QSet<QString>::fromList(m_CommonKeywordsModel.getKeywords())); }
         void initDescription(const QString &description) { setDescription(description); }
         void initTitle(const QString &title) { setTitle(title); }
         void initAuthor(const QString &author) { setAuthor(author); }
@@ -59,8 +98,7 @@ namespace Models {
         void recombineArtworks();
 
     public:
-        const QStringList &getKeywords() const { return m_CommonKeywords; }
-        void setKeywords(const QStringList& keywords) { m_CommonKeywords = keywords; emit keywordsChanged(); }
+        void setKeywords(const QStringList& keywords) { m_CommonKeywordsModel.reset(keywords); }
         const QString &getDescription() const { return m_ArtworkDescription; }
         void setDescription(const QString &value) {
             if (m_ArtworkDescription != value) {
@@ -82,10 +120,9 @@ namespace Models {
                 emit authorChanged();
             }
         }
-        int getKeywordsCount() const { return m_CommonKeywords.length(); }
+        int getKeywordsCount() const { return m_CommonKeywordsModel.rowCount(); }
 
     signals:
-        void keywordsChanged();
         void descriptionChanged();
         void titleChanged();
         void authorChanged();
@@ -97,7 +134,7 @@ namespace Models {
 
     public:
         Q_INVOKABLE void removeKeywordAt(int keywordIndex);
-        Q_INVOKABLE void removeLastKeyword() { removeKeywordAt(m_CommonKeywords.length() - 1); }
+        Q_INVOKABLE void removeLastKeyword();
         Q_INVOKABLE void appendKeyword(const QString &keyword);
         Q_INVOKABLE void selectArtwork(int index);
         Q_INVOKABLE void deselectArtwork(int index);
@@ -106,7 +143,12 @@ namespace Models {
         Q_INVOKABLE void saveSetKeywords();
         Q_INVOKABLE void saveAddKeywords();
         Q_INVOKABLE void resetModelData();
-        Q_INVOKABLE QString getKeywordsString() { return m_CommonKeywords.join(','); }
+        Q_INVOKABLE QString getKeywordsString() { return m_CommonKeywordsModel.getKeywords().join(','); }
+        Q_INVOKABLE QObject *getKeywordsModel() {
+            QObject *item = &m_CommonKeywordsModel;
+            QQmlEngine::setObjectOwnership(item, QQmlEngine::CppOwnership);
+            return item;
+        }
 
     public:
         enum CombinedArtworksModelRoles {
@@ -126,12 +168,16 @@ namespace Models {
 
     private:
         QList<ArtItemInfo*> m_ArtworksList;
-        QStringList m_CommonKeywords;
+        MiniKeywordsModel m_CommonKeywordsModel;
         QSet<QString> m_CommonKeywordsSet;
         QString m_ArtworkDescription;
         QString m_ArtworkTitle;
         QString m_ArtworkAuthor;
+        bool m_IsModified;
     };
 }
+
+
+Q_DECLARE_METATYPE(Models::MiniKeywordsModel*)
 
 #endif // COMBINEDARTWORKSMODEL_H
