@@ -123,6 +123,8 @@ Flickable {
             TextInput {
                 id: nextTagTextInput
                 maximumLength: 30
+                selectedTextColor: Colors.defaultLightColor
+                selectionColor: Colors.defaultControlColor
                 selectByMouse: true
                 anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
