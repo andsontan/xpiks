@@ -99,9 +99,14 @@ namespace Models {
         Q_INVOKABLE void selectDirectory(int directoryIndex);
         Q_INVOKABLE void checkForWarnings();
         Q_INVOKABLE QObject *getArtworkItself(int index) const {
-            QObject *item = m_ArtworkList[index];
-            QQmlEngine::setObjectOwnership(item, QQmlEngine::CppOwnership);
-            qDebug() << "Binding to keywords list... " << m_ArtworkList[index]->getFilepath();
+            ArtworkMetadata *item = NULL;
+
+            if (index >= 0 && index < m_ArtworkList.length()) {
+                item = m_ArtworkList[index];
+                QQmlEngine::setObjectOwnership(item, QQmlEngine::CppOwnership);
+                qDebug() << "Binding to keywords list... " << item->getFilepath();
+            }
+
             return item;
         }
 

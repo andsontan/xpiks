@@ -38,6 +38,8 @@ namespace Models {
             m_IsSelected(false)
         { }
 
+        ~ArtworkMetadata() { this->disconnect(); }
+
     public:
         enum ArtworkMetadataRoles {
             KeywordRole = Qt::UserRole + 1

@@ -528,6 +528,7 @@ namespace Models {
 
         m_ArtworksRepository->cleanupEmptyDirectories();
         m_ArtworksRepository->updateCountsForExistingDirectories();
+        updateModifiedCount();
     }
 
     void ArtItemsModel::getSelectedItemsIndices(QList<int> &indices)
