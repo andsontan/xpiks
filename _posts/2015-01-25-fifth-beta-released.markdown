@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Beta version 0.5 of Xpiks released!"
-date: 2015-01-16T09:13:01+02:00
+date: 2015-01-25T19:39:01+02:00
 ---
 
 I'm proud to announce fifth release of Cross-platform image keywording software v1.0-beta5! This release contains a lot of UI fixes. You can find binaries at Downloads page.
