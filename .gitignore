@@ -1,3 +1,5 @@
 src/build*
 *.pro.user
 *.autosave
+src/xpiks-tests/build-*
+.DS_Store
