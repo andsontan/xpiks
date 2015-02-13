@@ -12,7 +12,8 @@ private slots:
     void encodedTextNotEqualToRawTest();
     void encodedNotEqualToDecodedTest();
     void complexEncodeDecodeTest();
-    void simpleEncodeDecodeUnicodeTest();
+    void simpleEncodeDecodeCyrrylicTest();
+    void simpleEncodeDecodeUtf8Test();
 };
 
 #endif // RC6_TESTS

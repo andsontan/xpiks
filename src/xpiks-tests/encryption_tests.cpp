@@ -8,8 +8,6 @@ void EncryptionTests::simpleEncodeDecodeTest() {
     QByteArray encoded = encodeText(text, key);
     QString decoded = decodeText(encoded, key);
 
-    qDebug() << decoded;
-
     QVERIFY(decoded == text);
 }
 
@@ -42,10 +40,20 @@ void EncryptionTests::complexEncodeDecodeTest()
     QVERIFY(decoded == text);
 }
 
-void EncryptionTests::simpleEncodeDecodeUnicodeTest()
+void EncryptionTests::simpleEncodeDecodeCyrrylicTest()
 {
     QString text = "простий текст";
     QString key = "ключ";
+    QByteArray encoded = encodeText(text, key);
+    QString decoded = decodeText(encoded, key);
+
+    QVERIFY(decoded == text);
+}
+
+void EncryptionTests::simpleEncodeDecodeUtf8Test()
+{
+    QString text = QString::fromUtf8("Test \u20AC");;
+    QString key = QString::fromUtf8("Test \u20AC\u20AC");;
     QByteArray encoded = encodeText(text, key);
     QString decoded = decodeText(encoded, key);
 
