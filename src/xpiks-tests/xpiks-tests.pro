@@ -12,10 +12,11 @@ TARGET = xpiks-tests
 CONFIG   += console
 CONFIG   -= app_bundle
 
-TEMPLATE = app
+win32:INCLUDEPATH += ../tiny-aes
+win32:INCLUDEPATH += ../xpiks-qt/Encoding
 
-#INCLUDEPATH += ../tiny-aes
-#INCLUDEPATH += ../xpiks-qt/Encoding
+
+TEMPLATE = app
 
 SOURCES += main.cpp \
     encryption_tests.cpp \
@@ -25,5 +26,3 @@ HEADERS += \
     encryption_tests.h \
     ../tiny-aes/aes.h \
     ../xpiks-qt/Encoding/aes-qt.h
-
-QMAKE_CXXFLAGS += -stdlib=libc++
