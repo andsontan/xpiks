@@ -30,7 +30,7 @@ namespace Constants {
     const char MAX_DESCRIPTION_LENGTH[] = "MAX_DESCRIPTION_LENGTH";
     const char MIN_MEGAPIXEL_COUNT[] = "MIN_MEGAPIXEL_COUNT";
     const char ORGANIZATION_NAME[] = "Xpiks";
-    const char ORGANIZATION_DOMAIN[] = "ribtoks.github.io/xpiks";
+    const char ORGANIZATION_DOMAIN[] = "ribtoks.github.io";
     const char APPLICATION_NAME[] = "Xpiks";
     const char LOG_FILENAME[] = "xpiks.log";
     const char METADATA_BACKUP_EXTENSION[] = ".xpks";

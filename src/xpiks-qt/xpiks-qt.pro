@@ -8,7 +8,6 @@ SOURCES += main.cpp \
     Helpers/globalimageprovider.cpp \
     Models/artworksrepository.cpp \
     Models/combinedartworksmodel.cpp \
-    Models/artiteminfo.cpp \
     Helpers/indiceshelper.cpp \
     Models/iptcprovider.cpp \
     Helpers/externaltoolsprovider.cpp \
@@ -16,8 +15,9 @@ SOURCES += main.cpp \
     Models/artworksprocessor.cpp \
     Models/uploadinforepository.cpp \
     Helpers/tempmetadatadb.cpp \
-    Models/warningsinfo.cpp \
-    Models/warningsmanager.cpp
+    Models/warningsmanager.cpp \
+    ../tiny-aes/aes.cpp \
+    Encryption/secretsmanager.cpp
 
 RESOURCES += qml.qrc
 
@@ -58,7 +58,12 @@ HEADERS += \
     Models/logsmodel.h \
     Helpers/tempmetadatadb.h \
     Models/warningsinfo.h \
-    Models/warningsmanager.h
+    Models/warningsmanager.h \
+    Encoding/rc6.h \
+    Encoding/rc6qt.h \
+    Encryption/aes-qt.h \
+    ../tiny-aes/aes.h \
+    Encryption/secretsmanager.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
@@ -81,7 +86,8 @@ DISTFILES += \
     Dialogs/WarningsDialog.qml \
     xpiks-qt.ico \
     Dialogs/AboutWindow.qml \
-    StyledControls/StyledAddHostButton.qml
+    StyledControls/StyledAddHostButton.qml \
+    Dialogs/MasterPaswordDialog.qml
 
 macx {
 OBJECTIVE_SOURCES += \

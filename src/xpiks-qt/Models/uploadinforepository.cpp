@@ -24,9 +24,20 @@
 namespace Models {
     void UploadInfoRepository::initFromString(const QString &savedString)
     {
-        QStringList items = savedString.split('|', QString::SkipEmptyParts);
-        foreach (const QString &item, items) {
-            UploadInfo *info = new UploadInfo(item);
+        QByteArray originalData;
+        originalData.append(savedString);
+        // TODO: QT does not have less ugly way to do it??
+        originalData = originalData.fromBase64(originalData);
+
+        QList<QHash<int, QString> > items;
+        QByteArray result;
+        QDataStream stream(&result, QIODevice::ReadOnly);
+        stream >> items;
+
+        int length = items.length();
+        for (int i = 0; i < length; ++i) {
+            QHash<int, QString> hash = items[i];
+            UploadInfo *info = new UploadInfo(hash);
             m_UploadInfos.append(info);
         }
     }
@@ -40,7 +51,7 @@ namespace Models {
             }
         }
 
-        return items.join(',');
+        return items.join(", ");
     }
 
     int UploadInfoRepository::rowCount(const QModelIndex &parent) const
@@ -63,8 +74,12 @@ namespace Models {
             return uploadInfo->getHost();
         case UsernameRole:
             return uploadInfo->getUsername();
-        case PasswordRole:
-            return uploadInfo->getPassword();
+        case PasswordRole: {
+            const QByteArray &encodedPassword = uploadInfo->getPassword();
+            Q_ASSERT(m_SecretsManager != NULL);
+            QString password = m_SecretsManager->decodePassword(encodedPassword);
+            return password;
+        }
         case IsSelectedRole:
             return uploadInfo->getIsSelected();
         default:
@@ -104,10 +119,14 @@ namespace Models {
             roleToUpdate = UsernameRole;
             uploadInfo->setUsername(value.toString().trimmed());
             break;
-        case EditPasswordRole:
+        case EditPasswordRole: {
             roleToUpdate = PasswordRole;
-            uploadInfo->setPassword(value.toString());
+            QString rawPassword = value.toString();
+            Q_ASSERT(m_SecretsManager != NULL);
+            QByteArray encodedPassword = m_SecretsManager->encodePassword(rawPassword);
+            uploadInfo->setPassword(encodedPassword);
             break;
+        }
         case EditIsSelectedRole:
             roleToUpdate = IsSelectedRole;
             uploadInfo->setIsSelected(value.toBool());

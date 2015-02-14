@@ -37,7 +37,7 @@ namespace Models {
          ArtworkUploader();
          ~ArtworkUploader() { delete m_ArtworksUploader; }
 
-         void setUploadInfoRepository(UploadInfoRepository *infoRepository) { m_InfoRepository = infoRepository; }
+         void setUploadInfoRepository(UploadInfoRepository *infoRepository) { Q_ASSERT(infoRepository != NULL); m_InfoRepository = infoRepository; }
 
     public:
          Q_PROPERTY(bool includeEPS READ getIncludeEPS WRITE setIncludeEPS NOTIFY includeEPSChanged)

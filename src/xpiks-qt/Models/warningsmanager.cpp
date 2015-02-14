@@ -87,6 +87,7 @@ namespace Models {
 
         const QString &filePath = am->getFilepath();
         QSize size;
+        Q_ASSERT(m_ImageProvider != NULL);
         if (!m_ImageProvider->tryGetOriginalSize(filePath, size)) {
             QImageReader reader(filePath);
             size = reader.size();

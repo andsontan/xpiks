@@ -94,6 +94,7 @@ ApplicationWindow {
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
             artItemsModel.removeSelectedArtworks()
+            artItemsModel.checkForWarnings()
         }
     }
 
@@ -105,6 +106,7 @@ ApplicationWindow {
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
             artItemsModel.removeArtworksDirectory(directoryIndex)
+            artItemsModel.checkForWarnings()
         }
     }
 

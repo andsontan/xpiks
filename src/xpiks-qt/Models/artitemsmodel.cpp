@@ -190,8 +190,8 @@ namespace Models {
             }
         }
 
-        // TODO: assert iptc provider is not null
         // TODO: remove this two times copying
+        Q_ASSERT(m_IptcProvider != NULL);
         m_IptcProvider->setArtworks(modifiedSelectedArtworks);
     }
 
@@ -200,8 +200,8 @@ namespace Models {
         QList<ArtworkMetadata*> selectedArtworks;
         getSelectedArtworks(selectedArtworks);
 
-        // TODO: assert uploader is not null
         // TODO: remove this two times copying
+        Q_ASSERT(m_ArtworkUploader != NULL);
         m_ArtworkUploader->setArtworks(selectedArtworks);
         m_WarningsManager->checkForWarnings(selectedArtworks);
     }
@@ -513,7 +513,7 @@ namespace Models {
 
     void ArtItemsModel::removeInnerItem(int row)
     {
-        // TODO: add assert for row
+        Q_ASSERT(row >= 0 && row < m_ArtworkList.length());
         ArtworkMetadata *metadata = m_ArtworkList[row];
         m_ArtworksRepository->removeFile(metadata->getFilepath());
 

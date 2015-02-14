@@ -52,7 +52,7 @@ namespace Models {
         int getWarningsCount();
         void checkForWarnings(const QList<ArtworkMetadata*> &artworks);
         void recheckItems();
-        void setImageProvider(Helpers::GlobalImageProvider *imageProvider) { m_ImageProvider = imageProvider; }
+        void setImageProvider(Helpers::GlobalImageProvider *imageProvider) { Q_ASSERT(imageProvider != NULL); m_ImageProvider = imageProvider; }
 
     private:
         void checkItem(WarningsInfo *metadata);

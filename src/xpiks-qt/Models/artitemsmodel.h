@@ -71,11 +71,11 @@ namespace Models {
         void updateModifiedCount() { emit modifiedArtworksCountChanged(); }
 
     public:
-        void setArtworksRepository(ArtworksRepository *repository) { m_ArtworksRepository = repository; }
-        void setCombinedArtworksModel(CombinedArtworksModel *combinedArtworksModel) { m_CombinedArtworks = combinedArtworksModel; }
-        void setIptcProvider(IptcProvider *provider) { m_IptcProvider = provider; }
-        void setArtworkUploader(ArtworkUploader *uploader) { m_ArtworkUploader = uploader; }
-        void setWarningsManager(WarningsManager *manager) { m_WarningsManager = manager; }
+        void setArtworksRepository(ArtworksRepository *repository) { Q_ASSERT(repository != NULL); m_ArtworksRepository = repository; }
+        void setCombinedArtworksModel(CombinedArtworksModel *combinedArtworksModel) { Q_ASSERT(combinedArtworksModel != NULL); m_CombinedArtworks = combinedArtworksModel; }
+        void setIptcProvider(IptcProvider *provider) { Q_ASSERT(provider != NULL); m_IptcProvider = provider; }
+        void setArtworkUploader(ArtworkUploader *uploader) { Q_ASSERT(uploader != NULL); m_ArtworkUploader = uploader; }
+        void setWarningsManager(WarningsManager *manager) { Q_ASSERT(manager != NULL); m_WarningsManager = manager; }
 
     public:
         Q_INVOKABLE void updateAllProperties();

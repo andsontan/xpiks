@@ -31,8 +31,8 @@ import "../StyledControls"
 ApplicationWindow {
     id: settingsWindow
     modality: "ApplicationModal"
-    width: 640
-    height: 265
+    width: 450
+    height: 415
     minimumWidth: width
     maximumWidth: width
     minimumHeight: height
@@ -108,232 +108,303 @@ ApplicationWindow {
 
         ColumnLayout {
             anchors.fill: parent
-            anchors.margins: 20
-            spacing: 20
+            anchors.margins: 10
+            spacing: 5
 
-            GridLayout {
-                width: parent.width
-                Layout.fillHeight: true
-                rows: 5
-                columns: 4
-                rowSpacing: 15
-                columnSpacing: 5
+            StyledText {
+                text: qsTr("External tools paths:")
+            }
 
-                StyledText {
-                    Layout.row: 0
-                    Layout.column: 0
-                    Layout.fillWidth: true
-                    Layout.maximumWidth: 130
+            Rectangle {
+                Layout.fillWidth: true
+                height: 80
+                radius: 2
+                border.color: Colors.defaultInputBackground
+                border.width: 2
+                color: Colors.selectedArtworkColor
 
-                    horizontalAlignment: Text.AlignRight
-                    text: qsTr("ExifTool path:")
-                }
+                GridLayout {
+                    anchors.fill: parent
+                    anchors.margins: 10
+                    rows: 2
+                    columns: 4
+                    rowSpacing: 10
+                    columnSpacing: 5
 
-                Rectangle {
-                    Layout.row: 0
-                    Layout.column: 1
-                    height: childrenRect.height
-                    width: childrenRect.width + 5
-                    color: Colors.defaultInputBackground
-                    border.color: Colors.artworkActiveColor
-                    border.width: exifToolText.activeFocus ? 1 : 0
+                    StyledText {
+                        Layout.row: 0
+                        Layout.column: 0
+                        Layout.fillWidth: true
+                        Layout.maximumWidth: 80
 
-                    StyledTextInput {
-                        id: exifToolText
-                        width: 300
-                        height: 24
-                        clip: true
-                        text: exifToolPath
-                        anchors.left: parent.left
-                        anchors.leftMargin: 5
-                        KeyNavigation.tab: curlText
+                        horizontalAlignment: Text.AlignRight
+                        text: qsTr("ExifTool path:")
                     }
-                }
 
-                StyledButton {
-                    Layout.row: 0
-                    Layout.column: 2
-                    Layout.fillWidth: true
-                    text: qsTr("Select...")
-                    width: 50
-                    Layout.preferredWidth: 50
-                    onClicked: exifToolFileDialog.open()
-                }
+                    Rectangle {
+                        Layout.row: 0
+                        Layout.column: 1
+                        height: childrenRect.height
+                        width: childrenRect.width + 5
+                        color: Colors.defaultInputBackground
+                        border.color: Colors.artworkActiveColor
+                        border.width: exifToolText.activeFocus ? 1 : 0
 
-                StyledButton {
-                    Layout.row: 0
-                    Layout.column: 3                    
-                    Layout.fillWidth: true
-                    text: qsTr("Reset")
-                    width: 50
-                    Layout.preferredWidth: 50
-                    onClicked: exifToolText.text = defaultExifTool
-                }
-
-                StyledText {
-                    Layout.row: 1
-                    Layout.column: 0
-                    Layout.fillWidth: true
-                    Layout.maximumWidth: 130
-                    horizontalAlignment: Text.AlignRight
-                    text: qsTr("Curl path:")
-                }
-
-                Rectangle {
-                    Layout.row: 1
-                    Layout.column: 1
-                    height: childrenRect.height
-                    width: childrenRect.width + 5
-                    color: Colors.defaultInputBackground
-                    border.color: Colors.artworkActiveColor
-                    border.width: curlText.activeFocus ? 1 : 0
-
-                    StyledTextInput {
-                        id: curlText
-                        width: 300
-                        height: 24
-                        clip: true
-                        text: curlPath
-                        anchors.left: parent.left
-                        anchors.leftMargin: 5
-                        KeyNavigation.backtab: exifToolText
-                        KeyNavigation.tab: megapixelsCount
-                    }
-                }
-
-                StyledButton {
-                    Layout.row: 1
-                    Layout.column: 2
-                    Layout.fillWidth: true
-                    text: qsTr("Select...")
-                    width: 50
-                    Layout.preferredWidth: 50
-                    onClicked: curlFileDialog.open()
-                }
-
-                StyledButton {
-                    Layout.row: 1
-                    Layout.column: 3
-                    Layout.fillWidth: true
-                    text: qsTr("Reset")
-                    width: 50
-                    Layout.preferredWidth: 50
-                    onClicked: curlText.text = defaultCurl
-                }
-
-                StyledText {
-                    Layout.row: 2
-                    Layout.column: 0
-                    Layout.fillWidth: true
-                    Layout.maximumWidth: 130
-                    horizontalAlignment: Text.AlignRight
-                    text: qsTr("Minimum megapixels:")
-                }
-
-                Rectangle {
-                    Layout.row: 2
-                    Layout.column: 1
-                    height: childrenRect.height
-                    width: childrenRect.width + 5
-                    color: Colors.defaultInputBackground
-                    border.color: Colors.artworkActiveColor
-                    border.width: megapixelsCount.activeFocus ? 1 : 0
-
-                    StyledTextInput {
-                        id: megapixelsCount
-                        width: 100
-                        height: 24
-                        clip: true
-                        text: minMegapixelCount
-                        anchors.left: parent.left
-                        anchors.leftMargin: 5
-                        KeyNavigation.backtab: curlText
-                        KeyNavigation.tab: keywordsCount
-
-                        validator: DoubleValidator {
-                            bottom: 0
-                            top: 100
-                            decimals: 1
-                            notation: "StandardNotation"
+                        StyledTextInput {
+                            id: exifToolText
+                            width: 150
+                            height: 24
+                            clip: true
+                            text: exifToolPath
+                            anchors.left: parent.left
+                            anchors.leftMargin: 5
+                            KeyNavigation.tab: curlText
                         }
                     }
-                }
 
-                StyledText {
-                    Layout.row: 3
-                    Layout.column: 0
-                    Layout.fillWidth: true
-                    Layout.maximumWidth: 130
-                    horizontalAlignment: Text.AlignRight
-                    text: qsTr("Max keywords count:")
-                }
+                    StyledButton {
+                        Layout.row: 0
+                        Layout.column: 2
+                        text: qsTr("Select...")
+                        width: 70
+                        onClicked: exifToolFileDialog.open()
+                    }
 
-                Rectangle {
-                    Layout.row: 3
-                    Layout.column: 1
-                    height: childrenRect.height
-                    width: childrenRect.width + 5
-                    color: Colors.defaultInputBackground
-                    border.color: Colors.artworkActiveColor
-                    border.width: keywordsCount.activeFocus ? 1 : 0
+                    StyledButton {
+                        Layout.row: 0
+                        Layout.column: 3
+                        text: qsTr("Reset")
+                        width: 70
+                        onClicked: exifToolText.text = defaultExifTool
+                    }
 
-                    StyledTextInput {
-                        id: keywordsCount
-                        width: 100
-                        height: 24
-                        clip: true
-                        text: maxKeywordsCount
-                        anchors.left: parent.left
-                        anchors.leftMargin: 5
-                        KeyNavigation.backtab: megapixelsCount
-                        KeyNavigation.tab: descriptionLength
+                    StyledText {
+                        Layout.row: 1
+                        Layout.column: 0
+                        Layout.fillWidth: true
+                        Layout.maximumWidth: 80
+                        horizontalAlignment: Text.AlignRight
+                        text: qsTr("Curl path:")
+                    }
 
-                        validator: IntValidator {
-                            bottom: 0
-                            top: 200
+                    Rectangle {
+                        Layout.row: 1
+                        Layout.column: 1
+                        height: childrenRect.height
+                        width: childrenRect.width + 5
+                        color: Colors.defaultInputBackground
+                        border.color: Colors.artworkActiveColor
+                        border.width: curlText.activeFocus ? 1 : 0
+
+                        StyledTextInput {
+                            id: curlText
+                            width: 150
+                            height: 24
+                            clip: true
+                            text: curlPath
+                            anchors.left: parent.left
+                            anchors.leftMargin: 5
+                            KeyNavigation.backtab: exifToolText
+                            KeyNavigation.tab: megapixelsCount
                         }
                     }
+
+                    StyledButton {
+                        Layout.row: 1
+                        Layout.column: 2
+                        text: qsTr("Select...")
+                        width: 70
+                        onClicked: curlFileDialog.open()
+                    }
+
+                    StyledButton {
+                        Layout.row: 1
+                        Layout.column: 3
+                        text: qsTr("Reset")
+                        width: 70
+                        onClicked: curlText.text = defaultCurl
+                    }
                 }
+            }
 
-                StyledText {
-                    Layout.row: 4
-                    Layout.column: 0
-                    Layout.fillWidth: true
-                    Layout.maximumWidth: 130
-                    horizontalAlignment: Text.AlignRight
-                    text: qsTr("Max description length:")
-                }
+            Item {
+                height: 15
+            }
 
-                Rectangle {
-                    Layout.row: 4
-                    Layout.column: 1
-                    height: childrenRect.height
-                    width: childrenRect.width + 5
-                    color: Colors.defaultInputBackground
-                    border.color: Colors.artworkActiveColor
-                    border.width: descriptionLength.activeFocus ? 1 : 0
+            StyledText {
+                text: qsTr("Upload warnings limits:")
+            }
 
-                    StyledTextInput {
-                        id: descriptionLength
-                        width: 100
-                        height: 24
-                        clip: true
-                        text: maxDescriptionLength
-                        anchors.left: parent.left
-                        anchors.leftMargin: 5
-                        KeyNavigation.backtab: keywordsCount
+            Rectangle {
+                Layout.fillWidth: true
+                height: 120
+                radius: 2
+                border.color: Colors.defaultInputBackground
+                border.width: 2
+                color: Colors.selectedArtworkColor
 
-                        validator: IntValidator {
-                            bottom: 0
-                            top: 1000
+                ColumnLayout {
+                    spacing: 5
+                    anchors.fill: parent
+                    anchors.margins: 10
+
+                    RowLayout {
+                        width: parent.width
+                        spacing: 10
+
+                        StyledText {
+                            Layout.preferredWidth: 130
+                            horizontalAlignment: Text.AlignRight
+                            text: qsTr("Minimum megapixels:")
+                        }
+
+                        Rectangle {
+                            height: childrenRect.height
+                            width: childrenRect.width + 5
+                            color: Colors.defaultInputBackground
+                            border.color: Colors.artworkActiveColor
+                            border.width: megapixelsCount.activeFocus ? 1 : 0
+
+                            StyledTextInput {
+                                id: megapixelsCount
+                                width: 100
+                                height: 24
+                                clip: true
+                                text: minMegapixelCount
+                                anchors.left: parent.left
+                                anchors.leftMargin: 5
+                                KeyNavigation.backtab: curlText
+                                KeyNavigation.tab: keywordsCount
+
+                                validator: DoubleValidator {
+                                    bottom: 0
+                                    top: 100
+                                    decimals: 1
+                                    notation: "StandardNotation"
+                                }
+                            }
+                        }
+                    }
+
+                    RowLayout {
+                        width: parent.width
+                        spacing: 10
+
+                        StyledText {
+                            Layout.preferredWidth: 130
+                            horizontalAlignment: Text.AlignRight
+                            text: qsTr("Max keywords count:")
+                        }
+
+                        Rectangle {
+                            height: childrenRect.height
+                            width: childrenRect.width + 5
+                            color: Colors.defaultInputBackground
+                            border.color: Colors.artworkActiveColor
+                            border.width: keywordsCount.activeFocus ? 1 : 0
+
+                            StyledTextInput {
+                                id: keywordsCount
+                                width: 100
+                                height: 24
+                                clip: true
+                                text: maxKeywordsCount
+                                anchors.left: parent.left
+                                anchors.leftMargin: 5
+                                KeyNavigation.backtab: megapixelsCount
+                                KeyNavigation.tab: descriptionLength
+
+                                validator: IntValidator {
+                                    bottom: 0
+                                    top: 200
+                                }
+                            }
+                        }
+                    }
+
+                    RowLayout {
+                        width: parent.width
+                        spacing: 10
+
+                        StyledText {
+                            Layout.preferredWidth: 130
+                            horizontalAlignment: Text.AlignRight
+                            text: qsTr("Max description length:")
+                        }
+
+                        Rectangle {
+                            height: childrenRect.height
+                            width: childrenRect.width + 5
+                            color: Colors.defaultInputBackground
+                            border.color: Colors.artworkActiveColor
+                            border.width: descriptionLength.activeFocus ? 1 : 0
+
+                            StyledTextInput {
+                                id: descriptionLength
+                                width: 100
+                                height: 24
+                                clip: true
+                                text: maxDescriptionLength
+                                anchors.left: parent.left
+                                anchors.leftMargin: 5
+                                KeyNavigation.backtab: keywordsCount
+
+                                validator: IntValidator {
+                                    bottom: 0
+                                    top: 1000
+                                }
+                            }
                         }
                     }
                 }
             }
 
+            Item {
+                height: 15
+            }
+
+            StyledText {
+                text: qsTr("FTP passwords:")
+            }
+
+            Rectangle {
+                Layout.fillWidth: true
+                height: 45
+                radius: 2
+                border.color: Colors.defaultInputBackground
+                border.width: 2
+                color: Colors.selectedArtworkColor
+
+                RowLayout {
+                    anchors.fill: parent
+                    anchors.margins: 10
+
+                    StyledCheckbox {
+                        id: masterPasswordCheckbox
+                        text: qsTr("Use Master password")
+
+                    }
+
+                    Item {
+                        Layout.fillWidth: true
+                    }
+
+                    StyledButton {
+                        width: 190
+                        text: qsTr("Change Master password")
+                        enabled: masterPasswordCheckbox.checked
+                    }
+                }
+            }
+
+            Item {
+                height: 10
+            }
+
             RowLayout {
                 height: 24
-                spacing: 10
+                spacing: 0
+                width: parent.width
 
                 Item {
                     Layout.fillWidth: true
@@ -341,7 +412,7 @@ ApplicationWindow {
 
                 StyledButton {
                     text: qsTr("Save and Exit")
-                    width: 150
+                    width: 120
                     onClicked: {
                         exifToolPath = exifToolText.text
                         appSettings.setValue(exiftoolpathkey, exifToolPath)
@@ -362,11 +433,23 @@ ApplicationWindow {
                     }
                 }
 
+                Item {
+                    width: 10
+                }
+
                 StyledButton {
                     text: qsTr("Exit")
-                    width: 100
+                    width: 60
                     onClicked: closeSettings()
                 }
+
+                Item {
+                    width: 10
+                }
+            }
+
+            Item {
+                height: 5
             }
         }
     }

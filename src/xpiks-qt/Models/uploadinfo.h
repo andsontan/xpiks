@@ -22,10 +22,15 @@
 #ifndef UPLOADINFO
 #define UPLOADINFO
 
+#include <QHash>
 #include <QString>
+#include <QByteArray>
 
 namespace Models {
     class UploadInfo {
+    private:
+        enum UField { TitleField = 0, HostField, UsernameField, PasswordField };
+
     public:
         UploadInfo():
             m_IsSelected(false)
@@ -33,21 +38,25 @@ namespace Models {
             m_Title = "Untitled";
         }
 
-        UploadInfo(const QString& line) :
+        UploadInfo(const QHash<int, QString>& items) :
             m_IsSelected(false)
         {
-            if (line.length() > 2) {
-                m_Title = line.section(',', 0, 0);
-                m_Host = line.section(',', 1, 1);
-                m_Username = line.section(',', 2, 2);
-            }
+            m_Title = items.value(TitleField, "Untitled");
+            m_Host = items.value(HostField, "");
+            m_Username = items.value(UsernameField, "");
+
+            QByteArray base64;
+            QString serialized = items.value(PasswordField, "");
+            base64.append(serialized);
+            // TODO: replace this when Qt will have nice way for it
+            m_Password = base64.fromBase64(base64);
         }
 
     public:
         const QString &getTitle() const { return m_Title; }
         const QString &getHost() const { return m_Host; }
         const QString &getUsername() const { return m_Username; }
-        const QString &getPassword() const { return m_Password; }
+        const QByteArray &getPassword() const { return m_Password; }
         bool getIsSelected() const { return m_IsSelected; }
         bool isSomethingMissing() const { return m_Password.isEmpty() || m_Host.isEmpty() || m_Username.isEmpty(); }
 
@@ -55,21 +64,24 @@ namespace Models {
         void setTitle(const QString &value) { m_Title = value; }
         void setHost(const QString &value) { m_Host = value; }
         void setUsername(const QString &value) { m_Username = value; }
-        void setPassword(const QString &value) { m_Password = value; }
+        void setPassword(const QByteArray &value) { m_Password = value; }
         void setIsSelected(bool value) { m_IsSelected = value; }
 
     public:
-        QString toString() {
-            return QString("%1,%2,%3").arg(
-                        m_Title.trimmed().isEmpty() ? "Untitled" : m_Title,
-                        m_Host, m_Username);
+        QHash<int, QString> toHash() {
+            QHash<int, QString> hash;
+            hash[TitleField] = m_Title.trimmed().isEmpty() ? "Untitled" : m_Title;
+            hash[HostField] = m_Host;
+            hash[UsernameField] = m_Username;
+            hash[PasswordField] = m_Password.toBase64();
+            return hash;
         }
 
     private:
         QString m_Title;
         QString m_Host;
         QString m_Username;
-        QString m_Password;
+        QByteArray m_Password;
         bool m_IsSelected;
     };
 }

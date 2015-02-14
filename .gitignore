@@ -1,4 +1,4 @@
-src/build*
+src/xpiks-qt/build*
 *.pro.user
 *.autosave
 src/xpiks-tests/build-*

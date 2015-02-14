@@ -279,6 +279,7 @@ Item {
 
                     RowLayout {
                         Layout.fillWidth: true
+                        spacing: 0
 
                         Item {
                             width: 20
@@ -311,6 +312,11 @@ Item {
                                             uploadHostsListView.currentItem.myData.edittitle = "Untitled"
                                         }
                                     }
+
+                                    validator: RegExpValidator {
+                                        // copy paste in keys.onpressed Paste
+                                        regExp: /[a-zA-Z0-9]*$/
+                                    }
                                 }
                             }
 
@@ -338,6 +344,11 @@ Item {
                                     onTextChanged: uploadHostsListView.currentItem.myData.edithost = text
                                     KeyNavigation.tab: ftpUsername
                                     KeyNavigation.backtab: titleText
+
+                                    validator: RegExpValidator {
+                                        // copy paste in keys.onpressed Paste
+                                        regExp: /[a-zA-Z0-9]*$/
+                                    }
                                 }
                             }
 
@@ -365,6 +376,11 @@ Item {
                                     onTextChanged: uploadHostsListView.currentItem.myData.editusername = text
                                     KeyNavigation.tab: ftpPassword
                                     KeyNavigation.backtab: ftpHost
+
+                                    validator: RegExpValidator {
+                                        // copy paste in keys.onpressed Paste
+                                        regExp: /[a-zA-Z0-9]*$/
+                                    }
                                 }
                             }
 

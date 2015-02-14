@@ -23,8 +23,12 @@
 #define UPLOADINFOREPOSITORY_H
 
 #include <QAbstractListModel>
+#include <QDataStream>
+#include <QByteArray>
+#include <QHash>
 #include <QList>
 #include "uploadinfo.h"
+#include "../Encryption/secretsmanager.h"
 
 namespace Models {
     class UploadInfoRepository : public QAbstractListModel
@@ -38,6 +42,7 @@ namespace Models {
 
         ~UploadInfoRepository() { qDeleteAll(m_UploadInfos); m_UploadInfos.clear();  }
 
+        void setSecretsManager(Encryption::SecretsManager *secretsManager) { Q_ASSERT(secretsManager != NULL); m_SecretsManager = secretsManager; }
         void initFromString(const QString &savedString);
 
     public:
@@ -76,12 +81,18 @@ namespace Models {
         }
 
         Q_INVOKABLE QString getInfoString() const {
-            QStringList items;
+            QList<QHash<int, QString> > items;
             foreach (UploadInfo *info, m_UploadInfos) {
-                items.append(info->toString());
+                items.append(info->toHash());
             }
 
-            return items.join("|");
+            // TODO: move to SFTP
+            // while stocks use FTP, sophisticated passwords
+            // saving on client side is useless
+            QByteArray result;
+            QDataStream stream( &result, QIODevice::WriteOnly);
+            stream << items;
+            return result.toBase64();
         }
 
         Q_INVOKABLE int getSelectedInfosCount() const {
@@ -113,6 +124,7 @@ namespace Models {
 
     private:
         QList<UploadInfo*> m_UploadInfos;
+        Encryption::SecretsManager *m_SecretsManager;
     };
 }
 

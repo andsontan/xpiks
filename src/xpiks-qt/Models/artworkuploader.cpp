@@ -70,6 +70,7 @@ namespace Models {
         beginProcessing();
         QList<UploadPair> pairs;
 
+        Q_ASSERT(m_InfoRepository != NULL);
         const QList<UploadInfo *> &infos = m_InfoRepository->getUploadInfos();
         m_ActiveUploads = getAllFilepathes();
 
