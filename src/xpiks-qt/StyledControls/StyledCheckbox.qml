@@ -59,7 +59,7 @@ CheckBox {
 
         label: StyledText {
             text: control.text
-            color: control.enabled ? Colors.defaultLightGrayColor : Colors.selectedArtworkColor
+            color: control.enabled ? Colors.defaultLightGrayColor : Colors.itemsSourceSelected
         }
     }
 }

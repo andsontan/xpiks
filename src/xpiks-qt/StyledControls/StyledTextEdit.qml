@@ -33,6 +33,6 @@ TextEdit {
     selectByMouse: true
     cursorVisible: true
     clip: true
-    color: Colors.defaultLightColor
+    color: enabled ? Colors.defaultLightColor : Colors.itemsSourceForeground
 }
 

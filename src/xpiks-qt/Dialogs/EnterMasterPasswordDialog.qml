@@ -35,6 +35,7 @@ Item {
 
     function closePopup() {
         masterPasswordComponent.destroy()
+        masterPasswordComponent.parent.doOpenUploadDialog()
     }
 
     PropertyAnimation { target: masterPasswordComponent; property: "opacity";

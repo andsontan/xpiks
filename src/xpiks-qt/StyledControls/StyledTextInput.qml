@@ -32,7 +32,7 @@ TextInput {
     renderType: Text.NativeRendering
     selectByMouse: true
     clip: true
-    color: Colors.defaultLightColor
+    color: enabled ? Colors.defaultLightColor : Colors.itemsSourceForeground
     KeyNavigation.priority: KeyNavigation.BeforeItem
 }
 

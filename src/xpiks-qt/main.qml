@@ -47,6 +47,22 @@ ApplicationWindow {
         }
     }
 
+    function openUploadDialog() {
+        if (appSettings.value(appSettings.mustUseMasterPasswordKey, false)) {
+            var component = Qt.createComponent("Dialogs/EnterMasterPasswordDialog.qml")
+            component.createObject(applicationWindow, {componentParent: applicationWindow})
+        } else {
+            doOpenUploadDialog()
+        }
+    }
+
+    function doOpenUploadDialog() {
+        artworkUploader.resetModel()
+        artItemsModel.uploadSelectedArtworks()
+        var component = Qt.createComponent("Dialogs/UploadArtworks.qml")
+        component.createObject(applicationWindow, {componentParent: applicationWindow})
+    }
+
     menuBar: MenuBar {
         Menu {
             title: qsTr("File")
@@ -414,9 +430,7 @@ ApplicationWindow {
                                 }
                                 else {
                                     if (artItemsModel.areSelectedArtworksSaved()) {
-                                        artworkUploader.resetModel()
-                                        artItemsModel.uploadSelectedArtworks()
-                                        Qt.createComponent("Dialogs/UploadArtworks.qml").createObject(applicationWindow, {componentParent: applicationWindow})
+                                        openUploadDialog()
                                     } else {
                                         mustSaveWarning.open()
                                     }

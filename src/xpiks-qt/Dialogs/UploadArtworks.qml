@@ -79,6 +79,12 @@ Item {
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
             uploadInfos.removeItem(itemIndex)
+            if (uploadInfos.infosCount == 0) {
+                titleText.text = ""
+                ftpHost.text = ""
+                ftpUsername.text = ""
+                ftpPassword.text = ""
+            }
         }
     }
 
@@ -282,6 +288,7 @@ Item {
                         }
 
                         ColumnLayout {
+                            enabled: uploadInfos.infosCount > 0
                             spacing: 4
 
                             StyledText {
@@ -295,10 +302,9 @@ Item {
                                     id: titleText
                                     width: 300
                                     height: 30
-                                    anchors.fill: parent
-                                    enabled: uploadInfos.infosCount > 0
-                                    text: uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.title : ""
+                                    anchors.left: parent.left
                                     anchors.leftMargin: 5
+                                    text: uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.title : ""
                                     onTextChanged: uploadHostsListView.currentItem.myData.edittitle = text
                                     KeyNavigation.tab: ftpHost
                                     onEditingFinished: {
@@ -329,10 +335,9 @@ Item {
                                     id: ftpHost
                                     width: 300
                                     height: 30
-                                    anchors.fill: parent
-                                    enabled: uploadInfos.infosCount > 0
-                                    text: uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.host : ""
+                                    anchors.left: parent.left
                                     anchors.leftMargin: 5
+                                    text: uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.host : ""
                                     onTextChanged: uploadHostsListView.currentItem.myData.edithost = text
                                     KeyNavigation.tab: ftpUsername
                                     KeyNavigation.backtab: titleText
@@ -359,10 +364,9 @@ Item {
                                     id: ftpUsername
                                     width: 300
                                     height: 30
-                                    anchors.fill: parent
-                                    enabled: uploadInfos.infosCount > 0
-                                    text: uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.username : ""
+                                    anchors.left: parent.left
                                     anchors.leftMargin: 5
+                                    text: uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.username : ""
                                     onTextChanged: uploadHostsListView.currentItem.myData.editusername = text
                                     KeyNavigation.tab: ftpPassword
                                     KeyNavigation.backtab: ftpHost
@@ -389,8 +393,7 @@ Item {
                                     id: ftpPassword
                                     width: 300
                                     height: 30
-                                    anchors.fill: parent
-                                    enabled: uploadInfos.infosCount > 0
+                                    anchors.left: parent.left
                                     anchors.leftMargin: 5
                                     echoMode: showPasswordCheckBox.checked ? TextInput.Normal : TextInput.Password
                                     text: uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.password : ""
@@ -404,7 +407,6 @@ Item {
                             }
 
                             StyledCheckbox {
-                                enabled: uploadInfos.infosCount > 0
                                 id: showPasswordCheckBox
                                 text: qsTr("Show password")
                             }
@@ -413,7 +415,7 @@ Item {
                         Rectangle {
                             anchors.fill: parent
                             color: Colors.selectedArtworkColor
-                            opacity: 0.8
+                            opacity: 0.6
                             visible: uploadInfos.infosCount == 0
                         }
                     }

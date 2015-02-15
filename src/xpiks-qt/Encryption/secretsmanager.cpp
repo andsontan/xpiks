@@ -41,14 +41,24 @@ namespace Encryption {
     }
 
     QByteArray SecretsManager::encodePassword(const QString &password) const {
-        QString key = getKeyForEncryption();
-        QByteArray encodedPassword = encodeText(password, key);
+        QByteArray encodedPassword;
+
+        if (!password.isEmpty()) {
+            QString key = getKeyForEncryption();
+            encodedPassword = encodeText(password, key);
+        }
+
         return encodedPassword;
     }
 
     QString SecretsManager::decodePassword(const QByteArray &encodedPassword) const {
-        QString key = getKeyForEncryption();
-        QString decodedPassword = decodeText(encodedPassword, key);
+        QString decodedPassword = "";
+
+        if (!encodedPassword.isEmpty()) {
+            QString key = getKeyForEncryption();
+            decodedPassword = decodeText(encodedPassword, key);
+        }
+
         return decodedPassword;
     }
 
