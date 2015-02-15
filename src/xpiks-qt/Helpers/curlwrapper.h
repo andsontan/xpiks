@@ -31,29 +31,29 @@
 #include "externaltoolsprovider.h"
 #include "../Models/uploadinfo.h"
 #include "../Models/artworkmetadata.h"
+#include "../Encryption/secretsmanager.h"
+#include "curlwrapper.h"
 
-typedef QPair<QStringList*, Models::UploadInfo*> UploadPair;
-
-UploadPair uploadViaCurl(UploadPair pair) {
-    QStringList *filesToUpload = pair.first;
-    Models::UploadInfo *uploadInfo = pair.second;
+Helpers::UploadItem uploadViaCurl(Helpers::UploadItem uploadItem) {
+    QStringList *filesToUpload = uploadItem.m_FilesToUpload;
+    Models::UploadInfo *uploadInfo = uploadItem.m_UploadInfo;
 
     const QString curlPath = Helpers::ExternalToolsProvider::getCurlPath();
     // 10 minutes for each
     int maxSeconds = 10*60*filesToUpload->length();
 
+    QString password = uploadItem.m_SecretsManager->decodePassword(uploadInfo->getPassword());
     QString command = QString("%1 --connect-timeout 10 --max-time %6 --retry 1 -T \"{%2}\" %3 --user %4:%5").
-            arg(curlPath, filesToUpload->join(','), uploadInfo->getHost(), uploadInfo->getUsername(), uploadInfo->getPassword(), QString::number(maxSeconds));
+            arg(curlPath, filesToUpload->join(','), uploadInfo->getHost(), uploadInfo->getUsername(), password, QString::number(maxSeconds));
     qDebug() << command;
 
-    Models::UploadInfo *resultInfo = NULL;
     QProcess process;
     process.start(command);
     // TODO: move to config
     if (process.waitForFinished(maxSeconds * 1000) &&
             process.exitStatus() == QProcess::NormalExit &&
             process.exitCode() == 0) {
-        resultInfo = uploadInfo;
+        uploadItem.m_Success = true;
     }
 
     QByteArray stdoutByteArray = process.readAllStandardOutput();
@@ -64,7 +64,7 @@ UploadPair uploadViaCurl(UploadPair pair) {
     QString stderrText(stderrByteArray);
     qDebug() << "STDERR: " << stderrText;
 
-    return qMakePair(filesToUpload, resultInfo);
+    return uploadItem;
 }
 
 #endif // CURLWRAPPER

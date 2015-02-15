@@ -19,30 +19,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-var defaultDarkColor = "#1e1e1e";
-var defaultControlColor = "#292929";
+function movePopupInsideComponent(component, window, mouse, old_x, old_y) {
+    //            var tmp = root.mapToItem(img,mouse.x,mouse.y);
+    var tmp = mapToItem(component, mouse.x, mouse.y);
 
-var defaultLightColor = "#E0E0E0";
-var defaultLightGrayColor = "#D0D0D0";
+    var delta_x = tmp.x - old_x;
+    var nextX = Math.max(window.x + delta_x, 10);
 
-var itemsSourceBackground = "#232323";
-var itemsSourceSelected = "#333333";
-var itemsSourceForeground = "#e6e6e6";
+    if ((nextX + window.width) >= (component.width - 10)) {
+        nextX = component.width - 10 - window.width
+    }
 
-var buttonHoverBackground = "#12b9bc";
-var buttonPressedBackground = "#41b1b7";
-var buttonDisabledForeground = "#283c3f";
-var buttonPressedForeground = "#283c3f";
+    window.x = nextX;
+    old_x = tmp.x;
 
-var artworkBackground = "#031619";
-var artworkImageBackground = "#071215";
-var artworkModifiedColor = "#f49c12";
-var artworkSavedColor = "#435151";
-var artworkActiveColor = "#12b9bc"
+    var delta_y = tmp.y - old_y;
+    var nextY = Math.max(window.y + delta_y, 10);
 
-var selectedArtworkColor = "#545456";
-var selectedMetadataColor = "#5d5d5d";
-var checkboxCheckedColor = "#ffffff";
-var defaultInputBackground = "#999999";
+    if ((nextY + window.height) >= (component.height - 10)) {
+        nextY = component.height - 10 - window.height
+    }
 
-var destructiveColor = "#d10b0b";
+    window.y = nextY;
+    old_y = tmp.y;
+
+    return [old_x, old_y];
+}
+

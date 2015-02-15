@@ -43,6 +43,11 @@ ApplicationWindow {
         settingsWindow.destroy();
     }
 
+    function openMasterPasswordDialog(firstTimeParam) {
+        var component = Qt.createComponent("MasterPasswordSetupDialog.qml");
+        component.createObject(settingsWindow, {firstTime: firstTimeParam});
+    }
+
     property string defaultExifTool: "exiftool"
     property string defaultCurl: "curl"
     property double defaultMaxKeywords: 50
@@ -63,6 +68,11 @@ ApplicationWindow {
 
     property string minmegapixelskey: appSettings.minMegapixelCount;
     property double minMegapixelCount: appSettings.value(minmegapixelskey, defaultMinMegapixels)
+
+    property string mustusemasterpasswordkey: appSettings.mustUseMasterPasswordKey
+    property bool mustUseMasterPassword: appSettings.value(mustusemasterpasswordkey, false)
+
+    property string masterpasswordhashkey: appSettings.masterPasswordHashKey
 
     FileDialog {
         id: exifToolFileDialog
@@ -99,6 +109,23 @@ ApplicationWindow {
 
         onRejected: {
             console.log("File dialog canceled")
+        }
+    }
+
+    MessageDialog {
+        id: masterPasswordOffWarningDialog
+        title: "Warning"
+        text: qsTr("Switching off master password will make your passwords storage less secure. Continue?")
+        standardButtons: StandardButton.Yes | StandardButton.No
+        onYes: {
+            secretsManager.resetMasterPassword()
+            appSettings.setValue(mustusemasterpasswordkey, false)
+            appSettings.setValue(masterpasswordhashkey, "")
+        }
+
+        onNo: {
+            // revert checkbox state
+            masterPasswordCheckbox.checked = true
         }
     }
 
@@ -141,14 +168,10 @@ ApplicationWindow {
                         text: qsTr("ExifTool path:")
                     }
 
-                    Rectangle {
+                    StyledInputHost {
+                        border.width: exifToolText.activeFocus ? 1 : 0
                         Layout.row: 0
                         Layout.column: 1
-                        height: childrenRect.height
-                        width: childrenRect.width + 5
-                        color: Colors.defaultInputBackground
-                        border.color: Colors.artworkActiveColor
-                        border.width: exifToolText.activeFocus ? 1 : 0
 
                         StyledTextInput {
                             id: exifToolText
@@ -187,14 +210,10 @@ ApplicationWindow {
                         text: qsTr("Curl path:")
                     }
 
-                    Rectangle {
+                    StyledInputHost {
+                        border.width: curlText.activeFocus ? 1 : 0
                         Layout.row: 1
                         Layout.column: 1
-                        height: childrenRect.height
-                        width: childrenRect.width + 5
-                        color: Colors.defaultInputBackground
-                        border.color: Colors.artworkActiveColor
-                        border.width: curlText.activeFocus ? 1 : 0
 
                         StyledTextInput {
                             id: curlText
@@ -258,11 +277,7 @@ ApplicationWindow {
                             text: qsTr("Minimum megapixels:")
                         }
 
-                        Rectangle {
-                            height: childrenRect.height
-                            width: childrenRect.width + 5
-                            color: Colors.defaultInputBackground
-                            border.color: Colors.artworkActiveColor
+                        StyledInputHost {
                             border.width: megapixelsCount.activeFocus ? 1 : 0
 
                             StyledTextInput {
@@ -296,11 +311,7 @@ ApplicationWindow {
                             text: qsTr("Max keywords count:")
                         }
 
-                        Rectangle {
-                            height: childrenRect.height
-                            width: childrenRect.width + 5
-                            color: Colors.defaultInputBackground
-                            border.color: Colors.artworkActiveColor
+                        StyledInputHost {
                             border.width: keywordsCount.activeFocus ? 1 : 0
 
                             StyledTextInput {
@@ -332,11 +343,7 @@ ApplicationWindow {
                             text: qsTr("Max description length:")
                         }
 
-                        Rectangle {
-                            height: childrenRect.height
-                            width: childrenRect.width + 5
-                            color: Colors.defaultInputBackground
-                            border.color: Colors.artworkActiveColor
+                        StyledInputHost {
                             border.width: descriptionLength.activeFocus ? 1 : 0
 
                             StyledTextInput {
@@ -382,7 +389,15 @@ ApplicationWindow {
                     StyledCheckbox {
                         id: masterPasswordCheckbox
                         text: qsTr("Use Master password")
-
+                        onClicked: {
+                            if (masterPasswordCheckbox.checked) {
+                                if (!mustUseMasterPassword) {
+                                    openMasterPasswordDialog(true)
+                                }
+                            } else {
+                                masterPasswordOffWarningDialog.open()
+                            }
+                        }
                     }
 
                     Item {
@@ -393,6 +408,10 @@ ApplicationWindow {
                         width: 190
                         text: qsTr("Change Master password")
                         enabled: masterPasswordCheckbox.checked
+
+                        onClicked: {
+                            openMasterPasswordDialog(false)
+                        }
                     }
                 }
             }

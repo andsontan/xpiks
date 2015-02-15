@@ -131,16 +131,25 @@ int main(int argc, char *argv[]) {
     Models::LogsModel logsModel;
     Models::WarningsManager warningsManager;
     Helpers::AppSettings appSettings;
+    Encryption::SecretsManager secretsManager;
 
     // injecting dependencies
     artworkUploader.setUploadInfoRepository(&uploadInfoRepository);
+    artworkUploader.setSecretsManager(&secretsManager);
     artItemsModel.setArtworksRepository(&artworkRepository);
     artItemsModel.setCombinedArtworksModel(&combinedArtworksModel);
     artItemsModel.setIptcProvider(&iptcProvider);
     artItemsModel.setArtworkUploader(&artworkUploader);
     artItemsModel.setWarningsManager(&warningsManager);
+    uploadInfoRepository.setSecretsManager(&secretsManager);
 
+    // other initializations
+    secretsManager.setMasterPasswordHash(appSettings.value(Constants::MASTER_PASSWORD_HASH, "").toString());
     uploadInfoRepository.initFromString(appSettings.value(Constants::UPLOAD_HOSTS, "").toString());
+
+    QObject::connect(&secretsManager, SIGNAL(beforeMasterPasswordChange(QString)),
+                     &uploadInfoRepository, SLOT(onBeforeMasterPasswordChanged(QString)),
+                     Qt::DirectConnection);
 
     qmlRegisterType<Helpers::ClipboardHelper>("xpiks", 1, 0, "ClipboardHelper");
 
@@ -159,6 +168,7 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("uploadInfos", &uploadInfoRepository);
     rootContext->setContextProperty("logsModel", &logsModel);
     rootContext->setContextProperty("warningsManager", &warningsManager);
+    rootContext->setContextProperty("secretsManager", &secretsManager);
 
     engine.addImageProvider("global", globalProvider);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));

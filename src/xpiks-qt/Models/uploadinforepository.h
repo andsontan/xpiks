@@ -114,6 +114,18 @@ namespace Models {
         Qt::ItemFlags flags(const QModelIndex &index) const;
         bool setData(const QModelIndex &index, const QVariant & value, int role = Qt::EditRole);
 
+    public slots:
+        void onBeforeMasterPasswordChanged(const QString &newMasterPassword) {
+            Q_ASSERT(m_SecretsManager != NULL);
+            foreach (UploadInfo *info, m_UploadInfos) {
+                if (info->hasPassword()) {
+                    QByteArray newPassword = m_SecretsManager->recodePassword(
+                                info->getPassword(), newMasterPassword);
+                    info->setPassword(newPassword);
+                }
+            }
+        }
+
     protected:
         QHash<int, QByteArray> roleNames() const;
 

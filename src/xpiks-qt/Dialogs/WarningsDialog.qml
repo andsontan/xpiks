@@ -26,6 +26,7 @@ import QtQuick.Controls.Styles 1.2
 import QtQuick.Layouts 1.1
 import "../Constants"
 import "../Constants/Colors.js" as Colors;
+import "../Common.js" as Common;
 import "../Components"
 import "../StyledControls"
 
@@ -74,14 +75,8 @@ Item {
             }
 
             onPositionChanged: {
-                //            var tmp = root.mapToItem(img,mouse.x,mouse.y);
-                var tmp = mapToItem(warningsComponent, mouse.x, mouse.y);
-                var delta_x = tmp.x - old_x;
-                var delta_y = tmp.y - old_y;
-                dialogWindow.x += delta_x;
-                dialogWindow.y += delta_y;
-                old_x = tmp.x;
-                old_y = tmp.y;
+                var old_xy = Common.movePopupInsideComponent(warningsComponent, dialogWindow, mouse, old_x, old_y);
+                old_x = old_xy[0]; old_y = old_xy[1];
             }
         }
 

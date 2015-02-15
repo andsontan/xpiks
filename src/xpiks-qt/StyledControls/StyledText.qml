@@ -24,7 +24,7 @@ import "../Constants"
 import "../Constants/Colors.js" as Colors
 
 Text {
-    color: Colors.defaultLightColor
+    color: enabled ? Colors.defaultLightColor : Colors.itemsSourceSelected
     renderType: Text.NativeRendering
     font.family: "Helvetica"
     font.pixelSize: 12

@@ -28,6 +28,8 @@
 #include "artworksprocessor.h"
 #include "uploadinfo.h"
 #include "uploadinforepository.h"
+#include "../Helpers/uploaditem.h"
+#include "../Encryption/secretsmanager.h"
 
 namespace Models {
     class ArtworkUploader : public ArtworksProcessor
@@ -38,6 +40,7 @@ namespace Models {
          ~ArtworkUploader() { delete m_ArtworksUploader; }
 
          void setUploadInfoRepository(UploadInfoRepository *infoRepository) { Q_ASSERT(infoRepository != NULL); m_InfoRepository = infoRepository; }
+         void setSecretsManager(Encryption::SecretsManager *secretsManager) { Q_ASSERT(secretsManager != NULL); m_SecretsManager = secretsManager; }
 
     public:
          Q_PROPERTY(bool includeEPS READ getIncludeEPS WRITE setIncludeEPS NOTIFY includeEPSChanged)
@@ -54,7 +57,7 @@ namespace Models {
          void allFinished();
 
      private:
-         void artworkUploadedHandler(UploadInfo *info);
+         void artworkUploadedHandler(Helpers::UploadItem *item);
 
      public:
          Q_INVOKABLE void uploadArtworks() { doUploadArtworks(getArtworkList()); }
@@ -67,8 +70,9 @@ namespace Models {
         void cancelProcessing();
 
      private:
-         QFutureWatcher<QPair<QStringList*, Models::UploadInfo*> > *m_ArtworksUploader;
+         QFutureWatcher<Helpers::UploadItem> *m_ArtworksUploader;
          UploadInfoRepository *m_InfoRepository;
+         Encryption::SecretsManager *m_SecretsManager;
          QStringList *m_ActiveUploads;
          bool m_IncludeEPS;
     };

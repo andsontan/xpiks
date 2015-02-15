@@ -18,12 +18,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import QtQuick 2.4
+import QtQuick.Dialogs 1.2
 import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
-import QtQuick.Dialogs 1.2
-import QtQuick.Controls.Styles 1.3
 import "../Constants"
 import "../Constants/Colors.js" as Colors;
 import "../Common.js" as Common;
@@ -31,15 +29,15 @@ import "../Components"
 import "../StyledControls"
 
 Item {
-    id: logsComponent
-    property string logText
+    id: masterPasswordComponent
+    property bool wrongTry: false
     anchors.fill: parent
 
     function closePopup() {
-        logsComponent.destroy()
+        masterPasswordComponent.destroy()
     }
 
-    PropertyAnimation { target: logsComponent; property: "opacity";
+    PropertyAnimation { target: masterPasswordComponent; property: "opacity";
         duration: 400; from: 0; to: 1;
         easing.type: Easing.InOutQuad ; running: true }
 
@@ -57,18 +55,6 @@ Item {
         }
     }
 
-    MessageDialog {
-        id: confirmClearLogsDialog
-        property int itemIndex
-        title: "Confirmation"
-        text: qsTr("Are you sure you want to clear logs?")
-        standardButtons: StandardButton.Yes | StandardButton.No
-        onYes: {
-            logsModel.clearLogs()
-            logsComponent.logText = logsModel.getAllLogsText()
-        }
-    }
-
     FocusScope {
         anchors.fill: parent
 
@@ -82,13 +68,13 @@ Item {
 
             onPressed:{
                 //            var tmp = root.mapToItem(img,mouse.x,mouse.y);
-                var tmp = mapToItem(logsComponent, mouse.x, mouse.y);
+                var tmp = mapToItem(masterPasswordComponent, mouse.x, mouse.y);
                 old_x = tmp.x;
                 old_y = tmp.y;
             }
 
             onPositionChanged: {
-                var old_xy = Common.movePopupInsideComponent(logsComponent, dialogWindow, mouse, old_x, old_y);
+                var old_xy = Common.movePopupInsideComponent(masterPasswordComponent, dialogWindow, mouse, old_x, old_y);
                 old_x = old_xy[0]; old_y = old_xy[1];
             }
         }
@@ -96,65 +82,84 @@ Item {
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
-            width: 480
-            height: 580
+            width: 300
+            height: 80
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
 
             ColumnLayout {
-                spacing: 10
                 anchors.fill: parent
-                anchors.margins: 20
+                anchors.margins: 10
+                spacing: 10
 
-                StyledText {
-                    text: qsTr("Logs")
-                }
+                RowLayout {
+                    width: parent.width
+                    height: 20
+                    enabled: firstTime
+                    spacing: 10
 
-                Rectangle {
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    color: Colors.defaultControlColor
+                    StyledText {
+                        Layout.fillWidth: true
+                        Layout.preferredWidth: 130
+                        horizontalAlignment: Text.AlignRight
+                        text: qsTr("Enter Master Password:")
+                    }
 
-                    StyledScrollView {
-                        anchors.fill: parent
-                        anchors.margins: 10
+                    StyledInputHost {
+                        border.width: currentPassword.activeFocus ? 1 : 0
+                        border.color: wrongTry ? Colors.destructiveColor : Colors.artworkActiveColor
 
-                        StyledTextEdit {
-                            text: logsComponent.logText
-                            readOnly: true
+                        StyledTextInput {
+                            id: masterPassword
+                            width: 120
+                            height: 24
+                            clip: true
+                            anchors.left: parent.left
+                            anchors.leftMargin: 5
+                            echoMode: showPasswordCheckBox.checked ? TextInput.Normal : TextInput.Password
                         }
                     }
                 }
 
-                Item {
-                    height: 1
-                }
-
                 RowLayout {
-                    height: 24
+                    width: parent.width
+                    height: 20
+                    spacing: 10
+
+                    StyledCheckbox {
+                        id: showPasswordCheckBox
+                        text: qsTr("Show password")
+                    }
 
                     Item {
                         Layout.fillWidth: true
                     }
 
                     StyledButton {
-                        text: qsTr("Clear logs")
-                        width: 100
+                        text: qsTr("Ok")
+                        width: 57
                         onClicked: {
-                            confirmClearLogsDialog.open()
+                            var mp = masterPassword.text
+                            if (secretsManager.testMasterPassword(mp)) {
+                                secretsManager.setMasterPassword(mp)
+                                closePopup()
+                            } else {
+                                wrongTry = true
+                            }
                         }
                     }
 
                     StyledButton {
-                        text: qsTr("Close")
-                        width: 100
-                        onClicked: {
-                            closePopup()
-                        }
+                        text: qsTr("Cancel")
+                        tooltip: qsTr("This will leave password fields blank")
+                        width: 58
+                        onClicked: closePopup()
                     }
                 }
             }
         }
     }
+
+    Component.onCompleted: masterPassword.forceActiveFocus()
 }

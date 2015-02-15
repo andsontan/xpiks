@@ -37,7 +37,7 @@ namespace Helpers {
                                                               QCoreApplication::instance()->organizationName(),
                                                               QCoreApplication::instance()->applicationName(),
                                                               parent)
-        {}
+        { }
 
         Q_PROPERTY(QString exifToolPathKey READ getExifToolPathKey CONSTANT)
         QString getExifToolPathKey() const { return Constants::PATH_TO_EXIFTOOL; }
@@ -59,6 +59,12 @@ namespace Helpers {
 
         Q_PROPERTY(QString appVersion READ getAppVersion CONSTANT)
         QString getAppVersion() const { return QCoreApplication::applicationVersion(); }
+
+        Q_PROPERTY(QString mustUseMasterPasswordKey READ getMustUseMasterPasswordKey CONSTANT)
+        QString getMustUseMasterPasswordKey() const { return Constants::USE_MASTER_PASSWORD; }
+
+        Q_PROPERTY(QString masterPasswordHashKey READ getMasterPasswordHashKey CONSTANT)
+        QString getMasterPasswordHashKey() const { return Constants::USE_MASTER_PASSWORD; }
 
         Q_INVOKABLE inline void setValue(const QString &key, const QVariant &value) {
             QSettings::setValue(key, value);

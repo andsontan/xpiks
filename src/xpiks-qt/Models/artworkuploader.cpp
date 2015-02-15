@@ -28,7 +28,7 @@ namespace Models {
     ArtworkUploader::ArtworkUploader() :
         ArtworksProcessor()
     {
-        m_ArtworksUploader = new QFutureWatcher<UploadPair>(this);
+        m_ArtworksUploader = new QFutureWatcher<Helpers::UploadItem>(this);
         connect(m_ArtworksUploader, SIGNAL(resultReadyAt(int)), SLOT(artworkUploaded(int)));
         connect(m_ArtworksUploader, SIGNAL(finished()), SLOT(allFinished()));
     }
@@ -36,9 +36,8 @@ namespace Models {
     void ArtworkUploader::artworkUploaded(int index)
     {
         qDebug() << "Artwork uploaded at " << index;
-        UploadPair pair = m_ArtworksUploader->resultAt(index);
-        UploadInfo *info = pair.second;
-        artworkUploadedHandler(info);
+        Helpers::UploadItem item = m_ArtworksUploader->resultAt(index);
+        artworkUploadedHandler(&item);
     }
 
     void ArtworkUploader::allFinished()
@@ -47,13 +46,13 @@ namespace Models {
         delete m_ActiveUploads;
     }
 
-    void ArtworkUploader::artworkUploadedHandler(UploadInfo *info)
+    void ArtworkUploader::artworkUploadedHandler(Helpers::UploadItem *item)
     {
         incProgress();
 
         // TODO: handle bad results
-        if (NULL != info) {
-            qDebug() << info->getHost();
+        if (item->m_Success) {
+            qDebug() << item->m_UploadInfo->getHost();
         }
         else {
             setIsError(true);
@@ -68,22 +67,23 @@ namespace Models {
         }
 
         beginProcessing();
-        QList<UploadPair> pairs;
+        QList<Helpers::UploadItem> uploadItems;
 
         Q_ASSERT(m_InfoRepository != NULL);
+        Q_ASSERT(m_SecretsManager != NULL);
         const QList<UploadInfo *> &infos = m_InfoRepository->getUploadInfos();
         m_ActiveUploads = getAllFilepathes();
 
         foreach (UploadInfo *info, infos) {
             if (info->getIsSelected()) {
-                pairs.append(qMakePair(m_ActiveUploads, info));
+                uploadItems.append(Helpers::UploadItem(info, m_ActiveUploads, m_SecretsManager));
             }
         }
 
-        qDebug() << "Uploading " << pairs.length() << " items";
+        qDebug() << "Uploading " << uploadItems.length() << " items...";
 
-        if (pairs.length() > 0) {
-            m_ArtworksUploader->setFuture(QtConcurrent::mapped(pairs, uploadViaCurl));
+        if (uploadItems.length() > 0) {
+            m_ArtworksUploader->setFuture(QtConcurrent::mapped(uploadItems, uploadViaCurl));
         }
         else {
             endProcessing();

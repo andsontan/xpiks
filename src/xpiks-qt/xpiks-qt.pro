@@ -63,7 +63,8 @@ HEADERS += \
     Encoding/rc6qt.h \
     Encryption/aes-qt.h \
     ../tiny-aes/aes.h \
-    Encryption/secretsmanager.h
+    Encryption/secretsmanager.h \
+    Helpers/uploaditem.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
@@ -87,7 +88,9 @@ DISTFILES += \
     xpiks-qt.ico \
     Dialogs/AboutWindow.qml \
     StyledControls/StyledAddHostButton.qml \
-    Dialogs/MasterPaswordDialog.qml
+    StyledControls/StyledInputHost.qml \
+    Dialogs/EnterMasterPasswordDialog.qml \
+    Dialogs/MasterPasswordSetupDialog.qml
 
 macx {
 OBJECTIVE_SOURCES += \

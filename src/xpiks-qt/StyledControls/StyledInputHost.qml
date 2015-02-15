@@ -19,30 +19,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-var defaultDarkColor = "#1e1e1e";
-var defaultControlColor = "#292929";
+import QtQuick 2.4
+import QtQuick.Controls 1.3
+import QtQuick.Layouts 1.1
+import QtQuick.Dialogs 1.2
+import QtQuick.Controls.Styles 1.3
+import "../Constants"
+import "../Constants/Colors.js" as Colors;
+import "../Common.js" as Common;
+import "../Components"
+import "../StyledControls"
 
-var defaultLightColor = "#E0E0E0";
-var defaultLightGrayColor = "#D0D0D0";
+Rectangle {
+    height: childrenRect.height
+    width: childrenRect.width + 5
+    color: enabled ? Colors.defaultInputBackground : Colors.itemsSourceSelected
+    border.color: Colors.artworkActiveColor
+}
 
-var itemsSourceBackground = "#232323";
-var itemsSourceSelected = "#333333";
-var itemsSourceForeground = "#e6e6e6";
-
-var buttonHoverBackground = "#12b9bc";
-var buttonPressedBackground = "#41b1b7";
-var buttonDisabledForeground = "#283c3f";
-var buttonPressedForeground = "#283c3f";
-
-var artworkBackground = "#031619";
-var artworkImageBackground = "#071215";
-var artworkModifiedColor = "#f49c12";
-var artworkSavedColor = "#435151";
-var artworkActiveColor = "#12b9bc"
-
-var selectedArtworkColor = "#545456";
-var selectedMetadataColor = "#5d5d5d";
-var checkboxCheckedColor = "#ffffff";
-var defaultInputBackground = "#999999";
-
-var destructiveColor = "#d10b0b";

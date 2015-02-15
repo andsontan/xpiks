@@ -26,6 +26,7 @@ import QtQuick.Dialogs 1.2
 import QtQuick.Controls.Styles 1.3
 import "../Constants"
 import "../Constants/Colors.js" as Colors;
+import "../Common.js" as Common;
 import "../Components"
 import "../StyledControls"
 
@@ -36,6 +37,7 @@ Item {
     property variant componentParent
 
     function closePopup() {
+        secretsManager.purgeMasterPassword()
         uploadArtworksComponent.destroy()
     }
 
@@ -116,14 +118,8 @@ Item {
             }
 
             onPositionChanged: {
-                //            var tmp = root.mapToItem(img,mouse.x,mouse.y);
-                var tmp = mapToItem(uploadArtworksComponent, mouse.x, mouse.y);
-                var delta_x = tmp.x - old_x;
-                var delta_y = tmp.y - old_y;
-                dialogWindow.x += delta_x;
-                dialogWindow.y += delta_y;
-                old_x = tmp.x;
-                old_y = tmp.y;
+                var old_xy = Common.movePopupInsideComponent(uploadArtworksComponent, dialogWindow, mouse, old_x, old_y);
+                old_x = old_xy[0]; old_y = old_xy[1];
             }
         }
 
@@ -292,18 +288,16 @@ Item {
                                 text: qsTr("Title:")
                             }
 
-                            Rectangle {
-                                color: Colors.defaultInputBackground
-                                border.color: Colors.artworkActiveColor
+                            StyledInputHost {
                                 border.width: titleText.activeFocus ? 1 : 0
-                                width: 300
-                                height: 30
 
                                 StyledTextInput {
                                     id: titleText
+                                    width: 300
+                                    height: 30
                                     anchors.fill: parent
                                     enabled: uploadInfos.infosCount > 0
-                                    text: uploadHostsListView.currentItem.myData.title
+                                    text: uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.title : ""
                                     anchors.leftMargin: 5
                                     onTextChanged: uploadHostsListView.currentItem.myData.edittitle = text
                                     KeyNavigation.tab: ftpHost
@@ -328,18 +322,16 @@ Item {
                                 text: qsTr("Host:")
                             }
 
-                            Rectangle {
-                                color: Colors.defaultInputBackground
-                                border.color: Colors.artworkActiveColor
+                            StyledInputHost {
                                 border.width: ftpHost.activeFocus ? 1 : 0
-                                width: 300
-                                height: 30
 
                                 StyledTextInput {
                                     id: ftpHost
+                                    width: 300
+                                    height: 30
                                     anchors.fill: parent
                                     enabled: uploadInfos.infosCount > 0
-                                    text: uploadHostsListView.currentItem.myData.host
+                                    text: uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.host : ""
                                     anchors.leftMargin: 5
                                     onTextChanged: uploadHostsListView.currentItem.myData.edithost = text
                                     KeyNavigation.tab: ftpUsername
@@ -360,18 +352,16 @@ Item {
                                 text: qsTr("Username:")
                             }
 
-                            Rectangle {
-                                color: Colors.defaultInputBackground
-                                border.color: Colors.artworkActiveColor
+                            StyledInputHost {
                                 border.width: ftpUsername.activeFocus ? 1 : 0
-                                width: 300
-                                height: 30
 
                                 StyledTextInput {
                                     id: ftpUsername
+                                    width: 300
+                                    height: 30
                                     anchors.fill: parent
                                     enabled: uploadInfos.infosCount > 0
-                                    text: uploadHostsListView.currentItem.myData.username
+                                    text: uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.username : ""
                                     anchors.leftMargin: 5
                                     onTextChanged: uploadHostsListView.currentItem.myData.editusername = text
                                     KeyNavigation.tab: ftpPassword
@@ -392,20 +382,18 @@ Item {
                                 text: qsTr("Password:")
                             }
 
-                            Rectangle {
-                                color: Colors.defaultInputBackground
-                                border.color: Colors.artworkActiveColor
+                            StyledInputHost {
                                 border.width: ftpPassword.activeFocus ? 1 : 0
-                                width: 300
-                                height: 30
 
                                 StyledTextInput {
                                     id: ftpPassword
+                                    width: 300
+                                    height: 30
                                     anchors.fill: parent
                                     enabled: uploadInfos.infosCount > 0
                                     anchors.leftMargin: 5
                                     echoMode: showPasswordCheckBox.checked ? TextInput.Normal : TextInput.Password
-                                    text: uploadHostsListView.currentItem.myData.password
+                                    text: uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.password : ""
                                     onTextChanged: uploadHostsListView.currentItem.myData.editpassword = text
                                     KeyNavigation.backtab: ftpUsername
                                 }
@@ -443,7 +431,7 @@ Item {
                         background: Rectangle {
                             border.color: Colors.artworkActiveColor
                             border.width: control.indeterminate ? 1 : 0
-                            color: artworkUploader.isError ? Colors.desctuctiveColor : (control.indeterminate ? Colors.artworkActiveColor : Colors.defaultInputBackground)
+                            color: artworkUploader.isError ? Colors.destructiveColor : (control.indeterminate ? Colors.artworkActiveColor : Colors.defaultInputBackground)
 
                             // Indeterminate animation by animating alternating stripes:
                             Item {

@@ -19,30 +19,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-var defaultDarkColor = "#1e1e1e";
-var defaultControlColor = "#292929";
 
-var defaultLightColor = "#E0E0E0";
-var defaultLightGrayColor = "#D0D0D0";
+#ifndef UPLOADITEM
+#define UPLOADITEM
 
-var itemsSourceBackground = "#232323";
-var itemsSourceSelected = "#333333";
-var itemsSourceForeground = "#e6e6e6";
+namespace Helpers {
+    class UploadItem {
+    public:
+        UploadItem () {
 
-var buttonHoverBackground = "#12b9bc";
-var buttonPressedBackground = "#41b1b7";
-var buttonDisabledForeground = "#283c3f";
-var buttonPressedForeground = "#283c3f";
+        }
 
-var artworkBackground = "#031619";
-var artworkImageBackground = "#071215";
-var artworkModifiedColor = "#f49c12";
-var artworkSavedColor = "#435151";
-var artworkActiveColor = "#12b9bc"
+        UploadItem(Models::UploadInfo *uploadInfo, QStringList *filesToUpload,
+                   Encryption::SecretsManager *secretsManager) :
+            m_UploadInfo (uploadInfo),
+            m_FilesToUpload(filesToUpload),
+            m_SecretsManager(secretsManager),
+            m_Success(false)
+        { }
 
-var selectedArtworkColor = "#545456";
-var selectedMetadataColor = "#5d5d5d";
-var checkboxCheckedColor = "#ffffff";
-var defaultInputBackground = "#999999";
+        UploadItem(const UploadItem &copy) :
+            m_UploadInfo(copy.m_UploadInfo),
+            m_FilesToUpload(copy.m_FilesToUpload),
+            m_SecretsManager(copy.m_SecretsManager),
+            m_Success(copy.m_Success)
+        { }
 
-var destructiveColor = "#d10b0b";
+    public:
+        Models::UploadInfo *m_UploadInfo;
+        QStringList *m_FilesToUpload;
+        Encryption::SecretsManager *m_SecretsManager;
+        bool m_Success;
+    };
+}
+
+#endif // UPLOADITEM
+
