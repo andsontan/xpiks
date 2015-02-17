@@ -31,13 +31,33 @@ import "../StyledControls"
 Item {
     id: masterPasswordComponent
     property bool firstTime
-    property string masterpasswordhashkey: appSettings.masterPasswordHashKey
-    property string mustusemasterpasswordkey: appSettings.mustUseMasterPasswordKey
     anchors.fill: parent
+    property var callbackObject
 
     function closePopup() {
         secretsManager.purgeMasterPassword()
         masterPasswordComponent.destroy()
+    }
+
+    function trySetupMP() {
+        if (repeatMasterPassword.text == newMasterPassword.text) {
+
+            if (repeatMasterPassword.length == 0) {
+                callbackObject.onCancel(firstTime)
+                closePopup()
+            }
+
+            if (secretsManager.changeMasterPassword(firstTime,
+                                                    currentPassword.text,
+                                                    newMasterPassword.text)) {
+                callbackObject.onSuccess()
+                closePopup()
+            } else {
+                wrongCurrentMPDialog.open()
+            }
+        } else {
+            notEqualPasswordsDialog.open()
+        }
     }
 
     PropertyAnimation { target: masterPasswordComponent; property: "opacity";
@@ -117,7 +137,7 @@ Item {
                     id: currentPasswordRow
                     width: parent.width
                     height: 20
-                    enabled: firstTime
+                    enabled: !firstTime
                     spacing: 10
 
                     StyledText {
@@ -168,6 +188,14 @@ Item {
                             echoMode: TextInput.Password
                             KeyNavigation.backtab: currentPassword
                             KeyNavigation.tab: repeatMasterPassword
+
+                            Keys.onReturnPressed: {
+                                if (repeatMasterPassword.text != newMasterPassword.text) {
+                                    repeatMasterPassword.forceActiveFocus()
+                                } else {
+                                    trySetupMP()
+                                }
+                            }
                         }
                     }
                 }
@@ -197,6 +225,7 @@ Item {
                             anchors.leftMargin: 5
                             echoMode: TextInput.Password
                             KeyNavigation.backtab: newMasterPassword
+                            Keys.onReturnPressed: trySetupMP()
                         }
                     }
                 }
@@ -213,29 +242,16 @@ Item {
                     StyledButton {
                         text: qsTr("Ok")
                         width: 57
-                        onClicked: {
-                            if (repeatMasterPassword.text != newMasterPassword.text) {
-                                if (secretsManager.changeMasterPassword(firstTime,
-                                                                        currentPassword.text,
-                                                                        newMasterPassword.text)) {
-
-
-                                    appSettings.setValue(masterpasswordhashkey, secretsManager.getMasterPasswordHash())
-                                    appSettings.setValue(mustusemasterpasswordkey, true)
-                                    closePopup()
-                                } else {
-                                    wrongCurrentMPDialog.open()
-                                }
-                            } else {
-                                notEqualPasswordsDialog.open()
-                            }
-                        }
+                        onClicked: trySetupMP()
                     }
 
                     StyledButton {
                         text: qsTr("Cancel")
                         width: 58
-                        onClicked: closePopup()
+                        onClicked: {
+                            callbackObject.onCancel(firstTime)
+                            closePopup()
+                        }
                     }
                 }
             }

@@ -72,7 +72,7 @@ namespace Encryption {
     bool SecretsManager::testMasterPassword(const QString &masterPasswordCandidate) const
     {
         QByteArray hashByteArray = getPasswordHash(masterPasswordCandidate);
-        bool equals = hashByteArray == m_EncodedMasterPassword;
+        bool equals = hashByteArray == m_MasterPasswordHash;
         return equals;
     }
 
@@ -82,8 +82,14 @@ namespace Encryption {
     }
 
     void SecretsManager::setMasterPassword(const QString &masterPassword) {
-        m_EncodedMasterPassword = encodeText(masterPassword, m_PasswordForMasterPassword);
-        m_MasterPasswordHash = getPasswordHash(masterPassword);
+        if (!masterPassword.isEmpty()) {
+            m_EncodedMasterPassword = encodeText(masterPassword, m_PasswordForMasterPassword);
+            m_MasterPasswordHash = getPasswordHash(masterPassword);
+        } else {
+            m_EncodedMasterPassword = "";
+            m_MasterPasswordHash.clear();
+        }
+
     }
 
     void SecretsManager::resetMasterPassword()
@@ -101,8 +107,14 @@ namespace Encryption {
         // password only once and recode all passwords with it
         if (firstTime || testMasterPassword(inputCurrMasterPassword)) {
             // set before recoding all items
-            setMasterPassword(inputCurrMasterPassword);
+            if (!firstTime && !inputCurrMasterPassword.isEmpty()) {
+                setMasterPassword(inputCurrMasterPassword);
+            }
+
+            // all encoded items beind reEncoded with new masterPassword
             emit beforeMasterPasswordChange(masterPassword);
+
+            // saving new master password hash
             setMasterPassword(masterPassword);
             changed = true;
         }

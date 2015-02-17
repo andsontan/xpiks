@@ -46,12 +46,13 @@ namespace Encryption {
     public:
         Q_INVOKABLE QString getMasterPasswordHash() const { return m_MasterPasswordHash.toBase64(); }
         Q_INVOKABLE bool testMasterPassword(const QString &masterPasswordCandidate) const;
+        Q_INVOKABLE bool isMasterPasswordSet() const { return !m_MasterPasswordHash.isEmpty(); }
 
     private:
         QString getMasterPassword() const;
 
     public:
-        void setMasterPassword(const QString &masterPassword);
+        Q_INVOKABLE void setMasterPassword(const QString &masterPassword);
 
     public:
         Q_INVOKABLE void resetMasterPassword();
@@ -59,6 +60,7 @@ namespace Encryption {
         Q_INVOKABLE void purgeMasterPassword() { m_EncodedMasterPassword = ""; }
         Q_INVOKABLE bool changeMasterPassword(bool firstTime, const QString &inputCurrMasterPassword,
                                               const QString &masterPassword);
+        Q_INVOKABLE void removeMasterPassword() { m_EncodedMasterPassword = ""; m_MasterPasswordHash = ""; }
 
     signals:
         void beforeMasterPasswordChange(const QString &newMasterPassword);

@@ -31,11 +31,22 @@ import "../StyledControls"
 Item {
     id: masterPasswordComponent
     property bool wrongTry: false
+    property var callbackObject
     anchors.fill: parent
 
     function closePopup() {
         masterPasswordComponent.destroy()
-        masterPasswordComponent.parent.doOpenUploadDialog()
+    }
+
+    function testPassword() {
+        var mp = masterPassword.text
+        if (secretsManager.testMasterPassword(mp)) {
+            secretsManager.setMasterPassword(mp)
+            callbackObject.onSuccess()
+            closePopup()
+        } else {
+            wrongTry = true
+        }
     }
 
     PropertyAnimation { target: masterPasswordComponent; property: "opacity";
@@ -83,32 +94,31 @@ Item {
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
-            width: 300
-            height: 80
+            width: 340
+            height: 100
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
 
             ColumnLayout {
                 anchors.fill: parent
-                anchors.margins: 10
+                anchors.margins: 15
                 spacing: 10
 
                 RowLayout {
                     width: parent.width
                     height: 20
-                    enabled: firstTime
-                    spacing: 10
 
                     StyledText {
+                        text: qsTr("Enter current Master Password:")
+                    }
+
+                    Item {
                         Layout.fillWidth: true
-                        Layout.preferredWidth: 130
-                        horizontalAlignment: Text.AlignRight
-                        text: qsTr("Enter Master Password:")
                     }
 
                     StyledInputHost {
-                        border.width: currentPassword.activeFocus ? 1 : 0
+                        border.width: masterPassword.activeFocus ? 1 : 0
                         border.color: wrongTry ? Colors.destructiveColor : Colors.artworkActiveColor
 
                         StyledTextInput {
@@ -119,6 +129,10 @@ Item {
                             anchors.left: parent.left
                             anchors.leftMargin: 5
                             echoMode: showPasswordCheckBox.checked ? TextInput.Normal : TextInput.Password
+
+                            Keys.onReturnPressed: {
+                                testPassword()
+                            }
                         }
                     }
                 }
@@ -140,22 +154,17 @@ Item {
                     StyledButton {
                         text: qsTr("Ok")
                         width: 57
-                        onClicked: {
-                            var mp = masterPassword.text
-                            if (secretsManager.testMasterPassword(mp)) {
-                                secretsManager.setMasterPassword(mp)
-                                closePopup()
-                            } else {
-                                wrongTry = true
-                            }
-                        }
+                        onClicked: testPassword()
                     }
 
                     StyledButton {
                         text: qsTr("Cancel")
                         tooltip: qsTr("This will leave password fields blank")
                         width: 58
-                        onClicked: closePopup()
+                        onClicked: {
+                            callbackObject.onFail()
+                            closePopup()
+                        }
                     }
                 }
             }

@@ -64,7 +64,7 @@ namespace Helpers {
         QString getMustUseMasterPasswordKey() const { return Constants::USE_MASTER_PASSWORD; }
 
         Q_PROPERTY(QString masterPasswordHashKey READ getMasterPasswordHashKey CONSTANT)
-        QString getMasterPasswordHashKey() const { return Constants::USE_MASTER_PASSWORD; }
+        QString getMasterPasswordHashKey() const { return Constants::MASTER_PASSWORD_HASH; }
 
         Q_INVOKABLE inline void setValue(const QString &key, const QVariant &value) {
             QSettings::setValue(key, value);

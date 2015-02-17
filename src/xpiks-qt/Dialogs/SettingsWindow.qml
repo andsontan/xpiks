@@ -42,12 +42,6 @@ ApplicationWindow {
     function closeSettings() {
         settingsWindow.destroy();
     }
-
-    function openMasterPasswordDialog(firstTimeParam) {
-        var component = Qt.createComponent("MasterPasswordSetupDialog.qml");
-        component.createObject(settingsWindow, {firstTime: firstTimeParam});
-    }
-
     property string defaultExifTool: "exiftool"
     property string defaultCurl: "curl"
     property double defaultMaxKeywords: 50
@@ -73,6 +67,28 @@ ApplicationWindow {
     property bool mustUseMasterPassword: appSettings.value(mustusemasterpasswordkey, false)
 
     property string masterpasswordhashkey: appSettings.masterPasswordHashKey
+
+    function onCancelMP(firstTime) {
+        masterPasswordCheckbox.checked = !firstTime
+    }
+
+    function onMasterPasswordSet() {
+        console.log('Master password changed')
+        appSettings.setValue(masterpasswordhashkey, secretsManager.getMasterPasswordHash())
+        appSettings.setValue(mustusemasterpasswordkey, true)
+        mustUseMasterPassword = true
+    }
+
+    function openMasterPasswordDialog(firstTimeParam) {
+        var component = Qt.createComponent("MasterPasswordSetupDialog.qml");
+        var callbackObject = {
+            onCancel: onCancelMP,
+            onSuccess: onMasterPasswordSet
+        }
+
+        component.createObject(settingsWindow, {firstTime: firstTimeParam, callbackObject: callbackObject});
+    }
+
 
     FileDialog {
         id: exifToolFileDialog
@@ -112,20 +128,67 @@ ApplicationWindow {
         }
     }
 
+    function clearMPSettings() {
+        appSettings.setValue(mustusemasterpasswordkey, false)
+        appSettings.setValue(masterpasswordhashkey, "")
+    }
+
+    function turnMasterPasswordOff () {
+        secretsManager.resetMasterPassword()
+        mustUseMasterPassword = false
+        clearMPSettings()
+    }
+
     MessageDialog {
         id: masterPasswordOffWarningDialog
         title: "Warning"
         text: qsTr("Switching off master password will make your passwords storage less secure. Continue?")
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
-            secretsManager.resetMasterPassword()
-            appSettings.setValue(mustusemasterpasswordkey, false)
-            appSettings.setValue(masterpasswordhashkey, "")
+            if (secretsManager.isMasterPasswordSet()) {
+                var component = Qt.createComponent("EnterMasterPasswordDialog.qml")
+                var callbackObject = {
+                    onSuccess: turnMasterPasswordOff,
+                    onFail: function() { masterPasswordCheckbox.checked = true; }
+                }
+
+                component.createObject(settingsWindow, {componentParent: settingsWindow, callbackObject: callbackObject})
+            } else {
+                turnMasterPasswordOff()
+            }
         }
 
         onNo: {
             // revert checkbox state
             masterPasswordCheckbox.checked = true
+        }
+    }
+
+    MessageDialog {
+        id: resetSettingsDialog
+        title: "Warning"
+        text: qsTr("Are you sure you want reset all actions? This action cannot be undone.")
+        standardButtons: StandardButton.Yes | StandardButton.No
+        onYes: {
+            appSettings.setValue(exiftoolpathkey, defaultExifTool)
+            exifToolText.text = exifToolPath
+
+            appSettings.setValue(curlpathkey, defaultCurl)
+            curlText.text = defaultCurl
+
+            appSettings.setValue(minmegapixelskey, defaultMinMegapixels)
+            megapixelsCount.text = defaultMinMegapixels + ''
+
+            appSettings.setValue(maxkeywordscountkey, defaultMaxKeywords)
+            keywordsCount.text = defaultMaxKeywords + ''
+
+            appSettings.setValue(maxdescriptionlengthkey, defaultMaxDescription)
+            descriptionLength.text = defaultMaxDescription + ''
+
+            secretsManager.removeMasterPassword()
+            masterPasswordCheckbox.checked = false
+            mustUseMasterPassword = false
+            clearMPSettings()
         }
     }
 
@@ -425,6 +488,14 @@ ApplicationWindow {
                 spacing: 0
                 width: parent.width
 
+                StyledButton {
+                    text: qsTr("Reset to defaults")
+                    width: 120
+                    onClicked: {
+                        resetSettingsDialog.open()
+                    }
+                }
+
                 Item {
                     Layout.fillWidth: true
                 }
@@ -473,6 +544,9 @@ ApplicationWindow {
         }
     }
 
-    Component.onCompleted: exifToolText.forceActiveFocus()
+    Component.onCompleted: {
+        masterPasswordCheckbox.checked = mustUseMasterPassword
+        exifToolText.forceActiveFocus()
+    }
 }
 
