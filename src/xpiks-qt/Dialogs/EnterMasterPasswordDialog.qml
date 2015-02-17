@@ -29,13 +29,13 @@ import "../Components"
 import "../StyledControls"
 
 Item {
-    id: masterPasswordComponent
+    id: enterPasswordComponent
     property bool wrongTry: false
     property var callbackObject
     anchors.fill: parent
 
     function closePopup() {
-        masterPasswordComponent.destroy()
+        enterPasswordComponent.destroy()
     }
 
     function testPassword() {
@@ -49,7 +49,7 @@ Item {
         }
     }
 
-    PropertyAnimation { target: masterPasswordComponent; property: "opacity";
+    PropertyAnimation { target: enterPasswordComponent; property: "opacity";
         duration: 400; from: 0; to: 1;
         easing.type: Easing.InOutQuad ; running: true }
 
@@ -80,13 +80,13 @@ Item {
 
             onPressed:{
                 //            var tmp = root.mapToItem(img,mouse.x,mouse.y);
-                var tmp = mapToItem(masterPasswordComponent, mouse.x, mouse.y);
+                var tmp = mapToItem(enterPasswordComponent, mouse.x, mouse.y);
                 old_x = tmp.x;
                 old_y = tmp.y;
             }
 
             onPositionChanged: {
-                var old_xy = Common.movePopupInsideComponent(masterPasswordComponent, dialogWindow, mouse, old_x, old_y);
+                var old_xy = Common.movePopupInsideComponent(enterPasswordComponent, dialogWindow, mouse, old_x, old_y);
                 old_x = old_xy[0]; old_y = old_xy[1];
             }
         }
