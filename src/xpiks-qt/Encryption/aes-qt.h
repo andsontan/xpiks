@@ -33,32 +33,35 @@ namespace Encryption {
 
     QByteArray encodeText(const QString &rawText, const QString &key) {
         QCryptographicHash hash(QCryptographicHash::Md5);
-        hash.addData(key.toLocal8Bit());
+        hash.addData(key.toUtf8());
         QByteArray keyData = hash.result();
-        QByteArray inputData = rawText.toLocal8Bit();
 
-        const int sz = 2048;
-        uint8_t cypherText[sz];
-        memset(cypherText, 0, sz * sizeof(uint8_t));
+        QByteArray inputData = rawText.toUtf8();
+        const int length = inputData.size() + 1;
 
-        AES128_CBC_encrypt_buffer(cypherText, (uint8_t*)inputData.data(), inputData.length(), (uint8_t*)keyData.data(), iv);
+        uint8_t *cypherText = new uint8_t[length];
+        memset(cypherText, 0, length * sizeof(uint8_t));
 
-        QByteArray result((char*)cypherText, -1);
+        AES128_CBC_encrypt_buffer(cypherText, (uint8_t*)inputData.data(), length - 1, (uint8_t*)keyData.data(), iv);
+
+        QByteArray result((char*)cypherText, length - 1);
+        delete cypherText;
         return result;
     }
 
     QString decodeText(const QByteArray &encodedText, const QString &key) {
         QCryptographicHash hash(QCryptographicHash::Md5);
-        hash.addData(key.toLocal8Bit());
+        hash.addData(key.toUtf8());
         QByteArray keyData = hash.result();
 
-        const int sz = 2048;
-        uint8_t plainText[sz];
-        memset(plainText, 0, sz * sizeof(uint8_t));
+        const int length = encodedText.size() + 1;
+        uint8_t *plainText = new uint8_t[length];
+        memset(&plainText, 0, length* sizeof(uint8_t));
 
-        AES128_CBC_decrypt_buffer(plainText, (uint8_t*)encodedText.data(), encodedText.length(), (uint8_t*)keyData.data(), iv);
+        AES128_CBC_decrypt_buffer(plainText, (uint8_t*)encodedText.data(), length - 1, (uint8_t*)keyData.data(), iv);
 
-        QByteArray result((char*)plainText, -1);
+        QByteArray result((char*)plainText, length - 1);
+        delete plainText;
         return QString(result);
     }
 }
