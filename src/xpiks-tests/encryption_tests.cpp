@@ -32,8 +32,8 @@ void EncryptionTests::encodedNotEqualToDecodedTest()
 
 void EncryptionTests::complexEncodeDecodeTest()
 {
-    QString text = "simple text which consists of \n newlines and more \t symbols";
-    QString key = "key with \t tabulation and whitespaces and";
+    QString text = "simple text which \0 has end of line and consists of \n newlines and more \t symbols";
+    QString key = "key with \t tabulation \0 and whitespaces and";
     QByteArray encoded = Encryption::encodeText(text, key);
     QString decoded = Encryption::decodeText(encoded, key);
 
@@ -42,8 +42,8 @@ void EncryptionTests::complexEncodeDecodeTest()
 
 void EncryptionTests::simpleEncodeDecodeCyrrylicTest()
 {
-    QString text = "простий текст";
-    QString key = "ключ";
+    QString text = QString::fromUtf8("простий текст");
+    QString key =  QString::fromUtf8("ключ");
     QByteArray encoded = Encryption::encodeText(text, key);
     QString decoded = Encryption::decodeText(encoded, key);
 
