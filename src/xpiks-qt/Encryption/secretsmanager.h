@@ -41,7 +41,9 @@ namespace Encryption {
         QString decodePassword(const QByteArray &encodedPassword) const;
         // operation executed before setting new master password
         // old data gets reencoded with new master password
-        QByteArray recodePassword(const QByteArray &encodedPassword, const QString &newMasterPassword) const;
+        // could be static, but is instnance method for explicity
+        QByteArray recodePassword(const QByteArray &encodedPassword,
+                                  const QString &oldMasterPassword, const QString &newMasterPassword) const;
 
     public:
         Q_INVOKABLE QString getMasterPasswordHash() const { return m_MasterPasswordHash.toBase64(); }
@@ -59,11 +61,11 @@ namespace Encryption {
         // should be executed on close of Upload dialog
         Q_INVOKABLE void purgeMasterPassword() { m_EncodedMasterPassword = ""; }
         Q_INVOKABLE bool changeMasterPassword(bool firstTime, const QString &inputCurrMasterPassword,
-                                              const QString &masterPassword);
+                                              const QString &newMasterPassword);
         Q_INVOKABLE void removeMasterPassword() { m_EncodedMasterPassword = ""; m_MasterPasswordHash = ""; }
 
     signals:
-        void beforeMasterPasswordChange(const QString &newMasterPassword);
+        void beforeMasterPasswordChange(const QString oldMasterPassword, const QString &newMasterPassword);
 
     private:
         QString getKeyForEncryption() const;

@@ -31,6 +31,7 @@ import "../StyledControls"
 Item {
     id: masterPasswordComponent
     property bool firstTime
+    property bool emptyMP: false
     anchors.fill: parent
     property var callbackObject
 
@@ -40,6 +41,12 @@ Item {
     }
 
     function trySetupMP() {
+        if (!firstTime && currentPassword.length == 0) {
+            currentPassword.forceActiveFocus()
+            emptyMP = true
+            return
+        }
+
         if (repeatMasterPassword.text == newMasterPassword.text) {
 
             if (repeatMasterPassword.length == 0) {
@@ -107,7 +114,6 @@ Item {
             property real old_y : 0
 
             onPressed:{
-                //            var tmp = root.mapToItem(img,mouse.x,mouse.y);
                 var tmp = mapToItem(masterPasswordComponent, mouse.x, mouse.y);
                 old_x = tmp.x;
                 old_y = tmp.y;
@@ -148,7 +154,8 @@ Item {
                     }
 
                     StyledInputHost {
-                        border.width: currentPassword.activeFocus ? 1 : 0
+                        border.width: (currentPassword.activeFocus || emptyMP) ? 1 : 0
+                        border.color: emptyMP ? Colors.artworkModifiedColor : Colors.artworkActiveColor
 
                         StyledTextInput {
                             id: currentPassword
@@ -159,6 +166,13 @@ Item {
                             anchors.leftMargin: 5
                             echoMode: TextInput.Password
                             KeyNavigation.tab: newMasterPassword
+                            Keys.onReturnPressed: {
+                                if (repeatMasterPassword.text != newMasterPassword.text) {
+                                    newMasterPassword.forceActiveFocus()
+                                } else {
+                                    trySetupMP()
+                                }
+                            }
                         }
                     }
                 }

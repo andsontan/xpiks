@@ -21,6 +21,7 @@
 
 #include "secretsmanager.h"
 #include "aes-qt.h"
+#include <QDebug>
 
 #define STRINGIZE_(x) #x
 #define STRINGIZE(x) STRINGIZE_(x)
@@ -62,9 +63,9 @@ namespace Encryption {
         return decodedPassword;
     }
 
-    QByteArray SecretsManager::recodePassword(const QByteArray &encodedPassword, const QString &newMasterPassword) const
+    QByteArray SecretsManager::recodePassword(const QByteArray &encodedPassword, const QString &oldMasterPassword, const QString &newMasterPassword) const
     {
-        QString decodedPassword = decodePassword(encodedPassword);
+        QString decodedPassword = decodeText(encodedPassword, oldMasterPassword);
         QByteArray newEncodedPassword = encodeText(decodedPassword, newMasterPassword);
         return newEncodedPassword;
     }
@@ -89,33 +90,35 @@ namespace Encryption {
             m_EncodedMasterPassword = "";
             m_MasterPasswordHash.clear();
         }
-
     }
 
     void SecretsManager::resetMasterPassword()
     {
-        emit beforeMasterPasswordChange(m_DefaultMasterPassword);
+        emit beforeMasterPasswordChange(getKeyForEncryption(), m_DefaultMasterPassword);
         m_EncodedMasterPassword = "";
         m_MasterPasswordHash.clear();
+        qDebug() << "Master password is reset";
     }
 
-    bool SecretsManager::changeMasterPassword(bool firstTime, const QString &inputCurrMasterPassword, const QString &masterPassword)
+    bool SecretsManager::changeMasterPassword(bool firstTime, const QString &inputCurrMasterPassword, const QString &newMasterPassword)
     {
+        // Q_ASSERT(firstTime == m_EncodedMasterPassword.isEmpty());
+        Q_ASSERT(firstTime == inputCurrMasterPassword.isEmpty());
+
         bool changed = false;
 
         // TODO: optimize it in future: to take decoded previous master
         // password only once and recode all passwords with it
         if (firstTime || testMasterPassword(inputCurrMasterPassword)) {
-            // set before recoding all items
-            if (!firstTime && !inputCurrMasterPassword.isEmpty()) {
-                setMasterPassword(inputCurrMasterPassword);
+            QString &oldMasterPassword = m_DefaultMasterPassword;
+            if (!firstTime) {
+                oldMasterPassword = inputCurrMasterPassword;
             }
 
-            // all encoded items beind reEncoded with new masterPassword
-            emit beforeMasterPasswordChange(masterPassword);
+            // all encoded items being reEncoded with new masterPassword
+            emit beforeMasterPasswordChange(oldMasterPassword, newMasterPassword);
 
-            // saving new master password hash
-            setMasterPassword(masterPassword);
+            setMasterPassword(newMasterPassword);
             changed = true;
         }
 

@@ -117,7 +117,6 @@ Item {
             property real old_y : 0
 
             onPressed:{
-                //            var tmp = root.mapToItem(img,mouse.x,mouse.y);
                 var tmp = mapToItem(uploadArtworksComponent, mouse.x, mouse.y);
                 old_x = tmp.x;
                 old_y = tmp.y;
@@ -315,7 +314,7 @@ Item {
 
                                     validator: RegExpValidator {
                                         // copy paste in keys.onpressed Paste
-                                        regExp: /[a-zA-Z0-9]*$/
+                                        regExp: /[a-zA-Z0-9 _]*$/
                                     }
                                 }
                             }
@@ -341,11 +340,6 @@ Item {
                                     onTextChanged: uploadHostsListView.currentItem.myData.edithost = text
                                     KeyNavigation.tab: ftpUsername
                                     KeyNavigation.backtab: titleText
-
-                                    validator: RegExpValidator {
-                                        // copy paste in keys.onpressed Paste
-                                        regExp: /[a-zA-Z0-9]*$/
-                                    }
                                 }
                             }
 
@@ -370,11 +364,6 @@ Item {
                                     onTextChanged: uploadHostsListView.currentItem.myData.editusername = text
                                     KeyNavigation.tab: ftpPassword
                                     KeyNavigation.backtab: ftpHost
-
-                                    validator: RegExpValidator {
-                                        // copy paste in keys.onpressed Paste
-                                        regExp: /[a-zA-Z0-9]*$/
-                                    }
                                 }
                             }
 

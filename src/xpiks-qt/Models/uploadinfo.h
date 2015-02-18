@@ -49,7 +49,7 @@ namespace Models {
             QByteArray base64;
             QString serialized = items.value(PasswordField, "");
             base64.append(serialized);
-            // TODO: replace this when Qt will have nice way for it
+            // TODO: replace this when Qt will have a nice way for it
             m_EncodedPassword = base64.fromBase64(base64);
         }
 
@@ -75,7 +75,7 @@ namespace Models {
             hash[TitleField] = m_Title.trimmed().isEmpty() ? "Untitled" : m_Title;
             hash[HostField] = m_Host;
             hash[UsernameField] = m_Username;
-            hash[PasswordField] = m_EncodedPassword.toBase64();
+            hash[PasswordField] = QString(m_EncodedPassword.toBase64());
             return hash;
         }
 

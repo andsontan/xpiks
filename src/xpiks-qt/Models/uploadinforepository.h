@@ -115,12 +115,12 @@ namespace Models {
         bool setData(const QModelIndex &index, const QVariant & value, int role = Qt::EditRole);
 
     public slots:
-        void onBeforeMasterPasswordChanged(const QString &newMasterPassword) {
+        void onBeforeMasterPasswordChanged(const QString &oldMasterPassword, const QString &newMasterPassword) {
             Q_ASSERT(m_SecretsManager != NULL);
             foreach (UploadInfo *info, m_UploadInfos) {
                 if (info->hasPassword()) {
                     QByteArray newPassword = m_SecretsManager->recodePassword(
-                                info->getPassword(), newMasterPassword);
+                                info->getPassword(), oldMasterPassword, newMasterPassword);
                     info->setPassword(newPassword);
                 }
             }

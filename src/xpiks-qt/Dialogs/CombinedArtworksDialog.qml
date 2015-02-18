@@ -83,7 +83,6 @@ Item {
             property real old_y : 0
 
             onPressed:{
-                //            var tmp = root.mapToItem(img,mouse.x,mouse.y);
                 var tmp = mapToItem(dialogComponent, mouse.x, mouse.y);
                 old_x = tmp.x;
                 old_y = tmp.y;

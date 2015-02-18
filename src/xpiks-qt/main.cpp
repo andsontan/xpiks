@@ -147,9 +147,8 @@ int main(int argc, char *argv[]) {
     secretsManager.setMasterPasswordHash(appSettings.value(Constants::MASTER_PASSWORD_HASH, "").toString());
     uploadInfoRepository.initFromString(appSettings.value(Constants::UPLOAD_HOSTS, "").toString());
 
-    QObject::connect(&secretsManager, SIGNAL(beforeMasterPasswordChange(QString)),
-                     &uploadInfoRepository, SLOT(onBeforeMasterPasswordChanged(QString)),
-                     Qt::DirectConnection);
+    QObject::connect(&secretsManager, SIGNAL(beforeMasterPasswordChange(QString, QString)),
+                     &uploadInfoRepository, SLOT(onBeforeMasterPasswordChanged(QString, QString)));
 
     qmlRegisterType<Helpers::ClipboardHelper>("xpiks", 1, 0, "ClipboardHelper");
 
