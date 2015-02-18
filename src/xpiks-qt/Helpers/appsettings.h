@@ -22,6 +22,7 @@
 #ifndef APPSETTINGS_H
 #define APPSETTINGS_H
 
+#include <QDebug>
 #include <QString>
 #include <QSettings>
 #include <QCoreApplication>
@@ -72,6 +73,10 @@ namespace Helpers {
 
         Q_INVOKABLE inline QVariant value(const QString &key, const QVariant &defaultValue = QVariant()) const {
             return QSettings::value(key, defaultValue);
+        }
+
+        Q_INVOKABLE inline bool boolValue(const QString &key, const QVariant &defaultValue = QVariant()) const {
+            return QSettings::value(key, defaultValue).toBool();
         }
     };
 }

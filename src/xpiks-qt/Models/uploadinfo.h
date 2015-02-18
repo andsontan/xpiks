@@ -45,19 +45,14 @@ namespace Models {
             m_Title = items.value(TitleField, "Untitled");
             m_Host = items.value(HostField, "");
             m_Username = items.value(UsernameField, "");
-
-            QByteArray base64;
-            QString serialized = items.value(PasswordField, "");
-            base64.append(serialized);
-            // TODO: replace this when Qt will have a nice way for it
-            m_EncodedPassword = base64.fromBase64(base64);
+            m_EncodedPassword = items.value(PasswordField, "");
         }
 
     public:
         const QString &getTitle() const { return m_Title; }
         const QString &getHost() const { return m_Host; }
         const QString &getUsername() const { return m_Username; }
-        const QByteArray &getPassword() const { return m_EncodedPassword; }
+        const QString &getPassword() const { return m_EncodedPassword; }
         bool hasPassword() const { return m_EncodedPassword.isEmpty(); }
         bool getIsSelected() const { return m_IsSelected; }
         bool isSomethingMissing() const { return m_EncodedPassword.isEmpty() || m_Host.isEmpty() || m_Username.isEmpty(); }
@@ -66,7 +61,7 @@ namespace Models {
         void setTitle(const QString &value) { m_Title = value; }
         void setHost(const QString &value) { m_Host = value; }
         void setUsername(const QString &value) { m_Username = value; }
-        void setPassword(const QByteArray &value) { m_EncodedPassword = value; }
+        void setPassword(const QString &value) { m_EncodedPassword = value; }
         void setIsSelected(bool value) { m_IsSelected = value; }
 
     public:
@@ -75,7 +70,7 @@ namespace Models {
             hash[TitleField] = m_Title.trimmed().isEmpty() ? "Untitled" : m_Title;
             hash[HostField] = m_Host;
             hash[UsernameField] = m_Username;
-            hash[PasswordField] = QString(m_EncodedPassword.toBase64());
+            hash[PasswordField] = m_EncodedPassword;
             return hash;
         }
 
@@ -83,7 +78,7 @@ namespace Models {
         QString m_Title;
         QString m_Host;
         QString m_Username;
-        QByteArray m_EncodedPassword;
+        QString m_EncodedPassword;
         bool m_IsSelected;
     };
 }

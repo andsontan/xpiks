@@ -37,16 +37,16 @@ namespace Encryption {
         void setMasterPasswordHash(const QString &hash);
 
     public:
-        QByteArray encodePassword(const QString &password) const;
-        QString decodePassword(const QByteArray &encodedPassword) const;
+        QString encodePassword(const QString &password) const;
+        QString decodePassword(const QString &encodedPassword) const;
         // operation executed before setting new master password
         // old data gets reencoded with new master password
         // could be static, but is instnance method for explicity
-        QByteArray recodePassword(const QByteArray &encodedPassword,
+        QString recodePassword(const QString &encodedPassword,
                                   const QString &oldMasterPassword, const QString &newMasterPassword) const;
 
     public:
-        Q_INVOKABLE QString getMasterPasswordHash() const { return m_MasterPasswordHash.toBase64(); }
+        Q_INVOKABLE QString getMasterPasswordHash() const { return m_MasterPasswordHash.toHex(); }
         Q_INVOKABLE bool testMasterPassword(const QString &masterPasswordCandidate) const;
         Q_INVOKABLE bool isMasterPasswordSet() const { return !m_MasterPasswordHash.isEmpty(); }
 
@@ -59,10 +59,10 @@ namespace Encryption {
     public:
         Q_INVOKABLE void resetMasterPassword();
         // should be executed on close of Upload dialog
-        Q_INVOKABLE void purgeMasterPassword() { m_EncodedMasterPassword = ""; }
+        Q_INVOKABLE void purgeMasterPassword() { m_EncodedMasterPassword.clear(); }
         Q_INVOKABLE bool changeMasterPassword(bool firstTime, const QString &inputCurrMasterPassword,
                                               const QString &newMasterPassword);
-        Q_INVOKABLE void removeMasterPassword() { m_EncodedMasterPassword = ""; m_MasterPasswordHash = ""; }
+        Q_INVOKABLE void removeMasterPassword() { m_EncodedMasterPassword.clear(); m_MasterPasswordHash.clear(); }
 
     signals:
         void beforeMasterPasswordChange(const QString oldMasterPassword, const QString &newMasterPassword);
@@ -74,7 +74,7 @@ namespace Encryption {
     private:
         // for keeping in memory master password
         QString m_PasswordForMasterPassword;
-        QByteArray m_EncodedMasterPassword;
+        QString m_EncodedMasterPassword;
         QString m_DefaultMasterPassword;
         // used for checks in Upload dialog and changing MP
         QByteArray m_MasterPasswordHash;

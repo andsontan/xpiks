@@ -119,7 +119,7 @@ namespace Models {
             Q_ASSERT(m_SecretsManager != NULL);
             foreach (UploadInfo *info, m_UploadInfos) {
                 if (info->hasPassword()) {
-                    QByteArray newPassword = m_SecretsManager->recodePassword(
+                    QString newPassword = m_SecretsManager->recodePassword(
                                 info->getPassword(), oldMasterPassword, newMasterPassword);
                     info->setPassword(newPassword);
                 }

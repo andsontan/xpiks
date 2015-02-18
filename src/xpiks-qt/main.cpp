@@ -144,6 +144,7 @@ int main(int argc, char *argv[]) {
     uploadInfoRepository.setSecretsManager(&secretsManager);
 
     // other initializations
+    qDebug() << "Must use master password: " << appSettings.value(Constants::USE_MASTER_PASSWORD, false).toBool();
     secretsManager.setMasterPasswordHash(appSettings.value(Constants::MASTER_PASSWORD_HASH, "").toString());
     uploadInfoRepository.initFromString(appSettings.value(Constants::UPLOAD_HOSTS, "").toString());
 

@@ -32,6 +32,7 @@ Item {
     id: masterPasswordComponent
     property bool firstTime
     property bool emptyMP: false
+    property bool wrongMP: false
     anchors.fill: parent
     property var callbackObject
 
@@ -99,6 +100,7 @@ Item {
         standardButtons: StandardButton.Ok
         onAccepted: {
             currentPassword.forceActiveFocus()
+            wrongMP = true
         }
     }
 
@@ -155,7 +157,7 @@ Item {
 
                     StyledInputHost {
                         border.width: (currentPassword.activeFocus || emptyMP) ? 1 : 0
-                        border.color: emptyMP ? Colors.artworkModifiedColor : Colors.artworkActiveColor
+                        border.color: (emptyMP || wrongMP) ? Colors.artworkModifiedColor : Colors.artworkActiveColor
 
                         StyledTextInput {
                             id: currentPassword
