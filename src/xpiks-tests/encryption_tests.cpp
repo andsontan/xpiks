@@ -3,8 +3,8 @@
 #include "../xpiks-qt/Encryption/aes-qt.h"
 
 void EncryptionTests::simpleEncodeDecodeTest() {
-    QString text = "simple text";
-    QString key = "key";
+    QString text = QString::fromUtf8("simple text");
+    QString key = QString::fromUtf8("key");
     QByteArray encoded = Encryption::encodeText(text, key);
     QString decoded = Encryption::decodeText(encoded, key);
 
