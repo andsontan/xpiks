@@ -33,7 +33,6 @@
 namespace Encryption {
 
     const uint8_t iv[]  = { 0xf0, 0xe1, 0xd2, 0xc3, 0xb4, 0xa5, 0x96, 0x87, 0x78, 0x69, 0x5a, 0x4b, 0x3c, 0x2d, 0x5e, 0xaf };
-    uint8_t encodingBuffer[MAX_ENCRYPTION_LENGTH];
 
     inline int getAlignedSize(int currSize, int alignment) {
         Q_ASSERT(currSize >= 0);
@@ -52,6 +51,7 @@ namespace Encryption {
 
         int encryptionLength = getAlignedSize(length, 16);
 
+        uint8_t encodingBuffer[MAX_ENCRYPTION_LENGTH];
         memset(encodingBuffer, 0, encryptionLength * sizeof(uint8_t));
         inputData.resize(encryptionLength);
 
@@ -72,6 +72,7 @@ namespace Encryption {
         const int length = hexEncodedText.size();
         int encryptionLength = getAlignedSize(length, 16);
 
+        uint8_t encodingBuffer[MAX_ENCRYPTION_LENGTH];
         memset(encodingBuffer, 0, encryptionLength * sizeof(uint8_t));
         QByteArray encodedText = QByteArray::fromHex(hexEncodedText.toLatin1());
         encodedText.resize(encryptionLength);

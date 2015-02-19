@@ -12,6 +12,6 @@
 int main(int argc, char *argv[])
 {
     QTEST_CLASS(EncryptionTests, et);
-    //QTEST_CLASS(IndicesToRangesTests, itrt);
+    QTEST_CLASS(IndicesToRangesTests, itrt);
     return 0;
 }
