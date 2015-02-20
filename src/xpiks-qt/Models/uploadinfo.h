@@ -23,6 +23,7 @@
 #define UPLOADINFO
 
 #include <QHash>
+#include <QMutex>
 #include <QString>
 #include <QByteArray>
 #include "../Encryption/secretsmanager.h"
@@ -52,7 +53,7 @@ namespace Models {
         const QString &getTitle() const { return m_Title; }
         const QString &getHost() const { return m_Host; }
         const QString &getUsername() const { return m_Username; }
-        const QString &getPassword() const { return m_EncodedPassword; }
+        QString getPassword() { QString result; m_Mutex.lock(); result = m_EncodedPassword; m_Mutex.unlock(); return result; }
         bool hasPassword() const { return m_EncodedPassword.isEmpty(); }
         bool getIsSelected() const { return m_IsSelected; }
         bool isSomethingMissing() const { return m_EncodedPassword.isEmpty() || m_Host.isEmpty() || m_Username.isEmpty(); }
@@ -61,7 +62,7 @@ namespace Models {
         void setTitle(const QString &value) { m_Title = value; }
         void setHost(const QString &value) { m_Host = value; }
         void setUsername(const QString &value) { m_Username = value; }
-        void setPassword(const QString &value) { m_EncodedPassword = value; }
+        void setPassword(const QString &value) { m_Mutex.lock(); m_EncodedPassword = value; m_Mutex.unlock(); }
         void setIsSelected(bool value) { m_IsSelected = value; }
 
     public:
@@ -75,6 +76,7 @@ namespace Models {
         }
 
     private:
+        QMutex m_Mutex;
         QString m_Title;
         QString m_Host;
         QString m_Username;

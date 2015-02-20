@@ -15,6 +15,7 @@ private slots:
     void simpleEncodeDecodeCyrrylicTest();
     void simpleEncodeDecodeUtf8Test();
     void realTest();
+    void bigRandomTest();
 };
 
 #endif // RC6_TESTS
