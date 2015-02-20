@@ -48,7 +48,7 @@ ApplicationWindow {
     }
 
     function openUploadDialog() {
-        if (appSettings.value(appSettings.mustUseMasterPasswordKey, false)) {
+        if (appSettings.boolValue(appSettings.mustUseMasterPasswordKey, false)) {
             var component = Qt.createComponent("Dialogs/EnterMasterPasswordDialog.qml")
             var callbackObject = {
                 onSuccess: doOpenUploadDialog,
