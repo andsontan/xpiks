@@ -47,6 +47,7 @@ ApplicationWindow {
     property double defaultMaxKeywords: 50
     property int defaultMaxDescription: 200
     property double defaultMinMegapixels: 4.0
+    property bool defaultMustUseMasterPassword: false
 
     property string exiftoolpathkey: appSettings.exifToolPathKey
     property string exifToolPath: appSettings.value(exiftoolpathkey, defaultExifTool)
@@ -64,7 +65,7 @@ ApplicationWindow {
     property double minMegapixelCount: appSettings.value(minmegapixelskey, defaultMinMegapixels)
 
     property string mustusemasterpasswordkey: appSettings.mustUseMasterPasswordKey
-    property bool mustUseMasterPassword: appSettings.value(mustusemasterpasswordkey, false)
+    property bool mustUseMasterPassword: appSettings.boolValue(mustusemasterpasswordkey, defaultMustUseMasterPassword)
 
     property string masterpasswordhashkey: appSettings.masterPasswordHashKey
 
@@ -186,8 +187,8 @@ ApplicationWindow {
             descriptionLength.text = defaultMaxDescription + ''
 
             secretsManager.removeMasterPassword()
-            masterPasswordCheckbox.checked = false
-            mustUseMasterPassword = false
+            masterPasswordCheckbox.checked = defaultMustUseMasterPassword
+            mustUseMasterPassword = defaultMustUseMasterPassword
             clearMPSettings()
         }
     }
@@ -476,6 +477,11 @@ ApplicationWindow {
                             openMasterPasswordDialog(false)
                         }
                     }
+
+                    Component.onCompleted: {
+                        console.log("Must use master password is: " + mustUseMasterPassword)
+                        masterPasswordCheckbox.checked = mustUseMasterPassword
+                    }
                 }
             }
 
@@ -545,7 +551,6 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
-        masterPasswordCheckbox.checked = mustUseMasterPassword
         exifToolText.forceActiveFocus()
     }
 }

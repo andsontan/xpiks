@@ -35,14 +35,11 @@ namespace Encryption {
 
     void SecretsManager::setMasterPasswordHash(const QString &hash)
     {
-        QByteArray originalData;
-        originalData.append(hash);
-        // TODO: QT does not have less ugly way to do it??
-        m_MasterPasswordHash = originalData.fromBase64(originalData);
+        m_MasterPasswordHash = QByteArray::fromHex(hash.toLatin1());
     }
 
-    QByteArray SecretsManager::encodePassword(const QString &password) const {
-        QByteArray encodedPassword;
+    QString SecretsManager::encodePassword(const QString &password) const {
+        QString encodedPassword;
 
         if (!password.isEmpty()) {
             QString key = getKeyForEncryption();
@@ -52,7 +49,7 @@ namespace Encryption {
         return encodedPassword;
     }
 
-    QString SecretsManager::decodePassword(const QByteArray &encodedPassword) const {
+    QString SecretsManager::decodePassword(const QString &encodedPassword) const {
         QString decodedPassword = "";
 
         if (!encodedPassword.isEmpty()) {
@@ -63,10 +60,10 @@ namespace Encryption {
         return decodedPassword;
     }
 
-    QByteArray SecretsManager::recodePassword(const QByteArray &encodedPassword, const QString &oldMasterPassword, const QString &newMasterPassword) const
+    QString SecretsManager::recodePassword(const QString &encodedPassword, const QString &oldMasterPassword, const QString &newMasterPassword) const
     {
         QString decodedPassword = decodeText(encodedPassword, oldMasterPassword);
-        QByteArray newEncodedPassword = encodeText(decodedPassword, newMasterPassword);
+        QString newEncodedPassword = encodeText(decodedPassword, newMasterPassword);
         return newEncodedPassword;
     }
 
@@ -87,7 +84,7 @@ namespace Encryption {
             m_EncodedMasterPassword = encodeText(masterPassword, m_PasswordForMasterPassword);
             m_MasterPasswordHash = getPasswordHash(masterPassword);
         } else {
-            m_EncodedMasterPassword = "";
+            m_EncodedMasterPassword.clear();
             m_MasterPasswordHash.clear();
         }
     }
@@ -95,9 +92,8 @@ namespace Encryption {
     void SecretsManager::resetMasterPassword()
     {
         emit beforeMasterPasswordChange(getKeyForEncryption(), m_DefaultMasterPassword);
-        m_EncodedMasterPassword = "";
+        m_EncodedMasterPassword.clear();
         m_MasterPasswordHash.clear();
-        qDebug() << "Master password is reset";
     }
 
     bool SecretsManager::changeMasterPassword(bool firstTime, const QString &inputCurrMasterPassword, const QString &newMasterPassword)
@@ -107,8 +103,6 @@ namespace Encryption {
 
         bool changed = false;
 
-        // TODO: optimize it in future: to take decoded previous master
-        // password only once and recode all passwords with it
         if (firstTime || testMasterPassword(inputCurrMasterPassword)) {
             QString &oldMasterPassword = m_DefaultMasterPassword;
             if (!firstTime) {
@@ -141,7 +135,7 @@ namespace Encryption {
     {
         QCryptographicHash hash(QCryptographicHash::Sha256);
         QString data = m_DefaultMasterPassword + password;
-        hash.addData(data.toLocal8Bit());
+        hash.addData(data.toUtf8());
 
         return hash.result();
     }

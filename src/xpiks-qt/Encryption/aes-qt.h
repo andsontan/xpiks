@@ -22,18 +22,26 @@
 #ifndef AESQT_H
 #define AESQT_H
 
+#include <QDebug>
 #include <QString>
 #include <QCryptographicHash>
 #include <cstdio>
 #include "../tiny-aes/aes.h"
 
+#define MAX_ENCRYPTION_LENGTH 2048
+
 namespace Encryption {
 
     const uint8_t iv[]  = { 0xf0, 0xe1, 0xd2, 0xc3, 0xb4, 0xa5, 0x96, 0x87, 0x78, 0x69, 0x5a, 0x4b, 0x3c, 0x2d, 0x5e, 0xaf };
-    const int maxLength = 2048;
-    uint8_t encodingBuffer[maxLength];
 
-    QByteArray encodeText(const QString &rawText, const QString &key) {
+    inline int getAlignedSize(int currSize, int alignment) {
+        Q_ASSERT(currSize >= 0);
+
+        int padding = (alignment - currSize % alignment) % alignment;
+        return currSize + padding;
+    }
+
+    QString encodeText(const QString &rawText, const QString &key) {
         QCryptographicHash hash(QCryptographicHash::Md5);
         hash.addData(key.toUtf8());
         QByteArray keyData = hash.result();
@@ -41,24 +49,35 @@ namespace Encryption {
         QByteArray inputData = rawText.toUtf8();
         const int length = inputData.size();
 
-        memset(encodingBuffer, 0, maxLength * sizeof(uint8_t));
+        int encryptionLength = getAlignedSize(length, 16);
 
-        AES128_CBC_encrypt_buffer(encodingBuffer, (uint8_t*)inputData.data(), length, (uint8_t*)keyData.data(), iv);
+        uint8_t encodingBuffer[MAX_ENCRYPTION_LENGTH];
+        memset(encodingBuffer, 0, encryptionLength * sizeof(uint8_t));
+        inputData.resize(encryptionLength);
 
-        QByteArray result;
-        result.append((char*)encodingBuffer, -1);
-        return result;
+        AES128_CBC_encrypt_buffer(encodingBuffer, (uint8_t*)inputData.data(), length, (const uint8_t*)keyData.data(), iv);
+
+
+        int bufferLength = qstrlen((const char*)encodingBuffer);
+        QByteArray data((const char*)encodingBuffer, bufferLength);
+        QString hex = data.toHex();
+        return hex;
     }
 
-    QString decodeText(const QByteArray &encodedText, const QString &key) {
+    QString decodeText(const QString &hexEncodedText, const QString &key) {
         QCryptographicHash hash(QCryptographicHash::Md5);
         hash.addData(key.toUtf8());
         QByteArray keyData = hash.result();
 
-        const int length = encodedText.size();
-        memset(encodingBuffer, 0, maxLength * sizeof(uint8_t));
+        const int length = hexEncodedText.size();
+        int encryptionLength = getAlignedSize(length, 16);
 
-        AES128_CBC_decrypt_buffer(encodingBuffer, (uint8_t*)encodedText.data(), length, (uint8_t*)keyData.data(), iv);
+        uint8_t encodingBuffer[MAX_ENCRYPTION_LENGTH];
+        memset(encodingBuffer, 0, encryptionLength * sizeof(uint8_t));
+        QByteArray encodedText = QByteArray::fromHex(hexEncodedText.toLatin1());
+        encodedText.resize(encryptionLength);
+
+        AES128_CBC_decrypt_buffer(encodingBuffer, (uint8_t*)encodedText.data(), length, (const uint8_t*)keyData.data(), iv);
 
         QByteArray result;
         result.append((char*)encodingBuffer, -1);
