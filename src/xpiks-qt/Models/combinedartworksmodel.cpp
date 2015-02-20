@@ -211,9 +211,19 @@ namespace Models {
         foreach (ArtItemInfo* info, m_ArtworksList) {
             ArtworkMetadata *metadata = info->getOrigin();
             metadata->appendKeywords(m_CommonKeywordsModel.getKeywords());
-            metadata->setDescription(m_ArtworkDescription);
-            metadata->setTitle(m_ArtworkTitle);
-            metadata->setAuthor(m_ArtworkAuthor);
+
+            if (!m_ArtworkDescription.isEmpty()) {
+                metadata->setDescription(m_ArtworkDescription);
+            }
+
+            if (!m_ArtworkTitle.isEmpty()) {
+                metadata->setTitle(m_ArtworkTitle);
+            }
+
+            if (!m_ArtworkAuthor.isEmpty()) {
+                metadata->setAuthor(m_ArtworkAuthor);
+            }
+
             metadata->saveBackup();
         }
     }

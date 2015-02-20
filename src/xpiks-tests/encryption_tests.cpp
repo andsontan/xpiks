@@ -1,5 +1,6 @@
 #include "encryption_tests.h"
 #include <QDebug>
+#include <QTime>
 #include "../xpiks-qt/Encryption/aes-qt.h"
 
 void EncryptionTests::simpleEncodeDecodeTest() {
@@ -68,4 +69,39 @@ void EncryptionTests::realTest()
     QString decoded = Encryption::decodeText(encoded, key);
 
     QCOMPARE(decoded, text);
+}
+
+QString getRandomString(int length) {
+    QByteArray qbr;
+    qbr.reserve(length);
+    while (length--) {
+        qbr.append('a' + qrand()%26);
+
+        if (qrand() % 11) {
+            qbr.append('0' + qrand()%10);
+        }
+
+        if (qrand() % 13) {
+            qbr.append('A' + qrand()%26);
+        }
+    }
+
+    return QString::fromLatin1(qbr);
+}
+
+void EncryptionTests::bigRandomTest()
+{
+    int iterations = 1000;
+    QTime time = QTime::currentTime();
+    qsrand((uint)time.msec());
+
+    QString key = "93b7294e86d8d9923a497364fc8148befd67f46a";
+
+    while(iterations--) {
+        QString randomString = getRandomString(qrand() % 1000);
+        QString encoded = Encryption::encodeText(randomString, key);
+        QString decoded = Encryption::decodeText(encoded, key);
+        qDebug() << iterations << randomString.length();
+        QCOMPARE(decoded, randomString);
+    }
 }
