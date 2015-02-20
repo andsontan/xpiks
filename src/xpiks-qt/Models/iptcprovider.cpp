@@ -62,7 +62,7 @@ namespace Models {
         Models::ImportData *importData = importPair.second;
 
         if (metadata != NULL && importData != NULL) {
-            metadata->initialize(importData->Author, importData->Title, importData->Description, importData->Description);
+            metadata->initialize(importData->Author, importData->Title, importData->Description, importData->Keywords);
 
             if (importData->Description.isEmpty() || importData->Keywords.isEmpty()) {
                 Helpers::TempMetadataDb(metadata).load();
@@ -75,6 +75,10 @@ namespace Models {
             qDebug() << metadata->getFilepath();
         } else {
             setIsError(true);
+        }
+
+        if (importData != NULL) {
+            delete importData;
         }
     }
 
