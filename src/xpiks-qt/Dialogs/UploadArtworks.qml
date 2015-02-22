@@ -24,6 +24,7 @@ import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.2
 import QtQuick.Controls.Styles 1.3
+import xpiks 1.0
 import "../Constants"
 import "../Constants/Colors.js" as Colors;
 import "../Common.js" as Common;
@@ -128,6 +129,10 @@ Item {
                 var old_xy = Common.movePopupInsideComponent(uploadArtworksComponent, dialogWindow, mouse, old_x, old_y);
                 old_x = old_xy[0]; old_y = old_xy[1];
             }
+        }
+
+        ClipboardHelper {
+            id: clipboard
         }
 
         // This rectangle is the actual popup
@@ -317,6 +322,15 @@ Item {
                                     validator: RegExpValidator {
                                         // copy paste in keys.onpressed Paste
                                         regExp: /[a-zA-Z0-9 _-]*$/
+                                    }
+
+                                    Keys.onPressed: {
+                                        if(event.matches(StandardKey.Paste)) {
+                                            var clipboardText = clipboard.getText();
+                                            // same regexp as in validator
+                                            var sanitizedText = clipboardText.replace(/[^a-zA-Z0-9 _-]/g, '');
+                                            uploadHostsListView.currentItem.myData.edittitle = sanitizedText
+                                        }
                                     }
                                 }
                             }
