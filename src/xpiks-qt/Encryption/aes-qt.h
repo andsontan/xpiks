@@ -47,28 +47,22 @@ namespace Encryption {
         hash.addData(key.toUtf8());
         QByteArray keyData = hash.result();
 
-        QVector<uint> rawTextData = rawText.toUcs4();
+        const ushort *rawData = rawText.utf16();
+        void *rawDataVoid = (void*)rawData;
+        const char *rawDataChar = static_cast<const char*>(rawDataVoid);
         QByteArray inputData;
-        QDataStream stream(&inputData, QIODevice::WriteOnly);
-        //stream << rawTextData.length();
-        stream <<  rawText;//rawTextData;
-        stream << '\0';
+        inputData.append(rawDataChar, rawText.size() * 2 + 1);
 
         const int length = inputData.size();
-
         int encryptionLength = getAlignedSize(length, 16);
 
-        QByteArray encodingBuffer(encryptionLength + 100, 0);
-        //uint8_t *encodingBuffer = new uint8_t[encryptionLength];
-        //memset(encodingBuffer, 0, encryptionLength * sizeof(uint8_t));
-        inputData.resize(encryptionLength + 100);
+        QByteArray encodingBuffer(encryptionLength, 0);
+        inputData.resize(encryptionLength);
 
-        AES128_CBC_encrypt_buffer((uint8_t*)encodingBuffer.data(), (uint8_t*)inputData.data(), length, (const uint8_t*)keyData.data(), iv);
+        AES128_CBC_encrypt_buffer((uint8_t*)encodingBuffer.data(), (uint8_t*)inputData.data(), encryptionLength, (const uint8_t*)keyData.data(), iv);
 
-        //int bufferLength = qstrlen((const char*)encodingBuffer);
-        QByteArray data(encodingBuffer.data()); //QByteArray::fromRawData((const char*)encodingBuffer, bufferLength);
-        QString hex = data.toHex();
-        //delete encodingBuffer;
+        QByteArray data(encodingBuffer.data(), encryptionLength);
+        QString hex = QString::fromLatin1(data.toHex());
         return hex;
     }
 
@@ -80,27 +74,16 @@ namespace Encryption {
         const int length = hexEncodedText.size();
         int encryptionLength = getAlignedSize(length, 16);
 
-        //uint8_t *encodingBuffer = new uint8_t[encryptionLength];
-        //memset(encodingBuffer, 0, encryptionLength * sizeof(uint8_t));
-        QByteArray encodingBuffer(encryptionLength + 100, 0);
+        QByteArray encodingBuffer(encryptionLength, 0);
 
         QByteArray encodedText = QByteArray::fromHex(hexEncodedText.toLatin1());
-        encodedText.resize(encryptionLength + 100);
+        encodedText.resize(encryptionLength);
 
         AES128_CBC_decrypt_buffer((uint8_t*)encodingBuffer.data(), (uint8_t*)encodedText.data(), encryptionLength, (const uint8_t*)keyData.data(), iv);
 
-        QVector<uint> rawTextData;
-        QDataStream stream(encodingBuffer);
-        //int dataLength;
-        //stream >> dataLength;
-        QString result;
-        stream >> result;//rawTextData;
-        //QString text;
-        //text.append((char*)encodingBuffer);
-        //int len = qstrlen((char*)encodingBuffer);
-        //for (int i = 0; i < len; ++i) text.append(encodingBuffer[i]);
-
-        //QString result = QString::fromUcs4(rawTextData.data(), rawTextData.length());
+        void *data = encodingBuffer.data();
+        const ushort *decodedData = static_cast<ushort *>(data);
+        QString result = QString::fromUtf16(decodedData);
         return result;
     }
 }

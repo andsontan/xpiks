@@ -74,14 +74,20 @@ void EncryptionTests::realTest()
 QString getRandomString(int length) {
     QByteArray qbr;
     qbr.reserve(length);
+    const char chars[] = "/!@#$% \\^&*()_+=|";
+    int charsLength = sizeof(chars);
     while (length--) {
         qbr.append('a' + qrand()%26);
 
-        if (qrand() % 11) {
+        if (qrand() % 3 == 0) {
+            qbr.append(chars[qrand() % charsLength]);
+        }
+
+        if (qrand() % 11 == 0) {
             qbr.append('0' + qrand()%10);
         }
 
-        if (qrand() % 13) {
+        if (qrand() % 13 == 0) {
             qbr.append('A' + qrand()%26);
         }
     }
@@ -91,17 +97,19 @@ QString getRandomString(int length) {
 
 void EncryptionTests::bigRandomTest()
 {
-    int iterations = 1000;
+    int iterations = 10000;
     QTime time = QTime::currentTime();
     qsrand((uint)time.msec());
 
-    QString key = "93b7294e86d8d9923a497364fc8148befd67f46a";
-
     while(iterations--) {
+        QString key = getRandomString(qrand() % 100);
         QString randomString = getRandomString(qrand() % 1000);
         QString encoded = Encryption::encodeText(randomString, key);
         QString decoded = Encryption::decodeText(encoded, key);
-        qDebug() << iterations << randomString.length();
-        QCOMPARE(decoded, randomString);
+        if (randomString != decoded) {
+            QFAIL(QString("Text: %1\nDecoded: %2\nKey: %3").arg(randomString).arg(decoded).arg(key)
+                  .toStdString().c_str());
+            break;
+        }
     }
 }

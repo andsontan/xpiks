@@ -15,6 +15,8 @@ CONFIG   -= app_bundle
 win32:INCLUDEPATH += ../tiny-aes
 win32:INCLUDEPATH += ../xpiks-qt/Encryption
 
+DEFINES += QT_NO_CAST_TO_ASCII \
+           QT_NO_CAST_FROM_BYTEARRAY
 
 TEMPLATE = app
 
