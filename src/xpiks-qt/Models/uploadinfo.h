@@ -48,7 +48,6 @@ namespace Models {
             m_Host = items.value(HostField, emptyString);
             m_Username = items.value(UsernameField, emptyString);
             m_EncodedPassword = items.value(PasswordField, emptyString);
-            //m_OriginalEncodedPassword = m_EncodedPassword;
         }
 
     public:
@@ -64,8 +63,16 @@ namespace Models {
         void setTitle(const QString &value) { m_Title = value; }
         void setHost(const QString &value) { m_Host = value; }
         void setUsername(const QString &value) { m_Username = value; }
-        void setPassword(const QString &value) { m_Mutex.lock(); m_EncodedPassword = value; m_Mutex.unlock(); }
+        void setPassword(const QString &value) {
+            m_Mutex.lock();
+            {
+                m_EncodedPassword = value;
+            }
+            m_Mutex.unlock();
+        }
         void setIsSelected(bool value) { m_IsSelected = value; }
+        void restorePassword() { m_EncodedPassword = m_EncodedPasswordBackup; }
+        void backupPassword() { m_EncodedPasswordBackup = m_EncodedPassword; }
 
     public:
         QHash<int, QString> toHash() {
@@ -74,6 +81,7 @@ namespace Models {
             hash[HostField] = m_Host;
             hash[UsernameField] = m_Username;
             hash[PasswordField] = m_EncodedPassword;
+
             return hash;
         }
 
@@ -83,8 +91,8 @@ namespace Models {
         QString m_Host;
         QString m_Username;
         QString m_EncodedPassword;
-        // save backup in case user fails to decode with MP
-        //QString m_OriginalEncodedPassword;
+        // used for backup when MP is incorrect
+        QString m_EncodedPasswordBackup;
         bool m_IsSelected;
     };
 }

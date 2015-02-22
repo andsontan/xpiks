@@ -53,6 +53,22 @@ namespace Models {
         return items.join(", ");
     }
 
+    // mp == master password
+    void UploadInfoRepository::initializeAccounts(bool mpIsCorrectOrEmpty)
+    {
+        this->setEmptyPasswordsMode(!mpIsCorrectOrEmpty);
+        if (!mpIsCorrectOrEmpty) {
+            this->backupRealPasswords();
+        }
+    }
+
+    void UploadInfoRepository::finalizeAccounts()
+    {
+        if (m_EmptyPasswordsMode) {
+            this->restoreRealPasswords();
+        }
+    }
+
     int UploadInfoRepository::rowCount(const QModelIndex &parent) const
     {
         Q_UNUSED(parent);

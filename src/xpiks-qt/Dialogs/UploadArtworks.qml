@@ -530,6 +530,7 @@ Item {
                         width: 120
                         enabled: !artworkUploader.inProgress
                         onClicked: {
+                            uploadInfos.finalizeAccounts()
                             saveSettings()
                             artItemsModel.updateAllProperties()
                             closePopup()

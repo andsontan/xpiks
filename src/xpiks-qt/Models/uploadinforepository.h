@@ -106,6 +106,15 @@ namespace Models {
         Q_INVOKABLE QString getAgenciesWithMissingDetails();
 
     public:
+        Q_INVOKABLE void initializeAccounts(bool masterPasswordIsCorrect);
+        Q_INVOKABLE void finalizeAccounts();
+
+    public:
+        void setEmptyPasswordsMode(bool mode) { m_EmptyPasswordsMode = mode; }
+        void backupRealPasswords() { foreach (UploadInfo *info, m_UploadInfos) { info->backupPassword(); } }
+        void restoreRealPasswords() { foreach (UploadInfo *info, m_UploadInfos) { info->restorePassword(); } }
+
+    public:
         const QList<UploadInfo*> &getUploadInfos() const { return m_UploadInfos; }
 
     public:
@@ -137,6 +146,9 @@ namespace Models {
     private:
         QList<UploadInfo*> m_UploadInfos;
         Encryption::SecretsManager *m_SecretsManager;
+        // when MP is cancelled before Upload dialog
+        // all passwords should be empty
+        bool m_EmptyPasswordsMode;
     };
 }
 

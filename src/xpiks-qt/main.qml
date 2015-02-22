@@ -51,23 +51,21 @@ ApplicationWindow {
         if (appSettings.boolValue(appSettings.mustUseMasterPasswordKey, false)) {
             var component = Qt.createComponent("Dialogs/EnterMasterPasswordDialog.qml")
             var callbackObject = {
-                onSuccess: doOpenUploadDialog,
-                onFail: doOpenUploadDialogWithEmptyPasswords
+                onSuccess: function() { doOpenUploadDialog(true) },
+                onFail: function() { doOpenUploadDialog(false) }
             }
 
             component.createObject(applicationWindow, {componentParent: applicationWindow, callbackObject: callbackObject})
         } else {
-            doOpenUploadDialog()
+            doOpenUploadDialog(true)
         }
     }
 
-    function doOpenUploadDialogWithEmptyPasswords() {
-        // TODO: implement this
-    }
-
-    function doOpenUploadDialog() {
+    function doOpenUploadDialog(masterPasswordCorrectOrEmpty) {
         artworkUploader.resetModel()
         artItemsModel.setSelectedForUpload()
+        uploadInfos.initializeAccounts(masterPasswordCorrectOrEmpty)
+
         var component = Qt.createComponent("Dialogs/UploadArtworks.qml")
         component.createObject(applicationWindow, {componentParent: applicationWindow})
     }
