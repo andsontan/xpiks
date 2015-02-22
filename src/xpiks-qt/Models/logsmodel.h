@@ -48,7 +48,7 @@ namespace Models {
                 result = in.readAll();
             }
 #else
-            result = "Logs are available in Release version";
+            result = QString::fromLatin1("Logs are available in Release version");
 #endif
             return result;
 

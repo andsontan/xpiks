@@ -34,6 +34,8 @@ Item {
     id: uploadArtworksComponent
     anchors.fill: parent
     property string uploadhostskey: appSettings.uploadHostsKey
+    // if MasterPassword wasn't entered do not show passwords
+    property bool emptyPasswords: false
     property variant componentParent
 
     function closePopup() {
@@ -314,7 +316,7 @@ Item {
 
                                     validator: RegExpValidator {
                                         // copy paste in keys.onpressed Paste
-                                        regExp: /[a-zA-Z0-9 _]*$/
+                                        regExp: /[a-zA-Z0-9 _-]*$/
                                     }
                                 }
                             }

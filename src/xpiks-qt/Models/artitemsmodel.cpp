@@ -195,7 +195,7 @@ namespace Models {
         m_IptcProvider->setArtworks(modifiedSelectedArtworks);
     }
 
-    void ArtItemsModel::uploadSelectedArtworks()
+    void ArtItemsModel::setSelectedForUpload()
     {
         QList<ArtworkMetadata*> selectedArtworks;
         getSelectedArtworks(selectedArtworks);

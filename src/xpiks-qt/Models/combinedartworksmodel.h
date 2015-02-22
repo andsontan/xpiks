@@ -143,7 +143,7 @@ namespace Models {
         Q_INVOKABLE void saveSetKeywords();
         Q_INVOKABLE void saveAddKeywords();
         Q_INVOKABLE void resetModelData();
-        Q_INVOKABLE QString getKeywordsString() { return m_CommonKeywordsModel.getKeywords().join(','); }
+        Q_INVOKABLE QString getKeywordsString() { return m_CommonKeywordsModel.getKeywords().join(QChar(',')); }
         Q_INVOKABLE QObject *getKeywordsModel() {
             QObject *item = &m_CommonKeywordsModel;
             QQmlEngine::setObjectOwnership(item, QQmlEngine::CppOwnership);

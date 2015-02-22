@@ -26,12 +26,10 @@ namespace Models {
     void UploadInfoRepository::initFromString(const QString &savedString)
     {
         QByteArray originalData;
-        originalData.append(savedString);
-        // TODO: QT does not have less ugly way to do it??
-        originalData = originalData.fromBase64(originalData);
+        originalData.append(savedString.toLatin1());
+        QByteArray result = QByteArray::fromBase64(originalData);
 
         QList<QHash<int, QString> > items;
-        QByteArray result;
         QDataStream stream(&result, QIODevice::ReadOnly);
         stream >> items;
 

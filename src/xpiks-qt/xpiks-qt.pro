@@ -23,6 +23,8 @@ RESOURCES += qml.qrc
 
 BUILDNO = $$system(git log -n 1 --pretty=format:"%H")
 DEFINES += BUILDNUMBER=$${BUILDNO}
+DEFINES += QT_NO_CAST_TO_ASCII \
+           QT_NO_CAST_FROM_BYTEARRAY
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =

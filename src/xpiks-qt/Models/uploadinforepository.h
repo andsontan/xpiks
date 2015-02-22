@@ -92,7 +92,7 @@ namespace Models {
             QByteArray result;
             QDataStream stream( &result, QIODevice::WriteOnly);
             stream << items;
-            return result.toBase64();
+            return QString::fromUtf8(result.toBase64());
         }
 
         Q_INVOKABLE int getSelectedInfosCount() const {

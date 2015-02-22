@@ -93,7 +93,7 @@ namespace Models {
         Q_INVOKABLE void removeSelectedArtworks();
         Q_INVOKABLE void updateSelectedArtworks();
         Q_INVOKABLE void patchSelectedArtworks();
-        Q_INVOKABLE void uploadSelectedArtworks();
+        Q_INVOKABLE void setSelectedForUpload();
         Q_INVOKABLE bool areSelectedArtworksSaved();
         Q_INVOKABLE bool allArtworksSelected() const { return m_SelectedArtworksCount == m_ArtworkList.length(); }
         Q_INVOKABLE void selectDirectory(int directoryIndex);

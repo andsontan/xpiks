@@ -67,7 +67,7 @@ ApplicationWindow {
 
     function doOpenUploadDialog() {
         artworkUploader.resetModel()
-        artItemsModel.uploadSelectedArtworks()
+        artItemsModel.setSelectedForUpload()
         var component = Qt.createComponent("Dialogs/UploadArtworks.qml")
         component.createObject(applicationWindow, {componentParent: applicationWindow})
     }

@@ -37,16 +37,18 @@ namespace Models {
         UploadInfo():
             m_IsSelected(false)
         {
-            m_Title = "Untitled";
+            m_Title = QString::fromLatin1("Untitled");
         }
 
         UploadInfo(const QHash<int, QString>& items) :
             m_IsSelected(false)
         {
-            m_Title = items.value(TitleField, "Untitled");
-            m_Host = items.value(HostField, "");
-            m_Username = items.value(UsernameField, "");
-            m_EncodedPassword = items.value(PasswordField, "");
+            QString emptyString = QString::fromLatin1("");
+            m_Title = items.value(TitleField, QString::fromLatin1("Untitled"));
+            m_Host = items.value(HostField, emptyString);
+            m_Username = items.value(UsernameField, emptyString);
+            m_EncodedPassword = items.value(PasswordField, emptyString);
+            //m_OriginalEncodedPassword = m_EncodedPassword;
         }
 
     public:
@@ -68,7 +70,7 @@ namespace Models {
     public:
         QHash<int, QString> toHash() {
             QHash<int, QString> hash;
-            hash[TitleField] = m_Title.trimmed().isEmpty() ? "Untitled" : m_Title;
+            hash[TitleField] = m_Title.trimmed().isEmpty() ? QString::fromLatin1("Untitled") : m_Title;
             hash[HostField] = m_Host;
             hash[UsernameField] = m_Username;
             hash[PasswordField] = m_EncodedPassword;
@@ -81,6 +83,8 @@ namespace Models {
         QString m_Host;
         QString m_Username;
         QString m_EncodedPassword;
+        // save backup in case user fails to decode with MP
+        //QString m_OriginalEncodedPassword;
         bool m_IsSelected;
     };
 }

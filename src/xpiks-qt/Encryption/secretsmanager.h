@@ -46,7 +46,7 @@ namespace Encryption {
                                   const QString &oldMasterPassword, const QString &newMasterPassword) const;
 
     public:
-        Q_INVOKABLE QString getMasterPasswordHash() const { return m_MasterPasswordHash.toHex(); }
+        Q_INVOKABLE QString getMasterPasswordHash() const { return QString::fromLatin1(m_MasterPasswordHash.toHex()); }
         Q_INVOKABLE bool testMasterPassword(const QString &masterPasswordCandidate) const;
         Q_INVOKABLE bool isMasterPasswordSet() const { return !m_MasterPasswordHash.isEmpty(); }
 
