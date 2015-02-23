@@ -48,6 +48,9 @@ namespace Models {
     signals:
         void warningsCountChanged();
 
+    public slots:
+        void onCheckWarnings(const QList<ArtworkMetadata*> &artworks) { checkForWarnings(artworks); }
+
     public:
         int getWarningsCount();
         void checkForWarnings(const QList<ArtworkMetadata*> &artworks);

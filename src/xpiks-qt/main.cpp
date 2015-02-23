@@ -140,7 +140,6 @@ int main(int argc, char *argv[]) {
     artItemsModel.setCombinedArtworksModel(&combinedArtworksModel);
     artItemsModel.setIptcProvider(&iptcProvider);
     artItemsModel.setArtworkUploader(&artworkUploader);
-    artItemsModel.setWarningsManager(&warningsManager);
     uploadInfoRepository.setSecretsManager(&secretsManager);
 
     // other initializations
@@ -150,6 +149,9 @@ int main(int argc, char *argv[]) {
 
     QObject::connect(&secretsManager, SIGNAL(beforeMasterPasswordChange(QString, QString)),
                      &uploadInfoRepository, SLOT(onBeforeMasterPasswordChanged(QString, QString)));
+
+    QObject::connect(&artItemsModel, SIGNAL(needCheckItemsForWarnings(QList<ArtworkMetadata*>)),
+                     &warningsManager, SLOT(onCheckWarnings(QList<ArtworkMetadata*>)));
 
     qmlRegisterType<Helpers::ClipboardHelper>("xpiks", 1, 0, "ClipboardHelper");
 

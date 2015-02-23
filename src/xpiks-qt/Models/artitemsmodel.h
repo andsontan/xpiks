@@ -75,7 +75,6 @@ namespace Models {
         void setCombinedArtworksModel(CombinedArtworksModel *combinedArtworksModel) { Q_ASSERT(combinedArtworksModel != NULL); m_CombinedArtworks = combinedArtworksModel; }
         void setIptcProvider(IptcProvider *provider) { Q_ASSERT(provider != NULL); m_IptcProvider = provider; }
         void setArtworkUploader(ArtworkUploader *uploader) { Q_ASSERT(uploader != NULL); m_ArtworkUploader = uploader; }
-        void setWarningsManager(WarningsManager *manager) { Q_ASSERT(manager != NULL); m_WarningsManager = manager; }
 
     public:
         Q_INVOKABLE void updateAllProperties();
@@ -136,6 +135,7 @@ namespace Models {
         void modifiedArtworksCountChanged();
         void selectedArtworksCountChanged();
         void artworksChanged();
+        void needCheckItemsForWarnings(const QList<ArtworkMetadata*> &artworks);
 
     protected:
         QHash<int, QByteArray> roleNames() const;
@@ -153,7 +153,6 @@ namespace Models {
         ArtworksRepository *m_ArtworksRepository;
         IptcProvider *m_IptcProvider;
         ArtworkUploader *m_ArtworkUploader;
-        WarningsManager *m_WarningsManager;
         int m_SelectedArtworksCount;
     };
 }

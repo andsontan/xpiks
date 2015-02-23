@@ -203,7 +203,7 @@ namespace Models {
         // TODO: remove this two times copying
         Q_ASSERT(m_ArtworkUploader != NULL);
         m_ArtworkUploader->setArtworks(selectedArtworks);
-        m_WarningsManager->checkForWarnings(selectedArtworks);
+        emit needCheckItemsForWarnings(selectedArtworks);
     }
 
     bool ArtItemsModel::areSelectedArtworksSaved()
@@ -245,13 +245,13 @@ namespace Models {
     void ArtItemsModel::checkForWarnings()
     {
         if (this->getSelectedArtworksCount() == 0) {
-            m_WarningsManager->checkForWarnings(m_ArtworkList);
+            emit needCheckItemsForWarnings(m_ArtworkList);
             qDebug() << "Checking all items for upload warnings...";
         } else {
             QList<ArtworkMetadata*> selectedArtworks;
             getSelectedArtworks(selectedArtworks);
             qDebug() << "Selected items: " << selectedArtworks.length();
-            m_WarningsManager->checkForWarnings(selectedArtworks);
+            emit needCheckItemsForWarnings(selectedArtworks);
             qDebug() << "Checking selected items for upload warnings...";
         }
     }

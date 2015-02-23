@@ -106,7 +106,7 @@ namespace Models {
         Q_INVOKABLE QString getAgenciesWithMissingDetails();
 
     public:
-        Q_INVOKABLE void initializeAccounts(bool masterPasswordIsCorrect);
+        Q_INVOKABLE void initializeAccounts(bool mpIsCorrectOrEmpty);
         Q_INVOKABLE void finalizeAccounts();
 
     public:
