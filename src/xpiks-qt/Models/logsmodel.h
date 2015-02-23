@@ -48,6 +48,7 @@ namespace Models {
                 QString allText = in.readAll();
 
                 if (!reallyAll) {
+                    // TODO: replace magic number 100 by constant or setting
                     result = Helpers::getLastNLines(allText, 100);
                 } else {
                     result = allText;

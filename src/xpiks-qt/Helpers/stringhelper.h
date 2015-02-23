@@ -28,7 +28,7 @@
 #include <QRegExp>
 
 namespace Helpers {
-    QString getLastNLines(const QString &line, int N);
+    QString getLastNLines(const QString &text, int N);
 }
 
 #endif // STRINGHELPER

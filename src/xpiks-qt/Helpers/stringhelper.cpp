@@ -22,23 +22,20 @@
 #include "stringhelper.h"
 
 namespace Helpers {
-    QString getLastNLines(const QString &line, int N) {
+    QString getLastNLines(const QString &text, int N) {
         QString result;
 
-        QVector<QStringRef> items = line.splitRef(QRegExp("[\r\n]"),QString::SkipEmptyParts);
+        QVector<QStringRef> items = text.splitRef(QRegExp("[\r\n]"), QString::SkipEmptyParts);
 
         int length = items.length();
 
         if (length > 0) {
             int startIndex = length - N;
             if (startIndex < 0) { startIndex = 0; }
-            result = items[startIndex].toString();
-            for (int i = startIndex + 1; i < length; ++i) {
-                // TODO: use QStringBuilder
-                result += "\n" + items[i].toString();
-            }
+            int pos = items[startIndex].position();
+            result = text.right(text.length() - pos);
         } else {
-            result = line;
+            result = text;
         }
 
         return result;
