@@ -103,7 +103,6 @@ namespace Models {
             if (index >= 0 && index < m_ArtworkList.length()) {
                 item = m_ArtworkList[index];
                 QQmlEngine::setObjectOwnership(item, QQmlEngine::CppOwnership);
-                qDebug() << "Binding to keywords list... " << item->getFilepath();
             }
 
             return item;

@@ -121,7 +121,6 @@ namespace Models {
 
     void ArtworkMetadata::saveBackup()
     {
-        qDebug() << "Backing up item... " << this->getFilepath();
         Helpers::TempMetadataDb(this).flush();
     }
 

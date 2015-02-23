@@ -55,7 +55,7 @@ namespace Models {
         const QString &getHost() const { return m_Host; }
         const QString &getUsername() const { return m_Username; }
         QString getPassword() { QString result; m_Mutex.lock(); result = m_EncodedPassword; m_Mutex.unlock(); return result; }
-        bool hasPassword() const { return m_EncodedPassword.isEmpty(); }
+        bool hasPassword() const { return !m_EncodedPassword.isEmpty(); }
         bool getIsSelected() const { return m_IsSelected; }
         bool isSomethingMissing() const { return m_EncodedPassword.isEmpty() || m_Host.isEmpty() || m_Username.isEmpty(); }
 
@@ -73,6 +73,7 @@ namespace Models {
         void setIsSelected(bool value) { m_IsSelected = value; }
         void restorePassword() { m_EncodedPassword = m_EncodedPasswordBackup; }
         void backupPassword() { m_EncodedPasswordBackup = m_EncodedPassword; }
+        void dropPassword() { m_EncodedPassword = ""; }
 
     public:
         QHash<int, QString> toHash() {

@@ -351,7 +351,7 @@ namespace Models {
 
     int ArtItemsModel::addLocalDirectory(const QUrl &directory)
     {
-        qDebug() << directory;
+        qDebug() << "Adding local directory: " << directory;
         int addedFilesCount = addDirectory(directory.toLocalFile());
         return addedFilesCount;
     }

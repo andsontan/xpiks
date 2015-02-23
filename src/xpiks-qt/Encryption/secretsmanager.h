@@ -65,7 +65,7 @@ namespace Encryption {
         Q_INVOKABLE void removeMasterPassword() { m_EncodedMasterPassword.clear(); m_MasterPasswordHash.clear(); }
 
     signals:
-        void beforeMasterPasswordChange(const QString oldMasterPassword, const QString &newMasterPassword);
+        void beforeMasterPasswordChange(const QString &oldMasterPassword, const QString &newMasterPassword);
 
     private:
         QString getKeyForEncryption() const;

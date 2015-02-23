@@ -111,7 +111,12 @@ namespace Models {
 
     public:
         void setEmptyPasswordsMode(bool mode) { m_EmptyPasswordsMode = mode; }
-        void backupRealPasswords() { foreach (UploadInfo *info, m_UploadInfos) { info->backupPassword(); } }
+        void backupAndDropRealPasswords() {
+            foreach (UploadInfo *info, m_UploadInfos) {
+                info->backupPassword();
+                info->dropPassword();
+            }
+        }
         void restoreRealPasswords() { foreach (UploadInfo *info, m_UploadInfos) { info->restorePassword(); } }
 
     public:

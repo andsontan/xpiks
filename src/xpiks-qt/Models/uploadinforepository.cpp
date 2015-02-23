@@ -58,7 +58,7 @@ namespace Models {
     {
         this->setEmptyPasswordsMode(!mpIsCorrectOrEmpty);
         if (!mpIsCorrectOrEmpty) {
-            this->backupRealPasswords();
+            this->backupAndDropRealPasswords();
         }
     }
 
@@ -93,7 +93,6 @@ namespace Models {
             const QString &encodedPassword = uploadInfo->getPassword();
             Q_ASSERT(m_SecretsManager != NULL);
             QString password = m_SecretsManager->decodePassword(encodedPassword);
-            qDebug() << "get " << password;
             return password;
         }
         case IsSelectedRole:
@@ -138,7 +137,6 @@ namespace Models {
         case EditPasswordRole: {
             roleToUpdate = PasswordRole;
             QString rawPassword = value.toString();
-            qDebug() << "set " << rawPassword;
             Q_ASSERT(m_SecretsManager != NULL);
             QString encodedPassword = m_SecretsManager->encodePassword(rawPassword);
             uploadInfo->setPassword(encodedPassword);
