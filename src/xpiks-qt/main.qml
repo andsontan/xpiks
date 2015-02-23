@@ -593,6 +593,19 @@ ApplicationWindow {
                                                     Keys.onTabPressed: {
                                                         flv.activateEdit()
                                                     }
+
+                                                    validator: RegExpValidator {
+                                                        regExp: /[a-zA-Z0-9 !@#$%^&*()+="'|-]*/
+                                                    }
+
+                                                    Keys.onPressed: {
+                                                        if(event.matches(StandardKey.Paste)) {
+                                                            var clipboardText = clipboard.getText();
+                                                            // same regexp as in validator
+                                                            var sanitizedText = clipboardText.replace(/[^a-zA-Z0-9 !@#$%^&*()+="'|-]*/g, '');
+                                                            descriptionTextInput.text = sanitizedText
+                                                        }
+                                                    }
                                                 }
                                             }
 
