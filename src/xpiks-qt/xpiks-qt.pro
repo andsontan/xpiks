@@ -17,7 +17,8 @@ SOURCES += main.cpp \
     Helpers/tempmetadatadb.cpp \
     Models/warningsmanager.cpp \
     ../tiny-aes/aes.cpp \
-    Encryption/secretsmanager.cpp
+    Encryption/secretsmanager.cpp \
+    Helpers/stringhelper.cpp
 
 RESOURCES += qml.qrc
 
@@ -61,12 +62,11 @@ HEADERS += \
     Helpers/tempmetadatadb.h \
     Models/warningsinfo.h \
     Models/warningsmanager.h \
-    Encoding/rc6.h \
-    Encoding/rc6qt.h \
     Encryption/aes-qt.h \
     ../tiny-aes/aes.h \
     Encryption/secretsmanager.h \
-    Helpers/uploaditem.h
+    Helpers/uploaditem.h \
+    Helpers/stringhelper.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

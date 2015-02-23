@@ -26,28 +26,35 @@
 #include <QFile>
 #include <QDir>
 #include <QDebug>
-#include <QTextStream>
 #include <QDateTime>
+#include <QTextStream>
 #include <QStandardPaths>
 #include "../Helpers/constants.h"
+#include "../Helpers/stringhelper.h"
 
 namespace Models {
     class LogsModel : public QObject {
         Q_OBJECT
     public:
-        Q_INVOKABLE QString getAllLogsText() {
+        Q_INVOKABLE QString getAllLogsText(bool reallyAll=false) {
             QString result;
 #ifdef QT_NO_DEBUG
             QDir logFileDir(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));
             QString logFilePath = logFileDir.filePath(Constants::LOG_FILENAME);
             QFile f(logFilePath);
 
-
             if (f.open(QIODevice::ReadOnly | QIODevice::Text)) {
                 QTextStream in(&f);
-                result = in.readAll();
+                QString allText = in.readAll();
+
+                if (!reallyAll) {
+                    result = Helpers::getLastNLines(allText, 100);
+                } else {
+                    result = allText;
+                }
             }
 #else
+            Q_UNUSED(reallyAll);
             result = QString::fromLatin1("Logs are available in Release version");
 #endif
             return result;

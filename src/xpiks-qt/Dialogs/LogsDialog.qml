@@ -106,8 +106,22 @@ Item {
                 anchors.fill: parent
                 anchors.margins: 20
 
-                StyledText {
-                    text: qsTr("Logs")
+                RowLayout {
+                    Layout.fillWidth: true
+
+                    StyledText {
+                        text: qsTr("Logs")
+                    }
+
+                    Item {
+                        Layout.fillWidth: true
+                    }
+
+                    StyledText {
+                        id: oneHunderdLinesWarning
+                        text: qsTr("(showing last 100 lines by default)")
+                        color: Colors.defaultInputBackground
+                    }
                 }
 
                 Rectangle {
@@ -132,6 +146,16 @@ Item {
 
                 RowLayout {
                     height: 24
+
+                    StyledButton {
+                        text: qsTr("Load all logs")
+                        width: 120
+                        onClicked: {
+                            logsComponent.logText = logsModel.getAllLogsText(true)
+                            oneHunderdLinesWarning.visible = false
+                        }
+                    }
+
 
                     Item {
                         Layout.fillWidth: true
