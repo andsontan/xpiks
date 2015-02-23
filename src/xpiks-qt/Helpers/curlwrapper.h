@@ -45,7 +45,6 @@ Helpers::UploadItem uploadViaCurl(Helpers::UploadItem uploadItem) {
     QString password = uploadItem.m_SecretsManager->decodePassword(uploadInfo->getPassword());
     QString command = QString("%1 --connect-timeout 10 --max-time %6 --retry 1 -T \"{%2}\" %3 --user %4:%5").
             arg(curlPath, filesToUpload->join(','), uploadInfo->getHost(), uploadInfo->getUsername(), password, QString::number(maxSeconds));
-    qDebug() << command;
 
     QProcess process;
     process.start(command);
@@ -65,6 +64,32 @@ Helpers::UploadItem uploadViaCurl(Helpers::UploadItem uploadItem) {
     qDebug() << "STDERR: " << stderrText;
 
     return uploadItem;
+}
+
+bool isConnectionValid(const QString &host, const QString &username, const QString &password) {
+    bool isValid = false;
+
+    const QString curlPath = Helpers::ExternalToolsProvider::getCurlPath();
+
+    QString command = QString("%1 %2 --user %3:%4").arg(curlPath, host, username, password);
+    QProcess process;
+
+    process.start(command);
+    if (process.waitForFinished(7 * 1000) &&
+            process.exitStatus() == QProcess::NormalExit &&
+            process.exitCode() == 0) {
+        isValid = true;
+    }
+
+    QByteArray stdoutByteArray = process.readAllStandardOutput();
+    QString stdoutText(stdoutByteArray);
+    qDebug() << "STDOUT: " << stdoutText;
+
+    QByteArray stderrByteArray = process.readAllStandardError();
+    QString stderrText(stderrByteArray);
+    qDebug() << "STDERR: " << stderrText;
+
+    return isValid;
 }
 
 #endif // CURLWRAPPER

@@ -92,7 +92,8 @@ DISTFILES += \
     StyledControls/StyledAddHostButton.qml \
     StyledControls/StyledInputHost.qml \
     Dialogs/EnterMasterPasswordDialog.qml \
-    Dialogs/MasterPasswordSetupDialog.qml
+    Dialogs/MasterPasswordSetupDialog.qml \
+    Components/CheckedComponent.qml
 
 macx {
 OBJECTIVE_SOURCES += \

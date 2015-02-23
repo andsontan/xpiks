@@ -139,7 +139,7 @@ Item {
         Rectangle {
             id: dialogWindow
             width: 600
-            height: 370
+            height: 390
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
@@ -206,7 +206,12 @@ Item {
                                         MouseArea {
                                             anchors.fill: parent
                                             onClicked: {
-                                                uploadHostsListView.currentIndex = sourceWrapper.indexOfThisDelegate
+                                                if (uploadHostsListView.currentIndex != sourceWrapper.indexOfThisDelegate) {
+                                                    credentialsStatus.enabled = false
+                                                    checkedComponent.isGreen = false
+
+                                                    uploadHostsListView.currentIndex = sourceWrapper.indexOfThisDelegate
+                                                }
                                             }
                                         }
 
@@ -295,22 +300,28 @@ Item {
 
                         ColumnLayout {
                             enabled: uploadInfos.infosCount > 0
+                            Layout.fillWidth: true
                             spacing: 4
 
                             StyledText {
                                 text: qsTr("Title:")
                             }
 
-                            StyledInputHost {
+                            Rectangle {
                                 border.width: titleText.activeFocus ? 1 : 0
+                                border.color: Colors.artworkActiveColor
+                                Layout.fillWidth: true
+                                color: Colors.defaultInputBackground
+                                height: 30
 
                                 StyledTextInput {
                                     id: titleText
-                                    width: 300
                                     height: 30
                                     anchors.left: parent.left
-                                    anchors.leftMargin: 5
+                                    anchors.right: parent.right
+                                    anchors.rightMargin: 5
                                     text: uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.title : ""
+                                    anchors.leftMargin: 5
                                     onTextChanged: uploadHostsListView.currentItem.myData.edittitle = text
                                     KeyNavigation.tab: ftpHost
                                     onEditingFinished: {
@@ -343,17 +354,25 @@ Item {
                                 text: qsTr("Host:")
                             }
 
-                            StyledInputHost {
+                            Rectangle {
                                 border.width: ftpHost.activeFocus ? 1 : 0
+                                border.color: Colors.artworkActiveColor
+                                Layout.fillWidth: true
+                                color: Colors.defaultInputBackground
+                                height: 30
 
                                 StyledTextInput {
                                     id: ftpHost
-                                    width: 300
                                     height: 30
                                     anchors.left: parent.left
                                     anchors.leftMargin: 5
+                                    anchors.right: parent.right
+                                    anchors.rightMargin: 5
                                     text: uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.host : ""
-                                    onTextChanged: uploadHostsListView.currentItem.myData.edithost = text
+                                    onTextChanged: {
+                                        uploadHostsListView.currentItem.myData.edithost = text
+                                        credentialsStatus.enabled = false
+                                    }
                                     KeyNavigation.tab: ftpUsername
                                     KeyNavigation.backtab: titleText
                                 }
@@ -367,15 +386,20 @@ Item {
                                 text: qsTr("Username:")
                             }
 
-                            StyledInputHost {
+                            Rectangle {
                                 border.width: ftpUsername.activeFocus ? 1 : 0
+                                border.color: Colors.artworkActiveColor
+                                Layout.fillWidth: true
+                                color: Colors.defaultInputBackground
+                                height: 30
 
                                 StyledTextInput {
                                     id: ftpUsername
-                                    width: 300
                                     height: 30
                                     anchors.left: parent.left
                                     anchors.leftMargin: 5
+                                    anchors.right: parent.right
+                                    anchors.rightMargin: 5
                                     text: uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.username : ""
                                     onTextChanged: uploadHostsListView.currentItem.myData.editusername = text
                                     KeyNavigation.tab: ftpPassword
@@ -391,18 +415,26 @@ Item {
                                 text: qsTr("Password:")
                             }
 
-                            StyledInputHost {
+                            Rectangle {
                                 border.width: ftpPassword.activeFocus ? 1 : 0
+                                border.color: Colors.artworkActiveColor
+                                Layout.fillWidth: true
+                                height: 30
+                                color: Colors.defaultInputBackground
 
                                 StyledTextInput {
                                     id: ftpPassword
-                                    width: 300
                                     height: 30
                                     anchors.left: parent.left
                                     anchors.leftMargin: 5
+                                    anchors.right: parent.right
+                                    anchors.rightMargin: 5
                                     echoMode: showPasswordCheckBox.checked ? TextInput.Normal : TextInput.Password
                                     text: uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.password : ""
-                                    onTextChanged: uploadHostsListView.currentItem.myData.editpassword = text
+                                    onTextChanged: {
+                                        uploadHostsListView.currentItem.myData.editpassword = text
+                                        credentialsStatus.enabled = false
+                                    }
                                     KeyNavigation.backtab: ftpUsername
                                 }
                             }
@@ -411,9 +443,48 @@ Item {
                                 height: 5
                             }
 
-                            StyledCheckbox {
-                                id: showPasswordCheckBox
-                                text: qsTr("Show password")
+                            RowLayout {
+                                height: 30
+                                Layout.fillWidth: true
+                                spacing: 5
+
+                                StyledCheckbox {
+                                    id: showPasswordCheckBox
+                                    text: qsTr("Show password")
+                                }
+
+                                Item {
+                                    Layout.fillWidth: true
+                                }
+
+                                CheckedComponent {
+                                    width: 18
+                                    height: 18
+                                    id: credentialsStatus
+                                    enabled: false
+                                    isGreen: false
+                                }
+
+                                StyledButton {
+                                    id: testButton
+                                    text: qsTr("Test connection")
+                                    height: 24
+                                    width: 120
+                                    onClicked: {
+                                        testButton.enabled = false
+                                        credentialsStatus.enabled = false
+                                        artworkUploader.checkCredentials(ftpHost.text, ftpUsername.text, ftpPassword.text)
+                                    }
+
+                                    Connections {
+                                        target: artworkUploader
+                                        onCredentialsChecked: {
+                                            credentialsStatus.enabled = true
+                                            credentialsStatus.isGreen = result
+                                            testButton.enabled = true
+                                        }
+                                    }
+                                }
                             }
                         }
 

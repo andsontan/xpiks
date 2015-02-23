@@ -58,6 +58,8 @@ namespace Models {
         bool hasPassword() const { return !m_EncodedPassword.isEmpty(); }
         bool getIsSelected() const { return m_IsSelected; }
         bool isSomethingMissing() const { return m_EncodedPassword.isEmpty() || m_Host.isEmpty() || m_Username.isEmpty(); }
+        bool isEmpty() const { return m_EncodedPassword.isEmpty() && m_Host.isEmpty() && m_Username.isEmpty() &&
+                    (m_Title.isEmpty() || m_Title == QString::fromLatin1("Untitled")); }
 
     public:
         void setTitle(const QString &value) { m_Title = value; }

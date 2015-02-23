@@ -46,3 +46,4 @@ var checkboxCheckedColor = "#ffffff";
 var defaultInputBackground = "#999999";
 
 var destructiveColor = "#d10b0b";
+var greenColor = "#2daf02";

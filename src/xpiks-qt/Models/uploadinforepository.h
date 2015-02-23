@@ -83,14 +83,16 @@ namespace Models {
         Q_INVOKABLE QString getInfoString() const {
             QList<QHash<int, QString> > items;
             foreach (UploadInfo *info, m_UploadInfos) {
-                items.append(info->toHash());
+                if (!info->isEmpty()) {
+                    items.append(info->toHash());
+                }
             }
 
             // TODO: move to SFTP
             // while stocks use FTP, sophisticated passwords
             // saving on client side is useless
             QByteArray result;
-            QDataStream stream( &result, QIODevice::WriteOnly);
+            QDataStream stream(&result, QIODevice::WriteOnly);
             stream << items;
             return QString::fromUtf8(result.toBase64());
         }

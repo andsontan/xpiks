@@ -25,5 +25,6 @@
         <file>StyledControls/StyledInputHost.qml</file>
         <file>Dialogs/EnterMasterPasswordDialog.qml</file>
         <file>Dialogs/MasterPasswordSetupDialog.qml</file>
+        <file>Components/CheckedComponent.qml</file>
     </qresource>
 </RCC>

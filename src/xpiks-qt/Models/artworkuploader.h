@@ -37,7 +37,7 @@ namespace Models {
         Q_OBJECT
     public:
          ArtworkUploader();
-         ~ArtworkUploader() { delete m_ArtworksUploader; }
+         ~ArtworkUploader() { delete m_ArtworksUploader; delete m_TestingCredentialWatcher; }
 
          void setUploadInfoRepository(UploadInfoRepository *infoRepository) { Q_ASSERT(infoRepository != NULL); m_InfoRepository = infoRepository; }
          void setSecretsManager(Encryption::SecretsManager *secretsManager) { Q_ASSERT(secretsManager != NULL); m_SecretsManager = secretsManager; }
@@ -47,6 +47,7 @@ namespace Models {
 
     signals:
          void includeEPSChanged(bool);
+         void credentialsChecked(bool result);
 
     public:
          bool getIncludeEPS() const { return m_IncludeEPS; }
@@ -55,12 +56,14 @@ namespace Models {
      public slots:
          void artworkUploaded(int);
          void allFinished();
+         void credentialsTestingFinished();
 
      private:
          void artworkUploadedHandler(Helpers::UploadItem *item);
 
      public:
          Q_INVOKABLE void uploadArtworks() { doUploadArtworks(getArtworkList()); }
+         Q_INVOKABLE void checkCredentials(const QString &host, const QString &username, const QString &password) const;
 
      private:
          void doUploadArtworks(const QList<ArtworkMetadata*> &artworkList);
@@ -72,6 +75,7 @@ namespace Models {
      private:
          QFutureWatcher<Helpers::UploadItem> *m_ArtworksUploader;
          UploadInfoRepository *m_InfoRepository;
+         QFutureWatcher<bool> *m_TestingCredentialWatcher;
          Encryption::SecretsManager *m_SecretsManager;
          QStringList *m_ActiveUploads;
          bool m_IncludeEPS;

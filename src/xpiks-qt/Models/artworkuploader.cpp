@@ -26,11 +26,15 @@
 
 namespace Models {
     ArtworkUploader::ArtworkUploader() :
-        ArtworksProcessor()
+        ArtworksProcessor(),
+        m_IncludeEPS(false)
     {
         m_ArtworksUploader = new QFutureWatcher<Helpers::UploadItem>(this);
         connect(m_ArtworksUploader, SIGNAL(resultReadyAt(int)), SLOT(artworkUploaded(int)));
         connect(m_ArtworksUploader, SIGNAL(finished()), SLOT(allFinished()));
+
+        m_TestingCredentialWatcher = new QFutureWatcher<bool>(this);
+        connect(m_TestingCredentialWatcher, SIGNAL(finished()), SLOT(credentialsTestingFinished()));
     }
 
     void ArtworkUploader::artworkUploaded(int index)
@@ -46,6 +50,12 @@ namespace Models {
         delete m_ActiveUploads;
     }
 
+    void ArtworkUploader::credentialsTestingFinished()
+    {
+        bool result = m_TestingCredentialWatcher->result();
+        emit credentialsChecked(result);
+    }
+
     void ArtworkUploader::artworkUploadedHandler(Helpers::UploadItem *item)
     {
         incProgress();
@@ -57,6 +67,11 @@ namespace Models {
         else {
             setIsError(true);
         }
+    }
+
+    void ArtworkUploader::checkCredentials(const QString &host, const QString &username, const QString &password) const
+    {
+        m_TestingCredentialWatcher->setFuture(QtConcurrent::run(isConnectionValid, host, username, password));
     }
 
     void ArtworkUploader::doUploadArtworks(const QList<ArtworkMetadata *> &artworkList)
