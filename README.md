@@ -17,6 +17,16 @@ Xpiks is a free and open source keywording and uploading tool for microstock pho
 - ExifTool and Curl under the hood
 - written in C++ with Qt 5.4
 
+**How to build:**
+- git clone Xpiks repo
+- install Qt 5.4 from official website
+- git submodule init & git submodule update - update tinyAES repo
+- rename tinyAES/aes.c to tinyAES/aes.cpp
+- open main project in Qt Creator, select Release, Run qmake, Build
+- you can open, build and run tests project additionally 
+
+More instructions can be found at this page http://ribtoks.github.io/xpiks/blog/2014/building-xpiks-alone/
+
 **How to contribute**
 
 - open Issues page and select an issue (i'll provide you with all details and explanations as needed)
