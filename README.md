@@ -2,6 +2,7 @@ xpiks
 =====
 
 Cross-platform (X) Photo Keywording Software
+Official website: http://ribtoks.github.io/xpiks/
 
 Xpiks is a free and open source keywording and uploading tool for microstock photographers and illustrators with no hidden fees. If you're tired with copy and pasting keywords from one stock to another, Xpiks would be a great time saver for you!
 
@@ -27,7 +28,7 @@ Xpiks is a free and open source keywording and uploading tool for microstock pho
 
 More instructions can be found at this page http://ribtoks.github.io/xpiks/blog/2014/building-xpiks-alone/
 
-**How to contribute**
+**How to contribute:**
 
 - open Issues page and select an issue (i'll provide you with all details and explanations as needed)
 - send your ideas and proposals in comments, issues or via email
