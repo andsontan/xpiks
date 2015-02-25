@@ -25,6 +25,7 @@
 namespace Helpers {
     QString ExternalToolsProvider::defaultExifToolPath = "exiftool";
     QString ExternalToolsProvider::defaultCurlPath = "curl";
+    int ExternalToolsProvider::defaultOneItemUploadMinutesTimeout = 10;
 
     QString Helpers::ExternalToolsProvider::getExifToolPath()
     {
@@ -36,5 +37,11 @@ namespace Helpers {
     {
         QVariant value = AppSettings().value(Constants::PATH_TO_CURL, ExternalToolsProvider::defaultCurlPath);
         return value.toString();
+    }
+
+    int ExternalToolsProvider::getOneItemUploadMinutesTimeout()
+    {
+        QVariant value = AppSettings().value(Constants::ONE_UPLOAD_MINUTES_TIMEMOUT, ExternalToolsProvider::defaultOneItemUploadMinutesTimeout);
+        return value.toInt();
     }
 }

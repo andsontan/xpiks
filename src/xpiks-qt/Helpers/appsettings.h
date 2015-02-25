@@ -67,6 +67,9 @@ namespace Helpers {
         Q_PROPERTY(QString masterPasswordHashKey READ getMasterPasswordHashKey CONSTANT)
         QString getMasterPasswordHashKey() const { return QString::fromLatin1(Constants::MASTER_PASSWORD_HASH); }
 
+        Q_PROPERTY(QString oneUploadMinutesTimeoutKey READ getOneUploadMinutesTimeoutKey CONSTANT)
+        QString getOneUploadMinutesTimeoutKey() const { return QString::fromLatin1(Constants::ONE_UPLOAD_MINUTES_TIMEMOUT); }
+
         Q_INVOKABLE inline void setValue(const QString &key, const QVariant &value) {
             QSettings::setValue(key, value);
         }

@@ -36,10 +36,12 @@ namespace Helpers {
     public:
         static QString getExifToolPath();
         static QString getCurlPath();
+        static int getOneItemUploadMinutesTimeout();
 
     public:
         static QString defaultExifToolPath;
         static QString defaultCurlPath;
+        static int defaultOneItemUploadMinutesTimeout;
         static ExternalToolsProvider &getInstance() {
             static ExternalToolsProvider instance;
             return instance;

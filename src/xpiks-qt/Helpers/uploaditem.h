@@ -23,6 +23,10 @@
 #ifndef UPLOADITEM
 #define UPLOADITEM
 
+#include <QString>
+#include "../Encryption/secretsmanager.h"
+#include "../Models/uploadinfo.h"
+
 namespace Helpers {
     class UploadItem {
     public:
@@ -31,10 +35,14 @@ namespace Helpers {
         }
 
         UploadItem(Models::UploadInfo *uploadInfo, QStringList *filesToUpload,
-                   Encryption::SecretsManager *secretsManager) :
+                   Encryption::SecretsManager *secretsManager,
+                   int uploadTimeout,
+                   const QString &curlPath) :
             m_UploadInfo (uploadInfo),
             m_FilesToUpload(filesToUpload),
             m_SecretsManager(secretsManager),
+            m_OneItemUploadMinutesTimeout(uploadTimeout),
+            m_CurlPath(curlPath),
             m_Success(false)
         { }
 
@@ -42,6 +50,8 @@ namespace Helpers {
             m_UploadInfo(copy.m_UploadInfo),
             m_FilesToUpload(copy.m_FilesToUpload),
             m_SecretsManager(copy.m_SecretsManager),
+            m_OneItemUploadMinutesTimeout(copy.m_OneItemUploadMinutesTimeout),
+            m_CurlPath(copy.m_CurlPath),
             m_Success(copy.m_Success)
         { }
 
@@ -49,6 +59,8 @@ namespace Helpers {
         Models::UploadInfo *m_UploadInfo;
         QStringList *m_FilesToUpload;
         Encryption::SecretsManager *m_SecretsManager;
+        int m_OneItemUploadMinutesTimeout;
+        QString m_CurlPath;
         bool m_Success;
     };
 }

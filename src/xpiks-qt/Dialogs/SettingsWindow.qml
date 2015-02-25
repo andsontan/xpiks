@@ -31,8 +31,9 @@ import "../StyledControls"
 ApplicationWindow {
     id: settingsWindow
     modality: "ApplicationModal"
+    title: qsTr("Settings")
     width: 450
-    height: 415
+    height: 515
     minimumWidth: width
     maximumWidth: width
     minimumHeight: height
@@ -48,6 +49,7 @@ ApplicationWindow {
     property int defaultMaxDescription: 200
     property double defaultMinMegapixels: 4.0
     property bool defaultMustUseMasterPassword: false
+    property int defaultTimeout: 10
 
     property string exiftoolpathkey: appSettings.exifToolPathKey
     property string exifToolPath: appSettings.value(exiftoolpathkey, defaultExifTool)
@@ -68,6 +70,9 @@ ApplicationWindow {
     property bool mustUseMasterPassword: appSettings.boolValue(mustusemasterpasswordkey, defaultMustUseMasterPassword)
 
     property string masterpasswordhashkey: appSettings.masterPasswordHashKey
+
+    property string oneitemtimeoutkey: appSettings.oneUploadMinutesTimeoutKey
+    property int oneItemTimeoutMinutes: appSettings.value(oneitemtimeoutkey, defaultTimeout)
 
     function onCancelMP(firstTime) {
         masterPasswordCheckbox.checked = !firstTime
@@ -185,6 +190,9 @@ ApplicationWindow {
 
             appSettings.setValue(maxdescriptionlengthkey, defaultMaxDescription)
             descriptionLength.text = defaultMaxDescription + ''
+
+            appSettings.setValue(oneItemTimeoutMinutes, defaultTimeout)
+            timeoutMinutes.text = defaultTimeout + ''
 
             secretsManager.removeMasterPassword()
             masterPasswordCheckbox.checked = defaultMustUseMasterPassword
@@ -363,6 +371,11 @@ ApplicationWindow {
                                 }
                             }
                         }
+
+                        StyledText {
+                            text: qsTr("(can be real)")
+                            color: Colors.defaultInputBackground
+                        }
                     }
 
                     RowLayout {
@@ -395,6 +408,11 @@ ApplicationWindow {
                                 }
                             }
                         }
+
+                        StyledText {
+                            text: qsTr("(keywords)")
+                            color: Colors.defaultInputBackground
+                        }
                     }
 
                     RowLayout {
@@ -419,12 +437,77 @@ ApplicationWindow {
                                 anchors.left: parent.left
                                 anchors.leftMargin: 5
                                 KeyNavigation.backtab: keywordsCount
+                                KeyNavigation.tab: timeoutMinutes
 
                                 validator: IntValidator {
                                     bottom: 0
                                     top: 1000
                                 }
                             }
+                        }
+
+                        StyledText {
+                            text: qsTr("(characters)")
+                            color: Colors.defaultInputBackground
+                        }
+                    }
+                }
+            }
+
+            Item {
+                height: 15
+            }
+
+            StyledText {
+                text: qsTr("Upload:")
+            }
+
+            Rectangle {
+                Layout.fillWidth: true
+                height: 45
+                radius: 2
+                border.color: Colors.defaultInputBackground
+                border.width: 2
+                color: Colors.selectedArtworkColor
+
+                ColumnLayout {
+                    spacing: 5
+                    anchors.fill: parent
+                    anchors.margins: 10
+
+                    RowLayout {
+                        width: parent.width
+                        spacing: 10
+
+                        StyledText {
+                            Layout.preferredWidth: 130
+                            horizontalAlignment: Text.AlignRight
+                            text: qsTr("File upload timeout:")
+                        }
+
+                        StyledInputHost {
+                            border.width: timeoutMinutes.activeFocus ? 1 : 0
+
+                            StyledTextInput {
+                                id: timeoutMinutes
+                                width: 100
+                                height: 24
+                                clip: true
+                                text: oneItemTimeoutMinutes
+                                anchors.left: parent.left
+                                anchors.leftMargin: 5
+                                KeyNavigation.backtab: descriptionLength
+
+                                validator: IntValidator {
+                                    bottom: 1
+                                    top: 30
+                                }
+                            }
+                        }
+
+                        StyledText {
+                            text: qsTr("(minutes)")
+                            color: Colors.defaultInputBackground
                         }
                     }
                 }
@@ -494,6 +577,10 @@ ApplicationWindow {
                 spacing: 0
                 width: parent.width
 
+                Item {
+                    width: 10
+                }
+
                 StyledButton {
                     text: qsTr("Reset to defaults")
                     width: 120
@@ -524,6 +611,9 @@ ApplicationWindow {
 
                         maxDescriptionLength = parseInt(descriptionLength.text)
                         appSettings.setValue(maxdescriptionlengthkey, maxDescriptionLength)
+
+                        oneItemTimeoutMinutes = parseInt(timeoutMinutes.text)
+                        appSettings.setValue(oneitemtimeoutkey, oneItemTimeoutMinutes)
 
                         closeSettings()
                     }

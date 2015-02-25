@@ -208,7 +208,7 @@ Item {
                                             onClicked: {
                                                 if (uploadHostsListView.currentIndex != sourceWrapper.indexOfThisDelegate) {
                                                     credentialsStatus.enabled = false
-                                                    checkedComponent.isGreen = false
+                                                    credentialsStatus.isGreen = false
 
                                                     uploadHostsListView.currentIndex = sourceWrapper.indexOfThisDelegate
                                                 }

@@ -89,9 +89,13 @@ namespace Models {
         const QList<UploadInfo *> &infos = m_InfoRepository->getUploadInfos();
         m_ActiveUploads = getAllFilepathes();
 
+        const QString &curlPath = Helpers::ExternalToolsProvider::getCurlPath();
+        int oneItemUploadTimeout = Helpers::ExternalToolsProvider::getOneItemUploadMinutesTimeout();
+
         foreach (UploadInfo *info, infos) {
             if (info->getIsSelected()) {
-                uploadItems.append(Helpers::UploadItem(info, m_ActiveUploads, m_SecretsManager));
+                uploadItems.append(Helpers::UploadItem(info, m_ActiveUploads, m_SecretsManager,
+                                                       oneItemUploadTimeout, curlPath));
             }
         }
 

@@ -38,9 +38,9 @@ Helpers::UploadItem uploadViaCurl(Helpers::UploadItem uploadItem) {
     QStringList *filesToUpload = uploadItem.m_FilesToUpload;
     Models::UploadInfo *uploadInfo = uploadItem.m_UploadInfo;
 
-    const QString curlPath = Helpers::ExternalToolsProvider::getCurlPath();
-    // 10 minutes for each
-    int maxSeconds = 10*60*filesToUpload->length();
+    const QString curlPath = uploadItem.m_CurlPath;
+    int oneItemUploadMinutesTimeout = uploadItem.m_OneItemUploadMinutesTimeout;
+    int maxSeconds = oneItemUploadMinutesTimeout * 60 * filesToUpload->length();
 
     QString password = uploadItem.m_SecretsManager->decodePassword(uploadInfo->getPassword());
     QString command = QString("%1 --connect-timeout 10 --max-time %6 --retry 1 -T \"{%2}\" %3 --user %4:%5").
