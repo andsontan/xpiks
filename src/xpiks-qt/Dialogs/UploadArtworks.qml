@@ -164,6 +164,7 @@ Item {
                     ColumnLayout {
                         Layout.minimumWidth: 250
                         Layout.maximumWidth: 300
+                        height: parent.height
                         spacing: 0
 
                         Rectangle {
@@ -292,6 +293,7 @@ Item {
 
                     RowLayout {
                         Layout.fillWidth: true
+                        height: parent.height
                         spacing: 0
 
                         Item {
@@ -301,6 +303,7 @@ Item {
                         ColumnLayout {
                             enabled: uploadInfos.infosCount > 0
                             Layout.fillWidth: true
+                            Layout.fillHeight: true
                             spacing: 4
 
                             StyledText {
@@ -441,11 +444,11 @@ Item {
                             }
 
                             Item {
-                                height: 5
+                                Layout.fillHeight: true
                             }
 
                             RowLayout {
-                                height: 30
+                                height: 25
                                 Layout.fillWidth: true
                                 spacing: 5
 
@@ -486,6 +489,10 @@ Item {
                                         }
                                     }
                                 }
+                            }
+
+                            Item {
+                                height: 5
                             }
                         }
 
