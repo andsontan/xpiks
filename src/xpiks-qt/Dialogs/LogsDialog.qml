@@ -130,12 +130,19 @@ Item {
                     color: Colors.defaultControlColor
 
                     StyledScrollView {
+                        id: scrollView
                         anchors.fill: parent
                         anchors.margins: 10
 
                         StyledTextEdit {
+                            id: textEdit
                             text: logsComponent.logText
                             readOnly: true
+
+                            Component.onCompleted: {
+                                var flickable = scrollView.flickableItem
+                                flickable.contentY = flickable.contentHeight - flickable.height
+                            }
                         }
                     }
                 }

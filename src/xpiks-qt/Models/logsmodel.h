@@ -72,6 +72,13 @@ namespace Models {
 #endif
         }
 
+        Q_INVOKABLE void startFlushing() {
+#ifdef QT_NO_DEBUG
+            Q_ASSERT(m_LogsManager != NULL);
+            m_LogsManager->startFlushing();
+#endif
+        }
+
     private:
         Helpers::LogsManager *m_LogsManager;
     };

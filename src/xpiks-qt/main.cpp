@@ -100,7 +100,6 @@ int main(int argc, char *argv[]) {
         QString logFilePath = logFileDir.filePath(Constants::LOG_FILENAME);
 
         logsManager.initLogger(logFilePath);
-        logsManager.startFlushing();
     }
 
 #ifdef QT_NO_DEBUG
