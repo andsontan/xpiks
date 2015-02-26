@@ -66,7 +66,8 @@ HEADERS += \
     ../tiny-aes/aes.h \
     Encryption/secretsmanager.h \
     Helpers/uploaditem.h \
-    Helpers/stringhelper.h
+    Helpers/stringhelper.h \
+    Helpers/logger.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

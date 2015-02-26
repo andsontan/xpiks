@@ -41,6 +41,7 @@
 #include "Models/logsmodel.h"
 #include "Helpers/appsettings.h"
 #include "Helpers/constants.h"
+#include "Helpers/logger.h"
 
 #ifdef QT_NO_DEBUG
 
@@ -63,17 +64,12 @@ void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const Q
         break;
     }
 
-    QString appDataPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
-    if (!appDataPath.isEmpty()) {
-        QDir logFileDir(appDataPath);
-        QString logFilePath = logFileDir.filePath(Constants::LOG_FILENAME);
+    QString logLine = QString("%1 - %2")
+            .arg(QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss.zzz"))
+            .arg(txt);
 
-        QFile outFile(logFilePath);
-        if (outFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append)) {
-            QTextStream ts(&outFile);
-            ts << QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss.zzz") << " - " << txt << endl;
-        }
-    }
+    Helpers::Logger &logger = Helpers::Logger::getInstance();
+    logger.log(logLine);
 
     if (type == QtFatalMsg) {
         abort();
@@ -95,6 +91,17 @@ void initQSettings() {
 
 int main(int argc, char *argv[]) {    
     initQSettings();
+
+    Helpers::LogsManager logsManager;
+
+    QString appDataPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+    if (!appDataPath.isEmpty()) {
+        QDir logFileDir(appDataPath);
+        QString logFilePath = logFileDir.filePath(Constants::LOG_FILENAME);
+
+        logsManager.initLogger(logFilePath);
+        logsManager.startFlushing();
+    }
 
 #ifdef QT_NO_DEBUG
     QString logFileDir = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
@@ -141,6 +148,7 @@ int main(int argc, char *argv[]) {
     artItemsModel.setIptcProvider(&iptcProvider);
     artItemsModel.setArtworkUploader(&artworkUploader);
     uploadInfoRepository.setSecretsManager(&secretsManager);
+    logsModel.setLogsManager(&logsManager);
 
     // other initializations
     secretsManager.setMasterPasswordHash(appSettings.value(Constants::MASTER_PASSWORD_HASH, "").toString());

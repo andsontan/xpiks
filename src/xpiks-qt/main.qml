@@ -500,7 +500,7 @@ ApplicationWindow {
                                         Connections {
                                             target: artItemsModel
                                             onSelectedArtworksCountChanged: {
-                                                itemCheckedCheckbox.checked = rowWrapper.myData.isselected
+                                                itemCheckedCheckbox.checked = rowWrapper.myData.isselected || false
                                             }
                                         }
                                     }

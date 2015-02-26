@@ -31,11 +31,14 @@
 #include <QStandardPaths>
 #include "../Helpers/constants.h"
 #include "../Helpers/stringhelper.h"
+#include "../Helpers/logger.h"
 
 namespace Models {
     class LogsModel : public QObject {
         Q_OBJECT
     public:
+        void setLogsManager(Helpers::LogsManager *logsManager) { m_LogsManager = logsManager; }
+
         Q_INVOKABLE QString getAllLogsText(bool reallyAll=false) {
             QString result;
 #ifdef QT_NO_DEBUG
@@ -64,16 +67,13 @@ namespace Models {
 
         Q_INVOKABLE void clearLogs() {
 #ifdef QT_NO_DEBUG
-            QDir logFileDir(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));
-            QString logFilePath = logFileDir.filePath(Constants::LOG_FILENAME);
-
-            QFile outFile(logFilePath);
-            if (outFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
-                QTextStream ts(&outFile);
-                ts << QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss.zzz") << " - cleared log" << endl;
-            }
+            Q_ASSERT(m_LogsManager != NULL);
+            m_LogsManager->clearLogs();
 #endif
         }
+
+    private:
+        Helpers::LogsManager *m_LogsManager;
     };
 }
 
