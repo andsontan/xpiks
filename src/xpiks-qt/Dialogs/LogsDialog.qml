@@ -41,7 +41,11 @@ Item {
 
     function scrollToBottom() {
         var flickable = scrollView.flickableItem
-        flickable.contentY = flickable.contentHeight - flickable.height
+        if (flickable.contentHeight > flickable.height) {
+            flickable.contentY = flickable.contentHeight - flickable.height
+        } else {
+            flickable.contentY = 0
+        }
     }
 
     PropertyAnimation { target: logsComponent; property: "opacity";
