@@ -39,6 +39,11 @@ Item {
         logsComponent.destroy()
     }
 
+    function scrollToBottom() {
+        var flickable = scrollView.flickableItem
+        flickable.contentY = flickable.contentHeight - flickable.height
+    }
+
     PropertyAnimation { target: logsComponent; property: "opacity";
         duration: 400; from: 0; to: 1;
         easing.type: Easing.InOutQuad ; running: true }
@@ -140,8 +145,7 @@ Item {
                             readOnly: true
 
                             Component.onCompleted: {
-                                var flickable = scrollView.flickableItem
-                                flickable.contentY = flickable.contentHeight - flickable.height
+                                scrollToBottom()
                             }
                         }
                     }
@@ -160,6 +164,7 @@ Item {
                         onClicked: {
                             logsComponent.logText = logsModel.getAllLogsText(true)
                             oneHunderdLinesWarning.visible = false
+                            scrollToBottom()
                         }
                     }
 
