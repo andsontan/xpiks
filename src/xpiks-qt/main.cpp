@@ -86,7 +86,7 @@ void initQSettings() {
     QCoreApplication::setOrganizationDomain(Constants::ORGANIZATION_DOMAIN);
     QCoreApplication::setApplicationName(Constants::APPLICATION_NAME);
     QString appVersion(STRINGIZE(BUILDNUMBER));
-    QCoreApplication::setApplicationVersion("1.0 beta.5 - " + appVersion.left(10));
+    QCoreApplication::setApplicationVersion("1.0 beta.6 - " + appVersion.left(10));
 }
 
 int main(int argc, char *argv[]) {    
