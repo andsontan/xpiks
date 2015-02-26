@@ -585,6 +585,7 @@ ApplicationWindow {
                                                     anchors.right: parent.right
                                                     anchors.leftMargin: 5
                                                     anchors.rightMargin: 5
+
                                                     anchors.verticalCenter: parent.verticalCenter
                                                     maximumLength: 250
                                                     text: description
@@ -603,7 +604,9 @@ ApplicationWindow {
                                                             var clipboardText = clipboard.getText();
                                                             // same regexp as in validator
                                                             var sanitizedText = clipboardText.replace(/[^a-zA-Z0-9 !@#$%^&*()+="'|-]*/g, '');
-                                                            descriptionTextInput.text = sanitizedText
+                                                            console.log("before we have: " + sanitizedText)
+                                                            descriptionTextInput.paste(sanitizedText)
+                                                            event.accepted = true
                                                         }
                                                     }
                                                 }

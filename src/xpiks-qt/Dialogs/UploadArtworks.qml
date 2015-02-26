@@ -340,7 +340,8 @@ Item {
                                             var clipboardText = clipboard.getText();
                                             // same regexp as in validator
                                             var sanitizedText = clipboardText.replace(/[^a-zA-Z0-9 _-]/g, '');
-                                            uploadHostsListView.currentItem.myData.edittitle = sanitizedText
+                                            titleText.paste(sanitizedText)
+                                            event.accepted = true
                                         }
                                     }
                                 }
