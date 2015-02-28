@@ -27,7 +27,7 @@ After export finished, press "Close" and proceed to upload. Select artworks you 
 
 <img alt="Upload started" src="{{site.url}}/images/howto/xpiks-qt-upload-started.jpg" class="small-12 large-8" />
 
-Most microstocks allow FTP uploading of your works. To proceed with upload, add some hosts of agencies. Usually you can find FTP credentials in your stock's upload section. Just look for FTP host, username and password and enter them in appropriate fields in Xpiks hosts edit dialog. Please, note, that **Xpiks does not save passwords**, what means you'll have to enter all passwords each time you're uploading content. Title, host and username are automatically saved for you.
+Most microstocks allow FTP uploading of your works. To proceed with upload, add some hosts of agencies. Usually you can find FTP credentials in your stock's upload section. Just look for FTP host, username and password and enter them in appropriate fields in Xpiks hosts edit dialog. All credentials are automatically saved for you. Passwords are encrypted.
 
 <img alt="Adding upload hosts" src="{{site.url}}/images/howto/xpiks-qt-upload-hosts.jpg" class="small-12 large-8" />
 
