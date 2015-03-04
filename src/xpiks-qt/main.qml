@@ -600,14 +600,14 @@ ApplicationWindow {
                                                     }
 
                                                     validator: RegExpValidator {
-                                                        regExp: /[a-zA-Z0-9 !@#$%^&*()+="'|-]*/
+                                                        regExp: /[a-zA-Z0-9 !@#$%^&*()+="'|-,]*/
                                                     }
 
                                                     Keys.onPressed: {
                                                         if(event.matches(StandardKey.Paste)) {
                                                             var clipboardText = clipboard.getText();
                                                             // same regexp as in validator
-                                                            var sanitizedText = clipboardText.replace(/[^a-zA-Z0-9 !@#$%^&*()+="'|-]*/g, '');
+                                                            var sanitizedText = clipboardText.replace(/[^a-zA-Z0-9 !@#$%^&*()+="'|-,]*/g, '');
                                                             console.log("before we have: " + sanitizedText)
                                                             descriptionTextInput.paste(sanitizedText)
                                                             event.accepted = true
