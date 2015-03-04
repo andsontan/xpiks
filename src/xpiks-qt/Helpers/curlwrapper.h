@@ -75,10 +75,12 @@ bool isConnectionValid(const QString &host, const QString &username, const QStri
     QProcess process;
 
     process.start(command);
-    if (process.waitForFinished(7 * 1000) &&
-            process.exitStatus() == QProcess::NormalExit &&
+    bool finishedInTime = process.waitForFinished(10 * 1000);
+    if (finishedInTime && process.exitStatus() == QProcess::NormalExit &&
             process.exitCode() == 0) {
         isValid = true;
+    } else {
+        qDebug() << "Timeout while waiting for curl";
     }
 
     QByteArray stdoutByteArray = process.readAllStandardOutput();
