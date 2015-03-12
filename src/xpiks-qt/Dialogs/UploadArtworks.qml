@@ -483,8 +483,11 @@ Item {
                                     Connections {
                                         target: artworkUploader
                                         onCredentialsChecked: {
-                                            credentialsStatus.enabled = true
-                                            credentialsStatus.isGreen = result
+                                            if (url == ftpHost.text) {
+                                                credentialsStatus.enabled = true
+                                                credentialsStatus.isGreen = result
+                                            }
+
                                             testButton.enabled = true
                                         }
                                     }

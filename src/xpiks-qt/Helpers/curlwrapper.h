@@ -28,6 +28,7 @@
 #include <QString>
 #include <QDebug>
 #include <QPair>
+#include "testconnectionresult.h"
 #include "externaltoolsprovider.h"
 #include "../Models/uploadinfo.h"
 #include "../Models/artworkmetadata.h"
@@ -57,16 +58,16 @@ Helpers::UploadItem uploadViaCurl(Helpers::UploadItem uploadItem) {
 
     QByteArray stdoutByteArray = process.readAllStandardOutput();
     QString stdoutText(stdoutByteArray);
-    qDebug() << "STDOUT: " << stdoutText;
+    qDebug() << "STDOUT [" << uploadInfo->getHost() << "]:" << stdoutText;
 
     QByteArray stderrByteArray = process.readAllStandardError();
     QString stderrText(stderrByteArray);
-    qDebug() << "STDERR: " << stderrText;
+    qDebug() << "STDERR [" << uploadInfo->getHost() << "]:" << stderrText;
 
     return uploadItem;
 }
 
-bool isConnectionValid(const QString &host, const QString &username, const QString &password) {
+Helpers::TestConnectionResult isConnectionValid(const QString &host, const QString &username, const QString &password) {
     bool isValid = false;
 
     const QString curlPath = Helpers::ExternalToolsProvider::getCurlPath();
@@ -91,7 +92,8 @@ bool isConnectionValid(const QString &host, const QString &username, const QStri
     QString stderrText(stderrByteArray);
     qDebug() << "STDERR: " << stderrText;
 
-    return isValid;
+    Helpers::TestConnectionResult result(isValid, host);
+    return result;
 }
 
 #endif // CURLWRAPPER

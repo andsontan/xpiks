@@ -67,7 +67,8 @@ HEADERS += \
     Encryption/secretsmanager.h \
     Helpers/uploaditem.h \
     Helpers/stringhelper.h \
-    Helpers/logger.h
+    Helpers/logger.h \
+    Helpers/testconnectionresult.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

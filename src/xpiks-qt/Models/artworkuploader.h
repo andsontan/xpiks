@@ -29,6 +29,7 @@
 #include "uploadinfo.h"
 #include "uploadinforepository.h"
 #include "../Helpers/uploaditem.h"
+#include "../Helpers/testconnectionresult.h"
 #include "../Encryption/secretsmanager.h"
 
 namespace Models {
@@ -47,7 +48,7 @@ namespace Models {
 
     signals:
          void includeEPSChanged(bool);
-         void credentialsChecked(bool result);
+         void credentialsChecked(bool result, const QString &url);
 
     public:
          bool getIncludeEPS() const { return m_IncludeEPS; }
@@ -75,7 +76,7 @@ namespace Models {
      private:
          QFutureWatcher<Helpers::UploadItem> *m_ArtworksUploader;
          UploadInfoRepository *m_InfoRepository;
-         QFutureWatcher<bool> *m_TestingCredentialWatcher;
+         QFutureWatcher<Helpers::TestConnectionResult> *m_TestingCredentialWatcher;
          Encryption::SecretsManager *m_SecretsManager;
          QStringList *m_ActiveUploads;
          bool m_IncludeEPS;

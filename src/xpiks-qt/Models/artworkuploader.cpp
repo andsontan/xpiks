@@ -33,7 +33,7 @@ namespace Models {
         connect(m_ArtworksUploader, SIGNAL(resultReadyAt(int)), SLOT(artworkUploaded(int)));
         connect(m_ArtworksUploader, SIGNAL(finished()), SLOT(allFinished()));
 
-        m_TestingCredentialWatcher = new QFutureWatcher<bool>(this);
+        m_TestingCredentialWatcher = new QFutureWatcher<Helpers::TestConnectionResult>(this);
         connect(m_TestingCredentialWatcher, SIGNAL(finished()), SLOT(credentialsTestingFinished()));
     }
 
@@ -52,8 +52,8 @@ namespace Models {
 
     void ArtworkUploader::credentialsTestingFinished()
     {
-        bool result = m_TestingCredentialWatcher->result();
-        emit credentialsChecked(result);
+        Helpers::TestConnectionResult result = m_TestingCredentialWatcher->result();
+        emit credentialsChecked(result.getResult(), result.getUrl());
     }
 
     void ArtworkUploader::artworkUploadedHandler(Helpers::UploadItem *item)
