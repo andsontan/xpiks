@@ -212,15 +212,15 @@ namespace Models {
             ArtworkMetadata *metadata = info->getOrigin();
             metadata->appendKeywords(m_CommonKeywordsModel.getKeywords());
 
-            if (!m_ArtworkDescription.isEmpty()) {
+            if (!m_ArtworkDescription.isEmpty() && metadata->getDescription().isEmpty()) {
                 metadata->setDescription(m_ArtworkDescription);
             }
 
-            if (!m_ArtworkTitle.isEmpty()) {
+            if (!m_ArtworkTitle.isEmpty() && metadata->getTitle().isEmpty()) {
                 metadata->setTitle(m_ArtworkTitle);
             }
 
-            if (!m_ArtworkAuthor.isEmpty()) {
+            if (!m_ArtworkAuthor.isEmpty() && metadata->getAuthor().isEmpty()) {
                 metadata->setAuthor(m_ArtworkAuthor);
             }
 
