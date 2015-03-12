@@ -33,6 +33,8 @@ namespace Models {
     {
         Q_OBJECT
         Q_PROPERTY(bool mustSaveOriginal READ getMustSaveOriginal WRITE setMustSaveOriginal NOTIFY mustSaveOriginalChanged)
+        Q_PROPERTY(bool ignoreAutosave READ getIgnoreAutosave WRITE setIgnoreAutosave NOTIFY ignoreAutosaveChanged)
+
    public:
         IptcProvider();
         ~IptcProvider() { delete m_MetadataWriter; delete m_MetadataReader; }
@@ -43,15 +45,28 @@ namespace Models {
         void allFinished();
 
     private:
-        void metadataImportedHandler(QPair<Models::ArtworkMetadata*, Models::ImportData*> importPair);
+        void metadataImportedHandler(ImportPair importPair);
         void metadataExportedHandler(ArtworkMetadata *metadata);
 
     public:
         bool getMustSaveOriginal() const { return m_ExportInfo.getMustSaveOriginal(); }
-        void setMustSaveOriginal(bool value) { m_ExportInfo.setMustSaveOriginal(value); }
+        void setMustSaveOriginal(bool value) {
+            if (value != m_ExportInfo.getMustSaveOriginal()) {
+                m_ExportInfo.setMustSaveOriginal(value);
+                emit mustSaveOriginalChanged();
+            }
+        }
+        bool getIgnoreAutosave() const { return m_IgnoreAutosave; }
+        void setIgnoreAutosave(bool value) {
+            if (m_IgnoreAutosave != value) {
+                m_IgnoreAutosave = value;
+                emit ignoreAutosaveChanged();
+            }
+        }
 
     signals:
         void mustSaveOriginalChanged();
+        void ignoreAutosaveChanged();
 
     public:
         Q_INVOKABLE void importMetadata() { doReadMetadata(getArtworkList()); }
@@ -65,9 +80,10 @@ namespace Models {
         void cancelProcessing();
 
     private:
-        QFutureWatcher<QPair<Models::ArtworkMetadata*, Models::ImportData*> > *m_MetadataReader;
+        QFutureWatcher<QPair<Models::ArtworkMetadata*, Models::ImportDataResult*> > *m_MetadataReader;
         QFutureWatcher<QPair<ArtworkMetadata*, ExportInfo*> > *m_MetadataWriter;
         ExportInfo m_ExportInfo;
+        bool m_IgnoreAutosave;
     };
 }
 

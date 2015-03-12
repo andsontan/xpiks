@@ -38,6 +38,8 @@ Item {
         metadataImportComponent.destroy()
     }
 
+    Component.onCompleted: iptcProvider.ignoreAutosave = false
+
     PropertyAnimation { target: metadataImportComponent; property: "opacity";
         duration: 400; from: 0; to: 1;
         easing.type: Easing.InOutQuad ; running: true }
@@ -121,6 +123,12 @@ Item {
 
                 RowLayout {
                     height: 24
+
+                    StyledCheckbox {
+                        text: qsTr("Ignore autosaves (.xpks)")
+                        checked: iptcProvider.ignoreAutosave
+                        onCheckedChanged: iptcProvider.ignoreAutosave = checked
+                    }
 
                     Item {
                         Layout.fillWidth: true

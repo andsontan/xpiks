@@ -33,9 +33,6 @@
 #include "../Models/exportinfo.h"
 #include "tempmetadatadb.h"
 
-typedef QPair<Models::ArtworkMetadata*, Models::ImportData*> ImportPair;
-typedef QPair<Models::ArtworkMetadata*, Models::ExportInfo*> ExportPair;
-
 // returns NULL if patching wasn't successfull
 ExportPair writeArtworkMetadata(ExportPair pair) {
     Models::ArtworkMetadata *metadata = pair.first;
@@ -93,7 +90,7 @@ ExportPair writeArtworkMetadata(ExportPair pair) {
     return qMakePair(resultMetadata, exportInfo);
 }
 
-void grabMetadata(const QStringList &items, Models::ImportData *importData,
+void grabMetadata(const QStringList &items, Models::ImportDataResult *importData,
                   QRegExp authorRegExp,
                   QRegExp titleRegExp,
                   QRegExp descriptionRegExp,
@@ -102,7 +99,7 @@ void grabMetadata(const QStringList &items, Models::ImportData *importData,
 ImportPair readArtworkMetadata(ImportPair pair) {
     const QString exiftoolPath = Helpers::ExternalToolsProvider::getExifToolPath();
 
-    Models::ImportData *importData = pair.second;
+    Models::ImportDataResult *importData = pair.second;
     Models::ArtworkMetadata *metadata = pair.first;
 
     QStringList arguments;
@@ -129,7 +126,7 @@ ImportPair readArtworkMetadata(ImportPair pair) {
     return pair;
 }
 
-void grabMetadata(const QStringList &items, Models::ImportData *importData,
+void grabMetadata(const QStringList &items, Models::ImportDataResult *importData,
                   QRegExp authorRegExp,
                   QRegExp titleRegExp,
                   QRegExp descriptionRegExp,

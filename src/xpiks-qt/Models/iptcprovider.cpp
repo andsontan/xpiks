@@ -26,7 +26,8 @@
 
 namespace Models {
     IptcProvider::IptcProvider():
-        ArtworksProcessor()
+        ArtworksProcessor(),
+        m_IgnoreAutosave(false)
     {
         m_MetadataWriter = new QFutureWatcher<ExportPair>(this);
         connect(m_MetadataWriter, SIGNAL(resultReadyAt(int)), SLOT(metadataExported(int)));
@@ -59,12 +60,13 @@ namespace Models {
     void IptcProvider::metadataImportedHandler(ImportPair importPair)
     {
         ArtworkMetadata *metadata = importPair.first;
-        Models::ImportData *importData = importPair.second;
+        Models::ImportDataResult *importData = importPair.second;
 
         if (metadata != NULL && importData != NULL) {
             metadata->initialize(importData->Author, importData->Title, importData->Description, importData->Keywords);
 
-            if (importData->Description.isEmpty() || importData->Keywords.isEmpty()) {
+            if (!m_IgnoreAutosave &&
+                    (importData->Description.isEmpty() || importData->Keywords.isEmpty())) {
                 Helpers::TempMetadataDb(metadata).load();
             }
         }
@@ -102,7 +104,7 @@ namespace Models {
 
         QList<ImportPair> pairs;
         foreach(ArtworkMetadata *metadata, artworkList) {
-            pairs.append(qMakePair(metadata, new Models::ImportData()));
+            pairs.append(qMakePair(metadata, new Models::ImportDataResult()));
         }
 
         beginProcessing();

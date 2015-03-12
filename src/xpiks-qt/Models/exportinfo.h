@@ -23,9 +23,10 @@
 #define EXPORTINFO_H
 
 #include <QString>
+#include "../Models/artworkmetadata.h"
 
 namespace Models {    
-    class ImportData {
+    class ImportDataResult {
     public:
         QString Author;
         QString Title;
@@ -47,5 +48,8 @@ namespace Models {
         bool m_MustSaveOriginal;
     };
 }
+
+typedef QPair<Models::ArtworkMetadata*, Models::ImportDataResult*> ImportPair;
+typedef QPair<Models::ArtworkMetadata*, Models::ExportInfo*> ExportPair;
 
 #endif // EXPORTINFO_H

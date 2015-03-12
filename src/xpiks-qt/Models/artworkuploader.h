@@ -52,7 +52,12 @@ namespace Models {
 
     public:
          bool getIncludeEPS() const { return m_IncludeEPS; }
-         void setIncludeEPS(bool value) { m_IncludeEPS = value; }
+         void setIncludeEPS(bool value) {
+             if (m_IncludeEPS != value) {
+                 m_IncludeEPS = value;
+                 emit includeEPSChanged(value);
+             }
+         }
 
      public slots:
          void artworkUploaded(int);
