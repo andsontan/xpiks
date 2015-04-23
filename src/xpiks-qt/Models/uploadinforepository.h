@@ -29,6 +29,7 @@
 #include <QList>
 #include "uploadinfo.h"
 #include "../Encryption/secretsmanager.h"
+#include "../Commands/commandmanager.h"
 
 namespace Models {
     class UploadInfoRepository : public QAbstractListModel
@@ -42,7 +43,11 @@ namespace Models {
 
         ~UploadInfoRepository() { qDeleteAll(m_UploadInfos); m_UploadInfos.clear();  }
 
-        void setSecretsManager(Encryption::SecretsManager *secretsManager) { Q_ASSERT(secretsManager != NULL); m_SecretsManager = secretsManager; }
+        void setCommandManager(Commands::CommandManager *commandManager) {
+            Q_ASSERT(commandManager != NULL);
+            m_CommandManager = commandManager;
+        }
+
         void initFromString(const QString &savedString);
 
     public:
@@ -132,14 +137,7 @@ namespace Models {
 
     public slots:
         void onBeforeMasterPasswordChanged(const QString &oldMasterPassword, const QString &newMasterPassword) {
-            Q_ASSERT(m_SecretsManager != NULL);
-            foreach (UploadInfo *info, m_UploadInfos) {
-                if (info->hasPassword()) {
-                    QString newPassword = m_SecretsManager->recodePassword(
-                                info->getPassword(), oldMasterPassword, newMasterPassword);
-                    info->setPassword(newPassword);
-                }
-            }
+            m_CommandManager->recodePasswords(oldMasterPassword, newMasterPassword, m_UploadInfos);
         }
 
     protected:
@@ -152,7 +150,7 @@ namespace Models {
 
     private:
         QList<UploadInfo*> m_UploadInfos;
-        Encryption::SecretsManager *m_SecretsManager;
+        Commands::CommandManager *m_CommandManager;
         // when MP is cancelled before Upload dialog
         // all passwords should be empty
         bool m_EmptyPasswordsMode;

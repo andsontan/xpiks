@@ -27,6 +27,8 @@
 #include "artworkmetadata.h"
 #include "../Helpers/globalimageprovider.h"
 
+namespace Commands { class CommandManager; }
+
 namespace Models {
     class WarningsManager : public QAbstractListModel
     {
@@ -38,6 +40,11 @@ namespace Models {
         { }
 
         ~WarningsManager() {}
+
+        void setCommandManager(Commands::CommandManager *commandManager) {
+            Q_ASSERT(commandManager != NULL);
+            m_CommandManager = commandManager;
+        }
 
     public:
         enum WarningManagerRoles {
@@ -75,6 +82,7 @@ namespace Models {
         QList<WarningsInfo*> m_WarningsList;
         QList<WarningsInfo*> m_WarningsBufferList;
         Helpers::GlobalImageProvider *m_ImageProvider;
+        Commands::CommandManager *m_CommandManager;
         double m_MinimumMegapixels;
         int m_MaximumKeywordsCount;
         int m_MaximumDescriptionLength;

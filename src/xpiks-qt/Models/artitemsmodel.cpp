@@ -27,6 +27,7 @@
 #include "artitemsmodel.h"
 #include "artiteminfo.h"
 #include "../Helpers/indiceshelper.h"
+//#include "../Commands/commandmanager.h"
 
 #ifdef Q_OS_OSX
 #include "../Helpers/osxnsurlhelper.h"
@@ -65,7 +66,7 @@ namespace Models {
 
     void ArtItemsModel::removeArtworksDirectory(int index)
     {
-        const QString &directory = m_ArtworksRepository->getDirectory(index);
+        const QString &directory = m_CommandManager->getArtworkRepository()->getDirectory(index);
         QList<int> indicesToRemove;
 
         QList<ArtworkMetadata*>::const_iterator it = m_ArtworkList.constBegin();
@@ -191,8 +192,7 @@ namespace Models {
         }
 
         // TODO: remove this two times copying
-        Q_ASSERT(m_IptcProvider != NULL);
-        m_IptcProvider->setArtworks(modifiedSelectedArtworks);
+        m_CommandManager->setArtworksForIPTCProcessing(modifiedSelectedArtworks);
     }
 
     void ArtItemsModel::setSelectedForUpload()
@@ -201,8 +201,7 @@ namespace Models {
         getSelectedArtworks(selectedArtworks);
 
         // TODO: remove this two times copying
-        Q_ASSERT(m_ArtworkUploader != NULL);
-        m_ArtworkUploader->setArtworks(selectedArtworks);
+        m_CommandManager->setArtworksForUpload(selectedArtworks);
         emit needCheckItemsForWarnings(selectedArtworks);
     }
 
@@ -225,7 +224,8 @@ namespace Models {
     void ArtItemsModel::selectDirectory(int directoryIndex)
     {
         QList<int> directoryItems;
-        const QString directory = m_ArtworksRepository->getDirectory(directoryIndex);
+        const ArtworksRepository *artworksRepository = m_CommandManager->getArtworkRepository();
+        const QString directory = artworksRepository->getDirectory(directoryIndex);
 
         int i = 0;
         foreach (ArtworkMetadata *metadata, m_ArtworkList) {
@@ -395,9 +395,10 @@ namespace Models {
         }
 
         const int count = filenames.count();
-        const int newFilesCount = m_ArtworksRepository->getNewFilesCount(filenames);
+        ArtworksRepository *artworksRepository = m_CommandManager->getArtworkRepository();
+        const int newFilesCount = artworksRepository->getNewFilesCount(filenames);
 
-        bool filesWereAccounted = m_ArtworksRepository->beginAccountingFiles(filenames);
+        bool filesWereAccounted = artworksRepository->beginAccountingFiles(filenames);
 
         QList<ArtworkMetadata*> artworksToImport;
 
@@ -406,7 +407,7 @@ namespace Models {
 
             for (int i = 0; i < count; ++i) {
                 const QString &filename = filenames[i];
-                if (m_ArtworksRepository->accountFile(filename))
+                if (artworksRepository->accountFile(filename))
                 {
                     ArtworkMetadata *metadata = new ArtworkMetadata(filename);
                     QObject::connect(metadata, SIGNAL(modifiedChanged(bool)),
@@ -414,7 +415,7 @@ namespace Models {
                     QObject::connect(metadata, SIGNAL(selectedChanged(bool)),
                                      this, SLOT(itemSelectedChanged(bool)));                    
                     QObject::connect(metadata, SIGNAL(fileSelectedChanged(QString,bool)),
-                                     m_ArtworksRepository, SLOT(fileSelectedChanged(QString,bool)));
+                                     artworksRepository, SLOT(fileSelectedChanged(QString,bool)));
 
                     m_ArtworkList.append(metadata);
                     artworksToImport.append(metadata);
@@ -424,14 +425,14 @@ namespace Models {
             endInsertRows();
         }
 
-        m_ArtworksRepository->endAccountingFiles(filesWereAccounted);
+        artworksRepository->endAccountingFiles(filesWereAccounted);
 
         if (newFilesCount > 0) {
-            m_ArtworksRepository->updateCountsForExistingDirectories();
+            artworksRepository->updateCountsForExistingDirectories();
         }
 
         // set artworks for initial import
-        m_IptcProvider->setArtworks(artworksToImport);
+        m_CommandManager->setArtworksForIPTCProcessing(artworksToImport);
 
         return newFilesCount;
     }
@@ -461,7 +462,7 @@ namespace Models {
         }
     }
 
-    void ArtItemsModel::doCombineSelectedImages(CombinedArtworksModel *combinedModel) const
+    void ArtItemsModel::doCombineSelectedImages() const
     {
         QList<ArtItemInfo*> artworksList;
 
@@ -472,11 +473,10 @@ namespace Models {
             }
         }
 
-        combinedModel->initArtworks(artworksList);
-        combinedModel->recombineArtworks();
+        m_CommandManager->combineArtworks(artworksList);
     }
 
-    void ArtItemsModel::doCombineArtwork(int index, CombinedArtworksModel *combinedModel)
+    void ArtItemsModel::doCombineArtwork(int index)
     {
         if (index >= 0 && index < m_ArtworkList.length()) {
             QList<ArtItemInfo*> artworksList;
@@ -489,8 +489,7 @@ namespace Models {
             ArtItemInfo *info = new ArtItemInfo(metadata);
             artworksList.append(info);
 
-            combinedModel->initArtworks(artworksList);
-            combinedModel->recombineArtworks();
+            m_CommandManager->combineArtworks(artworksList);
         }
     }
 
@@ -515,7 +514,8 @@ namespace Models {
     {
         Q_ASSERT(row >= 0 && row < m_ArtworkList.length());
         ArtworkMetadata *metadata = m_ArtworkList[row];
-        m_ArtworksRepository->removeFile(metadata->getFilepath());
+        ArtworksRepository *artworkRepository = m_CommandManager->getArtworkRepository();
+        artworkRepository->removeFile(metadata->getFilepath());
 
         if (metadata->getIsSelected()) {
             m_SelectedArtworksCount--;
@@ -532,8 +532,9 @@ namespace Models {
         Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
         removeItemsAtIndices(rangesToRemove);
 
-        m_ArtworksRepository->cleanupEmptyDirectories();
-        m_ArtworksRepository->updateCountsForExistingDirectories();
+        ArtworksRepository *artworkRepository = m_CommandManager->getArtworkRepository();
+        artworkRepository->cleanupEmptyDirectories();
+        artworkRepository->updateCountsForExistingDirectories();
         updateModifiedCount();
     }
 

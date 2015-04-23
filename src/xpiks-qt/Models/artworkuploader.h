@@ -27,10 +27,10 @@
 #include <QFutureWatcher>
 #include "artworksprocessor.h"
 #include "uploadinfo.h"
-#include "uploadinforepository.h"
 #include "../Helpers/uploaditem.h"
 #include "../Helpers/testconnectionresult.h"
-#include "../Encryption/secretsmanager.h"
+
+namespace Commands { class CommandManager; }
 
 namespace Models {
     class ArtworkUploader : public ArtworksProcessor
@@ -39,9 +39,6 @@ namespace Models {
     public:
          ArtworkUploader();
          ~ArtworkUploader() { delete m_ArtworksUploader; delete m_TestingCredentialWatcher; }
-
-         void setUploadInfoRepository(UploadInfoRepository *infoRepository) { Q_ASSERT(infoRepository != NULL); m_InfoRepository = infoRepository; }
-         void setSecretsManager(Encryption::SecretsManager *secretsManager) { Q_ASSERT(secretsManager != NULL); m_SecretsManager = secretsManager; }
 
     public:
          Q_PROPERTY(bool includeEPS READ getIncludeEPS WRITE setIncludeEPS NOTIFY includeEPSChanged)
@@ -80,10 +77,9 @@ namespace Models {
 
      private:
          QFutureWatcher<Helpers::UploadItem> *m_ArtworksUploader;
-         UploadInfoRepository *m_InfoRepository;
          QFutureWatcher<Helpers::TestConnectionResult> *m_TestingCredentialWatcher;
-         Encryption::SecretsManager *m_SecretsManager;
          QStringList *m_ActiveUploads;
+         Commands::CommandManager *m_CommandManager;
          bool m_IncludeEPS;
     };
 }

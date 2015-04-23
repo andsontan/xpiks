@@ -24,6 +24,7 @@
 
 #include <QObject>
 #include "artworkmetadata.h"
+#include "../Commands/commandmanager.h"
 
 namespace Models {
     class ArtworksProcessor : public QObject
@@ -43,6 +44,10 @@ namespace Models {
         {}
 
         virtual ~ArtworksProcessor() {}
+
+        void setCommandManager(Commands::CommandManager *commandManager) {
+            Q_ASSERT(commandManager != NULL); m_CommandManager = commandManager;
+        }
 
     protected:
         void incProgress() { m_ProcessedArtworksCount++; updateProgress(); }
@@ -74,6 +79,7 @@ namespace Models {
 
     protected:
         const QList<ArtworkMetadata*> &getArtworkList() const { return m_ArtworkList; }
+        Commands::CommandManager *getCommandManager() { return m_CommandManager; }
         virtual void cancelProcessing() = 0;
         void beginProcessing();
         void endProcessing();
@@ -81,6 +87,7 @@ namespace Models {
 
     private:
         QList<ArtworkMetadata*> m_ArtworkList;
+        Commands::CommandManager *m_CommandManager;
         volatile int m_ProcessedArtworksCount;
         volatile int m_ArtworksCount;
         bool m_IsInProgress;

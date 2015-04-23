@@ -29,6 +29,8 @@
 #include <QSet>
 #include "abstractlistmodel.h"
 
+namespace Commands { class CommandManager; }
+
 namespace Models {
     class ArtworksRepository : public AbstractListModel {
         Q_OBJECT
@@ -42,6 +44,11 @@ namespace Models {
             m_DirectoriesList(copy.m_DirectoriesList), m_DirectoriesHash(copy.m_DirectoriesHash),
         m_FilesSet(copy.m_FilesSet) {}
         ~ArtworksRepository() {}
+
+        void setCommandManager(Commands::CommandManager *commandManager) {
+            Q_ASSERT(commandManager != NULL);
+            m_CommandManager = commandManager;
+        }
 
     public:
         enum ArtworksDirectoriesRoles {
@@ -96,6 +103,7 @@ namespace Models {
         QHash<QString, int> m_DirectoriesHash;
         QSet<QString> m_FilesSet;
         QHash<QString, int> m_DirectoriesSelectedHash;
+        Commands::CommandManager *m_CommandManager;
     };
 }
 

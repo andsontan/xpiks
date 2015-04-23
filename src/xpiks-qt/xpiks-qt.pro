@@ -18,7 +18,8 @@ SOURCES += main.cpp \
     Models/warningsmanager.cpp \
     ../tiny-aes/aes.cpp \
     Encryption/secretsmanager.cpp \
-    Helpers/stringhelper.cpp
+    Helpers/stringhelper.cpp \
+    Commands/commandmanager.cpp
 
 RESOURCES += qml.qrc
 
@@ -68,7 +69,8 @@ HEADERS += \
     Helpers/uploaditem.h \
     Helpers/stringhelper.h \
     Helpers/logger.h \
-    Helpers/testconnectionresult.h
+    Helpers/testconnectionresult.h \
+    Commands/commandmanager.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

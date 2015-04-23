@@ -91,8 +91,7 @@ namespace Models {
             return uploadInfo->getUsername();
         case PasswordRole: {
             const QString &encodedPassword = uploadInfo->getPassword();
-            Q_ASSERT(m_SecretsManager != NULL);
-            QString password = m_SecretsManager->decodePassword(encodedPassword);
+            QString password = m_CommandManager->getSecretsManager()->decodePassword(encodedPassword);
             return password;
         }
         case IsSelectedRole:
@@ -137,8 +136,7 @@ namespace Models {
         case EditPasswordRole: {
             roleToUpdate = PasswordRole;
             QString rawPassword = value.toString();
-            Q_ASSERT(m_SecretsManager != NULL);
-            QString encodedPassword = m_SecretsManager->encodePassword(rawPassword);
+            QString encodedPassword = m_CommandManager->getSecretsManager()->encodePassword(rawPassword);
             uploadInfo->setPassword(encodedPassword);
             break;
         }

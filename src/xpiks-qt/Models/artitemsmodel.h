@@ -35,6 +35,8 @@
 #include "artworkuploader.h"
 #include "iptcprovider.h"
 
+namespace Commands { class CommandManager; }
+
 namespace Models {
     class ArtItemsModel : public AbstractListModel {
         Q_OBJECT
@@ -43,11 +45,15 @@ namespace Models {
     public:
         ArtItemsModel(QObject *parent = 0) :
             AbstractListModel(parent),
-            m_ArtworksRepository(NULL),
             m_SelectedArtworksCount(0)
         {}
 
         ~ArtItemsModel();
+
+        void setCommandManager(Commands::CommandManager *commandManager) {
+            Q_ASSERT(commandManager != NULL);
+            m_CommandManager = commandManager;
+        }
 
     public:
         enum ArtItemsRoles {
@@ -71,20 +77,14 @@ namespace Models {
         void updateModifiedCount() { emit modifiedArtworksCountChanged(); }
 
     public:
-        void setArtworksRepository(ArtworksRepository *repository) { Q_ASSERT(repository != NULL); m_ArtworksRepository = repository; }
-        void setCombinedArtworksModel(CombinedArtworksModel *combinedArtworksModel) { Q_ASSERT(combinedArtworksModel != NULL); m_CombinedArtworks = combinedArtworksModel; }
-        void setIptcProvider(IptcProvider *provider) { Q_ASSERT(provider != NULL); m_IptcProvider = provider; }
-        void setArtworkUploader(ArtworkUploader *uploader) { Q_ASSERT(uploader != NULL); m_ArtworkUploader = uploader; }
-
-    public:
         Q_INVOKABLE void updateAllProperties();
         Q_INVOKABLE void removeArtworksDirectory(int index);
         Q_INVOKABLE void removeKeywordAt(int metadataIndex, int keywordIndex);
         Q_INVOKABLE void removeLastKeyword(int metadataIndex);
         Q_INVOKABLE void appendKeyword(int metadataIndex, const QString &keyword);
         Q_INVOKABLE void backupItem(int metadataIndex);
-        Q_INVOKABLE void combineSelectedArtworks() { doCombineSelectedImages(m_CombinedArtworks); }
-        Q_INVOKABLE void combineArtwork(int index) { doCombineArtwork(index, m_CombinedArtworks); }
+        Q_INVOKABLE void combineSelectedArtworks() { doCombineSelectedImages(); }
+        Q_INVOKABLE void combineArtwork(int index) { doCombineArtwork(index); }
         Q_INVOKABLE void selectAllArtworks() { setAllItemsSelected(true); }
         Q_INVOKABLE void unselectAllArtworks() { setAllItemsSelected(false); }
         Q_INVOKABLE int dropFiles(const QList<QUrl> &urls);
@@ -127,8 +127,8 @@ namespace Models {
         void getSelectedArtworks(QList<ArtworkMetadata *> &selectedArtworks) const;
 
     private:
-        void doCombineSelectedImages(CombinedArtworksModel *combinedModel) const;
-        void doCombineArtwork(int index, CombinedArtworksModel *combinedModel);
+        void doCombineSelectedImages() const;
+        void doCombineArtwork(int index);
 
     signals:
         void modifiedArtworksCountChanged();
@@ -148,10 +148,7 @@ namespace Models {
 
     private:
         QList<ArtworkMetadata*> m_ArtworkList;
-        CombinedArtworksModel *m_CombinedArtworks;
-        ArtworksRepository *m_ArtworksRepository;
-        IptcProvider *m_IptcProvider;
-        ArtworkUploader *m_ArtworkUploader;
+        Commands::CommandManager *m_CommandManager;
         int m_SelectedArtworksCount;
     };
 }

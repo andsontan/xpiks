@@ -34,6 +34,7 @@
 #include "Helpers/globalimageprovider.h"
 #include "Models/uploadinforepository.h"
 #include "Helpers/clipboardhelper.h"
+#include "Commands/commandmanager.h"
 #include "Models/artworkuploader.h"
 #include "Models/warningsmanager.h"
 #include "Models/artitemsmodel.h"
@@ -139,25 +140,21 @@ int main(int argc, char *argv[]) {
     Helpers::AppSettings appSettings;
     Encryption::SecretsManager secretsManager;
 
-    // injecting dependencies
-    artworkUploader.setUploadInfoRepository(&uploadInfoRepository);
-    artworkUploader.setSecretsManager(&secretsManager);
-    artItemsModel.setArtworksRepository(&artworkRepository);
-    artItemsModel.setCombinedArtworksModel(&combinedArtworksModel);
-    artItemsModel.setIptcProvider(&iptcProvider);
-    artItemsModel.setArtworkUploader(&artworkUploader);
-    uploadInfoRepository.setSecretsManager(&secretsManager);
-    logsModel.setLogsManager(&logsManager);
+    Commands::CommandManager commandManager;
+    commandManager.InjectDependency(&artworkRepository);
+    commandManager.InjectDependency(&artItemsModel);
+    commandManager.InjectDependency(&combinedArtworksModel);
+    commandManager.InjectDependency(&iptcProvider);
+    commandManager.InjectDependency(&artworkUploader);
+    commandManager.InjectDependency(&uploadInfoRepository);
+    commandManager.InjectDependency(&warningsManager);
+    commandManager.InjectDependency(&secretsManager);
 
     // other initializations
     secretsManager.setMasterPasswordHash(appSettings.value(Constants::MASTER_PASSWORD_HASH, "").toString());
     uploadInfoRepository.initFromString(appSettings.value(Constants::UPLOAD_HOSTS, "").toString());
 
-    QObject::connect(&secretsManager, SIGNAL(beforeMasterPasswordChange(QString,QString)),
-                     &uploadInfoRepository, SLOT(onBeforeMasterPasswordChanged(QString,QString)));
-
-    QObject::connect(&artItemsModel, SIGNAL(needCheckItemsForWarnings(QList<ArtworkMetadata*>)),
-                     &warningsManager, SLOT(onCheckWarnings(QList<ArtworkMetadata*>)));
+    commandManager.connectEntitiesSignalsSlots();
 
     qmlRegisterType<Helpers::ClipboardHelper>("xpiks", 1, 0, "ClipboardHelper");
 

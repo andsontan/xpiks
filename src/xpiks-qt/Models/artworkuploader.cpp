@@ -22,6 +22,7 @@
 #include "artworkuploader.h"
 #include <QtConcurrent>
 #include <QDebug>
+#include "uploadinforepository.h"
 #include "../Helpers/curlwrapper.h"
 
 namespace Models {
@@ -84,9 +85,8 @@ namespace Models {
         beginProcessing();
         QList<Helpers::UploadItem> uploadItems;
 
-        Q_ASSERT(m_InfoRepository != NULL);
-        Q_ASSERT(m_SecretsManager != NULL);
-        const QList<UploadInfo *> &infos = m_InfoRepository->getUploadInfos();
+        const UploadInfoRepository *uploadInfoRepository = m_CommandManager->getUploadInfoRepository();
+        const QList<UploadInfo *> &infos = uploadInfoRepository->getUploadInfos();
         m_ActiveUploads = getAllFilepathes();
 
         const QString &curlPath = Helpers::ExternalToolsProvider::getCurlPath();
@@ -94,7 +94,7 @@ namespace Models {
 
         foreach (UploadInfo *info, infos) {
             if (info->getIsSelected()) {
-                uploadItems.append(Helpers::UploadItem(info, m_ActiveUploads, m_SecretsManager,
+                uploadItems.append(Helpers::UploadItem(info, m_ActiveUploads,
                                                        oneItemUploadTimeout, curlPath));
             }
         }
@@ -102,7 +102,8 @@ namespace Models {
         qDebug() << "Uploading " << uploadItems.length() << " items...";
 
         if (uploadItems.length() > 0) {
-            m_ArtworksUploader->setFuture(QtConcurrent::mapped(uploadItems, uploadViaCurl));
+            UploadWrapper uploadWrapper(m_CommandManager->getSecretsManager());
+            m_ArtworksUploader->setFuture(QtConcurrent::mapped(uploadItems, uploadWrapper));
         }
         else {
             endProcessing();

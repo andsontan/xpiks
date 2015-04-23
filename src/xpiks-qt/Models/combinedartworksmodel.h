@@ -30,6 +30,8 @@
 #include "artiteminfo.h"
 #include "abstractlistmodel.h"
 
+namespace Commands { class CommandManager; }
+
 namespace Models {
     class MiniKeywordsModel : public QAbstractListModel {
         Q_OBJECT
@@ -84,6 +86,11 @@ namespace Models {
         {}
 
         ~CombinedArtworksModel() { qDeleteAll(m_ArtworksList); }
+
+        void setCommandManager(Commands::CommandManager *commandManager) {
+            Q_ASSERT(commandManager != NULL);
+            m_CommandManager = commandManager;
+        }
 
     public:
         void initArtworks(const QList<ArtItemInfo*> &artworks);
@@ -168,6 +175,7 @@ namespace Models {
 
     private:
         QList<ArtItemInfo*> m_ArtworksList;
+        Commands::CommandManager *m_CommandManager;
         MiniKeywordsModel m_CommonKeywordsModel;
         QSet<QString> m_CommonKeywordsSet;
         QString m_ArtworkDescription;
