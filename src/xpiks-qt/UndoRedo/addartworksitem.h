@@ -19,23 +19,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef HISTORYITEM_H
-#define HISTORYITEM_H
+#ifndef ADDARTWORKITEM_H
+#define ADDARTWORKITEM_H
+
+#include "historyitem.h"
 
 namespace UndoRedo {
 
-   class AddArtworksHistoryItem : HistoryItem
+   class AddArtworksHistoryItem : public HistoryItem
     {
     public:
-        AddArtworksHistoryItem() :
-           HistoryItem(AddedArtworks)
+        AddArtworksHistoryItem(int firstIndex, int count) :
+           HistoryItem(AddedArtworksActionType),
+           m_FirstIndex(firstIndex),
+           m_Count(count)
        { }
 
        virtual ~AddArtworksHistoryItem() { }
 
     private:
-       
+        int m_FirstIndex;
+        int m_Count;
     };
 }
 
-#endif // HISTORYITEM_H
+#endif // ADDARTWORKITEM_H

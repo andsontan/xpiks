@@ -25,9 +25,9 @@
 namespace UndoRedo {
 
     enum HistoryActionType {
-        AddedArtworks,
-        RemovedArtworks,
-        CombinedAppended
+        AddedArtworksActionType,
+        RemovedArtworksActionType,
+        CombinedAppendedActionType
     };
 
     class HistoryItem

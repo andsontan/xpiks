@@ -31,7 +31,7 @@ namespace UndoRedo {
     {
     public:
         UndoRedoManager() {}
-        ~UndoRedoManager() {}
+        ~UndoRedoManager() { qDeleteAll(m_HistoryStack); }
 
         void setCommandManager(Commands::CommandManager *commandManager) {
             Q_ASSERT(commandManager != NULL); m_CommandManager = commandManager;
