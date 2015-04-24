@@ -120,6 +120,13 @@ namespace Models {
         void itemModifiedChanged(bool) { updateModifiedCount(); }
         void itemSelectedChanged(bool);
 
+    public:
+        void beginAccountingFiles(int filesCount);
+        void endAccountingFiles();
+
+    public:
+        void appendArtwork(ArtworkMetadata *metadata);
+
     private:
         int addDirectory(const QString &directory);
         int addFiles(const QStringList &filepath);

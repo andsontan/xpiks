@@ -69,6 +69,13 @@ void Commands::CommandManager::InjectDependency(Encryption::SecretsManager *secr
     m_SecretsManager->setCommandManager(this);
 }
 
+Commands::CommandResult *Commands::CommandManager::processCommand(Commands::CommandBase *command) const
+{
+    Commands::CommandResult *result = command->execute(this);
+    delete command;
+    return result;
+}
+
 void Commands::CommandManager::connectEntitiesSignalsSlots() const
 {
     QObject::connect(m_SecretsManager, SIGNAL(beforeMasterPasswordChange(QString,QString)),

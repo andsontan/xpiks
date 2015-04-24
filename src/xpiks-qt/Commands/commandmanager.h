@@ -23,6 +23,7 @@
 #define COMMANDMANAGER_H
 
 #include <QList>
+#include "commandbase.h"
 
 namespace Encryption {
     class SecretsManager;
@@ -45,7 +46,7 @@ namespace Commands {
     class CommandManager
     {
     public:
-        CommandManager() { }
+        CommandManager() {}
         ~CommandManager() {}
 
     public:
@@ -57,6 +58,9 @@ namespace Commands {
         void InjectDependency(Models::UploadInfoRepository *uploadInfoRepository);
         void InjectDependency(Models::WarningsManager *warningsManager);
         void InjectDependency(Encryption::SecretsManager *secretsManager);
+
+    public:
+        CommandResult *processCommand(CommandBase *command) const;
 
     public:
         void connectEntitiesSignalsSlots() const;
@@ -72,7 +76,8 @@ namespace Commands {
 
     public:
         // methods for getters
-        Models::ArtworksRepository *getArtworkRepository() { return m_ArtworkRepository; }
+        Models::ArtworksRepository *getArtworkRepository() const { return m_ArtworkRepository; }
+        Models::ArtItemsModel *getArtItemsModel() const { return m_ArtItemsModel; }
         const Encryption::SecretsManager *getSecretsManager() const { return m_SecretsManager; }
         const Models::UploadInfoRepository *getUploadInfoRepository() const { return m_UploadInfoRepository; }
 

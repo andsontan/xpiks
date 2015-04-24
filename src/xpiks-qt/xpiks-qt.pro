@@ -19,7 +19,9 @@ SOURCES += main.cpp \
     ../tiny-aes/aes.cpp \
     Encryption/secretsmanager.cpp \
     Helpers/stringhelper.cpp \
-    Commands/commandmanager.cpp
+    Commands/commandmanager.cpp \
+    UndoRedo/undoredomanager.cpp \
+    Commands/addartworkscommand.cpp
 
 RESOURCES += qml.qrc
 
@@ -70,7 +72,12 @@ HEADERS += \
     Helpers/stringhelper.h \
     Helpers/logger.h \
     Helpers/testconnectionresult.h \
-    Commands/commandmanager.h
+    Commands/commandmanager.h \
+    UndoRedo/historyitem.h \
+    UndoRedo/undoredomanager.h \
+    UndoRedo/addartworksitem.h \
+    Commands/commandbase.h \
+    Commands/addartworkscommand.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

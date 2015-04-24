@@ -27,7 +27,7 @@
 #include "artitemsmodel.h"
 #include "artiteminfo.h"
 #include "../Helpers/indiceshelper.h"
-//#include "../Commands/commandmanager.h"
+#include "../Commands/addartworkscommand.h"
 
 #ifdef Q_OS_OSX
 #include "../Helpers/osxnsurlhelper.h"
@@ -363,6 +363,23 @@ namespace Models {
         emit selectedArtworksCountChanged();
     }
 
+    void ArtItemsModel::beginAccountingFiles(int filesCount)
+    {
+        int rowsCount = rowCount();
+        beginInsertRows(QModelIndex(), rowsCount, rowsCount + filesCount - 1);
+    }
+
+    void ArtItemsModel::endAccountingFiles()
+    {
+        endInsertRows();
+    }
+
+    void ArtItemsModel::appendArtwork(ArtworkMetadata *metadata)
+    {
+        Q_ASSERT(metadata != NULL);
+        m_ArtworkList.append(metadata);
+    }
+
     int ArtItemsModel::addDirectory(const QString &directory)
     {
         int filesCount = 0;
@@ -394,45 +411,11 @@ namespace Models {
             }
         }
 
-        const int count = filenames.count();
-        ArtworksRepository *artworksRepository = m_CommandManager->getArtworkRepository();
-        const int newFilesCount = artworksRepository->getNewFilesCount(filenames);
-
-        bool filesWereAccounted = artworksRepository->beginAccountingFiles(filenames);
-
-        QList<ArtworkMetadata*> artworksToImport;
-
-        if (newFilesCount > 0) {
-            beginInsertRows(QModelIndex(), rowCount(), rowCount() + newFilesCount - 1);
-
-            for (int i = 0; i < count; ++i) {
-                const QString &filename = filenames[i];
-                if (artworksRepository->accountFile(filename))
-                {
-                    ArtworkMetadata *metadata = new ArtworkMetadata(filename);
-                    QObject::connect(metadata, SIGNAL(modifiedChanged(bool)),
-                                     this, SLOT(itemModifiedChanged(bool)));
-                    QObject::connect(metadata, SIGNAL(selectedChanged(bool)),
-                                     this, SLOT(itemSelectedChanged(bool)));                    
-                    QObject::connect(metadata, SIGNAL(fileSelectedChanged(QString,bool)),
-                                     artworksRepository, SLOT(fileSelectedChanged(QString,bool)));
-
-                    m_ArtworkList.append(metadata);
-                    artworksToImport.append(metadata);
-                }
-            }
-
-            endInsertRows();
-        }
-
-        artworksRepository->endAccountingFiles(filesWereAccounted);
-
-        if (newFilesCount > 0) {
-            artworksRepository->updateCountsForExistingDirectories();
-        }
-
-        // set artworks for initial import
-        m_CommandManager->setArtworksForIPTCProcessing(artworksToImport);
+        Commands::AddArtworksCommand *addArtworksCommand = new Commands::AddArtworksCommand(filenames);
+        Commands::CommandResult *result = m_CommandManager->processCommand(addArtworksCommand);
+        Commands::AddArtworksCommandResult *addArtworksResult = static_cast<Commands::AddArtworksCommandResult*>(result);
+        int newFilesCount = addArtworksResult->m_NewFilesAdded;
+        delete result;
 
         return newFilesCount;
     }
