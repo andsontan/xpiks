@@ -21,7 +21,8 @@ SOURCES += main.cpp \
     Helpers/stringhelper.cpp \
     Commands/commandmanager.cpp \
     UndoRedo/undoredomanager.cpp \
-    Commands/addartworkscommand.cpp
+    Commands/addartworkscommand.cpp \
+    UndoRedo/addartworksitem.cpp
 
 RESOURCES += qml.qrc
 

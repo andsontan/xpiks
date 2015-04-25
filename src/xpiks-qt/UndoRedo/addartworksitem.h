@@ -40,6 +40,9 @@ namespace UndoRedo {
        virtual ~AddArtworksHistoryItem() { }
 
    public:
+        virtual void undo(const Commands::CommandManager *commandManager) const;
+
+   public:
         virtual QString getDescription() const {
             return m_Count > 1 ? QString("%1 items added").arg(m_Count) :
                                  QString("1 item added");

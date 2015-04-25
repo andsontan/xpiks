@@ -888,4 +888,16 @@ ApplicationWindow {
             }
         }
     }
+
+    Connections {
+        target: undoRedoManager
+        onCanUndoChanged: {
+            if (undoRedoManager.canUndo) {
+                var component = Qt.createComponent("Dialogs/UndoPopup.qml")
+                component.createObject(applicationWindow, {
+                                           componentParent: applicationWindow,
+                                           undoMessage: undoRedoManager.getUndoDescription()})
+            }
+        }
+    }
 }

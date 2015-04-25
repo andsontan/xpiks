@@ -82,6 +82,11 @@ Commands::CommandResult *Commands::CommandManager::processCommand(Commands::Comm
     return result;
 }
 
+void Commands::CommandManager::recordHistoryItem(UndoRedo::HistoryItem *historyItem) const
+{
+    m_UndoRedoManager->recordHistoryItem(historyItem);
+}
+
 void Commands::CommandManager::connectEntitiesSignalsSlots() const
 {
     QObject::connect(m_SecretsManager, SIGNAL(beforeMasterPasswordChange(QString,QString)),

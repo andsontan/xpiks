@@ -33,6 +33,7 @@ import "../StyledControls"
 Item {
     id: undoPopupComponent
     anchors.fill: parent
+    anchors.topMargin: 20
 
     property string undoMessage
 
@@ -58,9 +59,6 @@ Item {
         }
     }*/
 
-    FocusScope {
-        anchors.fill: parent
-
         /*MouseArea {
             anchors.fill: parent
             onWheel: wheel.accepted = true
@@ -81,19 +79,46 @@ Item {
             }
         }*/
 
-        // This rectangle is the actual popup
-        Rectangle {
-            id: dialogWindow
-            width: 200
-            height: 50
-            color: Colors.defaultLightColor
-            border.color: Colors.defaultLightGrayColor
+    // This rectangle is the actual popup
+    Rectangle {
+        id: dialogWindow
+        width: 200
+        height: 30
+        color: Colors.defaultInputBackground
+        border.color: Colors.defaultLightGrayColor
+        anchors.horizontalCenter: parent.horizontalCenter
+        Component.onCompleted: anchors.centerIn = undefined
+        radius: 8
+
+        Row {
             anchors.centerIn: parent
-            Component.onCompleted: anchors.centerIn = undefined
-            radius: 5
+            spacing: 5
+
+            Item {
+                width: 5
+            }
 
             StyledText {
                 text: undoMessage
+                color: Colors.selectedMetadataColor
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.leftMargin: 10
+                font.bold: true
+            }
+
+            StyledText {
+                text: qsTr("Undo")
+                color: undoMA.pressed ? Colors.selectedMetadataColor : Colors.artworkActiveColor
+
+                MouseArea {
+                    id: undoMA
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                        undoRedoManager.undoLastAction()
+                        closePopup()
+                    }
+                }
             }
         }
     }

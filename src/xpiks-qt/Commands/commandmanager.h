@@ -23,6 +23,7 @@
 #define COMMANDMANAGER_H
 
 #include <QList>
+#include "../UndoRedo/historyitem.h"
 #include "commandbase.h"
 
 namespace Encryption {
@@ -66,6 +67,7 @@ namespace Commands {
 
     public:
         CommandResult *processCommand(CommandBase *command) const;
+        void recordHistoryItem(UndoRedo::HistoryItem *historyItem) const;
 
     public:
         void connectEntitiesSignalsSlots() const;

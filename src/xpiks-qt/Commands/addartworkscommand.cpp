@@ -23,6 +23,7 @@
 #include "../Models/artworksrepository.h"
 #include "../Models/artworkmetadata.h"
 #include "../Models/artitemsmodel.h"
+#include "../UndoRedo/addartworksitem.h"
 
 Commands::CommandResult *Commands::AddArtworksCommand::execute(const CommandManager *commandManager) const
 {
@@ -30,7 +31,7 @@ Commands::CommandResult *Commands::AddArtworksCommand::execute(const CommandMana
     Models::ArtItemsModel *artItemsModel = commandManager->getArtItemsModel();
 
     const int newFilesCount = artworksRepository->getNewFilesCount(m_FilePathes);
-
+    const int initialCount = artItemsModel->rowCount();
     bool filesWereAccounted = artworksRepository->beginAccountingFiles(m_FilePathes);
 
     QList<Models::ArtworkMetadata*> artworksToImport;
@@ -63,6 +64,9 @@ Commands::CommandResult *Commands::AddArtworksCommand::execute(const CommandMana
 
     if (newFilesCount > 0) {
         artworksRepository->updateCountsForExistingDirectories();
+
+        UndoRedo::AddArtworksHistoryItem *addArtworksItem = new UndoRedo::AddArtworksHistoryItem(initialCount, newFilesCount);
+        commandManager->recordHistoryItem(addArtworksItem);
     }
 
     // set artworks for initial import

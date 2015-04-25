@@ -120,6 +120,7 @@ namespace Models {
 
     public:
         void appendArtwork(ArtworkMetadata *metadata);
+        void removeArtworks(const QList<int> &indices) { doRemoveItemsAtIndices(indices); }
 
     private:
         int addDirectory(const QString &directory);

@@ -21,7 +21,7 @@
 
 #include "undoredomanager.h"
 
-void UndoRedo::UndoRedoManager::recordAction(UndoRedo::HistoryItem *historyItem)
+void UndoRedo::UndoRedoManager::recordHistoryItem(UndoRedo::HistoryItem *historyItem)
 {
     m_HistoryStack.append(historyItem);
     emit canUndoChanged();
@@ -35,7 +35,8 @@ bool UndoRedo::UndoRedoManager::undoLastAction()
     if (anyItem) {
         HistoryItem *historyItem = m_HistoryStack.pop();
         emit canUndoChanged();
-        doUndoAction(historyItem);
+        historyItem->undo(m_CommandManager);
+        delete historyItem;
     }
 
     return anyItem;
@@ -43,11 +44,7 @@ bool UndoRedo::UndoRedoManager::undoLastAction()
 
 void UndoRedo::UndoRedoManager::discardLastAction()
 {
-    m_HistoryStack.pop();
+    HistoryItem *historyItem = m_HistoryStack.pop();
     emit canUndoChanged();
-}
-
-void UndoRedo::UndoRedoManager::doUndoAction(UndoRedo::HistoryItem *historyItem) const
-{
-
+    delete historyItem;
 }

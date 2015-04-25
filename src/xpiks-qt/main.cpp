@@ -177,6 +177,7 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("logsModel", &logsModel);
     rootContext->setContextProperty("warningsManager", &warningsManager);
     rootContext->setContextProperty("secretsManager", &secretsManager);
+    rootContext->setContextProperty("undoRedoManager", &undoRedoManager);
 
     engine.addImageProvider("global", globalProvider);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));

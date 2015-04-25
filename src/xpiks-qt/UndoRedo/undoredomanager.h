@@ -29,7 +29,7 @@
 #include "../Common/baseentity.h"
 
 namespace UndoRedo {
-    class UndoRedoManager : QObject, public Common::BaseEntity
+    class UndoRedoManager: public QObject, public Common::BaseEntity
     {
         Q_OBJECT
         Q_PROPERTY(bool canUndo READ getCanUndo NOTIFY canUndoChanged)
@@ -50,12 +50,9 @@ namespace UndoRedo {
         Q_INVOKABLE QString getUndoDescription() const { return m_HistoryStack.empty() ? "" : m_HistoryStack.top()->getDescription(); }
 
     public:
-        void recordAction(HistoryItem *historyItem);
-        bool undoLastAction();
+        void recordHistoryItem(HistoryItem *historyItem);
+        Q_INVOKABLE bool undoLastAction();
         void discardLastAction();
-
-    private:
-        void doUndoAction(HistoryItem *historyItem) const;
 
     private:
         QStack<HistoryItem*> m_HistoryStack;

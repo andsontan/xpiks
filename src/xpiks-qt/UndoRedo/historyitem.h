@@ -24,6 +24,10 @@
 
 #include <QString>
 
+namespace Commands {
+    class CommandManager;
+}
+
 namespace UndoRedo {
 
     enum HistoryActionType {
@@ -37,6 +41,9 @@ namespace UndoRedo {
     public:
         HistoryItem(HistoryActionType actionType) : m_ActionType(actionType){}
         virtual ~HistoryItem() {}
+
+    public:
+        virtual void undo(const Commands::CommandManager *commandManager) const = 0;
 
     public:
         virtual QString getDescription() const = 0;
