@@ -34,11 +34,10 @@
 #include "warningsmanager.h"
 #include "artworkuploader.h"
 #include "iptcprovider.h"
-
-namespace Commands { class CommandManager; }
+#include "../Common/baseentity.h"
 
 namespace Models {
-    class ArtItemsModel : public AbstractListModel {
+    class ArtItemsModel : public AbstractListModel, public Common::BaseEntity {
         Q_OBJECT
         Q_PROPERTY(int modifiedArtworksCount READ getModifiedArtworksCount NOTIFY modifiedArtworksCountChanged)
         Q_PROPERTY(int selectedArtworksCount READ getSelectedArtworksCount NOTIFY selectedArtworksCountChanged)
@@ -49,11 +48,6 @@ namespace Models {
         {}
 
         ~ArtItemsModel();
-
-        void setCommandManager(Commands::CommandManager *commandManager) {
-            Q_ASSERT(commandManager != NULL);
-            m_CommandManager = commandManager;
-        }
 
     public:
         enum ArtItemsRoles {
@@ -155,7 +149,6 @@ namespace Models {
 
     private:
         QList<ArtworkMetadata*> m_ArtworkList;
-        Commands::CommandManager *m_CommandManager;
         int m_SelectedArtworksCount;
     };
 }

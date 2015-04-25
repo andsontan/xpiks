@@ -33,15 +33,16 @@
 #include <QStandardPaths>
 #include "Helpers/globalimageprovider.h"
 #include "Models/uploadinforepository.h"
+#include "UndoRedo/undoredomanager.h"
 #include "Helpers/clipboardhelper.h"
 #include "Commands/commandmanager.h"
 #include "Models/artworkuploader.h"
 #include "Models/warningsmanager.h"
 #include "Models/artitemsmodel.h"
 #include "Models/iptcprovider.h"
-#include "Models/logsmodel.h"
 #include "Helpers/appsettings.h"
 #include "Helpers/constants.h"
+#include "Models/logsmodel.h"
 #include "Helpers/logger.h"
 
 #ifdef QT_NO_DEBUG
@@ -139,6 +140,7 @@ int main(int argc, char *argv[]) {
     Models::WarningsManager warningsManager;
     Helpers::AppSettings appSettings;
     Encryption::SecretsManager secretsManager;
+    UndoRedo::UndoRedoManager undoRedoManager;
 
     Commands::CommandManager commandManager;
     commandManager.InjectDependency(&artworkRepository);
@@ -149,6 +151,7 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&uploadInfoRepository);
     commandManager.InjectDependency(&warningsManager);
     commandManager.InjectDependency(&secretsManager);
+    commandManager.InjectDependency(&undoRedoManager);
 
     // other initializations
     secretsManager.setMasterPasswordHash(appSettings.value(Constants::MASTER_PASSWORD_HASH, "").toString());

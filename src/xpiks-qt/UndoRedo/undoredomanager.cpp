@@ -24,6 +24,7 @@
 void UndoRedo::UndoRedoManager::recordAction(UndoRedo::HistoryItem *historyItem)
 {
     m_HistoryStack.append(historyItem);
+    emit canUndoChanged();
 }
 
 bool UndoRedo::UndoRedoManager::undoLastAction()
@@ -33,6 +34,7 @@ bool UndoRedo::UndoRedoManager::undoLastAction()
 
     if (anyItem) {
         HistoryItem *historyItem = m_HistoryStack.pop();
+        emit canUndoChanged();
         doUndoAction(historyItem);
     }
 
@@ -42,6 +44,7 @@ bool UndoRedo::UndoRedoManager::undoLastAction()
 void UndoRedo::UndoRedoManager::discardLastAction()
 {
     m_HistoryStack.pop();
+    emit canUndoChanged();
 }
 
 void UndoRedo::UndoRedoManager::doUndoAction(UndoRedo::HistoryItem *historyItem) const

@@ -22,21 +22,34 @@
 #ifndef UNDOREDOMANAGER_H
 #define UNDOREDOMANAGER_H
 
+#include <QObject>
 #include <QStack>
 #include "historyitem.h"
 #include "../Commands/commandmanager.h"
+#include "../Common/baseentity.h"
 
 namespace UndoRedo {
-    class UndoRedoManager
+    class UndoRedoManager : QObject, public Common::BaseEntity
     {
+        Q_OBJECT
+        Q_PROPERTY(bool canUndo READ getCanUndo NOTIFY canUndoChanged)
     public:
-        UndoRedoManager() {}
+        UndoRedoManager(QObject *parent=0):
+            QObject(parent)
+        {}
+
         ~UndoRedoManager() { qDeleteAll(m_HistoryStack); }
 
-        void setCommandManager(Commands::CommandManager *commandManager) {
-            Q_ASSERT(commandManager != NULL); m_CommandManager = commandManager;
-        }
+    public:
+        bool getCanUndo() const { return !m_HistoryStack.empty(); }
 
+    signals:
+        void canUndoChanged();
+
+    public:
+        Q_INVOKABLE QString getUndoDescription() const { return m_HistoryStack.empty() ? "" : m_HistoryStack.top()->getDescription(); }
+
+    public:
         void recordAction(HistoryItem *historyItem);
         bool undoLastAction();
         void discardLastAction();
@@ -46,7 +59,6 @@ namespace UndoRedo {
 
     private:
         QStack<HistoryItem*> m_HistoryStack;
-        Commands::CommandManager *m_CommandManager;
     };
 }
 

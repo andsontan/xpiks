@@ -26,5 +26,6 @@
         <file>Dialogs/EnterMasterPasswordDialog.qml</file>
         <file>Dialogs/MasterPasswordSetupDialog.qml</file>
         <file>Components/CheckedComponent.qml</file>
+        <file>Dialogs/UndoPopup.qml</file>
     </qresource>
 </RCC>

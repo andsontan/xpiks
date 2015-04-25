@@ -30,8 +30,6 @@
 #include "../Helpers/uploaditem.h"
 #include "../Helpers/testconnectionresult.h"
 
-namespace Commands { class CommandManager; }
-
 namespace Models {
     class ArtworkUploader : public ArtworksProcessor
     {

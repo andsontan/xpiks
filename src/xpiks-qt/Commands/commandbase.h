@@ -42,6 +42,7 @@ namespace Commands {
 
     public:
         virtual CommandResult *execute(const CommandManager *commandManager) const = 0;
+        CommandType getCommandType() const { return m_CommandType; }
 
     private:
         CommandType m_CommandType;

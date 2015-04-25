@@ -22,6 +22,8 @@
 #ifndef HISTORYITEM_H
 #define HISTORYITEM_H
 
+#include <QString>
+
 namespace UndoRedo {
 
     enum HistoryActionType {
@@ -35,6 +37,10 @@ namespace UndoRedo {
     public:
         HistoryItem(HistoryActionType actionType) : m_ActionType(actionType){}
         virtual ~HistoryItem() {}
+
+    public:
+        virtual QString getDescription() const = 0;
+        HistoryActionType getActionType() const { return m_ActionType; }
 
     private:
         HistoryActionType m_ActionType;

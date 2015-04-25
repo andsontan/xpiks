@@ -77,7 +77,8 @@ HEADERS += \
     UndoRedo/undoredomanager.h \
     UndoRedo/addartworksitem.h \
     Commands/commandbase.h \
-    Commands/addartworkscommand.h
+    Commands/addartworkscommand.h \
+    Common/baseentity.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
@@ -104,7 +105,8 @@ DISTFILES += \
     StyledControls/StyledInputHost.qml \
     Dialogs/EnterMasterPasswordDialog.qml \
     Dialogs/MasterPasswordSetupDialog.qml \
-    Components/CheckedComponent.qml
+    Components/CheckedComponent.qml \
+    Dialogs/UndoPopup.qml
 
 macx {
 OBJECTIVE_SOURCES += \

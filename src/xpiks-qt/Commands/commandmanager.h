@@ -29,6 +29,10 @@ namespace Encryption {
     class SecretsManager;
 }
 
+namespace UndoRedo {
+    class UndoRedoManager;
+}
+
 namespace Models {
     class ArtworksRepository;
     class ArtItemsModel;
@@ -58,6 +62,7 @@ namespace Commands {
         void InjectDependency(Models::UploadInfoRepository *uploadInfoRepository);
         void InjectDependency(Models::WarningsManager *warningsManager);
         void InjectDependency(Encryption::SecretsManager *secretsManager);
+        void InjectDependency(UndoRedo::UndoRedoManager *undoRedoManager);
 
     public:
         CommandResult *processCommand(CommandBase *command) const;
@@ -90,6 +95,7 @@ namespace Commands {
         Models::UploadInfoRepository *m_UploadInfoRepository;
         Models::WarningsManager *m_WarningsManager;
         Encryption::SecretsManager *m_SecretsManager;
+        UndoRedo::UndoRedoManager *m_UndoRedoManager;
     };
 }
 

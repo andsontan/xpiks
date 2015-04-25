@@ -30,9 +30,10 @@
 #include "uploadinfo.h"
 #include "../Encryption/secretsmanager.h"
 #include "../Commands/commandmanager.h"
+#include "../Common/baseentity.h"
 
 namespace Models {
-    class UploadInfoRepository : public QAbstractListModel
+    class UploadInfoRepository : public QAbstractListModel, public Common::BaseEntity
     {
         Q_OBJECT
         Q_PROPERTY(int infosCount READ getInfosCount NOTIFY infosCountChanged)
@@ -42,11 +43,6 @@ namespace Models {
         {}
 
         ~UploadInfoRepository() { qDeleteAll(m_UploadInfos); m_UploadInfos.clear();  }
-
-        void setCommandManager(Commands::CommandManager *commandManager) {
-            Q_ASSERT(commandManager != NULL);
-            m_CommandManager = commandManager;
-        }
 
         void initFromString(const QString &savedString);
 
@@ -150,7 +146,6 @@ namespace Models {
 
     private:
         QList<UploadInfo*> m_UploadInfos;
-        Commands::CommandManager *m_CommandManager;
         // when MP is cancelled before Upload dialog
         // all passwords should be empty
         bool m_EmptyPasswordsMode;

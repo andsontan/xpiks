@@ -33,9 +33,17 @@ namespace UndoRedo {
            HistoryItem(AddedArtworksActionType),
            m_FirstIndex(firstIndex),
            m_Count(count)
-       { }
+        {
+            Q_ASSERT(count > 0);
+        }
 
        virtual ~AddArtworksHistoryItem() { }
+
+   public:
+        virtual QString getDescription() const {
+            return m_Count > 1 ? QString("%1 items added").arg(m_Count) :
+                                 QString("1 item added");
+        }
 
     private:
         int m_FirstIndex;

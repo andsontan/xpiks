@@ -28,11 +28,10 @@
 #include <QPair>
 #include <QSet>
 #include "abstractlistmodel.h"
-
-namespace Commands { class CommandManager; }
+#include "../Common/baseentity.h"
 
 namespace Models {
-    class ArtworksRepository : public AbstractListModel {
+    class ArtworksRepository : public AbstractListModel, public Common::BaseEntity {
         Q_OBJECT
         Q_PROPERTY(int artworksSourcesCount READ getArtworksSourcesCount NOTIFY artworksSourcesCountChanged)
     public:
@@ -44,11 +43,6 @@ namespace Models {
             m_DirectoriesList(copy.m_DirectoriesList), m_DirectoriesHash(copy.m_DirectoriesHash),
         m_FilesSet(copy.m_FilesSet) {}
         ~ArtworksRepository() {}
-
-        void setCommandManager(Commands::CommandManager *commandManager) {
-            Q_ASSERT(commandManager != NULL);
-            m_CommandManager = commandManager;
-        }
 
     public:
         enum ArtworksDirectoriesRoles {
@@ -103,7 +97,6 @@ namespace Models {
         QHash<QString, int> m_DirectoriesHash;
         QSet<QString> m_FilesSet;
         QHash<QString, int> m_DirectoriesSelectedHash;
-        Commands::CommandManager *m_CommandManager;
     };
 }
 

@@ -26,11 +26,10 @@
 #include "warningsinfo.h"
 #include "artworkmetadata.h"
 #include "../Helpers/globalimageprovider.h"
-
-namespace Commands { class CommandManager; }
+#include "../Common/baseentity.h"
 
 namespace Models {
-    class WarningsManager : public QAbstractListModel
+    class WarningsManager : public QAbstractListModel, public Common::BaseEntity
     {
         Q_OBJECT
         Q_PROPERTY(int warningsCount READ getWarningsCount NOTIFY warningsCountChanged)
@@ -40,11 +39,6 @@ namespace Models {
         { }
 
         ~WarningsManager() {}
-
-        void setCommandManager(Commands::CommandManager *commandManager) {
-            Q_ASSERT(commandManager != NULL);
-            m_CommandManager = commandManager;
-        }
 
     public:
         enum WarningManagerRoles {
@@ -82,7 +76,6 @@ namespace Models {
         QList<WarningsInfo*> m_WarningsList;
         QList<WarningsInfo*> m_WarningsBufferList;
         Helpers::GlobalImageProvider *m_ImageProvider;
-        Commands::CommandManager *m_CommandManager;
         double m_MinimumMegapixels;
         int m_MaximumKeywordsCount;
         int m_MaximumDescriptionLength;

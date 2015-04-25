@@ -28,6 +28,7 @@
 #include "../Models/uploadinforepository.h"
 #include "../Models/warningsmanager.h"
 #include "../Encryption/secretsmanager.h"
+#include "../UndoRedo/undoredomanager.h"
 
 void Commands::CommandManager::InjectDependency(Models::ArtworksRepository *artworkRepository) {
     Q_ASSERT(artworkRepository != NULL); m_ArtworkRepository = artworkRepository;
@@ -67,6 +68,11 @@ void Commands::CommandManager::InjectDependency(Models::WarningsManager *warning
 void Commands::CommandManager::InjectDependency(Encryption::SecretsManager *secretsManager) {
     Q_ASSERT(secretsManager != NULL); m_SecretsManager = secretsManager;
     m_SecretsManager->setCommandManager(this);
+}
+
+void Commands::CommandManager::InjectDependency(UndoRedo::UndoRedoManager *undoRedoManager) {
+    Q_ASSERT(undoRedoManager != NULL); m_UndoRedoManager = undoRedoManager;
+    m_UndoRedoManager->setCommandManager(this);
 }
 
 Commands::CommandResult *Commands::CommandManager::processCommand(Commands::CommandBase *command) const
