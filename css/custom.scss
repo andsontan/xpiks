@@ -1,0 +1,44 @@
+---
+# yet another main file
+---
+
+@import "variables";
+
+div.download-link {
+    background-color: $body-font-color;
+    width: 130px;
+    height: $navbar-height;
+    margin-top: 30px;
+}
+
+div.download-link a {
+    /* Layout */
+    line-height: $navbar-height;
+    display: block;
+    padding: 0 22px;
+    border-color: #aaa;
+
+    /* Typography */
+    font-family: $navbar-font-family;
+    font-size: $navbar-font-size;
+    font-weight: 700;
+    color: $secondary-color;
+    text-transform: uppercase;
+    text-decoration: none;
+
+    /* Transitions */
+    -webkit-transition: color .2s ease-in, border-top-color .2s ease-in;
+    -ms-transition: color .2s ease-in, border-top-color .2s ease-in;
+    -moz-transition: color .2s ease-in, border-top-color .2s ease-in;
+    -o-transition: color .2s ease-in, border-top-color .2s ease-in;
+    transition: color .2s ease-in, border-top-color .2s ease-in;
+
+}
+
+div.download-link:hover a {
+    color: $navbar-hover-color;
+}
+
+div.download-link a:hover {
+    cursor: pointer;
+}

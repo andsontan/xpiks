@@ -7,6 +7,8 @@ description: > # this means to ignore newlines until "baseurl:"
 
 url: //ribtoks.github.io/xpiks
 
+# Replace to . for local development
+
 header: yes
 header_sm: /images/banner-small.jpg
 header_med: /images/banner-med.jpg
