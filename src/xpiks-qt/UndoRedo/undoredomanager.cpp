@@ -23,6 +23,10 @@
 
 void UndoRedo::UndoRedoManager::recordHistoryItem(UndoRedo::HistoryItem *historyItem)
 {
+    if (!m_HistoryStack.empty()) {
+        discardLastAction();
+    }
+
     m_HistoryStack.append(historyItem);
     emit canUndoChanged();
 }

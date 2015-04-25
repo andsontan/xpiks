@@ -55,6 +55,7 @@ namespace UndoRedo {
         void discardLastAction();
 
     private:
+        // stack for future todos
         QStack<HistoryItem*> m_HistoryStack;
     };
 }

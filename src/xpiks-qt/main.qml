@@ -377,6 +377,13 @@ ApplicationWindow {
                         }
 
                         StyledButton {
+                            text: qsTr("Undo")
+                            width: 90
+                            enabled: undoRedoManager.canUndo
+                            onClicked: undoRedoManager.undoLastAction()
+                        }
+
+                        StyledButton {
                             text: qsTr("Remove")
                             width: 90
                             onClicked: {
@@ -885,18 +892,6 @@ ApplicationWindow {
                 implicitHeight: 20
                 implicitWidth: 200
                 color: Colors.defaultDarkColor
-            }
-        }
-    }
-
-    Connections {
-        target: undoRedoManager
-        onCanUndoChanged: {
-            if (undoRedoManager.canUndo) {
-                var component = Qt.createComponent("Dialogs/UndoPopup.qml")
-                component.createObject(applicationWindow, {
-                                           componentParent: applicationWindow,
-                                           undoMessage: undoRedoManager.getUndoDescription()})
             }
         }
     }
