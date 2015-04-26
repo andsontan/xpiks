@@ -343,8 +343,9 @@ ApplicationWindow {
                     RowLayout {
                         spacing: 10
                         anchors.fill: parent
-                        anchors.margins: { top: 10; left: 10; right: 10 }
+                        anchors.margins: { top: 10; left: 10 }
                         enabled: artworkRepository.artworksSourcesCount > 0
+                        anchors.rightMargin: mainScrollView.flickableItem.contentHeight > mainScrollView.flickableItem.height ? 20 : 10
 
                         Item {
                             width: 1
@@ -385,7 +386,7 @@ ApplicationWindow {
 
                         StyledButton {
                             text: qsTr("Remove")
-                            width: 90
+                            width: mainScrollView.flickableItem.contentHeight > mainScrollView.flickableItem.height ? 80 : 90
                             onClicked: {
                                 if (artItemsModel.selectedArtworksCount == 0) {
                                     mustSelectDialog.open()
@@ -468,8 +469,11 @@ ApplicationWindow {
                     color: Colors.defaultControlColor
 
                     StyledScrollView {
+                        id: mainScrollView
                         anchors.fill: parent
                         anchors.topMargin: 5
+                        // does not work for now in Qt 5.4.1 in combination with ListView
+                        //verticalScrollBarPolicy: Qt.ScrollBarAlwaysOn
 
                         ListView {
                             id: imagesListView
