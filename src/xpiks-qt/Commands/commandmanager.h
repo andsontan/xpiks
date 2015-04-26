@@ -80,16 +80,17 @@ namespace Commands {
         void combineArtworks(const QList<Models::ArtItemInfo*> &artworks) const;
         void setArtworksForIPTCProcessing(const QList<Models::ArtworkMetadata*> &artworks) const;
         void setArtworksForUpload(const QList<Models::ArtworkMetadata*> &artworks) const;
+        void connectArtworkSignals(Models::ArtworkMetadata *metadata) const;
 
     public:
         // methods for getters
-        Models::ArtworksRepository *getArtworkRepository() const { return m_ArtworkRepository; }
+        Models::ArtworksRepository *getArtworksRepository() const { return m_ArtworksRepository; }
         Models::ArtItemsModel *getArtItemsModel() const { return m_ArtItemsModel; }
         const Encryption::SecretsManager *getSecretsManager() const { return m_SecretsManager; }
         const Models::UploadInfoRepository *getUploadInfoRepository() const { return m_UploadInfoRepository; }
 
     private:
-        Models::ArtworksRepository *m_ArtworkRepository;
+        Models::ArtworksRepository *m_ArtworksRepository;
         Models::ArtItemsModel *m_ArtItemsModel;
         Models::CombinedArtworksModel *m_CombinedArtworksModel;
         Models::IptcProvider *m_IptcProvider;

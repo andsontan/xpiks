@@ -116,11 +116,14 @@ namespace Models {
 
     public:
         void beginAccountingFiles(int filesCount);
+        void beginAccountingFiles(int start, int end);
         void endAccountingFiles();
 
     public:
+        void insertArtwork(int index, ArtworkMetadata *metadata);
         void appendArtwork(ArtworkMetadata *metadata);
         void removeArtworks(const QList<int> &indices) { doRemoveItemsAtIndices(indices); }
+        ArtworkMetadata *getArtwork(int index) const;
 
     private:
         int addDirectory(const QString &directory);

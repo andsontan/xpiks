@@ -28,6 +28,7 @@
 #include "artiteminfo.h"
 #include "../Helpers/indiceshelper.h"
 #include "../Commands/addartworkscommand.h"
+#include "../Commands/removeartworkscommand.h"
 
 #ifdef Q_OS_OSX
 #include "../Helpers/osxnsurlhelper.h"
@@ -66,7 +67,7 @@ namespace Models {
 
     void ArtItemsModel::removeArtworksDirectory(int index)
     {
-        const QString &directory = m_CommandManager->getArtworkRepository()->getDirectory(index);
+        const QString &directory = m_CommandManager->getArtworksRepository()->getDirectory(index);
         QList<int> indicesToRemove;
 
         QList<ArtworkMetadata*>::const_iterator it = m_ArtworkList.constBegin();
@@ -224,7 +225,7 @@ namespace Models {
     void ArtItemsModel::selectDirectory(int directoryIndex)
     {
         QList<int> directoryItems;
-        const ArtworksRepository *artworksRepository = m_CommandManager->getArtworkRepository();
+        const ArtworksRepository *artworksRepository = m_CommandManager->getArtworksRepository();
         const QString directory = artworksRepository->getDirectory(directoryIndex);
 
         int i = 0;
@@ -369,15 +370,37 @@ namespace Models {
         beginInsertRows(QModelIndex(), rowsCount, rowsCount + filesCount - 1);
     }
 
+    void ArtItemsModel::beginAccountingFiles(int start, int end)
+    {
+        beginInsertRows(QModelIndex(), start, end);
+    }
+
     void ArtItemsModel::endAccountingFiles()
     {
         endInsertRows();
+    }
+
+    void ArtItemsModel::insertArtwork(int index, ArtworkMetadata *metadata)
+    {
+        Q_ASSERT(index >= 0 && index <= m_ArtworkList.length());
+        Q_ASSERT(metadata != NULL);
+        m_ArtworkList.insert(index, metadata);
     }
 
     void ArtItemsModel::appendArtwork(ArtworkMetadata *metadata)
     {
         Q_ASSERT(metadata != NULL);
         m_ArtworkList.append(metadata);
+    }
+
+    ArtworkMetadata *ArtItemsModel::getArtwork(int index) const
+    {
+        ArtworkMetadata *result = NULL;
+        if (index >= 0 && index < m_ArtworkList.length()) {
+            result = m_ArtworkList[index];
+        }
+
+        return result;
     }
 
     int ArtItemsModel::addDirectory(const QString &directory)
@@ -497,7 +520,7 @@ namespace Models {
     {
         Q_ASSERT(row >= 0 && row < m_ArtworkList.length());
         ArtworkMetadata *metadata = m_ArtworkList[row];
-        ArtworksRepository *artworkRepository = m_CommandManager->getArtworkRepository();
+        ArtworksRepository *artworkRepository = m_CommandManager->getArtworksRepository();
         artworkRepository->removeFile(metadata->getFilepath());
 
         if (metadata->getIsSelected()) {
@@ -511,14 +534,9 @@ namespace Models {
 
     void ArtItemsModel::doRemoveItemsAtIndices(const QList<int> &indicesToRemove)
     {
-        QList<QPair<int, int> > rangesToRemove;
-        Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
-        removeItemsAtIndices(rangesToRemove);
-
-        ArtworksRepository *artworkRepository = m_CommandManager->getArtworkRepository();
-        artworkRepository->cleanupEmptyDirectories();
-        artworkRepository->updateCountsForExistingDirectories();
-        updateModifiedCount();
+        Commands::RemoveArtworksCommand *removeArtworksCommand = new Commands::RemoveArtworksCommand(indicesToRemove);
+        Commands::CommandResult *result = m_CommandManager->processCommand(removeArtworksCommand);
+        delete result;
     }
 
     void ArtItemsModel::getSelectedItemsIndices(QList<int> &indices)

@@ -27,7 +27,7 @@
 
 Commands::CommandResult *Commands::AddArtworksCommand::execute(const CommandManager *commandManager) const
 {
-    Models::ArtworksRepository *artworksRepository = commandManager->getArtworkRepository();
+    Models::ArtworksRepository *artworksRepository = commandManager->getArtworksRepository();
     Models::ArtItemsModel *artItemsModel = commandManager->getArtItemsModel();
 
     const int newFilesCount = artworksRepository->getNewFilesCount(m_FilePathes);
@@ -45,12 +45,7 @@ Commands::CommandResult *Commands::AddArtworksCommand::execute(const CommandMana
             if (artworksRepository->accountFile(filename))
             {
                 Models::ArtworkMetadata *metadata = new Models::ArtworkMetadata(filename);
-                QObject::connect(metadata, SIGNAL(modifiedChanged(bool)),
-                                 artItemsModel, SLOT(itemModifiedChanged(bool)));
-                QObject::connect(metadata, SIGNAL(selectedChanged(bool)),
-                                 artItemsModel, SLOT(itemSelectedChanged(bool)));
-                QObject::connect(metadata, SIGNAL(fileSelectedChanged(QString,bool)),
-                                 artworksRepository, SLOT(fileSelectedChanged(QString,bool)));
+                commandManager->connectArtworkSignals(metadata);
 
                 artItemsModel->appendArtwork(metadata);
                 artworksToImport.append(metadata);

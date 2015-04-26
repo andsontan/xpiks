@@ -22,7 +22,9 @@ SOURCES += main.cpp \
     Commands/commandmanager.cpp \
     UndoRedo/undoredomanager.cpp \
     Commands/addartworkscommand.cpp \
-    UndoRedo/addartworksitem.cpp
+    UndoRedo/addartworksitem.cpp \
+    Commands/removeartworkscommand.cpp \
+    UndoRedo/removeartworksitem.cpp
 
 RESOURCES += qml.qrc
 
@@ -79,7 +81,9 @@ HEADERS += \
     UndoRedo/addartworksitem.h \
     Commands/commandbase.h \
     Commands/addartworkscommand.h \
-    Common/baseentity.h
+    Common/baseentity.h \
+    Commands/removeartworkscommand.h \
+    UndoRedo/removeartworksitem.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

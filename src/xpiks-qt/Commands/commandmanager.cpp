@@ -31,8 +31,8 @@
 #include "../UndoRedo/undoredomanager.h"
 
 void Commands::CommandManager::InjectDependency(Models::ArtworksRepository *artworkRepository) {
-    Q_ASSERT(artworkRepository != NULL); m_ArtworkRepository = artworkRepository;
-    m_ArtworkRepository->setCommandManager(this);
+    Q_ASSERT(artworkRepository != NULL); m_ArtworksRepository = artworkRepository;
+    m_ArtworksRepository->setCommandManager(this);
 }
 
 void Commands::CommandManager::InjectDependency(Models::ArtItemsModel *artItemsModel) {
@@ -115,12 +115,22 @@ void Commands::CommandManager::combineArtworks(const QList<Models::ArtItemInfo *
     m_CombinedArtworksModel->recombineArtworks();
 }
 
+void Commands::CommandManager::setArtworksForIPTCProcessing(const QList<Models::ArtworkMetadata*> &artworks) const
+{
+    m_IptcProvider->setArtworks(artworks);
+}
+
 void Commands::CommandManager::setArtworksForUpload(const QList<Models::ArtworkMetadata *> &artworks) const
 {
     m_ArtworkUploader->setArtworks(artworks);
 }
 
-void Commands::CommandManager::setArtworksForIPTCProcessing(const QList<Models::ArtworkMetadata*> &artworks) const
+void Commands::CommandManager::connectArtworkSignals(Models::ArtworkMetadata *metadata) const
 {
-    m_IptcProvider->setArtworks(artworks);
+    QObject::connect(metadata, SIGNAL(modifiedChanged(bool)),
+                     m_ArtItemsModel, SLOT(itemModifiedChanged(bool)));
+    QObject::connect(metadata, SIGNAL(selectedChanged(bool)),
+                     m_ArtItemsModel, SLOT(itemSelectedChanged(bool)));
+    QObject::connect(metadata, SIGNAL(fileSelectedChanged(QString,bool)),
+                     m_ArtworksRepository, SLOT(fileSelectedChanged(QString,bool)));
 }

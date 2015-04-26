@@ -32,7 +32,7 @@ namespace Models {
     public:
         AbstractListModel(QObject *parent = 0) : QAbstractListModel(parent) {}
 
-    protected:
+    public:
         void removeItemsAtIndices(const QList<QPair<int, int> > &ranges) {
             int removedCount = 0;
             int rangesCount = ranges.count();
@@ -49,6 +49,7 @@ namespace Models {
             }
         }
 
+    protected:
         void updateItemsAtIndices(const QList<QPair<int, int> > &ranges, QVector<int> roles) {
             int rangesCount = ranges.count();
             for (int i = 0; i < rangesCount; ++i) {
