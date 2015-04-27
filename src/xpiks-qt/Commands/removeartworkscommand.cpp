@@ -37,12 +37,20 @@ Commands::CommandResult *Commands::RemoveArtworksCommand::execute(const Commands
 
     QList<int> removedItemsIndices;
     QList<QString> removedItemsFilepathes;
-    foreach (int index, m_IndicesToRemove) {
-        Models::ArtworkMetadata *metadata = artItemsModel->getArtwork(index);
-        if (metadata != NULL) {
-            const QString &filepath = metadata->getFilepath();
-            removedItemsIndices.append(index);
-            removedItemsFilepathes.append(filepath);
+
+    int count = m_RangesToRemove.count();
+    for (int k = 0; k < count; ++k) {
+        const QPair<int, int> &item = m_RangesToRemove[k];
+        int first = item.first;
+        int last = item.second;
+
+        for (int i = first; i <= last; ++i) {
+            Models::ArtworkMetadata *metadata = artItemsModel->getArtwork(i);
+            if (metadata != NULL) {
+                const QString &filepath = metadata->getFilepath();
+                removedItemsIndices.append(i);
+                removedItemsFilepathes.append(filepath);
+            }
         }
     }
 

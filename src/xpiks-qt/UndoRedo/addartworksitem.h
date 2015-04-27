@@ -22,6 +22,8 @@
 #ifndef ADDARTWORKITEM_H
 #define ADDARTWORKITEM_H
 
+#include <QList>
+#include <QPair>
 #include "historyitem.h"
 
 namespace UndoRedo {
@@ -30,11 +32,17 @@ namespace UndoRedo {
     {
     public:
         AddArtworksHistoryItem(int firstIndex, int count) :
-           HistoryItem(AddedArtworksActionType),
-           m_FirstIndex(firstIndex),
-           m_Count(count)
+           HistoryItem(AddArtworksActionType)
         {
             Q_ASSERT(count > 0);
+            m_AddedRanges.append(qMakePair(firstIndex, firstIndex + count - 1));
+        }
+
+        AddArtworksHistoryItem(const QList<QPair<int, int> > &rangesAdded) :
+           HistoryItem(AddArtworksActionType),
+           m_AddedRanges(rangesAdded)
+        {
+            Q_ASSERT(!rangesAdded.empty());
         }
 
        virtual ~AddArtworksHistoryItem() { }
@@ -44,13 +52,13 @@ namespace UndoRedo {
 
    public:
         virtual QString getDescription() const {
-            return m_Count > 1 ? QString("%1 items added").arg(m_Count) :
+            int count = m_AddedRanges.count();
+            return count > 1 ? QString("%1 items added").arg(count) :
                                  QString("1 item added");
         }
 
     private:
-        int m_FirstIndex;
-        int m_Count;
+        QList<QPair<int, int> > m_AddedRanges;
     };
 }
 

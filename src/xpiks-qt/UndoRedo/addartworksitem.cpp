@@ -28,15 +28,5 @@ void UndoRedo::AddArtworksHistoryItem::undo(const Commands::CommandManager *comm
     qDebug() << "Undo: Add artworks command";
 
     Models::ArtItemsModel *artItemsModel = commandManager->getArtItemsModel();
-
-    QList<int> indicesToRemove;
-    int count = m_FirstIndex + m_Count;
-    int rowsCount = artItemsModel->rowCount();
-    count = rowsCount < count ? rowsCount : count;
-
-    for (int i = m_FirstIndex; i < count; ++i) {
-        indicesToRemove.append(i);
-    }
-
-    artItemsModel->removeArtworks(indicesToRemove);
+    artItemsModel->removeArtworks(m_AddedRanges);
 }

@@ -31,7 +31,7 @@ namespace Commands {
 namespace UndoRedo {
 
     enum HistoryActionType {
-        AddedArtworksActionType,
+        AddArtworksActionType,
         RemovedArtworksActionType,
         CombinedAppendedActionType
     };

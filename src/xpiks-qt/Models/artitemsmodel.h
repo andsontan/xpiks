@@ -122,7 +122,7 @@ namespace Models {
     public:
         void insertArtwork(int index, ArtworkMetadata *metadata);
         void appendArtwork(ArtworkMetadata *metadata);
-        void removeArtworks(const QList<int> &indices) { doRemoveItemsAtIndices(indices); }
+        void removeArtworks(const QList<QPair<int, int> > &ranges) { doRemoveItemsInRanges(ranges); }
         ArtworkMetadata *getArtwork(int index) const;
         void raiseArtworksAdded(int count) { emit artworksAdded(count); }
 
@@ -150,7 +150,8 @@ namespace Models {
         void removeInnerItem(int row);
 
     private:
-        void doRemoveItemsAtIndices(const QList<int> &indicesToRemove);
+        void doRemoveItemsAtIndices(QList<int> &indicesToRemove);
+        void doRemoveItemsInRanges(const QList<QPair<int, int> > &rangesToRemove);
         void getSelectedItemsIndices(QList<int> &indices);
 
     private:

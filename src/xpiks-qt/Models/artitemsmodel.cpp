@@ -78,6 +78,7 @@ namespace Models {
         }
 
         doRemoveItemsAtIndices(indicesToRemove);
+
         emit selectedArtworksCountChanged();
         emit modifiedArtworksCountChanged();
     }
@@ -532,9 +533,17 @@ namespace Models {
         m_ArtworkList.removeAt(row);
     }
 
-    void ArtItemsModel::doRemoveItemsAtIndices(const QList<int> &indicesToRemove)
+    void ArtItemsModel::doRemoveItemsAtIndices(QList<int> &indicesToRemove)
     {
-        Commands::RemoveArtworksCommand *removeArtworksCommand = new Commands::RemoveArtworksCommand(indicesToRemove);
+        qSort(indicesToRemove);
+        QList<QPair<int, int> > rangesToRemove;
+        Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
+        doRemoveItemsInRanges(rangesToRemove);
+    }
+
+    void ArtItemsModel::doRemoveItemsInRanges(const QList<QPair<int, int> > &rangesToRemove)
+    {
+        Commands::RemoveArtworksCommand *removeArtworksCommand = new Commands::RemoveArtworksCommand(rangesToRemove);
         Commands::CommandResult *result = m_CommandManager->processCommand(removeArtworksCommand);
         delete result;
     }

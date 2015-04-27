@@ -23,6 +23,7 @@
 #include "../Helpers/indiceshelper.h"
 #include "../Models/artworksrepository.h"
 #include "../Models/artitemsmodel.h"
+#include "addartworksitem.h"
 
 void UndoRedo::RemoveArtworksHistoryItem::undo(const Commands::CommandManager *commandManager) const {
     qDebug() << "Undo: remove artworks command";
@@ -64,6 +65,9 @@ void UndoRedo::RemoveArtworksHistoryItem::undo(const Commands::CommandManager *c
     }
 
     artworksRepository->endAccountingFiles(filesWereAccounted);
+
+    AddArtworksHistoryItem *addArtworksItem = new AddArtworksHistoryItem(ranges);
+    commandManager->recordHistoryItem(addArtworksItem);
 
     commandManager->setArtworksForIPTCProcessing(artworksToImport);
     artItemsModel->raiseArtworksAdded(usedCount);
