@@ -19,39 +19,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef HISTORYITEM_H
-#define HISTORYITEM_H
+#include "modifyartworkshistoryitem.h"
+#include "../Models/artitemsmodel.h"
+#include "../Models/artworkmetadata.h"
 
-#include <QString>
+void UndoRedo::ModifyArtworksHistoryItem::undo(const Commands::CommandManager *commandManager) const
+{
+    Models::ArtItemsModel *artItemsModel = commandManager->getArtItemsModel();
+    int count = m_Indices.count();
 
-namespace Commands {
-    class CommandManager;
+    for (int i = 0; i < count; ++i) {
+        int index = m_Indices[i];
+        Models::ArtworkMetadata *metadata = artItemsModel->getArtwork(index);
+        if (metadata != NULL) {
+            ArtworkMetadataBackup *backup = m_ArtworksBackups[i];
+            backup->restore(metadata);
+            metadata->saveBackup();
+        }
+    }
+
+    artItemsModel->updateItemsAtIndices(m_Indices);
 }
-
-namespace UndoRedo {
-
-    enum HistoryActionType {
-        AddArtworksActionType,
-        RemovedArtworksActionType,
-        ModifyArtworksActionType
-    };
-
-    class HistoryItem
-    {
-    public:
-        HistoryItem(HistoryActionType actionType) : m_ActionType(actionType){}
-        virtual ~HistoryItem() {}
-
-    public:
-        virtual void undo(const Commands::CommandManager *commandManager) const = 0;
-
-    public:
-        virtual QString getDescription() const = 0;
-        HistoryActionType getActionType() const { return m_ActionType; }
-
-    private:
-        HistoryActionType m_ActionType;
-    };
-}
-
-#endif // HISTORYITEM_H

@@ -30,10 +30,12 @@ namespace Models {
     class ArtItemInfo
     {
     public:
-        ArtItemInfo(ArtworkMetadata *metadata) :
+        ArtItemInfo(ArtworkMetadata *metadata, int index) :
             m_ArtworkMetadata(metadata),
+            m_OriginalIndex(index),
             m_IsSelected(false)
         {}
+
         ~ArtItemInfo() {}
 
     public:        
@@ -42,10 +44,12 @@ namespace Models {
         void deselect() { m_IsSelected = false; }
 
     public:
-        ArtworkMetadata *getOrigin() { return m_ArtworkMetadata; }
+        ArtworkMetadata *getOrigin() const { return m_ArtworkMetadata; }
+        int getOriginalIndex() const { return m_OriginalIndex; }
 
     private:
         ArtworkMetadata *m_ArtworkMetadata;
+        int m_OriginalIndex;
         bool m_IsSelected;
     };
 }

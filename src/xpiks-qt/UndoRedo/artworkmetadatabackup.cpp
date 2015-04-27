@@ -19,39 +19,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef HISTORYITEM_H
-#define HISTORYITEM_H
+#include "artworkmetadatabackup.h"
+#include "../Models/artworkmetadata.h"
 
-#include <QString>
-
-namespace Commands {
-    class CommandManager;
+UndoRedo::ArtworkMetadataBackup::ArtworkMetadataBackup(Models::ArtworkMetadata *metadata)
+{
+    m_Description = metadata->getDescription();
+    m_Author = metadata->getAuthor();
+    m_Title = metadata->getTitle();
+    m_KeywordsList = metadata->getKeywords();
 }
 
-namespace UndoRedo {
-
-    enum HistoryActionType {
-        AddArtworksActionType,
-        RemovedArtworksActionType,
-        ModifyArtworksActionType
-    };
-
-    class HistoryItem
-    {
-    public:
-        HistoryItem(HistoryActionType actionType) : m_ActionType(actionType){}
-        virtual ~HistoryItem() {}
-
-    public:
-        virtual void undo(const Commands::CommandManager *commandManager) const = 0;
-
-    public:
-        virtual QString getDescription() const = 0;
-        HistoryActionType getActionType() const { return m_ActionType; }
-
-    private:
-        HistoryActionType m_ActionType;
-    };
+void UndoRedo::ArtworkMetadataBackup::restore(Models::ArtworkMetadata *metadata) const
+{
+    metadata->setDescription(m_Description);
+    metadata->setAuthor(m_Author);
+    metadata->setTitle(m_Title);
+    metadata->setKeywords(m_KeywordsList);
 }
-
-#endif // HISTORYITEM_H

@@ -21,6 +21,9 @@
 
 #include "combinedartworksmodel.h"
 #include "../Helpers/indiceshelper.h"
+#include "../Commands/combinededitcommand.h"
+#include "../Commands/commandmanager.h"
+#include "../Commands/commandbase.h"
 
 namespace Models {
     void CombinedArtworksModel::initArtworks(const QList<ArtItemInfo *> &artworks)
@@ -107,6 +110,23 @@ namespace Models {
         m_CommonKeywordsSet.clear();
     }
 
+    void CombinedArtworksModel::createCombinedEditCommand(Commands::CombinedEditType commandType) const
+    {
+        Commands::CombinedEditCommand *combinedEditCommand = new Commands::CombinedEditCommand(
+                    commandType,
+                    m_ArtworksList,
+                    m_ArtworkDescription,
+                    m_ArtworkTitle,
+                    m_ArtworkAuthor,
+                    m_CommonKeywordsModel.getKeywords());
+
+        Commands::CommandResult *result = m_CommandManager->processCommand(combinedEditCommand);
+        Commands::CombinedEditCommandResult *combinedResult = static_cast<Commands::CombinedEditCommandResult*>(result);
+        m_CommandManager->updateArtworks(combinedResult->m_IndicesToUpdate);
+
+        delete combinedResult;
+    }
+
     void CombinedArtworksModel::removeKeywordAt(int keywordIndex)
     {
         QString keyword;
@@ -180,6 +200,14 @@ namespace Models {
         recombineArtworks();
     }
 
+    void CombinedArtworksModel::saveSetKeywords() const {
+        createCombinedEditCommand(Commands::SetEditType);
+    }
+
+    void CombinedArtworksModel::saveAddKeywords() const {
+        createCombinedEditCommand(Commands::AppendEditType);
+    }
+
     int CombinedArtworksModel::getSelectedArtworksCount() const
     {
         int selectedCount = 0;
@@ -192,40 +220,6 @@ namespace Models {
         }
 
         return selectedCount;
-    }
-
-    void CombinedArtworksModel::saveSetKeywords()
-    {
-        foreach (ArtItemInfo* info, m_ArtworksList) {
-            ArtworkMetadata *metadata = info->getOrigin();
-            metadata->setKeywords(m_CommonKeywordsModel.getKeywords());
-            metadata->setDescription(m_ArtworkDescription);
-            metadata->setTitle(m_ArtworkTitle);
-            metadata->setAuthor(m_ArtworkAuthor);
-            metadata->saveBackup();
-        }
-    }
-
-    void CombinedArtworksModel::saveAddKeywords()
-    {
-        foreach (ArtItemInfo* info, m_ArtworksList) {
-            ArtworkMetadata *metadata = info->getOrigin();
-            metadata->appendKeywords(m_CommonKeywordsModel.getKeywords());
-
-            if (!m_ArtworkDescription.isEmpty() && metadata->getDescription().isEmpty()) {
-                metadata->setDescription(m_ArtworkDescription);
-            }
-
-            if (!m_ArtworkTitle.isEmpty() && metadata->getTitle().isEmpty()) {
-                metadata->setTitle(m_ArtworkTitle);
-            }
-
-            if (!m_ArtworkAuthor.isEmpty() && metadata->getAuthor().isEmpty()) {
-                metadata->setAuthor(m_ArtworkAuthor);
-            }
-
-            metadata->saveBackup();
-        }
     }
 
     int CombinedArtworksModel::rowCount(const QModelIndex &parent) const

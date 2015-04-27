@@ -125,6 +125,7 @@ namespace Models {
         void removeArtworks(const QList<QPair<int, int> > &ranges) { doRemoveItemsInRanges(ranges); }
         ArtworkMetadata *getArtwork(int index) const;
         void raiseArtworksAdded(int count) { emit artworksAdded(count); }
+        void updateItemsAtIndices(const QList<int> &indices);
 
     private:
         int addDirectory(const QString &directory);
@@ -153,6 +154,9 @@ namespace Models {
         void doRemoveItemsAtIndices(QList<int> &indicesToRemove);
         void doRemoveItemsInRanges(const QList<QPair<int, int> > &rangesToRemove);
         void getSelectedItemsIndices(QList<int> &indices);
+
+    private:
+        void fillStandardRoles(QVector<int> &roles) const;
 
     private:
         QList<ArtworkMetadata*> m_ArtworkList;

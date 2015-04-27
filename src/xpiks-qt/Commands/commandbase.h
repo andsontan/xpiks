@@ -26,7 +26,8 @@ namespace Commands {
 
     enum CommandType {
         AddArtworksCommandType,
-        RemoveArtworksCommandType
+        RemoveArtworksCommandType,
+        CombinedEditCommandType
     };
 
     class CommandResult;

@@ -27,7 +27,7 @@
 
 namespace Helpers
 {
-    void indicesToRanges(const QList<int> &indices, QList<QPair<int, int> > &pairs);
+    void indicesToRanges(const QList<int> &indices, QList<QPair<int, int> > &ranges);
 }
 
 #endif // INDICESHELPER_H

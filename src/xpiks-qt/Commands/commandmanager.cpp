@@ -134,3 +134,8 @@ void Commands::CommandManager::connectArtworkSignals(Models::ArtworkMetadata *me
     QObject::connect(metadata, SIGNAL(fileSelectedChanged(QString,bool)),
                      m_ArtworksRepository, SLOT(fileSelectedChanged(QString,bool)));
 }
+
+void Commands::CommandManager::updateArtworks(const QList<int> &indices) const
+{
+    m_ArtItemsModel->updateItemsAtIndices(indices);
+}

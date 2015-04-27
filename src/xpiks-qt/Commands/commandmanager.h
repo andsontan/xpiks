@@ -81,6 +81,7 @@ namespace Commands {
         void setArtworksForIPTCProcessing(const QList<Models::ArtworkMetadata*> &artworks) const;
         void setArtworksForUpload(const QList<Models::ArtworkMetadata*> &artworks) const;
         void connectArtworkSignals(Models::ArtworkMetadata *metadata) const;
+        void updateArtworks(const QList<int> &indices) const;
 
     public:
         // methods for getters

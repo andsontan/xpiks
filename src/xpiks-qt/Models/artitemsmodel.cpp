@@ -62,7 +62,7 @@ namespace Models {
         ranges << qMakePair(0, m_ArtworkList.length() - 1);
         QVector<int> roles;
         roles << ArtworkDescriptionRole << IsModifiedRole << ArtworkAuthorRole << ArtworkTitleRole << KeywordsCountRole;
-        updateItemsAtIndices(ranges, roles);
+        updateItemsInRanges(ranges, roles);
     }
 
     void ArtItemsModel::removeArtworksDirectory(int index)
@@ -154,7 +154,7 @@ namespace Models {
 
         QList<QPair<int, int> > rangesToUpdate;
         Helpers::indicesToRanges(selectedIndices, rangesToUpdate);
-        updateItemsAtIndices(rangesToUpdate, QVector<int>() << IsModifiedRole);
+        updateItemsInRanges(rangesToUpdate, QVector<int>() << IsModifiedRole);
 
         updateModifiedCount();
         emit artworksChanged();
@@ -174,9 +174,8 @@ namespace Models {
         QList<QPair<int, int> > rangesToUpdate;
         Helpers::indicesToRanges(selectedIndices, rangesToUpdate);
         QVector<int> roles;
-        roles << ArtworkDescriptionRole << IsModifiedRole <<
-                 ArtworkAuthorRole << ArtworkTitleRole << KeywordsCountRole;
-        updateItemsAtIndices(rangesToUpdate, roles);
+        fillStandardRoles(roles);
+        updateItemsInRanges(rangesToUpdate, roles);
 
         emit artworksChanged();
     }
@@ -241,7 +240,7 @@ namespace Models {
 
         QList<QPair<int, int> > rangesToUpdate;
         Helpers::indicesToRanges(directoryItems, rangesToUpdate);
-        updateItemsAtIndices(rangesToUpdate, QVector<int>() << IsSelectedRole);
+        updateItemsInRanges(rangesToUpdate, QVector<int>() << IsSelectedRole);
     }
 
     void ArtItemsModel::checkForWarnings()
@@ -404,6 +403,15 @@ namespace Models {
         return result;
     }
 
+    void ArtItemsModel::updateItemsAtIndices(const QList<int> &indices)
+    {
+        QList<QPair<int, int> > ranges;
+        Helpers::indicesToRanges(indices, ranges);
+        QVector<int> roles;
+        fillStandardRoles(roles);
+        updateItemsInRanges(ranges, roles);
+    }
+
     int ArtItemsModel::addDirectory(const QString &directory)
     {
         int filesCount = 0;
@@ -473,9 +481,10 @@ namespace Models {
     {
         QList<ArtItemInfo*> artworksList;
 
-        foreach (ArtworkMetadata *metadata, m_ArtworkList) {
+        for (int i = 0; i < m_ArtworkList.length(); ++i) {
+            ArtworkMetadata *metadata = m_ArtworkList[i];
             if (metadata->getIsSelected()) {
-                ArtItemInfo *info = new ArtItemInfo(metadata);
+                ArtItemInfo *info = new ArtItemInfo(metadata, i);
                 artworksList.append(info);
             }
         }
@@ -493,7 +502,7 @@ namespace Models {
             QModelIndex qmIndex = this->index(index);
             emit dataChanged(qmIndex, qmIndex, QVector<int>() << IsSelectedRole);
 
-            ArtItemInfo *info = new ArtItemInfo(metadata);
+            ArtItemInfo *info = new ArtItemInfo(metadata, index);
             artworksList.append(info);
 
             m_CommandManager->combineArtworks(artworksList);
@@ -557,5 +566,11 @@ namespace Models {
                 indices.append(i);
             }
         }
+    }
+
+    void ArtItemsModel::fillStandardRoles(QVector<int> &roles) const
+    {
+        roles << ArtworkDescriptionRole << IsModifiedRole <<
+                 ArtworkAuthorRole << ArtworkTitleRole << KeywordsCountRole;
     }
 }

@@ -488,7 +488,6 @@ Item {
                             text: qsTr("Save and append")
                             onClicked: {
                                 combinedArtworks.saveAddKeywords()
-                                artItemsModel.updateSelectedArtworks()
                                 closePopup()
                             }
 
@@ -500,7 +499,6 @@ Item {
                             width: 130
                             onClicked: {
                                 combinedArtworks.saveSetKeywords()
-                                artItemsModel.updateSelectedArtworks()
                                 closePopup()
                             }
 

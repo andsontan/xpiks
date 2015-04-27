@@ -31,6 +31,8 @@
 #include "abstractlistmodel.h"
 #include "../Common/baseentity.h"
 
+namespace Commands { enum CombinedEditType; }
+
 namespace Models {
     class MiniKeywordsModel : public QAbstractListModel, public Common::BaseEntity {
         Q_OBJECT
@@ -141,8 +143,8 @@ namespace Models {
         Q_INVOKABLE void deselectArtwork(int index);
         Q_INVOKABLE void removeSelectedArtworks();
         Q_INVOKABLE int getArtworksCount() const { return m_ArtworksList.length(); }
-        Q_INVOKABLE void saveSetKeywords();
-        Q_INVOKABLE void saveAddKeywords();
+        Q_INVOKABLE void saveSetKeywords() const;
+        Q_INVOKABLE void saveAddKeywords() const;
         Q_INVOKABLE void resetModelData();
         Q_INVOKABLE QString getKeywordsString() { return m_CommonKeywordsModel.getKeywords().join(QChar(',')); }
         Q_INVOKABLE QObject *getKeywordsModel() {
@@ -150,6 +152,9 @@ namespace Models {
             QQmlEngine::setObjectOwnership(item, QQmlEngine::CppOwnership);
             return item;
         }
+
+    private:
+        void createCombinedEditCommand(Commands::CombinedEditType commandType) const;
 
     public:
         enum CombinedArtworksModelRoles {
