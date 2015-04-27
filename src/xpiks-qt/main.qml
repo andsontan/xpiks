@@ -147,9 +147,7 @@ ApplicationWindow {
         onAccepted: {
             console.log("You chose: " + chooseArtworksDialog.fileUrls)
             var filesAdded = artItemsModel.addLocalArtworks(chooseArtworksDialog.fileUrls)
-            if (filesAdded > 0) {
-                Qt.createComponent("Dialogs/ImportMetadata.qml").createObject(applicationWindow, {})
-            }
+            console.log(filesAdded + ' files via Open File(s)')
         }
 
         onRejected: {
@@ -167,9 +165,7 @@ ApplicationWindow {
         onAccepted: {
             console.log("You chose: " + chooseDirectoryDialog.fileUrl)
             var filesAdded = artItemsModel.addLocalDirectory(chooseDirectoryDialog.fileUrl)
-            if (filesAdded > 0) {
-                Qt.createComponent("Dialogs/ImportMetadata.qml").createObject(applicationWindow, {})
-            }
+            console.log(filesAdded + ' files via Open Directory')
         }
 
         onRejected: {
@@ -195,6 +191,15 @@ ApplicationWindow {
         text: qsTr("All selected items are already saved")
     }
 
+    Connections {
+        target: artItemsModel
+        onArtworksAdded: {
+           if (count > 0) {
+               Qt.createComponent("Dialogs/ImportMetadata.qml").createObject(applicationWindow, {})
+           }
+        }
+    }
+
     Rectangle {
         color: Colors.defaultDarkColor
         anchors.fill: parent
@@ -204,9 +209,7 @@ ApplicationWindow {
             onDropped: {
                 if (drop.hasUrls) {
                     var filesCount = artItemsModel.dropFiles(drop.urls)
-                    if (filesCount > 0) {
-                        Qt.createComponent("Dialogs/ImportMetadata.qml").createObject(applicationWindow, {})
-                    }
+                    console.log(filesCount + ' files drag&dropped')
                 }
             }
         }
@@ -344,7 +347,6 @@ ApplicationWindow {
                         spacing: 10
                         anchors.fill: parent
                         anchors.margins: { top: 10; left: 10 }
-                        enabled: artworkRepository.artworksSourcesCount > 0
                         anchors.rightMargin: mainScrollView.flickableItem.contentHeight > mainScrollView.flickableItem.height ? 20 : 10
 
                         Item {
@@ -353,6 +355,7 @@ ApplicationWindow {
 
                         StyledCheckbox {
                             id: selectAllCheckbox
+                            enabled: artworkRepository.artworksSourcesCount > 0
                             text: artItemsModel.selectedArtworksCount == 0 ? qsTr("Select all") : qsTr("Select none")
                             checked: artItemsModel.selectedArtworksCount > 0
 
@@ -386,6 +389,7 @@ ApplicationWindow {
 
                         StyledButton {
                             text: qsTr("Remove")
+                            enabled: artworkRepository.artworksSourcesCount > 0
                             width: mainScrollView.flickableItem.contentHeight > mainScrollView.flickableItem.height ? 80 : 90
                             onClicked: {
                                 if (artItemsModel.selectedArtworksCount == 0) {
@@ -404,6 +408,7 @@ ApplicationWindow {
                         StyledButton {
                             text: qsTr("Edit")
                             width: 80
+                            enabled: artworkRepository.artworksSourcesCount > 0
                             onClicked: {
                                 if (artItemsModel.selectedArtworksCount == 0) {
                                     mustSelectDialog.open()
@@ -421,6 +426,7 @@ ApplicationWindow {
                         StyledButton {
                             text: qsTr("Save")
                             width: 80
+                            enabled: artworkRepository.artworksSourcesCount > 0
                             onClicked: {
                                 if (artItemsModel.selectedArtworksCount == 0) {
                                     mustSelectDialog.open()
@@ -443,6 +449,7 @@ ApplicationWindow {
                         StyledButton {
                             text: qsTr("Upload")
                             width: 90
+                            enabled: artworkRepository.artworksSourcesCount > 0
                             onClicked: {
                                 if (artItemsModel.selectedArtworksCount == 0) {
                                     mustSelectDialog.open()

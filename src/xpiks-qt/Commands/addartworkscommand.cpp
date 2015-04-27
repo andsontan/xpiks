@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <QDebug>
 #include "addartworkscommand.h"
 #include "../Models/artworksrepository.h"
 #include "../Models/artworkmetadata.h"
@@ -27,6 +28,7 @@
 
 Commands::CommandResult *Commands::AddArtworksCommand::execute(const CommandManager *commandManager) const
 {
+    qDebug() << "Add artworks command";
     Models::ArtworksRepository *artworksRepository = commandManager->getArtworksRepository();
     Models::ArtItemsModel *artItemsModel = commandManager->getArtItemsModel();
 
@@ -59,6 +61,7 @@ Commands::CommandResult *Commands::AddArtworksCommand::execute(const CommandMana
 
     if (newFilesCount > 0) {
         artworksRepository->updateCountsForExistingDirectories();
+        artItemsModel->raiseArtworksAdded(newFilesCount);
 
         UndoRedo::AddArtworksHistoryItem *addArtworksItem = new UndoRedo::AddArtworksHistoryItem(initialCount, newFilesCount);
         commandManager->recordHistoryItem(addArtworksItem);

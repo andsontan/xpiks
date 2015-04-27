@@ -25,11 +25,15 @@
 #include "../Models/artitemsmodel.h"
 
 void UndoRedo::RemoveArtworksHistoryItem::undo(const Commands::CommandManager *commandManager) const {
+    qDebug() << "Undo: remove artworks command";
+
     QList<QPair<int, int> > ranges;
     Helpers::indicesToRanges(m_RemovedArtworksIndices, ranges);
 
     Models::ArtItemsModel *artItemsModel = commandManager->getArtItemsModel();
     Models::ArtworksRepository *artworksRepository = commandManager->getArtworksRepository();
+
+    QList<Models::ArtworkMetadata*> artworksToImport;
 
     bool filesWereAccounted = artworksRepository->beginAccountingFiles(m_RemovedArtworksPathes);
 
@@ -50,6 +54,7 @@ void UndoRedo::RemoveArtworksHistoryItem::undo(const Commands::CommandManager *c
                 commandManager->connectArtworkSignals(metadata);
 
                 artItemsModel->insertArtwork(j + startRow, metadata);
+                artworksToImport.append(metadata);
             }
         }
 
@@ -60,5 +65,6 @@ void UndoRedo::RemoveArtworksHistoryItem::undo(const Commands::CommandManager *c
 
     artworksRepository->endAccountingFiles(filesWereAccounted);
 
-    // TODO: handle import
+    commandManager->setArtworksForIPTCProcessing(artworksToImport);
+    artItemsModel->raiseArtworksAdded(usedCount);
 }

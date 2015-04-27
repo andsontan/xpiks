@@ -22,7 +22,7 @@
 #include <QList>
 #include <QPair>
 #include <QString>
-
+#include <QDebug>
 #include "removeartworkscommand.h"
 #include "../Models/artworksrepository.h"
 #include "../Models/artitemsmodel.h"
@@ -32,6 +32,7 @@
 
 Commands::CommandResult *Commands::RemoveArtworksCommand::execute(const Commands::CommandManager *commandManager) const
 {
+    qDebug() << "Remove artworks command";
     Models::ArtItemsModel *artItemsModel = commandManager->getArtItemsModel();
 
     QList<int> removedItemsIndices;
@@ -60,4 +61,8 @@ Commands::CommandResult *Commands::RemoveArtworksCommand::execute(const Commands
                                                                                                           removedItemsFilepathes);
         commandManager->recordHistoryItem(removeArtworksItem);
     }
+
+    // TODO: to be filled with useful return data in future
+    Commands::RemoveArtworksCommandResult *result = new Commands::RemoveArtworksCommandResult();
+    return result;
 }

@@ -19,11 +19,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <QDebug>
 #include <QList>
 #include "addartworksitem.h"
 #include "../Models/artitemsmodel.h"
 
 void UndoRedo::AddArtworksHistoryItem::undo(const Commands::CommandManager *commandManager) const {
+    qDebug() << "Undo: Add artworks command";
+
     Models::ArtItemsModel *artItemsModel = commandManager->getArtItemsModel();
 
     QList<int> indicesToRemove;

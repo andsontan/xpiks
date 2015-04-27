@@ -124,6 +124,7 @@ namespace Models {
         void appendArtwork(ArtworkMetadata *metadata);
         void removeArtworks(const QList<int> &indices) { doRemoveItemsAtIndices(indices); }
         ArtworkMetadata *getArtwork(int index) const;
+        void raiseArtworksAdded(int count) { emit artworksAdded(count); }
 
     private:
         int addDirectory(const QString &directory);
@@ -140,6 +141,7 @@ namespace Models {
         void selectedArtworksCountChanged();
         void artworksChanged();
         void needCheckItemsForWarnings(const QList<ArtworkMetadata*> &artworks);
+        void artworksAdded(int count);
 
     protected:
         QHash<int, QByteArray> roleNames() const;
