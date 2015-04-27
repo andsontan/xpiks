@@ -30,8 +30,7 @@
 #include "artiteminfo.h"
 #include "abstractlistmodel.h"
 #include "../Common/baseentity.h"
-
-namespace Commands { enum CombinedEditType; }
+#include "../Commands/combinededitcommand.h"
 
 namespace Models {
     class MiniKeywordsModel : public QAbstractListModel, public Common::BaseEntity {

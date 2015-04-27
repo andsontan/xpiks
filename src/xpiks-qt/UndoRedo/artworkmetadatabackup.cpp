@@ -28,6 +28,7 @@ UndoRedo::ArtworkMetadataBackup::ArtworkMetadataBackup(Models::ArtworkMetadata *
     m_Author = metadata->getAuthor();
     m_Title = metadata->getTitle();
     m_KeywordsList = metadata->getKeywords();
+    m_IsModified = metadata->isModified();
 }
 
 void UndoRedo::ArtworkMetadataBackup::restore(Models::ArtworkMetadata *metadata) const
@@ -36,4 +37,6 @@ void UndoRedo::ArtworkMetadataBackup::restore(Models::ArtworkMetadata *metadata)
     metadata->setAuthor(m_Author);
     metadata->setTitle(m_Title);
     metadata->setKeywords(m_KeywordsList);
+    if (m_IsModified) { metadata->setModified(); }
+    else { metadata->unsetModified(); }
 }
