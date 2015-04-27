@@ -676,6 +676,10 @@ ApplicationWindow {
                                                     artItemsModel.appendKeyword(rowWrapper.indexOfThisDelegate, keyword)
                                                 }
 
+                                                function pasteKeywords(keywords) {
+                                                    artItemsModel.pasteKeywords(rowWrapper.indexOfThisDelegate, keywords)
+                                                }
+
                                                 function saveKeywords() {
                                                     artItemsModel.backupItem(rowWrapper.indexOfThisDelegate)
                                                 }
@@ -744,6 +748,10 @@ ApplicationWindow {
 
                                                         onTagAdded: {
                                                             keywordsWrapper.appendKeyword(text)
+                                                        }
+
+                                                        onTagsPasted: {
+                                                            keywordsWrapper.pasteKeywords(tagsList)
                                                         }
 
                                                         onRemoveLast: {

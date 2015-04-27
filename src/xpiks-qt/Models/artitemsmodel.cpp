@@ -29,6 +29,7 @@
 #include "../Helpers/indiceshelper.h"
 #include "../Commands/addartworkscommand.h"
 #include "../Commands/removeartworkscommand.h"
+#include "../Commands/pastekeywordscommand.h"
 
 #ifdef Q_OS_OSX
 #include "../Helpers/osxnsurlhelper.h"
@@ -115,6 +116,21 @@ namespace Models {
                 QModelIndex index = this->index(metadataIndex);
                 emit dataChanged(index, index, QVector<int>() << IsModifiedRole << KeywordsCountRole);
             }
+        }
+    }
+
+    void ArtItemsModel::pasteKeywords(int metadataIndex, const QStringList &keywords)
+    {
+        if (metadataIndex >= 0 && metadataIndex < m_ArtworkList.length()) {
+            ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
+            ArtItemInfo *artItemInfo = new ArtItemInfo(metadata, metadataIndex);
+
+            Commands::PasteKeywordsCommand *pasteCommand = new Commands::PasteKeywordsCommand(artItemInfo, keywords);
+            Commands::CommandResult *result = m_CommandManager->processCommand(pasteCommand);
+            delete result;
+
+            QModelIndex index = this->index(metadataIndex);
+            emit dataChanged(index, index, QVector<int>() << IsModifiedRole << KeywordsCountRole);
         }
     }
 

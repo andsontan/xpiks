@@ -19,42 +19,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef COMMANDBASE_H
-#define COMMANDBASE_H
+#ifndef PASTEKEYWORDSCOMMAND_H
+#define PASTEKEYWORDSCOMMAND_H
+
+#include <QStringList>
+#include "commandbase.h"
+
+namespace Models { class ArtItemInfo; }
 
 namespace Commands {
-
-    enum CommandType {
-        AddArtworksCommandType,
-        RemoveArtworksCommandType,
-        CombinedEditCommandType,
-        PasteKeywordsCommandType
-    };
-
-    class CommandResult;
-    class CommandManager;
-
-    class CommandBase
+    class PasteKeywordsCommand : public CommandBase
     {
     public:
-        CommandBase(CommandType commandType):
-            m_CommandType(commandType)
+        PasteKeywordsCommand(Models::ArtItemInfo *artItemInfo,
+                             const QStringList &keywords) :
+            CommandBase(PasteKeywordsCommandType),
+            m_ArtItemInfo(artItemInfo),
+            m_KeywordsList(keywords)
         {}
-        virtual ~CommandBase() {}
+
+        virtual ~PasteKeywordsCommand();
 
     public:
-        virtual CommandResult *execute(const CommandManager *commandManager) const = 0;
-        CommandType getCommandType() const { return m_CommandType; }
+        virtual CommandResult *execute(const CommandManager *commandManager) const;
 
     private:
-        CommandType m_CommandType;
+        Models::ArtItemInfo *m_ArtItemInfo;
+        QStringList m_KeywordsList;
     };
 
-    class CommandResult {
-    public:
-        CommandResult(){}
-        ~CommandResult(){}
+    class PasteKeywordsCommandResult : public CommandResult {
+
     };
 }
 
-#endif // COMMANDBASE_H
+#endif // PASTEKEYWORDSCOMMAND_H

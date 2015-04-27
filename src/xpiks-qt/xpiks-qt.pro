@@ -27,7 +27,8 @@ SOURCES += main.cpp \
     UndoRedo/removeartworksitem.cpp \
     UndoRedo/artworkmetadatabackup.cpp \
     UndoRedo/modifyartworkshistoryitem.cpp \
-    Commands/combinededitcommand.cpp
+    Commands/combinededitcommand.cpp \
+    Commands/pastekeywordscommand.cpp
 
 RESOURCES += qml.qrc
 
@@ -89,7 +90,8 @@ HEADERS += \
     UndoRedo/removeartworksitem.h \
     UndoRedo/artworkmetadatabackup.h \
     UndoRedo/modifyartworkshistoryitem.h \
-    Commands/combinededitcommand.h
+    Commands/combinededitcommand.h \
+    Commands/pastekeywordscommand.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

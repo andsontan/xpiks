@@ -76,6 +76,7 @@ namespace Models {
         Q_INVOKABLE void removeKeywordAt(int metadataIndex, int keywordIndex);
         Q_INVOKABLE void removeLastKeyword(int metadataIndex);
         Q_INVOKABLE void appendKeyword(int metadataIndex, const QString &keyword);
+        Q_INVOKABLE void pasteKeywords(int metadataIndex, const QStringList &keywords);
         Q_INVOKABLE void backupItem(int metadataIndex);
         Q_INVOKABLE void combineSelectedArtworks() { doCombineSelectedImages(); }
         Q_INVOKABLE void combineArtwork(int index) { doCombineArtwork(index); }

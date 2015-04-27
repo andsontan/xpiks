@@ -46,23 +46,30 @@ Flickable {
     signal tagAdded(string text)
     signal removeLast()
     signal focusLost()
+    signal tagsPasted(var tagsList)
 
     function activateEdit() {
         nextTagTextInput.forceActiveFocus()
     }
 
+    function getSanitizedText(text) {
+        return text.replace(/^\s+|\s+$|-$/g, '');
+    }
+
     function getEditedText() {
         var tagText = nextTagTextInput.text;
-        return tagText.replace(/^\s+|\s+$|-$/g, '');
+        return getSanitizedText(tagText);
+    }
+
+    function canBeTag(tag) {
+        return (getCharsCount(tag) > 2) &&
+                (tag.match(/^(?:[a-zA-Z]+(?:-| |$))+$/));
     }
 
     function raiseAddTag(text) {
-        var sanitizedTagText = text.replace(/^\s+|\s+$|-$/g, '');
-        if (getCharsCount(sanitizedTagText) > 2) {
-            // same regexp as in validator
-            if (sanitizedTagText.match(/^(?:[a-zA-Z]+(?:-| |$))+$/)) {
-                tagAdded(sanitizedTagText);
-            }
+        var sanitizedTagText = getSanitizedText(text);
+        if (canBeTag(sanitizedTagText)) {
+            tagAdded(sanitizedTagText);
         }
     }
 
@@ -153,11 +160,17 @@ Flickable {
                 Keys.onPressed: {
                     if(event.matches(StandardKey.Paste)) {
                         var clipboardText = clipboard.getText();
+                        var keywordsToAdd = [];
 
                         var words = clipboardText.split(',');
                         for (var i = 0; i < words.length; i++) {
-                            raiseAddTag(words[i]);
+                            var sanitizedTagText = getSanitizedText(words[i]);
+                            if (canBeTag(sanitizedTagText)) {
+                                keywordsToAdd.push(sanitizedTagText);
+                            }
                         }
+
+                        tagsPasted(keywordsToAdd);
 
                         event.accepted = true;
                     }
