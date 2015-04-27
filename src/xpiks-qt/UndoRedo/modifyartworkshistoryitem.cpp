@@ -19,12 +19,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <QDebug>
 #include "modifyartworkshistoryitem.h"
 #include "../Models/artitemsmodel.h"
 #include "../Models/artworkmetadata.h"
 
 void UndoRedo::ModifyArtworksHistoryItem::undo(const Commands::CommandManager *commandManager) const
 {
+    qDebug() << "Undo: modify artworks item";
+
     Models::ArtItemsModel *artItemsModel = commandManager->getArtItemsModel();
     int count = m_Indices.count();
 
