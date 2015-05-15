@@ -29,6 +29,7 @@
 #include "uploadinfo.h"
 #include "../Helpers/uploaditem.h"
 #include "../Helpers/testconnectionresult.h"
+#include "../Helpers/uploadcoordinator.h"
 
 namespace Models {
     class ArtworkUploader : public ArtworksProcessor
@@ -36,7 +37,7 @@ namespace Models {
         Q_OBJECT
     public:
          ArtworkUploader();
-         ~ArtworkUploader() { delete m_ArtworksUploader; delete m_TestingCredentialWatcher; }
+         ~ArtworkUploader() { delete m_TestingCredentialWatcher; }
 
     public:
          Q_PROPERTY(bool includeEPS READ getIncludeEPS WRITE setIncludeEPS NOTIFY includeEPSChanged)
@@ -74,7 +75,7 @@ namespace Models {
         void cancelProcessing();
 
      private:
-         QFutureWatcher<Helpers::UploadItem> *m_ArtworksUploader;
+         Helpers::UploadCoordinator m_UploadCoordinator;
          QFutureWatcher<Helpers::TestConnectionResult> *m_TestingCredentialWatcher;
          QStringList *m_ActiveUploads;
          Commands::CommandManager *m_CommandManager;
