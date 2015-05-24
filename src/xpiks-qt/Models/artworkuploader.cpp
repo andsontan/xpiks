@@ -24,28 +24,34 @@
 #include <QDebug>
 #include "uploadinforepository.h"
 #include "../Helpers/curlwrapper.h"
+#include "../Helpers/uploadcoordinator.h"
 
 namespace Models {
     ArtworkUploader::ArtworkUploader() :
         ArtworksProcessor(),
         m_IncludeEPS(false)
     {
-        m_ArtworksUploader = new QFutureWatcher<Helpers::UploadItem>(this);
-        connect(m_ArtworksUploader, SIGNAL(resultReadyAt(int)), SLOT(artworkUploaded(int)));
-        connect(m_ArtworksUploader, SIGNAL(finished()), SLOT(allFinished()));
+        QObject::connect(&m_UploadCoordinator, SIGNAL(uploadStarted()), this, SLOT(onUploadStarted()));
+        QObject::connect(&m_UploadCoordinator, SIGNAL(uploadFinished(bool)), this, SLOT(allFinished(bool)));
+        QObject::connect(&m_UploadCoordinator, SIGNAL(itemFinished(bool)), this, SLOT(artworkUploaded(bool)));
 
         m_TestingCredentialWatcher = new QFutureWatcher<Helpers::TestConnectionResult>(this);
         connect(m_TestingCredentialWatcher, SIGNAL(finished()), SLOT(credentialsTestingFinished()));
     }
 
-    void ArtworkUploader::artworkUploaded(int index)
+    void ArtworkUploader::onUploadStarted()
     {
-        qDebug() << "Artwork uploaded at " << index;
-        Helpers::UploadItem item = m_ArtworksUploader->resultAt(index);
-        artworkUploadedHandler(&item);
+        // BUMP
     }
 
-    void ArtworkUploader::allFinished()
+    void ArtworkUploader::artworkUploaded(bool status)
+    {
+        //qDebug() << "Artwork uploaded at " << index;
+        //Helpers::UploadItem item = m_ArtworksUploader->resultAt(index);
+        artworkUploadedHandler(status);
+    }
+
+    void ArtworkUploader::allFinished(bool status)
     {
         endProcessing();
         delete m_ActiveUploads;
@@ -57,15 +63,11 @@ namespace Models {
         emit credentialsChecked(result.getResult(), result.getUrl());
     }
 
-    void ArtworkUploader::artworkUploadedHandler(Helpers::UploadItem *item)
+    void ArtworkUploader::artworkUploadedHandler(bool success)
     {
         incProgress();
 
-        // TODO: handle bad results
-        if (item->m_Success) {
-            qDebug() << item->m_UploadInfo->getHost();
-        }
-        else {
+        if (!success) {
             setIsError(true);
         }
     }
@@ -82,32 +84,12 @@ namespace Models {
             return;
         }
 
-        beginProcessing();
-        QList<Helpers::UploadItem> uploadItems;
-
         const UploadInfoRepository *uploadInfoRepository = m_CommandManager->getUploadInfoRepository();
-        const QList<UploadInfo *> &infos = uploadInfoRepository->getUploadInfos();
-        m_ActiveUploads = getAllFilepathes();
+        const QList<Models::UploadInfo *> &infos = uploadInfoRepository->getUploadInfos();
 
-        const QString &curlPath = Helpers::ExternalToolsProvider::getCurlPath();
-        int oneItemUploadTimeout = Helpers::ExternalToolsProvider::getOneItemUploadMinutesTimeout();
+        const Encryption::SecretsManager *secretsManager = m_CommandManager->getSecretsManager();
 
-        foreach (UploadInfo *info, infos) {
-            if (info->getIsSelected()) {
-                uploadItems.append(Helpers::UploadItem(info, m_ActiveUploads,
-                                                       oneItemUploadTimeout, curlPath));
-            }
-        }
-
-        qDebug() << "Uploading " << uploadItems.length() << " items...";
-
-        if (uploadItems.length() > 0) {
-            UploadWrapper uploadWrapper(m_CommandManager->getSecretsManager());
-            m_ArtworksUploader->setFuture(QtConcurrent::mapped(uploadItems, uploadWrapper));
-        }
-        else {
-            endProcessing();
-        }
+        m_UploadCoordinator.uploadArtworks(artworkList, infos, m_IncludeEPS, secretsManager);
     }
 
     QStringList *ArtworkUploader::getAllFilepathes() const
@@ -132,6 +114,6 @@ namespace Models {
 
     void ArtworkUploader::cancelProcessing()
     {
-        m_ArtworksUploader->cancel();
+        m_UploadCoordinator.cancelUpload();
     }
 }

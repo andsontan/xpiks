@@ -56,12 +56,13 @@ namespace Models {
          }
 
      public slots:
-         void artworkUploaded(int);
-         void allFinished();
+         void onUploadStarted();
+         void artworkUploaded(bool status);
+         void allFinished(bool status);
          void credentialsTestingFinished();
 
      private:
-         void artworkUploadedHandler(Helpers::UploadItem *item);
+         void artworkUploadedHandler(bool success);
 
      public:
          Q_INVOKABLE void uploadArtworks() { doUploadArtworks(getArtworkList()); }

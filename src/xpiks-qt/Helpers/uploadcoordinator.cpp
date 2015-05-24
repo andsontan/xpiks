@@ -31,21 +31,19 @@
 
 namespace Helpers {
     void UploadCoordinator::uploadArtworks(const QList<Models::ArtworkMetadata *> &artworkList,
-                                           const QList<UploadInfo *> &uploadInfos,
-                                           bool includeEPS) const
+                                           const QList<Models::UploadInfo *> &uploadInfos,
+                                           bool includeEPS, const Encryption::SecretsManager *secretsManager)
     {
-        m_FilePathes = new QStringList();
+        QStringList filePathes;
         extractFilePathes(artworkList, filePathes, includeEPS);
 
         QList<UploadItem*> uploadItems;
         const QString &curlPath = Helpers::ExternalToolsProvider::getCurlPath();
         int oneItemUploadTimeout = Helpers::ExternalToolsProvider::getOneItemUploadMinutesTimeout();
 
-        emit uploadStarted();
-
-        foreach (UploadInfo *info, uploadInfos) {
+        foreach (Models::UploadInfo *info, uploadInfos) {
             if (info->getIsSelected()) {
-                uploadItems.append(new UploadItem(info, m_FilePathes,
+                uploadItems.append(new UploadItem(info, filePathes,
                                                   oneItemUploadTimeout, curlPath));
             }
         }
@@ -57,10 +55,15 @@ namespace Helpers {
         m_AllWorkersCount = uploadItems.count();
 
         if (m_AllWorkersCount > 0) {
-            doRunUpload(uploadItems);
+            doRunUpload(uploadItems, secretsManager);
         } else {
             emit uploadFinished(true);
         }
+    }
+
+    void UploadCoordinator::cancelUpload()
+    {
+        emit cancelAll();
     }
 
     void UploadCoordinator::workerFinished(bool success)
@@ -75,15 +78,18 @@ namespace Helpers {
         }
         m_Mutex.unlock();
 
+        emit itemFinished(success);
+
         if (allWorkersFinished) {
             emit uploadFinished(!m_AnyFailed);
         }
     }
 
-    void UploadCoordinator::doRunUpload(const QList<UploadItem> &uploadItems)
+    void UploadCoordinator::doRunUpload(const QList<UploadItem*> &uploadItems,
+                                        const Encryption::SecretsManager *secretsManager)
     {
         foreach (UploadItem *uploadItem, uploadItems) {
-            UploadWorker *worker = new UploadWorker(uploadItem);
+            UploadWorker *worker = new UploadWorker(uploadItem, secretsManager);
             QThread *thread = new QThread();
             worker->moveToThread(thread);
 
@@ -93,7 +99,7 @@ namespace Helpers {
             QObject::connect(worker, SIGNAL(stopped()), worker, SLOT(deleteLater()));
             QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
 
-            QObject::connect(worker, SIGNAL(finished(bool)), this, SLOT(workerFinished(bool));
+            QObject::connect(worker, SIGNAL(finished(bool)), this, SLOT(workerFinished(bool)));
             QObject::connect(this, SIGNAL(cancelAll()), worker, SLOT(cancel()));
 
             thread->start();
@@ -101,17 +107,17 @@ namespace Helpers {
     }
 
     void UploadCoordinator::extractFilePathes(const QList<Models::ArtworkMetadata *> &artworkList,
-                                              QStringList *filePathes,
-                                              bool includeEPS) {
+                                              QStringList &filePathes,
+                                              bool includeEPS) const {
 
         foreach(Models::ArtworkMetadata *metadata, artworkList) {
             QString filepath = metadata->getFilepath();
-            filePathes->append(filepath);
+            filePathes.append(filepath);
 
             if (includeEPS) {
                 QString epsFilepath = filepath.replace(QRegExp("(.*)[.]jpg", Qt::CaseInsensitive), "\\1.eps");
                 if (QFileInfo(epsFilepath).exists()) {
-                    filePathes->append(epsFilepath);
+                    filePathes.append(epsFilepath);
                 }
             }
         }

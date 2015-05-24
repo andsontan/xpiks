@@ -27,28 +27,28 @@
 #include "../Encryption/secretsmanager.h"
 
 namespace Helpers {
-    UploadWorker::UploadWorker(UploadItem *uploadItem, Encryption::SecretsManager *secretsManager, QObject *parent) :
+    UploadWorker::UploadWorker(UploadItem *uploadItem, const Encryption::SecretsManager *secretsManager, QObject *parent) :
         QObject(parent),
         m_UploadItem(uploadItem),
         m_SecretsManager(secretsManager)
     {
     }
 
-    UploadWorker::~UploadWorker() { delete m_UploadItem; delete m_CurlProcess; }
+    UploadWorker::~UploadWorker() { delete m_UploadItem; }
 
     void UploadWorker::process() {
         m_SuccessStatus = false;
 
-        QStringList *filesToUpload = m_UploadItem.m_FilesToUpload;
+        const QStringList &filesToUpload = m_UploadItem->m_FilesToUpload;
         Models::UploadInfo *uploadInfo = m_UploadItem->m_UploadInfo;
 
-        const QString curlPath = uploadItem.m_CurlPath;
-        int oneItemUploadMinutesTimeout = uploadItem.m_OneItemUploadMinutesTimeout;
-        int maxSeconds = oneItemUploadMinutesTimeout * 60 * filesToUpload->length();
+        const QString curlPath = m_UploadItem->m_CurlPath;
+        int oneItemUploadMinutesTimeout = m_UploadItem->m_OneItemUploadMinutesTimeout;
+        int maxSeconds = oneItemUploadMinutesTimeout * 60 * filesToUpload.length();
 
         QString password = m_SecretsManager->decodePassword(uploadInfo->getPassword());
         QString command = QString("%1 --connect-timeout 10 --max-time %6 --retry 1 -T \"{%2}\" %3 --user %4:%5").
-                arg(curlPath, filesToUpload->join(','), uploadInfo->getHost(), uploadInfo->getUsername(), password, QString::number(maxSeconds));
+                arg(curlPath, filesToUpload.join(','), uploadInfo->getHost(), uploadInfo->getUsername(), password, QString::number(maxSeconds));
 
         m_CurlProcess.start(command);
 

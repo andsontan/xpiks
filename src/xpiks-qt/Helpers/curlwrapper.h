@@ -36,40 +36,6 @@
 #include "curlwrapper.h"
 #include "uploaditem.h"
 
-Helpers::UploadItem uploadViaCurl(const Helpers::UploadItem &uploadItem, const Encryption::SecretsManager *secretsManager) {
-    Helpers::UploadItem result(uploadItem);
-
-    QStringList *filesToUpload = uploadItem.m_FilesToUpload;
-    Models::UploadInfo *uploadInfo = uploadItem.m_UploadInfo;
-
-    const QString curlPath = uploadItem.m_CurlPath;
-    int oneItemUploadMinutesTimeout = uploadItem.m_OneItemUploadMinutesTimeout;
-    int maxSeconds = oneItemUploadMinutesTimeout * 60 * filesToUpload->length();
-
-    QString password = secretsManager->decodePassword(uploadInfo->getPassword());
-    QString command = QString("%1 --connect-timeout 10 --max-time %6 --retry 1 -T \"{%2}\" %3 --user %4:%5").
-            arg(curlPath, filesToUpload->join(','), uploadInfo->getHost(), uploadInfo->getUsername(), password, QString::number(maxSeconds));
-
-    QProcess process;
-    process.start(command);
-    // TODO: move to config
-    if (process.waitForFinished(maxSeconds * 1000) &&
-            process.exitStatus() == QProcess::NormalExit &&
-            process.exitCode() == 0) {
-        result.m_Success = true;
-    }
-
-    QByteArray stdoutByteArray = process.readAllStandardOutput();
-    QString stdoutText(stdoutByteArray);
-    qDebug() << "STDOUT [" << uploadInfo->getHost() << "]:" << stdoutText;
-
-    QByteArray stderrByteArray = process.readAllStandardError();
-    QString stderrText(stderrByteArray);
-    qDebug() << "STDERR [" << uploadInfo->getHost() << "]:" << stderrText;
-
-    return result;
-}
-
 Helpers::TestConnectionResult isConnectionValid(const QString &host, const QString &username, const QString &password) {
     bool isValid = false;
 
@@ -98,24 +64,6 @@ Helpers::TestConnectionResult isConnectionValid(const QString &host, const QStri
     Helpers::TestConnectionResult result(isValid, host);
     return result;
 }
-
-
-class UploadWrapper {
-public:
-    UploadWrapper(const Encryption::SecretsManager *secretsManager):
-        m_SecretsManager(secretsManager)
-    { }
-
-    typedef Helpers::UploadItem result_type;
-
-    Helpers::UploadItem operator()(const Helpers::UploadItem &uploadItem) {
-        return uploadViaCurl(uploadItem, m_SecretsManager);
-    }
-
-private:
-    const Encryption::SecretsManager *m_SecretsManager;
-};
-
 
 #endif // CURLWRAPPER
 

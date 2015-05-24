@@ -29,14 +29,20 @@
 
 namespace Models {
     class ArtworkMetadata;
+    class UploadInfo;
+}
+
+namespace Encryption {
+    class SecretsManager;
 }
 
 namespace Helpers {
     class UploadInfo;
     class UploadItem;
 
-    class UploadCoordinator : QObject
+    class UploadCoordinator : public QObject
     {
+        Q_OBJECT
     public:
         UploadCoordinator(QObject *parent = 0):
             QObject(parent)
@@ -46,26 +52,27 @@ namespace Helpers {
 
     public:
         void uploadArtworks(const QList<Models::ArtworkMetadata *> &artworkList,
-                            const QList<UploadInfo *> &uploadInfos,
-                            bool includeEPS) const;
+                            const QList<Models::UploadInfo *> &uploadInfos,
+                            bool includeEPS,
+                            const Encryption::SecretsManager *secretsManager);
 
-        void cancelUpload() { emit cancelAll(); }
+        void cancelUpload();
 
     signals:
         void cancelAll();
         void uploadStarted();
+        void itemFinished(bool success);
         void uploadFinished(bool success);
 
-    private slots:
+    public slots:
         void workerFinished(bool success);
 
     private:
-        void doRunUpload(const QList<UploadItem> &uploadItems);
+        void doRunUpload(const QList<UploadItem *> &uploadItems, const Encryption::SecretsManager *secretsManager);
         void extractFilePathes(const QList<Models::ArtworkMetadata*> &artworkList,
-                               QStringList *filePathes, bool includeEPS);
+                               QStringList &filePathes, bool includeEPS) const;
 
     private:
-        QStringList *m_FilePathes;
         QMutex m_Mutex;
         int m_WorkersCount;
         int m_AllWorkersCount;

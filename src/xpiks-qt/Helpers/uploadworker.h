@@ -37,7 +37,7 @@ namespace Helpers {
     {
         Q_OBJECT
     public:
-        explicit UploadWorker(UploadItem *uploadItem, Encryption::SecretsManager *secretsManager, QObject *parent = 0);
+        explicit UploadWorker(UploadItem *uploadItem, const Encryption::SecretsManager *secretsManager, QObject *parent = 0);
         ~UploadWorker();
 
     public:
@@ -54,7 +54,7 @@ namespace Helpers {
 
     private:
         UploadItem *m_UploadItem;
-        Encryption::SecretsManager *m_SecretsManager;
+        const Encryption::SecretsManager *m_SecretsManager;
         QProcess m_CurlProcess;
         bool m_SuccessStatus;
     };

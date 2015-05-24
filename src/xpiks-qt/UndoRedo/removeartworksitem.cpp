@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <QDebug>
 #include "removeartworksitem.h"
 #include "../Helpers/indiceshelper.h"
 #include "../Models/artworksrepository.h"

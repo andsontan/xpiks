@@ -32,7 +32,7 @@ namespace Helpers {
         UploadItem () {
         }
 
-        UploadItem(Models::UploadInfo *uploadInfo, QStringList *filesToUpload,
+        UploadItem(Models::UploadInfo *uploadInfo, const QStringList &filesToUpload,
                    int uploadTimeout,
                    const QString &curlPath) :
             m_UploadInfo (uploadInfo),
@@ -52,7 +52,7 @@ namespace Helpers {
 
     public:
         Models::UploadInfo *m_UploadInfo;
-        QStringList *m_FilesToUpload;
+        QStringList m_FilesToUpload;
         int m_OneItemUploadMinutesTimeout;
         QString m_CurlPath;
         bool m_Success;
