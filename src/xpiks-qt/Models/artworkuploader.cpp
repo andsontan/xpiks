@@ -77,6 +77,11 @@ namespace Models {
         m_TestingCredentialWatcher->setFuture(QtConcurrent::run(isConnectionValid, host, username, password));
     }
 
+    void ArtworkUploader::cancelUpload()
+    {
+        m_UploadCoordinator.cancelUpload();
+    }
+
     void ArtworkUploader::doUploadArtworks(const QList<ArtworkMetadata *> &artworkList)
     {
         int artworksCount = artworkList.length();

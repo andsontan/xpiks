@@ -67,6 +67,7 @@ namespace Models {
      public:
          Q_INVOKABLE void uploadArtworks() { doUploadArtworks(getArtworkList()); }
          Q_INVOKABLE void checkCredentials(const QString &host, const QString &username, const QString &password) const;
+         Q_INVOKABLE void cancelUpload();
 
      private:
          void doUploadArtworks(const QList<ArtworkMetadata*> &artworkList);

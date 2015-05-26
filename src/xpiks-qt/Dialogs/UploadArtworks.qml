@@ -50,7 +50,7 @@ Item {
 
     function startUpload() {
         progress.indeterminate = true
-        uploadButton.text = qsTr("Uploading...")
+        uploadButton.text = qsTr("Cancel")
         artworkUploader.resetModel()
         artworkUploader.uploadArtworks()
         saveSettings()
@@ -585,16 +585,20 @@ Item {
                         width: 130
                         enabled: !artworkUploader.inProgress
                         onClicked: {
-                            if (uploadInfos.getSelectedInfosCount() === 0) {
-                                selectHostsMessageBox.open()
-                            } else {
-                                var agencies = uploadInfos.getAgenciesWithMissingDetails();
-                                if (agencies.length !== 0) {
-                                    noPasswordDialog.agenciesList = agencies
-                                    noPasswordDialog.open()
+                            if (!artworkUploader.inProgress) {
+                                if (uploadInfos.getSelectedInfosCount() === 0) {
+                                    selectHostsMessageBox.open()
                                 } else {
-                                    startUpload()
+                                    var agencies = uploadInfos.getAgenciesWithMissingDetails();
+                                    if (agencies.length !== 0) {
+                                        noPasswordDialog.agenciesList = agencies
+                                        noPasswordDialog.open()
+                                    } else {
+                                        startUpload()
+                                    }
                                 }
+                            } else {
+                                artworkUploader.cancelUpload()
                             }
                         }
 
