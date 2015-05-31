@@ -37,4 +37,17 @@ namespace Helpers {
 
         ranges.append(qMakePair(currentStart, indices[indicesCount - 1]));
     }
+
+    int getRangesLength(const QList<QPair<int, int> > &ranges)
+    {
+        int sum = 0;
+
+        int length = ranges.length();
+        for (int i = 0; i < length; ++i) {
+            const QPair<int, int> &pair = ranges[i];
+            sum += pair.second - pair.first + 1;
+        }
+
+        return sum;
+    }
 }

@@ -28,6 +28,7 @@
 namespace Helpers
 {
     void indicesToRanges(const QList<int> &indices, QList<QPair<int, int> > &ranges);
+    int getRangesLength(const QList<QPair<int, int> > &ranges);
 }
 
 #endif // INDICESHELPER_H

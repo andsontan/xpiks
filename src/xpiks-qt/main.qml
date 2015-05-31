@@ -214,21 +214,14 @@ ApplicationWindow {
             }
         }
 
-        SplitView {
+        RowLayout {
             id: mainGrid
             anchors.fill: parent
-            orientation: Qt.Horizontal
-
-            handleDelegate: Rectangle {
-                height: parent.height
-                width: 2
-                color: Colors.defaultDarkColor
-            }
+            spacing: 0
 
             ColumnLayout {
-                Layout.minimumWidth: 250
-                Layout.preferredWidth: 250
-                Layout.maximumWidth: 350
+                width: 250
+                Layout.fillHeight: true
 
                 spacing: 0
 
@@ -262,9 +255,10 @@ ApplicationWindow {
 
                 Rectangle {
                     Layout.fillHeight: true
-                    Layout.fillWidth: true
-                    Layout.minimumWidth: 250
-                    Layout.maximumWidth: 350
+                    //Layout.fillWidth: true
+                    width: 250
+                    //Layout.minimumWidth: 250
+                    //Layout.maximumWidth: 350
 
                     color: Colors.defaultControlColor
 
@@ -276,6 +270,18 @@ ApplicationWindow {
                         anchors.margins: { left: 10; top: 5; right: 10 }
 
                         spacing: 10
+
+                        displaced: Transition {
+                            NumberAnimation { properties: "x,y"; duration: 230 }
+                        }
+
+                        addDisplaced: Transition {
+                            NumberAnimation { properties: "x,y"; duration: 230 }
+                        }
+
+                        removeDisplaced: Transition {
+                            NumberAnimation { properties: "x,y"; duration: 230 }
+                        }
 
                         delegate: Rectangle {
                             id: sourceWrapper
@@ -334,7 +340,15 @@ ApplicationWindow {
                 }
             }
 
+            Rectangle {
+                height: parent.height
+                width: 2
+                color: Colors.defaultDarkColor
+            }
+
             ColumnLayout {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
                 spacing: 0
 
                 Rectangle {
@@ -378,13 +392,6 @@ ApplicationWindow {
 
                         Item {
                             Layout.fillWidth: true
-                        }
-
-                        StyledButton {
-                            text: qsTr("Undo")
-                            width: 90
-                            enabled: undoRedoManager.canUndo
-                            onClicked: undoRedoManager.undoLastAction()
                         }
 
                         StyledButton {
@@ -475,349 +482,524 @@ ApplicationWindow {
                     Layout.fillHeight: true
                     color: Colors.defaultControlColor
 
-                    StyledScrollView {
-                        id: mainScrollView
+                    Item {
+                        anchors.topMargin: 4
                         anchors.fill: parent
-                        anchors.topMargin: 5
-                        // does not work for now in Qt 5.4.1 in combination with ListView
-                        //verticalScrollBarPolicy: Qt.ScrollBarAlwaysOn
 
-                        ListView {
-                            id: imagesListView
-                            model: artItemsModel
-                            boundsBehavior: Flickable.StopAtBounds
-                            spacing: 4
+                        Rectangle {
+                            id: undoRedoRect
+                            color: Colors.defaultDarkColor
+                            width: parent.width
+                            height: 0
+                            opacity: 0
 
-                            delegate: Rectangle {
-                                id: rowWrapper
-                                property bool isHighlighted: (isselected || descriptionTextInput.activeFocus || flv.isFocused)
-                                color: isHighlighted ? Colors.selectedArtworkColor : Colors.artworkImageBackground
-                                property int indexOfThisDelegate: index
-                                property variant myData: model
-
-                                width: parent.width
-                                height: 200
-
-                                RowLayout {
-                                    anchors.fill: parent
-                                    anchors.rightMargin: 10
-                                    spacing: 5
-
-                                    Rectangle {
-                                        id: isModifiedRectangle
-                                        color: ismodified ? Colors.artworkModifiedColor : Colors.artworkSavedColor
-                                        width: 6
-                                        Layout.fillHeight: true
+                            states: [
+                                State {
+                                    name: "canundo"
+                                    when: undoRedoManager.canUndo
+                                    PropertyChanges {
+                                        target: undoRedoRect
+                                        height: 50
                                     }
+                                }
+                            ]
 
-                                    Item {
-                                        width: 5
-                                    }
+                            transitions: [
+                                Transition {
+                                    from: ""; to: "canundo"
+                                    ParallelAnimation {
+                                        NumberAnimation {
+                                            target: undoRedoRect
+                                            properties: "height";
+                                            from: 0
+                                            to: 50
+                                            easing.type: "InOutQuad";
+                                            duration: 250
+                                        }
 
-                                    StyledCheckbox {
-                                        id: itemCheckedCheckbox
-                                        //checked: isselected
-                                        onClicked: editisselected = checked
-                                        Component.onCompleted: itemCheckedCheckbox.checked = isselected
-                                        Connections {
-                                            target: artItemsModel
-                                            onSelectedArtworksCountChanged: {
-                                                itemCheckedCheckbox.checked = rowWrapper.myData.isselected || false
-                                            }
+                                        NumberAnimation {
+                                            target: undoRedoRect
+                                            properties: "opacity";
+                                            from: 0
+                                            to: 1
+                                            easing.type: "InOutQuad";
+                                            duration: 250
                                         }
                                     }
+                                },
+                                Transition {
+                                    from: "canundo"; to: ""
+                                    ParallelAnimation {
+                                        NumberAnimation {
+                                            target: undoRedoRect
+                                            properties: "height";
+                                            from: 50
+                                            to: 0
+                                            easing.type: "InOutQuad";
+                                            duration: 250
+                                        }
 
-                                    Rectangle {
-                                        width: 180
-                                        height: parent.height
-                                        color: "transparent"
-
-                                        ColumnLayout {
-                                            anchors.fill: parent
-                                            anchors.margins: { left: 15; right: 15 }
-                                            spacing: 5
-
-                                            Item {
-                                                height: 15
-                                            }
-
-                                            Rectangle {
-                                                width: 150
-                                                height: 130
-                                                anchors.horizontalCenter: parent.horizontalCenter
-                                                color: "transparent"
-                                                Image {
-                                                    anchors.fill: parent
-                                                    source: "image://global/" + filename
-                                                    sourceSize.width: 150
-                                                    sourceSize.height: 150
-                                                    fillMode: Image.PreserveAspectCrop
-                                                    asynchronous: true
-                                                }
-
-                                                MouseArea {
-                                                    anchors.fill: parent
-                                                    onClicked: editisselected = !isselected
-                                                }
-                                            }
-
-                                            StyledText {
-                                                Layout.fillWidth: true
-                                                elide: Text.ElideMiddle
-                                                color: Colors.defaultInputBackground
-                                                horizontalAlignment: Text.AlignHCenter
-                                                text: filename.split(/[\\/]/).pop()
-                                            }
-
-                                            Item {
-                                                Layout.fillHeight: true
-                                            }
+                                        NumberAnimation {
+                                            target: undoRedoRect
+                                            properties: "opacity";
+                                            from: 1
+                                            to: 0
+                                            easing.type: "InOutQuad";
+                                            duration: 250
                                         }
                                     }
+                                }
 
-                                    Rectangle {
-                                        id: columnRectangle
-                                        height: parent.height
-                                        Layout.fillWidth: true
-                                        color: rowWrapper.isHighlighted  ? Colors.selectedMetadataColor : Colors.artworkBackground
+                            ]
 
-                                        ColumnLayout {
-                                            id: columnLayout
-                                            spacing: 3
-                                            anchors.fill: parent
-                                            anchors.margins: { left: 20; right: 20 }
+                            RowLayout {
+                                anchors.fill: parent
+                                spacing: 10
 
-                                            StyledText {
-                                                text: qsTr("Description:")
-                                                anchors.left: parent.left
-                                            }
+                                Rectangle {
+                                    color: Colors.artworkSavedColor
+                                    width: 6
+                                    Layout.fillHeight: true
+                                }
 
-                                            Rectangle {
-                                                id: rect
-                                                Layout.fillWidth: true
-                                                height: 30
-                                                color: rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.defaultControlColor
-                                                border.color: Colors.artworkActiveColor
-                                                border.width: descriptionTextInput.activeFocus ? 1 : 0
+                                Item {
+                                    Layout.fillWidth: true
+                                }
 
-                                                StyledTextInput {
-                                                    id: descriptionTextInput
-                                                    height: 30
-                                                    anchors.left: parent.left
-                                                    anchors.right: parent.right
-                                                    anchors.leftMargin: 5
-                                                    anchors.rightMargin: 5
+                                StyledText {
+                                    id: undoDescription
+                                    text: undoRedoManager.undoDescription
+                                }
 
-                                                    anchors.verticalCenter: parent.verticalCenter
-                                                    maximumLength: 250
-                                                    text: description
-                                                    color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.artworkActiveColor
-                                                    onTextChanged: model.editdescription = text
-                                                    Keys.onTabPressed: {
-                                                        flv.activateEdit()
-                                                    }
+                                Item {
+                                    width: 10
+                                }
 
-                                                    validator: RegExpValidator {
-                                                        regExp: /[a-zA-Z0-9 !@#$%^&*()+="'|-,]*/
-                                                    }
+                                StyledText {
+                                    text: qsTr("Undo")
+                                    color: undoMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
 
-                                                    Keys.onPressed: {
-                                                        if(event.matches(StandardKey.Paste)) {
-                                                            var clipboardText = clipboard.getText();
-                                                            // same regexp as in validator
-                                                            var sanitizedText = clipboardText.replace(/[^a-zA-Z0-9 !@#$%^&*()+="'|-,]*/g, '');
-                                                            console.log("before we have: " + sanitizedText)
-                                                            descriptionTextInput.paste(sanitizedText)
-                                                            event.accepted = true
-                                                        }
-                                                    }
+                                    MouseArea {
+                                        id: undoMA
+                                        anchors.fill: parent
+                                        cursorShape: Qt.PointingHandCursor
+                                        onClicked: {
+                                            undoRedoManager.undoLastAction()
+                                        }
+                                    }
+                                }
+
+                                StyledText {
+                                    text: qsTr("Dismiss (%1)").arg(10 - (autoDismissTimer.iterations % 11))
+                                    color: dismissUndoMA.pressed ? Colors.defaultLightColor : Colors.defaultInputBackground
+
+                                    MouseArea {
+                                        id: dismissUndoMA
+                                        anchors.fill: parent
+                                        cursorShape: Qt.PointingHandCursor
+                                        onClicked: {
+                                            undoRedoManager.discardLastAction()
+                                        }
+                                    }
+                                }
+
+                                Item {
+                                    Layout.fillWidth: true
+                                }
+
+                                Timer {
+                                    id: autoDismissTimer
+                                    property int iterations: 0
+                                    interval: 1000
+                                    repeat: true
+                                    running: undoRedoManager.canUndo
+                                    onTriggered: {
+                                        iterations += 1
+
+                                        if (iterations % 11 === 10) {
+                                            undoRedoManager.discardLastAction()
+                                            iterations = 0
+                                        }
+                                    }
+                                }
+
+                                Connections {
+                                    target: undoRedoManager
+                                    onItemRecorded: {
+                                        autoDismissTimer.iterations = 0
+                                    }
+                                }
+                            }
+                        }
+
+                        StyledScrollView {
+                            id: mainScrollView
+                            width: parent.width
+                            anchors.topMargin: 4
+                            anchors.top: undoRedoRect.bottom
+                            anchors.bottom: parent.bottom
+                            //Layout.fillWidth: true
+                            //Layout.fillHeight: true
+                            // does not work for now in Qt 5.4.1 in combination with ListView
+                            //verticalScrollBarPolicy: Qt.ScrollBarAlwaysOn
+
+                            ListView {
+                                id: imagesListView
+                                model: artItemsModel
+                                boundsBehavior: Flickable.StopAtBounds
+                                spacing: 4
+
+                                add: Transition {
+                                    NumberAnimation { property: "opacity"; from: 0; to: 1; duration: 230 }
+                                }
+
+                                remove: Transition {
+                                    NumberAnimation { property: "opacity"; to: 0; duration: 230 }
+                                }
+
+                                displaced: Transition {
+                                    NumberAnimation { properties: "x,y"; duration: 230 }
+                                }
+
+                                addDisplaced: Transition {
+                                    NumberAnimation { properties: "x,y"; duration: 230 }
+                                }
+
+                                removeDisplaced: Transition {
+                                    NumberAnimation { properties: "x,y"; duration: 230 }
+                                }
+
+                                delegate: Rectangle {
+                                    id: rowWrapper
+                                    property bool isHighlighted: (isselected || descriptionTextInput.activeFocus || flv.isFocused)
+                                    color: isHighlighted ? Colors.selectedArtworkColor : Colors.artworkImageBackground
+                                    property int indexOfThisDelegate: index
+                                    property variant myData: model
+
+                                    width: parent.width
+                                    height: 200
+
+                                    RowLayout {
+                                        anchors.fill: parent
+                                        anchors.rightMargin: 10
+                                        spacing: 5
+
+                                        Rectangle {
+                                            id: isModifiedRectangle
+                                            color: ismodified ? Colors.artworkModifiedColor : Colors.artworkSavedColor
+                                            width: 6
+                                            Layout.fillHeight: true
+                                        }
+
+                                        Item {
+                                            width: 5
+                                        }
+
+                                        StyledCheckbox {
+                                            id: itemCheckedCheckbox
+                                            //checked: isselected
+                                            onClicked: editisselected = checked
+                                            Component.onCompleted: itemCheckedCheckbox.checked = isselected
+                                            Connections {
+                                                target: artItemsModel
+                                                onSelectedArtworksCountChanged: {
+                                                    itemCheckedCheckbox.checked = rowWrapper.myData.isselected || false
                                                 }
                                             }
+                                        }
 
-                                            Item {
-                                                height: 1
-                                            }
+                                        Rectangle {
+                                            width: 180
+                                            height: parent.height
+                                            color: "transparent"
 
-                                            RowLayout {
-                                                anchors.left: parent.left
+                                            ColumnLayout {
+                                                anchors.fill: parent
+                                                anchors.margins: { left: 15; right: 15 }
                                                 spacing: 5
 
-                                                StyledText {
-                                                    id: keywordsLabel
-                                                    text: qsTr("Keywords:")
+                                                Item {
+                                                    height: 15
+                                                }
+
+                                                Rectangle {
+                                                    width: 150
+                                                    height: 130
+                                                    anchors.horizontalCenter: parent.horizontalCenter
+                                                    color: "transparent"
+                                                    Image {
+                                                        anchors.fill: parent
+                                                        source: "image://global/" + filename
+                                                        sourceSize.width: 150
+                                                        sourceSize.height: 150
+                                                        fillMode: Image.PreserveAspectCrop
+                                                        asynchronous: true
+                                                    }
+
+                                                    MouseArea {
+                                                        anchors.fill: parent
+                                                        onClicked: editisselected = !isselected
+                                                    }
                                                 }
 
                                                 StyledText {
-                                                    text: qsTr("(comma-separated)")
-                                                    visible: rowWrapper.isHighlighted
+                                                    Layout.fillWidth: true
+                                                    elide: Text.ElideMiddle
                                                     color: Colors.defaultInputBackground
-                                                }
-                                            }
-
-                                            Rectangle {
-                                                id: keywordsWrapper
-                                                Layout.fillWidth: true
-                                                height: 80
-                                                anchors.rightMargin: 20
-                                                border.color: Colors.artworkActiveColor
-                                                border.width: flv.isFocused ? 1 : 0
-                                                color: rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.defaultControlColor
-
-
-                                                function removeKeyword(index) {
-                                                    artItemsModel.removeKeywordAt(rowWrapper.indexOfThisDelegate, index)
-                                                }
-
-                                                function removeLastKeyword() {
-                                                    artItemsModel.removeLastKeyword(rowWrapper.indexOfThisDelegate)
-                                                }
-
-                                                function appendKeyword(keyword) {
-                                                    artItemsModel.appendKeyword(rowWrapper.indexOfThisDelegate, keyword)
-                                                }
-
-                                                function pasteKeywords(keywords) {
-                                                    artItemsModel.pasteKeywords(rowWrapper.indexOfThisDelegate, keywords)
-                                                }
-
-                                                function saveKeywords() {
-                                                    artItemsModel.backupItem(rowWrapper.indexOfThisDelegate)
-                                                }
-
-                                                MouseArea {
-                                                    anchors.fill: parent
-                                                    propagateComposedEvents: true
-                                                    onClicked: {
-                                                        flv.activateEdit()
-                                                        mouse.accepted = false
-                                                    }
-                                                }
-
-                                                StyledScrollView {
-                                                    id: scroller
-                                                    height: parent.height
-                                                    width: parent.width + 15
-                                                    highlightOnFocus: true
-
-                                                    EditableTags {
-                                                        id: flv
-                                                        model: artItemsModel.getArtworkItself(rowWrapper.indexOfThisDelegate)
-                                                        anchors.margins: { left: 5; top: 5; right: 0; bottom: 5 }
-
-                                                        delegate: Rectangle {
-                                                            id: itemWrapper
-                                                            property int indexOfThisDelegate: index
-                                                            color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.artworkActiveColor
-
-                                                            width: childrenRect.width
-                                                            height: childrenRect.height
-
-                                                            RowLayout {
-                                                                spacing: 1
-
-                                                                Rectangle {
-                                                                    id: tagTextRect
-                                                                    width: childrenRect.width + 5
-                                                                    height: 20
-                                                                    color: "transparent"
-
-                                                                    StyledText {
-                                                                        anchors.left: parent.left
-                                                                        anchors.leftMargin: 5
-                                                                        anchors.top: parent.top
-                                                                        anchors.bottom: parent.bottom
-                                                                        verticalAlignment: Text.AlignVCenter
-                                                                        text: keyword
-                                                                        color: rowWrapper.isHighlighted ? Colors.defaultControlColor : Colors.defaultLightColor
-                                                                    }
-                                                                }
-
-                                                                CloseIcon {
-                                                                    width: 14
-                                                                    height: 14
-                                                                    isActive: rowWrapper.isHighlighted
-                                                                    anchors.verticalCenter: tagTextRect.verticalCenter
-                                                                    onItemClicked: keywordsWrapper.removeKeyword(itemWrapper.indexOfThisDelegate)
-                                                                }
-
-                                                                Item {
-                                                                    width: 1
-                                                                }
-                                                            }
-                                                        }
-
-                                                        onTagAdded: {
-                                                            keywordsWrapper.appendKeyword(text)
-                                                        }
-
-                                                        onTagsPasted: {
-                                                            keywordsWrapper.pasteKeywords(tagsList)
-                                                        }
-
-                                                        onRemoveLast: {
-                                                            keywordsWrapper.removeLastKeyword()
-                                                        }
-
-                                                        onFocusLost: keywordsWrapper.saveKeywords()
-                                                    }
-                                                }
-                                            }
-
-                                            RowLayout {
-                                                spacing: 15
-
-                                                StyledText {
-                                                    text: keywordscount
-                                                    color: rowWrapper.isHighlighted ? Colors.defaultControlColor : Colors.selectedArtworkColor
+                                                    horizontalAlignment: Text.AlignHCenter
+                                                    text: filename.split(/[\\/]/).pop()
                                                 }
 
                                                 Item {
-                                                    Layout.fillWidth: true
+                                                    Layout.fillHeight: true
                                                 }
+                                            }
+                                        }
+
+                                        Rectangle {
+                                            id: columnRectangle
+                                            height: parent.height
+                                            Layout.fillWidth: true
+                                            color: rowWrapper.isHighlighted  ? Colors.selectedMetadataColor : Colors.artworkBackground
+
+                                            ColumnLayout {
+                                                id: columnLayout
+                                                spacing: 3
+                                                anchors.fill: parent
+                                                anchors.margins: { left: 20; right: 20 }
 
                                                 StyledText {
-                                                    text: qsTr("More Edits")
-                                                    color: moreEditsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
+                                                    text: qsTr("Description:")
+                                                    anchors.left: parent.left
+                                                }
 
-                                                    MouseArea {
-                                                        id: moreEditsMA
-                                                        anchors.fill: parent
-                                                        cursorShape: Qt.PointingHandCursor
-                                                        onClicked: {
-                                                            combinedArtworks.resetModelData();
-                                                            artItemsModel.combineArtwork(rowWrapper.indexOfThisDelegate);
-                                                            Qt.createComponent("Dialogs/CombinedArtworksDialog.qml").createObject(applicationWindow, {});
+                                                Rectangle {
+                                                    id: rect
+                                                    Layout.fillWidth: true
+                                                    height: 30
+                                                    color: rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.defaultControlColor
+                                                    border.color: Colors.artworkActiveColor
+                                                    border.width: descriptionTextInput.activeFocus ? 1 : 0
+
+                                                    StyledTextInput {
+                                                        id: descriptionTextInput
+                                                        height: 30
+                                                        anchors.left: parent.left
+                                                        anchors.right: parent.right
+                                                        anchors.leftMargin: 5
+                                                        anchors.rightMargin: 5
+
+                                                        anchors.verticalCenter: parent.verticalCenter
+                                                        maximumLength: 250
+                                                        text: description
+                                                        color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.artworkActiveColor
+                                                        onTextChanged: model.editdescription = text
+                                                        Keys.onTabPressed: {
+                                                            flv.activateEdit()
+                                                        }
+
+                                                        validator: RegExpValidator {
+                                                            regExp: /[a-zA-Z0-9 !@#$%^&*()+="'|-,]*/
+                                                        }
+
+                                                        Keys.onPressed: {
+                                                            if(event.matches(StandardKey.Paste)) {
+                                                                var clipboardText = clipboard.getText();
+                                                                // same regexp as in validator
+                                                                var sanitizedText = clipboardText.replace(/[^a-zA-Z0-9 !@#$%^&*()+="'|-,]*/g, '');
+                                                                console.log("before we have: " + sanitizedText)
+                                                                descriptionTextInput.paste(sanitizedText)
+                                                                event.accepted = true
+                                                            }
                                                         }
                                                     }
                                                 }
 
-                                                StyledText {
-                                                    text: qsTr("Copy keywords")
-                                                    color: copyKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
+                                                Item {
+                                                    height: 1
+                                                }
 
-                                                    MouseArea {
-                                                        id: copyKeywordsMA
-                                                        anchors.fill: parent
-                                                        cursorShape: Qt.PointingHandCursor
-                                                        onClicked: clipboard.setText(keywordsstring)
+                                                RowLayout {
+                                                    anchors.left: parent.left
+                                                    spacing: 5
+
+                                                    StyledText {
+                                                        id: keywordsLabel
+                                                        text: qsTr("Keywords:")
+                                                    }
+
+                                                    StyledText {
+                                                        text: qsTr("(comma-separated)")
+                                                        visible: rowWrapper.isHighlighted
+                                                        color: Colors.defaultInputBackground
                                                     }
                                                 }
-                                            }
 
-                                            Item {
-                                                height: 1
+                                                Rectangle {
+                                                    id: keywordsWrapper
+                                                    Layout.fillWidth: true
+                                                    height: 80
+                                                    anchors.rightMargin: 20
+                                                    border.color: Colors.artworkActiveColor
+                                                    border.width: flv.isFocused ? 1 : 0
+                                                    color: rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.defaultControlColor
+
+
+                                                    function removeKeyword(index) {
+                                                        artItemsModel.removeKeywordAt(rowWrapper.indexOfThisDelegate, index)
+                                                    }
+
+                                                    function removeLastKeyword() {
+                                                        artItemsModel.removeLastKeyword(rowWrapper.indexOfThisDelegate)
+                                                    }
+
+                                                    function appendKeyword(keyword) {
+                                                        artItemsModel.appendKeyword(rowWrapper.indexOfThisDelegate, keyword)
+                                                    }
+
+                                                    function pasteKeywords(keywords) {
+                                                        artItemsModel.pasteKeywords(rowWrapper.indexOfThisDelegate, keywords)
+                                                    }
+
+                                                    function saveKeywords() {
+                                                        artItemsModel.backupItem(rowWrapper.indexOfThisDelegate)
+                                                    }
+
+                                                    MouseArea {
+                                                        anchors.fill: parent
+                                                        propagateComposedEvents: true
+                                                        onClicked: {
+                                                            flv.activateEdit()
+                                                            mouse.accepted = false
+                                                        }
+                                                    }
+
+                                                    StyledScrollView {
+                                                        id: scroller
+                                                        height: parent.height
+                                                        width: parent.width + 15
+                                                        highlightOnFocus: true
+
+                                                        EditableTags {
+                                                            id: flv
+                                                            model: artItemsModel.getArtworkItself(rowWrapper.indexOfThisDelegate)
+                                                            anchors.margins: { left: 5; top: 5; right: 0; bottom: 5 }
+
+                                                            delegate: Rectangle {
+                                                                id: itemWrapper
+                                                                property int indexOfThisDelegate: index
+                                                                color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.artworkActiveColor
+
+                                                                width: childrenRect.width
+                                                                height: childrenRect.height
+
+                                                                RowLayout {
+                                                                    spacing: 1
+
+                                                                    Rectangle {
+                                                                        id: tagTextRect
+                                                                        width: childrenRect.width + 5
+                                                                        height: 20
+                                                                        color: "transparent"
+
+                                                                        StyledText {
+                                                                            anchors.left: parent.left
+                                                                            anchors.leftMargin: 5
+                                                                            anchors.top: parent.top
+                                                                            anchors.bottom: parent.bottom
+                                                                            verticalAlignment: Text.AlignVCenter
+                                                                            text: keyword
+                                                                            color: rowWrapper.isHighlighted ? Colors.defaultControlColor : Colors.defaultLightColor
+                                                                        }
+                                                                    }
+
+                                                                    CloseIcon {
+                                                                        width: 14
+                                                                        height: 14
+                                                                        isActive: rowWrapper.isHighlighted
+                                                                        anchors.verticalCenter: tagTextRect.verticalCenter
+                                                                        onItemClicked: keywordsWrapper.removeKeyword(itemWrapper.indexOfThisDelegate)
+                                                                    }
+
+                                                                    Item {
+                                                                        width: 1
+                                                                    }
+                                                                }
+                                                            }
+
+                                                            onTagAdded: {
+                                                                keywordsWrapper.appendKeyword(text)
+                                                            }
+
+                                                            onTagsPasted: {
+                                                                keywordsWrapper.pasteKeywords(tagsList)
+                                                            }
+
+                                                            onRemoveLast: {
+                                                                keywordsWrapper.removeLastKeyword()
+                                                            }
+
+                                                            onFocusLost: keywordsWrapper.saveKeywords()
+                                                        }
+                                                    }
+                                                }
+
+                                                RowLayout {
+                                                    spacing: 15
+
+                                                    StyledText {
+                                                        text: keywordscount
+                                                        color: rowWrapper.isHighlighted ? Colors.defaultControlColor : Colors.selectedArtworkColor
+                                                    }
+
+                                                    Item {
+                                                        Layout.fillWidth: true
+                                                    }
+
+                                                    StyledText {
+                                                        text: qsTr("More Edits")
+                                                        color: moreEditsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
+
+                                                        MouseArea {
+                                                            id: moreEditsMA
+                                                            anchors.fill: parent
+                                                            cursorShape: Qt.PointingHandCursor
+                                                            onClicked: {
+                                                                combinedArtworks.resetModelData();
+                                                                artItemsModel.combineArtwork(rowWrapper.indexOfThisDelegate);
+                                                                Qt.createComponent("Dialogs/CombinedArtworksDialog.qml").createObject(applicationWindow, {});
+                                                            }
+                                                        }
+                                                    }
+
+                                                    StyledText {
+                                                        text: qsTr("Copy keywords")
+                                                        color: copyKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
+
+                                                        MouseArea {
+                                                            id: copyKeywordsMA
+                                                            anchors.fill: parent
+                                                            cursorShape: Qt.PointingHandCursor
+                                                            onClicked: clipboard.setText(keywordsstring)
+                                                        }
+                                                    }
+                                                }
+
+                                                Item {
+                                                    height: 1
+                                                }
                                             }
                                         }
                                     }
                                 }
-                            }
 
-                            Connections {
-                                target: artItemsModel
-                                onArtworksChanged: {
-                                    console.log("Force layout for artworks list view")
-                                    imagesListView.forceLayout()
-                                    imagesListView.update()
+                                Connections {
+                                    target: artItemsModel
+                                    onArtworksChanged: {
+                                        console.log("Force layout for artworks list view")
+                                        imagesListView.forceLayout()
+                                        imagesListView.update()
+                                    }
                                 }
                             }
                         }

@@ -33,6 +33,7 @@ namespace UndoRedo {
     {
         Q_OBJECT
         Q_PROPERTY(bool canUndo READ getCanUndo NOTIFY canUndoChanged)
+        Q_PROPERTY(QString undoDescription READ getUndoDescription NOTIFY undoDescriptionChanged)
     public:
         UndoRedoManager(QObject *parent=0):
             QObject(parent)
@@ -45,14 +46,16 @@ namespace UndoRedo {
 
     signals:
         void canUndoChanged();
+        void undoDescriptionChanged();
+        void itemRecorded();
 
-    public:
-        Q_INVOKABLE QString getUndoDescription() const { return m_HistoryStack.empty() ? "" : m_HistoryStack.top()->getDescription(); }
+    private:
+        QString getUndoDescription() const { return m_HistoryStack.empty() ? "" : m_HistoryStack.top()->getDescription(); }
 
     public:
         void recordHistoryItem(HistoryItem *historyItem);
         Q_INVOKABLE bool undoLastAction();
-        void discardLastAction();
+        Q_INVOKABLE void discardLastAction();
 
     private:
         // stack for future todos

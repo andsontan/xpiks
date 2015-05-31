@@ -24,11 +24,14 @@
 void UndoRedo::UndoRedoManager::recordHistoryItem(UndoRedo::HistoryItem *historyItem)
 {
     if (!m_HistoryStack.empty()) {
-        discardLastAction();
+        HistoryItem *oldItem = m_HistoryStack.pop();
+        delete oldItem;
     }
 
     m_HistoryStack.append(historyItem);
+    emit itemRecorded();
     emit canUndoChanged();
+    emit undoDescriptionChanged();
 }
 
 bool UndoRedo::UndoRedoManager::undoLastAction()
@@ -39,6 +42,7 @@ bool UndoRedo::UndoRedoManager::undoLastAction()
     if (anyItem) {
         HistoryItem *historyItem = m_HistoryStack.pop();
         emit canUndoChanged();
+        emit undoDescriptionChanged();
         historyItem->undo(m_CommandManager);
         delete historyItem;
     }
@@ -50,5 +54,6 @@ void UndoRedo::UndoRedoManager::discardLastAction()
 {
     HistoryItem *historyItem = m_HistoryStack.pop();
     emit canUndoChanged();
+    emit undoDescriptionChanged();
     delete historyItem;
 }

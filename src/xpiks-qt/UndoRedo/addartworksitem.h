@@ -25,6 +25,7 @@
 #include <QList>
 #include <QPair>
 #include "historyitem.h"
+#include "../Helpers/indiceshelper.h"
 
 namespace UndoRedo {
 
@@ -52,7 +53,7 @@ namespace UndoRedo {
 
    public:
         virtual QString getDescription() const {
-            int count = m_AddedRanges.count();
+            int count = Helpers::getRangesLength(m_AddedRanges);
             return count > 1 ? QString("%1 items added").arg(count) :
                                  QString("1 item added");
         }
