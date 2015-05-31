@@ -26,6 +26,7 @@
 #include <QList>
 #include <QStringList>
 #include <QMutex>
+#include <QThread>
 
 namespace Models {
     class ArtworkMetadata;
@@ -71,9 +72,11 @@ namespace Helpers {
         void doRunUpload(const QList<UploadItem *> &uploadItems, const Encryption::SecretsManager *secretsManager);
         void extractFilePathes(const QList<Models::ArtworkMetadata*> &artworkList,
                                QStringList &filePathes, bool includeEPS) const;
+        void stopThreads();
 
     private:
         QMutex m_Mutex;
+        QList<QThread *> m_UploadThreads;
         int m_WorkersCount;
         int m_AllWorkersCount;
         bool m_AnyFailed;

@@ -25,6 +25,7 @@
 #include <QObject>
 #include <QProcess>
 #include <QString>
+#include <QTimer>
 
 namespace Encryption {
     class SecretsManager;
@@ -37,11 +38,9 @@ namespace Helpers {
     {
         Q_OBJECT
     public:
-        explicit UploadWorker(UploadItem *uploadItem, const Encryption::SecretsManager *secretsManager, QObject *parent = 0);
+        explicit UploadWorker(UploadItem *uploadItem, const Encryption::SecretsManager *secretsManager,
+                              int delay, QObject *parent = 0);
         ~UploadWorker();
-
-    public:
-        bool getSuccessStatus() const { return m_SuccessStatus; }
 
     signals:
         void stopped();
@@ -52,11 +51,18 @@ namespace Helpers {
         void process();
         void cancel();
 
+    private slots:
+        void innerProcessFinished(int exitCode, QProcess::ExitStatus exitStatus);
+        /*void uploadOutputReady();*/
+        void onTimerTimeout();
+
     private:
         UploadItem *m_UploadItem;
         const Encryption::SecretsManager *m_SecretsManager;
-        QProcess m_CurlProcess;
-        bool m_SuccessStatus;
+        QProcess *m_CurlProcess;
+        QTimer *m_Timer;
+        QString m_Host;
+        int m_Delay;
     };
 }
 

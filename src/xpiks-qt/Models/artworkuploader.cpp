@@ -41,7 +41,7 @@ namespace Models {
 
     void ArtworkUploader::onUploadStarted()
     {
-        // BUMP
+        beginProcessing();
     }
 
     void ArtworkUploader::artworkUploaded(bool status)
@@ -77,11 +77,6 @@ namespace Models {
         m_TestingCredentialWatcher->setFuture(QtConcurrent::run(isConnectionValid, host, username, password));
     }
 
-    void ArtworkUploader::cancelUpload()
-    {
-        m_UploadCoordinator.cancelUpload();
-    }
-
     void ArtworkUploader::doUploadArtworks(const QList<ArtworkMetadata *> &artworkList)
     {
         int artworksCount = artworkList.length();
@@ -91,7 +86,6 @@ namespace Models {
 
         const UploadInfoRepository *uploadInfoRepository = m_CommandManager->getUploadInfoRepository();
         const QList<Models::UploadInfo *> &infos = uploadInfoRepository->getUploadInfos();
-
         const Encryption::SecretsManager *secretsManager = m_CommandManager->getSecretsManager();
 
         m_UploadCoordinator.uploadArtworks(artworkList, infos, m_IncludeEPS, secretsManager);

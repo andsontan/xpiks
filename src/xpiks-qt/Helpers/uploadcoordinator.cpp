@@ -82,14 +82,16 @@ namespace Helpers {
 
         if (allWorkersFinished) {
             emit uploadFinished(!m_AnyFailed);
+            stopThreads();
         }
     }
 
     void UploadCoordinator::doRunUpload(const QList<UploadItem*> &uploadItems,
                                         const Encryption::SecretsManager *secretsManager)
     {
+        int i = 0;
         foreach (UploadItem *uploadItem, uploadItems) {
-            UploadWorker *worker = new UploadWorker(uploadItem, secretsManager);
+            UploadWorker *worker = new UploadWorker(uploadItem, secretsManager, i);
             QThread *thread = new QThread();
             worker->moveToThread(thread);
 
@@ -102,7 +104,10 @@ namespace Helpers {
             QObject::connect(worker, SIGNAL(finished(bool)), this, SLOT(workerFinished(bool)));
             QObject::connect(this, SIGNAL(cancelAll()), worker, SLOT(cancel()));
 
+            m_UploadThreads.append(thread);
+
             thread->start();
+            i++;
         }
     }
 
@@ -121,6 +126,13 @@ namespace Helpers {
                 }
             }
         }
+    }
+
+    void UploadCoordinator::stopThreads()
+    {
+        // threads are stopped on worker stopped signal
+        // and deleted with thread finished signal binding
+        m_UploadThreads.clear();
     }
 }
 

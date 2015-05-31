@@ -24,20 +24,35 @@
 #include <QStringList>
 #include <QByteArray>
 #include <QDebug>
+#include <QThread>
 #include "../Encryption/secretsmanager.h"
 
 namespace Helpers {
-    UploadWorker::UploadWorker(UploadItem *uploadItem, const Encryption::SecretsManager *secretsManager, QObject *parent) :
+    UploadWorker::UploadWorker(UploadItem *uploadItem, const Encryption::SecretsManager *secretsManager,
+                               int delay, QObject *parent) :
         QObject(parent),
         m_UploadItem(uploadItem),
-        m_SecretsManager(secretsManager)
+        m_SecretsManager(secretsManager),
+        m_Host(uploadItem->m_UploadInfo->getHost()),
+        m_Delay(delay)
     {
     }
 
-    UploadWorker::~UploadWorker() { delete m_UploadItem; }
+    UploadWorker::~UploadWorker() {
+        delete m_UploadItem;
+
+        if (m_CurlProcess) {
+            delete m_CurlProcess;
+        }
+
+        if (m_Timer) {
+            delete m_Timer;
+        }
+    }
 
     void UploadWorker::process() {
-        m_SuccessStatus = false;
+
+        QThread::sleep(m_Delay);
 
         const QStringList &filesToUpload = m_UploadItem->m_FilesToUpload;
         Models::UploadInfo *uploadInfo = m_UploadItem->m_UploadInfo;
@@ -50,31 +65,54 @@ namespace Helpers {
         QString command = QString("%1 --connect-timeout 10 --max-time %6 --retry 1 -T \"{%2}\" %3 --user %4:%5").
                 arg(curlPath, filesToUpload.join(','), uploadInfo->getHost(), uploadInfo->getUsername(), password, QString::number(maxSeconds));
 
-        m_CurlProcess.start(command);
+        m_CurlProcess = new QProcess();
 
-        // TODO: move to config
-        if (m_CurlProcess.waitForFinished(maxSeconds * 1000) &&
-                m_CurlProcess.exitStatus() == QProcess::NormalExit &&
-                m_CurlProcess.exitCode() == 0) {
-            m_SuccessStatus = true;
-        }
+        QObject::connect(m_CurlProcess, SIGNAL(finished(int,QProcess::ExitStatus)),
+                         this, SLOT(innerProcessFinished(int,QProcess::ExitStatus)));
+        /*QObject::connect(m_CurlProcess, SIGNAL(readyReadStandardOutput()),
+                         this, SLOT(uploadOutputReady()));*/
 
-        QByteArray stdoutByteArray = m_CurlProcess.readAllStandardOutput();
-        QString stdoutText(stdoutByteArray);
-        qDebug() << "STDOUT [" << uploadInfo->getHost() << "]:" << stdoutText;
+        m_Timer = new QTimer();
+        QObject::connect(m_Timer, SIGNAL(timeout()), this, SLOT(onTimerTimeout()));
+        m_Timer->setSingleShot(true);
 
-        QByteArray stderrByteArray = m_CurlProcess.readAllStandardError();
-        QString stderrText(stderrByteArray);
-        qDebug() << "STDERR [" << uploadInfo->getHost() << "]:" << stderrText;
-
-        // upload
-        emit finished(m_SuccessStatus);
-        emit stopped();
+        m_Timer->start(maxSeconds*1000);
+        m_CurlProcess->start(command);
     }
 
     void UploadWorker::cancel() {
-        m_CurlProcess.kill();
-        emit finished(false);
+        qDebug() << "Terminating upload to " << m_Host;
+
+        bool killed = false;
+
+        if (m_CurlProcess && m_CurlProcess->state() != QProcess::NotRunning && !m_CurlProcess->atEnd()) {
+            m_CurlProcess->kill();
+            qDebug() << "Curl process killed";
+            killed = true;
+        }
+
+        emit finished(!killed);
         emit stopped();
+    }
+
+    void UploadWorker::innerProcessFinished(int exitCode, QProcess::ExitStatus exitStatus)
+    {
+        QByteArray stdoutByteArray = m_CurlProcess->readAllStandardOutput();
+        QString stdoutText(stdoutByteArray);
+        qDebug() << "STDOUT [" << m_Host << "]:" << stdoutText;
+
+        QByteArray stderrByteArray = m_CurlProcess->readAllStandardError();
+        QString stderrText(stderrByteArray);
+        qDebug() << "STDERR [" << m_Host << "]:" << stderrText;
+
+        // upload
+        bool success = exitCode == 0 && exitStatus == QProcess::NormalExit;
+        emit finished(success);
+        emit stopped();
+    }
+
+    void UploadWorker::onTimerTimeout()
+    {
+        cancel();
     }
 }

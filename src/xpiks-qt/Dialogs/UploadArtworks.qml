@@ -50,7 +50,6 @@ Item {
 
     function startUpload() {
         progress.indeterminate = true
-        uploadButton.text = qsTr("Cancel")
         artworkUploader.resetModel()
         artworkUploader.uploadArtworks()
         saveSettings()
@@ -213,6 +212,11 @@ Item {
 
                                                     uploadHostsListView.currentIndex = sourceWrapper.indexOfThisDelegate
                                                 }
+                                            }
+
+                                            onDoubleClicked: {
+                                                myData.editisselected = !myData.isselected
+                                                itemCheckedCheckbox.checked = isselected
                                             }
                                         }
 
@@ -581,9 +585,8 @@ Item {
 
                     StyledButton {
                         id: uploadButton
-                        text: qsTr("Start Upload")
+                        text: artworkUploader.inProgress ? qsTr("Cancel") : qsTr("Start Upload")
                         width: 130
-                        enabled: !artworkUploader.inProgress
                         onClicked: {
                             if (!artworkUploader.inProgress) {
                                 if (uploadInfos.getSelectedInfosCount() === 0) {
@@ -598,7 +601,9 @@ Item {
                                     }
                                 }
                             } else {
-                                artworkUploader.cancelUpload()
+                                console.log("About to cancel upload...")
+                                enabled = false
+                                artworkUploader.cancelOperation()
                             }
                         }
 
@@ -606,7 +611,7 @@ Item {
                             target: artworkUploader
                             onFinishedProcessing: {
                                 progress.indeterminate = false
-                                uploadButton.text = qsTr("Start Upload")
+                                uploadButton.enabled = true
                             }
                         }
                     }
