@@ -70,6 +70,9 @@ namespace Helpers {
         Q_PROPERTY(QString oneUploadMinutesTimeoutKey READ getOneUploadMinutesTimeoutKey CONSTANT)
         QString getOneUploadMinutesTimeoutKey() const { return QString::fromLatin1(Constants::ONE_UPLOAD_MINUTES_TIMEMOUT); }
 
+        Q_PROPERTY(QString useConfirmationDialogsKey READ getUseConfirmationDialogsKey CONSTANT)
+        QString getUseConfirmationDialogsKey() const { return QString::fromLatin1(Constants::USE_CONFIRMATION_DIALOGS); }
+
         Q_INVOKABLE inline void setValue(const QString &key, const QVariant &value) {
             QSettings::setValue(key, value);
         }

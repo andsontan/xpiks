@@ -33,7 +33,7 @@ ApplicationWindow {
     modality: "ApplicationModal"
     title: qsTr("Settings")
     width: 450
-    height: 515
+    height: 600
     minimumWidth: width
     maximumWidth: width
     minimumHeight: height
@@ -50,6 +50,7 @@ ApplicationWindow {
     property double defaultMinMegapixels: 4.0
     property bool defaultMustUseMasterPassword: false
     property int defaultTimeout: 10
+    property bool defaultUseConfirmationDialogs: true
 
     property string exiftoolpathkey: appSettings.exifToolPathKey
     property string exifToolPath: appSettings.value(exiftoolpathkey, defaultExifTool)
@@ -73,6 +74,9 @@ ApplicationWindow {
 
     property string oneitemtimeoutkey: appSettings.oneUploadMinutesTimeoutKey
     property int oneItemTimeoutMinutes: appSettings.value(oneitemtimeoutkey, defaultTimeout)
+
+    property string useconfirmationdialogskey: appSettings.useConfirmationDialogsKey
+    property bool useConfirmationDialogs: appSettings.boolValue(useconfirmationdialogskey, defaultUseConfirmationDialogs)
 
     function onCancelMP(firstTime) {
         masterPasswordCheckbox.checked = !firstTime
@@ -194,6 +198,9 @@ ApplicationWindow {
             appSettings.setValue(oneItemTimeoutMinutes, defaultTimeout)
             timeoutMinutes.text = defaultTimeout + ''
 
+            appSettings.setValue(useconfirmationdialogskey, defaultUseConfirmationDialogs);
+            useConfirmationDialogsCheckbox.checked = defaultUseConfirmationDialogs
+
             secretsManager.removeMasterPassword()
             masterPasswordCheckbox.checked = defaultMustUseMasterPassword
             mustUseMasterPassword = defaultMustUseMasterPassword
@@ -314,6 +321,48 @@ ApplicationWindow {
                         text: qsTr("Reset")
                         width: 70
                         onClicked: curlText.text = defaultCurl
+                    }
+                }
+            }
+
+            Item {
+                height: 15
+            }
+
+            StyledText {
+                text: qsTr("Application UX:")
+            }
+
+            Rectangle {
+                Layout.fillWidth: true
+                height: 50
+                radius: 2
+                border.color: Colors.defaultInputBackground
+                border.width: 2
+                color: Colors.selectedArtworkColor
+
+                ColumnLayout {
+                    anchors.fill: parent
+                    spacing: 5
+                    anchors.margins: 10
+
+                    RowLayout {
+                        width: parent.width
+                        spacing: 10
+
+                        StyledCheckbox {
+                            id: useConfirmationDialogsCheckbox
+                            text: qsTr("Use confirmation dialogs")
+                        }
+
+                        StyledText {
+                            text: qsTr("(with destructive actions)")
+                            color: Colors.defaultInputBackground
+                        }
+
+                        Component.onCompleted: {
+                            useConfirmationDialogsCheckbox.checked = useConfirmationDialogs
+                        }
                     }
                 }
             }
@@ -562,7 +611,6 @@ ApplicationWindow {
                     }
 
                     Component.onCompleted: {
-                        console.log("Must use master password is: " + mustUseMasterPassword)
                         masterPasswordCheckbox.checked = mustUseMasterPassword
                     }
                 }
@@ -614,6 +662,8 @@ ApplicationWindow {
 
                         oneItemTimeoutMinutes = parseInt(timeoutMinutes.text)
                         appSettings.setValue(oneitemtimeoutkey, oneItemTimeoutMinutes)
+
+                        appSettings.setValue(useconfirmationdialogskey, useConfirmationDialogsCheckbox.checked)
 
                         closeSettings()
                     }

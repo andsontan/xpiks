@@ -51,6 +51,10 @@ ApplicationWindow {
         }
     }
 
+    function mustUseConfirmation() {
+        return appSettings.boolValue(appSettings.useConfirmationDialogsKey, true)
+    }
+
     function openUploadDialog() {
         if (appSettings.boolValue(appSettings.mustUseMasterPasswordKey, false)) {
             var component = Qt.createComponent("Dialogs/EnterMasterPasswordDialog.qml")
@@ -120,9 +124,13 @@ ApplicationWindow {
         text: qsTr("Are you sure you want to remove %1 item(s)?").arg(itemsCount)
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
-            artItemsModel.removeSelectedArtworks()
-            artItemsModel.checkForWarnings()
+            doRemoveSelectedArtworks()
         }
+    }
+
+    function doRemoveSelectedArtworks() {
+        artItemsModel.removeSelectedArtworks()
+        artItemsModel.checkForWarnings()
     }
 
     MessageDialog {
@@ -405,8 +413,12 @@ ApplicationWindow {
                                 else {
                                     var itemsCount = artItemsModel.selectedArtworksCount
                                     if (itemsCount > 0) {
-                                        confirmRemoveSelectedDialog.itemsCount = itemsCount
-                                        confirmRemoveSelectedDialog.open()
+                                        if (mustUseConfirmation()) {
+                                            confirmRemoveSelectedDialog.itemsCount = itemsCount
+                                            confirmRemoveSelectedDialog.open()
+                                        } else {
+                                            doRemoveSelectedArtworks()
+                                        }
                                     }
                                 }
                             }

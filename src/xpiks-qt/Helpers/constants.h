@@ -37,6 +37,7 @@ namespace Constants {
     const char LOG_FILENAME[] = "xpiks.log";
     const char METADATA_BACKUP_EXTENSION[] = ".xpks";
     const char ONE_UPLOAD_MINUTES_TIMEMOUT[] = "ONE_UPLOAD_MINUTES_TIMEMOUT";
+    const char USE_CONFIRMATION_DIALOGS[] = "USE_CONFIRMATION_DIALOGS";
 }
 
 #endif // CONSTANTS
