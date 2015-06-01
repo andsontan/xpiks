@@ -23,18 +23,28 @@
 #define MODIFYARTWORKHISTORYITEM_H
 
 #include <QList>
+#include <QString>
 #include "historyitem.h"
 #include "artworkmetadatabackup.h"
 
 namespace UndoRedo {
+    enum ModificationType {
+        PasteModificationType,
+        CombinedEditModificationType
+    };
+
+    QString getModificationTypeDescription(ModificationType type);
+
     class ModifyArtworksHistoryItem : public HistoryItem
     {
     public:
         ModifyArtworksHistoryItem(QList<ArtworkMetadataBackup*> backups,
-                                  QList<int> indices) :
+                                  QList<int> indices,
+                                  ModificationType modificationType) :
             HistoryItem(ModifyArtworksActionType),
             m_ArtworksBackups(backups),
-            m_Indices(indices)
+            m_Indices(indices),
+            m_ModificationType(modificationType)
         {
             Q_ASSERT(backups.length() == indices.length());
             Q_ASSERT(!backups.empty());
@@ -48,14 +58,16 @@ namespace UndoRedo {
     public:
          virtual QString getDescription() const {
              int count = m_ArtworksBackups.count();
-             return count > 1 ? QString("%1 items modified").arg(count) :
-                                  QString("1 item modified");
+             QString typeStr = getModificationTypeDescription(m_ModificationType);
+             return count > 1 ? QString("(%1)  %2 items modified").arg(typeStr).arg(count) :
+                                  QString("(%1)  1 item modified").arg(typeStr);
          }
 
 
     private:
         QList<ArtworkMetadataBackup*> m_ArtworksBackups;
         QList<int> m_Indices;
+        ModificationType m_ModificationType;
     };
 }
 

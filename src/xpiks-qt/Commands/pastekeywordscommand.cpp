@@ -45,7 +45,8 @@ Commands::CommandResult *Commands::PasteKeywordsCommand::execute(const Commands:
     metadata->appendKeywords(m_KeywordsList);
 
     UndoRedo::ModifyArtworksHistoryItem *modifyArtworksItem =
-            new UndoRedo::ModifyArtworksHistoryItem(artworksBackups, indicesToUpdate);
+            new UndoRedo::ModifyArtworksHistoryItem(artworksBackups, indicesToUpdate,
+                                                    UndoRedo::PasteModificationType);
     commandManager->recordHistoryItem(modifyArtworksItem);
 
     PasteKeywordsCommandResult *result = new PasteKeywordsCommandResult();

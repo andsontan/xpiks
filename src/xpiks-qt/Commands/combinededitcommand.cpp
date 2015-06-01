@@ -41,7 +41,8 @@ Commands::CommandResult *Commands::CombinedEditCommand::execute(const Commands::
     }
 
     UndoRedo::ModifyArtworksHistoryItem *modifyArtworksItem =
-            new UndoRedo::ModifyArtworksHistoryItem(artworksBackups, indicesToUpdate);
+            new UndoRedo::ModifyArtworksHistoryItem(artworksBackups, indicesToUpdate,
+                                                    UndoRedo::CombinedEditModificationType);
     commandManager->recordHistoryItem(modifyArtworksItem);
 
     CombinedEditCommandResult *result = new CombinedEditCommandResult(indicesToUpdate);

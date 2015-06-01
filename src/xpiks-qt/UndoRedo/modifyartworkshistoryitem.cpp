@@ -43,3 +43,15 @@ void UndoRedo::ModifyArtworksHistoryItem::undo(const Commands::CommandManager *c
 
     artItemsModel->updateItemsAtIndices(m_Indices);
 }
+
+
+QString UndoRedo::getModificationTypeDescription(UndoRedo::ModificationType type) {
+    switch (type) {
+    case PasteModificationType:
+        return "Paste";
+    case CombinedEditModificationType:
+        return "Combined Edit";
+    default:
+        return "";
+    }
+}
