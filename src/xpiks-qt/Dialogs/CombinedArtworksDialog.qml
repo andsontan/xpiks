@@ -385,6 +385,10 @@ Item {
                         combinedArtworks.appendKeyword(keyword)
                     }
 
+                    function pasteKeywords(keywordsList) {
+                        combinedArtworks.pasteKeywords(keywordsList)
+                    }
+
                     MouseArea {
                         anchors.fill: parent
                         propagateComposedEvents: true
@@ -454,6 +458,10 @@ Item {
 
                             onRemoveLast: {
                                 keywordsWrapper.removeLastKeyword()
+                            }
+
+                            onTagsPasted: {
+                                keywordsWrapper.pasteKeywords(tagsList)
                             }
                         }
                     }

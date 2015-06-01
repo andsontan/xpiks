@@ -160,6 +160,7 @@ Flickable {
                 Keys.onPressed: {
                     if(event.matches(StandardKey.Paste)) {
                         var clipboardText = clipboard.getText();
+                        clipboardText = clipboardText.replace(/(\r\n|\n|\r)/gm, '');
                         var keywordsToAdd = [];
 
                         var words = clipboardText.split(',');

@@ -138,6 +138,7 @@ namespace Models {
         Q_INVOKABLE void removeKeywordAt(int keywordIndex);
         Q_INVOKABLE void removeLastKeyword();
         Q_INVOKABLE void appendKeyword(const QString &keyword);
+        Q_INVOKABLE void pasteKeywords(const QStringList &keywords);
         Q_INVOKABLE void selectArtwork(int index);
         Q_INVOKABLE void deselectArtwork(int index);
         Q_INVOKABLE void removeSelectedArtworks();

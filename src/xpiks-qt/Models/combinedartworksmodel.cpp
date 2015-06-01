@@ -158,6 +158,19 @@ namespace Models {
         }
     }
 
+    void CombinedArtworksModel::pasteKeywords(const QStringList &keywords)
+    {
+        foreach (const QString &keyword, keywords) {
+            if (!m_CommonKeywordsSet.contains(keyword)) {
+                m_CommonKeywordsSet.insert(keyword);
+                m_CommonKeywordsModel.appendKeyword(keyword);
+            }
+        }
+
+        emit keywordsCountChanged();
+        m_IsModified = true;
+    }
+
     void CombinedArtworksModel::selectArtwork(int index)
     {
         if (index < 0 || index >= m_ArtworksList.length()) {
