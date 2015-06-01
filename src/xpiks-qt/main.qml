@@ -751,6 +751,11 @@ ApplicationWindow {
                                                     MouseArea {
                                                         anchors.fill: parent
                                                         onClicked: editisselected = !isselected
+                                                        onDoubleClicked: {
+                                                            combinedArtworks.resetModelData();
+                                                            artItemsModel.combineArtwork(rowWrapper.indexOfThisDelegate);
+                                                            Qt.createComponent("Dialogs/CombinedArtworksDialog.qml").createObject(applicationWindow, {});
+                                                        }
                                                     }
                                                 }
 
