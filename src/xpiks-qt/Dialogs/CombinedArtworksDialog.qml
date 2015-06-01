@@ -39,6 +39,10 @@ Item {
         dialogComponent.destroy()
     }
 
+    function mustUseConfirmation() {
+        return appSettings.boolValue(appSettings.useConfirmationDialogsKey, true)
+    }
+
     PropertyAnimation { target: dialogComponent; property: "opacity";
         duration: 400; from: 0; to: 1;
         easing.type: Easing.InOutQuad ; running: true }
@@ -50,10 +54,14 @@ Item {
         text: qsTr("Are you sure you want to remove %1 item(s)?").arg(itemsCount)
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
-            combinedArtworks.removeSelectedArtworks()
-            if (combinedArtworks.getArtworksCount() === 0) {
-                closePopup()
-            }
+            doRemoveSelectedArtworks()
+        }
+    }
+
+    function doRemoveSelectedArtworks() {
+        combinedArtworks.removeSelectedArtworks()
+        if (combinedArtworks.getArtworksCount() === 0) {
+            closePopup()
         }
     }
 
@@ -129,8 +137,12 @@ Item {
                         width: 100
                         enabled: combinedArtworks.selectedArtworksCount > 0
                         onClicked: {
-                            confirmRemoveArtworksDialog.itemsCount = combinedArtworks.selectedArtworksCount
-                            confirmRemoveArtworksDialog.open()
+                            if (mustUseConfirmation()) {
+                                confirmRemoveArtworksDialog.itemsCount = combinedArtworks.selectedArtworksCount
+                                confirmRemoveArtworksDialog.open()
+                            } else {
+                                doRemoveSelectedArtworks()
+                            }
                         }
                     }
                 }
