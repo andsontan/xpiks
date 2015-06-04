@@ -31,8 +31,8 @@ import "../StyledControls"
 ApplicationWindow {
     id: aboutWindow
     modality: "ApplicationModal"
-    width: 200
-    height: 100
+    width: 250
+    height: 150
     minimumWidth: width
     maximumWidth: width
     minimumHeight: height
@@ -67,6 +67,24 @@ ApplicationWindow {
                     onClicked: {
                         Qt.openUrlExternally("http://ribtoks.github.io/xpiks/")
                     }
+                }
+            }
+
+            Item {
+                height: 10
+            }
+
+            Rectangle {
+                height: 50
+                width: 220
+                anchors.margins: 10
+                color: "transparent"
+
+                StyledText {
+                    wrapMode: TextEdit.Wrap
+                    anchors.fill: parent
+                    horizontalAlignment: Text.AlignHCenter
+                    text: qsTr("The program is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE")
                 }
             }
         }
