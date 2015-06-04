@@ -23,9 +23,7 @@
 #define STRINGHELPER
 
 #include <QString>
-#include <QStringRef>
-#include <QVector>
-#include <QRegExp>
+#include <QFile>
 
 namespace Helpers {
     QString getLastNLines(const QString &text, int N);

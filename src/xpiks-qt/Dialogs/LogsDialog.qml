@@ -127,8 +127,9 @@ Item {
                     }
 
                     StyledText {
+                        property int linesNumber : 100
                         id: oneHunderdLinesWarning
-                        text: qsTr("(showing last 100 lines by default)")
+                        text: qsTr("(showing last %1 lines)").arg(linesNumber)
                         color: Colors.defaultInputBackground
                     }
                 }
@@ -163,11 +164,13 @@ Item {
                     height: 24
 
                     StyledButton {
-                        text: qsTr("Load all logs")
+                        id: loadMoreButton
+                        text: qsTr("Load more logs")
                         width: 120
                         onClicked: {
                             logsComponent.logText = logsModel.getAllLogsText(true)
-                            oneHunderdLinesWarning.visible = false
+                            oneHunderdLinesWarning.linesNumber = 1000
+                            loadMoreButton.enabled = false
                             scrollToBottom()
                         }
                     }

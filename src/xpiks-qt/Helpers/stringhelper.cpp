@@ -20,6 +20,10 @@
  */
 
 #include "stringhelper.h"
+#include <QFile>
+#include <QTextStream>
+#include <QStringRef>
+#include <QVector>
 
 namespace Helpers {
     QString getLastNLines(const QString &text, int N) {

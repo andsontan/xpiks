@@ -47,15 +47,12 @@ namespace Models {
             QFile f(logFilePath);
 
             if (f.open(QIODevice::ReadOnly | QIODevice::Text)) {
-                QTextStream in(&f);
-                QString allText = in.readAll();
-
-                if (!reallyAll) {
-                    // TODO: replace magic number 100 by constant or setting
-                    result = Helpers::getLastNLines(allText, 100);
-                } else {
-                    result = allText;
-                }
+                // 1000 - do not load the UI
+                // advanced users will open logs it notepad
+                int numberOfLines = reallyAll ? 1000 : 100;
+                QString text = f.readAll();
+                result = Helpers::getLastNLines(text, numberOfLines);
+                f.close();
             }
 #else
             Q_UNUSED(reallyAll);
