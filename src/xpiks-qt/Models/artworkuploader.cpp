@@ -29,11 +29,13 @@
 namespace Models {
     ArtworkUploader::ArtworkUploader() :
         ArtworksProcessor(),
-        m_IncludeEPS(false)
+        m_IncludeEPS(false),
+        m_Percent(0)
     {
         QObject::connect(&m_UploadCoordinator, SIGNAL(uploadStarted()), this, SLOT(onUploadStarted()));
         QObject::connect(&m_UploadCoordinator, SIGNAL(uploadFinished(bool)), this, SLOT(allFinished(bool)));
         QObject::connect(&m_UploadCoordinator, SIGNAL(itemFinished(bool)), this, SLOT(artworkUploaded(bool)));
+        QObject::connect(&m_UploadCoordinator, SIGNAL(percentChanged(double)), this, SLOT(uploaderPercentChanged(double)));
 
         m_TestingCredentialWatcher = new QFutureWatcher<Helpers::TestConnectionResult>(this);
         connect(m_TestingCredentialWatcher, SIGNAL(finished()), SLOT(credentialsTestingFinished()));
@@ -42,18 +44,20 @@ namespace Models {
     void ArtworkUploader::onUploadStarted()
     {
         beginProcessing();
+        m_Percent = 0;
+        updateProgress();
     }
 
     void ArtworkUploader::artworkUploaded(bool status)
     {
-        //qDebug() << "Artwork uploaded at " << index;
-        //Helpers::UploadItem item = m_ArtworksUploader->resultAt(index);
         artworkUploadedHandler(status);
     }
 
     void ArtworkUploader::allFinished(bool status)
     {
         endProcessing();
+        m_Percent = 100;
+        updateProgress();
         delete m_ActiveUploads;
     }
 
@@ -63,10 +67,14 @@ namespace Models {
         emit credentialsChecked(result.getResult(), result.getUrl());
     }
 
+    void ArtworkUploader::uploaderPercentChanged(double percent)
+    {
+        m_Percent = (int)(percent);
+        percentChanged();
+    }
+
     void ArtworkUploader::artworkUploadedHandler(bool success)
     {
-        incProgress();
-
         if (!success) {
             setIsError(true);
         }

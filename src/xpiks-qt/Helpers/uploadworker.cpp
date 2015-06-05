@@ -34,7 +34,10 @@ namespace Helpers {
         m_UploadItem(uploadItem),
         m_SecretsManager(secretsManager),
         m_Host(uploadItem->m_UploadInfo->getHost()),
-        m_Delay(delay)
+        m_PercentRegexp("[^0-9.]"),
+        m_Delay(delay),
+        m_PercentDone(0.0),
+        m_FilesUploaded(0)
     {
     }
 
@@ -56,21 +59,22 @@ namespace Helpers {
 
         const QStringList &filesToUpload = m_UploadItem->m_FilesToUpload;
         Models::UploadInfo *uploadInfo = m_UploadItem->m_UploadInfo;
+        m_OverallFilesCount = filesToUpload.length();
 
         const QString curlPath = m_UploadItem->m_CurlPath;
         int oneItemUploadMinutesTimeout = m_UploadItem->m_OneItemUploadMinutesTimeout;
         int maxSeconds = oneItemUploadMinutesTimeout * 60 * filesToUpload.length();
 
         QString password = m_SecretsManager->decodePassword(uploadInfo->getPassword());
-        QString command = QString("%1 --connect-timeout 10 --max-time %6 --retry 1 -T \"{%2}\" %3 --user %4:%5").
+        QString command = QString("%1 --progress-bar --connect-timeout 10 --max-time %6 --retry 1 -T \"{%2}\" %3 --user %4:%5").
                 arg(curlPath, filesToUpload.join(','), uploadInfo->getHost(), uploadInfo->getUsername(), password, QString::number(maxSeconds));
 
         m_CurlProcess = new QProcess();
 
         QObject::connect(m_CurlProcess, SIGNAL(finished(int,QProcess::ExitStatus)),
                          this, SLOT(innerProcessFinished(int,QProcess::ExitStatus)));
-        /*QObject::connect(m_CurlProcess, SIGNAL(readyReadStandardOutput()),
-                         this, SLOT(uploadOutputReady()));*/
+        QObject::connect(m_CurlProcess, SIGNAL(readyReadStandardError()),
+                         this, SLOT(uploadOutputReady()));
 
         m_Timer = new QTimer();
         QObject::connect(m_Timer, SIGNAL(timeout()), this, SLOT(onTimerTimeout()));
@@ -111,8 +115,40 @@ namespace Helpers {
         emit stopped();
     }
 
+    void UploadWorker::uploadOutputReady()
+    {
+        QString output = m_CurlProcess->readAllStandardError();
+        QString prettyfiedOutput = output.right(10).trimmed();
+
+        double percent = parsePercent(prettyfiedOutput);
+        bool anotherFileUploaded = qAbs(percent - 100.0) < 0.000000001;
+
+        percent += m_FilesUploaded*100.0;
+        percent /= (m_OverallFilesCount + 0.0);
+
+        if (anotherFileUploaded) { m_FilesUploaded++; }
+
+        percentChanged(percent, m_PercentDone);
+        m_PercentDone = percent;
+    }
+
     void UploadWorker::onTimerTimeout()
     {
         cancel();
+    }
+
+    double UploadWorker::parsePercent(QString &curlOutput) const
+    {
+        double value = 0.0;
+        if (curlOutput.endsWith("%")) {
+            curlOutput.remove(m_PercentRegexp);
+            value = curlOutput.toDouble();
+        }
+
+        if (value < 0 || value > 100.0) {
+            value = 0.0;
+        }
+
+        return value;
     }
 }

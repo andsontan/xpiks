@@ -49,7 +49,6 @@ Item {
     }
 
     function startUpload() {
-        progress.indeterminate = true
         artworkUploader.resetModel()
         artworkUploader.uploadArtworks()
         saveSettings()
@@ -532,43 +531,13 @@ Item {
                     }
                 }
 
-                ProgressBar {
+                SimpleProgressBar {
                     id: progress
                     anchors.horizontalCenter: parent.horizontalCenter
                     width: parent.width
                     height: 20
-                    //value: artworkUploader.percent
-                    indeterminate: false
-
-                    style: ProgressBarStyle {
-                        background: Rectangle {
-                            border.color: Colors.artworkActiveColor
-                            border.width: control.indeterminate ? 1 : 0
-                            color: artworkUploader.isError ? Colors.destructiveColor : (control.indeterminate ? Colors.artworkActiveColor : Colors.defaultInputBackground)
-
-                            // Indeterminate animation by animating alternating stripes:
-                            Item {
-                                anchors.fill: parent
-                                anchors.margins: 1
-                                visible: control.indeterminate
-                                clip: true
-                                Row {
-                                    Repeater {
-                                        Rectangle {
-                                            color: index % 2 ? Colors.artworkActiveColor : Colors.defaultControlColor
-                                            width: 20 ; height: control.height
-                                        }
-                                        model: control.width / 20 + 2
-                                    }
-                                    XAnimator on x {
-                                        from: 0 ; to: -40
-                                        loops: Animation.Infinite
-                                        running: control.indeterminate
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    color: artworkUploader.isError ? Colors.destructiveColor : Colors.artworkActiveColor
+                    value: artworkUploader.percent
                 }
 
                 RowLayout {
@@ -630,7 +599,6 @@ Item {
                         Connections {
                             target: artworkUploader
                             onFinishedProcessing: {
-                                progress.indeterminate = false
                                 uploadButton.enabled = true
                             }
                         }

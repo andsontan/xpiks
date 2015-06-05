@@ -53,6 +53,7 @@ namespace Helpers {
         m_AnyFailed = false;
         m_WorkersCount = 0;
         m_AllWorkersCount = uploadItems.count();
+        m_PercentDone = 0;
 
         if (m_AllWorkersCount > 0) {
             doRunUpload(uploadItems, secretsManager);
@@ -81,9 +82,28 @@ namespace Helpers {
         emit itemFinished(success);
 
         if (allWorkersFinished) {
+            percentChanged(100);
+            m_PercentDone = 100;
             emit uploadFinished(!m_AnyFailed);
             stopThreads();
         }
+    }
+
+    void UploadCoordinator::percentReported(double newPercent, double oldPercent)
+    {
+        double n = m_UploadThreads.length();
+        if (n == 0) { n = 1.0; }
+        int percentDone = 0;
+
+        m_PercentMutex.lock();
+        {
+            m_PercentDone -= oldPercent/n;
+            m_PercentDone += newPercent/n;
+            percentDone = m_PercentDone;
+        }
+        m_PercentMutex.unlock();
+
+        percentChanged(percentDone);
     }
 
     void UploadCoordinator::doRunUpload(const QList<UploadItem*> &uploadItems,
@@ -103,6 +123,9 @@ namespace Helpers {
 
             QObject::connect(worker, SIGNAL(finished(bool)), this, SLOT(workerFinished(bool)));
             QObject::connect(this, SIGNAL(cancelAll()), worker, SLOT(cancel()));
+
+            QObject::connect(worker, SIGNAL(percentChanged(double,double)),
+                             this, SLOT(percentReported(double,double)));
 
             m_UploadThreads.append(thread);
 

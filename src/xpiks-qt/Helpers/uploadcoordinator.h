@@ -64,9 +64,11 @@ namespace Helpers {
         void uploadStarted();
         void itemFinished(bool success);
         void uploadFinished(bool success);
+        void percentChanged(double percent);
 
     public slots:
         void workerFinished(bool success);
+        void percentReported(double newPercent, double oldPercent);
 
     private:
         void doRunUpload(const QList<UploadItem *> &uploadItems, const Encryption::SecretsManager *secretsManager);
@@ -76,10 +78,12 @@ namespace Helpers {
 
     private:
         QMutex m_Mutex;
+        QMutex m_PercentMutex;
         QList<QThread *> m_UploadThreads;
         int m_WorkersCount;
         int m_AllWorkersCount;
         bool m_AnyFailed;
+        double m_PercentDone;
     };
 }
 

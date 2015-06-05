@@ -55,11 +55,17 @@ namespace Models {
              }
          }
 
+         virtual int getPercent() const { return m_Percent; }
+
+
      public slots:
          void onUploadStarted();
          void artworkUploaded(bool status);
          void allFinished(bool status);
          void credentialsTestingFinished();
+
+    private slots:
+         void uploaderPercentChanged(double percent);
 
      private:
          void artworkUploadedHandler(bool success);
@@ -74,12 +80,14 @@ namespace Models {
 
     protected:
         void cancelProcessing();
+        virtual void innerResetModel() { m_Percent = 0; }
 
      private:
          Helpers::UploadCoordinator m_UploadCoordinator;
          QFutureWatcher<Helpers::TestConnectionResult> *m_TestingCredentialWatcher;
          QStringList *m_ActiveUploads;
          bool m_IncludeEPS;
+         int m_Percent;
     };
 }
 

@@ -26,6 +26,7 @@ namespace Models {
     {
         setInProgress(false);
         setIsError(false);
+        innerResetModel();
         m_ArtworksCount = 0;
         m_ProcessedArtworksCount = 0;
         updateProgress();

@@ -26,6 +26,7 @@
 #include <QProcess>
 #include <QString>
 #include <QTimer>
+#include <QRegExp>
 
 namespace Encryption {
     class SecretsManager;
@@ -46,6 +47,7 @@ namespace Helpers {
         void stopped();
         void finished(bool success);
         void error(QString err);
+        void percentChanged(double newPercent, double oldPercent);
 
     public slots:
         void process();
@@ -53,8 +55,11 @@ namespace Helpers {
 
     private slots:
         void innerProcessFinished(int exitCode, QProcess::ExitStatus exitStatus);
-        /*void uploadOutputReady();*/
+        void uploadOutputReady();
         void onTimerTimeout();
+
+    private:
+        double parsePercent(QString &curlOutput)const;
 
     private:
         UploadItem *m_UploadItem;
@@ -62,7 +67,11 @@ namespace Helpers {
         QProcess *m_CurlProcess;
         QTimer *m_Timer;
         QString m_Host;
+        QRegExp m_PercentRegexp;
         int m_Delay;
+        double m_PercentDone;
+        int m_FilesUploaded;
+        int m_OverallFilesCount;
     };
 }
 
