@@ -22,6 +22,7 @@
 #include "secretsmanager.h"
 #include "aes-qt.h"
 #include <QDebug>
+#include <QCryptographicHash>
 
 #define STRINGIZE_(x) #x
 #define STRINGIZE(x) STRINGIZE_(x)

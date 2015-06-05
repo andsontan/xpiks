@@ -44,12 +44,13 @@ Commands::CommandResult *Commands::AddArtworksCommand::execute(const CommandMana
         int count = m_FilePathes.count();
         for (int i = 0; i < count; ++i) {
             const QString &filename = m_FilePathes[i];
+
             if (artworksRepository->accountFile(filename))
             {
-                Models::ArtworkMetadata *metadata = new Models::ArtworkMetadata(filename);
+                Models::ArtworkMetadata *metadata = artItemsModel->createMetadata(filename);
                 commandManager->connectArtworkSignals(metadata);
 
-                artItemsModel->appendArtwork(metadata);
+                artItemsModel->appendMetadata(metadata);
                 artworksToImport.append(metadata);
             }
         }

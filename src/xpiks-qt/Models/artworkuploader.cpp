@@ -55,6 +55,7 @@ namespace Models {
 
     void ArtworkUploader::allFinished(bool status)
     {
+        Q_UNUSED(status);
         endProcessing();
         m_Percent = 100;
         updateProgress();

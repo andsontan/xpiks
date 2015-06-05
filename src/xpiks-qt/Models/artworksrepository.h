@@ -60,7 +60,7 @@ namespace Models {
         void endAccountingFiles(bool filesWereAccounted);
 
     public:
-        int getNewDirectoriesCount(const QStringList &items) const;
+        virtual int getNewDirectoriesCount(const QStringList &items) const;
         int getNewFilesCount(const QStringList &items) const;
         int getArtworksSourcesCount() const { return m_DirectoriesList.length(); }
 
@@ -91,6 +91,8 @@ namespace Models {
             m_DirectoriesHash.remove(directoryToRemove);
             emit artworksSourcesCountChanged();
         }
+
+        virtual bool checkFileExists(const QString &filename, QString &directory) const;
 
     private:
         QStringList m_DirectoriesList;

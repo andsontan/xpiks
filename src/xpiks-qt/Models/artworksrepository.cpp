@@ -66,6 +66,7 @@ namespace Models {
         }
     }
 
+    /*virtual */
     int ArtworksRepository::getNewDirectoriesCount(const QStringList &items) const
     {
         QSet<QString> filteredFiles;
@@ -111,11 +112,10 @@ namespace Models {
 
     bool ArtworksRepository::accountFile(const QString &filepath) {
         bool wasModified = false;
+        QString absolutePath;
 
-        QFileInfo fi(filepath);
-
-        if (fi.exists() && !m_FilesSet.contains(filepath)) {
-            const QString absolutePath = fi.absolutePath();
+        if (this->checkFileExists(filepath, absolutePath) &&
+                !m_FilesSet.contains(filepath)) {
 
             int occurances = 0;
             if (!m_DirectoriesHash.contains(absolutePath)) {
@@ -195,5 +195,18 @@ namespace Models {
         roles[UsedImagesCountRole] = "usedimagescount";
         roles[IsSelectedRole] = "isselected";
         return roles;
+    }
+
+    /*virtual */
+    bool ArtworksRepository::checkFileExists(const QString &filename, QString &directory) const
+    {
+        QFileInfo fi(filename);
+        bool exists = fi.exists();
+
+        if (exists) {
+            directory = fi.absolutePath();
+        }
+
+        return exists;
     }
 }

@@ -31,7 +31,8 @@ SOURCES += main.cpp \
     Commands/pastekeywordscommand.cpp \
     Helpers/uploadworker.cpp \
     Helpers/uploadcoordinator.cpp \
-    Helpers/runguard.cpp
+    Helpers/runguard.cpp \
+    Encryption/aes-qt.cpp
 
 RESOURCES += qml.qrc
 

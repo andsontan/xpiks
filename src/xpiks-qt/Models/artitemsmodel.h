@@ -66,6 +66,9 @@ namespace Models {
         };
 
     public:
+        virtual ArtworkMetadata *createMetadata(const QString &filepath) const { return new ArtworkMetadata(filepath); }
+
+    public:
         int getModifiedArtworksCount();
         int getSelectedArtworksCount() { return m_SelectedArtworksCount; }
         void updateModifiedCount() { emit modifiedArtworksCountChanged(); }
@@ -122,7 +125,7 @@ namespace Models {
 
     public:
         void insertArtwork(int index, ArtworkMetadata *metadata);
-        void appendArtwork(ArtworkMetadata *metadata);
+        void appendMetadata(ArtworkMetadata *metadata);
         void removeArtworks(const QList<QPair<int, int> > &ranges) { doRemoveItemsInRanges(ranges); }
         ArtworkMetadata *getArtwork(int index) const;
         void raiseArtworksAdded(int count) { emit artworksAdded(count); }

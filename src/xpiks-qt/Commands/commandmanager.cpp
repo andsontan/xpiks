@@ -84,7 +84,9 @@ Commands::CommandResult *Commands::CommandManager::processCommand(Commands::Comm
 
 void Commands::CommandManager::recordHistoryItem(UndoRedo::HistoryItem *historyItem) const
 {
-    m_UndoRedoManager->recordHistoryItem(historyItem);
+    if (m_UndoRedoManager) {
+        m_UndoRedoManager->recordHistoryItem(historyItem);
+    }
 }
 
 void Commands::CommandManager::connectEntitiesSignalsSlots() const
@@ -111,31 +113,45 @@ void Commands::CommandManager::recodePasswords(const QString &oldMasterPassword,
 
 void Commands::CommandManager::combineArtworks(const QList<Models::ArtItemInfo *> &artworks) const
 {
-    m_CombinedArtworksModel->initArtworks(artworks);
-    m_CombinedArtworksModel->recombineArtworks();
+    if (m_CombinedArtworksModel) {
+        m_CombinedArtworksModel->initArtworks(artworks);
+        m_CombinedArtworksModel->recombineArtworks();
+    }
 }
 
 void Commands::CommandManager::setArtworksForIPTCProcessing(const QList<Models::ArtworkMetadata*> &artworks) const
 {
-    m_IptcProvider->setArtworks(artworks);
+    if (m_IptcProvider) {
+        m_IptcProvider->setArtworks(artworks);
+    }
 }
 
 void Commands::CommandManager::setArtworksForUpload(const QList<Models::ArtworkMetadata *> &artworks) const
 {
-    m_ArtworkUploader->setArtworks(artworks);
+    if (m_ArtworkUploader) {
+        m_ArtworkUploader->setArtworks(artworks);
+    }
 }
 
+/*virtual*/
 void Commands::CommandManager::connectArtworkSignals(Models::ArtworkMetadata *metadata) const
 {
-    QObject::connect(metadata, SIGNAL(modifiedChanged(bool)),
-                     m_ArtItemsModel, SLOT(itemModifiedChanged(bool)));
-    QObject::connect(metadata, SIGNAL(selectedChanged(bool)),
-                     m_ArtItemsModel, SLOT(itemSelectedChanged(bool)));
-    QObject::connect(metadata, SIGNAL(fileSelectedChanged(QString,bool)),
-                     m_ArtworksRepository, SLOT(fileSelectedChanged(QString,bool)));
+    if (m_ArtItemsModel) {
+        QObject::connect(metadata, SIGNAL(modifiedChanged(bool)),
+                         m_ArtItemsModel, SLOT(itemModifiedChanged(bool)));
+        QObject::connect(metadata, SIGNAL(selectedChanged(bool)),
+                         m_ArtItemsModel, SLOT(itemSelectedChanged(bool)));
+    }
+
+    if (m_ArtworksRepository) {
+        QObject::connect(metadata, SIGNAL(fileSelectedChanged(QString,bool)),
+                         m_ArtworksRepository, SLOT(fileSelectedChanged(QString,bool)));
+    }
 }
 
 void Commands::CommandManager::updateArtworks(const QList<int> &indices) const
 {
-    m_ArtItemsModel->updateItemsAtIndices(indices);
+    if (m_ArtItemsModel) {
+        m_ArtItemsModel->updateItemsAtIndices(indices);
+    }
 }

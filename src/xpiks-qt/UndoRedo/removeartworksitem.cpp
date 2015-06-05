@@ -20,6 +20,7 @@
  */
 
 #include <QDebug>
+#include <QFileInfo>
 #include "removeartworksitem.h"
 #include "../Helpers/indiceshelper.h"
 #include "../Models/artworksrepository.h"

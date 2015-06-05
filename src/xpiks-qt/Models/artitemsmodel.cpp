@@ -403,7 +403,7 @@ namespace Models {
         m_ArtworkList.insert(index, metadata);
     }
 
-    void ArtItemsModel::appendArtwork(ArtworkMetadata *metadata)
+    void ArtItemsModel::appendMetadata(ArtworkMetadata *metadata)
     {
         Q_ASSERT(metadata != NULL);
         m_ArtworkList.append(metadata);

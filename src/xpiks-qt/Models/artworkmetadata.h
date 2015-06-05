@@ -38,7 +38,7 @@ namespace Models {
             m_IsSelected(false)
         { }
 
-        ~ArtworkMetadata() { this->disconnect(); }
+        virtual ~ArtworkMetadata() { this->disconnect(); }
 
     public:
         enum ArtworkMetadataRoles {

@@ -51,8 +51,19 @@ namespace Commands {
     class CommandManager
     {
     public:
-        CommandManager() {}
-        ~CommandManager() {}
+        CommandManager():
+            m_ArtworksRepository(NULL),
+            m_ArtItemsModel(NULL),
+            m_CombinedArtworksModel(NULL),
+            m_IptcProvider(NULL),
+            m_ArtworkUploader(NULL),
+            m_UploadInfoRepository(NULL),
+            m_WarningsManager(NULL),
+            m_SecretsManager(NULL),
+            m_UndoRedoManager(NULL)
+        {}
+
+        virtual ~CommandManager() {}
 
     public:
         void InjectDependency(Models::ArtworksRepository *artworkRepository);
@@ -80,15 +91,15 @@ namespace Commands {
         void combineArtworks(const QList<Models::ArtItemInfo*> &artworks) const;
         void setArtworksForIPTCProcessing(const QList<Models::ArtworkMetadata*> &artworks) const;
         void setArtworksForUpload(const QList<Models::ArtworkMetadata*> &artworks) const;
-        void connectArtworkSignals(Models::ArtworkMetadata *metadata) const;
+        virtual void connectArtworkSignals(Models::ArtworkMetadata *metadata) const;
         void updateArtworks(const QList<int> &indices) const;
 
     public:
         // methods for getters
-        Models::ArtworksRepository *getArtworksRepository() const { return m_ArtworksRepository; }
-        Models::ArtItemsModel *getArtItemsModel() const { return m_ArtItemsModel; }
-        const Encryption::SecretsManager *getSecretsManager() const { return m_SecretsManager; }
-        const Models::UploadInfoRepository *getUploadInfoRepository() const { return m_UploadInfoRepository; }
+        virtual Models::ArtworksRepository *getArtworksRepository() const { return m_ArtworksRepository; }
+        virtual Models::ArtItemsModel *getArtItemsModel() const { return m_ArtItemsModel; }
+        virtual const Encryption::SecretsManager *getSecretsManager() const { return m_SecretsManager; }
+        virtual const Models::UploadInfoRepository *getUploadInfoRepository() const { return m_UploadInfoRepository; }
 
     private:
         Models::ArtworksRepository *m_ArtworksRepository;
