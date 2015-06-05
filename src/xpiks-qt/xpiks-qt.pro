@@ -30,7 +30,8 @@ SOURCES += main.cpp \
     Commands/combinededitcommand.cpp \
     Commands/pastekeywordscommand.cpp \
     Helpers/uploadworker.cpp \
-    Helpers/uploadcoordinator.cpp
+    Helpers/uploadcoordinator.cpp \
+    Helpers/runguard.cpp
 
 RESOURCES += qml.qrc
 
@@ -95,7 +96,8 @@ HEADERS += \
     Commands/combinededitcommand.h \
     Commands/pastekeywordscommand.h \
     Helpers/uploadworker.h \
-    Helpers/uploadcoordinator.h
+    Helpers/uploadcoordinator.h \
+    Helpers/runguard.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

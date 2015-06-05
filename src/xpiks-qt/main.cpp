@@ -42,6 +42,7 @@
 #include "Models/iptcprovider.h"
 #include "Helpers/appsettings.h"
 #include "Helpers/constants.h"
+#include "Helpers/runguard.h"
 #include "Models/logsmodel.h"
 #include "Helpers/logger.h"
 
@@ -91,7 +92,10 @@ void initQSettings() {
     QCoreApplication::setApplicationVersion("1.0 beta.6 - " + appVersion.left(10));
 }
 
-int main(int argc, char *argv[]) {    
+int main(int argc, char *argv[]) {
+    Helpers::RunGuard guard("xpiks");
+    if (!guard.tryToRun()) { return 0; }
+
     initQSettings();
 
     Helpers::LogsManager logsManager;
