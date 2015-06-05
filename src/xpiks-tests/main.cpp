@@ -15,8 +15,8 @@ int main(int argc, char *argv[])
     Q_UNUSED(argc);
     Q_UNUSED(argv);
 
-    //QTEST_CLASS(EncryptionTests, et);
-    //QTEST_CLASS(IndicesToRangesTests, itrt);
+    QTEST_CLASS(EncryptionTests, et);
+    QTEST_CLASS(IndicesToRangesTests, itrt);
     QTEST_CLASS(AddCommand_Tests, act);
 
     return 0;
