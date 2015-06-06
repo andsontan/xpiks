@@ -32,7 +32,22 @@ SOURCES += main.cpp \
     Helpers/uploadworker.cpp \
     Helpers/uploadcoordinator.cpp \
     Helpers/runguard.cpp \
-    Encryption/aes-qt.cpp
+    Encryption/aes-qt.cpp \
+    Models/ziparchiver.cpp \
+    Helpers/ziphelper.cpp \
+    ../quazip/quazip/JlCompress.cpp \
+    ../quazip/quazip/qioapi.cpp \
+    ../quazip/quazip/quaadler32.cpp \
+    ../quazip/quazip/quacrc32.cpp \
+    ../quazip/quazip/quagzipfile.cpp \
+    ../quazip/quazip/quaziodevice.cpp \
+    ../quazip/quazip/quazip.cpp \
+    ../quazip/quazip/quazipdir.cpp \
+    ../quazip/quazip/quazipfile.cpp \
+    ../quazip/quazip/quazipfileinfo.cpp \
+    ../quazip/quazip/quazipnewinfo.cpp \
+    ../quazip/quazip/unzip.c \
+    ../quazip/quazip/zip.c
 
 RESOURCES += qml.qrc
 
@@ -40,6 +55,7 @@ BUILDNO = $$system(git log -n 1 --pretty=format:"%H")
 DEFINES += BUILDNUMBER=$${BUILDNO}
 DEFINES += QT_NO_CAST_TO_ASCII \
            QT_NO_CAST_FROM_BYTEARRAY
+DEFINES += QUAZIP_STATICx
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -98,7 +114,25 @@ HEADERS += \
     Commands/pastekeywordscommand.h \
     Helpers/uploadworker.h \
     Helpers/uploadcoordinator.h \
-    Helpers/runguard.h
+    Helpers/runguard.h \
+    Models/ziparchiver.h \
+    Helpers/ziphelper.h \
+    ../quazip/quazip/crypt.h \
+    ../quazip/quazip/ioapi.h \
+    ../quazip/quazip/JlCompress.h \
+    ../quazip/quazip/quaadler32.h \
+    ../quazip/quazip/quachecksum32.h \
+    ../quazip/quazip/quacrc32.h \
+    ../quazip/quazip/quagzipfile.h \
+    ../quazip/quazip/quaziodevice.h \
+    ../quazip/quazip/quazip_global.h \
+    ../quazip/quazip/quazip.h \
+    ../quazip/quazip/quazipdir.h \
+    ../quazip/quazip/quazipfile.h \
+    ../quazip/quazip/quazipfileinfo.h \
+    ../quazip/quazip/quazipnewinfo.h \
+    ../quazip/quazip/unzip.h \
+    ../quazip/quazip/zip.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
@@ -125,12 +159,14 @@ DISTFILES += \
     StyledControls/StyledInputHost.qml \
     Dialogs/EnterMasterPasswordDialog.qml \
     Dialogs/MasterPasswordSetupDialog.qml \
-    Components/CheckedComponent.qml
+    Components/CheckedComponent.qml \
+    Dialogs/ZipArtworksDialog.qml
 
 macx {
 OBJECTIVE_SOURCES += \
     Helpers/osxnsurlhelper.mm
 
 LIBS += -framework Foundation
+LIBS += -lz
 HEADERS += Helpers/osxnsurlhelper.h
 }

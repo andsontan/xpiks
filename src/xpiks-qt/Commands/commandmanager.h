@@ -45,6 +45,7 @@ namespace Models {
     class WarningsManager;
     class UploadInfo;
     class ArtworkMetadata;
+    class ZipArchiver;
 }
 
 namespace Commands {
@@ -60,7 +61,8 @@ namespace Commands {
             m_UploadInfoRepository(NULL),
             m_WarningsManager(NULL),
             m_SecretsManager(NULL),
-            m_UndoRedoManager(NULL)
+            m_UndoRedoManager(NULL),
+            m_ZipArchiver(NULL)
         {}
 
         virtual ~CommandManager() {}
@@ -75,6 +77,7 @@ namespace Commands {
         void InjectDependency(Models::WarningsManager *warningsManager);
         void InjectDependency(Encryption::SecretsManager *secretsManager);
         void InjectDependency(UndoRedo::UndoRedoManager *undoRedoManager);
+        void InjectDependency(Models::ZipArchiver *zipArchiver);
 
     public:
         CommandResult *processCommand(CommandBase *command) const;
@@ -91,6 +94,7 @@ namespace Commands {
         void combineArtworks(const QList<Models::ArtItemInfo*> &artworks) const;
         void setArtworksForIPTCProcessing(const QList<Models::ArtworkMetadata*> &artworks) const;
         void setArtworksForUpload(const QList<Models::ArtworkMetadata*> &artworks) const;
+        void setArtworksForZipping(const QList<Models::ArtworkMetadata*> &artworks) const;
         virtual void connectArtworkSignals(Models::ArtworkMetadata *metadata) const;
         void updateArtworks(const QList<int> &indices) const;
 
@@ -111,6 +115,7 @@ namespace Commands {
         Models::WarningsManager *m_WarningsManager;
         Encryption::SecretsManager *m_SecretsManager;
         UndoRedo::UndoRedoManager *m_UndoRedoManager;
+        Models::ZipArchiver *m_ZipArchiver;
     };
 }
 

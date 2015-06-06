@@ -104,6 +104,22 @@ ApplicationWindow {
                 onTriggered: Qt.quit();
             }
         }
+
+        Menu {
+            title: qsTr("Tools")
+
+            MenuItem {
+                text: qsTr("&Zip selected artworks")
+                enabled: artItemsModel.selectedArtworksCount > 0
+                onTriggered: {
+                    console.log("Zip archives triggered")
+
+                    artItemsModel.setSelectedForZipping()
+                    var component = Qt.createComponent("Dialogs/ZipArtworksDialog.qml")
+                    component.createObject(applicationWindow, {componentParent: applicationWindow})
+                }
+            }
+        }
     }
 
     MessageDialog {

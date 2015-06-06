@@ -29,6 +29,7 @@
 #include "../Models/warningsmanager.h"
 #include "../Encryption/secretsmanager.h"
 #include "../UndoRedo/undoredomanager.h"
+#include "../Models/ziparchiver.h"
 
 void Commands::CommandManager::InjectDependency(Models::ArtworksRepository *artworkRepository) {
     Q_ASSERT(artworkRepository != NULL); m_ArtworksRepository = artworkRepository;
@@ -73,6 +74,12 @@ void Commands::CommandManager::InjectDependency(Encryption::SecretsManager *secr
 void Commands::CommandManager::InjectDependency(UndoRedo::UndoRedoManager *undoRedoManager) {
     Q_ASSERT(undoRedoManager != NULL); m_UndoRedoManager = undoRedoManager;
     m_UndoRedoManager->setCommandManager(this);
+}
+
+void Commands::CommandManager::InjectDependency(Models::ZipArchiver *zipArchiver)
+{
+    Q_ASSERT(zipArchiver != NULL); m_ZipArchiver = zipArchiver;
+    m_ZipArchiver->setCommandManager(this);
 }
 
 Commands::CommandResult *Commands::CommandManager::processCommand(Commands::CommandBase *command) const
@@ -130,6 +137,12 @@ void Commands::CommandManager::setArtworksForUpload(const QList<Models::ArtworkM
 {
     if (m_ArtworkUploader) {
         m_ArtworkUploader->setArtworks(artworks);
+    }
+}
+
+void Commands::CommandManager::setArtworksForZipping(const QList<Models::ArtworkMetadata *> &artworks) const {
+    if (m_ZipArchiver) {
+        m_ZipArchiver->setArtworks(artworks);
     }
 }
 

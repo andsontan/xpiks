@@ -157,6 +157,10 @@ Item {
                         }
                     }
 
+                    Item {
+                        width: 10
+                    }
+
                     StyledButton {
                         text: qsTr("Close")
                         width: 100

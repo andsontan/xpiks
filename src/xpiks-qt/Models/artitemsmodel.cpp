@@ -222,6 +222,15 @@ namespace Models {
         emit needCheckItemsForWarnings(selectedArtworks);
     }
 
+    void ArtItemsModel::setSelectedForZipping()
+    {
+        QList<ArtworkMetadata*> selectedArtworks;
+        getSelectedArtworks(selectedArtworks);
+
+        // TODO: remove this two times copying
+        m_CommandManager->setArtworksForZipping(selectedArtworks);
+    }
+
     bool ArtItemsModel::areSelectedArtworksSaved()
     {
         bool areModified = false;
@@ -454,6 +463,7 @@ namespace Models {
 
         foreach (const QString &filepath, rawFilenames) {
             QImageReader imageReader(filepath);
+
             if (imageReader.format() == "jpeg") {
                 filenames.append(filepath);
             }

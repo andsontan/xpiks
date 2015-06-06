@@ -41,6 +41,7 @@
 #include "Models/artitemsmodel.h"
 #include "Models/iptcprovider.h"
 #include "Helpers/appsettings.h"
+#include "Models/ziparchiver.h"
 #include "Helpers/constants.h"
 #include "Helpers/runguard.h"
 #include "Models/logsmodel.h"
@@ -145,6 +146,7 @@ int main(int argc, char *argv[]) {
     Helpers::AppSettings appSettings;
     Encryption::SecretsManager secretsManager;
     UndoRedo::UndoRedoManager undoRedoManager;
+    Models::ZipArchiver zipArchiver;
 
     Commands::CommandManager commandManager;
     commandManager.InjectDependency(&artworkRepository);
@@ -156,6 +158,7 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&warningsManager);
     commandManager.InjectDependency(&secretsManager);
     commandManager.InjectDependency(&undoRedoManager);
+    commandManager.InjectDependency(&zipArchiver);
 
     // other initializations
     secretsManager.setMasterPasswordHash(appSettings.value(Constants::MASTER_PASSWORD_HASH, "").toString());
@@ -182,6 +185,7 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("warningsManager", &warningsManager);
     rootContext->setContextProperty("secretsManager", &secretsManager);
     rootContext->setContextProperty("undoRedoManager", &undoRedoManager);
+    rootContext->setContextProperty("zipArchiver", &zipArchiver);
 
     engine.addImageProvider("global", globalProvider);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
