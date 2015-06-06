@@ -405,7 +405,7 @@ ApplicationWindow {
                         StyledButton {
                             text: qsTr("Remove")
                             enabled: artworkRepository.artworksSourcesCount > 0
-                            width: mainScrollView.flickableItem.contentHeight > mainScrollView.flickableItem.height ? 80 : 90
+                            width: 80
                             onClicked: {
                                 if (artItemsModel.selectedArtworksCount == 0) {
                                     mustSelectDialog.open()
@@ -426,7 +426,7 @@ ApplicationWindow {
 
                         StyledButton {
                             text: qsTr("Edit")
-                            width: 80
+                            width: mainScrollView.flickableItem.contentHeight > mainScrollView.flickableItem.height ? 72 : 82
                             enabled: artworkRepository.artworksSourcesCount > 0
                             onClicked: {
                                 if (artItemsModel.selectedArtworksCount == 0) {
