@@ -5,7 +5,40 @@
 #include "../Mocks/artitemsmodelmock.h"
 #include "../xpiks-qt/Commands/addartworkscommand.h"
 
-void AddCommand_Tests::addOneArtworkTest()
+void AddCommand_Tests::addNoArtworksToEmptyRepositoryTest()
+{
+    Mocks::CommandManagerMock commandManagerMock;
+    Mocks::ArtworksRepositoryMock artworksRepositoryMock;
+    Mocks::ArtItemsModelMock artItemsMock;
+
+    Models::ArtworksRepository *artworksRepository = &artworksRepositoryMock;
+    commandManagerMock.InjectDependency(artworksRepository);
+
+    Models::ArtItemsModel *artItemsModel = &artItemsMock;
+    commandManagerMock.InjectDependency(artItemsModel);
+
+    QSignalSpy artItemsBeginInsertSpy(&artItemsMock, SIGNAL(rowsAboutToBeInserted(QModelIndex,int,int)));
+    QSignalSpy artItemsEndInsertSpy(&artItemsMock, SIGNAL(rowsInserted(QModelIndex,int,int)));
+    QSignalSpy artworkRepoBeginInsertSpy(&artworksRepositoryMock, SIGNAL(rowsAboutToBeInserted(QModelIndex,int,int)));
+    QSignalSpy artworkRepoEndInsertSpy(&artworksRepositoryMock, SIGNAL(rowsInserted(QModelIndex,int,int)));
+
+    QStringList filenames;
+
+    Commands::AddArtworksCommand *addArtworksCommand = new Commands::AddArtworksCommand(filenames);
+    Commands::CommandResult *result = commandManagerMock.processCommand(addArtworksCommand);
+    Commands::AddArtworksCommandResult *addArtworksResult = static_cast<Commands::AddArtworksCommandResult*>(result);
+    int newFilesCount = addArtworksResult->m_NewFilesAdded;
+    delete result;
+
+    QCOMPARE(newFilesCount, 0);
+
+    QCOMPARE(artItemsBeginInsertSpy.count(), 0);
+    QCOMPARE(artItemsEndInsertSpy.count(), 0);
+    QCOMPARE(artworkRepoBeginInsertSpy.count(), 0);
+    QCOMPARE(artworkRepoEndInsertSpy.count(), 0);
+}
+
+void AddCommand_Tests::addOneArtworkToEmptyRepositoryTest()
 {
     Mocks::CommandManagerMock commandManagerMock;
     Mocks::ArtworksRepositoryMock artworksRepositoryMock;
