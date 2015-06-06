@@ -128,8 +128,10 @@ namespace Helpers {
 
         if (anotherFileUploaded) { m_FilesUploaded++; }
 
-        percentChanged(percent, m_PercentDone);
-        m_PercentDone = percent;
+        if (percent > m_PercentDone) {
+            percentChanged(percent, m_PercentDone);
+            m_PercentDone = percent;
+        }
     }
 
     void UploadWorker::onTimerTimeout()
