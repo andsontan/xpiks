@@ -170,3 +170,9 @@ LIBS += -framework Foundation
 LIBS += -lz
 HEADERS += Helpers/osxnsurlhelper.h
 }
+
+win32 {
+INCLUDEPATH = "../zlib-1.2.8"
+LIBS += -L$$PWD/../libs/ -lz
+DEFINES += QUAZIP_BUILD
+}
