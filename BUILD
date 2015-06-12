@@ -1,8 +1,9 @@
-To build this project, you should download and install Qt version 5.4
-(or probably higher), open project file and build for Release on your platform.
+To build this project, you should:
 
-Also you would have to pull tiny-AES submodule and rename aes.c to aes.cpp in order 
-to be built correctly.
+- download and install Qt version 5.4 (or probably higher)
+- pull tiny-AES submodule and rename aes.c to aes.cpp
+- [Windows] if you're building for Windows, open zlib-project and build it for Debug/Release
+- open main xpiks-qt project and build it for Debug/Release
 
 Command to create standalone executable under OS X and Windows can be found here:
 
