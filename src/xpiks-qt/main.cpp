@@ -160,6 +160,8 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&undoRedoManager);
     commandManager.InjectDependency(&zipArchiver);
 
+    logsModel.setLogsManager(&logsManager);
+
     // other initializations
     secretsManager.setMasterPasswordHash(appSettings.value(Constants::MASTER_PASSWORD_HASH, "").toString());
     uploadInfoRepository.initFromString(appSettings.value(Constants::UPLOAD_HOSTS, "").toString());
