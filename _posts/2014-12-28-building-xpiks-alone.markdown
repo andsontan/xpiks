@@ -11,9 +11,17 @@ Build instructions for your desktop platform:
 - download source code in Downloads section of this release
 - download source code or initialize the repository of tiny-AES
 - rename tiny-AES/aes.c to tiny-AES/aes.cpp for correct build
+- [Windows] if you're building for Windows, build Zlib (see instructions below)
 - open xpiks-qt.pro file with Qt Creator installed with Qt
 - select build target Release, press "Run qmake" and then "Build"
 - now you can use xpiks-qt on your computer
+
+
+To build zlib under Windows for Xpiks, do:
+  
+- download zlib (1.2.8) source code and extract to scr/zlib-1.2.8
+- open zlib-project and build it for Debug/Release
+- copy z.lib and z.pdb to src/libs directory
 
 If you wish to redistribute it for similar desktop platforms to yours, follow next steps:
 
