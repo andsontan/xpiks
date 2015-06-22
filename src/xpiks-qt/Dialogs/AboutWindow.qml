@@ -37,7 +37,8 @@ ApplicationWindow {
     maximumWidth: width
     minimumHeight: height
     maximumHeight: height
-    flags: Qt.Tool | Qt.CustomizeWindowHint | Qt.WindowCloseButtonHint
+    flags: Qt.Tool
+    title: qsTr("About")
 
     function closeAbout() {
         aboutWindow.destroy();
