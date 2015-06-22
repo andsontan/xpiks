@@ -13,3 +13,5 @@ Short list of changes:
 - Changed design of upload dialog and added ShowPassword checkbox
 - Improved image scaling
 - Fixed scrolling in main window while dialog is opened
+
+<div class="download-link"><a href="{{ site.url }}/downloads">Download</a></div>

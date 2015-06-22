@@ -16,3 +16,5 @@ I'm proud to announce seventh release of Cross-platform image keywording softwar
 - Added ignore autosave checkbox for import #77
 - Added warranty disclaimer message
 - Added several integration tests
+
+<div class="download-link"><a href="{{ site.url }}/downloads">Download</a></div>

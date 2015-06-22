@@ -17,3 +17,5 @@ I'm proud to announce sixth release of Cross-platform image keywording software 
 - Fix for typo when description replaced image keywords on loading #68
 - Fix for replacing metadata in "Save and Append" button in combined edit #62
 - Fixes issue with non-latin characters in Description field #72
+
+<div class="download-link"><a href="{{ site.url }}/downloads">Download</a></div>

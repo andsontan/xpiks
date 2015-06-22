@@ -18,3 +18,5 @@ This beta release contains tons of solution of minor and major problems in Xpiks
 - Changed the way keywords list is bound to c++ code
 - Made all dialogs movable
 - and many other minor
+
+<div class="download-link"><a href="{{ site.url }}/downloads">Download</a></div>

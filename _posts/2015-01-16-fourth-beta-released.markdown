@@ -12,3 +12,5 @@ This beta release is the biggest of current beta releases because of useful and 
 - Added ability to Drag&Drop images to workflow
 - FTP credentials checking on upload (notifies if something is missing e.g. username, password)
 - Checks for potential problems on upload (insufficient resolution, missing metadata, too much keywords etc)
+
+<div class="download-link"><a href="{{ site.url }}/downloads">Download</a></div>

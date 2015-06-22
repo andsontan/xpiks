@@ -14,3 +14,4 @@ Short list of changes:
 - Fix for missing keywords validation on pasting keywords
 - Added back logging in release version and logs screen
 
+<div class="download-link"><a href="{{ site.url }}/downloads">Download</a></div>
