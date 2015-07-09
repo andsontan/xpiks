@@ -54,23 +54,25 @@ Commands::CommandResult *Commands::RemoveArtworksCommand::execute(const Commands
         }
     }
 
-    QList<QPair<int, int> > rangesToRemove;
-    Helpers::indicesToRanges(removedItemsIndices, rangesToRemove);
-    artItemsModel->removeItemsAtIndices(rangesToRemove);
+    int artworksToRemoveCount = removedItemsIndices.count();
 
-    Models::ArtworksRepository *artworkRepository = commandManager->getArtworksRepository();
-    artworkRepository->cleanupEmptyDirectories();
-    artworkRepository->updateCountsForExistingDirectories();
+    if (artworksToRemoveCount > 0) {
+        QList<QPair<int, int> > rangesToRemove;
+        Helpers::indicesToRanges(removedItemsIndices, rangesToRemove);
+        artItemsModel->removeItemsAtIndices(rangesToRemove);
 
-    artItemsModel->updateModifiedCount();
+        Models::ArtworksRepository *artworkRepository = commandManager->getArtworksRepository();
+        artworkRepository->cleanupEmptyDirectories();
+        artworkRepository->updateCountsForExistingDirectories();
 
-    if (!removedItemsIndices.empty()) {
+        artItemsModel->updateModifiedCount();
+
         UndoRedo::RemoveArtworksHistoryItem *removeArtworksItem = new UndoRedo::RemoveArtworksHistoryItem(removedItemsIndices,
                                                                                                           removedItemsFilepathes);
         commandManager->recordHistoryItem(removeArtworksItem);
     }
 
     // TODO: to be filled with useful return data in future
-    Commands::RemoveArtworksCommandResult *result = new Commands::RemoveArtworksCommandResult();
+    Commands::RemoveArtworksCommandResult *result = new Commands::RemoveArtworksCommandResult(artworksToRemoveCount);
     return result;
 }

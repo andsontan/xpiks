@@ -557,7 +557,7 @@ namespace Models {
         Q_ASSERT(row >= 0 && row < m_ArtworkList.length());
         ArtworkMetadata *metadata = m_ArtworkList[row];
         ArtworksRepository *artworkRepository = m_CommandManager->getArtworksRepository();
-        artworkRepository->removeFile(metadata->getFilepath());
+        artworkRepository->removeFile(metadata->getFilepath(), metadata->getAbsoluteFilepath());
 
         if (metadata->getIsSelected()) {
             m_SelectedArtworksCount--;

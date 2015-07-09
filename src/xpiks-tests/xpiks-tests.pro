@@ -43,7 +43,8 @@ SOURCES += main.cpp \
     ../xpiks-qt/UndoRedo/artworkmetadatabackup.cpp \
     ../xpiks-qt/UndoRedo/modifyartworkshistoryitem.cpp \
     ../xpiks-qt/UndoRedo/removeartworksitem.cpp \
-    ../xpiks-qt/Encryption/aes-qt.cpp
+    ../xpiks-qt/Encryption/aes-qt.cpp \
+    removecommand_tests.cpp
 
 HEADERS += \
     encryption_tests.h \
@@ -75,7 +76,8 @@ HEADERS += \
     ../xpiks-qt/UndoRedo/artworkmetadatabackup.h \
     ../xpiks-qt/UndoRedo/modifyartworkshistoryitem.h \
     ../xpiks-qt/UndoRedo/removeartworksitem.h \
-    Mocks/artworkmetadatamock.h
+    Mocks/artworkmetadatamock.h \
+    removecommand_tests.h
 
 macx {
 OBJECTIVE_SOURCES += \

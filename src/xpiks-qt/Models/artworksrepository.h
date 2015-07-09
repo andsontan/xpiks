@@ -72,7 +72,7 @@ namespace Models {
 
     public:
         bool accountFile(const QString &filepath);
-        void removeFile(const QString &filepath);
+        void removeFile(const QString &filepath, const QString &fileDirectory);
         void setFileSelected(const QString &filepath, bool selected);
 
         const QString &getDirectory(int index) const { return m_DirectoriesList[index]; }

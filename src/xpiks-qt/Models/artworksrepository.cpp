@@ -135,16 +135,13 @@ namespace Models {
         return wasModified;
     }
 
-    void ArtworksRepository::removeFile(const QString &filepath) {
-        QFileInfo fi(filepath);
-        const QString absolutePath = fi.absolutePath();
+    void ArtworksRepository::removeFile(const QString &filepath, const QString &fileDirectory) {
+        if (m_DirectoriesHash.contains(fileDirectory)) {
+            int occurances = m_DirectoriesHash[fileDirectory] - 1;
+            int selectedCount = m_DirectoriesSelectedHash[fileDirectory] - 1;
 
-        if (m_DirectoriesHash.contains(absolutePath)) {
-            int occurances = m_DirectoriesHash[absolutePath] - 1;
-            int selectedCount = m_DirectoriesSelectedHash[absolutePath] - 1;
-
-            m_DirectoriesHash[absolutePath] = occurances;
-            m_DirectoriesSelectedHash[absolutePath] = selectedCount;
+            m_DirectoriesHash[fileDirectory] = occurances;
+            m_DirectoriesSelectedHash[fileDirectory] = selectedCount;
         }
 
         m_FilesSet.remove(filepath);

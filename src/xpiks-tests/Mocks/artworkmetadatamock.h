@@ -11,6 +11,8 @@ namespace Mocks {
             Models::ArtworkMetadata(filepath)
         {
         }
+
+        virtual QString getAbsoluteFilepath() const { return "somedirectory"; }
     };
 }
 

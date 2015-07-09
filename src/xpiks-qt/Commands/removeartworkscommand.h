@@ -45,7 +45,12 @@ namespace Commands {
     };
 
     class RemoveArtworksCommandResult : public CommandResult {
-
+    public:
+        RemoveArtworksCommandResult(int removedCount):
+            m_RemovedArtworksCount(removedCount)
+        {}
+    public:
+        int m_RemovedArtworksCount;
     };
 }
 
