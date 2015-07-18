@@ -30,46 +30,10 @@
 #include "artiteminfo.h"
 #include "abstractlistmodel.h"
 #include "../Common/baseentity.h"
+#include "../Common/basickeywordsmodel.h"
 #include "../Commands/combinededitcommand.h"
 
 namespace Models {
-    class MiniKeywordsModel : public QAbstractListModel, public Common::BaseEntity {
-        Q_OBJECT
-    public:
-        MiniKeywordsModel(QObject *parent) :
-            QAbstractListModel(parent)
-        { }
-
-    public:
-        enum CombinedArtworksModelRoles {
-            KeywordRole = Qt::UserRole + 1
-        };
-
-    public:
-        int rowCount(const QModelIndex & parent = QModelIndex()) const { Q_UNUSED(parent); return m_KeywordsList.length(); }
-        QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const {
-            if (index.row() < 0 || index.row() >= m_KeywordsList.count()) return QVariant();
-            if (role == KeywordRole) { return m_KeywordsList[index.row()]; }
-            return QVariant();
-        }
-        const QStringList &getKeywords() const { return m_KeywordsList; }
-        void reset(const QStringList &items) { beginResetModel(); m_KeywordsList.clear(); m_KeywordsList.append(items); endResetModel(); }
-        void appendKeyword(const QString &keyword) { beginInsertRows(QModelIndex(), rowCount(), rowCount());
-                                                    m_KeywordsList.append(keyword); endInsertRows(); }
-        bool removeKeyword(int index, QString &keyword) { bool indexValid = index >= 0 && index < m_KeywordsList.length(); if (indexValid) {
-                beginRemoveRows(QModelIndex(), index, index); keyword = m_KeywordsList.takeAt(index); endRemoveRows(); }
-                return indexValid;
-            }
-        bool removeLastKeyword(QString &keyword) { return removeKeyword(m_KeywordsList.length() - 1, keyword); }
-
-    protected:
-        QHash<int, QByteArray> roleNames() const {
-            QHash<int, QByteArray> roles; roles[KeywordRole] = "keyword"; return roles;
-        }
-
-    private:
-        QStringList m_KeywordsList;
-    };
 
     class CombinedArtworksModel : public AbstractListModel, public Common::BaseEntity
     {
@@ -174,7 +138,7 @@ namespace Models {
 
     private:
         QList<ArtItemInfo*> m_ArtworksList;
-        MiniKeywordsModel m_CommonKeywordsModel;
+        Common::BasicKeywordsModel m_CommonKeywordsModel;
         QSet<QString> m_CommonKeywordsSet;
         QString m_ArtworkDescription;
         QString m_ArtworkTitle;
@@ -182,8 +146,5 @@ namespace Models {
         bool m_IsModified;
     };
 }
-
-
-Q_DECLARE_METATYPE(Models::MiniKeywordsModel*)
 
 #endif // COMBINEDARTWORKSMODEL_H

@@ -132,7 +132,8 @@ HEADERS += \
     ../quazip/quazip/quazipfileinfo.h \
     ../quazip/quazip/quazipnewinfo.h \
     ../quazip/quazip/unzip.h \
-    ../quazip/quazip/zip.h
+    ../quazip/quazip/zip.h \
+    Common/basickeywordsmodel.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
