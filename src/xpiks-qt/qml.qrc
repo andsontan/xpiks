@@ -27,5 +27,6 @@
         <file>Dialogs/MasterPasswordSetupDialog.qml</file>
         <file>Components/CheckedComponent.qml</file>
         <file>Dialogs/ZipArtworksDialog.qml</file>
+        <file>Components/AddIcon.qml</file>
     </qresource>
 </RCC>

@@ -96,8 +96,13 @@ namespace Models {
         }
     }
 
-    void CombinedArtworksModel::resetModelData()
-    {
+    void CombinedArtworksModel::acceptSuggestedKeywords(const QStringList &keywords)  {
+        foreach (const QString &keyword, keywords) {
+            this->appendKeyword(keyword);
+        }
+    }
+
+    void CombinedArtworksModel::resetModelData() {
         beginResetModel();
         qDeleteAll(m_ArtworksList);
         m_ArtworksList.clear();
@@ -110,8 +115,7 @@ namespace Models {
         m_CommonKeywordsSet.clear();
     }
 
-    void CombinedArtworksModel::createCombinedEditCommand(Commands::CombinedEditType commandType) const
-    {
+    void CombinedArtworksModel::createCombinedEditCommand(Commands::CombinedEditType commandType) const {
         Commands::CombinedEditCommand *combinedEditCommand = new Commands::CombinedEditCommand(
                     commandType,
                     m_ArtworksList,
@@ -127,8 +131,7 @@ namespace Models {
         delete combinedResult;
     }
 
-    void CombinedArtworksModel::removeKeywordAt(int keywordIndex)
-    {
+    void CombinedArtworksModel::removeKeywordAt(int keywordIndex) {
         QString keyword;
         if (m_CommonKeywordsModel.removeKeyword(keywordIndex, keyword)) {
             m_CommonKeywordsSet.remove(keyword);
@@ -137,8 +140,7 @@ namespace Models {
         }
     }
 
-    void CombinedArtworksModel::removeLastKeyword()
-    {
+    void CombinedArtworksModel::removeLastKeyword() {
         QString keyword;
         if (m_CommonKeywordsModel.removeLastKeyword(keyword)) {
             m_CommonKeywordsSet.remove(keyword);
@@ -147,8 +149,7 @@ namespace Models {
         }
     }
 
-    void CombinedArtworksModel::appendKeyword(const QString &word)
-    {
+    void CombinedArtworksModel::appendKeyword(const QString &word) {
         QString keyword = word.simplified();
         if (!m_CommonKeywordsSet.contains(keyword)) {
             m_CommonKeywordsModel.appendKeyword(keyword);
@@ -158,8 +159,7 @@ namespace Models {
         }
     }
 
-    void CombinedArtworksModel::pasteKeywords(const QStringList &keywords)
-    {
+    void CombinedArtworksModel::pasteKeywords(const QStringList &keywords) {
         foreach (const QString &keyword, keywords) {
             if (!m_CommonKeywordsSet.contains(keyword)) {
                 m_CommonKeywordsSet.insert(keyword);
@@ -171,32 +171,18 @@ namespace Models {
         m_IsModified = true;
     }
 
-    void CombinedArtworksModel::selectArtwork(int index)
-    {
+    void CombinedArtworksModel::setArtworksSelected(int index, bool newState) {
         if (index < 0 || index >= m_ArtworksList.length()) {
             return;
         }
 
-        m_ArtworksList[index]->select();
+        m_ArtworksList[index]->setSelected(newState);
         QModelIndex qIndex = this->index(index);
         emit dataChanged(qIndex, qIndex, QVector<int>() << IsSelectedRole);
         emit selectedArtworksCountChanged();
     }
 
-    void CombinedArtworksModel::deselectArtwork(int index)
-    {
-        if (index < 0 || index >= m_ArtworksList.length()) {
-            return;
-        }
-
-        m_ArtworksList[index]->deselect();
-        QModelIndex qIndex = this->index(index);
-        emit dataChanged(qIndex, qIndex, QVector<int>() << IsSelectedRole);
-        emit selectedArtworksCountChanged();
-    }
-
-    void CombinedArtworksModel::removeSelectedArtworks()
-    {
+    void CombinedArtworksModel::removeSelectedArtworks() {
         int count = m_ArtworksList.length();
         QList<int> indicesToRemove;
         for (int i = 0; i < count; ++i) {
@@ -221,8 +207,7 @@ namespace Models {
         createCombinedEditCommand(Commands::AppendEditType);
     }
 
-    int CombinedArtworksModel::getSelectedArtworksCount() const
-    {
+    int CombinedArtworksModel::getSelectedArtworksCount() const {
         int selectedCount = 0;
         int count = m_ArtworksList.length();
         for (int i = 0; i < count; ++i) {
@@ -235,14 +220,12 @@ namespace Models {
         return selectedCount;
     }
 
-    int CombinedArtworksModel::rowCount(const QModelIndex &parent) const
-    {
+    int CombinedArtworksModel::rowCount(const QModelIndex &parent) const {
         Q_UNUSED(parent);
         return m_ArtworksList.count();
     }
 
-    QVariant CombinedArtworksModel::data(const QModelIndex &index, int role) const
-    {
+    QVariant CombinedArtworksModel::data(const QModelIndex &index, int role) const {
         if (index.row() < 0 || index.row() >= m_ArtworksList.count())
             return QVariant();
 
@@ -258,16 +241,14 @@ namespace Models {
         }
     }
 
-    QHash<int, QByteArray> CombinedArtworksModel::roleNames() const
-    {
+    QHash<int, QByteArray> CombinedArtworksModel::roleNames() const {
         QHash<int, QByteArray> roles;
         roles[PathRole] = "path";
         roles[IsSelectedRole] = "isselected";
         return roles;
     }
 
-    void CombinedArtworksModel::removeInnerItem(int row)
-    {
+    void CombinedArtworksModel::removeInnerItem(int row) {
         ArtItemInfo *info = m_ArtworksList[row];
         delete info;
         m_ArtworksList.removeAt(row);

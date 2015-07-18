@@ -40,8 +40,7 @@ namespace Models {
 
     public:        
         bool isSelected() const { return m_IsSelected; }
-        void select() { m_IsSelected = true; }
-        void deselect() { m_IsSelected = false; }
+        void setSelected(bool selected) { m_IsSelected = selected; }
 
     public:
         ArtworkMetadata *getOrigin() const { return m_ArtworkMetadata; }

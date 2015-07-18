@@ -32,10 +32,11 @@
 #include "../Common/baseentity.h"
 #include "../Common/basickeywordsmodel.h"
 #include "../Commands/combinededitcommand.h"
+#include "../Suggestion/ikeywordssuggesteable.h"
 
 namespace Models {
 
-    class CombinedArtworksModel : public AbstractListModel, public Common::BaseEntity
+    class CombinedArtworksModel : public AbstractListModel, public Common::BaseEntity, public Suggestion::IKeywordsSuggesteable
     {
         Q_OBJECT
         Q_PROPERTY(QString description READ getDescription WRITE setDescription NOTIFY descriptionChanged)
@@ -62,6 +63,9 @@ namespace Models {
 
     public:
         void recombineArtworks();
+
+    public:
+        virtual void acceptSuggestedKeywords(const QStringList &keywords);
 
     public:
         void setKeywords(const QStringList& keywords) { m_CommonKeywordsModel.reset(keywords); }
@@ -103,8 +107,7 @@ namespace Models {
         Q_INVOKABLE void removeLastKeyword();
         Q_INVOKABLE void appendKeyword(const QString &keyword);
         Q_INVOKABLE void pasteKeywords(const QStringList &keywords);
-        Q_INVOKABLE void selectArtwork(int index);
-        Q_INVOKABLE void deselectArtwork(int index);
+        Q_INVOKABLE void setArtworksSelected(int index, bool newState);
         Q_INVOKABLE void removeSelectedArtworks();
         Q_INVOKABLE int getArtworksCount() const { return m_ArtworksList.length(); }
         Q_INVOKABLE void saveSetKeywords() const;

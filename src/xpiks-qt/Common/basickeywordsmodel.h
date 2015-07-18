@@ -52,6 +52,7 @@ namespace Common {
         }
         const QStringList &getKeywords() const { return m_KeywordsList; }
         void reset(const QStringList &items) { beginResetModel(); m_KeywordsList.clear(); m_KeywordsList.append(items); endResetModel(); }
+        void clear() { beginResetModel(); m_KeywordsList.clear(); endResetModel(); }
         void appendKeyword(const QString &keyword) { beginInsertRows(QModelIndex(), rowCount(), rowCount());
                                                      m_KeywordsList.append(keyword); endInsertRows(); }
         bool removeKeyword(int index, QString &keyword) { bool indexValid = index >= 0 && index < m_KeywordsList.length(); if (indexValid) {

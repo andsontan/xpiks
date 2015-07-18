@@ -47,7 +47,9 @@ SOURCES += main.cpp \
     ../quazip/quazip/quazipfileinfo.cpp \
     ../quazip/quazip/quazipnewinfo.cpp \
     ../quazip/quazip/unzip.c \
-    ../quazip/quazip/zip.c
+    ../quazip/quazip/zip.c \
+    Suggestion/keywordssuggestor.cpp \
+    Suggestion/suggestionqueryengine.cpp
 
 RESOURCES += qml.qrc
 
@@ -133,7 +135,11 @@ HEADERS += \
     ../quazip/quazip/quazipnewinfo.h \
     ../quazip/quazip/unzip.h \
     ../quazip/quazip/zip.h \
-    Common/basickeywordsmodel.h
+    Common/basickeywordsmodel.h \
+    Suggestion/keywordssuggestor.h \
+    Suggestion/suggestionartwork.h \
+    Suggestion/suggestionqueryengine.h \
+    Suggestion/ikeywordssuggesteable.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
@@ -161,7 +167,8 @@ DISTFILES += \
     Dialogs/EnterMasterPasswordDialog.qml \
     Dialogs/MasterPasswordSetupDialog.qml \
     Components/CheckedComponent.qml \
-    Dialogs/ZipArtworksDialog.qml
+    Dialogs/ZipArtworksDialog.qml \
+    Components/AddIcon.qml
 
 macx {
 OBJECTIVE_SOURCES += \
