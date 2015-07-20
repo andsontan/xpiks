@@ -33,17 +33,19 @@ Item {
 
         Rectangle {
             color: Colors.defaultLightGrayColor
-            width: parent.width - 2
+            width: parent.width - 20
             height: 8
             border.width: 4
             border.color: color
             radius: 4
+            transformOrigin: Item.Center
+            rotation: 90
             anchors.centerIn: parent
         }
 
         Rectangle {
             color: Colors.defaultLightGrayColor
-            width: parent.width - 2
+            width: parent.width - 20
             height: 8
             radius: 4
             border.width: 4

@@ -36,17 +36,19 @@ Item {
 
         Rectangle {
             color: mouseArea.pressed ? Colors.artworkModifiedColor : (isActive ? Colors.defaultControlColor : Colors.defaultLightColor)
-            width: parent.width - 2
+            width: parent.width - 4
             height: 3
             border.width: 1
             border.color: color
             radius: 2
+            transformOrigin: Item.Center
+            rotation: 90
             anchors.centerIn: parent
         }
 
         Rectangle {
             color: mouseArea.pressed ? Colors.artworkModifiedColor : (isActive ? Colors.defaultControlColor : Colors.defaultLightColor)
-            width: parent.width - 2
+            width: parent.width - 4
             height: 3
             radius: 2
             border.width: 1

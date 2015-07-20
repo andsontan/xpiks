@@ -28,7 +28,7 @@ namespace Suggestion {
         beginResetModel();
         qDeleteAll(m_Suggestions);
         m_Suggestions.clear();
-        qCopy(suggestedArtworks.begin(), suggestedArtworks.end(), m_Suggestions.begin());
+        m_Suggestions.append(suggestedArtworks);
         endResetModel();
         m_KeywordsHash.clear();
         m_SuggestedKeywords.clear();

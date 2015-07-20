@@ -35,7 +35,8 @@ Item {
     anchors.fill: parent
 
     function closePopup() {
-        keywordsSuggestionComponent.destroy()
+        keywordsSuggestor.close();
+        keywordsSuggestionComponent.destroy();
     }
 
     PropertyAnimation { target: keywordsSuggestionComponent; property: "opacity";
@@ -142,54 +143,66 @@ Item {
                     StyledScrollView {
                         id: imagesScrollView
                         height: parent.height
-                        width: parent.width
-                        anchors.margins: 10
+                        width: parent.width + 15
 
-                        Flow {
+                        Flickable {
                             anchors.fill: parent
-                            anchors.margins: 10
+                            contentHeight: grid.height
+                            contentWidth: grid.width
+                            anchors.margins: {left: 40; right: 0; top: 20}
 
-                            Repeater {
-                                model: keywordsSuggestor
-                                delegate: Rectangle {
+                            GridLayout {
+                                id: grid
+                                columns: 5
+                                columnSpacing: 20
+                                rowSpacing: 20
 
-                                    property int delegateIndex: index
-                                    id: imageWrapper
-                                    height: 110
-                                    width: height
-                                    color: "transparent"
+                                Repeater {
+                                    model: keywordsSuggestor
+                                    delegate: Rectangle {
+                                        property int delegateIndex: index
+                                        id: imageWrapper
+                                        height: 110
+                                        width: height
+                                        color: "transparent"
 
-                                    Image {
-                                        anchors.fill: parent
-                                        anchors.margins: 1
-                                        source: url
-                                        sourceSize.width: 150
-                                        sourceSize.height: 150
-                                        fillMode: Image.PreserveAspectCrop
-                                        asynchronous: true
-                                    }
+                                        Image {
+                                            anchors.fill: parent
+                                            anchors.margins: 1
+                                            source: url
+                                            sourceSize.width: 150
+                                            sourceSize.height: 150
+                                            fillMode: Image.PreserveAspectCrop
+                                            asynchronous: true
+                                        }
 
-                                    Rectangle {
-                                        anchors.fill: parent
-                                        color: Colors.defaultControlColor
-                                        opacity: mouseArea.containsMouse ? 0.4 : (isselected ? 0.7 : 0)
-                                    }
+                                        Rectangle {
+                                            anchors.fill: parent
+                                            color: Colors.defaultControlColor
+                                            opacity: mouseArea.containsMouse ? 0.4 : (isselected ? 0.7 : 0)
+                                        }
 
-                                    LargeAddIcon {
-                                        visible: isselected
-                                        width: parent.width
-                                        height: parent.height
-                                    }
+                                        LargeAddIcon {
+                                            visible: isselected
+                                            width: parent.width
+                                            height: parent.height
+                                        }
 
-                                    MouseArea {
-                                        id: mouseArea
-                                        anchors.fill: parent
-                                        hoverEnabled: true
-                                        onClicked: {
-                                            keywordsSuggestor.setArtworkSelected(delegateIndex, !isselected)
+                                        MouseArea {
+                                            id: mouseArea
+                                            anchors.fill: parent
+                                            hoverEnabled: true
+                                            onClicked: {
+                                                keywordsSuggestor.setArtworkSelected(delegateIndex, !isselected)
+                                            }
                                         }
                                     }
                                 }
+
+                                Item { height: 110; width: height }
+                                Item { height: 110; width: height }
+                                Item { height: 110; width: height }
+                                Item { height: 110; width: height }
                             }
                         }
                     }
