@@ -48,6 +48,14 @@ namespace Suggestion {
     QString KeywordsSuggestor::removeSuggestedKeywordAt(int keywordIndex) {
         QString keyword;
         m_SuggestedKeywords.removeKeyword(keywordIndex, keyword);
+        emit suggestedKeywordsCountChanged();
+        return keyword;
+    }
+
+    QString KeywordsSuggestor::removeOtherKeywordAt(int keywordIndex) {
+        QString keyword;
+        m_AllOtherKeywords.removeKeyword(keywordIndex, keyword);
+        emit otherKeywordsCountChanged();
         return keyword;
     }
 
@@ -74,6 +82,7 @@ namespace Suggestion {
 
     void KeywordsSuggestor::suggestKeywords() {
         if (m_Suggesteable != NULL) {
+            setInProgress();
             m_Suggesteable->acceptSuggestedKeywords(m_SuggestedKeywords.getKeywords());
         }
     }
@@ -120,8 +129,10 @@ namespace Suggestion {
         QSet<QString> allKeywords;
 
         foreach (SuggestionArtwork *artwork, m_Suggestions) {
-            QSet<QString> currentKeywords = artwork->getKeywords().toSet();
-            allKeywords.unite(currentKeywords);
+            if (artwork->getIsSelected()) {
+                QSet<QString> currentKeywords = artwork->getKeywords().toSet();
+                allKeywords.unite(currentKeywords);
+            }
         }
 
         return allKeywords;
@@ -133,7 +144,18 @@ namespace Suggestion {
         QHash<QString, int>::const_iterator it = m_KeywordsHash.constBegin();
         QHash<QString, int>::const_iterator itEnd = m_KeywordsHash.constEnd();
 
-        int threshold = qMax(m_SelectedArtworksCount/3, 1);
+        int threshold = 0;
+        if (m_SelectedArtworksCount <= 2) {
+            threshold = qMax(m_SelectedArtworksCount, 1);
+        } else if (m_SelectedArtworksCount <= 4) {
+            threshold = 2;
+        } else if (m_SelectedArtworksCount <= 6) {
+            threshold = 3;
+        } else if (m_SelectedArtworksCount <= 8) {
+            threshold = 4;
+        } else {
+            threshold = m_SelectedArtworksCount / 2 - 1;
+        }
 
         for (; it != itEnd; ++it) {
             if (it.value() >= threshold) {
@@ -143,10 +165,22 @@ namespace Suggestion {
 
         m_SuggestedKeywords.reset(keywords);
 
-        QSet<QString> allKeywords = getSelectedArtworksKeywords();
-        QSet<QString> suggestedKeywords = keywords.toSet();
-        QSet<QString> otherKeywords = allKeywords.subtract(suggestedKeywords);
+        if (m_SelectedArtworksCount != 0) {
+            QSet<QString> allKeywords = getSelectedArtworksKeywords();
+            QSet<QString> suggestedKeywords = keywords.toSet();
+            QSet<QString> otherKeywords = allKeywords.subtract(suggestedKeywords);
 
-        m_AllOtherKeywords.reset(otherKeywords.toList());
+            m_AllOtherKeywords.reset(otherKeywords.toList());
+        }
+#ifndef QT_DEBUG
+        else {
+            m_AllOtherKeywords.clear();
+            m_SuggestedKeywords.clear();
+            m_KeywordsHash.clear();
+        }
+#endif
+
+        emit suggestedKeywordsCountChanged();
+        emit otherKeywordsCountChanged();
     }
 }

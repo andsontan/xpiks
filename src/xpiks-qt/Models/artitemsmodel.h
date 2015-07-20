@@ -37,7 +37,10 @@
 #include "../Common/baseentity.h"
 
 namespace Models {
-    class ArtItemsModel : public AbstractListModel, public Common::BaseEntity {
+    class ArtItemsModel :
+            public AbstractListModel,
+            public Common::BaseEntity
+    {
         Q_OBJECT
         Q_PROPERTY(int modifiedArtworksCount READ getModifiedArtworksCount NOTIFY modifiedArtworksCountChanged)
         Q_PROPERTY(int selectedArtworksCount READ getSelectedArtworksCount NOTIFY selectedArtworksCountChanged)
@@ -83,7 +86,7 @@ namespace Models {
         Q_INVOKABLE void backupItem(int metadataIndex);
         Q_INVOKABLE void combineSelectedArtworks() { doCombineSelectedImages(); }
         Q_INVOKABLE void combineArtwork(int index) { doCombineArtwork(index); }
-        Q_INVOKABLE void askForSuggestion(int index);
+        Q_INVOKABLE void askForSuggestionAt(int index);
         Q_INVOKABLE void selectAllArtworks() { setAllItemsSelected(true); }
         Q_INVOKABLE void unselectAllArtworks() { setAllItemsSelected(false); }
         Q_INVOKABLE int dropFiles(const QList<QUrl> &urls);

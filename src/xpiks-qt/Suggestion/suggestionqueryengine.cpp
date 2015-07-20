@@ -67,6 +67,7 @@ namespace Suggestion {
             qDebug() << networkReply->errorString();
         }
 
+        m_Suggestor->unsetInProgress();
         networkReply->deleteLater();
     }
 

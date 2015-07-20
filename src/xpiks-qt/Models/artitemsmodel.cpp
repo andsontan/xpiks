@@ -143,7 +143,7 @@ namespace Models {
         }
     }
 
-    void ArtItemsModel::askForSuggestion(int index) {
+    void ArtItemsModel::askForSuggestionAt(int index) {
         Suggestion::KeywordsSuggestor *suggestor = m_CommandManager->getKeywordsSuggestor();
         ArtworkMetadata *metadata = this->getArtwork(index);
         suggestor->setSuggesteable(metadata);

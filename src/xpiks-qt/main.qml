@@ -1001,7 +1001,7 @@ ApplicationWindow {
                                                             anchors.fill: parent
                                                             cursorShape: Qt.PointingHandCursor
                                                             onClicked: {
-                                                                artItemsModel.askForSuggestion(rowWrapper.delegateIndex)
+                                                                artItemsModel.askForSuggestionAt(rowWrapper.delegateIndex)
                                                                 Common.launchComponent("Dialogs/KeywordsSuggestion.qml", applicationWindow, {});
                                                             }
                                                         }

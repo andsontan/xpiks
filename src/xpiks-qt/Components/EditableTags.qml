@@ -101,9 +101,9 @@ Flickable {
 
         property real lastHeight
 
-        add: Transition {
-            NumberAnimation { properties: "x,y"; easing.type: Easing.OutBounce }
-        }
+        /*add: Transition {
+            NumberAnimation { properties: "x,y"; easing.type: Easing.Bezier }
+        }*/
 
         populate: Transition {
             NumberAnimation { properties: "x,y"; from: 200; duration: 100; easing.type: Easing.OutBounce }

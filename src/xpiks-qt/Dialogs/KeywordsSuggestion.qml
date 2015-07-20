@@ -123,6 +123,7 @@ Item {
                     StyledButton {
                         text: qsTr("Search")
                         width: 70
+                        enabled: !keywordsSuggestor.isInProgress
                         onClicked: keywordsSuggestor.searchArtworks(queryText.text)
                     }
 
@@ -212,9 +213,20 @@ Item {
                     height: 1
                 }
 
-                StyledText {
-                    text: qsTr("Suggested keywords:")
-                    color: Colors.defaultInputBackground
+                RowLayout {
+                    StyledText {
+                        text: qsTr("Suggested keywords:")
+                        color: Colors.defaultInputBackground
+                    }
+
+                    Item {
+                        Layout.fillWidth: true
+                    }
+
+                    StyledText {
+                        text: keywordsSuggestor.suggestedKeywordsCount
+                        color: Colors.defaultInputBackground
+                    }
                 }
 
                 Rectangle {
@@ -314,9 +326,20 @@ Item {
                     height: 1
                 }
 
-                StyledText {
-                    text: qsTr("Other keywords:")
-                    color: Colors.defaultInputBackground
+                RowLayout {
+                    StyledText {
+                        text: qsTr("Other keywords:")
+                        color: Colors.defaultInputBackground
+                    }
+
+                    Item {
+                        Layout.fillWidth: true
+                    }
+
+                    StyledText {
+                        text: keywordsSuggestor.otherKeywordsCount
+                        color: Colors.defaultInputBackground
+                    }
                 }
 
                 Rectangle {
@@ -329,7 +352,7 @@ Item {
                     color: Colors.defaultInputBackground
 
                     function removeKeyword(index) {
-                        var keyword = keywordsSuggestor.removeKeywordAt(index)
+                        var keyword = keywordsSuggestor.removeOtherKeywordAt(index)
                         keywordsSuggestor.appendKeywordToSuggested(keyword)
                     }
 
@@ -427,6 +450,10 @@ Item {
                     StyledButton {
                         text: qsTr("Use suggested keywords")
                         width: 200
+                        onClicked: {
+                            keywordsSuggestor.suggestKeywords()
+                            closePopup()
+                        }
                     }
 
                     StyledButton {

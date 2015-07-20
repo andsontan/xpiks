@@ -38,6 +38,9 @@ namespace Suggestion {
     class KeywordsSuggestor : public QAbstractListModel, public Common::BaseEntity
     {
         Q_OBJECT
+        Q_PROPERTY(int suggestedKeywordsCount READ getSuggestedKeywordsCount NOTIFY suggestedKeywordsCountChanged)
+        Q_PROPERTY(int otherKeywordsCount READ getOtherKeywordsCount NOTIFY otherKeywordsCountChanged)
+        Q_PROPERTY(bool isInProgress READ getIsInProgress NOTIFY isInProgressChanged)
     public:
         KeywordsSuggestor(QObject *parent=NULL) :
             QAbstractListModel(parent),
@@ -45,7 +48,8 @@ namespace Suggestion {
             m_SuggestedKeywords(this),
             m_AllOtherKeywords(this),
             m_Suggesteable(NULL),
-            m_SelectedArtworksCount(0)
+            m_SelectedArtworksCount(0),
+            m_IsInProgress(false)
         {}
 
         ~KeywordsSuggestor() { qDeleteAll(m_Suggestions); }
@@ -55,10 +59,26 @@ namespace Suggestion {
         void setSuggesteable(IKeywordsSuggesteable *suggesteable) { m_Suggesteable = suggesteable; }
         void clear();
 
+    private:
+        int getSuggestedKeywordsCount() const { return m_SuggestedKeywords.rowCount(); }
+        int getOtherKeywordsCount() const { return m_AllOtherKeywords.rowCount(); }
+        bool getIsInProgress() const { return m_IsInProgress; }
+
+    signals:
+        void suggestedKeywordsCountChanged();
+        void otherKeywordsCountChanged();
+        void isInProgressChanged();
+
+    private:
+        void setInProgress() { m_IsInProgress = true; emit isInProgressChanged(); }
     public:
-        Q_INVOKABLE void appendKeywordToSuggested(const QString &keyword) { m_SuggestedKeywords.appendKeyword(keyword); }
-        Q_INVOKABLE void appendKeywordToOther(const QString &keyword) { m_AllOtherKeywords.appendKeyword(keyword); }
+        void unsetInProgress() { m_IsInProgress = false; emit isInProgressChanged(); }
+
+    public:
+        Q_INVOKABLE void appendKeywordToSuggested(const QString &keyword) { m_SuggestedKeywords.appendKeyword(keyword); emit suggestedKeywordsCountChanged(); }
+        Q_INVOKABLE void appendKeywordToOther(const QString &keyword) { m_AllOtherKeywords.appendKeyword(keyword); emit otherKeywordsCountChanged(); }
         Q_INVOKABLE QString removeSuggestedKeywordAt(int keywordIndex);
+        Q_INVOKABLE QString removeOtherKeywordAt(int keywordIndex);
         Q_INVOKABLE void setArtworkSelected(int index, bool newState);
         Q_INVOKABLE void searchArtworks(const QString &searchTerm);
         Q_INVOKABLE void suggestKeywords();
@@ -101,6 +121,7 @@ namespace Suggestion {
         Common::BasicKeywordsModel m_AllOtherKeywords;
         IKeywordsSuggesteable *m_Suggesteable;
         int m_SelectedArtworksCount;
+        bool m_IsInProgress;
     };
 }
 
