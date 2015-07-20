@@ -32,6 +32,7 @@
 #include "../Common/baseentity.h"
 #include "../Common/basickeywordsmodel.h"
 #include "ikeywordssuggesteable.h"
+#include "suggestionqueryengine.h"
 
 namespace Suggestion {
     class KeywordsSuggestor : public QAbstractListModel, public Common::BaseEntity
@@ -39,9 +40,12 @@ namespace Suggestion {
         Q_OBJECT
     public:
         KeywordsSuggestor(QObject *parent=NULL) :
-            QObject(parent),
-            m_SelectedArtworksCount(0),
-            m_Suggesteable(NULL)
+            QAbstractListModel(parent),
+            m_QueryEngine(new SuggestionQueryEngine(this)),
+            m_SuggestedKeywords(this),
+            m_AllOtherKeywords(this),
+            m_Suggesteable(NULL),
+            m_SelectedArtworksCount(0)
         {}
 
         ~KeywordsSuggestor() { qDeleteAll(m_Suggestions); }
@@ -52,19 +56,21 @@ namespace Suggestion {
         void clear();
 
     public:
-        Q_INVOKABLE void removeSuggestedKeywordAt(int keywordIndex);
-        Q_INVOKABLE void removeSuggestedLastKeyword();
+        Q_INVOKABLE void appendKeywordToSuggested(const QString &keyword) { m_SuggestedKeywords.appendKeyword(keyword); }
+        Q_INVOKABLE void appendKeywordToOther(const QString &keyword) { m_AllOtherKeywords.appendKeyword(keyword); }
+        Q_INVOKABLE QString removeSuggestedKeywordAt(int keywordIndex);
         Q_INVOKABLE void setArtworkSelected(int index, bool newState);
+        Q_INVOKABLE void searchArtworks(const QString &searchTerm);
         Q_INVOKABLE void suggestKeywords();
         Q_INVOKABLE void close() { clear(); }
 
-        Q_INVOKABLE QObject *getSuggestedKeywords() {
+        Q_INVOKABLE QObject *getSuggestedKeywordsModel() {
             QObject *item = &m_SuggestedKeywords;
             QQmlEngine::setObjectOwnership(item, QQmlEngine::CppOwnership);
             return item;
         }
 
-        Q_INVOKABLE QObject *getAllOtherKeywords() {
+        Q_INVOKABLE QObject *getAllOtherKeywordsModel() {
             QObject *item = &m_AllOtherKeywords;
             QQmlEngine::setObjectOwnership(item, QQmlEngine::CppOwnership);
             return item;
@@ -90,6 +96,7 @@ namespace Suggestion {
     private:
         QHash<QString, int> m_KeywordsHash;
         QList<SuggestionArtwork *> m_Suggestions;
+        SuggestionQueryEngine *m_QueryEngine;
         Common::BasicKeywordsModel m_SuggestedKeywords;
         Common::BasicKeywordsModel m_AllOtherKeywords;
         IKeywordsSuggesteable *m_Suggesteable;

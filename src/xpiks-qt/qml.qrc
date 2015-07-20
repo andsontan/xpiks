@@ -28,5 +28,7 @@
         <file>Components/CheckedComponent.qml</file>
         <file>Dialogs/ZipArtworksDialog.qml</file>
         <file>Components/AddIcon.qml</file>
+        <file>Dialogs/KeywordsSuggestion.qml</file>
+        <file>Components/LargeAddIcon.qml</file>
     </qresource>
 </RCC>

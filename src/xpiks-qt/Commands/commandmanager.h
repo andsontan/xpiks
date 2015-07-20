@@ -22,6 +22,7 @@
 #ifndef COMMANDMANAGER_H
 #define COMMANDMANAGER_H
 
+#include <QStringList>
 #include <QList>
 #include "../UndoRedo/historyitem.h"
 #include "commandbase.h"
@@ -48,6 +49,10 @@ namespace Models {
     class ZipArchiver;
 }
 
+namespace Suggestion {
+    class KeywordsSuggestor;
+}
+
 namespace Commands {
     class CommandManager
     {
@@ -62,7 +67,8 @@ namespace Commands {
             m_WarningsManager(NULL),
             m_SecretsManager(NULL),
             m_UndoRedoManager(NULL),
-            m_ZipArchiver(NULL)
+            m_ZipArchiver(NULL),
+            m_KeywordsSuggestor(NULL)
         {}
 
         virtual ~CommandManager() {}
@@ -78,6 +84,7 @@ namespace Commands {
         void InjectDependency(Encryption::SecretsManager *secretsManager);
         void InjectDependency(UndoRedo::UndoRedoManager *undoRedoManager);
         void InjectDependency(Models::ZipArchiver *zipArchiver);
+        void InjectDependency(Suggestion::KeywordsSuggestor *keywordsSuggestor);
 
     public:
         CommandResult *processCommand(CommandBase *command) const;
@@ -97,6 +104,9 @@ namespace Commands {
         void setArtworksForZipping(const QList<Models::ArtworkMetadata*> &artworks) const;
         virtual void connectArtworkSignals(Models::ArtworkMetadata *metadata) const;
         void updateArtworks(const QList<int> &indices) const;
+#ifdef QT_DEBUG
+        void addInitialArtworks(const QStringList &artworksFilepathes);
+#endif
 
     public:
         // methods for getters
@@ -104,6 +114,7 @@ namespace Commands {
         virtual Models::ArtItemsModel *getArtItemsModel() const { return m_ArtItemsModel; }
         virtual const Encryption::SecretsManager *getSecretsManager() const { return m_SecretsManager; }
         virtual const Models::UploadInfoRepository *getUploadInfoRepository() const { return m_UploadInfoRepository; }
+        virtual Suggestion::KeywordsSuggestor *getKeywordsSuggestor() const { return m_KeywordsSuggestor; }
 
     private:
         Models::ArtworksRepository *m_ArtworksRepository;
@@ -116,6 +127,7 @@ namespace Commands {
         Encryption::SecretsManager *m_SecretsManager;
         UndoRedo::UndoRedoManager *m_UndoRedoManager;
         Models::ZipArchiver *m_ZipArchiver;
+        Suggestion::KeywordsSuggestor *m_KeywordsSuggestor;
     };
 }
 

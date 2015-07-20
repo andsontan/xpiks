@@ -168,7 +168,9 @@ DISTFILES += \
     Dialogs/MasterPasswordSetupDialog.qml \
     Components/CheckedComponent.qml \
     Dialogs/ZipArtworksDialog.qml \
-    Components/AddIcon.qml
+    Components/AddIcon.qml \
+    Dialogs/KeywordsSuggestion.qml \
+    Components/LargeAddIcon.qml
 
 macx {
 OBJECTIVE_SOURCES += \

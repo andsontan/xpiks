@@ -191,7 +191,7 @@ Item {
                             }
 
                             delegate: Rectangle {
-                                property int indexOfThisDelegate: index
+                                property int delegateIndex: index
                                 id: imageWrapper
                                 height: 110
                                 width: height
@@ -224,11 +224,7 @@ Item {
                                     anchors.fill: parent
                                     hoverEnabled: true
                                     onClicked: {
-                                        if (isselected) {
-                                            combinedArtworks.deselectArtwork(indexOfThisDelegate)
-                                        } else {
-                                            combinedArtworks.selectArtwork(indexOfThisDelegate)
-                                        }
+                                        combinedArtworks.setArtworksSelected(delegateIndex, !isselected)
                                     }
                                 }
                             }
@@ -423,7 +419,7 @@ Item {
 
                             delegate: Rectangle {
                                 id: itemWrapper
-                                property int indexOfThisDelegate: index
+                                property int delegateIndex: index
                                 property string keyword: modelData
                                 color: Colors.defaultLightColor
 
@@ -455,7 +451,7 @@ Item {
                                         height: 14
                                         isActive: true
                                         anchors.verticalCenter: tagTextRect.verticalCenter
-                                        onItemClicked: keywordsWrapper.removeKeyword(itemWrapper.indexOfThisDelegate)
+                                        onItemClicked: keywordsWrapper.removeKeyword(itemWrapper.delegateIndex)
                                     }
 
                                     Item {
@@ -480,6 +476,8 @@ Item {
                 }
 
                 RowLayout {
+                    spacing: 15
+
                     StyledText {
                         text: combinedArtworks.keywordsCount
                         color: Colors.defaultControlColor
@@ -487,6 +485,21 @@ Item {
 
                     Item {
                         Layout.fillWidth: true
+                    }
+
+                    StyledText {
+                        text: qsTr("Suggest keywords")
+                        color: suggestKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
+
+                        MouseArea {
+                            id: suggestKeywordsMA
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: {
+                                combinedArtworks.askForSuggestion()
+                                Common.launchComponent("Dialogs/KeywordsSuggestion.qml", applicationWindow, {});
+                            }
+                        }
                     }
 
                     StyledText {

@@ -27,6 +27,7 @@ import "../Constants"
 import "../Constants/Colors.js" as Colors;
 import "../Components"
 import "../StyledControls"
+import "../Common.js" as Common
 
 ApplicationWindow {
     id: settingsWindow
@@ -90,15 +91,15 @@ ApplicationWindow {
     }
 
     function openMasterPasswordDialog(firstTimeParam) {
-        var component = Qt.createComponent("MasterPasswordSetupDialog.qml");
         var callbackObject = {
             onCancel: onCancelMP,
             onSuccess: onMasterPasswordSet
         }
 
-        component.createObject(settingsWindow, {firstTime: firstTimeParam, callbackObject: callbackObject});
+        Common.launchComponent("MasterPasswordSetupDialog.qml",
+                               settingsWindow,
+                               {firstTime: firstTimeParam, callbackObject: callbackObject});
     }
-
 
     FileDialog {
         id: exifToolFileDialog
@@ -156,13 +157,14 @@ ApplicationWindow {
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
             if (secretsManager.isMasterPasswordSet()) {
-                var component = Qt.createComponent("EnterMasterPasswordDialog.qml")
                 var callbackObject = {
                     onSuccess: turnMasterPasswordOff,
                     onFail: function() { masterPasswordCheckbox.checked = true; }
                 }
 
-                component.createObject(settingsWindow, {componentParent: settingsWindow, callbackObject: callbackObject})
+                Common.launchComponent("EnterMasterPasswordDialog.qml",
+                                       settingsWindow,
+                                       {componentParent: settingsWindow, callbackObject: callbackObject})
             } else {
                 turnMasterPasswordOff()
             }

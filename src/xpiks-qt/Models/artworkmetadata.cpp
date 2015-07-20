@@ -74,7 +74,7 @@ namespace Models {
     bool ArtworkMetadata::appendKeyword(const QString &keyword) {
         bool added = false;
         const QString &sanitizedKeyword = keyword.simplified().toLower();
-        if (!m_KeywordsSet.contains(sanitizedKeyword)) {
+        if (!sanitizedKeyword.isEmpty() && !m_KeywordsSet.contains(sanitizedKeyword)) {
             int keywordsCount = m_KeywordsList.length();
 
             beginInsertRows(QModelIndex(), keywordsCount, keywordsCount);

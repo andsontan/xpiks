@@ -36,7 +36,10 @@
 
 namespace Models {
 
-    class CombinedArtworksModel : public AbstractListModel, public Common::BaseEntity, public Suggestion::IKeywordsSuggesteable
+    class CombinedArtworksModel :
+            public AbstractListModel,
+            public Common::BaseEntity,
+            public Suggestion::IKeywordsSuggesteable
     {
         Q_OBJECT
         Q_PROPERTY(QString description READ getDescription WRITE setDescription NOTIFY descriptionChanged)
@@ -47,7 +50,7 @@ namespace Models {
     public:
         CombinedArtworksModel(QObject *parent = 0) :
             AbstractListModel(parent),
-            m_CommonKeywordsModel(parent)
+            m_CommonKeywordsModel(this)
         {}
 
         ~CombinedArtworksModel() { qDeleteAll(m_ArtworksList); }
@@ -103,7 +106,7 @@ namespace Models {
         int getSelectedArtworksCount() const;
 
     public:
-        Q_INVOKABLE void removeKeywordAt(int keywordIndex);
+        Q_INVOKABLE QString removeKeywordAt(int keywordIndex);
         Q_INVOKABLE void removeLastKeyword();
         Q_INVOKABLE void appendKeyword(const QString &keyword);
         Q_INVOKABLE void pasteKeywords(const QStringList &keywords);
@@ -114,6 +117,7 @@ namespace Models {
         Q_INVOKABLE void saveAddKeywords() const;
         Q_INVOKABLE void resetModelData();
         Q_INVOKABLE QString getKeywordsString() { return m_CommonKeywordsModel.getKeywords().join(QChar(',')); }
+        Q_INVOKABLE void askForSuggestion();
         Q_INVOKABLE QObject *getKeywordsModel() {
             QObject *item = &m_CommonKeywordsModel;
             QQmlEngine::setObjectOwnership(item, QQmlEngine::CppOwnership);

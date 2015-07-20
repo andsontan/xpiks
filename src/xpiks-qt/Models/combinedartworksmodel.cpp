@@ -24,6 +24,7 @@
 #include "../Commands/combinededitcommand.h"
 #include "../Commands/commandmanager.h"
 #include "../Commands/commandbase.h"
+#include "../Suggestion/keywordssuggestor.h"
 
 namespace Models {
     void CombinedArtworksModel::initArtworks(const QList<ArtItemInfo *> &artworks)
@@ -115,6 +116,11 @@ namespace Models {
         m_CommonKeywordsSet.clear();
     }
 
+    void CombinedArtworksModel::askForSuggestion() {
+        Suggestion::KeywordsSuggestor *suggestor = m_CommandManager->getKeywordsSuggestor();
+        suggestor->setSuggesteable(this);
+    }
+
     void CombinedArtworksModel::createCombinedEditCommand(Commands::CombinedEditType commandType) const {
         Commands::CombinedEditCommand *combinedEditCommand = new Commands::CombinedEditCommand(
                     commandType,
@@ -131,13 +137,15 @@ namespace Models {
         delete combinedResult;
     }
 
-    void CombinedArtworksModel::removeKeywordAt(int keywordIndex) {
+    QString CombinedArtworksModel::removeKeywordAt(int keywordIndex) {
         QString keyword;
         if (m_CommonKeywordsModel.removeKeyword(keywordIndex, keyword)) {
             m_CommonKeywordsSet.remove(keyword);
             emit keywordsCountChanged();
             m_IsModified = true;
         }
+
+        return keyword;
     }
 
     void CombinedArtworksModel::removeLastKeyword() {
@@ -151,7 +159,7 @@ namespace Models {
 
     void CombinedArtworksModel::appendKeyword(const QString &word) {
         QString keyword = word.simplified();
-        if (!m_CommonKeywordsSet.contains(keyword)) {
+        if (!keyword.isEmpty() && !m_CommonKeywordsSet.contains(keyword)) {
             m_CommonKeywordsModel.appendKeyword(keyword);
             m_CommonKeywordsSet.insert(keyword);
             emit keywordsCountChanged();

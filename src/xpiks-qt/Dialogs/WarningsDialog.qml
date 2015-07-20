@@ -112,7 +112,7 @@ Item {
                             spacing: 10
 
                             delegate: Rectangle {
-                                property int indexOfThisDelegate: index
+                                property int delegateIndex: index
                                 color: Colors.itemsSourceBackground
                                 id: imageWrapper
                                 width: parent.width - 10

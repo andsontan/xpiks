@@ -28,24 +28,19 @@
 #include <QStringList>
 #include <QJsonArray>
 #include "suggestionartwork.h"
-#include "keywordssuggestor.h"
 #include "ikeywordssuggesteable.h"
 
 namespace Suggestion {
+    class KeywordsSuggestor;
+
     class SuggestionQueryEngine : public QObject
     {
         Q_OBJECT
     public:
-        SuggestionQueryEngine(KeywordsSuggestor *keywordsSuggestor, QObject *parent=NULL) :
-            QObject(parent)
-        {
-            m_NetworkManager = new QNetworkAccessManager(this);
-            QObject::connect(m_NetworkManager, SIGNAL(finished(QNetworkReply*)),
-                             this, SLOT(replyReceived(QNetworkReply*)));
-        }
+        SuggestionQueryEngine(KeywordsSuggestor *keywordsSuggestor);
 
     public:
-        void submitQuery(const QStringList &queryKeywords, IKeywordsSuggesteable *suggesteable);
+        void submitQuery(const QStringList &queryKeywords);
 
     private slots:
         void replyReceived(QNetworkReply *networkReply);
@@ -56,7 +51,6 @@ namespace Suggestion {
 
     private:
         QNetworkAccessManager *m_NetworkManager;
-        IKeywordsSuggesteable *m_KeywordsSuggesteable;
         KeywordsSuggestor *m_Suggestor;
     };
 }

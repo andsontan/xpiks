@@ -214,7 +214,7 @@ Item {
                                     delegate: Rectangle {
                                         id: sourceWrapper
                                         property variant myData: model
-                                        property int indexOfThisDelegate: index
+                                        property int delegateIndex: index
                                         color: ListView.isCurrentItem ? Colors.itemsSourceSelected : Colors.defaultDarkColor
                                         width: parent.width - 10
                                         anchors.left: parent.left
@@ -225,11 +225,11 @@ Item {
                                         MouseArea {
                                             anchors.fill: parent
                                             onClicked: {
-                                                if (uploadHostsListView.currentIndex != sourceWrapper.indexOfThisDelegate) {
+                                                if (uploadHostsListView.currentIndex != sourceWrapper.delegateIndex) {
                                                     credentialsStatus.enabled = false
                                                     credentialsStatus.isGreen = false
 
-                                                    uploadHostsListView.currentIndex = sourceWrapper.indexOfThisDelegate
+                                                    uploadHostsListView.currentIndex = sourceWrapper.delegateIndex
                                                 }
                                             }
 
@@ -271,7 +271,7 @@ Item {
                                                 isActive: false
 
                                                 onItemClicked: {
-                                                    confirmRemoveItemDialog.itemIndex = sourceWrapper.indexOfThisDelegate
+                                                    confirmRemoveItemDialog.itemIndex = sourceWrapper.delegateIndex
                                                     confirmRemoveItemDialog.open()
                                                 }
                                             }
@@ -565,8 +565,8 @@ Item {
                             cursorShape: Qt.PointingHandCursor
                             onClicked: {
                                 if (warningsManager.warningsCount > 0) {
-                                    var component = Qt.createComponent("WarningsDialog.qml");
-                                    component.createObject(uploadArtworksComponent.componentParent);
+                                    Common.launchComponent("WarningsDialog.qml",
+                                                           uploadArtworksComponent.componentParent, {});
                                 }
                             }
                         }

@@ -19,18 +19,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QApplication>
-#include <QQmlApplicationEngine>
-#include <QtDebug>
-#include <QQmlContext>
+#include <QDir>
 #include <QtQml>
 #include <QFile>
-#include <QDir>
+#include <QtDebug>
 #include <QDateTime>
 #include <QSettings>
 #include <QTextStream>
 #include <QTranslator>
+#include <QQmlContext>
+#include <QApplication>
 #include <QStandardPaths>
+#include <QQmlApplicationEngine>
+
+#include "Suggestion/suggestionqueryengine.h"
+#include "Suggestion/keywordssuggestor.h"
 #include "Helpers/globalimageprovider.h"
 #include "Models/uploadinforepository.h"
 #include "UndoRedo/undoredomanager.h"
@@ -147,6 +150,7 @@ int main(int argc, char *argv[]) {
     Encryption::SecretsManager secretsManager;
     UndoRedo::UndoRedoManager undoRedoManager;
     Models::ZipArchiver zipArchiver;
+    Suggestion::KeywordsSuggestor keywordsSuggestor;
 
     Commands::CommandManager commandManager;
     commandManager.InjectDependency(&artworkRepository);
@@ -159,6 +163,7 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&secretsManager);
     commandManager.InjectDependency(&undoRedoManager);
     commandManager.InjectDependency(&zipArchiver);
+    commandManager.InjectDependency(&keywordsSuggestor);
 
     logsModel.setLogsManager(&logsManager);
 
@@ -188,9 +193,20 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("secretsManager", &secretsManager);
     rootContext->setContextProperty("undoRedoManager", &undoRedoManager);
     rootContext->setContextProperty("zipArchiver", &zipArchiver);
+    rootContext->setContextProperty("keywordsSuggestor", &keywordsSuggestor);
 
     engine.addImageProvider("global", globalProvider);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+
+#ifdef QT_DEBUG
+    if (argc > 1) {
+        QStringList pathes;
+        for (int i = 1; i < argc; ++i) {
+            pathes.append(QString(argv[i]));
+        }
+        commandManager.addInitialArtworks(pathes);
+    }
+#endif
 
     return app.exec();
 }

@@ -30,6 +30,7 @@ import "Constants/Colors.js" as Colors
 import "Components"
 import "StyledControls"
 import "Dialogs"
+import "Common.js" as Common
 
 ApplicationWindow {
     id: applicationWindow
@@ -57,13 +58,14 @@ ApplicationWindow {
 
     function openUploadDialog() {
         if (appSettings.boolValue(appSettings.mustUseMasterPasswordKey, false)) {
-            var component = Qt.createComponent("Dialogs/EnterMasterPasswordDialog.qml")
             var callbackObject = {
                 onSuccess: function() { doOpenUploadDialog(true) },
                 onFail: function() { doOpenUploadDialog(false) }
             }
 
-            component.createObject(applicationWindow, {componentParent: applicationWindow, callbackObject: callbackObject})
+            Common.launchComponent("Dialogs/EnterMasterPasswordDialog.qml",
+                         applicationWindow,
+                         {componentParent: applicationWindow, callbackObject: callbackObject})
         } else {
             doOpenUploadDialog(true)
         }
@@ -74,8 +76,9 @@ ApplicationWindow {
         artItemsModel.setSelectedForUpload()
         uploadInfos.initializeAccounts(masterPasswordCorrectOrEmpty)
 
-        var component = Qt.createComponent("Dialogs/UploadArtworks.qml")
-        component.createObject(applicationWindow, {componentParent: applicationWindow})
+        Common.Common.launchComponent("Dialogs/UploadArtworks.qml",
+                     applicationWindow,
+                     {componentParent: applicationWindow})
     }
 
     menuBar: MenuBar {
@@ -85,17 +88,17 @@ ApplicationWindow {
                 text: qsTr("&Settings")
                 onTriggered: {
                     console.log("Settings action triggered");
-                    var component = Qt.createComponent("Dialogs/SettingsWindow.qml");
-                    var window = component.createObject(applicationWindow);
-                    window.show();
+                    Common.launchComponent("Dialogs/SettingsWindow.qml",
+                                    applicationWindow, {},
+                                    function(wnd) {wnd.show();});
                 }
             }
             MenuItem {
                 text: qsTr("&About")
                 onTriggered: {
-                    var component = Qt.createComponent("Dialogs/AboutWindow.qml");
-                    var window = component.createObject(applicationWindow);
-                    window.show();
+                    Common.launchComponent("Dialogs/AboutWindow.qml",
+                                    applicationWindow, {},
+                                    function(wnd) {wnd.show();});
                 }
             }
 
@@ -115,8 +118,9 @@ ApplicationWindow {
                     console.log("Zip archives triggered")
 
                     artItemsModel.setSelectedForZipping()
-                    var component = Qt.createComponent("Dialogs/ZipArtworksDialog.qml")
-                    component.createObject(applicationWindow, {componentParent: applicationWindow})
+                    Common.launchComponent("Dialogs/ZipArtworksDialog.qml",
+                                    applicationWindow,
+                                    {componentParent: applicationWindow});
                 }
             }
         }
@@ -219,7 +223,7 @@ ApplicationWindow {
         target: artItemsModel
         onArtworksAdded: {
            if (count > 0) {
-               Qt.createComponent("Dialogs/ImportMetadata.qml").createObject(applicationWindow, {})
+               Common.launchComponent("Dialogs/ImportMetadata.qml", applicationWindow, {})
            }
         }
     }
@@ -309,7 +313,7 @@ ApplicationWindow {
 
                         delegate: Rectangle {
                             id: sourceWrapper
-                            property int indexOfThisDelegate: index
+                            property int delegateIndex: index
                             color: isselected ? Colors.itemsSourceSelected : Colors.itemsSourceBackground
                             width: parent.width
                             height: 31
@@ -318,7 +322,7 @@ ApplicationWindow {
                             MouseArea {
                                 anchors.fill: parent
                                 onClicked: {
-                                    artItemsModel.selectDirectory(sourceWrapper.indexOfThisDelegate)
+                                    artItemsModel.selectDirectory(sourceWrapper.delegateIndex)
                                 }
                             }
 
@@ -349,7 +353,7 @@ ApplicationWindow {
                                     isActive: false
 
                                     onItemClicked: {
-                                        confirmRemoveDirectoryDialog.directoryIndex = sourceWrapper.indexOfThisDelegate
+                                        confirmRemoveDirectoryDialog.directoryIndex = sourceWrapper.delegateIndex
                                         confirmRemoveDirectoryDialog.open()
                                     }
                                 }
@@ -452,7 +456,7 @@ ApplicationWindow {
                                     if (artItemsModel.selectedArtworksCount > 0) {
                                         combinedArtworks.resetModelData();
                                         artItemsModel.combineSelectedArtworks();
-                                        Qt.createComponent("Dialogs/CombinedArtworksDialog.qml").createObject(applicationWindow, {});
+                                        Common.launchComponent("Dialogs/CombinedArtworksDialog.qml", applicationWindow, {});
                                     }
                                 }
                             }
@@ -471,7 +475,7 @@ ApplicationWindow {
                                             artItemsModel.modifiedArtworksCount > 0) {
                                         iptcProvider.resetModel()
                                         artItemsModel.patchSelectedArtworks()
-                                        Qt.createComponent("Dialogs/ExportMetadata.qml").createObject(applicationWindow, {})
+                                        Common.launchComponent("Dialogs/ExportMetadata.qml", applicationWindow, {})
                                     } else {
                                         if (artItemsModel.modifiedArtworksCount == 0) {
                                             alreadySavedDialog.open()
@@ -701,8 +705,8 @@ ApplicationWindow {
                                     id: rowWrapper
                                     property bool isHighlighted: (isselected || descriptionTextInput.activeFocus || flv.isFocused)
                                     color: isHighlighted ? Colors.selectedArtworkColor : Colors.artworkImageBackground
-                                    property int indexOfThisDelegate: index
-                                    property variant myData: model
+                                    property int delegateIndex: index
+                                    property variant artworkModel: model
 
                                     width: parent.width
                                     height: 200
@@ -731,7 +735,7 @@ ApplicationWindow {
                                             Connections {
                                                 target: artItemsModel
                                                 onSelectedArtworksCountChanged: {
-                                                    itemCheckedCheckbox.checked = rowWrapper.myData.isselected || false
+                                                    itemCheckedCheckbox.checked = rowWrapper.artworkModel.isselected || false
                                                 }
                                             }
                                         }
@@ -769,8 +773,8 @@ ApplicationWindow {
                                                         onClicked: editisselected = !isselected
                                                         onDoubleClicked: {
                                                             combinedArtworks.resetModelData();
-                                                            artItemsModel.combineArtwork(rowWrapper.indexOfThisDelegate);
-                                                            Qt.createComponent("Dialogs/CombinedArtworksDialog.qml").createObject(applicationWindow, {});
+                                                            artItemsModel.combineArtwork(rowWrapper.delegateIndex);
+                                                            Common.launchComponent("Dialogs/CombinedArtworksDialog.qml", applicationWindow, {});
                                                         }
                                                     }
                                                 }
@@ -840,7 +844,6 @@ ApplicationWindow {
                                                                 var clipboardText = clipboard.getText();
                                                                 // same regexp as in validator
                                                                 var sanitizedText = clipboardText.replace(/[^a-zA-Z0-9 !@#$%^&*()+="'|-,]*/g, '');
-                                                                console.log("before we have: " + sanitizedText)
                                                                 descriptionTextInput.paste(sanitizedText)
                                                                 event.accepted = true
                                                             }
@@ -879,23 +882,23 @@ ApplicationWindow {
 
 
                                                     function removeKeyword(index) {
-                                                        artItemsModel.removeKeywordAt(rowWrapper.indexOfThisDelegate, index)
+                                                        artItemsModel.removeKeywordAt(rowWrapper.delegateIndex, index)
                                                     }
 
                                                     function removeLastKeyword() {
-                                                        artItemsModel.removeLastKeyword(rowWrapper.indexOfThisDelegate)
+                                                        artItemsModel.removeLastKeyword(rowWrapper.delegateIndex)
                                                     }
 
                                                     function appendKeyword(keyword) {
-                                                        artItemsModel.appendKeyword(rowWrapper.indexOfThisDelegate, keyword)
+                                                        artItemsModel.appendKeyword(rowWrapper.delegateIndex, keyword)
                                                     }
 
                                                     function pasteKeywords(keywords) {
-                                                        artItemsModel.pasteKeywords(rowWrapper.indexOfThisDelegate, keywords)
+                                                        artItemsModel.pasteKeywords(rowWrapper.delegateIndex, keywords)
                                                     }
 
                                                     function saveKeywords() {
-                                                        artItemsModel.backupItem(rowWrapper.indexOfThisDelegate)
+                                                        artItemsModel.backupItem(rowWrapper.delegateIndex)
                                                     }
 
                                                     MouseArea {
@@ -915,12 +918,12 @@ ApplicationWindow {
 
                                                         EditableTags {
                                                             id: flv
-                                                            model: artItemsModel.getArtworkItself(rowWrapper.indexOfThisDelegate)
+                                                            model: artItemsModel.getArtworkItself(rowWrapper.delegateIndex)
                                                             anchors.margins: { left: 5; top: 5; right: 0; bottom: 5 }
 
                                                             delegate: Rectangle {
                                                                 id: itemWrapper
-                                                                property int indexOfThisDelegate: index
+                                                                property int delegateIndex: index
                                                                 color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.artworkActiveColor
 
                                                                 width: childrenRect.width
@@ -951,7 +954,7 @@ ApplicationWindow {
                                                                         height: 14
                                                                         isActive: rowWrapper.isHighlighted
                                                                         anchors.verticalCenter: tagTextRect.verticalCenter
-                                                                        onItemClicked: keywordsWrapper.removeKeyword(itemWrapper.indexOfThisDelegate)
+                                                                        onItemClicked: keywordsWrapper.removeKeyword(itemWrapper.delegateIndex)
                                                                     }
 
                                                                     Item {
@@ -990,6 +993,21 @@ ApplicationWindow {
                                                     }
 
                                                     StyledText {
+                                                        text: qsTr("Suggest keywords")
+                                                        color: suggestKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
+
+                                                        MouseArea {
+                                                            id: suggestKeywordsMA
+                                                            anchors.fill: parent
+                                                            cursorShape: Qt.PointingHandCursor
+                                                            onClicked: {
+                                                                artItemsModel.askForSuggestion(rowWrapper.delegateIndex)
+                                                                Common.launchComponent("Dialogs/KeywordsSuggestion.qml", applicationWindow, {});
+                                                            }
+                                                        }
+                                                    }
+
+                                                    StyledText {
                                                         text: qsTr("More Edits")
                                                         color: moreEditsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
 
@@ -999,8 +1017,8 @@ ApplicationWindow {
                                                             cursorShape: Qt.PointingHandCursor
                                                             onClicked: {
                                                                 combinedArtworks.resetModelData();
-                                                                artItemsModel.combineArtwork(rowWrapper.indexOfThisDelegate);
-                                                                Qt.createComponent("Dialogs/CombinedArtworksDialog.qml").createObject(applicationWindow, {});
+                                                                artItemsModel.combineArtwork(rowWrapper.delegateIndex);
+                                                                Common.launchComponent("Dialogs/CombinedArtworksDialog.qml", applicationWindow, {});
                                                             }
                                                         }
                                                     }
@@ -1066,8 +1084,9 @@ ApplicationWindow {
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
-                        var component = Qt.createComponent("Dialogs/LogsDialog.qml");
-                        component.createObject(applicationWindow, {logText: logsModel.getAllLogsText()});
+                        Common.launchComponent("Dialogs/LogsDialog.qml",
+                                        applicationWindow,
+                                        { logText: logsModel.getAllLogsText() });
                     }
                 }
             }
@@ -1088,8 +1107,7 @@ ApplicationWindow {
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
                         artItemsModel.checkForWarnings()
-                        var component = Qt.createComponent("Dialogs/WarningsDialog.qml");
-                        component.createObject(applicationWindow);
+                        Common.launchComponent("Dialogs/WarningsDialog.qml", applicationWindow, {});
                     }
                 }
             }

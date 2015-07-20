@@ -26,6 +26,7 @@
 namespace Suggestion {
     void KeywordsSuggestor::setSuggestedArtworks(const QList<SuggestionArtwork *> &suggestedArtworks) {
         beginResetModel();
+        qDeleteAll(m_Suggestions);
         m_Suggestions.clear();
         qCopy(suggestedArtworks.begin(), suggestedArtworks.end(), m_Suggestions.begin());
         endResetModel();
@@ -36,6 +37,7 @@ namespace Suggestion {
 
     void KeywordsSuggestor::clear() {
         beginResetModel();
+        qDeleteAll(m_Suggestions);
         m_Suggestions.clear();
         endResetModel();
         m_KeywordsHash.clear();
@@ -43,18 +45,10 @@ namespace Suggestion {
         m_AllOtherKeywords.clear();
     }
 
-    void KeywordsSuggestor::removeSuggestedKeywordAt(int keywordIndex) {
+    QString KeywordsSuggestor::removeSuggestedKeywordAt(int keywordIndex) {
         QString keyword;
-        if (m_SuggestedKeywords.removeKeyword(keywordIndex, keyword)) {
-            m_AllOtherKeywords.appendKeyword(keyword);
-        }
-    }
-
-    void KeywordsSuggestor::removeSuggestedLastKeyword() {
-        QString keyword;
-        if (m_SuggestedKeywords.removeLastKeyword(keyword)) {
-            m_AllOtherKeywords.appendKeyword(keyword);
-        }
+        m_SuggestedKeywords.removeKeyword(keywordIndex, keyword);
+        return keyword;
     }
 
     void KeywordsSuggestor::setArtworkSelected(int index, bool newState) {
@@ -63,7 +57,7 @@ namespace Suggestion {
         }
 
         SuggestionArtwork *suggestionArtwork = m_Suggestions[index];
-        suggestionArtworks->setIsSelected(newState);
+        suggestionArtwork->setIsSelected(newState);
 
         int sign = newState ? +1 : -1;
         accountKeywords(suggestionArtwork->getKeywords(), sign);
@@ -72,6 +66,10 @@ namespace Suggestion {
         QModelIndex qIndex = this->index(index);
         emit dataChanged(qIndex, qIndex, QVector<int>() << IsSelectedRole);
         updateSuggestedKeywords();
+    }
+
+    void KeywordsSuggestor::searchArtworks(const QString &searchTerm) {
+        m_QueryEngine->submitQuery(searchTerm.split(' '));
     }
 
     void KeywordsSuggestor::suggestKeywords() {

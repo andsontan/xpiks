@@ -30,6 +30,7 @@
 #include "../Commands/addartworkscommand.h"
 #include "../Commands/removeartworkscommand.h"
 #include "../Commands/pastekeywordscommand.h"
+#include "../Suggestion/keywordssuggestor.h"
 
 #ifdef Q_OS_OSX
 #include "../Helpers/osxnsurlhelper.h"
@@ -140,6 +141,12 @@ namespace Models {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
             metadata->saveBackup();
         }
+    }
+
+    void ArtItemsModel::askForSuggestion(int index) {
+        Suggestion::KeywordsSuggestor *suggestor = m_CommandManager->getKeywordsSuggestor();
+        ArtworkMetadata *metadata = this->getArtwork(index);
+        suggestor->setSuggesteable(metadata);
     }
 
     int ArtItemsModel::dropFiles(const QList<QUrl> &urls)

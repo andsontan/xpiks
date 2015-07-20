@@ -24,11 +24,19 @@
 #include <QJsonObject>
 #include "suggestionqueryengine.h"
 #include "suggestionartwork.h"
+#include "keywordssuggestor.h"
 
 namespace Suggestion {
-    void SuggestionQueryEngine::submitQuery(const QStringList &queryKeywords, IKeywordsSuggesteable *suggesteable) {
+    SuggestionQueryEngine::SuggestionQueryEngine(KeywordsSuggestor *keywordsSuggestor):
+                    QObject(keywordsSuggestor)
+    {
+        m_NetworkManager = new QNetworkAccessManager(this);
+        QObject::connect(m_NetworkManager, SIGNAL(finished(QNetworkReply*)),
+                         this, SLOT(replyReceived(QNetworkReply*)));
+    }
+
+    void SuggestionQueryEngine::submitQuery(const QStringList &queryKeywords) {
         QString queryString = buildQuery(queryKeywords);
-        m_KeywordsSuggesteable = suggesteable;
         m_NetworkManager->get(QNetworkRequest(QUrl(queryString)));
     }
 

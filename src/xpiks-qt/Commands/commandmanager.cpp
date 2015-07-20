@@ -30,6 +30,8 @@
 #include "../Encryption/secretsmanager.h"
 #include "../UndoRedo/undoredomanager.h"
 #include "../Models/ziparchiver.h"
+#include "../Suggestion/keywordssuggestor.h"
+#include "../Commands/addartworkscommand.h"
 
 void Commands::CommandManager::InjectDependency(Models::ArtworksRepository *artworkRepository) {
     Q_ASSERT(artworkRepository != NULL); m_ArtworksRepository = artworkRepository;
@@ -80,6 +82,12 @@ void Commands::CommandManager::InjectDependency(Models::ZipArchiver *zipArchiver
 {
     Q_ASSERT(zipArchiver != NULL); m_ZipArchiver = zipArchiver;
     m_ZipArchiver->setCommandManager(this);
+}
+
+void Commands::CommandManager::InjectDependency(Suggestion::KeywordsSuggestor *keywordsSuggestor)
+{
+    Q_ASSERT(keywordsSuggestor != NULL); m_KeywordsSuggestor = keywordsSuggestor;
+    m_KeywordsSuggestor->setCommandManager(this);
 }
 
 Commands::CommandResult *Commands::CommandManager::processCommand(Commands::CommandBase *command) const
@@ -168,3 +176,12 @@ void Commands::CommandManager::updateArtworks(const QList<int> &indices) const
         m_ArtItemsModel->updateItemsAtIndices(indices);
     }
 }
+
+#ifdef QT_DEBUG
+void Commands::CommandManager::addInitialArtworks(const QStringList &artworksFilepathes)
+{
+    Commands::AddArtworksCommand *command = new Commands::AddArtworksCommand(artworksFilepathes);
+    CommandResult *result = this->processCommand(command);
+    delete result;
+}
+#endif

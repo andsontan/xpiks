@@ -42,6 +42,7 @@ Flickable {
     property alias flow: flow.flow
     property alias model: repeater.model
     property alias isFocused: nextTagTextInput.activeFocus
+    property alias editEnabled: editWrapper.enabled
 
     signal tagAdded(string text)
     signal removeLast()
@@ -99,6 +100,18 @@ Flickable {
         spacing: 5
 
         property real lastHeight
+
+        add: Transition {
+            NumberAnimation { properties: "x,y"; easing.type: Easing.OutBounce }
+        }
+
+        populate: Transition {
+            NumberAnimation { properties: "x,y"; from: 200; duration: 100; easing.type: Easing.OutBounce }
+        }
+
+        move: Transition {
+            NumberAnimation { properties: "x,y"; easing.type: Easing.OutBounce }
+        }
 
         onHeightChanged: {
             if (!lastHeight) {
