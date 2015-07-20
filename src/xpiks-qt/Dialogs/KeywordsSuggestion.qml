@@ -121,7 +121,7 @@ Item {
 
                     StyledButton {
                         text: qsTr("Search")
-                        width: 60
+                        width: 70
                         onClicked: keywordsSuggestor.searchArtworks(queryText.text)
                     }
 
@@ -417,7 +417,7 @@ Item {
                     }
 
                     StyledButton {
-                        width: 60
+                        width: 70
                         text: qsTr("Cancel")
                         onClicked: closePopup()
                     }

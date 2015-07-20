@@ -69,7 +69,7 @@ namespace Suggestion {
     }
 
     void KeywordsSuggestor::searchArtworks(const QString &searchTerm) {
-        m_QueryEngine->submitQuery(searchTerm.split(' '));
+        m_QueryEngine.submitQuery(searchTerm.split(' '));
     }
 
     void KeywordsSuggestor::suggestKeywords() {

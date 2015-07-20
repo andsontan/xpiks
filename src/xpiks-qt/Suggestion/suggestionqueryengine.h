@@ -45,13 +45,18 @@ namespace Suggestion {
     private slots:
         void replyReceived(QNetworkReply *networkReply);
 
-    private:
-        void parseResponse(const QJsonArray &jsonArray, QList<SuggestionArtwork *> &suggestionArtworks);
-        QString buildQuery(const QStringList &queryKeywords) const;
+    signals:
+        void searchResultsRetrieved(const QList<SuggestionArtwork*> &artworks);
 
     private:
-        QNetworkAccessManager *m_NetworkManager;
+        void parseResponse(const QJsonArray &jsonArray, QList<SuggestionArtwork *> &suggestionArtworks);
+        QUrl buildQuery(const QStringList &queryKeywords) const;
+
+    private:
+        QNetworkAccessManager m_NetworkManager;
         KeywordsSuggestor *m_Suggestor;
+        QString m_ClientId;
+        QString m_ClientSecret;
     };
 }
 

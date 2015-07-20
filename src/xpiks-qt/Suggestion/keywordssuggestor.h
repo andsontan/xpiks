@@ -41,7 +41,7 @@ namespace Suggestion {
     public:
         KeywordsSuggestor(QObject *parent=NULL) :
             QAbstractListModel(parent),
-            m_QueryEngine(new SuggestionQueryEngine(this)),
+            m_QueryEngine(this),
             m_SuggestedKeywords(this),
             m_AllOtherKeywords(this),
             m_Suggesteable(NULL),
@@ -96,7 +96,7 @@ namespace Suggestion {
     private:
         QHash<QString, int> m_KeywordsHash;
         QList<SuggestionArtwork *> m_Suggestions;
-        SuggestionQueryEngine *m_QueryEngine;
+        SuggestionQueryEngine m_QueryEngine;
         Common::BasicKeywordsModel m_SuggestedKeywords;
         Common::BasicKeywordsModel m_AllOtherKeywords;
         IKeywordsSuggesteable *m_Suggesteable;

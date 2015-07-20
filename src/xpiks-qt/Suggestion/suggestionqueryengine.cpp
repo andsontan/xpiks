@@ -19,25 +19,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <QDebug>
 #include <QUrlQuery>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QByteArray>
+#include <QString>
 #include "suggestionqueryengine.h"
 #include "suggestionartwork.h"
 #include "keywordssuggestor.h"
 
 namespace Suggestion {
     SuggestionQueryEngine::SuggestionQueryEngine(KeywordsSuggestor *keywordsSuggestor):
-                    QObject(keywordsSuggestor)
+                    QObject(keywordsSuggestor),
+                    m_NetworkManager(this),
+                    m_Suggestor(keywordsSuggestor),
+                    m_ClientId("9b9d014b29e6416f98c2"),
+                    m_ClientSecret("4be62c75cee7aa716e996d9e1336c3caa80e072c")
     {
-        m_NetworkManager = new QNetworkAccessManager(this);
-        QObject::connect(m_NetworkManager, SIGNAL(finished(QNetworkReply*)),
+        QObject::connect(&m_NetworkManager, SIGNAL(finished(QNetworkReply*)),
                          this, SLOT(replyReceived(QNetworkReply*)));
     }
 
     void SuggestionQueryEngine::submitQuery(const QStringList &queryKeywords) {
-        QString queryString = buildQuery(queryKeywords);
-        m_NetworkManager->get(QNetworkRequest(QUrl(queryString)));
+        QUrl url = buildQuery(queryKeywords);
+        QNetworkRequest request(url);
+
+        QString authStr = QString("%1:%2").arg(m_ClientId).arg(m_ClientSecret);
+        QString headerData = "Basic " + authStr.toLocal8Bit().toBase64();
+        request.setRawHeader("Authorization", headerData.toLocal8Bit());
+
+        m_NetworkManager.get(request);
     }
 
     void SuggestionQueryEngine::replyReceived(QNetworkReply *networkReply) {
@@ -51,6 +63,8 @@ namespace Suggestion {
                 parseResponse(dataValue.toArray(), suggestionArtworks);
                 m_Suggestor->setSuggestedArtworks(suggestionArtworks);
             }
+        } else {
+            qDebug() << networkReply->errorString();
         }
 
         networkReply->deleteLater();
@@ -82,23 +96,20 @@ namespace Suggestion {
         }
     }
 
-    QString SuggestionQueryEngine::buildQuery(const QStringList &queryKeywords) const {
+    QUrl SuggestionQueryEngine::buildQuery(const QStringList &queryKeywords) const {
         QUrlQuery urlQuery;
-        const QString clientId = "9b9d014b29e6416f98c2";
-        const QString clientSecret = "4be62c75cee7aa716e996d9e1336c3caa80e072c";
 
-        QString queryString = QString("https://%1:%2@api.shutterstock.com/v2/images/search")
-                .arg(clientId)
-                .arg(clientSecret);
+        QString queryString = QString("https://api.shutterstock.com/v2/images/search");
 
-        urlQuery.setQuery(queryString);
         urlQuery.addQueryItem("language", "en");
         urlQuery.addQueryItem("view", "full");
         urlQuery.addQueryItem("per_page", "75");
         urlQuery.addQueryItem("query", queryKeywords.join(' '));
 
-        QString request = urlQuery.query();
-        return request;
+        QUrl url;
+        url.setUrl(queryString);
+        url.setQuery(urlQuery);
+        return url;
     }
 }
 
