@@ -179,11 +179,11 @@ Item {
                                         Rectangle {
                                             anchors.fill: parent
                                             color: Colors.defaultControlColor
-                                            opacity: mouseArea.containsMouse ? 0.4 : (isselected ? 0.7 : 0)
+                                            opacity: isselected ? 0.7 : (mouseArea.containsMouse ? 0.4 : 0)
                                         }
 
                                         LargeAddIcon {
-                                            visible: isselected
+                                            opacity: isselected ? 1 : (mouseArea.containsMouse ? 0.6 : 0)
                                             width: parent.width
                                             height: parent.height
                                         }

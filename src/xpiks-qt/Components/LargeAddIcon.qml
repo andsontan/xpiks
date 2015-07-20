@@ -33,7 +33,7 @@ Item {
 
         Rectangle {
             color: Colors.defaultLightGrayColor
-            width: parent.width - 20
+            width: parent.width/2
             height: 8
             border.width: 4
             border.color: color
@@ -45,7 +45,7 @@ Item {
 
         Rectangle {
             color: Colors.defaultLightGrayColor
-            width: parent.width - 20
+            width: parent.width/2
             height: 8
             radius: 4
             border.width: 4
