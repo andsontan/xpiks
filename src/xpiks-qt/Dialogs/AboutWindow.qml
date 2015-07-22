@@ -37,7 +37,7 @@ ApplicationWindow {
     maximumWidth: width
     minimumHeight: height
     maximumHeight: height
-    flags: Qt.Tool
+    flags: Qt.Dialog
     title: qsTr("About")
 
     function closeAbout() {
