@@ -27,22 +27,23 @@
 
 namespace Helpers {
     QString getLastNLines(const QString &text, int N) {
-        QString result;
+        QStringList result;
 
-        QVector<QStringRef> items = text.splitRef(QRegExp("[\r\n]"), QString::SkipEmptyParts);
+        QStringList items = text.split(QRegExp("[\r\n]"), QString::SkipEmptyParts);
 
         int length = items.length();
 
         if (length > 0) {
             int startIndex = length - N;
             if (startIndex < 0) { startIndex = 0; }
-            int pos = items[startIndex].position();
-            result = text.right(text.length() - pos);
+            for(int pos = startIndex;pos<length;pos++){
+               result += items[pos];
+            }
         } else {
-            result = text;
+            return text;
         }
 
-        return result;
+        return result.join("\n");
     }
 }
 

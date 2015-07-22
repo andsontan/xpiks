@@ -104,7 +104,7 @@ int main(int argc, char *argv[]) {
 
     Helpers::LogsManager logsManager;
 
-    QString appDataPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+    QString appDataPath = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
     if (!appDataPath.isEmpty()) {
         QDir logFileDir(appDataPath);
         QString logFilePath = logFileDir.filePath(Constants::LOG_FILENAME);
@@ -113,7 +113,7 @@ int main(int argc, char *argv[]) {
     }
 
 #ifdef QT_NO_DEBUG
-    QString logFileDir = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+    QString logFileDir = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
     if (!logFileDir.isEmpty()) {
         QDir dir(logFileDir);
         if (!dir.exists()) {

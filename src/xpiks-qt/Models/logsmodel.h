@@ -42,7 +42,7 @@ namespace Models {
         Q_INVOKABLE QString getAllLogsText(bool reallyAll=false) {
             QString result;
 #ifdef QT_NO_DEBUG
-            QDir logFileDir(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));
+            QDir logFileDir(QStandardPaths::writableLocation(QStandardPaths::DataLocation));
             QString logFilePath = logFileDir.filePath(Constants::LOG_FILENAME);
             QFile f(logFilePath);
 
