@@ -138,8 +138,7 @@ HEADERS += \
     Common/basickeywordsmodel.h \
     Suggestion/keywordssuggestor.h \
     Suggestion/suggestionartwork.h \
-    Suggestion/suggestionqueryengine.h \
-    Suggestion/ikeywordssuggesteable.h
+    Suggestion/suggestionqueryengine.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
@@ -170,7 +169,8 @@ DISTFILES += \
     Dialogs/ZipArtworksDialog.qml \
     Components/AddIcon.qml \
     Dialogs/KeywordsSuggestion.qml \
-    Components/LargeAddIcon.qml
+    Components/LargeAddIcon.qml \
+    StyledControls/StyledBusyIndicator.qml
 
 macx {
 OBJECTIVE_SOURCES += \

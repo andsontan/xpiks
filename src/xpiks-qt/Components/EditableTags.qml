@@ -109,9 +109,9 @@ Flickable {
             NumberAnimation { properties: "x,y"; from: 200; duration: 100; easing.type: Easing.OutBounce }
         }
 
-        move: Transition {
+        /*move: Transition {
             NumberAnimation { properties: "x,y"; easing.type: Easing.OutBounce }
-        }
+        }*/
 
         onHeightChanged: {
             if (!lastHeight) {

@@ -28,7 +28,6 @@
 #include <QStringList>
 #include <QJsonArray>
 #include "suggestionartwork.h"
-#include "ikeywordssuggesteable.h"
 
 namespace Suggestion {
     class KeywordsSuggestor;

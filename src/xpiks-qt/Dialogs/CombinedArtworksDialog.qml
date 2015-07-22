@@ -496,8 +496,15 @@ Item {
                             anchors.fill: parent
                             cursorShape: Qt.PointingHandCursor
                             onClicked: {
-                                combinedArtworks.askForSuggestion()
-                                Common.launchComponent("Dialogs/KeywordsSuggestion.qml", applicationWindow, {});
+                                var callbackObject = {
+                                    promoteKeywords: function(keywords) {
+                                        combinedArtworks.pasteKeywords(keywords)
+                                    }
+                                }
+
+                                Common.launchComponent("Dialogs/KeywordsSuggestion.qml",
+                                                       applicationWindow,
+                                                       {callbackObject: callbackObject});
                             }
                         }
                     }

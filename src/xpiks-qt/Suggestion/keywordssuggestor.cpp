@@ -30,6 +30,8 @@ namespace Suggestion {
         m_Suggestions.clear();
         m_Suggestions.append(suggestedArtworks);
         endResetModel();
+        m_SelectedArtworksCount = 0;
+        unsetInProgress();
         m_KeywordsHash.clear();
         m_SuggestedKeywords.clear();
         m_AllOtherKeywords.clear();
@@ -40,6 +42,8 @@ namespace Suggestion {
         qDeleteAll(m_Suggestions);
         m_Suggestions.clear();
         endResetModel();
+        m_SelectedArtworksCount = 0;
+        unsetInProgress();
         m_KeywordsHash.clear();
         m_SuggestedKeywords.clear();
         m_AllOtherKeywords.clear();
@@ -77,13 +81,9 @@ namespace Suggestion {
     }
 
     void KeywordsSuggestor::searchArtworks(const QString &searchTerm) {
-        m_QueryEngine.submitQuery(searchTerm.split(' '));
-    }
-
-    void KeywordsSuggestor::suggestKeywords() {
-        if (m_Suggesteable != NULL) {
+        if (!m_IsInProgress) {
             setInProgress();
-            m_Suggesteable->acceptSuggestedKeywords(m_SuggestedKeywords.getKeywords());
+            m_QueryEngine.submitQuery(searchTerm.split(' '));
         }
     }
 

@@ -33,6 +33,7 @@ import "../StyledControls"
 Item {
     id: keywordsSuggestionComponent
     anchors.fill: parent
+    property var callbackObject
 
     function closePopup() {
         keywordsSuggestor.close();
@@ -117,6 +118,8 @@ Item {
                             clip: true
                             anchors.left: parent.left
                             anchors.leftMargin: 5
+
+                            onEditingFinished: keywordsSuggestor.searchArtworks(queryText.text)
                         }
                     }
 
@@ -125,6 +128,11 @@ Item {
                         width: 70
                         enabled: !keywordsSuggestor.isInProgress
                         onClicked: keywordsSuggestor.searchArtworks(queryText.text)
+                    }
+
+                    StyledText {
+                        text: qsTr("Powered by Shutterstock API")
+                        color: Colors.defaultInputBackground
                     }
 
                     Item {
@@ -204,8 +212,23 @@ Item {
                                 Item { height: 110; width: height }
                                 Item { height: 110; width: height }
                                 Item { height: 110; width: height }
+                                Item { height: 110; width: height }
                             }
                         }
+                    }
+
+                    Rectangle {
+                        anchors.fill: parent
+                        color: Colors.selectedArtworkColor
+                        opacity: 0.4
+                        visible: keywordsSuggestor.isInProgress
+                    }
+
+                    StyledBusyIndicator {
+                        width: parent.height
+                        height: parent.height
+                        anchors.centerIn: parent
+                        running: keywordsSuggestor.isInProgress
                     }
                 }
 
@@ -451,7 +474,7 @@ Item {
                         text: qsTr("Use suggested keywords")
                         width: 200
                         onClicked: {
-                            keywordsSuggestor.suggestKeywords()
+                            callbackObject.promoteKeywords(keywordsSuggestor.getSuggestedKeywords())
                             closePopup()
                         }
                     }

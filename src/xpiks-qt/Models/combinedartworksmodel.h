@@ -32,14 +32,12 @@
 #include "../Common/baseentity.h"
 #include "../Common/basickeywordsmodel.h"
 #include "../Commands/combinededitcommand.h"
-#include "../Suggestion/ikeywordssuggesteable.h"
 
 namespace Models {
 
     class CombinedArtworksModel :
             public AbstractListModel,
-            public Common::BaseEntity,
-            public Suggestion::IKeywordsSuggesteable
+            public Common::BaseEntity
     {
         Q_OBJECT
         Q_PROPERTY(QString description READ getDescription WRITE setDescription NOTIFY descriptionChanged)
@@ -117,7 +115,6 @@ namespace Models {
         Q_INVOKABLE void saveAddKeywords() const;
         Q_INVOKABLE void resetModelData();
         Q_INVOKABLE QString getKeywordsString() { return m_CommonKeywordsModel.getKeywords().join(QChar(',')); }
-        Q_INVOKABLE void askForSuggestion();
         Q_INVOKABLE QObject *getKeywordsModel() {
             QObject *item = &m_CommonKeywordsModel;
             QQmlEngine::setObjectOwnership(item, QQmlEngine::CppOwnership);

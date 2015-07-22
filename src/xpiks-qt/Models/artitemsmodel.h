@@ -86,7 +86,6 @@ namespace Models {
         Q_INVOKABLE void backupItem(int metadataIndex);
         Q_INVOKABLE void combineSelectedArtworks() { doCombineSelectedImages(); }
         Q_INVOKABLE void combineArtwork(int index) { doCombineArtwork(index); }
-        Q_INVOKABLE void askForSuggestionAt(int index);
         Q_INVOKABLE void selectAllArtworks() { setAllItemsSelected(true); }
         Q_INVOKABLE void unselectAllArtworks() { setAllItemsSelected(false); }
         Q_INVOKABLE int dropFiles(const QList<QUrl> &urls);

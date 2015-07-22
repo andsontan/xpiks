@@ -27,10 +27,9 @@
 #include <QFileInfo>
 #include <QString>
 #include <QSet>
-#include "../Suggestion/ikeywordssuggesteable.h"
 
 namespace Models {
-    class ArtworkMetadata : public QAbstractListModel, public Suggestion::IKeywordsSuggesteable {
+    class ArtworkMetadata : public QAbstractListModel {
         Q_OBJECT
     public:
         ArtworkMetadata(const QString &filepath) :
@@ -103,10 +102,6 @@ namespace Models {
     public:
         void setKeywords(const QStringList &keywordsList) { resetKeywords(); appendKeywords(keywordsList); }
         void appendKeywords(const QStringList &keywordsList);
-
-        // IKeywordsSuggesteable interface
-   public:
-        void acceptSuggestedKeywords(const QStringList &keywords) { appendKeywords(keywords); }
 
     private:
         void resetKeywords();

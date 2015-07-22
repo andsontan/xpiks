@@ -76,7 +76,7 @@ ApplicationWindow {
         artItemsModel.setSelectedForUpload()
         uploadInfos.initializeAccounts(masterPasswordCorrectOrEmpty)
 
-        Common.Common.launchComponent("Dialogs/UploadArtworks.qml",
+        Common.launchComponent("Dialogs/UploadArtworks.qml",
                      applicationWindow,
                      {componentParent: applicationWindow})
     }
@@ -87,7 +87,6 @@ ApplicationWindow {
             MenuItem {
                 text: qsTr("&Settings")
                 onTriggered: {
-                    console.log("Settings action triggered");
                     Common.launchComponent("Dialogs/SettingsWindow.qml",
                                     applicationWindow, {},
                                     function(wnd) {wnd.show();});
@@ -1001,8 +1000,15 @@ ApplicationWindow {
                                                             anchors.fill: parent
                                                             cursorShape: Qt.PointingHandCursor
                                                             onClicked: {
-                                                                artItemsModel.askForSuggestionAt(rowWrapper.delegateIndex)
-                                                                Common.launchComponent("Dialogs/KeywordsSuggestion.qml", applicationWindow, {});
+                                                                var callbackObject = {
+                                                                    promoteKeywords: function(keywords) {
+                                                                        artItemsModel.pasteKeywords(rowWrapper.delegateIndex, keywords)
+                                                                    }
+                                                                }
+
+                                                                Common.launchComponent("Dialogs/KeywordsSuggestion.qml",
+                                                                                       applicationWindow,
+                                                                                       {callbackObject: callbackObject});
                                                             }
                                                         }
                                                     }

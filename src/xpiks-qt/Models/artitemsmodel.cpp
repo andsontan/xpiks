@@ -122,7 +122,9 @@ namespace Models {
 
     void ArtItemsModel::pasteKeywords(int metadataIndex, const QStringList &keywords)
     {
-        if (metadataIndex >= 0 && metadataIndex < m_ArtworkList.length()) {
+        if (metadataIndex >= 0
+                && metadataIndex < m_ArtworkList.length()
+                && !keywords.empty()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
             ArtItemInfo *artItemInfo = new ArtItemInfo(metadata, metadataIndex);
 
@@ -141,12 +143,6 @@ namespace Models {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
             metadata->saveBackup();
         }
-    }
-
-    void ArtItemsModel::askForSuggestionAt(int index) {
-        Suggestion::KeywordsSuggestor *suggestor = m_CommandManager->getKeywordsSuggestor();
-        ArtworkMetadata *metadata = this->getArtwork(index);
-        suggestor->setSuggesteable(metadata);
     }
 
     int ArtItemsModel::dropFiles(const QList<QUrl> &urls)
