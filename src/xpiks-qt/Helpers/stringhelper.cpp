@@ -27,7 +27,7 @@
 #include <QtGlobal>
 
 namespace Helpers {
-#if QT_VERSION >= 0x050400
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
     QString getLastNLines(const QString &text, int N) {
         QString result;
 
