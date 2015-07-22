@@ -186,3 +186,8 @@ INCLUDEPATH = "../zlib-1.2.8"
 LIBS += -L$$PWD/../libs/ -lz
 DEFINES += QUAZIP_BUILD
 }
+
+unix {
+LIBS += -L/lib/x86_64-linux-gnu/ -lz
+QML_IMPORT_PATH += /usr/lib/x86_64-linux-gnu/qt5/imports/
+}
