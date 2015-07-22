@@ -89,5 +89,10 @@ ApplicationWindow {
                 }
             }
         }
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: closeAbout()
+        }
     }
 }
