@@ -147,11 +147,11 @@ namespace Suggestion {
         int threshold = 0;
         if (m_SelectedArtworksCount <= 2) {
             threshold = qMax(m_SelectedArtworksCount, 1);
-        } else if (m_SelectedArtworksCount <= 4) {
+        } else if (m_SelectedArtworksCount <= 5) {
             threshold = 2;
-        } else if (m_SelectedArtworksCount <= 6) {
-            threshold = 3;
         } else if (m_SelectedArtworksCount <= 8) {
+            threshold = 3;
+        } else if (m_SelectedArtworksCount <= 10) {
             threshold = 4;
         } else {
             threshold = m_SelectedArtworksCount / 2 - 1;

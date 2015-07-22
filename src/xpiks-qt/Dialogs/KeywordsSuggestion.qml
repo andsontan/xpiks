@@ -102,10 +102,6 @@ Item {
                     height: 24
                     spacing: 20
 
-                    Item {
-                        Layout.fillWidth: true
-                    }
-
                     StyledInputHost {
                         border.width: queryText.activeFocus ? 1 : 0
                         Layout.row: 0
@@ -113,7 +109,7 @@ Item {
 
                         StyledTextInput {
                             id: queryText
-                            width: 300
+                            width: 380
                             height: 24
                             clip: true
                             anchors.left: parent.left
@@ -131,12 +127,8 @@ Item {
                     }
 
                     StyledText {
-                        text: qsTr("Powered by Shutterstock API")
+                        text: qsTr("(powered by Shutterstock API)")
                         color: Colors.defaultInputBackground
-                    }
-
-                    Item {
-                        Layout.fillWidth: true
                     }
                 }
 
