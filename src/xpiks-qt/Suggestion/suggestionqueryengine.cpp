@@ -28,15 +28,17 @@
 #include "suggestionqueryengine.h"
 #include "suggestionartwork.h"
 #include "keywordssuggestor.h"
+#include "../Encryption/aes-qt.h"
 
 namespace Suggestion {
     SuggestionQueryEngine::SuggestionQueryEngine(KeywordsSuggestor *keywordsSuggestor):
                     QObject(keywordsSuggestor),
                     m_NetworkManager(this),
-                    m_Suggestor(keywordsSuggestor),
-                    m_ClientId("9b9d014b29e6416f98c2"),
-                    m_ClientSecret("4be62c75cee7aa716e996d9e1336c3caa80e072c")
+                    m_Suggestor(keywordsSuggestor)
     {
+        m_ClientId = Encryption::decodeText("28a2a9b917961a0cbc343c81b2dd0f6618377f9210aa3182e5cc9f5588f914d918ede1533c9e06b91769c89e80909743", "MasterPassword");
+        m_ClientSecret = Encryption::decodeText("5092d9a967c2f19b57aac29bc09ac3b9e6ae5baec1a371331b73ff24f1625d95c4f3fef90bdacfbe9b0b3803b48c269192bc55f14bb9c2b5a16d650cd641b746eb384fcf9dbd53a96f1f81215921b04409f3635ecf846ffdf01ee04ba76624c9", "MasterPassword");
+
         QObject::connect(&m_NetworkManager, SIGNAL(finished(QNetworkReply*)),
                          this, SLOT(replyReceived(QNetworkReply*)));
     }
