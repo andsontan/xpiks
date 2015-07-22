@@ -37,7 +37,7 @@ ApplicationWindow {
     maximumWidth: width
     minimumHeight: height
     maximumHeight: height
-    flags: Qt.Tool
+    flags: Qt.Dialog
     title: qsTr("About")
 
     function closeAbout() {
@@ -88,6 +88,11 @@ ApplicationWindow {
                     text: qsTr("The program is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE")
                 }
             }
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: closeAbout()
         }
     }
 }

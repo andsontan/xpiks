@@ -39,7 +39,7 @@ ApplicationWindow {
     maximumWidth: width
     minimumHeight: height
     maximumHeight: height
-    flags: Qt.Tool
+    flags: Qt.Dialog
 
     function closeSettings() {
         settingsWindow.destroy();
