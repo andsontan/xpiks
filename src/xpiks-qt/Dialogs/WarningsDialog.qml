@@ -178,15 +178,15 @@ Item {
                                             anchors.margins: 10
                                             boundsBehavior: Flickable.StopAtBounds
                                             model: warnings
-                                            spacing: 8
+                                            spacing: 10
 
                                             delegate: RowLayout {
                                                 width: parent.width
                                                 height: 10
-                                                spacing: 10
+                                                spacing: 5
 
                                                 Rectangle {
-                                                    height: 10
+                                                    height: 8
                                                     width: height
                                                     radius: height/2
                                                     anchors.verticalCenter: parent.verticalCenter

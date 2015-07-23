@@ -60,7 +60,7 @@ Item {
 
     function doRemoveSelectedArtworks() {
         combinedArtworks.removeSelectedArtworks()
-        if (combinedArtworks.getArtworksCount() === 0) {
+        if (combinedArtworks.artworksCount === 0) {
             closePopup()
         }
     }
@@ -106,7 +106,7 @@ Item {
         Rectangle {
             id: dialogWindow
             width: 730
-            height: 530
+            height: 540
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
@@ -115,6 +115,27 @@ Item {
                 anchors.fill: parent
                 anchors.margins: 30
                 spacing: 3
+
+                RowLayout {
+                    Layout.fillWidth: true
+
+                    StyledText {
+                        text: qsTr("Edit multiple artworks")
+                    }
+
+                    Item {
+                        Layout.fillWidth: true
+                    }
+
+                    StyledText {
+                        text: combinedArtworks.artworksCount == 1 ? qsTr("1 artwork begin edited") : qsTr("%1 artworks being editing").arg(combinedArtworks.artworksCount)
+                        color: Colors.defaultInputBackground
+                    }
+                }
+
+                Item {
+                    height: 10
+                }
 
                 RowLayout {
                     spacing: 5

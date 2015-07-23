@@ -202,6 +202,7 @@ namespace Models {
         removeItemsAtIndices(rangesToRemove);
 
         recombineArtworks();
+        emit artworksCountChanged();
     }
 
     void CombinedArtworksModel::saveSetKeywords() const {

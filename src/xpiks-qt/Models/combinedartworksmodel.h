@@ -45,6 +45,7 @@ namespace Models {
         Q_PROPERTY(QString author READ getAuthor WRITE setAuthor NOTIFY authorChanged)
         Q_PROPERTY(int keywordsCount READ getKeywordsCount NOTIFY keywordsCountChanged)
         Q_PROPERTY(int selectedArtworksCount READ getSelectedArtworksCount NOTIFY selectedArtworksCountChanged)
+        Q_PROPERTY(int artworksCount READ getArtworksCount NOTIFY artworksCountChanged)
     public:
         CombinedArtworksModel(QObject *parent = 0) :
             AbstractListModel(parent),
@@ -99,9 +100,11 @@ namespace Models {
         void authorChanged();
         void keywordsCountChanged();
         void selectedArtworksCountChanged();
+        void artworksCountChanged();
 
     public:
         int getSelectedArtworksCount() const;
+        int getArtworksCount() const { return m_ArtworksList.length(); }
 
     public:
         Q_INVOKABLE QString removeKeywordAt(int keywordIndex);
@@ -110,7 +113,6 @@ namespace Models {
         Q_INVOKABLE void pasteKeywords(const QStringList &keywords);
         Q_INVOKABLE void setArtworksSelected(int index, bool newState);
         Q_INVOKABLE void removeSelectedArtworks();
-        Q_INVOKABLE int getArtworksCount() const { return m_ArtworksList.length(); }
         Q_INVOKABLE void saveSetKeywords() const;
         Q_INVOKABLE void saveAddKeywords() const;
         Q_INVOKABLE void resetModelData();

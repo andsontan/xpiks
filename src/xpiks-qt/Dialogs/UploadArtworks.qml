@@ -164,7 +164,7 @@ Item {
                     }
 
                     StyledText {
-                        text: qsTr("%1 artworks selected").arg(artworkUploader.itemsCount)
+                        text: artworkUploader.itemsCount == 1 ? qsTr("1 artwork selected") : qsTr("%1 artworks selected").arg(artworkUploader.itemsCount)
                         color: Colors.defaultInputBackground
                     }
                 }
