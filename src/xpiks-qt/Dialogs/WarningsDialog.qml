@@ -174,24 +174,23 @@ Item {
                                             anchors.margins: 10
                                             boundsBehavior: Flickable.StopAtBounds
                                             model: warnings
-                                            spacing: 5
+                                            spacing: 8
 
                                             delegate: RowLayout {
                                                 width: parent.width
-                                                height: 15
-                                                spacing: 5
+                                                height: 10
+                                                spacing: 10
 
                                                 Rectangle {
-                                                    width: 8
-                                                    height: 8
-                                                    radius: 4
+                                                    height: 10
+                                                    width: height
+                                                    radius: height/2
                                                     anchors.verticalCenter: parent.verticalCenter
-                                                    color: Colors.defaultDarkColor
+                                                    color: Colors.selectedArtworkColor
                                                 }
 
                                                 StyledText {
                                                     Layout.fillWidth: true
-                                                    anchors.verticalCenter: parent.verticalCenter
                                                     text: modelData
                                                     color: Colors.artworkModifiedColor
                                                 }
