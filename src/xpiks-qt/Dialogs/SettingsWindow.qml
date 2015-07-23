@@ -96,7 +96,7 @@ ApplicationWindow {
             onSuccess: onMasterPasswordSet
         }
 
-        Common.launchComponent("MasterPasswordSetupDialog.qml",
+        Common.launchComponent("Dialogs/MasterPasswordSetupDialog.qml",
                                settingsWindow,
                                {firstTime: firstTimeParam, callbackObject: callbackObject});
     }
@@ -162,7 +162,7 @@ ApplicationWindow {
                     onFail: function() { masterPasswordCheckbox.checked = true; }
                 }
 
-                Common.launchComponent("EnterMasterPasswordDialog.qml",
+                Common.launchComponent("Dialogs/EnterMasterPasswordDialog.qml",
                                        settingsWindow,
                                        {componentParent: settingsWindow, callbackObject: callbackObject})
             } else {

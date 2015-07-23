@@ -565,7 +565,7 @@ Item {
                             cursorShape: Qt.PointingHandCursor
                             onClicked: {
                                 if (warningsManager.warningsCount > 0) {
-                                    Common.launchComponent("WarningsDialog.qml",
+                                    Common.launchComponent("Dialogs/WarningsDialog.qml",
                                                            uploadArtworksComponent.componentParent, {});
                                 }
                             }
