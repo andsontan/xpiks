@@ -110,7 +110,7 @@ Item {
                     }
 
                     StyledText {
-                        text: qsTr("%1 artwork(s)").arg(zipArchiver.itemsCount)
+                        text: zipArchiver.itemsCount == 1 ? qsTr("1 artwork") : qsTr("%1 artworks").arg(zipArchiver.itemsCount)
                         color: Colors.defaultInputBackground
                     }
                 }
