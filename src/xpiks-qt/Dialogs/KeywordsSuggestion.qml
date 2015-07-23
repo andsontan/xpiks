@@ -128,7 +128,7 @@ Item {
 
                     StyledText {
                         text: qsTr("(powered by Shutterstock API)")
-                        color: Colors.defaultInputBackground
+                        color: Colors.defaultControlColor
                     }
                 }
 
@@ -180,11 +180,11 @@ Item {
                                         Rectangle {
                                             anchors.fill: parent
                                             color: Colors.defaultControlColor
-                                            opacity: isselected ? 0.7 : (mouseArea.containsMouse ? 0.4 : 0)
+                                            opacity: isselected ? (mouseArea.containsMouse ? 0.6 : 0.7) : (mouseArea.containsMouse ? 0.4 : 0)
                                         }
 
                                         LargeAddIcon {
-                                            opacity: isselected ? 1 : (mouseArea.containsMouse ? 0.6 : 0)
+                                            opacity: isselected ? (mouseArea.containsMouse ? 0.85 : 1) : (mouseArea.containsMouse ? 0.6 : 0)
                                             width: parent.width
                                             height: parent.height
                                         }

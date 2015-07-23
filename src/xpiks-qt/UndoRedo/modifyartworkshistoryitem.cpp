@@ -50,7 +50,7 @@ QString UndoRedo::getModificationTypeDescription(UndoRedo::ModificationType type
     case PasteModificationType:
         return "Paste";
     case CombinedEditModificationType:
-        return "Combined Edit";
+        return "Multiple edit";
     default:
         return "";
     }

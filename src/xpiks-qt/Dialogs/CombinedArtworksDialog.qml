@@ -210,11 +210,11 @@ Item {
                                 Rectangle {
                                     anchors.fill: parent
                                     color: Colors.defaultControlColor
-                                    opacity: mouseArea.containsMouse ? 0.4 : (isselected ? 0.7 : 0)
+                                    opacity: isselected ? (mouseArea.containsMouse ? 0.6 : 0.7) : (mouseArea.containsMouse ? 0.4 : 0)
                                 }
 
                                 LargeRemoveIcon {
-                                    visible: isselected
+                                    opacity: isselected ? (mouseArea.containsMouse ? 0.85 : 1) : (mouseArea.containsMouse ? 0.6 : 0)
                                     width: parent.width
                                     height: parent.height
                                 }
@@ -233,7 +233,7 @@ Item {
                 }
 
                 Item {
-                    height: 30
+                    height: 20
                 }
 
                 RowLayout {
@@ -241,7 +241,7 @@ Item {
                     spacing: 20
 
                     ColumnLayout {
-                        spacing: 3
+                        spacing: 10
                         width: 325
 
                         RowLayout {
@@ -370,6 +370,15 @@ Item {
                         text: qsTr("(comma-separated)")
                         color: Colors.defaultInputBackground
                     }
+
+                    Item {
+                        Layout.fillWidth: true
+                    }
+
+                    StyledText {
+                        text: combinedArtworks.keywordsCount
+                        color: Colors.defaultInputBackground
+                    }
                 }
 
                 Rectangle {
@@ -475,26 +484,22 @@ Item {
                     }
                 }
 
-                RowLayout {
-                    spacing: 15
+                Item {
+                    height: 10
+                }
 
-                    StyledText {
-                        text: combinedArtworks.keywordsCount
-                        color: Colors.defaultControlColor
-                    }
+                Rectangle {
+                    width: parent.width
+                    color: "transparent"
+                    height: 24
 
-                    Item {
-                        Layout.fillWidth: true
-                    }
+                    RowLayout {
+                        anchors.fill: parent
+                        spacing: 10
 
-                    StyledText {
-                        text: qsTr("Suggest keywords")
-                        color: suggestKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
-
-                        MouseArea {
-                            id: suggestKeywordsMA
-                            anchors.fill: parent
-                            cursorShape: Qt.PointingHandCursor
+                        StyledButton {
+                            width: 130
+                            text: qsTr("Suggest keywords")
                             onClicked: {
                                 var callbackObject = {
                                     promoteKeywords: function(keywords) {
@@ -507,37 +512,6 @@ Item {
                                                        {callbackObject: callbackObject});
                             }
                         }
-                    }
-
-                    StyledText {
-                        text: qsTr("Copy keywords")
-                        color: combinedCopyKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
-
-                        MouseArea {
-                            id: combinedCopyKeywordsMA
-                            anchors.fill: parent
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: combinedClipboard.setText(combinedArtworks.getKeywordsString())
-                        }
-                    }
-
-                    ClipboardHelper {
-                        id: combinedClipboard
-                    }
-                }
-
-                Item {
-                    height: 5
-                }
-
-                Rectangle {
-                    width: parent.width
-                    color: "transparent"
-                    height: 24
-
-                    RowLayout {
-                        anchors.fill: parent
-                        spacing: 10
 
                         Item {
                             Layout.fillWidth: true

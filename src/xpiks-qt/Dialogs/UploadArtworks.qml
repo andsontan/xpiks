@@ -529,6 +529,26 @@ Item {
                             visible: uploadInfos.infosCount == 0
                         }
                     }
+
+                    /*ColumnLayout {
+                        width: 200
+                        Rectangle {
+                            //border.width: titleText.activeFocus ? 1 : 0
+                            border.color: Colors.artworkActiveColor
+                            Layout.fillWidth: true
+                            color: Colors.defaultInputBackground
+                            height: 30
+
+                            StyledTextInput {
+                                height: 30
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                anchors.rightMargin: 5
+                                //text: uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.title : ""
+                                anchors.leftMargin: 5
+                            }
+                        }
+                    }*/
                 }
 
                 SimpleProgressBar {
