@@ -64,7 +64,10 @@ Item {
         MouseArea {
             anchors.fill: parent
             onWheel: wheel.accepted = true
-            onClicked: mouse.accepted = true
+            onClicked: {
+                mouse.accepted = true;
+                closePopup();
+            }
 
             property real old_x : 0
             property real old_y : 0
@@ -89,6 +92,11 @@ Item {
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: mouse.accepted = true
+            }
 
             ColumnLayout {
                 anchors.fill: parent

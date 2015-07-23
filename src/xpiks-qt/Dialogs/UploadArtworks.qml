@@ -112,7 +112,10 @@ Item {
         MouseArea {
             anchors.fill: parent
             onWheel: wheel.accepted = true
-            onClicked: mouse.accepted = true
+            onClicked: {
+                mouse.accepted = true;
+                closePopup();
+            }
 
             property real old_x : 0
             property real old_y : 0
@@ -137,15 +140,37 @@ Item {
         Rectangle {
             id: dialogWindow
             width: 600
-            height: 390
+            height: 410
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: mouse.accepted = true
+            }
 
             ColumnLayout {
                 spacing: 15
                 anchors.fill: parent
                 anchors.margins: 20
+
+                RowLayout {
+                    Layout.fillWidth: true
+
+                    StyledText {
+                        text: qsTr("Upload artworks")
+                    }
+
+                    Item {
+                        Layout.fillWidth: true
+                    }
+
+                    StyledText {
+                        text: qsTr("%1 artworks selected").arg(artworkUploader.itemsCount)
+                        color: Colors.defaultInputBackground
+                    }
+                }
 
                 SplitView {
                     Layout.fillHeight: true
