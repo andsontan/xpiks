@@ -152,6 +152,14 @@ ApplicationWindow {
         artItemsModel.checkForWarnings()
     }
 
+    function tryUploadArtworks() {
+        if (artItemsModel.areSelectedArtworksSaved()) {
+            openUploadDialog()
+        } else {
+            mustSaveWarning.open()
+        }
+    }
+
     MessageDialog {
         id: confirmRemoveDirectoryDialog
         property int directoryIndex
@@ -490,15 +498,10 @@ ApplicationWindow {
                             enabled: artworkRepository.artworksSourcesCount > 0
                             onClicked: {
                                 if (artItemsModel.selectedArtworksCount == 0) {
-                                    mustSelectDialog.open()
+                                    artItemsModel.selectAllArtworks();
                                 }
-                                else {
-                                    if (artItemsModel.areSelectedArtworksSaved()) {
-                                        openUploadDialog()
-                                    } else {
-                                        mustSaveWarning.open()
-                                    }
-                                }
+
+                                tryUploadArtworks();
                             }
                         }
 
