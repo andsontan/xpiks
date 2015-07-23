@@ -112,10 +112,7 @@ Item {
         MouseArea {
             anchors.fill: parent
             onWheel: wheel.accepted = true
-            onClicked: {
-                mouse.accepted = true;
-                closePopup();
-            }
+            onClicked: mouse.accepted = true
 
             property real old_x : 0
             property real old_y : 0
@@ -124,6 +121,11 @@ Item {
                 var tmp = mapToItem(uploadArtworksComponent, mouse.x, mouse.y);
                 old_x = tmp.x;
                 old_y = tmp.y;
+
+                var dialogPoint = mapToItem(dialogWindow, mouse.x, mouse.y);
+                if (!Common.isInComponent(dialogPoint, dialogWindow)) {
+                    closePopup()
+                }
             }
 
             onPositionChanged: {
@@ -144,11 +146,6 @@ Item {
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
-
-            MouseArea {
-                anchors.fill: parent
-                onClicked: mouse.accepted = true
-            }
 
             ColumnLayout {
                 spacing: 15
@@ -581,7 +578,7 @@ Item {
                     }
 
                     StyledText {
-                        text: qsTr("%1 warning(s)").arg(warningsManager.warningsCount)
+                        text: warningsManager.warningsCount == 1 ? qsTr("1 warning") : qsTr("%1 warnings").arg(warningsManager.warningsCount)
                         color: uploadWarmingsMA.pressed ? Colors.defaultLightGrayColor : warningsManager.warningsCount > 0 ? Colors.artworkModifiedColor : Colors.defaultInputBackground
 
                         MouseArea {

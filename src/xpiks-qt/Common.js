@@ -46,6 +46,12 @@ function movePopupInsideComponent(component, window, mouse, old_x, old_y) {
     return [old_x, old_y];
 }
 
+function isInComponent(point, component) {
+    var result = (point.x >= 0 && point.x <= component.width) &&
+            (point.y >= 0 && point.y <= component.height);
+    return result;
+}
+
 function launchComponent(componentName, directParent, options, functor) {
     var component = Qt.createComponent(componentName);
     if (component.status !== Component.Ready) {

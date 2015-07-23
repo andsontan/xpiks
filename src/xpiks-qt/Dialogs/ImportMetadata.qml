@@ -60,13 +60,13 @@ Item {
 
     FocusScope {
         anchors.fill: parent
+        id: focusScope
 
         MouseArea {
             anchors.fill: parent
             onWheel: wheel.accepted = true
             onClicked: {
                 mouse.accepted = true;
-                closePopup();
             }
 
             property real old_x : 0
@@ -76,6 +76,11 @@ Item {
                 var tmp = mapToItem(metadataImportComponent, mouse.x, mouse.y);
                 old_x = tmp.x;
                 old_y = tmp.y;
+
+                var dialogPoint = mapToItem(dialogWindow, mouse.x, mouse.y);
+                if (!Common.isInComponent(dialogPoint, dialogWindow)) {
+                    closePopup()
+                }
             }
 
             onPositionChanged: {
@@ -92,11 +97,6 @@ Item {
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
-
-            MouseArea {
-                anchors.fill: parent
-                onClicked: mouse.accepted = true
-            }
 
             ColumnLayout {
                 spacing: 10

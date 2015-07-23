@@ -76,6 +76,11 @@ Item {
                 var tmp = mapToItem(keywordsSuggestionComponent, mouse.x, mouse.y);
                 old_x = tmp.x;
                 old_y = tmp.y;
+
+                var dialogPoint = mapToItem(dialogWindow, mouse.x, mouse.y);
+                if (!Common.isInComponent(dialogPoint, dialogWindow)) {
+                    closePopup()
+                }
             }
 
             onPositionChanged: {
@@ -92,11 +97,6 @@ Item {
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
-
-            MouseArea {
-                anchors.fill: parent
-                onClicked: mouse.accepted = true
-            }
 
             ColumnLayout {
                 anchors.fill: parent
