@@ -65,9 +65,7 @@ Item {
         MouseArea {
             anchors.fill: parent
             onWheel: wheel.accepted = true
-            onClicked: {
-                mouse.accepted = true;
-            }
+            onClicked: mouse.accepted = true;
 
             property real old_x : 0
             property real old_y : 0
