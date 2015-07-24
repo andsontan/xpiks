@@ -55,7 +55,7 @@ namespace Models {
         const QString &getTitle() const { return m_ArtworkTitle; }
         const QString &getDescription() const { return m_ArtworkDescription; }
         const QString &getFilepath() const { return m_ArtworkFilepath; }
-        virtual QString getAbsoluteFilepath() const { QFileInfo fi(m_ArtworkFilepath); return fi.absoluteFilePath(); }
+        virtual QString getAbsoluteFilepath() const { QFileInfo fi(m_ArtworkFilepath); return fi.absolutePath(); }
         int getKeywordsCount() const { return m_KeywordsSet.count(); }
         const QStringList &getKeywords() const { return m_KeywordsList; }
         const QSet<QString> &getKeywordsSet() const { return m_KeywordsSet; }
