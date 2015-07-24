@@ -334,29 +334,29 @@ namespace Models {
 
         ArtworkMetadata *metadata = m_ArtworkList.at(index.row());
         int roleToUpdate = 0;
-        bool needUpdate = false;
+        bool needToUpdate = false;
         switch (role) {
         case EditArtworkDescriptionRole:
-            needUpdate = metadata->setDescription(value.toString());
+            needToUpdate = metadata->setDescription(value.toString());
             roleToUpdate = ArtworkDescriptionRole;
             break;
         case EditArtworkTitleRole:
-            needUpdate = metadata->setTitle(value.toString());
+            needToUpdate = metadata->setTitle(value.toString());
             roleToUpdate = ArtworkTitleRole;
             break;
         case EditArtworkAuthorRole:
-            needUpdate = metadata->setAuthor(value.toString());
+            needToUpdate = metadata->setAuthor(value.toString());
             roleToUpdate = ArtworkAuthorRole;
             break;
         case EditIsSelectedRole:
-            needUpdate = metadata->setIsSelected(value.toBool());
+            needToUpdate = metadata->setIsSelected(value.toBool());
             roleToUpdate = IsSelectedRole;
             break;
         default:
             return false;
         }
 
-        if (needUpdate) {
+        if (needToUpdate) {
             emit dataChanged(index, index, QVector<int>() << IsModifiedRole << roleToUpdate);
         }
 
