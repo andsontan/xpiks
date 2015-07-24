@@ -31,14 +31,9 @@ namespace Helpers {
         return filepathes;
     }
 
-    bool zipArtworkAndEPS(QStringList filepathes, QString &zipFilePath) {
+    bool zipArtworkAndEPS(const QStringList &filepathes, QString &zipFilePath) {
         QString anyFile = filepathes.first();
-        QFileInfo fi(anyFile);
-        QString archiveName = fi.baseName() + ".zip";
-
-        QString basePath = fi.absolutePath();
-        QDir dir(basePath);
-        QString archivePath = dir.filePath(archiveName);
+        QString archivePath = getArchivePath(anyFile);
 
         bool result = JlCompress::compressFiles(archivePath, filepathes);
         if (!result) {
@@ -49,6 +44,15 @@ namespace Helpers {
         return result;
     }
 
+    QString getArchivePath(const QString &artworkPath) {
+        QFileInfo fi(artworkPath);
+        QString archiveName = fi.baseName() + ".zip";
+
+        QString basePath = fi.absolutePath();
+        QDir dir(basePath);
+        QString archivePath = dir.filePath(archiveName);
+        return archivePath;
+    }
 }
 
 

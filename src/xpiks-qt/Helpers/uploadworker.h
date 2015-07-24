@@ -60,6 +60,7 @@ namespace Helpers {
 
     private:
         double parsePercent(QString &curlOutput)const;
+        void emitFinishSignals(bool success);
 
     private:
         UploadItem *m_UploadItem;

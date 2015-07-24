@@ -12,7 +12,7 @@ namespace Mocks {
         {
         }
 
-        virtual QString getAbsoluteFilepath() const { return "somedirectory"; }
+        virtual QString getDirectory() const { return "somedirectory"; }
     };
 }
 

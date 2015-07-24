@@ -23,10 +23,12 @@
 #define ZIPHELPER
 
 #include <QStringList>
+#include <QString>
 
 namespace Helpers {
     QStringList zipFiles(QStringList filepathes);
-    bool zipArtworkAndEPS(QStringList filepathes, QString &zipFilePath);
+    bool zipArtworkAndEPS(const QStringList &filepathes, QString &zipFilePath);
+    QString getArchivePath(const QString &artworkPath);
 }
 
 #endif // ZIPHELPER

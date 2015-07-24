@@ -73,7 +73,7 @@ namespace Helpers {
     private:
         void doRunUpload(const QList<UploadItem *> &uploadItems, const Encryption::SecretsManager *secretsManager);
         void extractFilePathes(const QList<Models::ArtworkMetadata*> &artworkList,
-                               QStringList &filePathes, bool includeEPS) const;
+                               QStringList &filePathes, QStringList &zipsPathes, bool includeEPS) const;
         void stopThreads();
 
     private:

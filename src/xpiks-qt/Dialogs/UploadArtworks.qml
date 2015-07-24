@@ -48,10 +48,31 @@ Item {
         appSettings.setValue(uploadhostskey, uploadInfos.getInfoString())
     }
 
-    function startUpload() {
+    function mainAction() {
         artworkUploader.resetModel()
         artworkUploader.uploadArtworks()
         saveSettings()
+    }
+
+    function startUpload() {
+        if (artworkUploader.needCreateArchives()) {
+            var callbackObject = {
+                afterZipped: function() {
+                    mainAction();
+                }
+            }
+
+            artItemsModel.setSelectedForZipping()
+            Common.launchComponent("Dialogs/ZipArtworksDialog.qml",
+                            applicationWindow,
+                                   {
+                                       componentParent: applicationWindow,
+                                       immediateProcessing: true,
+                                       callbackObject: callbackObject
+                                   });
+        } else {
+            mainAction();
+        }
     }
 
     PropertyAnimation { target: uploadArtworksComponent; property: "opacity";
@@ -603,8 +624,9 @@ Item {
 
                                     StyledCheckbox {
                                         id: zipBeforeUploadCheckBox
-                                        text: qsTr("Zip files before upload (for illustrations)")
-                                        //Component.onCompleted: checked = uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.zipbeforeupload : false
+                                        text: qsTr("Zip with EPS before upload")
+                                        Component.onCompleted: checked = uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.zipbeforeupload : false
+
                                         onClicked: {
                                             if (uploadHostsListView.currentItem) {
                                                 uploadHostsListView.currentItem.myData.editzipbeforeupload = checked

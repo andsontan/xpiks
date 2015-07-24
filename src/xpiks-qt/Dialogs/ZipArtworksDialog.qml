@@ -32,6 +32,8 @@ import "../StyledControls"
 
 Item {
     id: zipArtworksComponent
+    property bool immediateProcessing: false
+    property var callbackObject
     anchors.fill: parent
 
     function closePopup() {
@@ -146,6 +148,15 @@ Item {
                             target: zipArchiver
                             onFinishedProcessing: {
                                 importButton.text = qsTr("Start Zipping")
+
+                                if (immediateProcessing) {
+                                    if (typeof callbackObject !== "undefined") {
+                                        callbackObject.afterZipped()
+                                    }
+
+                                    closePopup()
+                                }
+
                                 //if (!zipArchiver.isError) {
                                 //    closePopup()
                                 //}
@@ -167,6 +178,13 @@ Item {
                     }
                 }
             }
+        }
+    }
+
+    Component.onCompleted: {
+        if (immediateProcessing) {
+            zipArchiver.resetModel()
+            zipArchiver.archiveArtworks()
         }
     }
 }

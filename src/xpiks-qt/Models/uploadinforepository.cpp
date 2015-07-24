@@ -129,6 +129,11 @@ namespace Models {
             roleToUpdate = TitleRole;
             title = value.toString();
             needToUpdate = uploadInfo->setTitle(title);
+            // hack for updating checkbox binding
+            if (!needToUpdate) {
+                needToUpdate = true;
+                roleToUpdate = ZipBeforeUploadRole;
+            }
             break;
         case EditHostRole:
             roleToUpdate = HostRole;
