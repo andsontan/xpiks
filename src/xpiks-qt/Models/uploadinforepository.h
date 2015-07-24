@@ -57,7 +57,11 @@ namespace Models {
             PasswordRole,
             EditPasswordRole,
             IsSelectedRole,
-            EditIsSelectedRole
+            EditIsSelectedRole,
+            ZipBeforeUploadRole,
+            EditZipBeforeUploadRole,
+            UploadDirectoryRole,
+            EditUploadDirectoryRole
         };
 
         int getInfosCount() const { return m_UploadInfos.length(); }

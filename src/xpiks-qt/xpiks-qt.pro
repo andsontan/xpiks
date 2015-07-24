@@ -170,7 +170,9 @@ DISTFILES += \
     Components/AddIcon.qml \
     Dialogs/KeywordsSuggestion.qml \
     Components/LargeAddIcon.qml \
-    StyledControls/StyledBusyIndicator.qml
+    StyledControls/StyledBusyIndicator.qml \
+    StyledControls/StyledTabView.qml \
+    Components/CustomBorder.qml
 
 macx {
 OBJECTIVE_SOURCES += \

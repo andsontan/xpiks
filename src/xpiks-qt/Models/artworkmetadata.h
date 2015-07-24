@@ -65,33 +65,41 @@ namespace Models {
         bool getIsSelected() const { return m_IsSelected; }
 
     public:
-        void setDescription(const QString &value) {
-            if (m_ArtworkDescription != value) {
+        bool setDescription(const QString &value) {
+            bool result = m_ArtworkDescription != value;
+            if (result) {
                 m_ArtworkDescription = value;
                 setModified();
             }
+            return result;
         }
 
-        void setAuthor(const QString &value) {
-            if (m_ArtworkAuthor != value) {
+        bool setAuthor(const QString &value) {
+            bool result = m_ArtworkAuthor != value;
+            if (result) {
                 m_ArtworkAuthor = value;
                 setModified();
             }
+            return result;
         }
 
-        void setTitle(const QString &value) {
-            if (m_ArtworkTitle != value) {
+        bool setTitle(const QString &value) {
+            bool result = m_ArtworkTitle != value;
+            if (result) {
                 m_ArtworkTitle = value;
                 setModified();
             }
+            return result;
         }
 
-        void setIsSelected(bool value) {
-            if (m_IsSelected != value) {
+        bool setIsSelected(bool value) {
+            bool result = m_IsSelected != value;
+            if (result) {
                 m_IsSelected = value;
                 selectedChanged(value);
                 fileSelectedChanged(m_ArtworkFilepath, value);
             }
+            return result;
         }
 
     public:

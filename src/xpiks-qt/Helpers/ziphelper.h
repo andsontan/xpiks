@@ -26,6 +26,7 @@
 
 namespace Helpers {
     QStringList zipFiles(QStringList filepathes);
+    bool zipArtworkAndEPS(QStringList filepathes, QString &zipFilePath);
 }
 
 #endif // ZIPHELPER

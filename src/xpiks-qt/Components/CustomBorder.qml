@@ -19,36 +19,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "ziphelper.h"
-#include <QFileInfo>
-#include <QDebug>
-#include "../quazip/quazip/JlCompress.h"
+import QtQuick 2.3
+import "../Constants"
+import "../Constants/Colors.js" as Colors
 
-namespace Helpers {
-    QStringList zipFiles(QStringList filepathes) {
-        QString zipFilePath;
-        zipArtworkAndEPS(filepathes, zipFilePath);
-        return filepathes;
+Rectangle {
+    property bool commonBorder : true
+
+    property int lBorderwidth : 1
+    property int rBorderwidth : 1
+    property int tBorderwidth : 1
+    property int bBorderwidth : 1
+
+    property int commonBorderWidth : 1
+
+    z : -1
+
+    property string borderColor : "white"
+
+    color: borderColor
+
+    anchors
+    {
+        left: parent.left
+        right: parent.right
+        top: parent.top
+        bottom: parent.bottom
+
+        topMargin    : commonBorder ? -commonBorderWidth : -tBorderwidth
+        bottomMargin : commonBorder ? -commonBorderWidth : -bBorderwidth
+        leftMargin   : commonBorder ? -commonBorderWidth : -lBorderwidth
+        rightMargin  : commonBorder ? -commonBorderWidth : -rBorderwidth
     }
-
-    bool zipArtworkAndEPS(QStringList filepathes, QString &zipFilePath) {
-        QString anyFile = filepathes.first();
-        QFileInfo fi(anyFile);
-        QString archiveName = fi.baseName() + ".zip";
-
-        QString basePath = fi.absolutePath();
-        QDir dir(basePath);
-        QString archivePath = dir.filePath(archiveName);
-
-        bool result = JlCompress::compressFiles(archivePath, filepathes);
-        if (!result) {
-            qDebug() << "Failed to create zip" << archivePath;
-        }
-
-        zipFilePath = archivePath;
-        return result;
-    }
-
 }
-
-

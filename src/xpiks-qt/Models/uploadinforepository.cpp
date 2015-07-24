@@ -96,6 +96,10 @@ namespace Models {
         }
         case IsSelectedRole:
             return uploadInfo->getIsSelected();
+        case ZipBeforeUploadRole:
+            return uploadInfo->getZipBeforeUpload();
+        case UploadDirectoryRole:
+            return uploadInfo->getUploadDirectory();
         default:
             return QVariant();
         }
@@ -119,35 +123,49 @@ namespace Models {
         UploadInfo *uploadInfo = m_UploadInfos[index.row()];
         QString title;
         int roleToUpdate = 0;
+        bool needToUpdate = false;
         switch (role) {
         case EditTitleRole:
             roleToUpdate = TitleRole;
             title = value.toString();
-            uploadInfo->setTitle(title);
+            needToUpdate = uploadInfo->setTitle(title);
             break;
         case EditHostRole:
             roleToUpdate = HostRole;
-            uploadInfo->setHost(value.toString().trimmed());
+            needToUpdate = uploadInfo->setHost(value.toString().trimmed());
             break;
         case EditUsernameRole:
             roleToUpdate = UsernameRole;
-            uploadInfo->setUsername(value.toString().trimmed());
+            needToUpdate = uploadInfo->setUsername(value.toString().trimmed());
             break;
         case EditPasswordRole: {
             roleToUpdate = PasswordRole;
             QString rawPassword = value.toString();
             QString encodedPassword = m_CommandManager->getSecretsManager()->encodePassword(rawPassword);
+            // skip needUpdate
             uploadInfo->setPassword(encodedPassword);
             break;
         }
         case EditIsSelectedRole:
             roleToUpdate = IsSelectedRole;
-            uploadInfo->setIsSelected(value.toBool());
+            needToUpdate = uploadInfo->setIsSelected(value.toBool());
+            break;
+        case EditZipBeforeUploadRole:
+            roleToUpdate = ZipBeforeUploadRole;
+            needToUpdate = uploadInfo->setZipBeforeUpload(value.toBool());
+            break;
+        case EditUploadDirectoryRole:
+            roleToUpdate = UploadDirectoryRole;
+            needToUpdate = uploadInfo->setUploadDirectory(value.toString().trimmed());
+            break;
         default:
             return false;
         }
 
-        emit dataChanged(index, index, QVector<int>() << role << roleToUpdate);
+        if (needToUpdate) {
+            emit dataChanged(index, index, QVector<int>() << roleToUpdate);
+        }
+
         return true;
     }
 
@@ -164,6 +182,10 @@ namespace Models {
         roles[EditPasswordRole] = "editpassword";
         roles[IsSelectedRole] = "isselected";
         roles[EditIsSelectedRole] = "editisselected";
+        roles[ZipBeforeUploadRole] = "zipbeforeupload";
+        roles[EditZipBeforeUploadRole] = "editzipbeforeupload";
+        roles[UploadDirectoryRole] = "uploaddirectory";
+        roles[EditUploadDirectoryRole] = "edituploaddirectory";
         return roles;
     }
 }

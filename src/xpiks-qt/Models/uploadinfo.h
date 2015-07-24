@@ -31,10 +31,11 @@
 namespace Models {
     class UploadInfo {
     private:
-        enum UField { TitleField = 0, HostField, UsernameField, PasswordField };
+        enum UField { TitleField = 0, HostField, UsernameField, PasswordField, DirectoryField, ZipField };
 
     public:
         UploadInfo():
+            m_ZipBeforeUpload(false),
             m_IsSelected(false)
         {
             m_Title = QString::fromLatin1("Untitled");
@@ -48,6 +49,8 @@ namespace Models {
             m_Host = items.value(HostField, emptyString);
             m_Username = items.value(UsernameField, emptyString);
             m_EncodedPassword = items.value(PasswordField, emptyString);
+            m_UploadDirectory = items.value(DirectoryField, emptyString);
+            m_ZipBeforeUpload = items.value(ZipField, "false") == "true";
         }
 
     public:
@@ -55,24 +58,35 @@ namespace Models {
         const QString &getHost() const { return m_Host; }
         const QString &getUsername() const { return m_Username; }
         QString getPassword() { QString result; m_Mutex.lock(); result = m_EncodedPassword; m_Mutex.unlock(); return result; }
+        QString getUploadDirectory()  const { return m_UploadDirectory; }
         bool hasPassword() const { return !m_EncodedPassword.isEmpty(); }
         bool getIsSelected() const { return m_IsSelected; }
+        bool getZipBeforeUpload() const { return m_ZipBeforeUpload; }
         bool isSomethingMissing() const { return m_EncodedPassword.isEmpty() || m_Host.isEmpty() || m_Username.isEmpty(); }
         bool isEmpty() const { return m_EncodedPassword.isEmpty() && m_Host.isEmpty() && m_Username.isEmpty() &&
                     (m_Title.isEmpty() || m_Title == QString::fromLatin1("Untitled")); }
 
     public:
-        void setTitle(const QString &value) { m_Title = value; }
-        void setHost(const QString &value) { m_Host = value; }
-        void setUsername(const QString &value) { m_Username = value; }
-        void setPassword(const QString &value) {
-            m_Mutex.lock();
-            {
-                m_EncodedPassword = value;
+        bool setTitle(const QString &value) { bool result = m_Title != value; m_Title = value; return result; }
+        bool setHost(const QString &value) { bool result = m_Host != value; m_Host = value; return result; }
+        bool setUsername(const QString &value) { bool result = m_Username != value; m_Username = value; return result; }
+        bool setPassword(const QString &value) {
+            bool result = value != m_EncodedPassword;
+            if (result) {
+                m_Mutex.lock();
+                {
+                    result = value != m_EncodedPassword;
+                    if (result) {
+                        m_EncodedPassword = value;
+                    }
+                }
+                m_Mutex.unlock();
             }
-            m_Mutex.unlock();
+            return result;
         }
-        void setIsSelected(bool value) { m_IsSelected = value; }
+        bool setIsSelected(bool value) { bool result = m_IsSelected != value; m_IsSelected = value; return result; }
+        bool setUploadDirectory(const QString &directory) { bool result = m_UploadDirectory != directory; m_UploadDirectory = directory; return result; }
+        bool setZipBeforeUpload(bool value) { bool result = m_ZipBeforeUpload != value; m_ZipBeforeUpload = value; return result; }
         void restorePassword() { m_EncodedPassword = m_EncodedPasswordBackup; }
         void backupPassword() { m_EncodedPasswordBackup = m_EncodedPassword; }
         void dropPassword() { m_EncodedPassword = ""; }
@@ -84,7 +98,8 @@ namespace Models {
             hash[HostField] = m_Host;
             hash[UsernameField] = m_Username;
             hash[PasswordField] = m_EncodedPassword;
-
+            hash[DirectoryField] = m_UploadDirectory;
+            hash[ZipField] = m_ZipBeforeUpload ? "true" : "false";
             return hash;
         }
 
@@ -96,6 +111,8 @@ namespace Models {
         QString m_EncodedPassword;
         // used for backup when MP is incorrect
         QString m_EncodedPasswordBackup;
+        QString m_UploadDirectory;
+        bool m_ZipBeforeUpload;
         bool m_IsSelected;
     };
 }
