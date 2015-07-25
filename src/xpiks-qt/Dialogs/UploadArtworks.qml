@@ -584,44 +584,6 @@ Item {
                                     anchors.topMargin: 15
                                     spacing: 4
 
-                                    RowLayout {
-                                        StyledText {
-                                            text: qsTr("Directory to upload:")
-                                        }
-
-                                        Item {
-                                            Layout.fillWidth: true
-                                        }
-
-                                        StyledText {
-                                            text: qsTr("(uploads to root if empty)")
-                                            color: Colors.defaultInputBackground
-                                        }
-                                    }
-
-                                    Rectangle {
-                                        border.width: directoryText.activeFocus ? 1 : 0
-                                        border.color: Colors.artworkActiveColor
-                                        Layout.fillWidth: true
-                                        color: Colors.defaultInputBackground
-                                        height: 30
-
-                                        StyledTextInput {
-                                            id: directoryText
-                                            height: 30
-                                            anchors.left: parent.left
-                                            anchors.right: parent.right
-                                            anchors.rightMargin: 5
-                                            text: uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.uploaddirectory : ""
-                                            anchors.leftMargin: 5
-                                            onTextChanged: uploadHostsListView.currentItem.myData.edituploaddirectory = text
-                                        }
-                                    }
-
-                                    Item {
-                                        height: 10
-                                    }
-
                                     StyledCheckbox {
                                         id: zipBeforeUploadCheckBox
                                         text: qsTr("Zip with EPS before upload")

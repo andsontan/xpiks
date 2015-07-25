@@ -98,8 +98,6 @@ namespace Models {
             return uploadInfo->getIsSelected();
         case ZipBeforeUploadRole:
             return uploadInfo->getZipBeforeUpload();
-        case UploadDirectoryRole:
-            return uploadInfo->getUploadDirectory();
         default:
             return QVariant();
         }
@@ -159,10 +157,6 @@ namespace Models {
             roleToUpdate = ZipBeforeUploadRole;
             needToUpdate = uploadInfo->setZipBeforeUpload(value.toBool());
             break;
-        case EditUploadDirectoryRole:
-            roleToUpdate = UploadDirectoryRole;
-            needToUpdate = uploadInfo->setUploadDirectory(value.toString().trimmed());
-            break;
         default:
             return false;
         }
@@ -189,8 +183,6 @@ namespace Models {
         roles[EditIsSelectedRole] = "editisselected";
         roles[ZipBeforeUploadRole] = "zipbeforeupload";
         roles[EditZipBeforeUploadRole] = "editzipbeforeupload";
-        roles[UploadDirectoryRole] = "uploaddirectory";
-        roles[EditUploadDirectoryRole] = "edituploaddirectory";
         return roles;
     }
 }

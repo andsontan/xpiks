@@ -60,7 +60,6 @@ namespace Models {
             EditIsSelectedRole,
             ZipBeforeUploadRole,
             EditZipBeforeUploadRole,
-            UploadDirectoryRole,
             EditUploadDirectoryRole
         };
 
