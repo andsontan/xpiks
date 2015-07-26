@@ -6,6 +6,9 @@ date: 2015-02-26T10:58:01+02:00
 
 I'm proud to announce sixth release of Cross-platform image keywording software v1.0-beta6! Xpiks more and more looks like a real robust application. This release contains a lot of new features and some fixes from beta.5. You can find binaries at Downloads page.
 
+In this release I implemented encryption of sensitive data (upload usernames and passwords) with tinyAES. Another quite useful feature was "Test connection" button, which I added to "Upload dialog" and you can now test whether connection credentials are correct.
+
+List of all changes:
 
 - Xpiks now supports secure passwords saving using master password or the default one
 - Upload dialog now has "Test connection" button so you can check where credentials are correct
