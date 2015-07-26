@@ -33,8 +33,8 @@ ApplicationWindow {
     id: settingsWindow
     modality: "ApplicationModal"
     title: qsTr("Settings")
-    width: 450
-    height: 600
+    width: 500
+    height: 230
     minimumWidth: width
     maximumWidth: width
     minimumHeight: height
@@ -44,50 +44,17 @@ ApplicationWindow {
     function closeSettings() {
         settingsWindow.destroy();
     }
-    property string defaultExifTool: "exiftool"
-    property string defaultCurl: "curl"
-    property double defaultMaxKeywords: 50
-    property int defaultMaxDescription: 200
-    property double defaultMinMegapixels: 4.0
-    property bool defaultMustUseMasterPassword: false
-    property int defaultTimeout: 10
-    property bool defaultUseConfirmationDialogs: true
-
-    property string exiftoolpathkey: appSettings.exifToolPathKey
-    property string exifToolPath: appSettings.value(exiftoolpathkey, defaultExifTool)
-
-    property string curlpathkey: appSettings.curlPathKey
-    property string curlPath: appSettings.value(curlpathkey, defaultCurl)
-
-    property string maxkeywordscountkey: appSettings.maxKeywordsCount;
-    property int maxKeywordsCount: appSettings.value(maxkeywordscountkey, defaultMaxKeywords)
-
-    property string maxdescriptionlengthkey: appSettings.maxDescriptionLength;
-    property int maxDescriptionLength: appSettings.value(maxdescriptionlengthkey, defaultMaxDescription)
-
-    property string minmegapixelskey: appSettings.minMegapixelCount;
-    property double minMegapixelCount: appSettings.value(minmegapixelskey, defaultMinMegapixels)
-
-    property string mustusemasterpasswordkey: appSettings.mustUseMasterPasswordKey
-    property bool mustUseMasterPassword: appSettings.boolValue(mustusemasterpasswordkey, defaultMustUseMasterPassword)
-
-    property string masterpasswordhashkey: appSettings.masterPasswordHashKey
-
-    property string oneitemtimeoutkey: appSettings.oneUploadMinutesTimeoutKey
-    property int oneItemTimeoutMinutes: appSettings.value(oneitemtimeoutkey, defaultTimeout)
-
-    property string useconfirmationdialogskey: appSettings.useConfirmationDialogsKey
-    property bool useConfirmationDialogs: appSettings.boolValue(useconfirmationdialogskey, defaultUseConfirmationDialogs)
 
     function onCancelMP(firstTime) {
-        masterPasswordCheckbox.checked = !firstTime
+        settingsModel.mustUseMasterPassword = !firstTime
+        settingsModel.raiseMasterPasswordSignal()
     }
 
     function onMasterPasswordSet() {
         console.log('Master password changed')
-        appSettings.setValue(masterpasswordhashkey, secretsManager.getMasterPasswordHash())
-        appSettings.setValue(mustusemasterpasswordkey, true)
-        mustUseMasterPassword = true
+        appSettings.setValue(appSettings.masterPasswordHashKey, secretsManager.getMasterPasswordHash())
+        appSettings.setValue(appSettings.mustUseMasterPasswordKey, true)
+        settingsModel.mustUseMasterPassword = true
     }
 
     function openMasterPasswordDialog(firstTimeParam) {
@@ -111,8 +78,7 @@ ApplicationWindow {
         onAccepted: {
             console.log("You chose: " + exifToolFileDialog.fileUrl)
             var path = exifToolFileDialog.fileUrl.toString().replace(/^(file:\/{3})/,"");
-            exifToolPath = decodeURIComponent(path);
-            exifToolText.text = exifToolPath;
+            settingsModel.exifToolPath = decodeURIComponent(path);
         }
 
         onRejected: {
@@ -130,8 +96,7 @@ ApplicationWindow {
         onAccepted: {
             console.log("You chose: " + curlFileDialog.fileUrl)
             var path = curlFileDialog.fileUrl.toString().replace(/^(file:\/{3})/,"");
-            curlPath = decodeURIComponent(path);
-            curlText.text = curlPath;
+            settingsModel.curlPath = decodeURIComponent(path);
         }
 
         onRejected: {
@@ -139,15 +104,9 @@ ApplicationWindow {
         }
     }
 
-    function clearMPSettings() {
-        appSettings.setValue(mustusemasterpasswordkey, false)
-        appSettings.setValue(masterpasswordhashkey, "")
-    }
-
     function turnMasterPasswordOff () {
         secretsManager.resetMasterPassword()
-        mustUseMasterPassword = false
-        clearMPSettings()
+        settingsModel.clearMasterPasswordSettings();
     }
 
     MessageDialog {
@@ -159,7 +118,10 @@ ApplicationWindow {
             if (secretsManager.isMasterPasswordSet()) {
                 var callbackObject = {
                     onSuccess: turnMasterPasswordOff,
-                    onFail: function() { masterPasswordCheckbox.checked = true; }
+                    onFail: function() {
+                        settingsModel.mustUseMasterPassword = true;
+                        settingsModel.raiseMasterPasswordSignal()
+                    }
                 }
 
                 Common.launchComponent("Dialogs/EnterMasterPasswordDialog.qml",
@@ -171,8 +133,8 @@ ApplicationWindow {
         }
 
         onNo: {
-            // revert checkbox state
-            masterPasswordCheckbox.checked = true
+            settingsModel.mustUseMasterPassword = true
+            settingsModel.raiseMasterPasswordSignal()
         }
     }
 
@@ -182,31 +144,8 @@ ApplicationWindow {
         text: qsTr("Are you sure you want reset all actions? This action cannot be undone.")
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
-            appSettings.setValue(exiftoolpathkey, defaultExifTool)
-            exifToolText.text = exifToolPath
-
-            appSettings.setValue(curlpathkey, defaultCurl)
-            curlText.text = defaultCurl
-
-            appSettings.setValue(minmegapixelskey, defaultMinMegapixels)
-            megapixelsCount.text = defaultMinMegapixels + ''
-
-            appSettings.setValue(maxkeywordscountkey, defaultMaxKeywords)
-            keywordsCount.text = defaultMaxKeywords + ''
-
-            appSettings.setValue(maxdescriptionlengthkey, defaultMaxDescription)
-            descriptionLength.text = defaultMaxDescription + ''
-
-            appSettings.setValue(oneItemTimeoutMinutes, defaultTimeout)
-            timeoutMinutes.text = defaultTimeout + ''
-
-            appSettings.setValue(useconfirmationdialogskey, defaultUseConfirmationDialogs);
-            useConfirmationDialogsCheckbox.checked = defaultUseConfirmationDialogs
-
             secretsManager.removeMasterPassword()
-            masterPasswordCheckbox.checked = defaultMustUseMasterPassword
-            mustUseMasterPassword = defaultMustUseMasterPassword
-            clearMPSettings()
+            settingsModel.resetAllValues()
         }
     }
 
@@ -216,404 +155,395 @@ ApplicationWindow {
 
         ColumnLayout {
             anchors.fill: parent
-            anchors.margins: 10
-            spacing: 5
+            anchors.margins: {left:10; top:10; right:10}
 
-            StyledText {
-                text: qsTr("External tools paths:")
-            }
-
-            Rectangle {
+            StyledTabView {
+                Layout.fillHeight: true
                 Layout.fillWidth: true
-                height: 80
-                radius: 2
-                border.color: Colors.defaultInputBackground
-                border.width: 2
-                color: Colors.selectedArtworkColor
 
-                GridLayout {
-                    anchors.fill: parent
-                    anchors.margins: 10
-                    rows: 2
-                    columns: 4
-                    rowSpacing: 10
-                    columnSpacing: 5
+                Tab {
+                    title: qsTr("External")
 
-                    StyledText {
-                        Layout.row: 0
-                        Layout.column: 0
-                        Layout.fillWidth: true
-                        Layout.maximumWidth: 80
+                    ColumnLayout {
+                        anchors.fill: parent
+                        anchors.margins: {left: 5; top: 20; right: 20; bottom: 20}
 
-                        horizontalAlignment: Text.AlignRight
-                        text: qsTr("ExifTool path:")
-                    }
+                        GridLayout {
+                            width: parent.width
+                            rows: 2
+                            columns: 4
+                            rowSpacing: 10
+                            columnSpacing: 5
 
-                    StyledInputHost {
-                        border.width: exifToolText.activeFocus ? 1 : 0
-                        Layout.row: 0
-                        Layout.column: 1
+                            StyledText {
+                                Layout.row: 0
+                                Layout.column: 0
+                                Layout.fillWidth: true
+                                Layout.maximumWidth: 80
 
-                        StyledTextInput {
-                            id: exifToolText
-                            width: 150
-                            height: 24
-                            clip: true
-                            text: exifToolPath
-                            anchors.left: parent.left
-                            anchors.leftMargin: 5
-                            KeyNavigation.tab: curlText
-                        }
-                    }
+                                horizontalAlignment: Text.AlignRight
+                                text: qsTr("ExifTool path:")
+                            }
 
-                    StyledButton {
-                        Layout.row: 0
-                        Layout.column: 2
-                        text: qsTr("Select...")
-                        width: 70
-                        onClicked: exifToolFileDialog.open()
-                    }
+                            StyledInputHost {
+                                border.width: exifToolText.activeFocus ? 1 : 0
+                                Layout.row: 0
+                                Layout.column: 1
 
-                    StyledButton {
-                        Layout.row: 0
-                        Layout.column: 3
-                        text: qsTr("Reset")
-                        width: 70
-                        onClicked: exifToolText.text = defaultExifTool
-                    }
+                                StyledTextInput {
+                                    id: exifToolText
+                                    width: 150
+                                    height: 24
+                                    clip: true
+                                    text: settingsModel.exifToolPath
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: 5
+                                    KeyNavigation.tab: curlText
+                                    onTextChanged: settingsModel.exifToolPath = text
+                                }
+                            }
 
-                    StyledText {
-                        Layout.row: 1
-                        Layout.column: 0
-                        Layout.fillWidth: true
-                        Layout.maximumWidth: 80
-                        horizontalAlignment: Text.AlignRight
-                        text: qsTr("Curl path:")
-                    }
+                            StyledButton {
+                                Layout.row: 0
+                                Layout.column: 2
+                                text: qsTr("Select...")
+                                width: 70
+                                onClicked: exifToolFileDialog.open()
+                            }
 
-                    StyledInputHost {
-                        border.width: curlText.activeFocus ? 1 : 0
-                        Layout.row: 1
-                        Layout.column: 1
+                            StyledButton {
+                                Layout.row: 0
+                                Layout.column: 3
+                                text: qsTr("Reset")
+                                width: 70
+                                onClicked: settingsModel.resetExifTool()
+                            }
 
-                        StyledTextInput {
-                            id: curlText
-                            width: 150
-                            height: 24
-                            clip: true
-                            text: curlPath
-                            anchors.left: parent.left
-                            anchors.leftMargin: 5
-                            KeyNavigation.backtab: exifToolText
-                            KeyNavigation.tab: megapixelsCount
-                        }
-                    }
+                            StyledText {
+                                Layout.row: 1
+                                Layout.column: 0
+                                Layout.fillWidth: true
+                                Layout.maximumWidth: 80
+                                horizontalAlignment: Text.AlignRight
+                                text: qsTr("Curl path:")
+                            }
 
-                    StyledButton {
-                        Layout.row: 1
-                        Layout.column: 2
-                        text: qsTr("Select...")
-                        width: 70
-                        onClicked: curlFileDialog.open()
-                    }
+                            StyledInputHost {
+                                border.width: curlText.activeFocus ? 1 : 0
+                                Layout.row: 1
+                                Layout.column: 1
 
-                    StyledButton {
-                        Layout.row: 1
-                        Layout.column: 3
-                        text: qsTr("Reset")
-                        width: 70
-                        onClicked: curlText.text = defaultCurl
-                    }
-                }
-            }
+                                StyledTextInput {
+                                    id: curlText
+                                    width: 150
+                                    height: 24
+                                    clip: true
+                                    text: settingsModel.curlPath
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: 5
+                                    KeyNavigation.backtab: exifToolText
+                                    onTextChanged: settingsModel.curlPath = text
+                                }
+                            }
 
-            Item {
-                height: 15
-            }
+                            StyledButton {
+                                Layout.row: 1
+                                Layout.column: 2
+                                text: qsTr("Select...")
+                                width: 70
+                                onClicked: curlFileDialog.open()
+                            }
 
-            StyledText {
-                text: qsTr("Application UX:")
-            }
-
-            Rectangle {
-                Layout.fillWidth: true
-                height: 50
-                radius: 2
-                border.color: Colors.defaultInputBackground
-                border.width: 2
-                color: Colors.selectedArtworkColor
-
-                ColumnLayout {
-                    anchors.fill: parent
-                    spacing: 5
-                    anchors.margins: 10
-
-                    RowLayout {
-                        width: parent.width
-                        spacing: 10
-
-                        StyledCheckbox {
-                            id: useConfirmationDialogsCheckbox
-                            text: qsTr("Use confirmation dialogs")
+                            StyledButton {
+                                Layout.row: 1
+                                Layout.column: 3
+                                text: qsTr("Reset")
+                                width: 70
+                                onClicked: settingsModel.resetCurl()
+                            }
                         }
 
-                        StyledText {
-                            text: qsTr("(with destructive actions)")
-                            color: Colors.defaultInputBackground
-                        }
-
-                        Component.onCompleted: {
-                            useConfirmationDialogsCheckbox.checked = useConfirmationDialogs
+                        Item {
+                            Layout.fillHeight: true
                         }
                     }
                 }
-            }
 
-            Item {
-                height: 15
-            }
+                Tab {
+                    title: qsTr("UX")
 
-            StyledText {
-                text: qsTr("Upload warnings limits:")
-            }
+                    ColumnLayout {
+                        anchors.fill: parent
+                        anchors.margins: 20
 
-            Rectangle {
-                Layout.fillWidth: true
-                height: 120
-                radius: 2
-                border.color: Colors.defaultInputBackground
-                border.width: 2
-                color: Colors.selectedArtworkColor
+                        RowLayout {
+                            width: parent.width
+                            spacing: 10
 
-                ColumnLayout {
-                    spacing: 5
-                    anchors.fill: parent
-                    anchors.margins: 10
-
-                    RowLayout {
-                        width: parent.width
-                        spacing: 10
-
-                        StyledText {
-                            Layout.preferredWidth: 130
-                            horizontalAlignment: Text.AlignRight
-                            text: qsTr("Minimum megapixels:")
-                        }
-
-                        StyledInputHost {
-                            border.width: megapixelsCount.activeFocus ? 1 : 0
-
-                            StyledTextInput {
-                                id: megapixelsCount
-                                width: 100
-                                height: 24
-                                clip: true
-                                text: minMegapixelCount
-                                anchors.left: parent.left
-                                anchors.leftMargin: 5
-                                KeyNavigation.backtab: curlText
-                                KeyNavigation.tab: keywordsCount
-
-                                validator: DoubleValidator {
-                                    bottom: 0
-                                    top: 100
-                                    decimals: 1
-                                    notation: "StandardNotation"
+                            StyledCheckbox {
+                                id: useConfirmationDialogsCheckbox
+                                text: qsTr("Use confirmation dialogs")
+                                onCheckedChanged: {
+                                    settingsModel.mustUseConfirmations = checked
                                 }
+
+                                Component.onCompleted: checked = settingsModel.mustUseConfirmations
+                            }
+
+                            StyledText {
+                                text: qsTr("(with destructive actions)")
+                                color: Colors.defaultInputBackground
                             }
                         }
 
-                        StyledText {
-                            text: qsTr("(can be real)")
-                            color: Colors.defaultInputBackground
-                        }
-                    }
-
-                    RowLayout {
-                        width: parent.width
-                        spacing: 10
-
-                        StyledText {
-                            Layout.preferredWidth: 130
-                            horizontalAlignment: Text.AlignRight
-                            text: qsTr("Max keywords count:")
-                        }
-
-                        StyledInputHost {
-                            border.width: keywordsCount.activeFocus ? 1 : 0
-
-                            StyledTextInput {
-                                id: keywordsCount
-                                width: 100
-                                height: 24
-                                clip: true
-                                text: maxKeywordsCount
-                                anchors.left: parent.left
-                                anchors.leftMargin: 5
-                                KeyNavigation.backtab: megapixelsCount
-                                KeyNavigation.tab: descriptionLength
-
-                                validator: IntValidator {
-                                    bottom: 0
-                                    top: 200
-                                }
-                            }
-                        }
-
-                        StyledText {
-                            text: qsTr("(keywords)")
-                            color: Colors.defaultInputBackground
-                        }
-                    }
-
-                    RowLayout {
-                        width: parent.width
-                        spacing: 10
-
-                        StyledText {
-                            Layout.preferredWidth: 130
-                            horizontalAlignment: Text.AlignRight
-                            text: qsTr("Max description length:")
-                        }
-
-                        StyledInputHost {
-                            border.width: descriptionLength.activeFocus ? 1 : 0
-
-                            StyledTextInput {
-                                id: descriptionLength
-                                width: 100
-                                height: 24
-                                clip: true
-                                text: maxDescriptionLength
-                                anchors.left: parent.left
-                                anchors.leftMargin: 5
-                                KeyNavigation.backtab: keywordsCount
-                                KeyNavigation.tab: timeoutMinutes
-
-                                validator: IntValidator {
-                                    bottom: 0
-                                    top: 1000
-                                }
-                            }
-                        }
-
-                        StyledText {
-                            text: qsTr("(characters)")
-                            color: Colors.defaultInputBackground
+                        Item {
+                            Layout.fillHeight: true
                         }
                     }
                 }
-            }
 
-            Item {
-                height: 15
-            }
+                Tab {
+                    title: qsTr("Warnings")
 
-            StyledText {
-                text: qsTr("Upload:")
-            }
-
-            Rectangle {
-                Layout.fillWidth: true
-                height: 45
-                radius: 2
-                border.color: Colors.defaultInputBackground
-                border.width: 2
-                color: Colors.selectedArtworkColor
-
-                ColumnLayout {
-                    spacing: 5
-                    anchors.fill: parent
-                    anchors.margins: 10
-
-                    RowLayout {
-                        width: parent.width
+                    ColumnLayout {
                         spacing: 10
+                        anchors.fill: parent
+                        anchors.margins: 20
 
-                        StyledText {
-                            Layout.preferredWidth: 130
-                            horizontalAlignment: Text.AlignRight
-                            text: qsTr("File upload timeout:")
-                        }
+                        RowLayout {
+                            width: parent.width
+                            spacing: 10
 
-                        StyledInputHost {
-                            border.width: timeoutMinutes.activeFocus ? 1 : 0
+                            StyledText {
+                                Layout.preferredWidth: 130
+                                horizontalAlignment: Text.AlignRight
+                                text: qsTr("Minimum megapixels:")
+                            }
 
-                            StyledTextInput {
-                                id: timeoutMinutes
-                                width: 100
-                                height: 24
-                                clip: true
-                                text: oneItemTimeoutMinutes
-                                anchors.left: parent.left
-                                anchors.leftMargin: 5
-                                KeyNavigation.backtab: descriptionLength
+                            StyledInputHost {
+                                border.width: megapixelsCount.activeFocus ? 1 : 0
 
-                                validator: IntValidator {
-                                    bottom: 1
-                                    top: 30
+                                StyledTextInput {
+                                    id: megapixelsCount
+                                    width: 100
+                                    height: 24
+                                    clip: true
+                                    text: settingsModel.minMegapixelCount
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: 5
+                                    KeyNavigation.tab: keywordsCount
+                                    onTextChanged: {
+                                        if (text.length > 0) {
+                                            settingsModel.minMegapixelCount = parseFloat(text)
+                                        }
+                                    }
+
+                                    validator: DoubleValidator {
+                                        bottom: 0
+                                        top: 100
+                                        decimals: 1
+                                        notation: "StandardNotation"
+                                    }
                                 }
+                            }
+
+                            StyledText {
+                                text: qsTr("(can be real)")
+                                color: Colors.defaultInputBackground
                             }
                         }
 
-                        StyledText {
-                            text: qsTr("(minutes)")
-                            color: Colors.defaultInputBackground
+                        RowLayout {
+                            width: parent.width
+                            spacing: 10
+
+                            StyledText {
+                                Layout.preferredWidth: 130
+                                horizontalAlignment: Text.AlignRight
+                                text: qsTr("Max keywords count:")
+                            }
+
+                            StyledInputHost {
+                                border.width: keywordsCount.activeFocus ? 1 : 0
+
+                                StyledTextInput {
+                                    id: keywordsCount
+                                    width: 100
+                                    height: 24
+                                    clip: true
+                                    text: settingsModel.maxKeywordsCount
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: 5
+                                    KeyNavigation.backtab: megapixelsCount
+                                    KeyNavigation.tab: descriptionLength
+                                    onTextChanged: {
+                                        if (text.length > 0) {
+                                            settingsModel.maxKeywordsCount = parseInt(text)
+                                        }
+                                    }
+
+                                    validator: IntValidator {
+                                        bottom: 0
+                                        top: 200
+                                    }
+                                }
+                            }
+
+                            StyledText {
+                                text: qsTr("(keywords)")
+                                color: Colors.defaultInputBackground
+                            }
+                        }
+
+                        RowLayout {
+                            width: parent.width
+                            spacing: 10
+
+                            StyledText {
+                                Layout.preferredWidth: 130
+                                horizontalAlignment: Text.AlignRight
+                                text: qsTr("Max description length:")
+                            }
+
+                            StyledInputHost {
+                                border.width: descriptionLength.activeFocus ? 1 : 0
+
+                                StyledTextInput {
+                                    id: descriptionLength
+                                    width: 100
+                                    height: 24
+                                    clip: true
+                                    text: settingsModel.maxDescriptionLength
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: 5
+                                    KeyNavigation.backtab: keywordsCount
+                                    onTextChanged: {
+                                        if (text.length > 0) {
+                                            settingsModel.maxDescriptionLength = parseInt(text)
+                                        }
+                                    }
+
+                                    validator: IntValidator {
+                                        bottom: 0
+                                        top: 1000
+                                    }
+                                }
+                            }
+
+                            StyledText {
+                                text: qsTr("(characters)")
+                                color: Colors.defaultInputBackground
+                            }
                         }
                     }
                 }
-            }
 
-            Item {
-                height: 15
-            }
+                Tab {
+                    title: qsTr("Upload")
 
-            StyledText {
-                text: qsTr("FTP passwords:")
-            }
+                    ColumnLayout {
+                        spacing: 5
+                        anchors.fill: parent
+                        anchors.margins: 20
 
-            Rectangle {
-                Layout.fillWidth: true
-                height: 45
-                radius: 2
-                border.color: Colors.defaultInputBackground
-                border.width: 2
-                color: Colors.selectedArtworkColor
+                        RowLayout {
+                            width: parent.width
+                            spacing: 10
 
-                RowLayout {
-                    anchors.fill: parent
-                    anchors.margins: 10
+                            StyledText {
+                                Layout.preferredWidth: 130
+                                horizontalAlignment: Text.AlignRight
+                                text: qsTr("File upload timeout:")
+                            }
 
-                    StyledCheckbox {
-                        id: masterPasswordCheckbox
-                        text: qsTr("Use Master password")
-                        onClicked: {
-                            if (masterPasswordCheckbox.checked) {
-                                if (!mustUseMasterPassword) {
-                                    openMasterPasswordDialog(true)
+                            StyledInputHost {
+                                border.width: timeoutMinutes.activeFocus ? 1 : 0
+
+                                StyledTextInput {
+                                    id: timeoutMinutes
+                                    width: 100
+                                    height: 24
+                                    clip: true
+                                    text: settingsModel.uploadTimeout
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: 5
+                                    onTextChanged: {
+                                        if (text.length > 0) {
+                                            settingsModel.uploadTimeout = parseInt(text)
+                                        }
+                                    }
+
+                                    validator: IntValidator {
+                                        bottom: 1
+                                        top: 30
+                                    }
                                 }
-                            } else {
-                                masterPasswordOffWarningDialog.open()
+                            }
+
+                            StyledText {
+                                text: qsTr("(minutes)")
+                                color: Colors.defaultInputBackground
                             }
                         }
-                    }
 
-                    Item {
-                        Layout.fillWidth: true
-                    }
-
-                    StyledButton {
-                        width: 190
-                        text: qsTr("Change Master password")
-                        enabled: masterPasswordCheckbox.checked
-
-                        onClicked: {
-                            openMasterPasswordDialog(false)
+                        Item {
+                            Layout.fillHeight: true
                         }
                     }
+                }
 
-                    Component.onCompleted: {
-                        masterPasswordCheckbox.checked = mustUseMasterPassword
+                Tab {
+                    title: qsTr("Security")
+
+                    ColumnLayout {
+                        anchors.fill: parent
+                        anchors.margins: 20
+
+                        RowLayout {
+                            StyledCheckbox {
+                                id: masterPasswordCheckbox
+                                text: qsTr("Use Master password")
+                                onClicked: {
+                                    if (checked) {
+                                        if (!settingsModel.mustUseMasterPassword) {
+                                            var firstTime = true;
+                                            openMasterPasswordDialog(firstTime)
+                                        }
+                                    } else {
+                                        masterPasswordOffWarningDialog.open()
+                                    }
+                                }
+
+                                Component.onCompleted: {
+                                    checked = settingsModel.mustUseMasterPassword
+                                }
+
+                                Connections {
+                                    target: settingsModel
+                                    onMustUseMasterPasswordChanged: {
+                                        masterPasswordCheckbox.checked = settingsModel.mustUseMasterPassword
+                                    }
+                                }
+                            }
+
+                            Item {
+                                Layout.fillWidth: true
+                            }
+
+                            StyledButton {
+                                width: 190
+                                text: qsTr("Change Master password")
+                                enabled: masterPasswordCheckbox.checked
+
+                                onClicked: {
+                                    openMasterPasswordDialog(false)
+                                }
+                            }
+                        }
+
+                        Item {
+                            Layout.fillHeight: true
+                        }
                     }
                 }
             }
@@ -636,6 +566,14 @@ ApplicationWindow {
                     width: 120
                     onClicked: {
                         resetSettingsDialog.open()
+
+                        if (typeof useConfirmationDialogsCheckbox !== "undefined") {
+                            useConfirmationDialogsCheckbox.checked = settingsModel.mustUseConfirmations
+                        }
+
+                        if (typeof masterPasswordCheckbox !== "undefined") {
+                            masterPasswordCheckbox.checked = settingsModel.mustUseMasterPassword;
+                        }
                     }
                 }
 
@@ -647,26 +585,7 @@ ApplicationWindow {
                     text: qsTr("Save and Exit")
                     width: 120
                     onClicked: {
-                        exifToolPath = exifToolText.text
-                        appSettings.setValue(exiftoolpathkey, exifToolPath)
-
-                        curlPath = curlText.text
-                        appSettings.setValue(curlpathkey, curlPath)
-
-                        minMegapixelCount = parseFloat(megapixelsCount.text)
-                        appSettings.setValue(minmegapixelskey, minMegapixelCount)
-
-                        maxKeywordsCount = parseInt(keywordsCount.text)
-                        appSettings.setValue(maxkeywordscountkey, maxKeywordsCount)
-
-                        maxDescriptionLength = parseInt(descriptionLength.text)
-                        appSettings.setValue(maxdescriptionlengthkey, maxDescriptionLength)
-
-                        oneItemTimeoutMinutes = parseInt(timeoutMinutes.text)
-                        appSettings.setValue(oneitemtimeoutkey, oneItemTimeoutMinutes)
-
-                        appSettings.setValue(useconfirmationdialogskey, useConfirmationDialogsCheckbox.checked)
-
+                        settingsModel.saveAllValues()
                         closeSettings()
                     }
                 }
@@ -693,7 +612,7 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
-        exifToolText.forceActiveFocus()
+        //exifToolText.forceActiveFocus()
     }
 }
 

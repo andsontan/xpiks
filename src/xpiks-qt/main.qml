@@ -87,6 +87,7 @@ ApplicationWindow {
             MenuItem {
                 text: qsTr("&Settings")
                 onTriggered: {
+                    settingsModel.readAllValues()
                     Common.launchComponent("Dialogs/SettingsWindow.qml",
                                     applicationWindow, {},
                                     function(wnd) {wnd.show();});

@@ -114,6 +114,7 @@ namespace Models {
     public:
         Q_INVOKABLE void initializeAccounts(bool mpIsCorrectOrEmpty);
         Q_INVOKABLE void finalizeAccounts();
+        Q_INVOKABLE bool isMasterPasswordCorrectOrEmpty() const { return !m_EmptyPasswordsMode; }
 
     public:
         void setEmptyPasswordsMode(bool mode) { m_EmptyPasswordsMode = mode; }

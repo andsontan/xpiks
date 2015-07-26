@@ -56,7 +56,7 @@ TabView {
 
         tab: Rectangle {
             color: styleData.selected ? Colors.defaultControlColor : Colors.itemsSourceSelected
-            implicitWidth: Math.max(text.width + 4, 80)
+            implicitWidth: Math.max(text.width + 10, 80)
             implicitHeight: 25
 
             StyledText {

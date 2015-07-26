@@ -49,7 +49,8 @@ SOURCES += main.cpp \
     ../quazip/quazip/unzip.c \
     ../quazip/quazip/zip.c \
     Suggestion/keywordssuggestor.cpp \
-    Suggestion/suggestionqueryengine.cpp
+    Suggestion/suggestionqueryengine.cpp \
+    Models/settingsmodel.cpp
 
 RESOURCES += qml.qrc
 
@@ -138,7 +139,8 @@ HEADERS += \
     Common/basickeywordsmodel.h \
     Suggestion/keywordssuggestor.h \
     Suggestion/suggestionartwork.h \
-    Suggestion/suggestionqueryengine.h
+    Suggestion/suggestionqueryengine.h \
+    Models/settingsmodel.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
