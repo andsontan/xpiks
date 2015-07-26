@@ -69,10 +69,11 @@ namespace Encryption {
         Q_INVOKABLE void purgeMasterPassword() { m_EncodedMasterPassword.clear(); }
         Q_INVOKABLE bool changeMasterPassword(bool firstTime, const QString &inputCurrMasterPassword,
                                               const QString &newMasterPassword);
-        Q_INVOKABLE void removeMasterPassword() { m_EncodedMasterPassword.clear(); m_MasterPasswordHash.clear(); }
+        Q_INVOKABLE void removeMasterPassword();
 
     signals:
         void beforeMasterPasswordChange(const QString &oldMasterPassword, const QString &newMasterPassword);
+        void afterMasterPasswordReset();
 
     private:
         QString getKeyForEncryption() const;

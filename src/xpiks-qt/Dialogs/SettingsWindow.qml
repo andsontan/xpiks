@@ -141,7 +141,7 @@ ApplicationWindow {
     MessageDialog {
         id: resetSettingsDialog
         title: "Warning"
-        text: qsTr("Are you sure you want reset all actions? This action cannot be undone.")
+        text: qsTr("Are you sure you want reset all settings? \nThis action cannot be undone.")
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
             secretsManager.removeMasterPassword()

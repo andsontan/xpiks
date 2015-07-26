@@ -92,7 +92,8 @@ namespace Encryption {
 
     void SecretsManager::resetMasterPassword()
     {
-        emit beforeMasterPasswordChange(getKeyForEncryption(), m_DefaultMasterPassword);
+        QString keyForEncryption = getKeyForEncryption();
+        emit beforeMasterPasswordChange(keyForEncryption, m_DefaultMasterPassword);
         m_EncodedMasterPassword.clear();
         m_MasterPasswordHash.clear();
     }
@@ -120,6 +121,12 @@ namespace Encryption {
         }
 
         return changed;
+    }
+
+    void SecretsManager::removeMasterPassword() {
+         m_EncodedMasterPassword.clear();
+         m_MasterPasswordHash.clear();
+         emit afterMasterPasswordReset();
     }
 
     QString SecretsManager::getKeyForEncryption() const {

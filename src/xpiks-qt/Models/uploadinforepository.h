@@ -140,6 +140,12 @@ namespace Models {
             m_CommandManager->recodePasswords(oldMasterPassword, newMasterPassword, m_UploadInfos);
         }
 
+        void onAfterMasterPasswordReset() {
+            foreach (UploadInfo *info, m_UploadInfos) {
+                info->dropPassword();
+            }
+        }
+
     protected:
         QHash<int, QByteArray> roleNames() const;
 

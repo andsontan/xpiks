@@ -109,6 +109,9 @@ void Commands::CommandManager::connectEntitiesSignalsSlots() const
     QObject::connect(m_SecretsManager, SIGNAL(beforeMasterPasswordChange(QString,QString)),
                      m_UploadInfoRepository, SLOT(onBeforeMasterPasswordChanged(QString,QString)));
 
+    QObject::connect(m_SecretsManager, SIGNAL(afterMasterPasswordReset()),
+                     m_UploadInfoRepository, SLOT(onAfterMasterPasswordReset()));
+
     QObject::connect(m_ArtItemsModel, SIGNAL(needCheckItemsForWarnings(QList<ArtworkMetadata*>)),
                      m_WarningsManager, SLOT(onCheckWarnings(QList<ArtworkMetadata*>)));
 }
