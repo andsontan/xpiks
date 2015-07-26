@@ -149,6 +149,17 @@ ApplicationWindow {
         }
     }
 
+    MessageDialog {
+        id: resetMPDialog
+        title: "Warning"
+        text: qsTr("Are you sure you want reset Master password? \nAll upload hosts' passwords will be purged.")
+        standardButtons: StandardButton.Yes | StandardButton.No
+        onYes: {
+            secretsManager.removeMasterPassword()
+            settingsModel.clearMasterPasswordSettings()
+        }
+    }
+
     Rectangle {
         color: Colors.selectedArtworkColor
         anchors.fill: parent
@@ -537,6 +548,22 @@ ApplicationWindow {
 
                                 onClicked: {
                                     openMasterPasswordDialog(false)
+                                }
+                            }
+                        }
+
+                        RowLayout {
+                            Item {
+                                Layout.fillWidth: true
+                            }
+
+                            StyledButton {
+                                width: 190
+                                text: qsTr("Reset Master password")
+                                enabled: masterPasswordCheckbox.checked
+
+                                onClicked: {
+                                    resetMPDialog.open()
                                 }
                             }
                         }
