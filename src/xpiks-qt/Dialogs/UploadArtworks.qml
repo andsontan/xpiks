@@ -41,6 +41,8 @@ Item {
 
     function closePopup() {
         secretsManager.purgeMasterPassword()
+        uploadInfos.finalizeAccounts()
+        saveSettings()
         uploadArtworksComponent.destroy()
     }
 
@@ -51,7 +53,6 @@ Item {
     function mainAction() {
         artworkUploader.resetModel()
         artworkUploader.uploadArtworks()
-        saveSettings()
     }
 
     function startUpload() {
@@ -102,10 +103,12 @@ Item {
         onYes: {
             uploadInfos.removeItem(itemIndex)
             if (uploadInfos.infosCount == 0) {
-                titleText.text = ""
-                ftpHost.text = ""
-                ftpUsername.text = ""
-                ftpPassword.text = ""
+                if (typeof titleText !== "undefined") {
+                    titleText.text = ""
+                    ftpHost.text = ""
+                    ftpUsername.text = ""
+                    ftpPassword.text = ""
+                }
             }
         }
     }
@@ -190,21 +193,18 @@ Item {
                     }
                 }
 
-                SplitView {
+                Rectangle {
                     Layout.fillHeight: true
                     Layout.fillWidth: true
-                    orientation: Qt.Horizontal
                     enabled: !artworkUploader.inProgress
-
-                    handleDelegate: Rectangle {
-                        height: parent.height - 29
-                        width: 0
-                        color: Colors.defaultDarkColor
-                    }
+                    color: "transparent"
 
                     ColumnLayout {
-                        Layout.minimumWidth: 250
-                        Layout.maximumWidth: 300
+                        anchors.left: parent.left
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        id: uploadInfosStack
+                        width: 260
                         height: parent.height
                         spacing: 0
 
@@ -360,18 +360,18 @@ Item {
                         }
                     }
 
-                    RowLayout {
-                        Layout.fillWidth: true
+                    Rectangle {
+                        anchors.top: parent.top
+                        anchors.leftMargin: 10
+                        anchors.left: uploadInfosStack.right
+                        anchors.right: parent.right
+                        width: 280
+                        color: "transparent"
                         height: parent.height
-                        spacing: 0
-
-                        Item {
-                            width: 20
-                        }
 
                         StyledTabView {
-                            Layout.fillWidth: true
-                            Layout.fillHeight: true
+                            anchors.fill: parent
+                            anchors.leftMargin: 10
                             enabled: uploadInfos.infosCount > 0
 
                             Tab {
@@ -401,7 +401,11 @@ Item {
                                             anchors.rightMargin: 5
                                             text: uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.title : ""
                                             anchors.leftMargin: 5
-                                            onTextChanged: uploadHostsListView.currentItem.myData.edittitle = text
+                                            onTextChanged: {
+                                                if (uploadHostsListView.currentItem) {
+                                                    uploadHostsListView.currentItem.myData.edittitle = text
+                                                }
+                                            }
                                             KeyNavigation.tab: ftpHost
                                             onEditingFinished: {
                                                 if (text.length == 0) {
@@ -450,7 +454,9 @@ Item {
                                             anchors.rightMargin: 5
                                             text: uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.host : ""
                                             onTextChanged: {
-                                                uploadHostsListView.currentItem.myData.edithost = text
+                                                if (uploadHostsListView.currentItem) {
+                                                    uploadHostsListView.currentItem.myData.edithost = text
+                                                }
                                                 credentialsStatus.enabled = false
                                             }
                                             KeyNavigation.tab: ftpUsername
@@ -481,7 +487,11 @@ Item {
                                             anchors.right: parent.right
                                             anchors.rightMargin: 5
                                             text: uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.username : ""
-                                            onTextChanged: uploadHostsListView.currentItem.myData.editusername = text
+                                            onTextChanged: {
+                                                if (uploadHostsListView.currentItem) {
+                                                    uploadHostsListView.currentItem.myData.editusername = text
+                                                }
+                                            }
                                             KeyNavigation.tab: ftpPassword
                                             KeyNavigation.backtab: ftpHost
                                         }
@@ -512,7 +522,9 @@ Item {
                                             echoMode: showPasswordCheckBox.checked ? TextInput.Normal : TextInput.Password
                                             text: uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.password : ""
                                             onTextChanged: {
-                                                uploadHostsListView.currentItem.myData.editpassword = text
+                                                if (uploadHostsListView.currentItem) {
+                                                    uploadHostsListView.currentItem.myData.editpassword = text
+                                                }
                                                 credentialsStatus.enabled = false
                                             }
                                             KeyNavigation.backtab: ftpUsername
@@ -520,7 +532,7 @@ Item {
                                     }
 
                                     Item {
-                                        Layout.fillHeight: true
+                                        height: 4
                                     }
 
                                     RowLayout {
@@ -571,7 +583,7 @@ Item {
                                     }
 
                                     Item {
-                                        height: 5
+                                        Layout.fillHeight: true
                                     }
                                 }
                             }
@@ -608,14 +620,14 @@ Item {
                                     }
                                 }
                             }
-                        }
-                    }
 
-                    Rectangle {
-                        anchors.fill: parent
-                        color: Colors.selectedArtworkColor
-                        opacity: 0.6
-                        visible: uploadInfos.infosCount == 0
+                            Rectangle {
+                                anchors.fill: parent
+                                color: Colors.selectedArtworkColor
+                                opacity: 0.6
+                                visible: uploadInfos.infosCount == 0
+                            }
+                        }
                     }
                 }
 
@@ -697,8 +709,6 @@ Item {
                         width: 120
                         enabled: !artworkUploader.inProgress
                         onClicked: {
-                            uploadInfos.finalizeAccounts()
-                            saveSettings()
                             artItemsModel.updateAllProperties()
                             closePopup()
                         }
