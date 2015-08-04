@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -42,6 +42,7 @@
 #include "Models/artworkuploader.h"
 #include "Models/warningsmanager.h"
 #include "Models/artitemsmodel.h"
+#include "Models/settingsmodel.h"
 #include "Models/iptcprovider.h"
 #include "Helpers/appsettings.h"
 #include "Models/ziparchiver.h"
@@ -147,6 +148,7 @@ int main(int argc, char *argv[]) {
     Models::LogsModel logsModel;
     Models::WarningsManager warningsManager;
     Helpers::AppSettings appSettings;
+    Models::SettingsModel settingsModel;
     Encryption::SecretsManager secretsManager;
     UndoRedo::UndoRedoManager undoRedoManager;
     Models::ZipArchiver zipArchiver;
@@ -194,6 +196,7 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("undoRedoManager", &undoRedoManager);
     rootContext->setContextProperty("zipArchiver", &zipArchiver);
     rootContext->setContextProperty("keywordsSuggestor", &keywordsSuggestor);
+    rootContext->setContextProperty("settingsModel", &settingsModel);
 
     engine.addImageProvider("global", globalProvider);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));

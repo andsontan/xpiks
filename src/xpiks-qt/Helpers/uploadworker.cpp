@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -26,6 +26,7 @@
 #include <QDebug>
 #include <QThread>
 #include "../Encryption/secretsmanager.h"
+#include "../Helpers/ziphelper.h"
 
 namespace Helpers {
     UploadWorker::UploadWorker(UploadItem *uploadItem, const Encryption::SecretsManager *secretsManager,
@@ -33,6 +34,8 @@ namespace Helpers {
         QObject(parent),
         m_UploadItem(uploadItem),
         m_SecretsManager(secretsManager),
+        m_CurlProcess(NULL),
+        m_Timer(NULL),
         m_Host(uploadItem->m_UploadInfo->getHost()),
         m_PercentRegexp("[^0-9.]"),
         m_Delay(delay),
@@ -111,8 +114,7 @@ namespace Helpers {
 
         // upload
         bool success = exitCode == 0 && exitStatus == QProcess::NormalExit;
-        emit finished(success);
-        emit stopped();
+        emitFinishSignals(success);
     }
 
     void UploadWorker::uploadOutputReady()
@@ -152,5 +154,10 @@ namespace Helpers {
         }
 
         return value;
+    }
+
+    void UploadWorker::emitFinishSignals(bool success) {
+        emit finished(success);
+        emit stopped();
     }
 }

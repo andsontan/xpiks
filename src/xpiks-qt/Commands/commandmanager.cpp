@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -108,6 +108,9 @@ void Commands::CommandManager::connectEntitiesSignalsSlots() const
 {
     QObject::connect(m_SecretsManager, SIGNAL(beforeMasterPasswordChange(QString,QString)),
                      m_UploadInfoRepository, SLOT(onBeforeMasterPasswordChanged(QString,QString)));
+
+    QObject::connect(m_SecretsManager, SIGNAL(afterMasterPasswordReset()),
+                     m_UploadInfoRepository, SLOT(onAfterMasterPasswordReset()));
 
     QObject::connect(m_ArtItemsModel, SIGNAL(needCheckItemsForWarnings(QList<ArtworkMetadata*>)),
                      m_WarningsManager, SLOT(onCheckWarnings(QList<ArtworkMetadata*>)));

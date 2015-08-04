@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -32,7 +32,7 @@ import "../StyledControls"
 
 Rectangle {
     height: childrenRect.height
-    width: childrenRect.width + 5
+    width: childrenRect.width + 15
     color: enabled ? Colors.defaultInputBackground : Colors.itemsSourceSelected
     border.color: Colors.artworkActiveColor
 }

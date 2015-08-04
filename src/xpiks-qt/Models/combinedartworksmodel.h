@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -32,14 +32,12 @@
 #include "../Common/baseentity.h"
 #include "../Common/basickeywordsmodel.h"
 #include "../Commands/combinededitcommand.h"
-#include "../Suggestion/ikeywordssuggesteable.h"
 
 namespace Models {
 
     class CombinedArtworksModel :
             public AbstractListModel,
-            public Common::BaseEntity,
-            public Suggestion::IKeywordsSuggesteable
+            public Common::BaseEntity
     {
         Q_OBJECT
         Q_PROPERTY(QString description READ getDescription WRITE setDescription NOTIFY descriptionChanged)
@@ -47,6 +45,7 @@ namespace Models {
         Q_PROPERTY(QString author READ getAuthor WRITE setAuthor NOTIFY authorChanged)
         Q_PROPERTY(int keywordsCount READ getKeywordsCount NOTIFY keywordsCountChanged)
         Q_PROPERTY(int selectedArtworksCount READ getSelectedArtworksCount NOTIFY selectedArtworksCountChanged)
+        Q_PROPERTY(int artworksCount READ getArtworksCount NOTIFY artworksCountChanged)
     public:
         CombinedArtworksModel(QObject *parent = 0) :
             AbstractListModel(parent),
@@ -101,9 +100,11 @@ namespace Models {
         void authorChanged();
         void keywordsCountChanged();
         void selectedArtworksCountChanged();
+        void artworksCountChanged();
 
     public:
         int getSelectedArtworksCount() const;
+        int getArtworksCount() const { return m_ArtworksList.length(); }
 
     public:
         Q_INVOKABLE QString removeKeywordAt(int keywordIndex);
@@ -112,12 +113,10 @@ namespace Models {
         Q_INVOKABLE void pasteKeywords(const QStringList &keywords);
         Q_INVOKABLE void setArtworksSelected(int index, bool newState);
         Q_INVOKABLE void removeSelectedArtworks();
-        Q_INVOKABLE int getArtworksCount() const { return m_ArtworksList.length(); }
         Q_INVOKABLE void saveSetKeywords() const;
         Q_INVOKABLE void saveAddKeywords() const;
         Q_INVOKABLE void resetModelData();
         Q_INVOKABLE QString getKeywordsString() { return m_CommonKeywordsModel.getKeywords().join(QChar(',')); }
-        Q_INVOKABLE void askForSuggestion();
         Q_INVOKABLE QObject *getKeywordsModel() {
             QObject *item = &m_CommonKeywordsModel;
             QQmlEngine::setObjectOwnership(item, QQmlEngine::CppOwnership);

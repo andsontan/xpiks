@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -27,10 +27,9 @@
 #include <QFileInfo>
 #include <QString>
 #include <QSet>
-#include "../Suggestion/ikeywordssuggesteable.h"
 
 namespace Models {
-    class ArtworkMetadata : public QAbstractListModel, public Suggestion::IKeywordsSuggesteable {
+    class ArtworkMetadata : public QAbstractListModel {
         Q_OBJECT
     public:
         ArtworkMetadata(const QString &filepath) :
@@ -56,7 +55,7 @@ namespace Models {
         const QString &getTitle() const { return m_ArtworkTitle; }
         const QString &getDescription() const { return m_ArtworkDescription; }
         const QString &getFilepath() const { return m_ArtworkFilepath; }
-        virtual QString getAbsoluteFilepath() const { QFileInfo fi(m_ArtworkFilepath); return fi.absoluteFilePath(); }
+        virtual QString getDirectory() const { QFileInfo fi(m_ArtworkFilepath); return fi.absolutePath(); }
         int getKeywordsCount() const { return m_KeywordsSet.count(); }
         const QStringList &getKeywords() const { return m_KeywordsList; }
         const QSet<QString> &getKeywordsSet() const { return m_KeywordsSet; }
@@ -66,33 +65,41 @@ namespace Models {
         bool getIsSelected() const { return m_IsSelected; }
 
     public:
-        void setDescription(const QString &value) {
-            if (m_ArtworkDescription != value) {
+        bool setDescription(const QString &value) {
+            bool result = m_ArtworkDescription != value;
+            if (result) {
                 m_ArtworkDescription = value;
                 setModified();
             }
+            return result;
         }
 
-        void setAuthor(const QString &value) {
-            if (m_ArtworkAuthor != value) {
+        bool setAuthor(const QString &value) {
+            bool result = m_ArtworkAuthor != value;
+            if (result) {
                 m_ArtworkAuthor = value;
                 setModified();
             }
+            return result;
         }
 
-        void setTitle(const QString &value) {
-            if (m_ArtworkTitle != value) {
+        bool setTitle(const QString &value) {
+            bool result = m_ArtworkTitle != value;
+            if (result) {
                 m_ArtworkTitle = value;
                 setModified();
             }
+            return result;
         }
 
-        void setIsSelected(bool value) {
-            if (m_IsSelected != value) {
+        bool setIsSelected(bool value) {
+            bool result = m_IsSelected != value;
+            if (result) {
                 m_IsSelected = value;
                 selectedChanged(value);
                 fileSelectedChanged(m_ArtworkFilepath, value);
             }
+            return result;
         }
 
     public:
@@ -103,10 +110,6 @@ namespace Models {
     public:
         void setKeywords(const QStringList &keywordsList) { resetKeywords(); appendKeywords(keywordsList); }
         void appendKeywords(const QStringList &keywordsList);
-
-        // IKeywordsSuggesteable interface
-   public:
-        void acceptSuggestedKeywords(const QStringList &keywords) { appendKeywords(keywords); }
 
     private:
         void resetKeywords();

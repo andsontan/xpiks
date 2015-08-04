@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -122,7 +122,9 @@ namespace Models {
 
     void ArtItemsModel::pasteKeywords(int metadataIndex, const QStringList &keywords)
     {
-        if (metadataIndex >= 0 && metadataIndex < m_ArtworkList.length()) {
+        if (metadataIndex >= 0
+                && metadataIndex < m_ArtworkList.length()
+                && !keywords.empty()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
             ArtItemInfo *artItemInfo = new ArtItemInfo(metadata, metadataIndex);
 
@@ -141,12 +143,6 @@ namespace Models {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
             metadata->saveBackup();
         }
-    }
-
-    void ArtItemsModel::askForSuggestionAt(int index) {
-        Suggestion::KeywordsSuggestor *suggestor = m_CommandManager->getKeywordsSuggestor();
-        ArtworkMetadata *metadata = this->getArtwork(index);
-        suggestor->setSuggesteable(metadata);
     }
 
     int ArtItemsModel::dropFiles(const QList<QUrl> &urls)
@@ -338,28 +334,31 @@ namespace Models {
 
         ArtworkMetadata *metadata = m_ArtworkList.at(index.row());
         int roleToUpdate = 0;
+        bool needToUpdate = false;
         switch (role) {
         case EditArtworkDescriptionRole:
-            metadata->setDescription(value.toString());
+            needToUpdate = metadata->setDescription(value.toString());
             roleToUpdate = ArtworkDescriptionRole;
             break;
         case EditArtworkTitleRole:
-            metadata->setTitle(value.toString());
+            needToUpdate = metadata->setTitle(value.toString());
             roleToUpdate = ArtworkTitleRole;
             break;
         case EditArtworkAuthorRole:
-            metadata->setAuthor(value.toString());
+            needToUpdate = metadata->setAuthor(value.toString());
             roleToUpdate = ArtworkAuthorRole;
             break;
         case EditIsSelectedRole:
-            metadata->setIsSelected(value.toBool());
+            needToUpdate = metadata->setIsSelected(value.toBool());
             roleToUpdate = IsSelectedRole;
             break;
         default:
             return false;
         }
 
-        emit dataChanged(index, index, QVector<int>() << IsModifiedRole << role << roleToUpdate);
+        if (needToUpdate) {
+            emit dataChanged(index, index, QVector<int>() << IsModifiedRole << roleToUpdate);
+        }
 
         if (role == EditArtworkDescriptionRole ||
                 role == EditArtworkTitleRole ||
@@ -564,7 +563,7 @@ namespace Models {
         Q_ASSERT(row >= 0 && row < m_ArtworkList.length());
         ArtworkMetadata *metadata = m_ArtworkList[row];
         ArtworksRepository *artworkRepository = m_CommandManager->getArtworksRepository();
-        artworkRepository->removeFile(metadata->getFilepath(), metadata->getAbsoluteFilepath());
+        artworkRepository->removeFile(metadata->getFilepath(), metadata->getDirectory());
 
         if (metadata->getIsSelected()) {
             m_SelectedArtworksCount--;

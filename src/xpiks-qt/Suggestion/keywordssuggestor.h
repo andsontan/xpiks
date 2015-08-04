@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -31,7 +31,6 @@
 #include "suggestionartwork.h"
 #include "../Common/baseentity.h"
 #include "../Common/basickeywordsmodel.h"
-#include "ikeywordssuggesteable.h"
 #include "suggestionqueryengine.h"
 
 namespace Suggestion {
@@ -47,7 +46,6 @@ namespace Suggestion {
             m_QueryEngine(this),
             m_SuggestedKeywords(this),
             m_AllOtherKeywords(this),
-            m_Suggesteable(NULL),
             m_SelectedArtworksCount(0),
             m_IsInProgress(false)
         {}
@@ -56,7 +54,6 @@ namespace Suggestion {
 
     public:
         void setSuggestedArtworks(const QList<SuggestionArtwork*> &suggestedArtworks);
-        void setSuggesteable(IKeywordsSuggesteable *suggesteable) { m_Suggesteable = suggesteable; }
         void clear();
 
     private:
@@ -81,8 +78,8 @@ namespace Suggestion {
         Q_INVOKABLE QString removeOtherKeywordAt(int keywordIndex);
         Q_INVOKABLE void setArtworkSelected(int index, bool newState);
         Q_INVOKABLE void searchArtworks(const QString &searchTerm);
-        Q_INVOKABLE void suggestKeywords();
         Q_INVOKABLE void close() { clear(); }
+        Q_INVOKABLE QStringList getSuggestedKeywords() const { return m_SuggestedKeywords.getKeywords(); }
 
         Q_INVOKABLE QObject *getSuggestedKeywordsModel() {
             QObject *item = &m_SuggestedKeywords;
@@ -119,7 +116,6 @@ namespace Suggestion {
         SuggestionQueryEngine m_QueryEngine;
         Common::BasicKeywordsModel m_SuggestedKeywords;
         Common::BasicKeywordsModel m_AllOtherKeywords;
-        IKeywordsSuggesteable *m_Suggesteable;
         int m_SelectedArtworksCount;
         bool m_IsInProgress;
     };

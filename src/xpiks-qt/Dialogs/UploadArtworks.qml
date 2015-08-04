@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -41,6 +41,8 @@ Item {
 
     function closePopup() {
         secretsManager.purgeMasterPassword()
+        uploadInfos.finalizeAccounts()
+        saveSettings()
         uploadArtworksComponent.destroy()
     }
 
@@ -48,10 +50,30 @@ Item {
         appSettings.setValue(uploadhostskey, uploadInfos.getInfoString())
     }
 
-    function startUpload() {
+    function mainAction() {
         artworkUploader.resetModel()
         artworkUploader.uploadArtworks()
-        saveSettings()
+    }
+
+    function startUpload() {
+        if (artworkUploader.needCreateArchives()) {
+            var callbackObject = {
+                afterZipped: function() {
+                    mainAction();
+                }
+            }
+
+            artItemsModel.setSelectedForZipping()
+            Common.launchComponent("Dialogs/ZipArtworksDialog.qml",
+                            applicationWindow,
+                                   {
+                                       componentParent: applicationWindow,
+                                       immediateProcessing: true,
+                                       callbackObject: callbackObject
+                                   });
+        } else {
+            mainAction();
+        }
     }
 
     PropertyAnimation { target: uploadArtworksComponent; property: "opacity";
@@ -81,10 +103,12 @@ Item {
         onYes: {
             uploadInfos.removeItem(itemIndex)
             if (uploadInfos.infosCount == 0) {
-                titleText.text = ""
-                ftpHost.text = ""
-                ftpUsername.text = ""
-                ftpPassword.text = ""
+                if (typeof titleText !== "undefined") {
+                    titleText.text = ""
+                    ftpHost.text = ""
+                    ftpUsername.text = ""
+                    ftpPassword.text = ""
+                }
             }
         }
     }
@@ -121,6 +145,11 @@ Item {
                 var tmp = mapToItem(uploadArtworksComponent, mouse.x, mouse.y);
                 old_x = tmp.x;
                 old_y = tmp.y;
+
+                var dialogPoint = mapToItem(dialogWindow, mouse.x, mouse.y);
+                if (!Common.isInComponent(dialogPoint, dialogWindow)) {
+                    closePopup()
+                }
             }
 
             onPositionChanged: {
@@ -137,7 +166,7 @@ Item {
         Rectangle {
             id: dialogWindow
             width: 600
-            height: 390
+            height: 450
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
@@ -147,21 +176,35 @@ Item {
                 anchors.fill: parent
                 anchors.margins: 20
 
-                SplitView {
-                    Layout.fillHeight: true
+                RowLayout {
                     Layout.fillWidth: true
-                    orientation: Qt.Horizontal
-                    enabled: !artworkUploader.inProgress
 
-                    handleDelegate: Rectangle {
-                        height: parent.height - 29
-                        width: 0
-                        color: Colors.defaultDarkColor
+                    StyledText {
+                        text: qsTr("Upload artworks")
                     }
 
+                    Item {
+                        Layout.fillWidth: true
+                    }
+
+                    StyledText {
+                        text: artworkUploader.itemsCount == 1 ? qsTr("1 artwork selected") : qsTr("%1 artworks selected").arg(artworkUploader.itemsCount)
+                        color: Colors.defaultInputBackground
+                    }
+                }
+
+                Rectangle {
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    enabled: !artworkUploader.inProgress
+                    color: "transparent"
+
                     ColumnLayout {
-                        Layout.minimumWidth: 250
-                        Layout.maximumWidth: 300
+                        anchors.left: parent.left
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        id: uploadInfosStack
+                        width: 260
                         height: parent.height
                         spacing: 0
 
@@ -226,8 +269,11 @@ Item {
                                             anchors.fill: parent
                                             onClicked: {
                                                 if (uploadHostsListView.currentIndex != sourceWrapper.delegateIndex) {
-                                                    credentialsStatus.enabled = false
-                                                    credentialsStatus.isGreen = false
+                                                    // "if" is needed for tabControl
+                                                    if (typeof credentialsStatus !== "undefined") {
+                                                        credentialsStatus.enabled = false
+                                                        credentialsStatus.isGreen = false
+                                                    }
 
                                                     uploadHostsListView.currentIndex = sourceWrapper.delegateIndex
                                                 }
@@ -314,211 +360,265 @@ Item {
                         }
                     }
 
-                    RowLayout {
-                        Layout.fillWidth: true
+                    Rectangle {
+                        anchors.top: parent.top
+                        anchors.leftMargin: 10
+                        anchors.left: uploadInfosStack.right
+                        anchors.right: parent.right
+                        width: 280
+                        color: "transparent"
                         height: parent.height
-                        spacing: 0
 
-                        Item {
-                            width: 20
-                        }
-
-                        ColumnLayout {
+                        StyledTabView {
+                            anchors.fill: parent
+                            anchors.leftMargin: 10
                             enabled: uploadInfos.infosCount > 0
-                            Layout.fillWidth: true
-                            Layout.fillHeight: true
-                            spacing: 4
 
-                            StyledText {
-                                text: qsTr("Title:")
-                            }
+                            Tab {
+                                title: qsTr("General")
 
-                            Rectangle {
-                                border.width: titleText.activeFocus ? 1 : 0
-                                border.color: Colors.artworkActiveColor
-                                Layout.fillWidth: true
-                                color: Colors.defaultInputBackground
-                                height: 30
+                                ColumnLayout {
+                                    anchors.fill: parent
+                                    anchors.topMargin: 15
+                                    spacing: 4
 
-                                StyledTextInput {
-                                    id: titleText
-                                    height: 30
-                                    anchors.left: parent.left
-                                    anchors.right: parent.right
-                                    anchors.rightMargin: 5
-                                    text: uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.title : ""
-                                    anchors.leftMargin: 5
-                                    onTextChanged: uploadHostsListView.currentItem.myData.edittitle = text
-                                    KeyNavigation.tab: ftpHost
-                                    onEditingFinished: {
-                                        if (text.length == 0) {
-                                            uploadHostsListView.currentItem.myData.edittitle = "Untitled"
-                                        }
+                                    StyledText {
+                                        text: qsTr("Title:")
                                     }
 
-                                    validator: RegExpValidator {
-                                        // copy paste in keys.onpressed Paste
-                                        regExp: /[a-zA-Z0-9 _-]*$/
-                                    }
+                                    Rectangle {
+                                        border.width: titleText.activeFocus ? 1 : 0
+                                        border.color: Colors.artworkActiveColor
+                                        Layout.fillWidth: true
+                                        color: Colors.defaultInputBackground
+                                        height: 30
 
-                                    Keys.onPressed: {
-                                        if(event.matches(StandardKey.Paste)) {
-                                            var clipboardText = clipboard.getText();
-                                            // same regexp as in validator
-                                            var sanitizedText = clipboardText.replace(/[^a-zA-Z0-9 _-]/g, '');
-                                            titleText.paste(sanitizedText)
-                                            event.accepted = true
-                                        }
-                                    }
-                                }
-                            }
-
-                            Item {
-                                height: 5
-                            }
-
-                            StyledText {
-                                text: qsTr("Host:")
-                            }
-
-                            Rectangle {
-                                border.width: ftpHost.activeFocus ? 1 : 0
-                                border.color: Colors.artworkActiveColor
-                                Layout.fillWidth: true
-                                color: Colors.defaultInputBackground
-                                height: 30
-
-                                StyledTextInput {
-                                    id: ftpHost
-                                    height: 30
-                                    anchors.left: parent.left
-                                    anchors.leftMargin: 5
-                                    anchors.right: parent.right
-                                    anchors.rightMargin: 5
-                                    text: uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.host : ""
-                                    onTextChanged: {
-                                        uploadHostsListView.currentItem.myData.edithost = text
-                                        credentialsStatus.enabled = false
-                                    }
-                                    KeyNavigation.tab: ftpUsername
-                                    KeyNavigation.backtab: titleText
-                                }
-                            }
-
-                            Item {
-                                height: 6
-                            }
-
-                            StyledText {
-                                text: qsTr("Username:")
-                            }
-
-                            Rectangle {
-                                border.width: ftpUsername.activeFocus ? 1 : 0
-                                border.color: Colors.artworkActiveColor
-                                Layout.fillWidth: true
-                                color: Colors.defaultInputBackground
-                                height: 30
-
-                                StyledTextInput {
-                                    id: ftpUsername
-                                    height: 30
-                                    anchors.left: parent.left
-                                    anchors.leftMargin: 5
-                                    anchors.right: parent.right
-                                    anchors.rightMargin: 5
-                                    text: uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.username : ""
-                                    onTextChanged: uploadHostsListView.currentItem.myData.editusername = text
-                                    KeyNavigation.tab: ftpPassword
-                                    KeyNavigation.backtab: ftpHost
-                                }
-                            }
-
-                            Item {
-                                height: 5
-                            }
-
-                            StyledText {
-                                text: qsTr("Password:")
-                            }
-
-                            Rectangle {
-                                border.width: ftpPassword.activeFocus ? 1 : 0
-                                border.color: Colors.artworkActiveColor
-                                Layout.fillWidth: true
-                                height: 30
-                                color: Colors.defaultInputBackground
-
-                                StyledTextInput {
-                                    id: ftpPassword
-                                    height: 30
-                                    anchors.left: parent.left
-                                    anchors.leftMargin: 5
-                                    anchors.right: parent.right
-                                    anchors.rightMargin: 5
-                                    echoMode: showPasswordCheckBox.checked ? TextInput.Normal : TextInput.Password
-                                    text: uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.password : ""
-                                    onTextChanged: {
-                                        uploadHostsListView.currentItem.myData.editpassword = text
-                                        credentialsStatus.enabled = false
-                                    }
-                                    KeyNavigation.backtab: ftpUsername
-                                }
-                            }
-
-                            Item {
-                                Layout.fillHeight: true
-                            }
-
-                            RowLayout {
-                                height: 25
-                                Layout.fillWidth: true
-                                spacing: 5
-
-                                StyledCheckbox {
-                                    id: showPasswordCheckBox
-                                    text: qsTr("Show password")
-                                }
-
-                                Item {
-                                    Layout.fillWidth: true
-                                }
-
-                                CheckedComponent {
-                                    width: 18
-                                    height: 18
-                                    id: credentialsStatus
-                                    enabled: false
-                                    isGreen: false
-                                }
-
-                                StyledButton {
-                                    id: testButton
-                                    text: qsTr("Test connection")
-                                    height: 24
-                                    width: 120
-                                    onClicked: {
-                                        testButton.enabled = false
-                                        credentialsStatus.enabled = false
-                                        artworkUploader.checkCredentials(ftpHost.text, ftpUsername.text, ftpPassword.text)
-                                    }
-
-                                    Connections {
-                                        target: artworkUploader
-                                        onCredentialsChecked: {
-                                            if (url == ftpHost.text) {
-                                                credentialsStatus.enabled = true
-                                                credentialsStatus.isGreen = result
+                                        StyledTextInput {
+                                            id: titleText
+                                            height: 30
+                                            anchors.left: parent.left
+                                            anchors.right: parent.right
+                                            anchors.rightMargin: 5
+                                            text: uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.title : ""
+                                            anchors.leftMargin: 5
+                                            onTextChanged: {
+                                                if (uploadHostsListView.currentItem) {
+                                                    uploadHostsListView.currentItem.myData.edittitle = text
+                                                }
+                                            }
+                                            KeyNavigation.tab: ftpHost
+                                            onEditingFinished: {
+                                                if (text.length == 0) {
+                                                    uploadHostsListView.currentItem.myData.edittitle = "Untitled"
+                                                }
                                             }
 
-                                            testButton.enabled = true
+                                            validator: RegExpValidator {
+                                                // copy paste in keys.onpressed Paste
+                                                regExp: /[a-zA-Z0-9 _-]*$/
+                                            }
+
+                                            Keys.onPressed: {
+                                                if(event.matches(StandardKey.Paste)) {
+                                                    var clipboardText = clipboard.getText();
+                                                    // same regexp as in validator
+                                                    var sanitizedText = clipboardText.replace(/[^a-zA-Z0-9 _-]/g, '');
+                                                    titleText.paste(sanitizedText)
+                                                    event.accepted = true
+                                                }
+                                            }
                                         }
+                                    }
+
+                                    Item {
+                                        height: 5
+                                    }
+
+                                    StyledText {
+                                        text: qsTr("Host:")
+                                    }
+
+                                    Rectangle {
+                                        border.width: ftpHost.activeFocus ? 1 : 0
+                                        border.color: Colors.artworkActiveColor
+                                        Layout.fillWidth: true
+                                        color: Colors.defaultInputBackground
+                                        height: 30
+
+                                        StyledTextInput {
+                                            id: ftpHost
+                                            height: 30
+                                            anchors.left: parent.left
+                                            anchors.leftMargin: 5
+                                            anchors.right: parent.right
+                                            anchors.rightMargin: 5
+                                            text: uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.host : ""
+                                            onTextChanged: {
+                                                if (uploadHostsListView.currentItem) {
+                                                    uploadHostsListView.currentItem.myData.edithost = text
+                                                }
+                                                credentialsStatus.enabled = false
+                                            }
+                                            KeyNavigation.tab: ftpUsername
+                                            KeyNavigation.backtab: titleText
+                                        }
+                                    }
+
+                                    Item {
+                                        height: 6
+                                    }
+
+                                    StyledText {
+                                        text: qsTr("Username:")
+                                    }
+
+                                    Rectangle {
+                                        border.width: ftpUsername.activeFocus ? 1 : 0
+                                        border.color: Colors.artworkActiveColor
+                                        Layout.fillWidth: true
+                                        color: Colors.defaultInputBackground
+                                        height: 30
+
+                                        StyledTextInput {
+                                            id: ftpUsername
+                                            height: 30
+                                            anchors.left: parent.left
+                                            anchors.leftMargin: 5
+                                            anchors.right: parent.right
+                                            anchors.rightMargin: 5
+                                            text: uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.username : ""
+                                            onTextChanged: {
+                                                if (uploadHostsListView.currentItem) {
+                                                    uploadHostsListView.currentItem.myData.editusername = text
+                                                }
+                                            }
+                                            KeyNavigation.tab: ftpPassword
+                                            KeyNavigation.backtab: ftpHost
+                                        }
+                                    }
+
+                                    Item {
+                                        height: 5
+                                    }
+
+                                    StyledText {
+                                        text: qsTr("Password:")
+                                    }
+
+                                    Rectangle {
+                                        border.width: ftpPassword.activeFocus ? 1 : 0
+                                        border.color: Colors.artworkActiveColor
+                                        Layout.fillWidth: true
+                                        height: 30
+                                        color: Colors.defaultInputBackground
+
+                                        StyledTextInput {
+                                            id: ftpPassword
+                                            height: 30
+                                            anchors.left: parent.left
+                                            anchors.leftMargin: 5
+                                            anchors.right: parent.right
+                                            anchors.rightMargin: 5
+                                            echoMode: showPasswordCheckBox.checked ? TextInput.Normal : TextInput.Password
+                                            text: uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.password : ""
+                                            onTextChanged: {
+                                                if (uploadHostsListView.currentItem) {
+                                                    uploadHostsListView.currentItem.myData.editpassword = text
+                                                }
+                                                credentialsStatus.enabled = false
+                                            }
+                                            KeyNavigation.backtab: ftpUsername
+                                        }
+                                    }
+
+                                    Item {
+                                        height: 4
+                                    }
+
+                                    RowLayout {
+                                        height: 25
+                                        Layout.fillWidth: true
+                                        spacing: 5
+
+                                        StyledCheckbox {
+                                            id: showPasswordCheckBox
+                                            text: qsTr("Show password")
+                                        }
+
+                                        Item {
+                                            Layout.fillWidth: true
+                                        }
+
+                                        CheckedComponent {
+                                            width: 18
+                                            height: 18
+                                            id: credentialsStatus
+                                            enabled: false
+                                            isGreen: false
+                                        }
+
+                                        StyledButton {
+                                            id: testButton
+                                            text: qsTr("Test connection")
+                                            height: 24
+                                            width: 120
+                                            onClicked: {
+                                                testButton.enabled = false
+                                                credentialsStatus.enabled = false
+                                                artworkUploader.checkCredentials(ftpHost.text, ftpUsername.text, ftpPassword.text)
+                                            }
+
+                                            Connections {
+                                                target: artworkUploader
+                                                onCredentialsChecked: {
+                                                    if (url == ftpHost.text) {
+                                                        credentialsStatus.enabled = true
+                                                        credentialsStatus.isGreen = result
+                                                    }
+
+                                                    testButton.enabled = true
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    Item {
+                                        Layout.fillHeight: true
                                     }
                                 }
                             }
 
-                            Item {
-                                height: 5
+                            Tab {
+                                title: qsTr("Advanced")
+
+                                ColumnLayout {
+                                    anchors.fill: parent
+                                    anchors.topMargin: 15
+                                    spacing: 4
+
+                                    StyledCheckbox {
+                                        id: zipBeforeUploadCheckBox
+                                        text: qsTr("Zip with EPS before upload")
+                                        Component.onCompleted: checked = uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.zipbeforeupload : false
+
+                                        onClicked: {
+                                            if (uploadHostsListView.currentItem) {
+                                                uploadHostsListView.currentItem.myData.editzipbeforeupload = checked
+                                            }
+                                        }
+
+                                        Connections {
+                                            target: uploadInfos
+                                            onDataChanged: {
+                                                zipBeforeUploadCheckBox.checked = uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.zipbeforeupload : false
+                                            }
+                                        }
+                                    }
+
+                                    Item {
+                                        Layout.fillHeight: true
+                                    }
+                                }
                             }
                         }
 
@@ -556,7 +656,7 @@ Item {
                     }
 
                     StyledText {
-                        text: qsTr("%1 warning(s)").arg(warningsManager.warningsCount)
+                        text: warningsManager.warningsCount == 1 ? qsTr("1 warning") : qsTr("%1 warnings").arg(warningsManager.warningsCount)
                         color: uploadWarmingsMA.pressed ? Colors.defaultLightGrayColor : warningsManager.warningsCount > 0 ? Colors.artworkModifiedColor : Colors.defaultInputBackground
 
                         MouseArea {
@@ -565,7 +665,7 @@ Item {
                             cursorShape: Qt.PointingHandCursor
                             onClicked: {
                                 if (warningsManager.warningsCount > 0) {
-                                    Common.launchComponent("WarningsDialog.qml",
+                                    Common.launchComponent("Dialogs/WarningsDialog.qml",
                                                            uploadArtworksComponent.componentParent, {});
                                 }
                             }
@@ -609,8 +709,6 @@ Item {
                         width: 120
                         enabled: !artworkUploader.inProgress
                         onClicked: {
-                            uploadInfos.finalizeAccounts()
-                            saveSettings()
                             artItemsModel.updateAllProperties()
                             closePopup()
                         }

@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -32,7 +32,8 @@ CheckBox {
         indicator: Rectangle {
             implicitHeight: 17
             implicitWidth: 17
-            color: control.checked ? Colors.artworkActiveColor : (control.hovered ? Colors.selectedMetadataColor : Colors.defaultControlColor)
+            color: (control.checked || control.hovered) ? Colors.artworkActiveColor : Colors.defaultControlColor
+            opacity: control.hovered ? 0.6 : 1
 
             Rectangle {
                 visible: control.checked

@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -116,11 +116,6 @@ namespace Models {
         m_CommonKeywordsSet.clear();
     }
 
-    void CombinedArtworksModel::askForSuggestion() {
-        Suggestion::KeywordsSuggestor *suggestor = m_CommandManager->getKeywordsSuggestor();
-        suggestor->setSuggesteable(this);
-    }
-
     void CombinedArtworksModel::createCombinedEditCommand(Commands::CombinedEditType commandType) const {
         Commands::CombinedEditCommand *combinedEditCommand = new Commands::CombinedEditCommand(
                     commandType,
@@ -168,15 +163,17 @@ namespace Models {
     }
 
     void CombinedArtworksModel::pasteKeywords(const QStringList &keywords) {
-        foreach (const QString &keyword, keywords) {
-            if (!m_CommonKeywordsSet.contains(keyword)) {
-                m_CommonKeywordsSet.insert(keyword);
-                m_CommonKeywordsModel.appendKeyword(keyword);
+        if (!keywords.empty()) {
+            foreach (const QString &keyword, keywords) {
+                if (!m_CommonKeywordsSet.contains(keyword)) {
+                    m_CommonKeywordsSet.insert(keyword);
+                    m_CommonKeywordsModel.appendKeyword(keyword);
+                }
             }
-        }
 
-        emit keywordsCountChanged();
-        m_IsModified = true;
+            emit keywordsCountChanged();
+            m_IsModified = true;
+        }
     }
 
     void CombinedArtworksModel::setArtworksSelected(int index, bool newState) {
@@ -205,6 +202,7 @@ namespace Models {
         removeItemsAtIndices(rangesToRemove);
 
         recombineArtworks();
+        emit artworksCountChanged();
     }
 
     void CombinedArtworksModel::saveSetKeywords() const {

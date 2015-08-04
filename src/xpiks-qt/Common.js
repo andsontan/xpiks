@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -44,6 +44,12 @@ function movePopupInsideComponent(component, window, mouse, old_x, old_y) {
     old_y = tmp.y;
 
     return [old_x, old_y];
+}
+
+function isInComponent(point, component) {
+    var result = (point.x >= 0 && point.x <= component.width) &&
+            (point.y >= 0 && point.y <= component.height);
+    return result;
 }
 
 function launchComponent(componentName, directParent, options, functor) {

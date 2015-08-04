@@ -19,37 +19,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef WARNINGSINFO_H
-#define WARNINGSINFO_H
+import QtQuick 2.3
+import "../Constants"
+import "../Constants/Colors.js" as Colors
 
-#include <QStringList>
-#include <QString>
-#include "artworkmetadata.h"
+Rectangle {
+    property bool commonBorder : true
 
-namespace Models {
-    class WarningsInfo
+    property int lBorderwidth : 1
+    property int rBorderwidth : 1
+    property int tBorderwidth : 1
+    property int bBorderwidth : 1
+
+    property int commonBorderWidth : 1
+
+    z : -1
+
+    property string borderColor : "white"
+
+    color: borderColor
+
+    anchors
     {
-    public:
-        WarningsInfo(ArtworkMetadata *metadata) :
-            m_ArtworkMetadata(metadata)
-        {}
+        left: parent.left
+        right: parent.right
+        top: parent.top
+        bottom: parent.bottom
 
-        ~WarningsInfo() {}
-
-    public:
-        void addWarning(const QString &warning) { m_WarningsList.append(warning); }
-        ArtworkMetadata *getArtworkMetadata() const { return m_ArtworkMetadata; }
-        void clearWarnings() { m_WarningsList.clear(); }
-        bool hasWarnings() const { return m_WarningsList.length() > 0; }
-
-    public:
-        const QString &getFilePath() const { return m_ArtworkMetadata->getFilepath(); }
-        const QStringList &getWarnings() const { return m_WarningsList; }
-
-    private:
-        QStringList m_WarningsList;
-        ArtworkMetadata *m_ArtworkMetadata;
-    };
+        topMargin    : commonBorder ? -commonBorderWidth : -tBorderwidth
+        bottomMargin : commonBorder ? -commonBorderWidth : -bBorderwidth
+        leftMargin   : commonBorder ? -commonBorderWidth : -lBorderwidth
+        rightMargin  : commonBorder ? -commonBorderWidth : -rBorderwidth
+    }
 }
-
-#endif // WARNINGSINFO_H

@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -69,10 +69,11 @@ namespace Encryption {
         Q_INVOKABLE void purgeMasterPassword() { m_EncodedMasterPassword.clear(); }
         Q_INVOKABLE bool changeMasterPassword(bool firstTime, const QString &inputCurrMasterPassword,
                                               const QString &newMasterPassword);
-        Q_INVOKABLE void removeMasterPassword() { m_EncodedMasterPassword.clear(); m_MasterPasswordHash.clear(); }
+        Q_INVOKABLE void removeMasterPassword();
 
     signals:
         void beforeMasterPasswordChange(const QString &oldMasterPassword, const QString &newMasterPassword);
+        void afterMasterPasswordReset();
 
     private:
         QString getKeyForEncryption() const;

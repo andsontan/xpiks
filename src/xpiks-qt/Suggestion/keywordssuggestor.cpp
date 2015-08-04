@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -30,6 +30,8 @@ namespace Suggestion {
         m_Suggestions.clear();
         m_Suggestions.append(suggestedArtworks);
         endResetModel();
+        m_SelectedArtworksCount = 0;
+        unsetInProgress();
         m_KeywordsHash.clear();
         m_SuggestedKeywords.clear();
         m_AllOtherKeywords.clear();
@@ -40,6 +42,8 @@ namespace Suggestion {
         qDeleteAll(m_Suggestions);
         m_Suggestions.clear();
         endResetModel();
+        m_SelectedArtworksCount = 0;
+        unsetInProgress();
         m_KeywordsHash.clear();
         m_SuggestedKeywords.clear();
         m_AllOtherKeywords.clear();
@@ -77,13 +81,9 @@ namespace Suggestion {
     }
 
     void KeywordsSuggestor::searchArtworks(const QString &searchTerm) {
-        m_QueryEngine.submitQuery(searchTerm.split(' '));
-    }
-
-    void KeywordsSuggestor::suggestKeywords() {
-        if (m_Suggesteable != NULL) {
+        if (!m_IsInProgress) {
             setInProgress();
-            m_Suggesteable->acceptSuggestedKeywords(m_SuggestedKeywords.getKeywords());
+            m_QueryEngine.submitQuery(searchTerm.split(' '));
         }
     }
 
@@ -147,11 +147,11 @@ namespace Suggestion {
         int threshold = 0;
         if (m_SelectedArtworksCount <= 2) {
             threshold = qMax(m_SelectedArtworksCount, 1);
-        } else if (m_SelectedArtworksCount <= 4) {
+        } else if (m_SelectedArtworksCount <= 5) {
             threshold = 2;
-        } else if (m_SelectedArtworksCount <= 6) {
-            threshold = 3;
         } else if (m_SelectedArtworksCount <= 8) {
+            threshold = 3;
+        } else if (m_SelectedArtworksCount <= 10) {
             threshold = 4;
         } else {
             threshold = m_SelectedArtworksCount / 2 - 1;

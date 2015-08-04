@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -33,6 +33,7 @@ import "../StyledControls"
 Item {
     id: keywordsSuggestionComponent
     anchors.fill: parent
+    property var callbackObject
 
     function closePopup() {
         keywordsSuggestor.close();
@@ -72,6 +73,11 @@ Item {
                 var tmp = mapToItem(keywordsSuggestionComponent, mouse.x, mouse.y);
                 old_x = tmp.x;
                 old_y = tmp.y;
+
+                var dialogPoint = mapToItem(dialogWindow, mouse.x, mouse.y);
+                if (!Common.isInComponent(dialogPoint, dialogWindow)) {
+                    closePopup()
+                }
             }
 
             onPositionChanged: {
@@ -101,10 +107,6 @@ Item {
                     height: 24
                     spacing: 20
 
-                    Item {
-                        Layout.fillWidth: true
-                    }
-
                     StyledInputHost {
                         border.width: queryText.activeFocus ? 1 : 0
                         Layout.row: 0
@@ -112,11 +114,13 @@ Item {
 
                         StyledTextInput {
                             id: queryText
-                            width: 300
+                            width: 380
                             height: 24
                             clip: true
                             anchors.left: parent.left
                             anchors.leftMargin: 5
+
+                            onEditingFinished: keywordsSuggestor.searchArtworks(queryText.text)
                         }
                     }
 
@@ -127,8 +131,9 @@ Item {
                         onClicked: keywordsSuggestor.searchArtworks(queryText.text)
                     }
 
-                    Item {
-                        Layout.fillWidth: true
+                    StyledText {
+                        text: qsTr("(powered by Shutterstock API)")
+                        color: Colors.defaultControlColor
                     }
                 }
 
@@ -180,11 +185,11 @@ Item {
                                         Rectangle {
                                             anchors.fill: parent
                                             color: Colors.defaultControlColor
-                                            opacity: isselected ? 0.7 : (mouseArea.containsMouse ? 0.4 : 0)
+                                            opacity: isselected ? (mouseArea.containsMouse ? 0.6 : 0.7) : (mouseArea.containsMouse ? 0.4 : 0)
                                         }
 
                                         LargeAddIcon {
-                                            opacity: isselected ? 1 : (mouseArea.containsMouse ? 0.6 : 0)
+                                            opacity: isselected ? (mouseArea.containsMouse ? 0.85 : 1) : (mouseArea.containsMouse ? 0.6 : 0)
                                             width: parent.width
                                             height: parent.height
                                         }
@@ -204,8 +209,23 @@ Item {
                                 Item { height: 110; width: height }
                                 Item { height: 110; width: height }
                                 Item { height: 110; width: height }
+                                Item { height: 110; width: height }
                             }
                         }
+                    }
+
+                    Rectangle {
+                        anchors.fill: parent
+                        color: Colors.selectedArtworkColor
+                        opacity: 0.4
+                        visible: keywordsSuggestor.isInProgress
+                    }
+
+                    StyledBusyIndicator {
+                        width: parent.height
+                        height: parent.height
+                        anchors.centerIn: parent
+                        running: keywordsSuggestor.isInProgress
                     }
                 }
 
@@ -451,7 +471,7 @@ Item {
                         text: qsTr("Use suggested keywords")
                         width: 200
                         onClicked: {
-                            keywordsSuggestor.suggestKeywords()
+                            callbackObject.promoteKeywords(keywordsSuggestor.getSuggestedKeywords())
                             closePopup()
                         }
                     }

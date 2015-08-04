@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -92,7 +92,8 @@ namespace Encryption {
 
     void SecretsManager::resetMasterPassword()
     {
-        emit beforeMasterPasswordChange(getKeyForEncryption(), m_DefaultMasterPassword);
+        QString keyForEncryption = getKeyForEncryption();
+        emit beforeMasterPasswordChange(keyForEncryption, m_DefaultMasterPassword);
         m_EncodedMasterPassword.clear();
         m_MasterPasswordHash.clear();
     }
@@ -120,6 +121,12 @@ namespace Encryption {
         }
 
         return changed;
+    }
+
+    void SecretsManager::removeMasterPassword() {
+         m_EncodedMasterPassword.clear();
+         m_MasterPasswordHash.clear();
+         emit afterMasterPasswordReset();
     }
 
     QString SecretsManager::getKeyForEncryption() const {

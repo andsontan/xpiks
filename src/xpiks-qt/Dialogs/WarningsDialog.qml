@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -63,7 +63,6 @@ Item {
             anchors.fill: parent
             onWheel: wheel.accepted = true
             onClicked: mouse.accepted = true
-
             property real old_x : 0
             property real old_y : 0
 
@@ -71,6 +70,11 @@ Item {
                 var tmp = mapToItem(warningsComponent, mouse.x, mouse.y);
                 old_x = tmp.x;
                 old_y = tmp.y;
+
+                var dialogPoint = mapToItem(dialogWindow, mouse.x, mouse.y);
+                if (!Common.isInComponent(dialogPoint, dialogWindow)) {
+                    closePopup()
+                }
             }
 
             onPositionChanged: {
@@ -174,24 +178,23 @@ Item {
                                             anchors.margins: 10
                                             boundsBehavior: Flickable.StopAtBounds
                                             model: warnings
-                                            spacing: 5
+                                            spacing: 10
 
                                             delegate: RowLayout {
                                                 width: parent.width
-                                                height: 15
+                                                height: 10
                                                 spacing: 5
 
                                                 Rectangle {
-                                                    width: 8
                                                     height: 8
-                                                    radius: 4
+                                                    width: height
+                                                    radius: height/2
                                                     anchors.verticalCenter: parent.verticalCenter
-                                                    color: Colors.defaultDarkColor
+                                                    color: Colors.selectedArtworkColor
                                                 }
 
                                                 StyledText {
                                                     Layout.fillWidth: true
-                                                    anchors.verticalCenter: parent.verticalCenter
                                                     text: modelData
                                                     color: Colors.artworkModifiedColor
                                                 }

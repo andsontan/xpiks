@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -57,7 +57,10 @@ namespace Models {
             PasswordRole,
             EditPasswordRole,
             IsSelectedRole,
-            EditIsSelectedRole
+            EditIsSelectedRole,
+            ZipBeforeUploadRole,
+            EditZipBeforeUploadRole,
+            EditUploadDirectoryRole
         };
 
         int getInfosCount() const { return m_UploadInfos.length(); }
@@ -111,6 +114,7 @@ namespace Models {
     public:
         Q_INVOKABLE void initializeAccounts(bool mpIsCorrectOrEmpty);
         Q_INVOKABLE void finalizeAccounts();
+        Q_INVOKABLE bool isMasterPasswordCorrectOrEmpty() const { return !m_EmptyPasswordsMode; }
 
     public:
         void setEmptyPasswordsMode(bool mode) { m_EmptyPasswordsMode = mode; }
@@ -134,6 +138,12 @@ namespace Models {
     public slots:
         void onBeforeMasterPasswordChanged(const QString &oldMasterPassword, const QString &newMasterPassword) {
             m_CommandManager->recodePasswords(oldMasterPassword, newMasterPassword, m_UploadInfos);
+        }
+
+        void onAfterMasterPasswordReset() {
+            foreach (UploadInfo *info, m_UploadInfos) {
+                info->dropPassword();
+            }
         }
 
     protected:

@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -21,10 +21,12 @@
 
 #include "artworkuploader.h"
 #include <QtConcurrent>
+#include <QFileInfo>
 #include <QDebug>
 #include "uploadinforepository.h"
 #include "../Helpers/curlwrapper.h"
 #include "../Helpers/uploadcoordinator.h"
+#include "../Helpers/ziphelper.h"
 
 namespace Models {
     ArtworkUploader::ArtworkUploader() :
@@ -84,6 +86,36 @@ namespace Models {
     void ArtworkUploader::checkCredentials(const QString &host, const QString &username, const QString &password) const
     {
         m_TestingCredentialWatcher->setFuture(QtConcurrent::run(isConnectionValid, host, username, password));
+    }
+
+    bool ArtworkUploader::needCreateArchives() const {
+        bool anyZipNeeded = false;
+        const UploadInfoRepository *uploadInfoRepository = m_CommandManager->getUploadInfoRepository();
+        const QList<Models::UploadInfo *> &infos = uploadInfoRepository->getUploadInfos();
+        foreach (Models::UploadInfo *info, infos) {
+            if (info->getIsSelected() && info->getZipBeforeUpload()) {
+                anyZipNeeded = true;
+                break;
+            }
+        }
+
+        bool needCreate = false;
+
+        if (anyZipNeeded) {
+            const QList<ArtworkMetadata*> &artworkList = this->getArtworkList();
+            foreach (ArtworkMetadata *metadata, artworkList) {
+                const QString &filepath = metadata->getFilepath();
+                QString archivePath = Helpers::getArchivePath(filepath);
+                QFileInfo fi(archivePath);
+
+                if (!fi.exists()) {
+                    needCreate = true;
+                    break;
+                }
+            }
+        }
+
+        return needCreate;
     }
 
     void ArtworkUploader::doUploadArtworks(const QList<ArtworkMetadata *> &artworkList)

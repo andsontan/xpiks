@@ -30,5 +30,8 @@
         <file>Components/AddIcon.qml</file>
         <file>Dialogs/KeywordsSuggestion.qml</file>
         <file>Components/LargeAddIcon.qml</file>
+        <file>StyledControls/StyledBusyIndicator.qml</file>
+        <file>StyledControls/StyledTabView.qml</file>
+        <file>Components/CustomBorder.qml</file>
     </qresource>
 </RCC>

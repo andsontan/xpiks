@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -60,7 +60,7 @@ Item {
 
     function doRemoveSelectedArtworks() {
         combinedArtworks.removeSelectedArtworks()
-        if (combinedArtworks.getArtworksCount() === 0) {
+        if (combinedArtworks.artworksCount === 0) {
             closePopup()
         }
     }
@@ -106,7 +106,7 @@ Item {
         Rectangle {
             id: dialogWindow
             width: 730
-            height: 530
+            height: 540
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
@@ -115,6 +115,27 @@ Item {
                 anchors.fill: parent
                 anchors.margins: 30
                 spacing: 3
+
+                RowLayout {
+                    Layout.fillWidth: true
+
+                    StyledText {
+                        text: qsTr("Edit multiple artworks")
+                    }
+
+                    Item {
+                        Layout.fillWidth: true
+                    }
+
+                    StyledText {
+                        text: combinedArtworks.artworksCount == 1 ? qsTr("1 artwork begin edited") : qsTr("%1 artworks being editing").arg(combinedArtworks.artworksCount)
+                        color: Colors.defaultInputBackground
+                    }
+                }
+
+                Item {
+                    height: 10
+                }
 
                 RowLayout {
                     spacing: 5
@@ -210,11 +231,11 @@ Item {
                                 Rectangle {
                                     anchors.fill: parent
                                     color: Colors.defaultControlColor
-                                    opacity: mouseArea.containsMouse ? 0.4 : (isselected ? 0.7 : 0)
+                                    opacity: isselected ? (mouseArea.containsMouse ? 0.6 : 0.7) : (mouseArea.containsMouse ? 0.4 : 0)
                                 }
 
                                 LargeRemoveIcon {
-                                    visible: isselected
+                                    opacity: isselected ? (mouseArea.containsMouse ? 0.85 : 1) : (mouseArea.containsMouse ? 0.6 : 0)
                                     width: parent.width
                                     height: parent.height
                                 }
@@ -233,7 +254,7 @@ Item {
                 }
 
                 Item {
-                    height: 30
+                    height: 20
                 }
 
                 RowLayout {
@@ -241,7 +262,7 @@ Item {
                     spacing: 20
 
                     ColumnLayout {
-                        spacing: 3
+                        spacing: 10
                         width: 325
 
                         RowLayout {
@@ -370,6 +391,15 @@ Item {
                         text: qsTr("(comma-separated)")
                         color: Colors.defaultInputBackground
                     }
+
+                    Item {
+                        Layout.fillWidth: true
+                    }
+
+                    StyledText {
+                        text: combinedArtworks.keywordsCount
+                        color: Colors.defaultInputBackground
+                    }
                 }
 
                 Rectangle {
@@ -475,52 +505,8 @@ Item {
                     }
                 }
 
-                RowLayout {
-                    spacing: 15
-
-                    StyledText {
-                        text: combinedArtworks.keywordsCount
-                        color: Colors.defaultControlColor
-                    }
-
-                    Item {
-                        Layout.fillWidth: true
-                    }
-
-                    StyledText {
-                        text: qsTr("Suggest keywords")
-                        color: suggestKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
-
-                        MouseArea {
-                            id: suggestKeywordsMA
-                            anchors.fill: parent
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: {
-                                combinedArtworks.askForSuggestion()
-                                Common.launchComponent("Dialogs/KeywordsSuggestion.qml", applicationWindow, {});
-                            }
-                        }
-                    }
-
-                    StyledText {
-                        text: qsTr("Copy keywords")
-                        color: combinedCopyKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
-
-                        MouseArea {
-                            id: combinedCopyKeywordsMA
-                            anchors.fill: parent
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: combinedClipboard.setText(combinedArtworks.getKeywordsString())
-                        }
-                    }
-
-                    ClipboardHelper {
-                        id: combinedClipboard
-                    }
-                }
-
                 Item {
-                    height: 5
+                    height: 10
                 }
 
                 Rectangle {
@@ -531,6 +517,22 @@ Item {
                     RowLayout {
                         anchors.fill: parent
                         spacing: 10
+
+                        StyledButton {
+                            width: 130
+                            text: qsTr("Suggest keywords")
+                            onClicked: {
+                                var callbackObject = {
+                                    promoteKeywords: function(keywords) {
+                                        combinedArtworks.pasteKeywords(keywords)
+                                    }
+                                }
+
+                                Common.launchComponent("Dialogs/KeywordsSuggestion.qml",
+                                                       applicationWindow,
+                                                       {callbackObject: callbackObject});
+                            }
+                        }
 
                         Item {
                             Layout.fillWidth: true

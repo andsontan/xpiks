@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -26,20 +26,32 @@
 
 namespace Helpers {
     QStringList zipFiles(QStringList filepathes) {
+        QString zipFilePath;
+        zipArtworkAndEPS(filepathes, zipFilePath);
+        return filepathes;
+    }
+
+    bool zipArtworkAndEPS(const QStringList &filepathes, QString &zipFilePath) {
         QString anyFile = filepathes.first();
-        QFileInfo fi(anyFile);
+        QString archivePath = getArchivePath(anyFile);
+
+        bool result = JlCompress::compressFiles(archivePath, filepathes);
+        if (!result) {
+            qDebug() << "Failed to create zip" << archivePath;
+        }
+
+        zipFilePath = archivePath;
+        return result;
+    }
+
+    QString getArchivePath(const QString &artworkPath) {
+        QFileInfo fi(artworkPath);
         QString archiveName = fi.baseName() + ".zip";
 
         QString basePath = fi.absolutePath();
         QDir dir(basePath);
         QString archivePath = dir.filePath(archiveName);
-
-        bool result = JlCompress::compressFiles(archivePath, filepathes);
-        if (!result) {
-            qDebug() << "Failed zip" << filepathes;
-        }
-
-        return filepathes;
+        return archivePath;
     }
 }
 

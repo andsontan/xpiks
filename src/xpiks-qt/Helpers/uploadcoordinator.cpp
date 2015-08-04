@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -28,6 +28,7 @@
 #include "uploaditem.h"
 #include "externaltoolsprovider.h"
 #include "uploadworker.h"
+#include "../Helpers/ziphelper.h"
 
 namespace Helpers {
     void UploadCoordinator::uploadArtworks(const QList<Models::ArtworkMetadata *> &artworkList,
@@ -35,7 +36,8 @@ namespace Helpers {
                                            bool includeEPS, const Encryption::SecretsManager *secretsManager)
     {
         QStringList filePathes;
-        extractFilePathes(artworkList, filePathes, includeEPS);
+        QStringList zipsPathes;
+        extractFilePathes(artworkList, filePathes, zipsPathes, includeEPS);
 
         QList<UploadItem*> uploadItems;
         const QString &curlPath = Helpers::ExternalToolsProvider::getCurlPath();
@@ -43,8 +45,10 @@ namespace Helpers {
 
         foreach (Models::UploadInfo *info, uploadInfos) {
             if (info->getIsSelected()) {
-                uploadItems.append(new UploadItem(info, filePathes,
-                                                  oneItemUploadTimeout, curlPath));
+                UploadItem *item;
+                bool useZips = info->getZipBeforeUpload();
+                item = new UploadItem(info, useZips ? zipsPathes : filePathes, oneItemUploadTimeout, curlPath);
+                uploadItems.append(item);
             }
         }
 
@@ -136,6 +140,7 @@ namespace Helpers {
 
     void UploadCoordinator::extractFilePathes(const QList<Models::ArtworkMetadata *> &artworkList,
                                               QStringList &filePathes,
+                                              QStringList &zipsPathes,
                                               bool includeEPS) const {
 
         foreach(Models::ArtworkMetadata *metadata, artworkList) {
@@ -148,6 +153,9 @@ namespace Helpers {
                     filePathes.append(epsFilepath);
                 }
             }
+
+            QString zipPath = Helpers::getArchivePath(filepath);
+            zipsPathes.append(zipPath);
         }
     }
 

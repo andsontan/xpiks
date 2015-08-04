@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -109,9 +109,9 @@ Flickable {
             NumberAnimation { properties: "x,y"; from: 200; duration: 100; easing.type: Easing.OutBounce }
         }
 
-        move: Transition {
+        /*move: Transition {
             NumberAnimation { properties: "x,y"; easing.type: Easing.OutBounce }
-        }
+        }*/
 
         onHeightChanged: {
             if (!lastHeight) {

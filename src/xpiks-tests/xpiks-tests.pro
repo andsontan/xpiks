@@ -77,7 +77,8 @@ HEADERS += \
     ../xpiks-qt/UndoRedo/modifyartworkshistoryitem.h \
     ../xpiks-qt/UndoRedo/removeartworksitem.h \
     Mocks/artworkmetadatamock.h \
-    removecommand_tests.h
+    removecommand_tests.h \
+    ../xpiks-qt/Common/basickeywordsmodel.h
 
 macx {
 OBJECTIVE_SOURCES += \

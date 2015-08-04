@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -49,14 +49,14 @@ namespace Helpers {
         Q_PROPERTY(QString uploadHostsKey READ getUploadHostsKey CONSTANT)
         QString getUploadHostsKey() const { return QString::fromLatin1(Constants::UPLOAD_HOSTS); }
 
-        Q_PROPERTY(QString minMegapixelCount READ getMinMegapixelCount CONSTANT)
-        QString getMinMegapixelCount() const { return QString::fromLatin1(Constants::MIN_MEGAPIXEL_COUNT); }
+        Q_PROPERTY(QString minMegapixelCountKey READ getMinMegapixelCountKey CONSTANT)
+        QString getMinMegapixelCountKey() const { return QString::fromLatin1(Constants::MIN_MEGAPIXEL_COUNT); }
 
-        Q_PROPERTY(QString maxDescriptionLength READ getMaxDescriptionLength CONSTANT)
-        QString getMaxDescriptionLength() const { return QString::fromLatin1(Constants::MAX_DESCRIPTION_LENGTH); }
+        Q_PROPERTY(QString maxDescriptionLengthKey READ getMaxDescriptionLengthKey CONSTANT)
+        QString getMaxDescriptionLengthKey() const { return QString::fromLatin1(Constants::MAX_DESCRIPTION_LENGTH); }
 
-        Q_PROPERTY(QString maxKeywordsCount READ getMaxKeywordsCount CONSTANT)
-        QString getMaxKeywordsCount() const { return QString::fromLatin1(Constants::MAX_KEYWORD_COUNT); }
+        Q_PROPERTY(QString maxKeywordsCountKey READ getMaxKeywordsCountKey CONSTANT)
+        QString getMaxKeywordsCountKey() const { return QString::fromLatin1(Constants::MAX_KEYWORD_COUNT); }
 
         Q_PROPERTY(QString appVersion READ getAppVersion CONSTANT)
         QString getAppVersion() const { return QCoreApplication::applicationVersion(); }

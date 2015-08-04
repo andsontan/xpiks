@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -60,6 +60,7 @@ namespace Helpers {
 
     private:
         double parsePercent(QString &curlOutput)const;
+        void emitFinishSignals(bool success);
 
     private:
         UploadItem *m_UploadItem;

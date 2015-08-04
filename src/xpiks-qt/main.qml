@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -87,7 +87,7 @@ ApplicationWindow {
             MenuItem {
                 text: qsTr("&Settings")
                 onTriggered: {
-                    console.log("Settings action triggered");
+                    settingsModel.readAllValues()
                     Common.launchComponent("Dialogs/SettingsWindow.qml",
                                     applicationWindow, {},
                                     function(wnd) {wnd.show();});
@@ -151,6 +151,14 @@ ApplicationWindow {
     function doRemoveSelectedArtworks() {
         artItemsModel.removeSelectedArtworks()
         artItemsModel.checkForWarnings()
+    }
+
+    function tryUploadArtworks() {
+        if (artItemsModel.areSelectedArtworksSaved()) {
+            openUploadDialog()
+        } else {
+            mustSaveWarning.open()
+        }
     }
 
     MessageDialog {
@@ -491,15 +499,10 @@ ApplicationWindow {
                             enabled: artworkRepository.artworksSourcesCount > 0
                             onClicked: {
                                 if (artItemsModel.selectedArtworksCount == 0) {
-                                    mustSelectDialog.open()
+                                    artItemsModel.selectAllArtworks();
                                 }
-                                else {
-                                    if (artItemsModel.areSelectedArtworksSaved()) {
-                                        openUploadDialog()
-                                    } else {
-                                        mustSaveWarning.open()
-                                    }
-                                }
+
+                                tryUploadArtworks();
                             }
                         }
 
@@ -1001,8 +1004,15 @@ ApplicationWindow {
                                                             anchors.fill: parent
                                                             cursorShape: Qt.PointingHandCursor
                                                             onClicked: {
-                                                                artItemsModel.askForSuggestionAt(rowWrapper.delegateIndex)
-                                                                Common.launchComponent("Dialogs/KeywordsSuggestion.qml", applicationWindow, {});
+                                                                var callbackObject = {
+                                                                    promoteKeywords: function(keywords) {
+                                                                        artItemsModel.pasteKeywords(rowWrapper.delegateIndex, keywords)
+                                                                    }
+                                                                }
+
+                                                                Common.launchComponent("Dialogs/KeywordsSuggestion.qml",
+                                                                                       applicationWindow,
+                                                                                       {callbackObject: callbackObject});
                                                             }
                                                         }
                                                     }

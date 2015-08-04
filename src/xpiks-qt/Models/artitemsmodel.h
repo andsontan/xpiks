@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -86,7 +86,6 @@ namespace Models {
         Q_INVOKABLE void backupItem(int metadataIndex);
         Q_INVOKABLE void combineSelectedArtworks() { doCombineSelectedImages(); }
         Q_INVOKABLE void combineArtwork(int index) { doCombineArtwork(index); }
-        Q_INVOKABLE void askForSuggestionAt(int index);
         Q_INVOKABLE void selectAllArtworks() { setAllItemsSelected(true); }
         Q_INVOKABLE void unselectAllArtworks() { setAllItemsSelected(false); }
         Q_INVOKABLE int dropFiles(const QList<QUrl> &urls);

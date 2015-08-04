@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -32,6 +32,8 @@ import "../StyledControls"
 
 Item {
     id: zipArtworksComponent
+    property bool immediateProcessing: false
+    property var callbackObject
     anchors.fill: parent
 
     function closePopup() {
@@ -71,6 +73,11 @@ Item {
                 var tmp = mapToItem(zipArtworksComponent, mouse.x, mouse.y);
                 old_x = tmp.x;
                 old_y = tmp.y;
+
+                var dialogPoint = mapToItem(dialogWindow, mouse.x, mouse.y);
+                if (!Common.isInComponent(dialogPoint, dialogWindow)) {
+                    closePopup()
+                }
             }
 
             onPositionChanged: {
@@ -105,7 +112,7 @@ Item {
                     }
 
                     StyledText {
-                        text: qsTr("%1 artwork(s)").arg(zipArchiver.itemsCount)
+                        text: zipArchiver.itemsCount == 1 ? qsTr("1 artwork") : qsTr("%1 artworks").arg(zipArchiver.itemsCount)
                         color: Colors.defaultInputBackground
                     }
                 }
@@ -141,6 +148,15 @@ Item {
                             target: zipArchiver
                             onFinishedProcessing: {
                                 importButton.text = qsTr("Start Zipping")
+
+                                if (immediateProcessing) {
+                                    if (typeof callbackObject !== "undefined") {
+                                        callbackObject.afterZipped()
+                                    }
+
+                                    closePopup()
+                                }
+
                                 //if (!zipArchiver.isError) {
                                 //    closePopup()
                                 //}
@@ -162,6 +178,13 @@ Item {
                     }
                 }
             }
+        }
+    }
+
+    Component.onCompleted: {
+        if (immediateProcessing) {
+            zipArchiver.resetModel()
+            zipArchiver.archiveArtworks()
         }
     }
 }

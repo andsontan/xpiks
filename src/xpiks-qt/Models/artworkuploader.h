@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -73,6 +73,7 @@ namespace Models {
      public:
          Q_INVOKABLE void uploadArtworks() { doUploadArtworks(getArtworkList()); }
          Q_INVOKABLE void checkCredentials(const QString &host, const QString &username, const QString &password) const;
+         Q_INVOKABLE bool needCreateArchives() const;
 
      private:
          void doUploadArtworks(const QList<ArtworkMetadata*> &artworkList);

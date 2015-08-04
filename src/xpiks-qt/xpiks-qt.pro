@@ -49,7 +49,8 @@ SOURCES += main.cpp \
     ../quazip/quazip/unzip.c \
     ../quazip/quazip/zip.c \
     Suggestion/keywordssuggestor.cpp \
-    Suggestion/suggestionqueryengine.cpp
+    Suggestion/suggestionqueryengine.cpp \
+    Models/settingsmodel.cpp
 
 RESOURCES += qml.qrc
 
@@ -139,7 +140,7 @@ HEADERS += \
     Suggestion/keywordssuggestor.h \
     Suggestion/suggestionartwork.h \
     Suggestion/suggestionqueryengine.h \
-    Suggestion/ikeywordssuggesteable.h
+    Models/settingsmodel.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
@@ -170,7 +171,10 @@ DISTFILES += \
     Dialogs/ZipArtworksDialog.qml \
     Components/AddIcon.qml \
     Dialogs/KeywordsSuggestion.qml \
-    Components/LargeAddIcon.qml
+    Components/LargeAddIcon.qml \
+    StyledControls/StyledBusyIndicator.qml \
+    StyledControls/StyledTabView.qml \
+    Components/CustomBorder.qml
 
 macx {
 OBJECTIVE_SOURCES += \
