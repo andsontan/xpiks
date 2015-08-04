@@ -1,0 +1,18 @@
+Source: xpiks
+Maintainer: Artiom.M <a.mv@gmx.fr>
+Section: graphics
+Priority: optional
+Standards-Version: 3.9.6
+Build-Depends: debhelper (>= 9), qt5-default (>= 5.3)
+
+Package: xpiks
+Homepage: https://github.com/Ribtoks/xpiks
+Priority: optional
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Recommends:
+Description: Cross-platform (X) Photo Keywording Software
+ Xpiks is a free and open source keywording and uploading tool for 
+ microstock photographers and illustrators with no hidden fees. 
+ If you're tired with copy and pasting keywords from one stock to another, 
+ Xpiks would be a great time saver for you!
