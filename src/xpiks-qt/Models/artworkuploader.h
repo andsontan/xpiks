@@ -77,7 +77,6 @@ namespace Models {
 
      private:
          void doUploadArtworks(const QList<ArtworkMetadata*> &artworkList);
-         QStringList *getAllFilepathes() const;
 
     protected:
         void cancelProcessing();
@@ -86,7 +85,6 @@ namespace Models {
      private:
          Helpers::UploadCoordinator m_UploadCoordinator;
          QFutureWatcher<Helpers::TestConnectionResult> *m_TestingCredentialWatcher;
-         QStringList *m_ActiveUploads;
          bool m_IncludeEPS;
          int m_Percent;
     };

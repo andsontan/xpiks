@@ -61,7 +61,6 @@ namespace Models {
         endProcessing();
         m_Percent = 100;
         updateProgress();
-//        delete m_ActiveUploads;
     }
 
     void ArtworkUploader::credentialsTestingFinished()
@@ -130,26 +129,6 @@ namespace Models {
         const Encryption::SecretsManager *secretsManager = m_CommandManager->getSecretsManager();
 
         m_UploadCoordinator.uploadArtworks(artworkList, infos, m_IncludeEPS, secretsManager);
-    }
-
-    QStringList *ArtworkUploader::getAllFilepathes() const
-    {
-        QStringList *filesList = new QStringList();
-        const QList<ArtworkMetadata*> &artworksList = this->getArtworkList();
-
-        foreach(ArtworkMetadata *metadata, artworksList) {
-            QString filepath = metadata->getFilepath();
-            filesList->append(filepath);
-
-            if (m_IncludeEPS) {
-                QString epsFilepath = filepath.replace(QRegExp("(.*)[.]jpg", Qt::CaseInsensitive), "\\1.eps");
-                if (QFileInfo(epsFilepath).exists()) {
-                    filesList->append(epsFilepath);
-                }
-            }
-        }
-
-        return filesList;
     }
 
     void ArtworkUploader::cancelProcessing()
