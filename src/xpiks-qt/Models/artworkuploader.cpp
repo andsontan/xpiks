@@ -61,7 +61,7 @@ namespace Models {
         endProcessing();
         m_Percent = 100;
         updateProgress();
-        delete m_ActiveUploads;
+//        delete m_ActiveUploads;
     }
 
     void ArtworkUploader::credentialsTestingFinished()
