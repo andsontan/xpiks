@@ -28,7 +28,7 @@ You can find lastest package for OS X 10.10 and zip archive for Windows 8 x64 be
 </div>
 <br />
 <p>
-You can find Nightly Build of Xpiks <a href="https://dl.dropboxusercontent.com/u/14391423/xpiks-qt-nightly.dmg">at Dropbox</a>. For other downloads please refer to <a href="https://github.com/Ribtoks/xpiks/releases/tag/v1.0-beta.7">download section</a> at Github page of Xpiks release. If you have any questions don't hesitate to ask them in support section.
+You can find Nightly Build of Xpiks <a href="https://dl.dropboxusercontent.com/u/14391423/xpiks-qt-nightly.dmg">at Dropbox</a>. You can find .deb file with Nightly build <a href="https://mega.co.nz/#!e50yxC7C!kaXx3vEYLinD4bukYoFIs3cSPG4wEO2naSraSrGuUNE">at Mega</a>. For other downloads please refer to <a href="https://github.com/Ribtoks/xpiks/releases/tag/v1.0-beta.7">download section</a> at Github page of Xpiks release. If you have any questions don't hesitate to ask them in support section.
 </p>
 <p>
 Package for Windows has ExifTool and Curl supplied inside, while package for OS X doesn't so you have to download it manually in order to use Xpiks. You can <a href="http://owl.phy.queensu.ca/%7Ephil/exiftool/">download ExifTool here</a> and curl is already available in your OS X.
