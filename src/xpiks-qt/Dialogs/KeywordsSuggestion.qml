@@ -468,7 +468,7 @@ Item {
                     }
 
                     StyledButton {
-                        text: qsTr("Use suggested keywords")
+                        text: qsTr("Add suggested keywords")
                         width: 200
                         onClicked: {
                             callbackObject.promoteKeywords(keywordsSuggestor.getSuggestedKeywords())
