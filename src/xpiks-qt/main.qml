@@ -53,7 +53,8 @@ ApplicationWindow {
     }
 
     function mustUseConfirmation() {
-        return appSettings.boolValue(appSettings.useConfirmationDialogsKey, true)
+        var mustUse = appSettings.boolValue(appSettings.useConfirmationDialogsKey, true)
+        return mustUse
     }
 
     function openUploadDialog() {
@@ -291,10 +292,7 @@ ApplicationWindow {
 
                 Rectangle {
                     Layout.fillHeight: true
-                    //Layout.fillWidth: true
                     width: 250
-                    //Layout.minimumWidth: 250
-                    //Layout.maximumWidth: 350
 
                     color: Colors.defaultControlColor
 
@@ -361,8 +359,13 @@ ApplicationWindow {
                                     isActive: false
 
                                     onItemClicked: {
-                                        confirmRemoveDirectoryDialog.directoryIndex = sourceWrapper.delegateIndex
-                                        confirmRemoveDirectoryDialog.open()
+                                        if (mustUseConfirmation()) {
+                                            confirmRemoveDirectoryDialog.directoryIndex = sourceWrapper.delegateIndex
+                                            confirmRemoveDirectoryDialog.open()
+                                        } else {
+                                            artItemsModel.removeArtworksDirectory(sourceWrapper.delegateIndex)
+                                            artItemsModel.checkForWarnings()
+                                        }
                                     }
                                 }
 
