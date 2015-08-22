@@ -106,7 +106,7 @@ Item {
         Rectangle {
             id: dialogWindow
             width: 730
-            height: 540
+            height: 550
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
@@ -254,7 +254,7 @@ Item {
                 }
 
                 Item {
-                    height: 20
+                    height: 10
                 }
 
                 StyledText {
@@ -506,7 +506,7 @@ Item {
                 }
 
                 Item {
-                    height: 10
+                    height: 15
                 }
 
                 Rectangle {
