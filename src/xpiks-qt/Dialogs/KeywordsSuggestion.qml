@@ -469,16 +469,17 @@ Item {
 
                     StyledButton {
                         text: qsTr("Add suggested keywords")
+                        enabled: !keywordsSuggestor.isInProgress
                         width: 200
                         onClicked: {
                             callbackObject.promoteKeywords(keywordsSuggestor.getSuggestedKeywords())
-                            closePopup()
                         }
                     }
 
                     StyledButton {
                         width: 70
-                        text: qsTr("Cancel")
+                        text: qsTr("Close")
+                        enabled: !keywordsSuggestor.isInProgress
                         onClicked: closePopup()
                     }
                 }
