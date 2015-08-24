@@ -96,6 +96,7 @@ namespace Helpers {
             m_msec(2000)
         {
             m_Timer = new QTimer(this);
+            // TODO: refactor timer to wait for flush finish
             m_Timer->setSingleShot(false);
             connect(m_Timer, SIGNAL(timeout()), this, SLOT(onTimer()));
         }
