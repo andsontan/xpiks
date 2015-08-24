@@ -86,6 +86,7 @@ namespace Helpers {
         emit itemFinished(success);
 
         if (allWorkersFinished) {
+            Q_ASSERT(m_UploadSemaphore.available() == MAX_PARALLEL_UPLOAD);
             percentChanged(100);
             m_PercentDone = 100;
             emit uploadFinished(!m_AnyFailed);
