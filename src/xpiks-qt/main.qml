@@ -634,6 +634,7 @@ ApplicationWindow {
                                     MouseArea {
                                         id: dismissUndoMA
                                         anchors.fill: parent
+                                        enabled: undoRedoManager.canUndo
                                         cursorShape: Qt.PointingHandCursor
                                         onClicked: {
                                             undoRedoManager.discardLastAction()

@@ -29,8 +29,8 @@ void UndoRedo::UndoRedoManager::recordHistoryItem(UndoRedo::HistoryItem *history
     }
 
     m_HistoryStack.append(historyItem);
-    emit itemRecorded();
     emit canUndoChanged();
+    emit itemRecorded();
     emit undoDescriptionChanged();
 }
 
