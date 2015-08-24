@@ -27,6 +27,7 @@
 #include <QString>
 #include <QTimer>
 #include <QRegExp>
+#include <QSemaphore>
 
 namespace Encryption {
     class SecretsManager;
@@ -40,6 +41,7 @@ namespace Helpers {
         Q_OBJECT
     public:
         explicit UploadWorker(UploadItem *uploadItem, const Encryption::SecretsManager *secretsManager,
+                              QSemaphore *uploadSemaphore,
                               int delay, QObject *parent = 0);
         ~UploadWorker();
 
@@ -65,6 +67,7 @@ namespace Helpers {
     private:
         UploadItem *m_UploadItem;
         const Encryption::SecretsManager *m_SecretsManager;
+        QSemaphore *m_UploadSemaphore;
         QProcess *m_CurlProcess;
         QTimer *m_Timer;
         QString m_Host;
@@ -73,6 +76,7 @@ namespace Helpers {
         double m_PercentDone;
         int m_FilesUploaded;
         int m_OverallFilesCount;
+        volatile bool m_Cancelled;
     };
 }
 

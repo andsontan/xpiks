@@ -27,6 +27,7 @@
 #include <QStringList>
 #include <QMutex>
 #include <QThread>
+#include <QSemaphore>
 
 namespace Models {
     class ArtworkMetadata;
@@ -37,6 +38,9 @@ namespace Encryption {
     class SecretsManager;
 }
 
+// TODO: move to configs and settings (values from 1 to 4)
+#define MAX_PARALLEL_UPLOAD 2
+
 namespace Helpers {
     class UploadInfo;
     class UploadItem;
@@ -46,7 +50,8 @@ namespace Helpers {
         Q_OBJECT
     public:
         UploadCoordinator(QObject *parent = 0):
-            QObject(parent)
+            QObject(parent),
+            m_UploadSemaphore(MAX_PARALLEL_UPLOAD)
         {}
 
         ~UploadCoordinator() {}
@@ -79,6 +84,7 @@ namespace Helpers {
     private:
         QMutex m_Mutex;
         QMutex m_PercentMutex;
+        QSemaphore m_UploadSemaphore;
         QList<QThread *> m_UploadThreads;
         int m_WorkersCount;
         int m_AllWorkersCount;

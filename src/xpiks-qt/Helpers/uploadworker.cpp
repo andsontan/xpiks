@@ -30,18 +30,22 @@
 
 namespace Helpers {
     UploadWorker::UploadWorker(UploadItem *uploadItem, const Encryption::SecretsManager *secretsManager,
+                               QSemaphore *uploadSemaphore,
                                int delay, QObject *parent) :
         QObject(parent),
         m_UploadItem(uploadItem),
         m_SecretsManager(secretsManager),
+        m_UploadSemaphore(uploadSemaphore),
         m_CurlProcess(NULL),
         m_Timer(NULL),
         m_Host(uploadItem->m_UploadInfo->getHost()),
         m_PercentRegexp("[^0-9.]"),
         m_Delay(delay),
         m_PercentDone(0.0),
-        m_FilesUploaded(0)
+        m_FilesUploaded(0),
+        m_Cancelled(false)
     {
+        Q_ASSERT(uploadSemaphore != NULL);
     }
 
     UploadWorker::~UploadWorker() {
@@ -57,7 +61,6 @@ namespace Helpers {
     }
 
     void UploadWorker::process() {
-
         QThread::sleep(m_Delay);
 
         const QStringList &filesToUpload = m_UploadItem->m_FilesToUpload;
@@ -72,38 +75,45 @@ namespace Helpers {
         QString command = QString("%1 --progress-bar --connect-timeout 10 --max-time %6 --retry 1 -T \"{%2}\" %3 --user %4:%5").
                 arg(curlPath, filesToUpload.join(','), uploadInfo->getHost(), uploadInfo->getUsername(), password, QString::number(maxSeconds));
 
-        m_CurlProcess = new QProcess();
+        // initializations can't be in constructor, because
+        // it's executed in other thread
+        this->initializeUploadEntities();
 
-        QObject::connect(m_CurlProcess, SIGNAL(finished(int,QProcess::ExitStatus)),
-                         this, SLOT(innerProcessFinished(int,QProcess::ExitStatus)));
-        QObject::connect(m_CurlProcess, SIGNAL(readyReadStandardError()),
-                         this, SLOT(uploadOutputReady()));
+        m_UploadSemaphore->acquire();
 
-        m_Timer = new QTimer();
-        QObject::connect(m_Timer, SIGNAL(timeout()), this, SLOT(onTimerTimeout()));
-        m_Timer->setSingleShot(true);
-
-        m_Timer->start(maxSeconds*1000);
-        m_CurlProcess->start(command);
+        // m_Cancelled check is only if this thread's cancel() preceds code below
+        // for not releasing semaphore twice in innerProcessFinished() and cancel()
+        // (in general it's executed first because other thread's cancel() releases the semaphore)
+        if (!m_Cancelled) {
+            qDebug() << "Starting upload to" << m_Host;
+            m_Timer->start(maxSeconds*1000);
+            m_CurlProcess->start(command);
+        } else {
+            qDebug() << "Upload cancelled before start for" << m_Host;
+            emitFinishSignals(false);
+        }
     }
 
     void UploadWorker::cancel() {
-        qDebug() << "Terminating upload to " << m_Host;
+        qDebug() << "Cancelling upload to " << m_Host;
 
-        bool killed = false;
+        m_Cancelled = true;
+        m_UploadSemaphore->release();
 
-        if (m_CurlProcess && m_CurlProcess->state() != QProcess::NotRunning && !m_CurlProcess->atEnd()) {
+        if (m_CurlProcess && m_CurlProcess->state() != QProcess::NotRunning) {
             m_CurlProcess->kill();
-            qDebug() << "Curl process killed";
-            killed = true;
+            qDebug() << "Curl process killed for" << m_Host;
         }
-
-        emit finished(!killed);
-        emit stopped();
     }
 
     void UploadWorker::innerProcessFinished(int exitCode, QProcess::ExitStatus exitStatus)
     {
+        qDebug() << "Curl process finished for" << m_Host;
+
+        if (!m_Cancelled) {
+            m_UploadSemaphore->release();
+        }
+
         QByteArray stdoutByteArray = m_CurlProcess->readAllStandardOutput();
         QString stdoutText(stdoutByteArray);
         qDebug() << "STDOUT [" << m_Host << "]:" << stdoutText;
@@ -112,7 +122,6 @@ namespace Helpers {
         QString stderrText(stderrByteArray);
         qDebug() << "STDERR [" << m_Host << "]:" << stderrText;
 
-        // upload
         bool success = exitCode == 0 && exitStatus == QProcess::NormalExit;
         emitFinishSignals(success);
     }
@@ -136,9 +145,22 @@ namespace Helpers {
         }
     }
 
-    void UploadWorker::onTimerTimeout()
-    {
+    void UploadWorker::onTimerTimeout() {
         cancel();
+    }
+
+    void UploadWorker::initializeUploadEntities() {
+        m_CurlProcess = new QProcess();
+
+        QObject::connect(m_CurlProcess, SIGNAL(finished(int,QProcess::ExitStatus)),
+                         this, SLOT(innerProcessFinished(int,QProcess::ExitStatus)));
+        QObject::connect(m_CurlProcess, SIGNAL(readyReadStandardError()),
+                         this, SLOT(uploadOutputReady()));
+
+        m_Timer = new QTimer();
+
+        QObject::connect(m_Timer, SIGNAL(timeout()), this, SLOT(onTimerTimeout()));
+        m_Timer->setSingleShot(true);
     }
 
     double UploadWorker::parsePercent(QString &curlOutput) const

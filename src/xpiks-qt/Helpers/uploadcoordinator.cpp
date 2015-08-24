@@ -115,7 +115,7 @@ namespace Helpers {
     {
         int i = 0;
         foreach (UploadItem *uploadItem, uploadItems) {
-            UploadWorker *worker = new UploadWorker(uploadItem, secretsManager, i);
+            UploadWorker *worker = new UploadWorker(uploadItem, secretsManager, &m_UploadSemaphore, i);
             QThread *thread = new QThread();
             worker->moveToThread(thread);
 
