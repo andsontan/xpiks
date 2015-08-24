@@ -33,6 +33,10 @@ namespace Encryption {
     class SecretsManager;
 }
 
+namespace Models {
+    class UploadInfo;
+}
+
 namespace Helpers {
     class UploadItem;
 
@@ -61,6 +65,8 @@ namespace Helpers {
         void onTimerTimeout();
 
     private:
+        QString createCurlCommand(Models::UploadInfo *uploadInfo, const QStringList &filesToUpload, int maxSeconds) const;
+        void initializeUploadEntities();
         double parsePercent(QString &curlOutput)const;
         void emitFinishSignals(bool success);
 

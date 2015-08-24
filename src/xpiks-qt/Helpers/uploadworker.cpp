@@ -67,13 +67,10 @@ namespace Helpers {
         Models::UploadInfo *uploadInfo = m_UploadItem->m_UploadInfo;
         m_OverallFilesCount = filesToUpload.length();
 
-        const QString curlPath = m_UploadItem->m_CurlPath;
         int oneItemUploadMinutesTimeout = m_UploadItem->m_OneItemUploadMinutesTimeout;
         int maxSeconds = oneItemUploadMinutesTimeout * 60 * filesToUpload.length();
 
-        QString password = m_SecretsManager->decodePassword(uploadInfo->getPassword());
-        QString command = QString("%1 --progress-bar --connect-timeout 10 --max-time %6 --retry 1 -T \"{%2}\" %3 --user %4:%5").
-                arg(curlPath, filesToUpload.join(','), uploadInfo->getHost(), uploadInfo->getUsername(), password, QString::number(maxSeconds));
+        QString command = createCurlCommand(uploadInfo, filesToUpload, maxSeconds);
 
         // initializations can't be in constructor, because
         // it's executed in other thread
@@ -147,6 +144,17 @@ namespace Helpers {
 
     void UploadWorker::onTimerTimeout() {
         cancel();
+    }
+
+    QString UploadWorker::createCurlCommand(Models::UploadInfo *uploadInfo,
+                                            const QStringList &filesToUpload, int maxSeconds) const {
+        const QString &curlPath = m_UploadItem->m_CurlPath;
+
+        QString password = m_SecretsManager->decodePassword(uploadInfo->getPassword());
+        QString command = QString("%1 --progress-bar --connect-timeout 10 --max-time %6 --retry 1 -T \"{%2}\" %3 --user %4:%5").
+                arg(curlPath, filesToUpload.join(','), uploadInfo->getHost(), uploadInfo->getUsername(), password, QString::number(maxSeconds));
+
+        return command;
     }
 
     void UploadWorker::initializeUploadEntities() {
