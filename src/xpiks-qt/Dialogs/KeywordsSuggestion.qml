@@ -150,6 +150,7 @@ Item {
                         id: imagesScrollView
                         height: parent.height
                         width: parent.width + 15
+                        enabled: !keywordsSuggestor.isInProgress
 
                         Flickable {
                             anchors.fill: parent
