@@ -34,6 +34,7 @@ Item {
     id: keywordsSuggestionComponent
     anchors.fill: parent
     property var callbackObject
+    property bool initialized: false
 
     function closePopup() {
         keywordsSuggestor.close();
@@ -489,6 +490,10 @@ Item {
     }
 
     Component.onCompleted: {
-        queryText.forceActiveFocus()
+        // for some reason onCompleted was called twice
+        if (!initialized) {
+            queryText.forceActiveFocus()
+            initialized = true
+        }
     }
 }
