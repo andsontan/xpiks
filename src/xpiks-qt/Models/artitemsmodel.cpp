@@ -154,10 +154,23 @@ namespace Models {
             localUrls.append(localUrl);
         }
 
-        int count = addLocalArtworks(localUrls);
+        int count = 0;
+        bool isDirectory = localUrls.length() == 1 && QDir(localUrls.first().toLocalFile()).exists();
+        if (isDirectory) {
+            count = addLocalDirectory(localUrls.first());
+        } else {
+            count = addLocalArtworks(localUrls);
+        }
+
         return count;
 #else
-        int count = addLocalArtworks(urls);
+        int count = 0;
+        bool isDirectory = urls.length() == 1 && QDir(urls.first().toLocalFile()).exists();
+        if (isDirectory) {
+            count = addLocalDirectory(urls.first());
+        } else {
+            count = addLocalArtworks(urls);
+        }
         return count;
 #endif
     }
