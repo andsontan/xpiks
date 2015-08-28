@@ -77,7 +77,7 @@ ExportPair writeArtworkMetadata(ExportPair pair) {
 
     QProcess process;
     QString command = arguments.join(' ');
-    qDebug() << command;
+
     process.start(command);
     if (!process.waitForFinished()) {
         return qMakePair(resultMetadata, exportInfo);
