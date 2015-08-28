@@ -120,14 +120,15 @@ Item {
                             clip: true
                             anchors.left: parent.left
                             anchors.leftMargin: 5
-
-                            onEditingFinished: keywordsSuggestor.searchArtworks(queryText.text)
+                            Keys.onEnterPressed: keywordsSuggestor.searchArtworks(queryText.text)
+                            Keys.onReturnPressed: keywordsSuggestor.searchArtworks(queryText.text)
                         }
                     }
 
                     StyledButton {
                         text: qsTr("Search")
                         width: 70
+                        activeFocusOnPress: true
                         enabled: !keywordsSuggestor.isInProgress
                         onClicked: keywordsSuggestor.searchArtworks(queryText.text)
                     }
