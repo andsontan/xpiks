@@ -54,7 +54,13 @@ namespace Suggestion {
         QString headerData = "Basic " + authStr.toLocal8Bit().toBase64();
         request.setRawHeader("Authorization", headerData.toLocal8Bit());
 
-        m_NetworkManager.get(request);
+        QNetworkReply *reply = m_NetworkManager.get(request);
+        QObject::connect(this, SIGNAL(cancelAllQueries()),
+                         reply, SLOT(abort()));
+    }
+
+    void SuggestionQueryEngine::cancelQueries() {
+        emit cancelAllQueries();
     }
 
     void SuggestionQueryEngine::replyReceived(QNetworkReply *networkReply) {

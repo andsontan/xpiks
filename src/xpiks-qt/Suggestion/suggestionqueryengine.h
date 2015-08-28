@@ -40,12 +40,14 @@ namespace Suggestion {
 
     public:
         void submitQuery(const QStringList &queryKeywords);
+        void cancelQueries();
 
     private slots:
         void replyReceived(QNetworkReply *networkReply);
 
     signals:
         void searchResultsRetrieved(const QList<SuggestionArtwork*> &artworks);
+        void cancelAllQueries();
 
     private:
         void parseResponse(const QJsonArray &jsonArray, QList<SuggestionArtwork *> &suggestionArtworks);

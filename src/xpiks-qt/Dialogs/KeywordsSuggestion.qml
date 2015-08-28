@@ -482,8 +482,10 @@ Item {
                     StyledButton {
                         width: 70
                         text: qsTr("Close")
-                        enabled: !keywordsSuggestor.isInProgress
-                        onClicked: closePopup()
+                        onClicked: {
+                            keywordsSuggestor.cancelSearch()
+                            closePopup()
+                        }
                     }
                 }
             }

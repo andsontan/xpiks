@@ -78,6 +78,7 @@ namespace Suggestion {
         Q_INVOKABLE QString removeOtherKeywordAt(int keywordIndex);
         Q_INVOKABLE void setArtworkSelected(int index, bool newState);
         Q_INVOKABLE void searchArtworks(const QString &searchTerm);
+        Q_INVOKABLE void cancelSearch() { m_QueryEngine.cancelQueries(); }
         Q_INVOKABLE void close() { clear(); }
         Q_INVOKABLE QStringList getSuggestedKeywords() const { return m_SuggestedKeywords.getKeywords(); }
 
