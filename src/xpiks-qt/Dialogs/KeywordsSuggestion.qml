@@ -37,6 +37,7 @@ Item {
     property bool initialized: false
 
     function closePopup() {
+        keywordsSuggestor.cancelSearch()
         keywordsSuggestor.close();
         keywordsSuggestionComponent.destroy();
     }
@@ -482,10 +483,7 @@ Item {
                     StyledButton {
                         width: 70
                         text: qsTr("Close")
-                        onClicked: {
-                            keywordsSuggestor.cancelSearch()
-                            closePopup()
-                        }
+                        onClicked: closePopup()
                     }
                 }
             }
