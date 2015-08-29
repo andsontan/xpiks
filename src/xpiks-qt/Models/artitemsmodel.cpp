@@ -298,6 +298,35 @@ namespace Models {
         }
     }
 
+    QString ArtItemsModel::retrieveImageSize(int metadataIndex) const {
+        if (metadataIndex < 0 || metadataIndex >= m_ArtworkList.length()) { return "-"; }
+
+        ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
+        QImageReader reader(metadata->getFilepath());
+        QSize size = reader.size();
+        QString sizeDescription = QString("W %1 x H %2").arg(size.width()).arg(size.height());
+        return sizeDescription;
+    }
+
+    QString ArtItemsModel::retrieveFileSize(int metadataIndex) const {
+        if (metadataIndex < 0 || metadataIndex >= m_ArtworkList.length()) { return "-"; }
+
+        ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
+        QFileInfo fi(metadata->getFilepath());
+        double size = fi.size(); // in bytes
+        size /= 1024.0*1024.0;
+
+        QString sizeDescription;
+        if (size >= 1) {
+            sizeDescription = QString::number(size, 'f', 2) + " MB";
+        } else {
+            size *= 1024;
+            sizeDescription = QString::number(size, 'f', 2) + " KB";
+        }
+
+        return sizeDescription;
+    }
+
     int ArtItemsModel::rowCount(const QModelIndex &parent) const {
         Q_UNUSED(parent);
         return m_ArtworkList.count();

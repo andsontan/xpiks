@@ -766,13 +766,55 @@ ApplicationWindow {
                                                     height: 130
                                                     anchors.horizontalCenter: parent.horizontalCenter
                                                     color: "transparent"
+
                                                     Image {
+                                                        id: artworkImage
                                                         anchors.fill: parent
                                                         source: "image://global/" + filename
                                                         sourceSize.width: 150
                                                         sourceSize.height: 150
                                                         fillMode: Image.PreserveAspectCrop
                                                         asynchronous: true
+                                                    }
+
+                                                    Rectangle {
+                                                        anchors.fill: parent
+                                                        visible: moreInfoMA.pressed
+                                                        color: Colors.defaultControlColor
+                                                        opacity: 0.8
+
+                                                        ColumnLayout {
+                                                            anchors.margins: 10
+                                                            anchors.fill: parent
+                                                            spacing: 5
+
+                                                            StyledText {
+                                                                id: dimensionsText
+                                                                color: Colors.defaultLightColor
+                                                                text: "*"
+                                                            }
+
+                                                            StyledText {
+                                                                id: sizeText
+                                                                color: Colors.defaultLightColor
+                                                                text: '*'
+                                                            }
+
+                                                            Rectangle {
+                                                                color: "transparent"
+                                                                Layout.fillWidth: true
+                                                                height: 60
+
+                                                                StyledText {
+                                                                    wrapMode: TextEdit.Wrap
+                                                                    anchors.fill: parent
+                                                                    color: Colors.defaultLightColor
+                                                                    text: filename
+                                                                    height: 60
+                                                                    elide: Text.ElideRight
+                                                                }
+                                                            }
+                                                        }
                                                     }
 
                                                     MouseArea {
@@ -789,9 +831,19 @@ ApplicationWindow {
                                                 StyledText {
                                                     Layout.fillWidth: true
                                                     elide: Text.ElideMiddle
-                                                    color: Colors.defaultInputBackground
+                                                    color: moreInfoMA.pressed ? Colors.defaultLightColor : Colors.defaultInputBackground
                                                     horizontalAlignment: Text.AlignHCenter
                                                     text: filename.split(/[\\/]/).pop()
+
+                                                    MouseArea {
+                                                        id: moreInfoMA
+                                                        anchors.fill: parent
+                                                        cursorShape: Qt.PointingHandCursor
+                                                        onPressed: {
+                                                            dimensionsText.text = artItemsModel.retrieveImageSize(rowWrapper.delegateIndex)
+                                                            sizeText.text = artItemsModel.retrieveFileSize(rowWrapper.delegateIndex)
+                                                        }
+                                                    }
                                                 }
 
                                                 Item {

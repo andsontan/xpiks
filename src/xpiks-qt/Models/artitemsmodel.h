@@ -110,6 +110,9 @@ namespace Models {
             return item;
         }
 
+        Q_INVOKABLE QString retrieveImageSize(int metadataIndex) const;
+        Q_INVOKABLE QString retrieveFileSize(int metadataIndex) const;
+
     public:
         int rowCount(const QModelIndex & parent = QModelIndex()) const;
         QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
