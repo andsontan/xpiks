@@ -155,8 +155,11 @@ namespace Helpers {
 
             if (includeEPS) {
                 QString epsFilepath = filepath.replace(QRegExp("(.*)[.]jpg", Qt::CaseInsensitive), "\\1.eps");
+                QString aiFilepath = filepath.replace(QRegExp("(.*)[.]jpg", Qt::CaseInsensitive), "\\1.ai");
                 if (QFileInfo(epsFilepath).exists()) {
                     filePathes.append(epsFilepath);
+                } else if (QFileInfo(aiFilepath).exists()) {
+                    filePathes.append(aiFilepath);
                 }
             }
 
