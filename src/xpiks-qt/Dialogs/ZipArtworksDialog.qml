@@ -76,7 +76,9 @@ Item {
 
                 var dialogPoint = mapToItem(dialogWindow, mouse.x, mouse.y);
                 if (!Common.isInComponent(dialogPoint, dialogWindow)) {
-                    closePopup()
+                    if (!zipArchiver.inProgress) {
+                        closePopup()
+                    }
                 }
             }
 
