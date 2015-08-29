@@ -149,14 +149,21 @@ namespace Helpers {
     QString UploadWorker::createCurlCommand(Models::UploadInfo *uploadInfo,
                                             const QStringList &filesToUpload, int maxSeconds) const {
         const QString &curlPath = m_UploadItem->m_CurlPath;
+        QString host = uploadInfo->getHost();
+        // if curl is not able to guess the FTP protocol
+        if (!host.startsWith("ftp://") && !host.startsWith("ftp.")) {
+            host = "ftp://" + host;
+        }
 
         QString password = m_SecretsManager->decodePassword(uploadInfo->getPassword());
         QString command = QString("%1 --progress-bar --connect-timeout 10 --max-time %6 --retry 1 -T \"{%2}\" %3 --user %4:%5").
-                arg(curlPath, filesToUpload.join(','), uploadInfo->getHost(), uploadInfo->getUsername(), password, QString::number(maxSeconds));
+                arg(curlPath, filesToUpload.join(','), host, uploadInfo->getUsername(), password, QString::number(maxSeconds));
 
         if (uploadInfo->getFtpPassiveMode()) {
-            command += " --ftp-pasv";
+            command += " --ftp-pasv --disable-epsv";
         }
+
+        qDebug() << command;
 
         return command;
     }
