@@ -31,13 +31,14 @@
 namespace Models {
     class UploadInfo {
     private:
-        enum UField { TitleField = 0, HostField, UsernameField, PasswordField, DirectoryField, ZipField };
+        enum UField { TitleField = 0, HostField, UsernameField, PasswordField, DirectoryField, ZipField, FtpPassiveModeField };
 
     public:
         UploadInfo():
             m_Percent(0),
             m_ZipBeforeUpload(false),
-            m_IsSelected(false)
+            m_IsSelected(false),
+            m_FtpPassiveMode(false)
         {
             m_Title = QString::fromLatin1("Untitled");
         }
@@ -52,6 +53,7 @@ namespace Models {
             m_Username = items.value(UsernameField, emptyString);
             m_EncodedPassword = items.value(PasswordField, emptyString);
             m_ZipBeforeUpload = items.value(ZipField, "false") == "true";
+            m_FtpPassiveMode = items.value(FtpPassiveModeField, "false") == "true";
         }
 
     public:
@@ -66,6 +68,7 @@ namespace Models {
         bool isEmpty() const { return m_EncodedPassword.isEmpty() && m_Host.isEmpty() && m_Username.isEmpty() &&
                     (m_Title.isEmpty() || m_Title == QString::fromLatin1("Untitled")); }
         int getPercent() const { return m_Percent; }
+        bool getFtpPassiveMode() const { return m_FtpPassiveMode; }
 
     public:
         bool setTitle(const QString &value) { bool result = m_Title != value; m_Title = value; return result; }
@@ -92,6 +95,7 @@ namespace Models {
         void dropPassword() { m_EncodedPassword = ""; }
         void setPercent(int value) { m_Percent = value; }
         void resetPercent() { m_Percent = 0; }
+        bool setFtpPassiveMode(bool value) { bool result = m_FtpPassiveMode != value; m_FtpPassiveMode = value; return result; }
 
     public:
         QHash<int, QString> toHash() {
@@ -101,6 +105,7 @@ namespace Models {
             hash[UsernameField] = m_Username;
             hash[PasswordField] = m_EncodedPassword;
             hash[ZipField] = m_ZipBeforeUpload ? "true" : "false";
+            hash[FtpPassiveModeField] = m_FtpPassiveMode ? "true" : "false";
             return hash;
         }
 
@@ -115,6 +120,7 @@ namespace Models {
         int m_Percent;
         bool m_ZipBeforeUpload;
         bool m_IsSelected;
+        bool m_FtpPassiveMode;
     };
 }
 

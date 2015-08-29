@@ -100,6 +100,8 @@ namespace Models {
             return uploadInfo->getZipBeforeUpload();
         case PercentRole:
             return uploadInfo->getPercent();
+        case FtpPassiveModeRole:
+            return uploadInfo->getFtpPassiveMode();
         default:
             return QVariant();
         }
@@ -159,6 +161,9 @@ namespace Models {
             roleToUpdate = ZipBeforeUploadRole;
             needToUpdate = uploadInfo->setZipBeforeUpload(value.toBool());
             break;
+        case EditFtpPassiveModeRole:
+            roleToUpdate = FtpPassiveModeRole;
+            needToUpdate = uploadInfo->setFtpPassiveMode(value.toBool());
         default:
             return false;
         }
@@ -186,6 +191,8 @@ namespace Models {
         roles[ZipBeforeUploadRole] = "zipbeforeupload";
         roles[EditZipBeforeUploadRole] = "editzipbeforeupload";
         roles[PercentRole] = "percent";
+        roles[FtpPassiveModeRole] = "ftppassivemode";
+        roles[EditFtpPassiveModeRole] = "editftppassivemode";
         return roles;
     }
 }

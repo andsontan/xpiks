@@ -604,7 +604,7 @@ Item {
                                 ColumnLayout {
                                     anchors.fill: parent
                                     anchors.topMargin: 15
-                                    spacing: 4
+                                    spacing: 10
 
                                     StyledCheckbox {
                                         id: zipBeforeUploadCheckBox
@@ -621,6 +621,25 @@ Item {
                                             target: uploadInfos
                                             onDataChanged: {
                                                 zipBeforeUploadCheckBox.checked = uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.zipbeforeupload : false
+                                            }
+                                        }
+                                    }
+
+                                    StyledCheckbox {
+                                        id: ftpPassiveModeCheckBox
+                                        text: qsTr("FTP passive mode")
+                                        Component.onCompleted: checked = uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.ftppassivemode : false
+
+                                        onClicked: {
+                                            if (uploadHostsListView.currentItem) {
+                                                uploadHostsListView.currentItem.myData.editftppassivemode = checked
+                                            }
+                                        }
+
+                                        Connections {
+                                            target: uploadInfos
+                                            onDataChanged: {
+                                                ftpPassiveModeCheckBox.checked = uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.ftppassivemode : false
                                             }
                                         }
                                     }
@@ -655,7 +674,7 @@ Item {
                     spacing: 15
 
                     StyledCheckbox {
-                        text: qsTr("Include EPS (for illustrations)")
+                        text: qsTr("Include vector (.eps, .ai)")
                         checked: artworkUploader.includeEPS
                         onCheckedChanged: artworkUploader.includeEPS = checked
                         enabled: !artworkUploader.inProgress

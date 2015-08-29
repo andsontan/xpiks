@@ -22,48 +22,10 @@
 #ifndef CURLWRAPPER
 #define CURLWRAPPER
 
-#include <QStringList>
-#include <QProcess>
-#include <QRegExp>
 #include <QString>
-#include <QDebug>
-#include <QPair>
 #include "testconnectionresult.h"
-#include "externaltoolsprovider.h"
-#include "../Models/uploadinfo.h"
-#include "../Models/artworkmetadata.h"
-#include "../Encryption/secretsmanager.h"
-#include "curlwrapper.h"
-#include "uploaditem.h"
 
-Helpers::TestConnectionResult isConnectionValid(const QString &host, const QString &username, const QString &password) {
-    bool isValid = false;
-
-    const QString curlPath = Helpers::ExternalToolsProvider::getCurlPath();
-
-    QString command = QString("%1 %2 --user %3:%4").arg(curlPath, host, username, password);
-    QProcess process;
-
-    process.start(command);
-    bool finishedInTime = process.waitForFinished(10 * 1000);
-    if (finishedInTime && process.exitStatus() == QProcess::NormalExit &&
-            process.exitCode() == 0) {
-        isValid = true;
-    } else {
-        qDebug() << "Timeout while waiting for curl";
-    }
-
-    QByteArray stdoutByteArray = process.readAllStandardOutput();
-    QString stdoutText(stdoutByteArray);
-    qDebug() << "STDOUT: " << stdoutText;
-
-    QByteArray stderrByteArray = process.readAllStandardError();
-    QString stderrText(stderrByteArray);
-    qDebug() << "STDERR: " << stderrText;
-
-    Helpers::TestConnectionResult result(isValid, host);
-    return result;
-}
+Helpers::TestConnectionResult isConnectionValid(const QString &host, const QString &username, const QString &password);
 
 #endif // CURLWRAPPER
 

@@ -50,7 +50,8 @@ SOURCES += main.cpp \
     ../quazip/quazip/zip.c \
     Suggestion/keywordssuggestor.cpp \
     Suggestion/suggestionqueryengine.cpp \
-    Models/settingsmodel.cpp
+    Models/settingsmodel.cpp \
+    Helpers/curlwrapper.cpp
 
 RESOURCES += qml.qrc
 

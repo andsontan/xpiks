@@ -154,6 +154,10 @@ namespace Helpers {
         QString command = QString("%1 --progress-bar --connect-timeout 10 --max-time %6 --retry 1 -T \"{%2}\" %3 --user %4:%5").
                 arg(curlPath, filesToUpload.join(','), uploadInfo->getHost(), uploadInfo->getUsername(), password, QString::number(maxSeconds));
 
+        if (uploadInfo->getFtpPassiveMode()) {
+            command += " --ftp-pasv";
+        }
+
         return command;
     }
 

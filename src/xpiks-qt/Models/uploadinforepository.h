@@ -61,7 +61,9 @@ namespace Models {
             ZipBeforeUploadRole,
             EditZipBeforeUploadRole,
             EditUploadDirectoryRole,
-            PercentRole
+            PercentRole,
+            FtpPassiveModeRole,
+            EditFtpPassiveModeRole
         };
 
         int getInfosCount() const { return m_UploadInfos.length(); }
