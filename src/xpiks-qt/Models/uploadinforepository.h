@@ -131,6 +131,7 @@ namespace Models {
 
     public:
         void updatePercent(int itemIndex) { emit dataChanged(index(itemIndex), index(itemIndex), (QVector<int>() << PercentRole));}
+        void resetPercents() { foreach (UploadInfo *info, m_UploadInfos) { info->resetPercent(); } }
 
     public:
         const QList<UploadInfo*> &getUploadInfos() const { return m_UploadInfos; }

@@ -137,10 +137,11 @@ namespace Models {
             return;
         }
 
-        const UploadInfoRepository *uploadInfoRepository = m_CommandManager->getUploadInfoRepository();
+        UploadInfoRepository *uploadInfoRepository = m_CommandManager->getUploadInfoRepository();
         const QList<Models::UploadInfo *> &infos = uploadInfoRepository->getUploadInfos();
         const Encryption::SecretsManager *secretsManager = m_CommandManager->getSecretsManager();
 
+        uploadInfoRepository->resetPercents();
         m_UploadCoordinator.uploadArtworks(artworkList, infos, m_IncludeEPS, secretsManager);
     }
 
