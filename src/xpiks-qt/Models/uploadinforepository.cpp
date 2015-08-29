@@ -98,6 +98,8 @@ namespace Models {
             return uploadInfo->getIsSelected();
         case ZipBeforeUploadRole:
             return uploadInfo->getZipBeforeUpload();
+        case PercentRole:
+            return uploadInfo->getPercent();
         default:
             return QVariant();
         }
@@ -183,6 +185,7 @@ namespace Models {
         roles[EditIsSelectedRole] = "editisselected";
         roles[ZipBeforeUploadRole] = "zipbeforeupload";
         roles[EditZipBeforeUploadRole] = "editzipbeforeupload";
+        roles[PercentRole] = "percent";
         return roles;
     }
 }

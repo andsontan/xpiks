@@ -60,7 +60,8 @@ namespace Models {
             EditIsSelectedRole,
             ZipBeforeUploadRole,
             EditZipBeforeUploadRole,
-            EditUploadDirectoryRole
+            EditUploadDirectoryRole,
+            PercentRole
         };
 
         int getInfosCount() const { return m_UploadInfos.length(); }
@@ -125,6 +126,9 @@ namespace Models {
             }
         }
         void restoreRealPasswords() { foreach (UploadInfo *info, m_UploadInfos) { info->restorePassword(); } }
+
+    public:
+        void updatePercent(int itemIndex) { emit dataChanged(index(itemIndex), index(itemIndex), (QVector<int>() << PercentRole));}
 
     public:
         const QList<UploadInfo*> &getUploadInfos() const { return m_UploadInfos; }

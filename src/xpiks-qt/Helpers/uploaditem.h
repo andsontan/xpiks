@@ -32,13 +32,14 @@ namespace Helpers {
         UploadItem () {
         }
 
-        UploadItem(Models::UploadInfo *uploadInfo, const QStringList &filesToUpload,
+        UploadItem(Models::UploadInfo *uploadInfo, int uploadInfoIndex, const QStringList &filesToUpload,
                    int uploadTimeout,
                    const QString &curlPath) :
             m_UploadInfo (uploadInfo),
             m_FilesToUpload(filesToUpload),
             m_OneItemUploadMinutesTimeout(uploadTimeout),
             m_CurlPath(curlPath),
+            m_UploadInfoIndex(uploadInfoIndex),
             m_Success(false)
         { }
 
@@ -47,6 +48,7 @@ namespace Helpers {
             m_FilesToUpload(copy.m_FilesToUpload),
             m_OneItemUploadMinutesTimeout(copy.m_OneItemUploadMinutesTimeout),
             m_CurlPath(copy.m_CurlPath),
+            m_UploadInfoIndex(copy.m_UploadInfoIndex),
             m_Success(copy.m_Success)
         { }
 
@@ -55,6 +57,7 @@ namespace Helpers {
         QStringList m_FilesToUpload;
         int m_OneItemUploadMinutesTimeout;
         QString m_CurlPath;
+        int m_UploadInfoIndex;
         bool m_Success;
     };
 }

@@ -45,15 +45,15 @@ namespace Helpers {
         Q_OBJECT
     public:
         explicit UploadWorker(UploadItem *uploadItem, const Encryption::SecretsManager *secretsManager,
-                              QSemaphore *uploadSemaphore,
-                              int delay, QObject *parent = 0);
+                              QSemaphore *uploadSemaphore, int index,
+                              QObject *parent = 0);
         ~UploadWorker();
 
     signals:
         void stopped();
-        void finished(bool success);
+        void finished(int index, bool success);
         void error(QString err);
-        void percentChanged(double newPercent, double oldPercent);
+        void percentChanged(int index, double newPercent, double oldPercent);
 
     public slots:
         void process();

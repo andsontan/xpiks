@@ -24,6 +24,7 @@
 #include <QRegExp>
 #include <QFileInfo>
 #include <QThread>
+#include <QtMath>
 #include "../Models/artworkmetadata.h"
 #include "uploaditem.h"
 #include "externaltoolsprovider.h"
@@ -43,11 +44,13 @@ namespace Helpers {
         const QString &curlPath = Helpers::ExternalToolsProvider::getCurlPath();
         int oneItemUploadTimeout = Helpers::ExternalToolsProvider::getOneItemUploadMinutesTimeout();
 
-        foreach (Models::UploadInfo *info, uploadInfos) {
+        int count = uploadInfos.length();
+        for (int i = 0; i < count; ++i) {
+            Models::UploadInfo * info = uploadInfos.at(i);
             if (info->getIsSelected()) {
                 UploadItem *item;
                 bool useZips = info->getZipBeforeUpload();
-                item = new UploadItem(info, useZips ? zipsPathes : filePathes, oneItemUploadTimeout, curlPath);
+                item = new UploadItem(info, i, useZips ? zipsPathes : filePathes, oneItemUploadTimeout, curlPath);
                 uploadItems.append(item);
             }
         }
@@ -71,7 +74,7 @@ namespace Helpers {
         emit cancelAll();
     }
 
-    void UploadCoordinator::workerFinished(bool success)
+    void UploadCoordinator::workerFinished(int index, bool success)
     {
         bool allWorkersFinished = false;
 
@@ -87,14 +90,15 @@ namespace Helpers {
 
         if (allWorkersFinished) {
             Q_ASSERT(m_UploadSemaphore.available() == MAX_PARALLEL_UPLOAD);
-            percentChanged(100);
+            emit percentChanged(100);
+            emit percentChangedForItem(index, 100);
             m_PercentDone = 100;
             emit uploadFinished(!m_AnyFailed);
             stopThreads();
         }
     }
 
-    void UploadCoordinator::percentReported(double newPercent, double oldPercent)
+    void UploadCoordinator::percentReported(int index, double newPercent, double oldPercent)
     {
         double n = m_UploadThreads.length();
         if (n == 0) { n = 1.0; }
@@ -108,7 +112,8 @@ namespace Helpers {
         }
         m_PercentMutex.unlock();
 
-        percentChanged(percentDone);
+        emit percentChanged(percentDone);
+        emit percentChangedForItem(index, (int)qFloor(newPercent));
     }
 
     void UploadCoordinator::doRunUpload(const QList<UploadItem*> &uploadItems,
@@ -126,11 +131,11 @@ namespace Helpers {
             QObject::connect(worker, SIGNAL(stopped()), worker, SLOT(deleteLater()));
             QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
 
-            QObject::connect(worker, SIGNAL(finished(bool)), this, SLOT(workerFinished(bool)));
+            QObject::connect(worker, SIGNAL(finished(int,bool)), this, SLOT(workerFinished(int,bool)));
             QObject::connect(this, SIGNAL(cancelAll()), worker, SLOT(cancel()));
 
-            QObject::connect(worker, SIGNAL(percentChanged(double,double)),
-                             this, SLOT(percentReported(double,double)));
+            QObject::connect(worker, SIGNAL(percentChanged(int, double,double)),
+                             this, SLOT(percentReported(int, double,double)));
 
             m_UploadThreads.append(thread);
 

@@ -30,8 +30,7 @@
 
 namespace Helpers {
     UploadWorker::UploadWorker(UploadItem *uploadItem, const Encryption::SecretsManager *secretsManager,
-                               QSemaphore *uploadSemaphore,
-                               int delay, QObject *parent) :
+                               QSemaphore *uploadSemaphore, int index, QObject *parent) :
         QObject(parent),
         m_UploadItem(uploadItem),
         m_SecretsManager(secretsManager),
@@ -40,7 +39,7 @@ namespace Helpers {
         m_Timer(NULL),
         m_Host(uploadItem->m_UploadInfo->getHost()),
         m_PercentRegexp("[^0-9.]"),
-        m_Delay(delay),
+        m_Delay(index),
         m_PercentDone(0.0),
         m_FilesUploaded(0),
         m_Cancelled(false)
@@ -137,7 +136,8 @@ namespace Helpers {
         if (anotherFileUploaded) { m_FilesUploaded++; }
 
         if (percent > m_PercentDone) {
-            percentChanged(percent, m_PercentDone);
+            int index = m_UploadItem->m_UploadInfoIndex;
+            percentChanged(index, percent, m_PercentDone);
             m_PercentDone = percent;
         }
     }
@@ -187,7 +187,8 @@ namespace Helpers {
     }
 
     void UploadWorker::emitFinishSignals(bool success) {
-        emit finished(success);
+        int index = m_UploadItem->m_UploadInfoIndex;
+        emit finished(index, success);
         emit stopped();
     }
 }

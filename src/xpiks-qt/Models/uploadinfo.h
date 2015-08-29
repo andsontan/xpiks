@@ -35,6 +35,7 @@ namespace Models {
 
     public:
         UploadInfo():
+            m_Percent(0),
             m_ZipBeforeUpload(false),
             m_IsSelected(false)
         {
@@ -42,6 +43,7 @@ namespace Models {
         }
 
         UploadInfo(const QHash<int, QString>& items) :
+            m_Percent(0),
             m_IsSelected(false)
         {
             QString emptyString = QString::fromLatin1("");
@@ -63,6 +65,7 @@ namespace Models {
         bool isSomethingMissing() const { return m_EncodedPassword.isEmpty() || m_Host.isEmpty() || m_Username.isEmpty(); }
         bool isEmpty() const { return m_EncodedPassword.isEmpty() && m_Host.isEmpty() && m_Username.isEmpty() &&
                     (m_Title.isEmpty() || m_Title == QString::fromLatin1("Untitled")); }
+        int getPercent() const { return m_Percent; }
 
     public:
         bool setTitle(const QString &value) { bool result = m_Title != value; m_Title = value; return result; }
@@ -87,6 +90,8 @@ namespace Models {
         void restorePassword() { m_EncodedPassword = m_EncodedPasswordBackup; }
         void backupPassword() { m_EncodedPasswordBackup = m_EncodedPassword; }
         void dropPassword() { m_EncodedPassword = ""; }
+        void setPercent(int value) { m_Percent = value; }
+        void resetPercent() { m_Percent = 0; }
 
     public:
         QHash<int, QString> toHash() {
@@ -107,6 +112,7 @@ namespace Models {
         QString m_EncodedPassword;
         // used for backup when MP is incorrect
         QString m_EncodedPasswordBackup;
+        int m_Percent;
         bool m_ZipBeforeUpload;
         bool m_IsSelected;
     };

@@ -66,6 +66,7 @@ namespace Models {
 
     private slots:
          void uploaderPercentChanged(double percent);
+         void uploaderPercentChangedForItem(int index, int percent);
 
      private:
          void artworkUploadedHandler(bool success);

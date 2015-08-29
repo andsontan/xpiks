@@ -70,10 +70,11 @@ namespace Helpers {
         void itemFinished(bool success);
         void uploadFinished(bool success);
         void percentChanged(double percent);
+        void percentChangedForItem(int itemIndex, int percent);
 
     public slots:
-        void workerFinished(bool success);
-        void percentReported(double newPercent, double oldPercent);
+        void workerFinished(int index, bool success);
+        void percentReported(int index, double newPercent, double oldPercent);
 
     private:
         void doRunUpload(const QList<UploadItem *> &uploadItems, const Encryption::SecretsManager *secretsManager);

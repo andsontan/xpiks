@@ -312,6 +312,14 @@ Item {
                                                 font.bold: true
                                             }
 
+                                            StyledText {
+                                                id: percentText
+                                                text: percent + '%'
+                                                visible: artworkUploader.inProgress && isselected
+                                                color: Colors.artworkActiveColor
+                                                font.bold: true
+                                            }
+
                                             CloseIcon {
                                                 width: 14
                                                 height: 14
