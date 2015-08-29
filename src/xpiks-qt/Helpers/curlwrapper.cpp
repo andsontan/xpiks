@@ -32,10 +32,14 @@
 #include "curlwrapper.h"
 #include "uploaditem.h"
 
-Helpers::TestConnectionResult isConnectionValid(const QString &host, const QString &username, const QString &password) {
+Helpers::TestConnectionResult isConnectionValid(const QString &hostname, const QString &username, const QString &password) {
     bool isValid = false;
 
     const QString curlPath = Helpers::ExternalToolsProvider::getCurlPath();
+    QString host = hostname;
+    if (!host.startsWith("ftp://") && !host.startsWith("ftp.")) {
+        host = "ftp://" + host;
+    }
 
     QString command = QString("%1 %2 --user %3:%4").arg(curlPath, host, username, password);
     QProcess process;
