@@ -30,7 +30,7 @@
 
 namespace Helpers {
     UploadWorker::UploadWorker(UploadItem *uploadItem, const Encryption::SecretsManager *secretsManager,
-                               QSemaphore *uploadSemaphore, int index, QObject *parent) :
+                               QSemaphore *uploadSemaphore, int delay, QObject *parent) :
         QObject(parent),
         m_UploadItem(uploadItem),
         m_SecretsManager(secretsManager),
@@ -39,7 +39,7 @@ namespace Helpers {
         m_Timer(NULL),
         m_Host(uploadItem->m_UploadInfo->getHost()),
         m_PercentRegexp("[^0-9.]"),
-        m_Delay(index),
+        m_Delay(delay),
         m_PercentDone(0.0),
         m_FilesUploaded(0),
         m_Cancelled(false)
@@ -60,8 +60,6 @@ namespace Helpers {
     }
 
     void UploadWorker::process() {
-        QThread::sleep(m_Delay);
-
         const QStringList &filesToUpload = m_UploadItem->m_FilesToUpload;
         Models::UploadInfo *uploadInfo = m_UploadItem->m_UploadInfo;
         m_OverallFilesCount = filesToUpload.length();
@@ -72,10 +70,13 @@ namespace Helpers {
         QString command = createCurlCommand(uploadInfo, filesToUpload, maxSeconds);
 
         // initializations can't be in constructor, because
-        // it's executed in other thread
+        // it's executed in the other thread
         this->initializeUploadEntities();
 
+        qDebug() << "Waiting for the semaphore" << m_Host;
         m_UploadSemaphore->acquire();
+
+        QThread::sleep(m_Delay);
 
         // m_Cancelled check is only if this thread's cancel() preceds code below
         // for not releasing semaphore twice in innerProcessFinished() and cancel()
@@ -107,6 +108,7 @@ namespace Helpers {
         qDebug() << "Curl process finished for" << m_Host;
 
         if (!m_Cancelled) {
+            qDebug() << "Releasing semaphore for" << m_Host;
             m_UploadSemaphore->release();
         }
 
@@ -118,12 +120,14 @@ namespace Helpers {
         QString stderrText(stderrByteArray);
         qDebug() << "STDERR [" << m_Host << "]:" << stderrText;
 
+        updateUploadItemPercent(100);
+        emit percentChanged(100.0, m_PercentDone);
+
         bool success = exitCode == 0 && exitStatus == QProcess::NormalExit;
         emitFinishSignals(success);
     }
 
-    void UploadWorker::uploadOutputReady()
-    {
+    void UploadWorker::uploadOutputReady() {
         QString output = m_CurlProcess->readAllStandardError();
         QString prettyfiedOutput = output.right(10).trimmed();
 
@@ -136,8 +140,8 @@ namespace Helpers {
         if (anotherFileUploaded) { m_FilesUploaded++; }
 
         if (percent > m_PercentDone) {
-            int index = m_UploadItem->m_UploadInfoIndex;
-            percentChanged(index, percent, m_PercentDone);
+            updateUploadItemPercent(percent);
+            emit percentChanged(percent, m_PercentDone);
             m_PercentDone = percent;
         }
     }
@@ -198,8 +202,11 @@ namespace Helpers {
     }
 
     void UploadWorker::emitFinishSignals(bool success) {
-        int index = m_UploadItem->m_UploadInfoIndex;
-        emit finished(index, success);
+        emit finished(success);
         emit stopped();
+    }
+
+    void UploadWorker::updateUploadItemPercent(int percent) {
+        m_UploadItem->m_UploadInfo->setPercent(percent);
     }
 }

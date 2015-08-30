@@ -117,7 +117,7 @@ namespace Models {
         QString m_EncodedPassword;
         // used for backup when MP is incorrect
         QString m_EncodedPasswordBackup;
-        int m_Percent;
+        volatile int m_Percent;
         bool m_ZipBeforeUpload;
         bool m_IsSelected;
         bool m_FtpPassiveMode;

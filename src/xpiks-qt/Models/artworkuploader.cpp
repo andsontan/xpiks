@@ -31,14 +31,13 @@
 namespace Models {
     ArtworkUploader::ArtworkUploader() :
         ArtworksProcessor(),
-        m_IncludeEPS(false),
+        m_IncludeVector(false),
         m_Percent(0)
     {
         QObject::connect(&m_UploadCoordinator, SIGNAL(uploadStarted()), this, SLOT(onUploadStarted()));
         QObject::connect(&m_UploadCoordinator, SIGNAL(uploadFinished(bool)), this, SLOT(allFinished(bool)));
         QObject::connect(&m_UploadCoordinator, SIGNAL(itemFinished(bool)), this, SLOT(artworkUploaded(bool)));
         QObject::connect(&m_UploadCoordinator, SIGNAL(percentChanged(double)), this, SLOT(uploaderPercentChanged(double)));
-        QObject::connect(&m_UploadCoordinator, SIGNAL(percentChangedForItem(int,int)), this, SLOT(uploaderPercentChangedForItem(int,int)));
 
         m_TestingCredentialWatcher = new QFutureWatcher<Helpers::TestConnectionResult>(this);
         connect(m_TestingCredentialWatcher, SIGNAL(finished()), SLOT(credentialsTestingFinished()));
@@ -73,23 +72,12 @@ namespace Models {
     void ArtworkUploader::uploaderPercentChanged(double percent)
     {
         m_Percent = (int)(percent);
-        percentChanged();
-    }
-
-    void ArtworkUploader::uploaderPercentChangedForItem(int index, int percent)
-    {
+        emit percentChanged();
         UploadInfoRepository *uploadInfoRepository = m_CommandManager->getUploadInfoRepository();
-        const QList<Models::UploadInfo *> &infos = uploadInfoRepository->getUploadInfos();
-
-        if (index < 0 || index >= infos.length()) { return; }
-
-        Models::UploadInfo *item = infos[index];
-        item->setPercent(percent);
-        uploadInfoRepository->updatePercent(index);
+        uploadInfoRepository->updatePercentages();
     }
 
-    void ArtworkUploader::artworkUploadedHandler(bool success)
-    {
+    void ArtworkUploader::artworkUploadedHandler(bool success) {
         if (!success) {
             setIsError(true);
         }
@@ -142,7 +130,7 @@ namespace Models {
         const Encryption::SecretsManager *secretsManager = m_CommandManager->getSecretsManager();
 
         uploadInfoRepository->resetPercents();
-        m_UploadCoordinator.uploadArtworks(artworkList, infos, m_IncludeEPS, secretsManager);
+        m_UploadCoordinator.uploadArtworks(artworkList, infos, m_IncludeVector, secretsManager);
     }
 
     void ArtworkUploader::cancelProcessing()

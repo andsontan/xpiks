@@ -69,6 +69,10 @@ namespace Models {
         }
     }
 
+    void UploadInfoRepository::updatePercentages() {
+        emit dataChanged(index(0), index(m_UploadInfos.count() - 1), QVector<int>() << PercentRole);
+    }
+
     int UploadInfoRepository::rowCount(const QModelIndex &parent) const
     {
         Q_UNUSED(parent);

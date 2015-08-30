@@ -34,23 +34,21 @@
 namespace Helpers {
     void UploadCoordinator::uploadArtworks(const QList<Models::ArtworkMetadata *> &artworkList,
                                            const QList<Models::UploadInfo *> &uploadInfos,
-                                           bool includeEPS, const Encryption::SecretsManager *secretsManager)
+                                           bool includeVector, const Encryption::SecretsManager *secretsManager)
     {
         QStringList filePathes;
         QStringList zipsPathes;
-        extractFilePathes(artworkList, filePathes, zipsPathes, includeEPS);
+        extractFilePathes(artworkList, filePathes, zipsPathes, includeVector);
 
         QList<UploadItem*> uploadItems;
         const QString &curlPath = Helpers::ExternalToolsProvider::getCurlPath();
         int oneItemUploadTimeout = Helpers::ExternalToolsProvider::getOneItemUploadMinutesTimeout();
 
-        int count = uploadInfos.length();
-        for (int i = 0; i < count; ++i) {
-            Models::UploadInfo * info = uploadInfos.at(i);
+        foreach (Models::UploadInfo *info, uploadInfos) {
             if (info->getIsSelected()) {
                 UploadItem *item;
                 bool useZips = info->getZipBeforeUpload();
-                item = new UploadItem(info, i, useZips ? zipsPathes : filePathes, oneItemUploadTimeout, curlPath);
+                item = new UploadItem(info, useZips ? zipsPathes : filePathes, oneItemUploadTimeout, curlPath);
                 uploadItems.append(item);
             }
         }
@@ -74,7 +72,7 @@ namespace Helpers {
         emit cancelAll();
     }
 
-    void UploadCoordinator::workerFinished(int index, bool success)
+    void UploadCoordinator::workerFinished(bool success)
     {
         bool allWorkersFinished = false;
 
@@ -91,14 +89,13 @@ namespace Helpers {
         if (allWorkersFinished) {
             Q_ASSERT(m_UploadSemaphore.available() == MAX_PARALLEL_UPLOAD);
             emit percentChanged(100);
-            emit percentChangedForItem(index, 100);
             m_PercentDone = 100;
             emit uploadFinished(!m_AnyFailed);
             stopThreads();
         }
     }
 
-    void UploadCoordinator::percentReported(int index, double newPercent, double oldPercent)
+    void UploadCoordinator::percentReported(double newPercent, double oldPercent)
     {
         double n = m_UploadThreads.length();
         if (n == 0) { n = 1.0; }
@@ -113,15 +110,17 @@ namespace Helpers {
         m_PercentMutex.unlock();
 
         emit percentChanged(percentDone);
-        emit percentChangedForItem(index, (int)qFloor(newPercent));
     }
 
     void UploadCoordinator::doRunUpload(const QList<UploadItem*> &uploadItems,
                                         const Encryption::SecretsManager *secretsManager)
     {
-        int i = 0;
-        foreach (UploadItem *uploadItem, uploadItems) {
-            UploadWorker *worker = new UploadWorker(uploadItem, secretsManager, &m_UploadSemaphore, i);
+        int length = uploadItems.length();
+        for (int i = 0; i < length; ++i) {
+            UploadItem *uploadItem = uploadItems[i];
+            int delay = i;
+
+            UploadWorker *worker = new UploadWorker(uploadItem, secretsManager, &m_UploadSemaphore, delay);
             QThread *thread = new QThread();
             worker->moveToThread(thread);
 
@@ -131,31 +130,31 @@ namespace Helpers {
             QObject::connect(worker, SIGNAL(stopped()), worker, SLOT(deleteLater()));
             QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
 
-            QObject::connect(worker, SIGNAL(finished(int,bool)), this, SLOT(workerFinished(int,bool)));
+            QObject::connect(worker, SIGNAL(finished(bool)), this, SLOT(workerFinished(bool)));
             QObject::connect(this, SIGNAL(cancelAll()), worker, SLOT(cancel()));
 
-            QObject::connect(worker, SIGNAL(percentChanged(int, double,double)),
-                             this, SLOT(percentReported(int, double,double)));
+            QObject::connect(worker, SIGNAL(percentChanged(double,double)),
+                             this, SLOT(percentReported(double,double)));
 
             m_UploadThreads.append(thread);
 
             thread->start();
-            i++;
         }
     }
 
     void UploadCoordinator::extractFilePathes(const QList<Models::ArtworkMetadata *> &artworkList,
                                               QStringList &filePathes,
                                               QStringList &zipsPathes,
-                                              bool includeEPS) const {
+                                              bool includeVector) const {
 
         foreach(Models::ArtworkMetadata *metadata, artworkList) {
             QString filepath = metadata->getFilepath();
             filePathes.append(filepath);
 
-            if (includeEPS) {
+            if (includeVector) {
                 QString epsFilepath = filepath.replace(QRegExp("(.*)[.]jpg", Qt::CaseInsensitive), "\\1.eps");
                 QString aiFilepath = filepath.replace(QRegExp("(.*)[.]jpg", Qt::CaseInsensitive), "\\1.ai");
+
                 if (QFileInfo(epsFilepath).exists()) {
                     filePathes.append(epsFilepath);
                 } else if (QFileInfo(aiFilepath).exists()) {

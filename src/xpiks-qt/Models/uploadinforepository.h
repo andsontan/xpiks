@@ -130,7 +130,7 @@ namespace Models {
         void restoreRealPasswords() { foreach (UploadInfo *info, m_UploadInfos) { info->restorePassword(); } }
 
     public:
-        void updatePercent(int itemIndex) { emit dataChanged(index(itemIndex), index(itemIndex), (QVector<int>() << PercentRole));}
+        void updatePercentages();
         void resetPercents() { foreach (UploadInfo *info, m_UploadInfos) { info->resetPercent(); } }
 
     public:

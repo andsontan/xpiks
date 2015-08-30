@@ -675,8 +675,8 @@ Item {
 
                     StyledCheckbox {
                         text: qsTr("Include vector (.eps, .ai)")
-                        checked: artworkUploader.includeEPS
-                        onCheckedChanged: artworkUploader.includeEPS = checked
+                        checked: artworkUploader.includeVector
+                        onCheckedChanged: artworkUploader.includeVector = checked
                         enabled: !artworkUploader.inProgress
                     }
 
@@ -703,7 +703,7 @@ Item {
 
                     StyledButton {
                         id: uploadButton
-                        text: artworkUploader.inProgress ? qsTr("Cancel") : qsTr("Start Upload")
+                        text: artworkUploader.inProgress ? qsTr("Stop") : qsTr("Start Upload")
                         width: 130
                         onClicked: {
                             if (!artworkUploader.inProgress) {

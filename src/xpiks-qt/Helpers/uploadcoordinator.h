@@ -59,7 +59,7 @@ namespace Helpers {
     public:
         void uploadArtworks(const QList<Models::ArtworkMetadata *> &artworkList,
                             const QList<Models::UploadInfo *> &uploadInfos,
-                            bool includeEPS,
+                            bool includeVector,
                             const Encryption::SecretsManager *secretsManager);
 
         void cancelUpload();
@@ -70,16 +70,15 @@ namespace Helpers {
         void itemFinished(bool success);
         void uploadFinished(bool success);
         void percentChanged(double percent);
-        void percentChangedForItem(int itemIndex, int percent);
 
     public slots:
-        void workerFinished(int index, bool success);
-        void percentReported(int index, double newPercent, double oldPercent);
+        void workerFinished(bool success);
+        void percentReported(double newPercent, double oldPercent);
 
     private:
         void doRunUpload(const QList<UploadItem *> &uploadItems, const Encryption::SecretsManager *secretsManager);
         void extractFilePathes(const QList<Models::ArtworkMetadata*> &artworkList,
-                               QStringList &filePathes, QStringList &zipsPathes, bool includeEPS) const;
+                               QStringList &filePathes, QStringList &zipsPathes, bool includeVector) const;
         void stopThreads();
 
     private:

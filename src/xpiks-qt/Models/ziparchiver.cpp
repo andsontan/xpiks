@@ -72,8 +72,12 @@ namespace Models {
             hash[basename].append(filepath);
 
             QString epsFilepath = filepath.replace(QRegExp("(.*)[.]jpg", Qt::CaseInsensitive), "\\1.eps");
+            QString aiFilepath = filepath.replace(QRegExp("(.*)[.]jpg", Qt::CaseInsensitive), "\\1.ai");
+
             if (QFileInfo(epsFilepath).exists()) {
                 hash[basename].append(epsFilepath);
+            } else if (QFileInfo(aiFilepath).exists()) {
+                hash[basename].append(aiFilepath);
             }
         }
     }

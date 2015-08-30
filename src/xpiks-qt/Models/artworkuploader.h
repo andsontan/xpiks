@@ -40,18 +40,18 @@ namespace Models {
          ~ArtworkUploader() { delete m_TestingCredentialWatcher; }
 
     public:
-         Q_PROPERTY(bool includeEPS READ getIncludeEPS WRITE setIncludeEPS NOTIFY includeEPSChanged)
+         Q_PROPERTY(bool includeVector READ getIncludeVector WRITE setIncludeVector NOTIFY includeVectorChanged)
 
     signals:
-         void includeEPSChanged(bool);
+         void includeVectorChanged(bool);
          void credentialsChecked(bool result, const QString &url);
 
     public:
-         bool getIncludeEPS() const { return m_IncludeEPS; }
-         void setIncludeEPS(bool value) {
-             if (m_IncludeEPS != value) {
-                 m_IncludeEPS = value;
-                 emit includeEPSChanged(value);
+         bool getIncludeVector() const { return m_IncludeVector; }
+         void setIncludeVector(bool value) {
+             if (m_IncludeVector != value) {
+                 m_IncludeVector = value;
+                 emit includeVectorChanged(value);
              }
          }
 
@@ -66,7 +66,6 @@ namespace Models {
 
     private slots:
          void uploaderPercentChanged(double percent);
-         void uploaderPercentChangedForItem(int index, int percent);
 
      private:
          void artworkUploadedHandler(bool success);
@@ -86,7 +85,7 @@ namespace Models {
      private:
          Helpers::UploadCoordinator m_UploadCoordinator;
          QFutureWatcher<Helpers::TestConnectionResult> *m_TestingCredentialWatcher;
-         bool m_IncludeEPS;
+         bool m_IncludeVector;
          int m_Percent;
     };
 }
