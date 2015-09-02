@@ -40,7 +40,20 @@ namespace Models {
     {
 #ifdef WITH_LOGS
         m_WithLogs = true;
+#else
+        m_WithLogs = false;
+#endif
+    }
 
+    LogsModel::~LogsModel() {
+#ifdef WITH_LOGS
+        m_LoggingWorker->cancel();
+        m_LoggingWorker->deleteLater();
+#endif
+    }
+
+    void LogsModel::startLogging() {
+#ifdef WITH_LOGS
         QThread *loggingThread = new QThread();
         m_LoggingWorker->moveToThread(loggingThread);
 
@@ -51,15 +64,6 @@ namespace Models {
         QObject::connect(loggingThread, SIGNAL(finished()), loggingThread, SLOT(deleteLater()));
 
         loggingThread->start();
-#else
-        m_WithLogs = false;
-#endif
-    }
-
-    LogsModel::~LogsModel() {
-#ifdef WITH_LOGS
-        m_LoggingWorker->cancel();
-        m_LoggingWorker->deleteLater();
 #endif
     }
 

@@ -40,6 +40,9 @@ namespace Models {
         virtual ~LogsModel();
 
     public:
+        void startLogging();
+
+    public:
         Q_INVOKABLE QString getAllLogsText(bool moreLogs=false);
         Q_INVOKABLE void clearLogs();        
         bool getWithLogs() const { return m_WithLogs; }

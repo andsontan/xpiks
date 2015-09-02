@@ -115,6 +115,7 @@ int main(int argc, char *argv[]) {
     }
 
     Models::LogsModel logsModel;
+    logsModel.startLogging();
 
 #ifdef WITH_LOGS
     QString logFileDir = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
