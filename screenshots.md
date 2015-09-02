@@ -12,7 +12,7 @@ permalink: /screenshots/
   <br />
   <div>
   <p>Multiple edits</p>
-<img src="{{site.url}}/images/screenshots/MultipleEdits.jpg" />
+<img src="{{site.url}}/images/screenshots/MultipleEdit.jpg" />
 </div>
   <br />
   <div>
