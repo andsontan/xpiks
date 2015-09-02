@@ -12,6 +12,7 @@ In this article you will learn how:
 - keyword artworks
 - use keywods suggestion
 - <span class="gray">save XMP/IPTC metadata</span>
+- <span class="gray">check for warnings before upload</span>
 - <span class="gray">upload artworks to microstocks</span>
 
 In this post you will learn how to add images for keywording or upload and to add keywords and other metadata to existing images.

@@ -12,6 +12,7 @@ In this article you will learn how:
 - <span class="gray">keyword artworks</span>
 - <span class="gray">use keywods suggestion</span>
 - save XMP/IPTC metadata
+- check for warnings before upload
 - upload artworks to microstocks
 
 In this post you will learn how to save edited artworks and to upload them to microstocks.
@@ -25,6 +26,10 @@ So let's save them. In order to do that, just select images you want to save and
 After export finished, press "Close" <span class="gray">if the dialog didn't close itself</span> and proceed to upload. Select artworks you wish to upload and press "Upload" button.
 
 <img alt="Upload started" src="{{site.url}}/images/howto/xpiks-qt-upload-started.jpg" class="small-12 large-8" />
+
+If you have any errors, you will see orange "Warnings" link where you can check what is wrong with the images. You can see warnings related to dimensions, description and keywords error (empty, too long etc). You can configure warnings limits in the "Warnings" section of Xpiks settings.
+
+<img alt="Warnings check" src="{{site.url}}/images/screenshots/WarningsDialog.jpg" />
 
 Most microstocks allow FTP uploading of your works. To proceed with upload, add some hosts of agencies. Usually you can find FTP credentials in your stock's upload section. Just look for FTP host, username and password and enter them in appropriate fields in Xpiks hosts edit dialog. All credentials are automatically saved for you. Passwords are encrypted using the strong encryption. <span class="gray">At first they are encrypted using some default password. You can choose your own password (Maste password) in Xpiks settings, section "Security".</span>
 
