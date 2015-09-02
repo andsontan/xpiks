@@ -8,26 +8,26 @@ Build instructions for your desktop platform:
 
 - download latest Qt (5.4) for your platform
 - while installing, add Qt bin directory to your PATH
-- download source code in Downloads section of this release
-- download source code or initialize the repository of tiny-AES
-- rename tiny-AES/aes.c to tiny-AES/aes.cpp for correct build
-- [Windows] if you're building for Windows, build Zlib (see instructions below)
+- download source code in <a href="{{ site.url }}/downloads">Downloads</a> section
+- download source code or initialize the repository of tiny-AES (`git submodule init` and `git submodule update`)
+- rename `tiny-AES/aes.c` to `tiny-AES/aes.cpp` for correct build
+- <span class="gray">[Windows]</span> if you're building for Windows, build Zlib (see instructions below)
 - open xpiks-qt.pro file with Qt Creator installed with Qt
 - select build target Release, press "Run qmake" and then "Build"
 - now you can use xpiks-qt on your computer
 
 
-To build zlib under Windows for Xpiks, do:
-  
-- download zlib (1.2.8) source code and extract to scr/zlib-1.2.8
-- open zlib-project and build it for Debug/Release
-- copy z.lib and z.pdb to src/libs directory
+To build zlib under Windows for Xpiks, do the following:
+
+- download zlib (1.2.8) source code and extract to `scr/zlib-1.2.8`
+- open Qt zlib-project (in the repository) and build it for Debug/Release
+- copy z.lib and z.pdb to `src/libs` directory
 
 If you wish to redistribute it for similar desktop platforms to yours, follow next steps:
 
-- after build is successful, navigate to build directory, open it in terminar
+- after build is successful, navigate to build directory, open it in terminal
 - find macdeployqt, windeployqt or any similar tool in Qt bin directory
-- read help of ..deployqt tool and execute it with necessary parameters to include qt frameworks which are needed for build as well as QML directories
+- read help of *deployqt tool and execute it with necessary parameters to include qt frameworks which are needed for build as well as QML directories
 
 Sample macdeployqt command for OS X can be found lower: (depends on your build-* directory path)
 
@@ -39,7 +39,7 @@ And for Windows here:
 
 The RELEASE procedure for OS X, Windows:
 
-- build zlib for Release and put it to libs/ directory (as specified above)
+- build zlib for Release and put it to `libs/` directory (as specified above)
 - build Xpiks for Release
 - copy the exiftool to the directory with xpiks binaries
 - copy the curl (including additional libs) to the directory with xpiks binaries
