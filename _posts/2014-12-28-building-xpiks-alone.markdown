@@ -36,3 +36,11 @@ Sample macdeployqt command for OS X can be found lower: (depends on your build-*
 And for Windows here:
 
 `windeployqt.exe --qmldir=../../xpiks-qt/Components/ --qmldir=../../xpiks-qt/Constants/ --qmldir=../../xpiks-qt/Dialogs/ --qmldir=../../xpiks-qt/StyledControls/ xpiks-qt.exe`
+
+The RELEASE procedure for OS X, Windows:
+
+- build zlib for Release and put it to libs/ directory (as specified above)
+- build Xpiks for Release
+- copy the exiftool to the directory with xpiks binaries
+- copy the curl (including additional libs) to the directory with xpiks binaries
+- create the archive and that's it
