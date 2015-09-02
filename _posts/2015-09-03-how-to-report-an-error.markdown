@@ -10,9 +10,9 @@ To report an error, first of all write down what have you done before the error.
 
 Afterwards, try to find Xpiks logs:
 
-- on Windows they should be at "C:/Users/<USER>/AppData/Roaming/Xpiks/" directory
-- on OS X they should be at "~/Library/Application Support/Xpiks/" directory
-- on Linux they should be at "~/.local/share/xpiks/" directory
+- on Windows they should be at `C:/Users/USERNAME/AppData/Roaming/Xpiks/` directory
+- on OS X they should be at `~/Library/Application Support/Xpiks/` directory
+- on Linux they should be at `~/.local/share/xpiks/` directory
 
 Now you can navigate to the <a href="{{ site.url }}/support">Support</a> part of this website (Google group) and to create a new topic, where you are kindly asked to include:
 
