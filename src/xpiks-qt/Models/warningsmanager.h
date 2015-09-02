@@ -38,7 +38,7 @@ namespace Models {
             QAbstractListModel(parent)
         { }
 
-        ~WarningsManager() {}
+        virtual ~WarningsManager() {}
 
     public:
         enum WarningManagerRoles {

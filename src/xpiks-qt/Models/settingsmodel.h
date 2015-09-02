@@ -42,6 +42,7 @@ namespace Models {
         Q_PROPERTY(bool mustUseConfirmations READ getMustUseConfirmations WRITE setMustUseConfirmations NOTIFY mustUseConfirmationsChanged)
     public:
         explicit SettingsModel(QObject *parent = 0);
+        virtual ~SettingsModel() {}
 
     public:
         Q_INVOKABLE void resetAllValues();

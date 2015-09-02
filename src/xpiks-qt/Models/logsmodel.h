@@ -26,25 +26,27 @@
 #include <QString>
 #include "../Common/defines.h"
 
+namespace Helpers {
+    class LoggingWorker;
+}
+
 namespace Models {
     class LogsModel : public QObject {
         Q_OBJECT
+        Q_PROPERTY(bool withLogs READ getWithLogs CONSTANT)
+
     public:
         LogsModel(QObject *parent=NULL);
-        ~LogsModel() { emit stopLogsSignal(); }
+        virtual ~LogsModel();
+
     public:
         Q_INVOKABLE QString getAllLogsText(bool moreLogs=false);
-        Q_INVOKABLE void clearLogs();
-        Q_INVOKABLE bool canClearLogs() const {
-#ifdef WITH_LOGS
-            return true;
-#else
-            return false;
-#endif
-        }
+        Q_INVOKABLE void clearLogs();        
+        bool getWithLogs() const { return m_WithLogs; }
 
-    signals:
-        void stopLogsSignal();
+    private:
+        Helpers::LoggingWorker *m_LoggingWorker;
+        bool m_WithLogs;
     };
 }
 

@@ -20,7 +20,7 @@
  */
 
 #include "logsmodel.h"
-
+#include "../Helpers/loggingworker.h"
 #include <QThread>
 #include <QString>
 #include <QFile>
@@ -29,30 +29,37 @@
 #include <QDateTime>
 #include <QTextStream>
 #include <QStandardPaths>
-#include "../Helpers/constants.h"
 #include "../Helpers/stringhelper.h"
 #include "../Helpers/logger.h"
-#include "../Helpers/loggingworker.h"
 
 namespace Models {
 
     LogsModel::LogsModel(QObject *parent) :
-        QObject(parent)
+        QObject(parent),
+        m_LoggingWorker(new Helpers::LoggingWorker())
     {
 #ifdef WITH_LOGS
-        Helpers::LoggingWorker *loggerWorker = new Helpers::LoggingWorker();
+        m_WithLogs = true;
+
         QThread *loggingThread = new QThread();
-        loggerWorker->moveToThread(loggingThread);
+        m_LoggingWorker->moveToThread(loggingThread);
 
-        QObject::connect(loggingThread, SIGNAL(started()), loggerWorker, SLOT(process()));
-        QObject::connect(loggerWorker, SIGNAL(stopped()), loggingThread, SLOT(quit()));
+        QObject::connect(loggingThread, SIGNAL(started()), m_LoggingWorker, SLOT(process()));
+        QObject::connect(m_LoggingWorker, SIGNAL(stopped()), loggingThread, SLOT(quit()));
 
-        QObject::connect(loggerWorker, SIGNAL(stopped()), loggerWorker, SLOT(deleteLater()));
+        QObject::connect(m_LoggingWorker, SIGNAL(stopped()), m_LoggingWorker, SLOT(deleteLater()));
         QObject::connect(loggingThread, SIGNAL(finished()), loggingThread, SLOT(deleteLater()));
 
-        QObject::connect(this, SIGNAL(stopLogsSignal()), loggerWorker, SLOT(cancel()));
-
         loggingThread->start();
+#else
+        m_WithLogs = false;
+#endif
+    }
+
+    LogsModel::~LogsModel() {
+#ifdef WITH_LOGS
+        m_LoggingWorker->cancel();
+        m_LoggingWorker->deleteLater();
 #endif
     }
 

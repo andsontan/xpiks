@@ -31,6 +31,7 @@ namespace Models {
     class AbstractListModel : public QAbstractListModel {
     public:
         AbstractListModel(QObject *parent = 0) : QAbstractListModel(parent) {}
+        virtual ~AbstractListModel() {}
 
     public:
         void removeItemsAtIndices(const QList<QPair<int, int> > &ranges) {

@@ -37,7 +37,7 @@ namespace Models {
         Q_OBJECT
     public:
          ArtworkUploader();
-         ~ArtworkUploader() { delete m_TestingCredentialWatcher; }
+        virtual ~ArtworkUploader() { delete m_TestingCredentialWatcher; }
 
     public:
          Q_PROPERTY(bool includeVector READ getIncludeVector WRITE setIncludeVector NOTIFY includeVectorChanged)

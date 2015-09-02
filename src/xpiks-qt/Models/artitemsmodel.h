@@ -50,7 +50,7 @@ namespace Models {
             m_SelectedArtworksCount(0)
         {}
 
-        ~ArtItemsModel();
+        virtual ~ArtItemsModel();
 
     public:
         enum ArtItemsRoles {

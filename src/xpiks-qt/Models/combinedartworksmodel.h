@@ -52,7 +52,7 @@ namespace Models {
             m_CommonKeywordsModel(this)
         {}
 
-        ~CombinedArtworksModel() { qDeleteAll(m_ArtworksList); }
+        virtual ~CombinedArtworksModel() { qDeleteAll(m_ArtworksList); }
 
     public:
         void initArtworks(const QList<ArtItemInfo*> &artworks);

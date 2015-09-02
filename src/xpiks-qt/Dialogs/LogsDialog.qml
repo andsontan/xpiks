@@ -173,6 +173,7 @@ Item {
                     StyledButton {
                         id: loadMoreButton
                         text: qsTr("Load more logs")
+                        enabled: logsModel.withLogs
                         width: 120
                         onClicked: {
                             logsComponent.logText = logsModel.getAllLogsText(true)
@@ -189,6 +190,7 @@ Item {
 
                     StyledButton {
                         id: clearLogsButton
+                        enabled: logsModel.withLogs
                         text: qsTr("Clear logs")
                         width: 100
                         onClicked: {
@@ -206,11 +208,5 @@ Item {
                 }
             }
         }
-    }
-
-    Component.onCompleted: {
-        var canClearLogs = logsModel.canClearLogs()
-        clearLogsButton.enabled = canClearLogs
-        loadMoreButton.enabled = canClearLogs
     }
 }

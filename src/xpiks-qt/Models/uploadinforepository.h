@@ -42,7 +42,7 @@ namespace Models {
             QAbstractListModel(parent)
         {}
 
-        ~UploadInfoRepository() { qDeleteAll(m_UploadInfos); m_UploadInfos.clear();  }
+        virtual ~UploadInfoRepository() { qDeleteAll(m_UploadInfos); m_UploadInfos.clear();  }
 
         void initFromString(const QString &savedString);
 

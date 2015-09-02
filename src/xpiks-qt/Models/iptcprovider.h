@@ -37,7 +37,7 @@ namespace Models {
 
    public:
         IptcProvider();
-        ~IptcProvider() { delete m_MetadataWriter; delete m_MetadataReader; }
+        virtual ~IptcProvider() { delete m_MetadataWriter; delete m_MetadataReader; }
 
     public slots:
         void metadataImported(int);
