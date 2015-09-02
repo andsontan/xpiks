@@ -6,7 +6,7 @@ date: 2015-01-03T22:17:01+02:00
 
 This serie of posts will describe typical use case of Xpiks. Xpiks was created for microstockers by microstocker. It should help you to minimize time you spend keywording and uploading images or illustrations to stock agencies.
 
-You will learn how:
+In this article you will learn how:
 
 - add artworks to flow
 - keyword artworks
