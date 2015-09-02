@@ -8,10 +8,10 @@ Build instructions for your desktop platform:
 
 - download latest Qt (5.4) for your platform
 - while installing, add Qt bin directory to your PATH
-- download source code in <a href="{{ site.url }}/downloads">Downloads</a> section
+- download source code in <a href="{{ site.url }}/downloads">Downloads</a> section or at the <a href="https://github.com/Ribtoks/xpiks">GitHub</a>
 - download source code or initialize the repository of tiny-AES (`git submodule init` and `git submodule update`)
 - rename `tiny-AES/aes.c` to `tiny-AES/aes.cpp` for correct build
-- <span class="gray">[Windows]</span> if you're building for Windows, build Zlib (see instructions below)
+- <span class="gray">[Windows]</span> if you're building for Windows, build Zlib first (see instructions below)
 - open xpiks-qt.pro file with Qt Creator installed with Qt
 - select build target Release, press "Run qmake" and then "Build"
 - now you can use xpiks-qt on your computer
