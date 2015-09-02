@@ -45,7 +45,7 @@ Also you can use keywords suggestion in Xpiks which works using the Shutterstock
 
 <img alt="Keywords suggestion" src="{{site.url}}/images/howto/xpiks-qt-keywords-suggestion.jpg" class="small-12 large-8" />
 
-After pressing the "Add suggested keywords" button only keywords in the area marked "Suggested keywords" will be added to the selected image(s). Keywords in the area "Othe keywords" won't be added.
+After pressing the "Add suggested keywords" button only keywords in the area marked "Suggested keywords" will be added to the selected image(s). Keywords in the area "Other keywords" won't be added.
 
 Now you have choise to append written keywords to images you edit or to replace keywords with those you entered. Press appropriate button and you'll see keywords in main window. When an item is modified in any way, you'll see yellow sign near it until you'll save it. Also, you can track modified artworks count in status bar in the bottom line of Xpiks.
 
