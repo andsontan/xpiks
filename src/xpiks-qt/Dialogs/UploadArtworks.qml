@@ -655,7 +655,7 @@ Item {
                             anchors.fill: parent
                             color: Colors.selectedArtworkColor
                             opacity: 0.6
-                            visible: uploadInfos.infosCount == 0
+                            visible: (uploadInfos.infosCount == 0) || artworkUploader.inProgress
                         }
                     }
                 }
