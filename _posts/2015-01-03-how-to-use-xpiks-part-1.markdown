@@ -53,4 +53,8 @@ Now you have choise to append written keywords to images you edit or to replace 
 
 Now you can fine-tune images edited in combined mode and to add some specific keywords for each image.
 
+You can also see short system info (resolution, size, path) for each image. To do that just click on the file name directly under the image.
+
+<img alt="Short system info" src="{{site.url}}/images/screenshots/ShortFileInfoFeature.jpg" class="small-12 large-8" />
+
 Now this part is over. You can read about how to save metadata and upload artworks to microstock agencies in <a href="{{site.url}}/blog/2015/how-to-use-xpiks-part-2">next post</a>.
