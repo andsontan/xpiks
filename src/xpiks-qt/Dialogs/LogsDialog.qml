@@ -73,8 +73,10 @@ Item {
         text: qsTr("Are you sure you want to clear logs?")
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
+            clearLogsButton.enabled = false
             logsModel.clearLogs()
             logsComponent.logText = logsModel.getAllLogsText()
+            clearLogsButton.enabled = true
         }
     }
 
@@ -186,6 +188,7 @@ Item {
                     }
 
                     StyledButton {
+                        id: clearLogsButton
                         text: qsTr("Clear logs")
                         width: 100
                         onClicked: {
@@ -203,5 +206,11 @@ Item {
                 }
             }
         }
+    }
+
+    Component.onCompleted: {
+        var canClearLogs = logsModel.canClearLogs()
+        clearLogsButton.enabled = canClearLogs
+        loadMoreButton.enabled = canClearLogs
     }
 }

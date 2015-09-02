@@ -1,3 +1,24 @@
+/*
+ * This file is a part of Xpiks - cross platform application for
+ * keywording and uploading images for microstocks
+ * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ *
+ * Xpiks is distributed under the GNU General Public License, version 3.0
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #ifndef LOGGER_H
 #define LOGGER_H
 
@@ -5,12 +26,6 @@
 #include <QString>
 #include <QMutexLocker>
 #include <QMutex>
-#include <QFile>
-#include <QTextStream>
-#include <QTimer>
-#include <QDir>
-#include <QDateTime>
-#include <QStandardPaths>
 
 namespace Helpers {
     class Logger
@@ -28,53 +43,19 @@ namespace Helpers {
             m_LogFilepath = filepath;
         }
 
+        QString getLogFilePath() const { return m_LogFilepath; }
+
         void log(const QString &message) {
             QMutexLocker locker(&m_Mutex);
             m_LogsStorage[m_ActiveIndex].append(message);
         }
 
-        void flush() {
-            int previousIndex = m_ActiveIndex;
-
-            m_Mutex.lock();
-            {
-                m_ActiveIndex = (m_ActiveIndex + 1) % 2;
-            }
-            m_Mutex.unlock();
-
-            flushStream(previousIndex);
-        }
-
-        void clear() {
-            QMutexLocker locker(&m_Mutex);
-
-            m_LogsStorage[0].clear();
-            m_LogsStorage[1].clear();
-
-            QFile outFile(m_LogFilepath);
-            if (outFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
-                QTextStream ts(&outFile);
-                ts << QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss.zzz") << " - cleared log";
-                endl(ts);
-            }
-        }
+        void flush();
+        void clear();
 
     private:
-        void flushStream(int index) {
-            QStringList &logItems = m_LogsStorage[index];
-
-            if (logItems.length() > 0) {
-                QFile outFile(m_LogFilepath);
-                if (outFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append)) {
-                    QTextStream ts(&outFile);
-
-                    foreach (const QString &logItem, logItems) {
-                        ts << logItem;
-                        endl(ts);
-                    }
-                }
-            }
-        }
+        void flushStream(int index);
+        void clearStream();
 
     private:
         Logger() {}
@@ -85,52 +66,8 @@ namespace Helpers {
         QString m_LogFilepath;
         QStringList m_LogsStorage[2];
         QMutex m_Mutex;
-        int m_ActiveIndex;
-    };
-
-    class LogsManager : QObject {
-        Q_OBJECT
-    public:
-        LogsManager(QObject *parent=0) :
-            QObject(parent),
-            m_msec(2000)
-        {
-            m_Timer = new QTimer(this);
-            // TODO: refactor timer to wait for flush finish
-            m_Timer->setSingleShot(false);
-            connect(m_Timer, SIGNAL(timeout()), this, SLOT(onTimer()));
-        }
-
-        ~LogsManager() { m_Timer->stop(); delete m_Timer; }
-
-    public:
-        void initLogger(const QString &path) {
-            Logger &logger = Logger::getInstance();
-            logger.setLogFilePath(path);
-        }
-
-        void clearLogs() {
-            m_Timer->stop();
-
-            Logger &logger = Logger::getInstance();
-            logger.clear();
-
-            m_Timer->start(m_msec);
-        }
-
-        void startFlushing() {
-            m_Timer->start(m_msec);
-        }
-
-    public slots:
-        void onTimer() {
-            Logger &logger = Logger::getInstance();
-            logger.flush();
-        }
-
-    private:
-        QTimer *m_Timer;
-        int m_msec;
+        QMutex m_StreamMutex;
+        volatile int m_ActiveIndex;
     };
 }
 

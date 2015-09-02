@@ -19,34 +19,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef LOGSMODEL
-#define LOGSMODEL
+#ifndef DEFINES
+#define DEFINES
 
-#include <QObject>
-#include <QString>
-#include "../Common/defines.h"
-
-namespace Models {
-    class LogsModel : public QObject {
-        Q_OBJECT
-    public:
-        LogsModel(QObject *parent=NULL);
-        ~LogsModel() { emit stopLogsSignal(); }
-    public:
-        Q_INVOKABLE QString getAllLogsText(bool moreLogs=false);
-        Q_INVOKABLE void clearLogs();
-        Q_INVOKABLE bool canClearLogs() const {
-#ifdef WITH_LOGS
-            return true;
-#else
-            return false;
+#ifdef QT_NO_DEBUG
+#define WITH_LOGS
 #endif
-        }
 
-    signals:
-        void stopLogsSignal();
-    };
-}
-
-#endif // LOGSMODEL
+#endif // DEFINES
 

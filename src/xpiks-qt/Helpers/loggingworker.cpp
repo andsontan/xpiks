@@ -19,34 +19,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef LOGSMODEL
-#define LOGSMODEL
+#include "loggingworker.h"
+#include "logger.h"
+#include <QThread>
 
-#include <QObject>
-#include <QString>
-#include "../Common/defines.h"
+namespace Helpers {
+    LoggingWorker::LoggingWorker(QObject *parent) :
+        QObject(parent),
+        m_Cancel(false)
+    {
+    }
 
-namespace Models {
-    class LogsModel : public QObject {
-        Q_OBJECT
-    public:
-        LogsModel(QObject *parent=NULL);
-        ~LogsModel() { emit stopLogsSignal(); }
-    public:
-        Q_INVOKABLE QString getAllLogsText(bool moreLogs=false);
-        Q_INVOKABLE void clearLogs();
-        Q_INVOKABLE bool canClearLogs() const {
-#ifdef WITH_LOGS
-            return true;
-#else
-            return false;
-#endif
+    void LoggingWorker::process() {
+        Logger &logger = Logger::getInstance();
+        const int secondsToSleep = 1;
+
+        while (!m_Cancel) {
+            logger.flush();
+            QThread::sleep(secondsToSleep);
         }
+    }
 
-    signals:
-        void stopLogsSignal();
-    };
+    void LoggingWorker::cancel() {
+        m_Cancel = true;
+    }
 }
-
-#endif // LOGSMODEL
-

@@ -51,7 +51,10 @@ SOURCES += main.cpp \
     Suggestion/keywordssuggestor.cpp \
     Suggestion/suggestionqueryengine.cpp \
     Models/settingsmodel.cpp \
-    Helpers/curlwrapper.cpp
+    Helpers/curlwrapper.cpp \
+    Helpers/loggingworker.cpp \
+    Helpers/logger.cpp \
+    Models/logsmodel.cpp
 
 RESOURCES += qml.qrc
 
@@ -141,7 +144,9 @@ HEADERS += \
     Suggestion/keywordssuggestor.h \
     Suggestion/suggestionartwork.h \
     Suggestion/suggestionqueryengine.h \
-    Models/settingsmodel.h
+    Models/settingsmodel.h \
+    Helpers/loggingworker.h \
+    Common/defines.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

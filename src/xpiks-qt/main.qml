@@ -41,10 +41,6 @@ ApplicationWindow {
     minimumWidth: 900
     title: qsTr("Xpiks")
 
-    Component.onCompleted: {
-        logsModel.startFlushing()
-    }
-
     onClosing: {
         if (artItemsModel.modifiedArtworksCount > 0) {
             close.accepted = false
