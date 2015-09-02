@@ -11,8 +11,8 @@ You will learn how:
 - add artworks to flow
 - keyword artworks
 - use keywods suggestion
-- save XMP/IPTC metadata
-- upload artworks to microstocks
+- <span class="gray">save XMP/IPTC metadata</span>
+- <span class="gray">upload artworks to microstocks</span>
 
 In this post you will learn how to add images for keywording or upload and to add keywords and other metadata to existing images.
 
