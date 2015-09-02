@@ -32,7 +32,7 @@ permalink: /screenshots/
   <br />
   <div>
   <p>Master password for password storage</p>
-<img src="{{site.url}}/images/screenshots/SettingsSecurity.jpg" />
+<img src="{{site.url}}/images/screenshots/SettingsSecurity.jpg" class="small-12 large-8" />
 </div>
   <br />
 </section>
