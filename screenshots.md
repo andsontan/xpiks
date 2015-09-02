@@ -10,14 +10,30 @@ permalink: /screenshots/
 <img src="{{site.url}}/images/xpiks-qt-mainwindow.jpg" />
 </div>
   <br />
-<div>
-  <p>Multiple edits window</p>
-  <img src="{{site.url}}/images/xpiks-qt-editmany.jpg" />
-  </div>
+  <div>
+  <p>Multiple edits</p>
+<img src="{{site.url}}/images/screenshots/MultipleEdits.jpg" />
+</div>
   <br />
   <div>
-  <p>Upload window</p>
-  <img src="{{site.url}}/images/xpiks-qt-uploadwindow.jpg" />
-  </div>
+  <p>Keywords suggestion</p>
+<img src="{{site.url}}/images/screenshots/SuggestKeywords.jpg" />
+</div>
+  <br />
+  <div>
+  <p>Upload in progress</p>
+<img src="{{site.url}}/images/screenshots/UploadInProgress.jpg" />
+</div>
+  <br />
+  <div>
+  <p>Warnings check</p>
+<img src="{{site.url}}/images/screenshots/WarningsDialog.jpg" />
+</div>
+  <br />
+  <div>
+  <p>Master password for password storage</p>
+<img src="{{site.url}}/images/screenshots/SettingsSecurity.jpg" />
+</div>
+  <br />
 </section>
 </article>
