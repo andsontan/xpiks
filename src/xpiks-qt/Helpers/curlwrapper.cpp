@@ -29,6 +29,7 @@
 #include "../Models/uploadinfo.h"
 #include "../Models/artworkmetadata.h"
 #include "../Encryption/secretsmanager.h"
+#include "../Helpers/testconnectionresult.h"
 #include "curlwrapper.h"
 #include "uploaditem.h"
 

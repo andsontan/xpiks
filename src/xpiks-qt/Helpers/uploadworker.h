@@ -24,10 +24,11 @@
 
 #include <QObject>
 #include <QProcess>
-#include <QString>
-#include <QTimer>
-#include <QRegExp>
-#include <QSemaphore>
+
+class QSemaphore;
+class QTimer;
+class QRegExp;
+class QString;
 
 namespace Encryption {
     class SecretsManager;

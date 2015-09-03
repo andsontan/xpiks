@@ -23,12 +23,13 @@
 #define LOGSMODEL
 
 #include <QObject>
-#include <QString>
 #include "../Common/defines.h"
 
 namespace Helpers {
     class LoggingWorker;
 }
+
+class QString;
 
 namespace Models {
     class LogsModel : public QObject {

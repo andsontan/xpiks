@@ -25,6 +25,10 @@
 #include <QByteArray>
 #include <QDebug>
 #include <QThread>
+#include <QString>
+#include <QTimer>
+#include <QRegExp>
+#include <QSemaphore>
 #include "../Encryption/secretsmanager.h"
 #include "../Helpers/ziphelper.h"
 

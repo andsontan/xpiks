@@ -28,15 +28,11 @@
 #include <QPair>
 #include <QUrl>
 #include "abstractlistmodel.h"
-#include "artworkmetadata.h"
-#include "artworksrepository.h"
-#include "combinedartworksmodel.h"
-#include "warningsmanager.h"
-#include "artworkuploader.h"
-#include "iptcprovider.h"
 #include "../Common/baseentity.h"
 
 namespace Models {
+    class ArtworkMetadata;
+
     class ArtItemsModel :
             public AbstractListModel,
             public Common::BaseEntity
@@ -69,7 +65,7 @@ namespace Models {
         };
 
     public:
-        virtual ArtworkMetadata *createMetadata(const QString &filepath) const { return new ArtworkMetadata(filepath); }
+        virtual ArtworkMetadata *createMetadata(const QString &filepath) const;
 
     public:
         int getModifiedArtworksCount();
@@ -99,17 +95,7 @@ namespace Models {
         Q_INVOKABLE bool allArtworksSelected() const { return m_SelectedArtworksCount == m_ArtworkList.length(); }
         Q_INVOKABLE void selectDirectory(int directoryIndex);
         Q_INVOKABLE void checkForWarnings();
-        Q_INVOKABLE QObject *getArtworkItself(int index) const {
-            ArtworkMetadata *item = NULL;
-
-            if (index >= 0 && index < m_ArtworkList.length()) {
-                item = m_ArtworkList[index];
-                QQmlEngine::setObjectOwnership(item, QQmlEngine::CppOwnership);
-            }
-
-            return item;
-        }
-
+        Q_INVOKABLE QObject *getArtworkItself(int index) const;
         Q_INVOKABLE QString retrieveImageSize(int metadataIndex) const;
         Q_INVOKABLE QString retrieveFileSize(int metadataIndex) const;
 

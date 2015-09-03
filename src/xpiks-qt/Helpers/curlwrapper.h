@@ -22,8 +22,11 @@
 #ifndef CURLWRAPPER
 #define CURLWRAPPER
 
-#include <QString>
-#include "testconnectionresult.h"
+class QString;
+
+namespace Helpers {
+    class TestConnectionResult;
+}
 
 Helpers::TestConnectionResult isConnectionValid(const QString &host, const QString &username, const QString &password);
 

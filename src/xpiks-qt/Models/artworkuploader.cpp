@@ -24,9 +24,14 @@
 #include <QFileInfo>
 #include <QDebug>
 #include "uploadinforepository.h"
+#include "uploadinfo.h"
 #include "../Helpers/curlwrapper.h"
 #include "../Helpers/uploadcoordinator.h"
 #include "../Helpers/ziphelper.h"
+#include "../Models/artworkmetadata.h"
+#include "../Helpers/testconnectionresult.h"
+#include "../Helpers/uploadcoordinator.h"
+#include "../Commands/commandmanager.h"
 
 namespace Models {
     ArtworkUploader::ArtworkUploader() :
@@ -34,13 +39,20 @@ namespace Models {
         m_IncludeVector(false),
         m_Percent(0)
     {
-        QObject::connect(&m_UploadCoordinator, SIGNAL(uploadStarted()), this, SLOT(onUploadStarted()));
-        QObject::connect(&m_UploadCoordinator, SIGNAL(uploadFinished(bool)), this, SLOT(allFinished(bool)));
-        QObject::connect(&m_UploadCoordinator, SIGNAL(itemFinished(bool)), this, SLOT(artworkUploaded(bool)));
-        QObject::connect(&m_UploadCoordinator, SIGNAL(percentChanged(double)), this, SLOT(uploaderPercentChanged(double)));
+        m_UploadCoordinator = new Helpers::UploadCoordinator();
+
+        QObject::connect(m_UploadCoordinator, SIGNAL(uploadStarted()), this, SLOT(onUploadStarted()));
+        QObject::connect(m_UploadCoordinator, SIGNAL(uploadFinished(bool)), this, SLOT(allFinished(bool)));
+        QObject::connect(m_UploadCoordinator, SIGNAL(itemFinished(bool)), this, SLOT(artworkUploaded(bool)));
+        QObject::connect(m_UploadCoordinator, SIGNAL(percentChanged(double)), this, SLOT(uploaderPercentChanged(double)));
 
         m_TestingCredentialWatcher = new QFutureWatcher<Helpers::TestConnectionResult>(this);
         connect(m_TestingCredentialWatcher, SIGNAL(finished()), SLOT(credentialsTestingFinished()));
+    }
+
+    ArtworkUploader::~ArtworkUploader() {
+        delete m_TestingCredentialWatcher;
+        delete m_UploadCoordinator;
     }
 
     void ArtworkUploader::onUploadStarted()
@@ -83,6 +95,8 @@ namespace Models {
         }
     }
 
+    void ArtworkUploader::uploadArtworks() { doUploadArtworks(getArtworkList()); }
+
     void ArtworkUploader::checkCredentials(const QString &host, const QString &username, const QString &password) const
     {
         m_TestingCredentialWatcher->setFuture(QtConcurrent::run(isConnectionValid, host, username, password));
@@ -118,8 +132,7 @@ namespace Models {
         return needCreate;
     }
 
-    void ArtworkUploader::doUploadArtworks(const QList<ArtworkMetadata *> &artworkList)
-    {
+    void ArtworkUploader::doUploadArtworks(const QList<ArtworkMetadata *> &artworkList) {
         int artworksCount = artworkList.length();
         if (artworksCount == 0) {
             return;
@@ -130,11 +143,10 @@ namespace Models {
         const Encryption::SecretsManager *secretsManager = m_CommandManager->getSecretsManager();
 
         uploadInfoRepository->resetPercents();
-        m_UploadCoordinator.uploadArtworks(artworkList, infos, m_IncludeVector, secretsManager);
+        m_UploadCoordinator->uploadArtworks(artworkList, infos, m_IncludeVector, secretsManager);
     }
 
-    void ArtworkUploader::cancelProcessing()
-    {
-        m_UploadCoordinator.cancelUpload();
+    void ArtworkUploader::cancelProcessing() {
+        m_UploadCoordinator->cancelUpload();
     }
 }

@@ -25,8 +25,12 @@
 #include "../Commands/commandmanager.h"
 #include "../Commands/commandbase.h"
 #include "../Suggestion/keywordssuggestor.h"
+#include "artworkmetadata.h"
+#include "artiteminfo.h"
 
 namespace Models {
+    CombinedArtworksModel::~CombinedArtworksModel() { qDeleteAll(m_ArtworksList); }
+
     void CombinedArtworksModel::initArtworks(const QList<ArtItemInfo *> &artworks)
     {
         int innerLength = m_ArtworksList.length();
@@ -116,7 +120,8 @@ namespace Models {
         m_CommonKeywordsSet.clear();
     }
 
-    void CombinedArtworksModel::createCombinedEditCommand(Commands::CombinedEditType commandType) const {
+    void CombinedArtworksModel::createCombinedEditCommand(int commandTypeInt) const {
+        Commands::CombinedEditType commandType = (Commands::CombinedEditType)commandTypeInt;
         Commands::CombinedEditCommand *combinedEditCommand = new Commands::CombinedEditCommand(
                     commandType,
                     m_ArtworksList,
@@ -206,11 +211,11 @@ namespace Models {
     }
 
     void CombinedArtworksModel::saveSetKeywords() const {
-        createCombinedEditCommand(Commands::SetEditType);
+        createCombinedEditCommand((int)Commands::SetEditType);
     }
 
     void CombinedArtworksModel::saveAddKeywords() const {
-        createCombinedEditCommand(Commands::AppendEditType);
+        createCombinedEditCommand((int)Commands::AppendEditType);
     }
 
     int CombinedArtworksModel::getSelectedArtworksCount() const {

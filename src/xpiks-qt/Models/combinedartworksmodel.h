@@ -27,13 +27,13 @@
 #include <QStringList>
 #include <QString>
 #include <QList>
-#include "artiteminfo.h"
+#include <QSet>
 #include "abstractlistmodel.h"
 #include "../Common/baseentity.h"
 #include "../Common/basickeywordsmodel.h"
-#include "../Commands/combinededitcommand.h"
 
 namespace Models {
+    class ArtItemInfo;
 
     class CombinedArtworksModel :
             public AbstractListModel,
@@ -52,7 +52,7 @@ namespace Models {
             m_CommonKeywordsModel(this)
         {}
 
-        virtual ~CombinedArtworksModel() { qDeleteAll(m_ArtworksList); }
+        virtual ~CombinedArtworksModel();
 
     public:
         void initArtworks(const QList<ArtItemInfo*> &artworks);
@@ -124,7 +124,7 @@ namespace Models {
         }
 
     private:
-        void createCombinedEditCommand(Commands::CombinedEditType commandType) const;
+        void createCombinedEditCommand(int commandTypeInt) const;
 
     public:
         enum CombinedArtworksModelRoles {

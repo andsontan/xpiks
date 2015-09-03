@@ -21,6 +21,7 @@
 
 #include "osxnsurlhelper.h"
 #include <Foundation/Foundation.h>
+#include <QUrl>
 
 namespace Helpers {
     QUrl fromNSUrl(const QUrl &url) {

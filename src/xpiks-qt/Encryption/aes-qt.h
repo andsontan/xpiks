@@ -22,7 +22,7 @@
 #ifndef AESQT_H
 #define AESQT_H
 
-#include <QString>
+class QString;
 
 namespace Encryption {
     inline int getAlignedSize(int currSize, int alignment);

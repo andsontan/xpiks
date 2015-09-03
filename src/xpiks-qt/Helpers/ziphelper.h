@@ -22,8 +22,8 @@
 #ifndef ZIPHELPER
 #define ZIPHELPER
 
-#include <QStringList>
-#include <QString>
+class QStringList;
+class QString;
 
 namespace Helpers {
     QStringList zipFiles(QStringList filepathes);

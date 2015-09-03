@@ -31,6 +31,8 @@
 #include "../Commands/removeartworkscommand.h"
 #include "../Commands/pastekeywordscommand.h"
 #include "../Suggestion/keywordssuggestor.h"
+#include "../Commands/commandmanager.h"
+#include "artworksrepository.h"
 
 #ifdef Q_OS_OSX
 #include "../Helpers/osxnsurlhelper.h"
@@ -45,6 +47,8 @@ namespace Models {
         // being freed in gui
         //delete m_ArtworksDirectories;
     }
+
+    ArtworkMetadata *ArtItemsModel::createMetadata(const QString &filepath) const { return new ArtworkMetadata(filepath); }
 
     int ArtItemsModel::getModifiedArtworksCount()
     {
@@ -296,6 +300,17 @@ namespace Models {
             emit needCheckItemsForWarnings(selectedArtworks);
             qDebug() << "Checking selected items for upload warnings...";
         }
+    }
+
+    QObject *ArtItemsModel::getArtworkItself(int index) const {
+        ArtworkMetadata *item = NULL;
+
+        if (index >= 0 && index < m_ArtworkList.length()) {
+            item = m_ArtworkList[index];
+            QQmlEngine::setObjectOwnership(item, QQmlEngine::CppOwnership);
+        }
+
+        return item;
     }
 
     QString ArtItemsModel::retrieveImageSize(int metadataIndex) const {

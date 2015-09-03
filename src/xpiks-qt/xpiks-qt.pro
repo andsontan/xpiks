@@ -54,7 +54,8 @@ SOURCES += main.cpp \
     Helpers/curlwrapper.cpp \
     Helpers/loggingworker.cpp \
     Helpers/logger.cpp \
-    Models/logsmodel.cpp
+    Models/logsmodel.cpp \
+    Helpers/exiftoolwrapper.cpp
 
 RESOURCES += qml.qrc
 

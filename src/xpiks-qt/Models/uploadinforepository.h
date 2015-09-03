@@ -27,12 +27,11 @@
 #include <QByteArray>
 #include <QHash>
 #include <QList>
-#include "uploadinfo.h"
-#include "../Encryption/secretsmanager.h"
-#include "../Commands/commandmanager.h"
 #include "../Common/baseentity.h"
 
 namespace Models {
+    class UploadInfo;
+
     class UploadInfoRepository : public QAbstractListModel, public Common::BaseEntity
     {
         Q_OBJECT
@@ -42,7 +41,7 @@ namespace Models {
             QAbstractListModel(parent)
         {}
 
-        virtual ~UploadInfoRepository() { qDeleteAll(m_UploadInfos); m_UploadInfos.clear();  }
+        virtual ~UploadInfoRepository();
 
         void initFromString(const QString &savedString);
 
@@ -79,39 +78,9 @@ namespace Models {
             emit infosCountChanged();
         }
 
-        Q_INVOKABLE void addItem() {
-            int lastIndex = m_UploadInfos.length();
-            beginInsertRows(QModelIndex(), lastIndex, lastIndex);
-            m_UploadInfos.append(new UploadInfo());
-            endInsertRows();
-            emit infosCountChanged();
-        }
-
-        Q_INVOKABLE QString getInfoString() const {
-            QList<QHash<int, QString> > items;
-            foreach (UploadInfo *info, m_UploadInfos) {
-                if (!info->isEmpty()) {
-                    items.append(info->toHash());
-                }
-            }
-
-            // TODO: move to SFTP
-            // while stocks use FTP, sophisticated passwords
-            // saving on client side is useless
-            QByteArray result;
-            QDataStream stream(&result, QIODevice::WriteOnly);
-            stream << items;
-            return QString::fromUtf8(result.toBase64());
-        }
-
-        Q_INVOKABLE int getSelectedInfosCount() const {
-            int count = 0;
-            foreach (UploadInfo *info, m_UploadInfos) {
-                if (info->getIsSelected()) count++;
-            }
-            return count;
-        }
-
+        Q_INVOKABLE void addItem();
+        Q_INVOKABLE QString getInfoString() const;
+        Q_INVOKABLE int getSelectedInfosCount() const;
         Q_INVOKABLE QString getAgenciesWithMissingDetails();
 
     public:
@@ -121,17 +90,12 @@ namespace Models {
 
     public:
         void setEmptyPasswordsMode(bool mode) { m_EmptyPasswordsMode = mode; }
-        void backupAndDropRealPasswords() {
-            foreach (UploadInfo *info, m_UploadInfos) {
-                info->backupPassword();
-                info->dropPassword();
-            }
-        }
-        void restoreRealPasswords() { foreach (UploadInfo *info, m_UploadInfos) { info->restorePassword(); } }
+        void backupAndDropRealPasswords();
+        void restoreRealPasswords();
 
     public:
         void updatePercentages();
-        void resetPercents() { foreach (UploadInfo *info, m_UploadInfos) { info->resetPercent(); } }
+        void resetPercents();
 
     public:
         const QList<UploadInfo*> &getUploadInfos() const { return m_UploadInfos; }
@@ -143,23 +107,13 @@ namespace Models {
         bool setData(const QModelIndex &index, const QVariant & value, int role = Qt::EditRole);
 
     public slots:
-        void onBeforeMasterPasswordChanged(const QString &oldMasterPassword, const QString &newMasterPassword) {
-            m_CommandManager->recodePasswords(oldMasterPassword, newMasterPassword, m_UploadInfos);
-        }
-
-        void onAfterMasterPasswordReset() {
-            foreach (UploadInfo *info, m_UploadInfos) {
-                info->dropPassword();
-            }
-        }
+        void onBeforeMasterPasswordChanged(const QString &oldMasterPassword, const QString &newMasterPassword);
+        void onAfterMasterPasswordReset();
 
     protected:
         QHash<int, QByteArray> roleNames() const;
 
-        void removeInnerItem(int row) {
-            UploadInfo *info = m_UploadInfos.takeAt(row);
-            delete info;
-        }
+        void removeInnerItem(int row);
 
     private:
         QList<UploadInfo*> m_UploadInfos;

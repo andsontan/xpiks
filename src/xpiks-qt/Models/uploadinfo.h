@@ -26,7 +26,6 @@
 #include <QMutex>
 #include <QString>
 #include <QByteArray>
-#include "../Encryption/secretsmanager.h"
 
 namespace Models {
     class UploadInfo {

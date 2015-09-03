@@ -23,6 +23,7 @@
 #include "modifyartworkshistoryitem.h"
 #include "../Models/artitemsmodel.h"
 #include "../Models/artworkmetadata.h"
+#include "../Commands/commandmanager.h"
 
 void UndoRedo::ModifyArtworksHistoryItem::undo(const Commands::CommandManager *commandManager) const
 {

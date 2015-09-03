@@ -23,10 +23,11 @@
 #define ZIPARCHIVER_H
 
 #include <QFutureWatcher>
-#include <QStringList>
 #include <QPair>
-#include <QHash>
 #include "artworksprocessor.h"
+
+class QStringList;
+class QString;
 
 namespace Models {
     class ZipArchiver : public ArtworksProcessor

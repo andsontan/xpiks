@@ -21,6 +21,7 @@
 
 #include <QDebug>
 #include "addartworkscommand.h"
+#include "commandmanager.h"
 #include "../Models/artworksrepository.h"
 #include "../Models/artworkmetadata.h"
 #include "../Models/artitemsmodel.h"

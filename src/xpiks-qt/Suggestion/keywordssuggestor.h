@@ -28,12 +28,13 @@
 #include <QList>
 #include <QHash>
 #include <QSet>
-#include "suggestionartwork.h"
 #include "../Common/baseentity.h"
 #include "../Common/basickeywordsmodel.h"
 #include "suggestionqueryengine.h"
 
 namespace Suggestion {
+    class SuggestionArtwork;
+
     class KeywordsSuggestor : public QAbstractListModel, public Common::BaseEntity
     {
         Q_OBJECT

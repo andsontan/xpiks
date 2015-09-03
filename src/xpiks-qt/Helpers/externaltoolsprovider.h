@@ -22,8 +22,7 @@
 #ifndef EXTERNALTOOLSPROVIDER_H
 #define EXTERNALTOOLSPROVIDER_H
 
-#include <QString>
-#include "appsettings.h"
+class QString;
 
 namespace Helpers {
     class ExternalToolsProvider

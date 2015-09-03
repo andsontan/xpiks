@@ -22,7 +22,7 @@
 #ifndef OSXNSURLHELPER
 #define OSXNSURLHELPER
 
-#include <QUrl>
+class QUrl;
 
 namespace Helpers {
     QUrl fromNSUrl(const QUrl &url);

@@ -26,18 +26,21 @@
 #include <QStringList>
 #include <QFutureWatcher>
 #include "artworksprocessor.h"
-#include "uploadinfo.h"
-#include "../Helpers/uploaditem.h"
-#include "../Helpers/testconnectionresult.h"
-#include "../Helpers/uploadcoordinator.h"
+
+namespace Helpers {
+    class TestConnectionResult;
+    class UploadCoordinator;
+}
 
 namespace Models {
+    class ArtworkMetadata;
+
     class ArtworkUploader : public ArtworksProcessor
     {
         Q_OBJECT
     public:
          ArtworkUploader();
-        virtual ~ArtworkUploader() { delete m_TestingCredentialWatcher; }
+         virtual ~ArtworkUploader();
 
     public:
          Q_PROPERTY(bool includeVector READ getIncludeVector WRITE setIncludeVector NOTIFY includeVectorChanged)
@@ -71,7 +74,7 @@ namespace Models {
          void artworkUploadedHandler(bool success);
 
      public:
-         Q_INVOKABLE void uploadArtworks() { doUploadArtworks(getArtworkList()); }
+         Q_INVOKABLE void uploadArtworks();
          Q_INVOKABLE void checkCredentials(const QString &host, const QString &username, const QString &password) const;
          Q_INVOKABLE bool needCreateArchives() const;
 
@@ -83,7 +86,7 @@ namespace Models {
         virtual void innerResetModel() { m_Percent = 0; }
 
      private:
-         Helpers::UploadCoordinator m_UploadCoordinator;
+         Helpers::UploadCoordinator *m_UploadCoordinator;
          QFutureWatcher<Helpers::TestConnectionResult> *m_TestingCredentialWatcher;
          bool m_IncludeVector;
          int m_Percent;

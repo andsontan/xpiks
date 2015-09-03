@@ -19,10 +19,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QDebug>
 #include "uploadinforepository.h"
+#include <QDebug>
+#include "uploadinfo.h"
+#include "../Commands/commandmanager.h"
+#include "../Encryption/secretsmanager.h"
 
 namespace Models {
+    UploadInfoRepository::~UploadInfoRepository() { qDeleteAll(m_UploadInfos); m_UploadInfos.clear();  }
+
     void UploadInfoRepository::initFromString(const QString &savedString)
     {
         QByteArray originalData;
@@ -39,6 +44,39 @@ namespace Models {
             UploadInfo *info = new UploadInfo(hash);
             m_UploadInfos.append(info);
         }
+    }
+
+    void UploadInfoRepository::addItem() {
+        int lastIndex = m_UploadInfos.length();
+        beginInsertRows(QModelIndex(), lastIndex, lastIndex);
+        m_UploadInfos.append(new UploadInfo());
+        endInsertRows();
+        emit infosCountChanged();
+    }
+
+    QString UploadInfoRepository::getInfoString() const {
+        QList<QHash<int, QString> > items;
+        foreach (UploadInfo *info, m_UploadInfos) {
+            if (!info->isEmpty()) {
+                items.append(info->toHash());
+            }
+        }
+
+        // TODO: move to SFTP
+        // while stocks use FTP, sophisticated passwords
+        // saving on client side is useless
+        QByteArray result;
+        QDataStream stream(&result, QIODevice::WriteOnly);
+        stream << items;
+        return QString::fromUtf8(result.toBase64());
+    }
+
+    int UploadInfoRepository::getSelectedInfosCount() const {
+        int count = 0;
+        foreach (UploadInfo *info, m_UploadInfos) {
+            if (info->getIsSelected()) count++;
+        }
+        return count;
     }
 
     QString UploadInfoRepository::getAgenciesWithMissingDetails()
@@ -69,9 +107,24 @@ namespace Models {
         }
     }
 
+    void UploadInfoRepository::backupAndDropRealPasswords() {
+        foreach (UploadInfo *info, m_UploadInfos) {
+            info->backupPassword();
+            info->dropPassword();
+        }
+    }
+
+    void UploadInfoRepository::restoreRealPasswords() {
+        foreach (UploadInfo *info, m_UploadInfos) {
+            info->restorePassword();
+        }
+    }
+
     void UploadInfoRepository::updatePercentages() {
         emit dataChanged(index(0), index(m_UploadInfos.count() - 1), QVector<int>() << PercentRole);
     }
+
+    void UploadInfoRepository::resetPercents() { foreach (UploadInfo *info, m_UploadInfos) { info->resetPercent(); } }
 
     int UploadInfoRepository::rowCount(const QModelIndex &parent) const
     {
@@ -179,6 +232,17 @@ namespace Models {
         return true;
     }
 
+    void UploadInfoRepository::onBeforeMasterPasswordChanged(const QString &oldMasterPassword,
+                                                             const QString &newMasterPassword) {
+        m_CommandManager->recodePasswords(oldMasterPassword, newMasterPassword, m_UploadInfos);
+    }
+
+    void UploadInfoRepository::onAfterMasterPasswordReset() {
+        foreach (UploadInfo *info, m_UploadInfos) {
+            info->dropPassword();
+        }
+    }
+
     QHash<int, QByteArray> UploadInfoRepository::roleNames() const
     {
         QHash<int, QByteArray> roles;
@@ -198,5 +262,10 @@ namespace Models {
         roles[FtpPassiveModeRole] = "ftppassivemode";
         roles[EditFtpPassiveModeRole] = "editftppassivemode";
         return roles;
+    }
+
+    void UploadInfoRepository::removeInnerItem(int row) {
+        UploadInfo *info = m_UploadInfos.takeAt(row);
+        delete info;
     }
 }
