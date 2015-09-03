@@ -37,7 +37,7 @@ When adding a FTP account you can check it's validity using the "Test connection
 
 <img alt="Adding upload hosts" src="{{site.url}}/images/howto/xpiks-qt-upload-hosts.jpg" class="small-12 large-8" />
 
-You can add as many hosts as you wish and before each upload you can select stocks where you wish to upload this time. When everything is ready, just press "Start Upload" and wait until "Close" button becomes available again. When uploading, you have an option to upload EPS files along with JPG files (it's useful for illustrators, which have to keyword jpg's but upload both).
+You can add as many hosts as you wish and before each upload you can select stocks where you wish to upload this time. When everything is ready, just press "Start Upload" and wait until "Close" button becomes available again. When uploading, you have an option to upload EPS or AI files along with JPG files (it's useful for illustrators, which have to keyword jpg's but upload both). Also you have option to zip preview and vector file before actual upload (some stocks require you to upload zips) - just check the checkbox. <span class="gray">If talking about Shutterstock, you have to uncheck the Automatic FTP processing option in order to catch the keywords from the previews correctly.</span>
 
 <img alt="Uploading items" src="{{site.url}}/images/screenshots/UploadInProgress.jpg" class="small-12 large-8" />
 
