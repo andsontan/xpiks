@@ -6,8 +6,8 @@ date: 2014-12-28T09:54:01+02:00
 
 Build instructions for your desktop platform:
 
-- download latest Qt (5.4) for your platform
-- while installing, add Qt bin directory to your PATH
+- download Qt 5.3 or 5.4 for your platform from <a href="http://qt.io/">official website</a>
+- while installing, add Qt bin directory to your PATH (Environmental variables)
 - download source code in <a href="{{ site.url }}/downloads">Downloads</a> section or at the <a href="https://github.com/Ribtoks/xpiks">GitHub</a>
 - download source code or initialize the repository of tiny-AES (`git submodule init` and `git submodule update`)
 - rename `tiny-AES/aes.c` to `tiny-AES/aes.cpp` for correct build
@@ -41,6 +41,7 @@ The RELEASE procedure for OS X, Windows:
 
 - build zlib for Release and put it to `libs/` directory (as specified above)
 - build Xpiks for Release
+- use *deployqt tool (described above) to make Xpiks standalone
 - copy the exiftool to the directory with xpiks binaries
 - copy the curl (including additional libs) to the directory with xpiks binaries
 - create the archive and that's it
