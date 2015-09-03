@@ -21,6 +21,8 @@
 
 #include "undoredomanager.h"
 
+UndoRedo::UndoRedoManager::~UndoRedoManager() { qDeleteAll(m_HistoryStack); }
+
 void UndoRedo::UndoRedoManager::recordHistoryItem(UndoRedo::HistoryItem *historyItem)
 {
     if (!m_HistoryStack.empty()) {

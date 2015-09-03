@@ -24,11 +24,12 @@
 
 #include <QObject>
 #include <QStack>
-#include "historyitem.h"
 #include "../Commands/commandmanager.h"
 #include "../Common/baseentity.h"
 
 namespace UndoRedo {
+    class HistoryItem;
+
     class UndoRedoManager: public QObject, public Common::BaseEntity
     {
         Q_OBJECT
@@ -39,7 +40,7 @@ namespace UndoRedo {
             QObject(parent)
         {}
 
-        ~UndoRedoManager() { qDeleteAll(m_HistoryStack); }
+        virtual ~UndoRedoManager();
 
     public:
         bool getCanUndo() const { return !m_HistoryStack.empty(); }
