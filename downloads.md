@@ -34,7 +34,7 @@ permalink: /downloads/
 
 <p>Download the Xpiks zip archive from the link above, unpack it where you want and it's ready to go. Please, note that this build does work <strong>only for Windows 7 x64 and later</strong>.</p>
 
-<div style="clear:both;"></div>
+<div style="clear:both;height: 30px;"></div>
 
 <h2><strong>Other systems and versions</strong></h2>
 
