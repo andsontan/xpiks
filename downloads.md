@@ -7,9 +7,9 @@ permalink: /downloads/
 <article class="row">
 <section class="small-12 large-8 columns page-content">
 
-<h2> OS X instructions </h2>
+<h2><strong>OS X instructions</strong></h2>
 
-<div style="float: left; margin-right: 50px;">
+<div style="float: left; margin-right: 50px; height: 80px;">
 <a href="https://github.com/Ribtoks/xpiks/releases/download/v1.0-beta.8/xpiks-qt-v1.0-beta.8.dmg">
 <div>
 <img src="{{site.url}}/images/os_x_installer.jpg" style="vertical-align: middle;width:70px;" />
@@ -22,9 +22,9 @@ permalink: /downloads/
 
 <div style="clear:both;"></div>
 
-<h2> Windows 64-bit instructions </h2>
+<h2><strong>Windows 64-bit instructions</strong></h2>
 
-<div>
+<div style="float: left; margin-right: 50px; height: 80px;">
 <a href="https://github.com/Ribtoks/xpiks/releases/download/v1.0-beta.8/xpiks-qt-v1.0-beta.8.zip">
 <div><img src="{{site.url}}/images/windows_installer.jpg" style="vertical-align: middle;width:70px;" />
 <span style="vertical-align: middle;">Package for Windows x64</span>
@@ -36,7 +36,7 @@ permalink: /downloads/
 
 <div style="clear:both;"></div>
 
-<h2> Other systems and versions </h2>
+<h2><strong>Other systems and versions</strong></h2>
 
 <p>
 If you'd like to build Xpiks for your own platform, please, refer to <a href="{{site.url}}/blog/2014/building-xpiks-alone">this post</a>.
