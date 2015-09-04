@@ -171,8 +171,6 @@ namespace Helpers {
             command += " --ftp-pasv --disable-epsv";
         }
 
-        qDebug() << command;
-
         return command;
     }
 

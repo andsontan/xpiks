@@ -168,7 +168,7 @@ Item {
         Rectangle {
             id: dialogWindow
             width: 600
-            height: 450
+            height: Qt.platform.os == "windows" ? 460 : 450
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
@@ -377,7 +377,7 @@ Item {
                         anchors.right: parent.right
                         width: 280
                         color: "transparent"
-                        height: parent.height
+                        height: Qt.platform.os == "windows" ? parent.height + 10 : parent.height
 
                         StyledTabView {
                             anchors.fill: parent
@@ -652,10 +652,11 @@ Item {
                         }
 
                         Rectangle {
+                            id: overlayRectangle
                             anchors.fill: parent
                             color: Colors.selectedArtworkColor
                             opacity: 0.6
-                            visible: (uploadInfos.infosCount == 0) || artworkUploader.inProgress
+                            //visible: (uploadInfos.infosCount == 0) || artworkUploader.inProgress
                         }
                     }
                 }
