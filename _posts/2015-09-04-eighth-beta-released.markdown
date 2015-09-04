@@ -23,3 +23,5 @@ And fixes:
 - fixed issue with About dialog #86
 - fixed issue with master password hard reset
 - fixed issue with dreamtimes upload
+
+<div class="download-link"><a href="{{ site.url }}/downloads">Download</a></div>
