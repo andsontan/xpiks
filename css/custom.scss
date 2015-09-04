@@ -4,6 +4,13 @@
 
 @import "variables";
 
+div.download-package {
+ float: left;
+ margin-right: 50px;
+ height: 100px;
+ width: 230px;
+}
+
 span.gray {
   color: #cccccc;
 }
