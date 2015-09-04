@@ -7,32 +7,37 @@ permalink: /downloads/
 <article class="row">
 <section class="small-12 large-8 columns page-content">
 
-<p>
-You can find latest release for OS X 10.10 and for Windows 8 x64 below:
-</p>
+<h2> OS X instructions </h2>
 
 <div style="float: left; margin-right: 50px;">
-<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.0-beta.7/xpiks-qt-v1.0-beta.7.dmg">
+<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.0-beta.8/xpiks-qt-v1.0-beta.8.dmg">
 <div>
 <img src="{{site.url}}/images/os_x_installer.jpg" style="vertical-align: middle;width:70px;" />
 <span style="vertical-align: middle;">Package for OS X</span>
 </div>
 </a>
 </div>
+
+<p>Download the Xpiks package from the link above, unpack and drag'n'drop it to the Applications. You will need to install the Exiftool to use Xpiks. Download and install Exiftool from the <a href="http://owl.phy.queensu.ca/%7Ephil/exiftool/">official website</a>.</p>
+
+<div style="clear:both;"></div>
+
+<h2> Windows 64-bit instructions </h2>
+
 <div>
-<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.0-beta.7/xpiks-qt-v1.0-beta.7-x64.zip">
+<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.0-beta.8/xpiks-qt-v1.0-beta.8.zip">
 <div><img src="{{site.url}}/images/windows_installer.jpg" style="vertical-align: middle;width:70px;" />
 <span style="vertical-align: middle;">Package for Windows x64</span>
 </div>
 </a>
 </div>
-<br />
-<p>
-You can find Nightly Build of Xpiks <a href="https://dl.dropboxusercontent.com/u/14391423/xpiks-qt-nightly.dmg">at Dropbox</a>. You can find .deb file with Nightly build <a href="https://mega.co.nz/#!e50yxC7C!kaXx3vEYLinD4bukYoFIs3cSPG4wEO2naSraSrGuUNE">at Mega</a>. For other downloads please refer to <a href="https://github.com/Ribtoks/xpiks/releases/tag/v1.0-beta.7">download section</a> at Github page of Xpiks release. If you have any questions don't hesitate to ask them in support section.
-</p>
-<p>
-Package for Windows has ExifTool and Curl supplied inside, while package for OS X doesn't so you have to download it manually in order to use Xpiks. You can <a href="http://owl.phy.queensu.ca/%7Ephil/exiftool/">download ExifTool here</a> and curl is already available in your OS X.
-</p>
+
+<p>Download the Xpiks zip archive from the link above, unpack it where you want and it's ready to go. Please, note that this build does work <strong>only for Windows 7 x64 and later</strong>.</p>
+
+<div style="clear:both;"></div>
+
+<h2> Other systems and versions </h2>
+
 <p>
 If you'd like to build Xpiks for your own platform, please, refer to <a href="{{site.url}}/blog/2014/building-xpiks-alone">this post</a>.
 </p>
