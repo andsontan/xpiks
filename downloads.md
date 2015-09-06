@@ -22,7 +22,7 @@ permalink: /downloads/
 
 <div style="clear:both;"></div>
 
-<h2><strong>Windows 64-bit instructions</strong></h2>
+<h2><strong>Windows instructions</strong></h2>
 
 <div class="download-package">
 <a href="https://github.com/Ribtoks/xpiks/releases/download/v1.0-beta.8/xpiks-qt-v1.0-beta.8.zip">
@@ -32,11 +32,11 @@ permalink: /downloads/
 </a>
 </div>
 
-<p>Download the Xpiks zip archive from the link above, unpack it where you want and it's ready to go. Please, note that this build does work <strong>only for Windows 7 x64 and later</strong>.</p>
+<p>Download the Xpiks zip archive from the link above, unpack it where you want and it's ready to go. Please, note that this build does work <strong>only for Windows 7 x64 and later with x64 architecture</strong>.</p>
 
 <div style="clear:both;"></div>
 
-<h2><strong>Linux 64-bit instructions (Debian-based)</strong></h2>
+<h2><strong>Linux instructions</strong></h2>
 
 <div class="download-package">
 <a href="https://github.com/Ribtoks/xpiks/releases/download/v1.0-beta.8/xpiks_0.8b-1_amd64.deb">
@@ -46,7 +46,7 @@ permalink: /downloads/
 </a>
 </div>
 
-<p>Download the Xpiks package from the link above and install it with all dependencies. <strong>Works only in Debian-based operating systems (Ubuntu, Debian, Mint, etc.`)</strong></p>
+<p>Download the Xpiks package from the link above and install it with all dependencies. <strong>Works only in Debian-based operating systems (Ubuntu, Debian, Mint, etc.) with x64 architecture.</strong></p>
 
 <div style="clear:both;height: 30px;"></div>
 
