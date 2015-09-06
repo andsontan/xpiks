@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "All Windows builds upto 0.8 broken"
+title: "All Windows builds broken upto 0.8"
 date: 2015-09-06T15:15:01+02:00
 ---
 
