@@ -1,3 +1,29 @@
+xpiks (0.8b-1) UNRELEASED; urgency=medium
+
+
+    * Beta version 0.8
+
+    This release provides several major features:
+
+    keywords suggestion based on Shutterstock API
+    ability to zip items before upload with as simple as checking a checkbox
+    we now have build for Debian-based systems
+    ability to dismiss popups by clicking on an empty space
+    settings window is completely redesigned
+    upload now doesn't start every stock in parallel but uses a queue
+    drag'n'drop for directories
+    upload percentage is shown for each stock separately
+
+    And fixes:
+
+    fixed 123rf test connection always failed issue #74
+    fixed issue with About dialog #86
+    fixed issue with master password hard reset
+    fixed issue with dreamtimes upload
+
+ -- Artiom.M <a.mv@gmx.fr>  Sun, 6 Sep 2015 09:50:44 +0200
+
+
 xpiks (0.7b-1) UNRELEASED; urgency=medium
 
   *  Beta version 0.7
