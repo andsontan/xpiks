@@ -46,7 +46,7 @@ permalink: /downloads/
 </a>
 </div>
 
-<p>Download the Xpiks package from the link above and install it with all dependencies.<strong>Works for 64-bit architectures only in Debian-based operating systems (Ubuntu, Debian, Mint, etc.)</strong></p>
+<p>Download the Xpiks package from the link above and install it with all dependencies. <strong>Works only in Debian-based operating systems (Ubuntu, Debian, Mint, etc.`)</strong></p>
 
 <div style="clear:both;height: 30px;"></div>
 
