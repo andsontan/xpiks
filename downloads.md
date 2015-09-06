@@ -36,7 +36,7 @@ permalink: /downloads/
 
 <div style="clear:both;"></div>
 
-<h2><strong>Linux instructions (Debian-based)</strong></h2>
+<h2><strong>Linux 64-bit instructions (Debian-based)</strong></h2>
 
 <div class="download-package">
 <a href="https://github.com/Ribtoks/xpiks/releases/download/v1.0-beta.8/xpiks_0.8b-1_amd64.deb">
@@ -46,7 +46,7 @@ permalink: /downloads/
 </a>
 </div>
 
-<p>Download the Xpiks package from the link above and install it with all dependencies.</p>
+<p>Download the Xpiks package from the link above and install it with all dependencies.<strong>Works for 64-bit architectures only in Debian-based operating systems (Ubuntu, Debian, Mint, etc.)</strong></p>
 
 <div style="clear:both;height: 30px;"></div>
 
