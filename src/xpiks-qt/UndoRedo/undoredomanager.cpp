@@ -21,6 +21,8 @@
 
 #include "undoredomanager.h"
 
+UndoRedo::UndoRedoManager::~UndoRedoManager() { qDeleteAll(m_HistoryStack); }
+
 void UndoRedo::UndoRedoManager::recordHistoryItem(UndoRedo::HistoryItem *historyItem)
 {
     if (!m_HistoryStack.empty()) {
@@ -29,8 +31,8 @@ void UndoRedo::UndoRedoManager::recordHistoryItem(UndoRedo::HistoryItem *history
     }
 
     m_HistoryStack.append(historyItem);
-    emit itemRecorded();
     emit canUndoChanged();
+    emit itemRecorded();
     emit undoDescriptionChanged();
 }
 

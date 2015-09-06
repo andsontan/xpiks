@@ -76,7 +76,9 @@ Item {
 
                 var dialogPoint = mapToItem(dialogWindow, mouse.x, mouse.y);
                 if (!Common.isInComponent(dialogPoint, dialogWindow)) {
-                    closePopup()
+                    if (!zipArchiver.inProgress) {
+                        closePopup()
+                    }
                 }
             }
 
@@ -104,7 +106,7 @@ Item {
                     Layout.fillWidth: true
 
                     StyledText {
-                        text: qsTr("Zip zelected artworks with .eps files")
+                        text: qsTr("Zip zelected artworks with vector files (.ai or .eps)")
                     }
 
                     Item {

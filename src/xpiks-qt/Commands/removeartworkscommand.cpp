@@ -24,6 +24,7 @@
 #include <QString>
 #include <QDebug>
 #include "removeartworkscommand.h"
+#include "commandmanager.h"
 #include "../Models/artworksrepository.h"
 #include "../Models/artitemsmodel.h"
 #include "../Models/artworkmetadata.h"

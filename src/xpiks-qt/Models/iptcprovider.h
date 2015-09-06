@@ -25,8 +25,16 @@
 #include <QFutureWatcher>
 #include <QPair>
 #include "artworksprocessor.h"
-#include "artworkmetadata.h"
 #include "exportinfo.h"
+
+namespace Models {
+    class ArtworkMetadata;
+    class ImportDataResult;
+    class ExportInfo;
+}
+
+typedef QPair<Models::ArtworkMetadata*, Models::ImportDataResult*> ImportPair;
+typedef QPair<Models::ArtworkMetadata*, Models::ExportInfo*> ExportPair;
 
 namespace Models {
     class IptcProvider : public ArtworksProcessor
@@ -37,7 +45,7 @@ namespace Models {
 
    public:
         IptcProvider();
-        ~IptcProvider() { delete m_MetadataWriter; delete m_MetadataReader; }
+        virtual ~IptcProvider() { delete m_MetadataWriter; delete m_MetadataReader; }
 
     public slots:
         void metadataImported(int);

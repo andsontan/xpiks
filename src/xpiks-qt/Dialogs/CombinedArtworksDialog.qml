@@ -106,7 +106,7 @@ Item {
         Rectangle {
             id: dialogWindow
             width: 730
-            height: 540
+            height: 550
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
@@ -254,7 +254,39 @@ Item {
                 }
 
                 Item {
-                    height: 20
+                    height: 10
+                }
+
+                StyledText {
+                    text: qsTr("Description:")
+                    anchors.left: parent.left
+                }
+
+                Rectangle {
+                    id: rect
+                    width: parent.width
+                    height: 25
+                    color: Colors.defaultInputBackground
+                    border.color: Colors.artworkActiveColor
+                    border.width: descriptionTextInput.activeFocus ? 1 : 0
+                    anchors.left: parent.left
+
+                    StyledTextInput {
+                        id: descriptionTextInput
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.leftMargin: 5
+                        anchors.rightMargin: 5
+                        anchors.verticalCenter: parent.verticalCenter
+                        maximumLength: 250
+                        text: combinedArtworks.description
+                        onTextChanged: combinedArtworks.description = text
+                        KeyNavigation.tab: titleTextInput
+                    }
+                }
+
+                Item {
+                    height: 8
                 }
 
                 RowLayout {
@@ -262,7 +294,7 @@ Item {
                     spacing: 20
 
                     ColumnLayout {
-                        spacing: 10
+                        spacing: 3
                         width: 325
 
                         RowLayout {
@@ -299,6 +331,7 @@ Item {
                                 text: combinedArtworks.title
                                 onTextChanged: combinedArtworks.title = text
                                 KeyNavigation.tab: authorTextInput
+                                KeyNavigation.backtab: descriptionTextInput
                             }
                         }
                     }
@@ -333,49 +366,16 @@ Item {
                                 text: combinedArtworks.author
                                 onTextChanged: combinedArtworks.author = text
                                 KeyNavigation.backtab: titleTextInput
-                                KeyNavigation.tab: descriptionTextInput
+                                Keys.onTabPressed: {
+                                    flv.activateEdit()
+                                }
                             }
                         }
                     }
                 }
 
                 Item {
-                    height: 5
-                }
-
-                StyledText {
-                    text: qsTr("Description:")
-                    anchors.left: parent.left
-                }
-
-                Rectangle {
-                    id: rect
-                    width: parent.width
-                    height: 25
-                    color: Colors.defaultInputBackground
-                    border.color: Colors.artworkActiveColor
-                    border.width: descriptionTextInput.activeFocus ? 1 : 0
-                    anchors.left: parent.left
-
-                    StyledTextInput {
-                        id: descriptionTextInput
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        anchors.leftMargin: 5
-                        anchors.rightMargin: 5
-                        anchors.verticalCenter: parent.verticalCenter
-                        maximumLength: 250
-                        text: combinedArtworks.description
-                        onTextChanged: combinedArtworks.description = text
-                        Keys.onTabPressed: {
-                            flv.activateEdit()
-                        }
-                        KeyNavigation.backtab: authorTextInput
-                    }
-                }
-
-                Item {
-                    height: 5
+                    height: 8
                 }
 
                 RowLayout {
@@ -506,7 +506,7 @@ Item {
                 }
 
                 Item {
-                    height: 10
+                    height: 15
                 }
 
                 Rectangle {
@@ -575,5 +575,5 @@ Item {
         }
     }
 
-    Component.onCompleted: titleTextInput.forceActiveFocus()
+    Component.onCompleted: descriptionTextInput.forceActiveFocus()
 }

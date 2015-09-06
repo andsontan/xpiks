@@ -25,6 +25,7 @@
 #include <QString>
 #include <QFile>
 #include <QDataStream>
+#include "../Models/artworkmetadata.h"
 #include "constants.h"
 
 namespace Helpers {

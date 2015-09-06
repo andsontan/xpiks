@@ -19,37 +19,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TESTCONNECTIONRESULT
-#define TESTCONNECTIONRESULT
-
-#include <QString>
+#include "loggingworker.h"
+#include "logger.h"
+#include <QThread>
 
 namespace Helpers {
-    class TestConnectionResult {
-    public:
-        TestConnectionResult ():
-            m_Result(false)
-        {}
+    LoggingWorker::LoggingWorker(QObject *parent) :
+        QObject(parent),
+        m_Cancel(false)
+    {
+    }
 
-        TestConnectionResult (bool result, const QString &url) :
-            m_Url(url),
-            m_Result(result)
-        {}
+    void LoggingWorker::process() {
+        Logger &logger = Logger::getInstance();
+        const int secondsToSleep = 1;
 
-        TestConnectionResult (const TestConnectionResult &copy) :
-            m_Url(copy.m_Url),
-            m_Result(copy.m_Result)
-        {}
+        while (!m_Cancel) {
+            logger.flush();
+            QThread::sleep(secondsToSleep);
+        }
+    }
 
-    public:
-        bool getResult() const { return m_Result; }
-        QString getUrl() const { return m_Url; }
-
-    private:
-        QString m_Url;
-        bool m_Result;
-    };
+    void LoggingWorker::cancel() {
+        m_Cancel = true;
+    }
 }
-
-#endif // TESTCONNECTIONRESULT
-

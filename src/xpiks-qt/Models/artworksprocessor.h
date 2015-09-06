@@ -23,9 +23,15 @@
 #define ARTWORKSPROCESSOR_H
 
 #include <QObject>
-#include "artworkmetadata.h"
 #include "../Common/baseentity.h"
-#include "../Commands/commandmanager.h"
+
+namespace Commands {
+    class CommandManager;
+}
+
+namespace Models {
+    class ArtworkMetadata;
+}
 
 namespace Models {
     class ArtworksProcessor : public QObject, public Common::BaseEntity

@@ -26,32 +26,35 @@
 #include <QStringList>
 #include <QFutureWatcher>
 #include "artworksprocessor.h"
-#include "uploadinfo.h"
-#include "../Helpers/uploaditem.h"
-#include "../Helpers/testconnectionresult.h"
-#include "../Helpers/uploadcoordinator.h"
+
+namespace Helpers {
+    class TestConnectionResult;
+    class UploadCoordinator;
+}
 
 namespace Models {
+    class ArtworkMetadata;
+
     class ArtworkUploader : public ArtworksProcessor
     {
         Q_OBJECT
     public:
          ArtworkUploader();
-         ~ArtworkUploader() { delete m_TestingCredentialWatcher; }
+         virtual ~ArtworkUploader();
 
     public:
-         Q_PROPERTY(bool includeEPS READ getIncludeEPS WRITE setIncludeEPS NOTIFY includeEPSChanged)
+         Q_PROPERTY(bool includeVector READ getIncludeVector WRITE setIncludeVector NOTIFY includeVectorChanged)
 
     signals:
-         void includeEPSChanged(bool);
+         void includeVectorChanged(bool);
          void credentialsChecked(bool result, const QString &url);
 
     public:
-         bool getIncludeEPS() const { return m_IncludeEPS; }
-         void setIncludeEPS(bool value) {
-             if (m_IncludeEPS != value) {
-                 m_IncludeEPS = value;
-                 emit includeEPSChanged(value);
+         bool getIncludeVector() const { return m_IncludeVector; }
+         void setIncludeVector(bool value) {
+             if (m_IncludeVector != value) {
+                 m_IncludeVector = value;
+                 emit includeVectorChanged(value);
              }
          }
 
@@ -71,23 +74,21 @@ namespace Models {
          void artworkUploadedHandler(bool success);
 
      public:
-         Q_INVOKABLE void uploadArtworks() { doUploadArtworks(getArtworkList()); }
+         Q_INVOKABLE void uploadArtworks();
          Q_INVOKABLE void checkCredentials(const QString &host, const QString &username, const QString &password) const;
          Q_INVOKABLE bool needCreateArchives() const;
 
      private:
          void doUploadArtworks(const QList<ArtworkMetadata*> &artworkList);
-         QStringList *getAllFilepathes() const;
 
     protected:
         void cancelProcessing();
         virtual void innerResetModel() { m_Percent = 0; }
 
      private:
-         Helpers::UploadCoordinator m_UploadCoordinator;
+         Helpers::UploadCoordinator *m_UploadCoordinator;
          QFutureWatcher<Helpers::TestConnectionResult> *m_TestingCredentialWatcher;
-         QStringList *m_ActiveUploads;
-         bool m_IncludeEPS;
+         bool m_IncludeVector;
          int m_Percent;
     };
 }

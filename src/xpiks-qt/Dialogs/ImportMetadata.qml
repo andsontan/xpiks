@@ -74,11 +74,6 @@ Item {
                 var tmp = mapToItem(metadataImportComponent, mouse.x, mouse.y);
                 old_x = tmp.x;
                 old_y = tmp.y;
-
-                var dialogPoint = mapToItem(dialogWindow, mouse.x, mouse.y);
-                if (!Common.isInComponent(dialogPoint, dialogWindow)) {
-                    closePopup()
-                }
             }
 
             onPositionChanged: {

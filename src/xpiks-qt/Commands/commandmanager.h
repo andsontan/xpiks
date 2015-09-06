@@ -113,7 +113,7 @@ namespace Commands {
         virtual Models::ArtworksRepository *getArtworksRepository() const { return m_ArtworksRepository; }
         virtual Models::ArtItemsModel *getArtItemsModel() const { return m_ArtItemsModel; }
         virtual const Encryption::SecretsManager *getSecretsManager() const { return m_SecretsManager; }
-        virtual const Models::UploadInfoRepository *getUploadInfoRepository() const { return m_UploadInfoRepository; }
+        virtual Models::UploadInfoRepository *getUploadInfoRepository() { return m_UploadInfoRepository; }
         virtual Suggestion::KeywordsSuggestor *getKeywordsSuggestor() const { return m_KeywordsSuggestor; }
 
     private:

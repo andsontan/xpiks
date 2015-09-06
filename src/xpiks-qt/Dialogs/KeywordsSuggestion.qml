@@ -34,8 +34,10 @@ Item {
     id: keywordsSuggestionComponent
     anchors.fill: parent
     property var callbackObject
+    property bool initialized: false
 
     function closePopup() {
+        keywordsSuggestor.cancelSearch()
         keywordsSuggestor.close();
         keywordsSuggestionComponent.destroy();
     }
@@ -76,7 +78,9 @@ Item {
 
                 var dialogPoint = mapToItem(dialogWindow, mouse.x, mouse.y);
                 if (!Common.isInComponent(dialogPoint, dialogWindow)) {
-                    closePopup()
+                    if (!keywordsSuggestor.isInProgress) {
+                        closePopup()
+                    }
                 }
             }
 
@@ -119,14 +123,15 @@ Item {
                             clip: true
                             anchors.left: parent.left
                             anchors.leftMargin: 5
-
-                            onEditingFinished: keywordsSuggestor.searchArtworks(queryText.text)
+                            Keys.onEnterPressed: keywordsSuggestor.searchArtworks(queryText.text)
+                            Keys.onReturnPressed: keywordsSuggestor.searchArtworks(queryText.text)
                         }
                     }
 
                     StyledButton {
                         text: qsTr("Search")
                         width: 70
+                        activeFocusOnPress: true
                         enabled: !keywordsSuggestor.isInProgress
                         onClicked: keywordsSuggestor.searchArtworks(queryText.text)
                     }
@@ -150,6 +155,7 @@ Item {
                         id: imagesScrollView
                         height: parent.height
                         width: parent.width + 15
+                        enabled: !keywordsSuggestor.isInProgress
 
                         Flickable {
                             anchors.fill: parent
@@ -468,17 +474,17 @@ Item {
                     }
 
                     StyledButton {
-                        text: qsTr("Use suggested keywords")
+                        text: qsTr("Add suggested keywords")
+                        enabled: !keywordsSuggestor.isInProgress
                         width: 200
                         onClicked: {
                             callbackObject.promoteKeywords(keywordsSuggestor.getSuggestedKeywords())
-                            closePopup()
                         }
                     }
 
                     StyledButton {
                         width: 70
-                        text: qsTr("Cancel")
+                        text: qsTr("Close")
                         onClicked: closePopup()
                     }
                 }
@@ -487,6 +493,10 @@ Item {
     }
 
     Component.onCompleted: {
-        queryText.forceActiveFocus()
+        // for some reason onCompleted was called twice
+        if (!initialized) {
+            queryText.forceActiveFocus()
+            initialized = true
+        }
     }
 }

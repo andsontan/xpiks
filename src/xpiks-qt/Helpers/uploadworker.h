@@ -24,12 +24,18 @@
 
 #include <QObject>
 #include <QProcess>
-#include <QString>
-#include <QTimer>
-#include <QRegExp>
+
+class QSemaphore;
+class QTimer;
+class QRegExp;
+class QString;
 
 namespace Encryption {
     class SecretsManager;
+}
+
+namespace Models {
+    class UploadInfo;
 }
 
 namespace Helpers {
@@ -40,7 +46,8 @@ namespace Helpers {
         Q_OBJECT
     public:
         explicit UploadWorker(UploadItem *uploadItem, const Encryption::SecretsManager *secretsManager,
-                              int delay, QObject *parent = 0);
+                              QSemaphore *uploadSemaphore, int delay,
+                              QObject *parent = 0);
         ~UploadWorker();
 
     signals:
@@ -59,20 +66,25 @@ namespace Helpers {
         void onTimerTimeout();
 
     private:
+        QString createCurlCommand(Models::UploadInfo *uploadInfo, const QStringList &filesToUpload, int maxSeconds) const;
+        void initializeUploadEntities();
         double parsePercent(QString &curlOutput)const;
         void emitFinishSignals(bool success);
+        void updateUploadItemPercent(int percent);
 
     private:
         UploadItem *m_UploadItem;
         const Encryption::SecretsManager *m_SecretsManager;
+        QSemaphore *m_UploadSemaphore;
         QProcess *m_CurlProcess;
         QTimer *m_Timer;
         QString m_Host;
         QRegExp m_PercentRegexp;
         int m_Delay;
-        double m_PercentDone;
-        int m_FilesUploaded;
+        volatile double m_PercentDone;
+        volatile int m_FilesUploaded;
         int m_OverallFilesCount;
+        volatile bool m_Cancelled;
     };
 }
 

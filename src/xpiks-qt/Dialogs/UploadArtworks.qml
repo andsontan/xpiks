@@ -148,7 +148,9 @@ Item {
 
                 var dialogPoint = mapToItem(dialogWindow, mouse.x, mouse.y);
                 if (!Common.isInComponent(dialogPoint, dialogWindow)) {
-                    closePopup()
+                    if (!artworkUploader.inProgress) {
+                        closePopup()
+                    }
                 }
             }
 
@@ -166,7 +168,7 @@ Item {
         Rectangle {
             id: dialogWindow
             width: 600
-            height: 450
+            height: Qt.platform.os == "windows" ? 460 : 450
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
@@ -310,6 +312,14 @@ Item {
                                                 font.bold: true
                                             }
 
+                                            StyledText {
+                                                id: percentText
+                                                text: percent + '%'
+                                                visible: artworkUploader.inProgress && isselected
+                                                color: Colors.artworkActiveColor
+                                                font.bold: true
+                                            }
+
                                             CloseIcon {
                                                 width: 14
                                                 height: 14
@@ -367,7 +377,7 @@ Item {
                         anchors.right: parent.right
                         width: 280
                         color: "transparent"
-                        height: parent.height
+                        height: Qt.platform.os == "windows" ? parent.height + 10 : parent.height
 
                         StyledTabView {
                             anchors.fill: parent
@@ -594,7 +604,7 @@ Item {
                                 ColumnLayout {
                                     anchors.fill: parent
                                     anchors.topMargin: 15
-                                    spacing: 4
+                                    spacing: 10
 
                                     StyledCheckbox {
                                         id: zipBeforeUploadCheckBox
@@ -615,6 +625,25 @@ Item {
                                         }
                                     }
 
+                                    StyledCheckbox {
+                                        id: ftpPassiveModeCheckBox
+                                        text: qsTr("FTP passive mode")
+                                        Component.onCompleted: checked = uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.ftppassivemode : false
+
+                                        onClicked: {
+                                            if (uploadHostsListView.currentItem) {
+                                                uploadHostsListView.currentItem.myData.editftppassivemode = checked
+                                            }
+                                        }
+
+                                        Connections {
+                                            target: uploadInfos
+                                            onDataChanged: {
+                                                ftpPassiveModeCheckBox.checked = uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.ftppassivemode : false
+                                            }
+                                        }
+                                    }
+
                                     Item {
                                         Layout.fillHeight: true
                                     }
@@ -623,10 +652,11 @@ Item {
                         }
 
                         Rectangle {
+                            id: overlayRectangle
                             anchors.fill: parent
                             color: Colors.selectedArtworkColor
                             opacity: 0.6
-                            visible: uploadInfos.infosCount == 0
+                            visible: (uploadInfos.infosCount == 0) || artworkUploader.inProgress
                         }
                     }
                 }
@@ -645,9 +675,9 @@ Item {
                     spacing: 15
 
                     StyledCheckbox {
-                        text: qsTr("Include EPS (for illustrations)")
-                        checked: artworkUploader.includeEPS
-                        onCheckedChanged: artworkUploader.includeEPS = checked
+                        text: qsTr("Include vector (.eps, .ai)")
+                        checked: artworkUploader.includeVector
+                        onCheckedChanged: artworkUploader.includeVector = checked
                         enabled: !artworkUploader.inProgress
                     }
 
@@ -674,7 +704,7 @@ Item {
 
                     StyledButton {
                         id: uploadButton
-                        text: artworkUploader.inProgress ? qsTr("Cancel") : qsTr("Start Upload")
+                        text: artworkUploader.inProgress ? qsTr("Stop") : qsTr("Start Upload")
                         width: 130
                         onClicked: {
                             if (!artworkUploader.inProgress) {

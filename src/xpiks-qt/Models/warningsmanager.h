@@ -23,12 +23,16 @@
 #define WARNINGSMANAGER_H
 
 #include <QAbstractListModel>
-#include "warningsinfo.h"
-#include "artworkmetadata.h"
-#include "../Helpers/globalimageprovider.h"
 #include "../Common/baseentity.h"
 
+namespace Helpers {
+    class GlobalImageProvider;
+}
+
 namespace Models {
+    class WarningsInfo;
+    class ArtworkMetadata;
+
     class WarningsManager : public QAbstractListModel, public Common::BaseEntity
     {
         Q_OBJECT
@@ -38,7 +42,7 @@ namespace Models {
             QAbstractListModel(parent)
         { }
 
-        ~WarningsManager() {}
+        virtual ~WarningsManager() {}
 
     public:
         enum WarningManagerRoles {

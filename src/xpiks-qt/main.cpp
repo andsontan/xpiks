@@ -32,15 +32,20 @@
 #include <QStandardPaths>
 #include <QQmlApplicationEngine>
 
+#include "Common/defines.h"
 #include "Suggestion/suggestionqueryengine.h"
 #include "Suggestion/keywordssuggestor.h"
+#include "Models/combinedartworksmodel.h"
 #include "Helpers/globalimageprovider.h"
 #include "Models/uploadinforepository.h"
+#include "Encryption/secretsmanager.h"
+#include "Models/artworksrepository.h"
 #include "UndoRedo/undoredomanager.h"
 #include "Helpers/clipboardhelper.h"
 #include "Commands/commandmanager.h"
 #include "Models/artworkuploader.h"
 #include "Models/warningsmanager.h"
+#include "Helpers/loggingworker.h"
 #include "Models/artitemsmodel.h"
 #include "Models/settingsmodel.h"
 #include "Models/iptcprovider.h"
@@ -51,7 +56,7 @@
 #include "Models/logsmodel.h"
 #include "Helpers/logger.h"
 
-#ifdef QT_NO_DEBUG
+#ifdef WITH_LOGS
 
 void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg) {
     Q_UNUSED(context);
@@ -94,7 +99,7 @@ void initQSettings() {
     QCoreApplication::setOrganizationDomain(Constants::ORGANIZATION_DOMAIN);
     QCoreApplication::setApplicationName(Constants::APPLICATION_NAME);
     QString appVersion(STRINGIZE(BUILDNUMBER));
-    QCoreApplication::setApplicationVersion("1.0 beta.7 - " + appVersion.left(10));
+    QCoreApplication::setApplicationVersion("1.0 beta.8 - " + appVersion.left(10));
 }
 
 int main(int argc, char *argv[]) {
@@ -103,17 +108,19 @@ int main(int argc, char *argv[]) {
 
     initQSettings();
 
-    Helpers::LogsManager logsManager;
-
     QString appDataPath = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
     if (!appDataPath.isEmpty()) {
         QDir logFileDir(appDataPath);
         QString logFilePath = logFileDir.filePath(Constants::LOG_FILENAME);
 
-        logsManager.initLogger(logFilePath);
+        Helpers::Logger &logger = Helpers::Logger::getInstance();
+        logger.setLogFilePath(logFilePath);
     }
 
-#ifdef QT_NO_DEBUG
+    Models::LogsModel logsModel;
+    logsModel.startLogging();
+
+#ifdef WITH_LOGS
     QString logFileDir = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
     if (!logFileDir.isEmpty()) {
         QDir dir(logFileDir);
@@ -126,7 +133,6 @@ int main(int argc, char *argv[]) {
     qInstallMessageHandler(myMessageHandler);
     qDebug() << "Log started";
 #endif
-
 
     QApplication app(argc, argv);
 
@@ -145,7 +151,6 @@ int main(int argc, char *argv[]) {
     Models::IptcProvider iptcProvider;
     Models::ArtworkUploader artworkUploader;
     Models::UploadInfoRepository uploadInfoRepository;
-    Models::LogsModel logsModel;
     Models::WarningsManager warningsManager;
     Helpers::AppSettings appSettings;
     Models::SettingsModel settingsModel;
@@ -166,8 +171,6 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&undoRedoManager);
     commandManager.InjectDependency(&zipArchiver);
     commandManager.InjectDependency(&keywordsSuggestor);
-
-    logsModel.setLogsManager(&logsManager);
 
     // other initializations
     secretsManager.setMasterPasswordHash(appSettings.value(Constants::MASTER_PASSWORD_HASH, "").toString());

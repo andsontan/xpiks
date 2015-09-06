@@ -135,7 +135,7 @@ Item {
                                         ColumnLayout {
                                             anchors.fill: parent
                                             anchors.margins: { left: 15; right: 15 }
-                                            spacing: 5
+                                            spacing: 7
 
                                             Rectangle {
                                                 width: 90
@@ -158,6 +158,7 @@ Item {
                                                 color: Colors.defaultInputBackground
                                                 horizontalAlignment: Text.AlignHCenter
                                                 text: filename.split(/[\\/]/).pop()
+                                                font.pointSize: 10
                                             }
 
                                             Item {

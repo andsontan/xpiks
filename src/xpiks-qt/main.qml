@@ -41,10 +41,6 @@ ApplicationWindow {
     minimumWidth: 900
     title: qsTr("Xpiks")
 
-    Component.onCompleted: {
-        logsModel.startFlushing()
-    }
-
     onClosing: {
         if (artItemsModel.modifiedArtworksCount > 0) {
             close.accepted = false
@@ -53,7 +49,8 @@ ApplicationWindow {
     }
 
     function mustUseConfirmation() {
-        return appSettings.boolValue(appSettings.useConfirmationDialogsKey, true)
+        var mustUse = appSettings.boolValue(appSettings.useConfirmationDialogsKey, true)
+        return mustUse
     }
 
     function openUploadDialog() {
@@ -291,10 +288,7 @@ ApplicationWindow {
 
                 Rectangle {
                     Layout.fillHeight: true
-                    //Layout.fillWidth: true
                     width: 250
-                    //Layout.minimumWidth: 250
-                    //Layout.maximumWidth: 350
 
                     color: Colors.defaultControlColor
 
@@ -361,8 +355,13 @@ ApplicationWindow {
                                     isActive: false
 
                                     onItemClicked: {
-                                        confirmRemoveDirectoryDialog.directoryIndex = sourceWrapper.delegateIndex
-                                        confirmRemoveDirectoryDialog.open()
+                                        if (mustUseConfirmation()) {
+                                            confirmRemoveDirectoryDialog.directoryIndex = sourceWrapper.delegateIndex
+                                            confirmRemoveDirectoryDialog.open()
+                                        } else {
+                                            artItemsModel.removeArtworksDirectory(sourceWrapper.delegateIndex)
+                                            artItemsModel.checkForWarnings()
+                                        }
                                     }
                                 }
 
@@ -631,6 +630,7 @@ ApplicationWindow {
                                     MouseArea {
                                         id: dismissUndoMA
                                         anchors.fill: parent
+                                        enabled: undoRedoManager.canUndo
                                         cursorShape: Qt.PointingHandCursor
                                         onClicked: {
                                             undoRedoManager.discardLastAction()
@@ -762,13 +762,55 @@ ApplicationWindow {
                                                     height: 130
                                                     anchors.horizontalCenter: parent.horizontalCenter
                                                     color: "transparent"
+
                                                     Image {
+                                                        id: artworkImage
                                                         anchors.fill: parent
                                                         source: "image://global/" + filename
                                                         sourceSize.width: 150
                                                         sourceSize.height: 150
                                                         fillMode: Image.PreserveAspectCrop
                                                         asynchronous: true
+                                                    }
+
+                                                    Rectangle {
+                                                        anchors.fill: parent
+                                                        visible: moreInfoMA.pressed
+                                                        color: Colors.defaultControlColor
+                                                        opacity: 0.8
+
+                                                        ColumnLayout {
+                                                            anchors.margins: 10
+                                                            anchors.fill: parent
+                                                            spacing: 5
+
+                                                            StyledText {
+                                                                id: dimensionsText
+                                                                color: Colors.defaultLightColor
+                                                                text: "*"
+                                                            }
+
+                                                            StyledText {
+                                                                id: sizeText
+                                                                color: Colors.defaultLightColor
+                                                                text: '*'
+                                                            }
+
+                                                            Rectangle {
+                                                                color: "transparent"
+                                                                Layout.fillWidth: true
+                                                                height: 60
+
+                                                                StyledText {
+                                                                    wrapMode: TextEdit.Wrap
+                                                                    anchors.fill: parent
+                                                                    color: Colors.defaultLightColor
+                                                                    text: filename
+                                                                    height: 60
+                                                                    elide: Text.ElideRight
+                                                                }
+                                                            }
+                                                        }
                                                     }
 
                                                     MouseArea {
@@ -785,9 +827,19 @@ ApplicationWindow {
                                                 StyledText {
                                                     Layout.fillWidth: true
                                                     elide: Text.ElideMiddle
-                                                    color: Colors.defaultInputBackground
+                                                    color: moreInfoMA.pressed ? Colors.defaultLightColor : Colors.defaultInputBackground
                                                     horizontalAlignment: Text.AlignHCenter
                                                     text: filename.split(/[\\/]/).pop()
+
+                                                    MouseArea {
+                                                        id: moreInfoMA
+                                                        anchors.fill: parent
+                                                        cursorShape: Qt.PointingHandCursor
+                                                        onPressed: {
+                                                            dimensionsText.text = artItemsModel.retrieveImageSize(rowWrapper.delegateIndex)
+                                                            sizeText.text = artItemsModel.retrieveFileSize(rowWrapper.delegateIndex)
+                                                        }
+                                                    }
                                                 }
 
                                                 Item {

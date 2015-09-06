@@ -22,6 +22,8 @@
 #include "warningsmanager.h"
 #include <QImageReader>
 #include <QDebug>
+#include "warningsinfo.h"
+#include "../Helpers/globalimageprovider.h"
 #include "../Helpers/appsettings.h"
 
 namespace Models {

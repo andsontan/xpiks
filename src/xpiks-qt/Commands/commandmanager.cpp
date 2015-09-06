@@ -27,6 +27,8 @@
 #include "../Models/artworkuploader.h"
 #include "../Models/uploadinforepository.h"
 #include "../Models/warningsmanager.h"
+#include "../Models/uploadinfo.h"
+#include "../Models/artworkmetadata.h"
 #include "../Encryption/secretsmanager.h"
 #include "../UndoRedo/undoredomanager.h"
 #include "../Models/ziparchiver.h"

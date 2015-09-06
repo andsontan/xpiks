@@ -25,23 +25,30 @@
 #include <QByteArray>
 #include <QDebug>
 #include <QThread>
+#include <QString>
+#include <QTimer>
+#include <QRegExp>
+#include <QSemaphore>
 #include "../Encryption/secretsmanager.h"
 #include "../Helpers/ziphelper.h"
 
 namespace Helpers {
     UploadWorker::UploadWorker(UploadItem *uploadItem, const Encryption::SecretsManager *secretsManager,
-                               int delay, QObject *parent) :
+                               QSemaphore *uploadSemaphore, int delay, QObject *parent) :
         QObject(parent),
         m_UploadItem(uploadItem),
         m_SecretsManager(secretsManager),
+        m_UploadSemaphore(uploadSemaphore),
         m_CurlProcess(NULL),
         m_Timer(NULL),
         m_Host(uploadItem->m_UploadInfo->getHost()),
         m_PercentRegexp("[^0-9.]"),
         m_Delay(delay),
         m_PercentDone(0.0),
-        m_FilesUploaded(0)
+        m_FilesUploaded(0),
+        m_Cancelled(false)
     {
+        Q_ASSERT(uploadSemaphore != NULL);
     }
 
     UploadWorker::~UploadWorker() {
@@ -57,53 +64,58 @@ namespace Helpers {
     }
 
     void UploadWorker::process() {
-
-        QThread::sleep(m_Delay);
-
         const QStringList &filesToUpload = m_UploadItem->m_FilesToUpload;
         Models::UploadInfo *uploadInfo = m_UploadItem->m_UploadInfo;
         m_OverallFilesCount = filesToUpload.length();
 
-        const QString curlPath = m_UploadItem->m_CurlPath;
         int oneItemUploadMinutesTimeout = m_UploadItem->m_OneItemUploadMinutesTimeout;
         int maxSeconds = oneItemUploadMinutesTimeout * 60 * filesToUpload.length();
 
-        QString password = m_SecretsManager->decodePassword(uploadInfo->getPassword());
-        QString command = QString("%1 --progress-bar --connect-timeout 10 --max-time %6 --retry 1 -T \"{%2}\" %3 --user %4:%5").
-                arg(curlPath, filesToUpload.join(','), uploadInfo->getHost(), uploadInfo->getUsername(), password, QString::number(maxSeconds));
+        QString command = createCurlCommand(uploadInfo, filesToUpload, maxSeconds);
 
-        m_CurlProcess = new QProcess();
+        // initializations can't be in constructor, because
+        // it's executed in the other thread
+        this->initializeUploadEntities();
 
-        QObject::connect(m_CurlProcess, SIGNAL(finished(int,QProcess::ExitStatus)),
-                         this, SLOT(innerProcessFinished(int,QProcess::ExitStatus)));
-        QObject::connect(m_CurlProcess, SIGNAL(readyReadStandardError()),
-                         this, SLOT(uploadOutputReady()));
+        qDebug() << "Waiting for the semaphore" << m_Host;
+        m_UploadSemaphore->acquire();
 
-        m_Timer = new QTimer();
-        QObject::connect(m_Timer, SIGNAL(timeout()), this, SLOT(onTimerTimeout()));
-        m_Timer->setSingleShot(true);
+        QThread::sleep(m_Delay);
 
-        m_Timer->start(maxSeconds*1000);
-        m_CurlProcess->start(command);
+        // m_Cancelled check is only if this thread's cancel() preceds code below
+        // for not releasing semaphore twice in innerProcessFinished() and cancel()
+        // (in general it's executed first because other thread's cancel() releases the semaphore)
+        if (!m_Cancelled) {
+            qDebug() << "Starting upload to" << m_Host;
+            m_Timer->start(maxSeconds*1000);
+            m_CurlProcess->start(command);
+        } else {
+            qDebug() << "Upload cancelled before start for" << m_Host;
+            emitFinishSignals(false);
+        }
     }
 
     void UploadWorker::cancel() {
-        qDebug() << "Terminating upload to " << m_Host;
+        qDebug() << "Cancelling upload to " << m_Host;
 
-        bool killed = false;
+        m_Cancelled = true;
+        m_UploadSemaphore->release();
 
-        if (m_CurlProcess && m_CurlProcess->state() != QProcess::NotRunning && !m_CurlProcess->atEnd()) {
+        if (m_CurlProcess && m_CurlProcess->state() != QProcess::NotRunning) {
             m_CurlProcess->kill();
-            qDebug() << "Curl process killed";
-            killed = true;
+            qDebug() << "Curl process killed for" << m_Host;
         }
-
-        emit finished(!killed);
-        emit stopped();
     }
 
     void UploadWorker::innerProcessFinished(int exitCode, QProcess::ExitStatus exitStatus)
     {
+        qDebug() << "Curl process finished for" << m_Host;
+
+        if (!m_Cancelled) {
+            qDebug() << "Releasing semaphore for" << m_Host;
+            m_UploadSemaphore->release();
+        }
+
         QByteArray stdoutByteArray = m_CurlProcess->readAllStandardOutput();
         QString stdoutText(stdoutByteArray);
         qDebug() << "STDOUT [" << m_Host << "]:" << stdoutText;
@@ -112,13 +124,14 @@ namespace Helpers {
         QString stderrText(stderrByteArray);
         qDebug() << "STDERR [" << m_Host << "]:" << stderrText;
 
-        // upload
+        updateUploadItemPercent(100);
+        emit percentChanged(100.0, m_PercentDone);
+
         bool success = exitCode == 0 && exitStatus == QProcess::NormalExit;
         emitFinishSignals(success);
     }
 
-    void UploadWorker::uploadOutputReady()
-    {
+    void UploadWorker::uploadOutputReady() {
         QString output = m_CurlProcess->readAllStandardError();
         QString prettyfiedOutput = output.right(10).trimmed();
 
@@ -131,14 +144,48 @@ namespace Helpers {
         if (anotherFileUploaded) { m_FilesUploaded++; }
 
         if (percent > m_PercentDone) {
-            percentChanged(percent, m_PercentDone);
+            updateUploadItemPercent(percent);
+            emit percentChanged(percent, m_PercentDone);
             m_PercentDone = percent;
         }
     }
 
-    void UploadWorker::onTimerTimeout()
-    {
+    void UploadWorker::onTimerTimeout() {
         cancel();
+    }
+
+    QString UploadWorker::createCurlCommand(Models::UploadInfo *uploadInfo,
+                                            const QStringList &filesToUpload, int maxSeconds) const {
+        const QString &curlPath = m_UploadItem->m_CurlPath;
+        QString host = uploadInfo->getHost();
+        // if curl is not able to guess the FTP protocol
+        if (!host.startsWith("ftp://") && !host.startsWith("ftp.")) {
+            host = "ftp://" + host;
+        }
+
+        QString password = m_SecretsManager->decodePassword(uploadInfo->getPassword());
+        QString command = QString("%1 --progress-bar --connect-timeout 10 --max-time %6 -T \"{%2}\" %3 --user %4:%5").
+                arg(curlPath, filesToUpload.join(','), host, uploadInfo->getUsername(), password, QString::number(maxSeconds));
+
+        if (uploadInfo->getFtpPassiveMode()) {
+            command += " --ftp-pasv --disable-epsv";
+        }
+
+        return command;
+    }
+
+    void UploadWorker::initializeUploadEntities() {
+        m_CurlProcess = new QProcess();
+
+        QObject::connect(m_CurlProcess, SIGNAL(finished(int,QProcess::ExitStatus)),
+                         this, SLOT(innerProcessFinished(int,QProcess::ExitStatus)));
+        QObject::connect(m_CurlProcess, SIGNAL(readyReadStandardError()),
+                         this, SLOT(uploadOutputReady()));
+
+        m_Timer = new QTimer();
+
+        QObject::connect(m_Timer, SIGNAL(timeout()), this, SLOT(onTimerTimeout()));
+        m_Timer->setSingleShot(true);
     }
 
     double UploadWorker::parsePercent(QString &curlOutput) const
@@ -159,5 +206,9 @@ namespace Helpers {
     void UploadWorker::emitFinishSignals(bool success) {
         emit finished(success);
         emit stopped();
+    }
+
+    void UploadWorker::updateUploadItemPercent(int percent) {
+        m_UploadItem->m_UploadInfo->setPercent(percent);
     }
 }

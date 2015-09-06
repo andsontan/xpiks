@@ -22,62 +22,35 @@
 #ifndef LOGSMODEL
 #define LOGSMODEL
 
-#include <QString>
-#include <QFile>
-#include <QDir>
-#include <QDebug>
-#include <QDateTime>
-#include <QTextStream>
-#include <QStandardPaths>
-#include "../Helpers/constants.h"
-#include "../Helpers/stringhelper.h"
-#include "../Helpers/logger.h"
+#include <QObject>
+#include "../Common/defines.h"
+
+namespace Helpers {
+    class LoggingWorker;
+}
+
+class QString;
 
 namespace Models {
     class LogsModel : public QObject {
         Q_OBJECT
+        Q_PROPERTY(bool withLogs READ getWithLogs CONSTANT)
+
     public:
-        void setLogsManager(Helpers::LogsManager *logsManager) { m_LogsManager = logsManager; }
+        LogsModel(QObject *parent=NULL);
+        virtual ~LogsModel();
 
-        Q_INVOKABLE QString getAllLogsText(bool reallyAll=false) {
-            QString result;
-#ifdef QT_NO_DEBUG
-            QDir logFileDir(QStandardPaths::writableLocation(QStandardPaths::DataLocation));
-            QString logFilePath = logFileDir.filePath(Constants::LOG_FILENAME);
-            QFile f(logFilePath);
+    public:
+        void startLogging();
 
-            if (f.open(QIODevice::ReadOnly | QIODevice::Text)) {
-                // 1000 - do not load the UI
-                // advanced users will open logs it notepad
-                int numberOfLines = reallyAll ? 1000 : 100;
-                QString text = f.readAll();
-                result = Helpers::getLastNLines(text, numberOfLines);
-                f.close();
-            }
-#else
-            Q_UNUSED(reallyAll);
-            result = QString::fromLatin1("Logs are available in Release version");
-#endif
-            return result;
-
-        }
-
-        Q_INVOKABLE void clearLogs() {
-#ifdef QT_NO_DEBUG
-            Q_ASSERT(m_LogsManager != NULL);
-            m_LogsManager->clearLogs();
-#endif
-        }
-
-        Q_INVOKABLE void startFlushing() {
-#ifdef QT_NO_DEBUG
-            Q_ASSERT(m_LogsManager != NULL);
-            m_LogsManager->startFlushing();
-#endif
-        }
+    public:
+        Q_INVOKABLE QString getAllLogsText(bool moreLogs=false);
+        Q_INVOKABLE void clearLogs();        
+        bool getWithLogs() const { return m_WithLogs; }
 
     private:
-        Helpers::LogsManager *m_LogsManager;
+        Helpers::LoggingWorker *m_LoggingWorker;
+        bool m_WithLogs;
     };
 }
 

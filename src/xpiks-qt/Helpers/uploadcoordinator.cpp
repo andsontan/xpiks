@@ -24,6 +24,7 @@
 #include <QRegExp>
 #include <QFileInfo>
 #include <QThread>
+#include <QtMath>
 #include "../Models/artworkmetadata.h"
 #include "uploaditem.h"
 #include "externaltoolsprovider.h"
@@ -33,11 +34,11 @@
 namespace Helpers {
     void UploadCoordinator::uploadArtworks(const QList<Models::ArtworkMetadata *> &artworkList,
                                            const QList<Models::UploadInfo *> &uploadInfos,
-                                           bool includeEPS, const Encryption::SecretsManager *secretsManager)
+                                           bool includeVector, const Encryption::SecretsManager *secretsManager)
     {
         QStringList filePathes;
         QStringList zipsPathes;
-        extractFilePathes(artworkList, filePathes, zipsPathes, includeEPS);
+        extractFilePathes(artworkList, filePathes, zipsPathes, includeVector);
 
         QList<UploadItem*> uploadItems;
         const QString &curlPath = Helpers::ExternalToolsProvider::getCurlPath();
@@ -86,7 +87,8 @@ namespace Helpers {
         emit itemFinished(success);
 
         if (allWorkersFinished) {
-            percentChanged(100);
+            Q_ASSERT(m_UploadSemaphore.available() == MAX_PARALLEL_UPLOAD);
+            emit percentChanged(100);
             m_PercentDone = 100;
             emit uploadFinished(!m_AnyFailed);
             stopThreads();
@@ -107,15 +109,18 @@ namespace Helpers {
         }
         m_PercentMutex.unlock();
 
-        percentChanged(percentDone);
+        emit percentChanged(percentDone);
     }
 
     void UploadCoordinator::doRunUpload(const QList<UploadItem*> &uploadItems,
                                         const Encryption::SecretsManager *secretsManager)
     {
-        int i = 0;
-        foreach (UploadItem *uploadItem, uploadItems) {
-            UploadWorker *worker = new UploadWorker(uploadItem, secretsManager, i);
+        int length = uploadItems.length();
+        for (int i = 0; i < length; ++i) {
+            UploadItem *uploadItem = uploadItems[i];
+            int delay = i;
+
+            UploadWorker *worker = new UploadWorker(uploadItem, secretsManager, &m_UploadSemaphore, delay);
             QThread *thread = new QThread();
             worker->moveToThread(thread);
 
@@ -134,23 +139,26 @@ namespace Helpers {
             m_UploadThreads.append(thread);
 
             thread->start();
-            i++;
         }
     }
 
     void UploadCoordinator::extractFilePathes(const QList<Models::ArtworkMetadata *> &artworkList,
                                               QStringList &filePathes,
                                               QStringList &zipsPathes,
-                                              bool includeEPS) const {
+                                              bool includeVector) const {
 
         foreach(Models::ArtworkMetadata *metadata, artworkList) {
             QString filepath = metadata->getFilepath();
             filePathes.append(filepath);
 
-            if (includeEPS) {
+            if (includeVector) {
                 QString epsFilepath = filepath.replace(QRegExp("(.*)[.]jpg", Qt::CaseInsensitive), "\\1.eps");
+                QString aiFilepath = filepath.replace(QRegExp("(.*)[.]jpg", Qt::CaseInsensitive), "\\1.ai");
+
                 if (QFileInfo(epsFilepath).exists()) {
                     filePathes.append(epsFilepath);
+                } else if (QFileInfo(aiFilepath).exists()) {
+                    filePathes.append(aiFilepath);
                 }
             }
 

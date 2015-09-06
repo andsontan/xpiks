@@ -31,6 +31,8 @@
 #include "../Commands/removeartworkscommand.h"
 #include "../Commands/pastekeywordscommand.h"
 #include "../Suggestion/keywordssuggestor.h"
+#include "../Commands/commandmanager.h"
+#include "artworksrepository.h"
 
 #ifdef Q_OS_OSX
 #include "../Helpers/osxnsurlhelper.h"
@@ -45,6 +47,8 @@ namespace Models {
         // being freed in gui
         //delete m_ArtworksDirectories;
     }
+
+    ArtworkMetadata *ArtItemsModel::createMetadata(const QString &filepath) const { return new ArtworkMetadata(filepath); }
 
     int ArtItemsModel::getModifiedArtworksCount()
     {
@@ -154,10 +158,23 @@ namespace Models {
             localUrls.append(localUrl);
         }
 
-        int count = addLocalArtworks(localUrls);
+        int count = 0;
+        bool isDirectory = localUrls.length() == 1 && QDir(localUrls.first().toLocalFile()).exists();
+        if (isDirectory) {
+            count = addLocalDirectory(localUrls.first());
+        } else {
+            count = addLocalArtworks(localUrls);
+        }
+
         return count;
 #else
-        int count = addLocalArtworks(urls);
+        int count = 0;
+        bool isDirectory = urls.length() == 1 && QDir(urls.first().toLocalFile()).exists();
+        if (isDirectory) {
+            count = addLocalDirectory(urls.first());
+        } else {
+            count = addLocalArtworks(urls);
+        }
         return count;
 #endif
     }
@@ -283,6 +300,46 @@ namespace Models {
             emit needCheckItemsForWarnings(selectedArtworks);
             qDebug() << "Checking selected items for upload warnings...";
         }
+    }
+
+    QObject *ArtItemsModel::getArtworkItself(int index) const {
+        ArtworkMetadata *item = NULL;
+
+        if (index >= 0 && index < m_ArtworkList.length()) {
+            item = m_ArtworkList[index];
+            QQmlEngine::setObjectOwnership(item, QQmlEngine::CppOwnership);
+        }
+
+        return item;
+    }
+
+    QString ArtItemsModel::retrieveImageSize(int metadataIndex) const {
+        if (metadataIndex < 0 || metadataIndex >= m_ArtworkList.length()) { return "-"; }
+
+        ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
+        QImageReader reader(metadata->getFilepath());
+        QSize size = reader.size();
+        QString sizeDescription = QString("W %1 x H %2").arg(size.width()).arg(size.height());
+        return sizeDescription;
+    }
+
+    QString ArtItemsModel::retrieveFileSize(int metadataIndex) const {
+        if (metadataIndex < 0 || metadataIndex >= m_ArtworkList.length()) { return "-"; }
+
+        ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
+        QFileInfo fi(metadata->getFilepath());
+        double size = fi.size(); // in bytes
+        size /= 1024.0*1024.0;
+
+        QString sizeDescription;
+        if (size >= 1) {
+            sizeDescription = QString::number(size, 'f', 2) + " MB";
+        } else {
+            size *= 1024;
+            sizeDescription = QString::number(size, 'f', 2) + " KB";
+        }
+
+        return sizeDescription;
     }
 
     int ArtItemsModel::rowCount(const QModelIndex &parent) const {

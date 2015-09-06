@@ -22,9 +22,11 @@
 #include <QDebug>
 #include <QFileInfo>
 #include "removeartworksitem.h"
+#include "../Commands/commandmanager.h"
 #include "../Helpers/indiceshelper.h"
 #include "../Models/artworksrepository.h"
 #include "../Models/artitemsmodel.h"
+#include "../Models/artworkmetadata.h"
 #include "addartworksitem.h"
 
 void UndoRedo::RemoveArtworksHistoryItem::undo(const Commands::CommandManager *commandManager) const {

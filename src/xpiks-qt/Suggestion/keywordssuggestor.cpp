@@ -25,28 +25,28 @@
 
 namespace Suggestion {
     void KeywordsSuggestor::setSuggestedArtworks(const QList<SuggestionArtwork *> &suggestedArtworks) {
+        m_SelectedArtworksCount = 0;
+        m_KeywordsHash.clear();
+        m_SuggestedKeywords.clear();
+        m_AllOtherKeywords.clear();
         beginResetModel();
         qDeleteAll(m_Suggestions);
         m_Suggestions.clear();
         m_Suggestions.append(suggestedArtworks);
         endResetModel();
-        m_SelectedArtworksCount = 0;
         unsetInProgress();
-        m_KeywordsHash.clear();
-        m_SuggestedKeywords.clear();
-        m_AllOtherKeywords.clear();
     }
 
     void KeywordsSuggestor::clear() {
+        m_SelectedArtworksCount = 0;
+        m_KeywordsHash.clear();
+        m_SuggestedKeywords.clear();
+        m_AllOtherKeywords.clear();
         beginResetModel();
         qDeleteAll(m_Suggestions);
         m_Suggestions.clear();
         endResetModel();
-        m_SelectedArtworksCount = 0;
         unsetInProgress();
-        m_KeywordsHash.clear();
-        m_SuggestedKeywords.clear();
-        m_AllOtherKeywords.clear();
     }
 
     QString KeywordsSuggestor::removeSuggestedKeywordAt(int keywordIndex) {

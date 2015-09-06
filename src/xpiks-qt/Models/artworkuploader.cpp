@@ -24,23 +24,35 @@
 #include <QFileInfo>
 #include <QDebug>
 #include "uploadinforepository.h"
+#include "uploadinfo.h"
 #include "../Helpers/curlwrapper.h"
 #include "../Helpers/uploadcoordinator.h"
 #include "../Helpers/ziphelper.h"
+#include "../Models/artworkmetadata.h"
+#include "../Helpers/testconnectionresult.h"
+#include "../Helpers/uploadcoordinator.h"
+#include "../Commands/commandmanager.h"
 
 namespace Models {
     ArtworkUploader::ArtworkUploader() :
         ArtworksProcessor(),
-        m_IncludeEPS(false),
+        m_IncludeVector(false),
         m_Percent(0)
     {
-        QObject::connect(&m_UploadCoordinator, SIGNAL(uploadStarted()), this, SLOT(onUploadStarted()));
-        QObject::connect(&m_UploadCoordinator, SIGNAL(uploadFinished(bool)), this, SLOT(allFinished(bool)));
-        QObject::connect(&m_UploadCoordinator, SIGNAL(itemFinished(bool)), this, SLOT(artworkUploaded(bool)));
-        QObject::connect(&m_UploadCoordinator, SIGNAL(percentChanged(double)), this, SLOT(uploaderPercentChanged(double)));
+        m_UploadCoordinator = new Helpers::UploadCoordinator();
+
+        QObject::connect(m_UploadCoordinator, SIGNAL(uploadStarted()), this, SLOT(onUploadStarted()));
+        QObject::connect(m_UploadCoordinator, SIGNAL(uploadFinished(bool)), this, SLOT(allFinished(bool)));
+        QObject::connect(m_UploadCoordinator, SIGNAL(itemFinished(bool)), this, SLOT(artworkUploaded(bool)));
+        QObject::connect(m_UploadCoordinator, SIGNAL(percentChanged(double)), this, SLOT(uploaderPercentChanged(double)));
 
         m_TestingCredentialWatcher = new QFutureWatcher<Helpers::TestConnectionResult>(this);
         connect(m_TestingCredentialWatcher, SIGNAL(finished()), SLOT(credentialsTestingFinished()));
+    }
+
+    ArtworkUploader::~ArtworkUploader() {
+        delete m_TestingCredentialWatcher;
+        delete m_UploadCoordinator;
     }
 
     void ArtworkUploader::onUploadStarted()
@@ -61,7 +73,6 @@ namespace Models {
         endProcessing();
         m_Percent = 100;
         updateProgress();
-        delete m_ActiveUploads;
     }
 
     void ArtworkUploader::credentialsTestingFinished()
@@ -73,15 +84,18 @@ namespace Models {
     void ArtworkUploader::uploaderPercentChanged(double percent)
     {
         m_Percent = (int)(percent);
-        percentChanged();
+        emit percentChanged();
+        UploadInfoRepository *uploadInfoRepository = m_CommandManager->getUploadInfoRepository();
+        uploadInfoRepository->updatePercentages();
     }
 
-    void ArtworkUploader::artworkUploadedHandler(bool success)
-    {
+    void ArtworkUploader::artworkUploadedHandler(bool success) {
         if (!success) {
             setIsError(true);
         }
     }
+
+    void ArtworkUploader::uploadArtworks() { doUploadArtworks(getArtworkList()); }
 
     void ArtworkUploader::checkCredentials(const QString &host, const QString &username, const QString &password) const
     {
@@ -118,42 +132,21 @@ namespace Models {
         return needCreate;
     }
 
-    void ArtworkUploader::doUploadArtworks(const QList<ArtworkMetadata *> &artworkList)
-    {
+    void ArtworkUploader::doUploadArtworks(const QList<ArtworkMetadata *> &artworkList) {
         int artworksCount = artworkList.length();
         if (artworksCount == 0) {
             return;
         }
 
-        const UploadInfoRepository *uploadInfoRepository = m_CommandManager->getUploadInfoRepository();
+        UploadInfoRepository *uploadInfoRepository = m_CommandManager->getUploadInfoRepository();
         const QList<Models::UploadInfo *> &infos = uploadInfoRepository->getUploadInfos();
         const Encryption::SecretsManager *secretsManager = m_CommandManager->getSecretsManager();
 
-        m_UploadCoordinator.uploadArtworks(artworkList, infos, m_IncludeEPS, secretsManager);
+        uploadInfoRepository->resetPercents();
+        m_UploadCoordinator->uploadArtworks(artworkList, infos, m_IncludeVector, secretsManager);
     }
 
-    QStringList *ArtworkUploader::getAllFilepathes() const
-    {
-        QStringList *filesList = new QStringList();
-        const QList<ArtworkMetadata*> &artworksList = this->getArtworkList();
-
-        foreach(ArtworkMetadata *metadata, artworksList) {
-            QString filepath = metadata->getFilepath();
-            filesList->append(filepath);
-
-            if (m_IncludeEPS) {
-                QString epsFilepath = filepath.replace(QRegExp("(.*)[.]jpg", Qt::CaseInsensitive), "\\1.eps");
-                if (QFileInfo(epsFilepath).exists()) {
-                    filesList->append(epsFilepath);
-                }
-            }
-        }
-
-        return filesList;
-    }
-
-    void ArtworkUploader::cancelProcessing()
-    {
-        m_UploadCoordinator.cancelUpload();
+    void ArtworkUploader::cancelProcessing() {
+        m_UploadCoordinator->cancelUpload();
     }
 }

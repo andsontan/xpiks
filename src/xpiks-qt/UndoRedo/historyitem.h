@@ -22,7 +22,7 @@
 #ifndef HISTORYITEM_H
 #define HISTORYITEM_H
 
-#include <QString>
+class QString;
 
 namespace Commands {
     class CommandManager;

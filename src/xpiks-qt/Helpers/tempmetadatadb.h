@@ -22,7 +22,9 @@
 #ifndef TEMPMETADATADB_H
 #define TEMPMETADATADB_H
 
-#include "../Models/artworkmetadata.h"
+namespace Models {
+    class ArtworkMetadata;
+}
 
 namespace Helpers {
     // class not functions because it's supposed to progress in future

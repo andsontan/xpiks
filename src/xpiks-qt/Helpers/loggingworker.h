@@ -19,37 +19,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TESTCONNECTIONRESULT
-#define TESTCONNECTIONRESULT
+#ifndef LOGGINGWORKER_H
+#define LOGGINGWORKER_H
 
-#include <QString>
+#include <QObject>
 
 namespace Helpers {
-    class TestConnectionResult {
+    class LoggingWorker : public QObject
+    {
+        Q_OBJECT
     public:
-        TestConnectionResult ():
-            m_Result(false)
-        {}
+        explicit LoggingWorker(QObject *parent = 0);
+        virtual ~LoggingWorker() {emit stopped(); emit finished();}
 
-        TestConnectionResult (bool result, const QString &url) :
-            m_Url(url),
-            m_Result(result)
-        {}
+    signals:
+        void stopped();
+        void finished();
 
-        TestConnectionResult (const TestConnectionResult &copy) :
-            m_Url(copy.m_Url),
-            m_Result(copy.m_Result)
-        {}
-
-    public:
-        bool getResult() const { return m_Result; }
-        QString getUrl() const { return m_Url; }
+    public slots:
+        void process();
+        void cancel();
 
     private:
-        QString m_Url;
-        bool m_Result;
+        volatile bool m_Cancel;
     };
 }
 
-#endif // TESTCONNECTIONRESULT
-
+#endif // LOGGINGWORKER_H
