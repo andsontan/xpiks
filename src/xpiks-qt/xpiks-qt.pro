@@ -199,6 +199,7 @@ DEFINES += QUAZIP_BUILD
 }
 
 linux-g++* {
+target.path=/usr/bin/
 LIBS += -L/lib/x86_64-linux-gnu/ -lz
 QML_IMPORT_PATH += /usr/lib/x86_64-linux-gnu/qt5/imports/
 }
