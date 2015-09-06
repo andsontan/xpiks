@@ -34,6 +34,20 @@ permalink: /downloads/
 
 <p>Download the Xpiks zip archive from the link above, unpack it where you want and it's ready to go. Please, note that this build does work <strong>only for Windows 7 x64 and later</strong>.</p>
 
+<div style="clear:both;"></div>
+
+<h2><strong>Linux instructions (Debian-based)</strong></h2>
+
+<div class="download-package">
+<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.0-beta.8/xpiks_0.8b-1_amd64.deb">
+<div><img src="{{site.url}}/images/linux_installer.jpg" style="vertical-align: middle;width:70px;" />
+<span style="vertical-align: middle;">Package for Linux</span>
+</div>
+</a>
+</div>
+
+<p>Download the Xpiks package from the link above and install it with all dependencies.</p>
+
 <div style="clear:both;height: 30px;"></div>
 
 <h2><strong>Other systems and versions</strong></h2>
