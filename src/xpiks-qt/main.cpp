@@ -33,6 +33,7 @@
 #include <QQmlApplicationEngine>
 
 #include "Common/defines.h"
+#include "Models/filteredartitemsproxymodel.h"
 #include "Suggestion/suggestionqueryengine.h"
 #include "Suggestion/keywordssuggestor.h"
 #include "Models/combinedartworksmodel.h"
@@ -158,6 +159,8 @@ int main(int argc, char *argv[]) {
     UndoRedo::UndoRedoManager undoRedoManager;
     Models::ZipArchiver zipArchiver;
     Suggestion::KeywordsSuggestor keywordsSuggestor;
+    Models::FilteredArtItemsProxyModel filteredArtItemsModel;
+    filteredArtItemsModel.setSourceModel(&artItemsModel);
 
     Commands::CommandManager commandManager;
     commandManager.InjectDependency(&artworkRepository);
@@ -200,6 +203,7 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("zipArchiver", &zipArchiver);
     rootContext->setContextProperty("keywordsSuggestor", &keywordsSuggestor);
     rootContext->setContextProperty("settingsModel", &settingsModel);
+    rootContext->setContextProperty("filteredArtItemsModel", &filteredArtItemsModel);
 
     engine.addImageProvider("global", globalProvider);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
