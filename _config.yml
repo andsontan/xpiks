@@ -7,7 +7,7 @@ description: > # this means to ignore newlines until "baseurl:"
 
 url: /xpiks
 
-# Replace to . for local development
+# Replace to '' for local development
 
 header: yes
 header_sm: /images/banner-small.jpg
