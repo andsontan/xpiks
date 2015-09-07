@@ -24,6 +24,7 @@
 
 #include <QObject>
 #include <QStack>
+#include <QMutex>
 #include "../Commands/commandmanager.h"
 #include "../Common/baseentity.h"
 
@@ -61,6 +62,7 @@ namespace UndoRedo {
     private:
         // stack for future todos
         QStack<HistoryItem*> m_HistoryStack;
+        QMutex m_Mutex;
     };
 }
 
