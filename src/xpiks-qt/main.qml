@@ -594,7 +594,7 @@ ApplicationWindow {
                                     width: 90
                                     isContast: true
                                     text: qsTr("Search")
-
+                                    onClicked: filteredArtItemsModel.searchTerm = filterText.text
                                 }
 
                                 Item {
