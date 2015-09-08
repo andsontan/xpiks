@@ -874,7 +874,7 @@ ApplicationWindow {
                                                         asynchronous: true
                                                     }
 
-                                                    Rectangle {
+                                                    /*Rectangle {
                                                         anchors.fill: parent
                                                         visible: moreInfoMA.pressed
                                                         color: Colors.defaultControlColor
@@ -912,7 +912,7 @@ ApplicationWindow {
                                                                 }
                                                             }
                                                         }
-                                                    }
+                                                    }*/
 
                                                     MouseArea {
                                                         anchors.fill: parent
@@ -936,9 +936,13 @@ ApplicationWindow {
                                                         id: moreInfoMA
                                                         anchors.fill: parent
                                                         cursorShape: Qt.PointingHandCursor
+
                                                         onPressed: {
-                                                            dimensionsText.text = artItemsModel.retrieveImageSize(rowWrapper.getIndex())
-                                                            sizeText.text = artItemsModel.retrieveFileSize(rowWrapper.getIndex())
+                                                            Common.launchComponent("Dialogs/ArtworkPreview.qml", applicationWindow,
+                                                                                   {
+                                                                                       imagePath: filename,
+                                                                                       artworkIndex: rowWrapper.getIndex()
+                                                                                   });
                                                         }
                                                     }
                                                 }

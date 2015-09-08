@@ -185,7 +185,8 @@ DISTFILES += \
     Components/LargeAddIcon.qml \
     StyledControls/StyledBusyIndicator.qml \
     StyledControls/StyledTabView.qml \
-    Components/CustomBorder.qml
+    Components/CustomBorder.qml \
+    Dialogs/ArtworkPreview.qml
 
 macx {
 OBJECTIVE_SOURCES += \

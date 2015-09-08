@@ -33,5 +33,6 @@
         <file>StyledControls/StyledBusyIndicator.qml</file>
         <file>StyledControls/StyledTabView.qml</file>
         <file>Components/CustomBorder.qml</file>
+        <file>Dialogs/ArtworkPreview.qml</file>
     </qresource>
 </RCC>
