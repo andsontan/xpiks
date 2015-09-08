@@ -175,7 +175,7 @@ ApplicationWindow {
         title: "Please choose artworks"
         selectExisting: true
         selectMultiple: true
-        nameFilters: [ "Jpeg images (*.jpg), All files (*)" ]
+        nameFilters: [ "Jpeg images (*.jpg), Tiff images(*.tiff), All files (*)" ]
 
         onAccepted: {
             console.log("You chose: " + chooseArtworksDialog.fileUrls)
