@@ -42,6 +42,9 @@ namespace Models {
         Q_PROPERTY(int percent READ getPercent NOTIFY percentChanged)
         Q_PROPERTY(int itemsCount READ getItemsCount NOTIFY itemsCountChanged)
 
+    protected:
+        enum { MAX_WORKER_THREADS = 10};
+
     public:
         ArtworksProcessor() :
             m_ProcessedArtworksCount(0),
@@ -88,11 +91,13 @@ namespace Models {
         void beginProcessing();
         void endProcessing();
         void endAfterFirstError();
+        virtual void restrictMaxThreads();
 
     private:
         QList<ArtworkMetadata*> m_ArtworkList;
         volatile int m_ProcessedArtworksCount;
         volatile int m_ArtworksCount;
+        volatile int m_ExistingMaxThreadsNumber;
         bool m_IsInProgress;
         bool m_IsError;
     };

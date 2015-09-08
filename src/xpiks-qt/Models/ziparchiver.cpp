@@ -53,6 +53,7 @@ namespace Models {
         }
 
         beginProcessing();
+        restrictMaxThreads();
 
         QList<QStringList> items = itemsWithSameName.values();
         m_ArchiveCreator->setFuture(QtConcurrent::mapped(items, Helpers::zipFiles));
