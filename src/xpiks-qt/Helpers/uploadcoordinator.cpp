@@ -30,6 +30,7 @@
 #include "externaltoolsprovider.h"
 #include "uploadworker.h"
 #include "../Helpers/ziphelper.h"
+#include "../Helpers/filenameshelpers.h"
 
 namespace Helpers {
     void UploadCoordinator::uploadArtworks(const QList<Models::ArtworkMetadata *> &artworkList,
@@ -152,13 +153,13 @@ namespace Helpers {
             filePathes.append(filepath);
 
             if (includeVector) {
-                QString epsFilepath = filepath.replace(QRegExp("(.*)[.]jpg", Qt::CaseInsensitive), "\\1.eps");
-                QString aiFilepath = filepath.replace(QRegExp("(.*)[.]jpg", Qt::CaseInsensitive), "\\1.ai");
+                QStringList vectors = Helpers::convertToVectorFilenames(QStringList() << filepath);
 
-                if (QFileInfo(epsFilepath).exists()) {
-                    filePathes.append(epsFilepath);
-                } else if (QFileInfo(aiFilepath).exists()) {
-                    filePathes.append(aiFilepath);
+                foreach (const QString &item, vectors) {
+                    if (QFileInfo(item).exists()) {
+                        filePathes.append(item);
+                        break;
+                    }
                 }
             }
 

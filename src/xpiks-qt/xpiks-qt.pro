@@ -56,7 +56,8 @@ SOURCES += main.cpp \
     Helpers/logger.cpp \
     Models/logsmodel.cpp \
     Helpers/exiftoolwrapper.cpp \
-    Models/filteredartitemsproxymodel.cpp
+    Models/filteredartitemsproxymodel.cpp \
+    Helpers/filenameshelpers.cpp
 
 RESOURCES += qml.qrc
 
@@ -149,7 +150,8 @@ HEADERS += \
     Models/settingsmodel.h \
     Helpers/loggingworker.h \
     Common/defines.h \
-    Models/filteredartitemsproxymodel.h
+    Models/filteredartitemsproxymodel.h \
+    Helpers/filenameshelpers.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

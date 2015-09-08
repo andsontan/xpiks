@@ -527,7 +527,8 @@ namespace Models {
         foreach (const QString &filepath, rawFilenames) {
             QImageReader imageReader(filepath);
 
-            if (imageReader.format() == "jpeg") {
+            if (imageReader.format() == "jpeg" ||
+                    imageReader.format() == "tiff") {
                 filenames.append(filepath);
             }
         }
