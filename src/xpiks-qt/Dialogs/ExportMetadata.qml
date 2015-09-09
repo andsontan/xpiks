@@ -156,7 +156,7 @@ Item {
                                 exportButton.text = qsTr("Start Export")
                                 if (!iptcProvider.isError) {
                                     artItemsModel.updateAllProperties()
-                                    artItemsModel.setSelectedItemsSaved()
+                                    filteredArtItemsModel.setSelectedItemsSaved()
                                     closePopup()
                                 }
                             }

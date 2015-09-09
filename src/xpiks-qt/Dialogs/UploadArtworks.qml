@@ -63,7 +63,7 @@ Item {
                 }
             }
 
-            artItemsModel.setSelectedForZipping()
+            filteredArtItemsModel.setSelectedForZipping()
             Common.launchComponent("Dialogs/ZipArtworksDialog.qml",
                             applicationWindow,
                                    {

@@ -24,24 +24,60 @@
 
 #include <QSortFilterProxyModel>
 #include <QString>
+#include <QList>
+#include "../Common/baseentity.h"
 
 namespace Models {
-    class FilteredArtItemsProxyModel : public QSortFilterProxyModel
+    class ArtworkMetadata;
+    class ArtItemInfo;
+    class ArtItemsModel;
+
+    class FilteredArtItemsProxyModel : public QSortFilterProxyModel, public Common::BaseEntity
     {
         Q_OBJECT
         Q_PROPERTY(QString searchTerm READ getSearchTerm WRITE setSearchTerm NOTIFY searchTermChanged)
+        Q_PROPERTY(int selectedArtworksCount READ getSelectedArtworksCount NOTIFY selectedArtworksCountChanged)
     public:
         FilteredArtItemsProxyModel(QObject *parent=0);
 
     public:
         const QString &getSearchTerm() const { return m_SearchTerm; }
         void setSearchTerm(const QString &value);
+        int getSelectedArtworksCount() { return m_SelectedArtworksCount; }
 
     public:
         Q_INVOKABLE int getOriginalIndex(int index);
+        Q_INVOKABLE void selectFilteredArtworks() { setFilteredItemsSelected(true); }
+        Q_INVOKABLE void unselectFilteredArtworks() { setFilteredItemsSelected(false); }
+        Q_INVOKABLE void selectDirectory(int directoryIndex);
+        Q_INVOKABLE void combineSelectedArtworks();
+        Q_INVOKABLE void setSelectedItemsSaved();
+        Q_INVOKABLE void removeSelectedArtworks();
+        Q_INVOKABLE void updateSelectedArtworks();
+        Q_INVOKABLE void saveSelectedArtworks();
+        Q_INVOKABLE void setSelectedForUpload();
+        Q_INVOKABLE void setSelectedForZipping();
+        Q_INVOKABLE bool areSelectedArtworksSaved();
+        Q_INVOKABLE int getModifiedSelectedCount() const;
+        Q_INVOKABLE void removeArtworksDirectory(int index);
+        Q_INVOKABLE void checkForWarnings();
+
+    public slots:
+        void itemSelectedChanged(bool value);
+        void onSelectedArtworksRemoved();
 
     signals:
         void searchTermChanged(const QString &searchTerm);
+        void needCheckItemsForWarnings(const QList<ArtworkMetadata*> &artworks);
+        void selectedArtworksCountChanged();
+
+    private:
+        void setFilteredItemsSelected(bool selected);
+        QList<ArtworkMetadata *> getSelectedOriginalItems() const;
+        QList<ArtItemInfo *> getSelectedOriginalItemsWithIndices() const;
+        QList<int> getSelectedOriginalIndices() const;
+        void forceUnselectAllItems();
+        ArtItemsModel *getArtItemsModel() const;
 
     protected:
         bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const Q_DECL_OVERRIDE;
@@ -49,6 +85,7 @@ namespace Models {
     private:
         // ignore default regexp from proxymodel
         QString m_SearchTerm;
+        volatile int m_SelectedArtworksCount;
     };
 }
 

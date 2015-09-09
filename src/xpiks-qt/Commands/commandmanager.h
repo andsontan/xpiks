@@ -38,6 +38,7 @@ namespace UndoRedo {
 namespace Models {
     class ArtworksRepository;
     class ArtItemsModel;
+    class FilteredArtItemsProxyModel;
     class ArtItemInfo;
     class CombinedArtworksModel;
     class IptcProvider;
@@ -60,6 +61,7 @@ namespace Commands {
         CommandManager():
             m_ArtworksRepository(NULL),
             m_ArtItemsModel(NULL),
+            m_FilteredItemsModel(NULL),
             m_CombinedArtworksModel(NULL),
             m_IptcProvider(NULL),
             m_ArtworkUploader(NULL),
@@ -76,6 +78,7 @@ namespace Commands {
     public:
         void InjectDependency(Models::ArtworksRepository *artworkRepository);
         void InjectDependency(Models::ArtItemsModel *artItemsModel);
+        void InjectDependency(Models::FilteredArtItemsProxyModel *filteredItemsModel);
         void InjectDependency(Models::CombinedArtworksModel *combinedArtworksModel);
         void InjectDependency(Models::IptcProvider *iptcProvider);
         void InjectDependency(Models::ArtworkUploader *artworkUploader);
@@ -119,6 +122,7 @@ namespace Commands {
     private:
         Models::ArtworksRepository *m_ArtworksRepository;
         Models::ArtItemsModel *m_ArtItemsModel;
+        Models::FilteredArtItemsProxyModel *m_FilteredItemsModel;
         Models::CombinedArtworksModel *m_CombinedArtworksModel;
         Models::IptcProvider *m_IptcProvider;
         Models::ArtworkUploader *m_ArtworkUploader;

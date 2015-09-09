@@ -70,7 +70,7 @@ ApplicationWindow {
 
     function doOpenUploadDialog(masterPasswordCorrectOrEmpty) {
         artworkUploader.resetModel()
-        artItemsModel.setSelectedForUpload()
+        filteredArtItemsModel.setSelectedForUpload()
         uploadInfos.initializeAccounts(masterPasswordCorrectOrEmpty)
 
         Common.launchComponent("Dialogs/UploadArtworks.qml",
@@ -110,11 +110,11 @@ ApplicationWindow {
 
             MenuItem {
                 text: qsTr("&Zip selected artworks")
-                enabled: artItemsModel.selectedArtworksCount > 0
+                enabled: filteredArtItemsModel.selectedArtworksCount > 0
                 onTriggered: {
                     console.log("Zip archives triggered")
 
-                    artItemsModel.setSelectedForZipping()
+                    filteredArtItemsModel.setSelectedForZipping()
                     Common.launchComponent("Dialogs/ZipArtworksDialog.qml",
                                     applicationWindow,
                                     {componentParent: applicationWindow});
@@ -146,12 +146,12 @@ ApplicationWindow {
     }
 
     function doRemoveSelectedArtworks() {
-        artItemsModel.removeSelectedArtworks()
+        filteredArtItemsModel.removeSelectedArtworks()
         artItemsModel.checkForWarnings()
     }
 
     function tryUploadArtworks() {
-        if (artItemsModel.areSelectedArtworksSaved()) {
+        if (filteredArtItemsModel.areSelectedArtworksSaved()) {
             openUploadDialog()
         } else {
             mustSaveWarning.open()
@@ -165,7 +165,7 @@ ApplicationWindow {
         text: qsTr("Are you sure you want to remove this directory?")
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
-            artItemsModel.removeArtworksDirectory(directoryIndex)
+            filteredArtItemsModel.removeArtworksDirectory(directoryIndex)
             artItemsModel.checkForWarnings()
         }
     }
@@ -330,7 +330,7 @@ ApplicationWindow {
                             MouseArea {
                                 anchors.fill: parent
                                 onClicked: {
-                                    artItemsModel.selectDirectory(sourceWrapper.delegateIndex)
+                                    filteredArtItemsModel.selectDirectory(sourceWrapper.delegateIndex)
                                 }
                             }
 
@@ -365,7 +365,7 @@ ApplicationWindow {
                                             confirmRemoveDirectoryDialog.directoryIndex = sourceWrapper.delegateIndex
                                             confirmRemoveDirectoryDialog.open()
                                         } else {
-                                            artItemsModel.removeArtworksDirectory(sourceWrapper.delegateIndex)
+                                            filteredArtItemsModel.removeArtworksDirectory(sourceWrapper.delegateIndex)
                                             artItemsModel.checkForWarnings()
                                         }
                                     }
@@ -413,11 +413,11 @@ ApplicationWindow {
                             enabled: artworkRepository.artworksSourcesCount > 0
                             width: 80
                             onClicked: {
-                                if (artItemsModel.selectedArtworksCount === 0) {
+                                if (filteredArtItemsModel.selectedArtworksCount === 0) {
                                     mustSelectDialog.open()
                                 }
                                 else {
-                                    var itemsCount = artItemsModel.selectedArtworksCount
+                                    var itemsCount = filteredArtItemsModel.selectedArtworksCount
                                     if (itemsCount > 0) {
                                         if (mustUseConfirmation()) {
                                             confirmRemoveSelectedDialog.itemsCount = itemsCount
@@ -435,13 +435,13 @@ ApplicationWindow {
                             width: mainScrollView.flickableItem.contentHeight > mainScrollView.flickableItem.height ? 72 : 82
                             enabled: artworkRepository.artworksSourcesCount > 0
                             onClicked: {
-                                if (artItemsModel.selectedArtworksCount === 0) {
+                                if (filteredArtItemsModel.selectedArtworksCount === 0) {
                                     mustSelectDialog.open()
                                 }
                                 else {
-                                    if (artItemsModel.selectedArtworksCount > 0) {
+                                    if (filteredArtItemsModel.selectedArtworksCount > 0) {
                                         combinedArtworks.resetModelData();
-                                        artItemsModel.combineSelectedArtworks();
+                                        filteredArtItemsModel.combineSelectedArtworks();
                                         Common.launchComponent("Dialogs/CombinedArtworksDialog.qml", applicationWindow, {});
                                     }
                                 }
@@ -453,17 +453,18 @@ ApplicationWindow {
                             width: 80
                             enabled: artworkRepository.artworksSourcesCount > 0
                             onClicked: {
-                                if (artItemsModel.selectedArtworksCount == 0) {
+                                if (filteredArtItemsModel.selectedArtworksCount == 0) {
                                     mustSelectDialog.open()
                                 }
                                 else {
-                                    if (artItemsModel.selectedArtworksCount > 0 &&
-                                            artItemsModel.modifiedArtworksCount > 0) {
+                                    var modifiedSelectedCount = filteredArtItemsModel.getModifiedSelectedCount();
+
+                                    if (filteredArtItemsModel.selectedArtworksCount > 0 && modifiedSelectedCount > 0) {
                                         iptcProvider.resetModel()
-                                        artItemsModel.patchSelectedArtworks()
+                                        filteredArtItemsModel.saveSelectedArtworks()
                                         Common.launchComponent("Dialogs/ExportMetadata.qml", applicationWindow, {})
                                     } else {
-                                        if (artItemsModel.modifiedArtworksCount == 0) {
+                                        if (modifiedSelectedCount === 0) {
                                             alreadySavedDialog.open()
                                         }
                                     }
@@ -476,11 +477,13 @@ ApplicationWindow {
                             width: 90
                             enabled: artworkRepository.artworksSourcesCount > 0
                             onClicked: {
-                                if (artItemsModel.selectedArtworksCount == 0) {
-                                    artItemsModel.selectAllArtworks();
+                                if (filteredArtItemsModel.selectedArtworksCount === 0) {
+                                    filteredArtItemsModel.selectFilteredArtworks();
                                 }
 
-                                tryUploadArtworks();
+                                if (filteredArtItemsModel.selectedArtworksCount > 0) {
+                                    tryUploadArtworks();
+                                }
                             }
                         }
 
@@ -526,22 +529,22 @@ ApplicationWindow {
                                     id: selectAllCheckbox
                                     isContrast: true
                                     enabled: artworkRepository.artworksSourcesCount > 0
-                                    text: artItemsModel.selectedArtworksCount == 0 ? qsTr("Select all") : qsTr("Select none")
-                                    checked: artItemsModel.selectedArtworksCount > 0
+                                    text: filteredArtItemsModel.selectedArtworksCount === 0 ? qsTr("Select all") : qsTr("Select none")
+                                    checked: filteredArtItemsModel.selectedArtworksCount > 0
 
                                     onClicked: {
                                         if (checked) {
-                                            artItemsModel.selectAllArtworks();
+                                            filteredArtItemsModel.selectFilteredArtworks();
                                         }
                                         else {
-                                            artItemsModel.unselectAllArtworks();
+                                            filteredArtItemsModel.unselectFilteredArtworks();
                                         }
                                     }
 
                                     Connections {
-                                        target: artItemsModel
+                                        target: filteredArtItemsModel
                                         onSelectedArtworksCountChanged: {
-                                            selectAllCheckbox.checked = artItemsModel.selectedArtworksCount > 0
+                                            selectAllCheckbox.checked = filteredArtItemsModel.selectedArtworksCount > 0
                                         }
                                     }
                                 }
@@ -562,6 +565,7 @@ ApplicationWindow {
                                         clip: true
                                         anchors.left: parent.left
                                         anchors.leftMargin: 5
+                                        color: Colors.defaultInputBackground
                                         Keys.onReturnPressed: {
                                             filteredArtItemsModel.searchTerm = text
                                         }
@@ -837,7 +841,7 @@ ApplicationWindow {
                                             onClicked: editisselected = checked
                                             Component.onCompleted: itemCheckedCheckbox.checked = isselected
                                             Connections {
-                                                target: artItemsModel
+                                                target: filteredArtItemsModel
                                                 onSelectedArtworksCountChanged: {
                                                     itemCheckedCheckbox.checked = rowWrapper.artworkModel.isselected || false
                                                 }
@@ -1244,7 +1248,7 @@ ApplicationWindow {
             }
 
             StyledText {
-                text: artItemsModel.selectedArtworksCount > 0 ? qsTr("%1 selected item(s)").arg(artItemsModel.selectedArtworksCount) : qsTr("No selected items")
+                text: filteredArtItemsModel.selectedArtworksCount > 0 ? qsTr("%1 selected item(s)").arg(filteredArtItemsModel.selectedArtworksCount) : qsTr("No selected items")
                 color: Colors.selectedMetadataColor
                 verticalAlignment: Text.AlignVCenter
             }

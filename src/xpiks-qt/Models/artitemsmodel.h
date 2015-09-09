@@ -39,11 +39,9 @@ namespace Models {
     {
         Q_OBJECT
         Q_PROPERTY(int modifiedArtworksCount READ getModifiedArtworksCount NOTIFY modifiedArtworksCountChanged)
-        Q_PROPERTY(int selectedArtworksCount READ getSelectedArtworksCount NOTIFY selectedArtworksCountChanged)
     public:
         ArtItemsModel(QObject *parent = 0) :
-            AbstractListModel(parent),
-            m_SelectedArtworksCount(0)
+            AbstractListModel(parent)
         {}
 
         virtual ~ArtItemsModel();
@@ -69,32 +67,27 @@ namespace Models {
 
     public:
         int getModifiedArtworksCount();
-        int getSelectedArtworksCount() { return m_SelectedArtworksCount; }
         void updateModifiedCount() { emit modifiedArtworksCountChanged(); }
+        void updateItems(const QList<int> &indices, const QVector<int> &roles);
+        void forceUnselectAllItems() const;
 
     public:
         Q_INVOKABLE void updateAllProperties();
-        Q_INVOKABLE void removeArtworksDirectory(int index);
+        /*Q_INVOKABLE*/ void removeArtworksDirectory(int index);
         Q_INVOKABLE void removeKeywordAt(int metadataIndex, int keywordIndex);
         Q_INVOKABLE void removeLastKeyword(int metadataIndex);
         Q_INVOKABLE void appendKeyword(int metadataIndex, const QString &keyword);
         Q_INVOKABLE void pasteKeywords(int metadataIndex, const QStringList &keywords);
         Q_INVOKABLE void backupItem(int metadataIndex);
-        Q_INVOKABLE void combineSelectedArtworks() { doCombineSelectedImages(); }
         Q_INVOKABLE void combineArtwork(int index) { doCombineArtwork(index); }
-        Q_INVOKABLE void selectAllArtworks() { setAllItemsSelected(true); }
-        Q_INVOKABLE void unselectAllArtworks() { setAllItemsSelected(false); }
         Q_INVOKABLE int dropFiles(const QList<QUrl> &urls);
-        Q_INVOKABLE void setSelectedItemsSaved();
-        Q_INVOKABLE void removeSelectedArtworks();
-        Q_INVOKABLE void updateSelectedArtworks();
-        Q_INVOKABLE void patchSelectedArtworks();
-        Q_INVOKABLE void setSelectedForUpload();
-        Q_INVOKABLE void setSelectedForZipping();
-        Q_INVOKABLE bool areSelectedArtworksSaved();
-        Q_INVOKABLE bool allArtworksSelected() const { return m_SelectedArtworksCount == m_ArtworkList.length(); }
-        Q_INVOKABLE void selectDirectory(int directoryIndex);
-        Q_INVOKABLE void checkForWarnings();
+
+        /*Q_INVOKABLE*/ void setSelectedItemsSaved(const QList<int> &selectedIndices);
+        /*Q_INVOKABLE*/ void removeSelectedArtworks(QList<int> &selectedIndices);
+        /*Q_INVOKABLE*/ void updateSelectedArtworks(const QList<int> &selectedIndices);
+        /*Q_INVOKABLE*/ void saveSelectedArtworks(const QList<int> &selectedIndices);
+        /*Q_INVOKABLE*/ void checkForWarnings(const QList<ArtworkMetadata *> selectedArtworks);
+
         Q_INVOKABLE QObject *getArtworkItself(int index) const;
         Q_INVOKABLE QString retrieveImageSize(int metadataIndex) const;
         Q_INVOKABLE QString retrieveFileSize(int metadataIndex) const;
@@ -109,7 +102,6 @@ namespace Models {
         int addLocalArtworks(const QList<QUrl> &artworksPaths);
         int addLocalDirectory(const QUrl &directory);
         void itemModifiedChanged(bool) { updateModifiedCount(); }
-        void itemSelectedChanged(bool);
 
     public:
         void beginAccountingFiles(int filesCount);
@@ -131,15 +123,14 @@ namespace Models {
         void getSelectedArtworks(QList<ArtworkMetadata *> &selectedArtworks) const;
 
     private:
-        void doCombineSelectedImages() const;
         void doCombineArtwork(int index);
 
     signals:
-        void modifiedArtworksCountChanged();
-        void selectedArtworksCountChanged();
-        void artworksChanged();
         void needCheckItemsForWarnings(const QList<ArtworkMetadata*> &artworks);
+        void modifiedArtworksCountChanged();
+        void artworksChanged();
         void artworksAdded(int count);
+        void selectedArtworkRemoved();
 
     protected:
         QHash<int, QByteArray> roleNames() const;
@@ -157,7 +148,6 @@ namespace Models {
 
     private:
         QList<ArtworkMetadata*> m_ArtworkList;
-        int m_SelectedArtworksCount;
     };
 }
 

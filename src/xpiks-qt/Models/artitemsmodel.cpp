@@ -62,6 +62,18 @@ namespace Models {
         return modifiedCount;
     }
 
+    void ArtItemsModel::updateItems(const QList<int> &indices, const QVector<int> &roles) {
+        QList<QPair<int, int> > rangesToUpdate;
+        Helpers::indicesToRanges(indices, rangesToUpdate);
+        updateItemsInRanges(rangesToUpdate, roles);
+    }
+
+    void ArtItemsModel::forceUnselectAllItems() const {
+        foreach (ArtworkMetadata *metadata, m_ArtworkList) {
+            metadata->resetSelected();
+        }
+    }
+
     void ArtItemsModel::updateAllProperties()
     {
         QList<QPair<int, int> > ranges;
@@ -85,7 +97,6 @@ namespace Models {
 
         doRemoveItemsAtIndices(indicesToRemove);
 
-        emit selectedArtworksCountChanged();
         emit modifiedArtworksCountChanged();
     }
 
@@ -179,11 +190,7 @@ namespace Models {
 #endif
     }
 
-    void ArtItemsModel::setSelectedItemsSaved()
-    {
-        QList<int> selectedIndices;
-        getSelectedItemsIndices(selectedIndices);
-
+    void ArtItemsModel::setSelectedItemsSaved(const QList<int> &selectedIndices) {
         foreach (int index, selectedIndices) {
             m_ArtworkList[index]->unsetModified();
         }
@@ -196,17 +203,12 @@ namespace Models {
         emit artworksChanged();
     }
 
-    void ArtItemsModel::removeSelectedArtworks()
-    {
-        QList<int> indicesToRemove;
-        getSelectedItemsIndices(indicesToRemove);
-        doRemoveItemsAtIndices(indicesToRemove);
+    void ArtItemsModel::removeSelectedArtworks(QList<int> &selectedIndices) {
+        doRemoveItemsAtIndices(selectedIndices);
     }
 
-    void ArtItemsModel::updateSelectedArtworks()
+    void ArtItemsModel::updateSelectedArtworks(const QList<int> &selectedIndices)
     {
-        QList<int> selectedIndices;
-        getSelectedItemsIndices(selectedIndices);
         QList<QPair<int, int> > rangesToUpdate;
         Helpers::indicesToRanges(selectedIndices, rangesToUpdate);
         QVector<int> roles;
@@ -216,13 +218,14 @@ namespace Models {
         emit artworksChanged();
     }
 
-    void ArtItemsModel::patchSelectedArtworks()
+    void ArtItemsModel::saveSelectedArtworks(const QList<int> &selectedIndices)
     {
         QList<ArtworkMetadata*> modifiedSelectedArtworks;
-        int count = m_ArtworkList.length();
-        for (int i = 0; i < count; ++i) {
-            ArtworkMetadata *metadata = m_ArtworkList[i];
-            if (metadata->getIsSelected() &&
+
+        foreach (int index, selectedIndices) {
+            ArtworkMetadata *metadata = getArtwork(index);
+            if (metadata != NULL &&
+                    metadata->getIsSelected() &&
                     metadata->isModified()) {
                 modifiedSelectedArtworks.append(metadata);
             }
@@ -232,70 +235,11 @@ namespace Models {
         m_CommandManager->setArtworksForIPTCProcessing(modifiedSelectedArtworks);
     }
 
-    void ArtItemsModel::setSelectedForUpload()
-    {
-        QList<ArtworkMetadata*> selectedArtworks;
-        getSelectedArtworks(selectedArtworks);
-
-        // TODO: remove this two times copying
-        m_CommandManager->setArtworksForUpload(selectedArtworks);
-        emit needCheckItemsForWarnings(selectedArtworks);
-    }
-
-    void ArtItemsModel::setSelectedForZipping()
-    {
-        QList<ArtworkMetadata*> selectedArtworks;
-        getSelectedArtworks(selectedArtworks);
-
-        // TODO: remove this two times copying
-        m_CommandManager->setArtworksForZipping(selectedArtworks);
-    }
-
-    bool ArtItemsModel::areSelectedArtworksSaved()
-    {
-        bool areModified = false;
-
-        foreach(ArtworkMetadata *metadata, m_ArtworkList) {
-            if (metadata->getIsSelected()) {
-                if (metadata->isModified()) {
-                    areModified = true;
-                    break;
-                }
-            }
-        }
-
-        return !areModified;
-    }
-
-    void ArtItemsModel::selectDirectory(int directoryIndex)
-    {
-        QList<int> directoryItems;
-        const ArtworksRepository *artworksRepository = m_CommandManager->getArtworksRepository();
-        const QString directory = artworksRepository->getDirectory(directoryIndex);
-
-        int i = 0;
-        foreach (ArtworkMetadata *metadata, m_ArtworkList) {
-            if (metadata->isInDirectory(directory)) {
-                directoryItems.append(i);
-                metadata->setIsSelected(!metadata->getIsSelected());
-            }
-
-            i++;
-        }
-
-        QList<QPair<int, int> > rangesToUpdate;
-        Helpers::indicesToRanges(directoryItems, rangesToUpdate);
-        updateItemsInRanges(rangesToUpdate, QVector<int>() << IsSelectedRole);
-    }
-
-    void ArtItemsModel::checkForWarnings()
-    {
-        if (this->getSelectedArtworksCount() == 0) {
+    void ArtItemsModel::checkForWarnings(const QList<ArtworkMetadata *> selectedArtworks) {
+        if (selectedArtworks.length() == 0) {
             emit needCheckItemsForWarnings(m_ArtworkList);
             qDebug() << "Checking all items for upload warnings...";
         } else {
-            QList<ArtworkMetadata*> selectedArtworks;
-            getSelectedArtworks(selectedArtworks);
             qDebug() << "Selected items: " << selectedArtworks.length();
             emit needCheckItemsForWarnings(selectedArtworks);
             qDebug() << "Checking selected items for upload warnings...";
@@ -445,13 +389,6 @@ namespace Models {
         return addedFilesCount;
     }
 
-    void ArtItemsModel::itemSelectedChanged(bool value)
-    {
-        int plus = value ? +1 : -1;
-        m_SelectedArtworksCount += plus;
-        emit selectedArtworksCountChanged();
-    }
-
     void ArtItemsModel::beginAccountingFiles(int filesCount)
     {
         int rowsCount = rowCount();
@@ -567,21 +504,6 @@ namespace Models {
         }
     }
 
-    void ArtItemsModel::doCombineSelectedImages() const
-    {
-        QList<ArtItemInfo*> artworksList;
-
-        for (int i = 0; i < m_ArtworkList.length(); ++i) {
-            ArtworkMetadata *metadata = m_ArtworkList[i];
-            if (metadata->getIsSelected()) {
-                ArtItemInfo *info = new ArtItemInfo(metadata, i);
-                artworksList.append(info);
-            }
-        }
-
-        m_CommandManager->combineArtworks(artworksList);
-    }
-
     void ArtItemsModel::doCombineArtwork(int index)
     {
         if (index >= 0 && index < m_ArtworkList.length()) {
@@ -624,8 +546,7 @@ namespace Models {
         artworkRepository->removeFile(metadata->getFilepath(), metadata->getDirectory());
 
         if (metadata->getIsSelected()) {
-            m_SelectedArtworksCount--;
-            emit selectedArtworksCountChanged();
+            emit selectedArtworkRemoved();
         }
 
         delete metadata;

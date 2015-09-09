@@ -165,6 +165,7 @@ int main(int argc, char *argv[]) {
     Commands::CommandManager commandManager;
     commandManager.InjectDependency(&artworkRepository);
     commandManager.InjectDependency(&artItemsModel);
+    commandManager.InjectDependency(&filteredArtItemsModel);
     commandManager.InjectDependency(&combinedArtworksModel);
     commandManager.InjectDependency(&iptcProvider);
     commandManager.InjectDependency(&artworkUploader);
