@@ -874,46 +874,6 @@ ApplicationWindow {
                                                         asynchronous: true
                                                     }
 
-                                                    /*Rectangle {
-                                                        anchors.fill: parent
-                                                        visible: moreInfoMA.pressed
-                                                        color: Colors.defaultControlColor
-                                                        opacity: 0.8
-
-                                                        ColumnLayout {
-                                                            anchors.margins: 10
-                                                            anchors.fill: parent
-                                                            spacing: 5
-
-                                                            StyledText {
-                                                                id: dimensionsText
-                                                                color: Colors.defaultLightColor
-                                                                text: "*"
-                                                            }
-
-                                                            StyledText {
-                                                                id: sizeText
-                                                                color: Colors.defaultLightColor
-                                                                text: '*'
-                                                            }
-
-                                                            Rectangle {
-                                                                color: "transparent"
-                                                                Layout.fillWidth: true
-                                                                height: 60
-
-                                                                StyledText {
-                                                                    wrapMode: TextEdit.Wrap
-                                                                    anchors.fill: parent
-                                                                    color: Colors.defaultLightColor
-                                                                    text: filename
-                                                                    height: 60
-                                                                    elide: Text.ElideRight
-                                                                }
-                                                            }
-                                                        }
-                                                    }*/
-
                                                     MouseArea {
                                                         anchors.fill: parent
                                                         onClicked: editisselected = !isselected
