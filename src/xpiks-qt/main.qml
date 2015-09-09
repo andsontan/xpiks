@@ -989,7 +989,7 @@ ApplicationWindow {
                                                         anchors.verticalCenter: parent.verticalCenter
                                                         maximumLength: 250
                                                         text: description
-                                                        color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.artworkActiveColor
+                                                        color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.defaultInputBackground
                                                         onTextChanged: model.editdescription = text
                                                         Keys.onTabPressed: {
                                                             flv.activateEdit()
@@ -1084,7 +1084,7 @@ ApplicationWindow {
                                                             delegate: Rectangle {
                                                                 id: itemWrapper
                                                                 property int delegateIndex: index
-                                                                color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.artworkActiveColor
+                                                                color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.selectedArtworkColor
 
                                                                 width: childrenRect.width
                                                                 height: childrenRect.height
