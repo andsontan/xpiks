@@ -49,6 +49,7 @@ More instructions can be found at this page http://ribtoks.github.io/xpiks/blog/
 
 - open Issues page and select an issue (i'll provide you with all details and explanations as needed)
 - send your ideas and proposals in comments, issues or via email
+- read the CONTRIBUTOR_GUIDELINES.md file
 - send your pull requests
 
 C++ knowledge and experience in programming is required. Qt knowledge would be a plus.
