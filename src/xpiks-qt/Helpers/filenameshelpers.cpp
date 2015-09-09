@@ -29,7 +29,14 @@ QStringList Helpers::convertToVectorFilenames(const QStringList &items) {
     foreach (const QString &item, items) {
         QString replacedEPS = QString(item).replace(regExp, "\\1.eps");
         QString replacedAI = QString(item).replace(regExp, "\\1.ai");
-        converted << replacedEPS << replacedAI;
+
+        if (replacedEPS != item) {
+            converted << replacedEPS;
+        }
+
+        if (replacedAI != item) {
+            converted << replacedAI;
+        }
     }
 
     return converted;

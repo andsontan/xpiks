@@ -2,8 +2,8 @@
 #include <QPair>
 #include <QSignalSpy>
 #include "removecommand_tests.h"
-#include "../Mocks/commandmanagermock.h"
-#include "../Mocks/artitemsmodelmock.h"
+#include "Mocks/commandmanagermock.h"
+#include "Mocks/artitemsmodelmock.h"
 #include "../xpiks-qt/Commands/removeartworkscommand.h"
 
 void RemoveCommand_Tests::removeArtworksFromEmptyRepository() {
