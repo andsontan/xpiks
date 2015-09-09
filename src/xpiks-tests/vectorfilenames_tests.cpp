@@ -26,9 +26,20 @@ void CompareLists(const QStringList &actual, const QStringList &expected) {
     }
 }
 
-void VectorFileNamesTests::simpleFilenamesTest() {
+void VectorFileNamesTests::simpleFilenamesJpgTest() {
     QStringList images;
     images << "/home/file1.jpg" << "/home/file2.jpg";
+    QStringList vectorsExpected;
+    vectorsExpected << "/home/file1.eps" << "/home/file1.ai" << "/home/file2.eps" << "/home/file2.ai";
+
+    QStringList vectorsActual = Helpers::convertToVectorFilenames(images);
+
+    CompareLists(vectorsActual, vectorsExpected);
+}
+
+void VectorFileNamesTests::simpleFilenamesTiffTest() {
+    QStringList images;
+    images << "/home/file1.tiff" << "/home/file2.tiff";
     QStringList vectorsExpected;
     vectorsExpected << "/home/file1.eps" << "/home/file1.ai" << "/home/file2.eps" << "/home/file2.ai";
 

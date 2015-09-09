@@ -8,7 +8,8 @@ class VectorFileNamesTests : public QObject
 {
     Q_OBJECT
 private slots:
-    void simpleFilenamesTest();
+    void simpleFilenamesJpgTest();
+    void simpleFilenamesTiffTest();
 };
 
 #endif // VECTORFILENAMES_TESTS_H
