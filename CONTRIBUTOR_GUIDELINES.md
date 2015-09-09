@@ -1,6 +1,6 @@
 Project guidelines:
 
-- When you commit the code ensure project builds without errors and warnings and all tests are passing.
+- Before you push your commits ensure that project builds without errors and warnings and all tests are passing
 
 Coding guidelines:
 
