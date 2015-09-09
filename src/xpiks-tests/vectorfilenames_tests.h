@@ -10,6 +10,7 @@ class VectorFileNamesTests : public QObject
 private slots:
     void simpleFilenamesJpgTest();
     void simpleFilenamesTiffTest();
+    void filenamesNotReplacedTest();
 };
 
 #endif // VECTORFILENAMES_TESTS_H

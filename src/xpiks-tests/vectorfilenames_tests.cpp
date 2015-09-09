@@ -47,3 +47,13 @@ void VectorFileNamesTests::simpleFilenamesTiffTest() {
 
     CompareLists(vectorsActual, vectorsExpected);
 }
+
+void VectorFileNamesTests::filenamesNotReplacedTest() {
+    QStringList notImages;
+    notImages << "/home/file1.tar.gz" << "/home/file2.tar.gz";
+
+    QStringList vectorsExpected;
+    QStringList vectorsActual = Helpers::convertToVectorFilenames(notImages);
+
+    CompareLists(vectorsActual, vectorsExpected);
+}
