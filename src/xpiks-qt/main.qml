@@ -147,7 +147,7 @@ ApplicationWindow {
 
     function doRemoveSelectedArtworks() {
         filteredArtItemsModel.removeSelectedArtworks()
-        artItemsModel.checkForWarnings()
+        filteredArtItemsModel.checkForWarnings()
     }
 
     function tryUploadArtworks() {
@@ -166,7 +166,7 @@ ApplicationWindow {
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
             filteredArtItemsModel.removeArtworksDirectory(directoryIndex)
-            artItemsModel.checkForWarnings()
+            filteredArtItemsModel.checkForWarnings()
         }
     }
 
@@ -366,7 +366,7 @@ ApplicationWindow {
                                             confirmRemoveDirectoryDialog.open()
                                         } else {
                                             filteredArtItemsModel.removeArtworksDirectory(sourceWrapper.delegateIndex)
-                                            artItemsModel.checkForWarnings()
+                                            filteredArtItemsModel.checkForWarnings()
                                         }
                                     }
                                 }
@@ -1237,7 +1237,7 @@ ApplicationWindow {
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
-                        artItemsModel.checkForWarnings()
+                        filteredArtItemsModel.checkForWarnings()
                         Common.launchComponent("Dialogs/WarningsDialog.qml", applicationWindow, {});
                     }
                 }
