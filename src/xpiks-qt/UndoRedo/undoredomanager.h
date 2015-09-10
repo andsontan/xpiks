@@ -38,7 +38,8 @@ namespace UndoRedo {
         Q_PROPERTY(QString undoDescription READ getUndoDescription NOTIFY undoDescriptionChanged)
     public:
         UndoRedoManager(QObject *parent=0):
-            QObject(parent)
+            QObject(parent),
+            Common::BaseEntity()
         {}
 
         virtual ~UndoRedoManager();

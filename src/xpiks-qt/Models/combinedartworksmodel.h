@@ -49,6 +49,7 @@ namespace Models {
     public:
         CombinedArtworksModel(QObject *parent = 0) :
             AbstractListModel(parent),
+            Common::BaseEntity(),
             m_CommonKeywordsModel(this)
         {}
 

@@ -27,6 +27,11 @@ namespace Commands { class CommandManager; }
 namespace Common {
     class BaseEntity {
     public:
+        BaseEntity() :
+            m_CommandManager(NULL)
+        {}
+
+    public:
         void setCommandManager(Commands::CommandManager *commandManager) {
             Q_ASSERT(commandManager != NULL);
             m_CommandManager = commandManager;

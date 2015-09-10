@@ -41,7 +41,8 @@ namespace Models {
         Q_PROPERTY(int modifiedArtworksCount READ getModifiedArtworksCount NOTIFY modifiedArtworksCountChanged)
     public:
         ArtItemsModel(QObject *parent = 0) :
-            AbstractListModel(parent)
+            AbstractListModel(parent),
+            Common::BaseEntity()
         {}
 
         virtual ~ArtItemsModel();
