@@ -27,11 +27,11 @@
 namespace Helpers {
     QStringList zipFiles(QStringList filepathes) {
         QString zipFilePath;
-        zipArtworkAndEPS(filepathes, zipFilePath);
+        zipArtworkAndVector(filepathes, zipFilePath);
         return filepathes;
     }
 
-    bool zipArtworkAndEPS(const QStringList &filepathes, QString &zipFilePath) {
+    bool zipArtworkAndVector(const QStringList &filepathes, QString &zipFilePath) {
         QString anyFile = filepathes.first();
         QString archivePath = getArchivePath(anyFile);
 
