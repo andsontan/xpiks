@@ -43,6 +43,19 @@ Xpiks is a free and open source keywording and uploading tool for microstock pho
 - cd to _xpiks-qt_ subdirectory
 - `debuild -i -us -uc -b`
 
+***Ubuntu installation***
+
+Currently two dependencies have to be installed manually:
+
+- qtdeclarative5-controls-plugin
+- qtdeclarative5-quicklayouts-plugin
+
+Also there is an issue with application menu in Qt for Ubuntu which requires a workaround:
+
+`sudo apt-get remove --purge appmenu-qt5`
+
+***More***
+
 More instructions can be found at this page http://ribtoks.github.io/xpiks/blog/2014/building-xpiks-alone/
 
 **How to contribute:**
