@@ -63,6 +63,7 @@ namespace Models {
         bool isInDirectory(const QString &directory) const { return m_ArtworkFilepath.startsWith(directory); }
         bool isModified() const { return m_IsModified; }
         bool getIsSelected() const { return m_IsSelected; }
+        bool isEmpty() const;
 
     public:
         bool setDescription(const QString &value) {

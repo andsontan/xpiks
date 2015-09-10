@@ -248,11 +248,26 @@ namespace Models {
         return artItemsModel;
     }
 
+    bool FilteredArtItemsProxyModel::fitsSpecialKeywords(const ArtworkMetadata *metadata) const {
+        if (m_SearchTerm == "x:modified" && metadata->isModified()) {
+            return true;
+        }
+
+        if (m_SearchTerm == "x:empty" && metadata->isEmpty()) {
+            return true;
+        }
+
+        return false;
+    }
+
     bool FilteredArtItemsProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const {
         Q_UNUSED(sourceParent);
 
         ArtItemsModel *artItemsModel = getArtItemsModel();
         ArtworkMetadata *metadata = artItemsModel->getArtwork(sourceRow);
+
+
+        if (fitsSpecialKeywords(metadata)) { return true; }
 
         bool hasMatch = false;
 

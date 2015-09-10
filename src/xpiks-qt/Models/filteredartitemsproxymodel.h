@@ -78,6 +78,7 @@ namespace Models {
         QList<int> getSelectedOriginalIndices() const;
         void forceUnselectAllItems();
         ArtItemsModel *getArtItemsModel() const;
+        bool fitsSpecialKeywords(const ArtworkMetadata *metadata) const;
 
     protected:
         bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const Q_DECL_OVERRIDE;

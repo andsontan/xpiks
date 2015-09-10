@@ -54,6 +54,10 @@ namespace Models {
         return anythingModified;
     }
 
+    bool ArtworkMetadata::isEmpty() const {
+        return m_KeywordsList.isEmpty() || m_ArtworkDescription.isEmpty();
+    }
+
     bool ArtworkMetadata::removeKeywordAt(int index) {
         bool removed = false;
         if (index >= 0 && index < m_KeywordsList.length()) {
