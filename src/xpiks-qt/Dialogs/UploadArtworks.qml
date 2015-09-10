@@ -278,6 +278,7 @@ Item {
                                                     }
 
                                                     uploadHostsListView.currentIndex = sourceWrapper.delegateIndex
+                                                    uploadInfos.updateProperties(sourceWrapper.delegateIndex)
                                                 }
                                             }
 

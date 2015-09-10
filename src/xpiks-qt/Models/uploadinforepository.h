@@ -82,8 +82,8 @@ namespace Models {
         Q_INVOKABLE QString getInfoString() const;
         Q_INVOKABLE int getSelectedInfosCount() const;
         Q_INVOKABLE QString getAgenciesWithMissingDetails();
+        Q_INVOKABLE void updateProperties(int itemIndex);
 
-    public:
         Q_INVOKABLE void initializeAccounts(bool mpIsCorrectOrEmpty);
         Q_INVOKABLE void finalizeAccounts();
         Q_INVOKABLE bool isMasterPasswordCorrectOrEmpty() const { return !m_EmptyPasswordsMode; }

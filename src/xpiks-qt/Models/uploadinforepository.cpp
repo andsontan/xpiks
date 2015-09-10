@@ -91,6 +91,12 @@ namespace Models {
         return items.join(", ");
     }
 
+    void UploadInfoRepository::updateProperties(int itemIndex) {
+        QModelIndex itemModelIndex = index(itemIndex);
+        // could be any role - just to triger Advanced tab checkbox connections
+        emit dataChanged(itemModelIndex, itemModelIndex, QVector<int>() << ZipBeforeUploadRole);
+    }
+
     // mp == master password
     void UploadInfoRepository::initializeAccounts(bool mpIsCorrectOrEmpty)
     {
