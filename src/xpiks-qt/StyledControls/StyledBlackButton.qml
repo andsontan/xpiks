@@ -28,7 +28,7 @@ import "../Constants/Colors.js" as Colors
 Button {
     style: ButtonStyle {
         background: Rectangle {
-            color: control.enabled ? (control.hovered ? Colors.buttonHoverBackground : Colors.defaultControlColor) : Colors.defaultControlColor
+            color: control.enabled ? (control.hovered ? Colors.buttonHoverBackground : Colors.defaultDarkColor) : Colors.itemsSourceBackground
             implicitWidth: control.width
             implicitHeight: 24
         }
@@ -37,7 +37,7 @@ Button {
             font.bold: true
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
-            color: control.enabled ? (control.hovered ? (control.pressed ? Colors.buttonPressedForeground : Colors.defaultLightColor) : (control.pressed ? Colors.buttonPressedForeground : Colors.defaultLightColor)) : Colors.buttonDisabledForeground
+            color: control.enabled ? (control.hovered ? (control.pressed ? Colors.buttonPressedForeground : Colors.defaultLightColor) : (control.pressed ? Colors.buttonPressedForeground : Colors.defaultInputBackground)) : Colors.buttonDisabledForeground
             text: control.text
         }
     }

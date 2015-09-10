@@ -186,7 +186,8 @@ DISTFILES += \
     StyledControls/StyledBusyIndicator.qml \
     StyledControls/StyledTabView.qml \
     Components/CustomBorder.qml \
-    Dialogs/ArtworkPreview.qml
+    Dialogs/ArtworkPreview.qml \
+    StyledControls/StyledBlackButton.qml
 
 macx {
 OBJECTIVE_SOURCES += \

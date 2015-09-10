@@ -557,6 +557,7 @@ ApplicationWindow {
                                     color: Colors.defaultDarkColor
                                     width: 262
                                     height: 24
+                                    enabled: artworkRepository.artworksSourcesCount > 0
 
                                     StyledTextInput {
                                         id: filterText
@@ -594,10 +595,10 @@ ApplicationWindow {
                                     }
                                 }
 
-                                StyledButton {
+                                StyledBlackButton {
                                     width: 90
-                                    isContast: true
                                     text: qsTr("Search")
+                                    enabled: artworkRepository.artworksSourcesCount > 0
                                     onClicked: filteredArtItemsModel.searchTerm = filterText.text
                                 }
 
