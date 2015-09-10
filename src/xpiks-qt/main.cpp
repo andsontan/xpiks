@@ -19,6 +19,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <iostream>
+
 #include <QDir>
 #include <QtQml>
 #include <QFile>
@@ -105,7 +107,10 @@ void initQSettings() {
 
 int main(int argc, char *argv[]) {
     Helpers::RunGuard guard("xpiks");
-    if (!guard.tryToRun()) { return 0; }
+    if (!guard.tryToRun()) {
+        std::cerr << "Xpiks is already running";
+        return -1;
+    }
 
     initQSettings();
 
