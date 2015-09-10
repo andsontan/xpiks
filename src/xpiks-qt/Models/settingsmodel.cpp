@@ -22,7 +22,7 @@
 #include "settingsmodel.h"
 #include "../Helpers/appsettings.h"
 
-#define DEFAULT_EXIFTOOL "exiftool"
+#define DEFAULT_EXIFTOOL "/usr/local/bin/exiftool"
 #define DEFAULT_CURL "curl"
 #define DEFAULT_MAX_KEYWORDS 50
 #define DEFAULT_MAX_DESCRIPTION 200

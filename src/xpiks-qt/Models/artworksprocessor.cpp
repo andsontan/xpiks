@@ -53,7 +53,8 @@ namespace Models {
     void ArtworksProcessor::endAfterFirstError()
     {
         setIsError(true);
-        incProgress();
+        m_ProcessedArtworksCount = m_ArtworksCount;
+        updateProgress();
         endProcessing();
     }
 

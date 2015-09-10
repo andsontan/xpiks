@@ -78,15 +78,20 @@ ExportPair writeArtworkMetadata(ExportPair pair) {
     QString command = arguments.join(' ');
 
     process.start(command);
-    if (!process.waitForFinished()) {
+    bool finished = process.waitForFinished();
+
+    if (!finished || process.exitStatus() != QProcess::NormalExit) {
+        QByteArray stdoutByteArray = process.readAll();
+        QString stdoutText(stdoutByteArray);
+        if (!stdoutText.isEmpty()) {
+            qDebug() << "Error:" << exiftoolPath << stdoutText;
+        }
+
+        qDebug() << "Error:" << exiftoolPath << process.errorString();
+        return qMakePair(resultMetadata, exportInfo);
+    } else {
         return qMakePair(resultMetadata, exportInfo);
     }
-
-    if (process.exitStatus() == QProcess::NormalExit) {
-        resultMetadata = metadata;
-    }
-
-    return qMakePair(resultMetadata, exportInfo);
 }
 
 void grabMetadata(const QStringList &items, Models::ImportDataResult *importData,
@@ -107,13 +112,20 @@ ImportPair readArtworkMetadata(ImportPair pair) {
 
     QProcess process;
     process.start(exiftoolPath, arguments);
-    if (!process.waitForFinished()) {
+    bool finished = process.waitForFinished();
+
+    QByteArray stdoutByteArray = process.readAll();
+    QString stdoutText(stdoutByteArray);
+
+    if (!finished || process.exitStatus() != QProcess::NormalExit) {
+        if (!stdoutText.isEmpty()) {
+            qDebug() << "Error:" << exiftoolPath << stdoutText;
+        }
+        qDebug() << "Error:" << exiftoolPath << process.errorString();
         return ImportPair(NULL, NULL);
     }
 
-    QByteArray stdoutByteArray = process.readAll();
-    QString stdoutTextText(stdoutByteArray);
-    QStringList items = stdoutTextText.split(QRegExp("[\r\n]"), QString::SkipEmptyParts);
+    QStringList items = stdoutText.split(QRegExp("[\r\n]"), QString::SkipEmptyParts);
 
     QRegExp authorRegExp("^Artist\\s|^By-line\\s|^Creator\\s");
     QRegExp titleRegExp("^ObjectName\\s|^Title\\s");
