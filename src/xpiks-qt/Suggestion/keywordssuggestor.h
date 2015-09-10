@@ -44,6 +44,7 @@ namespace Suggestion {
     public:
         KeywordsSuggestor(QObject *parent=NULL) :
             QAbstractListModel(parent),
+            Common::BaseEntity(),
             m_QueryEngine(this),
             m_SuggestedKeywords(this),
             m_AllOtherKeywords(this),

@@ -38,7 +38,8 @@ namespace Models {
         Q_PROPERTY(int infosCount READ getInfosCount NOTIFY infosCountChanged)
     public:
         UploadInfoRepository(QObject *parent = 0) :
-            QAbstractListModel(parent)
+            QAbstractListModel(parent),
+            Common::BaseEntity()
         {}
 
         virtual ~UploadInfoRepository();

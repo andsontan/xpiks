@@ -47,6 +47,7 @@ namespace Models {
 
     public:
         ArtworksProcessor() :
+            Common::BaseEntity(),
             m_ProcessedArtworksCount(0),
             m_ArtworksCount(0),
             m_IsInProgress(false),

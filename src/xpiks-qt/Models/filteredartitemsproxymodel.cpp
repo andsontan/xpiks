@@ -29,6 +29,7 @@
 namespace Models {
     FilteredArtItemsProxyModel::FilteredArtItemsProxyModel(QObject *parent) :
         QSortFilterProxyModel(parent),
+        Common::BaseEntity(),
         m_SelectedArtworksCount(0)
     {
     }

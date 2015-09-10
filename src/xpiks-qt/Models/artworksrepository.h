@@ -40,8 +40,12 @@ namespace Models {
         {}
 
         ArtworksRepository(const ArtworksRepository &copy):
-            m_DirectoriesList(copy.m_DirectoriesList), m_DirectoriesHash(copy.m_DirectoriesHash),
-        m_FilesSet(copy.m_FilesSet) {}
+            AbstractListModel(),
+            Common::BaseEntity(),
+            m_DirectoriesList(copy.m_DirectoriesList),
+            m_DirectoriesHash(copy.m_DirectoriesHash),
+            m_FilesSet(copy.m_FilesSet)
+        {}
 
         virtual ~ArtworksRepository() {}
 

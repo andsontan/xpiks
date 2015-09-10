@@ -39,7 +39,8 @@ namespace Models {
         Q_PROPERTY(int warningsCount READ getWarningsCount NOTIFY warningsCountChanged)
     public:
         WarningsManager(QObject *parent = 0) :
-            QAbstractListModel(parent)
+            QAbstractListModel(parent),
+            Common::BaseEntity()
         { }
 
         virtual ~WarningsManager() {}
