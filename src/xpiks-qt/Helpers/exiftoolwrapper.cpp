@@ -90,6 +90,7 @@ ExportPair writeArtworkMetadata(ExportPair pair) {
         qDebug() << "Error:" << exiftoolPath << process.errorString();
         return qMakePair(resultMetadata, exportInfo);
     } else {
+        resultMetadata = metadata;
         return qMakePair(resultMetadata, exportInfo);
     }
 }
