@@ -40,12 +40,17 @@ ApplicationWindow {
     minimumHeight: 640
     minimumWidth: 900
     title: qsTr("Xpiks")
+    property int openedDialogsCount: 0
 
     onClosing: {
         if (artItemsModel.modifiedArtworksCount > 0) {
             close.accepted = false
             configExitDialog.open()
         }
+    }
+
+    function onDialogClosed() {
+        openedDialogsCount -= 1
     }
 
     function mustUseConfirmation() {
@@ -60,7 +65,7 @@ ApplicationWindow {
                 onFail: function() { doOpenUploadDialog(false) }
             }
 
-            Common.launchComponent("Dialogs/EnterMasterPasswordDialog.qml",
+            Common.launchDialog("Dialogs/EnterMasterPasswordDialog.qml",
                          applicationWindow,
                          {componentParent: applicationWindow, callbackObject: callbackObject})
         } else {
@@ -73,7 +78,7 @@ ApplicationWindow {
         filteredArtItemsModel.setSelectedForUpload()
         uploadInfos.initializeAccounts(masterPasswordCorrectOrEmpty)
 
-        Common.launchComponent("Dialogs/UploadArtworks.qml",
+        Common.launchDialog("Dialogs/UploadArtworks.qml",
                      applicationWindow,
                      {componentParent: applicationWindow})
     }
@@ -85,7 +90,7 @@ ApplicationWindow {
                 text: qsTr("&Settings")
                 onTriggered: {
                     settingsModel.readAllValues()
-                    Common.launchComponent("Dialogs/SettingsWindow.qml",
+                    Common.launchDialog("Dialogs/SettingsWindow.qml",
                                     applicationWindow, {},
                                     function(wnd) {wnd.show();});
                 }
@@ -93,7 +98,7 @@ ApplicationWindow {
             MenuItem {
                 text: qsTr("&About")
                 onTriggered: {
-                    Common.launchComponent("Dialogs/AboutWindow.qml",
+                    Common.launchDialog("Dialogs/AboutWindow.qml",
                                     applicationWindow, {},
                                     function(wnd) {wnd.show();});
                 }
@@ -115,7 +120,7 @@ ApplicationWindow {
                     console.log("Zip archives triggered")
 
                     filteredArtItemsModel.setSelectedForZipping()
-                    Common.launchComponent("Dialogs/ZipArtworksDialog.qml",
+                    Common.launchDialog("Dialogs/ZipArtworksDialog.qml",
                                     applicationWindow,
                                     {componentParent: applicationWindow});
                 }
@@ -228,7 +233,7 @@ ApplicationWindow {
         target: artItemsModel
         onArtworksAdded: {
            if (count > 0) {
-               Common.launchComponent("Dialogs/ImportMetadata.qml", applicationWindow, {})
+               Common.launchDialog("Dialogs/ImportMetadata.qml", applicationWindow, {})
            }
         }
     }
@@ -238,6 +243,7 @@ ApplicationWindow {
         anchors.fill: parent
 
         DropArea {
+            enabled: applicationWindow.openedDialogsCount == 0
             anchors.fill: parent
             onDropped: {
                 if (drop.hasUrls) {
@@ -442,7 +448,7 @@ ApplicationWindow {
                                     if (filteredArtItemsModel.selectedArtworksCount > 0) {
                                         combinedArtworks.resetModelData();
                                         filteredArtItemsModel.combineSelectedArtworks();
-                                        Common.launchComponent("Dialogs/CombinedArtworksDialog.qml", applicationWindow, {});
+                                        Common.launchDialog("Dialogs/CombinedArtworksDialog.qml", applicationWindow, {});
                                     }
                                 }
                             }
@@ -462,7 +468,7 @@ ApplicationWindow {
                                     if (filteredArtItemsModel.selectedArtworksCount > 0 && modifiedSelectedCount > 0) {
                                         iptcProvider.resetModel()
                                         filteredArtItemsModel.saveSelectedArtworks()
-                                        Common.launchComponent("Dialogs/ExportMetadata.qml", applicationWindow, {})
+                                        Common.launchDialog("Dialogs/ExportMetadata.qml", applicationWindow, {})
                                     } else {
                                         if (modifiedSelectedCount === 0) {
                                             alreadySavedDialog.open()
@@ -885,7 +891,7 @@ ApplicationWindow {
                                                         onDoubleClicked: {
                                                             combinedArtworks.resetModelData();
                                                             artItemsModel.combineArtwork(rowWrapper.getIndex());
-                                                            Common.launchComponent("Dialogs/CombinedArtworksDialog.qml", applicationWindow, {});
+                                                            Common.launchDialog("Dialogs/CombinedArtworksDialog.qml", applicationWindow, {});
                                                         }
                                                     }
                                                 }
@@ -903,7 +909,7 @@ ApplicationWindow {
                                                         cursorShape: Qt.PointingHandCursor
 
                                                         onPressed: {
-                                                            Common.launchComponent("Dialogs/ArtworkPreview.qml", applicationWindow,
+                                                            Common.launchDialog("Dialogs/ArtworkPreview.qml", applicationWindow,
                                                                                    {
                                                                                        imagePath: filename,
                                                                                        artworkIndex: rowWrapper.getIndex()
@@ -1132,7 +1138,7 @@ ApplicationWindow {
                                                                     }
                                                                 }
 
-                                                                Common.launchComponent("Dialogs/KeywordsSuggestion.qml",
+                                                                Common.launchDialog("Dialogs/KeywordsSuggestion.qml",
                                                                                        applicationWindow,
                                                                                        {callbackObject: callbackObject});
                                                             }
@@ -1150,7 +1156,7 @@ ApplicationWindow {
                                                             onClicked: {
                                                                 combinedArtworks.resetModelData();
                                                                 artItemsModel.combineArtwork(rowWrapper.getIndex());
-                                                                Common.launchComponent("Dialogs/CombinedArtworksDialog.qml", applicationWindow, {});
+                                                                Common.launchDialog("Dialogs/CombinedArtworksDialog.qml", applicationWindow, {});
                                                             }
                                                         }
                                                     }
@@ -1216,7 +1222,7 @@ ApplicationWindow {
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
-                        Common.launchComponent("Dialogs/LogsDialog.qml",
+                        Common.launchDialog("Dialogs/LogsDialog.qml",
                                         applicationWindow,
                                         { logText: logsModel.getAllLogsText() });
                     }
@@ -1239,7 +1245,7 @@ ApplicationWindow {
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
                         filteredArtItemsModel.checkForWarnings()
-                        Common.launchComponent("Dialogs/WarningsDialog.qml", applicationWindow, {});
+                        Common.launchDialog("Dialogs/WarningsDialog.qml", applicationWindow, {});
                     }
                 }
             }

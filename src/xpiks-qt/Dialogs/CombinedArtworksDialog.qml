@@ -35,6 +35,9 @@ Item {
     id: dialogComponent
     anchors.fill: parent
 
+    signal onDialogDestruction();
+    Component.onDestruction: onDialogDestruction();
+
     function closePopup() {
         dialogComponent.destroy()
     }
@@ -528,7 +531,7 @@ Item {
                                     }
                                 }
 
-                                Common.launchComponent("Dialogs/KeywordsSuggestion.qml",
+                                Common.launchDialog("Dialogs/KeywordsSuggestion.qml",
                                                        applicationWindow,
                                                        {callbackObject: callbackObject});
                             }

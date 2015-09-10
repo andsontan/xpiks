@@ -35,10 +35,16 @@ Item {
     anchors.fill: parent
 
     function closePopup() {
+        iptcProvider.isLaunched = false
         metadataImportComponent.destroy()
     }
 
-    Component.onCompleted: iptcProvider.ignoreAutosave = false
+    Component.onCompleted: {
+        iptcProvider.ignoreAutosave = false
+    }
+
+    signal onDialogDestruction();
+    Component.onDestruction: onDialogDestruction();
 
     PropertyAnimation { target: metadataImportComponent; property: "opacity";
         duration: 400; from: 0; to: 1;

@@ -40,6 +40,9 @@ ApplicationWindow {
     flags: Qt.Dialog
     title: qsTr("About")
 
+    signal onDialogDestruction();
+    Component.onDestruction: onDialogDestruction();
+
     function closeAbout() {
         aboutWindow.destroy();
     }

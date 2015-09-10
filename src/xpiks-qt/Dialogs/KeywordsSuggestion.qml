@@ -36,6 +36,9 @@ Item {
     property var callbackObject
     property bool initialized: false
 
+    signal onDialogDestruction();
+    Component.onDestruction: onDialogDestruction();
+
     function closePopup() {
         keywordsSuggestor.cancelSearch()
         keywordsSuggestor.close();

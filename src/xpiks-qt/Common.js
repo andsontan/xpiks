@@ -52,12 +52,23 @@ function isInComponent(point, component) {
     return result;
 }
 
-function launchComponent(componentName, directParent, options, functor) {
+function launchDialog(componentName, directParent, options, functor) {
     var component = Qt.createComponent(componentName);
     if (component.status !== Component.Ready) {
         console.debug("Component Error: " + component.errorString());
     } else {
-        var instance = component.createObject(directParent, options);
+        var instance = component.createObject(directParent, options);        
+
+        if (typeof instance.onDialogDestruction !== "undefined") {
+            if (typeof directParent.openedDialogsCount !== "undefined") {
+                directParent.openedDialogsCount += 1
+            }
+
+            if (typeof directParent.onDialogClosed !== "undefined") {
+                instance.onDialogDestruction.connect(directParent.onDialogClosed);
+            }
+        }
+
         if (functor) {
             functor(instance);
         }

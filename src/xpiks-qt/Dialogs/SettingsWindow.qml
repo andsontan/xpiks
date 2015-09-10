@@ -41,6 +41,9 @@ ApplicationWindow {
     maximumHeight: height
     flags: Qt.Dialog
 
+    signal onDialogDestruction();
+    Component.onDestruction: onDialogDestruction();
+
     function closeSettings() {
         settingsWindow.destroy();
     }
@@ -63,7 +66,7 @@ ApplicationWindow {
             onSuccess: onMasterPasswordSet
         }
 
-        Common.launchComponent("Dialogs/MasterPasswordSetupDialog.qml",
+        Common.launchDialog("Dialogs/MasterPasswordSetupDialog.qml",
                                settingsWindow,
                                {firstTime: firstTimeParam, callbackObject: callbackObject});
     }
@@ -124,7 +127,7 @@ ApplicationWindow {
                     }
                 }
 
-                Common.launchComponent("Dialogs/EnterMasterPasswordDialog.qml",
+                Common.launchDialog("Dialogs/EnterMasterPasswordDialog.qml",
                                        settingsWindow,
                                        {componentParent: settingsWindow, callbackObject: callbackObject})
             } else {

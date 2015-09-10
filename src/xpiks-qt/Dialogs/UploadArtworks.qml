@@ -39,6 +39,9 @@ Item {
     property bool emptyPasswords: false
     property variant componentParent
 
+    signal onDialogDestruction();
+    Component.onDestruction: onDialogDestruction();
+
     function closePopup() {
         secretsManager.purgeMasterPassword()
         uploadInfos.finalizeAccounts()
@@ -64,8 +67,8 @@ Item {
             }
 
             filteredArtItemsModel.setSelectedForZipping()
-            Common.launchComponent("Dialogs/ZipArtworksDialog.qml",
-                            applicationWindow,
+            Common.launchDialog("Dialogs/ZipArtworksDialog.qml",
+                            uploadArtworksComponent.componentParent,
                                    {
                                        componentParent: applicationWindow,
                                        immediateProcessing: true,
@@ -696,7 +699,7 @@ Item {
                             cursorShape: Qt.PointingHandCursor
                             onClicked: {
                                 if (warningsManager.warningsCount > 0) {
-                                    Common.launchComponent("Dialogs/WarningsDialog.qml",
+                                    Common.launchDialog("Dialogs/WarningsDialog.qml",
                                                            uploadArtworksComponent.componentParent, {});
                                 }
                             }

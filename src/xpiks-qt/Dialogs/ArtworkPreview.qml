@@ -37,6 +37,9 @@ Item {
     property string imagePath: ''
     property int artworkIndex: -1
 
+    signal onDialogDestruction();
+    Component.onDestruction: onDialogDestruction();
+
     function closePopup() {
         artworkPreviewDialog.destroy()
     }

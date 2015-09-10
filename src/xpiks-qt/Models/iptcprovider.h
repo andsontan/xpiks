@@ -64,6 +64,7 @@ namespace Models {
                 emit mustSaveOriginalChanged();
             }
         }
+
         bool getIgnoreAutosave() const { return m_IgnoreAutosave; }
         void setIgnoreAutosave(bool value) {
             if (m_IgnoreAutosave != value) {
