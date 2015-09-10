@@ -26,6 +26,7 @@
 #include <QDir>
 #include "../Helpers/ziphelper.h"
 #include "../Models/artworkmetadata.h"
+#include "../Helpers/filenameshelpers.h"
 
 namespace Models {
     ZipArchiver::ZipArchiver()
@@ -52,6 +53,7 @@ namespace Models {
         }
 
         beginProcessing();
+        restrictMaxThreads();
 
         QList<QStringList> items = itemsWithSameName.values();
         m_ArchiveCreator->setFuture(QtConcurrent::mapped(items, Helpers::zipFiles));
@@ -71,13 +73,13 @@ namespace Models {
 
             hash[basename].append(filepath);
 
-            QString epsFilepath = filepath.replace(QRegExp("(.*)[.]jpg", Qt::CaseInsensitive), "\\1.eps");
-            QString aiFilepath = filepath.replace(QRegExp("(.*)[.]jpg", Qt::CaseInsensitive), "\\1.ai");
+            QStringList vectors = Helpers::convertToVectorFilenames(QStringList() << filepath);
 
-            if (QFileInfo(epsFilepath).exists()) {
-                hash[basename].append(epsFilepath);
-            } else if (QFileInfo(aiFilepath).exists()) {
-                hash[basename].append(aiFilepath);
+            foreach (const QString &item, vectors) {
+                if (QFileInfo(item).exists()) {
+                    hash[basename].append(item);
+                    break;
+                }
             }
         }
     }

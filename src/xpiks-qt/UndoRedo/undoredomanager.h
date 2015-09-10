@@ -24,6 +24,7 @@
 
 #include <QObject>
 #include <QStack>
+#include <QMutex>
 #include "../Commands/commandmanager.h"
 #include "../Common/baseentity.h"
 
@@ -37,7 +38,8 @@ namespace UndoRedo {
         Q_PROPERTY(QString undoDescription READ getUndoDescription NOTIFY undoDescriptionChanged)
     public:
         UndoRedoManager(QObject *parent=0):
-            QObject(parent)
+            QObject(parent),
+            Common::BaseEntity()
         {}
 
         virtual ~UndoRedoManager();
@@ -61,6 +63,7 @@ namespace UndoRedo {
     private:
         // stack for future todos
         QStack<HistoryItem*> m_HistoryStack;
+        QMutex m_Mutex;
     };
 }
 

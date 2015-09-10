@@ -19,28 +19,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef BASEENTITY
-#define BASEENTITY
+#ifndef FILENAMESHELPERS
+#define FILENAMESHELPERS
 
-namespace Commands { class CommandManager; }
+#include <QStringList>
 
-namespace Common {
-    class BaseEntity {
-    public:
-        BaseEntity() :
-            m_CommandManager(NULL)
-        {}
-
-    public:
-        void setCommandManager(Commands::CommandManager *commandManager) {
-            Q_ASSERT(commandManager != NULL);
-            m_CommandManager = commandManager;
-        }
-
-    protected:
-        Commands::CommandManager *m_CommandManager;
-    };
+namespace Helpers {
+    QStringList convertToVectorFilenames(const QStringList &items);
 }
 
-#endif // BASEENTITY
+#endif // FILENAMESHELPERS
 

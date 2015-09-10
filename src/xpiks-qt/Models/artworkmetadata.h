@@ -102,6 +102,8 @@ namespace Models {
             return result;
         }
 
+        void resetSelected() { m_IsSelected = false; }
+
     public:
         bool removeKeywordAt(int index);
         bool removeLastKeyword() { return removeKeywordAt(m_KeywordsList.length() - 1); }

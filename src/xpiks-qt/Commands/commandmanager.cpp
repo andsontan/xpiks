@@ -34,6 +34,7 @@
 #include "../Models/ziparchiver.h"
 #include "../Suggestion/keywordssuggestor.h"
 #include "../Commands/addartworkscommand.h"
+#include "../Models/filteredartitemsproxymodel.h"
 
 void Commands::CommandManager::InjectDependency(Models::ArtworksRepository *artworkRepository) {
     Q_ASSERT(artworkRepository != NULL); m_ArtworksRepository = artworkRepository;
@@ -43,6 +44,11 @@ void Commands::CommandManager::InjectDependency(Models::ArtworksRepository *artw
 void Commands::CommandManager::InjectDependency(Models::ArtItemsModel *artItemsModel) {
     Q_ASSERT(artItemsModel != NULL); m_ArtItemsModel = artItemsModel;
     m_ArtItemsModel->setCommandManager(this);
+}
+
+void Commands::CommandManager::InjectDependency(Models::FilteredArtItemsProxyModel *filteredItemsModel) {
+    Q_ASSERT(filteredItemsModel != NULL); m_FilteredItemsModel = filteredItemsModel;
+    m_FilteredItemsModel->setCommandManager(this);
 }
 
 void Commands::CommandManager::InjectDependency(Models::CombinedArtworksModel *combinedArtworksModel) {
@@ -116,6 +122,12 @@ void Commands::CommandManager::connectEntitiesSignalsSlots() const
 
     QObject::connect(m_ArtItemsModel, SIGNAL(needCheckItemsForWarnings(QList<ArtworkMetadata*>)),
                      m_WarningsManager, SLOT(onCheckWarnings(QList<ArtworkMetadata*>)));
+
+    QObject::connect(m_FilteredItemsModel, SIGNAL(needCheckItemsForWarnings(QList<ArtworkMetadata*>)),
+                     m_WarningsManager, SLOT(onCheckWarnings(QList<ArtworkMetadata*>)));
+
+    QObject::connect(m_ArtItemsModel, SIGNAL(selectedArtworkRemoved()),
+                     m_FilteredItemsModel, SLOT(onSelectedArtworksRemoved()));
 }
 
 void Commands::CommandManager::recodePasswords(const QString &oldMasterPassword,
@@ -166,7 +178,7 @@ void Commands::CommandManager::connectArtworkSignals(Models::ArtworkMetadata *me
         QObject::connect(metadata, SIGNAL(modifiedChanged(bool)),
                          m_ArtItemsModel, SLOT(itemModifiedChanged(bool)));
         QObject::connect(metadata, SIGNAL(selectedChanged(bool)),
-                         m_ArtItemsModel, SLOT(itemSelectedChanged(bool)));
+                         m_FilteredItemsModel, SLOT(itemSelectedChanged(bool)));
     }
 
     if (m_ArtworksRepository) {

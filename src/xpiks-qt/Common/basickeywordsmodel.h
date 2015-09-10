@@ -35,7 +35,8 @@ namespace Common {
         Q_OBJECT
     public:
         BasicKeywordsModel(QObject *parent) :
-            QAbstractListModel(parent)
+            QAbstractListModel(parent),
+            Common::BaseEntity()
         { }
 
     public:

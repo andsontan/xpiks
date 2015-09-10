@@ -32,6 +32,8 @@ Xpiks is a free and open source keywording and uploading tool for microstock pho
 ***Generic build***
 
 - install Qt 5.4 from official website
+- open zlib project in Qt Creator, select Release, Run qmake, Build
+- copy zlib library to the `libs/` directory
 - open main project in Qt Creator, select Release, Run qmake, Build
 - you can open, build and run tests project additionally
 
@@ -47,6 +49,7 @@ More instructions can be found at this page http://ribtoks.github.io/xpiks/blog/
 
 - open Issues page and select an issue (i'll provide you with all details and explanations as needed)
 - send your ideas and proposals in comments, issues or via email
+- read the CONTRIBUTOR_GUIDELINES.md file
 - send your pull requests
 
 C++ knowledge and experience in programming is required. Qt knowledge would be a plus.

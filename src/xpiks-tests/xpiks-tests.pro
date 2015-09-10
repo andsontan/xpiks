@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core testlib qml quick
+QT       += core testlib qml quick concurrent
 
 QT       -= gui
 
@@ -44,7 +44,9 @@ SOURCES += main.cpp \
     ../xpiks-qt/UndoRedo/modifyartworkshistoryitem.cpp \
     ../xpiks-qt/UndoRedo/removeartworksitem.cpp \
     ../xpiks-qt/Encryption/aes-qt.cpp \
-    removecommand_tests.cpp
+    removecommand_tests.cpp \
+    vectorfilenames_tests.cpp \
+    ../xpiks-qt/Helpers/filenameshelpers.cpp
 
 HEADERS += \
     encryption_tests.h \
@@ -78,7 +80,9 @@ HEADERS += \
     ../xpiks-qt/UndoRedo/removeartworksitem.h \
     Mocks/artworkmetadatamock.h \
     removecommand_tests.h \
-    ../xpiks-qt/Common/basickeywordsmodel.h
+    ../xpiks-qt/Common/basickeywordsmodel.h \
+    vectorfilenames_tests.h \
+    ../xpiks-qt/Helpers/filenameshelpers.h
 
 macx {
 OBJECTIVE_SOURCES += \

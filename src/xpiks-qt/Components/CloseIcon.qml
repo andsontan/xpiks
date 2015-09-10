@@ -35,7 +35,7 @@ Item {
         opacity: mouseArea.containsMouse ? 1 : 0.8
 
         Rectangle {
-            color: mouseArea.pressed ? Colors.artworkModifiedColor : (isActive ? Colors.defaultControlColor : Colors.defaultLightColor)
+            color: enabled ? (mouseArea.pressed ? Colors.artworkModifiedColor : (isActive ? Colors.defaultControlColor : Colors.defaultLightColor)) : Colors.selectedArtworkColor
             width: parent.width - 2
             height: 3
             border.width: 1
@@ -47,7 +47,7 @@ Item {
         }
 
         Rectangle {
-            color: mouseArea.pressed ? Colors.artworkModifiedColor : (isActive ? Colors.defaultControlColor : Colors.defaultLightColor)
+            color: enabled ? (mouseArea.pressed ? Colors.artworkModifiedColor : (isActive ? Colors.defaultControlColor : Colors.defaultLightColor)) : Colors.selectedArtworkColor
             width: parent.width - 2
             height: 3
             radius: 2

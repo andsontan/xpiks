@@ -121,6 +121,7 @@ namespace Models {
         }
 
         if (pairs.length() > 0) {
+            restrictMaxThreads();
             m_MetadataReader->setFuture(QtConcurrent::mapped(pairs, readArtworkMetadata));
         }
         else {
@@ -152,6 +153,7 @@ namespace Models {
         }
 
         if (pairs.length() > 0) {
+            restrictMaxThreads();
             m_MetadataWriter->setFuture(QtConcurrent::mapped(pairs, writeArtworkMetadata));
         }
         else {

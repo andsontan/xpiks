@@ -19,28 +19,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef BASEENTITY
-#define BASEENTITY
+#include "filenameshelpers.h"
+#include <QRegExp>
 
-namespace Commands { class CommandManager; }
+QStringList Helpers::convertToVectorFilenames(const QStringList &items) {
+    QStringList converted;
+    QRegExp regExp("(.*)[.](jpg|jpeg|tiff)", Qt::CaseInsensitive);
 
-namespace Common {
-    class BaseEntity {
-    public:
-        BaseEntity() :
-            m_CommandManager(NULL)
-        {}
+    foreach (const QString &item, items) {
+        QString replacedEPS = QString(item).replace(regExp, "\\1.eps");
+        QString replacedAI = QString(item).replace(regExp, "\\1.ai");
 
-    public:
-        void setCommandManager(Commands::CommandManager *commandManager) {
-            Q_ASSERT(commandManager != NULL);
-            m_CommandManager = commandManager;
+        if (replacedEPS != item) {
+            converted << replacedEPS;
         }
 
-    protected:
-        Commands::CommandManager *m_CommandManager;
-    };
+        if (replacedAI != item) {
+            converted << replacedAI;
+        }
+    }
+
+    return converted;
 }
-
-#endif // BASEENTITY
-

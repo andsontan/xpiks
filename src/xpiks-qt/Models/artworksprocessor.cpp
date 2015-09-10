@@ -20,6 +20,7 @@
  */
 
 #include "artworksprocessor.h"
+#include <QtConcurrent>
 
 namespace Models {
     void ArtworksProcessor::resetModel()
@@ -34,6 +35,7 @@ namespace Models {
 
     void ArtworksProcessor::beginProcessing()
     {
+        m_ExistingMaxThreadsNumber = QThreadPool::globalInstance()->maxThreadCount();
         m_ArtworksCount = m_ArtworkList.length();
         m_ProcessedArtworksCount = 0;
         setInProgress(true);
@@ -43,6 +45,7 @@ namespace Models {
     {
         m_ProcessedArtworksCount = 0;
         m_ArtworksCount = 0;
+        QThreadPool::globalInstance()->setMaxThreadCount(m_ExistingMaxThreadsNumber);
         setInProgress(false);
         emit finishedProcessing();
     }
@@ -52,5 +55,10 @@ namespace Models {
         setIsError(true);
         incProgress();
         endProcessing();
+    }
+
+    void ArtworksProcessor::restrictMaxThreads()
+    {
+        QThreadPool::globalInstance()->setMaxThreadCount((int)MAX_WORKER_THREADS);
     }
 }

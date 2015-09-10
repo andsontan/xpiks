@@ -1,8 +1,8 @@
 #include <QStringList>
 #include <QSignalSpy>
 #include "addcommand_tests.h"
-#include "../Mocks/commandmanagermock.h"
-#include "../Mocks/artitemsmodelmock.h"
+#include "Mocks/commandmanagermock.h"
+#include "Mocks/artitemsmodelmock.h"
 #include "../xpiks-qt/Commands/addartworkscommand.h"
 
 void AddCommand_Tests::addNoArtworksToEmptyRepositoryTest()
