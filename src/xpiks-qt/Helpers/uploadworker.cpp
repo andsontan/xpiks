@@ -116,6 +116,10 @@ namespace Helpers {
             m_UploadSemaphore->release();
         }
 
+        if (m_CurlProcess->exitStatus() != QProcess::NormalExit) {
+            qDebug() << "Error:" << m_UploadItem->m_CurlPath << m_CurlProcess->errorString();
+        }
+
         QByteArray stdoutByteArray = m_CurlProcess->readAllStandardOutput();
         QString stdoutText(stdoutByteArray);
         qDebug() << "STDOUT [" << m_Host << "]:" << stdoutText;

@@ -51,7 +51,8 @@ Helpers::TestConnectionResult isConnectionValid(const QString &hostname, const Q
             process.exitCode() == 0) {
         isValid = true;
     } else {
-        qDebug() << "Timeout while waiting for curl";
+        qDebug() << "Timeout or error while waiting for curl";
+        qDebug() << "Error:" << curlPath << process.errorString();
     }
 
     QByteArray stdoutByteArray = process.readAllStandardOutput();
