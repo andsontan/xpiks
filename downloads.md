@@ -52,7 +52,7 @@ permalink: /downloads/
 
 <h2><strong>Other systems and versions</strong></h2>
 
-<p>You can also download <a href="https://dl.dropboxusercontent.com/u/14391423/xpiks-qt-nightly.dmg">Nightly package for OS X</a> and try the newest features.</p>
+<p>You can also download <a href="https://dl.dropboxusercontent.com/u/14391423/xpiks-qt-nightly.dmg">Nightly package for OS X</a> or <a href="https://dl.dropboxusercontent.com/u/14391423/xpiks-qt-v1.0-beta.nightly.zip">Nightly package for Windows x64</a> and try the newest features.</p>
 
 <p>
 If you'd like to build Xpiks for your own platform, please, refer to <a href="{{site.url}}/blog/2014/building-xpiks-alone">this post</a>.
