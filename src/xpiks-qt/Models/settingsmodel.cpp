@@ -22,7 +22,12 @@
 #include "settingsmodel.h"
 #include "../Helpers/appsettings.h"
 
+#ifdef Q_OS_MAC
 #define DEFAULT_EXIFTOOL "/usr/local/bin/exiftool"
+#else
+#define DEFAULT_EXIFTOOL "exiftool"
+#endif
+
 #define DEFAULT_CURL "curl"
 #define DEFAULT_MAX_KEYWORDS 50
 #define DEFAULT_MAX_DESCRIPTION 200
