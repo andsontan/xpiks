@@ -576,6 +576,11 @@ ApplicationWindow {
                                         Keys.onReturnPressed: {
                                             filteredArtItemsModel.searchTerm = text
                                         }
+
+                                        Connections {
+                                            target: filteredArtItemsModel
+                                            onSearchTermChanged: filterText.text = filteredArtItemsModel.searchTerm
+                                        }
                                     }
 
                                     CloseIcon {
@@ -585,10 +590,7 @@ ApplicationWindow {
                                         anchors.rightMargin: 5
                                         enabled: filterText.length > 0
                                         anchors.verticalCenter: parent.verticalCenter
-                                        onItemClicked: {
-                                            filterText.text = ''
-                                            filteredArtItemsModel.searchTerm = ''
-                                        }
+                                        onItemClicked: filteredArtItemsModel.searchTerm = ''
                                     }
 
                                     StyledText {
@@ -1270,6 +1272,17 @@ ApplicationWindow {
                 text: artItemsModel.modifiedArtworksCount > 0 ? qsTr("%1 modified item(s)").arg(artItemsModel.modifiedArtworksCount) : qsTr("No modified items")
                 verticalAlignment: Text.AlignVCenter
                 color: artItemsModel.modifiedArtworksCount > 0 ? Colors.artworkModifiedColor : Colors.selectedMetadataColor
+
+                MouseArea {
+                    id: selectModifiedMA
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                        if (artItemsModel.modifiedArtworksCount > 0) {
+                            filteredArtItemsModel.searchTerm = "x:modified"
+                        }
+                    }
+                }
             }
 
             Item {
