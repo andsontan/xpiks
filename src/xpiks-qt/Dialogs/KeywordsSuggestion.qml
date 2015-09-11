@@ -476,12 +476,24 @@ Item {
                         Layout.fillWidth: true
                     }
 
+                    Timer {
+                        id: suggestedAddedTimer
+                        property int iterations: 0
+                        interval: 2000
+                        repeat: false
+                        running: false
+                        onTriggered: addKeywordsButton.text = qsTr("Add suggested keywords")
+                    }
+
                     StyledButton {
+                        id: addKeywordsButton
                         text: qsTr("Add suggested keywords")
                         enabled: !keywordsSuggestor.isInProgress
                         width: 200
                         onClicked: {
                             callbackObject.promoteKeywords(keywordsSuggestor.getSuggestedKeywords())
+                            text = qsTr("Added!")
+                            suggestedAddedTimer.start()
                         }
                     }
 
