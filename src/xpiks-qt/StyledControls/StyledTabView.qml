@@ -65,6 +65,17 @@ TabView {
                 text: styleData.title
                 color: styleData.hovered ? Colors.defaultLightColor : (styleData.selected ? Colors.artworkActiveColor : Colors.defaultInputBackground)
             }
+
+            CustomBorder {
+                commonBorder: false
+                //color: Colors.artworkActiveColor
+                borderColor: Colors.defaultControlColor
+                opacity: 0.4
+                lBorderwidth: 0
+                rBorderwidth: 0
+                tBorderwidth: 0
+                bBorderwidth: styleData.selected ? tabBarWidth : 0
+            }
         }
     }
 }
