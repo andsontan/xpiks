@@ -3,5 +3,5 @@ xpiks
 
 **Usage**
 
-- Run `bundle install` on fresh installation
+- Run `bundle install --binstubs --path=vendor` on fresh installation
 - Run launch_website.sh script

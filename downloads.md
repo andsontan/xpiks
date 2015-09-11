@@ -20,7 +20,7 @@ permalink: /downloads/
 
 <p>Download the Xpiks package from the link above, unpack and drag'n'drop it to the Applications. <strong>You will need to install the Exiftool to use Xpiks.</strong> Download and install Exiftool from the <a href="http://owl.phy.queensu.ca/%7Ephil/exiftool/">official website</a>.</p>
 
-<div style="clear:both;"></div>
+<div style="clear:both; height: 25px;">&nbsp;</div>
 
 <h2><strong>Windows instructions</strong></h2>
 
@@ -34,7 +34,7 @@ permalink: /downloads/
 
 <p>Download the Xpiks zip archive from the link above, unpack it where you want and it's ready to go. Please, note that this build does work <strong>only for Windows 7 x64 and later with x64 architecture</strong>.</p>
 
-<div style="clear:both;"></div>
+<div style="clear:both;">&nbsp;</div>
 
 <h2><strong>Linux instructions</strong></h2>
 
@@ -48,9 +48,11 @@ permalink: /downloads/
 
 <p>Download the Xpiks package from the link above and install it with all dependencies. <strong>Package is only for Debian-based operating systems (Ubuntu, Debian, Mint, etc.) with x64 architecture.</strong></p>
 
-<div style="clear:both;height: 30px;"></div>
+<div style="clear:both;height: 30px;">&nbsp;</div>
 
 <h2><strong>Other systems and versions</strong></h2>
+
+<p>You can also download <a href="https://dl.dropboxusercontent.com/u/14391423/xpiks-qt-nightly.dmg">Nightly package for OS X</a> and try the newest features.</p>
 
 <p>
 If you'd like to build Xpiks for your own platform, please, refer to <a href="{{site.url}}/blog/2014/building-xpiks-alone">this post</a>.

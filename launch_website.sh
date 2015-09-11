@@ -3,7 +3,7 @@
 # replace url for local development
 sed -i.bak "s/^url: \/xpiks/url: ''/" _config.yml
 
-jekyll serve --baseurl ''
+bundle exec jekyll serve --baseurl ''
 
 # revert url for GitHub
 sed -i.bak "s/^url: ''/url: \/xpiks/" _config.yml
