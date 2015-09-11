@@ -386,6 +386,7 @@ Item {
                         StyledTabView {
                             anchors.fill: parent
                             anchors.leftMargin: 10
+                            anchors.topMargin: 1
                             enabled: uploadInfos.infosCount > 0
 
                             Tab {

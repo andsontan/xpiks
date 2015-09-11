@@ -29,7 +29,8 @@ import "../Constants"
 import "../Constants/Colors.js" as Colors
 
 TabView {
-    property double tabBarWidth: 2
+    property double tabBarWidth: 1
+    property double tabsHeight: 24
     property color backgroundColor: Colors.selectedArtworkColor
 
     style: TabViewStyle {
@@ -38,6 +39,12 @@ TabView {
 
         frame: Rectangle {
             color: backgroundColor
+        }
+
+        leftCorner: Rectangle {
+            implicitWidth: 5
+            implicitHeight: tabBarWidth
+            color: "transparent"
         }
 
         tabBar : Rectangle {
@@ -55,26 +62,35 @@ TabView {
         }
 
         tab: Rectangle {
-            color: styleData.selected ? Colors.defaultControlColor : Colors.itemsSourceSelected
+            color: styleData.selected ? backgroundColor : Colors.itemsSourceSelected
             implicitWidth: Math.max(text.width + 10, 80)
-            implicitHeight: 25
+            implicitHeight: tabsHeight
 
             StyledText {
                 id: text
                 anchors.centerIn: parent
                 text: styleData.title
-                color: styleData.hovered ? Colors.defaultLightColor : (styleData.selected ? Colors.artworkActiveColor : Colors.defaultInputBackground)
+                color: styleData.hovered ? Colors.artworkActiveColor : (styleData.selected ? Colors.defaultLightColor : Colors.defaultInputBackground)
             }
 
             CustomBorder {
                 commonBorder: false
                 //color: Colors.artworkActiveColor
-                borderColor: Colors.defaultControlColor
-                opacity: 0.4
+                borderColor: backgroundColor
                 lBorderwidth: 0
                 rBorderwidth: 0
                 tBorderwidth: 0
                 bBorderwidth: styleData.selected ? tabBarWidth : 0
+            }
+
+            CustomBorder {
+                commonBorder: false
+                //color: Colors.artworkActiveColor
+                borderColor: Colors.artworkActiveColor
+                lBorderwidth: styleData.selected ? tabBarWidth : 0
+                rBorderwidth: styleData.selected ? tabBarWidth : 0
+                tBorderwidth: styleData.selected ? tabBarWidth : 0
+                bBorderwidth: 0
             }
         }
     }
