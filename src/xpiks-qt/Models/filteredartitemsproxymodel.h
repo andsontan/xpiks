@@ -71,6 +71,7 @@ namespace Models {
         void searchTermChanged(const QString &searchTerm);
         void needCheckItemsForWarnings(const QList<ArtworkMetadata*> &artworks);
         void selectedArtworksCountChanged();
+        void afterInvalidateFilter();
 
     private:
         void setFilteredItemsSelected(bool selected);

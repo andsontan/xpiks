@@ -1193,6 +1193,15 @@ ApplicationWindow {
                                         imagesListView.update()
                                     }
                                 }
+
+                                Connections {
+                                    target: filteredArtItemsModel
+                                    onAfterInvalidateFilter: {
+                                        console.log("Force layout for artworks list view")
+                                        imagesListView.forceLayout()
+                                        imagesListView.update()
+                                    }
+                                }
                             }
                         }
                     }

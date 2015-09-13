@@ -40,6 +40,7 @@ namespace Models {
             emit searchTermChanged(value);
             invalidateFilter();
             forceUnselectAllItems();
+            emit afterInvalidateFilter();
         }
     }
 
