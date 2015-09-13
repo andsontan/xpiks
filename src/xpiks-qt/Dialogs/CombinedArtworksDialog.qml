@@ -459,7 +459,7 @@ Item {
 
                 RowLayout {
                     width: parent.width
-                    height: 195
+                    height: Qt.platform.os === "linux" ? 200 : 195
                     spacing: 0
 
                     Item {
@@ -639,7 +639,6 @@ Item {
                             RowLayout {
                                 width: parent.width
                                 spacing: 10
-
                                 StyledCheckbox {
                                     id: appendKeywordsCheckbox
                                     text: qsTr("Only append new keywords")
