@@ -162,32 +162,32 @@ namespace Models {
 
     int ArtItemsModel::dropFiles(const QList<QUrl> &urls)
     {
-#ifdef Q_OS_MAC
         QList<QUrl> localUrls;
+
+#ifdef Q_OS_MAC
         foreach (const QUrl &url, urls) {
             QUrl localUrl = Helpers::fromNSUrl(url);
             localUrls.append(localUrl);
         }
-
-        int count = 0;
-        bool isDirectory = localUrls.length() == 1 && QDir(localUrls.first().toLocalFile()).exists();
-        if (isDirectory) {
-            count = addLocalDirectory(localUrls.first());
-        } else {
-            count = addLocalArtworks(localUrls);
-        }
-
-        return count;
 #else
-        int count = 0;
-        bool isDirectory = urls.length() == 1 && QDir(urls.first().toLocalFile()).exists();
-        if (isDirectory) {
-            count = addLocalDirectory(urls.first());
-        } else {
-            count = addLocalArtworks(urls);
-        }
-        return count;
+        localUrls = urls;
 #endif
+        QList<QUrl> directories, files;
+
+        foreach(const QUrl &url, localUrls) {
+            bool isDirectory = QDir(url.toLocalFile()).exists();
+            if (isDirectory) {
+                directories.append(url);
+            } else {
+                files.append(url);
+            }
+        }
+
+        int count = 0;
+        count += addLocalArtworks(files);
+        count += addLocalDirectories(directories);
+
+        return count;
     }
 
     void ArtItemsModel::setSelectedItemsSaved(const QList<int> &selectedIndices) {
@@ -382,10 +382,15 @@ namespace Models {
         return filesAddedCount;
     }
 
-    int ArtItemsModel::addLocalDirectory(const QUrl &directory)
+    int ArtItemsModel::addLocalDirectories(const QList<QUrl> &directories)
     {
-        qDebug() << "Adding local directory: " << directory;
-        int addedFilesCount = addDirectory(directory.toLocalFile());
+        qDebug() << "Adding local directories: " << directories;
+        QStringList directoriesList;
+        foreach (const QUrl &url, directories) {
+            directoriesList.append(url.toLocalFile());
+        }
+
+        int addedFilesCount = addDirectories(directoriesList);
         return addedFilesCount;
     }
 
@@ -437,24 +442,31 @@ namespace Models {
         updateItemsInRanges(ranges, roles);
     }
 
-    int ArtItemsModel::addDirectory(const QString &directory)
-    {
+    int ArtItemsModel::addDirectories(const QStringList &directories) {
         int filesCount = 0;
+        QStringList files;
 
+        foreach (const QString &directory, directories) {
+            doAddDirectory(directory, files);
+        }
+
+        if (files.count() > 0) {
+            filesCount = addFiles(files);
+        }
+
+        return filesCount;
+    }
+
+    void ArtItemsModel::doAddDirectory(const QString &directory, QStringList &filesList) {
         QDir dir(directory);
 
         dir.setFilter(QDir::NoDotAndDotDot | QDir::Files);
 
         QStringList items = dir.entryList();
         for (int i = 0; i < items.size(); ++i) {
-            items[i] = dir.filePath(items[i]);
+            QString filepath = dir.filePath(items[i]);
+            filesList.append(filepath);
         }
-
-        if (items.count() > 0) {
-            filesCount = addFiles(items);
-        }
-
-        return filesCount;
     }
 
     int ArtItemsModel::addFiles(const QStringList &rawFilenames)

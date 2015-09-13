@@ -101,7 +101,7 @@ namespace Models {
 
     public slots:
         int addLocalArtworks(const QList<QUrl> &artworksPaths);
-        int addLocalDirectory(const QUrl &directory);
+        int addLocalDirectories(const QList<QUrl> &directories);
         void itemModifiedChanged(bool) { updateModifiedCount(); }
 
     public:
@@ -118,7 +118,8 @@ namespace Models {
         void updateItemsAtIndices(const QList<int> &indices);
 
     private:
-        int addDirectory(const QString &directory);
+        int addDirectories(const QStringList &directories);
+        void doAddDirectory(const QString &directory, QStringList &filesList);
         int addFiles(const QStringList &filepath);
         void setAllItemsSelected(bool selected);
         void getSelectedArtworks(QList<ArtworkMetadata *> &selectedArtworks) const;
