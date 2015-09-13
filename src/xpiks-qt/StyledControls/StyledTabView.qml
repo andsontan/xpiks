@@ -50,14 +50,12 @@ TabView {
         tabBar : Rectangle {
             color: backgroundColor
 
-            CustomBorder {
-                commonBorder: false
-                //color: Colors.artworkActiveColor
-                borderColor: Colors.artworkActiveColor
-                lBorderwidth: 0
-                rBorderwidth: 0
-                tBorderwidth: 0
-                bBorderwidth: tabBarWidth
+            Rectangle {
+                anchors.bottom: parent.bottom
+                height: 1
+                anchors.left: parent.left
+                anchors.right: parent.right
+                color: Colors.artworkActiveColor
             }
         }
 
@@ -65,6 +63,8 @@ TabView {
             color: styleData.selected ? backgroundColor : Colors.itemsSourceSelected
             implicitWidth: Math.max(text.width + 10, 80)
             implicitHeight: tabsHeight
+            border.color: Colors.artworkActiveColor
+            border.width: styleData.selected ? tabBarWidth : 0
 
             StyledText {
                 id: text
@@ -73,24 +73,14 @@ TabView {
                 color: styleData.hovered ? Colors.artworkActiveColor : (styleData.selected ? Colors.defaultLightColor : Colors.defaultInputBackground)
             }
 
-            CustomBorder {
-                commonBorder: false
-                //color: Colors.artworkActiveColor
-                borderColor: backgroundColor
-                lBorderwidth: 0
-                rBorderwidth: 0
-                tBorderwidth: 0
-                bBorderwidth: styleData.selected ? tabBarWidth : 0
-            }
-
-            CustomBorder {
-                commonBorder: false
-                //color: Colors.artworkActiveColor
-                borderColor: Colors.artworkActiveColor
-                lBorderwidth: styleData.selected ? tabBarWidth : 0
-                rBorderwidth: styleData.selected ? tabBarWidth : 0
-                tBorderwidth: styleData.selected ? tabBarWidth : 0
-                bBorderwidth: 0
+            Rectangle {
+                anchors.bottom: parent.bottom
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.leftMargin: styleData.selected ? 1 : 0
+                anchors.rightMargin: styleData.selected ? 1 : 0
+                color: styleData.selected ? backgroundColor : Colors.artworkActiveColor
+                height: 1
             }
         }
     }
