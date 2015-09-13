@@ -27,13 +27,15 @@ import "../Constants/Colors.js" as Colors
 
 CheckBox {
     property bool isContrast: false
+    property int indicatorWidth: 17
+    property int indicatorHeight: 17
 
     style: CheckBoxStyle {
         spacing: 8
 
         indicator: Rectangle {
-            implicitHeight: 17
-            implicitWidth: 17
+            implicitHeight: indicatorHeight
+            implicitWidth: indicatorWidth
             color: (control.checked || control.hovered) ? Colors.artworkActiveColor : (isContrast ? Colors.defaultDarkColor : Colors.defaultControlColor)
             opacity: control.hovered ? 0.6 : 1
 

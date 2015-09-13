@@ -27,26 +27,28 @@
 #include <QStringList>
 #include "commandbase.h"
 
-namespace Models { class ArtItemInfo; }
+namespace Models {
+    class ArtItemInfo;
+    class ArtworkMetadata;
+}
+
 namespace UndoRedo { class ArtworkMetadataBackup; }
 
 namespace Commands {
 
-    enum CombinedEditType { AppendEditType, SetEditType };
-
     class CombinedEditCommand: public CommandBase
     {
     public:
-        CombinedEditCommand(CombinedEditType editType,
+        CombinedEditCommand(int editFlags,
                             const QList<Models::ArtItemInfo*> &infos,
                             QString description, QString title,
                             QStringList keywords) :
             CommandBase(CombinedEditCommandType),
             m_ArtItemInfos(infos),
-            m_EditType(editType),
             m_ArtworkDescription(description),
             m_ArtworkTitle(title),
-            m_Keywords(keywords)
+            m_Keywords(keywords),
+            m_EditFlags(editFlags)
         { }
 
         virtual ~CombinedEditCommand() {}
@@ -55,17 +57,16 @@ namespace Commands {
         virtual CommandResult *execute(const CommandManager *commandManager) const;
 
     private:
-        void saveSetKeywords(QList<UndoRedo::ArtworkMetadataBackup*> &backups,
-                             QList<int> &indicesToUpdate) const;
-        void saveAppendKeywords(QList<UndoRedo::ArtworkMetadataBackup*> &backups,
-                                QList<int> &indicesToUpdate) const;
+        void setKeywords(Models::ArtworkMetadata *metadata) const;
+        void setDescription(Models::ArtworkMetadata *metadata) const;
+        void setTitle(Models::ArtworkMetadata *metadata) const;
 
     private:
         QList<Models::ArtItemInfo*> m_ArtItemInfos;
-        CombinedEditType m_EditType;
         QString m_ArtworkDescription;
         QString m_ArtworkTitle;
         QStringList m_Keywords;
+        int m_EditFlags;
     };
 
     class CombinedEditCommandResult : public CommandResult {

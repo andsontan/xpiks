@@ -42,6 +42,10 @@ namespace Models {
             endInsertRows();
         }
         m_IsModified = false;
+
+        if (artworks.length() == 1) {
+            enableAllFields();
+        }
     }
 
     void CombinedArtworksModel::recombineArtworks()
@@ -97,11 +101,41 @@ namespace Models {
         }
     }
 
+    void CombinedArtworksModel::setChangeDescription(bool value)  {
+        if (Common::HasFlag(m_EditFlags, Common::EditDesctiption) != value) {
+            Common::ApplyFlag(m_EditFlags, value, Common::EditDesctiption);
+            emit changeDescriptionChanged();
+        }
+    }
+
+    void CombinedArtworksModel::setChangeTitle(bool value) {
+        if (Common::HasFlag(m_EditFlags, Common::EditTitle) != value) {
+            Common::ApplyFlag(m_EditFlags, value, Common::EditTitle);
+            emit changeTitleChanged();
+        }
+    }
+
+    void CombinedArtworksModel::setChangeKeywords(bool value){
+        if (Common::HasFlag(m_EditFlags, Common::EditKeywords) != value) {
+            Common::ApplyFlag(m_EditFlags, value, Common::EditKeywords);
+            emit changeKeywordsChanged();
+        }
+    }
+
+    void CombinedArtworksModel::setAppendKeywords(bool value) {
+        if (Common::HasFlag(m_EditFlags, Common::AppendKeywords) != value) {
+            Common::ApplyFlag(m_EditFlags, value, Common::AppendKeywords);
+            emit appendKeywordsChanged();
+        }
+    }
+
     void CombinedArtworksModel::resetModelData() {
         beginResetModel();
         qDeleteAll(m_ArtworksList);
         m_ArtworksList.clear();
         endResetModel();
+
+        m_EditFlags = 0;
 
         setDescription("");
         setTitle("");
@@ -114,10 +148,9 @@ namespace Models {
         m_CommonKeywordsModel.clear();
     }
 
-    void CombinedArtworksModel::createCombinedEditCommand(int commandTypeInt) const {
-        Commands::CombinedEditType commandType = (Commands::CombinedEditType)commandTypeInt;
+    void CombinedArtworksModel::processCombinedEditCommand() const {
         Commands::CombinedEditCommand *combinedEditCommand = new Commands::CombinedEditCommand(
-                    commandType,
+                    m_EditFlags,
                     m_ArtworksList,
                     m_ArtworkDescription,
                     m_ArtworkTitle,
@@ -128,6 +161,12 @@ namespace Models {
         m_CommandManager->updateArtworks(combinedResult->m_IndicesToUpdate);
 
         delete combinedResult;
+    }
+
+    void CombinedArtworksModel::enableAllFields(){
+        setChangeDescription(true);
+        setChangeTitle(true);
+        setChangeKeywords(true);
     }
 
     QString CombinedArtworksModel::removeKeywordAt(int keywordIndex) {
@@ -203,12 +242,8 @@ namespace Models {
         emit artworksCountChanged();
     }
 
-    void CombinedArtworksModel::saveSetKeywords() const {
-        createCombinedEditCommand((int)Commands::SetEditType);
-    }
-
-    void CombinedArtworksModel::saveAddKeywords() const {
-        createCombinedEditCommand((int)Commands::AppendEditType);
+    void CombinedArtworksModel::saveEdits() const {
+        processCombinedEditCommand();
     }
 
     int CombinedArtworksModel::getSelectedArtworksCount() const {

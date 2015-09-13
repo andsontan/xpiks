@@ -111,25 +111,23 @@ Item {
         Rectangle {
             id: dialogWindow
             width: 730
-            height: 650
+            height: 610
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
 
+            property double disabledOpacity: 0.3
+
             ColumnLayout {
                 anchors.fill: parent
                 anchors.leftMargin: 20
-                anchors.rightMargin: 50
+                anchors.rightMargin: 30
                 anchors.topMargin: 20
                 anchors.bottomMargin: 10
                 spacing: 3
 
                 RowLayout {
                     width: parent.width
-
-                    Item {
-                        width: 26
-                    }
 
                     StyledText {
                         text: qsTr("Edit multiple artworks")
@@ -153,10 +151,6 @@ Item {
                     spacing: 5
                     width: parent.width
                     height: 40
-
-                    Item {
-                        width: 26
-                    }
 
                     StyledText {
                         height: parent.height
@@ -194,7 +188,6 @@ Item {
 
                     Rectangle {
                         anchors.fill: parent
-                        anchors.leftMargin: 30
                         color: Colors.defaultControlColor
 
                         StyledScrollView {
@@ -281,19 +274,27 @@ Item {
                 RowLayout {
                     width: parent.width
                     height: 50
-                    spacing: 5
+                    spacing: 0
 
-                    ColumnLayout {
-                        width: 20
+                    Item {
+                        width: 25
                         height: parent.height
-                        spacing: 3
 
-                        Item {
-                            height: 10
+                        Rectangle {
+                            color: Colors.defaultInputBackground
+                            anchors.fill: parent
+                            opacity: descriptionCheckBox.checked ? 0.1 : dialogWindow.disabledOpacity
                         }
 
                         StyledCheckbox {
+                            anchors.left: parent.left
+                            anchors.top: parent.top
+                            anchors.leftMargin: 5
+                            anchors.topMargin: 25
+                            text: ''
                             id: descriptionCheckBox
+                            /*indicatorWidth: 24
+                            indicatorHeight: 24*/
                             onClicked: {
                                 combinedArtworks.changeDescription = checked
                                 if (checked) { descriptionTextInput.forceActiveFocus(); }
@@ -307,6 +308,12 @@ Item {
                         Layout.fillWidth: true
                         height: parent.height
                         enabled: descriptionCheckBox.checked
+
+                        Rectangle {
+                            color: Colors.defaultInputBackground
+                            anchors.fill: parent
+                            opacity: descriptionCheckBox.checked ? 0.1 : 0
+                        }
 
                         ColumnLayout {
                             anchors.fill: parent
@@ -344,7 +351,7 @@ Item {
                         Rectangle {
                             color: Colors.defaultInputBackground
                             anchors.fill: parent
-                            opacity: descriptionCheckBox.checked ? 0 : 0.2
+                            opacity: descriptionCheckBox.checked ? 0 : dialogWindow.disabledOpacity
                         }
                     }
                 }
@@ -356,18 +363,24 @@ Item {
                 RowLayout {
                     width: parent.width
                     height: 50
-                    spacing: 5
+                    spacing: 0
 
-                    ColumnLayout {
-                        width: 20
+                    Item {
+                        width: 25
                         height: parent.height
-                        spacing: 3
 
-                        Item {
-                            height: 15
+                        Rectangle {
+                            color: Colors.defaultInputBackground
+                            anchors.fill: parent
+                            opacity: titleCheckBox.checked ? 0.1 : dialogWindow.disabledOpacity
                         }
 
                         StyledCheckbox {
+                            anchors.left: parent.left
+                            anchors.top: parent.top
+                            anchors.leftMargin: 5
+                            anchors.topMargin: 25
+                            text: ''
                             id: titleCheckBox
                             onClicked: {
                                 combinedArtworks.changeTitle = checked
@@ -382,6 +395,12 @@ Item {
                         Layout.fillWidth: true
                         height: parent.height
                         enabled: titleCheckBox.checked
+
+                        Rectangle {
+                            color: Colors.defaultInputBackground
+                            anchors.fill: parent
+                            opacity: titleCheckBox.checked ? 0.1 : 0
+                        }
 
                         ColumnLayout {
                             anchors.fill: parent
@@ -429,7 +448,7 @@ Item {
                         Rectangle {
                             color: Colors.defaultInputBackground
                             anchors.fill: parent
-                            opacity: titleCheckBox.checked ? 0 : 0.2
+                            opacity: titleCheckBox.checked ? 0 : dialogWindow.disabledOpacity
                         }
                     }
                 }
@@ -440,19 +459,25 @@ Item {
 
                 RowLayout {
                     width: parent.width
-                    height: 140
-                    spacing: 5
+                    height: 195
+                    spacing: 0
 
-                    ColumnLayout {
-                        width: 20
+                    Item {
+                        width: 25
                         height: parent.height
-                        spacing: 3
 
-                        Item {
-                            height: 25
+                        Rectangle {
+                            color: Colors.defaultInputBackground
+                            anchors.fill: parent
+                            opacity: keywordsCheckBox.checked ? 0.1 : dialogWindow.disabledOpacity
                         }
 
                         StyledCheckbox {
+                            anchors.left: parent.left
+                            anchors.top: parent.top
+                            anchors.leftMargin: 5
+                            anchors.topMargin: 20
+                            text: ''
                             id: keywordsCheckBox
                             onClicked: {
                                 combinedArtworks.changeKeywords = checked
@@ -461,10 +486,6 @@ Item {
 
                             Component.onCompleted: keywordsCheckBox.checked = combinedArtworks.changeKeywords
                         }
-
-                        Item {
-                            Layout.fillHeight: true
-                        }
                     }
 
                     Item {
@@ -472,10 +493,16 @@ Item {
                         height: parent.height
                         enabled: keywordsCheckBox.checked
 
+                        Rectangle {
+                            color: Colors.defaultInputBackground
+                            anchors.fill: parent
+                            opacity: keywordsCheckBox.checked ? 0.1 : 0
+                        }
+
                         ColumnLayout {
                             anchors.fill: parent
                             anchors.margins: 3
-                            spacing: 3
+                            spacing: 0
 
                             RowLayout {
                                 spacing: 5
@@ -500,11 +527,15 @@ Item {
                                 }
                             }
 
+                            Item {
+                                height: 4
+                            }
+
                             Rectangle {
                                 id: keywordsWrapper
                                 border.color: Colors.artworkActiveColor
                                 border.width: flv.isFocused ? 1 : 0
-                                height: 100
+                                height: 150
                                 anchors.rightMargin: 20
                                 Layout.fillWidth: true
                                 color: Colors.defaultInputBackground
@@ -603,9 +634,18 @@ Item {
                                 }
                             }
 
+                            Item { height: 5}
+
                             RowLayout {
                                 width: parent.width
                                 spacing: 10
+
+                                StyledCheckbox {
+                                    id: appendKeywordsCheckbox
+                                    text: qsTr("Only append new keywords")
+                                    onClicked: combinedArtworks.appendKeywords = checked
+                                    Component.onCompleted: appendKeywordsCheckbox.checked = combinedArtworks.appendKeywords
+                                }
 
                                 Item {
                                     Layout.fillWidth: true
@@ -645,18 +685,22 @@ Item {
                                     }
                                 }
                             }
+
+                            Item {
+                                Layout.fillHeight: true
+                            }
                         }
 
                         Rectangle {
                             color: Colors.defaultInputBackground
                             anchors.fill: parent
-                            opacity: keywordsCheckBox.checked ? 0 : 0.2
+                            opacity: keywordsCheckBox.checked ? 0 : dialogWindow.disabledOpacity
                         }
                     }
                 }
 
                 Item {
-                    height: 1
+                    height: 15
                 }
 
                 Rectangle {
@@ -668,20 +712,15 @@ Item {
                         anchors.fill: parent
                         spacing: 10
 
-                        StyledCheckbox {
-                            id: appendKeywordsCheckbox
-                            text: qsTr("Append new keywords")
-                        }
-
                         Item {
                             Layout.fillWidth: true
                         }
 
                         StyledButton {
                             text: qsTr("Save")
-                            width: 130
+                            width: 100
                             onClicked: {
-                                combinedArtworks.saveKeywords()
+                                combinedArtworks.saveEdits()
                                 closePopup()
                             }
                         }
@@ -696,6 +735,10 @@ Item {
                             tooltip: "Exits with no changes"
                         }
                     }
+                }
+
+                Item {
+                    Layout.fillHeight: true
                 }
             }
         }

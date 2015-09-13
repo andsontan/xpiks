@@ -25,19 +25,25 @@
 #include "../UndoRedo/modifyartworkshistoryitem.h"
 #include "../Models/artiteminfo.h"
 #include "../Models/artworkmetadata.h"
+#include "../Common/flags.h"
 
 Commands::CommandResult *Commands::CombinedEditCommand::execute(const Commands::CommandManager *commandManager) const
 {
     QList<int> indicesToUpdate;
     QList<UndoRedo::ArtworkMetadataBackup*> artworksBackups;
 
-    switch (m_EditType) {
-    case AppendEditType:
-        saveAppendKeywords(artworksBackups, indicesToUpdate);
-        break;
-    case SetEditType:
-        saveSetKeywords(artworksBackups, indicesToUpdate);
-        break;
+    foreach (Models::ArtItemInfo* info, m_ArtItemInfos) {
+        Models::ArtworkMetadata *metadata = info->getOrigin();
+
+        UndoRedo::ArtworkMetadataBackup *backup = new UndoRedo::ArtworkMetadataBackup(metadata);
+        artworksBackups.append(backup);
+        indicesToUpdate.append(info->getOriginalIndex());
+
+        setKeywords(metadata);
+        setDescription(metadata);
+        setTitle(metadata);
+
+        metadata->saveBackup();
     }
 
     UndoRedo::ModifyArtworksHistoryItem *modifyArtworksItem =
@@ -49,41 +55,24 @@ Commands::CommandResult *Commands::CombinedEditCommand::execute(const Commands::
     return result;
 }
 
-void Commands::CombinedEditCommand::saveSetKeywords(QList<UndoRedo::ArtworkMetadataBackup *> &backups, QList<int> &indicesToUpdate) const
-{
-    foreach (Models::ArtItemInfo* info, m_ArtItemInfos) {
-        Models::ArtworkMetadata *metadata = info->getOrigin();
-
-        UndoRedo::ArtworkMetadataBackup *backup = new UndoRedo::ArtworkMetadataBackup(metadata);
-        backups.append(backup);
-        indicesToUpdate.append(info->getOriginalIndex());
-
-        metadata->setKeywords(m_Keywords);
-        metadata->setDescription(m_ArtworkDescription);
-        metadata->setTitle(m_ArtworkTitle);
-        metadata->saveBackup();
+void Commands::CombinedEditCommand::setKeywords(Models::ArtworkMetadata *metadata) const {
+    if (Common::HasFlag(m_EditFlags, Common::EditKeywords)) {
+        if (Common::HasFlag(m_EditFlags, Common::AppendKeywords)) {
+            metadata->appendKeywords(m_Keywords);
+        } else {
+            metadata->setKeywords(m_Keywords);
+        }
     }
 }
 
-void Commands::CombinedEditCommand::saveAppendKeywords(QList<UndoRedo::ArtworkMetadataBackup *> &backups, QList<int> &indicesToUpdate) const
-{
-    foreach (Models::ArtItemInfo* info, m_ArtItemInfos) {
-        Models::ArtworkMetadata *metadata = info->getOrigin();
+void Commands::CombinedEditCommand::setDescription(Models::ArtworkMetadata *metadata) const {
+    if (Common::HasFlag(m_EditFlags, Common::EditDesctiption)) {
+        metadata->setDescription(m_ArtworkDescription);
+    }
+}
 
-        UndoRedo::ArtworkMetadataBackup *backup = new UndoRedo::ArtworkMetadataBackup(metadata);
-        backups.append(backup);
-        indicesToUpdate.append(info->getOriginalIndex());
-
-        metadata->appendKeywords(m_Keywords);
-
-        if (!m_ArtworkDescription.isEmpty() && metadata->getDescription().isEmpty()) {
-            metadata->setDescription(m_ArtworkDescription);
-        }
-
-        if (!m_ArtworkTitle.isEmpty() && metadata->getTitle().isEmpty()) {
-            metadata->setTitle(m_ArtworkTitle);
-        }
-
-        metadata->saveBackup();
+void Commands::CombinedEditCommand::setTitle(Models::ArtworkMetadata *metadata) const {
+    if (Common::HasFlag(m_EditFlags, Common::EditTitle)) {
+        metadata->setTitle(m_ArtworkTitle);
     }
 }

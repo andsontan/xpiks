@@ -31,6 +31,7 @@
 #include "abstractlistmodel.h"
 #include "../Common/baseentity.h"
 #include "../Common/basickeywordsmodel.h"
+#include "../Common/flags.h"
 
 namespace Models {
     class ArtItemInfo;
@@ -48,11 +49,14 @@ namespace Models {
         Q_PROPERTY(bool changeDescription READ getChangeDescription WRITE setChangeDescription NOTIFY changeDescriptionChanged)
         Q_PROPERTY(bool changeTitle READ getChangeTitle WRITE setChangeTitle NOTIFY changeTitleChanged)
         Q_PROPERTY(bool changeKeywords READ getChangeKeywords WRITE setChangeKeywords NOTIFY changeKeywordsChanged)
+        Q_PROPERTY(bool appendKeywords READ getAppendKeywords WRITE setAppendKeywords NOTIFY appendKeywordsChanged)
+
     public:
         CombinedArtworksModel(QObject *parent = 0) :
             AbstractListModel(parent),
             Common::BaseEntity(),
-            m_CommonKeywordsModel(this)
+            m_CommonKeywordsModel(this),
+            m_EditFlags(0)
         {}
 
         virtual ~CombinedArtworksModel();
@@ -82,7 +86,6 @@ namespace Models {
         }
 
         const QString &getTitle() const { return m_ArtworkTitle; }
-
         void setTitle(const QString &value) {
             if (m_ArtworkTitle != value) {
                 m_ArtworkTitle = value;
@@ -92,29 +95,17 @@ namespace Models {
 
         int getKeywordsCount() const { return m_CommonKeywordsModel.rowCount(); }
 
-        bool getChangeDescription() const { return m_ChangeDescription; }
-        void setChangeDescription(bool value) {
-            if (m_ChangeDescription != value) {
-                m_ChangeDescription = value;
-                emit changeDescriptionChanged();
-            }
-        }
+        bool getChangeDescription() const { return Common::HasFlag(m_EditFlags, Common::EditDesctiption); }
+        void setChangeDescription(bool value);
 
-        bool getChangeTitle() const { return m_ChangeTitle; }
-        void setChangeTitle(bool value) {
-            if (m_ChangeTitle != value) {
-                m_ChangeTitle = value;
-                emit changeTitleChanged();
-            }
-        }
+        bool getChangeTitle() const { return Common::HasFlag(m_EditFlags, Common::EditTitle); }
+        void setChangeTitle(bool value);
 
-        bool getChangeKeywords() const { return m_ChangeKeywords; }
-        void setChangeKeywords(bool value) {
-            if (m_ChangeKeywords != value) {
-                m_ChangeKeywords = value;
-                emit changeKeywordsChanged();
-            }
-        }
+        bool getChangeKeywords() const { return Common::HasFlag(m_EditFlags, Common::EditKeywords); }
+        void setChangeKeywords(bool value);
+
+        bool getAppendKeywords() const { return Common::HasFlag(m_EditFlags, Common::AppendKeywords); }
+        void setAppendKeywords(bool value);
 
     signals:
         void descriptionChanged();
@@ -125,6 +116,7 @@ namespace Models {
         void changeDescriptionChanged();
         void changeKeywordsChanged();
         void changeTitleChanged();
+        void appendKeywordsChanged();
 
     public:
         int getSelectedArtworksCount() const;
@@ -137,8 +129,7 @@ namespace Models {
         Q_INVOKABLE void pasteKeywords(const QStringList &keywords);
         Q_INVOKABLE void setArtworksSelected(int index, bool newState);
         Q_INVOKABLE void removeSelectedArtworks();
-        Q_INVOKABLE void saveSetKeywords() const;
-        Q_INVOKABLE void saveAddKeywords() const;
+        Q_INVOKABLE void saveEdits() const;
         Q_INVOKABLE void resetModelData();
         Q_INVOKABLE void clearKeywords();
         Q_INVOKABLE QString getKeywordsString() { return m_CommonKeywordsModel.getKeywords().join(QChar(',')); }
@@ -149,7 +140,8 @@ namespace Models {
         }
 
     private:
-        void createCombinedEditCommand(int commandTypeInt) const;
+        void processCombinedEditCommand() const;
+        void enableAllFields();
 
     public:
         enum CombinedArtworksModelRoles {
@@ -173,10 +165,8 @@ namespace Models {
         QSet<QString> m_CommonKeywordsSet;
         QString m_ArtworkDescription;
         QString m_ArtworkTitle;
+        int m_EditFlags;
         bool m_IsModified;
-        bool m_ChangeDescription;
-        bool m_ChangeTitle;
-        bool m_ChangeKeywords;
     };
 }
 

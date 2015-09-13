@@ -1159,7 +1159,7 @@ ApplicationWindow {
                                                             onClicked: {
                                                                 combinedArtworks.resetModelData();
                                                                 artItemsModel.combineArtwork(rowWrapper.getIndex());
-                                                                Common.launchDialog("Dialogs/CombinedArtworksDialog.qml", applicationWindow, {});
+                                                                Common.launchDialog("Dialogs/CombinedArtworksDialog.qml", applicationWindow, {componentParent: applicationWindow});
                                                             }
                                                         }
                                                     }
