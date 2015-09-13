@@ -61,6 +61,7 @@ namespace Models {
         Q_INVOKABLE int getModifiedSelectedCount() const;
         Q_INVOKABLE void removeArtworksDirectory(int index);
         Q_INVOKABLE void checkForWarnings();
+        Q_INVOKABLE int getItemsCount() const { return rowCount(); }
 
     public slots:
         void itemSelectedChanged(bool value);

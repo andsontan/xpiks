@@ -594,7 +594,7 @@ ApplicationWindow {
                                     }
 
                                     StyledText {
-                                        text: qsTr("Search...")
+                                        text: qsTr("Search...   x:empty  x:modified")
                                         color: Colors.defaultInputBackground
                                         opacity: (filterText.activeFocus || filterText.length > 0) ? 0 : 0.1
                                         anchors.left: parent.left
@@ -1258,7 +1258,36 @@ ApplicationWindow {
             }
 
             StyledText {
-                text: filteredArtItemsModel.selectedArtworksCount > 0 ? qsTr("%1 selected item(s)").arg(filteredArtItemsModel.selectedArtworksCount) : qsTr("No selected items")
+                id: filteredCountText
+                text: qsTr("No items available")
+                color: Colors.selectedMetadataColor
+                verticalAlignment: Text.AlignVCenter
+
+                function updateText() {
+                    var itemsCount = filteredArtItemsModel.getItemsCount()
+                    if (itemsCount > 0) {
+                        text = itemsCount > 1 ? qsTr("%1 items available").arg(itemsCount) : qsTr("1 item available")
+                    } else {
+                        text = qsTr("No items available")
+                    }
+                }
+
+                Component.onCompleted: updateText()
+                Connections {
+                    target: filteredArtItemsModel
+                    onRowsInserted: filteredCountText.updateText()
+                    onRowsRemoved: filteredCountText.updateText()
+                }
+            }
+
+            StyledText {
+                text: "|"
+                color: Colors.selectedMetadataColor
+                verticalAlignment: Text.AlignVCenter
+            }
+
+            StyledText {
+                text: filteredArtItemsModel.selectedArtworksCount > 1 ? qsTr("%1 selected items").arg(filteredArtItemsModel.selectedArtworksCount) : (filteredArtItemsModel.selectedArtworksCount === 1 ? qsTr("1 selected item") : qsTr("No selected items"))
                 color: Colors.selectedMetadataColor
                 verticalAlignment: Text.AlignVCenter
             }
@@ -1270,14 +1299,14 @@ ApplicationWindow {
             }
 
             StyledText {
-                text: artItemsModel.modifiedArtworksCount > 0 ? qsTr("%1 modified item(s)").arg(artItemsModel.modifiedArtworksCount) : qsTr("No modified items")
+                text: artItemsModel.modifiedArtworksCount > 1 ? qsTr("%1 modified items").arg(artItemsModel.modifiedArtworksCount) : (artItemsModel.modifiedArtworksCount === 1 ? qsTr("1 modified item") : qsTr("No modified items"))
                 verticalAlignment: Text.AlignVCenter
                 color: artItemsModel.modifiedArtworksCount > 0 ? Colors.artworkModifiedColor : Colors.selectedMetadataColor
 
                 MouseArea {
                     id: selectModifiedMA
                     anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
+                    cursorShape: artItemsModel.modifiedArtworksCount > 0 ? Qt.PointingHandCursor : Qt.ArrowCursor
                     onClicked: {
                         if (artItemsModel.modifiedArtworksCount > 0) {
                             filteredArtItemsModel.searchTerm = "x:modified"
