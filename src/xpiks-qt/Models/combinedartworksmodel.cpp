@@ -120,6 +120,11 @@ namespace Models {
         m_CommonKeywordsSet.clear();
     }
 
+    void CombinedArtworksModel::clearKeywords() {
+        m_CommonKeywordsSet.clear();
+        m_CommonKeywordsModel.clear();
+    }
+
     void CombinedArtworksModel::createCombinedEditCommand(int commandTypeInt) const {
         Commands::CombinedEditType commandType = (Commands::CombinedEditType)commandTypeInt;
         Commands::CombinedEditCommand *combinedEditCommand = new Commands::CombinedEditCommand(

@@ -46,6 +46,10 @@ namespace Models {
         Q_PROPERTY(int keywordsCount READ getKeywordsCount NOTIFY keywordsCountChanged)
         Q_PROPERTY(int selectedArtworksCount READ getSelectedArtworksCount NOTIFY selectedArtworksCountChanged)
         Q_PROPERTY(int artworksCount READ getArtworksCount NOTIFY artworksCountChanged)
+        Q_PROPERTY(bool changeDescription READ getChangeDescription WRITE setChangeDescription NOTIFY changeDescriptionChanged)
+        Q_PROPERTY(bool changeTitle READ getChangeTitle WRITE setChangeTitle NOTIFY changeTitleChanged)
+        Q_PROPERTY(bool changeAuthor READ getChangeAuthor WRITE setChangeAuthor NOTIFY changeAuthorChanged)
+        Q_PROPERTY(bool changeKeywords READ getChangeKeywords WRITE setChangeKeywords NOTIFY changeKeywordsChanged)
     public:
         CombinedArtworksModel(QObject *parent = 0) :
             AbstractListModel(parent),
@@ -79,6 +83,7 @@ namespace Models {
                 emit descriptionChanged();
             }
         }
+
         const QString &getTitle() const { return m_ArtworkTitle; }
         const QString &getAuthor() const { return m_ArtworkAuthor; }
         void setTitle(const QString &value) {
@@ -87,13 +92,47 @@ namespace Models {
                 emit titleChanged();
             }
         }
+
         void setAuthor(const QString &value) {
             if (m_ArtworkAuthor != value) {
                 m_ArtworkAuthor = value;
                 emit authorChanged();
             }
         }
+
         int getKeywordsCount() const { return m_CommonKeywordsModel.rowCount(); }
+
+        bool getChangeDescription() const { return m_ChangeDescription; }
+        void setChangeDescription(bool value) {
+            if (m_ChangeDescription != value) {
+                m_ChangeDescription = value;
+                emit changeDescriptionChanged();
+            }
+        }
+
+        bool getChangeTitle() const { return m_ChangeTitle; }
+        void setChangeTitle(bool value) {
+            if (m_ChangeTitle != value) {
+                m_ChangeTitle = value;
+                emit changeTitleChanged();
+            }
+        }
+
+        bool getChangeAuthor() const { return m_ChangeAuthor; }
+        void setChangeAuthor(bool value) {
+            if (m_ChangeAuthor != value) {
+                m_ChangeAuthor = value;
+                emit changeAuthorChanged();
+            }
+        }
+
+        bool getChangeKeywords() const { return m_ChangeKeywords; }
+        void setChangeKeywords(bool value) {
+            if (m_ChangeKeywords != value) {
+                m_ChangeKeywords = value;
+                emit changeKeywordsChanged();
+            }
+        }
 
     signals:
         void descriptionChanged();
@@ -102,6 +141,10 @@ namespace Models {
         void keywordsCountChanged();
         void selectedArtworksCountChanged();
         void artworksCountChanged();
+        void changeDescriptionChanged();
+        void changeKeywordsChanged();
+        void changeTitleChanged();
+        void changeAuthorChanged();
 
     public:
         int getSelectedArtworksCount() const;
@@ -117,6 +160,7 @@ namespace Models {
         Q_INVOKABLE void saveSetKeywords() const;
         Q_INVOKABLE void saveAddKeywords() const;
         Q_INVOKABLE void resetModelData();
+        Q_INVOKABLE void clearKeywords();
         Q_INVOKABLE QString getKeywordsString() { return m_CommonKeywordsModel.getKeywords().join(QChar(',')); }
         Q_INVOKABLE QObject *getKeywordsModel() {
             QObject *item = &m_CommonKeywordsModel;
@@ -151,6 +195,10 @@ namespace Models {
         QString m_ArtworkTitle;
         QString m_ArtworkAuthor;
         bool m_IsModified;
+        bool m_ChangeDescription;
+        bool m_ChangeTitle;
+        bool m_ChangeAuthor;
+        bool m_ChangeKeywords;
     };
 }
 

@@ -36,8 +36,8 @@ ApplicationWindow {
     id: applicationWindow
     visible: true
     width: 900
-    height: 640
-    minimumHeight: 640
+    height: 670
+    minimumHeight: 670
     minimumWidth: 900
     title: qsTr("Xpiks")
     property int openedDialogsCount: 0
@@ -448,7 +448,7 @@ ApplicationWindow {
                                     if (filteredArtItemsModel.selectedArtworksCount > 0) {
                                         combinedArtworks.resetModelData();
                                         filteredArtItemsModel.combineSelectedArtworks();
-                                        Common.launchDialog("Dialogs/CombinedArtworksDialog.qml", applicationWindow, {});
+                                        Common.launchDialog("Dialogs/CombinedArtworksDialog.qml", applicationWindow, {componentParent: applicationWindow});
                                     }
                                 }
                             }
@@ -894,7 +894,7 @@ ApplicationWindow {
                                                         onDoubleClicked: {
                                                             combinedArtworks.resetModelData();
                                                             artItemsModel.combineArtwork(rowWrapper.getIndex());
-                                                            Common.launchDialog("Dialogs/CombinedArtworksDialog.qml", applicationWindow, {});
+                                                            Common.launchDialog("Dialogs/CombinedArtworksDialog.qml", applicationWindow, {componentParent: applicationWindow});
                                                         }
                                                     }
                                                 }
@@ -1188,7 +1188,7 @@ ApplicationWindow {
                                 Connections {
                                     target: artItemsModel
                                     onArtworksChanged: {
-                                        console.log("Force layout for artworks list view")
+                                        console.log("ArtItemsModel: Force layout for artworks list view")
                                         imagesListView.forceLayout()
                                         imagesListView.update()
                                     }
@@ -1197,7 +1197,7 @@ ApplicationWindow {
                                 Connections {
                                     target: filteredArtItemsModel
                                     onAfterInvalidateFilter: {
-                                        console.log("Force layout for artworks list view")
+                                        console.log("Filtered Model: Force layout for artworks list view")
                                         imagesListView.forceLayout()
                                         imagesListView.update()
                                     }

@@ -70,7 +70,7 @@ Item {
             Common.launchDialog("Dialogs/ZipArtworksDialog.qml",
                             uploadArtworksComponent.componentParent,
                                    {
-                                       componentParent: applicationWindow,
+                                       componentParent: uploadArtworksComponent.componentParent,
                                        immediateProcessing: true,
                                        callbackObject: callbackObject
                                    });
