@@ -32,7 +32,7 @@ ApplicationWindow {
     id: aboutWindow
     modality: "ApplicationModal"
     width: 250
-    height: 150
+    height: Qt.platform.os === "linux" ? 180 : 150
     minimumWidth: width
     maximumWidth: width
     minimumHeight: height
@@ -79,7 +79,7 @@ ApplicationWindow {
             }
 
             Rectangle {
-                height: 50
+                height: Qt.platform.os === "linux" ? 80 : 50
                 width: 220
                 anchors.margins: 10
                 color: "transparent"
