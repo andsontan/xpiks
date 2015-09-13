@@ -201,8 +201,8 @@ ApplicationWindow {
         selectFolder: true
 
         onAccepted: {
-            console.log("You chose: " + chooseDirectoryDialog.fileUrl)
-            var filesAdded = artItemsModel.addLocalDirectory(chooseDirectoryDialog.fileUrl)
+            console.log("You chose: " + chooseDirectoryDialog.fileUrls)
+            var filesAdded = artItemsModel.addLocalDirectories(chooseDirectoryDialog.fileUrls)
             console.log(filesAdded + ' files via Open Directory')
         }
 
