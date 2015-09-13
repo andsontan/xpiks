@@ -42,13 +42,11 @@ namespace Models {
         Q_OBJECT
         Q_PROPERTY(QString description READ getDescription WRITE setDescription NOTIFY descriptionChanged)
         Q_PROPERTY(QString title READ getTitle WRITE setTitle NOTIFY titleChanged)
-        Q_PROPERTY(QString author READ getAuthor WRITE setAuthor NOTIFY authorChanged)
         Q_PROPERTY(int keywordsCount READ getKeywordsCount NOTIFY keywordsCountChanged)
         Q_PROPERTY(int selectedArtworksCount READ getSelectedArtworksCount NOTIFY selectedArtworksCountChanged)
         Q_PROPERTY(int artworksCount READ getArtworksCount NOTIFY artworksCountChanged)
         Q_PROPERTY(bool changeDescription READ getChangeDescription WRITE setChangeDescription NOTIFY changeDescriptionChanged)
         Q_PROPERTY(bool changeTitle READ getChangeTitle WRITE setChangeTitle NOTIFY changeTitleChanged)
-        Q_PROPERTY(bool changeAuthor READ getChangeAuthor WRITE setChangeAuthor NOTIFY changeAuthorChanged)
         Q_PROPERTY(bool changeKeywords READ getChangeKeywords WRITE setChangeKeywords NOTIFY changeKeywordsChanged)
     public:
         CombinedArtworksModel(QObject *parent = 0) :
@@ -66,7 +64,6 @@ namespace Models {
         void initKeywords(const QStringList &ek) { m_CommonKeywordsModel.reset(ek); m_CommonKeywordsSet.unite(QSet<QString>::fromList(m_CommonKeywordsModel.getKeywords())); }
         void initDescription(const QString &description) { setDescription(description); }
         void initTitle(const QString &title) { setTitle(title); }
-        void initAuthor(const QString &author) { setAuthor(author); }
 
     public:
         void recombineArtworks();
@@ -85,18 +82,11 @@ namespace Models {
         }
 
         const QString &getTitle() const { return m_ArtworkTitle; }
-        const QString &getAuthor() const { return m_ArtworkAuthor; }
+
         void setTitle(const QString &value) {
             if (m_ArtworkTitle != value) {
                 m_ArtworkTitle = value;
                 emit titleChanged();
-            }
-        }
-
-        void setAuthor(const QString &value) {
-            if (m_ArtworkAuthor != value) {
-                m_ArtworkAuthor = value;
-                emit authorChanged();
             }
         }
 
@@ -118,14 +108,6 @@ namespace Models {
             }
         }
 
-        bool getChangeAuthor() const { return m_ChangeAuthor; }
-        void setChangeAuthor(bool value) {
-            if (m_ChangeAuthor != value) {
-                m_ChangeAuthor = value;
-                emit changeAuthorChanged();
-            }
-        }
-
         bool getChangeKeywords() const { return m_ChangeKeywords; }
         void setChangeKeywords(bool value) {
             if (m_ChangeKeywords != value) {
@@ -137,14 +119,12 @@ namespace Models {
     signals:
         void descriptionChanged();
         void titleChanged();
-        void authorChanged();
         void keywordsCountChanged();
         void selectedArtworksCountChanged();
         void artworksCountChanged();
         void changeDescriptionChanged();
         void changeKeywordsChanged();
         void changeTitleChanged();
-        void changeAuthorChanged();
 
     public:
         int getSelectedArtworksCount() const;
@@ -193,11 +173,9 @@ namespace Models {
         QSet<QString> m_CommonKeywordsSet;
         QString m_ArtworkDescription;
         QString m_ArtworkTitle;
-        QString m_ArtworkAuthor;
         bool m_IsModified;
         bool m_ChangeDescription;
         bool m_ChangeTitle;
-        bool m_ChangeAuthor;
         bool m_ChangeKeywords;
     };
 }

@@ -52,8 +52,6 @@ namespace Models {
             ArtworkDescriptionRole = Qt::UserRole + 1,
             EditArtworkDescriptionRole,
             ArtworkFilenameRole,
-            ArtworkAuthorRole,
-            EditArtworkAuthorRole,
             ArtworkTitleRole,
             EditArtworkTitleRole,
             KeywordsStringRole,

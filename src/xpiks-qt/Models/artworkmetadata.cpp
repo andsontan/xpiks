@@ -24,14 +24,9 @@
 #include "../Helpers/tempmetadatadb.h"
 
 namespace Models {
-    bool ArtworkMetadata::initialize(const QString &author, const QString &title,
+    bool ArtworkMetadata::initialize(const QString &title,
                                      const QString &description, const QString &rawKeywords, bool overwrite) {
         bool anythingModified = false;
-
-        if (overwrite || (m_ArtworkAuthor.trimmed().isEmpty() && !author.isEmpty())) {
-            anythingModified = true;
-            m_ArtworkAuthor = author;
-        }
 
         if (overwrite || (m_ArtworkTitle.trimmed().isEmpty() && !title.isEmpty())) {
             anythingModified = true;

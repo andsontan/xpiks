@@ -61,7 +61,6 @@ void Commands::CombinedEditCommand::saveSetKeywords(QList<UndoRedo::ArtworkMetad
         metadata->setKeywords(m_Keywords);
         metadata->setDescription(m_ArtworkDescription);
         metadata->setTitle(m_ArtworkTitle);
-        metadata->setAuthor(m_ArtworkAuthor);
         metadata->saveBackup();
     }
 }
@@ -83,10 +82,6 @@ void Commands::CombinedEditCommand::saveAppendKeywords(QList<UndoRedo::ArtworkMe
 
         if (!m_ArtworkTitle.isEmpty() && metadata->getTitle().isEmpty()) {
             metadata->setTitle(m_ArtworkTitle);
-        }
-
-        if (!m_ArtworkAuthor.isEmpty() && metadata->getAuthor().isEmpty()) {
-            metadata->setAuthor(m_ArtworkAuthor);
         }
 
         metadata->saveBackup();

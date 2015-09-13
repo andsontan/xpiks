@@ -49,10 +49,8 @@ namespace Models {
         bool anyItemsProcessed = false;
         bool descriptionsDiffer = false;
         bool titleDiffer = false;
-        bool authorDiffer = false;
         QString description;
         QString title;
-        QString author;
         QSet<QString> commonKeywords;
 
         int artworksCount = m_ArtworksList.length();
@@ -63,7 +61,6 @@ namespace Models {
             if (!anyItemsProcessed) {
                 description = metadata->getDescription();
                 title = metadata->getTitle();
-                author = metadata->getAuthor();
                 commonKeywords.unite(metadata->getKeywordsSet());
                 anyItemsProcessed = true;
                 continue;
@@ -71,10 +68,8 @@ namespace Models {
 
             const QString &currDescription = metadata->getDescription();
             const QString &currTitle = metadata->getTitle();
-            const QString &currAuthor = metadata->getAuthor();
             descriptionsDiffer = descriptionsDiffer || description != currDescription;
             titleDiffer = titleDiffer || title != currTitle;
-            authorDiffer = authorDiffer || author != currAuthor;
             commonKeywords.intersect(metadata->getKeywordsSet());
         }
 
@@ -87,13 +82,8 @@ namespace Models {
                 title = "";
             }
 
-            if (authorDiffer) {
-                author = "";
-            }
-
             initDescription(description);
             initTitle(title);
-            initAuthor(author);
 
             if (!m_IsModified) {
                 initKeywords(commonKeywords.toList());
@@ -114,7 +104,6 @@ namespace Models {
         endResetModel();
 
         setDescription("");
-        setAuthor("");
         setTitle("");
         setKeywords(QStringList());
         m_CommonKeywordsSet.clear();
@@ -132,7 +121,6 @@ namespace Models {
                     m_ArtworksList,
                     m_ArtworkDescription,
                     m_ArtworkTitle,
-                    m_ArtworkAuthor,
                     m_CommonKeywordsModel.getKeywords());
 
         Commands::CommandResult *result = m_CommandManager->processCommand(combinedEditCommand);

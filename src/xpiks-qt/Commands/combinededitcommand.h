@@ -40,13 +40,12 @@ namespace Commands {
         CombinedEditCommand(CombinedEditType editType,
                             const QList<Models::ArtItemInfo*> &infos,
                             QString description, QString title,
-                            QString author, QStringList keywords) :
+                            QStringList keywords) :
             CommandBase(CombinedEditCommandType),
             m_ArtItemInfos(infos),
             m_EditType(editType),
             m_ArtworkDescription(description),
             m_ArtworkTitle(title),
-            m_ArtworkAuthor(author),
             m_Keywords(keywords)
         { }
 
@@ -66,7 +65,6 @@ namespace Commands {
         CombinedEditType m_EditType;
         QString m_ArtworkDescription;
         QString m_ArtworkTitle;
-        QString m_ArtworkAuthor;
         QStringList m_Keywords;
     };
 

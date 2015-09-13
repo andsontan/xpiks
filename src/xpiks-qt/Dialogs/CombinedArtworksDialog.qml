@@ -289,7 +289,7 @@ Item {
                         spacing: 3
 
                         Item {
-                            height: 15
+                            height: 10
                         }
 
                         StyledCheckbox {
@@ -421,7 +421,6 @@ Item {
                                     focus: true
                                     text: combinedArtworks.title
                                     onTextChanged: combinedArtworks.title = text
-                                    KeyNavigation.tab: authorTextInput
                                     KeyNavigation.backtab: descriptionTextInput
                                 }
                             }
@@ -441,85 +440,6 @@ Item {
 
                 RowLayout {
                     width: parent.width
-                    height: 50
-                    spacing: 5
-
-                    ColumnLayout {
-                        width: 20
-                        height: parent.height
-                        spacing: 3
-
-                        Item {
-                            height: 15
-                        }
-
-                        StyledCheckbox {
-                            id: authorCheckBox
-                            onClicked: {
-                                combinedArtworks.changeAuthor = checked
-                                if (checked) { authorTextInput.forceActiveFocus(); }
-                            }
-
-                            Component.onCompleted: authorCheckBox.checked = combinedArtworks.changeAuthor
-                        }
-                    }
-
-                    Item {
-                        Layout.fillWidth: true
-                        height: parent.height
-                        enabled: authorCheckBox.checked
-
-                        ColumnLayout {
-                            anchors.fill: parent
-                            anchors.margins: 3
-                            spacing: 3
-
-                            StyledText {
-                                text: qsTr("Author:")
-                            }
-
-                            Rectangle {
-                                id: yetAnotherRect
-                                anchors.left: parent.left
-                                anchors.right: parent.right
-                                height: 25
-                                color: Colors.defaultInputBackground
-                                border.color: Colors.artworkActiveColor
-                                border.width: authorTextInput.activeFocus ? 1 : 0
-
-                                StyledTextInput {
-                                    id: authorTextInput
-                                    anchors.left: parent.left
-                                    anchors.right: parent.right
-                                    anchors.leftMargin: 5
-                                    anchors.rightMargin: 5
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    maximumLength: 200
-                                    focus: true
-                                    text: combinedArtworks.author
-                                    onTextChanged: combinedArtworks.author = text
-                                    KeyNavigation.backtab: titleTextInput
-                                    Keys.onTabPressed: {
-                                        flv.activateEdit()
-                                    }
-                                }
-                            }
-                        }
-
-                        Rectangle {
-                            color: Colors.defaultInputBackground
-                            anchors.fill: parent
-                            opacity: authorCheckBox.checked ? 0 : 0.2
-                        }
-                    }
-                }
-
-                Item {
-                    height: 1
-                }
-
-                RowLayout {
-                    width: parent.width
                     height: 140
                     spacing: 5
 
@@ -529,7 +449,7 @@ Item {
                         spacing: 3
 
                         Item {
-                            height: 5
+                            height: 25
                         }
 
                         StyledCheckbox {
@@ -540,6 +460,10 @@ Item {
                             }
 
                             Component.onCompleted: keywordsCheckBox.checked = combinedArtworks.changeKeywords
+                        }
+
+                        Item {
+                            Layout.fillHeight: true
                         }
                     }
 

@@ -34,7 +34,6 @@ namespace Helpers {
         QHash<QString, QString> dict;
         dict["title"] = m_ArtworkMetadata->getTitle();
         dict["description"] = m_ArtworkMetadata->getDescription();
-        dict["author"] = m_ArtworkMetadata->getAuthor();
         dict["keywords"] = m_ArtworkMetadata->getKeywordsString();
 
         QString path = m_ArtworkMetadata->getFilepath() + Constants::METADATA_BACKUP_EXTENSION;
@@ -58,7 +57,6 @@ namespace Helpers {
             file.close();
 
             if (m_ArtworkMetadata->initialize(
-                    dict["author"],
                     dict["title"],
                     dict["description"],
                     dict["keywords"],

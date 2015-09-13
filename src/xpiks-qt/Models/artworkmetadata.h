@@ -47,11 +47,10 @@ namespace Models {
         };
 
     public:
-        bool initialize(const QString &author, const QString &title,
+        bool initialize(const QString &title,
                         const QString &description, const QString &rawKeywords, bool overwrite = true);
 
     public:
-        const QString &getAuthor() const { return m_ArtworkAuthor; }
         const QString &getTitle() const { return m_ArtworkTitle; }
         const QString &getDescription() const { return m_ArtworkDescription; }
         const QString &getFilepath() const { return m_ArtworkFilepath; }
@@ -70,15 +69,6 @@ namespace Models {
             bool result = m_ArtworkDescription != value;
             if (result) {
                 m_ArtworkDescription = value;
-                setModified();
-            }
-            return result;
-        }
-
-        bool setAuthor(const QString &value) {
-            bool result = m_ArtworkAuthor != value;
-            if (result) {
-                m_ArtworkAuthor = value;
                 setModified();
             }
             return result;
@@ -141,7 +131,6 @@ namespace Models {
          QString m_ArtworkFilepath;
          QString m_ArtworkDescription;
          QString m_ArtworkTitle;
-         QString m_ArtworkAuthor;
          volatile bool m_IsModified;
          volatile bool m_IsSelected;
     };

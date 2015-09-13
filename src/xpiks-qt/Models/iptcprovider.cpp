@@ -65,7 +65,7 @@ namespace Models {
         Models::ImportDataResult *importData = importPair.second;
 
         if (metadata != NULL && importData != NULL) {
-            metadata->initialize(importData->Author, importData->Title, importData->Description, importData->Keywords);
+            metadata->initialize(importData->Title, importData->Description, importData->Keywords);
 
             if (!m_IgnoreAutosave &&
                     (importData->Description.isEmpty() || importData->Keywords.isEmpty())) {

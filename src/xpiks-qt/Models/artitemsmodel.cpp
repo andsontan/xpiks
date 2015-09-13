@@ -79,7 +79,7 @@ namespace Models {
         QList<QPair<int, int> > ranges;
         ranges << qMakePair(0, m_ArtworkList.length() - 1);
         QVector<int> roles;
-        roles << ArtworkDescriptionRole << IsModifiedRole << ArtworkAuthorRole << ArtworkTitleRole << KeywordsCountRole;
+        roles << ArtworkDescriptionRole << IsModifiedRole << ArtworkTitleRole << KeywordsCountRole;
         updateItemsInRanges(ranges, roles);
     }
 
@@ -301,8 +301,6 @@ namespace Models {
             return metadata->getDescription();
         case ArtworkFilenameRole:
             return metadata->getFilepath();
-        case ArtworkAuthorRole:
-            return metadata->getAuthor();
         case ArtworkTitleRole:
             return metadata->getTitle();
         case KeywordsStringRole:
@@ -345,10 +343,6 @@ namespace Models {
             needToUpdate = metadata->setTitle(value.toString());
             roleToUpdate = ArtworkTitleRole;
             break;
-        case EditArtworkAuthorRole:
-            needToUpdate = metadata->setAuthor(value.toString());
-            roleToUpdate = ArtworkAuthorRole;
-            break;
         case EditIsSelectedRole:
             needToUpdate = metadata->setIsSelected(value.toBool());
             roleToUpdate = IsSelectedRole;
@@ -362,8 +356,7 @@ namespace Models {
         }
 
         if (role == EditArtworkDescriptionRole ||
-                role == EditArtworkTitleRole ||
-                role == EditArtworkAuthorRole) {
+                role == EditArtworkTitleRole) {
             metadata->saveBackup();
         }
 
@@ -537,8 +530,6 @@ namespace Models {
         QHash<int, QByteArray> roles;
         roles[ArtworkDescriptionRole] = "description";
         roles[EditArtworkDescriptionRole] = "editdescription";
-        roles[ArtworkAuthorRole] = "author";
-        roles[EditArtworkAuthorRole] = "editauthor";
         roles[ArtworkTitleRole] = "title";
         roles[EditArtworkTitleRole] = "edittitle";
         roles[ArtworkFilenameRole] = "filename";
@@ -594,6 +585,6 @@ namespace Models {
     void ArtItemsModel::fillStandardRoles(QVector<int> &roles) const
     {
         roles << ArtworkDescriptionRole << IsModifiedRole <<
-                 ArtworkAuthorRole << ArtworkTitleRole << KeywordsCountRole;
+                 ArtworkTitleRole << KeywordsCountRole;
     }
 }

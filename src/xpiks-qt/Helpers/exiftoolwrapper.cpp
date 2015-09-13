@@ -37,7 +37,6 @@ ExportPair writeArtworkMetadata(ExportPair pair) {
     Models::ArtworkMetadata *metadata = pair.first;
     Models::ExportInfo *exportInfo = pair.second;
 
-    QString author = QString(metadata->getAuthor()).simplified();
     QString title = QString(metadata->getTitle()).simplified();
     QString description = QString(metadata->getDescription()).simplified();
     const QString &keywords = metadata->getKeywordsString();
@@ -51,10 +50,6 @@ ExportPair writeArtworkMetadata(ExportPair pair) {
     QStringList arguments;
     arguments << exiftoolPath;
     arguments << "-quiet" << "-ignoreMinorErrors";
-    arguments << QString("-EXIF:Artist=\"%1\"").arg(author);
-    arguments << QString("-IPTC:By-line=\"%1\"").arg(author);
-    arguments << QString("-XMP:Author=\"%1\"").arg(author);
-    arguments << QString("-XMP:Creator=\"%1\"").arg(author);
     arguments << QString("-IPTC:ObjectName=\"%1\"").arg(title);
     arguments << QString("-XMP:Title=\"%1\"").arg(title);
     arguments << QString("-EXIF:ImageDescription=\"%1\"").arg(description);
@@ -96,7 +91,6 @@ ExportPair writeArtworkMetadata(ExportPair pair) {
 }
 
 void grabMetadata(const QStringList &items, Models::ImportDataResult *importData,
-                  QRegExp authorRegExp,
                   QRegExp titleRegExp,
                   QRegExp descriptionRegExp,
                   QRegExp keywordsRegExp);
@@ -128,22 +122,20 @@ ImportPair readArtworkMetadata(ImportPair pair) {
 
     QStringList items = stdoutText.split(QRegExp("[\r\n]"), QString::SkipEmptyParts);
 
-    QRegExp authorRegExp("^Artist\\s|^By-line\\s|^Creator\\s");
     QRegExp titleRegExp("^ObjectName\\s|^Title\\s");
     QRegExp descriptionRegExp("^ImageDescription\\s|^Caption-Abstract\\s|^Description\\s");
     QRegExp keywordsRegExp("^Keywords\\s|^Subject\\s");
 
-    grabMetadata(items, importData, authorRegExp, titleRegExp, descriptionRegExp, keywordsRegExp);
+    grabMetadata(items, importData, titleRegExp, descriptionRegExp, keywordsRegExp);
 
     return pair;
 }
 
 void grabMetadata(const QStringList &items, Models::ImportDataResult *importData,
-                  QRegExp authorRegExp,
                   QRegExp titleRegExp,
                   QRegExp descriptionRegExp,
                   QRegExp keywordsRegExp) {
-    bool authorSet = false, titleSet = false, descriptionSet = false, keywordsSet = false;
+    bool titleSet = false, descriptionSet = false, keywordsSet = false;
 
     foreach (const QString &item, items) {
         QStringList parts = item.split(':', QString::SkipEmptyParts);
@@ -153,11 +145,7 @@ void grabMetadata(const QStringList &items, Models::ImportDataResult *importData
 
         const QString &first = parts.first();
 
-        if (!authorSet && first.contains(authorRegExp)) {
-            importData->Author = parts.at(1).trimmed();
-            authorSet = true;
-        }
-        else if (!titleSet && first.contains(titleRegExp)) {
+        if (!titleSet && first.contains(titleRegExp)) {
             importData->Title = parts.at(1).trimmed();
             titleSet = true;
         }

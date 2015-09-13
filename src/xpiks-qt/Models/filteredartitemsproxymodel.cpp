@@ -275,10 +275,6 @@ namespace Models {
         hasMatch = metadata->getDescription().contains(m_SearchTerm, Qt::CaseInsensitive);
 
         if (!hasMatch) {
-            hasMatch = metadata->getAuthor().contains(m_SearchTerm, Qt::CaseInsensitive);
-        }
-
-        if (!hasMatch) {
             hasMatch = metadata->getTitle().contains(m_SearchTerm, Qt::CaseInsensitive);
         }
 

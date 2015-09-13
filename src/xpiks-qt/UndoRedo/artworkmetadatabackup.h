@@ -40,7 +40,6 @@ namespace UndoRedo {
     private:
         QString m_Description;
         QString m_Title;
-        QString m_Author;
         QStringList m_KeywordsList;
         bool m_IsModified;
     };
