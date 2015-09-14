@@ -2,7 +2,7 @@
 Name=Xpiks
 Exec=xpiks-qt
 Comment=Cross-platform (X) Photo Keywording Software
-Icon=xpiks.png
+Icon=xpiks
 Type=Application
 Terminal=false
 StartupNotify=true
