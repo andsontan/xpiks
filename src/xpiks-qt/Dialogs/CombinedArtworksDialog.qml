@@ -724,6 +724,10 @@ Item {
                             }
                         }
 
+                        Item {
+                            width: 1
+                        }
+
                         StyledButton {
                             text: qsTr("Cancel")
                             width: 100
