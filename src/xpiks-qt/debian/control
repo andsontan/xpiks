@@ -3,13 +3,13 @@ Maintainer: Artiom.M <a.mv@gmx.fr>
 Section: graphics
 Priority: optional
 Standards-Version: 3.9.6
-Build-Depends: debhelper (>= 9), qt5-default (>= 5.3)
+Build-Depends: debhelper (>= 9), qt5-default (>= 5.2)
 
 Package: xpiks
 Homepage: https://github.com/Ribtoks/xpiks
 Priority: optional
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends},libqt5concurrent5 (>= 5.2), libqt5core5a (>= 5.2), libqt5gui5 (>= 5.2), libqt5network5 (>= 5.2), libqt5qml5 (>= 5.2), libqt5quick5 (>= 5.2), libqt5widgets5 (>= 5.2),curl, exiftool
 Recommends:
 Description: Cross-platform (X) Photo Keywording Software
  Xpiks is a free and open source keywording and uploading tool for 
