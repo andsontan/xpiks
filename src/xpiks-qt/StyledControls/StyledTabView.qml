@@ -69,7 +69,7 @@ TabView {
             StyledText {
                 id: text
                 anchors.centerIn: parent
-                anchors.verticalCenterOffset: styleData.selected ? (Qt.platform.os === "osx" ? 2 : 1) : -1
+                anchors.verticalCenterOffset: styleData.selected ? 1 : -1
                 text: styleData.title
                 color: styleData.hovered ? Colors.artworkActiveColor : (styleData.selected ? Colors.defaultLightColor : Colors.defaultInputBackground)
             }
