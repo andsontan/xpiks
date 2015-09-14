@@ -29,12 +29,12 @@ import "../Constants"
 import "../Constants/Colors.js" as Colors
 
 TabView {
-    property double tabBarWidth: 1
-    property double tabsHeight: 24
+    property double tabBarHeight: 1
+    property double tabsHeight: 25
     property color backgroundColor: Colors.selectedArtworkColor
 
     style: TabViewStyle {
-        frameOverlap: -tabBarWidth
+        frameOverlap: -tabBarHeight
         tabOverlap: -2
 
         frame: Rectangle {
@@ -43,7 +43,7 @@ TabView {
 
         leftCorner: Rectangle {
             implicitWidth: 5
-            implicitHeight: tabBarWidth
+            implicitHeight: tabBarHeight
             color: "transparent"
         }
 
@@ -52,7 +52,7 @@ TabView {
 
             Rectangle {
                 anchors.bottom: parent.bottom
-                height: 1
+                height: tabBarHeight
                 anchors.left: parent.left
                 anchors.right: parent.right
                 color: Colors.artworkActiveColor
@@ -64,12 +64,12 @@ TabView {
             implicitWidth: Math.max(text.width + 10, 80)
             implicitHeight: tabsHeight
             border.color: Colors.artworkActiveColor
-            border.width: styleData.selected ? tabBarWidth : 0
+            border.width: styleData.selected ? tabBarHeight : 0
 
             StyledText {
                 id: text
                 anchors.centerIn: parent
-                anchors.verticalCenterOffset: Qt.platform.os === "osx" ? 2 : 1
+                anchors.verticalCenterOffset: styleData.selected ? (Qt.platform.os === "osx" ? 2 : 1) : -1
                 text: styleData.title
                 color: styleData.hovered ? Colors.artworkActiveColor : (styleData.selected ? Colors.defaultLightColor : Colors.defaultInputBackground)
             }
@@ -81,7 +81,7 @@ TabView {
                 anchors.leftMargin: styleData.selected ? 1 : 0
                 anchors.rightMargin: styleData.selected ? 1 : 0
                 color: styleData.selected ? backgroundColor : Colors.artworkActiveColor
-                height: 1
+                height: tabBarHeight
             }
         }
     }
