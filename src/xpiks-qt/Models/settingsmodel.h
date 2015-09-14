@@ -40,6 +40,7 @@ namespace Models {
         Q_PROPERTY(int uploadTimeout READ getUploadTimeout WRITE setUploadTimeout NOTIFY uploadTimeoutChanged)
         Q_PROPERTY(bool mustUseMasterPassword READ getMustUseMasterPassword WRITE setMustUseMasterPassword NOTIFY mustUseMasterPasswordChanged)
         Q_PROPERTY(bool mustUseConfirmations READ getMustUseConfirmations WRITE setMustUseConfirmations NOTIFY mustUseConfirmationsChanged)
+        Q_PROPERTY(bool saveBackups READ getSaveBackups WRITE setSaveBackups NOTIFY saveBackupsChanged)
     public:
         explicit SettingsModel(QObject *parent = 0);
         virtual ~SettingsModel() {}
@@ -62,6 +63,7 @@ namespace Models {
         int getUploadTimeout() const { return m_UploadTimeout; }
         bool getMustUseMasterPassword() const { return m_MustUseMasterPassword; }
         bool getMustUseConfirmations() const { return m_MustUseConfirmations; }
+        bool getSaveBackups() const { return m_SaveBackups; }
 
     signals:
         void exifToolPathChanged(QString exifToolPath);
@@ -72,6 +74,7 @@ namespace Models {
         void uploadTimeoutChanged(int uploadTimeout);
         void mustUseMasterPasswordChanged(bool mustUseMasterPassword);
         void mustUseConfirmationsChanged(bool mustUseConfirmations);
+        void saveBackupsChanged(bool saveBackups);
 
     public:
         void setExifToolPath(QString exifToolPath) {
@@ -138,6 +141,14 @@ namespace Models {
             emit mustUseConfirmationsChanged(mustUseConfirmations);
         }
 
+        void setSaveBackups(bool saveBackups) {
+            if (m_SaveBackups == saveBackups)
+                return;
+
+            m_SaveBackups = saveBackups;
+            emit saveBackupsChanged(saveBackups);
+        }
+
     private:
         void resetToDefault();
 
@@ -150,6 +161,7 @@ namespace Models {
         int m_UploadTimeout; // in minutes
         bool m_MustUseMasterPassword;
         bool m_MustUseConfirmations;
+        bool m_SaveBackups;
     };
 }
 

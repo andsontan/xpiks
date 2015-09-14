@@ -30,6 +30,7 @@ namespace Constants {
     const char APPLICATION_NAME[] = "Xpiks";
     const char LOG_FILENAME[] = "xpiks.log";
     const char METADATA_BACKUP_EXTENSION[] = ".xpks";
+    const char SAVE_BACKUPS[] = "SAVE_BACKUPS";
 
 #ifdef QT_NO_DEBUG
     const char UPLOAD_HOSTS[] = "UPLOAD_HOSTS_HASH";

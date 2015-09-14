@@ -29,6 +29,8 @@
 #include <QSet>
 
 namespace Models {
+    class SettingsModel;
+
     class ArtworkMetadata : public QAbstractListModel {
         Q_OBJECT
     public:
@@ -111,7 +113,7 @@ namespace Models {
         void addKeywords(const QString& rawKeywords);
         void setModified() { m_IsModified = true; emit modifiedChanged(m_IsModified); }
         void unsetModified() { m_IsModified = false; }
-        void saveBackup();
+        void saveBackup(SettingsModel *settings);
 
     signals:
          void modifiedChanged(bool newValue);

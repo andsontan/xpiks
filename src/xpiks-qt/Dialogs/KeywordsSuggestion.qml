@@ -126,8 +126,7 @@ Item {
                             clip: true
                             anchors.left: parent.left
                             anchors.leftMargin: 5
-                            Keys.onEnterPressed: keywordsSuggestor.searchArtworks(queryText.text)
-                            Keys.onReturnPressed: keywordsSuggestor.searchArtworks(queryText.text)
+                            onAccepted: keywordsSuggestor.searchArtworks(queryText.text)
                         }
                     }
 

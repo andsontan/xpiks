@@ -24,10 +24,13 @@
 #include "../Models/artitemsmodel.h"
 #include "../Models/artworkmetadata.h"
 #include "../Commands/commandmanager.h"
+#include "../Models/settingsmodel.h"
 
 void UndoRedo::ModifyArtworksHistoryItem::undo(const Commands::CommandManager *commandManager) const
 {
     qDebug() << "Undo: modify artworks item";
+
+    Models::SettingsModel *settingsModel = commandManager->getSettingsModel();
 
     Models::ArtItemsModel *artItemsModel = commandManager->getArtItemsModel();
     int count = m_Indices.count();
@@ -38,7 +41,7 @@ void UndoRedo::ModifyArtworksHistoryItem::undo(const Commands::CommandManager *c
         if (metadata != NULL) {
             ArtworkMetadataBackup *backup = m_ArtworksBackups[i];
             backup->restore(metadata);
-            metadata->saveBackup();
+            metadata->saveBackup(settingsModel);
         }
     }
 

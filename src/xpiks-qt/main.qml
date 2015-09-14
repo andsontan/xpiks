@@ -573,7 +573,7 @@ ApplicationWindow {
                                         anchors.left: parent.left
                                         anchors.leftMargin: 5
                                         color: Colors.defaultInputBackground
-                                        Keys.onReturnPressed: {
+                                        onAccepted: {
                                             filteredArtItemsModel.searchTerm = text
                                         }
 
@@ -1032,6 +1032,7 @@ ApplicationWindow {
                                                     }
 
                                                     function saveKeywords() {
+                                                        console.log("Saving keywords...")
                                                         artItemsModel.backupItem(rowWrapper.getIndex())
                                                     }
 

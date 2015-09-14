@@ -180,6 +180,7 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&undoRedoManager);
     commandManager.InjectDependency(&zipArchiver);
     commandManager.InjectDependency(&keywordsSuggestor);
+    commandManager.InjectDependency(&settingsModel);
 
     // other initializations
     secretsManager.setMasterPasswordHash(appSettings.value(Constants::MASTER_PASSWORD_HASH, "").toString());

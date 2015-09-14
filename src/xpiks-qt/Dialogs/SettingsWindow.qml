@@ -289,6 +289,7 @@ ApplicationWindow {
                     ColumnLayout {
                         anchors.fill: parent
                         anchors.margins: 20
+                        spacing: 10
 
                         RowLayout {
                             width: parent.width
@@ -306,6 +307,26 @@ ApplicationWindow {
 
                             StyledText {
                                 text: qsTr("(with destructive actions)")
+                                color: Colors.defaultInputBackground
+                            }
+                        }
+
+                        RowLayout {
+                            width: parent.width
+                            spacing: 10
+
+                            StyledCheckbox {
+                                id: saveBackupsCheckbox
+                                text: qsTr("Save backups for artworks")
+                                onCheckedChanged: {
+                                    settingsModel.saveBackups = checked
+                                }
+
+                                Component.onCompleted: checked = settingsModel.saveBackups
+                            }
+
+                            StyledText {
+                                text: qsTr("(edited but not saved)")
                                 color: Colors.defaultInputBackground
                             }
                         }

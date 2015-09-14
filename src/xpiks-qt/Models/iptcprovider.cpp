@@ -25,6 +25,8 @@
 #include "../Helpers/tempmetadatadb.h"
 #include "../Helpers/exiftoolwrapper.h"
 #include "artworkmetadata.h"
+#include "settingsmodel.h"
+#include "../Commands/commandmanager.h"
 
 namespace Models {
     IptcProvider::IptcProvider():
@@ -69,7 +71,10 @@ namespace Models {
 
             if (!m_IgnoreAutosave &&
                     (importData->Description.isEmpty() || importData->Keywords.isEmpty())) {
-                Helpers::TempMetadataDb(metadata).load();
+                SettingsModel *settings = m_CommandManager->getSettingsModel();
+                if (settings->getSaveBackups()) {
+                    Helpers::TempMetadataDb(metadata).load();
+                }
             }
         }
 

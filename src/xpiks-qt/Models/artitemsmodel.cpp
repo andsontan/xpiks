@@ -33,6 +33,7 @@
 #include "../Suggestion/keywordssuggestor.h"
 #include "../Commands/commandmanager.h"
 #include "artworksrepository.h"
+#include "../Models/settingsmodel.h"
 
 #ifdef Q_OS_OSX
 #include "../Helpers/osxnsurlhelper.h"
@@ -156,7 +157,8 @@ namespace Models {
     {
         if (metadataIndex >= 0 && metadataIndex < m_ArtworkList.length()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
-            metadata->saveBackup();
+            SettingsModel *settings = m_CommandManager->getSettingsModel();
+            metadata->saveBackup(settings);
         }
     }
 
@@ -357,7 +359,8 @@ namespace Models {
 
         if (role == EditArtworkDescriptionRole ||
                 role == EditArtworkTitleRole) {
-            metadata->saveBackup();
+            SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
+            metadata->saveBackup(settingsModel);
         }
 
         return true;

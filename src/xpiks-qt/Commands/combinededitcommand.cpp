@@ -26,11 +26,13 @@
 #include "../Models/artiteminfo.h"
 #include "../Models/artworkmetadata.h"
 #include "../Common/flags.h"
+#include "../Models/settingsmodel.h"
 
 Commands::CommandResult *Commands::CombinedEditCommand::execute(const Commands::CommandManager *commandManager) const
 {
     QList<int> indicesToUpdate;
     QList<UndoRedo::ArtworkMetadataBackup*> artworksBackups;
+    Models::SettingsModel *settingsModel = commandManager->getSettingsModel();
 
     foreach (Models::ArtItemInfo* info, m_ArtItemInfos) {
         Models::ArtworkMetadata *metadata = info->getOrigin();
@@ -43,7 +45,7 @@ Commands::CommandResult *Commands::CombinedEditCommand::execute(const Commands::
         setDescription(metadata);
         setTitle(metadata);
 
-        metadata->saveBackup();
+        metadata->saveBackup(settingsModel);
     }
 
     UndoRedo::ModifyArtworksHistoryItem *modifyArtworksItem =

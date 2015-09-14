@@ -168,7 +168,7 @@ Item {
                             anchors.leftMargin: 5
                             echoMode: TextInput.Password
                             KeyNavigation.tab: newMasterPassword
-                            Keys.onReturnPressed: {
+                            onAccepted: {
                                 if (repeatMasterPassword.text != newMasterPassword.text) {
                                     newMasterPassword.forceActiveFocus()
                                 } else {
@@ -205,7 +205,7 @@ Item {
                             KeyNavigation.backtab: currentPassword
                             KeyNavigation.tab: repeatMasterPassword
 
-                            Keys.onReturnPressed: {
+                            onAccepted: {
                                 if (repeatMasterPassword.text != newMasterPassword.text) {
                                     repeatMasterPassword.forceActiveFocus()
                                 } else {
@@ -241,7 +241,7 @@ Item {
                             anchors.leftMargin: 5
                             echoMode: TextInput.Password
                             KeyNavigation.backtab: newMasterPassword
-                            Keys.onReturnPressed: trySetupMP()
+                            onAccepted: trySetupMP()
                         }
                     }
                 }

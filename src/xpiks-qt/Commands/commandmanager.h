@@ -48,6 +48,7 @@ namespace Models {
     class UploadInfo;
     class ArtworkMetadata;
     class ZipArchiver;
+    class SettingsModel;
 }
 
 namespace Suggestion {
@@ -88,6 +89,7 @@ namespace Commands {
         void InjectDependency(UndoRedo::UndoRedoManager *undoRedoManager);
         void InjectDependency(Models::ZipArchiver *zipArchiver);
         void InjectDependency(Suggestion::KeywordsSuggestor *keywordsSuggestor);
+        void InjectDependency(Models::SettingsModel *settingsModel);
 
     public:
         CommandResult *processCommand(CommandBase *command) const;
@@ -118,6 +120,7 @@ namespace Commands {
         virtual const Encryption::SecretsManager *getSecretsManager() const { return m_SecretsManager; }
         virtual Models::UploadInfoRepository *getUploadInfoRepository() { return m_UploadInfoRepository; }
         virtual Suggestion::KeywordsSuggestor *getKeywordsSuggestor() const { return m_KeywordsSuggestor; }
+        virtual Models::SettingsModel *getSettingsModel() const { return m_SettingsModel; }
 
     private:
         Models::ArtworksRepository *m_ArtworksRepository;
@@ -132,6 +135,7 @@ namespace Commands {
         UndoRedo::UndoRedoManager *m_UndoRedoManager;
         Models::ZipArchiver *m_ZipArchiver;
         Suggestion::KeywordsSuggestor *m_KeywordsSuggestor;
+        Models::SettingsModel *m_SettingsModel;
     };
 }
 

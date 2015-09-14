@@ -98,6 +98,10 @@ void Commands::CommandManager::InjectDependency(Suggestion::KeywordsSuggestor *k
     m_KeywordsSuggestor->setCommandManager(this);
 }
 
+void Commands::CommandManager::InjectDependency(Models::SettingsModel *settingsModel) {
+    Q_ASSERT(settingsModel != NULL); m_SettingsModel = settingsModel;
+}
+
 Commands::CommandResult *Commands::CommandManager::processCommand(Commands::CommandBase *command) const
 {
     Commands::CommandResult *result = command->execute(this);

@@ -22,6 +22,7 @@
 #include <QDebug>
 #include "artworkmetadata.h"
 #include "../Helpers/tempmetadatadb.h"
+#include "settingsmodel.h"
 
 namespace Models {
     bool ArtworkMetadata::initialize(const QString &title,
@@ -113,8 +114,10 @@ namespace Models {
         }
     }
 
-    void ArtworkMetadata::saveBackup() {
-        Helpers::TempMetadataDb(this).flush();
+    void ArtworkMetadata::saveBackup(SettingsModel *settings) {
+        if (settings->getSaveBackups()) {
+            Helpers::TempMetadataDb(this).flush();
+        }
     }
 
     int ArtworkMetadata::rowCount(const QModelIndex &parent) const {

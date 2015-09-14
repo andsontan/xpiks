@@ -132,7 +132,7 @@ Item {
                             anchors.leftMargin: 5
                             echoMode: showPasswordCheckBox.checked ? TextInput.Normal : TextInput.Password
 
-                            Keys.onReturnPressed: {
+                            onAccepted: {
                                 testPassword()
                             }
                         }

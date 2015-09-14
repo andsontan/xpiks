@@ -73,6 +73,9 @@ namespace Helpers {
         Q_PROPERTY(QString useConfirmationDialogsKey READ getUseConfirmationDialogsKey CONSTANT)
         QString getUseConfirmationDialogsKey() const { return QString::fromLatin1(Constants::USE_CONFIRMATION_DIALOGS); }
 
+        Q_PROPERTY(QString saveBackupsKey READ getSaveBackupsKey CONSTANT)
+        QString getSaveBackupsKey() const { return QString::fromLatin1(Constants::SAVE_BACKUPS); }
+
         Q_INVOKABLE inline void setValue(const QString &key, const QVariant &value) {
             QSettings::setValue(key, value);
         }

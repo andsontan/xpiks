@@ -159,7 +159,9 @@ Flickable {
                     regExp: /^(?:[a-zA-Z]+(?:-| |$))+$/
                 }
 
-                onEditingFinished: {
+                onFocusChanged: focusLost()
+
+                onAccepted: {
                     var tagText = getEditedText();
                     raiseAddTag(tagText);
 

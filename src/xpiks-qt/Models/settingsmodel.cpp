@@ -35,6 +35,7 @@
 #define DEFAULT_USE_MASTERPASSWORD false
 #define DEFAULT_TIMEOUT 10
 #define DEFAULT_USE_CONFIRMATIONS true
+#define DEFAULT_SAVE_BACKUPS true
 
 namespace Models {
     SettingsModel::SettingsModel(QObject *parent) :
@@ -58,6 +59,7 @@ namespace Models {
         appSettings.setValue(appSettings.getOneUploadMinutesTimeoutKey(), m_UploadTimeout);
         appSettings.setValue(appSettings.getMustUseMasterPasswordKey(), m_MustUseMasterPassword);
         appSettings.setValue(appSettings.getUseConfirmationDialogsKey(), m_MustUseConfirmations);
+        appSettings.setValue(appSettings.getSaveBackupsKey(), m_SaveBackups);
 
         if (!m_MustUseMasterPassword) {
             appSettings.setValue(appSettings.getMasterPasswordHashKey(), "");
@@ -89,6 +91,7 @@ namespace Models {
         setUploadTimeout(appSettings.value(appSettings.getOneUploadMinutesTimeoutKey(), DEFAULT_TIMEOUT).toInt());
         setMustUseMasterPassword(appSettings.boolValue(appSettings.getMustUseMasterPasswordKey(), DEFAULT_USE_MASTERPASSWORD));
         setMustUseConfirmations(appSettings.boolValue(appSettings.getUseConfirmationDialogsKey(), DEFAULT_USE_CONFIRMATIONS));
+        setSaveBackups(appSettings.boolValue(appSettings.getSaveBackupsKey(), DEFAULT_SAVE_BACKUPS));
     }
 
     void SettingsModel::resetToDefault() {
@@ -100,6 +103,7 @@ namespace Models {
         setUploadTimeout(DEFAULT_TIMEOUT);
         setMustUseMasterPassword(DEFAULT_USE_MASTERPASSWORD);
         setMustUseConfirmations(DEFAULT_USE_CONFIRMATIONS);
+        setSaveBackups(DEFAULT_SAVE_BACKUPS);
     }
 
     int ensureInBounds(int value, int boundA, int boundB) {
