@@ -12,11 +12,11 @@ Xpiks is a free and open source keywording and uploading tool for microstock pho
 - ability to keyword images as well as set additional XMP/IPTC metadata (title, description, author)
 - uploading images to Stock Agencies' FTP hosts (saves credentials for each host)
 - keywords suggestion based on Shutterstock API
+- search through loaded images by any metadata (keywords, description, title)
 - ability to upload vector files with images with same name (useful for illustrators)
 - automatically zip vector files with previews (useful for illustrators)
 - checks for potential problems before upload (insufficient resolution, missing metadata etc.)
 - unsaved work is backed up so you can continue work later without actual writing metadata to images
-- Ability to Drag'n'Drop images to workflow
 - works under Linux, OS X and Windows
 - ExifTool and Curl under the hood
 - written in C++ with Qt 5.4
@@ -31,7 +31,7 @@ Please see the INSTALL.md file
 
 **How to contribute**
 
-- open Issues page and select an issue (i'll provide you with all details and explanations as needed)
+- open Issues page and select an issue (I'll provide you with all details and explanations as needed)
 - send your ideas and proposals in comments, issues or via email
 - read the CONTRIBUTOR_GUIDELINES.md file
 - send your pull requests
