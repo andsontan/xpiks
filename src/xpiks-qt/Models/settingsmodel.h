@@ -22,11 +22,13 @@
 #ifndef SETTINGSMODEL_H
 #define SETTINGSMODEL_H
 
+#include <QAbstractListModel>
 #include <QObject>
 #include <QString>
-#include "../Common/basiccomboboxmodel.h"
+#include "comboboxtypes.h"
 
 namespace Models {
+
     int ensureInBounds(int value, int boundA, int boundB);
     double ensureInBounds(double value, double boundA, double boundB);
 
@@ -47,10 +49,6 @@ namespace Models {
         virtual ~SettingsModel() {}
 
     public:
-        enum KeywordsSize {
-            NormalFontSize,
-            LargeFontSize
-        };
 
     public:
         Q_INVOKABLE void resetAllValues();
@@ -161,7 +159,7 @@ namespace Models {
         void fillFontComboboxModel();
 
     private:
-        Common::BasicComboboxModel<KeywordsSize> m_KeywordsSizeModel;
+        KeywordsSizeComboboxModel m_KeywordsSizeModel;
         QString m_ExifToolPath;
         QString m_CurlPath;
         double m_MinMegapixelCount;

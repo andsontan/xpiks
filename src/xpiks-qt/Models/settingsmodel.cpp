@@ -36,7 +36,7 @@
 #define DEFAULT_TIMEOUT 10
 #define DEFAULT_USE_CONFIRMATIONS true
 #define DEFAULT_SAVE_BACKUPS true
-#define DEFAULT_FONT_SIZE Models::SettingsModel::NormalFontSize
+#define DEFAULT_FONT_SIZE Models::NormalFontSize
 
 namespace Models {
     SettingsModel::SettingsModel(QObject *parent) :
@@ -110,8 +110,8 @@ namespace Models {
     }
 
     void SettingsModel::fillFontComboboxModel() {
-        m_KeywordsSizeModel.addComboboxValue(SettingsModel::NormalFontSize, "Normal");
-        m_KeywordsSizeModel.addComboboxValue(SettingsModel::LargeFontSize, "Large");
+        m_KeywordsSizeModel.addComboboxValue(Models::NormalFontSize, "Normal");
+        m_KeywordsSizeModel.addComboboxValue(Models::LargeFontSize, "Large");
     }
 
     int ensureInBounds(int value, int boundA, int boundB) {

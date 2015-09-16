@@ -58,8 +58,7 @@ SOURCES += main.cpp \
     Helpers/exiftoolwrapper.cpp \
     Models/filteredartitemsproxymodel.cpp \
     Helpers/filenameshelpers.cpp \
-    Common/flags.cpp \
-    Common/basiccomboboxmodel.cpp
+    Common/flags.cpp
 
 RESOURCES += qml.qrc
 
@@ -155,7 +154,8 @@ HEADERS += \
     Models/filteredartitemsproxymodel.h \
     Helpers/filenameshelpers.h \
     Common/flags.h \
-    Common/basiccomboboxmodel.h
+    Common/basiccomboboxmodel.h \
+    Models/comboboxtypes.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

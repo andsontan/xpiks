@@ -31,35 +31,64 @@
 
 namespace Common {
     template<typename T>
-    class BasicComboboxModel : public QAbstractListModel
+    class BasicComboboxModel
     {
-        Q_OBJECT
-        Q_PROPERTY(int selectedIndex READ getSelectedIndex WRITE setSelectedIndex NOTIFY selectedIndexChanged)
     public:
-        BasicComboboxModel();
+        BasicComboboxModel() :
+            m_SelectedIndex(0)
+        {
+        }
 
     public:
-        bool addComboboxValue(const T &value, const QString &description);
+        bool addComboboxValue(const T &value, const QString &description) {
+            bool inTheList = m_ExistingValues.contains(value);
+            if (!inTheList) {
+                m_ExistingValues.insert(value);
+                m_ComboboxValues.append(qMakePair(value, description));
+            }
+
+            return !inTheList;
+        }
+
         const T &getSelectedValue() const { return m_ComboboxValues[m_SelectedIndex].first; }
         int rowCount(const QModelIndex & parent = QModelIndex()) const { Q_UNUSED(parent); return m_ComboboxValues.length(); }
-        QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
-        void reset() { beginResetModel(); m_ComboboxValues.clear(); m_ExistingValues.clear(); m_SelectedIndex = 0; endResetModel(); }
-        void setSelectedValue(const T &value);
+        void reset() { m_ComboboxValues.clear(); m_ExistingValues.clear(); m_SelectedIndex = 0; }
 
-    public:
-        int getSelectedIndex() const { return m_SelectedIndex; }
-        void setSelectedIndex(int value) {
-            if (value != m_SelectedIndex &&
-                    value >= 0 && value < m_ComboboxValues.length()) {
-                m_SelectedIndex = value;
-                emit selectedIndexChanged();
+        QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const {
+            if (!index.isValid()) { return QVariant(); }
+
+            if (role == Qt::DisplayRole) {
+                return m_ComboboxValues[index.row()].second;
+            } else {
+                return QVariant();
             }
         }
 
-    signals:
-        void selectedIndexChanged();
+        bool setSelectedValue(const T &value) {
+            bool set = false;
+            int size = rowCount();
+            for (int i = 0; i < size; ++i) {
+                if (m_ComboboxValues[i].first == value) {
+                    setSelectedIndex(i);
+                    set = true;
+                    break;
+                }
+            }
+            return set;
+        }
 
-    protected:
+    public:
+        int getSelectedIndex() const { return m_SelectedIndex; }
+        bool setSelectedIndex(int value) {
+            bool set = false;
+            if (value != m_SelectedIndex &&
+                    value >= 0 && value < m_ComboboxValues.length()) {
+                m_SelectedIndex = value;
+                set = true;
+            }
+            return set;
+        }
+
         QHash<int, QByteArray> roleNames() const { return QHash<int, QByteArray>(); }
 
     private:
