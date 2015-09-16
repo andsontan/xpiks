@@ -161,7 +161,7 @@ Flickable {
 
                 onFocusChanged: focusLost()
 
-                onAccepted: {
+                onEditingFinished: {
                     var tagText = getEditedText();
                     raiseAddTag(tagText);
 
