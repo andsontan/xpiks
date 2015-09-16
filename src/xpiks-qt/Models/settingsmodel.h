@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
  * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
@@ -24,6 +24,7 @@
 
 #include <QObject>
 #include <QString>
+#include "../Common/basiccomboboxmodel.h"
 
 namespace Models {
     int ensureInBounds(int value, int boundA, int boundB);
@@ -44,6 +45,12 @@ namespace Models {
     public:
         explicit SettingsModel(QObject *parent = 0);
         virtual ~SettingsModel() {}
+
+    public:
+        enum KeywordsSize {
+            NormalFontSize,
+            LargeFontSize
+        };
 
     public:
         Q_INVOKABLE void resetAllValues();
@@ -151,8 +158,10 @@ namespace Models {
 
     private:
         void resetToDefault();
+        void fillFontComboboxModel();
 
     private:
+        Common::BasicComboboxModel<KeywordsSize> m_KeywordsSizeModel;
         QString m_ExifToolPath;
         QString m_CurlPath;
         double m_MinMegapixelCount;

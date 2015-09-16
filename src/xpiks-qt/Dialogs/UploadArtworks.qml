@@ -422,7 +422,7 @@ Item {
                                                 }
                                             }
                                             KeyNavigation.tab: ftpHost
-                                            onAccepted: {
+                                            onEditingFinished: {
                                                 if (text.length == 0) {
                                                     uploadHostsListView.currentItem.myData.edittitle = "Untitled"
                                                 }
