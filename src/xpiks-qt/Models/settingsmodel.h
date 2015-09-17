@@ -25,7 +25,6 @@
 #include <QAbstractListModel>
 #include <QObject>
 #include <QString>
-#include "comboboxtypes.h"
 
 namespace Models {
 
@@ -58,7 +57,6 @@ namespace Models {
         Q_INVOKABLE void resetCurl();
         Q_INVOKABLE void readAllValues();
         Q_INVOKABLE void raiseMasterPasswordSignal() { emit mustUseMasterPasswordChanged(m_MustUseMasterPassword); }
-        Q_INVOKABLE QObject *getKeywordsSizeModelItself();
 
     public:
         QString getExifToolPath() const { return m_ExifToolPath; }
@@ -157,10 +155,8 @@ namespace Models {
 
     private:
         void resetToDefault();
-        void fillFontComboboxModel();
 
     private:
-        KeywordsSizeComboboxModel m_KeywordsSizeModel;
         QString m_ExifToolPath;
         QString m_CurlPath;
         double m_MinMegapixelCount;

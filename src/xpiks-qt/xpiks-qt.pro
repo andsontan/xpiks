@@ -155,9 +155,7 @@ HEADERS += \
     Common/defines.h \
     Models/filteredartitemsproxymodel.h \
     Helpers/filenameshelpers.h \
-    Common/flags.h \
-    Common/basiccomboboxmodel.h \
-    Models/comboboxtypes.h
+    Common/flags.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
@@ -193,8 +191,7 @@ DISTFILES += \
     StyledControls/StyledTabView.qml \
     Components/CustomBorder.qml \
     Dialogs/ArtworkPreview.qml \
-    StyledControls/StyledBlackButton.qml \
-    StyledControls/StyledCombobox.qml
+    StyledControls/StyledBlackButton.qml
 
 macx {
 OBJECTIVE_SOURCES += \

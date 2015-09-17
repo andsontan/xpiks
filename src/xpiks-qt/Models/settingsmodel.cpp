@@ -37,14 +37,12 @@
 #define DEFAULT_TIMEOUT 10
 #define DEFAULT_USE_CONFIRMATIONS true
 #define DEFAULT_SAVE_BACKUPS true
-#define DEFAULT_FONT_SIZE Models::NormalFontSize
 
 namespace Models {
     SettingsModel::SettingsModel(QObject *parent) :
         QObject(parent)
     {
         readAllValues();
-        fillFontComboboxModel();
     }
 
     void SettingsModel::resetAllValues() {
@@ -107,12 +105,6 @@ namespace Models {
         setMustUseMasterPassword(DEFAULT_USE_MASTERPASSWORD);
         setMustUseConfirmations(DEFAULT_USE_CONFIRMATIONS);
         setSaveBackups(DEFAULT_SAVE_BACKUPS);
-        m_KeywordsSizeModel.setSelectedValue(DEFAULT_FONT_SIZE);
-    }
-
-    void SettingsModel::fillFontComboboxModel() {
-        m_KeywordsSizeModel.addComboboxValue(Models::NormalFontSize, "Normal");
-        m_KeywordsSizeModel.addComboboxValue(Models::LargeFontSize, "Large");
     }
 
     int ensureInBounds(int value, int boundA, int boundB) {
@@ -147,12 +139,5 @@ namespace Models {
 
         return value;
     }
-
-    QObject *Models::SettingsModel::getKeywordsSizeModelItself() {
-        QObject *item = &m_KeywordsSizeModel;
-        QQmlEngine::setObjectOwnership(item, QQmlEngine::CppOwnership);
-        return item;
-    }
-
 }
 
