@@ -27,7 +27,79 @@ import "../Constants/Colors.js" as Colors
 
 ComboBox {
     style: ComboBoxStyle {
+        //renderType: Text.NativeRendering
+        //textColor: Colors.defaultLightColor
 
+        background: Rectangle {
+            implicitHeight: 24
+            implicitWidth: 100
+            color: Colors.defaultControlColor
+
+            Rectangle {
+                id: glyph
+                property color glyphColor: Colors.defaultLightColor
+                width: 10
+                height: 10
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.right: parent.right
+                anchors.rightMargin: 10
+                transformOrigin: Item.Center
+                color: "transparent"
+
+                Rectangle {
+                    id: topBar
+                    width: parent.width + 2
+                    height: 3
+                    radius: 3
+                    color: glyph.glyphColor
+                    transformOrigin: Item.Center
+                    transform: Translate { x: -1; y: -1 }
+                }
+
+                Rectangle {
+                    id: rightSlash
+                    width: parent.width*1.2
+                    radius: 3
+                    height: 3
+                    color: glyph.glyphColor
+                    transformOrigin: Item.Center
+                    transform: [
+                        Rotation { angle: 120; origin.x: glyph.width/2; origin.y: glyph.height/2 },
+                        Translate { x: 0; y: -2 }
+                    ]
+                }
+
+                Rectangle {
+                    id: leftSlash
+                    width: parent.width*1.2
+                    radius: 3
+                    height: 3
+                    color: glyph.glyphColor
+                    transformOrigin: Item.Center
+                    transform: [
+                        Rotation { angle: 60; origin.x: glyph.width/2; origin.y: glyph.height/2 },
+                        Translate { x: -6; y: 1 }
+                    ]
+                }
+
+                transitions: Transition {
+                    RotationAnimation { duration: 50; direction: RotationAnimation.Clockwise }
+                }
+
+                states: State {
+                    name: "inverted"
+                    when: __popup.__popupVisible
+                    PropertyChanges { target: glyph; rotation: 180; }
+                }
+            }
+        }
+
+        label: StyledText {
+            anchors.fill: parent
+            text: control.currentText
+            verticalAlignment: Qt.AlignVCenter
+            anchors.leftMargin: 5
+        }
     }
 }
 
