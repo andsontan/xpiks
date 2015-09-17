@@ -35,6 +35,6 @@
         <file>Components/CustomBorder.qml</file>
         <file>Dialogs/ArtworkPreview.qml</file>
         <file>StyledControls/StyledBlackButton.qml</file>
-        <file>StyledControls/StyledCombobox.qml</file>
+        <file>StyledControls/StyledSlider.qml</file>
     </qresource>
 </RCC>

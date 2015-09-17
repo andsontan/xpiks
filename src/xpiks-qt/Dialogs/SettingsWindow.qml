@@ -278,15 +278,6 @@ ApplicationWindow {
                         }
 
                         Item {
-                            height: 20
-                        }
-
-                        StyledCombobox {
-                            model: settingsModel.getKeywordsSizeModelItself()
-                            textRole: "display"
-                        }
-
-                        Item {
                             Layout.fillHeight: true
                         }
                     }
@@ -337,6 +328,68 @@ ApplicationWindow {
                             StyledText {
                                 text: qsTr("(edited but not saved)")
                                 color: Colors.defaultInputBackground
+                            }
+                        }
+
+                        RowLayout {
+                            width: parent.width
+                            spacing: 10
+
+                            StyledText {
+                                text: qsTr("Keywords size")
+                            }
+
+                            StyledSlider {
+                                id: keywordSizeSlider
+                                width: 150
+                                minimumValue: 1.0
+                                maximumValue: 1.2
+                                stepSize: 0.0001
+                                orientation: Qt.Horizontal
+                                value: settingsModel.keywordSizeScale
+                                onValueChanged: settingsModel.keywordSizeScale = value
+                            }
+
+                            Rectangle {
+                                id: keywordPreview
+                                color: Colors.defaultLightGrayColor
+
+                                width: childrenRect.width
+                                height: childrenRect.height
+
+                                Row {
+                                    spacing: 1 + (keywordSizeSlider.value - 1) * 10
+
+                                    Rectangle {
+                                        id: tagTextRect
+                                        width: childrenRect.width + 5*keywordSizeSlider.value
+                                        height: 20 * keywordSizeSlider.value + (keywordSizeSlider.value - 1)*10
+                                        color: "transparent"
+
+                                        StyledText {
+                                            anchors.top: parent.top
+                                            anchors.bottom: parent.bottom
+                                            anchors.left: parent.left
+                                            anchors.leftMargin: 5 + (keywordSizeSlider.value - 1)*10
+                                            verticalAlignment: Text.AlignVCenter
+                                            text: "keyword"
+                                            color: Colors.defaultControlColor
+                                            font.pixelSize: 12 * keywordSizeSlider.value
+                                        }
+                                    }
+
+                                    CloseIcon {
+                                        width: 14 * keywordSizeSlider.value
+                                        height: 14 * keywordSizeSlider.value
+                                        isActive: true
+                                        anchors.verticalCenter: tagTextRect.verticalCenter
+                                    }
+
+                                    Item {
+                                        width: 1*keywordSizeSlider.value
+                                        height: 20
+                                    }
+                                }
                             }
                         }
 

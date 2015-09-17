@@ -1064,36 +1064,38 @@ ApplicationWindow {
                                                                 width: childrenRect.width
                                                                 height: childrenRect.height
 
-                                                                RowLayout {
-                                                                    spacing: 1
+                                                                Row {
+                                                                    spacing: 1 + (settingsModel.keywordSizeScale - 1) * 10
 
                                                                     Rectangle {
                                                                         id: tagTextRect
                                                                         width: childrenRect.width + 5
-                                                                        height: 20
+                                                                        height: 20 * settingsModel.keywordSizeScale + (settingsModel.keywordSizeScale - 1)*10
                                                                         color: "transparent"
 
                                                                         StyledText {
                                                                             anchors.left: parent.left
-                                                                            anchors.leftMargin: 5
+                                                                            anchors.leftMargin: 5 + (settingsModel.keywordSizeScale - 1)*10
                                                                             anchors.top: parent.top
                                                                             anchors.bottom: parent.bottom
                                                                             verticalAlignment: Text.AlignVCenter
                                                                             text: keyword
                                                                             color: rowWrapper.isHighlighted ? Colors.defaultControlColor : Colors.defaultLightColor
+                                                                            font.pixelSize: 12 * settingsModel.keywordSizeScale
                                                                         }
                                                                     }
 
                                                                     CloseIcon {
-                                                                        width: 14
-                                                                        height: 14
+                                                                        width: 14*settingsModel.keywordSizeScale
+                                                                        height: 14*settingsModel.keywordSizeScale
                                                                         isActive: rowWrapper.isHighlighted
                                                                         anchors.verticalCenter: tagTextRect.verticalCenter
                                                                         onItemClicked: keywordsWrapper.removeKeyword(itemWrapper.delegateIndex)
                                                                     }
 
                                                                     Item {
-                                                                        width: 1
+                                                                        width: 1*settingsModel.keywordSizeScale
+                                                                        height: 20
                                                                     }
                                                                 }
                                                             }

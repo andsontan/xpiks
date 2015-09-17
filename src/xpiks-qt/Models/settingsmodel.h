@@ -43,6 +43,7 @@ namespace Models {
         Q_PROPERTY(bool mustUseMasterPassword READ getMustUseMasterPassword WRITE setMustUseMasterPassword NOTIFY mustUseMasterPasswordChanged)
         Q_PROPERTY(bool mustUseConfirmations READ getMustUseConfirmations WRITE setMustUseConfirmations NOTIFY mustUseConfirmationsChanged)
         Q_PROPERTY(bool saveBackups READ getSaveBackups WRITE setSaveBackups NOTIFY saveBackupsChanged)
+        Q_PROPERTY(double keywordSizeScale READ getKeywordSizeScale WRITE setKeywordSizeScale NOTIFY keywordSizeScaleChanged)
     public:
         explicit SettingsModel(QObject *parent = 0);
         virtual ~SettingsModel() {}
@@ -68,6 +69,7 @@ namespace Models {
         bool getMustUseMasterPassword() const { return m_MustUseMasterPassword; }
         bool getMustUseConfirmations() const { return m_MustUseConfirmations; }
         bool getSaveBackups() const { return m_SaveBackups; }
+        double getKeywordSizeScale() const { return m_KeywordSizeScale; }
 
     signals:
         void exifToolPathChanged(QString exifToolPath);
@@ -79,6 +81,7 @@ namespace Models {
         void mustUseMasterPasswordChanged(bool mustUseMasterPassword);
         void mustUseConfirmationsChanged(bool mustUseConfirmations);
         void saveBackupsChanged(bool saveBackups);
+        void keywordSizeScaleChanged(double value);
 
     public:
         void setExifToolPath(QString exifToolPath) {
@@ -153,6 +156,14 @@ namespace Models {
             emit saveBackupsChanged(saveBackups);
         }
 
+        void setKeywordSizeScale(double value) {
+            if (m_KeywordSizeScale == value)
+                return;
+
+            m_KeywordSizeScale = value;
+            emit keywordSizeScaleChanged(value);
+        }
+
     private:
         void resetToDefault();
 
@@ -160,6 +171,7 @@ namespace Models {
         QString m_ExifToolPath;
         QString m_CurlPath;
         double m_MinMegapixelCount;
+        double m_KeywordSizeScale;
         int m_MaxDescriptionLength;
         int m_MaxKeywordsCount;
         int m_UploadTimeout; // in minutes

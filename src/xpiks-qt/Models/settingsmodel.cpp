@@ -37,6 +37,7 @@
 #define DEFAULT_TIMEOUT 10
 #define DEFAULT_USE_CONFIRMATIONS true
 #define DEFAULT_SAVE_BACKUPS true
+#define DEFAULT_KEYWORD_SIZE_SCALE 1.0
 
 namespace Models {
     SettingsModel::SettingsModel(QObject *parent) :
@@ -61,6 +62,7 @@ namespace Models {
         appSettings.setValue(appSettings.getMustUseMasterPasswordKey(), m_MustUseMasterPassword);
         appSettings.setValue(appSettings.getUseConfirmationDialogsKey(), m_MustUseConfirmations);
         appSettings.setValue(appSettings.getSaveBackupsKey(), m_SaveBackups);
+        appSettings.setValue(appSettings.getKeywordSizeScaleKey(), m_KeywordSizeScale);
 
         if (!m_MustUseMasterPassword) {
             appSettings.setValue(appSettings.getMasterPasswordHashKey(), "");
@@ -86,13 +88,14 @@ namespace Models {
         Helpers::AppSettings appSettings;
         setExifToolPath(appSettings.value(appSettings.getExifToolPathKey(), DEFAULT_EXIFTOOL).toString());
         setCurlPath(appSettings.value(appSettings.getCurlPathKey(), DEFAULT_CURL).toString());
-        setMinMegapixelCount(appSettings.value(appSettings.getMinMegapixelCountKey(), DEFAULT_MIN_MEGAPIXELS).toDouble());
+        setMinMegapixelCount(appSettings.doubleValue(appSettings.getMinMegapixelCountKey(), DEFAULT_MIN_MEGAPIXELS));
         setMaxDescriptionLength(appSettings.value(appSettings.getMaxDescriptionLengthKey(), DEFAULT_MAX_DESCRIPTION).toInt());
         setMaxKeywordsCount(appSettings.value(appSettings.getMaxKeywordsCountKey(), DEFAULT_MAX_KEYWORDS).toInt());
         setUploadTimeout(appSettings.value(appSettings.getOneUploadMinutesTimeoutKey(), DEFAULT_TIMEOUT).toInt());
         setMustUseMasterPassword(appSettings.boolValue(appSettings.getMustUseMasterPasswordKey(), DEFAULT_USE_MASTERPASSWORD));
         setMustUseConfirmations(appSettings.boolValue(appSettings.getUseConfirmationDialogsKey(), DEFAULT_USE_CONFIRMATIONS));
         setSaveBackups(appSettings.boolValue(appSettings.getSaveBackupsKey(), DEFAULT_SAVE_BACKUPS));
+        setKeywordSizeScale(appSettings.doubleValue(appSettings.getKeywordSizeScaleKey(), DEFAULT_KEYWORD_SIZE_SCALE));
     }
 
     void SettingsModel::resetToDefault() {
@@ -105,6 +108,7 @@ namespace Models {
         setMustUseMasterPassword(DEFAULT_USE_MASTERPASSWORD);
         setMustUseConfirmations(DEFAULT_USE_CONFIRMATIONS);
         setSaveBackups(DEFAULT_SAVE_BACKUPS);
+        setKeywordSizeScale(DEFAULT_KEYWORD_SIZE_SCALE);
     }
 
     int ensureInBounds(int value, int boundA, int boundB) {
