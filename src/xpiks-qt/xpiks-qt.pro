@@ -1,5 +1,7 @@
 TEMPLATE = app
 
+QMAKE_MAC_SDK = macosx10.11
+
 QT += qml quick widgets concurrent
 
 SOURCES += main.cpp \
@@ -191,7 +193,8 @@ DISTFILES += \
     StyledControls/StyledTabView.qml \
     Components/CustomBorder.qml \
     Dialogs/ArtworkPreview.qml \
-    StyledControls/StyledBlackButton.qml
+    StyledControls/StyledBlackButton.qml \
+    StyledControls/StyledCombobox.qml
 
 macx {
 OBJECTIVE_SOURCES += \

@@ -278,6 +278,15 @@ ApplicationWindow {
                         }
 
                         Item {
+                            height: 20
+                        }
+
+                        StyledCombobox {
+                            model: settingsModel.getKeywordsSizeModelItself()
+                            textRole: "display"
+                        }
+
+                        Item {
                             Layout.fillHeight: true
                         }
                     }

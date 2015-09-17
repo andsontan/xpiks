@@ -58,6 +58,7 @@ namespace Models {
         Q_INVOKABLE void resetCurl();
         Q_INVOKABLE void readAllValues();
         Q_INVOKABLE void raiseMasterPasswordSignal() { emit mustUseMasterPasswordChanged(m_MustUseMasterPassword); }
+        Q_INVOKABLE QObject *getKeywordsSizeModelItself();
 
     public:
         QString getExifToolPath() const { return m_ExifToolPath; }

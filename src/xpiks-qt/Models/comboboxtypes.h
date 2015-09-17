@@ -50,7 +50,7 @@ namespace Models {
         void addComboboxValue(KeywordsSize value, const QString &description) { m_ComboboxModel.addComboboxValue(value, description); }
 
     protected:
-        QHash<int, QByteArray> roleNames() const { return m_ComboboxModel.roleNames(); }
+        virtual QHash<int, QByteArray> roleNames() const { return QAbstractListModel::roleNames(); }
 
     signals:
         void selectedIndexChanged();

@@ -20,6 +20,7 @@
  */
 
 #include "settingsmodel.h"
+#include <QQmlEngine>
 #include "../Helpers/appsettings.h"
 
 #ifdef Q_OS_MAC
@@ -145,6 +146,12 @@ namespace Models {
         }
 
         return value;
+    }
+
+    QObject *Models::SettingsModel::getKeywordsSizeModelItself() {
+        QObject *item = &m_KeywordsSizeModel;
+        QQmlEngine::setObjectOwnership(item, QQmlEngine::CppOwnership);
+        return item;
     }
 
 }
