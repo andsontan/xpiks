@@ -26,6 +26,7 @@ import "../Constants/Colors.js" as Colors
 Item {
     id: item
     property bool isActive
+    property int thickness: 4
 
     signal itemClicked();
 
@@ -36,28 +37,22 @@ Item {
 
         Rectangle {
             color: enabled ? (mouseArea.pressed ? Colors.artworkModifiedColor : (isActive ? Colors.defaultControlColor : Colors.defaultLightColor)) : Colors.selectedArtworkColor
-            width: parent.width - 2
-            height: 3
-            border.width: 1
-            border.color: color
-            radius: 2
+            width: parent.width
+            height: item.thickness
+            radius: item.thickness
             transformOrigin: Item.Center
             rotation: 45
             anchors.centerIn: parent
-            anchors.verticalCenterOffset: 1
         }
 
         Rectangle {
             color: enabled ? (mouseArea.pressed ? Colors.artworkModifiedColor : (isActive ? Colors.defaultControlColor : Colors.defaultLightColor)) : Colors.selectedArtworkColor
-            width: parent.width - 2
-            height: 3
-            radius: 2
-            border.width: 1
-            border.color: color
+            width: parent.width
+            height: item.thickness
+            radius: item.thickness
             transformOrigin: Item.Center
             rotation: 135
             anchors.centerIn: parent
-            anchors.verticalCenterOffset: 1
         }
 
         scale: mouseArea.pressed ? 0.8 : 1

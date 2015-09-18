@@ -383,7 +383,7 @@ ApplicationWindow {
                                         height: 14 * keywordSizeSlider.value
                                         isActive: true
                                         anchors.verticalCenter: tagTextRect.verticalCenter
-                                        anchors.verticalCenterOffset: -1
+                                        thickness: 3
                                     }
 
                                     Item {
