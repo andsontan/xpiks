@@ -1070,7 +1070,7 @@ ApplicationWindow {
                                                                 height: childrenRect.height
 
                                                                 Row {
-                                                                    spacing: 1 + (settingsModel.keywordSizeScale - 1) * 10
+                                                                    spacing: 0
 
                                                                     Rectangle {
                                                                         id: tagTextRect
@@ -1090,19 +1090,18 @@ ApplicationWindow {
                                                                         }
                                                                     }
 
-                                                                    CloseIcon {
-                                                                        width: 14*settingsModel.keywordSizeScale
-                                                                        height: 14*settingsModel.keywordSizeScale
-                                                                        isActive: rowWrapper.isHighlighted
-                                                                        thickness: 3
-                                                                        anchors.verticalCenter: tagTextRect.verticalCenter
-                                                                        anchors.verticalCenterOffset: -0.5
-                                                                        onItemClicked: keywordsWrapper.removeKeyword(itemWrapper.delegateIndex)
-                                                                    }
-
                                                                     Item {
-                                                                        width: 1*settingsModel.keywordSizeScale
-                                                                        height: 20
+                                                                        height: 20 * settingsModel.keywordSizeScale + (settingsModel.keywordSizeScale - 1)*10
+                                                                        width: height
+
+                                                                        CloseIcon {
+                                                                            width: 14*settingsModel.keywordSizeScale
+                                                                            height: 14*settingsModel.keywordSizeScale
+                                                                            isActive: rowWrapper.isHighlighted
+                                                                            thickness: 3
+                                                                            anchors.centerIn: parent
+                                                                            onItemClicked: keywordsWrapper.removeKeyword(itemWrapper.delegateIndex)
+                                                                        }
                                                                     }
                                                                 }
                                                             }

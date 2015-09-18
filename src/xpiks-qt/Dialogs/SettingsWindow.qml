@@ -358,7 +358,7 @@ ApplicationWindow {
                                 height: childrenRect.height
 
                                 Row {
-                                    spacing: 1 + (keywordSizeSlider.value - 1) * 10
+                                    spacing: 0
 
                                     Rectangle {
                                         id: tagTextRect
@@ -378,17 +378,16 @@ ApplicationWindow {
                                         }
                                     }
 
-                                    CloseIcon {
-                                        width: 14 * keywordSizeSlider.value
-                                        height: 14 * keywordSizeSlider.value
-                                        isActive: true
-                                        anchors.verticalCenter: tagTextRect.verticalCenter
-                                        thickness: 3
-                                    }
-
                                     Item {
-                                        width: 1*keywordSizeSlider.value
-                                        height: 20
+                                        height: 20 * keywordSizeSlider.value + (keywordSizeSlider.value - 1)*10
+                                        width: height
+
+                                        CloseIcon {
+                                            width: 14 * keywordSizeSlider.value
+                                            height: 14 * keywordSizeSlider.value
+                                            isActive: true
+                                            anchors.centerIn: parent
+                                        }
                                     }
                                 }
                             }
