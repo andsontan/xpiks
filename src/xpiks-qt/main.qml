@@ -590,7 +590,12 @@ ApplicationWindow {
                                         anchors.rightMargin: 5
                                         enabled: filterText.length > 0
                                         anchors.verticalCenter: parent.verticalCenter
-                                        onItemClicked: filteredArtItemsModel.searchTerm = ''
+                                        onItemClicked: {
+                                            filteredArtItemsModel.searchTerm = ''
+                                            if (filterText.length > 0) {
+                                                filterText.text = ''
+                                            }
+                                        }
                                     }
 
                                     StyledText {
