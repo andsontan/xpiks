@@ -1090,6 +1090,7 @@ ApplicationWindow {
                                                                         height: 14*settingsModel.keywordSizeScale
                                                                         isActive: rowWrapper.isHighlighted
                                                                         anchors.verticalCenter: tagTextRect.verticalCenter
+                                                                        anchors.verticalCenterOffset: -1
                                                                         onItemClicked: keywordsWrapper.removeKeyword(itemWrapper.delegateIndex)
                                                                     }
 

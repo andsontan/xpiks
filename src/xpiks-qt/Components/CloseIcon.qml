@@ -44,6 +44,7 @@ Item {
             transformOrigin: Item.Center
             rotation: 45
             anchors.centerIn: parent
+            anchors.verticalCenterOffset: 1
         }
 
         Rectangle {
@@ -56,6 +57,7 @@ Item {
             transformOrigin: Item.Center
             rotation: 135
             anchors.centerIn: parent
+            anchors.verticalCenterOffset: 1
         }
 
         scale: mouseArea.pressed ? 0.8 : 1
