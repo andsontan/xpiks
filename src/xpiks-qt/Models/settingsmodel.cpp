@@ -67,6 +67,8 @@ namespace Models {
         if (!m_MustUseMasterPassword) {
             appSettings.setValue(appSettings.getMasterPasswordHashKey(), "");
         }
+
+        emit keywordSizeScaleChanged(m_KeywordSizeScale);
     }
 
     void SettingsModel::clearMasterPasswordSettings() {

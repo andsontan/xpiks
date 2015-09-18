@@ -292,47 +292,11 @@ Item {
                             model: keywordsSuggestor.getSuggestedKeywordsModel()
                             editEnabled: false
 
-                            delegate: Rectangle {
-                                id: suggestedItemWrapper
-                                property int delegateIndex: index
-                                property string keyword: modelData
-                                color: Colors.defaultLightColor
-
-                                width: childrenRect.width
-                                height: childrenRect.height
-
-                                RowLayout {
-                                    spacing: 1
-
-                                    Rectangle {
-                                        id: tagTextRect
-                                        width: childrenRect.width + 5
-                                        height: 20
-                                        color: "transparent"
-
-                                        StyledText {
-                                            anchors.left: parent.left
-                                            anchors.leftMargin: 5
-                                            anchors.top: parent.top
-                                            anchors.bottom: parent.bottom
-                                            verticalAlignment: Text.AlignVCenter
-                                            text: modelData
-                                            color: Colors.defaultControlColor
-                                        }
-                                    }
-
-                                    CloseIcon {
-                                        width: 14
-                                        height: 14
-                                        isActive: true
-                                        anchors.verticalCenter: tagTextRect.verticalCenter
-                                        onItemClicked: suggestedKeywordsWrapper.removeKeyword(suggestedItemWrapper.delegateIndex)
-                                    }
-
-                                    Item {
-                                        width: 1
-                                    }
-                                }
+                            delegate: KeywordWrapper {
+                                isHighlighted: true
+                                delegateIndex: index
+                                keywordText: modelData
+                                onActionClicked: suggestedKeywordsWrapper.removeKeyword(delegateIndex)
                             }
 
                             onTagAdded: {
@@ -404,49 +368,12 @@ Item {
                             anchors.margins: { left: 5; top: 5; right: 0; bottom: 5 }
                             model: keywordsSuggestor.getAllOtherKeywordsModel()
 
-                            delegate: Rectangle {
-                                id: otherItemWrapper
-                                property int delegateIndex: index
-                                property string keyword: modelData
-                                color: Colors.defaultLightColor
-
-                                width: childrenRect.width
-                                height: childrenRect.height
-
-                                RowLayout {
-                                    spacing: 1
-
-                                    Rectangle {
-                                        id: otherTagTextRect
-                                        width: childrenRect.width + 5
-                                        height: 20
-                                        color: "transparent"
-
-                                        StyledText {
-                                            anchors.left: parent.left
-                                            anchors.leftMargin: 5
-                                            anchors.top: parent.top
-                                            anchors.bottom: parent.bottom
-                                            verticalAlignment: Text.AlignVCenter
-                                            text: modelData
-                                            color: Colors.defaultControlColor
-                                        }
-                                    }
-
-                                    AddIcon {
-                                        width: 14
-                                        height: 14
-                                        isActive: true
-                                        anchors.verticalCenter: otherTagTextRect.verticalCenter
-                                        onItemClicked: {
-                                            otherKeywordsWrapper.removeKeyword(otherItemWrapper.delegateIndex)
-                                        }
-                                    }
-
-                                    Item {
-                                        width: 1
-                                    }
-                                }
+                            delegate: KeywordWrapper {
+                                delegateIndex: index
+                                keywordText: modelData
+                                isHighlighted: true
+                                hasPlusSign: true
+                                onActionClicked: otherKeywordsWrapper.removeKeyword(delegateIndex)
                             }
 
                             onTagAdded: {

@@ -1061,49 +1061,12 @@ ApplicationWindow {
                                                             model: artItemsModel.getArtworkItself(rowWrapper.getIndex())
                                                             anchors.margins: { left: 5; top: 5; right: 0; bottom: 5 }
 
-                                                            delegate: Rectangle {
-                                                                id: itemWrapper
-                                                                property int delegateIndex: index
-                                                                color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.selectedArtworkColor
-
-                                                                width: childrenRect.width
-                                                                height: childrenRect.height
-
-                                                                Row {
-                                                                    spacing: 0
-
-                                                                    Rectangle {
-                                                                        id: tagTextRect
-                                                                        width: childrenRect.width + 5
-                                                                        height: 20 * settingsModel.keywordSizeScale + (settingsModel.keywordSizeScale - 1)*10
-                                                                        color: "transparent"
-
-                                                                        StyledText {
-                                                                            anchors.left: parent.left
-                                                                            anchors.leftMargin: 5 + (settingsModel.keywordSizeScale - 1)*10
-                                                                            anchors.top: parent.top
-                                                                            anchors.bottom: parent.bottom
-                                                                            verticalAlignment: Text.AlignVCenter
-                                                                            text: keyword
-                                                                            color: rowWrapper.isHighlighted ? Colors.defaultControlColor : Colors.defaultLightColor
-                                                                            font.pixelSize: 12 * settingsModel.keywordSizeScale
-                                                                        }
-                                                                    }
-
-                                                                    Item {
-                                                                        height: 20 * settingsModel.keywordSizeScale + (settingsModel.keywordSizeScale - 1)*10
-                                                                        width: height
-
-                                                                        CloseIcon {
-                                                                            width: 14*settingsModel.keywordSizeScale
-                                                                            height: 14*settingsModel.keywordSizeScale
-                                                                            isActive: rowWrapper.isHighlighted
-                                                                            thickness: 3
-                                                                            anchors.centerIn: parent
-                                                                            onItemClicked: keywordsWrapper.removeKeyword(itemWrapper.delegateIndex)
-                                                                        }
-                                                                    }
-                                                                }
+                                                            delegate: KeywordWrapper {
+                                                                id: kw
+                                                                isHighlighted: rowWrapper.isHighlighted
+                                                                delegateIndex: index
+                                                                keywordText: keyword
+                                                                onActionClicked: keywordsWrapper.removeKeyword(kw.delegateIndex)
                                                             }
 
                                                             onTagAdded: {

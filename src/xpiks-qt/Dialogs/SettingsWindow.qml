@@ -284,6 +284,8 @@ ApplicationWindow {
                 }
 
                 Tab {
+                    id: uxTab
+                    property double sizeSliderValue
                     title: qsTr("UX")
 
                     ColumnLayout {
@@ -346,8 +348,8 @@ ApplicationWindow {
                                 maximumValue: 1.2
                                 stepSize: 0.0001
                                 orientation: Qt.Horizontal
-                                value: settingsModel.keywordSizeScale
-                                onValueChanged: settingsModel.keywordSizeScale = value
+                                onValueChanged: uxTab.sizeSliderValue = value
+                                Component.onCompleted: value = settingsModel.keywordSizeScale
                             }
 
                             Rectangle {
@@ -698,6 +700,7 @@ ApplicationWindow {
                     text: qsTr("Save and Exit")
                     width: 120
                     onClicked: {
+                        settingsModel.keywordSizeScale = uxTab.sizeSliderValue
                         settingsModel.saveAllValues()
                         closeSettings()
                     }

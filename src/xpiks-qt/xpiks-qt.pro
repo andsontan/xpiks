@@ -192,7 +192,8 @@ DISTFILES += \
     Components/CustomBorder.qml \
     Dialogs/ArtworkPreview.qml \
     StyledControls/StyledBlackButton.qml \
-    StyledControls/StyledSlider.qml
+    StyledControls/StyledSlider.qml \
+    Components/KeywordWrapper.qml
 
 macx {
 OBJECTIVE_SOURCES += \
