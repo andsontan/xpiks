@@ -39,6 +39,7 @@
 #define DEFAULT_SAVE_BACKUPS true
 #define DEFAULT_KEYWORD_SIZE_SCALE 1.0
 #define DEFAULT_DISMISS_DURATION 10
+#define DEFAULT_MAX_PARALLEL_UPLOADS 2
 
 namespace Models {
     SettingsModel::SettingsModel(QObject *parent) :
@@ -65,6 +66,7 @@ namespace Models {
         appSettings.setValue(appSettings.getSaveBackupsKey(), m_SaveBackups);
         appSettings.setValue(appSettings.getKeywordSizeScaleKey(), m_KeywordSizeScale);
         appSettings.setValue(appSettings.getDismissDurationKey(), m_DismissDuration);
+        appSettings.setValue(appSettings.getMaxParallelUploadsKey(), m_MaxParallelUploads);
 
         if (!m_MustUseMasterPassword) {
             appSettings.setValue(appSettings.getMasterPasswordHashKey(), "");
@@ -101,6 +103,7 @@ namespace Models {
         setSaveBackups(appSettings.boolValue(appSettings.getSaveBackupsKey(), DEFAULT_SAVE_BACKUPS));
         setKeywordSizeScale(appSettings.doubleValue(appSettings.getKeywordSizeScaleKey(), DEFAULT_KEYWORD_SIZE_SCALE));
         setDismissDuration(appSettings.value(appSettings.getDismissDurationKey(), DEFAULT_DISMISS_DURATION).toInt());
+        setMaxParallelUploads(appSettings.value(appSettings.getMaxParallelUploadsKey(), DEFAULT_MAX_PARALLEL_UPLOADS).toInt());
     }
 
     void SettingsModel::resetToDefault() {
@@ -115,6 +118,7 @@ namespace Models {
         setSaveBackups(DEFAULT_SAVE_BACKUPS);
         setKeywordSizeScale(DEFAULT_KEYWORD_SIZE_SCALE);
         setDismissDuration(DEFAULT_DISMISS_DURATION);
+        setMaxParallelUploads(DEFAULT_MAX_PARALLEL_UPLOADS);
     }
 
     int ensureInBounds(int value, int boundA, int boundB) {

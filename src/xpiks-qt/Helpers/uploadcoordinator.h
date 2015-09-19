@@ -38,9 +38,6 @@ namespace Encryption {
     class SecretsManager;
 }
 
-// TODO: move to configs and settings (values from 1 to 4)
-#define MAX_PARALLEL_UPLOAD 2
-
 namespace Helpers {
     class UploadInfo;
     class UploadItem;
@@ -49,9 +46,10 @@ namespace Helpers {
     {
         Q_OBJECT
     public:
-        UploadCoordinator(QObject *parent = 0):
+        UploadCoordinator(int maxParallelUploads, QObject *parent = 0):
             QObject(parent),
-            m_UploadSemaphore(MAX_PARALLEL_UPLOAD)
+            m_UploadSemaphore(maxParallelUploads),
+            m_MaxParallelUploads(maxParallelUploads)
         {}
 
         ~UploadCoordinator() {}
@@ -88,6 +86,7 @@ namespace Helpers {
         QList<QThread *> m_UploadThreads;
         int m_WorkersCount;
         int m_AllWorkersCount;
+        int m_MaxParallelUploads;
         bool m_AnyFailed;
         double m_PercentDone;
     };

@@ -611,7 +611,7 @@ ApplicationWindow {
                                             settingsModel.uploadTimeout = parseInt(text)
                                         }
                                     }
-
+                                    KeyNavigation.tab: maxParallelUploads
                                     validator: IntValidator {
                                         bottom: 1
                                         top: 30
@@ -621,6 +621,46 @@ ApplicationWindow {
 
                             StyledText {
                                 text: qsTr("(minutes)")
+                                color: Colors.defaultInputBackground
+                            }
+                        }
+
+                        RowLayout {
+                            width: parent.width
+                            spacing: 10
+
+                            StyledText {
+                                Layout.preferredWidth: 130
+                                horizontalAlignment: Text.AlignRight
+                                text: qsTr("Max parallel uploads:")
+                            }
+
+                            StyledInputHost {
+                                border.width: maxParallelUploads.activeFocus ? 1 : 0
+
+                                StyledTextInput {
+                                    id: maxParallelUploads
+                                    width: 100
+                                    height: 24
+                                    clip: true
+                                    text: settingsModel.maxParallelUploads
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: 5
+                                    onTextChanged: {
+                                        if (text.length > 0) {
+                                            settingsModel.maxParallelUploads = parseInt(text)
+                                        }
+                                    }
+                                    KeyNavigation.backtab: timeoutMinutes
+                                    validator: IntValidator {
+                                        bottom: 1
+                                        top: 4
+                                    }
+                                }
+                            }
+
+                            StyledText {
+                                text: qsTr("(takes effect after relaunch)")
                                 color: Colors.defaultInputBackground
                             }
                         }

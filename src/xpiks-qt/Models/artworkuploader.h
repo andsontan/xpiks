@@ -39,7 +39,7 @@ namespace Models {
     {
         Q_OBJECT
     public:
-         ArtworkUploader();
+         ArtworkUploader(int maxParallelUploads);
          virtual ~ArtworkUploader();
 
     public:

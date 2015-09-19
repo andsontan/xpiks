@@ -34,12 +34,12 @@
 #include "../Commands/commandmanager.h"
 
 namespace Models {
-    ArtworkUploader::ArtworkUploader() :
+    ArtworkUploader::ArtworkUploader(int maxParallelUploads) :
         ArtworksProcessor(),
         m_IncludeVector(false),
         m_Percent(0)
     {
-        m_UploadCoordinator = new Helpers::UploadCoordinator();
+        m_UploadCoordinator = new Helpers::UploadCoordinator(maxParallelUploads);
 
         QObject::connect(m_UploadCoordinator, SIGNAL(uploadStarted()), this, SLOT(onUploadStarted()));
         QObject::connect(m_UploadCoordinator, SIGNAL(uploadFinished(bool)), this, SLOT(allFinished(bool)));

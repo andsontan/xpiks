@@ -45,6 +45,7 @@ namespace Models {
         Q_PROPERTY(bool saveBackups READ getSaveBackups WRITE setSaveBackups NOTIFY saveBackupsChanged)
         Q_PROPERTY(double keywordSizeScale READ getKeywordSizeScale WRITE setKeywordSizeScale NOTIFY keywordSizeScaleChanged)
         Q_PROPERTY(int dismissDuration READ getDismissDuration WRITE setDismissDuration NOTIFY dismissDurationChanged)
+        Q_PROPERTY(int maxParallelUploads READ getMaxParallelUploads WRITE setMaxParallelUploads NOTIFY maxParallelUploadsChanged)
     public:
         explicit SettingsModel(QObject *parent = 0);
         virtual ~SettingsModel() {}
@@ -72,6 +73,7 @@ namespace Models {
         bool getSaveBackups() const { return m_SaveBackups; }
         double getKeywordSizeScale() const { return m_KeywordSizeScale; }
         int getDismissDuration() const { return m_DismissDuration; }
+        int getMaxParallelUploads() const { return m_MaxParallelUploads; }
 
     signals:
         void exifToolPathChanged(QString exifToolPath);
@@ -85,6 +87,7 @@ namespace Models {
         void saveBackupsChanged(bool saveBackups);
         void keywordSizeScaleChanged(double value);
         void dismissDurationChanged(int value);
+        void maxParallelUploadsChanged(int value);
 
     public:
         void setExifToolPath(QString exifToolPath) {
@@ -175,6 +178,14 @@ namespace Models {
             emit dismissDurationChanged(value);
         }
 
+        void setMaxParallelUploads(int value) {
+            if (m_MaxParallelUploads == value)
+                return;
+
+            m_MaxParallelUploads = ensureInBounds(value, 1, 4);
+            emit maxParallelUploadsChanged(value);
+        }
+
     private:
         void resetToDefault();
 
@@ -187,6 +198,7 @@ namespace Models {
         int m_MaxKeywordsCount;
         int m_UploadTimeout; // in minutes
         int m_DismissDuration;
+        int m_MaxParallelUploads;
         bool m_MustUseMasterPassword;
         bool m_MustUseConfirmations;
         bool m_SaveBackups;

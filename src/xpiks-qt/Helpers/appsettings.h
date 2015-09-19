@@ -85,6 +85,9 @@ namespace Helpers {
         Q_PROPERTY(QString dismissDurationKey READ getDismissDurationKey CONSTANT)
         QString getDismissDurationKey() const { return QString::fromLatin1(Constants::DISMISS_DURATION); }
 
+        Q_PROPERTY(QString maxParallelUploadsKey READ getMaxParallelUploadsKey CONSTANT)
+        QString getMaxParallelUploadsKey() const { return QString::fromLatin1(Constants::MAX_PARALLEL_UPLOADS); }
+
         Q_INVOKABLE inline void setValue(const QString &key, const QVariant &value) {
             QSettings::setValue(key, value);
         }

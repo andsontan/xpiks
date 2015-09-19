@@ -157,7 +157,6 @@ int main(int argc, char *argv[]) {
     Models::ArtItemsModel artItemsModel;
     Models::CombinedArtworksModel combinedArtworksModel;
     Models::IptcProvider iptcProvider;
-    Models::ArtworkUploader artworkUploader;
     Models::UploadInfoRepository uploadInfoRepository;
     Models::WarningsManager warningsManager;
     Helpers::AppSettings appSettings;
@@ -169,6 +168,7 @@ int main(int argc, char *argv[]) {
     Models::FilteredArtItemsProxyModel filteredArtItemsModel;
     filteredArtItemsModel.setSourceModel(&artItemsModel);
     Models::RecentDirectoriesModel recentDirectorieModel;
+    Models::ArtworkUploader artworkUploader(settingsModel.getMaxParallelUploads());
 
     Commands::CommandManager commandManager;
     commandManager.InjectDependency(&artworkRepository);
