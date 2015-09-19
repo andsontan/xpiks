@@ -104,7 +104,7 @@ namespace Models {
 
     public:
         void setKeywords(const QStringList &keywordsList) { resetKeywords(); appendKeywords(keywordsList); }
-        void appendKeywords(const QStringList &keywordsList);
+        int appendKeywords(const QStringList &keywordsList);
 
     private:
         void resetKeywords();

@@ -109,6 +109,7 @@ namespace Models {
             if (metadata->removeKeywordAt(keywordIndex)) {
                 QModelIndex index = this->index(metadataIndex);
                 emit dataChanged(index, index, QVector<int>() << IsModifiedRole << KeywordsCountRole);
+                backupItem(metadataIndex);
             }
         }
     }

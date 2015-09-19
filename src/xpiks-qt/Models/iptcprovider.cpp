@@ -69,8 +69,7 @@ namespace Models {
         if (metadata != NULL && importData != NULL) {
             metadata->initialize(importData->Title, importData->Description, importData->Keywords);
 
-            if (!m_IgnoreAutosave &&
-                    (importData->Description.isEmpty() || importData->Keywords.isEmpty())) {
+            if (!m_IgnoreAutosave) {
                 SettingsModel *settings = m_CommandManager->getSettingsModel();
                 if (settings->getSaveBackups()) {
                     Helpers::TempMetadataDb(metadata).load();

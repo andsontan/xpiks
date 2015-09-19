@@ -40,12 +40,16 @@ namespace Models {
             m_ArtworkDescription = description;
         }
 
-        if (overwrite || (m_KeywordsList.empty() && !rawKeywords.isEmpty())) {
+        if (overwrite && !rawKeywords.isEmpty()) {
             anythingModified = true;
             beginResetModel();
             m_KeywordsList.clear();
             addKeywords(rawKeywords);
             endResetModel();
+        } else if (!rawKeywords.isEmpty()) {
+            QStringList keywordsToAppend = rawKeywords.split(",", QString::SkipEmptyParts);
+            int appendedCount = appendKeywords(keywordsToAppend);
+            anythingModified = appendedCount > 0;
         }
 
         return anythingModified;
@@ -91,10 +95,14 @@ namespace Models {
         return added;
     }
 
-    void ArtworkMetadata::appendKeywords(const QStringList &keywordsList) {
+    int ArtworkMetadata::appendKeywords(const QStringList &keywordsList) {
+        int appendedCount = 0;
         foreach (const QString &keyword, keywordsList) {
-            appendKeyword(keyword);
+            if (appendKeyword(keyword)) {
+                appendedCount += 1;
+            }
         }
+        return appendedCount;
     }
 
     void ArtworkMetadata::resetKeywords() {
