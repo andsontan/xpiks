@@ -59,23 +59,15 @@ Flickable {
 
     function getEditedText() {
         var tagText = nextTagTextInput.text;
-        return getSanitizedText(tagText);
-    }
-
-    function canBeTag(tag) {
-        return (getCharsCount(tag) > 2) &&
-                (tag.match(/^(?:[a-zA-Z]+(?:-| |$))+$/));
+        return helpersWrapper.sanitizeKeyword(tagText);
     }
 
     function raiseAddTag(text) {
-        var sanitizedTagText = getSanitizedText(text);
-        if (canBeTag(sanitizedTagText)) {
-            tagAdded(sanitizedTagText);
+        var canBeAdded = helpersWrapper.isKeywordValid(text);
+        if (canBeAdded) {
+            tagAdded(text);
         }
-    }
-
-    function getCharsCount(text) {
-        return (text.match(/[a-zA-Z]/g) || []).length
+        return canBeAdded;
     }
 
     function scrollToBottom() {
@@ -154,18 +146,16 @@ Flickable {
                 font.pixelSize: 12
                 renderType: TextInput.NativeRendering
 
-                validator: RegExpValidator {
+                /*validator: RegExpValidator {
                     // copy paste in keys.onpressed Paste
-                    regExp: /^(?:[a-zA-Z]+(?:-| |$))+$/
-                }
+                    regExp: /^(?:\c+(?:-| |$))+$/
+                }*/
 
                 onFocusChanged: focusLost()
 
                 onEditingFinished: {
                     var tagText = getEditedText();
-                    raiseAddTag(tagText);
-
-                    if (getCharsCount(tagText) > 2) {
+                    if (raiseAddTag(tagText)) {
                         nextTagTextInput.text = '';
                     }
 
@@ -181,7 +171,7 @@ Flickable {
                         var words = clipboardText.split(',');
                         for (var i = 0; i < words.length; i++) {
                             var sanitizedTagText = getSanitizedText(words[i]);
-                            if (canBeTag(sanitizedTagText)) {
+                            if (helpersWrapper.isKeywordValid(sanitizedTagText)) {
                                 keywordsToAdd.push(sanitizedTagText);
                             }
                         }
@@ -192,8 +182,7 @@ Flickable {
                     }
                     else if (event.key === Qt.Key_Comma) {
                         var tagText = getEditedText();
-                        if (getCharsCount(tagText) > 2) {
-                            raiseAddTag(tagText);
+                        if (raiseAddTag(tagText)) {
                             nextTagTextInput.text = '';
                         }
 

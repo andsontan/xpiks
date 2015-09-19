@@ -60,7 +60,9 @@ SOURCES += main.cpp \
     Helpers/exiftoolwrapper.cpp \
     Models/filteredartitemsproxymodel.cpp \
     Helpers/filenameshelpers.cpp \
-    Common/flags.cpp
+    Common/flags.cpp \
+    Helpers/keywordvalidator.cpp \
+    Helpers/helpersqmlwrapper.cpp
 
 RESOURCES += qml.qrc
 
@@ -155,7 +157,9 @@ HEADERS += \
     Common/defines.h \
     Models/filteredartitemsproxymodel.h \
     Helpers/filenameshelpers.h \
-    Common/flags.h
+    Common/flags.h \
+    Helpers/keywordvalidator.h \
+    Helpers/helpersqmlwrapper.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

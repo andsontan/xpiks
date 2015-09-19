@@ -41,6 +41,7 @@
 #include "Models/combinedartworksmodel.h"
 #include "Helpers/globalimageprovider.h"
 #include "Models/uploadinforepository.h"
+#include "Helpers/helpersqmlwrapper.h"
 #include "Encryption/secretsmanager.h"
 #include "Models/artworksrepository.h"
 #include "UndoRedo/undoredomanager.h"
@@ -195,6 +196,8 @@ int main(int argc, char *argv[]) {
 
     warningsManager.setImageProvider(globalProvider);
 
+    Helpers::HelpersQmlWrapper helpersQmlWrapper;
+
     QQmlContext *rootContext = engine.rootContext();
     rootContext->setContextProperty("artItemsModel", &artItemsModel);
     rootContext->setContextProperty("artworkRepository", &artworkRepository);
@@ -211,6 +214,7 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("keywordsSuggestor", &keywordsSuggestor);
     rootContext->setContextProperty("settingsModel", &settingsModel);
     rootContext->setContextProperty("filteredArtItemsModel", &filteredArtItemsModel);
+    rootContext->setContextProperty("helpersWrapper", &helpersQmlWrapper);
 
     engine.addImageProvider("global", globalProvider);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));

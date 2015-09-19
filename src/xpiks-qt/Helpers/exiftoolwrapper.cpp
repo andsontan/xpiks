@@ -22,6 +22,7 @@
 #include "exiftoolwrapper.h"
 
 #include <QByteArray>
+#include <QTextCodec>
 #include <QProcess>
 #include <QRegExp>
 #include <QString>
@@ -50,6 +51,7 @@ ExportPair writeArtworkMetadata(ExportPair pair) {
     QStringList arguments;
     arguments << exiftoolPath;
     arguments << "-quiet" << "-ignoreMinorErrors";
+    arguments << "-charset exif=UTF8" << "-charset iptc=UTF8";
     arguments << QString("-IPTC:ObjectName=\"%1\"").arg(title);
     arguments << QString("-XMP:Title=\"%1\"").arg(title);
     arguments << QString("-EXIF:ImageDescription=\"%1\"").arg(description);
@@ -60,6 +62,7 @@ ExportPair writeArtworkMetadata(ExportPair pair) {
     arguments << QString("-IPTC:Keywords=\"%1\"").arg(keywords);
     arguments << QString("-XMP:Keywords=\"%1\"").arg(keywords);
     arguments << QString("-XMP:Subject=\"%1\"").arg(keywords);
+    arguments << QString("-IPTC:CodedCharacterSet=\"UTF8\"");
 
     if (!exportInfo->getMustSaveOriginal()) {
         arguments << "-overwrite_original";
@@ -103,6 +106,7 @@ ImportPair readArtworkMetadata(ImportPair pair) {
 
     QStringList arguments;
     arguments << "-s" << "-e" << "-n" << "-EXIF:all" << "-IPTC:all" << "-XMP:all";
+    arguments << "-charset exif=UTF8" << "-charset iptc=UTF8";
     arguments << metadata->getFilepath();
 
     QProcess process;
@@ -110,7 +114,7 @@ ImportPair readArtworkMetadata(ImportPair pair) {
     bool finished = process.waitForFinished();
 
     QByteArray stdoutByteArray = process.readAll();
-    QString stdoutText(stdoutByteArray);
+    QString stdoutText = QString::fromUtf8(stdoutByteArray.data());
 
     if (!finished || process.exitStatus() != QProcess::NormalExit) {
         if (!stdoutText.isEmpty()) {
