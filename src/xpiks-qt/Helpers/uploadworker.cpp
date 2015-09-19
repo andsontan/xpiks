@@ -71,16 +71,19 @@ namespace Helpers {
         int oneItemUploadMinutesTimeout = m_UploadItem->m_OneItemUploadMinutesTimeout;
         int maxSeconds = oneItemUploadMinutesTimeout * 60 * filesToUpload.length();
 
-        QString command = createCurlCommand(uploadInfo, filesToUpload, maxSeconds);
+
 
         // initializations can't be in constructor, because
         // it's executed in the other thread
         this->initializeUploadEntities();
 
+        updateUploadItemPercent(0);
+
         qDebug() << "Waiting for the semaphore" << m_Host;
         m_UploadSemaphore->acquire();
 
         QThread::sleep(m_Delay);
+        QString command = createCurlCommand(uploadInfo, filesToUpload, maxSeconds);
 
         // m_Cancelled check is only if this thread's cancel() preceds code below
         // for not releasing semaphore twice in innerProcessFinished() and cancel()
@@ -109,7 +112,7 @@ namespace Helpers {
 
     void UploadWorker::innerProcessFinished(int exitCode, QProcess::ExitStatus exitStatus)
     {
-        qDebug() << "Curl process finished for" << m_Host;
+        qDebug() << "Curl process finished for" << m_Host << "with code" << exitCode;
 
         if (!m_Cancelled) {
             qDebug() << "Releasing semaphore for" << m_Host;
@@ -167,6 +170,7 @@ namespace Helpers {
             host = "ftp://" + host;
         }
 
+        // NOT THREAD-SAFE
         QString password = m_SecretsManager->decodePassword(uploadInfo->getPassword());
         QString command = QString("%1 --progress-bar --connect-timeout 10 --max-time %6 -T \"{%2}\" %3 --user %4:%5").
                 arg(curlPath, filesToUpload.join(','), host, uploadInfo->getUsername(), password, QString::number(maxSeconds));

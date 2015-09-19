@@ -38,6 +38,7 @@ namespace Models {
         m_ExistingMaxThreadsNumber = QThreadPool::globalInstance()->maxThreadCount();
         m_ArtworksCount = m_ArtworkList.length();
         m_ProcessedArtworksCount = 0;
+        updateProgress();
         setInProgress(true);
     }
 
