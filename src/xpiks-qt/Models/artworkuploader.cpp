@@ -141,9 +141,10 @@ namespace Models {
         UploadInfoRepository *uploadInfoRepository = m_CommandManager->getUploadInfoRepository();
         const QList<Models::UploadInfo *> &infos = uploadInfoRepository->getUploadInfos();
         const Encryption::SecretsManager *secretsManager = m_CommandManager->getSecretsManager();
+        const Models::SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
 
         uploadInfoRepository->resetPercents();
-        m_UploadCoordinator->uploadArtworks(artworkList, infos, m_IncludeVector, secretsManager);
+        m_UploadCoordinator->uploadArtworks(artworkList, infos, m_IncludeVector, secretsManager, settingsModel);
     }
 
     void ArtworkUploader::cancelProcessing() {

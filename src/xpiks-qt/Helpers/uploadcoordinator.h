@@ -32,6 +32,7 @@
 namespace Models {
     class ArtworkMetadata;
     class UploadInfo;
+    class SettingsModel;
 }
 
 namespace Encryption {
@@ -58,7 +59,8 @@ namespace Helpers {
         void uploadArtworks(const QList<Models::ArtworkMetadata *> &artworkList,
                             const QList<Models::UploadInfo *> &uploadInfos,
                             bool includeVector,
-                            const Encryption::SecretsManager *secretsManager);
+                            const Encryption::SecretsManager *secretsManager,
+                            const Models::SettingsModel *settings);
 
         void cancelUpload();
 

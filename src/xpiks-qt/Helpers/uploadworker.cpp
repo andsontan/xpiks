@@ -71,8 +71,6 @@ namespace Helpers {
         int oneItemUploadMinutesTimeout = m_UploadItem->m_OneItemUploadMinutesTimeout;
         int maxSeconds = oneItemUploadMinutesTimeout * 60 * filesToUpload.length();
 
-
-
         // initializations can't be in constructor, because
         // it's executed in the other thread
         this->initializeUploadEntities();
@@ -177,6 +175,10 @@ namespace Helpers {
 
         if (uploadInfo->getFtpPassiveMode()) {
             command += " --ftp-pasv --disable-epsv";
+        }
+
+        if (!m_UploadItem->m_ProxyURI.isEmpty()) {
+            command += " --proxy " + m_UploadItem->m_ProxyURI;
         }
 
         return command;

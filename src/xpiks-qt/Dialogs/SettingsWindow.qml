@@ -666,6 +666,71 @@ ApplicationWindow {
                         }
 
                         Item {
+                            height: 5
+                            width: parent.width
+                        }
+
+                        RowLayout {
+                            width: parent.width
+                            spacing: 10
+
+                            StyledText {
+                                Layout.preferredWidth: 130
+                                horizontalAlignment: Text.AlignRight
+                                text: qsTr("Proxy url:")
+                            }
+
+                            StyledInputHost {
+                                border.width: proxyURI.activeFocus ? 1 : 0
+
+                                StyledTextInput {
+                                    id: proxyURI
+                                    width: 100
+                                    height: 24
+                                    clip: true
+                                    text: settingsModel.proxyURI
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: 5
+                                    onTextChanged: {
+                                        if (text.length > 0) {
+                                            settingsModel.proxyURI = parseInt(text)
+                                        }
+                                    }
+                                    KeyNavigation.backtab: timeoutMinutes
+                                    validator: IntValidator {
+                                        bottom: 1
+                                        top: 4
+                                    }
+                                }
+                            }
+
+                            StyledText {
+                                text: qsTr("(see format below)")
+                                color: Colors.defaultInputBackground
+                            }
+                        }
+
+                        RowLayout {
+                            width: parent.width
+                            spacing: 10
+                            StyledText {
+                                Layout.preferredWidth: 130
+                                color: Colors.defaultInputBackground
+                                horizontalAlignment: Text.AlignRight
+                                text: qsTr("Proxy url format:")
+                            }
+
+                            StyledText {
+                                text: qsTr("[protocol://][user:password@]proxyhost[:port]")
+                                color: Colors.defaultInputBackground
+                            }
+
+                            Item {
+                                Layout.fillWidth: true
+                            }
+                        }
+
+                        Item {
                             Layout.fillHeight: true
                         }
                     }

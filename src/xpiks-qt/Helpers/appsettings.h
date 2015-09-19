@@ -88,6 +88,9 @@ namespace Helpers {
         Q_PROPERTY(QString maxParallelUploadsKey READ getMaxParallelUploadsKey CONSTANT)
         QString getMaxParallelUploadsKey() const { return QString::fromLatin1(Constants::MAX_PARALLEL_UPLOADS); }
 
+        Q_PROPERTY(QString proxyURIKey READ getProxyURIKey CONSTANT)
+        QString getProxyURIKey() const { return QString::fromLatin1(Constants::PROXY_URI); }
+
         Q_INVOKABLE inline void setValue(const QString &key, const QVariant &value) {
             QSettings::setValue(key, value);
         }

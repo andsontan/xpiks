@@ -45,6 +45,7 @@ namespace Constants {
     const char USE_CONFIRMATION_DIALOGS[] = "USE_CONFIRMATION_DIALOGS";
     const char RECENT_DIRECTORIES[] = "RECENT_DIRECTORIES";
     const char MAX_PARALLEL_UPLOADS[] = "MAX_PARALLEL_UPLOADS";
+    const char PROXY_URI[] = "PROXY_URI";
 #else
     const char UPLOAD_HOSTS[] = "DEBUG_UPLOAD_HOSTS_HASH";
     const char MAX_KEYWORD_COUNT[] = "DEBUG_MAX_KEYWORD_COUNT";
@@ -56,6 +57,7 @@ namespace Constants {
     const char USE_CONFIRMATION_DIALOGS[] = "DEBUG_USE_CONFIRMATION_DIALOGS";
     const char RECENT_DIRECTORIES[] = "DEBUG_RECENT_DIRECTORIES";
     const char MAX_PARALLEL_UPLOADS[] = "DEBUG_MAX_PARALLEL_UPLOADS";
+    const char PROXY_URI[] = "DEBUG_PROXY_URI";
 #endif // QT_NO_DEBUG
 }
 

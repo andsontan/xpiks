@@ -12,7 +12,6 @@ SOURCES += main.cpp \
     Models/combinedartworksmodel.cpp \
     Helpers/indiceshelper.cpp \
     Models/iptcprovider.cpp \
-    Helpers/externaltoolsprovider.cpp \
     Models/artworkuploader.cpp \
     Models/artworksprocessor.cpp \
     Models/uploadinforepository.cpp \
@@ -96,7 +95,6 @@ HEADERS += \
     Helpers/constants.h \
     Helpers/appsettings.h \
     Models/iptcprovider.h \
-    Helpers/externaltoolsprovider.h \
     Helpers/exiftoolwrapper.h \
     Models/artworkuploader.h \
     Helpers/curlwrapper.h \

@@ -40,6 +40,7 @@
 #define DEFAULT_KEYWORD_SIZE_SCALE 1.0
 #define DEFAULT_DISMISS_DURATION 10
 #define DEFAULT_MAX_PARALLEL_UPLOADS 2
+#define DEFAULT_PROXY ""
 
 namespace Models {
     SettingsModel::SettingsModel(QObject *parent) :
@@ -67,6 +68,7 @@ namespace Models {
         appSettings.setValue(appSettings.getKeywordSizeScaleKey(), m_KeywordSizeScale);
         appSettings.setValue(appSettings.getDismissDurationKey(), m_DismissDuration);
         appSettings.setValue(appSettings.getMaxParallelUploadsKey(), m_MaxParallelUploads);
+        appSettings.setValue(appSettings.getProxyURIKey(), m_ProxyURI);
 
         if (!m_MustUseMasterPassword) {
             appSettings.setValue(appSettings.getMasterPasswordHashKey(), "");
@@ -104,6 +106,7 @@ namespace Models {
         setKeywordSizeScale(appSettings.doubleValue(appSettings.getKeywordSizeScaleKey(), DEFAULT_KEYWORD_SIZE_SCALE));
         setDismissDuration(appSettings.value(appSettings.getDismissDurationKey(), DEFAULT_DISMISS_DURATION).toInt());
         setMaxParallelUploads(appSettings.value(appSettings.getMaxParallelUploadsKey(), DEFAULT_MAX_PARALLEL_UPLOADS).toInt());
+        setProxyURI(appSettings.value(appSettings.getProxyURIKey(), DEFAULT_PROXY).toString());
     }
 
     void SettingsModel::resetToDefault() {
@@ -119,6 +122,7 @@ namespace Models {
         setKeywordSizeScale(DEFAULT_KEYWORD_SIZE_SCALE);
         setDismissDuration(DEFAULT_DISMISS_DURATION);
         setMaxParallelUploads(DEFAULT_MAX_PARALLEL_UPLOADS);
+        setProxyURI(DEFAULT_PROXY);
     }
 
     int ensureInBounds(int value, int boundA, int boundB) {
