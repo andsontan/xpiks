@@ -1032,7 +1032,6 @@ ApplicationWindow {
                                                     }
 
                                                     function saveKeywords() {
-                                                        console.log("Saving keywords...")
                                                         artItemsModel.backupItem(rowWrapper.getIndex())
                                                     }
 
