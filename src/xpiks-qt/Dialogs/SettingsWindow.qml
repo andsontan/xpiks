@@ -395,6 +395,46 @@ ApplicationWindow {
                             }
                         }
 
+                        RowLayout {
+                            width: parent.width
+                            spacing: 10
+
+                            StyledText {
+                                Layout.preferredWidth: 130
+                                horizontalAlignment: Text.AlignLeft
+                                text: qsTr("Undo dismiss duration:")
+                            }
+
+                            StyledInputHost {
+                                border.width: dismissDuration.activeFocus ? 1 : 0
+
+                                StyledTextInput {
+                                    id: dismissDuration
+                                    width: 100
+                                    height: 24
+                                    clip: true
+                                    text: settingsModel.dismissDuration
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: 5
+                                    onTextChanged: {
+                                        if (text.length > 0) {
+                                            settingsModel.dismissDuration = parseInt(text)
+                                        }
+                                    }
+
+                                    validator: IntValidator {
+                                        bottom: 5
+                                        top: 20
+                                    }
+                                }
+                            }
+
+                            StyledText {
+                                text: qsTr("(seconds)")
+                                color: Colors.defaultInputBackground
+                            }
+                        }
+
                         Item {
                             Layout.fillHeight: true
                         }

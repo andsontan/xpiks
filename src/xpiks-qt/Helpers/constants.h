@@ -32,6 +32,7 @@ namespace Constants {
     const char METADATA_BACKUP_EXTENSION[] = ".xpks";
     const char SAVE_BACKUPS[] = "SAVE_BACKUPS";
     const char KEYWORD_SIZE_SCALE[] = "KEYWORD_SIZE_SCALE";
+    const char DISMISS_DURATION[] = "DISMISS_DURATION";
 
 #ifdef QT_NO_DEBUG
     const char UPLOAD_HOSTS[] = "UPLOAD_HOSTS_HASH";

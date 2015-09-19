@@ -44,6 +44,7 @@ namespace Models {
         Q_PROPERTY(bool mustUseConfirmations READ getMustUseConfirmations WRITE setMustUseConfirmations NOTIFY mustUseConfirmationsChanged)
         Q_PROPERTY(bool saveBackups READ getSaveBackups WRITE setSaveBackups NOTIFY saveBackupsChanged)
         Q_PROPERTY(double keywordSizeScale READ getKeywordSizeScale WRITE setKeywordSizeScale NOTIFY keywordSizeScaleChanged)
+        Q_PROPERTY(int dismissDuration READ getDismissDuration WRITE setDismissDuration NOTIFY dismissDurationChanged)
     public:
         explicit SettingsModel(QObject *parent = 0);
         virtual ~SettingsModel() {}
@@ -70,6 +71,7 @@ namespace Models {
         bool getMustUseConfirmations() const { return m_MustUseConfirmations; }
         bool getSaveBackups() const { return m_SaveBackups; }
         double getKeywordSizeScale() const { return m_KeywordSizeScale; }
+        int getDismissDuration() const { return m_DismissDuration; }
 
     signals:
         void exifToolPathChanged(QString exifToolPath);
@@ -82,6 +84,7 @@ namespace Models {
         void mustUseConfirmationsChanged(bool mustUseConfirmations);
         void saveBackupsChanged(bool saveBackups);
         void keywordSizeScaleChanged(double value);
+        void dismissDurationChanged(int value);
 
     public:
         void setExifToolPath(QString exifToolPath) {
@@ -164,6 +167,14 @@ namespace Models {
             emit keywordSizeScaleChanged(value);
         }
 
+        void setDismissDuration(int value) {
+            if (m_DismissDuration == value)
+                return;
+
+            m_DismissDuration = ensureInBounds(value, 5, 20);
+            emit dismissDurationChanged(value);
+        }
+
     private:
         void resetToDefault();
 
@@ -175,6 +186,7 @@ namespace Models {
         int m_MaxDescriptionLength;
         int m_MaxKeywordsCount;
         int m_UploadTimeout; // in minutes
+        int m_DismissDuration;
         bool m_MustUseMasterPassword;
         bool m_MustUseConfirmations;
         bool m_SaveBackups;

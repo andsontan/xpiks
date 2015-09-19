@@ -111,9 +111,6 @@ ApplicationWindow {
                         }
                     }
                 }
-
-
-
             }
 
             MenuItem {
@@ -774,7 +771,7 @@ ApplicationWindow {
                                 }
 
                                 StyledText {
-                                    text: qsTr("Dismiss (%1)").arg(10 - (autoDismissTimer.iterations % 11))
+                                    text: qsTr("Dismiss (%1)").arg(settingsModel.dismissDuration - (autoDismissTimer.iterations % (settingsModel.dismissDuration + 1)))
                                     color: dismissUndoMA.pressed ? Colors.defaultLightColor : Colors.defaultInputBackground
 
                                     MouseArea {
@@ -801,7 +798,7 @@ ApplicationWindow {
                                     onTriggered: {
                                         iterations += 1
 
-                                        if (iterations % 11 === 10) {
+                                        if (iterations % (settingsModel.dismissDuration + 1) === settingsModel.dismissDuration) {
                                             undoRedoManager.discardLastAction()
                                             iterations = 0
                                         }

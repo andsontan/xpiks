@@ -38,6 +38,7 @@
 #define DEFAULT_USE_CONFIRMATIONS true
 #define DEFAULT_SAVE_BACKUPS true
 #define DEFAULT_KEYWORD_SIZE_SCALE 1.0
+#define DEFAULT_DISMISS_DURATION 10
 
 namespace Models {
     SettingsModel::SettingsModel(QObject *parent) :
@@ -63,6 +64,7 @@ namespace Models {
         appSettings.setValue(appSettings.getUseConfirmationDialogsKey(), m_MustUseConfirmations);
         appSettings.setValue(appSettings.getSaveBackupsKey(), m_SaveBackups);
         appSettings.setValue(appSettings.getKeywordSizeScaleKey(), m_KeywordSizeScale);
+        appSettings.setValue(appSettings.getDismissDurationKey(), m_DismissDuration);
 
         if (!m_MustUseMasterPassword) {
             appSettings.setValue(appSettings.getMasterPasswordHashKey(), "");
@@ -98,6 +100,7 @@ namespace Models {
         setMustUseConfirmations(appSettings.boolValue(appSettings.getUseConfirmationDialogsKey(), DEFAULT_USE_CONFIRMATIONS));
         setSaveBackups(appSettings.boolValue(appSettings.getSaveBackupsKey(), DEFAULT_SAVE_BACKUPS));
         setKeywordSizeScale(appSettings.doubleValue(appSettings.getKeywordSizeScaleKey(), DEFAULT_KEYWORD_SIZE_SCALE));
+        setDismissDuration(appSettings.value(appSettings.getDismissDurationKey(), DEFAULT_DISMISS_DURATION).toInt());
     }
 
     void SettingsModel::resetToDefault() {
@@ -111,6 +114,7 @@ namespace Models {
         setMustUseConfirmations(DEFAULT_USE_CONFIRMATIONS);
         setSaveBackups(DEFAULT_SAVE_BACKUPS);
         setKeywordSizeScale(DEFAULT_KEYWORD_SIZE_SCALE);
+        setDismissDuration(DEFAULT_DISMISS_DURATION);
     }
 
     int ensureInBounds(int value, int boundA, int boundB) {

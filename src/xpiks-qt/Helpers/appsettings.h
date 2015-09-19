@@ -82,6 +82,9 @@ namespace Helpers {
         Q_PROPERTY(QString recentDirectoriesKey READ getRecentDirectoriesKey CONSTANT)
         QString getRecentDirectoriesKey() const { return QString::fromLatin1(Constants::RECENT_DIRECTORIES); }
 
+        Q_PROPERTY(QString dismissDurationKey READ getDismissDurationKey CONSTANT)
+        QString getDismissDurationKey() const { return QString::fromLatin1(Constants::DISMISS_DURATION); }
+
         Q_INVOKABLE inline void setValue(const QString &key, const QVariant &value) {
             QSettings::setValue(key, value);
         }
