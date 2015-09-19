@@ -918,10 +918,10 @@ ApplicationWindow {
 
                                                         onPressed: {
                                                             Common.launchDialog("Dialogs/ArtworkPreview.qml", applicationWindow,
-                                                                                   {
-                                                                                       imagePath: filename,
-                                                                                       artworkIndex: rowWrapper.getIndex()
-                                                                                   });
+                                                                                {
+                                                                                    imagePath: filename,
+                                                                                    artworkIndex: rowWrapper.getIndex()
+                                                                                });
                                                         }
                                                     }
                                                 }
