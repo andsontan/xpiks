@@ -48,6 +48,7 @@ Flickable {
     signal removeLast()
     signal focusLost()
     signal tagsPasted(var tagsList)
+    signal copyRequest();
 
     function activateEdit() {
         nextTagTextInput.forceActiveFocus()
@@ -179,6 +180,10 @@ Flickable {
                         tagsPasted(keywordsToAdd);
 
                         event.accepted = true;
+                    }
+                    else if (event.matches(StandardKey.Copy)) {
+                        copyRequest()
+                        event.accepted = true
                     }
                     else if (event.key === Qt.Key_Comma) {
                         var tagText = getEditedText();

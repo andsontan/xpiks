@@ -1109,6 +1109,8 @@ ApplicationWindow {
                                                             }
 
                                                             onFocusLost: keywordsWrapper.saveKeywords()
+
+                                                            onCopyRequest: clipboard.setText(keywordsstring)
                                                         }
                                                     }
                                                 }
