@@ -384,7 +384,11 @@ namespace Models {
         qDebug() << "Adding local directories: " << directories;
         QStringList directoriesList;
         foreach (const QUrl &url, directories) {
-            directoriesList.append(url.toLocalFile());
+            if (url.isLocalFile()) {
+                directoriesList.append(url.toLocalFile());
+            } else {
+                directoriesList.append(url.path());
+            }
         }
 
         int addedFilesCount = addDirectories(directoriesList);

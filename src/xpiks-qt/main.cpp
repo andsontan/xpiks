@@ -37,6 +37,7 @@
 #include "Common/defines.h"
 #include "Models/filteredartitemsproxymodel.h"
 #include "Suggestion/suggestionqueryengine.h"
+#include "Models/recentdirectoriesmodel.h"
 #include "Suggestion/keywordssuggestor.h"
 #include "Models/combinedartworksmodel.h"
 #include "Helpers/globalimageprovider.h"
@@ -167,6 +168,7 @@ int main(int argc, char *argv[]) {
     Suggestion::KeywordsSuggestor keywordsSuggestor;
     Models::FilteredArtItemsProxyModel filteredArtItemsModel;
     filteredArtItemsModel.setSourceModel(&artItemsModel);
+    Models::RecentDirectoriesModel recentDirectorieModel;
 
     Commands::CommandManager commandManager;
     commandManager.InjectDependency(&artworkRepository);
@@ -182,10 +184,12 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&zipArchiver);
     commandManager.InjectDependency(&keywordsSuggestor);
     commandManager.InjectDependency(&settingsModel);
+    commandManager.InjectDependency(&recentDirectorieModel);
 
     // other initializations
     secretsManager.setMasterPasswordHash(appSettings.value(Constants::MASTER_PASSWORD_HASH, "").toString());
     uploadInfoRepository.initFromString(appSettings.value(Constants::UPLOAD_HOSTS, "").toString());
+    recentDirectorieModel.deserializeFromSettings(appSettings.value(Constants::RECENT_DIRECTORIES, "").toString());
 
     commandManager.connectEntitiesSignalsSlots();
 
@@ -215,6 +219,7 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("settingsModel", &settingsModel);
     rootContext->setContextProperty("filteredArtItemsModel", &filteredArtItemsModel);
     rootContext->setContextProperty("helpersWrapper", &helpersQmlWrapper);
+    rootContext->setContextProperty("recentDirectories", &recentDirectorieModel);
 
     engine.addImageProvider("global", globalProvider);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));

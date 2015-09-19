@@ -35,6 +35,7 @@
 #include "../Suggestion/keywordssuggestor.h"
 #include "../Commands/addartworkscommand.h"
 #include "../Models/filteredartitemsproxymodel.h"
+#include "../Models/recentdirectoriesmodel.h"
 
 void Commands::CommandManager::InjectDependency(Models::ArtworksRepository *artworkRepository) {
     Q_ASSERT(artworkRepository != NULL); m_ArtworksRepository = artworkRepository;
@@ -101,6 +102,11 @@ void Commands::CommandManager::InjectDependency(Suggestion::KeywordsSuggestor *k
 void Commands::CommandManager::InjectDependency(Models::SettingsModel *settingsModel) {
     Q_ASSERT(settingsModel != NULL); m_SettingsModel = settingsModel;
 }
+
+void Commands::CommandManager::InjectDependency(Models::RecentDirectoriesModel *recentDirectories) {
+    Q_ASSERT(recentDirectories != NULL); m_RecentDirectories = recentDirectories;
+}
+
 
 Commands::CommandResult *Commands::CommandManager::processCommand(Commands::CommandBase *command) const
 {
@@ -195,6 +201,12 @@ void Commands::CommandManager::updateArtworks(const QList<int> &indices) const
 {
     if (m_ArtItemsModel) {
         m_ArtItemsModel->updateItemsAtIndices(indices);
+    }
+}
+
+void Commands::CommandManager::addToRecentDirectories(const QString &path) const {
+    if (m_RecentDirectories) {
+        m_RecentDirectories->pushDirectory(path);
     }
 }
 

@@ -79,6 +79,9 @@ namespace Helpers {
         Q_PROPERTY(QString keywordSizeScale READ getKeywordSizeScaleKey CONSTANT)
         QString getKeywordSizeScaleKey() const { return QString::fromLatin1(Constants::KEYWORD_SIZE_SCALE); }
 
+        Q_PROPERTY(QString recentDirectoriesKey READ getRecentDirectoriesKey CONSTANT)
+        QString getRecentDirectoriesKey() const { return QString::fromLatin1(Constants::RECENT_DIRECTORIES); }
+
         Q_INVOKABLE inline void setValue(const QString &key, const QVariant &value) {
             QSettings::setValue(key, value);
         }

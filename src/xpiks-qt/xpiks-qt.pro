@@ -62,7 +62,8 @@ SOURCES += main.cpp \
     Helpers/filenameshelpers.cpp \
     Common/flags.cpp \
     Helpers/keywordvalidator.cpp \
-    Helpers/helpersqmlwrapper.cpp
+    Helpers/helpersqmlwrapper.cpp \
+    Models/recentdirectoriesmodel.cpp
 
 RESOURCES += qml.qrc
 
@@ -159,7 +160,8 @@ HEADERS += \
     Helpers/filenameshelpers.h \
     Common/flags.h \
     Helpers/keywordvalidator.h \
-    Helpers/helpersqmlwrapper.h
+    Helpers/helpersqmlwrapper.h \
+    Models/recentdirectoriesmodel.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

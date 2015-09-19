@@ -49,6 +49,7 @@ namespace Models {
     class ArtworkMetadata;
     class ZipArchiver;
     class SettingsModel;
+    class RecentDirectoriesModel;
 }
 
 namespace Suggestion {
@@ -71,7 +72,8 @@ namespace Commands {
             m_SecretsManager(NULL),
             m_UndoRedoManager(NULL),
             m_ZipArchiver(NULL),
-            m_KeywordsSuggestor(NULL)
+            m_KeywordsSuggestor(NULL),
+            m_RecentDirectories(NULL)
         {}
 
         virtual ~CommandManager() {}
@@ -90,6 +92,7 @@ namespace Commands {
         void InjectDependency(Models::ZipArchiver *zipArchiver);
         void InjectDependency(Suggestion::KeywordsSuggestor *keywordsSuggestor);
         void InjectDependency(Models::SettingsModel *settingsModel);
+        void InjectDependency(Models::RecentDirectoriesModel *recentDirectories);
 
     public:
         CommandResult *processCommand(CommandBase *command) const;
@@ -109,6 +112,7 @@ namespace Commands {
         void setArtworksForZipping(const QList<Models::ArtworkMetadata*> &artworks) const;
         virtual void connectArtworkSignals(Models::ArtworkMetadata *metadata) const;
         void updateArtworks(const QList<int> &indices) const;
+        void addToRecentDirectories(const QString &path) const;
 #ifdef QT_DEBUG
         void addInitialArtworks(const QStringList &artworksFilepathes);
 #endif
@@ -136,6 +140,7 @@ namespace Commands {
         Models::ZipArchiver *m_ZipArchiver;
         Suggestion::KeywordsSuggestor *m_KeywordsSuggestor;
         Models::SettingsModel *m_SettingsModel;
+        Models::RecentDirectoriesModel *m_RecentDirectories;
     };
 }
 

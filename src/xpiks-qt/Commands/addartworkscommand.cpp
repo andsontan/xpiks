@@ -20,6 +20,7 @@
  */
 
 #include <QDebug>
+#include <QFileInfo>
 #include "addartworkscommand.h"
 #include "commandmanager.h"
 #include "../Models/artworksrepository.h"
@@ -53,6 +54,9 @@ Commands::CommandResult *Commands::AddArtworksCommand::execute(const CommandMana
 
                 artItemsModel->appendMetadata(metadata);
                 artworksToImport.append(metadata);
+
+                const QString &dirPath = QFileInfo(filename).absolutePath();
+                commandManager->addToRecentDirectories(dirPath);
             }
         }
 

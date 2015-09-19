@@ -42,7 +42,13 @@ ApplicationWindow {
     title: qsTr("Xpiks")
     property int openedDialogsCount: 0
 
+    function saveRecentDirectories() {
+        appSettings.setValue(appSettings.recentDirectoriesKey, recentDirectories.serializeForSettings())
+    }
+
     onClosing: {
+        saveRecentDirectories()
+
         if (artItemsModel.modifiedArtworksCount > 0) {
             close.accepted = false
             configExitDialog.open()
@@ -86,6 +92,30 @@ ApplicationWindow {
     menuBar: MenuBar {
         Menu {
             title: qsTr("File")
+            Menu {
+                id: recentDirectoriesMenu
+                title: qsTr("Recent directories")
+
+                Instantiator {
+                    model: recentDirectories
+                    onObjectAdded: recentDirectoriesMenu.insertItem( index, object )
+                    onObjectRemoved: recentDirectoriesMenu.removeItem( object )
+
+                    delegate: MenuItem {
+                        text: display
+                        onTriggered: {
+                            var items = [];
+                            items.push(display)
+                            console.log(items)
+                            artItemsModel.addLocalDirectories(items)
+                        }
+                    }
+                }
+
+
+
+            }
+
             MenuItem {
                 text: qsTr("&Settings")
                 onTriggered: {
@@ -185,6 +215,7 @@ ApplicationWindow {
         onAccepted: {
             console.log("You chose: " + chooseArtworksDialog.fileUrls)
             var filesAdded = artItemsModel.addLocalArtworks(chooseArtworksDialog.fileUrls)
+            saveRecentDirectories()
             console.log(filesAdded + ' files via Open File(s)')
         }
 
@@ -203,6 +234,7 @@ ApplicationWindow {
         onAccepted: {
             console.log("You chose: " + chooseDirectoryDialog.fileUrls)
             var filesAdded = artItemsModel.addLocalDirectories(chooseDirectoryDialog.fileUrls)
+            saveRecentDirectories()
             console.log(filesAdded + ' files via Open Directory')
         }
 
@@ -248,6 +280,7 @@ ApplicationWindow {
             onDropped: {
                 if (drop.hasUrls) {
                     var filesCount = artItemsModel.dropFiles(drop.urls)
+                    saveRecentDirectories()
                     console.log(filesCount + ' files drag&dropped')
                 }
             }
