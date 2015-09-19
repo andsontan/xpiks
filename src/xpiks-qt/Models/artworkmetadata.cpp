@@ -22,6 +22,7 @@
 #include <QDebug>
 #include "artworkmetadata.h"
 #include "../Helpers/tempmetadatadb.h"
+#include "../Helpers/keywordvalidator.h"
 #include "settingsmodel.h"
 
 namespace Models {
@@ -74,7 +75,8 @@ namespace Models {
     bool ArtworkMetadata::appendKeyword(const QString &keyword) {
         bool added = false;
         const QString &sanitizedKeyword = keyword.simplified().toLower();
-        if (!sanitizedKeyword.isEmpty() && !m_KeywordsSet.contains(sanitizedKeyword)) {
+        bool isValid = Helpers::isValidKeyword(sanitizedKeyword);
+        if (isValid && !m_KeywordsSet.contains(sanitizedKeyword)) {
             int keywordsCount = m_KeywordsList.length();
 
             beginInsertRows(QModelIndex(), keywordsCount, keywordsCount);
