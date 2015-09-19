@@ -342,6 +342,7 @@ Item {
                                     anchors.verticalCenter: parent.verticalCenter
                                     maximumLength: 250
                                     text: combinedArtworks.description
+                                    font.pixelSize: 12*settingsModel.keywordSizeScale
                                     onTextChanged: combinedArtworks.description = text
                                     KeyNavigation.tab: titleTextInput
                                 }
@@ -438,6 +439,7 @@ Item {
                                     anchors.verticalCenter: parent.verticalCenter
                                     maximumLength: 200
                                     focus: true
+                                    font.pixelSize: 12*settingsModel.keywordSizeScale
                                     text: combinedArtworks.title
                                     onTextChanged: combinedArtworks.title = text
                                     KeyNavigation.backtab: descriptionTextInput

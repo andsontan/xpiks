@@ -997,7 +997,7 @@ ApplicationWindow {
                                                         anchors.right: parent.right
                                                         anchors.leftMargin: 5
                                                         anchors.rightMargin: 5
-
+                                                        font.pixelSize: 12 * settingsModel.keywordSizeScale
                                                         anchors.verticalCenter: parent.verticalCenter
                                                         maximumLength: 250
                                                         text: description
