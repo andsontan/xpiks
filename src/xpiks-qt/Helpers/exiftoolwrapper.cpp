@@ -28,10 +28,11 @@
 #include <QString>
 #include <QDebug>
 #include <QPair>
-#include "externaltoolsprovider.h"
 #include "../Models/artworkmetadata.h"
 #include "../Models/exportinfo.h"
 #include "tempmetadatadb.h"
+#include "Helpers/settingsprovider.h"
+#include "../Models/settingsmodel.h"
 
 // returns NULL if patching wasn't successfull
 ExportPair writeArtworkMetadata(ExportPair pair) {
@@ -46,7 +47,8 @@ ExportPair writeArtworkMetadata(ExportPair pair) {
         title = description;
     }
 
-    const QString exiftoolPath = Helpers::ExternalToolsProvider::getExifToolPath();
+    Models::SettingsModel *settingsModel = Helpers::SettingsProvider::getInstance().getSettingsModelInstance();
+    const QString exiftoolPath = settingsModel->getExifToolPath();
 
     QStringList arguments;
     arguments << exiftoolPath;
@@ -99,7 +101,8 @@ void grabMetadata(const QStringList &items, Models::ImportDataResult *importData
                   QRegExp keywordsRegExp);
 
 ImportPair readArtworkMetadata(ImportPair pair) {
-    const QString exiftoolPath = Helpers::ExternalToolsProvider::getExifToolPath();
+    Models::SettingsModel *settingsModel = Helpers::SettingsProvider::getInstance().getSettingsModelInstance();
+    const QString exiftoolPath = settingsModel->getExifToolPath();
 
     Models::ImportDataResult *importData = pair.second;
     Models::ArtworkMetadata *metadata = pair.first;

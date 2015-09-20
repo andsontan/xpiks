@@ -45,6 +45,7 @@
 #include "Helpers/helpersqmlwrapper.h"
 #include "Encryption/secretsmanager.h"
 #include "Models/artworksrepository.h"
+#include "Helpers/settingsprovider.h"
 #include "UndoRedo/undoredomanager.h"
 #include "Helpers/clipboardhelper.h"
 #include "Commands/commandmanager.h"
@@ -190,6 +191,8 @@ int main(int argc, char *argv[]) {
     secretsManager.setMasterPasswordHash(appSettings.value(Constants::MASTER_PASSWORD_HASH, "").toString());
     uploadInfoRepository.initFromString(appSettings.value(Constants::UPLOAD_HOSTS, "").toString());
     recentDirectorieModel.deserializeFromSettings(appSettings.value(Constants::RECENT_DIRECTORIES, "").toString());
+
+    Helpers::SettingsProvider::getInstance().setSettingsModelInstance(&settingsModel);
 
     commandManager.connectEntitiesSignalsSlots();
 

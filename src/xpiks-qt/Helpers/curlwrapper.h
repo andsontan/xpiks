@@ -28,7 +28,8 @@ namespace Helpers {
     class TestConnectionResult;
 }
 
-Helpers::TestConnectionResult isConnectionValid(const QString &host, const QString &username, const QString &password);
+Helpers::TestConnectionResult isConnectionValid(const QString &host, const QString &username,
+                                                const QString &password, const QString &curlPath);
 
 #endif // CURLWRAPPER
 

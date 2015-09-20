@@ -27,7 +27,6 @@
 #include <QtMath>
 #include "../Models/artworkmetadata.h"
 #include "uploaditem.h"
-#include "externaltoolsprovider.h"
 #include "uploadworker.h"
 #include "../Helpers/ziphelper.h"
 #include "../Helpers/filenameshelpers.h"

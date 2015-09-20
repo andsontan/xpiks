@@ -32,6 +32,7 @@
 #include "../Helpers/testconnectionresult.h"
 #include "../Helpers/uploadcoordinator.h"
 #include "../Commands/commandmanager.h"
+#include "../Models/settingsmodel.h"
 
 namespace Models {
     ArtworkUploader::ArtworkUploader(int maxParallelUploads) :
@@ -97,9 +98,9 @@ namespace Models {
 
     void ArtworkUploader::uploadArtworks() { doUploadArtworks(getArtworkList()); }
 
-    void ArtworkUploader::checkCredentials(const QString &host, const QString &username, const QString &password) const
-    {
-        m_TestingCredentialWatcher->setFuture(QtConcurrent::run(isConnectionValid, host, username, password));
+    void ArtworkUploader::checkCredentials(const QString &host, const QString &username, const QString &password) const {
+        const QString &curlPath = m_CommandManager->getSettingsModel()->getCurlPath();
+        m_TestingCredentialWatcher->setFuture(QtConcurrent::run(isConnectionValid, host, username, password, curlPath));
     }
 
     bool ArtworkUploader::needCreateArchives() const {
