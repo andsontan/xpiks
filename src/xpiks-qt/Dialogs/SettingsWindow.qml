@@ -41,8 +41,8 @@ ApplicationWindow {
     maximumHeight: height
     flags: Qt.Dialog
 
-    signal onDialogDestruction();
-    Component.onDestruction: onDialogDestruction();
+    signal dialogDestruction();
+    Component.onDestruction: dialogDestruction();
 
     function closeSettings() {
         settingsWindow.destroy();

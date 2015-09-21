@@ -34,8 +34,8 @@ Item {
     id: warningsComponent
     anchors.fill: parent
 
-    signal onDialogDestruction();
-    Component.onDestruction: onDialogDestruction();
+    signal dialogDestruction();
+    Component.onDestruction: dialogDestruction();
 
     function closePopup() {
         warningsComponent.destroy()

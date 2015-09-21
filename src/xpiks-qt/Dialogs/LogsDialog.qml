@@ -35,8 +35,8 @@ Item {
     property string logText
     anchors.fill: parent
 
-    signal onDialogDestruction();
-    Component.onDestruction: onDialogDestruction();
+    signal dialogDestruction();
+    Component.onDestruction: dialogDestruction();
 
     function closePopup() {
         logsComponent.destroy()

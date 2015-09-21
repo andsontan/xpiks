@@ -39,8 +39,8 @@ Item {
         metadataExportComponent.destroy()
     }
 
-    signal onDialogDestruction();
-    Component.onDestruction: onDialogDestruction();
+    signal dialogDestruction();
+    Component.onDestruction: dialogDestruction();
 
     PropertyAnimation { target: metadataExportComponent; property: "opacity";
         duration: 400; from: 0; to: 1;

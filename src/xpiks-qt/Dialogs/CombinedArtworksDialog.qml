@@ -37,8 +37,8 @@ Item {
 
     property variant componentParent
 
-    signal onDialogDestruction();
-    Component.onDestruction: onDialogDestruction();
+    signal dialogDestruction();
+    Component.onDestruction: dialogDestruction();
 
     function closePopup() {
         dialogComponent.destroy()

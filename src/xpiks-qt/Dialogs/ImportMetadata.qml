@@ -43,8 +43,8 @@ Item {
         iptcProvider.ignoreAutosave = false
     }
 
-    signal onDialogDestruction();
-    Component.onDestruction: onDialogDestruction();
+    signal dialogDestruction();
+    Component.onDestruction: dialogDestruction();
 
     PropertyAnimation { target: metadataImportComponent; property: "opacity";
         duration: 400; from: 0; to: 1;

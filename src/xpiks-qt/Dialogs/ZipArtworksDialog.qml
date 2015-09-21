@@ -36,8 +36,8 @@ Item {
     property var callbackObject
     anchors.fill: parent
 
-    signal onDialogDestruction();
-    Component.onDestruction: onDialogDestruction();
+    signal dialogDestruction();
+    Component.onDestruction: dialogDestruction();
 
     function closePopup() {
         zipArtworksComponent.destroy()
