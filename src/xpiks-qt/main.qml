@@ -334,82 +334,88 @@ ApplicationWindow {
 
                     color: Colors.defaultControlColor
 
-                    ListView {
-                        id: sourcesListView
-                        model: artworkRepository
-                        boundsBehavior: Flickable.StopAtBounds
+                    StyledScrollView {
                         anchors.fill: parent
-                        anchors.margins: { left: 10; top: 5; right: 10 }
+                        anchors.topMargin: 5
 
-                        spacing: 10
+                        ListView {
+                            id: sourcesListView
+                            model: artworkRepository
+                            boundsBehavior: Flickable.StopAtBounds
+                            anchors.fill: parent
+                            anchors.rightMargin: 10
+                            anchors.leftMargin: 10
 
-                        displaced: Transition {
-                            NumberAnimation { properties: "x,y"; duration: 230 }
-                        }
+                            spacing: 10
 
-                        addDisplaced: Transition {
-                            NumberAnimation { properties: "x,y"; duration: 230 }
-                        }
-
-                        removeDisplaced: Transition {
-                            NumberAnimation { properties: "x,y"; duration: 230 }
-                        }
-
-                        delegate: Rectangle {
-                            id: sourceWrapper
-                            property int delegateIndex: index
-                            color: isselected ? Colors.itemsSourceSelected : Colors.itemsSourceBackground
-                            width: parent.width
-                            height: 31
-                            Layout.minimumWidth: 237
-
-                            MouseArea {
-                                anchors.fill: parent
-                                onClicked: {
-                                    filteredArtItemsModel.selectDirectory(sourceWrapper.delegateIndex)
-                                }
+                            displaced: Transition {
+                                NumberAnimation { properties: "x,y"; duration: 230 }
                             }
 
-                            RowLayout {
-                                spacing: 10
-                                anchors.fill: parent
+                            addDisplaced: Transition {
+                                NumberAnimation { properties: "x,y"; duration: 230 }
+                            }
 
-                                Item {
-                                    id: placeholder1
-                                    width: 1
-                                }
+                            removeDisplaced: Transition {
+                                NumberAnimation { properties: "x,y"; duration: 230 }
+                            }
 
-                                StyledText {
-                                    id: directoryPath
-                                    Layout.fillWidth: true
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    height: 31
-                                    color: Colors.itemsSourceForeground
-                                    text: path + " (" + usedimagescount + ")"
-                                    elide: Text.ElideMiddle
-                                    font.bold: true
-                                }
+                            delegate: Rectangle {
+                                id: sourceWrapper
+                                property int delegateIndex: index
+                                color: isselected ? Colors.itemsSourceSelected : Colors.itemsSourceBackground
+                                width: parent.width
+                                height: 31
+                                Layout.minimumWidth: 237
 
-                                CloseIcon {
-                                    width: 14
-                                    height: 14
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    isActive: false
-
-                                    onItemClicked: {
-                                        if (mustUseConfirmation()) {
-                                            confirmRemoveDirectoryDialog.directoryIndex = sourceWrapper.delegateIndex
-                                            confirmRemoveDirectoryDialog.open()
-                                        } else {
-                                            filteredArtItemsModel.removeArtworksDirectory(sourceWrapper.delegateIndex)
-                                            filteredArtItemsModel.checkForWarnings()
-                                        }
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        filteredArtItemsModel.selectDirectory(sourceWrapper.delegateIndex)
                                     }
                                 }
 
-                                Item {
-                                    id: placeholder2
-                                    width: 1
+                                RowLayout {
+                                    spacing: 10
+                                    anchors.fill: parent
+
+                                    Item {
+                                        id: placeholder1
+                                        width: 1
+                                    }
+
+                                    StyledText {
+                                        id: directoryPath
+                                        Layout.fillWidth: true
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        height: 31
+                                        color: Colors.itemsSourceForeground
+                                        text: path + " (" + usedimagescount + ")"
+                                        elide: Text.ElideMiddle
+                                        font.bold: true
+                                    }
+
+                                    CloseIcon {
+                                        width: 14
+                                        height: 14
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        isActive: false
+
+                                        onItemClicked: {
+                                            if (mustUseConfirmation()) {
+                                                confirmRemoveDirectoryDialog.directoryIndex = sourceWrapper.delegateIndex
+                                                confirmRemoveDirectoryDialog.open()
+                                            } else {
+                                                filteredArtItemsModel.removeArtworksDirectory(sourceWrapper.delegateIndex)
+                                                filteredArtItemsModel.checkForWarnings()
+                                            }
+                                        }
+                                    }
+
+                                    Item {
+                                        id: placeholder2
+                                        width: 1
+                                    }
                                 }
                             }
                         }
