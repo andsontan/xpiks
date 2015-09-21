@@ -278,7 +278,7 @@ ApplicationWindow {
                 if (drop.hasUrls) {
                     var filesCount = artItemsModel.dropFiles(drop.urls)
                     saveRecentDirectories()
-                    console.log(filesCount + ' files drag&dropped')
+                    console.log(filesCount + ' files added via drag&drop')
                 }
             }
         }
