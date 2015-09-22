@@ -52,6 +52,8 @@ namespace Models {
             anythingModified = appendedCount > 0;
         }
 
+        m_IsModified = false;
+
         return anythingModified;
     }
 
