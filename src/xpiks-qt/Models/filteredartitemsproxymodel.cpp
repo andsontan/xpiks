@@ -145,6 +145,13 @@ namespace Models {
         artItemsModel->checkForWarnings(selectedArtworks);
     }
 
+    void FilteredArtItemsProxyModel::reimportMetadataForSelected() {
+        QList<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
+        m_CommandManager->setArtworksForIPTCProcessing(selectedArtworks);
+        ArtItemsModel *artItemsModel = getArtItemsModel();
+        artItemsModel->raiseArtworksAdded(selectedArtworks.count());
+    }
+
     void FilteredArtItemsProxyModel::itemSelectedChanged(bool value) {
         int plus = value ? +1 : -1;
         m_SelectedArtworksCount += plus;

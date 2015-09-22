@@ -152,6 +152,15 @@ ApplicationWindow {
                                     {componentParent: applicationWindow});
                 }
             }
+
+            MenuItem {
+                text: qsTr("&Import metadata from selected")
+                enabled: filteredArtItemsModel.selectedArtworksCount > 0
+                onTriggered: {
+                    console.log("Reimport archives triggered")
+                    filteredArtItemsModel.reimportMetadataForSelected()
+                }
+            }
         }
     }
 
