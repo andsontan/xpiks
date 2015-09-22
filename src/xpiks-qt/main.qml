@@ -283,70 +283,564 @@ ApplicationWindow {
             }
         }
 
-        RowLayout {
-            id: mainGrid
-            anchors.fill: parent
+        ColumnLayout {
+            id: repositoriesColumnLayout
+            width: 250
+            anchors.left: parent.left
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+
             spacing: 0
 
-            ColumnLayout {
-                width: 250
+            Rectangle {
+                width: parent.width
+                height: 45
+                color: Colors.defaultDarkColor
+
+                RowLayout {
+                    spacing: 10
+                    anchors.fill: parent
+                    anchors.margins: { top: 10; left: 10 }
+
+                    StyledButton {
+                        text: qsTr("Add directory")
+                        width: 120
+                        onClicked: chooseDirectoryDialog.open()
+                    }
+
+                    StyledButton {
+                        text: qsTr("Add files")
+                        width: 100
+                        onClicked: chooseArtworksDialog.open()
+                    }
+
+                    Item {
+                        Layout.fillWidth: true
+                    }
+                }
+            }
+
+            Rectangle {
+                height: 1
+                width: parent.width
+                color: Colors.itemsSourceSelected
+            }
+
+            Rectangle {
                 Layout.fillHeight: true
+                width: 250
 
-                spacing: 0
+                color: Colors.defaultControlColor
 
-                Rectangle {
-                    width: parent.width
-                    height: 45
-                    color: Colors.defaultDarkColor
+                StyledScrollView {
+                    anchors.fill: parent
+                    anchors.topMargin: 5
 
-                    RowLayout {
-                        spacing: 10
+                    ListView {
+                        id: sourcesListView
+                        model: artworkRepository
+                        boundsBehavior: Flickable.StopAtBounds
                         anchors.fill: parent
-                        anchors.margins: { top: 10; left: 10 }
+                        anchors.rightMargin: 10
+                        anchors.leftMargin: 10
 
-                        StyledButton {
-                            text: qsTr("Add directory")
-                            width: 120
-                            onClicked: chooseDirectoryDialog.open()
+                        spacing: 10
+
+                        displaced: Transition {
+                            NumberAnimation { properties: "x,y"; duration: 230 }
                         }
 
-                        StyledButton {
-                            text: qsTr("Add files")
-                            width: 100
-                            onClicked: chooseArtworksDialog.open()
+                        addDisplaced: Transition {
+                            NumberAnimation { properties: "x,y"; duration: 230 }
                         }
 
-                        Item {
-                            Layout.fillWidth: true
+                        removeDisplaced: Transition {
+                            NumberAnimation { properties: "x,y"; duration: 230 }
+                        }
+
+                        delegate: Rectangle {
+                            id: sourceWrapper
+                            property int delegateIndex: index
+                            color: isselected ? Colors.itemsSourceSelected : Colors.itemsSourceBackground
+                            width: parent.width
+                            height: 31
+                            Layout.minimumWidth: 237
+
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    filteredArtItemsModel.selectDirectory(sourceWrapper.delegateIndex)
+                                }
+                            }
+
+                            RowLayout {
+                                spacing: 10
+                                anchors.fill: parent
+
+                                Item {
+                                    id: placeholder1
+                                    width: 1
+                                }
+
+                                StyledText {
+                                    id: directoryPath
+                                    Layout.fillWidth: true
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    height: 31
+                                    color: Colors.itemsSourceForeground
+                                    text: path + " (" + usedimagescount + ")"
+                                    elide: Text.ElideMiddle
+                                    font.bold: true
+                                }
+
+                                CloseIcon {
+                                    width: 14
+                                    height: 14
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    isActive: false
+
+                                    onItemClicked: {
+                                        if (mustUseConfirmation()) {
+                                            confirmRemoveDirectoryDialog.directoryIndex = sourceWrapper.delegateIndex
+                                            confirmRemoveDirectoryDialog.open()
+                                        } else {
+                                            filteredArtItemsModel.removeArtworksDirectory(sourceWrapper.delegateIndex)
+                                            filteredArtItemsModel.checkForWarnings()
+                                        }
+                                    }
+                                }
+
+                                Item {
+                                    id: placeholder2
+                                    width: 1
+                                }
+                            }
                         }
                     }
                 }
+            }
+        }
 
-                Rectangle {
-                    height: 1
-                    width: parent.width
-                    color: Colors.itemsSourceSelected
+        ColumnLayout {
+            anchors.left: repositoriesColumnLayout.right
+            anchors.leftMargin: 2
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            spacing: 0
+
+            Rectangle {
+                height: 45
+                color: Colors.defaultDarkColor
+                z: 10000
+                anchors.left: parent.left
+                anchors.right: parent.right
+
+                RowLayout {
+                    spacing: 10
+                    anchors.fill: parent
+                    anchors.margins: { top: 10; left: 10 }
+                    anchors.rightMargin: mainScrollView.flickableItem.contentHeight > mainScrollView.flickableItem.height ? 20 : 10
+
+                    Item {
+                        Layout.fillWidth: true
+                    }
+
+                    StyledButton {
+                        text: qsTr("Remove")
+                        enabled: artworkRepository.artworksSourcesCount > 0
+                        width: 80
+                        onClicked: {
+                            if (filteredArtItemsModel.selectedArtworksCount === 0) {
+                                mustSelectDialog.open()
+                            }
+                            else {
+                                var itemsCount = filteredArtItemsModel.selectedArtworksCount
+                                if (itemsCount > 0) {
+                                    if (mustUseConfirmation()) {
+                                        confirmRemoveSelectedDialog.itemsCount = itemsCount
+                                        confirmRemoveSelectedDialog.open()
+                                    } else {
+                                        doRemoveSelectedArtworks()
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    StyledButton {
+                        text: qsTr("Edit")
+                        width: mainScrollView.flickableItem.contentHeight > mainScrollView.flickableItem.height ? 72 : 82
+                        enabled: artworkRepository.artworksSourcesCount > 0
+                        onClicked: {
+                            if (filteredArtItemsModel.selectedArtworksCount === 0) {
+                                mustSelectDialog.open()
+                            }
+                            else {
+                                if (filteredArtItemsModel.selectedArtworksCount > 0) {
+                                    combinedArtworks.resetModelData();
+                                    filteredArtItemsModel.combineSelectedArtworks();
+                                    Common.launchDialog("Dialogs/CombinedArtworksDialog.qml", applicationWindow, {componentParent: applicationWindow});
+                                }
+                            }
+                        }
+                    }
+
+                    StyledButton {
+                        text: qsTr("Save")
+                        width: 80
+                        enabled: artworkRepository.artworksSourcesCount > 0
+                        onClicked: {
+                            if (filteredArtItemsModel.selectedArtworksCount == 0) {
+                                mustSelectDialog.open()
+                            }
+                            else {
+                                var modifiedSelectedCount = filteredArtItemsModel.getModifiedSelectedCount();
+
+                                if (filteredArtItemsModel.selectedArtworksCount > 0 && modifiedSelectedCount > 0) {
+                                    iptcProvider.resetModel()
+                                    filteredArtItemsModel.saveSelectedArtworks()
+                                    Common.launchDialog("Dialogs/ExportMetadata.qml", applicationWindow, {})
+                                } else {
+                                    if (modifiedSelectedCount === 0) {
+                                        alreadySavedDialog.open()
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    StyledButton {
+                        text: qsTr("Upload")
+                        width: 90
+                        enabled: artworkRepository.artworksSourcesCount > 0
+                        onClicked: {
+                            if (filteredArtItemsModel.selectedArtworksCount === 0) {
+                                filteredArtItemsModel.selectFilteredArtworks();
+                            }
+
+                            if (filteredArtItemsModel.selectedArtworksCount > 0) {
+                                tryUploadArtworks();
+                            }
+                        }
+                    }
+
+                    Item {
+                        width: 10
+                    }
                 }
+            }
 
-                Rectangle {
-                    Layout.fillHeight: true
-                    width: 250
+            Rectangle {
+                height: 1
+                anchors.left: parent.left
+                anchors.right: parent.right
+                color: Colors.itemsSourceSelected
+            }
 
-                    color: Colors.defaultControlColor
+            Rectangle {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                Layout.fillHeight: true
+                color: Colors.defaultControlColor
+
+                Item {
+                    anchors.topMargin: 10
+                    anchors.fill: parent
+
+                    Rectangle {
+                        id: filterRect
+                        color: "transparent"
+                        anchors.top: parent.top
+                        anchors.left: parent.left
+                        width: parent.width
+                        height: 30
+
+                        RowLayout {
+                            anchors.fill: parent
+                            anchors.rightMargin: mainScrollView.flickableItem.contentHeight > mainScrollView.flickableItem.height ? 10 : 0
+                            spacing: 10
+
+                            Item {
+                                width: 10
+                            }
+
+                            StyledCheckbox {
+                                id: selectAllCheckbox
+                                isContrast: true
+                                enabled: artworkRepository.artworksSourcesCount > 0
+                                text: filteredArtItemsModel.selectedArtworksCount === 0 ? qsTr("Select all") : qsTr("Select none")
+                                checked: filteredArtItemsModel.selectedArtworksCount > 0
+
+                                onClicked: {
+                                    if (checked) {
+                                        filteredArtItemsModel.selectFilteredArtworks();
+                                    }
+                                    else {
+                                        filteredArtItemsModel.unselectFilteredArtworks();
+                                    }
+                                }
+
+                                Connections {
+                                    target: filteredArtItemsModel
+                                    onSelectedArtworksCountChanged: {
+                                        selectAllCheckbox.checked = filteredArtItemsModel.selectedArtworksCount > 0
+                                    }
+                                }
+                            }
+
+                            Item {
+                                Layout.fillWidth: true
+                            }
+
+                            Rectangle {
+                                color: Colors.defaultDarkColor
+                                width: 262
+                                height: 24
+                                enabled: artworkRepository.artworksSourcesCount > 0
+
+                                StyledTextInput {
+                                    id: filterText
+                                    width: 230
+                                    height: 24
+                                    clip: true
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: 5
+                                    color: Colors.defaultInputBackground
+                                    onAccepted: {
+                                        filteredArtItemsModel.searchTerm = text
+                                    }
+
+                                    Connections {
+                                        target: filteredArtItemsModel
+                                        onSearchTermChanged: filterText.text = filteredArtItemsModel.searchTerm
+                                    }
+                                }
+
+                                CloseIcon {
+                                    width: 14
+                                    height: 14
+                                    anchors.right: parent.right
+                                    anchors.rightMargin: 5
+                                    enabled: filterText.length > 0
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    onItemClicked: {
+                                        filteredArtItemsModel.searchTerm = ''
+                                        if (filterText.length > 0) {
+                                            filterText.text = ''
+                                        }
+                                    }
+                                }
+
+                                StyledText {
+                                    text: qsTr("Search...   x:empty  x:modified")
+                                    color: Colors.defaultInputBackground
+                                    opacity: (filterText.activeFocus || filterText.length > 0) ? 0 : 0.1
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: 7
+                                    anchors.verticalCenter: parent.verticalCenter
+                                }
+                            }
+
+                            StyledBlackButton {
+                                width: 90
+                                text: qsTr("Search")
+                                enabled: artworkRepository.artworksSourcesCount > 0
+                                onClicked: filteredArtItemsModel.searchTerm = filterText.text
+                            }
+
+                            Item {
+                                width: 20
+                            }
+                        }
+                    }
+
+                    Rectangle {
+                        id: undoRedoRect
+                        color: Colors.defaultDarkColor
+                        width: parent.width
+                        height: 4
+                        opacity: 0
+                        anchors.topMargin: 0
+                        anchors.top: filterRect.bottom
+
+                        states: [
+                            State {
+                                name: "canundo"
+                                when: undoRedoManager.canUndo
+                                PropertyChanges {
+                                    target: undoRedoRect
+                                    height: 40
+                                }
+                            }
+                        ]
+
+                        transitions: [
+                            Transition {
+                                from: ""; to: "canundo"
+                                ParallelAnimation {
+                                    NumberAnimation {
+                                        target: undoRedoRect
+                                        properties: "height";
+                                        from: 4
+                                        to: 40
+                                        easing.type: "InOutQuad";
+                                        duration: 250
+                                    }
+                                    NumberAnimation {
+                                        target: undoRedoRect
+                                        properties: "anchors.topMargin";
+                                        from: 0
+                                        to: 4
+                                        easing.type: "InOutQuad";
+                                        duration: 250
+                                    }
+                                    NumberAnimation {
+                                        target: undoRedoRect
+                                        properties: "opacity";
+                                        from: 0
+                                        to: 1
+                                        easing.type: "InOutQuad";
+                                        duration: 250
+                                    }
+                                }
+                            },
+                            Transition {
+                                from: "canundo"; to: ""
+                                ParallelAnimation {
+                                    NumberAnimation {
+                                        target: undoRedoRect
+                                        properties: "height";
+                                        from: 40
+                                        to: 4
+                                        easing.type: "InOutQuad";
+                                        duration: 250
+                                    }
+                                    NumberAnimation {
+                                        target: undoRedoRect
+                                        properties: "anchors.topMargin";
+                                        from: 4
+                                        to: 0
+                                        easing.type: "InOutQuad";
+                                        duration: 250
+                                    }
+                                    NumberAnimation {
+                                        target: undoRedoRect
+                                        properties: "opacity";
+                                        from: 1
+                                        to: 0
+                                        easing.type: "InOutQuad";
+                                        duration: 250
+                                    }
+                                }
+                            }
+                        ]
+
+                        RowLayout {
+                            anchors.fill: parent
+                            spacing: 10
+
+                            Rectangle {
+                                color: Colors.artworkSavedColor
+                                width: 6
+                                Layout.fillHeight: true
+                            }
+
+                            Item {
+                                Layout.fillWidth: true
+                            }
+
+                            StyledText {
+                                id: undoDescription
+                                text: undoRedoManager.undoDescription
+                            }
+
+                            Item {
+                                width: 10
+                            }
+
+                            StyledText {
+                                text: qsTr("Undo")
+                                color: undoMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
+
+                                MouseArea {
+                                    id: undoMA
+                                    anchors.fill: parent
+                                    enabled: undoRedoManager.canUndo
+                                    cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
+                                    onClicked: {
+                                        undoRedoManager.undoLastAction()
+                                    }
+                                }
+                            }
+
+                            StyledText {
+                                text: qsTr("Dismiss (%1)").arg(settingsModel.dismissDuration - (autoDismissTimer.iterations % (settingsModel.dismissDuration + 1)))
+                                color: dismissUndoMA.pressed ? Colors.defaultLightColor : Colors.defaultInputBackground
+
+                                MouseArea {
+                                    id: dismissUndoMA
+                                    anchors.fill: parent
+                                    enabled: undoRedoManager.canUndo
+                                    cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
+                                    onClicked: {
+                                        undoRedoManager.discardLastAction()
+                                    }
+                                }
+                            }
+
+                            Item {
+                                Layout.fillWidth: true
+                            }
+
+                            Timer {
+                                id: autoDismissTimer
+                                property int iterations: 0
+                                interval: 1000
+                                repeat: true
+                                running: undoRedoManager.canUndo
+                                onTriggered: {
+                                    iterations += 1
+
+                                    if (iterations % (settingsModel.dismissDuration + 1) === settingsModel.dismissDuration) {
+                                        undoRedoManager.discardLastAction()
+                                        iterations = 0
+                                    }
+                                }
+                            }
+
+                            Connections {
+                                target: undoRedoManager
+                                onItemRecorded: {
+                                    autoDismissTimer.iterations = 0
+                                }
+                            }
+                        }
+                    }
 
                     StyledScrollView {
-                        anchors.fill: parent
-                        anchors.topMargin: 5
+                        id: mainScrollView
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.topMargin: 4
+                        anchors.top: undoRedoRect.bottom
+                        anchors.bottom: parent.bottom
+                        // does not work for now in Qt 5.4.1 in combination with ListView
+                        //verticalScrollBarPolicy: Qt.ScrollBarAlwaysOn
 
                         ListView {
-                            id: sourcesListView
-                            model: artworkRepository
+                            id: imagesListView
+                            model: filteredArtItemsModel
                             boundsBehavior: Flickable.StopAtBounds
-                            anchors.fill: parent
-                            anchors.rightMargin: 10
-                            anchors.leftMargin: 10
+                            spacing: 4
 
-                            spacing: 10
+                            add: Transition {
+                                NumberAnimation { property: "opacity"; from: 0; to: 1; duration: 230 }
+                            }
+
+                            remove: Transition {
+                                NumberAnimation { property: "opacity"; to: 0; duration: 230 }
+                            }
 
                             displaced: Transition {
                                 NumberAnimation { properties: "x,y"; duration: 230 }
@@ -361,578 +855,321 @@ ApplicationWindow {
                             }
 
                             delegate: Rectangle {
-                                id: sourceWrapper
-                                property int delegateIndex: index
-                                color: isselected ? Colors.itemsSourceSelected : Colors.itemsSourceBackground
-                                width: parent.width
-                                height: 31
-                                Layout.minimumWidth: 237
+                                id: rowWrapper
+                                property bool isHighlighted: (isselected || descriptionTextInput.activeFocus || flv.isFocused)
+                                color: isHighlighted ? Colors.selectedArtworkColor : Colors.artworkImageBackground
+                                property variant artworkModel: model
 
-                                MouseArea {
-                                    anchors.fill: parent
-                                    onClicked: {
-                                        filteredArtItemsModel.selectDirectory(sourceWrapper.delegateIndex)
-                                    }
+                                function getIndex() {
+                                    return filteredArtItemsModel.getOriginalIndex(index)
                                 }
+
+                                width: parent.width
+                                height: 200 + 80*(settingsModel.keywordSizeScale - 1.0)
 
                                 RowLayout {
-                                    spacing: 10
                                     anchors.fill: parent
+                                    anchors.rightMargin: 10
+                                    spacing: 5
 
-                                    Item {
-                                        id: placeholder1
-                                        width: 1
-                                    }
-
-                                    StyledText {
-                                        id: directoryPath
-                                        Layout.fillWidth: true
-                                        anchors.verticalCenter: parent.verticalCenter
-                                        height: 31
-                                        color: Colors.itemsSourceForeground
-                                        text: path + " (" + usedimagescount + ")"
-                                        elide: Text.ElideMiddle
-                                        font.bold: true
-                                    }
-
-                                    CloseIcon {
-                                        width: 14
-                                        height: 14
-                                        anchors.verticalCenter: parent.verticalCenter
-                                        isActive: false
-
-                                        onItemClicked: {
-                                            if (mustUseConfirmation()) {
-                                                confirmRemoveDirectoryDialog.directoryIndex = sourceWrapper.delegateIndex
-                                                confirmRemoveDirectoryDialog.open()
-                                            } else {
-                                                filteredArtItemsModel.removeArtworksDirectory(sourceWrapper.delegateIndex)
-                                                filteredArtItemsModel.checkForWarnings()
-                                            }
-                                        }
+                                    Rectangle {
+                                        id: isModifiedRectangle
+                                        color: ismodified ? Colors.artworkModifiedColor : Colors.artworkSavedColor
+                                        width: 6
+                                        anchors.top: parent.top
+                                        anchors.bottom: parent.bottom
                                     }
 
                                     Item {
-                                        id: placeholder2
-                                        width: 1
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            Rectangle {
-                height: parent.height
-                width: 2
-                color: Colors.defaultDarkColor
-            }
-
-            ColumnLayout {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                spacing: 0
-
-                Rectangle {
-                    height: 45
-                    color: Colors.defaultDarkColor
-                    z: 10000
-                    Layout.fillWidth: true
-
-                    RowLayout {
-                        spacing: 10
-                        anchors.fill: parent
-                        anchors.margins: { top: 10; left: 10 }
-                        anchors.rightMargin: mainScrollView.flickableItem.contentHeight > mainScrollView.flickableItem.height ? 20 : 10
-
-                        Item {
-                            Layout.fillWidth: true
-                        }
-
-                        StyledButton {
-                            text: qsTr("Remove")
-                            enabled: artworkRepository.artworksSourcesCount > 0
-                            width: 80
-                            onClicked: {
-                                if (filteredArtItemsModel.selectedArtworksCount === 0) {
-                                    mustSelectDialog.open()
-                                }
-                                else {
-                                    var itemsCount = filteredArtItemsModel.selectedArtworksCount
-                                    if (itemsCount > 0) {
-                                        if (mustUseConfirmation()) {
-                                            confirmRemoveSelectedDialog.itemsCount = itemsCount
-                                            confirmRemoveSelectedDialog.open()
-                                        } else {
-                                            doRemoveSelectedArtworks()
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        StyledButton {
-                            text: qsTr("Edit")
-                            width: mainScrollView.flickableItem.contentHeight > mainScrollView.flickableItem.height ? 72 : 82
-                            enabled: artworkRepository.artworksSourcesCount > 0
-                            onClicked: {
-                                if (filteredArtItemsModel.selectedArtworksCount === 0) {
-                                    mustSelectDialog.open()
-                                }
-                                else {
-                                    if (filteredArtItemsModel.selectedArtworksCount > 0) {
-                                        combinedArtworks.resetModelData();
-                                        filteredArtItemsModel.combineSelectedArtworks();
-                                        Common.launchDialog("Dialogs/CombinedArtworksDialog.qml", applicationWindow, {componentParent: applicationWindow});
-                                    }
-                                }
-                            }
-                        }
-
-                        StyledButton {
-                            text: qsTr("Save")
-                            width: 80
-                            enabled: artworkRepository.artworksSourcesCount > 0
-                            onClicked: {
-                                if (filteredArtItemsModel.selectedArtworksCount == 0) {
-                                    mustSelectDialog.open()
-                                }
-                                else {
-                                    var modifiedSelectedCount = filteredArtItemsModel.getModifiedSelectedCount();
-
-                                    if (filteredArtItemsModel.selectedArtworksCount > 0 && modifiedSelectedCount > 0) {
-                                        iptcProvider.resetModel()
-                                        filteredArtItemsModel.saveSelectedArtworks()
-                                        Common.launchDialog("Dialogs/ExportMetadata.qml", applicationWindow, {})
-                                    } else {
-                                        if (modifiedSelectedCount === 0) {
-                                            alreadySavedDialog.open()
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        StyledButton {
-                            text: qsTr("Upload")
-                            width: 90
-                            enabled: artworkRepository.artworksSourcesCount > 0
-                            onClicked: {
-                                if (filteredArtItemsModel.selectedArtworksCount === 0) {
-                                    filteredArtItemsModel.selectFilteredArtworks();
-                                }
-
-                                if (filteredArtItemsModel.selectedArtworksCount > 0) {
-                                    tryUploadArtworks();
-                                }
-                            }
-                        }
-
-                        Item {
-                            width: 10
-                        }
-                    }
-                }
-
-                Rectangle {
-                    height: 1
-                    Layout.fillWidth: true
-                    color: Colors.itemsSourceSelected
-                }
-
-                Rectangle {
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    color: Colors.defaultControlColor
-
-                    Item {
-                        anchors.topMargin: 10
-                        anchors.fill: parent
-
-                        Rectangle {
-                            id: filterRect
-                            color: "transparent"
-                            anchors.top: parent.top
-                            anchors.left: parent.left
-                            width: parent.width
-                            height: 30
-
-                            RowLayout {
-                                anchors.fill: parent
-                                anchors.rightMargin: mainScrollView.flickableItem.contentHeight > mainScrollView.flickableItem.height ? 10 : 0
-                                spacing: 10
-
-                                Item {
-                                    width: 10
-                                }
-
-                                StyledCheckbox {
-                                    id: selectAllCheckbox
-                                    isContrast: true
-                                    enabled: artworkRepository.artworksSourcesCount > 0
-                                    text: filteredArtItemsModel.selectedArtworksCount === 0 ? qsTr("Select all") : qsTr("Select none")
-                                    checked: filteredArtItemsModel.selectedArtworksCount > 0
-
-                                    onClicked: {
-                                        if (checked) {
-                                            filteredArtItemsModel.selectFilteredArtworks();
-                                        }
-                                        else {
-                                            filteredArtItemsModel.unselectFilteredArtworks();
-                                        }
+                                        width: 5
                                     }
 
-                                    Connections {
-                                        target: filteredArtItemsModel
-                                        onSelectedArtworksCountChanged: {
-                                            selectAllCheckbox.checked = filteredArtItemsModel.selectedArtworksCount > 0
-                                        }
-                                    }
-                                }
-
-                                Item {
-                                    Layout.fillWidth: true
-                                }
-
-                                Rectangle {
-                                    color: Colors.defaultDarkColor
-                                    width: 262
-                                    height: 24
-                                    enabled: artworkRepository.artworksSourcesCount > 0
-
-                                    StyledTextInput {
-                                        id: filterText
-                                        width: 230
-                                        height: 24
-                                        clip: true
-                                        anchors.left: parent.left
-                                        anchors.leftMargin: 5
-                                        color: Colors.defaultInputBackground
-                                        onAccepted: {
-                                            filteredArtItemsModel.searchTerm = text
-                                        }
-
+                                    StyledCheckbox {
+                                        id: itemCheckedCheckbox
+                                        //checked: isselected
+                                        onClicked: editisselected = checked
+                                        Component.onCompleted: itemCheckedCheckbox.checked = isselected
                                         Connections {
                                             target: filteredArtItemsModel
-                                            onSearchTermChanged: filterText.text = filteredArtItemsModel.searchTerm
-                                        }
-                                    }
-
-                                    CloseIcon {
-                                        width: 14
-                                        height: 14
-                                        anchors.right: parent.right
-                                        anchors.rightMargin: 5
-                                        enabled: filterText.length > 0
-                                        anchors.verticalCenter: parent.verticalCenter
-                                        onItemClicked: {
-                                            filteredArtItemsModel.searchTerm = ''
-                                            if (filterText.length > 0) {
-                                                filterText.text = ''
+                                            onSelectedArtworksCountChanged: {
+                                                itemCheckedCheckbox.checked = rowWrapper.artworkModel.isselected || false
                                             }
                                         }
                                     }
 
-                                    StyledText {
-                                        text: qsTr("Search...   x:empty  x:modified")
-                                        color: Colors.defaultInputBackground
-                                        opacity: (filterText.activeFocus || filterText.length > 0) ? 0 : 0.1
-                                        anchors.left: parent.left
-                                        anchors.leftMargin: 7
-                                        anchors.verticalCenter: parent.verticalCenter
-                                    }
-                                }
+                                    Rectangle {
+                                        width: 180
+                                        anchors.top: parent.top
+                                        anchors.bottom: parent.bottom
+                                        color: "transparent"
 
-                                StyledBlackButton {
-                                    width: 90
-                                    text: qsTr("Search")
-                                    enabled: artworkRepository.artworksSourcesCount > 0
-                                    onClicked: filteredArtItemsModel.searchTerm = filterText.text
-                                }
+                                        ColumnLayout {
+                                            anchors.fill: parent
+                                            anchors.margins: { left: 15; right: 15 }
+                                            spacing: 5
 
-                                Item {
-                                    width: 20
-                                }
-                            }
-                        }
+                                            Item {
+                                                height: 15
+                                            }
 
-                        Rectangle {
-                            id: undoRedoRect
-                            color: Colors.defaultDarkColor
-                            width: parent.width
-                            height: 4
-                            opacity: 0
-                            anchors.topMargin: 0
-                            anchors.top: filterRect.bottom
+                                            Rectangle {
+                                                width: 150
+                                                height: 130
+                                                anchors.horizontalCenter: parent.horizontalCenter
+                                                color: "transparent"
 
-                            states: [
-                                State {
-                                    name: "canundo"
-                                    when: undoRedoManager.canUndo
-                                    PropertyChanges {
-                                        target: undoRedoRect
-                                        height: 40
-                                    }
-                                }
-                            ]
+                                                Image {
+                                                    id: artworkImage
+                                                    anchors.fill: parent
+                                                    source: "image://global/" + filename
+                                                    sourceSize.width: 150
+                                                    sourceSize.height: 150
+                                                    fillMode: Image.PreserveAspectCrop
+                                                    asynchronous: true
+                                                }
 
-                            transitions: [
-                                Transition {
-                                    from: ""; to: "canundo"
-                                    ParallelAnimation {
-                                        NumberAnimation {
-                                            target: undoRedoRect
-                                            properties: "height";
-                                            from: 4
-                                            to: 40
-                                            easing.type: "InOutQuad";
-                                            duration: 250
-                                        }
-                                        NumberAnimation {
-                                            target: undoRedoRect
-                                            properties: "anchors.topMargin";
-                                            from: 0
-                                            to: 4
-                                            easing.type: "InOutQuad";
-                                            duration: 250
-                                        }
-                                        NumberAnimation {
-                                            target: undoRedoRect
-                                            properties: "opacity";
-                                            from: 0
-                                            to: 1
-                                            easing.type: "InOutQuad";
-                                            duration: 250
+                                                MouseArea {
+                                                    anchors.fill: parent
+                                                    onClicked: editisselected = !isselected
+                                                    onDoubleClicked: {
+                                                        combinedArtworks.resetModelData();
+                                                        artItemsModel.combineArtwork(rowWrapper.getIndex());
+                                                        Common.launchDialog("Dialogs/CombinedArtworksDialog.qml", applicationWindow, {componentParent: applicationWindow});
+                                                    }
+                                                }
+                                            }
+
+                                            StyledText {
+                                                Layout.fillWidth: true
+                                                elide: Text.ElideMiddle
+                                                color: moreInfoMA.pressed ? Colors.defaultLightColor : Colors.defaultInputBackground
+                                                horizontalAlignment: Text.AlignHCenter
+                                                text: filename.split(/[\\/]/).pop()
+
+                                                MouseArea {
+                                                    id: moreInfoMA
+                                                    anchors.fill: parent
+                                                    cursorShape: Qt.PointingHandCursor
+
+                                                    onPressed: {
+                                                        Common.launchDialog("Dialogs/ArtworkPreview.qml", applicationWindow,
+                                                                            {
+                                                                                imagePath: filename,
+                                                                                artworkIndex: rowWrapper.getIndex()
+                                                                            });
+                                                    }
+                                                }
+                                            }
+
+                                            Item {
+                                                Layout.fillHeight: true
+                                            }
                                         }
                                     }
-                                },
-                                Transition {
-                                    from: "canundo"; to: ""
-                                    ParallelAnimation {
-                                        NumberAnimation {
-                                            target: undoRedoRect
-                                            properties: "height";
-                                            from: 40
-                                            to: 4
-                                            easing.type: "InOutQuad";
-                                            duration: 250
-                                        }
-                                        NumberAnimation {
-                                            target: undoRedoRect
-                                            properties: "anchors.topMargin";
-                                            from: 4
-                                            to: 0
-                                            easing.type: "InOutQuad";
-                                            duration: 250
-                                        }
-                                        NumberAnimation {
-                                            target: undoRedoRect
-                                            properties: "opacity";
-                                            from: 1
-                                            to: 0
-                                            easing.type: "InOutQuad";
-                                            duration: 250
-                                        }
-                                    }
-                                }
-                            ]
 
-                            RowLayout {
-                                anchors.fill: parent
-                                spacing: 10
-
-                                Rectangle {
-                                    color: Colors.artworkSavedColor
-                                    width: 6
-                                    Layout.fillHeight: true
-                                }
-
-                                Item {
-                                    Layout.fillWidth: true
-                                }
-
-                                StyledText {
-                                    id: undoDescription
-                                    text: undoRedoManager.undoDescription
-                                }
-
-                                Item {
-                                    width: 10
-                                }
-
-                                StyledText {
-                                    text: qsTr("Undo")
-                                    color: undoMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
-
-                                    MouseArea {
-                                        id: undoMA
-                                        anchors.fill: parent
-                                        enabled: undoRedoManager.canUndo
-                                        cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
-                                        onClicked: {
-                                            undoRedoManager.undoLastAction()
-                                        }
-                                    }
-                                }
-
-                                StyledText {
-                                    text: qsTr("Dismiss (%1)").arg(settingsModel.dismissDuration - (autoDismissTimer.iterations % (settingsModel.dismissDuration + 1)))
-                                    color: dismissUndoMA.pressed ? Colors.defaultLightColor : Colors.defaultInputBackground
-
-                                    MouseArea {
-                                        id: dismissUndoMA
-                                        anchors.fill: parent
-                                        enabled: undoRedoManager.canUndo
-                                        cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
-                                        onClicked: {
-                                            undoRedoManager.discardLastAction()
-                                        }
-                                    }
-                                }
-
-                                Item {
-                                    Layout.fillWidth: true
-                                }
-
-                                Timer {
-                                    id: autoDismissTimer
-                                    property int iterations: 0
-                                    interval: 1000
-                                    repeat: true
-                                    running: undoRedoManager.canUndo
-                                    onTriggered: {
-                                        iterations += 1
-
-                                        if (iterations % (settingsModel.dismissDuration + 1) === settingsModel.dismissDuration) {
-                                            undoRedoManager.discardLastAction()
-                                            iterations = 0
-                                        }
-                                    }
-                                }
-
-                                Connections {
-                                    target: undoRedoManager
-                                    onItemRecorded: {
-                                        autoDismissTimer.iterations = 0
-                                    }
-                                }
-                            }
-                        }
-
-                        StyledScrollView {
-                            id: mainScrollView
-                            width: parent.width
-                            anchors.topMargin: 4
-                            anchors.top: undoRedoRect.bottom
-                            anchors.bottom: parent.bottom
-                            //Layout.fillWidth: true
-                            //Layout.fillHeight: true
-                            // does not work for now in Qt 5.4.1 in combination with ListView
-                            //verticalScrollBarPolicy: Qt.ScrollBarAlwaysOn
-
-                            ListView {
-                                id: imagesListView
-                                model: filteredArtItemsModel
-                                boundsBehavior: Flickable.StopAtBounds
-                                spacing: 4
-
-                                add: Transition {
-                                    NumberAnimation { property: "opacity"; from: 0; to: 1; duration: 230 }
-                                }
-
-                                remove: Transition {
-                                    NumberAnimation { property: "opacity"; to: 0; duration: 230 }
-                                }
-
-                                displaced: Transition {
-                                    NumberAnimation { properties: "x,y"; duration: 230 }
-                                }
-
-                                addDisplaced: Transition {
-                                    NumberAnimation { properties: "x,y"; duration: 230 }
-                                }
-
-                                removeDisplaced: Transition {
-                                    NumberAnimation { properties: "x,y"; duration: 230 }
-                                }
-
-                                delegate: Rectangle {
-                                    id: rowWrapper
-                                    property bool isHighlighted: (isselected || descriptionTextInput.activeFocus || flv.isFocused)
-                                    color: isHighlighted ? Colors.selectedArtworkColor : Colors.artworkImageBackground
-                                    property variant artworkModel: model
-
-                                    function getIndex() {
-                                        return filteredArtItemsModel.getOriginalIndex(index)
-                                    }
-
-                                    width: parent.width
-                                    height: 200
-
-                                    RowLayout {
-                                        anchors.fill: parent
-                                        anchors.rightMargin: 10
-                                        spacing: 5
-
-                                        Rectangle {
-                                            id: isModifiedRectangle
-                                            color: ismodified ? Colors.artworkModifiedColor : Colors.artworkSavedColor
-                                            width: 6
-                                            Layout.fillHeight: true
-                                        }
+                                    Rectangle {
+                                        id: columnRectangle
+                                        anchors.top: parent.top
+                                        anchors.bottom: parent.bottom
+                                        Layout.fillWidth: true
+                                        color: rowWrapper.isHighlighted  ? Colors.selectedMetadataColor : Colors.artworkBackground
 
                                         Item {
-                                            width: 5
-                                        }
+                                            id: columnLayout
+                                            //spacing: 3
+                                            anchors.fill: parent
+                                            anchors.margins: { left: 20; right: 20 }
 
-                                        StyledCheckbox {
-                                            id: itemCheckedCheckbox
-                                            //checked: isselected
-                                            onClicked: editisselected = checked
-                                            Component.onCompleted: itemCheckedCheckbox.checked = isselected
-                                            Connections {
-                                                target: filteredArtItemsModel
-                                                onSelectedArtworksCountChanged: {
-                                                    itemCheckedCheckbox.checked = rowWrapper.artworkModel.isselected || false
-                                                }
+                                            StyledText {
+                                                id: descriptionText
+                                                anchors.left: parent.left
+                                                anchors.top: parent.top
+                                                text: qsTr("Description:")
                                             }
-                                        }
 
-                                        Rectangle {
-                                            width: 180
-                                            height: parent.height
-                                            color: "transparent"
+                                            Rectangle {
+                                                id: rect
+                                                height: 30
+                                                anchors.left: parent.left
+                                                anchors.right: parent.right
+                                                anchors.top: descriptionText.bottom
+                                                anchors.topMargin: 3
+                                                color: rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.defaultControlColor
+                                                border.color: Colors.artworkActiveColor
+                                                border.width: descriptionTextInput.activeFocus ? 1 : 0
 
-                                            ColumnLayout {
-                                                anchors.fill: parent
-                                                anchors.margins: { left: 15; right: 15 }
-                                                spacing: 5
-
-                                                Item {
-                                                    height: 15
-                                                }
-
-                                                Rectangle {
-                                                    width: 150
-                                                    height: 130
-                                                    anchors.horizontalCenter: parent.horizontalCenter
-                                                    color: "transparent"
-
-                                                    Image {
-                                                        id: artworkImage
-                                                        anchors.fill: parent
-                                                        source: "image://global/" + filename
-                                                        sourceSize.width: 150
-                                                        sourceSize.height: 150
-                                                        fillMode: Image.PreserveAspectCrop
-                                                        asynchronous: true
+                                                StyledTextInput {
+                                                    id: descriptionTextInput
+                                                    height: 30
+                                                    anchors.left: parent.left
+                                                    anchors.right: parent.right
+                                                    anchors.leftMargin: 5
+                                                    anchors.rightMargin: 5
+                                                    font.pixelSize: 12 * settingsModel.keywordSizeScale
+                                                    anchors.verticalCenter: parent.verticalCenter
+                                                    maximumLength: 250
+                                                    text: description
+                                                    color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.defaultInputBackground
+                                                    onTextChanged: model.editdescription = text
+                                                    Keys.onTabPressed: {
+                                                        flv.activateEdit()
                                                     }
 
+                                                    Keys.onPressed: {
+                                                        if(event.matches(StandardKey.Paste)) {
+                                                            var clipboardText = clipboard.getText();
+                                                            // same regexp as in validator
+                                                            descriptionTextInput.paste(sanitizedText)
+                                                            event.accepted = true
+                                                        }
+                                                    }
+                                                }
+                                            }
+
+                                            RowLayout {
+                                                id: keywordsLabelsRow
+                                                anchors.left: parent.left
+                                                anchors.top: rect.bottom
+                                                anchors.topMargin: 7
+                                                spacing: 5
+
+                                                StyledText {
+                                                    id: keywordsLabel
+                                                    text: qsTr("Keywords:")
+                                                }
+
+                                                StyledText {
+                                                    text: qsTr("(comma-separated)")
+                                                    visible: rowWrapper.isHighlighted
+                                                    color: Colors.defaultInputBackground
+                                                }
+                                            }
+
+                                            Rectangle {
+                                                id: keywordsWrapper
+                                                anchors.top: keywordsLabelsRow.bottom
+                                                anchors.topMargin: 3
+                                                anchors.left: parent.left
+                                                anchors.right: parent.right
+                                                height: 80*settingsModel.keywordSizeScale
+                                                border.color: Colors.artworkActiveColor
+                                                border.width: flv.isFocused ? 1 : 0
+                                                color: rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.defaultControlColor
+
+                                                function removeKeyword(index) {
+                                                    artItemsModel.removeKeywordAt(rowWrapper.getIndex(), index)
+                                                }
+
+                                                function removeLastKeyword() {
+                                                    artItemsModel.removeLastKeyword(rowWrapper.getIndex())
+                                                }
+
+                                                function appendKeyword(keyword) {
+                                                    artItemsModel.appendKeyword(rowWrapper.getIndex(), keyword)
+                                                }
+
+                                                function pasteKeywords(keywords) {
+                                                    artItemsModel.pasteKeywords(rowWrapper.getIndex(), keywords)
+                                                }
+
+                                                function saveKeywords() {
+                                                    artItemsModel.backupItem(rowWrapper.getIndex())
+                                                }
+
+                                                MouseArea {
+                                                    anchors.fill: parent
+                                                    propagateComposedEvents: true
+                                                    onClicked: {
+                                                        flv.activateEdit()
+                                                        mouse.accepted = false
+                                                    }
+                                                }
+
+                                                StyledScrollView {
+                                                    id: scroller
+                                                    height: parent.height
+                                                    width: parent.width + 15
+                                                    highlightOnFocus: true
+
+                                                    EditableTags {
+                                                        id: flv
+                                                        model: artItemsModel.getArtworkItself(rowWrapper.getIndex())
+                                                        anchors.margins: { left: 5; top: 5; right: 0; bottom: 5 }
+
+                                                        delegate: KeywordWrapper {
+                                                            id: kw
+                                                            isHighlighted: rowWrapper.isHighlighted
+                                                            delegateIndex: index
+                                                            keywordText: keyword
+                                                            onActionClicked: keywordsWrapper.removeKeyword(kw.delegateIndex)
+                                                        }
+
+                                                        onTagAdded: {
+                                                            keywordsWrapper.appendKeyword(text)
+                                                        }
+
+                                                        onTagsPasted: {
+                                                            keywordsWrapper.pasteKeywords(tagsList)
+                                                        }
+
+                                                        onRemoveLast: {
+                                                            keywordsWrapper.removeLastKeyword()
+                                                        }
+
+                                                        onFocusLost: keywordsWrapper.saveKeywords()
+
+                                                        onCopyRequest: clipboard.setText(keywordsstring)
+                                                    }
+                                                }
+                                            }
+
+                                            RowLayout {
+                                                anchors.left: parent.left
+                                                anchors.right: parent.right
+                                                anchors.top: keywordsWrapper.bottom
+                                                anchors.topMargin: 3
+                                                spacing: 15
+
+                                                StyledText {
+                                                    text: keywordscount
+                                                    color: rowWrapper.isHighlighted ? Colors.defaultControlColor : Colors.selectedArtworkColor
+                                                }
+
+                                                Item {
+                                                    Layout.fillWidth: true
+                                                }
+
+                                                StyledText {
+                                                    text: qsTr("Suggest keywords")
+                                                    color: suggestKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
+
                                                     MouseArea {
+                                                        id: suggestKeywordsMA
                                                         anchors.fill: parent
-                                                        onClicked: editisselected = !isselected
-                                                        onDoubleClicked: {
+                                                        cursorShape: Qt.PointingHandCursor
+                                                        onClicked: {
+                                                            var callbackObject = {
+                                                                promoteKeywords: function(keywords) {
+                                                                    artItemsModel.pasteKeywords(rowWrapper.getIndex(), keywords)
+                                                                }
+                                                            }
+
+                                                            Common.launchDialog("Dialogs/KeywordsSuggestion.qml",
+                                                                                applicationWindow,
+                                                                                {callbackObject: callbackObject});
+                                                        }
+                                                    }
+                                                }
+
+                                                StyledText {
+                                                    text: qsTr("More Edits")
+                                                    color: moreEditsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
+
+                                                    MouseArea {
+                                                        id: moreEditsMA
+                                                        anchors.fill: parent
+                                                        cursorShape: Qt.PointingHandCursor
+                                                        onClicked: {
                                                             combinedArtworks.resetModelData();
                                                             artItemsModel.combineArtwork(rowWrapper.getIndex());
                                                             Common.launchDialog("Dialogs/CombinedArtworksDialog.qml", applicationWindow, {componentParent: applicationWindow});
@@ -941,279 +1178,46 @@ ApplicationWindow {
                                                 }
 
                                                 StyledText {
-                                                    Layout.fillWidth: true
-                                                    elide: Text.ElideMiddle
-                                                    color: moreInfoMA.pressed ? Colors.defaultLightColor : Colors.defaultInputBackground
-                                                    horizontalAlignment: Text.AlignHCenter
-                                                    text: filename.split(/[\\/]/).pop()
+                                                    text: qsTr("Copy keywords")
+                                                    color: copyKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
 
                                                     MouseArea {
-                                                        id: moreInfoMA
+                                                        id: copyKeywordsMA
                                                         anchors.fill: parent
                                                         cursorShape: Qt.PointingHandCursor
-
-                                                        onPressed: {
-                                                            Common.launchDialog("Dialogs/ArtworkPreview.qml", applicationWindow,
-                                                                                {
-                                                                                    imagePath: filename,
-                                                                                    artworkIndex: rowWrapper.getIndex()
-                                                                                });
-                                                        }
+                                                        onClicked: clipboard.setText(keywordsstring)
                                                     }
-                                                }
-
-                                                Item {
-                                                    Layout.fillHeight: true
-                                                }
-                                            }
-                                        }
-
-                                        Rectangle {
-                                            id: columnRectangle
-                                            height: parent.height
-                                            Layout.fillWidth: true
-                                            color: rowWrapper.isHighlighted  ? Colors.selectedMetadataColor : Colors.artworkBackground
-
-                                            ColumnLayout {
-                                                id: columnLayout
-                                                spacing: 3
-                                                anchors.fill: parent
-                                                anchors.margins: { left: 20; right: 20 }
-
-                                                StyledText {
-                                                    text: qsTr("Description:")
-                                                    anchors.left: parent.left
-                                                }
-
-                                                Rectangle {
-                                                    id: rect
-                                                    Layout.fillWidth: true
-                                                    height: 30
-                                                    color: rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.defaultControlColor
-                                                    border.color: Colors.artworkActiveColor
-                                                    border.width: descriptionTextInput.activeFocus ? 1 : 0
-
-                                                    StyledTextInput {
-                                                        id: descriptionTextInput
-                                                        height: 30
-                                                        anchors.left: parent.left
-                                                        anchors.right: parent.right
-                                                        anchors.leftMargin: 5
-                                                        anchors.rightMargin: 5
-                                                        font.pixelSize: 12 * settingsModel.keywordSizeScale
-                                                        anchors.verticalCenter: parent.verticalCenter
-                                                        maximumLength: 250
-                                                        text: description
-                                                        color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.defaultInputBackground
-                                                        onTextChanged: model.editdescription = text
-                                                        Keys.onTabPressed: {
-                                                            flv.activateEdit()
-                                                        }
-
-                                                        Keys.onPressed: {
-                                                            if(event.matches(StandardKey.Paste)) {
-                                                                var clipboardText = clipboard.getText();
-                                                                // same regexp as in validator
-                                                                descriptionTextInput.paste(sanitizedText)
-                                                                event.accepted = true
-                                                            }
-                                                        }
-                                                    }
-                                                }
-
-                                                Item {
-                                                    height: 1
-                                                }
-
-                                                RowLayout {
-                                                    anchors.left: parent.left
-                                                    spacing: 5
-
-                                                    StyledText {
-                                                        id: keywordsLabel
-                                                        text: qsTr("Keywords:")
-                                                    }
-
-                                                    StyledText {
-                                                        text: qsTr("(comma-separated)")
-                                                        visible: rowWrapper.isHighlighted
-                                                        color: Colors.defaultInputBackground
-                                                    }
-                                                }
-
-                                                Rectangle {
-                                                    id: keywordsWrapper
-                                                    Layout.fillWidth: true
-                                                    height: 80
-                                                    anchors.rightMargin: 20
-                                                    border.color: Colors.artworkActiveColor
-                                                    border.width: flv.isFocused ? 1 : 0
-                                                    color: rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.defaultControlColor
-
-
-                                                    function removeKeyword(index) {
-                                                        artItemsModel.removeKeywordAt(rowWrapper.getIndex(), index)
-                                                    }
-
-                                                    function removeLastKeyword() {
-                                                        artItemsModel.removeLastKeyword(rowWrapper.getIndex())
-                                                    }
-
-                                                    function appendKeyword(keyword) {
-                                                        artItemsModel.appendKeyword(rowWrapper.getIndex(), keyword)
-                                                    }
-
-                                                    function pasteKeywords(keywords) {
-                                                        artItemsModel.pasteKeywords(rowWrapper.getIndex(), keywords)
-                                                    }
-
-                                                    function saveKeywords() {
-                                                        artItemsModel.backupItem(rowWrapper.getIndex())
-                                                    }
-
-                                                    MouseArea {
-                                                        anchors.fill: parent
-                                                        propagateComposedEvents: true
-                                                        onClicked: {
-                                                            flv.activateEdit()
-                                                            mouse.accepted = false
-                                                        }
-                                                    }
-
-                                                    StyledScrollView {
-                                                        id: scroller
-                                                        height: parent.height
-                                                        width: parent.width + 15
-                                                        highlightOnFocus: true
-
-                                                        EditableTags {
-                                                            id: flv
-                                                            model: artItemsModel.getArtworkItself(rowWrapper.getIndex())
-                                                            anchors.margins: { left: 5; top: 5; right: 0; bottom: 5 }
-
-                                                            delegate: KeywordWrapper {
-                                                                id: kw
-                                                                isHighlighted: rowWrapper.isHighlighted
-                                                                delegateIndex: index
-                                                                keywordText: keyword
-                                                                onActionClicked: keywordsWrapper.removeKeyword(kw.delegateIndex)
-                                                            }
-
-                                                            onTagAdded: {
-                                                                keywordsWrapper.appendKeyword(text)
-                                                            }
-
-                                                            onTagsPasted: {
-                                                                keywordsWrapper.pasteKeywords(tagsList)
-                                                            }
-
-                                                            onRemoveLast: {
-                                                                keywordsWrapper.removeLastKeyword()
-                                                            }
-
-                                                            onFocusLost: keywordsWrapper.saveKeywords()
-
-                                                            onCopyRequest: clipboard.setText(keywordsstring)
-                                                        }
-                                                    }
-                                                }
-
-                                                RowLayout {
-                                                    spacing: 15
-
-                                                    StyledText {
-                                                        text: keywordscount
-                                                        color: rowWrapper.isHighlighted ? Colors.defaultControlColor : Colors.selectedArtworkColor
-                                                    }
-
-                                                    Item {
-                                                        Layout.fillWidth: true
-                                                    }
-
-                                                    StyledText {
-                                                        text: qsTr("Suggest keywords")
-                                                        color: suggestKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
-
-                                                        MouseArea {
-                                                            id: suggestKeywordsMA
-                                                            anchors.fill: parent
-                                                            cursorShape: Qt.PointingHandCursor
-                                                            onClicked: {
-                                                                var callbackObject = {
-                                                                    promoteKeywords: function(keywords) {
-                                                                        artItemsModel.pasteKeywords(rowWrapper.getIndex(), keywords)
-                                                                    }
-                                                                }
-
-                                                                Common.launchDialog("Dialogs/KeywordsSuggestion.qml",
-                                                                                       applicationWindow,
-                                                                                       {callbackObject: callbackObject});
-                                                            }
-                                                        }
-                                                    }
-
-                                                    StyledText {
-                                                        text: qsTr("More Edits")
-                                                        color: moreEditsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
-
-                                                        MouseArea {
-                                                            id: moreEditsMA
-                                                            anchors.fill: parent
-                                                            cursorShape: Qt.PointingHandCursor
-                                                            onClicked: {
-                                                                combinedArtworks.resetModelData();
-                                                                artItemsModel.combineArtwork(rowWrapper.getIndex());
-                                                                Common.launchDialog("Dialogs/CombinedArtworksDialog.qml", applicationWindow, {componentParent: applicationWindow});
-                                                            }
-                                                        }
-                                                    }
-
-                                                    StyledText {
-                                                        text: qsTr("Copy keywords")
-                                                        color: copyKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
-
-                                                        MouseArea {
-                                                            id: copyKeywordsMA
-                                                            anchors.fill: parent
-                                                            cursorShape: Qt.PointingHandCursor
-                                                            onClicked: clipboard.setText(keywordsstring)
-                                                        }
-                                                    }
-                                                }
-
-                                                Item {
-                                                    height: 1
                                                 }
                                             }
                                         }
                                     }
                                 }
+                            }
 
-                                Connections {
-                                    target: artItemsModel
-                                    onArtworksChanged: {
-                                        console.log("ArtItemsModel: Force layout for artworks list view")
-                                        imagesListView.forceLayout()
-                                        imagesListView.update()
-                                    }
+                            Connections {
+                                target: artItemsModel
+                                onArtworksChanged: {
+                                    console.log("ArtItemsModel: Force layout for artworks list view")
+                                    imagesListView.forceLayout()
+                                    imagesListView.update()
                                 }
+                            }
 
-                                Connections {
-                                    target: filteredArtItemsModel
-                                    onAfterInvalidateFilter: {
-                                        console.log("Filtered Model: Force layout for artworks list view")
-                                        imagesListView.forceLayout()
-                                        imagesListView.update()
-                                    }
+                            Connections {
+                                target: filteredArtItemsModel
+                                onAfterInvalidateFilter: {
+                                    console.log("Filtered Model: Force layout for artworks list view")
+                                    imagesListView.forceLayout()
+                                    imagesListView.update()
                                 }
                             }
                         }
                     }
                 }
+            }
 
-                ClipboardHelper {
-                    id: clipboard
-                }
+            ClipboardHelper {
+                id: clipboard
             }
         }
     }
