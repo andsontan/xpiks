@@ -1307,6 +1307,17 @@ ApplicationWindow {
                 text: filteredArtItemsModel.selectedArtworksCount > 1 ? qsTr("%1 selected items").arg(filteredArtItemsModel.selectedArtworksCount) : (filteredArtItemsModel.selectedArtworksCount === 1 ? qsTr("1 selected item") : qsTr("No selected items"))
                 color: Colors.selectedMetadataColor
                 verticalAlignment: Text.AlignVCenter
+
+                MouseArea {
+                    id: selectSelectedMA
+                    anchors.fill: parent
+                    cursorShape: filteredArtItemsModel.selectedArtworksCount > 0 ? Qt.PointingHandCursor : Qt.ArrowCursor
+                    onClicked: {
+                        if (filteredArtItemsModel.selectedArtworksCount > 0) {
+                            filteredArtItemsModel.searchTerm = "x:selected"
+                        }
+                    }
+                }
             }
 
             StyledText {

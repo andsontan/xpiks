@@ -258,6 +258,10 @@ namespace Models {
             return true;
         }
 
+        if (m_SearchTerm == "x:selected" && metadata->getIsSelected()) {
+            return true;
+        }
+
         return false;
     }
 
