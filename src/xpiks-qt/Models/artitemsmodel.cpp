@@ -480,6 +480,8 @@ namespace Models {
             if (imageReader.format() == "jpeg" ||
                     imageReader.format() == "tiff") {
                 filenames.append(filepath);
+            } else if (imageReader.format() == "png") {
+                qDebug() << "PNG is unsupported file format";
             }
         }
 
