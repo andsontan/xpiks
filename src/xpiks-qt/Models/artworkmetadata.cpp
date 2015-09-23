@@ -30,12 +30,12 @@ namespace Models {
                                      const QString &description, const QString &rawKeywords, bool overwrite) {
         bool anythingModified = false;
 
-        if (overwrite || (m_ArtworkTitle.trimmed().isEmpty() && !title.isEmpty())) {
+        if (overwrite || (m_ArtworkTitle.simplified().isEmpty() && !title.isEmpty())) {
             anythingModified = true;
             m_ArtworkTitle = title;
         }
 
-        if (overwrite || (m_ArtworkDescription.trimmed().isEmpty() && !description.isEmpty())) {
+        if (overwrite || (m_ArtworkDescription.simplified().isEmpty() && !description.isEmpty())) {
             anythingModified = true;
             m_ArtworkDescription = description;
         }
@@ -122,7 +122,7 @@ namespace Models {
         for (int i = 0; i < keywordsList.size(); ++i) {
             const QString &keyword = keywordsList[i];
             m_KeywordsList.append(keyword);
-            m_KeywordsSet.insert(keyword.trimmed().toLower());
+            m_KeywordsSet.insert(keyword.simplified().toLower());
         }
     }
 

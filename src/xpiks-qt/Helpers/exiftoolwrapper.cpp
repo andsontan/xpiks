@@ -154,15 +154,15 @@ void grabMetadata(const QStringList &items, Models::ImportDataResult *importData
         const QString &first = parts.first();
 
         if (!titleSet && first.contains(titleRegExp)) {
-            importData->Title = parts.at(1).trimmed();
+            importData->Title = parts.at(1).simplified();
             titleSet = true;
         }
         else if (!descriptionSet && first.contains(descriptionRegExp)) {
-            importData->Description = parts.at(1).trimmed();
+            importData->Description = parts.at(1).simplified();
             descriptionSet = true;
         }
         else if (!keywordsSet && first.contains(keywordsRegExp)) {
-            importData->Keywords = parts.at(1).trimmed();
+            importData->Keywords = parts.at(1).simplified();
             keywordsSet = true;
         }
     }

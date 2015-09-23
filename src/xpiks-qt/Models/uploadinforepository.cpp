@@ -202,11 +202,11 @@ namespace Models {
             break;
         case EditHostRole:
             roleToUpdate = HostRole;
-            needToUpdate = uploadInfo->setHost(value.toString().trimmed());
+            needToUpdate = uploadInfo->setHost(value.toString().simplified());
             break;
         case EditUsernameRole:
             roleToUpdate = UsernameRole;
-            needToUpdate = uploadInfo->setUsername(value.toString().trimmed());
+            needToUpdate = uploadInfo->setUsername(value.toString().simplified());
             break;
         case EditPasswordRole: {
             roleToUpdate = PasswordRole;
