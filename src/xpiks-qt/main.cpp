@@ -61,6 +61,7 @@
 #include "Helpers/runguard.h"
 #include "Models/logsmodel.h"
 #include "Helpers/logger.h"
+#include "Common/version.h"
 
 #ifdef WITH_LOGS
 
@@ -105,7 +106,7 @@ void initQSettings() {
     QCoreApplication::setOrganizationDomain(Constants::ORGANIZATION_DOMAIN);
     QCoreApplication::setApplicationName(Constants::APPLICATION_NAME);
     QString appVersion(STRINGIZE(BUILDNUMBER));
-    QCoreApplication::setApplicationVersion("1.0 beta.8 - " + appVersion.left(10));
+    QCoreApplication::setApplicationVersion(STRINGIZE(XPIKS_VERSION)" "STRINGIZE(XPIKS_VERSION_SUFFIX)" - " + appVersion.left(10));
 }
 
 int main(int argc, char *argv[]) {

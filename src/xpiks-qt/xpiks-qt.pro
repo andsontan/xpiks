@@ -160,7 +160,8 @@ HEADERS += \
     Helpers/keywordvalidator.h \
     Helpers/helpersqmlwrapper.h \
     Models/recentdirectoriesmodel.h \
-    Helpers/settingsprovider.h
+    Helpers/settingsprovider.h \
+    Common/version.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
