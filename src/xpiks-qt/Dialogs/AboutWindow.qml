@@ -51,6 +51,9 @@ ApplicationWindow {
         color: Colors.selectedArtworkColor
         anchors.fill: parent
 
+        Component.onCompleted: focus = true
+        Keys.onEscapePressed: closeAbout()
+
         ColumnLayout {
             anchors.centerIn: parent
 

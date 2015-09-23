@@ -40,6 +40,8 @@ Item {
     signal dialogDestruction();
     Component.onDestruction: dialogDestruction();
 
+    Keys.onEscapePressed: closePopup()
+
     function closePopup() {
         dialogComponent.destroy()
     }
@@ -693,6 +695,8 @@ Item {
                                 combinedArtworks.saveEdits()
                                 closePopup()
                             }
+
+                            tooltip: "Save selected metadata"
                         }
 
                         Item {
@@ -706,7 +710,7 @@ Item {
                                 closePopup()
                             }
 
-                            tooltip: "Exits with no changes"
+                            tooltip: "Exit with no changes"
                         }
                     }
                 }
@@ -718,5 +722,8 @@ Item {
         }
     }
 
-    Component.onCompleted: descriptionTextInput.forceActiveFocus()
+    Component.onCompleted: {
+        focus = true
+        descriptionTextInput.forceActiveFocus()
+    }
 }

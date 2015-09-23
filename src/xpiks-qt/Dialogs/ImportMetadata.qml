@@ -34,6 +34,12 @@ Item {
     id: metadataImportComponent
     anchors.fill: parent
 
+    Keys.onEscapePressed: {
+        if (!iptcProvider.inProgress) {
+            closePopup()
+        }
+    }
+
     function closePopup() {
         iptcProvider.isLaunched = false
         metadataImportComponent.destroy()
@@ -41,6 +47,7 @@ Item {
 
     Component.onCompleted: {
         iptcProvider.ignoreAutosave = false
+        focus = true
     }
 
     signal dialogDestruction();

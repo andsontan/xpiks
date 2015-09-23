@@ -167,6 +167,9 @@ ApplicationWindow {
         color: Colors.selectedArtworkColor
         anchors.fill: parent
 
+        Component.onCompleted: focus = true
+        Keys.onEscapePressed: closeSettings()
+
         ColumnLayout {
             anchors.fill: parent
             anchors.margins: {left:10; top:10; right:10}

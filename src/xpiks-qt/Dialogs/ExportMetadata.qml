@@ -39,6 +39,14 @@ Item {
         metadataExportComponent.destroy()
     }
 
+    Keys.onEscapePressed: {
+        if (!iptcProvider.inProgress) {
+            closePopup()
+        }
+    }
+
+    Component.onCompleted: focus = true
+
     signal dialogDestruction();
     Component.onDestruction: dialogDestruction();
 

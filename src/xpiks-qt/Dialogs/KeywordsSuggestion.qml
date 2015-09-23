@@ -39,6 +39,12 @@ Item {
     signal dialogDestruction();
     Component.onDestruction: dialogDestruction();
 
+    Keys.onEscapePressed: {
+        if (!keywordsSuggestor.isInProgress) {
+            closePopup()
+        }
+    }
+
     function closePopup() {
         keywordsSuggestor.cancelSearch()
         keywordsSuggestor.close();
@@ -435,6 +441,7 @@ Item {
     }
 
     Component.onCompleted: {
+        focus = true
         // for some reason onCompleted was called twice
         if (!initialized) {
             queryText.forceActiveFocus()

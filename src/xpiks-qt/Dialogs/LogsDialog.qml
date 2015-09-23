@@ -42,6 +42,9 @@ Item {
         logsComponent.destroy()
     }
 
+    Component.onCompleted: focus = true
+    Keys.onEscapePressed: closePopup()
+
     function scrollToBottom() {
         var flickable = scrollView.flickableItem
         if (flickable.contentHeight > flickable.height) {

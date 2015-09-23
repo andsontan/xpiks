@@ -44,6 +44,9 @@ Item {
         artworkPreviewDialog.destroy()
     }
 
+    Component.onCompleted: focus = true
+    Keys.onEscapePressed: closePopup()
+
     PropertyAnimation { target: artworkPreviewDialog; property: "opacity";
         duration: 400; from: 0; to: 1;
         easing.type: Easing.InOutQuad ; running: true }
