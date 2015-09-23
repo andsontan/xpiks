@@ -123,8 +123,9 @@ ImportPair readArtworkMetadata(ImportPair pair) {
         if (!stdoutText.isEmpty()) {
             qDebug() << "Error:" << exiftoolPath << stdoutText;
         }
+
         qDebug() << "Error:" << exiftoolPath << process.errorString();
-        return ImportPair(NULL, NULL);
+        return ImportPair(metadata, NULL);
     }
 
     QStringList items = stdoutText.split(QRegExp("[\r\n]"), QString::SkipEmptyParts);

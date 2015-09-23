@@ -65,29 +65,24 @@ namespace Models {
     {
         ArtworkMetadata *metadata = importPair.first;
         Models::ImportDataResult *importData = importPair.second;
+        Q_ASSERT(metadata != NULL);
 
-        if (metadata != NULL && importData != NULL) {
+        if (importData != NULL) {
             metadata->initialize(importData->Title, importData->Description, importData->Keywords);
-
-            if (!m_IgnoreAutosave) {
-                SettingsModel *settings = m_CommandManager->getSettingsModel();
-                if (settings->getSaveBackups()) {
-                    Helpers::TempMetadataDb(metadata).load();
-                }
-            }
-        }
-
-        incProgress();
-
-        if (NULL != metadata) {
             qDebug() << metadata->getFilepath();
+            delete importData;
         } else {
             setIsError(true);
         }
 
-        if (importData != NULL) {
-            delete importData;
+        if (!m_IgnoreAutosave) {
+            SettingsModel *settings = m_CommandManager->getSettingsModel();
+            if (settings->getSaveBackups()) {
+                Helpers::TempMetadataDb(metadata).load();
+            }
         }
+
+        incProgress();
     }
 
     void IptcProvider::metadataExportedHandler(ArtworkMetadata *metadata)
