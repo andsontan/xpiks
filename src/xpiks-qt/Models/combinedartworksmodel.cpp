@@ -136,6 +136,11 @@ namespace Models {
         endResetModel();
 
         m_EditFlags = 0;
+        // TEMPORARY (enable everything on initial launch) --
+        Common::ApplyFlag(m_EditFlags, true, Common::EditTitle);
+        Common::ApplyFlag(m_EditFlags, true, Common::EditDesctiption);
+        Common::ApplyFlag(m_EditFlags, true, Common::EditKeywords);
+        // TEMPORARY (enable everything on initial launch) --
 
         setDescription("");
         setTitle("");

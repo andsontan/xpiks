@@ -678,6 +678,10 @@ Item {
                         anchors.fill: parent
                         spacing: 10
 
+                        StyledText {
+                            text: qsTr("Select changes to save using checkboxes above")
+                        }
+
                         Item {
                             Layout.fillWidth: true
                         }
