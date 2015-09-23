@@ -1085,15 +1085,6 @@ ApplicationWindow {
                                                     artItemsModel.backupItem(rowWrapper.getIndex())
                                                 }
 
-                                                MouseArea {
-                                                    anchors.fill: parent
-                                                    propagateComposedEvents: true
-                                                    onClicked: {
-                                                        flv.activateEdit()
-                                                        mouse.accepted = false
-                                                    }
-                                                }
-
                                                 StyledScrollView {
                                                     id: scroller
                                                     height: parent.height
@@ -1128,6 +1119,15 @@ ApplicationWindow {
                                                         onFocusLost: keywordsWrapper.saveKeywords()
 
                                                         onCopyRequest: clipboard.setText(keywordsstring)
+                                                    }
+                                                }
+
+                                                MouseArea {
+                                                    anchors.fill: parent
+                                                    propagateComposedEvents: true
+                                                    onClicked: {
+                                                        flv.activateEdit()
+                                                        mouse.accepted = false
                                                     }
                                                 }
                                             }

@@ -271,15 +271,6 @@ Item {
                         keywordsSuggestor.appendKeywordToOther(keyword)
                     }
 
-                    MouseArea {
-                        anchors.fill: parent
-                        propagateComposedEvents: true
-                        onClicked: {
-                            suggestedFlv.activateEdit()
-                            mouse.accepted = false
-                        }
-                    }
-
                     StyledScrollView {
                         id: suggestedScroller
                         width: parent.width + 15
@@ -310,6 +301,15 @@ Item {
                             onTagsPasted: {
                                 //suggestedKeywordsWrapper.pasteKeywords(tagsList)
                             }
+                        }
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        propagateComposedEvents: true
+                        onClicked: {
+                            suggestedFlv.activateEdit()
+                            mouse.accepted = false
                         }
                     }
                 }
@@ -348,15 +348,6 @@ Item {
                         keywordsSuggestor.appendKeywordToSuggested(keyword)
                     }
 
-                    MouseArea {
-                        anchors.fill: parent
-                        propagateComposedEvents: true
-                        onClicked: {
-                            otherFlv.activateEdit()
-                            mouse.accepted = false
-                        }
-                    }
-
                     StyledScrollView {
                         id: otherKeywordsScroller
                         width: parent.width + 15
@@ -387,6 +378,15 @@ Item {
                             onTagsPasted: {
                                 //keywordsWrapper.pasteKeywords(tagsList)
                             }
+                        }
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        propagateComposedEvents: true
+                        onClicked: {
+                            otherFlv.activateEdit()
+                            mouse.accepted = false
                         }
                     }
                 }
