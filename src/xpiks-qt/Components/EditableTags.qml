@@ -131,7 +131,7 @@ Flickable {
         Item {
             id: editWrapper
             width: 100
-            height: 20
+            height: 20*settingsModel.keywordSizeScale
 
             TextInput {
                 id: nextTagTextInput
@@ -140,11 +140,13 @@ Flickable {
                 selectionColor: Colors.defaultControlColor
                 selectByMouse: true
                 anchors.left: parent.left
-                anchors.verticalCenter: parent.verticalCenter
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
                 color: Colors.defaultLightColor
                 focus: true
                 font.family: "Helvetica"
-                font.pixelSize: 12
+                font.pixelSize: 12*settingsModel.keywordSizeScale
+                verticalAlignment: TextInput.AlignVCenter
                 renderType: TextInput.NativeRendering
 
                 /*validator: RegExpValidator {
