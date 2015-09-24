@@ -26,6 +26,11 @@ permalink: /screenshots/
 </div>
   <br />
   <div>
+  <p>Artwork preview</p>
+<img src="{{site.url}}/images/screenshots/xpiks-qt-preview.jpg" />
+</div>
+  <br />
+  <div>
   <p>Warnings check</p>
 <img src="{{site.url}}/images/screenshots/WarningsDialog.jpg" />
 </div>
