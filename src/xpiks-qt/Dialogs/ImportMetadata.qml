@@ -141,6 +141,7 @@ Item {
 
                     StyledCheckbox {
                         text: qsTr("Ignore autosaves (.xpks)")
+                        enabled: settingsModel.saveBackups
                         checked: iptcProvider.ignoreAutosave
                         onCheckedChanged: iptcProvider.ignoreAutosave = checked
                     }
