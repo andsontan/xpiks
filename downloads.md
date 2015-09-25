@@ -39,7 +39,7 @@ permalink: /downloads/
 <h2><strong>Linux instructions</strong></h2>
 
 <div class="download-package">
-<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.0-beta.8/xpiks_0.8b-1_amd64.deb">
+<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.0-beta.9/xpiks_0.9b-1_amd64.deb">
 <div><img src="{{site.url}}/images/linux_installer.jpg" style="vertical-align: middle;width:70px;" />
 <span style="vertical-align: middle;">Package for Linux</span>
 </div>
