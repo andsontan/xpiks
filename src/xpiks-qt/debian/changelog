@@ -1,8 +1,8 @@
 xpiks (0.9b-1) UNRELEASED; urgency=medium
 
-This beta release should be treated as Release Candidate for Xpiks
+    This beta release should be treated as Release Candidate for Xpiks
 
-Major features of this release:
+    Major features of this release:
 
     Improvements for Multiple Edit dialog
     Search and Filtering through artworks is implemented
@@ -10,7 +10,7 @@ Major features of this release:
     Added ability to drop multiple files and directories at once
     Added ability to reimport metadata for artworks on demand
 
-Also this release provides features requested by Xpiks users:
+    Also this release provides features requested by Xpiks users:
 
     ability to control size of keywords and description text
     artworks preview is improved and can be viewed at 100%
@@ -20,7 +20,7 @@ Also this release provides features requested by Xpiks users:
     added support to non-latin characters in keywords
     addes support for TIFF files for keywording
 
-And issues to minor bugs:
+    And issues to minor bugs:
 
     fix for checkbox updates in Upload Advanced settings #119
     fix for bug when user drops files on Xpiks with any opened dialog #124
