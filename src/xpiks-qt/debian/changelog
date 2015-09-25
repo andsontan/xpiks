@@ -28,7 +28,8 @@ And issues to minor bugs:
     fix for race conditions when uploading and decoding passwords for stocks
     several minor fixes for UI in Windows 10 and openSUSE 13.2
 
-
+ -- Artiom.M <a.mv@gmx.fr>  Fri, 25 Sep 2015 08:50:44 +0200
+ 
 xpiks (0.8b-1) UNRELEASED; urgency=medium
 
 
