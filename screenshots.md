@@ -40,5 +40,10 @@ permalink: /screenshots/
 <img src="{{site.url}}/images/screenshots/SettingsSecurity.jpg" class="small-12 large-8" />
 </div>
   <br />
+  <div>
+  <p>Interface settings</p>
+<img src="{{site.url}}/images/screenshots/xpiks-qt-ux-settings.jpg" class="small-12 large-8" />
+</div>
+  <br />
 </section>
 </article>
