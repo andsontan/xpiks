@@ -22,7 +22,7 @@ Open Settings and in the UX tab you will be able to choose keywords size which y
 
 To filter selected or modified images you can click hyperlinks in the bottom of Xpiks.
 
-<img alt="Modified and selected filter" src="{{site.url}}/images/howto/xpiks-selected-modified-filter.jpg" class="small-12 large-8" />
+<img alt="Modified and selected filter" src="{{site.url}}/images/howto/xpiks-qt-selected-modified-filter.jpg" class="small-12 large-8" />
 
 **4. Opening extended edits dialog for one image**
 
