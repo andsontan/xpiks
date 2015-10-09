@@ -873,6 +873,25 @@ ApplicationWindow {
                                     return filteredArtItemsModel.getOriginalIndex(index)
                                 }
 
+                                function focusInputs() {
+                                    descriptionTextInput.forceActiveFocus()
+                                }
+
+                                function isAnyFocused() {
+                                    return descriptionTextInput.activeFocus || flv.isFocused;
+                                }
+
+                                function focusIfNeeded() {
+                                    if (!isAnyFocused()) {
+                                        focusInputs()
+                                    }
+
+                                    if (!isselected) {
+                                        descriptionTextInput.focus = false
+                                        flv.removeFocus()
+                                    }
+                                }
+
                                 width: parent.width
                                 height: 200 + 80*(settingsModel.keywordSizeScale - 1.0)
 
@@ -897,6 +916,7 @@ ApplicationWindow {
                                             anchors.fill: parent
                                             onClicked: {
                                                 editisselected = !isselected
+                                                rowWrapper.focusIfNeeded()
                                             }
                                         }
                                     }
@@ -910,6 +930,7 @@ ApplicationWindow {
                                             anchors.fill: parent
                                             onClicked: {
                                                 editisselected = !isselected
+                                                rowWrapper.focusIfNeeded()
                                             }
                                         }
 
@@ -937,7 +958,10 @@ ApplicationWindow {
 
                                         MouseArea {
                                             anchors.fill: parent
-                                            onClicked: editisselected = !isselected
+                                            onClicked: {
+                                                editisselected = !isselected
+                                                rowWrapper.focusIfNeeded()
+                                            }
                                         }
 
                                         ColumnLayout {
@@ -967,7 +991,10 @@ ApplicationWindow {
 
                                                 MouseArea {
                                                     anchors.fill: parent
-                                                    onClicked: editisselected = !isselected
+                                                    onClicked: {
+                                                        editisselected = !isselected
+                                                        rowWrapper.focusIfNeeded()
+                                                    }
                                                     onDoubleClicked: {
                                                         combinedArtworks.resetModelData();
                                                         artItemsModel.combineArtwork(rowWrapper.getIndex());

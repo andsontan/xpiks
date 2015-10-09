@@ -87,6 +87,10 @@ Flickable {
         repeater.update()
     }
 
+    function removeFocus() {
+        nextTagTextInput.focus = false
+    }
+
     Flow {
         id: flow
         width: parent.width
