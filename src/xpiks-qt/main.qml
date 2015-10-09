@@ -891,17 +891,40 @@ ApplicationWindow {
 
                                     Item {
                                         width: 5
+                                        height: parent.height
+
+                                        MouseArea {
+                                            anchors.fill: parent
+                                            onClicked: {
+                                                editisselected = !isselected
+                                            }
+                                        }
                                     }
 
-                                    StyledCheckbox {
-                                        id: itemCheckedCheckbox
-                                        //checked: isselected
-                                        onClicked: editisselected = checked
-                                        Component.onCompleted: itemCheckedCheckbox.checked = isselected
-                                        Connections {
-                                            target: filteredArtItemsModel
-                                            onSelectedArtworksCountChanged: {
-                                                itemCheckedCheckbox.checked = rowWrapper.artworkModel.isselected || false
+                                    Rectangle {
+                                        height: parent.height
+                                        width: itemCheckedCheckbox.width
+                                        color: "transparent"
+
+                                        MouseArea {
+                                            anchors.fill: parent
+                                            onClicked: {
+                                                editisselected = !isselected
+                                            }
+                                        }
+
+                                        StyledCheckbox {
+                                            id: itemCheckedCheckbox
+                                            //checked: isselected
+                                            anchors.centerIn: parent
+                                            activeFocusOnPress: true
+                                            onClicked: editisselected = checked
+                                            Component.onCompleted: itemCheckedCheckbox.checked = isselected
+                                            Connections {
+                                                target: filteredArtItemsModel
+                                                onSelectedArtworksCountChanged: {
+                                                    itemCheckedCheckbox.checked = rowWrapper.artworkModel.isselected || false
+                                                }
                                             }
                                         }
                                     }
@@ -911,6 +934,11 @@ ApplicationWindow {
                                         anchors.top: parent.top
                                         anchors.bottom: parent.bottom
                                         color: "transparent"
+
+                                        MouseArea {
+                                            anchors.fill: parent
+                                            onClicked: editisselected = !isselected
+                                        }
 
                                         ColumnLayout {
                                             anchors.fill: parent
@@ -1020,6 +1048,7 @@ ApplicationWindow {
                                                     text: description
                                                     color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.defaultInputBackground
                                                     onTextChanged: model.editdescription = text
+
                                                     Keys.onTabPressed: {
                                                         flv.activateEdit()
                                                     }
