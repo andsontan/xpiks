@@ -1144,7 +1144,9 @@ ApplicationWindow {
                                                 StyledScrollView {
                                                     id: scroller
                                                     height: parent.height
-                                                    width: parent.width + 15
+                                                    anchors.left: parent.left
+                                                    anchors.right: parent.right
+                                                    anchors.rightMargin: -15
                                                     highlightOnFocus: true
 
                                                     EditableTags {

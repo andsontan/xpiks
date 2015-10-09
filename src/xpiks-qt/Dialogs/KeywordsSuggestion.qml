@@ -280,7 +280,9 @@ Item {
 
                     StyledScrollView {
                         id: suggestedScroller
-                        width: parent.width + 15
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.rightMargin: -15
                         height: parent.height
                         highlightOnFocus: true
 
@@ -357,7 +359,9 @@ Item {
 
                     StyledScrollView {
                         id: otherKeywordsScroller
-                        width: parent.width + 15
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.rightMargin: -15
                         height: parent.height
                         highlightOnFocus: true
 
