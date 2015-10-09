@@ -561,6 +561,15 @@ Item {
                                     combinedArtworks.pasteKeywords(keywordsList)
                                 }
 
+                                MouseArea {
+                                    anchors.fill: parent
+                                    propagateComposedEvents: true
+                                    onClicked: {
+                                        flv.activateEdit()
+                                        mouse.accepted = false
+                                    }
+                                }
+
                                 StyledScrollView {
                                     id: scroller
                                     anchors.left: parent.left
@@ -592,15 +601,6 @@ Item {
                                         onTagsPasted: {
                                             keywordsWrapper.pasteKeywords(tagsList)
                                         }
-                                    }
-                                }
-
-                                MouseArea {
-                                    anchors.fill: parent
-                                    propagateComposedEvents: true
-                                    onClicked: {
-                                        flv.activateEdit()
-                                        mouse.accepted = false
                                     }
                                 }
                             }

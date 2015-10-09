@@ -32,12 +32,21 @@ Item {
     signal itemClicked();
 
     Rectangle {
+        id: wrapperRect
         anchors.fill: parent
         color: "transparent"
-        opacity: mouseArea.containsMouse ? 1 : 0.8
+        opacity: closeIconMouseArea.containsMouse ? 1 : 0.8
+
+        function getPressColor() {
+            if (closeIconMouseArea.pressed) {
+                return Colors.artworkModifiedColor;
+            } else {
+                return isActive ? Colors.defaultControlColor : Colors.defaultLightColor;
+            }
+        }
 
         Rectangle {
-            color: enabled ? (mouseArea.pressed ? Colors.artworkModifiedColor : (isActive ? Colors.defaultControlColor : Colors.defaultLightColor)) : Colors.selectedArtworkColor
+            color: enabled ? wrapperRect.getPressColor() : Colors.selectedArtworkColor
             width: isPlus ? parent.width - 2 : parent.width
             height: item.thickness
             radius: item.thickness/2
@@ -47,7 +56,7 @@ Item {
         }
 
         Rectangle {
-            color: enabled ? (mouseArea.pressed ? Colors.artworkModifiedColor : (isActive ? Colors.defaultControlColor : Colors.defaultLightColor)) : Colors.selectedArtworkColor
+            color: enabled ? wrapperRect.getPressColor() : Colors.selectedArtworkColor
             width: isPlus ? parent.width - 2 : parent.width
             height: item.thickness
             radius: item.thickness/2
@@ -56,10 +65,10 @@ Item {
             transform: Translate { y: (width - thickness)/2 }
         }
 
-        scale: mouseArea.pressed ? 0.8 : 1
+        scale: closeIconMouseArea.pressed ? 0.8 : 1
 
         MouseArea {
-            id: mouseArea
+            id: closeIconMouseArea
             anchors.fill: parent
             hoverEnabled: true
             preventStealing: true

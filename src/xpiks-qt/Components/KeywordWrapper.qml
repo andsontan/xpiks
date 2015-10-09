@@ -56,7 +56,7 @@ Rectangle {
                 anchors.bottom: parent.bottom
                 verticalAlignment: Text.AlignVCenter
                 text: itemWrapper.keywordText
-                color: isHighlighted ? Colors.defaultControlColor : Colors.defaultLightColor
+                color: itemWrapper.isHighlighted ? Colors.defaultControlColor : Colors.defaultLightColor
                 font.pixelSize: 12 * settingsModel.keywordSizeScale
             }
         }
@@ -66,10 +66,10 @@ Rectangle {
             width: height
 
             CloseIcon {
-                isPlus: hasPlusSign
+                isPlus: itemWrapper.hasPlusSign
                 width: 14*settingsModel.keywordSizeScale
                 height: 14*settingsModel.keywordSizeScale
-                isActive: isHighlighted
+                isActive: itemWrapper.isHighlighted
                 anchors.centerIn: parent
                 onItemClicked: actionClicked()
             }

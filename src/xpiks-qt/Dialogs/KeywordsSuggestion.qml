@@ -278,6 +278,15 @@ Item {
                         keywordsSuggestor.appendKeywordToOther(keyword)
                     }
 
+                    MouseArea {
+                        anchors.fill: parent
+                        propagateComposedEvents: true
+                        onClicked: {
+                            suggestedFlv.activateEdit()
+                            mouse.accepted = false
+                        }
+                    }
+
                     StyledScrollView {
                         id: suggestedScroller
                         anchors.left: parent.left
@@ -310,15 +319,6 @@ Item {
                             onTagsPasted: {
                                 //suggestedKeywordsWrapper.pasteKeywords(tagsList)
                             }
-                        }
-                    }
-
-                    MouseArea {
-                        anchors.fill: parent
-                        propagateComposedEvents: true
-                        onClicked: {
-                            suggestedFlv.activateEdit()
-                            mouse.accepted = false
                         }
                     }
                 }
@@ -357,6 +357,15 @@ Item {
                         keywordsSuggestor.appendKeywordToSuggested(keyword)
                     }
 
+                    MouseArea {
+                        anchors.fill: parent
+                        propagateComposedEvents: true
+                        onClicked: {
+                            otherFlv.activateEdit()
+                            mouse.accepted = false
+                        }
+                    }
+
                     StyledScrollView {
                         id: otherKeywordsScroller
                         anchors.left: parent.left
@@ -391,15 +400,6 @@ Item {
                             }
                         }
                     }
-
-                    MouseArea {
-                        anchors.fill: parent
-                        propagateComposedEvents: true
-                        onClicked: {
-                            otherFlv.activateEdit()
-                            mouse.accepted = false
-                        }
-                    }
                 }
 
                 Item {
@@ -419,7 +419,10 @@ Item {
                         interval: 2000
                         repeat: false
                         running: false
-                        onTriggered: addKeywordsButton.text = qsTr("Add suggested keywords")
+                        onTriggered: {
+                            addKeywordsButton.text = qsTr("Add suggested keywords")
+                            addKeywordsButton.enabled = true
+                        }
                     }
 
                     StyledButton {
@@ -430,6 +433,7 @@ Item {
                         onClicked: {
                             callbackObject.promoteKeywords(keywordsSuggestor.getSuggestedKeywords())
                             text = qsTr("Added!")
+                            addKeywordsButton.enabled = false
                             suggestedAddedTimer.start()
                         }
                     }

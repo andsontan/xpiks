@@ -1047,6 +1047,7 @@ ApplicationWindow {
                                         anchors.top: parent.top
                                         anchors.bottom: parent.bottom
                                         anchors.left: imageColumnWrapper.right
+                                        anchors.leftMargin: 5
                                         anchors.right: parent.right
                                         color: rowWrapper.isHighlighted  ? Colors.selectedMetadataColor : Colors.artworkBackground
 
@@ -1209,6 +1210,15 @@ ApplicationWindow {
                                                     artItemsModel.backupItem(rowWrapper.getIndex())
                                                 }
 
+                                                MouseArea {
+                                                    anchors.fill: parent
+                                                    propagateComposedEvents: true
+                                                    onClicked: {
+                                                        flv.activateEdit()
+                                                        mouse.accepted = false
+                                                    }
+                                                }
+
                                                 StyledScrollView {
                                                     id: scroller
                                                     height: parent.height
@@ -1245,15 +1255,6 @@ ApplicationWindow {
                                                         onFocusLost: keywordsWrapper.saveKeywords()
 
                                                         onCopyRequest: clipboard.setText(keywordsstring)
-                                                    }
-                                                }
-
-                                                MouseArea {
-                                                    anchors.fill: parent
-                                                    propagateComposedEvents: true
-                                                    onClicked: {
-                                                        flv.activateEdit()
-                                                        mouse.accepted = false
                                                     }
                                                 }
                                             }
