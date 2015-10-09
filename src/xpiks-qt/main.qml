@@ -865,7 +865,7 @@ ApplicationWindow {
 
                             delegate: Rectangle {
                                 id: rowWrapper
-                                property bool isHighlighted: (isselected || descriptionTextInput.activeFocus || flv.isFocused)
+                                property bool isHighlighted: (isselected || descriptionTextInput.activeFocus || flv.isFocused || titleTextInput.activeFocus)
                                 color: isHighlighted ? Colors.selectedArtworkColor : Colors.artworkImageBackground
                                 property variant artworkModel: model
 
@@ -878,7 +878,7 @@ ApplicationWindow {
                                 }
 
                                 function isAnyFocused() {
-                                    return descriptionTextInput.activeFocus || flv.isFocused;
+                                    return descriptionTextInput.activeFocus || flv.isFocused || titleTextInput.activeFocus;
                                 }
 
                                 function focusIfNeeded() {
@@ -895,22 +895,26 @@ ApplicationWindow {
                                 width: parent.width
                                 height: 200 + 80*(settingsModel.keywordSizeScale - 1.0)
 
-                                RowLayout {
+                                Item {
                                     anchors.fill: parent
                                     anchors.rightMargin: 10
-                                    spacing: 5
 
                                     Rectangle {
                                         id: isModifiedRectangle
                                         color: ismodified ? Colors.artworkModifiedColor : Colors.artworkSavedColor
                                         width: 6
+                                        anchors.left: parent.left
                                         anchors.top: parent.top
                                         anchors.bottom: parent.bottom
                                     }
 
                                     Item {
+                                        id: checkboxSpacer
                                         width: 5
-                                        height: parent.height
+                                        anchors.left: isModifiedRectangle.right
+                                        anchors.leftMargin: 5
+                                        anchors.top: parent.top
+                                        anchors.bottom: parent.bottom
 
                                         MouseArea {
                                             anchors.fill: parent
@@ -922,7 +926,11 @@ ApplicationWindow {
                                     }
 
                                     Rectangle {
-                                        height: parent.height
+                                        id: checkboxRectangle
+                                        anchors.left: checkboxSpacer.right
+                                        anchors.leftMargin: 5
+                                        anchors.top: parent.top
+                                        anchors.bottom: parent.bottom
                                         width: itemCheckedCheckbox.width
                                         color: "transparent"
 
@@ -951,7 +959,10 @@ ApplicationWindow {
                                     }
 
                                     Rectangle {
+                                        id: imageColumnWrapper
                                         width: 180
+                                        anchors.left: checkboxRectangle.right
+                                        anchors.leftMargin: 5
                                         anchors.top: parent.top
                                         anchors.bottom: parent.bottom
                                         color: "transparent"
@@ -1035,7 +1046,8 @@ ApplicationWindow {
                                         id: columnRectangle
                                         anchors.top: parent.top
                                         anchors.bottom: parent.bottom
-                                        Layout.fillWidth: true
+                                        anchors.left: imageColumnWrapper.right
+                                        anchors.right: parent.right
                                         color: rowWrapper.isHighlighted  ? Colors.selectedMetadataColor : Colors.artworkBackground
 
                                         Item {
@@ -1043,6 +1055,7 @@ ApplicationWindow {
                                             //spacing: 3
                                             anchors.fill: parent
                                             anchors.margins: { left: 20; right: 20 }
+                                            property bool isWideEnough: width > 400
 
                                             StyledText {
                                                 id: descriptionText
@@ -1051,11 +1064,20 @@ ApplicationWindow {
                                                 text: qsTr("Description:")
                                             }
 
+                                            StyledText {
+                                                id: titleText
+                                                anchors.left: titleRect.left
+                                                anchors.top: parent.top
+                                                visible: columnLayout.isWideEnough
+                                                text: qsTr("Title:")
+                                            }
+
                                             Rectangle {
-                                                id: rect
+                                                id: descriptionRect
                                                 height: 30
                                                 anchors.left: parent.left
-                                                anchors.right: parent.right
+                                                anchors.right: titleRect.left
+                                                anchors.rightMargin: columnLayout.isWideEnough ? 10 : 0
                                                 anchors.top: descriptionText.bottom
                                                 anchors.topMargin: 3
                                                 color: rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.defaultControlColor
@@ -1077,7 +1099,11 @@ ApplicationWindow {
                                                     onTextChanged: model.editdescription = text
 
                                                     Keys.onTabPressed: {
-                                                        flv.activateEdit()
+                                                        if (columnLayout.isWideEnough) {
+                                                            titleTextInput.forceActiveFocus()
+                                                        } else {
+                                                            flv.activateEdit()
+                                                        }
                                                     }
 
                                                     Keys.onPressed: {
@@ -1091,10 +1117,52 @@ ApplicationWindow {
                                                 }
                                             }
 
+                                            Rectangle {
+                                                id: titleRect
+                                                height: 30
+                                                width: columnLayout.isWideEnough ? ((columnLayout.width / 2) - 10 ): 0
+                                                visible: columnLayout.isWideEnough
+                                                //anchors.left: descriptionRect.right
+                                                anchors.right: parent.right
+                                                anchors.top: descriptionText.bottom
+                                                anchors.topMargin: 3
+                                                color: rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.defaultControlColor
+                                                border.color: Colors.artworkActiveColor
+                                                border.width: titleTextInput.activeFocus ? 1 : 0
+
+                                                StyledTextInput {
+                                                    id: titleTextInput
+                                                    height: 30
+                                                    anchors.left: parent.left
+                                                    anchors.right: parent.right
+                                                    anchors.leftMargin: 5
+                                                    anchors.rightMargin: 5
+                                                    font.pixelSize: 12 * settingsModel.keywordSizeScale
+                                                    anchors.verticalCenter: parent.verticalCenter
+                                                    maximumLength: 250
+                                                    text: title
+                                                    color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.defaultInputBackground
+                                                    onTextChanged: model.edittitle = text
+
+                                                    Keys.onTabPressed: {
+                                                        flv.activateEdit()
+                                                    }
+
+                                                    Keys.onPressed: {
+                                                        if(event.matches(StandardKey.Paste)) {
+                                                            var clipboardText = clipboard.getText();
+                                                            // same regexp as in validator
+                                                            titleTextInput.paste(sanitizedText)
+                                                            event.accepted = true
+                                                        }
+                                                    }
+                                                }
+                                            }
+
                                             RowLayout {
                                                 id: keywordsLabelsRow
                                                 anchors.left: parent.left
-                                                anchors.top: rect.bottom
+                                                anchors.top: descriptionRect.bottom
                                                 anchors.topMargin: 7
                                                 spacing: 5
 
