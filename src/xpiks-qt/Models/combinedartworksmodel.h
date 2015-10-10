@@ -142,6 +142,8 @@ namespace Models {
     private:
         void processCombinedEditCommand() const;
         void enableAllFields();
+        void assignFromOneArtwork();
+        void assignFromManyArtworks();
 
     public:
         enum CombinedArtworksModelRoles {

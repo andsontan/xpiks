@@ -48,50 +48,11 @@ namespace Models {
         }
     }
 
-    void CombinedArtworksModel::recombineArtworks()
-    {
-        bool anyItemsProcessed = false;
-        bool descriptionsDiffer = false;
-        bool titleDiffer = false;
-        QString description;
-        QString title;
-        QSet<QString> commonKeywords;
-
-        int artworksCount = m_ArtworksList.length();
-        for (int i = 0; i < artworksCount; ++i) {
-            ArtItemInfo *info = m_ArtworksList[i];
-            ArtworkMetadata *metadata = info->getOrigin();
-
-            if (!anyItemsProcessed) {
-                description = metadata->getDescription();
-                title = metadata->getTitle();
-                commonKeywords.unite(metadata->getKeywordsSet());
-                anyItemsProcessed = true;
-                continue;
-            }
-
-            const QString &currDescription = metadata->getDescription();
-            const QString &currTitle = metadata->getTitle();
-            descriptionsDiffer = descriptionsDiffer || description != currDescription;
-            titleDiffer = titleDiffer || title != currTitle;
-            commonKeywords.intersect(metadata->getKeywordsSet());
-        }
-
-        if (artworksCount > 0) {
-            if (descriptionsDiffer) {
-                description = "";
-            }
-
-            if (titleDiffer) {
-                title = "";
-            }
-
-            initDescription(description);
-            initTitle(title);
-
-            if (!m_IsModified) {
-                initKeywords(commonKeywords.toList());
-            }
+    void CombinedArtworksModel::recombineArtworks() {
+        if (m_ArtworksList.length() == 1) {
+            assignFromOneArtwork();
+        } else {
+            assignFromManyArtworks();
         }
     }
 
@@ -172,6 +133,65 @@ namespace Models {
         setChangeDescription(true);
         setChangeTitle(true);
         setChangeKeywords(true);
+    }
+
+    void CombinedArtworksModel::assignFromOneArtwork() {
+        Q_ASSERT(m_ArtworksList.length() == 1);
+        ArtItemInfo *info = m_ArtworksList[0];
+        ArtworkMetadata *metadata = info->getOrigin();
+
+        initDescription(metadata->getDescription());
+        initTitle(metadata->getTitle());
+
+        if (!m_IsModified) {
+            initKeywords(metadata->getKeywords());
+        }
+    }
+
+    void CombinedArtworksModel::assignFromManyArtworks() {
+        bool anyItemsProcessed = false;
+        bool descriptionsDiffer = false;
+        bool titleDiffer = false;
+        QString description;
+        QString title;
+        QSet<QString> commonKeywords;
+
+        int artworksCount = m_ArtworksList.length();
+        for (int i = 0; i < artworksCount; ++i) {
+            ArtItemInfo *info = m_ArtworksList[i];
+            ArtworkMetadata *metadata = info->getOrigin();
+
+            if (!anyItemsProcessed) {
+                description = metadata->getDescription();
+                title = metadata->getTitle();
+                commonKeywords.unite(metadata->getKeywordsSet());
+                anyItemsProcessed = true;
+                continue;
+            }
+
+            const QString &currDescription = metadata->getDescription();
+            const QString &currTitle = metadata->getTitle();
+            descriptionsDiffer = descriptionsDiffer || description != currDescription;
+            titleDiffer = titleDiffer || title != currTitle;
+            commonKeywords.intersect(metadata->getKeywordsSet());
+        }
+
+        if (artworksCount > 0) {
+            if (descriptionsDiffer) {
+                description = "";
+            }
+
+            if (titleDiffer) {
+                title = "";
+            }
+
+            initDescription(description);
+            initTitle(title);
+
+            if (!m_IsModified) {
+                initKeywords(commonKeywords.toList());
+            }
+        }
     }
 
     QString CombinedArtworksModel::removeKeywordAt(int keywordIndex) {
