@@ -32,6 +32,7 @@ Rectangle {
     property bool isHighlighted
     property string keywordText
     property bool hasPlusSign: false
+    property alias itemHeight: tagTextRect.height
 
     signal actionClicked();
 
@@ -46,7 +47,7 @@ Rectangle {
         Rectangle {
             id: tagTextRect
             width: childrenRect.width + 5
-            height: 20 * settingsModel.keywordSizeScale + (settingsModel.keywordSizeScale - 1)*10
+            height: itemHeight
             color: "transparent"
 
             StyledText {

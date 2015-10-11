@@ -30,11 +30,18 @@ import "../StyledControls"
 Flickable {
     id: flowListView
     anchors.fill: parent
-    anchors.rightMargin: 20
-    contentWidth: parent.width - 20
-    contentHeight: flow.childrenRect.height + 10
+    anchors.leftMargin: 5
+    anchors.topMargin: 5
+    anchors.bottomMargin: 5
+    contentWidth: parent.width
+    contentHeight: flow.childrenRect.height
     boundsBehavior: Flickable.StopAtBounds
+    flickableDirection: Flickable.VerticalFlick
+    rightMargin: 10
+    interactive: false
+    clip: true
 
+    property int scrollStep: 10
     property alias count: repeater.count
     property int currentIndex: -1
     property variant currentItem;
@@ -43,6 +50,7 @@ Flickable {
     property alias model: repeater.model
     property alias isFocused: nextTagTextInput.activeFocus
     property alias editEnabled: editWrapper.enabled
+    property int flowSpacing: 5
 
     signal tagAdded(string text)
     signal removeLast()
@@ -51,7 +59,10 @@ Flickable {
     signal copyRequest();
 
     function activateEdit() {
-        nextTagTextInput.forceActiveFocus()
+        if (!nextTagTextInput.focus) {
+            scrollToBottom()
+            nextTagTextInput.forceActiveFocus()
+        }
     }
 
     function getSanitizedText(text) {
@@ -71,9 +82,23 @@ Flickable {
         return canBeAdded;
     }
 
+    function scrollDown () {
+        var flickable = flowListView;
+        if (flowListView.contentHeight >= flowListView.height) {
+            flickable.contentY = Math.min (flickable.contentY + scrollStep + flowSpacing, flickable.contentHeight - flickable.height);
+        }
+    }
+
+    function scrollUp () {
+        var flickable = flowListView;
+        if (flowListView.contentHeight >= flowListView.height) {
+            flickable.contentY = Math.max (flickable.contentY - scrollStep - flowSpacing, 0);
+        }
+    }
+
     function scrollToBottom() {
-        if (flowListView.contentHeight - 10 >= flowListView.height) {
-            flowListView.contentY = flowListView.contentHeight - 10 - flowListView.height
+        if (flowListView.contentHeight >= flowListView.height) {
+            flowListView.contentY = flowListView.contentHeight - flowListView.height
         }
     }
 
@@ -91,10 +116,28 @@ Flickable {
         nextTagTextInput.focus = false
     }
 
+    MouseArea {
+        anchors.fill: parent
+        onClicked: activateEdit()
+        propagateComposedEvents: true
+        preventStealing: true
+
+        onWheel: {
+            if (wheel.angleDelta.y < 0) {
+                scrollDown()
+            } else {
+                scrollUp()
+            }
+
+            wheel.accepted = false
+        }
+    }
+
     Flow {
         id: flow
-        width: parent.width
-        spacing: 5
+        width: parent.width - 10
+        anchors.left: parent.left
+        spacing: flowSpacing
 
         property real lastHeight
 
@@ -147,18 +190,18 @@ Flickable {
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 color: Colors.defaultLightColor
-                focus: true
                 font.family: "Helvetica"
                 font.pixelSize: 12*settingsModel.keywordSizeScale
                 verticalAlignment: TextInput.AlignVCenter
                 renderType: TextInput.NativeRendering
+                focus: true
 
                 /*validator: RegExpValidator {
                     // copy paste in keys.onpressed Paste
                     regExp: /^(?:\c+(?:-| |$))+$/
                 }*/
 
-                onFocusChanged: focusLost()
+                //onFocusChanged: focusLost()
 
                 onEditingFinished: {
                     var tagText = getEditedText();

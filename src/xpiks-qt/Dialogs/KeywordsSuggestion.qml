@@ -278,48 +278,40 @@ Item {
                         keywordsSuggestor.appendKeywordToOther(keyword)
                     }
 
-                    MouseArea {
+                    EditableTags {
+                        id: suggestedFlv
                         anchors.fill: parent
-                        propagateComposedEvents: true
-                        onClicked: {
-                            suggestedFlv.activateEdit()
-                            mouse.accepted = false
+                        model: keywordsSuggestor.getSuggestedKeywordsModel()
+                        property int keywordHeight: 20 * settingsModel.keywordSizeScale + (settingsModel.keywordSizeScale - 1)*10
+                        scrollStep: keywordHeight
+                        editEnabled: false
+
+                        delegate: KeywordWrapper {
+                            isHighlighted: true
+                            delegateIndex: index
+                            keywordText: modelData
+                            itemHeight: suggestedFlv.keywordHeight
+                            onActionClicked: suggestedKeywordsWrapper.removeKeyword(delegateIndex)
+                        }
+
+                        onTagAdded: {
+                            //suggestedKeywordsWrapper.appendKeyword(text)
+                        }
+
+                        onRemoveLast: {
+                            //suggestedKeywordsWrapper.removeLastKeyword()
+                        }
+
+                        onTagsPasted: {
+                            //suggestedKeywordsWrapper.pasteKeywords(tagsList)
                         }
                     }
 
-                    StyledScrollView {
-                        id: suggestedScroller
-                        anchors.left: parent.left
-                        anchors.right: parent.right
+                    CustomScrollbar {
+                        anchors.topMargin: -5
+                        anchors.bottomMargin: -5
                         anchors.rightMargin: -15
-                        height: parent.height
-                        highlightOnFocus: true
-
-                        EditableTags {
-                            id: suggestedFlv
-                            anchors.margins: { left: 5; top: 5; right: 0; bottom: 5 }
-                            model: keywordsSuggestor.getSuggestedKeywordsModel()
-                            editEnabled: false
-
-                            delegate: KeywordWrapper {
-                                isHighlighted: true
-                                delegateIndex: index
-                                keywordText: modelData
-                                onActionClicked: suggestedKeywordsWrapper.removeKeyword(delegateIndex)
-                            }
-
-                            onTagAdded: {
-                                //suggestedKeywordsWrapper.appendKeyword(text)
-                            }
-
-                            onRemoveLast: {
-                                //suggestedKeywordsWrapper.removeLastKeyword()
-                            }
-
-                            onTagsPasted: {
-                                //suggestedKeywordsWrapper.pasteKeywords(tagsList)
-                            }
-                        }
+                        flickable: suggestedFlv
                     }
                 }
 
@@ -357,48 +349,41 @@ Item {
                         keywordsSuggestor.appendKeywordToSuggested(keyword)
                     }
 
-                    MouseArea {
+                    EditableTags {
+                        id: otherFlv
                         anchors.fill: parent
-                        propagateComposedEvents: true
-                        onClicked: {
-                            otherFlv.activateEdit()
-                            mouse.accepted = false
+                        model: keywordsSuggestor.getAllOtherKeywordsModel()
+                        property int keywordHeight: 20 * settingsModel.keywordSizeScale + (settingsModel.keywordSizeScale - 1)*10
+                        scrollStep: keywordHeight
+                        editEnabled: false
+
+                        delegate: KeywordWrapper {
+                            delegateIndex: index
+                            keywordText: modelData
+                            isHighlighted: true
+                            hasPlusSign: true
+                            itemHeight: otherFlv.keywordHeight
+                            onActionClicked: otherKeywordsWrapper.removeKeyword(delegateIndex)
+                        }
+
+                        onTagAdded: {
+                            //eywordsWrapper.appendKeyword(text)
+                        }
+
+                        onRemoveLast: {
+                            //keywordsWrapper.removeLastKeyword()
+                        }
+
+                        onTagsPasted: {
+                            //keywordsWrapper.pasteKeywords(tagsList)
                         }
                     }
 
-                    StyledScrollView {
-                        id: otherKeywordsScroller
-                        anchors.left: parent.left
-                        anchors.right: parent.right
+                    CustomScrollbar {
+                        anchors.topMargin: -5
+                        anchors.bottomMargin: -5
                         anchors.rightMargin: -15
-                        height: parent.height
-                        highlightOnFocus: true
-
-                        EditableTags {
-                            id: otherFlv
-                            anchors.margins: { left: 5; top: 5; right: 0; bottom: 5 }
-                            model: keywordsSuggestor.getAllOtherKeywordsModel()
-
-                            delegate: KeywordWrapper {
-                                delegateIndex: index
-                                keywordText: modelData
-                                isHighlighted: true
-                                hasPlusSign: true
-                                onActionClicked: otherKeywordsWrapper.removeKeyword(delegateIndex)
-                            }
-
-                            onTagAdded: {
-                                //eywordsWrapper.appendKeyword(text)
-                            }
-
-                            onRemoveLast: {
-                                //keywordsWrapper.removeLastKeyword()
-                            }
-
-                            onTagsPasted: {
-                                //keywordsWrapper.pasteKeywords(tagsList)
-                            }
-                        }
+                        flickable: otherFlv
                     }
                 }
 

@@ -1210,52 +1210,44 @@ ApplicationWindow {
                                                     artItemsModel.backupItem(rowWrapper.getIndex())
                                                 }
 
-                                                MouseArea {
+                                                EditableTags {
+                                                    id: flv
+                                                    model: artItemsModel.getArtworkItself(rowWrapper.getIndex())
                                                     anchors.fill: parent
-                                                    propagateComposedEvents: true
-                                                    onClicked: {
-                                                        flv.activateEdit()
-                                                        mouse.accepted = false
+                                                    property int keywordHeight: 20 * settingsModel.keywordSizeScale + (settingsModel.keywordSizeScale - 1)*10
+                                                    scrollStep: keywordHeight
+
+                                                    delegate: KeywordWrapper {
+                                                        id: kw
+                                                        isHighlighted: rowWrapper.isHighlighted
+                                                        delegateIndex: index
+                                                        keywordText: keyword
+                                                        itemHeight: flv.keywordHeight
+                                                        onActionClicked: keywordsWrapper.removeKeyword(kw.delegateIndex)
                                                     }
+
+                                                    onTagAdded: {
+                                                        keywordsWrapper.appendKeyword(text)
+                                                    }
+
+                                                    onTagsPasted: {
+                                                        keywordsWrapper.pasteKeywords(tagsList)
+                                                    }
+
+                                                    onRemoveLast: {
+                                                        keywordsWrapper.removeLastKeyword()
+                                                    }
+
+                                                    onFocusLost: keywordsWrapper.saveKeywords()
+
+                                                    onCopyRequest: clipboard.setText(keywordsstring)
                                                 }
 
-                                                StyledScrollView {
-                                                    id: scroller
-                                                    height: parent.height
-                                                    anchors.left: parent.left
-                                                    anchors.right: parent.right
+                                                CustomScrollbar {
+                                                    anchors.topMargin: -5
+                                                    anchors.bottomMargin: -5
                                                     anchors.rightMargin: -15
-                                                    highlightOnFocus: true
-
-                                                    EditableTags {
-                                                        id: flv
-                                                        model: artItemsModel.getArtworkItself(rowWrapper.getIndex())
-                                                        anchors.margins: { left: 5; top: 5; right: 0; bottom: 5 }
-
-                                                        delegate: KeywordWrapper {
-                                                            id: kw
-                                                            isHighlighted: rowWrapper.isHighlighted
-                                                            delegateIndex: index
-                                                            keywordText: keyword
-                                                            onActionClicked: keywordsWrapper.removeKeyword(kw.delegateIndex)
-                                                        }
-
-                                                        onTagAdded: {
-                                                            keywordsWrapper.appendKeyword(text)
-                                                        }
-
-                                                        onTagsPasted: {
-                                                            keywordsWrapper.pasteKeywords(tagsList)
-                                                        }
-
-                                                        onRemoveLast: {
-                                                            keywordsWrapper.removeLastKeyword()
-                                                        }
-
-                                                        onFocusLost: keywordsWrapper.saveKeywords()
-
-                                                        onCopyRequest: clipboard.setText(keywordsstring)
-                                                    }
+                                                    flickable: flv
                                                 }
                                             }
 

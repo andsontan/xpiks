@@ -114,7 +114,7 @@ Item {
         Rectangle {
             id: dialogWindow
             width: 730
-            height: 610
+            height: 615
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
@@ -446,6 +446,10 @@ Item {
                                     text: combinedArtworks.title
                                     onTextChanged: combinedArtworks.title = text
                                     KeyNavigation.backtab: descriptionTextInput
+
+                                    Keys.onTabPressed: {
+                                        flv.activateEdit()
+                                    }
                                 }
                             }
                         }
@@ -540,7 +544,7 @@ Item {
                                 id: keywordsWrapper
                                 border.color: Colors.artworkActiveColor
                                 border.width: flv.isFocused ? 1 : 0
-                                height: 150
+                                height: 155
                                 anchors.rightMargin: 20
                                 Layout.fillWidth: true
                                 color: Colors.defaultInputBackground
@@ -564,44 +568,42 @@ Item {
                                 MouseArea {
                                     anchors.fill: parent
                                     propagateComposedEvents: true
-                                    onClicked: {
-                                        flv.activateEdit()
-                                        mouse.accepted = false
+                                    onClicked: flv.activateEdit()
+                                }
+
+                                EditableTags {
+                                    id: flv
+                                    anchors.fill: parent
+                                    model: combinedArtworks.getKeywordsModel()
+                                    property int keywordHeight: 20 * settingsModel.keywordSizeScale + (settingsModel.keywordSizeScale - 1)*10
+                                    scrollStep: keywordHeight
+
+                                    delegate: KeywordWrapper {
+                                        isHighlighted: true
+                                        keywordText: modelData
+                                        delegateIndex: index
+                                        itemHeight: flv.keywordHeight
+                                        onActionClicked: keywordsWrapper.removeKeyword(delegateIndex)
+                                    }
+
+                                    onTagAdded: {
+                                        keywordsWrapper.appendKeyword(text)
+                                    }
+
+                                    onRemoveLast: {
+                                        keywordsWrapper.removeLastKeyword()
+                                    }
+
+                                    onTagsPasted: {
+                                        keywordsWrapper.pasteKeywords(tagsList)
                                     }
                                 }
 
-                                StyledScrollView {
-                                    id: scroller
-                                    anchors.left: parent.left
-                                    anchors.right: parent.right
+                                CustomScrollbar {
+                                    anchors.topMargin: -5
+                                    anchors.bottomMargin: -5
                                     anchors.rightMargin: -15
-                                    height: parent.height
-                                    highlightOnFocus: true
-
-                                    EditableTags {
-                                        id: flv
-                                        anchors.margins: { left: 5; top: 5; right: 0; bottom: 5 }
-                                        model: combinedArtworks.getKeywordsModel()
-
-                                        delegate: KeywordWrapper {
-                                            isHighlighted: true
-                                            keywordText: modelData
-                                            delegateIndex: index
-                                            onActionClicked: keywordsWrapper.removeKeyword(delegateIndex)
-                                        }
-
-                                        onTagAdded: {
-                                            keywordsWrapper.appendKeyword(text)
-                                        }
-
-                                        onRemoveLast: {
-                                            keywordsWrapper.removeLastKeyword()
-                                        }
-
-                                        onTagsPasted: {
-                                            keywordsWrapper.pasteKeywords(tagsList)
-                                        }
-                                    }
+                                    flickable: flv
                                 }
                             }
 

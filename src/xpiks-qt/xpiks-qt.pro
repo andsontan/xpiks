@@ -199,7 +199,8 @@ DISTFILES += \
     Dialogs/ArtworkPreview.qml \
     StyledControls/StyledBlackButton.qml \
     StyledControls/StyledSlider.qml \
-    Components/KeywordWrapper.qml
+    Components/KeywordWrapper.qml \
+    Components/CustomScrollbar.qml
 
 macx {
 OBJECTIVE_SOURCES += \
