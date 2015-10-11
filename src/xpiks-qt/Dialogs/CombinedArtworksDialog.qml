@@ -565,12 +565,6 @@ Item {
                                     combinedArtworks.pasteKeywords(keywordsList)
                                 }
 
-                                MouseArea {
-                                    anchors.fill: parent
-                                    propagateComposedEvents: true
-                                    onClicked: flv.activateEdit()
-                                }
-
                                 EditableTags {
                                     id: flv
                                     anchors.fill: parent

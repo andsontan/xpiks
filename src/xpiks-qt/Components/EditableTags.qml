@@ -38,7 +38,7 @@ Flickable {
     boundsBehavior: Flickable.StopAtBounds
     flickableDirection: Flickable.VerticalFlick
     rightMargin: 10
-    interactive: false
+    //interactive: false
     clip: true
 
     property int scrollStep: 10
@@ -59,7 +59,7 @@ Flickable {
     signal copyRequest();
 
     function activateEdit() {
-        if (!nextTagTextInput.focus) {
+        if (editEnabled && !nextTagTextInput.activeFocus) {
             scrollToBottom()
             nextTagTextInput.forceActiveFocus()
         }
@@ -117,12 +117,18 @@ Flickable {
     }
 
     MouseArea {
-        anchors.fill: parent
-        onClicked: activateEdit()
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.right: parent.right
+        height: flowListView.height
+        onClicked: {
+            activateEdit()
+            mouse.accepted = false
+        }
         propagateComposedEvents: true
         preventStealing: true
 
-        onWheel: {
+        /*onWheel: {
             if (wheel.angleDelta.y < 0) {
                 scrollDown()
             } else {
@@ -130,7 +136,7 @@ Flickable {
             }
 
             wheel.accepted = false
-        }
+        }*/
     }
 
     Flow {
