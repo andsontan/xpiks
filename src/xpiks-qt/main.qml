@@ -89,6 +89,13 @@ ApplicationWindow {
                      {componentParent: applicationWindow})
     }
 
+    function clearFilter() {
+        filteredArtItemsModel.searchTerm = ''
+        if (filterText.length > 0) {
+            filterText.text = ''
+        }
+    }
+
     menuBar: MenuBar {
         Menu {
             title: qsTr("File")
@@ -633,12 +640,7 @@ ApplicationWindow {
                                     anchors.rightMargin: 5
                                     enabled: filterText.length > 0
                                     anchors.verticalCenter: parent.verticalCenter
-                                    onItemClicked: {
-                                        filteredArtItemsModel.searchTerm = ''
-                                        if (filterText.length > 0) {
-                                            filterText.text = ''
-                                        }
-                                    }
+                                    onItemClicked: clearFilter()
                                 }
 
                                 StyledText {
@@ -836,18 +838,6 @@ ApplicationWindow {
                         anchors.bottom: parent.bottom
                         // does not work for now in Qt 5.4.1 in combination with ListView
                         //verticalScrollBarPolicy: Qt.ScrollBarAlwaysOn
-
-                        Rectangle {
-                            visible: imagesListView.count == 0
-                            anchors.fill: parent
-                            color: "transparent"
-
-                            StyledText {
-                                anchors.centerIn: parent
-                                text: qsTr("No items available. Add files or clear the filter")
-                                color: Colors.selectedMetadataColor
-                            }
-                        }
 
                         ListView {
                             id: imagesListView
@@ -1349,6 +1339,51 @@ ApplicationWindow {
                                     console.log("Filtered Model: Force layout for artworks list view")
                                     imagesListView.forceLayout()
                                     imagesListView.update()
+                                }
+                            }
+                        }
+                    }
+
+                    Rectangle {
+                        visible: imagesListView.count == 0
+                        anchors.fill: parent
+                        color: "transparent"
+
+                        RowLayout {
+                            anchors.centerIn: parent
+                            spacing: 5
+
+                            StyledText {
+                                text: qsTr("No items available.")
+                                color: Colors.selectedMetadataColor
+                            }
+
+                            StyledText {
+                                text: qsTr("Add files")
+                                color: addFilesMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
+
+                                MouseArea {
+                                    id: addFilesMA
+                                    anchors.fill: parent
+                                    cursorShape: Qt.PointingHandCursor
+                                    onClicked: chooseArtworksDialog.open()
+                                }
+                            }
+
+                            StyledText {
+                                text: qsTr("or")
+                                color: Colors.selectedMetadataColor
+                            }
+
+                            StyledText {
+                                text: qsTr("clear the filter")
+                                color: clearFilterMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
+
+                                MouseArea {
+                                    id: clearFilterMA
+                                    anchors.fill: parent
+                                    cursorShape: Qt.PointingHandCursor
+                                    onClicked: clearFilter()
                                 }
                             }
                         }
