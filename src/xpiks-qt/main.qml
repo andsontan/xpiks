@@ -1111,7 +1111,7 @@ ApplicationWindow {
                                                         if(event.matches(StandardKey.Paste)) {
                                                             var clipboardText = clipboard.getText();
                                                             // same regexp as in validator
-                                                            descriptionTextInput.paste(sanitizedText)
+                                                            descriptionTextInput.paste(clipboardText)
                                                             event.accepted = true
                                                         }
                                                     }
@@ -1153,7 +1153,7 @@ ApplicationWindow {
                                                         if(event.matches(StandardKey.Paste)) {
                                                             var clipboardText = clipboard.getText();
                                                             // same regexp as in validator
-                                                            titleTextInput.paste(sanitizedText)
+                                                            titleTextInput.paste(clipboardText)
                                                             event.accepted = true
                                                         }
                                                     }

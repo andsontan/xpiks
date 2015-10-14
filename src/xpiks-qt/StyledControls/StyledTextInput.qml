@@ -34,5 +34,6 @@ TextInput {
     clip: true
     color: enabled ? Colors.defaultLightColor : Colors.itemsSourceForeground
     KeyNavigation.priority: KeyNavigation.BeforeItem
+    maximumLength: 300
 }
 

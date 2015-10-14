@@ -25,8 +25,9 @@
 namespace Helpers {
     bool isValidKeyword(const QString &keyword) {
         bool isValid = false;
+        int length = keyword.length();
 
-        if (keyword.length() >= 2) {
+        if (2 <= length && length < 30) {
             isValid = true;
         }
 
