@@ -34,7 +34,7 @@ ApplicationWindow {
     modality: "ApplicationModal"
     title: qsTr("Settings")
     width: 500
-    height: 230
+    height: 260
     minimumWidth: width
     maximumWidth: width
     minimumHeight: height
@@ -183,7 +183,7 @@ ApplicationWindow {
 
                     ColumnLayout {
                         anchors.fill: parent
-                        anchors.margins: {left: 5; top: 20; right: 20; bottom: 20}
+                        anchors.margins: {left: 5; top: 30; right: 20; bottom: 20}
 
                         GridLayout {
                             width: parent.width
@@ -293,7 +293,7 @@ ApplicationWindow {
 
                     ColumnLayout {
                         anchors.fill: parent
-                        anchors.margins: 20
+                        anchors.margins: {left: 20; top: 30; right: 20; bottom: 20}
                         spacing: 10
 
                         RowLayout {
@@ -332,6 +332,26 @@ ApplicationWindow {
 
                             StyledText {
                                 text: qsTr("(edited but not saved)")
+                                color: Colors.defaultInputBackground
+                            }
+                        }
+
+                        RowLayout {
+                            width: parent.width
+                            spacing: 10
+
+                            StyledCheckbox {
+                                id: fitArtworksCheckbox
+                                text: qsTr("Fit artwork's preview")
+                                onCheckedChanged: {
+                                    settingsModel.fitSmallPreview = checked
+                                }
+
+                                Component.onCompleted: checked = settingsModel.fitSmallPreview
+                            }
+
+                            StyledText {
+                                text: qsTr("(instead of filling the square)")
                                 color: Colors.defaultInputBackground
                             }
                         }
@@ -450,7 +470,7 @@ ApplicationWindow {
                     ColumnLayout {
                         spacing: 10
                         anchors.fill: parent
-                        anchors.margins: 20
+                        anchors.margins: {left: 20; top: 30; right: 20; bottom: 20}
 
                         RowLayout {
                             width: parent.width
@@ -577,6 +597,10 @@ ApplicationWindow {
                                 color: Colors.defaultInputBackground
                             }
                         }
+
+                        Item {
+                            Layout.fillHeight: true
+                        }
                     }
                 }
 
@@ -584,9 +608,9 @@ ApplicationWindow {
                     title: qsTr("Upload")
 
                     ColumnLayout {
-                        spacing: 5
+                        spacing: 10
                         anchors.fill: parent
-                        anchors.margins: 20
+                        anchors.margins: {left: 20; top: 30; right: 20; bottom: 20}
 
                         RowLayout {
                             width: parent.width
@@ -744,7 +768,7 @@ ApplicationWindow {
 
                     ColumnLayout {
                         anchors.fill: parent
-                        anchors.margins: 20
+                        anchors.margins: {left: 20; top: 30; right: 20; bottom: 20}
 
                         RowLayout {
                             StyledCheckbox {
@@ -861,7 +885,10 @@ ApplicationWindow {
                 StyledButton {
                     text: qsTr("Exit")
                     width: 60
-                    onClicked: closeSettings()
+                    onClicked: {
+                        settingsModel.readAllValues()
+                        closeSettings()
+                    }
                 }
 
                 Item {

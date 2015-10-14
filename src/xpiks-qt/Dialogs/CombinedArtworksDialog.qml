@@ -240,7 +240,7 @@ Item {
                                         source: "image://global/" + path
                                         sourceSize.width: 150
                                         sourceSize.height: 150
-                                        fillMode: Image.PreserveAspectCrop
+                                        fillMode: settingsModel.fitSmallPreview ? Image.PreserveAspectFit : Image.PreserveAspectCrop
                                         asynchronous: true
                                     }
 

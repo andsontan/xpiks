@@ -41,6 +41,7 @@
 #define DEFAULT_DISMISS_DURATION 10
 #define DEFAULT_MAX_PARALLEL_UPLOADS 2
 #define DEFAULT_PROXY ""
+#define DEFAULT_FIT_SMALL_PREVIEW false
 
 namespace Models {
     SettingsModel::SettingsModel(QObject *parent) :
@@ -69,6 +70,7 @@ namespace Models {
         appSettings.setValue(appSettings.getDismissDurationKey(), m_DismissDuration);
         appSettings.setValue(appSettings.getMaxParallelUploadsKey(), m_MaxParallelUploads);
         appSettings.setValue(appSettings.getProxyURIKey(), m_ProxyURI);
+        appSettings.setValue(appSettings.getFitSmallPreviewKey(), m_FitSmallPreview);
 
         if (!m_MustUseMasterPassword) {
             appSettings.setValue(appSettings.getMasterPasswordHashKey(), "");
@@ -107,6 +109,7 @@ namespace Models {
         setDismissDuration(appSettings.value(appSettings.getDismissDurationKey(), DEFAULT_DISMISS_DURATION).toInt());
         setMaxParallelUploads(appSettings.value(appSettings.getMaxParallelUploadsKey(), DEFAULT_MAX_PARALLEL_UPLOADS).toInt());
         setProxyURI(appSettings.value(appSettings.getProxyURIKey(), DEFAULT_PROXY).toString());
+        setFitSmallPreview(appSettings.boolValue(appSettings.getFitSmallPreviewKey(), DEFAULT_FIT_SMALL_PREVIEW));
     }
 
     void SettingsModel::resetToDefault() {
@@ -123,6 +126,7 @@ namespace Models {
         setDismissDuration(DEFAULT_DISMISS_DURATION);
         setMaxParallelUploads(DEFAULT_MAX_PARALLEL_UPLOADS);
         setProxyURI(DEFAULT_PROXY);
+        setFitSmallPreview(DEFAULT_FIT_SMALL_PREVIEW);
     }
 
     int ensureInBounds(int value, int boundA, int boundB) {

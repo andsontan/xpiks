@@ -91,6 +91,9 @@ namespace Helpers {
         Q_PROPERTY(QString proxyURIKey READ getProxyURIKey CONSTANT)
         QString getProxyURIKey() const { return QString::fromLatin1(Constants::PROXY_URI); }
 
+        Q_PROPERTY(QString fitSmallPreviewKey READ getFitSmallPreviewKey CONSTANT)
+        QString getFitSmallPreviewKey() const { return QString::fromLatin1(Constants::FIT_SMALL_PREVIEW); }
+
         Q_INVOKABLE inline void setValue(const QString &key, const QVariant &value) {
             QSettings::setValue(key, value);
         }

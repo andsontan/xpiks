@@ -47,6 +47,7 @@ namespace Models {
         Q_PROPERTY(int dismissDuration READ getDismissDuration WRITE setDismissDuration NOTIFY dismissDurationChanged)
         Q_PROPERTY(int maxParallelUploads READ getMaxParallelUploads WRITE setMaxParallelUploads NOTIFY maxParallelUploadsChanged)
         Q_PROPERTY(QString proxyURI READ getProxyURI WRITE setProxyURI NOTIFY proxyURIChanged)
+        Q_PROPERTY(bool fitSmallPreview READ getFitSmallPreview WRITE setFitSmallPreview NOTIFY fitSmallPreviewChanged)
     public:
         explicit SettingsModel(QObject *parent = 0);
         virtual ~SettingsModel() {}
@@ -76,6 +77,7 @@ namespace Models {
         int getDismissDuration() const { return m_DismissDuration; }
         int getMaxParallelUploads() const { return m_MaxParallelUploads; }
         QString getProxyURI() const { return m_ProxyURI; }
+        bool getFitSmallPreview() const { return m_FitSmallPreview; }
 
     signals:
         void exifToolPathChanged(QString exifToolPath);
@@ -91,6 +93,7 @@ namespace Models {
         void dismissDurationChanged(int value);
         void maxParallelUploadsChanged(int value);
         void proxyURIChanged(QString value);
+        void fitSmallPreviewChanged(bool value);
 
     public:
         void setExifToolPath(QString exifToolPath) {
@@ -197,6 +200,14 @@ namespace Models {
             emit maxParallelUploadsChanged(value);
         }
 
+        void setFitSmallPreview(bool value) {
+            if (m_FitSmallPreview == value)
+                return;
+
+            m_FitSmallPreview = value;
+            emit fitSmallPreviewChanged(value);
+        }
+
     private:
         void resetToDefault();
 
@@ -214,6 +225,7 @@ namespace Models {
         bool m_MustUseMasterPassword;
         bool m_MustUseConfirmations;
         bool m_SaveBackups;
+        bool m_FitSmallPreview;
     };
 }
 
