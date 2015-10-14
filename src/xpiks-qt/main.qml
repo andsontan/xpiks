@@ -837,6 +837,18 @@ ApplicationWindow {
                         // does not work for now in Qt 5.4.1 in combination with ListView
                         //verticalScrollBarPolicy: Qt.ScrollBarAlwaysOn
 
+                        Rectangle {
+                            visible: imagesListView.count == 0
+                            anchors.fill: parent
+                            color: "transparent"
+
+                            StyledText {
+                                anchors.centerIn: parent
+                                text: qsTr("No items available. Add files or clear the filter")
+                                color: Colors.selectedMetadataColor
+                            }
+                        }
+
                         ListView {
                             id: imagesListView
                             model: filteredArtItemsModel
