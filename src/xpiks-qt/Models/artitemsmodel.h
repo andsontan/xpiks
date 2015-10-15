@@ -27,6 +27,7 @@
 #include <QList>
 #include <QPair>
 #include <QUrl>
+#include <QSize>
 #include "abstractlistmodel.h"
 #include "../Common/baseentity.h"
 
@@ -88,7 +89,7 @@ namespace Models {
         /*Q_INVOKABLE*/ void checkForWarnings(const QList<ArtworkMetadata *> selectedArtworks);
 
         Q_INVOKABLE QObject *getArtworkItself(int index) const;
-        Q_INVOKABLE QString retrieveImageSize(int metadataIndex) const;
+        Q_INVOKABLE QSize retrieveImageSize(int metadataIndex) const;
         Q_INVOKABLE QString retrieveFileSize(int metadataIndex) const;
 
     public:

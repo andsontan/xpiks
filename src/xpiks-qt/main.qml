@@ -894,6 +894,30 @@ ApplicationWindow {
                                     }
                                 }
 
+                                function launchItemEditing(currentImagePath) {
+                                    var index = getIndex()
+
+                                    combinedArtworks.resetModelData()
+                                    artItemsModel.combineArtwork(index)
+
+                                    var size = artItemsModel.retrieveImageSize(index)
+                                    if (size.width < size.height) {
+                                        Common.launchDialog("Dialogs/EditArtworkHorizontalDialog.qml", applicationWindow,
+                                                            {
+                                                                imagePath: currentImagePath,
+                                                                artworkIndex: index,
+                                                                componentParent: applicationWindow
+                                                            })
+                                    } else {
+                                        Common.launchDialog("Dialogs/EditArtworkVerticalDialog.qml", applicationWindow,
+                                                            {
+                                                                imagePath: currentImagePath,
+                                                                artworkIndex: index,
+                                                                componentParent: applicationWindow
+                                                            })
+                                    }
+                                }
+
                                 width: parent.width
                                 height: 200 + 80*(settingsModel.keywordSizeScale - 1.0)
 
@@ -1008,11 +1032,7 @@ ApplicationWindow {
                                                         editisselected = !isselected
                                                         rowWrapper.focusIfNeeded()
                                                     }
-                                                    onDoubleClicked: {
-                                                        combinedArtworks.resetModelData();
-                                                        artItemsModel.combineArtwork(rowWrapper.getIndex());
-                                                        Common.launchDialog("Dialogs/CombinedArtworksDialog.qml", applicationWindow, {componentParent: applicationWindow});
-                                                    }
+                                                    onDoubleClicked: rowWrapper.launchItemEditing(filename)
                                                 }
                                             }
 
@@ -1028,7 +1048,7 @@ ApplicationWindow {
                                                     anchors.fill: parent
                                                     cursorShape: Qt.PointingHandCursor
 
-                                                    onPressed: {
+                                                    onClicked: {
                                                         Common.launchDialog("Dialogs/ArtworkPreview.qml", applicationWindow,
                                                                             {
                                                                                 imagePath: filename,
@@ -1299,11 +1319,7 @@ ApplicationWindow {
                                                         id: moreEditsMA
                                                         anchors.fill: parent
                                                         cursorShape: Qt.PointingHandCursor
-                                                        onClicked: {
-                                                            combinedArtworks.resetModelData();
-                                                            artItemsModel.combineArtwork(rowWrapper.getIndex());
-                                                            Common.launchDialog("Dialogs/CombinedArtworksDialog.qml", applicationWindow, {componentParent: applicationWindow});
-                                                        }
+                                                        onClicked: rowWrapper.launchItemEditing(filename)
                                                     }
                                                 }
 

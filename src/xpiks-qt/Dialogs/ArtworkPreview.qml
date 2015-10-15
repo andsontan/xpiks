@@ -112,6 +112,7 @@ Item {
                     id: scrollview
                     anchors.fill: parent
                     anchors.leftMargin: 10
+                    anchors.topMargin: 10
 
                     Image {
                         id: previewImage
@@ -145,7 +146,10 @@ Item {
                         id: dimensionsText
                         color: Colors.selectedMetadataColor
                         text: '*'
-                        Component.onCompleted: text = artItemsModel.retrieveImageSize(artworkIndex)
+                        Component.onCompleted: {
+                            var size = artItemsModel.retrieveImageSize(artworkIndex)
+                            text = "W %1 x H %2".arg(size.width).arg(size.height)
+                        }
                     }
 
                     StyledText {
@@ -187,6 +191,7 @@ Item {
                                 previewImage.width = previewImage.sourceSize.width
                                 previewImage.height = previewImage.sourceSize.height
                                 scrollview.anchors.leftMargin = 0
+                                scrollview.anchors.topMargin = 0
                                 previewImage.fillMode = Image.Pad
                             }
                         }
@@ -198,6 +203,7 @@ Item {
                                 previewImage.width = boundsRect.width - 20
                                 previewImage.height = boundsRect.height - 20
                                 scrollview.anchors.leftMargin = 10
+                                scrollview.anchors.topMargin = 10
                                 previewImage.fillMode = Image.PreserveAspectFit
                             }
                         }

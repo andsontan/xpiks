@@ -260,14 +260,13 @@ namespace Models {
         return item;
     }
 
-    QString ArtItemsModel::retrieveImageSize(int metadataIndex) const {
-        if (metadataIndex < 0 || metadataIndex >= m_ArtworkList.length()) { return "-"; }
+    QSize ArtItemsModel::retrieveImageSize(int metadataIndex) const {
+        if (metadataIndex < 0 || metadataIndex >= m_ArtworkList.length()) { return QSize(); }
 
         ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
         QImageReader reader(metadata->getFilepath());
         QSize size = reader.size();
-        QString sizeDescription = QString("W %1 x H %2").arg(size.width()).arg(size.height());
-        return sizeDescription;
+        return size;
     }
 
     QString ArtItemsModel::retrieveFileSize(int metadataIndex) const {

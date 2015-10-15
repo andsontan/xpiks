@@ -38,5 +38,7 @@
         <file>StyledControls/StyledSlider.qml</file>
         <file>Components/KeywordWrapper.qml</file>
         <file>Components/CustomScrollbar.qml</file>
+        <file>Dialogs/EditArtworkHorizontalDialog.qml</file>
+        <file>Dialogs/EditArtworkVerticalDialog.qml</file>
     </qresource>
 </RCC>
