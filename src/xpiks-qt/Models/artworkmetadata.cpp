@@ -57,6 +57,11 @@ namespace Models {
         return anythingModified;
     }
 
+    bool ArtworkMetadata::isInDirectory(const QString &directory) const {
+        bool startsWith = m_ArtworkFilepath.startsWith(directory);
+        return startsWith;
+    }
+
     bool ArtworkMetadata::isEmpty() const {
         return m_KeywordsList.isEmpty() || m_ArtworkDescription.isEmpty();
     }

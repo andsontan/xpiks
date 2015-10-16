@@ -295,6 +295,10 @@ namespace Models {
         return metadata->getFilepath();
     }
 
+    void ArtItemsModel::addRecentDirectory(const QString &directory) {
+        addDirectories(QStringList() << directory);
+    }
+
     int ArtItemsModel::rowCount(const QModelIndex &parent) const {
         Q_UNUSED(parent);
         return m_ArtworkList.count();

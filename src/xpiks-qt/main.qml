@@ -134,12 +134,7 @@ ApplicationWindow {
 
                     delegate: MenuItem {
                         text: display
-                        onTriggered: {
-                            var items = [];
-                            items.push(display)
-                            console.log(items)
-                            artItemsModel.addLocalDirectories(items)
-                        }
+                        onTriggered: artItemsModel.addRecentDirectory(display)
                     }
                 }
             }

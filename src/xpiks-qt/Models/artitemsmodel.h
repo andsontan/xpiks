@@ -93,6 +93,8 @@ namespace Models {
         Q_INVOKABLE QString retrieveFileSize(int metadataIndex) const;
         Q_INVOKABLE QString getArtworkFilepath(int index) const;
 
+        Q_INVOKABLE void addRecentDirectory(const QString &directory);
+
     public:
         virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
         virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
