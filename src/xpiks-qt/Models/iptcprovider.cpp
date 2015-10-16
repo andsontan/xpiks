@@ -110,15 +110,6 @@ namespace Models {
 
         beginProcessing();
 
-        ImportPair firstPair = pairs.takeFirst();
-        if (!(readArtworkMetadata(firstPair).first)) {
-            endAfterFirstError();
-            return;
-        }
-        else {
-            metadataImportedHandler(firstPair);
-        }
-
         if (pairs.length() > 0) {
             restrictMaxThreads();
             m_MetadataReader->setFuture(QtConcurrent::mapped(pairs, readArtworkMetadata));
