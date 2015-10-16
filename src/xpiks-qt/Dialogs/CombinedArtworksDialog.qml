@@ -468,7 +468,7 @@ Item {
 
                 RowLayout {
                     width: parent.width
-                    height: Qt.platform.os === "windows" ? 195 : 200
+                    height: 200
                     spacing: 0
 
                     Item {

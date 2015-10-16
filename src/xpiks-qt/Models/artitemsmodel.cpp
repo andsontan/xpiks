@@ -288,6 +288,13 @@ namespace Models {
         return sizeDescription;
     }
 
+    QString ArtItemsModel::getArtworkFilepath(int metadataIndex) const {
+        if (metadataIndex < 0 || metadataIndex >= m_ArtworkList.length()) { return ""; }
+
+        ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
+        return metadata->getFilepath();
+    }
+
     int ArtItemsModel::rowCount(const QModelIndex &parent) const {
         Q_UNUSED(parent);
         return m_ArtworkList.count();

@@ -91,12 +91,13 @@ namespace Models {
         Q_INVOKABLE QObject *getArtworkItself(int index) const;
         Q_INVOKABLE QSize retrieveImageSize(int metadataIndex) const;
         Q_INVOKABLE QString retrieveFileSize(int metadataIndex) const;
+        Q_INVOKABLE QString getArtworkFilepath(int index) const;
 
     public:
-        int rowCount(const QModelIndex & parent = QModelIndex()) const;
-        QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
-        Qt::ItemFlags flags(const QModelIndex &index) const;
-        bool setData(const QModelIndex &index, const QVariant & value, int role = Qt::EditRole);
+        virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
+        virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+        virtual Qt::ItemFlags flags(const QModelIndex &index) const;
+        virtual bool setData(const QModelIndex &index, const QVariant & value, int role = Qt::EditRole);
 
     public slots:
         int addLocalArtworks(const QList<QUrl> &artworksPaths);
@@ -134,7 +135,7 @@ namespace Models {
         void selectedArtworkRemoved();
 
     protected:
-        QHash<int, QByteArray> roleNames() const;
+       virtual QHash<int, QByteArray> roleNames() const;
 
     protected:
         void removeInnerItem(int row);

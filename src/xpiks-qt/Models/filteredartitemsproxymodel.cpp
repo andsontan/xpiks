@@ -152,6 +152,16 @@ namespace Models {
         artItemsModel->raiseArtworksAdded(selectedArtworks.count());
     }
 
+    int FilteredArtItemsProxyModel::findSelectedItemIndex() const {
+        int index = -1;
+        QList<int> indices = getSelectedOriginalIndices();
+        if (indices.length() == 1) {
+            index = indices.first();
+        }
+
+        return index;
+    }
+
     void FilteredArtItemsProxyModel::itemSelectedChanged(bool value) {
         int plus = value ? +1 : -1;
         m_SelectedArtworksCount += plus;

@@ -98,7 +98,7 @@ Item {
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
-            width: 700
+            width: 650
             height: 620
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
@@ -191,7 +191,7 @@ Item {
                     spacing: 20
 
                     ColumnLayout {
-                        width: 320
+                        width: 300
                         spacing: 5
 
                         StyledText {
@@ -225,7 +225,7 @@ Item {
 
                     ColumnLayout {
                         spacing: 5
-                        width: 320
+                        width: 300
 
                         RowLayout {
                             spacing: 5

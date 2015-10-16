@@ -63,6 +63,7 @@ namespace Models {
         Q_INVOKABLE void checkForWarnings();
         Q_INVOKABLE int getItemsCount() const { return rowCount(); }
         Q_INVOKABLE void reimportMetadataForSelected();
+        Q_INVOKABLE int findSelectedItemIndex() const;
 
     public slots:
         void itemSelectedChanged(bool value);

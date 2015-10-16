@@ -96,6 +96,30 @@ ApplicationWindow {
         }
     }
 
+    function launchItemEditing(index) {
+        combinedArtworks.resetModelData()
+        artItemsModel.combineArtwork(index)
+
+        var currentImagePath = artItemsModel.getArtworkFilepath(index)
+
+        var size = artItemsModel.retrieveImageSize(index)
+        if (size.width < size.height) {
+            Common.launchDialog("Dialogs/EditArtworkHorizontalDialog.qml", applicationWindow,
+                                {
+                                    imagePath: currentImagePath,
+                                    artworkIndex: index,
+                                    componentParent: applicationWindow
+                                })
+        } else {
+            Common.launchDialog("Dialogs/EditArtworkVerticalDialog.qml", applicationWindow,
+                                {
+                                    imagePath: currentImagePath,
+                                    artworkIndex: index,
+                                    componentParent: applicationWindow
+                                })
+        }
+    }
+
     menuBar: MenuBar {
         Menu {
             title: qsTr("File")
@@ -493,7 +517,19 @@ ApplicationWindow {
                                 mustSelectDialog.open()
                             }
                             else {
-                                if (filteredArtItemsModel.selectedArtworksCount > 0) {
+                                var launched = false
+
+                                if (filteredArtItemsModel.selectedArtworksCount == 1) {
+                                    var index = filteredArtItemsModel.findSelectedItemIndex()
+
+                                    if (index !== -1) {
+                                        launchItemEditing(index)
+                                        launched = true
+                                    }
+                                }
+
+                                if (!launched) {
+                                    // also as fallback in case of errors in findSelectedIndex
                                     combinedArtworks.resetModelData();
                                     filteredArtItemsModel.combineSelectedArtworks();
                                     Common.launchDialog("Dialogs/CombinedArtworksDialog.qml", applicationWindow, {componentParent: applicationWindow});
@@ -894,30 +930,6 @@ ApplicationWindow {
                                     }
                                 }
 
-                                function launchItemEditing(currentImagePath) {
-                                    var index = getIndex()
-
-                                    combinedArtworks.resetModelData()
-                                    artItemsModel.combineArtwork(index)
-
-                                    var size = artItemsModel.retrieveImageSize(index)
-                                    if (size.width < size.height) {
-                                        Common.launchDialog("Dialogs/EditArtworkHorizontalDialog.qml", applicationWindow,
-                                                            {
-                                                                imagePath: currentImagePath,
-                                                                artworkIndex: index,
-                                                                componentParent: applicationWindow
-                                                            })
-                                    } else {
-                                        Common.launchDialog("Dialogs/EditArtworkVerticalDialog.qml", applicationWindow,
-                                                            {
-                                                                imagePath: currentImagePath,
-                                                                artworkIndex: index,
-                                                                componentParent: applicationWindow
-                                                            })
-                                    }
-                                }
-
                                 width: parent.width
                                 height: 200 + 80*(settingsModel.keywordSizeScale - 1.0)
 
@@ -1032,7 +1044,7 @@ ApplicationWindow {
                                                         editisselected = !isselected
                                                         rowWrapper.focusIfNeeded()
                                                     }
-                                                    onDoubleClicked: rowWrapper.launchItemEditing(filename)
+                                                    onDoubleClicked: launchItemEditing(rowWrapper.getIndex())
                                                 }
                                             }
 
@@ -1319,7 +1331,7 @@ ApplicationWindow {
                                                         id: moreEditsMA
                                                         anchors.fill: parent
                                                         cursorShape: Qt.PointingHandCursor
-                                                        onClicked: rowWrapper.launchItemEditing(filename)
+                                                        onClicked: launchItemEditing(rowWrapper.getIndex())
                                                     }
                                                 }
 
