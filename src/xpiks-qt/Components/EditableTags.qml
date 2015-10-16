@@ -86,6 +86,9 @@ Flickable {
         var flickable = flowListView;
         if (flowListView.contentHeight >= flowListView.height) {
             flickable.contentY = Math.min (flickable.contentY + scrollStep + flowSpacing, flickable.contentHeight - flickable.height);
+
+            var lines = Math.floor(flickable.contentY / (scrollStep + flowSpacing));
+            flickable.contentY = lines*(scrollStep + flowSpacing)
         }
     }
 
@@ -93,6 +96,9 @@ Flickable {
         var flickable = flowListView;
         if (flowListView.contentHeight >= flowListView.height) {
             flickable.contentY = Math.max (flickable.contentY - scrollStep - flowSpacing, 0);
+
+            var lines = Math.floor(flickable.contentY / (scrollStep + flowSpacing));
+            flickable.contentY = lines*(scrollStep + flowSpacing)
         }
     }
 
