@@ -121,11 +121,11 @@ namespace Models {
          void fileSelectedChanged(const QString &filepath, bool newValue);
 
     public:
-        int rowCount(const QModelIndex & parent = QModelIndex()) const;
-        QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+        virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
+        virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
 
     protected:
-        QHash<int, QByteArray> roleNames() const;
+        virtual QHash<int, QByteArray> roleNames() const;
 
     private:
          QStringList m_KeywordsList;
