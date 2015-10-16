@@ -142,10 +142,25 @@ namespace Models {
         if (metadataIndex >= 0
                 && metadataIndex < m_ArtworkList.length()
                 && !keywords.empty()) {
-            ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
-            ArtItemInfo *artItemInfo = new ArtItemInfo(metadata, metadataIndex);
 
-            Commands::PasteKeywordsCommand *pasteCommand = new Commands::PasteKeywordsCommand(artItemInfo, keywords);
+            ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
+
+            QList<ArtItemInfo*> artItemInfos;
+            QList<int> selectedIndices;
+
+            getSelectedItemsIndices(selectedIndices);
+
+            if (!metadata->getIsSelected()) {
+                selectedIndices.append(metadataIndex);
+            }
+
+            foreach (int index, selectedIndices) {
+                ArtworkMetadata *metadata = m_ArtworkList.at(index);
+                ArtItemInfo *item = new ArtItemInfo(metadata, index);
+                artItemInfos.append(item);
+            }
+
+            Commands::PasteKeywordsCommand *pasteCommand = new Commands::PasteKeywordsCommand(artItemInfos, keywords);
             Commands::CommandResult *result = m_CommandManager->processCommand(pasteCommand);
             delete result;
 

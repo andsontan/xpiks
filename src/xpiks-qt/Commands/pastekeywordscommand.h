@@ -22,6 +22,7 @@
 #ifndef PASTEKEYWORDSCOMMAND_H
 #define PASTEKEYWORDSCOMMAND_H
 
+#include <QList>
 #include <QStringList>
 #include "commandbase.h"
 
@@ -31,10 +32,10 @@ namespace Commands {
     class PasteKeywordsCommand : public CommandBase
     {
     public:
-        PasteKeywordsCommand(Models::ArtItemInfo *artItemInfo,
+        PasteKeywordsCommand(const QList<Models::ArtItemInfo*> &artItemInfos,
                              const QStringList &keywords) :
             CommandBase(PasteKeywordsCommandType),
-            m_ArtItemInfo(artItemInfo),
+            m_ArtItemInfos(artItemInfos),
             m_KeywordsList(keywords)
         {}
 
@@ -44,7 +45,7 @@ namespace Commands {
         virtual CommandResult *execute(const CommandManager *commandManager) const;
 
     private:
-        Models::ArtItemInfo *m_ArtItemInfo;
+        QList<Models::ArtItemInfo*> m_ArtItemInfos;
         QStringList m_KeywordsList;
     };
 
