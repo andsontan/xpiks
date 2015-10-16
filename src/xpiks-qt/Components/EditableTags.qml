@@ -123,7 +123,10 @@ Flickable {
     }
 
     MouseArea {
-        anchors.fill: parent
+        anchors.left: parent.left
+        anchors.top: parent.top
+        width: parent.width
+        height: flowListView.contentHeight > flowListView.height ? flowListView.contentHeight : flowListView.height
         onClicked: {
             activateEdit()
             mouse.accepted = false
@@ -133,6 +136,11 @@ Flickable {
         preventStealing: true
 
         onWheel: {
+            if (repeater.count == 0) {
+                wheel.accepted = false
+                return
+            }
+
             if (wheel.angleDelta.y < 0) {
                 if (flowListView.contentY != flowListView.contentHeight - flowListView.height) {
                     scrollDown()
