@@ -136,7 +136,7 @@ Flickable {
         preventStealing: true
 
         onWheel: {
-            if (repeater.count == 0) {
+            if (flowListView.height >= flowListView.contentHeight) {
                 wheel.accepted = false
                 return
             }
