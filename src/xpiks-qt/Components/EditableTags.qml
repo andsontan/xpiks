@@ -38,7 +38,7 @@ Flickable {
     boundsBehavior: Flickable.StopAtBounds
     flickableDirection: Flickable.VerticalFlick
     rightMargin: 10
-    //interactive: false  -- enable with onWheel
+    interactive: false
     clip: true
 
     property int scrollStep: 10
@@ -122,18 +122,25 @@ Flickable {
             activateEdit()
             mouse.accepted = false
         }
+
         propagateComposedEvents: true
         preventStealing: true
 
-        /*onWheel: {
+        onWheel: {
             if (wheel.angleDelta.y < 0) {
-                scrollDown()
+                if (flowListView.contentY != flowListView.contentHeight - flowListView.height) {
+                    scrollDown()
+                } else {
+                    wheel.accepted = false
+                }
             } else {
-                scrollUp()
+                if (flowListView.contentY != 0) {
+                    scrollUp()
+                } else {
+                    wheel.accepted = false
+                }
             }
-
-            wheel.accepted = false
-        }*/
+        }
     }
 
     Flow {
@@ -254,11 +261,6 @@ Flickable {
 
                     scrollToBottom()
                 }
-            }
-
-            MouseArea {
-                anchors.fill: parent
-                onClicked: activateEdit()
             }
         }
 
