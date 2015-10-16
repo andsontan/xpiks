@@ -38,7 +38,7 @@ Flickable {
     boundsBehavior: Flickable.StopAtBounds
     flickableDirection: Flickable.VerticalFlick
     rightMargin: 10
-    //interactive: false
+    //interactive: false  -- enable with onWheel
     clip: true
 
     property int scrollStep: 10
@@ -117,10 +117,7 @@ Flickable {
     }
 
     MouseArea {
-        anchors.left: parent.left
-        anchors.top: parent.top
-        anchors.right: parent.right
-        height: flowListView.height
+        anchors.fill: parent
         onClicked: {
             activateEdit()
             mouse.accepted = false
@@ -257,6 +254,11 @@ Flickable {
 
                     scrollToBottom()
                 }
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: activateEdit()
             }
         }
 
