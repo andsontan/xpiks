@@ -191,7 +191,7 @@ Item {
                     spacing: 20
 
                     ColumnLayout {
-                        width: 300
+                        width: 295
                         spacing: 5
 
                         StyledText {
@@ -225,7 +225,7 @@ Item {
 
                     ColumnLayout {
                         spacing: 5
-                        width: 300
+                        width: 295
 
                         RowLayout {
                             spacing: 5
@@ -277,6 +277,8 @@ Item {
 
                 RowLayout {
                     spacing: 5
+                    anchors.left: parent.left
+                    anchors.right: parent.right
 
                     StyledText {
                         id: keywordsLabel
