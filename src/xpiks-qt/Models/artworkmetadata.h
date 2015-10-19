@@ -65,6 +65,7 @@ namespace Models {
         bool isModified() const { return m_IsModified; }
         bool getIsSelected() const { return m_IsSelected; }
         bool isEmpty() const;
+        void clearMetadata();
 
     public:
         bool setDescription(const QString &value) {

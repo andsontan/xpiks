@@ -25,6 +25,8 @@
 #include "artworksrepository.h"
 #include "artiteminfo.h"
 #include "../Commands/commandmanager.h"
+#include "../Commands/combinededitcommand.h"
+#include "../Common/flags.h"
 
 namespace Models {
     FilteredArtItemsProxyModel::FilteredArtItemsProxyModel(QObject *parent) :
@@ -160,6 +162,31 @@ namespace Models {
         }
 
         return index;
+    }
+
+    void FilteredArtItemsProxyModel::removeMetadataInSelected() const {
+        QList<ArtItemInfo *> selectedArtworks = getSelectedOriginalItemsWithIndices();
+
+        int flags = 0;
+        Common::SetFlag(flags, Common::EditDesctiption);
+        Common::SetFlag(flags, Common::EditKeywords);
+        Common::SetFlag(flags, Common::EditTitle);
+
+        const QString empty = "";
+
+        Commands::CombinedEditCommand *combinedEditCommand = new Commands::CombinedEditCommand(
+                    flags,
+                    selectedArtworks,
+                    empty,
+                    empty,
+                    QStringList());
+
+        Commands::CommandResult *result = m_CommandManager->processCommand(combinedEditCommand);
+        Commands::CombinedEditCommandResult *combinedResult = static_cast<Commands::CombinedEditCommandResult*>(result);
+        m_CommandManager->updateArtworks(combinedResult->m_IndicesToUpdate);
+
+        delete combinedResult;
+        qDeleteAll(selectedArtworks);
     }
 
     void FilteredArtItemsProxyModel::itemSelectedChanged(bool value) {

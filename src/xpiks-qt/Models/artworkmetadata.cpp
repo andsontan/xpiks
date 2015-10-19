@@ -63,7 +63,13 @@ namespace Models {
     }
 
     bool ArtworkMetadata::isEmpty() const {
-        return m_KeywordsList.isEmpty() || m_ArtworkDescription.isEmpty();
+        return m_KeywordsList.isEmpty() || m_ArtworkDescription.simplified().isEmpty();
+    }
+
+    void ArtworkMetadata::clearMetadata() {
+        setDescription("");
+        setTitle("");
+        resetKeywords();
     }
 
     bool ArtworkMetadata::removeKeywordAt(int index) {

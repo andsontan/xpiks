@@ -187,6 +187,15 @@ ApplicationWindow {
                     filteredArtItemsModel.reimportMetadataForSelected()
                 }
             }
+
+            MenuItem {
+                text: qsTr("&Remove metadata from selected")
+                enabled: filteredArtItemsModel.selectedArtworksCount > 0
+                onTriggered: {
+                    console.log("Remove metadata from selected triggered")
+                    removeMetadataDialog.open()
+                }
+            }
         }
     }
 
@@ -198,6 +207,17 @@ ApplicationWindow {
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
             Qt.quit()
+        }
+    }
+
+    MessageDialog {
+        id: removeMetadataDialog
+
+        title: "Confirmation"
+        text: qsTr("Remove metadata from selected artworks?")
+        standardButtons: StandardButton.Yes | StandardButton.No
+        onYes: {
+            filteredArtItemsModel.removeMetadataInSelected()
         }
     }
 
@@ -1168,6 +1188,7 @@ ApplicationWindow {
                                                     text: title
                                                     color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.defaultInputBackground
                                                     onTextChanged: model.edittitle = text
+                                                    KeyNavigation.backtab: descriptionTextInput
 
                                                     Keys.onTabPressed: {
                                                         flv.activateEdit()

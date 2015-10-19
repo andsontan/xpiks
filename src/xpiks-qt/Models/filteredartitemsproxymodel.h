@@ -64,6 +64,7 @@ namespace Models {
         Q_INVOKABLE int getItemsCount() const { return rowCount(); }
         Q_INVOKABLE void reimportMetadataForSelected();
         Q_INVOKABLE int findSelectedItemIndex() const;
+        Q_INVOKABLE void removeMetadataInSelected() const;
 
     public slots:
         void itemSelectedChanged(bool value);
