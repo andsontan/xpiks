@@ -42,7 +42,7 @@ namespace Helpers {
         m_CurlProcess(NULL),
         m_Timer(NULL),
         m_Host(uploadItem->m_UploadInfo->getHost()),
-        m_PercentRegexp("[^0-9.]"),
+        m_PercentRegexp("[^0-9.,]"),
         m_Delay(delay),
         m_PercentDone(0.0),
         m_FilesUploaded(0),
@@ -140,11 +140,17 @@ namespace Helpers {
         QString output = m_CurlProcess->readAllStandardError();
         QString prettyfiedOutput = output.right(10).trimmed();
 
-        double percent = parsePercent(prettyfiedOutput);
-        bool anotherFileUploaded = qAbs(percent - 100.0) < 0.000000001;
+        int filePercent = parsePercent(prettyfiedOutput);
+        bool anotherFileUploaded = filePercent == 100;
 
+        double percent = filePercent;
         percent += m_FilesUploaded*100.0;
         percent /= (m_OverallFilesCount + 0.0);
+
+        if (percent > 100.0) {
+            qDebug() << "ERROR: percent is higher than 100. Last curl output is [" << output << "]. Percent is" << percent;
+            percent = 100.0;
+        }
 
         if (anotherFileUploaded) { m_FilesUploaded++; }
 
@@ -198,16 +204,19 @@ namespace Helpers {
         m_Timer->setSingleShot(true);
     }
 
-    double UploadWorker::parsePercent(QString &curlOutput) const
+    int UploadWorker::parsePercent(QString &curlOutput) const
     {
-        double value = 0.0;
+        int value = 0;
         if (curlOutput.endsWith("%")) {
             curlOutput.remove(m_PercentRegexp);
-            value = curlOutput.toDouble();
+
+            int i = 0, length = curlOutput.length();
+            while (i < length && curlOutput[i].isDigit()) ++i;
+            value = curlOutput.left(qMin(i, 3)).toInt();
         }
 
-        if (value < 0 || value > 100.0) {
-            value = 0.0;
+        if (value < 0 || value > 100) {
+            value = 0;
         }
 
         return value;

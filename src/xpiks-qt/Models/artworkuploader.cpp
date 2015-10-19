@@ -145,6 +145,7 @@ namespace Models {
         const Models::SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
 
         uploadInfoRepository->resetPercents();
+        uploadInfoRepository->updatePercentages();
         m_UploadCoordinator->uploadArtworks(artworkList, infos, m_IncludeVector, secretsManager, settingsModel);
     }
 

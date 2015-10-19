@@ -103,7 +103,7 @@ namespace Helpers {
     void UploadCoordinator::percentReported(double newPercent, double oldPercent)
     {
         double n = m_UploadThreads.length();
-        if (n == 0) { n = 1.0; }
+        if (m_UploadThreads.empty()) { n = 1.0; }
         int percentDone = 0;
 
         m_PercentMutex.lock();
