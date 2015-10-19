@@ -475,7 +475,7 @@ ApplicationWindow {
                     spacing: 10
                     anchors.fill: parent
                     anchors.margins: { top: 10; left: 10 }
-                    anchors.rightMargin: mainScrollView.flickableItem.contentHeight > mainScrollView.flickableItem.height ? 20 : 10
+                    anchors.rightMargin: mainScrollView.areScrollbarsVisible ? 20 : 10
 
                     Item {
                         Layout.fillWidth: true
@@ -505,7 +505,7 @@ ApplicationWindow {
 
                     StyledButton {
                         text: qsTr("Edit")
-                        width: mainScrollView.flickableItem.contentHeight > mainScrollView.flickableItem.height ? 72 : 82
+                        width: mainScrollView.areScrollbarsVisible ? 72 : 82
                         enabled: artworkRepository.artworksSourcesCount > 0
                         onClicked: {
                             if (filteredArtItemsModel.selectedArtworksCount === 0) {
@@ -600,100 +600,94 @@ ApplicationWindow {
                         color: "transparent"
                         anchors.top: parent.top
                         anchors.left: parent.left
-                        width: parent.width
+                        anchors.right: parent.right
                         height: 30
 
-                        RowLayout {
-                            anchors.fill: parent
-                            anchors.rightMargin: mainScrollView.flickableItem.contentHeight > mainScrollView.flickableItem.height ? 10 : 0
-                            spacing: 10
+                        StyledCheckbox {
+                            id: selectAllCheckbox
+                            anchors.left: parent.left
+                            anchors.leftMargin: 20
+                            anchors.verticalCenter: parent.verticalCenter
+                            isContrast: true
+                            enabled: artworkRepository.artworksSourcesCount > 0
+                            text: filteredArtItemsModel.selectedArtworksCount === 0 ? qsTr("Select all") : qsTr("Select none")
+                            checked: filteredArtItemsModel.selectedArtworksCount > 0
 
-                            Item {
-                                width: 10
+                            onClicked: {
+                                if (checked) {
+                                    filteredArtItemsModel.selectFilteredArtworks();
+                                }
+                                else {
+                                    filteredArtItemsModel.unselectFilteredArtworks();
+                                }
                             }
 
-                            StyledCheckbox {
-                                id: selectAllCheckbox
-                                isContrast: true
-                                enabled: artworkRepository.artworksSourcesCount > 0
-                                text: filteredArtItemsModel.selectedArtworksCount === 0 ? qsTr("Select all") : qsTr("Select none")
-                                checked: filteredArtItemsModel.selectedArtworksCount > 0
+                            Connections {
+                                target: filteredArtItemsModel
+                                onSelectedArtworksCountChanged: {
+                                    selectAllCheckbox.checked = filteredArtItemsModel.selectedArtworksCount > 0
+                                }
+                            }
+                        }
 
-                                onClicked: {
-                                    if (checked) {
-                                        filteredArtItemsModel.selectFilteredArtworks();
-                                    }
-                                    else {
-                                        filteredArtItemsModel.unselectFilteredArtworks();
-                                    }
+                        Rectangle {
+                            anchors.right: searchButton.left
+                            anchors.rightMargin: 10
+                            anchors.verticalCenter: parent.verticalCenter
+                            color: Colors.defaultDarkColor
+                            width: (artworkRepository.artworksSourcesCount > 0 && mainScrollView.areScrollbarsVisible) ? 252 : 262
+                            enabled: artworkRepository.artworksSourcesCount > 0
+                            height: 24
+
+                            StyledTextInput {
+                                id: filterText
+                                width: (artworkRepository.artworksSourcesCount > 0 && mainScrollView.areScrollbarsVisible) ? 220 : 230
+                                height: 24
+                                clip: true
+                                anchors.left: parent.left
+                                anchors.leftMargin: 5
+                                color: Colors.defaultInputBackground
+                                enabled: artworkRepository.artworksSourcesCount > 0
+
+                                onAccepted: {
+                                    filteredArtItemsModel.searchTerm = text
                                 }
 
                                 Connections {
                                     target: filteredArtItemsModel
-                                    onSelectedArtworksCountChanged: {
-                                        selectAllCheckbox.checked = filteredArtItemsModel.selectedArtworksCount > 0
-                                    }
+                                    onSearchTermChanged: filterText.text = filteredArtItemsModel.searchTerm
                                 }
                             }
 
-                            Item {
-                                Layout.fillWidth: true
+                            CloseIcon {
+                                width: 14
+                                height: 14
+                                anchors.right: parent.right
+                                anchors.rightMargin: 5
+                                enabled: filterText.length > 0
+                                anchors.verticalCenter: parent.verticalCenter
+                                onItemClicked: clearFilter()
                             }
 
-                            Rectangle {
-                                color: Colors.defaultDarkColor
-                                width: 262
-                                height: 24
-                                enabled: artworkRepository.artworksSourcesCount > 0
-
-                                StyledTextInput {
-                                    id: filterText
-                                    width: 230
-                                    height: 24
-                                    clip: true
-                                    anchors.left: parent.left
-                                    anchors.leftMargin: 5
-                                    color: Colors.defaultInputBackground
-                                    onAccepted: {
-                                        filteredArtItemsModel.searchTerm = text
-                                    }
-
-                                    Connections {
-                                        target: filteredArtItemsModel
-                                        onSearchTermChanged: filterText.text = filteredArtItemsModel.searchTerm
-                                    }
-                                }
-
-                                CloseIcon {
-                                    width: 14
-                                    height: 14
-                                    anchors.right: parent.right
-                                    anchors.rightMargin: 5
-                                    enabled: filterText.length > 0
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    onItemClicked: clearFilter()
-                                }
-
-                                StyledText {
-                                    text: qsTr("Search...   x:empty  x:modified")
-                                    color: Colors.defaultInputBackground
-                                    opacity: (filterText.activeFocus || filterText.length > 0) ? 0 : 0.1
-                                    anchors.left: parent.left
-                                    anchors.leftMargin: 7
-                                    anchors.verticalCenter: parent.verticalCenter
-                                }
+                            StyledText {
+                                text: qsTr("Search...   x:empty  x:modified")
+                                color: Colors.defaultInputBackground
+                                opacity: (filterText.activeFocus || filterText.length > 0) ? 0 : 0.1
+                                anchors.left: parent.left
+                                anchors.leftMargin: 7
+                                anchors.verticalCenter: parent.verticalCenter
                             }
+                        }
 
-                            StyledBlackButton {
-                                width: 90
-                                text: qsTr("Search")
-                                enabled: artworkRepository.artworksSourcesCount > 0
-                                onClicked: filteredArtItemsModel.searchTerm = filterText.text
-                            }
-
-                            Item {
-                                width: 20
-                            }
+                        StyledBlackButton {
+                            id: searchButton
+                            anchors.right: parent.right
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.rightMargin:  mainScrollView.areScrollbarsVisible ? 40 : 30
+                            width: 90
+                            text: qsTr("Search")
+                            enabled: artworkRepository.artworksSourcesCount > 0
+                            onClicked: filteredArtItemsModel.searchTerm = filterText.text
                         }
                     }
 
@@ -867,6 +861,7 @@ ApplicationWindow {
                         anchors.topMargin: 4
                         anchors.top: undoRedoRect.bottom
                         anchors.bottom: parent.bottom
+                        property bool areScrollbarsVisible: flickableItem.contentHeight > flickableItem.height
                         // does not work for now in Qt 5.4.1 in combination with ListView
                         //verticalScrollBarPolicy: Qt.ScrollBarAlwaysOn
 
@@ -1107,7 +1102,7 @@ ApplicationWindow {
                                                 height: 30
                                                 anchors.left: parent.left
                                                 anchors.right: titleRect.left
-                                                anchors.rightMargin: columnLayout.isWideEnough ? 10 : 0
+                                                anchors.rightMargin: columnLayout.isWideEnough ? 20 : 0
                                                 anchors.top: descriptionText.bottom
                                                 anchors.topMargin: 3
                                                 color: rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.defaultControlColor
