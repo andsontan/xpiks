@@ -621,7 +621,7 @@ ApplicationWindow {
                         anchors.top: parent.top
                         anchors.left: parent.left
                         anchors.right: parent.right
-                        height: 30
+                        height: 24
 
                         StyledCheckbox {
                             id: selectAllCheckbox
