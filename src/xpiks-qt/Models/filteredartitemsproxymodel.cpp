@@ -267,6 +267,10 @@ namespace Models {
     }
 
     bool FilteredArtItemsProxyModel::fitsSpecialKeywords(const ArtworkMetadata *metadata) const {
+        if (m_SearchTerm.isEmpty()) {
+            return true;
+        }
+
         if (m_SearchTerm == "x:modified" && metadata->isModified()) {
             return true;
         }
@@ -288,28 +292,35 @@ namespace Models {
         ArtItemsModel *artItemsModel = getArtItemsModel();
         ArtworkMetadata *metadata = artItemsModel->getArtwork(sourceRow);
 
-
         if (fitsSpecialKeywords(metadata)) { return true; }
 
         bool hasMatch = false;
 
-        hasMatch = metadata->getDescription().contains(m_SearchTerm, Qt::CaseInsensitive);
+        QStringList searchTerms = m_SearchTerm.split(QChar::Space, QString::SkipEmptyParts);
 
-        if (!hasMatch) {
-            hasMatch = metadata->getTitle().contains(m_SearchTerm, Qt::CaseInsensitive);
-        }
+        foreach (const QString &searchTerm, searchTerms) {
+            hasMatch = metadata->getDescription().contains(searchTerm, Qt::CaseInsensitive);
 
-        if (!hasMatch) {
-            hasMatch = metadata->getFilepath().contains(m_SearchTerm, Qt::CaseInsensitive);
-        }
+            if (!hasMatch) {
+                hasMatch = metadata->getTitle().contains(searchTerm, Qt::CaseInsensitive);
+            }
 
-        if (!hasMatch) {
-            const QStringList &keywords = metadata->getKeywords();
-            foreach (const QString &keyword, keywords) {
-                if (keyword.contains(m_SearchTerm, Qt::CaseInsensitive)) {
-                    hasMatch = true;
-                    break;
+            if (!hasMatch) {
+                hasMatch = metadata->getFilepath().contains(searchTerm, Qt::CaseInsensitive);
+            }
+
+            if (!hasMatch) {
+                const QStringList &keywords = metadata->getKeywords();
+                foreach (const QString &keyword, keywords) {
+                    if (keyword.contains(searchTerm, Qt::CaseInsensitive)) {
+                        hasMatch = true;
+                        break;
+                    }
                 }
+            }
+
+            if (hasMatch) {
+                break;
             }
         }
 
