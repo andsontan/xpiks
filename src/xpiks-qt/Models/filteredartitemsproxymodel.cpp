@@ -40,10 +40,11 @@ namespace Models {
         if (value != m_SearchTerm) {
             m_SearchTerm = value;
             emit searchTermChanged(value);
-            invalidateFilter();
             forceUnselectAllItems();
-            emit afterInvalidateFilter();
         }
+
+        invalidateFilter();
+        emit afterInvalidateFilter();
     }
 
     int FilteredArtItemsProxyModel::getOriginalIndex(int index) {
@@ -293,36 +294,56 @@ namespace Models {
         return artItemsModel;
     }
 
-    bool FilteredArtItemsProxyModel::fitsSpecialKeywords(const ArtworkMetadata *metadata) const {
-        if (m_SearchTerm.isEmpty()) {
-            return true;
-        }
-
-        if (m_SearchTerm == "x:modified" && metadata->isModified()) {
-            return true;
-        }
-
-        if (m_SearchTerm == "x:empty" && metadata->isEmpty()) {
-            return true;
-        }
-
-        if (m_SearchTerm == "x:selected" && metadata->getIsSelected()) {
-            return true;
-        }
-
-        return false;
-    }
-
-    bool FilteredArtItemsProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const {
-        Q_UNUSED(sourceParent);
-
-        ArtItemsModel *artItemsModel = getArtItemsModel();
-        ArtworkMetadata *metadata = artItemsModel->getArtwork(sourceRow);
-
-        if (fitsSpecialKeywords(metadata)) { return true; }
-
+    bool FilteredArtItemsProxyModel::fitsSpecialKeywords(const ArtworkMetadata *metadata, bool &isSpecial) const {
+        isSpecial = false;
         bool hasMatch = false;
 
+        if (m_SearchTerm.isEmpty()) {
+            hasMatch = true;
+        }
+
+        if (m_SearchTerm == "x:modified") {
+            hasMatch = metadata->isModified();
+            isSpecial = true;
+        } else if (m_SearchTerm == "x:empty") {
+            hasMatch = metadata->isEmpty();
+            isSpecial = true;
+        } else if (m_SearchTerm == "x:selected") {
+            hasMatch = metadata->getIsSelected();
+            isSpecial = true;
+        }
+
+        return hasMatch;
+    }
+
+    bool FilteredArtItemsProxyModel::containsFullSearch(const ArtworkMetadata *metadata) const {
+        bool hasMatch = false;
+
+        hasMatch = metadata->getDescription().contains(m_SearchTerm, Qt::CaseInsensitive);
+
+        if (!hasMatch) {
+            hasMatch = metadata->getTitle().contains(m_SearchTerm, Qt::CaseInsensitive);
+        }
+
+        if (!hasMatch) {
+            hasMatch = metadata->getFilepath().contains(m_SearchTerm, Qt::CaseInsensitive);
+        }
+
+        if (!hasMatch && !m_SearchTerm.contains(QChar::Space)) {
+            const QStringList &keywords = metadata->getKeywords();
+            foreach (const QString &keyword, keywords) {
+                if (keyword.contains(m_SearchTerm, Qt::CaseInsensitive)) {
+                    hasMatch = true;
+                    break;
+                }
+            }
+        }
+
+        return hasMatch;
+    }
+
+    bool FilteredArtItemsProxyModel::containsPartsSearch(const ArtworkMetadata *metadata) const {
+        bool hasMatch = false;
         QStringList searchTerms = m_SearchTerm.split(QChar::Space, QString::SkipEmptyParts);
 
         foreach (const QString &searchTerm, searchTerms) {
@@ -348,6 +369,30 @@ namespace Models {
 
             if (hasMatch) {
                 break;
+            }
+        }
+
+        return hasMatch;
+    }
+
+    bool FilteredArtItemsProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const {
+        Q_UNUSED(sourceParent);
+
+        ArtItemsModel *artItemsModel = getArtItemsModel();
+        ArtworkMetadata *metadata = artItemsModel->getArtwork(sourceRow);
+
+        bool hasMatch = false;
+
+        if (metadata != NULL) {
+            bool isSpecial = false;
+            hasMatch = fitsSpecialKeywords(metadata, isSpecial);
+
+            if (!hasMatch && !isSpecial) {
+                hasMatch = containsFullSearch(metadata);
+            }
+
+            if (!hasMatch && !isSpecial) {
+                hasMatch = containsPartsSearch(metadata);
             }
         }
 
