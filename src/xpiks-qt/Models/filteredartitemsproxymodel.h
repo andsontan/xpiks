@@ -65,6 +65,7 @@ namespace Models {
         Q_INVOKABLE void reimportMetadataForSelected();
         Q_INVOKABLE int findSelectedItemIndex() const;
         Q_INVOKABLE void removeMetadataInSelected() const;
+        Q_INVOKABLE void updateFilter() { invalidateFilter(); emit afterInvalidateFilter(); }
 
     public slots:
         void itemSelectedChanged(bool value);
