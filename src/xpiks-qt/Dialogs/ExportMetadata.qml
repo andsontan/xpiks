@@ -145,6 +145,7 @@ Item {
                     StyledCheckbox {
                         text: qsTr("Backup each image")
                         checked: iptcProvider.mustSaveOriginal
+                        enabled: !iptcProvider.inProgress
                         onCheckedChanged: iptcProvider.mustSaveOriginal = checked
                     }
 
