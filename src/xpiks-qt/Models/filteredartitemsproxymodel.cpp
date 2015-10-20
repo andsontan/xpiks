@@ -316,49 +316,27 @@ namespace Models {
         return hasMatch;
     }
 
-    bool FilteredArtItemsProxyModel::containsFullSearch(const ArtworkMetadata *metadata) const {
-        bool hasMatch = false;
-
-        hasMatch = metadata->getDescription().contains(m_SearchTerm, Qt::CaseInsensitive);
-
-        if (!hasMatch) {
-            hasMatch = metadata->getTitle().contains(m_SearchTerm, Qt::CaseInsensitive);
-        }
-
-        if (!hasMatch) {
-            hasMatch = metadata->getFilepath().contains(m_SearchTerm, Qt::CaseInsensitive);
-        }
-
-        if (!hasMatch && !m_SearchTerm.contains(QChar::Space)) {
-            const QStringList &keywords = metadata->getKeywords();
-            foreach (const QString &keyword, keywords) {
-                if (keyword.contains(m_SearchTerm, Qt::CaseInsensitive)) {
-                    hasMatch = true;
-                    break;
-                }
-            }
-        }
-
-        return hasMatch;
-    }
-
     bool FilteredArtItemsProxyModel::containsPartsSearch(const ArtworkMetadata *metadata) const {
         bool hasMatch = false;
         QStringList searchTerms = m_SearchTerm.split(QChar::Space, QString::SkipEmptyParts);
 
+        const QString &description = metadata->getDescription();
+        const QString &title = metadata->getTitle();
+        const QString &filepath = metadata->getFilepath();
+        const QStringList &keywords = metadata->getKeywords();
+
         foreach (const QString &searchTerm, searchTerms) {
-            hasMatch = metadata->getDescription().contains(searchTerm, Qt::CaseInsensitive);
+            hasMatch = description.contains(searchTerm, Qt::CaseInsensitive);
 
             if (!hasMatch) {
-                hasMatch = metadata->getTitle().contains(searchTerm, Qt::CaseInsensitive);
+                hasMatch = title.contains(searchTerm, Qt::CaseInsensitive);
             }
 
             if (!hasMatch) {
-                hasMatch = metadata->getFilepath().contains(searchTerm, Qt::CaseInsensitive);
+                hasMatch = filepath.contains(searchTerm, Qt::CaseInsensitive);
             }
 
             if (!hasMatch) {
-                const QStringList &keywords = metadata->getKeywords();
                 foreach (const QString &keyword, keywords) {
                     if (keyword.contains(searchTerm, Qt::CaseInsensitive)) {
                         hasMatch = true;
@@ -386,10 +364,6 @@ namespace Models {
         if (metadata != NULL) {
             bool isSpecial = false;
             hasMatch = fitsSpecialKeywords(metadata, isSpecial);
-
-            if (!hasMatch && !isSpecial) {
-                hasMatch = containsFullSearch(metadata);
-            }
 
             if (!hasMatch && !isSpecial) {
                 hasMatch = containsPartsSearch(metadata);

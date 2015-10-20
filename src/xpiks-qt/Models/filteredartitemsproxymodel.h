@@ -84,7 +84,6 @@ namespace Models {
         void forceUnselectAllItems();
         ArtItemsModel *getArtItemsModel() const;
         bool fitsSpecialKeywords(const ArtworkMetadata *metadata, bool &isSpecial) const;
-        bool containsFullSearch(const ArtworkMetadata *metadata) const;
         bool containsPartsSearch(const ArtworkMetadata *metadata) const;
 
     protected:
