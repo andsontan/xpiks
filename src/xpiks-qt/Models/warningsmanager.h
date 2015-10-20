@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
  * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
@@ -68,6 +68,7 @@ namespace Models {
         bool checkDimensions(WarningsInfo *wi, ArtworkMetadata *am) const;
         bool checkKeywordsCount(WarningsInfo *wi, ArtworkMetadata *am) const;
         bool checkDescriptionLength(WarningsInfo *wi, ArtworkMetadata *am) const;
+        bool checkTitleWordsCount(WarningsInfo *wi, ArtworkMetadata *am) const;
         void initConstraintsFromSettings();
 
     public:

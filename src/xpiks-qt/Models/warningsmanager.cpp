@@ -77,6 +77,7 @@ namespace Models {
         hasWarnings = checkDimensions(wi, metadata) || hasWarnings;
         hasWarnings = checkKeywordsCount(wi, metadata) || hasWarnings;
         hasWarnings = checkDescriptionLength(wi, metadata) || hasWarnings;
+        hasWarnings = checkTitleWordsCount(wi, metadata) || hasWarnings;
 
         if (hasWarnings) {
             m_WarningsList.append(wi);
@@ -131,19 +132,43 @@ namespace Models {
     bool WarningsManager::checkDescriptionLength(WarningsInfo *wi, ArtworkMetadata *am) const
     {
         bool hasWarnings = false;
+        const QString &description = am->getDescription();
 
-        int descriptionLength = am->getDescription().length();
+        int descriptionLength = description.simplified().length();
         if (descriptionLength == 0) {
             wi->addWarning("Description is empty");
             hasWarnings = true;
+        } else {
+            if (descriptionLength > m_MaximumDescriptionLength) {
+                QString warning = QString("Description length (%1) exceeds maximum (%2)")
+                        .arg(descriptionLength)
+                        .arg(m_MaximumDescriptionLength);
+                wi->addWarning(warning);
+                hasWarnings = true;
+            }
+
+            if (description.split(QChar::Space, QString::SkipEmptyParts).length() < 3) {
+                QString warning = QString("Description should contain at least three words");
+                wi->addWarning(warning);
+                hasWarnings = true;
+            }
         }
 
-        if (descriptionLength > m_MaximumDescriptionLength) {
-            QString warning = QString("Description length (%1) exceeds maximum (%2)")
-                    .arg(descriptionLength)
-                    .arg(m_MaximumDescriptionLength);
-            wi->addWarning(warning);
-            hasWarnings = true;
+        return hasWarnings;
+    }
+
+    bool WarningsManager::checkTitleWordsCount(WarningsInfo *wi, ArtworkMetadata *am) const {
+        bool hasWarnings = false;
+
+        const QString &title = am->getTitle();
+
+        if (!title.simplified().isEmpty()) {
+            QStringList parts = title.split(QChar::Space, QString::SkipEmptyParts);
+            if ( parts.length() < 3) {
+                QString warning = QString("Title should contain at least three words");
+                wi->addWarning(warning);
+                hasWarnings = true;
+            }
         }
 
         return hasWarnings;
