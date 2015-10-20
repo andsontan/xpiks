@@ -656,7 +656,6 @@ ApplicationWindow {
                             anchors.verticalCenter: parent.verticalCenter
                             color: Colors.defaultDarkColor
                             width: (artworkRepository.artworksSourcesCount > 0 && mainScrollView.areScrollbarsVisible) ? 252 : 262
-                            enabled: artworkRepository.artworksSourcesCount > 0
                             height: 24
 
                             StyledTextInput {
