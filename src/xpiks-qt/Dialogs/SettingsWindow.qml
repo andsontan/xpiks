@@ -255,7 +255,7 @@ ApplicationWindow {
 
                 Tab {
                     id: uxTab
-                    property double sizeSliderValue: 1.0
+                    property double sizeSliderValue: settingsModel.keywordSizeScale
                     title: qsTr("Interface")
 
                     ColumnLayout {
