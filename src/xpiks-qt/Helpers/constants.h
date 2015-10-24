@@ -23,6 +23,7 @@
 #define CONSTANTS
 
 namespace Constants {
+    // common for DEBUG and RELEASE
     const char PATH_TO_EXIFTOOL[] = "PATH_TO_EXIF_TOOL";
     const char PATH_TO_CURL[] = "PATH_TO_CURL";
     const char ORGANIZATION_NAME[] = "Xpiks";
@@ -34,6 +35,9 @@ namespace Constants {
     const char KEYWORD_SIZE_SCALE[] = "KEYWORD_SIZE_SCALE";
     const char DISMISS_DURATION[] = "DISMISS_DURATION";
     const char FIT_SMALL_PREVIEW[] = "FIT_SMALL_PREVIEW";
+    const char SEARCH_USING_AND[] = "SEARCH_USING_AND";
+
+    // different for DEBUG and RELEASE
 
 #ifdef QT_NO_DEBUG
     const char UPLOAD_HOSTS[] = "UPLOAD_HOSTS_HASH";

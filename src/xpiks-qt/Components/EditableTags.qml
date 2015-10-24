@@ -136,7 +136,7 @@ Flickable {
         preventStealing: true
 
         onWheel: {
-            if (flowListView.height >= flowListView.contentHeight) {
+            if (!nextTagTextInput.activeFocus || flowListView.height >= flowListView.contentHeight) {
                 wheel.accepted = false
                 return
             }

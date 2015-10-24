@@ -48,6 +48,7 @@ namespace Models {
         Q_PROPERTY(int maxParallelUploads READ getMaxParallelUploads WRITE setMaxParallelUploads NOTIFY maxParallelUploadsChanged)
         Q_PROPERTY(QString proxyURI READ getProxyURI WRITE setProxyURI NOTIFY proxyURIChanged)
         Q_PROPERTY(bool fitSmallPreview READ getFitSmallPreview WRITE setFitSmallPreview NOTIFY fitSmallPreviewChanged)
+        Q_PROPERTY(bool searchUsingAnd READ getSearchUsingAnd WRITE setSearchUsingAnd NOTIFY searchUsingAndChanged)
     public:
         explicit SettingsModel(QObject *parent = 0);
         virtual ~SettingsModel() {}
@@ -78,6 +79,7 @@ namespace Models {
         int getMaxParallelUploads() const { return m_MaxParallelUploads; }
         QString getProxyURI() const { return m_ProxyURI; }
         bool getFitSmallPreview() const { return m_FitSmallPreview; }
+        bool getSearchUsingAnd() const { return m_SearchUsingAnd; }
 
     signals:
         void exifToolPathChanged(QString exifToolPath);
@@ -94,6 +96,7 @@ namespace Models {
         void maxParallelUploadsChanged(int value);
         void proxyURIChanged(QString value);
         void fitSmallPreviewChanged(bool value);
+        void searchUsingAndChanged(bool value);
 
     public:
         void setExifToolPath(QString exifToolPath) {
@@ -125,7 +128,7 @@ namespace Models {
                 return;
 
             m_MinMegapixelCount = ensureInBounds(minMegapixelCount, 0.0, 100.0);
-            emit minMegapixelCountChanged(minMegapixelCount);
+            emit minMegapixelCountChanged(m_MinMegapixelCount);
         }
 
         void setMaxDescriptionLength(int maxDescriptionLength) {
@@ -133,7 +136,7 @@ namespace Models {
                 return;
 
             m_MaxDescriptionLength = ensureInBounds(maxDescriptionLength, 0, 500);
-            emit maxDescriptionLengthChanged(maxDescriptionLength);
+            emit maxDescriptionLengthChanged(m_MaxDescriptionLength);
         }
 
         void setMaxKeywordsCount(int maxKeywordsCount) {
@@ -141,7 +144,7 @@ namespace Models {
                 return;
 
             m_MaxKeywordsCount = ensureInBounds(maxKeywordsCount, 0, 1000);
-            emit maxKeywordsCountChanged(maxKeywordsCount);
+            emit maxKeywordsCountChanged(m_MaxKeywordsCount);
         }
 
         void setUploadTimeout(int uploadTimeout) {
@@ -149,7 +152,7 @@ namespace Models {
                 return;
 
             m_UploadTimeout = ensureInBounds(uploadTimeout, 0, 20);
-            emit uploadTimeoutChanged(uploadTimeout);
+            emit uploadTimeoutChanged(m_UploadTimeout);
         }
 
         void setMustUseMasterPassword(bool mustUseMasterPassword) {
@@ -180,8 +183,8 @@ namespace Models {
             if (m_KeywordSizeScale == value)
                 return;
 
-            m_KeywordSizeScale = value;
-            emit keywordSizeScaleChanged(value);
+            m_KeywordSizeScale = ensureInBounds(value, 1.0, 100.0);
+            emit keywordSizeScaleChanged(m_KeywordSizeScale);
         }
 
         void setDismissDuration(int value) {
@@ -189,7 +192,7 @@ namespace Models {
                 return;
 
             m_DismissDuration = ensureInBounds(value, 5, 20);
-            emit dismissDurationChanged(value);
+            emit dismissDurationChanged(m_DismissDuration);
         }
 
         void setMaxParallelUploads(int value) {
@@ -197,7 +200,7 @@ namespace Models {
                 return;
 
             m_MaxParallelUploads = ensureInBounds(value, 1, 4);
-            emit maxParallelUploadsChanged(value);
+            emit maxParallelUploadsChanged(m_MaxParallelUploads);
         }
 
         void setFitSmallPreview(bool value) {
@@ -206,6 +209,14 @@ namespace Models {
 
             m_FitSmallPreview = value;
             emit fitSmallPreviewChanged(value);
+        }
+
+        void setSearchUsingAnd(bool value) {
+            if (m_SearchUsingAnd == value)
+                return;
+
+            m_SearchUsingAnd = value;
+            emit searchUsingAndChanged(value);
         }
 
     private:
@@ -226,6 +237,7 @@ namespace Models {
         bool m_MustUseConfirmations;
         bool m_SaveBackups;
         bool m_FitSmallPreview;
+        bool m_SearchUsingAnd;
     };
 }
 

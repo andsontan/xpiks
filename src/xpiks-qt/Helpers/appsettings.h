@@ -94,6 +94,9 @@ namespace Helpers {
         Q_PROPERTY(QString fitSmallPreviewKey READ getFitSmallPreviewKey CONSTANT)
         QString getFitSmallPreviewKey() const { return QString::fromLatin1(Constants::FIT_SMALL_PREVIEW); }
 
+        Q_PROPERTY(QString searchUsingAndKey READ getSearchUsingAndKey CONSTANT)
+        QString getSearchUsingAndKey() const { return QString::fromLatin1(Constants::SEARCH_USING_AND); }
+
         Q_INVOKABLE inline void setValue(const QString &key, const QVariant &value) {
             QSettings::setValue(key, value);
         }

@@ -24,7 +24,7 @@
 #include "../Helpers/appsettings.h"
 
 #ifdef Q_OS_MAC
-#define DEFAULT_EXIFTOOL "/usr/local/bin/exiftool"
+#define DEFAULT_EXIFTOOL "/usr/bin/exiftool"
 #else
 #define DEFAULT_EXIFTOOL "exiftool"
 #endif
@@ -42,6 +42,7 @@
 #define DEFAULT_MAX_PARALLEL_UPLOADS 2
 #define DEFAULT_PROXY ""
 #define DEFAULT_FIT_SMALL_PREVIEW false
+#define DEFAULT_SEARCH_USING_AND true
 
 namespace Models {
     SettingsModel::SettingsModel(QObject *parent) :
@@ -71,6 +72,7 @@ namespace Models {
         appSettings.setValue(appSettings.getMaxParallelUploadsKey(), m_MaxParallelUploads);
         appSettings.setValue(appSettings.getProxyURIKey(), m_ProxyURI);
         appSettings.setValue(appSettings.getFitSmallPreviewKey(), m_FitSmallPreview);
+        appSettings.setValue(appSettings.getSearchUsingAndKey(), m_SearchUsingAnd);
 
         if (!m_MustUseMasterPassword) {
             appSettings.setValue(appSettings.getMasterPasswordHashKey(), "");
@@ -110,6 +112,7 @@ namespace Models {
         setMaxParallelUploads(appSettings.value(appSettings.getMaxParallelUploadsKey(), DEFAULT_MAX_PARALLEL_UPLOADS).toInt());
         setProxyURI(appSettings.value(appSettings.getProxyURIKey(), DEFAULT_PROXY).toString());
         setFitSmallPreview(appSettings.boolValue(appSettings.getFitSmallPreviewKey(), DEFAULT_FIT_SMALL_PREVIEW));
+        setSearchUsingAnd(appSettings.boolValue(appSettings.getSearchUsingAndKey(), DEFAULT_SEARCH_USING_AND));
     }
 
     void SettingsModel::resetToDefault() {
@@ -127,6 +130,7 @@ namespace Models {
         setMaxParallelUploads(DEFAULT_MAX_PARALLEL_UPLOADS);
         setProxyURI(DEFAULT_PROXY);
         setFitSmallPreview(DEFAULT_FIT_SMALL_PREVIEW);
+        setSearchUsingAnd(DEFAULT_SEARCH_USING_AND);
     }
 
     int ensureInBounds(int value, int boundA, int boundB) {

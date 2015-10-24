@@ -24,9 +24,36 @@
 #include "artworkmetadata.h"
 #include "artworksrepository.h"
 #include "artiteminfo.h"
+#include "settingsmodel.h"
 #include "../Commands/commandmanager.h"
 #include "../Commands/combinededitcommand.h"
 #include "../Common/flags.h"
+
+bool containsAllTerms(const QString &text, const QStringList &items) {
+    bool anyError = false;
+
+    foreach (const QString &item, items) {
+        if (!text.contains(item, Qt::CaseInsensitive)) {
+            anyError = true;
+            break;
+        }
+    }
+
+    return !anyError;
+}
+
+bool containsOneTerm(const QStringList &keywords, const QString &term) {
+    bool containsTerm = false;
+
+    foreach (const QString &keyword, keywords) {
+        if (keyword.contains(term, Qt::CaseInsensitive)) {
+            containsTerm = true;
+            break;
+        }
+    }
+
+    return containsTerm;
+}
 
 namespace Models {
     FilteredArtItemsProxyModel::FilteredArtItemsProxyModel(QObject *parent) :
@@ -318,6 +345,19 @@ namespace Models {
 
     bool FilteredArtItemsProxyModel::containsPartsSearch(const ArtworkMetadata *metadata) const {
         bool hasMatch = false;
+        Models::SettingsModel *settings = m_CommandManager->getSettingsModel();
+
+        if (settings->getSearchUsingAnd()) {
+            hasMatch = containsAllPartsSearch(metadata);
+        } else {
+            hasMatch = containsAnyPartsSearch(metadata);
+        }
+
+        return hasMatch;
+    }
+
+    bool FilteredArtItemsProxyModel::containsAnyPartsSearch(const ArtworkMetadata *metadata) const {
+        bool hasMatch = false;
         QStringList searchTerms = m_SearchTerm.split(QChar::Space, QString::SkipEmptyParts);
 
         const QString &description = metadata->getDescription();
@@ -336,18 +376,49 @@ namespace Models {
                 hasMatch = filepath.contains(searchTerm, Qt::CaseInsensitive);
             }
 
-            if (!hasMatch) {
+            if (hasMatch) { break; }
+        }
+
+        if (!hasMatch) {
+            foreach (const QString &searchTerm, searchTerms) {
                 foreach (const QString &keyword, keywords) {
                     if (keyword.contains(searchTerm, Qt::CaseInsensitive)) {
                         hasMatch = true;
                         break;
                     }
                 }
+
+                if (hasMatch) { break; }
+            }
+        }
+
+        return hasMatch;
+    }
+
+    bool FilteredArtItemsProxyModel::containsAllPartsSearch(const ArtworkMetadata *metadata) const {
+        bool hasMatch = false;
+        QStringList searchTerms = m_SearchTerm.split(QChar::Space, QString::SkipEmptyParts);
+
+        const QString &description = metadata->getDescription();
+        const QString &title = metadata->getTitle();
+        const QString &filepath = metadata->getFilepath();
+        const QStringList &keywords = metadata->getKeywords();
+
+        hasMatch = containsAllTerms(description, searchTerms) ||
+                containsAllTerms(title, searchTerms) ||
+                containsAllTerms(filepath, searchTerms);
+
+        if (!hasMatch) {
+            bool anyError = false;
+
+            foreach (const QString &searchTerm, searchTerms) {
+                if (!containsOneTerm(keywords, searchTerm)) {
+                    anyError = true;
+                    break;
+                }
             }
 
-            if (hasMatch) {
-                break;
-            }
+            hasMatch = !anyError;
         }
 
         return hasMatch;

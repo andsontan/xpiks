@@ -86,6 +86,8 @@ namespace Models {
         ArtItemsModel *getArtItemsModel() const;
         bool fitsSpecialKeywords(const ArtworkMetadata *metadata, bool &isSpecial) const;
         bool containsPartsSearch(const ArtworkMetadata *metadata) const;
+        bool containsAnyPartsSearch(const ArtworkMetadata *metadata) const;
+        bool containsAllPartsSearch(const ArtworkMetadata *metadata) const;
 
     protected:
         bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const Q_DECL_OVERRIDE;

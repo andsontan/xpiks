@@ -33,7 +33,7 @@ ApplicationWindow {
     id: settingsWindow
     modality: "ApplicationModal"
     title: qsTr("Settings")
-    width: 500
+    width: 550
     height: 260
     minimumWidth: width
     maximumWidth: width
@@ -179,122 +179,13 @@ ApplicationWindow {
                 Layout.fillWidth: true
 
                 Tab {
-                    title: qsTr("External")
-
-                    ColumnLayout {
-                        anchors.fill: parent
-                        anchors.margins: {left: 5; top: 30; right: 20; bottom: 20}
-
-                        GridLayout {
-                            width: parent.width
-                            rows: 2
-                            columns: 4
-                            rowSpacing: 10
-                            columnSpacing: 5
-
-                            StyledText {
-                                Layout.row: 0
-                                Layout.column: 0
-                                Layout.fillWidth: true
-                                Layout.maximumWidth: 80
-
-                                horizontalAlignment: Text.AlignRight
-                                text: qsTr("ExifTool path:")
-                            }
-
-                            StyledInputHost {
-                                border.width: exifToolText.activeFocus ? 1 : 0
-                                Layout.row: 0
-                                Layout.column: 1
-
-                                StyledTextInput {
-                                    id: exifToolText
-                                    width: 150
-                                    height: 24
-                                    clip: true
-                                    text: settingsModel.exifToolPath
-                                    anchors.left: parent.left
-                                    anchors.leftMargin: 5
-                                    KeyNavigation.tab: curlText
-                                    onTextChanged: settingsModel.exifToolPath = text
-                                }
-                            }
-
-                            StyledButton {
-                                Layout.row: 0
-                                Layout.column: 2
-                                text: qsTr("Select...")
-                                width: 70
-                                onClicked: exifToolFileDialog.open()
-                            }
-
-                            StyledButton {
-                                Layout.row: 0
-                                Layout.column: 3
-                                text: qsTr("Reset")
-                                width: 70
-                                onClicked: settingsModel.resetExifTool()
-                            }
-
-                            StyledText {
-                                Layout.row: 1
-                                Layout.column: 0
-                                Layout.fillWidth: true
-                                Layout.maximumWidth: 80
-                                horizontalAlignment: Text.AlignRight
-                                text: qsTr("Curl path:")
-                            }
-
-                            StyledInputHost {
-                                border.width: curlText.activeFocus ? 1 : 0
-                                Layout.row: 1
-                                Layout.column: 1
-
-                                StyledTextInput {
-                                    id: curlText
-                                    width: 150
-                                    height: 24
-                                    clip: true
-                                    text: settingsModel.curlPath
-                                    anchors.left: parent.left
-                                    anchors.leftMargin: 5
-                                    KeyNavigation.backtab: exifToolText
-                                    onTextChanged: settingsModel.curlPath = text
-                                }
-                            }
-
-                            StyledButton {
-                                Layout.row: 1
-                                Layout.column: 2
-                                text: qsTr("Select...")
-                                width: 70
-                                onClicked: curlFileDialog.open()
-                            }
-
-                            StyledButton {
-                                Layout.row: 1
-                                Layout.column: 3
-                                text: qsTr("Reset")
-                                width: 70
-                                onClicked: settingsModel.resetCurl()
-                            }
-                        }
-
-                        Item {
-                            Layout.fillHeight: true
-                        }
-                    }
-                }
-
-                Tab {
-                    id: uxTab
-                    property double sizeSliderValue
-                    title: qsTr("UX")
+                    id: behaviorTab
+                    title: qsTr("Behavior")
 
                     ColumnLayout {
                         anchors.fill: parent
                         anchors.margins: {left: 20; top: 30; right: 20; bottom: 20}
-                        spacing: 10
+                        spacing: 20
 
                         RowLayout {
                             width: parent.width
@@ -335,6 +226,42 @@ ApplicationWindow {
                                 color: Colors.defaultInputBackground
                             }
                         }
+
+                        RowLayout {
+                            width: parent.width
+                            spacing: 10
+
+                            StyledCheckbox {
+                                id: searchUsingAndCheckbox
+                                text: qsTr("Search match all terms")
+                                onCheckedChanged: {
+                                    settingsModel.searchUsingAnd = checked
+                                }
+
+                                Component.onCompleted: checked = settingsModel.searchUsingAnd
+                            }
+
+                            StyledText {
+                                text: qsTr("(instead of any occurance)")
+                                color: Colors.defaultInputBackground
+                            }
+                        }
+
+                        Item {
+                            Layout.fillHeight: true
+                        }
+                    }
+                }
+
+                Tab {
+                    id: uxTab
+                    property double sizeSliderValue: 1.0
+                    title: qsTr("Interface")
+
+                    ColumnLayout {
+                        anchors.fill: parent
+                        anchors.margins: {left: 20; top: 30; right: 20; bottom: 20}
+                        spacing: 20
 
                         RowLayout {
                             width: parent.width
@@ -465,10 +392,118 @@ ApplicationWindow {
                 }
 
                 Tab {
+                    title: qsTr("External")
+
+                    ColumnLayout {
+                        anchors.fill: parent
+                        anchors.margins: {left: 5; top: 30; right: 20; bottom: 20}
+
+                        GridLayout {
+                            width: parent.width
+                            rows: 2
+                            columns: 4
+                            rowSpacing: 20
+                            columnSpacing: 15
+
+                            StyledText {
+                                Layout.row: 0
+                                Layout.column: 0
+                                Layout.fillWidth: true
+                                Layout.maximumWidth: 80
+
+                                horizontalAlignment: Text.AlignRight
+                                text: qsTr("ExifTool path:")
+                            }
+
+                            StyledInputHost {
+                                border.width: exifToolText.activeFocus ? 1 : 0
+                                Layout.row: 0
+                                Layout.column: 1
+
+                                StyledTextInput {
+                                    id: exifToolText
+                                    width: 150
+                                    height: 24
+                                    clip: true
+                                    text: settingsModel.exifToolPath
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: 5
+                                    KeyNavigation.tab: curlText
+                                    onTextChanged: settingsModel.exifToolPath = text
+                                }
+                            }
+
+                            StyledButton {
+                                Layout.row: 0
+                                Layout.column: 2
+                                text: qsTr("Select...")
+                                width: 70
+                                onClicked: exifToolFileDialog.open()
+                            }
+
+                            StyledButton {
+                                Layout.row: 0
+                                Layout.column: 3
+                                text: qsTr("Reset")
+                                width: 70
+                                onClicked: settingsModel.resetExifTool()
+                            }
+
+                            StyledText {
+                                Layout.row: 1
+                                Layout.column: 0
+                                Layout.fillWidth: true
+                                Layout.maximumWidth: 80
+                                horizontalAlignment: Text.AlignRight
+                                text: qsTr("Curl path:")
+                            }
+
+                            StyledInputHost {
+                                border.width: curlText.activeFocus ? 1 : 0
+                                Layout.row: 1
+                                Layout.column: 1
+
+                                StyledTextInput {
+                                    id: curlText
+                                    width: 150
+                                    height: 24
+                                    clip: true
+                                    text: settingsModel.curlPath
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: 5
+                                    KeyNavigation.backtab: exifToolText
+                                    onTextChanged: settingsModel.curlPath = text
+                                }
+                            }
+
+                            StyledButton {
+                                Layout.row: 1
+                                Layout.column: 2
+                                text: qsTr("Select...")
+                                width: 70
+                                onClicked: curlFileDialog.open()
+                            }
+
+                            StyledButton {
+                                Layout.row: 1
+                                Layout.column: 3
+                                text: qsTr("Reset")
+                                width: 70
+                                onClicked: settingsModel.resetCurl()
+                            }
+                        }
+
+                        Item {
+                            Layout.fillHeight: true
+                        }
+                    }
+                }
+
+                Tab {
                     title: qsTr("Warnings")
 
                     ColumnLayout {
-                        spacing: 10
+                        spacing: 20
                         anchors.fill: parent
                         anchors.margins: {left: 20; top: 30; right: 20; bottom: 20}
 
