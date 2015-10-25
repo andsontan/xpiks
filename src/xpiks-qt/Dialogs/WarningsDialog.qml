@@ -34,6 +34,9 @@ Item {
     id: warningsComponent
     anchors.fill: parent
 
+    property variant componentParent
+    property bool isRestricted: false
+
     signal dialogDestruction();
     Component.onDestruction: dialogDestruction();
 
@@ -132,23 +135,22 @@ Item {
 
                                 RowLayout {
                                     anchors.fill: parent
-                                    spacing: 5
+                                    spacing: 0
 
-                                    Rectangle {
+                                    Item {
                                         width: 120
                                         height: parent.height
-                                        color: "transparent"
 
                                         ColumnLayout {
                                             anchors.fill: parent
                                             anchors.margins: { left: 15; right: 15 }
                                             spacing: 7
 
-                                            Rectangle {
+                                            Item {
                                                 width: 90
                                                 height: 60
                                                 anchors.horizontalCenter: parent.horizontalCenter
-                                                color: "transparent"
+
                                                 Image {
                                                     anchors.fill: parent
                                                     source: "image://global/" + filename
@@ -172,6 +174,10 @@ Item {
                                                 Layout.fillHeight: true
                                             }
                                         }
+                                    }
+
+                                    Item {
+                                        width: 5
                                     }
 
                                     Rectangle {
@@ -209,8 +215,36 @@ Item {
                                             }
                                         }
                                     }
+
+                                    Rectangle {
+                                        width: 40
+                                        height: parent.height
+                                        color: Colors.selectedArtworkColor
+
+                                        StyledButton {
+                                            text: qsTr("Fix")
+                                            width: 30
+                                            anchors.centerIn: parent
+                                            enabled: !isRestricted && warningsListView.count > 0
+
+                                            onClicked: {
+                                                Common.launchItemEditing(itemindex, componentParent)
+                                            }
+                                        }
+                                    }
                                 }
                             }
+                        }
+                    }
+
+                    Item {
+                        anchors.fill: parent
+                        visible: warningsListView.count == 0
+
+                        StyledText {
+                            text: qsTr("There are no warnings")
+                            anchors.centerIn: parent
+                            color: Colors.selectedMetadataColor
                         }
                     }
                 }
@@ -220,10 +254,19 @@ Item {
                 }
 
                 RowLayout {
+                    spacing: 20
                     height: 24
 
                     Item {
                         Layout.fillWidth: true
+                    }
+
+                    StyledButton {
+                        text: qsTr("Recheck")
+                        width: 100
+                        onClicked: {
+                            warningsManager.recheckItems()
+                        }
                     }
 
                     StyledButton {

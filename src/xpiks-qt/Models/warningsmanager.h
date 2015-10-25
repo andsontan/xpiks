@@ -32,6 +32,7 @@ namespace Helpers {
 namespace Models {
     class WarningsInfo;
     class ArtworkMetadata;
+    class ArtItemInfo;
 
     class WarningsManager : public QAbstractListModel, public Common::BaseEntity
     {
@@ -48,19 +49,20 @@ namespace Models {
     public:
         enum WarningManagerRoles {
             ImagePathRole = Qt::UserRole + 1,
-            WarningsListRole
+            WarningsListRole,
+            ItemIndexRole
         };
 
     signals:
         void warningsCountChanged();
 
     public slots:
-        void onCheckWarnings(const QList<ArtworkMetadata*> &artworks) { checkForWarnings(artworks); }
+        void onCheckWarnings(const QList<ArtItemInfo*> &artworks) { checkForWarnings(artworks); }
 
     public:
         int getWarningsCount();
-        void checkForWarnings(const QList<ArtworkMetadata*> &artworks);
-        void recheckItems();
+        void checkForWarnings(const QList<ArtItemInfo *> &artworks);
+        Q_INVOKABLE void recheckItems();
         void setImageProvider(Helpers::GlobalImageProvider *imageProvider) { Q_ASSERT(imageProvider != NULL); m_ImageProvider = imageProvider; }
 
     private:

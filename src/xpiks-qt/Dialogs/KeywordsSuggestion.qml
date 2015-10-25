@@ -191,12 +191,11 @@ Item {
                                 id: suggestionsRepeater
                                 model: keywordsSuggestor
 
-                                delegate: Rectangle {
+                                delegate: Item {
                                     property int delegateIndex: index
                                     id: imageWrapper
                                     height: 110
                                     width: height
-                                    color: "transparent"
 
                                     Image {
                                         anchors.fill: parent
@@ -248,9 +247,8 @@ Item {
                         visible: keywordsSuggestor.isInProgress
                     }
 
-                    Rectangle {
+                    Item {
                         anchors.fill: parent
-                        color: "transparent"
                         visible: !keywordsSuggestor.isInProgress && (suggestionsRepeater.count == 0)
 
                         StyledText {

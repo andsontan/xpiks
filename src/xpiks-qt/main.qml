@@ -96,30 +96,6 @@ ApplicationWindow {
         }
     }
 
-    function launchItemEditing(index) {
-        combinedArtworks.resetModelData()
-        artItemsModel.combineArtwork(index)
-
-        var currentImagePath = artItemsModel.getArtworkFilepath(index)
-
-        var size = artItemsModel.retrieveImageSize(index)
-        if (size.width < size.height) {
-            Common.launchDialog("Dialogs/EditArtworkHorizontalDialog.qml", applicationWindow,
-                                {
-                                    imagePath: currentImagePath,
-                                    artworkIndex: index,
-                                    componentParent: applicationWindow
-                                })
-        } else {
-            Common.launchDialog("Dialogs/EditArtworkVerticalDialog.qml", applicationWindow,
-                                {
-                                    imagePath: currentImagePath,
-                                    artworkIndex: index,
-                                    componentParent: applicationWindow
-                                })
-        }
-    }
-
     menuBar: MenuBar {
         Menu {
             title: qsTr("File")
@@ -546,7 +522,7 @@ ApplicationWindow {
                                     var index = filteredArtItemsModel.findSelectedItemIndex()
 
                                     if (index !== -1) {
-                                        launchItemEditing(index)
+                                        Common.launchItemEditing(index, applicationWindow)
                                         launched = true
                                     }
                                 }
@@ -623,9 +599,8 @@ ApplicationWindow {
                     anchors.topMargin: 10
                     anchors.fill: parent
 
-                    Rectangle {
+                    Item {
                         id: filterRect
-                        color: "transparent"
                         anchors.top: parent.top
                         anchors.left: parent.left
                         anchors.right: parent.right
@@ -981,14 +956,13 @@ ApplicationWindow {
                                         }
                                     }
 
-                                    Rectangle {
+                                    Item {
                                         id: checkboxRectangle
                                         anchors.left: checkboxSpacer.right
                                         anchors.leftMargin: 5
                                         anchors.top: parent.top
                                         anchors.bottom: parent.bottom
                                         width: itemCheckedCheckbox.width
-                                        color: "transparent"
 
                                         MouseArea {
                                             anchors.fill: parent
@@ -1014,14 +988,13 @@ ApplicationWindow {
                                         }
                                     }
 
-                                    Rectangle {
+                                    Item {
                                         id: imageColumnWrapper
                                         width: 180
                                         anchors.left: checkboxRectangle.right
                                         anchors.leftMargin: 5
                                         anchors.top: parent.top
                                         anchors.bottom: parent.bottom
-                                        color: "transparent"
 
                                         MouseArea {
                                             anchors.fill: parent
@@ -1040,11 +1013,10 @@ ApplicationWindow {
                                                 height: 15
                                             }
 
-                                            Rectangle {
+                                            Item {
                                                 width: 150
                                                 height: 130
                                                 anchors.horizontalCenter: parent.horizontalCenter
-                                                color: "transparent"
 
                                                 Image {
                                                     id: artworkImage
@@ -1062,7 +1034,7 @@ ApplicationWindow {
                                                         editisselected = !isselected
                                                         rowWrapper.focusIfNeeded()
                                                     }
-                                                    onDoubleClicked: launchItemEditing(rowWrapper.getIndex())
+                                                    onDoubleClicked: Common.launchItemEditing(rowWrapper.getIndex(), applicationWindow)
                                                 }
                                             }
 
@@ -1351,7 +1323,7 @@ ApplicationWindow {
                                                         id: moreEditsMA
                                                         anchors.fill: parent
                                                         cursorShape: Qt.PointingHandCursor
-                                                        onClicked: launchItemEditing(rowWrapper.getIndex())
+                                                        onClicked: Common.launchItemEditing(rowWrapper.getIndex(), applicationWindow)
                                                     }
                                                 }
 
@@ -1392,10 +1364,9 @@ ApplicationWindow {
                         }
                     }
 
-                    Rectangle {
+                    Item {
                         visible: imagesListView.count == 0
                         anchors.fill: parent
-                        color: "transparent"
 
                         RowLayout {
                             anchors.centerIn: parent
@@ -1488,7 +1459,9 @@ ApplicationWindow {
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
                         filteredArtItemsModel.checkForWarnings()
-                        Common.launchDialog("Dialogs/WarningsDialog.qml", applicationWindow, {});
+                        Common.launchDialog("Dialogs/WarningsDialog.qml", applicationWindow, {
+                                                componentParent: applicationWindow
+                                            });
                     }
                 }
             }

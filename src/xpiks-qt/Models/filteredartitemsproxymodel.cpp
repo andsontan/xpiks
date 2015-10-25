@@ -124,7 +124,9 @@ namespace Models {
     void FilteredArtItemsProxyModel::setSelectedForUpload() {
         QList<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
         m_CommandManager->setArtworksForUpload(selectedArtworks);
-        emit needCheckItemsForWarnings(selectedArtworks);
+
+        QList<ArtItemInfo *> selectedArtworksWithIndices = getSelectedOriginalItemsWithIndices();
+        emit needCheckItemsForWarnings(selectedArtworksWithIndices);
     }
 
     void FilteredArtItemsProxyModel::setSelectedForZipping() {
@@ -157,9 +159,13 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::checkForWarnings() {
-        ArtItemsModel *artItemsModel = getArtItemsModel();
-        QList<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
-        artItemsModel->checkForWarnings(selectedArtworks);
+        QList<ArtItemInfo *> selectedArtworks = getSelectedOriginalItemsWithIndices();
+
+        if (selectedArtworks.isEmpty()) {
+            selectedArtworks = getAllItemsWithIndices();
+        }
+
+        emit needCheckItemsForWarnings(selectedArtworks);
     }
 
     void FilteredArtItemsProxyModel::reimportMetadataForSelected() {
@@ -267,6 +273,27 @@ namespace Models {
             ArtworkMetadata *metadata = artItemsModel->getArtwork(index);
 
             if (metadata != NULL && metadata->getIsSelected()) {
+                ArtItemInfo *info = new ArtItemInfo(metadata, index);
+                selectedArtworks.append(info);
+            }
+        }
+
+        return selectedArtworks;
+    }
+
+    QList<ArtItemInfo *> FilteredArtItemsProxyModel::getAllItemsWithIndices() const {
+        ArtItemsModel *artItemsModel = getArtItemsModel();
+        QList<ArtItemInfo *> selectedArtworks;
+
+        int size = this->rowCount();
+        for (int row = 0; row < size; ++row) {
+            QModelIndex proxyIndex = this->index(row, 0);
+            QModelIndex originalIndex = this->mapToSource(proxyIndex);
+
+            int index = originalIndex.row();
+            ArtworkMetadata *metadata = artItemsModel->getArtwork(index);
+
+            if (metadata != NULL) {
                 ArtItemInfo *info = new ArtItemInfo(metadata, index);
                 selectedArtworks.append(info);
             }

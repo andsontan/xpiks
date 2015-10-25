@@ -27,9 +27,8 @@ Item {
     id: item
     signal itemClicked();
 
-    Rectangle {
+    Item {
         anchors.fill: parent
-        color: "transparent"
 
         Rectangle {
             color: Colors.defaultLightGrayColor

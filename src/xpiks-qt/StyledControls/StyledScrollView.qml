@@ -51,14 +51,6 @@ ScrollView {
             implicitHeight: 10
             clip: true
 
-            Rectangle {
-                anchors.fill: parent
-                anchors.leftMargin: 0
-                anchors.rightMargin: 0
-                color: "transparent"
-                opacity: styleData.hovered ? 1 : 0.8
-            }
-
             onHoveredChanged: if (hovered) sticky = true
         }
 

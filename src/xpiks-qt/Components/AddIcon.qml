@@ -29,9 +29,8 @@ Item {
 
     signal itemClicked();
 
-    Rectangle {
+    Item {
         anchors.fill: parent
-        color: "transparent"
         opacity: mouseArea.containsMouse ? 1 : 0.8
 
         Rectangle {

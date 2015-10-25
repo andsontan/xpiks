@@ -36,6 +36,7 @@
 #include "../Commands/addartworkscommand.h"
 #include "../Models/filteredartitemsproxymodel.h"
 #include "../Models/recentdirectoriesmodel.h"
+#include "../Models/artiteminfo.h"
 
 void Commands::CommandManager::InjectDependency(Models::ArtworksRepository *artworkRepository) {
     Q_ASSERT(artworkRepository != NULL); m_ArtworksRepository = artworkRepository;
@@ -130,11 +131,11 @@ void Commands::CommandManager::connectEntitiesSignalsSlots() const
     QObject::connect(m_SecretsManager, SIGNAL(afterMasterPasswordReset()),
                      m_UploadInfoRepository, SLOT(onAfterMasterPasswordReset()));
 
-    QObject::connect(m_ArtItemsModel, SIGNAL(needCheckItemsForWarnings(QList<ArtworkMetadata*>)),
-                     m_WarningsManager, SLOT(onCheckWarnings(QList<ArtworkMetadata*>)));
+    QObject::connect(m_ArtItemsModel, SIGNAL(needCheckItemsForWarnings(QList<ArtItemInfo*>)),
+                     m_WarningsManager, SLOT(onCheckWarnings(QList<ArtItemInfo*>)));
 
-    QObject::connect(m_FilteredItemsModel, SIGNAL(needCheckItemsForWarnings(QList<ArtworkMetadata*>)),
-                     m_WarningsManager, SLOT(onCheckWarnings(QList<ArtworkMetadata*>)));
+    QObject::connect(m_FilteredItemsModel, SIGNAL(needCheckItemsForWarnings(QList<ArtItemInfo*>)),
+                     m_WarningsManager, SLOT(onCheckWarnings(QList<ArtItemInfo*>)));
 
     QObject::connect(m_ArtItemsModel, SIGNAL(selectedArtworkRemoved()),
                      m_FilteredItemsModel, SLOT(onSelectedArtworksRemoved()));

@@ -44,11 +44,10 @@ Rectangle {
     Row {
         spacing: 0
 
-        Rectangle {
+        Item {
             id: tagTextRect
             width: childrenRect.width + 5
             height: itemHeight
-            color: "transparent"
 
             StyledText {
                 anchors.left: parent.left

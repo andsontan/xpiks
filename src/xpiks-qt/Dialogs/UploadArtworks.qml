@@ -199,11 +199,10 @@ Item {
                     }
                 }
 
-                Rectangle {
+                Item {
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                     enabled: !artworkUploader.inProgress
-                    color: "transparent"
 
                     ColumnLayout {
                         anchors.left: parent.left
@@ -375,13 +374,12 @@ Item {
                         }
                     }
 
-                    Rectangle {
+                    Item {
                         anchors.top: parent.top
                         anchors.leftMargin: 10
                         anchors.left: uploadInfosStack.right
                         anchors.right: parent.right
                         width: 280
-                        color: "transparent"
                         height: Qt.platform.os == "windows" ? parent.height + 10 : parent.height
 
                         StyledTabView {
@@ -702,7 +700,11 @@ Item {
                             onClicked: {
                                 if (warningsManager.warningsCount > 0) {
                                     Common.launchDialog("Dialogs/WarningsDialog.qml",
-                                                           uploadArtworksComponent.componentParent, {});
+                                                           uploadArtworksComponent.componentParent,
+                                                        {
+                                                            componentParent: uploadArtworksComponent.componentParent,
+                                                            isRestricted: true
+                                                        });
                                 }
                             }
                         }

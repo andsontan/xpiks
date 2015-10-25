@@ -41,10 +41,9 @@ TabView {
             color: backgroundColor
         }
 
-        leftCorner: Rectangle {
+        leftCorner: Item {
             implicitWidth: 5
             implicitHeight: tabBarHeight
-            color: "transparent"
         }
 
         tabBar : Rectangle {

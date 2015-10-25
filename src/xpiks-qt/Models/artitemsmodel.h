@@ -33,6 +33,7 @@
 
 namespace Models {
     class ArtworkMetadata;
+    class ArtItemInfo;
 
     class ArtItemsModel :
             public AbstractListModel,
@@ -86,7 +87,6 @@ namespace Models {
         /*Q_INVOKABLE*/ void removeSelectedArtworks(QList<int> &selectedIndices);
         /*Q_INVOKABLE*/ void updateSelectedArtworks(const QList<int> &selectedIndices);
         /*Q_INVOKABLE*/ void saveSelectedArtworks(const QList<int> &selectedIndices);
-        /*Q_INVOKABLE*/ void checkForWarnings(const QList<ArtworkMetadata *> selectedArtworks);
 
         Q_INVOKABLE QObject *getArtworkItself(int index) const;
         Q_INVOKABLE QSize retrieveImageSize(int metadataIndex) const;
@@ -130,7 +130,7 @@ namespace Models {
         void doCombineArtwork(int index);
 
     signals:
-        void needCheckItemsForWarnings(const QList<ArtworkMetadata*> &artworks);
+        void needCheckItemsForWarnings(const QList<ArtItemInfo*> &artworks);
         void modifiedArtworksCountChanged();
         void artworksChanged();
         void artworksAdded(int count);

@@ -253,17 +253,6 @@ namespace Models {
         m_CommandManager->setArtworksForIPTCProcessing(modifiedSelectedArtworks);
     }
 
-    void ArtItemsModel::checkForWarnings(const QList<ArtworkMetadata *> selectedArtworks) {
-        if (selectedArtworks.length() == 0) {
-            emit needCheckItemsForWarnings(m_ArtworkList);
-            qDebug() << "Checking all items for upload warnings...";
-        } else {
-            qDebug() << "Selected items: " << selectedArtworks.length();
-            emit needCheckItemsForWarnings(selectedArtworks);
-            qDebug() << "Checking selected items for upload warnings...";
-        }
-    }
-
     QObject *ArtItemsModel::getArtworkItself(int index) const {
         ArtworkMetadata *item = NULL;
 

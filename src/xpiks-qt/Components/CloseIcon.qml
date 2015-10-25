@@ -31,10 +31,9 @@ Item {
 
     signal itemClicked();
 
-    Rectangle {
+    Item {
         id: wrapperRect
         anchors.fill: parent
-        color: "transparent"
         opacity: closeIconMouseArea.containsMouse ? 1 : 0.8
 
         function getPressColor() {

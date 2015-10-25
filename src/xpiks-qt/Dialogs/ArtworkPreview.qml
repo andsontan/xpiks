@@ -159,8 +159,7 @@ Item {
                         Component.onCompleted: text = artItemsModel.retrieveFileSize(artworkIndex)
                     }
 
-                    Rectangle {
-                        color: "transparent"
+                    Item {
                         Layout.fillWidth: true
                         height: 90
 

@@ -227,12 +227,11 @@ Item {
                                     NumberAnimation { properties: "x,y"; duration: 230 }
                                 }
 
-                                delegate: Rectangle {
+                                delegate: Item {
                                     property int delegateIndex: index
                                     id: imageWrapper
                                     height: 110
                                     width: height
-                                    color: "transparent"
 
                                     Image {
                                         anchors.fill: parent
@@ -669,9 +668,8 @@ Item {
                     height: 15
                 }
 
-                Rectangle {
+                Item {
                     width: parent.width
-                    color: "transparent"
                     height: 24
 
                     RowLayout {

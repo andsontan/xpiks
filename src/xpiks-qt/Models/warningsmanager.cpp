@@ -25,10 +25,12 @@
 #include "warningsinfo.h"
 #include "../Helpers/globalimageprovider.h"
 #include "../Helpers/appsettings.h"
+#include "../Models/artiteminfo.h"
+#include "../Commands/commandmanager.h"
+#include "settingsmodel.h"
 
 namespace Models {
-    int WarningsManager::getWarningsCount()
-    {
+    int WarningsManager::getWarningsCount() {
         int count = 0;
 
         foreach(WarningsInfo *info, m_WarningsBufferList) {
@@ -38,15 +40,14 @@ namespace Models {
         return count;
     }
 
-    void WarningsManager::checkForWarnings(const QList<ArtworkMetadata *> &artworks)
-    {
+    void WarningsManager::checkForWarnings(const QList<ArtItemInfo *> &artworks) {
         beginResetModel();
         {
             qDeleteAll(m_WarningsBufferList);
             m_WarningsBufferList.clear();
 
-            foreach (ArtworkMetadata *metadata, artworks) {
-                m_WarningsBufferList.append(new WarningsInfo(metadata));
+            foreach (ArtItemInfo *itemInfo, artworks) {
+                m_WarningsBufferList.append(new WarningsInfo(itemInfo));
             }
 
             recheckItems();
@@ -54,10 +55,10 @@ namespace Models {
         endResetModel();
     }
 
-    void WarningsManager::recheckItems()
-    {
+    void WarningsManager::recheckItems() {
         initConstraintsFromSettings();
 
+        beginResetModel();
         m_WarningsList.clear();
 
         foreach(WarningsInfo *info, m_WarningsBufferList) {
@@ -65,11 +66,12 @@ namespace Models {
             checkItem(info);
         }
 
+        endResetModel();
+
         emit warningsCountChanged();
     }
 
-    void WarningsManager::checkItem(WarningsInfo *wi)
-    {
+    void WarningsManager::checkItem(WarningsInfo *wi) {
         ArtworkMetadata *metadata = wi->getArtworkMetadata();
 
         bool hasWarnings = false;
@@ -84,8 +86,7 @@ namespace Models {
         }
     }
 
-    bool WarningsManager::checkDimensions(WarningsInfo *wi, ArtworkMetadata *am) const
-    {
+    bool WarningsManager::checkDimensions(WarningsInfo *wi, ArtworkMetadata *am) const {
         bool hasWarnings = false;
 
         const QString &filePath = am->getFilepath();
@@ -108,8 +109,7 @@ namespace Models {
         return hasWarnings;
     }
 
-    bool WarningsManager::checkKeywordsCount(WarningsInfo *wi, ArtworkMetadata *am) const
-    {
+    bool WarningsManager::checkKeywordsCount(WarningsInfo *wi, ArtworkMetadata *am) const {
         bool hasWarnings = false;
         int keywordsCount = am->getKeywordsCount();
 
@@ -129,8 +129,7 @@ namespace Models {
         return hasWarnings;
     }
 
-    bool WarningsManager::checkDescriptionLength(WarningsInfo *wi, ArtworkMetadata *am) const
-    {
+    bool WarningsManager::checkDescriptionLength(WarningsInfo *wi, ArtworkMetadata *am) const {
         bool hasWarnings = false;
         const QString &description = am->getDescription();
 
@@ -174,22 +173,19 @@ namespace Models {
         return hasWarnings;
     }
 
-    void WarningsManager::initConstraintsFromSettings()
-    {
-        Helpers::AppSettings settings;
-        m_MaximumDescriptionLength = settings.value(Constants::MAX_DESCRIPTION_LENGTH, 200).toInt();
-        m_MinimumMegapixels = settings.value(Constants::MIN_MEGAPIXEL_COUNT, 4.0).toDouble();
-        m_MaximumKeywordsCount = settings.value(Constants::MAX_KEYWORD_COUNT, 50).toInt();
+    void WarningsManager::initConstraintsFromSettings() {
+        SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
+        m_MaximumDescriptionLength = settingsModel->getMaxDescriptionLength();
+        m_MinimumMegapixels = settingsModel->getMinMegapixelCount();
+        m_MaximumKeywordsCount = settingsModel->getMaxKeywordsCount();
     }
 
-    int WarningsManager::rowCount(const QModelIndex &parent) const
-    {
+    int WarningsManager::rowCount(const QModelIndex &parent) const {
         Q_UNUSED(parent);
         return m_WarningsList.count();
     }
 
-    QVariant WarningsManager::data(const QModelIndex &index, int role) const
-    {
+    QVariant WarningsManager::data(const QModelIndex &index, int role) const {
         if (index.row() < 0 || index.row() >= m_WarningsList.count())
             return QVariant();
 
@@ -200,16 +196,18 @@ namespace Models {
             return warningsInfo->getFilePath();
         case WarningsListRole:
             return warningsInfo->getWarnings();
+        case ItemIndexRole:
+            return warningsInfo->getIndex();
         default:
             return QVariant();
         }
     }
 
-    QHash<int, QByteArray> WarningsManager::roleNames() const
-    {
+    QHash<int, QByteArray> WarningsManager::roleNames() const {
         QHash<int, QByteArray> roles;
         roles[ImagePathRole] = "filename";
         roles[WarningsListRole] = "warnings";
+        roles[ItemIndexRole] = "itemindex";
         return roles;
     }
 }

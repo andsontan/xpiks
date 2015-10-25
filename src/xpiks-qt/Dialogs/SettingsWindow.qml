@@ -312,11 +312,10 @@ ApplicationWindow {
                                 Row {
                                     spacing: 0
 
-                                    Rectangle {
+                                    Item {
                                         id: tagTextRect
                                         width: childrenRect.width + 5*keywordSizeSlider.value
                                         height: 20 * keywordSizeSlider.value + (keywordSizeSlider.value - 1)*10
-                                        color: "transparent"
 
                                         StyledText {
                                             anchors.top: parent.top

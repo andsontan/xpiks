@@ -81,11 +81,10 @@ ApplicationWindow {
                 height: 10
             }
 
-            Rectangle {
+            Item {
                 height: Qt.platform.os === "linux" ? 80 : 50
                 width: 220
                 anchors.margins: 10
-                color: "transparent"
 
                 StyledText {
                     wrapMode: TextEdit.Wrap
