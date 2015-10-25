@@ -27,10 +27,11 @@
 #include <QNetworkReply>
 #include <QStringList>
 #include <QJsonArray>
-#include "suggestionartwork.h"
 
 namespace Suggestion {
     class KeywordsSuggestor;
+    class LocalLibrary;
+    class SuggestionArtwork;
 
     class SuggestionQueryEngine : public QObject
     {
@@ -40,10 +41,12 @@ namespace Suggestion {
 
     public:
         void submitQuery(const QStringList &queryKeywords);
+        void submitLocalQuery(LocalLibrary *localLibrary, const QStringList &queryKeywords);
         void cancelQueries();
 
     private slots:
         void replyReceived(QNetworkReply *networkReply);
+        void artworksFound(QList<SuggestionArtwork *> *suggestions);
 
     signals:
         void searchResultsRetrieved(const QList<SuggestionArtwork*> &artworks);

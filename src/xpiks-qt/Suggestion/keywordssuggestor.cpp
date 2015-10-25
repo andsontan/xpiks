@@ -22,6 +22,7 @@
 #include <QHash>
 #include <QString>
 #include "keywordssuggestor.h"
+#include "suggestionartwork.h"
 
 namespace Suggestion {
     void KeywordsSuggestor::setSuggestedArtworks(const QList<SuggestionArtwork *> &suggestedArtworks) {
@@ -35,6 +36,7 @@ namespace Suggestion {
         m_Suggestions.append(suggestedArtworks);
         endResetModel();
         unsetInProgress();
+        emit suggestionArrived();
     }
 
     void KeywordsSuggestor::clear() {
@@ -81,9 +83,16 @@ namespace Suggestion {
     }
 
     void KeywordsSuggestor::searchArtworks(const QString &searchTerm) {
-        if (!m_IsInProgress) {
+        if (!m_IsInProgress && !searchTerm.simplified().isEmpty()) {
             setInProgress();
-            m_QueryEngine.submitQuery(searchTerm.split(' '));
+
+            QStringList searchTerms = searchTerm.split(QChar::Space, QString::SkipEmptyParts);
+
+            if (m_UseLocal) {
+                m_QueryEngine.submitLocalQuery(m_LocalLibrary, searchTerms);
+            } else {
+                m_QueryEngine.submitQuery(searchTerms);
+            }
         }
     }
 
@@ -93,8 +102,7 @@ namespace Suggestion {
     }
 
     QVariant KeywordsSuggestor::data(const QModelIndex &index, int role) const {
-        if (index.row() < 0 || index.row() >= m_Suggestions.count())
-            return QVariant();
+        if (!index.isValid()) { return QVariant(); }
 
         SuggestionArtwork *suggestionArtwork = m_Suggestions.at(index.row());
 

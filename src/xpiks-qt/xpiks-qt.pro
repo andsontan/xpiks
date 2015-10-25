@@ -62,7 +62,10 @@ SOURCES += main.cpp \
     Common/flags.cpp \
     Helpers/keywordvalidator.cpp \
     Helpers/helpersqmlwrapper.cpp \
-    Models/recentdirectoriesmodel.cpp
+    Models/recentdirectoriesmodel.cpp \
+    Suggestion/locallibrary.cpp \
+    Suggestion/libraryqueryworker.cpp \
+    Suggestion/libraryloaderworker.cpp
 
 RESOURCES += qml.qrc
 
@@ -161,7 +164,10 @@ HEADERS += \
     Helpers/helpersqmlwrapper.h \
     Models/recentdirectoriesmodel.h \
     Helpers/settingsprovider.h \
-    Common/version.h
+    Common/version.h \
+    Suggestion/locallibrary.h \
+    Suggestion/libraryqueryworker.h \
+    Suggestion/libraryloaderworker.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

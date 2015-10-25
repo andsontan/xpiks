@@ -30,6 +30,7 @@ namespace Constants {
     const char ORGANIZATION_DOMAIN[] = "ribtoks.github.io";
     const char APPLICATION_NAME[] = "Xpiks";
     const char LOG_FILENAME[] = "xpiks.log";
+    const char LIBRARY_FILENAME[] = "xpiks.library";
     const char METADATA_BACKUP_EXTENSION[] = ".xpks";
     const char SAVE_BACKUPS[] = "SAVE_BACKUPS";
     const char KEYWORD_SIZE_SCALE[] = "KEYWORD_SIZE_SCALE";

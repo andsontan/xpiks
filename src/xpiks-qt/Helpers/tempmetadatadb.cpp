@@ -52,14 +52,14 @@ namespace Helpers {
         if (file.exists() && file.open(QIODevice::ReadOnly)) {
             QHash<QString, QString> dict;
 
-            QDataStream in(&file);   // write the data
+            QDataStream in(&file);   // read the data
             in >> dict;
             file.close();
 
             if (m_ArtworkMetadata->initialize(
-                    dict["title"],
-                    dict["description"],
-                    dict["keywords"],
+                    dict.value("title", ""),
+                    dict.value("description", ""),
+                    dict.value("keywords", ""),
                     false)) {
                 m_ArtworkMetadata->setModified();
             }

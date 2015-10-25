@@ -49,6 +49,7 @@
 #include "UndoRedo/undoredomanager.h"
 #include "Helpers/clipboardhelper.h"
 #include "Commands/commandmanager.h"
+#include "Suggestion/locallibrary.h"
 #include "Models/artworkuploader.h"
 #include "Models/warningsmanager.h"
 #include "Helpers/loggingworker.h"
@@ -118,13 +119,18 @@ int main(int argc, char *argv[]) {
 
     initQSettings();
 
+    Suggestion::LocalLibrary localLibrary;
+
     QString appDataPath = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
     if (!appDataPath.isEmpty()) {
-        QDir logFileDir(appDataPath);
-        QString logFilePath = logFileDir.filePath(Constants::LOG_FILENAME);
+        QDir appDataDir(appDataPath);
 
+        QString logFilePath = appDataDir.filePath(Constants::LOG_FILENAME);
         Helpers::Logger &logger = Helpers::Logger::getInstance();
         logger.setLogFilePath(logFilePath);
+
+        QString libraryFilePath = appDataDir.filePath(Constants::LIBRARY_FILENAME);
+        localLibrary.setLibraryPath(libraryFilePath);
     }
 
     Models::LogsModel logsModel;
@@ -143,8 +149,9 @@ int main(int argc, char *argv[]) {
     qInstallMessageHandler(myMessageHandler);
     qDebug() << "Log started";
 #endif
-
     QApplication app(argc, argv);
+
+    localLibrary.loadLibraryAsync();
 
     QTranslator qtTranslator;
     qtTranslator.load("qt_" + QLocale::system().name(),
@@ -159,6 +166,7 @@ int main(int argc, char *argv[]) {
     Models::ArtItemsModel artItemsModel;
     Models::CombinedArtworksModel combinedArtworksModel;
     Models::IptcProvider iptcProvider;
+    iptcProvider.setLocalLibrary(&localLibrary);
     Models::UploadInfoRepository uploadInfoRepository;
     Models::WarningsManager warningsManager;
     Helpers::AppSettings appSettings;
@@ -167,6 +175,7 @@ int main(int argc, char *argv[]) {
     UndoRedo::UndoRedoManager undoRedoManager;
     Models::ZipArchiver zipArchiver;
     Suggestion::KeywordsSuggestor keywordsSuggestor;
+    keywordsSuggestor.setLocalLibrary(&localLibrary);
     Models::FilteredArtItemsProxyModel filteredArtItemsModel;
     filteredArtItemsModel.setSourceModel(&artItemsModel);
     Models::RecentDirectoriesModel recentDirectorieModel;

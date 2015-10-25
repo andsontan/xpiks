@@ -1261,6 +1261,7 @@ ApplicationWindow {
                                                     anchors.fill: parent
                                                     property int keywordHeight: 20 * settingsModel.keywordSizeScale + (settingsModel.keywordSizeScale - 1)*10
                                                     scrollStep: keywordHeight
+                                                    stealWheel: false
 
                                                     delegate: KeywordWrapper {
                                                         id: kw

@@ -145,9 +145,18 @@ Item {
                         onClicked: keywordsSuggestor.searchArtworks(queryText.text)
                     }
 
-                    StyledText {
-                        text: qsTr("(powered by Shutterstock API)")
-                        color: Colors.defaultControlColor
+                    Item {
+                        Layout.fillWidth: true
+                    }
+
+                    StyledCheckbox {
+                        id: searchUsingAndCheckbox
+                        text: qsTr("Use only local source")
+                        onCheckedChanged: {
+                            keywordsSuggestor.useLocal = checked
+                        }
+
+                        Component.onCompleted: checked = keywordsSuggestor.useLocal
                     }
                 }
 
@@ -160,73 +169,75 @@ Item {
                     width: parent.width
                     color: Colors.defaultControlColor
 
-                    StyledScrollView {
-                        id: imagesScrollView
-                        height: parent.height
-                        width: parent.width + 15
+                    Flickable {
+                        clip: true
+                        id: suggestionsWrapper
+                        anchors.fill: parent
+                        contentHeight: flow.childrenRect.height + 40
+                        contentWidth: parent.width
                         enabled: !keywordsSuggestor.isInProgress
+                        flickableDirection: Flickable.VerticalFlick
+                        boundsBehavior: Flickable.StopAtBounds
 
-                        Flickable {
-                            anchors.fill: parent
-                            contentHeight: grid.height
-                            contentWidth: grid.width
-                            anchors.margins: {left: 40; right: 0; top: 20}
+                        Flow {
+                            id: flow
+                            spacing: 20
+                            anchors.top: parent.top
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.margins: 20
 
-                            GridLayout {
-                                id: grid
-                                columns: 5
-                                columnSpacing: 20
-                                rowSpacing: 20
+                            Repeater {
+                                id: suggestionsRepeater
+                                model: keywordsSuggestor
 
-                                Repeater {
-                                    model: keywordsSuggestor
-                                    delegate: Rectangle {
-                                        property int delegateIndex: index
-                                        id: imageWrapper
-                                        height: 110
-                                        width: height
-                                        color: "transparent"
+                                delegate: Rectangle {
+                                    property int delegateIndex: index
+                                    id: imageWrapper
+                                    height: 110
+                                    width: height
+                                    color: "transparent"
 
-                                        Image {
-                                            anchors.fill: parent
-                                            anchors.margins: 1
-                                            source: url
-                                            sourceSize.width: 150
-                                            sourceSize.height: 150
-                                            fillMode: Image.PreserveAspectCrop
-                                            asynchronous: true
-                                        }
+                                    Image {
+                                        anchors.fill: parent
+                                        anchors.margins: 1
+                                        source: url
+                                        sourceSize.width: 150
+                                        sourceSize.height: 150
+                                        fillMode: Image.PreserveAspectCrop
+                                        asynchronous: true
+                                    }
 
-                                        Rectangle {
-                                            anchors.fill: parent
-                                            color: Colors.defaultControlColor
-                                            opacity: isselected ? (mouseArea.containsMouse ? 0.6 : 0.7) : (mouseArea.containsMouse ? 0.4 : 0)
-                                        }
+                                    Rectangle {
+                                        anchors.fill: parent
+                                        color: Colors.defaultControlColor
+                                        opacity: isselected ? (mouseArea.containsMouse ? 0.6 : 0.7) : (mouseArea.containsMouse ? 0.4 : 0)
+                                    }
 
-                                        LargeAddIcon {
-                                            opacity: isselected ? (mouseArea.containsMouse ? 0.85 : 1) : (mouseArea.containsMouse ? 0.6 : 0)
-                                            width: parent.width
-                                            height: parent.height
-                                        }
+                                    LargeAddIcon {
+                                        opacity: isselected ? (mouseArea.containsMouse ? 0.85 : 1) : (mouseArea.containsMouse ? 0.6 : 0)
+                                        width: parent.width
+                                        height: parent.height
+                                    }
 
-                                        MouseArea {
-                                            id: mouseArea
-                                            anchors.fill: parent
-                                            hoverEnabled: true
-                                            onClicked: {
-                                                keywordsSuggestor.setArtworkSelected(delegateIndex, !isselected)
-                                            }
+                                    MouseArea {
+                                        id: mouseArea
+                                        anchors.fill: parent
+                                        hoverEnabled: true
+                                        onClicked: {
+                                            keywordsSuggestor.setArtworkSelected(delegateIndex, !isselected)
                                         }
                                     }
                                 }
-
-                                Item { height: 110; width: height }
-                                Item { height: 110; width: height }
-                                Item { height: 110; width: height }
-                                Item { height: 110; width: height }
-                                Item { height: 110; width: height }
                             }
                         }
+                    }
+
+                    CustomScrollbar {
+                        anchors.topMargin: 0
+                        anchors.bottomMargin: 0
+                        anchors.rightMargin: -20
+                        flickable: suggestionsWrapper
                     }
 
                     Rectangle {
@@ -234,6 +245,18 @@ Item {
                         color: Colors.selectedArtworkColor
                         opacity: 0.4
                         visible: keywordsSuggestor.isInProgress
+                    }
+
+                    Rectangle {
+                        anchors.fill: parent
+                        color: "transparent"
+                        visible: !keywordsSuggestor.isInProgress && (suggestionsRepeater.count == 0)
+
+                        StyledText {
+                            anchors.centerIn: parent
+                            text: qsTr("No result found")
+                            color: Colors.selectedMetadataColor
+                        }
                     }
 
                     StyledBusyIndicator {

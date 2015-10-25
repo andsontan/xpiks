@@ -51,6 +51,7 @@ Flickable {
     property alias isFocused: nextTagTextInput.activeFocus
     property alias editEnabled: editWrapper.enabled
     property int flowSpacing: 5
+    property bool stealWheel: true
 
     signal tagAdded(string text)
     signal removeLast()
@@ -136,7 +137,7 @@ Flickable {
         preventStealing: true
 
         onWheel: {
-            if (!nextTagTextInput.activeFocus || flowListView.height >= flowListView.contentHeight) {
+            if (!stealWheel && !nextTagTextInput.activeFocus || flowListView.height >= flowListView.contentHeight) {
                 wheel.accepted = false
                 return
             }
@@ -159,7 +160,8 @@ Flickable {
 
     Flow {
         id: flow
-        width: parent.width - 10
+        anchors.right: parent.right
+        anchors.rightMargin: 5
         anchors.left: parent.left
         spacing: flowSpacing
 
