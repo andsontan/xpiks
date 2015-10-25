@@ -29,19 +29,6 @@
 #include "../Commands/combinededitcommand.h"
 #include "../Common/flags.h"
 
-bool containsAllTerms(const QString &text, const QStringList &items) {
-    bool anyError = false;
-
-    foreach (const QString &item, items) {
-        if (!text.contains(item, Qt::CaseInsensitive)) {
-            anyError = true;
-            break;
-        }
-    }
-
-    return !anyError;
-}
-
 bool containsOneTerm(const QStringList &keywords, const QString &term) {
     bool containsTerm = false;
 
@@ -321,23 +308,15 @@ namespace Models {
         return artItemsModel;
     }
 
-    bool FilteredArtItemsProxyModel::fitsSpecialKeywords(const ArtworkMetadata *metadata, bool &isSpecial) const {
-        isSpecial = false;
+    bool FilteredArtItemsProxyModel::fitsSpecialKeywords(const QString &searchTerm, const ArtworkMetadata *metadata) const {
         bool hasMatch = false;
 
-        if (m_SearchTerm.isEmpty()) {
-            hasMatch = true;
-        }
-
-        if (m_SearchTerm == "x:modified") {
+        if (searchTerm == "x:modified") {
             hasMatch = metadata->isModified();
-            isSpecial = true;
-        } else if (m_SearchTerm == "x:empty") {
+        } else if (searchTerm == "x:empty") {
             hasMatch = metadata->isEmpty();
-            isSpecial = true;
-        } else if (m_SearchTerm == "x:selected") {
+        } else if (searchTerm == "x:selected") {
             hasMatch = metadata->getIsSelected();
-            isSpecial = true;
         }
 
         return hasMatch;
@@ -366,7 +345,11 @@ namespace Models {
         const QStringList &keywords = metadata->getKeywords();
 
         foreach (const QString &searchTerm, searchTerms) {
-            hasMatch = description.contains(searchTerm, Qt::CaseInsensitive);
+            hasMatch = fitsSpecialKeywords(searchTerm, metadata);
+
+            if (!hasMatch) {
+                hasMatch = description.contains(searchTerm, Qt::CaseInsensitive);
+            }
 
             if (!hasMatch) {
                 hasMatch = title.contains(searchTerm, Qt::CaseInsensitive);
@@ -404,23 +387,36 @@ namespace Models {
         const QString &filepath = metadata->getFilepath();
         const QStringList &keywords = metadata->getKeywords();
 
-        hasMatch = containsAllTerms(description, searchTerms) ||
-                containsAllTerms(title, searchTerms) ||
-                containsAllTerms(filepath, searchTerms);
+        bool anyError = false;
 
-        if (!hasMatch) {
-            bool anyError = false;
+        foreach (const QString &searchTerm, searchTerms) {
+            bool anyContains = false;
 
-            foreach (const QString &searchTerm, searchTerms) {
-                if (!containsOneTerm(keywords, searchTerm)) {
-                    anyError = true;
-                    break;
-                }
+            anyContains = fitsSpecialKeywords(searchTerm, metadata);
+
+            if (!anyContains) {
+                anyContains = description.contains(searchTerm, Qt::CaseInsensitive);
             }
 
-            hasMatch = !anyError;
+            if (!anyContains) {
+                anyContains = title.contains(searchTerm, Qt::CaseInsensitive);
+            }
+
+            if (!anyContains) {
+                anyContains = filepath.contains(searchTerm, Qt::CaseInsensitive);
+            }
+
+            if (!anyContains) {
+                anyContains = containsOneTerm(keywords, searchTerm);
+            }
+
+            if (!anyContains) {
+                anyError = true;
+                break;
+            }
         }
 
+        hasMatch = !anyError;
         return hasMatch;
     }
 
@@ -430,17 +426,7 @@ namespace Models {
         ArtItemsModel *artItemsModel = getArtItemsModel();
         ArtworkMetadata *metadata = artItemsModel->getArtwork(sourceRow);
 
-        bool hasMatch = false;
-
-        if (metadata != NULL) {
-            bool isSpecial = false;
-            hasMatch = fitsSpecialKeywords(metadata, isSpecial);
-
-            if (!hasMatch && !isSpecial) {
-                hasMatch = containsPartsSearch(metadata);
-            }
-        }
-
+        bool hasMatch = containsPartsSearch(metadata);
         return hasMatch;
     }
 }
