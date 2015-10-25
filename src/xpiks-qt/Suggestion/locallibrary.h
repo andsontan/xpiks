@@ -27,6 +27,7 @@
 #include <QList>
 #include <QStringList>
 #include <QMutex>
+#include "libraryloaderworker.h"
 
 namespace Models {
     class ArtworkMetadata;
@@ -48,6 +49,11 @@ namespace Suggestion {
         void loadLibraryAsync();
         void saveLibraryAsync();
         void searchArtworks(const QStringList &query, QList<SuggestionArtwork*> &searchResults);
+        void cleanupLocalLibraryAsync();
+        void cleanupTrash();
+
+    private:
+        void performAsync(Suggestion::LibraryLoaderWorker::LoadOption option);
 
     private:
         QHash<QString, QStringList> m_LocalArtworks;

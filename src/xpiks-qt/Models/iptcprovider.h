@@ -87,6 +87,7 @@ namespace Models {
     public:
         Q_INVOKABLE void importMetadata() { doReadMetadata(getArtworkList()); }
         Q_INVOKABLE void exportMetadata() { doWriteMetadata(getArtworkList()); }
+        Q_INVOKABLE void cleanupLibrary() const;
 
     private:
         void doReadMetadata(const QList<ArtworkMetadata*> &artworkList);

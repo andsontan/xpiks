@@ -66,31 +66,11 @@ namespace Suggestion {
     }
 
     void LocalLibrary::loadLibraryAsync() {
-        LibraryLoaderWorker *worker = new LibraryLoaderWorker(this, m_Filename, LibraryLoaderWorker::Load);
-        QThread *thread = new QThread();
-        worker->moveToThread(thread);
-
-        QObject::connect(thread, SIGNAL(started()), worker, SLOT(process()));
-        QObject::connect(worker, SIGNAL(stopped()), thread, SLOT(quit()));
-
-        QObject::connect(worker, SIGNAL(stopped()), worker, SLOT(deleteLater()));
-        QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
-
-        thread->start();
+        performAsync(LibraryLoaderWorker::Load);
     }
 
     void LocalLibrary::saveLibraryAsync() {
-        LibraryLoaderWorker *worker = new LibraryLoaderWorker(this, m_Filename, LibraryLoaderWorker::Save);
-        QThread *thread = new QThread();
-        worker->moveToThread(thread);
-
-        QObject::connect(thread, SIGNAL(started()), worker, SLOT(process()));
-        QObject::connect(worker, SIGNAL(stopped()), thread, SLOT(quit()));
-
-        QObject::connect(worker, SIGNAL(stopped()), worker, SLOT(deleteLater()));
-        QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
-
-        thread->start();
+        performAsync(LibraryLoaderWorker::Save);
     }
 
     void LocalLibrary::searchArtworks(const QStringList &query, QList<SuggestionArtwork*> &searchResults) {
@@ -125,5 +105,45 @@ namespace Suggestion {
                 searchResults.append(artwork);
             }
         }
+    }
+
+    void LocalLibrary::cleanupTrash() {
+        QMutexLocker locker(&m_Mutex);
+
+        QStringList itemsToRemove;
+        QHashIterator<QString, QStringList> i(m_LocalArtworks);
+
+        while (i.hasNext()) {
+            i.next();
+
+            QFile file(i.key());
+            if (!file.exists()) {
+                itemsToRemove.append(i.key());
+            }
+        }
+
+        foreach (const QString &item, itemsToRemove) {
+            m_LocalArtworks.remove(item);
+        }
+
+        qDebug() << "Library cleanup finished." << itemsToRemove.count() << "items removed.";
+    }
+
+    void LocalLibrary::performAsync(LibraryLoaderWorker::LoadOption option) {
+        LibraryLoaderWorker *worker = new LibraryLoaderWorker(this, m_Filename, option);
+        QThread *thread = new QThread();
+        worker->moveToThread(thread);
+
+        QObject::connect(thread, SIGNAL(started()), worker, SLOT(process()));
+        QObject::connect(worker, SIGNAL(stopped()), thread, SLOT(quit()));
+
+        QObject::connect(worker, SIGNAL(stopped()), worker, SLOT(deleteLater()));
+        QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+
+        thread->start();
+    }
+
+    void LocalLibrary::cleanupLocalLibraryAsync() {
+        performAsync(LibraryLoaderWorker::Clean);
     }
 }

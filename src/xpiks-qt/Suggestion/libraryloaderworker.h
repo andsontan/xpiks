@@ -32,7 +32,7 @@ namespace Suggestion {
         Q_OBJECT
     public:
         enum LoadOption {
-            Load, Save
+            Load, Save, Clean
         };
 
     public:
@@ -47,6 +47,7 @@ namespace Suggestion {
     private:
         void read();
         void write();
+        void cleanup();
 
     private:
         Suggestion::LocalLibrary *m_LocalLibrary;

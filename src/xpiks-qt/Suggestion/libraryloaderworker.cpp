@@ -40,6 +40,8 @@ namespace Suggestion {
             write();
         } else if (m_Option == Load) {
             read();
+        } else if (m_Option == Clean) {
+            cleanup();
         }
 
         emit stopped();
@@ -64,6 +66,11 @@ namespace Suggestion {
         qDebug() << "Writing local artworks library...";
 
         m_LocalLibrary->saveToFile();
+    }
+
+    void LibraryLoaderWorker::cleanup() {
+        qDebug() << "Cleaning up local artworks library...";
+        m_LocalLibrary->cleanupTrash();
     }
 }
 

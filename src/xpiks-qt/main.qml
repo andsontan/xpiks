@@ -196,6 +196,14 @@ ApplicationWindow {
                     removeMetadataDialog.open()
                 }
             }
+
+            MenuItem {
+                text: qsTr("&Cleanup local library in background")
+                onTriggered: {
+                    console.log("Cleanup local library triggered")
+                    iptcProvider.cleanupLibrary()
+                }
+            }
         }
     }
 

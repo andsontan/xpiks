@@ -104,6 +104,12 @@ namespace Models {
         }
     }
 
+    void IptcProvider::cleanupLibrary() const {
+        if (m_LocalLibrary != NULL) {
+            m_LocalLibrary->cleanupLocalLibraryAsync();
+        }
+    }
+
     void IptcProvider::doReadMetadata(const QList<ArtworkMetadata *> &artworkList)
     {
         int artworksCount = artworkList.length();

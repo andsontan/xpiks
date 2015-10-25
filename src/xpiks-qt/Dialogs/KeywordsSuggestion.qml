@@ -218,6 +218,7 @@ Item {
                                         opacity: isselected ? (mouseArea.containsMouse ? 0.85 : 1) : (mouseArea.containsMouse ? 0.6 : 0)
                                         width: parent.width
                                         height: parent.height
+                                        rotation: isselected ? 45 : 0
                                     }
 
                                     MouseArea {
