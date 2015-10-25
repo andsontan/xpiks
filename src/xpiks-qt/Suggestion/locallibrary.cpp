@@ -102,7 +102,10 @@ namespace Suggestion {
 
             if (!anyError) {
                 SuggestionArtwork *artwork = new SuggestionArtwork("file:///" + i.key(), keywords);
-                searchResults.append(artwork);
+
+                if (QFile(i.key()).exists()) {
+                    searchResults.append(artwork);
+                }
             }
         }
     }
