@@ -109,56 +109,10 @@ Item {
                 anchors.margins: 20
                 spacing: 0
 
-                RowLayout {
-                    StyledText {
-                        text: imagePath.split(/[\\/]/).pop()
-                    }
-
-                    Item {
-                        Layout.fillWidth: true
-                    }
-
-                    StyledText {
-                        id: fitLink
-                        text: qsTr("100%")
-                        color: fitMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
-
-                        MouseArea {
-                            property bool isFit: false
-                            id: fitMA
-                            anchors.fill: parent
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: {
-                                if (isFit) {
-                                    previewImage.width = boundsRect.width - 20
-                                    previewImage.height = boundsRect.height - 20
-                                    scrollview.anchors.leftMargin = 10
-                                    scrollview.anchors.topMargin = 10
-                                    previewImage.fillMode = Image.PreserveAspectFit
-                                    isFit = false
-                                    fitLink.text = qsTr("100%")
-                                } else {
-                                    previewImage.width = previewImage.sourceSize.width
-                                    previewImage.height = previewImage.sourceSize.height
-                                    scrollview.anchors.leftMargin = 0
-                                    scrollview.anchors.topMargin = 0
-                                    previewImage.fillMode = Image.Pad
-                                    fitLink.text = qsTr("Fit")
-                                    isFit = true
-                                }
-                            }
-                        }
-                    }
-                }
-
-                Item {
-                    height: 10
-                }
-
                 Rectangle {
                     id: boundsRect
                     color: Colors.defaultControlColor
-                    height: 310
+                    height: 330
                     anchors.left: parent.left
                     anchors.right: parent.right
 

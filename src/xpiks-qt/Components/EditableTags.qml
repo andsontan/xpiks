@@ -143,15 +143,18 @@ Flickable {
             }
 
             if (wheel.angleDelta.y < 0) {
-                if (flowListView.contentY != flowListView.contentHeight - flowListView.height) {
+                var maxScrollPos = flowListView.contentHeight - flowListView.height
+                if (Math.abs(flowListView.contentY - maxScrollPos) > scrollStep) {
                     scrollDown()
                 } else {
+                    scrollToBottom()
                     wheel.accepted = false
                 }
             } else {
-                if (flowListView.contentY != 0) {
+                if (flowListView.contentY > scrollStep) {
                     scrollUp()
                 } else {
+                    flowListView.contentY = 0
                     wheel.accepted = false
                 }
             }
@@ -161,7 +164,7 @@ Flickable {
     Flow {
         id: flow
         anchors.right: parent.right
-        anchors.rightMargin: 5
+        anchors.rightMargin: 10
         anchors.left: parent.left
         spacing: flowSpacing
 
