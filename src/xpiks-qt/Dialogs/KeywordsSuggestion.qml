@@ -253,7 +253,7 @@ Item {
 
                         StyledText {
                             anchors.centerIn: parent
-                            text: qsTr("No result found")
+                            text: qsTr("No results found")
                             color: Colors.selectedMetadataColor
                         }
                     }
