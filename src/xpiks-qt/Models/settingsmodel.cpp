@@ -43,6 +43,7 @@
 #define DEFAULT_PROXY ""
 #define DEFAULT_FIT_SMALL_PREVIEW false
 #define DEFAULT_SEARCH_USING_AND true
+#define DEFAULT_SCROLL_SPEED_SCALE 1.0
 
 namespace Models {
     SettingsModel::SettingsModel(QObject *parent) :
@@ -73,6 +74,7 @@ namespace Models {
         appSettings.setValue(appSettings.getProxyURIKey(), m_ProxyURI);
         appSettings.setValue(appSettings.getFitSmallPreviewKey(), m_FitSmallPreview);
         appSettings.setValue(appSettings.getSearchUsingAndKey(), m_SearchUsingAnd);
+        appSettings.setValue(appSettings.getScrollSpeedScaleKey(), m_ScrollSpeedScale);
 
         if (!m_MustUseMasterPassword) {
             appSettings.setValue(appSettings.getMasterPasswordHashKey(), "");
@@ -113,6 +115,7 @@ namespace Models {
         setProxyURI(appSettings.value(appSettings.getProxyURIKey(), DEFAULT_PROXY).toString());
         setFitSmallPreview(appSettings.boolValue(appSettings.getFitSmallPreviewKey(), DEFAULT_FIT_SMALL_PREVIEW));
         setSearchUsingAnd(appSettings.boolValue(appSettings.getSearchUsingAndKey(), DEFAULT_SEARCH_USING_AND));
+        setScrollSpeedScale(appSettings.doubleValue(appSettings.getScrollSpeedScaleKey(), DEFAULT_SCROLL_SPEED_SCALE));
     }
 
     void SettingsModel::resetToDefault() {
@@ -131,6 +134,7 @@ namespace Models {
         setProxyURI(DEFAULT_PROXY);
         setFitSmallPreview(DEFAULT_FIT_SMALL_PREVIEW);
         setSearchUsingAnd(DEFAULT_SEARCH_USING_AND);
+        setScrollSpeedScale(DEFAULT_SCROLL_SPEED_SCALE);
     }
 
     int ensureInBounds(int value, int boundA, int boundB) {

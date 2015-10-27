@@ -26,6 +26,8 @@
 #include <QObject>
 #include <QString>
 
+#define SETTINGS_EPSILON 1e-9
+
 namespace Models {
 
     int ensureInBounds(int value, int boundA, int boundB);
@@ -49,6 +51,7 @@ namespace Models {
         Q_PROPERTY(QString proxyURI READ getProxyURI WRITE setProxyURI NOTIFY proxyURIChanged)
         Q_PROPERTY(bool fitSmallPreview READ getFitSmallPreview WRITE setFitSmallPreview NOTIFY fitSmallPreviewChanged)
         Q_PROPERTY(bool searchUsingAnd READ getSearchUsingAnd WRITE setSearchUsingAnd NOTIFY searchUsingAndChanged)
+        Q_PROPERTY(double scrollSpeedScale READ getScrollSpeedScale WRITE setScrollSpeedScale NOTIFY scrollSpeedScaleChanged)
     public:
         explicit SettingsModel(QObject *parent = 0);
         virtual ~SettingsModel() {}
@@ -80,6 +83,7 @@ namespace Models {
         QString getProxyURI() const { return m_ProxyURI; }
         bool getFitSmallPreview() const { return m_FitSmallPreview; }
         bool getSearchUsingAnd() const { return m_SearchUsingAnd; }
+        double getScrollSpeedScale() const { return m_ScrollSpeedScale; }
 
     signals:
         void exifToolPathChanged(QString exifToolPath);
@@ -97,6 +101,7 @@ namespace Models {
         void proxyURIChanged(QString value);
         void fitSmallPreviewChanged(bool value);
         void searchUsingAndChanged(bool value);
+        void scrollSpeedScaleChanged(double value);
 
     public:
         void setExifToolPath(QString exifToolPath) {
@@ -124,7 +129,7 @@ namespace Models {
         }
 
         void setMinMegapixelCount(double minMegapixelCount) {
-            if (m_MinMegapixelCount == minMegapixelCount)
+            if (qAbs(m_MinMegapixelCount - minMegapixelCount) <= SETTINGS_EPSILON)
                 return;
 
             m_MinMegapixelCount = ensureInBounds(minMegapixelCount, 0.0, 100.0);
@@ -180,10 +185,10 @@ namespace Models {
         }
 
         void setKeywordSizeScale(double value) {
-            if (m_KeywordSizeScale == value)
+            if (qAbs(m_KeywordSizeScale - value) <= SETTINGS_EPSILON)
                 return;
 
-            m_KeywordSizeScale = ensureInBounds(value, 1.0, 100.0);
+            m_KeywordSizeScale = ensureInBounds(value, 1.0, 1.2);
             emit keywordSizeScaleChanged(m_KeywordSizeScale);
         }
 
@@ -219,6 +224,14 @@ namespace Models {
             emit searchUsingAndChanged(value);
         }
 
+        void setScrollSpeedScale(double value) {
+            if (qAbs(m_ScrollSpeedScale - value) <= SETTINGS_EPSILON)
+                return;
+
+            m_ScrollSpeedScale = ensureInBounds(value, 1.0, 6.0);
+            emit scrollSpeedScaleChanged(m_ScrollSpeedScale);
+        }
+
     private:
         void resetToDefault();
 
@@ -228,6 +241,7 @@ namespace Models {
         QString m_ProxyURI;
         double m_MinMegapixelCount;
         double m_KeywordSizeScale;
+        double m_ScrollSpeedScale;
         int m_MaxDescriptionLength;
         int m_MaxKeywordsCount;
         int m_UploadTimeout; // in minutes

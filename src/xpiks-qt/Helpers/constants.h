@@ -37,6 +37,7 @@ namespace Constants {
     const char DISMISS_DURATION[] = "DISMISS_DURATION";
     const char FIT_SMALL_PREVIEW[] = "FIT_SMALL_PREVIEW";
     const char SEARCH_USING_AND[] = "SEARCH_USING_AND";
+    const char SCROLL_SPEED_SCALE[] = "SCROLL_SPEED_SCALE";
 
     // different for DEBUG and RELEASE
 

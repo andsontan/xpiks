@@ -97,6 +97,9 @@ namespace Helpers {
         Q_PROPERTY(QString searchUsingAndKey READ getSearchUsingAndKey CONSTANT)
         QString getSearchUsingAndKey() const { return QString::fromLatin1(Constants::SEARCH_USING_AND); }
 
+        Q_PROPERTY(QString scrollSpeedScaleKey READ getScrollSpeedScaleKey CONSTANT)
+        QString getScrollSpeedScaleKey() const { return QString::fromLatin1(Constants::SCROLL_SPEED_SCALE); }
+
         Q_INVOKABLE inline void setValue(const QString &key, const QVariant &value) {
             QSettings::setValue(key, value);
         }

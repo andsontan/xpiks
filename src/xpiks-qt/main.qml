@@ -867,6 +867,7 @@ ApplicationWindow {
                         anchors.top: undoRedoRect.bottom
                         anchors.bottom: parent.bottom
                         property bool areScrollbarsVisible: flickableItem.contentHeight > flickableItem.height
+                        __wheelAreaScrollSpeed: 50 + 10*settingsModel.scrollSpeedScale
                         // does not work for now in Qt 5.4.1 in combination with ListView
                         //verticalScrollBarPolicy: Qt.ScrollBarAlwaysOn
 

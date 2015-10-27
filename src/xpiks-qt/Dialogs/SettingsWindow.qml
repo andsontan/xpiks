@@ -256,6 +256,7 @@ ApplicationWindow {
                 Tab {
                     id: uxTab
                     property double sizeSliderValue: settingsModel.keywordSizeScale
+                    property double scrollSliderValue: settingsModel.scrollSpeedScale
                     title: qsTr("Interface")
 
                     ColumnLayout {
@@ -341,6 +342,26 @@ ApplicationWindow {
                                         }
                                     }
                                 }
+                            }
+                        }
+
+                        RowLayout {
+                            width: parent.width
+                            spacing: 20
+
+                            StyledText {
+                                text: qsTr("Scroll speed")
+                            }
+
+                            StyledSlider {
+                                id: scrollSpeedSlider
+                                width: 150
+                                minimumValue: 1.0
+                                maximumValue: 6
+                                stepSize: 0.01
+                                orientation: Qt.Horizontal
+                                onValueChanged: uxTab.scrollSliderValue = value
+                                Component.onCompleted: value = settingsModel.scrollSpeedScale
                             }
                         }
 
@@ -907,6 +928,7 @@ ApplicationWindow {
                     width: 120
                     onClicked: {
                         settingsModel.keywordSizeScale = uxTab.sizeSliderValue
+                        settingsModel.scrollSpeedScale = uxTab.scrollSliderValue
                         settingsModel.saveAllValues()
                         closeSettings()
                     }
