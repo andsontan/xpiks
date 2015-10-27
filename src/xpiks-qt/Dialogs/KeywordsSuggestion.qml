@@ -200,7 +200,7 @@ Item {
                                     Image {
                                         anchors.fill: parent
                                         anchors.margins: 1
-                                        source: url
+                                        source: keywordsSuggestor.useLocal ? ("image://global/" + url) : url
                                         sourceSize.width: 150
                                         sourceSize.height: 150
                                         fillMode: Image.PreserveAspectCrop

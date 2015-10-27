@@ -33,7 +33,7 @@ namespace Suggestion {
     {
         Q_OBJECT
     public:
-        LibraryQueryWorker(Suggestion::LocalLibrary *localLibrary, const QStringList &query);
+        LibraryQueryWorker(Suggestion::LocalLibrary *localLibrary, const QStringList &query, int maxResults);
 
     signals:
         void stopped();
@@ -46,6 +46,7 @@ namespace Suggestion {
     private:
         Suggestion::LocalLibrary *m_LocalLibrary;
         QStringList m_Query;
+        int m_MaxResults;
         volatile bool m_Cancel;
     };
 }

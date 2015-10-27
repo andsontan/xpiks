@@ -24,9 +24,10 @@
 #include "suggestionartwork.h"
 
 namespace Suggestion {
-    LibraryQueryWorker::LibraryQueryWorker(Suggestion::LocalLibrary *localLibrary, const QStringList &query) :
+    LibraryQueryWorker::LibraryQueryWorker(Suggestion::LocalLibrary *localLibrary, const QStringList &query, int maxResults) :
         m_LocalLibrary(localLibrary),
         m_Query(query),
+        m_MaxResults(maxResults),
         m_Cancel(false)
     {
     }
@@ -34,7 +35,7 @@ namespace Suggestion {
     void LibraryQueryWorker::process() {
         QList<SuggestionArtwork *> *results = new QList<SuggestionArtwork *>();
 
-        m_LocalLibrary->searchArtworks(m_Query, *results);
+        m_LocalLibrary->searchArtworks(m_Query, *results, m_MaxResults);
 
         if (m_Cancel) {
             qDeleteAll(*results);

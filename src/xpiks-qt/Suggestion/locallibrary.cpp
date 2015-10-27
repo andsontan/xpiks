@@ -73,7 +73,7 @@ namespace Suggestion {
         performAsync(LibraryLoaderWorker::Save);
     }
 
-    void LocalLibrary::searchArtworks(const QStringList &query, QList<SuggestionArtwork*> &searchResults) {
+    void LocalLibrary::searchArtworks(const QStringList &query, QList<SuggestionArtwork*> &searchResults, int maxResults) {
         QMutexLocker locker(&m_Mutex);
 
         QHashIterator<QString, QStringList> i(m_LocalArtworks);
@@ -101,10 +101,14 @@ namespace Suggestion {
             }
 
             if (!anyError) {
-                SuggestionArtwork *artwork = new SuggestionArtwork("file:///" + i.key(), keywords);
+                SuggestionArtwork *artwork = new SuggestionArtwork(i.key(), keywords);
 
                 if (QFile(i.key()).exists()) {
                     searchResults.append(artwork);
+
+                    if (searchResults.length() >= maxResults) {
+                        break;
+                    }
                 }
             }
         }

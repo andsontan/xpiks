@@ -33,6 +33,8 @@
 #include "libraryqueryworker.h"
 #include "locallibrary.h"
 
+#define MAX_LOCAL_RESULTS 100
+
 namespace Suggestion {
     SuggestionQueryEngine::SuggestionQueryEngine(KeywordsSuggestor *keywordsSuggestor):
                     QObject(keywordsSuggestor),
@@ -63,7 +65,7 @@ namespace Suggestion {
     }
 
     void SuggestionQueryEngine::submitLocalQuery(LocalLibrary *localLibrary, const QStringList &queryKeywords) {
-        LibraryQueryWorker *worker = new LibraryQueryWorker(localLibrary, queryKeywords);
+        LibraryQueryWorker *worker = new LibraryQueryWorker(localLibrary, queryKeywords, MAX_LOCAL_RESULTS);
         QThread *thread = new QThread();
         worker->moveToThread(thread);
 

@@ -48,7 +48,7 @@ namespace Suggestion {
         void saveToFile();
         void loadLibraryAsync();
         void saveLibraryAsync();
-        void searchArtworks(const QStringList &query, QList<SuggestionArtwork*> &searchResults);
+        void searchArtworks(const QStringList &query, QList<SuggestionArtwork*> &searchResults, int maxResults);
         void cleanupLocalLibraryAsync();
         void cleanupTrash();
 
