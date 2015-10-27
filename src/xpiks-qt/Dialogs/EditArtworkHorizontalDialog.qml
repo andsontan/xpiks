@@ -37,6 +37,7 @@ Item {
     property string imagePath: ''
     property int artworkIndex: -1
     property variant componentParent
+    property var callbackObject
 
     signal dialogDestruction();
     Component.onDestruction: dialogDestruction();
@@ -358,6 +359,7 @@ Item {
                             text: qsTr("Apply")
                             onClicked: {
                                 combinedArtworks.saveEdits()
+                                callbackObject.applyCallback()
                                 closePopup()
                             }
                         }

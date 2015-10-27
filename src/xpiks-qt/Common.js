@@ -75,7 +75,7 @@ function launchDialog(componentName, directParent, options, functor) {
     }
 }
 
-function launchItemEditing(index, appWnd) {
+function launchItemEditing(index, appWnd, callbackObject) {
     combinedArtworks.resetModelData()
     artItemsModel.combineArtwork(index)
 
@@ -84,18 +84,20 @@ function launchItemEditing(index, appWnd) {
     var size = artItemsModel.retrieveImageSize(index)
     if (size.width < size.height) {
         launchDialog("Dialogs/EditArtworkHorizontalDialog.qml", appWnd,
-                            {
-                                imagePath: currentImagePath,
-                                artworkIndex: index,
-                                componentParent: appWnd
-                            })
+                     {
+                         imagePath: currentImagePath,
+                         artworkIndex: index,
+                         componentParent: appWnd,
+                         callbackObject: callbackObject
+                     })
     } else {
         launchDialog("Dialogs/EditArtworkVerticalDialog.qml", appWnd,
-                            {
-                                imagePath: currentImagePath,
-                                artworkIndex: index,
-                                componentParent: appWnd
-                            })
+                     {
+                         imagePath: currentImagePath,
+                         artworkIndex: index,
+                         componentParent: appWnd,
+                         callbackObject: callbackObject
+                     })
     }
 }
 

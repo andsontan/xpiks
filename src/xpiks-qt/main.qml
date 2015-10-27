@@ -522,7 +522,9 @@ ApplicationWindow {
                                     var index = filteredArtItemsModel.findSelectedItemIndex()
 
                                     if (index !== -1) {
-                                        Common.launchItemEditing(index, applicationWindow)
+                                        Common.launchItemEditing(index, applicationWindow, {
+                                                                     applyCallback: function() {}
+                                                                 })
                                         launched = true
                                     }
                                 }
@@ -1034,7 +1036,9 @@ ApplicationWindow {
                                                         editisselected = !isselected
                                                         rowWrapper.focusIfNeeded()
                                                     }
-                                                    onDoubleClicked: Common.launchItemEditing(rowWrapper.getIndex(), applicationWindow)
+                                                    onDoubleClicked: Common.launchItemEditing(rowWrapper.getIndex(), applicationWindow, {
+                                                                                                  applyCallback: function() {}
+                                                                                              })
                                                 }
                                             }
 
@@ -1323,7 +1327,9 @@ ApplicationWindow {
                                                         id: moreEditsMA
                                                         anchors.fill: parent
                                                         cursorShape: Qt.PointingHandCursor
-                                                        onClicked: Common.launchItemEditing(rowWrapper.getIndex(), applicationWindow)
+                                                        onClicked: Common.launchItemEditing(rowWrapper.getIndex(), applicationWindow, {
+                                                                                                applyCallback: function() {}
+                                                                                            })
                                                     }
                                                 }
 

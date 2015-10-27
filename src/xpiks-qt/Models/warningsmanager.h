@@ -63,10 +63,11 @@ namespace Models {
         int getWarningsCount();
         void checkForWarnings(const QList<ArtItemInfo *> &artworks);
         Q_INVOKABLE void recheckItems();
+        Q_INVOKABLE void recheckItem(int itemIndex);
         void setImageProvider(Helpers::GlobalImageProvider *imageProvider) { Q_ASSERT(imageProvider != NULL); m_ImageProvider = imageProvider; }
 
     private:
-        void checkItem(WarningsInfo *metadata);
+        bool checkItem(WarningsInfo *metadata);
         bool checkDimensions(WarningsInfo *wi, ArtworkMetadata *am) const;
         bool checkKeywordsCount(WarningsInfo *wi, ArtworkMetadata *am) const;
         bool checkDescriptionLength(WarningsInfo *wi, ArtworkMetadata *am) const;

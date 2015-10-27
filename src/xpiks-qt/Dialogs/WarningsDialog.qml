@@ -228,7 +228,13 @@ Item {
                                             enabled: !isRestricted && warningsListView.count > 0
 
                                             onClicked: {
-                                                Common.launchItemEditing(itemindex, componentParent)
+                                                Common.launchItemEditing(itemindex, componentParent,
+                                                                         {
+                                                                             applyCallback: function() {
+                                                                                 console.log("Rechecking [" + imageWrapper.delegateIndex + "] item")
+                                                                                 warningsManager.recheckItem(imageWrapper.delegateIndex)
+                                                                             }
+                                                                         })
                                             }
                                         }
                                     }
@@ -259,14 +265,6 @@ Item {
 
                     Item {
                         Layout.fillWidth: true
-                    }
-
-                    StyledButton {
-                        text: qsTr("Recheck")
-                        width: 100
-                        onClicked: {
-                            warningsManager.recheckItems()
-                        }
                     }
 
                     StyledButton {

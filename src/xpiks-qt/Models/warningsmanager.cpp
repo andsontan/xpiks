@@ -63,7 +63,10 @@ namespace Models {
 
         foreach(WarningsInfo *info, m_WarningsBufferList) {
             info->clearWarnings();
-            checkItem(info);
+
+            if (checkItem(info)) {
+                m_WarningsList.append(info);
+            }
         }
 
         endResetModel();
@@ -71,7 +74,24 @@ namespace Models {
         emit warningsCountChanged();
     }
 
-    void WarningsManager::checkItem(WarningsInfo *wi) {
+    void WarningsManager::recheckItem(int itemIndex) {
+        if (itemIndex < 0 || itemIndex >= m_WarningsList.length()) {
+            return;
+        }
+
+        WarningsInfo *info = m_WarningsList[itemIndex];
+        info->clearWarnings();
+
+        if (!checkItem(info)) {
+            beginRemoveRows(QModelIndex(), itemIndex, itemIndex);
+            m_WarningsList.removeAt(itemIndex);
+            endRemoveRows();
+        } else {
+            emit dataChanged(this->index(itemIndex), this->index(itemIndex));
+        }
+    }
+
+    bool WarningsManager::checkItem(WarningsInfo *wi) {
         ArtworkMetadata *metadata = wi->getArtworkMetadata();
 
         bool hasWarnings = false;
@@ -81,9 +101,7 @@ namespace Models {
         hasWarnings = checkDescriptionLength(wi, metadata) || hasWarnings;
         hasWarnings = checkTitleWordsCount(wi, metadata) || hasWarnings;
 
-        if (hasWarnings) {
-            m_WarningsList.append(wi);
-        }
+        return hasWarnings;
     }
 
     bool WarningsManager::checkDimensions(WarningsInfo *wi, ArtworkMetadata *am) const {
