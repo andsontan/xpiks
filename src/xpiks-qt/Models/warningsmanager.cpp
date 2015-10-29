@@ -181,8 +181,16 @@ namespace Models {
 
         if (!title.simplified().isEmpty()) {
             QStringList parts = title.split(QChar::Space, QString::SkipEmptyParts);
-            if ( parts.length() < 3) {
+            int partsLength = parts.length();
+
+            if (partsLength < 3) {
                 QString warning = QString("Title should contain at least three words");
+                wi->addWarning(warning);
+                hasWarnings = true;
+            }
+
+            if (partsLength > 10) {
+                QString warning = QString("Title should not contain more that ten words");
                 wi->addWarning(warning);
                 hasWarnings = true;
             }
