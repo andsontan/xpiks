@@ -194,6 +194,9 @@ namespace Models {
                 wi->addWarning(warning);
                 hasWarnings = true;
             }
+        } else {
+            wi->addWarning("Title is empty and will be copied from description");
+            hasWarnings = true;
         }
 
         return hasWarnings;
