@@ -29,6 +29,18 @@
 #include "../Commands/commandmanager.h"
 #include "settingsmodel.h"
 
+int calculateWordsLength(const QStringList &stringList) {
+    int wordsLength = 0;
+
+    foreach (const QString &part, stringList) {
+        if (part.length() > 2) {
+            wordsLength++;
+        }
+    }
+
+    return wordsLength;
+}
+
 namespace Models {
     int WarningsManager::getWarningsCount() {
         int count = 0;
@@ -164,7 +176,9 @@ namespace Models {
                 hasWarnings = true;
             }
 
-            if (description.split(QChar::Space, QString::SkipEmptyParts).length() < 3) {
+            QStringList descriptionParts = description.split(QChar::Space, QString::SkipEmptyParts);
+            int wordsLength = calculateWordsLength(descriptionParts);
+            if (wordsLength < 3) {
                 QString warning = QString("Description should contain at least three words");
                 wi->addWarning(warning);
                 hasWarnings = true;
@@ -181,7 +195,7 @@ namespace Models {
 
         if (!title.simplified().isEmpty()) {
             QStringList parts = title.split(QChar::Space, QString::SkipEmptyParts);
-            int partsLength = parts.length();
+            int partsLength = calculateWordsLength(parts);
 
             if (partsLength < 3) {
                 QString warning = QString("Title should contain at least three words");
