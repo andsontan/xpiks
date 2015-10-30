@@ -190,7 +190,7 @@ namespace Models {
             }
 
             if (partsLength > 10) {
-                QString warning = QString("Title should not contain more that ten words");
+                QString warning = QString("Title should not contain more than ten words");
                 wi->addWarning(warning);
                 hasWarnings = true;
             }
