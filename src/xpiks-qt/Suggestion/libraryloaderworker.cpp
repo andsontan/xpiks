@@ -23,6 +23,7 @@
 #include <QHash>
 #include <QString>
 #include <QStringList>
+#include <QDataStream>
 #include <QDebug>
 #include "libraryloaderworker.h"
 #include "locallibrary.h"
