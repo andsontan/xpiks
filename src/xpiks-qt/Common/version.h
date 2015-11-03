@@ -22,8 +22,8 @@
 #ifndef VERSION_H
 #define VERSION_H
 
-#define XPIKS_VERSION 0.9
-#define XPIKS_VERSION_SUFFIX beta
+#define XPIKS_VERSION 1.0
+#define XPIKS_VERSION_SUFFIX release
 
 #endif // VERSION_H
 
