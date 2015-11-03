@@ -66,10 +66,6 @@ Flickable {
         }
     }
 
-    function getSanitizedText(text) {
-        return text.replace(/^\s+|\s+$|-$/g, '');
-    }
-
     function getEditedText() {
         var tagText = nextTagTextInput.text;
         return helpersWrapper.sanitizeKeyword(tagText);
@@ -247,9 +243,9 @@ Flickable {
                         clipboardText = clipboardText.replace(/(\r\n|\n|\r)/gm, '');
                         var keywordsToAdd = [];
 
-                        var words = clipboardText.split(',');
+                        var words = clipboardText.split(/,|;/);
                         for (var i = 0; i < words.length; i++) {
-                            var sanitizedTagText = getSanitizedText(words[i]);
+                            var sanitizedTagText = helpersWrapper.sanitizeKeyword(words[i]);
                             if (helpersWrapper.isKeywordValid(sanitizedTagText)) {
                                 keywordsToAdd.push(sanitizedTagText);
                             }
