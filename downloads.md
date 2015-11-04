@@ -10,7 +10,7 @@ permalink: /downloads/
 <h2><strong>OS X instructions</strong></h2>
 
 <div class="download-package">
-<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.0-beta.9/xpiks-qt-v1.0-beta.9.dmg">
+<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.0/xpiks-qt-v1.0.dmg">
 <div>
 <img src="{{site.url}}/images/os_x_installer.jpg" style="vertical-align: middle;width:70px;" />
 <span style="vertical-align: middle;">Package for OS X</span>
@@ -25,7 +25,7 @@ permalink: /downloads/
 <h2><strong>Windows instructions</strong></h2>
 
 <div class="download-package">
-<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.0-beta.9/xpiks-qt-v1.0-beta.9.zip">
+<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.0/Xpiks.zip">
 <div><img src="{{site.url}}/images/windows_installer.jpg" style="vertical-align: middle;width:70px;" />
 <span style="vertical-align: middle;">Package for Win x64</span>
 </div>
@@ -52,8 +52,9 @@ permalink: /downloads/
 
 <h2><strong>Other systems and versions</strong></h2>
 
+<!--
 <p>You can also download <a href="https://dl.dropboxusercontent.com/u/14391423/xpiks-qt-nightly.dmg">Nightly package for OS X</a> or <a href="https://dl.dropboxusercontent.com/u/14391423/xpiks-qt-v1.0-beta.nightly.zip">Nightly package for Windows x64</a> and try the newest features.</p>
-
+-->
 <p>
 If you'd like to build Xpiks for your own platform, please, refer to <a href="{{site.url}}/blog/2014/building-xpiks-alone">this post</a>.
 </p>
