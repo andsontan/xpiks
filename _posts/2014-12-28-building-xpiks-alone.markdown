@@ -29,11 +29,11 @@ If you wish to redistribute it for similar desktop platforms to yours, follow ne
 - find macdeployqt, windeployqt or any similar tool in Qt bin directory
 - read help of *deployqt tool and execute it with necessary parameters to include qt frameworks which are needed for build as well as QML directories
 
-Sample macdeployqt command for OS X can be found lower: (depends on your build-* directory path)
+Sample macdeployqt command for OS X can be found below: (depends on your build-* directory path)
 
 `macdeployqt xpiks-qt.app -verbose=2 -dmg -executable=xpiks-qt.app/Contents/MacOS/xpiks-qt -qmldir=../ -qmldir=../Components/ -qmldir=../Constants/ -qmldir=../Dialogs/ -qmldir=../StyledControls/`
 
-And for Windows here:
+And for Windows as well:
 
 `windeployqt.exe --qmldir=../../xpiks-qt/Components/ --qmldir=../../xpiks-qt/Constants/ --qmldir=../../xpiks-qt/Dialogs/ --qmldir=../../xpiks-qt/StyledControls/ xpiks-qt.exe`
 
