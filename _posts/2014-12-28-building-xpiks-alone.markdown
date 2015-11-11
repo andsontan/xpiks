@@ -6,7 +6,7 @@ date: 2014-12-28T09:54:01+02:00
 
 Build instructions for your desktop platform:
 
-- download Qt 5.3 or 5.4 for your platform from <a href="http://qt.io/">official website</a>
+- download Qt 5.2 or higher for your platform from <a href="http://qt.io/">official website</a>
 - while installing, add Qt bin directory to your PATH (Environmental variables)
 - download source code in <a href="{{ site.url }}/downloads">Downloads</a> section or at the <a href="https://github.com/Ribtoks/xpiks">GitHub</a>
 - download source code or initialize the repository of tiny-AES (`git submodule init` and `git submodule update`)
