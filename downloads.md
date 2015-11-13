@@ -18,7 +18,7 @@ permalink: /downloads/
 </a>
 </div>
 
-<p>Download the Xpiks package from the link above, unpack and drag'n'drop it to the Applications. <strong>You will need to install the Exiftool to use Xpiks.</strong> Download and install Exiftool from the <a href="http://owl.phy.queensu.ca/%7Ephil/exiftool/">official website</a>.</p>
+<p>Download the Xpiks package from the link above, unpack and drag'n'drop it to the Applications. <strong>You will need to install the Exiftool to use Xpiks.</strong> Download and install <i>Exiftool</i> from the <a href="http://owl.phy.queensu.ca/%7Ephil/exiftool/">official website</a>.</p>
 
 <div style="clear:both; height: 25px;">&nbsp;</div>
 
@@ -46,7 +46,7 @@ permalink: /downloads/
 </a>
 </div>
 
-<p>Download the Xpiks package from the link above and install it with all dependencies. <strong>Package is only for Debian-based operating systems (Ubuntu, Debian, Mint, etc.) with x64 architecture.</strong></p>
+<p>Download the Xpiks package from the link above and install it with all dependencies. <strong>Also you have to manually install <i>qtdeclarative5-controls-plugin</i> and <i>qtdeclarative5-quicklayouts-plugin</i>. Package is only for Debian-based operating systems (Ubuntu, Debian, Mint, etc.) with x64 architecture.</strong></p>
 
 <div style="clear:both;height: 30px;">&nbsp;</div>
 
