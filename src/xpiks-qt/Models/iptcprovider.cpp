@@ -25,6 +25,9 @@
 #include "../Helpers/tempmetadatadb.h"
 #include "../Helpers/exiftoolwrapper.h"
 #include "artworkmetadata.h"
+#include "settingsmodel.h"
+#include "../Commands/commandmanager.h"
+#include "../Suggestion/locallibrary.h"
 
 namespace Models {
     IptcProvider::IptcProvider():
@@ -33,11 +36,11 @@ namespace Models {
     {
         m_MetadataWriter = new QFutureWatcher<ExportPair>(this);
         connect(m_MetadataWriter, SIGNAL(resultReadyAt(int)), SLOT(metadataExported(int)));
-        connect(m_MetadataWriter, SIGNAL(finished()), SLOT(allFinished()));
+        connect(m_MetadataWriter, SIGNAL(finished()), SLOT(allFinishedWriting()));
 
         m_MetadataReader = new QFutureWatcher<ImportPair>(this);
         connect(m_MetadataReader, SIGNAL(resultReadyAt(int)), SLOT(metadataImported(int)));
-        connect(m_MetadataReader, SIGNAL(finished()), SLOT(allFinished()));
+        connect(m_MetadataReader, SIGNAL(finished()), SLOT(allFinishedReading()));
     }
 
     void IptcProvider::metadataImported(int index)
@@ -54,36 +57,40 @@ namespace Models {
         metadataExportedHandler(metadata);
     }
 
-    void IptcProvider::allFinished() {
+    void IptcProvider::allFinishedReading() {
         endProcessing();
-        qDebug() << "Metadata processing finished (with Error = " << getIsError() << ")";
+        m_LocalLibrary->addToLibrary(getArtworkList());
+        m_LocalLibrary->saveLibraryAsync();
+        qDebug() << "Metadata reading finished (with Error = " << getIsError() << ")";
+    }
+
+    void IptcProvider::allFinishedWriting() {
+        endProcessing();
+        qDebug() << "Metadata writing finished (with Error = " << getIsError() << ")";
     }
 
     void IptcProvider::metadataImportedHandler(ImportPair importPair)
     {
         ArtworkMetadata *metadata = importPair.first;
         Models::ImportDataResult *importData = importPair.second;
+        Q_ASSERT(metadata != NULL);
 
-        if (metadata != NULL && importData != NULL) {
-            metadata->initialize(importData->Author, importData->Title, importData->Description, importData->Keywords);
+        if (importData != NULL) {
+            metadata->initialize(importData->Title, importData->Description, importData->Keywords);
+            qDebug() << metadata->getFilepath();
+            delete importData;
+        } else {
+            setIsError(true);
+        }
 
-            if (!m_IgnoreAutosave &&
-                    (importData->Description.isEmpty() || importData->Keywords.isEmpty())) {
+        if (!m_IgnoreAutosave) {
+            SettingsModel *settings = m_CommandManager->getSettingsModel();
+            if (settings->getSaveBackups()) {
                 Helpers::TempMetadataDb(metadata).load();
             }
         }
 
         incProgress();
-
-        if (NULL != metadata) {
-            qDebug() << metadata->getFilepath();
-        } else {
-            setIsError(true);
-        }
-
-        if (importData != NULL) {
-            delete importData;
-        }
     }
 
     void IptcProvider::metadataExportedHandler(ArtworkMetadata *metadata)
@@ -94,6 +101,12 @@ namespace Models {
             qDebug() << metadata->getFilepath();
         } else {
             setIsError(true);
+        }
+    }
+
+    void IptcProvider::cleanupLibrary() const {
+        if (m_LocalLibrary != NULL) {
+            m_LocalLibrary->cleanupLocalLibraryAsync();
         }
     }
 
@@ -111,15 +124,6 @@ namespace Models {
 
         beginProcessing();
 
-        ImportPair firstPair = pairs.takeFirst();
-        if (!(readArtworkMetadata(firstPair).first)) {
-            endAfterFirstError();
-            return;
-        }
-        else {
-            metadataImportedHandler(firstPair);
-        }
-
         if (pairs.length() > 0) {
             restrictMaxThreads();
             m_MetadataReader->setFuture(QtConcurrent::mapped(pairs, readArtworkMetadata));
@@ -134,6 +138,8 @@ namespace Models {
         if (artworksCount == 0) {
             return;
         }
+
+        m_LocalLibrary->saveLibraryAsync();
 
         beginProcessing();
 

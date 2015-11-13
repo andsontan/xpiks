@@ -25,6 +25,7 @@
 #include <QApplication>
 #include <QClipboard>
 #include <QObject>
+#include "../Common/defines.h"
 
 namespace Helpers {
     class ClipboardHelper : public QObject
@@ -36,7 +37,13 @@ namespace Helpers {
         }
 
         Q_INVOKABLE QString getText() {
-            return clipboard->text(QClipboard::Clipboard);
+            QString clipboardText = clipboard->text(QClipboard::Clipboard);
+
+            if (clipboardText.length() >= MAX_PASTE_SIZE) {
+                clipboardText = clipboardText.left(MAX_PASTE_SIZE);
+            }
+
+            return clipboardText;
         }
 
         Q_INVOKABLE void setText(const QString &text) {

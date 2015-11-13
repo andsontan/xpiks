@@ -22,36 +22,54 @@
 #include <QDebug>
 #include "artworkmetadata.h"
 #include "../Helpers/tempmetadatadb.h"
+#include "../Helpers/keywordvalidator.h"
+#include "settingsmodel.h"
 
 namespace Models {
-    bool ArtworkMetadata::initialize(const QString &author, const QString &title,
+    bool ArtworkMetadata::initialize(const QString &title,
                                      const QString &description, const QString &rawKeywords, bool overwrite) {
         bool anythingModified = false;
 
-        if (overwrite || (m_ArtworkAuthor.trimmed().isEmpty() && !author.isEmpty())) {
-            anythingModified = true;
-            m_ArtworkAuthor = author;
-        }
-
-        if (overwrite || (m_ArtworkTitle.trimmed().isEmpty() && !title.isEmpty())) {
+        if (overwrite || (m_ArtworkTitle.simplified().isEmpty() && !title.isEmpty())) {
             anythingModified = true;
             m_ArtworkTitle = title;
         }
 
-        if (overwrite || (m_ArtworkDescription.trimmed().isEmpty() && !description.isEmpty())) {
+        if (overwrite || (m_ArtworkDescription.simplified().isEmpty() && !description.isEmpty())) {
             anythingModified = true;
             m_ArtworkDescription = description;
         }
 
-        if (overwrite || (m_KeywordsList.empty() && !rawKeywords.isEmpty())) {
+        if (overwrite && !rawKeywords.isEmpty()) {
             anythingModified = true;
             beginResetModel();
             m_KeywordsList.clear();
             addKeywords(rawKeywords);
             endResetModel();
+        } else if (!rawKeywords.isEmpty()) {
+            QStringList keywordsToAppend = rawKeywords.split(",", QString::SkipEmptyParts);
+            int appendedCount = appendKeywords(keywordsToAppend);
+            anythingModified = appendedCount > 0;
         }
 
+        m_IsModified = false;
+
         return anythingModified;
+    }
+
+    bool ArtworkMetadata::isInDirectory(const QString &directory) const {
+        bool startsWith = m_ArtworkFilepath.startsWith(directory);
+        return startsWith;
+    }
+
+    bool ArtworkMetadata::isEmpty() const {
+        return m_KeywordsList.isEmpty() || m_ArtworkDescription.simplified().isEmpty();
+    }
+
+    void ArtworkMetadata::clearMetadata() {
+        setDescription("");
+        setTitle("");
+        resetKeywords();
     }
 
     bool ArtworkMetadata::removeKeywordAt(int index) {
@@ -74,7 +92,8 @@ namespace Models {
     bool ArtworkMetadata::appendKeyword(const QString &keyword) {
         bool added = false;
         const QString &sanitizedKeyword = keyword.simplified().toLower();
-        if (!sanitizedKeyword.isEmpty() && !m_KeywordsSet.contains(sanitizedKeyword)) {
+        bool isValid = Helpers::isValidKeyword(sanitizedKeyword);
+        if (isValid && !m_KeywordsSet.contains(sanitizedKeyword)) {
             int keywordsCount = m_KeywordsList.length();
 
             beginInsertRows(QModelIndex(), keywordsCount, keywordsCount);
@@ -89,10 +108,14 @@ namespace Models {
         return added;
     }
 
-    void ArtworkMetadata::appendKeywords(const QStringList &keywordsList) {
+    int ArtworkMetadata::appendKeywords(const QStringList &keywordsList) {
+        int appendedCount = 0;
         foreach (const QString &keyword, keywordsList) {
-            appendKeyword(keyword);
+            if (appendKeyword(keyword)) {
+                appendedCount += 1;
+            }
         }
+        return appendedCount;
     }
 
     void ArtworkMetadata::resetKeywords() {
@@ -110,12 +133,14 @@ namespace Models {
         for (int i = 0; i < keywordsList.size(); ++i) {
             const QString &keyword = keywordsList[i];
             m_KeywordsList.append(keyword);
-            m_KeywordsSet.insert(keyword.trimmed().toLower());
+            m_KeywordsSet.insert(keyword.simplified().toLower());
         }
     }
 
-    void ArtworkMetadata::saveBackup() {
-        Helpers::TempMetadataDb(this).flush();
+    void ArtworkMetadata::saveBackup(SettingsModel *settings) {
+        if (settings->getSaveBackups()) {
+            Helpers::TempMetadataDb(this).flush();
+        }
     }
 
     int ArtworkMetadata::rowCount(const QModelIndex &parent) const {

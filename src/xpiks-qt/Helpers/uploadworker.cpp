@@ -42,7 +42,7 @@ namespace Helpers {
         m_CurlProcess(NULL),
         m_Timer(NULL),
         m_Host(uploadItem->m_UploadInfo->getHost()),
-        m_PercentRegexp("[^0-9.]"),
+        m_PercentRegexp("[^0-9.,]"),
         m_Delay(delay),
         m_PercentDone(0.0),
         m_FilesUploaded(0),
@@ -71,16 +71,17 @@ namespace Helpers {
         int oneItemUploadMinutesTimeout = m_UploadItem->m_OneItemUploadMinutesTimeout;
         int maxSeconds = oneItemUploadMinutesTimeout * 60 * filesToUpload.length();
 
-        QString command = createCurlCommand(uploadInfo, filesToUpload, maxSeconds);
-
         // initializations can't be in constructor, because
         // it's executed in the other thread
         this->initializeUploadEntities();
+
+        updateUploadItemPercent(0);
 
         qDebug() << "Waiting for the semaphore" << m_Host;
         m_UploadSemaphore->acquire();
 
         QThread::sleep(m_Delay);
+        QString command = createCurlCommand(uploadInfo, filesToUpload, maxSeconds);
 
         // m_Cancelled check is only if this thread's cancel() preceds code below
         // for not releasing semaphore twice in innerProcessFinished() and cancel()
@@ -109,11 +110,15 @@ namespace Helpers {
 
     void UploadWorker::innerProcessFinished(int exitCode, QProcess::ExitStatus exitStatus)
     {
-        qDebug() << "Curl process finished for" << m_Host;
+        qDebug() << "Curl process finished for" << m_Host << "with code" << exitCode;
 
         if (!m_Cancelled) {
             qDebug() << "Releasing semaphore for" << m_Host;
             m_UploadSemaphore->release();
+        }
+
+        if (m_CurlProcess->exitStatus() != QProcess::NormalExit) {
+            qDebug() << "Error:" << m_UploadItem->m_CurlPath << m_CurlProcess->errorString();
         }
 
         QByteArray stdoutByteArray = m_CurlProcess->readAllStandardOutput();
@@ -135,11 +140,17 @@ namespace Helpers {
         QString output = m_CurlProcess->readAllStandardError();
         QString prettyfiedOutput = output.right(10).trimmed();
 
-        double percent = parsePercent(prettyfiedOutput);
-        bool anotherFileUploaded = qAbs(percent - 100.0) < 0.000000001;
+        int filePercent = parsePercent(prettyfiedOutput);
+        bool anotherFileUploaded = filePercent == 100;
 
+        double percent = filePercent;
         percent += m_FilesUploaded*100.0;
         percent /= (m_OverallFilesCount + 0.0);
+
+        if (percent > 100.0) {
+            qDebug() << "ERROR: percent is higher than 100. Last curl output is [" << output << "]. Percent is" << percent;
+            percent = 100.0;
+        }
 
         if (anotherFileUploaded) { m_FilesUploaded++; }
 
@@ -163,12 +174,17 @@ namespace Helpers {
             host = "ftp://" + host;
         }
 
+        // NOT THREAD-SAFE
         QString password = m_SecretsManager->decodePassword(uploadInfo->getPassword());
         QString command = QString("%1 --progress-bar --connect-timeout 10 --max-time %6 -T \"{%2}\" %3 --user %4:%5").
                 arg(curlPath, filesToUpload.join(','), host, uploadInfo->getUsername(), password, QString::number(maxSeconds));
 
         if (uploadInfo->getFtpPassiveMode()) {
             command += " --ftp-pasv --disable-epsv";
+        }
+
+        if (!m_UploadItem->m_ProxyURI.isEmpty()) {
+            command += " --proxy " + m_UploadItem->m_ProxyURI;
         }
 
         return command;
@@ -188,16 +204,19 @@ namespace Helpers {
         m_Timer->setSingleShot(true);
     }
 
-    double UploadWorker::parsePercent(QString &curlOutput) const
+    int UploadWorker::parsePercent(QString &curlOutput) const
     {
-        double value = 0.0;
+        int value = 0;
         if (curlOutput.endsWith("%")) {
             curlOutput.remove(m_PercentRegexp);
-            value = curlOutput.toDouble();
+
+            int i = 0, length = curlOutput.length();
+            while (i < length && curlOutput[i].isDigit()) ++i;
+            value = curlOutput.left(qMin(i, 3)).toInt();
         }
 
-        if (value < 0 || value > 100.0) {
-            value = 0.0;
+        if (value < 0 || value > 100) {
+            value = 0;
         }
 
         return value;

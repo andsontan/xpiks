@@ -29,41 +29,58 @@ import "../Constants"
 import "../Constants/Colors.js" as Colors
 
 TabView {
-    property double tabBarWidth: 2
+    property double tabBarHeight: 1
+    property double tabsHeight: 25
     property color backgroundColor: Colors.selectedArtworkColor
 
     style: TabViewStyle {
-        frameOverlap: -tabBarWidth
+        frameOverlap: -tabBarHeight
         tabOverlap: -2
 
         frame: Rectangle {
             color: backgroundColor
         }
 
+        leftCorner: Item {
+            implicitWidth: 5
+            implicitHeight: tabBarHeight
+        }
+
         tabBar : Rectangle {
             color: backgroundColor
 
-            CustomBorder {
-                commonBorder: false
-                //color: Colors.artworkActiveColor
-                borderColor: Colors.artworkActiveColor
-                lBorderwidth: 0
-                rBorderwidth: 0
-                tBorderwidth: 0
-                bBorderwidth: tabBarWidth
+            Rectangle {
+                anchors.bottom: parent.bottom
+                height: tabBarHeight
+                anchors.left: parent.left
+                anchors.right: parent.right
+                color: Colors.artworkActiveColor
             }
         }
 
         tab: Rectangle {
-            color: styleData.selected ? Colors.defaultControlColor : Colors.itemsSourceSelected
+            color: styleData.selected ? backgroundColor : Colors.itemsSourceSelected
             implicitWidth: Math.max(text.width + 10, 80)
-            implicitHeight: 25
+            implicitHeight: tabsHeight
+            border.color: Colors.artworkActiveColor
+            border.width: styleData.selected ? tabBarHeight : 0
 
             StyledText {
                 id: text
                 anchors.centerIn: parent
+                anchors.verticalCenterOffset: styleData.selected ? 1 : -1
                 text: styleData.title
-                color: styleData.hovered ? Colors.defaultLightColor : (styleData.selected ? Colors.artworkActiveColor : Colors.defaultInputBackground)
+                color: styleData.hovered ? Colors.artworkActiveColor : (styleData.selected ? Colors.defaultLightColor : Colors.defaultInputBackground)
+            }
+
+            Rectangle {
+                anchors.bottom: parent.bottom
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.leftMargin: styleData.selected ? 1 : 0
+                anchors.rightMargin: styleData.selected ? 1 : 0
+                color: styleData.selected ? backgroundColor : Colors.artworkActiveColor
+                height: tabBarHeight
             }
         }
     }

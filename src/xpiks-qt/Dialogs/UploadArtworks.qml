@@ -39,6 +39,9 @@ Item {
     property bool emptyPasswords: false
     property variant componentParent
 
+    signal dialogDestruction();
+    Component.onDestruction: dialogDestruction();
+
     function closePopup() {
         secretsManager.purgeMasterPassword()
         uploadInfos.finalizeAccounts()
@@ -64,10 +67,10 @@ Item {
             }
 
             filteredArtItemsModel.setSelectedForZipping()
-            Common.launchComponent("Dialogs/ZipArtworksDialog.qml",
-                            applicationWindow,
+            Common.launchDialog("Dialogs/ZipArtworksDialog.qml",
+                            uploadArtworksComponent.componentParent,
                                    {
-                                       componentParent: applicationWindow,
+                                       componentParent: uploadArtworksComponent.componentParent,
                                        immediateProcessing: true,
                                        callbackObject: callbackObject
                                    });
@@ -137,6 +140,7 @@ Item {
             anchors.fill: parent
             onWheel: wheel.accepted = true
             onClicked: mouse.accepted = true
+            onDoubleClicked: mouse.accepted = true
 
             property real old_x : 0
             property real old_y : 0
@@ -168,7 +172,7 @@ Item {
         Rectangle {
             id: dialogWindow
             width: 600
-            height: Qt.platform.os == "windows" ? 460 : 450
+            height: Qt.platform.os == "windows" ? 460 : (Qt.platform.os == "linux" ? 470 : 450)
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
@@ -195,11 +199,10 @@ Item {
                     }
                 }
 
-                Rectangle {
+                Item {
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                     enabled: !artworkUploader.inProgress
-                    color: "transparent"
 
                     ColumnLayout {
                         anchors.left: parent.left
@@ -278,6 +281,7 @@ Item {
                                                     }
 
                                                     uploadHostsListView.currentIndex = sourceWrapper.delegateIndex
+                                                    uploadInfos.updateProperties(sourceWrapper.delegateIndex)
                                                 }
                                             }
 
@@ -370,18 +374,18 @@ Item {
                         }
                     }
 
-                    Rectangle {
+                    Item {
                         anchors.top: parent.top
                         anchors.leftMargin: 10
                         anchors.left: uploadInfosStack.right
                         anchors.right: parent.right
                         width: 280
-                        color: "transparent"
                         height: Qt.platform.os == "windows" ? parent.height + 10 : parent.height
 
                         StyledTabView {
                             anchors.fill: parent
                             anchors.leftMargin: 10
+                            anchors.topMargin: 1
                             enabled: uploadInfos.infosCount > 0
 
                             Tab {
@@ -608,7 +612,7 @@ Item {
 
                                     StyledCheckbox {
                                         id: zipBeforeUploadCheckBox
-                                        text: qsTr("Zip with EPS before upload")
+                                        text: qsTr("Zip with vector (eps/ai) before upload")
                                         Component.onCompleted: checked = uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.zipbeforeupload : false
 
                                         onClicked: {
@@ -695,8 +699,12 @@ Item {
                             cursorShape: Qt.PointingHandCursor
                             onClicked: {
                                 if (warningsManager.warningsCount > 0) {
-                                    Common.launchComponent("Dialogs/WarningsDialog.qml",
-                                                           uploadArtworksComponent.componentParent, {});
+                                    Common.launchDialog("Dialogs/WarningsDialog.qml",
+                                                           uploadArtworksComponent.componentParent,
+                                                        {
+                                                            componentParent: uploadArtworksComponent.componentParent,
+                                                            isRestricted: true
+                                                        });
                                 }
                             }
                         }

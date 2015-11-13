@@ -29,6 +29,8 @@
 #include <QSet>
 
 namespace Models {
+    class SettingsModel;
+
     class ArtworkMetadata : public QAbstractListModel {
         Q_OBJECT
     public:
@@ -47,11 +49,10 @@ namespace Models {
         };
 
     public:
-        bool initialize(const QString &author, const QString &title,
+        bool initialize(const QString &title,
                         const QString &description, const QString &rawKeywords, bool overwrite = true);
 
     public:
-        const QString &getAuthor() const { return m_ArtworkAuthor; }
         const QString &getTitle() const { return m_ArtworkTitle; }
         const QString &getDescription() const { return m_ArtworkDescription; }
         const QString &getFilepath() const { return m_ArtworkFilepath; }
@@ -60,24 +61,17 @@ namespace Models {
         const QStringList &getKeywords() const { return m_KeywordsList; }
         const QSet<QString> &getKeywordsSet() const { return m_KeywordsSet; }
         QString getKeywordsString() const { return m_KeywordsList.join(','); }
-        bool isInDirectory(const QString &directory) const { return m_ArtworkFilepath.startsWith(directory); }
+        bool isInDirectory(const QString &directory) const;
         bool isModified() const { return m_IsModified; }
         bool getIsSelected() const { return m_IsSelected; }
+        bool isEmpty() const;
+        void clearMetadata();
 
     public:
         bool setDescription(const QString &value) {
             bool result = m_ArtworkDescription != value;
             if (result) {
                 m_ArtworkDescription = value;
-                setModified();
-            }
-            return result;
-        }
-
-        bool setAuthor(const QString &value) {
-            bool result = m_ArtworkAuthor != value;
-            if (result) {
-                m_ArtworkAuthor = value;
                 setModified();
             }
             return result;
@@ -111,7 +105,7 @@ namespace Models {
 
     public:
         void setKeywords(const QStringList &keywordsList) { resetKeywords(); appendKeywords(keywordsList); }
-        void appendKeywords(const QStringList &keywordsList);
+        int appendKeywords(const QStringList &keywordsList);
 
     private:
         void resetKeywords();
@@ -120,7 +114,7 @@ namespace Models {
         void addKeywords(const QString& rawKeywords);
         void setModified() { m_IsModified = true; emit modifiedChanged(m_IsModified); }
         void unsetModified() { m_IsModified = false; }
-        void saveBackup();
+        void saveBackup(SettingsModel *settings);
 
     signals:
          void modifiedChanged(bool newValue);
@@ -128,11 +122,11 @@ namespace Models {
          void fileSelectedChanged(const QString &filepath, bool newValue);
 
     public:
-        int rowCount(const QModelIndex & parent = QModelIndex()) const;
-        QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+        virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
+        virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
 
     protected:
-        QHash<int, QByteArray> roleNames() const;
+        virtual QHash<int, QByteArray> roleNames() const;
 
     private:
          QStringList m_KeywordsList;
@@ -140,7 +134,6 @@ namespace Models {
          QString m_ArtworkFilepath;
          QString m_ArtworkDescription;
          QString m_ArtworkTitle;
-         QString m_ArtworkAuthor;
          volatile bool m_IsModified;
          volatile bool m_IsSelected;
     };

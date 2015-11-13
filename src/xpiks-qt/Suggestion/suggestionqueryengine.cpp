@@ -25,10 +25,15 @@
 #include <QJsonObject>
 #include <QByteArray>
 #include <QString>
+#include <QThread>
 #include "suggestionqueryengine.h"
 #include "suggestionartwork.h"
 #include "keywordssuggestor.h"
 #include "../Encryption/aes-qt.h"
+#include "libraryqueryworker.h"
+#include "locallibrary.h"
+
+#define MAX_LOCAL_RESULTS 100
 
 namespace Suggestion {
     SuggestionQueryEngine::SuggestionQueryEngine(KeywordsSuggestor *keywordsSuggestor):
@@ -59,6 +64,26 @@ namespace Suggestion {
                          reply, SLOT(abort()));
     }
 
+    void SuggestionQueryEngine::submitLocalQuery(LocalLibrary *localLibrary, const QStringList &queryKeywords) {
+        LibraryQueryWorker *worker = new LibraryQueryWorker(localLibrary, queryKeywords, MAX_LOCAL_RESULTS);
+        QThread *thread = new QThread();
+        worker->moveToThread(thread);
+
+        QObject::connect(thread, SIGNAL(started()), worker, SLOT(process()));
+        QObject::connect(worker, SIGNAL(stopped()), thread, SLOT(quit()));
+
+        QObject::connect(worker, SIGNAL(stopped()), worker, SLOT(deleteLater()));
+        QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+
+        QObject::connect(this, SIGNAL(cancelAllQueries()),
+                         worker, SLOT(cancel()));
+
+        QObject::connect(worker, SIGNAL(resultsFound(QList<SuggestionArtwork*> *)),
+                         this, SLOT(artworksFound(QList<SuggestionArtwork*> *)));
+
+        thread->start();
+    }
+
     void SuggestionQueryEngine::cancelQueries() {
         emit cancelAllQueries();
     }
@@ -80,6 +105,11 @@ namespace Suggestion {
 
         m_Suggestor->unsetInProgress();
         networkReply->deleteLater();
+    }
+
+    void SuggestionQueryEngine::artworksFound(QList<SuggestionArtwork *> *suggestions) {
+        m_Suggestor->setSuggestedArtworks(*suggestions);
+        delete suggestions;
     }
 
     void SuggestionQueryEngine::parseResponse(const QJsonArray &jsonArray, QList<SuggestionArtwork*> &suggestionArtworks) {

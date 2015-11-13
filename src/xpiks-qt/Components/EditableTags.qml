@@ -30,11 +30,18 @@ import "../StyledControls"
 Flickable {
     id: flowListView
     anchors.fill: parent
-    anchors.rightMargin: 20
-    contentWidth: parent.width - 20
-    contentHeight: flow.childrenRect.height + 10
+    anchors.leftMargin: 5
+    anchors.topMargin: 5
+    anchors.bottomMargin: 5
+    contentWidth: parent.width
+    contentHeight: flow.childrenRect.height
     boundsBehavior: Flickable.StopAtBounds
+    flickableDirection: Flickable.VerticalFlick
+    rightMargin: 10
+    interactive: false
+    clip: true
 
+    property int scrollStep: 10
     property alias count: repeater.count
     property int currentIndex: -1
     property variant currentItem;
@@ -43,44 +50,58 @@ Flickable {
     property alias model: repeater.model
     property alias isFocused: nextTagTextInput.activeFocus
     property alias editEnabled: editWrapper.enabled
+    property int flowSpacing: 5
+    property bool stealWheel: true
 
     signal tagAdded(string text)
     signal removeLast()
     signal focusLost()
     signal tagsPasted(var tagsList)
+    signal copyRequest();
 
     function activateEdit() {
-        nextTagTextInput.forceActiveFocus()
-    }
-
-    function getSanitizedText(text) {
-        return text.replace(/^\s+|\s+$|-$/g, '');
+        if (editEnabled && !nextTagTextInput.activeFocus) {
+            scrollToBottom()
+            nextTagTextInput.forceActiveFocus()
+        }
     }
 
     function getEditedText() {
         var tagText = nextTagTextInput.text;
-        return getSanitizedText(tagText);
-    }
-
-    function canBeTag(tag) {
-        return (getCharsCount(tag) > 2) &&
-                (tag.match(/^(?:[a-zA-Z]+(?:-| |$))+$/));
+        return helpersWrapper.sanitizeKeyword(tagText);
     }
 
     function raiseAddTag(text) {
-        var sanitizedTagText = getSanitizedText(text);
-        if (canBeTag(sanitizedTagText)) {
-            tagAdded(sanitizedTagText);
+        var canBeAdded = helpersWrapper.isKeywordValid(text);
+        if (canBeAdded) {
+            tagAdded(text);
+        }
+        return canBeAdded;
+    }
+
+    function scrollDown () {
+        var flickable = flowListView;
+        if (flowListView.contentHeight >= flowListView.height) {
+            flickable.contentY = Math.min (flickable.contentY + scrollStep + flowSpacing, flickable.contentHeight - flickable.height);
+
+            var lines = Math.floor(flickable.contentY / (scrollStep + flowSpacing));
+            flickable.contentY = lines*(scrollStep + flowSpacing)
         }
     }
 
-    function getCharsCount(text) {
-        return (text.match(/[a-zA-Z]/g) || []).length
+    function scrollUp () {
+        var flickable = flowListView;
+        if (flowListView.contentHeight >= flowListView.height) {
+            flickable.contentY = Math.max (flickable.contentY - scrollStep - flowSpacing, 0);
+
+            var lines = Math.floor(flickable.contentY / (scrollStep + flowSpacing));
+            flickable.contentY = lines*(scrollStep + flowSpacing)
+        }
     }
 
     function scrollToBottom() {
-        if (flowListView.contentHeight - 10 >= flowListView.height) {
-            flowListView.contentY = flowListView.contentHeight - 10 - flowListView.height
+        if (flowListView.contentHeight >= flowListView.height) {
+            flowListView.contentY = flowListView.contentHeight - flowListView.height
         }
     }
 
@@ -94,10 +115,54 @@ Flickable {
         repeater.update()
     }
 
+    function removeFocus() {
+        nextTagTextInput.focus = false
+    }
+
+    MouseArea {
+        anchors.left: parent.left
+        anchors.top: parent.top
+        width: parent.width
+        height: flowListView.contentHeight > flowListView.height ? flowListView.contentHeight : flowListView.height
+        onClicked: {
+            activateEdit()
+            mouse.accepted = false
+        }
+
+        propagateComposedEvents: true
+        preventStealing: true
+
+        onWheel: {
+            if (!stealWheel && !nextTagTextInput.activeFocus || flowListView.height >= flowListView.contentHeight) {
+                wheel.accepted = false
+                return
+            }
+
+            if (wheel.angleDelta.y < 0) {
+                var maxScrollPos = flowListView.contentHeight - flowListView.height
+                if (Math.abs(flowListView.contentY - maxScrollPos) > scrollStep) {
+                    scrollDown()
+                } else {
+                    scrollToBottom()
+                    wheel.accepted = false
+                }
+            } else {
+                if (flowListView.contentY > scrollStep) {
+                    scrollUp()
+                } else {
+                    flowListView.contentY = 0
+                    wheel.accepted = false
+                }
+            }
+        }
+    }
+
     Flow {
         id: flow
-        width: parent.width
-        spacing: 5
+        anchors.right: parent.right
+        anchors.rightMargin: 10
+        anchors.left: parent.left
+        spacing: flowSpacing
 
         property real lastHeight
 
@@ -138,7 +203,7 @@ Flickable {
         Item {
             id: editWrapper
             width: 100
-            height: 20
+            height: 20*settingsModel.keywordSizeScale
 
             TextInput {
                 id: nextTagTextInput
@@ -147,23 +212,25 @@ Flickable {
                 selectionColor: Colors.defaultControlColor
                 selectByMouse: true
                 anchors.left: parent.left
-                anchors.verticalCenter: parent.verticalCenter
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
                 color: Colors.defaultLightColor
-                focus: true
                 font.family: "Helvetica"
-                font.pixelSize: 12
+                font.pixelSize: 12*settingsModel.keywordSizeScale
+                verticalAlignment: TextInput.AlignVCenter
                 renderType: TextInput.NativeRendering
+                focus: true
 
-                validator: RegExpValidator {
+                /*validator: RegExpValidator {
                     // copy paste in keys.onpressed Paste
-                    regExp: /^(?:[a-zA-Z]+(?:-| |$))+$/
-                }
+                    regExp: /^(?:\c+(?:-| |$))+$/
+                }*/
+
+                //onFocusChanged: focusLost()
 
                 onEditingFinished: {
                     var tagText = getEditedText();
-                    raiseAddTag(tagText);
-
-                    if (getCharsCount(tagText) > 2) {
+                    if (raiseAddTag(tagText)) {
                         nextTagTextInput.text = '';
                     }
 
@@ -176,10 +243,10 @@ Flickable {
                         clipboardText = clipboardText.replace(/(\r\n|\n|\r)/gm, '');
                         var keywordsToAdd = [];
 
-                        var words = clipboardText.split(',');
+                        var words = clipboardText.split(/,|;/);
                         for (var i = 0; i < words.length; i++) {
-                            var sanitizedTagText = getSanitizedText(words[i]);
-                            if (canBeTag(sanitizedTagText)) {
+                            var sanitizedTagText = helpersWrapper.sanitizeKeyword(words[i]);
+                            if (helpersWrapper.isKeywordValid(sanitizedTagText)) {
                                 keywordsToAdd.push(sanitizedTagText);
                             }
                         }
@@ -188,10 +255,13 @@ Flickable {
 
                         event.accepted = true;
                     }
+                    else if (event.matches(StandardKey.Copy)) {
+                        copyRequest()
+                        event.accepted = true
+                    }
                     else if (event.key === Qt.Key_Comma) {
                         var tagText = getEditedText();
-                        if (getCharsCount(tagText) > 2) {
-                            raiseAddTag(tagText);
+                        if (raiseAddTag(tagText)) {
                             nextTagTextInput.text = '';
                         }
 

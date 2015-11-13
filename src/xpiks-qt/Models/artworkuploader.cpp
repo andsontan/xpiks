@@ -32,14 +32,15 @@
 #include "../Helpers/testconnectionresult.h"
 #include "../Helpers/uploadcoordinator.h"
 #include "../Commands/commandmanager.h"
+#include "../Models/settingsmodel.h"
 
 namespace Models {
-    ArtworkUploader::ArtworkUploader() :
+    ArtworkUploader::ArtworkUploader(int maxParallelUploads) :
         ArtworksProcessor(),
         m_IncludeVector(false),
         m_Percent(0)
     {
-        m_UploadCoordinator = new Helpers::UploadCoordinator();
+        m_UploadCoordinator = new Helpers::UploadCoordinator(maxParallelUploads);
 
         QObject::connect(m_UploadCoordinator, SIGNAL(uploadStarted()), this, SLOT(onUploadStarted()));
         QObject::connect(m_UploadCoordinator, SIGNAL(uploadFinished(bool)), this, SLOT(allFinished(bool)));
@@ -97,9 +98,9 @@ namespace Models {
 
     void ArtworkUploader::uploadArtworks() { doUploadArtworks(getArtworkList()); }
 
-    void ArtworkUploader::checkCredentials(const QString &host, const QString &username, const QString &password) const
-    {
-        m_TestingCredentialWatcher->setFuture(QtConcurrent::run(isConnectionValid, host, username, password));
+    void ArtworkUploader::checkCredentials(const QString &host, const QString &username, const QString &password) const {
+        const QString &curlPath = m_CommandManager->getSettingsModel()->getCurlPath();
+        m_TestingCredentialWatcher->setFuture(QtConcurrent::run(isConnectionValid, host, username, password, curlPath));
     }
 
     bool ArtworkUploader::needCreateArchives() const {
@@ -141,9 +142,11 @@ namespace Models {
         UploadInfoRepository *uploadInfoRepository = m_CommandManager->getUploadInfoRepository();
         const QList<Models::UploadInfo *> &infos = uploadInfoRepository->getUploadInfos();
         const Encryption::SecretsManager *secretsManager = m_CommandManager->getSecretsManager();
+        const Models::SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
 
         uploadInfoRepository->resetPercents();
-        m_UploadCoordinator->uploadArtworks(artworkList, infos, m_IncludeVector, secretsManager);
+        uploadInfoRepository->updatePercentages();
+        m_UploadCoordinator->uploadArtworks(artworkList, infos, m_IncludeVector, secretsManager, settingsModel);
     }
 
     void ArtworkUploader::cancelProcessing() {

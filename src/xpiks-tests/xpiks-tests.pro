@@ -4,6 +4,8 @@
 #
 #-------------------------------------------------
 
+QMAKE_MAC_SDK = macosx10.11
+
 QT       += core testlib qml quick concurrent
 
 QT       -= gui
@@ -46,7 +48,11 @@ SOURCES += main.cpp \
     ../xpiks-qt/Encryption/aes-qt.cpp \
     removecommand_tests.cpp \
     vectorfilenames_tests.cpp \
-    ../xpiks-qt/Helpers/filenameshelpers.cpp
+    ../xpiks-qt/Helpers/filenameshelpers.cpp \
+    ../xpiks-qt/Helpers/helpersqmlwrapper.cpp \
+    ../xpiks-qt/Models/recentdirectoriesmodel.cpp \
+    ../xpiks-qt/Helpers/keywordvalidator.cpp \
+    ../xpiks-qt/Common/flags.cpp
 
 HEADERS += \
     encryption_tests.h \
@@ -82,7 +88,11 @@ HEADERS += \
     removecommand_tests.h \
     ../xpiks-qt/Common/basickeywordsmodel.h \
     vectorfilenames_tests.h \
-    ../xpiks-qt/Helpers/filenameshelpers.h
+    ../xpiks-qt/Helpers/filenameshelpers.h \
+    ../xpiks-qt/Helpers/helpersqmlwrapper.h \
+    ../xpiks-qt/Models/recentdirectoriesmodel.h \
+    ../xpiks-qt/Helpers/keywordvalidator.h \
+    ../xpiks-qt/Common/flags.h
 
 macx {
 OBJECTIVE_SOURCES += \

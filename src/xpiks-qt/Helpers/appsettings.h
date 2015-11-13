@@ -73,6 +73,33 @@ namespace Helpers {
         Q_PROPERTY(QString useConfirmationDialogsKey READ getUseConfirmationDialogsKey CONSTANT)
         QString getUseConfirmationDialogsKey() const { return QString::fromLatin1(Constants::USE_CONFIRMATION_DIALOGS); }
 
+        Q_PROPERTY(QString saveBackupsKey READ getSaveBackupsKey CONSTANT)
+        QString getSaveBackupsKey() const { return QString::fromLatin1(Constants::SAVE_BACKUPS); }
+
+        Q_PROPERTY(QString keywordSizeScale READ getKeywordSizeScaleKey CONSTANT)
+        QString getKeywordSizeScaleKey() const { return QString::fromLatin1(Constants::KEYWORD_SIZE_SCALE); }
+
+        Q_PROPERTY(QString recentDirectoriesKey READ getRecentDirectoriesKey CONSTANT)
+        QString getRecentDirectoriesKey() const { return QString::fromLatin1(Constants::RECENT_DIRECTORIES); }
+
+        Q_PROPERTY(QString dismissDurationKey READ getDismissDurationKey CONSTANT)
+        QString getDismissDurationKey() const { return QString::fromLatin1(Constants::DISMISS_DURATION); }
+
+        Q_PROPERTY(QString maxParallelUploadsKey READ getMaxParallelUploadsKey CONSTANT)
+        QString getMaxParallelUploadsKey() const { return QString::fromLatin1(Constants::MAX_PARALLEL_UPLOADS); }
+
+        Q_PROPERTY(QString proxyURIKey READ getProxyURIKey CONSTANT)
+        QString getProxyURIKey() const { return QString::fromLatin1(Constants::PROXY_URI); }
+
+        Q_PROPERTY(QString fitSmallPreviewKey READ getFitSmallPreviewKey CONSTANT)
+        QString getFitSmallPreviewKey() const { return QString::fromLatin1(Constants::FIT_SMALL_PREVIEW); }
+
+        Q_PROPERTY(QString searchUsingAndKey READ getSearchUsingAndKey CONSTANT)
+        QString getSearchUsingAndKey() const { return QString::fromLatin1(Constants::SEARCH_USING_AND); }
+
+        Q_PROPERTY(QString scrollSpeedScaleKey READ getScrollSpeedScaleKey CONSTANT)
+        QString getScrollSpeedScaleKey() const { return QString::fromLatin1(Constants::SCROLL_SPEED_SCALE); }
+
         Q_INVOKABLE inline void setValue(const QString &key, const QVariant &value) {
             QSettings::setValue(key, value);
         }
@@ -83,6 +110,10 @@ namespace Helpers {
 
         Q_INVOKABLE inline bool boolValue(const QString &key, const QVariant &defaultValue = QVariant()) const {
             return QSettings::value(key, defaultValue).toBool();
+        }
+
+        Q_INVOKABLE inline double doubleValue(const QString &key, const QVariant &defaultValue = QVariant()) const {
+            return QSettings::value(key, defaultValue).toDouble();
         }
     };
 }

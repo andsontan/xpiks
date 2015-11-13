@@ -32,13 +32,16 @@ ApplicationWindow {
     id: aboutWindow
     modality: "ApplicationModal"
     width: 250
-    height: 150
+    height: Qt.platform.os === "linux" ? 180 : 150
     minimumWidth: width
     maximumWidth: width
     minimumHeight: height
     maximumHeight: height
     flags: Qt.Dialog
     title: qsTr("About")
+
+    signal dialogDestruction();
+    Component.onDestruction: dialogDestruction();
 
     function closeAbout() {
         aboutWindow.destroy();
@@ -47,6 +50,9 @@ ApplicationWindow {
     Rectangle {
         color: Colors.selectedArtworkColor
         anchors.fill: parent
+
+        Component.onCompleted: focus = true
+        Keys.onEscapePressed: closeAbout()
 
         ColumnLayout {
             anchors.centerIn: parent
@@ -75,11 +81,10 @@ ApplicationWindow {
                 height: 10
             }
 
-            Rectangle {
-                height: 50
+            Item {
+                height: Qt.platform.os === "linux" ? 80 : 50
                 width: 220
                 anchors.margins: 10
-                color: "transparent"
 
                 StyledText {
                     wrapMode: TextEdit.Wrap

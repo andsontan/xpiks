@@ -27,29 +27,33 @@
 #include <QtMath>
 #include "../Models/artworkmetadata.h"
 #include "uploaditem.h"
-#include "externaltoolsprovider.h"
 #include "uploadworker.h"
 #include "../Helpers/ziphelper.h"
 #include "../Helpers/filenameshelpers.h"
+#include "../Models/settingsmodel.h"
 
 namespace Helpers {
     void UploadCoordinator::uploadArtworks(const QList<Models::ArtworkMetadata *> &artworkList,
                                            const QList<Models::UploadInfo *> &uploadInfos,
-                                           bool includeVector, const Encryption::SecretsManager *secretsManager)
+                                           bool includeVector,
+                                           const Encryption::SecretsManager *secretsManager,
+                                           const Models::SettingsModel *settings)
     {
         QStringList filePathes;
         QStringList zipsPathes;
         extractFilePathes(artworkList, filePathes, zipsPathes, includeVector);
 
         QList<UploadItem*> uploadItems;
-        const QString &curlPath = Helpers::ExternalToolsProvider::getCurlPath();
-        int oneItemUploadTimeout = Helpers::ExternalToolsProvider::getOneItemUploadMinutesTimeout();
+        const QString &curlPath = settings->getCurlPath();
+        const QString &proxy = settings->getProxyURI();
+        int oneItemUploadTimeout = settings->getUploadTimeout();
 
         foreach (Models::UploadInfo *info, uploadInfos) {
             if (info->getIsSelected()) {
                 UploadItem *item;
                 bool useZips = info->getZipBeforeUpload();
-                item = new UploadItem(info, useZips ? zipsPathes : filePathes, oneItemUploadTimeout, curlPath);
+                // TODO: refactor this to pass only settings
+                item = new UploadItem(info, useZips ? zipsPathes : filePathes, oneItemUploadTimeout, curlPath, proxy);
                 uploadItems.append(item);
             }
         }
@@ -88,7 +92,7 @@ namespace Helpers {
         emit itemFinished(success);
 
         if (allWorkersFinished) {
-            Q_ASSERT(m_UploadSemaphore.available() == MAX_PARALLEL_UPLOAD);
+            Q_ASSERT(m_UploadSemaphore.available() == m_MaxParallelUploads);
             emit percentChanged(100);
             m_PercentDone = 100;
             emit uploadFinished(!m_AnyFailed);
@@ -99,7 +103,7 @@ namespace Helpers {
     void UploadCoordinator::percentReported(double newPercent, double oldPercent)
     {
         double n = m_UploadThreads.length();
-        if (n == 0) { n = 1.0; }
+        if (m_UploadThreads.empty()) { n = 1.0; }
         int percentDone = 0;
 
         m_PercentMutex.lock();

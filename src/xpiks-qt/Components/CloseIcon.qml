@@ -26,42 +26,48 @@ import "../Constants/Colors.js" as Colors
 Item {
     id: item
     property bool isActive
+    property bool isPlus
+    property int thickness: 3
 
     signal itemClicked();
 
-    Rectangle {
+    Item {
+        id: wrapperRect
         anchors.fill: parent
-        color: "transparent"
-        opacity: mouseArea.containsMouse ? 1 : 0.8
+        opacity: closeIconMouseArea.containsMouse ? 1 : 0.8
 
-        Rectangle {
-            color: enabled ? (mouseArea.pressed ? Colors.artworkModifiedColor : (isActive ? Colors.defaultControlColor : Colors.defaultLightColor)) : Colors.selectedArtworkColor
-            width: parent.width - 2
-            height: 3
-            border.width: 1
-            border.color: color
-            radius: 2
-            transformOrigin: Item.Center
-            rotation: 45
-            anchors.centerIn: parent
+        function getPressColor() {
+            if (closeIconMouseArea.pressed) {
+                return Colors.artworkModifiedColor;
+            } else {
+                return isActive ? Colors.defaultControlColor : Colors.defaultLightColor;
+            }
         }
 
         Rectangle {
-            color: enabled ? (mouseArea.pressed ? Colors.artworkModifiedColor : (isActive ? Colors.defaultControlColor : Colors.defaultLightColor)) : Colors.selectedArtworkColor
-            width: parent.width - 2
-            height: 3
-            radius: 2
-            border.width: 1
-            border.color: color
+            color: enabled ? wrapperRect.getPressColor() : Colors.selectedArtworkColor
+            width: isPlus ? parent.width - 2 : parent.width
+            height: item.thickness
+            radius: item.thickness/2
             transformOrigin: Item.Center
-            rotation: 135
-            anchors.centerIn: parent
+            rotation: isPlus ? 90 : 45
+            transform: Translate { y: (width - thickness)/2 }
         }
 
-        scale: mouseArea.pressed ? 0.8 : 1
+        Rectangle {
+            color: enabled ? wrapperRect.getPressColor() : Colors.selectedArtworkColor
+            width: isPlus ? parent.width - 2 : parent.width
+            height: item.thickness
+            radius: item.thickness/2
+            transformOrigin: Item.Center
+            rotation: isPlus ? 0 : 135
+            transform: Translate { y: (width - thickness)/2 }
+        }
+
+        scale: closeIconMouseArea.pressed ? 0.8 : 1
 
         MouseArea {
-            id: mouseArea
+            id: closeIconMouseArea
             anchors.fill: parent
             hoverEnabled: true
             preventStealing: true

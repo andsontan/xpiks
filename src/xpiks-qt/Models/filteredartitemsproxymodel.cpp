@@ -24,7 +24,23 @@
 #include "artworkmetadata.h"
 #include "artworksrepository.h"
 #include "artiteminfo.h"
+#include "settingsmodel.h"
 #include "../Commands/commandmanager.h"
+#include "../Commands/combinededitcommand.h"
+#include "../Common/flags.h"
+
+bool containsOneTerm(const QStringList &keywords, const QString &term) {
+    bool containsTerm = false;
+
+    foreach (const QString &keyword, keywords) {
+        if (keyword.contains(term, Qt::CaseInsensitive)) {
+            containsTerm = true;
+            break;
+        }
+    }
+
+    return containsTerm;
+}
 
 namespace Models {
     FilteredArtItemsProxyModel::FilteredArtItemsProxyModel(QObject *parent) :
@@ -38,9 +54,11 @@ namespace Models {
         if (value != m_SearchTerm) {
             m_SearchTerm = value;
             emit searchTermChanged(value);
-            invalidateFilter();
             forceUnselectAllItems();
         }
+
+        invalidateFilter();
+        emit afterInvalidateFilter();
     }
 
     int FilteredArtItemsProxyModel::getOriginalIndex(int index) {
@@ -106,7 +124,9 @@ namespace Models {
     void FilteredArtItemsProxyModel::setSelectedForUpload() {
         QList<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
         m_CommandManager->setArtworksForUpload(selectedArtworks);
-        emit needCheckItemsForWarnings(selectedArtworks);
+
+        QList<ArtItemInfo *> selectedArtworksWithIndices = getSelectedOriginalItemsWithIndices();
+        emit needCheckItemsForWarnings(selectedArtworksWithIndices);
     }
 
     void FilteredArtItemsProxyModel::setSelectedForZipping() {
@@ -139,9 +159,55 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::checkForWarnings() {
-        ArtItemsModel *artItemsModel = getArtItemsModel();
+        QList<ArtItemInfo *> selectedArtworks = getSelectedOriginalItemsWithIndices();
+
+        if (selectedArtworks.isEmpty()) {
+            selectedArtworks = getAllItemsWithIndices();
+        }
+
+        emit needCheckItemsForWarnings(selectedArtworks);
+    }
+
+    void FilteredArtItemsProxyModel::reimportMetadataForSelected() {
         QList<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
-        artItemsModel->checkForWarnings(selectedArtworks);
+        m_CommandManager->setArtworksForIPTCProcessing(selectedArtworks);
+        ArtItemsModel *artItemsModel = getArtItemsModel();
+        artItemsModel->raiseArtworksAdded(selectedArtworks.count());
+    }
+
+    int FilteredArtItemsProxyModel::findSelectedItemIndex() const {
+        int index = -1;
+        QList<int> indices = getSelectedOriginalIndices();
+        if (indices.length() == 1) {
+            index = indices.first();
+        }
+
+        return index;
+    }
+
+    void FilteredArtItemsProxyModel::removeMetadataInSelected() const {
+        QList<ArtItemInfo *> selectedArtworks = getSelectedOriginalItemsWithIndices();
+
+        int flags = 0;
+        Common::SetFlag(flags, Common::EditDesctiption);
+        Common::SetFlag(flags, Common::EditKeywords);
+        Common::SetFlag(flags, Common::EditTitle);
+
+        const QString empty = "";
+
+        Commands::CombinedEditCommand *combinedEditCommand = new Commands::CombinedEditCommand(
+                    flags,
+                    selectedArtworks,
+                    empty,
+                    empty,
+                    QStringList());
+
+        Commands::CommandResult *result = m_CommandManager->processCommand(combinedEditCommand);
+        Commands::CombinedEditCommandResult *combinedResult = static_cast<Commands::CombinedEditCommandResult*>(result);
+        m_CommandManager->updateArtworks(combinedResult->m_IndicesToUpdate);
+
+        delete combinedResult;
+        qDeleteAll(selectedArtworks);
     }
 
     void FilteredArtItemsProxyModel::itemSelectedChanged(bool value) {
@@ -215,6 +281,27 @@ namespace Models {
         return selectedArtworks;
     }
 
+    QList<ArtItemInfo *> FilteredArtItemsProxyModel::getAllItemsWithIndices() const {
+        ArtItemsModel *artItemsModel = getArtItemsModel();
+        QList<ArtItemInfo *> selectedArtworks;
+
+        int size = this->rowCount();
+        for (int row = 0; row < size; ++row) {
+            QModelIndex proxyIndex = this->index(row, 0);
+            QModelIndex originalIndex = this->mapToSource(proxyIndex);
+
+            int index = originalIndex.row();
+            ArtworkMetadata *metadata = artItemsModel->getArtwork(index);
+
+            if (metadata != NULL) {
+                ArtItemInfo *info = new ArtItemInfo(metadata, index);
+                selectedArtworks.append(info);
+            }
+        }
+
+        return selectedArtworks;
+    }
+
     QList<int> FilteredArtItemsProxyModel::getSelectedOriginalIndices() const {
         ArtItemsModel *artItemsModel = getArtItemsModel();
         QList<int> selectedIndices;
@@ -248,38 +335,125 @@ namespace Models {
         return artItemsModel;
     }
 
+    bool FilteredArtItemsProxyModel::fitsSpecialKeywords(const QString &searchTerm, const ArtworkMetadata *metadata) const {
+        bool hasMatch = false;
+
+        if (searchTerm == "x:modified") {
+            hasMatch = metadata->isModified();
+        } else if (searchTerm == "x:empty") {
+            hasMatch = metadata->isEmpty();
+        } else if (searchTerm == "x:selected") {
+            hasMatch = metadata->getIsSelected();
+        }
+
+        return hasMatch;
+    }
+
+    bool FilteredArtItemsProxyModel::containsPartsSearch(const ArtworkMetadata *metadata) const {
+        bool hasMatch = false;
+        Models::SettingsModel *settings = m_CommandManager->getSettingsModel();
+
+        if (settings->getSearchUsingAnd()) {
+            hasMatch = containsAllPartsSearch(metadata);
+        } else {
+            hasMatch = containsAnyPartsSearch(metadata);
+        }
+
+        return hasMatch;
+    }
+
+    bool FilteredArtItemsProxyModel::containsAnyPartsSearch(const ArtworkMetadata *metadata) const {
+        bool hasMatch = false;
+        QStringList searchTerms = m_SearchTerm.split(QChar::Space, QString::SkipEmptyParts);
+
+        const QString &description = metadata->getDescription();
+        const QString &title = metadata->getTitle();
+        const QString &filepath = metadata->getFilepath();
+        const QStringList &keywords = metadata->getKeywords();
+
+        foreach (const QString &searchTerm, searchTerms) {
+            hasMatch = fitsSpecialKeywords(searchTerm, metadata);
+
+            if (!hasMatch) {
+                hasMatch = description.contains(searchTerm, Qt::CaseInsensitive);
+            }
+
+            if (!hasMatch) {
+                hasMatch = title.contains(searchTerm, Qt::CaseInsensitive);
+            }
+
+            if (!hasMatch) {
+                hasMatch = filepath.contains(searchTerm, Qt::CaseInsensitive);
+            }
+
+            if (hasMatch) { break; }
+        }
+
+        if (!hasMatch) {
+            foreach (const QString &searchTerm, searchTerms) {
+                foreach (const QString &keyword, keywords) {
+                    if (keyword.contains(searchTerm, Qt::CaseInsensitive)) {
+                        hasMatch = true;
+                        break;
+                    }
+                }
+
+                if (hasMatch) { break; }
+            }
+        }
+
+        return hasMatch;
+    }
+
+    bool FilteredArtItemsProxyModel::containsAllPartsSearch(const ArtworkMetadata *metadata) const {
+        bool hasMatch = false;
+        QStringList searchTerms = m_SearchTerm.split(QChar::Space, QString::SkipEmptyParts);
+
+        const QString &description = metadata->getDescription();
+        const QString &title = metadata->getTitle();
+        const QString &filepath = metadata->getFilepath();
+        const QStringList &keywords = metadata->getKeywords();
+
+        bool anyError = false;
+
+        foreach (const QString &searchTerm, searchTerms) {
+            bool anyContains = false;
+
+            anyContains = fitsSpecialKeywords(searchTerm, metadata);
+
+            if (!anyContains) {
+                anyContains = description.contains(searchTerm, Qt::CaseInsensitive);
+            }
+
+            if (!anyContains) {
+                anyContains = title.contains(searchTerm, Qt::CaseInsensitive);
+            }
+
+            if (!anyContains) {
+                anyContains = filepath.contains(searchTerm, Qt::CaseInsensitive);
+            }
+
+            if (!anyContains) {
+                anyContains = containsOneTerm(keywords, searchTerm);
+            }
+
+            if (!anyContains) {
+                anyError = true;
+                break;
+            }
+        }
+
+        hasMatch = !anyError;
+        return hasMatch;
+    }
+
     bool FilteredArtItemsProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const {
         Q_UNUSED(sourceParent);
 
         ArtItemsModel *artItemsModel = getArtItemsModel();
         ArtworkMetadata *metadata = artItemsModel->getArtwork(sourceRow);
 
-        bool hasMatch = false;
-
-        hasMatch = metadata->getDescription().contains(m_SearchTerm, Qt::CaseInsensitive);
-
-        if (!hasMatch) {
-            hasMatch = metadata->getAuthor().contains(m_SearchTerm, Qt::CaseInsensitive);
-        }
-
-        if (!hasMatch) {
-            hasMatch = metadata->getTitle().contains(m_SearchTerm, Qt::CaseInsensitive);
-        }
-
-        if (!hasMatch) {
-            hasMatch = metadata->getFilepath().contains(m_SearchTerm, Qt::CaseInsensitive);
-        }
-
-        if (!hasMatch) {
-            const QStringList &keywords = metadata->getKeywords();
-            foreach (const QString &keyword, keywords) {
-                if (keyword.contains(m_SearchTerm, Qt::CaseInsensitive)) {
-                    hasMatch = true;
-                    break;
-                }
-            }
-        }
-
+        bool hasMatch = containsPartsSearch(metadata);
         return hasMatch;
     }
 }

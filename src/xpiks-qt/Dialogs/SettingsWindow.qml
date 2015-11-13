@@ -33,13 +33,16 @@ ApplicationWindow {
     id: settingsWindow
     modality: "ApplicationModal"
     title: qsTr("Settings")
-    width: 500
-    height: 230
+    width: 550
+    height: 260
     minimumWidth: width
     maximumWidth: width
     minimumHeight: height
     maximumHeight: height
     flags: Qt.Dialog
+
+    signal dialogDestruction();
+    Component.onDestruction: dialogDestruction();
 
     function closeSettings() {
         settingsWindow.destroy();
@@ -63,7 +66,7 @@ ApplicationWindow {
             onSuccess: onMasterPasswordSet
         }
 
-        Common.launchComponent("Dialogs/MasterPasswordSetupDialog.qml",
+        Common.launchDialog("Dialogs/MasterPasswordSetupDialog.qml",
                                settingsWindow,
                                {firstTime: firstTimeParam, callbackObject: callbackObject});
     }
@@ -124,7 +127,7 @@ ApplicationWindow {
                     }
                 }
 
-                Common.launchComponent("Dialogs/EnterMasterPasswordDialog.qml",
+                Common.launchDialog("Dialogs/EnterMasterPasswordDialog.qml",
                                        settingsWindow,
                                        {componentParent: settingsWindow, callbackObject: callbackObject})
             } else {
@@ -164,6 +167,9 @@ ApplicationWindow {
         color: Colors.selectedArtworkColor
         anchors.fill: parent
 
+        Component.onCompleted: focus = true
+        Keys.onEscapePressed: closeSettings()
+
         ColumnLayout {
             anchors.fill: parent
             anchors.margins: {left:10; top:10; right:10}
@@ -173,18 +179,251 @@ ApplicationWindow {
                 Layout.fillWidth: true
 
                 Tab {
+                    id: behaviorTab
+                    title: qsTr("Behavior")
+
+                    ColumnLayout {
+                        anchors.fill: parent
+                        anchors.margins: {left: 20; top: 30; right: 20; bottom: 20}
+                        spacing: 20
+
+                        RowLayout {
+                            width: parent.width
+                            spacing: 10
+
+                            StyledCheckbox {
+                                id: useConfirmationDialogsCheckbox
+                                text: qsTr("Use confirmation dialogs")
+                                onCheckedChanged: {
+                                    settingsModel.mustUseConfirmations = checked
+                                }
+
+                                Component.onCompleted: checked = settingsModel.mustUseConfirmations
+                            }
+
+                            StyledText {
+                                text: qsTr("(with destructive actions)")
+                                color: Colors.defaultInputBackground
+                            }
+                        }
+
+                        RowLayout {
+                            width: parent.width
+                            spacing: 10
+
+                            StyledCheckbox {
+                                id: saveBackupsCheckbox
+                                text: qsTr("Save backups for artworks")
+                                onCheckedChanged: {
+                                    settingsModel.saveBackups = checked
+                                }
+
+                                Component.onCompleted: checked = settingsModel.saveBackups
+                            }
+
+                            StyledText {
+                                text: qsTr("(edited but not saved)")
+                                color: Colors.defaultInputBackground
+                            }
+                        }
+
+                        RowLayout {
+                            width: parent.width
+                            spacing: 10
+
+                            StyledCheckbox {
+                                id: searchUsingAndCheckbox
+                                text: qsTr("Search match all terms")
+                                onCheckedChanged: {
+                                    settingsModel.searchUsingAnd = checked
+                                }
+
+                                Component.onCompleted: checked = settingsModel.searchUsingAnd
+                            }
+
+                            StyledText {
+                                text: qsTr("(instead of any occurance)")
+                                color: Colors.defaultInputBackground
+                            }
+                        }
+
+                        Item {
+                            Layout.fillHeight: true
+                        }
+                    }
+                }
+
+                Tab {
+                    id: uxTab
+                    property double sizeSliderValue: settingsModel.keywordSizeScale
+                    property double scrollSliderValue: settingsModel.scrollSpeedScale
+                    title: qsTr("Interface")
+
+                    ColumnLayout {
+                        anchors.fill: parent
+                        anchors.margins: {left: 20; top: 30; right: 20; bottom: 20}
+                        spacing: 20
+
+                        RowLayout {
+                            width: parent.width
+                            spacing: 10
+
+                            StyledCheckbox {
+                                id: fitArtworksCheckbox
+                                text: qsTr("Fit artwork's preview")
+                                onCheckedChanged: {
+                                    settingsModel.fitSmallPreview = checked
+                                }
+
+                                Component.onCompleted: checked = settingsModel.fitSmallPreview
+                            }
+
+                            StyledText {
+                                text: qsTr("(instead of filling the square)")
+                                color: Colors.defaultInputBackground
+                            }
+                        }
+
+                        RowLayout {
+                            width: parent.width
+                            spacing: 10
+
+                            StyledText {
+                                text: qsTr("Keywords size")
+                            }
+
+                            StyledSlider {
+                                id: keywordSizeSlider
+                                width: 150
+                                minimumValue: 1.0
+                                maximumValue: 1.2
+                                stepSize: 0.0001
+                                orientation: Qt.Horizontal
+                                onValueChanged: uxTab.sizeSliderValue = value
+                                Component.onCompleted: value = settingsModel.keywordSizeScale
+                            }
+
+                            Rectangle {
+                                id: keywordPreview
+                                color: Colors.defaultLightGrayColor
+
+                                width: childrenRect.width
+                                height: childrenRect.height
+
+                                Row {
+                                    spacing: 0
+
+                                    Item {
+                                        id: tagTextRect
+                                        width: childrenRect.width + 5*keywordSizeSlider.value
+                                        height: 20 * keywordSizeSlider.value + (keywordSizeSlider.value - 1)*10
+
+                                        StyledText {
+                                            anchors.top: parent.top
+                                            anchors.bottom: parent.bottom
+                                            anchors.left: parent.left
+                                            anchors.leftMargin: 5 + (keywordSizeSlider.value - 1)*10
+                                            verticalAlignment: Text.AlignVCenter
+                                            text: "keyword"
+                                            color: Colors.defaultControlColor
+                                            font.pixelSize: 12 * keywordSizeSlider.value
+                                        }
+                                    }
+
+                                    Item {
+                                        height: 20 * keywordSizeSlider.value + (keywordSizeSlider.value - 1)*10
+                                        width: height
+
+                                        CloseIcon {
+                                            width: 14 * keywordSizeSlider.value
+                                            height: 14 * keywordSizeSlider.value
+                                            isActive: true
+                                            anchors.centerIn: parent
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        RowLayout {
+                            width: parent.width
+                            spacing: 20
+
+                            StyledText {
+                                text: qsTr("Scroll speed")
+                            }
+
+                            StyledSlider {
+                                id: scrollSpeedSlider
+                                width: 150
+                                minimumValue: 1.0
+                                maximumValue: 6
+                                stepSize: 0.01
+                                orientation: Qt.Horizontal
+                                onValueChanged: uxTab.scrollSliderValue = value
+                                Component.onCompleted: value = settingsModel.scrollSpeedScale
+                            }
+                        }
+
+                        RowLayout {
+                            width: parent.width
+                            spacing: 10
+
+                            StyledText {
+                                Layout.preferredWidth: 130
+                                horizontalAlignment: Text.AlignLeft
+                                text: qsTr("Undo dismiss duration:")
+                            }
+
+                            StyledInputHost {
+                                border.width: dismissDuration.activeFocus ? 1 : 0
+
+                                StyledTextInput {
+                                    id: dismissDuration
+                                    width: 100
+                                    height: 24
+                                    clip: true
+                                    text: settingsModel.dismissDuration
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: 5
+                                    onTextChanged: {
+                                        if (text.length > 0) {
+                                            settingsModel.dismissDuration = parseInt(text)
+                                        }
+                                    }
+
+                                    validator: IntValidator {
+                                        bottom: 5
+                                        top: 20
+                                    }
+                                }
+                            }
+
+                            StyledText {
+                                text: qsTr("(seconds)")
+                                color: Colors.defaultInputBackground
+                            }
+                        }
+
+                        Item {
+                            Layout.fillHeight: true
+                        }
+                    }
+                }
+
+                Tab {
                     title: qsTr("External")
 
                     ColumnLayout {
                         anchors.fill: parent
-                        anchors.margins: {left: 5; top: 20; right: 20; bottom: 20}
+                        anchors.margins: {left: 5; top: 30; right: 20; bottom: 20}
 
                         GridLayout {
                             width: parent.width
                             rows: 2
                             columns: 4
-                            rowSpacing: 10
-                            columnSpacing: 5
+                            rowSpacing: 20
+                            columnSpacing: 15
 
                             StyledText {
                                 Layout.row: 0
@@ -281,45 +520,12 @@ ApplicationWindow {
                 }
 
                 Tab {
-                    title: qsTr("UX")
-
-                    ColumnLayout {
-                        anchors.fill: parent
-                        anchors.margins: 20
-
-                        RowLayout {
-                            width: parent.width
-                            spacing: 10
-
-                            StyledCheckbox {
-                                id: useConfirmationDialogsCheckbox
-                                text: qsTr("Use confirmation dialogs")
-                                onCheckedChanged: {
-                                    settingsModel.mustUseConfirmations = checked
-                                }
-
-                                Component.onCompleted: checked = settingsModel.mustUseConfirmations
-                            }
-
-                            StyledText {
-                                text: qsTr("(with destructive actions)")
-                                color: Colors.defaultInputBackground
-                            }
-                        }
-
-                        Item {
-                            Layout.fillHeight: true
-                        }
-                    }
-                }
-
-                Tab {
                     title: qsTr("Warnings")
 
                     ColumnLayout {
-                        spacing: 10
+                        spacing: 20
                         anchors.fill: parent
-                        anchors.margins: 20
+                        anchors.margins: {left: 20; top: 30; right: 20; bottom: 20}
 
                         RowLayout {
                             width: parent.width
@@ -446,6 +652,10 @@ ApplicationWindow {
                                 color: Colors.defaultInputBackground
                             }
                         }
+
+                        Item {
+                            Layout.fillHeight: true
+                        }
                     }
                 }
 
@@ -453,9 +663,9 @@ ApplicationWindow {
                     title: qsTr("Upload")
 
                     ColumnLayout {
-                        spacing: 5
+                        spacing: 10
                         anchors.fill: parent
-                        anchors.margins: 20
+                        anchors.margins: {left: 20; top: 30; right: 20; bottom: 20}
 
                         RowLayout {
                             width: parent.width
@@ -483,7 +693,7 @@ ApplicationWindow {
                                             settingsModel.uploadTimeout = parseInt(text)
                                         }
                                     }
-
+                                    KeyNavigation.tab: maxParallelUploads
                                     validator: IntValidator {
                                         bottom: 1
                                         top: 30
@@ -494,6 +704,111 @@ ApplicationWindow {
                             StyledText {
                                 text: qsTr("(minutes)")
                                 color: Colors.defaultInputBackground
+                            }
+                        }
+
+                        RowLayout {
+                            width: parent.width
+                            spacing: 10
+
+                            StyledText {
+                                Layout.preferredWidth: 130
+                                horizontalAlignment: Text.AlignRight
+                                text: qsTr("Max parallel uploads:")
+                            }
+
+                            StyledInputHost {
+                                border.width: maxParallelUploads.activeFocus ? 1 : 0
+
+                                StyledTextInput {
+                                    id: maxParallelUploads
+                                    width: 100
+                                    height: 24
+                                    clip: true
+                                    text: settingsModel.maxParallelUploads
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: 5
+                                    onTextChanged: {
+                                        if (text.length > 0) {
+                                            settingsModel.maxParallelUploads = parseInt(text)
+                                        }
+                                    }
+                                    KeyNavigation.backtab: timeoutMinutes
+                                    validator: IntValidator {
+                                        bottom: 1
+                                        top: 4
+                                    }
+                                }
+                            }
+
+                            StyledText {
+                                text: qsTr("(takes effect after relaunch)")
+                                color: Colors.defaultInputBackground
+                            }
+                        }
+
+                        Item {
+                            height: 5
+                            width: parent.width
+                        }
+
+                        RowLayout {
+                            width: parent.width
+                            spacing: 10
+
+                            StyledText {
+                                Layout.preferredWidth: 130
+                                horizontalAlignment: Text.AlignRight
+                                text: qsTr("Proxy url:")
+                            }
+
+                            StyledInputHost {
+                                border.width: proxyURI.activeFocus ? 1 : 0
+
+                                StyledTextInput {
+                                    id: proxyURI
+                                    width: 100
+                                    height: 24
+                                    clip: true
+                                    text: settingsModel.proxyURI
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: 5
+                                    onTextChanged: {
+                                        if (text.length > 0) {
+                                            settingsModel.proxyURI = parseInt(text)
+                                        }
+                                    }
+                                    KeyNavigation.backtab: timeoutMinutes
+                                    validator: IntValidator {
+                                        bottom: 1
+                                        top: 4
+                                    }
+                                }
+                            }
+
+                            StyledText {
+                                text: qsTr("(see format below)")
+                                color: Colors.defaultInputBackground
+                            }
+                        }
+
+                        RowLayout {
+                            width: parent.width
+                            spacing: 10
+                            StyledText {
+                                Layout.preferredWidth: 130
+                                color: Colors.defaultInputBackground
+                                horizontalAlignment: Text.AlignRight
+                                text: qsTr("Proxy url format:")
+                            }
+
+                            StyledText {
+                                text: qsTr("[protocol://][user:password@]proxyhost[:port]")
+                                color: Colors.defaultInputBackground
+                            }
+
+                            Item {
+                                Layout.fillWidth: true
                             }
                         }
 
@@ -508,7 +823,7 @@ ApplicationWindow {
 
                     ColumnLayout {
                         anchors.fill: parent
-                        anchors.margins: 20
+                        anchors.margins: {left: 20; top: 30; right: 20; bottom: 20}
 
                         RowLayout {
                             StyledCheckbox {
@@ -612,6 +927,8 @@ ApplicationWindow {
                     text: qsTr("Save and Exit")
                     width: 120
                     onClicked: {
+                        settingsModel.keywordSizeScale = uxTab.sizeSliderValue
+                        settingsModel.scrollSpeedScale = uxTab.scrollSliderValue
                         settingsModel.saveAllValues()
                         closeSettings()
                     }
@@ -624,7 +941,10 @@ ApplicationWindow {
                 StyledButton {
                     text: qsTr("Exit")
                     width: 60
-                    onClicked: closeSettings()
+                    onClicked: {
+                        settingsModel.readAllValues()
+                        closeSettings()
+                    }
                 }
 
                 Item {

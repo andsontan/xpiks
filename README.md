@@ -1,53 +1,37 @@
 xpiks
 =====
 
-Cross-platform (X) Photo Keywording Software
+Cross-Platform Image Keywording Software
 
 Official website: http://ribtoks.github.io/xpiks/
 
-Xpiks is a free and open source keywording and uploading tool for microstock photographers and illustrators with no hidden fees. If you're tired with copy and pasting keywords from one stock to another, Xpiks would be a great time saver for you!
+Xpiks is a free and open source keywording and uploading tool for microstock photographers and illustrators. It was written from scratch with aim to make it more usefull, convenient and quicker than existing tools.
 
 **Main features:**
 
 - ability to keyword images as well as set additional XMP/IPTC metadata (title, description, author)
-- uploading images to Stock Agencies' FTP hosts (saves credentials for each host)
-- keywords suggestion based on Shutterstock API
+- uploading images to Stock Agencies' FTP hosts (saves encrypted credentials for each host)
+- keywords suggestion based on Shutterstock API or the local library
+- search through loaded images by any metadata (keywords, description, title)
 - ability to upload vector files with images with same name (useful for illustrators)
 - automatically zip vector files with previews (useful for illustrators)
 - checks for potential problems before upload (insufficient resolution, missing metadata etc.)
 - unsaved work is backed up so you can continue work later without actual writing metadata to images
-- Ability to Drag'n'Drop images to workflow
 - works under Linux, OS X and Windows
 - ExifTool and Curl under the hood
 - written in C++ with Qt 5.4
 
-**How to build:**
+**How to build**
 
-***Prepare source tree***
+Please see the BUILD.md file
 
-- git clone Xpiks repo
-- git submodule init & git submodule update - update tinyAES repo
-- rename tinyAES/aes.c to tinyAES/aes.cpp
+**How to install**
 
-***Generic build***
+Please see the INSTALL.md file
 
-- install Qt 5.4 from official website
-- open zlib project in Qt Creator, select Release, Run qmake, Build
-- copy zlib library to the `libs/` directory
-- open main project in Qt Creator, select Release, Run qmake, Build
-- you can open, build and run tests project additionally
+**How to contribute**
 
-***Debian package build***
-
-- Install build dependecies from repository (QT)
-- cd to _xpiks-qt_ subdirectory
-- `debuild -i -us -uc -b`
-
-More instructions can be found at this page http://ribtoks.github.io/xpiks/blog/2014/building-xpiks-alone/
-
-**How to contribute:**
-
-- open Issues page and select an issue (i'll provide you with all details and explanations as needed)
+- open Issues page and select an issue (I'll provide you with all details and explanations as needed)
 - send your ideas and proposals in comments, issues or via email
 - read the CONTRIBUTOR_GUIDELINES.md file
 - send your pull requests

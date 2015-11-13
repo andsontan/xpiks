@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
  * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
@@ -22,10 +22,14 @@
 #ifndef SETTINGSMODEL_H
 #define SETTINGSMODEL_H
 
+#include <QAbstractListModel>
 #include <QObject>
 #include <QString>
 
+#define SETTINGS_EPSILON 1e-9
+
 namespace Models {
+
     int ensureInBounds(int value, int boundA, int boundB);
     double ensureInBounds(double value, double boundA, double boundB);
 
@@ -40,9 +44,19 @@ namespace Models {
         Q_PROPERTY(int uploadTimeout READ getUploadTimeout WRITE setUploadTimeout NOTIFY uploadTimeoutChanged)
         Q_PROPERTY(bool mustUseMasterPassword READ getMustUseMasterPassword WRITE setMustUseMasterPassword NOTIFY mustUseMasterPasswordChanged)
         Q_PROPERTY(bool mustUseConfirmations READ getMustUseConfirmations WRITE setMustUseConfirmations NOTIFY mustUseConfirmationsChanged)
+        Q_PROPERTY(bool saveBackups READ getSaveBackups WRITE setSaveBackups NOTIFY saveBackupsChanged)
+        Q_PROPERTY(double keywordSizeScale READ getKeywordSizeScale WRITE setKeywordSizeScale NOTIFY keywordSizeScaleChanged)
+        Q_PROPERTY(int dismissDuration READ getDismissDuration WRITE setDismissDuration NOTIFY dismissDurationChanged)
+        Q_PROPERTY(int maxParallelUploads READ getMaxParallelUploads WRITE setMaxParallelUploads NOTIFY maxParallelUploadsChanged)
+        Q_PROPERTY(QString proxyURI READ getProxyURI WRITE setProxyURI NOTIFY proxyURIChanged)
+        Q_PROPERTY(bool fitSmallPreview READ getFitSmallPreview WRITE setFitSmallPreview NOTIFY fitSmallPreviewChanged)
+        Q_PROPERTY(bool searchUsingAnd READ getSearchUsingAnd WRITE setSearchUsingAnd NOTIFY searchUsingAndChanged)
+        Q_PROPERTY(double scrollSpeedScale READ getScrollSpeedScale WRITE setScrollSpeedScale NOTIFY scrollSpeedScaleChanged)
     public:
         explicit SettingsModel(QObject *parent = 0);
         virtual ~SettingsModel() {}
+
+    public:
 
     public:
         Q_INVOKABLE void resetAllValues();
@@ -62,6 +76,14 @@ namespace Models {
         int getUploadTimeout() const { return m_UploadTimeout; }
         bool getMustUseMasterPassword() const { return m_MustUseMasterPassword; }
         bool getMustUseConfirmations() const { return m_MustUseConfirmations; }
+        bool getSaveBackups() const { return m_SaveBackups; }
+        double getKeywordSizeScale() const { return m_KeywordSizeScale; }
+        int getDismissDuration() const { return m_DismissDuration; }
+        int getMaxParallelUploads() const { return m_MaxParallelUploads; }
+        QString getProxyURI() const { return m_ProxyURI; }
+        bool getFitSmallPreview() const { return m_FitSmallPreview; }
+        bool getSearchUsingAnd() const { return m_SearchUsingAnd; }
+        double getScrollSpeedScale() const { return m_ScrollSpeedScale; }
 
     signals:
         void exifToolPathChanged(QString exifToolPath);
@@ -72,6 +94,14 @@ namespace Models {
         void uploadTimeoutChanged(int uploadTimeout);
         void mustUseMasterPasswordChanged(bool mustUseMasterPassword);
         void mustUseConfirmationsChanged(bool mustUseConfirmations);
+        void saveBackupsChanged(bool saveBackups);
+        void keywordSizeScaleChanged(double value);
+        void dismissDurationChanged(int value);
+        void maxParallelUploadsChanged(int value);
+        void proxyURIChanged(QString value);
+        void fitSmallPreviewChanged(bool value);
+        void searchUsingAndChanged(bool value);
+        void scrollSpeedScaleChanged(double value);
 
     public:
         void setExifToolPath(QString exifToolPath) {
@@ -90,12 +120,20 @@ namespace Models {
             emit curlPathChanged(curlPath);
         }
 
+        void setProxyURI(QString value) {
+            if (m_ProxyURI == value)
+                return;
+
+            m_ProxyURI = value;
+            emit proxyURIChanged(value);
+        }
+
         void setMinMegapixelCount(double minMegapixelCount) {
-            if (m_MinMegapixelCount == minMegapixelCount)
+            if (qAbs(m_MinMegapixelCount - minMegapixelCount) <= SETTINGS_EPSILON)
                 return;
 
             m_MinMegapixelCount = ensureInBounds(minMegapixelCount, 0.0, 100.0);
-            emit minMegapixelCountChanged(minMegapixelCount);
+            emit minMegapixelCountChanged(m_MinMegapixelCount);
         }
 
         void setMaxDescriptionLength(int maxDescriptionLength) {
@@ -103,7 +141,7 @@ namespace Models {
                 return;
 
             m_MaxDescriptionLength = ensureInBounds(maxDescriptionLength, 0, 500);
-            emit maxDescriptionLengthChanged(maxDescriptionLength);
+            emit maxDescriptionLengthChanged(m_MaxDescriptionLength);
         }
 
         void setMaxKeywordsCount(int maxKeywordsCount) {
@@ -111,7 +149,7 @@ namespace Models {
                 return;
 
             m_MaxKeywordsCount = ensureInBounds(maxKeywordsCount, 0, 1000);
-            emit maxKeywordsCountChanged(maxKeywordsCount);
+            emit maxKeywordsCountChanged(m_MaxKeywordsCount);
         }
 
         void setUploadTimeout(int uploadTimeout) {
@@ -119,7 +157,7 @@ namespace Models {
                 return;
 
             m_UploadTimeout = ensureInBounds(uploadTimeout, 0, 20);
-            emit uploadTimeoutChanged(uploadTimeout);
+            emit uploadTimeoutChanged(m_UploadTimeout);
         }
 
         void setMustUseMasterPassword(bool mustUseMasterPassword) {
@@ -138,18 +176,82 @@ namespace Models {
             emit mustUseConfirmationsChanged(mustUseConfirmations);
         }
 
+        void setSaveBackups(bool saveBackups) {
+            if (m_SaveBackups == saveBackups)
+                return;
+
+            m_SaveBackups = saveBackups;
+            emit saveBackupsChanged(saveBackups);
+        }
+
+        void setKeywordSizeScale(double value) {
+            if (qAbs(m_KeywordSizeScale - value) <= SETTINGS_EPSILON)
+                return;
+
+            m_KeywordSizeScale = ensureInBounds(value, 1.0, 1.2);
+            emit keywordSizeScaleChanged(m_KeywordSizeScale);
+        }
+
+        void setDismissDuration(int value) {
+            if (m_DismissDuration == value)
+                return;
+
+            m_DismissDuration = ensureInBounds(value, 5, 20);
+            emit dismissDurationChanged(m_DismissDuration);
+        }
+
+        void setMaxParallelUploads(int value) {
+            if (m_MaxParallelUploads == value)
+                return;
+
+            m_MaxParallelUploads = ensureInBounds(value, 1, 4);
+            emit maxParallelUploadsChanged(m_MaxParallelUploads);
+        }
+
+        void setFitSmallPreview(bool value) {
+            if (m_FitSmallPreview == value)
+                return;
+
+            m_FitSmallPreview = value;
+            emit fitSmallPreviewChanged(value);
+        }
+
+        void setSearchUsingAnd(bool value) {
+            if (m_SearchUsingAnd == value)
+                return;
+
+            m_SearchUsingAnd = value;
+            emit searchUsingAndChanged(value);
+        }
+
+        void setScrollSpeedScale(double value) {
+            if (qAbs(m_ScrollSpeedScale - value) <= SETTINGS_EPSILON)
+                return;
+
+            m_ScrollSpeedScale = ensureInBounds(value, 1.0, 6.0);
+            emit scrollSpeedScaleChanged(m_ScrollSpeedScale);
+        }
+
     private:
         void resetToDefault();
 
     private:
         QString m_ExifToolPath;
         QString m_CurlPath;
+        QString m_ProxyURI;
         double m_MinMegapixelCount;
+        double m_KeywordSizeScale;
+        double m_ScrollSpeedScale;
         int m_MaxDescriptionLength;
         int m_MaxKeywordsCount;
         int m_UploadTimeout; // in minutes
+        int m_DismissDuration;
+        int m_MaxParallelUploads;
         bool m_MustUseMasterPassword;
         bool m_MustUseConfirmations;
+        bool m_SaveBackups;
+        bool m_FitSmallPreview;
+        bool m_SearchUsingAnd;
     };
 }
 

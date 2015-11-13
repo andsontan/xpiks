@@ -27,7 +27,6 @@
 namespace Models {    
     class ImportDataResult {
     public:
-        QString Author;
         QString Title;
         QString Description;
         QString Keywords;

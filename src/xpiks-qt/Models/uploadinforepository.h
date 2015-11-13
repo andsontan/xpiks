@@ -83,8 +83,8 @@ namespace Models {
         Q_INVOKABLE QString getInfoString() const;
         Q_INVOKABLE int getSelectedInfosCount() const;
         Q_INVOKABLE QString getAgenciesWithMissingDetails();
+        Q_INVOKABLE void updateProperties(int itemIndex);
 
-    public:
         Q_INVOKABLE void initializeAccounts(bool mpIsCorrectOrEmpty);
         Q_INVOKABLE void finalizeAccounts();
         Q_INVOKABLE bool isMasterPasswordCorrectOrEmpty() const { return !m_EmptyPasswordsMode; }
@@ -102,17 +102,17 @@ namespace Models {
         const QList<UploadInfo*> &getUploadInfos() const { return m_UploadInfos; }
 
     public:
-        int rowCount(const QModelIndex & parent = QModelIndex()) const;
-        QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
-        Qt::ItemFlags flags(const QModelIndex &index) const;
-        bool setData(const QModelIndex &index, const QVariant & value, int role = Qt::EditRole);
+        virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
+        virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+        virtual Qt::ItemFlags flags(const QModelIndex &index) const;
+        virtual bool setData(const QModelIndex &index, const QVariant & value, int role = Qt::EditRole);
 
     public slots:
         void onBeforeMasterPasswordChanged(const QString &oldMasterPassword, const QString &newMasterPassword);
         void onAfterMasterPasswordReset();
 
     protected:
-        QHash<int, QByteArray> roleNames() const;
+        virtual QHash<int, QByteArray> roleNames() const;
 
         void removeInnerItem(int row);
 

@@ -33,6 +33,10 @@ namespace Models {
     class ExportInfo;
 }
 
+namespace Suggestion {
+    class LocalLibrary;
+}
+
 typedef QPair<Models::ArtworkMetadata*, Models::ImportDataResult*> ImportPair;
 typedef QPair<Models::ArtworkMetadata*, Models::ExportInfo*> ExportPair;
 
@@ -50,13 +54,16 @@ namespace Models {
     public slots:
         void metadataImported(int);
         void metadataExported(int);
-        void allFinished();
+        void allFinishedReading();
+        void allFinishedWriting();
 
     private:
         void metadataImportedHandler(ImportPair importPair);
         void metadataExportedHandler(ArtworkMetadata *metadata);
 
     public:
+        void setLocalLibrary(Suggestion::LocalLibrary *localLibrary) { m_LocalLibrary = localLibrary; }
+
         bool getMustSaveOriginal() const { return m_ExportInfo.getMustSaveOriginal(); }
         void setMustSaveOriginal(bool value) {
             if (value != m_ExportInfo.getMustSaveOriginal()) {
@@ -64,6 +71,7 @@ namespace Models {
                 emit mustSaveOriginalChanged();
             }
         }
+
         bool getIgnoreAutosave() const { return m_IgnoreAutosave; }
         void setIgnoreAutosave(bool value) {
             if (m_IgnoreAutosave != value) {
@@ -79,6 +87,7 @@ namespace Models {
     public:
         Q_INVOKABLE void importMetadata() { doReadMetadata(getArtworkList()); }
         Q_INVOKABLE void exportMetadata() { doWriteMetadata(getArtworkList()); }
+        Q_INVOKABLE void cleanupLibrary() const;
 
     private:
         void doReadMetadata(const QList<ArtworkMetadata*> &artworkList);
@@ -90,6 +99,7 @@ namespace Models {
     private:
         QFutureWatcher<QPair<Models::ArtworkMetadata*, Models::ImportDataResult*> > *m_MetadataReader;
         QFutureWatcher<QPair<ArtworkMetadata*, ExportInfo*> > *m_MetadataWriter;
+        Suggestion::LocalLibrary *m_LocalLibrary;
         ExportInfo m_ExportInfo;
         bool m_IgnoreAutosave;
     };

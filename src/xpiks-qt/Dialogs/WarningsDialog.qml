@@ -34,9 +34,18 @@ Item {
     id: warningsComponent
     anchors.fill: parent
 
+    property variant componentParent
+    property bool isRestricted: false
+
+    signal dialogDestruction();
+    Component.onDestruction: dialogDestruction();
+
     function closePopup() {
         warningsComponent.destroy()
     }
+
+    Component.onCompleted: focus = true
+    Keys.onEscapePressed: closePopup()
 
     PropertyAnimation { target: warningsComponent; property: "opacity";
         duration: 400; from: 0; to: 1;
@@ -63,6 +72,7 @@ Item {
             anchors.fill: parent
             onWheel: wheel.accepted = true
             onClicked: mouse.accepted = true
+            onDoubleClicked: mouse.accepted = true
             property real old_x : 0
             property real old_y : 0
 
@@ -125,29 +135,28 @@ Item {
 
                                 RowLayout {
                                     anchors.fill: parent
-                                    spacing: 5
+                                    spacing: 0
 
-                                    Rectangle {
+                                    Item {
                                         width: 120
                                         height: parent.height
-                                        color: "transparent"
 
                                         ColumnLayout {
                                             anchors.fill: parent
                                             anchors.margins: { left: 15; right: 15 }
                                             spacing: 7
 
-                                            Rectangle {
+                                            Item {
                                                 width: 90
                                                 height: 60
                                                 anchors.horizontalCenter: parent.horizontalCenter
-                                                color: "transparent"
+
                                                 Image {
                                                     anchors.fill: parent
                                                     source: "image://global/" + filename
                                                     sourceSize.width: 150
                                                     sourceSize.height: 150
-                                                    fillMode: Image.PreserveAspectCrop
+                                                    fillMode: settingsModel.fitSmallPreview ? Image.PreserveAspectFit : Image.PreserveAspectCrop
                                                     asynchronous: true
                                                 }
                                             }
@@ -165,6 +174,10 @@ Item {
                                                 Layout.fillHeight: true
                                             }
                                         }
+                                    }
+
+                                    Item {
+                                        width: 5
                                     }
 
                                     Rectangle {
@@ -202,8 +215,42 @@ Item {
                                             }
                                         }
                                     }
+
+                                    Rectangle {
+                                        width: 40
+                                        height: parent.height
+                                        color: Colors.selectedArtworkColor
+
+                                        StyledButton {
+                                            text: qsTr("Fix")
+                                            width: 30
+                                            anchors.centerIn: parent
+                                            enabled: !isRestricted && warningsListView.count > 0
+
+                                            onClicked: {
+                                                Common.launchItemEditing(itemindex, componentParent,
+                                                                         {
+                                                                             applyCallback: function() {
+                                                                                 console.log("Rechecking [" + imageWrapper.delegateIndex + "] item")
+                                                                                 warningsManager.recheckItem(imageWrapper.delegateIndex)
+                                                                             }
+                                                                         })
+                                            }
+                                        }
+                                    }
                                 }
                             }
+                        }
+                    }
+
+                    Item {
+                        anchors.fill: parent
+                        visible: warningsListView.count == 0
+
+                        StyledText {
+                            text: qsTr("There are no warnings")
+                            anchors.centerIn: parent
+                            color: Colors.selectedMetadataColor
                         }
                     }
                 }
@@ -213,6 +260,7 @@ Item {
                 }
 
                 RowLayout {
+                    spacing: 20
                     height: 24
 
                     Item {

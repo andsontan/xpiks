@@ -36,6 +36,15 @@ Item {
     property var callbackObject
     property bool initialized: false
 
+    signal dialogDestruction();
+    Component.onDestruction: dialogDestruction();
+
+    Keys.onEscapePressed: {
+        if (!keywordsSuggestor.isInProgress) {
+            closePopup()
+        }
+    }
+
     function closePopup() {
         keywordsSuggestor.cancelSearch()
         keywordsSuggestor.close();
@@ -67,6 +76,7 @@ Item {
             anchors.fill: parent
             onWheel: wheel.accepted = true
             onClicked: mouse.accepted = true
+            onDoubleClicked: mouse.accepted = true
 
             property real old_x : 0
             property real old_y : 0
@@ -123,8 +133,7 @@ Item {
                             clip: true
                             anchors.left: parent.left
                             anchors.leftMargin: 5
-                            Keys.onEnterPressed: keywordsSuggestor.searchArtworks(queryText.text)
-                            Keys.onReturnPressed: keywordsSuggestor.searchArtworks(queryText.text)
+                            onAccepted: keywordsSuggestor.searchArtworks(queryText.text)
                         }
                     }
 
@@ -136,9 +145,18 @@ Item {
                         onClicked: keywordsSuggestor.searchArtworks(queryText.text)
                     }
 
-                    StyledText {
-                        text: qsTr("(powered by Shutterstock API)")
-                        color: Colors.defaultControlColor
+                    Item {
+                        Layout.fillWidth: true
+                    }
+
+                    StyledCheckbox {
+                        id: searchUsingAndCheckbox
+                        text: qsTr("Use only local source")
+                        onCheckedChanged: {
+                            keywordsSuggestor.useLocal = checked
+                        }
+
+                        Component.onCompleted: checked = keywordsSuggestor.useLocal
                     }
                 }
 
@@ -151,73 +169,75 @@ Item {
                     width: parent.width
                     color: Colors.defaultControlColor
 
-                    StyledScrollView {
-                        id: imagesScrollView
-                        height: parent.height
-                        width: parent.width + 15
+                    Flickable {
+                        clip: true
+                        id: suggestionsWrapper
+                        anchors.fill: parent
+                        contentHeight: flow.childrenRect.height + 40
+                        contentWidth: parent.width
                         enabled: !keywordsSuggestor.isInProgress
+                        flickableDirection: Flickable.VerticalFlick
+                        boundsBehavior: Flickable.StopAtBounds
 
-                        Flickable {
-                            anchors.fill: parent
-                            contentHeight: grid.height
-                            contentWidth: grid.width
-                            anchors.margins: {left: 40; right: 0; top: 20}
+                        Flow {
+                            id: flow
+                            spacing: 20
+                            anchors.top: parent.top
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.margins: 20
 
-                            GridLayout {
-                                id: grid
-                                columns: 5
-                                columnSpacing: 20
-                                rowSpacing: 20
+                            Repeater {
+                                id: suggestionsRepeater
+                                model: keywordsSuggestor
 
-                                Repeater {
-                                    model: keywordsSuggestor
-                                    delegate: Rectangle {
-                                        property int delegateIndex: index
-                                        id: imageWrapper
-                                        height: 110
-                                        width: height
-                                        color: "transparent"
+                                delegate: Item {
+                                    property int delegateIndex: index
+                                    id: imageWrapper
+                                    height: 110
+                                    width: height
 
-                                        Image {
-                                            anchors.fill: parent
-                                            anchors.margins: 1
-                                            source: url
-                                            sourceSize.width: 150
-                                            sourceSize.height: 150
-                                            fillMode: Image.PreserveAspectCrop
-                                            asynchronous: true
-                                        }
+                                    Image {
+                                        anchors.fill: parent
+                                        anchors.margins: 1
+                                        source: keywordsSuggestor.useLocal ? ("image://global/" + url) : url
+                                        sourceSize.width: 150
+                                        sourceSize.height: 150
+                                        fillMode: Image.PreserveAspectCrop
+                                        asynchronous: true
+                                    }
 
-                                        Rectangle {
-                                            anchors.fill: parent
-                                            color: Colors.defaultControlColor
-                                            opacity: isselected ? (mouseArea.containsMouse ? 0.6 : 0.7) : (mouseArea.containsMouse ? 0.4 : 0)
-                                        }
+                                    Rectangle {
+                                        anchors.fill: parent
+                                        color: Colors.defaultControlColor
+                                        opacity: isselected ? (mouseArea.containsMouse ? 0.6 : 0.7) : (mouseArea.containsMouse ? 0.4 : 0)
+                                    }
 
-                                        LargeAddIcon {
-                                            opacity: isselected ? (mouseArea.containsMouse ? 0.85 : 1) : (mouseArea.containsMouse ? 0.6 : 0)
-                                            width: parent.width
-                                            height: parent.height
-                                        }
+                                    LargeAddIcon {
+                                        opacity: isselected ? (mouseArea.containsMouse ? 0.85 : 1) : (mouseArea.containsMouse ? 0.6 : 0)
+                                        width: parent.width
+                                        height: parent.height
+                                        rotation: isselected ? 45 : 0
+                                    }
 
-                                        MouseArea {
-                                            id: mouseArea
-                                            anchors.fill: parent
-                                            hoverEnabled: true
-                                            onClicked: {
-                                                keywordsSuggestor.setArtworkSelected(delegateIndex, !isselected)
-                                            }
+                                    MouseArea {
+                                        id: mouseArea
+                                        anchors.fill: parent
+                                        hoverEnabled: true
+                                        onClicked: {
+                                            keywordsSuggestor.setArtworkSelected(delegateIndex, !isselected)
                                         }
                                     }
                                 }
-
-                                Item { height: 110; width: height }
-                                Item { height: 110; width: height }
-                                Item { height: 110; width: height }
-                                Item { height: 110; width: height }
-                                Item { height: 110; width: height }
                             }
                         }
+                    }
+
+                    CustomScrollbar {
+                        anchors.topMargin: 0
+                        anchors.bottomMargin: 0
+                        anchors.rightMargin: -20
+                        flickable: suggestionsWrapper
                     }
 
                     Rectangle {
@@ -225,6 +245,17 @@ Item {
                         color: Colors.selectedArtworkColor
                         opacity: 0.4
                         visible: keywordsSuggestor.isInProgress
+                    }
+
+                    Item {
+                        anchors.fill: parent
+                        visible: !keywordsSuggestor.isInProgress && (suggestionsRepeater.count == 0)
+
+                        StyledText {
+                            anchors.centerIn: parent
+                            text: qsTr("No results found")
+                            color: Colors.selectedMetadataColor
+                        }
                     }
 
                     StyledBusyIndicator {
@@ -269,82 +300,40 @@ Item {
                         keywordsSuggestor.appendKeywordToOther(keyword)
                     }
 
-                    MouseArea {
+                    EditableTags {
+                        id: suggestedFlv
                         anchors.fill: parent
-                        propagateComposedEvents: true
-                        onClicked: {
-                            suggestedFlv.activateEdit()
-                            mouse.accepted = false
+                        model: keywordsSuggestor.getSuggestedKeywordsModel()
+                        property int keywordHeight: 20 * settingsModel.keywordSizeScale + (settingsModel.keywordSizeScale - 1)*10
+                        scrollStep: keywordHeight
+                        editEnabled: false
+
+                        delegate: KeywordWrapper {
+                            isHighlighted: true
+                            delegateIndex: index
+                            keywordText: modelData
+                            itemHeight: suggestedFlv.keywordHeight
+                            onActionClicked: suggestedKeywordsWrapper.removeKeyword(delegateIndex)
+                        }
+
+                        onTagAdded: {
+                            //suggestedKeywordsWrapper.appendKeyword(text)
+                        }
+
+                        onRemoveLast: {
+                            //suggestedKeywordsWrapper.removeLastKeyword()
+                        }
+
+                        onTagsPasted: {
+                            //suggestedKeywordsWrapper.pasteKeywords(tagsList)
                         }
                     }
 
-                    StyledScrollView {
-                        id: suggestedScroller
-                        width: parent.width + 15
-                        height: parent.height
-                        highlightOnFocus: true
-
-                        EditableTags {
-                            id: suggestedFlv
-                            anchors.margins: { left: 5; top: 5; right: 0; bottom: 5 }
-                            model: keywordsSuggestor.getSuggestedKeywordsModel()
-                            editEnabled: false
-
-                            delegate: Rectangle {
-                                id: suggestedItemWrapper
-                                property int delegateIndex: index
-                                property string keyword: modelData
-                                color: Colors.defaultLightColor
-
-                                width: childrenRect.width
-                                height: childrenRect.height
-
-                                RowLayout {
-                                    spacing: 1
-
-                                    Rectangle {
-                                        id: tagTextRect
-                                        width: childrenRect.width + 5
-                                        height: 20
-                                        color: "transparent"
-
-                                        StyledText {
-                                            anchors.left: parent.left
-                                            anchors.leftMargin: 5
-                                            anchors.top: parent.top
-                                            anchors.bottom: parent.bottom
-                                            verticalAlignment: Text.AlignVCenter
-                                            text: modelData
-                                            color: Colors.defaultControlColor
-                                        }
-                                    }
-
-                                    CloseIcon {
-                                        width: 14
-                                        height: 14
-                                        isActive: true
-                                        anchors.verticalCenter: tagTextRect.verticalCenter
-                                        onItemClicked: suggestedKeywordsWrapper.removeKeyword(suggestedItemWrapper.delegateIndex)
-                                    }
-
-                                    Item {
-                                        width: 1
-                                    }
-                                }
-                            }
-
-                            onTagAdded: {
-                                //suggestedKeywordsWrapper.appendKeyword(text)
-                            }
-
-                            onRemoveLast: {
-                                //suggestedKeywordsWrapper.removeLastKeyword()
-                            }
-
-                            onTagsPasted: {
-                                //suggestedKeywordsWrapper.pasteKeywords(tagsList)
-                            }
-                        }
+                    CustomScrollbar {
+                        anchors.topMargin: -5
+                        anchors.bottomMargin: -5
+                        anchors.rightMargin: -15
+                        flickable: suggestedFlv
                     }
                 }
 
@@ -382,83 +371,41 @@ Item {
                         keywordsSuggestor.appendKeywordToSuggested(keyword)
                     }
 
-                    MouseArea {
+                    EditableTags {
+                        id: otherFlv
                         anchors.fill: parent
-                        propagateComposedEvents: true
-                        onClicked: {
-                            otherFlv.activateEdit()
-                            mouse.accepted = false
+                        model: keywordsSuggestor.getAllOtherKeywordsModel()
+                        property int keywordHeight: 20 * settingsModel.keywordSizeScale + (settingsModel.keywordSizeScale - 1)*10
+                        scrollStep: keywordHeight
+                        editEnabled: false
+
+                        delegate: KeywordWrapper {
+                            delegateIndex: index
+                            keywordText: modelData
+                            isHighlighted: true
+                            hasPlusSign: true
+                            itemHeight: otherFlv.keywordHeight
+                            onActionClicked: otherKeywordsWrapper.removeKeyword(delegateIndex)
+                        }
+
+                        onTagAdded: {
+                            //eywordsWrapper.appendKeyword(text)
+                        }
+
+                        onRemoveLast: {
+                            //keywordsWrapper.removeLastKeyword()
+                        }
+
+                        onTagsPasted: {
+                            //keywordsWrapper.pasteKeywords(tagsList)
                         }
                     }
 
-                    StyledScrollView {
-                        id: otherKeywordsScroller
-                        width: parent.width + 15
-                        height: parent.height
-                        highlightOnFocus: true
-
-                        EditableTags {
-                            id: otherFlv
-                            anchors.margins: { left: 5; top: 5; right: 0; bottom: 5 }
-                            model: keywordsSuggestor.getAllOtherKeywordsModel()
-
-                            delegate: Rectangle {
-                                id: otherItemWrapper
-                                property int delegateIndex: index
-                                property string keyword: modelData
-                                color: Colors.defaultLightColor
-
-                                width: childrenRect.width
-                                height: childrenRect.height
-
-                                RowLayout {
-                                    spacing: 1
-
-                                    Rectangle {
-                                        id: otherTagTextRect
-                                        width: childrenRect.width + 5
-                                        height: 20
-                                        color: "transparent"
-
-                                        StyledText {
-                                            anchors.left: parent.left
-                                            anchors.leftMargin: 5
-                                            anchors.top: parent.top
-                                            anchors.bottom: parent.bottom
-                                            verticalAlignment: Text.AlignVCenter
-                                            text: modelData
-                                            color: Colors.defaultControlColor
-                                        }
-                                    }
-
-                                    AddIcon {
-                                        width: 14
-                                        height: 14
-                                        isActive: true
-                                        anchors.verticalCenter: otherTagTextRect.verticalCenter
-                                        onItemClicked: {
-                                            otherKeywordsWrapper.removeKeyword(otherItemWrapper.delegateIndex)
-                                        }
-                                    }
-
-                                    Item {
-                                        width: 1
-                                    }
-                                }
-                            }
-
-                            onTagAdded: {
-                                //eywordsWrapper.appendKeyword(text)
-                            }
-
-                            onRemoveLast: {
-                                //keywordsWrapper.removeLastKeyword()
-                            }
-
-                            onTagsPasted: {
-                                //keywordsWrapper.pasteKeywords(tagsList)
-                            }
-                        }
+                    CustomScrollbar {
+                        anchors.topMargin: -5
+                        anchors.bottomMargin: -5
+                        anchors.rightMargin: -15
+                        flickable: otherFlv
                     }
                 }
 
@@ -473,12 +420,28 @@ Item {
                         Layout.fillWidth: true
                     }
 
+                    Timer {
+                        id: suggestedAddedTimer
+                        property int iterations: 0
+                        interval: 2000
+                        repeat: false
+                        running: false
+                        onTriggered: {
+                            addKeywordsButton.text = qsTr("Add suggested keywords")
+                            addKeywordsButton.enabled = true
+                        }
+                    }
+
                     StyledButton {
+                        id: addKeywordsButton
                         text: qsTr("Add suggested keywords")
                         enabled: !keywordsSuggestor.isInProgress
                         width: 200
                         onClicked: {
                             callbackObject.promoteKeywords(keywordsSuggestor.getSuggestedKeywords())
+                            text = qsTr("Added!")
+                            addKeywordsButton.enabled = false
+                            suggestedAddedTimer.start()
                         }
                     }
 
@@ -493,6 +456,7 @@ Item {
     }
 
     Component.onCompleted: {
+        focus = true
         // for some reason onCompleted was called twice
         if (!initialized) {
             queryText.forceActiveFocus()

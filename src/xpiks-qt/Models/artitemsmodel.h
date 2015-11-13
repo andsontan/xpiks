@@ -27,11 +27,13 @@
 #include <QList>
 #include <QPair>
 #include <QUrl>
+#include <QSize>
 #include "abstractlistmodel.h"
 #include "../Common/baseentity.h"
 
 namespace Models {
     class ArtworkMetadata;
+    class ArtItemInfo;
 
     class ArtItemsModel :
             public AbstractListModel,
@@ -52,8 +54,6 @@ namespace Models {
             ArtworkDescriptionRole = Qt::UserRole + 1,
             EditArtworkDescriptionRole,
             ArtworkFilenameRole,
-            ArtworkAuthorRole,
-            EditArtworkAuthorRole,
             ArtworkTitleRole,
             EditArtworkTitleRole,
             KeywordsStringRole,
@@ -87,21 +87,23 @@ namespace Models {
         /*Q_INVOKABLE*/ void removeSelectedArtworks(QList<int> &selectedIndices);
         /*Q_INVOKABLE*/ void updateSelectedArtworks(const QList<int> &selectedIndices);
         /*Q_INVOKABLE*/ void saveSelectedArtworks(const QList<int> &selectedIndices);
-        /*Q_INVOKABLE*/ void checkForWarnings(const QList<ArtworkMetadata *> selectedArtworks);
 
         Q_INVOKABLE QObject *getArtworkItself(int index) const;
-        Q_INVOKABLE QString retrieveImageSize(int metadataIndex) const;
+        Q_INVOKABLE QSize retrieveImageSize(int metadataIndex) const;
         Q_INVOKABLE QString retrieveFileSize(int metadataIndex) const;
+        Q_INVOKABLE QString getArtworkFilepath(int index) const;
+
+        Q_INVOKABLE void addRecentDirectory(const QString &directory);
 
     public:
-        int rowCount(const QModelIndex & parent = QModelIndex()) const;
-        QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
-        Qt::ItemFlags flags(const QModelIndex &index) const;
-        bool setData(const QModelIndex &index, const QVariant & value, int role = Qt::EditRole);
+        virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
+        virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+        virtual Qt::ItemFlags flags(const QModelIndex &index) const;
+        virtual bool setData(const QModelIndex &index, const QVariant & value, int role = Qt::EditRole);
 
     public slots:
         int addLocalArtworks(const QList<QUrl> &artworksPaths);
-        int addLocalDirectory(const QUrl &directory);
+        int addLocalDirectories(const QList<QUrl> &directories);
         void itemModifiedChanged(bool) { updateModifiedCount(); }
 
     public:
@@ -118,7 +120,8 @@ namespace Models {
         void updateItemsAtIndices(const QList<int> &indices);
 
     private:
-        int addDirectory(const QString &directory);
+        int addDirectories(const QStringList &directories);
+        void doAddDirectory(const QString &directory, QStringList &filesList);
         int addFiles(const QStringList &filepath);
         void setAllItemsSelected(bool selected);
         void getSelectedArtworks(QList<ArtworkMetadata *> &selectedArtworks) const;
@@ -127,14 +130,14 @@ namespace Models {
         void doCombineArtwork(int index);
 
     signals:
-        void needCheckItemsForWarnings(const QList<ArtworkMetadata*> &artworks);
+        void needCheckItemsForWarnings(const QList<ArtItemInfo*> &artworks);
         void modifiedArtworksCountChanged();
         void artworksChanged();
         void artworksAdded(int count);
         void selectedArtworkRemoved();
 
     protected:
-        QHash<int, QByteArray> roleNames() const;
+       virtual QHash<int, QByteArray> roleNames() const;
 
     protected:
         void removeInnerItem(int row);

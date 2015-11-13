@@ -61,6 +61,11 @@ namespace Models {
         Q_INVOKABLE int getModifiedSelectedCount() const;
         Q_INVOKABLE void removeArtworksDirectory(int index);
         Q_INVOKABLE void checkForWarnings();
+        Q_INVOKABLE int getItemsCount() const { return rowCount(); }
+        Q_INVOKABLE void reimportMetadataForSelected();
+        Q_INVOKABLE int findSelectedItemIndex() const;
+        Q_INVOKABLE void removeMetadataInSelected() const;
+        Q_INVOKABLE void updateFilter() { invalidateFilter(); emit afterInvalidateFilter(); }
 
     public slots:
         void itemSelectedChanged(bool value);
@@ -68,16 +73,22 @@ namespace Models {
 
     signals:
         void searchTermChanged(const QString &searchTerm);
-        void needCheckItemsForWarnings(const QList<ArtworkMetadata*> &artworks);
+        void needCheckItemsForWarnings(const QList<ArtItemInfo*> &artworks);
         void selectedArtworksCountChanged();
+        void afterInvalidateFilter();
 
     private:
         void setFilteredItemsSelected(bool selected);
         QList<ArtworkMetadata *> getSelectedOriginalItems() const;
         QList<ArtItemInfo *> getSelectedOriginalItemsWithIndices() const;
+        QList<ArtItemInfo *> getAllItemsWithIndices() const;
         QList<int> getSelectedOriginalIndices() const;
         void forceUnselectAllItems();
         ArtItemsModel *getArtItemsModel() const;
+        bool fitsSpecialKeywords(const QString &searchTerm, const ArtworkMetadata *metadata) const;
+        bool containsPartsSearch(const ArtworkMetadata *metadata) const;
+        bool containsAnyPartsSearch(const ArtworkMetadata *metadata) const;
+        bool containsAllPartsSearch(const ArtworkMetadata *metadata) const;
 
     protected:
         bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const Q_DECL_OVERRIDE;

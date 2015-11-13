@@ -22,39 +22,38 @@
 #include "exiftoolwrapper.h"
 
 #include <QByteArray>
+#include <QTextCodec>
 #include <QProcess>
 #include <QRegExp>
 #include <QString>
 #include <QDebug>
 #include <QPair>
-#include "externaltoolsprovider.h"
 #include "../Models/artworkmetadata.h"
 #include "../Models/exportinfo.h"
 #include "tempmetadatadb.h"
+#include "Helpers/settingsprovider.h"
+#include "../Models/settingsmodel.h"
 
 // returns NULL if patching wasn't successfull
 ExportPair writeArtworkMetadata(ExportPair pair) {
     Models::ArtworkMetadata *metadata = pair.first;
     Models::ExportInfo *exportInfo = pair.second;
 
-    QString author = QString(metadata->getAuthor()).simplified();
     QString title = QString(metadata->getTitle()).simplified();
     QString description = QString(metadata->getDescription()).simplified();
     const QString &keywords = metadata->getKeywordsString();
 
-    if (title.isEmpty()) {
+    if (title.simplified().isEmpty()) {
         title = description;
     }
 
-    const QString exiftoolPath = Helpers::ExternalToolsProvider::getExifToolPath();
+    Models::SettingsModel *settingsModel = Helpers::SettingsProvider::getInstance().getSettingsModelInstance();
+    const QString exiftoolPath = settingsModel->getExifToolPath();
 
     QStringList arguments;
     arguments << exiftoolPath;
     arguments << "-quiet" << "-ignoreMinorErrors";
-    arguments << QString("-EXIF:Artist=\"%1\"").arg(author);
-    arguments << QString("-IPTC:By-line=\"%1\"").arg(author);
-    arguments << QString("-XMP:Author=\"%1\"").arg(author);
-    arguments << QString("-XMP:Creator=\"%1\"").arg(author);
+    arguments << "-charset exif=UTF8" << "-charset iptc=UTF8";
     arguments << QString("-IPTC:ObjectName=\"%1\"").arg(title);
     arguments << QString("-XMP:Title=\"%1\"").arg(title);
     arguments << QString("-EXIF:ImageDescription=\"%1\"").arg(description);
@@ -65,6 +64,7 @@ ExportPair writeArtworkMetadata(ExportPair pair) {
     arguments << QString("-IPTC:Keywords=\"%1\"").arg(keywords);
     arguments << QString("-XMP:Keywords=\"%1\"").arg(keywords);
     arguments << QString("-XMP:Subject=\"%1\"").arg(keywords);
+    arguments << QString("-IPTC:CodedCharacterSet=\"UTF8\"");
 
     if (!exportInfo->getMustSaveOriginal()) {
         arguments << "-overwrite_original";
@@ -78,59 +78,72 @@ ExportPair writeArtworkMetadata(ExportPair pair) {
     QString command = arguments.join(' ');
 
     process.start(command);
-    if (!process.waitForFinished()) {
+    bool finished = process.waitForFinished();
+
+    if (!finished || process.exitStatus() != QProcess::NormalExit) {
+        QByteArray stdoutByteArray = process.readAll();
+        QString stdoutText(stdoutByteArray);
+        if (!stdoutText.isEmpty()) {
+            qDebug() << "Error:" << exiftoolPath << stdoutText;
+        }
+
+        qDebug() << "Error:" << exiftoolPath << process.errorString();
+        return qMakePair(resultMetadata, exportInfo);
+    } else {
+        resultMetadata = metadata;
         return qMakePair(resultMetadata, exportInfo);
     }
-
-    if (process.exitStatus() == QProcess::NormalExit) {
-        resultMetadata = metadata;
-    }
-
-    return qMakePair(resultMetadata, exportInfo);
 }
 
 void grabMetadata(const QStringList &items, Models::ImportDataResult *importData,
-                  QRegExp authorRegExp,
                   QRegExp titleRegExp,
                   QRegExp descriptionRegExp,
                   QRegExp keywordsRegExp);
 
 ImportPair readArtworkMetadata(ImportPair pair) {
-    const QString exiftoolPath = Helpers::ExternalToolsProvider::getExifToolPath();
+    Models::SettingsModel *settingsModel = Helpers::SettingsProvider::getInstance().getSettingsModelInstance();
+    const QString exiftoolPath = settingsModel->getExifToolPath();
 
     Models::ImportDataResult *importData = pair.second;
     Models::ArtworkMetadata *metadata = pair.first;
 
     QStringList arguments;
     arguments << "-s" << "-e" << "-n" << "-EXIF:all" << "-IPTC:all" << "-XMP:all";
+    arguments << "-charset exif=UTF8" << "-charset iptc=UTF8";
     arguments << metadata->getFilepath();
 
     QProcess process;
     process.start(exiftoolPath, arguments);
-    if (!process.waitForFinished()) {
-        return ImportPair(NULL, NULL);
-    }
+    bool finished = process.waitForFinished();
 
     QByteArray stdoutByteArray = process.readAll();
-    QString stdoutTextText(stdoutByteArray);
-    QStringList items = stdoutTextText.split(QRegExp("[\r\n]"), QString::SkipEmptyParts);
+    QString stdoutText = QString::fromUtf8(stdoutByteArray.data());
 
-    QRegExp authorRegExp("^Artist\\s|^By-line\\s|^Creator\\s");
+    if (!finished || process.exitStatus() != QProcess::NormalExit) {
+        if (!stdoutText.isEmpty()) {
+            qDebug() << "Error:" << exiftoolPath << stdoutText;
+        }
+
+        qDebug() << "Error:" << exiftoolPath << process.errorString();
+        return ImportPair(metadata, NULL);
+    }
+
+    QStringList items = stdoutText.split(QRegExp("[\r\n]"), QString::SkipEmptyParts);
+
     QRegExp titleRegExp("^ObjectName\\s|^Title\\s");
     QRegExp descriptionRegExp("^ImageDescription\\s|^Caption-Abstract\\s|^Description\\s");
     QRegExp keywordsRegExp("^Keywords\\s|^Subject\\s");
 
-    grabMetadata(items, importData, authorRegExp, titleRegExp, descriptionRegExp, keywordsRegExp);
+    grabMetadata(items, importData, titleRegExp, descriptionRegExp, keywordsRegExp);
 
     return pair;
 }
 
 void grabMetadata(const QStringList &items, Models::ImportDataResult *importData,
-                  QRegExp authorRegExp,
                   QRegExp titleRegExp,
                   QRegExp descriptionRegExp,
                   QRegExp keywordsRegExp) {
-    bool authorSet = false, titleSet = false, descriptionSet = false, keywordsSet = false;
+    bool titleSet = false, descriptionSet = false, keywordsSet = false;
 
     foreach (const QString &item, items) {
         QStringList parts = item.split(':', QString::SkipEmptyParts);
@@ -139,22 +152,32 @@ void grabMetadata(const QStringList &items, Models::ImportDataResult *importData
         }
 
         const QString &first = parts.first();
+        QString second;
 
-        if (!authorSet && first.contains(authorRegExp)) {
-            importData->Author = parts.at(1).trimmed();
-            authorSet = true;
-        }
-        else if (!titleSet && first.contains(titleRegExp)) {
-            importData->Title = parts.at(1).trimmed();
-            titleSet = true;
+        if (!titleSet && first.contains(titleRegExp)) {
+            second = parts.at(1).simplified();
+            if (!second.isEmpty()) {
+                importData->Title = second;
+                titleSet = true;
+            }
         }
         else if (!descriptionSet && first.contains(descriptionRegExp)) {
-            importData->Description = parts.at(1).trimmed();
-            descriptionSet = true;
+            second = parts.at(1).simplified();
+            if (!second.isEmpty()) {
+                importData->Description = second;
+                descriptionSet = true;
+            }
         }
         else if (!keywordsSet && first.contains(keywordsRegExp)) {
-            importData->Keywords = parts.at(1).trimmed();
-            keywordsSet = true;
+            second = parts.at(1).simplified();
+            if (!second.isEmpty()) {
+                importData->Keywords = second;
+                keywordsSet = true;
+            }
+        }
+
+        if (titleSet && descriptionSet && keywordsSet) {
+            break;
         }
     }
 }

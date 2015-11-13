@@ -28,7 +28,7 @@
 #include "../Commands/commandmanager.h"
 
 Commands::PasteKeywordsCommand::~PasteKeywordsCommand() {
-    delete m_ArtItemInfo;
+    qDeleteAll(m_ArtItemInfos);
 }
 
 Commands::CommandResult *Commands::PasteKeywordsCommand::execute(const Commands::CommandManager *commandManager) const {
@@ -37,12 +37,14 @@ Commands::CommandResult *Commands::PasteKeywordsCommand::execute(const Commands:
     QList<int> indicesToUpdate;
     QList<UndoRedo::ArtworkMetadataBackup*> artworksBackups;
 
-    Models::ArtworkMetadata *metadata = m_ArtItemInfo->getOrigin();
+    foreach (Models::ArtItemInfo *itemInfo, m_ArtItemInfos) {
+        Models::ArtworkMetadata *metadata = itemInfo->getOrigin();
 
-    indicesToUpdate.append(m_ArtItemInfo->getOriginalIndex());
-    artworksBackups.append(new UndoRedo::ArtworkMetadataBackup(metadata));
+        indicesToUpdate.append(itemInfo->getOriginalIndex());
+        artworksBackups.append(new UndoRedo::ArtworkMetadataBackup(metadata));
 
-    metadata->appendKeywords(m_KeywordsList);
+        metadata->appendKeywords(m_KeywordsList);
+    }
 
     UndoRedo::ModifyArtworksHistoryItem *modifyArtworksItem =
             new UndoRedo::ModifyArtworksHistoryItem(artworksBackups, indicesToUpdate,

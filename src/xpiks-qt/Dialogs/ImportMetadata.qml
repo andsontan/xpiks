@@ -34,11 +34,24 @@ Item {
     id: metadataImportComponent
     anchors.fill: parent
 
+    Keys.onEscapePressed: {
+        if (!iptcProvider.inProgress) {
+            closePopup()
+        }
+    }
+
     function closePopup() {
+        iptcProvider.isLaunched = false
         metadataImportComponent.destroy()
     }
 
-    Component.onCompleted: iptcProvider.ignoreAutosave = false
+    Component.onCompleted: {
+        iptcProvider.ignoreAutosave = false
+        focus = true
+    }
+
+    signal dialogDestruction();
+    Component.onDestruction: dialogDestruction();
 
     PropertyAnimation { target: metadataImportComponent; property: "opacity";
         duration: 400; from: 0; to: 1;
@@ -66,6 +79,7 @@ Item {
             anchors.fill: parent
             onWheel: wheel.accepted = true
             onClicked: mouse.accepted = true;
+            onDoubleClicked: mouse.accepted = true
 
             property real old_x : 0
             property real old_y : 0
@@ -127,6 +141,7 @@ Item {
 
                     StyledCheckbox {
                         text: qsTr("Ignore autosaves (.xpks)")
+                        enabled: settingsModel.saveBackups && !iptcProvider.inProgress
                         checked: iptcProvider.ignoreAutosave
                         onCheckedChanged: iptcProvider.ignoreAutosave = checked
                     }

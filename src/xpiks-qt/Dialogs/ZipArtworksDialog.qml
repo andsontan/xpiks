@@ -36,6 +36,9 @@ Item {
     property var callbackObject
     anchors.fill: parent
 
+    signal dialogDestruction();
+    Component.onDestruction: dialogDestruction();
+
     function closePopup() {
         zipArtworksComponent.destroy()
     }
@@ -65,6 +68,7 @@ Item {
             anchors.fill: parent
             onWheel: wheel.accepted = true
             onClicked: mouse.accepted = true
+            onDoubleClicked: mouse.accepted = true
 
             property real old_x : 0
             property real old_y : 0
@@ -106,7 +110,7 @@ Item {
                     Layout.fillWidth: true
 
                     StyledText {
-                        text: qsTr("Zip zelected artworks with vector files (.ai or .eps)")
+                        text: qsTr("Zip selected artworks with vector files (.ai or .eps)")
                     }
 
                     Item {

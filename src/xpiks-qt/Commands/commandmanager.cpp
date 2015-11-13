@@ -35,6 +35,8 @@
 #include "../Suggestion/keywordssuggestor.h"
 #include "../Commands/addartworkscommand.h"
 #include "../Models/filteredartitemsproxymodel.h"
+#include "../Models/recentdirectoriesmodel.h"
+#include "../Models/artiteminfo.h"
 
 void Commands::CommandManager::InjectDependency(Models::ArtworksRepository *artworkRepository) {
     Q_ASSERT(artworkRepository != NULL); m_ArtworksRepository = artworkRepository;
@@ -98,6 +100,15 @@ void Commands::CommandManager::InjectDependency(Suggestion::KeywordsSuggestor *k
     m_KeywordsSuggestor->setCommandManager(this);
 }
 
+void Commands::CommandManager::InjectDependency(Models::SettingsModel *settingsModel) {
+    Q_ASSERT(settingsModel != NULL); m_SettingsModel = settingsModel;
+}
+
+void Commands::CommandManager::InjectDependency(Models::RecentDirectoriesModel *recentDirectories) {
+    Q_ASSERT(recentDirectories != NULL); m_RecentDirectories = recentDirectories;
+}
+
+
 Commands::CommandResult *Commands::CommandManager::processCommand(Commands::CommandBase *command) const
 {
     Commands::CommandResult *result = command->execute(this);
@@ -120,11 +131,11 @@ void Commands::CommandManager::connectEntitiesSignalsSlots() const
     QObject::connect(m_SecretsManager, SIGNAL(afterMasterPasswordReset()),
                      m_UploadInfoRepository, SLOT(onAfterMasterPasswordReset()));
 
-    QObject::connect(m_ArtItemsModel, SIGNAL(needCheckItemsForWarnings(QList<ArtworkMetadata*>)),
-                     m_WarningsManager, SLOT(onCheckWarnings(QList<ArtworkMetadata*>)));
+    QObject::connect(m_ArtItemsModel, SIGNAL(needCheckItemsForWarnings(QList<ArtItemInfo*>)),
+                     m_WarningsManager, SLOT(onCheckWarnings(QList<ArtItemInfo*>)));
 
-    QObject::connect(m_FilteredItemsModel, SIGNAL(needCheckItemsForWarnings(QList<ArtworkMetadata*>)),
-                     m_WarningsManager, SLOT(onCheckWarnings(QList<ArtworkMetadata*>)));
+    QObject::connect(m_FilteredItemsModel, SIGNAL(needCheckItemsForWarnings(QList<ArtItemInfo*>)),
+                     m_WarningsManager, SLOT(onCheckWarnings(QList<ArtItemInfo*>)));
 
     QObject::connect(m_ArtItemsModel, SIGNAL(selectedArtworkRemoved()),
                      m_FilteredItemsModel, SLOT(onSelectedArtworksRemoved()));
@@ -191,6 +202,12 @@ void Commands::CommandManager::updateArtworks(const QList<int> &indices) const
 {
     if (m_ArtItemsModel) {
         m_ArtItemsModel->updateItemsAtIndices(indices);
+    }
+}
+
+void Commands::CommandManager::addToRecentDirectories(const QString &path) const {
+    if (m_RecentDirectories) {
+        m_RecentDirectories->pushDirectory(path);
     }
 }
 

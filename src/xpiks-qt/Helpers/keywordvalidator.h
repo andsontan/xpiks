@@ -19,33 +19,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef EXTERNALTOOLSPROVIDER_H
-#define EXTERNALTOOLSPROVIDER_H
+#include <QString>
 
-class QString;
+#ifndef KEYWORDVALIDATOR
+#define KEYWORDVALIDATOR
 
 namespace Helpers {
-    class ExternalToolsProvider
-    {
-    private:
-        ExternalToolsProvider() {}
-        ExternalToolsProvider(ExternalToolsProvider const&);
-        void operator=(ExternalToolsProvider const&);
-
-    public:
-        static QString getExifToolPath();
-        static QString getCurlPath();
-        static int getOneItemUploadMinutesTimeout();
-
-    public:
-        static QString defaultExifToolPath;
-        static QString defaultCurlPath;
-        static int defaultOneItemUploadMinutesTimeout;
-        static ExternalToolsProvider &getInstance() {
-            static ExternalToolsProvider instance;
-            return instance;
-        }
-    };
+    bool isValidKeyword(const QString &keyword);
+    QString doSanitizeKeyword(const QString &keyword);
 }
 
-#endif // EXTERNALTOOLSPROVIDER_H
+#endif // KEYWORDVALIDATOR
+

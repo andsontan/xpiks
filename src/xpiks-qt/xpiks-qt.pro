@@ -1,5 +1,7 @@
 TEMPLATE = app
 
+QMAKE_MAC_SDK = macosx10.11
+
 QT += qml quick widgets concurrent
 
 SOURCES += main.cpp \
@@ -10,7 +12,6 @@ SOURCES += main.cpp \
     Models/combinedartworksmodel.cpp \
     Helpers/indiceshelper.cpp \
     Models/iptcprovider.cpp \
-    Helpers/externaltoolsprovider.cpp \
     Models/artworkuploader.cpp \
     Models/artworksprocessor.cpp \
     Models/uploadinforepository.cpp \
@@ -57,7 +58,14 @@ SOURCES += main.cpp \
     Models/logsmodel.cpp \
     Helpers/exiftoolwrapper.cpp \
     Models/filteredartitemsproxymodel.cpp \
-    Helpers/filenameshelpers.cpp
+    Helpers/filenameshelpers.cpp \
+    Common/flags.cpp \
+    Helpers/keywordvalidator.cpp \
+    Helpers/helpersqmlwrapper.cpp \
+    Models/recentdirectoriesmodel.cpp \
+    Suggestion/locallibrary.cpp \
+    Suggestion/libraryqueryworker.cpp \
+    Suggestion/libraryloaderworker.cpp
 
 RESOURCES += qml.qrc
 
@@ -90,7 +98,6 @@ HEADERS += \
     Helpers/constants.h \
     Helpers/appsettings.h \
     Models/iptcprovider.h \
-    Helpers/externaltoolsprovider.h \
     Helpers/exiftoolwrapper.h \
     Models/artworkuploader.h \
     Helpers/curlwrapper.h \
@@ -151,7 +158,16 @@ HEADERS += \
     Helpers/loggingworker.h \
     Common/defines.h \
     Models/filteredartitemsproxymodel.h \
-    Helpers/filenameshelpers.h
+    Helpers/filenameshelpers.h \
+    Common/flags.h \
+    Helpers/keywordvalidator.h \
+    Helpers/helpersqmlwrapper.h \
+    Models/recentdirectoriesmodel.h \
+    Helpers/settingsprovider.h \
+    Common/version.h \
+    Suggestion/locallibrary.h \
+    Suggestion/libraryqueryworker.h \
+    Suggestion/libraryloaderworker.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
@@ -186,7 +202,13 @@ DISTFILES += \
     StyledControls/StyledBusyIndicator.qml \
     StyledControls/StyledTabView.qml \
     Components/CustomBorder.qml \
-    Dialogs/ArtworkPreview.qml
+    Dialogs/ArtworkPreview.qml \
+    StyledControls/StyledBlackButton.qml \
+    StyledControls/StyledSlider.qml \
+    Components/KeywordWrapper.qml \
+    Components/CustomScrollbar.qml \
+    Dialogs/EditArtworkVerticalDialog.qml \
+    Dialogs/EditArtworkHorizontalDialog.qml
 
 macx {
 OBJECTIVE_SOURCES += \

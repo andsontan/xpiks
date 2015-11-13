@@ -35,9 +35,15 @@ Item {
     property string logText
     anchors.fill: parent
 
+    signal dialogDestruction();
+    Component.onDestruction: dialogDestruction();
+
     function closePopup() {
         logsComponent.destroy()
     }
+
+    Component.onCompleted: focus = true
+    Keys.onEscapePressed: closePopup()
 
     function scrollToBottom() {
         var flickable = scrollView.flickableItem
@@ -87,6 +93,7 @@ Item {
             anchors.fill: parent
             onWheel: wheel.accepted = true
             onClicked: mouse.accepted = true
+            onDoubleClicked: mouse.accepted = true
 
             property real old_x : 0
             property real old_y : 0

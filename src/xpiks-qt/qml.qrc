@@ -34,5 +34,11 @@
         <file>StyledControls/StyledTabView.qml</file>
         <file>Components/CustomBorder.qml</file>
         <file>Dialogs/ArtworkPreview.qml</file>
+        <file>StyledControls/StyledBlackButton.qml</file>
+        <file>StyledControls/StyledSlider.qml</file>
+        <file>Components/KeywordWrapper.qml</file>
+        <file>Components/CustomScrollbar.qml</file>
+        <file>Dialogs/EditArtworkHorizontalDialog.qml</file>
+        <file>Dialogs/EditArtworkVerticalDialog.qml</file>
     </qresource>
 </RCC>

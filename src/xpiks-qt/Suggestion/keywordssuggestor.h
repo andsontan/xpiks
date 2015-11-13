@@ -31,9 +31,10 @@
 #include "../Common/baseentity.h"
 #include "../Common/basickeywordsmodel.h"
 #include "suggestionqueryengine.h"
+#include "suggestionartwork.h"
 
 namespace Suggestion {
-    class SuggestionArtwork;
+    class LocalLibrary;
 
     class KeywordsSuggestor : public QAbstractListModel, public Common::BaseEntity
     {
@@ -41,22 +42,34 @@ namespace Suggestion {
         Q_PROPERTY(int suggestedKeywordsCount READ getSuggestedKeywordsCount NOTIFY suggestedKeywordsCountChanged)
         Q_PROPERTY(int otherKeywordsCount READ getOtherKeywordsCount NOTIFY otherKeywordsCountChanged)
         Q_PROPERTY(bool isInProgress READ getIsInProgress NOTIFY isInProgressChanged)
+        Q_PROPERTY(bool useLocal READ getUseLocal WRITE setUseLocal NOTIFY useLocalChanged)
     public:
         KeywordsSuggestor(QObject *parent=NULL) :
             QAbstractListModel(parent),
             Common::BaseEntity(),
             m_QueryEngine(this),
+            m_LocalLibrary(NULL),
             m_SuggestedKeywords(this),
             m_AllOtherKeywords(this),
             m_SelectedArtworksCount(0),
-            m_IsInProgress(false)
+            m_IsInProgress(false),
+            m_UseLocal(false)
         {}
 
         ~KeywordsSuggestor() { qDeleteAll(m_Suggestions); }
 
     public:
+        void setLocalLibrary(LocalLibrary *library) { m_LocalLibrary = library; }
         void setSuggestedArtworks(const QList<SuggestionArtwork*> &suggestedArtworks);
         void clear();
+
+        bool getUseLocal() const { return m_UseLocal; }
+        void setUseLocal(bool value) {
+            if (value != m_UseLocal) {
+                m_UseLocal = value;
+                emit useLocalChanged();
+            }
+        }
 
     private:
         int getSuggestedKeywordsCount() const { return m_SuggestedKeywords.rowCount(); }
@@ -67,6 +80,8 @@ namespace Suggestion {
         void suggestedKeywordsCountChanged();
         void otherKeywordsCountChanged();
         void isInProgressChanged();
+        void useLocalChanged();
+        void suggestionArrived();
 
     private:
         void setInProgress() { m_IsInProgress = true; emit isInProgressChanged(); }
@@ -102,11 +117,11 @@ namespace Suggestion {
             IsSelectedRole
         };
 
-        int rowCount(const QModelIndex & parent = QModelIndex()) const;
-        QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+        virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
+        virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
 
     protected:
-        QHash<int, QByteArray> roleNames() const;
+        virtual QHash<int, QByteArray> roleNames() const;
 
     private:
         void accountKeywords(const QStringList &keywords, int sign);
@@ -117,10 +132,12 @@ namespace Suggestion {
         QHash<QString, int> m_KeywordsHash;
         QList<SuggestionArtwork *> m_Suggestions;
         SuggestionQueryEngine m_QueryEngine;
+        LocalLibrary *m_LocalLibrary;
         Common::BasicKeywordsModel m_SuggestedKeywords;
         Common::BasicKeywordsModel m_AllOtherKeywords;
         int m_SelectedArtworksCount;
-        bool m_IsInProgress;
+        volatile bool m_IsInProgress;
+        volatile bool m_UseLocal;
     };
 }
 

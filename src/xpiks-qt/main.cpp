@@ -19,6 +19,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <iostream>
+
 #include <QDir>
 #include <QtQml>
 #include <QFile>
@@ -35,15 +37,19 @@
 #include "Common/defines.h"
 #include "Models/filteredartitemsproxymodel.h"
 #include "Suggestion/suggestionqueryengine.h"
+#include "Models/recentdirectoriesmodel.h"
 #include "Suggestion/keywordssuggestor.h"
 #include "Models/combinedartworksmodel.h"
 #include "Helpers/globalimageprovider.h"
 #include "Models/uploadinforepository.h"
+#include "Helpers/helpersqmlwrapper.h"
 #include "Encryption/secretsmanager.h"
 #include "Models/artworksrepository.h"
+#include "Helpers/settingsprovider.h"
 #include "UndoRedo/undoredomanager.h"
 #include "Helpers/clipboardhelper.h"
 #include "Commands/commandmanager.h"
+#include "Suggestion/locallibrary.h"
 #include "Models/artworkuploader.h"
 #include "Models/warningsmanager.h"
 #include "Helpers/loggingworker.h"
@@ -56,6 +62,7 @@
 #include "Helpers/runguard.h"
 #include "Models/logsmodel.h"
 #include "Helpers/logger.h"
+#include "Common/version.h"
 
 #ifdef WITH_LOGS
 
@@ -100,22 +107,30 @@ void initQSettings() {
     QCoreApplication::setOrganizationDomain(Constants::ORGANIZATION_DOMAIN);
     QCoreApplication::setApplicationName(Constants::APPLICATION_NAME);
     QString appVersion(STRINGIZE(BUILDNUMBER));
-    QCoreApplication::setApplicationVersion("1.0 beta.8 - " + appVersion.left(10));
+    QCoreApplication::setApplicationVersion(STRINGIZE(XPIKS_VERSION)" "STRINGIZE(XPIKS_VERSION_SUFFIX)" - " + appVersion.left(10));
 }
 
 int main(int argc, char *argv[]) {
     Helpers::RunGuard guard("xpiks");
-    if (!guard.tryToRun()) { return 0; }
+    if (!guard.tryToRun()) {
+        std::cerr << "Xpiks is already running";
+        return -1;
+    }
 
     initQSettings();
 
+    Suggestion::LocalLibrary localLibrary;
+
     QString appDataPath = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
     if (!appDataPath.isEmpty()) {
-        QDir logFileDir(appDataPath);
-        QString logFilePath = logFileDir.filePath(Constants::LOG_FILENAME);
+        QDir appDataDir(appDataPath);
 
+        QString logFilePath = appDataDir.filePath(Constants::LOG_FILENAME);
         Helpers::Logger &logger = Helpers::Logger::getInstance();
         logger.setLogFilePath(logFilePath);
+
+        QString libraryFilePath = appDataDir.filePath(Constants::LIBRARY_FILENAME);
+        localLibrary.setLibraryPath(libraryFilePath);
     }
 
     Models::LogsModel logsModel;
@@ -134,8 +149,9 @@ int main(int argc, char *argv[]) {
     qInstallMessageHandler(myMessageHandler);
     qDebug() << "Log started";
 #endif
-
     QApplication app(argc, argv);
+
+    localLibrary.loadLibraryAsync();
 
     QTranslator qtTranslator;
     qtTranslator.load("qt_" + QLocale::system().name(),
@@ -150,7 +166,7 @@ int main(int argc, char *argv[]) {
     Models::ArtItemsModel artItemsModel;
     Models::CombinedArtworksModel combinedArtworksModel;
     Models::IptcProvider iptcProvider;
-    Models::ArtworkUploader artworkUploader;
+    iptcProvider.setLocalLibrary(&localLibrary);
     Models::UploadInfoRepository uploadInfoRepository;
     Models::WarningsManager warningsManager;
     Helpers::AppSettings appSettings;
@@ -159,8 +175,11 @@ int main(int argc, char *argv[]) {
     UndoRedo::UndoRedoManager undoRedoManager;
     Models::ZipArchiver zipArchiver;
     Suggestion::KeywordsSuggestor keywordsSuggestor;
+    keywordsSuggestor.setLocalLibrary(&localLibrary);
     Models::FilteredArtItemsProxyModel filteredArtItemsModel;
     filteredArtItemsModel.setSourceModel(&artItemsModel);
+    Models::RecentDirectoriesModel recentDirectorieModel;
+    Models::ArtworkUploader artworkUploader(settingsModel.getMaxParallelUploads());
 
     Commands::CommandManager commandManager;
     commandManager.InjectDependency(&artworkRepository);
@@ -175,10 +194,15 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&undoRedoManager);
     commandManager.InjectDependency(&zipArchiver);
     commandManager.InjectDependency(&keywordsSuggestor);
+    commandManager.InjectDependency(&settingsModel);
+    commandManager.InjectDependency(&recentDirectorieModel);
 
     // other initializations
     secretsManager.setMasterPasswordHash(appSettings.value(Constants::MASTER_PASSWORD_HASH, "").toString());
     uploadInfoRepository.initFromString(appSettings.value(Constants::UPLOAD_HOSTS, "").toString());
+    recentDirectorieModel.deserializeFromSettings(appSettings.value(Constants::RECENT_DIRECTORIES, "").toString());
+
+    Helpers::SettingsProvider::getInstance().setSettingsModelInstance(&settingsModel);
 
     commandManager.connectEntitiesSignalsSlots();
 
@@ -188,6 +212,8 @@ int main(int argc, char *argv[]) {
     Helpers::GlobalImageProvider *globalProvider = new Helpers::GlobalImageProvider(QQmlImageProviderBase::Image);
 
     warningsManager.setImageProvider(globalProvider);
+
+    Helpers::HelpersQmlWrapper helpersQmlWrapper;
 
     QQmlContext *rootContext = engine.rootContext();
     rootContext->setContextProperty("artItemsModel", &artItemsModel);
@@ -205,6 +231,8 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("keywordsSuggestor", &keywordsSuggestor);
     rootContext->setContextProperty("settingsModel", &settingsModel);
     rootContext->setContextProperty("filteredArtItemsModel", &filteredArtItemsModel);
+    rootContext->setContextProperty("helpersWrapper", &helpersQmlWrapper);
+    rootContext->setContextProperty("recentDirectories", &recentDirectorieModel);
 
     engine.addImageProvider("global", globalProvider);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));

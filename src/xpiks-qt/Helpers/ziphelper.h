@@ -27,7 +27,7 @@ class QString;
 
 namespace Helpers {
     QStringList zipFiles(QStringList filepathes);
-    bool zipArtworkAndEPS(const QStringList &filepathes, QString &zipFilePath);
+    bool zipArtworkAndVector(const QStringList &filepathes, QString &zipFilePath);
     QString getArchivePath(const QString &artworkPath);
 }
 

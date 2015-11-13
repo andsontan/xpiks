@@ -99,8 +99,8 @@ namespace Models {
         volatile int m_ProcessedArtworksCount;
         volatile int m_ArtworksCount;
         volatile int m_ExistingMaxThreadsNumber;
-        bool m_IsInProgress;
-        bool m_IsError;
+        volatile bool m_IsInProgress;
+        volatile bool m_IsError;
     };
 }
 #endif // ARTWORKSPROCESSOR_H

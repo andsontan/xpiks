@@ -31,6 +31,7 @@
 #include "abstractlistmodel.h"
 #include "../Common/baseentity.h"
 #include "../Common/basickeywordsmodel.h"
+#include "../Common/flags.h"
 
 namespace Models {
     class ArtItemInfo;
@@ -42,15 +43,20 @@ namespace Models {
         Q_OBJECT
         Q_PROPERTY(QString description READ getDescription WRITE setDescription NOTIFY descriptionChanged)
         Q_PROPERTY(QString title READ getTitle WRITE setTitle NOTIFY titleChanged)
-        Q_PROPERTY(QString author READ getAuthor WRITE setAuthor NOTIFY authorChanged)
         Q_PROPERTY(int keywordsCount READ getKeywordsCount NOTIFY keywordsCountChanged)
         Q_PROPERTY(int selectedArtworksCount READ getSelectedArtworksCount NOTIFY selectedArtworksCountChanged)
         Q_PROPERTY(int artworksCount READ getArtworksCount NOTIFY artworksCountChanged)
+        Q_PROPERTY(bool changeDescription READ getChangeDescription WRITE setChangeDescription NOTIFY changeDescriptionChanged)
+        Q_PROPERTY(bool changeTitle READ getChangeTitle WRITE setChangeTitle NOTIFY changeTitleChanged)
+        Q_PROPERTY(bool changeKeywords READ getChangeKeywords WRITE setChangeKeywords NOTIFY changeKeywordsChanged)
+        Q_PROPERTY(bool appendKeywords READ getAppendKeywords WRITE setAppendKeywords NOTIFY appendKeywordsChanged)
+
     public:
         CombinedArtworksModel(QObject *parent = 0) :
             AbstractListModel(parent),
             Common::BaseEntity(),
-            m_CommonKeywordsModel(this)
+            m_CommonKeywordsModel(this),
+            m_EditFlags(0)
         {}
 
         virtual ~CombinedArtworksModel();
@@ -62,7 +68,6 @@ namespace Models {
         void initKeywords(const QStringList &ek) { m_CommonKeywordsModel.reset(ek); m_CommonKeywordsSet.unite(QSet<QString>::fromList(m_CommonKeywordsModel.getKeywords())); }
         void initDescription(const QString &description) { setDescription(description); }
         void initTitle(const QString &title) { setTitle(title); }
-        void initAuthor(const QString &author) { setAuthor(author); }
 
     public:
         void recombineArtworks();
@@ -79,29 +84,39 @@ namespace Models {
                 emit descriptionChanged();
             }
         }
+
         const QString &getTitle() const { return m_ArtworkTitle; }
-        const QString &getAuthor() const { return m_ArtworkAuthor; }
         void setTitle(const QString &value) {
             if (m_ArtworkTitle != value) {
                 m_ArtworkTitle = value;
                 emit titleChanged();
             }
         }
-        void setAuthor(const QString &value) {
-            if (m_ArtworkAuthor != value) {
-                m_ArtworkAuthor = value;
-                emit authorChanged();
-            }
-        }
+
         int getKeywordsCount() const { return m_CommonKeywordsModel.rowCount(); }
+
+        bool getChangeDescription() const { return Common::HasFlag(m_EditFlags, Common::EditDesctiption); }
+        void setChangeDescription(bool value);
+
+        bool getChangeTitle() const { return Common::HasFlag(m_EditFlags, Common::EditTitle); }
+        void setChangeTitle(bool value);
+
+        bool getChangeKeywords() const { return Common::HasFlag(m_EditFlags, Common::EditKeywords); }
+        void setChangeKeywords(bool value);
+
+        bool getAppendKeywords() const { return Common::HasFlag(m_EditFlags, Common::AppendKeywords); }
+        void setAppendKeywords(bool value);
 
     signals:
         void descriptionChanged();
         void titleChanged();
-        void authorChanged();
         void keywordsCountChanged();
         void selectedArtworksCountChanged();
         void artworksCountChanged();
+        void changeDescriptionChanged();
+        void changeKeywordsChanged();
+        void changeTitleChanged();
+        void appendKeywordsChanged();
 
     public:
         int getSelectedArtworksCount() const;
@@ -114,9 +129,9 @@ namespace Models {
         Q_INVOKABLE void pasteKeywords(const QStringList &keywords);
         Q_INVOKABLE void setArtworksSelected(int index, bool newState);
         Q_INVOKABLE void removeSelectedArtworks();
-        Q_INVOKABLE void saveSetKeywords() const;
-        Q_INVOKABLE void saveAddKeywords() const;
+        Q_INVOKABLE void saveEdits() const;
         Q_INVOKABLE void resetModelData();
+        Q_INVOKABLE void clearKeywords();
         Q_INVOKABLE QString getKeywordsString() { return m_CommonKeywordsModel.getKeywords().join(QChar(',')); }
         Q_INVOKABLE QObject *getKeywordsModel() {
             QObject *item = &m_CommonKeywordsModel;
@@ -125,7 +140,10 @@ namespace Models {
         }
 
     private:
-        void createCombinedEditCommand(int commandTypeInt) const;
+        void processCombinedEditCommand() const;
+        void enableAllFields();
+        void assignFromOneArtwork();
+        void assignFromManyArtworks();
 
     public:
         enum CombinedArtworksModelRoles {
@@ -134,11 +152,11 @@ namespace Models {
         };
 
     public:
-        int rowCount(const QModelIndex & parent = QModelIndex()) const;
-        QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+        virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
+        virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
 
     protected:
-        QHash<int, QByteArray> roleNames() const;
+        virtual QHash<int, QByteArray> roleNames() const;
 
     protected:
         void removeInnerItem(int row);
@@ -149,7 +167,7 @@ namespace Models {
         QSet<QString> m_CommonKeywordsSet;
         QString m_ArtworkDescription;
         QString m_ArtworkTitle;
-        QString m_ArtworkAuthor;
+        int m_EditFlags;
         bool m_IsModified;
     };
 }

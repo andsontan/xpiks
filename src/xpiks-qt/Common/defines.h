@@ -26,5 +26,8 @@
 #define WITH_LOGS
 #endif
 
+// 4*(avg word size 10 * avg keywords size 50)
+#define MAX_PASTE_SIZE 2000
+
 #endif // DEFINES
 

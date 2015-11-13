@@ -1,3 +1,56 @@
+xpiks (1.0-1) UNRELEASED; urgency=medium
+
+    This is the first public stable release of Xpiks!
+    
+    **Major features** of this release are:
+    
+    - Keywords Suggestion from the local library
+    - New dialogs for single item editing
+    - Advanced filtering support
+    - Improved scrolling support
+    - Improved warnings checking
+    
+    **Fixed issues**:
+    
+    - Xpiks fails to remove directory added via recent directories #147
+    - Empty EditableTags steals focus #128
+    - Xpiks can't read metadata written by some other software #159
+    - Upload percentage in Windows is not correct #140 
+ 
+ -- Artiom.M <a.mv@gmx.fr>  Thu, 5 Nov 2015 08:00:00 +0200
+
+xpiks (0.9b-1) UNRELEASED; urgency=medium
+
+    This beta release should be treated as Release Candidate for Xpiks
+
+    Major features of this release:
+
+    Improvements for Multiple Edit dialog
+    Search and Filtering through artworks is implemented
+    Improved look and feel of Tab control
+    Added ability to drop multiple files and directories at once
+    Added ability to reimport metadata for artworks on demand
+
+    Also this release provides features requested by Xpiks users:
+
+    ability to control size of keywords and description text
+    artworks preview is improved and can be viewed at 100%
+    backups files can be turned off in Settings
+    added support for proxy settings for uploading
+    added recent directories functionality
+    added support to non-latin characters in keywords
+    addes support for TIFF files for keywording
+
+    And issues to minor bugs:
+
+    fix for checkbox updates in Upload Advanced settings #119
+    fix for bug when user drops files on Xpiks with any opened dialog #124
+    fix for crash when monkey clicking on Dismiss link #97
+    fix for race conditions when uploading and decoding passwords for stocks
+    several minor fixes for UI in Windows 10 and openSUSE 13.2
+
+ -- Artiom.M <a.mv@gmx.fr>  Fri, 25 Sep 2015 08:50:44 +0200
+ 
 xpiks (0.8b-1) UNRELEASED; urgency=medium
 
 

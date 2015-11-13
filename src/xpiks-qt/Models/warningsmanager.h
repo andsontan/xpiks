@@ -1,4 +1,4 @@
-/*
+﻿/*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
  * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
@@ -32,6 +32,7 @@ namespace Helpers {
 namespace Models {
     class WarningsInfo;
     class ArtworkMetadata;
+    class ArtItemInfo;
 
     class WarningsManager : public QAbstractListModel, public Common::BaseEntity
     {
@@ -48,34 +49,37 @@ namespace Models {
     public:
         enum WarningManagerRoles {
             ImagePathRole = Qt::UserRole + 1,
-            WarningsListRole
+            WarningsListRole,
+            ItemIndexRole
         };
 
     signals:
         void warningsCountChanged();
 
     public slots:
-        void onCheckWarnings(const QList<ArtworkMetadata*> &artworks) { checkForWarnings(artworks); }
+        void onCheckWarnings(const QList<ArtItemInfo*> &artworks) { checkForWarnings(artworks); }
 
     public:
         int getWarningsCount();
-        void checkForWarnings(const QList<ArtworkMetadata*> &artworks);
-        void recheckItems();
+        void checkForWarnings(const QList<ArtItemInfo *> &artworks);
+        Q_INVOKABLE void recheckItems();
+        Q_INVOKABLE void recheckItem(int itemIndex);
         void setImageProvider(Helpers::GlobalImageProvider *imageProvider) { Q_ASSERT(imageProvider != NULL); m_ImageProvider = imageProvider; }
 
     private:
-        void checkItem(WarningsInfo *metadata);
+        bool checkItem(WarningsInfo *metadata);
         bool checkDimensions(WarningsInfo *wi, ArtworkMetadata *am) const;
         bool checkKeywordsCount(WarningsInfo *wi, ArtworkMetadata *am) const;
         bool checkDescriptionLength(WarningsInfo *wi, ArtworkMetadata *am) const;
+        bool checkTitleWordsCount(WarningsInfo *wi, ArtworkMetadata *am) const;
         void initConstraintsFromSettings();
 
     public:
-        int rowCount(const QModelIndex & parent = QModelIndex()) const;
-        QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+        virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
+        virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
 
     protected:
-        QHash<int, QByteArray> roleNames() const;
+        virtual QHash<int, QByteArray> roleNames() const;
 
     private:
         QList<WarningsInfo*> m_WarningsList;

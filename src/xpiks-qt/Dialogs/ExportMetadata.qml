@@ -35,8 +35,20 @@ Item {
     anchors.fill: parent
 
     function closePopup() {
+        iptcProvider.isLaunched = false
         metadataExportComponent.destroy()
     }
+
+    Keys.onEscapePressed: {
+        if (!iptcProvider.inProgress) {
+            closePopup()
+        }
+    }
+
+    Component.onCompleted: focus = true
+
+    signal dialogDestruction();
+    Component.onDestruction: dialogDestruction();
 
     PropertyAnimation { target: metadataExportComponent; property: "opacity";
         duration: 400; from: 0; to: 1;
@@ -63,6 +75,7 @@ Item {
             anchors.fill: parent
             onWheel: wheel.accepted = true
             onClicked: mouse.accepted = true
+            onDoubleClicked: mouse.accepted = true
 
             property real old_x : 0
             property real old_y : 0
@@ -132,6 +145,7 @@ Item {
                     StyledCheckbox {
                         text: qsTr("Backup each image")
                         checked: iptcProvider.mustSaveOriginal
+                        enabled: !iptcProvider.inProgress
                         onCheckedChanged: iptcProvider.mustSaveOriginal = checked
                     }
 

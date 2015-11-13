@@ -23,21 +23,49 @@
 #define CONSTANTS
 
 namespace Constants {
+    // common for DEBUG and RELEASE
     const char PATH_TO_EXIFTOOL[] = "PATH_TO_EXIF_TOOL";
     const char PATH_TO_CURL[] = "PATH_TO_CURL";
+    const char ORGANIZATION_NAME[] = "Xpiks";
+    const char ORGANIZATION_DOMAIN[] = "ribtoks.github.io";
+    const char APPLICATION_NAME[] = "Xpiks";
+    const char LOG_FILENAME[] = "xpiks.log";
+    const char LIBRARY_FILENAME[] = "xpiks.library";
+    const char METADATA_BACKUP_EXTENSION[] = ".xpks";
+    const char SAVE_BACKUPS[] = "SAVE_BACKUPS";
+    const char KEYWORD_SIZE_SCALE[] = "KEYWORD_SIZE_SCALE";
+    const char DISMISS_DURATION[] = "DISMISS_DURATION";
+    const char FIT_SMALL_PREVIEW[] = "FIT_SMALL_PREVIEW";
+    const char SEARCH_USING_AND[] = "SEARCH_USING_AND";
+    const char SCROLL_SPEED_SCALE[] = "SCROLL_SPEED_SCALE";
+
+    // different for DEBUG and RELEASE
+
+#ifdef QT_NO_DEBUG
     const char UPLOAD_HOSTS[] = "UPLOAD_HOSTS_HASH";
     const char MAX_KEYWORD_COUNT[] = "MAX_KEYWORD_COUNT";
     const char MAX_DESCRIPTION_LENGTH[] = "MAX_DESCRIPTION_LENGTH";
     const char MIN_MEGAPIXEL_COUNT[] = "MIN_MEGAPIXEL_COUNT";
     const char USE_MASTER_PASSWORD[] = "USE_MASTER_PASSWORD";
     const char MASTER_PASSWORD_HASH[] = "MASTER_PASSWORD_HASH";
-    const char ORGANIZATION_NAME[] = "Xpiks";
-    const char ORGANIZATION_DOMAIN[] = "ribtoks.github.io";
-    const char APPLICATION_NAME[] = "Xpiks";
-    const char LOG_FILENAME[] = "xpiks.log";
-    const char METADATA_BACKUP_EXTENSION[] = ".xpks";
     const char ONE_UPLOAD_MINUTES_TIMEMOUT[] = "ONE_UPLOAD_MINUTES_TIMEMOUT";
     const char USE_CONFIRMATION_DIALOGS[] = "USE_CONFIRMATION_DIALOGS";
+    const char RECENT_DIRECTORIES[] = "RECENT_DIRECTORIES";
+    const char MAX_PARALLEL_UPLOADS[] = "MAX_PARALLEL_UPLOADS";
+    const char PROXY_URI[] = "PROXY_URI";
+#else
+    const char UPLOAD_HOSTS[] = "DEBUG_UPLOAD_HOSTS_HASH";
+    const char MAX_KEYWORD_COUNT[] = "DEBUG_MAX_KEYWORD_COUNT";
+    const char MAX_DESCRIPTION_LENGTH[] = "DEBUG_MAX_DESCRIPTION_LENGTH";
+    const char MIN_MEGAPIXEL_COUNT[] = "DEBUG_MIN_MEGAPIXEL_COUNT";
+    const char USE_MASTER_PASSWORD[] = "DEBUG_USE_MASTER_PASSWORD";
+    const char MASTER_PASSWORD_HASH[] = "DEBUG_MASTER_PASSWORD_HASH";
+    const char ONE_UPLOAD_MINUTES_TIMEMOUT[] = "DEBUG_ONE_UPLOAD_MINUTES_TIMEMOUT";
+    const char USE_CONFIRMATION_DIALOGS[] = "DEBUG_USE_CONFIRMATION_DIALOGS";
+    const char RECENT_DIRECTORIES[] = "DEBUG_RECENT_DIRECTORIES";
+    const char MAX_PARALLEL_UPLOADS[] = "DEBUG_MAX_PARALLEL_UPLOADS";
+    const char PROXY_URI[] = "DEBUG_PROXY_URI";
+#endif // QT_NO_DEBUG
 }
 
 #endif // CONSTANTS

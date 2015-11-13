@@ -34,6 +34,9 @@ Item {
     property var callbackObject
     anchors.fill: parent
 
+    signal dialogDestruction();
+    Component.onDestruction: dialogDestruction();
+
     function closePopup() {
         enterPasswordComponent.destroy()
     }
@@ -74,6 +77,7 @@ Item {
             anchors.fill: parent
             onWheel: wheel.accepted = true
             onClicked: mouse.accepted = true
+            onDoubleClicked: mouse.accepted = true
 
             property real old_x : 0
             property real old_y : 0
@@ -129,7 +133,7 @@ Item {
                             anchors.leftMargin: 5
                             echoMode: showPasswordCheckBox.checked ? TextInput.Normal : TextInput.Password
 
-                            Keys.onReturnPressed: {
+                            onAccepted: {
                                 testPassword()
                             }
                         }

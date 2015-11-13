@@ -68,7 +68,7 @@ namespace Helpers {
     private:
         QString createCurlCommand(Models::UploadInfo *uploadInfo, const QStringList &filesToUpload, int maxSeconds) const;
         void initializeUploadEntities();
-        double parsePercent(QString &curlOutput)const;
+        int parsePercent(QString &curlOutput)const;
         void emitFinishSignals(bool success);
         void updateUploadItemPercent(int percent);
 

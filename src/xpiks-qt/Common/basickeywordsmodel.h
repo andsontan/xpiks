@@ -31,12 +31,11 @@
 
 namespace Common {
 
-    class BasicKeywordsModel : public QAbstractListModel, public Common::BaseEntity {
+    class BasicKeywordsModel : public QAbstractListModel {
         Q_OBJECT
     public:
         BasicKeywordsModel(QObject *parent) :
-            QAbstractListModel(parent),
-            Common::BaseEntity()
+            QAbstractListModel(parent)
         { }
 
     public:
@@ -45,8 +44,8 @@ namespace Common {
         };
 
     public:
-        int rowCount(const QModelIndex & parent = QModelIndex()) const { Q_UNUSED(parent); return m_KeywordsList.length(); }
-        QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const {
+        virtual int rowCount(const QModelIndex & parent = QModelIndex()) const { Q_UNUSED(parent); return m_KeywordsList.length(); }
+        virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const {
             if (index.row() < 0 || index.row() >= m_KeywordsList.count()) return QVariant();
             if (role == KeywordRole) { return m_KeywordsList[index.row()]; }
             return QVariant();
@@ -63,7 +62,7 @@ namespace Common {
         bool removeLastKeyword(QString &keyword) { return removeKeyword(m_KeywordsList.length() - 1, keyword); }
 
     protected:
-        QHash<int, QByteArray> roleNames() const {
+        virtual QHash<int, QByteArray> roleNames() const {
             QHash<int, QByteArray> roles; roles[KeywordRole] = "keyword"; return roles;
         }
 

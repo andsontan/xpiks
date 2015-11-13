@@ -37,9 +37,15 @@ Item {
     property string imagePath: ''
     property int artworkIndex: -1
 
+    signal dialogDestruction();
+    Component.onDestruction: dialogDestruction();
+
     function closePopup() {
         artworkPreviewDialog.destroy()
     }
+
+    Component.onCompleted: focus = true
+    Keys.onEscapePressed: closePopup()
 
     PropertyAnimation { target: artworkPreviewDialog; property: "opacity";
         duration: 400; from: 0; to: 1;
@@ -67,6 +73,7 @@ Item {
             anchors.fill: parent
             onWheel: wheel.accepted = true
             onClicked: mouse.accepted = true
+            onDoubleClicked: mouse.accepted = true
 
             property real old_x : 0
             property real old_y : 0
@@ -90,91 +97,120 @@ Item {
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
-            width: 600
-            height: 450
+            anchors.fill: parent
+            anchors.margins: 50
             color: Colors.selectedArtworkColor
-            anchors.centerIn: parent
-            Component.onCompleted: anchors.centerIn = undefined
 
-            RowLayout {
-                anchors.fill: parent
-                spacing: 0
+            Rectangle {
+                id: boundsRect
+                color: Colors.defaultControlColor
+                height: parent.height
+                width: height
+                anchors.left: parent.left
 
-                Rectangle {
-                    height: parent.height
-                    width: height
-                    color: Colors.defaultControlColor
+                StyledScrollView {
+                    id: scrollview
+                    anchors.fill: parent
+                    anchors.leftMargin: 10
+                    anchors.topMargin: 10
 
                     Image {
+                        id: previewImage
                         source: "image://global/" + imagePath
-                        sourceSize.width: parent.width - 30
-                        sourceSize.height: parent.height - 30
+                        cache: false
+                        width: boundsRect.width - 20
+                        height: boundsRect.height - 20
                         fillMode: Image.PreserveAspectFit
                         anchors.centerIn: parent
                         asynchronous: true
                     }
                 }
+            }
 
-                Rectangle {
-                    height: parent.height
-                    width: 25
-                    color: Colors.defaultDarkColor
-                }
+            Rectangle {
+                anchors.left: boundsRect.right
+                anchors.right: parent.right
+                height: parent.height
+                color: Colors.defaultDarkColor
 
-                Rectangle {
-                    Layout.fillWidth: true
-                    height: parent.height
-                    color: Colors.defaultDarkColor
+                ColumnLayout {
+                    anchors.fill: parent
+                    anchors.margins: 20
+                    spacing: 10
 
-                    ColumnLayout {
-                        anchors.fill: parent
+                    Item {
+                        height: 15
+                    }
+
+                    StyledText {
+                        id: dimensionsText
+                        color: Colors.selectedMetadataColor
+                        text: '*'
+                        Component.onCompleted: {
+                            var size = artItemsModel.retrieveImageSize(artworkIndex)
+                            text = "W %1 x H %2".arg(size.width).arg(size.height)
+                        }
+                    }
+
+                    StyledText {
+                        id: sizeText
+                        color: Colors.selectedMetadataColor
+                        text: '*'
+                        Component.onCompleted: text = artItemsModel.retrieveFileSize(artworkIndex)
+                    }
+
+                    Item {
+                        Layout.fillWidth: true
+                        height: 90
+
+                        StyledText {
+                            wrapMode: TextEdit.Wrap
+                            anchors.fill: parent
+                            color: Colors.selectedMetadataColor
+                            text: imagePath
+                            height: 90
+                            elide: Text.ElideRight
+                        }
+                    }
+
+                    Item {
+                        Layout.fillHeight: true
+                    }
+
+                    RowLayout {
+                        width: 180
+                        anchors.right: parent.right
+                        anchors.rightMargin: 10
                         spacing: 10
 
-                        Item {
-                            height: 15
-                        }
-
-                        StyledText {
-                            id: dimensionsText
-                            color: Colors.selectedMetadataColor
-                            text: '*'
-                            Component.onCompleted: text = artItemsModel.retrieveImageSize(artworkIndex)
-                        }
-
-                        StyledText {
-                            id: sizeText
-                            color: Colors.selectedMetadataColor
-                            text: '*'
-                            Component.onCompleted: text = artItemsModel.retrieveFileSize(artworkIndex)
-                        }
-
-                        Rectangle {
-                            color: "transparent"
-                            Layout.fillWidth: true
-                            height: 90
-
-                            StyledText {
-                                wrapMode: TextEdit.Wrap
-                                anchors.fill: parent
-                                color: Colors.selectedMetadataColor
-                                text: imagePath
-                                height: 90
-                                elide: Text.ElideRight
+                        StyledButton {
+                            text: qsTr("100%")
+                            width: 50
+                            onClicked: {
+                                previewImage.width = previewImage.sourceSize.width
+                                previewImage.height = previewImage.sourceSize.height
+                                scrollview.anchors.leftMargin = 0
+                                scrollview.anchors.topMargin = 0
+                                previewImage.fillMode = Image.Pad
                             }
                         }
 
-                        Item {
-                            Layout.fillHeight: true
+                        StyledButton {
+                            text: qsTr("Fit")
+                            width: 50
+                            onClicked: {
+                                previewImage.width = boundsRect.width - 20
+                                previewImage.height = boundsRect.height - 20
+                                scrollview.anchors.leftMargin = 10
+                                scrollview.anchors.topMargin = 10
+                                previewImage.fillMode = Image.PreserveAspectFit
+                            }
                         }
 
                         StyledButton {
                             text: qsTr("Close")
-                            width: 100
+                            width: 50
                             onClicked: closePopup()
-                        }
-
-                        Item {
-                            height: 15
                         }
                     }
                 }

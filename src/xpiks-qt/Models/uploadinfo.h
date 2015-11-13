@@ -99,7 +99,7 @@ namespace Models {
     public:
         QHash<int, QString> toHash() {
             QHash<int, QString> hash;
-            hash[TitleField] = m_Title.trimmed().isEmpty() ? QString::fromLatin1("Untitled") : m_Title;
+            hash[TitleField] = m_Title.simplified().isEmpty() ? QString::fromLatin1("Untitled") : m_Title;
             hash[HostField] = m_Host;
             hash[UsernameField] = m_Username;
             hash[PasswordField] = m_EncodedPassword;

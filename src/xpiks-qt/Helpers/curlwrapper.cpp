@@ -25,7 +25,6 @@
 #include <QRegExp>
 #include <QDebug>
 #include <QPair>
-#include "externaltoolsprovider.h"
 #include "../Models/uploadinfo.h"
 #include "../Models/artworkmetadata.h"
 #include "../Encryption/secretsmanager.h"
@@ -33,10 +32,10 @@
 #include "curlwrapper.h"
 #include "uploaditem.h"
 
-Helpers::TestConnectionResult isConnectionValid(const QString &hostname, const QString &username, const QString &password) {
+Helpers::TestConnectionResult isConnectionValid(const QString &hostname, const QString &username,
+                                                const QString &password, const QString &curlPath) {
     bool isValid = false;
 
-    const QString curlPath = Helpers::ExternalToolsProvider::getCurlPath();
     QString host = hostname;
     if (!host.startsWith("ftp://") && !host.startsWith("ftp.")) {
         host = "ftp://" + host;
@@ -51,7 +50,8 @@ Helpers::TestConnectionResult isConnectionValid(const QString &hostname, const Q
             process.exitCode() == 0) {
         isValid = true;
     } else {
-        qDebug() << "Timeout while waiting for curl";
+        qDebug() << "Timeout or error while waiting for curl";
+        qDebug() << "Error:" << curlPath << process.errorString();
     }
 
     QByteArray stdoutByteArray = process.readAllStandardOutput();

@@ -19,29 +19,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "externaltoolsprovider.h"
-#include "appsettings.h"
+#include "keywordvalidator.h"
+#include <QRegularExpression>
 
 namespace Helpers {
-    QString ExternalToolsProvider::defaultExifToolPath = "exiftool";
-    QString ExternalToolsProvider::defaultCurlPath = "curl";
-    int ExternalToolsProvider::defaultOneItemUploadMinutesTimeout = 10;
+    bool isValidKeyword(const QString &keyword) {
+        bool isValid = false;
+        int length = keyword.length();
 
-    QString Helpers::ExternalToolsProvider::getExifToolPath()
-    {
-        QVariant value = AppSettings().value(Constants::PATH_TO_EXIFTOOL, ExternalToolsProvider::defaultExifToolPath);
-        return value.toString();
+        if (2 <= length && length < 30) {
+            isValid = true;
+        }
+
+        return isValid;
     }
 
-    QString Helpers::ExternalToolsProvider::getCurlPath()
-    {
-        QVariant value = AppSettings().value(Constants::PATH_TO_CURL, ExternalToolsProvider::defaultCurlPath);
-        return value.toString();
+    QString doSanitizeKeyword(const QString &keyword) {
+        return keyword.simplified();
     }
 
-    int ExternalToolsProvider::getOneItemUploadMinutesTimeout()
-    {
-        QVariant value = AppSettings().value(Constants::ONE_UPLOAD_MINUTES_TIMEMOUT, ExternalToolsProvider::defaultOneItemUploadMinutesTimeout);
-        return value.toInt();
-    }
 }

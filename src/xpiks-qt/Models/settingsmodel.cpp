@@ -20,9 +20,15 @@
  */
 
 #include "settingsmodel.h"
+#include <QQmlEngine>
 #include "../Helpers/appsettings.h"
 
+#ifdef Q_OS_MAC
+#define DEFAULT_EXIFTOOL "/usr/bin/exiftool"
+#else
 #define DEFAULT_EXIFTOOL "exiftool"
+#endif
+
 #define DEFAULT_CURL "curl"
 #define DEFAULT_MAX_KEYWORDS 50
 #define DEFAULT_MAX_DESCRIPTION 200
@@ -30,6 +36,14 @@
 #define DEFAULT_USE_MASTERPASSWORD false
 #define DEFAULT_TIMEOUT 10
 #define DEFAULT_USE_CONFIRMATIONS true
+#define DEFAULT_SAVE_BACKUPS true
+#define DEFAULT_KEYWORD_SIZE_SCALE 1.0
+#define DEFAULT_DISMISS_DURATION 10
+#define DEFAULT_MAX_PARALLEL_UPLOADS 2
+#define DEFAULT_PROXY ""
+#define DEFAULT_FIT_SMALL_PREVIEW false
+#define DEFAULT_SEARCH_USING_AND true
+#define DEFAULT_SCROLL_SPEED_SCALE 1.0
 
 namespace Models {
     SettingsModel::SettingsModel(QObject *parent) :
@@ -53,10 +67,20 @@ namespace Models {
         appSettings.setValue(appSettings.getOneUploadMinutesTimeoutKey(), m_UploadTimeout);
         appSettings.setValue(appSettings.getMustUseMasterPasswordKey(), m_MustUseMasterPassword);
         appSettings.setValue(appSettings.getUseConfirmationDialogsKey(), m_MustUseConfirmations);
+        appSettings.setValue(appSettings.getSaveBackupsKey(), m_SaveBackups);
+        appSettings.setValue(appSettings.getKeywordSizeScaleKey(), m_KeywordSizeScale);
+        appSettings.setValue(appSettings.getDismissDurationKey(), m_DismissDuration);
+        appSettings.setValue(appSettings.getMaxParallelUploadsKey(), m_MaxParallelUploads);
+        appSettings.setValue(appSettings.getProxyURIKey(), m_ProxyURI);
+        appSettings.setValue(appSettings.getFitSmallPreviewKey(), m_FitSmallPreview);
+        appSettings.setValue(appSettings.getSearchUsingAndKey(), m_SearchUsingAnd);
+        appSettings.setValue(appSettings.getScrollSpeedScaleKey(), m_ScrollSpeedScale);
 
         if (!m_MustUseMasterPassword) {
             appSettings.setValue(appSettings.getMasterPasswordHashKey(), "");
         }
+
+        emit keywordSizeScaleChanged(m_KeywordSizeScale);
     }
 
     void SettingsModel::clearMasterPasswordSettings() {
@@ -78,12 +102,20 @@ namespace Models {
         Helpers::AppSettings appSettings;
         setExifToolPath(appSettings.value(appSettings.getExifToolPathKey(), DEFAULT_EXIFTOOL).toString());
         setCurlPath(appSettings.value(appSettings.getCurlPathKey(), DEFAULT_CURL).toString());
-        setMinMegapixelCount(appSettings.value(appSettings.getMinMegapixelCountKey(), DEFAULT_MIN_MEGAPIXELS).toDouble());
+        setMinMegapixelCount(appSettings.doubleValue(appSettings.getMinMegapixelCountKey(), DEFAULT_MIN_MEGAPIXELS));
         setMaxDescriptionLength(appSettings.value(appSettings.getMaxDescriptionLengthKey(), DEFAULT_MAX_DESCRIPTION).toInt());
         setMaxKeywordsCount(appSettings.value(appSettings.getMaxKeywordsCountKey(), DEFAULT_MAX_KEYWORDS).toInt());
         setUploadTimeout(appSettings.value(appSettings.getOneUploadMinutesTimeoutKey(), DEFAULT_TIMEOUT).toInt());
         setMustUseMasterPassword(appSettings.boolValue(appSettings.getMustUseMasterPasswordKey(), DEFAULT_USE_MASTERPASSWORD));
         setMustUseConfirmations(appSettings.boolValue(appSettings.getUseConfirmationDialogsKey(), DEFAULT_USE_CONFIRMATIONS));
+        setSaveBackups(appSettings.boolValue(appSettings.getSaveBackupsKey(), DEFAULT_SAVE_BACKUPS));
+        setKeywordSizeScale(appSettings.doubleValue(appSettings.getKeywordSizeScaleKey(), DEFAULT_KEYWORD_SIZE_SCALE));
+        setDismissDuration(appSettings.value(appSettings.getDismissDurationKey(), DEFAULT_DISMISS_DURATION).toInt());
+        setMaxParallelUploads(appSettings.value(appSettings.getMaxParallelUploadsKey(), DEFAULT_MAX_PARALLEL_UPLOADS).toInt());
+        setProxyURI(appSettings.value(appSettings.getProxyURIKey(), DEFAULT_PROXY).toString());
+        setFitSmallPreview(appSettings.boolValue(appSettings.getFitSmallPreviewKey(), DEFAULT_FIT_SMALL_PREVIEW));
+        setSearchUsingAnd(appSettings.boolValue(appSettings.getSearchUsingAndKey(), DEFAULT_SEARCH_USING_AND));
+        setScrollSpeedScale(appSettings.doubleValue(appSettings.getScrollSpeedScaleKey(), DEFAULT_SCROLL_SPEED_SCALE));
     }
 
     void SettingsModel::resetToDefault() {
@@ -95,6 +127,14 @@ namespace Models {
         setUploadTimeout(DEFAULT_TIMEOUT);
         setMustUseMasterPassword(DEFAULT_USE_MASTERPASSWORD);
         setMustUseConfirmations(DEFAULT_USE_CONFIRMATIONS);
+        setSaveBackups(DEFAULT_SAVE_BACKUPS);
+        setKeywordSizeScale(DEFAULT_KEYWORD_SIZE_SCALE);
+        setDismissDuration(DEFAULT_DISMISS_DURATION);
+        setMaxParallelUploads(DEFAULT_MAX_PARALLEL_UPLOADS);
+        setProxyURI(DEFAULT_PROXY);
+        setFitSmallPreview(DEFAULT_FIT_SMALL_PREVIEW);
+        setSearchUsingAnd(DEFAULT_SEARCH_USING_AND);
+        setScrollSpeedScale(DEFAULT_SCROLL_SPEED_SCALE);
     }
 
     int ensureInBounds(int value, int boundA, int boundB) {
@@ -129,6 +169,5 @@ namespace Models {
 
         return value;
     }
-
 }
 
