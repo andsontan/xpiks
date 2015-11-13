@@ -46,7 +46,7 @@ permalink: /downloads/
 </a>
 </div>
 
-<p>Download the Xpiks package from the link above and install it with all dependencies. <strong>Also you have to manually install <i>qtdeclarative5-controls-plugin</i> and <i>qtdeclarative5-quicklayouts-plugin</i>. Package is only for Debian-based operating systems (Ubuntu, Debian, Mint, etc.) with x64 architecture.</strong></p>
+<p><strong>Also you have to manually install <i>qtdeclarative5-controls-plugin</i> and <i>qtdeclarative5-quicklayouts-plugin</i>.</strong> Package is only for Debian-based operating systems (Ubuntu, Debian, Mint, etc.) with x64 architecture.</p>
 
 <div style="clear:both;height: 30px;">&nbsp;</div>
 
