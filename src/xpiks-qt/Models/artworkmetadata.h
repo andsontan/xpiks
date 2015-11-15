@@ -60,7 +60,7 @@ namespace Models {
         int getKeywordsCount() const { return m_KeywordsSet.count(); }
         const QStringList &getKeywords() const { return m_KeywordsList; }
         const QSet<QString> &getKeywordsSet() const { return m_KeywordsSet; }
-        QString getKeywordsString() const { return m_KeywordsList.join(','); }
+        QString getKeywordsString() const { return m_KeywordsList.join(", "); }
         bool isInDirectory(const QString &directory) const;
         bool isModified() const { return m_IsModified; }
         bool getIsSelected() const { return m_IsSelected; }

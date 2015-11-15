@@ -1,7 +1,7 @@
 xpiks
 =====
 
-Cross-platform (X) Photo Keywording Software
+Cross-Platform Image Keywording Software
 
 Official website: http://ribtoks.github.io/xpiks/
 
