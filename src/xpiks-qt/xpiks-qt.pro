@@ -68,7 +68,8 @@ SOURCES += main.cpp \
     Suggestion/libraryloaderworker.cpp \
     Helpers/updateservice.cpp \
     SpellCheck/spellcheckerservice.cpp \
-    SpellCheck/spellcheckitem.cpp
+    SpellCheck/spellcheckitem.cpp \
+    SpellCheck/spellcheckworker.cpp
 
 RESOURCES += qml.qrc
 
@@ -173,7 +174,8 @@ HEADERS += \
     Suggestion/libraryloaderworker.h \
     Helpers/updateservice.h \
     SpellCheck/spellcheckerservice.h \
-    SpellCheck/spellcheckitem.h
+    SpellCheck/spellcheckitem.h \
+    SpellCheck/spellcheckworker.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

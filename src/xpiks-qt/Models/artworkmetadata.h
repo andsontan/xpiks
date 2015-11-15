@@ -69,7 +69,9 @@ namespace Models {
         bool isEmpty() const;
         void clearMetadata();
         QString retrieveKeyword(int index);
-        bool containsKeyword(const QString& searchTerm);
+        bool containsKeyword(const QString &searchTerm);
+        void setSpellCheckResult(bool result, int index, const QString &keyword);
+        bool hasAnySpellCheckError();
 
     public:
         bool setDescription(const QString &value) {
@@ -119,7 +121,7 @@ namespace Models {
         void resetKeywordsUnsafe();
 
     public:
-        void addKeywords(const QString& rawKeywords);
+        void addKeywords(const QString &rawKeywords);
         void setModified() { m_IsModified = true; emit modifiedChanged(m_IsModified); }
         void unsetModified() { m_IsModified = false; }
         void saveBackup(SettingsModel *settings);
@@ -139,6 +141,7 @@ namespace Models {
     private:
          QReadWriteLock m_RWLock;
          QStringList m_KeywordsList;
+         QList<bool> m_SpellCheckResults;
          QSet<QString> m_KeywordsSet;
          QString m_ArtworkFilepath;
          QString m_ArtworkDescription;

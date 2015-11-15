@@ -48,6 +48,7 @@ namespace Models {
             anythingModified = true;
             beginResetModel();
             m_KeywordsList.clear();
+            m_SpellCheckResults.clear();
             addKeywords(rawKeywords);
             endResetModel();
         } else if (!rawKeywords.isEmpty()) {
@@ -121,6 +122,34 @@ namespace Models {
         return hasMatch;
     }
 
+    void ArtworkMetadata::setSpellCheckResult(bool result, int index, const QString &keyword) {
+        QReadLocker locker(&m_RWLock);
+
+        if (0 <= index && index < m_KeywordsList.length()) {
+            const QString &existingKeyword = m_KeywordsList.at(index);
+            if (keyword == existingKeyword) {
+                m_SpellCheckResults[index] = result;
+                QModelIndex i = this->index(index);
+                emit dataChanged(i, i, QVector<int>() << SpellCheckOkRole);
+            }
+        }
+    }
+
+    bool ArtworkMetadata::hasAnySpellCheckError() {
+        QReadLocker locker(&m_RWLock);
+
+        bool anyError = false;
+
+        foreach (bool status, m_SpellCheckResults) {
+            if (!status) {
+                anyError = true;
+                break;
+            }
+        }
+
+        return anyError;
+    }
+
     bool ArtworkMetadata::removeKeywordAt(int index) {
         bool removed = false;
         QWriteLocker locker(&m_RWLock);
@@ -131,6 +160,7 @@ namespace Models {
 
             beginRemoveRows(QModelIndex(), index, index);
             m_KeywordsList.removeAt(index);
+            m_SpellCheckResults.removeAt(index);
             endRemoveRows();
 
             setModified();
@@ -155,6 +185,7 @@ namespace Models {
 
             beginInsertRows(QModelIndex(), keywordsCount, keywordsCount);
             m_KeywordsList.append(sanitizedKeyword);
+            m_SpellCheckResults.append(true);
             endInsertRows();
 
             m_KeywordsSet.insert(sanitizedKeyword);
@@ -190,6 +221,7 @@ namespace Models {
     void ArtworkMetadata::resetKeywordsUnsafe() {
         beginResetModel();
         m_KeywordsList.clear();
+        m_SpellCheckResults.clear();
         endResetModel();
 
         m_KeywordsSet.clear();
@@ -203,6 +235,7 @@ namespace Models {
         for (int i = 0; i < keywordsList.size(); ++i) {
             const QString &keyword = keywordsList[i];
             m_KeywordsList.append(keyword);
+            m_SpellCheckResults.append(true);
             m_KeywordsSet.insert(keyword.simplified().toLower());
         }
     }
@@ -227,7 +260,7 @@ namespace Models {
         case KeywordRole:
             return m_KeywordsList.at(index.row());
         case SpellCheckOkRole:
-            return true;
+            return m_SpellCheckResults.at(index.row());
         default:
             return QVariant();
         }

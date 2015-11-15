@@ -24,9 +24,13 @@
 
 namespace SpellCheck {
     SpellCheckItem::SpellCheckItem(Models::ArtworkMetadata *metadata, int keywordIndex) :
-        m_Metadata(metadata),
-        m_KeywordIndex(keywordIndex)
+        m_KeywordIndex(keywordIndex),
+        m_Metadata(metadata)
     {
         m_Keyword = metadata->retrieveKeyword(keywordIndex);
+    }
+
+    void SpellCheckItem::processResult(bool isCorrectWord) const {
+        m_Metadata->setSpellCheckResult(isCorrectWord, m_KeywordIndex, m_Keyword);
     }
 }

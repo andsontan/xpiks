@@ -20,10 +20,27 @@
  */
 
 #include "spellcheckerservice.h"
+#include "spellcheckworker.h"
+#include <QThread>
 
 namespace SpellCheck {
-    SpellCheckerService::SpellCheckerService()
-    {
+    SpellCheckerService::SpellCheckerService() {
+        m_SpellCheckWorker = new SpellCheckWorker();
+    }
 
+    void SpellCheckerService::startWorker() {
+        QThread *thread = new QThread();
+        m_SpellCheckWorker->moveToThread(thread);
+
+        QObject::connect(thread, SIGNAL(started()), m_SpellCheckWorker, SLOT(process()));
+        QObject::connect(m_SpellCheckWorker, SIGNAL(stopped()), thread, SLOT(quit()));
+
+        QObject::connect(m_SpellCheckWorker, SIGNAL(stopped()), m_SpellCheckWorker, SLOT(deleteLater()));
+        QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+
+        QObject::connect(this, SIGNAL(cancelSpellChecking()),
+                         m_SpellCheckWorker, SLOT(cancel()));
+
+        thread->start();
     }
 }

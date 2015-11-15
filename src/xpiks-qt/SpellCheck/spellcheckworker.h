@@ -19,30 +19,44 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SPELLCHECKERSERVICE_H
-#define SPELLCHECKERSERVICE_H
+#ifndef SPELLCHECKWORKER_H
+#define SPELLCHECKWORKER_H
 
 #include <QObject>
-#include <QString>
+#include <QList>
+#include <QWaitCondition>
+#include <QMutex>
 
 namespace SpellCheck {
-    class SpellCheckWorker;
+    class SpellCheckItem;
 
-    class SpellCheckerService : public QObject
+    class SpellCheckWorker : public QObject
     {
         Q_OBJECT
     public:
-        SpellCheckerService();
+        explicit SpellCheckWorker(QObject *parent = 0);
 
     public:
-        void startWorker();
-
-    signals:
-        void cancelSpellChecking();
+        void submitItemToCheck(SpellCheckItem *item);
 
     private:
-        SpellCheckWorker *m_SpellCheckWorker;
+        void initHunspell();
+        void spellcheckLoop();
+        void processOneRequest(const SpellCheckItem *item);
+
+    public slots:
+        void process();
+        void cancel();
+
+    signals:
+        void stopped();
+
+    private:
+        QWaitCondition m_WaitAnyItem;
+        QMutex m_Mutex;
+        QList<SpellCheckItem*> m_Queue;
+        volatile bool m_Cancel;
     };
 }
 
-#endif // SPELLCHECKERSERVICE_H
+#endif // SPELLCHECKWORKER_H

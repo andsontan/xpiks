@@ -33,6 +33,10 @@ namespace SpellCheck {
     public:
         SpellCheckItem(Models::ArtworkMetadata *metadata, int keywordIndex);
 
+    public:
+        const QString &getKeyword() const { return m_Keyword; }
+        void processResult(bool isCorrectWord) const;
+
     private:
         QString m_Keyword;
         int m_KeywordIndex;
