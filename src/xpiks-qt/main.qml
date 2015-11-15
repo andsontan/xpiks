@@ -41,6 +41,7 @@ ApplicationWindow {
     minimumWidth: 900
     title: qsTr("Xpiks")
     property int openedDialogsCount: 0
+    property bool showUpdateLink: false
 
     function saveRecentDirectories() {
         appSettings.setValue(appSettings.recentDirectoriesKey, recentDirectories.serializeForSettings())
@@ -303,6 +304,19 @@ ApplicationWindow {
            if (count > 0) {
                Common.launchDialog("Dialogs/ImportMetadata.qml", applicationWindow, {})
            }
+        }
+    }
+
+    Connections {
+        target: updateService
+        onUpdateAvailable: {
+            if (Qt.platform.os !== "linux") {
+                Common.launchDialog("Dialogs/UpdateWindow.qml",
+                                    applicationWindow, {updateUrl: updateLink},
+                                    function(wnd) {wnd.show();});
+            }
+
+            applicationWindow.showUpdateLink = true
         }
     }
 
@@ -1469,6 +1483,29 @@ ApplicationWindow {
                         Common.launchDialog("Dialogs/WarningsDialog.qml", applicationWindow, {
                                                 componentParent: applicationWindow
                                             });
+                    }
+                }
+            }
+
+            StyledText {
+                visible: applicationWindow.showUpdateLink
+                text: "|"
+                color: Colors.selectedMetadataColor
+                verticalAlignment: Text.AlignVCenter
+            }
+
+            StyledText {
+                visible: applicationWindow.showUpdateLink
+                enabled: applicationWindow.showUpdateLink
+                text: qsTr("Update available!")
+                color: updateMA.pressed ? Colors.defaultInputBackground : Colors.greenColor
+
+                MouseArea {
+                    id: updateMA
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                        Qt.openUrlExternally("http://ribtoks.github.io/xpiks/downloads/")
                     }
                 }
             }

@@ -40,5 +40,6 @@
         <file>Components/CustomScrollbar.qml</file>
         <file>Dialogs/EditArtworkHorizontalDialog.qml</file>
         <file>Dialogs/EditArtworkVerticalDialog.qml</file>
+        <file>Dialogs/UpdateWindow.qml</file>
     </qresource>
 </RCC>

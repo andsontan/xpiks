@@ -65,7 +65,8 @@ SOURCES += main.cpp \
     Models/recentdirectoriesmodel.cpp \
     Suggestion/locallibrary.cpp \
     Suggestion/libraryqueryworker.cpp \
-    Suggestion/libraryloaderworker.cpp
+    Suggestion/libraryloaderworker.cpp \
+    Helpers/updateservice.cpp
 
 RESOURCES += qml.qrc
 
@@ -167,7 +168,8 @@ HEADERS += \
     Common/version.h \
     Suggestion/locallibrary.h \
     Suggestion/libraryqueryworker.h \
-    Suggestion/libraryloaderworker.h
+    Suggestion/libraryloaderworker.h \
+    Helpers/updateservice.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
@@ -208,7 +210,8 @@ DISTFILES += \
     Components/KeywordWrapper.qml \
     Components/CustomScrollbar.qml \
     Dialogs/EditArtworkVerticalDialog.qml \
-    Dialogs/EditArtworkHorizontalDialog.qml
+    Dialogs/EditArtworkHorizontalDialog.qml \
+    Dialogs/UpdateWindow.qml
 
 macx {
 OBJECTIVE_SOURCES += \

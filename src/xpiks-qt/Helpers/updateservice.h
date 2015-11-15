@@ -19,17 +19,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VERSION_H
-#define VERSION_H
+#ifndef UPDATESERVICE_H
+#define UPDATESERVICE_H
 
-// About dialog
-#define XPIKS_VERSION 1.0
-#define XPIKS_VERSION_SUFFIX release
+#include <QObject>
+#include <QNetworkAccessManager>
 
-// update.json (values from 0..9)
-#define XPIKS_MAJOR_VERSION 1
-#define XPIKS_MINOR_VERSION 0
-#define XPIKS_FIX_VERSION 0
+namespace Helpers {
+    class UpdateService : public QObject
+    {
+        Q_OBJECT
+    public:
+        UpdateService();
 
-#endif // VERSION_H
+    public:
+        void checkForUpdates();
 
+    signals:
+        void updateAvailable(QString updateLink);
+
+    private slots:
+        void replyReceived(QNetworkReply *networkReply);
+
+    private:
+        QNetworkAccessManager m_NetworkManager;
+    };
+}
+
+Q_DECLARE_METATYPE(Helpers::UpdateService*)
+
+#endif // UPDATESERVICE_H

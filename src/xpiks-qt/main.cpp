@@ -33,8 +33,7 @@
 #include <QApplication>
 #include <QStandardPaths>
 #include <QQmlApplicationEngine>
-
-#include "Common/defines.h"
+//-------------------------------------
 #include "Models/filteredartitemsproxymodel.h"
 #include "Suggestion/suggestionqueryengine.h"
 #include "Models/recentdirectoriesmodel.h"
@@ -53,6 +52,7 @@
 #include "Models/artworkuploader.h"
 #include "Models/warningsmanager.h"
 #include "Helpers/loggingworker.h"
+#include "Helpers/updateservice.h"
 #include "Models/artitemsmodel.h"
 #include "Models/settingsmodel.h"
 #include "Models/iptcprovider.h"
@@ -63,6 +63,7 @@
 #include "Models/logsmodel.h"
 #include "Helpers/logger.h"
 #include "Common/version.h"
+#include "Common/defines.h"
 
 #ifdef WITH_LOGS
 
@@ -214,6 +215,7 @@ int main(int argc, char *argv[]) {
     warningsManager.setImageProvider(globalProvider);
 
     Helpers::HelpersQmlWrapper helpersQmlWrapper;
+    Helpers::UpdateService updateService;
 
     QQmlContext *rootContext = engine.rootContext();
     rootContext->setContextProperty("artItemsModel", &artItemsModel);
@@ -233,6 +235,7 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("filteredArtItemsModel", &filteredArtItemsModel);
     rootContext->setContextProperty("helpersWrapper", &helpersQmlWrapper);
     rootContext->setContextProperty("recentDirectories", &recentDirectorieModel);
+    rootContext->setContextProperty("updateService", &updateService);
 
     engine.addImageProvider("global", globalProvider);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
@@ -246,6 +249,8 @@ int main(int argc, char *argv[]) {
         commandManager.addInitialArtworks(pathes);
     }
 #endif
+
+    updateService.checkForUpdates();
 
     return app.exec();
 }
