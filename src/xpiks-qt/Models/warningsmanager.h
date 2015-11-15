@@ -44,7 +44,7 @@ namespace Models {
             Common::BaseEntity()
         { }
 
-        virtual ~WarningsManager() {}
+        virtual ~WarningsManager();
 
     public:
         enum WarningManagerRoles {

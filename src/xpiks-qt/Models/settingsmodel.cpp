@@ -47,7 +47,23 @@
 
 namespace Models {
     SettingsModel::SettingsModel(QObject *parent) :
-        QObject(parent)
+        QObject(parent),
+        m_ExifToolPath(DEFAULT_EXIFTOOL),
+        m_CurlPath(DEFAULT_CURL),
+        m_ProxyURI(DEFAULT_PROXY),
+        m_MinMegapixelCount(DEFAULT_MIN_MEGAPIXELS),
+        m_KeywordSizeScale(DEFAULT_KEYWORD_SIZE_SCALE),
+        m_ScrollSpeedScale(DEFAULT_SCROLL_SPEED_SCALE),
+        m_MaxDescriptionLength(DEFAULT_MAX_DESCRIPTION),
+        m_MaxKeywordsCount(DEFAULT_MAX_KEYWORDS),
+        m_UploadTimeout(DEFAULT_TIMEOUT),
+        m_DismissDuration(DEFAULT_DISMISS_DURATION),
+        m_MaxParallelUploads(DEFAULT_MAX_PARALLEL_UPLOADS),
+        m_MustUseMasterPassword(DEFAULT_USE_MASTERPASSWORD),
+        m_MustUseConfirmations(DEFAULT_USE_CONFIRMATIONS),
+        m_SaveBackups(DEFAULT_SAVE_BACKUPS),
+        m_FitSmallPreview(DEFAULT_FIT_SMALL_PREVIEW),
+        m_SearchUsingAnd(DEFAULT_SEARCH_USING_AND)
     {
         readAllValues();
     }

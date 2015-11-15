@@ -42,6 +42,10 @@ int calculateWordsLength(const QStringList &stringList) {
 }
 
 namespace Models {
+    WarningsManager::~WarningsManager() {
+        qDeleteAll(m_WarningsBufferList);
+    }
+
     int WarningsManager::getWarningsCount() {
         int count = 0;
 
