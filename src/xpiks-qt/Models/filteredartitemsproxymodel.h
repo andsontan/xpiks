@@ -86,9 +86,9 @@ namespace Models {
         void forceUnselectAllItems();
         ArtItemsModel *getArtItemsModel() const;
         bool fitsSpecialKeywords(const QString &searchTerm, const ArtworkMetadata *metadata) const;
-        bool containsPartsSearch(const ArtworkMetadata *metadata) const;
-        bool containsAnyPartsSearch(const ArtworkMetadata *metadata) const;
-        bool containsAllPartsSearch(const ArtworkMetadata *metadata) const;
+        bool containsPartsSearch(ArtworkMetadata *metadata) const;
+        bool containsAnyPartsSearch(ArtworkMetadata *metadata) const;
+        bool containsAllPartsSearch(ArtworkMetadata *metadata) const;
 
     protected:
         bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const Q_DECL_OVERRIDE;

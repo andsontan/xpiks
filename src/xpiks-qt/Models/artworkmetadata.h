@@ -23,6 +23,7 @@
 #define IMAGEMETADATA_H
 
 #include <QAbstractListModel>
+#include <QReadWriteLock>
 #include <QStringList>
 #include <QFileInfo>
 #include <QString>
@@ -45,7 +46,8 @@ namespace Models {
 
     public:
         enum ArtworkMetadataRoles {
-            KeywordRole = Qt::UserRole + 1
+            KeywordRole = Qt::UserRole + 1,
+            SpellCheckOkRole
         };
 
     public:
@@ -57,15 +59,17 @@ namespace Models {
         const QString &getDescription() const { return m_ArtworkDescription; }
         const QString &getFilepath() const { return m_ArtworkFilepath; }
         virtual QString getDirectory() const { QFileInfo fi(m_ArtworkFilepath); return fi.absolutePath(); }
-        int getKeywordsCount() const { return m_KeywordsSet.count(); }
-        const QStringList &getKeywords() const { return m_KeywordsList; }
+        int getKeywordsCount();
+        QStringList getKeywords();
         const QSet<QString> &getKeywordsSet() const { return m_KeywordsSet; }
-        QString getKeywordsString() const { return m_KeywordsList.join(", "); }
+        QString getKeywordsString();
         bool isInDirectory(const QString &directory) const;
         bool isModified() const { return m_IsModified; }
         bool getIsSelected() const { return m_IsSelected; }
         bool isEmpty() const;
         void clearMetadata();
+        QString retrieveKeyword(int index);
+        bool containsKeyword(const QString& searchTerm);
 
     public:
         bool setDescription(const QString &value) {
@@ -103,12 +107,16 @@ namespace Models {
         bool removeLastKeyword() { return removeKeywordAt(m_KeywordsList.length() - 1); }
         bool appendKeyword(const QString &keyword);
 
+    private:
+        bool appendKeywordUnsafe(const QString &keyword);
+
     public:
-        void setKeywords(const QStringList &keywordsList) { resetKeywords(); appendKeywords(keywordsList); }
+        void setKeywords(const QStringList &keywordsList);
         int appendKeywords(const QStringList &keywordsList);
 
     private:
-        void resetKeywords();
+        int appendKeywordsUnsafe(const QStringList &keywordsList);
+        void resetKeywordsUnsafe();
 
     public:
         void addKeywords(const QString& rawKeywords);
@@ -129,6 +137,7 @@ namespace Models {
         virtual QHash<int, QByteArray> roleNames() const;
 
     private:
+         QReadWriteLock m_RWLock;
          QStringList m_KeywordsList;
          QSet<QString> m_KeywordsSet;
          QString m_ArtworkFilepath;

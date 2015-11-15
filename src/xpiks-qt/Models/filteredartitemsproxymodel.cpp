@@ -29,19 +29,6 @@
 #include "../Commands/combinededitcommand.h"
 #include "../Common/flags.h"
 
-bool containsOneTerm(const QStringList &keywords, const QString &term) {
-    bool containsTerm = false;
-
-    foreach (const QString &keyword, keywords) {
-        if (keyword.contains(term, Qt::CaseInsensitive)) {
-            containsTerm = true;
-            break;
-        }
-    }
-
-    return containsTerm;
-}
-
 namespace Models {
     FilteredArtItemsProxyModel::FilteredArtItemsProxyModel(QObject *parent) :
         QSortFilterProxyModel(parent),
@@ -349,7 +336,7 @@ namespace Models {
         return hasMatch;
     }
 
-    bool FilteredArtItemsProxyModel::containsPartsSearch(const ArtworkMetadata *metadata) const {
+    bool FilteredArtItemsProxyModel::containsPartsSearch(ArtworkMetadata *metadata) const {
         bool hasMatch = false;
         Models::SettingsModel *settings = m_CommandManager->getSettingsModel();
 
@@ -362,14 +349,13 @@ namespace Models {
         return hasMatch;
     }
 
-    bool FilteredArtItemsProxyModel::containsAnyPartsSearch(const ArtworkMetadata *metadata) const {
+    bool FilteredArtItemsProxyModel::containsAnyPartsSearch(ArtworkMetadata *metadata) const {
         bool hasMatch = false;
         QStringList searchTerms = m_SearchTerm.split(QChar::Space, QString::SkipEmptyParts);
 
         const QString &description = metadata->getDescription();
         const QString &title = metadata->getTitle();
         const QString &filepath = metadata->getFilepath();
-        const QStringList &keywords = metadata->getKeywords();
 
         foreach (const QString &searchTerm, searchTerms) {
             hasMatch = fitsSpecialKeywords(searchTerm, metadata);
@@ -391,13 +377,7 @@ namespace Models {
 
         if (!hasMatch) {
             foreach (const QString &searchTerm, searchTerms) {
-                foreach (const QString &keyword, keywords) {
-                    if (keyword.contains(searchTerm, Qt::CaseInsensitive)) {
-                        hasMatch = true;
-                        break;
-                    }
-                }
-
+                hasMatch = metadata->containsKeyword(searchTerm);
                 if (hasMatch) { break; }
             }
         }
@@ -405,14 +385,13 @@ namespace Models {
         return hasMatch;
     }
 
-    bool FilteredArtItemsProxyModel::containsAllPartsSearch(const ArtworkMetadata *metadata) const {
+    bool FilteredArtItemsProxyModel::containsAllPartsSearch(ArtworkMetadata *metadata) const {
         bool hasMatch = false;
         QStringList searchTerms = m_SearchTerm.split(QChar::Space, QString::SkipEmptyParts);
 
         const QString &description = metadata->getDescription();
         const QString &title = metadata->getTitle();
         const QString &filepath = metadata->getFilepath();
-        const QStringList &keywords = metadata->getKeywords();
 
         bool anyError = false;
 
@@ -434,7 +413,7 @@ namespace Models {
             }
 
             if (!anyContains) {
-                anyContains = containsOneTerm(keywords, searchTerm);
+                anyContains = metadata->containsKeyword(searchTerm);
             }
 
             if (!anyContains) {

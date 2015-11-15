@@ -34,7 +34,7 @@ namespace Suggestion {
 
         foreach (Models::ArtworkMetadata *metadata, artworksList) {
             const QString &filepath = metadata->getFilepath();
-            const QStringList &keywords = metadata->getKeywords();
+            QStringList keywords = metadata->getKeywords();
             // replaces if exists
             m_LocalArtworks.insert(filepath, keywords);
         }

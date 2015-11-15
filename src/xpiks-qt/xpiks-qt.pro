@@ -66,7 +66,9 @@ SOURCES += main.cpp \
     Suggestion/locallibrary.cpp \
     Suggestion/libraryqueryworker.cpp \
     Suggestion/libraryloaderworker.cpp \
-    Helpers/updateservice.cpp
+    Helpers/updateservice.cpp \
+    SpellCheck/spellcheckerservice.cpp \
+    SpellCheck/spellcheckitem.cpp
 
 RESOURCES += qml.qrc
 
@@ -169,7 +171,9 @@ HEADERS += \
     Suggestion/locallibrary.h \
     Suggestion/libraryqueryworker.h \
     Suggestion/libraryloaderworker.h \
-    Helpers/updateservice.h
+    Helpers/updateservice.h \
+    SpellCheck/spellcheckerservice.h \
+    SpellCheck/spellcheckitem.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
@@ -220,6 +224,11 @@ OBJECTIVE_SOURCES += \
 LIBS += -framework Foundation
 LIBS += -lz
 HEADERS += Helpers/osxnsurlhelper.h
+}
+
+macx {
+INCLUDEPATH = "../hunspell-1.3.3/src/hunspell"
+LIBS += -L$$PWD/../libs/ -lz
 }
 
 win32 {

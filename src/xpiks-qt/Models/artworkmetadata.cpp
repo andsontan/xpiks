@@ -19,8 +19,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QDebug>
 #include "artworkmetadata.h"
+#include <QDebug>
+#include <QReadLocker>
+#include <QWriteLocker>
 #include "../Helpers/tempmetadatadb.h"
 #include "../Helpers/keywordvalidator.h"
 #include "settingsmodel.h"
@@ -40,6 +42,8 @@ namespace Models {
             m_ArtworkDescription = description;
         }
 
+        QWriteLocker locker(&m_RWLock);
+
         if (overwrite && !rawKeywords.isEmpty()) {
             anythingModified = true;
             beginResetModel();
@@ -57,6 +61,23 @@ namespace Models {
         return anythingModified;
     }
 
+    int ArtworkMetadata::getKeywordsCount() {
+        QReadLocker locker(&m_RWLock);
+        int result = m_KeywordsSet.count();
+        return result;
+    }
+
+    QStringList ArtworkMetadata::getKeywords() {
+        QReadLocker locker(&m_RWLock);
+        return QStringList(m_KeywordsList);
+    }
+
+    QString ArtworkMetadata::getKeywordsString() {
+        QReadLocker locker(&m_RWLock);
+        QString result =  m_KeywordsList.join(", ");
+        return result;
+    }
+
     bool ArtworkMetadata::isInDirectory(const QString &directory) const {
         bool startsWith = m_ArtworkFilepath.startsWith(directory);
         return startsWith;
@@ -69,11 +90,41 @@ namespace Models {
     void ArtworkMetadata::clearMetadata() {
         setDescription("");
         setTitle("");
-        resetKeywords();
+
+        QWriteLocker locker(&m_RWLock);
+        resetKeywordsUnsafe();
+    }
+
+    QString ArtworkMetadata::retrieveKeyword(int index) {
+        QString keyword = "";
+        QReadLocker locker(&m_RWLock);
+
+        if (0 <= index && index < m_KeywordsList.length()) {
+            keyword = m_KeywordsList.at(index);
+        }
+
+        return keyword;
+    }
+
+    bool ArtworkMetadata::containsKeyword(const QString &searchTerm) {
+        QReadLocker locker(&m_RWLock);
+
+        bool hasMatch = false;
+
+        foreach (const QString &keyword, m_KeywordsList) {
+            if (keyword.contains(searchTerm, Qt::CaseInsensitive)) {
+                hasMatch = true;
+                break;
+            }
+        }
+
+        return hasMatch;
     }
 
     bool ArtworkMetadata::removeKeywordAt(int index) {
         bool removed = false;
+        QWriteLocker locker(&m_RWLock);
+
         if (index >= 0 && index < m_KeywordsList.length()) {
             const QString &keyword = m_KeywordsList.at(index);
             m_KeywordsSet.remove(keyword);
@@ -90,6 +141,12 @@ namespace Models {
     }
 
     bool ArtworkMetadata::appendKeyword(const QString &keyword) {
+        QWriteLocker locker(&m_RWLock);
+        bool result = appendKeywordUnsafe(keyword);
+        return result;
+    }
+
+    bool ArtworkMetadata::appendKeywordUnsafe(const QString &keyword) {
         bool added = false;
         const QString &sanitizedKeyword = keyword.simplified().toLower();
         bool isValid = Helpers::isValidKeyword(sanitizedKeyword);
@@ -108,17 +165,29 @@ namespace Models {
         return added;
     }
 
+    void ArtworkMetadata::setKeywords(const QStringList &keywordsList) {
+        QWriteLocker locker(&m_RWLock);
+        resetKeywordsUnsafe();
+        appendKeywordsUnsafe(keywordsList);
+    }
+
     int ArtworkMetadata::appendKeywords(const QStringList &keywordsList) {
+        QWriteLocker locker(&m_RWLock);
+        int result = appendKeywordsUnsafe(keywordsList);
+        return result;
+    }
+
+    int ArtworkMetadata::appendKeywordsUnsafe(const QStringList &keywordsList) {
         int appendedCount = 0;
         foreach (const QString &keyword, keywordsList) {
-            if (appendKeyword(keyword)) {
+            if (appendKeywordUnsafe(keyword)) {
                 appendedCount += 1;
             }
         }
         return appendedCount;
     }
 
-    void ArtworkMetadata::resetKeywords() {
+    void ArtworkMetadata::resetKeywordsUnsafe() {
         beginResetModel();
         m_KeywordsList.clear();
         endResetModel();
@@ -128,6 +197,7 @@ namespace Models {
     }
 
     void ArtworkMetadata::addKeywords(const QString &rawKeywords) {
+        QWriteLocker locker(&m_RWLock);
         QStringList keywordsList = rawKeywords.split(",", QString::SkipEmptyParts);
 
         for (int i = 0; i < keywordsList.size(); ++i) {
@@ -139,6 +209,7 @@ namespace Models {
 
     void ArtworkMetadata::saveBackup(SettingsModel *settings) {
         if (settings->getSaveBackups()) {
+            QReadLocker locker(&m_RWLock);
             Helpers::TempMetadataDb(this).flush();
         }
     }
@@ -155,6 +226,8 @@ namespace Models {
         switch (role) {
         case KeywordRole:
             return m_KeywordsList.at(index.row());
+        case SpellCheckOkRole:
+            return true;
         default:
             return QVariant();
         }
@@ -163,6 +236,7 @@ namespace Models {
     QHash<int, QByteArray> ArtworkMetadata::roleNames() const {
         QHash<int, QByteArray> roles;
         roles[KeywordRole] = "keyword";
+        roles[SpellCheckOkRole] = "spellcheckok";
         return roles;
     }
 }
