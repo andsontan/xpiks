@@ -26,6 +26,8 @@
 #include <QList>
 #include <QWaitCondition>
 #include <QMutex>
+#include <QString>
+#include <QStringList>
 
 namespace SpellCheck {
     class SpellCheckItem;
@@ -38,6 +40,9 @@ namespace SpellCheck {
 
     public:
         void submitItemToCheck(SpellCheckItem *item);
+        void submitItemsToCheck(const QList<SpellCheckItem*> &items);
+        void cancelCurrentRequests();
+        QStringList suggestCorrections(const QString &word);
 
     private:
         void initHunspell();

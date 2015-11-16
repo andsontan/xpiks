@@ -24,6 +24,11 @@
 
 #include <QObject>
 #include <QString>
+#include <QList>
+
+namespace Models {
+    class ArtworkMetadata;
+}
 
 namespace SpellCheck {
     class SpellCheckWorker;
@@ -36,6 +41,9 @@ namespace SpellCheck {
 
     public:
         void startWorker();
+        void submitItems(QList<Models::ArtworkMetadata*> artworksToCheck);
+        void submitKeyword(Models::ArtworkMetadata* metadata, int keywordIndex);
+        QStringList suggestCorrections(const QString &keyword);
 
     signals:
         void cancelSpellChecking();

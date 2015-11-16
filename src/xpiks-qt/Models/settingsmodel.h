@@ -52,6 +52,7 @@ namespace Models {
         Q_PROPERTY(bool fitSmallPreview READ getFitSmallPreview WRITE setFitSmallPreview NOTIFY fitSmallPreviewChanged)
         Q_PROPERTY(bool searchUsingAnd READ getSearchUsingAnd WRITE setSearchUsingAnd NOTIFY searchUsingAndChanged)
         Q_PROPERTY(double scrollSpeedScale READ getScrollSpeedScale WRITE setScrollSpeedScale NOTIFY scrollSpeedScaleChanged)
+        Q_PROPERTY(bool useSpellCheck READ getUseSpellCheck WRITE setUseSpellCheck NOTIFY useSpellCheckChanged)
     public:
         explicit SettingsModel(QObject *parent = 0);
         virtual ~SettingsModel() {}
@@ -84,6 +85,7 @@ namespace Models {
         bool getFitSmallPreview() const { return m_FitSmallPreview; }
         bool getSearchUsingAnd() const { return m_SearchUsingAnd; }
         double getScrollSpeedScale() const { return m_ScrollSpeedScale; }
+        bool getUseSpellCheck() const { return m_UseSpellCheck; }
 
     signals:
         void exifToolPathChanged(QString exifToolPath);
@@ -102,6 +104,7 @@ namespace Models {
         void fitSmallPreviewChanged(bool value);
         void searchUsingAndChanged(bool value);
         void scrollSpeedScaleChanged(double value);
+        void useSpellCheckChanged(bool value);
 
     public:
         void setExifToolPath(QString exifToolPath) {
@@ -232,6 +235,14 @@ namespace Models {
             emit scrollSpeedScaleChanged(m_ScrollSpeedScale);
         }
 
+        void setUseSpellCheck(bool value) {
+            if (m_UseSpellCheck == value)
+                return;
+
+            m_UseSpellCheck = value;
+            emit useSpellCheckChanged(value);
+        }
+
     private:
         void resetToDefault();
 
@@ -252,6 +263,7 @@ namespace Models {
         bool m_SaveBackups;
         bool m_FitSmallPreview;
         bool m_SearchUsingAnd;
+        bool m_UseSpellCheck;
     };
 }
 

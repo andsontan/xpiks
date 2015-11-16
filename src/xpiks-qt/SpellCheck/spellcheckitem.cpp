@@ -21,16 +21,48 @@
 
 #include "spellcheckitem.h"
 #include "../Models/artworkmetadata.h"
+#include <QStringList>
+#include "../Helpers/indiceshelper.h"
 
 namespace SpellCheck {
     SpellCheckItem::SpellCheckItem(Models::ArtworkMetadata *metadata, int keywordIndex) :
-        m_KeywordIndex(keywordIndex),
         m_Metadata(metadata)
     {
-        m_Keyword = metadata->retrieveKeyword(keywordIndex);
+        QString keyword = metadata->retrieveKeyword(keywordIndex);
+        SpellCheckQueryItem *queryItem = new SpellCheckQueryItem(keywordIndex, keyword);
+        m_QueryItems.append(queryItem);
     }
 
-    void SpellCheckItem::processResult(bool isCorrectWord) const {
-        m_Metadata->setSpellCheckResult(isCorrectWord, m_KeywordIndex, m_Keyword);
+    SpellCheckItem::SpellCheckItem(Models::ArtworkMetadata *metadata) {
+        QStringList keywords = metadata->getKeywords();
+        int index = 0;
+
+        foreach (const QString &word, keywords) {
+            SpellCheckQueryItem *queryItem = new SpellCheckQueryItem(index, word);
+            m_QueryItems.append(queryItem);
+            index++;
+        }
+    }
+
+    SpellCheckItem::~SpellCheckItem() {
+        qDeleteAll(m_QueryItems);
+    }
+
+    void SpellCheckItem::submitSpellCheckResult() const {
+        m_Metadata->lockRead();
+        {
+            foreach (SpellCheckQueryItem *item, m_QueryItems) {
+                m_Metadata->setSpellCheckResultUnsafe(item->m_CheckResult, item->m_Index, item->m_Keyword);
+            }
+        }
+        m_Metadata->unlock();
+
+        int index = -1;
+
+        if (m_QueryItems.length() == 1) {
+            index = m_QueryItems.first()->m_Index;
+        }
+
+        m_Metadata->emitSpellCheckChanged(index);
     }
 }

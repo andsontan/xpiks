@@ -30,12 +30,36 @@ namespace SpellCheck {
 
     void SpellCheckWorker::submitItemToCheck(SpellCheckItem *item) {
         m_Mutex.lock();
-        m_Queue.push_back(item);
+        {
+            m_Queue.append(item);
+        }
         m_Mutex.unlock();
         m_WaitAnyItem.wakeOne();
     }
 
+    void SpellCheckWorker::submitItemsToCheck(const QList<SpellCheckItem *> &items) {
+        m_Mutex.lock();
+        {
+            m_Queue.append(items);
+        }
+        m_Mutex.unlock();
+        m_WaitAnyItem.wakeOne();
+    }
+
+    void SpellCheckWorker::cancelCurrentRequests() {
+        m_Mutex.lock();
+        {
+            qDeleteAll(m_Queue);
+        }
+        m_Queue.clear();
+        m_Mutex.unlock();
+    }
+
     void SpellCheckWorker::initHunspell() {
+        // TODO: implement this
+    }
+
+    QStringList SpellCheckWorker::suggestCorrections(const QString &word) {
         // TODO: implement this
     }
 
@@ -49,10 +73,16 @@ namespace SpellCheck {
 
             if (m_Queue.isEmpty()) {
                 m_WaitAnyItem.wait(&m_Mutex);
+
+                // can be cleared by clearCurrectRequests()
+                if (m_Queue.isEmpty()) {
+                    m_Mutex.unlock();
+                    continue;
+                }
             }
 
             SpellCheckItem *item = m_Queue.first();
-            m_Queue.pop_front();
+            m_Queue.removeFirst();
 
             m_Mutex.unlock();
 
@@ -64,6 +94,8 @@ namespace SpellCheck {
             catch (...) {
                 qDebug() << "Error while processing spellcheck";
             }
+
+            delete item;
         }
     }
 

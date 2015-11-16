@@ -100,6 +100,9 @@ namespace Helpers {
         Q_PROPERTY(QString scrollSpeedScaleKey READ getScrollSpeedScaleKey CONSTANT)
         QString getScrollSpeedScaleKey() const { return QString::fromLatin1(Constants::SCROLL_SPEED_SCALE); }
 
+        Q_PROPERTY(QString autoSpellCheckKey READ getUseSpellCheckKey CONSTANT)
+        QString getUseSpellCheckKey() const { return QString::fromLatin1(Constants::USE_SPELL_CHECK); }
+
         Q_INVOKABLE inline void setValue(const QString &key, const QVariant &value) {
             QSettings::setValue(key, value);
         }

@@ -70,7 +70,10 @@ namespace Models {
         void clearMetadata();
         QString retrieveKeyword(int index);
         bool containsKeyword(const QString &searchTerm);
-        void setSpellCheckResult(bool result, int index, const QString &keyword);
+        void lockRead() { m_RWLock.lockForRead(); }
+        void unlock() { m_RWLock.unlock(); }
+        void setSpellCheckResultUnsafe(bool result, int index, const QString &keyword);
+        void emitSpellCheckChanged(int index=-1);
         bool hasAnySpellCheckError();
 
     public:

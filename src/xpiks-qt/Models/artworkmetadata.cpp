@@ -122,13 +122,28 @@ namespace Models {
         return hasMatch;
     }
 
-    void ArtworkMetadata::setSpellCheckResult(bool result, int index, const QString &keyword) {
-        QReadLocker locker(&m_RWLock);
-
+    void ArtworkMetadata::setSpellCheckResultUnsafe(bool result, int index, const QString &keyword) {
         if (0 <= index && index < m_KeywordsList.length()) {
             const QString &existingKeyword = m_KeywordsList.at(index);
             if (keyword == existingKeyword) {
                 m_SpellCheckResults[index] = result;
+            }
+        }
+    }
+
+    void ArtworkMetadata::emitSpellCheckChanged(int index) {
+        QReadLocker locker(&m_RWLock);
+
+        int count = m_KeywordsList.length();
+
+        if (index == -1) {
+            if (count > 0) {
+                QModelIndex start = this->index(0);
+                QModelIndex end = this->index(count - 1);
+                emit dataChanged(start, end, QVector<int>() << SpellCheckOkRole);
+            }
+        } else {
+            if (0 <= index && index < count) {
                 QModelIndex i = this->index(index);
                 emit dataChanged(i, i, QVector<int>() << SpellCheckOkRole);
             }

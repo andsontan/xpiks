@@ -20,8 +20,11 @@
  */
 
 #include "spellcheckerservice.h"
-#include "spellcheckworker.h"
 #include <QThread>
+
+#include "../Models/artworkmetadata.h"
+#include "spellcheckworker.h"
+#include "spellcheckitem.h"
 
 namespace SpellCheck {
     SpellCheckerService::SpellCheckerService() {
@@ -42,5 +45,31 @@ namespace SpellCheck {
                          m_SpellCheckWorker, SLOT(cancel()));
 
         thread->start();
+    }
+
+    void SpellCheckerService::submitItems(QList<Models::ArtworkMetadata *> artworksToCheck) {
+        Q_ASSERT(m_SpellCheckWorker != NULL);
+
+        QList<SpellCheckItem *> items;
+
+        foreach (Models::ArtworkMetadata *metadata, artworksToCheck) {
+            SpellCheckItem *item = new SpellCheckItem(metadata);
+            items.append(item);
+        }
+
+        m_SpellCheckWorker->submitItemsToCheck(items);
+    }
+
+    void SpellCheckerService::submitKeyword(Models::ArtworkMetadata *metadata, int keywordIndex) {
+        Q_ASSERT(m_SpellCheckWorker != NULL);
+
+        SpellCheckItem *item = new SpellCheckItem(metadata, keywordIndex);
+        m_SpellCheckWorker->submitItemToCheck(item);
+    }
+
+    QStringList SpellCheckerService::suggestCorrections(const QString &keyword) {
+        Q_ASSERT(m_SpellCheckWorker != NULL);
+        QStringList corrections = m_SpellCheckWorker->suggestCorrections(keyword);
+        return corrections;
     }
 }

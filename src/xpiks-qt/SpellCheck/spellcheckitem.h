@@ -22,24 +22,38 @@
 #ifndef SPELLCHECKITEM_H
 #define SPELLCHECKITEM_H
 
-#include <QString>
+#include <QList>
+#include <QStringList>
 
 namespace Models {
     class ArtworkMetadata;
 }
 
 namespace SpellCheck {
+    struct SpellCheckQueryItem {
+        SpellCheckQueryItem(int index, const QString &keyword) :
+            m_Keyword(keyword),
+            m_Index(index),
+            m_CheckResult(true)
+        { }
+
+        QString m_Keyword;
+        int m_Index;
+        volatile bool m_CheckResult;
+    };
+
     class SpellCheckItem {
     public:
         SpellCheckItem(Models::ArtworkMetadata *metadata, int keywordIndex);
+        SpellCheckItem(Models::ArtworkMetadata *metadata);
+        ~SpellCheckItem();
 
     public:
-        const QString &getKeyword() const { return m_Keyword; }
-        void processResult(bool isCorrectWord) const;
+        const QList<SpellCheckQueryItem*> &getQueries() const { return m_QueryItems; }
+        void submitSpellCheckResult() const;
 
     private:
-        QString m_Keyword;
-        int m_KeywordIndex;
+        QList<SpellCheckQueryItem*> m_QueryItems;
         Models::ArtworkMetadata *m_Metadata;
     };
 }

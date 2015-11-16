@@ -56,6 +56,10 @@ namespace Suggestion {
     class KeywordsSuggestor;
 }
 
+namespace SpellCheck {
+    class SpellCheckerService;
+}
+
 namespace Commands {
     class CommandManager
     {
@@ -93,6 +97,7 @@ namespace Commands {
         void InjectDependency(Suggestion::KeywordsSuggestor *keywordsSuggestor);
         void InjectDependency(Models::SettingsModel *settingsModel);
         void InjectDependency(Models::RecentDirectoriesModel *recentDirectories);
+        void InjectDependency(SpellCheck::SpellCheckerService *spellCheckerService);
 
     public:
         CommandResult *processCommand(CommandBase *command) const;
@@ -116,6 +121,7 @@ namespace Commands {
 #ifdef QT_DEBUG
         void addInitialArtworks(const QStringList &artworksFilepathes);
 #endif
+        void submitForSpellCheck(Models::ArtworkMetadata *metadata, int keywordIndex);
 
     public:
         // methods for getters
@@ -141,6 +147,7 @@ namespace Commands {
         Suggestion::KeywordsSuggestor *m_KeywordsSuggestor;
         Models::SettingsModel *m_SettingsModel;
         Models::RecentDirectoriesModel *m_RecentDirectories;
+        SpellCheck::SpellCheckerService *m_SpellCheckerService;
     };
 }
 

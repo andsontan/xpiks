@@ -37,6 +37,8 @@
 #include "../Models/filteredartitemsproxymodel.h"
 #include "../Models/recentdirectoriesmodel.h"
 #include "../Models/artiteminfo.h"
+#include "../SpellCheck/spellcheckerservice.h"
+#include "../Models/settingsmodel.h"
 
 void Commands::CommandManager::InjectDependency(Models::ArtworksRepository *artworkRepository) {
     Q_ASSERT(artworkRepository != NULL); m_ArtworksRepository = artworkRepository;
@@ -106,6 +108,10 @@ void Commands::CommandManager::InjectDependency(Models::SettingsModel *settingsM
 
 void Commands::CommandManager::InjectDependency(Models::RecentDirectoriesModel *recentDirectories) {
     Q_ASSERT(recentDirectories != NULL); m_RecentDirectories = recentDirectories;
+}
+
+void Commands::CommandManager::InjectDependency(SpellCheck::SpellCheckerService *spellCheckerService) {
+    Q_ASSERT(spellCheckerService != NULL); m_SpellCheckerService = spellCheckerService;
 }
 
 
@@ -219,3 +225,9 @@ void Commands::CommandManager::addInitialArtworks(const QStringList &artworksFil
     delete result;
 }
 #endif
+
+void Commands::CommandManager::submitForSpellCheck(Models::ArtworkMetadata *metadata, int keywordIndex) {
+    if (m_SettingsModel->getUseSpellCheck()) {
+        m_SpellCheckerService->submitKeyword(metadata, keywordIndex);
+    }
+}

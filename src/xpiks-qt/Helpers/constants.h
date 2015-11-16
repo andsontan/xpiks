@@ -53,6 +53,7 @@ namespace Constants {
     const char RECENT_DIRECTORIES[] = "RECENT_DIRECTORIES";
     const char MAX_PARALLEL_UPLOADS[] = "MAX_PARALLEL_UPLOADS";
     const char PROXY_URI[] = "PROXY_URI";
+    const char USE_SPELL_CHECK[] = "USE_SPELL_CHECK";
 #else
     const char UPLOAD_HOSTS[] = "DEBUG_UPLOAD_HOSTS_HASH";
     const char MAX_KEYWORD_COUNT[] = "DEBUG_MAX_KEYWORD_COUNT";
@@ -65,6 +66,7 @@ namespace Constants {
     const char RECENT_DIRECTORIES[] = "DEBUG_RECENT_DIRECTORIES";
     const char MAX_PARALLEL_UPLOADS[] = "DEBUG_MAX_PARALLEL_UPLOADS";
     const char PROXY_URI[] = "DEBUG_PROXY_URI";
+    const char USE_SPELL_CHECK[] = "DEBUG_USE_SPELL_CHECK";
 #endif // QT_NO_DEBUG
 }
 
