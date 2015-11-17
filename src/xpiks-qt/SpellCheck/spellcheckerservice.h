@@ -40,8 +40,8 @@ namespace SpellCheck {
         SpellCheckerService();
 
     public:
-        void startWorker();
-        void submitItems(QList<Models::ArtworkMetadata*> artworksToCheck);
+        void startChecking();
+        void submitItems(const QList<Models::ArtworkMetadata *> &artworksToCheck);
         void submitKeyword(Models::ArtworkMetadata* metadata, int keywordIndex);
         QStringList suggestCorrections(const QString &keyword);
 

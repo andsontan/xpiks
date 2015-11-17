@@ -29,6 +29,9 @@
 #include <QString>
 #include <QStringList>
 
+class Hunspell;
+class QTextCodec;
+
 namespace SpellCheck {
     class SpellCheckItem;
 
@@ -37,6 +40,7 @@ namespace SpellCheck {
         Q_OBJECT
     public:
         explicit SpellCheckWorker(QObject *parent = 0);
+        virtual ~SpellCheckWorker();
 
     public:
         void submitItemToCheck(SpellCheckItem *item);
@@ -46,8 +50,10 @@ namespace SpellCheck {
 
     private:
         void initHunspell();
+        void detectAffEncoding();
         void spellcheckLoop();
         void processOneRequest(const SpellCheckItem *item);
+        bool isWordSpelledOk(const QString &word) const;
 
     public slots:
         void process();
@@ -55,11 +61,15 @@ namespace SpellCheck {
 
     signals:
         void stopped();
+        void queueIsEmpty();
 
     private:
         QWaitCondition m_WaitAnyItem;
         QMutex m_Mutex;
         QList<SpellCheckItem*> m_Queue;
+        QString m_Encoding;
+        QTextCodec *m_Codec;
+        Hunspell *m_Hunspell;
         volatile bool m_Cancel;
     };
 }

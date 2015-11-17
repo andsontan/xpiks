@@ -126,6 +126,11 @@ namespace Models {
         return modifiedSelectedCount == 0;
     }
 
+    void FilteredArtItemsProxyModel::spellCheckSelected() {
+        QList<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
+        m_CommandManager->submitForSpellCheck(selectedArtworks);
+    }
+
     int FilteredArtItemsProxyModel::getModifiedSelectedCount() const {
         QList<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
         int modifiedCount = 0;

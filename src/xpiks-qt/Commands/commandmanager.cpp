@@ -231,3 +231,9 @@ void Commands::CommandManager::submitForSpellCheck(Models::ArtworkMetadata *meta
         m_SpellCheckerService->submitKeyword(metadata, keywordIndex);
     }
 }
+
+void Commands::CommandManager::submitForSpellCheck(const QList<Models::ArtworkMetadata *> &artworks) {
+    if (m_SettingsModel->getUseSpellCheck()) {
+        m_SpellCheckerService->submitItems(artworks);
+    }
+}

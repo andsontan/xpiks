@@ -36,6 +36,7 @@
 //-------------------------------------
 #include "Models/filteredartitemsproxymodel.h"
 #include "Suggestion/suggestionqueryengine.h"
+#include "SpellCheck/spellcheckerservice.h"
 #include "Models/recentdirectoriesmodel.h"
 #include "Suggestion/keywordssuggestor.h"
 #include "Models/combinedartworksmodel.h"
@@ -181,6 +182,7 @@ int main(int argc, char *argv[]) {
     filteredArtItemsModel.setSourceModel(&artItemsModel);
     Models::RecentDirectoriesModel recentDirectorieModel;
     Models::ArtworkUploader artworkUploader(settingsModel.getMaxParallelUploads());
+    SpellCheck::SpellCheckerService spellCheckerService;
 
     Commands::CommandManager commandManager;
     commandManager.InjectDependency(&artworkRepository);
@@ -197,6 +199,7 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&keywordsSuggestor);
     commandManager.InjectDependency(&settingsModel);
     commandManager.InjectDependency(&recentDirectorieModel);
+    commandManager.InjectDependency(&spellCheckerService);
 
     // other initializations
     secretsManager.setMasterPasswordHash(appSettings.value(Constants::MASTER_PASSWORD_HASH, "").toString());
@@ -240,6 +243,8 @@ int main(int argc, char *argv[]) {
     engine.addImageProvider("global", globalProvider);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
+    spellCheckerService.startChecking();
+
 #ifdef QT_DEBUG
     if (argc > 1) {
         QStringList pathes;
@@ -251,6 +256,7 @@ int main(int argc, char *argv[]) {
 #endif
 
     updateService.checkForUpdates();
+
 
     return app.exec();
 }

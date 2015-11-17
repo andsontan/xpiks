@@ -122,6 +122,7 @@ namespace Commands {
         void addInitialArtworks(const QStringList &artworksFilepathes);
 #endif
         void submitForSpellCheck(Models::ArtworkMetadata *metadata, int keywordIndex);
+        void submitForSpellCheck(const QList<Models::ArtworkMetadata *> &artworks);
 
     public:
         // methods for getters

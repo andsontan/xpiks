@@ -31,7 +31,7 @@ namespace SpellCheck {
         m_SpellCheckWorker = new SpellCheckWorker();
     }
 
-    void SpellCheckerService::startWorker() {
+    void SpellCheckerService::startChecking() {
         QThread *thread = new QThread();
         m_SpellCheckWorker->moveToThread(thread);
 
@@ -47,7 +47,7 @@ namespace SpellCheck {
         thread->start();
     }
 
-    void SpellCheckerService::submitItems(QList<Models::ArtworkMetadata *> artworksToCheck) {
+    void SpellCheckerService::submitItems(const QList<Models::ArtworkMetadata *> &artworksToCheck) {
         Q_ASSERT(m_SpellCheckWorker != NULL);
 
         QList<SpellCheckItem *> items;

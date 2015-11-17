@@ -58,6 +58,7 @@ namespace Models {
         Q_INVOKABLE void setSelectedForUpload();
         Q_INVOKABLE void setSelectedForZipping();
         Q_INVOKABLE bool areSelectedArtworksSaved();
+        Q_INVOKABLE void spellCheckSelected();
         Q_INVOKABLE int getModifiedSelectedCount() const;
         Q_INVOKABLE void removeArtworksDirectory(int index);
         Q_INVOKABLE void checkForWarnings();

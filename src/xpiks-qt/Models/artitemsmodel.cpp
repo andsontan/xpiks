@@ -133,6 +133,7 @@ namespace Models {
             if (metadata->appendKeyword(keyword)) {
                 QModelIndex index = this->index(metadataIndex);
                 emit dataChanged(index, index, QVector<int>() << IsModifiedRole << KeywordsCountRole);
+                m_CommandManager->submitForSpellCheck(metadata, metadata->rowCount() - 1);
             }
         }
     }

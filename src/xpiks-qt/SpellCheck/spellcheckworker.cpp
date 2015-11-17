@@ -22,10 +22,23 @@
 #include "spellcheckworker.h"
 
 #include <QDebug>
+#include <QFile>
+#include <QTextStream>
+#include <QTextCodec>
 #include "spellcheckitem.h"
+#include "../hunspell/hunspell.hxx"
+
+#define EN_HUNSPELL_DIC "dict/en_US.dic"
+#define EN_HUNSPELL_AFF "dict/en_US.aff"
 
 namespace SpellCheck {
     SpellCheckWorker::SpellCheckWorker(QObject *parent) : QObject(parent) {
+    }
+
+    SpellCheckWorker::~SpellCheckWorker() {
+        if (m_Hunspell != NULL) {
+            delete m_Hunspell;
+        }
     }
 
     void SpellCheckWorker::submitItemToCheck(SpellCheckItem *item) {
@@ -56,7 +69,31 @@ namespace SpellCheck {
     }
 
     void SpellCheckWorker::initHunspell() {
-        // TODO: implement this
+        m_Hunspell = new Hunspell(EN_HUNSPELL_AFF, EN_HUNSPELL_DIC);
+        detectAffEncoding();
+    }
+
+    void SpellCheckWorker::detectAffEncoding() {
+        // detect encoding analyzing the SET option in the affix file
+        m_Encoding = "ISO8859-1";
+        QFile affixFile(EN_HUNSPELL_AFF);
+
+        if (affixFile.open(QIODevice::ReadOnly)) {
+            QTextStream stream(&affixFile);
+            QRegExp encDetector("^\\s*SET\\s+([A-Z0-9\\-]+)\\s*", Qt::CaseInsensitive);
+
+            for (QString line = stream.readLine(); !line.isEmpty(); line = stream.readLine()) {
+                if (encDetector.indexIn(line) > -1) {
+                    m_Encoding = encDetector.cap(1);
+                    qDebug() << QString("Encoding of AFF set to ") + m_Encoding;
+                    break;
+                }
+            }
+
+            affixFile.close();
+        }
+
+        m_Codec = QTextCodec::codecForName(m_Encoding.toLatin1().constData());
     }
 
     QStringList SpellCheckWorker::suggestCorrections(const QString &word) {
@@ -68,6 +105,8 @@ namespace SpellCheck {
             if (m_Cancel) {
                 break;
             }
+
+            bool noMoreItems = false;
 
             m_Mutex.lock();
 
@@ -84,6 +123,8 @@ namespace SpellCheck {
             SpellCheckItem *item = m_Queue.first();
             m_Queue.removeFirst();
 
+            noMoreItems = m_Queue.isEmpty();
+
             m_Mutex.unlock();
 
             if (item == NULL) { break; }
@@ -95,12 +136,34 @@ namespace SpellCheck {
                 qDebug() << "Error while processing spellcheck";
             }
 
+            if (noMoreItems) {
+                emit queueIsEmpty();
+            }
+
             delete item;
         }
     }
 
     void SpellCheckWorker::processOneRequest(const SpellCheckItem *item) {
-        // TODO: implement this
+        Q_ASSERT(item != NULL);
+
+        const QList<SpellCheckQueryItem*> &queryItems = item->getQueries();
+        foreach (SpellCheckQueryItem *queryItem, queryItems) {
+            queryItem->m_CheckResult = isWordSpelledOk(queryItem->m_Keyword);
+        }
+
+        item->submitSpellCheckResult();
+    }
+
+    bool SpellCheckWorker::isWordSpelledOk(const QString &word) const {
+        bool isOk = false;
+        try {
+            isOk = m_Hunspell->spell(m_Codec->fromUnicode(word).constData()) != 0;
+        }
+        catch (...) {
+            isOk = false;
+        }
+        return isOk;
     }
 
     void SpellCheckWorker::process() {
