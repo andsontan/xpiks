@@ -230,7 +230,7 @@ HEADERS += Helpers/osxnsurlhelper.h
 
 macx {
 INCLUDEPATH = "../hunspell-1.3.3/src/hunspell"
-LIBS += -L$$PWD/../libs/ -lz
+LIBS += -L$$PWD/../libs/ -lhunspell
 }
 
 win32 {
