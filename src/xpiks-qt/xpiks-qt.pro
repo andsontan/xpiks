@@ -252,3 +252,7 @@ QTPLUGIN += qt5quick
 DEFINES += STATIC
 message("Static build.")
 }
+
+HUNSPELL_DICT_FILES.files = dict/en_US.aff dict/en_US.dic
+HUNSPELL_DICT_FILES.path = Contents/Resources
+QMAKE_BUNDLE_DATA += HUNSPELL_DICT_FILES

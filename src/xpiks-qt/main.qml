@@ -1268,6 +1268,7 @@ ApplicationWindow {
                                                         delegateIndex: index
                                                         keywordText: keyword
                                                         itemHeight: flv.keywordHeight
+                                                        hasSpellCheckError: !spellcheckok
                                                         onActionClicked: keywordsWrapper.removeKeyword(kw.delegateIndex)
                                                     }
 

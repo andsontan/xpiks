@@ -25,11 +25,24 @@
 #include <QFile>
 #include <QTextStream>
 #include <QTextCodec>
+#include <QDir>
+#include <QUrl>
+#include <QCoreApplication>
 #include "spellcheckitem.h"
 #include "../hunspell/hunspell.hxx"
 
-#define EN_HUNSPELL_DIC "dict/en_US.dic"
-#define EN_HUNSPELL_AFF "dict/en_US.aff"
+#define EN_HUNSPELL_DIC "en_US.dic"
+#define EN_HUNSPELL_AFF "en_US.aff"
+
+QString getHunspellResourcesPath() {
+    QString path = QCoreApplication::applicationDirPath();
+
+#ifdef Q_OS_MAC
+    path += "/../Resources/";
+#endif
+
+    return path;
+}
 
 namespace SpellCheck {
     SpellCheckWorker::SpellCheckWorker(QObject *parent) : QObject(parent) {
@@ -59,7 +72,7 @@ namespace SpellCheck {
         m_WaitAnyItem.wakeOne();
     }
 
-    void SpellCheckWorker::cancelCurrentRequests() {
+    void SpellCheckWorker::cancelCurrentBatch() {
         m_Mutex.lock();
         {
             qDeleteAll(m_Queue);
@@ -69,14 +82,22 @@ namespace SpellCheck {
     }
 
     void SpellCheckWorker::initHunspell() {
-        m_Hunspell = new Hunspell(EN_HUNSPELL_AFF, EN_HUNSPELL_DIC);
+        QDir resourcesDir(getHunspellResourcesPath());
+        QString affPath = resourcesDir.absoluteFilePath(EN_HUNSPELL_AFF);
+        QString dicPath = resourcesDir.absoluteFilePath(EN_HUNSPELL_DIC);
+
+        m_Hunspell = new Hunspell(affPath.toLocal8Bit().constData(),
+                                  dicPath.toLocal8Bit().constData());
         detectAffEncoding();
     }
 
     void SpellCheckWorker::detectAffEncoding() {
         // detect encoding analyzing the SET option in the affix file
+        QDir resourcesDir(getHunspellResourcesPath());
+        QString affPath = resourcesDir.absoluteFilePath(EN_HUNSPELL_AFF);
+
         m_Encoding = "ISO8859-1";
-        QFile affixFile(EN_HUNSPELL_AFF);
+        QFile affixFile(affPath);
 
         if (affixFile.open(QIODevice::ReadOnly)) {
             QTextStream stream(&affixFile);

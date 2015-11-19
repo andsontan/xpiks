@@ -42,13 +42,17 @@ namespace Models {
             m_ArtworkDescription = description;
         }
 
-        QWriteLocker locker(&m_RWLock);
-
         if (overwrite && !rawKeywords.isEmpty()) {
             anythingModified = true;
             beginResetModel();
-            m_KeywordsList.clear();
-            m_SpellCheckResults.clear();
+
+            m_RWLock.lockForWrite();
+            {
+                m_KeywordsList.clear();
+                m_SpellCheckResults.clear();
+            }
+            m_RWLock.unlock();
+
             addKeywords(rawKeywords);
             endResetModel();
         } else if (!rawKeywords.isEmpty()) {

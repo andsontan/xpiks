@@ -45,8 +45,15 @@ namespace SpellCheck {
         void submitKeyword(Models::ArtworkMetadata* metadata, int keywordIndex);
         QStringList suggestCorrections(const QString &keyword);
 
+    public:
+        Q_INVOKABLE void cancelCurrentBatch();
+
     signals:
         void cancelSpellChecking();
+        void spellCheckQueueIsEmpty();
+
+    private slots:
+        void workerQueueIsEmpty();
 
     private:
         SpellCheckWorker *m_SpellCheckWorker;

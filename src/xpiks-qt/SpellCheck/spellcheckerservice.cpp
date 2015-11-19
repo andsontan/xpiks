@@ -44,6 +44,9 @@ namespace SpellCheck {
         QObject::connect(this, SIGNAL(cancelSpellChecking()),
                          m_SpellCheckWorker, SLOT(cancel()));
 
+        QObject::connect(m_SpellCheckWorker, SIGNAL(queueIsEmpty()),
+                         this, SLOT(workerQueueIsEmpty()));
+
         thread->start();
     }
 
@@ -71,5 +74,13 @@ namespace SpellCheck {
         Q_ASSERT(m_SpellCheckWorker != NULL);
         QStringList corrections = m_SpellCheckWorker->suggestCorrections(keyword);
         return corrections;
+    }
+
+    void SpellCheckerService::cancelCurrentBatch() {
+        m_SpellCheckWorker->cancelCurrentBatch();
+    }
+
+    void SpellCheckerService::workerQueueIsEmpty() {
+        emit spellCheckQueueIsEmpty();
     }
 }

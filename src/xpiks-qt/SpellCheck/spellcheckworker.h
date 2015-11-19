@@ -45,7 +45,7 @@ namespace SpellCheck {
     public:
         void submitItemToCheck(SpellCheckItem *item);
         void submitItemsToCheck(const QList<SpellCheckItem*> &items);
-        void cancelCurrentRequests();
+        void cancelCurrentBatch();
         QStringList suggestCorrections(const QString &word);
 
     private:

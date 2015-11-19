@@ -30,6 +30,7 @@ Rectangle {
     id: itemWrapper
     property int delegateIndex
     property bool isHighlighted
+    property bool hasSpellCheckError: false
     property string keywordText
     property bool hasPlusSign: false
     property alias itemHeight: tagTextRect.height
@@ -56,7 +57,7 @@ Rectangle {
                 anchors.bottom: parent.bottom
                 verticalAlignment: Text.AlignVCenter
                 text: itemWrapper.keywordText
-                color: itemWrapper.isHighlighted ? Colors.defaultControlColor : Colors.defaultLightColor
+                color: itemWrapper.hasSpellCheckError ? (Colors.artworkModifiedColor) : (itemWrapper.isHighlighted ? Colors.defaultControlColor : Colors.defaultLightColor)
                 font.pixelSize: 12 * settingsModel.keywordSizeScale
             }
         }
