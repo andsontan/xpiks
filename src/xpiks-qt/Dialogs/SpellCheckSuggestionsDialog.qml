@@ -40,6 +40,7 @@ Item {
     Component.onDestruction: dialogDestruction();
 
     Keys.onEscapePressed: {
+        closePopup()
     }
 
     function closePopup() {
@@ -175,13 +176,20 @@ Item {
                     }
                 }
 
+                Item {
+                    height: 1
+                }
+
                 RowLayout {
+                    spacing: 20
+
                     Item {
                         Layout.fillWidth: true
                     }
 
                     StyledButton {
                         text: qsTr("Replace all")
+                        width: 100
                         onClicked: {
                             spellCheckSuggestionModel.submitCorrections()
                             closePopup()
@@ -190,6 +198,7 @@ Item {
 
                     StyledButton {
                         text: qsTr("Cancel")
+                        width: 80
                         onClicked: closePopup()
                     }
                 }

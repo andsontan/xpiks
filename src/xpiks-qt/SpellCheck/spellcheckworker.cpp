@@ -138,6 +138,12 @@ namespace SpellCheck {
         return suggestions;
     }
 
+    bool SpellCheckWorker::hasPendingJobs() {
+        QMutexLocker locker(&m_Mutex);
+        bool isEmpty = m_Queue.isEmpty();
+        return !isEmpty;
+    }
+
     void SpellCheckWorker::spellcheckLoop() {
         for (;;) {
             if (m_Cancel) {

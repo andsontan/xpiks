@@ -47,6 +47,7 @@ namespace SpellCheck {
         void submitItemsToCheck(const QList<SpellCheckItem*> &items);
         void cancelCurrentBatch();
         QStringList suggestCorrections(const QString &word);
+        bool hasPendingJobs();
 
     private:
         void initHunspell();

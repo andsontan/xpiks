@@ -47,6 +47,7 @@ namespace SpellCheck {
 
     public:
         Q_INVOKABLE void cancelCurrentBatch();
+        Q_INVOKABLE bool hasAnyPending();
 
     signals:
         void cancelSpellChecking();

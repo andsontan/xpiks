@@ -74,6 +74,12 @@ Item {
         }
     }
 
+    Component.onCompleted: {
+        if (!spellCheckerService.hasAnyPending()) {
+            spinnerTimer.start()
+        }
+    }
+
     FocusScope {
         anchors.fill: parent
 

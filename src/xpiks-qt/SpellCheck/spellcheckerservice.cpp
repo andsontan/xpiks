@@ -80,6 +80,11 @@ namespace SpellCheck {
         m_SpellCheckWorker->cancelCurrentBatch();
     }
 
+    bool SpellCheckerService::hasAnyPending() {
+        bool hasPending = m_SpellCheckWorker->hasPendingJobs();
+        return hasPending;
+    }
+
     void SpellCheckerService::workerQueueIsEmpty() {
         emit spellCheckQueueIsEmpty();
     }

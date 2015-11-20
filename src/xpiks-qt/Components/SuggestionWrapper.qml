@@ -43,9 +43,9 @@ Rectangle {
 
     StyledText {
         id: suggestionText
-        anchors.bottom: parent.bottom
         verticalAlignment: Text.AlignVCenter
-        horizontalAlignment: Text.AlignHCenter
+        anchors.left: parent.left
+        anchors.leftMargin: 5
         text: itemWrapper.suggestionText
         color: isSelected ? Colors.defaultControlColor : Colors.defaultInputBackground
         font.pixelSize: 12 * settingsModel.keywordSizeScale
