@@ -26,6 +26,7 @@
 #include "../Helpers/tempmetadatadb.h"
 #include "../Helpers/keywordvalidator.h"
 #include "settingsmodel.h"
+#include "../SpellCheck/keywordspellsuggestions.h"
 
 namespace Models {
     bool ArtworkMetadata::initialize(const QString &title,
@@ -167,6 +168,37 @@ namespace Models {
         }
 
         return anyError;
+    }
+
+    void ArtworkMetadata::replaceKeyword(int index, const QString &existing, const QString &replacement) {
+        QWriteLocker locker(&m_RWLock);
+
+        if (0 <= index && index < m_KeywordsList.length()) {
+            const QString &internal = m_KeywordsList.at(index);
+            if (internal == existing) {
+                m_KeywordsList[index] = replacement;
+                m_SpellCheckResults[index] = true;
+                QModelIndex i = this->index(index);
+                emit dataChanged(i, i, QVector<int>() << SpellCheckOkRole);
+            }
+        }
+    }
+
+    QList<SpellCheck::KeywordSpellSuggestions *> ArtworkMetadata::createSuggestionsRequests() {
+        QReadLocker locker(&m_RWLock);
+
+        QList<SpellCheck::KeywordSpellSuggestions *> spellCheckRequests;
+
+        int length = m_KeywordsList.length();
+        for (int i = 0; i < length; ++i) {
+            if (m_SpellCheckResults[i] == false) {
+                const QString &keyword = m_KeywordsList[i];
+                SpellCheck::KeywordSpellSuggestions *suggestionsItem = new SpellCheck::KeywordSpellSuggestions(keyword, i);
+                spellCheckRequests.append(suggestionsItem);
+            }
+        }
+
+        return spellCheckRequests;
     }
 
     bool ArtworkMetadata::removeKeywordAt(int index) {

@@ -69,7 +69,9 @@ SOURCES += main.cpp \
     Helpers/updateservice.cpp \
     SpellCheck/spellcheckerservice.cpp \
     SpellCheck/spellcheckitem.cpp \
-    SpellCheck/spellcheckworker.cpp
+    SpellCheck/spellcheckworker.cpp \
+    SpellCheck/spellchecksuggestionmodel.cpp \
+    SpellCheck/keywordspellsuggestions.cpp
 
 RESOURCES += qml.qrc
 
@@ -175,7 +177,9 @@ HEADERS += \
     Helpers/updateservice.h \
     SpellCheck/spellcheckerservice.h \
     SpellCheck/spellcheckitem.h \
-    SpellCheck/spellcheckworker.h
+    SpellCheck/spellcheckworker.h \
+    SpellCheck/spellchecksuggestionmodel.h \
+    SpellCheck/keywordspellsuggestions.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
@@ -217,7 +221,10 @@ DISTFILES += \
     Components/CustomScrollbar.qml \
     Dialogs/EditArtworkVerticalDialog.qml \
     Dialogs/EditArtworkHorizontalDialog.qml \
-    Dialogs/UpdateWindow.qml
+    Dialogs/UpdateWindow.qml \
+    Dialogs/SpellCheckDialog.qml \
+    Dialogs/SpellCheckSuggestionsDialog.qml \
+    Components/SuggestionWrapper.qml
 
 macx {
 OBJECTIVE_SOURCES += \

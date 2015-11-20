@@ -36,6 +36,7 @@ Rectangle {
     property alias itemHeight: tagTextRect.height
 
     signal actionClicked();
+    signal spellSuggestionRequested();
 
     color: isHighlighted ? Colors.defaultLightColor : Colors.selectedArtworkColor
 
@@ -43,6 +44,7 @@ Rectangle {
     height: childrenRect.height
 
     Row {
+        id: row
         spacing: 0
 
         Item {
@@ -51,14 +53,22 @@ Rectangle {
             height: itemHeight
 
             StyledText {
+                id: keywordText
                 anchors.left: parent.left
                 anchors.leftMargin: 5 + (settingsModel.keywordSizeScale - 1)*10
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 verticalAlignment: Text.AlignVCenter
                 text: itemWrapper.keywordText
-                color: itemWrapper.hasSpellCheckError ? (Colors.artworkModifiedColor) : (itemWrapper.isHighlighted ? Colors.defaultControlColor : Colors.defaultLightColor)
+                color: itemWrapper.isHighlighted ? Colors.defaultControlColor : Colors.defaultLightColor
                 font.pixelSize: 12 * settingsModel.keywordSizeScale
+            }
+
+            MouseArea {
+                anchors.fill: keywordText
+                enabled: hasSpellCheckError
+                cursorShape: hasSpellCheckError > 0 ? Qt.PointingHandCursor : Qt.ArrowCursor
+                onClicked: spellSuggestionRequested()
             }
         }
 
@@ -75,5 +85,14 @@ Rectangle {
                 onItemClicked: actionClicked()
             }
         }
+    }
+
+    Rectangle {
+        height: 2
+        anchors.left: row.left
+        anchors.right: row.right
+        anchors.bottom: row.bottom
+        color: Colors.artworkModifiedColor
+        visible: itemWrapper.hasSpellCheckError
     }
 }

@@ -166,6 +166,17 @@ ApplicationWindow {
             }
 
             MenuItem {
+                text: qsTr("&Check spelling in selected")
+                enabled: filteredArtItemsModel.selectedArtworksCount > 0
+                onTriggered: {
+                    console.log("Spell check in selected")
+                    filteredArtItemsModel.spellCheckSelected()
+                    Common.launchDialog("Dialogs/SpellCheckDialog.qml",
+                                        applicationWindow, {});
+                }
+            }
+
+            MenuItem {
                 text: qsTr("&Remove metadata from selected")
                 enabled: filteredArtItemsModel.selectedArtworksCount > 0
                 onTriggered: {
@@ -1270,6 +1281,12 @@ ApplicationWindow {
                                                         itemHeight: flv.keywordHeight
                                                         hasSpellCheckError: !spellcheckok
                                                         onActionClicked: keywordsWrapper.removeKeyword(kw.delegateIndex)
+                                                        onSpellSuggestionRequested: {
+                                                            artItemsModel.suggestCorrections(kw.delegateIndex)
+                                                            Common.launchDialog("Dialogs/SpellCheckSuggestionsDialog.qml",
+                                                                                applicationWindow,
+                                                                                {})
+                                                        }
                                                     }
 
                                                     onTagAdded: {

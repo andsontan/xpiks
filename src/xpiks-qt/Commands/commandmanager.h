@@ -58,6 +58,7 @@ namespace Suggestion {
 
 namespace SpellCheck {
     class SpellCheckerService;
+    class SpellCheckSuggestionModel;
 }
 
 namespace Commands {
@@ -98,6 +99,7 @@ namespace Commands {
         void InjectDependency(Models::SettingsModel *settingsModel);
         void InjectDependency(Models::RecentDirectoriesModel *recentDirectories);
         void InjectDependency(SpellCheck::SpellCheckerService *spellCheckerService);
+        void InjectDependency(SpellCheck::SpellCheckSuggestionModel *spellCheckSuggestionModel);
 
     public:
         CommandResult *processCommand(CommandBase *command) const;
@@ -123,6 +125,7 @@ namespace Commands {
 #endif
         void submitForSpellCheck(Models::ArtworkMetadata *metadata, int keywordIndex);
         void submitForSpellCheck(const QList<Models::ArtworkMetadata *> &artworks);
+        void setupSpellCheckSuggestions(Models::ArtworkMetadata *metadata);
 
     public:
         // methods for getters
@@ -149,6 +152,7 @@ namespace Commands {
         Models::SettingsModel *m_SettingsModel;
         Models::RecentDirectoriesModel *m_RecentDirectories;
         SpellCheck::SpellCheckerService *m_SpellCheckerService;
+        SpellCheck::SpellCheckSuggestionModel *m_SpellCheckSuggestionModel;
     };
 }
 

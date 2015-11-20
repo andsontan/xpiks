@@ -84,6 +84,7 @@ namespace Models {
         QList<ArtItemInfo *> getSelectedOriginalItemsWithIndices() const;
         QList<ArtItemInfo *> getAllItemsWithIndices() const;
         QList<int> getSelectedOriginalIndices() const;
+        void selectAllItems();
         void forceUnselectAllItems();
         ArtItemsModel *getArtItemsModel() const;
         bool fitsSpecialKeywords(const QString &searchTerm, const ArtworkMetadata *metadata) const;

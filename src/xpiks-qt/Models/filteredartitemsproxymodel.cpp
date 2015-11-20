@@ -200,6 +200,7 @@ namespace Models {
 
         delete combinedResult;
         qDeleteAll(selectedArtworks);
+        selectedArtworks.clear();
     }
 
     void FilteredArtItemsProxyModel::itemSelectedChanged(bool value) {
@@ -312,6 +313,11 @@ namespace Models {
         }
 
         return selectedIndices;
+    }
+
+    void FilteredArtItemsProxyModel::selectAllItems() {
+        ArtItemsModel *artItemsModel = getArtItemsModel();
+        artItemsModel->setAllItemsSelected(true);
     }
 
     void FilteredArtItemsProxyModel::forceUnselectAllItems() {

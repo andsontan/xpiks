@@ -29,6 +29,10 @@
 #include <QString>
 #include <QSet>
 
+namespace SpellCheck {
+    class KeywordSpellSuggestions;
+}
+
 namespace Models {
     class SettingsModel;
 
@@ -75,6 +79,8 @@ namespace Models {
         void setSpellCheckResultUnsafe(bool result, int index, const QString &keyword);
         void emitSpellCheckChanged(int index=-1);
         bool hasAnySpellCheckError();
+        void replaceKeyword(int index, const QString &existing, const QString &replacement);
+        QList<SpellCheck::KeywordSpellSuggestions*> createSuggestionsRequests();
 
     public:
         bool setDescription(const QString &value) {

@@ -170,6 +170,12 @@ namespace Models {
         }
     }
 
+    void ArtItemsModel::suggestCorrections(int metadataIndex) {
+        if (metadataIndex >= 0 && metadataIndex < m_ArtworkList.length()) {
+            m_CommandManager->setupSpellCheckSuggestions(m_ArtworkList[metadataIndex]);
+        }
+    }
+
     void ArtItemsModel::backupItem(int metadataIndex)
     {
         if (metadataIndex >= 0 && metadataIndex < m_ArtworkList.length()) {
@@ -458,6 +464,22 @@ namespace Models {
         updateItemsInRanges(ranges, roles);
     }
 
+    void ArtItemsModel::setAllItemsSelected(bool selected)
+    {
+        qDebug() << "Setting all items selected (" << selected << ")";
+        int length = m_ArtworkList.length();
+        for (int i = 0; i < length; ++i) {
+            ArtworkMetadata *metadata = m_ArtworkList[i];
+            metadata->setIsSelected(selected);
+        }
+
+        if (length > 0) {
+            QModelIndex startIndex = index(0);
+            QModelIndex endIndex = index(length - 1);
+            emit dataChanged(startIndex, endIndex, QVector<int>() << IsSelectedRole);
+        }
+    }
+
     int ArtItemsModel::addDirectories(const QStringList &directories) {
         int filesCount = 0;
         QStringList files;
@@ -507,22 +529,6 @@ namespace Models {
         delete result;
 
         return newFilesCount;
-    }
-
-    void ArtItemsModel::setAllItemsSelected(bool selected)
-    {
-        qDebug() << "Setting all items selected (" << selected << ")";
-        int length = m_ArtworkList.length();
-        for (int i = 0; i < length; ++i) {
-            ArtworkMetadata *metadata = m_ArtworkList[i];
-            metadata->setIsSelected(selected);
-        }
-
-        if (length > 0) {
-            QModelIndex startIndex = index(0);
-            QModelIndex endIndex = index(length - 1);
-            emit dataChanged(startIndex, endIndex, QVector<int>() << IsSelectedRole);
-        }
     }
 
     void ArtItemsModel::getSelectedArtworks(QList<ArtworkMetadata *> &selectedArtworks) const

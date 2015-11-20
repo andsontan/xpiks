@@ -34,6 +34,7 @@
 #include <QStandardPaths>
 #include <QQmlApplicationEngine>
 //-------------------------------------
+#include "SpellCheck/spellchecksuggestionmodel.h"
 #include "Models/filteredartitemsproxymodel.h"
 #include "Suggestion/suggestionqueryengine.h"
 #include "SpellCheck/spellcheckerservice.h"
@@ -183,6 +184,7 @@ int main(int argc, char *argv[]) {
     Models::RecentDirectoriesModel recentDirectorieModel;
     Models::ArtworkUploader artworkUploader(settingsModel.getMaxParallelUploads());
     SpellCheck::SpellCheckerService spellCheckerService;
+    SpellCheck::SpellCheckSuggestionModel spellCheckSuggestionModel;
 
     Commands::CommandManager commandManager;
     commandManager.InjectDependency(&artworkRepository);
@@ -200,6 +202,7 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&settingsModel);
     commandManager.InjectDependency(&recentDirectorieModel);
     commandManager.InjectDependency(&spellCheckerService);
+    commandManager.InjectDependency(&spellCheckSuggestionModel);
 
     // other initializations
     secretsManager.setMasterPasswordHash(appSettings.value(Constants::MASTER_PASSWORD_HASH, "").toString());
@@ -239,6 +242,8 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("helpersWrapper", &helpersQmlWrapper);
     rootContext->setContextProperty("recentDirectories", &recentDirectorieModel);
     rootContext->setContextProperty("updateService", &updateService);
+    rootContext->setContextProperty("spellCheckerService", &spellCheckerService);
+    rootContext->setContextProperty("spellCheckSuggestionModel", &spellCheckSuggestionModel);
 
     engine.addImageProvider("global", globalProvider);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));

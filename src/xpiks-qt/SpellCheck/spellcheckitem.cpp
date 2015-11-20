@@ -33,7 +33,9 @@ namespace SpellCheck {
         m_QueryItems.append(queryItem);
     }
 
-    SpellCheckItem::SpellCheckItem(Models::ArtworkMetadata *metadata) {
+    SpellCheckItem::SpellCheckItem(Models::ArtworkMetadata *metadata) :
+        m_Metadata(metadata)
+    {
         QStringList keywords = metadata->getKeywords();
         int index = 0;
 

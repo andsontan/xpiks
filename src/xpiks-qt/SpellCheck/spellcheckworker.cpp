@@ -67,6 +67,7 @@ namespace SpellCheck {
         m_Mutex.lock();
         {
             m_Queue.append(items);
+            qDebug() << "Submitted" << items.count() << "items to spell check loop";
         }
         m_Mutex.unlock();
         m_WaitAnyItem.wakeOne();
@@ -76,8 +77,8 @@ namespace SpellCheck {
         m_Mutex.lock();
         {
             qDeleteAll(m_Queue);
+            m_Queue.clear();
         }
-        m_Queue.clear();
         m_Mutex.unlock();
     }
 
@@ -118,7 +119,23 @@ namespace SpellCheck {
     }
 
     QStringList SpellCheckWorker::suggestCorrections(const QString &word) {
-        // TODO: implement this
+        QStringList suggestions;
+        char **suggestWordList;
+
+        try {
+            // Encode from Unicode to the encoding used by current dictionary
+            int count = m_Hunspell->suggest(&suggestWordList, m_Codec->fromUnicode(word).constData());
+
+            for (int i = 0; i < count; ++i) {
+                suggestions << m_Codec->toUnicode(suggestWordList[i]);
+                free(suggestWordList[i]);
+            }
+        }
+        catch (...) {
+            qDebug() << "Error in suggestCorrections for keyword:" << word;
+        }
+
+        return suggestions;
     }
 
     void SpellCheckWorker::spellcheckLoop() {
