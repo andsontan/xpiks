@@ -26,10 +26,12 @@
 #include "../Models/artworkmetadata.h"
 #include "spellcheckerservice.h"
 #include "ispellcheckable.h"
+#include "../Commands/commandmanager.h"
 
 namespace SpellCheck {
     SpellCheckSuggestionModel::SpellCheckSuggestionModel():
-        QAbstractListModel()
+        QAbstractListModel(),
+        Common::BaseEntity()
     {
     }
 
@@ -67,6 +69,7 @@ namespace SpellCheck {
         Q_ASSERT(item != NULL);
 
         QList<KeywordSpellSuggestions*> suggestionsRequests = item->createSuggestionsList();
+        setupSuggestions(suggestionsRequests);
 
         beginResetModel();
         m_CurrentItem = item;
@@ -74,6 +77,15 @@ namespace SpellCheck {
         m_KeywordsSuggestions.clear();
         m_KeywordsSuggestions.append(suggestionsRequests);
         endResetModel();
+    }
+
+    void SpellCheckSuggestionModel::setupSuggestions(const QList<KeywordSpellSuggestions*> &items) {
+        SpellCheckerService *service = m_CommandManager->getSpellCheckerService();
+
+        foreach (KeywordSpellSuggestions* item, items) {
+            QStringList suggestions = service->suggestCorrections(item->getWord());
+            item->setSuggestions(suggestions);
+        }
     }
 
     int SpellCheckSuggestionModel::rowCount(const QModelIndex &parent) const {

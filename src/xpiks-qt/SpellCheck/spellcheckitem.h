@@ -56,12 +56,20 @@ namespace SpellCheck {
     public:
         const QList<SpellCheckQueryItem*> &getQueries() const { return m_QueryItems; }
         virtual void submitSpellCheckResult() const = 0;
+        bool needsSuggestions() const { return m_NeedsSuggestions; }
+        void requestSuggestions() { m_NeedsSuggestions = true; }
 
     protected:
         void appendItem(SpellCheckQueryItem *item);
 
     private:
         QList<SpellCheckQueryItem*> m_QueryItems;
+        volatile bool m_NeedsSuggestions;
+    };
+
+    class SpellCheckSeparatorItem : public SpellCheckItemBase {
+    public:
+        virtual void submitSpellCheckResult() const { /*BUMP*/ }
     };
 
     class SpellCheckItem : public SpellCheckItemBase {

@@ -58,31 +58,31 @@ namespace SpellCheck {
     }
 
     void SpellCheckWorker::submitItemToCheck(SpellCheckItemBase *item) {
-        m_Mutex.lock();
+        m_QueueMutex.lock();
         {
             m_Queue.append(item);
         }
-        m_Mutex.unlock();
+        m_QueueMutex.unlock();
         m_WaitAnyItem.wakeOne();
     }
 
     void SpellCheckWorker::submitItemsToCheck(const QList<SpellCheckItemBase *> &items) {
-        m_Mutex.lock();
+        m_QueueMutex.lock();
         {
             m_Queue.append(items);
             qDebug() << "Submitted" << items.count() << "items to spell check loop";
         }
-        m_Mutex.unlock();
+        m_QueueMutex.unlock();
         m_WaitAnyItem.wakeOne();
     }
 
     void SpellCheckWorker::cancelCurrentBatch() {
-        m_Mutex.lock();
+        m_QueueMutex.lock();
         {
             qDeleteAll(m_Queue);
             m_Queue.clear();
         }
-        m_Mutex.unlock();
+        m_QueueMutex.unlock();
 
         m_WaitAnyItem.wakeOne();
         emit queueIsEmpty();
@@ -125,9 +125,25 @@ namespace SpellCheck {
     }
 
     bool SpellCheckWorker::hasPendingJobs() {
-        QMutexLocker locker(&m_Mutex);
+        QMutexLocker locker(&m_QueueMutex);
         bool isEmpty = m_Queue.isEmpty();
         return !isEmpty;
+    }
+
+    QStringList SpellCheckWorker::retrieveCorrections(const QString &word) {
+        QReadLocker locker(&m_SuggestionsLock);
+        QStringList result;
+
+        if (m_Suggestions.contains(word)) {
+            result = m_Suggestions.value(word);
+        }
+
+        return result;
+    }
+
+    void SpellCheckWorker::clearCorrections() {
+        QWriteLocker locker(&m_SuggestionsLock);
+        m_Suggestions.clear();
     }
 
     QStringList SpellCheckWorker::suggestCorrections(const QString &word) {
@@ -159,15 +175,15 @@ namespace SpellCheck {
 
             bool noMoreItems = false;
 
-            m_Mutex.lock();
+            m_QueueMutex.lock();
 
             if (m_Queue.isEmpty()) {
-                m_WaitAnyItem.wait(&m_Mutex);
+                m_WaitAnyItem.wait(&m_QueueMutex);
 
                 // can be cleared by clearCurrectRequests()
                 if (m_Queue.isEmpty()) {
                     emit queueIsEmpty();
-                    m_Mutex.unlock();
+                    m_QueueMutex.unlock();
                     continue;
                 }
             }
@@ -177,39 +193,66 @@ namespace SpellCheck {
 
             noMoreItems = m_Queue.isEmpty();
 
-            m_Mutex.unlock();
+            m_QueueMutex.unlock();
 
             if (item == NULL) { break; }
 
+            bool canDelete = true;
+
             try {
-                processOneRequest(item);
+                canDelete = processOneRequest(item);
             }
             catch (...) {
                 qDebug() << "Error while processing spellcheck";
             }
 
+            if (canDelete) {
+                delete item;
+            }
+
             if (noMoreItems) {
                 emit queueIsEmpty();
             }
-
-            delete item;
         }
     }
 
-    void SpellCheckWorker::processOneRequest(const SpellCheckItemBase *item) {
+    bool SpellCheckWorker::processOneRequest(SpellCheckItemBase *item) {
         Q_ASSERT(item != NULL);
 
-        const QList<SpellCheckQueryItem*> &queryItems = item->getQueries();
-        foreach (SpellCheckQueryItem *queryItem, queryItems) {
-            bool isOk = isWordSpelledOk(queryItem->m_Word);
-            queryItem->m_IsCorrect = isOk;
+        if (dynamic_cast<SpellCheckSeparatorItem*>(item)) {
+            emit queueIsEmpty();
+            return true;
+        }
 
-            if (!isOk) {
-                queryItem->m_Suggestions = suggestCorrections(queryItem->m_Word);
+        bool neededSuggestions = item->needsSuggestions();
+        const QList<SpellCheckQueryItem*> &queryItems = item->getQueries();
+        bool anyWrong = false;
+
+        if (!neededSuggestions) {
+            foreach (SpellCheckQueryItem *queryItem, queryItems) {
+                bool isOk = isWordSpelledOk(queryItem->m_Word);
+                queryItem->m_IsCorrect = isOk;
+                anyWrong = anyWrong || !isOk;
+            }
+        } else {
+            foreach (SpellCheckQueryItem *queryItem, queryItems) {
+                if (!queryItem->m_IsCorrect) {
+                    findSuggestions(queryItem->m_Word);
+                }
             }
         }
 
-        item->submitSpellCheckResult();
+        bool canDelete = false;
+
+        if (anyWrong && !neededSuggestions) {
+            item->submitSpellCheckResult();
+            item->requestSuggestions();
+            this->submitItemToCheck(item);
+        } else {
+            canDelete = true;
+        }
+
+        return canDelete;
     }
 
     bool SpellCheckWorker::isWordSpelledOk(const QString &word) const {
@@ -221,6 +264,21 @@ namespace SpellCheck {
             isOk = false;
         }
         return isOk;
+    }
+
+    void SpellCheckWorker::findSuggestions(const QString &word) {
+        bool needsCorrections = false;
+
+        m_SuggestionsLock.lockForRead();
+        needsCorrections = !m_Suggestions.contains(word);
+        m_SuggestionsLock.unlock();
+
+        if (needsCorrections) {
+            QStringList suggestions = suggestCorrections(word);
+            m_SuggestionsLock.lockForWrite();
+            m_Suggestions.insert(word, suggestions);
+            m_SuggestionsLock.unlock();
+        }
     }
 
     void SpellCheckWorker::process() {

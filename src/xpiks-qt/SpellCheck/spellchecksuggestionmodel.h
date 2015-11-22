@@ -24,6 +24,7 @@
 
 #include <QAbstractListModel>
 #include <QList>
+#include "../Common/baseentity.h"
 
 namespace Models {
     class ArtworkMetadata;
@@ -34,7 +35,7 @@ namespace SpellCheck {
     class SpellCheckerService;
     class ISpellCheckable;
 
-    class SpellCheckSuggestionModel : public QAbstractListModel {
+    class SpellCheckSuggestionModel : public QAbstractListModel, public Common::BaseEntity {
         Q_OBJECT
     public:
         SpellCheckSuggestionModel();
@@ -54,6 +55,9 @@ namespace SpellCheck {
 
     public:
         void setupModel(SpellCheck::SpellCheckerService *service, SpellCheck::ISpellCheckable *item);
+
+    private:
+        void setupSuggestions(const QList<KeywordSpellSuggestions *> &items);
 
     public:
         virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;

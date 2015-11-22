@@ -60,7 +60,10 @@ namespace SpellCheck {
             items.append(item);
         }
 
+        m_SpellCheckWorker->clearCorrections();
         m_SpellCheckWorker->submitItemsToCheck(items);
+
+        m_SpellCheckWorker->submitItemToCheck(new SpellCheckSeparatorItem());
     }
 
     void SpellCheckerService::submitKeyword(SpellCheck::ISpellCheckable *itemToCheck, int keywordIndex) {
@@ -68,6 +71,10 @@ namespace SpellCheck {
 
         SpellCheckItem *item = new SpellCheckItem(itemToCheck, keywordIndex);
         m_SpellCheckWorker->submitItemToCheck(item);
+    }
+
+    QStringList SpellCheckerService::suggestCorrections(const QString &word) const {
+        return m_SpellCheckWorker->retrieveCorrections(word);
     }
 
     void SpellCheckerService::cancelCurrentBatch() {

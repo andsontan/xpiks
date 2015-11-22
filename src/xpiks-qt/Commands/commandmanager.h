@@ -136,6 +136,7 @@ namespace Commands {
         virtual Models::UploadInfoRepository *getUploadInfoRepository() { return m_UploadInfoRepository; }
         virtual Suggestion::KeywordsSuggestor *getKeywordsSuggestor() const { return m_KeywordsSuggestor; }
         virtual Models::SettingsModel *getSettingsModel() const { return m_SettingsModel; }
+        virtual SpellCheck::SpellCheckerService *getSpellCheckerService() const { return m_SpellCheckerService; }
 
     private:
         Models::ArtworksRepository *m_ArtworksRepository;

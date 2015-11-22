@@ -118,6 +118,7 @@ void Commands::CommandManager::InjectDependency(SpellCheck::SpellCheckerService 
 
 void Commands::CommandManager::InjectDependency(SpellCheck::SpellCheckSuggestionModel *spellCheckSuggestionModel) {
     Q_ASSERT(spellCheckSuggestionModel != NULL); m_SpellCheckSuggestionModel = spellCheckSuggestionModel;
+    m_SpellCheckSuggestionModel->setCommandManager(this);
 }
 
 

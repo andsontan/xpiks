@@ -225,7 +225,7 @@ Item {
                     }
 
                     StyledButton {
-                        text: qsTr("Replace all")
+                        text: qsTr("Replace")
                         width: 100
                         onClicked: {
                             spellCheckSuggestionModel.submitCorrections()

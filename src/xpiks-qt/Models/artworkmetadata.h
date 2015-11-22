@@ -75,7 +75,7 @@ namespace Models {
         bool isEmpty() const;
         void clearMetadata();
         virtual QString retrieveKeyword(int index);
-        bool containsKeyword(const QString &searchTerm);
+        bool containsKeyword(const QString &searchTerm, bool exactMatch = false);
         virtual void setSpellCheckResults(const QList<SpellCheck::SpellCheckQueryItem *> &results);
         bool hasAnySpellCheckError();
         virtual void replaceKeyword(int index, const QString &existing, const QString &replacement);
@@ -129,7 +129,6 @@ namespace Models {
     private:
         int appendKeywordsUnsafe(const QStringList &keywordsList);
         void resetKeywordsUnsafe();
-        bool hasSpellCheckError(int keywordIndex) const;
 
     public:
         void addKeywords(const QString &rawKeywords);
@@ -152,7 +151,7 @@ namespace Models {
     private:
          QReadWriteLock m_RWLock;
          QStringList m_KeywordsList;
-         QHash<int, SpellCheck::SpellCheckQueryItem*> m_SpellCheckResults;
+         QList<bool> m_SpellCheckResults;
          QSet<QString> m_KeywordsSet;
          QString m_ArtworkFilepath;
          QString m_ArtworkDescription;

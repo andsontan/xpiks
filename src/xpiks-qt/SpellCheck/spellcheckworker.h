@@ -28,6 +28,8 @@
 #include <QMutex>
 #include <QString>
 #include <QStringList>
+#include <QReadWriteLock>
+#include <QHash>
 
 class Hunspell;
 class QTextCodec;
@@ -47,14 +49,17 @@ namespace SpellCheck {
         void submitItemsToCheck(const QList<SpellCheckItemBase*> &items);
         void cancelCurrentBatch();
         bool hasPendingJobs();
+        QStringList retrieveCorrections(const QString &word);
+        void clearCorrections();
 
     private:
         QStringList suggestCorrections(const QString &word);
         void initHunspell();
         void detectAffEncoding();
         void spellcheckLoop();
-        void processOneRequest(const SpellCheckItemBase *item);
+        bool processOneRequest(SpellCheckItemBase *item);
         bool isWordSpelledOk(const QString &word) const;
+        void findSuggestions(const QString &word);
 
     public slots:
         void process();
@@ -66,8 +71,10 @@ namespace SpellCheck {
 
     private:
         QWaitCondition m_WaitAnyItem;
-        QMutex m_Mutex;
+        QMutex m_QueueMutex;
         QList<SpellCheckItemBase*> m_Queue;
+        QHash<QString, QStringList> m_Suggestions;
+        QReadWriteLock m_SuggestionsLock;
         QString m_Encoding;
         QTextCodec *m_Codec;
         Hunspell *m_Hunspell;

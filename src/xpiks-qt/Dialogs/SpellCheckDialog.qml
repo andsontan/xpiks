@@ -33,8 +33,7 @@ import "../StyledControls"
 Item {
     id: spellCheckDialog
     anchors.fill: parent
-    property var callbackObject
-    property bool initialized: false
+    property bool canClose: false
 
     signal dialogDestruction();
     Component.onDestruction: dialogDestruction();
@@ -70,13 +69,13 @@ Item {
     Connections {
         target: spellCheckerService
         onSpellCheckQueueIsEmpty: {
-            closePopup()
+            canClose = true
         }
     }
 
     Component.onCompleted: {
         if (!spellCheckerService.hasAnyPending()) {
-            closePopup()
+            canClose = true
         }
     }
 
@@ -122,6 +121,18 @@ Item {
                     width: 100
                     anchors.horizontalCenter: parent.horizontalCenter
                     onClicked: spellCheckerService.cancelCurrentBatch()
+                }
+            }
+        }
+
+        Timer {
+            id: closeTimer
+            interval: 500
+            running: true
+            repeat: true
+            onTriggered: {
+                if (canClose) {
+                    closePopup()
                 }
             }
         }

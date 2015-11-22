@@ -142,6 +142,7 @@ ApplicationWindow {
 
         Menu {
             title: qsTr("Tools")
+            enabled: applicationWindow.openedDialogsCount == 0
 
             MenuItem {
                 text: qsTr("&Zip selected artworks")
