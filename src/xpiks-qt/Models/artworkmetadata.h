@@ -53,7 +53,7 @@ namespace Models {
     public:
         enum ArtworkMetadataRoles {
             KeywordRole = Qt::UserRole + 1,
-            SpellCheckOkRole
+            IsCorrectRole
         };
 
     public:

@@ -114,6 +114,10 @@ namespace Models {
         m_CommonKeywordsModel.clear();
     }
 
+    void CombinedArtworksModel::suggestCorrections() {
+        m_CommandManager->setupSpellCheckSuggestions(&m_CommonKeywordsModel);
+    }
+
     void CombinedArtworksModel::processCombinedEditCommand() const {
         Commands::CombinedEditCommand *combinedEditCommand = new Commands::CombinedEditCommand(
                     m_EditFlags,
@@ -221,6 +225,8 @@ namespace Models {
             m_CommonKeywordsSet.insert(keyword);
             emit keywordsCountChanged();
             m_IsModified = true;
+
+            m_CommandManager->submitForSpellCheck(&m_CommonKeywordsModel, m_CommonKeywordsModel.rowCount() - 1);
         }
     }
 

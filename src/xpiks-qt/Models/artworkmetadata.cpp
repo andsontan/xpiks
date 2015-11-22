@@ -181,7 +181,7 @@ namespace Models {
                 m_KeywordsList[index] = replacement;
                 m_SpellCheckResults[index] = true;
                 QModelIndex i = this->index(index);
-                emit dataChanged(i, i, QVector<int>() << SpellCheckOkRole << KeywordRole);
+                emit dataChanged(i, i, QVector<int>() << IsCorrectRole << KeywordRole);
             }
         }
     }
@@ -268,12 +268,12 @@ namespace Models {
             if (count > 0) {
                 QModelIndex start = this->index(0);
                 QModelIndex end = this->index(count - 1);
-                emit dataChanged(start, end, QVector<int>() << SpellCheckOkRole);
+                emit dataChanged(start, end, QVector<int>() << IsCorrectRole);
             }
         } else {
             if (0 <= index && index < count) {
                 QModelIndex i = this->index(index);
-                emit dataChanged(i, i, QVector<int>() << SpellCheckOkRole);
+                emit dataChanged(i, i, QVector<int>() << IsCorrectRole);
             }
         }
     }
@@ -343,7 +343,7 @@ namespace Models {
         switch (role) {
         case KeywordRole:
             return m_KeywordsList.at(row);
-        case SpellCheckOkRole:
+        case IsCorrectRole:
             return m_SpellCheckResults.at(row);
         default:
             return QVariant();
@@ -353,7 +353,7 @@ namespace Models {
     QHash<int, QByteArray> ArtworkMetadata::roleNames() const {
         QHash<int, QByteArray> roles;
         roles[KeywordRole] = "keyword";
-        roles[SpellCheckOkRole] = "spellcheckok";
+        roles[IsCorrectRole] = "iscorrect";
         return roles;
     }
 }

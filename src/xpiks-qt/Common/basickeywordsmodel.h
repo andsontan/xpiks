@@ -27,11 +27,17 @@
 #include <QVariant>
 #include <QByteArray>
 #include <QHash>
+#include <QList>
 #include "baseentity.h"
+#include "../SpellCheck/ispellcheckable.h"
+
+namespace SpellCheck {
+    class SpellCheckQueryItem;
+    class KeywordSpellSuggestions;
+}
 
 namespace Common {
-
-    class BasicKeywordsModel : public QAbstractListModel {
+    class BasicKeywordsModel : public QAbstractListModel, public SpellCheck::ISpellCheckable {
         Q_OBJECT
     public:
         BasicKeywordsModel(QObject *parent) :
@@ -40,34 +46,37 @@ namespace Common {
 
     public:
         enum BasicKeywordsModellRoles {
-            KeywordRole = Qt::UserRole + 1
+            KeywordRole = Qt::UserRole + 1,
+            IsCorrectRole
         };
 
     public:
         virtual int rowCount(const QModelIndex & parent = QModelIndex()) const { Q_UNUSED(parent); return m_KeywordsList.length(); }
-        virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const {
-            if (index.row() < 0 || index.row() >= m_KeywordsList.count()) return QVariant();
-            if (role == KeywordRole) { return m_KeywordsList[index.row()]; }
-            return QVariant();
-        }
+        virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
         const QStringList &getKeywords() const { return m_KeywordsList; }
-        void reset(const QStringList &items) { beginResetModel(); m_KeywordsList.clear(); m_KeywordsList.append(items); endResetModel(); }
-        void clear() { beginResetModel(); m_KeywordsList.clear(); endResetModel(); }
-        void appendKeyword(const QString &keyword) { beginInsertRows(QModelIndex(), rowCount(), rowCount());
-                                                     m_KeywordsList.append(keyword); endInsertRows(); }
-        bool removeKeyword(int index, QString &keyword) { bool indexValid = index >= 0 && index < m_KeywordsList.length(); if (indexValid) {
-                beginRemoveRows(QModelIndex(), index, index); keyword = m_KeywordsList.takeAt(index); endRemoveRows(); }
-            return indexValid;
-                                                        }
+        void reset(const QStringList &items);
+        void clear();
+        void appendKeyword(const QString &keyword);
+        bool removeKeyword(int index, QString &keyword);
         bool removeLastKeyword(QString &keyword) { return removeKeyword(m_KeywordsList.length() - 1, keyword); }
 
+    public:
+        // ISPELLCHECKABLE
+        virtual QString retrieveKeyword(int wordIndex);
+        virtual QStringList getKeywords();
+        virtual void setSpellCheckResults(const QList<SpellCheck::SpellCheckQueryItem*> &items);
+        virtual QList<SpellCheck::KeywordSpellSuggestions*> createSuggestionsList();
+        virtual void replaceKeyword(int index, const QString &existing, const QString &replacement);
+
+    private:
+        void emitSpellCheckChanged(int index);
+
     protected:
-        virtual QHash<int, QByteArray> roleNames() const {
-            QHash<int, QByteArray> roles; roles[KeywordRole] = "keyword"; return roles;
-        }
+        virtual QHash<int, QByteArray> roleNames() const;
 
     private:
         QStringList m_KeywordsList;
+        QList<bool> m_SpellCheckResults;
     };
 }
 

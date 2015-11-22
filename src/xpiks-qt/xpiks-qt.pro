@@ -71,7 +71,8 @@ SOURCES += main.cpp \
     SpellCheck/spellcheckitem.cpp \
     SpellCheck/spellcheckworker.cpp \
     SpellCheck/spellchecksuggestionmodel.cpp \
-    SpellCheck/keywordspellsuggestions.cpp
+    SpellCheck/keywordspellsuggestions.cpp \
+    Common/basickeywordsmodel.cpp
 
 RESOURCES += qml.qrc
 

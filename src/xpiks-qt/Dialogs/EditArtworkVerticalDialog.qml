@@ -293,10 +293,17 @@ Item {
 
                         delegate: KeywordWrapper {
                             isHighlighted: true
-                            keywordText: modelData
+                            keywordText: keyword
+                            hasSpellCheckError: !iscorrect
                             delegateIndex: index
                             itemHeight: flv.keywordHeight
                             onActionClicked: keywordsWrapper.removeKeyword(delegateIndex)
+                            onSpellSuggestionRequested: {
+                                combinedArtworks.suggestCorrections()
+                                Common.launchDialog("Dialogs/SpellCheckSuggestionsDialog.qml",
+                                                    applicationWindow,
+                                                    {})
+                            }
                         }
 
                         onTagAdded: {

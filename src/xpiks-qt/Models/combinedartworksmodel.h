@@ -138,6 +138,7 @@ namespace Models {
             QQmlEngine::setObjectOwnership(item, QQmlEngine::CppOwnership);
             return item;
         }
+        Q_INVOKABLE void suggestCorrections();
 
     private:
         void processCombinedEditCommand() const;

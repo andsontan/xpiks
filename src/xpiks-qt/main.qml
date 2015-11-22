@@ -1280,7 +1280,7 @@ ApplicationWindow {
                                                         delegateIndex: index
                                                         keywordText: keyword
                                                         itemHeight: flv.keywordHeight
-                                                        hasSpellCheckError: !spellcheckok
+                                                        hasSpellCheckError: !iscorrect
                                                         onActionClicked: keywordsWrapper.removeKeyword(kw.delegateIndex)
                                                         onSpellSuggestionRequested: {
                                                             artItemsModel.suggestCorrections(rowWrapper.getIndex())
