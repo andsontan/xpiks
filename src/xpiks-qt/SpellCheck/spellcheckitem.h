@@ -25,21 +25,28 @@
 #include <QList>
 #include <QStringList>
 
-namespace Models {
-    class ArtworkMetadata;
-}
-
 namespace SpellCheck {
-    struct SpellCheckQueryItem {
+    class ISpellCheckable;
+
+    class SpellCheckQueryItem {
+    public:
         SpellCheckQueryItem(int index, const QString &word) :
             m_Word(word),
             m_Index(index),
-            m_CheckResult(true)
+            m_IsCorrect(true)
+        { }
+
+        SpellCheckQueryItem(const SpellCheckQueryItem &copy) :
+            m_Word(copy.m_Word),
+            m_Index(copy.m_Index),
+            m_IsCorrect(copy.m_IsCorrect),
+            m_Suggestions(copy.m_Suggestions)
         { }
 
         QString m_Word;
         int m_Index;
-        volatile bool m_CheckResult;
+        volatile bool m_IsCorrect;
+        QStringList m_Suggestions;
     };
 
     class SpellCheckItemBase {
@@ -59,14 +66,14 @@ namespace SpellCheck {
 
     class SpellCheckItem : public SpellCheckItemBase {
     public:
-        SpellCheckItem(Models::ArtworkMetadata *metadata, int keywordIndex);
-        SpellCheckItem(Models::ArtworkMetadata *metadata);
+        SpellCheckItem(ISpellCheckable *spellCheckable, int keywordIndex);
+        SpellCheckItem(ISpellCheckable *spellCheckable);
 
     public:
         virtual void submitSpellCheckResult() const;
 
     private:
-        Models::ArtworkMetadata *m_Metadata;
+        ISpellCheckable *m_SpellCheckable;
     };
 }
 

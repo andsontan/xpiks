@@ -27,8 +27,14 @@
 #include "../Helpers/keywordvalidator.h"
 #include "settingsmodel.h"
 #include "../SpellCheck/keywordspellsuggestions.h"
+#include "../SpellCheck/spellcheckitem.h"
 
 namespace Models {
+    ArtworkMetadata::~ArtworkMetadata() {
+         this->disconnect();
+        qDeleteAll(m_SpellCheckResults.values());
+    }
+
     bool ArtworkMetadata::initialize(const QString &title,
                                      const QString &description, const QString &rawKeywords, bool overwrite) {
         bool anythingModified = false;
@@ -50,6 +56,7 @@ namespace Models {
             m_RWLock.lockForWrite();
             {
                 m_KeywordsList.clear();
+                qDeleteAll(m_SpellCheckResults.values());
                 m_SpellCheckResults.clear();
             }
             m_RWLock.unlock();
@@ -127,32 +134,20 @@ namespace Models {
         return hasMatch;
     }
 
-    void ArtworkMetadata::setSpellCheckResultUnsafe(bool result, int index, const QString &keyword) {
-        if (0 <= index && index < m_KeywordsList.length()) {
-            const QString &existingKeyword = m_KeywordsList.at(index);
-            if (keyword == existingKeyword) {
-                m_SpellCheckResults[index] = result;
-            }
-        }
-    }
-
-    void ArtworkMetadata::emitSpellCheckChanged(int index) {
+    void ArtworkMetadata::setSpellCheckResults(const QList<SpellCheck::SpellCheckQueryItem *> &results) {
         QReadLocker locker(&m_RWLock);
 
-        int count = m_KeywordsList.length();
-
-        if (index == -1) {
-            if (count > 0) {
-                QModelIndex start = this->index(0);
-                QModelIndex end = this->index(count - 1);
-                emit dataChanged(start, end, QVector<int>() << SpellCheckOkRole);
-            }
-        } else {
-            if (0 <= index && index < count) {
-                QModelIndex i = this->index(index);
-                emit dataChanged(i, i, QVector<int>() << SpellCheckOkRole);
-            }
+        foreach (SpellCheck::SpellCheckQueryItem *item, results) {
+            this->setSpellCheckResultUnsafe(item);
         }
+
+        int index = -1;
+
+        if (results.length() == 1) {
+            index = results.first()->m_Index;
+        }
+
+        emitSpellCheckChangedUnsafe(index);
     }
 
     bool ArtworkMetadata::hasAnySpellCheckError() {
@@ -160,8 +155,11 @@ namespace Models {
 
         bool anyError = false;
 
-        foreach (bool status, m_SpellCheckResults) {
-            if (!status) {
+        QHashIterator<int, SpellCheck::SpellCheckQueryItem*> i(m_SpellCheckResults);
+
+        while (i.hasNext()) {
+            i.next();
+            if (!i.value()->m_IsCorrect) {
                 anyError = true;
                 break;
             }
@@ -177,28 +175,35 @@ namespace Models {
             const QString &internal = m_KeywordsList.at(index);
             if (internal == existing) {
                 m_KeywordsList[index] = replacement;
-                m_SpellCheckResults[index] = true;
+                m_SpellCheckResults[index]->m_IsCorrect = true;
                 QModelIndex i = this->index(index);
                 emit dataChanged(i, i, QVector<int>() << SpellCheckOkRole);
             }
         }
     }
 
-    QList<SpellCheck::KeywordSpellSuggestions *> ArtworkMetadata::createSuggestionsRequests() {
+    QList<SpellCheck::KeywordSpellSuggestions *> ArtworkMetadata::createSuggestionsList() {
         QReadLocker locker(&m_RWLock);
 
-        QList<SpellCheck::KeywordSpellSuggestions *> spellCheckRequests;
+        QList<SpellCheck::KeywordSpellSuggestions *> spellCheckSuggestions;
 
         int length = m_KeywordsList.length();
         for (int i = 0; i < length; ++i) {
-            if (m_SpellCheckResults[i] == false) {
-                const QString &keyword = m_KeywordsList[i];
-                SpellCheck::KeywordSpellSuggestions *suggestionsItem = new SpellCheck::KeywordSpellSuggestions(keyword, i);
-                spellCheckRequests.append(suggestionsItem);
+            if (hasSpellCheckError(i)) {
+                SpellCheck::SpellCheckQueryItem *item = m_SpellCheckResults.value(i, NULL);
+                Q_ASSERT(item != NULL);
+                const QStringList &suggestions = item->m_Suggestions;
+
+                if (!suggestions.isEmpty()) {
+                    const QString &keyword = m_KeywordsList[i];
+                    SpellCheck::KeywordSpellSuggestions *suggestionsItem = new SpellCheck::KeywordSpellSuggestions(keyword, i);
+                    suggestionsItem->setSuggestions(suggestions);
+                    spellCheckSuggestions.append(suggestionsItem);
+                }
             }
         }
 
-        return spellCheckRequests;
+        return spellCheckSuggestions;
     }
 
     bool ArtworkMetadata::removeKeywordAt(int index) {
@@ -211,8 +216,10 @@ namespace Models {
 
             beginRemoveRows(QModelIndex(), index, index);
             m_KeywordsList.removeAt(index);
-            m_SpellCheckResults.removeAt(index);
             endRemoveRows();
+
+            SpellCheck::SpellCheckQueryItem *item = m_SpellCheckResults.take(index);
+            delete item;
 
             setModified();
             removed = true;
@@ -236,7 +243,6 @@ namespace Models {
 
             beginInsertRows(QModelIndex(), keywordsCount, keywordsCount);
             m_KeywordsList.append(sanitizedKeyword);
-            m_SpellCheckResults.append(true);
             endInsertRows();
 
             m_KeywordsSet.insert(sanitizedKeyword);
@@ -245,6 +251,35 @@ namespace Models {
         }
 
         return added;
+    }
+
+    void ArtworkMetadata::setSpellCheckResultUnsafe(SpellCheck::SpellCheckQueryItem *result) {
+        int index = result->m_Index;
+
+        if (m_SpellCheckResults.contains(index)) {
+            SpellCheck::SpellCheckQueryItem *prev = m_SpellCheckResults.value(index);
+            qDebug() << "Replacing existing spellcheck item for word:" << prev->m_Word;
+            delete prev;
+        }
+
+        m_SpellCheckResults.insert(index, new SpellCheck::SpellCheckQueryItem(*result));
+    }
+
+    void ArtworkMetadata::emitSpellCheckChangedUnsafe(int index) {
+        int count = m_KeywordsList.length();
+
+        if (index == -1) {
+            if (count > 0) {
+                QModelIndex start = this->index(0);
+                QModelIndex end = this->index(count - 1);
+                emit dataChanged(start, end, QVector<int>() << SpellCheckOkRole);
+            }
+        } else {
+            if (0 <= index && index < count) {
+                QModelIndex i = this->index(index);
+                emit dataChanged(i, i, QVector<int>() << SpellCheckOkRole);
+            }
+        }
     }
 
     void ArtworkMetadata::setKeywords(const QStringList &keywordsList) {
@@ -272,11 +307,24 @@ namespace Models {
     void ArtworkMetadata::resetKeywordsUnsafe() {
         beginResetModel();
         m_KeywordsList.clear();
+        qDeleteAll(m_SpellCheckResults.values());
         m_SpellCheckResults.clear();
         endResetModel();
 
         m_KeywordsSet.clear();
         setModified();
+    }
+
+    bool ArtworkMetadata::hasSpellCheckError(int keywordIndex) const {
+        bool hasError = false;
+        SpellCheck::SpellCheckQueryItem *item = m_SpellCheckResults.value(keywordIndex, NULL);
+
+        if (item != NULL) {
+            hasError = (item->m_Word == m_KeywordsList[keywordIndex]) &&
+                    (item->m_IsCorrect == false);
+        }
+
+        return hasError;
     }
 
     void ArtworkMetadata::addKeywords(const QString &rawKeywords) {
@@ -286,7 +334,6 @@ namespace Models {
         for (int i = 0; i < keywordsList.size(); ++i) {
             const QString &keyword = keywordsList[i];
             m_KeywordsList.append(keyword);
-            m_SpellCheckResults.append(true);
             m_KeywordsSet.insert(keyword.simplified().toLower());
         }
     }
@@ -311,7 +358,7 @@ namespace Models {
         case KeywordRole:
             return m_KeywordsList.at(index.row());
         case SpellCheckOkRole:
-            return m_SpellCheckResults.at(index.row());
+            return !hasSpellCheckError(index.row());
         default:
             return QVariant();
         }

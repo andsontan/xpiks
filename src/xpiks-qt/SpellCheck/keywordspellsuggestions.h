@@ -34,60 +34,47 @@ namespace SpellCheck {
         KeywordSpellSuggestions(const QString &keyword, int originalIndex);
 
     public:
-        Q_PROPERTY(QString keyword READ getKeyword WRITE setKeyword NOTIFY keywordChanged)
-        Q_PROPERTY(int replacementIndex READ getReplacementIndex WRITE setReplacementIndex NOTIFY replacementIndexChanged)
-
-    public:
         enum KeywordSpellSuggestionsRoles {
             SuggestionRole = Qt::UserRole + 1,
-            IsSelectedRole
+            // not same as inner m_IsSelected
+            // used for selected replacement
+            IsSelectedRole,
+            EditReplacementIndexRole
         };
 
     public:
-        const QString &getKeyword() const { return m_Keyword; }
+        const QString &getWord() const { return m_Word; }
         int getReplacementIndex() const { return m_ReplacementIndex; }
 
-        void setKeyword(const QString &keyword) {
-            if (keyword != m_Keyword) {
-                m_Keyword = keyword;
-                emit keywordChanged();
-            }
-        }
-
-        void setReplacementIndex(int value) {
-            if (value != m_ReplacementIndex) {
-                QModelIndex prev = this->index(m_ReplacementIndex);
-                QModelIndex curr = this->index(value);
-                m_ReplacementIndex = value;
-                emit replacementIndexChanged();
-                QVector<int> roles;
-                roles << IsSelectedRole;
-                emit dataChanged(prev, prev, roles);
-                emit dataChanged(curr, curr, roles);
-            }
-        }
+        bool setReplacementIndex(int value);
 
         const QString &getReplacement() const { return m_Suggestions[m_ReplacementIndex]; }
         void setSuggestions(const QStringList &suggestions);
         int getOriginalIndex() const { return m_OriginalIndex; }
 
+        bool getIsSelected() const { return m_IsSelected; }
+        void setIsSelected(bool value) { m_IsSelected = value; }
+
     signals:
-        void keywordChanged();
         void replacementIndexChanged();
 
     public:
         virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
         virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+        virtual bool setData(const QModelIndex &index, const QVariant &value, int role);
 
     protected:
         virtual QHash<int, QByteArray> roleNames() const;
 
     private:
         QStringList m_Suggestions;
-        QString m_Keyword;
+        QString m_Word;
         int m_ReplacementIndex;
         int m_OriginalIndex;
+        bool m_IsSelected;
     };
 }
+
+Q_DECLARE_METATYPE(SpellCheck::KeywordSpellSuggestions*)
 
 #endif // KEYWORDSPELLSUGGESTIONS_H

@@ -23,10 +23,27 @@
 
 namespace SpellCheck {
     KeywordSpellSuggestions::KeywordSpellSuggestions(const QString &keyword, int originalIndex) :
-        m_Keyword(keyword),
+        m_Word(keyword),
         m_ReplacementIndex(0),
-        m_OriginalIndex(originalIndex)
+        m_OriginalIndex(originalIndex),
+        m_IsSelected(true)
     {
+    }
+
+    bool KeywordSpellSuggestions::setReplacementIndex(int value) {
+        bool result = value != m_ReplacementIndex;
+
+        if (result) {
+            QModelIndex prev = this->index(m_ReplacementIndex);
+            QModelIndex curr = this->index(value);
+            m_ReplacementIndex = value;
+            QVector<int> roles;
+            roles << IsSelectedRole;
+            emit dataChanged(prev, prev, roles);
+            emit dataChanged(curr, curr, roles);
+        }
+
+        return result;
     }
 
     void KeywordSpellSuggestions::setSuggestions(const QStringList &suggestions) {
@@ -57,10 +74,27 @@ namespace SpellCheck {
         }
     }
 
+    bool KeywordSpellSuggestions::setData(const QModelIndex &index, const QVariant &value, int role) {
+        if (!index.isValid()) return false;
+
+        bool result = false;
+
+        switch (role) {
+        case EditReplacementIndexRole:
+            result = setReplacementIndex(value.toInt());
+            break;
+        default:
+            return false;
+        }
+
+        return result;
+    }
+
     QHash<int, QByteArray> KeywordSpellSuggestions::roleNames() const {
         QHash<int, QByteArray> roles;
         roles[SuggestionRole] = "suggestion";
         roles[IsSelectedRole] = "isselected";
+        roles[EditReplacementIndexRole] = "editreplacementindex";
         return roles;
     }
 }

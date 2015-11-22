@@ -46,10 +46,10 @@ namespace SpellCheck {
         void submitItemToCheck(SpellCheckItemBase *item);
         void submitItemsToCheck(const QList<SpellCheckItemBase*> &items);
         void cancelCurrentBatch();
-        QStringList suggestCorrections(const QString &word);
         bool hasPendingJobs();
 
     private:
+        QStringList suggestCorrections(const QString &word);
         void initHunspell();
         void detectAffEncoding();
         void spellcheckLoop();

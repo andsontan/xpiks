@@ -28,15 +28,17 @@
 #include <QFileInfo>
 #include <QString>
 #include <QSet>
+#include "../SpellCheck/ispellcheckable.h"
 
 namespace SpellCheck {
     class KeywordSpellSuggestions;
+    class SpellCheckQueryItem;
 }
 
 namespace Models {
     class SettingsModel;
 
-    class ArtworkMetadata : public QAbstractListModel {
+    class ArtworkMetadata : public QAbstractListModel, public SpellCheck::ISpellCheckable {
         Q_OBJECT
     public:
         ArtworkMetadata(const QString &filepath) :
@@ -46,7 +48,7 @@ namespace Models {
             m_IsSelected(false)
         { }
 
-        virtual ~ArtworkMetadata() { this->disconnect(); }
+        virtual ~ArtworkMetadata();
 
     public:
         enum ArtworkMetadataRoles {
@@ -64,7 +66,7 @@ namespace Models {
         const QString &getFilepath() const { return m_ArtworkFilepath; }
         virtual QString getDirectory() const { QFileInfo fi(m_ArtworkFilepath); return fi.absolutePath(); }
         int getKeywordsCount();
-        QStringList getKeywords();
+        virtual QStringList getKeywords();
         const QSet<QString> &getKeywordsSet() const { return m_KeywordsSet; }
         QString getKeywordsString();
         bool isInDirectory(const QString &directory) const;
@@ -72,15 +74,12 @@ namespace Models {
         bool getIsSelected() const { return m_IsSelected; }
         bool isEmpty() const;
         void clearMetadata();
-        QString retrieveKeyword(int index);
+        virtual QString retrieveKeyword(int index);
         bool containsKeyword(const QString &searchTerm);
-        void lockRead() { m_RWLock.lockForRead(); }
-        void unlock() { m_RWLock.unlock(); }
-        void setSpellCheckResultUnsafe(bool result, int index, const QString &keyword);
-        void emitSpellCheckChanged(int index=-1);
+        virtual void setSpellCheckResults(const QList<SpellCheck::SpellCheckQueryItem *> &results);
         bool hasAnySpellCheckError();
         void replaceKeyword(int index, const QString &existing, const QString &replacement);
-        QList<SpellCheck::KeywordSpellSuggestions*> createSuggestionsRequests();
+        QList<SpellCheck::KeywordSpellSuggestions*> createSuggestionsList();
 
     public:
         bool setDescription(const QString &value) {
@@ -120,6 +119,8 @@ namespace Models {
 
     private:
         bool appendKeywordUnsafe(const QString &keyword);
+        void setSpellCheckResultUnsafe(SpellCheck::SpellCheckQueryItem *result);
+        void emitSpellCheckChangedUnsafe(int index=-1);
 
     public:
         void setKeywords(const QStringList &keywordsList);
@@ -128,6 +129,7 @@ namespace Models {
     private:
         int appendKeywordsUnsafe(const QStringList &keywordsList);
         void resetKeywordsUnsafe();
+        bool hasSpellCheckError(int keywordIndex) const;
 
     public:
         void addKeywords(const QString &rawKeywords);
@@ -150,7 +152,7 @@ namespace Models {
     private:
          QReadWriteLock m_RWLock;
          QStringList m_KeywordsList;
-         QList<bool> m_SpellCheckResults;
+         QHash<int, SpellCheck::SpellCheckQueryItem*> m_SpellCheckResults;
          QSet<QString> m_KeywordsSet;
          QString m_ArtworkFilepath;
          QString m_ArtworkDescription;

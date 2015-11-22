@@ -70,12 +70,6 @@ namespace SpellCheck {
         m_SpellCheckWorker->submitItemToCheck(item);
     }
 
-    QStringList SpellCheckerService::suggestCorrections(const QString &keyword) {
-        Q_ASSERT(m_SpellCheckWorker != NULL);
-        QStringList corrections = m_SpellCheckWorker->suggestCorrections(keyword);
-        return corrections;
-    }
-
     void SpellCheckerService::cancelCurrentBatch() {
         m_SpellCheckWorker->cancelCurrentBatch();
     }

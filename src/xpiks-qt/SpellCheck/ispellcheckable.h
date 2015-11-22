@@ -19,45 +19,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SPELLCHECKERSERVICE_H
-#define SPELLCHECKERSERVICE_H
+#ifndef ISPELLCHECKABLE
+#define ISPELLCHECKABLE
 
-#include <QObject>
 #include <QString>
-#include <QList>
-
-namespace Models {
-    class ArtworkMetadata;
-}
+#include <QStringList>
+#include "spellcheckitem.h"
 
 namespace SpellCheck {
-    class SpellCheckWorker;
-
-    class SpellCheckerService : public QObject
-    {
-        Q_OBJECT
+    class ISpellCheckable {
     public:
-        SpellCheckerService();
-
-    public:
-        void startChecking();
-        void submitItems(const QList<Models::ArtworkMetadata *> &artworksToCheck);
-        void submitKeyword(Models::ArtworkMetadata* metadata, int keywordIndex);
-
-    public:
-        Q_INVOKABLE void cancelCurrentBatch();
-        Q_INVOKABLE bool hasAnyPending();
-
-    signals:
-        void cancelSpellChecking();
-        void spellCheckQueueIsEmpty();
-
-    private slots:
-        void workerQueueIsEmpty();
-
-    private:
-        SpellCheckWorker *m_SpellCheckWorker;
+        virtual QString retrieveKeyword(int wordIndex) = 0;
+        virtual QStringList getKeywords() = 0;
+        virtual void setSpellCheckResults(const QList<SpellCheckQueryItem*> &items) = 0;
     };
 }
 
-#endif // SPELLCHECKERSERVICE_H
+#endif // ISPELLCHECKABLE
+

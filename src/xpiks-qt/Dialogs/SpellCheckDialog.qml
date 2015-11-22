@@ -70,13 +70,13 @@ Item {
     Connections {
         target: spellCheckerService
         onSpellCheckQueueIsEmpty: {
-            spinnerTimer.start()
+            closePopup()
         }
     }
 
     Component.onCompleted: {
         if (!spellCheckerService.hasAnyPending()) {
-            spinnerTimer.start()
+            closePopup()
         }
     }
 
@@ -121,24 +121,8 @@ Item {
                     text: qsTr("Cancel")
                     width: 100
                     anchors.horizontalCenter: parent.horizontalCenter
-                    onClicked: {
-                        if (!spinnerTimer.running) {
-                            spellCheckerService.cancelCurrentBatch()
-                        }
-                    }
+                    onClicked: spellCheckerService.cancelCurrentBatch()
                 }
-            }
-        }
-
-        Timer {
-            id: spinnerTimer
-            property int iterations: 0
-            interval: 1000
-            repeat: false
-            running: false
-            onTriggered: {
-                spinner.running = false
-                closePopup()
             }
         }
     }

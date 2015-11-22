@@ -134,42 +134,78 @@ Item {
                                 property int delegateIndex: index
                                 color: Colors.itemsSourceBackground
                                 width: parent.width - 10
-                                height: childrenRect.height
-                                property var data: spellCheckSuggestionModel.getSuggestionItself(delegateIndex)
+                                height: suggestionsListRect.height
+
+                                Item {
+                                    id: checkBoxWrapper
+                                    anchors.left: parent.left
+                                    anchors.top: parent.top
+                                    height: suggestionsListRect.height
+                                    width: 40
+
+                                    StyledCheckbox {
+                                        anchors.centerIn: parent
+                                        anchors.horizontalCenterOffset: 5
+                                        activeFocusOnPress: true
+                                        onClicked: editisselected = checked
+                                        Component.onCompleted: checked = isselected
+                                    }
+                                }
 
                                 StyledText {
                                     id: keywordText
-                                    anchors.left: parent.left
+                                    anchors.left: checkBoxWrapper.right
                                     anchors.top: parent.top
-                                    width: 150
-                                    text: data.keyword
+                                    horizontalAlignment: Text.AlignHCenter
+                                    verticalAlignment: Text.AlignVCenter
+                                    width: 100
+                                    height: suggestionsListRect.height
+                                    text: word
+                                    color: isselected ? Colors.artworkModifiedColor : Colors.defaultInputBackground
                                     elide: Text.ElideMiddle
                                 }
 
                                 Rectangle {
+                                    id: suggestionsListRect
                                     anchors.left: keywordText.right
                                     anchors.leftMargin: 20
                                     anchors.top: parent.top
                                     anchors.right: parent.right
+                                    color: Colors.defaultDarkColor
+                                    height: childrenRect.height + 20
 
                                     Flow {
                                         anchors.left: parent.left
+                                        anchors.leftMargin: 10
                                         anchors.right: parent.right
+                                        anchors.rightMargin: 10
                                         anchors.top: parent.top
+                                        anchors.topMargin: 10
                                         spacing: 10
+                                        enabled: isselected
 
                                         Repeater {
-                                            model: suggestionsWrapper.data
+                                            model: spellCheckSuggestionModel.getSuggestionItself(delegateIndex)
 
                                             delegate: SuggestionWrapper {
                                                 property int suggestionIndex: index
                                                 itemHeight: 20 * settingsModel.keywordSizeScale + (settingsModel.keywordSizeScale - 1)*10
                                                 suggestionText: suggestion
                                                 isSelected: isselected
-                                                onActionClicked: replacementIndex = suggestionIndex
+                                                onActionClicked: editreplacementindex = suggestionIndex
                                             }
                                         }
                                     }
+                                }
+
+                                Rectangle {
+                                    visible: !isselected
+                                    anchors.left: checkBoxWrapper.right
+                                    anchors.top: parent.top
+                                    anchors.right: parent.right
+                                    color: Colors.defaultControlColor
+                                    height: suggestionsListRect.height
+                                    opacity: 0.7
                                 }
                             }
                         }

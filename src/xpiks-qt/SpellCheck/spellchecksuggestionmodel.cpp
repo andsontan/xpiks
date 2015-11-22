@@ -52,10 +52,12 @@ namespace SpellCheck {
 
     void SpellCheckSuggestionModel::submitCorrections() const {
         foreach (KeywordSpellSuggestions *item, m_KeywordsSuggestions) {
-            int originalIndex = item->getOriginalIndex();
-            const QString &keyword = item->getKeyword();
-            const QString &replacement = item->getReplacement();
-            m_CurrentMetadata->replaceKeyword(originalIndex, keyword, replacement);
+            if (item->getIsSelected()) {
+                int originalIndex = item->getOriginalIndex();
+                const QString &keyword = item->getWord();
+                const QString &replacement = item->getReplacement();
+                m_CurrentMetadata->replaceKeyword(originalIndex, keyword, replacement);
+            }
         }
     }
 
@@ -63,19 +65,10 @@ namespace SpellCheck {
         Q_ASSERT(service != NULL);
         Q_ASSERT(metadata != NULL);
 
-        QList<KeywordSpellSuggestions*> suggestionsRequests = metadata->createSuggestionsRequests();
-        int length = suggestionsRequests.length();
-
-        for (int i = 0; i < length; ++i) {
-            KeywordSpellSuggestions *item = suggestionsRequests[i];
-            const QString &keyword = item->getKeyword();
-            QStringList suggestions = service->suggestCorrections(keyword);
-            item->setSuggestions(suggestions);
-        }
-
-        m_CurrentMetadata = metadata;
+        QList<KeywordSpellSuggestions*> suggestionsRequests = metadata->createSuggestionsList();
 
         beginResetModel();
+        m_CurrentMetadata = metadata;
         qDeleteAll(m_KeywordsSuggestions);
         m_KeywordsSuggestions.clear();
         m_KeywordsSuggestions.append(suggestionsRequests);
@@ -88,8 +81,46 @@ namespace SpellCheck {
     }
 
     QVariant SpellCheckSuggestionModel::data(const QModelIndex &index, int role) const {
-        Q_UNUSED(index);
-        Q_UNUSED(role);
-        return QVariant();
+        if (!index.isValid()) { return QVariant(); }
+
+        KeywordSpellSuggestions *item = m_KeywordsSuggestions[index.row()];
+
+        switch (role) {
+        case WordRole:
+            return item->getWord();
+        case ReplacementIndexRole:
+            return item->getReplacementIndex();
+        case IsSelectedRole:
+            return item->getIsSelected();
+        default:
+            return QVariant();
+        }
+    }
+
+    bool SpellCheckSuggestionModel::setData(const QModelIndex &index, const QVariant &value, int role) {
+        if (!index.isValid()) return false;
+        int roleToUpdate = 0;
+
+        switch (role) {
+        case EditIsSelectedRole:
+            m_KeywordsSuggestions[index.row()]->setIsSelected(value.toBool());
+            roleToUpdate = IsSelectedRole;
+            break;
+        default:
+            return false;
+        }
+
+        emit dataChanged(index, index, QVector<int>() << roleToUpdate);
+
+        return true;
+    }
+
+    QHash<int, QByteArray> SpellCheckSuggestionModel::roleNames() const {
+        QHash<int, QByteArray> roles;
+        roles[WordRole] = "word";
+        roles[ReplacementIndexRole] = "replacementindex";
+        roles[IsSelectedRole] = "isselected";
+        roles[EditIsSelectedRole] = "editisselected";
+        return roles;
     }
 }

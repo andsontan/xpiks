@@ -35,9 +35,9 @@ Rectangle {
 
     signal actionClicked();
 
-    color: isSelected ? Colors.defaultInputBackground : Colors.selectedArtworkColor
+    color: isSelected ? Colors.defaultLightGrayColor : Colors.selectedArtworkColor
 
-    width: childrenRect.width + 10
+    width: suggestionText.width + 10
     height: childrenRect.height
     radius: 4
 
@@ -52,7 +52,11 @@ Rectangle {
     }
 
     MouseArea {
-        anchors.fill: parent
+        anchors.left: parent.left
+        anchors.top: parent.top
+        width: suggestionText.width
+        height: suggestionText.height
         onClicked: actionClicked()
+        cursorShape: Qt.PointingHandCursor
     }
 }

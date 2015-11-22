@@ -23,6 +23,7 @@
 #include "../Models/artworkmetadata.h"
 #include <QStringList>
 #include "../Helpers/indiceshelper.h"
+#include "ispellcheckable.h"
 
 namespace SpellCheck {
     SpellCheckItemBase::~SpellCheckItemBase() {
@@ -33,18 +34,18 @@ namespace SpellCheck {
         m_QueryItems.append(item);
     }
 
-    SpellCheckItem::SpellCheckItem(Models::ArtworkMetadata *metadata, int keywordIndex) :
-        m_Metadata(metadata)
+    SpellCheckItem::SpellCheckItem(ISpellCheckable *spellCheckable, int keywordIndex) :
+        m_SpellCheckable(spellCheckable)
     {
-        QString keyword = metadata->retrieveKeyword(keywordIndex);
+        QString keyword = m_SpellCheckable->retrieveKeyword(keywordIndex);
         SpellCheckQueryItem *queryItem = new SpellCheckQueryItem(keywordIndex, keyword);
         appendItem(queryItem);
     }
 
-    SpellCheckItem::SpellCheckItem(Models::ArtworkMetadata *metadata) :
-        m_Metadata(metadata)
+    SpellCheckItem::SpellCheckItem(ISpellCheckable *spellCheckable) :
+        m_SpellCheckable(spellCheckable)
     {
-        QStringList keywords = metadata->getKeywords();
+        QStringList keywords = spellCheckable->getKeywords();
         int index = 0;
 
         foreach (const QString &word, keywords) {
@@ -57,21 +58,6 @@ namespace SpellCheck {
     /*virtual */
     void SpellCheckItem::submitSpellCheckResult() const {
         const QList<SpellCheckQueryItem*> &items = getQueries();
-
-        m_Metadata->lockRead();
-        {
-            foreach (SpellCheckQueryItem *item, items) {
-                m_Metadata->setSpellCheckResultUnsafe(item->m_CheckResult, item->m_Index, item->m_Word);
-            }
-        }
-        m_Metadata->unlock();
-
-        int index = -1;
-
-        if (items.length() == 1) {
-            index = items.first()->m_Index;
-        }
-
-        m_Metadata->emitSpellCheckChanged(index);
+        m_SpellCheckable->setSpellCheckResults(items);
     }
 }

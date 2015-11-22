@@ -45,7 +45,10 @@ QString getHunspellResourcesPath() {
 }
 
 namespace SpellCheck {
-    SpellCheckWorker::SpellCheckWorker(QObject *parent) : QObject(parent) {
+    SpellCheckWorker::SpellCheckWorker(QObject *parent) :
+        QObject(parent),
+        m_Cancel(false)
+    {
     }
 
     SpellCheckWorker::~SpellCheckWorker() {
@@ -80,6 +83,9 @@ namespace SpellCheck {
             m_Queue.clear();
         }
         m_Mutex.unlock();
+
+        m_WaitAnyItem.wakeOne();
+        emit queueIsEmpty();
     }
 
     void SpellCheckWorker::initHunspell() {
@@ -118,6 +124,12 @@ namespace SpellCheck {
         m_Codec = QTextCodec::codecForName(m_Encoding.toLatin1().constData());
     }
 
+    bool SpellCheckWorker::hasPendingJobs() {
+        QMutexLocker locker(&m_Mutex);
+        bool isEmpty = m_Queue.isEmpty();
+        return !isEmpty;
+    }
+
     QStringList SpellCheckWorker::suggestCorrections(const QString &word) {
         QStringList suggestions;
         char **suggestWordList;
@@ -138,15 +150,10 @@ namespace SpellCheck {
         return suggestions;
     }
 
-    bool SpellCheckWorker::hasPendingJobs() {
-        QMutexLocker locker(&m_Mutex);
-        bool isEmpty = m_Queue.isEmpty();
-        return !isEmpty;
-    }
-
     void SpellCheckWorker::spellcheckLoop() {
         for (;;) {
             if (m_Cancel) {
+                qDebug() << "SpellCheck loop cancelled. Exiting...";
                 break;
             }
 
@@ -159,6 +166,7 @@ namespace SpellCheck {
 
                 // can be cleared by clearCurrectRequests()
                 if (m_Queue.isEmpty()) {
+                    emit queueIsEmpty();
                     m_Mutex.unlock();
                     continue;
                 }
@@ -193,7 +201,12 @@ namespace SpellCheck {
 
         const QList<SpellCheckQueryItem*> &queryItems = item->getQueries();
         foreach (SpellCheckQueryItem *queryItem, queryItems) {
-            queryItem->m_CheckResult = isWordSpelledOk(queryItem->m_Word);
+            bool isOk = isWordSpelledOk(queryItem->m_Word);
+            queryItem->m_IsCorrect = isOk;
+
+            if (!isOk) {
+                queryItem->m_Suggestions = suggestCorrections(queryItem->m_Word);
+            }
         }
 
         item->submitSpellCheckResult();

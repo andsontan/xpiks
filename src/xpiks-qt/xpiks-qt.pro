@@ -179,7 +179,8 @@ HEADERS += \
     SpellCheck/spellcheckitem.h \
     SpellCheck/spellcheckworker.h \
     SpellCheck/spellchecksuggestionmodel.h \
-    SpellCheck/keywordspellsuggestions.h
+    SpellCheck/keywordspellsuggestions.h \
+    SpellCheck/ispellcheckable.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
