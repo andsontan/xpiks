@@ -132,7 +132,7 @@ namespace SpellCheck {
 
     QStringList SpellCheckWorker::suggestCorrections(const QString &word) {
         QStringList suggestions;
-        char **suggestWordList;
+        char **suggestWordList = NULL;
 
         try {
             // Encode from Unicode to the encoding used by current dictionary

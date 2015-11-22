@@ -1282,7 +1282,7 @@ ApplicationWindow {
                                                         hasSpellCheckError: !spellcheckok
                                                         onActionClicked: keywordsWrapper.removeKeyword(kw.delegateIndex)
                                                         onSpellSuggestionRequested: {
-                                                            artItemsModel.suggestCorrections(kw.delegateIndex)
+                                                            artItemsModel.suggestCorrections(rowWrapper.getIndex())
                                                             Common.launchDialog("Dialogs/SpellCheckSuggestionsDialog.qml",
                                                                                 applicationWindow,
                                                                                 {})
