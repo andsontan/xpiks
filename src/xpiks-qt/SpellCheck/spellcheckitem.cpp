@@ -35,6 +35,7 @@ namespace SpellCheck {
     }
 
     SpellCheckItem::SpellCheckItem(ISpellCheckable *spellCheckable, int keywordIndex) :
+        SpellCheckItemBase(),
         m_SpellCheckable(spellCheckable)
     {
         QString keyword = m_SpellCheckable->retrieveKeyword(keywordIndex);
@@ -43,6 +44,7 @@ namespace SpellCheck {
     }
 
     SpellCheckItem::SpellCheckItem(ISpellCheckable *spellCheckable) :
+        SpellCheckItemBase(),
         m_SpellCheckable(spellCheckable)
     {
         QStringList keywords = spellCheckable->getKeywords();
@@ -56,8 +58,10 @@ namespace SpellCheck {
     }
 
     /*virtual */
-    void SpellCheckItem::submitSpellCheckResult() const {
+    void SpellCheckItem::submitSpellCheckResult() {
         const QList<SpellCheckQueryItem*> &items = getQueries();
         m_SpellCheckable->setSpellCheckResults(items);
+        int index = items.length() == 1 ? items.first()->m_Index : -1;
+        emit resultsReady(index);
     }
 }

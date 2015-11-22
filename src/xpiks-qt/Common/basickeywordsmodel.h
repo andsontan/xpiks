@@ -34,6 +34,7 @@
 namespace SpellCheck {
     class SpellCheckQueryItem;
     class KeywordSpellSuggestions;
+    class SpellCheckItem;
 }
 
 namespace Common {
@@ -67,6 +68,10 @@ namespace Common {
         virtual void setSpellCheckResults(const QList<SpellCheck::SpellCheckQueryItem*> &items);
         virtual QList<SpellCheck::KeywordSpellSuggestions*> createSuggestionsList();
         virtual void replaceKeyword(int index, const QString &existing, const QString &replacement);
+        virtual void connectSignals(SpellCheck::SpellCheckItem *item);
+
+    private slots:
+         void spellCheckRequestReady(int index);
 
     private:
         void emitSpellCheckChanged(int index);

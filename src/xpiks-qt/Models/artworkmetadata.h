@@ -80,6 +80,7 @@ namespace Models {
         bool hasAnySpellCheckError();
         virtual void replaceKeyword(int index, const QString &existing, const QString &replacement);
         virtual QList<SpellCheck::KeywordSpellSuggestions*> createSuggestionsList();
+        virtual void connectSignals(SpellCheck::SpellCheckItem *item);
 
     public:
         bool setDescription(const QString &value) {
@@ -140,6 +141,9 @@ namespace Models {
          void modifiedChanged(bool newValue);
          void selectedChanged(bool newValue);
          void fileSelectedChanged(const QString &filepath, bool newValue);
+
+    private slots:
+         void spellCheckRequestReady(int index);
 
     public:
         virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;

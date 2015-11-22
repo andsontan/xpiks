@@ -57,6 +57,7 @@ namespace SpellCheck {
 
         foreach (SpellCheck::ISpellCheckable *itemToCheck, itemsToCheck) {
             SpellCheckItem *item = new SpellCheckItem(itemToCheck);
+            itemToCheck->connectSignals(item);
             items.append(item);
         }
 
@@ -68,6 +69,7 @@ namespace SpellCheck {
         Q_ASSERT(m_SpellCheckWorker != NULL);
 
         SpellCheckItem *item = new SpellCheckItem(itemToCheck, keywordIndex);
+        itemToCheck->connectSignals(item);
         m_SpellCheckWorker->submitItemToCheck(item);
     }
 

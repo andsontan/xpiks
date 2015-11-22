@@ -133,6 +133,14 @@ namespace Common {
         }
     }
 
+    void BasicKeywordsModel::connectSignals(SpellCheck::SpellCheckItem *item) {
+        QObject::connect(item, SIGNAL(resultsReady(int)), this, SLOT(spellCheckRequestReady(int)));
+    }
+
+    void BasicKeywordsModel::spellCheckRequestReady(int index) {
+        emitSpellCheckChanged(index);
+    }
+
     void BasicKeywordsModel::emitSpellCheckChanged(int index) {
         int count = m_KeywordsList.length();
 

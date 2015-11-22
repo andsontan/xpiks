@@ -24,6 +24,7 @@
 
 #include <QList>
 #include <QStringList>
+#include <QObject>
 
 namespace SpellCheck {
     class ISpellCheckable;
@@ -49,15 +50,24 @@ namespace SpellCheck {
         QStringList m_Suggestions;
     };
 
-    class SpellCheckItemBase {
+    class SpellCheckItemBase : public QObject {
+        Q_OBJECT
     public:
         virtual ~SpellCheckItemBase();
 
+    protected:
+        SpellCheckItemBase() :
+            QObject(),
+            m_NeedsSuggestions(false) { }
+
     public:
         const QList<SpellCheckQueryItem*> &getQueries() const { return m_QueryItems; }
-        virtual void submitSpellCheckResult() const = 0;
+        virtual void submitSpellCheckResult() = 0;
         bool needsSuggestions() const { return m_NeedsSuggestions; }
         void requestSuggestions() { m_NeedsSuggestions = true; }
+
+    signals:
+        void resultsReady(int index);
 
     protected:
         void appendItem(SpellCheckQueryItem *item);
@@ -69,7 +79,7 @@ namespace SpellCheck {
 
     class SpellCheckSeparatorItem : public SpellCheckItemBase {
     public:
-        virtual void submitSpellCheckResult() const { /*BUMP*/ }
+        virtual void submitSpellCheckResult() { /*BUMP*/ }
     };
 
     class SpellCheckItem : public SpellCheckItemBase {
@@ -78,7 +88,7 @@ namespace SpellCheck {
         SpellCheckItem(ISpellCheckable *spellCheckable);
 
     public:
-        virtual void submitSpellCheckResult() const;
+        virtual void submitSpellCheckResult();
 
     private:
         ISpellCheckable *m_SpellCheckable;

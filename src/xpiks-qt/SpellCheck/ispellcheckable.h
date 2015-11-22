@@ -36,6 +36,7 @@ namespace SpellCheck {
         virtual void setSpellCheckResults(const QList<SpellCheckQueryItem*> &items) = 0;
         virtual QList<KeywordSpellSuggestions*> createSuggestionsList() = 0;
         virtual void replaceKeyword(int index, const QString &existing, const QString &replacement) = 0;
+        virtual void connectSignals(SpellCheckItem *item) = 0;
     };
 }
 

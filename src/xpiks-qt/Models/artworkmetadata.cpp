@@ -147,14 +147,6 @@ namespace Models {
         foreach (SpellCheck::SpellCheckQueryItem *item, results) {
             this->setSpellCheckResultUnsafe(item);
         }
-
-        int index = -1;
-
-        if (results.length() == 1) {
-            index = results.first()->m_Index;
-        }
-
-        emitSpellCheckChangedUnsafe(index);
     }
 
     bool ArtworkMetadata::hasAnySpellCheckError() {
@@ -201,6 +193,10 @@ namespace Models {
         }
 
         return spellCheckSuggestions;
+    }
+
+    void ArtworkMetadata::connectSignals(SpellCheck::SpellCheckItem *item) {
+        QObject::connect(item, SIGNAL(resultsReady(int)), this, SLOT(spellCheckRequestReady(int)));
     }
 
     bool ArtworkMetadata::removeKeywordAt(int index) {
@@ -327,6 +323,11 @@ namespace Models {
             QReadLocker locker(&m_RWLock);
             Helpers::TempMetadataDb(this).flush();
         }
+    }
+
+    void ArtworkMetadata::spellCheckRequestReady(int index) {
+        qDebug() << "Spellcheck results ready. Index is" << index;
+        emitSpellCheckChangedUnsafe(index);
     }
 
     int ArtworkMetadata::rowCount(const QModelIndex &parent) const {
