@@ -162,8 +162,8 @@ namespace Models {
 
         bool anyError = false;
 
-        foreach (bool hasError, m_SpellCheckResults) {
-            if (hasError) {
+        foreach (bool isCorrect, m_SpellCheckResults) {
+            if (!isCorrect) {
                 anyError = true;
                 break;
             }

@@ -116,6 +116,7 @@ namespace Models {
         hasWarnings = checkKeywordsCount(wi, metadata) || hasWarnings;
         hasWarnings = checkDescriptionLength(wi, metadata) || hasWarnings;
         hasWarnings = checkTitleWordsCount(wi, metadata) || hasWarnings;
+        hasWarnings = checkSpellCheckErrors(wi, metadata) || hasWarnings;
 
         return hasWarnings;
     }
@@ -214,6 +215,17 @@ namespace Models {
             }
         } else {
             wi->addWarning("Title is empty and will be copied from description");
+            hasWarnings = true;
+        }
+
+        return hasWarnings;
+    }
+
+    bool WarningsManager::checkSpellCheckErrors(WarningsInfo *wi, ArtworkMetadata *am) const {
+        bool hasWarnings = false;
+
+        if (am->hasAnySpellCheckError()) {
+            wi->addWarning("Item has spellcheck errors");
             hasWarnings = true;
         }
 

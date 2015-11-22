@@ -72,6 +72,7 @@ namespace Models {
         bool checkKeywordsCount(WarningsInfo *wi, ArtworkMetadata *am) const;
         bool checkDescriptionLength(WarningsInfo *wi, ArtworkMetadata *am) const;
         bool checkTitleWordsCount(WarningsInfo *wi, ArtworkMetadata *am) const;
+        bool checkSpellCheckErrors(WarningsInfo *wi, ArtworkMetadata *am) const;
         void initConstraintsFromSettings();
 
     public:
