@@ -57,7 +57,7 @@ namespace SpellCheck {
         void setupModel(SpellCheck::SpellCheckerService *service, SpellCheck::ISpellCheckable *item);
 
     private:
-        void setupSuggestions(const QList<KeywordSpellSuggestions *> &items);
+        QList<KeywordSpellSuggestions *> setupSuggestions(const QList<KeywordSpellSuggestions *> &items);
 
     public:
         virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;

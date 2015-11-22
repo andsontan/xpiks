@@ -50,7 +50,6 @@ namespace SpellCheck {
         void cancelCurrentBatch();
         bool hasPendingJobs();
         QStringList retrieveCorrections(const QString &word);
-        void clearCorrections();
 
     private:
         QStringList suggestCorrections(const QString &word);

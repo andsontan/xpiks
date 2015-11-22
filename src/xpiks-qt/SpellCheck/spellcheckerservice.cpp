@@ -60,9 +60,7 @@ namespace SpellCheck {
             items.append(item);
         }
 
-        m_SpellCheckWorker->clearCorrections();
         m_SpellCheckWorker->submitItemsToCheck(items);
-
         m_SpellCheckWorker->submitItemToCheck(new SpellCheckSeparatorItem());
     }
 

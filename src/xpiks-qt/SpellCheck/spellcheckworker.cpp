@@ -141,11 +141,6 @@ namespace SpellCheck {
         return result;
     }
 
-    void SpellCheckWorker::clearCorrections() {
-        QWriteLocker locker(&m_SuggestionsLock);
-        m_Suggestions.clear();
-    }
-
     QStringList SpellCheckWorker::suggestCorrections(const QString &word) {
         QStringList suggestions;
         char **suggestWordList = NULL;

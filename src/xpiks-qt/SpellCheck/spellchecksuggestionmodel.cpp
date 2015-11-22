@@ -69,23 +69,31 @@ namespace SpellCheck {
         Q_ASSERT(item != NULL);
 
         QList<KeywordSpellSuggestions*> suggestionsRequests = item->createSuggestionsList();
-        setupSuggestions(suggestionsRequests);
+        QList<KeywordSpellSuggestions*> executedRequests = setupSuggestions(suggestionsRequests);
 
         beginResetModel();
         m_CurrentItem = item;
         qDeleteAll(m_KeywordsSuggestions);
         m_KeywordsSuggestions.clear();
-        m_KeywordsSuggestions.append(suggestionsRequests);
+        m_KeywordsSuggestions.append(executedRequests);
         endResetModel();
     }
 
-    void SpellCheckSuggestionModel::setupSuggestions(const QList<KeywordSpellSuggestions*> &items) {
+    QList<KeywordSpellSuggestions*> SpellCheckSuggestionModel::setupSuggestions(const QList<KeywordSpellSuggestions*> &items) {
         SpellCheckerService *service = m_CommandManager->getSpellCheckerService();
+        QList<KeywordSpellSuggestions*> executedRequests;
 
         foreach (KeywordSpellSuggestions* item, items) {
             QStringList suggestions = service->suggestCorrections(item->getWord());
-            item->setSuggestions(suggestions);
+            if (!suggestions.isEmpty()) {
+                item->setSuggestions(suggestions);
+                executedRequests.append(item);
+            } else {
+                delete item;
+            }
         }
+
+        return executedRequests;
     }
 
     int SpellCheckSuggestionModel::rowCount(const QModelIndex &parent) const {
