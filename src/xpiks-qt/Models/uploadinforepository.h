@@ -39,7 +39,8 @@ namespace Models {
     public:
         UploadInfoRepository(QObject *parent = 0) :
             QAbstractListModel(parent),
-            Common::BaseEntity()
+            Common::BaseEntity(),
+            m_EmptyPasswordsMode(false)
         {}
 
         virtual ~UploadInfoRepository();

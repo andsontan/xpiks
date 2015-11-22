@@ -56,7 +56,8 @@ namespace Models {
             AbstractListModel(parent),
             Common::BaseEntity(),
             m_CommonKeywordsModel(this),
-            m_EditFlags(0)
+            m_EditFlags(0),
+            m_IsModified(false)
         {}
 
         virtual ~CombinedArtworksModel();

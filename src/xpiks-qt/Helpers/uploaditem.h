@@ -29,7 +29,9 @@
 namespace Helpers {
     class UploadItem {
     public:
-        UploadItem () {
+        UploadItem () :
+            m_Success(false)
+        {
         }
 
         UploadItem(Models::UploadInfo *uploadInfo, const QStringList &filesToUpload,

@@ -50,7 +50,8 @@ namespace Helpers {
         UploadCoordinator(int maxParallelUploads, QObject *parent = 0):
             QObject(parent),
             m_UploadSemaphore(maxParallelUploads),
-            m_MaxParallelUploads(maxParallelUploads)
+            m_MaxParallelUploads(maxParallelUploads),
+            m_AnyFailed(false)
         {}
 
         ~UploadCoordinator() {}
