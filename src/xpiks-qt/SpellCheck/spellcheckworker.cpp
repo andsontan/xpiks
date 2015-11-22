@@ -54,7 +54,7 @@ namespace SpellCheck {
         }
     }
 
-    void SpellCheckWorker::submitItemToCheck(SpellCheckItem *item) {
+    void SpellCheckWorker::submitItemToCheck(SpellCheckItemBase *item) {
         m_Mutex.lock();
         {
             m_Queue.append(item);
@@ -63,7 +63,7 @@ namespace SpellCheck {
         m_WaitAnyItem.wakeOne();
     }
 
-    void SpellCheckWorker::submitItemsToCheck(const QList<SpellCheckItem *> &items) {
+    void SpellCheckWorker::submitItemsToCheck(const QList<SpellCheckItemBase *> &items) {
         m_Mutex.lock();
         {
             m_Queue.append(items);
@@ -164,7 +164,7 @@ namespace SpellCheck {
                 }
             }
 
-            SpellCheckItem *item = m_Queue.first();
+            SpellCheckItemBase *item = m_Queue.first();
             m_Queue.removeFirst();
 
             noMoreItems = m_Queue.isEmpty();
@@ -188,12 +188,12 @@ namespace SpellCheck {
         }
     }
 
-    void SpellCheckWorker::processOneRequest(const SpellCheckItem *item) {
+    void SpellCheckWorker::processOneRequest(const SpellCheckItemBase *item) {
         Q_ASSERT(item != NULL);
 
         const QList<SpellCheckQueryItem*> &queryItems = item->getQueries();
         foreach (SpellCheckQueryItem *queryItem, queryItems) {
-            queryItem->m_CheckResult = isWordSpelledOk(queryItem->m_Keyword);
+            queryItem->m_CheckResult = isWordSpelledOk(queryItem->m_Word);
         }
 
         item->submitSpellCheckResult();

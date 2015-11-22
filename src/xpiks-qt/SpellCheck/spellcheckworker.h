@@ -33,7 +33,7 @@ class Hunspell;
 class QTextCodec;
 
 namespace SpellCheck {
-    class SpellCheckItem;
+    class SpellCheckItemBase;
 
     class SpellCheckWorker : public QObject
     {
@@ -43,8 +43,8 @@ namespace SpellCheck {
         virtual ~SpellCheckWorker();
 
     public:
-        void submitItemToCheck(SpellCheckItem *item);
-        void submitItemsToCheck(const QList<SpellCheckItem*> &items);
+        void submitItemToCheck(SpellCheckItemBase *item);
+        void submitItemsToCheck(const QList<SpellCheckItemBase*> &items);
         void cancelCurrentBatch();
         QStringList suggestCorrections(const QString &word);
         bool hasPendingJobs();
@@ -53,7 +53,7 @@ namespace SpellCheck {
         void initHunspell();
         void detectAffEncoding();
         void spellcheckLoop();
-        void processOneRequest(const SpellCheckItem *item);
+        void processOneRequest(const SpellCheckItemBase *item);
         bool isWordSpelledOk(const QString &word) const;
 
     public slots:
@@ -67,7 +67,7 @@ namespace SpellCheck {
     private:
         QWaitCondition m_WaitAnyItem;
         QMutex m_Mutex;
-        QList<SpellCheckItem*> m_Queue;
+        QList<SpellCheckItemBase*> m_Queue;
         QString m_Encoding;
         QTextCodec *m_Codec;
         Hunspell *m_Hunspell;

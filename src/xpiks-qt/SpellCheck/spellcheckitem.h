@@ -31,29 +31,41 @@ namespace Models {
 
 namespace SpellCheck {
     struct SpellCheckQueryItem {
-        SpellCheckQueryItem(int index, const QString &keyword) :
-            m_Keyword(keyword),
+        SpellCheckQueryItem(int index, const QString &word) :
+            m_Word(word),
             m_Index(index),
             m_CheckResult(true)
         { }
 
-        QString m_Keyword;
+        QString m_Word;
         int m_Index;
         volatile bool m_CheckResult;
     };
 
-    class SpellCheckItem {
+    class SpellCheckItemBase {
     public:
-        SpellCheckItem(Models::ArtworkMetadata *metadata, int keywordIndex);
-        SpellCheckItem(Models::ArtworkMetadata *metadata);
-        ~SpellCheckItem();
+        virtual ~SpellCheckItemBase();
 
     public:
         const QList<SpellCheckQueryItem*> &getQueries() const { return m_QueryItems; }
-        void submitSpellCheckResult() const;
+        virtual void submitSpellCheckResult() const = 0;
+
+    protected:
+        void appendItem(SpellCheckQueryItem *item);
 
     private:
         QList<SpellCheckQueryItem*> m_QueryItems;
+    };
+
+    class SpellCheckItem : public SpellCheckItemBase {
+    public:
+        SpellCheckItem(Models::ArtworkMetadata *metadata, int keywordIndex);
+        SpellCheckItem(Models::ArtworkMetadata *metadata);
+
+    public:
+        virtual void submitSpellCheckResult() const;
+
+    private:
         Models::ArtworkMetadata *m_Metadata;
     };
 }

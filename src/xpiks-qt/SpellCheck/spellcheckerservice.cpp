@@ -53,7 +53,7 @@ namespace SpellCheck {
     void SpellCheckerService::submitItems(const QList<Models::ArtworkMetadata *> &artworksToCheck) {
         Q_ASSERT(m_SpellCheckWorker != NULL);
 
-        QList<SpellCheckItem *> items;
+        QList<SpellCheckItemBase *> items;
 
         foreach (Models::ArtworkMetadata *metadata, artworksToCheck) {
             SpellCheckItem *item = new SpellCheckItem(metadata);
