@@ -28,6 +28,7 @@
 #include "../Commands/commandmanager.h"
 #include "../Commands/combinededitcommand.h"
 #include "../Common/flags.h"
+#include "../SpellCheck/ispellcheckable.h"
 
 namespace Models {
     FilteredArtItemsProxyModel::FilteredArtItemsProxyModel(QObject *parent) :
@@ -128,7 +129,12 @@ namespace Models {
 
     void FilteredArtItemsProxyModel::spellCheckSelected() {
         QList<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
-        m_CommandManager->submitForSpellCheck(selectedArtworks);
+        QList<SpellCheck::ISpellCheckable*> itemsToSubmit;
+        foreach (ArtworkMetadata *artwork, selectedArtworks) {
+            itemsToSubmit.append(artwork);
+        }
+
+        m_CommandManager->submitForSpellCheck(itemsToSubmit);
     }
 
     int FilteredArtItemsProxyModel::getModifiedSelectedCount() const {

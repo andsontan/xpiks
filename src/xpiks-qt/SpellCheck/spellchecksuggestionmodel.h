@@ -32,6 +32,7 @@ namespace Models {
 namespace SpellCheck {
     class KeywordSpellSuggestions;
     class SpellCheckerService;
+    class ISpellCheckable;
 
     class SpellCheckSuggestionModel : public QAbstractListModel {
         Q_OBJECT
@@ -52,7 +53,7 @@ namespace SpellCheck {
         Q_INVOKABLE void submitCorrections() const;
 
     public:
-        void setupModel(SpellCheck::SpellCheckerService *service, Models::ArtworkMetadata *metadata);
+        void setupModel(SpellCheck::SpellCheckerService *service, SpellCheck::ISpellCheckable *item);
 
     public:
         virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
@@ -64,7 +65,7 @@ namespace SpellCheck {
 
     private:
         QList<KeywordSpellSuggestions*> m_KeywordsSuggestions;
-        Models::ArtworkMetadata *m_CurrentMetadata;
+        ISpellCheckable *m_CurrentItem;
     };
 }
 

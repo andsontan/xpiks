@@ -78,8 +78,8 @@ namespace Models {
         bool containsKeyword(const QString &searchTerm);
         virtual void setSpellCheckResults(const QList<SpellCheck::SpellCheckQueryItem *> &results);
         bool hasAnySpellCheckError();
-        void replaceKeyword(int index, const QString &existing, const QString &replacement);
-        QList<SpellCheck::KeywordSpellSuggestions*> createSuggestionsList();
+        virtual void replaceKeyword(int index, const QString &existing, const QString &replacement);
+        virtual QList<SpellCheck::KeywordSpellSuggestions*> createSuggestionsList();
 
     public:
         bool setDescription(const QString &value) {

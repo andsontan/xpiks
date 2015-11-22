@@ -24,7 +24,9 @@
 
 #include <QString>
 #include <QStringList>
+#include <QList>
 #include "spellcheckitem.h"
+#include "keywordspellsuggestions.h"
 
 namespace SpellCheck {
     class ISpellCheckable {
@@ -32,6 +34,8 @@ namespace SpellCheck {
         virtual QString retrieveKeyword(int wordIndex) = 0;
         virtual QStringList getKeywords() = 0;
         virtual void setSpellCheckResults(const QList<SpellCheckQueryItem*> &items) = 0;
+        virtual QList<KeywordSpellSuggestions*> createSuggestionsList() = 0;
+        virtual void replaceKeyword(int index, const QString &existing, const QString &replacement) = 0;
     };
 }
 

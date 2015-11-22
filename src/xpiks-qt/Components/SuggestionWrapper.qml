@@ -54,7 +54,7 @@ Rectangle {
     MouseArea {
         anchors.left: parent.left
         anchors.top: parent.top
-        width: suggestionText.width
+        width: suggestionText.width + 10
         height: suggestionText.height
         onClicked: actionClicked()
         cursorShape: Qt.PointingHandCursor

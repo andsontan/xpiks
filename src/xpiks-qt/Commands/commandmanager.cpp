@@ -40,6 +40,7 @@
 #include "../SpellCheck/spellcheckerservice.h"
 #include "../Models/settingsmodel.h"
 #include "../SpellCheck/spellchecksuggestionmodel.h"
+#include "../SpellCheck/ispellcheckable.h"
 
 void Commands::CommandManager::InjectDependency(Models::ArtworksRepository *artworkRepository) {
     Q_ASSERT(artworkRepository != NULL); m_ArtworksRepository = artworkRepository;
@@ -231,18 +232,18 @@ void Commands::CommandManager::addInitialArtworks(const QStringList &artworksFil
 }
 #endif
 
-void Commands::CommandManager::submitForSpellCheck(Models::ArtworkMetadata *metadata, int keywordIndex) {
+void Commands::CommandManager::submitForSpellCheck(SpellCheck::ISpellCheckable *item, int keywordIndex) {
     if (m_SettingsModel->getUseSpellCheck()) {
-        m_SpellCheckerService->submitKeyword(metadata, keywordIndex);
+        m_SpellCheckerService->submitKeyword(item, keywordIndex);
     }
 }
 
-void Commands::CommandManager::submitForSpellCheck(const QList<Models::ArtworkMetadata *> &artworks) {
+void Commands::CommandManager::submitForSpellCheck(const QList<SpellCheck::ISpellCheckable *> &items) {
     if (m_SettingsModel->getUseSpellCheck()) {
-        m_SpellCheckerService->submitItems(artworks);
+        m_SpellCheckerService->submitItems(items);
     }
 }
 
-void Commands::CommandManager::setupSpellCheckSuggestions(Models::ArtworkMetadata *metadata) {
-    m_SpellCheckSuggestionModel->setupModel(m_SpellCheckerService, metadata);
+void Commands::CommandManager::setupSpellCheckSuggestions(SpellCheck::ISpellCheckable *item) {
+    m_SpellCheckSuggestionModel->setupModel(m_SpellCheckerService, item);
 }

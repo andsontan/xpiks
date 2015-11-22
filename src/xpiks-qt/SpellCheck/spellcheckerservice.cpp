@@ -50,23 +50,23 @@ namespace SpellCheck {
         thread->start();
     }
 
-    void SpellCheckerService::submitItems(const QList<Models::ArtworkMetadata *> &artworksToCheck) {
+    void SpellCheckerService::submitItems(const QList<ISpellCheckable *> &itemsToCheck) {
         Q_ASSERT(m_SpellCheckWorker != NULL);
 
         QList<SpellCheckItemBase *> items;
 
-        foreach (Models::ArtworkMetadata *metadata, artworksToCheck) {
-            SpellCheckItem *item = new SpellCheckItem(metadata);
+        foreach (SpellCheck::ISpellCheckable *itemToCheck, itemsToCheck) {
+            SpellCheckItem *item = new SpellCheckItem(itemToCheck);
             items.append(item);
         }
 
         m_SpellCheckWorker->submitItemsToCheck(items);
     }
 
-    void SpellCheckerService::submitKeyword(Models::ArtworkMetadata *metadata, int keywordIndex) {
+    void SpellCheckerService::submitKeyword(SpellCheck::ISpellCheckable *itemToCheck, int keywordIndex) {
         Q_ASSERT(m_SpellCheckWorker != NULL);
 
-        SpellCheckItem *item = new SpellCheckItem(metadata, keywordIndex);
+        SpellCheckItem *item = new SpellCheckItem(itemToCheck, keywordIndex);
         m_SpellCheckWorker->submitItemToCheck(item);
     }
 

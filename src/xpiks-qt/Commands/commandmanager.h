@@ -59,6 +59,7 @@ namespace Suggestion {
 namespace SpellCheck {
     class SpellCheckerService;
     class SpellCheckSuggestionModel;
+    class ISpellCheckable;
 }
 
 namespace Commands {
@@ -123,9 +124,9 @@ namespace Commands {
 #ifdef QT_DEBUG
         void addInitialArtworks(const QStringList &artworksFilepathes);
 #endif
-        void submitForSpellCheck(Models::ArtworkMetadata *metadata, int keywordIndex);
-        void submitForSpellCheck(const QList<Models::ArtworkMetadata *> &artworks);
-        void setupSpellCheckSuggestions(Models::ArtworkMetadata *metadata);
+        void submitForSpellCheck(SpellCheck::ISpellCheckable *item, int keywordIndex);
+        void submitForSpellCheck(const QList<SpellCheck::ISpellCheckable *> &items);
+        void setupSpellCheckSuggestions(SpellCheck::ISpellCheckable *item);
 
     public:
         // methods for getters

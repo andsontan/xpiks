@@ -161,6 +161,7 @@ Item {
                                     width: 100
                                     height: suggestionsListRect.height
                                     text: word
+                                    font.pixelSize: 12 * settingsModel.keywordSizeScale
                                     color: isselected ? Colors.artworkModifiedColor : Colors.defaultInputBackground
                                     elide: Text.ElideMiddle
                                 }

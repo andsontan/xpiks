@@ -32,6 +32,7 @@ namespace Models {
 
 namespace SpellCheck {
     class SpellCheckWorker;
+    class ISpellCheckable;
 
     class SpellCheckerService : public QObject
     {
@@ -41,8 +42,8 @@ namespace SpellCheck {
 
     public:
         void startChecking();
-        void submitItems(const QList<Models::ArtworkMetadata *> &artworksToCheck);
-        void submitKeyword(Models::ArtworkMetadata* metadata, int keywordIndex);
+        void submitItems(const QList<SpellCheck::ISpellCheckable *> &itemsToCheck);
+        void submitKeyword(SpellCheck::ISpellCheckable *itemToCheck, int keywordIndex);
 
     public:
         Q_INVOKABLE void cancelCurrentBatch();

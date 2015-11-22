@@ -25,6 +25,7 @@
 #include "keywordspellsuggestions.h"
 #include "../Models/artworkmetadata.h"
 #include "spellcheckerservice.h"
+#include "ispellcheckable.h"
 
 namespace SpellCheck {
     SpellCheckSuggestionModel::SpellCheckSuggestionModel():
@@ -56,19 +57,19 @@ namespace SpellCheck {
                 int originalIndex = item->getOriginalIndex();
                 const QString &keyword = item->getWord();
                 const QString &replacement = item->getReplacement();
-                m_CurrentMetadata->replaceKeyword(originalIndex, keyword, replacement);
+                m_CurrentItem->replaceKeyword(originalIndex, keyword, replacement);
             }
         }
     }
 
-    void SpellCheckSuggestionModel::setupModel(SpellCheckerService *service, Models::ArtworkMetadata *metadata) {
+    void SpellCheckSuggestionModel::setupModel(SpellCheckerService *service, SpellCheck::ISpellCheckable *item) {
         Q_ASSERT(service != NULL);
-        Q_ASSERT(metadata != NULL);
+        Q_ASSERT(item != NULL);
 
-        QList<KeywordSpellSuggestions*> suggestionsRequests = metadata->createSuggestionsList();
+        QList<KeywordSpellSuggestions*> suggestionsRequests = item->createSuggestionsList();
 
         beginResetModel();
-        m_CurrentMetadata = metadata;
+        m_CurrentItem = item;
         qDeleteAll(m_KeywordsSuggestions);
         m_KeywordsSuggestions.clear();
         m_KeywordsSuggestions.append(suggestionsRequests);
