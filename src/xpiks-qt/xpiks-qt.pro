@@ -237,13 +237,20 @@ LIBS += -lz
 HEADERS += Helpers/osxnsurlhelper.h
 }
 
+LIBS += -L$$PWD/../libs/
+
 macx {
-INCLUDEPATH = "../hunspell-1.3.3/src/hunspell"
-LIBS += -L$$PWD/../libs/ -lhunspell
+INCLUDEPATH += "..\hunspell-1.3.3\src\hunspell"
+LIBS += -lhunspell
 }
 
 win32 {
-INCLUDEPATH = "../zlib-1.2.8"
+INCLUDEPATH += "..\hunspell-1.3.3\src\hunspell"
+LIBS += -llibhunspell
+}
+
+win32 {
+INCLUDEPATH += "../zlib-1.2.8"
 LIBS += -L$$PWD/../libs/ -lz
 DEFINES += QUAZIP_BUILD
 }

@@ -35,11 +35,11 @@
 #include <QJsonObject>
 #include <QtGlobal>
 
-#ifdef Q_OS_DARWIN
+#if defined(Q_OS_DARWIN)
 #define UPDATE_JSON_UPDATE_URL "osx_link"
-#elif Q_OS_WIN
+#elif defined(Q_OS_WIN)
 #define UPDATE_JSON_UPDATE_URL "windows_link"
-#elif Q_OS_LINUX
+#elif defined(Q_OS_LINUX)
 #define UPDATE_JSON_UPDATE_URL "linux_link"
 #else
 #define UPDATE_JSON_UPDATE_URL "unknown_link"

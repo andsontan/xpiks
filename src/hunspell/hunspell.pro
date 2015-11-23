@@ -9,6 +9,8 @@ QT       -= core gui
 TARGET = hunspell
 TEMPLATE = lib
 CONFIG += staticlib
+DEFINES += HUNSPELL_LIBRARY
+CONFIG += precompile_header
 
 SOURCES += \
     ../hunspell-1.3.3/src/hunspell/affentry.cxx \
@@ -48,3 +50,7 @@ unix {
     target.path = /usr/lib
     INSTALLS += target
 }
+
+#!static: {
+#  win32:RC_FILE = ../hunspell-1.3.3/src/win_api/Hunspell.rc
+#}
