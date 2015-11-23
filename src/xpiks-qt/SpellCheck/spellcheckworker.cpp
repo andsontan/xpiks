@@ -95,8 +95,15 @@ namespace SpellCheck {
         QString affPath = resourcesDir.absoluteFilePath(EN_HUNSPELL_AFF);
         QString dicPath = resourcesDir.absoluteFilePath(EN_HUNSPELL_DIC);
 
-        m_Hunspell = new Hunspell(affPath.toLocal8Bit().constData(),
+        try {
+            m_Hunspell = new Hunspell(affPath.toLocal8Bit().constData(),
                                   dicPath.toLocal8Bit().constData());
+            qDebug() << "Hunspell initialized with AFF" << affPath << "and DIC" << dicPath;
+        }
+        catch(...) {
+            qDebug() << "Error in Hunspell initialization";
+        }
+
         detectAffEncoding();
     }
 
