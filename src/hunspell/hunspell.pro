@@ -9,8 +9,10 @@ QT       -= core gui
 TARGET = hunspell
 TEMPLATE = lib
 CONFIG += staticlib
-DEFINES += HUNSPELL_LIBRARY
-CONFIG += precompile_header
+DEFINES += HUNSPELL_STATIC
+#DEFINES += BUILDING_LIBHUNSPELL
+
+INCLUDEPATH += "../hunspell-1.3.3/src/hunspell/"
 
 SOURCES += \
     ../hunspell-1.3.3/src/hunspell/affentry.cxx \
@@ -45,7 +47,7 @@ HEADERS += \
     ../hunspell-1.3.3/src/hunspell/replist.hxx \
     ../hunspell-1.3.3/src/hunspell/suggestmgr.hxx \
     ../hunspell-1.3.3/src/hunspell/w_char.hxx \
-    ../hunspell-1.3.3/src/hunspell/config.h
+    ../hunspell-1.3.3/src/win_api/config.h
 unix {
     target.path = /usr/lib
     INSTALLS += target

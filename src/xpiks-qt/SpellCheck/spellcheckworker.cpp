@@ -29,12 +29,7 @@
 #include <QUrl>
 #include <QCoreApplication>
 #include "spellcheckitem.h"
-
-#if defined(Q_OS_WIN)
-#include "../hunspell-1.3.3/src/win_api/hunspelldll.h"
-#else
 #include "hunspell.hxx"
-#endif
 
 #define EN_HUNSPELL_DIC "en_US.dic"
 #define EN_HUNSPELL_AFF "en_US.aff"
@@ -42,8 +37,10 @@
 QString getHunspellResourcesPath() {
     QString path = QCoreApplication::applicationDirPath();
 
-#ifdef Q_OS_MAC
+#if defined(Q_OS_MAC)
     path += "/../Resources/";
+#elif defined(Q_OS_WIN)
+    path += "/dict/";
 #endif
 
     return path;
@@ -58,11 +55,7 @@ namespace SpellCheck {
 
     SpellCheckWorker::~SpellCheckWorker() {
         if (m_Hunspell != NULL) {
-#if defined(Q_OS_WIN)
-            hunspell_uninitialize(m_Hunspell);
-#else
             delete m_Hunspell;
-#endif
         }
     }
 
@@ -102,13 +95,8 @@ namespace SpellCheck {
         QString affPath = resourcesDir.absoluteFilePath(EN_HUNSPELL_AFF);
         QString dicPath = resourcesDir.absoluteFilePath(EN_HUNSPELL_DIC);
 
-#if defined(Q_OS_WIN)
-        m_Hunspell = (Hunspell*)hunspell_initialize(affPath.toLocal8Bit().data(),
-                            dicPath.toLocal8Bit().data());
-#else
         m_Hunspell = new Hunspell(affPath.toLocal8Bit().constData(),
                                   dicPath.toLocal8Bit().constData());
-#endif
         detectAffEncoding();
     }
 
@@ -161,11 +149,7 @@ namespace SpellCheck {
 
         try {
             // Encode from Unicode to the encoding used by current dictionary
-#if defined(Q_OS_WIN)
-            int count = hunspell_suggest(m_Hunspell, m_Codec->fromUnicode(word).data(), &suggestWordList);
-#else
             int count = m_Hunspell->suggest(&suggestWordList, m_Codec->fromUnicode(word).constData());
-#endif
 
             for (int i = 0; i < count; ++i) {
                 suggestions << m_Codec->toUnicode(suggestWordList[i]);
@@ -271,11 +255,7 @@ namespace SpellCheck {
     bool SpellCheckWorker::isWordSpelledOk(const QString &word) const {
         bool isOk = false;
         try {
-#if defined(Q_OS_WIN)
-            isOk = hunspell_spell(m_Hunspell, m_Codec->fromUnicode(word).data()) != 0;
-#else
             isOk = m_Hunspell->spell(m_Codec->fromUnicode(word).constData()) != 0;
-#endif
         }
         catch (...) {
             isOk = false;
