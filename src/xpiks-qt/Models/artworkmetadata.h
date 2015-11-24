@@ -81,6 +81,8 @@ namespace Models {
         virtual void replaceKeyword(int index, const QString &existing, const QString &replacement);
         virtual QList<SpellCheck::KeywordSpellSuggestions*> createSuggestionsList();
         virtual void connectSignals(SpellCheck::SpellCheckItem *item);
+        virtual QStringList getDescriptionWords() const;
+        virtual QStringList getTitleWords() const;
 
     public:
         bool setDescription(const QString &value) {

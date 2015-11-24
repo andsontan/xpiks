@@ -25,6 +25,7 @@
 #include <QList>
 #include <QStringList>
 #include <QObject>
+#include <QHash>
 
 namespace SpellCheck {
     class ISpellCheckable;
@@ -65,6 +66,8 @@ namespace SpellCheck {
         virtual void submitSpellCheckResult() = 0;
         bool needsSuggestions() const { return m_NeedsSuggestions; }
         void requestSuggestions() { m_NeedsSuggestions = true; }
+        void accountResultAt(int index);
+        bool getIsCorrect(const QString &word) const;
 
     signals:
         void resultsReady(int index);
@@ -74,6 +77,7 @@ namespace SpellCheck {
 
     private:
         QList<SpellCheckQueryItem*> m_QueryItems;
+        QHash<QString, bool> m_SpellCheckResults;
         volatile bool m_NeedsSuggestions;
     };
 
@@ -86,6 +90,9 @@ namespace SpellCheck {
     public:
         SpellCheckItem(ISpellCheckable *spellCheckable, int keywordIndex);
         SpellCheckItem(ISpellCheckable *spellCheckable);
+
+    private:
+        void addWords(const QStringList &words, int startingIndex);
 
     public:
         virtual void submitSpellCheckResult();

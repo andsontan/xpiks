@@ -247,9 +247,11 @@ namespace SpellCheck {
         bool anyWrong = false;
 
         if (!neededSuggestions) {
-            foreach (SpellCheckQueryItem *queryItem, queryItems) {
+            for (int i = 0; i < queryItems.length(); ++i) {
+                SpellCheckQueryItem *queryItem = queryItems[i];
                 bool isOk = isWordSpelledOk(queryItem->m_Word);
                 queryItem->m_IsCorrect = isOk;
+                item->accountResultAt(i);
                 anyWrong = anyWrong || !isOk;
             }
         } else {

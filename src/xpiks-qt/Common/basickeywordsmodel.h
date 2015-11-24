@@ -60,6 +60,10 @@ namespace Common {
         void appendKeyword(const QString &keyword);
         bool removeKeyword(int index, QString &keyword);
         bool removeLastKeyword(QString &keyword) { return removeKeyword(m_KeywordsList.length() - 1, keyword); }
+        const QString &getDescription() const { return m_Description; }
+        const QString &getTitle() const { return m_Title; }
+        bool setDescription(const QString &value);
+        bool setTitle(const QString &value);
 
     public:
         // ISPELLCHECKABLE
@@ -69,6 +73,8 @@ namespace Common {
         virtual QList<SpellCheck::KeywordSpellSuggestions*> createSuggestionsList();
         virtual void replaceKeyword(int index, const QString &existing, const QString &replacement);
         virtual void connectSignals(SpellCheck::SpellCheckItem *item);
+        virtual QStringList getDescriptionWords() const;
+        virtual QStringList getTitleWords() const;
 
     private slots:
          void spellCheckRequestReady(int index);
@@ -82,6 +88,8 @@ namespace Common {
     private:
         QStringList m_KeywordsList;
         QList<bool> m_SpellCheckResults;
+        QString m_Description;
+        QString m_Title;
     };
 }
 

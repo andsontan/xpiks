@@ -199,6 +199,16 @@ namespace Models {
         QObject::connect(item, SIGNAL(resultsReady(int)), this, SLOT(spellCheckRequestReady(int)));
     }
 
+    QStringList ArtworkMetadata::getDescriptionWords() const {
+        QStringList words = m_ArtworkDescription.split(" ", QString::SkipEmptyParts);
+        return words;
+    }
+
+    QStringList ArtworkMetadata::getTitleWords() const {
+        QStringList words = m_ArtworkTitle.split(" ", QString::SkipEmptyParts);
+        return words;
+    }
+
     bool ArtworkMetadata::removeKeywordAt(int index) {
         bool removed = false;
         QWriteLocker locker(&m_RWLock);

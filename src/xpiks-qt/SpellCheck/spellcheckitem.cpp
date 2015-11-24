@@ -30,6 +30,18 @@ namespace SpellCheck {
         qDeleteAll(m_QueryItems);
     }
 
+    void SpellCheckItemBase::accountResultAt(int index) {
+        if (0 <= index && index < m_QueryItems.length()) {
+            SpellCheckQueryItem *item = m_QueryItems[index];
+            m_SpellCheckResults[item->m_Word] = item->m_IsCorrect;
+        }
+    }
+
+    bool SpellCheckItemBase::getIsCorrect(const QString &word) const {
+        bool result = m_SpellCheckResults.value(word, true);
+        return result;
+    }
+
     void SpellCheckItemBase::appendItem(SpellCheckQueryItem *item) {
         m_QueryItems.append(item);
     }
@@ -48,9 +60,19 @@ namespace SpellCheck {
         m_SpellCheckable(spellCheckable)
     {
         QStringList keywords = spellCheckable->getKeywords();
-        int index = 0;
+        addWords(keywords, 0);
 
-        foreach (const QString &word, keywords) {
+        QStringList descriptionWords = spellCheckable->getDescriptionWords();
+        addWords(descriptionWords, keywords.length() * 1000);
+
+        QStringList titleWords = spellCheckable->getTitleWords();
+        addWords(titleWords, keywords.length() * 1000);
+    }
+
+    void SpellCheckItem::addWords(const QStringList &words, int startingIndex) {
+        int index = startingIndex;
+
+        foreach (const QString &word, words) {
             SpellCheckQueryItem *queryItem = new SpellCheckQueryItem(index, word);
             appendItem(queryItem);
             index++;

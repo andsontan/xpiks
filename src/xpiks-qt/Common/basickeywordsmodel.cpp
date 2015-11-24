@@ -20,6 +20,7 @@
  */
 
 #include "basickeywordsmodel.h"
+#include <QDebug>
 #include "../SpellCheck/spellcheckitem.h"
 #include "../SpellCheck/keywordspellsuggestions.h"
 
@@ -72,6 +73,24 @@ namespace Common {
             endRemoveRows();
         }
         return indexValid;
+    }
+
+    bool BasicKeywordsModel::setDescription(const QString &value) {
+        bool result = value != m_Description;
+        if (result) {
+            m_Description = value;
+        }
+
+        return result;
+    }
+
+    bool BasicKeywordsModel::setTitle(const QString &value) {
+        bool result = value != m_Title;
+        if (result) {
+            m_Title = value;
+        }
+
+        return result;
     }
 
     QString BasicKeywordsModel::retrieveKeyword(int wordIndex) {
@@ -137,7 +156,18 @@ namespace Common {
         QObject::connect(item, SIGNAL(resultsReady(int)), this, SLOT(spellCheckRequestReady(int)));
     }
 
+    QStringList BasicKeywordsModel::getDescriptionWords() const {
+        QStringList words = m_Description.split(" ", QString::SkipEmptyParts);
+        return words;
+    }
+
+    QStringList BasicKeywordsModel::getTitleWords() const {
+        QStringList words = m_Title.split(" ", QString::SkipEmptyParts);
+        return words;
+    }
+
     void BasicKeywordsModel::spellCheckRequestReady(int index) {
+        qDebug() << "SpellCheck results ready at index" << index;
         emitSpellCheckChanged(index);
     }
 

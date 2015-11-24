@@ -88,11 +88,11 @@ Rectangle {
     }
 
     Rectangle {
-        height: 2
+        height: 1.5
         anchors.left: row.left
         anchors.right: row.right
         anchors.bottom: row.bottom
-        color: Colors.artworkModifiedColor
+        color: Colors.destructiveColor
         visible: itemWrapper.hasSpellCheckError
     }
 }

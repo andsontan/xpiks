@@ -122,8 +122,8 @@ namespace Models {
         Commands::CombinedEditCommand *combinedEditCommand = new Commands::CombinedEditCommand(
                     m_EditFlags,
                     m_ArtworksList,
-                    m_ArtworkDescription,
-                    m_ArtworkTitle,
+                    m_CommonKeywordsModel.getDescription(),
+                    m_CommonKeywordsModel.getTitle(),
                     m_CommonKeywordsModel.getKeywords());
 
         Commands::CommandResult *result = m_CommandManager->processCommand(combinedEditCommand);

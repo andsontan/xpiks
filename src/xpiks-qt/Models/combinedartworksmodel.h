@@ -78,18 +78,16 @@ namespace Models {
 
     public:
         void setKeywords(const QStringList& keywords) { m_CommonKeywordsModel.reset(keywords); }
-        const QString &getDescription() const { return m_ArtworkDescription; }
+        const QString &getDescription() const { return m_CommonKeywordsModel.getDescription(); }
         void setDescription(const QString &value) {
-            if (m_ArtworkDescription != value) {
-                m_ArtworkDescription = value;
+            if (m_CommonKeywordsModel.setDescription(value)) {
                 emit descriptionChanged();
             }
         }
 
-        const QString &getTitle() const { return m_ArtworkTitle; }
+        const QString &getTitle() const { return m_CommonKeywordsModel.getTitle(); }
         void setTitle(const QString &value) {
-            if (m_ArtworkTitle != value) {
-                m_ArtworkTitle = value;
+            if (m_CommonKeywordsModel.setTitle(value)) {
                 emit titleChanged();
             }
         }
@@ -167,8 +165,6 @@ namespace Models {
         QList<ArtItemInfo*> m_ArtworksList;
         Common::BasicKeywordsModel m_CommonKeywordsModel;
         QSet<QString> m_CommonKeywordsSet;
-        QString m_ArtworkDescription;
-        QString m_ArtworkTitle;
         int m_EditFlags;
         bool m_IsModified;
     };
