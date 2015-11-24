@@ -99,6 +99,7 @@ namespace SpellCheck {
 
         if (QFile(affPath).exists() && QFile(dicPath).exists()) {
 #ifdef Q_OS_WIN
+            // specific Hunspell handling of UTF-8 encoded pathes
             affPath = "\\\\?\\" + QDir::toNativeSeparators(affPath);
             dicPath = "\\\\?\\" + QDir::toNativeSeparators(dicPath);
 #endif
