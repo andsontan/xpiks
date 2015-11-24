@@ -51,38 +51,51 @@ namespace SpellCheck {
     }
 
     void SpellCheckerService::submitItems(const QList<ISpellCheckable *> &itemsToCheck) {
-        Q_ASSERT(m_SpellCheckWorker != NULL);
+        if (m_SpellCheckWorker != NULL && !m_SpellCheckWorker->isCancelled()) {
+            QList<SpellCheckItemBase *> items;
 
-        QList<SpellCheckItemBase *> items;
+            foreach (SpellCheck::ISpellCheckable *itemToCheck, itemsToCheck) {
+                SpellCheckItem *item = new SpellCheckItem(itemToCheck);
+                itemToCheck->connectSignals(item);
+                items.append(item);
+            }
 
-        foreach (SpellCheck::ISpellCheckable *itemToCheck, itemsToCheck) {
-            SpellCheckItem *item = new SpellCheckItem(itemToCheck);
-            itemToCheck->connectSignals(item);
-            items.append(item);
+            m_SpellCheckWorker->submitItemsToCheck(items);
+            m_SpellCheckWorker->submitItemToCheck(new SpellCheckSeparatorItem());
         }
-
-        m_SpellCheckWorker->submitItemsToCheck(items);
-        m_SpellCheckWorker->submitItemToCheck(new SpellCheckSeparatorItem());
     }
 
     void SpellCheckerService::submitKeyword(SpellCheck::ISpellCheckable *itemToCheck, int keywordIndex) {
         Q_ASSERT(m_SpellCheckWorker != NULL);
 
-        SpellCheckItem *item = new SpellCheckItem(itemToCheck, keywordIndex);
-        itemToCheck->connectSignals(item);
-        m_SpellCheckWorker->submitItemToCheck(item);
+        if (m_SpellCheckWorker != NULL && !m_SpellCheckWorker->isCancelled()) {
+            SpellCheckItem *item = new SpellCheckItem(itemToCheck, keywordIndex);
+            itemToCheck->connectSignals(item);
+            m_SpellCheckWorker->submitItemToCheck(item);
+        }
     }
 
     QStringList SpellCheckerService::suggestCorrections(const QString &word) const {
-        return m_SpellCheckWorker->retrieveCorrections(word);
+        if (m_SpellCheckWorker != NULL) {
+            return m_SpellCheckWorker->retrieveCorrections(word);
+        }
+
+        return QStringList();
     }
 
     void SpellCheckerService::cancelCurrentBatch() {
-        m_SpellCheckWorker->cancelCurrentBatch();
+        if (m_SpellCheckWorker != NULL) {
+            m_SpellCheckWorker->cancelCurrentBatch();
+        }
     }
 
     bool SpellCheckerService::hasAnyPending() {
-        bool hasPending = m_SpellCheckWorker->hasPendingJobs();
+        bool hasPending = false;
+
+        if (m_SpellCheckWorker != NULL) {
+            hasPending = m_SpellCheckWorker->hasPendingJobs();
+        }
+
         return hasPending;
     }
 

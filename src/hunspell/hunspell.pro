@@ -10,7 +10,6 @@ TARGET = hunspell
 TEMPLATE = lib
 CONFIG += staticlib
 DEFINES += HUNSPELL_STATIC
-#DEFINES += BUILDING_LIBHUNSPELL
 
 INCLUDEPATH += "../hunspell-1.3.3/src/hunspell/"
 
@@ -52,7 +51,3 @@ unix {
     target.path = /usr/lib
     INSTALLS += target
 }
-
-#!static: {
-#  win32:RC_FILE = ../hunspell-1.3.3/src/win_api/Hunspell.rc
-#}

@@ -90,26 +90,34 @@ namespace SpellCheck {
         emit queueIsEmpty();
     }
 
-    void SpellCheckWorker::initHunspell() {
+    bool SpellCheckWorker::initHunspell() {
         QDir resourcesDir(getHunspellResourcesPath());
         QString affPath = resourcesDir.absoluteFilePath(EN_HUNSPELL_AFF);
         QString dicPath = resourcesDir.absoluteFilePath(EN_HUNSPELL_DIC);
 
+        bool initResult = false;
+
+        if (QFile(affPath).exists() && QFile(dicPath).exists()) {
 #ifdef Q_OS_WIN
-        affPath = "\\\\?\\" + QDir::toNativeSeparators(affPath);
-        dicPath = "\\\\?\\" + QDir::toNativeSeparators(dicPath);
+            affPath = "\\\\?\\" + QDir::toNativeSeparators(affPath);
+            dicPath = "\\\\?\\" + QDir::toNativeSeparators(dicPath);
 #endif
 
-        try {
-            m_Hunspell = new Hunspell(affPath.toUtf8().constData(),
-                                  dicPath.toUtf8().constData());
-            qDebug() << "Hunspell initialized with AFF" << affPath << "and DIC" << dicPath;
-        }
-        catch(...) {
-            qDebug() << "Error in Hunspell initialization with AFF" << affPath << "and DIC" << dicPath;
+            try {
+                m_Hunspell = new Hunspell(affPath.toUtf8().constData(),
+                                          dicPath.toUtf8().constData());
+                qDebug() << "Hunspell initialized with AFF" << affPath << "and DIC" << dicPath;
+                initResult = true;
+                detectAffEncoding();
+            }
+            catch(...) {
+                qDebug() << "Error in Hunspell initialization with AFF" << affPath << "and DIC" << dicPath;
+            }
+        } else {
+            qDebug() << "DIC or AFF file not found." << dicPath << "||" << affPath;
         }
 
-        detectAffEncoding();
+        return initResult;
     }
 
     void SpellCheckWorker::detectAffEncoding() {
@@ -291,8 +299,11 @@ namespace SpellCheck {
     }
 
     void SpellCheckWorker::process() {
-        initHunspell();
-        spellcheckLoop();
+        if (initHunspell()) {
+            spellcheckLoop();
+        } else {
+            m_Cancel = true;
+        }
     }
 
     void SpellCheckWorker::cancel() {

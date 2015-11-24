@@ -49,11 +49,12 @@ namespace SpellCheck {
         void submitItemsToCheck(const QList<SpellCheckItemBase*> &items);
         void cancelCurrentBatch();
         bool hasPendingJobs();
+        bool isCancelled() const { return m_Cancel; }
         QStringList retrieveCorrections(const QString &word);
 
     private:
         QStringList suggestCorrections(const QString &word);
-        void initHunspell();
+        bool initHunspell();
         void detectAffEncoding();
         void spellcheckLoop();
         bool processOneRequest(SpellCheckItemBase *item);
