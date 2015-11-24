@@ -240,14 +240,8 @@ HEADERS += Helpers/osxnsurlhelper.h
 LIBS += -L$$PWD/../libs/
 INCLUDEPATH += "..\hunspell-1.3.3\src\hunspell"
 
-macx {
-LIBS += -lhunspell
-}
-
-win32 {
 LIBS += -lhunspell
 DEFINES += HUNSPELL_STATIC
-}
 
 win32 {
 INCLUDEPATH += "../zlib-1.2.8"
