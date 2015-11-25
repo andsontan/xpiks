@@ -33,7 +33,6 @@ namespace SpellCheck {
     void SpellCheckErrorsHighlighter::setErrorWords(const QSet<QString> &items) {
         m_WordsWithErrors.clear();
         m_WordsWithErrors.unite(items);
-        rehighlight();
     }
 
     void SpellCheckErrorsHighlighter::highlightBlock(const QString &text) {

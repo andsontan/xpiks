@@ -1170,6 +1170,11 @@ ApplicationWindow {
                                                             event.accepted = true
                                                         }
                                                     }
+
+                                                    Component.onCompleted: {
+                                                        var index = rowWrapper.getIndex()
+                                                        artItemsModel.initDescriptionHighlighting(index, descriptionTextInput.textDocument)
+                                                    }
                                                 }
                                             }
 
@@ -1186,7 +1191,7 @@ ApplicationWindow {
                                                 border.color: Colors.artworkActiveColor
                                                 border.width: titleTextInput.activeFocus ? 1 : 0
 
-                                                StyledTextInput {
+                                                StyledTextEdit {
                                                     id: titleTextInput
                                                     height: 30
                                                     anchors.left: parent.left
@@ -1195,7 +1200,7 @@ ApplicationWindow {
                                                     anchors.rightMargin: 5
                                                     font.pixelSize: 12 * settingsModel.keywordSizeScale
                                                     anchors.verticalCenter: parent.verticalCenter
-                                                    maximumLength: 250
+                                                    //maximumLength: 250
                                                     text: title
                                                     color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.defaultInputBackground
                                                     onTextChanged: model.edittitle = text
@@ -1212,6 +1217,11 @@ ApplicationWindow {
                                                             titleTextInput.paste(clipboardText)
                                                             event.accepted = true
                                                         }
+                                                    }
+
+                                                    Component.onCompleted: {
+                                                        var index = rowWrapper.getIndex()
+                                                        artItemsModel.initTitleHighlighting(index, titleTextInput.textDocument)
                                                     }
                                                 }
                                             }

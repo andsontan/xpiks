@@ -152,6 +152,7 @@ namespace Models {
          void modifiedChanged(bool newValue);
          void selectedChanged(bool newValue);
          void fileSelectedChanged(const QString &filepath, bool newValue);
+         void spellCheckResultsReady();
 
     private slots:
          void spellCheckRequestReady(int index);

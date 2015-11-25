@@ -22,6 +22,7 @@
 #include "spellcheckiteminfo.h"
 #include <QTextDocument>
 #include "spellcheckerrorshighlighter.h"
+#include "../Models/artworkmetadata.h"
 
 namespace SpellCheck {
     SpellCheckItemInfo::SpellCheckItemInfo():
@@ -40,17 +41,25 @@ namespace SpellCheck {
         m_TitleErrorsHighlighter->setErrorWords(errors);
     }
 
-    void SpellCheckItemInfo::createHighlighterForDescription(QTextDocument *document) {
+    void SpellCheckItemInfo::createHighlighterForDescription(QTextDocument *document,
+                                                             Models::ArtworkMetadata *metadata) {
         if (m_DescriptionErrorsHighlighter == NULL) {
             m_DescriptionErrorsHighlighter = new SpellCheckErrorsHighlighter(document);
             m_DescriptionErrorsHighlighter->setErrorWords(m_ErrorsInDescription);
+
+            QObject::connect(metadata, SIGNAL(spellCheckResultsReady()),
+                             m_DescriptionErrorsHighlighter, SLOT(rehighlight()));
         }
     }
 
-    void SpellCheckItemInfo::createHighlighterForTitle(QTextDocument *document) {
+    void SpellCheckItemInfo::createHighlighterForTitle(QTextDocument *document,
+                                                       Models::ArtworkMetadata *metadata) {
         if (m_TitleErrorsHighlighter == NULL) {
             m_TitleErrorsHighlighter = new SpellCheckErrorsHighlighter(document);
             m_TitleErrorsHighlighter->setErrorWords(m_ErrorsInTitle);
+
+            QObject::connect(metadata, SIGNAL(spellCheckResultsReady()),
+                             m_TitleErrorsHighlighter, SLOT(rehighlight()));
         }
     }
 }

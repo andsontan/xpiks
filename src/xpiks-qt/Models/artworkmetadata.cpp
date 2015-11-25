@@ -162,6 +162,8 @@ namespace Models {
     void ArtworkMetadata::setSpellCheckResults(const QHash<QString, bool> &results) {
         updateDescriptionSpellErrors(results);
         updateTitleSpellErrors(results);
+
+        emit spellCheckResultsReady();
     }
 
     bool ArtworkMetadata::hasAnySpellCheckError() {

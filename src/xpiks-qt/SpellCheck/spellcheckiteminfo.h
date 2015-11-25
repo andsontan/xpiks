@@ -26,6 +26,10 @@
 #include <QString>
 #include <QTextDocument>
 
+namespace Models {
+    class ArtworkMetadata;
+}
+
 namespace SpellCheck {
     class SpellCheckErrorsHighlighter;
 
@@ -37,14 +41,14 @@ namespace SpellCheck {
     public:
         void setDescriptionErrors(const QSet<QString> &errors);
         void setTitleErrors(const QSet<QString> &errors);
-        void createHighlighterForDescription(QTextDocument *document);
-        void createHighlighterForTitle(QTextDocument *document);
+        void createHighlighterForDescription(QTextDocument *document, Models::ArtworkMetadata *metadata);
+        void createHighlighterForTitle(QTextDocument *document, Models::ArtworkMetadata *metadata);
 
     private:
         QSet<QString> m_ErrorsInDescription;
         QSet<QString> m_ErrorsInTitle;
-        SpellCheckErrorsHighlighter *m_TitleErrorsHighlighter;
         SpellCheckErrorsHighlighter *m_DescriptionErrorsHighlighter;
+        SpellCheckErrorsHighlighter *m_TitleErrorsHighlighter;
     };
 }
 

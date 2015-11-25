@@ -311,19 +311,19 @@ namespace Models {
         addDirectories(QStringList() << directory);
     }
 
-    void ArtItemsModel::initDescriptionHighlighting(int metadataIndex, QTextDocument *document) {
+    void ArtItemsModel::initDescriptionHighlighting(int metadataIndex, QQuickTextDocument *document) {
         if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
             SpellCheck::SpellCheckItemInfo *info = metadata->getSpellCheckInfo();
-            info->createHighlighterForDescription(document);
+            info->createHighlighterForDescription(document->textDocument(), metadata);
         }
     }
 
-    void ArtItemsModel::initTitleHighlighting(int metadataIndex, QTextDocument *document) {
+    void ArtItemsModel::initTitleHighlighting(int metadataIndex, QQuickTextDocument *document) {
         if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
             SpellCheck::SpellCheckItemInfo *info = metadata->getSpellCheckInfo();
-            info->createHighlighterForTitle(document);
+            info->createHighlighterForTitle(document->textDocument(), metadata);
         }
     }
 
