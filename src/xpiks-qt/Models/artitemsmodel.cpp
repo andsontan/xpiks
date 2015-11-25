@@ -34,6 +34,7 @@
 #include "../Commands/commandmanager.h"
 #include "artworksrepository.h"
 #include "../Models/settingsmodel.h"
+#include "../SpellCheck/spellcheckiteminfo.h"
 
 #ifdef Q_OS_OSX
 #include "../Helpers/osxnsurlhelper.h"
@@ -308,6 +309,22 @@ namespace Models {
 
     void ArtItemsModel::addRecentDirectory(const QString &directory) {
         addDirectories(QStringList() << directory);
+    }
+
+    void ArtItemsModel::initDescriptionHighlighting(int metadataIndex, QTextDocument *document) {
+        if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
+            ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
+            SpellCheck::SpellCheckItemInfo *info = metadata->getSpellCheckInfo();
+            info->createHighlighterForDescription(document);
+        }
+    }
+
+    void ArtItemsModel::initTitleHighlighting(int metadataIndex, QTextDocument *document) {
+        if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
+            ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
+            SpellCheck::SpellCheckItemInfo *info = metadata->getSpellCheckInfo();
+            info->createHighlighterForTitle(document);
+        }
     }
 
     int ArtItemsModel::rowCount(const QModelIndex &parent) const {

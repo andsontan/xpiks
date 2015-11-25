@@ -20,6 +20,9 @@
  */
 
 #include "spellcheckerrorshighlighter.h"
+#include <QColor>
+#include <QSet>
+#include <QString>
 
 namespace SpellCheck {
     SpellCheckErrorsHighlighter::SpellCheckErrorsHighlighter(QTextDocument *document) :
@@ -27,11 +30,51 @@ namespace SpellCheck {
     {
     }
 
-    void SpellCheckErrorsHighlighter::setErrorWords(const QStringList &items) {
+    void SpellCheckErrorsHighlighter::setErrorWords(const QSet<QString> &items) {
         m_WordsWithErrors.clear();
+        m_WordsWithErrors.unite(items);
+        rehighlight();
+    }
 
-        foreach (const QString &item, items) {
-            m_WordsWithErrors.insert(item);
+    void SpellCheckErrorsHighlighter::highlightBlock(const QString &text) {
+        int i = 0;
+        int size = text.size();
+        int lastStart = -1;
+
+        // destructiveColor from Colors.js
+        QColor destructiveColor = QColor::fromRgb(209, 11, 11);
+
+        while (i < size) {
+            QChar c = text[i];
+            if (c == QChar::Space || c == QChar::Tabulation || c == QChar::CarriageReturn) {
+                if (lastStart != -1) {
+                    int wordLength = i - lastStart;
+                    if (hasWrongSpelling(text, lastStart, wordLength)) {
+                        setFormat(lastStart, wordLength, destructiveColor);
+                    }
+
+                    lastStart = -1;
+                }
+            } else {
+                if (lastStart == -1) {
+                    lastStart = i;
+                }
+            }
+
+            i++;
         }
+
+        if (lastStart != -1) {
+            int wordLength = size - lastStart;
+            if (hasWrongSpelling(text, lastStart, wordLength)) {
+                setFormat(lastStart, wordLength, destructiveColor);
+            }
+        }
+    }
+
+    bool SpellCheckErrorsHighlighter::hasWrongSpelling(const QString &text, int start, int count) const {
+        QString substring = text.mid(start, count);
+        bool isWrong = m_WordsWithErrors.contains(substring);
+        return isWrong;
     }
 }

@@ -33,7 +33,10 @@
 namespace SpellCheck {
     class KeywordSpellSuggestions;
     class SpellCheckQueryItem;
+    class SpellCheckItemInfo;
 }
+
+class QTextDocument;
 
 namespace Models {
     class SettingsModel;
@@ -41,13 +44,7 @@ namespace Models {
     class ArtworkMetadata : public QAbstractListModel, public SpellCheck::ISpellCheckable {
         Q_OBJECT
     public:
-        ArtworkMetadata(const QString &filepath) :
-            QAbstractListModel(),
-            m_ArtworkFilepath(filepath),
-            m_IsModified(false),
-            m_IsSelected(false)
-        { }
-
+        ArtworkMetadata(const QString &filepath);
         virtual ~ArtworkMetadata();
 
     public:
@@ -69,13 +66,20 @@ namespace Models {
         virtual QStringList getKeywords();
         const QSet<QString> &getKeywordsSet() const { return m_KeywordsSet; }
         QString getKeywordsString();
+        SpellCheck::SpellCheckItemInfo *getSpellCheckInfo() { return m_SpellCheckInfo; }
+
+    public:
         bool isInDirectory(const QString &directory) const;
         bool isModified() const { return m_IsModified; }
         bool getIsSelected() const { return m_IsSelected; }
         bool isEmpty() const;
+
+    public:
         void clearMetadata();
         virtual QString retrieveKeyword(int index);
         bool containsKeyword(const QString &searchTerm, bool exactMatch = false);
+
+    public:
         virtual void setSpellCheckResults(const QList<SpellCheck::SpellCheckQueryItem *> &results);
         virtual void setSpellCheckResults(const QHash<QString, bool> &results);
         bool hasAnySpellCheckError();
@@ -84,6 +88,10 @@ namespace Models {
         virtual void connectSignals(SpellCheck::SpellCheckItem *item);
         virtual QStringList getDescriptionWords() const;
         virtual QStringList getTitleWords() const;
+
+    private:
+        void updateDescriptionSpellErrors(const QHash<QString, bool> &results);
+        void updateTitleSpellErrors(const QHash<QString, bool> &results);
 
     public:
         bool setDescription(const QString &value) {
@@ -159,8 +167,7 @@ namespace Models {
          QReadWriteLock m_RWLock;
          QStringList m_KeywordsList;
          QList<bool> m_SpellCheckResults;
-         QStringList m_ErrorsInDescription;
-         QStringList m_ErrorsInTitle;
+         SpellCheck::SpellCheckItemInfo *m_SpellCheckInfo;
          QSet<QString> m_KeywordsSet;
          QString m_ArtworkFilepath;
          QString m_ArtworkDescription;

@@ -28,6 +28,7 @@
 #include <QPair>
 #include <QUrl>
 #include <QSize>
+#include <QTextDocument>
 #include "abstractlistmodel.h"
 #include "../Common/baseentity.h"
 
@@ -95,6 +96,8 @@ namespace Models {
         Q_INVOKABLE QString getArtworkFilepath(int index) const;
 
         Q_INVOKABLE void addRecentDirectory(const QString &directory);
+        Q_INVOKABLE void initDescriptionHighlighting(int metadataIndex, QTextDocument *document);
+        Q_INVOKABLE void initTitleHighlighting(int metadataIndex, QTextDocument *document);
 
     public:
         virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;

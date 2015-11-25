@@ -19,32 +19,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SPELLCHECKERRORSHIGHLIGHTER_H
-#define SPELLCHECKERRORSHIGHLIGHTER_H
+#ifndef SPELLCHECKITEMINFO_H
+#define SPELLCHECKITEMINFO_H
 
-#include <QtGui>
 #include <QSet>
 #include <QString>
+#include <QTextDocument>
 
 namespace SpellCheck {
-    class SpellCheckErrorsHighlighter : public QSyntaxHighlighter
+    class SpellCheckErrorsHighlighter;
+
+    class SpellCheckItemInfo
     {
     public:
-        SpellCheckErrorsHighlighter(QTextDocument *document);
+        SpellCheckItemInfo();
 
     public:
-        void setErrorWords(const QSet<QString> &items);
-
-    protected:
-        virtual void highlightBlock(const QString &text);
-
-    private:
-        bool hasWrongSpelling(const QString &text, int start, int count) const;
+        void setDescriptionErrors(const QSet<QString> &errors);
+        void setTitleErrors(const QSet<QString> &errors);
+        void createHighlighterForDescription(QTextDocument *document);
+        void createHighlighterForTitle(QTextDocument *document);
 
     private:
-        QSet<QString> m_WordsWithErrors;
-
+        QSet<QString> m_ErrorsInDescription;
+        QSet<QString> m_ErrorsInTitle;
+        SpellCheckErrorsHighlighter *m_TitleErrorsHighlighter;
+        SpellCheckErrorsHighlighter *m_DescriptionErrorsHighlighter;
     };
 }
 
-#endif // SPELLCHECKERRORSHIGHLIGHTER_H
+#endif // SPELLCHECKITEMINFO_H

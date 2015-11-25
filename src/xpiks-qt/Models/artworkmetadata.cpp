@@ -28,8 +28,18 @@
 #include "settingsmodel.h"
 #include "../SpellCheck/keywordspellsuggestions.h"
 #include "../SpellCheck/spellcheckitem.h"
+#include "../SpellCheck/spellcheckiteminfo.h"
 
 namespace Models {
+    ArtworkMetadata::ArtworkMetadata(const QString &filepath) :
+        QAbstractListModel(),
+        m_ArtworkFilepath(filepath),
+        m_IsModified(false),
+        m_IsSelected(false)
+    {
+        m_SpellCheckInfo = new SpellCheck::SpellCheckItemInfo();
+    }
+
     ArtworkMetadata::~ArtworkMetadata() {
         this->disconnect();
     }
@@ -150,21 +160,8 @@ namespace Models {
     }
 
     void ArtworkMetadata::setSpellCheckResults(const QHash<QString, bool> &results) {
-        m_ErrorsInDescription.clear();
-        QStringList descriptionWords = getDescriptionWords();
-        foreach (const QString &word, descriptionWords) {
-            if (results.value(word, true) == false) {
-                m_ErrorsInDescription.append(word);
-            }
-        }
-
-        m_ErrorsInTitle.clear();
-        QStringList titleWords = getTitleWords();
-        foreach (const QString &word, titleWords) {
-            if (results.value(word, true) == false) {
-                m_ErrorsInTitle.append(word);
-            }
-        }
+        updateDescriptionSpellErrors(results);
+        updateTitleSpellErrors(results);
     }
 
     bool ArtworkMetadata::hasAnySpellCheckError() {
@@ -225,6 +222,30 @@ namespace Models {
     QStringList ArtworkMetadata::getTitleWords() const {
         QStringList words = m_ArtworkTitle.split(" ", QString::SkipEmptyParts);
         return words;
+    }
+
+    void ArtworkMetadata::updateDescriptionSpellErrors(const QHash<QString, bool> &results) {
+        QSet<QString> descriptionErrors;
+        QStringList descriptionWords = getDescriptionWords();
+        foreach (const QString &word, descriptionWords) {
+            if (results.value(word, true) == false) {
+                descriptionErrors.insert(word);
+            }
+        }
+
+        m_SpellCheckInfo->setDescriptionErrors(descriptionErrors);
+    }
+
+    void ArtworkMetadata::updateTitleSpellErrors(const QHash<QString, bool> &results) {
+        QSet<QString> titleErrors;
+        QStringList titleWords = getTitleWords();
+        foreach (const QString &word, titleWords) {
+            if (results.value(word, true) == false) {
+                titleErrors.insert(word);
+            }
+        }
+
+        m_SpellCheckInfo->setTitleErrors(titleErrors);
     }
 
     bool ArtworkMetadata::removeKeywordAt(int index) {
