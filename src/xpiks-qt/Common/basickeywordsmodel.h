@@ -70,7 +70,8 @@ namespace Common {
         virtual QString retrieveKeyword(int wordIndex);
         virtual QStringList getKeywords();
         virtual void setSpellCheckResults(const QList<SpellCheck::SpellCheckQueryItem*> &items);
-        virtual QList<SpellCheck::KeywordSpellSuggestions*> createSuggestionsList();
+        virtual void setSpellCheckResults(const QHash<QString, bool> &results);
+        virtual QList<SpellCheck::KeywordSpellSuggestions*> createKeywordsSuggestionsList();
         virtual void replaceKeyword(int index, const QString &existing, const QString &replacement);
         virtual void connectSignals(SpellCheck::SpellCheckItem *item);
         virtual QStringList getDescriptionWords() const;
@@ -88,6 +89,8 @@ namespace Common {
     private:
         QStringList m_KeywordsList;
         QList<bool> m_SpellCheckResults;
+        QStringList m_ErrorsInDescription;
+        QStringList m_ErrorsInTitle;
         QString m_Description;
         QString m_Title;
     };

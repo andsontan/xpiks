@@ -125,7 +125,25 @@ namespace Common {
         emitSpellCheckChanged(index);
     }
 
-    QList<SpellCheck::KeywordSpellSuggestions *> BasicKeywordsModel::createSuggestionsList() {
+    void BasicKeywordsModel::setSpellCheckResults(const QHash<QString, bool> &results) {
+        m_ErrorsInDescription.clear();
+        QStringList descriptionWords = getDescriptionWords();
+        foreach (const QString &word, descriptionWords) {
+            if (results.value(word, true) == false) {
+                m_ErrorsInDescription.append(word);
+            }
+        }
+
+        m_ErrorsInTitle.clear();
+        QStringList titleWords = getTitleWords();
+        foreach (const QString &word, titleWords) {
+            if (results.value(word, true) == false) {
+                m_ErrorsInTitle.append(word);
+            }
+        }
+    }
+
+    QList<SpellCheck::KeywordSpellSuggestions *> BasicKeywordsModel::createKeywordsSuggestionsList() {
         QList<SpellCheck::KeywordSpellSuggestions *> spellCheckSuggestions;
 
         int length = m_KeywordsList.length();

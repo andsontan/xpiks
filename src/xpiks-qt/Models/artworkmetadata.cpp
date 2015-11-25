@@ -149,6 +149,24 @@ namespace Models {
         }
     }
 
+    void ArtworkMetadata::setSpellCheckResults(const QHash<QString, bool> &results) {
+        m_ErrorsInDescription.clear();
+        QStringList descriptionWords = getDescriptionWords();
+        foreach (const QString &word, descriptionWords) {
+            if (results.value(word, true) == false) {
+                m_ErrorsInDescription.append(word);
+            }
+        }
+
+        m_ErrorsInTitle.clear();
+        QStringList titleWords = getTitleWords();
+        foreach (const QString &word, titleWords) {
+            if (results.value(word, true) == false) {
+                m_ErrorsInTitle.append(word);
+            }
+        }
+    }
+
     bool ArtworkMetadata::hasAnySpellCheckError() {
         QReadLocker locker(&m_RWLock);
 
@@ -178,7 +196,7 @@ namespace Models {
         }
     }
 
-    QList<SpellCheck::KeywordSpellSuggestions *> ArtworkMetadata::createSuggestionsList() {
+    QList<SpellCheck::KeywordSpellSuggestions *> ArtworkMetadata::createKeywordsSuggestionsList() {
         QReadLocker locker(&m_RWLock);
 
         QList<SpellCheck::KeywordSpellSuggestions *> spellCheckSuggestions;

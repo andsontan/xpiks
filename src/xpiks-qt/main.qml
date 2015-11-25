@@ -1140,7 +1140,7 @@ ApplicationWindow {
                                                 border.color: Colors.artworkActiveColor
                                                 border.width: descriptionTextInput.activeFocus ? 1 : 0
 
-                                                StyledTextInput {
+                                                StyledTextEdit {
                                                     id: descriptionTextInput
                                                     height: 30
                                                     anchors.left: parent.left
@@ -1149,7 +1149,7 @@ ApplicationWindow {
                                                     anchors.rightMargin: 5
                                                     font.pixelSize: 12 * settingsModel.keywordSizeScale
                                                     anchors.verticalCenter: parent.verticalCenter
-                                                    maximumLength: 250
+                                                    //maximumLength: 250
                                                     text: description
                                                     color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.defaultInputBackground
                                                     onTextChanged: model.editdescription = text

@@ -68,7 +68,7 @@ namespace SpellCheck {
         Q_ASSERT(service != NULL);
         Q_ASSERT(item != NULL);
 
-        QList<KeywordSpellSuggestions*> suggestionsRequests = item->createSuggestionsList();
+        QList<KeywordSpellSuggestions*> suggestionsRequests = item->createKeywordsSuggestionsList();
         QList<KeywordSpellSuggestions*> executedRequests = setupSuggestions(suggestionsRequests);
 
         beginResetModel();

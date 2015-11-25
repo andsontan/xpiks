@@ -63,6 +63,7 @@ namespace SpellCheck {
 
     public:
         const QList<SpellCheckQueryItem*> &getQueries() const { return m_QueryItems; }
+        const QHash<QString, bool> &getHash() const { return m_SpellCheckResults; }
         virtual void submitSpellCheckResult() = 0;
         bool needsSuggestions() const { return m_NeedsSuggestions; }
         void requestSuggestions() { m_NeedsSuggestions = true; }

@@ -77,9 +77,10 @@ namespace Models {
         virtual QString retrieveKeyword(int index);
         bool containsKeyword(const QString &searchTerm, bool exactMatch = false);
         virtual void setSpellCheckResults(const QList<SpellCheck::SpellCheckQueryItem *> &results);
+        virtual void setSpellCheckResults(const QHash<QString, bool> &results);
         bool hasAnySpellCheckError();
         virtual void replaceKeyword(int index, const QString &existing, const QString &replacement);
-        virtual QList<SpellCheck::KeywordSpellSuggestions*> createSuggestionsList();
+        virtual QList<SpellCheck::KeywordSpellSuggestions*> createKeywordsSuggestionsList();
         virtual void connectSignals(SpellCheck::SpellCheckItem *item);
         virtual QStringList getDescriptionWords() const;
         virtual QStringList getTitleWords() const;
@@ -158,6 +159,8 @@ namespace Models {
          QReadWriteLock m_RWLock;
          QStringList m_KeywordsList;
          QList<bool> m_SpellCheckResults;
+         QStringList m_ErrorsInDescription;
+         QStringList m_ErrorsInTitle;
          QSet<QString> m_KeywordsSet;
          QString m_ArtworkFilepath;
          QString m_ArtworkDescription;

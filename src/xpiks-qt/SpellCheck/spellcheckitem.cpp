@@ -83,6 +83,7 @@ namespace SpellCheck {
     void SpellCheckItem::submitSpellCheckResult() {
         const QList<SpellCheckQueryItem*> &items = getQueries();
         m_SpellCheckable->setSpellCheckResults(items);
+        m_SpellCheckable->setSpellCheckResults(getHash());
         int index = items.length() == 1 ? items.first()->m_Index : -1;
         emit resultsReady(index);
     }
