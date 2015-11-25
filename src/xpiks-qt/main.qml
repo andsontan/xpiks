@@ -1140,40 +1140,56 @@ ApplicationWindow {
                                                 border.color: Colors.artworkActiveColor
                                                 border.width: descriptionTextInput.activeFocus ? 1 : 0
 
-                                                StyledTextEdit {
-                                                    id: descriptionTextInput
-                                                    height: 30
+                                                Flickable {
+                                                    id: descriptionFlick
+                                                    contentWidth: descriptionTextInput.paintedWidth
+                                                    contentHeight: descriptionTextInput.paintedHeight
                                                     anchors.left: parent.left
                                                     anchors.right: parent.right
                                                     anchors.leftMargin: 5
                                                     anchors.rightMargin: 5
-                                                    font.pixelSize: 12 * settingsModel.keywordSizeScale
-                                                    anchors.verticalCenter: parent.verticalCenter
-                                                    //maximumLength: 250
-                                                    text: description
-                                                    color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.defaultInputBackground
-                                                    onTextChanged: model.editdescription = text
+                                                    height: 30
+                                                    clip: true
 
-                                                    Keys.onTabPressed: {
-                                                        if (columnLayout.isWideEnough) {
-                                                            titleTextInput.forceActiveFocus()
-                                                        } else {
-                                                            flv.activateEdit()
-                                                        }
+                                                    function ensureVisible(r) {
+                                                        if (contentX >= r.x)
+                                                            contentX = r.x;
+                                                        else if (contentX+width <= r.x+r.width)
+                                                            contentX = r.x+r.width-width;
                                                     }
 
-                                                    Keys.onPressed: {
-                                                        if(event.matches(StandardKey.Paste)) {
-                                                            var clipboardText = clipboard.getText();
-                                                            // same regexp as in validator
-                                                            descriptionTextInput.paste(clipboardText)
-                                                            event.accepted = true
-                                                        }
-                                                    }
+                                                    StyledTextEdit {
+                                                        id: descriptionTextInput
+                                                        width: descriptionFlick.width
+                                                        height: descriptionFlick.height
+                                                        font.pixelSize: 12 * settingsModel.keywordSizeScale
+                                                        text: description
+                                                        color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.defaultInputBackground
+                                                        onTextChanged: model.editdescription = text
 
-                                                    Component.onCompleted: {
-                                                        var index = rowWrapper.getIndex()
-                                                        artItemsModel.initDescriptionHighlighting(index, descriptionTextInput.textDocument)
+                                                        Keys.onTabPressed: {
+                                                            if (columnLayout.isWideEnough) {
+                                                                titleTextInput.forceActiveFocus()
+                                                            } else {
+                                                                flv.activateEdit()
+                                                            }
+                                                        }
+
+                                                        Keys.onPressed: {
+                                                            if(event.matches(StandardKey.Paste)) {
+                                                                var clipboardText = clipboard.getText();
+                                                                // same regexp as in validator
+                                                                descriptionTextInput.paste(clipboardText)
+                                                                event.accepted = true
+                                                            }
+                                                        }
+
+                                                        Component.onCompleted: {
+                                                            var index = rowWrapper.getIndex()
+                                                            artItemsModel.initDescriptionHighlighting(index, descriptionTextInput.textDocument)
+                                                        }
+
+                                                        onCursorRectangleChanged: descriptionFlick.ensureVisible(cursorRectangle)
                                                     }
                                                 }
                                             }
@@ -1191,37 +1207,53 @@ ApplicationWindow {
                                                 border.color: Colors.artworkActiveColor
                                                 border.width: titleTextInput.activeFocus ? 1 : 0
 
-                                                StyledTextEdit {
-                                                    id: titleTextInput
+                                                Flickable {
+                                                    id: titleFlick
+                                                    contentWidth: titleTextInput.paintedWidth
+                                                    contentHeight: titleTextInput.paintedHeight
                                                     height: 30
                                                     anchors.left: parent.left
                                                     anchors.right: parent.right
                                                     anchors.leftMargin: 5
                                                     anchors.rightMargin: 5
-                                                    font.pixelSize: 12 * settingsModel.keywordSizeScale
-                                                    anchors.verticalCenter: parent.verticalCenter
-                                                    //maximumLength: 250
-                                                    text: title
-                                                    color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.defaultInputBackground
-                                                    onTextChanged: model.edittitle = text
-                                                    KeyNavigation.backtab: descriptionTextInput
+                                                    clip: true
 
-                                                    Keys.onTabPressed: {
-                                                        flv.activateEdit()
+                                                    function ensureVisible(r) {
+                                                        if (contentX >= r.x)
+                                                            contentX = r.x;
+                                                        else if (contentX+width <= r.x+r.width)
+                                                            contentX = r.x+r.width-width;
                                                     }
 
-                                                    Keys.onPressed: {
-                                                        if(event.matches(StandardKey.Paste)) {
-                                                            var clipboardText = clipboard.getText();
-                                                            // same regexp as in validator
-                                                            titleTextInput.paste(clipboardText)
-                                                            event.accepted = true
+                                                    StyledTextEdit {
+                                                        id: titleTextInput
+                                                        font.pixelSize: 12 * settingsModel.keywordSizeScale
+                                                        text: title
+                                                        width: titleFlick.width
+                                                        height: titleFlick.height
+                                                        color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.defaultInputBackground
+                                                        onTextChanged: model.edittitle = text
+                                                        KeyNavigation.backtab: descriptionTextInput
+
+                                                        Keys.onTabPressed: {
+                                                            flv.activateEdit()
                                                         }
-                                                    }
 
-                                                    Component.onCompleted: {
-                                                        var index = rowWrapper.getIndex()
-                                                        artItemsModel.initTitleHighlighting(index, titleTextInput.textDocument)
+                                                        Keys.onPressed: {
+                                                            if (event.matches(StandardKey.Paste)) {
+                                                                var clipboardText = clipboard.getText();
+                                                                // same regexp as in validator
+                                                                titleTextInput.paste(clipboardText)
+                                                                event.accepted = true
+                                                            }
+                                                        }
+
+                                                        Component.onCompleted: {
+                                                            var index = rowWrapper.getIndex()
+                                                            artItemsModel.initTitleHighlighting(index, titleTextInput.textDocument)
+                                                        }
+
+                                                        onCursorRectangleChanged: titleFlick.ensureVisible(cursorRectangle)
                                                     }
                                                 }
                                             }
