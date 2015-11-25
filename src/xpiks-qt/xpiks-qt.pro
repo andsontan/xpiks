@@ -72,7 +72,8 @@ SOURCES += main.cpp \
     SpellCheck/spellcheckworker.cpp \
     SpellCheck/spellchecksuggestionmodel.cpp \
     SpellCheck/keywordspellsuggestions.cpp \
-    Common/basickeywordsmodel.cpp
+    Common/basickeywordsmodel.cpp \
+    SpellCheck/spellcheckerrorshighlighter.cpp
 
 RESOURCES += qml.qrc
 
@@ -181,7 +182,8 @@ HEADERS += \
     SpellCheck/spellcheckworker.h \
     SpellCheck/spellchecksuggestionmodel.h \
     SpellCheck/keywordspellsuggestions.h \
-    SpellCheck/ispellcheckable.h
+    SpellCheck/ispellcheckable.h \
+    SpellCheck/spellcheckerrorshighlighter.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
