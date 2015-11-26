@@ -33,6 +33,7 @@ TextEdit {
     selectByMouse: true
     cursorVisible: false
     wrapMode: TextEdit.NoWrap
+    activeFocusOnPress: true
     color: enabled ? Colors.defaultLightColor : Colors.itemsSourceForeground
 }
 

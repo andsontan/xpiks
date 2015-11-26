@@ -25,42 +25,26 @@
 #include "../Models/artworkmetadata.h"
 
 namespace SpellCheck {
-    SpellCheckItemInfo::SpellCheckItemInfo():
-        m_DescriptionErrorsHighlighter(NULL),
-        m_TitleErrorsHighlighter(NULL)
-    {
-    }
-
     void SpellCheckItemInfo::setDescriptionErrors(const QSet<QString> &errors) {
-        m_ErrorsInDescription = errors;
-        m_DescriptionErrorsHighlighter->setErrorWords(errors);
+        m_DescriptionErrors.setErrorWords(errors);
     }
 
     void SpellCheckItemInfo::setTitleErrors(const QSet<QString> &errors) {
-        m_ErrorsInTitle = errors;
-        m_TitleErrorsHighlighter->setErrorWords(errors);
+        m_TitleErrors.setErrorWords(errors);
     }
 
     void SpellCheckItemInfo::createHighlighterForDescription(QTextDocument *document,
                                                              Models::ArtworkMetadata *metadata) {
-        if (m_DescriptionErrorsHighlighter == NULL) {
-            m_DescriptionErrorsHighlighter = new SpellCheckErrorsHighlighter(document);
-            m_DescriptionErrorsHighlighter->setErrorWords(m_ErrorsInDescription);
-
-            QObject::connect(metadata, SIGNAL(spellCheckResultsReady()),
-                             m_DescriptionErrorsHighlighter, SLOT(rehighlight()));
-        }
+        SpellCheckErrorsHighlighter *highlighter = new SpellCheckErrorsHighlighter(document, &m_DescriptionErrors);
+        QObject::connect(metadata, SIGNAL(spellCheckResultsReady()),
+                         highlighter, SLOT(rehighlight()));
     }
 
     void SpellCheckItemInfo::createHighlighterForTitle(QTextDocument *document,
                                                        Models::ArtworkMetadata *metadata) {
-        if (m_TitleErrorsHighlighter == NULL) {
-            m_TitleErrorsHighlighter = new SpellCheckErrorsHighlighter(document);
-            m_TitleErrorsHighlighter->setErrorWords(m_ErrorsInTitle);
-
-            QObject::connect(metadata, SIGNAL(spellCheckResultsReady()),
-                             m_TitleErrorsHighlighter, SLOT(rehighlight()));
-        }
+        SpellCheckErrorsHighlighter *highlighter = new SpellCheckErrorsHighlighter(document, &m_TitleErrors);
+        QObject::connect(metadata, SIGNAL(spellCheckResultsReady()),
+                         highlighter, SLOT(rehighlight()));
     }
 }
 

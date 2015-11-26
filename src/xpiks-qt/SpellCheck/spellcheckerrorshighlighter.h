@@ -27,23 +27,18 @@
 #include <QString>
 
 namespace SpellCheck {
+    class SpellCheckErrorsInfo;
+
     class SpellCheckErrorsHighlighter : public QSyntaxHighlighter
     {
     public:
-        SpellCheckErrorsHighlighter(QTextDocument *document);
-
-    public:
-        void setErrorWords(const QSet<QString> &items);
+        SpellCheckErrorsHighlighter(QTextDocument *document, SpellCheckErrorsInfo *errorsInfo);
 
     protected:
         virtual void highlightBlock(const QString &text);
 
     private:
-        bool hasWrongSpelling(const QString &text, int start, int count) const;
-
-    private:
-        QSet<QString> m_WordsWithErrors;
-
+        SpellCheckErrorsInfo *m_SpellCheckErrors;
     };
 }
 

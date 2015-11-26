@@ -33,11 +33,17 @@ namespace Models {
 namespace SpellCheck {
     class SpellCheckErrorsHighlighter;
 
+    class SpellCheckErrorsInfo {
+    public:
+        bool hasWrongSpelling(const QString& word) const { return m_WordsWithErrors.contains(word); }
+        void setErrorWords(const QSet<QString> &errors) { m_WordsWithErrors.clear(); m_WordsWithErrors.unite(errors); }
+
+    private:
+        QSet<QString> m_WordsWithErrors;
+    };
+
     class SpellCheckItemInfo
     {
-    public:
-        SpellCheckItemInfo();
-
     public:
         void setDescriptionErrors(const QSet<QString> &errors);
         void setTitleErrors(const QSet<QString> &errors);
@@ -45,10 +51,8 @@ namespace SpellCheck {
         void createHighlighterForTitle(QTextDocument *document, Models::ArtworkMetadata *metadata);
 
     private:
-        QSet<QString> m_ErrorsInDescription;
-        QSet<QString> m_ErrorsInTitle;
-        SpellCheckErrorsHighlighter *m_DescriptionErrorsHighlighter;
-        SpellCheckErrorsHighlighter *m_TitleErrorsHighlighter;
+        SpellCheckErrorsInfo m_DescriptionErrors;
+        SpellCheckErrorsInfo m_TitleErrors;
     };
 }
 

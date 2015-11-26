@@ -23,16 +23,15 @@
 #include <QColor>
 #include <QSet>
 #include <QString>
+#include <QDebug>
+#include "spellcheckiteminfo.h"
 
 namespace SpellCheck {
-    SpellCheckErrorsHighlighter::SpellCheckErrorsHighlighter(QTextDocument *document) :
-        QSyntaxHighlighter(document)
+    SpellCheckErrorsHighlighter::SpellCheckErrorsHighlighter(QTextDocument *document,
+                                                             SpellCheckErrorsInfo *errorsInfo) :
+        QSyntaxHighlighter(document),
+        m_SpellCheckErrors(errorsInfo)
     {
-    }
-
-    void SpellCheckErrorsHighlighter::setErrorWords(const QSet<QString> &items) {
-        m_WordsWithErrors.clear();
-        m_WordsWithErrors.unite(items);
     }
 
     void SpellCheckErrorsHighlighter::highlightBlock(const QString &text) {
@@ -48,7 +47,8 @@ namespace SpellCheck {
             if (c == QChar::Space || c == QChar::Tabulation || c == QChar::CarriageReturn) {
                 if (lastStart != -1) {
                     int wordLength = i - lastStart;
-                    if (hasWrongSpelling(text, lastStart, wordLength)) {
+                    QString word = text.mid(lastStart, wordLength);
+                    if (m_SpellCheckErrors->hasWrongSpelling(word)) {
                         setFormat(lastStart, wordLength, destructiveColor);
                     }
 
@@ -65,15 +65,10 @@ namespace SpellCheck {
 
         if (lastStart != -1) {
             int wordLength = size - lastStart;
-            if (hasWrongSpelling(text, lastStart, wordLength)) {
+            QString word = text.mid(lastStart, wordLength);
+            if (m_SpellCheckErrors->hasWrongSpelling(word)) {
                 setFormat(lastStart, wordLength, destructiveColor);
             }
         }
-    }
-
-    bool SpellCheckErrorsHighlighter::hasWrongSpelling(const QString &text, int start, int count) const {
-        QString substring = text.mid(start, count);
-        bool isWrong = m_WordsWithErrors.contains(substring);
-        return isWrong;
     }
 }
