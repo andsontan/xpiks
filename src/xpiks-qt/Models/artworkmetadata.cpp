@@ -151,6 +151,31 @@ namespace Models {
         return hasMatch;
     }
 
+    bool ArtworkMetadata::hasKeywordsSpellError() {
+        QReadLocker locker(&m_RWLock);
+
+        bool anyError = false;
+
+        foreach (bool isCorrect, m_SpellCheckResults) {
+            if (!isCorrect) {
+                anyError = true;
+                break;
+            }
+        }
+
+        return anyError;
+    }
+
+    bool ArtworkMetadata::hasDescriptionSpellError() const {
+        bool hasError = m_SpellCheckInfo->anyDescriptionError();
+        return hasError;
+    }
+
+    bool ArtworkMetadata::hasTitleSpellError() const {
+        bool hasError = m_SpellCheckInfo->anyTitleError();
+        return hasError;
+    }
+
     void ArtworkMetadata::setSpellCheckResults(const QList<SpellCheck::SpellCheckQueryItem *> &results) {
         QReadLocker locker(&m_RWLock);
 
@@ -164,21 +189,6 @@ namespace Models {
         updateTitleSpellErrors(results);
 
         emit spellCheckResultsReady();
-    }
-
-    bool ArtworkMetadata::hasAnySpellCheckError() {
-        QReadLocker locker(&m_RWLock);
-
-        bool anyError = false;
-
-        foreach (bool isCorrect, m_SpellCheckResults) {
-            if (!isCorrect) {
-                anyError = true;
-                break;
-            }
-        }
-
-        return anyError;
     }
 
     void ArtworkMetadata::replaceKeyword(int index, const QString &existing, const QString &replacement) {

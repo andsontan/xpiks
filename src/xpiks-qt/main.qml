@@ -1203,7 +1203,6 @@ ApplicationWindow {
                                                 height: 30
                                                 width: columnLayout.isWideEnough ? ((columnLayout.width / 2) - 10 ): 0
                                                 visible: columnLayout.isWideEnough
-                                                //anchors.left: descriptionRect.right
                                                 anchors.right: parent.right
                                                 anchors.top: descriptionText.bottom
                                                 anchors.topMargin: 3

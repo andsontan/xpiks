@@ -78,11 +78,13 @@ namespace Models {
         void clearMetadata();
         virtual QString retrieveKeyword(int index);
         bool containsKeyword(const QString &searchTerm, bool exactMatch = false);
+        bool hasKeywordsSpellError();
+        bool hasDescriptionSpellError() const;
+        bool hasTitleSpellError() const;
 
     public:
         virtual void setSpellCheckResults(const QList<SpellCheck::SpellCheckQueryItem *> &results);
         virtual void setSpellCheckResults(const QHash<QString, bool> &results);
-        bool hasAnySpellCheckError();
         virtual void replaceKeyword(int index, const QString &existing, const QString &replacement);
         virtual QList<SpellCheck::KeywordSpellSuggestions*> createKeywordsSuggestionsList();
         virtual void connectSignals(SpellCheck::SpellCheckItem *item);

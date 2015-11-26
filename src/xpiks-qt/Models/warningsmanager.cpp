@@ -224,8 +224,8 @@ namespace Models {
     bool WarningsManager::checkSpellCheckErrors(WarningsInfo *wi, ArtworkMetadata *am) const {
         bool hasWarnings = false;
 
-        if (am->hasAnySpellCheckError()) {
-            wi->addWarning("Item has spellcheck errors");
+        if (am->hasKeywordsSpellError()) {
+            wi->addWarning("Item has spell errors in keywords");
             hasWarnings = true;
         }
 
