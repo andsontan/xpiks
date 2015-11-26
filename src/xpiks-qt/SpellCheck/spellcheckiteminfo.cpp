@@ -35,6 +35,7 @@ namespace SpellCheck {
 
     void SpellCheckItemInfo::createHighlighterForDescription(QTextDocument *document,
                                                              Models::ArtworkMetadata *metadata) {
+        // is freed by the document
         SpellCheckErrorsHighlighter *highlighter = new SpellCheckErrorsHighlighter(document, &m_DescriptionErrors);
         QObject::connect(metadata, SIGNAL(spellCheckResultsReady()),
                          highlighter, SLOT(rehighlight()));
@@ -42,6 +43,7 @@ namespace SpellCheck {
 
     void SpellCheckItemInfo::createHighlighterForTitle(QTextDocument *document,
                                                        Models::ArtworkMetadata *metadata) {
+        // is freed by the document
         SpellCheckErrorsHighlighter *highlighter = new SpellCheckErrorsHighlighter(document, &m_TitleErrors);
         QObject::connect(metadata, SIGNAL(spellCheckResultsReady()),
                          highlighter, SLOT(rehighlight()));

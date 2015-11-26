@@ -1139,6 +1139,7 @@ ApplicationWindow {
                                                 color: rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.defaultControlColor
                                                 border.color: Colors.artworkActiveColor
                                                 border.width: descriptionTextInput.activeFocus ? 1 : 0
+                                                clip: true
 
                                                 Flickable {
                                                     id: descriptionFlick
@@ -1148,8 +1149,11 @@ ApplicationWindow {
                                                     anchors.right: parent.right
                                                     anchors.leftMargin: 5
                                                     anchors.rightMargin: 5
+                                                    interactive: false
+                                                    flickableDirection: Flickable.HorizontalFlick
                                                     height: 30
                                                     clip: true
+                                                    focus: false
 
                                                     function ensureVisible(r) {
                                                         if (contentX >= r.x)
@@ -1206,6 +1210,7 @@ ApplicationWindow {
                                                 color: rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.defaultControlColor
                                                 border.color: Colors.artworkActiveColor
                                                 border.width: titleTextInput.activeFocus ? 1 : 0
+                                                clip: true
 
                                                 Flickable {
                                                     id: titleFlick
@@ -1217,6 +1222,9 @@ ApplicationWindow {
                                                     anchors.leftMargin: 5
                                                     anchors.rightMargin: 5
                                                     clip: true
+                                                    flickableDirection: Flickable.HorizontalFlick
+                                                    interactive: false
+                                                    focus: false
 
                                                     function ensureVisible(r) {
                                                         if (contentX >= r.x)
