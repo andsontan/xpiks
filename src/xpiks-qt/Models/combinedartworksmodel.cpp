@@ -46,6 +46,8 @@ namespace Models {
 
         if (artworks.length() == 1) {
             enableAllFields();
+            ArtworkMetadata *metadata = artworks.first()->getOrigin();
+            m_CommonKeywordsModel.setSpellCheckInfo(metadata->getSpellCheckInfo());
         }
     }
 
@@ -108,6 +110,7 @@ namespace Models {
         setTitle("");
         setKeywords(QStringList());
         m_CommonKeywordsSet.clear();
+        m_CommonKeywordsModel.dropSpellCheckInfo();
     }
 
     void CombinedArtworksModel::clearKeywords() {
