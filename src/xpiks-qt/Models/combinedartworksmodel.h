@@ -28,6 +28,7 @@
 #include <QString>
 #include <QList>
 #include <QSet>
+#include <QQuickTextDocument>
 #include "abstractlistmodel.h"
 #include "../Common/baseentity.h"
 #include "../Common/basickeywordsmodel.h"
@@ -138,6 +139,8 @@ namespace Models {
             return item;
         }
         Q_INVOKABLE void suggestCorrections();
+        Q_INVOKABLE void initDescriptionHighlighting(QQuickTextDocument *document);
+        Q_INVOKABLE void initTitleHighlighting(QQuickTextDocument *document);
 
     private:
         void processCombinedEditCommand() const;

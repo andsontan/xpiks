@@ -35,6 +35,7 @@ namespace SpellCheck {
     class SpellCheckQueryItem;
     class KeywordSpellSuggestions;
     class SpellCheckItem;
+    class SpellCheckItemInfo;
 }
 
 namespace Common {
@@ -42,7 +43,8 @@ namespace Common {
         Q_OBJECT
     public:
         BasicKeywordsModel(QObject *parent) :
-            QAbstractListModel(parent)
+            QAbstractListModel(parent),
+            m_SpellCheckInfo(NULL)
         { }
 
     public:
@@ -66,6 +68,12 @@ namespace Common {
         bool setTitle(const QString &value);
 
     public:
+        SpellCheck::SpellCheckItemInfo *getSpellCheckInfo() const { return m_SpellCheckInfo; }
+        void setSpellCheckInfo(SpellCheck::SpellCheckItemInfo *info) { m_SpellCheckInfo = info; }
+        void updateDescriptionSpellErrors(const QHash<QString, bool> &results);
+        void updateTitleSpellErrors(const QHash<QString, bool> &results);
+
+    public:
         // ISPELLCHECKABLE
         virtual QString retrieveKeyword(int wordIndex);
         virtual QStringList getKeywords();
@@ -76,6 +84,9 @@ namespace Common {
         virtual void connectSignals(SpellCheck::SpellCheckItem *item);
         virtual QStringList getDescriptionWords() const;
         virtual QStringList getTitleWords() const;
+
+    signals:
+        void spellCheckResultsReady();
 
     private slots:
          void spellCheckRequestReady(int index);
@@ -89,8 +100,7 @@ namespace Common {
     private:
         QStringList m_KeywordsList;
         QList<bool> m_SpellCheckResults;
-        QStringList m_ErrorsInDescription;
-        QStringList m_ErrorsInTitle;
+        SpellCheck::SpellCheckItemInfo *m_SpellCheckInfo;
         QString m_Description;
         QString m_Title;
     };

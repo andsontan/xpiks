@@ -30,6 +30,10 @@ namespace Models {
     class ArtworkMetadata;
 }
 
+namespace Common {
+    class BasicKeywordsModel;
+}
+
 namespace SpellCheck {
     class SpellCheckErrorsHighlighter;
 
@@ -52,6 +56,8 @@ namespace SpellCheck {
         void setTitleErrors(const QSet<QString> &errors);
         void createHighlighterForDescription(QTextDocument *document, Models::ArtworkMetadata *metadata);
         void createHighlighterForTitle(QTextDocument *document, Models::ArtworkMetadata *metadata);
+        void createHighlighterForDescription(QTextDocument *document, Common::BasicKeywordsModel *basicKeywordsModel);
+        void createHighlighterForTitle(QTextDocument *document, Common::BasicKeywordsModel *basicKeywordsModel);
 
     private:
         SpellCheckErrorsInfo m_DescriptionErrors;

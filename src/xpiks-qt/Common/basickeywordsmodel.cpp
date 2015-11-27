@@ -23,6 +23,7 @@
 #include <QDebug>
 #include "../SpellCheck/spellcheckitem.h"
 #include "../SpellCheck/keywordspellsuggestions.h"
+#include "../SpellCheck/spellcheckiteminfo.h"
 
 namespace Common {
 
@@ -93,6 +94,30 @@ namespace Common {
         return result;
     }
 
+    void BasicKeywordsModel::updateDescriptionSpellErrors(const QHash<QString, bool> &results) {
+        QSet<QString> descriptionErrors;
+        QStringList descriptionWords = getDescriptionWords();
+        foreach (const QString &word, descriptionWords) {
+            if (results.value(word, true) == false) {
+                descriptionErrors.insert(word);
+            }
+        }
+
+        m_SpellCheckInfo->setDescriptionErrors(descriptionErrors);
+    }
+
+    void BasicKeywordsModel::updateTitleSpellErrors(const QHash<QString, bool> &results) {
+        QSet<QString> titleErrors;
+        QStringList titleWords = getTitleWords();
+        foreach (const QString &word, titleWords) {
+            if (results.value(word, true) == false) {
+                titleErrors.insert(word);
+            }
+        }
+
+        m_SpellCheckInfo->setTitleErrors(titleErrors);
+    }
+
     QString BasicKeywordsModel::retrieveKeyword(int wordIndex) {
         QString keyword;
         if (0 <= wordIndex && wordIndex < m_KeywordsList.length()) {
@@ -126,21 +151,10 @@ namespace Common {
     }
 
     void BasicKeywordsModel::setSpellCheckResults(const QHash<QString, bool> &results) {
-        m_ErrorsInDescription.clear();
-        QStringList descriptionWords = getDescriptionWords();
-        foreach (const QString &word, descriptionWords) {
-            if (results.value(word, true) == false) {
-                m_ErrorsInDescription.append(word);
-            }
-        }
+        updateDescriptionSpellErrors(results);
+        updateTitleSpellErrors(results);
 
-        m_ErrorsInTitle.clear();
-        QStringList titleWords = getTitleWords();
-        foreach (const QString &word, titleWords) {
-            if (results.value(word, true) == false) {
-                m_ErrorsInTitle.append(word);
-            }
-        }
+        emit spellCheckResultsReady();
     }
 
     QList<SpellCheck::KeywordSpellSuggestions *> BasicKeywordsModel::createKeywordsSuggestionsList() {

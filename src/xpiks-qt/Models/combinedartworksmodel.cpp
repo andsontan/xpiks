@@ -27,6 +27,7 @@
 #include "../Suggestion/keywordssuggestor.h"
 #include "artworkmetadata.h"
 #include "artiteminfo.h"
+#include "../SpellCheck/spellcheckiteminfo.h"
 
 namespace Models {
     CombinedArtworksModel::~CombinedArtworksModel() { qDeleteAll(m_ArtworksList); }
@@ -116,6 +117,16 @@ namespace Models {
 
     void CombinedArtworksModel::suggestCorrections() {
         m_CommandManager->setupSpellCheckSuggestions(&m_CommonKeywordsModel);
+    }
+
+    void CombinedArtworksModel::initDescriptionHighlighting(QQuickTextDocument *document) {
+        SpellCheck::SpellCheckItemInfo *info = m_CommonKeywordsModel.getSpellCheckInfo();
+        info->createHighlighterForDescription(document->textDocument(), &m_CommonKeywordsModel);
+    }
+
+    void CombinedArtworksModel::initTitleHighlighting(QQuickTextDocument *document) {
+        SpellCheck::SpellCheckItemInfo *info = m_CommonKeywordsModel.getSpellCheckInfo();
+        info->createHighlighterForTitle(document->textDocument(), &m_CommonKeywordsModel);
     }
 
     void CombinedArtworksModel::processCombinedEditCommand() const {
