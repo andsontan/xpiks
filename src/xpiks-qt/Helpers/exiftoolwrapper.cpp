@@ -63,7 +63,7 @@ ExportPair writeArtworkMetadata(ExportPair pair) {
     arguments << QString("-XMP:Description=\"%1\"").arg(description);
     arguments << QString("-IPTC:Keywords=\"%1\"").arg(keywords);
     arguments << QString("-XMP:Keywords=\"%1\"").arg(keywords);
-    arguments << QString("-XMP:Subject=\"%1\"").arg(keywords);
+    //arguments << QString("-XMP:Subject=\"%1\"").arg(keywords);
     arguments << QString("-IPTC:CodedCharacterSet=\"UTF8\"");
 
     if (!exportInfo->getMustSaveOriginal()) {

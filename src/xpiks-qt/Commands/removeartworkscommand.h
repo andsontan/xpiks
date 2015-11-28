@@ -22,7 +22,7 @@
 #ifndef REMOVEARTWORKSCOMMAND_H
 #define REMOVEARTWORKSCOMMAND_H
 
-#include <QList>
+#include <QVector>
 #include <QPair>
 #include "commandbase.h"
 #include "../Helpers/indiceshelper.h"
@@ -31,7 +31,7 @@ namespace Commands {
     class RemoveArtworksCommand : public CommandBase
     {
     public:
-        RemoveArtworksCommand(const QList<QPair<int, int> > &rangesToRemove):
+        RemoveArtworksCommand(const QVector<QPair<int, int> > &rangesToRemove):
             CommandBase(RemoveArtworksCommandType),
             m_RangesToRemove(rangesToRemove)
         {
@@ -41,7 +41,7 @@ namespace Commands {
         virtual CommandResult *execute(const CommandManager *commandManager) const;
 
     private:
-        QList<QPair<int, int> > m_RangesToRemove;
+        QVector<QPair<int, int> > m_RangesToRemove;
     };
 
     class RemoveArtworksCommandResult : public CommandResult {

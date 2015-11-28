@@ -68,10 +68,10 @@ namespace SpellCheck {
         m_WaitAnyItem.wakeOne();
     }
 
-    void SpellCheckWorker::submitItemsToCheck(const QList<SpellCheckItemBase *> &items) {
+    void SpellCheckWorker::submitItemsToCheck(const QVector<SpellCheckItemBase *> &items) {
         m_QueueMutex.lock();
         {
-            m_Queue.append(items);
+            m_Queue << items;
             qDebug() << "Submitted" << items.count() << "items to spell check loop";
         }
         m_QueueMutex.unlock();
@@ -243,12 +243,13 @@ namespace SpellCheck {
         }
 
         bool neededSuggestions = item->needsSuggestions();
-        const QList<SpellCheckQueryItem*> &queryItems = item->getQueries();
+        const QVector<SpellCheckQueryItem*> &queryItems = item->getQueries();
         bool anyWrong = false;
 
         if (!neededSuggestions) {
-            for (int i = 0; i < queryItems.length(); ++i) {
-                SpellCheckQueryItem *queryItem = queryItems[i];
+            int length = queryItems.length();
+            for (int i = 0; i < length; ++i) {
+                SpellCheckQueryItem *queryItem = queryItems.at(i);
                 bool isOk = isWordSpelledOk(queryItem->m_Word);
                 queryItem->m_IsCorrect = isOk;
                 item->accountResultAt(i);

@@ -27,6 +27,7 @@
 #include <QStringList>
 #include <QMutex>
 #include <QThread>
+#include <QVector>
 #include <QSemaphore>
 
 namespace Models {
@@ -57,8 +58,8 @@ namespace Helpers {
         ~UploadCoordinator() {}
 
     public:
-        void uploadArtworks(const QList<Models::ArtworkMetadata *> &artworkList,
-                            const QList<Models::UploadInfo *> &uploadInfos,
+        void uploadArtworks(const QVector<Models::ArtworkMetadata *> &artworkList,
+                            const QVector<Models::UploadInfo *> &uploadInfos,
                             bool includeVector,
                             const Encryption::SecretsManager *secretsManager,
                             const Models::SettingsModel *settings);
@@ -77,8 +78,8 @@ namespace Helpers {
         void percentReported(double newPercent, double oldPercent);
 
     private:
-        void doRunUpload(const QList<UploadItem *> &uploadItems, const Encryption::SecretsManager *secretsManager);
-        void extractFilePathes(const QList<Models::ArtworkMetadata*> &artworkList,
+        void doRunUpload(const QVector<UploadItem *> &uploadItems, const Encryption::SecretsManager *secretsManager);
+        void extractFilePathes(const QVector<Models::ArtworkMetadata*> &artworkList,
                                QStringList &filePathes, QStringList &zipsPathes, bool includeVector) const;
         void stopThreads();
 
@@ -86,7 +87,7 @@ namespace Helpers {
         QMutex m_Mutex;
         QMutex m_PercentMutex;
         QSemaphore m_UploadSemaphore;
-        QList<QThread *> m_UploadThreads;
+        QVector<QThread *> m_UploadThreads;
         int m_WorkersCount;
         int m_AllWorkersCount;
         int m_MaxParallelUploads;

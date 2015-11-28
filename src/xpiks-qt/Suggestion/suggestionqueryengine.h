@@ -46,14 +46,14 @@ namespace Suggestion {
 
     private slots:
         void replyReceived(QNetworkReply *networkReply);
-        void artworksFound(QList<SuggestionArtwork *> *suggestions);
+        void artworksFound(QVector<SuggestionArtwork *> *suggestions);
 
     signals:
-        void searchResultsRetrieved(const QList<SuggestionArtwork*> &artworks);
+        void searchResultsRetrieved(const QVector<SuggestionArtwork*> &artworks);
         void cancelAllQueries();
 
     private:
-        void parseResponse(const QJsonArray &jsonArray, QList<SuggestionArtwork *> &suggestionArtworks);
+        void parseResponse(const QJsonArray &jsonArray, QVector<SuggestionArtwork *> &suggestionArtworks);
         QUrl buildQuery(const QStringList &queryKeywords) const;
 
     private:

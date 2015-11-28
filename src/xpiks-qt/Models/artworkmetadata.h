@@ -27,6 +27,7 @@
 #include <QStringList>
 #include <QFileInfo>
 #include <QString>
+#include <QVector>
 #include <QSet>
 #include "../SpellCheck/ispellcheckable.h"
 
@@ -83,10 +84,10 @@ namespace Models {
         bool hasTitleSpellError() const;
 
     public:
-        virtual void setSpellCheckResults(const QList<SpellCheck::SpellCheckQueryItem *> &results);
+        virtual void setSpellCheckResults(const QVector<SpellCheck::SpellCheckQueryItem *> &results);
         virtual void setSpellCheckResults(const QHash<QString, bool> &results);
         virtual void replaceKeyword(int index, const QString &existing, const QString &replacement);
-        virtual QList<SpellCheck::KeywordSpellSuggestions*> createKeywordsSuggestionsList();
+        virtual QVector<SpellCheck::KeywordSpellSuggestions*> createKeywordsSuggestionsList();
         virtual void connectSignals(SpellCheck::SpellCheckItem *item);
         virtual QStringList getDescriptionWords() const;
         virtual QStringList getTitleWords() const;
@@ -169,7 +170,7 @@ namespace Models {
     private:
          QReadWriteLock m_RWLock;
          QStringList m_KeywordsList;
-         QList<bool> m_SpellCheckResults;
+         QVector<bool> m_SpellCheckResults;
          SpellCheck::SpellCheckItemInfo *m_SpellCheckInfo;
          QSet<QString> m_KeywordsSet;
          QString m_ArtworkFilepath;

@@ -22,9 +22,9 @@
 #ifndef COMBINEDEDITCOMMAND_H
 #define COMBINEDEDITCOMMAND_H
 
-#include <QList>
-#include <QString>
 #include <QStringList>
+#include <QString>
+#include <QVector>
 #include "commandbase.h"
 
 namespace Models {
@@ -40,9 +40,9 @@ namespace Commands {
     {
     public:
         CombinedEditCommand(int editFlags,
-                            const QList<Models::ArtItemInfo*> &infos,
+                            const QVector<Models::ArtItemInfo*> &infos,
                             QString description, QString title,
-                            QStringList keywords) :
+                            const QStringList &keywords) :
             CommandBase(CombinedEditCommandType),
             m_ArtItemInfos(infos),
             m_ArtworkDescription(description),
@@ -62,7 +62,7 @@ namespace Commands {
         void setTitle(Models::ArtworkMetadata *metadata) const;
 
     private:
-        QList<Models::ArtItemInfo*> m_ArtItemInfos;
+        QVector<Models::ArtItemInfo*> m_ArtItemInfos;
         QString m_ArtworkDescription;
         QString m_ArtworkTitle;
         QStringList m_Keywords;
@@ -71,13 +71,13 @@ namespace Commands {
 
     class CombinedEditCommandResult : public CommandResult {
     public:
-        CombinedEditCommandResult(const QList<int> &indicesToUpdate) :
+        CombinedEditCommandResult(const QVector<int> &indicesToUpdate) :
             m_IndicesToUpdate(indicesToUpdate)
         {
         }
 
     public:
-        QList<int> m_IndicesToUpdate;
+        QVector<int> m_IndicesToUpdate;
         // list of Ids to update!
     };
 }

@@ -22,13 +22,13 @@
 #ifndef INDICESHELPER_H
 #define INDICESHELPER_H
 
-#include <QList>
+#include <QVector>
 #include <QPair>
 
 namespace Helpers
 {
-    void indicesToRanges(const QList<int> &indices, QList<QPair<int, int> > &ranges);
-    int getRangesLength(const QList<QPair<int, int> > &ranges);
+    void indicesToRanges(const QVector<int> &indices, QVector<QPair<int, int> > &ranges);
+    int getRangesLength(const QVector<QPair<int, int> > &ranges);
 }
 
 #endif // INDICESHELPER_H

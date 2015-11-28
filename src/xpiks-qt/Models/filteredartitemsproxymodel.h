@@ -74,16 +74,16 @@ namespace Models {
 
     signals:
         void searchTermChanged(const QString &searchTerm);
-        void needCheckItemsForWarnings(const QList<ArtItemInfo*> &artworks);
+        void needCheckItemsForWarnings(const QVector<ArtItemInfo*> &artworks);
         void selectedArtworksCountChanged();
         void afterInvalidateFilter();
 
     private:
         void setFilteredItemsSelected(bool selected);
-        QList<ArtworkMetadata *> getSelectedOriginalItems() const;
-        QList<ArtItemInfo *> getSelectedOriginalItemsWithIndices() const;
-        QList<ArtItemInfo *> getAllItemsWithIndices() const;
-        QList<int> getSelectedOriginalIndices() const;
+        QVector<ArtworkMetadata *> getSelectedOriginalItems() const;
+        QVector<ArtItemInfo *> getSelectedOriginalItemsWithIndices() const;
+        QVector<ArtItemInfo *> getAllItemsWithIndices() const;
+        QVector<int> getSelectedOriginalIndices() const;
         void selectAllItems();
         void forceUnselectAllItems();
         ArtItemsModel *getArtItemsModel() const;

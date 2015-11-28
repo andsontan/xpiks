@@ -64,7 +64,7 @@ namespace Models {
         virtual ~CombinedArtworksModel();
 
     public:
-        void initArtworks(const QList<ArtItemInfo*> &artworks);
+        void initArtworks(const QVector<ArtItemInfo *> &artworks);
 
     private:
         void initKeywords(const QStringList &ek) { m_CommonKeywordsModel.reset(ek); m_CommonKeywordsSet.unite(QSet<QString>::fromList(m_CommonKeywordsModel.getKeywords())); }
@@ -165,7 +165,7 @@ namespace Models {
         void removeInnerItem(int row);
 
     private:
-        QList<ArtItemInfo*> m_ArtworksList;
+        QVector<ArtItemInfo*> m_ArtworksList;
         Common::BasicKeywordsModel m_CommonKeywordsModel;
         QSet<QString> m_CommonKeywordsSet;
         int m_EditFlags;

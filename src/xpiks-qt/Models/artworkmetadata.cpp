@@ -23,6 +23,7 @@
 #include <QDebug>
 #include <QReadLocker>
 #include <QWriteLocker>
+#include <QStringBuilder>
 #include "../Helpers/tempmetadatadb.h"
 #include "../Helpers/keywordvalidator.h"
 #include "settingsmodel.h"
@@ -95,7 +96,7 @@ namespace Models {
 
     QString ArtworkMetadata::getKeywordsString() {
         QReadLocker locker(&m_RWLock);
-        QString result =  m_KeywordsList.join(", ");
+        QString result = m_KeywordsList.join(", ");
         return result;
     }
 
@@ -131,17 +132,18 @@ namespace Models {
         QReadLocker locker(&m_RWLock);
 
         bool hasMatch = false;
+        int length = m_KeywordsList.length();
 
         if (exactMatch) {
-            foreach (const QString &keyword, m_KeywordsList) {
-                if (keyword == searchTerm) {
+            for (int i = 0; i < length; ++i) {
+                if (m_KeywordsList.at(i) == searchTerm) {
                     hasMatch = true;
                     break;
                 }
             }
         } else {
-            foreach (const QString &keyword, m_KeywordsList) {
-                if (keyword.contains(searchTerm, Qt::CaseInsensitive)) {
+            for (int i = 0; i < length; ++i) {
+                if (m_KeywordsList.at(i).contains(searchTerm, Qt::CaseInsensitive)) {
                     hasMatch = true;
                     break;
                 }
@@ -155,9 +157,10 @@ namespace Models {
         QReadLocker locker(&m_RWLock);
 
         bool anyError = false;
+        int length = m_SpellCheckResults.length();
 
-        foreach (bool isCorrect, m_SpellCheckResults) {
-            if (!isCorrect) {
+        for (int i = 0; i < length; ++i) {
+            if (!m_SpellCheckResults[i]) {
                 anyError = true;
                 break;
             }
@@ -176,11 +179,12 @@ namespace Models {
         return hasError;
     }
 
-    void ArtworkMetadata::setSpellCheckResults(const QList<SpellCheck::SpellCheckQueryItem *> &results) {
+    void ArtworkMetadata::setSpellCheckResults(const QVector<SpellCheck::SpellCheckQueryItem *> &results) {
         QReadLocker locker(&m_RWLock);
 
-        foreach (SpellCheck::SpellCheckQueryItem *item, results) {
-            this->setSpellCheckResultUnsafe(item);
+        int length = results.length();
+        for (int i = 0; i < length; ++i) {
+            this->setSpellCheckResultUnsafe(results.at(i));
         }
     }
 
@@ -205,12 +209,14 @@ namespace Models {
         }
     }
 
-    QList<SpellCheck::KeywordSpellSuggestions *> ArtworkMetadata::createKeywordsSuggestionsList() {
+    QVector<SpellCheck::KeywordSpellSuggestions *> ArtworkMetadata::createKeywordsSuggestionsList() {
         QReadLocker locker(&m_RWLock);
 
-        QList<SpellCheck::KeywordSpellSuggestions *> spellCheckSuggestions;
-
         int length = m_KeywordsList.length();
+
+        QVector<SpellCheck::KeywordSpellSuggestions *> spellCheckSuggestions;
+        spellCheckSuggestions.reserve(length/2);
+
         for (int i = 0; i < length; ++i) {
             if (!m_SpellCheckResults[i]) {
                 const QString &keyword = m_KeywordsList[i];
@@ -264,15 +270,15 @@ namespace Models {
         bool removed = false;
         QWriteLocker locker(&m_RWLock);
 
-        if (index >= 0 && index < m_KeywordsList.length()) {
+        if (0 <= index && index < m_KeywordsList.length()) {
             const QString &keyword = m_KeywordsList.at(index);
             m_KeywordsSet.remove(keyword);
 
+
             beginRemoveRows(QModelIndex(), index, index);
             m_KeywordsList.removeAt(index);
-            endRemoveRows();
-
             m_SpellCheckResults.removeAt(index);
+            endRemoveRows();
 
             setModified();
             removed = true;
@@ -291,6 +297,7 @@ namespace Models {
         bool added = false;
         const QString &sanitizedKeyword = keyword.simplified().toLower();
         bool isValid = Helpers::isValidKeyword(sanitizedKeyword);
+
         if (isValid && !m_KeywordsSet.contains(sanitizedKeyword)) {
             int keywordsCount = m_KeywordsList.length();
 
@@ -348,12 +355,14 @@ namespace Models {
     }
 
     int ArtworkMetadata::appendKeywordsUnsafe(const QStringList &keywordsList) {
-        int appendedCount = 0;
-        foreach (const QString &keyword, keywordsList) {
-            if (appendKeywordUnsafe(keyword)) {
+        int appendedCount = 0, size = keywordsList.length();
+
+        for (int i = 0; i < size; ++i) {
+            if (appendKeywordUnsafe(keywordsList[i])) {
                 appendedCount += 1;
             }
         }
+
         return appendedCount;
     }
 
@@ -370,9 +379,10 @@ namespace Models {
     void ArtworkMetadata::addKeywords(const QString &rawKeywords) {
         QWriteLocker locker(&m_RWLock);
         QStringList keywordsList = rawKeywords.split(",", QString::SkipEmptyParts);
+        int size = keywordsList.size();
 
-        for (int i = 0; i < keywordsList.size(); ++i) {
-            const QString &keyword = keywordsList[i];
+        for (int i = 0; i < size; ++i) {
+            const QString &keyword = keywordsList.at(i);
             m_KeywordsList.append(keyword);
             m_SpellCheckResults.append(true);
             m_KeywordsSet.insert(keyword.simplified().toLower());

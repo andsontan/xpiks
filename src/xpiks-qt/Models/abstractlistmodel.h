@@ -34,7 +34,7 @@ namespace Models {
         virtual ~AbstractListModel() {}
 
     public:
-        void removeItemsAtIndices(const QList<QPair<int, int> > &ranges) {
+        void removeItemsAtIndices(const QVector<QPair<int, int> > &ranges) {
             int removedCount = 0;
             int rangesCount = ranges.count();
             for (int i = 0; i < rangesCount; ++i) {
@@ -51,7 +51,7 @@ namespace Models {
         }
 
     protected:
-        void updateItemsInRanges(const QList<QPair<int, int> > &ranges, QVector<int> roles) {
+        void updateItemsInRanges(const QVector<QPair<int, int> > &ranges, QVector<int> roles) {
             int rangesCount = ranges.count();
             for (int i = 0; i < rangesCount; ++i) {
                 int startRow = ranges[i].first;

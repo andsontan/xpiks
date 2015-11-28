@@ -33,7 +33,7 @@ namespace Suggestion {
     }
 
     void LibraryQueryWorker::process() {
-        QList<SuggestionArtwork *> *results = new QList<SuggestionArtwork *>();
+        QVector<SuggestionArtwork *> *results = new QVector<SuggestionArtwork *>();
 
         m_LocalLibrary->searchArtworks(m_Query, *results, m_MaxResults);
 

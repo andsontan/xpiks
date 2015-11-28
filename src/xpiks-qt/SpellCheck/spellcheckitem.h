@@ -22,7 +22,7 @@
 #ifndef SPELLCHECKITEM_H
 #define SPELLCHECKITEM_H
 
-#include <QList>
+#include <QVector>
 #include <QStringList>
 #include <QObject>
 #include <QHash>
@@ -62,7 +62,7 @@ namespace SpellCheck {
             m_NeedsSuggestions(false) { }
 
     public:
-        const QList<SpellCheckQueryItem*> &getQueries() const { return m_QueryItems; }
+        const QVector<SpellCheckQueryItem*> &getQueries() const { return m_QueryItems; }
         const QHash<QString, bool> &getHash() const { return m_SpellCheckResults; }
         virtual void submitSpellCheckResult() = 0;
         bool needsSuggestions() const { return m_NeedsSuggestions; }
@@ -74,10 +74,11 @@ namespace SpellCheck {
         void resultsReady(int index);
 
     protected:
+        void reserve(int n) { m_QueryItems.reserve(n); }
         void appendItem(SpellCheckQueryItem *item);
 
     private:
-        QList<SpellCheckQueryItem*> m_QueryItems;
+        QVector<SpellCheckQueryItem*> m_QueryItems;
         QHash<QString, bool> m_SpellCheckResults;
         volatile bool m_NeedsSuggestions;
     };

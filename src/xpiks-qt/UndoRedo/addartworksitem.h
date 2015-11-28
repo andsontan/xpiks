@@ -22,7 +22,7 @@
 #ifndef ADDARTWORKITEM_H
 #define ADDARTWORKITEM_H
 
-#include <QList>
+#include <QVector>
 #include <QPair>
 #include "historyitem.h"
 #include "../Helpers/indiceshelper.h"
@@ -39,7 +39,7 @@ namespace UndoRedo {
             m_AddedRanges.append(qMakePair(firstIndex, firstIndex + count - 1));
         }
 
-        AddArtworksHistoryItem(const QList<QPair<int, int> > &rangesAdded) :
+        AddArtworksHistoryItem(const QVector<QPair<int, int> > &rangesAdded) :
            HistoryItem(AddArtworksActionType),
            m_AddedRanges(rangesAdded)
         {
@@ -59,7 +59,7 @@ namespace UndoRedo {
         }
 
     private:
-        QList<QPair<int, int> > m_AddedRanges;
+        QVector<QPair<int, int> > m_AddedRanges;
     };
 }
 

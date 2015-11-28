@@ -79,7 +79,7 @@ namespace Models {
          Q_INVOKABLE bool needCreateArchives() const;
 
      private:
-         void doUploadArtworks(const QList<ArtworkMetadata*> &artworkList);
+         void doUploadArtworks(const QVector<ArtworkMetadata*> &artworkList);
 
     protected:
         void cancelProcessing();

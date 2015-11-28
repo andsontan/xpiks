@@ -56,11 +56,12 @@ namespace Models {
         return count;
     }
 
-    void WarningsManager::checkForWarnings(const QList<ArtItemInfo *> &artworks) {
+    void WarningsManager::checkForWarnings(const QVector<ArtItemInfo *> &artworks) {
         beginResetModel();
         {
             qDeleteAll(m_WarningsBufferList);
             m_WarningsBufferList.clear();
+            m_WarningsBufferList.reserve(artworks.length());
 
             foreach (ArtItemInfo *itemInfo, artworks) {
                 m_WarningsBufferList.append(new WarningsInfo(itemInfo));
@@ -77,7 +78,7 @@ namespace Models {
         beginResetModel();
         m_WarningsList.clear();
 
-        foreach(WarningsInfo *info, m_WarningsBufferList) {
+        foreach (WarningsInfo *info, m_WarningsBufferList) {
             info->clearWarnings();
 
             if (checkItem(info)) {
@@ -95,7 +96,7 @@ namespace Models {
             return;
         }
 
-        WarningsInfo *info = m_WarningsList[itemIndex];
+        WarningsInfo *info = m_WarningsList.at(itemIndex);
         info->clearWarnings();
 
         if (!checkItem(info)) {
@@ -245,10 +246,11 @@ namespace Models {
     }
 
     QVariant WarningsManager::data(const QModelIndex &index, int role) const {
-        if (index.row() < 0 || index.row() >= m_WarningsList.count())
+        int row = index.row();
+        if (row < 0 || row >= m_WarningsList.count())
             return QVariant();
 
-        WarningsInfo *warningsInfo = m_WarningsList.at(index.row());
+        WarningsInfo *warningsInfo = m_WarningsList.at(row);
 
         switch (role) {
         case ImagePathRole:

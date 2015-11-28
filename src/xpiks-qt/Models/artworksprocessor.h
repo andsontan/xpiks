@@ -23,6 +23,7 @@
 #define ARTWORKSPROCESSOR_H
 
 #include <QObject>
+#include <QVector>
 #include "../Common/baseentity.h"
 
 namespace Commands {
@@ -80,12 +81,12 @@ namespace Models {
         void itemsCountChanged();
 
     public:
-        void setArtworks(const QList<ArtworkMetadata*> &artworkList) { resetArtworks(); addArtworks(artworkList); }
-        void addArtworks(const QList<ArtworkMetadata*> &artworkList) { m_ArtworkList.append(artworkList); emit itemsCountChanged(); }
+        void setArtworks(const QVector<ArtworkMetadata*> &artworkList) { resetArtworks(); addArtworks(artworkList); }
+        void addArtworks(const QVector<ArtworkMetadata*> &artworkList) { m_ArtworkList << artworkList; emit itemsCountChanged(); }
         void resetArtworks() { m_ArtworkList.clear(); }
 
     protected:
-        const QList<ArtworkMetadata*> &getArtworkList() const { return m_ArtworkList; }
+        const QVector<ArtworkMetadata*> &getArtworkList() const { return m_ArtworkList; }
         Commands::CommandManager *getCommandManager() { return m_CommandManager; }
         virtual void cancelProcessing() = 0;
         virtual void innerResetModel() { /*BUMP*/ }
@@ -95,7 +96,7 @@ namespace Models {
         virtual void restrictMaxThreads();
 
     private:
-        QList<ArtworkMetadata*> m_ArtworkList;
+        QVector<ArtworkMetadata*> m_ArtworkList;
         volatile int m_ProcessedArtworksCount;
         volatile int m_ArtworksCount;
         volatile int m_ExistingMaxThreadsNumber;

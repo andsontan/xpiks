@@ -56,12 +56,14 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::selectDirectory(int directoryIndex) {
-        QList<int> directoryItems;
+        QVector<int> directoryItems;
+        int size = this->rowCount();
+        directoryItems.reserve(size);
+
         ArtItemsModel *artItemsModel = getArtItemsModel();
         const ArtworksRepository *artworksRepository = m_CommandManager->getArtworksRepository();
         const QString directory = artworksRepository->getDirectory(directoryIndex);
 
-        int size = this->rowCount();
         for (int row = 0; row < size; ++row) {
             QModelIndex proxyIndex = this->index(row, 0);
             QModelIndex originalIndex = this->mapToSource(proxyIndex);
@@ -80,45 +82,45 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::combineSelectedArtworks() {
-        QList<ArtItemInfo *> artworksList = getSelectedOriginalItemsWithIndices();
+        QVector<ArtItemInfo *> artworksList = getSelectedOriginalItemsWithIndices();
         m_CommandManager->combineArtworks(artworksList);
     }
 
     void FilteredArtItemsProxyModel::setSelectedItemsSaved() {
-        QList<int> indices = getSelectedOriginalIndices();
+        QVector<int> indices = getSelectedOriginalIndices();
         ArtItemsModel *artItemsModel = getArtItemsModel();
         artItemsModel->setSelectedItemsSaved(indices);
     }
 
     void FilteredArtItemsProxyModel::removeSelectedArtworks() {
-        QList<int> indices = getSelectedOriginalIndices();
+        QVector<int> indices = getSelectedOriginalIndices();
         ArtItemsModel *artItemsModel = getArtItemsModel();
         artItemsModel->removeSelectedArtworks(indices);
     }
 
     void FilteredArtItemsProxyModel::updateSelectedArtworks() {
-        QList<int> indices = getSelectedOriginalIndices();
+        QVector<int> indices = getSelectedOriginalIndices();
         ArtItemsModel *artItemsModel = getArtItemsModel();
         artItemsModel->updateSelectedArtworks(indices);
     }
 
     void FilteredArtItemsProxyModel::saveSelectedArtworks() {
         // former patchSelectedArtworks
-        QList<int> indices = getSelectedOriginalIndices();
+        QVector<int> indices = getSelectedOriginalIndices();
         ArtItemsModel *artItemsModel = getArtItemsModel();
         artItemsModel->saveSelectedArtworks(indices);
     }
 
     void FilteredArtItemsProxyModel::setSelectedForUpload() {
-        QList<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
+        QVector<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
         m_CommandManager->setArtworksForUpload(selectedArtworks);
 
-        QList<ArtItemInfo *> selectedArtworksWithIndices = getSelectedOriginalItemsWithIndices();
+        QVector<ArtItemInfo *> selectedArtworksWithIndices = getSelectedOriginalItemsWithIndices();
         emit needCheckItemsForWarnings(selectedArtworksWithIndices);
     }
 
     void FilteredArtItemsProxyModel::setSelectedForZipping() {
-        QList<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
+        QVector<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
         m_CommandManager->setArtworksForZipping(selectedArtworks);
     }
 
@@ -128,8 +130,8 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::spellCheckSelected() {
-        QList<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
-        QList<SpellCheck::ISpellCheckable*> itemsToSubmit;
+        QVector<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
+        QVector<SpellCheck::ISpellCheckable*> itemsToSubmit;
         foreach (ArtworkMetadata *artwork, selectedArtworks) {
             itemsToSubmit.append(artwork);
         }
@@ -138,7 +140,7 @@ namespace Models {
     }
 
     int FilteredArtItemsProxyModel::getModifiedSelectedCount() const {
-        QList<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
+        QVector<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
         int modifiedCount = 0;
 
         foreach (const ArtworkMetadata *metadata, selectedArtworks) {
@@ -157,7 +159,7 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::checkForWarnings() {
-        QList<ArtItemInfo *> selectedArtworks = getSelectedOriginalItemsWithIndices();
+        QVector<ArtItemInfo *> selectedArtworks = getSelectedOriginalItemsWithIndices();
 
         if (selectedArtworks.isEmpty()) {
             selectedArtworks = getAllItemsWithIndices();
@@ -167,7 +169,7 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::reimportMetadataForSelected() {
-        QList<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
+        QVector<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
         m_CommandManager->setArtworksForIPTCProcessing(selectedArtworks);
         ArtItemsModel *artItemsModel = getArtItemsModel();
         artItemsModel->raiseArtworksAdded(selectedArtworks.count());
@@ -175,7 +177,7 @@ namespace Models {
 
     int FilteredArtItemsProxyModel::findSelectedItemIndex() const {
         int index = -1;
-        QList<int> indices = getSelectedOriginalIndices();
+        QVector<int> indices = getSelectedOriginalIndices();
         if (indices.length() == 1) {
             index = indices.first();
         }
@@ -184,7 +186,7 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::removeMetadataInSelected() const {
-        QList<ArtItemInfo *> selectedArtworks = getSelectedOriginalItemsWithIndices();
+        QVector<ArtItemInfo *> selectedArtworks = getSelectedOriginalItemsWithIndices();
 
         int flags = 0;
         Common::SetFlag(flags, Common::EditDesctiption);
@@ -222,9 +224,10 @@ namespace Models {
 
     void FilteredArtItemsProxyModel::setFilteredItemsSelected(bool selected) {
         ArtItemsModel *artItemsModel = getArtItemsModel();
-        QList<int> indices;
-
+        QVector<int> indices;
         int size = this->rowCount();
+        indices.reserve(size);
+
         for (int row = 0; row < size; ++row) {
             QModelIndex proxyIndex = this->index(row, 0);
             QModelIndex originalIndex = this->mapToSource(proxyIndex);
@@ -239,11 +242,12 @@ namespace Models {
         artItemsModel->updateItems(indices, QVector<int>() << ArtItemsModel::IsSelectedRole);
     }
 
-    QList<ArtworkMetadata *> FilteredArtItemsProxyModel::getSelectedOriginalItems() const {
+    QVector<ArtworkMetadata *> FilteredArtItemsProxyModel::getSelectedOriginalItems() const {
         ArtItemsModel *artItemsModel = getArtItemsModel();
-        QList<ArtworkMetadata *> selectedArtworks;
-
+        QVector<ArtworkMetadata *> selectedArtworks;
         int size = this->rowCount();
+        selectedArtworks.reserve(size);
+
         for (int row = 0; row < size; ++row) {
             QModelIndex proxyIndex = this->index(row, 0);
             QModelIndex originalIndex = this->mapToSource(proxyIndex);
@@ -259,11 +263,12 @@ namespace Models {
         return selectedArtworks;
     }
 
-    QList<ArtItemInfo *> FilteredArtItemsProxyModel::getSelectedOriginalItemsWithIndices() const {
+    QVector<ArtItemInfo *> FilteredArtItemsProxyModel::getSelectedOriginalItemsWithIndices() const {
         ArtItemsModel *artItemsModel = getArtItemsModel();
-        QList<ArtItemInfo *> selectedArtworks;
-
+        QVector<ArtItemInfo *> selectedArtworks;
         int size = this->rowCount();
+        selectedArtworks.reserve(size);
+
         for (int row = 0; row < size; ++row) {
             QModelIndex proxyIndex = this->index(row, 0);
             QModelIndex originalIndex = this->mapToSource(proxyIndex);
@@ -280,11 +285,12 @@ namespace Models {
         return selectedArtworks;
     }
 
-    QList<ArtItemInfo *> FilteredArtItemsProxyModel::getAllItemsWithIndices() const {
+    QVector<ArtItemInfo *> FilteredArtItemsProxyModel::getAllItemsWithIndices() const {
         ArtItemsModel *artItemsModel = getArtItemsModel();
-        QList<ArtItemInfo *> selectedArtworks;
-
+        QVector<ArtItemInfo *> selectedArtworks;
         int size = this->rowCount();
+        selectedArtworks.reserve(size);
+
         for (int row = 0; row < size; ++row) {
             QModelIndex proxyIndex = this->index(row, 0);
             QModelIndex originalIndex = this->mapToSource(proxyIndex);
@@ -301,11 +307,12 @@ namespace Models {
         return selectedArtworks;
     }
 
-    QList<int> FilteredArtItemsProxyModel::getSelectedOriginalIndices() const {
+    QVector<int> FilteredArtItemsProxyModel::getSelectedOriginalIndices() const {
         ArtItemsModel *artItemsModel = getArtItemsModel();
-        QList<int> selectedIndices;
-
+        QVector<int> selectedIndices;
         int size = this->rowCount();
+        selectedIndices.reserve(size);
+
         for (int row = 0; row < size; ++row) {
             QModelIndex proxyIndex = this->index(row, 0);
             QModelIndex originalIndex = this->mapToSource(proxyIndex);
@@ -342,11 +349,11 @@ namespace Models {
     bool FilteredArtItemsProxyModel::fitsSpecialKeywords(const QString &searchTerm, const ArtworkMetadata *metadata) const {
         bool hasMatch = false;
 
-        if (searchTerm == "x:modified") {
+        if (searchTerm == QLatin1String("x:modified")) {
             hasMatch = metadata->isModified();
-        } else if (searchTerm == "x:empty") {
+        } else if (searchTerm == QLatin1String("x:empty")) {
             hasMatch = metadata->isEmpty();
-        } else if (searchTerm == "x:selected") {
+        } else if (searchTerm == QLatin1String("x:selected")) {
             hasMatch = metadata->getIsSelected();
         }
 

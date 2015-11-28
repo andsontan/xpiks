@@ -90,8 +90,8 @@ namespace Models {
         Q_INVOKABLE void cleanupLibrary() const;
 
     private:
-        void doReadMetadata(const QList<ArtworkMetadata*> &artworkList);
-        void doWriteMetadata(const QList<ArtworkMetadata*> &artworkList);
+        void doReadMetadata(const QVector<ArtworkMetadata *> &artworkList);
+        void doWriteMetadata(const QVector<ArtworkMetadata*> &artworkList);
 
     protected:
         void cancelProcessing();

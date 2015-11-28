@@ -89,7 +89,7 @@ void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const Q
     }
 
     QString logLine = QString("%1 - %2")
-            .arg(QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss.zzz"))
+            .arg(QDateTime::currentDateTimeUtc().toString("dd.MM.yyyy hh:mm:ss.zzz"))
             .arg(txt);
 
     Helpers::Logger &logger = Helpers::Logger::getInstance();

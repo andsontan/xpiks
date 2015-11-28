@@ -22,7 +22,7 @@
 #ifndef MODIFYARTWORKHISTORYITEM_H
 #define MODIFYARTWORKHISTORYITEM_H
 
-#include <QList>
+#include <QVector>
 #include <QString>
 #include "historyitem.h"
 #include "artworkmetadatabackup.h"
@@ -38,8 +38,8 @@ namespace UndoRedo {
     class ModifyArtworksHistoryItem : public HistoryItem
     {
     public:
-        ModifyArtworksHistoryItem(QList<ArtworkMetadataBackup*> backups,
-                                  QList<int> indices,
+        ModifyArtworksHistoryItem(QVector<ArtworkMetadataBackup*> backups,
+                                  QVector<int> indices,
                                   ModificationType modificationType) :
             HistoryItem(ModifyArtworksActionType),
             m_ArtworksBackups(backups),
@@ -65,8 +65,8 @@ namespace UndoRedo {
 
 
     private:
-        QList<ArtworkMetadataBackup*> m_ArtworksBackups;
-        QList<int> m_Indices;
+        QVector<ArtworkMetadataBackup*> m_ArtworksBackups;
+        QVector<int> m_Indices;
         ModificationType m_ModificationType;
     };
 }

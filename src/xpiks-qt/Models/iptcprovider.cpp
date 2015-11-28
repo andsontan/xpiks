@@ -110,14 +110,15 @@ namespace Models {
         }
     }
 
-    void IptcProvider::doReadMetadata(const QList<ArtworkMetadata *> &artworkList)
+    void IptcProvider::doReadMetadata(const QVector<ArtworkMetadata *> &artworkList)
     {
         int artworksCount = artworkList.length();
         if (artworksCount == 0) {
             return;
         }
 
-        QList<ImportPair> pairs;
+        QVector<ImportPair> pairs;
+        pairs.reserve(artworkList.length());
         foreach(ArtworkMetadata *metadata, artworkList) {
             pairs.append(qMakePair(metadata, new Models::ImportDataResult()));
         }
@@ -133,7 +134,7 @@ namespace Models {
         }
     }
 
-    void IptcProvider::doWriteMetadata(const QList<ArtworkMetadata *> &artworkList) {
+    void IptcProvider::doWriteMetadata(const QVector<ArtworkMetadata *> &artworkList) {
         int artworksCount = artworkList.length();
         if (artworksCount == 0) {
             return;
@@ -143,7 +144,8 @@ namespace Models {
 
         beginProcessing();
 
-        QList<ExportPair> pairs;
+        QVector<ExportPair> pairs;
+        pairs.reserve(artworkList.length());
         foreach(ArtworkMetadata *metadata, artworkList) {
             pairs.append(qMakePair(metadata, &m_ExportInfo));
         }

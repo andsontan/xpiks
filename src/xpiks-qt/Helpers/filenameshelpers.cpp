@@ -24,6 +24,7 @@
 
 QStringList Helpers::convertToVectorFilenames(const QStringList &items) {
     QStringList converted;
+    converted.reserve(items.length()*2);
     QRegExp regExp("(.*)[.](jpg|jpeg|tiff)", Qt::CaseInsensitive);
 
     foreach (const QString &item, items) {

@@ -78,8 +78,8 @@ namespace Suggestion {
         QObject::connect(this, SIGNAL(cancelAllQueries()),
                          worker, SLOT(cancel()));
 
-        QObject::connect(worker, SIGNAL(resultsFound(QList<SuggestionArtwork*> *)),
-                         this, SLOT(artworksFound(QList<SuggestionArtwork*> *)));
+        QObject::connect(worker, SIGNAL(resultsFound(QVector<SuggestionArtwork*> *)),
+                         this, SLOT(artworksFound(QVector<SuggestionArtwork*> *)));
 
         thread->start();
     }
@@ -95,7 +95,7 @@ namespace Suggestion {
             QJsonValue dataValue = jsonObject["data"];
 
             if (dataValue.isArray()) {
-                QList<SuggestionArtwork*> suggestionArtworks;
+                QVector<SuggestionArtwork*> suggestionArtworks;
                 parseResponse(dataValue.toArray(), suggestionArtworks);
                 m_Suggestor->setSuggestedArtworks(suggestionArtworks);
             }
@@ -107,12 +107,12 @@ namespace Suggestion {
         networkReply->deleteLater();
     }
 
-    void SuggestionQueryEngine::artworksFound(QList<SuggestionArtwork *> *suggestions) {
+    void SuggestionQueryEngine::artworksFound(QVector<SuggestionArtwork *> *suggestions) {
         m_Suggestor->setSuggestedArtworks(*suggestions);
         delete suggestions;
     }
 
-    void SuggestionQueryEngine::parseResponse(const QJsonArray &jsonArray, QList<SuggestionArtwork*> &suggestionArtworks) {
+    void SuggestionQueryEngine::parseResponse(const QJsonArray &jsonArray, QVector<SuggestionArtwork*> &suggestionArtworks) {
         foreach (const QJsonValue &value, jsonArray) {
             QJsonObject imageResult = value.toObject();
 

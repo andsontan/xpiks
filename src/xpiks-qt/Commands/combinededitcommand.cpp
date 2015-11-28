@@ -20,6 +20,7 @@
  */
 
 #include "combinededitcommand.h"
+#include <QVector>
 #include "../Commands/commandmanager.h"
 #include "../UndoRedo/artworkmetadatabackup.h"
 #include "../UndoRedo/modifyartworkshistoryitem.h"
@@ -30,11 +31,16 @@
 
 Commands::CommandResult *Commands::CombinedEditCommand::execute(const Commands::CommandManager *commandManager) const
 {
-    QList<int> indicesToUpdate;
-    QList<UndoRedo::ArtworkMetadataBackup*> artworksBackups;
+    QVector<int> indicesToUpdate;
+    QVector<UndoRedo::ArtworkMetadataBackup*> artworksBackups;
     Models::SettingsModel *settingsModel = commandManager->getSettingsModel();
 
-    foreach (Models::ArtItemInfo* info, m_ArtItemInfos) {
+    int size = m_ArtItemInfos.length();
+    indicesToUpdate.reserve(size);
+    artworksBackups.reserve(size);
+
+    for (int i = 0; i < size; ++i) {
+        Models::ArtItemInfo* info = m_ArtItemInfos[i];
         Models::ArtworkMetadata *metadata = info->getOrigin();
 
         UndoRedo::ArtworkMetadataBackup *backup = new UndoRedo::ArtworkMetadataBackup(metadata);

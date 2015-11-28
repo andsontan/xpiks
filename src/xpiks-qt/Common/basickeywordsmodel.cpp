@@ -28,7 +28,10 @@
 namespace Common {
 
     QVariant BasicKeywordsModel::data(const QModelIndex &index, int role) const {
-        if (index.row() < 0 || index.row() >= m_KeywordsList.count()) return QVariant();
+        int row = index.row();
+        if (row < 0 || row >= m_KeywordsList.length()) {
+            return QVariant();
+        }
 
         switch (role) {
         case KeywordRole:
@@ -43,7 +46,7 @@ namespace Common {
     void BasicKeywordsModel::reset(const QStringList &items) {
         m_SpellCheckResults.clear();
         int n = items.length();
-        while (n--) { m_SpellCheckResults.append(true); }
+        m_SpellCheckResults.insert(0, n, true);
 
         beginResetModel();
         m_KeywordsList.clear();
@@ -66,7 +69,7 @@ namespace Common {
     }
 
     bool BasicKeywordsModel::removeKeyword(int index, QString &keyword) {
-        bool indexValid = index >= 0 && index < m_KeywordsList.length();
+        bool indexValid = 0 <= index && index < m_KeywordsList.length();
         if (indexValid) {
             beginRemoveRows(QModelIndex(), index, index);
             keyword = m_KeywordsList.takeAt(index);
@@ -78,19 +81,13 @@ namespace Common {
 
     bool BasicKeywordsModel::setDescription(const QString &value) {
         bool result = value != m_Description;
-        if (result) {
-            m_Description = value;
-        }
-
+        if (result) { m_Description = value; }
         return result;
     }
 
     bool BasicKeywordsModel::setTitle(const QString &value) {
         bool result = value != m_Title;
-        if (result) {
-            m_Title = value;
-        }
-
+        if (result) { m_Title = value; }
         return result;
     }
 
@@ -131,8 +128,10 @@ namespace Common {
         return m_KeywordsList;
     }
 
-    void BasicKeywordsModel::setSpellCheckResults(const QList<SpellCheck::SpellCheckQueryItem *> &items) {
-        foreach (SpellCheck::SpellCheckQueryItem *item, items) {
+    void BasicKeywordsModel::setSpellCheckResults(const QVector<SpellCheck::SpellCheckQueryItem *> &items) {
+        int size = items.length();
+        for (int i = 0; i < size; ++i) {
+            SpellCheck::SpellCheckQueryItem *item = items.at(i);
             int index = item->m_Index;
             if (0 <= index && index <= m_KeywordsList.length()) {
                 if (m_KeywordsList[index] == item->m_Word) {
@@ -141,13 +140,13 @@ namespace Common {
             }
         }
 
-        int index = -1;
+        int indexToUpdate = -1;
 
         if (items.length() == 1) {
-            index = items.first()->m_Index;
+            indexToUpdate = items.first()->m_Index;
         }
 
-        emitSpellCheckChanged(index);
+        emitSpellCheckChanged(indexToUpdate);
     }
 
     void BasicKeywordsModel::setSpellCheckResults(const QHash<QString, bool> &results) {
@@ -157,10 +156,11 @@ namespace Common {
         emit spellCheckResultsReady();
     }
 
-    QList<SpellCheck::KeywordSpellSuggestions *> BasicKeywordsModel::createKeywordsSuggestionsList() {
-        QList<SpellCheck::KeywordSpellSuggestions *> spellCheckSuggestions;
-
+    QVector<SpellCheck::KeywordSpellSuggestions *> BasicKeywordsModel::createKeywordsSuggestionsList() {
+        QVector<SpellCheck::KeywordSpellSuggestions *> spellCheckSuggestions;
         int length = m_KeywordsList.length();
+        spellCheckSuggestions.reserve(length/2);
+
         for (int i = 0; i < length; ++i) {
             if (!m_SpellCheckResults[i]) {
                 const QString &keyword = m_KeywordsList[i];

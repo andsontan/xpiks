@@ -22,17 +22,18 @@
 #ifndef REMOVEARTWORKSITEM_H
 #define REMOVEARTWORKSITEM_H
 
-#include <QList>
+#include <QVector>
 #include <QPair>
 #include <QString>
+#include <QStringList>
 #include "historyitem.h"
 
 namespace UndoRedo {
     class RemoveArtworksHistoryItem : public HistoryItem
     {
     public:
-        RemoveArtworksHistoryItem(const QList<int> &removedArtworksIndices,
-                                  const QList<QString> &removedArtworksFilepathes):
+        RemoveArtworksHistoryItem(const QVector<int> &removedArtworksIndices,
+                                  const QStringList &removedArtworksFilepathes):
             HistoryItem(RemovedArtworksActionType),
             m_RemovedArtworksIndices(removedArtworksIndices),
             m_RemovedArtworksPathes(removedArtworksFilepathes)
@@ -52,8 +53,8 @@ namespace UndoRedo {
 
 
     private:
-        QList<int> m_RemovedArtworksIndices;
-        QList<QString> m_RemovedArtworksPathes;
+        QVector<int> m_RemovedArtworksIndices;
+        QStringList m_RemovedArtworksPathes;
     };
 }
 

@@ -32,7 +32,7 @@ namespace SpellCheck {
 
     void SpellCheckItemBase::accountResultAt(int index) {
         if (0 <= index && index < m_QueryItems.length()) {
-            SpellCheckQueryItem *item = m_QueryItems[index];
+            SpellCheckQueryItem *item = m_QueryItems.at(index);
             m_SpellCheckResults[item->m_Word] = item->m_IsCorrect;
         }
     }
@@ -60,12 +60,13 @@ namespace SpellCheck {
         m_SpellCheckable(spellCheckable)
     {
         QStringList keywords = spellCheckable->getKeywords();
-        addWords(keywords, 0);
-
         QStringList descriptionWords = spellCheckable->getDescriptionWords();
-        addWords(descriptionWords, keywords.length() * 1000);
-
         QStringList titleWords = spellCheckable->getTitleWords();
+
+        reserve(keywords.length() + descriptionWords.length() + titleWords.length());
+
+        addWords(keywords, 0);
+        addWords(descriptionWords, keywords.length() * 1000);
         addWords(titleWords, keywords.length() * 1000);
     }
 
@@ -81,7 +82,7 @@ namespace SpellCheck {
 
     /*virtual */
     void SpellCheckItem::submitSpellCheckResult() {
-        const QList<SpellCheckQueryItem*> &items = getQueries();
+        const QVector<SpellCheckQueryItem*> &items = getQueries();
         m_SpellCheckable->setSpellCheckResults(items);
         m_SpellCheckable->setSpellCheckResults(getHash());
         int index = items.length() == 1 ? items.first()->m_Index : -1;

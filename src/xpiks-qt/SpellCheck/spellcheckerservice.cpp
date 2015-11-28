@@ -50,11 +50,15 @@ namespace SpellCheck {
         thread->start();
     }
 
-    void SpellCheckerService::submitItems(const QList<ISpellCheckable *> &itemsToCheck) {
+    void SpellCheckerService::submitItems(const QVector<ISpellCheckable *> &itemsToCheck) {
         if (m_SpellCheckWorker != NULL && !m_SpellCheckWorker->isCancelled()) {
-            QList<SpellCheckItemBase *> items;
+            QVector<SpellCheckItemBase *> items;
+            int length = itemsToCheck.length();
 
-            foreach (SpellCheck::ISpellCheckable *itemToCheck, itemsToCheck) {
+            items.reserve(length);
+
+            for (int i = 0; i < length; ++i) {
+                SpellCheck::ISpellCheckable *itemToCheck = itemsToCheck.at(i);
                 SpellCheckItem *item = new SpellCheckItem(itemToCheck);
                 itemToCheck->connectSignals(item);
                 items.append(item);

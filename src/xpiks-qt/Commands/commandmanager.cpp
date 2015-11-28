@@ -144,11 +144,11 @@ void Commands::CommandManager::connectEntitiesSignalsSlots() const
     QObject::connect(m_SecretsManager, SIGNAL(afterMasterPasswordReset()),
                      m_UploadInfoRepository, SLOT(onAfterMasterPasswordReset()));
 
-    QObject::connect(m_ArtItemsModel, SIGNAL(needCheckItemsForWarnings(QList<ArtItemInfo*>)),
-                     m_WarningsManager, SLOT(onCheckWarnings(QList<ArtItemInfo*>)));
+    QObject::connect(m_ArtItemsModel, SIGNAL(needCheckItemsForWarnings(QVector<ArtItemInfo*>)),
+                     m_WarningsManager, SLOT(onCheckWarnings(QVector<ArtItemInfo*>)));
 
-    QObject::connect(m_FilteredItemsModel, SIGNAL(needCheckItemsForWarnings(QList<ArtItemInfo*>)),
-                     m_WarningsManager, SLOT(onCheckWarnings(QList<ArtItemInfo*>)));
+    QObject::connect(m_FilteredItemsModel, SIGNAL(needCheckItemsForWarnings(QVector<ArtItemInfo*>)),
+                     m_WarningsManager, SLOT(onCheckWarnings(QVector<ArtItemInfo*>)));
 
     QObject::connect(m_ArtItemsModel, SIGNAL(selectedArtworkRemoved()),
                      m_FilteredItemsModel, SLOT(onSelectedArtworksRemoved()));
@@ -156,8 +156,7 @@ void Commands::CommandManager::connectEntitiesSignalsSlots() const
 
 void Commands::CommandManager::recodePasswords(const QString &oldMasterPassword,
                                                   const QString &newMasterPassword,
-                                                  const QList<Models::UploadInfo*> &uploadInfos) const
-{
+                                                  const QVector<Models::UploadInfo *> &uploadInfos) const {
     foreach (Models::UploadInfo *info, uploadInfos) {
         if (info->hasPassword()) {
             QString newPassword = m_SecretsManager->recodePassword(
@@ -167,29 +166,28 @@ void Commands::CommandManager::recodePasswords(const QString &oldMasterPassword,
     }
 }
 
-void Commands::CommandManager::combineArtworks(const QList<Models::ArtItemInfo *> &artworks) const
-{
+void Commands::CommandManager::combineArtworks(const QVector<Models::ArtItemInfo *> &artworks) const {
     if (m_CombinedArtworksModel) {
         m_CombinedArtworksModel->initArtworks(artworks);
         m_CombinedArtworksModel->recombineArtworks();
     }
 }
 
-void Commands::CommandManager::setArtworksForIPTCProcessing(const QList<Models::ArtworkMetadata*> &artworks) const
+void Commands::CommandManager::setArtworksForIPTCProcessing(const QVector<Models::ArtworkMetadata*> &artworks) const
 {
     if (m_IptcProvider) {
         m_IptcProvider->setArtworks(artworks);
     }
 }
 
-void Commands::CommandManager::setArtworksForUpload(const QList<Models::ArtworkMetadata *> &artworks) const
+void Commands::CommandManager::setArtworksForUpload(const QVector<Models::ArtworkMetadata *> &artworks) const
 {
     if (m_ArtworkUploader) {
         m_ArtworkUploader->setArtworks(artworks);
     }
 }
 
-void Commands::CommandManager::setArtworksForZipping(const QList<Models::ArtworkMetadata *> &artworks) const {
+void Commands::CommandManager::setArtworksForZipping(const QVector<Models::ArtworkMetadata *> &artworks) const {
     if (m_ZipArchiver) {
         m_ZipArchiver->setArtworks(artworks);
     }
@@ -211,7 +209,7 @@ void Commands::CommandManager::connectArtworkSignals(Models::ArtworkMetadata *me
     }
 }
 
-void Commands::CommandManager::updateArtworks(const QList<int> &indices) const
+void Commands::CommandManager::updateArtworks(const QVector<int> &indices) const
 {
     if (m_ArtItemsModel) {
         m_ArtItemsModel->updateItemsAtIndices(indices);
@@ -239,7 +237,7 @@ void Commands::CommandManager::submitForSpellCheck(SpellCheck::ISpellCheckable *
     }
 }
 
-void Commands::CommandManager::submitForSpellCheck(const QList<SpellCheck::ISpellCheckable *> &items) {
+void Commands::CommandManager::submitForSpellCheck(const QVector<SpellCheck::ISpellCheckable *> &items) {
     if (m_SettingsModel->getUseSpellCheck()) {
         m_SpellCheckerService->submitItems(items);
     }

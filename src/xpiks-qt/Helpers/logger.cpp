@@ -84,7 +84,7 @@ namespace Helpers {
         QFile outFile(m_LogFilepath);
         if (outFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
             QTextStream ts(&outFile);
-            ts << QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss.zzz") << " - cleared log";
+            ts << QDateTime::currentDateTimeUtc().toString("dd.MM.yyyy hh:mm:ss.zzz") << " - cleared log";
             endl(ts);
         }
     }

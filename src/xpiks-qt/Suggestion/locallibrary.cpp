@@ -29,10 +29,12 @@
 #include "suggestionartwork.h"
 
 namespace Suggestion {
-    void LocalLibrary::addToLibrary(const QList<Models::ArtworkMetadata *> artworksList) {
+    void LocalLibrary::addToLibrary(const QVector<Models::ArtworkMetadata *> artworksList) {
         QMutexLocker locker(&m_Mutex);
 
-        foreach (Models::ArtworkMetadata *metadata, artworksList) {
+        int length = artworksList.length();
+        for (int i = 0; i < length; ++i) {
+            Models::ArtworkMetadata *metadata = artworksList.at(i);
             const QString &filepath = metadata->getFilepath();
             QStringList keywords = metadata->getKeywords();
             // replaces if exists
@@ -73,7 +75,7 @@ namespace Suggestion {
         performAsync(LibraryLoaderWorker::Save);
     }
 
-    void LocalLibrary::searchArtworks(const QStringList &query, QList<SuggestionArtwork*> &searchResults, int maxResults) {
+    void LocalLibrary::searchArtworks(const QStringList &query, QVector<SuggestionArtwork*> &searchResults, int maxResults) {
         QMutexLocker locker(&m_Mutex);
 
         QHashIterator<QString, QStringList> i(m_LocalArtworks);

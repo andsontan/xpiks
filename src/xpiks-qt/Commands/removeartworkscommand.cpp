@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QList>
+#include <QVector>
 #include <QPair>
 #include <QString>
 #include <QDebug>
@@ -36,10 +36,14 @@ Commands::CommandResult *Commands::RemoveArtworksCommand::execute(const Commands
     qDebug() << "Remove artworks command";
     Models::ArtItemsModel *artItemsModel = commandManager->getArtItemsModel();
 
-    QList<int> removedItemsIndices;
-    QList<QString> removedItemsFilepathes;
-
     int count = m_RangesToRemove.count();
+
+    QVector<int> removedItemsIndices;
+    removedItemsIndices.reserve(count);
+
+    QStringList removedItemsFilepathes;
+    removedItemsFilepathes.reserve(count);
+
     for (int k = 0; k < count; ++k) {
         const QPair<int, int> &item = m_RangesToRemove[k];
         int first = item.first;
@@ -58,7 +62,7 @@ Commands::CommandResult *Commands::RemoveArtworksCommand::execute(const Commands
     int artworksToRemoveCount = removedItemsIndices.count();
 
     if (artworksToRemoveCount > 0) {
-        QList<QPair<int, int> > rangesToRemove;
+        QVector<QPair<int, int> > rangesToRemove;
         Helpers::indicesToRanges(removedItemsIndices, rangesToRemove);
         artItemsModel->removeItemsAtIndices(rangesToRemove);
 

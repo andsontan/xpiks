@@ -27,7 +27,7 @@
 #include <QVariant>
 #include <QByteArray>
 #include <QHash>
-#include <QList>
+#include <QVector>
 #include "baseentity.h"
 #include "../SpellCheck/ispellcheckable.h"
 
@@ -78,9 +78,9 @@ namespace Common {
         // ISPELLCHECKABLE
         virtual QString retrieveKeyword(int wordIndex);
         virtual QStringList getKeywords();
-        virtual void setSpellCheckResults(const QList<SpellCheck::SpellCheckQueryItem*> &items);
+        virtual void setSpellCheckResults(const QVector<SpellCheck::SpellCheckQueryItem*> &items);
         virtual void setSpellCheckResults(const QHash<QString, bool> &results);
-        virtual QList<SpellCheck::KeywordSpellSuggestions*> createKeywordsSuggestionsList();
+        virtual QVector<SpellCheck::KeywordSpellSuggestions *> createKeywordsSuggestionsList();
         virtual void replaceKeyword(int index, const QString &existing, const QString &replacement);
         virtual void connectSignals(SpellCheck::SpellCheckItem *item);
         virtual QStringList getDescriptionWords() const;
@@ -100,7 +100,7 @@ namespace Common {
 
     private:
         QStringList m_KeywordsList;
-        QList<bool> m_SpellCheckResults;
+        QVector<bool> m_SpellCheckResults;
         SpellCheck::SpellCheckItemInfo *m_SpellCheckInfo;
         QString m_Description;
         QString m_Title;

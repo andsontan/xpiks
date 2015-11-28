@@ -25,7 +25,7 @@
 #include "suggestionartwork.h"
 
 namespace Suggestion {
-    void KeywordsSuggestor::setSuggestedArtworks(const QList<SuggestionArtwork *> &suggestedArtworks) {
+    void KeywordsSuggestor::setSuggestedArtworks(const QVector<SuggestionArtwork *> &suggestedArtworks) {
         m_SelectedArtworksCount = 0;
         m_KeywordsHash.clear();
         m_SuggestedKeywords.clear();
@@ -33,7 +33,7 @@ namespace Suggestion {
         beginResetModel();
         qDeleteAll(m_Suggestions);
         m_Suggestions.clear();
-        m_Suggestions.append(suggestedArtworks);
+        m_Suggestions << suggestedArtworks;
         endResetModel();
         unsetInProgress();
         emit suggestionArrived();

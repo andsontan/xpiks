@@ -80,7 +80,7 @@ namespace Commands {
             m_ZipArchiver(NULL),
             m_KeywordsSuggestor(NULL),
             m_RecentDirectories(NULL)
-        {}
+        { }
 
         virtual ~CommandManager() {}
 
@@ -112,20 +112,20 @@ namespace Commands {
     public:
         void recodePasswords(const QString &oldMasterPassword,
                                 const QString &newMasterPassword,
-                                const QList<Models::UploadInfo*> &uploadInfos) const;
+                                const QVector<Models::UploadInfo*> &uploadInfos) const;
 
-        void combineArtworks(const QList<Models::ArtItemInfo*> &artworks) const;
-        void setArtworksForIPTCProcessing(const QList<Models::ArtworkMetadata*> &artworks) const;
-        void setArtworksForUpload(const QList<Models::ArtworkMetadata*> &artworks) const;
-        void setArtworksForZipping(const QList<Models::ArtworkMetadata*> &artworks) const;
+        void combineArtworks(const QVector<Models::ArtItemInfo*> &artworks) const;
+        void setArtworksForIPTCProcessing(const QVector<Models::ArtworkMetadata *> &artworks) const;
+        void setArtworksForUpload(const QVector<Models::ArtworkMetadata*> &artworks) const;
+        void setArtworksForZipping(const QVector<Models::ArtworkMetadata*> &artworks) const;
         virtual void connectArtworkSignals(Models::ArtworkMetadata *metadata) const;
-        void updateArtworks(const QList<int> &indices) const;
+        void updateArtworks(const QVector<int> &indices) const;
         void addToRecentDirectories(const QString &path) const;
 #ifdef QT_DEBUG
         void addInitialArtworks(const QStringList &artworksFilepathes);
 #endif
         void submitForSpellCheck(SpellCheck::ISpellCheckable *item, int keywordIndex);
-        void submitForSpellCheck(const QList<SpellCheck::ISpellCheckable *> &items);
+        void submitForSpellCheck(const QVector<SpellCheck::ISpellCheckable *> &items);
         void setupSpellCheckSuggestions(SpellCheck::ISpellCheckable *item);
 
     public:

@@ -21,6 +21,7 @@
 
 #include <QDebug>
 #include <QFileInfo>
+#include <QVector>
 #include "addartworkscommand.h"
 #include "commandmanager.h"
 #include "../Models/artworksrepository.h"
@@ -38,12 +39,15 @@ Commands::CommandResult *Commands::AddArtworksCommand::execute(const CommandMana
     const int initialCount = artItemsModel->rowCount();
     bool filesWereAccounted = artworksRepository->beginAccountingFiles(m_FilePathes);
 
-    QList<Models::ArtworkMetadata*> artworksToImport;
+    QVector<Models::ArtworkMetadata*> artworksToImport;
+    artworksToImport.reserve(newFilesCount);
 
     if (newFilesCount > 0) {
         artItemsModel->beginAccountingFiles(newFilesCount);
 
         int count = m_FilePathes.count();
+        artworksToImport.reserve(count);
+
         for (int i = 0; i < count; ++i) {
             const QString &filename = m_FilePathes[i];
 

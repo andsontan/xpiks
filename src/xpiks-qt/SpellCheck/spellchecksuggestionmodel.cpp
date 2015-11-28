@@ -68,20 +68,21 @@ namespace SpellCheck {
         Q_ASSERT(service != NULL);
         Q_ASSERT(item != NULL);
 
-        QList<KeywordSpellSuggestions*> suggestionsRequests = item->createKeywordsSuggestionsList();
-        QList<KeywordSpellSuggestions*> executedRequests = setupSuggestions(suggestionsRequests);
+        QVector<KeywordSpellSuggestions*> suggestionsRequests = item->createKeywordsSuggestionsList();
+        QVector<KeywordSpellSuggestions*> executedRequests = setupSuggestions(suggestionsRequests);
 
         beginResetModel();
         m_CurrentItem = item;
         qDeleteAll(m_KeywordsSuggestions);
         m_KeywordsSuggestions.clear();
-        m_KeywordsSuggestions.append(executedRequests);
+        m_KeywordsSuggestions << executedRequests;
         endResetModel();
     }
 
-    QList<KeywordSpellSuggestions*> SpellCheckSuggestionModel::setupSuggestions(const QList<KeywordSpellSuggestions*> &items) {
+    QVector<KeywordSpellSuggestions *> SpellCheckSuggestionModel::setupSuggestions(const QVector<KeywordSpellSuggestions*> &items) {
         SpellCheckerService *service = m_CommandManager->getSpellCheckerService();
-        QList<KeywordSpellSuggestions*> executedRequests;
+        QVector<KeywordSpellSuggestions*> executedRequests;
+        executedRequests.reserve(items.length());
 
         foreach (KeywordSpellSuggestions* item, items) {
             QStringList suggestions = service->suggestCorrections(item->getWord());
@@ -102,9 +103,10 @@ namespace SpellCheck {
     }
 
     QVariant SpellCheckSuggestionModel::data(const QModelIndex &index, int role) const {
-        if (!index.isValid()) { return QVariant(); }
+        int row = index.row();
+        if (row < 0 || row >= m_KeywordsSuggestions.length()) { return QVariant(); }
 
-        KeywordSpellSuggestions *item = m_KeywordsSuggestions[index.row()];
+        KeywordSpellSuggestions *item = m_KeywordsSuggestions.at(row);
 
         switch (role) {
         case WordRole:
@@ -119,12 +121,13 @@ namespace SpellCheck {
     }
 
     bool SpellCheckSuggestionModel::setData(const QModelIndex &index, const QVariant &value, int role) {
-        if (!index.isValid()) return false;
+        int row = index.row();
+        if (row < 0 || row >= m_KeywordsSuggestions.length()) { return false; }
         int roleToUpdate = 0;
 
         switch (role) {
         case EditIsSelectedRole:
-            m_KeywordsSuggestions[index.row()]->setIsSelected(value.toBool());
+            m_KeywordsSuggestions.at(row)->setIsSelected(value.toBool());
             roleToUpdate = IsSelectedRole;
             break;
         default:

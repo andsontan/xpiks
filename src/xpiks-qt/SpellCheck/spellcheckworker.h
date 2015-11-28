@@ -26,6 +26,7 @@
 #include <QList>
 #include <QWaitCondition>
 #include <QMutex>
+#include <QVector>
 #include <QString>
 #include <QStringList>
 #include <QReadWriteLock>
@@ -46,7 +47,7 @@ namespace SpellCheck {
 
     public:
         void submitItemToCheck(SpellCheckItemBase *item);
-        void submitItemsToCheck(const QList<SpellCheckItemBase*> &items);
+        void submitItemsToCheck(const QVector<SpellCheckItemBase *> &items);
         void cancelCurrentBatch();
         bool hasPendingJobs();
         bool isCancelled() const { return m_Cancel; }
@@ -72,7 +73,7 @@ namespace SpellCheck {
     private:
         QWaitCondition m_WaitAnyItem;
         QMutex m_QueueMutex;
-        QList<SpellCheckItemBase*> m_Queue;
+        QVector<SpellCheckItemBase*> m_Queue;
         QHash<QString, QStringList> m_Suggestions;
         QReadWriteLock m_SuggestionsLock;
         QString m_Encoding;

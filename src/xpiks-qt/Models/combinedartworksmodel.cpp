@@ -32,14 +32,13 @@
 namespace Models {
     CombinedArtworksModel::~CombinedArtworksModel() { qDeleteAll(m_ArtworksList); }
 
-    void CombinedArtworksModel::initArtworks(const QList<ArtItemInfo *> &artworks)
-    {
+    void CombinedArtworksModel::initArtworks(const QVector<ArtItemInfo *> &artworks) {
         int innerLength = m_ArtworksList.length();
         int start = innerLength == 0 ? 0 : innerLength - 1;
         int paramLength = artworks.length();
         if (paramLength > 0) {
             beginInsertRows(QModelIndex(), start, start + paramLength - 1);
-            m_ArtworksList.append(artworks);
+            m_ArtworksList << artworks;
             endInsertRows();
         }
         m_IsModified = false;
@@ -263,7 +262,7 @@ namespace Models {
             return;
         }
 
-        m_ArtworksList[index]->setSelected(newState);
+        m_ArtworksList.at(index)->setSelected(newState);
         QModelIndex qIndex = this->index(index);
         emit dataChanged(qIndex, qIndex, QVector<int>() << IsSelectedRole);
         emit selectedArtworksCountChanged();
@@ -271,7 +270,9 @@ namespace Models {
 
     void CombinedArtworksModel::removeSelectedArtworks() {
         int count = m_ArtworksList.length();
-        QList<int> indicesToRemove;
+        QVector<int> indicesToRemove;
+        indicesToRemove.reserve(count);
+
         for (int i = 0; i < count; ++i) {
             ArtItemInfo *item = m_ArtworksList[i];
             if (item->isSelected()) {
@@ -279,7 +280,7 @@ namespace Models {
             }
         }
 
-        QList<QPair<int, int> > rangesToRemove;
+        QVector<QPair<int, int> > rangesToRemove;
         Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
         removeItemsAtIndices(rangesToRemove);
 
@@ -295,8 +296,7 @@ namespace Models {
         int selectedCount = 0;
         int count = m_ArtworksList.length();
         for (int i = 0; i < count; ++i) {
-            ArtItemInfo *item = m_ArtworksList[i];
-            if (item->isSelected()) {
+            if (m_ArtworksList.at(i)->isSelected()) {
                 selectedCount++;
             }
         }

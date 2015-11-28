@@ -43,12 +43,12 @@ namespace Suggestion {
 
     public:
         void setLibraryPath(const QString &filename) { m_Filename = filename; }
-        void addToLibrary(const QList<Models::ArtworkMetadata *> artworksList);
+        void addToLibrary(const QVector<Models::ArtworkMetadata *> artworksList);
         void swap(QHash<QString, QStringList> &hash);
         void saveToFile();
         void loadLibraryAsync();
         void saveLibraryAsync();
-        void searchArtworks(const QStringList &query, QList<SuggestionArtwork*> &searchResults, int maxResults);
+        void searchArtworks(const QStringList &query, QVector<SuggestionArtwork *> &searchResults, int maxResults);
         void cleanupLocalLibraryAsync();
         void cleanupTrash();
 

@@ -57,11 +57,11 @@ namespace Models {
         void warningsCountChanged();
 
     public slots:
-        void onCheckWarnings(const QList<ArtItemInfo*> &artworks) { checkForWarnings(artworks); }
+        void onCheckWarnings(const QVector<ArtItemInfo*> &artworks) { checkForWarnings(artworks); }
 
     public:
         int getWarningsCount();
-        void checkForWarnings(const QList<ArtItemInfo *> &artworks);
+        void checkForWarnings(const QVector<ArtItemInfo *> &artworks);
         Q_INVOKABLE void recheckItems();
         Q_INVOKABLE void recheckItem(int itemIndex);
         void setImageProvider(Helpers::GlobalImageProvider *imageProvider) { Q_ASSERT(imageProvider != NULL); m_ImageProvider = imageProvider; }
@@ -83,8 +83,8 @@ namespace Models {
         virtual QHash<int, QByteArray> roleNames() const;
 
     private:
-        QList<WarningsInfo*> m_WarningsList;
-        QList<WarningsInfo*> m_WarningsBufferList;
+        QVector<WarningsInfo*> m_WarningsList;
+        QVector<WarningsInfo*> m_WarningsBufferList;
         Helpers::GlobalImageProvider *m_ImageProvider;
         double m_MinimumMegapixels;
         int m_MaximumKeywordsCount;
