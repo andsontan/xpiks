@@ -235,13 +235,13 @@ void Commands::CommandManager::addInitialArtworks(const QStringList &artworksFil
 }
 #endif
 
-void Commands::CommandManager::submitForSpellCheck(SpellCheck::ISpellCheckable *item, int keywordIndex) {
+void Commands::CommandManager::submitForSpellCheck(SpellCheck::ISpellCheckable *item, int keywordIndex) const {
     if (m_SettingsModel->getUseSpellCheck()) {
         m_SpellCheckerService->submitKeyword(item, keywordIndex);
     }
 }
 
-void Commands::CommandManager::submitForSpellCheck(const QVector<SpellCheck::ISpellCheckable *> &items) {
+void Commands::CommandManager::submitForSpellCheck(const QVector<SpellCheck::ISpellCheckable *> &items) const {
     if (m_SettingsModel->getUseSpellCheck()) {
         m_SpellCheckerService->submitItems(items);
     }

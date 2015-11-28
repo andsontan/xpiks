@@ -43,16 +43,17 @@ namespace Models {
         }
         m_IsModified = false;
 
-        if (artworks.length() == 1) {
+        if (paramLength == 1) {
             enableAllFields();
-            ArtworkMetadata *metadata = artworks.first()->getOrigin();
-            m_CommonKeywordsModel.setSpellCheckInfo(metadata->getSpellCheckInfo());
         }
     }
 
     void CombinedArtworksModel::recombineArtworks() {
         if (m_ArtworksList.length() == 1) {
             assignFromOneArtwork();
+            ArtworkMetadata *metadata = m_ArtworksList.first()->getOrigin();
+            m_CommonKeywordsModel.setSpellCheckInfo(metadata->getSpellCheckInfo());
+            m_CommonKeywordsModel.setSpellStatuses(metadata->getSpellStatuses());
         } else {
             assignFromManyArtworks();
         }
@@ -124,11 +125,13 @@ namespace Models {
     void CombinedArtworksModel::initDescriptionHighlighting(QQuickTextDocument *document) {
         SpellCheck::SpellCheckItemInfo *info = m_CommonKeywordsModel.getSpellCheckInfo();
         info->createHighlighterForDescription(document->textDocument(), &m_CommonKeywordsModel);
+        m_CommonKeywordsModel.notifySpellCheckResults();
     }
 
     void CombinedArtworksModel::initTitleHighlighting(QQuickTextDocument *document) {
         SpellCheck::SpellCheckItemInfo *info = m_CommonKeywordsModel.getSpellCheckInfo();
         info->createHighlighterForTitle(document->textDocument(), &m_CommonKeywordsModel);
+        m_CommonKeywordsModel.notifySpellCheckResults();
     }
 
     void CombinedArtworksModel::processCombinedEditCommand() const {

@@ -161,19 +161,43 @@ Item {
                             color: Colors.defaultInputBackground
                             border.color: Colors.artworkActiveColor
                             border.width: descriptionTextInput.activeFocus ? 1 : 0
+                            clip: true
 
-                            StyledTextInput {
-                                id: descriptionTextInput
+                            Flickable {
+                                id: descriptionFlick
+                                contentWidth: descriptionTextInput.paintedWidth
+                                contentHeight: descriptionTextInput.paintedHeight
                                 anchors.left: parent.left
                                 anchors.right: parent.right
                                 anchors.leftMargin: 5
                                 anchors.rightMargin: 5
                                 anchors.verticalCenter: parent.verticalCenter
-                                maximumLength: 250
-                                text: combinedArtworks.description
-                                font.pixelSize: 12*settingsModel.keywordSizeScale
-                                onTextChanged: combinedArtworks.description = text
-                                KeyNavigation.tab: titleTextInput
+                                interactive: false
+                                flickableDirection: Flickable.HorizontalFlick
+                                height: 30
+                                clip: true
+                                focus: false
+
+                                function ensureVisible(r) {
+                                    if (contentX >= r.x)
+                                        contentX = r.x;
+                                    else if (contentX+width <= r.x+r.width)
+                                        contentX = r.x+r.width-width;
+                                }
+
+                                StyledTextEdit {
+                                    id: descriptionTextInput
+                                    text: combinedArtworks.description
+                                    width: descriptionFlick.width
+                                    height: descriptionFlick.height
+                                    font.pixelSize: 12*settingsModel.keywordSizeScale
+                                    onTextChanged: combinedArtworks.description = text
+                                    KeyNavigation.tab: titleTextInput
+
+                                    Component.onCompleted: {
+                                        combinedArtworks.initDescriptionHighlighting(descriptionTextInput.textDocument)
+                                    }
+                                }
                             }
                         }
                     }
@@ -203,23 +227,47 @@ Item {
                             color: Colors.defaultInputBackground
                             border.color: Colors.artworkActiveColor
                             border.width: titleTextInput.activeFocus ? 1 : 0
+                            clip: true
 
-                            StyledTextInput {
-                                id: titleTextInput
+                            Flickable {
+                                id: titleFlick
+                                contentWidth: titleTextInput.paintedWidth
+                                contentHeight: titleTextInput.paintedHeight
+                                height: 30
                                 anchors.left: parent.left
                                 anchors.right: parent.right
                                 anchors.leftMargin: 5
                                 anchors.rightMargin: 5
                                 anchors.verticalCenter: parent.verticalCenter
-                                maximumLength: 200
-                                focus: true
-                                font.pixelSize: 12*settingsModel.keywordSizeScale
-                                text: combinedArtworks.title
-                                onTextChanged: combinedArtworks.title = text
-                                KeyNavigation.backtab: descriptionTextInput
+                                clip: true
+                                flickableDirection: Flickable.HorizontalFlick
+                                interactive: false
+                                focus: false
 
-                                Keys.onTabPressed: {
-                                    flv.activateEdit()
+                                function ensureVisible(r) {
+                                    if (contentX >= r.x)
+                                        contentX = r.x;
+                                    else if (contentX+width <= r.x+r.width)
+                                        contentX = r.x+r.width-width;
+                                }
+
+                                StyledTextEdit {
+                                    id: titleTextInput
+                                    width: titleFlick.width
+                                    height: titleFlick.height
+                                    focus: true
+                                    font.pixelSize: 12*settingsModel.keywordSizeScale
+                                    text: combinedArtworks.title
+                                    onTextChanged: combinedArtworks.title = text
+                                    KeyNavigation.backtab: descriptionTextInput
+
+                                    Keys.onTabPressed: {
+                                        flv.activateEdit()
+                                    }
+
+                                    Component.onCompleted: {
+                                        combinedArtworks.initTitleHighlighting(titleTextInput.textDocument)
+                                    }
                                 }
                             }
                         }

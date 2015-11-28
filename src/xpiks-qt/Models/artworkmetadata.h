@@ -68,6 +68,7 @@ namespace Models {
         const QSet<QString> &getKeywordsSet() const { return m_KeywordsSet; }
         QString getKeywordsString();
         SpellCheck::SpellCheckItemInfo *getSpellCheckInfo() { return m_SpellCheckInfo; }
+        const QVector<bool> &getSpellStatuses() const { return m_SpellCheckResults; }
 
     public:
         bool isInDirectory(const QString &directory) const;
@@ -83,6 +84,7 @@ namespace Models {
         bool hasKeywordsSpellError();
         bool hasDescriptionSpellError() const;
         bool hasTitleSpellError() const;
+        void notifySpellCheckResultReady() { emit spellCheckResultsReady(); }
 
     public:
         virtual void setSpellCheckResults(const QVector<SpellCheck::SpellCheckQueryItem *> &results);

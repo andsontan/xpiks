@@ -51,6 +51,7 @@ Commands::CommandResult *Commands::CombinedEditCommand::execute(const Commands::
         setTitle(metadata);
 
         commandManager->saveMetadata(metadata);
+        commandManager->submitForSpellCheck(QVector<SpellCheck::ISpellCheckable*>() << metadata);
     }
 
     UndoRedo::ModifyArtworksHistoryItem *modifyArtworksItem =

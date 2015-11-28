@@ -91,6 +91,15 @@ namespace Common {
         return result;
     }
 
+    void BasicKeywordsModel::setSpellStatuses(const QVector<bool> &statuses) {
+        Q_ASSERT(statuses.length() == m_SpellCheckResults.length());
+
+        int size = statuses.length();
+        for (int i = 0; i < size; ++i) {
+            m_SpellCheckResults[i] = statuses[i];
+        }
+    }
+
     void BasicKeywordsModel::updateDescriptionSpellErrors(const QHash<QString, bool> &results) {
         QSet<QString> descriptionErrors;
         QStringList descriptionWords = getDescriptionWords();

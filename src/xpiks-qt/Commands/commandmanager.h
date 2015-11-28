@@ -130,8 +130,8 @@ namespace Commands {
 #ifdef QT_DEBUG
         void addInitialArtworks(const QStringList &artworksFilepathes);
 #endif
-        void submitForSpellCheck(SpellCheck::ISpellCheckable *item, int keywordIndex);
-        void submitForSpellCheck(const QVector<SpellCheck::ISpellCheckable *> &items);
+        void submitForSpellCheck(SpellCheck::ISpellCheckable *item, int keywordIndex) const;
+        void submitForSpellCheck(const QVector<SpellCheck::ISpellCheckable *> &items) const;
         void setupSpellCheckSuggestions(SpellCheck::ISpellCheckable *item);
         void saveMetadata(Models::ArtworkMetadata *metadata) const;
 

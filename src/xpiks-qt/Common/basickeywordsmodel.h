@@ -70,9 +70,11 @@ namespace Common {
     public:
         SpellCheck::SpellCheckItemInfo *getSpellCheckInfo() const { return m_SpellCheckInfo; }
         void setSpellCheckInfo(SpellCheck::SpellCheckItemInfo *info) { m_SpellCheckInfo = info; }
+        void setSpellStatuses(const QVector<bool> &statuses);
         void dropSpellCheckInfo() { m_SpellCheckInfo = NULL; }
         void updateDescriptionSpellErrors(const QHash<QString, bool> &results);
         void updateTitleSpellErrors(const QHash<QString, bool> &results);
+        void notifySpellCheckResults() { emit spellCheckResultsReady(); }
 
     public:
         // ISPELLCHECKABLE
