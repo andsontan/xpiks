@@ -19,33 +19,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SPELLCHECKWORKER_H
-#define SPELLCHECKWORKER_H
+#ifndef BACKUPSAVERWORKER_H
+#define BACKUPSAVERWORKER_H
 
-#include <QString>
-#include <QStringList>
-#include <QReadWriteLock>
-#include <QHash>
+#include <QObject>
 #include "../Common/itemprocessingworker.h"
-#include "spellcheckitem.h"
+#include "../Helpers/tempmetadatadb.h"
 
-class Hunspell;
-class QTextCodec;
-
-namespace SpellCheck {
-    class SpellCheckWorker : public QObject, public Common::ItemProcessingWorker<SpellCheckItemBase>
+namespace Helpers {
+    class BackupSaverWorker : public QObject, public Common::ItemProcessingWorker<TempMetadataCopy>
     {
         Q_OBJECT
-    public:
-        SpellCheckWorker();
-        virtual ~SpellCheckWorker();
-
-    public:
-        QStringList retrieveCorrections(const QString &word);
-
     protected:
-        virtual bool initWorker();
-        virtual bool processOneItem(SpellCheckItemBase *item);
+        virtual bool initWorker() { return true; }
+        virtual bool processOneItem(TempMetadataCopy *item);
         virtual void notifyQueueIsEmpty() { emit queueIsEmpty(); }
         virtual void notifyStopped() { emit stopped(); }
 
@@ -56,21 +43,7 @@ namespace SpellCheck {
     signals:
         void stopped();
         void queueIsEmpty();
-
-    private:
-        void detectAffEncoding();
-        QStringList suggestCorrections(const QString &word);
-        bool isWordSpelledOk(const QString &word) const;
-        void findSuggestions(const QString &word);
-
-    private:
-        QHash<QString, QStringList> m_Suggestions;
-        QReadWriteLock m_SuggestionsLock;
-        QString m_Encoding;
-        Hunspell *m_Hunspell;
-        // Coded does not need destruction
-        QTextCodec *m_Codec;
     };
 }
 
-#endif // SPELLCHECKWORKER_H
+#endif // BACKUPSAVERWORKER_H

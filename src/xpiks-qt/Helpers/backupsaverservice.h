@@ -19,46 +19,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TEMPMETADATADB_H
-#define TEMPMETADATADB_H
+#ifndef BACKUPSAVERSERVICE_H
+#define BACKUPSAVERSERVICE_H
 
-#include <QHash>
-#include <QString>
+#include <QObject>
 
 namespace Models {
     class ArtworkMetadata;
 }
 
 namespace Helpers {
-    class TempMetadataCopy {
-    public:
-        TempMetadataCopy(Models::ArtworkMetadata *metadata);
+    class BackupSaverWorker;
 
-    public:
-        const QString &getFilepath() const { return m_Filepath; }
-        const QHash<QString, QString> &getInfo() const { return m_MetadataInfo; }
-
-    private:
-        QHash<QString, QString> m_MetadataInfo;
-        QString m_Filepath;
-    };
-
-    // class not functions because it's supposed to progress in future
-    class TempMetadataDb
+    class BackupSaverService : public QObject
     {
+        Q_OBJECT
     public:
-        TempMetadataDb(Models::ArtworkMetadata *metadata) :
-            m_ArtworkMetadata(metadata)
-        {  }
+        BackupSaverService();
 
     public:
-        // deprecated. use backupsaverworker's queue instead
-        void flush() const;
-        void load() const;
+        void startSaving();
+        void saveArtwork(Models::ArtworkMetadata *metadata);
+
+    signals:
+        void cancelSaving();
 
     private:
-        Models::ArtworkMetadata *m_ArtworkMetadata;
+        BackupSaverWorker *m_BackupWorker;
     };
 }
 
-#endif // TEMPMETADATADB_H
+#endif // BACKUPSAVERSERVICE_H

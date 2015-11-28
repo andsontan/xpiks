@@ -29,6 +29,13 @@
 #include "constants.h"
 
 namespace Helpers {
+    TempMetadataCopy::TempMetadataCopy(Models::ArtworkMetadata *metadata) {
+        m_MetadataInfo["title"] = metadata->getTitle();
+        m_MetadataInfo["description"] = metadata->getDescription();
+        m_MetadataInfo["keywords"] = metadata->getKeywordsString();
+        m_Filepath = metadata->getFilepath();
+    }
+
     void TempMetadataDb::flush() const
     {
         QHash<QString, QString> dict;

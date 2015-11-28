@@ -47,9 +47,9 @@ QString getHunspellResourcesPath() {
 }
 
 namespace SpellCheck {
-    SpellCheckWorker::SpellCheckWorker(QObject *parent) :
-        QObject(parent),
-        m_Cancel(false)
+    SpellCheckWorker::SpellCheckWorker() :
+        m_Hunspell(NULL),
+        m_Codec(NULL)
     {
     }
 
@@ -59,38 +59,7 @@ namespace SpellCheck {
         }
     }
 
-    void SpellCheckWorker::submitItemToCheck(SpellCheckItemBase *item) {
-        m_QueueMutex.lock();
-        {
-            m_Queue.append(item);
-        }
-        m_QueueMutex.unlock();
-        m_WaitAnyItem.wakeOne();
-    }
-
-    void SpellCheckWorker::submitItemsToCheck(const QVector<SpellCheckItemBase *> &items) {
-        m_QueueMutex.lock();
-        {
-            m_Queue << items;
-            qDebug() << "Submitted" << items.count() << "items to spell check loop";
-        }
-        m_QueueMutex.unlock();
-        m_WaitAnyItem.wakeOne();
-    }
-
-    void SpellCheckWorker::cancelCurrentBatch() {
-        m_QueueMutex.lock();
-        {
-            qDeleteAll(m_Queue);
-            m_Queue.clear();
-        }
-        m_QueueMutex.unlock();
-
-        m_WaitAnyItem.wakeOne();
-        emit queueIsEmpty();
-    }
-
-    bool SpellCheckWorker::initHunspell() {
+    bool SpellCheckWorker::initWorker() {
         QDir resourcesDir(getHunspellResourcesPath());
         QString affPath = resourcesDir.absoluteFilePath(EN_HUNSPELL_AFF);
         QString dicPath = resourcesDir.absoluteFilePath(EN_HUNSPELL_DIC);
@@ -121,120 +90,7 @@ namespace SpellCheck {
         return initResult;
     }
 
-    void SpellCheckWorker::detectAffEncoding() {
-        // detect encoding analyzing the SET option in the affix file
-        QDir resourcesDir(getHunspellResourcesPath());
-        QString affPath = resourcesDir.absoluteFilePath(EN_HUNSPELL_AFF);
-
-        m_Encoding = "ISO8859-1";
-        QFile affixFile(affPath);
-
-        if (affixFile.open(QIODevice::ReadOnly)) {
-            QTextStream stream(&affixFile);
-            QRegExp encDetector("^\\s*SET\\s+([A-Z0-9\\-]+)\\s*", Qt::CaseInsensitive);
-
-            for (QString line = stream.readLine(); !line.isEmpty(); line = stream.readLine()) {
-                if (encDetector.indexIn(line) > -1) {
-                    m_Encoding = encDetector.cap(1);
-                    qDebug() << QString("Encoding of AFF set to ") + m_Encoding;
-                    break;
-                }
-            }
-
-            affixFile.close();
-        }
-
-        m_Codec = QTextCodec::codecForName(m_Encoding.toLatin1().constData());
-    }
-
-    bool SpellCheckWorker::hasPendingJobs() {
-        QMutexLocker locker(&m_QueueMutex);
-        bool isEmpty = m_Queue.isEmpty();
-        return !isEmpty;
-    }
-
-    QStringList SpellCheckWorker::retrieveCorrections(const QString &word) {
-        QReadLocker locker(&m_SuggestionsLock);
-        QStringList result;
-
-        if (m_Suggestions.contains(word)) {
-            result = m_Suggestions.value(word);
-        }
-
-        return result;
-    }
-
-    QStringList SpellCheckWorker::suggestCorrections(const QString &word) {
-        QStringList suggestions;
-        char **suggestWordList = NULL;
-
-        try {
-            // Encode from Unicode to the encoding used by current dictionary
-            int count = m_Hunspell->suggest(&suggestWordList, m_Codec->fromUnicode(word).constData());
-
-            for (int i = 0; i < count; ++i) {
-                suggestions << m_Codec->toUnicode(suggestWordList[i]);
-                free(suggestWordList[i]);
-            }
-        }
-        catch (...) {
-            qDebug() << "Error in suggestCorrections for keyword:" << word;
-        }
-
-        return suggestions;
-    }
-
-    void SpellCheckWorker::spellcheckLoop() {
-        for (;;) {
-            if (m_Cancel) {
-                qDebug() << "SpellCheck loop cancelled. Exiting...";
-                break;
-            }
-
-            bool noMoreItems = false;
-
-            m_QueueMutex.lock();
-
-            if (m_Queue.isEmpty()) {
-                m_WaitAnyItem.wait(&m_QueueMutex);
-
-                // can be cleared by clearCurrectRequests()
-                if (m_Queue.isEmpty()) {
-                    emit queueIsEmpty();
-                    m_QueueMutex.unlock();
-                    continue;
-                }
-            }
-
-            SpellCheckItemBase *item = m_Queue.first();
-            m_Queue.removeFirst();
-
-            noMoreItems = m_Queue.isEmpty();
-
-            m_QueueMutex.unlock();
-
-            if (item == NULL) { break; }
-
-            bool canDelete = true;
-
-            try {
-                canDelete = processOneRequest(item);
-            }
-            catch (...) {
-                qDebug() << "Error while processing spellcheck";
-            }
-
-            if (canDelete) {
-                delete item;
-            }
-
-            if (noMoreItems) {
-                emit queueIsEmpty();
-            }
-        }
-    }
-
-    bool SpellCheckWorker::processOneRequest(SpellCheckItemBase *item) {
+    bool SpellCheckWorker::processOneItem(SpellCheckItemBase *item) {
         Q_ASSERT(item != NULL);
 
         if (dynamic_cast<SpellCheckSeparatorItem*>(item)) {
@@ -268,12 +124,69 @@ namespace SpellCheck {
         if (anyWrong && !neededSuggestions) {
             item->submitSpellCheckResult();
             item->requestSuggestions();
-            this->submitItemToCheck(item);
+            this->submitItem(item);
         } else {
             canDelete = true;
         }
 
         return canDelete;
+    }
+
+    void SpellCheckWorker::detectAffEncoding() {
+        // detect encoding analyzing the SET option in the affix file
+        QDir resourcesDir(getHunspellResourcesPath());
+        QString affPath = resourcesDir.absoluteFilePath(EN_HUNSPELL_AFF);
+
+        m_Encoding = "ISO8859-1";
+        QFile affixFile(affPath);
+
+        if (affixFile.open(QIODevice::ReadOnly)) {
+            QTextStream stream(&affixFile);
+            QRegExp encDetector("^\\s*SET\\s+([A-Z0-9\\-]+)\\s*", Qt::CaseInsensitive);
+
+            for (QString line = stream.readLine(); !line.isEmpty(); line = stream.readLine()) {
+                if (encDetector.indexIn(line) > -1) {
+                    m_Encoding = encDetector.cap(1);
+                    qDebug() << QString("Encoding of AFF set to ") + m_Encoding;
+                    break;
+                }
+            }
+
+            affixFile.close();
+        }
+
+        m_Codec = QTextCodec::codecForName(m_Encoding.toLatin1().constData());
+    }
+
+    QStringList SpellCheckWorker::retrieveCorrections(const QString &word) {
+        QReadLocker locker(&m_SuggestionsLock);
+        QStringList result;
+
+        if (m_Suggestions.contains(word)) {
+            result = m_Suggestions.value(word);
+        }
+
+        return result;
+    }
+
+    QStringList SpellCheckWorker::suggestCorrections(const QString &word) {
+        QStringList suggestions;
+        char **suggestWordList = NULL;
+
+        try {
+            // Encode from Unicode to the encoding used by current dictionary
+            int count = m_Hunspell->suggest(&suggestWordList, m_Codec->fromUnicode(word).constData());
+
+            for (int i = 0; i < count; ++i) {
+                suggestions << m_Codec->toUnicode(suggestWordList[i]);
+                free(suggestWordList[i]);
+            }
+        }
+        catch (...) {
+            qDebug() << "Error in suggestCorrections for keyword:" << word;
+        }
+
+        return suggestions;
     }
 
     bool SpellCheckWorker::isWordSpelledOk(const QString &word) const {
@@ -300,18 +213,5 @@ namespace SpellCheck {
             m_Suggestions.insert(word, suggestions);
             m_SuggestionsLock.unlock();
         }
-    }
-
-    void SpellCheckWorker::process() {
-        if (initHunspell()) {
-            spellcheckLoop();
-        } else {
-            m_Cancel = true;
-        }
-    }
-
-    void SpellCheckWorker::cancel() {
-        m_Cancel = true;
-        submitItemToCheck(NULL);
     }
 }

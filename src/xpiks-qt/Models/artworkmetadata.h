@@ -74,6 +74,7 @@ namespace Models {
         bool isModified() const { return m_IsModified; }
         bool getIsSelected() const { return m_IsSelected; }
         bool isEmpty() const;
+        bool isInitialized() const { return m_IsInitialized; }
 
     public:
         void clearMetadata();
@@ -149,7 +150,6 @@ namespace Models {
         void addKeywords(const QString &rawKeywords);
         void setModified() { m_IsModified = true; emit modifiedChanged(m_IsModified); }
         void unsetModified() { m_IsModified = false; }
-        void saveBackup(SettingsModel *settings);
 
     signals:
          void modifiedChanged(bool newValue);
@@ -178,6 +178,7 @@ namespace Models {
          QString m_ArtworkTitle;
          volatile bool m_IsModified;
          volatile bool m_IsSelected;
+         volatile bool m_IsInitialized;
     };
 }
 

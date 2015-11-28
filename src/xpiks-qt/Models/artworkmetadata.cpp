@@ -36,7 +36,8 @@ namespace Models {
         QAbstractListModel(),
         m_ArtworkFilepath(filepath),
         m_IsModified(false),
-        m_IsSelected(false)
+        m_IsSelected(false),
+        m_IsInitialized(false)
     {
         m_SpellCheckInfo = new SpellCheck::SpellCheckItemInfo();
     }
@@ -79,6 +80,7 @@ namespace Models {
         }
 
         m_IsModified = false;
+        m_IsInitialized = true;
 
         return anythingModified;
     }
@@ -386,13 +388,6 @@ namespace Models {
             m_KeywordsList.append(keyword);
             m_SpellCheckResults.append(true);
             m_KeywordsSet.insert(keyword.simplified().toLower());
-        }
-    }
-
-    void ArtworkMetadata::saveBackup(SettingsModel *settings) {
-        if (settings->getSaveBackups()) {
-            QReadLocker locker(&m_RWLock);
-            Helpers::TempMetadataDb(this).flush();
         }
     }
 

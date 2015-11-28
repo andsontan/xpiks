@@ -176,8 +176,7 @@ namespace Models {
     void ArtItemsModel::backupItem(int metadataIndex) {
         if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
-            SettingsModel *settings = m_CommandManager->getSettingsModel();
-            metadata->saveBackup(settings);
+            m_CommandManager->saveMetadata(metadata);
         }
     }
 
@@ -398,8 +397,9 @@ namespace Models {
 
         if (role == EditArtworkDescriptionRole ||
                 role == EditArtworkTitleRole) {
-            SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
-            metadata->saveBackup(settingsModel);
+            if (metadata->isInitialized()) {
+                m_CommandManager->saveMetadata(metadata);
+            }
         }
 
         return true;

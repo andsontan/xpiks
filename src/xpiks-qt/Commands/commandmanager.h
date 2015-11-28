@@ -56,6 +56,10 @@ namespace Suggestion {
     class KeywordsSuggestor;
 }
 
+namespace Helpers {
+    class BackupSaverService;
+}
+
 namespace SpellCheck {
     class SpellCheckerService;
     class SpellCheckSuggestionModel;
@@ -79,7 +83,8 @@ namespace Commands {
             m_UndoRedoManager(NULL),
             m_ZipArchiver(NULL),
             m_KeywordsSuggestor(NULL),
-            m_RecentDirectories(NULL)
+            m_RecentDirectories(NULL),
+            m_MetadataSaverService(NULL)
         { }
 
         virtual ~CommandManager() {}
@@ -101,6 +106,7 @@ namespace Commands {
         void InjectDependency(Models::RecentDirectoriesModel *recentDirectories);
         void InjectDependency(SpellCheck::SpellCheckerService *spellCheckerService);
         void InjectDependency(SpellCheck::SpellCheckSuggestionModel *spellCheckSuggestionModel);
+        void InjectDependency(Helpers::BackupSaverService *backupSaverService);
 
     public:
         CommandResult *processCommand(CommandBase *command) const;
@@ -127,6 +133,7 @@ namespace Commands {
         void submitForSpellCheck(SpellCheck::ISpellCheckable *item, int keywordIndex);
         void submitForSpellCheck(const QVector<SpellCheck::ISpellCheckable *> &items);
         void setupSpellCheckSuggestions(SpellCheck::ISpellCheckable *item);
+        void saveMetadata(Models::ArtworkMetadata *metadata) const;
 
     public:
         // methods for getters
@@ -155,6 +162,7 @@ namespace Commands {
         Models::RecentDirectoriesModel *m_RecentDirectories;
         SpellCheck::SpellCheckerService *m_SpellCheckerService;
         SpellCheck::SpellCheckSuggestionModel *m_SpellCheckSuggestionModel;
+        Helpers::BackupSaverService *m_MetadataSaverService;
     };
 }
 

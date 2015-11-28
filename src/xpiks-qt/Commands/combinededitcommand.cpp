@@ -33,7 +33,6 @@ Commands::CommandResult *Commands::CombinedEditCommand::execute(const Commands::
 {
     QVector<int> indicesToUpdate;
     QVector<UndoRedo::ArtworkMetadataBackup*> artworksBackups;
-    Models::SettingsModel *settingsModel = commandManager->getSettingsModel();
 
     int size = m_ArtItemInfos.length();
     indicesToUpdate.reserve(size);
@@ -51,7 +50,7 @@ Commands::CommandResult *Commands::CombinedEditCommand::execute(const Commands::
         setDescription(metadata);
         setTitle(metadata);
 
-        metadata->saveBackup(settingsModel);
+        commandManager->saveMetadata(metadata);
     }
 
     UndoRedo::ModifyArtworksHistoryItem *modifyArtworksItem =

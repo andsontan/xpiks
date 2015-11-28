@@ -32,6 +32,8 @@ namespace SpellCheck {
     }
 
     void SpellCheckerService::startChecking() {
+        Q_ASSERT(!m_SpellCheckWorker->isRunning());
+
         QThread *thread = new QThread();
         m_SpellCheckWorker->moveToThread(thread);
 
@@ -64,8 +66,8 @@ namespace SpellCheck {
                 items.append(item);
             }
 
-            m_SpellCheckWorker->submitItemsToCheck(items);
-            m_SpellCheckWorker->submitItemToCheck(new SpellCheckSeparatorItem());
+            m_SpellCheckWorker->submitItems(items);
+            m_SpellCheckWorker->submitItem(new SpellCheckSeparatorItem());
         }
     }
 
@@ -75,7 +77,7 @@ namespace SpellCheck {
         if (m_SpellCheckWorker != NULL && !m_SpellCheckWorker->isCancelled()) {
             SpellCheckItem *item = new SpellCheckItem(itemToCheck, keywordIndex);
             itemToCheck->connectSignals(item);
-            m_SpellCheckWorker->submitItemToCheck(item);
+            m_SpellCheckWorker->submitItem(item);
         }
     }
 

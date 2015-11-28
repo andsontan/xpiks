@@ -41,6 +41,7 @@
 #include "../Models/settingsmodel.h"
 #include "../SpellCheck/spellchecksuggestionmodel.h"
 #include "../SpellCheck/ispellcheckable.h"
+#include "../Helpers/backupsaverservice.h"
 
 void Commands::CommandManager::InjectDependency(Models::ArtworksRepository *artworkRepository) {
     Q_ASSERT(artworkRepository != NULL); m_ArtworksRepository = artworkRepository;
@@ -121,6 +122,9 @@ void Commands::CommandManager::InjectDependency(SpellCheck::SpellCheckSuggestion
     m_SpellCheckSuggestionModel->setCommandManager(this);
 }
 
+void Commands::CommandManager::InjectDependency(Helpers::BackupSaverService *backupSaverService) {
+    Q_ASSERT(backupSaverService != NULL); m_MetadataSaverService = backupSaverService;
+}
 
 Commands::CommandResult *Commands::CommandManager::processCommand(Commands::CommandBase *command) const
 {
@@ -245,4 +249,10 @@ void Commands::CommandManager::submitForSpellCheck(const QVector<SpellCheck::ISp
 
 void Commands::CommandManager::setupSpellCheckSuggestions(SpellCheck::ISpellCheckable *item) {
     m_SpellCheckSuggestionModel->setupModel(m_SpellCheckerService, item);
+}
+
+void Commands::CommandManager::saveMetadata(Models::ArtworkMetadata *metadata) const {
+    if (m_SettingsModel->getSaveBackups()) {
+        m_MetadataSaverService->saveArtwork(metadata);
+    }
 }
