@@ -29,92 +29,46 @@
 #include <QString>
 #include <QVector>
 #include <QSet>
-#include "../SpellCheck/ispellcheckable.h"
-
-namespace SpellCheck {
-    class KeywordSpellSuggestions;
-    class SpellCheckQueryItem;
-    class SpellCheckItemInfo;
-}
+#include "../Common/basickeywordsmodel.h"
 
 class QTextDocument;
 
 namespace Models {
     class SettingsModel;
 
-    class ArtworkMetadata : public QAbstractListModel, public SpellCheck::ISpellCheckable {
+    class ArtworkMetadata : public Common::BasicKeywordsModel {
         Q_OBJECT
     public:
         ArtworkMetadata(const QString &filepath);
         virtual ~ArtworkMetadata();
 
     public:
-        enum ArtworkMetadataRoles {
-            KeywordRole = Qt::UserRole + 1,
-            IsCorrectRole
-        };
-
-    public:
         bool initialize(const QString &title,
                         const QString &description, const QString &rawKeywords, bool overwrite = true);
 
     public:
-        const QString &getTitle() const { return m_ArtworkTitle; }
-        const QString &getDescription() const { return m_ArtworkDescription; }
         const QString &getFilepath() const { return m_ArtworkFilepath; }
         virtual QString getDirectory() const { QFileInfo fi(m_ArtworkFilepath); return fi.absolutePath(); }
-        int getKeywordsCount();
-        virtual QStringList getKeywords();
-        const QSet<QString> &getKeywordsSet() const { return m_KeywordsSet; }
-        QString getKeywordsString();
-        SpellCheck::SpellCheckItemInfo *getSpellCheckInfo() { return m_SpellCheckInfo; }
-        const QVector<bool> &getSpellStatuses() const { return m_SpellCheckResults; }
 
     public:
         bool isInDirectory(const QString &directory) const;
         bool isModified() const { return m_IsModified; }
         bool getIsSelected() const { return m_IsSelected; }
-        bool isEmpty() const;
         bool isInitialized() const { return m_IsInitialized; }
 
     public:
-        void clearMetadata();
-        virtual QString retrieveKeyword(int index);
-        bool containsKeyword(const QString &searchTerm, bool exactMatch = false);
-        bool hasKeywordsSpellError();
-        bool hasDescriptionSpellError() const;
-        bool hasTitleSpellError() const;
-        void notifySpellCheckResultReady() { emit spellCheckResultsReady(); }
+        virtual void clearModel();
 
     public:
-        virtual void setSpellCheckResults(const QVector<SpellCheck::SpellCheckQueryItem *> &results);
-        virtual void setSpellCheckResults(const QHash<QString, bool> &results);
-        virtual void replaceKeyword(int index, const QString &existing, const QString &replacement);
-        virtual QVector<SpellCheck::KeywordSpellSuggestions*> createKeywordsSuggestionsList();
-        virtual void connectSignals(SpellCheck::SpellCheckItem *item);
-        virtual QStringList getDescriptionWords() const;
-        virtual QStringList getTitleWords() const;
-
-    private:
-        void updateDescriptionSpellErrors(const QHash<QString, bool> &results);
-        void updateTitleSpellErrors(const QHash<QString, bool> &results);
-
-    public:
-        bool setDescription(const QString &value) {
-            bool result = m_ArtworkDescription != value;
-            if (result) {
-                m_ArtworkDescription = value;
-                setModified();
-            }
+        virtual bool setDescription(const QString &value) {
+            bool result = BasicKeywordsModel::setDescription(value);
+            if (result) { setModified(); }
             return result;
         }
 
         bool setTitle(const QString &value) {
-            bool result = m_ArtworkTitle != value;
-            if (result) {
-                m_ArtworkTitle = value;
-                setModified();
-            }
+            bool result = BasicKeywordsModel::setTitle(value);
+            if (result) { setModified(); }
             return result;
         }
 
@@ -132,21 +86,8 @@ namespace Models {
 
     public:
         bool removeKeywordAt(int index);
-        bool removeLastKeyword() { return removeKeywordAt(m_KeywordsList.length() - 1); }
-        bool appendKeyword(const QString &keyword);
-
-    private:
-        bool appendKeywordUnsafe(const QString &keyword);
-        void setSpellCheckResultUnsafe(SpellCheck::SpellCheckQueryItem *result);
-        void emitSpellCheckChangedUnsafe(int index=-1);
-
-    public:
-        void setKeywords(const QStringList &keywordsList);
-        int appendKeywords(const QStringList &keywordsList);
-
-    private:
-        int appendKeywordsUnsafe(const QStringList &keywordsList);
-        void resetKeywordsUnsafe();
+        bool removeLastKeyword();
+        virtual bool appendKeyword(const QString &keyword);
 
     public:
         void addKeywords(const QString &rawKeywords);
@@ -157,27 +98,9 @@ namespace Models {
          void modifiedChanged(bool newValue);
          void selectedChanged(bool newValue);
          void fileSelectedChanged(const QString &filepath, bool newValue);
-         void spellCheckResultsReady();
-
-    private slots:
-         void spellCheckRequestReady(int index);
-
-    public:
-        virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
-        virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
-
-    protected:
-        virtual QHash<int, QByteArray> roleNames() const;
 
     private:
-         QReadWriteLock m_RWLock;
-         QStringList m_KeywordsList;
-         QVector<bool> m_SpellCheckResults;
-         SpellCheck::SpellCheckItemInfo *m_SpellCheckInfo;
-         QSet<QString> m_KeywordsSet;
          QString m_ArtworkFilepath;
-         QString m_ArtworkDescription;
-         QString m_ArtworkTitle;
          volatile bool m_IsModified;
          volatile bool m_IsSelected;
          volatile bool m_IsInitialized;

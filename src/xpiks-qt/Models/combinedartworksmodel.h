@@ -67,7 +67,7 @@ namespace Models {
         void initArtworks(const QVector<ArtItemInfo *> &artworks);
 
     private:
-        void initKeywords(const QStringList &ek) { m_CommonKeywordsModel.reset(ek); m_CommonKeywordsSet.unite(QSet<QString>::fromList(m_CommonKeywordsModel.getKeywords())); }
+        void initKeywords(const QStringList &ek) { m_CommonKeywordsModel.resetKeywords(ek); }
         void initDescription(const QString &description) { setDescription(description); }
         void initTitle(const QString &title) { setTitle(title); }
 
@@ -78,7 +78,7 @@ namespace Models {
         virtual void acceptSuggestedKeywords(const QStringList &keywords);
 
     public:
-        void setKeywords(const QStringList& keywords) { m_CommonKeywordsModel.reset(keywords); }
+        void setKeywords(const QStringList& keywords) { m_CommonKeywordsModel.resetKeywords(keywords); }
         const QString &getDescription() const { return m_CommonKeywordsModel.getDescription(); }
         void setDescription(const QString &value) {
             if (m_CommonKeywordsModel.setDescription(value)) {
@@ -167,7 +167,6 @@ namespace Models {
     private:
         QVector<ArtItemInfo*> m_ArtworksList;
         Common::BasicKeywordsModel m_CommonKeywordsModel;
-        QSet<QString> m_CommonKeywordsSet;
         int m_EditFlags;
         bool m_IsModified;
     };

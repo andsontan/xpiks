@@ -27,7 +27,7 @@
 #include <QVector>
 #include <QHash>
 #include "spellcheckitem.h"
-#include "keywordspellsuggestions.h"
+#include "spellsuggestionsitem.h"
 
 namespace SpellCheck {
     class ISpellCheckable {
@@ -36,8 +36,12 @@ namespace SpellCheck {
         virtual QStringList getKeywords() = 0;
         virtual void setSpellCheckResults(const QVector<SpellCheckQueryItem*> &items) = 0;
         virtual void setSpellCheckResults(const QHash<QString, bool> &results) = 0;
-        virtual QVector<KeywordSpellSuggestions*> createKeywordsSuggestionsList() = 0;
+        virtual QVector<SpellSuggestionsItem*> createKeywordsSuggestionsList() = 0;
+        virtual QVector<SpellSuggestionsItem*> createDescriptionSuggestionsList() = 0;
+        virtual QVector<SpellSuggestionsItem*> createTitleSuggestionsList() = 0;
         virtual void replaceKeyword(int index, const QString &existing, const QString &replacement) = 0;
+        virtual void replaceWordInDescription(const QString &word, const QString &replacement) = 0;
+        virtual void replaceWordInTitle(const QString &word, const QString &replacement) = 0;
         virtual void connectSignals(SpellCheckItem *item) = 0;
         virtual QStringList getDescriptionWords() const = 0;
         virtual QStringList getTitleWords() const = 0;

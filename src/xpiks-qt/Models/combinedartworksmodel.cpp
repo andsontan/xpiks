@@ -109,13 +109,11 @@ namespace Models {
         setDescription("");
         setTitle("");
         setKeywords(QStringList());
-        m_CommonKeywordsSet.clear();
-        m_CommonKeywordsModel.dropSpellCheckInfo();
+        m_CommonKeywordsModel.setSpellCheckInfo(NULL);
     }
 
     void CombinedArtworksModel::clearKeywords() {
-        m_CommonKeywordsSet.clear();
-        m_CommonKeywordsModel.clear();
+        m_CommonKeywordsModel.clearKeywords();
     }
 
     void CombinedArtworksModel::suggestCorrections() {
@@ -216,8 +214,7 @@ namespace Models {
 
     QString CombinedArtworksModel::removeKeywordAt(int keywordIndex) {
         QString keyword;
-        if (m_CommonKeywordsModel.removeKeyword(keywordIndex, keyword)) {
-            m_CommonKeywordsSet.remove(keyword);
+        if (m_CommonKeywordsModel.takeKeywordAt(keywordIndex, keyword)) {
             emit keywordsCountChanged();
             m_IsModified = true;
         }
@@ -227,18 +224,14 @@ namespace Models {
 
     void CombinedArtworksModel::removeLastKeyword() {
         QString keyword;
-        if (m_CommonKeywordsModel.removeLastKeyword(keyword)) {
-            m_CommonKeywordsSet.remove(keyword);
+        if (m_CommonKeywordsModel.takeLastKeyword(keyword)) {
             emit keywordsCountChanged();
             m_IsModified = true;
         }
     }
 
-    void CombinedArtworksModel::appendKeyword(const QString &word) {
-        QString keyword = word.simplified();
-        if (!keyword.isEmpty() && !m_CommonKeywordsSet.contains(keyword)) {
-            m_CommonKeywordsModel.appendKeyword(keyword);
-            m_CommonKeywordsSet.insert(keyword);
+    void CombinedArtworksModel::appendKeyword(const QString &keyword) {
+        if (m_CommonKeywordsModel.appendKeyword(keyword)) {
             emit keywordsCountChanged();
             m_IsModified = true;
 
@@ -247,14 +240,7 @@ namespace Models {
     }
 
     void CombinedArtworksModel::pasteKeywords(const QStringList &keywords) {
-        if (!keywords.empty()) {
-            foreach (const QString &keyword, keywords) {
-                if (!m_CommonKeywordsSet.contains(keyword)) {
-                    m_CommonKeywordsSet.insert(keyword);
-                    m_CommonKeywordsModel.appendKeyword(keyword);
-                }
-            }
-
+        if (m_CommonKeywordsModel.appendKeywords(keywords) > 0) {
             emit keywordsCountChanged();
             m_IsModified = true;
         }

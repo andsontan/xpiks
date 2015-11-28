@@ -28,8 +28,8 @@ namespace Suggestion {
     void KeywordsSuggestor::setSuggestedArtworks(const QVector<SuggestionArtwork *> &suggestedArtworks) {
         m_SelectedArtworksCount = 0;
         m_KeywordsHash.clear();
-        m_SuggestedKeywords.clear();
-        m_AllOtherKeywords.clear();
+        m_SuggestedKeywords.clearModel();
+        m_AllOtherKeywords.clearModel();
         beginResetModel();
         qDeleteAll(m_Suggestions);
         m_Suggestions.clear();
@@ -42,8 +42,8 @@ namespace Suggestion {
     void KeywordsSuggestor::clear() {
         m_SelectedArtworksCount = 0;
         m_KeywordsHash.clear();
-        m_SuggestedKeywords.clear();
-        m_AllOtherKeywords.clear();
+        m_SuggestedKeywords.clearModel();
+        m_AllOtherKeywords.clearModel();
         beginResetModel();
         qDeleteAll(m_Suggestions);
         m_Suggestions.clear();
@@ -53,14 +53,14 @@ namespace Suggestion {
 
     QString KeywordsSuggestor::removeSuggestedKeywordAt(int keywordIndex) {
         QString keyword;
-        m_SuggestedKeywords.removeKeyword(keywordIndex, keyword);
+        m_SuggestedKeywords.takeKeywordAt(keywordIndex, keyword);
         emit suggestedKeywordsCountChanged();
         return keyword;
     }
 
     QString KeywordsSuggestor::removeOtherKeywordAt(int keywordIndex) {
         QString keyword;
-        m_AllOtherKeywords.removeKeyword(keywordIndex, keyword);
+        m_AllOtherKeywords.takeKeywordAt(keywordIndex, keyword);
         emit otherKeywordsCountChanged();
         return keyword;
     }
@@ -171,14 +171,14 @@ namespace Suggestion {
             }
         }
 
-        m_SuggestedKeywords.reset(keywords);
+        m_SuggestedKeywords.resetKeywords(keywords);
 
         if (m_SelectedArtworksCount != 0) {
             QSet<QString> allKeywords = getSelectedArtworksKeywords();
             QSet<QString> suggestedKeywords = keywords.toSet();
             QSet<QString> otherKeywords = allKeywords.subtract(suggestedKeywords);
 
-            m_AllOtherKeywords.reset(otherKeywords.toList());
+            m_AllOtherKeywords.resetKeywords(otherKeywords.toList());
         }
 #ifndef QT_DEBUG
         else {

@@ -42,6 +42,7 @@ namespace SpellCheck {
         bool hasWrongSpelling(const QString& word) const { return m_WordsWithErrors.contains(word); }
         void setErrorWords(const QSet<QString> &errors) { m_WordsWithErrors.clear(); m_WordsWithErrors.unite(errors); }
         bool anyError() const { return !m_WordsWithErrors.isEmpty(); }
+        QStringList toList() const { return QStringList::fromSet(m_WordsWithErrors); }
 
     private:
         QSet<QString> m_WordsWithErrors;
@@ -54,6 +55,8 @@ namespace SpellCheck {
         bool anyTitleError() const { return m_TitleErrors.anyError(); }
         void setDescriptionErrors(const QSet<QString> &errors);
         void setTitleErrors(const QSet<QString> &errors);
+        QStringList retrieveDescriptionErrors() const { return m_DescriptionErrors.toList(); }
+        QStringList retrieveTitleErrors() const { return m_TitleErrors.toList(); }
         void createHighlighterForDescription(QTextDocument *document, Models::ArtworkMetadata *metadata);
         void createHighlighterForTitle(QTextDocument *document, Models::ArtworkMetadata *metadata);
         void createHighlighterForDescription(QTextDocument *document, Common::BasicKeywordsModel *basicKeywordsModel);

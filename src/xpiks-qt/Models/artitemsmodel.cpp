@@ -313,7 +313,7 @@ namespace Models {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
             SpellCheck::SpellCheckItemInfo *info = metadata->getSpellCheckInfo();
             info->createHighlighterForDescription(document->textDocument(), metadata);
-            metadata->notifySpellCheckResultReady();
+            metadata->notifySpellCheckResults();
         }
     }
 
@@ -322,7 +322,7 @@ namespace Models {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
             SpellCheck::SpellCheckItemInfo *info = metadata->getSpellCheckInfo();
             info->createHighlighterForTitle(document->textDocument(), metadata);
-            metadata->notifySpellCheckResultReady();
+            metadata->notifySpellCheckResults();
         }
     }
 

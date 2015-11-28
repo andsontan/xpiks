@@ -71,12 +71,12 @@ SOURCES += main.cpp \
     SpellCheck/spellcheckitem.cpp \
     SpellCheck/spellcheckworker.cpp \
     SpellCheck/spellchecksuggestionmodel.cpp \
-    SpellCheck/keywordspellsuggestions.cpp \
     Common/basickeywordsmodel.cpp \
     SpellCheck/spellcheckerrorshighlighter.cpp \
     SpellCheck/spellcheckiteminfo.cpp \
     Helpers/backupsaverworker.cpp \
-    Helpers/backupsaverservice.cpp
+    Helpers/backupsaverservice.cpp \
+    SpellCheck/spellsuggestionsitem.cpp
 
 RESOURCES += qml.qrc
 
@@ -184,13 +184,13 @@ HEADERS += \
     SpellCheck/spellcheckitem.h \
     SpellCheck/spellcheckworker.h \
     SpellCheck/spellchecksuggestionmodel.h \
-    SpellCheck/keywordspellsuggestions.h \
     SpellCheck/ispellcheckable.h \
     SpellCheck/spellcheckerrorshighlighter.h \
     SpellCheck/spellcheckiteminfo.h \
     Helpers/backupsaverworker.h \
     Common/itemprocessingworker.h \
-    Helpers/backupsaverservice.h
+    Helpers/backupsaverservice.h \
+    SpellCheck/spellsuggestionsitem.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

@@ -22,10 +22,16 @@
 #include "basickeywordsmodel.h"
 #include <QDebug>
 #include "../SpellCheck/spellcheckitem.h"
-#include "../SpellCheck/keywordspellsuggestions.h"
+#include "../SpellCheck/spellsuggestionsitem.h"
 #include "../SpellCheck/spellcheckiteminfo.h"
+#include "../Helpers/keywordvalidator.h"
 
 namespace Common {
+    BasicKeywordsModel::BasicKeywordsModel(QObject *parent):
+        QAbstractListModel(parent),
+        m_SpellCheckInfo(NULL)
+    {
+    }
 
     QVariant BasicKeywordsModel::data(const QModelIndex &index, int role) const {
         int row = index.row();
@@ -43,40 +49,59 @@ namespace Common {
         }
     }
 
-    void BasicKeywordsModel::reset(const QStringList &items) {
-        m_SpellCheckResults.clear();
-        int n = items.length();
-        m_SpellCheckResults.insert(0, n, true);
+    bool BasicKeywordsModel::appendKeyword(const QString &keyword) {
+        bool added = false;
+        const QString &sanitizedKeyword = keyword.simplified().toLower();
+        bool isValid = Helpers::isValidKeyword(sanitizedKeyword);
 
-        beginResetModel();
-        m_KeywordsList.clear();
-        m_KeywordsList.append(items);
-        endResetModel();
+        if (isValid && !m_KeywordsSet.contains(sanitizedKeyword)) {
+            int keywordsCount = m_KeywordsList.length();
+
+            m_KeywordsSet.insert(sanitizedKeyword);
+            m_SpellCheckResults.append(true);
+
+            beginInsertRows(QModelIndex(), keywordsCount, keywordsCount);
+            m_KeywordsList.append(sanitizedKeyword);
+            endInsertRows();
+            added = true;
+        }
+
+        return added;
     }
 
-    void BasicKeywordsModel::clear() {
-        beginResetModel();
-        m_KeywordsList.clear();
-        m_SpellCheckResults.clear();
-        endResetModel();
-    }
+    bool BasicKeywordsModel::takeKeywordAt(int index, QString &removedKeyword) {
+        bool removed = false;
 
-    void BasicKeywordsModel::appendKeyword(const QString &keyword) {
-        m_SpellCheckResults.append(true);
-        beginInsertRows(QModelIndex(), rowCount(), rowCount());
-        m_KeywordsList.append(keyword);
-        endInsertRows();
-    }
+        if (0 <= index && index < m_KeywordsList.length()) {
+            const QString &keyword = m_KeywordsList.at(index);
+            m_KeywordsSet.remove(keyword);
 
-    bool BasicKeywordsModel::removeKeyword(int index, QString &keyword) {
-        bool indexValid = 0 <= index && index < m_KeywordsList.length();
-        if (indexValid) {
             beginRemoveRows(QModelIndex(), index, index);
-            keyword = m_KeywordsList.takeAt(index);
+            removedKeyword = m_KeywordsList.takeAt(index);
             m_SpellCheckResults.removeAt(index);
             endRemoveRows();
+
+            removed = true;
         }
-        return indexValid;
+
+        return removed;
+    }
+
+    void BasicKeywordsModel::setKeywords(const QStringList &keywordsList) {
+        clearModel();
+        appendKeywords(keywordsList);
+    }
+
+    int BasicKeywordsModel::appendKeywords(const QStringList &keywordsList) {
+        int appendedCount = 0, size = keywordsList.length();
+
+        for (int i = 0; i < size; ++i) {
+            if (appendKeyword(keywordsList.at(i))) {
+                appendedCount += 1;
+            }
+        }
+
+        return appendedCount;
     }
 
     bool BasicKeywordsModel::setDescription(const QString &value) {
@@ -91,6 +116,65 @@ namespace Common {
         return result;
     }
 
+    bool BasicKeywordsModel::isEmpty() const {
+        return m_KeywordsList.isEmpty() || m_Description.simplified().isEmpty();
+    }
+
+    bool BasicKeywordsModel::isTitleEmpty() const {
+        return m_Title.simplified().isEmpty();
+    }
+
+    bool BasicKeywordsModel::isDescriptionEmpty() const {
+        return m_Description.simplified().isEmpty();
+    }
+
+    bool BasicKeywordsModel::containsKeyword(const QString &searchTerm, bool exactMatch) {
+        bool hasMatch = false;
+        int length = m_KeywordsList.length();
+
+        if (exactMatch) {
+            for (int i = 0; i < length; ++i) {
+                if (m_KeywordsList.at(i) == searchTerm) {
+                    hasMatch = true;
+                    break;
+                }
+            }
+        } else {
+            for (int i = 0; i < length; ++i) {
+                if (m_KeywordsList.at(i).contains(searchTerm, Qt::CaseInsensitive)) {
+                    hasMatch = true;
+                    break;
+                }
+            }
+        }
+
+        return hasMatch;
+    }
+
+    bool BasicKeywordsModel::hasKeywordsSpellError() const {
+        bool anyError = false;
+        int length = m_SpellCheckResults.length();
+
+        for (int i = 0; i < length; ++i) {
+            if (!m_SpellCheckResults[i]) {
+                anyError = true;
+                break;
+            }
+        }
+
+        return anyError;
+    }
+
+    bool BasicKeywordsModel::hasDescriptionSpellError() const {
+        bool hasError = m_SpellCheckInfo->anyDescriptionError();
+        return hasError;
+    }
+
+    bool BasicKeywordsModel::hasTitleSpellError() const {
+        bool hasError = m_SpellCheckInfo->anyTitleError();
+        return hasError;
+    }
+
     void BasicKeywordsModel::setSpellStatuses(const QVector<bool> &statuses) {
         Q_ASSERT(statuses.length() == m_SpellCheckResults.length());
 
@@ -98,6 +182,26 @@ namespace Common {
         for (int i = 0; i < size; ++i) {
             m_SpellCheckResults[i] = statuses[i];
         }
+    }
+
+    void BasicKeywordsModel::clearModel() {
+        setDescription("");
+        setTitle("");
+        clearKeywords();
+    }
+
+    void BasicKeywordsModel::clearKeywords() {
+        beginResetModel();
+        m_KeywordsList.clear();
+        endResetModel();
+
+        m_SpellCheckResults.clear();
+        m_KeywordsSet.clear();
+    }
+
+    void BasicKeywordsModel::resetKeywords(const QStringList &keywords) {
+        clearKeywords();
+        appendKeywords(keywords);
     }
 
     void BasicKeywordsModel::updateDescriptionSpellErrors(const QHash<QString, bool> &results) {
@@ -122,6 +226,16 @@ namespace Common {
         }
 
         m_SpellCheckInfo->setTitleErrors(titleErrors);
+    }
+
+    void BasicKeywordsModel::setSpellCheckResult(SpellCheck::SpellCheckQueryItem *result) {
+        int index = result->m_Index;
+
+        if (0 <= index && index < m_SpellCheckResults.length()) {
+            if (m_KeywordsList[index] == result->m_Word) {
+                m_SpellCheckResults[index] = result->m_IsCorrect;
+            }
+        }
     }
 
     QString BasicKeywordsModel::retrieveKeyword(int wordIndex) {
@@ -165,8 +279,8 @@ namespace Common {
         emit spellCheckResultsReady();
     }
 
-    QVector<SpellCheck::KeywordSpellSuggestions *> BasicKeywordsModel::createKeywordsSuggestionsList() {
-        QVector<SpellCheck::KeywordSpellSuggestions *> spellCheckSuggestions;
+    QVector<SpellCheck::SpellSuggestionsItem *> BasicKeywordsModel::createKeywordsSuggestionsList() {
+        QVector<SpellCheck::SpellSuggestionsItem *> spellCheckSuggestions;
         int length = m_KeywordsList.length();
         spellCheckSuggestions.reserve(length/2);
 
@@ -176,6 +290,38 @@ namespace Common {
                 SpellCheck::KeywordSpellSuggestions *suggestionsItem = new SpellCheck::KeywordSpellSuggestions(keyword, i);
                 spellCheckSuggestions.append(suggestionsItem);
             }
+        }
+
+        return spellCheckSuggestions;
+    }
+
+    QVector<SpellCheck::SpellSuggestionsItem *> BasicKeywordsModel::createDescriptionSuggestionsList() {
+        QStringList descriptionErrors = m_SpellCheckInfo->retrieveDescriptionErrors();
+        int length = descriptionErrors.length();
+
+        QVector<SpellCheck::SpellSuggestionsItem *> spellCheckSuggestions;
+        spellCheckSuggestions.reserve(length);
+
+        for (int i = 0; i < length; ++i) {
+            const QString &word = descriptionErrors.at(i);
+            SpellCheck::DescriptionSpellSuggestions *suggestionsItem = new SpellCheck::DescriptionSpellSuggestions(word);
+            spellCheckSuggestions.append(suggestionsItem);
+        }
+
+        return spellCheckSuggestions;
+    }
+
+    QVector<SpellCheck::SpellSuggestionsItem *> BasicKeywordsModel::createTitleSuggestionsList() {
+        QStringList titleErrors = m_SpellCheckInfo->retrieveTitleErrors();
+        int length = titleErrors.length();
+
+        QVector<SpellCheck::SpellSuggestionsItem *> spellCheckSuggestions;
+        spellCheckSuggestions.reserve(length);
+
+        for (int i = 0; i < length; ++i) {
+            const QString &word = titleErrors.at(i);
+            SpellCheck::TitleSpellSuggestions *suggestionsItem = new SpellCheck::TitleSpellSuggestions(word);
+            spellCheckSuggestions.append(suggestionsItem);
         }
 
         return spellCheckSuggestions;
@@ -191,6 +337,14 @@ namespace Common {
                 emit dataChanged(i, i, QVector<int>() << IsCorrectRole << KeywordRole);
             }
         }
+    }
+
+    void BasicKeywordsModel::replaceWordInDescription(const QString &word, const QString &replacement) {
+        m_Description.replace(word, replacement);
+    }
+
+    void BasicKeywordsModel::replaceWordInTitle(const QString &word, const QString &replacement) {
+        m_Title.replace(word, replacement);
     }
 
     void BasicKeywordsModel::connectSignals(SpellCheck::SpellCheckItem *item) {
@@ -234,5 +388,23 @@ namespace Common {
         roles[KeywordRole] = "keyword";
         roles[IsCorrectRole] = "iscorrect";
         return roles;
+    }
+
+    void BasicKeywordsModel::resetKeywords() {
+        m_KeywordsList.clear();
+        m_KeywordsSet.clear();
+        m_SpellCheckResults.clear();
+    }
+
+    void BasicKeywordsModel::addKeywords(const QString &rawKeywords) {
+        QStringList keywordsList = rawKeywords.split(",", QString::SkipEmptyParts);
+        int size = keywordsList.size();
+
+        for (int i = 0; i < size; ++i) {
+            const QString &keyword = keywordsList.at(i).simplified();
+            m_KeywordsList.append(keyword);
+            m_SpellCheckResults.append(true);
+            m_KeywordsSet.insert(keyword.toLower());
+        }
     }
 }

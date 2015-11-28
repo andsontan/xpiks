@@ -27,12 +27,12 @@
 #include <QAbstractListModel>
 
 namespace SpellCheck {
-    class KeywordSpellSuggestions: public QAbstractListModel
-    {
+    class ISpellCheckable;
+
+    class SpellSuggestionsItem: public QAbstractListModel {
         Q_OBJECT
     public:
-        KeywordSpellSuggestions(const QString &keyword, int originalIndex);
-
+        SpellSuggestionsItem(const QString &word);
     public:
         enum KeywordSpellSuggestionsRoles {
             SuggestionRole = Qt::UserRole + 1,
@@ -48,12 +48,14 @@ namespace SpellCheck {
 
         bool setReplacementIndex(int value);
 
-        const QString &getReplacement() const { return m_Suggestions[m_ReplacementIndex]; }
+        const QString &getReplacement() const { return m_Suggestions.at(m_ReplacementIndex); }
         void setSuggestions(const QStringList &suggestions);
-        int getOriginalIndex() const { return m_OriginalIndex; }
 
         bool getIsSelected() const { return m_IsSelected; }
         void setIsSelected(bool value) { m_IsSelected = value; }
+
+    public:
+        virtual void replaceToSuggested(ISpellCheckable *item) = 0;
 
     signals:
         void replacementIndexChanged();
@@ -70,8 +72,38 @@ namespace SpellCheck {
         QStringList m_Suggestions;
         QString m_Word;
         int m_ReplacementIndex;
-        int m_OriginalIndex;
         bool m_IsSelected;
+    };
+
+    class KeywordSpellSuggestions: public SpellSuggestionsItem
+    {
+    public:
+        KeywordSpellSuggestions(const QString &keyword, int originalIndex);
+
+    public:
+        int getOriginalIndex() const { return m_OriginalIndex; }
+        virtual void replaceToSuggested(ISpellCheckable *item);
+
+    private:
+        int m_OriginalIndex;
+    };
+
+    class DescriptionSpellSuggestions: public SpellSuggestionsItem
+    {
+    public:
+        DescriptionSpellSuggestions(const QString &word);
+
+    public:
+        virtual void replaceToSuggested(ISpellCheckable *item);
+    };
+
+    class TitleSpellSuggestions: public SpellSuggestionsItem
+    {
+    public:
+        TitleSpellSuggestions(const QString &word);
+
+    public:
+        virtual void replaceToSuggested(ISpellCheckable *item);
     };
 }
 

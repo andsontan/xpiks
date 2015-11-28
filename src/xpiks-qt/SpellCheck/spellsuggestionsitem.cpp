@@ -19,18 +19,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "keywordspellsuggestions.h"
+#include "spellsuggestionsitem.h"
+#include "ispellcheckable.h"
 
 namespace SpellCheck {
-    KeywordSpellSuggestions::KeywordSpellSuggestions(const QString &keyword, int originalIndex) :
-        m_Word(keyword),
+    SpellSuggestionsItem::SpellSuggestionsItem(const QString &word) :
+        QAbstractListModel(),
+        m_Word(word),
         m_ReplacementIndex(0),
-        m_OriginalIndex(originalIndex),
         m_IsSelected(true)
     {
     }
 
-    bool KeywordSpellSuggestions::setReplacementIndex(int value) {
+    bool SpellSuggestionsItem::setReplacementIndex(int value) {
         bool result = value != m_ReplacementIndex;
 
         if (result) {
@@ -46,7 +47,7 @@ namespace SpellCheck {
         return result;
     }
 
-    void KeywordSpellSuggestions::setSuggestions(const QStringList &suggestions) {
+    void SpellSuggestionsItem::setSuggestions(const QStringList &suggestions) {
         beginResetModel();
         m_Suggestions.clear();
         m_Suggestions.append(suggestions);
@@ -54,12 +55,12 @@ namespace SpellCheck {
         endResetModel();
     }
 
-    int KeywordSpellSuggestions::rowCount(const QModelIndex &parent) const {
+    int SpellSuggestionsItem::rowCount(const QModelIndex &parent) const {
         Q_UNUSED(parent);
         return m_Suggestions.length();
     }
 
-    QVariant KeywordSpellSuggestions::data(const QModelIndex &index, int role) const {
+    QVariant SpellSuggestionsItem::data(const QModelIndex &index, int role) const {
         if (!index.isValid()) return QVariant();
 
         int row = index.row();
@@ -74,7 +75,7 @@ namespace SpellCheck {
         }
     }
 
-    bool KeywordSpellSuggestions::setData(const QModelIndex &index, const QVariant &value, int role) {
+    bool SpellSuggestionsItem::setData(const QModelIndex &index, const QVariant &value, int role) {
         if (!index.isValid()) return false;
 
         bool result = false;
@@ -90,11 +91,41 @@ namespace SpellCheck {
         return result;
     }
 
-    QHash<int, QByteArray> KeywordSpellSuggestions::roleNames() const {
+    QHash<int, QByteArray> SpellSuggestionsItem::roleNames() const {
         QHash<int, QByteArray> roles;
         roles[SuggestionRole] = "suggestion";
         roles[IsSelectedRole] = "isselected";
         roles[EditReplacementIndexRole] = "editreplacementindex";
         return roles;
+    }
+
+    KeywordSpellSuggestions::KeywordSpellSuggestions(const QString &keyword, int originalIndex) :
+        SpellSuggestionsItem(keyword),
+        m_OriginalIndex(originalIndex)
+    {
+    }
+
+    void KeywordSpellSuggestions::replaceToSuggested(ISpellCheckable *item) {
+        const QString &word = getWord();
+        const QString &replacement = getReplacement();
+        item->replaceKeyword(m_OriginalIndex, word, replacement);
+    }
+
+    DescriptionSpellSuggestions::DescriptionSpellSuggestions(const QString &word):
+        SpellSuggestionsItem(word)
+    {
+    }
+
+    void DescriptionSpellSuggestions::replaceToSuggested(ISpellCheckable *item) {
+        item->replaceWordInDescription(getWord(), getReplacement());
+    }
+
+    TitleSpellSuggestions::TitleSpellSuggestions(const QString &word):
+        SpellSuggestionsItem(word)
+    {
+    }
+
+    void TitleSpellSuggestions::replaceToSuggested(ISpellCheckable *item) {
+        item->replaceWordInTitle(getWord(), getReplacement());
     }
 }
