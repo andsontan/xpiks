@@ -44,6 +44,7 @@ namespace Models {
 
     ArtworkMetadata::~ArtworkMetadata() {
         this->disconnect();
+        this->freeSpellCheckInfo();
     }
 
     bool ArtworkMetadata::initialize(const QString &title,

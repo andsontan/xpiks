@@ -204,6 +204,11 @@ namespace Common {
         appendKeywords(keywords);
     }
 
+    void BasicKeywordsModel::notifySpellCheckResults() {
+        emit spellCheckResultsReady();
+        qDebug() << "spellCheckResultsReady() emited";
+    }
+
     void BasicKeywordsModel::updateDescriptionSpellErrors(const QHash<QString, bool> &results) {
         QSet<QString> descriptionErrors;
         QStringList descriptionWords = getDescriptionWords();
@@ -252,11 +257,13 @@ namespace Common {
     }
 
     void BasicKeywordsModel::setSpellCheckResults(const QVector<SpellCheck::SpellCheckQueryItem *> &items) {
+        Q_ASSERT(m_KeywordsList.length() == m_SpellCheckResults.length());
+
         int size = items.length();
         for (int i = 0; i < size; ++i) {
             SpellCheck::SpellCheckQueryItem *item = items.at(i);
             int index = item->m_Index;
-            if (0 <= index && index <= m_KeywordsList.length()) {
+            if (0 <= index && index < m_KeywordsList.length()) {
                 if (m_KeywordsList[index] == item->m_Word) {
                     m_SpellCheckResults[index] = item->m_IsCorrect;
                 }
@@ -276,7 +283,7 @@ namespace Common {
         updateDescriptionSpellErrors(results);
         updateTitleSpellErrors(results);
 
-        emit spellCheckResultsReady();
+        notifySpellCheckResults();
     }
 
     QVector<SpellCheck::SpellSuggestionsItem *> BasicKeywordsModel::createKeywordsSuggestionsList() {
@@ -405,6 +412,12 @@ namespace Common {
             m_KeywordsList.append(keyword);
             m_SpellCheckResults.append(true);
             m_KeywordsSet.insert(keyword.toLower());
+        }
+    }
+
+    void BasicKeywordsModel::freeSpellCheckInfo() {
+        if (m_SpellCheckInfo != NULL) {
+            delete m_SpellCheckInfo;
         }
     }
 }

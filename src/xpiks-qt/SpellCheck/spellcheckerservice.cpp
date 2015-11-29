@@ -47,7 +47,7 @@ namespace SpellCheck {
                          m_SpellCheckWorker, SLOT(cancel()));
 
         QObject::connect(m_SpellCheckWorker, SIGNAL(queueIsEmpty()),
-                         this, SLOT(workerQueueIsEmpty()));
+                         this, SIGNAL(spellCheckQueueIsEmpty()));
 
         thread->start();
     }
@@ -103,9 +103,5 @@ namespace SpellCheck {
         }
 
         return hasPending;
-    }
-
-    void SpellCheckerService::workerQueueIsEmpty() {
-        emit spellCheckQueueIsEmpty();
     }
 }

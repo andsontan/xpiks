@@ -44,6 +44,7 @@ namespace Common {
         Q_OBJECT
     public:
         BasicKeywordsModel(QObject *parent=0);
+        virtual ~BasicKeywordsModel() {}
 
     public:
         enum BasicKeywordsModellRoles {
@@ -90,7 +91,7 @@ namespace Common {
     public:
         SpellCheck::SpellCheckItemInfo *getSpellCheckInfo() const { return m_SpellCheckInfo; }
         void setSpellCheckInfo(SpellCheck::SpellCheckItemInfo *info) { m_SpellCheckInfo = info; }
-        void notifySpellCheckResults() { emit spellCheckResultsReady(); }
+        void notifySpellCheckResults();
 
     private:
         void updateDescriptionSpellErrors(const QHash<QString, bool> &results);
@@ -126,6 +127,7 @@ namespace Common {
         virtual QHash<int, QByteArray> roleNames() const;
         void resetKeywords();
         void addKeywords(const QString &rawKeywords);
+        void freeSpellCheckInfo();
 
     private:
         QStringList m_KeywordsList;

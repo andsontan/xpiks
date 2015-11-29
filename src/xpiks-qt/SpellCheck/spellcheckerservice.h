@@ -54,9 +54,6 @@ namespace SpellCheck {
         void cancelSpellChecking();
         void spellCheckQueueIsEmpty();
 
-    private slots:
-        void workerQueueIsEmpty();
-
     private:
         SpellCheckWorker *m_SpellCheckWorker;
     };

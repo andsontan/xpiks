@@ -35,6 +35,10 @@ namespace SpellCheck {
     }
 
     void SpellCheckErrorsHighlighter::highlightBlock(const QString &text) {
+        if (!m_SpellCheckErrors->anyError()) { return; }
+
+        qDebug() << "In highlightBlock()" << m_SpellCheckErrors->toList();
+
         int i = 0;
         int size = text.size();
         int lastStart = -1;

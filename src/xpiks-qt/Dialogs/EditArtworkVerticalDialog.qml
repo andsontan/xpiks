@@ -197,6 +197,8 @@ Item {
                                     Component.onCompleted: {
                                         combinedArtworks.initDescriptionHighlighting(descriptionTextInput.textDocument)
                                     }
+
+                                    onCursorRectangleChanged: descriptionFlick.ensureVisible(cursorRectangle)
                                 }
                             }
                         }
@@ -268,6 +270,8 @@ Item {
                                     Component.onCompleted: {
                                         combinedArtworks.initTitleHighlighting(titleTextInput.textDocument)
                                     }
+
+                                    onCursorRectangleChanged: titleFlick.ensureVisible(cursorRectangle)
                                 }
                             }
                         }
