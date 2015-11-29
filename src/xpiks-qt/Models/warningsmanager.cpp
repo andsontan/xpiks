@@ -230,6 +230,16 @@ namespace Models {
             hasWarnings = true;
         }
 
+        if (am->hasDescriptionSpellError()) {
+            wi->addWarning("Item has spell errors in description");
+            hasWarnings = true;
+        }
+
+        if (am->hasTitleSpellError()) {
+            wi->addWarning("Item has spell errors in title");
+            hasWarnings = true;
+        }
+
         return hasWarnings;
     }
 
