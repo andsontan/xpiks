@@ -1193,13 +1193,6 @@ ApplicationWindow {
                                                             artItemsModel.initDescriptionHighlighting(index, descriptionTextInput.textDocument)
                                                         }
 
-                                                        Connections {
-                                                            target: spellCheckerService
-                                                            onSpellCheckQueueIsEmpty: {
-                                                                console.log("updated")
-                                                            }
-                                                        }
-
                                                         onCursorRectangleChanged: descriptionFlick.ensureVisible(cursorRectangle)
                                                     }
                                                 }
