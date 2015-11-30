@@ -304,8 +304,9 @@ namespace Models {
         return metadata->getFilepath();
     }
 
-    void ArtItemsModel::addRecentDirectory(const QString &directory) {
-        addDirectories(QStringList() << directory);
+    int ArtItemsModel::addRecentDirectory(const QString &directory) {
+        int filesAdded = addDirectories(QStringList() << directory);
+        return filesAdded;
     }
 
     void ArtItemsModel::initDescriptionHighlighting(int metadataIndex, QQuickTextDocument *document) {

@@ -111,7 +111,12 @@ ApplicationWindow {
 
                     delegate: MenuItem {
                         text: display
-                        onTriggered: artItemsModel.addRecentDirectory(display)
+                        onTriggered: {
+                            var filesAdded = artItemsModel.addRecentDirectory(display)
+                            if (filesAdded === 0) {
+                                noFilesInfo.open()
+                            }
+                        }
                     }
                 }
             }
@@ -302,6 +307,12 @@ ApplicationWindow {
         id: mustSelectDialog
         title: "Warning"
         text: qsTr("Please, select some artworks first")
+    }
+
+    MessageDialog {
+        id: noFilesInfo
+        title: "Information"
+        text: qsTr("No files were added")
     }
 
     MessageDialog {

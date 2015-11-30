@@ -97,7 +97,7 @@ namespace Models {
         Q_INVOKABLE QString retrieveFileSize(int metadataIndex) const;
         Q_INVOKABLE QString getArtworkFilepath(int index) const;
 
-        Q_INVOKABLE void addRecentDirectory(const QString &directory);
+        Q_INVOKABLE int addRecentDirectory(const QString &directory);
         Q_INVOKABLE void initDescriptionHighlighting(int metadataIndex, QQuickTextDocument *document);
         Q_INVOKABLE void initTitleHighlighting(int metadataIndex, QQuickTextDocument *document);
 
