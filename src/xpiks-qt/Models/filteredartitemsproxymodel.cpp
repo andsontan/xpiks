@@ -73,11 +73,12 @@ namespace Models {
             Q_ASSERT(metadata != NULL);
 
             if (metadata->isInDirectory(directory)) {
-                directoryItems.append(row);
+                directoryItems.append(index);
                 metadata->setIsSelected(!metadata->getIsSelected());
             }
         }
 
+        emit allItemsSelectedChanged();
         artItemsModel->updateItems(directoryItems, QVector<int>() << ArtItemsModel::IsSelectedRole);
     }
 
@@ -240,6 +241,7 @@ namespace Models {
         }
 
         artItemsModel->updateItems(indices, QVector<int>() << ArtItemsModel::IsSelectedRole);
+        emit allItemsSelectedChanged();
     }
 
     QVector<ArtworkMetadata *> FilteredArtItemsProxyModel::getSelectedOriginalItems() const {
@@ -328,16 +330,12 @@ namespace Models {
         return selectedIndices;
     }
 
-    void FilteredArtItemsProxyModel::selectAllItems() {
-        ArtItemsModel *artItemsModel = getArtItemsModel();
-        artItemsModel->setAllItemsSelected(true);
-    }
-
     void FilteredArtItemsProxyModel::forceUnselectAllItems() {
         ArtItemsModel *artItemsModel = getArtItemsModel();
         artItemsModel->forceUnselectAllItems();
         m_SelectedArtworksCount = 0;
         emit selectedArtworksCountChanged();
+        emit allItemsSelectedChanged();
     }
 
     ArtItemsModel *FilteredArtItemsProxyModel::getArtItemsModel() const {

@@ -77,6 +77,7 @@ namespace Models {
         void needCheckItemsForWarnings(const QVector<ArtItemInfo*> &artworks);
         void selectedArtworksCountChanged();
         void afterInvalidateFilter();
+        void allItemsSelectedChanged();
 
     private:
         void setFilteredItemsSelected(bool selected);
@@ -84,7 +85,6 @@ namespace Models {
         QVector<ArtItemInfo *> getSelectedOriginalItemsWithIndices() const;
         QVector<ArtItemInfo *> getAllItemsWithIndices() const;
         QVector<int> getSelectedOriginalIndices() const;
-        void selectAllItems();
         void forceUnselectAllItems();
         ArtItemsModel *getArtItemsModel() const;
         bool fitsSpecialKeywords(const QString &searchTerm, const ArtworkMetadata *metadata) const;

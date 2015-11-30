@@ -82,7 +82,12 @@ namespace Models {
             return result;
         }
 
-        void resetSelected() { m_IsSelected = false; }
+        void resetSelected() {
+            if (m_IsSelected) {
+                m_IsSelected = false;
+                fileSelectedChanged(m_ArtworkFilepath, false);
+            }
+        }
 
     public:
         bool removeKeywordAt(int index);

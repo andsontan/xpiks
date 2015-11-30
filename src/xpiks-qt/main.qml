@@ -952,6 +952,11 @@ ApplicationWindow {
                                     }
                                 }
 
+                                function switchChecked() {
+                                    editisselected = !isselected
+                                    itemCheckedCheckbox.checked = isselected
+                                }
+
                                 width: parent.width
                                 height: 200 + 80*(settingsModel.keywordSizeScale - 1.0)
 
@@ -979,7 +984,7 @@ ApplicationWindow {
                                         MouseArea {
                                             anchors.fill: parent
                                             onClicked: {
-                                                editisselected = !isselected
+                                                rowWrapper.switchChecked()
                                                 rowWrapper.focusIfNeeded()
                                             }
                                         }
@@ -996,7 +1001,7 @@ ApplicationWindow {
                                         MouseArea {
                                             anchors.fill: parent
                                             onClicked: {
-                                                editisselected = !isselected
+                                                rowWrapper.switchChecked()
                                                 rowWrapper.focusIfNeeded()
                                             }
                                         }
@@ -1010,8 +1015,8 @@ ApplicationWindow {
                                             Component.onCompleted: itemCheckedCheckbox.checked = isselected
                                             Connections {
                                                 target: filteredArtItemsModel
-                                                onSelectedArtworksCountChanged: {
-                                                    itemCheckedCheckbox.checked = rowWrapper.artworkModel.isselected || false
+                                                onAllItemsSelectedChanged: {
+                                                    itemCheckedCheckbox.checked = isselected
                                                 }
                                             }
                                         }
@@ -1028,7 +1033,7 @@ ApplicationWindow {
                                         MouseArea {
                                             anchors.fill: parent
                                             onClicked: {
-                                                editisselected = !isselected
+                                                rowWrapper.switchChecked()
                                                 rowWrapper.focusIfNeeded()
                                             }
                                         }
@@ -1060,7 +1065,7 @@ ApplicationWindow {
                                                 MouseArea {
                                                     anchors.fill: parent
                                                     onClicked: {
-                                                        editisselected = !isselected
+                                                        rowWrapper.switchChecked()
                                                         rowWrapper.focusIfNeeded()
                                                     }
                                                     onDoubleClicked: Common.launchItemEditing(rowWrapper.getIndex(), applicationWindow, {
