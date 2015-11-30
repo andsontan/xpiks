@@ -203,6 +203,9 @@ void Commands::CommandManager::connectArtworkSignals(Models::ArtworkMetadata *me
     if (m_ArtItemsModel) {
         QObject::connect(metadata, SIGNAL(modifiedChanged(bool)),
                          m_ArtItemsModel, SLOT(itemModifiedChanged(bool)));
+    }
+    
+    if (m_FilteredItemsModel) {
         QObject::connect(metadata, SIGNAL(selectedChanged(bool)),
                          m_FilteredItemsModel, SLOT(itemSelectedChanged(bool)));
     }
