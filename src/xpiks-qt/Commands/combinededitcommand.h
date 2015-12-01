@@ -41,7 +41,7 @@ namespace Commands {
     public:
         CombinedEditCommand(int editFlags,
                             const QVector<Models::ArtItemInfo*> &infos,
-                            QString description, QString title,
+                            const QString &description, const QString &title,
                             const QStringList &keywords) :
             CommandBase(CombinedEditCommandType),
             m_ArtItemInfos(infos),

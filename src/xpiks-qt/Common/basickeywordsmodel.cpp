@@ -88,7 +88,7 @@ namespace Common {
     }
 
     void BasicKeywordsModel::setKeywords(const QStringList &keywordsList) {
-        clearModel();
+        clearKeywords();
         appendKeywords(keywordsList);
     }
 
