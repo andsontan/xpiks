@@ -235,7 +235,8 @@ DISTFILES += \
     Dialogs/UpdateWindow.qml \
     Dialogs/SpellCheckDialog.qml \
     Dialogs/SpellCheckSuggestionsDialog.qml \
-    Components/SuggestionWrapper.qml
+    Components/SuggestionWrapper.qml \
+    Dialogs/EditKeywordDialog.qml
 
 macx {
 OBJECTIVE_SOURCES += \

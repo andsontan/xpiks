@@ -327,6 +327,13 @@ namespace Models {
         }
     }
 
+    void ArtItemsModel::editKeyword(int metadataIndex, int keywordIndex, const QString &replacement) {
+        if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
+            ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
+            metadata->editKeyword(keywordIndex, replacement);
+        }
+    }
+
     int ArtItemsModel::rowCount(const QModelIndex &parent) const {
         Q_UNUSED(parent);
         return m_ArtworkList.count();

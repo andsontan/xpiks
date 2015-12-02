@@ -71,6 +71,7 @@ namespace Common {
         bool takeLastKeyword(QString &removedKeyword) { return takeKeywordAt(m_KeywordsList.length() - 1, removedKeyword); }
         virtual void setKeywords(const QStringList &keywordsList);
         virtual int appendKeywords(const QStringList &keywordsList);
+        virtual bool editKeyword(int index, const QString &replacement);
 
         virtual bool setDescription(const QString &value);
         virtual bool setTitle(const QString &value);

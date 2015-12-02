@@ -293,6 +293,12 @@ namespace Models {
         return selectedCount;
     }
 
+    void CombinedArtworksModel::editKeyword(int index, const QString &replacement) {
+        if (m_CommonKeywordsModel.editKeyword(index, replacement)) {
+            m_IsModified = true;
+        }
+    }
+
     int CombinedArtworksModel::rowCount(const QModelIndex &parent) const {
         Q_UNUSED(parent);
         return m_ArtworksList.count();

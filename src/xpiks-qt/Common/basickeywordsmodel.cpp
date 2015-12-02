@@ -104,6 +104,25 @@ namespace Common {
         return appendedCount;
     }
 
+    bool BasicKeywordsModel::editKeyword(int index, const QString &replacement) {
+        bool result = false;
+
+        if (0 <= index && index < m_KeywordsList.length()) {
+            QString sanitized = Helpers::doSanitizeKeyword(replacement);
+
+            QString existing = m_KeywordsList.at(index);
+            if (existing != sanitized && Helpers::isValidKeyword(sanitized)) {
+                m_KeywordsSet.insert(sanitized);
+                m_KeywordsList[index] = sanitized;
+                m_KeywordsSet.remove(existing);
+
+                result = true;
+            }
+        }
+
+        return result;
+    }
+
     bool BasicKeywordsModel::setDescription(const QString &value) {
         bool result = value != m_Description;
         if (result) { m_Description = value; }

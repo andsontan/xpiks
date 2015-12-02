@@ -58,6 +58,7 @@ namespace Models {
 
     public:
         virtual void clearModel();
+        virtual bool editKeyword(int index, const QString &replacement);
 
     public:
         virtual bool setDescription(const QString &value) {

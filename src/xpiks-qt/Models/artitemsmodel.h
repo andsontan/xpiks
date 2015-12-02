@@ -101,6 +101,8 @@ namespace Models {
         Q_INVOKABLE void initDescriptionHighlighting(int metadataIndex, QQuickTextDocument *document);
         Q_INVOKABLE void initTitleHighlighting(int metadataIndex, QQuickTextDocument *document);
 
+        Q_INVOKABLE void editKeyword(int metadataIndex, int keywordIndex, const QString &replacement);
+
     public:
         virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
         virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
