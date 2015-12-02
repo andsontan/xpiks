@@ -93,6 +93,93 @@ namespace Models {
         }
     }
 
+    int CombinedArtworksModel::getSelectedArtworksCount() const {
+        int selectedCount = 0;
+        int count = m_ArtworksList.length();
+        for (int i = 0; i < count; ++i) {
+            if (m_ArtworksList.at(i)->isSelected()) {
+                selectedCount++;
+            }
+        }
+
+        return selectedCount;
+    }
+
+    void CombinedArtworksModel::editKeyword(int index, const QString &replacement) {
+        if (m_CommonKeywordsModel.editKeyword(index, replacement)) {
+            m_IsModified = true;
+        }
+    }
+
+    QString CombinedArtworksModel::removeKeywordAt(int keywordIndex) {
+        QString keyword;
+        if (m_CommonKeywordsModel.takeKeywordAt(keywordIndex, keyword)) {
+            emit keywordsCountChanged();
+            m_IsModified = true;
+        }
+
+        return keyword;
+    }
+
+    void CombinedArtworksModel::removeLastKeyword() {
+        QString keyword;
+        if (m_CommonKeywordsModel.takeLastKeyword(keyword)) {
+            emit keywordsCountChanged();
+            m_IsModified = true;
+        }
+    }
+
+    void CombinedArtworksModel::appendKeyword(const QString &keyword) {
+        if (m_CommonKeywordsModel.appendKeyword(keyword)) {
+            emit keywordsCountChanged();
+            m_IsModified = true;
+
+            m_CommandManager->submitForSpellCheck(&m_CommonKeywordsModel, m_CommonKeywordsModel.rowCount() - 1);
+        }
+    }
+
+    void CombinedArtworksModel::pasteKeywords(const QStringList &keywords) {
+        if (m_CommonKeywordsModel.appendKeywords(keywords) > 0) {
+            emit keywordsCountChanged();
+            m_IsModified = true;
+        }
+    }
+
+    void CombinedArtworksModel::setArtworksSelected(int index, bool newState) {
+        if (index < 0 || index >= m_ArtworksList.length()) {
+            return;
+        }
+
+        m_ArtworksList.at(index)->setSelected(newState);
+        QModelIndex qIndex = this->index(index);
+        emit dataChanged(qIndex, qIndex, QVector<int>() << IsSelectedRole);
+        emit selectedArtworksCountChanged();
+    }
+
+    void CombinedArtworksModel::removeSelectedArtworks() {
+        int count = m_ArtworksList.length();
+        QVector<int> indicesToRemove;
+        indicesToRemove.reserve(count);
+
+        for (int i = 0; i < count; ++i) {
+            ArtItemInfo *item = m_ArtworksList[i];
+            if (item->isSelected()) {
+                indicesToRemove.append(i);
+            }
+        }
+
+        QVector<QPair<int, int> > rangesToRemove;
+        Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
+        removeItemsAtIndices(rangesToRemove);
+
+        recombineArtworks();
+        emit artworksCountChanged();
+    }
+
+    void CombinedArtworksModel::saveEdits() const {
+        processCombinedEditCommand();
+    }
+
     void CombinedArtworksModel::resetModelData() {
         beginResetModel();
         qDeleteAll(m_ArtworksList);
@@ -209,93 +296,6 @@ namespace Models {
             if (!m_IsModified) {
                 initKeywords(commonKeywords.toList());
             }
-        }
-    }
-
-    QString CombinedArtworksModel::removeKeywordAt(int keywordIndex) {
-        QString keyword;
-        if (m_CommonKeywordsModel.takeKeywordAt(keywordIndex, keyword)) {
-            emit keywordsCountChanged();
-            m_IsModified = true;
-        }
-
-        return keyword;
-    }
-
-    void CombinedArtworksModel::removeLastKeyword() {
-        QString keyword;
-        if (m_CommonKeywordsModel.takeLastKeyword(keyword)) {
-            emit keywordsCountChanged();
-            m_IsModified = true;
-        }
-    }
-
-    void CombinedArtworksModel::appendKeyword(const QString &keyword) {
-        if (m_CommonKeywordsModel.appendKeyword(keyword)) {
-            emit keywordsCountChanged();
-            m_IsModified = true;
-
-            m_CommandManager->submitForSpellCheck(&m_CommonKeywordsModel, m_CommonKeywordsModel.rowCount() - 1);
-        }
-    }
-
-    void CombinedArtworksModel::pasteKeywords(const QStringList &keywords) {
-        if (m_CommonKeywordsModel.appendKeywords(keywords) > 0) {
-            emit keywordsCountChanged();
-            m_IsModified = true;
-        }
-    }
-
-    void CombinedArtworksModel::setArtworksSelected(int index, bool newState) {
-        if (index < 0 || index >= m_ArtworksList.length()) {
-            return;
-        }
-
-        m_ArtworksList.at(index)->setSelected(newState);
-        QModelIndex qIndex = this->index(index);
-        emit dataChanged(qIndex, qIndex, QVector<int>() << IsSelectedRole);
-        emit selectedArtworksCountChanged();
-    }
-
-    void CombinedArtworksModel::removeSelectedArtworks() {
-        int count = m_ArtworksList.length();
-        QVector<int> indicesToRemove;
-        indicesToRemove.reserve(count);
-
-        for (int i = 0; i < count; ++i) {
-            ArtItemInfo *item = m_ArtworksList[i];
-            if (item->isSelected()) {
-                indicesToRemove.append(i);
-            }
-        }
-
-        QVector<QPair<int, int> > rangesToRemove;
-        Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
-        removeItemsAtIndices(rangesToRemove);
-
-        recombineArtworks();
-        emit artworksCountChanged();
-    }
-
-    void CombinedArtworksModel::saveEdits() const {
-        processCombinedEditCommand();
-    }
-
-    int CombinedArtworksModel::getSelectedArtworksCount() const {
-        int selectedCount = 0;
-        int count = m_ArtworksList.length();
-        for (int i = 0; i < count; ++i) {
-            if (m_ArtworksList.at(i)->isSelected()) {
-                selectedCount++;
-            }
-        }
-
-        return selectedCount;
-    }
-
-    void CombinedArtworksModel::editKeyword(int index, const QString &replacement) {
-        if (m_CommonKeywordsModel.editKeyword(index, replacement)) {
-            m_IsModified = true;
         }
     }
 
