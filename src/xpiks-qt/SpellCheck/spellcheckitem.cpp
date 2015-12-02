@@ -25,6 +25,21 @@
 #include "../Helpers/indiceshelper.h"
 #include "ispellcheckable.h"
 
+QStringList simplifyList(const QStringList &items) {
+    QStringList processed;
+    processed.reserve(items.length());
+
+    foreach (const QString &item, items) {
+        if (item.contains(QChar::Space)) {
+            processed.append(item.split(QChar::Space, QString::SkipEmptyParts));
+        } else {
+            processed.append(item);
+        }
+    }
+
+    return processed;
+}
+
 namespace SpellCheck {
     SpellCheckItemBase::~SpellCheckItemBase() {
         qDeleteAll(m_QueryItems);
@@ -48,18 +63,29 @@ namespace SpellCheck {
 
     SpellCheckItem::SpellCheckItem(ISpellCheckable *spellCheckable, int keywordIndex) :
         SpellCheckItemBase(),
-        m_SpellCheckable(spellCheckable)
+        m_SpellCheckable(spellCheckable),
+        m_OnlyOneKeyword(true)
     {
         QString keyword = m_SpellCheckable->retrieveKeyword(keywordIndex);
-        SpellCheckQueryItem *queryItem = new SpellCheckQueryItem(keywordIndex, keyword);
-        appendItem(queryItem);
+        if (!keyword.contains(QChar::Space)) {
+            SpellCheckQueryItem *queryItem = new SpellCheckQueryItem(keywordIndex, keyword);
+            appendItem(queryItem);
+        } else {
+            QStringList parts = keyword.split(QChar::Space, QString::SkipEmptyParts);
+            foreach (const QString &part, parts) {
+                QString item = part.trimmed();
+                SpellCheckQueryItem *queryItem = new SpellCheckQueryItem(keywordIndex, item);
+                appendItem(queryItem);
+            }
+        }
     }
 
     SpellCheckItem::SpellCheckItem(ISpellCheckable *spellCheckable) :
         SpellCheckItemBase(),
-        m_SpellCheckable(spellCheckable)
+        m_SpellCheckable(spellCheckable),
+        m_OnlyOneKeyword(false)
     {
-        QStringList keywords = spellCheckable->getKeywords();
+        QStringList keywords = simplifyList(spellCheckable->getKeywords());
         QStringList descriptionWords = spellCheckable->getDescriptionWords();
         QStringList titleWords = spellCheckable->getTitleWords();
 
@@ -83,9 +109,9 @@ namespace SpellCheck {
     /*virtual */
     void SpellCheckItem::submitSpellCheckResult() {
         const QVector<SpellCheckQueryItem*> &items = getQueries();
-        m_SpellCheckable->setSpellCheckResults(items);
+        m_SpellCheckable->setSpellCheckResults(items, m_OnlyOneKeyword);
         m_SpellCheckable->setSpellCheckResults(getHash());
-        int index = items.length() == 1 ? items.first()->m_Index : -1;
+        int index = m_OnlyOneKeyword ? items.first()->m_Index : -1;
         emit resultsReady(index);
     }
 }

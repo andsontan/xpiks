@@ -98,9 +98,11 @@ namespace SpellCheck {
 
     public:
         virtual void submitSpellCheckResult();
+        bool getIsOnlyOneKeyword() const { return m_OnlyOneKeyword; }
 
     private:
         ISpellCheckable *m_SpellCheckable;
+        volatile bool m_OnlyOneKeyword;
     };
 }
 

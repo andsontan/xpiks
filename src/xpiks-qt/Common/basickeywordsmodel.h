@@ -96,13 +96,13 @@ namespace Common {
     private:
         void updateDescriptionSpellErrors(const QHash<QString, bool> &results);
         void updateTitleSpellErrors(const QHash<QString, bool> &results);
-        void setSpellCheckResult(SpellCheck::SpellCheckQueryItem *result);
+        void resetSpellCheckResults();
 
     public:
         // ISPELLCHECKABLE
         virtual QString retrieveKeyword(int wordIndex);
         virtual QStringList getKeywords();
-        virtual void setSpellCheckResults(const QVector<SpellCheck::SpellCheckQueryItem*> &items);
+        virtual void setSpellCheckResults(const QVector<SpellCheck::SpellCheckQueryItem*> &items, bool onlyOneKeyword);
         virtual void setSpellCheckResults(const QHash<QString, bool> &results);
         virtual QVector<SpellCheck::SpellSuggestionsItem *> createKeywordsSuggestionsList();
         virtual QVector<SpellCheck::SpellSuggestionsItem*> createDescriptionSuggestionsList();

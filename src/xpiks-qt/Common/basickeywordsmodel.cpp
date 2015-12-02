@@ -233,13 +233,11 @@ namespace Common {
         m_SpellCheckInfo->setTitleErrors(titleErrors);
     }
 
-    void BasicKeywordsModel::setSpellCheckResult(SpellCheck::SpellCheckQueryItem *result) {
-        int index = result->m_Index;
-
-        if (0 <= index && index < m_SpellCheckResults.length()) {
-            if (m_KeywordsList[index] == result->m_Word) {
-                m_SpellCheckResults[index] = result->m_IsCorrect;
-            }
+    void BasicKeywordsModel::resetSpellCheckResults() {
+        int size = m_SpellCheckResults.length();
+        // TODO: use smth like memset
+        for (int i = 0; i < size; ++i) {
+            m_SpellCheckResults[i] = true;
         }
     }
 
@@ -256,23 +254,29 @@ namespace Common {
         return m_KeywordsList;
     }
 
-    void BasicKeywordsModel::setSpellCheckResults(const QVector<SpellCheck::SpellCheckQueryItem *> &items) {
+    void BasicKeywordsModel::setSpellCheckResults(const QVector<SpellCheck::SpellCheckQueryItem *> &items, bool onlyOneKeyword) {
         Q_ASSERT(m_KeywordsList.length() == m_SpellCheckResults.length());
+
+        if (!onlyOneKeyword) {
+            resetSpellCheckResults();
+        }
 
         int size = items.length();
         for (int i = 0; i < size; ++i) {
             SpellCheck::SpellCheckQueryItem *item = items.at(i);
             int index = item->m_Index;
             if (0 <= index && index < m_KeywordsList.length()) {
-                if (m_KeywordsList[index] == item->m_Word) {
-                    m_SpellCheckResults[index] = item->m_IsCorrect;
+                if (m_KeywordsList[index].contains(item->m_Word)) {
+                    // if keyword contains several words, there would be
+                    // several queryitems and there's error if any has error
+                    m_SpellCheckResults[index] = m_SpellCheckResults[index] && item->m_IsCorrect;
                 }
             }
         }
 
         int indexToUpdate = -1;
 
-        if (items.length() == 1) {
+        if (onlyOneKeyword) {
             indexToUpdate = items.first()->m_Index;
         }
 
@@ -294,8 +298,17 @@ namespace Common {
         for (int i = 0; i < length; ++i) {
             if (!m_SpellCheckResults[i]) {
                 const QString &keyword = m_KeywordsList[i];
-                SpellCheck::KeywordSpellSuggestions *suggestionsItem = new SpellCheck::KeywordSpellSuggestions(keyword, i);
-                spellCheckSuggestions.append(suggestionsItem);
+
+                if (!keyword.contains(QChar::Space)) {
+                    SpellCheck::KeywordSpellSuggestions *suggestionsItem = new SpellCheck::KeywordSpellSuggestions(keyword, i);
+                    spellCheckSuggestions.append(suggestionsItem);
+                } else {
+                    QStringList items = keyword.split(QChar::Space, QString::SkipEmptyParts);
+                    foreach (const QString &item, items) {
+                        SpellCheck::KeywordSpellSuggestions *suggestionsItem = new SpellCheck::KeywordSpellSuggestions(item, i);
+                        spellCheckSuggestions.append(suggestionsItem);
+                    }
+                }
             }
         }
 
@@ -342,6 +355,14 @@ namespace Common {
                 m_SpellCheckResults[index] = true;
                 QModelIndex i = this->index(index);
                 emit dataChanged(i, i, QVector<int>() << IsCorrectRole << KeywordRole);
+            } else if (internal.contains(existing) && internal.contains(QChar::Space)) {
+                m_KeywordsList[index].replace(existing, replacement);
+                // TODO: reimplement this someday
+                // no need to mark keyword as correct
+                // if we replace only part of it
+                m_SpellCheckResults[index] = true;
+                QModelIndex i = this->index(index);
+                emit dataChanged(i, i, QVector<int>() << IsCorrectRole << KeywordRole);
             }
         }
     }
@@ -359,12 +380,12 @@ namespace Common {
     }
 
     QStringList BasicKeywordsModel::getDescriptionWords() const {
-        QStringList words = m_Description.split(" ", QString::SkipEmptyParts);
+        QStringList words = m_Description.split(QChar::Space, QString::SkipEmptyParts);
         return words;
     }
 
     QStringList BasicKeywordsModel::getTitleWords() const {
-        QStringList words = m_Title.split(" ", QString::SkipEmptyParts);
+        QStringList words = m_Title.split(QChar::Space, QString::SkipEmptyParts);
         return words;
     }
 
