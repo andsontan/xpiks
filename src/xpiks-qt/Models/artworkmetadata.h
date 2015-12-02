@@ -96,7 +96,7 @@ namespace Models {
 
     public:
         void addKeywords(const QString &rawKeywords);
-        void setModified() { m_IsModified = true; emit modifiedChanged(m_IsModified); }
+        void setModified() { if (!m_IsModified) { m_IsModified = true; emit modifiedChanged(m_IsModified); } }
         void unsetModified() { m_IsModified = false; }
 
     signals:
