@@ -86,26 +86,26 @@ namespace Models {
 
     void ArtworkMetadata::clearModel() {
         BasicKeywordsModel::clearModel();
-        setModified();
+        markModified();
     }
 
     bool ArtworkMetadata::removeKeywordAt(int index) {
         QString removed;
         bool result = BasicKeywordsModel::takeKeywordAt(index, removed);
-        if (result) { setModified(); }
+        if (result) { markModified(); }
         return result;
     }
 
     bool ArtworkMetadata::removeLastKeyword() {
         QString removed;
         bool result = BasicKeywordsModel::takeLastKeyword(removed);
-        if (result) { setModified(); }
+        if (result) { markModified(); }
         return result;
     }
 
     bool ArtworkMetadata::appendKeyword(const QString &keyword) {
         bool result = BasicKeywordsModel::appendKeyword(keyword);
-        if (result) { setModified(); }
+        if (result) { markModified(); }
         return result;
     }
 }

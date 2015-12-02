@@ -62,13 +62,13 @@ namespace Models {
     public:
         virtual bool setDescription(const QString &value) {
             bool result = BasicKeywordsModel::setDescription(value);
-            if (result) { setModified(); }
+            if (result) { markModified(); }
             return result;
         }
 
         bool setTitle(const QString &value) {
             bool result = BasicKeywordsModel::setTitle(value);
-            if (result) { setModified(); }
+            if (result) { markModified(); }
             return result;
         }
 
@@ -96,8 +96,9 @@ namespace Models {
 
     public:
         void addKeywords(const QString &rawKeywords);
-        void setModified() { if (!m_IsModified) { m_IsModified = true; emit modifiedChanged(m_IsModified); } }
-        void unsetModified() { m_IsModified = false; }
+        void markModified() { if (!m_IsModified) { m_IsModified = true; emit modifiedChanged(m_IsModified); } }
+        void setModified() { m_IsModified = true; }
+        void resetModified() { m_IsModified = false; }
 
     signals:
          void modifiedChanged(bool newValue);

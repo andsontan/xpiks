@@ -181,7 +181,7 @@ namespace Models {
     }
 
     int ArtItemsModel::dropFiles(const QList<QUrl> &urls) {
-        QVector<QUrl> localUrls;
+        QList<QUrl> localUrls;
 
 #ifdef Q_OS_MAC
         localUrls.reserve(urls.length());
@@ -214,7 +214,7 @@ namespace Models {
 
     void ArtItemsModel::setSelectedItemsSaved(const QVector<int> &selectedIndices) {
         foreach (int index, selectedIndices) {
-            m_ArtworkList.at(index)->unsetModified();
+            m_ArtworkList.at(index)->resetModified();
         }
 
         QVector<QPair<int, int> > rangesToUpdate;

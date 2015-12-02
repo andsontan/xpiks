@@ -44,6 +44,7 @@ void UndoRedo::ModifyArtworksHistoryItem::undo(const Commands::CommandManager *c
     }
 
     artItemsModel->updateItemsAtIndices(m_Indices);
+    artItemsModel->updateModifiedCount();
 }
 
 

@@ -68,7 +68,7 @@ namespace Helpers {
                     dict.value("description", ""),
                     dict.value("keywords", ""),
                     false)) {
-                m_ArtworkMetadata->setModified();
+                m_ArtworkMetadata->markModified();
             }
         }
     }
