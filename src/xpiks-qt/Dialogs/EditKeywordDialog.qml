@@ -42,6 +42,8 @@ Item {
         closePopup()
     }
 
+    Keys.onEscapePressed: closePopup()
+
     function closePopup() {
         editKeywordComponent.destroy()
     }
@@ -80,6 +82,11 @@ Item {
                 var tmp = mapToItem(editKeywordComponent, mouse.x, mouse.y);
                 old_x = tmp.x;
                 old_y = tmp.y;
+
+                var dialogPoint = mapToItem(dialogWindow, mouse.x, mouse.y);
+                if (!Common.isInComponent(dialogPoint, dialogWindow)) {
+                    closePopup()
+                }
             }
 
             onPositionChanged: {
@@ -91,7 +98,7 @@ Item {
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
-            width: 340
+            width: 200
             height: 100
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
@@ -102,53 +109,36 @@ Item {
                 anchors.margins: 15
                 spacing: 10
 
-                RowLayout {
-                    width: parent.width
-                    height: 20
+                StyledInputHost {
+                    border.width: keywordInput.activeFocus ? 1 : 0
+                    border.color: Colors.artworkActiveColor
 
-                    StyledText {
-                        text: qsTr("Keyword:")
-                    }
-
-                    Item {
-                        Layout.fillWidth: true
-                    }
-
-                    StyledInputHost {
-                        border.width: keywordInput.activeFocus ? 1 : 0
-                        border.color: Colors.artworkActiveColor
-
-                        StyledTextInput {
-                            id: keywordInput
-                            width: 120
-                            height: 24
-                            clip: true
-                            anchors.left: parent.left
-                            anchors.leftMargin: 5
-                            onAccepted: submitKeyword()
-                            Component.onCompleted: keywordInput.text = previousKeyword
-                        }
+                    StyledTextInput {
+                        id: keywordInput
+                        width: 155
+                        height: 24
+                        clip: true
+                        anchors.left: parent.left
+                        anchors.leftMargin: 5
+                        onAccepted: submitKeyword()
+                        Component.onCompleted: keywordInput.text = previousKeyword
                     }
                 }
 
                 RowLayout {
                     width: parent.width
                     height: 20
-                    spacing: 10
-
-                    Item {
-                        Layout.fillWidth: true
-                    }
+                    spacing: 15
 
                     StyledButton {
                         text: qsTr("Ok")
-                        width: 57
+                        width: 70
                         onClicked: submitKeyword()
                     }
 
                     StyledButton {
                         text: qsTr("Cancel")
-                        width: 58
+                        width: 85
                         onClicked: closePopup()
                     }
                 }

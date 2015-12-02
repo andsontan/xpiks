@@ -36,6 +36,7 @@ Rectangle {
     property alias itemHeight: tagTextRect.height
 
     signal actionClicked();
+    signal actionDoubleClicked();
     signal spellSuggestionRequested();
 
     color: isHighlighted ? Colors.defaultLightColor : Colors.selectedArtworkColor
@@ -66,9 +67,13 @@ Rectangle {
 
             MouseArea {
                 anchors.fill: keywordText
-                enabled: hasSpellCheckError
                 cursorShape: hasSpellCheckError > 0 ? Qt.PointingHandCursor : Qt.ArrowCursor
-                onClicked: spellSuggestionRequested()
+                onClicked: {
+                    if (hasSpellCheckError) {
+                        spellSuggestionRequested()
+                    }
+                }
+                onDoubleClicked: actionDoubleClicked()
             }
         }
 

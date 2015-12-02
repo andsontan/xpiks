@@ -25,21 +25,6 @@
 #include "../Helpers/indiceshelper.h"
 #include "ispellcheckable.h"
 
-QStringList simplifyList(const QStringList &items) {
-    QStringList processed;
-    processed.reserve(items.length());
-
-    foreach (const QString &item, items) {
-        if (item.contains(QChar::Space)) {
-            processed.append(item.split(QChar::Space, QString::SkipEmptyParts));
-        } else {
-            processed.append(item);
-        }
-    }
-
-    return processed;
-}
-
 namespace SpellCheck {
     SpellCheckItemBase::~SpellCheckItemBase() {
         qDeleteAll(m_QueryItems);
@@ -85,7 +70,7 @@ namespace SpellCheck {
         m_SpellCheckable(spellCheckable),
         m_OnlyOneKeyword(false)
     {
-        QStringList keywords = simplifyList(spellCheckable->getKeywords());
+        QStringList keywords = spellCheckable->getKeywords();
         QStringList descriptionWords = spellCheckable->getDescriptionWords();
         QStringList titleWords = spellCheckable->getTitleWords();
 
@@ -100,8 +85,18 @@ namespace SpellCheck {
         int index = startingIndex;
 
         foreach (const QString &word, words) {
-            SpellCheckQueryItem *queryItem = new SpellCheckQueryItem(index, word);
-            appendItem(queryItem);
+            if (!word.contains(QChar::Space)) {
+                SpellCheckQueryItem *queryItem = new SpellCheckQueryItem(index, word);
+                appendItem(queryItem);
+            } else {
+                QStringList parts = word.split(QChar::Space, QString::SkipEmptyParts);
+                foreach (const QString &part, parts) {
+                    QString item = part.trimmed();
+                    SpellCheckQueryItem *queryItem = new SpellCheckQueryItem(index, item);
+                    appendItem(queryItem);
+                }
+            }
+
             index++;
         }
     }

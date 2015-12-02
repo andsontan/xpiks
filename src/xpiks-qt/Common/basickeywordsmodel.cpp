@@ -112,9 +112,16 @@ namespace Common {
 
             QString existing = m_KeywordsList.at(index);
             if (existing != sanitized && Helpers::isValidKeyword(sanitized)) {
-                m_KeywordsSet.insert(sanitized);
-                m_KeywordsList[index] = sanitized;
-                m_KeywordsSet.remove(existing);
+                if (!m_KeywordsSet.contains(sanitized)) {
+                    m_KeywordsSet.insert(sanitized);
+                    m_KeywordsList[index] = sanitized;
+                    m_KeywordsSet.remove(existing);
+
+                    QModelIndex i = this->index(index);
+                    emit dataChanged(i, i, QVector<int>() << KeywordRole);
+                } else {
+                    qDebug() << "Attempt to rename keyword to existing one. Use remove instead";
+                }
 
                 result = true;
             }

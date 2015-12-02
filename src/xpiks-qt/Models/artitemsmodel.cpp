@@ -330,7 +330,9 @@ namespace Models {
     void ArtItemsModel::editKeyword(int metadataIndex, int keywordIndex, const QString &replacement) {
         if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
-            metadata->editKeyword(keywordIndex, replacement);
+            if (metadata->editKeyword(keywordIndex, replacement)) {
+                m_CommandManager->submitForSpellCheck(metadata, keywordIndex);
+            }
         }
     }
 

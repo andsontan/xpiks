@@ -108,6 +108,7 @@ namespace Models {
     void CombinedArtworksModel::editKeyword(int index, const QString &replacement) {
         if (m_CommonKeywordsModel.editKeyword(index, replacement)) {
             m_IsModified = true;
+            m_CommandManager->submitForSpellCheck(&m_CommonKeywordsModel, index);
         }
     }
 

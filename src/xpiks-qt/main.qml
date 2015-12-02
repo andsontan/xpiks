@@ -1353,6 +1353,20 @@ ApplicationWindow {
                                                                                 applicationWindow,
                                                                                 {})
                                                         }
+                                                        onActionDoubleClicked: {
+                                                            var callbackObject = {
+                                                                onSuccess: function(replacement) {
+                                                                    artItemsModel.editKeyword(rowWrapper.getIndex(), kw.delegateIndex, replacement)
+                                                                }
+                                                            }
+
+                                                            Common.launchDialog("Dialogs/EditKeywordDialog.qml",
+                                                                                applicationWindow,
+                                                                                {
+                                                                                    callbackObject: callbackObject,
+                                                                                    previousKeyword: keyword
+                                                                                })
+                                                        }
                                                     }
 
                                                     onTagAdded: {
