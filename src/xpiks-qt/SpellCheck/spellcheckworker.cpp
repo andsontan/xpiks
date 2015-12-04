@@ -57,6 +57,8 @@ namespace SpellCheck {
         if (m_Hunspell != NULL) {
             delete m_Hunspell;
         }
+
+        qDebug() << "Spellcheck worker finished!";
     }
 
     bool SpellCheckWorker::initWorker() {

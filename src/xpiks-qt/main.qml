@@ -938,7 +938,7 @@ ApplicationWindow {
                                 id: rowWrapper
                                 property bool isHighlighted: (isselected || descriptionTextInput.activeFocus || flv.isFocused || titleTextInput.activeFocus)
                                 color: isHighlighted ? Colors.selectedArtworkColor : Colors.artworkImageBackground
-                                property variant artworkModel: model
+                                property var artworkModel: artItemsModel.getArtworkItself(rowWrapper.getIndex())
 
                                 function getIndex() {
                                     return filteredArtItemsModel.getOriginalIndex(index)
@@ -1204,6 +1204,14 @@ ApplicationWindow {
                                                             }
                                                         }
 
+                                                        Connections {
+                                                            target: rowWrapper.artworkModel
+                                                            onSpellCheckResultsReady: {
+                                                                // hack for highlighting update
+                                                                descriptionTextInput.deselect()
+                                                            }
+                                                        }
+
                                                         Component.onCompleted: {
                                                             var index = rowWrapper.getIndex()
                                                             artItemsModel.initDescriptionHighlighting(index, descriptionTextInput.textDocument)
@@ -1333,7 +1341,7 @@ ApplicationWindow {
 
                                                 EditableTags {
                                                     id: flv
-                                                    model: artItemsModel.getArtworkItself(rowWrapper.getIndex())
+                                                    model: rowWrapper.artworkModel
                                                     anchors.fill: parent
                                                     property int keywordHeight: 20 * settingsModel.keywordSizeScale + (settingsModel.keywordSizeScale - 1)*10
                                                     scrollStep: keywordHeight
