@@ -76,7 +76,6 @@ function launchDialog(componentName, directParent, options, functor) {
 }
 
 function launchItemEditing(index, appWnd, callbackObject) {
-    combinedArtworks.resetModelData()
     artItemsModel.combineArtwork(index)
 
     var currentImagePath = artItemsModel.getArtworkFilepath(index)

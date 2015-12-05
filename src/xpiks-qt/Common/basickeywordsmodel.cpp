@@ -51,10 +51,9 @@ namespace Common {
 
     bool BasicKeywordsModel::appendKeyword(const QString &keyword) {
         bool added = false;
-        const QString &sanitizedKeyword = keyword.simplified().toLower();
-        bool isValid = Helpers::isValidKeyword(sanitizedKeyword);
 
-        if (isValid && !m_KeywordsSet.contains(sanitizedKeyword)) {
+        if (canBeAdded(keyword)) {
+            const QString &sanitizedKeyword = keyword.simplified().toLower();
             int keywordsCount = m_KeywordsList.length();
 
             m_KeywordsSet.insert(sanitizedKeyword);
@@ -78,8 +77,12 @@ namespace Common {
 
             beginRemoveRows(QModelIndex(), index, index);
             removedKeyword = m_KeywordsList.takeAt(index);
-            m_SpellCheckResults.removeAt(index);
+            bool wasCorrect = m_SpellCheckResults.takeAt(index);
             endRemoveRows();
+
+            if (!wasCorrect) {
+                emit spellCheckErrorsChanged();
+            }
 
             removed = true;
         }
@@ -93,13 +96,29 @@ namespace Common {
     }
 
     int BasicKeywordsModel::appendKeywords(const QStringList &keywordsList) {
+        QStringList keywordsToAdd;
         int appendedCount = 0, size = keywordsList.length();
+        keywordsToAdd.reserve(size);
 
         for (int i = 0; i < size; ++i) {
-            if (appendKeyword(keywordsList.at(i))) {
-                appendedCount += 1;
+            const QString &keyword = keywordsList.at(i);
+            if (canBeAdded(keyword)) {
+                keywordsToAdd.append(keyword);
             }
         }
+
+        int rowsCount = m_KeywordsList.length();
+        size = keywordsToAdd.size();
+        beginInsertRows(QModelIndex(), rowsCount, rowsCount + size - 1);
+
+        for (int i = 0; i < size; ++i) {
+            QString sanitizedKeyword = keywordsToAdd[i].simplified().toLower();
+            m_KeywordsSet.insert(sanitizedKeyword);
+            m_SpellCheckResults.append(true);
+            m_KeywordsList.append(sanitizedKeyword);
+        }
+
+        endInsertRows();
 
         return appendedCount;
     }
@@ -201,6 +220,13 @@ namespace Common {
         return hasError;
     }
 
+    bool BasicKeywordsModel::hasSpellErrors() const {
+        bool hasErrors = hasDescriptionSpellError() ||
+                hasTitleSpellError() ||
+                hasKeywordsSpellError();
+        return hasErrors;
+    }
+
     void BasicKeywordsModel::setSpellStatuses(const QVector<bool> &statuses) {
         Q_ASSERT(statuses.length() == m_SpellCheckResults.length());
 
@@ -232,7 +258,7 @@ namespace Common {
 
     void BasicKeywordsModel::notifySpellCheckResults() {
         emit spellCheckResultsReady();
-        qDebug() << "spellCheckResultsReady() emited";
+        emit spellCheckErrorsChanged();
     }
 
     void BasicKeywordsModel::updateDescriptionSpellErrors(const QHash<QString, bool> &results) {
@@ -265,6 +291,13 @@ namespace Common {
         for (int i = 0; i < size; ++i) {
             m_SpellCheckResults[i] = true;
         }
+    }
+
+    bool BasicKeywordsModel::canBeAdded(const QString &keyword) const {
+        const QString &sanitizedKeyword = keyword.simplified().toLower();
+        bool isValid = Helpers::isValidKeyword(sanitizedKeyword);
+        bool result = isValid && !m_KeywordsSet.contains(sanitizedKeyword);
+        return result;
     }
 
     QString BasicKeywordsModel::retrieveKeyword(int wordIndex) {

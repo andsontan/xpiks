@@ -568,7 +568,6 @@ ApplicationWindow {
 
                                 if (!launched) {
                                     // also as fallback in case of errors in findSelectedIndex
-                                    combinedArtworks.resetModelData();
                                     filteredArtItemsModel.combineSelectedArtworks();
                                     Common.launchDialog("Dialogs/CombinedArtworksDialog.qml", applicationWindow, {componentParent: applicationWindow});
                                 }
@@ -939,6 +938,7 @@ ApplicationWindow {
                                 property bool isHighlighted: (isselected || descriptionTextInput.activeFocus || flv.isFocused || titleTextInput.activeFocus)
                                 color: isHighlighted ? Colors.selectedArtworkColor : Colors.artworkImageBackground
                                 property var artworkModel: artItemsModel.getArtworkItself(rowWrapper.getIndex())
+                                property int delegateIndex: index
 
                                 function getIndex() {
                                     return filteredArtItemsModel.getOriginalIndex(index)
@@ -970,6 +970,16 @@ ApplicationWindow {
 
                                 width: parent.width
                                 height: 200 + 80*(settingsModel.keywordSizeScale - 1.0)
+
+                                Connections {
+                                    target: rowWrapper.artworkModel
+                                    onSpellCheckResultsReady: {
+                                        descriptionTextInput.deselect()
+                                        if (columnLayout.isWideEnough) {
+                                            titleTextInput.deselect()
+                                        }
+                                    }
+                                }
 
                                 Item {
                                     anchors.fill: parent
@@ -1124,7 +1134,6 @@ ApplicationWindow {
 
                                         Item {
                                             id: columnLayout
-                                            //spacing: 3
                                             anchors.fill: parent
                                             anchors.margins: { left: 20; right: 20 }
                                             property bool isWideEnough: width > 400
@@ -1201,14 +1210,6 @@ ApplicationWindow {
                                                                 // same regexp as in validator
                                                                 descriptionTextInput.paste(clipboardText)
                                                                 event.accepted = true
-                                                            }
-                                                        }
-
-                                                        Connections {
-                                                            target: rowWrapper.artworkModel
-                                                            onSpellCheckResultsReady: {
-                                                                // hack for highlighting update
-                                                                descriptionTextInput.deselect()
                                                             }
                                                         }
 
@@ -1293,6 +1294,7 @@ ApplicationWindow {
                                                 id: keywordsLabelsRow
                                                 anchors.left: parent.left
                                                 anchors.top: descriptionRect.bottom
+                                                anchors.right: parent.right
                                                 anchors.topMargin: 7
                                                 spacing: 5
 
@@ -1354,17 +1356,15 @@ ApplicationWindow {
                                                         keywordText: keyword
                                                         itemHeight: flv.keywordHeight
                                                         hasSpellCheckError: !iscorrect
-                                                        onActionClicked: keywordsWrapper.removeKeyword(kw.delegateIndex)
-                                                        onSpellSuggestionRequested: {
-                                                            artItemsModel.suggestCorrections(rowWrapper.getIndex())
-                                                            Common.launchDialog("Dialogs/SpellCheckSuggestionsDialog.qml",
-                                                                                applicationWindow,
-                                                                                {})
-                                                        }
+                                                        onRemoveClicked: keywordsWrapper.removeKeyword(kw.delegateIndex)
+
                                                         onActionDoubleClicked: {
                                                             var callbackObject = {
                                                                 onSuccess: function(replacement) {
                                                                     artItemsModel.editKeyword(rowWrapper.getIndex(), kw.delegateIndex, replacement)
+                                                                },
+                                                                onClose: function() {
+                                                                    flv.activateEdit()
                                                                 }
                                                             }
 
@@ -1407,7 +1407,7 @@ ApplicationWindow {
                                                 anchors.right: parent.right
                                                 anchors.top: keywordsWrapper.bottom
                                                 anchors.topMargin: 3
-                                                spacing: 15
+                                                spacing: 5
 
                                                 StyledText {
                                                     text: keywordscount
@@ -1419,7 +1419,32 @@ ApplicationWindow {
                                                 }
 
                                                 StyledText {
-                                                    text: qsTr("Suggest keywords")
+                                                    id: fixSpellingText
+                                                    text: qsTr("Fix spelling")
+                                                    enabled: rowWrapper.artworkModel ? rowWrapper.artworkModel.hasSpellErrors : false
+                                                    color: enabled ? Colors.artworkActiveColor : (rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.selectedArtworkColor)
+
+                                                    MouseArea {
+                                                        anchors.fill: parent
+                                                        cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
+
+                                                        onClicked: {
+                                                            artItemsModel.suggestCorrections(rowWrapper.getIndex())
+                                                            Common.launchDialog("Dialogs/SpellCheckSuggestionsDialog.qml",
+                                                                                applicationWindow,
+                                                                                {})
+                                                        }
+                                                    }
+                                                }
+
+                                                StyledText {
+                                                    text: "|"
+                                                    color: rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.selectedMetadataColor
+                                                    verticalAlignment: Text.AlignVCenter
+                                                }
+
+                                                StyledText {
+                                                    text: qsTr("Suggest")
                                                     color: suggestKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
 
                                                     MouseArea {
@@ -1441,7 +1466,13 @@ ApplicationWindow {
                                                 }
 
                                                 StyledText {
-                                                    text: qsTr("More Edits")
+                                                    text: "|"
+                                                    color: rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.selectedMetadataColor
+                                                    verticalAlignment: Text.AlignVCenter
+                                                }
+
+                                                StyledText {
+                                                    text: qsTr("Edit")
                                                     color: moreEditsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
 
                                                     MouseArea {
@@ -1455,7 +1486,13 @@ ApplicationWindow {
                                                 }
 
                                                 StyledText {
-                                                    text: qsTr("Copy keywords")
+                                                    text: "|"
+                                                    color: rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.selectedMetadataColor
+                                                    verticalAlignment: Text.AlignVCenter
+                                                }
+
+                                                StyledText {
+                                                    text: qsTr("Copy all")
                                                     color: copyKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
 
                                                     MouseArea {
@@ -1463,6 +1500,24 @@ ApplicationWindow {
                                                         anchors.fill: parent
                                                         cursorShape: Qt.PointingHandCursor
                                                         onClicked: clipboard.setText(keywordsstring)
+                                                    }
+                                                }
+
+                                                StyledText {
+                                                    text: "|"
+                                                    color: rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.selectedMetadataColor
+                                                    verticalAlignment: Text.AlignVCenter
+                                                }
+
+                                                StyledText {
+                                                    text: qsTr("Clear")
+                                                    color: clearKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
+
+                                                    MouseArea {
+                                                        id: clearKeywordsMA
+                                                        anchors.fill: parent
+                                                        cursorShape: Qt.PointingHandCursor
+                                                        onClicked: filteredArtItemsModel.clearKeywords(rowWrapper.delegateIndex)
                                                     }
                                                 }
                                             }

@@ -42,6 +42,7 @@ namespace SpellCheck {
 namespace Common {
     class BasicKeywordsModel : public QAbstractListModel, public SpellCheck::ISpellCheckable {
         Q_OBJECT
+        Q_PROPERTY(bool hasSpellErrors READ hasSpellErrors NOTIFY spellCheckErrorsChanged)
     public:
         BasicKeywordsModel(QObject *parent=0);
         virtual ~BasicKeywordsModel() {}
@@ -83,6 +84,9 @@ namespace Common {
         bool hasKeywordsSpellError() const;
         bool hasDescriptionSpellError() const;
         bool hasTitleSpellError() const;
+
+        bool hasSpellErrors() const;
+
         void setSpellStatuses(const QVector<bool> &statuses);
 
         virtual void clearModel();
@@ -98,6 +102,7 @@ namespace Common {
         void updateDescriptionSpellErrors(const QHash<QString, bool> &results);
         void updateTitleSpellErrors(const QHash<QString, bool> &results);
         void resetSpellCheckResults();
+        bool canBeAdded(const QString &keyword) const;
 
     public:
         // ISPELLCHECKABLE
@@ -117,6 +122,7 @@ namespace Common {
 
     signals:
         void spellCheckResultsReady();
+        void spellCheckErrorsChanged();
 
     protected slots:
          void spellCheckRequestReady(int index);

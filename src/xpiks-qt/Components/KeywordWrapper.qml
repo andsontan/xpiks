@@ -35,7 +35,7 @@ Rectangle {
     property bool hasPlusSign: false
     property alias itemHeight: tagTextRect.height
 
-    signal actionClicked();
+    signal removeClicked();
     signal actionDoubleClicked();
     signal spellSuggestionRequested();
 
@@ -67,13 +67,9 @@ Rectangle {
 
             MouseArea {
                 anchors.fill: keywordText
-                cursorShape: hasSpellCheckError > 0 ? Qt.PointingHandCursor : Qt.ArrowCursor
-                onClicked: {
-                    if (hasSpellCheckError) {
-                        spellSuggestionRequested()
-                    }
-                }
                 onDoubleClicked: actionDoubleClicked()
+                preventStealing: true
+                propagateComposedEvents: true
             }
         }
 
@@ -87,7 +83,7 @@ Rectangle {
                 height: 14*settingsModel.keywordSizeScale
                 isActive: itemWrapper.isHighlighted
                 anchors.centerIn: parent
-                onItemClicked: actionClicked()
+                onItemClicked: removeClicked()
             }
         }
     }

@@ -188,28 +188,20 @@ namespace Models {
 
     void FilteredArtItemsProxyModel::removeMetadataInSelected() const {
         QVector<ArtItemInfo *> selectedArtworks = getSelectedOriginalItemsWithIndices();
-
         int flags = 0;
         Common::SetFlag(flags, Common::EditDesctiption);
         Common::SetFlag(flags, Common::EditKeywords);
         Common::SetFlag(flags, Common::EditTitle);
+        removeMetadataInItems(selectedArtworks, flags);
+    }
 
-        const QString empty = "";
-
-        Commands::CombinedEditCommand *combinedEditCommand = new Commands::CombinedEditCommand(
-                    flags,
-                    selectedArtworks,
-                    empty,
-                    empty,
-                    QStringList());
-
-        Commands::CommandResult *result = m_CommandManager->processCommand(combinedEditCommand);
-        Commands::CombinedEditCommandResult *combinedResult = static_cast<Commands::CombinedEditCommandResult*>(result);
-        m_CommandManager->updateArtworks(combinedResult->m_IndicesToUpdate);
-
-        delete combinedResult;
-        qDeleteAll(selectedArtworks);
-        selectedArtworks.clear();
+    void FilteredArtItemsProxyModel::clearKeywords(int index) {
+        ArtItemsModel *artItemsModel = getArtItemsModel();
+        int originalIndex = getOriginalIndex(index);
+        ArtworkMetadata *metadata = artItemsModel->getArtwork(originalIndex);
+        Q_ASSERT(metadata != NULL);
+        ArtItemInfo *info = new ArtItemInfo(metadata, originalIndex);
+        removeKeywordsInItem(info);
     }
 
     void FilteredArtItemsProxyModel::itemSelectedChanged(bool value) {
@@ -221,6 +213,30 @@ namespace Models {
     void FilteredArtItemsProxyModel::onSelectedArtworksRemoved() {
         m_SelectedArtworksCount--;
         emit selectedArtworksCountChanged();
+    }
+
+    void FilteredArtItemsProxyModel::removeMetadataInItems(const QVector<ArtItemInfo *> &itemsToClear, int flags) const {
+        const QString empty = "";
+
+        Commands::CombinedEditCommand *combinedEditCommand = new Commands::CombinedEditCommand(
+                    flags,
+                    itemsToClear,
+                    empty,
+                    empty,
+                    QStringList());
+
+        Commands::CommandResult *result = m_CommandManager->processCommand(combinedEditCommand);
+        Commands::CombinedEditCommandResult *combinedResult = static_cast<Commands::CombinedEditCommandResult*>(result);
+        m_CommandManager->updateArtworks(combinedResult->m_IndicesToUpdate);
+
+        delete combinedResult;
+        qDeleteAll(itemsToClear);
+    }
+
+    void FilteredArtItemsProxyModel::removeKeywordsInItem(ArtItemInfo *itemToClear) {
+        int flags = 0;
+        Common::SetFlag(flags, Common::EditKeywords);
+        removeMetadataInItems(QVector<ArtItemInfo *>() << itemToClear, flags);
     }
 
     void FilteredArtItemsProxyModel::setFilteredItemsSelected(bool selected) {

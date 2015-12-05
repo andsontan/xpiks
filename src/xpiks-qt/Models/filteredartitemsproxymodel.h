@@ -66,6 +66,7 @@ namespace Models {
         Q_INVOKABLE void reimportMetadataForSelected();
         Q_INVOKABLE int findSelectedItemIndex() const;
         Q_INVOKABLE void removeMetadataInSelected() const;
+        Q_INVOKABLE void clearKeywords(int index);
         Q_INVOKABLE void updateFilter() { invalidateFilter(); emit afterInvalidateFilter(); }
 
     public slots:
@@ -80,6 +81,8 @@ namespace Models {
         void allItemsSelectedChanged();
 
     private:
+        void removeMetadataInItems(const QVector<Models::ArtItemInfo *> &itemsToClear, int flags) const;
+        void removeKeywordsInItem(Models::ArtItemInfo *itemToClear);
         void setFilteredItemsSelected(bool selected);
         QVector<ArtworkMetadata *> getSelectedOriginalItems() const;
         QVector<ArtItemInfo *> getSelectedOriginalItemsWithIndices() const;

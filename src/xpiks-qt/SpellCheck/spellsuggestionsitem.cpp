@@ -76,7 +76,8 @@ namespace SpellCheck {
     }
 
     bool SpellSuggestionsItem::setData(const QModelIndex &index, const QVariant &value, int role) {
-        if (!index.isValid()) return false;
+        int row = index.row();
+        if (row < 0 || row >= m_Suggestions.length()) return false;
 
         bool result = false;
 

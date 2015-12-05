@@ -120,6 +120,7 @@ namespace Commands {
                                 const QString &newMasterPassword,
                                 const QVector<Models::UploadInfo*> &uploadInfos) const;
 
+        void combineArtwork(Models::ArtItemInfo* itemInfo) const;
         void combineArtworks(const QVector<Models::ArtItemInfo*> &artworks) const;
         void setArtworksForIPTCProcessing(const QVector<Models::ArtworkMetadata *> &artworks) const;
         void setArtworksForUpload(const QVector<Models::ArtworkMetadata*> &artworks) const;
@@ -132,6 +133,7 @@ namespace Commands {
 #endif
         void submitForSpellCheck(SpellCheck::ISpellCheckable *item, int keywordIndex) const;
         void submitForSpellCheck(const QVector<SpellCheck::ISpellCheckable *> &items) const;
+        void submitForSpellCheck(SpellCheck::ISpellCheckable *item) const;
         void setupSpellCheckSuggestions(SpellCheck::ISpellCheckable *item);
         void saveMetadata(Models::ArtworkMetadata *metadata) const;
 

@@ -170,8 +170,17 @@ void Commands::CommandManager::recodePasswords(const QString &oldMasterPassword,
     }
 }
 
+void Commands::CommandManager::combineArtwork(Models::ArtItemInfo *itemInfo) const {
+    if (m_CombinedArtworksModel) {
+        m_CombinedArtworksModel->resetModelData();
+        m_CombinedArtworksModel->initArtworks(QVector<Models::ArtItemInfo*>() << itemInfo);
+        m_CombinedArtworksModel->recombineArtworks();
+    }
+}
+
 void Commands::CommandManager::combineArtworks(const QVector<Models::ArtItemInfo *> &artworks) const {
     if (m_CombinedArtworksModel) {
+        m_CombinedArtworksModel->resetModelData();
         m_CombinedArtworksModel->initArtworks(artworks);
         m_CombinedArtworksModel->recombineArtworks();
     }
@@ -247,6 +256,12 @@ void Commands::CommandManager::submitForSpellCheck(SpellCheck::ISpellCheckable *
 void Commands::CommandManager::submitForSpellCheck(const QVector<SpellCheck::ISpellCheckable *> &items) const {
     if (m_SettingsModel->getUseSpellCheck()) {
         m_SpellCheckerService->submitItems(items);
+    }
+}
+
+void Commands::CommandManager::submitForSpellCheck(SpellCheck::ISpellCheckable *item) const {
+    if (m_SettingsModel->getUseSpellCheck()) {
+        m_SpellCheckerService->submitItems(QVector<SpellCheck::ISpellCheckable*>() << item);
     }
 }
 

@@ -358,7 +358,7 @@ Item {
                                 hasSpellCheckError: !iscorrect
                                 delegateIndex: index
                                 itemHeight: flv.keywordHeight
-                                onActionClicked: keywordsWrapper.removeKeyword(delegateIndex)
+                                onRemoveClicked: keywordsWrapper.removeKeyword(delegateIndex)
                                 onSpellSuggestionRequested: {
                                     combinedArtworks.suggestCorrections()
                                     Common.launchDialog("Dialogs/SpellCheckSuggestionsDialog.qml",

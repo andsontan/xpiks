@@ -173,6 +173,14 @@ namespace Models {
         }
     }
 
+    void ArtItemsModel::clearKeywords(int metadataIndex) {
+        if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
+            ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
+            metadata->clearKeywords();
+            m_CommandManager->saveMetadata(metadata);
+        }
+    }
+
     void ArtItemsModel::backupItem(int metadataIndex) {
         if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
@@ -571,18 +579,14 @@ namespace Models {
     }
 
     void ArtItemsModel::doCombineArtwork(int index) {
-        if (index >= 0 && index < m_ArtworkList.length()) {
-            QVector<ArtItemInfo*> artworksList;
-
+        if (0 <= index && index < m_ArtworkList.length()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(index);
             metadata->setIsSelected(true);
             QModelIndex qmIndex = this->index(index);
             emit dataChanged(qmIndex, qmIndex, QVector<int>() << IsSelectedRole);
 
             ArtItemInfo *info = new ArtItemInfo(metadata, index);
-            artworksList.append(info);
-
-            m_CommandManager->combineArtworks(artworksList);
+            m_CommandManager->combineArtwork(info);
         }
     }
 

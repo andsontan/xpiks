@@ -45,6 +45,7 @@ Item {
     Keys.onEscapePressed: closePopup()
 
     function closePopup() {
+        callbackObject.onClose()
         editKeywordComponent.destroy()
     }
 

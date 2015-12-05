@@ -313,7 +313,7 @@ Item {
                             delegateIndex: index
                             keywordText: keyword
                             itemHeight: suggestedFlv.keywordHeight
-                            onActionClicked: suggestedKeywordsWrapper.removeKeyword(delegateIndex)
+                            onRemoveClicked: suggestedKeywordsWrapper.removeKeyword(delegateIndex)
                         }
 
                         onTagAdded: {
@@ -385,7 +385,7 @@ Item {
                             isHighlighted: true
                             hasPlusSign: true
                             itemHeight: otherFlv.keywordHeight
-                            onActionClicked: otherKeywordsWrapper.removeKeyword(delegateIndex)
+                            onRemoveClicked: otherKeywordsWrapper.removeKeyword(delegateIndex)
                         }
 
                         onTagAdded: {

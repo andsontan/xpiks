@@ -33,10 +33,12 @@ Commands::CommandResult *Commands::CombinedEditCommand::execute(const Commands::
 {
     QVector<int> indicesToUpdate;
     QVector<UndoRedo::ArtworkMetadataBackup*> artworksBackups;
+    QVector<SpellCheck::ISpellCheckable*> itemsToCheck;
 
     int size = m_ArtItemInfos.length();
     indicesToUpdate.reserve(size);
     artworksBackups.reserve(size);
+    itemsToCheck.reserve(size);
 
     for (int i = 0; i < size; ++i) {
         Models::ArtItemInfo* info = m_ArtItemInfos[i];
@@ -51,8 +53,10 @@ Commands::CommandResult *Commands::CombinedEditCommand::execute(const Commands::
         setTitle(metadata);
 
         commandManager->saveMetadata(metadata);
-        commandManager->submitForSpellCheck(QVector<SpellCheck::ISpellCheckable*>() << metadata);
+        itemsToCheck.append(metadata);
     }
+
+    commandManager->submitForSpellCheck(itemsToCheck);
 
     UndoRedo::ModifyArtworksHistoryItem *modifyArtworksItem =
             new UndoRedo::ModifyArtworksHistoryItem(artworksBackups, indicesToUpdate,
