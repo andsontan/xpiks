@@ -160,23 +160,41 @@ Item {
                                     }
                                 }
 
-                                StyledText {
-                                    id: keywordText
+                                Item {
+                                    id: wordsColumn
                                     anchors.left: checkBoxWrapper.right
                                     anchors.top: parent.top
-                                    horizontalAlignment: Text.AlignHCenter
-                                    verticalAlignment: Text.AlignVCenter
                                     width: 100
                                     height: suggestionsListRect.height
-                                    text: word
-                                    font.pixelSize: 12 * settingsModel.keywordSizeScale
-                                    color: isselected ? Colors.artworkModifiedColor : Colors.defaultInputBackground
-                                    elide: Text.ElideMiddle
+
+                                    ColumnLayout {
+                                        anchors.centerIn: parent
+
+                                        StyledText {
+                                            id: originText
+                                            anchors.horizontalCenter: parent.horizontalCenter
+                                            verticalAlignment: Text.AlignVCenter
+                                            text: word
+                                            font.pixelSize: 12 * settingsModel.keywordSizeScale
+                                            color: isselected ? Colors.artworkModifiedColor : Colors.defaultInputBackground
+                                            elide: Text.ElideMiddle
+                                        }
+
+                                        StyledText {
+                                            anchors.horizontalCenter: parent.horizontalCenter
+                                            verticalAlignment: Text.AlignVCenter
+                                            visible: replacementorigin != word
+                                            text: replacementorigin
+                                            font.pixelSize: 10
+                                            color: Colors.selectedMetadataColor
+                                            elide: Text.ElideMiddle
+                                        }
+                                    }
                                 }
 
                                 Rectangle {
                                     id: suggestionsListRect
-                                    anchors.left: keywordText.right
+                                    anchors.left: wordsColumn.right
                                     anchors.leftMargin: 20
                                     anchors.top: parent.top
                                     anchors.right: parent.right

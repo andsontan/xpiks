@@ -573,12 +573,30 @@ Item {
                                     scrollStep: keywordHeight
 
                                     delegate: KeywordWrapper {
+                                        id: kw
                                         isHighlighted: true
                                         keywordText: keyword
                                         hasSpellCheckError: !iscorrect
                                         delegateIndex: index
                                         itemHeight: flv.keywordHeight
                                         onRemoveClicked: keywordsWrapper.removeKeyword(delegateIndex)
+                                        onActionDoubleClicked: {
+                                            var callbackObject = {
+                                                onSuccess: function(replacement) {
+                                                    combinedArtworks.editKeyword(kw.delegateIndex, replacement)
+                                                },
+                                                onClose: function() {
+                                                    flv.activateEdit()
+                                                }
+                                            }
+
+                                            Common.launchDialog("Dialogs/EditKeywordDialog.qml",
+                                                                componentParent,
+                                                                {
+                                                                    callbackObject: callbackObject,
+                                                                    previousKeyword: keyword
+                                                                })
+                                        }
                                     }
 
                                     onTagAdded: {

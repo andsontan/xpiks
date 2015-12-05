@@ -32,6 +32,7 @@ namespace SpellCheck {
     class SpellSuggestionsItem: public QAbstractListModel {
         Q_OBJECT
     public:
+        SpellSuggestionsItem(const QString &word, const QString &origin);
         SpellSuggestionsItem(const QString &word);
     public:
         enum KeywordSpellSuggestionsRoles {
@@ -50,6 +51,8 @@ namespace SpellCheck {
 
         const QString &getReplacement() const { return m_Suggestions.at(m_ReplacementIndex); }
         void setSuggestions(const QStringList &suggestions);
+
+        const QString &getReplacementOrigin() const { return m_ReplacementOrigin; }
 
         bool getIsSelected() const { return m_IsSelected; }
         void setIsSelected(bool value) { m_IsSelected = value; }
@@ -71,6 +74,7 @@ namespace SpellCheck {
     private:
         QStringList m_Suggestions;
         QString m_Word;
+        QString m_ReplacementOrigin;
         int m_ReplacementIndex;
         bool m_IsSelected;
     };
@@ -78,6 +82,7 @@ namespace SpellCheck {
     class KeywordSpellSuggestions: public SpellSuggestionsItem
     {
     public:
+        KeywordSpellSuggestions(const QString &keyword, int originalIndex, const QString &origin);
         KeywordSpellSuggestions(const QString &keyword, int originalIndex);
 
     public:

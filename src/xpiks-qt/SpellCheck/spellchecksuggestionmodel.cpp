@@ -129,6 +129,8 @@ namespace SpellCheck {
             return item->getReplacementIndex();
         case IsSelectedRole:
             return item->getIsSelected();
+        case ReplacementOriginRole:
+            return item->getReplacementOrigin();
         default:
             return QVariant();
         }
@@ -159,6 +161,7 @@ namespace SpellCheck {
         roles[ReplacementIndexRole] = "replacementindex";
         roles[IsSelectedRole] = "isselected";
         roles[EditIsSelectedRole] = "editisselected";
+        roles[ReplacementOriginRole] = "replacementorigin";
         return roles;
     }
 }

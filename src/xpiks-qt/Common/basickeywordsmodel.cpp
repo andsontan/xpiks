@@ -138,11 +138,11 @@ namespace Common {
 
                     QModelIndex i = this->index(index);
                     emit dataChanged(i, i, QVector<int>() << KeywordRole);
+
+                    result = true;
                 } else {
                     qDebug() << "Attempt to rename keyword to existing one. Use remove instead";
                 }
-
-                result = true;
             }
         }
 
@@ -318,6 +318,10 @@ namespace Common {
 
         if (!onlyOneKeyword) {
             resetSpellCheckResults();
+        } else {
+            Q_ASSERT(!items.isEmpty());
+            int index = items.first()->m_Index;
+            m_SpellCheckResults[index] = true;
         }
 
         int size = items.length();
@@ -337,8 +341,6 @@ namespace Common {
     void BasicKeywordsModel::setSpellCheckResults(const QHash<QString, bool> &results) {
         updateDescriptionSpellErrors(results);
         updateTitleSpellErrors(results);
-
-        notifySpellCheckResults();
     }
 
     QVector<SpellCheck::SpellSuggestionsItem *> BasicKeywordsModel::createKeywordsSuggestionsList() {
@@ -356,7 +358,8 @@ namespace Common {
                 } else {
                     QStringList items = keyword.split(QChar::Space, QString::SkipEmptyParts);
                     foreach (const QString &item, items) {
-                        SpellCheck::KeywordSpellSuggestions *suggestionsItem = new SpellCheck::KeywordSpellSuggestions(item, i);
+                        SpellCheck::KeywordSpellSuggestions *suggestionsItem =
+                                new SpellCheck::KeywordSpellSuggestions(item, i, keyword);
                         spellCheckSuggestions.append(suggestionsItem);
                     }
                 }
@@ -442,6 +445,7 @@ namespace Common {
 
     void BasicKeywordsModel::spellCheckRequestReady(int index) {
         emitSpellCheckChanged(index);
+        notifySpellCheckResults();
     }
 
     void BasicKeywordsModel::emitSpellCheckChanged(int index) {

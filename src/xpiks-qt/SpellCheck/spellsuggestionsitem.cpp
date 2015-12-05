@@ -23,9 +23,19 @@
 #include "ispellcheckable.h"
 
 namespace SpellCheck {
-    SpellSuggestionsItem::SpellSuggestionsItem(const QString &word) :
+    SpellSuggestionsItem::SpellSuggestionsItem(const QString &word, const QString &origin) :
         QAbstractListModel(),
         m_Word(word),
+        m_ReplacementOrigin(origin),
+        m_ReplacementIndex(0),
+        m_IsSelected(true)
+    {
+    }
+
+    SpellSuggestionsItem::SpellSuggestionsItem(const QString &word):
+        QAbstractListModel(),
+        m_Word(word),
+        m_ReplacementOrigin((word)),
         m_ReplacementIndex(0),
         m_IsSelected(true)
     {
@@ -100,7 +110,13 @@ namespace SpellCheck {
         return roles;
     }
 
-    KeywordSpellSuggestions::KeywordSpellSuggestions(const QString &keyword, int originalIndex) :
+    KeywordSpellSuggestions::KeywordSpellSuggestions(const QString &keyword, int originalIndex, const QString &origin) :
+        SpellSuggestionsItem(keyword, origin),
+        m_OriginalIndex(originalIndex)
+    {
+    }
+
+    KeywordSpellSuggestions::KeywordSpellSuggestions(const QString &keyword, int originalIndex):
         SpellSuggestionsItem(keyword),
         m_OriginalIndex(originalIndex)
     {

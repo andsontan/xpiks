@@ -22,6 +22,7 @@
 #include "spellcheckitem.h"
 #include "../Models/artworkmetadata.h"
 #include <QStringList>
+#include <QDebug>
 #include "../Helpers/indiceshelper.h"
 #include "ispellcheckable.h"
 

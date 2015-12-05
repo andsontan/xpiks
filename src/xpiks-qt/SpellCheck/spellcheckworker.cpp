@@ -113,6 +113,8 @@ namespace SpellCheck {
                 item->accountResultAt(i);
                 anyWrong = anyWrong || !isOk;
             }
+
+            item->submitSpellCheckResult();
         } else {
             foreach (SpellCheckQueryItem *queryItem, queryItems) {
                 if (!queryItem->m_IsCorrect) {
@@ -123,8 +125,7 @@ namespace SpellCheck {
 
         bool canDelete = false;
 
-        if (anyWrong && !neededSuggestions) {
-            item->submitSpellCheckResult();
+        if (anyWrong) {
             item->requestSuggestions();
             this->submitItem(item);
         } else {

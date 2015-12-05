@@ -45,6 +45,7 @@ namespace SpellCheck {
         enum KeywordSpellSuggestionsRoles {
             WordRole = Qt::UserRole + 1,
             ReplacementIndexRole,
+            ReplacementOriginRole,
             IsSelectedRole,
             EditIsSelectedRole
         };
