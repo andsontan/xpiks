@@ -547,6 +547,7 @@ Item {
                                 anchors.rightMargin: 20
                                 Layout.fillWidth: true
                                 color: Colors.defaultInputBackground
+                                property var keywordsModel: combinedArtworks.getKeywordsModel()
 
                                 function removeKeyword(index) {
                                     combinedArtworks.removeKeywordAt(index)
@@ -567,7 +568,7 @@ Item {
                                 EditableTags {
                                     id: flv
                                     anchors.fill: parent
-                                    model: combinedArtworks.getKeywordsModel()
+                                    model: keywordsWrapper.keywordsModel
                                     property int keywordHeight: 20 * settingsModel.keywordSizeScale + (settingsModel.keywordSizeScale - 1)*10
                                     scrollStep: keywordHeight
 
@@ -578,12 +579,6 @@ Item {
                                         delegateIndex: index
                                         itemHeight: flv.keywordHeight
                                         onRemoveClicked: keywordsWrapper.removeKeyword(delegateIndex)
-                                        onSpellSuggestionRequested: {
-                                            combinedArtworks.suggestCorrections()
-                                            Common.launchDialog("Dialogs/SpellCheckSuggestionsDialog.qml",
-                                                                applicationWindow,
-                                                                {})
-                                        }
                                     }
 
                                     onTagAdded: {
@@ -607,7 +602,7 @@ Item {
                                 }
                             }
 
-                            Item { height: 5}
+                            Item { height: 5 }
 
                             RowLayout {
                                 width: parent.width
@@ -621,6 +616,24 @@ Item {
 
                                 Item {
                                     Layout.fillWidth: true
+                                }
+
+                                StyledText {
+                                    text: qsTr("Fix spelling")
+                                    enabled: keywordsWrapper.keywordsModel ? keywordsWrapper.keywordsModel.hasSpellErrors : false
+                                    color: enabled ? (fixSpellingMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor) : Colors.defaultInputBackground
+
+                                    MouseArea {
+                                        id: fixSpellingMA
+                                        anchors.fill: parent
+                                        cursorShape: Qt.PointingHandCursor
+                                        onClicked: {
+                                            combinedArtworks.suggestCorrections()
+                                            Common.launchDialog("Dialogs/SpellCheckSuggestionsDialog.qml",
+                                                                componentParent,
+                                                                {})
+                                        }
+                                    }
                                 }
 
                                 StyledText {

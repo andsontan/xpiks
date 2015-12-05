@@ -144,11 +144,19 @@ Item {
                                     width: 40
 
                                     StyledCheckbox {
+                                        id: selectedCheckbox
                                         anchors.centerIn: parent
                                         anchors.horizontalCenterOffset: 5
                                         activeFocusOnPress: true
                                         onClicked: editisselected = checked
                                         Component.onCompleted: checked = isselected
+
+                                        Connections {
+                                            target: spellCheckSuggestionModel
+                                            onSelectAllChanged: {
+                                                selectedCheckbox.checked = isselected
+                                            }
+                                        }
                                     }
                                 }
 
@@ -219,6 +227,18 @@ Item {
 
                 RowLayout {
                     spacing: 20
+
+                    StyledButton {
+                        text: qsTr("Select all")
+                        width: 100
+                        onClicked: spellCheckSuggestionModel.selectAllSuggestions()
+                    }
+
+                    StyledButton {
+                        text: qsTr("Select none")
+                        width: 100
+                        onClicked: spellCheckSuggestionModel.unselectAllSuggestions()
+                    }
 
                     Item {
                         Layout.fillWidth: true

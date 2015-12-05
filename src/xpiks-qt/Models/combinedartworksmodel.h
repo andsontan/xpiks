@@ -33,6 +33,7 @@
 #include "../Common/baseentity.h"
 #include "../Common/basickeywordsmodel.h"
 #include "../Common/flags.h"
+#include "../SpellCheck/spellcheckiteminfo.h"
 
 namespace Models {
     class ArtItemInfo;
@@ -168,6 +169,7 @@ namespace Models {
     private:
         QVector<ArtItemInfo*> m_ArtworksList;
         Common::BasicKeywordsModel m_CommonKeywordsModel;
+        SpellCheck::SpellCheckItemInfo m_SpellCheckInfo;
         int m_EditFlags;
         bool m_IsModified;
     };

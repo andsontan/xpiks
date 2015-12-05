@@ -56,6 +56,8 @@ namespace Models {
             m_CommonKeywordsModel.setSpellStatuses(metadata->getSpellStatuses());
         } else {
             assignFromManyArtworks();
+            m_CommonKeywordsModel.setSpellCheckInfo(&m_SpellCheckInfo);
+            m_CommandManager->submitForSpellCheck(&m_CommonKeywordsModel);
         }
     }
 
@@ -194,10 +196,10 @@ namespace Models {
         Common::ApplyFlag(m_EditFlags, true, Common::EditKeywords);
         // TEMPORARY (enable everything on initial launch) --
 
+        m_CommonKeywordsModel.setSpellCheckInfo(NULL);
         setDescription("");
         setTitle("");
         setKeywords(QStringList());
-        m_CommonKeywordsModel.setSpellCheckInfo(NULL);
     }
 
     void CombinedArtworksModel::clearKeywords() {
@@ -210,12 +212,24 @@ namespace Models {
 
     void CombinedArtworksModel::initDescriptionHighlighting(QQuickTextDocument *document) {
         SpellCheck::SpellCheckItemInfo *info = m_CommonKeywordsModel.getSpellCheckInfo();
+        if (info == NULL) {
+            // OneItem edits will use artwork's spellcheckinfo
+            // combined edit will use this one
+            info = &m_SpellCheckInfo;
+        }
+
         info->createHighlighterForDescription(document->textDocument(), &m_CommonKeywordsModel);
         m_CommonKeywordsModel.notifySpellCheckResults();
     }
 
     void CombinedArtworksModel::initTitleHighlighting(QQuickTextDocument *document) {
         SpellCheck::SpellCheckItemInfo *info = m_CommonKeywordsModel.getSpellCheckInfo();
+        if (info == NULL) {
+            // OneItem edits will use artwork's spellcheckinfo
+            // combined edit will use this one
+            info = &m_SpellCheckInfo;
+        }
+
         info->createHighlighterForTitle(document->textDocument(), &m_CommonKeywordsModel);
         m_CommonKeywordsModel.notifySpellCheckResults();
     }

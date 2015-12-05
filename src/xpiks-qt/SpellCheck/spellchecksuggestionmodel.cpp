@@ -99,6 +99,18 @@ namespace SpellCheck {
         return executedRequests;
     }
 
+    void SpellCheckSuggestionModel::setAllSelected(bool selected) {
+        int size = m_SuggestionsList.length();
+
+        for (int i = 0; i < size; ++i) {
+            SpellSuggestionsItem *item = m_SuggestionsList.at(i);
+            item->setIsSelected(selected);
+        }
+
+        emit dataChanged(index(0), index(size - 1), QVector<int>() << IsSelectedRole);
+        emit selectAllChanged();
+    }
+
     int SpellCheckSuggestionModel::rowCount(const QModelIndex &parent) const {
         Q_UNUSED(parent);
         return m_SuggestionsList.length();

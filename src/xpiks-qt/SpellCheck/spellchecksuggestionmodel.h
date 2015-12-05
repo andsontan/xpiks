@@ -53,12 +53,18 @@ namespace SpellCheck {
         Q_INVOKABLE QObject *getSuggestionItself(int index) const;
         Q_INVOKABLE void clearModel();
         Q_INVOKABLE void submitCorrections() const;
+        Q_INVOKABLE void selectAllSuggestions() { setAllSelected(true); }
+        Q_INVOKABLE void unselectAllSuggestions() { setAllSelected(false); }
+
+    signals:
+        void selectAllChanged();
 
     public:
         void setupModel(SpellCheck::SpellCheckerService *service, SpellCheck::ISpellCheckable *item);
 
     private:
         QVector<SpellSuggestionsItem *> setupSuggestions(const QVector<SpellSuggestionsItem *> &items);
+        void setAllSelected(bool selected);
 
     public:
         virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;

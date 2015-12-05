@@ -332,14 +332,6 @@ namespace Common {
                 }
             }
         }
-
-        int indexToUpdate = -1;
-
-        if (onlyOneKeyword) {
-            indexToUpdate = items.first()->m_Index;
-        }
-
-        emitSpellCheckChanged(indexToUpdate);
     }
 
     void BasicKeywordsModel::setSpellCheckResults(const QHash<QString, bool> &results) {
@@ -449,7 +441,6 @@ namespace Common {
     }
 
     void BasicKeywordsModel::spellCheckRequestReady(int index) {
-        qDebug() << "SpellCheck results ready at index" << index;
         emitSpellCheckChanged(index);
     }
 

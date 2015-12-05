@@ -1290,29 +1290,26 @@ ApplicationWindow {
                                                 }
                                             }
 
-                                            RowLayout {
-                                                id: keywordsLabelsRow
+                                            StyledText {
+                                                id: keywordsLabel
                                                 anchors.left: parent.left
                                                 anchors.top: descriptionRect.bottom
-                                                anchors.right: parent.right
                                                 anchors.topMargin: 7
-                                                spacing: 5
+                                                text: qsTr("Keywords:")
+                                            }
 
-                                                StyledText {
-                                                    id: keywordsLabel
-                                                    text: qsTr("Keywords:")
-                                                }
-
-                                                StyledText {
-                                                    text: qsTr("(comma-separated)")
-                                                    visible: rowWrapper.isHighlighted
-                                                    color: Colors.defaultInputBackground
-                                                }
+                                            StyledText {
+                                                anchors.left: keywordsLabel.right
+                                                anchors.leftMargin: 5
+                                                anchors.top: keywordsLabel.top
+                                                text: qsTr("(comma-separated)")
+                                                visible: rowWrapper.isHighlighted
+                                                color: Colors.defaultInputBackground
                                             }
 
                                             Rectangle {
                                                 id: keywordsWrapper
-                                                anchors.top: keywordsLabelsRow.bottom
+                                                anchors.top: keywordsLabel.bottom
                                                 anchors.topMargin: 3
                                                 anchors.left: parent.left
                                                 anchors.right: parent.right
