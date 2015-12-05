@@ -48,6 +48,7 @@ Commands::CommandResult *Commands::PasteKeywordsCommand::execute(const Commands:
         artworksBackups.append(new UndoRedo::ArtworkMetadataBackup(metadata));
 
         metadata->appendKeywords(m_KeywordsList);
+        commandManager->saveMetadata(metadata);
     }
 
     commandManager->submitForSpellCheck(itemsToCheck);
