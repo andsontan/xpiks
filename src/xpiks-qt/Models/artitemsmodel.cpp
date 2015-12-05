@@ -107,7 +107,7 @@ namespace Models {
             if (metadata->removeKeywordAt(keywordIndex)) {
                 QModelIndex index = this->index(metadataIndex);
                 emit dataChanged(index, index, QVector<int>() << IsModifiedRole << KeywordsCountRole);
-                backupItem(metadataIndex);
+                m_CommandManager->saveMetadata(metadata);
             }
         }
     }
@@ -119,6 +119,7 @@ namespace Models {
             if (metadata->removeLastKeyword()) {
                 QModelIndex index = this->index(metadataIndex);
                 emit dataChanged(index, index, QVector<int>() << IsModifiedRole << KeywordsCountRole);
+                m_CommandManager->saveMetadata(metadata);
             }
         }
     }
@@ -130,6 +131,7 @@ namespace Models {
                 QModelIndex index = this->index(metadataIndex);
                 emit dataChanged(index, index, QVector<int>() << IsModifiedRole << KeywordsCountRole);
                 m_CommandManager->submitForSpellCheck(metadata, metadata->rowCount() - 1);
+                m_CommandManager->saveMetadata(metadata);
             }
         }
     }
@@ -340,6 +342,7 @@ namespace Models {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
             if (metadata->editKeyword(keywordIndex, replacement)) {
                 m_CommandManager->submitForSpellCheck(metadata, keywordIndex);
+                m_CommandManager->saveMetadata(metadata);
             }
         }
     }
@@ -581,7 +584,6 @@ namespace Models {
     void ArtItemsModel::doCombineArtwork(int index) {
         if (0 <= index && index < m_ArtworkList.length()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(index);
-            metadata->setIsSelected(true);
             QModelIndex qmIndex = this->index(index);
             emit dataChanged(qmIndex, qmIndex, QVector<int>() << IsSelectedRole);
 

@@ -175,6 +175,8 @@ void Commands::CommandManager::combineArtwork(Models::ArtItemInfo *itemInfo) con
         m_CombinedArtworksModel->resetModelData();
         m_CombinedArtworksModel->initArtworks(QVector<Models::ArtItemInfo*>() << itemInfo);
         m_CombinedArtworksModel->recombineArtworks();
+
+        submitForSpellCheck(itemInfo->getOrigin());
     }
 }
 

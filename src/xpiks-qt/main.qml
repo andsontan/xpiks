@@ -1477,7 +1477,8 @@ ApplicationWindow {
                                                         anchors.fill: parent
                                                         cursorShape: Qt.PointingHandCursor
                                                         onClicked: Common.launchItemEditing(rowWrapper.getIndex(), applicationWindow, {
-                                                                                                applyCallback: function() {}
+                                                                                                applyCallback: function() {
+                                                                                                }
                                                                                             })
                                                     }
                                                 }

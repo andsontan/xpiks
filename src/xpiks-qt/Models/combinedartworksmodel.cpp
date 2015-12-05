@@ -57,8 +57,9 @@ namespace Models {
         } else {
             assignFromManyArtworks();
             m_CommonKeywordsModel.setSpellCheckInfo(&m_SpellCheckInfo);
-            m_CommandManager->submitForSpellCheck(&m_CommonKeywordsModel);
         }
+
+        m_CommandManager->submitForSpellCheck(&m_CommonKeywordsModel);
     }
 
     void CombinedArtworksModel::acceptSuggestedKeywords(const QStringList &keywords)  {
