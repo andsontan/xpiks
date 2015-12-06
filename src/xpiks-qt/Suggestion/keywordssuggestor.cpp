@@ -182,8 +182,8 @@ namespace Suggestion {
         }
 #ifndef QT_DEBUG
         else {
-            m_AllOtherKeywords.clear();
-            m_SuggestedKeywords.clear();
+            m_AllOtherKeywords.clearKeywords();
+            m_SuggestedKeywords.clearKeywords();
             m_KeywordsHash.clear();
         }
 #endif
