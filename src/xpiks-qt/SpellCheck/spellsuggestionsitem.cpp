@@ -87,7 +87,7 @@ namespace SpellCheck {
 
     Qt::ItemFlags SpellSuggestionsItem::flags(const QModelIndex &index) const {
         int row = index.row();
-        if (row < 0 || row >= m_ArtworkList.length()) {
+        if (row < 0 || row >= m_Suggestions.length()) {
             return Qt::ItemIsEnabled;
         }
 

@@ -29,6 +29,7 @@
 namespace SpellCheck {
     SpellCheckerService::SpellCheckerService() {
         m_SpellCheckWorker = new SpellCheckWorker();
+        m_WorkerIsAlive = false;
     }
 
     void SpellCheckerService::startChecking() {
@@ -49,10 +50,16 @@ namespace SpellCheck {
         QObject::connect(m_SpellCheckWorker, SIGNAL(queueIsEmpty()),
                          this, SIGNAL(spellCheckQueueIsEmpty()));
 
+        QObject::connect(m_SpellCheckWorker, SIGNAL(stopped()),
+                         this, SLOT(workerFinished()));
+
         thread->start();
+        m_WorkerIsAlive = true;
     }
 
     void SpellCheckerService::submitItems(const QVector<ISpellCheckable *> &itemsToCheck) {
+        if (!m_WorkerIsAlive) { return; }
+
         if (m_SpellCheckWorker != NULL && !m_SpellCheckWorker->isCancelled()) {
             QVector<SpellCheckItemBase *> items;
             int length = itemsToCheck.length();
@@ -72,6 +79,8 @@ namespace SpellCheck {
     }
 
     void SpellCheckerService::submitKeyword(SpellCheck::ISpellCheckable *itemToCheck, int keywordIndex) {
+        if (!m_WorkerIsAlive) { return; }
+
         Q_ASSERT(m_SpellCheckWorker != NULL);
 
         if (m_SpellCheckWorker != NULL && !m_SpellCheckWorker->isCancelled()) {
@@ -82,6 +91,8 @@ namespace SpellCheck {
     }
 
     QStringList SpellCheckerService::suggestCorrections(const QString &word) const {
+        if (!m_WorkerIsAlive) { return QStringList(); }
+
         if (m_SpellCheckWorker != NULL) {
             return m_SpellCheckWorker->retrieveCorrections(word);
         }
@@ -90,6 +101,8 @@ namespace SpellCheck {
     }
 
     void SpellCheckerService::cancelCurrentBatch() {
+        if (!m_WorkerIsAlive) { return; }
+
         if (m_SpellCheckWorker != NULL) {
             m_SpellCheckWorker->cancelCurrentBatch();
         }
@@ -98,10 +111,15 @@ namespace SpellCheck {
     bool SpellCheckerService::hasAnyPending() {
         bool hasPending = false;
 
-        if (m_SpellCheckWorker != NULL) {
+        if (m_WorkerIsAlive && (m_SpellCheckWorker != NULL)) {
             hasPending = m_SpellCheckWorker->hasPendingJobs();
         }
 
         return hasPending;
+    }
+
+    void SpellCheckerService::workerFinished() {
+        qDebug() << "Spellcheck service went offline";
+        m_WorkerIsAlive = false;
     }
 }
