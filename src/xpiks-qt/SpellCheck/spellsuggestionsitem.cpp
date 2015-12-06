@@ -85,6 +85,15 @@ namespace SpellCheck {
         }
     }
 
+    Qt::ItemFlags SpellSuggestionsItem::flags(const QModelIndex &index) const {
+        int row = index.row();
+        if (row < 0 || row >= m_ArtworkList.length()) {
+            return Qt::ItemIsEnabled;
+        }
+
+        return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
+    }
+
     bool SpellSuggestionsItem::setData(const QModelIndex &index, const QVariant &value, int role) {
         int row = index.row();
         if (row < 0 || row >= m_Suggestions.length()) return false;
