@@ -61,7 +61,7 @@ namespace SpellCheck {
         void selectAllChanged();
 
     public:
-        void setupModel(SpellCheck::SpellCheckerService *service, SpellCheck::ISpellCheckable *item);
+        void setupModel(SpellCheck::ISpellCheckable *item);
 
     private:
         QVector<SpellSuggestionsItem *> setupSuggestions(const QVector<SpellSuggestionsItem *> &items);

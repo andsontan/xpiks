@@ -247,8 +247,8 @@ LIBS += -lz
 HEADERS += Helpers/osxnsurlhelper.h
 }
 
-LIBS += -L$$PWD/../libs/
-INCLUDEPATH += "..\hunspell-1.3.3\src\hunspell"
+LIBS += -L"$$PWD/../libs/"
+INCLUDEPATH += "../hunspell-1.3.3/src/hunspell"
 
 LIBS += -lhunspell
 DEFINES += HUNSPELL_STATIC
@@ -273,6 +273,6 @@ DEFINES += STATIC
 message("Static build.")
 }
 
-HUNSPELL_DICT_FILES.files = dict/en_US.aff dict/en_US.dic
+HUNSPELL_DICT_FILES.files = dict/en_US.aff dict/en_US.dic dict/license.txt dict/README_en_US.txt
 HUNSPELL_DICT_FILES.path = Contents/Resources
 QMAKE_BUNDLE_DATA += HUNSPELL_DICT_FILES

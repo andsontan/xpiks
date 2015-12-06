@@ -65,8 +65,7 @@ namespace SpellCheck {
         }
     }
 
-    void SpellCheckSuggestionModel::setupModel(SpellCheckerService *service, SpellCheck::ISpellCheckable *item) {
-        Q_ASSERT(service != NULL);
+    void SpellCheckSuggestionModel::setupModel(SpellCheck::ISpellCheckable *item) {
         Q_ASSERT(item != NULL);
 
         QVector<SpellSuggestionsItem*> suggestionsRequests = item->createKeywordsSuggestionsList();

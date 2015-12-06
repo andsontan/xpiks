@@ -268,7 +268,7 @@ void Commands::CommandManager::submitForSpellCheck(SpellCheck::ISpellCheckable *
 }
 
 void Commands::CommandManager::setupSpellCheckSuggestions(SpellCheck::ISpellCheckable *item) {
-    m_SpellCheckSuggestionModel->setupModel(m_SpellCheckerService, item);
+    m_SpellCheckSuggestionModel->setupModel(item);
 }
 
 void Commands::CommandManager::saveMetadata(Models::ArtworkMetadata *metadata) const {
