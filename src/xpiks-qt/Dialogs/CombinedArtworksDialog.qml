@@ -86,6 +86,15 @@ Item {
         }
     }
 
+    MessageDialog {
+        id: clearKeywordsDialog
+
+        title: "Confirmation"
+        text: qsTr("Clear all keywords?")
+        standardButtons: StandardButton.Yes | StandardButton.No
+        onYes: combinedArtworks.clearKeywords()
+    }
+
     FocusScope {
         anchors.fill: parent
 
@@ -684,7 +693,7 @@ Item {
                                         id: clearKeywordsMA
                                         anchors.fill: parent
                                         cursorShape: Qt.PointingHandCursor
-                                        onClicked: combinedArtworks.clearKeywords()
+                                        onClicked: clearKeywordsDialog.open()
                                     }
                                 }
                             }
