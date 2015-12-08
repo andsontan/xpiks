@@ -30,7 +30,6 @@
 #include <QDebug>
 #include <QNetworkReply>
 #include "telemetryservice.h"
-#include "telemetryworker.h"
 #include "analyticsuserevent.h"
 
 namespace Conectivity {
@@ -60,11 +59,10 @@ namespace Conectivity {
         query.addQueryItem(QLatin1String("m"), QString::number(userEvent.getMinute()));
         query.addQueryItem(QLatin1String("s"), QString::number(userEvent.getSecond()));
         query.addQueryItem(QLatin1String("send_image"), QLatin1String("0"));
-        /*query.addQueryItem(QLatin1String("_cvar"),
+        query.addQueryItem(QLatin1String("_cvar"),
                            QString("{\"1\":[\"OS_type\",\"%1\"],\"2\":[\"OS_version\",\"%2\"]}")
                            .arg(QSysInfo::productType())
                            .arg(QSysInfo::productVersion()));
-                           */
 
         QUrl reportingUrl;
         reportingUrl.setUrl(m_ReportingEndpoint);
