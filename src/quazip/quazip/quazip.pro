@@ -2,6 +2,14 @@ TEMPLATE = lib
 CONFIG += qt warn_on
 QT -= gui
 
+
+win32 {
+LIBS += -L"$$PWD/../../libs/" -lz
+INCLUDEPATH += "$$PWD/../../zlib-1.2.8/"
+}
+
+CONFIG += staticlib
+
 # The ABI version.
 
 !win32:VERSION = 1.0.0
