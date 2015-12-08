@@ -33,6 +33,8 @@ import "../StyledControls"
 Item {
     id: logsComponent
     property string logText
+    property int popupWidth
+    property int popupHeight
     anchors.fill: parent
 
     signal dialogDestruction();
@@ -118,39 +120,46 @@ Item {
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
-            width: 480
-            height: 580
+            width: logsComponent.popupWidth
+            height: logsComponent.popupHeight
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
 
-            ColumnLayout {
-                spacing: 10
-                anchors.fill: parent
-                anchors.margins: 20
+            RowLayout {
+                id: header
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.topMargin: 20
+                anchors.leftMargin: 20
+                anchors.rightMargin: 20
 
-                RowLayout {
-                    Layout.fillWidth: true
-
-                    StyledText {
-                        text: qsTr("Logs")
-                    }
-
-                    Item {
-                        Layout.fillWidth: true
-                    }
-
-                    StyledText {
-                        property int linesNumber : 100
-                        id: oneHunderdLinesWarning
-                        text: qsTr("(showing last %1 lines)").arg(linesNumber)
-                        color: Colors.defaultInputBackground
-                    }
+                StyledText {
+                    text: qsTr("Logs")
                 }
 
-                Rectangle {
+                Item {
                     Layout.fillWidth: true
-                    Layout.fillHeight: true
+                }
+
+                StyledText {
+                    property int linesNumber : 100
+                    id: oneHunderdLinesWarning
+                    text: qsTr("(showing last %1 lines)").arg(linesNumber)
+                    color: Colors.defaultInputBackground
+                }
+            }
+
+                Rectangle {
+                    anchors.top: header.bottom
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.leftMargin: 20
+                    anchors.rightMargin: 20
+                    anchors.topMargin: 10
+                    anchors.bottom: footer.top
+                    anchors.bottomMargin: 20
                     color: Colors.defaultControlColor
 
                     StyledScrollView {
@@ -161,6 +170,7 @@ Item {
                         StyledTextEdit {
                             id: textEdit
                             text: logsComponent.logText
+                            selectionColor: Colors.selectedArtworkColor
                             readOnly: true
 
                             Component.onCompleted: {
@@ -170,12 +180,16 @@ Item {
                     }
                 }
 
-                Item {
-                    height: 1
-                }
-
                 RowLayout {
+                    id: footer
+                    anchors.bottom: parent.bottom
+                    anchors.bottomMargin: 20
+                    anchors.left: parent.left
+                    anchors.leftMargin: 20
+                    anchors.right: parent.right
+                    anchors.rightMargin: 20
                     height: 24
+                    spacing: 20
 
                     StyledButton {
                         id: loadMoreButton
@@ -213,7 +227,6 @@ Item {
                         }
                     }
                 }
-            }
         }
     }
 }
