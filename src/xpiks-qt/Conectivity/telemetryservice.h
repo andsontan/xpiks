@@ -19,49 +19,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SPELLCHECKERSERVICE_H
-#define SPELLCHECKERSERVICE_H
+#ifndef TELEMETRYSERVICE_H
+#define TELEMETRYSERVICE_H
 
 #include <QObject>
+#include <QNetworkAccessManager>
 #include <QString>
-#include <QList>
+#include "analyticsuserevent.h"
 
-namespace Models {
-    class ArtworkMetadata;
-}
-
-namespace SpellCheck {
-    class SpellCheckWorker;
-    class ISpellCheckable;
-
-    class SpellCheckerService : public QObject
-    {
+namespace Conectivity {
+    class TelemetryService : public QObject {
         Q_OBJECT
     public:
-        SpellCheckerService();
-        virtual ~SpellCheckerService();
+        TelemetryService(const QString &userId, QObject *parent=NULL);
 
     public:
-        void startChecking();
-        void submitItems(const QVector<ISpellCheckable *> &itemsToCheck);
-        void submitKeyword(SpellCheck::ISpellCheckable *itemToCheck, int keywordIndex);
-        QStringList suggestCorrections(const QString &word) const;
-
-    public:
-        Q_INVOKABLE void cancelCurrentBatch();
-        Q_INVOKABLE bool hasAnyPending();
+        void reportAction(UserAction action);
 
     signals:
-        void cancelSpellChecking();
-        void spellCheckQueueIsEmpty();
+        void cancelAllQueries();
 
     private slots:
-        void workerFinished();
+        void replyReceived(QNetworkReply *reply);
 
     private:
-        SpellCheckWorker *m_SpellCheckWorker;
-        volatile bool m_WorkerIsAlive;
+        QNetworkAccessManager m_NetworkManager;
+        QString m_ReportingEndpoint;
+        QString m_UserAgentId;
     };
 }
 
-#endif // SPELLCHECKERSERVICE_H
+#endif // TELEMETRYSERVICE_H
+

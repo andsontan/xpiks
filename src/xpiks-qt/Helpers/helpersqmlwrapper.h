@@ -25,13 +25,23 @@
 #include <QObject>
 #include <QString>
 
+namespace Commands {
+    class CommandManager;
+}
+
 namespace Helpers {
     class HelpersQmlWrapper : public QObject
     {
         Q_OBJECT
     public:
+        HelpersQmlWrapper(Commands::CommandManager *commandManager);
+    public:
         Q_INVOKABLE bool isKeywordValid(const QString &keyword) const;
         Q_INVOKABLE QString sanitizeKeyword(const QString &keyword) const;
+        Q_INVOKABLE void afterConstruction();
+
+    private:
+        Commands::CommandManager *m_CommandManager;
     };
 }
 

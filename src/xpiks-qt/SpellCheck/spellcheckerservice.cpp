@@ -32,6 +32,12 @@ namespace SpellCheck {
         m_WorkerIsAlive = false;
     }
 
+    SpellCheckerService::~SpellCheckerService() {
+        if (m_WorkerIsAlive && m_SpellCheckWorker && m_SpellCheckWorker->isRunning()) {
+            m_SpellCheckWorker->cancelWork();
+        }
+    }
+
     void SpellCheckerService::startChecking() {
         Q_ASSERT(!m_SpellCheckWorker->isRunning());
 

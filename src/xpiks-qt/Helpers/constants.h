@@ -54,6 +54,7 @@ namespace Constants {
     const char PROXY_URI[] = "PROXY_URI";
     const char USE_SPELL_CHECK[] = "USE_SPELL_CHECK";
     const char LIBRARY_FILENAME[] = "xpiks.library";
+    const char USER_AGENT_ID[] = "USER_AGENT_ID";
 #else
     const char UPLOAD_HOSTS[] = "DEBUG_UPLOAD_HOSTS_HASH";
     const char MAX_KEYWORD_COUNT[] = "DEBUG_MAX_KEYWORD_COUNT";
@@ -68,6 +69,7 @@ namespace Constants {
     const char PROXY_URI[] = "DEBUG_PROXY_URI";
     const char USE_SPELL_CHECK[] = "DEBUG_USE_SPELL_CHECK";
     const char LIBRARY_FILENAME[] = "xpiks.debug.library";
+    const char USER_AGENT_ID[] = "DEBUG_USER_AGENT_ID";
 #endif // QT_NO_DEBUG
 }
 

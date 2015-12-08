@@ -26,6 +26,7 @@
 #include <QList>
 #include "../UndoRedo/historyitem.h"
 #include "commandbase.h"
+#include "../Conectivity/analyticsuserevent.h"
 
 namespace Encryption {
     class SecretsManager;
@@ -58,12 +59,17 @@ namespace Suggestion {
 
 namespace Helpers {
     class BackupSaverService;
+    class UpdateService;
 }
 
 namespace SpellCheck {
     class SpellCheckerService;
     class SpellCheckSuggestionModel;
     class ISpellCheckable;
+}
+
+namespace Conectivity {
+    class TelemetryService;
 }
 
 namespace Commands {
@@ -84,7 +90,9 @@ namespace Commands {
             m_ZipArchiver(NULL),
             m_KeywordsSuggestor(NULL),
             m_RecentDirectories(NULL),
-            m_MetadataSaverService(NULL)
+            m_MetadataSaverService(NULL),
+            m_TelemetryService(NULL),
+            m_UpdateService(NULL)
         { }
 
         virtual ~CommandManager() {}
@@ -107,6 +115,8 @@ namespace Commands {
         void InjectDependency(SpellCheck::SpellCheckerService *spellCheckerService);
         void InjectDependency(SpellCheck::SpellCheckSuggestionModel *spellCheckSuggestionModel);
         void InjectDependency(Helpers::BackupSaverService *backupSaverService);
+        void InjectDependency(Conectivity::TelemetryService *telemetryService);
+        void InjectDependency(Helpers::UpdateService *updateService);
 
     public:
         CommandResult *processCommand(CommandBase *command) const;
@@ -136,6 +146,8 @@ namespace Commands {
         void submitForSpellCheck(SpellCheck::ISpellCheckable *item) const;
         void setupSpellCheckSuggestions(SpellCheck::ISpellCheckable *item);
         void saveMetadata(Models::ArtworkMetadata *metadata) const;
+        void reportUserAction(Conectivity::UserAction userAction) const;
+        void afterConstructionCallback() const;
 
     public:
         // methods for getters
@@ -165,6 +177,8 @@ namespace Commands {
         SpellCheck::SpellCheckerService *m_SpellCheckerService;
         SpellCheck::SpellCheckSuggestionModel *m_SpellCheckSuggestionModel;
         Helpers::BackupSaverService *m_MetadataSaverService;
+        Conectivity::TelemetryService *m_TelemetryService;
+        Helpers::UpdateService *m_UpdateService;
     };
 }
 

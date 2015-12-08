@@ -21,14 +21,23 @@
 
 #include "helpersqmlwrapper.h"
 #include "keywordvalidator.h"
+#include "../Commands/commandmanager.h"
 
 namespace Helpers {
+    HelpersQmlWrapper::HelpersQmlWrapper(Commands::CommandManager *commandManager) {
+        m_CommandManager = commandManager;
+    }
+
     bool HelpersQmlWrapper::isKeywordValid(const QString &keyword) const {
         return isValidKeyword(keyword);
     }
 
     QString HelpersQmlWrapper::sanitizeKeyword(const QString &keyword) const {
         return doSanitizeKeyword(keyword);
+    }
+
+    void HelpersQmlWrapper::afterConstruction() {
+        m_CommandManager->afterConstructionCallback();
     }
 }
 

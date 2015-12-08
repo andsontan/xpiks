@@ -97,6 +97,8 @@ ApplicationWindow {
         }
     }
 
+    Component.onCompleted: helpersWrapper.afterConstruction()
+
     menuBar: MenuBar {
         Menu {
             title: qsTr("File")

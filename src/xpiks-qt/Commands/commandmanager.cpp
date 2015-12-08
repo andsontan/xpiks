@@ -42,6 +42,8 @@
 #include "../SpellCheck/spellchecksuggestionmodel.h"
 #include "../SpellCheck/ispellcheckable.h"
 #include "../Helpers/backupsaverservice.h"
+#include "../Conectivity/telemetryservice.h"
+#include "../Helpers/updateservice.h"
 
 void Commands::CommandManager::InjectDependency(Models::ArtworksRepository *artworkRepository) {
     Q_ASSERT(artworkRepository != NULL); m_ArtworksRepository = artworkRepository;
@@ -124,6 +126,14 @@ void Commands::CommandManager::InjectDependency(SpellCheck::SpellCheckSuggestion
 
 void Commands::CommandManager::InjectDependency(Helpers::BackupSaverService *backupSaverService) {
     Q_ASSERT(backupSaverService != NULL); m_MetadataSaverService = backupSaverService;
+}
+
+void Commands::CommandManager::InjectDependency(Conectivity::TelemetryService *telemetryService) {
+    Q_ASSERT(telemetryService != NULL); m_TelemetryService = telemetryService;
+}
+
+void Commands::CommandManager::InjectDependency(Helpers::UpdateService *updateService) {
+    Q_ASSERT(updateService != NULL); m_UpdateService = updateService;
 }
 
 Commands::CommandResult *Commands::CommandManager::processCommand(Commands::CommandBase *command) const
@@ -275,4 +285,18 @@ void Commands::CommandManager::saveMetadata(Models::ArtworkMetadata *metadata) c
     if (m_SettingsModel->getSaveBackups()) {
         m_MetadataSaverService->saveArtwork(metadata);
     }
+}
+
+void Commands::CommandManager::reportUserAction(Conectivity::UserAction userAction) const {
+    if (m_TelemetryService) {
+        m_TelemetryService->reportAction(userAction);
+    }
+}
+
+void Commands::CommandManager::afterConstructionCallback() const {
+    m_SpellCheckerService->startChecking();
+    m_MetadataSaverService->startSaving();
+
+    m_UpdateService->checkForUpdates();
+    m_TelemetryService->reportAction(Conectivity::UserActionOpen);
 }

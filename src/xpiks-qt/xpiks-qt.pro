@@ -63,7 +63,8 @@ SOURCES += main.cpp \
     SpellCheck/spellcheckiteminfo.cpp \
     Helpers/backupsaverworker.cpp \
     Helpers/backupsaverservice.cpp \
-    SpellCheck/spellsuggestionsitem.cpp
+    SpellCheck/spellsuggestionsitem.cpp \
+    Conectivity/telemetryservice.cpp
 
 RESOURCES += qml.qrc
 
@@ -162,7 +163,9 @@ HEADERS += \
     Helpers/backupsaverworker.h \
     Common/itemprocessingworker.h \
     Helpers/backupsaverservice.h \
-    SpellCheck/spellsuggestionsitem.h
+    SpellCheck/spellsuggestionsitem.h \
+    Conectivity/analyticsuserevent.h \
+    Conectivity/telemetryservice.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

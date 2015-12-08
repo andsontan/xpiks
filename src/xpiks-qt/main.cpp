@@ -25,6 +25,7 @@
 #include <QtQml>
 #include <QFile>
 #include <QtDebug>
+#include <QUuid>
 #include <QDateTime>
 #include <QSettings>
 #include <QTextStream>
@@ -36,10 +37,12 @@
 #include "SpellCheck/spellchecksuggestionmodel.h"
 #include "Models/filteredartitemsproxymodel.h"
 #include "Suggestion/suggestionqueryengine.h"
+#include "Conectivity/analyticsuserevent.h"
 #include "SpellCheck/spellcheckerservice.h"
 #include "Models/recentdirectoriesmodel.h"
 #include "Suggestion/keywordssuggestor.h"
 #include "Models/combinedartworksmodel.h"
+#include "Conectivity/telemetryservice.h"
 #include "Helpers/globalimageprovider.h"
 #include "Models/uploadinforepository.h"
 #include "Helpers/backupsaverservice.h"
@@ -113,6 +116,14 @@ void initQSettings() {
     QCoreApplication::setApplicationVersion(STRINGIZE(XPIKS_VERSION)" "STRINGIZE(XPIKS_VERSION_SUFFIX)" - " + appVersion.left(10));
 }
 
+void ensureUserIdExists(Helpers::AppSettings *settings) {
+    QLatin1String userIdKey = QLatin1String(Constants::USER_AGENT_ID);
+    if (!settings->contains(userIdKey)) {
+        QUuid uuid = QUuid::createUuid();
+        settings->setValue(userIdKey, uuid.toString());
+    }
+}
+
 int main(int argc, char *argv[]) {
     Helpers::RunGuard guard("xpiks");
     if (!guard.tryToRun()) {
@@ -121,6 +132,8 @@ int main(int argc, char *argv[]) {
     }
 
     initQSettings();
+    Helpers::AppSettings appSettings;
+    ensureUserIdExists(&appSettings);
 
     Suggestion::LocalLibrary localLibrary;
 
@@ -157,6 +170,9 @@ int main(int argc, char *argv[]) {
     localLibrary.loadLibraryAsync();
 
 
+    QString userId = appSettings.value(QLatin1String(Constants::USER_AGENT_ID)).toString();
+    userId.remove(QRegExp("[{}-]."));
+
     Models::ArtworksRepository artworkRepository;
     Models::ArtItemsModel artItemsModel;
     Models::CombinedArtworksModel combinedArtworksModel;
@@ -164,7 +180,6 @@ int main(int argc, char *argv[]) {
     iptcProvider.setLocalLibrary(&localLibrary);
     Models::UploadInfoRepository uploadInfoRepository;
     Models::WarningsManager warningsManager;
-    Helpers::AppSettings appSettings;
     Models::SettingsModel settingsModel;
     Encryption::SecretsManager secretsManager;
     UndoRedo::UndoRedoManager undoRedoManager;
@@ -178,6 +193,8 @@ int main(int argc, char *argv[]) {
     SpellCheck::SpellCheckerService spellCheckerService;
     SpellCheck::SpellCheckSuggestionModel spellCheckSuggestionModel;
     Helpers::BackupSaverService metadataSaverService;
+    Conectivity::TelemetryService telemetryService(userId);
+    Helpers::UpdateService updateService;
 
     Commands::CommandManager commandManager;
     commandManager.InjectDependency(&artworkRepository);
@@ -197,6 +214,8 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&spellCheckerService);
     commandManager.InjectDependency(&spellCheckSuggestionModel);
     commandManager.InjectDependency(&metadataSaverService);
+    commandManager.InjectDependency(&telemetryService);
+    commandManager.InjectDependency(&updateService);
 
     // other initializations
     secretsManager.setMasterPasswordHash(appSettings.value(Constants::MASTER_PASSWORD_HASH, "").toString());
@@ -214,8 +233,7 @@ int main(int argc, char *argv[]) {
 
     warningsManager.setImageProvider(globalProvider);
 
-    Helpers::HelpersQmlWrapper helpersQmlWrapper;
-    Helpers::UpdateService updateService;
+    Helpers::HelpersQmlWrapper helpersQmlWrapper(&commandManager);
 
     QQmlContext *rootContext = engine.rootContext();
     rootContext->setContextProperty("artItemsModel", &artItemsModel);
@@ -242,8 +260,6 @@ int main(int argc, char *argv[]) {
     engine.addImageProvider("global", globalProvider);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
-    spellCheckerService.startChecking();
-    metadataSaverService.startSaving();
 
 #ifdef QT_DEBUG
     if (argc > 1) {
@@ -254,9 +270,6 @@ int main(int argc, char *argv[]) {
         commandManager.addInitialArtworks(pathes);
     }
 #endif
-
-    updateService.checkForUpdates();
-
 
     return app.exec();
 }

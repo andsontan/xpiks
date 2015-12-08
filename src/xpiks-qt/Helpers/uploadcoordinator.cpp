@@ -153,7 +153,7 @@ namespace Helpers {
                                               QStringList &filePathes,
                                               QStringList &zipsPathes,
                                               bool includeVector) const {
-        int size = 0;
+        int size = artworkList.length();
         for (int i = 0; i < size; ++i) {
             Models::ArtworkMetadata *metadata = artworkList.at(i);
             QString filepath = metadata->getFilepath();
