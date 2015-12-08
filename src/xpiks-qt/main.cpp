@@ -28,7 +28,6 @@
 #include <QDateTime>
 #include <QSettings>
 #include <QTextStream>
-#include <QTranslator>
 #include <QQmlContext>
 #include <QApplication>
 #include <QStandardPaths>
@@ -157,14 +156,6 @@ int main(int argc, char *argv[]) {
 
     localLibrary.loadLibraryAsync();
 
-    QTranslator qtTranslator;
-    qtTranslator.load("qt_" + QLocale::system().name(),
-                      QLibraryInfo::location(QLibraryInfo::TranslationsPath));
-    app.installTranslator(&qtTranslator);
-
-    QTranslator myappTranslator;
-    myappTranslator.load("xpiks_" + QLocale::system().name());
-    app.installTranslator(&myappTranslator);
 
     Models::ArtworksRepository artworkRepository;
     Models::ArtItemsModel artItemsModel;
