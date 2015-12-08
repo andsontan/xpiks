@@ -40,6 +40,8 @@ Commands::CommandResult *Commands::CombinedEditCommand::execute(const Commands::
     artworksBackups.reserve(size);
     itemsToCheck.reserve(size);
 
+    bool needToClear = Common::HasFlag(m_EditFlags, Common::Clear);
+
     for (int i = 0; i < size; ++i) {
         Models::ArtItemInfo* info = m_ArtItemInfos[i];
         Models::ArtworkMetadata *metadata = info->getOrigin();
@@ -52,7 +54,12 @@ Commands::CommandResult *Commands::CombinedEditCommand::execute(const Commands::
         setDescription(metadata);
         setTitle(metadata);
 
-        commandManager->saveMetadata(metadata);
+        // do not save if Сlear flag present
+        // to be able to restore from .xpks
+        if (!needToClear) {
+            commandManager->saveMetadata(metadata);
+        }
+
         itemsToCheck.append(metadata);
     }
 
@@ -71,20 +78,33 @@ void Commands::CombinedEditCommand::setKeywords(Models::ArtworkMetadata *metadat
     if (Common::HasFlag(m_EditFlags, Common::EditKeywords)) {
         if (Common::HasFlag(m_EditFlags, Common::AppendKeywords)) {
             metadata->appendKeywords(m_Keywords);
-        } else {
-            metadata->setKeywords(m_Keywords);
+        }
+        else {
+            if (Common::HasFlag(m_EditFlags, Common::Clear)) {
+                metadata->clearKeywords();
+            } else {
+                metadata->setKeywords(m_Keywords);
+            }
         }
     }
 }
 
 void Commands::CombinedEditCommand::setDescription(Models::ArtworkMetadata *metadata) const {
     if (Common::HasFlag(m_EditFlags, Common::EditDesctiption)) {
-        metadata->setDescription(m_ArtworkDescription);
+        if (Common::HasFlag(m_EditFlags, Common::Clear)) {
+            metadata->setDescription("");
+        } else {
+            metadata->setDescription(m_ArtworkDescription);
+        }
     }
 }
 
 void Commands::CombinedEditCommand::setTitle(Models::ArtworkMetadata *metadata) const {
     if (Common::HasFlag(m_EditFlags, Common::EditTitle)) {
-        metadata->setTitle(m_ArtworkTitle);
+        if (Common::HasFlag(m_EditFlags, Common::Clear)) {
+            metadata->setTitle("");
+        } else {
+            metadata->setTitle(m_ArtworkTitle);
+        }
     }
 }

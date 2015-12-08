@@ -27,7 +27,8 @@ namespace Common {
         EditTitle = 1,
         EditDesctiption = 2,
         EditKeywords = 4,
-        AppendKeywords = 8
+        AppendKeywords = 8,
+        Clear = 16
     };
 
     bool HasFlag(int value, CombinedEditFlags flag);

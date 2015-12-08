@@ -51,6 +51,13 @@ namespace Commands {
             m_EditFlags(editFlags)
         { }
 
+        CombinedEditCommand(int editFlags,
+                            const QVector<Models::ArtItemInfo*> &infos) :
+            CommandBase(CombinedEditCommandType),
+            m_ArtItemInfos(infos),
+            m_EditFlags(editFlags)
+        { }
+
         virtual ~CombinedEditCommand() {}
 
     public:

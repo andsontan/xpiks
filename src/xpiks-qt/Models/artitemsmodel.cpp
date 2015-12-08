@@ -179,7 +179,8 @@ namespace Models {
         if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
             metadata->clearKeywords();
-            m_CommandManager->saveMetadata(metadata);
+            // do not save metadata - give change to restore from .xpks
+            //m_CommandManager->saveMetadata(metadata);
         }
     }
 

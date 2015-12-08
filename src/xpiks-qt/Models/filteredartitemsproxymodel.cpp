@@ -192,6 +192,7 @@ namespace Models {
         Common::SetFlag(flags, Common::EditDesctiption);
         Common::SetFlag(flags, Common::EditKeywords);
         Common::SetFlag(flags, Common::EditTitle);
+        Common::SetFlag(flags, Common::Clear);
         removeMetadataInItems(selectedArtworks, flags);
     }
 
@@ -216,14 +217,9 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::removeMetadataInItems(const QVector<ArtItemInfo *> &itemsToClear, int flags) const {
-        const QString empty = "";
-
         Commands::CombinedEditCommand *combinedEditCommand = new Commands::CombinedEditCommand(
                     flags,
-                    itemsToClear,
-                    empty,
-                    empty,
-                    QStringList());
+                    itemsToClear);
 
         Commands::CommandResult *result = m_CommandManager->processCommand(combinedEditCommand);
         Commands::CombinedEditCommandResult *combinedResult = static_cast<Commands::CombinedEditCommandResult*>(result);
@@ -236,6 +232,7 @@ namespace Models {
     void FilteredArtItemsProxyModel::removeKeywordsInItem(ArtItemInfo *itemToClear) {
         int flags = 0;
         Common::SetFlag(flags, Common::EditKeywords);
+        Common::SetFlag(flags, Common::Clear);
         removeMetadataInItems(QVector<ArtItemInfo *>() << itemToClear, flags);
     }
 
