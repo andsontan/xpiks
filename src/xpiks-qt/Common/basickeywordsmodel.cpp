@@ -107,18 +107,20 @@ namespace Common {
             }
         }
 
-        int rowsCount = m_KeywordsList.length();
         size = keywordsToAdd.size();
-        beginInsertRows(QModelIndex(), rowsCount, rowsCount + size - 1);
+        if (size > 0) {
+            int rowsCount = m_KeywordsList.length();
+            beginInsertRows(QModelIndex(), rowsCount, rowsCount + size - 1);
 
-        for (int i = 0; i < size; ++i) {
-            QString sanitizedKeyword = keywordsToAdd[i].simplified().toLower();
-            m_KeywordsSet.insert(sanitizedKeyword);
-            m_SpellCheckResults.append(true);
-            m_KeywordsList.append(sanitizedKeyword);
+            for (int i = 0; i < size; ++i) {
+                QString sanitizedKeyword = keywordsToAdd[i].simplified().toLower();
+                m_KeywordsSet.insert(sanitizedKeyword);
+                m_SpellCheckResults.append(true);
+                m_KeywordsList.append(sanitizedKeyword);
+            }
+
+            endInsertRows();
         }
-
-        endInsertRows();
 
         return appendedCount;
     }
