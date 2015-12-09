@@ -268,6 +268,7 @@ void Commands::CommandManager::submitForSpellCheck(SpellCheck::ISpellCheckable *
 void Commands::CommandManager::submitForSpellCheck(const QVector<SpellCheck::ISpellCheckable *> &items) const {
     if (m_SettingsModel->getUseSpellCheck()) {
         m_SpellCheckerService->submitItems(items);
+        reportUserAction(Conectivity::UserActionSpellCheck);
     }
 }
 

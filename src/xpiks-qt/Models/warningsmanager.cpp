@@ -70,6 +70,8 @@ namespace Models {
             recheckItems();
         }
         endResetModel();
+
+        m_CommandManager->reportUserAction(Conectivity::UserActionWarningsCheck);
     }
 
     void WarningsManager::recheckItems() {

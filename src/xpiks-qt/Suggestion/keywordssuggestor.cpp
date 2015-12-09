@@ -23,6 +23,7 @@
 #include <QString>
 #include "keywordssuggestor.h"
 #include "suggestionartwork.h"
+#include "../Commands/commandmanager.h"
 
 namespace Suggestion {
     void KeywordsSuggestor::setSuggestedArtworks(const QVector<SuggestionArtwork *> &suggestedArtworks) {
@@ -90,8 +91,10 @@ namespace Suggestion {
 
             if (m_UseLocal) {
                 m_QueryEngine.submitLocalQuery(m_LocalLibrary, searchTerms);
+                m_CommandManager->reportUserAction(Conectivity::UserActionSuggestionLocal);
             } else {
                 m_QueryEngine.submitQuery(searchTerms);
+                m_CommandManager->reportUserAction(Conectivity::UserActionSuggestionRemote);
             }
         }
     }

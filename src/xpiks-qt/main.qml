@@ -53,6 +53,8 @@ ApplicationWindow {
         if (artItemsModel.modifiedArtworksCount > 0) {
             close.accepted = false
             configExitDialog.open()
+        } else {
+            applicationWindow.visibility = "Minimized"
         }
     }
 
@@ -210,6 +212,7 @@ ApplicationWindow {
         text: qsTr("You have some artworks modified. Really exit?")
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
+            applicationWindow.visibility = "Minimized"
             Qt.quit()
         }
     }

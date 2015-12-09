@@ -147,6 +147,8 @@ namespace Models {
         uploadInfoRepository->resetPercents();
         uploadInfoRepository->updatePercentages();
         m_UploadCoordinator->uploadArtworks(artworkList, infos, m_IncludeVector, secretsManager, settingsModel);
+
+        m_CommandManager->reportUserAction(Conectivity::UserActionUpload);
     }
 
     void ArtworkUploader::cancelProcessing() {

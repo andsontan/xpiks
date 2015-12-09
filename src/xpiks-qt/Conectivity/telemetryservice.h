@@ -36,6 +36,9 @@ namespace Conectivity {
     public:
         void reportAction(UserAction action);
 
+    private:
+        void doReportAction(UserAction action);
+
     signals:
         void cancelAllQueries();
 

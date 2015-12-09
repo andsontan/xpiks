@@ -45,12 +45,20 @@ namespace Conectivity {
     }
 
     void TelemetryService::reportAction(UserAction action) {
+#ifdef QT_NO_DEBUG
+        doReportAction(action);
+#else
+        Q_UNUSED(action);
+#endif
+    }
+
+    void TelemetryService::doReportAction(UserAction action) {
         AnalyticsUserEvent userEvent(action);
 
         QUrlQuery query;
         query.addQueryItem(QLatin1String("idsite"), QLatin1String("1"));
         query.addQueryItem(QLatin1String("rec"), QLatin1String("1"));
-        query.addQueryItem(QLatin1String("url"), QString("/window/%1").arg(userEvent.getActionString()));
+        query.addQueryItem(QLatin1String("url"), QString("/client/%1").arg(userEvent.getActionString()));
         query.addQueryItem(QLatin1String("action_name"), userEvent.getActionString());
         query.addQueryItem(QLatin1String("_id"), m_UserAgentId);
         query.addQueryItem(QLatin1String("rand"), QString::number(qrand()));
