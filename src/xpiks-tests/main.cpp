@@ -8,6 +8,7 @@
 #include "removecommand_tests.h"
 #include "vectorfilenames_tests.h"
 #include "artworkmetadata_tests.h"
+#include "basickeywordsmodel_tests.h"
 
 #define QTEST_CLASS(TestObject, vName) \
     TestObject vName; \
@@ -23,6 +24,7 @@ int main(int argc, char *argv[]) {
     QTEST_CLASS(RemoveCommand_Tests, rct);
     QTEST_CLASS(VectorFileNamesTests, vfnt);
     QTEST_CLASS(ArtworkMetadataTests, amt);
+    QTEST_CLASS(BasicKeywordsModelTests, bkt);
 
     return 0;
 }

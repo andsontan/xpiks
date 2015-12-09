@@ -51,9 +51,9 @@ namespace Common {
 
     bool BasicKeywordsModel::appendKeyword(const QString &keyword) {
         bool added = false;
+        const QString &sanitizedKeyword = keyword.trimmed().toLower();
 
-        if (canBeAdded(keyword)) {
-            const QString &sanitizedKeyword = keyword.simplified().toLower();
+        if (canBeAdded(sanitizedKeyword)) {
             int keywordsCount = m_KeywordsList.length();
 
             m_KeywordsSet.insert(sanitizedKeyword);
@@ -99,11 +99,16 @@ namespace Common {
         QStringList keywordsToAdd;
         int appendedCount = 0, size = keywordsList.length();
         keywordsToAdd.reserve(size);
+        QSet<QString> accountedKeywords;
 
         for (int i = 0; i < size; ++i) {
             const QString &keyword = keywordsList.at(i);
-            if (canBeAdded(keyword)) {
-                keywordsToAdd.append(keyword);
+            const QString &sanitizedKeyword = keyword.simplified().toLower();
+
+            if (canBeAdded(sanitizedKeyword) && !accountedKeywords.contains(sanitizedKeyword)) {
+                keywordsToAdd.append(sanitizedKeyword);
+                accountedKeywords.insert(sanitizedKeyword);
+                appendedCount++;
             }
         }
 
@@ -113,15 +118,13 @@ namespace Common {
             beginInsertRows(QModelIndex(), rowsCount, rowsCount + size - 1);
 
             for (int i = 0; i < size; ++i) {
-                QString sanitizedKeyword = keywordsToAdd[i].simplified().toLower();
-                m_KeywordsSet.insert(sanitizedKeyword);
+                const QString &keywordToAdd = keywordsToAdd.at(i);
+                m_KeywordsSet.insert(keywordToAdd);
                 m_SpellCheckResults.append(true);
-                m_KeywordsList.append(sanitizedKeyword);
+                m_KeywordsList.append(keywordToAdd);
             }
 
             endInsertRows();
-
-            appendedCount = size;
         }
 
         return appendedCount;
@@ -298,9 +301,8 @@ namespace Common {
     }
 
     bool BasicKeywordsModel::canBeAdded(const QString &keyword) const {
-        const QString &sanitizedKeyword = keyword.simplified().toLower();
-        bool isValid = Helpers::isValidKeyword(sanitizedKeyword);
-        bool result = isValid && !m_KeywordsSet.contains(sanitizedKeyword);
+        bool isValid = Helpers::isValidKeyword(keyword);
+        bool result = isValid && !m_KeywordsSet.contains(keyword);
         return result;
     }
 
