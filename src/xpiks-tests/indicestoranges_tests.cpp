@@ -7,8 +7,8 @@
 #include <cstdarg>
 
 typedef QPair<int, int> Pair;
-typedef QList<Pair > Pairs;
-typedef QList<int> Indices;
+typedef QVector<Pair > Pairs;
+typedef QVector<int> Indices;
 
 Pairs MAKE_PAIRS(int length, ...) {
     Pairs pairs;

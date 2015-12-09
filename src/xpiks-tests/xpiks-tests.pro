@@ -16,9 +16,14 @@ CONFIG   -= app_bundle
 
 win32:INCLUDEPATH += ../tiny-aes
 win32:INCLUDEPATH += ../xpiks-qt/Encryption
+INCLUDEPATH += "../hunspell-1.3.3/src/hunspell"
+DEFINES += HUNSPELL_STATIC
 
 DEFINES += QT_NO_CAST_TO_ASCII \
            QT_NO_CAST_FROM_BYTEARRAY
+
+LIBS += -L"$$PWD/../libs/"
+LIBS += -lhunspell
 
 TEMPLATE = app
 
@@ -52,7 +57,19 @@ SOURCES += main.cpp \
     ../xpiks-qt/Helpers/helpersqmlwrapper.cpp \
     ../xpiks-qt/Models/recentdirectoriesmodel.cpp \
     ../xpiks-qt/Helpers/keywordvalidator.cpp \
-    ../xpiks-qt/Common/flags.cpp
+    ../xpiks-qt/Common/flags.cpp \
+    ../xpiks-qt/SpellCheck/spellcheckerservice.cpp \
+    ../xpiks-qt/SpellCheck/spellcheckitem.cpp \
+    ../xpiks-qt/SpellCheck/spellcheckworker.cpp \
+    ../xpiks-qt/SpellCheck/spellchecksuggestionmodel.cpp \
+    ../xpiks-qt/Helpers/backupsaverservice.cpp \
+    ../xpiks-qt/Helpers/backupsaverworker.cpp \
+    ../xpiks-qt/Conectivity/telemetryservice.cpp \
+    ../xpiks-qt/Helpers/updateservice.cpp \
+    ../xpiks-qt/SpellCheck/spellcheckiteminfo.cpp \
+    ../xpiks-qt/SpellCheck/spellsuggestionsitem.cpp \
+    ../xpiks-qt/Common/basickeywordsmodel.cpp \
+    ../xpiks-qt/SpellCheck/spellcheckerrorshighlighter.cpp
 
 HEADERS += \
     encryption_tests.h \
@@ -92,7 +109,21 @@ HEADERS += \
     ../xpiks-qt/Helpers/helpersqmlwrapper.h \
     ../xpiks-qt/Models/recentdirectoriesmodel.h \
     ../xpiks-qt/Helpers/keywordvalidator.h \
-    ../xpiks-qt/Common/flags.h
+    ../xpiks-qt/Common/flags.h \
+    ../xpiks-qt/SpellCheck/spellcheckerservice.h \
+    ../xpiks-qt/SpellCheck/spellcheckitem.h \
+    ../xpiks-qt/SpellCheck/spellcheckworker.h \
+    ../xpiks-qt/SpellCheck/spellchecksuggestionmodel.h \
+    ../xpiks-qt/Helpers/backupsaverservice.h \
+    ../xpiks-qt/Helpers/backupsaverworker.h \
+    ../xpiks-qt/Conectivity/analyticsuserevent.h \
+    ../xpiks-qt/Conectivity/telemetryservice.h \
+    ../xpiks-qt/Helpers/updateservice.h \
+    ../xpiks-qt/SpellCheck/ispellcheckable.h \
+    ../xpiks-qt/SpellCheck/spellcheckiteminfo.h \
+    ../xpiks-qt/SpellCheck/spellsuggestionsitem.h \
+    ../hunspell-1.3.3/src/hunspell/hunspell.hxx \
+    ../xpiks-qt/SpellCheck/spellcheckerrorshighlighter.h
 
 macx {
 OBJECTIVE_SOURCES += \

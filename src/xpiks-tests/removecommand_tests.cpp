@@ -17,7 +17,7 @@ void RemoveCommand_Tests::removeArtworksFromEmptyRepository() {
     Models::ArtItemsModel *artItemsModel = &artItemsMock;
     commandManagerMock.InjectDependency(artItemsModel);
 
-    QList<QPair<int, int> > indicesToRemove;
+    QVector<QPair<int, int> > indicesToRemove;
     indicesToRemove.append(qMakePair(0, 2));
     Commands::RemoveArtworksCommand *removeArtworkCommand = new Commands::RemoveArtworksCommand(indicesToRemove);
 
@@ -62,7 +62,7 @@ void RemoveCommand_Tests::removeAllArtworksFromRepository() {
     int itemsToAdd = 5;
     commandManagerMock.generateAndAddArtworks(itemsToAdd);
 
-    QList<QPair<int, int> > indicesToRemove;
+    QVector<QPair<int, int> > indicesToRemove;
     indicesToRemove.append(qMakePair(0, itemsToAdd - 1));
     Commands::RemoveArtworksCommand *removeArtworkCommand = new Commands::RemoveArtworksCommand(indicesToRemove);
 
