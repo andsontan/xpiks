@@ -121,6 +121,24 @@ void BasicKeywordsModelTests::appendSameKeywordsTest() {
     QCOMPARE(addedArguments.at(2).toInt(), 0);
 }
 
+void BasicKeywordsModelTests::appendSameChangedKeywordTest() {
+    Common::BasicKeywordsModel basicModel;
+
+    QSignalSpy addSignalSpy(&basicModel, SIGNAL(rowsInserted(QModelIndex,int,int)));
+
+    QStringList keywords;
+    keywords << "keyword" << "KEYWORD" << "kEyworD" << "keYword" << "  keyword" << "keyword  " << "   kEyworD  ";
+
+    int appendedCount = basicModel.appendKeywords(keywords);
+    QCOMPARE(appendedCount, 1);
+
+    QCOMPARE(addSignalSpy.count(), 1);
+    QCOMPARE(basicModel.getKeywordsCount(), 1);
+    QList<QVariant> addedArguments = addSignalSpy.takeFirst();
+    QCOMPARE(addedArguments.at(1).toInt(), 0);
+    QCOMPARE(addedArguments.at(2).toInt(), 0);
+}
+
 void BasicKeywordsModelTests::appendNoKeywordsTest() {
     Common::BasicKeywordsModel basicModel;
 
