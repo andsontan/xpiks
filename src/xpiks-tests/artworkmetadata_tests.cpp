@@ -148,7 +148,7 @@ void ArtworkMetadataTests::modifiedIsNotMarkedModifiedAgainTest() {
     QCOMPARE(modifiedSpy.count(), 0);
 }
 
-void ArtworkMetadataTests::setDescriptionEmitsModified() {
+void ArtworkMetadataTests::setDescriptionEmitsModifiedTest() {
     Mocks::ArtworkMetadataMock metadata("file.jpg");
 
     QSignalSpy modifiedSpy(&metadata, SIGNAL(modifiedChanged(bool)));
@@ -160,7 +160,7 @@ void ArtworkMetadataTests::setDescriptionEmitsModified() {
     QCOMPARE(modifyArguments.at(0).toBool(), true);
 }
 
-void ArtworkMetadataTests::setTitleEmitsModified() {
+void ArtworkMetadataTests::setTitleEmitsModifiedTest() {
     Mocks::ArtworkMetadataMock metadata("file.jpg");
 
     QSignalSpy modifiedSpy(&metadata, SIGNAL(modifiedChanged(bool)));
@@ -172,7 +172,7 @@ void ArtworkMetadataTests::setTitleEmitsModified() {
     QCOMPARE(modifyArguments.at(0).toBool(), true);
 }
 
-void ArtworkMetadataTests::addNewKeywordsEmitsModified() {
+void ArtworkMetadataTests::addNewKeywordsEmitsModifiedTest() {
     Mocks::ArtworkMetadataMock metadata("file.jpg");
 
     QSignalSpy modifiedSpy(&metadata, SIGNAL(modifiedChanged(bool)));
@@ -192,7 +192,7 @@ void ArtworkMetadataTests::addNewKeywordsEmitsModified() {
     QCOMPARE(addedArguments.at(2).toInt(), 1);
 }
 
-void ArtworkMetadataTests::addExistingKeywordsDoesNotEmitModified() {
+void ArtworkMetadataTests::addExistingKeywordsDoesNotEmitModifiedTest() {
     Mocks::ArtworkMetadataMock metadata("file.jpg");
     int addedCount = metadata.appendKeywords(QStringList() << "keyword1" << "keyword2");
 
@@ -209,7 +209,7 @@ void ArtworkMetadataTests::addExistingKeywordsDoesNotEmitModified() {
     QCOMPARE(addedSpy.count(), 0);
 }
 
-void ArtworkMetadataTests::addOneNewKeywordEmitsModified() {
+void ArtworkMetadataTests::addOneNewKeywordEmitsModifiedTest() {
     Mocks::ArtworkMetadataMock metadata("file.jpg");
 
     QSignalSpy modifiedSpy(&metadata, SIGNAL(modifiedChanged(bool)));
@@ -228,7 +228,7 @@ void ArtworkMetadataTests::addOneNewKeywordEmitsModified() {
     QCOMPARE(addedArguments.at(2).toInt(), 0);
 }
 
-void ArtworkMetadataTests::addOneExistingKeywordDoesNotEmitModified() {
+void ArtworkMetadataTests::addOneExistingKeywordDoesNotEmitModifiedTest() {
     Mocks::ArtworkMetadataMock metadata("file.jpg");
     bool added = metadata.appendKeyword("keyword2");
 
@@ -309,4 +309,42 @@ void ArtworkMetadataTests::removeLastActualKeywordTest() {
     QList<QVariant> removeArguments = removedSpy.takeFirst();
     QCOMPARE(removeArguments.at(1).toInt(), 0);
     QCOMPARE(removeArguments.at(2).toInt(), 0);
+}
+
+void ArtworkMetadataTests::editKeywordToAnotherEmitsModifiedTest() {
+    Mocks::ArtworkMetadataMock metadata("file.jpg");
+
+    QSignalSpy modifiedSpy(&metadata, SIGNAL(modifiedChanged(bool)));
+
+    metadata.appendKeywords(QStringList() << "keyword1" << "keyword2");
+    bool editResult = metadata.editKeyword(0, "another");
+
+    QCOMPARE(editResult, true);
+    QCOMPARE(modifiedSpy.count(), 1);
+    QList<QVariant> modifyArguments = modifiedSpy.takeFirst();
+    QCOMPARE(modifyArguments.at(0).toBool(), true);
+}
+
+void ArtworkMetadataTests::editKeywordToExistingDoesNotEmitModifiedTest() {
+    Mocks::ArtworkMetadataMock metadata("file.jpg");
+    metadata.appendKeywords(QStringList() << "keyword1" << "keyword2");
+
+    QSignalSpy modifiedSpy(&metadata, SIGNAL(modifiedChanged(bool)));
+
+    bool editResult = metadata.editKeyword(0, "keyword2");
+
+    QCOMPARE(editResult, false);
+    QCOMPARE(modifiedSpy.count(), 0);
+}
+
+void ArtworkMetadataTests::misEditOfKeywordDoesNothingTest() {
+    Mocks::ArtworkMetadataMock metadata("file.jpg");
+    metadata.appendKeywords(QStringList() << "keyword1" << "keyword2");
+
+    QSignalSpy modifiedSpy(&metadata, SIGNAL(modifiedChanged(bool)));
+
+    bool editResult = metadata.editKeyword(2, "keyword2");
+
+    QCOMPARE(editResult, false);
+    QCOMPARE(modifiedSpy.count(), 0);
 }

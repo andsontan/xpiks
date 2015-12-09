@@ -15,16 +15,19 @@ private slots:
     void freshObjectTest();
     void markModifiedShouldEmitSignalTest();
     void modifiedIsNotMarkedModifiedAgainTest();
-    void setDescriptionEmitsModified();
-    void setTitleEmitsModified();
-    void addNewKeywordsEmitsModified();
-    void addExistingKeywordsDoesNotEmitModified();
-    void addOneNewKeywordEmitsModified();
-    void addOneExistingKeywordDoesNotEmitModified();
+    void setDescriptionEmitsModifiedTest();
+    void setTitleEmitsModifiedTest();
+    void addNewKeywordsEmitsModifiedTest();
+    void addExistingKeywordsDoesNotEmitModifiedTest();
+    void addOneNewKeywordEmitsModifiedTest();
+    void addOneExistingKeywordDoesNotEmitModifiedTest();
     void removeKeywordFromEmptyTest();
     void removeLastKeywordFromEmptyTest();
     void removeActualKeywordTest();
     void removeLastActualKeywordTest();
+    void editKeywordToAnotherEmitsModifiedTest();
+    void editKeywordToExistingDoesNotEmitModifiedTest();
+    void misEditOfKeywordDoesNothingTest();
 };
 
 #endif // ARTWORKMETADATA_TESTS_H
