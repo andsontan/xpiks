@@ -94,9 +94,9 @@ namespace Models {
         bool removeKeywordAt(int index);
         bool removeLastKeyword();
         virtual bool appendKeyword(const QString &keyword);
+        virtual int appendKeywords(const QStringList &keywordsList);
 
     public:
-        void addKeywords(const QString &rawKeywords);
         void markModified() { if (!m_IsModified) { m_IsModified = true; emit modifiedChanged(m_IsModified); } }
         void setModified() { m_IsModified = true; }
         void resetModified() { m_IsModified = false; }

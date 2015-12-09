@@ -69,7 +69,8 @@ SOURCES += main.cpp \
     ../xpiks-qt/SpellCheck/spellcheckiteminfo.cpp \
     ../xpiks-qt/SpellCheck/spellsuggestionsitem.cpp \
     ../xpiks-qt/Common/basickeywordsmodel.cpp \
-    ../xpiks-qt/SpellCheck/spellcheckerrorshighlighter.cpp
+    ../xpiks-qt/SpellCheck/spellcheckerrorshighlighter.cpp \
+    artworkmetadata_tests.cpp
 
 HEADERS += \
     encryption_tests.h \
@@ -123,7 +124,8 @@ HEADERS += \
     ../xpiks-qt/SpellCheck/spellcheckiteminfo.h \
     ../xpiks-qt/SpellCheck/spellsuggestionsitem.h \
     ../hunspell-1.3.3/src/hunspell/hunspell.hxx \
-    ../xpiks-qt/SpellCheck/spellcheckerrorshighlighter.h
+    ../xpiks-qt/SpellCheck/spellcheckerrorshighlighter.h \
+    artworkmetadata_tests.h
 
 macx {
 OBJECTIVE_SOURCES += \

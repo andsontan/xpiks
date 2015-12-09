@@ -120,6 +120,8 @@ namespace Common {
             }
 
             endInsertRows();
+
+            appendedCount = size;
         }
 
         return appendedCount;

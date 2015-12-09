@@ -70,7 +70,7 @@ namespace Models {
         } else if (!rawKeywords.isEmpty()) {
             QStringList keywordsToAppend = rawKeywords.split(",", QString::SkipEmptyParts);
             int appendedCount = appendKeywords(keywordsToAppend);
-            anythingModified = appendedCount > 0;
+            anythingModified = anythingModified || (appendedCount > 0);
         }
 
         m_IsModified = false;
@@ -112,6 +112,12 @@ namespace Models {
     bool ArtworkMetadata::appendKeyword(const QString &keyword) {
         bool result = BasicKeywordsModel::appendKeyword(keyword);
         if (result) { markModified(); }
+        return result;
+    }
+
+    int ArtworkMetadata::appendKeywords(const QStringList &keywordsList) {
+        int result = BasicKeywordsModel::appendKeywords(keywordsList);
+        if (result > 0) { markModified(); }
         return result;
     }
 }
