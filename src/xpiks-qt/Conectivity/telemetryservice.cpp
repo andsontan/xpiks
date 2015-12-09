@@ -50,7 +50,7 @@ namespace Conectivity {
         QUrlQuery query;
         query.addQueryItem(QLatin1String("idsite"), QLatin1String("1"));
         query.addQueryItem(QLatin1String("rec"), QLatin1String("1"));
-        query.addQueryItem(QLatin1String("url"), QLatin1String("client"));
+        query.addQueryItem(QLatin1String("url"), QString("/window/%1").arg(userEvent.getActionString()));
         query.addQueryItem(QLatin1String("action_name"), userEvent.getActionString());
         query.addQueryItem(QLatin1String("_id"), m_UserAgentId);
         query.addQueryItem(QLatin1String("rand"), QString::number(qrand()));
@@ -64,16 +64,25 @@ namespace Conectivity {
                            .arg(QSysInfo::productType())
                            .arg(QSysInfo::productVersion()));
 
+
         QUrl reportingUrl;
         reportingUrl.setUrl(m_ReportingEndpoint);
         reportingUrl.setQuery(query);
+
 
 #ifdef QT_DEBUG
         qDebug() << "Telemetry request" << reportingUrl;
 #endif
 
         QNetworkRequest request(reportingUrl);
-        //request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+
+#if defined(Q_OS_DARWIN)
+        request.setRawHeader(QString("User-Agent").toLocal8Bit(), QString("Mozilla/5.0 (Macintosh; Mac OS X %2; rv:1.1) Qt Xpiks/1.1")
+                .arg(QSysInfo::productVersion()).toLocal8Bit());
+#elif defined(Q_OS_WIN)
+        request.setRawHeader(QString("User-Agent").toLocal8Bit(), QString("Mozilla/5.0 (Windows %2; rv:1.1) Qt Xpiks/1.1")
+                .arg(QSysInfo::productVersion()).toLocal8Bit());
+#endif
 
         QNetworkReply *reply = m_NetworkManager.get(request);
         QObject::connect(this, SIGNAL(cancelAllQueries()),
