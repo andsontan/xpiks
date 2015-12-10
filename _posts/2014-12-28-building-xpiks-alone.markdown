@@ -34,6 +34,7 @@ date: 2014-12-28T09:54:01+02:00
 - open project `src/quazip/quazip.pro` in Qt Creator, select `Release`, execute `Run qmake`, execute `Build`
 - copy builded library (e.g. `libquazip.a`, `quazip.lib`) from the build directory to the `src/libs` directory
 
+***Redistribution***
 
 If you builded for Release and you wish to redistribute it for similar desktop platforms to yours, follow next steps:
 
@@ -51,9 +52,8 @@ And for Windows as well:
 
 The RELEASE procedure for OS X, Windows:
 
-- build zlib for Release and put it to `libs/` directory (as specified above)
-- build Xpiks for Release
+- build Xpiks for Release using procedure described above
 - use *deployqt tool (described above) to make Xpiks standalone
-- copy the exiftool to the directory with xpiks binaries
-- copy the curl (including additional libs) to the directory with xpiks binaries
+- [Windows] copy the exiftool to the directory with Xpiks binaries
+- [Windows] copy the curl (including additional libs) to the directory with Xpiks binaries
 - create the archive and that's it
