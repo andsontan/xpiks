@@ -31,7 +31,7 @@ date: 2014-12-28T09:54:01+02:00
 
 ***<span id="quazip">To build Quazip do the following:</span>***
 
-- open project `src/quazip/quazip.pro` in Qt Creator, select `Release`, execute `Run qmake`, execute `Build`
+- open project `src/quazip/quazip/quazip.pro` in Qt Creator, select `Release`, execute `Run qmake`, execute `Build`
 - copy builded library (e.g. `libquazip.a`, `quazip.lib`) from the build directory to the `src/libs` directory
 
 ***Redistribution***
