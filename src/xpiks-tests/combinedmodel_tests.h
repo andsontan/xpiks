@@ -27,6 +27,12 @@ private slots:
     void initEmptyArtworksDoesNotEmitTest();
     void initOneArtworkEnablesAllFields();
     void initManyArtworksDoesNotEnableAllFields();
+    void resetModelClearsEverythingTest();
+    void appendNewKeywordEmitsCountChangedTest();
+    void appendExistingKeywordDoesNotEmitTest();
+    void pasteNewKeywordsEmitsCountChangedTest();
+    void pasteExistingKeywordsDoesNotEmitTest();
+    void editKeywordDoesNotEmitCountChangedTest();
 private:
     Mocks::CommandManagerMock m_CommandManagerMock;
     Models::SettingsModel m_SettingsModel;

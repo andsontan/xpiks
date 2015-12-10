@@ -441,3 +441,95 @@ void CombinedModelTests::initManyArtworksDoesNotEnableAllFields() {
 
     freeArtworks(items);
 }
+
+void CombinedModelTests::resetModelClearsEverythingTest() {
+    Models::CombinedArtworksModel combinedModel;
+    m_CommandManagerMock.InjectDependency(&combinedModel);
+
+    QVector<Models::ArtItemInfo *> items;
+    items << createArtworkMetadata("Description1", "title1", QStringList() << "Keyword1", 0);
+    items << createArtworkMetadata("Description2", "title2", QStringList() << "Keyword2", 1);
+    items << createArtworkMetadata("Description3", "title3", QStringList() << "Keyword3", 2);
+
+    combinedModel.initArtworks(items);
+    combinedModel.recombineArtworks();
+
+    combinedModel.resetModelData();
+
+    QCOMPARE(combinedModel.getArtworksCount(), 0);
+    QVERIFY(combinedModel.getDescription().isEmpty());
+    QVERIFY(combinedModel.getTitle().isEmpty());
+    QCOMPARE(combinedModel.getKeywordsCount(), 0);
+    QCOMPARE(combinedModel.getIsModified(), false);
+    // TEMPORARY
+    QCOMPARE(combinedModel.getChangeDescription(), true);
+    QCOMPARE(combinedModel.getChangeTitle(), true);
+    QCOMPARE(combinedModel.getChangeKeywords(), true);
+}
+
+void CombinedModelTests::appendNewKeywordEmitsCountChangedTest() {
+    Models::CombinedArtworksModel combinedModel;
+    m_CommandManagerMock.InjectDependency(&combinedModel);
+
+    QSignalSpy addSpy(&combinedModel, SIGNAL(keywordsCountChanged()));
+
+    combinedModel.appendKeyword("new keyword");
+
+    QCOMPARE(addSpy.count(), 1);
+}
+
+void CombinedModelTests::appendExistingKeywordDoesNotEmitTest() {
+    Models::CombinedArtworksModel combinedModel;
+    m_CommandManagerMock.InjectDependency(&combinedModel);
+
+    QString keyword = "new keyword";
+
+    combinedModel.appendKeyword(keyword);
+
+    QSignalSpy addSpy(&combinedModel, SIGNAL(keywordsCountChanged()));
+
+    combinedModel.appendKeyword(keyword);
+
+    QCOMPARE(addSpy.count(), 0);
+}
+
+void CombinedModelTests::pasteNewKeywordsEmitsCountChangedTest() {
+    Models::CombinedArtworksModel combinedModel;
+    m_CommandManagerMock.InjectDependency(&combinedModel);
+
+    QSignalSpy addSpy(&combinedModel, SIGNAL(keywordsCountChanged()));
+
+    combinedModel.pasteKeywords(QStringList() << "new keyword" << "another keyword");
+
+    QCOMPARE(addSpy.count(), 1);
+}
+
+void CombinedModelTests::pasteExistingKeywordsDoesNotEmitTest() {
+    Models::CombinedArtworksModel combinedModel;
+    m_CommandManagerMock.InjectDependency(&combinedModel);
+
+    QStringList keywords;
+    keywords << "new keyword" << "another keyword";
+
+    combinedModel.pasteKeywords(keywords);
+
+    QSignalSpy addSpy(&combinedModel, SIGNAL(keywordsCountChanged()));
+    combinedModel.pasteKeywords(keywords);
+
+    QCOMPARE(addSpy.count(), 0);
+}
+
+void CombinedModelTests::editKeywordDoesNotEmitCountChangedTest() {
+    Models::CombinedArtworksModel combinedModel;
+    m_CommandManagerMock.InjectDependency(&combinedModel);
+
+    QString keyword = "new keyword";
+
+    combinedModel.appendKeyword(keyword);
+
+    QSignalSpy addSpy(&combinedModel, SIGNAL(keywordsCountChanged()));
+
+    combinedModel.editKeyword(0, "another");
+
+    QCOMPARE(addSpy.count(), 0);
+}
