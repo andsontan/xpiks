@@ -12,7 +12,7 @@ If you want to create Xpiks executable for everyday usage, before each `Run qmak
 - download **Hunspell 1.3.3** from http://hunspell.sourceforge.net/ and extract it in the `src/` directory
 - open project `src/hunspell/hunspell.pro` in Qt Creator, execute `Run qmake`, execute `Build`
 - copy builded library (e.g. `libhunspell.a`) from the build directory to the `src/libs` directory
-- open project `src/quazip/quazip.pro` in Qt Creator, execute `Run qmake`, execute `Build`
+- open project `src/quazip/quazip/quazip.pro` in Qt Creator, execute `Run qmake`, execute `Build`
 - copy builded library (e.g. `libquazip.a`) from the build directory to the `src/libs` directory
 - [windows] you will also need to download **zlib 1.2.8** and extract it in the `src/` directory
 - [windows] open project `src/zlib-project/zlib.pro` in Qt Creator, execute `Run qmake`, execute `Build`
