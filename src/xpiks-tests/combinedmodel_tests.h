@@ -17,6 +17,16 @@ private slots:
     void combineCommonInTitleTest();
     void combineCommonInDescriptionTest();
     void recombineAfterRemoveDifferentTest();
+    void recombineAfterRemoveAllButOneTest();
+    void twoTimesInARowRecombineTest();
+    void isNotModifiedAfterTitleDescEditTest();
+    void isModifiedAfterKeywordsAppendTest();
+    void isModifiedAfterKeywordRemovalTest();
+    void isModifiedAfterKeywordEditTest();
+    void initArtworksEmitsRowsInsertTest();
+    void initEmptyArtworksDoesNotEmitTest();
+    void initOneArtworkEnablesAllFields();
+    void initManyArtworksDoesNotEnableAllFields();
 private:
     Mocks::CommandManagerMock m_CommandManagerMock;
     Models::SettingsModel m_SettingsModel;

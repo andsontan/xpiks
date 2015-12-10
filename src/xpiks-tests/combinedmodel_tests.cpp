@@ -1,6 +1,7 @@
 #include "combinedmodel_tests.h"
 #include <QStringList>
 #include <QVector>
+#include <QSignalSpy>
 #include "../xpiks-qt/Models/combinedartworksmodel.h"
 #include "Mocks/artitemsmodelmock.h"
 #include "Mocks/commandmanagermock.h"
@@ -41,6 +42,10 @@ void CombinedModelTests::trivialCombineNoItemsTest() {
     QVERIFY(combinedModel.getDescription().isEmpty());
     QVERIFY(combinedModel.getTitle().isEmpty());
     QCOMPARE(combinedModel.getKeywordsCount(), 0);
+    QCOMPARE(combinedModel.getIsModified(), false);
+    QCOMPARE(combinedModel.getChangeDescription(), false);
+    QCOMPARE(combinedModel.getChangeTitle(), false);
+    QCOMPARE(combinedModel.getChangeKeywords(), false);
 }
 
 void CombinedModelTests::trivialcombineOneItemTest() {
@@ -63,6 +68,7 @@ void CombinedModelTests::trivialcombineOneItemTest() {
     QCOMPARE(combinedModel.getDescription(), desc);
     QCOMPARE(combinedModel.getTitle(), title);
     QCOMPARE(combinedModel.getKeywordsCount(), keywords.count());
+    QCOMPARE(combinedModel.getIsModified(), false);
 
     freeArtworks(items);
 }
@@ -90,6 +96,7 @@ void CombinedModelTests::combineSeveralSameItemsTest() {
     QCOMPARE(combinedModel.getDescription(), desc);
     QCOMPARE(combinedModel.getTitle(), title);
     QCOMPARE(combinedModel.getKeywordsCount(), keywords.count());
+    QCOMPARE(combinedModel.getIsModified(), false);
 
     freeArtworks(items);
 }
@@ -110,6 +117,7 @@ void CombinedModelTests::combineAllDifferentItemsTest() {
     QVERIFY(combinedModel.getDescription().isEmpty());
     QVERIFY(combinedModel.getTitle().isEmpty());
     QCOMPARE(combinedModel.getKeywordsCount(), 0);
+    QCOMPARE(combinedModel.getIsModified(), false);
 
     freeArtworks(items);
 }
@@ -133,6 +141,7 @@ void CombinedModelTests::combineCommonInKeywordsTest() {
     QVERIFY(combinedModel.getTitle().isEmpty());
     QCOMPARE(combinedModel.getKeywordsCount(), 1);
     QCOMPARE(combinedModel.getKeywords()[0], commonKeyword);
+    QCOMPARE(combinedModel.getIsModified(), false);
 
     freeArtworks(items);
 }
@@ -155,6 +164,7 @@ void CombinedModelTests::combineCommonInTitleTest() {
     QVERIFY(combinedModel.getDescription().isEmpty());
     QCOMPARE(combinedModel.getTitle(), commonTitle);
     QCOMPARE(combinedModel.getKeywordsCount(), 0);
+    QCOMPARE(combinedModel.getIsModified(), false);
 
     freeArtworks(items);
 }
@@ -177,6 +187,7 @@ void CombinedModelTests::combineCommonInDescriptionTest() {
     QVERIFY(combinedModel.getTitle().isEmpty());
     QCOMPARE(combinedModel.getDescription(), commonDescription);
     QCOMPARE(combinedModel.getKeywordsCount(), 0);
+    QCOMPARE(combinedModel.getIsModified(), false);
 
     freeArtworks(items);
 }
@@ -196,11 +207,6 @@ void CombinedModelTests::recombineAfterRemoveDifferentTest() {
     combinedModel.initArtworks(items);
     combinedModel.recombineArtworks();
 
-    QCOMPARE(combinedModel.getArtworksCount(), items.count());
-    QVERIFY(combinedModel.getTitle().isEmpty());
-    QVERIFY(combinedModel.getDescription().isEmpty());
-    QCOMPARE(combinedModel.getKeywordsCount(), 0);
-
     items.last()->setSelected(true);
     combinedModel.removeSelectedArtworks();
 
@@ -209,7 +215,229 @@ void CombinedModelTests::recombineAfterRemoveDifferentTest() {
     QCOMPARE(combinedModel.getDescription(), commonDescription);
     QCOMPARE(combinedModel.getKeywordsCount(), 1);
     QCOMPARE(combinedModel.getKeywords()[0], commonKeyword);
+    QCOMPARE(combinedModel.getIsModified(), false);
 
     items.removeAt(items.length() - 1);
+    freeArtworks(items);
+}
+
+void CombinedModelTests::recombineAfterRemoveAllButOneTest() {
+    Models::CombinedArtworksModel combinedModel;
+    m_CommandManagerMock.InjectDependency(&combinedModel);
+
+    QVector<Models::ArtItemInfo *> items;
+    items << createArtworkMetadata("Description1", "title1", QStringList() << "Keyword1" << "adfafdaf", 0);
+    items << createArtworkMetadata("Description2", "title2", QStringList() << "Keyword2" << "21345425421", 1);
+    items << createArtworkMetadata("Description3", "title3", QStringList() << "Keyword3" << "(*&^*&^*&&^%", 2);
+
+    combinedModel.initArtworks(items);
+    combinedModel.recombineArtworks();
+
+    items[1]->setSelected(true);
+    items[2]->setSelected(true);
+    combinedModel.removeSelectedArtworks();
+    Models::ArtworkMetadata *first = items.first()->getOrigin();
+
+    QCOMPARE(combinedModel.getArtworksCount(), 1);
+    QCOMPARE(combinedModel.getTitle(), first->getTitle());
+    QCOMPARE(combinedModel.getDescription(), first->getDescription());
+    QCOMPARE(combinedModel.getKeywordsCount(), first->getKeywordsCount());
+    QCOMPARE(combinedModel.getKeywords(), first->getKeywords());
+    QCOMPARE(combinedModel.getIsModified(), false);
+
+    items.removeAt(items.length() - 1);
+    items.removeAt(items.length() - 1);
+    freeArtworks(items);
+}
+
+void CombinedModelTests::twoTimesInARowRecombineTest() {
+    Models::CombinedArtworksModel combinedModel;
+    m_CommandManagerMock.InjectDependency(&combinedModel);
+
+    QString commonDescription = "a common Description1";
+    QString commonKeyword = "keyword";
+
+    QVector<Models::ArtItemInfo *> items;
+    items << createArtworkMetadata(commonDescription, "title1", QStringList() << "Keyword1" << commonKeyword, 0);
+    items << createArtworkMetadata(commonDescription, "title2", QStringList() << "Keyword2" << commonKeyword, 1);
+    items << createArtworkMetadata("Different description", "title3", QStringList() << "Keyword3", 2);
+
+    combinedModel.initArtworks(items);
+    combinedModel.recombineArtworks();
+    combinedModel.recombineArtworks();
+
+    QCOMPARE(combinedModel.getArtworksCount(), items.count());
+    QVERIFY(combinedModel.getTitle().isEmpty());
+    QVERIFY(combinedModel.getDescription().isEmpty());
+    QCOMPARE(combinedModel.getKeywordsCount(), 0);
+    QCOMPARE(combinedModel.getIsModified(), false);
+}
+
+void CombinedModelTests::isNotModifiedAfterTitleDescEditTest() {
+    Models::CombinedArtworksModel combinedModel;
+    m_CommandManagerMock.InjectDependency(&combinedModel);
+
+    QString commonDescription = "a common Description1";
+
+    QVector<Models::ArtItemInfo *> items;
+    items << createArtworkMetadata(commonDescription, "title1", QStringList() << "Keyword1", 0);
+    items << createArtworkMetadata(commonDescription, "title2", QStringList() << "Keyword2", 1);
+    items << createArtworkMetadata(commonDescription, "title3", QStringList() << "Keyword3", 2);
+
+    combinedModel.initArtworks(items);
+    combinedModel.recombineArtworks();
+
+    QCOMPARE(combinedModel.getIsModified(), false);
+
+    combinedModel.setDescription("Brand new description");
+    QCOMPARE(combinedModel.getIsModified(), false);
+
+    combinedModel.setTitle("Brand new title");
+    QCOMPARE(combinedModel.getIsModified(), false);
+
+    freeArtworks(items);
+}
+
+void CombinedModelTests::isModifiedAfterKeywordsAppendTest() {
+    Models::CombinedArtworksModel combinedModel;
+    m_CommandManagerMock.InjectDependency(&combinedModel);
+
+    QString commonDescription = "a common Description1";
+
+    QVector<Models::ArtItemInfo *> items;
+    items << createArtworkMetadata(commonDescription, "title1", QStringList() << "Keyword1", 0);
+    items << createArtworkMetadata(commonDescription, "title2", QStringList() << "Keyword2", 1);
+    items << createArtworkMetadata(commonDescription, "title3", QStringList() << "Keyword3", 2);
+
+    combinedModel.initArtworks(items);
+    combinedModel.recombineArtworks();
+
+    QCOMPARE(combinedModel.getIsModified(), false);
+
+    combinedModel.appendKeyword("Brand new keyword");
+
+    QCOMPARE(combinedModel.getIsModified(), true);
+
+    freeArtworks(items);
+}
+
+void CombinedModelTests::isModifiedAfterKeywordRemovalTest() {
+    Models::CombinedArtworksModel combinedModel;
+    m_CommandManagerMock.InjectDependency(&combinedModel);
+
+    QString commonKeyword = "a common keyword";
+
+    QVector<Models::ArtItemInfo *> items;
+    items << createArtworkMetadata("Description1", "title1", QStringList() << "Keyword1" << commonKeyword, 0);
+    items << createArtworkMetadata("Description2", "title2", QStringList() << "Keyword2" << commonKeyword, 1);
+    items << createArtworkMetadata("Description3", "title3", QStringList() << "Keyword3" << commonKeyword, 2);
+
+    combinedModel.initArtworks(items);
+    combinedModel.recombineArtworks();
+
+    QCOMPARE(combinedModel.getIsModified(), false);
+
+    combinedModel.removeLastKeyword();
+
+    QCOMPARE(combinedModel.getIsModified(), true);
+
+    freeArtworks(items);
+}
+
+void CombinedModelTests::isModifiedAfterKeywordEditTest() {
+    Models::CombinedArtworksModel combinedModel;
+    m_CommandManagerMock.InjectDependency(&combinedModel);
+
+    QString commonKeyword = "a common keyword";
+
+    QVector<Models::ArtItemInfo *> items;
+    items << createArtworkMetadata("Description1", "title1", QStringList() << "Keyword1" << commonKeyword, 0);
+    items << createArtworkMetadata("Description2", "title2", QStringList() << "Keyword2" << commonKeyword, 1);
+    items << createArtworkMetadata("Description3", "title3", QStringList() << "Keyword3" << commonKeyword, 2);
+
+    combinedModel.initArtworks(items);
+    combinedModel.recombineArtworks();
+
+    QCOMPARE(combinedModel.getIsModified(), false);
+
+    combinedModel.editKeyword(0, "another keyword");
+
+    QCOMPARE(combinedModel.getIsModified(), true);
+
+    freeArtworks(items);
+}
+
+void CombinedModelTests::initArtworksEmitsRowsInsertTest() {
+    Models::CombinedArtworksModel combinedModel;
+    m_CommandManagerMock.InjectDependency(&combinedModel);
+
+    QString commonKeyword = "a common keyword";
+
+    QVector<Models::ArtItemInfo *> items;
+    items << createArtworkMetadata("Description1", "title1", QStringList() << "Keyword1" << commonKeyword, 0);
+    items << createArtworkMetadata("Description2", "title2", QStringList() << "Keyword2" << commonKeyword, 1);
+    items << createArtworkMetadata("Description3", "title3", QStringList() << "Keyword3" << commonKeyword, 2);
+
+    QSignalSpy addSpy(&combinedModel, SIGNAL(rowsInserted(QModelIndex,int,int)));
+
+    combinedModel.initArtworks(items);
+
+    QCOMPARE(combinedModel.getIsModified(), false);
+    QCOMPARE(addSpy.count(), 1);
+    QList<QVariant> addedArguments = addSpy.takeFirst();
+    QCOMPARE(addedArguments.at(1).toInt(), 0);
+    QCOMPARE(addedArguments.at(2).toInt(), items.length() - 1);
+
+    freeArtworks(items);
+}
+
+void CombinedModelTests::initEmptyArtworksDoesNotEmitTest() {
+    Models::CombinedArtworksModel combinedModel;
+    m_CommandManagerMock.InjectDependency(&combinedModel);
+
+    QSignalSpy addSpy(&combinedModel, SIGNAL(rowsInserted(QModelIndex,int,int)));
+
+    combinedModel.initArtworks(QVector<Models::ArtItemInfo *>());
+
+    QCOMPARE(combinedModel.getIsModified(), false);
+    QCOMPARE(addSpy.count(), 0);
+    QCOMPARE(combinedModel.getChangeDescription(), false);
+    QCOMPARE(combinedModel.getChangeTitle(), false);
+    QCOMPARE(combinedModel.getChangeKeywords(), false);
+}
+
+void CombinedModelTests::initOneArtworkEnablesAllFields() {
+    Models::CombinedArtworksModel combinedModel;
+    m_CommandManagerMock.InjectDependency(&combinedModel);
+
+    QVector<Models::ArtItemInfo *> items;
+    items << createArtworkMetadata("Description1", "title1", QStringList() << "Keyword1", 0);
+
+    combinedModel.initArtworks(items);
+
+    QCOMPARE(combinedModel.getIsModified(), false);
+    QCOMPARE(combinedModel.getChangeDescription(), true);
+    QCOMPARE(combinedModel.getChangeTitle(), true);
+    QCOMPARE(combinedModel.getChangeKeywords(), true);
+
+    freeArtworks(items);
+}
+
+void CombinedModelTests::initManyArtworksDoesNotEnableAllFields() {
+    Models::CombinedArtworksModel combinedModel;
+    m_CommandManagerMock.InjectDependency(&combinedModel);
+
+    QVector<Models::ArtItemInfo *> items;
+    items << createArtworkMetadata("Description1", "title1", QStringList() << "Keyword1", 0);
+    items << createArtworkMetadata("Description2", "title2", QStringList() << "Keyword2", 1);
+    items << createArtworkMetadata("Description3", "title3", QStringList() << "Keyword3", 2);
+
+    combinedModel.initArtworks(items);
+
+    QCOMPARE(combinedModel.getIsModified(), false);
+    QCOMPARE(combinedModel.getChangeDescription(), false);
+    QCOMPARE(combinedModel.getChangeTitle(), false);
+    QCOMPARE(combinedModel.getChangeKeywords(), false);
+
     freeArtworks(items);
 }

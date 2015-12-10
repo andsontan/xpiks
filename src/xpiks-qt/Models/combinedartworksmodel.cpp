@@ -206,7 +206,7 @@ namespace Models {
         m_CommonKeywordsModel.setSpellCheckInfo(NULL);
         setDescription("");
         setTitle("");
-        setKeywords(QStringList());
+        clearKeywords();
     }
 
     void CombinedArtworksModel::clearKeywords() {

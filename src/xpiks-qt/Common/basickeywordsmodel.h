@@ -61,7 +61,7 @@ namespace Common {
         const QStringList &getKeywords() const { return m_KeywordsList; }
         const QString &getDescription() const { return m_Description; }
         const QString &getTitle() const { return m_Title; }
-        int getKeywordsCount() { return m_KeywordsSet.count(); }
+        int getKeywordsCount() const { return m_KeywordsSet.count(); }
         const QSet<QString> &getKeywordsSet() const { return m_KeywordsSet; }
         const QVector<bool> &getSpellStatuses() const { return m_SpellCheckResults; }
         QString getKeywordsString() { return m_KeywordsList.join(", "); }

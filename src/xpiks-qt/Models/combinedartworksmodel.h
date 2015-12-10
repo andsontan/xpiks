@@ -94,7 +94,7 @@ namespace Models {
             }
         }
 
-        int getKeywordsCount() const { return m_CommonKeywordsModel.rowCount(); }
+        int getKeywordsCount() const { return m_CommonKeywordsModel.getKeywordsCount(); }
 
         bool getChangeDescription() const { return Common::HasFlag(m_EditFlags, Common::EditDesctiption); }
         void setChangeDescription(bool value);
@@ -125,6 +125,7 @@ namespace Models {
 
 #if defined(TESTS)
         const QStringList &getKeywords() const;
+        bool getIsModified() const { return m_IsModified; }
 #endif
 
     public:
