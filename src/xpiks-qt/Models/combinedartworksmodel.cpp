@@ -108,6 +108,12 @@ namespace Models {
         return selectedCount;
     }
 
+#if defined(TESTS)
+        const QStringList &CombinedArtworksModel::getKeywords() const {
+            return m_CommonKeywordsModel.getKeywords();
+        }
+#endif
+
     void CombinedArtworksModel::editKeyword(int index, const QString &replacement) {
         if (m_CommonKeywordsModel.editKeyword(index, replacement)) {
             m_IsModified = true;

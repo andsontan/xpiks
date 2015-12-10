@@ -18,6 +18,7 @@ win32:INCLUDEPATH += ../tiny-aes
 win32:INCLUDEPATH += ../xpiks-qt/Encryption
 INCLUDEPATH += "../hunspell-1.3.3/src/hunspell"
 DEFINES += HUNSPELL_STATIC
+DEFINES += TESTS
 
 DEFINES += QT_NO_CAST_TO_ASCII \
            QT_NO_CAST_FROM_BYTEARRAY
@@ -71,7 +72,9 @@ SOURCES += main.cpp \
     ../xpiks-qt/Common/basickeywordsmodel.cpp \
     ../xpiks-qt/SpellCheck/spellcheckerrorshighlighter.cpp \
     artworkmetadata_tests.cpp \
-    basickeywordsmodel_tests.cpp
+    basickeywordsmodel_tests.cpp \
+    combinedmodel_tests.cpp \
+    ../xpiks-qt/Models/settingsmodel.cpp
 
 HEADERS += \
     encryption_tests.h \
@@ -127,7 +130,10 @@ HEADERS += \
     ../hunspell-1.3.3/src/hunspell/hunspell.hxx \
     ../xpiks-qt/SpellCheck/spellcheckerrorshighlighter.h \
     artworkmetadata_tests.h \
-    basickeywordsmodel_tests.h
+    basickeywordsmodel_tests.h \
+    combinedmodel_tests.h \
+    ../xpiks-qt/Models/settingsmodel.h \
+    ../xpiks-qt/Helpers/appsettings.h
 
 macx {
 OBJECTIVE_SOURCES += \

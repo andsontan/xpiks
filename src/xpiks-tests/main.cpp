@@ -9,6 +9,7 @@
 #include "vectorfilenames_tests.h"
 #include "artworkmetadata_tests.h"
 #include "basickeywordsmodel_tests.h"
+#include "combinedmodel_tests.h"
 
 #define QTEST_CLASS(TestObject, vName) \
     TestObject vName; \
@@ -18,13 +19,13 @@ int main(int argc, char *argv[]) {
     Q_UNUSED(argc);
     Q_UNUSED(argv);
 
-    QTEST_CLASS(EncryptionTests, et);
+    /*QTEST_CLASS(EncryptionTests, et);
     QTEST_CLASS(IndicesToRangesTests, itrt);
     QTEST_CLASS(AddCommand_Tests, act);
     QTEST_CLASS(RemoveCommand_Tests, rct);
     QTEST_CLASS(VectorFileNamesTests, vfnt);
     QTEST_CLASS(ArtworkMetadataTests, amt);
     QTEST_CLASS(BasicKeywordsModelTests, bkt);
-
+    */QTEST_CLASS(CombinedModelTests, cmt);
     return 0;
 }

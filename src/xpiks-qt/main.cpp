@@ -182,6 +182,7 @@ int main(int argc, char *argv[]) {
     Models::UploadInfoRepository uploadInfoRepository;
     Models::WarningsManager warningsManager;
     Models::SettingsModel settingsModel;
+    settingsModel.readAllValues();
     Encryption::SecretsManager secretsManager;
     UndoRedo::UndoRedoManager undoRedoManager;
     Models::ZipArchiver zipArchiver;

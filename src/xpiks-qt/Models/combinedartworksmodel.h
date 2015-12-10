@@ -123,6 +123,10 @@ namespace Models {
         int getSelectedArtworksCount() const;
         int getArtworksCount() const { return m_ArtworksList.length(); }
 
+#if defined(TESTS)
+        const QStringList &getKeywords() const;
+#endif
+
     public:
         Q_INVOKABLE void editKeyword(int index, const QString &replacement);
         Q_INVOKABLE QString removeKeywordAt(int keywordIndex);

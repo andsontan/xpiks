@@ -67,7 +67,6 @@ namespace Models {
         m_SearchUsingAnd(DEFAULT_SEARCH_USING_AND),
         m_UseSpellCheck(DEFAULT_USE_SPELL_CHECK)
     {
-        readAllValues();
     }
 
     void SettingsModel::resetAllValues() {
