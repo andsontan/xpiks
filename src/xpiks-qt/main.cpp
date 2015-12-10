@@ -64,6 +64,7 @@
 #include "Helpers/appsettings.h"
 #include "Models/ziparchiver.h"
 #include "Helpers/constants.h"
+#include "Encryption/aes-qt.h"
 #include "Helpers/runguard.h"
 #include "Models/logsmodel.h"
 #include "Helpers/logger.h"
@@ -193,8 +194,11 @@ int main(int argc, char *argv[]) {
     SpellCheck::SpellCheckerService spellCheckerService;
     SpellCheck::SpellCheckSuggestionModel spellCheckSuggestionModel;
     Helpers::BackupSaverService metadataSaverService;
-    Conectivity::TelemetryService telemetryService(userId);
     Helpers::UpdateService updateService;
+
+    const QString reportingEndpoint = QLatin1String("cc39a47f60e1ed812e2403b33678dd1c529f1cc43f66494998ec478a4d13496269a3dfa01f882941766dba246c76b12b2a0308e20afd84371c41cf513260f8eb8b71f8c472cafb1abf712c071938ec0791bbf769ab9625c3b64827f511fa3fbb");
+    QString endpoint = Encryption::decodeText(reportingEndpoint, "reporting");
+    Conectivity::TelemetryService telemetryService(userId, endpoint);
 
     Commands::CommandManager commandManager;
     commandManager.InjectDependency(&artworkRepository);

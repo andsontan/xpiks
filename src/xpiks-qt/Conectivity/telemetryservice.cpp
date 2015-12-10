@@ -33,15 +33,14 @@
 #include "analyticsuserevent.h"
 
 namespace Conectivity {
-    TelemetryService::TelemetryService(const QString &userId, QObject *parent) :
+    TelemetryService::TelemetryService(const QString &userId, const QString &endpoint, QObject *parent) :
         QObject(parent),
-        m_NetworkManager(this),
+        m_NetworkManager(this),        
+        m_ReportingEndpoint(endpoint),
         m_UserAgentId(userId)
     {
         QObject::connect(&m_NetworkManager, SIGNAL(finished(QNetworkReply*)),
                          this, SLOT(replyReceived(QNetworkReply*)));
-
-        m_ReportingEndpoint = "";
     }
 
     void TelemetryService::reportAction(UserAction action) {
