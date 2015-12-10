@@ -55,7 +55,16 @@ ApplicationWindow {
             configExitDialog.open()
         } else {
             applicationWindow.visibility = "Minimized"
+            helpersWrapper.beforeDestruction();
+            closingTimer.start()
         }
+    }
+
+    Timer {
+        id: closingTimer
+        interval: 1000
+        running: false
+        onTriggered: Qt.quit()
     }
 
     function onDialogClosed() {
@@ -213,7 +222,8 @@ ApplicationWindow {
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
             applicationWindow.visibility = "Minimized"
-            Qt.quit()
+            helpersWrapper.beforeDestruction();
+            closingTimer.start()
         }
     }
 

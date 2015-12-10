@@ -148,6 +148,7 @@ namespace Commands {
         void saveMetadata(Models::ArtworkMetadata *metadata) const;
         void reportUserAction(Conectivity::UserAction userAction) const;
         void afterConstructionCallback() const;
+        void beforeDestructionCallback() const;
 
     public:
         // methods for getters

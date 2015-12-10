@@ -39,6 +39,7 @@ namespace Helpers {
         Q_INVOKABLE bool isKeywordValid(const QString &keyword) const;
         Q_INVOKABLE QString sanitizeKeyword(const QString &keyword) const;
         Q_INVOKABLE void afterConstruction();
+        Q_INVOKABLE void beforeDestruction();
 
     private:
         Commands::CommandManager *m_CommandManager;

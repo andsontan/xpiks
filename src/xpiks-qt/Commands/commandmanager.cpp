@@ -301,3 +301,7 @@ void Commands::CommandManager::afterConstructionCallback() const {
     m_UpdateService->checkForUpdates();
     m_TelemetryService->reportAction(Conectivity::UserActionOpen);
 }
+
+void Commands::CommandManager::beforeDestructionCallback() const {
+    m_TelemetryService->reportAction(Conectivity::UserActionClose);
+}

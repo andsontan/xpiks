@@ -39,6 +39,10 @@ namespace Helpers {
     void HelpersQmlWrapper::afterConstruction() {
         m_CommandManager->afterConstructionCallback();
     }
+
+    void HelpersQmlWrapper::beforeDestruction() {
+        m_CommandManager->beforeDestructionCallback();
+    }
 }
 
 
