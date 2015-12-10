@@ -6,6 +6,8 @@
 - git submodule init & git submodule update - update tinyAES repo
 - rename tinyAES/aes.c to tinyAES/aes.cpp
 
+If you want to use create Xpiks executable, which you will use every day, before each `Run qmake` step described below, select `Release` in Qt Creator. Select `Debug` (the default) in all other cases.
+
 ***Obtain and build third-parties***
 - download **Hunspell 1.3.3** from http://hunspell.sourceforge.net/ and extract it in the `src/` directory
 - open project `src/hunspell/hunspell.pro` in Qt Creator, execute `Run qmake`, execute `Build`
