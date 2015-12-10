@@ -12,18 +12,29 @@ Build instructions for your desktop platform:
 - download source code or initialize the repository of tiny-AES (`git submodule init` and `git submodule update`)
 - rename `tiny-AES/aes.c` to `tiny-AES/aes.cpp` for correct build
 - <span class="gray">[Windows]</span> if you're building for Windows, build Zlib first (see instructions below)
+- build Hunspell and Quazip (see instructions below)
 - open xpiks-qt.pro file with Qt Creator installed with Qt
 - select build target Release, press "Run qmake" and then "Build"
 - now you can use xpiks-qt on your computer
 
-
 To build zlib under Windows for Xpiks, do the following:
 
 - download zlib (1.2.8) source code and extract to `scr/zlib-1.2.8`
-- open Qt zlib-project (in the repository) and build it for Debug/Release
-- copy z.lib and z.pdb to `src/libs` directory
+- open `src\zlib-project\zlib.pro` in Qt Creator, select `Release`, execute `Run qmake`, execute `Build`
+- copy builded library `.lib` (and z.pdb if you builded for Debug) to `src/libs` directory
 
-If you wish to redistribute it for similar desktop platforms to yours, follow next steps:
+To build Hunspell do the following:
+
+- download **Hunspell 1.3.3** from http://hunspell.sourceforge.net/ and extract it in the `src/` directory
+- open project `src/hunspell/hunspell.pro` in Qt Creator, select `Release`, execute `Run qmake`, execute `Build`
+- copy builded library (e.g. `libhunspell.a`, `hunspell.lib`) from the build directory to the `src/libs` directory
+
+To build Quazip do the following:
+- open project `src/quazip/quazip.pro` in Qt Creator, select `Release`, execute `Run qmake`, execute `Build`
+- copy builded library (e.g. `libquazip.a`, `quazip.lib`) from the build directory to the `src/libs` directory
+
+
+If you builded for Release and you wish to redistribute it for similar desktop platforms to yours, follow next steps:
 
 - after build is successful, navigate to build directory, open it in terminal
 - find macdeployqt, windeployqt or any similar tool in Qt bin directory
