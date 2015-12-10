@@ -31,5 +31,7 @@
 #define XPIKS_MINOR_VERSION 0
 #define XPIKS_FIX_VERSION 0
 
+#define XPIKS_VERSION_STRING "1.0.0"
+
 #endif // VERSION_H
 

@@ -31,6 +31,7 @@
 #include <QNetworkReply>
 #include "telemetryservice.h"
 #include "analyticsuserevent.h"
+#include "../Common/version.h"
 
 namespace Conectivity {
     TelemetryService::TelemetryService(const QString &userId, const QString &endpoint, QObject *parent) :
@@ -67,9 +68,10 @@ namespace Conectivity {
         query.addQueryItem(QLatin1String("s"), QString::number(userEvent.getSecond()));
         query.addQueryItem(QLatin1String("send_image"), QLatin1String("0"));
         query.addQueryItem(QLatin1String("_cvar"),
-                           QString("{\"1\":[\"OS_type\",\"%1\"],\"2\":[\"OS_version\",\"%2\"]}")
+                           QString("{\"1\":[\"OS_type\",\"%1\"],\"2\":[\"OS_version\",\"%2\"],\"3\":[\"Xpiks_version\",\"%3\"]}")
                            .arg(QSysInfo::productType())
-                           .arg(QSysInfo::productVersion()));
+                           .arg(QSysInfo::productVersion())
+                           .arg(XPIKS_VERSION_STRING));
 
 
         QUrl reportingUrl;
