@@ -58,7 +58,6 @@ SOURCES += main.cpp \
     ../xpiks-qt/Helpers/helpersqmlwrapper.cpp \
     ../xpiks-qt/Models/recentdirectoriesmodel.cpp \
     ../xpiks-qt/Helpers/keywordvalidator.cpp \
-    ../xpiks-qt/Common/flags.cpp \
     ../xpiks-qt/SpellCheck/spellcheckerservice.cpp \
     ../xpiks-qt/SpellCheck/spellcheckitem.cpp \
     ../xpiks-qt/SpellCheck/spellcheckworker.cpp \
