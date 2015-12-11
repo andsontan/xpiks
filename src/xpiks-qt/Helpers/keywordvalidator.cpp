@@ -37,5 +37,4 @@ namespace Helpers {
     QString doSanitizeKeyword(const QString &keyword) {
         return keyword.simplified();
     }
-
 }

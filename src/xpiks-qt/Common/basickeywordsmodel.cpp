@@ -51,12 +51,12 @@ namespace Common {
 
     bool BasicKeywordsModel::appendKeyword(const QString &keyword) {
         bool added = false;
-        const QString &sanitizedKeyword = keyword.trimmed().toLower();
+        const QString &sanitizedKeyword = keyword.simplified();
 
         if (canBeAdded(sanitizedKeyword)) {
             int keywordsCount = m_KeywordsList.length();
 
-            m_KeywordsSet.insert(sanitizedKeyword);
+            m_KeywordsSet.insert(sanitizedKeyword.toLower());
             m_SpellCheckResults.append(true);
 
             beginInsertRows(QModelIndex(), keywordsCount, keywordsCount);
@@ -103,11 +103,12 @@ namespace Common {
 
         for (int i = 0; i < size; ++i) {
             const QString &keyword = keywordsList.at(i);
-            const QString &sanitizedKeyword = keyword.simplified().toLower();
+            const QString &sanitizedKeyword = keyword.simplified();
+            const QString &lowerCased = sanitizedKeyword.toLower();
 
-            if (canBeAdded(sanitizedKeyword) && !accountedKeywords.contains(sanitizedKeyword)) {
+            if (canBeAdded(sanitizedKeyword) && !accountedKeywords.contains(lowerCased)) {
                 keywordsToAdd.append(sanitizedKeyword);
-                accountedKeywords.insert(sanitizedKeyword);
+                accountedKeywords.insert(lowerCased);
                 appendedCount++;
             }
         }
@@ -119,7 +120,7 @@ namespace Common {
 
             for (int i = 0; i < size; ++i) {
                 const QString &keywordToAdd = keywordsToAdd.at(i);
-                m_KeywordsSet.insert(keywordToAdd);
+                m_KeywordsSet.insert(keywordToAdd.toLower());
                 m_SpellCheckResults.append(true);
                 m_KeywordsList.append(keywordToAdd);
             }
@@ -302,7 +303,7 @@ namespace Common {
 
     bool BasicKeywordsModel::canBeAdded(const QString &keyword) const {
         bool isValid = Helpers::isValidKeyword(keyword);
-        bool result = isValid && !m_KeywordsSet.contains(keyword);
+        bool result = isValid && !m_KeywordsSet.contains(keyword.toLower());
         return result;
     }
 
