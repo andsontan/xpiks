@@ -144,7 +144,7 @@ namespace Commands {
         void submitForSpellCheck(SpellCheck::ISpellCheckable *item, int keywordIndex) const;
         void submitForSpellCheck(const QVector<SpellCheck::ISpellCheckable *> &items) const;
         void submitForSpellCheck(SpellCheck::ISpellCheckable *item) const;
-        void setupSpellCheckSuggestions(SpellCheck::ISpellCheckable *item);
+        void setupSpellCheckSuggestions(SpellCheck::ISpellCheckable *item, int index, int flags);
         void saveMetadata(Models::ArtworkMetadata *metadata) const;
         void reportUserAction(Conectivity::UserAction userAction) const;
         void afterConstructionCallback() const;

@@ -27,11 +27,13 @@
 #include "spellcheckerservice.h"
 #include "ispellcheckable.h"
 #include "../Commands/commandmanager.h"
+#include "../Common/flags.h"
 
 namespace SpellCheck {
     SpellCheckSuggestionModel::SpellCheckSuggestionModel():
         QAbstractListModel(),
-        Common::BaseEntity()
+        Common::BaseEntity(),
+        m_ItemIndex(-1)
     {
     }
 
@@ -55,13 +57,21 @@ namespace SpellCheck {
         qDeleteAll(m_SuggestionsList);
         m_SuggestionsList.clear();
         endResetModel();
+        m_ItemIndex = -1;
     }
 
     void SpellCheckSuggestionModel::submitCorrections() const {
+        bool anyChanged = false;
+
         foreach (SpellSuggestionsItem *item, m_SuggestionsList) {
-            if (item->getIsSelected()) {
+            if (item->anyReplacementSelected()) {
                 item->replaceToSuggested(m_CurrentItem);
+                anyChanged = true;
             }
+        }
+
+        if (m_ItemIndex != -1) {
+            m_CommandManager->updateArtworks(QVector<int>() << m_ItemIndex);
         }
     }
 
@@ -74,11 +84,26 @@ namespace SpellCheck {
         }
     }
 
-    void SpellCheckSuggestionModel::setupModel(SpellCheck::ISpellCheckable *item) {
+    void SpellCheckSuggestionModel::setupModel(SpellCheck::ISpellCheckable *item, int index, int flags) {
         Q_ASSERT(item != NULL);
+        QVector<SpellSuggestionsItem*> requests;
 
-        QVector<SpellSuggestionsItem*> suggestionsRequests = item->createKeywordsSuggestionsList();
-        QVector<SpellSuggestionsItem*> executedRequests = setupSuggestions(suggestionsRequests);
+        if (Common::HasFlag(flags, Common::CorrectKeywords)) {
+            QVector<SpellSuggestionsItem*> keywordsSuggestionsRequests = item->createKeywordsSuggestionsList();
+            requests << keywordsSuggestionsRequests;
+        }
+
+        if (Common::HasFlag(flags, Common::CorrectTitle)) {
+            QVector<SpellSuggestionsItem*> titleSuggestionsRequests = item->createTitleSuggestionsList();
+            requests << titleSuggestionsRequests;
+        }
+
+        if (Common::HasFlag(flags, Common::CorrectKeywords)) {
+            QVector<SpellSuggestionsItem*> descriptionSuggestionsRequests = item->createDescriptionSuggestionsList();
+            requests << descriptionSuggestionsRequests;
+        }
+
+        QVector<SpellSuggestionsItem*> executedRequests = setupSuggestions(requests);
 
         beginResetModel();
         m_CurrentItem = item;
@@ -86,6 +111,8 @@ namespace SpellCheck {
         m_SuggestionsList.clear();
         m_SuggestionsList << executedRequests;
         endResetModel();
+
+        m_ItemIndex = index;
     }
 
     QVector<SpellSuggestionsItem *> SpellCheckSuggestionModel::setupSuggestions(const QVector<SpellSuggestionsItem *> &items) {

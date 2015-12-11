@@ -173,7 +173,7 @@ Item {
                                 Rectangle {
                                     id: suggestionsListRect
                                     anchors.left: wordsColumn.right
-                                    anchors.leftMargin: 20
+                                    anchors.leftMargin: 5
                                     anchors.top: parent.top
                                     anchors.right: parent.right
                                     color: Colors.defaultDarkColor

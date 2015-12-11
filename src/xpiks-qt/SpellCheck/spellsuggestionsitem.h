@@ -55,9 +55,6 @@ namespace SpellCheck {
         const QString &getReplacementOrigin() const { return m_ReplacementOrigin; }
         bool anyReplacementSelected() const { return m_ReplacementIndex != -1; }
 
-        bool getIsSelected() const { return m_IsSelected; }
-        void setIsSelected(bool value) { m_IsSelected = value; }
-
     public:
         virtual void replaceToSuggested(ISpellCheckable *item) = 0;
 
@@ -78,7 +75,6 @@ namespace SpellCheck {
         QString m_Word;
         QString m_ReplacementOrigin;
         int m_ReplacementIndex;
-        bool m_IsSelected;
     };
 
     class KeywordSpellSuggestions: public SpellSuggestionsItem

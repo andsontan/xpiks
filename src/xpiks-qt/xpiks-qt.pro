@@ -46,7 +46,6 @@ SOURCES += main.cpp \
     Helpers/exiftoolwrapper.cpp \
     Models/filteredartitemsproxymodel.cpp \
     Helpers/filenameshelpers.cpp \
-    Common/flags.cpp \
     Helpers/keywordvalidator.cpp \
     Helpers/helpersqmlwrapper.cpp \
     Models/recentdirectoriesmodel.cpp \

@@ -31,10 +31,37 @@ namespace Common {
         Clear = 16
     };
 
-    bool HasFlag(int value, CombinedEditFlags flag);
-    void SetFlag(int &value, CombinedEditFlags flag);
-    void UnsetFlag(int &value, CombinedEditFlags flag);
-    void ApplyFlag(int &value, bool applySwitch, CombinedEditFlags flag);
+    enum SuggestCorrectionsFlags {
+        CorrectTitle = 1,
+        CorrectDescription = 2,
+        CorrectKeywords = 4
+    };
+
+    template<typename FlagType>
+    bool HasFlag(int value, FlagType flag) {
+        int intFlag = static_cast<int>(flag);
+        bool result = (value & intFlag) == intFlag;
+        return result;
+    }
+
+    template<typename FlagType>
+    void SetFlag(int &value, FlagType flag) {
+        value |= static_cast<int>(flag);
+    }
+
+    template<typename FlagType>
+    void UnsetFlag(int &value, FlagType flag) {
+        value &= ~(static_cast<int>(flag));
+    }
+
+    template<typename FlagType>
+    void ApplyFlag(int &value, bool applySwitch, FlagType flag) {
+        if (applySwitch) {
+            SetFlag(value, flag);
+        } else {
+            UnsetFlag(value, flag);
+        }
+    }
 }
 
 #endif // FLAGS

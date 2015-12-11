@@ -214,7 +214,10 @@ namespace Models {
     }
 
     void CombinedArtworksModel::suggestCorrections() {
-        m_CommandManager->setupSpellCheckSuggestions(&m_CommonKeywordsModel);
+        int flags = 0;
+        Common::SetFlag(flags, Common::CorrectKeywords);
+        // TODO: no real description/title spellchecking yet
+        m_CommandManager->setupSpellCheckSuggestions(&m_CommonKeywordsModel, -1, flags);
     }
 
     void CombinedArtworksModel::initDescriptionHighlighting(QQuickTextDocument *document) {

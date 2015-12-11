@@ -35,6 +35,7 @@
 #include "artworksrepository.h"
 #include "../Models/settingsmodel.h"
 #include "../SpellCheck/spellcheckiteminfo.h"
+#include "../Common/flags.h"
 
 #ifdef Q_OS_OSX
 #include "../Helpers/osxnsurlhelper.h"
@@ -171,7 +172,11 @@ namespace Models {
 
     void ArtItemsModel::suggestCorrections(int metadataIndex) {
         if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
-            m_CommandManager->setupSpellCheckSuggestions(m_ArtworkList.at(metadataIndex));
+            int flags = 0;
+            Common::SetFlag(flags, Common::CorrectDescription);
+            Common::SetFlag(flags, Common::CorrectTitle);
+            Common::SetFlag(flags, Common::CorrectKeywords);
+            m_CommandManager->setupSpellCheckSuggestions(m_ArtworkList.at(metadataIndex), metadataIndex, flags);
         }
     }
 

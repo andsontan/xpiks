@@ -27,8 +27,7 @@ namespace SpellCheck {
         QAbstractListModel(),
         m_Word(word),
         m_ReplacementOrigin(origin),
-        m_ReplacementIndex(-1),
-        m_IsSelected(true)
+        m_ReplacementIndex(-1)
     {
     }
 
@@ -36,8 +35,7 @@ namespace SpellCheck {
         QAbstractListModel(),
         m_Word(word),
         m_ReplacementOrigin((word)),
-        m_ReplacementIndex(-1),
-        m_IsSelected(true)
+        m_ReplacementIndex(-1)
     {
     }
 

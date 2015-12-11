@@ -428,11 +428,15 @@ namespace Common {
     }
 
     void BasicKeywordsModel::replaceWordInDescription(const QString &word, const QString &replacement) {
-        m_Description.replace(word, replacement);
+        QString description = m_Description;
+        description.replace(word, replacement);
+        setDescription(description);
     }
 
     void BasicKeywordsModel::replaceWordInTitle(const QString &word, const QString &replacement) {
-        m_Title.replace(word, replacement);
+        QString title = m_Title;
+        title.replace(word, replacement);
+        setTitle(title);
     }
 
     void BasicKeywordsModel::connectSignals(SpellCheck::SpellCheckItem *item) {

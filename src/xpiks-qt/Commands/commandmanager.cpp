@@ -278,8 +278,8 @@ void Commands::CommandManager::submitForSpellCheck(SpellCheck::ISpellCheckable *
     }
 }
 
-void Commands::CommandManager::setupSpellCheckSuggestions(SpellCheck::ISpellCheckable *item) {
-    m_SpellCheckSuggestionModel->setupModel(item);
+void Commands::CommandManager::setupSpellCheckSuggestions(SpellCheck::ISpellCheckable *item, int index, int flags) {
+    m_SpellCheckSuggestionModel->setupModel(item, index, flags);
 }
 
 void Commands::CommandManager::saveMetadata(Models::ArtworkMetadata *metadata) const {
