@@ -65,6 +65,15 @@ namespace SpellCheck {
         }
     }
 
+    void SpellCheckSuggestionModel::resetAllSuggestions() {
+        int size = m_SuggestionsList.length();
+
+        for (int i = 0; i < size; ++i) {
+            SpellSuggestionsItem *item = m_SuggestionsList.at(i);
+            item->setReplacementIndex(-1);
+        }
+    }
+
     void SpellCheckSuggestionModel::setupModel(SpellCheck::ISpellCheckable *item) {
         Q_ASSERT(item != NULL);
 
@@ -98,18 +107,6 @@ namespace SpellCheck {
         return executedRequests;
     }
 
-    void SpellCheckSuggestionModel::setAllSelected(bool selected) {
-        int size = m_SuggestionsList.length();
-
-        for (int i = 0; i < size; ++i) {
-            SpellSuggestionsItem *item = m_SuggestionsList.at(i);
-            item->setIsSelected(selected);
-        }
-
-        emit dataChanged(index(0), index(size - 1), QVector<int>() << IsSelectedRole);
-        emit selectAllChanged();
-    }
-
     int SpellCheckSuggestionModel::rowCount(const QModelIndex &parent) const {
         Q_UNUSED(parent);
         return m_SuggestionsList.length();
@@ -126,8 +123,6 @@ namespace SpellCheck {
             return item->getWord();
         case ReplacementIndexRole:
             return item->getReplacementIndex();
-        case IsSelectedRole:
-            return item->getIsSelected();
         case ReplacementOriginRole:
             return item->getReplacementOrigin();
         default:
@@ -135,40 +130,10 @@ namespace SpellCheck {
         }
     }
 
-    Qt::ItemFlags SpellCheckSuggestionModel::flags(const QModelIndex &index) const {
-        int row = index.row();
-        if (row < 0 || row >= m_SuggestionsList.length()) {
-            return Qt::ItemIsEnabled;
-        }
-
-        return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
-    }
-
-    bool SpellCheckSuggestionModel::setData(const QModelIndex &index, const QVariant &value, int role) {
-        int row = index.row();
-        if (row < 0 || row >= m_SuggestionsList.length()) { return false; }
-        int roleToUpdate = 0;
-
-        switch (role) {
-        case EditIsSelectedRole:
-            m_SuggestionsList.at(row)->setIsSelected(value.toBool());
-            roleToUpdate = IsSelectedRole;
-            break;
-        default:
-            return false;
-        }
-
-        emit dataChanged(index, index, QVector<int>() << roleToUpdate);
-
-        return true;
-    }
-
     QHash<int, QByteArray> SpellCheckSuggestionModel::roleNames() const {
         QHash<int, QByteArray> roles;
         roles[WordRole] = "word";
         roles[ReplacementIndexRole] = "replacementindex";
-        roles[IsSelectedRole] = "isselected";
-        roles[EditIsSelectedRole] = "editisselected";
         roles[ReplacementOriginRole] = "replacementorigin";
         return roles;
     }

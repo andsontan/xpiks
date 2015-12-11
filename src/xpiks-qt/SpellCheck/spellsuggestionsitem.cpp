@@ -27,7 +27,7 @@ namespace SpellCheck {
         QAbstractListModel(),
         m_Word(word),
         m_ReplacementOrigin(origin),
-        m_ReplacementIndex(0),
+        m_ReplacementIndex(-1),
         m_IsSelected(true)
     {
     }
@@ -36,22 +36,39 @@ namespace SpellCheck {
         QAbstractListModel(),
         m_Word(word),
         m_ReplacementOrigin((word)),
-        m_ReplacementIndex(0),
+        m_ReplacementIndex(-1),
         m_IsSelected(true)
     {
     }
 
     bool SpellSuggestionsItem::setReplacementIndex(int value) {
-        bool result = value != m_ReplacementIndex;
+        bool result = (value != m_ReplacementIndex) && (value != -1);
 
         if (result) {
-            QModelIndex prev = this->index(m_ReplacementIndex);
-            QModelIndex curr = this->index(value);
-            m_ReplacementIndex = value;
             QVector<int> roles;
             roles << IsSelectedRole;
-            emit dataChanged(prev, prev, roles);
+            int prevIndexToUpdate = m_ReplacementIndex;
+            m_ReplacementIndex = value;
+
+            if (m_ReplacementIndex != -1) {
+                QModelIndex prev = this->index(prevIndexToUpdate);
+                emit dataChanged(prev, prev, roles);
+            }
+
+            QModelIndex curr = this->index(value);
             emit dataChanged(curr, curr, roles);
+        } else {
+            if ((value == m_ReplacementIndex) ||
+                    (value == -1 && m_ReplacementIndex != -1)) {
+                int prevIndexToUpdate = m_ReplacementIndex;
+                m_ReplacementIndex = -1;
+
+                QModelIndex prev = this->index(prevIndexToUpdate);
+                QVector<int> roles;
+                roles << IsSelectedRole;
+                emit dataChanged(prev, prev, roles);
+                result = true;
+            }
         }
 
         return result;
@@ -61,7 +78,6 @@ namespace SpellCheck {
         beginResetModel();
         m_Suggestions.clear();
         m_Suggestions.append(suggestions);
-        m_ReplacementIndex = 0;
         endResetModel();
     }
 
@@ -132,9 +148,11 @@ namespace SpellCheck {
     }
 
     void KeywordSpellSuggestions::replaceToSuggested(ISpellCheckable *item) {
-        const QString &word = getWord();
-        const QString &replacement = getReplacement();
-        item->replaceKeyword(m_OriginalIndex, word, replacement);
+        if (anyReplacementSelected()) {
+            const QString &word = getWord();
+            const QString &replacement = getReplacement();
+            item->replaceKeyword(m_OriginalIndex, word, replacement);
+        }
     }
 
     DescriptionSpellSuggestions::DescriptionSpellSuggestions(const QString &word):
@@ -143,7 +161,9 @@ namespace SpellCheck {
     }
 
     void DescriptionSpellSuggestions::replaceToSuggested(ISpellCheckable *item) {
-        item->replaceWordInDescription(getWord(), getReplacement());
+        if (anyReplacementSelected()) {
+            item->replaceWordInDescription(getWord(), getReplacement());
+        }
     }
 
     TitleSpellSuggestions::TitleSpellSuggestions(const QString &word):
@@ -152,6 +172,8 @@ namespace SpellCheck {
     }
 
     void TitleSpellSuggestions::replaceToSuggested(ISpellCheckable *item) {
-        item->replaceWordInTitle(getWord(), getReplacement());
+        if (anyReplacementSelected()) {
+            item->replaceWordInTitle(getWord(), getReplacement());
+        }
     }
 }

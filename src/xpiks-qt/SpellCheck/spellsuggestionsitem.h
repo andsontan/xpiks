@@ -53,6 +53,7 @@ namespace SpellCheck {
         void setSuggestions(const QStringList &suggestions);
 
         const QString &getReplacementOrigin() const { return m_ReplacementOrigin; }
+        bool anyReplacementSelected() const { return m_ReplacementIndex != -1; }
 
         bool getIsSelected() const { return m_IsSelected; }
         void setIsSelected(bool value) { m_IsSelected = value; }

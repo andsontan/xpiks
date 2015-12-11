@@ -32,10 +32,12 @@ Rectangle {
     property bool isSelected
     property string suggestionText
     property alias itemHeight: suggestionText.height
+    border.color: isSelected ? Colors.defaultLightColor : Colors.defaultInputBackground
+    border.width: innerMA.containsMouse ? 1 : 0
 
     signal actionClicked();
 
-    color: isSelected ? Colors.defaultLightGrayColor : Colors.selectedArtworkColor
+    color: isSelected ? Colors.defaultLightGrayColor : (innerMA.containsMouse ? Colors.selectedMetadataColor : Colors.selectedArtworkColor)
 
     width: suggestionText.width + 10
     height: childrenRect.height
@@ -47,15 +49,17 @@ Rectangle {
         anchors.left: parent.left
         anchors.leftMargin: 5
         text: itemWrapper.suggestionText
-        color: isSelected ? Colors.defaultControlColor : Colors.defaultInputBackground
+        color: isSelected ? (innerMA.containsMouse ? Colors.selectedMetadataColor : Colors.defaultControlColor) : (innerMA.containsMouse ? Colors.defaultLightColor : Colors.defaultInputBackground)
         font.pixelSize: 12 * settingsModel.keywordSizeScale
     }
 
     MouseArea {
+        id: innerMA
         anchors.left: parent.left
         anchors.top: parent.top
         width: suggestionText.width + 10
         height: suggestionText.height
+        hoverEnabled: true
         onClicked: actionClicked()
         cursorShape: Qt.PointingHandCursor
     }

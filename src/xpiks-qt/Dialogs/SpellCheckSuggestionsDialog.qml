@@ -123,10 +123,12 @@ Item {
                     StyledScrollView {
                         anchors.fill: parent
                         anchors.margins: 10
+                        focus: true
 
                         ListView {
                             id: suggestionsListView
                             model: spellCheckSuggestionModel
+                            focus: true
                             spacing: 5
 
                             delegate: Rectangle {
@@ -137,32 +139,8 @@ Item {
                                 height: suggestionsListRect.height
 
                                 Item {
-                                    id: checkBoxWrapper
-                                    anchors.left: parent.left
-                                    anchors.top: parent.top
-                                    height: suggestionsListRect.height
-                                    width: 40
-
-                                    StyledCheckbox {
-                                        id: selectedCheckbox
-                                        anchors.centerIn: parent
-                                        anchors.horizontalCenterOffset: 5
-                                        activeFocusOnPress: true
-                                        onClicked: editisselected = checked
-                                        Component.onCompleted: checked = isselected
-
-                                        Connections {
-                                            target: spellCheckSuggestionModel
-                                            onSelectAllChanged: {
-                                                selectedCheckbox.checked = isselected
-                                            }
-                                        }
-                                    }
-                                }
-
-                                Item {
                                     id: wordsColumn
-                                    anchors.left: checkBoxWrapper.right
+                                    anchors.left: parent.left
                                     anchors.top: parent.top
                                     width: 100
                                     height: suggestionsListRect.height
@@ -176,7 +154,7 @@ Item {
                                             verticalAlignment: Text.AlignVCenter
                                             text: word
                                             font.pixelSize: 12 * settingsModel.keywordSizeScale
-                                            color: isselected ? Colors.artworkModifiedColor : Colors.defaultInputBackground
+                                            color: Colors.artworkModifiedColor
                                             elide: Text.ElideMiddle
                                         }
 
@@ -209,7 +187,7 @@ Item {
                                         anchors.top: parent.top
                                         anchors.topMargin: 10
                                         spacing: 10
-                                        enabled: isselected
+                                        focus: true
 
                                         Repeater {
                                             model: spellCheckSuggestionModel.getSuggestionItself(delegateIndex)
@@ -224,16 +202,6 @@ Item {
                                         }
                                     }
                                 }
-
-                                Rectangle {
-                                    visible: !isselected
-                                    anchors.left: checkBoxWrapper.right
-                                    anchors.top: parent.top
-                                    anchors.right: parent.right
-                                    color: Colors.defaultControlColor
-                                    height: suggestionsListRect.height
-                                    opacity: 0.7
-                                }
                             }
                         }
                     }
@@ -247,15 +215,9 @@ Item {
                     spacing: 20
 
                     StyledButton {
-                        text: qsTr("Select all")
+                        text: qsTr("Reset all")
                         width: 100
-                        onClicked: spellCheckSuggestionModel.selectAllSuggestions()
-                    }
-
-                    StyledButton {
-                        text: qsTr("Select none")
-                        width: 100
-                        onClicked: spellCheckSuggestionModel.unselectAllSuggestions()
+                        onClicked: spellCheckSuggestionModel.resetAllSuggestions()
                     }
 
                     Item {

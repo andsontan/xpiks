@@ -45,17 +45,14 @@ namespace SpellCheck {
         enum KeywordSpellSuggestionsRoles {
             WordRole = Qt::UserRole + 1,
             ReplacementIndexRole,
-            ReplacementOriginRole,
-            IsSelectedRole,
-            EditIsSelectedRole
+            ReplacementOriginRole
         };
 
     public:
         Q_INVOKABLE QObject *getSuggestionItself(int index) const;
         Q_INVOKABLE void clearModel();
         Q_INVOKABLE void submitCorrections() const;
-        Q_INVOKABLE void selectAllSuggestions() { setAllSelected(true); }
-        Q_INVOKABLE void unselectAllSuggestions() { setAllSelected(false); }
+        Q_INVOKABLE void resetAllSuggestions();
 
     signals:
         void selectAllChanged();
@@ -65,13 +62,10 @@ namespace SpellCheck {
 
     private:
         QVector<SpellSuggestionsItem *> setupSuggestions(const QVector<SpellSuggestionsItem *> &items);
-        void setAllSelected(bool selected);
 
     public:
         virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
         virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
-        virtual Qt::ItemFlags flags(const QModelIndex &index) const;
-        virtual bool setData(const QModelIndex &index, const QVariant &value, int role);
 
     protected:
         virtual QHash<int, QByteArray> roleNames() const;
