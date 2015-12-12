@@ -388,7 +388,11 @@ namespace Models {
         const QString &title = metadata->getTitle();
         const QString &filepath = metadata->getFilepath();
 
-        foreach (const QString &searchTerm, searchTerms) {
+        int length = searchTerms.length();
+
+        for (int i = 0; i < length; ++i) {
+            const QString &searchTerm = searchTerms.at(i);
+
             hasMatch = fitsSpecialKeywords(searchTerm, metadata);
 
             if (!hasMatch) {
@@ -407,8 +411,16 @@ namespace Models {
         }
 
         if (!hasMatch) {
-            foreach (const QString &searchTerm, searchTerms) {
-                hasMatch = metadata->containsKeyword(searchTerm);
+            for (int i = 0; i < length; ++i) {
+                QString searchTerm = searchTerms[i];
+                bool strictMatch = false;
+
+                if ((searchTerm.length() > 0) && searchTerm[0] == QChar('!')) {
+                    strictMatch = true;
+                    searchTerm.remove(0, 1);
+                }
+
+                hasMatch = metadata->containsKeyword(searchTerm, strictMatch);
                 if (hasMatch) { break; }
             }
         }
@@ -425,9 +437,12 @@ namespace Models {
         const QString &filepath = metadata->getFilepath();
 
         bool anyError = false;
+        int length = searchTerms.length();
 
-        foreach (const QString &searchTerm, searchTerms) {
+        for (int i = 0; i < length; ++i) {
+            QString searchTerm = searchTerms[i];
             bool anyContains = false;
+            bool strictMatch = false;
 
             anyContains = fitsSpecialKeywords(searchTerm, metadata);
 
@@ -444,7 +459,12 @@ namespace Models {
             }
 
             if (!anyContains) {
-                anyContains = metadata->containsKeyword(searchTerm);
+                if ((searchTerm.length() > 0) && searchTerm[0] == QChar('!')) {
+                    strictMatch = true;
+                    searchTerm.remove(0, 1);
+                }
+
+                anyContains = metadata->containsKeyword(searchTerm, strictMatch);
             }
 
             if (!anyContains) {
