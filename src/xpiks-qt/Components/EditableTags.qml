@@ -246,14 +246,19 @@ Flickable {
                         var keywordsToAdd = [];
 
                         var words = clipboardText.split(/,|;/);
-                        for (var i = 0; i < words.length; i++) {
-                            var sanitizedTagText = helpersWrapper.sanitizeKeyword(words[i]);
-                            if (helpersWrapper.isKeywordValid(sanitizedTagText)) {
-                                keywordsToAdd.push(sanitizedTagText);
-                            }
-                        }
 
-                        tagsPasted(keywordsToAdd);
+                        if (words.length > 1) {
+                            for (var i = 0; i < words.length; i++) {
+                                var sanitizedTagText = helpersWrapper.sanitizeKeyword(words[i]);
+                                if (helpersWrapper.isKeywordValid(sanitizedTagText)) {
+                                    keywordsToAdd.push(sanitizedTagText);
+                                }
+                            }
+
+                            tagsPasted(keywordsToAdd);
+                        } else {
+                            nextTagTextInput.text = words[0]
+                        }
 
                         event.accepted = true;
                     }
