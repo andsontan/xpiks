@@ -77,9 +77,11 @@ namespace Models {
     }
 
     void ArtItemsModel::updateLastN(int N) {
-        if (0 < N && N <= m_ArtworkList.length()) {
-            int start = m_ArtworkList.length() - N;
-            int end = m_ArtworkList.length() - 1;
+        int length = m_ArtworkList.length();
+
+        if (0 < N && N <= length) {
+            int start = length - N;
+            int end = length - 1;
 
             QVector<QPair<int, int> > ranges;
             ranges << qMakePair(start, end);
@@ -88,6 +90,22 @@ namespace Models {
             fillStandardRoles(roles);
 
             updateItemsInRanges(ranges, roles);
+        }
+    }
+
+    void ArtItemsModel::submitLastNForSpellCheck(int N) {
+        int length = m_ArtworkList.length();
+        if (0 < N && N <= length) {
+            int start = length - N;
+
+            QVector<SpellCheck::ISpellCheckable*> items;
+            items.reserve(N);
+
+            for (int i = start; i < length; ++i) {
+                items << m_ArtworkList[i];
+            }
+
+            m_CommandManager->submitForSpellCheck(items);
         }
     }
 

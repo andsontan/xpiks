@@ -77,6 +77,7 @@ namespace Models {
 
     public:
         Q_INVOKABLE void updateLastN(int N);
+        Q_INVOKABLE void submitLastNForSpellCheck(int N);
         /*Q_INVOKABLE*/ void removeArtworksDirectory(int index);
         Q_INVOKABLE void removeKeywordAt(int metadataIndex, int keywordIndex);
         Q_INVOKABLE void removeLastKeyword(int metadataIndex);
