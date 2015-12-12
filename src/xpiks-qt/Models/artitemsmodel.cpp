@@ -93,22 +93,6 @@ namespace Models {
         }
     }
 
-    void ArtItemsModel::submitLastNForSpellCheck(int N) {
-        int length = m_ArtworkList.length();
-        if (0 < N && N <= length) {
-            int start = length - N;
-
-            QVector<SpellCheck::ISpellCheckable*> items;
-            items.reserve(N);
-
-            for (int i = start; i < length; ++i) {
-                items << m_ArtworkList[i];
-            }
-
-            m_CommandManager->submitForSpellCheck(items);
-        }
-    }
-
     void ArtItemsModel::removeArtworksDirectory(int index) {
         const QString &directory = m_CommandManager->getArtworksRepository()->getDirectory(index);
         QVector<int> indicesToRemove;

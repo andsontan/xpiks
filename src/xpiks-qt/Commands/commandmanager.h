@@ -142,6 +142,7 @@ namespace Commands {
         void addInitialArtworks(const QStringList &artworksFilepathes);
 #endif
         void submitForSpellCheck(SpellCheck::ISpellCheckable *item, int keywordIndex) const;
+        void submitForSpellCheck(const QVector<Models::ArtworkMetadata*> &items) const;
         void submitForSpellCheck(const QVector<SpellCheck::ISpellCheckable *> &items) const;
         void submitForSpellCheck(SpellCheck::ISpellCheckable *item) const;
         void setupSpellCheckSuggestions(SpellCheck::ISpellCheckable *item, int index, int flags);

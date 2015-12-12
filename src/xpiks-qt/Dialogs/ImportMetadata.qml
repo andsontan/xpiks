@@ -166,7 +166,6 @@ Item {
                             onFinishedProcessing: {
                                 importButton.text = qsTr("Start Import")
                                 artItemsModel.updateLastN(iptcProvider.itemsCount)
-                                artItemsModel.submitLastNForSpellCheck(iptcProvider.itemsCount)
                                 if (!iptcProvider.isError) {
                                     closePopup()
                                 }

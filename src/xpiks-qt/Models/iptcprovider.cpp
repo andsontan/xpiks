@@ -59,8 +59,13 @@ namespace Models {
 
     void IptcProvider::allFinishedReading() {
         endProcessing();
-        m_LocalLibrary->addToLibrary(getArtworkList());
+        QVector<Models::ArtworkMetadata*> artworks = getArtworkList();
+
+        m_LocalLibrary->addToLibrary(artworks);
         m_LocalLibrary->saveLibraryAsync();
+
+        m_CommandManager->submitForSpellCheck(artworks);
+
         qDebug() << "Metadata reading finished (with Error = " << getIsError() << ")";
     }
 

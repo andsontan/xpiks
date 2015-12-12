@@ -265,6 +265,20 @@ void Commands::CommandManager::submitForSpellCheck(SpellCheck::ISpellCheckable *
     }
 }
 
+void Commands::CommandManager::submitForSpellCheck(const QVector<Models::ArtworkMetadata *> &items) const {
+    if (m_SettingsModel->getUseSpellCheck() && !items.isEmpty()) {
+        QVector<SpellCheck::ISpellCheckable*> itemsToSubmit;
+        int count = items.length();
+        itemsToSubmit.reserve(count);
+
+        for (int i = 0; i < count; ++i) {
+            itemsToSubmit << items.at(i);
+        }
+
+        this->submitForSpellCheck(itemsToSubmit);
+    }
+}
+
 void Commands::CommandManager::submitForSpellCheck(const QVector<SpellCheck::ISpellCheckable *> &items) const {
     if (m_SettingsModel->getUseSpellCheck()) {
         m_SpellCheckerService->submitItems(items);

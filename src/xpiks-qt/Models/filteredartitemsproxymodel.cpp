@@ -133,12 +133,7 @@ namespace Models {
 
     void FilteredArtItemsProxyModel::spellCheckSelected() {
         QVector<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
-        QVector<SpellCheck::ISpellCheckable*> itemsToSubmit;
-        foreach (ArtworkMetadata *artwork, selectedArtworks) {
-            itemsToSubmit.append(artwork);
-        }
-
-        m_CommandManager->submitForSpellCheck(itemsToSubmit);
+        m_CommandManager->submitForSpellCheck(selectedArtworks);
     }
 
     int FilteredArtItemsProxyModel::getModifiedSelectedCount() const {
