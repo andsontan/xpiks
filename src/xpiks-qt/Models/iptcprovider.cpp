@@ -77,7 +77,7 @@ namespace Models {
 
         if (importData != NULL) {
             metadata->initialize(importData->Title, importData->Description, importData->Keywords);
-            qDebug() << metadata->getFilepath();
+            qDebug() << "Metadata initialized" << metadata->getFilepath();
             delete importData;
         } else {
             setIsError(true);

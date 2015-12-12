@@ -76,7 +76,7 @@ namespace Models {
         void forceUnselectAllItems() const;
 
     public:
-        Q_INVOKABLE void updateAllProperties();
+        Q_INVOKABLE void updateLastN(int N);
         /*Q_INVOKABLE*/ void removeArtworksDirectory(int index);
         Q_INVOKABLE void removeKeywordAt(int metadataIndex, int keywordIndex);
         Q_INVOKABLE void removeLastKeyword(int metadataIndex);

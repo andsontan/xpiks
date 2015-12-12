@@ -165,7 +165,7 @@ Item {
                             target: iptcProvider
                             onFinishedProcessing: {
                                 importButton.text = qsTr("Start Import")
-                                artItemsModel.updateAllProperties()
+                                artItemsModel.updateLastN(iptcProvider.itemsCount)
                                 if (!iptcProvider.isError) {
                                     closePopup()
                                 }

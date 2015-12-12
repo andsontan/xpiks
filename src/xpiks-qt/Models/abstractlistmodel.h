@@ -51,7 +51,7 @@ namespace Models {
         }
 
     protected:
-        void updateItemsInRanges(const QVector<QPair<int, int> > &ranges, QVector<int> roles) {
+        void updateItemsInRanges(const QVector<QPair<int, int> > &ranges, const QVector<int> &roles) {
             int rangesCount = ranges.count();
             for (int i = 0; i < rangesCount; ++i) {
                 int startRow = ranges[i].first;

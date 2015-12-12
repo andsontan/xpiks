@@ -97,6 +97,7 @@ namespace Models {
         QVector<int> indices = getSelectedOriginalIndices();
         ArtItemsModel *artItemsModel = getArtItemsModel();
         artItemsModel->removeSelectedArtworks(indices);
+        updateFilter();
     }
 
     void FilteredArtItemsProxyModel::updateSelectedArtworks() {
@@ -463,6 +464,8 @@ namespace Models {
 
     bool FilteredArtItemsProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const {
         Q_UNUSED(sourceParent);
+
+        if (m_SearchTerm.trimmed().isEmpty()) { return true; }
 
         ArtItemsModel *artItemsModel = getArtItemsModel();
         ArtworkMetadata *metadata = artItemsModel->getArtwork(sourceRow);

@@ -76,12 +76,19 @@ namespace Models {
         }
     }
 
-    void ArtItemsModel::updateAllProperties() {
-        QVector<QPair<int, int> > ranges;
-        ranges << qMakePair(0, m_ArtworkList.length() - 1);
-        QVector<int> roles;
-        roles << ArtworkDescriptionRole << IsModifiedRole << ArtworkTitleRole << KeywordsCountRole;
-        updateItemsInRanges(ranges, roles);
+    void ArtItemsModel::updateLastN(int N) {
+        if (0 < N && N <= m_ArtworkList.length()) {
+            int start = m_ArtworkList.length() - N;
+            int end = m_ArtworkList.length() - 1;
+
+            QVector<QPair<int, int> > ranges;
+            ranges << qMakePair(start, end);
+
+            QVector<int> roles;
+            fillStandardRoles(roles);
+
+            updateItemsInRanges(ranges, roles);
+        }
     }
 
     void ArtItemsModel::removeArtworksDirectory(int index) {

@@ -43,7 +43,7 @@ namespace Models {
     public:
         const QString &getSearchTerm() const { return m_SearchTerm; }
         void setSearchTerm(const QString &value);
-        int getSelectedArtworksCount() { return m_SelectedArtworksCount; }
+        int getSelectedArtworksCount() const { return m_SelectedArtworksCount; }
 
     public:
         Q_INVOKABLE int getOriginalIndex(int index);
@@ -96,7 +96,7 @@ namespace Models {
         bool containsAllPartsSearch(ArtworkMetadata *metadata) const;
 
     protected:
-        bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const Q_DECL_OVERRIDE;
+        virtual bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
 
     private:
         // ignore default regexp from proxymodel

@@ -928,6 +928,13 @@ ApplicationWindow {
                             boundsBehavior: Flickable.StopAtBounds
                             spacing: 4
 
+                            function forceUpdateArtworks() {
+                                console.log("Force layout magic for artworks list view")
+                                imagesListView.forceLayout()
+                                imagesListView.update()
+                                imagesListView.positionViewAtBeginning()
+                            }
+
                             add: Transition {
                                 NumberAnimation { property: "opacity"; from: 0; to: 1; duration: 230 }
                             }
@@ -1573,20 +1580,12 @@ ApplicationWindow {
 
                             Connections {
                                 target: artItemsModel
-                                onArtworksChanged: {
-                                    console.log("ArtItemsModel: Force layout for artworks list view")
-                                    imagesListView.forceLayout()
-                                    imagesListView.update()
-                                }
+                                onArtworksChanged: imagesListView.forceUpdateArtworks()
                             }
 
                             Connections {
                                 target: filteredArtItemsModel
-                                onAfterInvalidateFilter: {
-                                    console.log("Filtered Model: Force layout for artworks list view")
-                                    imagesListView.forceLayout()
-                                    imagesListView.update()
-                                }
+                                onAfterInvalidateFilter: imagesListView.forceUpdateArtworks()
                             }
                         }
                     }
