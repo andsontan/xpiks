@@ -145,7 +145,7 @@ namespace Suggestion {
 
         urlQuery.addQueryItem("language", "en");
         urlQuery.addQueryItem("view", "full");
-        urlQuery.addQueryItem("per_page", "75");
+        urlQuery.addQueryItem("per_page", "100");
         urlQuery.addQueryItem("query", queryKeywords.join(' '));
 
         QUrl url;
