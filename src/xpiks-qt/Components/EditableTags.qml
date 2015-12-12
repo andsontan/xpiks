@@ -58,6 +58,8 @@ Flickable {
     signal focusLost()
     signal tagsPasted(var tagsList)
     signal copyRequest();
+    signal backTabPressed();
+    signal tabPressed();
 
     function activateEdit() {
         if (editEnabled && !nextTagTextInput.activeFocus) {
@@ -272,6 +274,12 @@ Flickable {
                             removeLast();
                             event.accepted = true;
                         }
+                    }
+                    else if (event.key === Qt.Key_Tab) {
+                        tabPressed()
+                    }
+                    else if (event.key === Qt.Key_Backtab) {
+                        backTabPressed()
                     }
 
                     scrollToBottom()

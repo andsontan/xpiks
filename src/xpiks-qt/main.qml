@@ -1401,6 +1401,14 @@ ApplicationWindow {
                                                         keywordsWrapper.removeLastKeyword()
                                                     }
 
+                                                    onBackTabPressed: {
+                                                        if (columnLayout.isWideEnough) {
+                                                            titleTextInput.forceActiveFocus()
+                                                        } else {
+                                                            descriptionTextInput.forceActiveFocus()
+                                                        }
+                                                    }
+
                                                     onFocusLost: keywordsWrapper.saveKeywords()
 
                                                     onCopyRequest: clipboard.setText(keywordsstring)

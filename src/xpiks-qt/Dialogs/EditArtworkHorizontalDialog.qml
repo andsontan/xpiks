@@ -208,6 +208,8 @@ Item {
                                     combinedArtworks.initDescriptionHighlighting(descriptionTextInput.textDocument)
                                 }
 
+                                Keys.onTabPressed: titleTextInput.forceActiveFocus()
+
                                 onCursorRectangleChanged: descriptionFlick.ensureVisible(cursorRectangle)
                             }
                         }
@@ -275,6 +277,8 @@ Item {
                                 text: combinedArtworks.title
                                 onTextChanged: combinedArtworks.title = text
                                 KeyNavigation.backtab: descriptionTextInput
+
+                                Keys.onBacktabPressed: descriptionTextInput.forceActiveFocus()
 
                                 Keys.onTabPressed: {
                                     flv.activateEdit()
@@ -389,6 +393,10 @@ Item {
 
                             onTagsPasted: {
                                 keywordsWrapper.pasteKeywords(tagsList)
+                            }
+
+                            onBackTabPressed: {
+                                titleTextInput.forceActiveFocus()
                             }
                         }
 

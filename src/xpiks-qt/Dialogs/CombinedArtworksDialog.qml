@@ -619,6 +619,10 @@ Item {
                                     onTagsPasted: {
                                         keywordsWrapper.pasteKeywords(tagsList)
                                     }
+
+                                    onBackTabPressed: {
+                                        titleTextInput.forceActiveFocus()
+                                    }
                                 }
 
                                 CustomScrollbar {
