@@ -223,22 +223,11 @@ namespace Models {
     }
 
     int ArtItemsModel::dropFiles(const QList<QUrl> &urls) {
-        QList<QUrl> localUrls;
-
-#ifdef Q_OS_MAC
-        localUrls.reserve(urls.length());
-        foreach (const QUrl &url, urls) {
-            QUrl localUrl = Helpers::fromNSUrl(url);
-            localUrls.append(localUrl);
-        }
-#else
-        localUrls = urls;
-#endif
         QList<QUrl> directories, files;
-        directories.reserve(localUrls.count()/2);
-        files.reserve(localUrls.count());
+        directories.reserve(urls.count()/2);
+        files.reserve(urls.count());
 
-        foreach(const QUrl &url, localUrls) {
+        foreach(const QUrl &url, urls) {
             bool isDirectory = QDir(url.toLocalFile()).exists();
             if (isDirectory) {
                 directories.append(url);

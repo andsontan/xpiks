@@ -214,8 +214,7 @@ DISTFILES += \
     Dialogs/PlainTextKeywordsDialog.qml
 
 macx {
-OBJECTIVE_SOURCES += \
-    Helpers/osxnsurlhelper.mm
+OBJECTIVE_SOURCES +=
 
 LIBS += -framework Foundation
 LIBS += -lz
