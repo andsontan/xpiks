@@ -33,3 +33,5 @@ If you want to create Xpiks executable for everyday usage, before each `Run qmak
 ***More***
 
 More instructions can be found at this page http://ribtoks.github.io/xpiks/blog/2014/building-xpiks-alone/
+
+Xpiks uses English dictionaries from http://cgit.freedesktop.org/libreoffice/dictionaries/tree/. In Windows they are stored in the `dict/` subdirectory, in OS X they are in the `Resources/` directory of a bundle.
