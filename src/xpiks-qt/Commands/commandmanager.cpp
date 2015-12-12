@@ -312,7 +312,9 @@ void Commands::CommandManager::afterConstructionCallback() const {
     m_SpellCheckerService->startChecking();
     m_MetadataSaverService->startSaving();
 
+#ifndef Q_OS_LINUX
     m_UpdateService->checkForUpdates();
+#endif
     m_TelemetryService->reportAction(Conectivity::UserActionOpen);
 }
 
