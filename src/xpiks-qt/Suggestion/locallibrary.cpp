@@ -37,8 +37,15 @@ namespace Suggestion {
             Models::ArtworkMetadata *metadata = artworksList.at(i);
             const QString &filepath = metadata->getFilepath();
             QStringList keywords = metadata->getKeywords();
+            QStringList descriptionWords = metadata->getDescriptionWords();
+            QStringList titleWords = metadata->getTitleWords();
+            QStringList tags;
+            tags.reserve(keywords.length() + descriptionWords.length() + titleWords);
+            tags.append(descriptionWords);
+            tags.append(keywords);
+            tags.append(titleWords);
             // replaces if exists
-            m_LocalArtworks.insert(filepath, keywords);
+            m_LocalArtworks.insert(filepath, tags);
         }
 
         qDebug() << artworksList.length() << "artworks added to the local library";
