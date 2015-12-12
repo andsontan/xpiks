@@ -43,6 +43,7 @@ namespace SpellCheck {
 
     public:
         void startChecking();
+        void stopChecking();
         void submitItems(const QVector<ISpellCheckable *> &itemsToCheck);
         void submitKeyword(SpellCheck::ISpellCheckable *itemToCheck, int keywordIndex);
         QStringList suggestCorrections(const QString &word) const;

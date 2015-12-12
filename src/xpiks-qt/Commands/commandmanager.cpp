@@ -303,5 +303,8 @@ void Commands::CommandManager::afterConstructionCallback() const {
 }
 
 void Commands::CommandManager::beforeDestructionCallback() const {
+    // we have a second for important stuff
     m_TelemetryService->reportAction(Conectivity::UserActionClose);
+    m_SpellCheckerService->stopChecking();
+    m_MetadataSaverService->stopSaving();
 }

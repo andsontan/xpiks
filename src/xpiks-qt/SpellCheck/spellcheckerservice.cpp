@@ -128,4 +128,11 @@ namespace SpellCheck {
         qDebug() << "Spellcheck service went offline";
         m_WorkerIsAlive = false;
     }
+
+    void SpellCheck::SpellCheckerService::stopChecking() {
+        if (m_WorkerIsAlive) {
+            m_SpellCheckWorker->cancelWork();
+        }
+    }
+
 }

@@ -47,12 +47,23 @@ namespace Helpers {
         QObject::connect(this, SIGNAL(cancelSaving()),
                          m_BackupWorker, SLOT(cancel()));
 
+        QObject::connect(m_BackupWorker, SIGNAL(stopped()),
+                         this, SLOT(workerFinished()));
+
         thread->start();
     }
 
     void BackupSaverService::saveArtwork(Models::ArtworkMetadata *metadata) {
         TempMetadataCopy *copy = new TempMetadataCopy(metadata);
         m_BackupWorker->submitItem(copy);
+    }
+
+    void BackupSaverService::workerFinished() {
+        qDebug() << "Backup saver service went offline";
+    }
+
+    void Helpers::BackupSaverService::stopSaving() {
+        m_BackupWorker->cancelWork();
     }
 }
 

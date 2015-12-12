@@ -39,10 +39,14 @@ namespace Helpers {
 
     public:
         void startSaving();
+        void stopSaving();
         void saveArtwork(Models::ArtworkMetadata *metadata);
 
     signals:
         void cancelSaving();
+
+    private slots:
+        void workerFinished();
 
     private:
         BackupSaverWorker *m_BackupWorker;
