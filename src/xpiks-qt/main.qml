@@ -1314,12 +1314,36 @@ ApplicationWindow {
                                             }
 
                                             StyledText {
-                                                anchors.left: keywordsLabel.right
-                                                anchors.leftMargin: 5
-                                                anchors.top: keywordsLabel.top
-                                                text: qsTr("(comma-separated)")
+                                                text: qsTr("<u>edit in plain text</u>")
+                                                color: plainTextMA.containsMouse ? Colors.defaultLightGrayColor : Colors.defaultInputBackground
                                                 visible: rowWrapper.isHighlighted
-                                                color: Colors.defaultInputBackground
+                                                anchors.right: parent.right
+                                                anchors.top: descriptionRect.bottom
+                                                anchors.topMargin: 7
+
+                                                MouseArea {
+                                                    id: plainTextMA
+                                                    anchors.fill: parent
+                                                    hoverEnabled: true
+                                                    cursorShape: rowWrapper.isHighlighted ? Qt.PointingHandCursor : Qt.ArrowCursor
+                                                    onClicked: {
+                                                        var callbackObject = {
+                                                            onSuccess: function(text) {
+                                                                artItemsModel.plainTextEdit(rowWrapper.getIndex(), text)
+                                                            },
+                                                            onClose: function() {
+                                                                flv.activateEdit()
+                                                            }
+                                                        }
+
+                                                        Common.launchDialog("Dialogs/PlainTextKeywordsDialog.qml",
+                                                                            applicationWindow,
+                                                                            {
+                                                                                callbackObject: callbackObject,
+                                                                                keywordsText: keywordsstring
+                                                                            });
+                                                    }
+                                                }
                                             }
 
                                             Rectangle {

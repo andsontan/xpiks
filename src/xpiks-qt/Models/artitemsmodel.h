@@ -103,6 +103,7 @@ namespace Models {
         Q_INVOKABLE void initTitleHighlighting(int metadataIndex, QQuickTextDocument *document);
 
         Q_INVOKABLE void editKeyword(int metadataIndex, int keywordIndex, const QString &replacement);
+        Q_INVOKABLE void plainTextEdit(int metadataIndex, const QString &rawKeywords);
 
     public:
         virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;

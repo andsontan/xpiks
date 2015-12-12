@@ -36,6 +36,7 @@
 #include "../Models/settingsmodel.h"
 #include "../SpellCheck/spellcheckiteminfo.h"
 #include "../Common/flags.h"
+#include "../Commands/combinededitcommand.h"
 
 #ifdef Q_OS_OSX
 #include "../Helpers/osxnsurlhelper.h"
@@ -350,6 +351,29 @@ namespace Models {
                 m_CommandManager->submitForSpellCheck(metadata, keywordIndex);
                 m_CommandManager->saveMetadata(metadata);
             }
+        }
+    }
+
+    void ArtItemsModel::plainTextEdit(int metadataIndex, const QString &rawKeywords) {
+        if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
+            ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
+            ArtItemInfo *itemInfo = new ArtItemInfo(metadata, metadataIndex);
+
+            QStringList keywords = rawKeywords.trimmed().split(QChar(','), QString::SkipEmptyParts);
+
+            int flags = 0;
+            Common::SetFlag(flags, Common::EditKeywords);
+            Commands::CombinedEditCommand *combinedEditCommand = new Commands::CombinedEditCommand(
+                        flags,
+                        QVector<ArtItemInfo*>() << itemInfo,
+                        "", "",
+                        keywords);
+
+            Commands::CommandResult *result = m_CommandManager->processCommand(combinedEditCommand);
+            Commands::CombinedEditCommandResult *combinedResult = static_cast<Commands::CombinedEditCommandResult*>(result);
+
+            delete combinedResult;
+            delete itemInfo;
         }
     }
 

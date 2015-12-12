@@ -31,22 +31,24 @@ import "../Components"
 import "../StyledControls"
 
 Item {
-    id: logsComponent
-    property string logText
+    id: plainTextKeywordsComponent
+    property string keywordsText
+    property var callbackObject
     anchors.fill: parent
 
     signal dialogDestruction();
     Component.onDestruction: dialogDestruction();
 
     function closePopup() {
-        logsComponent.destroy()
+        callbackObject.onClose()
+        plainTextKeywordsComponent.destroy()
     }
 
-    Component.onCompleted: focus = true
+    Component.onCompleted: textEdit.forceActiveFocus()
     Keys.onEscapePressed: closePopup()
 
     function scrollToBottom() {
-        var flickable = scrollView.flickableItem
+        var flickable = flick
         if (flickable.contentHeight > flickable.height) {
             flickable.contentY = flickable.contentHeight - flickable.height
         } else {
@@ -54,7 +56,12 @@ Item {
         }
     }
 
-    PropertyAnimation { target: logsComponent; property: "opacity";
+    function submitKeywords() {
+        callbackObject.onSuccess(textEdit.text)
+        closePopup()
+    }
+
+    PropertyAnimation { target: plainTextKeywordsComponent; property: "opacity";
         duration: 400; from: 0; to: 1;
         easing.type: Easing.InOutQuad ; running: true }
 
@@ -72,20 +79,6 @@ Item {
         }
     }
 
-    MessageDialog {
-        id: confirmClearLogsDialog
-        property int itemIndex
-        title: "Confirmation"
-        text: qsTr("Are you sure you want to clear logs?")
-        standardButtons: StandardButton.Yes | StandardButton.No
-        onYes: {
-            clearLogsButton.enabled = false
-            logsModel.clearLogs()
-            logsComponent.logText = logsModel.getAllLogsText()
-            clearLogsButton.enabled = true
-        }
-    }
-
     FocusScope {
         anchors.fill: parent
 
@@ -99,7 +92,7 @@ Item {
             property real old_y : 0
 
             onPressed:{
-                var tmp = mapToItem(logsComponent, mouse.x, mouse.y);
+                var tmp = mapToItem(plainTextKeywordsComponent, mouse.x, mouse.y);
                 old_x = tmp.x;
                 old_y = tmp.y;
 
@@ -109,44 +102,30 @@ Item {
                 }
             }
 
+            /*
+              TODO: fix when user moves window through flickable
             onPositionChanged: {
-                var old_xy = Common.movePopupInsideComponent(logsComponent, dialogWindow, mouse, old_x, old_y);
+                var old_xy = Common.movePopupInsideComponent(plainTextKeywordsComponent, dialogWindow, mouse, old_x, old_y);
                 old_x = old_xy[0]; old_y = old_xy[1];
-            }
+            }*/
         }
 
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
-            width: logsComponent.width * 0.75
-            height: logsComponent.height - 60
+            width: 600
+            height: 400
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
 
-            RowLayout {
+            StyledText {
                 id: header
                 anchors.top: parent.top
                 anchors.left: parent.left
-                anchors.right: parent.right
                 anchors.topMargin: 20
                 anchors.leftMargin: 20
-                anchors.rightMargin: 20
-
-                StyledText {
-                    text: qsTr("Logs")
-                }
-
-                Item {
-                    Layout.fillWidth: true
-                }
-
-                StyledText {
-                    property int linesNumber : 100
-                    id: oneHunderdLinesWarning
-                    text: qsTr("(showing last %1 lines)").arg(linesNumber)
-                    color: Colors.defaultInputBackground
-                }
+                text: qsTr("Keywords")
             }
 
             Rectangle {
@@ -160,21 +139,60 @@ Item {
                 anchors.bottomMargin: 20
                 color: Colors.defaultControlColor
 
-                StyledScrollView {
-                    id: scrollView
+                Flickable {
+                    id: flick
                     anchors.fill: parent
                     anchors.margins: 10
+                    clip: true
+                    contentWidth: textEdit.paintedWidth
+                    contentHeight: textEdit.paintedHeight
+
+                    function ensureVisible(r) {
+                        if (contentX >= r.x)
+                            contentX = r.x;
+                        else if (contentX+width <= r.x+r.width)
+                            contentX = r.x+r.width-width;
+                        if (contentY >= r.y)
+                            contentY = r.y;
+                        else if (contentY+height <= r.y+r.height)
+                            contentY = r.y+r.height-height;
+                    }
 
                     StyledTextEdit {
                         id: textEdit
-                        text: logsComponent.logText
+                        anchors.top: parent.top
+                        width: flick.width - 10
+                        height: flick.height
+                        focus: true
+                        text: plainTextKeywordsComponent.keywordsText
+                        font.pixelSize: 12*settingsModel.keywordSizeScale
                         selectionColor: Colors.selectedArtworkColor
-                        readOnly: true
+                        wrapMode: TextEdit.Wrap
+                        horizontalAlignment: TextEdit.AlignLeft
+                        verticalAlignment: TextEdit.AlignTop
+                        textFormat: TextEdit.PlainText
 
                         Component.onCompleted: {
                             scrollToBottom()
+                            textEdit.cursorPosition += plainTextKeywordsComponent.keywordsText.length
                         }
+
+                        Keys.onPressed: {
+                            if (((event.key === Qt.Key_Return) || (event.key === Qt.Key_Enter)) &&
+                                    event.modifiers === Qt.ControlModifier) {
+                                submitKeywords()
+                            }
+                        }
+
+                        onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
                     }
+                }
+
+                CustomScrollbar {
+                    anchors.topMargin: -5
+                    anchors.bottomMargin: -5
+                    anchors.rightMargin: -5
+                    flickable: flick
                 }
             }
 
@@ -189,40 +207,21 @@ Item {
                 height: 24
                 spacing: 20
 
-                StyledButton {
-                    id: loadMoreButton
-                    text: qsTr("Load more logs")
-                    enabled: logsModel.withLogs
-                    width: 120
-                    onClicked: {
-                        logsComponent.logText = logsModel.getAllLogsText(true)
-                        oneHunderdLinesWarning.linesNumber = 1000
-                        loadMoreButton.enabled = false
-                        scrollToBottom()
-                    }
-                }
-
-
                 Item {
                     Layout.fillWidth: true
                 }
 
                 StyledButton {
-                    id: clearLogsButton
-                    enabled: logsModel.withLogs
-                    text: qsTr("Clear logs")
+                    id: okButton
+                    text: qsTr("Save")
                     width: 100
-                    onClicked: {
-                        confirmClearLogsDialog.open()
-                    }
+                    onClicked: submitKeywords()
                 }
 
                 StyledButton {
-                    text: qsTr("Close")
+                    text: qsTr("Cancel")
                     width: 100
-                    onClicked: {
-                        closePopup()
-                    }
+                    onClicked: closePopup()
                 }
             }
         }
