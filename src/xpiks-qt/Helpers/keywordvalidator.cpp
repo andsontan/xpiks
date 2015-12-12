@@ -22,6 +22,8 @@
 #include "keywordvalidator.h"
 #include <QRegularExpression>
 
+#define ALLOWED_SYMBOLS "@#$%&"
+
 namespace Helpers {
     bool isValidKeyword(const QString &keyword) {
         bool isValid = false;
@@ -29,6 +31,13 @@ namespace Helpers {
 
         if (2 <= length && length < 30) {
             isValid = true;
+        }
+
+        if (length == 1) {
+            QChar symbol = keyword.at(0);
+            if (symbol.isLetterOrNumber() || QString(ALLOWED_SYMBOLS).contains(symbol)) {
+                isValid = true;
+            }
         }
 
         return isValid;
