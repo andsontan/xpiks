@@ -33,8 +33,6 @@ import "../StyledControls"
 Item {
     id: logsComponent
     property string logText
-    property int popupWidth
-    property int popupHeight
     anchors.fill: parent
 
     signal dialogDestruction();
@@ -120,8 +118,8 @@ Item {
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
-            width: logsComponent.popupWidth
-            height: logsComponent.popupHeight
+            width: logsComponent.width * 0.75
+            height: logsComponent.height - 60
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined

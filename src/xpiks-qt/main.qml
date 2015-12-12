@@ -1633,9 +1633,8 @@ ApplicationWindow {
                     onClicked: {
                         Common.launchDialog("Dialogs/LogsDialog.qml",
                                         applicationWindow,
-                                            { logText: logsModel.getAllLogsText(),
-                                                popupWidth: applicationWindow.width*0.75,
-                                                popupHeight: applicationWindow.height - 60
+                                            {
+                                                logText: logsModel.getAllLogsText()
                                             });
                     }
                 }
