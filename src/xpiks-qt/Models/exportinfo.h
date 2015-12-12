@@ -23,6 +23,7 @@
 #define EXPORTINFO_H
 
 #include <QString>
+#include <QSize>
 
 namespace Models {    
     class ImportDataResult {
@@ -30,6 +31,7 @@ namespace Models {
         QString Title;
         QString Description;
         QString Keywords;
+        QSize Size;
     };
 
     class ExportInfo {

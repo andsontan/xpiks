@@ -168,7 +168,7 @@ Item {
                                             color: Colors.defaultInputBackground
                                             horizontalAlignment: Text.AlignHCenter
                                             text: filename.split(/[\\/]/).pop()
-                                            font.pointSize: 10
+                                            font.pixelSize: 10
                                         }
 
                                         Item {

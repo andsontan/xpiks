@@ -236,8 +236,6 @@ int main(int argc, char *argv[]) {
     QQmlApplicationEngine engine;
     Helpers::GlobalImageProvider *globalProvider = new Helpers::GlobalImageProvider(QQmlImageProviderBase::Image);
 
-    warningsManager.setImageProvider(globalProvider);
-
     Helpers::HelpersQmlWrapper helpersQmlWrapper(&commandManager);
 
     QQmlContext *rootContext = engine.rootContext();

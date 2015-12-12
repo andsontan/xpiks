@@ -315,8 +315,7 @@ namespace Models {
         if (metadataIndex < 0 || metadataIndex >= m_ArtworkList.length()) { return QSize(); }
 
         ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
-        QImageReader reader(metadata->getFilepath());
-        QSize size = reader.size();
+        QSize size = metadata->getSize();
         return size;
     }
 

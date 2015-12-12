@@ -20,7 +20,8 @@
  */
 
 #include "warningsmanager.h"
-#include <QImageReader>
+#include <QtConcurrent>
+#include <QFuture>
 #include <QDebug>
 #include "warningsinfo.h"
 #include "../Helpers/globalimageprovider.h"
@@ -29,62 +30,41 @@
 #include "../Commands/commandmanager.h"
 #include "settingsmodel.h"
 
-int calculateWordsLength(const QStringList &stringList) {
-    int wordsLength = 0;
-
-    foreach (const QString &part, stringList) {
-        if (part.length() > 2) {
-            wordsLength++;
-        }
-    }
-
-    return wordsLength;
-}
-
 namespace Models {
+    WarningsManager::WarningsManager(QObject *parent) :
+        QAbstractListModel(parent),
+        Common::BaseEntity()
+    {
+        m_CheckingWatcher = new QFutureWatcher<QVector<WarningsInfo*> >();
+        QObject::connect(m_CheckingWatcher, SIGNAL(finished()),
+                         this, SLOT(warningsCheckFinished()));
+    }
+
     WarningsManager::~WarningsManager() {
-        qDeleteAll(m_WarningsBufferList);
+        qDeleteAll(m_WarningsList);
+        delete m_CheckingWatcher;
     }
 
-    int WarningsManager::getWarningsCount() {
-        int count = 0;
-
-        foreach(WarningsInfo *info, m_WarningsBufferList) {
-            if (info->hasWarnings()) count++;
-        }
-
-        return count;
+    void WarningsManager::onCheckWarnings(const QVector<ArtItemInfo *> &artworks) {
+        clearModel();
+        checkForWarnings(artworks);
     }
 
-    void WarningsManager::checkForWarnings(const QVector<ArtItemInfo *> &artworks) {
-        beginResetModel();
-        {
-            qDeleteAll(m_WarningsBufferList);
-            m_WarningsBufferList.clear();
-            m_WarningsBufferList.reserve(artworks.length());
-
-            foreach (ArtItemInfo *itemInfo, artworks) {
-                m_WarningsBufferList.append(new WarningsInfo(itemInfo));
-            }
-
-            recheckItems();
-        }
-        endResetModel();
-
-        m_CommandManager->reportUserAction(Conectivity::UserActionWarningsCheck);
-    }
-
-    void WarningsManager::recheckItems() {
-        initConstraintsFromSettings();
+    void WarningsManager::warningsCheckFinished() {
+        QVector<WarningsInfo*> items = m_CheckingWatcher->result();
 
         beginResetModel();
+
+        qDeleteAll(m_WarningsList);
         m_WarningsList.clear();
 
-        foreach (WarningsInfo *info, m_WarningsBufferList) {
-            info->clearWarnings();
-
-            if (checkItem(info)) {
-                m_WarningsList.append(info);
+        int length = items.length();
+        for (int i = 0; i < length; ++i) {
+            WarningsInfo *item = items[i];
+            if  (!item->hasWarnings()) {
+                delete item;
+            } else {
+                m_WarningsList.append(item);
             }
         }
 
@@ -93,12 +73,30 @@ namespace Models {
         emit warningsCountChanged();
     }
 
+    void WarningsManager::checkForWarnings(const QVector<ArtItemInfo *> &artworks) {
+        QVector<WarningsInfo*> warningsBufferList;
+
+        warningsBufferList.reserve(artworks.length());
+
+        foreach (ArtItemInfo *itemInfo, artworks) {
+            warningsBufferList.append(new WarningsInfo(itemInfo));
+        }
+
+        initConstraintsFromSettings();
+
+        QFuture<QVector<WarningsInfo*> > future = QtConcurrent::run(this, &WarningsManager::doCheckItems, warningsBufferList);
+        m_CheckingWatcher->setFuture(future);
+
+        m_CommandManager->reportUserAction(Conectivity::UserActionWarningsCheck);
+    }
+
     void WarningsManager::recheckItem(int itemIndex) {
         if (itemIndex < 0 || itemIndex >= m_WarningsList.length()) {
             return;
         }
 
         WarningsInfo *info = m_WarningsList.at(itemIndex);
+        info->updateData();
         info->clearWarnings();
 
         if (!checkItem(info)) {
@@ -110,30 +108,40 @@ namespace Models {
         }
     }
 
-    bool WarningsManager::checkItem(WarningsInfo *wi) {
-        ArtworkMetadata *metadata = wi->getArtworkMetadata();
+    void WarningsManager::clearModel() {
+        beginResetModel();
 
+        qDeleteAll(m_WarningsList);
+        m_WarningsList.clear();
+
+        endResetModel();
+    }
+
+    QVector<WarningsInfo *> WarningsManager::doCheckItems(const QVector<WarningsInfo *> &items) const {
+        int length = items.length();
+        for (int i = 0; i < length; ++i) {
+            checkItem(items[i]);
+        }
+
+        return items;
+    }
+
+    bool WarningsManager::checkItem(WarningsInfo *wi) const {
         bool hasWarnings = false;
 
-        hasWarnings = checkDimensions(wi, metadata) || hasWarnings;
-        hasWarnings = checkKeywordsCount(wi, metadata) || hasWarnings;
-        hasWarnings = checkDescriptionLength(wi, metadata) || hasWarnings;
-        hasWarnings = checkTitleWordsCount(wi, metadata) || hasWarnings;
-        hasWarnings = checkSpellCheckErrors(wi, metadata) || hasWarnings;
+        hasWarnings = checkDimensions(wi) || hasWarnings;
+        hasWarnings = checkKeywordsCount(wi) || hasWarnings;
+        hasWarnings = checkDescriptionLength(wi) || hasWarnings;
+        hasWarnings = checkTitleWordsCount(wi) || hasWarnings;
+        hasWarnings = checkSpellCheckErrors(wi) || hasWarnings;
 
         return hasWarnings;
     }
 
-    bool WarningsManager::checkDimensions(WarningsInfo *wi, ArtworkMetadata *am) const {
+    bool WarningsManager::checkDimensions(WarningsInfo *wi) const {
         bool hasWarnings = false;
 
-        const QString &filePath = am->getFilepath();
-        QSize size;
-        Q_ASSERT(m_ImageProvider != NULL);
-        if (!m_ImageProvider->tryGetOriginalSize(filePath, size)) {
-            QImageReader reader(filePath);
-            size = reader.size();
-        }
+        QSize size = wi->getSize();
 
         double currentProd = size.width() * size.height() / 1000000.0;
         if (currentProd < m_MinimumMegapixels) {
@@ -147,9 +155,9 @@ namespace Models {
         return hasWarnings;
     }
 
-    bool WarningsManager::checkKeywordsCount(WarningsInfo *wi, ArtworkMetadata *am) const {
+    bool WarningsManager::checkKeywordsCount(WarningsInfo *wi) const {
         bool hasWarnings = false;
-        int keywordsCount = am->getKeywordsCount();
+        int keywordsCount = wi->getKeywordsCount();
 
         if (keywordsCount == 0) {
             wi->addWarning("Image has no keywords");
@@ -167,11 +175,10 @@ namespace Models {
         return hasWarnings;
     }
 
-    bool WarningsManager::checkDescriptionLength(WarningsInfo *wi, ArtworkMetadata *am) const {
+    bool WarningsManager::checkDescriptionLength(WarningsInfo *wi) const {
         bool hasWarnings = false;
-        const QString &description = am->getDescription();
+        int descriptionLength = wi->getDescriptionLength();
 
-        int descriptionLength = description.simplified().length();
         if (descriptionLength == 0) {
             wi->addWarning("Description is empty");
             hasWarnings = true;
@@ -184,8 +191,7 @@ namespace Models {
                 hasWarnings = true;
             }
 
-            QStringList descriptionParts = description.split(QChar::Space, QString::SkipEmptyParts);
-            int wordsLength = calculateWordsLength(descriptionParts);
+            int wordsLength = wi->getDescriptionWordsCount();
             if (wordsLength < 3) {
                 QString warning = QString("Description should contain at least three words");
                 wi->addWarning(warning);
@@ -196,14 +202,11 @@ namespace Models {
         return hasWarnings;
     }
 
-    bool WarningsManager::checkTitleWordsCount(WarningsInfo *wi, ArtworkMetadata *am) const {
+    bool WarningsManager::checkTitleWordsCount(WarningsInfo *wi) const {
         bool hasWarnings = false;
 
-        const QString &title = am->getTitle();
-
-        if (!title.simplified().isEmpty()) {
-            QStringList parts = title.split(QChar::Space, QString::SkipEmptyParts);
-            int partsLength = calculateWordsLength(parts);
+        if (wi->getTitleLength() > 0) {
+            int partsLength = wi->getTitleWordsCount();
 
             if (partsLength < 3) {
                 QString warning = QString("Title should contain at least three words");
@@ -224,20 +227,20 @@ namespace Models {
         return hasWarnings;
     }
 
-    bool WarningsManager::checkSpellCheckErrors(WarningsInfo *wi, ArtworkMetadata *am) const {
+    bool WarningsManager::checkSpellCheckErrors(WarningsInfo *wi) const {
         bool hasWarnings = false;
 
-        if (am->hasKeywordsSpellError()) {
+        if (wi->hasKeywordsSpellErrors()) {
             wi->addWarning("Item has spell errors in keywords");
             hasWarnings = true;
         }
 
-        if (am->hasDescriptionSpellError()) {
+        if (wi->hasDescriptionSpellErrors()) {
             wi->addWarning("Item has spell errors in description");
             hasWarnings = true;
         }
 
-        if (am->hasTitleSpellError()) {
+        if (wi->hasTitleSpellErrors()) {
             wi->addWarning("Item has spell errors in title");
             hasWarnings = true;
         }

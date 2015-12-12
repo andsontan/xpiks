@@ -28,6 +28,7 @@
 #include <QString>
 #include <QDebug>
 #include <QPair>
+#include <QImageReader>
 #include "../Models/artworkmetadata.h"
 #include "../Models/exportinfo.h"
 #include "tempmetadatadb.h"
@@ -135,6 +136,9 @@ ImportPair readArtworkMetadata(ImportPair pair) {
     QRegExp keywordsRegExp("^Keywords\\s|^Subject\\s");
 
     grabMetadata(items, importData, titleRegExp, descriptionRegExp, keywordsRegExp);
+
+    QImageReader reader(metadata->getFilepath());
+    importData->Size = reader.size();
 
     return pair;
 }

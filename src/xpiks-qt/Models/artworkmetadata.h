@@ -29,6 +29,7 @@
 #include <QString>
 #include <QVector>
 #include <QSet>
+#include <QSize>
 #include "../Common/basickeywordsmodel.h"
 
 class QTextDocument;
@@ -55,6 +56,7 @@ namespace Models {
         bool isModified() const { return m_IsModified; }
         bool getIsSelected() const { return m_IsSelected; }
         bool isInitialized() const { return m_IsInitialized; }
+        QSize getSize() const { return m_ImageSize; }
 
     public:
         virtual void clearModel();
@@ -83,6 +85,8 @@ namespace Models {
             return result;
         }
 
+        void setSize(const QSize &size) { m_ImageSize = size; }
+
         void resetSelected() {
             if (m_IsSelected) {
                 m_IsSelected = false;
@@ -107,6 +111,7 @@ namespace Models {
          void fileSelectedChanged(const QString &filepath, bool newValue);
 
     private:
+         QSize m_ImageSize;
          QString m_ArtworkFilepath;
          volatile bool m_IsModified;
          volatile bool m_IsSelected;
