@@ -54,6 +54,7 @@ namespace Suggestion {
 
     private:
         void performAsync(Suggestion::LibraryLoaderWorker::LoadOption option);
+        void doAddToLibrary(const QVector<Models::ArtworkMetadata *> artworksList);
 
     private:
         QHash<QString, QStringList> m_LocalArtworks;
