@@ -26,6 +26,37 @@
 #include "../SpellCheck/spellcheckiteminfo.h"
 #include "../Helpers/keywordvalidator.h"
 
+void splitText(const QString &text, QStringList &parts) {
+    int i = 0;
+    int size = text.size();
+    int lastStart = -1;
+
+    while (i < size) {
+        QChar c = text[i];
+        if (c.isSpace() || c.isPunct()) {
+            if (lastStart != -1) {
+                int wordLength = i - lastStart;
+                QString word = text.mid(lastStart, wordLength);
+                parts.append(word);
+
+                lastStart = -1;
+            }
+        } else {
+            if (lastStart == -1) {
+                lastStart = i;
+            }
+        }
+
+        i++;
+    }
+
+    if (lastStart != -1) {
+        int wordLength = size - lastStart;
+        QString word = text.mid(lastStart, wordLength);
+        parts.append(word);
+    }
+}
+
 namespace Common {
     BasicKeywordsModel::BasicKeywordsModel(QObject *parent):
         QAbstractListModel(parent),
@@ -445,12 +476,15 @@ namespace Common {
     }
 
     QStringList BasicKeywordsModel::getDescriptionWords() const {
-        QStringList words = m_Description.split(QChar::Space, QString::SkipEmptyParts);
+        QStringList words;
+        splitText(m_Description, words);
+        qDebug() << words;
         return words;
     }
 
     QStringList BasicKeywordsModel::getTitleWords() const {
-        QStringList words = m_Title.split(QChar::Space, QString::SkipEmptyParts);
+        QStringList words;
+        splitText(m_Title, words);
         return words;
     }
 

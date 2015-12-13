@@ -46,7 +46,7 @@ namespace SpellCheck {
 
         while (i < size) {
             QChar c = text[i];
-            if (c == QChar::Space || c == QChar::Tabulation || c == QChar::CarriageReturn) {
+            if (c.isSpace() || c.isPunct()) {
                 if (lastStart != -1) {
                     int wordLength = i - lastStart;
                     QString word = text.mid(lastStart, wordLength);
