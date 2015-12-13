@@ -23,3 +23,8 @@ Currently two dependencies have to be installed manually:
 Also there is an issue with application menu in Qt for Ubuntu which requires a workaround:
 
 `sudo apt-get remove --purge appmenu-qt5`
+
+**OpenSuse installation**
+Additional package have to be installed manually:
+
+- libqt5-qtquickcontrols
