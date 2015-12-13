@@ -108,7 +108,19 @@ ApplicationWindow {
         }
     }
 
-    Component.onCompleted: helpersWrapper.afterConstruction()
+    Component.onCompleted: {
+        helpersWrapper.afterConstruction()
+        if (appSettings.needToShowWhatsNew()) {
+            var text = appSettings.whatsNewText;
+            if (text.length > 0) {
+                Common.launchDialog("Dialogs/WhatsNewDialog.qml",
+                                    applicationWindow,
+                                    {
+                                        whatsNewText: text
+                                    })
+            }
+        }
+    }
 
     menuBar: MenuBar {
         Menu {

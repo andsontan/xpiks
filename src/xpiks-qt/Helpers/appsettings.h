@@ -27,6 +27,8 @@
 #include <QSettings>
 #include <QCoreApplication>
 #include "constants.h"
+#include "../Common/version.h"
+#include <QFile>
 
 namespace Helpers {
     class AppSettings : public QSettings
@@ -103,6 +105,31 @@ namespace Helpers {
         Q_PROPERTY(QString autoSpellCheckKey READ getUseSpellCheckKey CONSTANT)
         QString getUseSpellCheckKey() const { return QLatin1String(Constants::USE_SPELL_CHECK); }
 
+        Q_PROPERTY(QString installedVersionKey READ getInstalledVersionKey CONSTANT)
+        QString getInstalledVersionKey() const { return QLatin1String(Constants::INSTALLED_VERSION); }
+
+        Q_PROPERTY(QString whatsNewText READ getWhatsNewText CONSTANT)
+        QString getWhatsNewText() const {
+            QString path = QCoreApplication::applicationDirPath();
+
+#if defined(Q_OS_MAC)
+            path += "/../Resources/";
+#endif
+
+            path += QLatin1String(Constants::WHATS_NEW_FILENAME);
+
+            QFile file(path);
+            QString text;
+            if (file.open(QIODevice::ReadOnly)) {
+                text = file.readAll();
+                file.close();
+            } else {
+                qDebug() << "whatsnew.txt file is not found.";
+            }
+
+            return text;
+        }
+
         Q_INVOKABLE inline void setValue(const QString &key, const QVariant &value) {
             QSettings::setValue(key, value);
         }
@@ -117,6 +144,20 @@ namespace Helpers {
 
         Q_INVOKABLE inline double doubleValue(const QString &key, const QVariant &defaultValue = QVariant()) const {
             return QSettings::value(key, defaultValue).toDouble();
+        }
+
+        Q_INVOKABLE inline int intValue(const QString &key, const QVariant &defaultValue = QVariant()) const {
+            return QSettings::value(key, defaultValue).toInt();
+        }
+
+        Q_INVOKABLE bool needToShowWhatsNew() {
+            int lastVersion = intValue(getInstalledVersionKey(), 0);
+            bool result = XPIKS_VERSION_INT > lastVersion;
+            return result;
+        }
+
+        Q_INVOKABLE void saveCurrentVersion() {
+            setValue(getInstalledVersionKey(), XPIKS_VERSION_INT);
         }
     };
 }

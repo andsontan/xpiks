@@ -46,5 +46,6 @@
         <file>Components/SuggestionWrapper.qml</file>
         <file>Dialogs/EditKeywordDialog.qml</file>
         <file>Dialogs/PlainTextKeywordsDialog.qml</file>
+        <file>Dialogs/WhatsNewDialog.qml</file>
     </qresource>
 </RCC>

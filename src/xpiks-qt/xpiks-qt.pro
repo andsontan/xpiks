@@ -211,14 +211,11 @@ DISTFILES += \
     Dialogs/SpellCheckSuggestionsDialog.qml \
     Components/SuggestionWrapper.qml \
     Dialogs/EditKeywordDialog.qml \
-    Dialogs/PlainTextKeywordsDialog.qml
+    Dialogs/PlainTextKeywordsDialog.qml \
+    Dialogs/WhatsNewDialog.qml
 
 macx {
-OBJECTIVE_SOURCES +=
-
-LIBS += -framework Foundation
 LIBS += -lz
-HEADERS += Helpers/osxnsurlhelper.h
 }
 
 LIBS += -L"$$PWD/../libs/"
@@ -250,3 +247,7 @@ message("Static build.")
 HUNSPELL_DICT_FILES.files = dict/en_US.aff dict/en_US.dic dict/license.txt dict/README_en_US.txt
 HUNSPELL_DICT_FILES.path = Contents/Resources
 QMAKE_BUNDLE_DATA += HUNSPELL_DICT_FILES
+
+WHATS_NEW.files = whatsnew.txt
+WHATS_NEW.path = Contents/Resources
+QMAKE_BUNDLE_DATA += WHATS_NEW

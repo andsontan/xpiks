@@ -38,10 +38,6 @@
 #include "../Common/flags.h"
 #include "../Commands/combinededitcommand.h"
 
-#ifdef Q_OS_OSX
-#include "../Helpers/osxnsurlhelper.h"
-#endif
-
 namespace Models {
     ArtItemsModel::~ArtItemsModel() {
         qDeleteAll(m_ArtworkList);
