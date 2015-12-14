@@ -202,6 +202,16 @@ Item {
                     }
                 }
 
+                StyledButton {
+                    id: revealFileButton
+                    text: qsTr("Reveal logfile")
+                    visible: Qt.platform.os !== "linux"
+                    width: 120
+                    onClicked: {
+                        helpersWrapper.revealLogFile()
+                    }
+                }
+
 
                 Item {
                     Layout.fillWidth: true

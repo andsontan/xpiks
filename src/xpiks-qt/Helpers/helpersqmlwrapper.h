@@ -40,6 +40,7 @@ namespace Helpers {
         Q_INVOKABLE QString sanitizeKeyword(const QString &keyword) const;
         Q_INVOKABLE void afterConstruction();
         Q_INVOKABLE void beforeDestruction();
+        Q_INVOKABLE void revealLogFile();
 
     private:
         Commands::CommandManager *m_CommandManager;
