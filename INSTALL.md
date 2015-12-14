@@ -1,4 +1,4 @@
-*** Basic install ***
+# Basic install #
 
 **OS X installation**
 
@@ -15,7 +15,7 @@ Exiftool and curl are packed inside the zip archive. Download and extract Xpiks 
 
 Install the deb file from latest release with all dependencies.
 
-*** Special instructions ***
+# Special instructions #
 
 **Ubuntu**
 **Mint 17.3 (Rose)**
