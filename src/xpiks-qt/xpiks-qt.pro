@@ -212,7 +212,8 @@ DISTFILES += \
     Components/SuggestionWrapper.qml \
     Dialogs/EditKeywordDialog.qml \
     Dialogs/PlainTextKeywordsDialog.qml \
-    Dialogs/WhatsNewDialog.qml
+    Dialogs/WhatsNewDialog.qml \
+    Dialogs/TermsAndConditionsDialog.qml
 
 macx {
 LIBS += -lz
@@ -251,3 +252,7 @@ QMAKE_BUNDLE_DATA += HUNSPELL_DICT_FILES
 WHATS_NEW.files = whatsnew.txt
 WHATS_NEW.path = Contents/Resources
 QMAKE_BUNDLE_DATA += WHATS_NEW
+
+TERMS_AND_CONDITIONS.files = terms_and_conditions.txt
+TERMS_AND_CONDITIONS.path = Contents/Resources
+QMAKE_BUNDLE_DATA += TERMS_AND_CONDITIONS

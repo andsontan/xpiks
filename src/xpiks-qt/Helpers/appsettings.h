@@ -108,6 +108,9 @@ namespace Helpers {
         Q_PROPERTY(QString installedVersionKey READ getInstalledVersionKey CONSTANT)
         QString getInstalledVersionKey() const { return QLatin1String(Constants::INSTALLED_VERSION); }
 
+        Q_PROPERTY(QString userConsentKey READ getUserConsentKey CONSTANT)
+        QString getUserConsentKey() const { return QLatin1String(Constants::USER_CONSENT); }
+
         Q_PROPERTY(QString whatsNewText READ getWhatsNewText CONSTANT)
         QString getWhatsNewText() const {
             QString path = QCoreApplication::applicationDirPath();
@@ -158,6 +161,37 @@ namespace Helpers {
 
         Q_INVOKABLE void saveCurrentVersion() {
             setValue(getInstalledVersionKey(), XPIKS_VERSION_INT);
+        }
+
+        Q_INVOKABLE bool needToShowTermsAndConditions() {
+            bool haveConsent = boolValue(getUserConsentKey(), false);
+            return !haveConsent;
+        }
+
+        Q_INVOKABLE void userAgreeHandler() {
+            setValue(getUserConsentKey(), true);
+        }
+
+        Q_PROPERTY(QString termsAndConditionsText READ getTermsAndConditionsText CONSTANT)
+        QString getTermsAndConditionsText() const {
+            QString path = QCoreApplication::applicationDirPath();
+
+#if defined(Q_OS_MAC)
+            path += "/../Resources/";
+#endif
+
+            path += QLatin1String(Constants::TERMS_AND_CONDITIONS_FILENAME);
+
+            QFile file(path);
+            QString text;
+            if (file.open(QIODevice::ReadOnly)) {
+                text = file.readAll();
+                file.close();
+            } else {
+                qDebug() << "terms_and_conditions.txt file is not found.";
+            }
+
+            return text;
         }
     };
 }

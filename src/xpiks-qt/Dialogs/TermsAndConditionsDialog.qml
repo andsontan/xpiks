@@ -31,30 +31,21 @@ import "../Components"
 import "../StyledControls"
 
 Item {
-    id: logsComponent
-    property string logText
+    id: termsComponent
+    property string termsText
     anchors.fill: parent
+    z: 20000
 
     signal dialogDestruction();
     Component.onDestruction: dialogDestruction();
 
     function closePopup() {
-        logsComponent.destroy()
+        termsComponent.destroy()
     }
 
     Component.onCompleted: focus = true
-    Keys.onEscapePressed: closePopup()
 
-    function scrollToBottom() {
-        var flickable = scrollView.flickableItem
-        if (flickable.contentHeight > flickable.height) {
-            flickable.contentY = flickable.contentHeight - flickable.height
-        } else {
-            flickable.contentY = 0
-        }
-    }
-
-    PropertyAnimation { target: logsComponent; property: "opacity";
+    PropertyAnimation { target: termsComponent; property: "opacity";
         duration: 400; from: 0; to: 1;
         easing.type: Easing.InOutQuad ; running: true }
 
@@ -72,20 +63,6 @@ Item {
         }
     }
 
-    MessageDialog {
-        id: confirmClearLogsDialog
-        property int itemIndex
-        title: "Confirmation"
-        text: qsTr("Are you sure you want to clear logs?")
-        standardButtons: StandardButton.Yes | StandardButton.No
-        onYes: {
-            clearLogsButton.enabled = false
-            logsModel.clearLogs()
-            logsComponent.logText = logsModel.getAllLogsText()
-            clearLogsButton.enabled = true
-        }
-    }
-
     FocusScope {
         anchors.fill: parent
 
@@ -94,59 +71,24 @@ Item {
             onWheel: wheel.accepted = true
             onClicked: mouse.accepted = true
             onDoubleClicked: mouse.accepted = true
-
-            property real old_x : 0
-            property real old_y : 0
-
-            onPressed:{
-                var tmp = mapToItem(logsComponent, mouse.x, mouse.y);
-                old_x = tmp.x;
-                old_y = tmp.y;
-
-                var dialogPoint = mapToItem(dialogWindow, mouse.x, mouse.y);
-                if (!Common.isInComponent(dialogPoint, dialogWindow)) {
-                    closePopup()
-                }
-            }
-
-            onPositionChanged: {
-                var old_xy = Common.movePopupInsideComponent(logsComponent, dialogWindow, mouse, old_x, old_y);
-                old_x = old_xy[0]; old_y = old_xy[1];
-            }
         }
 
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
-            width: logsComponent.width * 0.75
-            height: logsComponent.height - 60
+            width: 700
+            height: 400
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
 
-            RowLayout {
+            StyledText {
                 id: header
                 anchors.top: parent.top
                 anchors.left: parent.left
-                anchors.right: parent.right
                 anchors.topMargin: 20
                 anchors.leftMargin: 20
-                anchors.rightMargin: 20
-
-                StyledText {
-                    text: qsTr("Logs")
-                }
-
-                Item {
-                    Layout.fillWidth: true
-                }
-
-                StyledText {
-                    property int linesNumber : 100
-                    id: oneHunderdLinesWarning
-                    text: qsTr("(showing last %1 lines)").arg(linesNumber)
-                    color: Colors.defaultInputBackground
-                }
+                text: qsTr("Terms and conditions:")
             }
 
             Rectangle {
@@ -167,14 +109,12 @@ Item {
 
                     StyledTextEdit {
                         id: textEdit
-                        text: logsComponent.logText
+                        width: 600
+                        text: termsComponent.termsText
+                        font.pixelSize: 12*settingsModel.keywordSizeScale
+                        wrapMode: TextEdit.Wrap
                         selectionColor: Colors.selectedArtworkColor
                         readOnly: true
-                        font.pixelSize: 12*settingsModel.keywordSizeScale
-
-                        Component.onCompleted: {
-                            scrollToBottom()
-                        }
                     }
                 }
             }
@@ -190,49 +130,27 @@ Item {
                 height: 24
                 spacing: 20
 
-                StyledButton {
-                    id: loadMoreButton
-                    text: qsTr("Load more logs")
-                    enabled: logsModel.withLogs
-                    width: 120
-                    onClicked: {
-                        logsComponent.logText = logsModel.getAllLogsText(true)
-                        oneHunderdLinesWarning.linesNumber = 1000
-                        loadMoreButton.enabled = false
-                        scrollToBottom()
-                    }
-                }
-
-                StyledButton {
-                    id: revealFileButton
-                    text: qsTr("Reveal logfile")
-                    visible: Qt.platform.os !== "linux"
-                    width: 120
-                    onClicked: {
-                        helpersWrapper.revealLogFile()
-                    }
-                }
-
-
                 Item {
                     Layout.fillWidth: true
                 }
 
                 StyledButton {
-                    id: clearLogsButton
-                    enabled: logsModel.withLogs
-                    text: qsTr("Clear logs")
+                    id: agreeButton
+                    text: qsTr("Agree")
                     width: 100
                     onClicked: {
-                        confirmClearLogsDialog.open()
+                        appSettings.userAgreeHandler()
+                        closePopup()
                     }
                 }
 
                 StyledButton {
-                    text: qsTr("Close")
+                    text: qsTr("Disagree")
                     width: 100
+                    tooltip: qsTr("Close Xpiks")
                     onClicked: {
                         closePopup()
+                        Qt.quit()
                     }
                 }
             }

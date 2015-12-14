@@ -120,6 +120,17 @@ ApplicationWindow {
                                     })
             }
         }
+
+        if (appSettings.needToShowTermsAndConditions()) {
+            var licenseText = appSettings.termsAndConditionsText;
+            if (licenseText.length > 0) {
+                Common.launchDialog("Dialogs/TermsAndConditionsDialog.qml",
+                                    applicationWindow,
+                                    {
+                                        termsText: licenseText
+                                    })
+            }
+        }
     }
 
     menuBar: MenuBar {
@@ -535,7 +546,7 @@ ApplicationWindow {
             Rectangle {
                 height: 45
                 color: Colors.defaultDarkColor
-                z: 10000
+                z: 5000
                 anchors.left: parent.left
                 anchors.right: parent.right
 
