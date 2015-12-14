@@ -12,6 +12,7 @@ CONFIG += staticlib
 DEFINES += HUNSPELL_STATIC
 
 INCLUDEPATH += "../hunspell-1.3.3/src/hunspell/"
+linux:INCLUDEPATH += "../hunspell-1.3.3/src/win_api/"
 
 SOURCES += \
     ../hunspell-1.3.3/src/hunspell/affentry.cxx \

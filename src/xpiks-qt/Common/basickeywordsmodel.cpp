@@ -448,7 +448,6 @@ namespace Common {
     QStringList BasicKeywordsModel::getDescriptionWords() const {
         QStringList words;
         Helpers::splitText(m_Description, words);
-        qDebug() << words;
         return words;
     }
 

@@ -37,7 +37,7 @@ Item {
         opacity: closeIconMouseArea.containsMouse ? 1 : 0.8
 
         function getPressColor() {
-            if (closeIconMouseArea.pressed) {
+            if (closeIconMouseArea.containsMouse) {
                 return Colors.artworkModifiedColor;
             } else {
                 return isActive ? Colors.defaultControlColor : Colors.defaultLightColor;
