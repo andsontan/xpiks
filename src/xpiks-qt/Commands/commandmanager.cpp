@@ -308,14 +308,20 @@ void Commands::CommandManager::reportUserAction(Conectivity::UserAction userActi
     }
 }
 
-void Commands::CommandManager::afterConstructionCallback() const {
+void Commands::CommandManager::afterConstructionCallback()  {
+    if (m_AfterInitCalled) {
+        qDebug() << "Attempt to call afterCosntructionCallback() second time";
+        return;
+    }
+
+    m_AfterInitCalled = true;
+
     m_SpellCheckerService->startChecking();
     m_MetadataSaverService->startSaving();
 
 #ifndef Q_OS_LINUX
     m_UpdateService->checkForUpdates();
 #endif
-    m_TelemetryService->reportAction(Conectivity::UserActionOpen);
 }
 
 void Commands::CommandManager::beforeDestructionCallback() const {

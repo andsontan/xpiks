@@ -41,6 +41,7 @@ namespace Helpers {
         Q_INVOKABLE void afterConstruction();
         Q_INVOKABLE void beforeDestruction();
         Q_INVOKABLE void revealLogFile();
+        Q_INVOKABLE void reportOpen();
 
     private:
         Commands::CommandManager *m_CommandManager;

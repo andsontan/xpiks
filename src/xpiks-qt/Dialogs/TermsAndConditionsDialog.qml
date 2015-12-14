@@ -140,6 +140,7 @@ Item {
                     width: 100
                     onClicked: {
                         appSettings.userAgreeHandler()
+                        helpersWrapper.reportOpen()
                         closePopup()
                     }
                 }

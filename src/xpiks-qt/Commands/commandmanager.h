@@ -92,7 +92,8 @@ namespace Commands {
             m_RecentDirectories(NULL),
             m_MetadataSaverService(NULL),
             m_TelemetryService(NULL),
-            m_UpdateService(NULL)
+            m_UpdateService(NULL),
+            m_AfterInitCalled(false)
         { }
 
         virtual ~CommandManager() {}
@@ -148,7 +149,7 @@ namespace Commands {
         void setupSpellCheckSuggestions(SpellCheck::ISpellCheckable *item, int index, int flags);
         void saveMetadata(Models::ArtworkMetadata *metadata) const;
         void reportUserAction(Conectivity::UserAction userAction) const;
-        void afterConstructionCallback() const;
+        void afterConstructionCallback();
         void beforeDestructionCallback() const;
 
     public:
@@ -181,6 +182,7 @@ namespace Commands {
         Helpers::BackupSaverService *m_MetadataSaverService;
         Conectivity::TelemetryService *m_TelemetryService;
         Helpers::UpdateService *m_UpdateService;
+        volatile bool m_AfterInitCalled;
     };
 }
 

@@ -110,6 +110,7 @@ ApplicationWindow {
 
     Component.onCompleted: {
         helpersWrapper.afterConstruction()
+
         if (appSettings.needToShowWhatsNew()) {
             var text = appSettings.whatsNewText;
             if (text.length > 0) {
@@ -130,6 +131,8 @@ ApplicationWindow {
                                         termsText: licenseText
                                     })
             }
+        } else {
+            helpersWrapper.reportOpen()
         }
     }
 
