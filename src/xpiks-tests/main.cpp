@@ -7,13 +7,15 @@
 #include "addcommand_tests.h"
 #include "removecommand_tests.h"
 #include "vectorfilenames_tests.h"
+#include "artworkmetadata_tests.h"
+#include "basickeywordsmodel_tests.h"
+#include "combinedmodel_tests.h"
 
 #define QTEST_CLASS(TestObject, vName) \
     TestObject vName; \
     QTest::qExec(&vName, argc, argv); \
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     Q_UNUSED(argc);
     Q_UNUSED(argv);
 
@@ -22,6 +24,9 @@ int main(int argc, char *argv[])
     QTEST_CLASS(AddCommand_Tests, act);
     QTEST_CLASS(RemoveCommand_Tests, rct);
     QTEST_CLASS(VectorFileNamesTests, vfnt);
+    QTEST_CLASS(ArtworkMetadataTests, amt);
+    QTEST_CLASS(BasicKeywordsModelTests, bkt);
+    QTEST_CLASS(CombinedModelTests, cmt);
 
     return 0;
 }

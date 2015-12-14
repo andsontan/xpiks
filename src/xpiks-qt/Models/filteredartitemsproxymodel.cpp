@@ -28,19 +28,7 @@
 #include "../Commands/commandmanager.h"
 #include "../Commands/combinededitcommand.h"
 #include "../Common/flags.h"
-
-bool containsOneTerm(const QStringList &keywords, const QString &term) {
-    bool containsTerm = false;
-
-    foreach (const QString &keyword, keywords) {
-        if (keyword.contains(term, Qt::CaseInsensitive)) {
-            containsTerm = true;
-            break;
-        }
-    }
-
-    return containsTerm;
-}
+#include "../SpellCheck/ispellcheckable.h"
 
 namespace Models {
     FilteredArtItemsProxyModel::FilteredArtItemsProxyModel(QObject *parent) :
@@ -68,12 +56,14 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::selectDirectory(int directoryIndex) {
-        QList<int> directoryItems;
+        QVector<int> directoryItems;
+        int size = this->rowCount();
+        directoryItems.reserve(size);
+
         ArtItemsModel *artItemsModel = getArtItemsModel();
         const ArtworksRepository *artworksRepository = m_CommandManager->getArtworksRepository();
         const QString directory = artworksRepository->getDirectory(directoryIndex);
 
-        int size = this->rowCount();
         for (int row = 0; row < size; ++row) {
             QModelIndex proxyIndex = this->index(row, 0);
             QModelIndex originalIndex = this->mapToSource(proxyIndex);
@@ -83,54 +73,56 @@ namespace Models {
             Q_ASSERT(metadata != NULL);
 
             if (metadata->isInDirectory(directory)) {
-                directoryItems.append(row);
+                directoryItems.append(index);
                 metadata->setIsSelected(!metadata->getIsSelected());
             }
         }
 
+        emit allItemsSelectedChanged();
         artItemsModel->updateItems(directoryItems, QVector<int>() << ArtItemsModel::IsSelectedRole);
     }
 
     void FilteredArtItemsProxyModel::combineSelectedArtworks() {
-        QList<ArtItemInfo *> artworksList = getSelectedOriginalItemsWithIndices();
+        QVector<ArtItemInfo *> artworksList = getSelectedOriginalItemsWithIndices();
         m_CommandManager->combineArtworks(artworksList);
     }
 
     void FilteredArtItemsProxyModel::setSelectedItemsSaved() {
-        QList<int> indices = getSelectedOriginalIndices();
+        QVector<int> indices = getSelectedOriginalIndices();
         ArtItemsModel *artItemsModel = getArtItemsModel();
         artItemsModel->setSelectedItemsSaved(indices);
     }
 
     void FilteredArtItemsProxyModel::removeSelectedArtworks() {
-        QList<int> indices = getSelectedOriginalIndices();
+        QVector<int> indices = getSelectedOriginalIndices();
         ArtItemsModel *artItemsModel = getArtItemsModel();
         artItemsModel->removeSelectedArtworks(indices);
+        updateFilter();
     }
 
     void FilteredArtItemsProxyModel::updateSelectedArtworks() {
-        QList<int> indices = getSelectedOriginalIndices();
+        QVector<int> indices = getSelectedOriginalIndices();
         ArtItemsModel *artItemsModel = getArtItemsModel();
         artItemsModel->updateSelectedArtworks(indices);
     }
 
     void FilteredArtItemsProxyModel::saveSelectedArtworks() {
         // former patchSelectedArtworks
-        QList<int> indices = getSelectedOriginalIndices();
+        QVector<int> indices = getSelectedOriginalIndices();
         ArtItemsModel *artItemsModel = getArtItemsModel();
         artItemsModel->saveSelectedArtworks(indices);
     }
 
     void FilteredArtItemsProxyModel::setSelectedForUpload() {
-        QList<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
+        QVector<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
         m_CommandManager->setArtworksForUpload(selectedArtworks);
 
-        QList<ArtItemInfo *> selectedArtworksWithIndices = getSelectedOriginalItemsWithIndices();
+        QVector<ArtItemInfo *> selectedArtworksWithIndices = getSelectedOriginalItemsWithIndices();
         emit needCheckItemsForWarnings(selectedArtworksWithIndices);
     }
 
     void FilteredArtItemsProxyModel::setSelectedForZipping() {
-        QList<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
+        QVector<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
         m_CommandManager->setArtworksForZipping(selectedArtworks);
     }
 
@@ -139,8 +131,13 @@ namespace Models {
         return modifiedSelectedCount == 0;
     }
 
+    void FilteredArtItemsProxyModel::spellCheckSelected() {
+        QVector<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
+        m_CommandManager->submitForSpellCheck(selectedArtworks);
+    }
+
     int FilteredArtItemsProxyModel::getModifiedSelectedCount() const {
-        QList<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
+        QVector<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
         int modifiedCount = 0;
 
         foreach (const ArtworkMetadata *metadata, selectedArtworks) {
@@ -159,7 +156,7 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::checkForWarnings() {
-        QList<ArtItemInfo *> selectedArtworks = getSelectedOriginalItemsWithIndices();
+        QVector<ArtItemInfo *> selectedArtworks = getSelectedOriginalItemsWithIndices();
 
         if (selectedArtworks.isEmpty()) {
             selectedArtworks = getAllItemsWithIndices();
@@ -169,7 +166,7 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::reimportMetadataForSelected() {
-        QList<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
+        QVector<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
         m_CommandManager->setArtworksForIPTCProcessing(selectedArtworks);
         ArtItemsModel *artItemsModel = getArtItemsModel();
         artItemsModel->raiseArtworksAdded(selectedArtworks.count());
@@ -177,7 +174,7 @@ namespace Models {
 
     int FilteredArtItemsProxyModel::findSelectedItemIndex() const {
         int index = -1;
-        QList<int> indices = getSelectedOriginalIndices();
+        QVector<int> indices = getSelectedOriginalIndices();
         if (indices.length() == 1) {
             index = indices.first();
         }
@@ -186,28 +183,22 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::removeMetadataInSelected() const {
-        QList<ArtItemInfo *> selectedArtworks = getSelectedOriginalItemsWithIndices();
-
+        QVector<ArtItemInfo *> selectedArtworks = getSelectedOriginalItemsWithIndices();
         int flags = 0;
         Common::SetFlag(flags, Common::EditDesctiption);
         Common::SetFlag(flags, Common::EditKeywords);
         Common::SetFlag(flags, Common::EditTitle);
+        Common::SetFlag(flags, Common::Clear);
+        removeMetadataInItems(selectedArtworks, flags);
+    }
 
-        const QString empty = "";
-
-        Commands::CombinedEditCommand *combinedEditCommand = new Commands::CombinedEditCommand(
-                    flags,
-                    selectedArtworks,
-                    empty,
-                    empty,
-                    QStringList());
-
-        Commands::CommandResult *result = m_CommandManager->processCommand(combinedEditCommand);
-        Commands::CombinedEditCommandResult *combinedResult = static_cast<Commands::CombinedEditCommandResult*>(result);
-        m_CommandManager->updateArtworks(combinedResult->m_IndicesToUpdate);
-
-        delete combinedResult;
-        qDeleteAll(selectedArtworks);
+    void FilteredArtItemsProxyModel::clearKeywords(int index) {
+        ArtItemsModel *artItemsModel = getArtItemsModel();
+        int originalIndex = getOriginalIndex(index);
+        ArtworkMetadata *metadata = artItemsModel->getArtwork(originalIndex);
+        Q_ASSERT(metadata != NULL);
+        ArtItemInfo *info = new ArtItemInfo(metadata, originalIndex);
+        removeKeywordsInItem(info);
     }
 
     void FilteredArtItemsProxyModel::itemSelectedChanged(bool value) {
@@ -221,11 +212,32 @@ namespace Models {
         emit selectedArtworksCountChanged();
     }
 
+    void FilteredArtItemsProxyModel::removeMetadataInItems(const QVector<ArtItemInfo *> &itemsToClear, int flags) const {
+        Commands::CombinedEditCommand *combinedEditCommand = new Commands::CombinedEditCommand(
+                    flags,
+                    itemsToClear);
+
+        Commands::CommandResult *result = m_CommandManager->processCommand(combinedEditCommand);
+        Commands::CombinedEditCommandResult *combinedResult = static_cast<Commands::CombinedEditCommandResult*>(result);
+        m_CommandManager->updateArtworks(combinedResult->m_IndicesToUpdate);
+
+        delete combinedResult;
+        qDeleteAll(itemsToClear);
+    }
+
+    void FilteredArtItemsProxyModel::removeKeywordsInItem(ArtItemInfo *itemToClear) {
+        int flags = 0;
+        Common::SetFlag(flags, Common::EditKeywords);
+        Common::SetFlag(flags, Common::Clear);
+        removeMetadataInItems(QVector<ArtItemInfo *>() << itemToClear, flags);
+    }
+
     void FilteredArtItemsProxyModel::setFilteredItemsSelected(bool selected) {
         ArtItemsModel *artItemsModel = getArtItemsModel();
-        QList<int> indices;
-
+        QVector<int> indices;
         int size = this->rowCount();
+        indices.reserve(size);
+
         for (int row = 0; row < size; ++row) {
             QModelIndex proxyIndex = this->index(row, 0);
             QModelIndex originalIndex = this->mapToSource(proxyIndex);
@@ -238,13 +250,15 @@ namespace Models {
         }
 
         artItemsModel->updateItems(indices, QVector<int>() << ArtItemsModel::IsSelectedRole);
+        emit allItemsSelectedChanged();
     }
 
-    QList<ArtworkMetadata *> FilteredArtItemsProxyModel::getSelectedOriginalItems() const {
+    QVector<ArtworkMetadata *> FilteredArtItemsProxyModel::getSelectedOriginalItems() const {
         ArtItemsModel *artItemsModel = getArtItemsModel();
-        QList<ArtworkMetadata *> selectedArtworks;
-
+        QVector<ArtworkMetadata *> selectedArtworks;
         int size = this->rowCount();
+        selectedArtworks.reserve(size);
+
         for (int row = 0; row < size; ++row) {
             QModelIndex proxyIndex = this->index(row, 0);
             QModelIndex originalIndex = this->mapToSource(proxyIndex);
@@ -260,11 +274,12 @@ namespace Models {
         return selectedArtworks;
     }
 
-    QList<ArtItemInfo *> FilteredArtItemsProxyModel::getSelectedOriginalItemsWithIndices() const {
+    QVector<ArtItemInfo *> FilteredArtItemsProxyModel::getSelectedOriginalItemsWithIndices() const {
         ArtItemsModel *artItemsModel = getArtItemsModel();
-        QList<ArtItemInfo *> selectedArtworks;
-
+        QVector<ArtItemInfo *> selectedArtworks;
         int size = this->rowCount();
+        selectedArtworks.reserve(size);
+
         for (int row = 0; row < size; ++row) {
             QModelIndex proxyIndex = this->index(row, 0);
             QModelIndex originalIndex = this->mapToSource(proxyIndex);
@@ -281,11 +296,12 @@ namespace Models {
         return selectedArtworks;
     }
 
-    QList<ArtItemInfo *> FilteredArtItemsProxyModel::getAllItemsWithIndices() const {
+    QVector<ArtItemInfo *> FilteredArtItemsProxyModel::getAllItemsWithIndices() const {
         ArtItemsModel *artItemsModel = getArtItemsModel();
-        QList<ArtItemInfo *> selectedArtworks;
-
+        QVector<ArtItemInfo *> selectedArtworks;
         int size = this->rowCount();
+        selectedArtworks.reserve(size);
+
         for (int row = 0; row < size; ++row) {
             QModelIndex proxyIndex = this->index(row, 0);
             QModelIndex originalIndex = this->mapToSource(proxyIndex);
@@ -302,11 +318,12 @@ namespace Models {
         return selectedArtworks;
     }
 
-    QList<int> FilteredArtItemsProxyModel::getSelectedOriginalIndices() const {
+    QVector<int> FilteredArtItemsProxyModel::getSelectedOriginalIndices() const {
         ArtItemsModel *artItemsModel = getArtItemsModel();
-        QList<int> selectedIndices;
-
+        QVector<int> selectedIndices;
         int size = this->rowCount();
+        selectedIndices.reserve(size);
+
         for (int row = 0; row < size; ++row) {
             QModelIndex proxyIndex = this->index(row, 0);
             QModelIndex originalIndex = this->mapToSource(proxyIndex);
@@ -327,6 +344,7 @@ namespace Models {
         artItemsModel->forceUnselectAllItems();
         m_SelectedArtworksCount = 0;
         emit selectedArtworksCountChanged();
+        emit allItemsSelectedChanged();
     }
 
     ArtItemsModel *FilteredArtItemsProxyModel::getArtItemsModel() const {
@@ -338,18 +356,18 @@ namespace Models {
     bool FilteredArtItemsProxyModel::fitsSpecialKeywords(const QString &searchTerm, const ArtworkMetadata *metadata) const {
         bool hasMatch = false;
 
-        if (searchTerm == "x:modified") {
+        if (searchTerm == QLatin1String("x:modified")) {
             hasMatch = metadata->isModified();
-        } else if (searchTerm == "x:empty") {
+        } else if (searchTerm == QLatin1String("x:empty")) {
             hasMatch = metadata->isEmpty();
-        } else if (searchTerm == "x:selected") {
+        } else if (searchTerm == QLatin1String("x:selected")) {
             hasMatch = metadata->getIsSelected();
         }
 
         return hasMatch;
     }
 
-    bool FilteredArtItemsProxyModel::containsPartsSearch(const ArtworkMetadata *metadata) const {
+    bool FilteredArtItemsProxyModel::containsPartsSearch(ArtworkMetadata *metadata) const {
         bool hasMatch = false;
         Models::SettingsModel *settings = m_CommandManager->getSettingsModel();
 
@@ -362,16 +380,19 @@ namespace Models {
         return hasMatch;
     }
 
-    bool FilteredArtItemsProxyModel::containsAnyPartsSearch(const ArtworkMetadata *metadata) const {
+    bool FilteredArtItemsProxyModel::containsAnyPartsSearch(ArtworkMetadata *metadata) const {
         bool hasMatch = false;
         QStringList searchTerms = m_SearchTerm.split(QChar::Space, QString::SkipEmptyParts);
 
         const QString &description = metadata->getDescription();
         const QString &title = metadata->getTitle();
         const QString &filepath = metadata->getFilepath();
-        const QStringList &keywords = metadata->getKeywords();
 
-        foreach (const QString &searchTerm, searchTerms) {
+        int length = searchTerms.length();
+
+        for (int i = 0; i < length; ++i) {
+            const QString &searchTerm = searchTerms.at(i);
+
             hasMatch = fitsSpecialKeywords(searchTerm, metadata);
 
             if (!hasMatch) {
@@ -390,14 +411,16 @@ namespace Models {
         }
 
         if (!hasMatch) {
-            foreach (const QString &searchTerm, searchTerms) {
-                foreach (const QString &keyword, keywords) {
-                    if (keyword.contains(searchTerm, Qt::CaseInsensitive)) {
-                        hasMatch = true;
-                        break;
-                    }
+            for (int i = 0; i < length; ++i) {
+                QString searchTerm = searchTerms[i];
+                bool strictMatch = false;
+
+                if ((searchTerm.length() > 0) && searchTerm[0] == QChar('!')) {
+                    strictMatch = true;
+                    searchTerm.remove(0, 1);
                 }
 
+                hasMatch = metadata->containsKeyword(searchTerm, strictMatch);
                 if (hasMatch) { break; }
             }
         }
@@ -405,19 +428,21 @@ namespace Models {
         return hasMatch;
     }
 
-    bool FilteredArtItemsProxyModel::containsAllPartsSearch(const ArtworkMetadata *metadata) const {
+    bool FilteredArtItemsProxyModel::containsAllPartsSearch(ArtworkMetadata *metadata) const {
         bool hasMatch = false;
         QStringList searchTerms = m_SearchTerm.split(QChar::Space, QString::SkipEmptyParts);
 
         const QString &description = metadata->getDescription();
         const QString &title = metadata->getTitle();
         const QString &filepath = metadata->getFilepath();
-        const QStringList &keywords = metadata->getKeywords();
 
         bool anyError = false;
+        int length = searchTerms.length();
 
-        foreach (const QString &searchTerm, searchTerms) {
+        for (int i = 0; i < length; ++i) {
+            QString searchTerm = searchTerms[i];
             bool anyContains = false;
+            bool strictMatch = false;
 
             anyContains = fitsSpecialKeywords(searchTerm, metadata);
 
@@ -434,7 +459,12 @@ namespace Models {
             }
 
             if (!anyContains) {
-                anyContains = containsOneTerm(keywords, searchTerm);
+                if ((searchTerm.length() > 0) && searchTerm[0] == QChar('!')) {
+                    strictMatch = true;
+                    searchTerm.remove(0, 1);
+                }
+
+                anyContains = metadata->containsKeyword(searchTerm, strictMatch);
             }
 
             if (!anyContains) {
@@ -449,6 +479,8 @@ namespace Models {
 
     bool FilteredArtItemsProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const {
         Q_UNUSED(sourceParent);
+
+        if (m_SearchTerm.trimmed().isEmpty()) { return true; }
 
         ArtItemsModel *artItemsModel = getArtItemsModel();
         ArtworkMetadata *metadata = artItemsModel->getArtwork(sourceRow);

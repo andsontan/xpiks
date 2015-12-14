@@ -27,15 +27,15 @@
 #include "../Helpers/indiceshelper.h"
 
 namespace Models {
-    void ArtworksRepository::updateCountsForExistingDirectories()
-    {
+    void ArtworksRepository::updateCountsForExistingDirectories() {
         emit dataChanged(index(0), index(rowCount() - 1), QVector<int>() << UsedImagesCountRole << IsSelectedRole);
     }
 
-    void ArtworksRepository::cleanupEmptyDirectories()
-    {
+    void ArtworksRepository::cleanupEmptyDirectories() {
         int count = m_DirectoriesList.length();
-        QList<int> indicesToRemove;
+        QVector<int> indicesToRemove;
+        indicesToRemove.reserve(count);
+
         for (int i = 0; i < count; ++i) {
             const QString &directory = m_DirectoriesList[i];
             if (m_DirectoriesHash[directory] == 0) {
@@ -43,13 +43,12 @@ namespace Models {
             }
         }
 
-        QList<QPair<int, int> > rangesToRemove;
+        QVector<QPair<int, int> > rangesToRemove;
         Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
         removeItemsAtIndices(rangesToRemove);
     }
 
-    bool ArtworksRepository::beginAccountingFiles(const QStringList &items)
-    {
+    bool ArtworksRepository::beginAccountingFiles(const QStringList &items) {
         int count = getNewDirectoriesCount(items);
         bool shouldAccountFiles = count > 0;
         if (shouldAccountFiles) {
@@ -59,16 +58,14 @@ namespace Models {
         return shouldAccountFiles;
     }
 
-    void ArtworksRepository::endAccountingFiles(bool filesWereAccounted)
-    {
+    void ArtworksRepository::endAccountingFiles(bool filesWereAccounted) {
         if (filesWereAccounted) {
             endInsertRows();
         }
     }
 
     /*virtual */
-    int ArtworksRepository::getNewDirectoriesCount(const QStringList &items) const
-    {
+    int ArtworksRepository::getNewDirectoriesCount(const QStringList &items) const {
         QSet<QString> filteredFiles;
 
         foreach (const QString &filepath, items) {
@@ -96,8 +93,7 @@ namespace Models {
         return count;
     }
 
-    int ArtworksRepository::getNewFilesCount(const QStringList &items) const
-    {
+    int ArtworksRepository::getNewFilesCount(const QStringList &items) const {
         int count = 0;
         QSet<QString> itemsSet = QSet<QString>::fromList(items);
 
@@ -147,8 +143,7 @@ namespace Models {
         m_FilesSet.remove(filepath);
     }
 
-    void ArtworksRepository::setFileSelected(const QString &filepath, bool selected)
-    {
+    void ArtworksRepository::setFileSelected(const QString &filepath, bool selected) {
         QFileInfo fi(filepath);
         const QString absolutePath = fi.absolutePath();
 
@@ -195,8 +190,7 @@ namespace Models {
     }
 
     /*virtual */
-    bool ArtworksRepository::checkFileExists(const QString &filename, QString &directory) const
-    {
+    bool ArtworksRepository::checkFileExists(const QString &filename, QString &directory) const {
         QFileInfo fi(filename);
         bool exists = fi.exists();
 

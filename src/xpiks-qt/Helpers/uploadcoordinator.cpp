@@ -33,8 +33,8 @@
 #include "../Models/settingsmodel.h"
 
 namespace Helpers {
-    void UploadCoordinator::uploadArtworks(const QList<Models::ArtworkMetadata *> &artworkList,
-                                           const QList<Models::UploadInfo *> &uploadInfos,
+    void UploadCoordinator::uploadArtworks(const QVector<Models::ArtworkMetadata *> &artworkList,
+                                           const QVector<Models::UploadInfo *> &uploadInfos,
                                            bool includeVector,
                                            const Encryption::SecretsManager *secretsManager,
                                            const Models::SettingsModel *settings)
@@ -43,7 +43,9 @@ namespace Helpers {
         QStringList zipsPathes;
         extractFilePathes(artworkList, filePathes, zipsPathes, includeVector);
 
-        QList<UploadItem*> uploadItems;
+        QVector<UploadItem*> uploadItems;
+        uploadItems.reserve(uploadInfos.length());
+
         const QString &curlPath = settings->getCurlPath();
         const QString &proxy = settings->getProxyURI();
         int oneItemUploadTimeout = settings->getUploadTimeout();
@@ -117,7 +119,7 @@ namespace Helpers {
         emit percentChanged(percentDone);
     }
 
-    void UploadCoordinator::doRunUpload(const QList<UploadItem*> &uploadItems,
+    void UploadCoordinator::doRunUpload(const QVector<UploadItem*> &uploadItems,
                                         const Encryption::SecretsManager *secretsManager)
     {
         int length = uploadItems.length();
@@ -147,12 +149,13 @@ namespace Helpers {
         }
     }
 
-    void UploadCoordinator::extractFilePathes(const QList<Models::ArtworkMetadata *> &artworkList,
+    void UploadCoordinator::extractFilePathes(const QVector<Models::ArtworkMetadata *> &artworkList,
                                               QStringList &filePathes,
                                               QStringList &zipsPathes,
                                               bool includeVector) const {
-
-        foreach(Models::ArtworkMetadata *metadata, artworkList) {
+        int size = artworkList.length();
+        for (int i = 0; i < size; ++i) {
+            Models::ArtworkMetadata *metadata = artworkList.at(i);
             QString filepath = metadata->getFilepath();
             filePathes.append(filepath);
 

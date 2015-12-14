@@ -25,23 +25,27 @@
 #include <QtQml>
 #include <QFile>
 #include <QtDebug>
+#include <QUuid>
 #include <QDateTime>
 #include <QSettings>
 #include <QTextStream>
-#include <QTranslator>
 #include <QQmlContext>
 #include <QApplication>
 #include <QStandardPaths>
 #include <QQmlApplicationEngine>
-
-#include "Common/defines.h"
+//-------------------------------------
+#include "SpellCheck/spellchecksuggestionmodel.h"
 #include "Models/filteredartitemsproxymodel.h"
 #include "Suggestion/suggestionqueryengine.h"
+#include "Conectivity/analyticsuserevent.h"
+#include "SpellCheck/spellcheckerservice.h"
 #include "Models/recentdirectoriesmodel.h"
 #include "Suggestion/keywordssuggestor.h"
 #include "Models/combinedartworksmodel.h"
+#include "Conectivity/telemetryservice.h"
 #include "Helpers/globalimageprovider.h"
 #include "Models/uploadinforepository.h"
+#include "Helpers/backupsaverservice.h"
 #include "Helpers/helpersqmlwrapper.h"
 #include "Encryption/secretsmanager.h"
 #include "Models/artworksrepository.h"
@@ -53,16 +57,19 @@
 #include "Models/artworkuploader.h"
 #include "Models/warningsmanager.h"
 #include "Helpers/loggingworker.h"
+#include "Helpers/updateservice.h"
 #include "Models/artitemsmodel.h"
 #include "Models/settingsmodel.h"
 #include "Models/iptcprovider.h"
 #include "Helpers/appsettings.h"
 #include "Models/ziparchiver.h"
 #include "Helpers/constants.h"
+#include "Encryption/aes-qt.h"
 #include "Helpers/runguard.h"
 #include "Models/logsmodel.h"
 #include "Helpers/logger.h"
 #include "Common/version.h"
+#include "Common/defines.h"
 
 #ifdef WITH_LOGS
 
@@ -86,7 +93,7 @@ void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const Q
     }
 
     QString logLine = QString("%1 - %2")
-            .arg(QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss.zzz"))
+            .arg(QDateTime::currentDateTimeUtc().toString("dd.MM.yyyy hh:mm:ss.zzz"))
             .arg(txt);
 
     Helpers::Logger &logger = Helpers::Logger::getInstance();
@@ -110,6 +117,14 @@ void initQSettings() {
     QCoreApplication::setApplicationVersion(STRINGIZE(XPIKS_VERSION)" "STRINGIZE(XPIKS_VERSION_SUFFIX)" - " + appVersion.left(10));
 }
 
+void ensureUserIdExists(Helpers::AppSettings *settings) {
+    QLatin1String userIdKey = QLatin1String(Constants::USER_AGENT_ID);
+    if (!settings->contains(userIdKey)) {
+        QUuid uuid = QUuid::createUuid();
+        settings->setValue(userIdKey, uuid.toString());
+    }
+}
+
 int main(int argc, char *argv[]) {
     Helpers::RunGuard guard("xpiks");
     if (!guard.tryToRun()) {
@@ -118,6 +133,8 @@ int main(int argc, char *argv[]) {
     }
 
     initQSettings();
+    Helpers::AppSettings appSettings;
+    ensureUserIdExists(&appSettings);
 
     Suggestion::LocalLibrary localLibrary;
 
@@ -153,14 +170,9 @@ int main(int argc, char *argv[]) {
 
     localLibrary.loadLibraryAsync();
 
-    QTranslator qtTranslator;
-    qtTranslator.load("qt_" + QLocale::system().name(),
-                      QLibraryInfo::location(QLibraryInfo::TranslationsPath));
-    app.installTranslator(&qtTranslator);
 
-    QTranslator myappTranslator;
-    myappTranslator.load("xpiks_" + QLocale::system().name());
-    app.installTranslator(&myappTranslator);
+    QString userId = appSettings.value(QLatin1String(Constants::USER_AGENT_ID)).toString();
+    userId.remove(QRegExp("[{}-]."));
 
     Models::ArtworksRepository artworkRepository;
     Models::ArtItemsModel artItemsModel;
@@ -169,8 +181,8 @@ int main(int argc, char *argv[]) {
     iptcProvider.setLocalLibrary(&localLibrary);
     Models::UploadInfoRepository uploadInfoRepository;
     Models::WarningsManager warningsManager;
-    Helpers::AppSettings appSettings;
     Models::SettingsModel settingsModel;
+    settingsModel.readAllValues();
     Encryption::SecretsManager secretsManager;
     UndoRedo::UndoRedoManager undoRedoManager;
     Models::ZipArchiver zipArchiver;
@@ -180,6 +192,14 @@ int main(int argc, char *argv[]) {
     filteredArtItemsModel.setSourceModel(&artItemsModel);
     Models::RecentDirectoriesModel recentDirectorieModel;
     Models::ArtworkUploader artworkUploader(settingsModel.getMaxParallelUploads());
+    SpellCheck::SpellCheckerService spellCheckerService;
+    SpellCheck::SpellCheckSuggestionModel spellCheckSuggestionModel;
+    Helpers::BackupSaverService metadataSaverService;
+    Helpers::UpdateService updateService;
+
+    const QString reportingEndpoint = QLatin1String("cc39a47f60e1ed812e2403b33678dd1c529f1cc43f66494998ec478a4d13496269a3dfa01f882941766dba246c76b12b2a0308e20afd84371c41cf513260f8eb8b71f8c472cafb1abf712c071938ec0791bbf769ab9625c3b64827f511fa3fbb");
+    QString endpoint = Encryption::decodeText(reportingEndpoint, "reporting");
+    Conectivity::TelemetryService telemetryService(userId, endpoint);
 
     Commands::CommandManager commandManager;
     commandManager.InjectDependency(&artworkRepository);
@@ -196,6 +216,11 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&keywordsSuggestor);
     commandManager.InjectDependency(&settingsModel);
     commandManager.InjectDependency(&recentDirectorieModel);
+    commandManager.InjectDependency(&spellCheckerService);
+    commandManager.InjectDependency(&spellCheckSuggestionModel);
+    commandManager.InjectDependency(&metadataSaverService);
+    commandManager.InjectDependency(&telemetryService);
+    commandManager.InjectDependency(&updateService);
 
     // other initializations
     secretsManager.setMasterPasswordHash(appSettings.value(Constants::MASTER_PASSWORD_HASH, "").toString());
@@ -211,9 +236,7 @@ int main(int argc, char *argv[]) {
     QQmlApplicationEngine engine;
     Helpers::GlobalImageProvider *globalProvider = new Helpers::GlobalImageProvider(QQmlImageProviderBase::Image);
 
-    warningsManager.setImageProvider(globalProvider);
-
-    Helpers::HelpersQmlWrapper helpersQmlWrapper;
+    Helpers::HelpersQmlWrapper helpersQmlWrapper(&commandManager);
 
     QQmlContext *rootContext = engine.rootContext();
     rootContext->setContextProperty("artItemsModel", &artItemsModel);
@@ -233,9 +256,13 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("filteredArtItemsModel", &filteredArtItemsModel);
     rootContext->setContextProperty("helpersWrapper", &helpersQmlWrapper);
     rootContext->setContextProperty("recentDirectories", &recentDirectorieModel);
+    rootContext->setContextProperty("updateService", &updateService);
+    rootContext->setContextProperty("spellCheckerService", &spellCheckerService);
+    rootContext->setContextProperty("spellCheckSuggestionModel", &spellCheckSuggestionModel);
 
     engine.addImageProvider("global", globalProvider);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+
 
 #ifdef QT_DEBUG
     if (argc > 1) {

@@ -34,8 +34,8 @@ namespace Helpers
         GlobalImageProvider(ImageType type, Flags flags = 0) : QQuickImageProvider(type, flags) {}
         ~GlobalImageProvider() {}
 
-        QImage requestImage(const QString& id, QSize* size, const QSize& requestedSize);
-        QPixmap requestPixmap(const QString& id, QSize* size, const QSize& requestedSize);
+        QImage requestImage(const QString &id, QSize *size, const QSize& requestedSize);
+        QPixmap requestPixmap(const QString &id, QSize *size, const QSize& requestedSize);
 
     public:
         bool tryGetOriginalSize(const QString &filePath, QSize &size) const {

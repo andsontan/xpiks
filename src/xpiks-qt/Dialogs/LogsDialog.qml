@@ -118,99 +118,120 @@ Item {
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
-            width: 480
-            height: 580
+            width: logsComponent.width * 0.75
+            height: logsComponent.height - 60
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
 
-            ColumnLayout {
-                spacing: 10
-                anchors.fill: parent
-                anchors.margins: 20
+            RowLayout {
+                id: header
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.topMargin: 20
+                anchors.leftMargin: 20
+                anchors.rightMargin: 20
 
-                RowLayout {
-                    Layout.fillWidth: true
-
-                    StyledText {
-                        text: qsTr("Logs")
-                    }
-
-                    Item {
-                        Layout.fillWidth: true
-                    }
-
-                    StyledText {
-                        property int linesNumber : 100
-                        id: oneHunderdLinesWarning
-                        text: qsTr("(showing last %1 lines)").arg(linesNumber)
-                        color: Colors.defaultInputBackground
-                    }
-                }
-
-                Rectangle {
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    color: Colors.defaultControlColor
-
-                    StyledScrollView {
-                        id: scrollView
-                        anchors.fill: parent
-                        anchors.margins: 10
-
-                        StyledTextEdit {
-                            id: textEdit
-                            text: logsComponent.logText
-                            readOnly: true
-
-                            Component.onCompleted: {
-                                scrollToBottom()
-                            }
-                        }
-                    }
+                StyledText {
+                    text: qsTr("Logs")
                 }
 
                 Item {
-                    height: 1
+                    Layout.fillWidth: true
                 }
 
-                RowLayout {
-                    height: 24
+                StyledText {
+                    property int linesNumber : 100
+                    id: oneHunderdLinesWarning
+                    text: qsTr("(showing last %1 lines)").arg(linesNumber)
+                    color: Colors.defaultInputBackground
+                }
+            }
 
-                    StyledButton {
-                        id: loadMoreButton
-                        text: qsTr("Load more logs")
-                        enabled: logsModel.withLogs
-                        width: 120
-                        onClicked: {
-                            logsComponent.logText = logsModel.getAllLogsText(true)
-                            oneHunderdLinesWarning.linesNumber = 1000
-                            loadMoreButton.enabled = false
+            Rectangle {
+                anchors.top: header.bottom
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.leftMargin: 20
+                anchors.rightMargin: 20
+                anchors.topMargin: 10
+                anchors.bottom: footer.top
+                anchors.bottomMargin: 20
+                color: Colors.defaultControlColor
+
+                StyledScrollView {
+                    id: scrollView
+                    anchors.fill: parent
+                    anchors.margins: 10
+
+                    StyledTextEdit {
+                        id: textEdit
+                        text: logsComponent.logText
+                        selectionColor: Colors.selectedArtworkColor
+                        readOnly: true
+
+                        Component.onCompleted: {
                             scrollToBottom()
                         }
                     }
+                }
+            }
 
+            RowLayout {
+                id: footer
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 20
+                anchors.left: parent.left
+                anchors.leftMargin: 20
+                anchors.right: parent.right
+                anchors.rightMargin: 20
+                height: 24
+                spacing: 20
 
-                    Item {
-                        Layout.fillWidth: true
+                StyledButton {
+                    id: loadMoreButton
+                    text: qsTr("Load more logs")
+                    enabled: logsModel.withLogs
+                    width: 120
+                    onClicked: {
+                        logsComponent.logText = logsModel.getAllLogsText(true)
+                        oneHunderdLinesWarning.linesNumber = 1000
+                        loadMoreButton.enabled = false
+                        scrollToBottom()
                     }
+                }
 
-                    StyledButton {
-                        id: clearLogsButton
-                        enabled: logsModel.withLogs
-                        text: qsTr("Clear logs")
-                        width: 100
-                        onClicked: {
-                            confirmClearLogsDialog.open()
-                        }
+                StyledButton {
+                    id: revealFileButton
+                    text: qsTr("Reveal logfile")
+                    visible: Qt.platform.os !== "linux"
+                    width: 120
+                    onClicked: {
+                        helpersWrapper.revealLogFile()
                     }
+                }
 
-                    StyledButton {
-                        text: qsTr("Close")
-                        width: 100
-                        onClicked: {
-                            closePopup()
-                        }
+
+                Item {
+                    Layout.fillWidth: true
+                }
+
+                StyledButton {
+                    id: clearLogsButton
+                    enabled: logsModel.withLogs
+                    text: qsTr("Clear logs")
+                    width: 100
+                    onClicked: {
+                        confirmClearLogsDialog.open()
+                    }
+                }
+
+                StyledButton {
+                    text: qsTr("Close")
+                    width: 100
+                    onClicked: {
+                        closePopup()
                     }
                 }
             }

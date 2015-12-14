@@ -37,7 +37,7 @@ namespace Suggestion {
 
     signals:
         void stopped();
-        void resultsFound(QList<SuggestionArtwork *> *results);
+        void resultsFound(QVector<SuggestionArtwork *> *results);
 
     public slots:
         void process();

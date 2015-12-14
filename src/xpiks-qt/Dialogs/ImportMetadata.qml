@@ -164,8 +164,9 @@ Item {
                         Connections {
                             target: iptcProvider
                             onFinishedProcessing: {
+                                console.log("Import finished in UI")
                                 importButton.text = qsTr("Start Import")
-                                artItemsModel.updateAllProperties()
+                                artItemsModel.updateLastN(iptcProvider.itemsCount)
                                 if (!iptcProvider.isError) {
                                     closePopup()
                                 }

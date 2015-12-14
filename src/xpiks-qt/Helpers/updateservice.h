@@ -19,29 +19,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "flags.h"
+#ifndef UPDATESERVICE_H
+#define UPDATESERVICE_H
 
-namespace Common {
-    bool HasFlag(int value, CombinedEditFlags flag) {
-        int intFlag = static_cast<int>(flag);
-        bool result = (value & intFlag) == intFlag;
-        return result;
-    }
+#include <QObject>
+#include <QNetworkAccessManager>
 
-    void SetFlag(int &value, CombinedEditFlags flag) {
-        value |= static_cast<int>(flag);
-    }
+namespace Helpers {
+    class UpdateService : public QObject
+    {
+        Q_OBJECT
+    public:
+        UpdateService();
 
-    void UnsetFlag(int &value, CombinedEditFlags flag) {
-        value &= ~(static_cast<int>(flag));
-    }
+    public:
+        void checkForUpdates();
 
-    void ApplyFlag(int &value, bool applySwitch, CombinedEditFlags flag) {
-        if (applySwitch) {
-            SetFlag(value, flag);
-        } else {
-            UnsetFlag(value, flag);
-        }
-    }
+    signals:
+        void updateAvailable(QString updateLink);
 
+    private slots:
+        void replyReceived(QNetworkReply *networkReply);
+
+    private:
+        QNetworkAccessManager m_NetworkManager;
+    };
 }
+
+Q_DECLARE_METATYPE(Helpers::UpdateService*)
+
+#endif // UPDATESERVICE_H

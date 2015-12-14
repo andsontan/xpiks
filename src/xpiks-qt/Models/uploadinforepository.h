@@ -39,7 +39,8 @@ namespace Models {
     public:
         UploadInfoRepository(QObject *parent = 0) :
             QAbstractListModel(parent),
-            Common::BaseEntity()
+            Common::BaseEntity(),
+            m_EmptyPasswordsMode(false)
         {}
 
         virtual ~UploadInfoRepository();
@@ -99,7 +100,7 @@ namespace Models {
         void resetPercents();
 
     public:
-        const QList<UploadInfo*> &getUploadInfos() const { return m_UploadInfos; }
+        const QVector<UploadInfo*> &getUploadInfos() const { return m_UploadInfos; }
 
     public:
         virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
@@ -117,7 +118,7 @@ namespace Models {
         void removeInnerItem(int row);
 
     private:
-        QList<UploadInfo*> m_UploadInfos;
+        QVector<UploadInfo*> m_UploadInfos;
         // when MP is cancelled before Upload dialog
         // all passwords should be empty
         bool m_EmptyPasswordsMode;

@@ -30,11 +30,14 @@ Rectangle {
     id: itemWrapper
     property int delegateIndex
     property bool isHighlighted
+    property bool hasSpellCheckError: false
     property string keywordText
     property bool hasPlusSign: false
     property alias itemHeight: tagTextRect.height
 
-    signal actionClicked();
+    signal removeClicked();
+    signal actionDoubleClicked();
+    signal spellSuggestionRequested();
 
     color: isHighlighted ? Colors.defaultLightColor : Colors.selectedArtworkColor
 
@@ -42,6 +45,7 @@ Rectangle {
     height: childrenRect.height
 
     Row {
+        id: row
         spacing: 0
 
         Item {
@@ -50,6 +54,7 @@ Rectangle {
             height: itemHeight
 
             StyledText {
+                id: keywordText
                 anchors.left: parent.left
                 anchors.leftMargin: 5 + (settingsModel.keywordSizeScale - 1)*10
                 anchors.top: parent.top
@@ -58,6 +63,13 @@ Rectangle {
                 text: itemWrapper.keywordText
                 color: itemWrapper.isHighlighted ? Colors.defaultControlColor : Colors.defaultLightColor
                 font.pixelSize: 12 * settingsModel.keywordSizeScale
+            }
+
+            MouseArea {
+                anchors.fill: keywordText
+                onDoubleClicked: actionDoubleClicked()
+                preventStealing: true
+                propagateComposedEvents: true
             }
         }
 
@@ -71,8 +83,17 @@ Rectangle {
                 height: 14*settingsModel.keywordSizeScale
                 isActive: itemWrapper.isHighlighted
                 anchors.centerIn: parent
-                onItemClicked: actionClicked()
+                onItemClicked: removeClicked()
             }
         }
+    }
+
+    Rectangle {
+        height: 1.5
+        anchors.left: row.left
+        anchors.right: row.right
+        anchors.bottom: row.bottom
+        color: Colors.destructiveColor
+        visible: itemWrapper.hasSpellCheckError
     }
 }

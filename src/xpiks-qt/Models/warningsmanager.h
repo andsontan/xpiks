@@ -23,11 +23,8 @@
 #define WARNINGSMANAGER_H
 
 #include <QAbstractListModel>
+#include <QFutureWatcher>
 #include "../Common/baseentity.h"
-
-namespace Helpers {
-    class GlobalImageProvider;
-}
 
 namespace Models {
     class WarningsInfo;
@@ -39,12 +36,9 @@ namespace Models {
         Q_OBJECT
         Q_PROPERTY(int warningsCount READ getWarningsCount NOTIFY warningsCountChanged)
     public:
-        WarningsManager(QObject *parent = 0) :
-            QAbstractListModel(parent),
-            Common::BaseEntity()
-        { }
+        WarningsManager(QObject *parent = 0);
 
-        virtual ~WarningsManager() {}
+        virtual ~WarningsManager();
 
     public:
         enum WarningManagerRoles {
@@ -57,21 +51,26 @@ namespace Models {
         void warningsCountChanged();
 
     public slots:
-        void onCheckWarnings(const QList<ArtItemInfo*> &artworks) { checkForWarnings(artworks); }
+        void onCheckWarnings(const QVector<ArtItemInfo*> &artworks);
+
+    private slots:
+        void warningsCheckFinished();
 
     public:
-        int getWarningsCount();
-        void checkForWarnings(const QList<ArtItemInfo *> &artworks);
-        Q_INVOKABLE void recheckItems();
+        int getWarningsCount() const { return m_WarningsList.length(); }
+        void checkForWarnings(const QVector<ArtItemInfo *> &artworks);
         Q_INVOKABLE void recheckItem(int itemIndex);
-        void setImageProvider(Helpers::GlobalImageProvider *imageProvider) { Q_ASSERT(imageProvider != NULL); m_ImageProvider = imageProvider; }
+
+        bool checkItem(WarningsInfo *metadata) const;
 
     private:
-        bool checkItem(WarningsInfo *metadata);
-        bool checkDimensions(WarningsInfo *wi, ArtworkMetadata *am) const;
-        bool checkKeywordsCount(WarningsInfo *wi, ArtworkMetadata *am) const;
-        bool checkDescriptionLength(WarningsInfo *wi, ArtworkMetadata *am) const;
-        bool checkTitleWordsCount(WarningsInfo *wi, ArtworkMetadata *am) const;
+        void clearModel();
+        QVector<WarningsInfo*> doCheckItems(const QVector<WarningsInfo*> &items) const;
+        bool checkDimensions(WarningsInfo *wi) const;
+        bool checkKeywordsCount(WarningsInfo *wi) const;
+        bool checkDescriptionLength(WarningsInfo *wi) const;
+        bool checkTitleWordsCount(WarningsInfo *wi) const;
+        bool checkSpellCheckErrors(WarningsInfo *wi) const;
         void initConstraintsFromSettings();
 
     public:
@@ -82,9 +81,8 @@ namespace Models {
         virtual QHash<int, QByteArray> roleNames() const;
 
     private:
-        QList<WarningsInfo*> m_WarningsList;
-        QList<WarningsInfo*> m_WarningsBufferList;
-        Helpers::GlobalImageProvider *m_ImageProvider;
+        QVector<WarningsInfo*> m_WarningsList;
+        QFutureWatcher<QVector<WarningsInfo*> > *m_CheckingWatcher;
         double m_MinimumMegapixels;
         int m_MaximumKeywordsCount;
         int m_MaximumDescriptionLength;

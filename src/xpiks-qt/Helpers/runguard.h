@@ -30,7 +30,7 @@ namespace Helpers {
     class RunGuard
     {
     public:
-        RunGuard( const QString& m_Key );
+        RunGuard( const QString &m_Key );
         ~RunGuard();
 
         bool isAnotherRunning();

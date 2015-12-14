@@ -20,6 +20,7 @@
  */
 
 #include "combinededitcommand.h"
+#include <QVector>
 #include "../Commands/commandmanager.h"
 #include "../UndoRedo/artworkmetadatabackup.h"
 #include "../UndoRedo/modifyartworkshistoryitem.h"
@@ -30,11 +31,19 @@
 
 Commands::CommandResult *Commands::CombinedEditCommand::execute(const Commands::CommandManager *commandManager) const
 {
-    QList<int> indicesToUpdate;
-    QList<UndoRedo::ArtworkMetadataBackup*> artworksBackups;
-    Models::SettingsModel *settingsModel = commandManager->getSettingsModel();
+    QVector<int> indicesToUpdate;
+    QVector<UndoRedo::ArtworkMetadataBackup*> artworksBackups;
+    QVector<SpellCheck::ISpellCheckable*> itemsToCheck;
 
-    foreach (Models::ArtItemInfo* info, m_ArtItemInfos) {
+    int size = m_ArtItemInfos.length();
+    indicesToUpdate.reserve(size);
+    artworksBackups.reserve(size);
+    itemsToCheck.reserve(size);
+
+    bool needToClear = Common::HasFlag(m_EditFlags, Common::Clear);
+
+    for (int i = 0; i < size; ++i) {
+        Models::ArtItemInfo* info = m_ArtItemInfos[i];
         Models::ArtworkMetadata *metadata = info->getOrigin();
 
         UndoRedo::ArtworkMetadataBackup *backup = new UndoRedo::ArtworkMetadataBackup(metadata);
@@ -45,8 +54,16 @@ Commands::CommandResult *Commands::CombinedEditCommand::execute(const Commands::
         setDescription(metadata);
         setTitle(metadata);
 
-        metadata->saveBackup(settingsModel);
+        // do not save if Сlear flag present
+        // to be able to restore from .xpks
+        if (!needToClear) {
+            commandManager->saveMetadata(metadata);
+        }
+
+        itemsToCheck.append(metadata);
     }
+
+    commandManager->submitForSpellCheck(itemsToCheck);
 
     UndoRedo::ModifyArtworksHistoryItem *modifyArtworksItem =
             new UndoRedo::ModifyArtworksHistoryItem(artworksBackups, indicesToUpdate,
@@ -61,20 +78,33 @@ void Commands::CombinedEditCommand::setKeywords(Models::ArtworkMetadata *metadat
     if (Common::HasFlag(m_EditFlags, Common::EditKeywords)) {
         if (Common::HasFlag(m_EditFlags, Common::AppendKeywords)) {
             metadata->appendKeywords(m_Keywords);
-        } else {
-            metadata->setKeywords(m_Keywords);
+        }
+        else {
+            if (Common::HasFlag(m_EditFlags, Common::Clear)) {
+                metadata->clearKeywords();
+            } else {
+                metadata->setKeywords(m_Keywords);
+            }
         }
     }
 }
 
 void Commands::CombinedEditCommand::setDescription(Models::ArtworkMetadata *metadata) const {
     if (Common::HasFlag(m_EditFlags, Common::EditDesctiption)) {
-        metadata->setDescription(m_ArtworkDescription);
+        if (Common::HasFlag(m_EditFlags, Common::Clear)) {
+            metadata->setDescription("");
+        } else {
+            metadata->setDescription(m_ArtworkDescription);
+        }
     }
 }
 
 void Commands::CombinedEditCommand::setTitle(Models::ArtworkMetadata *metadata) const {
     if (Common::HasFlag(m_EditFlags, Common::EditTitle)) {
-        metadata->setTitle(m_ArtworkTitle);
+        if (Common::HasFlag(m_EditFlags, Common::Clear)) {
+            metadata->setTitle("");
+        } else {
+            metadata->setTitle(m_ArtworkTitle);
+        }
     }
 }

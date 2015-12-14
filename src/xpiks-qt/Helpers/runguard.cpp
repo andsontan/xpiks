@@ -23,7 +23,7 @@
 #include <QCryptographicHash>
 
 namespace Helpers {
-    QString generateKeyHash( const QString& key, const QString& salt )
+    QString generateKeyHash( const QString &key, const QString &salt )
     {
         QByteArray data;
 
@@ -34,7 +34,7 @@ namespace Helpers {
         return data;
     }
 
-    RunGuard::RunGuard( const QString& key )
+    RunGuard::RunGuard( const QString &key )
         : m_Key( key )
         , m_MemLockKey( generateKeyHash( key, "_memLockKey" ) )
         , m_SharedMemKey( generateKeyHash( key, "_sharedmemKey" ) )

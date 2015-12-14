@@ -23,66 +23,55 @@
 #define IMAGEMETADATA_H
 
 #include <QAbstractListModel>
+#include <QReadWriteLock>
 #include <QStringList>
 #include <QFileInfo>
 #include <QString>
+#include <QVector>
 #include <QSet>
+#include <QSize>
+#include "../Common/basickeywordsmodel.h"
+
+class QTextDocument;
 
 namespace Models {
     class SettingsModel;
 
-    class ArtworkMetadata : public QAbstractListModel {
+    class ArtworkMetadata : public Common::BasicKeywordsModel {
         Q_OBJECT
     public:
-        ArtworkMetadata(const QString &filepath) :
-            QAbstractListModel(),
-            m_ArtworkFilepath(filepath),
-            m_IsModified(false),
-            m_IsSelected(false)
-        { }
-
-        virtual ~ArtworkMetadata() { this->disconnect(); }
-
-    public:
-        enum ArtworkMetadataRoles {
-            KeywordRole = Qt::UserRole + 1
-        };
+        ArtworkMetadata(const QString &filepath);
+        virtual ~ArtworkMetadata();
 
     public:
         bool initialize(const QString &title,
                         const QString &description, const QString &rawKeywords, bool overwrite = true);
 
     public:
-        const QString &getTitle() const { return m_ArtworkTitle; }
-        const QString &getDescription() const { return m_ArtworkDescription; }
         const QString &getFilepath() const { return m_ArtworkFilepath; }
         virtual QString getDirectory() const { QFileInfo fi(m_ArtworkFilepath); return fi.absolutePath(); }
-        int getKeywordsCount() const { return m_KeywordsSet.count(); }
-        const QStringList &getKeywords() const { return m_KeywordsList; }
-        const QSet<QString> &getKeywordsSet() const { return m_KeywordsSet; }
-        QString getKeywordsString() const { return m_KeywordsList.join(','); }
+
+    public:
         bool isInDirectory(const QString &directory) const;
         bool isModified() const { return m_IsModified; }
         bool getIsSelected() const { return m_IsSelected; }
-        bool isEmpty() const;
-        void clearMetadata();
+        bool isInitialized() const { return m_IsInitialized; }
+        QSize getSize() const { return m_ImageSize; }
 
     public:
-        bool setDescription(const QString &value) {
-            bool result = m_ArtworkDescription != value;
-            if (result) {
-                m_ArtworkDescription = value;
-                setModified();
-            }
+        virtual void clearModel();
+        virtual bool editKeyword(int index, const QString &replacement);
+
+    public:
+        virtual bool setDescription(const QString &value) {
+            bool result = BasicKeywordsModel::setDescription(value);
+            if (result) { markModified(); }
             return result;
         }
 
         bool setTitle(const QString &value) {
-            bool result = m_ArtworkTitle != value;
-            if (result) {
-                m_ArtworkTitle = value;
-                setModified();
-            }
+            bool result = BasicKeywordsModel::setTitle(value);
+            if (result) { markModified(); }
             return result;
         }
 
@@ -96,46 +85,37 @@ namespace Models {
             return result;
         }
 
-        void resetSelected() { m_IsSelected = false; }
+        void setSize(const QSize &size) { m_ImageSize = size; }
+
+        void resetSelected() {
+            if (m_IsSelected) {
+                m_IsSelected = false;
+                fileSelectedChanged(m_ArtworkFilepath, false);
+            }
+        }
 
     public:
         bool removeKeywordAt(int index);
-        bool removeLastKeyword() { return removeKeywordAt(m_KeywordsList.length() - 1); }
-        bool appendKeyword(const QString &keyword);
+        bool removeLastKeyword();
+        virtual bool appendKeyword(const QString &keyword);
+        virtual int appendKeywords(const QStringList &keywordsList);
 
     public:
-        void setKeywords(const QStringList &keywordsList) { resetKeywords(); appendKeywords(keywordsList); }
-        int appendKeywords(const QStringList &keywordsList);
-
-    private:
-        void resetKeywords();
-
-    public:
-        void addKeywords(const QString& rawKeywords);
-        void setModified() { m_IsModified = true; emit modifiedChanged(m_IsModified); }
-        void unsetModified() { m_IsModified = false; }
-        void saveBackup(SettingsModel *settings);
+        void markModified() { if (!m_IsModified) { m_IsModified = true; emit modifiedChanged(m_IsModified); } }
+        void setModified() { m_IsModified = true; }
+        void resetModified() { m_IsModified = false; }
 
     signals:
          void modifiedChanged(bool newValue);
          void selectedChanged(bool newValue);
          void fileSelectedChanged(const QString &filepath, bool newValue);
 
-    public:
-        virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
-        virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
-
-    protected:
-        virtual QHash<int, QByteArray> roleNames() const;
-
     private:
-         QStringList m_KeywordsList;
-         QSet<QString> m_KeywordsSet;
+         QSize m_ImageSize;
          QString m_ArtworkFilepath;
-         QString m_ArtworkDescription;
-         QString m_ArtworkTitle;
          volatile bool m_IsModified;
          volatile bool m_IsSelected;
+         volatile bool m_IsInitialized;
     };
 }
 

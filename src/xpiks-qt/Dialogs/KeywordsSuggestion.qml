@@ -311,9 +311,9 @@ Item {
                         delegate: KeywordWrapper {
                             isHighlighted: true
                             delegateIndex: index
-                            keywordText: modelData
+                            keywordText: keyword
                             itemHeight: suggestedFlv.keywordHeight
-                            onActionClicked: suggestedKeywordsWrapper.removeKeyword(delegateIndex)
+                            onRemoveClicked: suggestedKeywordsWrapper.removeKeyword(delegateIndex)
                         }
 
                         onTagAdded: {
@@ -381,11 +381,11 @@ Item {
 
                         delegate: KeywordWrapper {
                             delegateIndex: index
-                            keywordText: modelData
+                            keywordText: keyword
                             isHighlighted: true
                             hasPlusSign: true
                             itemHeight: otherFlv.keywordHeight
-                            onActionClicked: otherKeywordsWrapper.removeKeyword(delegateIndex)
+                            onRemoveClicked: otherKeywordsWrapper.removeKeyword(delegateIndex)
                         }
 
                         onTagAdded: {

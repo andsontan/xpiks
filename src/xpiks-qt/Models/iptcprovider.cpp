@@ -59,8 +59,13 @@ namespace Models {
 
     void IptcProvider::allFinishedReading() {
         endProcessing();
-        m_LocalLibrary->addToLibrary(getArtworkList());
+        QVector<Models::ArtworkMetadata*> artworks = getArtworkList();
+
+        m_LocalLibrary->addToLibrary(artworks);
         m_LocalLibrary->saveLibraryAsync();
+
+        m_CommandManager->submitForSpellCheck(artworks);
+
         qDebug() << "Metadata reading finished (with Error = " << getIsError() << ")";
     }
 
@@ -77,7 +82,8 @@ namespace Models {
 
         if (importData != NULL) {
             metadata->initialize(importData->Title, importData->Description, importData->Keywords);
-            qDebug() << metadata->getFilepath();
+            metadata->setSize(importData->Size);
+            qDebug() << "Metadata initialized" << metadata->getFilepath();
             delete importData;
         } else {
             setIsError(true);
@@ -110,14 +116,15 @@ namespace Models {
         }
     }
 
-    void IptcProvider::doReadMetadata(const QList<ArtworkMetadata *> &artworkList)
+    void IptcProvider::doReadMetadata(const QVector<ArtworkMetadata *> &artworkList)
     {
         int artworksCount = artworkList.length();
         if (artworksCount == 0) {
             return;
         }
 
-        QList<ImportPair> pairs;
+        QVector<ImportPair> pairs;
+        pairs.reserve(artworkList.length());
         foreach(ArtworkMetadata *metadata, artworkList) {
             pairs.append(qMakePair(metadata, new Models::ImportDataResult()));
         }
@@ -133,7 +140,7 @@ namespace Models {
         }
     }
 
-    void IptcProvider::doWriteMetadata(const QList<ArtworkMetadata *> &artworkList) {
+    void IptcProvider::doWriteMetadata(const QVector<ArtworkMetadata *> &artworkList) {
         int artworksCount = artworkList.length();
         if (artworksCount == 0) {
             return;
@@ -143,7 +150,8 @@ namespace Models {
 
         beginProcessing();
 
-        QList<ExportPair> pairs;
+        QVector<ExportPair> pairs;
+        pairs.reserve(artworkList.length());
         foreach(ArtworkMetadata *metadata, artworkList) {
             pairs.append(qMakePair(metadata, &m_ExportInfo));
         }

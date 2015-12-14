@@ -247,6 +247,26 @@ ApplicationWindow {
                             }
                         }
 
+                        RowLayout {
+                            width: parent.width
+                            spacing: 10
+
+                            StyledCheckbox {
+                                id: autoSpellCheckCheckbox
+                                text: qsTr("Check spelling automatically")
+                                onCheckedChanged: {
+                                    settingsModel.useSpellCheck = checked
+                                }
+
+                                Component.onCompleted: checked = settingsModel.useSpellCheck
+                            }
+
+                            StyledText {
+                                text: qsTr("(for typed keywords)")
+                                color: Colors.defaultInputBackground
+                            }
+                        }
+
                         Item {
                             Layout.fillHeight: true
                         }

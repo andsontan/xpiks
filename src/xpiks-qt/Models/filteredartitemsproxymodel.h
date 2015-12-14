@@ -43,7 +43,7 @@ namespace Models {
     public:
         const QString &getSearchTerm() const { return m_SearchTerm; }
         void setSearchTerm(const QString &value);
-        int getSelectedArtworksCount() { return m_SelectedArtworksCount; }
+        int getSelectedArtworksCount() const { return m_SelectedArtworksCount; }
 
     public:
         Q_INVOKABLE int getOriginalIndex(int index);
@@ -58,6 +58,7 @@ namespace Models {
         Q_INVOKABLE void setSelectedForUpload();
         Q_INVOKABLE void setSelectedForZipping();
         Q_INVOKABLE bool areSelectedArtworksSaved();
+        Q_INVOKABLE void spellCheckSelected();
         Q_INVOKABLE int getModifiedSelectedCount() const;
         Q_INVOKABLE void removeArtworksDirectory(int index);
         Q_INVOKABLE void checkForWarnings();
@@ -65,6 +66,7 @@ namespace Models {
         Q_INVOKABLE void reimportMetadataForSelected();
         Q_INVOKABLE int findSelectedItemIndex() const;
         Q_INVOKABLE void removeMetadataInSelected() const;
+        Q_INVOKABLE void clearKeywords(int index);
         Q_INVOKABLE void updateFilter() { invalidateFilter(); emit afterInvalidateFilter(); }
 
     public slots:
@@ -73,25 +75,28 @@ namespace Models {
 
     signals:
         void searchTermChanged(const QString &searchTerm);
-        void needCheckItemsForWarnings(const QList<ArtItemInfo*> &artworks);
+        void needCheckItemsForWarnings(const QVector<ArtItemInfo*> &artworks);
         void selectedArtworksCountChanged();
         void afterInvalidateFilter();
+        void allItemsSelectedChanged();
 
     private:
+        void removeMetadataInItems(const QVector<Models::ArtItemInfo *> &itemsToClear, int flags) const;
+        void removeKeywordsInItem(Models::ArtItemInfo *itemToClear);
         void setFilteredItemsSelected(bool selected);
-        QList<ArtworkMetadata *> getSelectedOriginalItems() const;
-        QList<ArtItemInfo *> getSelectedOriginalItemsWithIndices() const;
-        QList<ArtItemInfo *> getAllItemsWithIndices() const;
-        QList<int> getSelectedOriginalIndices() const;
+        QVector<ArtworkMetadata *> getSelectedOriginalItems() const;
+        QVector<ArtItemInfo *> getSelectedOriginalItemsWithIndices() const;
+        QVector<ArtItemInfo *> getAllItemsWithIndices() const;
+        QVector<int> getSelectedOriginalIndices() const;
         void forceUnselectAllItems();
         ArtItemsModel *getArtItemsModel() const;
         bool fitsSpecialKeywords(const QString &searchTerm, const ArtworkMetadata *metadata) const;
-        bool containsPartsSearch(const ArtworkMetadata *metadata) const;
-        bool containsAnyPartsSearch(const ArtworkMetadata *metadata) const;
-        bool containsAllPartsSearch(const ArtworkMetadata *metadata) const;
+        bool containsPartsSearch(ArtworkMetadata *metadata) const;
+        bool containsAnyPartsSearch(ArtworkMetadata *metadata) const;
+        bool containsAllPartsSearch(ArtworkMetadata *metadata) const;
 
     protected:
-        bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const Q_DECL_OVERRIDE;
+        virtual bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
 
     private:
         // ignore default regexp from proxymodel

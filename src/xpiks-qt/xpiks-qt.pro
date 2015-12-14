@@ -36,19 +36,6 @@ SOURCES += main.cpp \
     Encryption/aes-qt.cpp \
     Models/ziparchiver.cpp \
     Helpers/ziphelper.cpp \
-    ../quazip/quazip/JlCompress.cpp \
-    ../quazip/quazip/qioapi.cpp \
-    ../quazip/quazip/quaadler32.cpp \
-    ../quazip/quazip/quacrc32.cpp \
-    ../quazip/quazip/quagzipfile.cpp \
-    ../quazip/quazip/quaziodevice.cpp \
-    ../quazip/quazip/quazip.cpp \
-    ../quazip/quazip/quazipdir.cpp \
-    ../quazip/quazip/quazipfile.cpp \
-    ../quazip/quazip/quazipfileinfo.cpp \
-    ../quazip/quazip/quazipnewinfo.cpp \
-    ../quazip/quazip/unzip.c \
-    ../quazip/quazip/zip.c \
     Suggestion/keywordssuggestor.cpp \
     Suggestion/suggestionqueryengine.cpp \
     Models/settingsmodel.cpp \
@@ -59,13 +46,24 @@ SOURCES += main.cpp \
     Helpers/exiftoolwrapper.cpp \
     Models/filteredartitemsproxymodel.cpp \
     Helpers/filenameshelpers.cpp \
-    Common/flags.cpp \
     Helpers/keywordvalidator.cpp \
     Helpers/helpersqmlwrapper.cpp \
     Models/recentdirectoriesmodel.cpp \
     Suggestion/locallibrary.cpp \
     Suggestion/libraryqueryworker.cpp \
-    Suggestion/libraryloaderworker.cpp
+    Suggestion/libraryloaderworker.cpp \
+    Helpers/updateservice.cpp \
+    SpellCheck/spellcheckerservice.cpp \
+    SpellCheck/spellcheckitem.cpp \
+    SpellCheck/spellcheckworker.cpp \
+    SpellCheck/spellchecksuggestionmodel.cpp \
+    Common/basickeywordsmodel.cpp \
+    SpellCheck/spellcheckerrorshighlighter.cpp \
+    SpellCheck/spellcheckiteminfo.cpp \
+    Helpers/backupsaverworker.cpp \
+    Helpers/backupsaverservice.cpp \
+    SpellCheck/spellsuggestionsitem.cpp \
+    Conectivity/telemetryservice.cpp
 
 RESOURCES += qml.qrc
 
@@ -73,7 +71,7 @@ BUILDNO = $$system(git log -n 1 --pretty=format:"%H")
 DEFINES += BUILDNUMBER=$${BUILDNO}
 DEFINES += QT_NO_CAST_TO_ASCII \
            QT_NO_CAST_FROM_BYTEARRAY
-DEFINES += QUAZIP_STATICx
+DEFINES += QUAZIP_STATIC
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -134,22 +132,7 @@ HEADERS += \
     Helpers/runguard.h \
     Models/ziparchiver.h \
     Helpers/ziphelper.h \
-    ../quazip/quazip/crypt.h \
-    ../quazip/quazip/ioapi.h \
     ../quazip/quazip/JlCompress.h \
-    ../quazip/quazip/quaadler32.h \
-    ../quazip/quazip/quachecksum32.h \
-    ../quazip/quazip/quacrc32.h \
-    ../quazip/quazip/quagzipfile.h \
-    ../quazip/quazip/quaziodevice.h \
-    ../quazip/quazip/quazip_global.h \
-    ../quazip/quazip/quazip.h \
-    ../quazip/quazip/quazipdir.h \
-    ../quazip/quazip/quazipfile.h \
-    ../quazip/quazip/quazipfileinfo.h \
-    ../quazip/quazip/quazipnewinfo.h \
-    ../quazip/quazip/unzip.h \
-    ../quazip/quazip/zip.h \
     Common/basickeywordsmodel.h \
     Suggestion/keywordssuggestor.h \
     Suggestion/suggestionartwork.h \
@@ -167,7 +150,21 @@ HEADERS += \
     Common/version.h \
     Suggestion/locallibrary.h \
     Suggestion/libraryqueryworker.h \
-    Suggestion/libraryloaderworker.h
+    Suggestion/libraryloaderworker.h \
+    Helpers/updateservice.h \
+    SpellCheck/spellcheckerservice.h \
+    SpellCheck/spellcheckitem.h \
+    SpellCheck/spellcheckworker.h \
+    SpellCheck/spellchecksuggestionmodel.h \
+    SpellCheck/ispellcheckable.h \
+    SpellCheck/spellcheckerrorshighlighter.h \
+    SpellCheck/spellcheckiteminfo.h \
+    Helpers/backupsaverworker.h \
+    Common/itemprocessingworker.h \
+    Helpers/backupsaverservice.h \
+    SpellCheck/spellsuggestionsitem.h \
+    Conectivity/analyticsuserevent.h \
+    Conectivity/telemetryservice.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
@@ -208,21 +205,29 @@ DISTFILES += \
     Components/KeywordWrapper.qml \
     Components/CustomScrollbar.qml \
     Dialogs/EditArtworkVerticalDialog.qml \
-    Dialogs/EditArtworkHorizontalDialog.qml
+    Dialogs/EditArtworkHorizontalDialog.qml \
+    Dialogs/UpdateWindow.qml \
+    Dialogs/SpellCheckDialog.qml \
+    Dialogs/SpellCheckSuggestionsDialog.qml \
+    Components/SuggestionWrapper.qml \
+    Dialogs/EditKeywordDialog.qml \
+    Dialogs/PlainTextKeywordsDialog.qml \
+    Dialogs/WhatsNewDialog.qml
 
 macx {
-OBJECTIVE_SOURCES += \
-    Helpers/osxnsurlhelper.mm
-
-LIBS += -framework Foundation
 LIBS += -lz
-HEADERS += Helpers/osxnsurlhelper.h
 }
 
+LIBS += -L"$$PWD/../libs/"
+LIBS += -lquazip
+INCLUDEPATH += "../hunspell-1.3.3/src/hunspell"
+
+LIBS += -lhunspell
+DEFINES += HUNSPELL_STATIC
+
 win32 {
-INCLUDEPATH = "../zlib-1.2.8"
-LIBS += -L$$PWD/../libs/ -lz
-DEFINES += QUAZIP_BUILD
+INCLUDEPATH += "../zlib-1.2.8"
+LIBS += -lz
 }
 
 linux-g++-64 {
@@ -238,3 +243,11 @@ QTPLUGIN += qt5quick
 DEFINES += STATIC
 message("Static build.")
 }
+
+HUNSPELL_DICT_FILES.files = dict/en_US.aff dict/en_US.dic dict/license.txt dict/README_en_US.txt
+HUNSPELL_DICT_FILES.path = Contents/Resources
+QMAKE_BUNDLE_DATA += HUNSPELL_DICT_FILES
+
+WHATS_NEW.files = whatsnew.txt
+WHATS_NEW.path = Contents/Resources
+QMAKE_BUNDLE_DATA += WHATS_NEW

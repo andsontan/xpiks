@@ -23,7 +23,7 @@
 #ifndef SUGGESTIONARTWORK_H
 #define SUGGESTIONARTWORK_H
 
-#include <QStringList>
+#include <QVector>
 #include <QString>
 
 namespace Suggestion {

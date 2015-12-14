@@ -70,7 +70,8 @@ namespace Models {
     }
 
     QVariant RecentDirectoriesModel::data(const QModelIndex &index, int role) const {
-        if (!index.isValid()) return QVariant();
+        int row = index.row();
+        if (row < 0 || row >= m_RecentDirectories.length()) return QVariant();
         if (role == Qt::DisplayRole) { return m_RecentDirectories.at(index.row()); }
         return QVariant();
     }

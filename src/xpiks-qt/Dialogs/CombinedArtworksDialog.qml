@@ -86,6 +86,15 @@ Item {
         }
     }
 
+    MessageDialog {
+        id: clearKeywordsDialog
+
+        title: "Confirmation"
+        text: qsTr("Clear all keywords?")
+        standardButtons: StandardButton.Yes | StandardButton.No
+        onYes: combinedArtworks.clearKeywords()
+    }
+
     FocusScope {
         anchors.fill: parent
 
@@ -547,6 +556,7 @@ Item {
                                 anchors.rightMargin: 20
                                 Layout.fillWidth: true
                                 color: Colors.defaultInputBackground
+                                property var keywordsModel: combinedArtworks.getKeywordsModel()
 
                                 function removeKeyword(index) {
                                     combinedArtworks.removeKeywordAt(index)
@@ -567,16 +577,35 @@ Item {
                                 EditableTags {
                                     id: flv
                                     anchors.fill: parent
-                                    model: combinedArtworks.getKeywordsModel()
+                                    model: keywordsWrapper.keywordsModel
                                     property int keywordHeight: 20 * settingsModel.keywordSizeScale + (settingsModel.keywordSizeScale - 1)*10
                                     scrollStep: keywordHeight
 
                                     delegate: KeywordWrapper {
+                                        id: kw
                                         isHighlighted: true
-                                        keywordText: modelData
+                                        keywordText: keyword
+                                        hasSpellCheckError: !iscorrect
                                         delegateIndex: index
                                         itemHeight: flv.keywordHeight
-                                        onActionClicked: keywordsWrapper.removeKeyword(delegateIndex)
+                                        onRemoveClicked: keywordsWrapper.removeKeyword(delegateIndex)
+                                        onActionDoubleClicked: {
+                                            var callbackObject = {
+                                                onSuccess: function(replacement) {
+                                                    combinedArtworks.editKeyword(kw.delegateIndex, replacement)
+                                                },
+                                                onClose: function() {
+                                                    flv.activateEdit()
+                                                }
+                                            }
+
+                                            Common.launchDialog("Dialogs/EditKeywordDialog.qml",
+                                                                componentParent,
+                                                                {
+                                                                    callbackObject: callbackObject,
+                                                                    previousKeyword: keyword
+                                                                })
+                                        }
                                     }
 
                                     onTagAdded: {
@@ -590,6 +619,10 @@ Item {
                                     onTagsPasted: {
                                         keywordsWrapper.pasteKeywords(tagsList)
                                     }
+
+                                    onBackTabPressed: {
+                                        titleTextInput.forceActiveFocus()
+                                    }
                                 }
 
                                 CustomScrollbar {
@@ -600,7 +633,7 @@ Item {
                                 }
                             }
 
-                            Item { height: 5}
+                            Item { height: 5 }
 
                             RowLayout {
                                 width: parent.width
@@ -614,6 +647,24 @@ Item {
 
                                 Item {
                                     Layout.fillWidth: true
+                                }
+
+                                StyledText {
+                                    text: qsTr("Fix spelling")
+                                    enabled: keywordsWrapper.keywordsModel ? keywordsWrapper.keywordsModel.hasSpellErrors : false
+                                    color: enabled ? (fixSpellingMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor) : Colors.defaultInputBackground
+
+                                    MouseArea {
+                                        id: fixSpellingMA
+                                        anchors.fill: parent
+                                        cursorShape: Qt.PointingHandCursor
+                                        onClicked: {
+                                            combinedArtworks.suggestCorrections()
+                                            Common.launchDialog("Dialogs/SpellCheckSuggestionsDialog.qml",
+                                                                componentParent,
+                                                                {})
+                                        }
+                                    }
                                 }
 
                                 StyledText {
@@ -646,7 +697,7 @@ Item {
                                         id: clearKeywordsMA
                                         anchors.fill: parent
                                         cursorShape: Qt.PointingHandCursor
-                                        onClicked: combinedArtworks.clearKeywords()
+                                        onClicked: clearKeywordsDialog.open()
                                     }
                                 }
                             }

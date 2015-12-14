@@ -26,6 +26,7 @@
 #include <QList>
 #include "../UndoRedo/historyitem.h"
 #include "commandbase.h"
+#include "../Conectivity/analyticsuserevent.h"
 
 namespace Encryption {
     class SecretsManager;
@@ -56,6 +57,21 @@ namespace Suggestion {
     class KeywordsSuggestor;
 }
 
+namespace Helpers {
+    class BackupSaverService;
+    class UpdateService;
+}
+
+namespace SpellCheck {
+    class SpellCheckerService;
+    class SpellCheckSuggestionModel;
+    class ISpellCheckable;
+}
+
+namespace Conectivity {
+    class TelemetryService;
+}
+
 namespace Commands {
     class CommandManager
     {
@@ -73,8 +89,11 @@ namespace Commands {
             m_UndoRedoManager(NULL),
             m_ZipArchiver(NULL),
             m_KeywordsSuggestor(NULL),
-            m_RecentDirectories(NULL)
-        {}
+            m_RecentDirectories(NULL),
+            m_MetadataSaverService(NULL),
+            m_TelemetryService(NULL),
+            m_UpdateService(NULL)
+        { }
 
         virtual ~CommandManager() {}
 
@@ -93,6 +112,11 @@ namespace Commands {
         void InjectDependency(Suggestion::KeywordsSuggestor *keywordsSuggestor);
         void InjectDependency(Models::SettingsModel *settingsModel);
         void InjectDependency(Models::RecentDirectoriesModel *recentDirectories);
+        void InjectDependency(SpellCheck::SpellCheckerService *spellCheckerService);
+        void InjectDependency(SpellCheck::SpellCheckSuggestionModel *spellCheckSuggestionModel);
+        void InjectDependency(Helpers::BackupSaverService *backupSaverService);
+        void InjectDependency(Conectivity::TelemetryService *telemetryService);
+        void InjectDependency(Helpers::UpdateService *updateService);
 
     public:
         CommandResult *processCommand(CommandBase *command) const;
@@ -104,18 +128,28 @@ namespace Commands {
     public:
         void recodePasswords(const QString &oldMasterPassword,
                                 const QString &newMasterPassword,
-                                const QList<Models::UploadInfo*> &uploadInfos) const;
+                                const QVector<Models::UploadInfo*> &uploadInfos) const;
 
-        void combineArtworks(const QList<Models::ArtItemInfo*> &artworks) const;
-        void setArtworksForIPTCProcessing(const QList<Models::ArtworkMetadata*> &artworks) const;
-        void setArtworksForUpload(const QList<Models::ArtworkMetadata*> &artworks) const;
-        void setArtworksForZipping(const QList<Models::ArtworkMetadata*> &artworks) const;
+        void combineArtwork(Models::ArtItemInfo* itemInfo) const;
+        void combineArtworks(const QVector<Models::ArtItemInfo*> &artworks) const;
+        void setArtworksForIPTCProcessing(const QVector<Models::ArtworkMetadata *> &artworks) const;
+        void setArtworksForUpload(const QVector<Models::ArtworkMetadata*> &artworks) const;
+        void setArtworksForZipping(const QVector<Models::ArtworkMetadata*> &artworks) const;
         virtual void connectArtworkSignals(Models::ArtworkMetadata *metadata) const;
-        void updateArtworks(const QList<int> &indices) const;
+        void updateArtworks(const QVector<int> &indices) const;
         void addToRecentDirectories(const QString &path) const;
 #ifdef QT_DEBUG
         void addInitialArtworks(const QStringList &artworksFilepathes);
 #endif
+        void submitForSpellCheck(SpellCheck::ISpellCheckable *item, int keywordIndex) const;
+        void submitForSpellCheck(const QVector<Models::ArtworkMetadata*> &items) const;
+        void submitForSpellCheck(const QVector<SpellCheck::ISpellCheckable *> &items) const;
+        void submitForSpellCheck(SpellCheck::ISpellCheckable *item) const;
+        void setupSpellCheckSuggestions(SpellCheck::ISpellCheckable *item, int index, int flags);
+        void saveMetadata(Models::ArtworkMetadata *metadata) const;
+        void reportUserAction(Conectivity::UserAction userAction) const;
+        void afterConstructionCallback() const;
+        void beforeDestructionCallback() const;
 
     public:
         // methods for getters
@@ -125,6 +159,7 @@ namespace Commands {
         virtual Models::UploadInfoRepository *getUploadInfoRepository() { return m_UploadInfoRepository; }
         virtual Suggestion::KeywordsSuggestor *getKeywordsSuggestor() const { return m_KeywordsSuggestor; }
         virtual Models::SettingsModel *getSettingsModel() const { return m_SettingsModel; }
+        virtual SpellCheck::SpellCheckerService *getSpellCheckerService() const { return m_SpellCheckerService; }
 
     private:
         Models::ArtworksRepository *m_ArtworksRepository;
@@ -141,6 +176,11 @@ namespace Commands {
         Suggestion::KeywordsSuggestor *m_KeywordsSuggestor;
         Models::SettingsModel *m_SettingsModel;
         Models::RecentDirectoriesModel *m_RecentDirectories;
+        SpellCheck::SpellCheckerService *m_SpellCheckerService;
+        SpellCheck::SpellCheckSuggestionModel *m_SpellCheckSuggestionModel;
+        Helpers::BackupSaverService *m_MetadataSaverService;
+        Conectivity::TelemetryService *m_TelemetryService;
+        Helpers::UpdateService *m_UpdateService;
     };
 }
 

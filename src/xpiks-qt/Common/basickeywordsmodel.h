@@ -27,47 +27,122 @@
 #include <QVariant>
 #include <QByteArray>
 #include <QHash>
+#include <QSet>
+#include <QVector>
 #include "baseentity.h"
+#include "../SpellCheck/ispellcheckable.h"
+
+namespace SpellCheck {
+    class SpellCheckQueryItem;
+    class KeywordSpellSuggestions;
+    class SpellCheckItem;
+    class SpellCheckItemInfo;
+}
 
 namespace Common {
-
-    class BasicKeywordsModel : public QAbstractListModel {
+    class BasicKeywordsModel : public QAbstractListModel, public SpellCheck::ISpellCheckable {
         Q_OBJECT
+        Q_PROPERTY(bool hasSpellErrors READ hasSpellErrors NOTIFY spellCheckErrorsChanged)
     public:
-        BasicKeywordsModel(QObject *parent) :
-            QAbstractListModel(parent)
-        { }
+        BasicKeywordsModel(QObject *parent=0);
+        virtual ~BasicKeywordsModel() {}
 
     public:
         enum BasicKeywordsModellRoles {
-            KeywordRole = Qt::UserRole + 1
+            KeywordRole = Qt::UserRole + 1,
+            IsCorrectRole
         };
 
     public:
         virtual int rowCount(const QModelIndex & parent = QModelIndex()) const { Q_UNUSED(parent); return m_KeywordsList.length(); }
-        virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const {
-            if (index.row() < 0 || index.row() >= m_KeywordsList.count()) return QVariant();
-            if (role == KeywordRole) { return m_KeywordsList[index.row()]; }
-            return QVariant();
-        }
+        virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+
+    public:
         const QStringList &getKeywords() const { return m_KeywordsList; }
-        void reset(const QStringList &items) { beginResetModel(); m_KeywordsList.clear(); m_KeywordsList.append(items); endResetModel(); }
-        void clear() { beginResetModel(); m_KeywordsList.clear(); endResetModel(); }
-        void appendKeyword(const QString &keyword) { beginInsertRows(QModelIndex(), rowCount(), rowCount());
-                                                     m_KeywordsList.append(keyword); endInsertRows(); }
-        bool removeKeyword(int index, QString &keyword) { bool indexValid = index >= 0 && index < m_KeywordsList.length(); if (indexValid) {
-                beginRemoveRows(QModelIndex(), index, index); keyword = m_KeywordsList.takeAt(index); endRemoveRows(); }
-            return indexValid;
-                                                        }
-        bool removeLastKeyword(QString &keyword) { return removeKeyword(m_KeywordsList.length() - 1, keyword); }
+        const QString &getDescription() const { return m_Description; }
+        const QString &getTitle() const { return m_Title; }
+        int getKeywordsCount() const { return m_KeywordsSet.count(); }
+        const QSet<QString> &getKeywordsSet() const { return m_KeywordsSet; }
+        const QVector<bool> &getSpellStatuses() const { return m_SpellCheckResults; }
+        QString getKeywordsString() { return m_KeywordsList.join(", "); }
+
+    public:
+        virtual bool appendKeyword(const QString &keyword);
+        virtual bool takeKeywordAt(int index, QString &removedKeyword);
+        bool takeLastKeyword(QString &removedKeyword) { return takeKeywordAt(m_KeywordsList.length() - 1, removedKeyword); }
+        virtual void setKeywords(const QStringList &keywordsList);
+        virtual int appendKeywords(const QStringList &keywordsList);
+        virtual bool editKeyword(int index, const QString &replacement);
+
+        virtual bool setDescription(const QString &value);
+        virtual bool setTitle(const QString &value);
+        bool isEmpty() const;
+        bool isTitleEmpty() const;
+        bool isDescriptionEmpty() const;
+        bool containsKeyword(const QString &searchTerm, bool exactMatch=false);
+
+        bool hasKeywordsSpellError() const;
+        bool hasDescriptionSpellError() const;
+        bool hasTitleSpellError() const;
+
+        bool hasSpellErrors() const;
+
+        void setSpellStatuses(const QVector<bool> &statuses);
+
+        virtual void clearModel();
+        void clearKeywords();
+        void resetKeywords(const QStringList &keywords);
+
+    public:
+        SpellCheck::SpellCheckItemInfo *getSpellCheckInfo() const { return m_SpellCheckInfo; }
+        void setSpellCheckInfo(SpellCheck::SpellCheckItemInfo *info) { m_SpellCheckInfo = info; }
+        void notifySpellCheckResults();
+
+    private:
+        void updateDescriptionSpellErrors(const QHash<QString, bool> &results);
+        void updateTitleSpellErrors(const QHash<QString, bool> &results);
+        void resetSpellCheckResults();
+        bool canBeAdded(const QString &keyword) const;
+
+    public:
+        // ISPELLCHECKABLE
+        virtual QString retrieveKeyword(int wordIndex);
+        virtual QStringList getKeywords();
+        virtual void setSpellCheckResults(const QVector<SpellCheck::SpellCheckQueryItem*> &items, bool onlyOneKeyword);
+        virtual void setSpellCheckResults(const QHash<QString, bool> &results);
+        virtual QVector<SpellCheck::SpellSuggestionsItem *> createKeywordsSuggestionsList();
+        virtual QVector<SpellCheck::SpellSuggestionsItem*> createDescriptionSuggestionsList();
+        virtual QVector<SpellCheck::SpellSuggestionsItem*> createTitleSuggestionsList();
+        virtual void replaceKeyword(int index, const QString &existing, const QString &replacement);
+        virtual void replaceWordInDescription(const QString &word, const QString &replacement);
+        virtual void replaceWordInTitle(const QString &word, const QString &replacement);
+        virtual void connectSignals(SpellCheck::SpellCheckItem *item);
+        virtual QStringList getDescriptionWords() const;
+        virtual QStringList getTitleWords() const;
+
+    signals:
+        void spellCheckResultsReady();
+        void spellCheckErrorsChanged();
+
+    protected slots:
+         void spellCheckRequestReady(int index);
+
+    private:
+        void emitSpellCheckChanged(int index=-1);
 
     protected:
-        virtual QHash<int, QByteArray> roleNames() const {
-            QHash<int, QByteArray> roles; roles[KeywordRole] = "keyword"; return roles;
-        }
+        virtual QHash<int, QByteArray> roleNames() const;
+        void resetKeywords();
+        void addKeywords(const QString &rawKeywords);
+        void freeSpellCheckInfo();
 
     private:
         QStringList m_KeywordsList;
+        QSet<QString> m_KeywordsSet;
+        QVector<bool> m_SpellCheckResults;
+        SpellCheck::SpellCheckItemInfo *m_SpellCheckInfo;
+        QString m_Description;
+        QString m_Title;
     };
 }
 

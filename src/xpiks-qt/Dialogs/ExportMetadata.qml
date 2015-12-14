@@ -169,8 +169,8 @@ Item {
                             onFinishedProcessing: {
                                 exportButton.text = qsTr("Start Export")
                                 if (!iptcProvider.isError) {
-                                    artItemsModel.updateAllProperties()
                                     filteredArtItemsModel.setSelectedItemsSaved()
+                                    filteredArtItemsModel.updateSelectedArtworks()
                                     closePopup()
                                 }
                             }

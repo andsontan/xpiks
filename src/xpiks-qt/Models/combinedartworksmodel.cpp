@@ -27,23 +27,23 @@
 #include "../Suggestion/keywordssuggestor.h"
 #include "artworkmetadata.h"
 #include "artiteminfo.h"
+#include "../SpellCheck/spellcheckiteminfo.h"
 
 namespace Models {
     CombinedArtworksModel::~CombinedArtworksModel() { qDeleteAll(m_ArtworksList); }
 
-    void CombinedArtworksModel::initArtworks(const QList<ArtItemInfo *> &artworks)
-    {
+    void CombinedArtworksModel::initArtworks(const QVector<ArtItemInfo *> &artworks) {
         int innerLength = m_ArtworksList.length();
         int start = innerLength == 0 ? 0 : innerLength - 1;
         int paramLength = artworks.length();
         if (paramLength > 0) {
             beginInsertRows(QModelIndex(), start, start + paramLength - 1);
-            m_ArtworksList.append(artworks);
+            m_ArtworksList << artworks;
             endInsertRows();
         }
         m_IsModified = false;
 
-        if (artworks.length() == 1) {
+        if (paramLength == 1) {
             enableAllFields();
         }
     }
@@ -51,9 +51,15 @@ namespace Models {
     void CombinedArtworksModel::recombineArtworks() {
         if (m_ArtworksList.length() == 1) {
             assignFromOneArtwork();
+            ArtworkMetadata *metadata = m_ArtworksList.first()->getOrigin();
+            m_CommonKeywordsModel.setSpellCheckInfo(metadata->getSpellCheckInfo());
+            m_CommonKeywordsModel.setSpellStatuses(metadata->getSpellStatuses());
         } else {
             assignFromManyArtworks();
+            m_CommonKeywordsModel.setSpellCheckInfo(&m_SpellCheckInfo);
         }
+
+        m_CommandManager->submitForSpellCheck(&m_CommonKeywordsModel);
     }
 
     void CombinedArtworksModel::acceptSuggestedKeywords(const QStringList &keywords)  {
@@ -90,6 +96,100 @@ namespace Models {
         }
     }
 
+    int CombinedArtworksModel::getSelectedArtworksCount() const {
+        int selectedCount = 0;
+        int count = m_ArtworksList.length();
+        for (int i = 0; i < count; ++i) {
+            if (m_ArtworksList.at(i)->isSelected()) {
+                selectedCount++;
+            }
+        }
+
+        return selectedCount;
+    }
+
+#if defined(TESTS)
+        const QStringList &CombinedArtworksModel::getKeywords() const {
+            return m_CommonKeywordsModel.getKeywords();
+        }
+#endif
+
+    void CombinedArtworksModel::editKeyword(int index, const QString &replacement) {
+        if (m_CommonKeywordsModel.editKeyword(index, replacement)) {
+            m_IsModified = true;
+            m_CommandManager->submitForSpellCheck(&m_CommonKeywordsModel, index);
+        }
+    }
+
+    QString CombinedArtworksModel::removeKeywordAt(int keywordIndex) {
+        QString keyword;
+        if (m_CommonKeywordsModel.takeKeywordAt(keywordIndex, keyword)) {
+            emit keywordsCountChanged();
+            m_IsModified = true;
+        }
+
+        return keyword;
+    }
+
+    void CombinedArtworksModel::removeLastKeyword() {
+        QString keyword;
+        if (m_CommonKeywordsModel.takeLastKeyword(keyword)) {
+            emit keywordsCountChanged();
+            m_IsModified = true;
+        }
+    }
+
+    void CombinedArtworksModel::appendKeyword(const QString &keyword) {
+        if (m_CommonKeywordsModel.appendKeyword(keyword)) {
+            emit keywordsCountChanged();
+            m_IsModified = true;
+
+            m_CommandManager->submitForSpellCheck(&m_CommonKeywordsModel, m_CommonKeywordsModel.rowCount() - 1);
+        }
+    }
+
+    void CombinedArtworksModel::pasteKeywords(const QStringList &keywords) {
+        if (m_CommonKeywordsModel.appendKeywords(keywords) > 0) {
+            emit keywordsCountChanged();
+            m_IsModified = true;
+        }
+    }
+
+    void CombinedArtworksModel::setArtworksSelected(int index, bool newState) {
+        if (index < 0 || index >= m_ArtworksList.length()) {
+            return;
+        }
+
+        m_ArtworksList.at(index)->setSelected(newState);
+        QModelIndex qIndex = this->index(index);
+        emit dataChanged(qIndex, qIndex, QVector<int>() << IsSelectedRole);
+        emit selectedArtworksCountChanged();
+    }
+
+    void CombinedArtworksModel::removeSelectedArtworks() {
+        int count = m_ArtworksList.length();
+        QVector<int> indicesToRemove;
+        indicesToRemove.reserve(count);
+
+        for (int i = 0; i < count; ++i) {
+            ArtItemInfo *item = m_ArtworksList[i];
+            if (item->isSelected()) {
+                indicesToRemove.append(i);
+            }
+        }
+
+        QVector<QPair<int, int> > rangesToRemove;
+        Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
+        removeItemsAtIndices(rangesToRemove);
+
+        recombineArtworks();
+        emit artworksCountChanged();
+    }
+
+    void CombinedArtworksModel::saveEdits() const {
+        processCombinedEditCommand();
+    }
+
     void CombinedArtworksModel::resetModelData() {
         beginResetModel();
         qDeleteAll(m_ArtworksList);
@@ -103,23 +203,53 @@ namespace Models {
         Common::ApplyFlag(m_EditFlags, true, Common::EditKeywords);
         // TEMPORARY (enable everything on initial launch) --
 
+        m_CommonKeywordsModel.setSpellCheckInfo(NULL);
         setDescription("");
         setTitle("");
-        setKeywords(QStringList());
-        m_CommonKeywordsSet.clear();
+        clearKeywords();
     }
 
     void CombinedArtworksModel::clearKeywords() {
-        m_CommonKeywordsSet.clear();
-        m_CommonKeywordsModel.clear();
+        m_CommonKeywordsModel.clearKeywords();
+    }
+
+    void CombinedArtworksModel::suggestCorrections() {
+        int flags = 0;
+        Common::SetFlag(flags, Common::CorrectKeywords);
+        // TODO: no real description/title spellchecking yet
+        m_CommandManager->setupSpellCheckSuggestions(&m_CommonKeywordsModel, -1, flags);
+    }
+
+    void CombinedArtworksModel::initDescriptionHighlighting(QQuickTextDocument *document) {
+        SpellCheck::SpellCheckItemInfo *info = m_CommonKeywordsModel.getSpellCheckInfo();
+        if (info == NULL) {
+            // OneItem edits will use artwork's spellcheckinfo
+            // combined edit will use this one
+            info = &m_SpellCheckInfo;
+        }
+
+        info->createHighlighterForDescription(document->textDocument(), &m_CommonKeywordsModel);
+        m_CommonKeywordsModel.notifySpellCheckResults();
+    }
+
+    void CombinedArtworksModel::initTitleHighlighting(QQuickTextDocument *document) {
+        SpellCheck::SpellCheckItemInfo *info = m_CommonKeywordsModel.getSpellCheckInfo();
+        if (info == NULL) {
+            // OneItem edits will use artwork's spellcheckinfo
+            // combined edit will use this one
+            info = &m_SpellCheckInfo;
+        }
+
+        info->createHighlighterForTitle(document->textDocument(), &m_CommonKeywordsModel);
+        m_CommonKeywordsModel.notifySpellCheckResults();
     }
 
     void CombinedArtworksModel::processCombinedEditCommand() const {
         Commands::CombinedEditCommand *combinedEditCommand = new Commands::CombinedEditCommand(
                     m_EditFlags,
                     m_ArtworksList,
-                    m_ArtworkDescription,
-                    m_ArtworkTitle,
+                    m_CommonKeywordsModel.getDescription(),
+                    m_CommonKeywordsModel.getTitle(),
                     m_CommonKeywordsModel.getKeywords());
 
         Commands::CommandResult *result = m_CommandManager->processCommand(combinedEditCommand);
@@ -192,96 +322,6 @@ namespace Models {
                 initKeywords(commonKeywords.toList());
             }
         }
-    }
-
-    QString CombinedArtworksModel::removeKeywordAt(int keywordIndex) {
-        QString keyword;
-        if (m_CommonKeywordsModel.removeKeyword(keywordIndex, keyword)) {
-            m_CommonKeywordsSet.remove(keyword);
-            emit keywordsCountChanged();
-            m_IsModified = true;
-        }
-
-        return keyword;
-    }
-
-    void CombinedArtworksModel::removeLastKeyword() {
-        QString keyword;
-        if (m_CommonKeywordsModel.removeLastKeyword(keyword)) {
-            m_CommonKeywordsSet.remove(keyword);
-            emit keywordsCountChanged();
-            m_IsModified = true;
-        }
-    }
-
-    void CombinedArtworksModel::appendKeyword(const QString &word) {
-        QString keyword = word.simplified();
-        if (!keyword.isEmpty() && !m_CommonKeywordsSet.contains(keyword)) {
-            m_CommonKeywordsModel.appendKeyword(keyword);
-            m_CommonKeywordsSet.insert(keyword);
-            emit keywordsCountChanged();
-            m_IsModified = true;
-        }
-    }
-
-    void CombinedArtworksModel::pasteKeywords(const QStringList &keywords) {
-        if (!keywords.empty()) {
-            foreach (const QString &keyword, keywords) {
-                if (!m_CommonKeywordsSet.contains(keyword)) {
-                    m_CommonKeywordsSet.insert(keyword);
-                    m_CommonKeywordsModel.appendKeyword(keyword);
-                }
-            }
-
-            emit keywordsCountChanged();
-            m_IsModified = true;
-        }
-    }
-
-    void CombinedArtworksModel::setArtworksSelected(int index, bool newState) {
-        if (index < 0 || index >= m_ArtworksList.length()) {
-            return;
-        }
-
-        m_ArtworksList[index]->setSelected(newState);
-        QModelIndex qIndex = this->index(index);
-        emit dataChanged(qIndex, qIndex, QVector<int>() << IsSelectedRole);
-        emit selectedArtworksCountChanged();
-    }
-
-    void CombinedArtworksModel::removeSelectedArtworks() {
-        int count = m_ArtworksList.length();
-        QList<int> indicesToRemove;
-        for (int i = 0; i < count; ++i) {
-            ArtItemInfo *item = m_ArtworksList[i];
-            if (item->isSelected()) {
-                indicesToRemove.append(i);
-            }
-        }
-
-        QList<QPair<int, int> > rangesToRemove;
-        Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
-        removeItemsAtIndices(rangesToRemove);
-
-        recombineArtworks();
-        emit artworksCountChanged();
-    }
-
-    void CombinedArtworksModel::saveEdits() const {
-        processCombinedEditCommand();
-    }
-
-    int CombinedArtworksModel::getSelectedArtworksCount() const {
-        int selectedCount = 0;
-        int count = m_ArtworksList.length();
-        for (int i = 0; i < count; ++i) {
-            ArtItemInfo *item = m_ArtworksList[i];
-            if (item->isSelected()) {
-                selectedCount++;
-            }
-        }
-
-        return selectedCount;
     }
 
     int CombinedArtworksModel::rowCount(const QModelIndex &parent) const {

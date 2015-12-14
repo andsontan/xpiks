@@ -31,8 +31,9 @@ TextEdit {
     selectionColor: Colors.defaultControlColor
     renderType: Text.NativeRendering
     selectByMouse: true
-    cursorVisible: true
-    clip: true
+    cursorVisible: false
+    wrapMode: TextEdit.NoWrap
+    activeFocusOnPress: true
     color: enabled ? Colors.defaultLightColor : Colors.itemsSourceForeground
 }
 

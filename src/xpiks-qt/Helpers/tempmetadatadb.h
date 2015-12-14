@@ -22,11 +22,27 @@
 #ifndef TEMPMETADATADB_H
 #define TEMPMETADATADB_H
 
+#include <QHash>
+#include <QString>
+
 namespace Models {
     class ArtworkMetadata;
 }
 
 namespace Helpers {
+    class TempMetadataCopy {
+    public:
+        TempMetadataCopy(Models::ArtworkMetadata *metadata);
+
+    public:
+        const QString &getFilepath() const { return m_Filepath; }
+        const QHash<QString, QString> &getInfo() const { return m_MetadataInfo; }
+
+    private:
+        QHash<QString, QString> m_MetadataInfo;
+        QString m_Filepath;
+    };
+
     // class not functions because it's supposed to progress in future
     class TempMetadataDb
     {
@@ -36,6 +52,7 @@ namespace Helpers {
         {  }
 
     public:
+        // deprecated. use backupsaverworker's queue instead
         void flush() const;
         void load() const;
 

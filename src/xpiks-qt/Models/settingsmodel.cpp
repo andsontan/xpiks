@@ -44,12 +44,29 @@
 #define DEFAULT_FIT_SMALL_PREVIEW false
 #define DEFAULT_SEARCH_USING_AND true
 #define DEFAULT_SCROLL_SPEED_SCALE 1.0
+#define DEFAULT_USE_SPELL_CHECK true
 
 namespace Models {
     SettingsModel::SettingsModel(QObject *parent) :
-        QObject(parent)
+        QObject(parent),
+        m_ExifToolPath(DEFAULT_EXIFTOOL),
+        m_CurlPath(DEFAULT_CURL),
+        m_ProxyURI(DEFAULT_PROXY),
+        m_MinMegapixelCount(DEFAULT_MIN_MEGAPIXELS),
+        m_KeywordSizeScale(DEFAULT_KEYWORD_SIZE_SCALE),
+        m_ScrollSpeedScale(DEFAULT_SCROLL_SPEED_SCALE),
+        m_MaxDescriptionLength(DEFAULT_MAX_DESCRIPTION),
+        m_MaxKeywordsCount(DEFAULT_MAX_KEYWORDS),
+        m_UploadTimeout(DEFAULT_TIMEOUT),
+        m_DismissDuration(DEFAULT_DISMISS_DURATION),
+        m_MaxParallelUploads(DEFAULT_MAX_PARALLEL_UPLOADS),
+        m_MustUseMasterPassword(DEFAULT_USE_MASTERPASSWORD),
+        m_MustUseConfirmations(DEFAULT_USE_CONFIRMATIONS),
+        m_SaveBackups(DEFAULT_SAVE_BACKUPS),
+        m_FitSmallPreview(DEFAULT_FIT_SMALL_PREVIEW),
+        m_SearchUsingAnd(DEFAULT_SEARCH_USING_AND),
+        m_UseSpellCheck(DEFAULT_USE_SPELL_CHECK)
     {
-        readAllValues();
     }
 
     void SettingsModel::resetAllValues() {
@@ -75,6 +92,7 @@ namespace Models {
         appSettings.setValue(appSettings.getFitSmallPreviewKey(), m_FitSmallPreview);
         appSettings.setValue(appSettings.getSearchUsingAndKey(), m_SearchUsingAnd);
         appSettings.setValue(appSettings.getScrollSpeedScaleKey(), m_ScrollSpeedScale);
+        appSettings.setValue(appSettings.getUseSpellCheckKey(), m_UseSpellCheck);
 
         if (!m_MustUseMasterPassword) {
             appSettings.setValue(appSettings.getMasterPasswordHashKey(), "");
@@ -116,6 +134,7 @@ namespace Models {
         setFitSmallPreview(appSettings.boolValue(appSettings.getFitSmallPreviewKey(), DEFAULT_FIT_SMALL_PREVIEW));
         setSearchUsingAnd(appSettings.boolValue(appSettings.getSearchUsingAndKey(), DEFAULT_SEARCH_USING_AND));
         setScrollSpeedScale(appSettings.doubleValue(appSettings.getScrollSpeedScaleKey(), DEFAULT_SCROLL_SPEED_SCALE));
+        setUseSpellCheck(appSettings.boolValue(appSettings.getUseSpellCheckKey(), DEFAULT_USE_SPELL_CHECK));
     }
 
     void SettingsModel::resetToDefault() {
@@ -135,6 +154,7 @@ namespace Models {
         setFitSmallPreview(DEFAULT_FIT_SMALL_PREVIEW);
         setSearchUsingAnd(DEFAULT_SEARCH_USING_AND);
         setScrollSpeedScale(DEFAULT_SCROLL_SPEED_SCALE);
+        setUseSpellCheck(DEFAULT_USE_SPELL_CHECK);
     }
 
     int ensureInBounds(int value, int boundA, int boundB) {

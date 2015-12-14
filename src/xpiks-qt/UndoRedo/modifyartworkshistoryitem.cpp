@@ -30,8 +30,6 @@ void UndoRedo::ModifyArtworksHistoryItem::undo(const Commands::CommandManager *c
 {
     qDebug() << "Undo: modify artworks item";
 
-    Models::SettingsModel *settingsModel = commandManager->getSettingsModel();
-
     Models::ArtItemsModel *artItemsModel = commandManager->getArtItemsModel();
     int count = m_Indices.count();
 
@@ -41,21 +39,22 @@ void UndoRedo::ModifyArtworksHistoryItem::undo(const Commands::CommandManager *c
         if (metadata != NULL) {
             ArtworkMetadataBackup *backup = m_ArtworksBackups[i];
             backup->restore(metadata);
-            metadata->saveBackup(settingsModel);
+            commandManager->saveMetadata(metadata);
         }
     }
 
     artItemsModel->updateItemsAtIndices(m_Indices);
+    artItemsModel->updateModifiedCount();
 }
 
 
 QString UndoRedo::getModificationTypeDescription(UndoRedo::ModificationType type) {
     switch (type) {
     case PasteModificationType:
-        return "Paste";
+        return QLatin1String("Paste");
     case CombinedEditModificationType:
-        return "Multiple edit";
+        return QLatin1String("Multiple edit");
     default:
-        return "";
+        return QLatin1String("");
     }
 }

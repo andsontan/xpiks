@@ -19,14 +19,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef OSXNSURLHELPER
-#define OSXNSURLHELPER
+#ifndef BACKUPSAVERWORKER_H
+#define BACKUPSAVERWORKER_H
 
-class QUrl;
+#include <QObject>
+#include "../Common/itemprocessingworker.h"
+#include "../Helpers/tempmetadatadb.h"
 
 namespace Helpers {
-    QUrl fromNSUrl(const QUrl &url);
+    class BackupSaverWorker : public QObject, public Common::ItemProcessingWorker<TempMetadataCopy>
+    {
+        Q_OBJECT
+    protected:
+        virtual bool initWorker() { return true; }
+        virtual bool processOneItem(TempMetadataCopy *item);
+        virtual void notifyQueueIsEmpty() { emit queueIsEmpty(); }
+        virtual void notifyStopped() { emit stopped(); }
+
+    public slots:
+        void process() { doWork(); }
+        void cancel() { cancelWork(); }
+
+    signals:
+        void stopped();
+        void queueIsEmpty();
+    };
 }
 
-#endif // OSXNSURLHELPER
-
+#endif // BACKUPSAVERWORKER_H

@@ -23,23 +23,16 @@
 #include <QDataStream>
 #include <QThread>
 #include <QDebug>
+#include <QtConcurrent>
+#include <QFuture>
 #include "locallibrary.h"
 #include "../Models/artworkmetadata.h"
 #include "libraryloaderworker.h"
 #include "suggestionartwork.h"
 
 namespace Suggestion {
-    void LocalLibrary::addToLibrary(const QList<Models::ArtworkMetadata *> artworksList) {
-        QMutexLocker locker(&m_Mutex);
-
-        foreach (Models::ArtworkMetadata *metadata, artworksList) {
-            const QString &filepath = metadata->getFilepath();
-            const QStringList &keywords = metadata->getKeywords();
-            // replaces if exists
-            m_LocalArtworks.insert(filepath, keywords);
-        }
-
-        qDebug() << artworksList.length() << "artworks added to the local library";
+    void LocalLibrary::addToLibrary(const QVector<Models::ArtworkMetadata *> artworksList) {
+        QtConcurrent::run(this, &LocalLibrary::doAddToLibrary, artworksList);
     }
 
     void LocalLibrary::swap(QHash<QString, QStringList> &hash) {
@@ -73,7 +66,7 @@ namespace Suggestion {
         performAsync(LibraryLoaderWorker::Save);
     }
 
-    void LocalLibrary::searchArtworks(const QStringList &query, QList<SuggestionArtwork*> &searchResults, int maxResults) {
+    void LocalLibrary::searchArtworks(const QStringList &query, QVector<SuggestionArtwork*> &searchResults, int maxResults) {
         QMutexLocker locker(&m_Mutex);
 
         QHashIterator<QString, QStringList> i(m_LocalArtworks);
@@ -148,6 +141,30 @@ namespace Suggestion {
         QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
 
         thread->start();
+    }
+
+    void LocalLibrary::doAddToLibrary(const QVector<Models::ArtworkMetadata *> artworksList) {
+        QMutexLocker locker(&m_Mutex);
+
+        int length = artworksList.length();
+        for (int i = 0; i < length; ++i) {
+            Models::ArtworkMetadata *metadata = artworksList.at(i);
+            const QString &filepath = metadata->getFilepath();
+
+            QSet<QString> tags;
+            tags.unite(metadata->getKeywordsSet());
+
+            QStringList descriptionWords = metadata->getDescriptionWords();
+            QStringList titleWords = metadata->getTitleWords();
+
+            tags.unite(descriptionWords.toSet());
+            tags.unite(titleWords.toSet());
+
+            // replaces if exists
+            m_LocalArtworks.insert(filepath, tags.toList());
+        }
+
+        qDebug() << artworksList.length() << "artworks added to the local library";
     }
 
     void LocalLibrary::cleanupLocalLibraryAsync() {

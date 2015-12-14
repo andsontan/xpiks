@@ -41,6 +41,7 @@ ApplicationWindow {
     minimumWidth: 900
     title: qsTr("Xpiks")
     property int openedDialogsCount: 0
+    property bool showUpdateLink: false
 
     function saveRecentDirectories() {
         appSettings.setValue(appSettings.recentDirectoriesKey, recentDirectories.serializeForSettings())
@@ -52,7 +53,18 @@ ApplicationWindow {
         if (artItemsModel.modifiedArtworksCount > 0) {
             close.accepted = false
             configExitDialog.open()
+        } else {
+            applicationWindow.visibility = "Minimized"
+            helpersWrapper.beforeDestruction();
+            closingTimer.start()
         }
+    }
+
+    Timer {
+        id: closingTimer
+        interval: 1000
+        running: false
+        onTriggered: Qt.quit()
     }
 
     function onDialogClosed() {
@@ -96,6 +108,20 @@ ApplicationWindow {
         }
     }
 
+    Component.onCompleted: {
+        helpersWrapper.afterConstruction()
+        if (appSettings.needToShowWhatsNew()) {
+            var text = appSettings.whatsNewText;
+            if (text.length > 0) {
+                Common.launchDialog("Dialogs/WhatsNewDialog.qml",
+                                    applicationWindow,
+                                    {
+                                        whatsNewText: text
+                                    })
+            }
+        }
+    }
+
     menuBar: MenuBar {
         Menu {
             title: qsTr("File")
@@ -110,7 +136,12 @@ ApplicationWindow {
 
                     delegate: MenuItem {
                         text: display
-                        onTriggered: artItemsModel.addRecentDirectory(display)
+                        onTriggered: {
+                            var filesAdded = artItemsModel.addRecentDirectory(display)
+                            if (filesAdded === 0) {
+                                noFilesInfo.open()
+                            }
+                        }
                     }
                 }
             }
@@ -141,6 +172,7 @@ ApplicationWindow {
 
         Menu {
             title: qsTr("Tools")
+            enabled: applicationWindow.openedDialogsCount == 0
 
             MenuItem {
                 text: qsTr("&Zip selected artworks")
@@ -161,6 +193,17 @@ ApplicationWindow {
                 onTriggered: {
                     console.log("Reimport archives triggered")
                     filteredArtItemsModel.reimportMetadataForSelected()
+                }
+            }
+
+            MenuItem {
+                text: qsTr("&Check spelling in selected")
+                enabled: filteredArtItemsModel.selectedArtworksCount > 0
+                onTriggered: {
+                    console.log("Spell check in selected")
+                    filteredArtItemsModel.spellCheckSelected()
+                    Common.launchDialog("Dialogs/SpellCheckDialog.qml",
+                                        applicationWindow, {});
                 }
             }
 
@@ -190,7 +233,9 @@ ApplicationWindow {
         text: qsTr("You have some artworks modified. Really exit?")
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
-            Qt.quit()
+            applicationWindow.visibility = "Minimized"
+            helpersWrapper.beforeDestruction();
+            closingTimer.start()
         }
     }
 
@@ -292,6 +337,12 @@ ApplicationWindow {
     }
 
     MessageDialog {
+        id: noFilesInfo
+        title: "Information"
+        text: qsTr("No files were added")
+    }
+
+    MessageDialog {
         id: alreadySavedDialog
         title: "Information"
         text: qsTr("All selected items are already saved")
@@ -303,6 +354,19 @@ ApplicationWindow {
            if (count > 0) {
                Common.launchDialog("Dialogs/ImportMetadata.qml", applicationWindow, {})
            }
+        }
+    }
+
+    Connections {
+        target: updateService
+        onUpdateAvailable: {
+            if (Qt.platform.os !== "linux") {
+                Common.launchDialog("Dialogs/UpdateWindow.qml",
+                                    applicationWindow, {updateUrl: updateLink},
+                                    function(wnd) {wnd.show();});
+            }
+
+            applicationWindow.showUpdateLink = true
         }
     }
 
@@ -531,7 +595,6 @@ ApplicationWindow {
 
                                 if (!launched) {
                                     // also as fallback in case of errors in findSelectedIndex
-                                    combinedArtworks.resetModelData();
                                     filteredArtItemsModel.combineSelectedArtworks();
                                     Common.launchDialog("Dialogs/CombinedArtworksDialog.qml", applicationWindow, {componentParent: applicationWindow});
                                 }
@@ -877,6 +940,13 @@ ApplicationWindow {
                             boundsBehavior: Flickable.StopAtBounds
                             spacing: 4
 
+                            function forceUpdateArtworks() {
+                                console.log("Force layout magic for artworks list view")
+                                imagesListView.forceLayout()
+                                imagesListView.update()
+                                imagesListView.positionViewAtBeginning()
+                            }
+
                             add: Transition {
                                 NumberAnimation { property: "opacity"; from: 0; to: 1; duration: 230 }
                             }
@@ -901,7 +971,8 @@ ApplicationWindow {
                                 id: rowWrapper
                                 property bool isHighlighted: (isselected || descriptionTextInput.activeFocus || flv.isFocused || titleTextInput.activeFocus)
                                 color: isHighlighted ? Colors.selectedArtworkColor : Colors.artworkImageBackground
-                                property variant artworkModel: model
+                                property var artworkModel: artItemsModel.getArtworkItself(rowWrapper.getIndex())
+                                property int delegateIndex: index
 
                                 function getIndex() {
                                     return filteredArtItemsModel.getOriginalIndex(index)
@@ -926,8 +997,23 @@ ApplicationWindow {
                                     }
                                 }
 
+                                function switchChecked() {
+                                    editisselected = !isselected
+                                    itemCheckedCheckbox.checked = isselected
+                                }
+
                                 width: parent.width
                                 height: 200 + 80*(settingsModel.keywordSizeScale - 1.0)
+
+                                Connections {
+                                    target: rowWrapper.artworkModel
+                                    onSpellCheckResultsReady: {
+                                        descriptionTextInput.deselect()
+                                        if (columnLayout.isWideEnough) {
+                                            titleTextInput.deselect()
+                                        }
+                                    }
+                                }
 
                                 Item {
                                     anchors.fill: parent
@@ -953,7 +1039,7 @@ ApplicationWindow {
                                         MouseArea {
                                             anchors.fill: parent
                                             onClicked: {
-                                                editisselected = !isselected
+                                                rowWrapper.switchChecked()
                                                 rowWrapper.focusIfNeeded()
                                             }
                                         }
@@ -970,7 +1056,7 @@ ApplicationWindow {
                                         MouseArea {
                                             anchors.fill: parent
                                             onClicked: {
-                                                editisselected = !isselected
+                                                rowWrapper.switchChecked()
                                                 rowWrapper.focusIfNeeded()
                                             }
                                         }
@@ -984,8 +1070,8 @@ ApplicationWindow {
                                             Component.onCompleted: itemCheckedCheckbox.checked = isselected
                                             Connections {
                                                 target: filteredArtItemsModel
-                                                onSelectedArtworksCountChanged: {
-                                                    itemCheckedCheckbox.checked = rowWrapper.artworkModel.isselected || false
+                                                onAllItemsSelectedChanged: {
+                                                    itemCheckedCheckbox.checked = isselected
                                                 }
                                             }
                                         }
@@ -1002,7 +1088,7 @@ ApplicationWindow {
                                         MouseArea {
                                             anchors.fill: parent
                                             onClicked: {
-                                                editisselected = !isselected
+                                                rowWrapper.switchChecked()
                                                 rowWrapper.focusIfNeeded()
                                             }
                                         }
@@ -1034,7 +1120,7 @@ ApplicationWindow {
                                                 MouseArea {
                                                     anchors.fill: parent
                                                     onClicked: {
-                                                        editisselected = !isselected
+                                                        rowWrapper.switchChecked()
                                                         rowWrapper.focusIfNeeded()
                                                     }
                                                     onDoubleClicked: Common.launchItemEditing(rowWrapper.getIndex(), applicationWindow, {
@@ -1082,7 +1168,6 @@ ApplicationWindow {
 
                                         Item {
                                             id: columnLayout
-                                            //spacing: 3
                                             anchors.fill: parent
                                             anchors.margins: { left: 20; right: 20 }
                                             property bool isWideEnough: width > 400
@@ -1113,36 +1198,61 @@ ApplicationWindow {
                                                 color: rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.defaultControlColor
                                                 border.color: Colors.artworkActiveColor
                                                 border.width: descriptionTextInput.activeFocus ? 1 : 0
+                                                clip: true
 
-                                                StyledTextInput {
-                                                    id: descriptionTextInput
-                                                    height: 30
+                                                Flickable {
+                                                    id: descriptionFlick
+                                                    contentWidth: descriptionTextInput.paintedWidth
+                                                    contentHeight: descriptionTextInput.paintedHeight
                                                     anchors.left: parent.left
                                                     anchors.right: parent.right
                                                     anchors.leftMargin: 5
                                                     anchors.rightMargin: 5
-                                                    font.pixelSize: 12 * settingsModel.keywordSizeScale
-                                                    anchors.verticalCenter: parent.verticalCenter
-                                                    maximumLength: 250
-                                                    text: description
-                                                    color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.defaultInputBackground
-                                                    onTextChanged: model.editdescription = text
+                                                    interactive: false
+                                                    flickableDirection: Flickable.HorizontalFlick
+                                                    height: 30
+                                                    clip: true
+                                                    focus: false
 
-                                                    Keys.onTabPressed: {
-                                                        if (columnLayout.isWideEnough) {
-                                                            titleTextInput.forceActiveFocus()
-                                                        } else {
-                                                            flv.activateEdit()
-                                                        }
+                                                    function ensureVisible(r) {
+                                                        if (contentX >= r.x)
+                                                            contentX = r.x;
+                                                        else if (contentX+width <= r.x+r.width)
+                                                            contentX = r.x+r.width-width;
                                                     }
 
-                                                    Keys.onPressed: {
-                                                        if(event.matches(StandardKey.Paste)) {
-                                                            var clipboardText = clipboard.getText();
-                                                            // same regexp as in validator
-                                                            descriptionTextInput.paste(clipboardText)
-                                                            event.accepted = true
+                                                    StyledTextEdit {
+                                                        id: descriptionTextInput
+                                                        width: descriptionFlick.width
+                                                        height: descriptionFlick.height
+                                                        font.pixelSize: 12 * settingsModel.keywordSizeScale
+                                                        text: description
+                                                        color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.defaultInputBackground
+                                                        onTextChanged: model.editdescription = text
+
+                                                        Keys.onTabPressed: {
+                                                            if (columnLayout.isWideEnough) {
+                                                                titleTextInput.forceActiveFocus()
+                                                            } else {
+                                                                flv.activateEdit()
+                                                            }
                                                         }
+
+                                                        Keys.onPressed: {
+                                                            if(event.matches(StandardKey.Paste)) {
+                                                                var clipboardText = clipboard.getText();
+                                                                // same regexp as in validator
+                                                                descriptionTextInput.paste(clipboardText)
+                                                                event.accepted = true
+                                                            }
+                                                        }
+
+                                                        Component.onCompleted: {
+                                                            var index = rowWrapper.getIndex()
+                                                            artItemsModel.initDescriptionHighlighting(index, descriptionTextInput.textDocument)
+                                                        }
+
+                                                        onCursorRectangleChanged: descriptionFlick.ensureVisible(cursorRectangle)
                                                     }
                                                 }
                                             }
@@ -1152,66 +1262,112 @@ ApplicationWindow {
                                                 height: 30
                                                 width: columnLayout.isWideEnough ? ((columnLayout.width / 2) - 10 ): 0
                                                 visible: columnLayout.isWideEnough
-                                                //anchors.left: descriptionRect.right
                                                 anchors.right: parent.right
                                                 anchors.top: descriptionText.bottom
                                                 anchors.topMargin: 3
                                                 color: rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.defaultControlColor
                                                 border.color: Colors.artworkActiveColor
                                                 border.width: titleTextInput.activeFocus ? 1 : 0
+                                                clip: true
 
-                                                StyledTextInput {
-                                                    id: titleTextInput
+                                                Flickable {
+                                                    id: titleFlick
+                                                    contentWidth: titleTextInput.paintedWidth
+                                                    contentHeight: titleTextInput.paintedHeight
                                                     height: 30
                                                     anchors.left: parent.left
                                                     anchors.right: parent.right
                                                     anchors.leftMargin: 5
                                                     anchors.rightMargin: 5
-                                                    font.pixelSize: 12 * settingsModel.keywordSizeScale
-                                                    anchors.verticalCenter: parent.verticalCenter
-                                                    maximumLength: 250
-                                                    text: title
-                                                    color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.defaultInputBackground
-                                                    onTextChanged: model.edittitle = text
-                                                    KeyNavigation.backtab: descriptionTextInput
+                                                    clip: true
+                                                    flickableDirection: Flickable.HorizontalFlick
+                                                    interactive: false
+                                                    focus: false
 
-                                                    Keys.onTabPressed: {
-                                                        flv.activateEdit()
+                                                    function ensureVisible(r) {
+                                                        if (contentX >= r.x)
+                                                            contentX = r.x;
+                                                        else if (contentX+width <= r.x+r.width)
+                                                            contentX = r.x+r.width-width;
                                                     }
 
-                                                    Keys.onPressed: {
-                                                        if(event.matches(StandardKey.Paste)) {
-                                                            var clipboardText = clipboard.getText();
-                                                            // same regexp as in validator
-                                                            titleTextInput.paste(clipboardText)
-                                                            event.accepted = true
+                                                    StyledTextEdit {
+                                                        id: titleTextInput
+                                                        font.pixelSize: 12 * settingsModel.keywordSizeScale
+                                                        text: title
+                                                        width: titleFlick.width
+                                                        height: titleFlick.height
+                                                        color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.defaultInputBackground
+                                                        onTextChanged: model.edittitle = text
+                                                        KeyNavigation.backtab: descriptionTextInput
+
+                                                        Keys.onTabPressed: {
+                                                            flv.activateEdit()
                                                         }
+
+                                                        Keys.onPressed: {
+                                                            if (event.matches(StandardKey.Paste)) {
+                                                                var clipboardText = clipboard.getText();
+                                                                // same regexp as in validator
+                                                                titleTextInput.paste(clipboardText)
+                                                                event.accepted = true
+                                                            }
+                                                        }
+
+                                                        Component.onCompleted: {
+                                                            var index = rowWrapper.getIndex()
+                                                            artItemsModel.initTitleHighlighting(index, titleTextInput.textDocument)
+                                                        }
+
+                                                        onCursorRectangleChanged: titleFlick.ensureVisible(cursorRectangle)
                                                     }
                                                 }
                                             }
 
-                                            RowLayout {
-                                                id: keywordsLabelsRow
+                                            StyledText {
+                                                id: keywordsLabel
                                                 anchors.left: parent.left
                                                 anchors.top: descriptionRect.bottom
                                                 anchors.topMargin: 7
-                                                spacing: 5
+                                                text: qsTr("Keywords:")
+                                            }
 
-                                                StyledText {
-                                                    id: keywordsLabel
-                                                    text: qsTr("Keywords:")
-                                                }
+                                            StyledText {
+                                                text: qsTr("<u>edit in plain text</u>")
+                                                color: plainTextMA.containsMouse ? Colors.defaultLightGrayColor : Colors.defaultInputBackground
+                                                visible: rowWrapper.isHighlighted
+                                                anchors.right: parent.right
+                                                anchors.top: descriptionRect.bottom
+                                                anchors.topMargin: 7
 
-                                                StyledText {
-                                                    text: qsTr("(comma-separated)")
-                                                    visible: rowWrapper.isHighlighted
-                                                    color: Colors.defaultInputBackground
+                                                MouseArea {
+                                                    id: plainTextMA
+                                                    anchors.fill: parent
+                                                    hoverEnabled: true
+                                                    cursorShape: rowWrapper.isHighlighted ? Qt.PointingHandCursor : Qt.ArrowCursor
+                                                    onClicked: {
+                                                        var callbackObject = {
+                                                            onSuccess: function(text) {
+                                                                artItemsModel.plainTextEdit(rowWrapper.getIndex(), text)
+                                                            },
+                                                            onClose: function() {
+                                                                flv.activateEdit()
+                                                            }
+                                                        }
+
+                                                        Common.launchDialog("Dialogs/PlainTextKeywordsDialog.qml",
+                                                                            applicationWindow,
+                                                                            {
+                                                                                callbackObject: callbackObject,
+                                                                                keywordsText: keywordsstring
+                                                                            });
+                                                    }
                                                 }
                                             }
 
                                             Rectangle {
                                                 id: keywordsWrapper
-                                                anchors.top: keywordsLabelsRow.bottom
+                                                anchors.top: keywordsLabel.bottom
                                                 anchors.topMargin: 3
                                                 anchors.left: parent.left
                                                 anchors.right: parent.right
@@ -1242,7 +1398,7 @@ ApplicationWindow {
 
                                                 EditableTags {
                                                     id: flv
-                                                    model: artItemsModel.getArtworkItself(rowWrapper.getIndex())
+                                                    model: rowWrapper.artworkModel
                                                     anchors.fill: parent
                                                     property int keywordHeight: 20 * settingsModel.keywordSizeScale + (settingsModel.keywordSizeScale - 1)*10
                                                     scrollStep: keywordHeight
@@ -1254,7 +1410,26 @@ ApplicationWindow {
                                                         delegateIndex: index
                                                         keywordText: keyword
                                                         itemHeight: flv.keywordHeight
-                                                        onActionClicked: keywordsWrapper.removeKeyword(kw.delegateIndex)
+                                                        hasSpellCheckError: !iscorrect
+                                                        onRemoveClicked: keywordsWrapper.removeKeyword(kw.delegateIndex)
+
+                                                        onActionDoubleClicked: {
+                                                            var callbackObject = {
+                                                                onSuccess: function(replacement) {
+                                                                    artItemsModel.editKeyword(rowWrapper.getIndex(), kw.delegateIndex, replacement)
+                                                                },
+                                                                onClose: function() {
+                                                                    flv.activateEdit()
+                                                                }
+                                                            }
+
+                                                            Common.launchDialog("Dialogs/EditKeywordDialog.qml",
+                                                                                applicationWindow,
+                                                                                {
+                                                                                    callbackObject: callbackObject,
+                                                                                    previousKeyword: keyword
+                                                                                })
+                                                        }
                                                     }
 
                                                     onTagAdded: {
@@ -1267,6 +1442,14 @@ ApplicationWindow {
 
                                                     onRemoveLast: {
                                                         keywordsWrapper.removeLastKeyword()
+                                                    }
+
+                                                    onBackTabPressed: {
+                                                        if (columnLayout.isWideEnough) {
+                                                            titleTextInput.forceActiveFocus()
+                                                        } else {
+                                                            descriptionTextInput.forceActiveFocus()
+                                                        }
                                                     }
 
                                                     onFocusLost: keywordsWrapper.saveKeywords()
@@ -1287,7 +1470,7 @@ ApplicationWindow {
                                                 anchors.right: parent.right
                                                 anchors.top: keywordsWrapper.bottom
                                                 anchors.topMargin: 3
-                                                spacing: 15
+                                                spacing: 5
 
                                                 StyledText {
                                                     text: keywordscount
@@ -1299,7 +1482,32 @@ ApplicationWindow {
                                                 }
 
                                                 StyledText {
-                                                    text: qsTr("Suggest keywords")
+                                                    id: fixSpellingText
+                                                    text: qsTr("Fix spelling")
+                                                    enabled: rowWrapper.artworkModel ? rowWrapper.artworkModel.hasSpellErrors : false
+                                                    color: enabled ? Colors.artworkActiveColor : (rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.selectedArtworkColor)
+
+                                                    MouseArea {
+                                                        anchors.fill: parent
+                                                        cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
+
+                                                        onClicked: {
+                                                            artItemsModel.suggestCorrections(rowWrapper.getIndex())
+                                                            Common.launchDialog("Dialogs/SpellCheckSuggestionsDialog.qml",
+                                                                                applicationWindow,
+                                                                                {})
+                                                        }
+                                                    }
+                                                }
+
+                                                StyledText {
+                                                    text: "|"
+                                                    color: rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.selectedMetadataColor
+                                                    verticalAlignment: Text.AlignVCenter
+                                                }
+
+                                                StyledText {
+                                                    text: qsTr("Suggest")
                                                     color: suggestKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
 
                                                     MouseArea {
@@ -1321,7 +1529,13 @@ ApplicationWindow {
                                                 }
 
                                                 StyledText {
-                                                    text: qsTr("More Edits")
+                                                    text: "|"
+                                                    color: rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.selectedMetadataColor
+                                                    verticalAlignment: Text.AlignVCenter
+                                                }
+
+                                                StyledText {
+                                                    text: qsTr("Edit")
                                                     color: moreEditsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
 
                                                     MouseArea {
@@ -1329,13 +1543,20 @@ ApplicationWindow {
                                                         anchors.fill: parent
                                                         cursorShape: Qt.PointingHandCursor
                                                         onClicked: Common.launchItemEditing(rowWrapper.getIndex(), applicationWindow, {
-                                                                                                applyCallback: function() {}
+                                                                                                applyCallback: function() {
+                                                                                                }
                                                                                             })
                                                     }
                                                 }
 
                                                 StyledText {
-                                                    text: qsTr("Copy keywords")
+                                                    text: "|"
+                                                    color: rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.selectedMetadataColor
+                                                    verticalAlignment: Text.AlignVCenter
+                                                }
+
+                                                StyledText {
+                                                    text: qsTr("Copy all")
                                                     color: copyKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
 
                                                     MouseArea {
@@ -1343,6 +1564,24 @@ ApplicationWindow {
                                                         anchors.fill: parent
                                                         cursorShape: Qt.PointingHandCursor
                                                         onClicked: clipboard.setText(keywordsstring)
+                                                    }
+                                                }
+
+                                                StyledText {
+                                                    text: "|"
+                                                    color: rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.selectedMetadataColor
+                                                    verticalAlignment: Text.AlignVCenter
+                                                }
+
+                                                StyledText {
+                                                    text: qsTr("Clear")
+                                                    color: clearKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
+
+                                                    MouseArea {
+                                                        id: clearKeywordsMA
+                                                        anchors.fill: parent
+                                                        cursorShape: Qt.PointingHandCursor
+                                                        onClicked: filteredArtItemsModel.clearKeywords(rowWrapper.delegateIndex)
                                                     }
                                                 }
                                             }
@@ -1353,20 +1592,12 @@ ApplicationWindow {
 
                             Connections {
                                 target: artItemsModel
-                                onArtworksChanged: {
-                                    console.log("ArtItemsModel: Force layout for artworks list view")
-                                    imagesListView.forceLayout()
-                                    imagesListView.update()
-                                }
+                                onArtworksChanged: imagesListView.forceUpdateArtworks()
                             }
 
                             Connections {
                                 target: filteredArtItemsModel
-                                onAfterInvalidateFilter: {
-                                    console.log("Filtered Model: Force layout for artworks list view")
-                                    imagesListView.forceLayout()
-                                    imagesListView.update()
-                                }
+                                onAfterInvalidateFilter: imagesListView.forceUpdateArtworks()
                             }
                         }
                     }
@@ -1445,7 +1676,9 @@ ApplicationWindow {
                     onClicked: {
                         Common.launchDialog("Dialogs/LogsDialog.qml",
                                         applicationWindow,
-                                        { logText: logsModel.getAllLogsText() });
+                                            {
+                                                logText: logsModel.getAllLogsText()
+                                            });
                     }
                 }
             }
@@ -1469,6 +1702,29 @@ ApplicationWindow {
                         Common.launchDialog("Dialogs/WarningsDialog.qml", applicationWindow, {
                                                 componentParent: applicationWindow
                                             });
+                    }
+                }
+            }
+
+            StyledText {
+                visible: applicationWindow.showUpdateLink
+                text: "|"
+                color: Colors.selectedMetadataColor
+                verticalAlignment: Text.AlignVCenter
+            }
+
+            StyledText {
+                visible: applicationWindow.showUpdateLink
+                enabled: applicationWindow.showUpdateLink
+                text: qsTr("Update available!")
+                color: updateMA.pressed ? Colors.defaultInputBackground : Colors.greenColor
+
+                MouseArea {
+                    id: updateMA
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: {
+                        Qt.openUrlExternally("http://ribtoks.github.io/xpiks/downloads/")
                     }
                 }
             }

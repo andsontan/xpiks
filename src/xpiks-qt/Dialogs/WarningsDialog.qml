@@ -129,73 +129,78 @@ Item {
                                 property int delegateIndex: index
                                 color: Colors.itemsSourceBackground
                                 id: imageWrapper
-                                width: parent.width - 10
-                                height: 100
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                anchors.rightMargin: 10
+                                height: columnRectangle.height
                                 radius: 2
 
-                                RowLayout {
-                                    anchors.fill: parent
-                                    spacing: 0
+                                Item {
+                                    id: imageItem
+                                    anchors.left: parent.left
+                                    anchors.top: parent.top
+                                    width: 120
+                                    height: parent.height
 
-                                    Item {
-                                        width: 120
-                                        height: parent.height
+                                    ColumnLayout {
+                                        anchors.centerIn: parent
+                                        anchors.verticalCenterOffset: 7
+                                        spacing: 7
 
-                                        ColumnLayout {
-                                            anchors.fill: parent
-                                            anchors.margins: { left: 15; right: 15 }
-                                            spacing: 7
+                                        Item {
+                                            width: 90
+                                            height: 60
+                                            anchors.horizontalCenter: parent.horizontalCenter
 
-                                            Item {
-                                                width: 90
-                                                height: 60
-                                                anchors.horizontalCenter: parent.horizontalCenter
-
-                                                Image {
-                                                    anchors.fill: parent
-                                                    source: "image://global/" + filename
-                                                    sourceSize.width: 150
-                                                    sourceSize.height: 150
-                                                    fillMode: settingsModel.fitSmallPreview ? Image.PreserveAspectFit : Image.PreserveAspectCrop
-                                                    asynchronous: true
-                                                }
-                                            }
-
-                                            StyledText {
-                                                Layout.fillWidth: true
-                                                elide: Text.ElideMiddle
-                                                color: Colors.defaultInputBackground
-                                                horizontalAlignment: Text.AlignHCenter
-                                                text: filename.split(/[\\/]/).pop()
-                                                font.pointSize: 10
-                                            }
-
-                                            Item {
-                                                Layout.fillHeight: true
+                                            Image {
+                                                anchors.fill: parent
+                                                source: "image://global/" + filename
+                                                sourceSize.width: 150
+                                                sourceSize.height: 150
+                                                fillMode: settingsModel.fitSmallPreview ? Image.PreserveAspectFit : Image.PreserveAspectCrop
+                                                asynchronous: true
                                             }
                                         }
+
+                                        StyledText {
+                                            Layout.fillWidth: true
+                                            elide: Text.ElideMiddle
+                                            color: Colors.defaultInputBackground
+                                            horizontalAlignment: Text.AlignHCenter
+                                            text: filename.split(/[\\/]/).pop()
+                                            font.pixelSize: 10
+                                        }
+
+                                        Item {
+                                            Layout.fillHeight: true
+                                        }
                                     }
+                                }
 
-                                    Item {
-                                        width: 5
-                                    }
+                                Rectangle {
+                                    id: columnRectangle
+                                    anchors.left: imageItem.right
+                                    anchors.top: parent.top
+                                    anchors.right: fixItRect.left
+                                    height: (childrenRect.height < 80) ? 100 : (childrenRect.height + 20)
+                                    color: Colors.itemsSourceSelected
 
-                                    Rectangle {
-                                        id: columnRectangle
-                                        height: parent.height
-                                        Layout.fillWidth: true
-                                        color: Colors.itemsSourceSelected
+                                    Column {
+                                        id: warningsTextList
+                                        spacing: 10
 
-                                        ListView {
-                                            id: warningsTextList
-                                            anchors.fill: parent
-                                            anchors.margins: 10
-                                            boundsBehavior: Flickable.StopAtBounds
+                                        anchors.left: parent.left
+                                        anchors.right: parent.right
+                                        anchors.top: parent.top
+                                        anchors.leftMargin: 10
+                                        anchors.rightMargin: 10
+                                        anchors.topMargin: 10
+
+                                        Repeater {
                                             model: warnings
-                                            spacing: 10
 
                                             delegate: RowLayout {
-                                                width: parent.width
+                                                width: warningsTextList.width
                                                 height: 10
                                                 spacing: 5
 
@@ -215,27 +220,30 @@ Item {
                                             }
                                         }
                                     }
+                                }
 
-                                    Rectangle {
-                                        width: 40
-                                        height: parent.height
-                                        color: Colors.selectedArtworkColor
+                                Rectangle {
+                                    id: fixItRect
+                                    anchors.top: parent.top
+                                    anchors.right: parent.right
+                                    width: 40
+                                    height: columnRectangle.height
+                                    color: Colors.selectedArtworkColor
 
-                                        StyledButton {
-                                            text: qsTr("Fix")
-                                            width: 30
-                                            anchors.centerIn: parent
-                                            enabled: !isRestricted && warningsListView.count > 0
+                                    StyledButton {
+                                        text: qsTr("Fix")
+                                        width: 30
+                                        anchors.centerIn: parent
+                                        enabled: !isRestricted && warningsListView.count > 0
 
-                                            onClicked: {
-                                                Common.launchItemEditing(itemindex, componentParent,
-                                                                         {
-                                                                             applyCallback: function() {
-                                                                                 console.log("Rechecking [" + imageWrapper.delegateIndex + "] item")
-                                                                                 warningsManager.recheckItem(imageWrapper.delegateIndex)
-                                                                             }
-                                                                         })
-                                            }
+                                        onClicked: {
+                                            Common.launchItemEditing(itemindex, componentParent,
+                                                                     {
+                                                                         applyCallback: function() {
+                                                                             console.log("Rechecking [" + imageWrapper.delegateIndex + "] item")
+                                                                             warningsManager.recheckItem(imageWrapper.delegateIndex)
+                                                                         }
+                                                                     })
                                         }
                                     }
                                 }

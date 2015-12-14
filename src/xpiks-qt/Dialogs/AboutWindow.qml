@@ -54,6 +54,11 @@ ApplicationWindow {
         Component.onCompleted: focus = true
         Keys.onEscapePressed: closeAbout()
 
+        MouseArea {
+            anchors.fill: parent
+            onClicked: closeAbout()
+        }
+
         ColumnLayout {
             anchors.centerIn: parent
 
@@ -63,6 +68,7 @@ ApplicationWindow {
             }
 
             StyledText {
+                focus: true
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: qsTr("<u>Home webpage of Xpiks</u>")
                 color: aboutMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
@@ -71,6 +77,7 @@ ApplicationWindow {
                     id: aboutMA
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
+                    hoverEnabled: true
                     onClicked: {
                         Qt.openUrlExternally("http://ribtoks.github.io/xpiks/")
                     }
@@ -93,11 +100,6 @@ ApplicationWindow {
                     text: qsTr("The program is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE")
                 }
             }
-        }
-
-        MouseArea {
-            anchors.fill: parent
-            onClicked: closeAbout()
         }
     }
 }

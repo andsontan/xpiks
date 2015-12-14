@@ -30,26 +30,76 @@ namespace Models {
     class WarningsInfo
     {
     public:
-        WarningsInfo(ArtItemInfo *itemInfo) :
+        WarningsInfo(ArtItemInfo *itemInfo):
             m_ArtworkInfo(itemInfo)
-        {}
+        {
+            updateData();
+        }
 
         ~WarningsInfo() { delete m_ArtworkInfo; }
 
     public:
         void addWarning(const QString &warning) { m_WarningsList.append(warning); }
-        ArtworkMetadata *getArtworkMetadata() const { return m_ArtworkInfo->getOrigin(); }
+        //ArtworkMetadata *getArtworkMetadata() const { return m_ArtworkInfo->getOrigin(); }
         void clearWarnings() { m_WarningsList.clear(); }
         bool hasWarnings() const { return m_WarningsList.length() > 0; }
 
+        void updateData() {
+            ArtworkMetadata *metadata = m_ArtworkInfo->getOrigin();
+            m_Filepath = metadata->getFilepath();
+            m_Dimensions = metadata->getSize();
+            m_ArtworkIndex = m_ArtworkInfo->getOriginalIndex();
+            m_KeywordsCount = metadata->getKeywordsCount();
+            m_DescriptionLength = metadata->getDescription().length();
+            m_TitleLength = metadata->getTitle().length();
+            m_TitleSpellErrors = metadata->hasTitleSpellError();
+            m_DescriptionSpellErrors = metadata->hasDescriptionSpellError();
+            m_KeywordsSpellErrors = metadata->hasKeywordsSpellError();
+            m_DescriptionWordsCount = calculateWordsLength(metadata->getDescriptionWords());
+            m_TitleWordsCount = calculateWordsLength(metadata->getTitleWords());
+        }
+
     public:
-        const QString &getFilePath() const { return m_ArtworkInfo->getOrigin()->getFilepath(); }
+        const QString &getFilePath() const { return m_Filepath; }
         const QStringList &getWarnings() const { return m_WarningsList; }
-        int getIndex() const { return m_ArtworkInfo->getOriginalIndex(); }
+        int getIndex() const { return m_ArtworkIndex; }
+        QSize getSize() const { return m_Dimensions; }
+        int getDescriptionLength() const { return m_DescriptionLength; }
+        int getTitleLength() const { return m_TitleLength; }
+        int getKeywordsCount() const { return m_KeywordsCount; }
+        bool hasTitleSpellErrors() const { return m_TitleSpellErrors; }
+        bool hasDescriptionSpellErrors() const { return m_DescriptionSpellErrors; }
+        bool hasKeywordsSpellErrors() const { return m_KeywordsSpellErrors; }
+        int getDescriptionWordsCount() const { return m_DescriptionWordsCount; }
+        int getTitleWordsCount() const { return m_TitleWordsCount; }
 
     private:
-        QStringList m_WarningsList;
+        int calculateWordsLength(const QStringList &stringList) const {
+            int wordsLength = 0;
+
+            foreach (const QString &part, stringList) {
+                if (part.length() > 2) {
+                    wordsLength++;
+                }
+            }
+
+            return wordsLength;
+        }
+
+    private:
         ArtItemInfo *m_ArtworkInfo;
+        QStringList m_WarningsList;
+        QString m_Filepath;
+        QSize m_Dimensions;
+        int m_ArtworkIndex;
+        int m_KeywordsCount;
+        int m_DescriptionLength;
+        int m_DescriptionWordsCount;
+        int m_TitleLength;
+        int m_TitleWordsCount;
+        bool m_TitleSpellErrors;
+        bool m_DescriptionSpellErrors;
+        bool m_KeywordsSpellErrors;
     };
 }
 

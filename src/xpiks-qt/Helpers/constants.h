@@ -30,7 +30,6 @@ namespace Constants {
     const char ORGANIZATION_DOMAIN[] = "ribtoks.github.io";
     const char APPLICATION_NAME[] = "Xpiks";
     const char LOG_FILENAME[] = "xpiks.log";
-    const char LIBRARY_FILENAME[] = "xpiks.library";
     const char METADATA_BACKUP_EXTENSION[] = ".xpks";
     const char SAVE_BACKUPS[] = "SAVE_BACKUPS";
     const char KEYWORD_SIZE_SCALE[] = "KEYWORD_SIZE_SCALE";
@@ -38,6 +37,7 @@ namespace Constants {
     const char FIT_SMALL_PREVIEW[] = "FIT_SMALL_PREVIEW";
     const char SEARCH_USING_AND[] = "SEARCH_USING_AND";
     const char SCROLL_SPEED_SCALE[] = "SCROLL_SPEED_SCALE";
+    const char WHATS_NEW_FILENAME[] = "whatsnew.txt";
 
     // different for DEBUG and RELEASE
 
@@ -53,6 +53,10 @@ namespace Constants {
     const char RECENT_DIRECTORIES[] = "RECENT_DIRECTORIES";
     const char MAX_PARALLEL_UPLOADS[] = "MAX_PARALLEL_UPLOADS";
     const char PROXY_URI[] = "PROXY_URI";
+    const char USE_SPELL_CHECK[] = "USE_SPELL_CHECK";
+    const char LIBRARY_FILENAME[] = "xpiks.library";
+    const char USER_AGENT_ID[] = "USER_AGENT_ID";
+    const char INSTALLED_VERSION[] = "INSTALLED_VERSION";
 #else
     const char UPLOAD_HOSTS[] = "DEBUG_UPLOAD_HOSTS_HASH";
     const char MAX_KEYWORD_COUNT[] = "DEBUG_MAX_KEYWORD_COUNT";
@@ -65,6 +69,10 @@ namespace Constants {
     const char RECENT_DIRECTORIES[] = "DEBUG_RECENT_DIRECTORIES";
     const char MAX_PARALLEL_UPLOADS[] = "DEBUG_MAX_PARALLEL_UPLOADS";
     const char PROXY_URI[] = "DEBUG_PROXY_URI";
+    const char USE_SPELL_CHECK[] = "DEBUG_USE_SPELL_CHECK";
+    const char LIBRARY_FILENAME[] = "xpiks.debug.library";
+    const char USER_AGENT_ID[] = "DEBUG_USER_AGENT_ID";
+    const char INSTALLED_VERSION[] = "DEBUG_INSTALLED_VERSION";
 #endif // QT_NO_DEBUG
 }
 

@@ -20,15 +20,54 @@
 */
 
 #include "helpersqmlwrapper.h"
+#include <QStringList>
+#include <QProcess>
+#include <QDir>
 #include "keywordvalidator.h"
+#include "../Commands/commandmanager.h"
+#include "logger.h"
 
 namespace Helpers {
+    HelpersQmlWrapper::HelpersQmlWrapper(Commands::CommandManager *commandManager) {
+        m_CommandManager = commandManager;
+    }
+
     bool HelpersQmlWrapper::isKeywordValid(const QString &keyword) const {
         return isValidKeyword(keyword);
     }
 
     QString HelpersQmlWrapper::sanitizeKeyword(const QString &keyword) const {
         return doSanitizeKeyword(keyword);
+    }
+
+    void HelpersQmlWrapper::afterConstruction() {
+        m_CommandManager->afterConstructionCallback();
+    }
+
+    void HelpersQmlWrapper::beforeDestruction() {
+        m_CommandManager->beforeDestructionCallback();
+    }
+
+    void HelpersQmlWrapper::revealLogFile() {
+        QString logFilePath = Logger::getInstance().getLogFilePath();
+#ifdef Q_OS_MAC
+    QStringList args;
+    args << "-e";
+    args << "tell application \"Finder\"";
+    args << "-e";
+    args << "activate";
+    args << "-e";
+    args << "select POSIX file \"" + logFilePath + "\"";
+    args << "-e";
+    args << "end tell";
+    QProcess::startDetached("osascript", args);
+#endif
+
+#ifdef Q_OS_WIN
+    QStringList args;
+    args << "/select," << QDir::toNativeSeparators(logFilePath);
+    QProcess::startDetached("explorer", args);
+#endif
     }
 }
 

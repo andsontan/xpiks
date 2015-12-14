@@ -22,11 +22,12 @@
 #include "indiceshelper.h"
 
 namespace Helpers {
-    void indicesToRanges(const QList<int> &indices, QList<QPair<int, int> > &ranges) {
+    void indicesToRanges(const QVector<int> &indices, QVector<QPair<int, int> > &ranges) {
         if (indices.empty()) { return; }
 
         int currentStart = indices[0];
         int indicesCount = indices.count();
+        ranges.reserve(indicesCount/3);
 
         for (int i = 1; i < indicesCount; ++i) {
             if (indices[i] - indices[i - 1] > 1) {
@@ -38,8 +39,7 @@ namespace Helpers {
         ranges.append(qMakePair(currentStart, indices[indicesCount - 1]));
     }
 
-    int getRangesLength(const QList<QPair<int, int> > &ranges)
-    {
+    int getRangesLength(const QVector<QPair<int, int> > &ranges) {
         int sum = 0;
 
         int length = ranges.length();

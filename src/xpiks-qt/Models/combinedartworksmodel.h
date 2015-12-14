@@ -28,10 +28,12 @@
 #include <QString>
 #include <QList>
 #include <QSet>
+#include <QQuickTextDocument>
 #include "abstractlistmodel.h"
 #include "../Common/baseentity.h"
 #include "../Common/basickeywordsmodel.h"
 #include "../Common/flags.h"
+#include "../SpellCheck/spellcheckiteminfo.h"
 
 namespace Models {
     class ArtItemInfo;
@@ -56,16 +58,17 @@ namespace Models {
             AbstractListModel(parent),
             Common::BaseEntity(),
             m_CommonKeywordsModel(this),
-            m_EditFlags(0)
+            m_EditFlags(0),
+            m_IsModified(false)
         {}
 
         virtual ~CombinedArtworksModel();
 
     public:
-        void initArtworks(const QList<ArtItemInfo*> &artworks);
+        void initArtworks(const QVector<ArtItemInfo *> &artworks);
 
     private:
-        void initKeywords(const QStringList &ek) { m_CommonKeywordsModel.reset(ek); m_CommonKeywordsSet.unite(QSet<QString>::fromList(m_CommonKeywordsModel.getKeywords())); }
+        void initKeywords(const QStringList &ek) { m_CommonKeywordsModel.resetKeywords(ek); }
         void initDescription(const QString &description) { setDescription(description); }
         void initTitle(const QString &title) { setTitle(title); }
 
@@ -76,24 +79,22 @@ namespace Models {
         virtual void acceptSuggestedKeywords(const QStringList &keywords);
 
     public:
-        void setKeywords(const QStringList& keywords) { m_CommonKeywordsModel.reset(keywords); }
-        const QString &getDescription() const { return m_ArtworkDescription; }
+        void setKeywords(const QStringList& keywords) { m_CommonKeywordsModel.resetKeywords(keywords); }
+        const QString &getDescription() const { return m_CommonKeywordsModel.getDescription(); }
         void setDescription(const QString &value) {
-            if (m_ArtworkDescription != value) {
-                m_ArtworkDescription = value;
+            if (m_CommonKeywordsModel.setDescription(value)) {
                 emit descriptionChanged();
             }
         }
 
-        const QString &getTitle() const { return m_ArtworkTitle; }
+        const QString &getTitle() const { return m_CommonKeywordsModel.getTitle(); }
         void setTitle(const QString &value) {
-            if (m_ArtworkTitle != value) {
-                m_ArtworkTitle = value;
+            if (m_CommonKeywordsModel.setTitle(value)) {
                 emit titleChanged();
             }
         }
 
-        int getKeywordsCount() const { return m_CommonKeywordsModel.rowCount(); }
+        int getKeywordsCount() const { return m_CommonKeywordsModel.getKeywordsCount(); }
 
         bool getChangeDescription() const { return Common::HasFlag(m_EditFlags, Common::EditDesctiption); }
         void setChangeDescription(bool value);
@@ -122,7 +123,13 @@ namespace Models {
         int getSelectedArtworksCount() const;
         int getArtworksCount() const { return m_ArtworksList.length(); }
 
+#if defined(TESTS)
+        const QStringList &getKeywords() const;
+        bool getIsModified() const { return m_IsModified; }
+#endif
+
     public:
+        Q_INVOKABLE void editKeyword(int index, const QString &replacement);
         Q_INVOKABLE QString removeKeywordAt(int keywordIndex);
         Q_INVOKABLE void removeLastKeyword();
         Q_INVOKABLE void appendKeyword(const QString &keyword);
@@ -138,6 +145,9 @@ namespace Models {
             QQmlEngine::setObjectOwnership(item, QQmlEngine::CppOwnership);
             return item;
         }
+        Q_INVOKABLE void suggestCorrections();
+        Q_INVOKABLE void initDescriptionHighlighting(QQuickTextDocument *document);
+        Q_INVOKABLE void initTitleHighlighting(QQuickTextDocument *document);
 
     private:
         void processCombinedEditCommand() const;
@@ -162,11 +172,9 @@ namespace Models {
         void removeInnerItem(int row);
 
     private:
-        QList<ArtItemInfo*> m_ArtworksList;
+        QVector<ArtItemInfo*> m_ArtworksList;
         Common::BasicKeywordsModel m_CommonKeywordsModel;
-        QSet<QString> m_CommonKeywordsSet;
-        QString m_ArtworkDescription;
-        QString m_ArtworkTitle;
+        SpellCheck::SpellCheckItemInfo m_SpellCheckInfo;
         int m_EditFlags;
         bool m_IsModified;
     };

@@ -40,5 +40,12 @@
         <file>Components/CustomScrollbar.qml</file>
         <file>Dialogs/EditArtworkHorizontalDialog.qml</file>
         <file>Dialogs/EditArtworkVerticalDialog.qml</file>
+        <file>Dialogs/UpdateWindow.qml</file>
+        <file>Dialogs/SpellCheckDialog.qml</file>
+        <file>Dialogs/SpellCheckSuggestionsDialog.qml</file>
+        <file>Components/SuggestionWrapper.qml</file>
+        <file>Dialogs/EditKeywordDialog.qml</file>
+        <file>Dialogs/PlainTextKeywordsDialog.qml</file>
+        <file>Dialogs/WhatsNewDialog.qml</file>
     </qresource>
 </RCC>

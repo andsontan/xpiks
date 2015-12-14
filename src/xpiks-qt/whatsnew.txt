@@ -1,0 +1,9 @@
+**Major features** of 1.0 release are:
+
+- Keywords Suggestion from the local library
+- New dialogs for single item editing
+- Advanced filtering support
+- Improved scrolling support
+- Improved warnings checking
+
+Enjoy!

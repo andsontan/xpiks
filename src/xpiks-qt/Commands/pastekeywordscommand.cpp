@@ -34,8 +34,12 @@ Commands::PasteKeywordsCommand::~PasteKeywordsCommand() {
 Commands::CommandResult *Commands::PasteKeywordsCommand::execute(const Commands::CommandManager *commandManager) const {
     qDebug() << "Paste command";
 
-    QList<int> indicesToUpdate;
-    QList<UndoRedo::ArtworkMetadataBackup*> artworksBackups;
+    QVector<int> indicesToUpdate;
+    QVector<UndoRedo::ArtworkMetadataBackup*> artworksBackups;
+    QVector<SpellCheck::ISpellCheckable*> itemsToCheck;
+    indicesToUpdate.reserve(m_ArtItemInfos.length());
+    artworksBackups.reserve(m_ArtItemInfos.length());
+    itemsToCheck.reserve(m_ArtItemInfos.length());
 
     foreach (Models::ArtItemInfo *itemInfo, m_ArtItemInfos) {
         Models::ArtworkMetadata *metadata = itemInfo->getOrigin();
@@ -44,7 +48,10 @@ Commands::CommandResult *Commands::PasteKeywordsCommand::execute(const Commands:
         artworksBackups.append(new UndoRedo::ArtworkMetadataBackup(metadata));
 
         metadata->appendKeywords(m_KeywordsList);
+        commandManager->saveMetadata(metadata);
     }
+
+    commandManager->submitForSpellCheck(itemsToCheck);
 
     UndoRedo::ModifyArtworksHistoryItem *modifyArtworksItem =
             new UndoRedo::ModifyArtworksHistoryItem(artworksBackups, indicesToUpdate,

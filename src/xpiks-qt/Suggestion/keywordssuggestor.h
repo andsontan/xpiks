@@ -60,7 +60,7 @@ namespace Suggestion {
 
     public:
         void setLocalLibrary(LocalLibrary *library) { m_LocalLibrary = library; }
-        void setSuggestedArtworks(const QList<SuggestionArtwork*> &suggestedArtworks);
+        void setSuggestedArtworks(const QVector<SuggestionArtwork *> &suggestedArtworks);
         void clear();
 
         bool getUseLocal() const { return m_UseLocal; }
@@ -130,7 +130,7 @@ namespace Suggestion {
 
     private:
         QHash<QString, int> m_KeywordsHash;
-        QList<SuggestionArtwork *> m_Suggestions;
+        QVector<SuggestionArtwork *> m_Suggestions;
         SuggestionQueryEngine m_QueryEngine;
         LocalLibrary *m_LocalLibrary;
         Common::BasicKeywordsModel m_SuggestedKeywords;

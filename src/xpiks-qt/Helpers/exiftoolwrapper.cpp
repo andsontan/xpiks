@@ -28,6 +28,7 @@
 #include <QString>
 #include <QDebug>
 #include <QPair>
+#include <QImageReader>
 #include "../Models/artworkmetadata.h"
 #include "../Models/exportinfo.h"
 #include "tempmetadatadb.h"
@@ -63,7 +64,7 @@ ExportPair writeArtworkMetadata(ExportPair pair) {
     arguments << QString("-XMP:Description=\"%1\"").arg(description);
     arguments << QString("-IPTC:Keywords=\"%1\"").arg(keywords);
     arguments << QString("-XMP:Keywords=\"%1\"").arg(keywords);
-    arguments << QString("-XMP:Subject=\"%1\"").arg(keywords);
+    //arguments << QString("-XMP:Subject=\"%1\"").arg(keywords);
     arguments << QString("-IPTC:CodedCharacterSet=\"UTF8\"");
 
     if (!exportInfo->getMustSaveOriginal()) {
@@ -135,6 +136,9 @@ ImportPair readArtworkMetadata(ImportPair pair) {
     QRegExp keywordsRegExp("^Keywords\\s|^Subject\\s");
 
     grabMetadata(items, importData, titleRegExp, descriptionRegExp, keywordsRegExp);
+
+    QImageReader reader(metadata->getFilepath());
+    importData->Size = reader.size();
 
     return pair;
 }

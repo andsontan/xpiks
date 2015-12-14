@@ -32,13 +32,14 @@
 void UndoRedo::RemoveArtworksHistoryItem::undo(const Commands::CommandManager *commandManager) const {
     qDebug() << "Undo: remove artworks command";
 
-    QList<QPair<int, int> > ranges;
+    QVector<QPair<int, int> > ranges;
     Helpers::indicesToRanges(m_RemovedArtworksIndices, ranges);
 
     Models::ArtItemsModel *artItemsModel = commandManager->getArtItemsModel();
     Models::ArtworksRepository *artworksRepository = commandManager->getArtworksRepository();
 
-    QList<Models::ArtworkMetadata*> artworksToImport;
+    QVector<Models::ArtworkMetadata*> artworksToImport;
+    artworksToImport.reserve(m_RemovedArtworksIndices.length());
 
     bool filesWereAccounted = artworksRepository->beginAccountingFiles(m_RemovedArtworksPathes);
 

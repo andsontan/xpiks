@@ -36,5 +36,5 @@ void UndoRedo::ArtworkMetadataBackup::restore(Models::ArtworkMetadata *metadata)
     metadata->setTitle(m_Title);
     metadata->setKeywords(m_KeywordsList);
     if (m_IsModified) { metadata->setModified(); }
-    else { metadata->unsetModified(); }
+    else { metadata->resetModified(); }
 }

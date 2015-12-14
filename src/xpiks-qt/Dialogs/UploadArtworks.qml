@@ -747,7 +747,7 @@ Item {
                         width: 120
                         enabled: !artworkUploader.inProgress
                         onClicked: {
-                            artItemsModel.updateAllProperties()
+                            filteredArtItemsModel.updateSelectedArtworks()
                             closePopup()
                         }
                     }

@@ -34,28 +34,24 @@
 #include "../Commands/commandmanager.h"
 #include "artworksrepository.h"
 #include "../Models/settingsmodel.h"
-
-#ifdef Q_OS_OSX
-#include "../Helpers/osxnsurlhelper.h"
-#endif
+#include "../SpellCheck/spellcheckiteminfo.h"
+#include "../Common/flags.h"
+#include "../Commands/combinededitcommand.h"
 
 namespace Models {
-
     ArtItemsModel::~ArtItemsModel() {
         qDeleteAll(m_ArtworkList);
         m_ArtworkList.clear();
-
-        // being freed in gui
-        //delete m_ArtworksDirectories;
     }
 
     ArtworkMetadata *ArtItemsModel::createMetadata(const QString &filepath) const { return new ArtworkMetadata(filepath); }
 
-    int ArtItemsModel::getModifiedArtworksCount()
-    {
+    int ArtItemsModel::getModifiedArtworksCount() {
         int modifiedCount = 0;
-        foreach (ArtworkMetadata *metadata, m_ArtworkList) {
-            if (metadata->isModified()) {
+        int length = m_ArtworkList.length();
+
+        for (int i = 0; i < length; ++i) {
+            if (m_ArtworkList.at(i)->isModified()) {
                 modifiedCount++;
             }
         }
@@ -63,35 +59,45 @@ namespace Models {
         return modifiedCount;
     }
 
-    void ArtItemsModel::updateItems(const QList<int> &indices, const QVector<int> &roles) {
-        QList<QPair<int, int> > rangesToUpdate;
+    void ArtItemsModel::updateItems(const QVector<int> &indices, const QVector<int> &roles) {
+        QVector<QPair<int, int> > rangesToUpdate;
         Helpers::indicesToRanges(indices, rangesToUpdate);
         updateItemsInRanges(rangesToUpdate, roles);
     }
 
     void ArtItemsModel::forceUnselectAllItems() const {
-        foreach (ArtworkMetadata *metadata, m_ArtworkList) {
-            metadata->resetSelected();
+        int count = m_ArtworkList.count();
+        for (int i = 0; i < count; ++i) {
+            m_ArtworkList.at(i)->resetSelected();
         }
     }
 
-    void ArtItemsModel::updateAllProperties()
-    {
-        QList<QPair<int, int> > ranges;
-        ranges << qMakePair(0, m_ArtworkList.length() - 1);
-        QVector<int> roles;
-        roles << ArtworkDescriptionRole << IsModifiedRole << ArtworkTitleRole << KeywordsCountRole;
-        updateItemsInRanges(ranges, roles);
+    void ArtItemsModel::updateLastN(int N) {
+        int length = m_ArtworkList.length();
+
+        if (0 < N && N <= length) {
+            int start = length - N;
+            int end = length - 1;
+
+            QVector<QPair<int, int> > ranges;
+            ranges << qMakePair(start, end);
+
+            QVector<int> roles;
+            fillStandardRoles(roles);
+
+            updateItemsInRanges(ranges, roles);
+        }
     }
 
-    void ArtItemsModel::removeArtworksDirectory(int index)
-    {
+    void ArtItemsModel::removeArtworksDirectory(int index) {
         const QString &directory = m_CommandManager->getArtworksRepository()->getDirectory(index);
-        QList<int> indicesToRemove;
+        QVector<int> indicesToRemove;
+        int count = m_ArtworkList.length();
+        indicesToRemove.reserve(count);
 
-        QList<ArtworkMetadata*>::const_iterator it = m_ArtworkList.constBegin();
-        for (int i = 0; it < m_ArtworkList.constEnd(); ++it, ++i) {
-            if ((*it)->isInDirectory(directory)) {
+        for (int i = 0; i < count; ++i) {
+            ArtworkMetadata *metadata = m_ArtworkList.at(i);
+            if (metadata->isInDirectory(directory)) {
                 indicesToRemove.append(i);
             }
         }
@@ -101,58 +107,59 @@ namespace Models {
         emit modifiedArtworksCountChanged();
     }
 
-    void ArtItemsModel::removeKeywordAt(int metadataIndex, int keywordIndex)
-    {
-        if (metadataIndex >= 0 && metadataIndex < m_ArtworkList.length()) {
+    void ArtItemsModel::removeKeywordAt(int metadataIndex, int keywordIndex) {
+        if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
 
             if (metadata->removeKeywordAt(keywordIndex)) {
                 QModelIndex index = this->index(metadataIndex);
                 emit dataChanged(index, index, QVector<int>() << IsModifiedRole << KeywordsCountRole);
-                backupItem(metadataIndex);
+                m_CommandManager->saveMetadata(metadata);
             }
         }
     }
 
-    void ArtItemsModel::removeLastKeyword(int metadataIndex)
-    {
-        if (metadataIndex >= 0 && metadataIndex < m_ArtworkList.length()) {
+    void ArtItemsModel::removeLastKeyword(int metadataIndex) {
+        if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
 
             if (metadata->removeLastKeyword()) {
                 QModelIndex index = this->index(metadataIndex);
                 emit dataChanged(index, index, QVector<int>() << IsModifiedRole << KeywordsCountRole);
+                m_CommandManager->saveMetadata(metadata);
             }
         }
     }
 
-    void ArtItemsModel::appendKeyword(int metadataIndex, const QString &keyword)
-    {
-        if (metadataIndex >= 0 && metadataIndex < m_ArtworkList.length()) {
+    void ArtItemsModel::appendKeyword(int metadataIndex, const QString &keyword) {
+        if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
             if (metadata->appendKeyword(keyword)) {
                 QModelIndex index = this->index(metadataIndex);
                 emit dataChanged(index, index, QVector<int>() << IsModifiedRole << KeywordsCountRole);
+                m_CommandManager->submitForSpellCheck(metadata, metadata->rowCount() - 1);
+                m_CommandManager->saveMetadata(metadata);
             }
         }
     }
 
-    void ArtItemsModel::pasteKeywords(int metadataIndex, const QStringList &keywords)
-    {
+    void ArtItemsModel::pasteKeywords(int metadataIndex, const QStringList &keywords) {
         if (metadataIndex >= 0
                 && metadataIndex < m_ArtworkList.length()
                 && !keywords.empty()) {
 
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
 
-            QList<ArtItemInfo*> artItemInfos;
-            QList<int> selectedIndices;
+            QVector<ArtItemInfo*> artItemInfos;
+            QVector<int> selectedIndices;
 
             getSelectedItemsIndices(selectedIndices);
 
             if (!metadata->getIsSelected()) {
                 selectedIndices.append(metadataIndex);
             }
+
+            artItemInfos.reserve(selectedIndices.length());
 
             foreach (int index, selectedIndices) {
                 ArtworkMetadata *metadata = m_ArtworkList.at(index);
@@ -169,30 +176,38 @@ namespace Models {
         }
     }
 
-    void ArtItemsModel::backupItem(int metadataIndex)
-    {
-        if (metadataIndex >= 0 && metadataIndex < m_ArtworkList.length()) {
-            ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
-            SettingsModel *settings = m_CommandManager->getSettingsModel();
-            metadata->saveBackup(settings);
+    void ArtItemsModel::suggestCorrections(int metadataIndex) {
+        if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
+            int flags = 0;
+            Common::SetFlag(flags, Common::CorrectDescription);
+            Common::SetFlag(flags, Common::CorrectTitle);
+            Common::SetFlag(flags, Common::CorrectKeywords);
+            m_CommandManager->setupSpellCheckSuggestions(m_ArtworkList.at(metadataIndex), metadataIndex, flags);
         }
     }
 
-    int ArtItemsModel::dropFiles(const QList<QUrl> &urls)
-    {
-        QList<QUrl> localUrls;
-
-#ifdef Q_OS_MAC
-        foreach (const QUrl &url, urls) {
-            QUrl localUrl = Helpers::fromNSUrl(url);
-            localUrls.append(localUrl);
+    void ArtItemsModel::clearKeywords(int metadataIndex) {
+        if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
+            ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
+            metadata->clearKeywords();
+            // do not save metadata - give change to restore from .xpks
+            //m_CommandManager->saveMetadata(metadata);
         }
-#else
-        localUrls = urls;
-#endif
-        QList<QUrl> directories, files;
+    }
 
-        foreach(const QUrl &url, localUrls) {
+    void ArtItemsModel::backupItem(int metadataIndex) {
+        if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
+            ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
+            m_CommandManager->saveMetadata(metadata);
+        }
+    }
+
+    int ArtItemsModel::dropFiles(const QList<QUrl> &urls) {
+        QList<QUrl> directories, files;
+        directories.reserve(urls.count()/2);
+        files.reserve(urls.count());
+
+        foreach(const QUrl &url, urls) {
             bool isDirectory = QDir(url.toLocalFile()).exists();
             if (isDirectory) {
                 directories.append(url);
@@ -208,12 +223,12 @@ namespace Models {
         return count;
     }
 
-    void ArtItemsModel::setSelectedItemsSaved(const QList<int> &selectedIndices) {
+    void ArtItemsModel::setSelectedItemsSaved(const QVector<int> &selectedIndices) {
         foreach (int index, selectedIndices) {
-            m_ArtworkList[index]->unsetModified();
+            m_ArtworkList.at(index)->resetModified();
         }
 
-        QList<QPair<int, int> > rangesToUpdate;
+        QVector<QPair<int, int> > rangesToUpdate;
         Helpers::indicesToRanges(selectedIndices, rangesToUpdate);
         updateItemsInRanges(rangesToUpdate, QVector<int>() << IsModifiedRole);
 
@@ -221,13 +236,12 @@ namespace Models {
         emit artworksChanged();
     }
 
-    void ArtItemsModel::removeSelectedArtworks(QList<int> &selectedIndices) {
+    void ArtItemsModel::removeSelectedArtworks(QVector<int> &selectedIndices) {
         doRemoveItemsAtIndices(selectedIndices);
     }
 
-    void ArtItemsModel::updateSelectedArtworks(const QList<int> &selectedIndices)
-    {
-        QList<QPair<int, int> > rangesToUpdate;
+    void ArtItemsModel::updateSelectedArtworks(const QVector<int> &selectedIndices) {
+        QVector<QPair<int, int> > rangesToUpdate;
         Helpers::indicesToRanges(selectedIndices, rangesToUpdate);
         QVector<int> roles;
         fillStandardRoles(roles);
@@ -236,11 +250,13 @@ namespace Models {
         emit artworksChanged();
     }
 
-    void ArtItemsModel::saveSelectedArtworks(const QList<int> &selectedIndices)
-    {
-        QList<ArtworkMetadata*> modifiedSelectedArtworks;
+    void ArtItemsModel::saveSelectedArtworks(const QVector<int> &selectedIndices) {
+        QVector<ArtworkMetadata*> modifiedSelectedArtworks;
+        int count = selectedIndices.count();
+        modifiedSelectedArtworks.reserve(count/2);
 
-        foreach (int index, selectedIndices) {
+        for (int i = 0; i < count; ++i) {
+            int index = selectedIndices.at(i);
             ArtworkMetadata *metadata = getArtwork(index);
             if (metadata != NULL &&
                     metadata->getIsSelected() &&
@@ -256,8 +272,8 @@ namespace Models {
     QObject *ArtItemsModel::getArtworkItself(int index) const {
         ArtworkMetadata *item = NULL;
 
-        if (index >= 0 && index < m_ArtworkList.length()) {
-            item = m_ArtworkList[index];
+        if (0 <= index && index < m_ArtworkList.length()) {
+            item = m_ArtworkList.at(index);
             QQmlEngine::setObjectOwnership(item, QQmlEngine::CppOwnership);
         }
 
@@ -268,13 +284,12 @@ namespace Models {
         if (metadataIndex < 0 || metadataIndex >= m_ArtworkList.length()) { return QSize(); }
 
         ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
-        QImageReader reader(metadata->getFilepath());
-        QSize size = reader.size();
+        QSize size = metadata->getSize();
         return size;
     }
 
     QString ArtItemsModel::retrieveFileSize(int metadataIndex) const {
-        if (metadataIndex < 0 || metadataIndex >= m_ArtworkList.length()) { return "-"; }
+        if (metadataIndex < 0 || metadataIndex >= m_ArtworkList.length()) { return QLatin1String("-"); }
 
         ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
         QFileInfo fi(metadata->getFilepath());
@@ -283,24 +298,76 @@ namespace Models {
 
         QString sizeDescription;
         if (size >= 1) {
-            sizeDescription = QString::number(size, 'f', 2) + " MB";
+            sizeDescription = QString::number(size, 'f', 2) + QLatin1String(" MB");
         } else {
             size *= 1024;
-            sizeDescription = QString::number(size, 'f', 2) + " KB";
+            sizeDescription = QString::number(size, 'f', 2) + QLatin1String(" KB");
         }
 
         return sizeDescription;
     }
 
     QString ArtItemsModel::getArtworkFilepath(int metadataIndex) const {
-        if (metadataIndex < 0 || metadataIndex >= m_ArtworkList.length()) { return ""; }
+        if (metadataIndex < 0 || metadataIndex >= m_ArtworkList.length()) { return QLatin1String(""); }
 
         ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
         return metadata->getFilepath();
     }
 
-    void ArtItemsModel::addRecentDirectory(const QString &directory) {
-        addDirectories(QStringList() << directory);
+    int ArtItemsModel::addRecentDirectory(const QString &directory) {
+        int filesAdded = addDirectories(QStringList() << directory);
+        return filesAdded;
+    }
+
+    void ArtItemsModel::initDescriptionHighlighting(int metadataIndex, QQuickTextDocument *document) {
+        if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
+            ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
+            SpellCheck::SpellCheckItemInfo *info = metadata->getSpellCheckInfo();
+            info->createHighlighterForDescription(document->textDocument(), metadata);
+            metadata->notifySpellCheckResults();
+        }
+    }
+
+    void ArtItemsModel::initTitleHighlighting(int metadataIndex, QQuickTextDocument *document) {
+        if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
+            ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
+            SpellCheck::SpellCheckItemInfo *info = metadata->getSpellCheckInfo();
+            info->createHighlighterForTitle(document->textDocument(), metadata);
+            metadata->notifySpellCheckResults();
+        }
+    }
+
+    void ArtItemsModel::editKeyword(int metadataIndex, int keywordIndex, const QString &replacement) {
+        if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
+            ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
+            if (metadata->editKeyword(keywordIndex, replacement)) {
+                m_CommandManager->submitForSpellCheck(metadata, keywordIndex);
+                m_CommandManager->saveMetadata(metadata);
+            }
+        }
+    }
+
+    void ArtItemsModel::plainTextEdit(int metadataIndex, const QString &rawKeywords) {
+        if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
+            ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
+            ArtItemInfo *itemInfo = new ArtItemInfo(metadata, metadataIndex);
+
+            QStringList keywords = rawKeywords.trimmed().split(QChar(','), QString::SkipEmptyParts);
+
+            int flags = 0;
+            Common::SetFlag(flags, Common::EditKeywords);
+            Commands::CombinedEditCommand *combinedEditCommand = new Commands::CombinedEditCommand(
+                        flags,
+                        QVector<ArtItemInfo*>() << itemInfo,
+                        "", "",
+                        keywords);
+
+            Commands::CommandResult *result = m_CommandManager->processCommand(combinedEditCommand);
+            Commands::CombinedEditCommandResult *combinedResult = static_cast<Commands::CombinedEditCommandResult*>(result);
+
+            delete combinedResult;
+            delete itemInfo;
+        }
     }
 
     int ArtItemsModel::rowCount(const QModelIndex &parent) const {
@@ -309,10 +376,12 @@ namespace Models {
     }
 
     QVariant ArtItemsModel::data(const QModelIndex &index, int role) const {
-        if (index.row() < 0 || index.row() >= m_ArtworkList.count())
+        int row = index.row();
+        if (row < 0 || row >= m_ArtworkList.length()) {
             return QVariant();
+        }
 
-        ArtworkMetadata *metadata = m_ArtworkList.at(index.row());
+        ArtworkMetadata *metadata = m_ArtworkList.at(row);
         switch (role) {
         case ArtworkDescriptionRole:
             return metadata->getDescription();
@@ -333,22 +402,22 @@ namespace Models {
         }
     }
 
-    Qt::ItemFlags ArtItemsModel::flags(const QModelIndex &index) const
-    {
-        if (!index.isValid()) {
+    Qt::ItemFlags ArtItemsModel::flags(const QModelIndex &index) const {
+        int row = index.row();
+        if (row < 0 || row >= m_ArtworkList.length()) {
             return Qt::ItemIsEnabled;
         }
 
         return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
     }
 
-    bool ArtItemsModel::setData(const QModelIndex &index, const QVariant &value, int role)
-    {
-        if (!index.isValid()) {
+    bool ArtItemsModel::setData(const QModelIndex &index, const QVariant &value, int role) {
+        int row = index.row();
+        if (row < 0 || row >= m_ArtworkList.length()) {
             return false;
         }
 
-        ArtworkMetadata *metadata = m_ArtworkList.at(index.row());
+        ArtworkMetadata *metadata = m_ArtworkList.at(row);
         int roleToUpdate = 0;
         bool needToUpdate = false;
         switch (role) {
@@ -374,17 +443,19 @@ namespace Models {
 
         if (role == EditArtworkDescriptionRole ||
                 role == EditArtworkTitleRole) {
-            SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
-            metadata->saveBackup(settingsModel);
+            if (metadata->isInitialized()) {
+                m_CommandManager->saveMetadata(metadata);
+            }
         }
 
         return true;
     }
 
-    int ArtItemsModel::addLocalArtworks(const QList<QUrl> &artworksPaths)
-    {
+    int ArtItemsModel::addLocalArtworks(const QList<QUrl> &artworksPaths) {
         qDebug() << artworksPaths;
         QStringList fileList;
+        fileList.reserve(artworksPaths.length());
+
         foreach (const QUrl &url, artworksPaths) {
             fileList.append(url.toLocalFile());
         }
@@ -393,10 +464,11 @@ namespace Models {
         return filesAddedCount;
     }
 
-    int ArtItemsModel::addLocalDirectories(const QList<QUrl> &directories)
-    {
+    int ArtItemsModel::addLocalDirectories(const QList<QUrl> &directories) {
         qDebug() << "Adding local directories: " << directories;
         QStringList directoriesList;
+        directoriesList.reserve(directories.length());
+
         foreach (const QUrl &url, directories) {
             if (url.isLocalFile()) {
                 directoriesList.append(url.toLocalFile());
@@ -409,52 +481,61 @@ namespace Models {
         return addedFilesCount;
     }
 
-    void ArtItemsModel::beginAccountingFiles(int filesCount)
-    {
+    void ArtItemsModel::beginAccountingFiles(int filesCount) {
         int rowsCount = rowCount();
         beginInsertRows(QModelIndex(), rowsCount, rowsCount + filesCount - 1);
     }
 
-    void ArtItemsModel::beginAccountingFiles(int start, int end)
-    {
+    void ArtItemsModel::beginAccountingFiles(int start, int end) {
         beginInsertRows(QModelIndex(), start, end);
     }
 
-    void ArtItemsModel::endAccountingFiles()
-    {
+    void ArtItemsModel::endAccountingFiles() {
         endInsertRows();
     }
 
-    void ArtItemsModel::insertArtwork(int index, ArtworkMetadata *metadata)
-    {
+    void ArtItemsModel::insertArtwork(int index, ArtworkMetadata *metadata) {
         Q_ASSERT(index >= 0 && index <= m_ArtworkList.length());
         Q_ASSERT(metadata != NULL);
         m_ArtworkList.insert(index, metadata);
     }
 
-    void ArtItemsModel::appendMetadata(ArtworkMetadata *metadata)
-    {
+    void ArtItemsModel::appendMetadata(ArtworkMetadata *metadata) {
         Q_ASSERT(metadata != NULL);
         m_ArtworkList.append(metadata);
     }
 
-    ArtworkMetadata *ArtItemsModel::getArtwork(int index) const
-    {
+    ArtworkMetadata *ArtItemsModel::getArtwork(int index) const {
         ArtworkMetadata *result = NULL;
-        if (index >= 0 && index < m_ArtworkList.length()) {
-            result = m_ArtworkList[index];
+        if (0 <= index && index < m_ArtworkList.length()) {
+            result = m_ArtworkList.at(index);
         }
 
         return result;
     }
 
-    void ArtItemsModel::updateItemsAtIndices(const QList<int> &indices)
-    {
-        QList<QPair<int, int> > ranges;
+    void ArtItemsModel::updateItemsAtIndices(const QVector<int> &indices) {
+        QVector<QPair<int, int> > ranges;
         Helpers::indicesToRanges(indices, ranges);
         QVector<int> roles;
         fillStandardRoles(roles);
         updateItemsInRanges(ranges, roles);
+    }
+
+    void ArtItemsModel::setAllItemsSelected(bool selected)
+    {
+        qDebug() << "Setting all items selected (" << selected << ")";
+        int length = m_ArtworkList.length();
+        for (int i = 0; i < length; ++i) {
+            ArtworkMetadata *metadata = m_ArtworkList.at(i);
+            metadata->setIsSelected(selected);
+        }
+
+        if (length > 0) {
+            QModelIndex startIndex = index(0);
+            QModelIndex endIndex = index(length - 1);
+            emit dataChanged(startIndex, endIndex, QVector<int>() << IsSelectedRole);
+        }
     }
 
     int ArtItemsModel::addDirectories(const QStringList &directories) {
@@ -477,9 +558,11 @@ namespace Models {
 
         dir.setFilter(QDir::NoDotAndDotDot | QDir::Files);
 
-        QStringList items = dir.entryList();
-        for (int i = 0; i < items.size(); ++i) {
-            QString filepath = dir.filePath(items[i]);
+        QFileInfoList items = dir.entryInfoList();
+        int size = items.size();
+        filesList.reserve(size);
+        for (int i = 0; i < size; ++i) {
+            QString filepath = items.at(i).absoluteFilePath();
             filesList.append(filepath);
         }
     }
@@ -487,14 +570,17 @@ namespace Models {
     int ArtItemsModel::addFiles(const QStringList &rawFilenames)
     {
         QStringList filenames;
+        filenames.reserve(rawFilenames.length());
 
         foreach (const QString &filepath, rawFilenames) {
             QImageReader imageReader(filepath);
 
-            if (imageReader.format() == "jpeg" ||
-                    imageReader.format() == "tiff") {
+            QString format = imageReader.format();
+
+            if (format == QLatin1String("jpeg") ||
+                    format == QLatin1String("tiff")) {
                 filenames.append(filepath);
-            } else if (imageReader.format() == "png") {
+            } else if (format == QLatin1String("png")) {
                 qDebug() << "PNG is unsupported file format";
             }
         }
@@ -508,45 +594,24 @@ namespace Models {
         return newFilesCount;
     }
 
-    void ArtItemsModel::setAllItemsSelected(bool selected)
-    {
-        qDebug() << "Setting all items selected (" << selected << ")";
-        int length = m_ArtworkList.length();
-        for (int i = 0; i < length; ++i) {
-            ArtworkMetadata *metadata = m_ArtworkList[i];
-            metadata->setIsSelected(selected);
-        }
-
-        if (length > 0) {
-            QModelIndex startIndex = index(0);
-            QModelIndex endIndex = index(length - 1);
-            emit dataChanged(startIndex, endIndex, QVector<int>() << IsSelectedRole);
-        }
-    }
-
-    void ArtItemsModel::getSelectedArtworks(QList<ArtworkMetadata *> &selectedArtworks) const
-    {
-        foreach (ArtworkMetadata *metadata, m_ArtworkList) {
+    void ArtItemsModel::getSelectedArtworks(QVector<ArtworkMetadata *> &selectedArtworks) const {
+        int count = m_ArtworkList.length();
+        for (int i = 0; i < count; ++i) {
+            ArtworkMetadata *metadata = m_ArtworkList.at(i);
             if (metadata->getIsSelected()) {
                 selectedArtworks.append(metadata);
             }
         }
     }
 
-    void ArtItemsModel::doCombineArtwork(int index)
-    {
-        if (index >= 0 && index < m_ArtworkList.length()) {
-            QList<ArtItemInfo*> artworksList;
-
+    void ArtItemsModel::doCombineArtwork(int index) {
+        if (0 <= index && index < m_ArtworkList.length()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(index);
-            metadata->setIsSelected(true);
             QModelIndex qmIndex = this->index(index);
             emit dataChanged(qmIndex, qmIndex, QVector<int>() << IsSelectedRole);
 
             ArtItemInfo *info = new ArtItemInfo(metadata, index);
-            artworksList.append(info);
-
-            m_CommandManager->combineArtworks(artworksList);
+            m_CommandManager->combineArtwork(info);
         }
     }
 
@@ -565,10 +630,9 @@ namespace Models {
         return roles;
     }
 
-    void ArtItemsModel::removeInnerItem(int row)
-    {
+    void ArtItemsModel::removeInnerItem(int row) {
         Q_ASSERT(row >= 0 && row < m_ArtworkList.length());
-        ArtworkMetadata *metadata = m_ArtworkList[row];
+        ArtworkMetadata *metadata = m_ArtworkList.at(row);
         ArtworksRepository *artworkRepository = m_CommandManager->getArtworksRepository();
         artworkRepository->removeFile(metadata->getFilepath(), metadata->getDirectory());
 
@@ -580,34 +644,30 @@ namespace Models {
         m_ArtworkList.removeAt(row);
     }
 
-    void ArtItemsModel::doRemoveItemsAtIndices(QList<int> &indicesToRemove)
-    {
+    void ArtItemsModel::doRemoveItemsAtIndices(QVector<int> &indicesToRemove) {
         qSort(indicesToRemove);
-        QList<QPair<int, int> > rangesToRemove;
+        QVector<QPair<int, int> > rangesToRemove;
         Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
         doRemoveItemsInRanges(rangesToRemove);
     }
 
-    void ArtItemsModel::doRemoveItemsInRanges(const QList<QPair<int, int> > &rangesToRemove)
-    {
+    void ArtItemsModel::doRemoveItemsInRanges(const QVector<QPair<int, int> > &rangesToRemove) {
         Commands::RemoveArtworksCommand *removeArtworksCommand = new Commands::RemoveArtworksCommand(rangesToRemove);
         Commands::CommandResult *result = m_CommandManager->processCommand(removeArtworksCommand);
         delete result;
     }
 
-    void ArtItemsModel::getSelectedItemsIndices(QList<int> &indices)
-    {
+    void ArtItemsModel::getSelectedItemsIndices(QVector<int> &indices) {
         int count = m_ArtworkList.length();
+        indices.reserve(count / 3);
         for (int i = 0; i < count; ++i) {
-            ArtworkMetadata *metadata = m_ArtworkList[i];
-            if (metadata->getIsSelected()) {
+            if (m_ArtworkList.at(i)->getIsSelected()) {
                 indices.append(i);
             }
         }
     }
 
-    void ArtItemsModel::fillStandardRoles(QVector<int> &roles) const
-    {
+    void ArtItemsModel::fillStandardRoles(QVector<int> &roles) const {
         roles << ArtworkDescriptionRole << IsModifiedRole <<
                  ArtworkTitleRole << KeywordsCountRole;
     }

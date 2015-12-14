@@ -23,9 +23,11 @@
 #define STRINGHELPER
 
 class QString;
+class QStringList;
 
 namespace Helpers {
     QString getLastNLines(const QString &text, int N);
+    void splitText(const QString &text, QStringList &parts);
 }
 
 #endif // STRINGHELPER

@@ -46,10 +46,8 @@ namespace Models {
     }
 
     LogsModel::~LogsModel() {
-#ifdef WITH_LOGS
         m_LoggingWorker->cancel();
         m_LoggingWorker->deleteLater();
-#endif
     }
 
     void LogsModel::startLogging() {

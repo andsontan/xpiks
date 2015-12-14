@@ -35,7 +35,13 @@ namespace Helpers {
         QString anyFile = filepathes.first();
         QString archivePath = getArchivePath(anyFile);
 
-        bool result = JlCompress::compressFiles(archivePath, filepathes);
+        bool result = false;
+        try {
+            result = JlCompress::compressFiles(archivePath, filepathes);
+        } catch (...) {
+            qDebug() << "Exception while zipping with QuaZip";
+        }
+
         if (!result) {
             qDebug() << "Failed to create zip" << archivePath;
         }

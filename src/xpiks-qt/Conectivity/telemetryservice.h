@@ -19,16 +19,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "osxnsurlhelper.h"
-#include <Foundation/Foundation.h>
-#include <QUrl>
+#ifndef TELEMETRYSERVICE_H
+#define TELEMETRYSERVICE_H
 
-namespace Helpers {
-    QUrl fromNSUrl(const QUrl &url) {
-        NSURL *nsUrl = url.toNSURL();
-        NSString *path = nsUrl.path;
+#include <QObject>
+#include <QNetworkAccessManager>
+#include <QString>
+#include "analyticsuserevent.h"
 
-        QString qtString = QString::fromNSString(path);
-        return QUrl::fromLocalFile(qtString);
-    }
+namespace Conectivity {
+    class TelemetryService : public QObject {
+        Q_OBJECT
+    public:
+        TelemetryService(const QString &userId, const QString &endpoint, QObject *parent=NULL);
+
+    public:
+        void reportAction(UserAction action);
+
+    private:
+        void doReportAction(UserAction action);
+
+    signals:
+        void cancelAllQueries();
+
+    private slots:
+        void replyReceived(QNetworkReply *reply);
+
+    private:
+        QNetworkAccessManager m_NetworkManager;
+        QString m_ReportingEndpoint;
+        QString m_UserAgentId;
+    };
 }
+
+#endif // TELEMETRYSERVICE_H
+

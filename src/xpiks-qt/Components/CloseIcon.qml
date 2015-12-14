@@ -25,8 +25,8 @@ import "../Constants/Colors.js" as Colors
 
 Item {
     id: item
-    property bool isActive
-    property bool isPlus
+    property bool isActive: false
+    property bool isPlus: false
     property int thickness: 3
 
     signal itemClicked();

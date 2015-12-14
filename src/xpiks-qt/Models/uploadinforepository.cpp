@@ -34,13 +34,17 @@ namespace Models {
         originalData.append(savedString.toLatin1());
         QByteArray result = QByteArray::fromBase64(originalData);
 
+        // bad type QList instead of QVector
+        // but users already have this
         QList<QHash<int, QString> > items;
         QDataStream stream(&result, QIODevice::ReadOnly);
         stream >> items;
 
         int length = items.length();
+        m_UploadInfos.reserve(length);
+
         for (int i = 0; i < length; ++i) {
-            QHash<int, QString> hash = items[i];
+            const QHash<int, QString> &hash = items.at(i);
             UploadInfo *info = new UploadInfo(hash);
             m_UploadInfos.append(info);
         }
@@ -55,6 +59,8 @@ namespace Models {
     }
 
     QString UploadInfoRepository::getInfoString() const {
+        // bad type QList instead of QVector
+        // but users already have this
         QList<QHash<int, QString> > items;
         foreach (UploadInfo *info, m_UploadInfos) {
             if (!info->isEmpty()) {
@@ -72,15 +78,19 @@ namespace Models {
     }
 
     int UploadInfoRepository::getSelectedInfosCount() const {
-        int count = 0;
-        foreach (UploadInfo *info, m_UploadInfos) {
-            if (info->getIsSelected()) count++;
+        int count = m_UploadInfos.length();
+        int selectedCount = 0;
+        for (int i = 0; i < count; ++i) {
+            if (m_UploadInfos.at(i)->getIsSelected()) {
+                selectedCount++;
+
+            }
         }
-        return count;
+
+        return selectedCount;
     }
 
-    QString UploadInfoRepository::getAgenciesWithMissingDetails()
-    {
+    QString UploadInfoRepository::getAgenciesWithMissingDetails() {
         QStringList items;
         foreach (UploadInfo *info, m_UploadInfos) {
             if (info->getIsSelected() && info->isSomethingMissing()) {
@@ -98,8 +108,7 @@ namespace Models {
     }
 
     // mp == master password
-    void UploadInfoRepository::initializeAccounts(bool mpIsCorrectOrEmpty)
-    {
+    void UploadInfoRepository::initializeAccounts(bool mpIsCorrectOrEmpty) {
         this->setEmptyPasswordsMode(!mpIsCorrectOrEmpty);
         if (!mpIsCorrectOrEmpty) {
             this->backupAndDropRealPasswords();
@@ -132,18 +141,17 @@ namespace Models {
 
     void UploadInfoRepository::resetPercents() { foreach (UploadInfo *info, m_UploadInfos) { info->resetPercent(); } }
 
-    int UploadInfoRepository::rowCount(const QModelIndex &parent) const
-    {
+    int UploadInfoRepository::rowCount(const QModelIndex &parent) const {
         Q_UNUSED(parent);
         return m_UploadInfos.count();
     }
 
-    QVariant UploadInfoRepository::data(const QModelIndex &index, int role) const
-    {
-        if (index.row() < 0 || index.row() >= m_UploadInfos.count())
+    QVariant UploadInfoRepository::data(const QModelIndex &index, int role) const {
+        int row = index.row();
+        if (row < 0 || row >= m_UploadInfos.count())
             return QVariant();
 
-        UploadInfo *uploadInfo = m_UploadInfos[index.row()];
+        UploadInfo *uploadInfo = m_UploadInfos.at(row);
 
         switch (role) {
         case TitleRole:
@@ -170,22 +178,22 @@ namespace Models {
         }
     }
 
-    Qt::ItemFlags UploadInfoRepository::flags(const QModelIndex &index) const
-    {
-        if (!index.isValid()) {
+    Qt::ItemFlags UploadInfoRepository::flags(const QModelIndex &index) const {
+        int row = index.row();
+        if (row < 0 || row >= m_UploadInfos.length()) {
             return Qt::ItemIsEnabled;
         }
 
         return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
     }
 
-    bool UploadInfoRepository::setData(const QModelIndex &index, const QVariant &value, int role)
-    {
-        if (!index.isValid()) {
+    bool UploadInfoRepository::setData(const QModelIndex &index, const QVariant &value, int role) {
+        int row = index.row();
+        if (row < 0 || row >= m_UploadInfos.length()) {
             return false;
         }
 
-        UploadInfo *uploadInfo = m_UploadInfos[index.row()];
+        UploadInfo *uploadInfo = m_UploadInfos.at(row);
         QString title;
         int roleToUpdate = 0;
         bool needToUpdate = false;
@@ -249,8 +257,7 @@ namespace Models {
         }
     }
 
-    QHash<int, QByteArray> UploadInfoRepository::roleNames() const
-    {
+    QHash<int, QByteArray> UploadInfoRepository::roleNames() const {
         QHash<int, QByteArray> roles;
         roles[TitleRole] = "title";
         roles[HostRole] = "host";

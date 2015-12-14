@@ -106,7 +106,7 @@ namespace Models {
     bool ArtworkUploader::needCreateArchives() const {
         bool anyZipNeeded = false;
         const UploadInfoRepository *uploadInfoRepository = m_CommandManager->getUploadInfoRepository();
-        const QList<Models::UploadInfo *> &infos = uploadInfoRepository->getUploadInfos();
+        const QVector<Models::UploadInfo *> &infos = uploadInfoRepository->getUploadInfos();
         foreach (Models::UploadInfo *info, infos) {
             if (info->getIsSelected() && info->getZipBeforeUpload()) {
                 anyZipNeeded = true;
@@ -117,7 +117,7 @@ namespace Models {
         bool needCreate = false;
 
         if (anyZipNeeded) {
-            const QList<ArtworkMetadata*> &artworkList = this->getArtworkList();
+            const QVector<ArtworkMetadata*> &artworkList = this->getArtworkList();
             foreach (ArtworkMetadata *metadata, artworkList) {
                 const QString &filepath = metadata->getFilepath();
                 QString archivePath = Helpers::getArchivePath(filepath);
@@ -133,20 +133,22 @@ namespace Models {
         return needCreate;
     }
 
-    void ArtworkUploader::doUploadArtworks(const QList<ArtworkMetadata *> &artworkList) {
+    void ArtworkUploader::doUploadArtworks(const QVector<ArtworkMetadata *> &artworkList) {
         int artworksCount = artworkList.length();
         if (artworksCount == 0) {
             return;
         }
 
         UploadInfoRepository *uploadInfoRepository = m_CommandManager->getUploadInfoRepository();
-        const QList<Models::UploadInfo *> &infos = uploadInfoRepository->getUploadInfos();
+        const QVector<Models::UploadInfo *> &infos = uploadInfoRepository->getUploadInfos();
         const Encryption::SecretsManager *secretsManager = m_CommandManager->getSecretsManager();
         const Models::SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
 
         uploadInfoRepository->resetPercents();
         uploadInfoRepository->updatePercentages();
         m_UploadCoordinator->uploadArtworks(artworkList, infos, m_IncludeVector, secretsManager, settingsModel);
+
+        m_CommandManager->reportUserAction(Conectivity::UserActionUpload);
     }
 
     void ArtworkUploader::cancelProcessing() {

@@ -38,7 +38,7 @@ Helpers::TestConnectionResult isConnectionValid(const QString &hostname, const Q
 
     QString host = hostname;
     if (!host.startsWith("ftp://") && !host.startsWith("ftp.")) {
-        host = "ftp://" + host;
+        host = QLatin1String("ftp://") + host;
     }
 
     QString command = QString("%1 %2 --user %3:%4").arg(curlPath, host, username, password);

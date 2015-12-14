@@ -23,17 +23,18 @@
 #include <QString>
 #include "keywordssuggestor.h"
 #include "suggestionartwork.h"
+#include "../Commands/commandmanager.h"
 
 namespace Suggestion {
-    void KeywordsSuggestor::setSuggestedArtworks(const QList<SuggestionArtwork *> &suggestedArtworks) {
+    void KeywordsSuggestor::setSuggestedArtworks(const QVector<SuggestionArtwork *> &suggestedArtworks) {
         m_SelectedArtworksCount = 0;
         m_KeywordsHash.clear();
-        m_SuggestedKeywords.clear();
-        m_AllOtherKeywords.clear();
+        m_SuggestedKeywords.clearModel();
+        m_AllOtherKeywords.clearModel();
         beginResetModel();
         qDeleteAll(m_Suggestions);
         m_Suggestions.clear();
-        m_Suggestions.append(suggestedArtworks);
+        m_Suggestions << suggestedArtworks;
         endResetModel();
         unsetInProgress();
         emit suggestionArrived();
@@ -42,8 +43,8 @@ namespace Suggestion {
     void KeywordsSuggestor::clear() {
         m_SelectedArtworksCount = 0;
         m_KeywordsHash.clear();
-        m_SuggestedKeywords.clear();
-        m_AllOtherKeywords.clear();
+        m_SuggestedKeywords.clearModel();
+        m_AllOtherKeywords.clearModel();
         beginResetModel();
         qDeleteAll(m_Suggestions);
         m_Suggestions.clear();
@@ -53,14 +54,14 @@ namespace Suggestion {
 
     QString KeywordsSuggestor::removeSuggestedKeywordAt(int keywordIndex) {
         QString keyword;
-        m_SuggestedKeywords.removeKeyword(keywordIndex, keyword);
+        m_SuggestedKeywords.takeKeywordAt(keywordIndex, keyword);
         emit suggestedKeywordsCountChanged();
         return keyword;
     }
 
     QString KeywordsSuggestor::removeOtherKeywordAt(int keywordIndex) {
         QString keyword;
-        m_AllOtherKeywords.removeKeyword(keywordIndex, keyword);
+        m_AllOtherKeywords.takeKeywordAt(keywordIndex, keyword);
         emit otherKeywordsCountChanged();
         return keyword;
     }
@@ -90,8 +91,10 @@ namespace Suggestion {
 
             if (m_UseLocal) {
                 m_QueryEngine.submitLocalQuery(m_LocalLibrary, searchTerms);
+                m_CommandManager->reportUserAction(Conectivity::UserActionSuggestionLocal);
             } else {
                 m_QueryEngine.submitQuery(searchTerms);
+                m_CommandManager->reportUserAction(Conectivity::UserActionSuggestionRemote);
             }
         }
     }
@@ -171,19 +174,19 @@ namespace Suggestion {
             }
         }
 
-        m_SuggestedKeywords.reset(keywords);
+        m_SuggestedKeywords.resetKeywords(keywords);
 
         if (m_SelectedArtworksCount != 0) {
             QSet<QString> allKeywords = getSelectedArtworksKeywords();
             QSet<QString> suggestedKeywords = keywords.toSet();
             QSet<QString> otherKeywords = allKeywords.subtract(suggestedKeywords);
 
-            m_AllOtherKeywords.reset(otherKeywords.toList());
+            m_AllOtherKeywords.resetKeywords(otherKeywords.toList());
         }
 #ifndef QT_DEBUG
         else {
-            m_AllOtherKeywords.clear();
-            m_SuggestedKeywords.clear();
+            m_AllOtherKeywords.clearKeywords();
+            m_SuggestedKeywords.clearKeywords();
             m_KeywordsHash.clear();
         }
 #endif

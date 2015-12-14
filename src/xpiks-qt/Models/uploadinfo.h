@@ -51,8 +51,8 @@ namespace Models {
             m_Host = items.value(HostField, emptyString);
             m_Username = items.value(UsernameField, emptyString);
             m_EncodedPassword = items.value(PasswordField, emptyString);
-            m_ZipBeforeUpload = items.value(ZipField, "false") == "true";
-            m_FtpPassiveMode = items.value(FtpPassiveModeField, "false") == "true";
+            m_ZipBeforeUpload = items.value(ZipField, "false") == QLatin1String("true");
+            m_FtpPassiveMode = items.value(FtpPassiveModeField, "false") == QLatin1String("true");
         }
 
     public:
@@ -65,7 +65,7 @@ namespace Models {
         bool getZipBeforeUpload() const { return m_ZipBeforeUpload; }
         bool isSomethingMissing() const { return m_EncodedPassword.isEmpty() || m_Host.isEmpty() || m_Username.isEmpty(); }
         bool isEmpty() const { return m_EncodedPassword.isEmpty() && m_Host.isEmpty() && m_Username.isEmpty() &&
-                    (m_Title.isEmpty() || m_Title == QString::fromLatin1("Untitled")); }
+                    (m_Title.isEmpty() || m_Title == QLatin1String("Untitled")); }
         int getPercent() const { return m_Percent; }
         bool getFtpPassiveMode() const { return m_FtpPassiveMode; }
 

@@ -60,7 +60,7 @@ namespace Models {
     }
 
     void ZipArchiver::fillFilenamesHash(QHash<QString, QStringList> &hash) {
-        QList<Models::ArtworkMetadata*> artworksList = getArtworkList();
+        QVector<Models::ArtworkMetadata*> artworksList = getArtworkList();
 
         foreach (Models::ArtworkMetadata *metadata, artworksList) {
             QString filepath = metadata->getFilepath();
