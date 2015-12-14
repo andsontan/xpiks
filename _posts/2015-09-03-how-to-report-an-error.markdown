@@ -10,6 +10,8 @@ To report an error, first of all write down what have you done before the error.
 
 Afterwards, try to find Xpiks logs:
 
+As of Xpiks 1.1, you can easily find them in Logs View (leftmost link in the bottom of main window) with a magical button "Reveal logfile". If you're on earlier build, you can find them in on of the following:
+
 - on Windows they should be at `C:/Users/USERNAME/AppData/Roaming/Xpiks/` directory
 - on OS X they should be at `~/Library/Application Support/Xpiks/` directory
 - on Linux they should be at `~/.local/share/xpiks/` directory
