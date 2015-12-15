@@ -1037,6 +1037,14 @@ ApplicationWindow {
                                             titleTextInput.deselect()
                                         }
                                     }
+
+                                    onFocusRequested: {
+                                        if (directionSign === +1) {
+                                            descriptionTextInput.forceActiveFocus()
+                                        } else {
+                                            flv.activateEdit()
+                                        }
+                                    }
                                 }
 
                                 Item {
@@ -1262,6 +1270,10 @@ ApplicationWindow {
                                                             }
                                                         }
 
+                                                        Keys.onBacktabPressed: {
+                                                            filteredArtItemsModel.focusPreviousItem(rowWrapper.delegateIndex)
+                                                        }
+
                                                         Keys.onPressed: {
                                                             if(event.matches(StandardKey.Paste)) {
                                                                 var clipboardText = clipboard.getText();
@@ -1474,6 +1486,10 @@ ApplicationWindow {
                                                         } else {
                                                             descriptionTextInput.forceActiveFocus()
                                                         }
+                                                    }
+
+                                                    onTabPressed: {
+                                                        filteredArtItemsModel.focusNextItem(rowWrapper.delegateIndex)
                                                     }
 
                                                     onFocusLost: keywordsWrapper.saveKeywords()

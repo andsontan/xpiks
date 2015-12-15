@@ -68,6 +68,8 @@ namespace Models {
         Q_INVOKABLE void removeMetadataInSelected() const;
         Q_INVOKABLE void clearKeywords(int index);
         Q_INVOKABLE void updateFilter() { invalidateFilter(); emit afterInvalidateFilter(); }
+        Q_INVOKABLE void focusNextItem(int index);
+        Q_INVOKABLE void focusPreviousItem(int index);
 
     public slots:
         void itemSelectedChanged(bool value);

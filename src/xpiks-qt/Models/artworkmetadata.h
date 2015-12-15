@@ -104,11 +104,13 @@ namespace Models {
         void markModified() { if (!m_IsModified) { m_IsModified = true; emit modifiedChanged(m_IsModified); } }
         void setModified() { m_IsModified = true; }
         void resetModified() { m_IsModified = false; }
+        void requestFocus(int directionSign) { emit focusRequested(directionSign); }
 
     signals:
          void modifiedChanged(bool newValue);
          void selectedChanged(bool newValue);
          void fileSelectedChanged(const QString &filepath, bool newValue);
+         void focusRequested(int directionSign);
 
     private:
          QSize m_ImageSize;

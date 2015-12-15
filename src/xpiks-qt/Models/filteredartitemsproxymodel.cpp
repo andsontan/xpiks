@@ -204,6 +204,32 @@ namespace Models {
         removeKeywordsInItem(info);
     }
 
+    void FilteredArtItemsProxyModel::focusNextItem(int index) {
+        if (0 <= index && index < rowCount() - 1) {
+            QModelIndex nextQIndex = this->index(index + 1, 0);
+            QModelIndex sourceIndex = mapToSource(nextQIndex);
+            ArtItemsModel *artItemsModel = getArtItemsModel();
+            ArtworkMetadata *metadata = artItemsModel->getArtwork(sourceIndex.row());
+
+            if (metadata != NULL) {
+                metadata->requestFocus(+1);
+            }
+        }
+    }
+
+    void FilteredArtItemsProxyModel::focusPreviousItem(int index) {
+        if (0 < index && index < rowCount()) {
+            QModelIndex nextQIndex = this->index(index - 1, 0);
+            QModelIndex sourceIndex = mapToSource(nextQIndex);
+            ArtItemsModel *artItemsModel = getArtItemsModel();
+            ArtworkMetadata *metadata = artItemsModel->getArtwork(sourceIndex.row());
+
+            if (metadata != NULL) {
+                metadata->requestFocus(-1);
+            }
+        }
+    }
+
     void FilteredArtItemsProxyModel::itemSelectedChanged(bool value) {
         int plus = value ? +1 : -1;
         m_SelectedArtworksCount += plus;
