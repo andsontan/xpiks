@@ -85,9 +85,8 @@ namespace SpellCheck {
     }
 
     QVariant SpellSuggestionsItem::data(const QModelIndex &index, int role) const {
-        if (!index.isValid()) return QVariant();
-
         int row = index.row();
+        if (row < 0 || row >= m_Suggestions.length()) { return QVariant(); }
 
         switch (role) {
         case SuggestionRole:

@@ -54,15 +54,17 @@ namespace Suggestion {
 
     QString KeywordsSuggestor::removeSuggestedKeywordAt(int keywordIndex) {
         QString keyword;
-        m_SuggestedKeywords.takeKeywordAt(keywordIndex, keyword);
-        emit suggestedKeywordsCountChanged();
+        if (m_SuggestedKeywords.takeKeywordAt(keywordIndex, keyword)) {
+            emit suggestedKeywordsCountChanged();
+        }
         return keyword;
     }
 
     QString KeywordsSuggestor::removeOtherKeywordAt(int keywordIndex) {
         QString keyword;
-        m_AllOtherKeywords.takeKeywordAt(keywordIndex, keyword);
-        emit otherKeywordsCountChanged();
+        if (m_AllOtherKeywords.takeKeywordAt(keywordIndex, keyword)) {
+            emit otherKeywordsCountChanged();
+        }
         return keyword;
     }
 
@@ -71,7 +73,7 @@ namespace Suggestion {
             return;
         }
 
-        SuggestionArtwork *suggestionArtwork = m_Suggestions[index];
+        SuggestionArtwork *suggestionArtwork = m_Suggestions.at(index);
         suggestionArtwork->setIsSelected(newState);
 
         int sign = newState ? +1 : -1;
@@ -84,7 +86,7 @@ namespace Suggestion {
     }
 
     void KeywordsSuggestor::searchArtworks(const QString &searchTerm) {
-        if (!m_IsInProgress && !searchTerm.simplified().isEmpty()) {
+        if (!m_IsInProgress && !searchTerm.trimmed().isEmpty()) {
             setInProgress();
 
             QStringList searchTerms = searchTerm.split(QChar::Space, QString::SkipEmptyParts);
@@ -105,9 +107,10 @@ namespace Suggestion {
     }
 
     QVariant KeywordsSuggestor::data(const QModelIndex &index, int role) const {
-        if (!index.isValid()) { return QVariant(); }
+        int row = index.row();
+        if (row < 0 || row >= m_Suggestions.length()) { return QVariant(); }
 
-        SuggestionArtwork *suggestionArtwork = m_Suggestions.at(index.row());
+        SuggestionArtwork *suggestionArtwork = m_Suggestions.at(row);
 
         switch (role) {
         case UrlRole:
@@ -138,8 +141,11 @@ namespace Suggestion {
 
     QSet<QString> KeywordsSuggestor::getSelectedArtworksKeywords() const {
         QSet<QString> allKeywords;
+        int size = m_Suggestions.length();
 
-        foreach (SuggestionArtwork *artwork, m_Suggestions) {
+        for (int i = 0; i < size; ++i) {
+            SuggestionArtwork *artwork = m_Suggestions.at(i);
+
             if (artwork->getIsSelected()) {
                 const QSet<QString> &currentKeywords = artwork->getKeywordsSet();
                 allKeywords.unite(currentKeywords);
