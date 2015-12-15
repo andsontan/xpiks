@@ -325,6 +325,8 @@ void Commands::CommandManager::afterConstructionCallback()  {
 }
 
 void Commands::CommandManager::beforeDestructionCallback() const {
+    if (!m_AfterInitCalled) { return; }
+
     // we have a second for important stuff
     m_TelemetryService->reportAction(Conectivity::UserActionClose);
     m_SpellCheckerService->stopChecking();
