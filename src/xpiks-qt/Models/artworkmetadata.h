@@ -52,7 +52,7 @@ namespace Models {
         virtual QString getDirectory() const { QFileInfo fi(m_ArtworkFilepath); return fi.absolutePath(); }
 
     public:
-        bool isInDirectory(const QString &directory) const;
+        bool isInDirectory(const QString &directoryAbsolutePath) const;
         bool isModified() const { return m_IsModified; }
         bool getIsSelected() const { return m_IsSelected; }
         bool isInitialized() const { return m_IsInitialized; }

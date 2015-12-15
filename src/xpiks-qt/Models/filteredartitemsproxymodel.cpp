@@ -20,6 +20,7 @@
  */
 
 #include "filteredartitemsproxymodel.h"
+#include <QDir>
 #include "artitemsmodel.h"
 #include "artworkmetadata.h"
 #include "artworksrepository.h"
@@ -62,7 +63,9 @@ namespace Models {
 
         ArtItemsModel *artItemsModel = getArtItemsModel();
         const ArtworksRepository *artworksRepository = m_CommandManager->getArtworksRepository();
-        const QString directory = artworksRepository->getDirectory(directoryIndex);
+        const QString &directory = artworksRepository->getDirectory(directoryIndex);
+        QDir dir(directory);
+        QString directoryAbsolutePath = dir.absolutePath();
 
         for (int row = 0; row < size; ++row) {
             QModelIndex proxyIndex = this->index(row, 0);
@@ -72,7 +75,7 @@ namespace Models {
             ArtworkMetadata *metadata = artItemsModel->getArtwork(index);
             Q_ASSERT(metadata != NULL);
 
-            if (metadata->isInDirectory(directory)) {
+            if (metadata->isInDirectory(directoryAbsolutePath)) {
                 directoryItems.append(index);
                 metadata->setIsSelected(!metadata->getIsSelected());
             }

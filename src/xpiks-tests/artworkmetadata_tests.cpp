@@ -356,12 +356,14 @@ void ArtworkMetadataTests::isInDirectoryTest() {
     QString alsoDir = "C:\\path\\to\\directory\\of";
 #else
     QString dir = "/path/to/directory/of/";
-    QString dir = "/path/to/directory/of";
+    QString alsoDir = "/path/to/directory/of";
 #endif
 
-    Mocks::ArtworkMetadataMock metadata(dir + filename);
-    QVERIFY(metadata.isInDirectory(dir));
-    QVERIFY(metadata.isInDirectory(alsoDir));
+    QFileInfo info(dir + filename);
+    Mocks::ArtworkMetadataMock metadata(info.absoluteFilePath());
+    qDebug() << QDir(dir).absolutePath();
+    QVERIFY(metadata.isInDirectory(QDir(dir).absolutePath()));
+    QVERIFY(metadata.isInDirectory(QDir(alsoDir).absolutePath()));
 }
 
 void ArtworkMetadataTests::isNotInParentsDirectoryTest() {
@@ -378,11 +380,12 @@ void ArtworkMetadataTests::isNotInParentsDirectoryTest() {
     QString notADir3 = "/path/to/";
 #endif
 
-    Mocks::ArtworkMetadataMock metadata(dir + filename);
+    QFileInfo info(dir + filename);
+    Mocks::ArtworkMetadataMock metadata(info.absoluteFilePath());
 
-    QVERIFY(!metadata.isInDirectory(notADir1));
-    QVERIFY(!metadata.isInDirectory(notADir2));
-    QVERIFY(!metadata.isInDirectory(notADir3));
+    QVERIFY(!metadata.isInDirectory(QDir(notADir1).absolutePath()));
+    QVERIFY(!metadata.isInDirectory(QDir(notADir2).absolutePath()));
+    QVERIFY(!metadata.isInDirectory(QDir(notADir3).absolutePath()));
 }
 
 void ArtworkMetadataTests::isNotInOtherDirectoryTest() {
@@ -395,8 +398,9 @@ void ArtworkMetadataTests::isNotInOtherDirectoryTest() {
     QString otherDir = "/path/to/some/other/directory/of/";
 #endif
 
-    Mocks::ArtworkMetadataMock metadata(dir + filename);
-    QVERIFY(!metadata.isInDirectory(otherDir));
+    QFileInfo info(dir + filename);
+    Mocks::ArtworkMetadataMock metadata(info.absoluteFilePath());
+    QVERIFY(!metadata.isInDirectory(QDir(otherDir).absolutePath()));
 }
 
 void ArtworkMetadataTests::isNotInEmptyDirectoryTest() {
@@ -409,6 +413,7 @@ void ArtworkMetadataTests::isNotInEmptyDirectoryTest() {
     QString otherDir = "";
 #endif
 
-    Mocks::ArtworkMetadataMock metadata(dir + filename);
-    QVERIFY(!metadata.isInDirectory(otherDir));
+    QFileInfo info(dir + filename);
+    Mocks::ArtworkMetadataMock metadata(info.absoluteFilePath());
+    QVERIFY(!metadata.isInDirectory(QDir(otherDir).absolutePath()));
 }

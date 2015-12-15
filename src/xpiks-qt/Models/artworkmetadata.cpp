@@ -80,17 +80,15 @@ namespace Models {
         return anythingModified;
     }
 
-    bool ArtworkMetadata::isInDirectory(const QString &directory) const {
+    bool ArtworkMetadata::isInDirectory(const QString &directoryAbsolutePath) const {
         bool isInDir = false;
+        Q_ASSERT(directoryAbsolutePath == QDir(directoryAbsolutePath).absolutePath());
 
-        int pos = m_ArtworkFilepath.lastIndexOf(QDir::separator());
-        if (pos != -1) {
-            bool startsWith = m_ArtworkFilepath.startsWith(directory);
-            if (startsWith) {
-                QString baseFilename = m_ArtworkFilepath.right(m_ArtworkFilepath.length() - pos - 1);
-                QString pathToCheck = QDir::toNativeSeparators(QDir::cleanPath(directory + QDir::separator() + baseFilename));
-                isInDir = pathToCheck == m_ArtworkFilepath;
-            }
+        if (m_ArtworkFilepath.startsWith(directoryAbsolutePath)) {
+            QFileInfo fi(m_ArtworkFilepath);
+            QString artworksDirectory = fi.absolutePath();
+
+            isInDir = artworksDirectory == directoryAbsolutePath;
         }
 
         return isInDir;

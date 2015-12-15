@@ -91,13 +91,16 @@ namespace Models {
 
     void ArtItemsModel::removeArtworksDirectory(int index) {
         const QString &directory = m_CommandManager->getArtworksRepository()->getDirectory(index);
+        QDir dir(directory);
+        QString directoryAbsolutePath = dir.absolutePath();
+
         QVector<int> indicesToRemove;
         int count = m_ArtworkList.length();
         indicesToRemove.reserve(count);
 
         for (int i = 0; i < count; ++i) {
             ArtworkMetadata *metadata = m_ArtworkList.at(i);
-            if (metadata->isInDirectory(directory)) {
+            if (metadata->isInDirectory(directoryAbsolutePath)) {
                 indicesToRemove.append(i);
             }
         }
@@ -575,7 +578,7 @@ namespace Models {
         foreach (const QString &filepath, rawFilenames) {
             QImageReader imageReader(filepath);
 
-            QString format = imageReader.format();
+            QString format = imageReader.format().toLower();
 
             if (format == QLatin1String("jpeg") ||
                     format == QLatin1String("tiff")) {
@@ -607,8 +610,8 @@ namespace Models {
     void ArtItemsModel::doCombineArtwork(int index) {
         if (0 <= index && index < m_ArtworkList.length()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(index);
-            QModelIndex qmIndex = this->index(index);
-            emit dataChanged(qmIndex, qmIndex, QVector<int>() << IsSelectedRole);
+            //QModelIndex qmIndex = this->index(index);
+            //emit dataChanged(qmIndex, qmIndex, QVector<int>() << IsSelectedRole);
 
             ArtItemInfo *info = new ArtItemInfo(metadata, index);
             m_CommandManager->combineArtwork(info);
