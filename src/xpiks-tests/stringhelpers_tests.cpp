@@ -10,6 +10,14 @@ void StringHelpersTests::splitEmptyStringTest() {
     QVERIFY(result.isEmpty());
 }
 
+void StringHelpersTests::splitStringWithSpacesTest() {
+    QString text = "    . , : -";
+    QStringList result;
+    Helpers::splitText(text, result);
+
+    QVERIFY(result.isEmpty());
+}
+
 void StringHelpersTests::splitOneWordTest() {
     QString text = "oneword";
     QStringList result;

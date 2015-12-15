@@ -8,6 +8,7 @@ class StringHelpersTests : public QObject
     Q_OBJECT
 private slots:
     void splitEmptyStringTest();
+    void splitStringWithSpacesTest();
     void splitOneWordTest();
     void splitOneWordWithSpacesTest();
     void splitSeveralWordsWithSpacesTest();
