@@ -25,27 +25,28 @@
 
 #include <QVector>
 #include <QString>
+#include <QSet>
 
 namespace Suggestion {
     class SuggestionArtwork
     {
     public:
         SuggestionArtwork(const QString &url, const QStringList &keywords) :
-            m_KeywordsList(keywords),
+            m_KeywordsSet(keywords.toSet()),
             m_Url(url),
             m_IsSelected(false)
         { }
 
     public:
         const QString &getUrl() const { return m_Url; }
-        const QStringList &getKeywords() const { return m_KeywordsList; }
+        const QSet<QString> &getKeywordsSet() const { return m_KeywordsSet; }
         bool getIsSelected() const { return m_IsSelected; }
 
     public:
         void setIsSelected(bool isSelected) { m_IsSelected = isSelected; }
 
     private:
-        QStringList m_KeywordsList;
+        QSet<QString> m_KeywordsSet;
         QString m_Url;
         bool m_IsSelected;
     };

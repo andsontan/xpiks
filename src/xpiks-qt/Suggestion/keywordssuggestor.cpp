@@ -75,7 +75,7 @@ namespace Suggestion {
         suggestionArtwork->setIsSelected(newState);
 
         int sign = newState ? +1 : -1;
-        accountKeywords(suggestionArtwork->getKeywords(), sign);
+        accountKeywords(suggestionArtwork->getKeywordsSet(), sign);
         m_SelectedArtworksCount += sign;
 
         QModelIndex qIndex = this->index(index);
@@ -126,7 +126,7 @@ namespace Suggestion {
         return roles;
     }
 
-    void KeywordsSuggestor::accountKeywords(const QStringList &keywords, int sign) {
+    void KeywordsSuggestor::accountKeywords(const QSet<QString> &keywords, int sign) {
         foreach(const QString &keyword, keywords) {
             if (m_KeywordsHash.contains(keyword)) {
                 m_KeywordsHash[keyword] += sign;
@@ -141,7 +141,7 @@ namespace Suggestion {
 
         foreach (SuggestionArtwork *artwork, m_Suggestions) {
             if (artwork->getIsSelected()) {
-                QSet<QString> currentKeywords = artwork->getKeywords().toSet();
+                const QSet<QString> &currentKeywords = artwork->getKeywordsSet();
                 allKeywords.unite(currentKeywords);
             }
         }

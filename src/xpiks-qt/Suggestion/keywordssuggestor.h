@@ -124,7 +124,7 @@ namespace Suggestion {
         virtual QHash<int, QByteArray> roleNames() const;
 
     private:
-        void accountKeywords(const QStringList &keywords, int sign);
+        void accountKeywords(const QSet<QString> &keywords, int sign);
         QSet<QString> getSelectedArtworksKeywords() const;
         void updateSuggestedKeywords();
 
