@@ -348,3 +348,64 @@ void ArtworkMetadataTests::misEditOfKeywordDoesNothingTest() {
     QCOMPARE(editResult, false);
     QCOMPARE(modifiedSpy.count(), 0);
 }
+
+void ArtworkMetadataTests::isInDirectoryTest() {
+    QString filename = "file.jpg";
+#ifdef Q_OS_WIN
+    QString dir = "C:\\path\\to\\directory\\of\\";
+#else
+    QString dir = "/path/to/directory/of/";
+#endif
+
+    Mocks::ArtworkMetadataMock metadata(dir + filename);
+    QVERIFY(metadata.isInDirectory(dir));
+}
+
+void ArtworkMetadataTests::isNotInParentsDirectoryTest() {
+    QString filename = "file.jpg";
+#ifdef Q_OS_WIN
+    QString dir = "C:\\path\\to\\directory\\of\\";
+    QString notADir1 = "C:\\path\\to\\directory";
+    QString notADir2 = "C:\\path\\to\\directory\\";
+    QString notADir3 = "C:\\path\\to\\";
+#else
+    QString dir = "/path/to/directory/of/";
+    QString notADir1 = "/path/to/directory/";
+    QString notADir2 = "/path/to/directory";
+    QString notADir3 = "/path/to/";
+#endif
+
+    Mocks::ArtworkMetadataMock metadata(dir + filename);
+
+    QVERIFY(!metadata.isInDirectory(notADir1));
+    QVERIFY(!metadata.isInDirectory(notADir2));
+    QVERIFY(!metadata.isInDirectory(notADir3));
+}
+
+void ArtworkMetadataTests::isNotInOtherDirectoryTest() {
+    QString filename = "file.jpg";
+#ifdef Q_OS_WIN
+    QString dir = "C:\\path\\to\\directory\\of\\";
+    QString otherDir = "C:\\path\\to\\some\\other\\directory\\of\\";
+#else
+    QString dir = "/path/to/directory/of/";
+    QString otherDir = "/path/to/some/other/directory/of/";
+#endif
+
+    Mocks::ArtworkMetadataMock metadata(dir + filename);
+    QVERIFY(!metadata.isInDirectory(otherDir));
+}
+
+void ArtworkMetadataTests::isNotInEmptyDirectoryTest() {
+    QString filename = "file.jpg";
+#ifdef Q_OS_WIN
+    QString dir = "C:\\path\\to\\directory\\of\\";
+    QString otherDir = "";
+#else
+    QString dir = "/path/to/directory/of/";
+    QString otherDir = "";
+#endif
+
+    Mocks::ArtworkMetadataMock metadata(dir + filename);
+    QVERIFY(!metadata.isInDirectory(otherDir));
+}

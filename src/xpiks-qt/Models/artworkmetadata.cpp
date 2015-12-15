@@ -24,6 +24,7 @@
 #include <QReadLocker>
 #include <QWriteLocker>
 #include <QStringBuilder>
+#include <QDir>
 #include "../Helpers/tempmetadatadb.h"
 #include "../Helpers/keywordvalidator.h"
 #include "settingsmodel.h"
@@ -80,8 +81,19 @@ namespace Models {
     }
 
     bool ArtworkMetadata::isInDirectory(const QString &directory) const {
-        bool startsWith = m_ArtworkFilepath.startsWith(directory);
-        return startsWith;
+        bool isInDir = false;
+
+        int pos = m_ArtworkFilepath.lastIndexOf(QDir::separator());
+        if (pos != -1) {
+            bool startsWith = m_ArtworkFilepath.startsWith(directory);
+            if (startsWith) {
+                QString baseFilename = m_ArtworkFilepath.right(m_ArtworkFilepath.length() - pos - 1);
+                QString pathToCheck = QDir::toNativeSeparators(QDir::cleanPath(directory + QDir::separator() + baseFilename));
+                isInDir = pathToCheck == m_ArtworkFilepath;
+            }
+        }
+
+        return isInDir;
     }
 
     void ArtworkMetadata::clearModel() {
