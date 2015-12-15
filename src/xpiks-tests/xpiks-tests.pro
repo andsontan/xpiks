@@ -75,7 +75,8 @@ SOURCES += main.cpp \
     combinedmodel_tests.cpp \
     ../xpiks-qt/Models/settingsmodel.cpp \
     stringhelpers_tests.cpp \
-    ../xpiks-qt/Helpers/stringhelper.cpp
+    ../xpiks-qt/Helpers/stringhelper.cpp \
+    keywordvalidation_tests.cpp
 
 HEADERS += \
     encryption_tests.h \
@@ -134,4 +135,5 @@ HEADERS += \
     combinedmodel_tests.h \
     ../xpiks-qt/Models/settingsmodel.h \
     ../xpiks-qt/Helpers/appsettings.h \
-    stringhelpers_tests.h
+    stringhelpers_tests.h \
+    keywordvalidation_tests.h
