@@ -73,7 +73,9 @@ SOURCES += main.cpp \
     artworkmetadata_tests.cpp \
     basickeywordsmodel_tests.cpp \
     combinedmodel_tests.cpp \
-    ../xpiks-qt/Models/settingsmodel.cpp
+    ../xpiks-qt/Models/settingsmodel.cpp \
+    stringhelpers_tests.cpp \
+    ../xpiks-qt/Helpers/stringhelper.cpp
 
 HEADERS += \
     encryption_tests.h \
@@ -95,7 +97,6 @@ HEADERS += \
     ../xpiks-qt/UndoRedo/addartworksitem.h \
     ../xpiks-qt/UndoRedo/historyitem.h \
     ../xpiks-qt/UndoRedo/undoredomanager.h \
-    ../xpiks-qt/Helpers/osxnsurlhelper.h \
     ../xpiks-qt/Helpers/tempmetadatadb.h \
     ../xpiks-qt/Encryption/secretsmanager.h \
     ../xpiks-qt/Commands/combinededitcommand.h \
@@ -132,12 +133,5 @@ HEADERS += \
     basickeywordsmodel_tests.h \
     combinedmodel_tests.h \
     ../xpiks-qt/Models/settingsmodel.h \
-    ../xpiks-qt/Helpers/appsettings.h
-
-macx {
-OBJECTIVE_SOURCES += \
-    ../xpiks-qt/Helpers/osxnsurlhelper.mm
-
-LIBS += -framework Foundation
-HEADERS += ../xpiks-qt/Helpers/osxnsurlhelper.h
-}
+    ../xpiks-qt/Helpers/appsettings.h \
+    stringhelpers_tests.h
