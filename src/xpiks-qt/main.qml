@@ -64,7 +64,40 @@ ApplicationWindow {
         id: closingTimer
         interval: 1000
         running: false
+        repeat: false
         onTriggered: Qt.quit()
+    }
+
+    Timer {
+        id: openingTimer
+        interval: 500
+        running: false
+        repeat: false
+        onTriggered: {
+            if (appSettings.needToShowWhatsNew()) {
+                var text = appSettings.whatsNewText;
+                if (text.length > 0) {
+                    Common.launchDialog("Dialogs/WhatsNewDialog.qml",
+                                        applicationWindow,
+                                        {
+                                            whatsNewText: text
+                                        })
+                }
+            }
+
+            if (appSettings.needToShowTermsAndConditions()) {
+                var licenseText = appSettings.termsAndConditionsText;
+                if (licenseText.length > 0) {
+                    Common.launchDialog("Dialogs/TermsAndConditionsDialog.qml",
+                                        applicationWindow,
+                                        {
+                                            termsText: licenseText
+                                        })
+                }
+            } else {
+                helpersWrapper.reportOpen()
+            }
+        }
     }
 
     function onDialogClosed() {
@@ -110,30 +143,7 @@ ApplicationWindow {
 
     Component.onCompleted: {
         helpersWrapper.afterConstruction()
-
-        if (appSettings.needToShowWhatsNew()) {
-            var text = appSettings.whatsNewText;
-            if (text.length > 0) {
-                Common.launchDialog("Dialogs/WhatsNewDialog.qml",
-                                    applicationWindow,
-                                    {
-                                        whatsNewText: text
-                                    })
-            }
-        }
-
-        if (appSettings.needToShowTermsAndConditions()) {
-            var licenseText = appSettings.termsAndConditionsText;
-            if (licenseText.length > 0) {
-                Common.launchDialog("Dialogs/TermsAndConditionsDialog.qml",
-                                    applicationWindow,
-                                    {
-                                        termsText: licenseText
-                                    })
-            }
-        } else {
-            helpersWrapper.reportOpen()
-        }
+        openingTimer.start()
     }
 
     menuBar: MenuBar {

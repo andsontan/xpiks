@@ -58,7 +58,7 @@ namespace Constants {
     const char LIBRARY_FILENAME[] = "xpiks.library";
     const char USER_AGENT_ID[] = "USER_AGENT_ID";
     const char INSTALLED_VERSION[] = "INSTALLED_VERSION";
-    const char USER_CONSENT[] = "USER_CONSENT";
+    const char USER_CONSENT[] = "USER_CONSENT_1_0";
 #else
     const char UPLOAD_HOSTS[] = "DEBUG_UPLOAD_HOSTS_HASH";
     const char MAX_KEYWORD_COUNT[] = "DEBUG_MAX_KEYWORD_COUNT";
@@ -75,7 +75,7 @@ namespace Constants {
     const char LIBRARY_FILENAME[] = "xpiks.debug.library";
     const char USER_AGENT_ID[] = "DEBUG_USER_AGENT_ID";
     const char INSTALLED_VERSION[] = "DEBUG_INSTALLED_VERSION";
-    const char USER_CONSENT[] = "DEBUG_USER_CONSENT";
+    const char USER_CONSENT[] = "DEBUG_USER_CONSENT_1_0";
 #endif // QT_NO_DEBUG
 }
 

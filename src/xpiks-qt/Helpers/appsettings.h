@@ -29,6 +29,7 @@
 #include "constants.h"
 #include "../Common/version.h"
 #include <QFile>
+#include <QDir>
 
 namespace Helpers {
     class AppSettings : public QSettings
@@ -119,7 +120,8 @@ namespace Helpers {
             path += "/../Resources/";
 #endif
 
-            path += QLatin1String(Constants::WHATS_NEW_FILENAME);
+            path += QDir::separator() + QLatin1String(Constants::WHATS_NEW_FILENAME);
+            path = QDir::cleanPath(path);
 
             QFile file(path);
             QString text;
@@ -127,7 +129,7 @@ namespace Helpers {
                 text = file.readAll();
                 file.close();
             } else {
-                qDebug() << "whatsnew.txt file is not found.";
+                qDebug() << "whatsnew.txt file is not found on path" << path;
             }
 
             return text;
@@ -180,7 +182,8 @@ namespace Helpers {
             path += "/../Resources/";
 #endif
 
-            path += QLatin1String(Constants::TERMS_AND_CONDITIONS_FILENAME);
+            path += QDir::separator() + QLatin1String(Constants::TERMS_AND_CONDITIONS_FILENAME);
+            path = QDir::cleanPath(path);
 
             QFile file(path);
             QString text;
@@ -188,7 +191,7 @@ namespace Helpers {
                 text = file.readAll();
                 file.close();
             } else {
-                qDebug() << "terms_and_conditions.txt file is not found.";
+                qDebug() << "terms_and_conditions.txt file is not found on path" << path;
             }
 
             return text;
