@@ -90,6 +90,9 @@ void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const Q
     case QtFatalMsg:
         txt = QString("Fatal: %1").arg(msg);
         break;
+    case QtInfoMsg:
+        txt = QString("Info: %1").arg(msg);
+        break;
     }
 
     QString logLine = QString("%1 - %2")
