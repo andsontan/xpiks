@@ -353,12 +353,15 @@ void ArtworkMetadataTests::isInDirectoryTest() {
     QString filename = "file.jpg";
 #ifdef Q_OS_WIN
     QString dir = "C:\\path\\to\\directory\\of\\";
+    QString alsoDir = "C:\\path\\to\\directory\\of";
 #else
     QString dir = "/path/to/directory/of/";
+    QString dir = "/path/to/directory/of";
 #endif
 
     Mocks::ArtworkMetadataMock metadata(dir + filename);
     QVERIFY(metadata.isInDirectory(dir));
+    QVERIFY(metadata.isInDirectory(alsoDir));
 }
 
 void ArtworkMetadataTests::isNotInParentsDirectoryTest() {
