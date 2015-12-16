@@ -38,6 +38,7 @@ Item {
     property int artworkIndex: -1
     property variant componentParent
     property var callbackObject
+    property double coef: 1.0
 
     signal dialogDestruction();
     Component.onDestruction: dialogDestruction();
@@ -99,7 +100,7 @@ Item {
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
-            width: parent.width * 0.765
+            width: previewImage.width < 650 ? 690 : previewImage.width + 40
             height: parent.height - 100
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
@@ -110,18 +111,15 @@ Item {
                 color: Colors.defaultControlColor
                 anchors.left: parent.left
                 anchors.right: parent.right
-                anchors.leftMargin: 20
-                anchors.rightMargin: 20
+                anchors.margins: 20
                 anchors.top: parent.top
-                anchors.topMargin: 20
                 anchors.bottom: fields.top
-                anchors.bottomMargin: 20
 
                 Image {
                     id: previewImage
                     source: "image://global/" + imagePath
                     cache: false
-                    width: boundsRect.width - 20
+                    width: boundsRect.height*coef
                     height: boundsRect.height - 20
                     fillMode: Image.PreserveAspectFit
                     anchors.centerIn: parent
@@ -266,7 +264,6 @@ Item {
                                     font.pixelSize: 12*settingsModel.keywordSizeScale
                                     text: combinedArtworks.title
                                     onTextChanged: combinedArtworks.title = text
-                                    KeyNavigation.backtab: descriptionTextInput
 
                                     Keys.onBacktabPressed: descriptionTextInput.forceActiveFocus()
 

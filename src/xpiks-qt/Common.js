@@ -90,12 +90,15 @@ function launchItemEditing(index, appWnd, callbackObject) {
                          callbackObject: callbackObject
                      })
     } else {
+        var width = size.width;
+        var height = size.height + 0.0;
         launchDialog("Dialogs/EditArtworkVerticalDialog.qml", appWnd,
                      {
                          imagePath: currentImagePath,
                          artworkIndex: index,
                          componentParent: appWnd,
-                         callbackObject: callbackObject
+                         callbackObject: callbackObject,
+                         coef: width / height
                      })
     }
 }
