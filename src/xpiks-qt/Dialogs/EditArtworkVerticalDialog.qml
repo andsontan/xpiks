@@ -99,54 +99,55 @@ Item {
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
-            width: 650
-            height: 620
+            width: parent.width * 0.765
+            height: parent.height - 100
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
 
+            Rectangle {
+                id: boundsRect
+                color: Colors.defaultControlColor
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.leftMargin: 20
+                anchors.rightMargin: 20
+                anchors.top: parent.top
+                anchors.topMargin: 20
+                anchors.bottom: fields.top
+                anchors.bottomMargin: 20
+
+                Image {
+                    id: previewImage
+                    source: "image://global/" + imagePath
+                    cache: false
+                    width: boundsRect.width - 20
+                    height: boundsRect.height - 20
+                    fillMode: Image.PreserveAspectFit
+                    anchors.centerIn: parent
+                    asynchronous: true
+                }
+            }
+
             ColumnLayout {
-                anchors.fill: parent
-                anchors.margins: 20
+                id: fields
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 20
+                height: 230
+                width: 650
+                anchors.horizontalCenter: parent.horizontalCenter
                 spacing: 0
 
-                Rectangle {
-                    id: boundsRect
-                    color: Colors.defaultControlColor
-                    height: 330
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-
-                    StyledScrollView {
-                        id: scrollview
-                        anchors.fill: parent
-                        anchors.leftMargin: 10
-                        anchors.topMargin: 10
-
-                        Image {
-                            id: previewImage
-                            source: "image://global/" + imagePath
-                            cache: false
-                            width: boundsRect.width - 20
-                            height: boundsRect.height - 20
-                            fillMode: Image.PreserveAspectFit
-                            anchors.centerIn: parent
-                            asynchronous: true
-                        }
-                    }
-                }
-
                 Item {
-                    height: 20
-                }
-
-                RowLayout {
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    spacing: 20
+                    height: childrenRect.height
 
                     ColumnLayout {
-                        width: 295
+                        id: descriptionColumn
+                        width: parent.width / 2 - 10
+                        anchors.left: parent.left
+                        anchors.top: parent.top
                         spacing: 5
 
                         StyledText {
@@ -208,7 +209,9 @@ Item {
 
                     ColumnLayout {
                         spacing: 5
-                        width: 295
+                        anchors.top: parent.top
+                        anchors.right: parent.right
+                        width: parent.width/2 - 10
 
                         RowLayout {
                             spacing: 5

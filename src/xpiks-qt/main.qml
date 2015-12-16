@@ -24,6 +24,7 @@ import QtQuick.Dialogs 1.1
 import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.1
 import QtQuick.Layouts 1.1
+import QtQuick.Window 2.2
 import xpiks 1.0
 import "Constants"
 import "Constants/Colors.js" as Colors
@@ -36,12 +37,21 @@ ApplicationWindow {
     id: applicationWindow
     visible: true
     width: 900
-    height: 670
+    height: 725
     minimumHeight: 670
     minimumWidth: 900
     title: qsTr("Xpiks")
     property int openedDialogsCount: 0
     property bool showUpdateLink: false
+    property bool needToCenter: true
+
+    onVisibleChanged: {
+        if (needToCenter) {
+            needToCenter = false
+            applicationWindow.x = (Screen.width - applicationWindow.width) / 2
+            applicationWindow.y = (Screen.height - applicationWindow.height) / 2
+        }
+    }
 
     function saveRecentDirectories() {
         appSettings.setValue(appSettings.recentDirectoriesKey, recentDirectories.serializeForSettings())
@@ -1044,6 +1054,8 @@ ApplicationWindow {
                                         } else {
                                             flv.activateEdit()
                                         }
+
+                                        imagesListView.positionViewAtIndex(rowWrapper.delegateIndex, ListView.Contain)
                                     }
                                 }
 

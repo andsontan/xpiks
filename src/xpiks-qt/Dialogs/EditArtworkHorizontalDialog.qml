@@ -102,356 +102,343 @@ Item {
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
-            width: 800
-            height: 400
+            width: parent.width - 50
+            height: parent.height - 150
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
 
-            RowLayout {
-                anchors.fill: parent
-                anchors.margins: 20
+            Rectangle {
+                id: boundsRect
+                color: Colors.defaultControlColor
+                anchors.left: parent.left
+                anchors.leftMargin: 20
+                anchors.topMargin: 20
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 20
+                anchors.right: fields.left
+                anchors.rightMargin: 20
+
+                Image {
+                    id: previewImage
+                    source: "image://global/" + imagePath
+                    cache: false
+                    width: boundsRect.width - 20
+                    height: boundsRect.height - 20
+                    fillMode: Image.PreserveAspectFit
+                    anchors.centerIn: parent
+                    asynchronous: true
+                }
+            }
+
+            ColumnLayout {
+                id: fields
+                anchors.right: parent.right
+                anchors.rightMargin: 20
+                anchors.topMargin: 20
+                anchors.top: parent.top
+                width: 450
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 20
                 spacing: 0
 
-                ColumnLayout {
-                    width: 300
-                    anchors.top: parent.top
-                    anchors.bottom: parent.bottom
+                StyledText {
+                    text: qsTr("Description:")
+                }
 
-                    Rectangle {
-                        id: boundsRect
-                        color: Colors.defaultControlColor
-                        Layout.fillHeight: true
-                        width: parent.width
+                Item {
+                    height: 5
+                }
 
-                        StyledScrollView {
-                            id: scrollview
-                            anchors.fill: parent
-                            anchors.leftMargin: 10
-                            anchors.topMargin: 10
+                Rectangle {
+                    id: rect
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: 25
+                    color: Colors.defaultInputBackground
+                    border.color: Colors.artworkActiveColor
+                    border.width: descriptionTextInput.activeFocus ? 1 : 0
+                    clip: true
 
-                            Image {
-                                id: previewImage
-                                source: "image://global/" + imagePath
-                                cache: false
-                                width: boundsRect.width - 20
-                                height: boundsRect.height - 20
-                                fillMode: Image.PreserveAspectFit
-                                anchors.centerIn: parent
-                                asynchronous: true
+                    Flickable {
+                        id: descriptionFlick
+                        contentWidth: descriptionTextInput.paintedWidth
+                        contentHeight: descriptionTextInput.paintedHeight
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.leftMargin: 5
+                        anchors.rightMargin: 5
+                        anchors.verticalCenter: parent.verticalCenter
+                        interactive: false
+                        flickableDirection: Flickable.HorizontalFlick
+                        height: 30
+                        clip: true
+                        focus: false
+
+                        function ensureVisible(r) {
+                            if (contentX >= r.x)
+                                contentX = r.x;
+                            else if (contentX+width <= r.x+r.width)
+                                contentX = r.x+r.width-width;
+                        }
+
+                        StyledTextEdit {
+                            id: descriptionTextInput
+                            width: descriptionFlick.width
+                            height: descriptionFlick.height
+                            text: combinedArtworks.description
+                            font.pixelSize: 12*settingsModel.keywordSizeScale
+                            onTextChanged: combinedArtworks.description = text
+                            KeyNavigation.tab: titleTextInput
+
+                            Component.onCompleted: {
+                                combinedArtworks.initDescriptionHighlighting(descriptionTextInput.textDocument)
                             }
+
+                            Keys.onTabPressed: titleTextInput.forceActiveFocus()
+
+                            onCursorRectangleChanged: descriptionFlick.ensureVisible(cursorRectangle)
                         }
                     }
                 }
 
                 Item {
-                    width: 20
-                    height: parent.height
+                    height: 20
                 }
 
-                ColumnLayout {
-                    Layout.fillWidth: true
-                    anchors.top: parent.top
-                    anchors.bottom: parent.bottom
-                    spacing: 0
+                RowLayout {
+                    spacing: 5
 
                     StyledText {
-                        text: qsTr("Description:")
+                        text: qsTr("Title:")
                     }
 
-                    Item {
-                        height: 5
+                    StyledText {
+                        text: qsTr("(same as Description if empty)")
+                        color: Colors.defaultInputBackground
                     }
+                }
 
-                    Rectangle {
-                        id: rect
+                Item {
+                    height: 5
+                }
+
+                Rectangle {
+                    id: anotherRect
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: 25
+                    color: Colors.defaultInputBackground
+                    border.color: Colors.artworkActiveColor
+                    border.width: titleTextInput.activeFocus ? 1 : 0
+                    clip: true
+
+                    Flickable {
+                        id: titleFlick
+                        contentWidth: titleTextInput.paintedWidth
+                        contentHeight: titleTextInput.paintedHeight
+                        height: 30
                         anchors.left: parent.left
                         anchors.right: parent.right
-                        height: 25
-                        color: Colors.defaultInputBackground
-                        border.color: Colors.artworkActiveColor
-                        border.width: descriptionTextInput.activeFocus ? 1 : 0
+                        anchors.leftMargin: 5
+                        anchors.rightMargin: 5
+                        anchors.verticalCenter: parent.verticalCenter
                         clip: true
+                        flickableDirection: Flickable.HorizontalFlick
+                        interactive: false
+                        focus: false
 
-                        Flickable {
-                            id: descriptionFlick
-                            contentWidth: descriptionTextInput.paintedWidth
-                            contentHeight: descriptionTextInput.paintedHeight
-                            anchors.left: parent.left
-                            anchors.right: parent.right
-                            anchors.leftMargin: 5
-                            anchors.rightMargin: 5
-                            anchors.verticalCenter: parent.verticalCenter
-                            interactive: false
-                            flickableDirection: Flickable.HorizontalFlick
-                            height: 30
-                            clip: true
-                            focus: false
+                        function ensureVisible(r) {
+                            if (contentX >= r.x)
+                                contentX = r.x;
+                            else if (contentX+width <= r.x+r.width)
+                                contentX = r.x+r.width-width;
+                        }
 
-                            function ensureVisible(r) {
-                                if (contentX >= r.x)
-                                    contentX = r.x;
-                                else if (contentX+width <= r.x+r.width)
-                                    contentX = r.x+r.width-width;
+                        StyledTextEdit {
+                            id: titleTextInput
+                            focus: true
+                            width: titleFlick.width
+                            height: titleFlick.height
+                            font.pixelSize: 12*settingsModel.keywordSizeScale
+                            text: combinedArtworks.title
+                            onTextChanged: combinedArtworks.title = text
+                            KeyNavigation.backtab: descriptionTextInput
+
+                            Keys.onBacktabPressed: descriptionTextInput.forceActiveFocus()
+
+                            Keys.onTabPressed: {
+                                flv.activateEdit()
                             }
 
-                            StyledTextEdit {
-                                id: descriptionTextInput
-                                width: descriptionFlick.width
-                                height: descriptionFlick.height
-                                text: combinedArtworks.description
-                                font.pixelSize: 12*settingsModel.keywordSizeScale
-                                onTextChanged: combinedArtworks.description = text
-                                KeyNavigation.tab: titleTextInput
-
-                                Component.onCompleted: {
-                                    combinedArtworks.initDescriptionHighlighting(descriptionTextInput.textDocument)
-                                }
-
-                                Keys.onTabPressed: titleTextInput.forceActiveFocus()
-
-                                onCursorRectangleChanged: descriptionFlick.ensureVisible(cursorRectangle)
+                            Component.onCompleted: {
+                                combinedArtworks.initTitleHighlighting(titleTextInput.textDocument)
                             }
+
+                            onCursorRectangleChanged: titleFlick.ensureVisible(cursorRectangle)
                         }
                     }
+                }
 
-                    Item {
-                        height: 20
+                Item {
+                    height: 20
+                }
+
+                RowLayout {
+                    spacing: 5
+
+                    StyledText {
+                        id: keywordsLabel
+                        text: qsTr("Keywords:")
                     }
 
-                    RowLayout {
-                        spacing: 5
-
-                        StyledText {
-                            text: qsTr("Title:")
-                        }
-
-                        StyledText {
-                            text: qsTr("(same as Description if empty)")
-                            color: Colors.defaultInputBackground
-                        }
-                    }
-
-                    Item {
-                        height: 5
-                    }
-
-                    Rectangle {
-                        id: anotherRect
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        height: 25
+                    StyledText {
+                        text: qsTr("(comma-separated)")
                         color: Colors.defaultInputBackground
-                        border.color: Colors.artworkActiveColor
-                        border.width: titleTextInput.activeFocus ? 1 : 0
-                        clip: true
-
-                        Flickable {
-                            id: titleFlick
-                            contentWidth: titleTextInput.paintedWidth
-                            contentHeight: titleTextInput.paintedHeight
-                            height: 30
-                            anchors.left: parent.left
-                            anchors.right: parent.right
-                            anchors.leftMargin: 5
-                            anchors.rightMargin: 5
-                            anchors.verticalCenter: parent.verticalCenter
-                            clip: true
-                            flickableDirection: Flickable.HorizontalFlick
-                            interactive: false
-                            focus: false
-
-                            function ensureVisible(r) {
-                                if (contentX >= r.x)
-                                    contentX = r.x;
-                                else if (contentX+width <= r.x+r.width)
-                                    contentX = r.x+r.width-width;
-                            }
-
-                            StyledTextEdit {
-                                id: titleTextInput
-                                focus: true
-                                width: titleFlick.width
-                                height: titleFlick.height
-                                font.pixelSize: 12*settingsModel.keywordSizeScale
-                                text: combinedArtworks.title
-                                onTextChanged: combinedArtworks.title = text
-                                KeyNavigation.backtab: descriptionTextInput
-
-                                Keys.onBacktabPressed: descriptionTextInput.forceActiveFocus()
-
-                                Keys.onTabPressed: {
-                                    flv.activateEdit()
-                                }
-
-                                Component.onCompleted: {
-                                    combinedArtworks.initTitleHighlighting(titleTextInput.textDocument)
-                                }
-
-                                onCursorRectangleChanged: titleFlick.ensureVisible(cursorRectangle)
-                            }
-                        }
                     }
 
                     Item {
-                        height: 20
+                        Layout.fillWidth: true
                     }
 
-                    RowLayout {
-                        spacing: 5
-
-                        StyledText {
-                            id: keywordsLabel
-                            text: qsTr("Keywords:")
-                        }
-
-                        StyledText {
-                            text: qsTr("(comma-separated)")
-                            color: Colors.defaultInputBackground
-                        }
-
-                        Item {
-                            Layout.fillWidth: true
-                        }
-
-                        StyledText {
-                            text: combinedArtworks.keywordsCount
-                            color: Colors.defaultInputBackground
-                        }
-                    }
-
-                    Item {
-                        height: 4
-                    }
-
-                    Rectangle {
-                        id: keywordsWrapper
-                        border.color: Colors.artworkActiveColor
-                        border.width: flv.isFocused ? 1 : 0
-                        height: 155
-                        anchors.left: parent.left
-                        anchors.right: parent.right
+                    StyledText {
+                        text: combinedArtworks.keywordsCount
                         color: Colors.defaultInputBackground
+                    }
+                }
 
-                        function removeKeyword(index) {
-                            combinedArtworks.removeKeywordAt(index)
-                        }
+                Item {
+                    height: 4
+                }
 
-                        function removeLastKeyword() {
-                            combinedArtworks.removeLastKeyword()
-                        }
+                Rectangle {
+                    id: keywordsWrapper
+                    border.color: Colors.artworkActiveColor
+                    border.width: flv.isFocused ? 1 : 0
+                    height: 155
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    color: Colors.defaultInputBackground
 
-                        function appendKeyword(keyword) {
-                            combinedArtworks.appendKeyword(keyword)
-                        }
-
-                        function pasteKeywords(keywordsList) {
-                            combinedArtworks.pasteKeywords(keywordsList)
-                        }
-
-                        EditableTags {
-                            id: flv
-                            anchors.fill: parent
-                            model: combinedArtworks.getKeywordsModel()
-                            property int keywordHeight: 20 * settingsModel.keywordSizeScale + (settingsModel.keywordSizeScale - 1)*10
-                            scrollStep: keywordHeight
-
-                            delegate: KeywordWrapper {
-                                id: kw
-                                isHighlighted: true
-                                keywordText: keyword
-                                hasSpellCheckError: !iscorrect
-                                delegateIndex: index
-                                itemHeight: flv.keywordHeight
-                                onRemoveClicked: keywordsWrapper.removeKeyword(delegateIndex)
-                                onActionDoubleClicked: {
-                                    var callbackObject = {
-                                        onSuccess: function(replacement) {
-                                            combinedArtworks.editKeyword(kw.delegateIndex, replacement)
-                                        },
-                                        onClose: function() {
-                                            flv.activateEdit()
-                                        }
-                                    }
-
-                                    Common.launchDialog("Dialogs/EditKeywordDialog.qml",
-                                                        componentParent,
-                                                        {
-                                                            callbackObject: callbackObject,
-                                                            previousKeyword: keyword
-                                                        })
-                                }
-                            }
-
-                            onTagAdded: {
-                                keywordsWrapper.appendKeyword(text)
-                            }
-
-                            onRemoveLast: {
-                                keywordsWrapper.removeLastKeyword()
-                            }
-
-                            onTagsPasted: {
-                                keywordsWrapper.pasteKeywords(tagsList)
-                            }
-
-                            onBackTabPressed: {
-                                titleTextInput.forceActiveFocus()
-                            }
-                        }
-
-                        CustomScrollbar {
-                            anchors.topMargin: -5
-                            anchors.bottomMargin: -5
-                            anchors.rightMargin: -15
-                            flickable: flv
-                        }
+                    function removeKeyword(index) {
+                        combinedArtworks.removeKeywordAt(index)
                     }
 
-                    Item {
-                        Layout.fillHeight: true
+                    function removeLastKeyword() {
+                        combinedArtworks.removeLastKeyword()
                     }
 
-                    RowLayout {
-                        spacing: 20
+                    function appendKeyword(keyword) {
+                        combinedArtworks.appendKeyword(keyword)
+                    }
 
-                        StyledButton {
-                            width: 150
-                            text: qsTr("Suggest keywords")
+                    function pasteKeywords(keywordsList) {
+                        combinedArtworks.pasteKeywords(keywordsList)
+                    }
 
-                            onClicked: {
+                    EditableTags {
+                        id: flv
+                        anchors.fill: parent
+                        model: combinedArtworks.getKeywordsModel()
+                        property int keywordHeight: 20 * settingsModel.keywordSizeScale + (settingsModel.keywordSizeScale - 1)*10
+                        scrollStep: keywordHeight
+
+                        delegate: KeywordWrapper {
+                            id: kw
+                            isHighlighted: true
+                            keywordText: keyword
+                            hasSpellCheckError: !iscorrect
+                            delegateIndex: index
+                            itemHeight: flv.keywordHeight
+                            onRemoveClicked: keywordsWrapper.removeKeyword(delegateIndex)
+                            onActionDoubleClicked: {
                                 var callbackObject = {
-                                    promoteKeywords: function(keywords) {
-                                        combinedArtworks.pasteKeywords(keywords)
+                                    onSuccess: function(replacement) {
+                                        combinedArtworks.editKeyword(kw.delegateIndex, replacement)
+                                    },
+                                    onClose: function() {
+                                        flv.activateEdit()
                                     }
                                 }
 
-                                Common.launchDialog("Dialogs/KeywordsSuggestion.qml",
+                                Common.launchDialog("Dialogs/EditKeywordDialog.qml",
                                                     componentParent,
-                                                    {callbackObject: callbackObject});
+                                                    {
+                                                        callbackObject: callbackObject,
+                                                        previousKeyword: keyword
+                                                    })
                             }
                         }
 
-                        Item {
-                            Layout.fillWidth: true
+                        onTagAdded: {
+                            keywordsWrapper.appendKeyword(text)
                         }
 
-                        StyledButton {
-                            width: 100
-                            text: qsTr("Apply")
-                            onClicked: {
-                                combinedArtworks.saveEdits()
-                                callbackObject.applyCallback()
-                                closePopup()
-                            }
+                        onRemoveLast: {
+                            keywordsWrapper.removeLastKeyword()
                         }
 
-                        StyledButton {
-                            width: 100
-                            text: qsTr("Close")
-                            onClicked: {
-                                closePopup()
+                        onTagsPasted: {
+                            keywordsWrapper.pasteKeywords(tagsList)
+                        }
+
+                        onBackTabPressed: {
+                            titleTextInput.forceActiveFocus()
+                        }
+                    }
+
+                    CustomScrollbar {
+                        anchors.topMargin: -5
+                        anchors.bottomMargin: -5
+                        anchors.rightMargin: -15
+                        flickable: flv
+                    }
+                }
+
+                Item {
+                    Layout.fillHeight: true
+                }
+
+                RowLayout {
+                    spacing: 20
+
+                    StyledButton {
+                        width: 150
+                        text: qsTr("Suggest keywords")
+
+                        onClicked: {
+                            var callbackObject = {
+                                promoteKeywords: function(keywords) {
+                                    combinedArtworks.pasteKeywords(keywords)
+                                }
                             }
+
+                            Common.launchDialog("Dialogs/KeywordsSuggestion.qml",
+                                                componentParent,
+                                                {callbackObject: callbackObject});
+                        }
+                    }
+
+                    Item {
+                        Layout.fillWidth: true
+                    }
+
+                    StyledButton {
+                        width: 100
+                        text: qsTr("Apply")
+                        onClicked: {
+                            combinedArtworks.saveEdits()
+                            callbackObject.applyCallback()
+                            closePopup()
+                        }
+                    }
+
+                    StyledButton {
+                        width: 100
+                        text: qsTr("Close")
+                        onClicked: {
+                            closePopup()
                         }
                     }
                 }
