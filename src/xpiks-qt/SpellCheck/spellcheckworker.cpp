@@ -58,7 +58,7 @@ namespace SpellCheck {
             delete m_Hunspell;
         }
 
-        qDebug() << "Spellcheck worker finished.";
+        qInfo() << "Spellcheck worker finished.";
     }
 
     bool SpellCheckWorker::initWorker() {
@@ -86,7 +86,7 @@ namespace SpellCheck {
                 qDebug() << "Error in Hunspell initialization with AFF" << affPath << "and DIC" << dicPath;
             }
         } else {
-            qDebug() << "DIC or AFF file not found." << dicPath << "||" << affPath;
+            qWarning() << "DIC or AFF file not found." << dicPath << "||" << affPath;
         }
 
         return initResult;

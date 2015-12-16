@@ -23,6 +23,7 @@
 #include <QDir>
 #include <QSet>
 #include <QFileInfo>
+#include <QDebug>
 #include <QRegExp>
 #include "../Helpers/indiceshelper.h"
 
@@ -43,9 +44,13 @@ namespace Models {
             }
         }
 
-        QVector<QPair<int, int> > rangesToRemove;
-        Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
-        removeItemsAtIndices(rangesToRemove);
+        if (!indicesToRemove.isEmpty()) {
+            qInfo() << "Removing" << indicesToRemove.length() << "empty directory(ies)...";
+
+            QVector<QPair<int, int> > rangesToRemove;
+            Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
+            removeItemsAtIndices(rangesToRemove);
+        }
     }
 
     bool ArtworksRepository::beginAccountingFiles(const QStringList &items) {
@@ -115,6 +120,7 @@ namespace Models {
 
             int occurances = 0;
             if (!m_DirectoriesHash.contains(absolutePath)) {
+                qInfo() << "Adding new directory to repository with index" << m_DirectoriesList.length();
                 m_DirectoriesList.append(absolutePath);
                 m_DirectoriesSelectedHash.insert(absolutePath, 0);
                 emit artworksSourcesCountChanged();

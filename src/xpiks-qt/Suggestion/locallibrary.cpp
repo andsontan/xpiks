@@ -126,7 +126,7 @@ namespace Suggestion {
             m_LocalArtworks.remove(item);
         }
 
-        qDebug() << "Library cleanup finished." << itemsToRemove.count() << "items removed.";
+        qInfo() << "Library cleanup finished." << itemsToRemove.count() << "items removed.";
     }
 
     void LocalLibrary::performAsync(LibraryLoaderWorker::LoadOption option) {
@@ -164,7 +164,7 @@ namespace Suggestion {
             m_LocalArtworks.insert(filepath, tags.toList());
         }
 
-        qDebug() << artworksList.length() << "artworks added to the local library";
+        qInfo() << artworksList.length() << "artworks added/updated to/in the local library";
     }
 
     void LocalLibrary::cleanupLocalLibraryAsync() {

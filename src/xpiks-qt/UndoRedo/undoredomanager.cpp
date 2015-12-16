@@ -20,11 +20,13 @@
  */
 
 #include "undoredomanager.h"
+#include <QDebug>
 
 UndoRedo::UndoRedoManager::~UndoRedoManager() { qDeleteAll(m_HistoryStack); }
 
-void UndoRedo::UndoRedoManager::recordHistoryItem(UndoRedo::HistoryItem *historyItem)
-{
+void UndoRedo::UndoRedoManager::recordHistoryItem(UndoRedo::HistoryItem *historyItem) {
+    qInfo() << "History item about to be recorded:" << historyItem->getActionType();
+
     QMutexLocker locker(&m_Mutex);
 
     if (!m_HistoryStack.empty()) {

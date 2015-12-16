@@ -21,6 +21,7 @@
 
 #include "backupsaverservice.h"
 #include <QThread>
+#include <QDebug>
 #include "backupsaverworker.h"
 #include "../Models/artworkmetadata.h"
 #include "tempmetadatadb.h"
@@ -59,10 +60,11 @@ namespace Helpers {
     }
 
     void BackupSaverService::workerFinished() {
-        qDebug() << "Backup saver service went offline";
+        qInfo() << "Backup saver service went offline";
     }
 
     void Helpers::BackupSaverService::stopSaving() {
+        qDebug() << "Backup saver service: stopping...";
         m_BackupWorker->cancelWork();
     }
 }

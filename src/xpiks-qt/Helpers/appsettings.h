@@ -129,7 +129,7 @@ namespace Helpers {
                 text = file.readAll();
                 file.close();
             } else {
-                qDebug() << "whatsnew.txt file is not found on path" << path;
+                qWarning() << "whatsnew.txt file is not found on path" << path;
             }
 
             return text;
@@ -191,7 +191,7 @@ namespace Helpers {
                 text = file.readAll();
                 file.close();
             } else {
-                qDebug() << "terms_and_conditions.txt file is not found on path" << path;
+                qWarning() << "terms_and_conditions.txt file is not found on path" << path;
             }
 
             return text;

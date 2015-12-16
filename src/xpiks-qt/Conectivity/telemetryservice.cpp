@@ -104,7 +104,7 @@ namespace Conectivity {
         } else {
             // TODO: add tracking of failed items
 
-            qDebug() << "Failed to process a telemetry report." << networkReply->errorString();;
+            qWarning() << "Failed to process a telemetry report." << networkReply->errorString();;
         }
 
         networkReply->deleteLater();

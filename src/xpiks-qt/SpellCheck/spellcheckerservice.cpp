@@ -21,6 +21,7 @@
 
 #include "spellcheckerservice.h"
 #include <QThread>
+#include <QDebug>
 
 #include "../Models/artworkmetadata.h"
 #include "spellcheckworker.h"
@@ -79,6 +80,8 @@ namespace SpellCheck {
                 items.append(item);
             }
 
+            qInfo() << "SpellCheck service: about to submit" << length << "items";
+
             m_SpellCheckWorker->submitItems(items);
             m_SpellCheckWorker->submitItem(new SpellCheckSeparatorItem());
         }
@@ -110,6 +113,7 @@ namespace SpellCheck {
         if (!m_WorkerIsAlive) { return; }
 
         if (m_SpellCheckWorker != NULL) {
+            qInfo() << "SpellCheck service: cancelling current batch";
             m_SpellCheckWorker->cancelCurrentBatch();
         }
     }
@@ -125,12 +129,13 @@ namespace SpellCheck {
     }
 
     void SpellCheckerService::workerFinished() {
-        qDebug() << "Spellcheck service went offline";
+        qInfo() << "Spellcheck service went offline";
         m_WorkerIsAlive = false;
     }
 
     void SpellCheck::SpellCheckerService::stopChecking() {
         if (m_WorkerIsAlive) {
+            qDebug() << "SpellCheck service: stopping checking...";
             m_SpellCheckWorker->cancelWork();
         }
     }

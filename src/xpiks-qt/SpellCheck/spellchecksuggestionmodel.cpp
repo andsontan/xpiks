@@ -21,7 +21,7 @@
 
 #include "spellchecksuggestionmodel.h"
 #include <QQmlEngine>
-
+#include <QDebug>
 #include "spellsuggestionsitem.h"
 #include "../Models/artworkmetadata.h"
 #include "spellcheckerservice.h"
@@ -86,6 +86,7 @@ namespace SpellCheck {
 
     void SpellCheckSuggestionModel::setupModel(SpellCheck::ISpellCheckable *item, int index, int flags) {
         Q_ASSERT(item != NULL);
+        qInfo() << "Setting suggestions with flags" << flags;
         QVector<SpellSuggestionsItem*> requests;
 
         if (Common::HasFlag(flags, Common::CorrectKeywords)) {
@@ -116,6 +117,7 @@ namespace SpellCheck {
     }
 
     QVector<SpellSuggestionsItem *> SpellCheckSuggestionModel::setupSuggestions(const QVector<SpellSuggestionsItem *> &items) {
+        qDebug() << "Suggesting corrections for" << items.length() << "item(s)";
         SpellCheckerService *service = m_CommandManager->getSpellCheckerService();
         // another vector for requests with available suggestions
         QVector<SpellSuggestionsItem*> executedRequests;

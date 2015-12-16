@@ -104,7 +104,7 @@ namespace Common {
         void runWorkerLoop() {
             for (;;) {
                 if (m_Cancel) {
-                    qDebug() << "Worker loop: Cancelled. Exiting...";
+                    qInfo() << "Worker loop: Cancelled. Exiting...";
                     break;
                 }
 
@@ -138,7 +138,7 @@ namespace Common {
                     canDelete = processOneItem(item);
                 }
                 catch (...) {
-                    qDebug() << "Worker loop: Error while processing item";
+                    qWarning() << "Worker loop: Error while processing item";
                 }
 
                 if (canDelete) {

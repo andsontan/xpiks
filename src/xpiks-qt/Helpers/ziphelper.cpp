@@ -39,11 +39,11 @@ namespace Helpers {
         try {
             result = JlCompress::compressFiles(archivePath, filepathes);
         } catch (...) {
-            qDebug() << "Exception while zipping with QuaZip";
+            qWarning() << "Exception while zipping with QuaZip";
         }
 
         if (!result) {
-            qDebug() << "Failed to create zip" << archivePath;
+            qWarning() << "Failed to create zip" << archivePath;
         }
 
         zipFilePath = archivePath;

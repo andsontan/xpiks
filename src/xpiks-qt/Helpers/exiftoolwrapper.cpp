@@ -85,10 +85,10 @@ ExportPair writeArtworkMetadata(ExportPair pair) {
         QByteArray stdoutByteArray = process.readAll();
         QString stdoutText(stdoutByteArray);
         if (!stdoutText.isEmpty()) {
-            qDebug() << "Error:" << exiftoolPath << stdoutText;
+            qWarning() << "Error:" << exiftoolPath << stdoutText;
         }
 
-        qDebug() << "Error:" << exiftoolPath << process.errorString();
+        qWarning() << "Error:" << exiftoolPath << process.errorString();
         return qMakePair(resultMetadata, exportInfo);
     } else {
         resultMetadata = metadata;
@@ -122,10 +122,10 @@ ImportPair readArtworkMetadata(ImportPair pair) {
 
     if (!finished || process.exitStatus() != QProcess::NormalExit) {
         if (!stdoutText.isEmpty()) {
-            qDebug() << "Error:" << exiftoolPath << stdoutText;
+            qWarning() << "Error:" << exiftoolPath << stdoutText;
         }
 
-        qDebug() << "Error:" << exiftoolPath << process.errorString();
+        qWarning() << "Error:" << exiftoolPath << process.errorString();
         return ImportPair(metadata, NULL);
     }
 

@@ -49,6 +49,7 @@ namespace Models {
     }
 
     void CombinedArtworksModel::recombineArtworks() {
+        qDebug() << "Recombining" << m_ArtworksList.length() << "artworks";
         if (m_ArtworksList.length() == 1) {
             assignFromOneArtwork();
             ArtworkMetadata *metadata = m_ArtworksList.first()->getOrigin();

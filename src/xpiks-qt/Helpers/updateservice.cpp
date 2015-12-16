@@ -57,6 +57,7 @@ namespace Helpers {
     }
 
     void UpdateService::checkForUpdates() {
+        qInfo() << "Update service: checking for updates...";
         QString queryString = QString(UPDATE_JSON_URL);
         QUrl url;
         url.setUrl(queryString);
@@ -82,6 +83,8 @@ namespace Helpers {
                 int availableVersion = majorVersion*100 + minorVersion*10 + fixVersion;
                 int currVersion = XPIKS_MAJOR_VERSION*100 + XPIKS_MINOR_VERSION*10 + XPIKS_FIX_VERSION;
 
+                qInfo() << "Update service: available=" << availableVersion << "current=" << currVersion;
+
                 if (availableVersion > currVersion) {
                     QString updateUrl = DEFAULT_UPDATE_URL;
                     if (jsonObject.contains(UPDATE_JSON_UPDATE_URL)) {
@@ -92,7 +95,7 @@ namespace Helpers {
                 }
             }
         } else {
-            qDebug() << networkReply->errorString();
+            qWarning() << "Update check failed:" << networkReply->errorString();
         }
 
         networkReply->deleteLater();

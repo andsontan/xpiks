@@ -310,7 +310,7 @@ void Commands::CommandManager::reportUserAction(Conectivity::UserAction userActi
 
 void Commands::CommandManager::afterConstructionCallback()  {
     if (m_AfterInitCalled) {
-        qDebug() << "Attempt to call afterCosntructionCallback() second time";
+        qWarning() << "Attempt to call afterCosntructionCallback() second time";
         return;
     }
 

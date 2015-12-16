@@ -150,7 +150,7 @@ namespace Common {
 
                     result = true;
                 } else {
-                    qDebug() << "Attempt to rename keyword to existing one. Use remove instead";
+                    qWarning() << "Attempt to rename keyword to existing one. Use remove instead";
                 }
             }
         }

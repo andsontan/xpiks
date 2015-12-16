@@ -45,13 +45,13 @@ namespace Models {
 
     void IptcProvider::metadataImported(int index)
     {
-        qDebug() << "Metadata imported at " << index;
+        qInfo() << "Metadata imported at " << index;
         ImportPair importPair = m_MetadataReader->resultAt(index);
         metadataImportedHandler(importPair);
     }
 
     void IptcProvider::metadataExported(int index) {
-        qDebug() << "Metadata exported at " << index;
+        qInfo() << "Metadata exported at " << index;
         ExportPair pair = m_MetadataWriter->resultAt(index);
         ArtworkMetadata *metadata = pair.first;
         metadataExportedHandler(metadata);
@@ -83,7 +83,9 @@ namespace Models {
         if (importData != NULL) {
             metadata->initialize(importData->Title, importData->Description, importData->Keywords);
             metadata->setSize(importData->Size);
+#if defined(QT_DEBUG)
             qDebug() << "Metadata initialized" << metadata->getFilepath();
+#endif
             delete importData;
         } else {
             setIsError(true);
@@ -104,7 +106,7 @@ namespace Models {
         incProgress();
 
         if (NULL != metadata) {
-            qDebug() << metadata->getFilepath();
+            qDebug() << "Metadata saved" << metadata->getFilepath();
         } else {
             setIsError(true);
         }

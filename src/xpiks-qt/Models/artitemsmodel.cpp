@@ -73,6 +73,7 @@ namespace Models {
     }
 
     void ArtItemsModel::updateLastN(int N) {
+        qDebug() << "Updating last" << N << "item(s)";
         int length = m_ArtworkList.length();
 
         if (0 < N && N <= length) {
@@ -90,6 +91,7 @@ namespace Models {
     }
 
     void ArtItemsModel::removeArtworksDirectory(int index) {
+        qDebug() << "Remove artworks directory at" << index;
         const QString &directory = m_CommandManager->getArtworksRepository()->getDirectory(index);
         QDir dir(directory);
         QString directoryAbsolutePath = dir.absolutePath();
@@ -147,6 +149,7 @@ namespace Models {
     }
 
     void ArtItemsModel::pasteKeywords(int metadataIndex, const QStringList &keywords) {
+        qDebug() << "Pasting keywords on item" << metadataIndex;
         if (metadataIndex >= 0
                 && metadataIndex < m_ArtworkList.length()
                 && !keywords.empty()) {
@@ -160,6 +163,7 @@ namespace Models {
 
             if (!metadata->getIsSelected()) {
                 selectedIndices.append(metadataIndex);
+                qDebug() << "Pasting keywords: item was not selected";
             }
 
             artItemInfos.reserve(selectedIndices.length());
@@ -206,6 +210,7 @@ namespace Models {
     }
 
     int ArtItemsModel::dropFiles(const QList<QUrl> &urls) {
+        qDebug() << "Dropped" << urls.count() << "items(s)";
         QList<QUrl> directories, files;
         directories.reserve(urls.count()/2);
         files.reserve(urls.count());
@@ -219,11 +224,12 @@ namespace Models {
             }
         }
 
-        int count = 0;
-        count += addLocalArtworks(files);
-        count += addLocalDirectories(directories);
+        int filesAddedCount = addLocalArtworks(files);
+        int directoriesAddedCount = addLocalDirectories(directories);
 
-        return count;
+        qDebug() << "Added" << filesAddedCount << "files and" << directoriesAddedCount << "directories";
+
+        return filesAddedCount + directoriesAddedCount;
     }
 
     void ArtItemsModel::setSelectedItemsSaved(const QVector<int> &selectedIndices) {
@@ -351,6 +357,7 @@ namespace Models {
     }
 
     void ArtItemsModel::plainTextEdit(int metadataIndex, const QString &rawKeywords) {
+        qDebug() << "Plain text edit for item" << metadataIndex;
         if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
             ArtItemInfo *itemInfo = new ArtItemInfo(metadata, metadataIndex);
@@ -455,7 +462,7 @@ namespace Models {
     }
 
     int ArtItemsModel::addLocalArtworks(const QList<QUrl> &artworksPaths) {
-        qDebug() << artworksPaths;
+        qDebug() << "Adding local files:" << artworksPaths;
         QStringList fileList;
         fileList.reserve(artworksPaths.length());
 
@@ -468,7 +475,7 @@ namespace Models {
     }
 
     int ArtItemsModel::addLocalDirectories(const QList<QUrl> &directories) {
-        qDebug() << "Adding local directories: " << directories;
+        qDebug() << "Adding local directories:" << directories;
         QStringList directoriesList;
         directoriesList.reserve(directories.length());
 
@@ -584,7 +591,7 @@ namespace Models {
                     format == QLatin1String("tiff")) {
                 filenames.append(filepath);
             } else if (format == QLatin1String("png")) {
-                qDebug() << "PNG is unsupported file format";
+                qWarning() << "PNG is unsupported file format";
             }
         }
 

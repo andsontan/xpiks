@@ -87,17 +87,17 @@ namespace Helpers {
         // for not releasing semaphore twice in innerProcessFinished() and cancel()
         // (in general it's executed first because other thread's cancel() releases the semaphore)
         if (!m_Cancelled) {
-            qDebug() << "Starting upload to" << m_Host;
+            qInfo() << "Starting upload to" << m_Host;
             m_Timer->start(maxSeconds*1000);
             m_CurlProcess->start(command);
         } else {
-            qDebug() << "Upload cancelled before start for" << m_Host;
+            qInfo() << "Upload cancelled before start for" << m_Host;
             emitFinishSignals(false);
         }
     }
 
     void UploadWorker::cancel() {
-        qDebug() << "Cancelling upload to " << m_Host;
+        qInfo() << "Cancelling upload to " << m_Host;
 
         m_Cancelled = true;
         m_UploadSemaphore->release();
@@ -108,9 +108,8 @@ namespace Helpers {
         }
     }
 
-    void UploadWorker::innerProcessFinished(int exitCode, QProcess::ExitStatus exitStatus)
-    {
-        qDebug() << "Curl process finished for" << m_Host << "with code" << exitCode;
+    void UploadWorker::innerProcessFinished(int exitCode, QProcess::ExitStatus exitStatus) {
+        qInfo() << "Curl process finished for" << m_Host << "with code" << exitCode;
 
         if (!m_Cancelled) {
             qDebug() << "Releasing semaphore for" << m_Host;
@@ -118,7 +117,7 @@ namespace Helpers {
         }
 
         if (m_CurlProcess->exitStatus() != QProcess::NormalExit) {
-            qDebug() << "Error:" << m_UploadItem->m_CurlPath << m_CurlProcess->errorString();
+            qWarning() << "Error:" << m_UploadItem->m_CurlPath << m_CurlProcess->errorString();
         }
 
         QByteArray stdoutByteArray = m_CurlProcess->readAllStandardOutput();
@@ -148,7 +147,7 @@ namespace Helpers {
         percent /= (m_OverallFilesCount + 0.0);
 
         if (percent > 100.0) {
-            qDebug() << "ERROR: percent is higher than 100. Last curl output is [" << output << "]. Percent is" << percent;
+            qWarning() << "ERROR: percent is higher than 100. Last curl output is [" << output << "]. Percent is" << percent;
             percent = 100.0;
         }
 
