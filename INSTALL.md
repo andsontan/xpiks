@@ -4,7 +4,7 @@
 
 To install Xpiks in OS X do the following:
 
-- download and install Exiftool
+- download and install Exiftool (http://www.sno.phy.queensu.ca/~phil/exiftool/)
 - unpack Xpiks from dmg and drag'n'drop it to the Applications
 
 **Windows intallation**
