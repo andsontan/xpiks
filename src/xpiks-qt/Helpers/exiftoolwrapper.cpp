@@ -44,7 +44,7 @@ ExportPair writeArtworkMetadata(ExportPair pair) {
     QString description = QString(metadata->getDescription()).simplified();
     const QString &keywords = metadata->getKeywordsString();
 
-    if (title.simplified().isEmpty()) {
+    if (title.trimmed().isEmpty()) {
         title = description;
     }
 

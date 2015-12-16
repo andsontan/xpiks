@@ -33,6 +33,7 @@ namespace Models {
     }
 
     void ArtworksRepository::cleanupEmptyDirectories() {
+        qDebug() << "Cleaning empty directories";
         int count = m_DirectoriesList.length();
         QVector<int> indicesToRemove;
         indicesToRemove.reserve(count);

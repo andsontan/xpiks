@@ -22,6 +22,7 @@
 #include "loggingworker.h"
 #include "logger.h"
 #include <QThread>
+#include <QDebug>
 
 namespace Helpers {
     LoggingWorker::LoggingWorker(QObject *parent) :
@@ -38,6 +39,9 @@ namespace Helpers {
             logger.flush();
             QThread::sleep(secondsToSleep);
         }
+
+        qDebug() << "Logging worker stopped";
+        logger.flush();
     }
 
     void LoggingWorker::cancel() {

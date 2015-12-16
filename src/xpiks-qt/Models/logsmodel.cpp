@@ -65,6 +65,12 @@ namespace Models {
 #endif
     }
 
+    void LogsModel::stopLogging() {
+#ifdef WITH_LOGS
+        m_LoggingWorker->cancel();
+#endif
+    }
+
     QString LogsModel::getAllLogsText(bool moreLogs) {
         QString result;
 #ifdef WITH_LOGS

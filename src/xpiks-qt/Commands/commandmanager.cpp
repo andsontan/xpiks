@@ -44,6 +44,7 @@
 #include "../Helpers/backupsaverservice.h"
 #include "../Conectivity/telemetryservice.h"
 #include "../Helpers/updateservice.h"
+#include "../Models/logsmodel.h"
 
 void Commands::CommandManager::InjectDependency(Models::ArtworksRepository *artworkRepository) {
     Q_ASSERT(artworkRepository != NULL); m_ArtworksRepository = artworkRepository;
@@ -136,6 +137,10 @@ void Commands::CommandManager::InjectDependency(Helpers::UpdateService *updateSe
     Q_ASSERT(updateService != NULL); m_UpdateService = updateService;
 }
 
+void Commands::CommandManager::InjectDependency(Models::LogsModel *logsModel) {
+    Q_ASSERT(logsModel != NULL); m_LogsModel = logsModel;
+}
+
 Commands::CommandResult *Commands::CommandManager::processCommand(Commands::CommandBase *command) const
 {
     Commands::CommandResult *result = command->execute(this);
@@ -171,6 +176,7 @@ void Commands::CommandManager::connectEntitiesSignalsSlots() const
 void Commands::CommandManager::recodePasswords(const QString &oldMasterPassword,
                                                   const QString &newMasterPassword,
                                                   const QVector<Models::UploadInfo *> &uploadInfos) const {
+    qDebug() << "Recoding passwords for" << uploadInfos.length() << "item(s)";
     foreach (Models::UploadInfo *info, uploadInfos) {
         if (info->hasPassword()) {
             QString newPassword = m_SecretsManager->recodePassword(
@@ -181,6 +187,7 @@ void Commands::CommandManager::recodePasswords(const QString &oldMasterPassword,
 }
 
 void Commands::CommandManager::combineArtwork(Models::ArtItemInfo *itemInfo) const {
+    qDebug() << "Combining one item with index" << itemInfo->getOriginalIndex();
     if (m_CombinedArtworksModel) {
         m_CombinedArtworksModel->resetModelData();
         m_CombinedArtworksModel->initArtworks(QVector<Models::ArtItemInfo*>() << itemInfo);
@@ -191,6 +198,7 @@ void Commands::CommandManager::combineArtwork(Models::ArtItemInfo *itemInfo) con
 }
 
 void Commands::CommandManager::combineArtworks(const QVector<Models::ArtItemInfo *> &artworks) const {
+    qDebug() << "Combining" << artworks.length() << "artworks";
     if (m_CombinedArtworksModel) {
         m_CombinedArtworksModel->resetModelData();
         m_CombinedArtworksModel->initArtworks(artworks);
@@ -331,4 +339,5 @@ void Commands::CommandManager::beforeDestructionCallback() const {
     m_TelemetryService->reportAction(Conectivity::UserActionClose);
     m_SpellCheckerService->stopChecking();
     m_MetadataSaverService->stopSaving();
+    m_LogsModel->stopLogging();
 }

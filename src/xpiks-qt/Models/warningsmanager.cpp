@@ -51,6 +51,7 @@ namespace Models {
     }
 
     void WarningsManager::warningsCheckFinished() {
+        qInfo() << "Warnings check finished. Updating main model...";
         QVector<WarningsInfo*> items = m_CheckingWatcher->result();
 
         beginResetModel();
@@ -74,6 +75,7 @@ namespace Models {
     }
 
     void WarningsManager::checkForWarnings(const QVector<ArtItemInfo *> &artworks) {
+        qDebug() << "Check for warnings" << artworks.length() << "item(s)";
         QVector<WarningsInfo*> warningsBufferList;
 
         warningsBufferList.reserve(artworks.length());
@@ -95,6 +97,8 @@ namespace Models {
             return;
         }
 
+        qInfo() << "Rechecking item for warnings with index" << itemIndex;
+
         WarningsInfo *info = m_WarningsList.at(itemIndex);
         info->updateData();
         info->clearWarnings();
@@ -109,6 +113,7 @@ namespace Models {
     }
 
     void WarningsManager::clearModel() {
+        qDebug() << "Clearing warnings...";
         beginResetModel();
 
         qDeleteAll(m_WarningsList);

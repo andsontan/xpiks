@@ -224,6 +224,7 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&metadataSaverService);
     commandManager.InjectDependency(&telemetryService);
     commandManager.InjectDependency(&updateService);
+    commandManager.InjectDependency(&logsModel);
 
     // other initializations
     secretsManager.setMasterPasswordHash(appSettings.value(Constants::MASTER_PASSWORD_HASH, "").toString());

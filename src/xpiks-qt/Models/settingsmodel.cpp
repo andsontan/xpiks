@@ -21,6 +21,7 @@
 
 #include "settingsmodel.h"
 #include <QQmlEngine>
+#include <QDebug>
 #include "../Helpers/appsettings.h"
 
 #ifdef Q_OS_MAC
@@ -75,6 +76,8 @@ namespace Models {
     }
 
     void SettingsModel::saveAllValues() {
+        qInfo() << "Saving settings";
+
         Helpers::AppSettings appSettings;
         appSettings.setValue(appSettings.getExifToolPathKey(), m_ExifToolPath);
         appSettings.setValue(appSettings.getCurlPathKey(), m_CurlPath);
@@ -117,6 +120,8 @@ namespace Models {
     }
 
     void SettingsModel::readAllValues() {
+        qInfo() << "Reading settings values";
+
         Helpers::AppSettings appSettings;
         setExifToolPath(appSettings.value(appSettings.getExifToolPathKey(), DEFAULT_EXIFTOOL).toString());
         setCurlPath(appSettings.value(appSettings.getCurlPathKey(), DEFAULT_CURL).toString());
@@ -138,6 +143,8 @@ namespace Models {
     }
 
     void SettingsModel::resetToDefault() {
+        qInfo() << "Resetting all settings";
+
         setExifToolPath(DEFAULT_EXIFTOOL);
         setCurlPath(DEFAULT_CURL);
         setMinMegapixelCount(DEFAULT_MIN_MEGAPIXELS);

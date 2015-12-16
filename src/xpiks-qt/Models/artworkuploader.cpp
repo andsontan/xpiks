@@ -110,6 +110,7 @@ namespace Models {
         foreach (Models::UploadInfo *info, infos) {
             if (info->getIsSelected() && info->getZipBeforeUpload()) {
                 anyZipNeeded = true;
+                qDebug() << "Need create archives at least for" << info->getHost();
                 break;
             }
         }
@@ -125,6 +126,7 @@ namespace Models {
 
                 if (!fi.exists()) {
                     needCreate = true;
+                    qDebug() << "Zip needed at least for" << archivePath;
                     break;
                 }
             }

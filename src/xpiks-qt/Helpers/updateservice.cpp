@@ -83,7 +83,7 @@ namespace Helpers {
                 int availableVersion = majorVersion*100 + minorVersion*10 + fixVersion;
                 int currVersion = XPIKS_MAJOR_VERSION*100 + XPIKS_MINOR_VERSION*10 + XPIKS_FIX_VERSION;
 
-                qInfo() << "Update service: available=" << availableVersion << "current=" << currVersion;
+                qInfo() << "Update service: available =" << availableVersion << "current =" << currVersion;
 
                 if (availableVersion > currVersion) {
                     QString updateUrl = DEFAULT_UPDATE_URL;

@@ -30,6 +30,7 @@ namespace Models {
 
     void UploadInfoRepository::initFromString(const QString &savedString)
     {
+        qInfo() << "Initializing upload infos from string";
         QByteArray originalData;
         originalData.append(savedString.toLatin1());
         QByteArray result = QByteArray::fromBase64(originalData);
@@ -52,6 +53,7 @@ namespace Models {
 
     void UploadInfoRepository::addItem() {
         int lastIndex = m_UploadInfos.length();
+        qInfo() << "Appending upload info" << lastIndex;
         beginInsertRows(QModelIndex(), lastIndex, lastIndex);
         m_UploadInfos.append(new UploadInfo());
         endInsertRows();
@@ -59,6 +61,7 @@ namespace Models {
     }
 
     QString UploadInfoRepository::getInfoString() const {
+        qInfo() << "Serializing upload infos to string";
         // bad type QList instead of QVector
         // but users already have this
         QList<QHash<int, QString> > items;
@@ -139,7 +142,10 @@ namespace Models {
         emit dataChanged(index(0), index(m_UploadInfos.count() - 1), QVector<int>() << PercentRole);
     }
 
-    void UploadInfoRepository::resetPercents() { foreach (UploadInfo *info, m_UploadInfos) { info->resetPercent(); } }
+    void UploadInfoRepository::resetPercents() {
+        qDebug() << "Resetting percents for upload items";
+        foreach (UploadInfo *info, m_UploadInfos) { info->resetPercent(); }
+    }
 
     int UploadInfoRepository::rowCount(const QModelIndex &parent) const {
         Q_UNUSED(parent);
@@ -248,10 +254,12 @@ namespace Models {
 
     void UploadInfoRepository::onBeforeMasterPasswordChanged(const QString &oldMasterPassword,
                                                              const QString &newMasterPassword) {
+        qInfo() << "Before master password change";
         m_CommandManager->recodePasswords(oldMasterPassword, newMasterPassword, m_UploadInfos);
     }
 
     void UploadInfoRepository::onAfterMasterPasswordReset() {
+        qInfo() << "After master password change";
         foreach (UploadInfo *info, m_UploadInfos) {
             info->dropPassword();
         }

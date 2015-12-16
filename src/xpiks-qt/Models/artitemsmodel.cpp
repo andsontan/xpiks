@@ -233,6 +233,7 @@ namespace Models {
     }
 
     void ArtItemsModel::setSelectedItemsSaved(const QVector<int> &selectedIndices) {
+        qDebug() << "Setting selected" << selectedIndices.length() << "item(s) saved";
         foreach (int index, selectedIndices) {
             m_ArtworkList.at(index)->resetModified();
         }

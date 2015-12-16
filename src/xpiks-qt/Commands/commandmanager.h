@@ -51,6 +51,7 @@ namespace Models {
     class ZipArchiver;
     class SettingsModel;
     class RecentDirectoriesModel;
+    class LogsModel;
 }
 
 namespace Suggestion {
@@ -93,6 +94,7 @@ namespace Commands {
             m_MetadataSaverService(NULL),
             m_TelemetryService(NULL),
             m_UpdateService(NULL),
+            m_LogsModel(NULL),
             m_AfterInitCalled(false)
         { }
 
@@ -118,6 +120,7 @@ namespace Commands {
         void InjectDependency(Helpers::BackupSaverService *backupSaverService);
         void InjectDependency(Conectivity::TelemetryService *telemetryService);
         void InjectDependency(Helpers::UpdateService *updateService);
+        void InjectDependency(Models::LogsModel *logsModel);
 
     public:
         CommandResult *processCommand(CommandBase *command) const;
@@ -182,6 +185,7 @@ namespace Commands {
         Helpers::BackupSaverService *m_MetadataSaverService;
         Conectivity::TelemetryService *m_TelemetryService;
         Helpers::UpdateService *m_UpdateService;
+        Models::LogsModel *m_LogsModel;
         volatile bool m_AfterInitCalled;
     };
 }
