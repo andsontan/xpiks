@@ -102,6 +102,7 @@ void grabMetadata(const QStringList &items, Models::ImportDataResult *importData
                   QRegExp keywordsRegExp);
 
 ImportPair readArtworkMetadata(ImportPair pair) {
+    qDebug() << "Reading artwork metadata" << pair.first->getFilepath();
     Models::SettingsModel *settingsModel = Helpers::SettingsProvider::getInstance().getSettingsModelInstance();
     const QString exiftoolPath = settingsModel->getExifToolPath();
 

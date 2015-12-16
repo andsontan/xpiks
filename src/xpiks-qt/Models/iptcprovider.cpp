@@ -121,6 +121,9 @@ namespace Models {
     void IptcProvider::doReadMetadata(const QVector<ArtworkMetadata *> &artworkList)
     {
         int artworksCount = artworkList.length();
+
+        qDebug() << "Reading metadata from" << artworksCount << "item(s)";
+
         if (artworksCount == 0) {
             return;
         }
