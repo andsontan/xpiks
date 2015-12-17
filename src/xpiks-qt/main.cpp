@@ -74,30 +74,26 @@
 void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg) {
     Q_UNUSED(context);
 
-    QString txt;
+    QString logLine;
     switch (type) {
         case QtDebugMsg:
-            txt = QString("Debug: %1").arg(msg);
+            logLine = QString("%1 - Debug: %2").arg(QDateTime::currentDateTimeUtc().toString("dd.MM.yyyy hh:mm:ss.zzz")).arg(msg);
             break;
         case QtWarningMsg:
-            txt = QString("Warning: %1").arg(msg);
+            logLine = QString("%1 - Warning: %2").arg(QDateTime::currentDateTimeUtc().toString("dd.MM.yyyy hh:mm:ss.zzz")).arg(msg);
             break;
         case QtCriticalMsg:
-            txt = QString("Critical: %1").arg(msg);
+            logLine = QString("%1 - Critical: %2").arg(QDateTime::currentDateTimeUtc().toString("dd.MM.yyyy hh:mm:ss.zzz")).arg(msg);
             break;
         case QtFatalMsg:
-            txt = QString("Fatal: %1").arg(msg);
+            logLine = QString("%1 - Fatal: %2").arg(QDateTime::currentDateTimeUtc().toString("dd.MM.yyyy hh:mm:ss.zzz")).arg(msg);
             break;
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 1))
         case QtInfoMsg:
-            txt = QString("Info: %1").arg(msg);
+            logLine = QString("%1 - Info: %2").arg(QDateTime::currentDateTimeUtc().toString("dd.MM.yyyy hh:mm:ss.zzz")).arg(msg);
             break;
 #endif
     }
-
-    QString logLine = QString("%1 - %2")
-            .arg(QDateTime::currentDateTimeUtc().toString("dd.MM.yyyy hh:mm:ss.zzz"))
-            .arg(txt);
 
     Helpers::Logger &logger = Helpers::Logger::getInstance();
     logger.log(logLine);

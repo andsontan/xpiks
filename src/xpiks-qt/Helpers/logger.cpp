@@ -40,7 +40,7 @@ namespace Helpers {
         m_Mutex.lock();
         {
             previousIndex = m_ActiveIndex;
-            m_ActiveIndex = (m_ActiveIndex + 1) % 2;
+            m_ActiveIndex = (previousIndex + 1) % 2;
         }
         m_Mutex.unlock();
 

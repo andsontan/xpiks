@@ -57,7 +57,7 @@ ApplicationWindow {
         appSettings.setValue(appSettings.recentDirectoriesKey, recentDirectories.serializeForSettings())
     }
 
-    onClosing: {
+    function closeHandler() {
         saveRecentDirectories()
 
         if (artItemsModel.modifiedArtworksCount > 0) {
@@ -69,6 +69,8 @@ ApplicationWindow {
             closingTimer.start()
         }
     }
+
+    onClosing: closeHandler()
 
     Timer {
         id: closingTimer
@@ -203,7 +205,7 @@ ApplicationWindow {
 
             MenuItem {
                 text: qsTr("Exit")
-                onTriggered: Qt.quit();
+                onTriggered: closeHandler();
             }
         }
 
