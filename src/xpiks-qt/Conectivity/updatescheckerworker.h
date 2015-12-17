@@ -25,7 +25,6 @@
 #include <QObject>
 #include <QNetworkAccessManager>
 #include <QEventLoop>
-#include "updaterequest.h"
 
 namespace Conectivity {
     class UpdatesCheckerWorker : public QObject

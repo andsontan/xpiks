@@ -135,8 +135,8 @@ namespace SpellCheck {
     }
 
     void SpellCheck::SpellCheckerService::stopChecking() {
+        qDebug() << "SpellCheck service: stopping checking...";
         if (m_WorkerIsAlive) {
-            qDebug() << "SpellCheck service: stopping checking...";
             m_SpellCheckWorker->cancelWork();
         }
     }

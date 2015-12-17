@@ -45,6 +45,7 @@ namespace Conectivity {
     }
 
     void TelemetryService::reportAction(UserAction action) {
+        qDebug() << "Reporting action" << action;
 #ifdef QT_NO_DEBUG
         doReportAction(action);
 #else

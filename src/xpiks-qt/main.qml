@@ -57,20 +57,21 @@ ApplicationWindow {
         appSettings.setValue(appSettings.recentDirectoriesKey, recentDirectories.serializeForSettings())
     }
 
-    function closeHandler() {
+    function closeHandler(close) {
         saveRecentDirectories()
 
         if (artItemsModel.modifiedArtworksCount > 0) {
             close.accepted = false
             configExitDialog.open()
         } else {
+            console.log("No modified artworks")
             applicationWindow.visibility = "Minimized"
             helpersWrapper.beforeDestruction();
             closingTimer.start()
         }
     }
 
-    onClosing: closeHandler()
+    onClosing: closeHandler(close)
 
     Timer {
         id: closingTimer

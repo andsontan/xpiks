@@ -330,6 +330,7 @@ void Commands::CommandManager::afterConstructionCallback()  {
 }
 
 void Commands::CommandManager::beforeDestructionCallback() const {
+    qDebug() << "Before destruction handler";
     if (!m_AfterInitCalled) { return; }
 
     // we have a second for important stuff

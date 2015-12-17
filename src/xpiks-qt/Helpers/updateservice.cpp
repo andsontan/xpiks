@@ -23,7 +23,6 @@
 #include <QThread>
 #include <QDebug>
 #include "../Conectivity/updatescheckerworker.h"
-#include "../Conectivity/updaterequest.h"
 
 namespace Helpers {
     UpdateService::UpdateService() {
