@@ -64,7 +64,7 @@ ApplicationWindow {
             close.accepted = false
             configExitDialog.open()
         } else {
-            console.log("No modified artworks")
+            console.log("No modified artworks found. Exiting...")
             applicationWindow.visibility = "Minimized"
             helpersWrapper.beforeDestruction();
             closingTimer.start()
