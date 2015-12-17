@@ -260,7 +260,7 @@ namespace Models {
     }
 
     void UploadInfoRepository::onAfterMasterPasswordReset() {
-        qInfo() << "After master password change";
+        qInfo() << "After master password reset";
         foreach (UploadInfo *info, m_UploadInfos) {
             info->dropPassword();
         }

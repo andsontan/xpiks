@@ -47,6 +47,7 @@
 #define DEFAULT_SEARCH_USING_AND true
 #define DEFAULT_SCROLL_SPEED_SCALE 1.0
 #define DEFAULT_USE_SPELL_CHECK true
+#define DEFAULT_HAVE_USER_CONSENT false
 
 namespace Models {
     SettingsModel::SettingsModel(QObject *parent) :
@@ -163,6 +164,12 @@ namespace Models {
         setSearchUsingAnd(DEFAULT_SEARCH_USING_AND);
         setScrollSpeedScale(DEFAULT_SCROLL_SPEED_SCALE);
         setUseSpellCheck(DEFAULT_USE_SPELL_CHECK);
+
+#if defined(QT_DEBUG)
+        Helpers::AppSettings appSettings;
+        appSettings.setValue(appSettings.getUserConsentKey(), DEFAULT_HAVE_USER_CONSENT);
+        appSettings.setValue(appSettings.getInstalledVersionKey(), 0);
+#endif
     }
 
     int ensureInBounds(int value, int boundA, int boundB) {

@@ -162,6 +162,7 @@ namespace Helpers {
         }
 
         Q_INVOKABLE void saveCurrentVersion() {
+            qDebug() << "Saving current xpiks version";
             setValue(getInstalledVersionKey(), XPIKS_VERSION_INT);
         }
 
