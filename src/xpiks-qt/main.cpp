@@ -71,8 +71,6 @@
 #include "Common/version.h"
 #include "Common/defines.h"
 
-#ifdef WITH_LOGS
-
 void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg) {
     Q_UNUSED(context);
 
@@ -107,7 +105,6 @@ void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const Q
     }
 }
 
-#endif
 
 #define STRINGIZE_(x) #x
 #define STRINGIZE(x) STRINGIZE_(x)
@@ -165,10 +162,10 @@ int main(int argc, char *argv[]) {
             Q_UNUSED(created);
         }
     }
-
+#endif
     qInstallMessageHandler(myMessageHandler);
     qDebug() << "Log started";
-#endif
+
     QApplication app(argc, argv);
 
     localLibrary.loadLibraryAsync();
@@ -265,8 +262,9 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("spellCheckSuggestionModel", &spellCheckSuggestionModel);
 
     engine.addImageProvider("global", globalProvider);
+    qDebug() << "About to load main view...";
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
-
+    qDebug() << "Main view loaded";
 
 #ifdef QT_DEBUG
     if (argc > 1) {

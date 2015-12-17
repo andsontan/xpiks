@@ -33,6 +33,7 @@
 #include "../Helpers/uploadcoordinator.h"
 #include "../Commands/commandmanager.h"
 #include "../Models/settingsmodel.h"
+#include "../Helpers/filenameshelpers.h"
 
 namespace Models {
     ArtworkUploader::ArtworkUploader(int maxParallelUploads) :

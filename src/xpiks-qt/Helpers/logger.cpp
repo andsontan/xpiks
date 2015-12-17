@@ -31,6 +31,7 @@
 #include <QDir>
 #include <QDateTime>
 #include <QStandardPaths>
+#include <iostream>
 
 namespace Helpers {
     void Logger::flush() {
@@ -64,6 +65,7 @@ namespace Helpers {
         if (logItems.length() > 0) {
             QMutexLocker locker(&m_StreamMutex);
 
+#ifdef WITH_LOGS
             QFile outFile(m_LogFilepath);
             if (outFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append)) {
                 QTextStream ts(&outFile);
@@ -72,9 +74,13 @@ namespace Helpers {
                     ts << logItem;
                     endl(ts);
                 }
-
-                logItems.clear();
             }
+#else
+            foreach (const QString &logItem, logItems) {
+                std::cout << logItem.toLocal8Bit().data() << std::endl;
+            }
+#endif
+            logItems.clear();
         }
     }
 

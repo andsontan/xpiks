@@ -51,7 +51,6 @@ namespace Models {
     }
 
     void LogsModel::startLogging() {
-#ifdef WITH_LOGS
         QThread *loggingThread = new QThread();
         m_LoggingWorker->moveToThread(loggingThread);
 
@@ -62,13 +61,10 @@ namespace Models {
         QObject::connect(loggingThread, SIGNAL(finished()), loggingThread, SLOT(deleteLater()));
 
         loggingThread->start();
-#endif
     }
 
     void LogsModel::stopLogging() {
-#ifdef WITH_LOGS
         m_LoggingWorker->cancel();
-#endif
     }
 
     QString LogsModel::getAllLogsText(bool moreLogs) {
