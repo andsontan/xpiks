@@ -5,14 +5,14 @@
 #include "Mocks/commandmanagermock.h"
 #include "Mocks/artitemsmodelmock.h"
 #include "../xpiks-qt/Commands/removeartworkscommand.h"
+#include "../xpiks-qt/Models/artworksrepository.h"
 
 void RemoveCommand_Tests::removeArtworksFromEmptyRepository() {
     Mocks::CommandManagerMock commandManagerMock;
-    Mocks::ArtworksRepositoryMock artworksRepositoryMock;
     Mocks::ArtItemsModelMock artItemsMock;
 
-    Models::ArtworksRepository *artworksRepository = &artworksRepositoryMock;
-    commandManagerMock.InjectDependency(artworksRepository);
+    Models::ArtworksRepository artworksRepository;
+    commandManagerMock.InjectDependency(&artworksRepository);
 
     Models::ArtItemsModel *artItemsModel = &artItemsMock;
     commandManagerMock.InjectDependency(artItemsModel);
@@ -24,10 +24,10 @@ void RemoveCommand_Tests::removeArtworksFromEmptyRepository() {
     QSignalSpy rowsRemovedItemsStart(&artItemsMock, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)));
     QSignalSpy rowsRemovedItemsEnd(&artItemsMock, SIGNAL(rowsRemoved(QModelIndex,int,int)));
 
-    QSignalSpy rowsRemovedRepositoryStart(&artworksRepositoryMock, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)));
-    QSignalSpy rowsRemovedRepositoryEnd(&artworksRepositoryMock, SIGNAL(rowsRemoved(QModelIndex,int,int)));
+    QSignalSpy rowsRemovedRepositoryStart(&artworksRepository, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)));
+    QSignalSpy rowsRemovedRepositoryEnd(&artworksRepository, SIGNAL(rowsRemoved(QModelIndex,int,int)));
 
-    QSignalSpy dataChangedInRepository(&artworksRepositoryMock, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)));
+    QSignalSpy dataChangedInRepository(&artworksRepository, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)));
 
     QSignalSpy modifiedFilesChanged(&artItemsMock, SIGNAL(modifiedArtworksCountChanged()));
 
@@ -50,11 +50,10 @@ void RemoveCommand_Tests::removeArtworksFromEmptyRepository() {
 
 void RemoveCommand_Tests::removeAllArtworksFromRepository() {
     Mocks::CommandManagerMock commandManagerMock;
-    Mocks::ArtworksRepositoryMock artworksRepositoryMock;
     Mocks::ArtItemsModelMock artItemsMock;
 
-    Models::ArtworksRepository *artworksRepository = &artworksRepositoryMock;
-    commandManagerMock.InjectDependency(artworksRepository);
+    Models::ArtworksRepository artworksRepository;
+    commandManagerMock.InjectDependency(&artworksRepository);
 
     Models::ArtItemsModel *artItemsModel = &artItemsMock;
     commandManagerMock.InjectDependency(artItemsModel);
@@ -69,10 +68,10 @@ void RemoveCommand_Tests::removeAllArtworksFromRepository() {
     QSignalSpy rowsRemovedItemsStart(&artItemsMock, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)));
     QSignalSpy rowsRemovedItemsEnd(&artItemsMock, SIGNAL(rowsRemoved(QModelIndex,int,int)));
 
-    QSignalSpy rowsRemovedRepositoryStart(&artworksRepositoryMock, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)));
-    QSignalSpy rowsRemovedRepositoryEnd(&artworksRepositoryMock, SIGNAL(rowsRemoved(QModelIndex,int,int)));
+    QSignalSpy rowsRemovedRepositoryStart(&artworksRepository, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)));
+    QSignalSpy rowsRemovedRepositoryEnd(&artworksRepository, SIGNAL(rowsRemoved(QModelIndex,int,int)));
 
-    QSignalSpy dataChangedInRepository(&artworksRepositoryMock, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)));
+    QSignalSpy dataChangedInRepository(&artworksRepository, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)));
 
     QSignalSpy modifiedFilesChanged(&artItemsMock, SIGNAL(modifiedArtworksCountChanged()));
 

@@ -23,6 +23,7 @@
 #include <QFileInfo>
 #include <QDebug>
 #include "../quazip/quazip/JlCompress.h"
+#include "filenameshelpers.h"
 
 namespace Helpers {
     QStringList zipFiles(QStringList filepathes) {
@@ -48,16 +49,6 @@ namespace Helpers {
 
         zipFilePath = archivePath;
         return result;
-    }
-
-    QString getArchivePath(const QString &artworkPath) {
-        QFileInfo fi(artworkPath);
-        QString archiveName = fi.baseName() + ".zip";
-
-        QString basePath = fi.absolutePath();
-        QDir dir(basePath);
-        QString archivePath = dir.filePath(archiveName);
-        return archivePath;
     }
 }
 

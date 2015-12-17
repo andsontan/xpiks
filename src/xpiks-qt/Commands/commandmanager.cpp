@@ -339,5 +339,7 @@ void Commands::CommandManager::beforeDestructionCallback() const {
     m_TelemetryService->reportAction(Conectivity::UserActionClose);
     m_SpellCheckerService->stopChecking();
     m_MetadataSaverService->stopSaving();
+#ifndef TESTS
     m_LogsModel->stopLogging();
+#endif
 }

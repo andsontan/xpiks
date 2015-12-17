@@ -81,6 +81,9 @@ namespace Models {
         void setFileSelected(const QString &filepath, bool selected);
 
         const QString &getDirectory(int index) const { return m_DirectoriesList[index]; }
+#ifdef TESTS
+        int getFilesCountForDirectory(const QString &directory) const { return m_DirectoriesHash[directory]; }
+#endif
 
     public:
         virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;

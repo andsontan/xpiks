@@ -4,7 +4,6 @@
 #include "../xpiks-qt/Commands/commandmanager.h"
 #include "../xpiks-qt/Models/artitemsmodel.h"
 #include "../xpiks-qt/Models/artworksrepository.h"
-#include "artworksrepositorymock.h"
 
 namespace Mocks {
     class CommandManagerMock : public Commands::CommandManager
@@ -21,7 +20,7 @@ namespace Mocks {
             Models::ArtItemsModel *artItemsModel = getArtItemsModel();
 
             while (i < count) {
-                QString filename = QString("somedirectory/artwork%1.jpg").arg(i);
+                QString filename = QString("/path/to/somedirectory/artwork%1.jpg").arg(i);
 
                 if (artworksRepository->accountFile(filename))
                 {

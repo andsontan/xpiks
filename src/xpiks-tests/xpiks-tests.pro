@@ -76,7 +76,8 @@ SOURCES += main.cpp \
     ../xpiks-qt/Models/settingsmodel.cpp \
     stringhelpers_tests.cpp \
     ../xpiks-qt/Helpers/stringhelper.cpp \
-    keywordvalidation_tests.cpp
+    keywordvalidation_tests.cpp \
+    artworkrepository_tests.cpp
 
 HEADERS += \
     encryption_tests.h \
@@ -88,7 +89,6 @@ HEADERS += \
     ../xpiks-qt/Commands/commandmanager.h \
     ../xpiks-qt/Models/artworkmetadata.h \
     ../xpiks-qt/Models/artworksrepository.h \
-    Mocks/artworksrepositorymock.h \
     addcommand_tests.h \
     ../xpiks-qt/Models/artitemsmodel.h \
     Mocks/artitemsmodelmock.h \
@@ -136,4 +136,5 @@ HEADERS += \
     ../xpiks-qt/Models/settingsmodel.h \
     ../xpiks-qt/Helpers/appsettings.h \
     stringhelpers_tests.h \
-    keywordvalidation_tests.h
+    keywordvalidation_tests.h \
+    artworkrepository_tests.h

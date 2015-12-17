@@ -21,6 +21,8 @@
 
 #include "filenameshelpers.h"
 #include <QRegExp>
+#include <QFileInfo>
+#include <QDir>
 
 QStringList Helpers::convertToVectorFilenames(const QStringList &items) {
     QStringList converted;
@@ -41,4 +43,14 @@ QStringList Helpers::convertToVectorFilenames(const QStringList &items) {
     }
 
     return converted;
+}
+
+QString Helpers::getArchivePath(const QString &artworkPath) {
+    QFileInfo fi(artworkPath);
+    QString archiveName = fi.baseName() + ".zip";
+
+    QString basePath = fi.absolutePath();
+    QDir dir(basePath);
+    QString archivePath = dir.filePath(archiveName);
+    return archivePath;
 }

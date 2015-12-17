@@ -12,6 +12,7 @@
 #include "combinedmodel_tests.h"
 #include "stringhelpers_tests.h"
 #include "keywordvalidation_tests.h"
+#include "artworkrepository_tests.h"
 
 #define QTEST_CLASS(TestObject, vName) \
     TestObject vName; \
@@ -31,6 +32,7 @@ int main(int argc, char *argv[]) {
     QTEST_CLASS(CombinedModelTests, cmt);
     QTEST_CLASS(StringHelpersTests, sht);
     QTEST_CLASS(KeywordValidationTests, kvt);
+    QTEST_CLASS(ArtworkRepositoryTests, art);
 
     return 0;
 }

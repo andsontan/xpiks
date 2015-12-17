@@ -83,9 +83,9 @@ namespace Models {
         QSet<QString> filteredDirectories;
 
         foreach (const QString &filepath, filteredFiles) {
-            QFileInfo fi(filepath);
-            if (fi.exists()) {
-                filteredDirectories.insert(fi.absolutePath());
+            QString directory;
+            if (checkFileExists(filepath, directory)) {
+                filteredDirectories.insert(directory);
             }
         }
 
@@ -198,8 +198,14 @@ namespace Models {
 
     /*virtual */
     bool ArtworksRepository::checkFileExists(const QString &filename, QString &directory) const {
+        bool exists = false;
         QFileInfo fi(filename);
-        bool exists = fi.exists();
+
+#ifndef TESTS
+        exists = fi.exists();
+#else
+        exists = true;
+#endif
 
         if (exists) {
             directory = fi.absolutePath();
