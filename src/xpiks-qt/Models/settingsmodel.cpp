@@ -23,6 +23,7 @@
 #include <QQmlEngine>
 #include <QDebug>
 #include "../Helpers/appsettings.h"
+#include "../Common/defines.h"
 
 #ifdef Q_OS_MAC
 #define DEFAULT_EXIFTOOL "/usr/bin/exiftool"

@@ -29,6 +29,7 @@
 #include "../Models/artiteminfo.h"
 #include "../Commands/commandmanager.h"
 #include "settingsmodel.h"
+#include "../Common/defines.h"
 
 namespace Models {
     WarningsManager::WarningsManager(QObject *parent) :

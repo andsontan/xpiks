@@ -76,21 +76,23 @@ void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const Q
 
     QString txt;
     switch (type) {
-    case QtDebugMsg:
-        txt = QString("Debug: %1").arg(msg);
-        break;
-    case QtWarningMsg:
-        txt = QString("Warning: %1").arg(msg);
-        break;
-    case QtCriticalMsg:
-        txt = QString("Critical: %1").arg(msg);
-        break;
-    case QtFatalMsg:
-        txt = QString("Fatal: %1").arg(msg);
-        break;
-    case QtInfoMsg:
-        txt = QString("Info: %1").arg(msg);
-        break;
+        case QtDebugMsg:
+            txt = QString("Debug: %1").arg(msg);
+            break;
+        case QtWarningMsg:
+            txt = QString("Warning: %1").arg(msg);
+            break;
+        case QtCriticalMsg:
+            txt = QString("Critical: %1").arg(msg);
+            break;
+        case QtFatalMsg:
+            txt = QString("Fatal: %1").arg(msg);
+            break;
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 1))
+        case QtInfoMsg:
+            txt = QString("Info: %1").arg(msg);
+            break;
+#endif
     }
 
     QString logLine = QString("%1 - %2")

@@ -32,6 +32,7 @@
 #include "../Helpers/ziphelper.h"
 #include "../Helpers/filenameshelpers.h"
 #include "../Models/settingsmodel.h"
+#include "../Common/defines.h"
 
 namespace Helpers {
     void UploadCoordinator::uploadArtworks(const QVector<Models::ArtworkMetadata *> &artworkList,

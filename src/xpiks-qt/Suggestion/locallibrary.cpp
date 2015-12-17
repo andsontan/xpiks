@@ -29,6 +29,7 @@
 #include "../Models/artworkmetadata.h"
 #include "libraryloaderworker.h"
 #include "suggestionartwork.h"
+#include "../Common/defines.h"
 
 namespace Suggestion {
     void LocalLibrary::addToLibrary(const QVector<Models::ArtworkMetadata *> artworksList) {

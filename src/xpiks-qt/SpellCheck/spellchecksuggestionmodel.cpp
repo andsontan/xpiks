@@ -28,6 +28,7 @@
 #include "ispellcheckable.h"
 #include "../Commands/commandmanager.h"
 #include "../Common/flags.h"
+#include "../Common/defines.h"
 
 namespace SpellCheck {
     SpellCheckSuggestionModel::SpellCheckSuggestionModel():

@@ -28,6 +28,7 @@
 #include "settingsmodel.h"
 #include "../Commands/commandmanager.h"
 #include "../Suggestion/locallibrary.h"
+#include "../Common/defines.h"
 
 namespace Models {
     IptcProvider::IptcProvider():

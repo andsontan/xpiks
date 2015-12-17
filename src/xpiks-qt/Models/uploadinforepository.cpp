@@ -24,6 +24,7 @@
 #include "uploadinfo.h"
 #include "../Commands/commandmanager.h"
 #include "../Encryption/secretsmanager.h"
+#include "../Common/defines.h"
 
 namespace Models {
     UploadInfoRepository::~UploadInfoRepository() { qDeleteAll(m_UploadInfos); m_UploadInfos.clear();  }

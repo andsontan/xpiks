@@ -21,6 +21,7 @@
 
 #include "undoredomanager.h"
 #include <QDebug>
+#include "../Common/defines.h"
 
 UndoRedo::UndoRedoManager::~UndoRedoManager() { qDeleteAll(m_HistoryStack); }
 

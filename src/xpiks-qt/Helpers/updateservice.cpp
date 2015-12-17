@@ -46,6 +46,7 @@
 #endif
 
 #include "../Common/version.h"
+#include "../Common/defines.h"
 
 namespace Helpers {
     UpdateService::UpdateService() :

@@ -31,6 +31,7 @@
 #include <QSemaphore>
 #include "../Encryption/secretsmanager.h"
 #include "../Helpers/ziphelper.h"
+#include "../Common/defines.h"
 
 namespace Helpers {
     UploadWorker::UploadWorker(UploadItem *uploadItem, const Encryption::SecretsManager *secretsManager,

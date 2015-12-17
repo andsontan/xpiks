@@ -25,6 +25,7 @@
 #include <QFileInfo>
 #include <QDebug>
 #include <QRegExp>
+#include "../Common/defines.h"
 #include "../Helpers/indiceshelper.h"
 
 namespace Models {

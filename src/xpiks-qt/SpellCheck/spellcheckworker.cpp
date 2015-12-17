@@ -29,6 +29,7 @@
 #include <QUrl>
 #include <QCoreApplication>
 #include "spellcheckitem.h"
+#include "../Common/defines.h"
 #include "../hunspell-1.3.3/src/hunspell/hunspell.hxx"
 
 #define EN_HUNSPELL_DIC "en_US.dic"

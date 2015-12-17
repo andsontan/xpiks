@@ -26,6 +26,7 @@
 #include "../UndoRedo/artworkmetadatabackup.h"
 #include "../Models/artiteminfo.h"
 #include "../Commands/commandmanager.h"
+#include "../Common/defines.h"
 
 Commands::PasteKeywordsCommand::~PasteKeywordsCommand() {
     qDeleteAll(m_ArtItemInfos);

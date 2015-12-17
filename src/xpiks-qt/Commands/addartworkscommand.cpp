@@ -28,6 +28,7 @@
 #include "../Models/artworkmetadata.h"
 #include "../Models/artitemsmodel.h"
 #include "../UndoRedo/addartworksitem.h"
+#include "../Common/defines.h"
 
 Commands::CommandResult *Commands::AddArtworksCommand::execute(const CommandManager *commandManager) const
 {

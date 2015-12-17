@@ -30,6 +30,7 @@
 #include "../Models/artworkmetadata.h"
 #include "../Helpers/indiceshelper.h"
 #include "../UndoRedo/removeartworksitem.h"
+#include "../Common/defines.h"
 
 Commands::CommandResult *Commands::RemoveArtworksCommand::execute(const Commands::CommandManager *commandManager) const
 {

@@ -26,6 +26,7 @@
 #include <QMutex>
 #include <QVector>
 #include <QDebug>
+#include "../Common/defines.h"
 
 namespace Common {
     template<typename T>

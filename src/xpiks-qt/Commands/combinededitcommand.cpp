@@ -29,6 +29,7 @@
 #include "../Models/artworkmetadata.h"
 #include "../Common/flags.h"
 #include "../Models/settingsmodel.h"
+#include "../Common/defines.h"
 
 Commands::CommandResult *Commands::CombinedEditCommand::execute(const Commands::CommandManager *commandManager) const {
     qInfo() << "Combined edit command: flags=" << m_EditFlags << "artworks count =" << m_ArtItemInfos.length();

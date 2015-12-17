@@ -84,6 +84,8 @@ ApplicationWindow {
         running: false
         repeat: false
         onTriggered: {
+            console.log("Delayed timer triggered");
+
             if (appSettings.needToShowWhatsNew()) {
                 var text = appSettings.whatsNewText;
                 if (text.length > 0) {
@@ -152,6 +154,7 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
+        console.log("Main view onCompleted handler")
         helpersWrapper.afterConstruction()
         openingTimer.start()
     }

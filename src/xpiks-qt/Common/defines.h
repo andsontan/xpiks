@@ -29,5 +29,9 @@
 // 4*(avg word size 10 * avg keywords size 50)
 #define MAX_PASTE_SIZE 2000
 
+#if (QT_VERSION <= QT_VERSION_CHECK(5, 4, 2))
+#define qInfo qDebug
+#endif
+
 #endif // DEFINES
 

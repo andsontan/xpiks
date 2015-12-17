@@ -26,6 +26,7 @@
 #include "../Models/artworkmetadata.h"
 #include "spellcheckworker.h"
 #include "spellcheckitem.h"
+#include "../Common/defines.h"
 
 namespace SpellCheck {
     SpellCheckerService::SpellCheckerService() {
