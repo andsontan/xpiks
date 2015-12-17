@@ -168,7 +168,6 @@ int main(int argc, char *argv[]) {
 
     localLibrary.loadLibraryAsync();
 
-
     QString userId = appSettings.value(QLatin1String(Constants::USER_AGENT_ID)).toString();
     userId.remove(QRegExp("[{}-]."));
 
@@ -263,6 +262,9 @@ int main(int argc, char *argv[]) {
     qDebug() << "About to load main view...";
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     qDebug() << "Main view loaded";
+
+    spellCheckerService.startChecking();
+    metadataSaverService.startSaving();
 
 #ifdef QT_DEBUG
     if (argc > 1) {

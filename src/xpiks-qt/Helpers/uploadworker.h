@@ -48,7 +48,7 @@ namespace Helpers {
         explicit UploadWorker(UploadItem *uploadItem, const Encryption::SecretsManager *secretsManager,
                               QSemaphore *uploadSemaphore, int delay,
                               QObject *parent = 0);
-        ~UploadWorker();
+        virtual ~UploadWorker();
 
     signals:
         void stopped();

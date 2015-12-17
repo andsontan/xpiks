@@ -86,7 +86,8 @@ ApplicationWindow {
         running: false
         repeat: false
         onTriggered: {
-            console.log("Delayed timer triggered");
+            console.log("Delayed onOpen timer triggered");
+            helpersWrapper.afterConstruction()
 
             if (appSettings.needToShowWhatsNew()) {
                 var text = appSettings.whatsNewText;
@@ -157,7 +158,6 @@ ApplicationWindow {
 
     Component.onCompleted: {
         console.log("Main view onCompleted handler")
-        helpersWrapper.afterConstruction()
         openingTimer.start()
     }
 
@@ -442,7 +442,8 @@ ApplicationWindow {
                 RowLayout {
                     spacing: 10
                     anchors.fill: parent
-                    anchors.margins: { top: 10; left: 10 }
+                    anchors.leftMargin: 10
+                    anchors.topMargin: 10
 
                     StyledButton {
                         text: qsTr("Add directory")
@@ -574,14 +575,15 @@ ApplicationWindow {
             Rectangle {
                 height: 45
                 color: Colors.defaultDarkColor
-                z: 5000
+                z: 2000
                 anchors.left: parent.left
                 anchors.right: parent.right
 
                 RowLayout {
                     spacing: 10
                     anchors.fill: parent
-                    anchors.margins: { top: 10; left: 10 }
+                    anchors.leftMargin: 10
+                    anchors.topMargin: 10
                     anchors.rightMargin: mainScrollView.areScrollbarsVisible ? 20 : 10
 
                     Item {

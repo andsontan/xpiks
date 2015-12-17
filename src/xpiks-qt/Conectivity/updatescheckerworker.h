@@ -19,37 +19,41 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef UPDATESERVICE_H
-#define UPDATESERVICE_H
+#ifndef UPDATESCHECKERWORKER_H
+#define UPDATESCHECKERWORKER_H
 
 #include <QObject>
+#include <QNetworkAccessManager>
+#include <QEventLoop>
+#include "updaterequest.h"
 
 namespace Conectivity {
-    class UpdatesCheckerWorker;
-}
-
-namespace Helpers {
-    class UpdateService : public QObject
+    class UpdatesCheckerWorker : public QObject
     {
         Q_OBJECT
     public:
-        UpdateService();
-
-    public:
-        void startChecking();
-        void stopChecking();
-
-    private slots:
-        void workerFinished();
-
-    signals:
-        void updateAvailable(QString updateLink);
+        UpdatesCheckerWorker();
+        virtual ~UpdatesCheckerWorker();
 
     private:
-        Conectivity::UpdatesCheckerWorker *m_UpdatesCheckerWorker;
+        void initWorker();
+        void processOneItem();
+
+    public slots:
+        void process();
+
+    signals:
+        void stopped();
+        void updateAvailable(QString updateLink);
+        void requestFinished();
+
+    private slots:
+        void replyReceived(QNetworkReply *networkReply);
+
+    private:
+        QNetworkAccessManager *m_NetworkManager;
+        QEventLoop *m_Loop;
     };
 }
 
-Q_DECLARE_METATYPE(Helpers::UpdateService*)
-
-#endif // UPDATESERVICE_H
+#endif // UPDATESCHECKERWORKER_H
