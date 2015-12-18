@@ -77,7 +77,8 @@ SOURCES += main.cpp \
     stringhelpers_tests.cpp \
     ../xpiks-qt/Helpers/stringhelper.cpp \
     keywordvalidation_tests.cpp \
-    artworkrepository_tests.cpp
+    artworkrepository_tests.cpp \
+    ../xpiks-qt/Conectivity/updatescheckerworker.cpp
 
 HEADERS += \
     encryption_tests.h \
@@ -137,4 +138,5 @@ HEADERS += \
     ../xpiks-qt/Helpers/appsettings.h \
     stringhelpers_tests.h \
     keywordvalidation_tests.h \
-    artworkrepository_tests.h
+    artworkrepository_tests.h \
+    ../xpiks-qt/Conectivity/updatescheckerworker.h
