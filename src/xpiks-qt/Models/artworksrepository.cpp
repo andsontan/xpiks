@@ -122,7 +122,7 @@ namespace Models {
 
             int occurances = 0;
             if (!m_DirectoriesHash.contains(absolutePath)) {
-                qInfo() << "Adding new directory to repository with index" << m_DirectoriesList.length();
+                qInfo() << "Adding new directory" << absolutePath << "to repository with index" << m_DirectoriesList.length();
                 m_DirectoriesList.append(absolutePath);
                 m_DirectoriesSelectedHash.insert(absolutePath, 0);
                 emit artworksSourcesCountChanged();
@@ -139,16 +139,21 @@ namespace Models {
         return wasModified;
     }
 
-    void ArtworksRepository::removeFile(const QString &filepath, const QString &fileDirectory) {
-        if (m_DirectoriesHash.contains(fileDirectory)) {
+    bool ArtworksRepository::removeFile(const QString &filepath, const QString &fileDirectory) {
+        bool result = false;
+
+        if (m_FilesSet.contains(filepath) && m_DirectoriesHash.contains(fileDirectory)) {
             int occurances = m_DirectoriesHash[fileDirectory] - 1;
             int selectedCount = m_DirectoriesSelectedHash[fileDirectory] - 1;
 
             m_DirectoriesHash[fileDirectory] = occurances;
             m_DirectoriesSelectedHash[fileDirectory] = selectedCount;
+
+            m_FilesSet.remove(filepath);
+            result = true;
         }
 
-        m_FilesSet.remove(filepath);
+        return result;
     }
 
     void ArtworksRepository::setFileSelected(const QString &filepath, bool selected) {
