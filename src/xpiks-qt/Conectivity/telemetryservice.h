@@ -31,10 +31,11 @@ namespace Conectivity {
     class TelemetryService : public QObject {
         Q_OBJECT
     public:
-        TelemetryService(const QString &userId, const QString &endpoint, QObject *parent=NULL);
+        TelemetryService(const QString &userId, QObject *parent=NULL);
 
     public:
         void reportAction(UserAction action);
+        void setEndpoint(const QString &endpoint);
 
     private:
         void doReportAction(UserAction action);

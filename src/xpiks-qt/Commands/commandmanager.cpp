@@ -45,6 +45,7 @@
 #include "../Conectivity/telemetryservice.h"
 #include "../Helpers/updateservice.h"
 #include "../Models/logsmodel.h"
+#include "../Encryption/aes-qt.h"
 
 void Commands::CommandManager::InjectDependency(Models::ArtworksRepository *artworkRepository) {
     Q_ASSERT(artworkRepository != NULL); m_ArtworksRepository = artworkRepository;
@@ -326,6 +327,10 @@ void Commands::CommandManager::afterConstructionCallback()  {
 
     m_SpellCheckerService->startChecking();
     m_MetadataSaverService->startSaving();
+
+    const QString reportingEndpoint = QLatin1String("cc39a47f60e1ed812e2403b33678dd1c529f1cc43f66494998ec478a4d13496269a3dfa01f882941766dba246c76b12b2a0308e20afd84371c41cf513260f8eb8b71f8c472cafb1abf712c071938ec0791bbf769ab9625c3b64827f511fa3fbb");
+    QString endpoint = Encryption::decodeText(reportingEndpoint, "reporting");
+    m_TelemetryService->setEndpoint(endpoint);
 
 #ifndef Q_OS_LINUX
     m_UpdateService->startChecking();

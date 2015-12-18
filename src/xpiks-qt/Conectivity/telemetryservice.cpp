@@ -34,10 +34,9 @@
 #include "../Common/version.h"
 
 namespace Conectivity {
-    TelemetryService::TelemetryService(const QString &userId, const QString &endpoint, QObject *parent) :
+    TelemetryService::TelemetryService(const QString &userId, QObject *parent) :
         QObject(parent),
-        m_NetworkManager(this),        
-        m_ReportingEndpoint(endpoint),
+        m_NetworkManager(this),
         m_UserAgentId(userId)
     {
         QObject::connect(&m_NetworkManager, SIGNAL(finished(QNetworkReply*)),
@@ -51,6 +50,10 @@ namespace Conectivity {
 #else
         Q_UNUSED(action);
 #endif
+    }
+
+    void TelemetryService::setEndpoint(const QString &endpoint) {
+        m_ReportingEndpoint = endpoint;
     }
 
     void TelemetryService::doReportAction(UserAction action) {

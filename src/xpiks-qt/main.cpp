@@ -64,7 +64,6 @@
 #include "Helpers/appsettings.h"
 #include "Models/ziparchiver.h"
 #include "Helpers/constants.h"
-#include "Encryption/aes-qt.h"
 #include "Helpers/runguard.h"
 #include "Models/logsmodel.h"
 #include "Helpers/logger.h"
@@ -75,22 +74,23 @@ void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const Q
     Q_UNUSED(context);
 
     QString logLine;
+    QString time = QDateTime::currentDateTimeUtc().toString("dd.MM.yyyy hh:mm:ss.zzz");
     switch (type) {
         case QtDebugMsg:
-            logLine = QString("%1 - Debug: %2").arg(QDateTime::currentDateTimeUtc().toString("dd.MM.yyyy hh:mm:ss.zzz")).arg(msg);
+            logLine = QString("%1 - Debug: %2").arg(time).arg(msg);
             break;
         case QtWarningMsg:
-            logLine = QString("%1 - Warning: %2").arg(QDateTime::currentDateTimeUtc().toString("dd.MM.yyyy hh:mm:ss.zzz")).arg(msg);
+            logLine = QString("%1 - Warning: %2").arg(time).arg(msg);
             break;
         case QtCriticalMsg:
-            logLine = QString("%1 - Critical: %2").arg(QDateTime::currentDateTimeUtc().toString("dd.MM.yyyy hh:mm:ss.zzz")).arg(msg);
+            logLine = QString("%1 - Critical: %2").arg(time).arg(msg);
             break;
         case QtFatalMsg:
-            logLine = QString("%1 - Fatal: %2").arg(QDateTime::currentDateTimeUtc().toString("dd.MM.yyyy hh:mm:ss.zzz")).arg(msg);
+            logLine = QString("%1 - Fatal: %2").arg(time).arg(msg);
             break;
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 1))
         case QtInfoMsg:
-            logLine = QString("%1 - Info: %2").arg(QDateTime::currentDateTimeUtc().toString("dd.MM.yyyy hh:mm:ss.zzz")).arg(msg);
+            logLine = QString("%1 - Info: %2").arg(time).arg(msg);
             break;
 #endif
     }
@@ -102,7 +102,6 @@ void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const Q
         abort();
     }
 }
-
 
 #define STRINGIZE_(x) #x
 #define STRINGIZE(x) STRINGIZE_(x)
@@ -161,6 +160,7 @@ int main(int argc, char *argv[]) {
         }
     }
 #endif
+
     qInstallMessageHandler(myMessageHandler);
     qDebug() << "Log started";
 
@@ -194,9 +194,7 @@ int main(int argc, char *argv[]) {
     Helpers::BackupSaverService metadataSaverService;
     Helpers::UpdateService updateService;
 
-    const QString reportingEndpoint = QLatin1String("cc39a47f60e1ed812e2403b33678dd1c529f1cc43f66494998ec478a4d13496269a3dfa01f882941766dba246c76b12b2a0308e20afd84371c41cf513260f8eb8b71f8c472cafb1abf712c071938ec0791bbf769ab9625c3b64827f511fa3fbb");
-    QString endpoint = Encryption::decodeText(reportingEndpoint, "reporting");
-    Conectivity::TelemetryService telemetryService(userId, endpoint);
+    Conectivity::TelemetryService telemetryService(userId);
 
     Commands::CommandManager commandManager;
     commandManager.InjectDependency(&artworkRepository);

@@ -206,7 +206,7 @@ ApplicationWindow {
 
             MenuItem {
                 text: qsTr("Exit")
-                onTriggered: closeHandler();
+                onTriggered: closeHandler({accepted: false});
             }
         }
 
