@@ -1,4 +1,5 @@
 #include "artworkrepository_tests.h"
+#include <QSignalSpy>
 #include "../xpiks-qt/Models/artworksrepository.h"
 
 void ArtworkRepositoryTests::simpleAccountFileTest() {
@@ -124,8 +125,28 @@ void ArtworkRepositoryTests::brandNewDirectoriesCountTest() {
     QStringList files;
     files << filename1 << filename2;
 
-    int newFilesCount = repository.getNewDirectoriesCount(files);
-    QCOMPARE(newFilesCount, 1);
+    int newDirsCount = repository.getNewDirectoriesCount(files);
+    QCOMPARE(newDirsCount, 1);
+    QCOMPARE(repository.getArtworksSourcesCount(), 0);
+    QCOMPARE(repository.rowCount(), 0);
+}
+
+void ArtworkRepositoryTests::differentNewDirectoriesCountTest() {
+    Models::ArtworksRepository repository;
+
+#ifdef Q_OS_WIN
+    QString filename1 = "C:/path/to/some/file1";
+    QString filename2 = "C:/path/to/some/other/file2";
+#else
+    QString filename1 = "/path/to/some/file1";
+    QString filename2 = "/path/to/some/other/file2";
+#endif
+
+    QStringList files;
+    files << filename1 << filename2;
+
+    int newDirsCount = repository.getNewDirectoriesCount(files);
+    QCOMPARE(newDirsCount, files.length());
     QCOMPARE(repository.getArtworksSourcesCount(), 0);
     QCOMPARE(repository.rowCount(), 0);
 }
@@ -192,4 +213,36 @@ void ArtworkRepositoryTests::noNewFilesCountTest() {
     int newFilesCount = repository.getNewFilesCount(files);
     QCOMPARE(newFilesCount, 0);
     QCOMPARE(repository.getArtworksSourcesCount(), 1);
+}
+
+void ArtworkRepositoryTests::endAccountingWithNoNewFilesTest() {
+    Models::ArtworksRepository repository;
+    QSignalSpy endSpy(&repository, SIGNAL(rowsInserted(QModelIndex,int,int)));
+
+    repository.endAccountingFiles(false);
+    QVERIFY(endSpy.isEmpty());
+}
+
+void ArtworkRepositoryTests::startAccountingNewFilesEmitsTest() {
+    Models::ArtworksRepository repository;
+
+#ifdef Q_OS_WIN
+    QString filename1 = "C:/path/to/some/file1";
+    QString filename2 = "C:/path/to/some/other/file2";
+#else
+    QString filename1 = "/path/to/some/file1";
+    QString filename2 = "/path/to/some/other/file2";
+#endif
+
+    QStringList files;
+    files << filename1 << filename2;
+
+    QSignalSpy beginSpy(&repository, SIGNAL(rowsAboutToBeInserted(QModelIndex,int,int)));
+    bool newFiles = repository.beginAccountingFiles(files);
+
+    QCOMPARE(newFiles, true);
+    QCOMPARE(beginSpy.count(), 1);
+    QList<QVariant> addArguments = beginSpy.takeFirst();
+    QCOMPARE(addArguments.at(1).toInt(), 0);
+    QCOMPARE(addArguments.at(2).toInt(), files.length() - 1);
 }
