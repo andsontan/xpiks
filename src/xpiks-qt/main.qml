@@ -440,27 +440,23 @@ ApplicationWindow {
                 height: 45
                 color: Colors.defaultDarkColor
 
-                RowLayout {
-                    spacing: 10
-                    anchors.fill: parent
+                StyledButton {
+                    anchors.left: parent.left
                     anchors.leftMargin: 10
-                    anchors.topMargin: 10
+                    anchors.verticalCenter: parent.verticalCenter
+                    id: addDirectoryButton
+                    text: qsTr("Add directory")
+                    width: 120
+                    onClicked: chooseDirectoryDialog.open()
+                }
 
-                    StyledButton {
-                        text: qsTr("Add directory")
-                        width: 120
-                        onClicked: chooseDirectoryDialog.open()
-                    }
-
-                    StyledButton {
-                        text: qsTr("Add files")
-                        width: 100
-                        onClicked: chooseArtworksDialog.open()
-                    }
-
-                    Item {
-                        Layout.fillWidth: true
-                    }
+                StyledButton {
+                    anchors.leftMargin: 10
+                    anchors.left: addDirectoryButton.right
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: qsTr("Add files")
+                    width: 100
+                    onClicked: chooseArtworksDialog.open()
                 }
             }
 
@@ -582,9 +578,10 @@ ApplicationWindow {
 
                 RowLayout {
                     spacing: 10
-                    anchors.fill: parent
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter
                     anchors.leftMargin: 10
-                    anchors.topMargin: 10
                     anchors.rightMargin: mainScrollView.areScrollbarsVisible ? 20 : 10
 
                     Item {
