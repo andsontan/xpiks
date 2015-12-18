@@ -109,3 +109,87 @@ void ArtworkRepositoryTests::removeNotExistingFileTest() {
     QCOMPARE(removeResult, false);
     QCOMPARE(repository.getArtworksSourcesCount(), 1);
 }
+
+void ArtworkRepositoryTests::brandNewDirectoriesCountTest() {
+    Models::ArtworksRepository repository;
+
+#ifdef Q_OS_WIN
+    QString filename1 = "C:/path/to/some/file1";
+    QString filename2 = "C:/path/to/some/file2";
+#else
+    QString filename1 = "/path/to/some/file1";
+    QString filename2 = "/path/to/some/file2";
+#endif
+
+    QStringList files;
+    files << filename1 << filename2;
+
+    int newFilesCount = repository.getNewDirectoriesCount(files);
+    QCOMPARE(newFilesCount, 1);
+    QCOMPARE(repository.getArtworksSourcesCount(), 0);
+    QCOMPARE(repository.rowCount(), 0);
+}
+
+void ArtworkRepositoryTests::newFilesCountTest() {
+    Models::ArtworksRepository repository;
+
+#ifdef Q_OS_WIN
+    QString filename1 = "C:/path/to/some/file1";
+    QString filename2 = "C:/path/to/some/file2";
+#else
+    QString filename1 = "/path/to/some/file1";
+    QString filename2 = "/path/to/some/file2";
+#endif
+
+    QStringList files;
+    files << filename1 << filename2;
+
+    int newFilesCount = repository.getNewFilesCount(files);
+    QCOMPARE(newFilesCount, files.length());
+    QCOMPARE(repository.getArtworksSourcesCount(), 0);
+    QCOMPARE(repository.rowCount(), 0);
+}
+
+void ArtworkRepositoryTests::noNewDirectoriesCountTest() {
+    Models::ArtworksRepository repository;
+
+#ifdef Q_OS_WIN
+    QString filename1 = "C:/path/to/some/file1";
+    QString filename2 = "C:/path/to/some/file2";
+#else
+    QString filename1 = "/path/to/some/file1";
+    QString filename2 = "/path/to/some/file2";
+#endif
+
+    repository.accountFile(filename1);
+
+    QStringList files;
+    files << filename2;
+
+    int newFilesCount = repository.getNewDirectoriesCount(files);
+    QCOMPARE(newFilesCount, 0);
+    QCOMPARE(repository.getArtworksSourcesCount(), 1);
+}
+
+void ArtworkRepositoryTests::noNewFilesCountTest() {
+    Models::ArtworksRepository repository;
+
+#ifdef Q_OS_WIN
+    QString filename1 = "C:/path/to/some/file1";
+    QString filename2 = "C:/path/to/some/file2";
+#else
+    QString filename1 = "/path/to/some/file1";
+    QString filename2 = "/path/to/some/file2";
+#endif
+
+    QStringList files;
+    files << filename1 << filename2;
+
+    foreach (const QString &file, files) {
+        repository.accountFile(file);
+    }
+
+    int newFilesCount = repository.getNewFilesCount(files);
+    QCOMPARE(newFilesCount, 0);
+    QCOMPARE(repository.getArtworksSourcesCount(), 1);
+}

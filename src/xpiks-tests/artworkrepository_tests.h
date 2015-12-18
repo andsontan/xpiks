@@ -12,6 +12,10 @@ private slots:
     void addFilesFromOneDirectoryTest();
     void addAndRemoveSameFileTest();
     void removeNotExistingFileTest();
+    void brandNewDirectoriesCountTest();
+    void newFilesCountTest();
+    void noNewDirectoriesCountTest();
+    void noNewFilesCountTest();
 };
 
 #endif // ARTWORKREPOSITORYTESTS_H
