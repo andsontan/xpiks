@@ -263,9 +263,6 @@ int main(int argc, char *argv[]) {
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     qDebug() << "Main view loaded";
 
-    spellCheckerService.startChecking();
-    metadataSaverService.startSaving();
-
 #ifdef QT_DEBUG
     if (argc > 1) {
         QStringList pathes;

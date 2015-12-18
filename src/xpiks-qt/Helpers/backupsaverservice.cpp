@@ -35,6 +35,7 @@ namespace Helpers {
 
     void BackupSaverService::startSaving() {
         Q_ASSERT(!m_BackupWorker->isRunning());
+        qDebug() << "Starting backups saver service...";
 
         QThread *thread = new QThread();
         m_BackupWorker->moveToThread(thread);

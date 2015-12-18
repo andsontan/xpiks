@@ -42,6 +42,7 @@ namespace SpellCheck {
 
     void SpellCheckerService::startChecking() {
         Q_ASSERT(!m_SpellCheckWorker->isRunning());
+        qDebug() << "Starting spellchecker service...";
 
         QThread *thread = new QThread();
         m_SpellCheckWorker->moveToThread(thread);

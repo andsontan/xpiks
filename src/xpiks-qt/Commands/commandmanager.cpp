@@ -324,6 +324,9 @@ void Commands::CommandManager::afterConstructionCallback()  {
 
     m_AfterInitCalled = true;
 
+    m_SpellCheckerService->startChecking();
+    m_MetadataSaverService->startSaving();
+
 #ifndef Q_OS_LINUX
     m_UpdateService->startChecking();
 #endif

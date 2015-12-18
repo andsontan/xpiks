@@ -131,6 +131,7 @@ namespace Models {
         void setAllItemsSelected(bool selected);
 
     private:
+        void updateItemAtIndex(int metadataIndex);
         int addDirectories(const QStringList &directories);
         void doAddDirectory(const QString &directory, QStringList &filesList);
         int addFiles(const QStringList &filepath);

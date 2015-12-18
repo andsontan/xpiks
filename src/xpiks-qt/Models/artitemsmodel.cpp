@@ -375,6 +375,7 @@ namespace Models {
 
             Commands::CommandResult *result = m_CommandManager->processCommand(combinedEditCommand);
             Commands::CombinedEditCommandResult *combinedResult = static_cast<Commands::CombinedEditCommandResult*>(result);
+            updateItemAtIndex(metadataIndex);
 
             delete combinedResult;
             delete itemInfo;
@@ -547,6 +548,14 @@ namespace Models {
             QModelIndex endIndex = index(length - 1);
             emit dataChanged(startIndex, endIndex, QVector<int>() << IsSelectedRole);
         }
+    }
+
+    void ArtItemsModel::updateItemAtIndex(int metadataIndex) {
+        QVector<int> roles;
+        fillStandardRoles(roles);
+        QModelIndex topLeft = this->index(metadataIndex);
+        QModelIndex bottomRight = this->index(metadataIndex);
+        emit dataChanged(topLeft, bottomRight, roles);
     }
 
     int ArtItemsModel::addDirectories(const QStringList &directories) {
