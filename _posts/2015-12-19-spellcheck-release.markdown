@@ -24,3 +24,5 @@ Also, a lot of small UI issues and glitches were fixed!
 Known issues:
 
 - Xpiks proposes spell suggestions for all words with errors, what creates duplicates if one word has been used several times in metadata (keywords, title, description)
+
+<div class="download-link"><a href="{{ site.url }}/downloads">Download</a></div>
