@@ -127,6 +127,7 @@ ImportPair readArtworkMetadata(ImportPair pair) {
         }
 
         qWarning() << "Error:" << exiftoolPath << process.errorString();
+        delete importData;
         return ImportPair(metadata, NULL);
     }
 
