@@ -58,4 +58,4 @@ The RELEASE procedure for OS X, Windows:
 - [Windows] copy the curl (including additional libs) to the directory with Xpiks binaries
 - create the archive and that's it
 
-Xpiks uses English dictionaries from http://cgit.freedesktop.org/libreoffice/dictionaries/tree/. In Windows they are stored in the `dict/` subdirectory, in OS X they are in the `Resources/` directory of a bundle.
+Xpiks uses English dictionaries from [Libreoffice collection](http://cgit.freedesktop.org/libreoffice/dictionaries/tree/). In Windows they are stored in the `dict/` subdirectory, in OS X they are in the `Resources/` directory of a bundle.
