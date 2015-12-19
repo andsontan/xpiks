@@ -10,13 +10,13 @@ As usual, small changelog:
 
 **Major features** of this release:
 
-- Automatic spell checking and suggestion for all metadata #148
-- Automatic checking for updates #78
-- Added plain text mode for keywords editing #176
-- Speed improvements with large collections #172 #186 #175 #174
+- Automatic spell checking and suggestion for all metadata
+- Automatic checking for updates
+- Added plain text mode for keywords editingp
+- Speed improvements with large collections
 - Editing of separate keywords
 - Improvements for UI of some popups on large monitors
-- Improvements on keywords pasting #179
+- Improvements on keywords pasting
 - Exact search terms parsing (with exclamation mark before word like "!man")
 
 Also, a lot of small UI issues and glitches were fixed!
