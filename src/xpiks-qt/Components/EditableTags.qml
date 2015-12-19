@@ -282,9 +282,11 @@ Flickable {
                     }
                     else if (event.key === Qt.Key_Tab) {
                         tabPressed()
+                        event.accepted = true;
                     }
                     else if (event.key === Qt.Key_Backtab) {
                         backTabPressed()
+                        event.accepted = true;
                     }
 
                     scrollToBottom()
