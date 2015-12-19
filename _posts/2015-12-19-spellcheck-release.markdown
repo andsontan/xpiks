@@ -12,7 +12,7 @@ As usual, small changelog:
 
 - Automatic spell checking and suggestion for all metadata
 - Automatic checking for updates
-- Added plain text mode for keywords editingp
+- Added plain text mode for keywords editing
 - Speed improvements with large collections
 - Editing of separate keywords
 - Improvements for UI of some popups on large monitors
