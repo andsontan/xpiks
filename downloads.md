@@ -25,7 +25,7 @@ permalink: /downloads/
 <h2><strong>Windows instructions</strong></h2>
 
 <div class="download-package">
-<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.1/Xpiks-v1.1.zip">
+<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.1/Xpiks-qt-v1.1.zip">
 <div><img src="{{site.url}}/images/windows_installer.jpg" style="vertical-align: middle;width:70px;" />
 <span style="vertical-align: middle;">Package for Win x64</span>
 </div>
