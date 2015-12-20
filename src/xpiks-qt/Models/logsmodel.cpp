@@ -31,6 +31,7 @@
 #include <QStandardPaths>
 #include "../Helpers/stringhelper.h"
 #include "../Helpers/logger.h"
+#include "../Common/defines.h"
 
 namespace Models {
 

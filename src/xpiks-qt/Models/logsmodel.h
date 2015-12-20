@@ -23,7 +23,6 @@
 #define LOGSMODEL
 
 #include <QObject>
-#include "../Common/defines.h"
 
 namespace Helpers {
     class LoggingWorker;
