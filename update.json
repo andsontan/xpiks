@@ -3,7 +3,7 @@
     "minor_version": 1,
     "fix_version": 0,
     "osx_link": "https://github.com/Ribtoks/xpiks/releases/download/v1.1/xpiks-qt-v1.1.dmg",
-    "windows_link": "https://github.com/Ribtoks/xpiks/releases/download/v1.1/Xpiks-1.1.zip",
+    "windows_link": "https://github.com/Ribtoks/xpiks/releases/download/v1.1/Xpiks-v1.1.zip",
     "linux_link": "https://github.com/Ribtoks/xpiks/releases/download/v1.0/xpiks_1.0-1_amd64.deb",
     "unknown_link": "http://ribtoks.github.io/xpiks/downloads/"
 }
