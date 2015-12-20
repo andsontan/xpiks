@@ -149,6 +149,8 @@ int main(int argc, char *argv[]) {
 
         QString libraryFilePath = appDataDir.filePath(Constants::LIBRARY_FILENAME);
         localLibrary.setLibraryPath(libraryFilePath);
+    } else {
+        std::cerr << "AppDataPath is empty!";
     }
 
     Models::LogsModel logsModel;

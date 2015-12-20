@@ -32,6 +32,7 @@
 #include <QDateTime>
 #include <QStandardPaths>
 #include <iostream>
+#include "../Common/defines.h"
 
 namespace Helpers {
     void Logger::flush() {
