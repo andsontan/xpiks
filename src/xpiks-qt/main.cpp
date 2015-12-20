@@ -135,7 +135,11 @@ int main(int argc, char *argv[]) {
 
     Suggestion::LocalLibrary localLibrary;
 
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
+    QString appDataPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+#else
     QString appDataPath = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+#endif
     if (!appDataPath.isEmpty()) {
         QDir appDataDir(appDataPath);
 
@@ -151,7 +155,7 @@ int main(int argc, char *argv[]) {
     logsModel.startLogging();
 
 #ifdef WITH_LOGS
-    QString logFileDir = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+    const QString &logFileDir = appDataPath;
     if (!logFileDir.isEmpty()) {
         QDir dir(logFileDir);
         if (!dir.exists()) {
