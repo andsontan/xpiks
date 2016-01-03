@@ -290,3 +290,20 @@ void BasicKeywordsModelTests::editKeywordToSameTest() {
     QCOMPARE(modifiedSpy.count(), 0);
 }
 
+void BasicKeywordsModelTests::addRemoveAddUpperCaseWordTest() {
+    const QString keyword = "Test";
+
+    Common::BasicKeywordsModel basicModel;
+
+    bool addResult = basicModel.appendKeyword(keyword);
+    QCOMPARE(addResult, true);
+
+    QString removed;
+    bool removeResult = basicModel.takeKeywordAt(0, removed);
+    QCOMPARE(removeResult, true);
+    QCOMPARE(removed, keyword);
+
+    bool addAgainResult = basicModel.appendKeyword(keyword);
+    QCOMPARE(addAgainResult, true);
+}
+

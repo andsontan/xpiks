@@ -26,6 +26,7 @@ private slots:
     void setSameDescriptionTest();
     void editKeywordToAnotherTest();
     void editKeywordToSameTest();
+    void addRemoveAddUpperCaseWordTest();
 };
 
 #endif // BASICKEYWORDSMODELTESTS_H
