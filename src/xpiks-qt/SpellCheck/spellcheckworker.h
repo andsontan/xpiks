@@ -61,6 +61,7 @@ namespace SpellCheck {
         void detectAffEncoding();
         QStringList suggestCorrections(const QString &word);
         bool isWordSpelledOk(const QString &word) const;
+        bool isHunspellSpellingCorrect(const QString &word) const;
         void findSuggestions(const QString &word);
 
     private:
