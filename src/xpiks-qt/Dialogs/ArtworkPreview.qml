@@ -97,16 +97,23 @@ Item {
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
-            anchors.fill: parent
-            anchors.margins: 50
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.topMargin: 60
+            anchors.bottomMargin: 60
+            anchors.horizontalCenter: parent.horizontalCenter
             color: Colors.selectedArtworkColor
+            width: childrenRect.width
+
+            Component.onCompleted: anchors.horizontalCenter = undefined
 
             Rectangle {
                 id: boundsRect
                 color: Colors.defaultControlColor
-                height: parent.height
-                width: height
+                width: parent.height
                 anchors.left: parent.left
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
 
                 StyledScrollView {
                     id: scrollview
@@ -128,10 +135,11 @@ Item {
             }
 
             Rectangle {
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
                 anchors.left: boundsRect.right
-                anchors.right: parent.right
-                height: parent.height
                 color: Colors.defaultDarkColor
+                width: 210
 
                 ColumnLayout {
                     anchors.fill: parent
@@ -178,9 +186,8 @@ Item {
                     }
 
                     RowLayout {
-                        width: 180
-                        anchors.right: parent.right
-                        anchors.rightMargin: 10
+                        width: parent.width
+                        anchors.left: parent.left
                         spacing: 10
 
                         StyledButton {
