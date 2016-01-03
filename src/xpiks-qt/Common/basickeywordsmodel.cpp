@@ -74,7 +74,8 @@ namespace Common {
 
         if (0 <= index && index < m_KeywordsList.length()) {
             const QString &keyword = m_KeywordsList.at(index);
-            m_KeywordsSet.remove(keyword);
+            QString invariant = keyword.toLower();
+            m_KeywordsSet.remove(invariant);
 
             beginRemoveRows(QModelIndex(), index, index);
             removedKeyword = m_KeywordsList.takeAt(index);
@@ -140,16 +141,26 @@ namespace Common {
 
             QString existing = m_KeywordsList.at(index);
             if (existing != sanitized && Helpers::isValidKeyword(sanitized)) {
-                if (!m_KeywordsSet.contains(sanitized)) {
-                    m_KeywordsSet.insert(sanitized);
+                QString lowerCasedNew = sanitized.toLower();
+                QString lowerCasedExisting = existing.toLower();
+
+                if (!m_KeywordsSet.contains(lowerCasedNew)) {
+                    m_KeywordsSet.insert(lowerCasedNew);
                     m_KeywordsList[index] = sanitized;
-                    m_KeywordsSet.remove(existing);
+                    m_KeywordsSet.remove(lowerCasedExisting);
 
                     QModelIndex i = this->index(index);
                     emit dataChanged(i, i, QVector<int>() << KeywordRole);
 
                     result = true;
-                } else {
+                } else if (lowerCasedNew == lowerCasedExisting) {
+                    m_KeywordsList[index] = sanitized;
+                    QModelIndex i = this->index(index);
+                    emit dataChanged(i, i, QVector<int>() << KeywordRole);
+
+                    result = true;
+                }
+                else {
                     qWarning() << "Attempt to rename keyword to existing one. Use remove instead";
                 }
             }
@@ -413,18 +424,21 @@ namespace Common {
         if (0 <= index && index < m_KeywordsList.length()) {
             const QString &internal = m_KeywordsList.at(index);
             if (internal == existing) {
-                m_KeywordsList[index] = replacement;
+                this->editKeyword(index, replacement);
                 m_SpellCheckResults[index] = true;
                 QModelIndex i = this->index(index);
-                emit dataChanged(i, i, QVector<int>() << IsCorrectRole << KeywordRole);
+                emit dataChanged(i, i, QVector<int>() << IsCorrectRole);
+
             } else if (internal.contains(existing) && internal.contains(QChar::Space)) {
-                m_KeywordsList[index].replace(existing, replacement);
+                QString existingFixed = internal;
+                existingFixed.replace(existing, replacement);
+                this->editKeyword(index, existingFixed);
                 // TODO: reimplement this someday
                 // no need to mark keyword as correct
                 // if we replace only part of it
                 m_SpellCheckResults[index] = true;
                 QModelIndex i = this->index(index);
-                emit dataChanged(i, i, QVector<int>() << IsCorrectRole << KeywordRole);
+                emit dataChanged(i, i, QVector<int>() << IsCorrectRole);
             }
         }
     }
@@ -498,9 +512,15 @@ namespace Common {
 
         for (int i = 0; i < size; ++i) {
             const QString &keyword = keywordsList.at(i).simplified();
-            m_KeywordsList.append(keyword);
-            m_SpellCheckResults.append(true);
-            m_KeywordsSet.insert(keyword.toLower());
+            QString invariant = keyword.toLower();
+
+            if (!m_KeywordsSet.contains(invariant)) {
+                m_KeywordsList.append(keyword);
+                m_SpellCheckResults.append(true);
+                m_KeywordsSet.insert(invariant);
+            } else {
+                qWarning() << "Skipping duplicates in keywords...";
+            }
         }
     }
 

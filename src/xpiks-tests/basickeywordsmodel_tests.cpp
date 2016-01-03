@@ -307,3 +307,17 @@ void BasicKeywordsModelTests::addRemoveAddUpperCaseWordTest() {
     QCOMPARE(addAgainResult, true);
 }
 
+void BasicKeywordsModelTests::editToUpperCaseTest() {
+    Common::BasicKeywordsModel basicModel;
+
+    QStringList keywords;
+    keywords << "keyword1" << "keyword2" << "keyword3";
+    basicModel.appendKeywords(keywords);
+
+    bool editSelfResult = basicModel.editKeyword(0, "Keyword1");
+    QCOMPARE(editSelfResult, true);
+
+    bool editOtherResult = basicModel.editKeyword(1, "Keyword1");
+    QCOMPARE(editOtherResult, false);
+}
+
