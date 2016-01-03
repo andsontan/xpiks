@@ -38,10 +38,14 @@ Item {
     signal dialogDestruction();
     Component.onDestruction: dialogDestruction();
 
+    Component.onCompleted: focus = true
+
     Keys.onEscapePressed: {
         if (!spinnerTimer.running) {
             spellCheckerService.cancelCurrentBatch()
         }
+
+        event.accepted = true
     }
 
     function closePopup() {

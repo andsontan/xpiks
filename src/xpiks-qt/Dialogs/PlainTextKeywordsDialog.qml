@@ -44,7 +44,11 @@ Item {
         plainTextKeywordsComponent.destroy()
     }
 
-    Component.onCompleted: textEdit.forceActiveFocus()
+    Component.onCompleted: {
+        focus = true
+        textEdit.forceActiveFocus()
+    }
+
     Keys.onEscapePressed: closePopup()
 
     function scrollToBottom() {

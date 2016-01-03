@@ -39,9 +39,9 @@ Item {
     signal dialogDestruction();
     Component.onDestruction: dialogDestruction();
 
-    Keys.onEscapePressed: {
-        closePopup()
-    }
+    Component.onCompleted: focus = true
+
+    Keys.onEscapePressed: closePopup()
 
     function closePopup() {
         spellCheckSuggestionModel.clearModel()

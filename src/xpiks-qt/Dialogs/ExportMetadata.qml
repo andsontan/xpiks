@@ -43,6 +43,8 @@ Item {
         if (!iptcProvider.inProgress) {
             closePopup()
         }
+
+        event.accepted = true
     }
 
     Component.onCompleted: focus = true

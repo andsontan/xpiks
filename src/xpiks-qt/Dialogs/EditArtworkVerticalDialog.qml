@@ -47,7 +47,11 @@ Item {
         artworkEditVerticalDialog.destroy()
     }
 
-    Component.onCompleted: descriptionTextInput.forceActiveFocus()
+    Component.onCompleted: {
+        focus = true
+        descriptionTextInput.forceActiveFocus()
+    }
+
     Keys.onEscapePressed: closePopup()
 
     PropertyAnimation { target: artworkEditVerticalDialog; property: "opacity";

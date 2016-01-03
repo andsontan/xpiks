@@ -276,6 +276,7 @@ Item {
     }
 
     Component.onCompleted: {
+        focus = true
         if (firstTime) {
             newMasterPassword.forceActiveFocus()
         } else {

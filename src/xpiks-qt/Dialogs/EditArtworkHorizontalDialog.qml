@@ -47,6 +47,7 @@ Item {
     }
 
     Component.onCompleted: {
+        focus = true
         descriptionTextInput.forceActiveFocus()
     }
 

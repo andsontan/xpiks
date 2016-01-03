@@ -188,6 +188,7 @@ Item {
     }
 
     Component.onCompleted: {
+        focus = true
         if (immediateProcessing) {
             zipArchiver.resetModel()
             zipArchiver.archiveArtworks()

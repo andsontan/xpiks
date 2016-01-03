@@ -38,6 +38,8 @@ Item {
         if (!iptcProvider.inProgress) {
             closePopup()
         }
+
+        event.accepted = true
     }
 
     function closePopup() {

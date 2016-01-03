@@ -174,5 +174,8 @@ Item {
         }
     }
 
-    Component.onCompleted: masterPassword.forceActiveFocus()
+    Component.onCompleted: {
+        focus = true
+        masterPassword.forceActiveFocus()
+    }
 }

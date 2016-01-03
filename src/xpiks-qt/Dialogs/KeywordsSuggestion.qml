@@ -43,6 +43,8 @@ Item {
         if (!keywordsSuggestor.isInProgress) {
             closePopup()
         }
+
+        event.accepted = true
     }
 
     function closePopup() {

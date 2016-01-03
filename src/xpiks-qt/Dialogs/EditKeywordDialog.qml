@@ -148,5 +148,8 @@ Item {
         }
     }
 
-    Component.onCompleted: keywordInput.forceActiveFocus()
+    Component.onCompleted: {
+        focus = true
+        keywordInput.forceActiveFocus()
+    }
 }

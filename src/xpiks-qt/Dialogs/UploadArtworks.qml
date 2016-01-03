@@ -42,6 +42,8 @@ Item {
     signal dialogDestruction();
     Component.onDestruction: dialogDestruction();
 
+    Component.onCompleted: focus = true
+
     function closePopup() {
         secretsManager.purgeMasterPassword()
         uploadInfos.finalizeAccounts()
