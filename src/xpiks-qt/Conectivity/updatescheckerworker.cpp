@@ -21,11 +21,19 @@
 
 #include "updatescheckerworker.h"
 
+#if defined(Q_OS_DARWIN)
+#define UPDATE_JSON_URL "http://ribtoks.github.io/xpiks/update-osx.json"
+#elif defined(Q_OS_WIN)
+#define UPDATE_JSON_URL "http://ribtoks.github.io/xpiks/update-windows.json"
+#else
 #define UPDATE_JSON_URL "http://ribtoks.github.io/xpiks/update.json"
+#endif
+
 #define DEFAULT_UPDATE_URL "http://ribtoks.github.io/xpiks/downloads/"
 #define UPDATE_JSON_MAJOR_VERSION "major_version"
 #define UPDATE_JSON_MINOR_VERSION "minor_version"
 #define UPDATE_JSON_FIX_VERSION "fix_version"
+#define UPDATE_JSON_UPDATE_URL "update_link"
 
 #include <QString>
 #include <QUrl>
@@ -38,17 +46,6 @@
 #include <QEventLoop>
 #include <QDebug>
 #include "../Common/defines.h"
-
-#if defined(Q_OS_DARWIN)
-#define UPDATE_JSON_UPDATE_URL "osx_link"
-#elif defined(Q_OS_WIN)
-#define UPDATE_JSON_UPDATE_URL "windows_link"
-#elif defined(Q_OS_LINUX)
-#define UPDATE_JSON_UPDATE_URL "linux_link"
-#else
-#define UPDATE_JSON_UPDATE_URL "unknown_link"
-#endif
-
 #include "../Common/version.h"
 #include "../Common/defines.h"
 
@@ -101,6 +98,7 @@ namespace Conectivity {
     void UpdatesCheckerWorker::replyReceived(QNetworkReply *networkReply) {
         if (networkReply->error() == QNetworkReply::NoError) {
             QJsonDocument document = QJsonDocument::fromJson(networkReply->readAll());
+
             QJsonObject jsonObject = document.object();
 
             if (jsonObject.contains(UPDATE_JSON_MAJOR_VERSION) &&
