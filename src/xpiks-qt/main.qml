@@ -64,7 +64,7 @@ ApplicationWindow {
             close.accepted = false
             configExitDialog.open()
         } else {
-            console.log("No modified artworks found. Exiting...")
+            console.debug("No modified artworks found. Exiting...")
             applicationWindow.visibility = "Minimized"
             helpersWrapper.beforeDestruction();
             closingTimer.start()
@@ -118,6 +118,7 @@ ApplicationWindow {
 
     function onDialogClosed() {
         openedDialogsCount -= 1
+        console.log("Dialog closed. Opened dialogs count is " + openedDialogsCount)
     }
 
     function mustUseConfirmation() {
@@ -134,7 +135,7 @@ ApplicationWindow {
 
             Common.launchDialog("Dialogs/EnterMasterPasswordDialog.qml",
                          applicationWindow,
-                         {componentParent: applicationWindow, callbackObject: callbackObject})
+                         {callbackObject: callbackObject})
         } else {
             doOpenUploadDialog(true)
         }
@@ -223,7 +224,7 @@ ApplicationWindow {
                     filteredArtItemsModel.setSelectedForZipping()
                     Common.launchDialog("Dialogs/ZipArtworksDialog.qml",
                                     applicationWindow,
-                                    {componentParent: applicationWindow});
+                                    {});
                 }
             }
 
@@ -421,7 +422,7 @@ ApplicationWindow {
                 if (drop.hasUrls) {
                     var filesCount = artItemsModel.dropFiles(drop.urls)
                     saveRecentDirectories()
-                    console.log(filesCount + ' files added via drag&drop')
+                    console.debug(filesCount + ' files added via drag&drop')
                 }
             }
         }
@@ -635,7 +636,8 @@ ApplicationWindow {
                                 if (!launched) {
                                     // also as fallback in case of errors in findSelectedIndex
                                     filteredArtItemsModel.combineSelectedArtworks();
-                                    Common.launchDialog("Dialogs/CombinedArtworksDialog.qml", applicationWindow, {componentParent: applicationWindow});
+                                    Common.launchDialog("Dialogs/CombinedArtworksDialog.qml",
+                                                        applicationWindow, {componentParent: applicationWindow});
                                 }
                             }
                         }
@@ -1732,7 +1734,7 @@ ApplicationWindow {
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
                         Common.launchDialog("Dialogs/LogsDialog.qml",
-                                        applicationWindow,
+                                            applicationWindow,
                                             {
                                                 logText: logsModel.getAllLogsText()
                                             });

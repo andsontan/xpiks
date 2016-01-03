@@ -62,6 +62,7 @@ function launchDialog(componentName, directParent, options, functor) {
         if (typeof instance.onDialogDestruction !== "undefined") {
             if (typeof directParent.openedDialogsCount !== "undefined") {
                 directParent.openedDialogsCount += 1
+                console.debug("Opened dialog " + componentName + ". Opened dialogs count is " + directParent.openedDialogsCount);
             }
 
             if (typeof directParent.onDialogClosed !== "undefined") {

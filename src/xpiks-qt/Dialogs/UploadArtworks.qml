@@ -68,12 +68,11 @@ Item {
 
             filteredArtItemsModel.setSelectedForZipping()
             Common.launchDialog("Dialogs/ZipArtworksDialog.qml",
-                            uploadArtworksComponent.componentParent,
-                                   {
-                                       componentParent: uploadArtworksComponent.componentParent,
-                                       immediateProcessing: true,
-                                       callbackObject: callbackObject
-                                   });
+                                uploadArtworksComponent.componentParent,
+                                {
+                                    immediateProcessing: true,
+                                    callbackObject: callbackObject
+                                });
         } else {
             mainAction();
         }
@@ -700,7 +699,7 @@ Item {
                             onClicked: {
                                 if (warningsManager.warningsCount > 0) {
                                     Common.launchDialog("Dialogs/WarningsDialog.qml",
-                                                           uploadArtworksComponent.componentParent,
+                                                        uploadArtworksComponent.componentParent,
                                                         {
                                                             componentParent: uploadArtworksComponent.componentParent,
                                                             isRestricted: true

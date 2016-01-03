@@ -67,8 +67,12 @@ ApplicationWindow {
         }
 
         Common.launchDialog("Dialogs/MasterPasswordSetupDialog.qml",
-                               settingsWindow,
-                               {firstTime: firstTimeParam, callbackObject: callbackObject});
+                            settingsWindow,
+                            {
+                                componentParent: settingsWindow,
+                                firstTime: firstTimeParam,
+                                callbackObject: callbackObject
+                            });
     }
 
     FileDialog {
