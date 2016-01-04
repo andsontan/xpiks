@@ -294,7 +294,15 @@ namespace Models {
         if (metadataIndex < 0 || metadataIndex >= m_ArtworkList.length()) { return QSize(); }
 
         ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
-        QSize size = metadata->getSize();
+        QSize size;
+
+        if (metadata->isInitialized()) {
+            size = metadata->getSize();
+        } else {
+            QImageReader reader(metadata->getFilepath());
+            size = reader.size();
+            //metadata->setSize(size);
+        }
         return size;
     }
 
