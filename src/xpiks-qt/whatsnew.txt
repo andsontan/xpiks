@@ -6,7 +6,7 @@ This is Xpiks 1.1 bugfix update 2. Fixes:
 - issue with case-sensitive spellcheck suggestions
 - issue with update dialog preventing update
 
-This is Xpiks 1.1 bugfix update 1. Fixes:
+Xpiks 1.1 bugfix update 1. Fixes:
 
 - bug with logs missing in Windows
 
