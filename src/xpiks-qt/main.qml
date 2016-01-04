@@ -332,6 +332,7 @@ ApplicationWindow {
         title: "Please choose artworks"
         selectExisting: true
         selectMultiple: true
+        folder: shortcuts.pictures
         nameFilters: [ "Jpeg images (*.jpg)", "Tiff images(*.tiff)", "All files (*)" ]
 
         onAccepted: {
@@ -342,7 +343,7 @@ ApplicationWindow {
         }
 
         onRejected: {
-            console.log("Artworks dialog canceled")
+            console.log("Open files dialog canceled")
         }
     }
 
@@ -352,6 +353,7 @@ ApplicationWindow {
         selectExisting: true
         selectMultiple: false
         selectFolder: true
+        folder: shortcuts.pictures
 
         onAccepted: {
             console.log("You chose: " + chooseDirectoryDialog.fileUrls)
