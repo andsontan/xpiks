@@ -10,7 +10,7 @@ permalink: /downloads/
 <h2><strong>OS X instructions</strong></h2>
 
 <div class="download-package">
-<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.1/xpiks-qt-v1.1.dmg">
+<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.1/xpiks-qt-v1.1.2.dmg">
 <div>
 <img src="{{site.url}}/images/os_x_installer.jpg" style="vertical-align: middle;width:70px;" />
 <span style="vertical-align: middle;">Package for OS X</span>
