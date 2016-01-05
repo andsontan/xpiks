@@ -1,8 +1,5 @@
 - title: "feed"
   href: "https://ribtoks.github.io/xpiks/feed.xml"
-  
-- title: "facebook"
-  href: "https://www.facebook.com/Xpiks-748703535265682/"
 
 - title: "googleplus"
   href: "#"
@@ -10,5 +7,8 @@
 - title: "twitter"
   href: "https://twitter.com/ribtoks"
 
+- title: "facebook"
+  href: "https://www.facebook.com/Xpiks-748703535265682/"
+  
 - title: "github"
   href: "https://github.com/ribtoks/xpiks"
