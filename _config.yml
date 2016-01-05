@@ -23,6 +23,9 @@ exclude: [.bundle, bin, vendor, Gemfile, Gemfile.lock, Rakefile, s3_website.yml,
 google_universal_analytics: UA-10412407-9
 google_universal_analytics_cookiedomain: auto
 
+# Facebook Page
+use_facebook_page: true
+
 # Build settings
 markdown: kramdown
 kramdown:
