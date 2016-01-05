@@ -79,7 +79,8 @@ ExportPair writeArtworkMetadata(ExportPair pair) {
     QString command = arguments.join(' ');
 
     process.start(command);
-    bool finished = process.waitForFinished();
+    const int timeoutMilliseconds = 15000;
+    bool finished = process.waitForFinished(timeoutMilliseconds);
 
     if (!finished || process.exitStatus() != QProcess::NormalExit) {
         QByteArray stdoutByteArray = process.readAll();
@@ -89,6 +90,8 @@ ExportPair writeArtworkMetadata(ExportPair pair) {
         }
 
         qWarning() << "Error:" << exiftoolPath << process.errorString();
+        process.kill();
+
         return qMakePair(resultMetadata, exportInfo);
     } else {
         resultMetadata = metadata;

@@ -71,6 +71,8 @@ namespace SpellCheck {
             }
         }
 
+        m_CurrentItem->afterReplaceCallback();
+
         if (m_ItemIndex != -1) {
             m_CommandManager->updateArtworks(QVector<int>() << m_ItemIndex);
         }

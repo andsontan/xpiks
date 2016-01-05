@@ -455,6 +455,10 @@ namespace Common {
         setTitle(title);
     }
 
+    void BasicKeywordsModel::afterReplaceCallback() {
+        emit spellCheckErrorsChanged();
+    }
+
     void BasicKeywordsModel::connectSignals(SpellCheck::SpellCheckItem *item) {
         QObject::connect(item, SIGNAL(resultsReady(int)), this, SLOT(spellCheckRequestReady(int)));
     }

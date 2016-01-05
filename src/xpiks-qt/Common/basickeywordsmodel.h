@@ -116,6 +116,7 @@ namespace Common {
         virtual void replaceKeyword(int index, const QString &existing, const QString &replacement);
         virtual void replaceWordInDescription(const QString &word, const QString &replacement);
         virtual void replaceWordInTitle(const QString &word, const QString &replacement);
+        virtual void afterReplaceCallback();
         virtual void connectSignals(SpellCheck::SpellCheckItem *item);
         virtual QStringList getDescriptionWords() const;
         virtual QStringList getTitleWords() const;
