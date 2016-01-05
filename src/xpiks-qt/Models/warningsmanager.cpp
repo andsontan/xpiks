@@ -87,7 +87,7 @@ namespace Models {
 
         initConstraintsFromSettings();
 
-        QFuture<QVector<WarningsInfo*> > future = QtConcurrent::run(this, &WarningsManager::doCheckItems, warningsBufferList);
+        QFuture<QVector<WarningsInfo*> > future = QtConcurrent::run<QVector<WarningsInfo*> >(this, &WarningsManager::doCheckItems, warningsBufferList);
         m_CheckingWatcher->setFuture(future);
 
         m_CommandManager->reportUserAction(Conectivity::UserActionWarningsCheck);
