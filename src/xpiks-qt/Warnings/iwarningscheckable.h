@@ -19,22 +19,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef BACKUPSAVERWORKER_H
-#define BACKUPSAVERWORKER_H
+#ifndef IWARNINGSCHECKABLE
+#define IWARNINGSCHECKABLE
 
-#include <QObject>
-#include "../Common/itemprocessingworker.h"
-#include "../Helpers/tempmetadatadb.h"
+#include <QSize>
+#include <QStringList>
 
-namespace Helpers {
-    class BackupSaverWorker : public QObject, public Common::ItemProcessingWorker<TempMetadataCopy>
-    {
-        Q_OBJECT
-        XPIKS_WORKER
-    protected:
-        virtual bool initWorker() { return true; }
-        virtual bool processOneItem(TempMetadataCopy *item);
+namespace Warnings {
+    class IWarningsCheckable {
+        virtual QSize getSize() = 0;
+        virtual const QString &getDescription() = 0;
+        virtual const QString &getTitle() = 0;
+        virtual int getKeywordsCount() = 0;
+        virtual bool hasTitleSpellErrors() = 0;
+        virtual bool hasDescriptionSpellErrors() = 0;
+        virtual bool hasKeywordsSpellErrors() = 0;
+        virtual QStringList getDescriptionWords() = 0;
+        virtual QStringList getTitleWords() = 0;
+        virtual void setWarningsFlags(int warningsFlags) = 0;
     };
 }
 
-#endif // BACKUPSAVERWORKER_H
+#endif // IWARNINGSCHECKABLE
+

@@ -37,6 +37,24 @@ namespace Common {
         CorrectKeywords = 4
     };
 
+    enum WarningType {
+        WarningTypeNoWarnings = 0,
+        WarningTypeSizeLessThanMinimum = 1 << 0,
+        WarningTypeNoKeywords = 1 << 1,
+        WarningTypeTooFewKeywords = 1 << 2,
+        WarningTypeTooManyKeywords = 1 << 3,
+        WarningTypeDescriptionIsEmpty = 1 << 4,
+        WarningTypeDescriptionNotEnoughWords = 1 << 5,
+        WarningTypeDescriptionTooBig = 1 << 6,
+        WarningTypeTitleIsEmpty = 1 << 7,
+        WarningTypeTitleNotEnoughWords = 1 << 8,
+        WarningTypeTitleTooManyWords = 1 << 9,
+        WarningTypeTitleTooBig = 1 << 10,
+        WarningTypeSpellErrorsInKeywords = 1 << 11,
+        WarningTypeSpellErrorsInDescription = 1 << 12,
+        WarningTypeSpellErrorsInTitle = 1 << 13
+    };
+
     template<typename FlagType>
     bool HasFlag(int value, FlagType flag) {
         int intFlag = static_cast<int>(flag);

@@ -31,6 +31,7 @@
 #include <QVector>
 #include "baseentity.h"
 #include "../SpellCheck/ispellcheckable.h"
+#include "../Warnings/iwarningscheckable.h"
 
 namespace SpellCheck {
     class SpellCheckQueryItem;
@@ -40,7 +41,11 @@ namespace SpellCheck {
 }
 
 namespace Common {
-    class BasicKeywordsModel : public QAbstractListModel, public SpellCheck::ISpellCheckable {
+    class BasicKeywordsModel :
+            public QAbstractListModel,
+            public SpellCheck::ISpellCheckable,
+            public Warnings::IWarningsCheckable
+    {
         Q_OBJECT
         Q_PROPERTY(bool hasSpellErrors READ hasSpellErrors NOTIFY spellCheckErrorsChanged)
     public:
@@ -65,6 +70,7 @@ namespace Common {
         const QSet<QString> &getKeywordsSet() const { return m_KeywordsSet; }
         const QVector<bool> &getSpellStatuses() const { return m_SpellCheckResults; }
         QString getKeywordsString() { return m_KeywordsList.join(", "); }
+        int getWarningsFlags() const { return m_WarningsInfo; }
 
     public:
         virtual bool appendKeyword(const QString &keyword);
@@ -88,6 +94,7 @@ namespace Common {
         bool hasSpellErrors() const;
 
         void setSpellStatuses(const QVector<bool> &statuses);
+        void setWarningsFlags(int flags) { m_WarningsFlags = flags; }
 
         virtual void clearModel();
         void clearKeywords();
@@ -113,7 +120,7 @@ namespace Common {
         virtual QVector<SpellCheck::SpellSuggestionsItem *> createKeywordsSuggestionsList();
         virtual QVector<SpellCheck::SpellSuggestionsItem*> createDescriptionSuggestionsList();
         virtual QVector<SpellCheck::SpellSuggestionsItem*> createTitleSuggestionsList();
-        virtual void replaceKeyword(int index, const QString &existing, const QString &replacement);
+        virtual bool replaceKeyword(int index, const QString &existing, const QString &replacement);
         virtual void replaceWordInDescription(const QString &word, const QString &replacement);
         virtual void replaceWordInTitle(const QString &word, const QString &replacement);
         virtual void afterReplaceCallback();
@@ -144,6 +151,7 @@ namespace Common {
         SpellCheck::SpellCheckItemInfo *m_SpellCheckInfo;
         QString m_Description;
         QString m_Title;
+        volatile int m_WarningsFlags;
     };
 }
 
