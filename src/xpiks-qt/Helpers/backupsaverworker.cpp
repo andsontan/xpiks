@@ -26,6 +26,8 @@
 
 namespace Helpers {
     bool BackupSaverWorker::processOneItem(TempMetadataCopy *item) {
+        Q_ASSERT(item != NULL);
+
         QString path = item->getFilepath() + QLatin1String(Constants::METADATA_BACKUP_EXTENSION);
         const QHash<QString, QString> &dict = item->getInfo();
         QFile file(path);

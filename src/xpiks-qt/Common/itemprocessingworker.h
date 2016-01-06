@@ -28,6 +28,16 @@
 #include <QDebug>
 #include "../Common/defines.h"
 
+#define XPIKS_WORKER protected: \
+virtual void notifyQueueIsEmpty() { emit queueIsEmpty(); } \
+virtual void notifyStopped() { emit stopped(); } \
+public slots: \
+void process() { doWork(); } \
+void cancel() { cancelWork(); } \
+signals: \
+void stopped(); \
+void queueIsEmpty();
+
 namespace Common {
     template<typename T>
     class ItemProcessingWorker

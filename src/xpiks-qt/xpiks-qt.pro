@@ -65,7 +65,8 @@ SOURCES += main.cpp \
     Helpers/backupsaverservice.cpp \
     SpellCheck/spellsuggestionsitem.cpp \
     Conectivity/telemetryservice.cpp \
-    Conectivity/updatescheckerworker.cpp
+    Conectivity/updatescheckerworker.cpp \
+    Warnings/warningscheckingworker.cpp
 
 RESOURCES += qml.qrc
 
@@ -167,7 +168,10 @@ HEADERS += \
     SpellCheck/spellsuggestionsitem.h \
     Conectivity/analyticsuserevent.h \
     Conectivity/telemetryservice.h \
-    Conectivity/updatescheckerworker.h
+    Conectivity/updatescheckerworker.h \
+    Warnings/warningscheckingworker.h \
+    Warnings/iwarningscheckable.h \
+    Warnings/warningsitem.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
