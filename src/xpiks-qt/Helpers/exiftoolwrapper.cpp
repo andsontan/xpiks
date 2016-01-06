@@ -55,6 +55,8 @@ ExportPair writeArtworkMetadata(ExportPair pair) {
     arguments << exiftoolPath;
     arguments << "-quiet" << "-ignoreMinorErrors";
     arguments << "-charset exif=UTF8" << "-charset iptc=UTF8";
+    arguments << QString("-IPTC:CodedCharacterSet=\"UTF8\"");
+    arguments << QString("-sep \", \"");
     arguments << QString("-IPTC:ObjectName=\"%1\"").arg(title);
     arguments << QString("-XMP:Title=\"%1\"").arg(title);
     arguments << QString("-EXIF:ImageDescription=\"%1\"").arg(description);
@@ -62,10 +64,10 @@ ExportPair writeArtworkMetadata(ExportPair pair) {
     arguments << QString("-IPTC:Caption-Abstract=\"%1\"").arg(description);
     arguments << QString("-XMP:Caption=\"%1\"").arg(description);
     arguments << QString("-XMP:Description=\"%1\"").arg(description);
+    //arguments << QString("-keywords=\"%1\"").arg(keywords);
     arguments << QString("-IPTC:Keywords=\"%1\"").arg(keywords);
     arguments << QString("-XMP:Keywords=\"%1\"").arg(keywords);
     //arguments << QString("-XMP:Subject=\"%1\"").arg(keywords);
-    arguments << QString("-IPTC:CodedCharacterSet=\"UTF8\"");
 
     if (!exportInfo->getMustSaveOriginal()) {
         arguments << "-overwrite_original";
