@@ -36,7 +36,6 @@ namespace SpellCheck {
     class SpellCheckWorker : public QObject, public Common::ItemProcessingWorker<SpellCheckItemBase>
     {
         Q_OBJECT
-        XPIKS_WORKER
     public:
         SpellCheckWorker();
         virtual ~SpellCheckWorker();
@@ -47,6 +46,16 @@ namespace SpellCheck {
     protected:
         virtual bool initWorker();
         virtual bool processOneItem(SpellCheckItemBase *item);
+
+    protected:
+        virtual void notifyQueueIsEmpty() { emit queueIsEmpty(); }
+        virtual void notifyStopped() { emit stopped(); }
+    public slots:
+        void process() { doWork(); }
+        void cancel() { cancelWork(); }
+    signals:
+        void stopped();
+        void queueIsEmpty();
 
     private:
         void detectAffEncoding();

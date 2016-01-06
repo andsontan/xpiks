@@ -30,7 +30,8 @@
 namespace Common {
     BasicKeywordsModel::BasicKeywordsModel(QObject *parent):
         QAbstractListModel(parent),
-        m_SpellCheckInfo(NULL)
+        m_SpellCheckInfo(NULL),
+        m_WarningsFlags(0)
     {
     }
 

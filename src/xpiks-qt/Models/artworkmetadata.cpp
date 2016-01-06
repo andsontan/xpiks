@@ -36,7 +36,6 @@ namespace Models {
     ArtworkMetadata::ArtworkMetadata(const QString &filepath) :
         Common::BasicKeywordsModel(),
         m_ArtworkFilepath(filepath),
-        m_WarningsInfo(0),
         m_IsModified(false),
         m_IsSelected(false),
         m_IsInitialized(false)

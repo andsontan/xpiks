@@ -64,13 +64,13 @@ namespace Common {
 
     public:
         const QStringList &getKeywords() const { return m_KeywordsList; }
-        const QString &getDescription() const { return m_Description; }
-        const QString &getTitle() const { return m_Title; }
+        virtual const QString &getDescription() const { return m_Description; }
+        virtual const QString &getTitle() const { return m_Title; }
         int getKeywordsCount() const { return m_KeywordsSet.count(); }
         const QSet<QString> &getKeywordsSet() const { return m_KeywordsSet; }
         const QVector<bool> &getSpellStatuses() const { return m_SpellCheckResults; }
         QString getKeywordsString() { return m_KeywordsList.join(", "); }
-        int getWarningsFlags() const { return m_WarningsInfo; }
+        int getWarningsFlags() const { return m_WarningsFlags; }
 
     public:
         virtual bool appendKeyword(const QString &keyword);
@@ -87,9 +87,11 @@ namespace Common {
         bool isDescriptionEmpty() const;
         bool containsKeyword(const QString &searchTerm, bool exactMatch=false);
 
-        bool hasKeywordsSpellError() const;
-        bool hasDescriptionSpellError() const;
-        bool hasTitleSpellError() const;
+        virtual bool hasKeywordsSpellError() const;
+        virtual bool hasDescriptionSpellError() const;
+        virtual bool hasTitleSpellError() const;
+
+        virtual QSize getSize() const { throw 0; }
 
         bool hasSpellErrors() const;
 
@@ -120,7 +122,7 @@ namespace Common {
         virtual QVector<SpellCheck::SpellSuggestionsItem *> createKeywordsSuggestionsList();
         virtual QVector<SpellCheck::SpellSuggestionsItem*> createDescriptionSuggestionsList();
         virtual QVector<SpellCheck::SpellSuggestionsItem*> createTitleSuggestionsList();
-        virtual bool replaceKeyword(int index, const QString &existing, const QString &replacement);
+        virtual void replaceKeyword(int index, const QString &existing, const QString &replacement);
         virtual void replaceWordInDescription(const QString &word, const QString &replacement);
         virtual void replaceWordInTitle(const QString &word, const QString &replacement);
         virtual void afterReplaceCallback();

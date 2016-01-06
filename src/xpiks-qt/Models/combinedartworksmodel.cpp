@@ -41,7 +41,6 @@ namespace Models {
             m_ArtworksList << artworks;
             endInsertRows();
         }
-        m_IsModified = false;
 
         if (paramLength == 1) {
             enableAllFields();
@@ -117,7 +116,7 @@ namespace Models {
 
     void CombinedArtworksModel::editKeyword(int index, const QString &replacement) {
         if (m_CommonKeywordsModel.editKeyword(index, replacement)) {
-            m_IsModified = true;
+            m_AreKeywordsModified = true;
             m_CommandManager->submitForSpellCheck(&m_CommonKeywordsModel, index);
         }
     }
@@ -126,7 +125,7 @@ namespace Models {
         QString keyword;
         if (m_CommonKeywordsModel.takeKeywordAt(keywordIndex, keyword)) {
             emit keywordsCountChanged();
-            m_IsModified = true;
+            m_AreKeywordsModified = true;
         }
 
         return keyword;
@@ -136,14 +135,14 @@ namespace Models {
         QString keyword;
         if (m_CommonKeywordsModel.takeLastKeyword(keyword)) {
             emit keywordsCountChanged();
-            m_IsModified = true;
+            m_AreKeywordsModified = true;
         }
     }
 
     void CombinedArtworksModel::appendKeyword(const QString &keyword) {
         if (m_CommonKeywordsModel.appendKeyword(keyword)) {
             emit keywordsCountChanged();
-            m_IsModified = true;
+            m_AreKeywordsModified = true;
 
             m_CommandManager->submitForSpellCheck(&m_CommonKeywordsModel, m_CommonKeywordsModel.rowCount() - 1);
         }
@@ -152,7 +151,7 @@ namespace Models {
     void CombinedArtworksModel::pasteKeywords(const QStringList &keywords) {
         if (m_CommonKeywordsModel.appendKeywords(keywords) > 0) {
             emit keywordsCountChanged();
-            m_IsModified = true;
+            m_AreKeywordsModified = true;
         }
     }
 
@@ -188,7 +187,16 @@ namespace Models {
     }
 
     void CombinedArtworksModel::saveEdits() const {
-        processCombinedEditCommand();
+        bool needToSave = false;
+
+        needToSave = m_ArtworksList.length() > 1;
+        needToSave = needToSave || (getChangeKeywords() && m_AreKeywordsModified);
+        needToSave = needToSave || (getChangeTitle() && m_IsTitleModified);
+        needToSave = needToSave || (getChangeDescription() && m_IsDescriptionModified);
+
+        if (needToSave) {
+            processCombinedEditCommand();
+        }
     }
 
     void CombinedArtworksModel::resetModelData() {
@@ -197,18 +205,19 @@ namespace Models {
         m_ArtworksList.clear();
         endResetModel();
 
-        m_IsModified = false;
-        m_EditFlags = 0;
+        m_AreKeywordsModified = false;
+        m_IsDescriptionModified = false;
+        m_IsTitleModified = false;
+
         // TEMPORARY (enable everything on initial launch) --
-        Common::ApplyFlag(m_EditFlags, true, Common::EditTitle);
-        Common::ApplyFlag(m_EditFlags, true, Common::EditDesctiption);
-        Common::ApplyFlag(m_EditFlags, true, Common::EditKeywords);
+        m_EditFlags = 0;
+        enableAllFields();
         // TEMPORARY (enable everything on initial launch) --
 
         m_CommonKeywordsModel.setSpellCheckInfo(NULL);
-        setDescription("");
-        setTitle("");
-        clearKeywords();
+        initDescription("");
+        initTitle("");
+        initKeywords(QStringList());
     }
 
     void CombinedArtworksModel::clearKeywords() {
@@ -275,7 +284,7 @@ namespace Models {
         initDescription(metadata->getDescription());
         initTitle(metadata->getTitle());
 
-        if (!m_IsModified) {
+        if (!m_AreKeywordsModified) {
             initKeywords(metadata->getKeywords());
         }
     }
@@ -320,7 +329,7 @@ namespace Models {
             initDescription(description);
             initTitle(title);
 
-            if (!m_IsModified) {
+            if (!m_AreKeywordsModified) {
                 initKeywords(commonKeywords.toList());
             }
         }

@@ -123,7 +123,11 @@ namespace Commands {
         void InjectDependency(Models::LogsModel *logsModel);
 
     public:
-        CommandResult *processCommand(CommandBase *command) const;
+        virtual CommandResult *processCommand(CommandBase *command)
+#ifndef TESTS
+        const
+#endif
+        ;
         void recordHistoryItem(UndoRedo::HistoryItem *historyItem) const;
 
     public:

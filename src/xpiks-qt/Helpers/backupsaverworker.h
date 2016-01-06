@@ -30,10 +30,19 @@ namespace Helpers {
     class BackupSaverWorker : public QObject, public Common::ItemProcessingWorker<TempMetadataCopy>
     {
         Q_OBJECT
-        XPIKS_WORKER
     protected:
         virtual bool initWorker() { return true; }
         virtual bool processOneItem(TempMetadataCopy *item);
+
+    protected:
+        virtual void notifyQueueIsEmpty() { emit queueIsEmpty(); }
+        virtual void notifyStopped() { emit stopped(); }
+    public slots:
+        void process() { doWork(); }
+        void cancel() { cancelWork(); }
+    signals:
+        void stopped();
+        void queueIsEmpty();
     };
 }
 

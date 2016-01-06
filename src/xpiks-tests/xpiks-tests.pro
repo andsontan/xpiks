@@ -139,4 +139,5 @@ HEADERS += \
     stringhelpers_tests.h \
     keywordvalidation_tests.h \
     artworkrepository_tests.h \
-    ../xpiks-qt/Conectivity/updatescheckerworker.h
+    ../xpiks-qt/Conectivity/updatescheckerworker.h \
+    ../xpiks-qt/Common/itemprocessingworker.h

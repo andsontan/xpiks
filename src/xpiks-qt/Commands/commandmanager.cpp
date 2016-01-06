@@ -142,7 +142,10 @@ void Commands::CommandManager::InjectDependency(Models::LogsModel *logsModel) {
     Q_ASSERT(logsModel != NULL); m_LogsModel = logsModel;
 }
 
-Commands::CommandResult *Commands::CommandManager::processCommand(Commands::CommandBase *command) const
+Commands::CommandResult *Commands::CommandManager::processCommand(Commands::CommandBase *command)
+#ifndef TESTS
+const
+#endif
 {
     Commands::CommandResult *result = command->execute(this);
     delete command;

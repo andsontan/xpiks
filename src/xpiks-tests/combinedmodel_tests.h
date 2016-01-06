@@ -33,6 +33,13 @@ private slots:
     void pasteNewKeywordsEmitsCountChangedTest();
     void pasteExistingKeywordsDoesNotEmitTest();
     void editKeywordDoesNotEmitCountChangedTest();
+    void notSavedAfterAllDisabledTest();
+    void notSavedAfterNothingModifiedTest();
+    void notSavedAfterModifiedDisabledTest();
+    void savedAfterModifiedDescriptionTest();
+    void savedAfterModifiedTitleTest();
+    void savedAfterKeywordsModifiedTest();
+    void savedIfMoreThanOneButNotModifiedTest();
 private:
     Mocks::CommandManagerMock m_CommandManagerMock;
     Models::SettingsModel m_SettingsModel;

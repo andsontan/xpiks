@@ -59,7 +59,9 @@ namespace Models {
             Common::BaseEntity(),
             m_CommonKeywordsModel(this),
             m_EditFlags(0),
-            m_IsModified(false)
+            m_AreKeywordsModified(false),
+            m_IsDescriptionModified(false),
+            m_IsTitleModified(false)
         {}
 
         virtual ~CombinedArtworksModel();
@@ -68,9 +70,9 @@ namespace Models {
         void initArtworks(const QVector<ArtItemInfo *> &artworks);
 
     private:
-        void initKeywords(const QStringList &ek) { m_CommonKeywordsModel.resetKeywords(ek); }
-        void initDescription(const QString &description) { setDescription(description); }
-        void initTitle(const QString &title) { setTitle(title); }
+        void initKeywords(const QStringList &ek) { m_CommonKeywordsModel.resetKeywords(ek); m_AreKeywordsModified = false; }
+        void initDescription(const QString &description) { setDescription(description); m_IsDescriptionModified = false; }
+        void initTitle(const QString &title) { setTitle(title); m_IsTitleModified = false; }
 
     public:
         void recombineArtworks();
@@ -84,6 +86,7 @@ namespace Models {
         void setDescription(const QString &value) {
             if (m_CommonKeywordsModel.setDescription(value)) {
                 emit descriptionChanged();
+                m_IsDescriptionModified = true;
             }
         }
 
@@ -91,6 +94,7 @@ namespace Models {
         void setTitle(const QString &value) {
             if (m_CommonKeywordsModel.setTitle(value)) {
                 emit titleChanged();
+                m_IsTitleModified = true;
             }
         }
 
@@ -125,7 +129,8 @@ namespace Models {
 
 #if defined(TESTS)
         const QStringList &getKeywords() const;
-        bool getIsModified() const { return m_IsModified; }
+        bool getAreKeywordsModified() const { return m_AreKeywordsModified; }
+        bool getIsDescriptionModified() const { return m_IsDescriptionModified; }
 #endif
 
     public:
@@ -176,7 +181,9 @@ namespace Models {
         Common::BasicKeywordsModel m_CommonKeywordsModel;
         SpellCheck::SpellCheckItemInfo m_SpellCheckInfo;
         int m_EditFlags;
-        bool m_IsModified;
+        bool m_AreKeywordsModified;
+        bool m_IsDescriptionModified;
+        bool m_IsTitleModified;
     };
 }
 

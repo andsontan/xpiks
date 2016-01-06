@@ -33,6 +33,5 @@ int main(int argc, char *argv[]) {
     QTEST_CLASS(StringHelpersTests, sht);
     QTEST_CLASS(KeywordValidationTests, kvt);
     QTEST_CLASS(ArtworkRepositoryTests, art);
-
     return 0;
 }

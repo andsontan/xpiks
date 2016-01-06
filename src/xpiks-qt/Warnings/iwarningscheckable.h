@@ -27,15 +27,15 @@
 
 namespace Warnings {
     class IWarningsCheckable {
-        virtual QSize getSize() = 0;
-        virtual const QString &getDescription() = 0;
-        virtual const QString &getTitle() = 0;
-        virtual int getKeywordsCount() = 0;
-        virtual bool hasTitleSpellErrors() = 0;
-        virtual bool hasDescriptionSpellErrors() = 0;
-        virtual bool hasKeywordsSpellErrors() = 0;
-        virtual QStringList getDescriptionWords() = 0;
-        virtual QStringList getTitleWords() = 0;
+        virtual QSize getSize() const = 0;
+        virtual const QString &getDescription() const = 0;
+        virtual const QString &getTitle() const = 0;
+        virtual int getKeywordsCount() const = 0;
+        virtual bool hasTitleSpellError() const = 0;
+        virtual bool hasDescriptionSpellError() const = 0;
+        virtual bool hasKeywordsSpellError() const = 0;
+        virtual QStringList getDescriptionWords() const = 0;
+        virtual QStringList getTitleWords() const = 0;
         virtual void setWarningsFlags(int warningsFlags) = 0;
     };
 }
