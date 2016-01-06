@@ -34,7 +34,7 @@ namespace SpellCheck {
     SpellSuggestionsItem::SpellSuggestionsItem(const QString &word):
         QAbstractListModel(),
         m_Word(word),
-        m_ReplacementOrigin((word)),
+        m_ReplacementOrigin(word),
         m_ReplacementIndex(-1)
     {
     }
@@ -148,8 +148,12 @@ namespace SpellCheck {
         if (anyReplacementSelected()) {
             const QString &word = getWord();
             const QString &replacement = getReplacement();
-            item->replaceKeyword(m_OriginalIndex, word, replacement);
+            this->replaceToSuggested(item, word, replacement);
         }
+    }
+
+    void KeywordSpellSuggestions::replaceToSuggested(ISpellCheckable *item, const QString &word, const QString &replacement) {
+        item->replaceKeyword(m_OriginalIndex, word, replacement);
     }
 
     DescriptionSpellSuggestions::DescriptionSpellSuggestions(const QString &word):
@@ -159,8 +163,14 @@ namespace SpellCheck {
 
     void DescriptionSpellSuggestions::replaceToSuggested(ISpellCheckable *item) {
         if (anyReplacementSelected()) {
-            item->replaceWordInDescription(getWord(), getReplacement());
+            const QString &word = getWord();
+            const QString &replacement = getReplacement();
+            this->replaceToSuggested(item, word, replacement);
         }
+    }
+
+    void DescriptionSpellSuggestions::replaceToSuggested(ISpellCheckable *item, const QString &word, const QString &replacement) {
+        item->replaceWordInDescription(word, replacement);
     }
 
     TitleSpellSuggestions::TitleSpellSuggestions(const QString &word):
@@ -170,7 +180,41 @@ namespace SpellCheck {
 
     void TitleSpellSuggestions::replaceToSuggested(ISpellCheckable *item) {
         if (anyReplacementSelected()) {
-            item->replaceWordInTitle(getWord(), getReplacement());
+            const QString &word = getWord();
+            const QString &replacement = getReplacement();
+            this->replaceToSuggested(item, word, replacement);
+        }
+    }
+
+    void TitleSpellSuggestions::replaceToSuggested(ISpellCheckable *item, const QString &word, const QString &replacement) {
+        item->replaceWordInTitle(word, replacement);
+    }
+
+    CombinedSpellSuggestions::CombinedSpellSuggestions(const QString &word, const QVector<SpellSuggestionsItem *> &suggestions):
+        SpellSuggestionsItem(word, tr("multireplace")),
+        m_SpellSuggestions(suggestions)
+    {
+        Q_ASSERT(!suggestions.isEmpty());
+    }
+
+    CombinedSpellSuggestions::~CombinedSpellSuggestions() {
+        qDeleteAll(m_SpellSuggestions);
+    }
+
+    void CombinedSpellSuggestions::replaceToSuggested(ISpellCheckable *item) {
+        if (anyReplacementSelected()) {
+            const QString &word = getWord();
+            const QString &replacement = getReplacement();
+            this->replaceToSuggested(item, word, replacement);
+        }
+    }
+
+    void CombinedSpellSuggestions::replaceToSuggested(ISpellCheckable *item, const QString &word, const QString &replacement) {
+        int size = m_SpellSuggestions.length();
+
+        for (int i = 0; i < size; ++i) {
+            SpellSuggestionsItem *suggestionItem = m_SpellSuggestions.at(i);
+            suggestionItem->replaceToSuggested(item, word, replacement);
         }
     }
 }
