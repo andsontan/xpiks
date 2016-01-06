@@ -197,6 +197,7 @@ namespace Models {
         m_ArtworksList.clear();
         endResetModel();
 
+        m_IsModified = false;
         m_EditFlags = 0;
         // TEMPORARY (enable everything on initial launch) --
         Common::ApplyFlag(m_EditFlags, true, Common::EditTitle);
