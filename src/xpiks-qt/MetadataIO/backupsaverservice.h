@@ -28,7 +28,7 @@ namespace Models {
     class ArtworkMetadata;
 }
 
-namespace Helpers {
+namespace MetadataIO {
     class BackupSaverWorker;
 
     class BackupSaverService : public QObject
@@ -41,6 +41,7 @@ namespace Helpers {
         void startSaving();
         void stopSaving();
         void saveArtwork(Models::ArtworkMetadata *metadata);
+        void readArtwork(Models::ArtworkMetadata *metadata);
 
     signals:
         void cancelSaving();

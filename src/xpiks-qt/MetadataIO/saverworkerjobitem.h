@@ -19,22 +19,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef BACKUPSAVERWORKER_H
-#define BACKUPSAVERWORKER_H
+#ifndef SAVERWORKERJOBITEM
+#define SAVERWORKERJOBITEM
 
-#include <QObject>
-#include "../Common/itemprocessingworker.h"
-#include "../Helpers/tempmetadatadb.h"
+#include "../Models/artworkmetadata.h"
 
-namespace Helpers {
-    class BackupSaverWorker : public QObject, public Common::ItemProcessingWorker<TempMetadataCopy>
-    {
-        Q_OBJECT
-        XPIKS_WORKER
-    protected:
-        virtual bool initWorker() { return true; }
-        virtual bool processOneItem(TempMetadataCopy *item);
+namespace MetadataIO {
+    enum SaverWorkerJobType { JobTypeRead, JobTypeWrite };
+
+    class SaverWorkerJobItem {
+    public:
+        SaverWorkerJobItem(Models::ArtworkMetadata *metadata, SaverWorkerJobType jobType):
+            m_ArtworkMetadata(metadata),
+            m_JobType(jobType)
+        {
+        }
+
+    public:
+        SaverWorkerJobType getJobType() const { return m_JobType; }
+        Models::ArtworkMetadata *getMetadata() const { return m_ArtworkMetadata; }
+
+    private:
+        Models::ArtworkMetadata *m_ArtworkMetadata;
+        SaverWorkerJobType m_JobType;
     };
 }
 
-#endif // BACKUPSAVERWORKER_H
+#endif // SAVERWORKERJOBITEM
+

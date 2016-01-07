@@ -24,9 +24,9 @@
 #include <QDebug>
 #include "backupsaverworker.h"
 #include "../Models/artworkmetadata.h"
-#include "tempmetadatadb.h"
+#include "saverworkerjobitem.h"
 
-namespace Helpers {
+namespace MetadataIO {
     BackupSaverService::BackupSaverService():
         QObject()
     {
@@ -56,8 +56,13 @@ namespace Helpers {
     }
 
     void BackupSaverService::saveArtwork(Models::ArtworkMetadata *metadata) {
-        TempMetadataCopy *copy = new TempMetadataCopy(metadata);
-        m_BackupWorker->submitItem(copy);
+        SaverWorkerJobItem *jobItem = new SaverWorkerJobItem(metadata, JobTypeWrite);
+        m_BackupWorker->submitItem(jobItem);
+    }
+
+    void BackupSaverService::readArtwork(Models::ArtworkMetadata *metadata) {
+        SaverWorkerJobItem *jobItem = new SaverWorkerJobItem(metadata, JobTypeRead);
+        m_BackupWorker->submitItem(jobItem);
     }
 
     void BackupSaverService::workerFinished() {
