@@ -23,6 +23,7 @@
 #define BACKUPSAVERSERVICE_H
 
 #include <QObject>
+#include <QVector>
 
 namespace Models {
     class ArtworkMetadata;
@@ -40,8 +41,9 @@ namespace MetadataIO {
     public:
         void startSaving();
         void stopSaving();
-        void saveArtwork(Models::ArtworkMetadata *metadata);
-        void readArtwork(Models::ArtworkMetadata *metadata);
+        void saveArtwork(Models::ArtworkMetadata *metadata) const;
+        void readArtwork(Models::ArtworkMetadata *metadata) const;
+        void readArtworks(const QVector<Models::ArtworkMetadata *> &artworks) const;
 
     signals:
         void cancelSaving();

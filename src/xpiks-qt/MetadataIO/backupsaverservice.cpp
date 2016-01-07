@@ -55,14 +55,26 @@ namespace MetadataIO {
         thread->start();
     }
 
-    void BackupSaverService::saveArtwork(Models::ArtworkMetadata *metadata) {
+    void BackupSaverService::saveArtwork(Models::ArtworkMetadata *metadata) const {
         SaverWorkerJobItem *jobItem = new SaverWorkerJobItem(metadata, JobTypeWrite);
         m_BackupWorker->submitItem(jobItem);
     }
 
-    void BackupSaverService::readArtwork(Models::ArtworkMetadata *metadata) {
+    void BackupSaverService::readArtwork(Models::ArtworkMetadata *metadata) const {
         SaverWorkerJobItem *jobItem = new SaverWorkerJobItem(metadata, JobTypeRead);
         m_BackupWorker->submitItem(jobItem);
+    }
+
+    void BackupSaverService::readArtworks(const QVector<Models::ArtworkMetadata *> &artworks) const {
+        QVector<SaverWorkerJobItem *> jobs;
+        jobs.reserve(artworks.length());
+
+        int size = artworks.size();
+        for (int i = 0; i < size; ++i) {
+            jobs.append(new SaverWorkerJobItem(artworks.at(i), JobTypeRead));
+        }
+
+        m_BackupWorker->submitItems(jobs);
     }
 
     void BackupSaverService::workerFinished() {

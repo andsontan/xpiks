@@ -25,15 +25,7 @@
 #include <QString>
 #include <QSize>
 
-namespace Models {    
-    class ImportDataResult {
-    public:
-        QString Title;
-        QString Description;
-        QString Keywords;
-        QSize Size;
-    };
-
+namespace Models {
     class ExportInfo {
     public:
         ExportInfo() :

@@ -66,7 +66,8 @@ SOURCES += main.cpp \
     SpellCheck/spellsuggestionsitem.cpp \
     Conectivity/telemetryservice.cpp \
     Conectivity/updatescheckerworker.cpp \
-    Warnings/warningscheckingworker.cpp
+    Warnings/warningscheckingworker.cpp \
+    MetadataIO/metadatareadingworker.cpp
 
 RESOURCES += qml.qrc
 
@@ -172,7 +173,8 @@ HEADERS += \
     Warnings/warningscheckingworker.h \
     Warnings/iwarningscheckable.h \
     Warnings/warningsitem.h \
-    MetadataIO/saverworkerjobitem.h
+    MetadataIO/saverworkerjobitem.h \
+    MetadataIO/metadatareadingworker.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
