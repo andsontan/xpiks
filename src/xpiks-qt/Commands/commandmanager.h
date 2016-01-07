@@ -58,8 +58,11 @@ namespace Suggestion {
     class KeywordsSuggestor;
 }
 
-namespace Helpers {
+namespace MetadataIO {
     class BackupSaverService;
+}
+
+namespace Helpers {
     class UpdateService;
 }
 
@@ -117,7 +120,7 @@ namespace Commands {
         void InjectDependency(Models::RecentDirectoriesModel *recentDirectories);
         void InjectDependency(SpellCheck::SpellCheckerService *spellCheckerService);
         void InjectDependency(SpellCheck::SpellCheckSuggestionModel *spellCheckSuggestionModel);
-        void InjectDependency(Helpers::BackupSaverService *backupSaverService);
+        void InjectDependency(MetadataIO::BackupSaverService *backupSaverService);
         void InjectDependency(Conectivity::TelemetryService *telemetryService);
         void InjectDependency(Helpers::UpdateService *updateService);
         void InjectDependency(Models::LogsModel *logsModel);
@@ -182,7 +185,7 @@ namespace Commands {
         Models::RecentDirectoriesModel *m_RecentDirectories;
         SpellCheck::SpellCheckerService *m_SpellCheckerService;
         SpellCheck::SpellCheckSuggestionModel *m_SpellCheckSuggestionModel;
-        Helpers::BackupSaverService *m_MetadataSaverService;
+        MetadataIO::BackupSaverService *m_MetadataSaverService;
         Conectivity::TelemetryService *m_TelemetryService;
         Helpers::UpdateService *m_UpdateService;
         Models::LogsModel *m_LogsModel;
