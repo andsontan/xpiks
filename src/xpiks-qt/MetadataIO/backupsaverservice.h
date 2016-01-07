@@ -19,31 +19,41 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef BACKUPSAVERWORKER_H
-#define BACKUPSAVERWORKER_H
+#ifndef BACKUPSAVERSERVICE_H
+#define BACKUPSAVERSERVICE_H
 
 #include <QObject>
-#include "../Common/itemprocessingworker.h"
-#include "../Helpers/tempmetadatadb.h"
+#include <QVector>
 
-namespace Helpers {
-    class BackupSaverWorker : public QObject, public Common::ItemProcessingWorker<TempMetadataCopy>
+namespace Models {
+    class ArtworkMetadata;
+}
+
+namespace MetadataIO {
+    class BackupSaverWorker;
+
+    class BackupSaverService : public QObject
     {
         Q_OBJECT
-    protected:
-        virtual bool initWorker() { return true; }
-        virtual bool processOneItem(TempMetadataCopy *item);
+    public:
+        BackupSaverService();
 
-    protected:
-        virtual void notifyQueueIsEmpty() { emit queueIsEmpty(); }
-        virtual void notifyStopped() { emit stopped(); }
-    public slots:
-        void process() { doWork(); }
-        void cancel() { cancelWork(); }
+    public:
+        void startSaving();
+        void stopSaving();
+        void saveArtwork(Models::ArtworkMetadata *metadata) const;
+        void readArtwork(Models::ArtworkMetadata *metadata) const;
+        void readArtworks(const QVector<Models::ArtworkMetadata *> &artworks) const;
+
     signals:
-        void stopped();
-        void queueIsEmpty();
+        void cancelSaving();
+
+    private slots:
+        void workerFinished();
+
+    private:
+        BackupSaverWorker *m_BackupWorker;
     };
 }
 
-#endif // BACKUPSAVERWORKER_H
+#endif // BACKUPSAVERSERVICE_H

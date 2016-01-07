@@ -19,24 +19,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "backupsaverworker.h"
-#include <QFile>
-#include <QDataStream>
-#include "../Helpers/constants.h"
+#ifndef BACKUPSAVERWORKER_H
+#define BACKUPSAVERWORKER_H
 
-namespace Helpers {
-    bool BackupSaverWorker::processOneItem(TempMetadataCopy *item) {
-        Q_ASSERT(item != NULL);
+#include <QObject>
+#include "../Common/itemprocessingworker.h"
+#include "saverworkerjobitem.h"
 
-        QString path = item->getFilepath() + QLatin1String(Constants::METADATA_BACKUP_EXTENSION);
-        const QHash<QString, QString> &dict = item->getInfo();
-        QFile file(path);
-        if (file.open(QIODevice::WriteOnly)) {
-            QDataStream out(&file);   // write the data
-            out << dict;
-            file.close();
-        }
+namespace MetadataIO {
+    class BackupSaverWorker : public QObject, public Common::ItemProcessingWorker<SaverWorkerJobItem>
+    {
+        Q_OBJECT
+    protected:
+        virtual bool initWorker() { return true; }
+        virtual bool processOneItem(SaverWorkerJobItem *item);
 
-        return true;
-    }
+    private:
+        void readItem(SaverWorkerJobItem *item);
+        void writeItem(SaverWorkerJobItem *item);
+    };
 }
+
+#endif // BACKUPSAVERWORKER_H

@@ -41,7 +41,7 @@
 #include "../Models/settingsmodel.h"
 #include "../SpellCheck/spellchecksuggestionmodel.h"
 #include "../SpellCheck/ispellcheckable.h"
-#include "../Helpers/backupsaverservice.h"
+#include "../MetadataIO/backupsaverservice.h"
 #include "../Conectivity/telemetryservice.h"
 #include "../Helpers/updateservice.h"
 #include "../Models/logsmodel.h"
@@ -126,7 +126,7 @@ void Commands::CommandManager::InjectDependency(SpellCheck::SpellCheckSuggestion
     m_SpellCheckSuggestionModel->setCommandManager(this);
 }
 
-void Commands::CommandManager::InjectDependency(Helpers::BackupSaverService *backupSaverService) {
+void Commands::CommandManager::InjectDependency(MetadataIO::BackupSaverService *backupSaverService) {
     Q_ASSERT(backupSaverService != NULL); m_MetadataSaverService = backupSaverService;
 }
 

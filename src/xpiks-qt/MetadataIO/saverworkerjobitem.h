@@ -19,38 +19,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef BACKUPSAVERSERVICE_H
-#define BACKUPSAVERSERVICE_H
+#ifndef SAVERWORKERJOBITEM
+#define SAVERWORKERJOBITEM
 
-#include <QObject>
+#include "../Models/artworkmetadata.h"
 
-namespace Models {
-    class ArtworkMetadata;
-}
+namespace MetadataIO {
+    enum SaverWorkerJobType { JobTypeRead, JobTypeWrite };
 
-namespace Helpers {
-    class BackupSaverWorker;
-
-    class BackupSaverService : public QObject
-    {
-        Q_OBJECT
+    class SaverWorkerJobItem {
     public:
-        BackupSaverService();
+        SaverWorkerJobItem(Models::ArtworkMetadata *metadata, SaverWorkerJobType jobType):
+            m_ArtworkMetadata(metadata),
+            m_JobType(jobType)
+        {
+        }
 
     public:
-        void startSaving();
-        void stopSaving();
-        void saveArtwork(Models::ArtworkMetadata *metadata);
-
-    signals:
-        void cancelSaving();
-
-    private slots:
-        void workerFinished();
+        SaverWorkerJobType getJobType() const { return m_JobType; }
+        Models::ArtworkMetadata *getMetadata() const { return m_ArtworkMetadata; }
 
     private:
-        BackupSaverWorker *m_BackupWorker;
+        Models::ArtworkMetadata *m_ArtworkMetadata;
+        SaverWorkerJobType m_JobType;
     };
 }
 
-#endif // BACKUPSAVERSERVICE_H
+#endif // SAVERWORKERJOBITEM
+

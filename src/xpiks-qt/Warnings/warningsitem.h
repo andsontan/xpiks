@@ -19,28 +19,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef EXPORTINFO_H
-#define EXPORTINFO_H
+#ifndef WARNINGSQUERYITEM
+#define WARNINGSQUERYITEM
 
-#include <QString>
-#include <QSize>
+#include "iwarningscheckable.h"
 
-namespace Models {
-    class ExportInfo {
+namespace Warnings {
+    class WarningsItem {
     public:
-        ExportInfo() :
-            m_MustSaveOriginal(false) {}
-        ~ExportInfo() {}
+        WarningsItem() :
+        { }
 
     public:
-        bool getMustSaveOriginal() const { return m_MustSaveOriginal; }
-        void setMustSaveOriginal(bool value) { m_MustSaveOriginal = value; }
+        void submitWarnings() {
+            m_CheckableItem->setWarningsFlags(m_WarningsFlags);
+        }
+
+        IWarningsCheckable *getCheckableItem() const { return m_CheckableItem; }
 
     private:
-        bool m_MustSaveOriginal;
+        IWarningsCheckable *m_CheckableItem;
+        int m_WarningsFlags;
     };
 }
 
-Q_DECLARE_TYPEINFO(Models::ImportDataResult, Q_MOVABLE_TYPE);
+#endif // WARNINGSQUERYITEM
 
-#endif // EXPORTINFO_H

@@ -61,12 +61,13 @@ SOURCES += main.cpp \
     Common/basickeywordsmodel.cpp \
     SpellCheck/spellcheckerrorshighlighter.cpp \
     SpellCheck/spellcheckiteminfo.cpp \
-    Helpers/backupsaverworker.cpp \
-    Helpers/backupsaverservice.cpp \
+    MetadataIO/backupsaverworker.cpp \
+    MetadataIO/backupsaverservice.cpp \
     SpellCheck/spellsuggestionsitem.cpp \
     Conectivity/telemetryservice.cpp \
     Conectivity/updatescheckerworker.cpp \
-    Warnings/warningscheckingworker.cpp
+    Warnings/warningscheckingworker.cpp \
+    MetadataIO/metadatareadingworker.cpp
 
 RESOURCES += qml.qrc
 
@@ -162,16 +163,18 @@ HEADERS += \
     SpellCheck/ispellcheckable.h \
     SpellCheck/spellcheckerrorshighlighter.h \
     SpellCheck/spellcheckiteminfo.h \
-    Helpers/backupsaverworker.h \
+    MetadataIO/backupsaverworker.h \
     Common/itemprocessingworker.h \
-    Helpers/backupsaverservice.h \
+    MetadataIO/backupsaverservice.h \
     SpellCheck/spellsuggestionsitem.h \
     Conectivity/analyticsuserevent.h \
     Conectivity/telemetryservice.h \
     Conectivity/updatescheckerworker.h \
     Warnings/warningscheckingworker.h \
     Warnings/iwarningscheckable.h \
-    Warnings/warningsitem.h
+    Warnings/warningsitem.h \
+    MetadataIO/saverworkerjobitem.h \
+    MetadataIO/metadatareadingworker.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
