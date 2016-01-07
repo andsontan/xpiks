@@ -30,12 +30,12 @@ namespace Models {
     class ExportInfo;
 }
 
-typedef QPair<Models::ArtworkMetadata*, Models::ImportDataResult*> ImportPair;
+//typedef QPair<Models::ArtworkMetadata*, Models::ImportDataResult*> ImportPair;
 typedef QPair<Models::ArtworkMetadata*, Models::ExportInfo*> ExportPair;
 
 // returns NULL if patching wasn't successfull
 ExportPair writeArtworkMetadata(ExportPair pair);
-ImportPair readArtworkMetadata(ImportPair pair);
+//ImportPair readArtworkMetadata(ImportPair pair);
 
 #endif // EXIFTOOLWRAPPER
 

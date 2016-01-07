@@ -38,17 +38,6 @@ namespace Models {
         m_MetadataWriter = new QFutureWatcher<ExportPair>(this);
         connect(m_MetadataWriter, SIGNAL(resultReadyAt(int)), SLOT(metadataExported(int)));
         connect(m_MetadataWriter, SIGNAL(finished()), SLOT(allFinishedWriting()));
-
-        m_MetadataReader = new QFutureWatcher<ImportPair>(this);
-        connect(m_MetadataReader, SIGNAL(resultReadyAt(int)), SLOT(metadataImported(int)));
-        connect(m_MetadataReader, SIGNAL(finished()), SLOT(allFinishedReading()));
-    }
-
-    void IptcProvider::metadataImported(int index)
-    {
-        qInfo() << "Metadata imported at " << index;
-        ImportPair importPair = m_MetadataReader->resultAt(index);
-        metadataImportedHandler(importPair);
     }
 
     void IptcProvider::metadataExported(int index) {
@@ -58,48 +47,9 @@ namespace Models {
         metadataExportedHandler(metadata);
     }
 
-    void IptcProvider::allFinishedReading() {
-        endProcessing();
-        QVector<Models::ArtworkMetadata*> artworks = getArtworkList();
-
-        m_LocalLibrary->addToLibrary(artworks);
-        m_LocalLibrary->saveLibraryAsync();
-
-        m_CommandManager->submitForSpellCheck(artworks);
-
-        qDebug() << "Metadata reading finished (with Error = " << getIsError() << ")";
-    }
-
     void IptcProvider::allFinishedWriting() {
         endProcessing();
         qDebug() << "Metadata writing finished (with Error = " << getIsError() << ")";
-    }
-
-    void IptcProvider::metadataImportedHandler(ImportPair importPair)
-    {
-        ArtworkMetadata *metadata = importPair.first;
-        Models::ImportDataResult *importData = importPair.second;
-        Q_ASSERT(metadata != NULL);
-
-        if (importData != NULL) {
-            metadata->initialize(importData->Title, importData->Description, importData->Keywords);
-            metadata->setSize(importData->Size);
-#if defined(QT_DEBUG)
-            qDebug() << "Metadata initialized" << metadata->getFilepath();
-#endif
-            delete importData;
-        } else {
-            setIsError(true);
-        }
-
-        if (!m_IgnoreAutosave) {
-            SettingsModel *settings = m_CommandManager->getSettingsModel();
-            if (settings->getSaveBackups()) {
-                Helpers::TempMetadataDb(metadata).load();
-            }
-        }
-
-        incProgress();
     }
 
     void IptcProvider::metadataExportedHandler(ArtworkMetadata *metadata)
@@ -121,6 +71,8 @@ namespace Models {
 
     void IptcProvider::doReadMetadata(const QVector<ArtworkMetadata *> &artworkList)
     {
+        m_CommandManager->readMetadata(artworkList, m_IgnoreAutosave);
+        /*
         int artworksCount = artworkList.length();
 
         qDebug() << "Reading metadata from" << artworksCount << "item(s)";
@@ -144,6 +96,7 @@ namespace Models {
         else {
             endProcessing();
         }
+        */
     }
 
     void IptcProvider::doWriteMetadata(const QVector<ArtworkMetadata *> &artworkList) {
@@ -184,6 +137,5 @@ namespace Models {
     void IptcProvider::cancelProcessing()
     {
         m_MetadataWriter->cancel();
-        m_MetadataReader->cancel();
     }
 }

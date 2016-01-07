@@ -101,8 +101,8 @@ Item {
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
-            width: 480
-            height: 150
+            width: 380
+            height: 250
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
@@ -129,13 +129,13 @@ Item {
                     }
                 }
 
-                SimpleProgressBar {
-                    id: progress
+                StyledBusyIndicator {
+                    id: spinner
+                    width: 200
+                    height: 200
                     anchors.horizontalCenter: parent.horizontalCenter
-                    width: parent.width
-                    height: 20
-                    color: iptcProvider.isError ? Colors.destructiveColor : Colors.artworkActiveColor
-                    value: iptcProvider.percent
+                    running: false
+                    visible: running
                 }
 
                 RowLayout {
@@ -159,13 +159,14 @@ Item {
                         enabled: !iptcProvider.inProgress
                         onClicked: {
                             text = qsTr("Importing...")
+                            spinner.running = true
                             iptcProvider.resetModel()
                             iptcProvider.importMetadata()
                         }
 
                         Connections {
-                            target: iptcProvider
-                            onFinishedProcessing: {
+                            target: metadataIOCoordinator
+                            onMetadataReadingFinished: {
                                 console.log("Import finished in UI")
                                 importButton.text = qsTr("Start Import")
                                 artItemsModel.updateLastN(iptcProvider.itemsCount)

@@ -29,7 +29,6 @@
 
 namespace Models {
     class ArtworkMetadata;
-    class ImportDataResult;
     class ExportInfo;
 }
 
@@ -37,7 +36,6 @@ namespace Suggestion {
     class LocalLibrary;
 }
 
-typedef QPair<Models::ArtworkMetadata*, Models::ImportDataResult*> ImportPair;
 typedef QPair<Models::ArtworkMetadata*, Models::ExportInfo*> ExportPair;
 
 namespace Models {
@@ -49,16 +47,13 @@ namespace Models {
 
    public:
         IptcProvider();
-        virtual ~IptcProvider() { delete m_MetadataWriter; delete m_MetadataReader; }
+        virtual ~IptcProvider() { delete m_MetadataWriter; }
 
     public slots:
-        void metadataImported(int);
         void metadataExported(int);
-        void allFinishedReading();
         void allFinishedWriting();
 
     private:
-        void metadataImportedHandler(ImportPair importPair);
         void metadataExportedHandler(ArtworkMetadata *metadata);
 
     public:
@@ -97,7 +92,6 @@ namespace Models {
         void cancelProcessing();
 
     private:
-        QFutureWatcher<QPair<Models::ArtworkMetadata*, Models::ImportDataResult*> > *m_MetadataReader;
         QFutureWatcher<QPair<ArtworkMetadata*, ExportInfo*> > *m_MetadataWriter;
         Suggestion::LocalLibrary *m_LocalLibrary;
         ExportInfo m_ExportInfo;

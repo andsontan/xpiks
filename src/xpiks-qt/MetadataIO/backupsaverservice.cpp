@@ -81,7 +81,7 @@ namespace MetadataIO {
         qInfo() << "Backup saver service went offline";
     }
 
-    void Helpers::BackupSaverService::stopSaving() {
+    void BackupSaverService::stopSaving() {
         qDebug() << "Backup saver service: stopping...";
         m_BackupWorker->cancelWork();
     }

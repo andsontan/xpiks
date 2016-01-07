@@ -27,6 +27,7 @@
 
 namespace Warnings {
     class IWarningsCheckable {
+    public:
         virtual QSize getSize() const = 0;
         virtual const QString &getDescription() const = 0;
         virtual const QString &getTitle() const = 0;

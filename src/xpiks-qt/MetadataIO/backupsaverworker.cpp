@@ -65,8 +65,8 @@ namespace MetadataIO {
     void BackupSaverWorker::writeItem(SaverWorkerJobItem *item) {
         Helpers::TempMetadataCopy copy(item->getMetadata());
 
-        QString path = item->getFilepath() + QLatin1String(Constants::METADATA_BACKUP_EXTENSION);
-        const QHash<QString, QString> &dict = copy->getInfo();
+        QString path = copy.getFilepath() + QLatin1String(Constants::METADATA_BACKUP_EXTENSION);
+        const QHash<QString, QString> &dict = copy.getInfo();
         QFile file(path);
         if (file.open(QIODevice::WriteOnly)) {
             QDataStream out(&file);   // write the data

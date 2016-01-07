@@ -56,10 +56,12 @@ namespace Models {
 
 namespace Suggestion {
     class KeywordsSuggestor;
+    class LocalLibrary;
 }
 
 namespace MetadataIO {
     class BackupSaverService;
+    class MetadataIOCoordinator;
 }
 
 namespace Helpers {
@@ -98,6 +100,8 @@ namespace Commands {
             m_TelemetryService(NULL),
             m_UpdateService(NULL),
             m_LogsModel(NULL),
+            m_LocalLibrary(NULL),
+            m_MetadataIOCoordinator(NULL),
             m_AfterInitCalled(false)
         { }
 
@@ -124,6 +128,8 @@ namespace Commands {
         void InjectDependency(Conectivity::TelemetryService *telemetryService);
         void InjectDependency(Helpers::UpdateService *updateService);
         void InjectDependency(Models::LogsModel *logsModel);
+        void InjectDependency(MetadataIO::MetadataIOCoordinator *metadataIOCoordinator);
+        void InjectDependency(Suggestion::LocalLibrary *localLibrary);
 
     public:
         virtual CommandResult *processCommand(CommandBase *command)
@@ -147,6 +153,8 @@ namespace Commands {
         void setArtworksForUpload(const QVector<Models::ArtworkMetadata*> &artworks) const;
         void setArtworksForZipping(const QVector<Models::ArtworkMetadata*> &artworks) const;
         virtual void connectArtworkSignals(Models::ArtworkMetadata *metadata) const;
+        void readMetadata(const QVector<Models::ArtworkMetadata*> &artworks, bool ignoreBackup) const;
+        void addToLibrary(const QVector<Models::ArtworkMetadata*> &artworks) const;
         void updateArtworks(const QVector<int> &indices) const;
         void addToRecentDirectories(const QString &path) const;
 #ifdef QT_DEBUG
@@ -159,6 +167,7 @@ namespace Commands {
         void setupSpellCheckSuggestions(SpellCheck::ISpellCheckable *item, int index, int flags);
         void saveMetadata(Models::ArtworkMetadata *metadata) const;
         void reportUserAction(Conectivity::UserAction userAction) const;
+        void saveLocalLibraryAsync() const;
         void afterConstructionCallback();
         void beforeDestructionCallback() const;
 
@@ -171,6 +180,7 @@ namespace Commands {
         virtual Suggestion::KeywordsSuggestor *getKeywordsSuggestor() const { return m_KeywordsSuggestor; }
         virtual Models::SettingsModel *getSettingsModel() const { return m_SettingsModel; }
         virtual SpellCheck::SpellCheckerService *getSpellCheckerService() const { return m_SpellCheckerService; }
+        virtual MetadataIO::BackupSaverService *getBackupSaverService() const { return m_MetadataSaverService; }
 
     private:
         Models::ArtworksRepository *m_ArtworksRepository;
@@ -193,6 +203,8 @@ namespace Commands {
         Conectivity::TelemetryService *m_TelemetryService;
         Helpers::UpdateService *m_UpdateService;
         Models::LogsModel *m_LogsModel;
+        Suggestion::LocalLibrary *m_LocalLibrary;
+        MetadataIO::MetadataIOCoordinator *m_MetadataIOCoordinator;
         volatile bool m_AfterInitCalled;
     };
 }

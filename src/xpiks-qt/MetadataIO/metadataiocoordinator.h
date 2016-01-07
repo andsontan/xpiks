@@ -19,29 +19,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef WARNINGSQUERYITEM
-#define WARNINGSQUERYITEM
+#ifndef METADATAIOCOORDINATOR_H
+#define METADATAIOCOORDINATOR_H
 
-#include "iwarningscheckable.h"
+#include <QObject>
+#include <QVector>
+#include "../Common/baseentity.h"
 
-namespace Warnings {
-    class WarningsItem {
+namespace Models {
+    class ArtworkMetadata;
+}
+
+namespace MetadataIO {
+    class MetadataIOCoordinator : public QObject, public Common::BaseEntity
+    {
+        Q_OBJECT
     public:
-        WarningsItem()
-        { }
+        MetadataIOCoordinator();
+
+    signals:
+        void metadataReadingFinished();
+
+    private slots:
+        void workerFinished(bool success);
 
     public:
-        void submitWarnings() {
-            m_CheckableItem->setWarningsFlags(m_WarningsFlags);
-        }
-
-        IWarningsCheckable *getCheckableItem() const { return m_CheckableItem; }
-
-    private:
-        IWarningsCheckable *m_CheckableItem;
-        int m_WarningsFlags;
+        void readMetadata(const QVector<Models::ArtworkMetadata*> &artworksToRead, bool ignoreBackups);
     };
 }
 
-#endif // WARNINGSQUERYITEM
-
+#endif // METADATAIOCOORDINATOR_H

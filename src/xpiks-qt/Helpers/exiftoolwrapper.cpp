@@ -106,6 +106,7 @@ void grabMetadata(const QStringList &items, Models::ImportDataResult *importData
                   QRegExp descriptionRegExp,
                   QRegExp keywordsRegExp);
 
+/*
 ImportPair readArtworkMetadata(ImportPair pair) {
     qDebug() << "Reading artwork metadata" << pair.first->getFilepath();
     Models::SettingsModel *settingsModel = Helpers::SettingsProvider::getInstance().getSettingsModelInstance();
@@ -192,3 +193,4 @@ void grabMetadata(const QStringList &items, Models::ImportDataResult *importData
         }
     }
 }
+*/

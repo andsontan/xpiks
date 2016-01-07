@@ -22,11 +22,9 @@
 #include "warningscheckingworker.h"
 #include "../Common/defines.h"
 #include "../Common/flags.h"
+#include "../Models/settingsmodel.h"
 
 namespace Warnings {
-    WarningsCheckingWorker::WarningsCheckingWorker()
-    {
-    }
 
     bool WarningsCheckingWorker::initWorker() {
         return true;
@@ -35,17 +33,20 @@ namespace Warnings {
     bool WarningsCheckingWorker::processOneItem(WarningsItem *item) {
         Q_ASSERT(item != NULL);
 
-        int warningsInfo = 0;
+        int warningsFlags = 0;
 
         initValuesFromSettings();
 
-        warningsInfo |= checkDimensions(checkableItem);
-        warningsInfo |= checkDescriptionLength(checkableItem);
-        warningsInfo |= checkTitleWordsCount(checkableItem);
-        warningsInfo |= checkKeywordsCount(checkableItem);
-        warningsInfo |= checkSpellCheckErrors(checkableItem);
+        IWarningsCheckable *checkableItem = item->getCheckableItem();
+        warningsFlags |= checkDimensions(checkableItem);
+        warningsFlags |= checkDescriptionLength(checkableItem);
+        warningsFlags |= checkTitleWordsCount(checkableItem);
+        warningsFlags |= checkKeywordsCount(checkableItem);
+        warningsFlags |= checkSpellCheckErrors(checkableItem);
 
-        metadata->setWarningsInfo(warningsInfo);
+        checkableItem->setWarningsFlags(warningsFlags);
+
+        return true;
     }
 
     void WarningsCheckingWorker::initValuesFromSettings() {
@@ -128,15 +129,15 @@ namespace Warnings {
     int WarningsCheckingWorker::checkSpellCheckErrors(IWarningsCheckable *item) const {
         int warningsInfo = 0;
 
-        if (item->hasKeywordsSpellErrors()) {
+        if (item->hasKeywordsSpellError()) {
             Common::SetFlag(warningsInfo, Common::WarningTypeSpellErrorsInKeywords);
         }
 
-        if (item->hasDescriptionSpellErrors()) {
+        if (item->hasDescriptionSpellError()) {
             Common::SetFlag(warningsInfo, Common::WarningTypeSpellErrorsInDescription);
         }
 
-        if (item->hasTitleSpellErrors()) {
+        if (item->hasTitleSpellError()) {
             Common::SetFlag(warningsInfo, Common::WarningTypeSpellErrorsInTitle);
         }
 

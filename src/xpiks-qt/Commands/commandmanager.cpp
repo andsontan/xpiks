@@ -46,6 +46,8 @@
 #include "../Helpers/updateservice.h"
 #include "../Models/logsmodel.h"
 #include "../Encryption/aes-qt.h"
+#include "../MetadataIO/metadataiocoordinator.h"
+#include "../Suggestion/locallibrary.h"
 
 void Commands::CommandManager::InjectDependency(Models::ArtworksRepository *artworkRepository) {
     Q_ASSERT(artworkRepository != NULL); m_ArtworksRepository = artworkRepository;
@@ -140,6 +142,15 @@ void Commands::CommandManager::InjectDependency(Helpers::UpdateService *updateSe
 
 void Commands::CommandManager::InjectDependency(Models::LogsModel *logsModel) {
     Q_ASSERT(logsModel != NULL); m_LogsModel = logsModel;
+}
+
+void Commands::CommandManager::InjectDependency(MetadataIO::MetadataIOCoordinator *metadataIOCoordinator) {
+    Q_ASSERT(metadataIOCoordinator != NULL); m_MetadataIOCoordinator = metadataIOCoordinator;
+    m_MetadataIOCoordinator->setCommandManager(this);
+}
+
+void Commands::CommandManager::InjectDependency(Suggestion::LocalLibrary *localLibrary) {
+    Q_ASSERT(localLibrary != NULL); m_LocalLibrary = localLibrary;
 }
 
 Commands::CommandResult *Commands::CommandManager::processCommand(Commands::CommandBase *command)
@@ -249,6 +260,19 @@ void Commands::CommandManager::connectArtworkSignals(Models::ArtworkMetadata *me
     }
 }
 
+void Commands::CommandManager::readMetadata(const QVector<Models::ArtworkMetadata *> &artworks,
+                                            bool ignoreBackup) const {
+    if (m_MetadataIOCoordinator) {
+        m_MetadataIOCoordinator->readMetadata(artworks, ignoreBackup);
+    }
+}
+
+void Commands::CommandManager::addToLibrary(const QVector<Models::ArtworkMetadata *> &artworks) const {
+    if (m_LocalLibrary) {
+        m_LocalLibrary->addToLibrary(artworks);
+    }
+}
+
 void Commands::CommandManager::updateArtworks(const QVector<int> &indices) const
 {
     if (m_ArtItemsModel) {
@@ -317,6 +341,12 @@ void Commands::CommandManager::saveMetadata(Models::ArtworkMetadata *metadata) c
 void Commands::CommandManager::reportUserAction(Conectivity::UserAction userAction) const {
     if (m_TelemetryService) {
         m_TelemetryService->reportAction(userAction);
+    }
+}
+
+void Commands::CommandManager::saveLocalLibraryAsync() const {
+    if (m_LocalLibrary) {
+        m_LocalLibrary->saveLibraryAsync();
     }
 }
 

@@ -41,6 +41,4 @@ namespace Models {
     };
 }
 
-Q_DECLARE_TYPEINFO(Models::ImportDataResult, Q_MOVABLE_TYPE);
-
 #endif // EXPORTINFO_H

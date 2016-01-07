@@ -53,6 +53,8 @@ namespace Helpers {
     }
 
     UploadWorker::~UploadWorker() {
+        qDebug() << "Upload worker destructor";
+
         delete m_UploadItem;
 
         if (m_CurlProcess) {

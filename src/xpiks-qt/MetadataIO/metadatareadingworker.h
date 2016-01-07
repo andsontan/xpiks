@@ -28,28 +28,37 @@
 #include <QString>
 #include <QProcess>
 #include <QStringList>
+#include <QByteArray>
+#include <QHash>
+#include <QSize>
 
 namespace Models {
     class ArtworkMetadata;
+    class SettingsModel;
+}
+
+namespace Commands {
+    class CommandManager;
 }
 
 namespace MetadataIO {
+    class BackupSaverService;
+
     struct ImportDataResult {
+        QString FilePath;
         QString Title;
         QString Description;
         QString Keywords;
         QSize Size;
     };
 
-    class BackupSaverService;
-
     class MetadataReadingWorker : public QObject
     {
         Q_OBJECT
     public:
         explicit MetadataReadingWorker(const QVector<Models::ArtworkMetadata *> &itemsToRead,
-                                       BackupSaverService *saverService,
-                                       const QString &exiftoolPath);
+                                       Commands::CommandManager *commandManager,
+                                       bool ignoreBackups);
         virtual ~MetadataReadingWorker();
 
     signals:
@@ -58,20 +67,24 @@ namespace MetadataIO {
 
     public slots:
         void process();
-        void cancel();
+        //void cancel();
 
     private slots:
         void innerProcessFinished(int exitCode, QProcess::ExitStatus exitStatus);
 
     private:
         void initWorker();
+        void afterImportHandler();
         QStringList createArgumentsList();
+        void parseExiftoolOutput(const QByteArray &output);
+        void setAllMetadata();
 
     private:
         QVector<Models::ArtworkMetadata *> m_ItemsToRead;
+        QHash<QString, ImportDataResult> m_ImportResult;
         QProcess *m_ExiftoolProcess;
-        QString m_ExiftoolPath;
-        BackupSaverService *m_BackupSaverService;
+        Commands::CommandManager *m_CommandManager;
+        volatile bool m_IgnoreBackups;
     };
 }
 

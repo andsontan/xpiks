@@ -67,7 +67,8 @@ SOURCES += main.cpp \
     Conectivity/telemetryservice.cpp \
     Conectivity/updatescheckerworker.cpp \
     Warnings/warningscheckingworker.cpp \
-    MetadataIO/metadatareadingworker.cpp
+    MetadataIO/metadatareadingworker.cpp \
+    MetadataIO/metadataiocoordinator.cpp
 
 RESOURCES += qml.qrc
 
@@ -174,7 +175,8 @@ HEADERS += \
     Warnings/iwarningscheckable.h \
     Warnings/warningsitem.h \
     MetadataIO/saverworkerjobitem.h \
-    MetadataIO/metadatareadingworker.h
+    MetadataIO/metadatareadingworker.h \
+    MetadataIO/metadataiocoordinator.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

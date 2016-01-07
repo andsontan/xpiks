@@ -35,13 +35,20 @@ namespace Warnings {
     class WarningsCheckingWorker: public QObject, public Common::ItemProcessingWorker<WarningsItem>
     {
         Q_OBJECT
-        XPIKS_WORKER
     protected:
         virtual bool initWorker();
         virtual bool processOneItem(WarningsItem *item);
 
     private:
         void initValuesFromSettings();
+
+    protected:
+        virtual void notifyQueueIsEmpty() { emit queueIsEmpty(); }
+        virtual void notifyStopped() { emit stopped(); }
+
+    signals:
+        void stopped();
+        void queueIsEmpty();
 
     private:
         int checkDimensions(IWarningsCheckable *item) const;

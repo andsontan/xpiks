@@ -34,6 +34,18 @@ namespace MetadataIO {
         virtual bool initWorker() { return true; }
         virtual bool processOneItem(SaverWorkerJobItem *item);
 
+    protected:
+        virtual void notifyQueueIsEmpty() { emit queueIsEmpty(); }
+        virtual void notifyStopped() { emit stopped(); }
+
+    public slots:
+        void process() { doWork(); }
+        void cancel() { cancelWork(); }
+
+    signals:
+        void stopped();
+        void queueIsEmpty();
+
     private:
         void readItem(SaverWorkerJobItem *item);
         void writeItem(SaverWorkerJobItem *item);

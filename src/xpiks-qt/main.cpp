@@ -37,6 +37,7 @@
 #include "SpellCheck/spellchecksuggestionmodel.h"
 #include "Models/filteredartitemsproxymodel.h"
 #include "Suggestion/suggestionqueryengine.h"
+#include "MetadataIO/metadataiocoordinator.h"
 #include "Conectivity/analyticsuserevent.h"
 #include "SpellCheck/spellcheckerservice.h"
 #include "Models/recentdirectoriesmodel.h"
@@ -197,8 +198,9 @@ int main(int argc, char *argv[]) {
     Models::ArtworkUploader artworkUploader(settingsModel.getMaxParallelUploads());
     SpellCheck::SpellCheckerService spellCheckerService;
     SpellCheck::SpellCheckSuggestionModel spellCheckSuggestionModel;
-    Helpers::BackupSaverService metadataSaverService;
+    MetadataIO::BackupSaverService metadataSaverService;
     Helpers::UpdateService updateService;
+    MetadataIO::MetadataIOCoordinator metadataIOCoordinator;
 
     Conectivity::TelemetryService telemetryService(userId);
 
@@ -223,6 +225,7 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&telemetryService);
     commandManager.InjectDependency(&updateService);
     commandManager.InjectDependency(&logsModel);
+    commandManager.InjectDependency(&metadataIOCoordinator);
 
     // other initializations
     secretsManager.setMasterPasswordHash(appSettings.value(Constants::MASTER_PASSWORD_HASH, "").toString());
@@ -261,6 +264,7 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("updateService", &updateService);
     rootContext->setContextProperty("spellCheckerService", &spellCheckerService);
     rootContext->setContextProperty("spellCheckSuggestionModel", &spellCheckSuggestionModel);
+    rootContext->setContextProperty("metadataIOCoordinator", &metadataIOCoordinator);
 
     engine.addImageProvider("global", globalProvider);
     qDebug() << "About to load main view...";
