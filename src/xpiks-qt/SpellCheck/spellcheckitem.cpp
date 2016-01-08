@@ -106,7 +106,11 @@ namespace SpellCheck {
     void SpellCheckItem::submitSpellCheckResult() {
         const QVector<SpellCheckQueryItem*> &items = getQueries();
         m_SpellCheckable->setSpellCheckResults(items, m_OnlyOneKeyword);
-        m_SpellCheckable->setSpellCheckResults(getHash());
+
+        if (!m_OnlyOneKeyword) {
+            m_SpellCheckable->setSpellCheckResults(getHash());
+        }
+
         int index = m_OnlyOneKeyword ? items.first()->m_Index : -1;
         emit resultsReady(index);
     }
