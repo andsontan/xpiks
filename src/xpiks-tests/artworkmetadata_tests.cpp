@@ -9,7 +9,8 @@ void ArtworkMetadataTests::initializeOverwriteTest() {
 
     QString title = "Artwork Special Title";
     QString description = "Artwork Special Description";
-    QString rawKeywords = "keyword1, keyword2,keyword3";
+    QStringList rawKeywords;
+    rawKeywords << "keyword1" << "keyword2" << "keyword3";
 
     QCOMPARE(metadata.isInitialized(), false);
 
@@ -34,7 +35,8 @@ void ArtworkMetadataTests::initializeNoOverwriteButEmptyTest() {
 
     QString title = "Artwork Special Title";
     QString description = "Artwork Special Description";
-    QString rawKeywords = "keyword1, keyword2,keyword3";
+    QStringList rawKeywords;
+    rawKeywords << "keyword1" << "keyword2" << "keyword3";
 
     QCOMPARE(metadata.isInitialized(), false);
 
@@ -63,8 +65,8 @@ void ArtworkMetadataTests::initializeNoOverwriteNotEmptyTest() {
 
     QString title = "Artwork Special Title";
     QString description = "Artwork Special Description";
-    QString rawKeywords = "keyword1, keyword2,keyword3";
-
+    QStringList rawKeywords;
+    rawKeywords << "keyword1" << "keyword2" << "keyword3";
     QCOMPARE(metadata.isInitialized(), false);
 
     bool result = metadata.initialize(title, description, rawKeywords, false);
@@ -92,7 +94,8 @@ void ArtworkMetadataTests::initializeNoOverwriteTest() {
 
     QString title = "Artwork Special Title";
     QString description = "Artwork Special Description";
-    QString rawKeywords = "keyword1, keyword2,keyword3";
+    QStringList rawKeywords;
+    rawKeywords << "keyword1" << "keyword2" << "keyword3";
 
     QCOMPARE(metadata.isInitialized(), false);
 

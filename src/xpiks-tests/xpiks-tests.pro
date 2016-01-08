@@ -43,7 +43,6 @@ SOURCES += main.cpp \
     ../xpiks-qt/Models/combinedartworksmodel.cpp \
     ../xpiks-qt/UndoRedo/addartworksitem.cpp \
     ../xpiks-qt/UndoRedo/undoredomanager.cpp \
-    ../xpiks-qt/Helpers/tempmetadatadb.cpp \
     ../xpiks-qt/Encryption/secretsmanager.cpp \
     ../xpiks-qt/Commands/combinededitcommand.cpp \
     ../xpiks-qt/Commands/pastekeywordscommand.cpp \
@@ -62,8 +61,8 @@ SOURCES += main.cpp \
     ../xpiks-qt/SpellCheck/spellcheckitem.cpp \
     ../xpiks-qt/SpellCheck/spellcheckworker.cpp \
     ../xpiks-qt/SpellCheck/spellchecksuggestionmodel.cpp \
-    ../xpiks-qt/Helpers/backupsaverservice.cpp \
-    ../xpiks-qt/Helpers/backupsaverworker.cpp \
+    ../xpiks-qt/MetadataIO/backupsaverservice.cpp \
+    ../xpiks-qt/MetadataIO/backupsaverworker.cpp \
     ../xpiks-qt/Conectivity/telemetryservice.cpp \
     ../xpiks-qt/Helpers/updateservice.cpp \
     ../xpiks-qt/SpellCheck/spellcheckiteminfo.cpp \
@@ -78,7 +77,12 @@ SOURCES += main.cpp \
     ../xpiks-qt/Helpers/stringhelper.cpp \
     keywordvalidation_tests.cpp \
     artworkrepository_tests.cpp \
-    ../xpiks-qt/Conectivity/updatescheckerworker.cpp
+    ../xpiks-qt/Conectivity/updatescheckerworker.cpp \
+    ../xpiks-qt/MetadataIO/metadataiocoordinator.cpp \
+    ../xpiks-qt/MetadataIO/metadatareadingworker.cpp \
+    ../xpiks-qt/MetadataIO/saverworkerjobitem.cpp \
+    ../xpiks-qt/Suggestion/locallibrary.cpp \
+    ../xpiks-qt/Suggestion/libraryloaderworker.cpp
 
 HEADERS += \
     encryption_tests.h \
@@ -99,7 +103,6 @@ HEADERS += \
     ../xpiks-qt/UndoRedo/addartworksitem.h \
     ../xpiks-qt/UndoRedo/historyitem.h \
     ../xpiks-qt/UndoRedo/undoredomanager.h \
-    ../xpiks-qt/Helpers/tempmetadatadb.h \
     ../xpiks-qt/Encryption/secretsmanager.h \
     ../xpiks-qt/Commands/combinededitcommand.h \
     ../xpiks-qt/Commands/commandbase.h \
@@ -121,8 +124,8 @@ HEADERS += \
     ../xpiks-qt/SpellCheck/spellcheckitem.h \
     ../xpiks-qt/SpellCheck/spellcheckworker.h \
     ../xpiks-qt/SpellCheck/spellchecksuggestionmodel.h \
-    ../xpiks-qt/Helpers/backupsaverservice.h \
-    ../xpiks-qt/Helpers/backupsaverworker.h \
+    ../xpiks-qt/MetadataIO/backupsaverservice.h \
+    ../xpiks-qt/MetadataIO/backupsaverworker.h \
     ../xpiks-qt/Conectivity/analyticsuserevent.h \
     ../xpiks-qt/Conectivity/telemetryservice.h \
     ../xpiks-qt/Helpers/updateservice.h \
@@ -140,4 +143,9 @@ HEADERS += \
     keywordvalidation_tests.h \
     artworkrepository_tests.h \
     ../xpiks-qt/Conectivity/updatescheckerworker.h \
-    ../xpiks-qt/Common/itemprocessingworker.h
+    ../xpiks-qt/Common/itemprocessingworker.h \
+    ../xpiks-qt/MetadataIO/metadataiocoordinator.h \
+    ../xpiks-qt/MetadataIO/metadatareadingworker.h \
+    ../xpiks-qt/MetadataIO/saverworkerjobitem.h \
+    ../xpiks-qt/Suggestion/locallibrary.h \
+    ../xpiks-qt/Suggestion/libraryloaderworker.h
