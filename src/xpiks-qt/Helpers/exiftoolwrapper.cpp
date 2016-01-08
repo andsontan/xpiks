@@ -31,7 +31,6 @@
 #include <QImageReader>
 #include "../Models/artworkmetadata.h"
 #include "../Models/exportinfo.h"
-#include "tempmetadatadb.h"
 #include "Helpers/settingsprovider.h"
 #include "../Models/settingsmodel.h"
 

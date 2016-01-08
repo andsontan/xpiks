@@ -22,7 +22,6 @@
 #include "iptcprovider.h"
 #include <QtConcurrent>
 #include <QDebug>
-#include "../Helpers/tempmetadatadb.h"
 #include "../Helpers/exiftoolwrapper.h"
 #include "artworkmetadata.h"
 #include "settingsmodel.h"

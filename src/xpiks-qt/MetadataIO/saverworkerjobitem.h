@@ -22,9 +22,31 @@
 #ifndef SAVERWORKERJOBITEM
 #define SAVERWORKERJOBITEM
 
+#include <QHash>
+#include <QString>
 #include "../Models/artworkmetadata.h"
 
 namespace MetadataIO {
+    class MetadataSavingCopy {
+    public:
+        MetadataSavingCopy(Models::ArtworkMetadata *metadata);
+        MetadataSavingCopy(Models::ArtworkMetadata *metadata, const QHash<QString, QString> &dict);
+
+    public:
+        const QString &getFilepath() const { return m_Filepath; }
+        const QHash<QString, QString> &getInfo() const { return m_MetadataInfo; }
+
+        void readFromMetadata();
+        void saveToFile() const;
+        bool readFromFile();
+        void saveToMetadata() const;
+
+    private:
+        QHash<QString, QString> m_MetadataInfo;
+        QString m_Filepath;
+        Models::ArtworkMetadata *m_Metadata;
+    };
+
     enum SaverWorkerJobType { JobTypeRead, JobTypeWrite };
 
     class SaverWorkerJobItem {

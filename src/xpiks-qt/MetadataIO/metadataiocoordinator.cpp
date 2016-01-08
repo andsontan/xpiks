@@ -29,6 +29,7 @@
 #include "../Models/settingsmodel.h"
 #include "../Commands/commandmanager.h"
 #include "../Suggestion/locallibrary.h"
+#include "saverworkerjobitem.h"
 
 namespace MetadataIO {
     MetadataIOCoordinator::MetadataIOCoordinator():
@@ -84,10 +85,23 @@ namespace MetadataIO {
 
     void MetadataIOCoordinator::afterImportHandler(const QVector<Models::ArtworkMetadata*> &itemsToRead, bool ignoreBackups) {
         Models::SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
+        const QHash<QString, ImportDataResult> &importResult = m_ReadingWorker->getImportResult();
 
         if (!ignoreBackups && settingsModel->getSaveBackups()) {
-            BackupSaverService *saverService = m_CommandManager->getBackupSaverService();
-            //saverService->readArtworks(itemsToRead);
+            qDebug() << "Restoring the backups...";
+            int size = itemsToRead.size();
+            for (int i = 0; i < size; ++i) {
+                Models::ArtworkMetadata *metadata = itemsToRead.at(i);
+                const QString &filepath = metadata->getFilepath();
+
+                if (importResult.contains(filepath)) {
+                    const ImportDataResult &importResultItem = importResult.value(filepath);
+                    MetadataSavingCopy copy(metadata, importResultItem.BackupDict);
+                    copy.saveToMetadata();
+                }
+            }
+        } else {
+            qDebug() << "Skipped restoring the backups";
         }
 
         m_CommandManager->addToLibrary(itemsToRead);

@@ -16,7 +16,6 @@ SOURCES += main.cpp \
     Models/artworkuploader.cpp \
     Models/artworksprocessor.cpp \
     Models/uploadinforepository.cpp \
-    Helpers/tempmetadatadb.cpp \
     Models/warningsmanager.cpp \
     ../tiny-aes/aes.cpp \
     Encryption/secretsmanager.cpp \
@@ -68,7 +67,8 @@ SOURCES += main.cpp \
     Conectivity/updatescheckerworker.cpp \
     Warnings/warningscheckingworker.cpp \
     MetadataIO/metadatareadingworker.cpp \
-    MetadataIO/metadataiocoordinator.cpp
+    MetadataIO/metadataiocoordinator.cpp \
+    MetadataIO/saverworkerjobitem.cpp
 
 RESOURCES += qml.qrc
 
@@ -109,7 +109,6 @@ HEADERS += \
     Models/exportinfo.h \
     Models/uploadinforepository.h \
     Models/logsmodel.h \
-    Helpers/tempmetadatadb.h \
     Models/warningsinfo.h \
     Models/warningsmanager.h \
     Encryption/aes-qt.h \

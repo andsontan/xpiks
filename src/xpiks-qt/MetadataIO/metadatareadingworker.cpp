@@ -25,10 +25,14 @@
 #include <QJsonArray>
 #include <QDebug>
 #include <QDir>
+#include <QFile>
 #include <QTemporaryFile>
 #include <QTextStream>
+#include <QDataStream>
 #include "../Models/settingsmodel.h"
 #include "../Models/artworkmetadata.h"
+#include "../Helpers/constants.h"
+#include "saverworkerjobitem.h"
 
 #define SOURCEFILE QLatin1String("SourceFile")
 #define TITLE QLatin1String("Title")
@@ -143,6 +147,10 @@ namespace MetadataIO {
                 QByteArray stdoutByteArray = m_ExiftoolProcess->readAllStandardOutput();
                 parseExiftoolOutput(stdoutByteArray);
             }
+
+            if (m_SettingsModel->getSaveBackups()) {
+                readBackups();
+            }
         }
 
         emit finished(true);
@@ -159,8 +167,6 @@ namespace MetadataIO {
         QObject::connect(m_ExiftoolProcess, SIGNAL(finished(int,QProcess::ExitStatus)),
                          this, SLOT(innerProcessFinished(int,QProcess::ExitStatus)));
     }
-
-
 
     QStringList MetadataReadingWorker::createArgumentsList() {
         QStringList arguments;
@@ -202,6 +208,20 @@ namespace MetadataIO {
             }
         } else {
             qWarning() << "Exiftool Json Error: Main element is not array";
+        }
+    }
+
+    void MetadataReadingWorker::readBackups() {
+        qDebug() << "Reading backups of items...";
+        int size = m_ItemsToRead.size();
+        for (int i = 0; i < size; ++i) {
+            Models::ArtworkMetadata *metadata = m_ItemsToRead.at(i);
+            MetadataSavingCopy copy(metadata);
+            if (copy.readFromFile()) {
+                const QString &filepath = metadata->getFilepath();
+                Q_ASSERT(m_ImportResult.contains(filepath));
+                m_ImportResult[filepath].BackupDict = copy.getInfo();
+            }
         }
     }
 }

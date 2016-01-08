@@ -46,6 +46,7 @@ namespace MetadataIO {
         QString Description;
         QStringList Keywords;
         QSize Size;
+        QHash<QString, QString> BackupDict;
     };
 
     class MetadataReadingWorker : public QObject
@@ -77,6 +78,7 @@ namespace MetadataIO {
         void initWorker();
         QStringList createArgumentsList();
         void parseExiftoolOutput(const QByteArray &output);
+        void readBackups();
 
     private:
         QVector<Models::ArtworkMetadata *> m_ItemsToRead;

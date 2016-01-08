@@ -25,7 +25,6 @@
 #include <QWriteLocker>
 #include <QStringBuilder>
 #include <QDir>
-#include "../Helpers/tempmetadatadb.h"
 #include "../Helpers/keywordvalidator.h"
 #include "settingsmodel.h"
 #include "../SpellCheck/spellsuggestionsitem.h"
@@ -52,12 +51,12 @@ namespace Models {
                                      const QString &description, const QStringList &rawKeywords, bool overwrite) {
         bool anythingModified = false;
 
-        if (overwrite || (isTitleEmpty() && !title.isEmpty())) {
+        if (overwrite || (isTitleEmpty() && !title.trimmed().isEmpty())) {
             anythingModified = true;
             BasicKeywordsModel::setTitle(title);
         }
 
-        if (overwrite || (isDescriptionEmpty() && !description.isEmpty())) {
+        if (overwrite || (isDescriptionEmpty() && !description.trimmed().isEmpty())) {
             anythingModified = true;
             BasicKeywordsModel::setDescription(description);
         }

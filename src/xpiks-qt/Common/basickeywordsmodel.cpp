@@ -183,15 +183,15 @@ namespace Common {
     }
 
     bool BasicKeywordsModel::isEmpty() const {
-        return m_KeywordsList.isEmpty() || m_Description.simplified().isEmpty();
+        return m_KeywordsList.isEmpty() || m_Description.trimmed().isEmpty();
     }
 
     bool BasicKeywordsModel::isTitleEmpty() const {
-        return m_Title.simplified().isEmpty();
+        return m_Title.trimmed().isEmpty();
     }
 
     bool BasicKeywordsModel::isDescriptionEmpty() const {
-        return m_Description.simplified().isEmpty();
+        return m_Description.trimmed().isEmpty();
     }
 
     bool BasicKeywordsModel::containsKeyword(const QString &searchTerm, bool exactMatch) {

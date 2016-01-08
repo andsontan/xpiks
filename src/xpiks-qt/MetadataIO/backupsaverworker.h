@@ -45,10 +45,6 @@ namespace MetadataIO {
     signals:
         void stopped();
         void queueIsEmpty();
-
-    private:
-        void readItem(SaverWorkerJobItem *item);
-        void writeItem(SaverWorkerJobItem *item);
     };
 }
 

@@ -23,58 +23,22 @@
 #include <QFile>
 #include <QDataStream>
 #include "../Helpers/constants.h"
-#include "../Helpers/tempmetadatadb.h"
 
 namespace MetadataIO {
     bool BackupSaverWorker::processOneItem(SaverWorkerJobItem *item) {
         Q_ASSERT(item != NULL);
 
         SaverWorkerJobType jobType = item->getJobType();
+        MetadataSavingCopy copy(item->getMetadata());
 
-        if (jobType == JobTypeRead) {
-            readItem(item);
-        } else if (jobType == JobTypeWrite) {
-            writeItem(item);
+        if (jobType == JobTypeWrite) {
+            copy.readFromMetadata();
+            copy.saveToFile();
+        } else if (jobType == JobTypeRead) {
+            copy.readFromFile();
+            copy.saveToMetadata();
         }
 
         return true;
-    }
-
-    void BackupSaverWorker::readItem(SaverWorkerJobItem *item) {
-        Models::ArtworkMetadata *metadata = item->getMetadata();
-
-        QString path = metadata->getFilepath() + Constants::METADATA_BACKUP_EXTENSION;
-        QFile file(path);
-        if (file.exists() && file.open(QIODevice::ReadOnly)) {
-            QHash<QString, QString> dict;
-
-            QDataStream in(&file);   // read the data
-            in >> dict;
-            file.close();
-
-            QString keywordsString = dict.value("keywords", "");
-            QStringList keywords = keywordsString.split(QChar(','), QString::SkipEmptyParts);
-
-            if (metadata->initialize(
-                    dict.value("title", ""),
-                    dict.value("description", ""),
-                    keywords,
-                    false)) {
-                metadata->markModified();
-            }
-        }
-    }
-
-    void BackupSaverWorker::writeItem(SaverWorkerJobItem *item) {
-        Helpers::TempMetadataCopy copy(item->getMetadata());
-
-        QString path = copy.getFilepath() + QLatin1String(Constants::METADATA_BACKUP_EXTENSION);
-        const QHash<QString, QString> &dict = copy.getInfo();
-        QFile file(path);
-        if (file.open(QIODevice::WriteOnly)) {
-            QDataStream out(&file);   // write the data
-            out << dict;
-            file.close();
-        }
     }
 }
