@@ -12,7 +12,6 @@ SOURCES += main.cpp \
     Models/artworksrepository.cpp \
     Models/combinedartworksmodel.cpp \
     Helpers/indiceshelper.cpp \
-    Models/iptcprovider.cpp \
     Models/artworkuploader.cpp \
     Models/artworksprocessor.cpp \
     Models/uploadinforepository.cpp \
@@ -43,7 +42,6 @@ SOURCES += main.cpp \
     Helpers/loggingworker.cpp \
     Helpers/logger.cpp \
     Models/logsmodel.cpp \
-    Helpers/exiftoolwrapper.cpp \
     Models/filteredartitemsproxymodel.cpp \
     Helpers/filenameshelpers.cpp \
     Helpers/keywordvalidator.cpp \
@@ -101,7 +99,6 @@ HEADERS += \
     Models/abstractlistmodel.h \
     Helpers/constants.h \
     Helpers/appsettings.h \
-    Models/iptcprovider.h \
     Helpers/exiftoolwrapper.h \
     Models/artworkuploader.h \
     Helpers/curlwrapper.h \

@@ -42,6 +42,7 @@ namespace Helpers {
         Q_INVOKABLE void beforeDestruction();
         Q_INVOKABLE void revealLogFile();
         Q_INVOKABLE void reportOpen();
+        Q_INVOKABLE void cleanupLocalLibrary() const;
 
     private:
         Commands::CommandManager *m_CommandManager;

@@ -61,7 +61,6 @@
 #include "Helpers/updateservice.h"
 #include "Models/artitemsmodel.h"
 #include "Models/settingsmodel.h"
-#include "Models/iptcprovider.h"
 #include "Helpers/appsettings.h"
 #include "Models/ziparchiver.h"
 #include "Helpers/constants.h"
@@ -181,8 +180,6 @@ int main(int argc, char *argv[]) {
     Models::ArtworksRepository artworkRepository;
     Models::ArtItemsModel artItemsModel;
     Models::CombinedArtworksModel combinedArtworksModel;
-    Models::IptcProvider iptcProvider;
-    iptcProvider.setLocalLibrary(&localLibrary);
     Models::UploadInfoRepository uploadInfoRepository;
     Models::WarningsManager warningsManager;
     Models::SettingsModel settingsModel;
@@ -209,7 +206,6 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&artItemsModel);
     commandManager.InjectDependency(&filteredArtItemsModel);
     commandManager.InjectDependency(&combinedArtworksModel);
-    commandManager.InjectDependency(&iptcProvider);
     commandManager.InjectDependency(&artworkUploader);
     commandManager.InjectDependency(&uploadInfoRepository);
     commandManager.InjectDependency(&warningsManager);
@@ -248,7 +244,6 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("artworkRepository", &artworkRepository);
     rootContext->setContextProperty("combinedArtworks", &combinedArtworksModel);
     rootContext->setContextProperty("appSettings", &appSettings);
-    rootContext->setContextProperty("iptcProvider", &iptcProvider);
     rootContext->setContextProperty("artworkUploader", &artworkUploader);
     rootContext->setContextProperty("uploadInfos", &uploadInfoRepository);
     rootContext->setContextProperty("logsModel", &logsModel);

@@ -23,7 +23,6 @@
 #include "../Models/artworksrepository.h"
 #include "../Models/artitemsmodel.h"
 #include "../Models/combinedartworksmodel.h"
-#include "../Models/iptcprovider.h"
 #include "../Models/artworkuploader.h"
 #include "../Models/uploadinforepository.h"
 #include "../Models/warningsmanager.h"
@@ -67,11 +66,6 @@ void Commands::CommandManager::InjectDependency(Models::FilteredArtItemsProxyMod
 void Commands::CommandManager::InjectDependency(Models::CombinedArtworksModel *combinedArtworksModel) {
     Q_ASSERT(combinedArtworksModel != NULL); m_CombinedArtworksModel = combinedArtworksModel;
     m_CombinedArtworksModel->setCommandManager(this);
-}
-
-void Commands::CommandManager::InjectDependency(Models::IptcProvider *iptcProvider) {
-    Q_ASSERT(iptcProvider != NULL); m_IptcProvider = iptcProvider;
-    m_IptcProvider->setCommandManager(this);
 }
 
 void Commands::CommandManager::InjectDependency(Models::ArtworkUploader *artworkUploader) {
@@ -221,12 +215,6 @@ void Commands::CommandManager::combineArtworks(const QVector<Models::ArtItemInfo
     }
 }
 
-void Commands::CommandManager::setArtworksForIPTCProcessing(const QVector<Models::ArtworkMetadata*> &artworks) const
-{
-    if (m_IptcProvider) {
-        m_IptcProvider->setArtworks(artworks);
-    }
-}
 
 void Commands::CommandManager::setArtworksForUpload(const QVector<Models::ArtworkMetadata *> &artworks) const
 {
@@ -338,6 +326,8 @@ void Commands::CommandManager::setupSpellCheckSuggestions(SpellCheck::ISpellChec
 }
 
 void Commands::CommandManager::saveMetadata(Models::ArtworkMetadata *metadata) const {
+    saveLocalLibraryAsync();
+
     if (m_SettingsModel->getSaveBackups()) {
         m_MetadataSaverService->saveArtwork(metadata);
     }
@@ -352,6 +342,12 @@ void Commands::CommandManager::reportUserAction(Conectivity::UserAction userActi
 void Commands::CommandManager::saveLocalLibraryAsync() const {
     if (m_LocalLibrary) {
         m_LocalLibrary->saveLibraryAsync();
+    }
+}
+
+void Commands::CommandManager::cleanupLocalLibraryAsync() const {
+    if (m_LocalLibrary) {
+        m_LocalLibrary->cleanupLocalLibraryAsync();
     }
 }
 

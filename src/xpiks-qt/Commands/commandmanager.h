@@ -42,7 +42,6 @@ namespace Models {
     class FilteredArtItemsProxyModel;
     class ArtItemInfo;
     class CombinedArtworksModel;
-    class IptcProvider;
     class ArtworkUploader;
     class UploadInfoRepository;
     class WarningsManager;
@@ -87,7 +86,6 @@ namespace Commands {
             m_ArtItemsModel(NULL),
             m_FilteredItemsModel(NULL),
             m_CombinedArtworksModel(NULL),
-            m_IptcProvider(NULL),
             m_ArtworkUploader(NULL),
             m_UploadInfoRepository(NULL),
             m_WarningsManager(NULL),
@@ -112,7 +110,6 @@ namespace Commands {
         void InjectDependency(Models::ArtItemsModel *artItemsModel);
         void InjectDependency(Models::FilteredArtItemsProxyModel *filteredItemsModel);
         void InjectDependency(Models::CombinedArtworksModel *combinedArtworksModel);
-        void InjectDependency(Models::IptcProvider *iptcProvider);
         void InjectDependency(Models::ArtworkUploader *artworkUploader);
         void InjectDependency(Models::UploadInfoRepository *uploadInfoRepository);
         void InjectDependency(Models::WarningsManager *warningsManager);
@@ -149,7 +146,6 @@ namespace Commands {
 
         void combineArtwork(Models::ArtItemInfo* itemInfo) const;
         void combineArtworks(const QVector<Models::ArtItemInfo*> &artworks) const;
-        void setArtworksForIPTCProcessing(const QVector<Models::ArtworkMetadata *> &artworks) const;
         void setArtworksForUpload(const QVector<Models::ArtworkMetadata*> &artworks) const;
         void setArtworksForZipping(const QVector<Models::ArtworkMetadata*> &artworks) const;
         virtual void connectArtworkSignals(Models::ArtworkMetadata *metadata) const;
@@ -169,6 +165,7 @@ namespace Commands {
         void saveMetadata(Models::ArtworkMetadata *metadata) const;
         void reportUserAction(Conectivity::UserAction userAction) const;
         void saveLocalLibraryAsync() const;
+        void cleanupLocalLibraryAsync() const;
         void afterConstructionCallback();
         void beforeDestructionCallback() const;
 
@@ -188,7 +185,6 @@ namespace Commands {
         Models::ArtItemsModel *m_ArtItemsModel;
         Models::FilteredArtItemsProxyModel *m_FilteredItemsModel;
         Models::CombinedArtworksModel *m_CombinedArtworksModel;
-        Models::IptcProvider *m_IptcProvider;
         Models::ArtworkUploader *m_ArtworkUploader;
         Models::UploadInfoRepository *m_UploadInfoRepository;
         Models::WarningsManager *m_WarningsManager;

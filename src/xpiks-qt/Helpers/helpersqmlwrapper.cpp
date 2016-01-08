@@ -75,6 +75,10 @@ namespace Helpers {
         m_CommandManager->reportUserAction(Conectivity::UserActionOpen);
     }
 
+    void Helpers::HelpersQmlWrapper::cleanupLocalLibrary() const {
+        m_CommandManager->cleanupLocalLibraryAsync();
+    }
+
 }
 
 
