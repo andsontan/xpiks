@@ -238,6 +238,15 @@ ApplicationWindow {
             }
 
             MenuItem {
+                text: qsTr("&Overwrite metadata in selected")
+                enabled: filteredArtItemsModel.selectedArtworksCount > 0
+                onTriggered: {
+                    console.log("Overwrite metadata triggered")
+                    Common.launchDialog("Dialogs/ExportMetadata.qml", applicationWindow, {overwriteAll: true})
+                }
+            }
+
+            MenuItem {
                 text: qsTr("&Check spelling in selected")
                 enabled: filteredArtItemsModel.selectedArtworksCount > 0
                 onTriggered: {

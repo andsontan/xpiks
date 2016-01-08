@@ -34,6 +34,7 @@ Item {
     id: metadataExportComponent
     anchors.fill: parent
     property bool isInProgress: false
+    property bool overwriteAll: false
 
     function closePopup() {
         metadataExportComponent.isInProgress = false
@@ -154,7 +155,7 @@ Item {
 
                     StyledText {
                         anchors.right: parent.right
-                        text: qsTr("%1 modified image(s) selected").arg(filteredArtItemsModel.getModifiedSelectedCount())
+                        text: qsTr("%1 modified image(s) selected").arg(filteredArtItemsModel.getModifiedSelectedCount(overwriteAll))
                         color: Colors.defaultInputBackground
                     }
                 }
@@ -190,7 +191,7 @@ Item {
                             spinner.height = spinner.width
                             dialogWindow.height += spinner.height + column.spacing
                             spinner.running = true
-                            filteredArtItemsModel.saveSelectedArtworks(useBackupsCheckbox.checked)
+                            filteredArtItemsModel.saveSelectedArtworks(overwriteAll, useBackupsCheckbox.checked)
                         }
 
                         Connections {

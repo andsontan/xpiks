@@ -260,7 +260,7 @@ namespace Models {
         emit artworksChanged();
     }
 
-    void ArtItemsModel::saveSelectedArtworks(const QVector<int> &selectedIndices, bool useBackups) {
+    void ArtItemsModel::saveSelectedArtworks(const QVector<int> &selectedIndices, bool overwriteAll, bool useBackups) {
         QVector<ArtworkMetadata*> modifiedSelectedArtworks;
         int count = selectedIndices.count();
         modifiedSelectedArtworks.reserve(count/2);
@@ -268,10 +268,10 @@ namespace Models {
         for (int i = 0; i < count; ++i) {
             int index = selectedIndices.at(i);
             ArtworkMetadata *metadata = getArtwork(index);
-            if (metadata != NULL &&
-                    metadata->getIsSelected() &&
-                    metadata->isModified()) {
-                modifiedSelectedArtworks.append(metadata);
+            if (metadata != NULL && metadata->getIsSelected()) {
+                if (metadata->isModified() || overwriteAll) {
+                    modifiedSelectedArtworks.append(metadata);
+                }
             }
         }
 

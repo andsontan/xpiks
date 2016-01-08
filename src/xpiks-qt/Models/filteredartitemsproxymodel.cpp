@@ -109,11 +109,11 @@ namespace Models {
         artItemsModel->updateSelectedArtworks(indices);
     }
 
-    void FilteredArtItemsProxyModel::saveSelectedArtworks(bool useBackups) {
+    void FilteredArtItemsProxyModel::saveSelectedArtworks(bool overwriteAll, bool useBackups) {
         // former patchSelectedArtworks
         QVector<int> indices = getSelectedOriginalIndices();
         ArtItemsModel *artItemsModel = getArtItemsModel();
-        artItemsModel->saveSelectedArtworks(indices, useBackups);
+        artItemsModel->saveSelectedArtworks(indices, overwriteAll, useBackups);
     }
 
     void FilteredArtItemsProxyModel::setSelectedForUpload() {
@@ -139,12 +139,12 @@ namespace Models {
         m_CommandManager->submitForSpellCheck(selectedArtworks);
     }
 
-    int FilteredArtItemsProxyModel::getModifiedSelectedCount() const {
+    int FilteredArtItemsProxyModel::getModifiedSelectedCount(bool overwriteAll) const {
         QVector<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
         int modifiedCount = 0;
 
         foreach (const ArtworkMetadata *metadata, selectedArtworks) {
-            if (metadata->isModified()) {
+            if (metadata->isModified() || overwriteAll) {
                 modifiedCount++;
             }
         }

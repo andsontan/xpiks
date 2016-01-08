@@ -54,12 +54,12 @@ namespace Models {
         Q_INVOKABLE void setSelectedItemsSaved();
         Q_INVOKABLE void removeSelectedArtworks();
         Q_INVOKABLE void updateSelectedArtworks();
-        Q_INVOKABLE void saveSelectedArtworks(bool useBackups);
+        Q_INVOKABLE void saveSelectedArtworks(bool overwriteAll, bool useBackups);
         Q_INVOKABLE void setSelectedForUpload();
         Q_INVOKABLE void setSelectedForZipping();
         Q_INVOKABLE bool areSelectedArtworksSaved();
         Q_INVOKABLE void spellCheckSelected();
-        Q_INVOKABLE int getModifiedSelectedCount() const;
+        Q_INVOKABLE int getModifiedSelectedCount(bool overwriteAll=false) const;
         Q_INVOKABLE void removeArtworksDirectory(int index);
         Q_INVOKABLE void checkForWarnings();
         Q_INVOKABLE int getItemsCount() const { return rowCount(); }
