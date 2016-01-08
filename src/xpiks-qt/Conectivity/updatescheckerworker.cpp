@@ -52,8 +52,7 @@
 namespace Conectivity {
 
     UpdatesCheckerWorker::UpdatesCheckerWorker():
-        m_NetworkManager(NULL),
-        m_Loop(NULL)
+        m_NetworkManager(NULL)
     {
     }
 
@@ -61,20 +60,12 @@ namespace Conectivity {
         if (m_NetworkManager != NULL) {
             delete m_NetworkManager;
         }
-
-        if (m_Loop != NULL) {
-            delete m_Loop;
-        }
     }
 
     void UpdatesCheckerWorker::initWorker() {
         m_NetworkManager = new QNetworkAccessManager();
         QObject::connect(m_NetworkManager, SIGNAL(finished(QNetworkReply*)),
                          this, SLOT(replyReceived(QNetworkReply*)));
-
-       m_Loop = new QEventLoop();
-       QObject::connect(this, SIGNAL(requestFinished()),
-                        m_Loop, SLOT(quit()));
     }
 
     void UpdatesCheckerWorker::processOneItem() {
@@ -91,8 +82,6 @@ namespace Conectivity {
     void UpdatesCheckerWorker::process() {
         initWorker();
         processOneItem();
-        m_Loop->exec();
-        qInfo() << "Updates checking event loop finished";
     }
 
     void UpdatesCheckerWorker::replyReceived(QNetworkReply *networkReply) {
@@ -128,6 +117,9 @@ namespace Conectivity {
         }
 
         networkReply->deleteLater();
+        emit stopped();
         emit requestFinished();
+
+        qInfo() << "Updates checking loop finished";
     }
 }

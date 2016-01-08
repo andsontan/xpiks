@@ -51,7 +51,6 @@ namespace Conectivity {
 
     private:
         QNetworkAccessManager *m_NetworkManager;
-        QEventLoop *m_Loop;
     };
 }
 

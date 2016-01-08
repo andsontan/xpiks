@@ -365,7 +365,7 @@ void Commands::CommandManager::afterConstructionCallback()  {
     QString endpoint = Encryption::decodeText(reportingEndpoint, "reporting");
     m_TelemetryService->setEndpoint(endpoint);
 
-#if !defined(Q_OS_LINUX) && !defined(_WIN32)
+#if !defined(Q_OS_LINUX)
     m_UpdateService->startChecking();
 #endif
 }
