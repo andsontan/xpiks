@@ -27,6 +27,7 @@
 #include <QFile>
 #include <QTemporaryFile>
 #include <QTextStream>
+#include <QImageReader>
 #include "../Models/settingsmodel.h"
 #include "../Models/artworkmetadata.h"
 #include "../Helpers/constants.h"
@@ -238,6 +239,7 @@ namespace MetadataIO {
         int size = m_ItemsToRead.size();
         for (int i = 0; i < size; ++i) {
             Models::ArtworkMetadata *metadata = m_ItemsToRead.at(i);
+
             MetadataSavingCopy copy(metadata);
             if (copy.readFromFile()) {
                 const QString &filepath = metadata->getFilepath();

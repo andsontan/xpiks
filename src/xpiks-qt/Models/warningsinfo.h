@@ -24,6 +24,7 @@
 
 #include <QStringList>
 #include <QString>
+#include <QImageReader>
 #include "artiteminfo.h"
 
 namespace Models {
@@ -47,7 +48,12 @@ namespace Models {
         void updateData() {
             ArtworkMetadata *metadata = m_ArtworkInfo->getOrigin();
             m_Filepath = metadata->getFilepath();
-            m_Dimensions = metadata->getSize();
+            if (metadata->isInitialized()) {
+                m_Dimensions = metadata->getSize();
+            } else {
+                QImageReader reader(m_Filepath);
+                m_Dimensions = reader.size();
+            }
             m_ArtworkIndex = m_ArtworkInfo->getOriginalIndex();
             m_KeywordsCount = metadata->getKeywordsCount();
             m_DescriptionLength = metadata->getDescription().length();
