@@ -458,12 +458,12 @@ namespace Models {
 
         if (needToUpdate) {
             emit dataChanged(index, index, QVector<int>() << IsModifiedRole << roleToUpdate);
-        }
 
-        if (role == EditArtworkDescriptionRole ||
-                role == EditArtworkTitleRole) {
-            if (metadata->isInitialized()) {
-                m_CommandManager->saveMetadata(metadata);
+            if (role == EditArtworkDescriptionRole ||
+                    role == EditArtworkTitleRole) {
+                if (metadata->isInitialized()) {
+                    m_CommandManager->saveMetadata(metadata);
+                }
             }
         }
 
