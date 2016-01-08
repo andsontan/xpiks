@@ -34,8 +34,10 @@ Item {
     id: metadataImportComponent
     anchors.fill: parent
 
+    property bool isInProgress: false
+
     Keys.onEscapePressed: {
-        if (!iptcProvider.inProgress) {
+        if (!metadataImportComponent.isInProgress) {
             closePopup()
         }
 
@@ -43,12 +45,10 @@ Item {
     }
 
     function closePopup() {
-        iptcProvider.isLaunched = false
         metadataImportComponent.destroy()
     }
 
     Component.onCompleted: {
-        iptcProvider.ignoreAutosave = false
         focus = true
     }
 
@@ -140,7 +140,7 @@ Item {
 
                     StyledText {
                         anchors.right: parent.right
-                        text: qsTr("from %1 image(s)").arg(iptcProvider.itemsCount)
+                        text: qsTr("from %1 image(s)").arg(metadataIOCoordinator.processingItemsCount)
                         color: Colors.defaultInputBackground
                     }
                 }
@@ -154,10 +154,10 @@ Item {
                 }
 
                 StyledCheckbox {
+                    id: ignoreAutosavesCheckbox
                     text: qsTr("Ignore autosaves (.xpks)")
-                    enabled: settingsModel.saveBackups && !iptcProvider.inProgress
-                    checked: iptcProvider.ignoreAutosave
-                    onCheckedChanged: iptcProvider.ignoreAutosave = checked
+                    enabled: settingsModel.saveBackups && !metadataImportComponent.isInProgress
+                    checked: false
                 }
 
                 RowLayout {
@@ -169,25 +169,25 @@ Item {
                         id: importButton
                         width: 130
                         text: qsTr("Start Import")
-                        enabled: !iptcProvider.inProgress
+                        enabled: !metadataImportComponent.isInProgress
                         onClicked: {
                             text = qsTr("Importing...")
+                            metadataImportComponent.isInProgress = true
+
                             spinner.height = spinner.width
                             dialogWindow.height += spinner.height + column.spacing
                             spinner.running = true
-                            iptcProvider.resetModel()
-                            iptcProvider.importMetadata()
+
+                            metadataIOCoordinator.readMetadata(ignoreAutosavesCheckbox.checked)
                         }
 
                         Connections {
                             target: metadataIOCoordinator
                             onMetadataReadingFinished: {
-                                console.log("Import finished in UI")
+                                console.log("Import finished UI handler")
                                 importButton.text = qsTr("Start Import")
-                                artItemsModel.updateLastN(iptcProvider.itemsCount)
-                                if (!iptcProvider.isError) {
-                                    closePopup()
-                                }
+                                artItemsModel.updateLastN(metadataIOCoordinator.processingItemsCount)
+                                closePopup()
                             }
                         }
                     }

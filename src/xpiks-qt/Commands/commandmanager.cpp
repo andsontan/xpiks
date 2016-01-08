@@ -260,10 +260,9 @@ void Commands::CommandManager::connectArtworkSignals(Models::ArtworkMetadata *me
     }
 }
 
-void Commands::CommandManager::readMetadata(const QVector<Models::ArtworkMetadata *> &artworks,
-                                            bool ignoreBackup) const {
+void Commands::CommandManager::readMetadata(const QVector<Models::ArtworkMetadata *> &artworks) const {
     if (m_MetadataIOCoordinator) {
-        m_MetadataIOCoordinator->readMetadata(artworks, ignoreBackup);
+        m_MetadataIOCoordinator->readMetadata(artworks);
     }
 }
 

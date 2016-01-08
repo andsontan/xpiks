@@ -32,7 +32,7 @@
 
 Commands::CommandResult *Commands::AddArtworksCommand::execute(const CommandManager *commandManager) const
 {
-    qDebug() << "Add artworks command:" << m_FilePathes << "files";
+    qDebug() << "Add artworks command:" << m_FilePathes.length() << "files";
     Models::ArtworksRepository *artworksRepository = commandManager->getArtworksRepository();
     Models::ArtItemsModel *artItemsModel = commandManager->getArtItemsModel();
 
@@ -72,6 +72,7 @@ Commands::CommandResult *Commands::AddArtworksCommand::execute(const CommandMana
     artworksRepository->endAccountingFiles(filesWereAccounted);
 
     if (newFilesCount > 0) {
+        commandManager->readMetadata(artworksToImport);
         artworksRepository->updateCountsForExistingDirectories();
         artItemsModel->raiseArtworksAdded(newFilesCount);
 

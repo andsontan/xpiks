@@ -70,7 +70,7 @@ namespace Models {
 
     void IptcProvider::doReadMetadata(const QVector<ArtworkMetadata *> &artworkList)
     {
-        m_CommandManager->readMetadata(artworkList, m_IgnoreAutosave);
+        m_CommandManager->readMetadata(artworkList);
         /*
         int artworksCount = artworkList.length();
 

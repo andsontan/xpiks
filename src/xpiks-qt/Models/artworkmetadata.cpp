@@ -128,4 +128,11 @@ namespace Models {
         if (result > 0) { markModified(); }
         return result;
     }
+
+    void ArtworkMetadata::markModified() {
+        if (!m_IsModified) {
+            m_IsModified = true;
+            emit modifiedChanged(m_IsModified);
+        }
+    }
 }

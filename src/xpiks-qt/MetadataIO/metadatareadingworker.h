@@ -54,8 +54,7 @@ namespace MetadataIO {
         Q_OBJECT
     public:
         explicit MetadataReadingWorker(const QVector<Models::ArtworkMetadata *> &itemsToRead,
-                                       Models::SettingsModel *settingsModel,
-                                       bool ignoreBackups);
+                                       Models::SettingsModel *settingsModel);
         virtual ~MetadataReadingWorker();
 
     signals:
@@ -64,7 +63,7 @@ namespace MetadataIO {
 
     public slots:
         void process();
-        //void cancel();
+        void cancel();
 
     private slots:
         void innerProcessFinished(int exitCode, QProcess::ExitStatus exitStatus);
@@ -72,7 +71,6 @@ namespace MetadataIO {
     public:
         const QHash<QString, ImportDataResult> &getImportResult() const { return m_ImportResult; }
         const QVector<Models::ArtworkMetadata *> &getArtworksToImport() const { return m_ItemsToRead; }
-        bool getIgnoreBackups() const { return m_IgnoreBackups; }
 
     private:
         void initWorker();
@@ -85,7 +83,6 @@ namespace MetadataIO {
         QHash<QString, ImportDataResult> m_ImportResult;
         QProcess *m_ExiftoolProcess;
         Models::SettingsModel *m_SettingsModel;
-        volatile bool m_IgnoreBackups;
     };
 }
 

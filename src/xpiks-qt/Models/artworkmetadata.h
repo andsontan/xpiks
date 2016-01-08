@@ -101,7 +101,7 @@ namespace Models {
         virtual int appendKeywords(const QStringList &keywordsList);
 
     public:
-        void markModified() { if (!m_IsModified) { m_IsModified = true; emit modifiedChanged(m_IsModified); } }
+        void markModified();
         void setModified() { m_IsModified = true; }
         void resetModified() { m_IsModified = false; }
         void requestFocus(int directionSign) { emit focusRequested(directionSign); }

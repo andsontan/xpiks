@@ -103,12 +103,10 @@ namespace MetadataIO {
     }
 
     MetadataReadingWorker::MetadataReadingWorker(const QVector<Models::ArtworkMetadata *> &itemsToRead,
-                                                 Models::SettingsModel *settingsModel,
-                                                 bool ignoreBackups):
+                                                 Models::SettingsModel *settingsModel):
         m_ItemsToRead(itemsToRead),
         m_ExiftoolProcess(NULL),
-        m_SettingsModel(settingsModel),
-        m_IgnoreBackups(ignoreBackups)
+        m_SettingsModel(settingsModel)
     {
     }
 
@@ -141,7 +139,6 @@ namespace MetadataIO {
             m_ExiftoolProcess->start(exiftoolCommand);
 
             bool success = m_ExiftoolProcess->waitForFinished();
-            qDebug() << "Exiftool process finished with code" << m_ExiftoolProcess->exitCode();
 
             if (success && m_ExiftoolProcess->exitStatus() == QProcess::NormalExit) {
                 QByteArray stdoutByteArray = m_ExiftoolProcess->readAllStandardOutput();
@@ -156,9 +153,18 @@ namespace MetadataIO {
         emit finished(true);
     }
 
+    void MetadataReadingWorker::cancel() {
+        qInfo() << "Cancelling reading metadata...";
+
+        if (m_ExiftoolProcess && m_ExiftoolProcess->state() != QProcess::NotRunning) {
+            m_ExiftoolProcess->kill();
+            qDebug() << "Exiftool process killed";
+        }
+    }
+
     void MetadataReadingWorker::innerProcessFinished(int exitCode, QProcess::ExitStatus exitStatus) {
         Q_UNUSED(exitStatus);
-        qDebug() << "Exiftool finished with exitcode " << exitCode;
+        qDebug() << "Exiftool finished with exitcode" << exitCode;
     }
 
     void MetadataReadingWorker::initWorker() {

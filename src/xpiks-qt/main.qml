@@ -1278,8 +1278,8 @@ ApplicationWindow {
                                                         id: descriptionTextInput
                                                         width: descriptionFlick.width
                                                         height: descriptionFlick.height
-                                                        font.pixelSize: 12 * settingsModel.keywordSizeScale
                                                         text: description
+                                                        font.pixelSize: 12 * settingsModel.keywordSizeScale
                                                         color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.defaultInputBackground
                                                         onTextChanged: model.editdescription = text
 
@@ -1351,9 +1351,9 @@ ApplicationWindow {
                                                     StyledTextEdit {
                                                         id: titleTextInput
                                                         font.pixelSize: 12 * settingsModel.keywordSizeScale
-                                                        text: title
                                                         width: titleFlick.width
                                                         height: titleFlick.height
+                                                        text: title
                                                         color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.defaultInputBackground
                                                         onTextChanged: model.edittitle = text
                                                         KeyNavigation.backtab: descriptionTextInput
