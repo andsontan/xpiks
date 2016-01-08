@@ -255,6 +255,8 @@ void Commands::CommandManager::readMetadata(const QVector<Models::ArtworkMetadat
 }
 
 void Commands::CommandManager::writeMetadata(const QVector<Models::ArtworkMetadata *> &artworks, bool useBackups) const {
+    saveLocalLibraryAsync();
+
     if (m_MetadataIOCoordinator) {
         m_MetadataIOCoordinator->writeMetadata(artworks, useBackups);
     }
@@ -326,8 +328,6 @@ void Commands::CommandManager::setupSpellCheckSuggestions(SpellCheck::ISpellChec
 }
 
 void Commands::CommandManager::saveMetadata(Models::ArtworkMetadata *metadata) const {
-    saveLocalLibraryAsync();
-
     if (m_SettingsModel->getSaveBackups()) {
         m_MetadataSaverService->saveArtwork(metadata);
     }
