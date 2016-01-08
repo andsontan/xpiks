@@ -49,7 +49,7 @@ namespace Models {
     }
 
     bool ArtworkMetadata::initialize(const QString &title,
-                                     const QString &description, const QString &rawKeywords, bool overwrite) {
+                                     const QString &description, const QStringList &rawKeywords, bool overwrite) {
         bool anythingModified = false;
 
         if (overwrite || (isTitleEmpty() && !title.isEmpty())) {
@@ -69,8 +69,7 @@ namespace Models {
             BasicKeywordsModel::addKeywords(rawKeywords);
             endResetModel();
         } else if (!rawKeywords.isEmpty()) {
-            QStringList keywordsToAppend = rawKeywords.split(",", QString::SkipEmptyParts);
-            int appendedCount = appendKeywords(keywordsToAppend);
+            int appendedCount = appendKeywords(rawKeywords);
             anythingModified = anythingModified || (appendedCount > 0);
         }
 

@@ -22,9 +22,13 @@
 #include "metadataiocoordinator.h"
 #include <QThread>
 #include <QDebug>
+#include <QHash>
 #include "metadatareadingworker.h"
-#include "../Commands/commandmanager.h"
+#include "backupsaverservice.h"
+#include "../Models/artworkmetadata.h"
 #include "../Models/settingsmodel.h"
+#include "../Commands/commandmanager.h"
+#include "../Suggestion/locallibrary.h"
 
 namespace MetadataIO {
     MetadataIOCoordinator::MetadataIOCoordinator():
@@ -34,25 +38,61 @@ namespace MetadataIO {
 
     void MetadataIOCoordinator::workerFinished(bool success) {
         qDebug() << "Metadata reading finished with status" << success;
+
+        const QHash<QString, ImportDataResult> &importResult = m_ReadingWorker->getImportResult();
+        const QVector<Models::ArtworkMetadata*> &itemsToRead = m_ReadingWorker->getArtworksToImport();
+
+        qDebug() << "Setting imported metadata";
+        int size = itemsToRead.size();
+        for (int i = 0; i < size; ++i) {
+            Models::ArtworkMetadata *metadata = itemsToRead.at(i);
+            const QString &filepath = metadata->getFilepath();
+
+            if (importResult.contains(filepath)) {
+                const ImportDataResult &importResultItem = importResult.value(filepath);
+                metadata->initialize(importResultItem.Title,
+                                     importResultItem.Description,
+                                     importResultItem.Keywords);
+            }
+        }
+
+        afterImportHandler(itemsToRead, m_ReadingWorker->getIgnoreBackups());
+
+        qDebug() << "Metadata import finished";
+        m_ReadingWorker->shutdown();
+
         emit metadataReadingFinished();
     }
 
     void MetadataIOCoordinator::readMetadata(const QVector<Models::ArtworkMetadata *> &artworksToRead, bool ignoreBackups) {
-        MetadataReadingWorker *worker = new MetadataReadingWorker(artworksToRead,
-                                                                  m_CommandManager,
-                                                                  ignoreBackups);
+        m_ReadingWorker = new MetadataReadingWorker(artworksToRead,
+                                                    m_CommandManager->getSettingsModel(),
+                                                    ignoreBackups);
         QThread *thread = new QThread();
-        worker->moveToThread(thread);
+        m_ReadingWorker->moveToThread(thread);
 
-        QObject::connect(thread, SIGNAL(started()), worker, SLOT(process()));
-        QObject::connect(worker, SIGNAL(stopped()), thread, SLOT(quit()));
+        QObject::connect(thread, SIGNAL(started()), m_ReadingWorker, SLOT(process()));
+        QObject::connect(m_ReadingWorker, SIGNAL(stopped()), thread, SLOT(quit()));
 
-        QObject::connect(worker, SIGNAL(stopped()), worker, SLOT(deleteLater()));
+        QObject::connect(m_ReadingWorker, SIGNAL(stopped()), m_ReadingWorker, SLOT(deleteLater()));
         QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
 
-        QObject::connect(worker, SIGNAL(finished(bool)), this, SLOT(workerFinished(bool)));
+        QObject::connect(m_ReadingWorker, SIGNAL(finished(bool)), this, SLOT(workerFinished(bool)));
 
         thread->start();
+    }
+
+    void MetadataIOCoordinator::afterImportHandler(const QVector<Models::ArtworkMetadata*> &itemsToRead, bool ignoreBackups) {
+        Models::SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
+
+        if (!ignoreBackups && settingsModel->getSaveBackups()) {
+            BackupSaverService *saverService = m_CommandManager->getBackupSaverService();
+            //saverService->readArtworks(itemsToRead);
+        }
+
+        m_CommandManager->addToLibrary(itemsToRead);
+        m_CommandManager->saveLocalLibraryAsync();
+        m_CommandManager->submitForSpellCheck(itemsToRead);
     }
 }
 

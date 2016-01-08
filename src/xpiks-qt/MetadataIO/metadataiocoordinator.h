@@ -31,6 +31,8 @@ namespace Models {
 }
 
 namespace MetadataIO {
+    class MetadataReadingWorker;
+
     class MetadataIOCoordinator : public QObject, public Common::BaseEntity
     {
         Q_OBJECT
@@ -45,6 +47,12 @@ namespace MetadataIO {
 
     public:
         void readMetadata(const QVector<Models::ArtworkMetadata*> &artworksToRead, bool ignoreBackups);
+
+    private:
+        void afterImportHandler(const QVector<Models::ArtworkMetadata*> &itemsToRead, bool ignoreBackups);
+
+    private:
+        MetadataReadingWorker *m_ReadingWorker;
     };
 }
 

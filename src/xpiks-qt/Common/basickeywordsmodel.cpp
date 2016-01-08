@@ -511,12 +511,11 @@ namespace Common {
         m_SpellCheckResults.clear();
     }
 
-    void BasicKeywordsModel::addKeywords(const QString &rawKeywords) {
-        QStringList keywordsList = rawKeywords.split(",", QString::SkipEmptyParts);
-        int size = keywordsList.size();
+    void BasicKeywordsModel::addKeywords(const QStringList &rawKeywords) {
+        int size = rawKeywords.size();
 
         for (int i = 0; i < size; ++i) {
-            const QString &keyword = keywordsList.at(i).simplified();
+            const QString &keyword = rawKeywords.at(i).simplified();
             QString invariant = keyword.toLower();
 
             if (!m_KeywordsSet.contains(invariant)) {

@@ -52,10 +52,13 @@ namespace MetadataIO {
             in >> dict;
             file.close();
 
+            QString keywordsString = dict.value("keywords", "");
+            QStringList keywords = keywordsString.split(QChar(','), QString::SkipEmptyParts);
+
             if (metadata->initialize(
                     dict.value("title", ""),
                     dict.value("description", ""),
-                    dict.value("keywords", ""),
+                    keywords,
                     false)) {
                 metadata->markModified();
             }

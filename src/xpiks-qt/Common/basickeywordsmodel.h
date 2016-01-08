@@ -143,7 +143,7 @@ namespace Common {
     protected:
         virtual QHash<int, QByteArray> roleNames() const;
         void resetKeywords();
-        void addKeywords(const QString &rawKeywords);
+        void addKeywords(const QStringList &rawKeywords);
         void freeSpellCheckInfo();
 
     private:

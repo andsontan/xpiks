@@ -45,7 +45,7 @@ namespace Models {
 
     public:
         bool initialize(const QString &title,
-                        const QString &description, const QString &rawKeywords, bool overwrite = true);
+                        const QString &description, const QStringList &rawKeywords, bool overwrite = true);
 
     public:
         const QString &getFilepath() const { return m_ArtworkFilepath; }

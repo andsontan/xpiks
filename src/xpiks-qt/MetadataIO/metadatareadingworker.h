@@ -37,10 +37,6 @@ namespace Models {
     class SettingsModel;
 }
 
-namespace Commands {
-    class CommandManager;
-}
-
 namespace MetadataIO {
     class BackupSaverService;
 
@@ -48,7 +44,7 @@ namespace MetadataIO {
         QString FilePath;
         QString Title;
         QString Description;
-        QString Keywords;
+        QStringList Keywords;
         QSize Size;
     };
 
@@ -57,7 +53,7 @@ namespace MetadataIO {
         Q_OBJECT
     public:
         explicit MetadataReadingWorker(const QVector<Models::ArtworkMetadata *> &itemsToRead,
-                                       Commands::CommandManager *commandManager,
+                                       Models::SettingsModel *settingsModel,
                                        bool ignoreBackups);
         virtual ~MetadataReadingWorker();
 
@@ -72,18 +68,22 @@ namespace MetadataIO {
     private slots:
         void innerProcessFinished(int exitCode, QProcess::ExitStatus exitStatus);
 
+    public:
+        const QHash<QString, ImportDataResult> &getImportResult() const { return m_ImportResult; }
+        const QVector<Models::ArtworkMetadata *> &getArtworksToImport() const { return m_ItemsToRead; }
+        bool getIgnoreBackups() const { return m_IgnoreBackups; }
+        void shutdown() { emit stopped(); }
+
     private:
         void initWorker();
-        void afterImportHandler();
         QStringList createArgumentsList();
         void parseExiftoolOutput(const QByteArray &output);
-        void setAllMetadata();
 
     private:
         QVector<Models::ArtworkMetadata *> m_ItemsToRead;
         QHash<QString, ImportDataResult> m_ImportResult;
         QProcess *m_ExiftoolProcess;
-        Commands::CommandManager *m_CommandManager;
+        Models::SettingsModel *m_SettingsModel;
         volatile bool m_IgnoreBackups;
     };
 }

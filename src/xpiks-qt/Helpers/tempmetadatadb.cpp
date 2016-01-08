@@ -63,10 +63,13 @@ namespace Helpers {
             in >> dict;
             file.close();
 
+            QString keywordsString = dict.value("keywords", "");
+            QStringList keywords = keywordsString.split(QChar(','), QString::SkipEmptyParts);
+
             if (m_ArtworkMetadata->initialize(
                     dict.value("title", ""),
                     dict.value("description", ""),
-                    dict.value("keywords", ""),
+                    keywords,
                     false)) {
                 m_ArtworkMetadata->markModified();
             }

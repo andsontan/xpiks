@@ -27,11 +27,8 @@
 #include <QDir>
 #include <QTemporaryFile>
 #include <QTextStream>
-#include "backupsaverservice.h"
-#include "../Models/artworkmetadata.h"
 #include "../Models/settingsmodel.h"
-#include "../Commands/commandmanager.h"
-#include "../Suggestion/locallibrary.h"
+#include "../Models/artworkmetadata.h"
 
 #define SOURCEFILE QLatin1String("SourceFile")
 #define TITLE QLatin1String("Title")
@@ -43,6 +40,17 @@
 #define SUBJECT QLatin1String("Subject")
 
 namespace MetadataIO {
+    void parseJsonKeywords(const QJsonArray &array, ImportDataResult &result) {
+        int size = array.size();
+        QStringList keywords;
+        keywords.reserve(size);
+
+        for (int i = 0; i < size; ++i) {
+            keywords.append(array.at(i).toString());
+        }
+
+        result.Keywords = keywords;
+    }
 
     void jsonObjectToImportResult(const QJsonObject &object, ImportDataResult &result) {
         if (object.contains(SOURCEFILE)) {
@@ -64,23 +72,31 @@ namespace MetadataIO {
         }
 
         if (object.contains(KEYWORDS)) {
-            result.Keywords = object.value(KEYWORDS).toString();
+            QJsonValue keywords = object.value(KEYWORDS);
+            if (keywords.isArray()) {
+                parseJsonKeywords(keywords.toArray(), result);
+            } else {
+                qWarning() << "Keywords object in json is not array";
+                result.Keywords = object.value(KEYWORDS).toString().split(QChar(','), QString::SkipEmptyParts);
+            }
         } else if (object.contains(SUBJECT)) {
-            result.Keywords = object.value(SUBJECT).toString();
+            result.Keywords = object.value(SUBJECT).toString().split(QChar(','), QString::SkipEmptyParts);
         }
     }
 
     MetadataReadingWorker::MetadataReadingWorker(const QVector<Models::ArtworkMetadata *> &itemsToRead,
-                                                 Commands::CommandManager *commandManager,
+                                                 Models::SettingsModel *settingsModel,
                                                  bool ignoreBackups):
         m_ItemsToRead(itemsToRead),
         m_ExiftoolProcess(NULL),
-        m_CommandManager(commandManager),
+        m_SettingsModel(settingsModel),
         m_IgnoreBackups(ignoreBackups)
     {
     }
 
     MetadataReadingWorker::~MetadataReadingWorker() {
+        qDebug() << "Reading worker destroyed";
+
         if (m_ExiftoolProcess != NULL) {
             delete m_ExiftoolProcess;
         }
@@ -101,8 +117,7 @@ namespace MetadataIO {
             out.flush();
             file.close();
 
-            Models::SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
-            QString exiftoolPath = settingsModel->getExifToolPath();
+            QString exiftoolPath = m_SettingsModel->getExifToolPath();
             QString exiftoolCommand = QString("%1 -@ %2").arg(exiftoolPath).arg(file.fileName());
             qDebug() << "Starting exiftool with command:" << exiftoolCommand;
             m_ExiftoolProcess->start(exiftoolCommand);
@@ -113,11 +128,8 @@ namespace MetadataIO {
             if (success && m_ExiftoolProcess->exitStatus() == QProcess::NormalExit) {
                 QByteArray stdoutByteArray = m_ExiftoolProcess->readAllStandardOutput();
                 parseExiftoolOutput(stdoutByteArray);
-                setAllMetadata();
             }
         }
-
-        afterImportHandler();
 
         emit finished(true);
     }
@@ -134,18 +146,7 @@ namespace MetadataIO {
                          this, SLOT(innerProcessFinished(int,QProcess::ExitStatus)));
     }
 
-    void MetadataReadingWorker::afterImportHandler() {
-        Models::SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
 
-        if (!m_IgnoreBackups && settingsModel->getSaveBackups()) {
-            BackupSaverService *saverService = m_CommandManager->getBackupSaverService();
-            saverService->readArtworks(m_ItemsToRead);
-        }
-
-        m_CommandManager->addToLibrary(m_ItemsToRead);
-        m_CommandManager->saveLocalLibraryAsync();
-        m_CommandManager->submitForSpellCheck(m_ItemsToRead);
-    }
 
     QStringList MetadataReadingWorker::createArgumentsList() {
         QStringList arguments;
@@ -187,22 +188,6 @@ namespace MetadataIO {
             }
         } else {
             qWarning() << "Exiftool Json Error: Main element is not array";
-        }
-    }
-
-    void MetadataReadingWorker::setAllMetadata() {
-        qDebug() << "Setting imported metadata";
-        int size = m_ItemsToRead.size();
-        for (int i = 0; i < size; ++i) {
-            Models::ArtworkMetadata *metadata = m_ItemsToRead.at(i);
-            const QString &filepath = metadata->getFilepath();
-
-            if (m_ImportResult.contains(filepath)) {
-                const ImportDataResult &importResult = m_ImportResult.value(filepath);
-                metadata->initialize(importResult.Title,
-                                     importResult.Description,
-                                     importResult.Keywords);
-            }
         }
     }
 }
