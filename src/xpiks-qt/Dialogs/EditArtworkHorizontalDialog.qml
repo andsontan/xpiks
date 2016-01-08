@@ -317,7 +317,7 @@ Item {
                     id: keywordsWrapper
                     border.color: Colors.artworkActiveColor
                     border.width: flv.isFocused ? 1 : 0
-                    height: 155
+                    height: 255
                     anchors.left: parent.left
                     anchors.right: parent.right
                     color: Colors.defaultInputBackground

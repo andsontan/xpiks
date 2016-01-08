@@ -105,7 +105,7 @@ Item {
         Rectangle {
             id: dialogWindow
             width: previewImage.width < 650 ? 690 : previewImage.width + 40
-            height: parent.height - 100
+            height: parent.height - 60
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
@@ -135,7 +135,7 @@ Item {
                 id: fields
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 20
-                height: 230
+                height: 275
                 width: 650
                 anchors.horizontalCenter: parent.horizontalCenter
                 spacing: 0
@@ -323,7 +323,7 @@ Item {
                     id: keywordsWrapper
                     border.color: Colors.artworkActiveColor
                     border.width: flv.isFocused ? 1 : 0
-                    height: 105
+                    height: 145
                     anchors.left: parent.left
                     anchors.right: parent.right
                     color: Colors.defaultInputBackground
