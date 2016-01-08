@@ -102,28 +102,44 @@ Item {
         Rectangle {
             id: dialogWindow
             width: 380
-            height: 250
+            height: 130
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
 
-            ColumnLayout {
-                spacing: 10
+            Behavior on height {
+                NumberAnimation {
+                    duration: 200
+                    easing.type: Easing.InQuad
+                }
+            }
+
+            Column {
+                id: column
+                spacing: 20
                 anchors.fill: parent
                 anchors.margins: 20
 
-                RowLayout {
-                    Layout.fillWidth: true
+                add: Transition {
+                    NumberAnimation { properties: "x,y"; easing.type: Easing.InQuad; duration: 200 }
+                }
+
+                move: Transition {
+                    NumberAnimation { properties: "x,y"; easing.type: Easing.InQuad; duration: 200 }
+                }
+
+                Item {
+                    height: childrenRect.height
+                    anchors.left: parent.left
+                    anchors.right: parent.right
 
                     StyledText {
+                        anchors.left: parent.left
                         text: qsTr("Import existing metadata")
                     }
 
-                    Item {
-                        Layout.fillWidth: true
-                    }
-
                     StyledText {
+                        anchors.right: parent.right
                         text: qsTr("from %1 image(s)").arg(iptcProvider.itemsCount)
                         color: Colors.defaultInputBackground
                     }
@@ -131,26 +147,23 @@ Item {
 
                 StyledBusyIndicator {
                     id: spinner
-                    width: 200
-                    height: 200
+                    width: 150
+                    height: 0
                     anchors.horizontalCenter: parent.horizontalCenter
                     running: false
-                    visible: running
+                }
+
+                StyledCheckbox {
+                    text: qsTr("Ignore autosaves (.xpks)")
+                    enabled: settingsModel.saveBackups && !iptcProvider.inProgress
+                    checked: iptcProvider.ignoreAutosave
+                    onCheckedChanged: iptcProvider.ignoreAutosave = checked
                 }
 
                 RowLayout {
                     height: 24
-
-                    StyledCheckbox {
-                        text: qsTr("Ignore autosaves (.xpks)")
-                        enabled: settingsModel.saveBackups && !iptcProvider.inProgress
-                        checked: iptcProvider.ignoreAutosave
-                        onCheckedChanged: iptcProvider.ignoreAutosave = checked
-                    }
-
-                    Item {
-                        Layout.fillWidth: true
-                    }
+                    anchors.left: parent.left
+                    anchors.right: parent.right
 
                     StyledButton {
                         id: importButton
@@ -159,6 +172,8 @@ Item {
                         enabled: !iptcProvider.inProgress
                         onClicked: {
                             text = qsTr("Importing...")
+                            spinner.height = spinner.width
+                            dialogWindow.height += spinner.height + column.spacing
                             spinner.running = true
                             iptcProvider.resetModel()
                             iptcProvider.importMetadata()
@@ -178,7 +193,7 @@ Item {
                     }
 
                     Item {
-                        width: 10
+                        Layout.fillWidth: true
                     }
 
                     StyledButton {
