@@ -266,6 +266,12 @@ void Commands::CommandManager::readMetadata(const QVector<Models::ArtworkMetadat
     }
 }
 
+void Commands::CommandManager::writeMetadata(const QVector<Models::ArtworkMetadata *> &artworks, bool useBackups) const {
+    if (m_MetadataIOCoordinator) {
+        m_MetadataIOCoordinator->writeMetadata(artworks, useBackups);
+    }
+}
+
 void Commands::CommandManager::addToLibrary(const QVector<Models::ArtworkMetadata *> &artworks) const {
     if (m_LocalLibrary) {
         m_LocalLibrary->addToLibrary(artworks);

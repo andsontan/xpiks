@@ -32,33 +32,28 @@ namespace Models {
 
 namespace MetadataIO {
     class MetadataReadingWorker;
+    class MetadataWritingWorker;
 
     class MetadataIOCoordinator : public QObject, public Common::BaseEntity
     {
         Q_OBJECT
-        Q_PROPERTY(bool isImportInProgress READ getIsImportInProgress WRITE setIsImportInProgress NOTIFY isImportInProgressChanged)
         Q_PROPERTY(int processingItemsCount READ getProcessingItemsCount WRITE setProcessingItemsCount NOTIFY processingItemsCountChanged)
+        Q_PROPERTY(bool hasErrors READ getHasErrors WRITE setHasErrors NOTIFY hasErrorsChanged)
     public:
         MetadataIOCoordinator();
 
     signals:
         void metadataReadingFinished();
-        void isImportInProgressChanged(bool value);
+        void metadataWritingFinished();
         void processingItemsCountChanged(int value);
         void discardReadingSignal();
+        void hasErrorsChanged(bool value);
 
     private slots:
-        void workerFinished(bool success);
+        void readingWorkerFinished(bool success);
+        void writingWorkerFinished(bool success);
 
     public:
-        bool getIsImportInProgress() const { return m_IsImportInProgress; }
-        void setIsImportInProgress(bool value) {
-            if (m_IsImportInProgress != value) {
-                m_IsImportInProgress = value;
-                emit isImportInProgressChanged(value);
-            }
-        }
-
         int getProcessingItemsCount() const { return m_ProcessingItemsCount; }
         void setProcessingItemsCount(int value) {
             if (value != m_ProcessingItemsCount) {
@@ -67,8 +62,17 @@ namespace MetadataIO {
             }
         }
 
+        bool getHasErrors() const { return m_HasErrors; }
+        void setHasErrors(bool value) {
+            if (value != m_HasErrors) {
+                m_HasErrors = value;
+                emit hasErrorsChanged(value);
+            }
+        }
+
     public:
         void readMetadata(const QVector<Models::ArtworkMetadata*> &artworksToRead);
+        void writeMetadata(const QVector<Models::ArtworkMetadata*> &artworksToWrite, bool useBackups);
         Q_INVOKABLE void discardReading();
         Q_INVOKABLE void readMetadata(bool ignoreBackups);
 
@@ -78,10 +82,12 @@ namespace MetadataIO {
 
     private:
         MetadataReadingWorker *m_ReadingWorker;
+        MetadataWritingWorker *m_WritingWorker;
         int m_ProcessingItemsCount;
         volatile bool m_IsImportInProgress;
         volatile bool m_CanProcessResults;
         volatile bool m_IgnoreBackupsAtImport;
+        volatile bool m_HasErrors;
     };
 }
 

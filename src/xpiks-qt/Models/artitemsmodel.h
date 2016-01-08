@@ -91,7 +91,7 @@ namespace Models {
         /*Q_INVOKABLE*/ void setSelectedItemsSaved(const QVector<int> &selectedIndices);
         /*Q_INVOKABLE*/ void removeSelectedArtworks(QVector<int> &selectedIndices);
         /*Q_INVOKABLE*/ void updateSelectedArtworks(const QVector<int> &selectedIndices);
-        /*Q_INVOKABLE*/ void saveSelectedArtworks(const QVector<int> &selectedIndices);
+        /*Q_INVOKABLE*/ void saveSelectedArtworks(const QVector<int> &selectedIndices, bool useBackups);
 
         Q_INVOKABLE QObject *getArtworkItself(int index) const;
         Q_INVOKABLE QSize retrieveImageSize(int metadataIndex) const;

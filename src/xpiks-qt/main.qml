@@ -657,8 +657,6 @@ ApplicationWindow {
                                 var modifiedSelectedCount = filteredArtItemsModel.getModifiedSelectedCount();
 
                                 if (filteredArtItemsModel.selectedArtworksCount > 0 && modifiedSelectedCount > 0) {
-                                    iptcProvider.resetModel()
-                                    filteredArtItemsModel.saveSelectedArtworks()
                                     Common.launchDialog("Dialogs/ExportMetadata.qml", applicationWindow, {})
                                 } else {
                                     if (modifiedSelectedCount === 0) {

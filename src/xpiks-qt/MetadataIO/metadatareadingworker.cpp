@@ -24,11 +24,9 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QDebug>
-#include <QDir>
 #include <QFile>
 #include <QTemporaryFile>
 #include <QTextStream>
-#include <QDataStream>
 #include "../Models/settingsmodel.h"
 #include "../Models/artworkmetadata.h"
 #include "../Helpers/constants.h"
@@ -54,6 +52,21 @@ namespace MetadataIO {
         }
 
         result.Keywords = keywords;
+    }
+
+    bool parseStringKeywords(QString &keywords, ImportDataResult &result) {
+        bool parsed = false;
+        if (!keywords.isEmpty()) {
+            // old Xpiks bug when it called exiftool with wrong arguments
+            if (keywords.startsWith(QChar('"')) && keywords.endsWith('"')) {
+                keywords = keywords.mid(1, keywords.length() - 2);
+            }
+
+            result.Keywords = keywords.split(QChar(','), QString::SkipEmptyParts);
+            parsed = true;
+        }
+
+        return parsed;
     }
 
     void jsonObjectToImportResult(const QJsonObject &object, ImportDataResult &result) {
@@ -84,21 +97,19 @@ namespace MetadataIO {
                 keywordsSet = true;
             } else {
                 qWarning() << "Keywords object in json is not array";
-                QString keywordsStr = object.value(KEYWORDS).toString();
-                if (!keywordsStr.simplified().isEmpty()) {
-                    // old Xpiks bug when it called exiftool with wrong arguments
-                    if (keywordsStr.startsWith(QChar('"')) && keywordsStr.endsWith('"')) {
-                        keywordsStr = keywordsStr.mid(1, keywordsStr.length() - 2);
-                    }
-
-                    result.Keywords = keywordsStr.split(QChar(','), QString::SkipEmptyParts);
-                    keywordsSet = true;
-                }
+                QString keywordsStr = object.value(KEYWORDS).toString().trimmed();
+                keywordsSet = parseStringKeywords(keywordsStr, result);
             }
         }
 
         if (!keywordsSet && object.contains(SUBJECT)) {
-            result.Keywords = object.value(SUBJECT).toString().split(QChar(','), QString::SkipEmptyParts);
+            QJsonValue subject = object.value(SUBJECT);
+            if (subject.isArray()) {
+                parseJsonKeywords(subject.toArray(), result);
+            } else {
+                QString keywordsStr = object.value(SUBJECT).toString().trimmed();
+                parseStringKeywords(keywordsStr, result);
+            }
         }
     }
 
@@ -112,35 +123,36 @@ namespace MetadataIO {
 
     MetadataReadingWorker::~MetadataReadingWorker() {
         qDebug() << "Reading worker destroyed";
-
-        if (m_ExiftoolProcess != NULL) {
-            delete m_ExiftoolProcess;
-        }
     }
 
     void MetadataReadingWorker::process() {
+        bool success = false;
         initWorker();
 
-        QTemporaryFile file;
+        QTemporaryFile argumentsFile;
 
-        if (file.open()) {
-            QTextStream out(&file);
+        if (argumentsFile.open()) {
+            QTextStream out(&argumentsFile);
             QStringList exiftoolArguments = createArgumentsList();
             foreach (const QString &line, exiftoolArguments) {
                 out << line << endl;
             }
 
             out.flush();
-            file.close();
 
             QString exiftoolPath = m_SettingsModel->getExifToolPath();
-            QString exiftoolCommand = QString("%1 -@ %2").arg(exiftoolPath).arg(file.fileName());
-            qDebug() << "Starting exiftool with command:" << exiftoolCommand;
-            m_ExiftoolProcess->start(exiftoolCommand);
+            QStringList arguments;
+            arguments << "-@" << argumentsFile.fileName();
+            argumentsFile.close();
 
-            bool success = m_ExiftoolProcess->waitForFinished();
+            m_ExiftoolProcess->start(exiftoolPath, arguments);
 
-            if (success && m_ExiftoolProcess->exitStatus() == QProcess::NormalExit) {
+            success = m_ExiftoolProcess->waitForFinished();
+            success = success &&
+                    (m_ExiftoolProcess->exitCode() == 0) &&
+                    (m_ExiftoolProcess->exitStatus() == QProcess::NormalExit);
+
+            if (success) {
                 QByteArray stdoutByteArray = m_ExiftoolProcess->readAllStandardOutput();
                 parseExiftoolOutput(stdoutByteArray);
             }
@@ -150,7 +162,7 @@ namespace MetadataIO {
             }
         }
 
-        emit finished(true);
+        emit finished(success);
     }
 
     void MetadataReadingWorker::cancel() {
@@ -165,10 +177,14 @@ namespace MetadataIO {
     void MetadataReadingWorker::innerProcessFinished(int exitCode, QProcess::ExitStatus exitStatus) {
         Q_UNUSED(exitStatus);
         qDebug() << "Exiftool finished with exitcode" << exitCode;
+
+        QByteArray stderrByteArray = m_ExiftoolProcess->readAllStandardError();
+        QString stderrText(stderrByteArray);
+        qDebug() << "STDERR [Exiftool]:" << stderrText;
     }
 
     void MetadataReadingWorker::initWorker() {
-        m_ExiftoolProcess = new QProcess();
+        m_ExiftoolProcess = new QProcess(this);
 
         QObject::connect(m_ExiftoolProcess, SIGNAL(finished(int,QProcess::ExitStatus)),
                          this, SLOT(innerProcessFinished(int,QProcess::ExitStatus)));

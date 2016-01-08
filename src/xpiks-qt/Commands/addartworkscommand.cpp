@@ -80,9 +80,6 @@ Commands::CommandResult *Commands::AddArtworksCommand::execute(const CommandMana
         commandManager->recordHistoryItem(addArtworksItem);
     }
 
-    // set artworks for initial import
-    commandManager->setArtworksForIPTCProcessing(artworksToImport);
-
     AddArtworksCommandResult *result = new AddArtworksCommandResult(newFilesCount);
     return result;
 }

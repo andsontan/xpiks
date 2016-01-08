@@ -33,14 +33,15 @@ import "../StyledControls"
 Item {
     id: metadataExportComponent
     anchors.fill: parent
+    property bool isInProgress: false
 
     function closePopup() {
-        iptcProvider.isLaunched = false
+        metadataExportComponent.isInProgress = false
         metadataExportComponent.destroy()
     }
 
     Keys.onEscapePressed: {
-        if (!iptcProvider.inProgress) {
+        if (!metadataExportComponent.isInProgress) {
             closePopup()
         }
 
@@ -48,6 +49,16 @@ Item {
     }
 
     Component.onCompleted: focus = true
+
+    MessageDialog {
+        id: errorsNotification
+        title: "Warning"
+        text: qsTr("Export finished with errors. See logs for details.")
+
+        onAccepted: {
+            closePopup()
+        }
+    }
 
     signal dialogDestruction();
     Component.onDestruction: dialogDestruction();
@@ -89,7 +100,7 @@ Item {
 
                 var dialogPoint = mapToItem(dialogWindow, mouse.x, mouse.y);
                 if (!Common.isInComponent(dialogPoint, dialogWindow)) {
-                    if (!iptcProvider.inProgress) {
+                    if (!metadataExportComponent.isInProgress) {
                         closePopup()
                     }
                 }
@@ -104,89 +115,110 @@ Item {
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
-            width: 480
-            height: 150
+            width: 380
+            height: 130
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
 
-            ColumnLayout {
-                spacing: 10
+            Behavior on height {
+                NumberAnimation {
+                    duration: 200
+                    easing.type: Easing.InQuad
+                }
+            }
+
+            Column {
+                id: column
+                spacing: 20
                 anchors.fill: parent
                 anchors.margins: 20
 
-                RowLayout {
-                    Layout.fillWidth: true
+                add: Transition {
+                    NumberAnimation { properties: "x,y"; easing.type: Easing.InQuad; duration: 200 }
+                }
+
+                move: Transition {
+                    NumberAnimation { properties: "x,y"; easing.type: Easing.InQuad; duration: 200 }
+                }
+
+                Item {
+                    height: childrenRect.height
+                    anchors.left: parent.left
+                    anchors.right: parent.right
 
                     StyledText {
+                        anchors.left: parent.left
                         text: qsTr("Export metadata")
                     }
 
-                    Item {
-                        Layout.fillWidth: true
-                    }
-
                     StyledText {
-                        text: qsTr("%1 modified image(s) selected").arg(iptcProvider.itemsCount)
+                        anchors.right: parent.right
+                        text: qsTr("%1 modified image(s) selected").arg(filteredArtItemsModel.getModifiedSelectedCount())
                         color: Colors.defaultInputBackground
                     }
                 }
 
-                SimpleProgressBar {
-                    id: progress
+                StyledBusyIndicator {
+                    id: spinner
+                    width: 150
+                    height: 0
                     anchors.horizontalCenter: parent.horizontalCenter
-                    width: parent.width
-                    height: 20
-                    color: iptcProvider.isError ? Colors.destructiveColor : Colors.artworkActiveColor
-                    value: iptcProvider.percent
+                    running: false
+                }
+
+                StyledCheckbox {
+                    id: useBackupsCheckbox
+                    text: qsTr("Backup each image")
+                    checked: false
+                    enabled: !metadataExportComponent.isInProgress
                 }
 
                 RowLayout {
                     height: 24
-
-                    StyledCheckbox {
-                        text: qsTr("Backup each image")
-                        checked: iptcProvider.mustSaveOriginal
-                        enabled: !iptcProvider.inProgress
-                        onCheckedChanged: iptcProvider.mustSaveOriginal = checked
-                    }
-
-                    Item {
-                        Layout.fillWidth: true
-                    }
+                    anchors.left: parent.left
+                    anchors.right: parent.right
 
                     StyledButton {
                         id: exportButton
                         text: qsTr("Start Export")
                         width: 130
-                        enabled: !iptcProvider.inProgress
+                        enabled: !metadataExportComponent.isInProgress
                         onClicked: {
                             text = qsTr("Exporting...")
-                            iptcProvider.resetModel()
-                            iptcProvider.exportMetadata()
+                            metadataExportComponent.isInProgress = true
+                            spinner.height = spinner.width
+                            dialogWindow.height += spinner.height + column.spacing
+                            spinner.running = true
+                            filteredArtItemsModel.saveSelectedArtworks(useBackupsCheckbox.checked)
                         }
 
                         Connections {
-                            target: iptcProvider
-                            onFinishedProcessing: {
-                                exportButton.text = qsTr("Start Export")
-                                if (!iptcProvider.isError) {
+                            target: metadataIOCoordinator
+                            onMetadataWritingFinished: {
+                                metadataExportComponent.isInProgress = false
+
+                                if (!metadataIOCoordinator.hasErrors) {
                                     filteredArtItemsModel.setSelectedItemsSaved()
                                     filteredArtItemsModel.updateSelectedArtworks()
+
+                                    exportButton.text = qsTr("Start Export")
                                     closePopup()
+                                } else {
+                                    errorsNotification.open()
                                 }
                             }
                         }
                     }
 
                     Item {
-                        width: 10
+                        Layout.fillWidth: true
                     }
 
                     StyledButton {
                         text: qsTr("Close")
                         width: 100
-                        enabled: !iptcProvider.inProgress
+                        enabled: !metadataExportComponent.isInProgress
                         onClicked: {
                             closePopup()
                         }

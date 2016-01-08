@@ -54,7 +54,7 @@ namespace Models {
         Q_INVOKABLE void setSelectedItemsSaved();
         Q_INVOKABLE void removeSelectedArtworks();
         Q_INVOKABLE void updateSelectedArtworks();
-        Q_INVOKABLE void saveSelectedArtworks();
+        Q_INVOKABLE void saveSelectedArtworks(bool useBackups);
         Q_INVOKABLE void setSelectedForUpload();
         Q_INVOKABLE void setSelectedForZipping();
         Q_INVOKABLE bool areSelectedArtworksSaved();

@@ -260,7 +260,7 @@ namespace Models {
         emit artworksChanged();
     }
 
-    void ArtItemsModel::saveSelectedArtworks(const QVector<int> &selectedIndices) {
+    void ArtItemsModel::saveSelectedArtworks(const QVector<int> &selectedIndices, bool useBackups) {
         QVector<ArtworkMetadata*> modifiedSelectedArtworks;
         int count = selectedIndices.count();
         modifiedSelectedArtworks.reserve(count/2);
@@ -275,8 +275,7 @@ namespace Models {
             }
         }
 
-        // TODO: remove this two times copying
-        m_CommandManager->setArtworksForIPTCProcessing(modifiedSelectedArtworks);
+        m_CommandManager->writeMetadata(modifiedSelectedArtworks, useBackups);
     }
 
     QObject *ArtItemsModel::getArtworkItself(int index) const {

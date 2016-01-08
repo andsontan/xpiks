@@ -154,6 +154,7 @@ namespace Commands {
         void setArtworksForZipping(const QVector<Models::ArtworkMetadata*> &artworks) const;
         virtual void connectArtworkSignals(Models::ArtworkMetadata *metadata) const;
         void readMetadata(const QVector<Models::ArtworkMetadata*> &artworks) const;
+        void writeMetadata(const QVector<Models::ArtworkMetadata*> &artworks, bool useBackups) const;
         void addToLibrary(const QVector<Models::ArtworkMetadata*> &artworks) const;
         void updateArtworks(const QVector<int> &indices) const;
         void addToRecentDirectories(const QString &path) const;

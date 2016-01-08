@@ -55,6 +55,16 @@ Item {
     signal dialogDestruction();
     Component.onDestruction: dialogDestruction();
 
+    MessageDialog {
+        id: errorsNotification
+        title: "Warning"
+        text: qsTr("Import finished with errors. See logs for details.")
+
+        onAccepted: {
+            closePopup()
+        }
+    }
+
     PropertyAnimation { target: metadataImportComponent; property: "opacity";
         duration: 400; from: 0; to: 1;
         easing.type: Easing.InOutQuad ; running: true }
@@ -185,9 +195,16 @@ Item {
                             target: metadataIOCoordinator
                             onMetadataReadingFinished: {
                                 console.log("Import finished UI handler")
-                                importButton.text = qsTr("Start Import")
+
+                                metadataImportComponent.isInProgress = false
                                 artItemsModel.updateLastN(metadataIOCoordinator.processingItemsCount)
-                                closePopup()
+
+                                if (metadataIOCoordinator.hasErrors) {
+                                    errorsNotification.open()
+                                } else {
+                                    importButton.text = qsTr("Start Import")
+                                    closePopup()
+                                }
                             }
                         }
                     }
@@ -199,7 +216,7 @@ Item {
                     StyledButton {
                         text: qsTr("Close")
                         width: 100
-                        enabled: !iptcProvider.inProgress
+                        enabled: !metadataImportComponent.isInProgress
                         onClicked: {
                             closePopup()
                         }

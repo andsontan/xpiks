@@ -109,11 +109,11 @@ namespace Models {
         artItemsModel->updateSelectedArtworks(indices);
     }
 
-    void FilteredArtItemsProxyModel::saveSelectedArtworks() {
+    void FilteredArtItemsProxyModel::saveSelectedArtworks(bool useBackups) {
         // former patchSelectedArtworks
         QVector<int> indices = getSelectedOriginalIndices();
         ArtItemsModel *artItemsModel = getArtItemsModel();
-        artItemsModel->saveSelectedArtworks(indices);
+        artItemsModel->saveSelectedArtworks(indices, useBackups);
     }
 
     void FilteredArtItemsProxyModel::setSelectedForUpload() {
@@ -170,7 +170,7 @@ namespace Models {
 
     void FilteredArtItemsProxyModel::reimportMetadataForSelected() {
         QVector<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
-        m_CommandManager->setArtworksForIPTCProcessing(selectedArtworks);
+        m_CommandManager->readMetadata(selectedArtworks);
         ArtItemsModel *artItemsModel = getArtItemsModel();
         artItemsModel->raiseArtworksAdded(selectedArtworks.count());
     }

@@ -68,7 +68,8 @@ SOURCES += main.cpp \
     Warnings/warningscheckingworker.cpp \
     MetadataIO/metadatareadingworker.cpp \
     MetadataIO/metadataiocoordinator.cpp \
-    MetadataIO/saverworkerjobitem.cpp
+    MetadataIO/saverworkerjobitem.cpp \
+    MetadataIO/metadatawritingworker.cpp
 
 RESOURCES += qml.qrc
 
@@ -175,7 +176,8 @@ HEADERS += \
     Warnings/warningsitem.h \
     MetadataIO/saverworkerjobitem.h \
     MetadataIO/metadatareadingworker.h \
-    MetadataIO/metadataiocoordinator.h
+    MetadataIO/metadataiocoordinator.h \
+    MetadataIO/metadatawritingworker.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

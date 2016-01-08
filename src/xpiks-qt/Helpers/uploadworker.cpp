@@ -56,14 +56,6 @@ namespace Helpers {
         qDebug() << "Upload worker destructor";
 
         delete m_UploadItem;
-
-        if (m_CurlProcess) {
-            delete m_CurlProcess;
-        }
-
-        if (m_Timer) {
-            delete m_Timer;
-        }
     }
 
     void UploadWorker::process() {
@@ -193,14 +185,14 @@ namespace Helpers {
     }
 
     void UploadWorker::initializeUploadEntities() {
-        m_CurlProcess = new QProcess();
+        m_CurlProcess = new QProcess(this);
 
         QObject::connect(m_CurlProcess, SIGNAL(finished(int,QProcess::ExitStatus)),
                          this, SLOT(innerProcessFinished(int,QProcess::ExitStatus)));
         QObject::connect(m_CurlProcess, SIGNAL(readyReadStandardError()),
                          this, SLOT(uploadOutputReady()));
 
-        m_Timer = new QTimer();
+        m_Timer = new QTimer(this);
 
         QObject::connect(m_Timer, SIGNAL(timeout()), this, SLOT(onTimerTimeout()));
         m_Timer->setSingleShot(true);
