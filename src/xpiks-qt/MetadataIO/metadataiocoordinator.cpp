@@ -59,7 +59,6 @@ namespace MetadataIO {
         afterImportHandler(itemsToRead, m_ReadingWorker->getIgnoreBackups());
 
         qDebug() << "Metadata import finished";
-        m_ReadingWorker->shutdown();
 
         emit metadataReadingFinished();
     }
@@ -78,6 +77,7 @@ namespace MetadataIO {
         QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
 
         QObject::connect(m_ReadingWorker, SIGNAL(finished(bool)), this, SLOT(workerFinished(bool)));
+        QObject::connect(this, SIGNAL(metadataReadingFinished()), m_ReadingWorker, SIGNAL(stopped()));
 
         thread->start();
     }

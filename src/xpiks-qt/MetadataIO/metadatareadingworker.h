@@ -72,7 +72,6 @@ namespace MetadataIO {
         const QHash<QString, ImportDataResult> &getImportResult() const { return m_ImportResult; }
         const QVector<Models::ArtworkMetadata *> &getArtworksToImport() const { return m_ItemsToRead; }
         bool getIgnoreBackups() const { return m_IgnoreBackups; }
-        void shutdown() { emit stopped(); }
 
     private:
         void initWorker();
