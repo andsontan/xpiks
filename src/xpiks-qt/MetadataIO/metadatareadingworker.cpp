@@ -71,15 +71,29 @@ namespace MetadataIO {
             result.Description = object.value(IMAGEDESCRIPTION).toString();
         }
 
+        bool keywordsSet = false;
+
         if (object.contains(KEYWORDS)) {
             QJsonValue keywords = object.value(KEYWORDS);
             if (keywords.isArray()) {
                 parseJsonKeywords(keywords.toArray(), result);
+                keywordsSet = true;
             } else {
                 qWarning() << "Keywords object in json is not array";
-                result.Keywords = object.value(KEYWORDS).toString().split(QChar(','), QString::SkipEmptyParts);
+                QString keywordsStr = object.value(KEYWORDS).toString();
+                if (!keywordsStr.simplified().isEmpty()) {
+                    // old Xpiks bug when it called exiftool with wrong arguments
+                    if (keywordsStr.startsWith(QChar('"')) && keywordsStr.endsWith('"')) {
+                        keywordsStr = keywordsStr.mid(1, keywordsStr.length() - 2);
+                    }
+
+                    result.Keywords = keywordsStr.split(QChar(','), QString::SkipEmptyParts);
+                    keywordsSet = true;
+                }
             }
-        } else if (object.contains(SUBJECT)) {
+        }
+
+        if (!keywordsSet && object.contains(SUBJECT)) {
             result.Keywords = object.value(SUBJECT).toString().split(QChar(','), QString::SkipEmptyParts);
         }
     }
