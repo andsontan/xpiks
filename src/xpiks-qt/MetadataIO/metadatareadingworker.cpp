@@ -159,7 +159,9 @@ namespace MetadataIO {
             }
 
             if (m_SettingsModel->getSaveBackups()) {
-                readBackups();
+                readBackupsAndSizes();
+            } else {
+                readSizes();
             }
         }
 
@@ -234,18 +236,34 @@ namespace MetadataIO {
         }
     }
 
-    void MetadataReadingWorker::readBackups() {
+    void MetadataReadingWorker::readBackupsAndSizes() {
         qDebug() << "Reading backups of items...";
         int size = m_ItemsToRead.size();
         for (int i = 0; i < size; ++i) {
             Models::ArtworkMetadata *metadata = m_ItemsToRead.at(i);
+            const QString &filepath = metadata->getFilepath();
 
             MetadataSavingCopy copy(metadata);
             if (copy.readFromFile()) {
-                const QString &filepath = metadata->getFilepath();
                 Q_ASSERT(m_ImportResult.contains(filepath));
                 m_ImportResult[filepath].BackupDict = copy.getInfo();
             }
+
+            QImageReader reader(filepath);
+            m_ImportResult[filepath].Size = reader.size();
+        }
+    }
+
+    void MetadataReadingWorker::readSizes() {
+        qDebug() << "Reading sizes of items...";
+        int size = m_ItemsToRead.size();
+        for (int i = 0; i < size; ++i) {
+            Models::ArtworkMetadata *metadata = m_ItemsToRead.at(i);
+            const QString &filepath = metadata->getFilepath();
+
+            Q_ASSERT(m_ImportResult.contains(filepath));
+            QImageReader reader(filepath);
+            m_ImportResult[filepath].Size = reader.size();
         }
     }
 }

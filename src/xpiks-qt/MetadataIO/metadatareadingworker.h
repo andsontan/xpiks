@@ -76,7 +76,8 @@ namespace MetadataIO {
         void initWorker();
         QStringList createArgumentsList();
         void parseExiftoolOutput(const QByteArray &output);
-        void readBackups();
+        void readBackupsAndSizes();
+        void readSizes();
 
     private:
         QVector<Models::ArtworkMetadata *> m_ItemsToRead;
