@@ -996,16 +996,6 @@ ApplicationWindow {
                                 imagesListView.update()
                                 imagesListView.decrementCurrentIndex()
                                 imagesListView.positionViewAtIndex(imagesListView.currentIndex, ListView.Visible)
-                                /*for (var i = 0; i < contentItem.children.length; i++) {
-                                    var item = contentItem.children[i];
-                                    if (item.objectName === "artworkDelegate") {
-                                        console.log(item.x, item.y)
-                                    }
-                                }*/
-
-                                //console.log(imagesListView.contentItem.visibleChildren.length)
-                                //console.log(imagesListView.contentHeight)
-                                //imagesListView.positionViewAtIndex(index, ListView.Visible)
                             }
 
                             add: Transition {
