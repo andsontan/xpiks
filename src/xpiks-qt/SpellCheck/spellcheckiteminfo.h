@@ -53,10 +53,10 @@ namespace SpellCheck {
         bool anyTitleError() const { return m_TitleErrors.anyError(); }
         void setDescriptionErrors(const QSet<QString> &errors);
         void setTitleErrors(const QSet<QString> &errors);
-        QStringList retrieveDescriptionErrors() const { return m_DescriptionErrors.toList(); }
-        QStringList retrieveTitleErrors() const { return m_TitleErrors.toList(); }
         void createHighlighterForDescription(QTextDocument *document, Common::BasicKeywordsModel *basicKeywordsModel);
         void createHighlighterForTitle(QTextDocument *document, Common::BasicKeywordsModel *basicKeywordsModel);
+        bool hasDescriptionError(const QString &word) const { return m_DescriptionErrors.hasWrongSpelling(word); }
+        bool hasTitleError(const QString &word) const { return m_TitleErrors.hasWrongSpelling(word); }
 
     private:
         SpellCheckErrorsInfo m_DescriptionErrors;

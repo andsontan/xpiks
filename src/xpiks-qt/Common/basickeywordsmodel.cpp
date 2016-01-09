@@ -404,32 +404,36 @@ namespace Common {
     }
 
     QVector<SpellCheck::SpellSuggestionsItem *> BasicKeywordsModel::createDescriptionSuggestionsList() {
-        QStringList descriptionErrors = m_SpellCheckInfo->retrieveDescriptionErrors();
-        int length = descriptionErrors.length();
+        QStringList descriptionWords = getDescriptionWords();
+        int length = descriptionWords.length();
 
         QVector<SpellCheck::SpellSuggestionsItem *> spellCheckSuggestions;
-        spellCheckSuggestions.reserve(length);
+        spellCheckSuggestions.reserve(length / 3);
 
         for (int i = 0; i < length; ++i) {
-            const QString &word = descriptionErrors.at(i);
-            SpellCheck::DescriptionSpellSuggestions *suggestionsItem = new SpellCheck::DescriptionSpellSuggestions(word);
-            spellCheckSuggestions.append(suggestionsItem);
+            const QString &word = descriptionWords.at(i);
+            if (m_SpellCheckInfo->hasDescriptionError(word)) {
+                SpellCheck::DescriptionSpellSuggestions *suggestionsItem = new SpellCheck::DescriptionSpellSuggestions(word);
+                spellCheckSuggestions.append(suggestionsItem);
+            }
         }
 
         return spellCheckSuggestions;
     }
 
     QVector<SpellCheck::SpellSuggestionsItem *> BasicKeywordsModel::createTitleSuggestionsList() {
-        QStringList titleErrors = m_SpellCheckInfo->retrieveTitleErrors();
-        int length = titleErrors.length();
+        QStringList titleWords = getTitleWords();
+        int length = titleWords.length();
 
         QVector<SpellCheck::SpellSuggestionsItem *> spellCheckSuggestions;
-        spellCheckSuggestions.reserve(length);
+        spellCheckSuggestions.reserve(length / 3);
 
         for (int i = 0; i < length; ++i) {
-            const QString &word = titleErrors.at(i);
-            SpellCheck::TitleSpellSuggestions *suggestionsItem = new SpellCheck::TitleSpellSuggestions(word);
-            spellCheckSuggestions.append(suggestionsItem);
+            const QString &word = titleWords.at(i);
+            if (m_SpellCheckInfo->hasTitleError(word)) {
+                SpellCheck::TitleSpellSuggestions *suggestionsItem = new SpellCheck::TitleSpellSuggestions(word);
+                spellCheckSuggestions.append(suggestionsItem);
+            }
         }
 
         return spellCheckSuggestions;
