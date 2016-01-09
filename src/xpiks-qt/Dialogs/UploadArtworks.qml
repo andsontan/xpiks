@@ -586,7 +586,9 @@ Item {
                                             Connections {
                                                 target: artworkUploader
                                                 onCredentialsChecked: {
-                                                    if (url == ftpHost.text) {
+                                                    console.log("Connection checked for " + url)
+                                                    var currHost = ftpHost.text
+                                                    if (url.indexOf(currHost) > -1) {
                                                         credentialsStatus.enabled = true
                                                         credentialsStatus.isGreen = result
                                                     }
