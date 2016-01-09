@@ -59,7 +59,7 @@ namespace Models {
             m_CommonKeywordsModel.setSpellCheckInfo(&m_SpellCheckInfo);
         }
 
-        m_CommandManager->submitForSpellCheck(&m_CommonKeywordsModel);
+        m_CommandManager->submitItemForSpellCheck(&m_CommonKeywordsModel);
     }
 
     void CombinedArtworksModel::acceptSuggestedKeywords(const QStringList &keywords)  {
@@ -117,7 +117,7 @@ namespace Models {
     void CombinedArtworksModel::editKeyword(int index, const QString &replacement) {
         if (m_CommonKeywordsModel.editKeyword(index, replacement)) {
             m_AreKeywordsModified = true;
-            m_CommandManager->submitForSpellCheck(&m_CommonKeywordsModel, index);
+            m_CommandManager->submitKeywordForSpellCheck(&m_CommonKeywordsModel, index);
         }
     }
 
@@ -144,7 +144,7 @@ namespace Models {
             emit keywordsCountChanged();
             m_AreKeywordsModified = true;
 
-            m_CommandManager->submitForSpellCheck(&m_CommonKeywordsModel, m_CommonKeywordsModel.rowCount() - 1);
+            m_CommandManager->submitKeywordForSpellCheck(&m_CommonKeywordsModel, m_CommonKeywordsModel.rowCount() - 1);
         }
     }
 
@@ -153,7 +153,7 @@ namespace Models {
             emit keywordsCountChanged();
             m_AreKeywordsModified = true;
 
-            m_CommandManager->submitForSpellCheck(&m_CommonKeywordsModel);
+            m_CommandManager->submitItemForSpellCheck(&m_CommonKeywordsModel);
         }
     }
 
@@ -242,7 +242,7 @@ namespace Models {
         }
 
         info->createHighlighterForDescription(document->textDocument(), &m_CommonKeywordsModel);
-        m_CommonKeywordsModel.notifySpellCheckResults();
+        m_CommonKeywordsModel.notifySpellCheckResults(Common::SpellCheckDescription);
     }
 
     void CombinedArtworksModel::initTitleHighlighting(QQuickTextDocument *document) {
@@ -254,7 +254,7 @@ namespace Models {
         }
 
         info->createHighlighterForTitle(document->textDocument(), &m_CommonKeywordsModel);
-        m_CommonKeywordsModel.notifySpellCheckResults();
+        m_CommonKeywordsModel.notifySpellCheckResults(Common::SpellCheckTitle);
     }
 
     void CombinedArtworksModel::processCombinedEditCommand() const {

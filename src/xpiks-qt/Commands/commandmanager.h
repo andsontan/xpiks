@@ -27,6 +27,7 @@
 #include "../UndoRedo/historyitem.h"
 #include "commandbase.h"
 #include "../Conectivity/analyticsuserevent.h"
+#include "../Common/flags.h"
 
 namespace Encryption {
     class SecretsManager;
@@ -157,10 +158,10 @@ namespace Commands {
 #ifdef QT_DEBUG
         void addInitialArtworks(const QStringList &artworksFilepathes);
 #endif
-        void submitForSpellCheck(SpellCheck::ISpellCheckable *item, int keywordIndex) const;
+        void submitKeywordForSpellCheck(SpellCheck::ISpellCheckable *item, int keywordIndex) const;
         void submitForSpellCheck(const QVector<Models::ArtworkMetadata*> &items) const;
         void submitForSpellCheck(const QVector<SpellCheck::ISpellCheckable *> &items) const;
-        void submitForSpellCheck(SpellCheck::ISpellCheckable *item) const;
+        void submitItemForSpellCheck(SpellCheck::ISpellCheckable *item, int flags = Common::SpellCheckAll) const;
         void setupSpellCheckSuggestions(SpellCheck::ISpellCheckable *item, int index, int flags);
         void saveMetadata(Models::ArtworkMetadata *metadata) const;
         void reportUserAction(Conectivity::UserAction userAction) const;

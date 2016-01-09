@@ -26,6 +26,7 @@
 #include "../SpellCheck/spellcheckiteminfo.h"
 #include "../Helpers/keywordvalidator.h"
 #include "../Helpers/stringhelper.h"
+#include "./Common/flags.h"
 
 namespace Common {
     BasicKeywordsModel::BasicKeywordsModel(QObject *parent):
@@ -281,8 +282,12 @@ namespace Common {
         appendKeywords(keywords);
     }
 
-    void BasicKeywordsModel::notifySpellCheckResults() {
-        emit spellCheckResultsReady();
+    void BasicKeywordsModel::notifySpellCheckResults(int flags) {
+        if (Common::HasFlag(flags, Common::SpellCheckDescription) ||
+                Common::HasFlag(flags, Common::SpellCheckTitle)) {
+            emit spellCheckResultsReady();
+        }
+        
         emit spellCheckErrorsChanged();
     }
 
@@ -362,9 +367,14 @@ namespace Common {
         }
     }
 
-    void BasicKeywordsModel::setSpellCheckResults(const QHash<QString, bool> &results) {
-        updateDescriptionSpellErrors(results);
-        updateTitleSpellErrors(results);
+    void BasicKeywordsModel::setSpellCheckResults(const QHash<QString, bool> &results, int flags) {
+        if (Common::HasFlag(flags, Common::SpellCheckDescription)) {
+            updateDescriptionSpellErrors(results);
+        }
+
+        if (Common::HasFlag(flags, Common::SpellCheckTitle)) {
+            updateTitleSpellErrors(results);
+        }
     }
 
     QVector<SpellCheck::SpellSuggestionsItem *> BasicKeywordsModel::createKeywordsSuggestionsList() {
@@ -469,7 +479,7 @@ namespace Common {
     }
 
     void BasicKeywordsModel::connectSignals(SpellCheck::SpellCheckItem *item) {
-        QObject::connect(item, SIGNAL(resultsReady(int)), this, SLOT(spellCheckRequestReady(int)));
+        QObject::connect(item, SIGNAL(resultsReady(int, int)), this, SLOT(spellCheckRequestReady(int, int)));
     }
 
     QStringList BasicKeywordsModel::getDescriptionWords() const {
@@ -484,9 +494,12 @@ namespace Common {
         return words;
     }
 
-    void BasicKeywordsModel::spellCheckRequestReady(int index) {
-        emitSpellCheckChanged(index);
-        notifySpellCheckResults();
+    void BasicKeywordsModel::spellCheckRequestReady(int flags, int index) {
+        if (Common::HasFlag(flags, Common::SpellCheckKeywords)) {
+            emitSpellCheckChanged(index);
+        }
+
+        notifySpellCheckResults(flags);
     }
 
     void BasicKeywordsModel::emitSpellCheckChanged(int index) {

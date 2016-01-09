@@ -46,7 +46,10 @@ namespace SpellCheck {
         void stopChecking();
         void submitItems(const QVector<ISpellCheckable *> &itemsToCheck);
         void submitKeyword(SpellCheck::ISpellCheckable *itemToCheck, int keywordIndex);
+        void submitItem(SpellCheck::ISpellCheckable *itemToCheck, int flags);
         QStringList suggestCorrections(const QString &word) const;
+
+    private:
 
     public:
         Q_INVOKABLE void cancelCurrentBatch();

@@ -202,7 +202,7 @@ void Commands::CommandManager::combineArtwork(Models::ArtItemInfo *itemInfo) con
         m_CombinedArtworksModel->initArtworks(QVector<Models::ArtItemInfo*>() << itemInfo);
         m_CombinedArtworksModel->recombineArtworks();
 
-        submitForSpellCheck(itemInfo->getOrigin());
+        submitItemForSpellCheck(itemInfo->getOrigin());
     }
 }
 
@@ -290,14 +290,17 @@ void Commands::CommandManager::addInitialArtworks(const QStringList &artworksFil
 }
 #endif
 
-void Commands::CommandManager::submitForSpellCheck(SpellCheck::ISpellCheckable *item, int keywordIndex) const {
-    if (m_SettingsModel->getUseSpellCheck()) {
+void Commands::CommandManager::submitKeywordForSpellCheck(SpellCheck::ISpellCheckable *item, int keywordIndex) const {
+    if ((m_SettingsModel != NULL) && m_SettingsModel->getUseSpellCheck() && (m_SpellCheckerService != NULL)) {
         m_SpellCheckerService->submitKeyword(item, keywordIndex);
     }
 }
 
 void Commands::CommandManager::submitForSpellCheck(const QVector<Models::ArtworkMetadata *> &items) const {
-    if (m_SettingsModel->getUseSpellCheck() && !items.isEmpty()) {
+    if ((m_SettingsModel != NULL) &&
+            m_SettingsModel->getUseSpellCheck() &&
+            (m_SpellCheckerService != NULL) &&
+            !items.isEmpty()) {
         QVector<SpellCheck::ISpellCheckable*> itemsToSubmit;
         int count = items.length();
         itemsToSubmit.reserve(count);
@@ -311,15 +314,15 @@ void Commands::CommandManager::submitForSpellCheck(const QVector<Models::Artwork
 }
 
 void Commands::CommandManager::submitForSpellCheck(const QVector<SpellCheck::ISpellCheckable *> &items) const {
-    if (m_SettingsModel->getUseSpellCheck()) {
+    if (m_SettingsModel->getUseSpellCheck() && m_SpellCheckerService != NULL) {
         m_SpellCheckerService->submitItems(items);
         reportUserAction(Conectivity::UserActionSpellCheck);
     }
 }
 
-void Commands::CommandManager::submitForSpellCheck(SpellCheck::ISpellCheckable *item) const {
-    if (m_SettingsModel->getUseSpellCheck()) {
-        m_SpellCheckerService->submitItems(QVector<SpellCheck::ISpellCheckable*>() << item);
+void Commands::CommandManager::submitItemForSpellCheck(SpellCheck::ISpellCheckable *item, int flags) const {
+    if ((m_SettingsModel != NULL) && m_SettingsModel->getUseSpellCheck() && (m_SpellCheckerService != NULL)) {
+        m_SpellCheckerService->submitItem(item, flags);
     }
 }
 
@@ -328,7 +331,7 @@ void Commands::CommandManager::setupSpellCheckSuggestions(SpellCheck::ISpellChec
 }
 
 void Commands::CommandManager::saveMetadata(Models::ArtworkMetadata *metadata) const {
-    if (m_SettingsModel->getSaveBackups()) {
+    if (m_SettingsModel->getSaveBackups() && m_MetadataSaverService != NULL) {
         m_MetadataSaverService->saveArtwork(metadata);
     }
 }

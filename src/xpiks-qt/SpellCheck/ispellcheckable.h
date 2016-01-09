@@ -35,7 +35,7 @@ namespace SpellCheck {
         virtual QString retrieveKeyword(int wordIndex) = 0;
         virtual QStringList getKeywords() = 0;
         virtual void setSpellCheckResults(const QVector<SpellCheckQueryItem*> &items, bool onlyOneKeyword) = 0;
-        virtual void setSpellCheckResults(const QHash<QString, bool> &results) = 0;
+        virtual void setSpellCheckResults(const QHash<QString, bool> &results, int flags) = 0;
         virtual QVector<SpellSuggestionsItem*> createKeywordsSuggestionsList() = 0;
         virtual QVector<SpellSuggestionsItem*> createDescriptionSuggestionsList() = 0;
         virtual QVector<SpellSuggestionsItem*> createTitleSuggestionsList() = 0;

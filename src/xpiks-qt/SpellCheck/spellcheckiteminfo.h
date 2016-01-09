@@ -38,7 +38,7 @@ namespace SpellCheck {
     class SpellCheckErrorsInfo {
     public:
         bool hasWrongSpelling(const QString& word) const { return m_WordsWithErrors.contains(word); }
-        void setErrorWords(const QSet<QString> &errors) { m_WordsWithErrors.clear(); m_WordsWithErrors.unite(errors); }
+        void setErrorWords(const QSet<QString> &errors) { /*m_WordsWithErrors.clear();*/ m_WordsWithErrors.unite(errors); }
         bool anyError() const { return !m_WordsWithErrors.isEmpty(); }
         QStringList toList() const { return QStringList::fromSet(m_WordsWithErrors); }
 

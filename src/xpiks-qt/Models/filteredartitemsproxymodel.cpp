@@ -230,6 +230,28 @@ namespace Models {
         }
     }
 
+    void FilteredArtItemsProxyModel::spellCheckDescription(int index) {
+        if (0 < index && index < rowCount()) {
+            int originalIndex = getOriginalIndex(index);
+            ArtItemsModel *artItemsModel = getArtItemsModel();
+            ArtworkMetadata *metadata = artItemsModel->getArtwork(originalIndex);
+            if (!metadata->getDescription().trimmed().isEmpty()) {
+                m_CommandManager->submitItemForSpellCheck(metadata, Common::SpellCheckDescription);
+            }
+        }
+    }
+
+    void FilteredArtItemsProxyModel::spellCheckTitle(int index) {
+        if (0 < index && index < rowCount()) {
+            int originalIndex = getOriginalIndex(index);
+            ArtItemsModel *artItemsModel = getArtItemsModel();
+            ArtworkMetadata *metadata = artItemsModel->getArtwork(originalIndex);
+            if (!metadata->getTitle().trimmed().isEmpty()) {
+                m_CommandManager->submitItemForSpellCheck(metadata, Common::SpellCheckTitle);
+            }
+        }
+    }
+
     void FilteredArtItemsProxyModel::itemSelectedChanged(bool value) {
         int plus = value ? +1 : -1;
         m_SelectedArtworksCount += plus;

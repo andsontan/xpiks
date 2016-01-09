@@ -27,6 +27,7 @@
 #include "spellcheckworker.h"
 #include "spellcheckitem.h"
 #include "../Common/defines.h"
+#include "../Common/flags.h"
 
 namespace SpellCheck {
     SpellCheckerService::SpellCheckerService() {
@@ -77,7 +78,7 @@ namespace SpellCheck {
 
             for (int i = 0; i < length; ++i) {
                 SpellCheck::ISpellCheckable *itemToCheck = itemsToCheck.at(i);
-                SpellCheckItem *item = new SpellCheckItem(itemToCheck);
+                SpellCheckItem *item = new SpellCheckItem(itemToCheck, Common::SpellCheckAll);
                 itemToCheck->connectSignals(item);
                 items.append(item);
             }
@@ -95,7 +96,19 @@ namespace SpellCheck {
         Q_ASSERT(m_SpellCheckWorker != NULL);
 
         if (m_SpellCheckWorker != NULL && !m_SpellCheckWorker->isCancelled()) {
-            SpellCheckItem *item = new SpellCheckItem(itemToCheck, keywordIndex);
+            SpellCheckItem *item = new SpellCheckItem(itemToCheck, Common::SpellCheckKeywords, keywordIndex);
+            itemToCheck->connectSignals(item);
+            m_SpellCheckWorker->submitItem(item);
+        }
+    }
+
+    void SpellCheckerService::submitItem(ISpellCheckable *itemToCheck, int flags) {
+        if (!m_WorkerIsAlive) { return; }
+
+        Q_ASSERT(m_SpellCheckWorker != NULL);
+
+        if (m_SpellCheckWorker != NULL && !m_SpellCheckWorker->isCancelled()) {
+            SpellCheckItem *item = new SpellCheckItem(itemToCheck, flags);
             itemToCheck->connectSignals(item);
             m_SpellCheckWorker->submitItem(item);
         }

@@ -142,7 +142,7 @@ namespace Models {
             if (metadata->appendKeyword(keyword)) {
                 QModelIndex index = this->index(metadataIndex);
                 emit dataChanged(index, index, QVector<int>() << IsModifiedRole << KeywordsCountRole);
-                m_CommandManager->submitForSpellCheck(metadata, metadata->rowCount() - 1);
+                m_CommandManager->submitKeywordForSpellCheck(metadata, metadata->rowCount() - 1);
                 m_CommandManager->saveMetadata(metadata);
             }
         }
@@ -341,7 +341,7 @@ namespace Models {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
             SpellCheck::SpellCheckItemInfo *info = metadata->getSpellCheckInfo();
             info->createHighlighterForDescription(document->textDocument(), metadata);
-            metadata->notifySpellCheckResults();
+            metadata->notifySpellCheckResults(Common::SpellCheckDescription);
         }
     }
 
@@ -350,7 +350,7 @@ namespace Models {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
             SpellCheck::SpellCheckItemInfo *info = metadata->getSpellCheckInfo();
             info->createHighlighterForTitle(document->textDocument(), metadata);
-            metadata->notifySpellCheckResults();
+            metadata->notifySpellCheckResults(Common::SpellCheckTitle);
         }
     }
 
@@ -358,7 +358,7 @@ namespace Models {
         if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
             if (metadata->editKeyword(keywordIndex, replacement)) {
-                m_CommandManager->submitForSpellCheck(metadata, keywordIndex);
+                m_CommandManager->submitKeywordForSpellCheck(metadata, keywordIndex);
                 m_CommandManager->saveMetadata(metadata);
             }
         }

@@ -105,7 +105,7 @@ namespace Common {
     public:
         SpellCheck::SpellCheckItemInfo *getSpellCheckInfo() const { return m_SpellCheckInfo; }
         void setSpellCheckInfo(SpellCheck::SpellCheckItemInfo *info) { m_SpellCheckInfo = info; }
-        void notifySpellCheckResults();
+        void notifySpellCheckResults(int flags);
 
     private:
         void updateDescriptionSpellErrors(const QHash<QString, bool> &results);
@@ -118,7 +118,7 @@ namespace Common {
         virtual QString retrieveKeyword(int wordIndex);
         virtual QStringList getKeywords();
         virtual void setSpellCheckResults(const QVector<SpellCheck::SpellCheckQueryItem*> &items, bool onlyOneKeyword);
-        virtual void setSpellCheckResults(const QHash<QString, bool> &results);
+        virtual void setSpellCheckResults(const QHash<QString, bool> &results, int flags);
         virtual QVector<SpellCheck::SpellSuggestionsItem *> createKeywordsSuggestionsList();
         virtual QVector<SpellCheck::SpellSuggestionsItem*> createDescriptionSuggestionsList();
         virtual QVector<SpellCheck::SpellSuggestionsItem*> createTitleSuggestionsList();
@@ -135,7 +135,7 @@ namespace Common {
         void spellCheckErrorsChanged();
 
     protected slots:
-         void spellCheckRequestReady(int index);
+         void spellCheckRequestReady(int flags, int index);
 
     private:
         void emitSpellCheckChanged(int index=-1);

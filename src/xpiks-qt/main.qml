@@ -1298,6 +1298,12 @@ ApplicationWindow {
                                                             }
                                                         }
 
+                                                        onActiveFocusChanged: {
+                                                            if (descriptionTextInput.length > 0) {
+                                                                filteredArtItemsModel.spellCheckDescription(rowWrapper.delegateIndex)
+                                                            }
+                                                        }
+
                                                         Keys.onBacktabPressed: {
                                                             filteredArtItemsModel.focusPreviousItem(rowWrapper.delegateIndex)
                                                         }
@@ -1367,6 +1373,12 @@ ApplicationWindow {
 
                                                         Keys.onTabPressed: {
                                                             flv.activateEdit()
+                                                        }
+
+                                                        onActiveFocusChanged: {
+                                                            if (titleTextInput.length > 0) {
+                                                                filteredArtItemsModel.spellCheckTitle(rowWrapper.delegateIndex)
+                                                            }
                                                         }
 
                                                         Keys.onPressed: {

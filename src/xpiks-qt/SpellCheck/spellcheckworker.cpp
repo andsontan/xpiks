@@ -48,7 +48,8 @@ QString getHunspellResourcesPath() {
 }
 
 namespace SpellCheck {
-    SpellCheckWorker::SpellCheckWorker() :
+    SpellCheckWorker::SpellCheckWorker(QObject *parent) :
+        QObject(parent),
         m_Hunspell(NULL),
         m_Codec(NULL)
     {

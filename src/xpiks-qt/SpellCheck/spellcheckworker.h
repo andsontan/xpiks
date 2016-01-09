@@ -37,7 +37,7 @@ namespace SpellCheck {
     {
         Q_OBJECT
     public:
-        SpellCheckWorker();
+        SpellCheckWorker(QObject *parent=0);
         virtual ~SpellCheckWorker();
 
     public:

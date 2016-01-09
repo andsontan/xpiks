@@ -70,11 +70,8 @@ namespace SpellCheck {
         void accountResultAt(int index);
         bool getIsCorrect(const QString &word) const;
 
-    signals:
-        void resultsReady(int index);
-
     protected:
-        void reserve(int n) { m_QueryItems.reserve(n); }
+        void reserve(int n) { m_QueryItems.reserve(m_QueryItems.length() + n); }
         void appendItem(SpellCheckQueryItem *item);
 
     private:
@@ -84,17 +81,22 @@ namespace SpellCheck {
     };
 
     class SpellCheckSeparatorItem : public SpellCheckItemBase {
+        Q_OBJECT
     public:
         virtual void submitSpellCheckResult() { /*BUMP*/ }
     };
 
     class SpellCheckItem : public SpellCheckItemBase {
+        Q_OBJECT
     public:
-        SpellCheckItem(ISpellCheckable *spellCheckable, int keywordIndex);
-        SpellCheckItem(ISpellCheckable *spellCheckable);
+        SpellCheckItem(ISpellCheckable *spellCheckable, int spellCheckFlags, int keywordIndex);
+        SpellCheckItem(ISpellCheckable *spellCheckable, int spellCheckFlags);
 
     private:
         void addWords(const QStringList &words, int startingIndex);
+
+    signals:
+        void resultsReady(int flags, int index);
 
     public:
         virtual void submitSpellCheckResult();
@@ -102,6 +104,7 @@ namespace SpellCheck {
 
     private:
         ISpellCheckable *m_SpellCheckable;
+        int m_SpellCheckFlags;
         volatile bool m_OnlyOneKeyword;
     };
 }

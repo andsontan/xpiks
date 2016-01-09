@@ -70,6 +70,8 @@ namespace Models {
         Q_INVOKABLE void updateFilter() { invalidateFilter(); emit afterInvalidateFilter(); }
         Q_INVOKABLE void focusNextItem(int index);
         Q_INVOKABLE void focusPreviousItem(int index);
+        Q_INVOKABLE void spellCheckDescription(int index);
+        Q_INVOKABLE void spellCheckTitle(int index);
 
     public slots:
         void itemSelectedChanged(bool value);

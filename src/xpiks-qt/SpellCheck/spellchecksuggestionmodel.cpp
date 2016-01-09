@@ -114,7 +114,7 @@ namespace SpellCheck {
         }
 
         if (anyChanged) {
-            m_CommandManager->submitForSpellCheck(m_CurrentItem);
+            m_CommandManager->submitItemForSpellCheck(m_CurrentItem);
         }
     }
 
