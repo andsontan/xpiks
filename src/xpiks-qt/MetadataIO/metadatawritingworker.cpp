@@ -55,10 +55,6 @@ namespace MetadataIO {
             title = description;
         }
 
-        if (description.isEmpty()) {
-            description = title;
-        }
-
         jsonObject.insert(SOURCEFILE, QJsonValue(metadata->getFilepath()));
 
         QJsonValue titleValue(title);
