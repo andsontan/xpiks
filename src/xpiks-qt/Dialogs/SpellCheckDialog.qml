@@ -38,8 +38,6 @@ Item {
     signal dialogDestruction();
     Component.onDestruction: dialogDestruction();
 
-    Component.onCompleted: focus = true
-
     Keys.onEscapePressed: {
         if (!spinnerTimer.running) {
             spellCheckerService.cancelCurrentBatch()
@@ -78,6 +76,7 @@ Item {
     }
 
     Component.onCompleted: {
+        focus = true
         if (!spellCheckerService.hasAnyPending()) {
             canClose = true
         }
