@@ -37,6 +37,13 @@ namespace Common {
         CorrectKeywords = 4
     };
 
+    enum SpellCheckFlags {
+        SpellCheckTitle = 1,
+        SpellCheckDescription = 2,
+        SpellCheckKeywords = 4,
+        SpellCheckAll = 7
+    };
+
     enum WarningType {
         WarningTypeNoWarnings = 0,
         WarningTypeSizeLessThanMinimum = 1 << 0,

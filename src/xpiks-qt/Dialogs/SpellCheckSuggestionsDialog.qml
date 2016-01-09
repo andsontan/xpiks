@@ -120,6 +120,17 @@ Item {
                     Layout.fillHeight: true
                     color: Colors.defaultControlColor
 
+                    Item {
+                        visible: suggestionsListView.count == 0
+                        anchors.fill: parent
+
+                        StyledText {
+                            text: qsTr("No suggestions available.")
+                            color: Colors.selectedMetadataColor
+                            anchors.centerIn: parent
+                        }
+                    }
+
                     StyledScrollView {
                         anchors.fill: parent
                         anchors.margins: 10

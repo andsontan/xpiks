@@ -32,9 +32,9 @@ namespace MetadataIO {
     }
 
     MetadataSavingCopy::MetadataSavingCopy(Models::ArtworkMetadata *metadata, const QHash<QString, QString> &dict):
+        m_MetadataInfo(dict),
         m_Filepath(metadata->getFilepath()),
-        m_Metadata(metadata),
-        m_MetadataInfo(dict)
+        m_Metadata(metadata)
     {
     }
 

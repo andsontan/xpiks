@@ -152,6 +152,8 @@ namespace Models {
         if (m_CommonKeywordsModel.appendKeywords(keywords) > 0) {
             emit keywordsCountChanged();
             m_AreKeywordsModified = true;
+
+            m_CommandManager->submitForSpellCheck(&m_CommonKeywordsModel);
         }
     }
 
