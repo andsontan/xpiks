@@ -235,7 +235,7 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::spellCheckDescription(int index) {
-        if (0 < index && index < rowCount()) {
+        if (0 <= index && index < rowCount()) {
             int originalIndex = getOriginalIndex(index);
             ArtItemsModel *artItemsModel = getArtItemsModel();
             ArtworkMetadata *metadata = artItemsModel->getArtwork(originalIndex);
@@ -246,7 +246,7 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::spellCheckTitle(int index) {
-        if (0 < index && index < rowCount()) {
+        if (0 <= index && index < rowCount()) {
             int originalIndex = getOriginalIndex(index);
             ArtItemsModel *artItemsModel = getArtItemsModel();
             ArtworkMetadata *metadata = artItemsModel->getArtwork(originalIndex);
