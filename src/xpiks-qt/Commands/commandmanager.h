@@ -150,10 +150,12 @@ namespace Commands {
         void setArtworksForUpload(const QVector<Models::ArtworkMetadata*> &artworks) const;
         void setArtworksForZipping(const QVector<Models::ArtworkMetadata*> &artworks) const;
         virtual void connectArtworkSignals(Models::ArtworkMetadata *metadata) const;
-        void readMetadata(const QVector<Models::ArtworkMetadata*> &artworks) const;
+        void readMetadata(const QVector<Models::ArtworkMetadata*> &artworks,
+                          const QVector<QPair<int, int> > &rangesToUpdate) const;
         void writeMetadata(const QVector<Models::ArtworkMetadata*> &artworks, bool useBackups) const;
         void addToLibrary(const QVector<Models::ArtworkMetadata*> &artworks) const;
         void updateArtworks(const QVector<int> &indices) const;
+        void updateArtworks(const QVector<QPair<int, int> > &rangesToUpdate) const;
         void addToRecentDirectories(const QString &path) const;
 #ifdef QT_DEBUG
         void addInitialArtworks(const QStringList &artworksFilepathes);

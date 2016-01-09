@@ -115,9 +115,11 @@ namespace MetadataIO {
     }
 
     MetadataReadingWorker::MetadataReadingWorker(const QVector<Models::ArtworkMetadata *> &itemsToRead,
-                                                 Models::SettingsModel *settingsModel):
+                                                 Models::SettingsModel *settingsModel,
+                                                 const QVector<QPair<int, int> > &rangesToUpdate):
         m_ItemsToRead(itemsToRead),
         m_ExiftoolProcess(NULL),
+        m_RangesToUpdate(rangesToUpdate),
         m_SettingsModel(settingsModel)
     {
     }

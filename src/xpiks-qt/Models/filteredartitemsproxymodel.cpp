@@ -30,6 +30,7 @@
 #include "../Commands/combinededitcommand.h"
 #include "../Common/flags.h"
 #include "../SpellCheck/ispellcheckable.h"
+#include "../Helpers/indiceshelper.h"
 
 namespace Models {
     FilteredArtItemsProxyModel::FilteredArtItemsProxyModel(QObject *parent) :
@@ -170,7 +171,10 @@ namespace Models {
 
     void FilteredArtItemsProxyModel::reimportMetadataForSelected() {
         QVector<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
-        m_CommandManager->readMetadata(selectedArtworks);
+        QVector<QPair<int, int> > ranges;
+        Helpers::indicesToRanges(getSelectedOriginalIndices(), ranges);
+
+        m_CommandManager->readMetadata(selectedArtworks, ranges);
         ArtItemsModel *artItemsModel = getArtItemsModel();
         artItemsModel->raiseArtworksAdded(selectedArtworks.count());
     }

@@ -30,8 +30,7 @@
 #include "../UndoRedo/addartworksitem.h"
 #include "../Common/defines.h"
 
-Commands::CommandResult *Commands::AddArtworksCommand::execute(const CommandManager *commandManager) const
-{
+Commands::CommandResult *Commands::AddArtworksCommand::execute(const CommandManager *commandManager) const {
     qDebug() << "Add artworks command:" << m_FilePathes.length() << "files";
     Models::ArtworksRepository *artworksRepository = commandManager->getArtworksRepository();
     Models::ArtItemsModel *artItemsModel = commandManager->getArtItemsModel();
@@ -72,7 +71,12 @@ Commands::CommandResult *Commands::AddArtworksCommand::execute(const CommandMana
     artworksRepository->endAccountingFiles(filesWereAccounted);
 
     if (newFilesCount > 0) {
-        commandManager->readMetadata(artworksToImport);
+        int length = artItemsModel->rowCount();
+        int start = length - newFilesCount, end = length - 1;
+        QVector<QPair<int, int> > ranges;
+        ranges << qMakePair(start, end);
+        commandManager->readMetadata(artworksToImport, ranges);
+
         artworksRepository->updateCountsForExistingDirectories();
         artItemsModel->raiseArtworksAdded(newFilesCount);
 

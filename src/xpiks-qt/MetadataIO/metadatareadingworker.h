@@ -54,7 +54,7 @@ namespace MetadataIO {
         Q_OBJECT
     public:
         explicit MetadataReadingWorker(const QVector<Models::ArtworkMetadata *> &itemsToRead,
-                                       Models::SettingsModel *settingsModel);
+                                       Models::SettingsModel *settingsModel, const QVector<QPair<int, int> > &rangesToUpdate);
         virtual ~MetadataReadingWorker();
 
     signals:
@@ -71,6 +71,7 @@ namespace MetadataIO {
     public:
         const QHash<QString, ImportDataResult> &getImportResult() const { return m_ImportResult; }
         const QVector<Models::ArtworkMetadata *> &getArtworksToImport() const { return m_ItemsToRead; }
+        const QVector<QPair<int, int> > &getRangesToUpdate() const { return m_RangesToUpdate; }
 
     private:
         void initWorker();
@@ -83,6 +84,7 @@ namespace MetadataIO {
         QVector<Models::ArtworkMetadata *> m_ItemsToRead;
         QHash<QString, ImportDataResult> m_ImportResult;
         QProcess *m_ExiftoolProcess;
+        QVector<QPair<int, int> > m_RangesToUpdate;
         Models::SettingsModel *m_SettingsModel;
     };
 }

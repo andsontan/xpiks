@@ -71,7 +71,7 @@ namespace MetadataIO {
         }
 
     public:
-        void readMetadata(const QVector<Models::ArtworkMetadata*> &artworksToRead);
+        void readMetadata(const QVector<Models::ArtworkMetadata*> &artworksToRead, const QVector<QPair<int, int> > &rangesToUpdate);
         void writeMetadata(const QVector<Models::ArtworkMetadata*> &artworksToWrite, bool useBackups);
         Q_INVOKABLE void discardReading();
         Q_INVOKABLE void readMetadata(bool ignoreBackups);

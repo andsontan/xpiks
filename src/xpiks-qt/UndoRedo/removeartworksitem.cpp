@@ -74,6 +74,6 @@ void UndoRedo::RemoveArtworksHistoryItem::undo(const Commands::CommandManager *c
     AddArtworksHistoryItem *addArtworksItem = new AddArtworksHistoryItem(ranges);
     commandManager->recordHistoryItem(addArtworksItem);
 
-    commandManager->readMetadata(artworksToImport);
+    commandManager->readMetadata(artworksToImport, ranges);
     artItemsModel->raiseArtworksAdded(usedCount);
 }

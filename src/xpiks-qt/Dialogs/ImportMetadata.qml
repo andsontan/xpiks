@@ -197,7 +197,6 @@ Item {
                                 console.log("Import finished UI handler")
 
                                 metadataImportComponent.isInProgress = false
-                                artItemsModel.updateLastN(metadataIOCoordinator.processingItemsCount)
 
                                 if (metadataIOCoordinator.hasErrors) {
                                     errorsNotification.open()

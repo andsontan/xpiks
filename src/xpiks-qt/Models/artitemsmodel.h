@@ -76,7 +76,6 @@ namespace Models {
         void forceUnselectAllItems() const;
 
     public:
-        Q_INVOKABLE void updateLastN(int N);
         /*Q_INVOKABLE*/ void removeArtworksDirectory(int index);
         Q_INVOKABLE void removeKeywordAt(int metadataIndex, int keywordIndex);
         Q_INVOKABLE void removeLastKeyword(int metadataIndex);
@@ -128,6 +127,7 @@ namespace Models {
         ArtworkMetadata *getArtwork(int index) const;
         void raiseArtworksAdded(int count) { emit artworksAdded(count); }
         void updateItemsAtIndices(const QVector<int> &indices);
+        void updateItemsInRanges(const QVector<QPair<int, int> > &ranges);
         void setAllItemsSelected(bool selected);
 
     private:

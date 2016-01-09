@@ -990,11 +990,22 @@ ApplicationWindow {
                             boundsBehavior: Flickable.StopAtBounds
                             spacing: 4
 
-                            function forceUpdateArtworks() {
+                            function forceUpdateArtworks(index) {
                                 console.log("Force layout magic for artworks list view")
                                 imagesListView.forceLayout()
                                 imagesListView.update()
-                                imagesListView.positionViewAtBeginning()
+                                imagesListView.decrementCurrentIndex()
+                                imagesListView.positionViewAtIndex(imagesListView.currentIndex, ListView.Visible)
+                                /*for (var i = 0; i < contentItem.children.length; i++) {
+                                    var item = contentItem.children[i];
+                                    if (item.objectName === "artworkDelegate") {
+                                        console.log(item.x, item.y)
+                                    }
+                                }*/
+
+                                //console.log(imagesListView.contentItem.visibleChildren.length)
+                                //console.log(imagesListView.contentHeight)
+                                //imagesListView.positionViewAtIndex(index, ListView.Visible)
                             }
 
                             add: Transition {
@@ -1019,6 +1030,7 @@ ApplicationWindow {
 
                             delegate: Rectangle {
                                 id: rowWrapper
+                                objectName: "artworkDelegate"
                                 property bool isHighlighted: (isselected || descriptionTextInput.activeFocus || flv.isFocused || titleTextInput.activeFocus)
                                 color: isHighlighted ? Colors.selectedArtworkColor : Colors.artworkImageBackground
                                 property var artworkModel: artItemsModel.getArtworkItself(rowWrapper.getIndex())
@@ -1050,6 +1062,7 @@ ApplicationWindow {
                                 function switchChecked() {
                                     editisselected = !isselected
                                     itemCheckedCheckbox.checked = isselected
+                                    ListView.view.currentIndex = rowWrapper.delegateIndex
                                 }
 
                                 width: parent.width

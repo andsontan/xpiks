@@ -62,31 +62,13 @@ namespace Models {
     void ArtItemsModel::updateItems(const QVector<int> &indices, const QVector<int> &roles) {
         QVector<QPair<int, int> > rangesToUpdate;
         Helpers::indicesToRanges(indices, rangesToUpdate);
-        updateItemsInRanges(rangesToUpdate, roles);
+        AbstractListModel::updateItemsInRanges(rangesToUpdate, roles);
     }
 
     void ArtItemsModel::forceUnselectAllItems() const {
         int count = m_ArtworkList.count();
         for (int i = 0; i < count; ++i) {
             m_ArtworkList.at(i)->resetSelected();
-        }
-    }
-
-    void ArtItemsModel::updateLastN(int N) {
-        qDebug() << "Updating last" << N << "item(s)";
-        int length = m_ArtworkList.length();
-
-        if (0 < N && N <= length) {
-            int start = length - N;
-            int end = length - 1;
-
-            QVector<QPair<int, int> > ranges;
-            ranges << qMakePair(start, end);
-
-            QVector<int> roles;
-            fillStandardRoles(roles);
-
-            updateItemsInRanges(ranges, roles);
         }
     }
 
@@ -240,7 +222,7 @@ namespace Models {
 
         QVector<QPair<int, int> > rangesToUpdate;
         Helpers::indicesToRanges(selectedIndices, rangesToUpdate);
-        updateItemsInRanges(rangesToUpdate, QVector<int>() << IsModifiedRole);
+        AbstractListModel::updateItemsInRanges(rangesToUpdate, QVector<int>() << IsModifiedRole);
 
         updateModifiedCount();
         emit artworksChanged();
@@ -255,7 +237,7 @@ namespace Models {
         Helpers::indicesToRanges(selectedIndices, rangesToUpdate);
         QVector<int> roles;
         fillStandardRoles(roles);
-        updateItemsInRanges(rangesToUpdate, roles);
+        AbstractListModel::updateItemsInRanges(rangesToUpdate, roles);
 
         emit artworksChanged();
     }
@@ -536,9 +518,13 @@ namespace Models {
     void ArtItemsModel::updateItemsAtIndices(const QVector<int> &indices) {
         QVector<QPair<int, int> > ranges;
         Helpers::indicesToRanges(indices, ranges);
+        updateItemsInRanges(ranges);
+    }
+
+    void ArtItemsModel::updateItemsInRanges(const QVector<QPair<int, int> > &ranges) {
         QVector<int> roles;
         fillStandardRoles(roles);
-        updateItemsInRanges(ranges, roles);
+        AbstractListModel::updateItemsInRanges(ranges, roles);
     }
 
     void ArtItemsModel::setAllItemsSelected(bool selected)

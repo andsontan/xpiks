@@ -248,9 +248,10 @@ void Commands::CommandManager::connectArtworkSignals(Models::ArtworkMetadata *me
     }
 }
 
-void Commands::CommandManager::readMetadata(const QVector<Models::ArtworkMetadata *> &artworks) const {
+void Commands::CommandManager::readMetadata(const QVector<Models::ArtworkMetadata *> &artworks,
+                                            const QVector<QPair<int, int> > &rangesToUpdate) const {
     if (m_MetadataIOCoordinator) {
-        m_MetadataIOCoordinator->readMetadata(artworks);
+        m_MetadataIOCoordinator->readMetadata(artworks, rangesToUpdate);
     }
 }
 
@@ -268,10 +269,15 @@ void Commands::CommandManager::addToLibrary(const QVector<Models::ArtworkMetadat
     }
 }
 
-void Commands::CommandManager::updateArtworks(const QVector<int> &indices) const
-{
+void Commands::CommandManager::updateArtworks(const QVector<int> &indices) const {
     if (m_ArtItemsModel) {
         m_ArtItemsModel->updateItemsAtIndices(indices);
+    }
+}
+
+void Commands::CommandManager::updateArtworks(const QVector<QPair<int, int> > &rangesToUpdate) const {
+    if (m_ArtItemsModel) {
+        m_ArtItemsModel->updateItemsInRanges(rangesToUpdate);
     }
 }
 

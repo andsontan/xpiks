@@ -60,9 +60,11 @@ namespace MetadataIO {
         emit metadataWritingFinished();
     }
 
-    void MetadataIOCoordinator::readMetadata(const QVector<Models::ArtworkMetadata *> &artworksToRead) {
+    void MetadataIOCoordinator::readMetadata(const QVector<Models::ArtworkMetadata *> &artworksToRead,
+                                             const QVector<QPair<int, int> > &rangesToUpdate) {
         m_ReadingWorker = new MetadataReadingWorker(artworksToRead,
-                                                    m_CommandManager->getSettingsModel());
+                                                    m_CommandManager->getSettingsModel(),
+                                                    rangesToUpdate);
         QThread *thread = new QThread();
         m_ReadingWorker->moveToThread(thread);
 
@@ -152,6 +154,7 @@ namespace MetadataIO {
     void MetadataIOCoordinator::afterImportHandler(const QVector<Models::ArtworkMetadata*> &itemsToRead, bool ignoreBackups) {
         Models::SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
         const QHash<QString, ImportDataResult> &importResult = m_ReadingWorker->getImportResult();
+        const QVector<QPair<int, int> > &rangesToUpdate = m_ReadingWorker->getRangesToUpdate();
 
         if (!ignoreBackups && settingsModel->getSaveBackups()) {
             qDebug() << "Restoring the backups...";
@@ -170,6 +173,7 @@ namespace MetadataIO {
             qDebug() << "Skipped restoring the backups";
         }
 
+        m_CommandManager->updateArtworks(rangesToUpdate);
         m_CommandManager->addToLibrary(itemsToRead);
         m_CommandManager->saveLocalLibraryAsync();
         m_CommandManager->submitForSpellCheck(itemsToRead);
