@@ -99,7 +99,6 @@ HEADERS += \
     Models/abstractlistmodel.h \
     Helpers/constants.h \
     Helpers/appsettings.h \
-    Helpers/exiftoolwrapper.h \
     Models/artworkuploader.h \
     Helpers/curlwrapper.h \
     Models/artworksprocessor.h \
