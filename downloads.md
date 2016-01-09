@@ -10,7 +10,7 @@ permalink: /downloads/
 <h2><strong>OS X instructions</strong></h2>
 
 <div class="download-package">
-<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.1/xpiks-qt-v1.1.2.dmg">
+<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.1/xpiks-qt-v1.1.3.dmg">
 <div>
 <img src="{{site.url}}/images/os_x_installer.jpg" style="vertical-align: middle;width:70px;" />
 <span style="vertical-align: middle;">Package for OS X</span>
@@ -18,14 +18,14 @@ permalink: /downloads/
 </a>
 </div>
 
-<p>Download the Xpiks package from the link above, unpack and drag'n'drop it to the Applications. <strong>You will need to install the Exiftool to use Xpiks.</strong> Download and install <i>Exiftool</i> from the <a href="http://owl.phy.queensu.ca/%7Ephil/exiftool/ExifTool-10.00.dmg">official website</a>.</p>
+<p>Download the Xpiks package from the link above, unpack and drag'n'drop it to the Applications. <strong>You will need to install the Exiftool to use Xpiks.</strong> Download and install <i>Exiftool</i> from the <a href="http://owl.phy.queensu.ca/%7Ephil/exiftool/">official website</a>.</p>
 
 <div style="clear:both; height: 25px;">&nbsp;</div>
 
 <h2><strong>Windows instructions</strong></h2>
 
 <div class="download-package">
-<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.1/Xpiks-qt-v1.1.2.zip">
+<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.1/Xpiks-qt-v1.1.3.zip">
 <div><img src="{{site.url}}/images/windows_installer.jpg" style="vertical-align: middle;width:70px;" />
 <span style="vertical-align: middle;">Package for Win x64</span>
 </div>
