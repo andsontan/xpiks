@@ -257,7 +257,7 @@ Flickable {
 
                             tagsPasted(keywordsToAdd);
                         } else {
-                            nextTagTextInput.text = words[0]
+                            nextTagTextInput.text = nextTagTextInput.text + words[0]
                         }
 
                         event.accepted = true;
