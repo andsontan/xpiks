@@ -355,7 +355,16 @@ Item {
                                     text: combinedArtworks.description
                                     font.pixelSize: 12*settingsModel.keywordSizeScale
                                     onTextChanged: combinedArtworks.description = text
-                                    KeyNavigation.tab: titleTextInput
+
+                                    Keys.onTabPressed: {
+                                        if (titleCheckBox.checked) {
+                                            titleTextInput.forceActiveFocus()
+                                            event.accepted = true
+                                        } else if (keywordsCheckBox.checked) {
+                                            flv.activateEdit()
+                                            event.accepted = true
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -453,10 +462,19 @@ Item {
                                     font.pixelSize: 12*settingsModel.keywordSizeScale
                                     text: combinedArtworks.title
                                     onTextChanged: combinedArtworks.title = text
-                                    KeyNavigation.backtab: descriptionTextInput
+
+                                    Keys.onBacktabPressed: {
+                                        if (descriptionCheckBox.checked) {
+                                            descriptionTextInput.forceActiveFocus()
+                                            event.accepted = true
+                                        }
+                                    }
 
                                     Keys.onTabPressed: {
-                                        flv.activateEdit()
+                                        if (keywordsCheckBox.checked) {
+                                            flv.activateEdit()
+                                            event.accepted = true
+                                        }
                                     }
                                 }
                             }
@@ -621,7 +639,11 @@ Item {
                                     }
 
                                     onBackTabPressed: {
-                                        titleTextInput.forceActiveFocus()
+                                        if (titleCheckBox.checked) {
+                                            titleTextInput.forceActiveFocus()
+                                        } else if (descriptionCheckBox.checked) {
+                                            descriptionTextInput.forceActiveFocus()
+                                        }
                                     }
                                 }
 
