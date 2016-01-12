@@ -180,7 +180,7 @@ ApplicationWindow {
                         onTriggered: {
                             var filesAdded = artItemsModel.addRecentDirectory(display)
                             if (filesAdded === 0) {
-                                noFilesInfo.open()
+                                noNewFilesDialog.open()
                             }
                         }
                     }
@@ -347,8 +347,12 @@ ApplicationWindow {
         onAccepted: {
             console.log("You chose: " + chooseArtworksDialog.fileUrls)
             var filesAdded = artItemsModel.addLocalArtworks(chooseArtworksDialog.fileUrls)
-            saveRecentDirectories()
-            console.log(filesAdded + ' files via Open File(s)')
+            if (filesAdded > 0) {
+                saveRecentDirectories()
+                console.log(filesAdded + ' files via Open File(s)')
+            } else {
+                noNewFilesDialog.open()
+            }
         }
 
         onRejected: {
@@ -367,8 +371,12 @@ ApplicationWindow {
         onAccepted: {
             console.log("You chose: " + chooseDirectoryDialog.fileUrls)
             var filesAdded = artItemsModel.addLocalDirectories(chooseDirectoryDialog.fileUrls)
-            saveRecentDirectories()
-            console.log(filesAdded + ' files via Open Directory')
+            if (filesAdded > 0) {
+                saveRecentDirectories()
+                console.log(filesAdded + ' files via Open Directory')
+            } else {
+                noNewFilesDialog.open()
+            }
         }
 
         onRejected: {
@@ -389,9 +397,9 @@ ApplicationWindow {
     }
 
     MessageDialog {
-        id: noFilesInfo
+        id: noNewFilesDialog
         title: "Information"
-        text: qsTr("No files were added")
+        text: qsTr("No new files were added")
     }
 
     MessageDialog {
@@ -405,6 +413,8 @@ ApplicationWindow {
         onArtworksAdded: {
            if (count > 0) {
                Common.launchDialog("Dialogs/ImportMetadata.qml", applicationWindow, {})
+           } else {
+               console.debug("Warning: artworksAdded() signal with no new items!")
            }
         }
     }
@@ -432,8 +442,12 @@ ApplicationWindow {
             onDropped: {
                 if (drop.hasUrls) {
                     var filesCount = artItemsModel.dropFiles(drop.urls)
-                    saveRecentDirectories()
-                    console.debug(filesCount + ' files added via drag&drop')
+                    if (filesCount > 0) {
+                        saveRecentDirectories()
+                        console.debug(filesCount + ' files added via drag&drop')
+                    } else {
+                        noNewFilesDialog.open()
+                    }
                 }
             }
         }
