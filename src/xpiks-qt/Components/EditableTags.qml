@@ -256,11 +256,8 @@ Flickable {
                             }
 
                             tagsPasted(keywordsToAdd);
-                        } else {
-                            nextTagTextInput.text = nextTagTextInput.text + words[0]
+                            event.accepted = true;
                         }
-
-                        event.accepted = true;
                     }
                     else if (event.matches(StandardKey.Copy)) {
                         copyRequest()
