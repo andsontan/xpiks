@@ -138,6 +138,7 @@ namespace Models {
     void FilteredArtItemsProxyModel::spellCheckSelected() {
         QVector<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
         m_CommandManager->submitForSpellCheck(selectedArtworks);
+        m_CommandManager->reportUserAction(Conectivity::UserActionSpellCheck);
     }
 
     int FilteredArtItemsProxyModel::getModifiedSelectedCount(bool overwriteAll) const {

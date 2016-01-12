@@ -322,7 +322,6 @@ void Commands::CommandManager::submitForSpellCheck(const QVector<Models::Artwork
 void Commands::CommandManager::submitForSpellCheck(const QVector<SpellCheck::ISpellCheckable *> &items) const {
     if (m_SettingsModel->getUseSpellCheck() && m_SpellCheckerService != NULL) {
         m_SpellCheckerService->submitItems(items);
-        reportUserAction(Conectivity::UserActionSpellCheck);
     }
 }
 
@@ -333,7 +332,10 @@ void Commands::CommandManager::submitItemForSpellCheck(SpellCheck::ISpellCheckab
 }
 
 void Commands::CommandManager::setupSpellCheckSuggestions(SpellCheck::ISpellCheckable *item, int index, int flags) {
-    m_SpellCheckSuggestionModel->setupModel(item, index, flags);
+    if (m_SpellCheckSuggestionModel) {
+        m_SpellCheckSuggestionModel->setupModel(item, index, flags);
+        reportUserAction(Conectivity::UserActionSpellSuggestions);
+    }
 }
 
 void Commands::CommandManager::saveMetadata(Models::ArtworkMetadata *metadata) const {
