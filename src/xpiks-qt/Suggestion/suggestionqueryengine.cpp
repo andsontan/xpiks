@@ -141,15 +141,13 @@ namespace Suggestion {
     QUrl SuggestionQueryEngine::buildQuery(const QStringList &queryKeywords) const {
         QUrlQuery urlQuery;
 
-        QString queryString = QString("https://api.shutterstock.com/v2/images/search");
-
         urlQuery.addQueryItem("language", "en");
         urlQuery.addQueryItem("view", "full");
         urlQuery.addQueryItem("per_page", "100");
         urlQuery.addQueryItem("query", queryKeywords.join(' '));
 
         QUrl url;
-        url.setUrl(queryString);
+        url.setUrl(QLatin1String("https://api.shutterstock.com/v2/images/search"));
         url.setQuery(urlQuery);
         return url;
     }

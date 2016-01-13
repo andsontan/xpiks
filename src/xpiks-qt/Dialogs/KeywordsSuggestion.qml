@@ -105,172 +105,184 @@ Item {
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
-            width: 730
-            height: 610
+            width: 720
+            anchors.top: parent.top
+            anchors.topMargin: 20
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 20
             color: Colors.selectedArtworkColor
-            anchors.centerIn: parent
-            Component.onCompleted: anchors.centerIn = undefined
+            anchors.horizontalCenter: parent.horizontalCenter
+            Component.onCompleted: anchors.horizontalCenter = undefined
 
-            ColumnLayout {
-                anchors.fill: parent
-                anchors.leftMargin: 30
-                anchors.rightMargin: 30
+            RowLayout {
+                id: searchRow
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.top: parent.top
                 anchors.topMargin: 20
-                anchors.bottomMargin: 20
-                spacing: 5
+                anchors.leftMargin: 20
+                anchors.rightMargin: 20
+                height: 24
+                spacing: 20
 
-                RowLayout {
-                    height: 24
-                    spacing: 20
+                StyledInputHost {
+                    border.width: queryText.activeFocus ? 1 : 0
+                    Layout.row: 0
+                    Layout.column: 1
 
-                    StyledInputHost {
-                        border.width: queryText.activeFocus ? 1 : 0
-                        Layout.row: 0
-                        Layout.column: 1
-
-                        StyledTextInput {
-                            id: queryText
-                            width: 380
-                            height: 24
-                            clip: true
-                            anchors.left: parent.left
-                            anchors.leftMargin: 5
-                            onAccepted: keywordsSuggestor.searchArtworks(queryText.text)
-                        }
+                    StyledTextInput {
+                        id: queryText
+                        width: 380
+                        height: 24
+                        clip: true
+                        anchors.left: parent.left
+                        anchors.leftMargin: 5
+                        onAccepted: keywordsSuggestor.searchArtworks(queryText.text)
                     }
+                }
 
-                    StyledButton {
-                        text: qsTr("Search")
-                        width: 70
-                        activeFocusOnPress: true
-                        enabled: !keywordsSuggestor.isInProgress
-                        onClicked: keywordsSuggestor.searchArtworks(queryText.text)
-                    }
-
-                    Item {
-                        Layout.fillWidth: true
-                    }
-
-                    StyledCheckbox {
-                        id: searchUsingAndCheckbox
-                        text: qsTr("Use only local source")
-                        onCheckedChanged: {
-                            keywordsSuggestor.useLocal = checked
-                        }
-
-                        Component.onCompleted: checked = keywordsSuggestor.useLocal
-                    }
+                StyledButton {
+                    text: qsTr("Search")
+                    width: 70
+                    activeFocusOnPress: true
+                    enabled: !keywordsSuggestor.isInProgress
+                    onClicked: keywordsSuggestor.searchArtworks(queryText.text)
                 }
 
                 Item {
-                    height: 10
+                    Layout.fillWidth: true
                 }
 
-                Rectangle {
-                    height: 250
-                    width: parent.width
-                    color: Colors.defaultControlColor
+                StyledCheckbox {
+                    id: searchUsingAndCheckbox
+                    text: qsTr("Use only local source")
+                    onCheckedChanged: {
+                        keywordsSuggestor.useLocal = checked
+                    }
 
-                    Flickable {
-                        clip: true
-                        id: suggestionsWrapper
-                        anchors.fill: parent
-                        contentHeight: flow.childrenRect.height + 40
-                        contentWidth: parent.width
-                        enabled: !keywordsSuggestor.isInProgress
-                        flickableDirection: Flickable.VerticalFlick
-                        boundsBehavior: Flickable.StopAtBounds
+                    Component.onCompleted: checked = keywordsSuggestor.useLocal
+                }
+            }
 
-                        Flow {
-                            id: flow
-                            spacing: 20
-                            anchors.top: parent.top
-                            anchors.left: parent.left
-                            anchors.right: parent.right
-                            anchors.margins: 20
+            Rectangle {
+                id: resultsRect
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.top: searchRow.bottom
+                anchors.topMargin: 15
+                anchors.bottom: column.top
+                anchors.bottomMargin: 10
+                anchors.leftMargin: 20
+                anchors.rightMargin: 20
+                color: Colors.defaultControlColor
 
-                            Repeater {
-                                id: suggestionsRepeater
-                                model: keywordsSuggestor
+                Flickable {
+                    clip: true
+                    id: suggestionsWrapper
+                    anchors.fill: parent
+                    contentHeight: flow.childrenRect.height + 40
+                    contentWidth: parent.width
+                    enabled: !keywordsSuggestor.isInProgress
+                    flickableDirection: Flickable.VerticalFlick
+                    boundsBehavior: Flickable.StopAtBounds
 
-                                delegate: Item {
-                                    property int delegateIndex: index
-                                    id: imageWrapper
-                                    height: 110
-                                    width: height
+                    Flow {
+                        id: flow
+                        spacing: 20
+                        anchors.top: parent.top
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.margins: 20
 
-                                    Image {
-                                        anchors.fill: parent
-                                        anchors.margins: 1
-                                        source: keywordsSuggestor.useLocal ? ("image://global/" + url) : url
-                                        sourceSize.width: 150
-                                        sourceSize.height: 150
-                                        fillMode: Image.PreserveAspectCrop
-                                        asynchronous: true
-                                    }
+                        Repeater {
+                            id: suggestionsRepeater
+                            model: keywordsSuggestor
 
-                                    Rectangle {
-                                        anchors.fill: parent
-                                        color: Colors.defaultControlColor
-                                        opacity: isselected ? (mouseArea.containsMouse ? 0.6 : 0.7) : (mouseArea.containsMouse ? 0.4 : 0)
-                                    }
+                            delegate: Item {
+                                property int delegateIndex: index
+                                id: imageWrapper
+                                height: 145
+                                width: height
 
-                                    LargeAddIcon {
-                                        opacity: isselected ? (mouseArea.containsMouse ? 0.85 : 1) : (mouseArea.containsMouse ? 0.6 : 0)
-                                        width: parent.width
-                                        height: parent.height
-                                        rotation: isselected ? 45 : 0
-                                    }
+                                Image {
+                                    anchors.fill: parent
+                                    anchors.margins: 1
+                                    source: keywordsSuggestor.useLocal ? ("image://global/" + url) : url
+                                    sourceSize.width: 145
+                                    sourceSize.height: 145
+                                    fillMode: Image.PreserveAspectCrop
+                                    asynchronous: true
+                                }
 
-                                    MouseArea {
-                                        id: mouseArea
-                                        anchors.fill: parent
-                                        hoverEnabled: true
-                                        onClicked: {
-                                            keywordsSuggestor.setArtworkSelected(delegateIndex, !isselected)
-                                        }
+                                Rectangle {
+                                    anchors.fill: parent
+                                    color: Colors.defaultControlColor
+                                    opacity: isselected ? (mouseArea.containsMouse ? 0.6 : 0.7) : (mouseArea.containsMouse ? 0.4 : 0)
+                                }
+
+                                LargeAddIcon {
+                                    opacity: isselected ? (mouseArea.containsMouse ? 0.85 : 1) : (mouseArea.containsMouse ? 0.6 : 0)
+                                    width: parent.width
+                                    height: parent.height
+                                    rotation: isselected ? 45 : 0
+                                }
+
+                                MouseArea {
+                                    id: mouseArea
+                                    anchors.fill: parent
+                                    hoverEnabled: true
+                                    onClicked: {
+                                        keywordsSuggestor.setArtworkSelected(delegateIndex, !isselected)
                                     }
                                 }
                             }
                         }
                     }
+                }
 
-                    CustomScrollbar {
-                        anchors.topMargin: 0
-                        anchors.bottomMargin: 0
-                        anchors.rightMargin: -20
-                        flickable: suggestionsWrapper
-                    }
+                CustomScrollbar {
+                    anchors.topMargin: 0
+                    anchors.bottomMargin: 0
+                    anchors.rightMargin: -20
+                    flickable: suggestionsWrapper
+                }
 
-                    Rectangle {
-                        anchors.fill: parent
-                        color: Colors.selectedArtworkColor
-                        opacity: 0.4
-                        visible: keywordsSuggestor.isInProgress
-                    }
-
-                    Item {
-                        anchors.fill: parent
-                        visible: !keywordsSuggestor.isInProgress && (suggestionsRepeater.count == 0)
-
-                        StyledText {
-                            anchors.centerIn: parent
-                            text: qsTr("No results found")
-                            color: Colors.selectedMetadataColor
-                        }
-                    }
-
-                    StyledBusyIndicator {
-                        width: parent.height
-                        height: parent.height
-                        anchors.centerIn: parent
-                        running: keywordsSuggestor.isInProgress
-                    }
+                Rectangle {
+                    anchors.fill: parent
+                    color: Colors.selectedArtworkColor
+                    opacity: 0.4
+                    visible: keywordsSuggestor.isInProgress
                 }
 
                 Item {
-                    height: 1
+                    anchors.fill: parent
+                    visible: !keywordsSuggestor.isInProgress && (suggestionsRepeater.count == 0)
+
+                    StyledText {
+                        anchors.centerIn: parent
+                        text: qsTr("No results found")
+                        color: Colors.selectedMetadataColor
+                    }
                 }
+
+                StyledBusyIndicator {
+                    width: parent.height
+                    height: parent.height
+                    anchors.centerIn: parent
+                    running: keywordsSuggestor.isInProgress
+                }
+            }
+
+            ColumnLayout {
+                id: column
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                anchors.leftMargin: 20
+                anchors.rightMargin: 20
+                anchors.bottomMargin: 20
+                spacing: 5
+                height: childrenRect.height
 
                 RowLayout {
                     StyledText {
@@ -417,6 +429,8 @@ Item {
 
                 RowLayout {
                     spacing: 20
+                    anchors.left: parent.left
+                    anchors.right: parent.right
 
                     Item {
                         Layout.fillWidth: true
