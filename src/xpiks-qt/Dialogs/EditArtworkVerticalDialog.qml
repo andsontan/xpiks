@@ -204,6 +204,12 @@ Item {
                                     Keys.onTabPressed: titleTextInput.forceActiveFocus()
 
                                     onCursorRectangleChanged: descriptionFlick.ensureVisible(cursorRectangle)
+
+                                    onActiveFocusChanged: {
+                                        if (descriptionTextInput.length > 0) {
+                                            combinedArtworks.spellCheckDescription()
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -280,6 +286,12 @@ Item {
                                     }
 
                                     onCursorRectangleChanged: titleFlick.ensureVisible(cursorRectangle)
+
+                                    onActiveFocusChanged: {
+                                        if (titleTextInput.length > 0) {
+                                            combinedArtworks.spellCheckTitle()
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -424,6 +436,18 @@ Item {
                             Common.launchDialog("Dialogs/KeywordsSuggestion.qml",
                                                 componentParent,
                                                 {callbackObject: callbackObject});
+                        }
+                    }
+
+                    StyledButton {
+                        width: 100
+                        text: qsTr("Fix spelling")
+
+                        onClicked: {
+                            combinedArtworks.suggestCorrections()
+                            Common.launchDialog("Dialogs/SpellCheckSuggestionsDialog.qml",
+                                                componentParent,
+                                                {})
                         }
                     }
 

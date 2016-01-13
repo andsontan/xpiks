@@ -200,6 +200,12 @@ Item {
                             Keys.onTabPressed: titleTextInput.forceActiveFocus()
 
                             onCursorRectangleChanged: descriptionFlick.ensureVisible(cursorRectangle)
+
+                            onActiveFocusChanged: {
+                                if (descriptionTextInput.length > 0) {
+                                    combinedArtworks.spellCheckDescription()
+                                }
+                            }
                         }
                     }
                 }
@@ -278,6 +284,12 @@ Item {
                             }
 
                             onCursorRectangleChanged: titleFlick.ensureVisible(cursorRectangle)
+
+                            onActiveFocusChanged: {
+                                if (titleTextInput.length > 0) {
+                                    combinedArtworks.spellCheckTitle()
+                                }
+                            }
                         }
                     }
                 }
@@ -402,7 +414,7 @@ Item {
                 }
 
                 RowLayout {
-                    spacing: 20
+                    spacing: 15
 
                     StyledButton {
                         width: 150
@@ -421,12 +433,24 @@ Item {
                         }
                     }
 
+                    StyledButton {
+                        width: 100
+                        text: qsTr("Fix spelling")
+
+                        onClicked: {
+                            combinedArtworks.suggestCorrections()
+                            Common.launchDialog("Dialogs/SpellCheckSuggestionsDialog.qml",
+                                                componentParent,
+                                                {})
+                        }
+                    }
+
                     Item {
                         Layout.fillWidth: true
                     }
 
                     StyledButton {
-                        width: 100
+                        width: 70
                         text: qsTr("Apply")
                         onClicked: {
                             combinedArtworks.saveEdits()
@@ -436,7 +460,7 @@ Item {
                     }
 
                     StyledButton {
-                        width: 100
+                        width: 70
                         text: qsTr("Close")
                         onClicked: {
                             closePopup()
