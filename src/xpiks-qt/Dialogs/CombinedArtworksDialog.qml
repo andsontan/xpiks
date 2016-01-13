@@ -337,32 +337,64 @@ Item {
 
                             Rectangle {
                                 id: rect
-                                Layout.fillWidth: true
+                                anchors.left: parent.left
+                                anchors.right: parent.right
                                 height: 25
                                 color: Colors.defaultInputBackground
                                 border.color: Colors.artworkActiveColor
                                 border.width: descriptionTextInput.activeFocus ? 1 : 0
-                                anchors.left: parent.left
+                                clip: true
 
-                                StyledTextInput {
-                                    id: descriptionTextInput
+                                Flickable {
+                                    id: descriptionFlick
+                                    contentWidth: descriptionTextInput.paintedWidth
+                                    contentHeight: descriptionTextInput.paintedHeight
                                     anchors.left: parent.left
                                     anchors.right: parent.right
                                     anchors.leftMargin: 5
                                     anchors.rightMargin: 5
                                     anchors.verticalCenter: parent.verticalCenter
-                                    maximumLength: 250
-                                    text: combinedArtworks.description
-                                    font.pixelSize: 12*settingsModel.keywordSizeScale
-                                    onTextChanged: combinedArtworks.description = text
+                                    interactive: false
+                                    flickableDirection: Flickable.HorizontalFlick
+                                    height: 30
+                                    clip: true
+                                    focus: false
 
-                                    Keys.onTabPressed: {
-                                        if (titleCheckBox.checked) {
-                                            titleTextInput.forceActiveFocus()
-                                            event.accepted = true
-                                        } else if (keywordsCheckBox.checked) {
-                                            flv.activateEdit()
-                                            event.accepted = true
+                                    function ensureVisible(r) {
+                                        if (contentX >= r.x)
+                                            contentX = r.x;
+                                        else if (contentX+width <= r.x+r.width)
+                                            contentX = r.x+r.width-width;
+                                    }
+
+                                    StyledTextEdit {
+                                        id: descriptionTextInput
+                                        width: descriptionFlick.width
+                                        height: descriptionFlick.height
+                                        text: combinedArtworks.description
+                                        font.pixelSize: 12*settingsModel.keywordSizeScale
+                                        onTextChanged: combinedArtworks.description = text
+
+                                        Component.onCompleted: {
+                                            combinedArtworks.initDescriptionHighlighting(descriptionTextInput.textDocument)
+                                        }
+
+                                        onActiveFocusChanged: {
+                                            if (descriptionTextInput.length > 0) {
+                                                combinedArtworks.spellCheckDescription()
+                                            }
+                                        }
+
+                                        onCursorRectangleChanged: descriptionFlick.ensureVisible(cursorRectangle)
+
+                                        Keys.onTabPressed: {
+                                            if (titleCheckBox.checked) {
+                                                titleTextInput.forceActiveFocus()
+                                                event.accepted = true
+                                            } else if (keywordsCheckBox.checked) {
+                                                flv.activateEdit()
+                                                event.accepted = true
+                                            }
                                         }
                                     }
                                 }
@@ -449,32 +481,65 @@ Item {
                                 color: Colors.defaultInputBackground
                                 border.color: Colors.artworkActiveColor
                                 border.width: titleTextInput.activeFocus ? 1 : 0
+                                clip: true
 
-                                StyledTextInput {
-                                    id: titleTextInput
+                                Flickable {
+                                    id: titleFlick
+                                    contentWidth: titleTextInput.paintedWidth
+                                    contentHeight: titleTextInput.paintedHeight
+                                    height: 30
                                     anchors.left: parent.left
                                     anchors.right: parent.right
                                     anchors.leftMargin: 5
                                     anchors.rightMargin: 5
                                     anchors.verticalCenter: parent.verticalCenter
-                                    maximumLength: 200
-                                    focus: true
-                                    font.pixelSize: 12*settingsModel.keywordSizeScale
-                                    text: combinedArtworks.title
-                                    onTextChanged: combinedArtworks.title = text
+                                    clip: true
+                                    flickableDirection: Flickable.HorizontalFlick
+                                    interactive: false
+                                    focus: false
 
-                                    Keys.onBacktabPressed: {
-                                        if (descriptionCheckBox.checked) {
-                                            descriptionTextInput.forceActiveFocus()
-                                            event.accepted = true
-                                        }
+                                    function ensureVisible(r) {
+                                        if (contentX >= r.x)
+                                            contentX = r.x;
+                                        else if (contentX+width <= r.x+r.width)
+                                            contentX = r.x+r.width-width;
                                     }
 
-                                    Keys.onTabPressed: {
-                                        if (keywordsCheckBox.checked) {
-                                            flv.activateEdit()
-                                            event.accepted = true
+                                    StyledTextEdit {
+                                        id: titleTextInput
+                                        focus: true
+                                        width: titleFlick.width
+                                        height: titleFlick.height
+                                        font.pixelSize: 12*settingsModel.keywordSizeScale
+                                        text: combinedArtworks.title
+                                        onTextChanged: combinedArtworks.title = text
+                                        KeyNavigation.backtab: descriptionTextInput
+
+                                        Keys.onBacktabPressed: {
+                                            if (descriptionCheckBox.checked) {
+                                                descriptionTextInput.forceActiveFocus()
+                                                event.accepted = true
+                                            }
                                         }
+
+                                        Keys.onTabPressed: {
+                                            if (keywordsCheckBox.checked) {
+                                                flv.activateEdit()
+                                                event.accepted = true
+                                            }
+                                        }
+
+                                        onActiveFocusChanged: {
+                                            if (titleTextInput.length > 0) {
+                                                combinedArtworks.spellCheckTitle()
+                                            }
+                                        }
+
+                                        Component.onCompleted: {
+                                            combinedArtworks.initTitleHighlighting(titleTextInput.textDocument)
+                                        }
+
+                                        onCursorRectangleChanged: titleFlick.ensureVisible(cursorRectangle)
                                     }
                                 }
                             }

@@ -34,7 +34,8 @@ namespace Common {
     enum SuggestCorrectionsFlags {
         CorrectTitle = 1,
         CorrectDescription = 2,
-        CorrectKeywords = 4
+        CorrectKeywords = 4,
+        CorrectAll = 7
     };
 
     enum SpellCheckFlags {

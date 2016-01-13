@@ -30,6 +30,19 @@
 #include "../SpellCheck/spellcheckiteminfo.h"
 
 namespace Models {
+    CombinedArtworksModel::CombinedArtworksModel(QObject *parent) :
+        AbstractListModel(parent),
+        Common::BaseEntity(),
+        m_CommonKeywordsModel(this),
+        m_EditFlags(0),
+        m_AreKeywordsModified(false),
+        m_IsDescriptionModified(false),
+        m_IsTitleModified(false)
+    {
+        QObject::connect(&m_CommonKeywordsModel, SIGNAL(spellCheckErrorsChanged()),
+                         this, SLOT(spellCheckErrorsChangedHandler()));
+    }
+
     CombinedArtworksModel::~CombinedArtworksModel() { qDeleteAll(m_ArtworksList); }
 
     void CombinedArtworksModel::initArtworks(const QVector<ArtItemInfo *> &artworks) {
@@ -227,15 +240,13 @@ namespace Models {
     }
 
     void CombinedArtworksModel::suggestCorrections() {
-        int flags = 0;
-        Common::SetFlag(flags, Common::CorrectKeywords);
-        // TODO: no real description/title spellchecking yet
-        m_CommandManager->setupSpellCheckSuggestions(&m_CommonKeywordsModel, -1, flags);
+        m_CommandManager->setupSpellCheckSuggestions(&m_CommonKeywordsModel, -1, Common::CorrectAll);
     }
 
     void CombinedArtworksModel::initDescriptionHighlighting(QQuickTextDocument *document) {
         SpellCheck::SpellCheckItemInfo *info = m_CommonKeywordsModel.getSpellCheckInfo();
         if (info == NULL) {
+            Q_ASSERT(false);
             // OneItem edits will use artwork's spellcheckinfo
             // combined edit will use this one
             info = &m_SpellCheckInfo;
@@ -248,6 +259,7 @@ namespace Models {
     void CombinedArtworksModel::initTitleHighlighting(QQuickTextDocument *document) {
         SpellCheck::SpellCheckItemInfo *info = m_CommonKeywordsModel.getSpellCheckInfo();
         if (info == NULL) {
+            Q_ASSERT(false);
             // OneItem edits will use artwork's spellcheckinfo
             // combined edit will use this one
             info = &m_SpellCheckInfo;
@@ -255,6 +267,18 @@ namespace Models {
 
         info->createHighlighterForTitle(document->textDocument(), &m_CommonKeywordsModel);
         m_CommonKeywordsModel.notifySpellCheckResults(Common::SpellCheckTitle);
+    }
+
+    void CombinedArtworksModel::spellCheckDescription() {
+        if (!m_CommonKeywordsModel.getDescription().trimmed().isEmpty()) {
+            m_CommandManager->submitItemForSpellCheck(&m_CommonKeywordsModel, Common::SpellCheckDescription);
+        }
+    }
+
+    void CombinedArtworksModel::spellCheckTitle() {
+        if (!m_CommonKeywordsModel.getTitle().trimmed().isEmpty()) {
+            m_CommandManager->submitItemForSpellCheck(&m_CommonKeywordsModel, Common::SpellCheckTitle);
+        }
     }
 
     void CombinedArtworksModel::processCombinedEditCommand() const {
@@ -335,6 +359,11 @@ namespace Models {
                 initKeywords(commonKeywords.toList());
             }
         }
+    }
+
+    void CombinedArtworksModel::spellCheckErrorsChangedHandler() {
+        emit descriptionChanged();
+        emit titleChanged();
     }
 
     int CombinedArtworksModel::rowCount(const QModelIndex &parent) const {

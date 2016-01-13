@@ -54,16 +54,7 @@ namespace Models {
         Q_PROPERTY(bool appendKeywords READ getAppendKeywords WRITE setAppendKeywords NOTIFY appendKeywordsChanged)
 
     public:
-        CombinedArtworksModel(QObject *parent = 0) :
-            AbstractListModel(parent),
-            Common::BaseEntity(),
-            m_CommonKeywordsModel(this),
-            m_EditFlags(0),
-            m_AreKeywordsModified(false),
-            m_IsDescriptionModified(false),
-            m_IsTitleModified(false)
-        {}
-
+        CombinedArtworksModel(QObject *parent = 0);
         virtual ~CombinedArtworksModel();
 
     public:
@@ -153,12 +144,17 @@ namespace Models {
         Q_INVOKABLE void suggestCorrections();
         Q_INVOKABLE void initDescriptionHighlighting(QQuickTextDocument *document);
         Q_INVOKABLE void initTitleHighlighting(QQuickTextDocument *document);
+        Q_INVOKABLE void spellCheckDescription();
+        Q_INVOKABLE void spellCheckTitle();
 
     private:
         void processCombinedEditCommand() const;
         void enableAllFields();
         void assignFromOneArtwork();
         void assignFromManyArtworks();
+
+    private slots:
+        void spellCheckErrorsChangedHandler();
 
     public:
         enum CombinedArtworksModelRoles {
