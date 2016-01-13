@@ -156,6 +156,7 @@ ApplicationWindow {
         if (filterText.length > 0) {
             filterText.text = ''
         }
+        filterClearTimer.start()
     }
 
     Component.onCompleted: {
@@ -803,10 +804,17 @@ ApplicationWindow {
                             StyledText {
                                 text: qsTr("Search...   x:empty  x:modified")
                                 color: Colors.defaultInputBackground
-                                opacity: (filterText.activeFocus || filterText.length > 0) ? 0 : 0.1
+                                opacity: (filterClearTimer.running || filterText.activeFocus || (filterText.length > 0)) ? 0 : 0.1
                                 anchors.left: parent.left
                                 anchors.leftMargin: 7
                                 anchors.verticalCenter: parent.verticalCenter
+                            }
+
+                            Timer {
+                                id: filterClearTimer
+                                running: false
+                                interval: 750
+                                repeat: false
                             }
                         }
 
