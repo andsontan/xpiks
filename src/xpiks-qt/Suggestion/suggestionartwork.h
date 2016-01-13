@@ -31,11 +31,17 @@ namespace Suggestion {
     class SuggestionArtwork
     {
     public:
-        SuggestionArtwork(const QString &url, const QStringList &keywords) :
+        SuggestionArtwork(const QString &url, const QStringList &keywords, bool isLocal = true) :
             m_KeywordsSet(keywords.toSet()),
-            m_Url(url),
-            m_IsSelected(false)
-        { }
+            m_IsSelected(false),
+            m_IsLocal(isLocal)
+        {
+            if (isLocal) {
+                m_Url = QLatin1String("image://global/") + url;
+            } else {
+                m_Url = url;
+            }
+        }
 
     public:
         const QString &getUrl() const { return m_Url; }
@@ -49,6 +55,7 @@ namespace Suggestion {
         QSet<QString> m_KeywordsSet;
         QString m_Url;
         bool m_IsSelected;
+        bool m_IsLocal;
     };
 }
 

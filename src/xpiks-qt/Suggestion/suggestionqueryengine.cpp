@@ -130,7 +130,7 @@ namespace Suggestion {
                             }
                         }
 
-                        SuggestionArtwork *artwork = new SuggestionArtwork(url, keywordsList);
+                        SuggestionArtwork *artwork = new SuggestionArtwork(url, keywordsList, false);
                         suggestionArtworks.append(artwork);
                     }
                 }

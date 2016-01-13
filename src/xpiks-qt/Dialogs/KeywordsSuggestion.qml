@@ -105,11 +105,11 @@ Item {
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
-            width: 720
+            width: 740
             anchors.top: parent.top
-            anchors.topMargin: 20
+            anchors.topMargin: 15
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: 20
+            anchors.bottomMargin: 15
             color: Colors.selectedArtworkColor
             anchors.horizontalCenter: parent.horizontalCenter
             Component.onCompleted: anchors.horizontalCenter = undefined
@@ -201,15 +201,15 @@ Item {
                             delegate: Item {
                                 property int delegateIndex: index
                                 id: imageWrapper
-                                height: 145
+                                height: 150
                                 width: height
 
                                 Image {
                                     anchors.fill: parent
                                     anchors.margins: 1
-                                    source: keywordsSuggestor.useLocal ? ("image://global/" + url) : url
-                                    sourceSize.width: 145
-                                    sourceSize.height: 145
+                                    source: url
+                                    sourceSize.width: 150
+                                    sourceSize.height: 150
                                     fillMode: Image.PreserveAspectCrop
                                     asynchronous: true
                                 }
