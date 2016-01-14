@@ -93,14 +93,12 @@ void Commands::CommandManager::InjectDependency(UndoRedo::UndoRedoManager *undoR
     m_UndoRedoManager->setCommandManager(this);
 }
 
-void Commands::CommandManager::InjectDependency(Models::ZipArchiver *zipArchiver)
-{
+void Commands::CommandManager::InjectDependency(Models::ZipArchiver *zipArchiver) {
     Q_ASSERT(zipArchiver != NULL); m_ZipArchiver = zipArchiver;
     m_ZipArchiver->setCommandManager(this);
 }
 
-void Commands::CommandManager::InjectDependency(Suggestion::KeywordsSuggestor *keywordsSuggestor)
-{
+void Commands::CommandManager::InjectDependency(Suggestion::KeywordsSuggestor *keywordsSuggestor) {
     Q_ASSERT(keywordsSuggestor != NULL); m_KeywordsSuggestor = keywordsSuggestor;
     m_KeywordsSuggestor->setCommandManager(this);
 }
@@ -157,15 +155,13 @@ const
     return result;
 }
 
-void Commands::CommandManager::recordHistoryItem(UndoRedo::HistoryItem *historyItem) const
-{
+void Commands::CommandManager::recordHistoryItem(UndoRedo::HistoryItem *historyItem) const {
     if (m_UndoRedoManager) {
         m_UndoRedoManager->recordHistoryItem(historyItem);
     }
 }
 
-void Commands::CommandManager::connectEntitiesSignalsSlots() const
-{
+void Commands::CommandManager::connectEntitiesSignalsSlots() const {
     QObject::connect(m_SecretsManager, SIGNAL(beforeMasterPasswordChange(QString,QString)),
                      m_UploadInfoRepository, SLOT(onBeforeMasterPasswordChanged(QString,QString)));
 
@@ -185,12 +181,14 @@ void Commands::CommandManager::connectEntitiesSignalsSlots() const
 void Commands::CommandManager::recodePasswords(const QString &oldMasterPassword,
                                                   const QString &newMasterPassword,
                                                   const QVector<Models::UploadInfo *> &uploadInfos) const {
-    qDebug() << "Recoding passwords for" << uploadInfos.length() << "item(s)";
-    foreach (Models::UploadInfo *info, uploadInfos) {
-        if (info->hasPassword()) {
-            QString newPassword = m_SecretsManager->recodePassword(
-                        info->getPassword(), oldMasterPassword, newMasterPassword);
-            info->setPassword(newPassword);
+    if (m_SecretsManager) {
+        qDebug() << "Recoding passwords for" << uploadInfos.length() << "item(s)";
+        foreach (Models::UploadInfo *info, uploadInfos) {
+            if (info->hasPassword()) {
+                QString newPassword = m_SecretsManager->recodePassword(
+                            info->getPassword(), oldMasterPassword, newMasterPassword);
+                info->setPassword(newPassword);
+            }
         }
     }
 }
@@ -216,8 +214,7 @@ void Commands::CommandManager::combineArtworks(const QVector<Models::ArtItemInfo
 }
 
 
-void Commands::CommandManager::setArtworksForUpload(const QVector<Models::ArtworkMetadata *> &artworks) const
-{
+void Commands::CommandManager::setArtworksForUpload(const QVector<Models::ArtworkMetadata *> &artworks) const {
     if (m_ArtworkUploader) {
         m_ArtworkUploader->setArtworks(artworks);
     }
@@ -230,8 +227,7 @@ void Commands::CommandManager::setArtworksForZipping(const QVector<Models::Artwo
 }
 
 /*virtual*/
-void Commands::CommandManager::connectArtworkSignals(Models::ArtworkMetadata *metadata) const
-{
+void Commands::CommandManager::connectArtworkSignals(Models::ArtworkMetadata *metadata) const {
     if (m_ArtItemsModel) {
         QObject::connect(metadata, SIGNAL(modifiedChanged(bool)),
                          m_ArtItemsModel, SLOT(itemModifiedChanged(bool)));

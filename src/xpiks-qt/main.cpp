@@ -153,9 +153,6 @@ int main(int argc, char *argv[]) {
         std::cerr << "AppDataPath is empty!";
     }
 
-    Models::LogsModel logsModel;
-    logsModel.startLogging();
-
 #ifdef WITH_LOGS
     const QString &logFileDir = appDataPath;
     if (!logFileDir.isEmpty()) {
@@ -166,6 +163,9 @@ int main(int argc, char *argv[]) {
         }
     }
 #endif
+
+    Models::LogsModel logsModel;
+    logsModel.startLogging();
 
     qInstallMessageHandler(myMessageHandler);
     qDebug() << "Log started";
