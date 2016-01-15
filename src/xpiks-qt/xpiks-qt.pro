@@ -67,7 +67,8 @@ SOURCES += main.cpp \
     MetadataIO/metadatareadingworker.cpp \
     MetadataIO/metadataiocoordinator.cpp \
     MetadataIO/saverworkerjobitem.cpp \
-    MetadataIO/metadatawritingworker.cpp
+    MetadataIO/metadatawritingworker.cpp \
+    Conectivity/curlftpuploader.cpp
 
 RESOURCES += qml.qrc
 
@@ -173,7 +174,8 @@ HEADERS += \
     MetadataIO/saverworkerjobitem.h \
     MetadataIO/metadatareadingworker.h \
     MetadataIO/metadataiocoordinator.h \
-    MetadataIO/metadatawritingworker.h
+    MetadataIO/metadatawritingworker.h \
+    Conectivity/curlftpuploader.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
@@ -230,6 +232,8 @@ LIBS += -lz
 
 LIBS += -L"$$PWD/../libs/"
 LIBS += -lquazip
+LIBS += -lcurl_debug
+INCLUDEPATH += "../libcurl/include/curl"
 INCLUDEPATH += "../hunspell-1.3.3/src/hunspell"
 
 LIBS += -lhunspell
