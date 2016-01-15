@@ -25,6 +25,7 @@
 #include <QObject>
 #include <QString>
 #include <QVector>
+#include <QSharedPointer>
 
 namespace Conectivity {
     struct UploadContext {
@@ -34,6 +35,7 @@ namespace Conectivity {
         bool m_UsePassiveMode;
         int m_RetriesCount;
         int m_TimeoutSeconds;
+        // proxy info
     };
 
     class UploadBatch {
@@ -43,13 +45,17 @@ namespace Conectivity {
             m_UploadContext(context)
         {}
 
+        ~UploadBatch() {
+            m_UploadContext.clear();
+        }
+
     public:
         const QVector<QString> &getFilesToUpload() const { return m_FilesList; }
-        UploadContext *getContext() const { return m_UploadContext; }
+        UploadContext *getContext() const { return m_UploadContext.data(); }
         
     private:
         QVector<QString> m_FilesList;
-        UploadContext *m_UploadContext;
+        QSharedPointer<UploadContext> m_UploadContext;
     };
 
     class CurlFtpUploader : public QObject
@@ -67,7 +73,7 @@ namespace Conectivity {
         void uploadFinished();
 
     public slots:
-        void cancell();
+        void cancel();
 
     private:
         UploadBatch *m_BatchToUpload;

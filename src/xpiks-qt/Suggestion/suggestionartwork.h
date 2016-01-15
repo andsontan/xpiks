@@ -33,8 +33,7 @@ namespace Suggestion {
     public:
         SuggestionArtwork(const QString &url, const QStringList &keywords, bool isLocal = true) :
             m_KeywordsSet(keywords.toSet()),
-            m_IsSelected(false),
-            m_IsLocal(isLocal)
+            m_IsSelected(false)
         {
             if (isLocal) {
                 m_Url = QLatin1String("image://global/") + url;
@@ -55,7 +54,7 @@ namespace Suggestion {
         QSet<QString> m_KeywordsSet;
         QString m_Url;
         bool m_IsSelected;
-        bool m_IsLocal;
+        //bool m_IsLocal;
     };
 }
 

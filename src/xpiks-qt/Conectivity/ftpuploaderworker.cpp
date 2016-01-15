@@ -20,14 +20,55 @@
  */
 
 #include "ftpuploaderworker.h"
+#include <QSemaphore>
+#include <QDebug>
+#include "curlftpuploader.h"
 
 namespace Conectivity {
-    FtpUploaderWorker::FtpUploaderWorker(QSemaphore *uploadSemaphore, Encryption::SecretsManager *secretsManager, QObject *parent) :
+    FtpUploaderWorker::FtpUploaderWorker(QSemaphore *uploadSemaphore,
+                                         Encryption::SecretsManager *secretsManager,
+                                         UploadBatch *batch,
+                                         QObject *parent) :
         QObject(parent),
-        m_SecretsManager(secretsManager),
         m_UploadSemaphore(uploadSemaphore),
+        m_SecretsManager(secretsManager),
+        m_UploadBatch(batch),
         m_Cancel(false)
     {
+    }
+
+    void FtpUploaderWorker::process() {
+        const QString &host = m_UploadBatch->getContext()->m_Host;
+
+        qDebug() << "Waiting for the semaphore" << host;
+        m_UploadSemaphore->acquire();
+
+        if (!m_Cancel) {
+            qInfo() << "Starting upload to" << host;
+            doUpload();
+            m_UploadSemaphore->release();
+        } else {
+            qInfo() << "Upload cancelled before start for" << host;
+        }
+
+        emit stopped();
+    }
+
+    void FtpUploaderWorker::cancel() {
+        m_Cancel = true;
+        m_UploadSemaphore->release();
+        emit workerCancelled();
+    }
+
+    void FtpUploaderWorker::doUpload() {
+        CurlFtpUploader ftpUploader(m_UploadBatch);
+
+        QObject::connect(&ftpUploader, SIGNAL(uploadStarted()), this, SIGNAL(uploadStarted()));
+        QObject::connect(&ftpUploader, SIGNAL(uploadFinished()), this, SIGNAL(uploadFinished()));
+        QObject::connect(&ftpUploader, SIGNAL(progressChanged(int)), this, SIGNAL(progressChanged(int)));
+        QObject::connect(this, SIGNAL(workerCancelled()), &ftpUploader, SLOT(cancel()));
+
+        ftpUploader.uploadBatch();
     }
 }
 

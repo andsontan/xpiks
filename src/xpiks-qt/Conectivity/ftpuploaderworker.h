@@ -31,25 +31,35 @@ namespace Encryption {
 }
 
 namespace Conectivity {
+    class UploadBatch;
+
     class FtpUploaderWorker : public QObject
     {
         Q_OBJECT
     public:
-        explicit FtpUploaderWorker(QSemaphore *uploadSemaphore, Encryption::SecretsManager *secretsManager, QObject *parent = 0);
+        explicit FtpUploaderWorker(QSemaphore *uploadSemaphore,
+                                   Encryption::SecretsManager *secretsManager,
+                                   UploadBatch *batch,
+                                   QObject *parent = 0);
 
     signals:
         void uploadStarted();
         void progressChanged(int percents);
         void uploadFinished();
         void stopped();
+        void workerCancelled();
 
     public slots:
         void process();
         void cancel();
 
     private:
-        Encryption::SecretsManager *m_SecretsManager;
+        void doUpload();
+
+    private:
         QSemaphore *m_UploadSemaphore;
+        Encryption::SecretsManager *m_SecretsManager;
+        UploadBatch *m_UploadBatch;
         volatile bool m_Cancel;
     };
 }

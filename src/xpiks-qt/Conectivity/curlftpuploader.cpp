@@ -42,8 +42,12 @@ namespace Conectivity {
         int r;
         long len = 0;
 
+#if defined(Q_OS_WIN)
         /* _snscanf() is Win32 specific */
         r = _snscanf(ptr, size * nmemb, "Content-Length: %ld\n", &len);
+#else
+        r = std::sscanf((const char*)ptr, "Content-Length:% ld / n", &len);
+#endif
 
         if (r) /* Microsoft: we don't read the specs */
             *((long *) stream) = len;
@@ -54,13 +58,15 @@ namespace Conectivity {
     /* discard downloaded data */
     size_t discardfunc(void *ptr, size_t size, size_t nmemb, void *stream)
     {
+        Q_UNUSED(stream);
+        Q_UNUSED(ptr);
         return size * nmemb;
     }
 
     /* read data to upload */
     size_t readfunc(void *ptr, size_t size, size_t nmemb, void *stream)
     {
-        FILE *f = stream;
+        FILE *f = (FILE*)stream;
         size_t n;
 
         if (ferror(f))
@@ -83,7 +89,6 @@ namespace Conectivity {
         }
 
         curl_easy_setopt(curlHandle, CURLOPT_HEADERFUNCTION, getcontentlengthfunc);
-        curl_easy_setopt(curlHandle, CURLOPT_HEADERDATA, &uploaded_len);
 
         curl_easy_setopt(curlHandle, CURLOPT_WRITEFUNCTION, discardfunc);
 
@@ -110,6 +115,7 @@ namespace Conectivity {
 
         fillCurlOptions(curlHandle, context, remoteUrl);
         curl_easy_setopt(curlHandle, CURLOPT_READDATA, f);
+        curl_easy_setopt(curlHandle, CURLOPT_HEADERDATA, &uploaded_len);
 
         for (c = 0; (r != CURLE_OK) && (c < context->m_RetriesCount); c++) {
             /* are we resuming? */
@@ -175,10 +181,12 @@ namespace Conectivity {
             host.append(slash);
         }
 
-        curl_global_init(CURL_GLOBAL_ALL);
+        // TODO: do not call this from thread
+        //curl_global_init(CURL_GLOBAL_ALL);
         curlHandle = curl_easy_init();
 
         emit uploadStarted();
+        qDebug() << "Uploading started for" << host;
 
         for (int i = 0; i < size; ++i) {
             if (m_Cancel) {
@@ -205,9 +213,15 @@ namespace Conectivity {
         }
 
         emit uploadFinished();
+        qDebug() << "Uploading finished for" << host;
 
         curl_easy_cleanup(curlHandle);
+        // TODO: do not call this from thread
         curl_global_cleanup();
+    }
+
+    void CurlFtpUploader::cancel() {
+        m_Cancel = true;
     }
 }
 
