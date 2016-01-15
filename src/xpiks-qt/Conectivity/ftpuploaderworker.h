@@ -24,16 +24,33 @@
 
 #include <QObject>
 
+class QSemaphore;
+
+namespace Encryption {
+    class SecretsManager;
+}
+
 namespace Conectivity {
     class FtpUploaderWorker : public QObject
     {
         Q_OBJECT
     public:
-        explicit FtpUploaderWorker(QObject *parent = 0);
+        explicit FtpUploaderWorker(QSemaphore *uploadSemaphore, Encryption::SecretsManager *secretsManager, QObject *parent = 0);
 
     signals:
+        void uploadStarted();
+        void progressChanged(int percents);
+        void uploadFinished();
+        void stopped();
 
     public slots:
+        void process();
+        void cancel();
+
+    private:
+        Encryption::SecretsManager *m_SecretsManager;
+        QSemaphore *m_UploadSemaphore;
+        volatile bool m_Cancel;
     };
 }
 

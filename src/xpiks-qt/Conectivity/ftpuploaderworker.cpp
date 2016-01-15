@@ -22,9 +22,12 @@
 #include "ftpuploaderworker.h"
 
 namespace Conectivity {
-    FtpUploaderWorker::FtpUploaderWorker(QObject *parent) : QObject(parent)
+    FtpUploaderWorker::FtpUploaderWorker(QSemaphore *uploadSemaphore, Encryption::SecretsManager *secretsManager, QObject *parent) :
+        QObject(parent),
+        m_SecretsManager(secretsManager),
+        m_UploadSemaphore(uploadSemaphore),
+        m_Cancel(false)
     {
-
     }
 }
 
