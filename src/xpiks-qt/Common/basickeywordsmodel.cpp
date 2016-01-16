@@ -237,13 +237,31 @@ namespace Common {
     }
 
     bool BasicKeywordsModel::hasDescriptionSpellError() const {
-        bool hasError = m_SpellCheckInfo->anyDescriptionError();
-        return hasError;
+        bool anyError = false;
+
+        const QStringList &descriptionWords = getDescriptionWords();
+        foreach (const QString &word, descriptionWords) {
+            if (m_SpellCheckInfo->hasDescriptionError(word)) {
+                anyError = true;
+                break;
+            }
+        }
+
+        return anyError;
     }
 
     bool BasicKeywordsModel::hasTitleSpellError() const {
-        bool hasError = m_SpellCheckInfo->anyTitleError();
-        return hasError;
+        bool anyError = false;
+
+        const QStringList &titleWords = getTitleWords();
+        foreach (const QString &word, titleWords) {
+            if (m_SpellCheckInfo->hasTitleError(word)) {
+                anyError = true;
+                break;
+            }
+        }
+
+        return anyError;
     }
 
     bool BasicKeywordsModel::hasSpellErrors() const {

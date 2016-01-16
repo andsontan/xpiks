@@ -49,8 +49,6 @@ namespace SpellCheck {
     class SpellCheckItemInfo
     {
     public:
-        bool anyDescriptionError() const { return m_DescriptionErrors.anyError(); }
-        bool anyTitleError() const { return m_TitleErrors.anyError(); }
         void setDescriptionErrors(const QSet<QString> &errors);
         void setTitleErrors(const QSet<QString> &errors);
         void createHighlighterForDescription(QTextDocument *document, Common::BasicKeywordsModel *basicKeywordsModel);
