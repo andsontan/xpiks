@@ -18,7 +18,7 @@ permalink: /downloads/
 </a>
 </div>
 
-<p>Download the Xpiks package from the link above, unpack and drag'n'drop it to the Applications. <strong>You will need to install the Exiftool to use Xpiks.</strong> Download and install <i>Exiftool</i> from the <a href="http://owl.phy.queensu.ca/%7Ephil/exiftool/">official website</a>.</p>
+<p>Download the Xpiks package from the link on the left, unpack and drag'n'drop it to the Applications. <strong>You will need to install the Exiftool to use Xpiks.</strong> Download and install <i>Exiftool</i> from the <a href="http://owl.phy.queensu.ca/%7Ephil/exiftool/">official website</a>.</p>
 
 <div style="clear:both; height: 25px;">&nbsp;</div>
 
@@ -32,7 +32,7 @@ permalink: /downloads/
 </a>
 </div>
 
-<p>Download the Xpiks zip archive from the link above, unpack it where you want and it's ready to go. Please, note that this build does work <strong>only for Windows 7 x64 and later with x64 architecture</strong>.</p>
+<p>Download the Xpiks zip archive from the link on the left, unpack it where you want and it's ready to go. Please, note that this build does work <strong>only for Windows 7 x64 and later with x64 architecture</strong>.</p>
 
 <div style="clear:both;">&nbsp;</div>
 
