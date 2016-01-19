@@ -343,7 +343,7 @@ ApplicationWindow {
         selectExisting: true
         selectMultiple: true
         folder: shortcuts.pictures
-        nameFilters: [ "Jpeg images (*.jpg)", "Tiff images(*.tiff)", "All files (*)" ]
+        nameFilters: [ "Image files (*.jpg *.tiff)", "All files (*)" ]
 
         onAccepted: {
             console.log("You chose: " + chooseArtworksDialog.fileUrls)
