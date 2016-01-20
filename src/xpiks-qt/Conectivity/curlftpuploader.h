@@ -24,23 +24,15 @@
 
 #include <QObject>
 #include <QString>
+#include <QStringList>
 #include <QVector>
 #include <QSharedPointer>
+#include "uploadcontext.h"
 
 namespace Conectivity {
-    struct UploadContext {
-        QString m_Host;
-        QString m_Username;
-        QString m_Password;
-        bool m_UsePassiveMode;
-        int m_RetriesCount;
-        int m_TimeoutSeconds;
-        // proxy info
-    };
-
     class UploadBatch {
     public:
-        UploadBatch(UploadContext *context, const QVector<QString> &filesList):
+        UploadBatch(const QSharedPointer<UploadContext> &context, const QStringList &filesList):
             m_FilesList(filesList),
             m_UploadContext(context)
         {}
@@ -50,11 +42,11 @@ namespace Conectivity {
         }
 
     public:
-        const QVector<QString> &getFilesToUpload() const { return m_FilesList; }
+        const QStringList &getFilesToUpload() const { return m_FilesList; }
         UploadContext *getContext() const { return m_UploadContext.data(); }
         
     private:
-        QVector<QString> m_FilesList;
+        QStringList m_FilesList;
         QSharedPointer<UploadContext> m_UploadContext;
     };
 

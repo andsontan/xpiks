@@ -69,7 +69,8 @@ SOURCES += main.cpp \
     MetadataIO/saverworkerjobitem.cpp \
     MetadataIO/metadatawritingworker.cpp \
     Conectivity/curlftpuploader.cpp \
-    Conectivity/ftpuploaderworker.cpp
+    Conectivity/ftpuploaderworker.cpp \
+    Conectivity/ftpcoordinator.cpp
 
 RESOURCES += qml.qrc
 
@@ -177,7 +178,9 @@ HEADERS += \
     MetadataIO/metadataiocoordinator.h \
     MetadataIO/metadatawritingworker.h \
     Conectivity/curlftpuploader.h \
-    Conectivity/ftpuploaderworker.h
+    Conectivity/ftpuploaderworker.h \
+    Conectivity/ftpcoordinator.h \
+    Conectivity/uploadcontext.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
