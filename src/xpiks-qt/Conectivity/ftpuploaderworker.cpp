@@ -64,7 +64,7 @@ namespace Conectivity {
         CurlFtpUploader ftpUploader(m_UploadBatch);
 
         QObject::connect(&ftpUploader, SIGNAL(uploadStarted()), this, SIGNAL(uploadStarted()));
-        QObject::connect(&ftpUploader, SIGNAL(uploadFinished()), this, SIGNAL(uploadFinished()));
+        QObject::connect(&ftpUploader, SIGNAL(uploadFinished(bool)), this, SIGNAL(uploadFinished(bool)));
         QObject::connect(&ftpUploader, SIGNAL(progressChanged(int)), this, SIGNAL(progressChanged(int)));
         QObject::connect(this, SIGNAL(workerCancelled()), &ftpUploader, SLOT(cancel()));
 

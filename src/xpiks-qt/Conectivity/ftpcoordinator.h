@@ -42,9 +42,11 @@ namespace Conectivity {
 
     public:
         void uploadArtworks(const QVector<Models::ArtworkMetadata *> &artworksToUpload,
-                            const QVector<Models::UploadInfo *> &uploadInfos);
+                            const QVector<Models::UploadInfo *> &uploadInfos,
+                            bool includeVectors);
 
-    private:
+    private slots:
+        void workerFinished(bool anyErrors);
 
     private:
         QSemaphore m_UploadSemaphore;

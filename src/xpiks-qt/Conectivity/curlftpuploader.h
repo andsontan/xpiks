@@ -62,7 +62,7 @@ namespace Conectivity {
     signals:
         void uploadStarted();
         void progressChanged(int percents);
-        void uploadFinished();
+        void uploadFinished(bool anyErrors);
 
     public slots:
         void cancel();

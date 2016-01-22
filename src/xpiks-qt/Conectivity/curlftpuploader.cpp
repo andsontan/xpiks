@@ -169,6 +169,7 @@ namespace Conectivity {
 
     void CurlFtpUploader::uploadBatch() {
         CURL *curlHandle = NULL;
+        bool anyErrors = false;
 
         UploadContext *context = m_BatchToUpload->getContext();
 
@@ -205,14 +206,18 @@ namespace Conectivity {
                 qWarning() << "Upload CRASHED for file" << filepath;
             }
 
-            if (uploadSuccess) {
+            if (!uploadSuccess) {
+                anyErrors = true;
+            }
+
+            //if (uploadSuccess) {
                 double percentage = (i + 1.0)*100.0 / (size + 0.0);
                 int percents = (int)floor(percentage);
                 emit progressChanged(percents);
-            }
+            //}
         }
 
-        emit uploadFinished();
+        emit uploadFinished(anyErrors);
         qDebug() << "Uploading finished for" << host;
 
         curl_easy_cleanup(curlHandle);

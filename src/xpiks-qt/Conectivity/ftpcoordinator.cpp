@@ -22,11 +22,15 @@
 #include "ftpcoordinator.h"
 #include <QStringList>
 #include <QSharedData>
+#include <QThread>
 #include "../Models/artworkmetadata.h"
 #include "../Models/uploadinfo.h"
 #include "../Helpers/filenameshelpers.h"
+#include "../Encryption/secretsmanager.h"
+#include "../Commands/commandmanager.h"
 #include "curlftpuploader.h"
 #include "uploadcontext.h"
+#include "ftpuploaderworker.h"
 
 #define TIMEOUT_SECONDS 10
 #define RETRIES_COUNT 3
@@ -54,10 +58,11 @@ namespace Conectivity {
                         break;
                     }
                 }
-
-                QString zipPath = Helpers::getArchivePath(filepath);
-                zipsPathes.append(zipPath);
             }
+
+            // TODO: maybe there's a sense zipping only vectors?
+            QString zipPath = Helpers::getArchivePath(filepath);
+            zipsPathes.append(zipPath);
         }
     }
 
@@ -83,9 +88,11 @@ namespace Conectivity {
         }
     }
 
-    QVector<UploadBatch> generateUploadBatches(const QVector<Models::ArtworkMetadata *> &artworksToUpload,
+    QVector<UploadBatch*> generateUploadBatches(const QVector<Models::ArtworkMetadata *> &artworksToUpload,
                                const QVector<Models::UploadInfo *> &uploadInfos,
                                bool includeVector) {
+        QVector<UploadBatch*> batches;
+
         QStringList filePathes;
         QStringList zipFilePathes;
         extractFilePathes(artworksToUpload, filePathes, zipFilePathes, includeVector);
@@ -93,17 +100,55 @@ namespace Conectivity {
         QVector<QSharedDataPointer<UploadContext> > contexts;
         generateUploadContexts(uploadInfos, contexts);
 
-        int size = artworksToUpload.size();
+        int size = contexts.size();
+        batches.reserve(size);
+
         for (int i = 0; i < size; ++i) {
-            // TODO:
+            UploadBatch *batch;
+            const QSharedDataPointer<UploadContext> &context = contexts.at(i);
+
+            if (uploadInfos[i]->getZipBeforeUpload()) {
+                batch = new UploadBatch(context, zipFilePathes);
+            } else {
+                batch = new UploadBatch(context, filePathes);
+            }
+
+            batches.append(batch);
         }
+
+        return batches;
     }
 
     FtpCoordinator::FtpCoordinator(int maxParallelUploads, QObject *parent) :
         QObject(parent),
-        m_UploadSemaphore(maxParallelUploads),
+        m_UploadSemaphore(new QSemaphore(maxParallelUploads)),
         m_MaxParallelUploads(maxParallelUploads)
     {
+    }
+
+    void FtpCoordinator::uploadArtworks(const QVector<Models::ArtworkMetadata *> &artworksToUpload,
+                                        const QVector<Models::UploadInfo *> &uploadInfos,
+                                        bool includeVectors) {
+        QVector<UploadBatch*> batches = generateUploadBatches(artworksToUpload, uploadInfos, includeVectors);
+        Encryption::SecretsManager *secretsManager = m_CommandManager->getSecretsManager();
+
+        int size = batches.size();
+        for (int i = 0; i < size; ++i) {
+            FtpUploaderWorker *worker = new FtpUploaderWorker(&m_UploadSemaphore, secretsManager, batches.at(i));
+            QThread *thread = new QThread();
+            worker->moveToThread(thread);
+
+            QObject::connect(thread, SIGNAL(started()), worker, SLOT(process()));
+            QObject::connect(worker, SIGNAL(stopped()), thread, SLOT(quit()));
+
+            QObject::connect(worker, SIGNAL(stopped()), worker, SLOT(deleteLater()));
+            QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+
+            QObject::connect(worker, SIGNAL(uploadFinished(bool)), this, SLOT(workerFinished(bool)));
+            QObject::connect(this, SIGNAL(cancelAll()), worker, SLOT(cancel()));
+
+            thread->start();
+        }
     }
 }
 

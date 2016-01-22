@@ -45,7 +45,7 @@ namespace Conectivity {
     signals:
         void uploadStarted();
         void progressChanged(int percents);
-        void uploadFinished();
+        void uploadFinished(bool anyErrors);
         void stopped();
         void workerCancelled();
 

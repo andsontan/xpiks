@@ -23,9 +23,16 @@
 #define UPLOADCONTEXT
 
 #include <QString>
+#include <QDebug>
 
 namespace Conectivity {
-    struct UploadContext {
+    class UploadContext {
+    public:
+        ~UploadContext() {
+            qDebug() << "Upload context destructor for host" << m_Host;
+        }
+
+    public:
         QString m_Host;
         QString m_Username;
         QString m_Password;
