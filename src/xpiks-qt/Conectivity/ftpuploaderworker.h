@@ -30,6 +30,10 @@ namespace Encryption {
     class SecretsManager;
 }
 
+namespace Models {
+    class UploadInfo;
+}
+
 namespace Conectivity {
     class UploadBatch;
 
@@ -44,13 +48,14 @@ namespace Conectivity {
 
     signals:
         void uploadStarted();
-        void progressChanged(int percents);
+        void progressChanged(double oldPercents, double newPercents);
         void uploadFinished(bool anyErrors);
         void stopped();
         void workerCancelled();
 
     public slots:
         void process();
+        void progressChangedHandler(double oldPercents, double newPercents);
 
     private:
         void doUpload();
@@ -59,6 +64,7 @@ namespace Conectivity {
         QSemaphore *m_UploadSemaphore;
         Encryption::SecretsManager *m_SecretsManager;
         UploadBatch *m_UploadBatch;
+        Models::UploadInfo *m_UploadInfo;
     };
 }
 

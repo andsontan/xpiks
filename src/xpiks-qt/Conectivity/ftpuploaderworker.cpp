@@ -23,16 +23,19 @@
 #include <QSemaphore>
 #include <QDebug>
 #include "curlftpuploader.h"
+#include "../Models/uploadinfo.h"
 
 namespace Conectivity {
     FtpUploaderWorker::FtpUploaderWorker(QSemaphore *uploadSemaphore,
                                          Encryption::SecretsManager *secretsManager,
                                          UploadBatch *batch,
+                                         Models::UploadInfo *uploadInfo,
                                          QObject *parent) :
         QObject(parent),
         m_UploadSemaphore(uploadSemaphore),
         m_SecretsManager(secretsManager),
-        m_UploadBatch(batch)
+        m_UploadBatch(batch),
+        m_UploadInfo(uploadInfo)
     {
     }
 
@@ -45,12 +48,19 @@ namespace Conectivity {
         if (!m_Cancel) {
             qInfo() << "Starting upload to" << host;
             doUpload();
-            m_UploadSemaphore->release();
         } else {
             qInfo() << "Upload cancelled before start for" << host;
         }
 
+        m_UploadSemaphore->release();
+        qDebug() << "Released semaphore" << host;
+
         emit stopped();
+    }
+
+    void FtpUploaderWorker::progressChangedHandler(double oldPercents, double newPercents) {
+        Q_UNUSED(oldPercents);
+        m_UploadInfo->setPercent(newPercents);
     }
 
     void FtpUploaderWorker::doUpload() {
@@ -58,7 +68,8 @@ namespace Conectivity {
 
         QObject::connect(&ftpUploader, SIGNAL(uploadStarted()), this, SIGNAL(uploadStarted()));
         QObject::connect(&ftpUploader, SIGNAL(uploadFinished(bool)), this, SIGNAL(uploadFinished(bool)));
-        QObject::connect(&ftpUploader, SIGNAL(progressChanged(int)), this, SIGNAL(progressChanged(int)));
+        QObject::connect(&ftpUploader, SIGNAL(progressChanged(double, double)), this, SIGNAL(progressChanged(double, double)));
+        QObject::connect(&ftpUploader, SIGNAL(progressChanged(double, double)), this, SLOT(progressChangedHandler(double,double)));
         QObject::connect(this, SIGNAL(workerCancelled()), &ftpUploader, SLOT(cancel()));
 
         ftpUploader.uploadBatch();

@@ -26,6 +26,8 @@
 #include <QVector>
 #include <QSemaphore>
 #include "../Common/baseentity.h"
+#include <QAtomicInt>
+#include <QMutex>
 
 namespace Models {
     class ArtworkMetadata;
@@ -47,15 +49,25 @@ namespace Conectivity {
 
     signals:
         void cancelAll();
+        void uploadFinished(bool anyError);
+        void overallProgressChanged(double percentDone);
 
     private slots:
+        void workerProgressChanged(double oldPercents, double newPercents);
         void workerFinished(bool anyErrors);
 
     private:
+        void initUpload(int uploadBatchesCount);
+        void finalizeUpload();
+
+    private:
+        QMutex m_WorkerMutex;
         QSemaphore m_UploadSemaphore;
         double m_OverallProgress;
         int m_MaxParallelUploads;
-        bool m_AnyFailed;
+        QAtomicInt m_FinishedWorkersCount;
+        volatile int m_AllWorkersCount;
+        volatile bool m_AnyFailed;
     };
 }
 

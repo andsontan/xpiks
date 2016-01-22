@@ -22,13 +22,17 @@
 #ifndef UPLOADINFO
 #define UPLOADINFO
 
+#include <QObject>
 #include <QHash>
 #include <QMutex>
 #include <QString>
 #include <QByteArray>
+#include <cmath>
 
 namespace Models {
-    class UploadInfo {
+    class UploadInfo : public QObject {
+        Q_OBJECT
+
     private:
         enum UField { TitleField = 0, HostField, UsernameField, PasswordField, DirectoryField, ZipField, FtpPassiveModeField };
 
@@ -55,6 +59,9 @@ namespace Models {
             m_FtpPassiveMode = items.value(FtpPassiveModeField, "false") == QLatin1String("true");
         }
 
+    signals:
+        void progressChanged(double percent);
+
     public:
         const QString &getTitle() const { return m_Title; }
         const QString &getHost() const { return m_Host; }
@@ -66,7 +73,7 @@ namespace Models {
         bool isSomethingMissing() const { return m_EncodedPassword.isEmpty() || m_Host.isEmpty() || m_Username.isEmpty(); }
         bool isEmpty() const { return m_EncodedPassword.isEmpty() && m_Host.isEmpty() && m_Username.isEmpty() &&
                     (m_Title.isEmpty() || m_Title == QLatin1String("Untitled")); }
-        int getPercent() const { return m_Percent; }
+        double getPercent() const { return m_Percent; }
         bool getFtpPassiveMode() const { return m_FtpPassiveMode; }
 
     public:
@@ -92,7 +99,12 @@ namespace Models {
         void restorePassword() { m_EncodedPassword = m_EncodedPasswordBackup; }
         void backupPassword() { m_EncodedPasswordBackup = m_EncodedPassword; }
         void dropPassword() { m_EncodedPassword = ""; }
-        void setPercent(int value) { m_Percent = value; }
+        void setPercent(double value) {
+            if (m_Percent != value) {
+                m_Percent = value;
+                emit progressChanged(value);
+            }
+        }
         void resetPercent() { m_Percent = 0; }
         bool setFtpPassiveMode(bool value) { bool result = m_FtpPassiveMode != value; m_FtpPassiveMode = value; return result; }
 
@@ -116,7 +128,7 @@ namespace Models {
         QString m_EncodedPassword;
         // used for backup when MP is incorrect
         QString m_EncodedPasswordBackup;
-        volatile int m_Percent;
+        volatile double m_Percent;
         bool m_ZipBeforeUpload;
         bool m_IsSelected;
         bool m_FtpPassiveMode;

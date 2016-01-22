@@ -61,7 +61,7 @@ namespace Conectivity {
 
     signals:
         void uploadStarted();
-        void progressChanged(int percents);
+        void progressChanged(double prevPercents, double newPercents);
         void uploadFinished(bool anyErrors);
 
     public slots:

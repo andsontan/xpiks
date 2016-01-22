@@ -23,7 +23,6 @@
 #include <QDebug>
 #include <QFileInfo>
 
-#include <cmath>
 #include <cstdio>
 #include <cstdlib>
 #include "../../libcurl/include/curl/curl.h"
@@ -188,6 +187,7 @@ namespace Conectivity {
 
         emit uploadStarted();
         qDebug() << "Uploading started for" << host;
+        double lastPercent = 0.0;
 
         for (int i = 0; i < size; ++i) {
             if (m_Cancel) {
@@ -213,8 +213,8 @@ namespace Conectivity {
             // TODO: only update progress of not-failed uploads
             if (uploadSuccess) {
                 double percentage = (i + 1.0)*100.0 / (size + 0.0);
-                int percents = (int)floor(percentage);
-                emit progressChanged(percents);
+                emit progressChanged(lastPercent, percents);
+                lastPercent = percentage;
             }
         }
 
@@ -223,7 +223,7 @@ namespace Conectivity {
 
         curl_easy_cleanup(curlHandle);
         // TODO: do not call this from thread
-        curl_global_cleanup();
+        //curl_global_cleanup();
     }
 
     void CurlFtpUploader::cancel() {

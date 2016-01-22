@@ -32,6 +32,8 @@
 #include "uploadcontext.h"
 #include "ftpuploaderworker.h"
 
+#include "../../libcurl/include/curl/curl.h"
+
 #define TIMEOUT_SECONDS 10
 #define RETRIES_COUNT 3
 
@@ -121,7 +123,7 @@ namespace Conectivity {
 
     FtpCoordinator::FtpCoordinator(int maxParallelUploads, QObject *parent) :
         QObject(parent),
-        m_UploadSemaphore(new QSemaphore(maxParallelUploads)),
+        m_UploadSemaphore(maxParallelUploads),
         m_MaxParallelUploads(maxParallelUploads)
     {
     }
@@ -129,10 +131,19 @@ namespace Conectivity {
     void FtpCoordinator::uploadArtworks(const QVector<Models::ArtworkMetadata *> &artworksToUpload,
                                         const QVector<Models::UploadInfo *> &uploadInfos,
                                         bool includeVectors) {
+
+        if (artworksToUpload.isEmpty() || uploadInfos.isEmpty()) {
+            qWarning() << "Trying to upload" << artworksToUpload.size() << "files to" << uploadInfos.size() << "hosts";
+            return;
+        }
+
         QVector<UploadBatch*> batches = generateUploadBatches(artworksToUpload, uploadInfos, includeVectors);
         Encryption::SecretsManager *secretsManager = m_CommandManager->getSecretsManager();
 
         int size = batches.size();
+
+        initUpload(size);
+
         for (int i = 0; i < size; ++i) {
             FtpUploaderWorker *worker = new FtpUploaderWorker(&m_UploadSemaphore, secretsManager, batches.at(i));
             QThread *thread = new QThread();
@@ -149,6 +160,40 @@ namespace Conectivity {
 
             thread->start();
         }
+    }
+
+    void FtpCoordinator::workerProgressChanged(double oldPercents, double newPercents) {
+        Q_ASSERT(m_AllWorkersCount > 0);
+        double change = (newPercents - oldPercents) / m_AllWorkersCount;
+        m_OverallProgress += change;
+        emit overallProgressChanged(m_OverallProgress);
+    }
+
+    void FtpCoordinator::workerFinished(bool anyErrors) {
+        if (anyErrors) {
+            m_AnyFailed = true;
+        }
+
+        int workersDone = m_FinishedWorkersCount.fetchAndAddOrdered(1) + 1;
+
+        if (workersDone == m_AllWorkersCount) {
+            finalizeUpload();
+            emit uploadFinished(m_AnyFailed);
+            emit overallProgressChanged(100.0);
+        }
+    }
+
+    void FtpCoordinator::initUpload(int uploadBatchesCount) {
+        m_AnyFailed = false;
+        m_AllWorkersCount = uploadBatchesCount;
+        m_FinishedWorkersCount = 0;
+
+        curl_global_init(CURL_GLOBAL_ALL);
+    }
+
+    void FtpCoordinator::finalizeUpload() {
+        Q_ASSERT(m_FinishedWorkersCount == m_AllWorkersCount);
+        curl_global_cleanup();
     }
 }
 
