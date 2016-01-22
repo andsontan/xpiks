@@ -32,8 +32,7 @@ namespace Conectivity {
         QObject(parent),
         m_UploadSemaphore(uploadSemaphore),
         m_SecretsManager(secretsManager),
-        m_UploadBatch(batch),
-        m_Cancel(false)
+        m_UploadBatch(batch)
     {
     }
 
@@ -52,12 +51,6 @@ namespace Conectivity {
         }
 
         emit stopped();
-    }
-
-    void FtpUploaderWorker::cancel() {
-        m_Cancel = true;
-        m_UploadSemaphore->release();
-        emit workerCancelled();
     }
 
     void FtpUploaderWorker::doUpload() {

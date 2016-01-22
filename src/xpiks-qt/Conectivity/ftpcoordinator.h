@@ -45,6 +45,9 @@ namespace Conectivity {
                             const QVector<Models::UploadInfo *> &uploadInfos,
                             bool includeVectors);
 
+    signals:
+        void cancelAll();
+
     private slots:
         void workerFinished(bool anyErrors);
 

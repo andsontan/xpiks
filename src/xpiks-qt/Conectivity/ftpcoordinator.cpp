@@ -145,7 +145,7 @@ namespace Conectivity {
             QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
 
             QObject::connect(worker, SIGNAL(uploadFinished(bool)), this, SLOT(workerFinished(bool)));
-            QObject::connect(this, SIGNAL(cancelAll()), worker, SLOT(cancel()));
+            QObject::connect(this, SIGNAL(cancelAll()), worker, SIGNAL(workerCancelled()));
 
             thread->start();
         }

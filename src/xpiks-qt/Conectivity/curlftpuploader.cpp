@@ -210,11 +210,12 @@ namespace Conectivity {
                 anyErrors = true;
             }
 
-            //if (uploadSuccess) {
+            // TODO: only update progress of not-failed uploads
+            if (uploadSuccess) {
                 double percentage = (i + 1.0)*100.0 / (size + 0.0);
                 int percents = (int)floor(percentage);
                 emit progressChanged(percents);
-            //}
+            }
         }
 
         emit uploadFinished(anyErrors);

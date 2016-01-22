@@ -51,7 +51,6 @@ namespace Conectivity {
 
     public slots:
         void process();
-        void cancel();
 
     private:
         void doUpload();
@@ -60,7 +59,6 @@ namespace Conectivity {
         QSemaphore *m_UploadSemaphore;
         Encryption::SecretsManager *m_SecretsManager;
         UploadBatch *m_UploadBatch;
-        volatile bool m_Cancel;
     };
 }
 
