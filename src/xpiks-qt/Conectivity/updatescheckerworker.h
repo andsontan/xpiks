@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -19,38 +19,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef BACKUPSAVERSERVICE_H
-#define BACKUPSAVERSERVICE_H
+#ifndef UPDATESCHECKERWORKER_H
+#define UPDATESCHECKERWORKER_H
 
 #include <QObject>
+#include <QNetworkAccessManager>
+#include <QEventLoop>
 
-namespace Models {
-    class ArtworkMetadata;
-}
-
-namespace Helpers {
-    class BackupSaverWorker;
-
-    class BackupSaverService : public QObject
+namespace Conectivity {
+    class UpdatesCheckerWorker : public QObject
     {
         Q_OBJECT
     public:
-        BackupSaverService();
-
-    public:
-        void startSaving();
-        void stopSaving();
-        void saveArtwork(Models::ArtworkMetadata *metadata);
-
-    signals:
-        void cancelSaving();
-
-    private slots:
-        void workerFinished();
+        UpdatesCheckerWorker();
+        virtual ~UpdatesCheckerWorker();
 
     private:
-        BackupSaverWorker *m_BackupWorker;
+        void initWorker();
+        void processOneItem();
+
+    public slots:
+        void process();
+
+    signals:
+        void stopped();
+        void updateAvailable(QString updateLink);
+        void requestFinished();
+
+    private slots:
+        void replyReceived(QNetworkReply *networkReply);
+
+    private:
+        QNetworkAccessManager *m_NetworkManager;
     };
 }
 
-#endif // BACKUPSAVERSERVICE_H
+#endif // UPDATESCHECKERWORKER_H

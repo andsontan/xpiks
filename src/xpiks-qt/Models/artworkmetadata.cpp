@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -24,7 +24,7 @@
 #include <QReadLocker>
 #include <QWriteLocker>
 #include <QStringBuilder>
-#include "../Helpers/tempmetadatadb.h"
+#include <QDir>
 #include "../Helpers/keywordvalidator.h"
 #include "settingsmodel.h"
 #include "../SpellCheck/spellsuggestionsitem.h"
@@ -48,15 +48,15 @@ namespace Models {
     }
 
     bool ArtworkMetadata::initialize(const QString &title,
-                                     const QString &description, const QString &rawKeywords, bool overwrite) {
+                                     const QString &description, const QStringList &rawKeywords, bool overwrite) {
         bool anythingModified = false;
 
-        if (overwrite || (isTitleEmpty() && !title.isEmpty())) {
+        if (overwrite || (isTitleEmpty() && !title.trimmed().isEmpty())) {
             anythingModified = true;
             BasicKeywordsModel::setTitle(title);
         }
 
-        if (overwrite || (isDescriptionEmpty() && !description.isEmpty())) {
+        if (overwrite || (isDescriptionEmpty() && !description.trimmed().isEmpty())) {
             anythingModified = true;
             BasicKeywordsModel::setDescription(description);
         }
@@ -68,8 +68,7 @@ namespace Models {
             BasicKeywordsModel::addKeywords(rawKeywords);
             endResetModel();
         } else if (!rawKeywords.isEmpty()) {
-            QStringList keywordsToAppend = rawKeywords.split(",", QString::SkipEmptyParts);
-            int appendedCount = appendKeywords(keywordsToAppend);
+            int appendedCount = appendKeywords(rawKeywords);
             anythingModified = anythingModified || (appendedCount > 0);
         }
 
@@ -79,9 +78,18 @@ namespace Models {
         return anythingModified;
     }
 
-    bool ArtworkMetadata::isInDirectory(const QString &directory) const {
-        bool startsWith = m_ArtworkFilepath.startsWith(directory);
-        return startsWith;
+    bool ArtworkMetadata::isInDirectory(const QString &directoryAbsolutePath) const {
+        bool isInDir = false;
+        Q_ASSERT(directoryAbsolutePath == QDir(directoryAbsolutePath).absolutePath());
+
+        if (m_ArtworkFilepath.startsWith(directoryAbsolutePath)) {
+            QFileInfo fi(m_ArtworkFilepath);
+            QString artworksDirectory = fi.absolutePath();
+
+            isInDir = artworksDirectory == directoryAbsolutePath;
+        }
+
+        return isInDir;
     }
 
     void ArtworkMetadata::clearModel() {
@@ -119,5 +127,12 @@ namespace Models {
         int result = BasicKeywordsModel::appendKeywords(keywordsList);
         if (result > 0) { markModified(); }
         return result;
+    }
+
+    void ArtworkMetadata::markModified() {
+        if (!m_IsModified) {
+            m_IsModified = true;
+            emit modifiedChanged(m_IsModified);
+        }
     }
 }

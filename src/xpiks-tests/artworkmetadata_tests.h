@@ -28,6 +28,10 @@ private slots:
     void editKeywordToAnotherEmitsModifiedTest();
     void editKeywordToExistingDoesNotEmitModifiedTest();
     void misEditOfKeywordDoesNothingTest();
+    void isInDirectoryTest();
+    void isNotInParentsDirectoryTest();
+    void isNotInOtherDirectoryTest();
+    void isNotInEmptyDirectoryTest();
 };
 
 #endif // ARTWORKMETADATA_TESTS_H

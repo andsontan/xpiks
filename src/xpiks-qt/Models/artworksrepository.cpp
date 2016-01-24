@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -23,7 +23,9 @@
 #include <QDir>
 #include <QSet>
 #include <QFileInfo>
+#include <QDebug>
 #include <QRegExp>
+#include "../Common/defines.h"
 #include "../Helpers/indiceshelper.h"
 
 namespace Models {
@@ -32,6 +34,7 @@ namespace Models {
     }
 
     void ArtworksRepository::cleanupEmptyDirectories() {
+        qDebug() << "Cleaning empty directories";
         int count = m_DirectoriesList.length();
         QVector<int> indicesToRemove;
         indicesToRemove.reserve(count);
@@ -43,9 +46,13 @@ namespace Models {
             }
         }
 
-        QVector<QPair<int, int> > rangesToRemove;
-        Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
-        removeItemsAtIndices(rangesToRemove);
+        if (!indicesToRemove.isEmpty()) {
+            qInfo() << "Removing" << indicesToRemove.length() << "empty directory(ies)...";
+
+            QVector<QPair<int, int> > rangesToRemove;
+            Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
+            removeItemsAtIndices(rangesToRemove);
+        }
     }
 
     bool ArtworksRepository::beginAccountingFiles(const QStringList &items) {
@@ -77,9 +84,9 @@ namespace Models {
         QSet<QString> filteredDirectories;
 
         foreach (const QString &filepath, filteredFiles) {
-            QFileInfo fi(filepath);
-            if (fi.exists()) {
-                filteredDirectories.insert(fi.absolutePath());
+            QString directory;
+            if (checkFileExists(filepath, directory)) {
+                filteredDirectories.insert(directory);
             }
         }
 
@@ -115,6 +122,7 @@ namespace Models {
 
             int occurances = 0;
             if (!m_DirectoriesHash.contains(absolutePath)) {
+                qInfo() << "Adding new directory" << absolutePath << "to repository with index" << m_DirectoriesList.length();
                 m_DirectoriesList.append(absolutePath);
                 m_DirectoriesSelectedHash.insert(absolutePath, 0);
                 emit artworksSourcesCountChanged();
@@ -131,16 +139,21 @@ namespace Models {
         return wasModified;
     }
 
-    void ArtworksRepository::removeFile(const QString &filepath, const QString &fileDirectory) {
-        if (m_DirectoriesHash.contains(fileDirectory)) {
+    bool ArtworksRepository::removeFile(const QString &filepath, const QString &fileDirectory) {
+        bool result = false;
+
+        if (m_FilesSet.contains(filepath) && m_DirectoriesHash.contains(fileDirectory)) {
             int occurances = m_DirectoriesHash[fileDirectory] - 1;
             int selectedCount = m_DirectoriesSelectedHash[fileDirectory] - 1;
 
             m_DirectoriesHash[fileDirectory] = occurances;
             m_DirectoriesSelectedHash[fileDirectory] = selectedCount;
+
+            m_FilesSet.remove(filepath);
+            result = true;
         }
 
-        m_FilesSet.remove(filepath);
+        return result;
     }
 
     void ArtworksRepository::setFileSelected(const QString &filepath, bool selected) {
@@ -191,8 +204,14 @@ namespace Models {
 
     /*virtual */
     bool ArtworksRepository::checkFileExists(const QString &filename, QString &directory) const {
+        bool exists = false;
         QFileInfo fi(filename);
-        bool exists = fi.exists();
+
+#ifndef TESTS
+        exists = fi.exists();
+#else
+        exists = true;
+#endif
 
         if (exists) {
             directory = fi.absolutePath();

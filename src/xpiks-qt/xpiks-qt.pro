@@ -3,6 +3,7 @@ TEMPLATE = app
 QMAKE_MAC_SDK = macosx10.11
 
 QT += qml quick widgets concurrent
+CONFIG += qtquickcompiler
 
 SOURCES += main.cpp \
     Models/artitemsmodel.cpp \
@@ -11,11 +12,9 @@ SOURCES += main.cpp \
     Models/artworksrepository.cpp \
     Models/combinedartworksmodel.cpp \
     Helpers/indiceshelper.cpp \
-    Models/iptcprovider.cpp \
     Models/artworkuploader.cpp \
     Models/artworksprocessor.cpp \
     Models/uploadinforepository.cpp \
-    Helpers/tempmetadatadb.cpp \
     Models/warningsmanager.cpp \
     ../tiny-aes/aes.cpp \
     Encryption/secretsmanager.cpp \
@@ -43,7 +42,6 @@ SOURCES += main.cpp \
     Helpers/loggingworker.cpp \
     Helpers/logger.cpp \
     Models/logsmodel.cpp \
-    Helpers/exiftoolwrapper.cpp \
     Models/filteredartitemsproxymodel.cpp \
     Helpers/filenameshelpers.cpp \
     Helpers/keywordvalidator.cpp \
@@ -60,10 +58,16 @@ SOURCES += main.cpp \
     Common/basickeywordsmodel.cpp \
     SpellCheck/spellcheckerrorshighlighter.cpp \
     SpellCheck/spellcheckiteminfo.cpp \
-    Helpers/backupsaverworker.cpp \
-    Helpers/backupsaverservice.cpp \
+    MetadataIO/backupsaverworker.cpp \
+    MetadataIO/backupsaverservice.cpp \
     SpellCheck/spellsuggestionsitem.cpp \
-    Conectivity/telemetryservice.cpp
+    Conectivity/telemetryservice.cpp \
+    Conectivity/updatescheckerworker.cpp \
+    Warnings/warningscheckingworker.cpp \
+    MetadataIO/metadatareadingworker.cpp \
+    MetadataIO/metadataiocoordinator.cpp \
+    MetadataIO/saverworkerjobitem.cpp \
+    MetadataIO/metadatawritingworker.cpp
 
 RESOURCES += qml.qrc
 
@@ -95,8 +99,6 @@ HEADERS += \
     Models/abstractlistmodel.h \
     Helpers/constants.h \
     Helpers/appsettings.h \
-    Models/iptcprovider.h \
-    Helpers/exiftoolwrapper.h \
     Models/artworkuploader.h \
     Helpers/curlwrapper.h \
     Models/artworksprocessor.h \
@@ -104,7 +106,6 @@ HEADERS += \
     Models/exportinfo.h \
     Models/uploadinforepository.h \
     Models/logsmodel.h \
-    Helpers/tempmetadatadb.h \
     Models/warningsinfo.h \
     Models/warningsmanager.h \
     Encryption/aes-qt.h \
@@ -159,12 +160,20 @@ HEADERS += \
     SpellCheck/ispellcheckable.h \
     SpellCheck/spellcheckerrorshighlighter.h \
     SpellCheck/spellcheckiteminfo.h \
-    Helpers/backupsaverworker.h \
+    MetadataIO/backupsaverworker.h \
     Common/itemprocessingworker.h \
-    Helpers/backupsaverservice.h \
+    MetadataIO/backupsaverservice.h \
     SpellCheck/spellsuggestionsitem.h \
     Conectivity/analyticsuserevent.h \
-    Conectivity/telemetryservice.h
+    Conectivity/telemetryservice.h \
+    Conectivity/updatescheckerworker.h \
+    Warnings/warningscheckingworker.h \
+    Warnings/iwarningscheckable.h \
+    Warnings/warningsitem.h \
+    MetadataIO/saverworkerjobitem.h \
+    MetadataIO/metadatareadingworker.h \
+    MetadataIO/metadataiocoordinator.h \
+    MetadataIO/metadatawritingworker.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
@@ -212,7 +221,8 @@ DISTFILES += \
     Components/SuggestionWrapper.qml \
     Dialogs/EditKeywordDialog.qml \
     Dialogs/PlainTextKeywordsDialog.qml \
-    Dialogs/WhatsNewDialog.qml
+    Dialogs/WhatsNewDialog.qml \
+    Dialogs/TermsAndConditionsDialog.qml
 
 macx {
 LIBS += -lz
@@ -251,3 +261,7 @@ QMAKE_BUNDLE_DATA += HUNSPELL_DICT_FILES
 WHATS_NEW.files = whatsnew.txt
 WHATS_NEW.path = Contents/Resources
 QMAKE_BUNDLE_DATA += WHATS_NEW
+
+TERMS_AND_CONDITIONS.files = terms_and_conditions.txt
+TERMS_AND_CONDITIONS.path = Contents/Resources
+QMAKE_BUNDLE_DATA += TERMS_AND_CONDITIONS

@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -27,6 +27,7 @@
 #include "../UndoRedo/historyitem.h"
 #include "commandbase.h"
 #include "../Conectivity/analyticsuserevent.h"
+#include "../Common/flags.h"
 
 namespace Encryption {
     class SecretsManager;
@@ -42,7 +43,6 @@ namespace Models {
     class FilteredArtItemsProxyModel;
     class ArtItemInfo;
     class CombinedArtworksModel;
-    class IptcProvider;
     class ArtworkUploader;
     class UploadInfoRepository;
     class WarningsManager;
@@ -51,14 +51,20 @@ namespace Models {
     class ZipArchiver;
     class SettingsModel;
     class RecentDirectoriesModel;
+    class LogsModel;
 }
 
 namespace Suggestion {
     class KeywordsSuggestor;
+    class LocalLibrary;
+}
+
+namespace MetadataIO {
+    class BackupSaverService;
+    class MetadataIOCoordinator;
 }
 
 namespace Helpers {
-    class BackupSaverService;
     class UpdateService;
 }
 
@@ -81,7 +87,6 @@ namespace Commands {
             m_ArtItemsModel(NULL),
             m_FilteredItemsModel(NULL),
             m_CombinedArtworksModel(NULL),
-            m_IptcProvider(NULL),
             m_ArtworkUploader(NULL),
             m_UploadInfoRepository(NULL),
             m_WarningsManager(NULL),
@@ -92,7 +97,11 @@ namespace Commands {
             m_RecentDirectories(NULL),
             m_MetadataSaverService(NULL),
             m_TelemetryService(NULL),
-            m_UpdateService(NULL)
+            m_UpdateService(NULL),
+            m_LogsModel(NULL),
+            m_LocalLibrary(NULL),
+            m_MetadataIOCoordinator(NULL),
+            m_AfterInitCalled(false)
         { }
 
         virtual ~CommandManager() {}
@@ -102,7 +111,6 @@ namespace Commands {
         void InjectDependency(Models::ArtItemsModel *artItemsModel);
         void InjectDependency(Models::FilteredArtItemsProxyModel *filteredItemsModel);
         void InjectDependency(Models::CombinedArtworksModel *combinedArtworksModel);
-        void InjectDependency(Models::IptcProvider *iptcProvider);
         void InjectDependency(Models::ArtworkUploader *artworkUploader);
         void InjectDependency(Models::UploadInfoRepository *uploadInfoRepository);
         void InjectDependency(Models::WarningsManager *warningsManager);
@@ -114,12 +122,19 @@ namespace Commands {
         void InjectDependency(Models::RecentDirectoriesModel *recentDirectories);
         void InjectDependency(SpellCheck::SpellCheckerService *spellCheckerService);
         void InjectDependency(SpellCheck::SpellCheckSuggestionModel *spellCheckSuggestionModel);
-        void InjectDependency(Helpers::BackupSaverService *backupSaverService);
+        void InjectDependency(MetadataIO::BackupSaverService *backupSaverService);
         void InjectDependency(Conectivity::TelemetryService *telemetryService);
         void InjectDependency(Helpers::UpdateService *updateService);
+        void InjectDependency(Models::LogsModel *logsModel);
+        void InjectDependency(MetadataIO::MetadataIOCoordinator *metadataIOCoordinator);
+        void InjectDependency(Suggestion::LocalLibrary *localLibrary);
 
     public:
-        CommandResult *processCommand(CommandBase *command) const;
+        virtual CommandResult *processCommand(CommandBase *command)
+#ifndef TESTS
+        const
+#endif
+        ;
         void recordHistoryItem(UndoRedo::HistoryItem *historyItem) const;
 
     public:
@@ -132,23 +147,29 @@ namespace Commands {
 
         void combineArtwork(Models::ArtItemInfo* itemInfo) const;
         void combineArtworks(const QVector<Models::ArtItemInfo*> &artworks) const;
-        void setArtworksForIPTCProcessing(const QVector<Models::ArtworkMetadata *> &artworks) const;
         void setArtworksForUpload(const QVector<Models::ArtworkMetadata*> &artworks) const;
         void setArtworksForZipping(const QVector<Models::ArtworkMetadata*> &artworks) const;
         virtual void connectArtworkSignals(Models::ArtworkMetadata *metadata) const;
+        void readMetadata(const QVector<Models::ArtworkMetadata*> &artworks,
+                          const QVector<QPair<int, int> > &rangesToUpdate) const;
+        void writeMetadata(const QVector<Models::ArtworkMetadata*> &artworks, bool useBackups) const;
+        void addToLibrary(const QVector<Models::ArtworkMetadata*> &artworks) const;
         void updateArtworks(const QVector<int> &indices) const;
+        void updateArtworks(const QVector<QPair<int, int> > &rangesToUpdate) const;
         void addToRecentDirectories(const QString &path) const;
 #ifdef QT_DEBUG
         void addInitialArtworks(const QStringList &artworksFilepathes);
 #endif
-        void submitForSpellCheck(SpellCheck::ISpellCheckable *item, int keywordIndex) const;
+        void submitKeywordForSpellCheck(SpellCheck::ISpellCheckable *item, int keywordIndex) const;
         void submitForSpellCheck(const QVector<Models::ArtworkMetadata*> &items) const;
         void submitForSpellCheck(const QVector<SpellCheck::ISpellCheckable *> &items) const;
-        void submitForSpellCheck(SpellCheck::ISpellCheckable *item) const;
+        void submitItemForSpellCheck(SpellCheck::ISpellCheckable *item, int flags = Common::SpellCheckAll) const;
         void setupSpellCheckSuggestions(SpellCheck::ISpellCheckable *item, int index, int flags);
         void saveMetadata(Models::ArtworkMetadata *metadata) const;
         void reportUserAction(Conectivity::UserAction userAction) const;
-        void afterConstructionCallback() const;
+        void saveLocalLibraryAsync() const;
+        void cleanupLocalLibraryAsync() const;
+        void afterConstructionCallback();
         void beforeDestructionCallback() const;
 
     public:
@@ -160,13 +181,13 @@ namespace Commands {
         virtual Suggestion::KeywordsSuggestor *getKeywordsSuggestor() const { return m_KeywordsSuggestor; }
         virtual Models::SettingsModel *getSettingsModel() const { return m_SettingsModel; }
         virtual SpellCheck::SpellCheckerService *getSpellCheckerService() const { return m_SpellCheckerService; }
+        virtual MetadataIO::BackupSaverService *getBackupSaverService() const { return m_MetadataSaverService; }
 
     private:
         Models::ArtworksRepository *m_ArtworksRepository;
         Models::ArtItemsModel *m_ArtItemsModel;
         Models::FilteredArtItemsProxyModel *m_FilteredItemsModel;
         Models::CombinedArtworksModel *m_CombinedArtworksModel;
-        Models::IptcProvider *m_IptcProvider;
         Models::ArtworkUploader *m_ArtworkUploader;
         Models::UploadInfoRepository *m_UploadInfoRepository;
         Models::WarningsManager *m_WarningsManager;
@@ -178,9 +199,13 @@ namespace Commands {
         Models::RecentDirectoriesModel *m_RecentDirectories;
         SpellCheck::SpellCheckerService *m_SpellCheckerService;
         SpellCheck::SpellCheckSuggestionModel *m_SpellCheckSuggestionModel;
-        Helpers::BackupSaverService *m_MetadataSaverService;
+        MetadataIO::BackupSaverService *m_MetadataSaverService;
         Conectivity::TelemetryService *m_TelemetryService;
         Helpers::UpdateService *m_UpdateService;
+        Models::LogsModel *m_LogsModel;
+        Suggestion::LocalLibrary *m_LocalLibrary;
+        MetadataIO::MetadataIOCoordinator *m_MetadataIOCoordinator;
+        volatile bool m_AfterInitCalled;
     };
 }
 

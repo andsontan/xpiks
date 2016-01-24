@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -54,23 +54,16 @@ namespace Models {
         Q_PROPERTY(bool appendKeywords READ getAppendKeywords WRITE setAppendKeywords NOTIFY appendKeywordsChanged)
 
     public:
-        CombinedArtworksModel(QObject *parent = 0) :
-            AbstractListModel(parent),
-            Common::BaseEntity(),
-            m_CommonKeywordsModel(this),
-            m_EditFlags(0),
-            m_IsModified(false)
-        {}
-
+        CombinedArtworksModel(QObject *parent = 0);
         virtual ~CombinedArtworksModel();
 
     public:
         void initArtworks(const QVector<ArtItemInfo *> &artworks);
 
     private:
-        void initKeywords(const QStringList &ek) { m_CommonKeywordsModel.resetKeywords(ek); }
-        void initDescription(const QString &description) { setDescription(description); }
-        void initTitle(const QString &title) { setTitle(title); }
+        void initKeywords(const QStringList &ek) { m_CommonKeywordsModel.resetKeywords(ek); m_AreKeywordsModified = false; }
+        void initDescription(const QString &description) { setDescription(description); m_IsDescriptionModified = false; }
+        void initTitle(const QString &title) { setTitle(title); m_IsTitleModified = false; }
 
     public:
         void recombineArtworks();
@@ -84,6 +77,7 @@ namespace Models {
         void setDescription(const QString &value) {
             if (m_CommonKeywordsModel.setDescription(value)) {
                 emit descriptionChanged();
+                m_IsDescriptionModified = true;
             }
         }
 
@@ -91,6 +85,7 @@ namespace Models {
         void setTitle(const QString &value) {
             if (m_CommonKeywordsModel.setTitle(value)) {
                 emit titleChanged();
+                m_IsTitleModified = true;
             }
         }
 
@@ -125,7 +120,8 @@ namespace Models {
 
 #if defined(TESTS)
         const QStringList &getKeywords() const;
-        bool getIsModified() const { return m_IsModified; }
+        bool getAreKeywordsModified() const { return m_AreKeywordsModified; }
+        bool getIsDescriptionModified() const { return m_IsDescriptionModified; }
 #endif
 
     public:
@@ -139,7 +135,7 @@ namespace Models {
         Q_INVOKABLE void saveEdits() const;
         Q_INVOKABLE void resetModelData();
         Q_INVOKABLE void clearKeywords();
-        Q_INVOKABLE QString getKeywordsString() { return m_CommonKeywordsModel.getKeywords().join(QChar(',')); }
+        Q_INVOKABLE QString getKeywordsString() { return m_CommonKeywordsModel.getKeywordsString(); }
         Q_INVOKABLE QObject *getKeywordsModel() {
             QObject *item = &m_CommonKeywordsModel;
             QQmlEngine::setObjectOwnership(item, QQmlEngine::CppOwnership);
@@ -148,12 +144,17 @@ namespace Models {
         Q_INVOKABLE void suggestCorrections();
         Q_INVOKABLE void initDescriptionHighlighting(QQuickTextDocument *document);
         Q_INVOKABLE void initTitleHighlighting(QQuickTextDocument *document);
+        Q_INVOKABLE void spellCheckDescription();
+        Q_INVOKABLE void spellCheckTitle();
 
     private:
         void processCombinedEditCommand() const;
         void enableAllFields();
         void assignFromOneArtwork();
         void assignFromManyArtworks();
+
+    private slots:
+        void spellCheckErrorsChangedHandler();
 
     public:
         enum CombinedArtworksModelRoles {
@@ -176,7 +177,9 @@ namespace Models {
         Common::BasicKeywordsModel m_CommonKeywordsModel;
         SpellCheck::SpellCheckItemInfo m_SpellCheckInfo;
         int m_EditFlags;
-        bool m_IsModified;
+        bool m_AreKeywordsModified;
+        bool m_IsDescriptionModified;
+        bool m_IsTitleModified;
     };
 }
 

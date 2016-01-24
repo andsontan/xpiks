@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -38,6 +38,7 @@ Item {
     property int artworkIndex: -1
     property variant componentParent
     property var callbackObject
+    property double coef: 1.0
 
     signal dialogDestruction();
     Component.onDestruction: dialogDestruction();
@@ -46,7 +47,11 @@ Item {
         artworkEditVerticalDialog.destroy()
     }
 
-    Component.onCompleted: descriptionTextInput.forceActiveFocus()
+    Component.onCompleted: {
+        focus = true
+        descriptionTextInput.forceActiveFocus()
+    }
+
     Keys.onEscapePressed: closePopup()
 
     PropertyAnimation { target: artworkEditVerticalDialog; property: "opacity";
@@ -99,54 +104,52 @@ Item {
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
-            width: 650
-            height: 620
+            width: previewImage.width < 650 ? 690 : previewImage.width + 40
+            height: parent.height - 60
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
 
-            ColumnLayout {
-                anchors.fill: parent
+            Rectangle {
+                id: boundsRect
+                color: Colors.defaultControlColor
+                anchors.left: parent.left
+                anchors.right: parent.right
                 anchors.margins: 20
+                anchors.top: parent.top
+                anchors.bottom: fields.top
+
+                Image {
+                    id: previewImage
+                    source: "image://global/" + imagePath
+                    cache: false
+                    width: boundsRect.height*coef
+                    height: boundsRect.height - 20
+                    fillMode: Image.PreserveAspectFit
+                    anchors.centerIn: parent
+                    asynchronous: true
+                }
+            }
+
+            ColumnLayout {
+                id: fields
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 20
+                height: 275
+                width: 650
+                anchors.horizontalCenter: parent.horizontalCenter
                 spacing: 0
 
-                Rectangle {
-                    id: boundsRect
-                    color: Colors.defaultControlColor
-                    height: 330
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-
-                    StyledScrollView {
-                        id: scrollview
-                        anchors.fill: parent
-                        anchors.leftMargin: 10
-                        anchors.topMargin: 10
-
-                        Image {
-                            id: previewImage
-                            source: "image://global/" + imagePath
-                            cache: false
-                            width: boundsRect.width - 20
-                            height: boundsRect.height - 20
-                            fillMode: Image.PreserveAspectFit
-                            anchors.centerIn: parent
-                            asynchronous: true
-                        }
-                    }
-                }
-
                 Item {
-                    height: 20
-                }
-
-                RowLayout {
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    spacing: 20
+                    height: childrenRect.height
 
                     ColumnLayout {
-                        width: 295
+                        id: descriptionColumn
+                        width: parent.width / 2 - 10
+                        anchors.left: parent.left
+                        anchors.top: parent.top
                         spacing: 5
 
                         StyledText {
@@ -201,6 +204,12 @@ Item {
                                     Keys.onTabPressed: titleTextInput.forceActiveFocus()
 
                                     onCursorRectangleChanged: descriptionFlick.ensureVisible(cursorRectangle)
+
+                                    onActiveFocusChanged: {
+                                        if (descriptionTextInput.length > 0) {
+                                            combinedArtworks.spellCheckDescription()
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -208,7 +217,9 @@ Item {
 
                     ColumnLayout {
                         spacing: 5
-                        width: 295
+                        anchors.top: parent.top
+                        anchors.right: parent.right
+                        width: parent.width/2 - 10
 
                         RowLayout {
                             spacing: 5
@@ -263,7 +274,6 @@ Item {
                                     font.pixelSize: 12*settingsModel.keywordSizeScale
                                     text: combinedArtworks.title
                                     onTextChanged: combinedArtworks.title = text
-                                    KeyNavigation.backtab: descriptionTextInput
 
                                     Keys.onBacktabPressed: descriptionTextInput.forceActiveFocus()
 
@@ -276,6 +286,12 @@ Item {
                                     }
 
                                     onCursorRectangleChanged: titleFlick.ensureVisible(cursorRectangle)
+
+                                    onActiveFocusChanged: {
+                                        if (titleTextInput.length > 0) {
+                                            combinedArtworks.spellCheckTitle()
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -319,7 +335,7 @@ Item {
                     id: keywordsWrapper
                     border.color: Colors.artworkActiveColor
                     border.width: flv.isFocused ? 1 : 0
-                    height: 105
+                    height: 145
                     anchors.left: parent.left
                     anchors.right: parent.right
                     color: Colors.defaultInputBackground
@@ -420,6 +436,18 @@ Item {
                             Common.launchDialog("Dialogs/KeywordsSuggestion.qml",
                                                 componentParent,
                                                 {callbackObject: callbackObject});
+                        }
+                    }
+
+                    StyledButton {
+                        width: 100
+                        text: qsTr("Fix spelling")
+
+                        onClicked: {
+                            combinedArtworks.suggestCorrections()
+                            Common.launchDialog("Dialogs/SpellCheckSuggestionsDialog.qml",
+                                                componentParent,
+                                                {})
                         }
                     }
 

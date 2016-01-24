@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -42,6 +42,8 @@ Item {
     signal dialogDestruction();
     Component.onDestruction: dialogDestruction();
 
+    Component.onCompleted: focus = true
+
     function closePopup() {
         secretsManager.purgeMasterPassword()
         uploadInfos.finalizeAccounts()
@@ -68,12 +70,11 @@ Item {
 
             filteredArtItemsModel.setSelectedForZipping()
             Common.launchDialog("Dialogs/ZipArtworksDialog.qml",
-                            uploadArtworksComponent.componentParent,
-                                   {
-                                       componentParent: uploadArtworksComponent.componentParent,
-                                       immediateProcessing: true,
-                                       callbackObject: callbackObject
-                                   });
+                                uploadArtworksComponent.componentParent,
+                                {
+                                    immediateProcessing: true,
+                                    callbackObject: callbackObject
+                                });
         } else {
             mainAction();
         }
@@ -585,7 +586,9 @@ Item {
                                             Connections {
                                                 target: artworkUploader
                                                 onCredentialsChecked: {
-                                                    if (url == ftpHost.text) {
+                                                    console.log("Connection checked for " + url)
+                                                    var currHost = ftpHost.text
+                                                    if (url.indexOf(currHost) > -1) {
                                                         credentialsStatus.enabled = true
                                                         credentialsStatus.isGreen = result
                                                     }
@@ -700,7 +703,7 @@ Item {
                             onClicked: {
                                 if (warningsManager.warningsCount > 0) {
                                     Common.launchDialog("Dialogs/WarningsDialog.qml",
-                                                           uploadArtworksComponent.componentParent,
+                                                        uploadArtworksComponent.componentParent,
                                                         {
                                                             componentParent: uploadArtworksComponent.componentParent,
                                                             isRestricted: true

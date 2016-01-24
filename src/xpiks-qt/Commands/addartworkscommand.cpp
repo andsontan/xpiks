@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -28,10 +28,10 @@
 #include "../Models/artworkmetadata.h"
 #include "../Models/artitemsmodel.h"
 #include "../UndoRedo/addartworksitem.h"
+#include "../Common/defines.h"
 
-Commands::CommandResult *Commands::AddArtworksCommand::execute(const CommandManager *commandManager) const
-{
-    qDebug() << "Add artworks command";
+Commands::CommandResult *Commands::AddArtworksCommand::execute(const CommandManager *commandManager) const {
+    qDebug() << "Add artworks command:" << m_FilePathes.length() << "files";
     Models::ArtworksRepository *artworksRepository = commandManager->getArtworksRepository();
     Models::ArtItemsModel *artItemsModel = commandManager->getArtItemsModel();
 
@@ -43,6 +43,7 @@ Commands::CommandResult *Commands::AddArtworksCommand::execute(const CommandMana
     artworksToImport.reserve(newFilesCount);
 
     if (newFilesCount > 0) {
+        qInfo() << "Add artworks command:" << newFilesCount << "new files";
         artItemsModel->beginAccountingFiles(newFilesCount);
 
         int count = m_FilePathes.count();
@@ -70,15 +71,18 @@ Commands::CommandResult *Commands::AddArtworksCommand::execute(const CommandMana
     artworksRepository->endAccountingFiles(filesWereAccounted);
 
     if (newFilesCount > 0) {
+        int length = artItemsModel->rowCount();
+        int start = length - newFilesCount, end = length - 1;
+        QVector<QPair<int, int> > ranges;
+        ranges << qMakePair(start, end);
+        commandManager->readMetadata(artworksToImport, ranges);
+
         artworksRepository->updateCountsForExistingDirectories();
         artItemsModel->raiseArtworksAdded(newFilesCount);
 
         UndoRedo::AddArtworksHistoryItem *addArtworksItem = new UndoRedo::AddArtworksHistoryItem(initialCount, newFilesCount);
         commandManager->recordHistoryItem(addArtworksItem);
     }
-
-    // set artworks for initial import
-    commandManager->setArtworksForIPTCProcessing(artworksToImport);
 
     AddArtworksCommandResult *result = new AddArtworksCommandResult(newFilesCount);
     return result;

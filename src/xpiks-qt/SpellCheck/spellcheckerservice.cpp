@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -21,10 +21,13 @@
 
 #include "spellcheckerservice.h"
 #include <QThread>
+#include <QDebug>
 
 #include "../Models/artworkmetadata.h"
 #include "spellcheckworker.h"
 #include "spellcheckitem.h"
+#include "../Common/defines.h"
+#include "../Common/flags.h"
 
 namespace SpellCheck {
     SpellCheckerService::SpellCheckerService() {
@@ -40,6 +43,7 @@ namespace SpellCheck {
 
     void SpellCheckerService::startChecking() {
         Q_ASSERT(!m_SpellCheckWorker->isRunning());
+        qDebug() << "Starting spellchecker service...";
 
         QThread *thread = new QThread();
         m_SpellCheckWorker->moveToThread(thread);
@@ -74,10 +78,12 @@ namespace SpellCheck {
 
             for (int i = 0; i < length; ++i) {
                 SpellCheck::ISpellCheckable *itemToCheck = itemsToCheck.at(i);
-                SpellCheckItem *item = new SpellCheckItem(itemToCheck);
+                SpellCheckItem *item = new SpellCheckItem(itemToCheck, Common::SpellCheckAll);
                 itemToCheck->connectSignals(item);
                 items.append(item);
             }
+
+            qInfo() << "SpellCheck service: about to submit" << length << "items";
 
             m_SpellCheckWorker->submitItems(items);
             m_SpellCheckWorker->submitItem(new SpellCheckSeparatorItem());
@@ -90,7 +96,19 @@ namespace SpellCheck {
         Q_ASSERT(m_SpellCheckWorker != NULL);
 
         if (m_SpellCheckWorker != NULL && !m_SpellCheckWorker->isCancelled()) {
-            SpellCheckItem *item = new SpellCheckItem(itemToCheck, keywordIndex);
+            SpellCheckItem *item = new SpellCheckItem(itemToCheck, Common::SpellCheckKeywords, keywordIndex);
+            itemToCheck->connectSignals(item);
+            m_SpellCheckWorker->submitItem(item);
+        }
+    }
+
+    void SpellCheckerService::submitItem(ISpellCheckable *itemToCheck, int flags) {
+        if (!m_WorkerIsAlive) { return; }
+
+        Q_ASSERT(m_SpellCheckWorker != NULL);
+
+        if (m_SpellCheckWorker != NULL && !m_SpellCheckWorker->isCancelled()) {
+            SpellCheckItem *item = new SpellCheckItem(itemToCheck, flags);
             itemToCheck->connectSignals(item);
             m_SpellCheckWorker->submitItem(item);
         }
@@ -110,6 +128,7 @@ namespace SpellCheck {
         if (!m_WorkerIsAlive) { return; }
 
         if (m_SpellCheckWorker != NULL) {
+            qInfo() << "SpellCheck service: cancelling current batch";
             m_SpellCheckWorker->cancelCurrentBatch();
         }
     }
@@ -125,11 +144,12 @@ namespace SpellCheck {
     }
 
     void SpellCheckerService::workerFinished() {
-        qDebug() << "Spellcheck service went offline";
+        qInfo() << "Spellcheck service went offline";
         m_WorkerIsAlive = false;
     }
 
     void SpellCheck::SpellCheckerService::stopChecking() {
+        qDebug() << "SpellCheck service: stopping checking...";
         if (m_WorkerIsAlive) {
             m_SpellCheckWorker->cancelWork();
         }

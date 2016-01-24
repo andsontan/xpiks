@@ -1,0 +1,15 @@
+By accessing and using Xpiks (heretofore called the "application" or the "program"), you accept and agree to be bound by the terms and provision of this agreement. In addition, when using these particular application, you shall be subject to any posted guidelines or rules applicable to such application. Any participation in this application will constitute acceptance of this agreement. If you do not agree to abide by the above, please do not use this application.
+
+Xpiks is distributed under the GNU General Public License, version 3.0
+
+This application is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+This application is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+Xpiks has an option to save credentials of FTP uploads. When you enter such sensitive data, Xpiks always encrypts it. Also you have option to encrypt it with your own password (Master Password). Application sends anonymous statistics data to collect analytics of how many users on which platforms use Xpiks daily. Also Xpiks records which features are used the most to invest more time in developing most needed parts. Such analytics data is not shared with any third-parties and is saved in secure manner.
+
+Application and its original content, features, and functionality are owned by Taras Kushnir and are protected by international copyright.
+
+This terms and conditions can be amended in future and users will be notified on such occasions.

@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -37,15 +37,16 @@
 #include "SpellCheck/spellchecksuggestionmodel.h"
 #include "Models/filteredartitemsproxymodel.h"
 #include "Suggestion/suggestionqueryengine.h"
+#include "MetadataIO/metadataiocoordinator.h"
 #include "Conectivity/analyticsuserevent.h"
 #include "SpellCheck/spellcheckerservice.h"
 #include "Models/recentdirectoriesmodel.h"
+#include "MetadataIO/backupsaverservice.h"
 #include "Suggestion/keywordssuggestor.h"
 #include "Models/combinedartworksmodel.h"
 #include "Conectivity/telemetryservice.h"
 #include "Helpers/globalimageprovider.h"
 #include "Models/uploadinforepository.h"
-#include "Helpers/backupsaverservice.h"
 #include "Helpers/helpersqmlwrapper.h"
 #include "Encryption/secretsmanager.h"
 #include "Models/artworksrepository.h"
@@ -60,41 +61,39 @@
 #include "Helpers/updateservice.h"
 #include "Models/artitemsmodel.h"
 #include "Models/settingsmodel.h"
-#include "Models/iptcprovider.h"
 #include "Helpers/appsettings.h"
 #include "Models/ziparchiver.h"
 #include "Helpers/constants.h"
-#include "Encryption/aes-qt.h"
 #include "Helpers/runguard.h"
 #include "Models/logsmodel.h"
 #include "Helpers/logger.h"
 #include "Common/version.h"
 #include "Common/defines.h"
 
-#ifdef WITH_LOGS
-
 void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg) {
     Q_UNUSED(context);
 
-    QString txt;
+    QString logLine;
+    QString time = QDateTime::currentDateTimeUtc().toString("dd.MM.yyyy hh:mm:ss.zzz");
     switch (type) {
-    case QtDebugMsg:
-        txt = QString("Debug: %1").arg(msg);
-        break;
-    case QtWarningMsg:
-        txt = QString("Warning: %1").arg(msg);
-        break;
-    case QtCriticalMsg:
-        txt = QString("Critical: %1").arg(msg);
-        break;
-    case QtFatalMsg:
-        txt = QString("Fatal: %1").arg(msg);
-        break;
+        case QtDebugMsg:
+            logLine = QString("%1 - Debug: %2").arg(time).arg(msg);
+            break;
+        case QtWarningMsg:
+            logLine = QString("%1 - Warning: %2").arg(time).arg(msg);
+            break;
+        case QtCriticalMsg:
+            logLine = QString("%1 - Critical: %2").arg(time).arg(msg);
+            break;
+        case QtFatalMsg:
+            logLine = QString("%1 - Fatal: %2").arg(time).arg(msg);
+            break;
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 1))
+        case QtInfoMsg:
+            logLine = QString("%1 - Info: %2").arg(time).arg(msg);
+            break;
+#endif
     }
-
-    QString logLine = QString("%1 - %2")
-            .arg(QDateTime::currentDateTimeUtc().toString("dd.MM.yyyy hh:mm:ss.zzz"))
-            .arg(txt);
 
     Helpers::Logger &logger = Helpers::Logger::getInstance();
     logger.log(logLine);
@@ -103,8 +102,6 @@ void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const Q
         abort();
     }
 }
-
-#endif
 
 #define STRINGIZE_(x) #x
 #define STRINGIZE(x) STRINGIZE_(x)
@@ -138,7 +135,11 @@ int main(int argc, char *argv[]) {
 
     Suggestion::LocalLibrary localLibrary;
 
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
+    QString appDataPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+#else
     QString appDataPath = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+#endif
     if (!appDataPath.isEmpty()) {
         QDir appDataDir(appDataPath);
 
@@ -148,13 +149,12 @@ int main(int argc, char *argv[]) {
 
         QString libraryFilePath = appDataDir.filePath(Constants::LIBRARY_FILENAME);
         localLibrary.setLibraryPath(libraryFilePath);
+    } else {
+        std::cerr << "AppDataPath is empty!";
     }
 
-    Models::LogsModel logsModel;
-    logsModel.startLogging();
-
 #ifdef WITH_LOGS
-    QString logFileDir = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+    const QString &logFileDir = appDataPath;
     if (!logFileDir.isEmpty()) {
         QDir dir(logFileDir);
         if (!dir.exists()) {
@@ -162,14 +162,17 @@ int main(int argc, char *argv[]) {
             Q_UNUSED(created);
         }
     }
+#endif
+
+    Models::LogsModel logsModel;
+    logsModel.startLogging();
 
     qInstallMessageHandler(myMessageHandler);
     qDebug() << "Log started";
-#endif
+
     QApplication app(argc, argv);
 
     localLibrary.loadLibraryAsync();
-
 
     QString userId = appSettings.value(QLatin1String(Constants::USER_AGENT_ID)).toString();
     userId.remove(QRegExp("[{}-]."));
@@ -177,8 +180,6 @@ int main(int argc, char *argv[]) {
     Models::ArtworksRepository artworkRepository;
     Models::ArtItemsModel artItemsModel;
     Models::CombinedArtworksModel combinedArtworksModel;
-    Models::IptcProvider iptcProvider;
-    iptcProvider.setLocalLibrary(&localLibrary);
     Models::UploadInfoRepository uploadInfoRepository;
     Models::WarningsManager warningsManager;
     Models::SettingsModel settingsModel;
@@ -194,19 +195,17 @@ int main(int argc, char *argv[]) {
     Models::ArtworkUploader artworkUploader(settingsModel.getMaxParallelUploads());
     SpellCheck::SpellCheckerService spellCheckerService;
     SpellCheck::SpellCheckSuggestionModel spellCheckSuggestionModel;
-    Helpers::BackupSaverService metadataSaverService;
+    MetadataIO::BackupSaverService metadataSaverService;
     Helpers::UpdateService updateService;
+    MetadataIO::MetadataIOCoordinator metadataIOCoordinator;
 
-    const QString reportingEndpoint = QLatin1String("cc39a47f60e1ed812e2403b33678dd1c529f1cc43f66494998ec478a4d13496269a3dfa01f882941766dba246c76b12b2a0308e20afd84371c41cf513260f8eb8b71f8c472cafb1abf712c071938ec0791bbf769ab9625c3b64827f511fa3fbb");
-    QString endpoint = Encryption::decodeText(reportingEndpoint, "reporting");
-    Conectivity::TelemetryService telemetryService(userId, endpoint);
+    Conectivity::TelemetryService telemetryService(userId);
 
     Commands::CommandManager commandManager;
     commandManager.InjectDependency(&artworkRepository);
     commandManager.InjectDependency(&artItemsModel);
     commandManager.InjectDependency(&filteredArtItemsModel);
     commandManager.InjectDependency(&combinedArtworksModel);
-    commandManager.InjectDependency(&iptcProvider);
     commandManager.InjectDependency(&artworkUploader);
     commandManager.InjectDependency(&uploadInfoRepository);
     commandManager.InjectDependency(&warningsManager);
@@ -221,6 +220,8 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&metadataSaverService);
     commandManager.InjectDependency(&telemetryService);
     commandManager.InjectDependency(&updateService);
+    commandManager.InjectDependency(&logsModel);
+    commandManager.InjectDependency(&metadataIOCoordinator);
 
     // other initializations
     secretsManager.setMasterPasswordHash(appSettings.value(Constants::MASTER_PASSWORD_HASH, "").toString());
@@ -243,7 +244,6 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("artworkRepository", &artworkRepository);
     rootContext->setContextProperty("combinedArtworks", &combinedArtworksModel);
     rootContext->setContextProperty("appSettings", &appSettings);
-    rootContext->setContextProperty("iptcProvider", &iptcProvider);
     rootContext->setContextProperty("artworkUploader", &artworkUploader);
     rootContext->setContextProperty("uploadInfos", &uploadInfoRepository);
     rootContext->setContextProperty("logsModel", &logsModel);
@@ -259,10 +259,12 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("updateService", &updateService);
     rootContext->setContextProperty("spellCheckerService", &spellCheckerService);
     rootContext->setContextProperty("spellCheckSuggestionModel", &spellCheckSuggestionModel);
+    rootContext->setContextProperty("metadataIOCoordinator", &metadataIOCoordinator);
 
     engine.addImageProvider("global", globalProvider);
+    qDebug() << "About to load main view...";
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
-
+    qDebug() << "Main view loaded";
 
 #ifdef QT_DEBUG
     if (argc > 1) {

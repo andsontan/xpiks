@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -34,24 +34,36 @@ Item {
     id: metadataImportComponent
     anchors.fill: parent
 
+    property bool isInProgress: false
+
     Keys.onEscapePressed: {
-        if (!iptcProvider.inProgress) {
+        if (!metadataImportComponent.isInProgress) {
             closePopup()
         }
+
+        event.accepted = true
     }
 
     function closePopup() {
-        iptcProvider.isLaunched = false
         metadataImportComponent.destroy()
     }
 
     Component.onCompleted: {
-        iptcProvider.ignoreAutosave = false
         focus = true
     }
 
     signal dialogDestruction();
     Component.onDestruction: dialogDestruction();
+
+    MessageDialog {
+        id: errorsNotification
+        title: "Warning"
+        text: qsTr("Import finished with errors. See logs for details.")
+
+        onAccepted: {
+            closePopup()
+        }
+    }
 
     PropertyAnimation { target: metadataImportComponent; property: "opacity";
         duration: 400; from: 0; to: 1;
@@ -99,75 +111,97 @@ Item {
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
-            width: 480
-            height: 150
+            width: 380
+            height: 130
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
 
-            ColumnLayout {
-                spacing: 10
+            Behavior on height {
+                NumberAnimation {
+                    duration: 200
+                    easing.type: Easing.InQuad
+                }
+            }
+
+            Column {
+                id: column
+                spacing: 20
                 anchors.fill: parent
                 anchors.margins: 20
 
-                RowLayout {
-                    Layout.fillWidth: true
+                add: Transition {
+                    NumberAnimation { properties: "x,y"; easing.type: Easing.InQuad; duration: 200 }
+                }
+
+                move: Transition {
+                    NumberAnimation { properties: "x,y"; easing.type: Easing.InQuad; duration: 200 }
+                }
+
+                Item {
+                    height: childrenRect.height
+                    anchors.left: parent.left
+                    anchors.right: parent.right
 
                     StyledText {
+                        anchors.left: parent.left
                         text: qsTr("Import existing metadata")
                     }
 
-                    Item {
-                        Layout.fillWidth: true
-                    }
-
                     StyledText {
-                        text: qsTr("from %1 image(s)").arg(iptcProvider.itemsCount)
+                        anchors.right: parent.right
+                        text: qsTr("from %1 image(s)").arg(metadataIOCoordinator.processingItemsCount)
                         color: Colors.defaultInputBackground
                     }
                 }
 
-                SimpleProgressBar {
-                    id: progress
+                StyledBusyIndicator {
+                    id: spinner
+                    width: 150
+                    height: 0
                     anchors.horizontalCenter: parent.horizontalCenter
-                    width: parent.width
-                    height: 20
-                    color: iptcProvider.isError ? Colors.destructiveColor : Colors.artworkActiveColor
-                    value: iptcProvider.percent
+                    running: false
+                }
+
+                StyledCheckbox {
+                    id: ignoreAutosavesCheckbox
+                    text: qsTr("Ignore autosaves (.xpks)")
+                    enabled: settingsModel.saveBackups && !metadataImportComponent.isInProgress
+                    checked: false
                 }
 
                 RowLayout {
                     height: 24
-
-                    StyledCheckbox {
-                        text: qsTr("Ignore autosaves (.xpks)")
-                        enabled: settingsModel.saveBackups && !iptcProvider.inProgress
-                        checked: iptcProvider.ignoreAutosave
-                        onCheckedChanged: iptcProvider.ignoreAutosave = checked
-                    }
-
-                    Item {
-                        Layout.fillWidth: true
-                    }
+                    anchors.left: parent.left
+                    anchors.right: parent.right
 
                     StyledButton {
                         id: importButton
                         width: 130
                         text: qsTr("Start Import")
-                        enabled: !iptcProvider.inProgress
+                        enabled: !metadataImportComponent.isInProgress
                         onClicked: {
                             text = qsTr("Importing...")
-                            iptcProvider.resetModel()
-                            iptcProvider.importMetadata()
+                            metadataImportComponent.isInProgress = true
+
+                            spinner.height = spinner.width
+                            dialogWindow.height += spinner.height + column.spacing
+                            spinner.running = true
+
+                            metadataIOCoordinator.readMetadata(ignoreAutosavesCheckbox.checked)
                         }
 
                         Connections {
-                            target: iptcProvider
-                            onFinishedProcessing: {
-                                console.log("Import finished in UI")
-                                importButton.text = qsTr("Start Import")
-                                artItemsModel.updateLastN(iptcProvider.itemsCount)
-                                if (!iptcProvider.isError) {
+                            target: metadataIOCoordinator
+                            onMetadataReadingFinished: {
+                                console.log("Import finished UI handler")
+
+                                metadataImportComponent.isInProgress = false
+
+                                if (metadataIOCoordinator.hasErrors) {
+                                    errorsNotification.open()
+                                } else {
+                                    importButton.text = qsTr("Start Import")
                                     closePopup()
                                 }
                             }
@@ -175,13 +209,13 @@ Item {
                     }
 
                     Item {
-                        width: 10
+                        Layout.fillWidth: true
                     }
 
                     StyledButton {
                         text: qsTr("Close")
                         width: 100
-                        enabled: !iptcProvider.inProgress
+                        enabled: !metadataImportComponent.isInProgress
                         onClicked: {
                             closePopup()
                         }

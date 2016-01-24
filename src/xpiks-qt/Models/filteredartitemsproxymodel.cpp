@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -20,6 +20,7 @@
  */
 
 #include "filteredartitemsproxymodel.h"
+#include <QDir>
 #include "artitemsmodel.h"
 #include "artworkmetadata.h"
 #include "artworksrepository.h"
@@ -29,6 +30,7 @@
 #include "../Commands/combinededitcommand.h"
 #include "../Common/flags.h"
 #include "../SpellCheck/ispellcheckable.h"
+#include "../Helpers/indiceshelper.h"
 
 namespace Models {
     FilteredArtItemsProxyModel::FilteredArtItemsProxyModel(QObject *parent) :
@@ -62,7 +64,9 @@ namespace Models {
 
         ArtItemsModel *artItemsModel = getArtItemsModel();
         const ArtworksRepository *artworksRepository = m_CommandManager->getArtworksRepository();
-        const QString directory = artworksRepository->getDirectory(directoryIndex);
+        const QString &directory = artworksRepository->getDirectory(directoryIndex);
+        QDir dir(directory);
+        QString directoryAbsolutePath = dir.absolutePath();
 
         for (int row = 0; row < size; ++row) {
             QModelIndex proxyIndex = this->index(row, 0);
@@ -72,7 +76,7 @@ namespace Models {
             ArtworkMetadata *metadata = artItemsModel->getArtwork(index);
             Q_ASSERT(metadata != NULL);
 
-            if (metadata->isInDirectory(directory)) {
+            if (metadata->isInDirectory(directoryAbsolutePath)) {
                 directoryItems.append(index);
                 metadata->setIsSelected(!metadata->getIsSelected());
             }
@@ -106,11 +110,11 @@ namespace Models {
         artItemsModel->updateSelectedArtworks(indices);
     }
 
-    void FilteredArtItemsProxyModel::saveSelectedArtworks() {
+    void FilteredArtItemsProxyModel::saveSelectedArtworks(bool overwriteAll, bool useBackups) {
         // former patchSelectedArtworks
         QVector<int> indices = getSelectedOriginalIndices();
         ArtItemsModel *artItemsModel = getArtItemsModel();
-        artItemsModel->saveSelectedArtworks(indices);
+        artItemsModel->saveSelectedArtworks(indices, overwriteAll, useBackups);
     }
 
     void FilteredArtItemsProxyModel::setSelectedForUpload() {
@@ -134,14 +138,15 @@ namespace Models {
     void FilteredArtItemsProxyModel::spellCheckSelected() {
         QVector<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
         m_CommandManager->submitForSpellCheck(selectedArtworks);
+        m_CommandManager->reportUserAction(Conectivity::UserActionSpellCheck);
     }
 
-    int FilteredArtItemsProxyModel::getModifiedSelectedCount() const {
+    int FilteredArtItemsProxyModel::getModifiedSelectedCount(bool overwriteAll) const {
         QVector<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
         int modifiedCount = 0;
 
         foreach (const ArtworkMetadata *metadata, selectedArtworks) {
-            if (metadata->isModified()) {
+            if (metadata->isModified() || overwriteAll) {
                 modifiedCount++;
             }
         }
@@ -167,7 +172,10 @@ namespace Models {
 
     void FilteredArtItemsProxyModel::reimportMetadataForSelected() {
         QVector<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
-        m_CommandManager->setArtworksForIPTCProcessing(selectedArtworks);
+        QVector<QPair<int, int> > ranges;
+        Helpers::indicesToRanges(getSelectedOriginalIndices(), ranges);
+
+        m_CommandManager->readMetadata(selectedArtworks, ranges);
         ArtItemsModel *artItemsModel = getArtItemsModel();
         artItemsModel->raiseArtworksAdded(selectedArtworks.count());
     }
@@ -199,6 +207,54 @@ namespace Models {
         Q_ASSERT(metadata != NULL);
         ArtItemInfo *info = new ArtItemInfo(metadata, originalIndex);
         removeKeywordsInItem(info);
+    }
+
+    void FilteredArtItemsProxyModel::focusNextItem(int index) {
+        if (0 <= index && index < rowCount() - 1) {
+            QModelIndex nextQIndex = this->index(index + 1, 0);
+            QModelIndex sourceIndex = mapToSource(nextQIndex);
+            ArtItemsModel *artItemsModel = getArtItemsModel();
+            ArtworkMetadata *metadata = artItemsModel->getArtwork(sourceIndex.row());
+
+            if (metadata != NULL) {
+                metadata->requestFocus(+1);
+            }
+        }
+    }
+
+    void FilteredArtItemsProxyModel::focusPreviousItem(int index) {
+        if (0 < index && index < rowCount()) {
+            QModelIndex nextQIndex = this->index(index - 1, 0);
+            QModelIndex sourceIndex = mapToSource(nextQIndex);
+            ArtItemsModel *artItemsModel = getArtItemsModel();
+            ArtworkMetadata *metadata = artItemsModel->getArtwork(sourceIndex.row());
+
+            if (metadata != NULL) {
+                metadata->requestFocus(-1);
+            }
+        }
+    }
+
+    void FilteredArtItemsProxyModel::spellCheckDescription(int index) {
+        if (0 <= index && index < rowCount()) {
+            int originalIndex = getOriginalIndex(index);
+            ArtItemsModel *artItemsModel = getArtItemsModel();
+            ArtworkMetadata *metadata = artItemsModel->getArtwork(originalIndex);
+            if (!metadata->getDescription().trimmed().isEmpty()) {
+                m_CommandManager->submitItemForSpellCheck(metadata, Common::SpellCheckDescription);
+            }
+        }
+    }
+
+    void FilteredArtItemsProxyModel::spellCheckTitle(int index) {
+        if (0 <= index && index < rowCount()) {
+            int originalIndex = getOriginalIndex(index);
+            ArtItemsModel *artItemsModel = getArtItemsModel();
+            ArtworkMetadata *metadata = artItemsModel->getArtwork(originalIndex);
+            if (!metadata->getTitle().trimmed().isEmpty()) {
+                m_CommandManager->submitItemForSpellCheck(metadata, Common::SpellCheckTitle);
+            }
+        }
     }
 
     void FilteredArtItemsProxyModel::itemSelectedChanged(bool value) {

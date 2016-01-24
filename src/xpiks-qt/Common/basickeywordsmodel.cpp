@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -26,11 +26,13 @@
 #include "../SpellCheck/spellcheckiteminfo.h"
 #include "../Helpers/keywordvalidator.h"
 #include "../Helpers/stringhelper.h"
+#include "./Common/flags.h"
 
 namespace Common {
     BasicKeywordsModel::BasicKeywordsModel(QObject *parent):
         QAbstractListModel(parent),
-        m_SpellCheckInfo(NULL)
+        m_SpellCheckInfo(NULL),
+        m_WarningsFlags(0)
     {
     }
 
@@ -74,7 +76,8 @@ namespace Common {
 
         if (0 <= index && index < m_KeywordsList.length()) {
             const QString &keyword = m_KeywordsList.at(index);
-            m_KeywordsSet.remove(keyword);
+            QString invariant = keyword.toLower();
+            m_KeywordsSet.remove(invariant);
 
             beginRemoveRows(QModelIndex(), index, index);
             removedKeyword = m_KeywordsList.takeAt(index);
@@ -140,19 +143,33 @@ namespace Common {
 
             QString existing = m_KeywordsList.at(index);
             if (existing != sanitized && Helpers::isValidKeyword(sanitized)) {
-                if (!m_KeywordsSet.contains(sanitized)) {
-                    m_KeywordsSet.insert(sanitized);
-                    m_KeywordsList[index] = sanitized;
-                    m_KeywordsSet.remove(existing);
+                QString lowerCasedNew = sanitized.toLower();
+                QString lowerCasedExisting = existing.toLower();
 
+                if (!m_KeywordsSet.contains(lowerCasedNew)) {
+                    m_KeywordsSet.insert(lowerCasedNew);
+                    m_KeywordsList[index] = sanitized;
+                    m_KeywordsSet.remove(lowerCasedExisting);
+
+                    QModelIndex i = this->index(index);
+                    emit dataChanged(i, i, QVector<int>() << KeywordRole);
+                    qDebug() << "Keyword edit: common edit";
+
+                    result = true;
+                } else if (lowerCasedNew == lowerCasedExisting) {
+                    qDebug() << "Keyword edit: changing case in same keyword";
+                    m_KeywordsList[index] = sanitized;
                     QModelIndex i = this->index(index);
                     emit dataChanged(i, i, QVector<int>() << KeywordRole);
 
                     result = true;
-                } else {
-                    qDebug() << "Attempt to rename keyword to existing one. Use remove instead";
+                }
+                else {
+                    qWarning() << "Attempt to rename keyword to existing one. Use remove instead";
                 }
             }
+        } else {
+            qWarning() << "Failed to edit keyword with index" << index;
         }
 
         return result;
@@ -171,15 +188,15 @@ namespace Common {
     }
 
     bool BasicKeywordsModel::isEmpty() const {
-        return m_KeywordsList.isEmpty() || m_Description.simplified().isEmpty();
+        return m_KeywordsList.isEmpty() || m_Description.trimmed().isEmpty();
     }
 
     bool BasicKeywordsModel::isTitleEmpty() const {
-        return m_Title.simplified().isEmpty();
+        return m_Title.trimmed().isEmpty();
     }
 
     bool BasicKeywordsModel::isDescriptionEmpty() const {
-        return m_Description.simplified().isEmpty();
+        return m_Description.trimmed().isEmpty();
     }
 
     bool BasicKeywordsModel::containsKeyword(const QString &searchTerm, bool exactMatch) {
@@ -220,13 +237,31 @@ namespace Common {
     }
 
     bool BasicKeywordsModel::hasDescriptionSpellError() const {
-        bool hasError = m_SpellCheckInfo->anyDescriptionError();
-        return hasError;
+        bool anyError = false;
+
+        const QStringList &descriptionWords = getDescriptionWords();
+        foreach (const QString &word, descriptionWords) {
+            if (m_SpellCheckInfo->hasDescriptionError(word)) {
+                anyError = true;
+                break;
+            }
+        }
+
+        return anyError;
     }
 
     bool BasicKeywordsModel::hasTitleSpellError() const {
-        bool hasError = m_SpellCheckInfo->anyTitleError();
-        return hasError;
+        bool anyError = false;
+
+        const QStringList &titleWords = getTitleWords();
+        foreach (const QString &word, titleWords) {
+            if (m_SpellCheckInfo->hasTitleError(word)) {
+                anyError = true;
+                break;
+            }
+        }
+
+        return anyError;
     }
 
     bool BasicKeywordsModel::hasSpellErrors() const {
@@ -265,8 +300,12 @@ namespace Common {
         appendKeywords(keywords);
     }
 
-    void BasicKeywordsModel::notifySpellCheckResults() {
-        emit spellCheckResultsReady();
+    void BasicKeywordsModel::notifySpellCheckResults(int flags) {
+        if (Common::HasFlag(flags, Common::SpellCheckDescription) ||
+                Common::HasFlag(flags, Common::SpellCheckTitle)) {
+            emit spellCheckResultsReady();
+        }
+        
         emit spellCheckErrorsChanged();
     }
 
@@ -346,9 +385,14 @@ namespace Common {
         }
     }
 
-    void BasicKeywordsModel::setSpellCheckResults(const QHash<QString, bool> &results) {
-        updateDescriptionSpellErrors(results);
-        updateTitleSpellErrors(results);
+    void BasicKeywordsModel::setSpellCheckResults(const QHash<QString, bool> &results, int flags) {
+        if (Common::HasFlag(flags, Common::SpellCheckDescription)) {
+            updateDescriptionSpellErrors(results);
+        }
+
+        if (Common::HasFlag(flags, Common::SpellCheckTitle)) {
+            updateTitleSpellErrors(results);
+        }
     }
 
     QVector<SpellCheck::SpellSuggestionsItem *> BasicKeywordsModel::createKeywordsSuggestionsList() {
@@ -378,54 +422,65 @@ namespace Common {
     }
 
     QVector<SpellCheck::SpellSuggestionsItem *> BasicKeywordsModel::createDescriptionSuggestionsList() {
-        QStringList descriptionErrors = m_SpellCheckInfo->retrieveDescriptionErrors();
-        int length = descriptionErrors.length();
+        QStringList descriptionWords = getDescriptionWords();
+        int length = descriptionWords.length();
 
         QVector<SpellCheck::SpellSuggestionsItem *> spellCheckSuggestions;
-        spellCheckSuggestions.reserve(length);
+        spellCheckSuggestions.reserve(length / 3);
 
         for (int i = 0; i < length; ++i) {
-            const QString &word = descriptionErrors.at(i);
-            SpellCheck::DescriptionSpellSuggestions *suggestionsItem = new SpellCheck::DescriptionSpellSuggestions(word);
-            spellCheckSuggestions.append(suggestionsItem);
+            const QString &word = descriptionWords.at(i);
+            if (m_SpellCheckInfo->hasDescriptionError(word)) {
+                SpellCheck::DescriptionSpellSuggestions *suggestionsItem = new SpellCheck::DescriptionSpellSuggestions(word);
+                spellCheckSuggestions.append(suggestionsItem);
+            }
         }
 
         return spellCheckSuggestions;
     }
 
     QVector<SpellCheck::SpellSuggestionsItem *> BasicKeywordsModel::createTitleSuggestionsList() {
-        QStringList titleErrors = m_SpellCheckInfo->retrieveTitleErrors();
-        int length = titleErrors.length();
+        QStringList titleWords = getTitleWords();
+        int length = titleWords.length();
 
         QVector<SpellCheck::SpellSuggestionsItem *> spellCheckSuggestions;
-        spellCheckSuggestions.reserve(length);
+        spellCheckSuggestions.reserve(length / 3);
 
         for (int i = 0; i < length; ++i) {
-            const QString &word = titleErrors.at(i);
-            SpellCheck::TitleSpellSuggestions *suggestionsItem = new SpellCheck::TitleSpellSuggestions(word);
-            spellCheckSuggestions.append(suggestionsItem);
+            const QString &word = titleWords.at(i);
+            if (m_SpellCheckInfo->hasTitleError(word)) {
+                SpellCheck::TitleSpellSuggestions *suggestionsItem = new SpellCheck::TitleSpellSuggestions(word);
+                spellCheckSuggestions.append(suggestionsItem);
+            }
         }
 
         return spellCheckSuggestions;
     }
 
     void BasicKeywordsModel::replaceKeyword(int index, const QString &existing, const QString &replacement) {
+        qDebug() << "Replacing keyword" << existing << "to" << replacement << "with index" << index;
         if (0 <= index && index < m_KeywordsList.length()) {
             const QString &internal = m_KeywordsList.at(index);
             if (internal == existing) {
-                m_KeywordsList[index] = replacement;
+                this->editKeyword(index, replacement);
                 m_SpellCheckResults[index] = true;
                 QModelIndex i = this->index(index);
-                emit dataChanged(i, i, QVector<int>() << IsCorrectRole << KeywordRole);
+                emit dataChanged(i, i, QVector<int>() << IsCorrectRole);
+
             } else if (internal.contains(existing) && internal.contains(QChar::Space)) {
-                m_KeywordsList[index].replace(existing, replacement);
+                qDebug() << "Replacing composite keyword";
+                QString existingFixed = internal;
+                existingFixed.replace(existing, replacement);
+                this->editKeyword(index, existingFixed);
                 // TODO: reimplement this someday
                 // no need to mark keyword as correct
                 // if we replace only part of it
                 m_SpellCheckResults[index] = true;
                 QModelIndex i = this->index(index);
-                emit dataChanged(i, i, QVector<int>() << IsCorrectRole << KeywordRole);
+                emit dataChanged(i, i, QVector<int>() << IsCorrectRole);
             }
+        } else {
+            qDebug() << "Failed to replace keyword. Index is negative or exceeds count" << m_KeywordsList.length();
         }
     }
 
@@ -441,14 +496,17 @@ namespace Common {
         setTitle(title);
     }
 
+    void BasicKeywordsModel::afterReplaceCallback() {
+        emit spellCheckErrorsChanged();
+    }
+
     void BasicKeywordsModel::connectSignals(SpellCheck::SpellCheckItem *item) {
-        QObject::connect(item, SIGNAL(resultsReady(int)), this, SLOT(spellCheckRequestReady(int)));
+        QObject::connect(item, SIGNAL(resultsReady(int, int)), this, SLOT(spellCheckRequestReady(int, int)));
     }
 
     QStringList BasicKeywordsModel::getDescriptionWords() const {
         QStringList words;
         Helpers::splitText(m_Description, words);
-        qDebug() << words;
         return words;
     }
 
@@ -458,9 +516,12 @@ namespace Common {
         return words;
     }
 
-    void BasicKeywordsModel::spellCheckRequestReady(int index) {
-        emitSpellCheckChanged(index);
-        notifySpellCheckResults();
+    void BasicKeywordsModel::spellCheckRequestReady(int flags, int index) {
+        if (Common::HasFlag(flags, Common::SpellCheckKeywords)) {
+            emitSpellCheckChanged(index);
+        }
+
+        notifySpellCheckResults(flags);
     }
 
     void BasicKeywordsModel::emitSpellCheckChanged(int index) {
@@ -493,15 +554,20 @@ namespace Common {
         m_SpellCheckResults.clear();
     }
 
-    void BasicKeywordsModel::addKeywords(const QString &rawKeywords) {
-        QStringList keywordsList = rawKeywords.split(",", QString::SkipEmptyParts);
-        int size = keywordsList.size();
+    void BasicKeywordsModel::addKeywords(const QStringList &rawKeywords) {
+        int size = rawKeywords.size();
 
         for (int i = 0; i < size; ++i) {
-            const QString &keyword = keywordsList.at(i).simplified();
-            m_KeywordsList.append(keyword);
-            m_SpellCheckResults.append(true);
-            m_KeywordsSet.insert(keyword.toLower());
+            const QString &keyword = rawKeywords.at(i).simplified();
+            QString invariant = keyword.toLower();
+
+            if (!m_KeywordsSet.contains(invariant)) {
+                m_KeywordsList.append(keyword);
+                m_SpellCheckResults.append(true);
+                m_KeywordsSet.insert(invariant);
+            } else {
+                qWarning() << "Skipping duplicates in keywords...";
+            }
         }
     }
 

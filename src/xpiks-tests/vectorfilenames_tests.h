@@ -11,6 +11,7 @@ private slots:
     void simpleFilenamesJpgTest();
     void simpleFilenamesTiffTest();
     void filenamesNotReplacedTest();
+    void simpleArchivePathTest();
 };
 
 #endif // VECTORFILENAMES_TESTS_H

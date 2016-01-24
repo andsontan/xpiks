@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -23,17 +23,17 @@
 #define VERSION_H
 
 // About dialog
-#define XPIKS_VERSION 1.0
+#define XPIKS_VERSION 1.1
 #define XPIKS_VERSION_SUFFIX release
 
 // update.json (values from 0..9)
 #define XPIKS_MAJOR_VERSION 1
-#define XPIKS_MINOR_VERSION 0
-#define XPIKS_FIX_VERSION 0
+#define XPIKS_MINOR_VERSION 1
+#define XPIKS_FIX_VERSION 3
 
 #define XPIKS_VERSION_INT (XPIKS_MAJOR_VERSION*100 + XPIKS_MINOR_VERSION*10 + XPIKS_FIX_VERSION)
 
-#define XPIKS_VERSION_STRING "1.0.0"
+#define XPIKS_VERSION_STRING "1.1.3"
 
 #endif // VERSION_H
 

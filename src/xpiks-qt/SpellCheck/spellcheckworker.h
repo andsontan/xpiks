@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -37,7 +37,7 @@ namespace SpellCheck {
     {
         Q_OBJECT
     public:
-        SpellCheckWorker();
+        SpellCheckWorker(QObject *parent=0);
         virtual ~SpellCheckWorker();
 
     public:
@@ -46,6 +46,8 @@ namespace SpellCheck {
     protected:
         virtual bool initWorker();
         virtual bool processOneItem(SpellCheckItemBase *item);
+
+    protected:
         virtual void notifyQueueIsEmpty() { emit queueIsEmpty(); }
         virtual void notifyStopped() { emit stopped(); }
 
@@ -61,6 +63,7 @@ namespace SpellCheck {
         void detectAffEncoding();
         QStringList suggestCorrections(const QString &word);
         bool isWordSpelledOk(const QString &word) const;
+        bool isHunspellSpellingCorrect(const QString &word) const;
         void findSuggestions(const QString &word);
 
     private:

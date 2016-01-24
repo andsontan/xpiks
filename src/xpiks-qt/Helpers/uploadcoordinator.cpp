@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -25,12 +25,14 @@
 #include <QFileInfo>
 #include <QThread>
 #include <QtMath>
+#include <QDebug>
 #include "../Models/artworkmetadata.h"
 #include "uploaditem.h"
 #include "uploadworker.h"
 #include "../Helpers/ziphelper.h"
 #include "../Helpers/filenameshelpers.h"
 #include "../Models/settingsmodel.h"
+#include "../Common/defines.h"
 
 namespace Helpers {
     void UploadCoordinator::uploadArtworks(const QVector<Models::ArtworkMetadata *> &artworkList,
@@ -123,6 +125,7 @@ namespace Helpers {
                                         const Encryption::SecretsManager *secretsManager)
     {
         int length = uploadItems.length();
+        qInfo() << "Launching" << length << "upload worker(s)...";
         for (int i = 0; i < length; ++i) {
             UploadItem *uploadItem = uploadItems[i];
             int delay = i;
@@ -154,6 +157,7 @@ namespace Helpers {
                                               QStringList &zipsPathes,
                                               bool includeVector) const {
         int size = artworkList.length();
+        qDebug() << "Generating filepathes for upload of" << size << "item(s)";
         for (int i = 0; i < size; ++i) {
             Models::ArtworkMetadata *metadata = artworkList.at(i);
             QString filepath = metadata->getFilepath();

@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -21,6 +21,7 @@
 
 #include "combinededitcommand.h"
 #include <QVector>
+#include <QDebug>
 #include "../Commands/commandmanager.h"
 #include "../UndoRedo/artworkmetadatabackup.h"
 #include "../UndoRedo/modifyartworkshistoryitem.h"
@@ -28,9 +29,10 @@
 #include "../Models/artworkmetadata.h"
 #include "../Common/flags.h"
 #include "../Models/settingsmodel.h"
+#include "../Common/defines.h"
 
-Commands::CommandResult *Commands::CombinedEditCommand::execute(const Commands::CommandManager *commandManager) const
-{
+Commands::CommandResult *Commands::CombinedEditCommand::execute(const Commands::CommandManager *commandManager) const {
+    qInfo() << "Combined edit command: flags=" << m_EditFlags << "artworks count =" << m_ArtItemInfos.length();
     QVector<int> indicesToUpdate;
     QVector<UndoRedo::ArtworkMetadataBackup*> artworksBackups;
     QVector<SpellCheck::ISpellCheckable*> itemsToCheck;

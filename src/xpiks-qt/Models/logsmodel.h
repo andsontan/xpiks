@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -23,7 +23,6 @@
 #define LOGSMODEL
 
 #include <QObject>
-#include "../Common/defines.h"
 
 namespace Helpers {
     class LoggingWorker;
@@ -42,6 +41,7 @@ namespace Models {
 
     public:
         void startLogging();
+        void stopLogging();
 
     public:
         Q_INVOKABLE QString getAllLogsText(bool moreLogs=false);

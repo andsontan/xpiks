@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -23,6 +23,7 @@
 #include <QFileInfo>
 #include <QDebug>
 #include "../quazip/quazip/JlCompress.h"
+#include "filenameshelpers.h"
 
 namespace Helpers {
     QStringList zipFiles(QStringList filepathes) {
@@ -39,25 +40,15 @@ namespace Helpers {
         try {
             result = JlCompress::compressFiles(archivePath, filepathes);
         } catch (...) {
-            qDebug() << "Exception while zipping with QuaZip";
+            qWarning() << "Exception while zipping with QuaZip";
         }
 
         if (!result) {
-            qDebug() << "Failed to create zip" << archivePath;
+            qWarning() << "Failed to create zip" << archivePath;
         }
 
         zipFilePath = archivePath;
         return result;
-    }
-
-    QString getArchivePath(const QString &artworkPath) {
-        QFileInfo fi(artworkPath);
-        QString archiveName = fi.baseName() + ".zip";
-
-        QString basePath = fi.absolutePath();
-        QDir dir(basePath);
-        QString archivePath = dir.filePath(archiveName);
-        return archivePath;
     }
 }
 

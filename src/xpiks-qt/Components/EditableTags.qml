@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -256,11 +256,8 @@ Flickable {
                             }
 
                             tagsPasted(keywordsToAdd);
-                        } else {
-                            nextTagTextInput.text = words[0]
+                            event.accepted = true;
                         }
-
-                        event.accepted = true;
                     }
                     else if (event.matches(StandardKey.Copy)) {
                         copyRequest()
@@ -282,9 +279,11 @@ Flickable {
                     }
                     else if (event.key === Qt.Key_Tab) {
                         tabPressed()
+                        event.accepted = true;
                     }
                     else if (event.key === Qt.Key_Backtab) {
                         backTabPressed()
+                        event.accepted = true;
                     }
 
                     scrollToBottom()

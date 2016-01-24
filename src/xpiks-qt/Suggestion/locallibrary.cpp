@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -29,6 +29,7 @@
 #include "../Models/artworkmetadata.h"
 #include "libraryloaderworker.h"
 #include "suggestionartwork.h"
+#include "../Common/defines.h"
 
 namespace Suggestion {
     void LocalLibrary::addToLibrary(const QVector<Models::ArtworkMetadata *> artworksList) {
@@ -126,7 +127,7 @@ namespace Suggestion {
             m_LocalArtworks.remove(item);
         }
 
-        qDebug() << "Library cleanup finished." << itemsToRemove.count() << "items removed.";
+        qInfo() << "Library cleanup finished." << itemsToRemove.count() << "items removed.";
     }
 
     void LocalLibrary::performAsync(LibraryLoaderWorker::LoadOption option) {
@@ -164,7 +165,7 @@ namespace Suggestion {
             m_LocalArtworks.insert(filepath, tags.toList());
         }
 
-        qDebug() << artworksList.length() << "artworks added to the local library";
+        qInfo() << artworksList.length() << "artworks added/updated to/in the local library";
     }
 
     void LocalLibrary::cleanupLocalLibraryAsync() {

@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -54,12 +54,12 @@ namespace Models {
         Q_INVOKABLE void setSelectedItemsSaved();
         Q_INVOKABLE void removeSelectedArtworks();
         Q_INVOKABLE void updateSelectedArtworks();
-        Q_INVOKABLE void saveSelectedArtworks();
+        Q_INVOKABLE void saveSelectedArtworks(bool overwriteAll, bool useBackups);
         Q_INVOKABLE void setSelectedForUpload();
         Q_INVOKABLE void setSelectedForZipping();
         Q_INVOKABLE bool areSelectedArtworksSaved();
         Q_INVOKABLE void spellCheckSelected();
-        Q_INVOKABLE int getModifiedSelectedCount() const;
+        Q_INVOKABLE int getModifiedSelectedCount(bool overwriteAll=false) const;
         Q_INVOKABLE void removeArtworksDirectory(int index);
         Q_INVOKABLE void checkForWarnings();
         Q_INVOKABLE int getItemsCount() const { return rowCount(); }
@@ -68,6 +68,10 @@ namespace Models {
         Q_INVOKABLE void removeMetadataInSelected() const;
         Q_INVOKABLE void clearKeywords(int index);
         Q_INVOKABLE void updateFilter() { invalidateFilter(); emit afterInvalidateFilter(); }
+        Q_INVOKABLE void focusNextItem(int index);
+        Q_INVOKABLE void focusPreviousItem(int index);
+        Q_INVOKABLE void spellCheckDescription(int index);
+        Q_INVOKABLE void spellCheckTitle(int index);
 
     public slots:
         void itemSelectedChanged(bool value);

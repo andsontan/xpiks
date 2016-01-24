@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -20,11 +20,14 @@
  */
 
 #include "undoredomanager.h"
+#include <QDebug>
+#include "../Common/defines.h"
 
 UndoRedo::UndoRedoManager::~UndoRedoManager() { qDeleteAll(m_HistoryStack); }
 
-void UndoRedo::UndoRedoManager::recordHistoryItem(UndoRedo::HistoryItem *historyItem)
-{
+void UndoRedo::UndoRedoManager::recordHistoryItem(UndoRedo::HistoryItem *historyItem) {
+    qInfo() << "History item about to be recorded:" << historyItem->getActionType();
+
     QMutexLocker locker(&m_Mutex);
 
     if (!m_HistoryStack.empty()) {

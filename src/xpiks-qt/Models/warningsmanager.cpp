@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -29,6 +29,7 @@
 #include "../Models/artiteminfo.h"
 #include "../Commands/commandmanager.h"
 #include "settingsmodel.h"
+#include "../Common/defines.h"
 
 namespace Models {
     WarningsManager::WarningsManager(QObject *parent) :
@@ -51,6 +52,7 @@ namespace Models {
     }
 
     void WarningsManager::warningsCheckFinished() {
+        qInfo() << "Warnings check finished. Updating main model...";
         QVector<WarningsInfo*> items = m_CheckingWatcher->result();
 
         beginResetModel();
@@ -74,6 +76,7 @@ namespace Models {
     }
 
     void WarningsManager::checkForWarnings(const QVector<ArtItemInfo *> &artworks) {
+        qDebug() << "Check for warnings" << artworks.length() << "item(s)";
         QVector<WarningsInfo*> warningsBufferList;
 
         warningsBufferList.reserve(artworks.length());
@@ -84,7 +87,7 @@ namespace Models {
 
         initConstraintsFromSettings();
 
-        QFuture<QVector<WarningsInfo*> > future = QtConcurrent::run(this, &WarningsManager::doCheckItems, warningsBufferList);
+        QFuture<QVector<WarningsInfo*> > future = QtConcurrent::run<QVector<WarningsInfo*> >(this, &WarningsManager::doCheckItems, warningsBufferList);
         m_CheckingWatcher->setFuture(future);
 
         m_CommandManager->reportUserAction(Conectivity::UserActionWarningsCheck);
@@ -94,6 +97,8 @@ namespace Models {
         if (itemIndex < 0 || itemIndex >= m_WarningsList.length()) {
             return;
         }
+
+        qInfo() << "Rechecking item for warnings with index" << itemIndex;
 
         WarningsInfo *info = m_WarningsList.at(itemIndex);
         info->updateData();
@@ -109,6 +114,7 @@ namespace Models {
     }
 
     void WarningsManager::clearModel() {
+        qDebug() << "Clearing warnings...";
         beginResetModel();
 
         qDeleteAll(m_WarningsList);

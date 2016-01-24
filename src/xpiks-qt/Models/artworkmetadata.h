@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -45,14 +45,14 @@ namespace Models {
 
     public:
         bool initialize(const QString &title,
-                        const QString &description, const QString &rawKeywords, bool overwrite = true);
+                        const QString &description, const QStringList &rawKeywords, bool overwrite = true);
 
     public:
         const QString &getFilepath() const { return m_ArtworkFilepath; }
         virtual QString getDirectory() const { QFileInfo fi(m_ArtworkFilepath); return fi.absolutePath(); }
 
     public:
-        bool isInDirectory(const QString &directory) const;
+        bool isInDirectory(const QString &directoryAbsolutePath) const;
         bool isModified() const { return m_IsModified; }
         bool getIsSelected() const { return m_IsSelected; }
         bool isInitialized() const { return m_IsInitialized; }
@@ -101,14 +101,16 @@ namespace Models {
         virtual int appendKeywords(const QStringList &keywordsList);
 
     public:
-        void markModified() { if (!m_IsModified) { m_IsModified = true; emit modifiedChanged(m_IsModified); } }
+        void markModified();
         void setModified() { m_IsModified = true; }
         void resetModified() { m_IsModified = false; }
+        void requestFocus(int directionSign) { emit focusRequested(directionSign); }
 
     signals:
          void modifiedChanged(bool newValue);
          void selectedChanged(bool newValue);
          void fileSelectedChanged(const QString &filepath, bool newValue);
+         void focusRequested(int directionSign);
 
     private:
          QSize m_ImageSize;

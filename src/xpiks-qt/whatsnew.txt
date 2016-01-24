@@ -1,9 +1,30 @@
-**Major features** of 1.0 release are:
+This is Xpiks 1.1 bugfix update 3. Fixes:
 
-- Keywords Suggestion from the local library
-- New dialogs for single item editing
-- Advanced filtering support
-- Improved scrolling support
-- Improved warnings checking
+- bug when Xpiks writes metadata incorrectly
+- known issue of 1.1 release with duplicates in spell suggestions
+- improvements for importing and exporting speed
+- removing of image causes focus to jump
 
+Xpiks 1.1 bugfix update 2. Fixes:
+
+- exiftool downgraded to previous version
+  (speed regression in Windows)
+- bug with editing of capitalized keyword
+- issue with case-sensitive spellcheck suggestions
+- issue with update dialog preventing update
+
+Xpiks 1.1 bugfix update 1. Fixes:
+
+- bug with logs missing in Windows
+
+Xpiks 1.1 release provides following features:
+
+- Automatic spell checking for all metadata
+- Automatic checking for updates
+- Added plain text mode for keywords editing
+- Speed improvements with large collections
+- A lot of minor improvements for look and feel, search,
+suggestions and keywords pasting
+
+And this fancy "What's new" dialog as well.
 Enjoy!

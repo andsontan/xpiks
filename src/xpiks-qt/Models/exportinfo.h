@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -25,15 +25,7 @@
 #include <QString>
 #include <QSize>
 
-namespace Models {    
-    class ImportDataResult {
-    public:
-        QString Title;
-        QString Description;
-        QString Keywords;
-        QSize Size;
-    };
-
+namespace Models {
     class ExportInfo {
     public:
         ExportInfo() :
@@ -48,7 +40,5 @@ namespace Models {
         bool m_MustSaveOriginal;
     };
 }
-
-Q_DECLARE_TYPEINFO(Models::ImportDataResult, Q_MOVABLE_TYPE);
 
 #endif // EXPORTINFO_H

@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -29,6 +29,7 @@
 #include <QUrl>
 #include <QCoreApplication>
 #include "spellcheckitem.h"
+#include "../Common/defines.h"
 #include "../hunspell-1.3.3/src/hunspell/hunspell.hxx"
 
 #define EN_HUNSPELL_DIC "en_US.dic"
@@ -47,7 +48,8 @@ QString getHunspellResourcesPath() {
 }
 
 namespace SpellCheck {
-    SpellCheckWorker::SpellCheckWorker() :
+    SpellCheckWorker::SpellCheckWorker(QObject *parent) :
+        QObject(parent),
         m_Hunspell(NULL),
         m_Codec(NULL)
     {
@@ -58,7 +60,7 @@ namespace SpellCheck {
             delete m_Hunspell;
         }
 
-        qDebug() << "Spellcheck worker finished.";
+        qInfo() << "Spellcheck worker finished.";
     }
 
     bool SpellCheckWorker::initWorker() {
@@ -86,7 +88,7 @@ namespace SpellCheck {
                 qDebug() << "Error in Hunspell initialization with AFF" << affPath << "and DIC" << dicPath;
             }
         } else {
-            qDebug() << "DIC or AFF file not found." << dicPath << "||" << affPath;
+            qWarning() << "DIC or AFF file not found." << dicPath << "||" << affPath;
         }
 
         return initResult;
@@ -179,9 +181,15 @@ namespace SpellCheck {
         try {
             // Encode from Unicode to the encoding used by current dictionary
             int count = m_Hunspell->suggest(&suggestWordList, m_Codec->fromUnicode(word).constData());
+            QString lowerWord = word.toLower();
 
             for (int i = 0; i < count; ++i) {
-                suggestions << m_Codec->toUnicode(suggestWordList[i]);
+                QString suggestion = m_Codec->toUnicode(suggestWordList[i]);
+
+                if (suggestion.toLower() != lowerWord) {
+                    suggestions << suggestion;
+                }
+
                 free(suggestWordList[i]);
             }
         }
@@ -193,6 +201,21 @@ namespace SpellCheck {
     }
 
     bool SpellCheckWorker::isWordSpelledOk(const QString &word) const {
+        bool isOk = isHunspellSpellingCorrect(word);
+
+        if (!isOk) {
+            QString capitalized = word;
+            capitalized[0] = capitalized[0].toUpper();
+
+            if (isHunspellSpellingCorrect(capitalized)) {
+                isOk = true;
+            }
+        }
+
+        return isOk;
+    }
+
+    bool SpellCheckWorker::isHunspellSpellingCorrect(const QString &word) const {
         bool isOk = false;
         try {
             isOk = m_Hunspell->spell(m_Codec->fromUnicode(word).constData()) != 0;

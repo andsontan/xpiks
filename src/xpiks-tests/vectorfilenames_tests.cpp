@@ -2,7 +2,6 @@
 #include <QStringList>
 #include "../xpiks-qt/Helpers/filenameshelpers.h"
 
-
 void CompareLists(const QStringList &actual, const QStringList &expected) {
     bool anyDifference = false;
 
@@ -56,4 +55,17 @@ void VectorFileNamesTests::filenamesNotReplacedTest() {
     QStringList vectorsActual = Helpers::convertToVectorFilenames(notImages);
 
     CompareLists(vectorsActual, vectorsExpected);
+}
+
+void VectorFileNamesTests::simpleArchivePathTest() {
+#if defined(Q_OS_WIN)
+    QString filepath = "C:/test/file.ai";
+    QString zipPath = "C:/test/file.zip";
+#else
+    QString filepath = "/c/test/file.ai";
+    QString zipPath = "/c/test/file.zip";
+#endif
+
+    QString processedPath = Helpers::getArchivePath(filepath);
+    QCOMPARE(processedPath, zipPath);
 }

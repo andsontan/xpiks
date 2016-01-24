@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -39,9 +39,9 @@ Item {
     signal dialogDestruction();
     Component.onDestruction: dialogDestruction();
 
-    Keys.onEscapePressed: {
-        closePopup()
-    }
+    Component.onCompleted: focus = true
+
+    Keys.onEscapePressed: closePopup()
 
     function closePopup() {
         spellCheckSuggestionModel.clearModel()
@@ -119,6 +119,17 @@ Item {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
                     color: Colors.defaultControlColor
+
+                    Item {
+                        visible: suggestionsListView.count == 0
+                        anchors.fill: parent
+
+                        StyledText {
+                            text: qsTr("No suggestions available.")
+                            color: Colors.selectedMetadataColor
+                            anchors.centerIn: parent
+                        }
+                    }
 
                     StyledScrollView {
                         anchors.fill: parent

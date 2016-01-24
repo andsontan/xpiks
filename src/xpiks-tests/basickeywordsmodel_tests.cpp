@@ -290,3 +290,34 @@ void BasicKeywordsModelTests::editKeywordToSameTest() {
     QCOMPARE(modifiedSpy.count(), 0);
 }
 
+void BasicKeywordsModelTests::addRemoveAddUpperCaseWordTest() {
+    const QString keyword = "Test";
+
+    Common::BasicKeywordsModel basicModel;
+
+    bool addResult = basicModel.appendKeyword(keyword);
+    QCOMPARE(addResult, true);
+
+    QString removed;
+    bool removeResult = basicModel.takeKeywordAt(0, removed);
+    QCOMPARE(removeResult, true);
+    QCOMPARE(removed, keyword);
+
+    bool addAgainResult = basicModel.appendKeyword(keyword);
+    QCOMPARE(addAgainResult, true);
+}
+
+void BasicKeywordsModelTests::editToUpperCaseTest() {
+    Common::BasicKeywordsModel basicModel;
+
+    QStringList keywords;
+    keywords << "keyword1" << "keyword2" << "keyword3";
+    basicModel.appendKeywords(keywords);
+
+    bool editSelfResult = basicModel.editKeyword(0, "Keyword1");
+    QCOMPARE(editSelfResult, true);
+
+    bool editOtherResult = basicModel.editKeyword(1, "Keyword1");
+    QCOMPARE(editOtherResult, false);
+}
+

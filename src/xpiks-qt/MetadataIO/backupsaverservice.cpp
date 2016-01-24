@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -21,11 +21,12 @@
 
 #include "backupsaverservice.h"
 #include <QThread>
+#include <QDebug>
 #include "backupsaverworker.h"
 #include "../Models/artworkmetadata.h"
-#include "tempmetadatadb.h"
+#include "saverworkerjobitem.h"
 
-namespace Helpers {
+namespace MetadataIO {
     BackupSaverService::BackupSaverService():
         QObject()
     {
@@ -34,6 +35,7 @@ namespace Helpers {
 
     void BackupSaverService::startSaving() {
         Q_ASSERT(!m_BackupWorker->isRunning());
+        qDebug() << "Starting backups saver service...";
 
         QThread *thread = new QThread();
         m_BackupWorker->moveToThread(thread);
@@ -53,16 +55,34 @@ namespace Helpers {
         thread->start();
     }
 
-    void BackupSaverService::saveArtwork(Models::ArtworkMetadata *metadata) {
-        TempMetadataCopy *copy = new TempMetadataCopy(metadata);
-        m_BackupWorker->submitItem(copy);
+    void BackupSaverService::saveArtwork(Models::ArtworkMetadata *metadata) const {
+        SaverWorkerJobItem *jobItem = new SaverWorkerJobItem(metadata, JobTypeWrite);
+        m_BackupWorker->submitItem(jobItem);
+    }
+
+    void BackupSaverService::readArtwork(Models::ArtworkMetadata *metadata) const {
+        SaverWorkerJobItem *jobItem = new SaverWorkerJobItem(metadata, JobTypeRead);
+        m_BackupWorker->submitItem(jobItem);
+    }
+
+    void BackupSaverService::readArtworks(const QVector<Models::ArtworkMetadata *> &artworks) const {
+        QVector<SaverWorkerJobItem *> jobs;
+        jobs.reserve(artworks.length());
+
+        int size = artworks.size();
+        for (int i = 0; i < size; ++i) {
+            jobs.append(new SaverWorkerJobItem(artworks.at(i), JobTypeRead));
+        }
+
+        m_BackupWorker->submitItems(jobs);
     }
 
     void BackupSaverService::workerFinished() {
-        qDebug() << "Backup saver service went offline";
+        qInfo() << "Backup saver service went offline";
     }
 
-    void Helpers::BackupSaverService::stopSaving() {
+    void BackupSaverService::stopSaving() {
+        qDebug() << "Backup saver service: stopping...";
         m_BackupWorker->cancelWork();
     }
 }

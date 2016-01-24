@@ -7,3 +7,7 @@ build-*
 *.zip
 *.tar
 *.pro.user.*
+libs/
+zlib-1.2.8/
+hunspell-1.3.3
+*.lib

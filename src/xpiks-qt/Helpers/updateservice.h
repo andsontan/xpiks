@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -23,7 +23,10 @@
 #define UPDATESERVICE_H
 
 #include <QObject>
-#include <QNetworkAccessManager>
+
+namespace Conectivity {
+    class UpdatesCheckerWorker;
+}
 
 namespace Helpers {
     class UpdateService : public QObject
@@ -33,16 +36,17 @@ namespace Helpers {
         UpdateService();
 
     public:
-        void checkForUpdates();
+        void startChecking();
+        void stopChecking();
+
+    private slots:
+        void workerFinished();
 
     signals:
         void updateAvailable(QString updateLink);
 
-    private slots:
-        void replyReceived(QNetworkReply *networkReply);
-
     private:
-        QNetworkAccessManager m_NetworkManager;
+        Conectivity::UpdatesCheckerWorker *m_UpdatesCheckerWorker;
     };
 }
 

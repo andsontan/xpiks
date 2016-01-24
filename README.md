@@ -16,6 +16,7 @@ Xpiks is a free and open source keywording and uploading tool for microstock pho
 - ability to upload vector files with images with same name (useful for illustrators)
 - automatically zip vector files with previews (useful for illustrators)
 - checks for potential problems before upload (insufficient resolution, missing metadata etc.)
+- automatically checks spelling of description, title and keywords
 - unsaved work is backed up so you can continue work later without actual writing metadata to images
 - works under Linux, OS X and Windows
 - ExifTool and Curl under the hood

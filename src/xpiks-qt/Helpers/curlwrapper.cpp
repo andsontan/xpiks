@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -34,6 +34,7 @@
 
 Helpers::TestConnectionResult isConnectionValid(const QString &hostname, const QString &username,
                                                 const QString &password, const QString &curlPath) {
+    qDebug() << "Checking credentials to" << hostname;
     bool isValid = false;
 
     QString host = hostname;
@@ -50,8 +51,8 @@ Helpers::TestConnectionResult isConnectionValid(const QString &hostname, const Q
             process.exitCode() == 0) {
         isValid = true;
     } else {
-        qDebug() << "Timeout or error while waiting for curl";
-        qDebug() << "Error:" << curlPath << process.errorString();
+        qWarning() << "Timeout or error while waiting for curl";
+        qWarning() << "Error:" << curlPath << process.errorString();
     }
 
     QByteArray stdoutByteArray = process.readAllStandardOutput();

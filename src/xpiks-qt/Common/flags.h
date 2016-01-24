@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -34,7 +34,33 @@ namespace Common {
     enum SuggestCorrectionsFlags {
         CorrectTitle = 1,
         CorrectDescription = 2,
-        CorrectKeywords = 4
+        CorrectKeywords = 4,
+        CorrectAll = 7
+    };
+
+    enum SpellCheckFlags {
+        SpellCheckTitle = 1,
+        SpellCheckDescription = 2,
+        SpellCheckKeywords = 4,
+        SpellCheckAll = 7
+    };
+
+    enum WarningType {
+        WarningTypeNoWarnings = 0,
+        WarningTypeSizeLessThanMinimum = 1 << 0,
+        WarningTypeNoKeywords = 1 << 1,
+        WarningTypeTooFewKeywords = 1 << 2,
+        WarningTypeTooManyKeywords = 1 << 3,
+        WarningTypeDescriptionIsEmpty = 1 << 4,
+        WarningTypeDescriptionNotEnoughWords = 1 << 5,
+        WarningTypeDescriptionTooBig = 1 << 6,
+        WarningTypeTitleIsEmpty = 1 << 7,
+        WarningTypeTitleNotEnoughWords = 1 << 8,
+        WarningTypeTitleTooManyWords = 1 << 9,
+        WarningTypeTitleTooBig = 1 << 10,
+        WarningTypeSpellErrorsInKeywords = 1 << 11,
+        WarningTypeSpellErrorsInDescription = 1 << 12,
+        WarningTypeSpellErrorsInTitle = 1 << 13
     };
 
     template<typename FlagType>

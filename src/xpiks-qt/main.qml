@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -24,6 +24,7 @@ import QtQuick.Dialogs 1.1
 import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.1
 import QtQuick.Layouts 1.1
+import QtQuick.Window 2.2
 import xpiks 1.0
 import "Constants"
 import "Constants/Colors.js" as Colors
@@ -36,39 +37,88 @@ ApplicationWindow {
     id: applicationWindow
     visible: true
     width: 900
-    height: 670
+    height: 725
     minimumHeight: 670
     minimumWidth: 900
     title: qsTr("Xpiks")
     property int openedDialogsCount: 0
     property bool showUpdateLink: false
+    property bool needToCenter: true
+
+    onVisibleChanged: {
+        if (needToCenter) {
+            needToCenter = false
+            applicationWindow.x = (Screen.width - applicationWindow.width) / 2
+            applicationWindow.y = (Screen.height - applicationWindow.height) / 2
+        }
+    }
 
     function saveRecentDirectories() {
         appSettings.setValue(appSettings.recentDirectoriesKey, recentDirectories.serializeForSettings())
     }
 
-    onClosing: {
+    function closeHandler(close) {
         saveRecentDirectories()
 
         if (artItemsModel.modifiedArtworksCount > 0) {
             close.accepted = false
             configExitDialog.open()
         } else {
+            console.debug("No modified artworks found. Exiting...")
             applicationWindow.visibility = "Minimized"
             helpersWrapper.beforeDestruction();
             closingTimer.start()
         }
     }
 
+    onClosing: closeHandler(close)
+
     Timer {
         id: closingTimer
         interval: 1000
         running: false
+        repeat: false
         onTriggered: Qt.quit()
+    }
+
+    Timer {
+        id: openingTimer
+        interval: 500
+        running: false
+        repeat: false
+        onTriggered: {
+            console.log("Delayed onOpen timer triggered");
+            helpersWrapper.afterConstruction()
+
+            if (appSettings.needToShowWhatsNew()) {
+                var text = appSettings.whatsNewText;
+                if (text.length > 0) {
+                    Common.launchDialog("Dialogs/WhatsNewDialog.qml",
+                                        applicationWindow,
+                                        {
+                                            whatsNewText: text
+                                        })
+                }
+            }
+
+            if (appSettings.needToShowTermsAndConditions()) {
+                var licenseText = appSettings.termsAndConditionsText;
+                if (licenseText.length > 0) {
+                    Common.launchDialog("Dialogs/TermsAndConditionsDialog.qml",
+                                        applicationWindow,
+                                        {
+                                            termsText: licenseText
+                                        })
+                }
+            } else {
+                helpersWrapper.reportOpen()
+            }
+        }
     }
 
     function onDialogClosed() {
         openedDialogsCount -= 1
+        console.log("Dialog closed. Opened dialogs count is " + openedDialogsCount)
     }
 
     function mustUseConfirmation() {
@@ -85,7 +135,7 @@ ApplicationWindow {
 
             Common.launchDialog("Dialogs/EnterMasterPasswordDialog.qml",
                          applicationWindow,
-                         {componentParent: applicationWindow, callbackObject: callbackObject})
+                         {callbackObject: callbackObject})
         } else {
             doOpenUploadDialog(true)
         }
@@ -106,20 +156,12 @@ ApplicationWindow {
         if (filterText.length > 0) {
             filterText.text = ''
         }
+        filterClearTimer.start()
     }
 
     Component.onCompleted: {
-        helpersWrapper.afterConstruction()
-        if (appSettings.needToShowWhatsNew()) {
-            var text = appSettings.whatsNewText;
-            if (text.length > 0) {
-                Common.launchDialog("Dialogs/WhatsNewDialog.qml",
-                                    applicationWindow,
-                                    {
-                                        whatsNewText: text
-                                    })
-            }
-        }
+        console.log("Main view onCompleted handler")
+        openingTimer.start()
     }
 
     menuBar: MenuBar {
@@ -139,7 +181,7 @@ ApplicationWindow {
                         onTriggered: {
                             var filesAdded = artItemsModel.addRecentDirectory(display)
                             if (filesAdded === 0) {
-                                noFilesInfo.open()
+                                noNewFilesDialog.open()
                             }
                         }
                     }
@@ -166,7 +208,7 @@ ApplicationWindow {
 
             MenuItem {
                 text: qsTr("Exit")
-                onTriggered: Qt.quit();
+                onTriggered: closeHandler({accepted: false});
             }
         }
 
@@ -183,7 +225,7 @@ ApplicationWindow {
                     filteredArtItemsModel.setSelectedForZipping()
                     Common.launchDialog("Dialogs/ZipArtworksDialog.qml",
                                     applicationWindow,
-                                    {componentParent: applicationWindow});
+                                    {});
                 }
             }
 
@@ -193,6 +235,15 @@ ApplicationWindow {
                 onTriggered: {
                     console.log("Reimport archives triggered")
                     filteredArtItemsModel.reimportMetadataForSelected()
+                }
+            }
+
+            MenuItem {
+                text: qsTr("&Overwrite metadata in selected")
+                enabled: filteredArtItemsModel.selectedArtworksCount > 0
+                onTriggered: {
+                    console.log("Overwrite metadata triggered")
+                    Common.launchDialog("Dialogs/ExportMetadata.qml", applicationWindow, {overwriteAll: true})
                 }
             }
 
@@ -220,7 +271,7 @@ ApplicationWindow {
                 text: qsTr("&Cleanup local library in background")
                 onTriggered: {
                     console.log("Cleanup local library triggered")
-                    iptcProvider.cleanupLibrary()
+                    helpersWrapper.cleanupLocalLibrary()
                 }
             }
         }
@@ -291,17 +342,22 @@ ApplicationWindow {
         title: "Please choose artworks"
         selectExisting: true
         selectMultiple: true
-        nameFilters: [ "Jpeg images (*.jpg), Tiff images(*.tiff), All files (*)" ]
+        folder: shortcuts.pictures
+        nameFilters: [ "Image files (*.jpg *.tiff)", "All files (*)" ]
 
         onAccepted: {
             console.log("You chose: " + chooseArtworksDialog.fileUrls)
             var filesAdded = artItemsModel.addLocalArtworks(chooseArtworksDialog.fileUrls)
-            saveRecentDirectories()
-            console.log(filesAdded + ' files via Open File(s)')
+            if (filesAdded > 0) {
+                saveRecentDirectories()
+                console.log(filesAdded + ' files via Open File(s)')
+            } else {
+                noNewFilesDialog.open()
+            }
         }
 
         onRejected: {
-            console.log("Artworks dialog canceled")
+            console.log("Open files dialog canceled")
         }
     }
 
@@ -311,12 +367,17 @@ ApplicationWindow {
         selectExisting: true
         selectMultiple: false
         selectFolder: true
+        folder: shortcuts.pictures
 
         onAccepted: {
             console.log("You chose: " + chooseDirectoryDialog.fileUrls)
             var filesAdded = artItemsModel.addLocalDirectories(chooseDirectoryDialog.fileUrls)
-            saveRecentDirectories()
-            console.log(filesAdded + ' files via Open Directory')
+            if (filesAdded > 0) {
+                saveRecentDirectories()
+                console.log(filesAdded + ' files via Open Directory')
+            } else {
+                noNewFilesDialog.open()
+            }
         }
 
         onRejected: {
@@ -337,9 +398,9 @@ ApplicationWindow {
     }
 
     MessageDialog {
-        id: noFilesInfo
+        id: noNewFilesDialog
         title: "Information"
-        text: qsTr("No files were added")
+        text: qsTr("No new files were added")
     }
 
     MessageDialog {
@@ -353,6 +414,8 @@ ApplicationWindow {
         onArtworksAdded: {
            if (count > 0) {
                Common.launchDialog("Dialogs/ImportMetadata.qml", applicationWindow, {})
+           } else {
+               console.debug("Warning: artworksAdded() signal with no new items!")
            }
         }
     }
@@ -380,8 +443,12 @@ ApplicationWindow {
             onDropped: {
                 if (drop.hasUrls) {
                     var filesCount = artItemsModel.dropFiles(drop.urls)
-                    saveRecentDirectories()
-                    console.log(filesCount + ' files added via drag&drop')
+                    if (filesCount > 0) {
+                        saveRecentDirectories()
+                        console.debug(filesCount + ' files added via drag&drop')
+                    } else {
+                        noNewFilesDialog.open()
+                    }
                 }
             }
         }
@@ -400,26 +467,23 @@ ApplicationWindow {
                 height: 45
                 color: Colors.defaultDarkColor
 
-                RowLayout {
-                    spacing: 10
-                    anchors.fill: parent
-                    anchors.margins: { top: 10; left: 10 }
+                StyledButton {
+                    anchors.left: parent.left
+                    anchors.leftMargin: 10
+                    anchors.verticalCenter: parent.verticalCenter
+                    id: addDirectoryButton
+                    text: qsTr("Add directory")
+                    width: 120
+                    onClicked: chooseDirectoryDialog.open()
+                }
 
-                    StyledButton {
-                        text: qsTr("Add directory")
-                        width: 120
-                        onClicked: chooseDirectoryDialog.open()
-                    }
-
-                    StyledButton {
-                        text: qsTr("Add files")
-                        width: 100
-                        onClicked: chooseArtworksDialog.open()
-                    }
-
-                    Item {
-                        Layout.fillWidth: true
-                    }
+                StyledButton {
+                    anchors.leftMargin: 10
+                    anchors.left: addDirectoryButton.right
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: qsTr("Add files")
+                    width: 100
+                    onClicked: chooseArtworksDialog.open()
                 }
             }
 
@@ -535,14 +599,16 @@ ApplicationWindow {
             Rectangle {
                 height: 45
                 color: Colors.defaultDarkColor
-                z: 10000
+                z: 2000
                 anchors.left: parent.left
                 anchors.right: parent.right
 
                 RowLayout {
                     spacing: 10
-                    anchors.fill: parent
-                    anchors.margins: { top: 10; left: 10 }
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.leftMargin: 10
                     anchors.rightMargin: mainScrollView.areScrollbarsVisible ? 20 : 10
 
                     Item {
@@ -596,7 +662,8 @@ ApplicationWindow {
                                 if (!launched) {
                                     // also as fallback in case of errors in findSelectedIndex
                                     filteredArtItemsModel.combineSelectedArtworks();
-                                    Common.launchDialog("Dialogs/CombinedArtworksDialog.qml", applicationWindow, {componentParent: applicationWindow});
+                                    Common.launchDialog("Dialogs/CombinedArtworksDialog.qml",
+                                                        applicationWindow, {componentParent: applicationWindow});
                                 }
                             }
                         }
@@ -614,8 +681,6 @@ ApplicationWindow {
                                 var modifiedSelectedCount = filteredArtItemsModel.getModifiedSelectedCount();
 
                                 if (filteredArtItemsModel.selectedArtworksCount > 0 && modifiedSelectedCount > 0) {
-                                    iptcProvider.resetModel()
-                                    filteredArtItemsModel.saveSelectedArtworks()
                                     Common.launchDialog("Dialogs/ExportMetadata.qml", applicationWindow, {})
                                 } else {
                                     if (modifiedSelectedCount === 0) {
@@ -739,10 +804,17 @@ ApplicationWindow {
                             StyledText {
                                 text: qsTr("Search...   x:empty  x:modified")
                                 color: Colors.defaultInputBackground
-                                opacity: (filterText.activeFocus || filterText.length > 0) ? 0 : 0.1
+                                opacity: (filterClearTimer.running || filterText.activeFocus || (filterText.length > 0)) ? 0 : 0.1
                                 anchors.left: parent.left
                                 anchors.leftMargin: 7
                                 anchors.verticalCenter: parent.verticalCenter
+                            }
+
+                            Timer {
+                                id: filterClearTimer
+                                running: false
+                                interval: 750
+                                repeat: false
                             }
                         }
 
@@ -940,11 +1012,12 @@ ApplicationWindow {
                             boundsBehavior: Flickable.StopAtBounds
                             spacing: 4
 
-                            function forceUpdateArtworks() {
+                            function forceUpdateArtworks(index) {
                                 console.log("Force layout magic for artworks list view")
                                 imagesListView.forceLayout()
                                 imagesListView.update()
-                                imagesListView.positionViewAtBeginning()
+                                imagesListView.decrementCurrentIndex()
+                                imagesListView.positionViewAtIndex(imagesListView.currentIndex, ListView.Visible)
                             }
 
                             add: Transition {
@@ -969,6 +1042,7 @@ ApplicationWindow {
 
                             delegate: Rectangle {
                                 id: rowWrapper
+                                objectName: "artworkDelegate"
                                 property bool isHighlighted: (isselected || descriptionTextInput.activeFocus || flv.isFocused || titleTextInput.activeFocus)
                                 color: isHighlighted ? Colors.selectedArtworkColor : Colors.artworkImageBackground
                                 property var artworkModel: artItemsModel.getArtworkItself(rowWrapper.getIndex())
@@ -1000,6 +1074,7 @@ ApplicationWindow {
                                 function switchChecked() {
                                     editisselected = !isselected
                                     itemCheckedCheckbox.checked = isselected
+                                    ListView.view.currentIndex = rowWrapper.delegateIndex
                                 }
 
                                 width: parent.width
@@ -1012,6 +1087,16 @@ ApplicationWindow {
                                         if (columnLayout.isWideEnough) {
                                             titleTextInput.deselect()
                                         }
+                                    }
+
+                                    onFocusRequested: {
+                                        if (directionSign === +1) {
+                                            descriptionTextInput.forceActiveFocus()
+                                        } else {
+                                            flv.activateEdit()
+                                        }
+
+                                        imagesListView.positionViewAtIndex(rowWrapper.delegateIndex, ListView.Contain)
                                     }
                                 }
 
@@ -1225,8 +1310,8 @@ ApplicationWindow {
                                                         id: descriptionTextInput
                                                         width: descriptionFlick.width
                                                         height: descriptionFlick.height
-                                                        font.pixelSize: 12 * settingsModel.keywordSizeScale
                                                         text: description
+                                                        font.pixelSize: 12 * settingsModel.keywordSizeScale
                                                         color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.defaultInputBackground
                                                         onTextChanged: model.editdescription = text
 
@@ -1236,6 +1321,16 @@ ApplicationWindow {
                                                             } else {
                                                                 flv.activateEdit()
                                                             }
+                                                        }
+
+                                                        onActiveFocusChanged: {
+                                                            if (descriptionTextInput.length > 0) {
+                                                                filteredArtItemsModel.spellCheckDescription(rowWrapper.delegateIndex)
+                                                            }
+                                                        }
+
+                                                        Keys.onBacktabPressed: {
+                                                            filteredArtItemsModel.focusPreviousItem(rowWrapper.delegateIndex)
                                                         }
 
                                                         Keys.onPressed: {
@@ -1294,15 +1389,21 @@ ApplicationWindow {
                                                     StyledTextEdit {
                                                         id: titleTextInput
                                                         font.pixelSize: 12 * settingsModel.keywordSizeScale
-                                                        text: title
                                                         width: titleFlick.width
                                                         height: titleFlick.height
+                                                        text: title
                                                         color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.defaultInputBackground
                                                         onTextChanged: model.edittitle = text
                                                         KeyNavigation.backtab: descriptionTextInput
 
                                                         Keys.onTabPressed: {
                                                             flv.activateEdit()
+                                                        }
+
+                                                        onActiveFocusChanged: {
+                                                            if (titleTextInput.length > 0) {
+                                                                filteredArtItemsModel.spellCheckTitle(rowWrapper.delegateIndex)
+                                                            }
                                                         }
 
                                                         Keys.onPressed: {
@@ -1450,6 +1551,10 @@ ApplicationWindow {
                                                         } else {
                                                             descriptionTextInput.forceActiveFocus()
                                                         }
+                                                    }
+
+                                                    onTabPressed: {
+                                                        filteredArtItemsModel.focusNextItem(rowWrapper.delegateIndex)
                                                     }
 
                                                     onFocusLost: keywordsWrapper.saveKeywords()
@@ -1675,7 +1780,7 @@ ApplicationWindow {
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
                         Common.launchDialog("Dialogs/LogsDialog.qml",
-                                        applicationWindow,
+                                            applicationWindow,
                                             {
                                                 logText: logsModel.getAllLogsText()
                                             });

@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -31,6 +31,7 @@ namespace Conectivity {
         UserActionClose,
         UserActionUpload,
         UserActionSpellCheck,
+        UserActionSpellSuggestions,
         UserActionSuggestionRemote,
         UserActionSuggestionLocal,
         UserActionWarningsCheck
@@ -50,6 +51,7 @@ namespace Conectivity {
             case UserActionClose: return QLatin1String("Close");
             case UserActionUpload: return QLatin1String("Upload");
             case UserActionSpellCheck: return QLatin1String("SpellCheck");
+            case UserActionSpellSuggestions: return QLatin1String("SpellSuggestions");
             case UserActionSuggestionRemote: return QLatin1String("SuggestionRemote");
             case UserActionSuggestionLocal: return QLatin1String("SuggestionLocal");
             case UserActionWarningsCheck: return QLatin1String("WarningsCheck");

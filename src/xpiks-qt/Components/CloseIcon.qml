@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -37,7 +37,7 @@ Item {
         opacity: closeIconMouseArea.containsMouse ? 1 : 0.8
 
         function getPressColor() {
-            if (closeIconMouseArea.pressed) {
+            if (closeIconMouseArea.containsMouse) {
                 return Colors.artworkModifiedColor;
             } else {
                 return isActive ? Colors.defaultControlColor : Colors.defaultLightColor;

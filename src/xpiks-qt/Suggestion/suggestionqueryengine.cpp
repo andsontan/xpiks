@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -100,7 +100,7 @@ namespace Suggestion {
                 m_Suggestor->setSuggestedArtworks(suggestionArtworks);
             }
         } else {
-            qDebug() << networkReply->errorString();
+            qWarning() << "Keywords suggestion error:" << networkReply->errorString();
         }
 
         m_Suggestor->unsetInProgress();
@@ -130,7 +130,7 @@ namespace Suggestion {
                             }
                         }
 
-                        SuggestionArtwork *artwork = new SuggestionArtwork(url, keywordsList);
+                        SuggestionArtwork *artwork = new SuggestionArtwork(url, keywordsList, false);
                         suggestionArtworks.append(artwork);
                     }
                 }
@@ -141,15 +141,13 @@ namespace Suggestion {
     QUrl SuggestionQueryEngine::buildQuery(const QStringList &queryKeywords) const {
         QUrlQuery urlQuery;
 
-        QString queryString = QString("https://api.shutterstock.com/v2/images/search");
-
         urlQuery.addQueryItem("language", "en");
         urlQuery.addQueryItem("view", "full");
         urlQuery.addQueryItem("per_page", "100");
         urlQuery.addQueryItem("query", queryKeywords.join(' '));
 
         QUrl url;
-        url.setUrl(queryString);
+        url.setUrl(QLatin1String("https://api.shutterstock.com/v2/images/search"));
         url.setQuery(urlQuery);
         return url;
     }

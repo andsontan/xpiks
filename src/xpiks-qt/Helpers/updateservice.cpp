@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -20,81 +20,35 @@
  */
 
 #include "updateservice.h"
-
-#define UPDATE_JSON_URL "http://ribtoks.github.io/xpiks/update.json"
-#define DEFAULT_UPDATE_URL "http://ribtoks.github.io/xpiks/downloads/"
-#define UPDATE_JSON_MAJOR_VERSION "major_version"
-#define UPDATE_JSON_MINOR_VERSION "minor_version"
-#define UPDATE_JSON_FIX_VERSION "fix_version"
-
-#include <QString>
-#include <QUrl>
-#include <QNetworkReply>
-#include <QNetworkRequest>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QtGlobal>
-
-#if defined(Q_OS_DARWIN)
-#define UPDATE_JSON_UPDATE_URL "osx_link"
-#elif defined(Q_OS_WIN)
-#define UPDATE_JSON_UPDATE_URL "windows_link"
-#elif defined(Q_OS_LINUX)
-#define UPDATE_JSON_UPDATE_URL "linux_link"
-#else
-#define UPDATE_JSON_UPDATE_URL "unknown_link"
-#endif
-
-#include "../Common/version.h"
+#include <QThread>
+#include <QDebug>
+#include "../Conectivity/updatescheckerworker.h"
 
 namespace Helpers {
-    UpdateService::UpdateService() :
-        QObject(),
-        m_NetworkManager(this)
-    {
-        QObject::connect(&m_NetworkManager, SIGNAL(finished(QNetworkReply*)),
-                         this, SLOT(replyReceived(QNetworkReply*)));
+    UpdateService::UpdateService() {
+        m_UpdatesCheckerWorker = new Conectivity::UpdatesCheckerWorker();
     }
 
-    void UpdateService::checkForUpdates() {
-        QString queryString = QString(UPDATE_JSON_URL);
-        QUrl url;
-        url.setUrl(queryString);
+    void UpdateService::startChecking() {
+        QThread *thread = new QThread();
+        m_UpdatesCheckerWorker->moveToThread(thread);
 
-        QNetworkRequest request(url);
-        QNetworkReply *reply = m_NetworkManager.get(request);
-        Q_UNUSED(reply);
+        QObject::connect(thread, SIGNAL(started()), m_UpdatesCheckerWorker, SLOT(process()));
+        QObject::connect(m_UpdatesCheckerWorker, SIGNAL(stopped()), thread, SLOT(quit()));
+
+        QObject::connect(m_UpdatesCheckerWorker, SIGNAL(stopped()), m_UpdatesCheckerWorker, SLOT(deleteLater()));
+        QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+
+        QObject::connect(m_UpdatesCheckerWorker, SIGNAL(updateAvailable(QString)),
+                         this, SIGNAL(updateAvailable(QString)));
+
+        QObject::connect(m_UpdatesCheckerWorker, SIGNAL(stopped()),
+                         this, SLOT(workerFinished()));
+
+        thread->start();
     }
 
-    void UpdateService::replyReceived(QNetworkReply *networkReply) {
-        if (networkReply->error() == QNetworkReply::NoError) {
-            QJsonDocument document = QJsonDocument::fromJson(networkReply->readAll());
-            QJsonObject jsonObject = document.object();
-
-            if (jsonObject.contains(UPDATE_JSON_MAJOR_VERSION) &&
-                    jsonObject.contains(UPDATE_JSON_MINOR_VERSION) &&
-                    jsonObject.contains(UPDATE_JSON_FIX_VERSION)) {
-
-                int majorVersion = jsonObject.value(UPDATE_JSON_MAJOR_VERSION).toInt();
-                int minorVersion = jsonObject.value(UPDATE_JSON_MINOR_VERSION).toInt();
-                int fixVersion = jsonObject.value(UPDATE_JSON_FIX_VERSION).toInt();
-
-                int availableVersion = majorVersion*100 + minorVersion*10 + fixVersion;
-                int currVersion = XPIKS_MAJOR_VERSION*100 + XPIKS_MINOR_VERSION*10 + XPIKS_FIX_VERSION;
-
-                if (availableVersion > currVersion) {
-                    QString updateUrl = DEFAULT_UPDATE_URL;
-                    if (jsonObject.contains(UPDATE_JSON_UPDATE_URL)) {
-                        updateUrl = jsonObject.value(UPDATE_JSON_UPDATE_URL).toString();
-                    }
-
-                    emit updateAvailable(updateUrl);
-                }
-            }
-        } else {
-            qDebug() << networkReply->errorString();
-        }
-
-        networkReply->deleteLater();
+    void UpdateService::workerFinished() {
+        qDebug() << "Updates worker finished";
     }
 }

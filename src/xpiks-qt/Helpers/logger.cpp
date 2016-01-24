@@ -2,7 +2,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -31,6 +31,8 @@
 #include <QDir>
 #include <QDateTime>
 #include <QStandardPaths>
+#include <iostream>
+#include "../Common/defines.h"
 
 namespace Helpers {
     void Logger::flush() {
@@ -39,7 +41,7 @@ namespace Helpers {
         m_Mutex.lock();
         {
             previousIndex = m_ActiveIndex;
-            m_ActiveIndex = (m_ActiveIndex + 1) % 2;
+            m_ActiveIndex = (previousIndex + 1) % 2;
         }
         m_Mutex.unlock();
 
@@ -64,6 +66,7 @@ namespace Helpers {
         if (logItems.length() > 0) {
             QMutexLocker locker(&m_StreamMutex);
 
+#ifdef WITH_LOGS
             QFile outFile(m_LogFilepath);
             if (outFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append)) {
                 QTextStream ts(&outFile);
@@ -72,9 +75,13 @@ namespace Helpers {
                     ts << logItem;
                     endl(ts);
                 }
-
-                logItems.clear();
             }
+#else
+            foreach (const QString &logItem, logItems) {
+                std::cout << logItem.toLocal8Bit().data() << std::endl;
+            }
+#endif
+            logItems.clear();
         }
     }
 

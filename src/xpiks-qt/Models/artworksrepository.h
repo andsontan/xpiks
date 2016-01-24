@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -77,10 +77,13 @@ namespace Models {
 
     public:
         bool accountFile(const QString &filepath);
-        void removeFile(const QString &filepath, const QString &fileDirectory);
+        bool removeFile(const QString &filepath, const QString &fileDirectory);
         void setFileSelected(const QString &filepath, bool selected);
 
         const QString &getDirectory(int index) const { return m_DirectoriesList[index]; }
+#ifdef TESTS
+        int getFilesCountForDirectory(const QString &directory) const { return m_DirectoriesHash[directory]; }
+#endif
 
     public:
         virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;

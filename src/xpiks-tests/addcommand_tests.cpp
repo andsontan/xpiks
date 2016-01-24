@@ -8,19 +8,18 @@
 void AddCommand_Tests::addNoArtworksToEmptyRepositoryTest()
 {
     Mocks::CommandManagerMock commandManagerMock;
-    Mocks::ArtworksRepositoryMock artworksRepositoryMock;
     Mocks::ArtItemsModelMock artItemsMock;
 
-    Models::ArtworksRepository *artworksRepository = &artworksRepositoryMock;
-    commandManagerMock.InjectDependency(artworksRepository);
+    Models::ArtworksRepository artworksRepository;
+    commandManagerMock.InjectDependency(&artworksRepository);
 
     Models::ArtItemsModel *artItemsModel = &artItemsMock;
     commandManagerMock.InjectDependency(artItemsModel);
 
     QSignalSpy artItemsBeginInsertSpy(&artItemsMock, SIGNAL(rowsAboutToBeInserted(QModelIndex,int,int)));
     QSignalSpy artItemsEndInsertSpy(&artItemsMock, SIGNAL(rowsInserted(QModelIndex,int,int)));
-    QSignalSpy artworkRepoBeginInsertSpy(&artworksRepositoryMock, SIGNAL(rowsAboutToBeInserted(QModelIndex,int,int)));
-    QSignalSpy artworkRepoEndInsertSpy(&artworksRepositoryMock, SIGNAL(rowsInserted(QModelIndex,int,int)));
+    QSignalSpy artworkRepoBeginInsertSpy(&artworksRepository, SIGNAL(rowsAboutToBeInserted(QModelIndex,int,int)));
+    QSignalSpy artworkRepoEndInsertSpy(&artworksRepository, SIGNAL(rowsInserted(QModelIndex,int,int)));
 
     QStringList filenames;
 
@@ -41,19 +40,18 @@ void AddCommand_Tests::addNoArtworksToEmptyRepositoryTest()
 void AddCommand_Tests::addOneArtworkToEmptyRepositoryTest()
 {
     Mocks::CommandManagerMock commandManagerMock;
-    Mocks::ArtworksRepositoryMock artworksRepositoryMock;
     Mocks::ArtItemsModelMock artItemsMock;
 
-    Models::ArtworksRepository *artworksRepository = &artworksRepositoryMock;
-    commandManagerMock.InjectDependency(artworksRepository);
+    Models::ArtworksRepository artworksRepository;
+    commandManagerMock.InjectDependency(&artworksRepository);
 
     Models::ArtItemsModel *artItemsModel = &artItemsMock;
     commandManagerMock.InjectDependency(artItemsModel);
 
     QSignalSpy artItemsBeginInsertSpy(&artItemsMock, SIGNAL(rowsAboutToBeInserted(QModelIndex,int,int)));
     QSignalSpy artItemsEndInsertSpy(&artItemsMock, SIGNAL(rowsInserted(QModelIndex,int,int)));
-    QSignalSpy artworkRepoBeginInsertSpy(&artworksRepositoryMock, SIGNAL(rowsAboutToBeInserted(QModelIndex,int,int)));
-    QSignalSpy artworkRepoEndInsertSpy(&artworksRepositoryMock, SIGNAL(rowsInserted(QModelIndex,int,int)));
+    QSignalSpy artworkRepoBeginInsertSpy(&artworksRepository, SIGNAL(rowsAboutToBeInserted(QModelIndex,int,int)));
+    QSignalSpy artworkRepoEndInsertSpy(&artworksRepository, SIGNAL(rowsInserted(QModelIndex,int,int)));
 
     QStringList filenames;
     filenames.append("somefile.jpg");

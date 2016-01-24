@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -62,6 +62,7 @@ function launchDialog(componentName, directParent, options, functor) {
         if (typeof instance.onDialogDestruction !== "undefined") {
             if (typeof directParent.openedDialogsCount !== "undefined") {
                 directParent.openedDialogsCount += 1
+                console.debug("Opened dialog " + componentName + ". Opened dialogs count is " + directParent.openedDialogsCount);
             }
 
             if (typeof directParent.onDialogClosed !== "undefined") {
@@ -90,12 +91,15 @@ function launchItemEditing(index, appWnd, callbackObject) {
                          callbackObject: callbackObject
                      })
     } else {
+        var width = size.width;
+        var height = size.height + 0.0;
         launchDialog("Dialogs/EditArtworkVerticalDialog.qml", appWnd,
                      {
                          imagePath: currentImagePath,
                          artworkIndex: index,
                          componentParent: appWnd,
-                         callbackObject: callbackObject
+                         callbackObject: callbackObject,
+                         coef: width / height
                      })
     }
 }

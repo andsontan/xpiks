@@ -9,7 +9,8 @@ void ArtworkMetadataTests::initializeOverwriteTest() {
 
     QString title = "Artwork Special Title";
     QString description = "Artwork Special Description";
-    QString rawKeywords = "keyword1, keyword2,keyword3";
+    QStringList rawKeywords;
+    rawKeywords << "keyword1" << "keyword2" << "keyword3";
 
     QCOMPARE(metadata.isInitialized(), false);
 
@@ -34,7 +35,8 @@ void ArtworkMetadataTests::initializeNoOverwriteButEmptyTest() {
 
     QString title = "Artwork Special Title";
     QString description = "Artwork Special Description";
-    QString rawKeywords = "keyword1, keyword2,keyword3";
+    QStringList rawKeywords;
+    rawKeywords << "keyword1" << "keyword2" << "keyword3";
 
     QCOMPARE(metadata.isInitialized(), false);
 
@@ -63,8 +65,8 @@ void ArtworkMetadataTests::initializeNoOverwriteNotEmptyTest() {
 
     QString title = "Artwork Special Title";
     QString description = "Artwork Special Description";
-    QString rawKeywords = "keyword1, keyword2,keyword3";
-
+    QStringList rawKeywords;
+    rawKeywords << "keyword1" << "keyword2" << "keyword3";
     QCOMPARE(metadata.isInitialized(), false);
 
     bool result = metadata.initialize(title, description, rawKeywords, false);
@@ -92,7 +94,8 @@ void ArtworkMetadataTests::initializeNoOverwriteTest() {
 
     QString title = "Artwork Special Title";
     QString description = "Artwork Special Description";
-    QString rawKeywords = "keyword1, keyword2,keyword3";
+    QStringList rawKeywords;
+    rawKeywords << "keyword1" << "keyword2" << "keyword3";
 
     QCOMPARE(metadata.isInitialized(), false);
 
@@ -347,4 +350,73 @@ void ArtworkMetadataTests::misEditOfKeywordDoesNothingTest() {
 
     QCOMPARE(editResult, false);
     QCOMPARE(modifiedSpy.count(), 0);
+}
+
+void ArtworkMetadataTests::isInDirectoryTest() {
+    QString filename = "file.jpg";
+#ifdef Q_OS_WIN
+    QString dir = "C:\\path\\to\\directory\\of\\";
+    QString alsoDir = "C:\\path\\to\\directory\\of";
+#else
+    QString dir = "/path/to/directory/of/";
+    QString alsoDir = "/path/to/directory/of";
+#endif
+
+    QFileInfo info(dir + filename);
+    Mocks::ArtworkMetadataMock metadata(info.absoluteFilePath());
+    qDebug() << QDir(dir).absolutePath();
+    QVERIFY(metadata.isInDirectory(QDir(dir).absolutePath()));
+    QVERIFY(metadata.isInDirectory(QDir(alsoDir).absolutePath()));
+}
+
+void ArtworkMetadataTests::isNotInParentsDirectoryTest() {
+    QString filename = "file.jpg";
+#ifdef Q_OS_WIN
+    QString dir = "C:\\path\\to\\directory\\of\\";
+    QString notADir1 = "C:\\path\\to\\directory";
+    QString notADir2 = "C:\\path\\to\\directory\\";
+    QString notADir3 = "C:\\path\\to\\";
+#else
+    QString dir = "/path/to/directory/of/";
+    QString notADir1 = "/path/to/directory/";
+    QString notADir2 = "/path/to/directory";
+    QString notADir3 = "/path/to/";
+#endif
+
+    QFileInfo info(dir + filename);
+    Mocks::ArtworkMetadataMock metadata(info.absoluteFilePath());
+
+    QVERIFY(!metadata.isInDirectory(QDir(notADir1).absolutePath()));
+    QVERIFY(!metadata.isInDirectory(QDir(notADir2).absolutePath()));
+    QVERIFY(!metadata.isInDirectory(QDir(notADir3).absolutePath()));
+}
+
+void ArtworkMetadataTests::isNotInOtherDirectoryTest() {
+    QString filename = "file.jpg";
+#ifdef Q_OS_WIN
+    QString dir = "C:\\path\\to\\directory\\of\\";
+    QString otherDir = "C:\\path\\to\\some\\other\\directory\\of\\";
+#else
+    QString dir = "/path/to/directory/of/";
+    QString otherDir = "/path/to/some/other/directory/of/";
+#endif
+
+    QFileInfo info(dir + filename);
+    Mocks::ArtworkMetadataMock metadata(info.absoluteFilePath());
+    QVERIFY(!metadata.isInDirectory(QDir(otherDir).absolutePath()));
+}
+
+void ArtworkMetadataTests::isNotInEmptyDirectoryTest() {
+    QString filename = "file.jpg";
+#ifdef Q_OS_WIN
+    QString dir = "C:\\path\\to\\directory\\of\\";
+    QString otherDir = "";
+#else
+    QString dir = "/path/to/directory/of/";
+    QString otherDir = "";
+#endif
+
+    QFileInfo info(dir + filename);
+    Mocks::ArtworkMetadataMock metadata(info.absoluteFilePath());
+    QVERIFY(!metadata.isInDirectory(QDir(otherDir).absolutePath()));
 }

@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -31,6 +31,7 @@
 #include <QStandardPaths>
 #include "../Helpers/stringhelper.h"
 #include "../Helpers/logger.h"
+#include "../Common/defines.h"
 
 namespace Models {
 
@@ -51,7 +52,6 @@ namespace Models {
     }
 
     void LogsModel::startLogging() {
-#ifdef WITH_LOGS
         QThread *loggingThread = new QThread();
         m_LoggingWorker->moveToThread(loggingThread);
 
@@ -62,7 +62,10 @@ namespace Models {
         QObject::connect(loggingThread, SIGNAL(finished()), loggingThread, SLOT(deleteLater()));
 
         loggingThread->start();
-#endif
+    }
+
+    void LogsModel::stopLogging() {
+        m_LoggingWorker->cancel();
     }
 
     QString LogsModel::getAllLogsText(bool moreLogs) {

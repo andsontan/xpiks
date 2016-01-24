@@ -4,16 +4,24 @@
 #include "../xpiks-qt/Commands/commandmanager.h"
 #include "../xpiks-qt/Models/artitemsmodel.h"
 #include "../xpiks-qt/Models/artworksrepository.h"
-#include "artworksrepositorymock.h"
 
 namespace Mocks {
     class CommandManagerMock : public Commands::CommandManager
     {
     public:
-        CommandManagerMock() {}
+        CommandManagerMock():
+            m_AnyCommandProcessed(false),
+            m_CanExecuteCommands(true)
+        {}
+
+    public:
+        bool anyCommandProcessed() const { return m_AnyCommandProcessed; }
+        void resetAnyCommandProcessed() { m_AnyCommandProcessed = false; }
+        void disableCommands() { m_CanExecuteCommands = false; }
 
     public:
         virtual void connectArtworkSignals(Models::ArtworkMetadata *metadata) const { Q_UNUSED(metadata); /*DO NOTHING*/ }
+
         void generateAndAddArtworks(int count) {
             Q_ASSERT(count >= 0);
             int i = 0;
@@ -21,7 +29,7 @@ namespace Mocks {
             Models::ArtItemsModel *artItemsModel = getArtItemsModel();
 
             while (i < count) {
-                QString filename = QString("somedirectory/artwork%1.jpg").arg(i);
+                QString filename = QString("/path/to/somedirectory/artwork%1.jpg").arg(i);
 
                 if (artworksRepository->accountFile(filename))
                 {
@@ -32,6 +40,19 @@ namespace Mocks {
                 i++;
             }
         }
+
+        virtual Commands::CommandResult *processCommand(Commands::CommandBase *command) {
+            m_AnyCommandProcessed = true;
+            if (m_CanExecuteCommands) {
+                return Commands::CommandManager::processCommand(command);
+            } else {
+                return NULL;
+            }
+        }
+
+    private:
+        bool m_AnyCommandProcessed;
+        volatile bool m_CanExecuteCommands;
     };
 }
 

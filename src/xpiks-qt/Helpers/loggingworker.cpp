@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -22,6 +22,8 @@
 #include "loggingworker.h"
 #include "logger.h"
 #include <QThread>
+#include <QDebug>
+#include "../Common/defines.h"
 
 namespace Helpers {
     LoggingWorker::LoggingWorker(QObject *parent) :
@@ -38,6 +40,9 @@ namespace Helpers {
             logger.flush();
             QThread::sleep(secondsToSleep);
         }
+
+        logger.flush();
+        qInfo() << "Logging worker stopped";
     }
 
     void LoggingWorker::cancel() {

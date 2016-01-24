@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -25,6 +25,7 @@
 #include <QString>
 #include <QStringList>
 #include <QAbstractListModel>
+#include <QVector>
 
 namespace SpellCheck {
     class ISpellCheckable;
@@ -34,6 +35,8 @@ namespace SpellCheck {
     public:
         SpellSuggestionsItem(const QString &word, const QString &origin);
         SpellSuggestionsItem(const QString &word);
+        virtual ~SpellSuggestionsItem() {}
+
     public:
         enum KeywordSpellSuggestionsRoles {
             SuggestionRole = Qt::UserRole + 1,
@@ -58,6 +61,11 @@ namespace SpellCheck {
     public:
         virtual void replaceToSuggested(ISpellCheckable *item) = 0;
 
+        // doesn't work like that because of f&cking c++ standard
+        // about accessing base protected members in derived class
+        //protected:
+        virtual void replaceToSuggested(ISpellCheckable *item, const QString &word, const QString &replacement) = 0;
+
     signals:
         void replacementIndexChanged();
 
@@ -79,6 +87,7 @@ namespace SpellCheck {
 
     class KeywordSpellSuggestions: public SpellSuggestionsItem
     {
+        Q_OBJECT
     public:
         KeywordSpellSuggestions(const QString &keyword, int originalIndex, const QString &origin);
         KeywordSpellSuggestions(const QString &keyword, int originalIndex);
@@ -87,26 +96,54 @@ namespace SpellCheck {
         int getOriginalIndex() const { return m_OriginalIndex; }
         virtual void replaceToSuggested(ISpellCheckable *item);
 
+        // TODO: fix this back in future when c++ will be normal language
+    //protected:
+        virtual void replaceToSuggested(ISpellCheckable *item, const QString &word, const QString &replacement);
+
     private:
         int m_OriginalIndex;
     };
 
     class DescriptionSpellSuggestions: public SpellSuggestionsItem
     {
+        Q_OBJECT
     public:
         DescriptionSpellSuggestions(const QString &word);
 
     public:
         virtual void replaceToSuggested(ISpellCheckable *item);
+
+    //protected:
+        virtual void replaceToSuggested(ISpellCheckable *item, const QString &word, const QString &replacement);
     };
 
     class TitleSpellSuggestions: public SpellSuggestionsItem
     {
+        Q_OBJECT
     public:
         TitleSpellSuggestions(const QString &word);
 
     public:
         virtual void replaceToSuggested(ISpellCheckable *item);
+
+    //protected:
+        virtual void replaceToSuggested(ISpellCheckable *item, const QString &word, const QString &replacement);
+    };
+
+    class CombinedSpellSuggestions: public SpellSuggestionsItem {
+        Q_OBJECT
+    public:
+        CombinedSpellSuggestions(const QString &word, const QVector<SpellSuggestionsItem*> &suggestions);
+        virtual ~CombinedSpellSuggestions();
+
+    public:
+        virtual void replaceToSuggested(ISpellCheckable *item);
+
+    //protected:
+        virtual void replaceToSuggested(ISpellCheckable *item, const QString &word, const QString &replacement);
+
+    private:
+        QVector<SpellSuggestionsItem*> m_SpellSuggestions;
     };
 }
 

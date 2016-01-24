@@ -1,7 +1,7 @@
 /*
 * This file is a part of Xpiks - cross platform application for
 * keywording and uploading images for microstocks
-* Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+* Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
 *
 * Xpiks is distributed under the GNU General Public License, version 3.0
 *
@@ -22,6 +22,7 @@
 #include "helpersqmlwrapper.h"
 #include <QStringList>
 #include <QProcess>
+#include <QDebug>
 #include <QDir>
 #include "keywordvalidator.h"
 #include "../Commands/commandmanager.h"
@@ -51,16 +52,16 @@ namespace Helpers {
     void HelpersQmlWrapper::revealLogFile() {
         QString logFilePath = Logger::getInstance().getLogFilePath();
 #ifdef Q_OS_MAC
-    QStringList args;
-    args << "-e";
-    args << "tell application \"Finder\"";
-    args << "-e";
-    args << "activate";
-    args << "-e";
-    args << "select POSIX file \"" + logFilePath + "\"";
-    args << "-e";
-    args << "end tell";
-    QProcess::startDetached("osascript", args);
+        QStringList args;
+        args << "-e";
+        args << "tell application \"Finder\"";
+        args << "-e";
+        args << "activate";
+        args << "-e";
+        args << "select POSIX file \"" + logFilePath + "\"";
+        args << "-e";
+        args << "end tell";
+        QProcess::startDetached("osascript", args);
 #endif
 
 #ifdef Q_OS_WIN
@@ -69,6 +70,15 @@ namespace Helpers {
     QProcess::startDetached("explorer", args);
 #endif
     }
+
+    void Helpers::HelpersQmlWrapper::reportOpen() {
+        m_CommandManager->reportUserAction(Conectivity::UserActionOpen);
+    }
+
+    void Helpers::HelpersQmlWrapper::cleanupLocalLibrary() const {
+        m_CommandManager->cleanupLocalLibraryAsync();
+    }
+
 }
 
 

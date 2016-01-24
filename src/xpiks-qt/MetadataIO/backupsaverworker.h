@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -19,23 +19,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef EXIFTOOLWRAPPER
-#define EXIFTOOLWRAPPER
+#ifndef BACKUPSAVERWORKER_H
+#define BACKUPSAVERWORKER_H
 
-#include <QPair>
+#include <QObject>
+#include "../Common/itemprocessingworker.h"
+#include "saverworkerjobitem.h"
 
-namespace Models {
-    class ArtworkMetadata;
-    class ImportDataResult;
-    class ExportInfo;
+namespace MetadataIO {
+    class BackupSaverWorker : public QObject, public Common::ItemProcessingWorker<SaverWorkerJobItem>
+    {
+        Q_OBJECT
+    protected:
+        virtual bool initWorker() { return true; }
+        virtual bool processOneItem(SaverWorkerJobItem *item);
+
+    protected:
+        virtual void notifyQueueIsEmpty() { emit queueIsEmpty(); }
+        virtual void notifyStopped() { emit stopped(); }
+
+    public slots:
+        void process() { doWork(); }
+        void cancel() { cancelWork(); }
+
+    signals:
+        void stopped();
+        void queueIsEmpty();
+    };
 }
 
-typedef QPair<Models::ArtworkMetadata*, Models::ImportDataResult*> ImportPair;
-typedef QPair<Models::ArtworkMetadata*, Models::ExportInfo*> ExportPair;
-
-// returns NULL if patching wasn't successfull
-ExportPair writeArtworkMetadata(ExportPair pair);
-ImportPair readArtworkMetadata(ImportPair pair);
-
-#endif // EXIFTOOLWRAPPER
-
+#endif // BACKUPSAVERWORKER_H

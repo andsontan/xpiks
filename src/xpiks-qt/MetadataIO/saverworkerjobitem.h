@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -19,46 +19,53 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TEMPMETADATADB_H
-#define TEMPMETADATADB_H
+#ifndef SAVERWORKERJOBITEM
+#define SAVERWORKERJOBITEM
 
 #include <QHash>
 #include <QString>
+#include "../Models/artworkmetadata.h"
 
-namespace Models {
-    class ArtworkMetadata;
-}
-
-namespace Helpers {
-    class TempMetadataCopy {
+namespace MetadataIO {
+    class MetadataSavingCopy {
     public:
-        TempMetadataCopy(Models::ArtworkMetadata *metadata);
+        MetadataSavingCopy(Models::ArtworkMetadata *metadata);
+        MetadataSavingCopy(Models::ArtworkMetadata *metadata, const QHash<QString, QString> &dict);
 
     public:
         const QString &getFilepath() const { return m_Filepath; }
         const QHash<QString, QString> &getInfo() const { return m_MetadataInfo; }
 
+        void readFromMetadata();
+        void saveToFile() const;
+        bool readFromFile();
+        void saveToMetadata() const;
+
     private:
         QHash<QString, QString> m_MetadataInfo;
         QString m_Filepath;
+        Models::ArtworkMetadata *m_Metadata;
     };
 
-    // class not functions because it's supposed to progress in future
-    class TempMetadataDb
-    {
+    enum SaverWorkerJobType { JobTypeRead, JobTypeWrite };
+
+    class SaverWorkerJobItem {
     public:
-        TempMetadataDb(Models::ArtworkMetadata *metadata) :
-            m_ArtworkMetadata(metadata)
-        {  }
+        SaverWorkerJobItem(Models::ArtworkMetadata *metadata, SaverWorkerJobType jobType):
+            m_ArtworkMetadata(metadata),
+            m_JobType(jobType)
+        {
+        }
 
     public:
-        // deprecated. use backupsaverworker's queue instead
-        void flush() const;
-        void load() const;
+        SaverWorkerJobType getJobType() const { return m_JobType; }
+        Models::ArtworkMetadata *getMetadata() const { return m_ArtworkMetadata; }
 
     private:
         Models::ArtworkMetadata *m_ArtworkMetadata;
+        SaverWorkerJobType m_JobType;
     };
 }
 
-#endif // TEMPMETADATADB_H
+#endif // SAVERWORKERJOBITEM
+

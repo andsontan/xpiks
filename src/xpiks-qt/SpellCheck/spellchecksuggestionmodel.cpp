@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -21,15 +21,52 @@
 
 #include "spellchecksuggestionmodel.h"
 #include <QQmlEngine>
-
+#include <QDebug>
+#include <QHash>
+#include <QString>
 #include "spellsuggestionsitem.h"
 #include "../Models/artworkmetadata.h"
 #include "spellcheckerservice.h"
 #include "ispellcheckable.h"
 #include "../Commands/commandmanager.h"
 #include "../Common/flags.h"
+#include "../Common/defines.h"
 
 namespace SpellCheck {
+
+    QVector<SpellSuggestionsItem *> combineSuggestionRequests(const QVector<SpellSuggestionsItem *> &items) {
+        QHash<QString, QVector<SpellSuggestionsItem*> > dict;
+
+        int size = items.size();
+        for (int i = 0; i < size; ++i) {
+            SpellSuggestionsItem *item = items.at(i);
+            const QString &word = item->getWord();
+            if (!dict.contains(word)) {
+                dict.insert(word, QVector<SpellSuggestionsItem*>());
+            }
+
+            dict[word].append(item);
+        }
+
+        QVector<SpellSuggestionsItem *> result;
+        result.reserve(size);
+
+        QHashIterator<QString, QVector<SpellSuggestionsItem*> > i(dict);
+        while (i.hasNext()) {
+            i.next();
+
+            const QVector<SpellSuggestionsItem*> &vector = i.value();
+
+            if (vector.size() > 1) {
+                result.append(new CombinedSpellSuggestions(i.key(), vector));
+            } else {
+                result.append(vector.first());
+            }
+        }
+
+        return result;
+    }
+
     SpellCheckSuggestionModel::SpellCheckSuggestionModel():
         QAbstractListModel(),
         Common::BaseEntity(),
@@ -70,8 +107,14 @@ namespace SpellCheck {
             }
         }
 
+        m_CurrentItem->afterReplaceCallback();
+
         if (m_ItemIndex != -1) {
             m_CommandManager->updateArtworks(QVector<int>() << m_ItemIndex);
+        }
+
+        if (anyChanged) {
+            m_CommandManager->submitItemForSpellCheck(m_CurrentItem);
         }
     }
 
@@ -86,6 +129,7 @@ namespace SpellCheck {
 
     void SpellCheckSuggestionModel::setupModel(SpellCheck::ISpellCheckable *item, int index, int flags) {
         Q_ASSERT(item != NULL);
+        qInfo() << "Setting suggestions with flags" << flags;
         QVector<SpellSuggestionsItem*> requests;
 
         if (Common::HasFlag(flags, Common::CorrectKeywords)) {
@@ -103,7 +147,8 @@ namespace SpellCheck {
             requests << descriptionSuggestionsRequests;
         }
 
-        QVector<SpellSuggestionsItem*> executedRequests = setupSuggestions(requests);
+        QVector<SpellSuggestionsItem*> combinedRequests = combineSuggestionRequests(requests);
+        QVector<SpellSuggestionsItem*> executedRequests = setupSuggestions(combinedRequests);
 
         beginResetModel();
         m_CurrentItem = item;
@@ -116,6 +161,7 @@ namespace SpellCheck {
     }
 
     QVector<SpellSuggestionsItem *> SpellCheckSuggestionModel::setupSuggestions(const QVector<SpellSuggestionsItem *> &items) {
+        qDebug() << "Suggesting corrections for" << items.length() << "item(s)";
         SpellCheckerService *service = m_CommandManager->getSpellCheckerService();
         // another vector for requests with available suggestions
         QVector<SpellSuggestionsItem*> executedRequests;

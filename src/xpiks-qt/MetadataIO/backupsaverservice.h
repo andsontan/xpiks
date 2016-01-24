@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -19,22 +19,41 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "backupsaverworker.h"
-#include <QFile>
-#include <QDataStream>
-#include "../Helpers/constants.h"
+#ifndef BACKUPSAVERSERVICE_H
+#define BACKUPSAVERSERVICE_H
 
-namespace Helpers {
-    bool BackupSaverWorker::processOneItem(TempMetadataCopy *item) {
-        QString path = item->getFilepath() + QLatin1String(Constants::METADATA_BACKUP_EXTENSION);
-        const QHash<QString, QString> &dict = item->getInfo();
-        QFile file(path);
-        if (file.open(QIODevice::WriteOnly)) {
-            QDataStream out(&file);   // write the data
-            out << dict;
-            file.close();
-        }
+#include <QObject>
+#include <QVector>
 
-        return true;
-    }
+namespace Models {
+    class ArtworkMetadata;
 }
+
+namespace MetadataIO {
+    class BackupSaverWorker;
+
+    class BackupSaverService : public QObject
+    {
+        Q_OBJECT
+    public:
+        BackupSaverService();
+
+    public:
+        void startSaving();
+        void stopSaving();
+        void saveArtwork(Models::ArtworkMetadata *metadata) const;
+        void readArtwork(Models::ArtworkMetadata *metadata) const;
+        void readArtworks(const QVector<Models::ArtworkMetadata *> &artworks) const;
+
+    signals:
+        void cancelSaving();
+
+    private slots:
+        void workerFinished();
+
+    private:
+        BackupSaverWorker *m_BackupWorker;
+    };
+}
+
+#endif // BACKUPSAVERSERVICE_H

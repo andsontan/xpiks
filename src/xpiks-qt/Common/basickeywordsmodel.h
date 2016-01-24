@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -31,6 +31,7 @@
 #include <QVector>
 #include "baseentity.h"
 #include "../SpellCheck/ispellcheckable.h"
+#include "../Warnings/iwarningscheckable.h"
 
 namespace SpellCheck {
     class SpellCheckQueryItem;
@@ -40,7 +41,11 @@ namespace SpellCheck {
 }
 
 namespace Common {
-    class BasicKeywordsModel : public QAbstractListModel, public SpellCheck::ISpellCheckable {
+    class BasicKeywordsModel :
+            public QAbstractListModel,
+            public SpellCheck::ISpellCheckable,
+            public Warnings::IWarningsCheckable
+    {
         Q_OBJECT
         Q_PROPERTY(bool hasSpellErrors READ hasSpellErrors NOTIFY spellCheckErrorsChanged)
     public:
@@ -59,12 +64,13 @@ namespace Common {
 
     public:
         const QStringList &getKeywords() const { return m_KeywordsList; }
-        const QString &getDescription() const { return m_Description; }
-        const QString &getTitle() const { return m_Title; }
+        virtual const QString &getDescription() const { return m_Description; }
+        virtual const QString &getTitle() const { return m_Title; }
         int getKeywordsCount() const { return m_KeywordsSet.count(); }
         const QSet<QString> &getKeywordsSet() const { return m_KeywordsSet; }
         const QVector<bool> &getSpellStatuses() const { return m_SpellCheckResults; }
         QString getKeywordsString() { return m_KeywordsList.join(", "); }
+        int getWarningsFlags() const { return m_WarningsFlags; }
 
     public:
         virtual bool appendKeyword(const QString &keyword);
@@ -81,13 +87,16 @@ namespace Common {
         bool isDescriptionEmpty() const;
         bool containsKeyword(const QString &searchTerm, bool exactMatch=false);
 
-        bool hasKeywordsSpellError() const;
-        bool hasDescriptionSpellError() const;
-        bool hasTitleSpellError() const;
+        virtual bool hasKeywordsSpellError() const;
+        virtual bool hasDescriptionSpellError() const;
+        virtual bool hasTitleSpellError() const;
+
+        virtual QSize getSize() const { throw 0; }
 
         bool hasSpellErrors() const;
 
         void setSpellStatuses(const QVector<bool> &statuses);
+        void setWarningsFlags(int flags) { m_WarningsFlags = flags; }
 
         virtual void clearModel();
         void clearKeywords();
@@ -96,7 +105,7 @@ namespace Common {
     public:
         SpellCheck::SpellCheckItemInfo *getSpellCheckInfo() const { return m_SpellCheckInfo; }
         void setSpellCheckInfo(SpellCheck::SpellCheckItemInfo *info) { m_SpellCheckInfo = info; }
-        void notifySpellCheckResults();
+        void notifySpellCheckResults(int flags);
 
     private:
         void updateDescriptionSpellErrors(const QHash<QString, bool> &results);
@@ -109,13 +118,14 @@ namespace Common {
         virtual QString retrieveKeyword(int wordIndex);
         virtual QStringList getKeywords();
         virtual void setSpellCheckResults(const QVector<SpellCheck::SpellCheckQueryItem*> &items, bool onlyOneKeyword);
-        virtual void setSpellCheckResults(const QHash<QString, bool> &results);
+        virtual void setSpellCheckResults(const QHash<QString, bool> &results, int flags);
         virtual QVector<SpellCheck::SpellSuggestionsItem *> createKeywordsSuggestionsList();
         virtual QVector<SpellCheck::SpellSuggestionsItem*> createDescriptionSuggestionsList();
         virtual QVector<SpellCheck::SpellSuggestionsItem*> createTitleSuggestionsList();
         virtual void replaceKeyword(int index, const QString &existing, const QString &replacement);
         virtual void replaceWordInDescription(const QString &word, const QString &replacement);
         virtual void replaceWordInTitle(const QString &word, const QString &replacement);
+        virtual void afterReplaceCallback();
         virtual void connectSignals(SpellCheck::SpellCheckItem *item);
         virtual QStringList getDescriptionWords() const;
         virtual QStringList getTitleWords() const;
@@ -125,7 +135,7 @@ namespace Common {
         void spellCheckErrorsChanged();
 
     protected slots:
-         void spellCheckRequestReady(int index);
+         void spellCheckRequestReady(int flags, int index);
 
     private:
         void emitSpellCheckChanged(int index=-1);
@@ -133,7 +143,7 @@ namespace Common {
     protected:
         virtual QHash<int, QByteArray> roleNames() const;
         void resetKeywords();
-        void addKeywords(const QString &rawKeywords);
+        void addKeywords(const QStringList &rawKeywords);
         void freeSpellCheckInfo();
 
     private:
@@ -143,6 +153,7 @@ namespace Common {
         SpellCheck::SpellCheckItemInfo *m_SpellCheckInfo;
         QString m_Description;
         QString m_Title;
+        volatile int m_WarningsFlags;
     };
 }
 

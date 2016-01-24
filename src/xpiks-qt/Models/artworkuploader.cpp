@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -33,6 +33,7 @@
 #include "../Helpers/uploadcoordinator.h"
 #include "../Commands/commandmanager.h"
 #include "../Models/settingsmodel.h"
+#include "../Helpers/filenameshelpers.h"
 
 namespace Models {
     ArtworkUploader::ArtworkUploader(int maxParallelUploads) :
@@ -110,6 +111,7 @@ namespace Models {
         foreach (Models::UploadInfo *info, infos) {
             if (info->getIsSelected() && info->getZipBeforeUpload()) {
                 anyZipNeeded = true;
+                qDebug() << "Need create archives at least for" << info->getHost();
                 break;
             }
         }
@@ -125,6 +127,7 @@ namespace Models {
 
                 if (!fi.exists()) {
                     needCreate = true;
+                    qDebug() << "Zip needed at least for" << archivePath;
                     break;
                 }
             }

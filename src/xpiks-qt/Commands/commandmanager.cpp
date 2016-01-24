@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -23,7 +23,6 @@
 #include "../Models/artworksrepository.h"
 #include "../Models/artitemsmodel.h"
 #include "../Models/combinedartworksmodel.h"
-#include "../Models/iptcprovider.h"
 #include "../Models/artworkuploader.h"
 #include "../Models/uploadinforepository.h"
 #include "../Models/warningsmanager.h"
@@ -41,9 +40,13 @@
 #include "../Models/settingsmodel.h"
 #include "../SpellCheck/spellchecksuggestionmodel.h"
 #include "../SpellCheck/ispellcheckable.h"
-#include "../Helpers/backupsaverservice.h"
+#include "../MetadataIO/backupsaverservice.h"
 #include "../Conectivity/telemetryservice.h"
 #include "../Helpers/updateservice.h"
+#include "../Models/logsmodel.h"
+#include "../Encryption/aes-qt.h"
+#include "../MetadataIO/metadataiocoordinator.h"
+#include "../Suggestion/locallibrary.h"
 
 void Commands::CommandManager::InjectDependency(Models::ArtworksRepository *artworkRepository) {
     Q_ASSERT(artworkRepository != NULL); m_ArtworksRepository = artworkRepository;
@@ -63,11 +66,6 @@ void Commands::CommandManager::InjectDependency(Models::FilteredArtItemsProxyMod
 void Commands::CommandManager::InjectDependency(Models::CombinedArtworksModel *combinedArtworksModel) {
     Q_ASSERT(combinedArtworksModel != NULL); m_CombinedArtworksModel = combinedArtworksModel;
     m_CombinedArtworksModel->setCommandManager(this);
-}
-
-void Commands::CommandManager::InjectDependency(Models::IptcProvider *iptcProvider) {
-    Q_ASSERT(iptcProvider != NULL); m_IptcProvider = iptcProvider;
-    m_IptcProvider->setCommandManager(this);
 }
 
 void Commands::CommandManager::InjectDependency(Models::ArtworkUploader *artworkUploader) {
@@ -95,14 +93,12 @@ void Commands::CommandManager::InjectDependency(UndoRedo::UndoRedoManager *undoR
     m_UndoRedoManager->setCommandManager(this);
 }
 
-void Commands::CommandManager::InjectDependency(Models::ZipArchiver *zipArchiver)
-{
+void Commands::CommandManager::InjectDependency(Models::ZipArchiver *zipArchiver) {
     Q_ASSERT(zipArchiver != NULL); m_ZipArchiver = zipArchiver;
     m_ZipArchiver->setCommandManager(this);
 }
 
-void Commands::CommandManager::InjectDependency(Suggestion::KeywordsSuggestor *keywordsSuggestor)
-{
+void Commands::CommandManager::InjectDependency(Suggestion::KeywordsSuggestor *keywordsSuggestor) {
     Q_ASSERT(keywordsSuggestor != NULL); m_KeywordsSuggestor = keywordsSuggestor;
     m_KeywordsSuggestor->setCommandManager(this);
 }
@@ -124,7 +120,7 @@ void Commands::CommandManager::InjectDependency(SpellCheck::SpellCheckSuggestion
     m_SpellCheckSuggestionModel->setCommandManager(this);
 }
 
-void Commands::CommandManager::InjectDependency(Helpers::BackupSaverService *backupSaverService) {
+void Commands::CommandManager::InjectDependency(MetadataIO::BackupSaverService *backupSaverService) {
     Q_ASSERT(backupSaverService != NULL); m_MetadataSaverService = backupSaverService;
 }
 
@@ -136,22 +132,36 @@ void Commands::CommandManager::InjectDependency(Helpers::UpdateService *updateSe
     Q_ASSERT(updateService != NULL); m_UpdateService = updateService;
 }
 
-Commands::CommandResult *Commands::CommandManager::processCommand(Commands::CommandBase *command) const
+void Commands::CommandManager::InjectDependency(Models::LogsModel *logsModel) {
+    Q_ASSERT(logsModel != NULL); m_LogsModel = logsModel;
+}
+
+void Commands::CommandManager::InjectDependency(MetadataIO::MetadataIOCoordinator *metadataIOCoordinator) {
+    Q_ASSERT(metadataIOCoordinator != NULL); m_MetadataIOCoordinator = metadataIOCoordinator;
+    m_MetadataIOCoordinator->setCommandManager(this);
+}
+
+void Commands::CommandManager::InjectDependency(Suggestion::LocalLibrary *localLibrary) {
+    Q_ASSERT(localLibrary != NULL); m_LocalLibrary = localLibrary;
+}
+
+Commands::CommandResult *Commands::CommandManager::processCommand(Commands::CommandBase *command)
+#ifndef TESTS
+const
+#endif
 {
     Commands::CommandResult *result = command->execute(this);
     delete command;
     return result;
 }
 
-void Commands::CommandManager::recordHistoryItem(UndoRedo::HistoryItem *historyItem) const
-{
+void Commands::CommandManager::recordHistoryItem(UndoRedo::HistoryItem *historyItem) const {
     if (m_UndoRedoManager) {
         m_UndoRedoManager->recordHistoryItem(historyItem);
     }
 }
 
-void Commands::CommandManager::connectEntitiesSignalsSlots() const
-{
+void Commands::CommandManager::connectEntitiesSignalsSlots() const {
     QObject::connect(m_SecretsManager, SIGNAL(beforeMasterPasswordChange(QString,QString)),
                      m_UploadInfoRepository, SLOT(onBeforeMasterPasswordChanged(QString,QString)));
 
@@ -171,26 +181,31 @@ void Commands::CommandManager::connectEntitiesSignalsSlots() const
 void Commands::CommandManager::recodePasswords(const QString &oldMasterPassword,
                                                   const QString &newMasterPassword,
                                                   const QVector<Models::UploadInfo *> &uploadInfos) const {
-    foreach (Models::UploadInfo *info, uploadInfos) {
-        if (info->hasPassword()) {
-            QString newPassword = m_SecretsManager->recodePassword(
-                        info->getPassword(), oldMasterPassword, newMasterPassword);
-            info->setPassword(newPassword);
+    if (m_SecretsManager) {
+        qDebug() << "Recoding passwords for" << uploadInfos.length() << "item(s)";
+        foreach (Models::UploadInfo *info, uploadInfos) {
+            if (info->hasPassword()) {
+                QString newPassword = m_SecretsManager->recodePassword(
+                            info->getPassword(), oldMasterPassword, newMasterPassword);
+                info->setPassword(newPassword);
+            }
         }
     }
 }
 
 void Commands::CommandManager::combineArtwork(Models::ArtItemInfo *itemInfo) const {
+    qDebug() << "Combining one item with index" << itemInfo->getOriginalIndex();
     if (m_CombinedArtworksModel) {
         m_CombinedArtworksModel->resetModelData();
         m_CombinedArtworksModel->initArtworks(QVector<Models::ArtItemInfo*>() << itemInfo);
         m_CombinedArtworksModel->recombineArtworks();
 
-        submitForSpellCheck(itemInfo->getOrigin());
+        submitItemForSpellCheck(itemInfo->getOrigin());
     }
 }
 
 void Commands::CommandManager::combineArtworks(const QVector<Models::ArtItemInfo *> &artworks) const {
+    qDebug() << "Combining" << artworks.length() << "artworks";
     if (m_CombinedArtworksModel) {
         m_CombinedArtworksModel->resetModelData();
         m_CombinedArtworksModel->initArtworks(artworks);
@@ -198,15 +213,8 @@ void Commands::CommandManager::combineArtworks(const QVector<Models::ArtItemInfo
     }
 }
 
-void Commands::CommandManager::setArtworksForIPTCProcessing(const QVector<Models::ArtworkMetadata*> &artworks) const
-{
-    if (m_IptcProvider) {
-        m_IptcProvider->setArtworks(artworks);
-    }
-}
 
-void Commands::CommandManager::setArtworksForUpload(const QVector<Models::ArtworkMetadata *> &artworks) const
-{
+void Commands::CommandManager::setArtworksForUpload(const QVector<Models::ArtworkMetadata *> &artworks) const {
     if (m_ArtworkUploader) {
         m_ArtworkUploader->setArtworks(artworks);
     }
@@ -219,8 +227,7 @@ void Commands::CommandManager::setArtworksForZipping(const QVector<Models::Artwo
 }
 
 /*virtual*/
-void Commands::CommandManager::connectArtworkSignals(Models::ArtworkMetadata *metadata) const
-{
+void Commands::CommandManager::connectArtworkSignals(Models::ArtworkMetadata *metadata) const {
     if (m_ArtItemsModel) {
         QObject::connect(metadata, SIGNAL(modifiedChanged(bool)),
                          m_ArtItemsModel, SLOT(itemModifiedChanged(bool)));
@@ -237,10 +244,36 @@ void Commands::CommandManager::connectArtworkSignals(Models::ArtworkMetadata *me
     }
 }
 
-void Commands::CommandManager::updateArtworks(const QVector<int> &indices) const
-{
+void Commands::CommandManager::readMetadata(const QVector<Models::ArtworkMetadata *> &artworks,
+                                            const QVector<QPair<int, int> > &rangesToUpdate) const {
+    if (m_MetadataIOCoordinator) {
+        m_MetadataIOCoordinator->readMetadata(artworks, rangesToUpdate);
+    }
+}
+
+void Commands::CommandManager::writeMetadata(const QVector<Models::ArtworkMetadata *> &artworks, bool useBackups) const {
+    saveLocalLibraryAsync();
+
+    if (m_MetadataIOCoordinator) {
+        m_MetadataIOCoordinator->writeMetadata(artworks, useBackups);
+    }
+}
+
+void Commands::CommandManager::addToLibrary(const QVector<Models::ArtworkMetadata *> &artworks) const {
+    if (m_LocalLibrary) {
+        m_LocalLibrary->addToLibrary(artworks);
+    }
+}
+
+void Commands::CommandManager::updateArtworks(const QVector<int> &indices) const {
     if (m_ArtItemsModel) {
         m_ArtItemsModel->updateItemsAtIndices(indices);
+    }
+}
+
+void Commands::CommandManager::updateArtworks(const QVector<QPair<int, int> > &rangesToUpdate) const {
+    if (m_ArtItemsModel) {
+        m_ArtItemsModel->updateItemsInRanges(rangesToUpdate);
     }
 }
 
@@ -259,14 +292,17 @@ void Commands::CommandManager::addInitialArtworks(const QStringList &artworksFil
 }
 #endif
 
-void Commands::CommandManager::submitForSpellCheck(SpellCheck::ISpellCheckable *item, int keywordIndex) const {
-    if (m_SettingsModel->getUseSpellCheck()) {
+void Commands::CommandManager::submitKeywordForSpellCheck(SpellCheck::ISpellCheckable *item, int keywordIndex) const {
+    if ((m_SettingsModel != NULL) && m_SettingsModel->getUseSpellCheck() && (m_SpellCheckerService != NULL)) {
         m_SpellCheckerService->submitKeyword(item, keywordIndex);
     }
 }
 
 void Commands::CommandManager::submitForSpellCheck(const QVector<Models::ArtworkMetadata *> &items) const {
-    if (m_SettingsModel->getUseSpellCheck() && !items.isEmpty()) {
+    if ((m_SettingsModel != NULL) &&
+            m_SettingsModel->getUseSpellCheck() &&
+            (m_SpellCheckerService != NULL) &&
+            !items.isEmpty()) {
         QVector<SpellCheck::ISpellCheckable*> itemsToSubmit;
         int count = items.length();
         itemsToSubmit.reserve(count);
@@ -280,24 +316,26 @@ void Commands::CommandManager::submitForSpellCheck(const QVector<Models::Artwork
 }
 
 void Commands::CommandManager::submitForSpellCheck(const QVector<SpellCheck::ISpellCheckable *> &items) const {
-    if (m_SettingsModel->getUseSpellCheck()) {
+    if (m_SettingsModel->getUseSpellCheck() && m_SpellCheckerService != NULL) {
         m_SpellCheckerService->submitItems(items);
-        reportUserAction(Conectivity::UserActionSpellCheck);
     }
 }
 
-void Commands::CommandManager::submitForSpellCheck(SpellCheck::ISpellCheckable *item) const {
-    if (m_SettingsModel->getUseSpellCheck()) {
-        m_SpellCheckerService->submitItems(QVector<SpellCheck::ISpellCheckable*>() << item);
+void Commands::CommandManager::submitItemForSpellCheck(SpellCheck::ISpellCheckable *item, int flags) const {
+    if ((m_SettingsModel != NULL) && m_SettingsModel->getUseSpellCheck() && (m_SpellCheckerService != NULL)) {
+        m_SpellCheckerService->submitItem(item, flags);
     }
 }
 
 void Commands::CommandManager::setupSpellCheckSuggestions(SpellCheck::ISpellCheckable *item, int index, int flags) {
-    m_SpellCheckSuggestionModel->setupModel(item, index, flags);
+    if (m_SpellCheckSuggestionModel) {
+        m_SpellCheckSuggestionModel->setupModel(item, index, flags);
+        reportUserAction(Conectivity::UserActionSpellSuggestions);
+    }
 }
 
 void Commands::CommandManager::saveMetadata(Models::ArtworkMetadata *metadata) const {
-    if (m_SettingsModel->getSaveBackups()) {
+    if (m_SettingsModel->getSaveBackups() && m_MetadataSaverService != NULL) {
         m_MetadataSaverService->saveArtwork(metadata);
     }
 }
@@ -308,19 +346,47 @@ void Commands::CommandManager::reportUserAction(Conectivity::UserAction userActi
     }
 }
 
-void Commands::CommandManager::afterConstructionCallback() const {
+void Commands::CommandManager::saveLocalLibraryAsync() const {
+    if (m_LocalLibrary) {
+        m_LocalLibrary->saveLibraryAsync();
+    }
+}
+
+void Commands::CommandManager::cleanupLocalLibraryAsync() const {
+    if (m_LocalLibrary) {
+        m_LocalLibrary->cleanupLocalLibraryAsync();
+    }
+}
+
+void Commands::CommandManager::afterConstructionCallback()  {
+    if (m_AfterInitCalled) {
+        qWarning() << "Attempt to call afterConstructionCallback() second time";
+        return;
+    }
+
+    m_AfterInitCalled = true;
+
     m_SpellCheckerService->startChecking();
     m_MetadataSaverService->startSaving();
 
-#ifndef Q_OS_LINUX
-    m_UpdateService->checkForUpdates();
+    const QString reportingEndpoint = QLatin1String("cc39a47f60e1ed812e2403b33678dd1c529f1cc43f66494998ec478a4d13496269a3dfa01f882941766dba246c76b12b2a0308e20afd84371c41cf513260f8eb8b71f8c472cafb1abf712c071938ec0791bbf769ab9625c3b64827f511fa3fbb");
+    QString endpoint = Encryption::decodeText(reportingEndpoint, "reporting");
+    m_TelemetryService->setEndpoint(endpoint);
+
+#if !defined(Q_OS_LINUX)
+    m_UpdateService->startChecking();
 #endif
-    m_TelemetryService->reportAction(Conectivity::UserActionOpen);
 }
 
 void Commands::CommandManager::beforeDestructionCallback() const {
+    qDebug() << "Before destruction handler";
+    if (!m_AfterInitCalled) { return; }
+
     // we have a second for important stuff
     m_TelemetryService->reportAction(Conectivity::UserActionClose);
     m_SpellCheckerService->stopChecking();
     m_MetadataSaverService->stopSaving();
+#ifndef TESTS
+    m_LogsModel->stopLogging();
+#endif
 }

@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -31,6 +31,7 @@
 #include <QSemaphore>
 #include "../Encryption/secretsmanager.h"
 #include "../Helpers/ziphelper.h"
+#include "../Common/defines.h"
 
 namespace Helpers {
     UploadWorker::UploadWorker(UploadItem *uploadItem, const Encryption::SecretsManager *secretsManager,
@@ -52,15 +53,9 @@ namespace Helpers {
     }
 
     UploadWorker::~UploadWorker() {
+        qDebug() << "Upload worker destructor";
+
         delete m_UploadItem;
-
-        if (m_CurlProcess) {
-            delete m_CurlProcess;
-        }
-
-        if (m_Timer) {
-            delete m_Timer;
-        }
     }
 
     void UploadWorker::process() {
@@ -87,17 +82,17 @@ namespace Helpers {
         // for not releasing semaphore twice in innerProcessFinished() and cancel()
         // (in general it's executed first because other thread's cancel() releases the semaphore)
         if (!m_Cancelled) {
-            qDebug() << "Starting upload to" << m_Host;
+            qInfo() << "Starting upload to" << m_Host;
             m_Timer->start(maxSeconds*1000);
             m_CurlProcess->start(command);
         } else {
-            qDebug() << "Upload cancelled before start for" << m_Host;
+            qInfo() << "Upload cancelled before start for" << m_Host;
             emitFinishSignals(false);
         }
     }
 
     void UploadWorker::cancel() {
-        qDebug() << "Cancelling upload to " << m_Host;
+        qInfo() << "Cancelling upload to " << m_Host;
 
         m_Cancelled = true;
         m_UploadSemaphore->release();
@@ -108,9 +103,8 @@ namespace Helpers {
         }
     }
 
-    void UploadWorker::innerProcessFinished(int exitCode, QProcess::ExitStatus exitStatus)
-    {
-        qDebug() << "Curl process finished for" << m_Host << "with code" << exitCode;
+    void UploadWorker::innerProcessFinished(int exitCode, QProcess::ExitStatus exitStatus) {
+        qInfo() << "Curl process finished for" << m_Host << "with code" << exitCode;
 
         if (!m_Cancelled) {
             qDebug() << "Releasing semaphore for" << m_Host;
@@ -118,7 +112,7 @@ namespace Helpers {
         }
 
         if (m_CurlProcess->exitStatus() != QProcess::NormalExit) {
-            qDebug() << "Error:" << m_UploadItem->m_CurlPath << m_CurlProcess->errorString();
+            qWarning() << "Error:" << m_UploadItem->m_CurlPath << m_CurlProcess->errorString();
         }
 
         QByteArray stdoutByteArray = m_CurlProcess->readAllStandardOutput();
@@ -148,7 +142,7 @@ namespace Helpers {
         percent /= (m_OverallFilesCount + 0.0);
 
         if (percent > 100.0) {
-            qDebug() << "ERROR: percent is higher than 100. Last curl output is [" << output << "]. Percent is" << percent;
+            qWarning() << "ERROR: percent is higher than 100. Last curl output is [" << output << "]. Percent is" << percent;
             percent = 100.0;
         }
 
@@ -191,14 +185,14 @@ namespace Helpers {
     }
 
     void UploadWorker::initializeUploadEntities() {
-        m_CurlProcess = new QProcess();
+        m_CurlProcess = new QProcess(this);
 
         QObject::connect(m_CurlProcess, SIGNAL(finished(int,QProcess::ExitStatus)),
                          this, SLOT(innerProcessFinished(int,QProcess::ExitStatus)));
         QObject::connect(m_CurlProcess, SIGNAL(readyReadStandardError()),
                          this, SLOT(uploadOutputReady()));
 
-        m_Timer = new QTimer();
+        m_Timer = new QTimer(this);
 
         QObject::connect(m_Timer, SIGNAL(timeout()), this, SLOT(onTimerTimeout()));
         m_Timer->setSingleShot(true);

@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -34,10 +34,9 @@
 #include "../Common/version.h"
 
 namespace Conectivity {
-    TelemetryService::TelemetryService(const QString &userId, const QString &endpoint, QObject *parent) :
+    TelemetryService::TelemetryService(const QString &userId, QObject *parent) :
         QObject(parent),
-        m_NetworkManager(this),        
-        m_ReportingEndpoint(endpoint),
+        m_NetworkManager(this),
         m_UserAgentId(userId)
     {
         QObject::connect(&m_NetworkManager, SIGNAL(finished(QNetworkReply*)),
@@ -45,11 +44,16 @@ namespace Conectivity {
     }
 
     void TelemetryService::reportAction(UserAction action) {
+        qDebug() << "Reporting action" << action;
 #ifdef QT_NO_DEBUG
         doReportAction(action);
 #else
         Q_UNUSED(action);
 #endif
+    }
+
+    void TelemetryService::setEndpoint(const QString &endpoint) {
+        m_ReportingEndpoint = endpoint;
     }
 
     void TelemetryService::doReportAction(UserAction action) {
@@ -104,7 +108,7 @@ namespace Conectivity {
         } else {
             // TODO: add tracking of failed items
 
-            qDebug() << "Failed to process a telemetry report." << networkReply->errorString();;
+            qWarning() << "Failed to process a telemetry report." << networkReply->errorString();;
         }
 
         networkReply->deleteLater();

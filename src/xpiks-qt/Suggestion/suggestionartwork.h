@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -25,29 +25,37 @@
 
 #include <QVector>
 #include <QString>
+#include <QSet>
 
 namespace Suggestion {
     class SuggestionArtwork
     {
     public:
-        SuggestionArtwork(const QString &url, const QStringList &keywords) :
-            m_KeywordsList(keywords),
-            m_Url(url),
-            m_IsSelected(false)
-        { }
+        SuggestionArtwork(const QString &url, const QStringList &keywords, bool isLocal = true) :
+            m_KeywordsSet(keywords.toSet()),
+            m_IsSelected(false),
+            m_IsLocal(isLocal)
+        {
+            if (isLocal) {
+                m_Url = QLatin1String("image://global/") + url;
+            } else {
+                m_Url = url;
+            }
+        }
 
     public:
         const QString &getUrl() const { return m_Url; }
-        const QStringList &getKeywords() const { return m_KeywordsList; }
+        const QSet<QString> &getKeywordsSet() const { return m_KeywordsSet; }
         bool getIsSelected() const { return m_IsSelected; }
 
     public:
         void setIsSelected(bool isSelected) { m_IsSelected = isSelected; }
 
     private:
-        QStringList m_KeywordsList;
+        QSet<QString> m_KeywordsSet;
         QString m_Url;
         bool m_IsSelected;
+        bool m_IsLocal;
     };
 }
 

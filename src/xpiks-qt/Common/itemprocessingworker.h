@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -26,6 +26,7 @@
 #include <QMutex>
 #include <QVector>
 #include <QDebug>
+#include "../Common/defines.h"
 
 namespace Common {
     template<typename T>
@@ -104,7 +105,7 @@ namespace Common {
         void runWorkerLoop() {
             for (;;) {
                 if (m_Cancel) {
-                    qDebug() << "Worker loop: Cancelled. Exiting...";
+                    qInfo() << "Worker loop: Cancelled. Exiting...";
                     break;
                 }
 
@@ -138,7 +139,7 @@ namespace Common {
                     canDelete = processOneItem(item);
                 }
                 catch (...) {
-                    qDebug() << "Worker loop: Error while processing item";
+                    qWarning() << "Worker loop: Error while processing item";
                 }
 
                 if (canDelete) {

@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -30,10 +30,11 @@
 #include "../Models/artworkmetadata.h"
 #include "../Helpers/indiceshelper.h"
 #include "../UndoRedo/removeartworksitem.h"
+#include "../Common/defines.h"
 
 Commands::CommandResult *Commands::RemoveArtworksCommand::execute(const Commands::CommandManager *commandManager) const
 {
-    qDebug() << "Remove artworks command";
+    qDebug() << "Remove artworks command: removing" << m_RangesToRemove.length() << "ranges";
     Models::ArtItemsModel *artItemsModel = commandManager->getArtItemsModel();
 
     int count = m_RangesToRemove.count();
@@ -60,6 +61,8 @@ Commands::CommandResult *Commands::RemoveArtworksCommand::execute(const Commands
     }
 
     int artworksToRemoveCount = removedItemsIndices.count();
+
+    qInfo() << "Remove artworks command: removing" << artworksToRemoveCount << "real items";
 
     if (artworksToRemoveCount > 0) {
         QVector<QPair<int, int> > rangesToRemove;

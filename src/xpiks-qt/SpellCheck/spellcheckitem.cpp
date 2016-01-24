@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -25,6 +25,7 @@
 #include <QDebug>
 #include "../Helpers/indiceshelper.h"
 #include "ispellcheckable.h"
+#include "../Common/flags.h"
 
 namespace SpellCheck {
     SpellCheckItemBase::~SpellCheckItemBase() {
@@ -47,11 +48,14 @@ namespace SpellCheck {
         m_QueryItems.append(item);
     }
 
-    SpellCheckItem::SpellCheckItem(ISpellCheckable *spellCheckable, int keywordIndex) :
+    SpellCheckItem::SpellCheckItem(ISpellCheckable *spellCheckable, int spellCheckFlags, int keywordIndex) :
         SpellCheckItemBase(),
         m_SpellCheckable(spellCheckable),
+        m_SpellCheckFlags(spellCheckFlags),
         m_OnlyOneKeyword(true)
     {
+        Q_ASSERT(Common::HasFlag(spellCheckFlags, Common::SpellCheckKeywords));
+
         QString keyword = m_SpellCheckable->retrieveKeyword(keywordIndex);
         if (!keyword.contains(QChar::Space)) {
             SpellCheckQueryItem *queryItem = new SpellCheckQueryItem(keywordIndex, keyword);
@@ -66,20 +70,29 @@ namespace SpellCheck {
         }
     }
 
-    SpellCheckItem::SpellCheckItem(ISpellCheckable *spellCheckable) :
+    SpellCheckItem::SpellCheckItem(ISpellCheckable *spellCheckable, int spellCheckFlags) :
         SpellCheckItemBase(),
         m_SpellCheckable(spellCheckable),
+        m_SpellCheckFlags(spellCheckFlags),
         m_OnlyOneKeyword(false)
     {
-        QStringList keywords = spellCheckable->getKeywords();
-        QStringList descriptionWords = spellCheckable->getDescriptionWords();
-        QStringList titleWords = spellCheckable->getTitleWords();
+        if (Common::HasFlag(spellCheckFlags, Common::SpellCheckKeywords)) {
+            QStringList keywords = spellCheckable->getKeywords();
+            reserve(keywords.length());
+            addWords(keywords, 0);
+        }
 
-        reserve(keywords.length() + descriptionWords.length() + titleWords.length());
+        if (Common::HasFlag(spellCheckFlags, Common::SpellCheckDescription)) {
+            QStringList descriptionWords = spellCheckable->getDescriptionWords();
+            reserve(descriptionWords.length());
+            addWords(descriptionWords, 100000);
+        }
 
-        addWords(keywords, 0);
-        addWords(descriptionWords, keywords.length() * 1000);
-        addWords(titleWords, keywords.length() * 1000);
+        if (Common::HasFlag(spellCheckFlags, Common::SpellCheckTitle)) {
+            QStringList titleWords = spellCheckable->getTitleWords();
+            reserve(titleWords.length());
+            addWords(titleWords, 100000);
+        }
     }
 
     void SpellCheckItem::addWords(const QStringList &words, int startingIndex) {
@@ -105,9 +118,17 @@ namespace SpellCheck {
     /*virtual */
     void SpellCheckItem::submitSpellCheckResult() {
         const QVector<SpellCheckQueryItem*> &items = getQueries();
-        m_SpellCheckable->setSpellCheckResults(items, m_OnlyOneKeyword);
-        m_SpellCheckable->setSpellCheckResults(getHash());
+
+        if (Common::HasFlag(m_SpellCheckFlags, Common::SpellCheckKeywords)) {
+            m_SpellCheckable->setSpellCheckResults(items, m_OnlyOneKeyword);
+        }
+
+        if (Common::HasFlag(m_SpellCheckFlags, Common::SpellCheckDescription) ||
+                Common::HasFlag(m_SpellCheckFlags, Common::SpellCheckTitle)) {
+            m_SpellCheckable->setSpellCheckResults(getHash(), m_SpellCheckFlags);
+        }
+
         int index = m_OnlyOneKeyword ? items.first()->m_Index : -1;
-        emit resultsReady(index);
+        emit resultsReady(m_SpellCheckFlags, index);
     }
 }

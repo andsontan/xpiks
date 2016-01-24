@@ -1,7 +1,7 @@
 /*
  * This file is a part of Xpiks - cross platform application for
  * keywording and uploading images for microstocks
- * Copyright (C) 2014-2015 Taras Kushnir <kushnirTV@gmail.com>
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
  *
  * Xpiks is distributed under the GNU General Public License, version 3.0
  *
@@ -76,7 +76,6 @@ namespace Models {
         void forceUnselectAllItems() const;
 
     public:
-        Q_INVOKABLE void updateLastN(int N);
         /*Q_INVOKABLE*/ void removeArtworksDirectory(int index);
         Q_INVOKABLE void removeKeywordAt(int metadataIndex, int keywordIndex);
         Q_INVOKABLE void removeLastKeyword(int metadataIndex);
@@ -91,7 +90,7 @@ namespace Models {
         /*Q_INVOKABLE*/ void setSelectedItemsSaved(const QVector<int> &selectedIndices);
         /*Q_INVOKABLE*/ void removeSelectedArtworks(QVector<int> &selectedIndices);
         /*Q_INVOKABLE*/ void updateSelectedArtworks(const QVector<int> &selectedIndices);
-        /*Q_INVOKABLE*/ void saveSelectedArtworks(const QVector<int> &selectedIndices);
+        /*Q_INVOKABLE*/ void saveSelectedArtworks(const QVector<int> &selectedIndices, bool overwriteAll, bool useBackups);
 
         Q_INVOKABLE QObject *getArtworkItself(int index) const;
         Q_INVOKABLE QSize retrieveImageSize(int metadataIndex) const;
@@ -128,9 +127,11 @@ namespace Models {
         ArtworkMetadata *getArtwork(int index) const;
         void raiseArtworksAdded(int count) { emit artworksAdded(count); }
         void updateItemsAtIndices(const QVector<int> &indices);
+        void updateItemsInRanges(const QVector<QPair<int, int> > &ranges);
         void setAllItemsSelected(bool selected);
 
     private:
+        void updateItemAtIndex(int metadataIndex);
         int addDirectories(const QStringList &directories);
         void doAddDirectory(const QString &directory, QStringList &filesList);
         int addFiles(const QStringList &filepath);
