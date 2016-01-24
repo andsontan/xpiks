@@ -1,18 +1,18 @@
 Source: xpiks
-Maintainer: Artiom.M <a.mv@gmx.fr>
-Section: graphics
-Priority: optional
 Standards-Version: 3.9.6
-Build-Depends: debhelper (>= 9), qt5-default (>= 5.2)
+Build-Depends: debhelper (>= 9), qt5-default (>= 5.2), libhunspell-dev, libquazip-qt5-dev
+Maintainer: Artiom.M <a.mv@gmx.fr>
 
 Package: xpiks
-Homepage: https://github.com/Ribtoks/xpiks
+Architecture: amd64
+Depends: libc6 (>=2.14), libqt5concurrent5 (>= 5.2), libqt5core5a (>= 5.2.0~alpha1), libqt5gui5 (>= 5.2), libqt5network5 (>= 5.2), libqt5qml5 (>= 5.2), libqt5quick5 (>= 5.2), libqt5widgets5 (>= 5.2),  zlib1g (>= 1:1.1.4), curl, exiftool
+Recommends: hunspell-en-us
+Section: graphics
 Priority: optional
-Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends},libqt5concurrent5 (>= 5.2), libqt5core5a (>= 5.2), libqt5gui5 (>= 5.2), libqt5network5 (>= 5.2), libqt5qml5 (>= 5.2), libqt5quick5 (>= 5.2), libqt5widgets5 (>= 5.2),curl, exiftool
-Recommends:
+Homepage: https://github.com/Ribtoks/xpiks
 Description: Cross-platform (X) Photo Keywording Software
- Xpiks is a free and open source keywording and uploading tool for 
- microstock photographers and illustrators with no hidden fees. 
- If you're tired with copy and pasting keywords from one stock to another, 
+ Xpiks is a free and open source keywording and uploading tool for
+ microstock photographers and illustrators with no hidden fees.
+ If you're tired with copy and pasting keywords from one stock to another,
  Xpiks would be a great time saver for you!
+

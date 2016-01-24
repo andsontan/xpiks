@@ -25,6 +25,7 @@
 #include <QObject>
 #include <QNetworkAccessManager>
 #include <QString>
+#include "Helpers/appsettings.h"
 #include "analyticsuserevent.h"
 
 namespace Conectivity {
@@ -37,6 +38,9 @@ namespace Conectivity {
         void reportAction(UserAction action);
         void setEndpoint(const QString &endpoint);
 
+    public slots:
+        void changeReporting();
+
     private:
         void doReportAction(UserAction action);
 
@@ -47,9 +51,11 @@ namespace Conectivity {
         void replyReceived(QNetworkReply *reply);
 
     private:
+        Helpers::AppSettings appSettings;
         QNetworkAccessManager m_NetworkManager;
         QString m_ReportingEndpoint;
         QString m_UserAgentId;
+        bool m_TelemetryEnabled;
     };
 }
 

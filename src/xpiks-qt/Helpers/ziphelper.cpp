@@ -22,7 +22,7 @@
 #include "ziphelper.h"
 #include <QFileInfo>
 #include <QDebug>
-#include "../quazip/quazip/JlCompress.h"
+#include <JlCompress.h>
 #include "filenameshelpers.h"
 
 namespace Helpers {
