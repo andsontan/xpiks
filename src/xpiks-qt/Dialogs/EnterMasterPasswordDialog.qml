@@ -133,6 +133,14 @@ Item {
                             anchors.leftMargin: 5
                             echoMode: showPasswordCheckBox.checked ? TextInput.Normal : TextInput.Password
 
+                            Keys.onBacktabPressed: {
+                                event.accepted = true
+                            }
+
+                            Keys.onTabPressed: {
+                                event.accepted = true
+                            }
+
                             onAccepted: {
                                 testPassword()
                             }

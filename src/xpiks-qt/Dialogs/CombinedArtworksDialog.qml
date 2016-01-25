@@ -387,6 +387,10 @@ Item {
 
                                         onCursorRectangleChanged: descriptionFlick.ensureVisible(cursorRectangle)
 
+                                        Keys.onBacktabPressed: {
+                                            event.accepted = true
+                                        }
+
                                         Keys.onTabPressed: {
                                             if (titleCheckBox.checked) {
                                                 titleTextInput.forceActiveFocus()

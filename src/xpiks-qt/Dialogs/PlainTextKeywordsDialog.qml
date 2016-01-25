@@ -188,6 +188,14 @@ Item {
                             }
                         }
 
+                        Keys.onBacktabPressed: {
+                            event.accepted = true
+                        }
+
+                        Keys.onTabPressed: {
+                            event.accepted = true
+                        }
+
                         onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
                     }
                 }

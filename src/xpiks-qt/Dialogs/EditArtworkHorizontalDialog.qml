@@ -197,6 +197,10 @@ Item {
                                 combinedArtworks.initDescriptionHighlighting(descriptionTextInput.textDocument)
                             }
 
+                            Keys.onBacktabPressed: {
+                                event.accepted = true
+                            }
+
                             Keys.onTabPressed: titleTextInput.forceActiveFocus()
 
                             onCursorRectangleChanged: descriptionFlick.ensureVisible(cursorRectangle)
