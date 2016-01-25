@@ -30,10 +30,10 @@
 #include "../Helpers/ziphelper.h"
 #include "../Models/artworkmetadata.h"
 #include "../Helpers/testconnectionresult.h"
-#include "../Helpers/uploadcoordinator.h"
 #include "../Commands/commandmanager.h"
 #include "../Models/settingsmodel.h"
 #include "../Helpers/filenameshelpers.h"
+#include "../Conectivity/ftpcoordinator.h"
 
 namespace Models {
     ArtworkUploader::ArtworkUploader(int maxParallelUploads) :
@@ -41,12 +41,17 @@ namespace Models {
         m_IncludeVector(false),
         m_Percent(0)
     {
-        m_UploadCoordinator = new Helpers::UploadCoordinator(maxParallelUploads);
+        m_FtpCoordinator = new Conectivity::FtpCoordinator(maxParallelUploads);
 
-        QObject::connect(m_UploadCoordinator, SIGNAL(uploadStarted()), this, SLOT(onUploadStarted()));
+        QObject::connect(m_FtpCoordinator, SIGNAL(uploadStarted()), this, SLOT(onUploadStarted()));
+        QObject::connect(m_FtpCoordinator, SIGNAL(uploadFinished(bool)), this, SLOT(allFinished(bool)));
+        QObject::connect(m_FtpCoordinator, SIGNAL(overallProgressChanged(double)), this, SLOT(uploaderPercentChanged(double)));
+
+        /*QObject::connect(m_UploadCoordinator, SIGNAL(uploadStarted()), this, SLOT(onUploadStarted()));
         QObject::connect(m_UploadCoordinator, SIGNAL(uploadFinished(bool)), this, SLOT(allFinished(bool)));
         QObject::connect(m_UploadCoordinator, SIGNAL(itemFinished(bool)), this, SLOT(artworkUploaded(bool)));
         QObject::connect(m_UploadCoordinator, SIGNAL(percentChanged(double)), this, SLOT(uploaderPercentChanged(double)));
+        */
 
         m_TestingCredentialWatcher = new QFutureWatcher<Helpers::TestConnectionResult>(this);
         connect(m_TestingCredentialWatcher, SIGNAL(finished()), SLOT(credentialsTestingFinished()));
@@ -54,37 +59,37 @@ namespace Models {
 
     ArtworkUploader::~ArtworkUploader() {
         delete m_TestingCredentialWatcher;
-        delete m_UploadCoordinator;
+        delete m_FtpCoordinator;
     }
 
-    void ArtworkUploader::onUploadStarted()
-    {
+    void ArtworkUploader::setCommandManager(Commands::CommandManager *commandManager) {
+        ArtworksProcessor::setCommandManager(commandManager);
+        m_FtpCoordinator->setCommandManager(commandManager);
+    }
+
+    void ArtworkUploader::onUploadStarted() {
         beginProcessing();
         m_Percent = 0;
         updateProgress();
     }
 
-    void ArtworkUploader::artworkUploaded(bool status)
-    {
+    void ArtworkUploader::artworkUploaded(bool status) {
         artworkUploadedHandler(status);
     }
 
-    void ArtworkUploader::allFinished(bool status)
-    {
-        Q_UNUSED(status);
+    void ArtworkUploader::allFinished(bool anyError) {
+        Q_UNUSED(anyError);
         endProcessing();
         m_Percent = 100;
         updateProgress();
     }
 
-    void ArtworkUploader::credentialsTestingFinished()
-    {
+    void ArtworkUploader::credentialsTestingFinished() {
         Helpers::TestConnectionResult result = m_TestingCredentialWatcher->result();
         emit credentialsChecked(result.getResult(), result.getUrl());
     }
 
-    void ArtworkUploader::uploaderPercentChanged(double percent)
-    {
+    void ArtworkUploader::uploaderPercentChanged(double percent) {
         m_Percent = (int)(percent);
         emit percentChanged();
         UploadInfoRepository *uploadInfoRepository = m_CommandManager->getUploadInfoRepository();
@@ -144,17 +149,15 @@ namespace Models {
 
         UploadInfoRepository *uploadInfoRepository = m_CommandManager->getUploadInfoRepository();
         const QVector<Models::UploadInfo *> &infos = uploadInfoRepository->getUploadInfos();
-        const Encryption::SecretsManager *secretsManager = m_CommandManager->getSecretsManager();
-        const Models::SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
 
         uploadInfoRepository->resetPercents();
         uploadInfoRepository->updatePercentages();
-        m_UploadCoordinator->uploadArtworks(artworkList, infos, m_IncludeVector, secretsManager, settingsModel);
 
+        m_FtpCoordinator->uploadArtworks(artworkList, infos, m_IncludeVector);
         m_CommandManager->reportUserAction(Conectivity::UserActionUpload);
     }
 
     void ArtworkUploader::cancelProcessing() {
-        m_UploadCoordinator->cancelUpload();
+        m_FtpCoordinator->cancelUpload();
     }
 }

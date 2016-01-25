@@ -172,7 +172,7 @@ namespace Conectivity {
 
         UploadContext *context = m_BatchToUpload->getContext();
 
-        const QVector<QString> &filesToUpload = m_BatchToUpload->getFilesToUpload();
+        const QStringList &filesToUpload = m_BatchToUpload->getFilesToUpload();
         int size = filesToUpload.size();
 
         QString host = context->m_Host;
@@ -191,6 +191,7 @@ namespace Conectivity {
 
         for (int i = 0; i < size; ++i) {
             if (m_Cancel) {
+                qWarning() << "CurlUploader: Cancelled. Breaking..." << host;
                 break;
             }
 
@@ -208,12 +209,14 @@ namespace Conectivity {
 
             if (!uploadSuccess) {
                 anyErrors = true;
+                emit transferFailed(filepath);
+                //m_FailedIndices.append(i);
             }
 
             // TODO: only update progress of not-failed uploads
             if (uploadSuccess) {
                 double percentage = (i + 1.0)*100.0 / (size + 0.0);
-                emit progressChanged(lastPercent, percents);
+                emit progressChanged(lastPercent, percentage);
                 lastPercent = percentage;
             }
         }

@@ -41,7 +41,7 @@ namespace Conectivity {
     void extractFilePathes(const QVector<Models::ArtworkMetadata *> &artworkList,
                            QStringList &filePathes,
                            QStringList &zipsPathes,
-                           bool includeVector) const {
+                           bool includeVector) {
 
         int size = artworkList.length();
         qDebug() << "Generating filepathes for upload of" << size << "item(s)";
@@ -86,7 +86,7 @@ namespace Conectivity {
             context->m_TimeoutSeconds = TIMEOUT_SECONDS;
             context->m_RetriesCount = RETRIES_COUNT;
 
-            contexts.append(QSharedPointer(context));
+            contexts.append(QSharedPointer<UploadContext>(context));
         }
     }
 
@@ -99,7 +99,7 @@ namespace Conectivity {
         QStringList zipFilePathes;
         extractFilePathes(artworksToUpload, filePathes, zipFilePathes, includeVector);
 
-        QVector<QSharedDataPointer<UploadContext> > contexts;
+        QVector<QSharedPointer<UploadContext> > contexts;
         generateUploadContexts(uploadInfos, contexts);
 
         int size = contexts.size();
@@ -107,7 +107,7 @@ namespace Conectivity {
 
         for (int i = 0; i < size; ++i) {
             UploadBatch *batch;
-            const QSharedDataPointer<UploadContext> &context = contexts.at(i);
+            const QSharedPointer<UploadContext> &context = contexts.at(i);
 
             if (uploadInfos[i]->getZipBeforeUpload()) {
                 batch = new UploadBatch(context, zipFilePathes);
@@ -138,14 +138,17 @@ namespace Conectivity {
         }
 
         QVector<UploadBatch*> batches = generateUploadBatches(artworksToUpload, uploadInfos, includeVectors);
-        Encryption::SecretsManager *secretsManager = m_CommandManager->getSecretsManager();
+        const Encryption::SecretsManager *secretsManager = m_CommandManager->getSecretsManager();
+
+        Q_ASSERT(batches.size() == uploadInfos.size());
 
         int size = batches.size();
 
         initUpload(size);
 
         for (int i = 0; i < size; ++i) {
-            FtpUploaderWorker *worker = new FtpUploaderWorker(&m_UploadSemaphore, secretsManager, batches.at(i));
+            FtpUploaderWorker *worker = new FtpUploaderWorker(&m_UploadSemaphore, secretsManager,
+                                                              batches.at(i), uploadInfos.at(i));
             QThread *thread = new QThread();
             worker->moveToThread(thread);
 
@@ -155,6 +158,7 @@ namespace Conectivity {
             QObject::connect(worker, SIGNAL(stopped()), worker, SLOT(deleteLater()));
             QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
 
+            QObject::connect(worker, SIGNAL(uploadStarted()), this, SIGNAL(uploadStarted()));
             QObject::connect(worker, SIGNAL(uploadFinished(bool)), this, SLOT(workerFinished(bool)));
             QObject::connect(this, SIGNAL(cancelAll()), worker, SIGNAL(workerCancelled()));
 
@@ -196,4 +200,3 @@ namespace Conectivity {
         curl_global_cleanup();
     }
 }
-

@@ -27,7 +27,7 @@
 
 namespace Conectivity {
     FtpUploaderWorker::FtpUploaderWorker(QSemaphore *uploadSemaphore,
-                                         Encryption::SecretsManager *secretsManager,
+                                         const Encryption::SecretsManager *secretsManager,
                                          UploadBatch *batch,
                                          Models::UploadInfo *uploadInfo,
                                          QObject *parent) :
@@ -45,12 +45,8 @@ namespace Conectivity {
         qDebug() << "Waiting for the semaphore" << host;
         m_UploadSemaphore->acquire();
 
-        if (!m_Cancel) {
-            qInfo() << "Starting upload to" << host;
-            doUpload();
-        } else {
-            qInfo() << "Upload cancelled before start for" << host;
-        }
+        qInfo() << "Starting upload to" << host;
+        doUpload();
 
         m_UploadSemaphore->release();
         qDebug() << "Released semaphore" << host;
@@ -71,6 +67,7 @@ namespace Conectivity {
         QObject::connect(&ftpUploader, SIGNAL(progressChanged(double, double)), this, SIGNAL(progressChanged(double, double)));
         QObject::connect(&ftpUploader, SIGNAL(progressChanged(double, double)), this, SLOT(progressChangedHandler(double,double)));
         QObject::connect(this, SIGNAL(workerCancelled()), &ftpUploader, SLOT(cancel()));
+        QObject::connect(&ftpUploader, SIGNAL(transferFailed(QString)), this, SIGNAL(transferFailed(QString)));
 
         ftpUploader.uploadBatch();
     }

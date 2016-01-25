@@ -63,13 +63,14 @@ namespace Conectivity {
         void uploadStarted();
         void progressChanged(double prevPercents, double newPercents);
         void uploadFinished(bool anyErrors);
+        void transferFailed(const QString &filepath);
 
     public slots:
         void cancel();
 
     private:
         UploadBatch *m_BatchToUpload;
-        QVector<int> m_FailedIndices;
+        //QVector<int> m_FailedIndices;
         volatile bool m_Cancel;
     };
 }

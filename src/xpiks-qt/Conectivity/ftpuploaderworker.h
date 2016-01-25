@@ -23,6 +23,8 @@
 #define FTPUPLOADERWORKER_H
 
 #include <QObject>
+#include <QVector>
+#include <QString>
 
 class QSemaphore;
 
@@ -42,8 +44,9 @@ namespace Conectivity {
         Q_OBJECT
     public:
         explicit FtpUploaderWorker(QSemaphore *uploadSemaphore,
-                                   Encryption::SecretsManager *secretsManager,
+                                   const Encryption::SecretsManager *secretsManager,
                                    UploadBatch *batch,
+                                   Models::UploadInfo *uploadInfo,
                                    QObject *parent = 0);
 
     signals:
@@ -52,6 +55,7 @@ namespace Conectivity {
         void uploadFinished(bool anyErrors);
         void stopped();
         void workerCancelled();
+        void transferFailed(const QString &filename);
 
     public slots:
         void process();
@@ -62,9 +66,10 @@ namespace Conectivity {
 
     private:
         QSemaphore *m_UploadSemaphore;
-        Encryption::SecretsManager *m_SecretsManager;
+        const Encryption::SecretsManager *m_SecretsManager;
         UploadBatch *m_UploadBatch;
         Models::UploadInfo *m_UploadInfo;
+        QVector<QString> m_FailedTransfers;
     };
 }
 

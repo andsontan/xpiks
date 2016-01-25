@@ -29,7 +29,14 @@
 
 namespace Helpers {
     class TestConnectionResult;
-    class UploadCoordinator;
+}
+
+namespace Conectivity {
+    class FtpCoordinator;
+}
+
+namespace Commands {
+    class CommandManager;
 }
 
 namespace Models {
@@ -44,6 +51,7 @@ namespace Models {
 
     public:
          Q_PROPERTY(bool includeVector READ getIncludeVector WRITE setIncludeVector NOTIFY includeVectorChanged)
+         virtual void setCommandManager(Commands::CommandManager *commandManager);
 
     signals:
          void includeVectorChanged(bool);
@@ -64,7 +72,7 @@ namespace Models {
      public slots:
          void onUploadStarted();
          void artworkUploaded(bool status);
-         void allFinished(bool status);
+         void allFinished(bool anyError);
          void credentialsTestingFinished();
 
     private slots:
@@ -86,7 +94,7 @@ namespace Models {
         virtual void innerResetModel() { m_Percent = 0; }
 
      private:
-         Helpers::UploadCoordinator *m_UploadCoordinator;
+         Conectivity::FtpCoordinator *m_FtpCoordinator;
          QFutureWatcher<Helpers::TestConnectionResult> *m_TestingCredentialWatcher;
          bool m_IncludeVector;
          int m_Percent;
