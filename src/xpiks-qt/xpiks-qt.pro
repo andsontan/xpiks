@@ -29,8 +29,6 @@ SOURCES += main.cpp \
     UndoRedo/modifyartworkshistoryitem.cpp \
     Commands/combinededitcommand.cpp \
     Commands/pastekeywordscommand.cpp \
-    Helpers/uploadworker.cpp \
-    Helpers/uploadcoordinator.cpp \
     Helpers/runguard.cpp \
     Encryption/aes-qt.cpp \
     Models/ziparchiver.cpp \
@@ -131,8 +129,6 @@ HEADERS += \
     UndoRedo/modifyartworkshistoryitem.h \
     Commands/combinededitcommand.h \
     Commands/pastekeywordscommand.h \
-    Helpers/uploadworker.h \
-    Helpers/uploadcoordinator.h \
     Helpers/runguard.h \
     Models/ziparchiver.h \
     Helpers/ziphelper.h \

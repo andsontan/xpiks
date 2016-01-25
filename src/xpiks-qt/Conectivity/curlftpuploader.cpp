@@ -120,7 +120,6 @@ namespace Conectivity {
             /* are we resuming? */
             if (c) { /* yes */
                 /* determine the length of the file already written */
-
                 /*
                * With NOBODY and NOHEADER, libcurl will issue a SIZE
                * command, but the only way to retrieve the result is
@@ -133,8 +132,9 @@ namespace Conectivity {
                 curl_easy_setopt(curlHandle, CURLOPT_HEADER, 1L);
 
                 r = curl_easy_perform(curlHandle);
-                if (r != CURLE_OK)
+                if (r != CURLE_OK) {
                     continue;
+                }
 
                 curl_easy_setopt(curlHandle, CURLOPT_NOBODY, 0L);
                 curl_easy_setopt(curlHandle, CURLOPT_HEADER, 0L);
@@ -150,7 +150,7 @@ namespace Conectivity {
             r = curl_easy_perform(curlHandle);
         }
 
-        result = r == CURLE_OK;
+        result = (r == CURLE_OK);
 
         if (!result) {
             qWarning() << "Upload failed! Curl error:" << curl_easy_strerror(r);
@@ -181,12 +181,17 @@ namespace Conectivity {
             host.append(slash);
         }
 
+        if (!host.startsWith(QLatin1String("ftp.")) &&
+                !host.startsWith(QLatin1String("ftp://"))) {
+            host = QLatin1String("ftp://") + host;
+        }
+
         // TODO: do not call this from thread
         //curl_global_init(CURL_GLOBAL_ALL);
         curlHandle = curl_easy_init();
 
         emit uploadStarted();
-        qDebug() << "Uploading started for" << host;
+        qDebug() << "Uploading" << size << "file(s) started for" << host;
         double lastPercent = 0.0;
 
         for (int i = 0; i < size; ++i) {

@@ -22,6 +22,7 @@
 #include "ftpuploaderworker.h"
 #include <QSemaphore>
 #include <QDebug>
+#include <QThread>
 #include "curlftpuploader.h"
 #include "../Models/uploadinfo.h"
 

@@ -70,7 +70,7 @@ namespace Conectivity {
 
     void generateUploadContexts(const QVector<Models::UploadInfo *> &uploadInfos,
                                 QVector<QSharedPointer<UploadContext> > &contexts,
-                                const Encryption::SecretsManager *secretsManager) {
+                                Encryption::SecretsManager *secretsManager) {
         int size = uploadInfos.size();
         contexts.reserve(size);
 
@@ -93,7 +93,7 @@ namespace Conectivity {
 
     QVector<UploadBatch*> generateUploadBatches(const QVector<Models::ArtworkMetadata *> &artworksToUpload,
                                                 const QVector<Models::UploadInfo *> &uploadInfos,
-                                                const Encryption::SecretsManager *secretsManager,
+                                                Encryption::SecretsManager *secretsManager,
                                                 bool includeVector) {
         QVector<UploadBatch*> batches;
 
@@ -139,7 +139,7 @@ namespace Conectivity {
             return;
         }
 
-        const Encryption::SecretsManager *secretsManager = m_CommandManager->getSecretsManager();
+        Encryption::SecretsManager *secretsManager = m_CommandManager->getSecretsManager();
         QVector<UploadBatch*> batches = generateUploadBatches(artworksToUpload,
                                                               uploadInfos,
                                                               secretsManager,
