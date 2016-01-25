@@ -98,6 +98,22 @@ namespace Conectivity {
         }
     }
 
+    QString sanitizeHost(const QString &inputHost) {
+        QString host = inputHost;
+
+        const QChar slash('/');
+        if (!host.endsWith(slash)) {
+            host.append(slash);
+        }
+
+        if (!host.startsWith(QLatin1String("ftp.")) &&
+                !host.startsWith(QLatin1String("ftp://"))) {
+            host = QLatin1String("ftp://") + host;
+        }
+
+        return host;
+    }
+
     bool uploadFile(CURL *curlHandle, UploadContext *context, const QString &filepath, const QString &remoteUrl) {
         bool result = false;
 
@@ -177,16 +193,7 @@ namespace Conectivity {
         const QStringList &filesToUpload = m_BatchToUpload->getFilesToUpload();
         int size = filesToUpload.size();
 
-        QString host = context->m_Host;
-        const QChar slash('/');
-        if (!host.endsWith(slash)) {
-            host.append(slash);
-        }
-
-        if (!host.startsWith(QLatin1String("ftp.")) &&
-                !host.startsWith(QLatin1String("ftp://"))) {
-            host = QLatin1String("ftp://") + host;
-        }
+        QString host = sanitizeHost(context->m_Host);
 
         // TODO: do not call this from thread
         //curl_global_init(CURL_GLOBAL_ALL);
