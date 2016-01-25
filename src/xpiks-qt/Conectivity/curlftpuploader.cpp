@@ -45,7 +45,7 @@ namespace Conectivity {
         /* _snscanf() is Win32 specific */
         r = _snscanf(ptr, size * nmemb, "Content-Length: %ld\n", &len);
 #else
-        r = std::sscanf((const char*)ptr, "Content-Length:% ld / n", &len);
+        r = std::sscanf((const char*)ptr, "Content-Length: %ld\n", &len);
 #endif
 
         if (r) /* Microsoft: we don't read the specs */
