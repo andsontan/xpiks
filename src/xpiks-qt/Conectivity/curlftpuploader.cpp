@@ -150,6 +150,8 @@ namespace Conectivity {
             r = curl_easy_perform(curlHandle);
         }
 
+        fclose(f);
+
         result = (r == CURLE_OK);
 
         if (!result) {
