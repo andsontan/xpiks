@@ -27,13 +27,11 @@
 
 namespace Conectivity {
     FtpUploaderWorker::FtpUploaderWorker(QSemaphore *uploadSemaphore,
-                                         const Encryption::SecretsManager *secretsManager,
                                          UploadBatch *batch,
                                          Models::UploadInfo *uploadInfo,
                                          QObject *parent) :
         QObject(parent),
         m_UploadSemaphore(uploadSemaphore),
-        m_SecretsManager(secretsManager),
         m_UploadBatch(batch),
         m_UploadInfo(uploadInfo)
     {

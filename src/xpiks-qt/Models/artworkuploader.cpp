@@ -148,12 +148,12 @@ namespace Models {
         }
 
         UploadInfoRepository *uploadInfoRepository = m_CommandManager->getUploadInfoRepository();
-        const QVector<Models::UploadInfo *> &infos = uploadInfoRepository->getUploadInfos();
+        QVector<Models::UploadInfo *> selectedInfos = uploadInfoRepository->retrieveSelectedUploadInfos();
 
         uploadInfoRepository->resetPercents();
         uploadInfoRepository->updatePercentages();
 
-        m_FtpCoordinator->uploadArtworks(artworkList, infos, m_IncludeVector);
+        m_FtpCoordinator->uploadArtworks(artworkList, selectedInfos, m_IncludeVector);
         m_CommandManager->reportUserAction(Conectivity::UserActionUpload);
     }
 

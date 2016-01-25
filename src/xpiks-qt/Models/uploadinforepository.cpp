@@ -148,6 +148,19 @@ namespace Models {
         foreach (UploadInfo *info, m_UploadInfos) { info->resetPercent(); }
     }
 
+    QVector<UploadInfo *> UploadInfoRepository::retrieveSelectedUploadInfos() const {
+        QVector<UploadInfo*> uploadInfos;
+        uploadInfos.reserve(m_UploadInfos.size());
+
+        foreach (UploadInfo *info, m_UploadInfos) {
+            if (info->getIsSelected()) {
+                uploadInfos.append(info);
+            }
+        }
+
+        return uploadInfos;
+    }
+
     int UploadInfoRepository::rowCount(const QModelIndex &parent) const {
         Q_UNUSED(parent);
         return m_UploadInfos.count();

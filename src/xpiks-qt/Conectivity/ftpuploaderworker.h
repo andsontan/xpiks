@@ -44,7 +44,6 @@ namespace Conectivity {
         Q_OBJECT
     public:
         explicit FtpUploaderWorker(QSemaphore *uploadSemaphore,
-                                   const Encryption::SecretsManager *secretsManager,
                                    UploadBatch *batch,
                                    Models::UploadInfo *uploadInfo,
                                    QObject *parent = 0);
@@ -66,7 +65,6 @@ namespace Conectivity {
 
     private:
         QSemaphore *m_UploadSemaphore;
-        const Encryption::SecretsManager *m_SecretsManager;
         UploadBatch *m_UploadBatch;
         Models::UploadInfo *m_UploadInfo;
         QVector<QString> m_FailedTransfers;

@@ -101,6 +101,7 @@ namespace Models {
 
     public:
         const QVector<UploadInfo*> &getUploadInfos() const { return m_UploadInfos; }
+        QVector<UploadInfo*> retrieveSelectedUploadInfos() const;
 
     public:
         virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;

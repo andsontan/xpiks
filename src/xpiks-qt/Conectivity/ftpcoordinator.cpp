@@ -69,7 +69,8 @@ namespace Conectivity {
     }
 
     void generateUploadContexts(const QVector<Models::UploadInfo *> &uploadInfos,
-                                QVector<QSharedPointer<UploadContext> > &contexts) {
+                                QVector<QSharedPointer<UploadContext> > &contexts,
+                                const Encryption::SecretsManager *secretsManager) {
         int size = uploadInfos.size();
         contexts.reserve(size);
 
@@ -79,7 +80,7 @@ namespace Conectivity {
 
             context->m_Host = info->getHost();
             context->m_Username = info->getUsername();
-            context->m_Password = info->getPassword();
+            context->m_Password = secretsManager->decodePassword(info->getPassword());
             context->m_UsePassiveMode = info->getFtpPassiveMode();
 
             // TODO: move to configs/options
@@ -91,8 +92,9 @@ namespace Conectivity {
     }
 
     QVector<UploadBatch*> generateUploadBatches(const QVector<Models::ArtworkMetadata *> &artworksToUpload,
-                               const QVector<Models::UploadInfo *> &uploadInfos,
-                               bool includeVector) {
+                                                const QVector<Models::UploadInfo *> &uploadInfos,
+                                                const Encryption::SecretsManager *secretsManager,
+                                                bool includeVector) {
         QVector<UploadBatch*> batches;
 
         QStringList filePathes;
@@ -100,7 +102,7 @@ namespace Conectivity {
         extractFilePathes(artworksToUpload, filePathes, zipFilePathes, includeVector);
 
         QVector<QSharedPointer<UploadContext> > contexts;
-        generateUploadContexts(uploadInfos, contexts);
+        generateUploadContexts(uploadInfos, contexts, secretsManager);
 
         int size = contexts.size();
         batches.reserve(size);
@@ -137,8 +139,11 @@ namespace Conectivity {
             return;
         }
 
-        QVector<UploadBatch*> batches = generateUploadBatches(artworksToUpload, uploadInfos, includeVectors);
         const Encryption::SecretsManager *secretsManager = m_CommandManager->getSecretsManager();
+        QVector<UploadBatch*> batches = generateUploadBatches(artworksToUpload,
+                                                              uploadInfos,
+                                                              secretsManager,
+                                                              includeVectors);
 
         Q_ASSERT(batches.size() == uploadInfos.size());
 
@@ -147,7 +152,7 @@ namespace Conectivity {
         initUpload(size);
 
         for (int i = 0; i < size; ++i) {
-            FtpUploaderWorker *worker = new FtpUploaderWorker(&m_UploadSemaphore, secretsManager,
+            FtpUploaderWorker *worker = new FtpUploaderWorker(&m_UploadSemaphore,
                                                               batches.at(i), uploadInfos.at(i));
             QThread *thread = new QThread();
             worker->moveToThread(thread);
