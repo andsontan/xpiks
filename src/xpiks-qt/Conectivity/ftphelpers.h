@@ -19,17 +19,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CURLWRAPPER
-#define CURLWRAPPER
+#ifndef CONECTIVITYHELPERS_H
+#define CONECTIVITYHELPERS_H
 
-class QString;
+#include <QString>
 
-namespace Helpers {
-    class TestConnectionResult;
+namespace Conectivity {
+    class UploadContext;
+
+    void fillCurlOptions(void *curlHandle, UploadContext *context, const QString &remoteUrl);
+    QString sanitizeHost(const QString &inputHost);
 }
 
-Helpers::TestConnectionResult isConnectionValid(const QString &host, const QString &username,
-                                                const QString &password, const QString &curlPath);
-
-#endif // CURLWRAPPER
-
+#endif // CONECTIVITYHELPERS_H

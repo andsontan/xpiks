@@ -36,7 +36,6 @@ SOURCES += main.cpp \
     Suggestion/keywordssuggestor.cpp \
     Suggestion/suggestionqueryengine.cpp \
     Models/settingsmodel.cpp \
-    Helpers/curlwrapper.cpp \
     Helpers/loggingworker.cpp \
     Helpers/logger.cpp \
     Models/logsmodel.cpp \
@@ -68,7 +67,9 @@ SOURCES += main.cpp \
     MetadataIO/metadatawritingworker.cpp \
     Conectivity/curlftpuploader.cpp \
     Conectivity/ftpuploaderworker.cpp \
-    Conectivity/ftpcoordinator.cpp
+    Conectivity/ftpcoordinator.cpp \
+    Conectivity/testconnection.cpp \
+    Conectivity/ftphelpers.cpp
 
 RESOURCES += qml.qrc
 
@@ -101,7 +102,6 @@ HEADERS += \
     Helpers/constants.h \
     Helpers/appsettings.h \
     Models/artworkuploader.h \
-    Helpers/curlwrapper.h \
     Models/artworksprocessor.h \
     Models/uploadinfo.h \
     Models/exportinfo.h \
@@ -115,7 +115,6 @@ HEADERS += \
     Helpers/uploaditem.h \
     Helpers/stringhelper.h \
     Helpers/logger.h \
-    Helpers/testconnectionresult.h \
     Commands/commandmanager.h \
     UndoRedo/historyitem.h \
     UndoRedo/undoredomanager.h \
@@ -176,7 +175,9 @@ HEADERS += \
     Conectivity/curlftpuploader.h \
     Conectivity/ftpuploaderworker.h \
     Conectivity/ftpcoordinator.h \
-    Conectivity/uploadcontext.h
+    Conectivity/uploadcontext.h \
+    Conectivity/testconnection.h \
+    Conectivity/ftphelpers.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

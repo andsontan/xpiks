@@ -25,14 +25,14 @@
 #include <QDebug>
 #include "uploadinforepository.h"
 #include "uploadinfo.h"
-#include "../Helpers/curlwrapper.h"
 #include "../Helpers/ziphelper.h"
 #include "../Models/artworkmetadata.h"
-#include "../Helpers/testconnectionresult.h"
 #include "../Commands/commandmanager.h"
 #include "../Models/settingsmodel.h"
 #include "../Helpers/filenameshelpers.h"
 #include "../Conectivity/ftpcoordinator.h"
+#include "../Conectivity/testconnection.h"
+#include "../Conectivity/uploadcontext.h"
 
 namespace Models {
     ArtworkUploader::ArtworkUploader(int maxParallelUploads) :
@@ -46,7 +46,7 @@ namespace Models {
         QObject::connect(m_FtpCoordinator, SIGNAL(uploadFinished(bool)), this, SLOT(allFinished(bool)));
         QObject::connect(m_FtpCoordinator, SIGNAL(overallProgressChanged(double)), this, SLOT(uploaderPercentChanged(double)));
 
-        m_TestingCredentialWatcher = new QFutureWatcher<Helpers::TestConnectionResult>(this);
+        m_TestingCredentialWatcher = new QFutureWatcher<Conectivity::ContextValidationResult>(this);
         connect(m_TestingCredentialWatcher, SIGNAL(finished()), SLOT(credentialsTestingFinished()));
     }
 
@@ -78,8 +78,8 @@ namespace Models {
     }
 
     void ArtworkUploader::credentialsTestingFinished() {
-        Helpers::TestConnectionResult result = m_TestingCredentialWatcher->result();
-        emit credentialsChecked(result.getResult(), result.getUrl());
+        Conectivity::ContextValidationResult result = m_TestingCredentialWatcher->result();
+        emit credentialsChecked(result.m_Result, result.m_Host);
     }
 
     void ArtworkUploader::uploaderPercentChanged(double percent) {
@@ -98,9 +98,16 @@ namespace Models {
 
     void ArtworkUploader::uploadArtworks() { doUploadArtworks(getArtworkList()); }
 
-    void ArtworkUploader::checkCredentials(const QString &host, const QString &username, const QString &password) const {
-        const QString &curlPath = m_CommandManager->getSettingsModel()->getCurlPath();
-        m_TestingCredentialWatcher->setFuture(QtConcurrent::run(isConnectionValid, host, username, password, curlPath));
+    void ArtworkUploader::checkCredentials(const QString &host, const QString &username,
+                                           const QString &password) const {
+        Conectivity::UploadContext *context = new Conectivity::UploadContext();
+        context->m_Host = host;
+        context->m_Username = username;
+        context->m_Password = password;
+        context->m_TimeoutSeconds = 10;
+        context->m_UsePassiveMode = true;
+
+        m_TestingCredentialWatcher->setFuture(QtConcurrent::run(Conectivity::isContextValid, context));
     }
 
     bool ArtworkUploader::needCreateArchives() const {

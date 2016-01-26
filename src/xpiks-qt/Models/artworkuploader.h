@@ -26,6 +26,7 @@
 #include <QStringList>
 #include <QFutureWatcher>
 #include "artworksprocessor.h"
+#include "../Conectivity/testconnection.h"
 
 namespace Helpers {
     class TestConnectionResult;
@@ -83,7 +84,8 @@ namespace Models {
 
      public:
          Q_INVOKABLE void uploadArtworks();
-         Q_INVOKABLE void checkCredentials(const QString &host, const QString &username, const QString &password) const;
+         Q_INVOKABLE void checkCredentials(const QString &host, const QString &username,
+                                           const QString &password) const;
          Q_INVOKABLE bool needCreateArchives() const;
 
      private:
@@ -95,7 +97,7 @@ namespace Models {
 
      private:
          Conectivity::FtpCoordinator *m_FtpCoordinator;
-         QFutureWatcher<Helpers::TestConnectionResult> *m_TestingCredentialWatcher;
+         QFutureWatcher<Conectivity::ContextValidationResult> *m_TestingCredentialWatcher;
          bool m_IncludeVector;
          int m_Percent;
     };

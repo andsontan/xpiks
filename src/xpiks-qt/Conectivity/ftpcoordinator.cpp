@@ -202,6 +202,7 @@ namespace Conectivity {
         m_AllWorkersCount = uploadBatchesCount;
         m_FinishedWorkersCount = 0;
         m_OverallProgress = 0.0;
+        qDebug() << "Initializing CURL";
 
         curl_global_init(CURL_GLOBAL_ALL);
     }
@@ -209,5 +210,6 @@ namespace Conectivity {
     void FtpCoordinator::finalizeUpload() {
         Q_ASSERT(m_FinishedWorkersCount == m_AllWorkersCount);
         curl_global_cleanup();
+        qDebug() << "Cleaning up CURL";
     }
 }
