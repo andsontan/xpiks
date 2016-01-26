@@ -60,13 +60,18 @@ namespace Conectivity {
         void *getCurl() const { return m_Curl; }
         double getLastTime() const { return m_LastTime; }
         void setLastTime(double value) { m_LastTime = value; }
+        bool cancelRequested() const { return m_Cancel; }
 
     signals:
         void progressChanged(double percentsDone);
 
+    public slots:
+        void cancelHandler() { m_Cancel = true; }
+
     private:
         double m_LastTime;
         void *m_Curl;
+        volatile bool m_Cancel;
     };
 
     class CurlFtpUploader : public QObject
@@ -83,6 +88,7 @@ namespace Conectivity {
         void progressChanged(double prevPercents, double newPercents);
         void uploadFinished(bool anyErrors);
         void transferFailed(const QString &filepath);
+        void cancelCurrentUpload();
 
     public slots:
         void cancel();
@@ -93,8 +99,8 @@ namespace Conectivity {
     private:
         UploadBatch *m_BatchToUpload;
         //QVector<int> m_FailedIndices;
-        volatile bool m_Cancel;
         volatile int m_UploadedCount;
+        volatile bool m_Cancel;
         double m_LastPercentage;
         int m_TotalCount;
     };

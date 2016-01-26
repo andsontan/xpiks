@@ -126,6 +126,7 @@ namespace Conectivity {
         double curtime = 0;
 
         curl_easy_getinfo(curl, CURLINFO_TOTAL_TIME, &curtime);
+        qDebug() << dltotal << dlnow << ultotal << ulnow;
 
         /* under certain circumstances it may be desirable for certain functionality
          to only run every N seconds, in order to do this the transaction time can
@@ -135,7 +136,8 @@ namespace Conectivity {
             progressReporter->updateProgress((double)ultotal, (double)ulnow);
         }
 
-        return 0;
+        int result = progressReporter->cancelRequested() ? 1 : 0;
+        return result;
     }
 
     /* for libcurl older than 7.32.0 (CURLOPT_PROGRESSFUNCTION) */
@@ -157,14 +159,14 @@ namespace Conectivity {
 
 #if LIBCURL_VERSION_NUM >= 0x072000
         /* xferinfo was introduced in 7.32.0, no earlier libcurl versions will
-              compile as they won't have the symbols around.
+           compile as they won't have the symbols around.
 
-              If built with a newer libcurl, but running with an older libcurl:
-              curl_easy_setopt() will fail in run-time trying to set the new
-              callback, making the older callback get used.
+           If built with a newer libcurl, but running with an older libcurl:
+           curl_easy_setopt() will fail in run-time trying to set the new
+           callback, making the older callback get used.
 
-              New libcurls will prefer the new callback and instead use that one even
-              if both callbacks are set. */
+           New libcurls will prefer the new callback and instead use that one even
+           if both callbacks are set. */
 
         curl_easy_setopt(curlHandle, CURLOPT_XFERINFOFUNCTION, xferinfo);
         /* pass the struct pointer into the xferinfo function, note that this is
@@ -243,7 +245,8 @@ namespace Conectivity {
     CurlProgressReporter::CurlProgressReporter(void *curl):
         QObject(),
         m_LastTime(0.0),
-        m_Curl(curl)
+        m_Curl(curl),
+        m_Cancel(false)
     {
     }
 
@@ -280,6 +283,7 @@ namespace Conectivity {
         CurlProgressReporter progressReporter(curlHandle);
         QObject::connect(&progressReporter, SIGNAL(progressChanged(double)),
                          this, SLOT(reportCurrentFileProgress(double)));
+        QObject::connect(this, SIGNAL(cancelCurrentUpload()), &progressReporter, SLOT(cancelHandler()));
 
         emit uploadStarted();
         qDebug() << "Uploading" << size << "file(s) started for" << host;
@@ -326,6 +330,7 @@ namespace Conectivity {
 
     void CurlFtpUploader::cancel() {
         m_Cancel = true;
+        emit cancelCurrentUpload();
     }
 
     void CurlFtpUploader::reportCurrentFileProgress(double percent) {
