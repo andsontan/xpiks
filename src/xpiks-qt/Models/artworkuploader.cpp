@@ -84,6 +84,7 @@ namespace Models {
 
     void ArtworkUploader::uploaderPercentChanged(double percent) {
         m_Percent = (int)(percent);
+        qDebug() << "Overall upload progress changed to" << percent;
         updateProgress();
         UploadInfoRepository *uploadInfoRepository = m_CommandManager->getUploadInfoRepository();
         uploadInfoRepository->updatePercentages();

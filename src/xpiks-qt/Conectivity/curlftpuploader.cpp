@@ -122,6 +122,9 @@ namespace Conectivity {
                         curl_off_t dltotal, curl_off_t dlnow,
                         curl_off_t ultotal, curl_off_t ulnow)
     {
+        Q_UNUSED(dltotal);
+        Q_UNUSED(dlnow);
+
         CurlProgressReporter *progressReporter = (CurlProgressReporter *)p;
         CURL *curl = progressReporter->getCurl();
         double curtime = 0;
@@ -268,7 +271,7 @@ namespace Conectivity {
     }
 
     void CurlProgressReporter::updateProgress(double ultotal, double ulnow) {
-        if (fabs(ulnow - 0.0) > 1e-6) {
+        if (fabs(ultotal - 0.0) > 1e-6) {
             double progress = ulnow * 100.0 / ultotal;
             emit progressChanged(progress);
         }
@@ -330,7 +333,6 @@ namespace Conectivity {
             if (!uploadSuccess) {
                 anyErrors = true;
                 emit transferFailed(filepath);
-                //m_FailedIndices.append(i);
             }
 
             // TODO: only update progress of not-failed uploads

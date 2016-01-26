@@ -48,6 +48,8 @@ namespace Conectivity {
                                    Models::UploadInfo *uploadInfo,
                                    QObject *parent = 0);
 
+        virtual ~FtpUploaderWorker();
+
     signals:
         void uploadStarted();
         void progressChanged(double oldPercents, double newPercents);

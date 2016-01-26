@@ -98,7 +98,6 @@ namespace Conectivity {
 
     private:
         UploadBatch *m_BatchToUpload;
-        //QVector<int> m_FailedIndices;
         volatile int m_UploadedCount;
         volatile bool m_Cancel;
         double m_LastPercentage;

@@ -38,6 +38,10 @@ namespace Conectivity {
     {
     }
 
+    FtpUploaderWorker::~FtpUploaderWorker() {
+        delete m_UploadBatch;
+    }
+
     void FtpUploaderWorker::process() {
         const QString &host = m_UploadBatch->getContext()->m_Host;
 
