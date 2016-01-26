@@ -26,7 +26,6 @@
 #include "uploadinforepository.h"
 #include "uploadinfo.h"
 #include "../Helpers/curlwrapper.h"
-#include "../Helpers/uploadcoordinator.h"
 #include "../Helpers/ziphelper.h"
 #include "../Models/artworkmetadata.h"
 #include "../Helpers/testconnectionresult.h"

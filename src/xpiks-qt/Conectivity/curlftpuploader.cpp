@@ -27,6 +27,8 @@
 #include <cstdlib>
 #include "../../libcurl/include/curl/curl.h"
 
+#define MINIMAL_PROGRESS_FUNCTIONALITY_INTERVAL 3
+
 namespace Conectivity {
     /* The MinGW headers are missing a few Win32 function definitions,
        you shouldn't need this if you use VC++ */
@@ -43,7 +45,7 @@ namespace Conectivity {
 
 #if defined(Q_OS_WIN)
         /* _snscanf() is Win32 specific */
-        r = _snscanf(ptr, size * nmemb, "Content-Length: %ld\n", &len);
+        r = _snscanf((const char*)ptr, size * nmemb, "Content-Length: %ld\n", &len);
 #else
         r = std::sscanf((const char*)ptr, "Content-Length: %ld\n", &len);
 #endif
@@ -114,7 +116,67 @@ namespace Conectivity {
         return host;
     }
 
-    bool uploadFile(CURL *curlHandle, UploadContext *context, const QString &filepath, const QString &remoteUrl) {
+    /* this is how the CURLOPT_XFERINFOFUNCTION callback works */
+    static int xferinfo(void *p,
+                        curl_off_t dltotal, curl_off_t dlnow,
+                        curl_off_t ultotal, curl_off_t ulnow)
+    {
+        CurlProgressReporter *progressReporter = (CurlProgressReporter *)p;
+        CURL *curl = progressReporter->getCurl();
+        double curtime = 0;
+
+        curl_easy_getinfo(curl, CURLINFO_TOTAL_TIME, &curtime);
+
+        /* under certain circumstances it may be desirable for certain functionality
+         to only run every N seconds, in order to do this the transaction time can
+         be used */
+        if ((curtime - progressReporter->getLastTime()) >= MINIMAL_PROGRESS_FUNCTIONALITY_INTERVAL) {
+            progressReporter->setLastTime(curtime);
+            progressReporter->updateProgress((double)ultotal, (double)ulnow);
+        }
+
+        return 0;
+    }
+
+    /* for libcurl older than 7.32.0 (CURLOPT_PROGRESSFUNCTION) */
+    static int older_progress(void *p,
+                              double dltotal, double dlnow,
+                              double ultotal, double ulnow)
+    {
+        return xferinfo(p,
+                        (curl_off_t)dltotal,
+                        (curl_off_t)dlnow,
+                        (curl_off_t)ultotal,
+                        (curl_off_t)ulnow);
+    }
+
+    void setCurlProgressCallback(CURL *curlHandle, CurlProgressReporter *progressReporter) {
+        curl_easy_setopt(curlHandle, CURLOPT_PROGRESSFUNCTION, older_progress);
+        /* pass the struct pointer into the progress function */
+        curl_easy_setopt(curlHandle, CURLOPT_PROGRESSDATA, progressReporter);
+
+#if LIBCURL_VERSION_NUM >= 0x072000
+        /* xferinfo was introduced in 7.32.0, no earlier libcurl versions will
+              compile as they won't have the symbols around.
+
+              If built with a newer libcurl, but running with an older libcurl:
+              curl_easy_setopt() will fail in run-time trying to set the new
+              callback, making the older callback get used.
+
+              New libcurls will prefer the new callback and instead use that one even
+              if both callbacks are set. */
+
+        curl_easy_setopt(curlHandle, CURLOPT_XFERINFOFUNCTION, xferinfo);
+        /* pass the struct pointer into the xferinfo function, note that this is
+              an alias to CURLOPT_PROGRESSDATA */
+        curl_easy_setopt(curlHandle, CURLOPT_XFERINFODATA, progressReporter);
+#endif
+
+        curl_easy_setopt(curlHandle, CURLOPT_NOPROGRESS, 0L);
+    }
+
+    bool uploadFile(CURL *curlHandle, UploadContext *context, CurlProgressReporter *progressReporter,
+                    const QString &filepath, const QString &remoteUrl) {
         bool result = false;
 
         FILE *f;
@@ -129,6 +191,7 @@ namespace Conectivity {
         }
 
         fillCurlOptions(curlHandle, context, remoteUrl);
+        setCurlProgressCallback(curlHandle, progressReporter);
         curl_easy_setopt(curlHandle, CURLOPT_READDATA, f);
         curl_easy_setopt(curlHandle, CURLOPT_HEADERDATA, &uploaded_len);
 
@@ -177,11 +240,26 @@ namespace Conectivity {
         return result;
     }
 
+    CurlProgressReporter::CurlProgressReporter(void *curl):
+        QObject(),
+        m_LastTime(0.0),
+        m_Curl(curl)
+    {
+    }
+
+    void CurlProgressReporter::updateProgress(double ultotal, double ulnow) {
+        double progress = ulnow * 100.0 / ultotal;
+        emit progressChanged(progress);
+    }
+
     CurlFtpUploader::CurlFtpUploader(UploadBatch *batchToUpload, QObject *parent) :
         QObject(parent),
         m_BatchToUpload(batchToUpload),
-        m_Cancel(false)
+        m_Cancel(false),
+        m_UploadedCount(0),
+        m_LastPercentage(0.0)
     {
+        m_TotalCount = batchToUpload->getFilesToUpload().length();
     }
 
     void CurlFtpUploader::uploadBatch() {
@@ -199,9 +277,12 @@ namespace Conectivity {
         //curl_global_init(CURL_GLOBAL_ALL);
         curlHandle = curl_easy_init();
 
+        CurlProgressReporter progressReporter(curlHandle);
+        QObject::connect(&progressReporter, SIGNAL(progressChanged(double)),
+                         this, SLOT(reportCurrentFileProgress(double)));
+
         emit uploadStarted();
         qDebug() << "Uploading" << size << "file(s) started for" << host;
-        double lastPercent = 0.0;
 
         for (int i = 0; i < size; ++i) {
             if (m_Cancel) {
@@ -216,7 +297,7 @@ namespace Conectivity {
             bool uploadSuccess = false;
 
             try {
-                uploadSuccess = uploadFile(curlHandle, context, filepath, remoteUrl);
+                uploadSuccess = uploadFile(curlHandle, context, &progressReporter, filepath, remoteUrl);
             } catch (...) {
                 qWarning() << "Upload CRASHED for file" << filepath;
             }
@@ -229,9 +310,8 @@ namespace Conectivity {
 
             // TODO: only update progress of not-failed uploads
             if (uploadSuccess) {
-                double percentage = (i + 1.0)*100.0 / (size + 0.0);
-                emit progressChanged(lastPercent, percentage);
-                lastPercent = percentage;
+                m_UploadedCount++;
+                reportCurrentFileProgress(0.0);
             }
         }
 
@@ -245,6 +325,13 @@ namespace Conectivity {
 
     void CurlFtpUploader::cancel() {
         m_Cancel = true;
+    }
+
+    void CurlFtpUploader::reportCurrentFileProgress(double percent) {
+        double newProgress = m_UploadedCount*100.0 + percent;
+        newProgress /= m_TotalCount;
+        emit progressChanged(m_LastPercentage, newProgress);
+        m_LastPercentage = newProgress;
     }
 }
 

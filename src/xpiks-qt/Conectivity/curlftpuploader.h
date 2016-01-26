@@ -50,6 +50,25 @@ namespace Conectivity {
         QSharedPointer<UploadContext> m_UploadContext;
     };
 
+    class CurlProgressReporter : public QObject {
+        Q_OBJECT
+    public:
+        CurlProgressReporter(void *curl);
+
+    public:
+        void updateProgress(double ultotal, double ulnow);
+        void *getCurl() const { return m_Curl; }
+        double getLastTime() const { return m_LastTime; }
+        void setLastTime(double value) { m_LastTime = value; }
+
+    signals:
+        void progressChanged(double percentsDone);
+
+    private:
+        double m_LastTime;
+        void *m_Curl;
+    };
+
     class CurlFtpUploader : public QObject
     {
         Q_OBJECT
@@ -68,10 +87,16 @@ namespace Conectivity {
     public slots:
         void cancel();
 
+    private slots:
+        void reportCurrentFileProgress(double percent);
+
     private:
         UploadBatch *m_BatchToUpload;
         //QVector<int> m_FailedIndices;
         volatile bool m_Cancel;
+        volatile int m_UploadedCount;
+        double m_LastPercentage;
+        int m_TotalCount;
     };
 }
 
