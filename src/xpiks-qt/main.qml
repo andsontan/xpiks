@@ -1336,8 +1336,11 @@ ApplicationWindow {
                                                         Keys.onPressed: {
                                                             if(event.matches(StandardKey.Paste)) {
                                                                 var clipboardText = clipboard.getText();
+                                                                clipboardText = clipboardText.replace(/(\r\n|\n|\r)/gm, '');
                                                                 // same regexp as in validator
-                                                                descriptionTextInput.paste(clipboardText)
+                                                                descriptionTextInput.insert(descriptionTextInput.cursorPosition, clipboardText)
+                                                                event.accepted = true
+                                                            } else if ((event.key === Qt.Key_Return) || (event.key === Qt.Key_Enter)) {
                                                                 event.accepted = true
                                                             }
                                                         }
@@ -1409,8 +1412,11 @@ ApplicationWindow {
                                                         Keys.onPressed: {
                                                             if (event.matches(StandardKey.Paste)) {
                                                                 var clipboardText = clipboard.getText();
+                                                                clipboardText = clipboardText.replace(/(\r\n|\n|\r)/gm, '');
                                                                 // same regexp as in validator
-                                                                titleTextInput.paste(clipboardText)
+                                                                titleTextInput.insert(titleTextInput.cursorPosition, clipboardText)
+                                                                event.accepted = true
+                                                            } else if ((event.key === Qt.Key_Return) || (event.key === Qt.Key_Enter)) {
                                                                 event.accepted = true
                                                             }
                                                         }

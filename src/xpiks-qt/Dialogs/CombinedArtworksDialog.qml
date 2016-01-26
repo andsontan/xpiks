@@ -400,6 +400,18 @@ Item {
                                                 event.accepted = true
                                             }
                                         }
+
+                                        Keys.onPressed: {
+                                            if(event.matches(StandardKey.Paste)) {
+                                                var clipboardText = clipboard.getText();
+                                                clipboardText = clipboardText.replace(/(\r\n|\n|\r)/gm, '');
+                                                // same regexp as in validator
+                                                descriptionTextInput.insert(descriptionTextInput.cursorPosition, clipboardText)
+                                                event.accepted = true
+                                            } else if ((event.key === Qt.Key_Return) || (event.key === Qt.Key_Enter)) {
+                                                event.accepted = true
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -544,6 +556,18 @@ Item {
                                         }
 
                                         onCursorRectangleChanged: titleFlick.ensureVisible(cursorRectangle)
+
+                                        Keys.onPressed: {
+                                            if(event.matches(StandardKey.Paste)) {
+                                                var clipboardText = clipboard.getText();
+                                                clipboardText = clipboardText.replace(/(\r\n|\n|\r)/gm, '');
+                                                // same regexp as in validator
+                                                titleTextInput.insert(titleTextInput.cursorPosition, clipboardText)
+                                                event.accepted = true
+                                            } else if ((event.key === Qt.Key_Return) || (event.key === Qt.Key_Enter)) {
+                                                event.accepted = true
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -858,6 +882,10 @@ Item {
                 }
             }
         }
+    }
+
+    ClipboardHelper {
+        id: clipboard
     }
 
     Component.onCompleted: {

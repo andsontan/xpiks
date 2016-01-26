@@ -24,6 +24,7 @@ import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.1
 import QtQuick.Controls.Styles 1.1
+import xpiks 1.0
 import "../Constants"
 import "../Constants/Colors.js" as Colors;
 import "../Common.js" as Common;
@@ -214,6 +215,18 @@ Item {
                                             combinedArtworks.spellCheckDescription()
                                         }
                                     }
+
+                                    Keys.onPressed: {
+                                        if(event.matches(StandardKey.Paste)) {
+                                            var clipboardText = clipboard.getText();
+                                            clipboardText = clipboardText.replace(/(\r\n|\n|\r)/gm, '');
+                                            // same regexp as in validator
+                                            descriptionTextInput.insert(descriptionTextInput.cursorPosition, clipboardText)
+                                            event.accepted = true
+                                        } else if ((event.key === Qt.Key_Return) || (event.key === Qt.Key_Enter)) {
+                                            event.accepted = true
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -294,6 +307,18 @@ Item {
                                     onActiveFocusChanged: {
                                         if (titleTextInput.length > 0) {
                                             combinedArtworks.spellCheckTitle()
+                                        }
+                                    }
+
+                                    Keys.onPressed: {
+                                        if(event.matches(StandardKey.Paste)) {
+                                            var clipboardText = clipboard.getText();
+                                            clipboardText = clipboardText.replace(/(\r\n|\n|\r)/gm, '');
+                                            // same regexp as in validator
+                                            titleTextInput.insert(titleTextInput.cursorPosition, clipboardText)
+                                            event.accepted = true
+                                        } else if ((event.key === Qt.Key_Return) || (event.key === Qt.Key_Enter)) {
+                                            event.accepted = true
                                         }
                                     }
                                 }
@@ -479,5 +504,9 @@ Item {
                 }
             }
         }
+    }
+
+    ClipboardHelper {
+        id: clipboard
     }
 }
