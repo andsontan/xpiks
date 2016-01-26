@@ -126,7 +126,10 @@ namespace Conectivity {
     FtpCoordinator::FtpCoordinator(int maxParallelUploads, QObject *parent) :
         QObject(parent),
         m_UploadSemaphore(maxParallelUploads),
-        m_MaxParallelUploads(maxParallelUploads)
+        m_MaxParallelUploads(maxParallelUploads),
+        m_OverallProgress(0.0),
+        m_FinishedWorkersCount(0),
+        m_AnyFailed(false)
     {
     }
 
@@ -166,6 +169,8 @@ namespace Conectivity {
             QObject::connect(worker, SIGNAL(uploadStarted()), this, SIGNAL(uploadStarted()));
             QObject::connect(worker, SIGNAL(uploadFinished(bool)), this, SLOT(workerFinished(bool)));
             QObject::connect(this, SIGNAL(cancelAll()), worker, SIGNAL(workerCancelled()));
+            QObject::connect(worker, SIGNAL(progressChanged(double,double)),
+                             this, SLOT(workerProgressChanged(double,double)));
 
             thread->start();
         }
@@ -196,6 +201,7 @@ namespace Conectivity {
         m_AnyFailed = false;
         m_AllWorkersCount = uploadBatchesCount;
         m_FinishedWorkersCount = 0;
+        m_OverallProgress = 0.0;
 
         curl_global_init(CURL_GLOBAL_ALL);
     }

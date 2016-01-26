@@ -65,8 +65,8 @@ namespace Conectivity {
     private:
         QMutex m_WorkerMutex;
         QSemaphore m_UploadSemaphore;
-        double m_OverallProgress;
         int m_MaxParallelUploads;
+        double m_OverallProgress;
         QAtomicInt m_FinishedWorkersCount;
         volatile int m_AllWorkersCount;
         volatile bool m_AnyFailed;

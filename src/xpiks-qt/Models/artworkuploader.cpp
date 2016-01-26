@@ -46,12 +46,6 @@ namespace Models {
         QObject::connect(m_FtpCoordinator, SIGNAL(uploadFinished(bool)), this, SLOT(allFinished(bool)));
         QObject::connect(m_FtpCoordinator, SIGNAL(overallProgressChanged(double)), this, SLOT(uploaderPercentChanged(double)));
 
-        /*QObject::connect(m_UploadCoordinator, SIGNAL(uploadStarted()), this, SLOT(onUploadStarted()));
-        QObject::connect(m_UploadCoordinator, SIGNAL(uploadFinished(bool)), this, SLOT(allFinished(bool)));
-        QObject::connect(m_UploadCoordinator, SIGNAL(itemFinished(bool)), this, SLOT(artworkUploaded(bool)));
-        QObject::connect(m_UploadCoordinator, SIGNAL(percentChanged(double)), this, SLOT(uploaderPercentChanged(double)));
-        */
-
         m_TestingCredentialWatcher = new QFutureWatcher<Helpers::TestConnectionResult>(this);
         connect(m_TestingCredentialWatcher, SIGNAL(finished()), SLOT(credentialsTestingFinished()));
     }
@@ -90,7 +84,7 @@ namespace Models {
 
     void ArtworkUploader::uploaderPercentChanged(double percent) {
         m_Percent = (int)(percent);
-        emit percentChanged();
+        updateProgress();
         UploadInfoRepository *uploadInfoRepository = m_CommandManager->getUploadInfoRepository();
         uploadInfoRepository->updatePercentages();
     }

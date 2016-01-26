@@ -55,7 +55,7 @@ namespace Conectivity {
 
     void FtpUploaderWorker::progressChangedHandler(double oldPercents, double newPercents) {
         Q_UNUSED(oldPercents);
-        m_UploadInfo->setPercent(newPercents);
+        m_UploadInfo->setPercent(floor(newPercents));
     }
 
     void FtpUploaderWorker::doUpload() {

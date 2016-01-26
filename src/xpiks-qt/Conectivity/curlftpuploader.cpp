@@ -22,12 +22,13 @@
 #include "curlftpuploader.h"
 #include <QDebug>
 #include <QFileInfo>
-
+#include <sys/stat.h>
 #include <cstdio>
 #include <cstdlib>
+#include <cmath>
 #include "../../libcurl/include/curl/curl.h"
 
-#define MINIMAL_PROGRESS_FUNCTIONALITY_INTERVAL 3
+#define MINIMAL_PROGRESS_FUNCTIONALITY_INTERVAL 1
 
 namespace Conectivity {
     /* The MinGW headers are missing a few Win32 function definitions,
@@ -126,7 +127,6 @@ namespace Conectivity {
         double curtime = 0;
 
         curl_easy_getinfo(curl, CURLINFO_TOTAL_TIME, &curtime);
-        qDebug() << dltotal << dlnow << ultotal << ulnow;
 
         /* under certain circumstances it may be desirable for certain functionality
          to only run every N seconds, in order to do this the transaction time can
@@ -184,7 +184,17 @@ namespace Conectivity {
         FILE *f;
         long uploaded_len = 0;
         CURLcode r = CURLE_GOT_NOTHING;
+        struct stat file_info;
         int c;
+        curl_off_t fsize;
+
+        /* get the file size of the local file */
+        if (stat(filepath.toLocal8Bit().data(), &file_info)) {
+            qWarning() << "Failed to open file" << filepath;
+            return result;
+        }
+
+        fsize = (curl_off_t) file_info.st_size;
 
         f = fopen(filepath.toLocal8Bit().data(), "rb");
         if (f == NULL) {
@@ -195,6 +205,8 @@ namespace Conectivity {
         fillCurlOptions(curlHandle, context, remoteUrl);
         setCurlProgressCallback(curlHandle, progressReporter);
         curl_easy_setopt(curlHandle, CURLOPT_READDATA, f);
+        curl_easy_setopt(curlHandle, CURLOPT_INFILESIZE_LARGE,
+                             (curl_off_t)fsize);
         curl_easy_setopt(curlHandle, CURLOPT_HEADERDATA, &uploaded_len);
 
         for (c = 0; (r != CURLE_OK) && (c < context->m_RetriesCount); c++) {
@@ -229,6 +241,11 @@ namespace Conectivity {
             }
 
             r = curl_easy_perform(curlHandle);
+
+            if (r == CURLE_ABORTED_BY_CALLBACK) {
+                qInfo() << "Upload aborted by user...";
+                break;
+            }
         }
 
         fclose(f);
@@ -251,15 +268,17 @@ namespace Conectivity {
     }
 
     void CurlProgressReporter::updateProgress(double ultotal, double ulnow) {
-        double progress = ulnow * 100.0 / ultotal;
-        emit progressChanged(progress);
+        if (fabs(ulnow - 0.0) > 1e-6) {
+            double progress = ulnow * 100.0 / ultotal;
+            emit progressChanged(progress);
+        }
     }
 
     CurlFtpUploader::CurlFtpUploader(UploadBatch *batchToUpload, QObject *parent) :
         QObject(parent),
         m_BatchToUpload(batchToUpload),
-        m_Cancel(false),
         m_UploadedCount(0),
+        m_Cancel(false),
         m_LastPercentage(0.0)
     {
         m_TotalCount = batchToUpload->getFilesToUpload().length();
