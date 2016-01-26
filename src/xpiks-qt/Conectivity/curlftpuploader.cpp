@@ -290,6 +290,8 @@ namespace Conectivity {
                 break;
             }
 
+            reportCurrentFileProgress(0.0);
+
             const QString &filepath = filesToUpload.at(i);
             QFileInfo fi(filepath);
             QString remoteUrl = host + fi.fileName();
@@ -311,7 +313,6 @@ namespace Conectivity {
             // TODO: only update progress of not-failed uploads
             if (uploadSuccess) {
                 m_UploadedCount++;
-                reportCurrentFileProgress(0.0);
             }
         }
 
