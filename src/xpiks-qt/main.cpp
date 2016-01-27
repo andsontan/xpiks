@@ -103,6 +103,7 @@ void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const Q
     }
 }
 
+#define TELEMETRY_ENABLED true
 #define STRINGIZE_(x) #x
 #define STRINGIZE(x) STRINGIZE_(x)
 
@@ -199,7 +200,7 @@ int main(int argc, char *argv[]) {
     Helpers::UpdateService updateService;
     MetadataIO::MetadataIOCoordinator metadataIOCoordinator;
 
-    Conectivity::TelemetryService telemetryService(userId);
+    Conectivity::TelemetryService telemetryService(userId, TELEMETRY_ENABLED);
 
     Commands::CommandManager commandManager;
     commandManager.InjectDependency(&artworkRepository);

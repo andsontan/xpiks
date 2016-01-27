@@ -100,7 +100,6 @@ namespace Models {
         QString getDictionaryPath() const { return m_DictPath; }
 
     signals:
-        void allValuesSaved();
         void exifToolPathChanged(QString exifToolPath);
         void curlPathChanged(QString curlPath);
         void minMegapixelCountChanged(double minMegapixelCount);

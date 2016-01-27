@@ -204,6 +204,7 @@ ApplicationWindow {
                 Tab {
                     id: behaviorTab
                     title: qsTr("Behavior")
+                    property bool useStatistics: settingsModel.userStatistic
 
                     ColumnLayout {
                         anchors.fill: parent
@@ -289,23 +290,27 @@ ApplicationWindow {
                                 color: Colors.defaultInputBackground
                             }
                         }
+
                         RowLayout {
                             width: parent.width
                             spacing: 10
+
                             StyledCheckbox {
                                 id: userStatisticCheckBox
                                 text: qsTr("Collect usage statistic")
                                 onCheckedChanged: {
-                                    settingsModel.userStatistic = checked
+                                    behaviorTab.useStatistics = checked
                                 }
 
                                 Component.onCompleted: checked = settingsModel.userStatistic
                             }
+
                             StyledText {
                                 text: qsTr("(simple statistic of feature usage)")
                                 color: Colors.defaultInputBackground
                             }
                         }
+
                         Item {
                             Layout.fillHeight: true
                         }
@@ -1035,6 +1040,7 @@ ApplicationWindow {
                     onClicked: {
                         settingsModel.keywordSizeScale = uxTab.sizeSliderValue
                         settingsModel.scrollSpeedScale = uxTab.scrollSliderValue
+                        settingsModel.userStatistic = behaviorTab.useStatistics
                         settingsModel.saveAllValues()
                         closeSettings()
                     }

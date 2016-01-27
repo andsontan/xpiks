@@ -110,7 +110,6 @@ namespace Models {
         }
 
         emit keywordSizeScaleChanged(m_KeywordSizeScale);
-        emit allValuesSaved();
     }
 
     void SettingsModel::clearMasterPasswordSettings() {

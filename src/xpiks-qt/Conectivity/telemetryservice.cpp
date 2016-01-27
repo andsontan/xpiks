@@ -35,36 +35,38 @@
 #include "../Common/version.h"
 
 namespace Conectivity {
-    TelemetryService::TelemetryService(const QString &userId, QObject *parent) :
+    TelemetryService::TelemetryService(const QString &userId, bool telemetryEnabled, QObject *parent) :
         QObject(parent),
         m_NetworkManager(this),
-        m_UserAgentId(userId)
+        m_UserAgentId(userId),
+        m_TelemetryEnabled(telemetryEnabled)
     {
         QObject::connect(&m_NetworkManager, SIGNAL(finished(QNetworkReply*)),
                          this, SLOT(replyReceived(QNetworkReply*)));
-        m_TelemetryEnabled = appSettings.value(Constants::USER_STATISTIC, DEFAULT_COLLECT_USER_STATISTIC).toBool();
     }
 
     void TelemetryService::reportAction(UserAction action) {
 #ifdef QT_NO_DEBUG
-        if(m_TelemetryEnabled)
-	{
+        if (m_TelemetryEnabled)
+        {
             qDebug() << "Reporting action" << action;
             doReportAction(action);
-	}
+        }
         else
 #endif
             Q_UNUSED(action);
-
     }
 
-    void TelemetryService::changeReporting() {
-        m_TelemetryEnabled=appSettings.value(Constants::USER_STATISTIC, DEFAULT_COLLECT_USER_STATISTIC).toBool();
+    void TelemetryService::changeReporting(bool value) {
 #ifndef QT_NO_DEBUG
-        if(m_TelemetryEnabled) {
-            qDebug()<<"Telemetry enabled by setting";
-        } else {
-            qDebug()<<"Telemetry disabled by setting";
+        if (m_TelemetryEnabled != value) {
+            m_TelemetryEnabled = value;
+
+            if (m_TelemetryEnabled) {
+                qDebug()<<"Telemetry enabled by setting";
+            } else {
+                qDebug()<<"Telemetry disabled by setting";
+            }
         }
 #endif
     }

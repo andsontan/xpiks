@@ -177,8 +177,8 @@ void Commands::CommandManager::connectEntitiesSignalsSlots() const {
     QObject::connect(m_ArtItemsModel, SIGNAL(selectedArtworkRemoved()),
                      m_FilteredItemsModel, SLOT(onSelectedArtworksRemoved()));
 
-    QObject::connect(m_SettingsModel, SIGNAL(allValuesSaved()),
-                     m_TelemetryService, SLOT(changeReporting()));
+    QObject::connect(m_SettingsModel, SIGNAL(userStatisticChanged(bool)),
+                     m_TelemetryService, SLOT(changeReporting(bool)));
 }
 
 void Commands::CommandManager::recodePasswords(const QString &oldMasterPassword,
