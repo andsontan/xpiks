@@ -580,7 +580,8 @@ Item {
                                             onClicked: {
                                                 testButton.enabled = false
                                                 credentialsStatus.enabled = false
-                                                artworkUploader.checkCredentials(ftpHost.text, ftpUsername.text, ftpPassword.text)
+                                                var disablePassiveMode = uploadHostsListView.currentItem.myData.disablepassivemode
+                                                artworkUploader.checkCredentials(ftpHost.text, ftpUsername.text, ftpPassword.text, disablePassiveMode)
                                             }
 
                                             Connections {
@@ -633,19 +634,19 @@ Item {
 
                                     StyledCheckbox {
                                         id: ftpPassiveModeCheckBox
-                                        text: qsTr("FTP passive mode")
-                                        Component.onCompleted: checked = uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.ftppassivemode : false
+                                        text: qsTr("Disable FTP passive mode")
+                                        Component.onCompleted: checked = uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.disablepassivemode : false
 
                                         onClicked: {
                                             if (uploadHostsListView.currentItem) {
-                                                uploadHostsListView.currentItem.myData.editftppassivemode = checked
+                                                uploadHostsListView.currentItem.myData.editdisablepassivemode = checked
                                             }
                                         }
 
                                         Connections {
                                             target: uploadInfos
                                             onDataChanged: {
-                                                ftpPassiveModeCheckBox.checked = uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.ftppassivemode : false
+                                                ftpPassiveModeCheckBox.checked = uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.disablepassivemode : false
                                             }
                                         }
                                     }

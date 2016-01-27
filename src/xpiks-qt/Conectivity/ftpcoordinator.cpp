@@ -81,7 +81,7 @@ namespace Conectivity {
             context->m_Host = info->getHost();
             context->m_Username = info->getUsername();
             context->m_Password = secretsManager->decodePassword(info->getPassword());
-            context->m_UsePassiveMode = info->getFtpPassiveMode();
+            context->m_UsePassiveMode = !info->getDisableFtpPassiveMode();
 
             // TODO: move to configs/options
             context->m_TimeoutSeconds = TIMEOUT_SECONDS;

@@ -63,8 +63,10 @@ namespace Models {
             EditZipBeforeUploadRole,
             EditUploadDirectoryRole,
             PercentRole,
-            FtpPassiveModeRole,
-            EditFtpPassiveModeRole
+            /*DEPRECATED*/FtpPassiveModeRole,
+            /*DEPRECATED*/EditFtpPassiveModeRole,
+            DisableFtpPassiveModeRole,
+            EditDisableFtpPassiveModeRole
         };
 
         int getInfosCount() const { return m_UploadInfos.length(); }
