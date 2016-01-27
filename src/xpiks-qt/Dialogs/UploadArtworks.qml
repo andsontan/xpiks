@@ -38,6 +38,7 @@ Item {
     // if MasterPassword wasn't entered do not show passwords
     property bool emptyPasswords: false
     property variant componentParent
+    property bool uploadEnabled: artworkRepository.artworksSourcesCount > 0
 
     signal dialogDestruction();
     Component.onDestruction: dialogDestruction();
@@ -685,7 +686,7 @@ Item {
                         text: qsTr("Include vector (.eps, .ai)")
                         checked: artworkUploader.includeVector
                         onCheckedChanged: artworkUploader.includeVector = checked
-                        enabled: !artworkUploader.inProgress
+                        enabled: !artworkUploader.inProgress && uploadArtworksComponent.uploadEnabled
                     }
 
                     Item {
@@ -693,6 +694,7 @@ Item {
                     }
 
                     StyledText {
+                        enabled: uploadArtworksComponent.uploadEnabled
                         text: warningsManager.warningsCount == 1 ? qsTr("1 warning") : qsTr("%1 warnings").arg(warningsManager.warningsCount)
                         color: uploadWarmingsMA.pressed ? Colors.defaultLightGrayColor : warningsManager.warningsCount > 0 ? Colors.artworkModifiedColor : Colors.defaultInputBackground
 
@@ -715,6 +717,7 @@ Item {
 
                     StyledButton {
                         id: uploadButton
+                        enabled: uploadArtworksComponent.uploadEnabled
                         text: artworkUploader.inProgress ? qsTr("Stop") : qsTr("Start Upload")
                         width: 130
                         onClicked: {
