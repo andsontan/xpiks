@@ -39,6 +39,8 @@ namespace Constants {
     const char SCROLL_SPEED_SCALE[] = "SCROLL_SPEED_SCALE";
     const char WHATS_NEW_FILENAME[] = "whatsnew.txt";
     const char TERMS_AND_CONDITIONS_FILENAME[] = "terms_and_conditions.txt";
+    const char DICT_PATH[] = "DICT_PATH";
+    const char USER_STATISTIC[] = "USER_STATISTIC";
 
     // different for DEBUG and RELEASE
 

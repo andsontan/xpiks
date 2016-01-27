@@ -20,6 +20,7 @@
  */
 
 #include "metadatawritingworker.h"
+#include "../Common/defines.h"
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
@@ -48,8 +49,8 @@ namespace MetadataIO {
     }
 
     void metadataToJsonObject(Models::ArtworkMetadata *metadata, QJsonObject &jsonObject) {
-        QString title = metadata->getTitle().trimmed();
-        QString description = metadata->getDescription().trimmed();
+        QString title = metadata->getTitle().simplified();
+        QString description = metadata->getDescription().simplified();
 
         if (title.isEmpty()) {
             title = description;

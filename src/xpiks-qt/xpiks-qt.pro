@@ -76,6 +76,8 @@ DEFINES += BUILDNUMBER=$${BUILDNO}
 DEFINES += QT_NO_CAST_TO_ASCII \
            QT_NO_CAST_FROM_BYTEARRAY
 DEFINES += QUAZIP_STATIC
+DEFINES += HUNSPELL_STATIC
+DEFINES += COLLECT_USER_STATISTIC
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -133,7 +135,6 @@ HEADERS += \
     Helpers/runguard.h \
     Models/ziparchiver.h \
     Helpers/ziphelper.h \
-    ../quazip/quazip/JlCompress.h \
     Common/basickeywordsmodel.h \
     Suggestion/keywordssuggestor.h \
     Suggestion/suggestionartwork.h \
@@ -224,34 +225,43 @@ DISTFILES += \
     Dialogs/WhatsNewDialog.qml \
     Dialogs/TermsAndConditionsDialog.qml
 
-macx {
+LIBS += -L"$$PWD/../libs/"
+LIBS += -lhunspell
 LIBS += -lz
+CONFIG(debug, debug|release)  {
+    message("Debug build.")
+} else {
+    message("Building release")
 }
 
-LIBS += -L"$$PWD/../libs/"
-LIBS += -lquazip
-INCLUDEPATH += "../hunspell-1.3.3/src/hunspell"
-
-LIBS += -lhunspell
-DEFINES += HUNSPELL_STATIC
+macx {
+    INCLUDEPATH += "../hunspell-1.3.3/src/hunspell"
+    INCLUDEPATH += "../quazip/quazip/"
+    LIBS += -lquazip
+}
 
 win32 {
-INCLUDEPATH += "../zlib-1.2.8"
-LIBS += -lz
+    INCLUDEPATH += "../zlib-1.2.8"
+    INCLUDEPATH += "../hunspell-1.3.3/src/hunspell"
+    INCLUDEPATH += "../quazip/quazip/"
+    LIBS += -lquazip
 }
 
 linux-g++-64 {
-target.path=/usr/bin/
-LIBS += -L/lib/x86_64-linux-gnu/ -lz
-QML_IMPORT_PATH += /usr/lib/x86_64-linux-gnu/qt5/imports/
+    target.path=/usr/bin/
+    INCLUDEPATH += "/usr/include/hunspell"
+    INCLUDEPATH += "/usr/include/quazip"
+    LIBS += -L/lib/x86_64-linux-gnu/
+    LIBS += /usr/lib/x86_64-linux-gnu/libquazip-qt5.a
+    QML_IMPORT_PATH += /usr/lib/x86_64-linux-gnu/qt5/imports/
+    #DEFINES -= COLLECT_USER_STATISTIC
 }
 
-
 linux-static {
-CONFIG += static
-QTPLUGIN += qt5quick
-DEFINES += STATIC
-message("Static build.")
+    CONFIG += static
+    QTPLUGIN += qt5quick
+    DEFINES += STATIC
+    message("Static build.")
 }
 
 HUNSPELL_DICT_FILES.files = dict/en_US.aff dict/en_US.dic dict/license.txt dict/README_en_US.txt

@@ -28,24 +28,14 @@
 #include <QDir>
 #include <QUrl>
 #include <QCoreApplication>
+#include <QStandardPaths>
+#include "Helpers/appsettings.h"
 #include "spellcheckitem.h"
 #include "../Common/defines.h"
-#include "../hunspell-1.3.3/src/hunspell/hunspell.hxx"
+#include <hunspell.hxx>
 
 #define EN_HUNSPELL_DIC "en_US.dic"
 #define EN_HUNSPELL_AFF "en_US.aff"
-
-QString getHunspellResourcesPath() {
-    QString path = QCoreApplication::applicationDirPath();
-
-#if defined(Q_OS_MAC)
-    path += "/../Resources/";
-#elif defined(Q_OS_WIN)
-    path += "/dict/";
-#endif
-
-    return path;
-}
 
 namespace SpellCheck {
     SpellCheckWorker::SpellCheckWorker(QObject *parent) :
@@ -64,10 +54,33 @@ namespace SpellCheck {
     }
 
     bool SpellCheckWorker::initWorker() {
-        QDir resourcesDir(getHunspellResourcesPath());
+
+        Helpers::AppSettings appSettings;
+        QString resourcesPath;
+        QString affPath;
+        QString dicPath;
+#if not defined(Q_OS_LINUX)
+        resourcesPath = QCoreApplication::applicationDirPath();
+#if defined(Q_OS_MAC)
+        resourcesPath += "/../Resources/";
+#elif defined(Q_OS_WIN)
+        resourcesPath += "/dict/";
+#endif
+        QDir resourcesDir(resourcesPath);
         QString affPath = resourcesDir.absoluteFilePath(EN_HUNSPELL_AFF);
         QString dicPath = resourcesDir.absoluteFilePath(EN_HUNSPELL_DIC);
-
+#else
+        resourcesPath=appSettings.value(Constants::DICT_PATH, "").toString();
+        if(resourcesPath == "") {
+            resourcesPath="hunspell/";
+            dicPath=QStandardPaths::locate(QStandardPaths::GenericDataLocation, resourcesPath+EN_HUNSPELL_DIC);
+            affPath=QStandardPaths::locate(QStandardPaths::GenericDataLocation, resourcesPath+EN_HUNSPELL_AFF);
+        } else {
+            QDir resourcesDir(resourcesPath);
+            affPath = resourcesDir.absoluteFilePath(EN_HUNSPELL_AFF);
+            dicPath = resourcesDir.absoluteFilePath(EN_HUNSPELL_DIC);
+        }
+#endif
         bool initResult = false;
 
         if (QFile(affPath).exists() && QFile(dicPath).exists()) {
@@ -82,7 +95,9 @@ namespace SpellCheck {
                                           dicPath.toUtf8().constData());
                 qDebug() << "Hunspell initialized with AFF" << affPath << "and DIC" << dicPath;
                 initResult = true;
-                detectAffEncoding();
+                //detectAffEncoding();
+                m_Encoding = m_Hunspell->get_dic_encoding();
+                m_Codec = QTextCodec::codecForName(m_Encoding.toLatin1().constData());
             }
             catch(...) {
                 qDebug() << "Error in Hunspell initialization with AFF" << affPath << "and DIC" << dicPath;
@@ -136,7 +151,7 @@ namespace SpellCheck {
 
         return canDelete;
     }
-
+/*
     void SpellCheckWorker::detectAffEncoding() {
         // detect encoding analyzing the SET option in the affix file
         QDir resourcesDir(getHunspellResourcesPath());
@@ -162,7 +177,7 @@ namespace SpellCheck {
 
         m_Codec = QTextCodec::codecForName(m_Encoding.toLatin1().constData());
     }
-
+*/
     QStringList SpellCheckWorker::retrieveCorrections(const QString &word) {
         QReadLocker locker(&m_SuggestionsLock);
         QStringList result;

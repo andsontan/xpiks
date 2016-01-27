@@ -124,6 +124,14 @@ Item {
                         anchors.leftMargin: 5
                         onAccepted: submitKeyword()
                         Component.onCompleted: keywordInput.text = previousKeyword
+
+                        Keys.onBacktabPressed: {
+                            event.accepted = true
+                        }
+
+                        Keys.onTabPressed: {
+                            event.accepted = true
+                        }
                     }
                 }
 

@@ -24,6 +24,7 @@ import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.1
 import QtQuick.Controls.Styles 1.1
+import xpiks 1.0
 import "../Constants"
 import "../Constants/Colors.js" as Colors;
 import "../Common.js" as Common;
@@ -182,10 +183,27 @@ Item {
                         }
 
                         Keys.onPressed: {
-                            if (((event.key === Qt.Key_Return) || (event.key === Qt.Key_Enter)) &&
-                                    event.modifiers === Qt.ControlModifier) {
-                                submitKeywords()
+                            if(event.matches(StandardKey.Paste)) {
+                                var clipboardText = clipboard.getText();
+                                clipboardText = clipboardText.replace(/(\r\n|\n|\r)/gm, '');
+                                // same regexp as in validator
+                                textEdit.insert(textEdit.cursorPosition, clipboardText)
+                                event.accepted = true
+                            } else if ((event.key === Qt.Key_Return) || (event.key === Qt.Key_Enter)) {
+                                if (event.modifiers === Qt.ControlModifier) {
+                                    submitKeywords()
+                                } else {
+                                    event.accepted = true
+                                }
                             }
+                        }
+
+                        Keys.onBacktabPressed: {
+                            event.accepted = true
+                        }
+
+                        Keys.onTabPressed: {
+                            event.accepted = true
                         }
 
                         onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
@@ -229,5 +247,9 @@ Item {
                 }
             }
         }
+    }
+
+    ClipboardHelper {
+        id: clipboard
     }
 }

@@ -10,6 +10,8 @@ Coding guidelines:
 - class fields should be named using the `m_CamelCase` style (starting with "m_" and then the name starting with the capital letter)
 - try to move as much includes from the header to implementation as possible
 
+Take a look at the [Xpiks Wiki pages](https://github.com/Ribtoks/xpiks/wiki). They contain a lot of topics of how to develop this or that feature.
+
 How to contribute:
 - [Fork](http://help.github.com/forking/) Xpiks repository on GitHub
 - Clone your fork locally

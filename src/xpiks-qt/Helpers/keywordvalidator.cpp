@@ -22,7 +22,7 @@
 #include "keywordvalidator.h"
 #include <QRegularExpression>
 
-#define ALLOWED_SYMBOLS "@#$%&"
+#define ALLOWED_SYMBOLS "@#%&!?"
 
 namespace Helpers {
     bool isValidKeyword(const QString &keyword) {
@@ -35,7 +35,9 @@ namespace Helpers {
 
         if (length == 1) {
             QChar symbol = keyword.at(0);
-            if (symbol.isLetterOrNumber() || QString(ALLOWED_SYMBOLS).contains(symbol)) {
+            if (symbol.isLetterOrNumber() ||
+                    QString(ALLOWED_SYMBOLS).contains(symbol) ||
+                    symbol.category() == QChar::Symbol_Currency) {
                 isValid = true;
             }
         }

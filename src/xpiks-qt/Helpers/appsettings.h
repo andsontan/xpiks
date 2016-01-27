@@ -26,6 +26,7 @@
 #include <QString>
 #include <QSettings>
 #include <QCoreApplication>
+#include <QStandardPaths>
 #include "constants.h"
 #include "../Common/version.h"
 #include <QFile>
@@ -37,11 +38,20 @@ namespace Helpers {
         Q_OBJECT
 
     public:
+        QStandardPaths::StandardLocation appDataLocationType;
+
         explicit AppSettings(QObject *parent = 0) : QSettings(QSettings::UserScope,
                                                               QCoreApplication::instance()->organizationName(),
                                                               QCoreApplication::instance()->applicationName(),
                                                               parent)
-        { }
+        {
+            #if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
+                appDataLocationType = QStandardPaths::AppDataLocation;
+            #else
+                appDataLocationType = QStandardPaths::DataLocation;
+            #endif
+            //qDebug()<< "Extra files search locations: "<<QStandardPaths::standardLocations(appDataLocationType);
+        }
 
         Q_PROPERTY(QString exifToolPathKey READ getExifToolPathKey CONSTANT)
         QString getExifToolPathKey() const { return QLatin1String(Constants::PATH_TO_EXIFTOOL); }
@@ -112,9 +122,19 @@ namespace Helpers {
         Q_PROPERTY(QString userConsentKey READ getUserConsentKey CONSTANT)
         QString getUserConsentKey() const { return QLatin1String(Constants::USER_CONSENT); }
 
+        Q_PROPERTY(QString dictionaryPathKey READ getDictionaryPathKey CONSTANT)
+        QString getDictionaryPathKey() const { return QLatin1String(Constants::DICT_PATH); }
+
+        Q_PROPERTY(QString userStatisticKey READ getUserStatisticKey CONSTANT)
+        QString getUserStatisticKey() const { return QLatin1String(Constants::USER_STATISTIC); }
+
         Q_PROPERTY(QString whatsNewText READ getWhatsNewText CONSTANT)
         QString getWhatsNewText() const {
-            QString path = QCoreApplication::applicationDirPath();
+            QString text;
+            QString path;
+
+#if not defined(Q_OS_LINUX)
+            path = QCoreApplication::applicationDirPath();
 
 #if defined(Q_OS_MAC)
             path += "/../Resources/";
@@ -122,16 +142,16 @@ namespace Helpers {
 
             path += QDir::separator() + QLatin1String(Constants::WHATS_NEW_FILENAME);
             path = QDir::cleanPath(path);
-
+#else
+            path=QStandardPaths::locate(appDataLocationType, Constants::WHATS_NEW_FILENAME);
+#endif
             QFile file(path);
-            QString text;
             if (file.open(QIODevice::ReadOnly)) {
                 text = file.readAll();
                 file.close();
             } else {
                 qWarning() << "whatsnew.txt file is not found on path" << path;
             }
-
             return text;
         }
 
@@ -177,7 +197,11 @@ namespace Helpers {
 
         Q_PROPERTY(QString termsAndConditionsText READ getTermsAndConditionsText CONSTANT)
         QString getTermsAndConditionsText() const {
-            QString path = QCoreApplication::applicationDirPath();
+            QString text;
+            QString path;
+
+#if not defined(Q_OS_LINUX)
+            path = QCoreApplication::applicationDirPath();
 
 #if defined(Q_OS_MAC)
             path += "/../Resources/";
@@ -185,9 +209,10 @@ namespace Helpers {
 
             path += QDir::separator() + QLatin1String(Constants::TERMS_AND_CONDITIONS_FILENAME);
             path = QDir::cleanPath(path);
-
+#else
+            path=QStandardPaths::locate(appDataLocationType, Constants::TERMS_AND_CONDITIONS_FILENAME);
+#endif
             QFile file(path);
-            QString text;
             if (file.open(QIODevice::ReadOnly)) {
                 text = file.readAll();
                 file.close();

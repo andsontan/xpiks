@@ -168,6 +168,11 @@ Item {
                             anchors.left: parent.left
                             anchors.leftMargin: 5
                             echoMode: TextInput.Password
+
+                            Keys.onBacktabPressed: {
+                                event.accepted = true
+                            }
+
                             KeyNavigation.tab: newMasterPassword
                             onAccepted: {
                                 if (repeatMasterPassword.text != newMasterPassword.text) {

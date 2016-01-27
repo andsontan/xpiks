@@ -260,8 +260,10 @@ Flickable {
                         }
                     }
                     else if (event.matches(StandardKey.Copy)) {
-                        copyRequest()
-                        event.accepted = true
+                        if (nextTagTextInput.length === 0) {
+                            copyRequest()
+                            event.accepted = true
+                        }
                     }
                     else if (event.key === Qt.Key_Comma) {
                         var tagText = getEditedText();

@@ -34,7 +34,7 @@ ApplicationWindow {
     modality: "ApplicationModal"
     title: qsTr("Settings")
     width: 550
-    height: 260
+    height: 280
     minimumWidth: width
     maximumWidth: width
     minimumHeight: height
@@ -104,6 +104,25 @@ ApplicationWindow {
             console.log("You chose: " + curlFileDialog.fileUrl)
             var path = curlFileDialog.fileUrl.toString().replace(/^(file:\/{3})/,"");
             settingsModel.curlPath = decodeURIComponent(path);
+        }
+
+        onRejected: {
+            console.log("File dialog canceled")
+        }
+    }
+
+    FileDialog {
+        id: dictPathDialog
+        title: "Please choose dictionaries location"
+        selectExisting: true
+        selectMultiple: false
+        selectFolder: true
+        nameFilters: [ "All files (*)" ]
+
+        onAccepted: {
+            console.log("You chose: " + dictPathDialog.folder)
+            var path = dictPathDialog.folder.toString().replace(/^(file:\/{2})/,"");
+            settingsModel.dictionaryPath = decodeURIComponent(path);
         }
 
         onRejected: {
@@ -270,7 +289,23 @@ ApplicationWindow {
                                 color: Colors.defaultInputBackground
                             }
                         }
+                        RowLayout {
+                            width: parent.width
+                            spacing: 10
+                            StyledCheckbox {
+                                id: userStatisticCheckBox
+                                text: qsTr("Collect usage statistic")
+                                onCheckedChanged: {
+                                    settingsModel.userStatistic = checked
+                                }
 
+                                Component.onCompleted: checked = settingsModel.userStatistic
+                            }
+                            StyledText {
+                                text: qsTr("(simple statistic of feature usage)")
+                                color: Colors.defaultInputBackground
+                            }
+                        }
                         Item {
                             Layout.fillHeight: true
                         }
@@ -535,6 +570,50 @@ ApplicationWindow {
                                 width: 70
                                 onClicked: settingsModel.resetCurl()
                             }
+
+                            StyledText {
+                                                            Layout.row: 2
+                                                            Layout.column: 0
+                                                            Layout.fillWidth: true
+                                                            Layout.maximumWidth: 80
+                                                            horizontalAlignment: Text.AlignRight
+                                                            text: qsTr("Dictionary path:")
+                                                        }
+
+                                                        StyledInputHost {
+                                                            border.width: dictText.activeFocus ? 1 : 0
+                                                            Layout.row: 2
+                                                            Layout.column: 1
+
+                                                            StyledTextInput {
+                                                                id: dictText
+                                                                width: 150
+                                                                height: 24
+                                                                clip: true
+                                                                text: settingsModel.dictionaryPath
+                                                                anchors.left: parent.left
+                                                                anchors.leftMargin: 5
+                                                                KeyNavigation.backtab: curlText
+                                                                onTextChanged: settingsModel.dictionaryPath = text
+                                                            }
+                                                        }
+
+                                                        StyledButton {
+                                                            Layout.row: 2
+                                                            Layout.column: 2
+                                                            text: qsTr("Select...")
+                                                            width: 70
+                                                            onClicked: dictPathDialog.open()
+                                                        }
+
+                                                        StyledButton {
+                                                            Layout.row: 2
+                                                            Layout.column: 3
+                                                            text: qsTr("Reset")
+                                                            width: 70
+                                                            onClicked: settingsModel.resetDictPath()
+                                                        }
+
                         }
 
                         Item {
@@ -948,7 +1027,7 @@ ApplicationWindow {
                 }
 
                 StyledButton {
-                    text: qsTr("Save and Exit")
+                    text: qsTr("Save and Close")
                     width: 120
                     onClicked: {
                         settingsModel.keywordSizeScale = uxTab.sizeSliderValue
@@ -963,7 +1042,7 @@ ApplicationWindow {
                 }
 
                 StyledButton {
-                    text: qsTr("Exit")
+                    text: qsTr("Close")
                     width: 60
                     onClicked: {
                         settingsModel.readAllValues()
