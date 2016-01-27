@@ -30,6 +30,10 @@ If you want to create Xpiks executable for everyday usage, before each `Run qmak
 - cd to _xpiks-qt_ subdirectory
 - `debuild -i -us -uc -b`
 
+***OpenSUSE build***
+- in the _xpiks-qt.pro_ file in the _linux-g++-x64_ section comment out quazip static library paths
+- build _quazip_ separately and add path to the built .a file
+
 ***More***
 
 More instructions can be found at this page http://ribtoks.github.io/xpiks/blog/2014/building-xpiks-alone/
