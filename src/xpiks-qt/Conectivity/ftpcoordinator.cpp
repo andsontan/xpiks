@@ -159,7 +159,6 @@ namespace Conectivity {
                                                               batches.at(i), uploadInfos.at(i));
             QThread *thread = new QThread();
             worker->moveToThread(thread);
-
             QObject::connect(thread, SIGNAL(started()), worker, SLOT(process()));
             QObject::connect(worker, SIGNAL(stopped()), thread, SLOT(quit()));
 
@@ -174,6 +173,11 @@ namespace Conectivity {
 
             thread->start();
         }
+    }
+
+    void FtpCoordinator::cancelUpload() {
+        qDebug() << "Cancelling upload in coordinator";
+        emit cancelAll();
     }
 
     void FtpCoordinator::workerProgressChanged(double oldPercents, double newPercents) {

@@ -92,7 +92,7 @@ namespace Models {
          void doUploadArtworks(const QVector<ArtworkMetadata*> &artworkList);
 
     protected:
-        void cancelProcessing();
+        virtual void cancelProcessing();
         virtual void innerResetModel() { m_Percent = 0; }
 
      private:

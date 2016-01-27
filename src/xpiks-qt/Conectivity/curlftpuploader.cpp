@@ -21,6 +21,7 @@
 
 #include "curlftpuploader.h"
 #include <QDebug>
+#include <QCoreApplication>
 #include <QFileInfo>
 #include <sys/stat.h>
 #include <cstdio>
@@ -53,9 +54,15 @@ namespace Conectivity {
         if ((curtime - progressReporter->getLastTime()) >= MINIMAL_PROGRESS_FUNCTIONALITY_INTERVAL) {
             progressReporter->setLastTime(curtime);
             progressReporter->updateProgress((double)ultotal, (double)ulnow);
+
+            QCoreApplication::processEvents();
         }
 
         int result = progressReporter->cancelRequested() ? 1 : 0;
+        if (result) {
+            qDebug() << "Upload cancelled from the progress callback";
+        }
+
         return result;
     }
 
@@ -129,6 +136,11 @@ namespace Conectivity {
         curl_easy_setopt(curlHandle, CURLOPT_HEADERDATA, &uploaded_len);
 
         for (c = 0; (r != CURLE_OK) && (c < context->m_RetriesCount); c++) {
+            if (r == CURLE_ABORTED_BY_CALLBACK) {
+                qInfo() << "Upload aborted by user...";
+                break;
+            }
+
             /* are we resuming? */
             if (c) { /* yes */
                 /* determine the length of the file already written */
@@ -160,11 +172,6 @@ namespace Conectivity {
             }
 
             r = curl_easy_perform(curlHandle);
-
-            if (r == CURLE_ABORTED_BY_CALLBACK) {
-                qInfo() << "Upload aborted by user...";
-                break;
-            }
         }
 
         fclose(f);
@@ -191,6 +198,11 @@ namespace Conectivity {
             double progress = ulnow * 100.0 / ultotal;
             emit progressChanged(progress);
         }
+    }
+
+    void CurlProgressReporter::cancelHandler() {
+        m_Cancel = true;
+        qDebug() << "Cancelled in the progress reporter...";
     }
 
     CurlFtpUploader::CurlFtpUploader(UploadBatch *batchToUpload, QObject *parent) :
@@ -227,6 +239,7 @@ namespace Conectivity {
         qDebug() << "Uploading" << size << "file(s) started for" << host;
 
         for (int i = 0; i < size; ++i) {
+
             if (m_Cancel) {
                 qWarning() << "CurlUploader: Cancelled. Breaking..." << host;
                 break;
@@ -268,6 +281,7 @@ namespace Conectivity {
     void CurlFtpUploader::cancel() {
         m_Cancel = true;
         emit cancelCurrentUpload();
+        qDebug() << "Cancelling current upload...";
     }
 
     void CurlFtpUploader::reportCurrentFileProgress(double percent) {

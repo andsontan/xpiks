@@ -234,10 +234,12 @@ LIBS += -lz
 
 LIBS += -L"$$PWD/../libs/"
 LIBS += -lquazip
-win32:LIBS += -llibcurl_debug
+win32:LIBS += -llibcurl_a_debug
 unix:LIBS += -lcurl
 INCLUDEPATH += "../libcurl/include/curl"
 INCLUDEPATH += "../hunspell-1.3.3/src/hunspell"
+
+DEFINES += CURL_STATICLIB
 
 LIBS += -lhunspell
 DEFINES += HUNSPELL_STATIC

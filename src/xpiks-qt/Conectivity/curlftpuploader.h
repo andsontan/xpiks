@@ -66,7 +66,7 @@ namespace Conectivity {
         void progressChanged(double percentsDone);
 
     public slots:
-        void cancelHandler() { m_Cancel = true; }
+        void cancelHandler();
 
     private:
         double m_LastTime;
