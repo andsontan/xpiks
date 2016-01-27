@@ -162,7 +162,7 @@ namespace MetadataIO {
             }
 
             if (m_SettingsModel->getSaveBackups()) {
-                readBackupsAndSizes();
+                readBackupsAndSizes(success);
             } else {
                 readSizes();
             }
@@ -239,7 +239,7 @@ namespace MetadataIO {
         }
     }
 
-    void MetadataReadingWorker::readBackupsAndSizes() {
+    void MetadataReadingWorker::readBackupsAndSizes(bool exiftoolSuccess) {
         qDebug() << "Reading backups of items...";
         int size = m_ItemsToRead.size();
         for (int i = 0; i < size; ++i) {
@@ -248,7 +248,10 @@ namespace MetadataIO {
 
             MetadataSavingCopy copy(metadata);
             if (copy.readFromFile()) {
-                Q_ASSERT(m_ImportResult.contains(filepath));
+                if (exiftoolSuccess) {
+                    Q_ASSERT(m_ImportResult.contains(filepath));
+                }
+
                 m_ImportResult[filepath].BackupDict = copy.getInfo();
             }
 
