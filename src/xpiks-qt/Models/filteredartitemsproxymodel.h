@@ -44,6 +44,7 @@ namespace Models {
         const QString &getSearchTerm() const { return m_SearchTerm; }
         void setSearchTerm(const QString &value);
         int getSelectedArtworksCount() const { return m_SelectedArtworksCount; }
+        void spellCheckAllItems();
 
     public:
         Q_INVOKABLE int getOriginalIndex(int index);
@@ -76,6 +77,7 @@ namespace Models {
     public slots:
         void itemSelectedChanged(bool value);
         void onSelectedArtworksRemoved();
+        void onSpellCheckerAvailable(bool afterRestart);
 
     signals:
         void searchTermChanged(const QString &searchTerm);
@@ -91,6 +93,7 @@ namespace Models {
         QVector<ArtworkMetadata *> getSelectedOriginalItems() const;
         QVector<ArtItemInfo *> getSelectedOriginalItemsWithIndices() const;
         QVector<ArtItemInfo *> getAllItemsWithIndices() const;
+        QVector<ArtworkMetadata *> getAllOriginalItems() const;
         QVector<int> getSelectedOriginalIndices() const;
         void forceUnselectAllItems();
         ArtItemsModel *getArtItemsModel() const;

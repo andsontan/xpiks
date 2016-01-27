@@ -24,6 +24,7 @@
 #include <QDebug>
 #include "../Helpers/appsettings.h"
 #include "../Common/defines.h"
+#include "../Commands/commandmanager.h"
 
 #ifdef Q_OS_MAC
 #define DEFAULT_EXIFTOOL "/usr/bin/exiftool"
@@ -72,7 +73,8 @@ namespace Models {
         m_FitSmallPreview(DEFAULT_FIT_SMALL_PREVIEW),
         m_SearchUsingAnd(DEFAULT_SEARCH_USING_AND),
         m_UseSpellCheck(DEFAULT_USE_SPELL_CHECK),
-        m_UserStatistic(DEFAULT_COLLECT_USER_STATISTIC)
+        m_UserStatistic(DEFAULT_COLLECT_USER_STATISTIC),
+        m_DictsPathChanged(false)
     {
     }
 
@@ -110,6 +112,14 @@ namespace Models {
         }
 
         emit keywordSizeScaleChanged(m_KeywordSizeScale);
+
+#if defined(Q_OS_LINUX)
+        if (m_DictsPathChanged) {
+            // TODO: check if need to restart depending on path
+            m_CommandManager->restartSpellChecking();
+            m_DictsPathChanged = false;
+        }
+#endif
     }
 
     void SettingsModel::clearMasterPasswordSettings() {

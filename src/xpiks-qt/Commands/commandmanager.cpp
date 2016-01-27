@@ -105,6 +105,7 @@ void Commands::CommandManager::InjectDependency(Suggestion::KeywordsSuggestor *k
 
 void Commands::CommandManager::InjectDependency(Models::SettingsModel *settingsModel) {
     Q_ASSERT(settingsModel != NULL); m_SettingsModel = settingsModel;
+    m_SettingsModel->setCommandManager(this);
 }
 
 void Commands::CommandManager::InjectDependency(Models::RecentDirectoriesModel *recentDirectories) {
@@ -179,6 +180,9 @@ void Commands::CommandManager::connectEntitiesSignalsSlots() const {
 
     QObject::connect(m_SettingsModel, SIGNAL(userStatisticChanged(bool)),
                      m_TelemetryService, SLOT(changeReporting(bool)));
+
+    QObject::connect(m_SpellCheckerService, SIGNAL(serviceAvailable(bool)),
+                     m_FilteredItemsModel, SLOT(onSpellCheckerAvailable(bool)));
 }
 
 void Commands::CommandManager::recodePasswords(const QString &oldMasterPassword,
@@ -392,4 +396,10 @@ void Commands::CommandManager::beforeDestructionCallback() const {
 #ifndef TESTS
     m_LogsModel->stopLogging();
 #endif
+}
+
+void Commands::CommandManager::restartSpellChecking() {
+    if (m_SpellCheckerService) {
+        m_SpellCheckerService->restartWorker();
+    }
 }

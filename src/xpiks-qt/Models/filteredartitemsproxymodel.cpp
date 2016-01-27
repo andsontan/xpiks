@@ -51,6 +51,12 @@ namespace Models {
         emit afterInvalidateFilter();
     }
 
+    void FilteredArtItemsProxyModel::spellCheckAllItems() {
+        QVector<ArtworkMetadata *> allArtworks = getAllOriginalItems();
+        m_CommandManager->submitForSpellCheck(allArtworks);
+        m_CommandManager->reportUserAction(Conectivity::UserActionSpellCheck);
+    }
+
     int FilteredArtItemsProxyModel::getOriginalIndex(int index) {
         QModelIndex originalIndex = mapToSource(this->index(index, 0));
         int row = originalIndex.row();
@@ -268,6 +274,12 @@ namespace Models {
         emit selectedArtworksCountChanged();
     }
 
+    void FilteredArtItemsProxyModel::onSpellCheckerAvailable(bool afterRestart) {
+        if (afterRestart) {
+            this->spellCheckAllItems();
+        }
+    }
+
     void FilteredArtItemsProxyModel::removeMetadataInItems(const QVector<ArtItemInfo *> &itemsToClear, int flags) const {
         Commands::CombinedEditCommand *combinedEditCommand = new Commands::CombinedEditCommand(
                     flags,
@@ -372,6 +384,27 @@ namespace Models {
         }
 
         return selectedArtworks;
+    }
+
+    QVector<ArtworkMetadata *> FilteredArtItemsProxyModel::getAllOriginalItems() const {
+        ArtItemsModel *artItemsModel = getArtItemsModel();
+        QVector<ArtworkMetadata *> allArtworks;
+        int size = this->rowCount();
+        allArtworks.reserve(size);
+
+        for (int row = 0; row < size; ++row) {
+            QModelIndex proxyIndex = this->index(row, 0);
+            QModelIndex originalIndex = this->mapToSource(proxyIndex);
+
+            int index = originalIndex.row();
+            ArtworkMetadata *metadata = artItemsModel->getArtwork(index);
+
+            if (metadata != NULL) {
+                allArtworks.append(metadata);
+            }
+        }
+
+        return allArtworks;
     }
 
     QVector<int> FilteredArtItemsProxyModel::getSelectedOriginalIndices() const {

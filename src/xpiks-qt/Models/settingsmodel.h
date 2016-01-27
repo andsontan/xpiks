@@ -25,6 +25,7 @@
 #include <QAbstractListModel>
 #include <QObject>
 #include <QString>
+#include "../Common/baseentity.h"
 
 #define SETTINGS_EPSILON 1e-9
 
@@ -40,7 +41,7 @@ namespace Models {
     int ensureInBounds(int value, int boundA, int boundB);
     double ensureInBounds(double value, double boundA, double boundB);
 
-    class SettingsModel : public QObject
+    class SettingsModel : public QObject, public Common::BaseEntity
     {
         Q_OBJECT
         Q_PROPERTY(QString exifToolPath READ getExifToolPath WRITE setExifToolPath NOTIFY exifToolPathChanged)
@@ -271,7 +272,9 @@ namespace Models {
 
             m_DictPath = path;
             emit dictionaryPathChanged(path);
+            m_DictsPathChanged = true;
         }
+
     private:
         void resetToDefault();
 
@@ -295,6 +298,7 @@ namespace Models {
         bool m_SearchUsingAnd;
         bool m_UseSpellCheck;
         bool m_UserStatistic;
+        bool m_DictsPathChanged;
     };
 }
 

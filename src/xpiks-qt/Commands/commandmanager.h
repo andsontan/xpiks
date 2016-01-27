@@ -171,6 +171,7 @@ namespace Commands {
         void cleanupLocalLibraryAsync() const;
         void afterConstructionCallback();
         void beforeDestructionCallback() const;
+        void restartSpellChecking();
 
     public:
         // methods for getters
