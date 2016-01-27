@@ -55,8 +55,14 @@ namespace Conectivity {
             progressReporter->setLastTime(curtime);
             progressReporter->updateProgress((double)ultotal, (double)ulnow);
 
-            QCoreApplication::processEvents();
+            QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
         }
+
+        /*fprintf(stdout, "UP: %" CURL_FORMAT_CURL_OFF_T " of %" CURL_FORMAT_CURL_OFF_T
+                  "  DOWN: %" CURL_FORMAT_CURL_OFF_T " of %" CURL_FORMAT_CURL_OFF_T
+                  "\r\n",
+                  ulnow, ultotal, dlnow, dltotal);
+        fflush(stdout);*/
 
         int result = progressReporter->cancelRequested() ? 1 : 0;
         if (result) {
@@ -136,6 +142,9 @@ namespace Conectivity {
         curl_easy_setopt(curlHandle, CURLOPT_HEADERDATA, &uploaded_len);
 
         for (c = 0; (r != CURLE_OK) && (c < context->m_RetriesCount); c++) {
+
+            QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+
             if (r == CURLE_ABORTED_BY_CALLBACK) {
                 qInfo() << "Upload aborted by user...";
                 break;
