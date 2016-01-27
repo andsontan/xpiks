@@ -87,7 +87,7 @@ namespace Conectivity {
         void uploadStarted();
         void progressChanged(double prevPercents, double newPercents);
         void uploadFinished(bool anyErrors);
-        void transferFailed(const QString &filepath);
+        void transferFailed(const QString &filepath, const QString &host);
         void cancelCurrentUpload();
 
     public slots:

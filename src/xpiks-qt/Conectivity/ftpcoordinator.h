@@ -55,6 +55,7 @@ namespace Conectivity {
         void overallProgressChanged(double percentDone);
 
     private slots:
+        void transferFailed(const QString &filepath, const QString &host);
         void workerProgressChanged(double oldPercents, double newPercents);
         void workerFinished(bool anyErrors);
 

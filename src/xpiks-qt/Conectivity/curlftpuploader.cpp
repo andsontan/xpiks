@@ -263,7 +263,7 @@ namespace Conectivity {
 
             if (!uploadSuccess) {
                 anyErrors = true;
-                emit transferFailed(filepath);
+                emit transferFailed(filepath, host);
             }
 
             // TODO: only update progress of not-failed uploads

@@ -70,7 +70,8 @@ namespace Conectivity {
         QObject::connect(&ftpUploader, SIGNAL(progressChanged(double, double)), this, SIGNAL(progressChanged(double, double)));
         QObject::connect(&ftpUploader, SIGNAL(progressChanged(double, double)), this, SLOT(progressChangedHandler(double,double)));
         QObject::connect(this, SIGNAL(workerCancelled()), &ftpUploader, SLOT(cancel()));
-        QObject::connect(&ftpUploader, SIGNAL(transferFailed(QString)), this, SIGNAL(transferFailed(QString)));
+        QObject::connect(&ftpUploader, SIGNAL(transferFailed(QString, QString)),
+                         this, SIGNAL(transferFailed(QString, QString)));
 
         ftpUploader.uploadBatch();
     }
