@@ -754,6 +754,7 @@ Item {
                         enabled: !artworkUploader.inProgress
                         onClicked: {
                             filteredArtItemsModel.updateSelectedArtworks()
+                            uploadInfos.setAllUnselected()
                             closePopup()
                         }
                     }

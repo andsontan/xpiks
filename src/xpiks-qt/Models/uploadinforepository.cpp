@@ -126,6 +126,12 @@ namespace Models {
         }
     }
 
+    void UploadInfoRepository::setAllUnselected() {
+        foreach (UploadInfo *info, m_UploadInfos) {
+            info->setIsSelected(false);
+        }
+    }
+
     void UploadInfoRepository::backupAndDropRealPasswords() {
         foreach (UploadInfo *info, m_UploadInfos) {
             info->backupPassword();
