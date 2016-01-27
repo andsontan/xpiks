@@ -30,7 +30,7 @@
 #include "ftphelpers.h"
 #include "../../libcurl/include/curl/curl.h"
 
-#define MINIMAL_PROGRESS_FUNCTIONALITY_INTERVAL 1
+#define MINIMAL_PROGRESS_FUNCTIONALITY_INTERVAL 2
 
 namespace Conectivity {
 
@@ -57,12 +57,6 @@ namespace Conectivity {
 
             QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
         }
-
-        /*fprintf(stdout, "UP: %" CURL_FORMAT_CURL_OFF_T " of %" CURL_FORMAT_CURL_OFF_T
-                  "  DOWN: %" CURL_FORMAT_CURL_OFF_T " of %" CURL_FORMAT_CURL_OFF_T
-                  "\r\n",
-                  ulnow, ultotal, dlnow, dltotal);
-        fflush(stdout);*/
 
         int result = progressReporter->cancelRequested() ? 1 : 0;
         if (result) {
@@ -142,7 +136,6 @@ namespace Conectivity {
         curl_easy_setopt(curlHandle, CURLOPT_HEADERDATA, &uploaded_len);
 
         for (c = 0; (r != CURLE_OK) && (c < context->m_RetriesCount); c++) {
-
             QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
 
             if (r == CURLE_ABORTED_BY_CALLBACK) {
@@ -152,6 +145,7 @@ namespace Conectivity {
 
             /* are we resuming? */
             if (c) { /* yes */
+                qDebug() << "Attempting to resume upload" << uploaded_len << "try #" << c;
                 /* determine the length of the file already written */
                 /*
                * With NOBODY and NOHEADER, libcurl will issue a SIZE
@@ -203,7 +197,7 @@ namespace Conectivity {
     }
 
     void CurlProgressReporter::updateProgress(double ultotal, double ulnow) {
-        if (fabs(ultotal - 0.0) > 1e-6) {
+        if (fabs(ultotal) > 1e-6) {
             double progress = ulnow * 100.0 / ultotal;
             emit progressChanged(progress);
         }
@@ -235,8 +229,7 @@ namespace Conectivity {
 
         QString host = sanitizeHost(context->m_Host);
 
-        // TODO: do not call this from thread
-        //curl_global_init(CURL_GLOBAL_ALL);
+        // curl_global_init should be done from coordinator
         curlHandle = curl_easy_init();
 
         CurlProgressReporter progressReporter(curlHandle);
@@ -283,14 +276,12 @@ namespace Conectivity {
         qDebug() << "Uploading finished for" << host;
 
         curl_easy_cleanup(curlHandle);
-        // TODO: do not call this from thread
-        //curl_global_cleanup();
+        // curl_global_cleanup should be done from coordinator
     }
 
     void CurlFtpUploader::cancel() {
         m_Cancel = true;
         emit cancelCurrentUpload();
-        qDebug() << "Cancelling current upload...";
     }
 
     void CurlFtpUploader::reportCurrentFileProgress(double percent) {
