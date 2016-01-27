@@ -46,7 +46,7 @@ permalink: /downloads/
 </a>
 </div>
 
-<p><strong>Also you have to manually install <i>qtdeclarative5-controls-plugin</i> and <i>qtdeclarative5-quicklayouts-plugin</i>.</strong> Package is only for Debian-based operating systems (Ubuntu, Debian, Mint, etc.) with x64 architecture.</p>
+<p>Package is only for Debian-based operating systems (Ubuntu, Debian, Mint, etc.) with x64 architecture. See <a href="{{site.url}}/linux-instructions/">installation instructions for Linux</a> page.</p>
 
 <div style="clear:both;height: 30px;">&nbsp;</div>
 
