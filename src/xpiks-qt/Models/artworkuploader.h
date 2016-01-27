@@ -72,15 +72,11 @@ namespace Models {
 
      public slots:
          void onUploadStarted();
-         void artworkUploaded(bool status);
          void allFinished(bool anyError);
          void credentialsTestingFinished();
 
     private slots:
          void uploaderPercentChanged(double percent);
-
-     private:
-         void artworkUploadedHandler(bool success);
 
      public:
          Q_INVOKABLE void uploadArtworks();

@@ -66,12 +66,9 @@ namespace Models {
         updateProgress();
     }
 
-    void ArtworkUploader::artworkUploaded(bool status) {
-        artworkUploadedHandler(status);
-    }
-
     void ArtworkUploader::allFinished(bool anyError) {
-        Q_UNUSED(anyError);
+        qInfo() << "Upload finished with status anyError =" << anyError;
+        setIsError(anyError);
         endProcessing();
         m_Percent = 100;
         updateProgress();
@@ -88,12 +85,6 @@ namespace Models {
         updateProgress();
         UploadInfoRepository *uploadInfoRepository = m_CommandManager->getUploadInfoRepository();
         uploadInfoRepository->updatePercentages();
-    }
-
-    void ArtworkUploader::artworkUploadedHandler(bool success) {
-        if (!success) {
-            setIsError(true);
-        }
     }
 
     void ArtworkUploader::uploadArtworks() { doUploadArtworks(getArtworkList()); }
