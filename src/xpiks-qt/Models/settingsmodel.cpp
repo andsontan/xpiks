@@ -41,7 +41,6 @@
 #define DEFAULT_KEYWORD_SIZE_SCALE 1.0
 #define DEFAULT_DISMISS_DURATION 10
 #define DEFAULT_MAX_PARALLEL_UPLOADS 2
-#define DEFAULT_PROXY ""
 #define DEFAULT_FIT_SMALL_PREVIEW false
 #define DEFAULT_SEARCH_USING_AND true
 #define DEFAULT_SCROLL_SPEED_SCALE 1.0
@@ -51,8 +50,6 @@
 namespace Models {
     SettingsModel::SettingsModel(QObject *parent) :
         QObject(parent),
-        m_ExifToolPath(DEFAULT_EXIFTOOL),
-        m_ProxyURI(DEFAULT_PROXY),
         m_MinMegapixelCount(DEFAULT_MIN_MEGAPIXELS),
         m_KeywordSizeScale(DEFAULT_KEYWORD_SIZE_SCALE),
         m_ScrollSpeedScale(DEFAULT_SCROLL_SPEED_SCALE),
@@ -90,7 +87,6 @@ namespace Models {
         appSettings.setValue(appSettings.getKeywordSizeScaleKey(), m_KeywordSizeScale);
         appSettings.setValue(appSettings.getDismissDurationKey(), m_DismissDuration);
         appSettings.setValue(appSettings.getMaxParallelUploadsKey(), m_MaxParallelUploads);
-        appSettings.setValue(appSettings.getProxyURIKey(), m_ProxyURI);
         appSettings.setValue(appSettings.getFitSmallPreviewKey(), m_FitSmallPreview);
         appSettings.setValue(appSettings.getSearchUsingAndKey(), m_SearchUsingAnd);
         appSettings.setValue(appSettings.getScrollSpeedScaleKey(), m_ScrollSpeedScale);
@@ -129,7 +125,6 @@ namespace Models {
         setKeywordSizeScale(appSettings.doubleValue(appSettings.getKeywordSizeScaleKey(), DEFAULT_KEYWORD_SIZE_SCALE));
         setDismissDuration(appSettings.value(appSettings.getDismissDurationKey(), DEFAULT_DISMISS_DURATION).toInt());
         setMaxParallelUploads(appSettings.value(appSettings.getMaxParallelUploadsKey(), DEFAULT_MAX_PARALLEL_UPLOADS).toInt());
-        setProxyURI(appSettings.value(appSettings.getProxyURIKey(), DEFAULT_PROXY).toString());
         setFitSmallPreview(appSettings.boolValue(appSettings.getFitSmallPreviewKey(), DEFAULT_FIT_SMALL_PREVIEW));
         setSearchUsingAnd(appSettings.boolValue(appSettings.getSearchUsingAndKey(), DEFAULT_SEARCH_USING_AND));
         setScrollSpeedScale(appSettings.doubleValue(appSettings.getScrollSpeedScaleKey(), DEFAULT_SCROLL_SPEED_SCALE));
@@ -150,7 +145,6 @@ namespace Models {
         setKeywordSizeScale(DEFAULT_KEYWORD_SIZE_SCALE);
         setDismissDuration(DEFAULT_DISMISS_DURATION);
         setMaxParallelUploads(DEFAULT_MAX_PARALLEL_UPLOADS);
-        setProxyURI(DEFAULT_PROXY);
         setFitSmallPreview(DEFAULT_FIT_SMALL_PREVIEW);
         setSearchUsingAnd(DEFAULT_SEARCH_USING_AND);
         setScrollSpeedScale(DEFAULT_SCROLL_SPEED_SCALE);

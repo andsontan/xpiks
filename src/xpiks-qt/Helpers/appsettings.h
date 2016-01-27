@@ -88,9 +88,6 @@ namespace Helpers {
         Q_PROPERTY(QString maxParallelUploadsKey READ getMaxParallelUploadsKey CONSTANT)
         QString getMaxParallelUploadsKey() const { return QLatin1String(Constants::MAX_PARALLEL_UPLOADS); }
 
-        Q_PROPERTY(QString proxyURIKey READ getProxyURIKey CONSTANT)
-        QString getProxyURIKey() const { return QLatin1String(Constants::PROXY_URI); }
-
         Q_PROPERTY(QString fitSmallPreviewKey READ getFitSmallPreviewKey CONSTANT)
         QString getFitSmallPreviewKey() const { return QLatin1String(Constants::FIT_SMALL_PREVIEW); }
 

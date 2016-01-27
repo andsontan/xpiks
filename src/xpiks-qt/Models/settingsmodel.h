@@ -47,7 +47,6 @@ namespace Models {
         Q_PROPERTY(double keywordSizeScale READ getKeywordSizeScale WRITE setKeywordSizeScale NOTIFY keywordSizeScaleChanged)
         Q_PROPERTY(int dismissDuration READ getDismissDuration WRITE setDismissDuration NOTIFY dismissDurationChanged)
         Q_PROPERTY(int maxParallelUploads READ getMaxParallelUploads WRITE setMaxParallelUploads NOTIFY maxParallelUploadsChanged)
-        Q_PROPERTY(QString proxyURI READ getProxyURI WRITE setProxyURI NOTIFY proxyURIChanged)
         Q_PROPERTY(bool fitSmallPreview READ getFitSmallPreview WRITE setFitSmallPreview NOTIFY fitSmallPreviewChanged)
         Q_PROPERTY(bool searchUsingAnd READ getSearchUsingAnd WRITE setSearchUsingAnd NOTIFY searchUsingAndChanged)
         Q_PROPERTY(double scrollSpeedScale READ getScrollSpeedScale WRITE setScrollSpeedScale NOTIFY scrollSpeedScaleChanged)
@@ -78,7 +77,6 @@ namespace Models {
         double getKeywordSizeScale() const { return m_KeywordSizeScale; }
         int getDismissDuration() const { return m_DismissDuration; }
         int getMaxParallelUploads() const { return m_MaxParallelUploads; }
-        QString getProxyURI() const { return m_ProxyURI; }
         bool getFitSmallPreview() const { return m_FitSmallPreview; }
         bool getSearchUsingAnd() const { return m_SearchUsingAnd; }
         double getScrollSpeedScale() const { return m_ScrollSpeedScale; }
@@ -96,7 +94,6 @@ namespace Models {
         void keywordSizeScaleChanged(double value);
         void dismissDurationChanged(int value);
         void maxParallelUploadsChanged(int value);
-        void proxyURIChanged(QString value);
         void fitSmallPreviewChanged(bool value);
         void searchUsingAndChanged(bool value);
         void scrollSpeedScaleChanged(double value);
@@ -109,14 +106,6 @@ namespace Models {
 
             m_ExifToolPath = exifToolPath;
             emit exifToolPathChanged(exifToolPath);
-        }
-
-        void setProxyURI(QString value) {
-            if (m_ProxyURI == value)
-                return;
-
-            m_ProxyURI = value;
-            emit proxyURIChanged(value);
         }
 
         void setMinMegapixelCount(double minMegapixelCount) {
@@ -236,7 +225,6 @@ namespace Models {
 
     private:
         QString m_ExifToolPath;
-        QString m_ProxyURI;
         double m_MinMegapixelCount;
         double m_KeywordSizeScale;
         double m_ScrollSpeedScale;
