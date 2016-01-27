@@ -82,7 +82,8 @@ SOURCES += main.cpp \
     ../xpiks-qt/MetadataIO/metadatareadingworker.cpp \
     ../xpiks-qt/MetadataIO/saverworkerjobitem.cpp \
     ../xpiks-qt/Suggestion/locallibrary.cpp \
-    ../xpiks-qt/Suggestion/libraryloaderworker.cpp
+    ../xpiks-qt/Suggestion/libraryloaderworker.cpp \
+    ../xpiks-qt/MetadataIO/metadatawritingworker.cpp
 
 HEADERS += \
     encryption_tests.h \
@@ -148,4 +149,5 @@ HEADERS += \
     ../xpiks-qt/MetadataIO/metadatareadingworker.h \
     ../xpiks-qt/MetadataIO/saverworkerjobitem.h \
     ../xpiks-qt/Suggestion/locallibrary.h \
-    ../xpiks-qt/Suggestion/libraryloaderworker.h
+    ../xpiks-qt/Suggestion/libraryloaderworker.h \
+    ../xpiks-qt/MetadataIO/metadatawritingworker.h

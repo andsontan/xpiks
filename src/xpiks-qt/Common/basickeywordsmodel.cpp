@@ -26,7 +26,7 @@
 #include "../SpellCheck/spellcheckiteminfo.h"
 #include "../Helpers/keywordvalidator.h"
 #include "../Helpers/stringhelper.h"
-#include "./Common/flags.h"
+#include "flags.h"
 
 namespace Common {
     BasicKeywordsModel::BasicKeywordsModel(QObject *parent):
