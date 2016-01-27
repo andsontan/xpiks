@@ -19,6 +19,10 @@ Install the deb file from latest release with all dependencies.
 
 **Ubuntu**
 
+Also there is an issue with application menu in Qt for Ubuntu which requires a workaround:
+
+`sudo apt-get remove --purge appmenu-qt5`
+
 **Mint 17.3 (Rose)**
 
 List of QML plugins to be installed manually (from standard repository):
@@ -29,11 +33,6 @@ List of QML plugins to be installed manually (from standard repository):
 - qtdeclarative5-quicklayouts-plugin
 - qtdeclarative5-window-plugin
 - qtdeclarative5-controls-plugin
-
-Also there is an issue with application menu in Qt for Ubuntu which requires a workaround:
-
-`sudo apt-get remove --purge appmenu-qt5`
-
 
 **OpenSuse installation**
 

@@ -42,7 +42,7 @@ namespace Conectivity {
     {
         QObject::connect(&m_NetworkManager, SIGNAL(finished(QNetworkReply*)),
                          this, SLOT(replyReceived(QNetworkReply*)));
-        m_TelemetryEnabled=appSettings.value(Constants::USER_STATISTIC, DEFAULT_COLLECT_USER_STATISTIC).toBool();
+        m_TelemetryEnabled = appSettings.value(Constants::USER_STATISTIC, DEFAULT_COLLECT_USER_STATISTIC).toBool();
     }
 
     void TelemetryService::reportAction(UserAction action) {
@@ -98,9 +98,9 @@ namespace Conectivity {
         query.addQueryItem(QLatin1String("_cvar"),
                            QString("{\"1\":[\"OS_type\",\"%1\"],\"2\":[\"OS_version\",\"%2\"],\"3\":[\"Xpiks_version\",\"%3\"]}")
 #ifdef Q_OS_WIN
-                           .arg(QString("Windows QT<5.4"))
+                           .arg(QString("windows"))
 #elsif Q_OS_DARWIN
-                           .arg(QString("Mac OS QT<5.4"))
+                           .arg(QString("osx"))
 #else
                            .arg(QString("Linux QT<5.4"))
 #endif
@@ -124,6 +124,9 @@ namespace Conectivity {
                 .arg(QSysInfo::productVersion()).toLocal8Bit());
 #elif defined(Q_OS_WIN)
         request.setRawHeader(QString("User-Agent").toLocal8Bit(), QString("Mozilla/5.0 (Windows %2; rv:1.1) Qt Xpiks/1.1")
+                .arg(QSysInfo::productVersion()).toLocal8Bit());
+#else
+        request.setRawHeader(QString("User-Agent").toLocal8Bit(), QString("Mozilla/5.0 (Linux %2; rv:1.1) Qt Xpiks/1.1")
                 .arg(QSysInfo::productVersion()).toLocal8Bit());
 #endif
 

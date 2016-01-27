@@ -59,6 +59,7 @@ namespace SpellCheck {
         QString resourcesPath;
         QString affPath;
         QString dicPath;
+
 #if not defined(Q_OS_LINUX)
         resourcesPath = QCoreApplication::applicationDirPath();
 #if defined(Q_OS_MAC)
@@ -67,18 +68,18 @@ namespace SpellCheck {
         resourcesPath += "/dict/";
 #endif
         QDir resourcesDir(resourcesPath);
-        QString affPath = resourcesDir.absoluteFilePath(EN_HUNSPELL_AFF);
-        QString dicPath = resourcesDir.absoluteFilePath(EN_HUNSPELL_DIC);
+        affPath = resourcesDir.absoluteFilePath(EN_HUNSPELL_AFF);
+        dicPath = resourcesDir.absoluteFilePath(EN_HUNSPELL_DIC);
 #else
         resourcesPath=appSettings.value(Constants::DICT_PATH, "").toString();
-        if(resourcesPath == "") {
+        if (resourcesPath == "") {
             resourcesPath="hunspell/";
-            dicPath=QStandardPaths::locate(QStandardPaths::GenericDataLocation, resourcesPath+EN_HUNSPELL_DIC);
-            affPath=QStandardPaths::locate(QStandardPaths::GenericDataLocation, resourcesPath+EN_HUNSPELL_AFF);
+            dicPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, resourcesPath+EN_HUNSPELL_DIC);
+            affPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, resourcesPath+EN_HUNSPELL_AFF);
         } else {
-            QDir resourcesDir(resourcesPath);
-            affPath = resourcesDir.absoluteFilePath(EN_HUNSPELL_AFF);
-            dicPath = resourcesDir.absoluteFilePath(EN_HUNSPELL_DIC);
+            QDir resourcesDirectory(resourcesPath);
+            affPath = resourcesDirectory.absoluteFilePath(EN_HUNSPELL_AFF);
+            dicPath = resourcesDirectory.absoluteFilePath(EN_HUNSPELL_DIC);
         }
 #endif
         bool initResult = false;

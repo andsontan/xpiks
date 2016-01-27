@@ -572,48 +572,51 @@ ApplicationWindow {
                             }
 
                             StyledText {
-                                                            Layout.row: 2
-                                                            Layout.column: 0
-                                                            Layout.fillWidth: true
-                                                            Layout.maximumWidth: 80
-                                                            horizontalAlignment: Text.AlignRight
-                                                            text: qsTr("Dictionary path:")
-                                                        }
+                                Layout.row: 2
+                                Layout.column: 0
+                                Layout.fillWidth: true
+                                Layout.maximumWidth: 80
+                                horizontalAlignment: Text.AlignRight
+                                text: qsTr("Dictionary path:")
+                                visible: Qt.platform.os === "linux"
+                            }
 
-                                                        StyledInputHost {
-                                                            border.width: dictText.activeFocus ? 1 : 0
-                                                            Layout.row: 2
-                                                            Layout.column: 1
+                            StyledInputHost {
+                                border.width: dictText.activeFocus ? 1 : 0
+                                Layout.row: 2
+                                Layout.column: 1
+                                visible: Qt.platform.os === "linux"
 
-                                                            StyledTextInput {
-                                                                id: dictText
-                                                                width: 150
-                                                                height: 24
-                                                                clip: true
-                                                                text: settingsModel.dictionaryPath
-                                                                anchors.left: parent.left
-                                                                anchors.leftMargin: 5
-                                                                KeyNavigation.backtab: curlText
-                                                                onTextChanged: settingsModel.dictionaryPath = text
-                                                            }
-                                                        }
+                                StyledTextInput {
+                                    id: dictText
+                                    width: 150
+                                    height: 24
+                                    clip: true
+                                    text: settingsModel.dictionaryPath
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: 5
+                                    KeyNavigation.backtab: curlText
+                                    onTextChanged: settingsModel.dictionaryPath = text
+                                }
+                            }
 
-                                                        StyledButton {
-                                                            Layout.row: 2
-                                                            Layout.column: 2
-                                                            text: qsTr("Select...")
-                                                            width: 70
-                                                            onClicked: dictPathDialog.open()
-                                                        }
+                            StyledButton {
+                                Layout.row: 2
+                                Layout.column: 2
+                                text: qsTr("Select...")
+                                width: 70
+                                onClicked: dictPathDialog.open()
+                                visible: Qt.platform.os === "linux"
+                            }
 
-                                                        StyledButton {
-                                                            Layout.row: 2
-                                                            Layout.column: 3
-                                                            text: qsTr("Reset")
-                                                            width: 70
-                                                            onClicked: settingsModel.resetDictPath()
-                                                        }
-
+                            StyledButton {
+                                Layout.row: 2
+                                Layout.column: 3
+                                text: qsTr("Reset")
+                                width: 70
+                                onClicked: settingsModel.resetDictPath()
+                                visible: Qt.platform.os === "linux"
+                            }
                         }
 
                         Item {
