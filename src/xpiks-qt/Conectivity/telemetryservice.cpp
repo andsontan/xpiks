@@ -31,6 +31,7 @@
 #include <QNetworkReply>
 #include "telemetryservice.h"
 #include "analyticsuserevent.h"
+#include "Models/settingsmodel.h"
 #include "../Common/version.h"
 
 namespace Conectivity {
@@ -41,14 +42,30 @@ namespace Conectivity {
     {
         QObject::connect(&m_NetworkManager, SIGNAL(finished(QNetworkReply*)),
                          this, SLOT(replyReceived(QNetworkReply*)));
+        m_TelemetryEnabled=appSettings.value(Constants::USER_STATISTIC, DEFAULT_COLLECT_USER_STATISTIC).toBool();
     }
 
     void TelemetryService::reportAction(UserAction action) {
-        qDebug() << "Reporting action" << action;
 #ifdef QT_NO_DEBUG
-        doReportAction(action);
-#else
-        Q_UNUSED(action);
+        if(m_TelemetryEnabled)
+	{
+            qDebug() << "Reporting action" << action;
+            doReportAction(action);
+	}
+        else
+#endif
+            Q_UNUSED(action);
+
+    }
+
+    void TelemetryService::changeReporting() {
+        m_TelemetryEnabled=appSettings.value(Constants::USER_STATISTIC, DEFAULT_COLLECT_USER_STATISTIC).toBool();
+#ifndef QT_NO_DEBUG
+        if(m_TelemetryEnabled) {
+            qDebug()<<"Telemetry enabled by setting";
+        } else {
+            qDebug()<<"Telemetry disabled by setting";
+        }
 #endif
     }
 
@@ -71,12 +88,25 @@ namespace Conectivity {
         query.addQueryItem(QLatin1String("m"), QString::number(userEvent.getMinute()));
         query.addQueryItem(QLatin1String("s"), QString::number(userEvent.getSecond()));
         query.addQueryItem(QLatin1String("send_image"), QLatin1String("0"));
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
         query.addQueryItem(QLatin1String("_cvar"),
                            QString("{\"1\":[\"OS_type\",\"%1\"],\"2\":[\"OS_version\",\"%2\"],\"3\":[\"Xpiks_version\",\"%3\"]}")
                            .arg(QSysInfo::productType())
                            .arg(QSysInfo::productVersion())
                            .arg(XPIKS_VERSION_STRING));
-
+#else
+        query.addQueryItem(QLatin1String("_cvar"),
+                           QString("{\"1\":[\"OS_type\",\"%1\"],\"2\":[\"OS_version\",\"%2\"],\"3\":[\"Xpiks_version\",\"%3\"]}")
+#ifdef Q_OS_WIN
+                           .arg(QString("Windows QT<5.4"))
+#elsif Q_OS_DARWIN
+                           .arg(QString("Mac OS QT<5.4"))
+#else
+                           .arg(QString("Linux QT<5.4"))
+#endif
+                           .arg(QString("-"))
+                           .arg(XPIKS_VERSION_STRING));
+#endif
 
         QUrl reportingUrl;
         reportingUrl.setUrl(m_ReportingEndpoint);

@@ -20,6 +20,7 @@
  */
 
 #include "metadatareadingworker.h"
+#include "../Common/defines.h"
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>

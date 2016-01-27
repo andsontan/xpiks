@@ -28,6 +28,13 @@
 
 #define SETTINGS_EPSILON 1e-9
 
+
+#ifdef COLLECT_USER_STATISTIC
+#define DEFAULT_COLLECT_USER_STATISTIC true
+#else
+#define DEFAULT_COLLECT_USER_STATISTIC false
+#endif
+
 namespace Models {
 
     int ensureInBounds(int value, int boundA, int boundB);
@@ -53,6 +60,8 @@ namespace Models {
         Q_PROPERTY(bool searchUsingAnd READ getSearchUsingAnd WRITE setSearchUsingAnd NOTIFY searchUsingAndChanged)
         Q_PROPERTY(double scrollSpeedScale READ getScrollSpeedScale WRITE setScrollSpeedScale NOTIFY scrollSpeedScaleChanged)
         Q_PROPERTY(bool useSpellCheck READ getUseSpellCheck WRITE setUseSpellCheck NOTIFY useSpellCheckChanged)
+        Q_PROPERTY(bool userStatistic READ getUserStatistic WRITE setUserStatistic NOTIFY userStatisticChanged)
+        Q_PROPERTY(QString dictionaryPath READ getDictionaryPath WRITE setDictionaryPath NOTIFY dictionaryPathChanged)
     public:
         explicit SettingsModel(QObject *parent = 0);
         virtual ~SettingsModel() {}
@@ -65,6 +74,7 @@ namespace Models {
         Q_INVOKABLE void clearMasterPasswordSettings();
         Q_INVOKABLE void resetExifTool();
         Q_INVOKABLE void resetCurl();
+        Q_INVOKABLE void resetDictPath();
         Q_INVOKABLE void readAllValues();
         Q_INVOKABLE void raiseMasterPasswordSignal() { emit mustUseMasterPasswordChanged(m_MustUseMasterPassword); }
 
@@ -86,8 +96,11 @@ namespace Models {
         bool getSearchUsingAnd() const { return m_SearchUsingAnd; }
         double getScrollSpeedScale() const { return m_ScrollSpeedScale; }
         bool getUseSpellCheck() const { return m_UseSpellCheck; }
+        bool getUserStatistic() const { return m_UserStatistic; }
+        QString getDictionaryPath() const { return m_DictPath; }
 
     signals:
+        void allValuesSaved();
         void exifToolPathChanged(QString exifToolPath);
         void curlPathChanged(QString curlPath);
         void minMegapixelCountChanged(double minMegapixelCount);
@@ -105,6 +118,8 @@ namespace Models {
         void searchUsingAndChanged(bool value);
         void scrollSpeedScaleChanged(double value);
         void useSpellCheckChanged(bool value);
+        void userStatisticChanged(bool value);
+        void dictionaryPathChanged(QString path);
 
     public:
         void setExifToolPath(QString exifToolPath) {
@@ -243,6 +258,21 @@ namespace Models {
             emit useSpellCheckChanged(value);
         }
 
+        void setUserStatistic(bool userStatistic) {
+            if (m_UserStatistic == userStatistic)
+                return;
+
+            m_UserStatistic = userStatistic;
+            emit userStatisticChanged(userStatistic);
+        }
+
+        void setDictionaryPath(QString path) {
+            if (m_DictPath == path)
+                return;
+
+            m_DictPath = path;
+            emit dictionaryPathChanged(path);
+        }
     private:
         void resetToDefault();
 
@@ -250,6 +280,7 @@ namespace Models {
         QString m_ExifToolPath;
         QString m_CurlPath;
         QString m_ProxyURI;
+        QString m_DictPath;
         double m_MinMegapixelCount;
         double m_KeywordSizeScale;
         double m_ScrollSpeedScale;
@@ -264,6 +295,7 @@ namespace Models {
         bool m_FitSmallPreview;
         bool m_SearchUsingAnd;
         bool m_UseSpellCheck;
+        bool m_UserStatistic;
     };
 }
 
