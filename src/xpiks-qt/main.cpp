@@ -200,7 +200,8 @@ int main(int argc, char *argv[]) {
     Helpers::UpdateService updateService;
     MetadataIO::MetadataIOCoordinator metadataIOCoordinator;
 
-    Conectivity::TelemetryService telemetryService(userId, TELEMETRY_ENABLED);
+    bool telemetryEnabled = appSettings.value(Constants::USER_STATISTIC, TELEMETRY_ENABLED).toBool();
+    Conectivity::TelemetryService telemetryService(userId, telemetryEnabled);
 
     Commands::CommandManager commandManager;
     commandManager.InjectDependency(&artworkRepository);

@@ -77,7 +77,6 @@ DEFINES += QT_NO_CAST_TO_ASCII \
            QT_NO_CAST_FROM_BYTEARRAY
 DEFINES += QUAZIP_STATIC
 DEFINES += HUNSPELL_STATIC
-DEFINES += COLLECT_USER_STATISTIC
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -254,7 +253,6 @@ linux-g++-64 {
     LIBS += -L/lib/x86_64-linux-gnu/
     LIBS += /usr/lib/x86_64-linux-gnu/libquazip-qt5.a
     QML_IMPORT_PATH += /usr/lib/x86_64-linux-gnu/qt5/imports/
-    #DEFINES -= COLLECT_USER_STATISTIC
 }
 
 linux-static {

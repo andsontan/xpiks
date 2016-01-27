@@ -50,6 +50,7 @@
 #define DEFAULT_SCROLL_SPEED_SCALE 1.0
 #define DEFAULT_USE_SPELL_CHECK true
 #define DEFAULT_HAVE_USER_CONSENT false
+#define DEFAULT_COLLECT_USER_STATISTIC true
 
 
 namespace Models {

@@ -291,26 +291,6 @@ ApplicationWindow {
                             }
                         }
 
-                        RowLayout {
-                            width: parent.width
-                            spacing: 10
-
-                            StyledCheckbox {
-                                id: userStatisticCheckBox
-                                text: qsTr("Collect usage statistic")
-                                onCheckedChanged: {
-                                    behaviorTab.useStatistics = checked
-                                }
-
-                                Component.onCompleted: checked = settingsModel.userStatistic
-                            }
-
-                            StyledText {
-                                text: qsTr("(simple statistic of feature usage)")
-                                color: Colors.defaultInputBackground
-                            }
-                        }
-
                         Item {
                             Layout.fillHeight: true
                         }
@@ -990,6 +970,80 @@ ApplicationWindow {
 
                                 onClicked: {
                                     resetMPDialog.open()
+                                }
+                            }
+                        }
+
+                        Item {
+                            id: container
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            height: childrenRect.height
+                            property bool expanded: false
+
+                            StyledText {
+                                id: link
+                                text: qsTr("More...")
+                                color: Colors.artworkActiveColor
+                                anchors.top: parent.top
+                                anchors.left: parent.left
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    cursorShape: Qt.PointingHandCursor
+                                    onClicked: {
+                                        if (container.expanded) {
+                                            container.expanded = false
+                                            contentsRect.height = 0
+                                            link.text = qsTr("More...")
+                                        } else {
+                                            contentsRect.height = 50
+                                            container.expanded = true
+                                            link.text = qsTr("Less...")
+                                        }
+                                    }
+                                }
+                            }
+
+                            Rectangle {
+                                id: contentsRect
+                                color: "transparent"
+                                border.color: Colors.defaultControlColor
+                                border.width: 1
+                                anchors.left: parent.left
+                                anchors.top: link.bottom
+                                anchors.topMargin: 5
+                                height: 0
+                                width: parent.width
+
+                                Behavior on height {
+                                    NumberAnimation {
+                                        duration: 200
+                                        easing.type: Easing.InQuad
+                                    }
+                                }
+
+                                RowLayout {
+                                    visible: container.expanded
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: 10
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    spacing: 10
+
+                                    StyledCheckbox {
+                                        id: userStatisticCheckBox
+                                        text: qsTr("Collect usage statistic")
+                                        onCheckedChanged: {
+                                            behaviorTab.useStatistics = checked
+                                        }
+
+                                        Component.onCompleted: checked = settingsModel.userStatistic
+                                    }
+
+                                    StyledText {
+                                        text: qsTr("(simple statistic of feature usage)")
+                                        color: Colors.defaultInputBackground
+                                    }
                                 }
                             }
                         }

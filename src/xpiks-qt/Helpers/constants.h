@@ -41,6 +41,7 @@ namespace Constants {
     const char TERMS_AND_CONDITIONS_FILENAME[] = "terms_and_conditions.txt";
     const char DICT_PATH[] = "DICT_PATH";
     const char USER_STATISTIC[] = "USER_STATISTIC";
+    const char NUMBER_OF_LAUNCHES[] = "NUMBER_OF_LAUNCHES";
 
     // different for DEBUG and RELEASE
 

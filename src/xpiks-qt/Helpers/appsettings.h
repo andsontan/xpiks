@@ -128,12 +128,15 @@ namespace Helpers {
         Q_PROPERTY(QString userStatisticKey READ getUserStatisticKey CONSTANT)
         QString getUserStatisticKey() const { return QLatin1String(Constants::USER_STATISTIC); }
 
+        Q_PROPERTY(QString numberOfLaunchesKey READ getNumberOfLaunchesKey CONSTANT)
+        QString getNumberOfLaunchesKey() const { return QLatin1String(Constants::NUMBER_OF_LAUNCHES); }
+
         Q_PROPERTY(QString whatsNewText READ getWhatsNewText CONSTANT)
         QString getWhatsNewText() const {
             QString text;
             QString path;
 
-#if not defined(Q_OS_LINUX)
+#if !defined(Q_OS_LINUX)
             path = QCoreApplication::applicationDirPath();
 
 #if defined(Q_OS_MAC)
@@ -143,7 +146,7 @@ namespace Helpers {
             path += QDir::separator() + QLatin1String(Constants::WHATS_NEW_FILENAME);
             path = QDir::cleanPath(path);
 #else
-            path=QStandardPaths::locate(appDataLocationType, Constants::WHATS_NEW_FILENAME);
+            path = QStandardPaths::locate(appDataLocationType, Constants::WHATS_NEW_FILENAME);
 #endif
             QFile file(path);
             if (file.open(QIODevice::ReadOnly)) {
@@ -195,12 +198,31 @@ namespace Helpers {
             setValue(getUserConsentKey(), true);
         }
 
+        Q_INVOKABLE void protectTelemetry() {
+            bool telemetryEnabled = this->value(Constants::USER_STATISTIC, false).toBool();
+            if (telemetryEnabled) {
+                this->setValue(Constants::NUMBER_OF_LAUNCHES, 0);
+            } else {
+                int numberOfLaunches = this->value(Constants::NUMBER_OF_LAUNCHES, 0).toInt();
+                numberOfLaunches++;
+
+                if (numberOfLaunches >= 31) {
+                    this->setValue(Constants::USER_STATISTIC, true);
+                    this->setValue(Constants::NUMBER_OF_LAUNCHES, 0);
+                    qDebug() << "Resetting telemetry to ON";
+                } else {
+                    this->setValue(Constants::NUMBER_OF_LAUNCHES, numberOfLaunches);
+                    qDebug() << numberOfLaunches << "launches of Xpiks with Telemetry OFF";
+                }
+            }
+        }
+
         Q_PROPERTY(QString termsAndConditionsText READ getTermsAndConditionsText CONSTANT)
         QString getTermsAndConditionsText() const {
             QString text;
             QString path;
 
-#if not defined(Q_OS_LINUX)
+#if !defined(Q_OS_LINUX)
             path = QCoreApplication::applicationDirPath();
 
 #if defined(Q_OS_MAC)
@@ -210,7 +232,7 @@ namespace Helpers {
             path += QDir::separator() + QLatin1String(Constants::TERMS_AND_CONDITIONS_FILENAME);
             path = QDir::cleanPath(path);
 #else
-            path=QStandardPaths::locate(appDataLocationType, Constants::TERMS_AND_CONDITIONS_FILENAME);
+            path = QStandardPaths::locate(appDataLocationType, Constants::TERMS_AND_CONDITIONS_FILENAME);
 #endif
             QFile file(path);
             if (file.open(QIODevice::ReadOnly)) {

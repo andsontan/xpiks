@@ -67,6 +67,7 @@ ApplicationWindow {
             console.debug("No modified artworks found. Exiting...")
             applicationWindow.visibility = "Minimized"
             helpersWrapper.beforeDestruction();
+            appSettings.protectTelemetry();
             closingTimer.start()
         }
     }

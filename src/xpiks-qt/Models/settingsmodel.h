@@ -29,13 +29,6 @@
 
 #define SETTINGS_EPSILON 1e-9
 
-
-#ifdef COLLECT_USER_STATISTIC
-#define DEFAULT_COLLECT_USER_STATISTIC true
-#else
-#define DEFAULT_COLLECT_USER_STATISTIC false
-#endif
-
 namespace Models {
 
     int ensureInBounds(int value, int boundA, int boundB);
