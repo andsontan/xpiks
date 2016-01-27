@@ -46,9 +46,6 @@ namespace Helpers {
         Q_PROPERTY(QString exifToolPathKey READ getExifToolPathKey CONSTANT)
         QString getExifToolPathKey() const { return QLatin1String(Constants::PATH_TO_EXIFTOOL); }
 
-        Q_PROPERTY(QString curlPathKey READ getCurlPathKey CONSTANT)
-        QString getCurlPathKey() const { return QLatin1String(Constants::PATH_TO_CURL); }
-
         Q_PROPERTY(QString uploadHostsKey READ getUploadHostsKey CONSTANT)
         QString getUploadHostsKey() const { return QLatin1String(Constants::UPLOAD_HOSTS); }
 

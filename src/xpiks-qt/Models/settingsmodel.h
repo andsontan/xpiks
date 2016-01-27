@@ -37,7 +37,6 @@ namespace Models {
     {
         Q_OBJECT
         Q_PROPERTY(QString exifToolPath READ getExifToolPath WRITE setExifToolPath NOTIFY exifToolPathChanged)
-        Q_PROPERTY(QString curlPath READ getCurlPath WRITE setCurlPath NOTIFY curlPathChanged)
         Q_PROPERTY(double minMegapixelCount READ getMinMegapixelCount WRITE setMinMegapixelCount NOTIFY minMegapixelCountChanged)
         Q_PROPERTY(int maxDescriptionLength READ getMaxDescriptionLength WRITE setMaxDescriptionLength NOTIFY maxDescriptionLengthChanged)
         Q_PROPERTY(int maxKeywordsCount READ getMaxKeywordsCount WRITE setMaxKeywordsCount NOTIFY maxKeywordsCountChanged)
@@ -64,13 +63,11 @@ namespace Models {
         Q_INVOKABLE void saveAllValues();
         Q_INVOKABLE void clearMasterPasswordSettings();
         Q_INVOKABLE void resetExifTool();
-        Q_INVOKABLE void resetCurl();
         Q_INVOKABLE void readAllValues();
         Q_INVOKABLE void raiseMasterPasswordSignal() { emit mustUseMasterPasswordChanged(m_MustUseMasterPassword); }
 
     public:
         QString getExifToolPath() const { return m_ExifToolPath; }
-        QString getCurlPath() const { return m_CurlPath; }
         double getMinMegapixelCount() const { return m_MinMegapixelCount; }
         int getMaxDescriptionLength() const { return m_MaxDescriptionLength; }
         int getMaxKeywordsCount() const { return m_MaxKeywordsCount; }
@@ -89,7 +86,6 @@ namespace Models {
 
     signals:
         void exifToolPathChanged(QString exifToolPath);
-        void curlPathChanged(QString curlPath);
         void minMegapixelCountChanged(double minMegapixelCount);
         void maxDescriptionLengthChanged(int maxDescriptionLength);
         void maxKeywordsCountChanged(int maxKeywordsCount);
@@ -113,14 +109,6 @@ namespace Models {
 
             m_ExifToolPath = exifToolPath;
             emit exifToolPathChanged(exifToolPath);
-        }
-
-        void setCurlPath(QString curlPath) {
-            if (m_CurlPath == curlPath)
-                return;
-
-            m_CurlPath = curlPath;
-            emit curlPathChanged(curlPath);
         }
 
         void setProxyURI(QString value) {
@@ -248,7 +236,6 @@ namespace Models {
 
     private:
         QString m_ExifToolPath;
-        QString m_CurlPath;
         QString m_ProxyURI;
         double m_MinMegapixelCount;
         double m_KeywordSizeScale;

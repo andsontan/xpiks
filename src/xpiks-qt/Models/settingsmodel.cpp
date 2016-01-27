@@ -31,7 +31,6 @@
 #define DEFAULT_EXIFTOOL "exiftool"
 #endif
 
-#define DEFAULT_CURL "curl"
 #define DEFAULT_MAX_KEYWORDS 50
 #define DEFAULT_MAX_DESCRIPTION 200
 #define DEFAULT_MIN_MEGAPIXELS 4.0
@@ -53,7 +52,6 @@ namespace Models {
     SettingsModel::SettingsModel(QObject *parent) :
         QObject(parent),
         m_ExifToolPath(DEFAULT_EXIFTOOL),
-        m_CurlPath(DEFAULT_CURL),
         m_ProxyURI(DEFAULT_PROXY),
         m_MinMegapixelCount(DEFAULT_MIN_MEGAPIXELS),
         m_KeywordSizeScale(DEFAULT_KEYWORD_SIZE_SCALE),
@@ -82,7 +80,6 @@ namespace Models {
 
         Helpers::AppSettings appSettings;
         appSettings.setValue(appSettings.getExifToolPathKey(), m_ExifToolPath);
-        appSettings.setValue(appSettings.getCurlPathKey(), m_CurlPath);
         appSettings.setValue(appSettings.getMinMegapixelCountKey(), m_MinMegapixelCount);
         appSettings.setValue(appSettings.getMaxDescriptionLengthKey(), m_MaxDescriptionLength);
         appSettings.setValue(appSettings.getMaxKeywordsCountKey(), m_MaxKeywordsCount);
@@ -117,16 +114,11 @@ namespace Models {
         setExifToolPath(DEFAULT_EXIFTOOL);
     }
 
-    void SettingsModel::resetCurl() {
-        setCurlPath(DEFAULT_CURL);
-    }
-
     void SettingsModel::readAllValues() {
         qInfo() << "Reading settings values";
 
         Helpers::AppSettings appSettings;
         setExifToolPath(appSettings.value(appSettings.getExifToolPathKey(), DEFAULT_EXIFTOOL).toString());
-        setCurlPath(appSettings.value(appSettings.getCurlPathKey(), DEFAULT_CURL).toString());
         setMinMegapixelCount(appSettings.doubleValue(appSettings.getMinMegapixelCountKey(), DEFAULT_MIN_MEGAPIXELS));
         setMaxDescriptionLength(appSettings.value(appSettings.getMaxDescriptionLengthKey(), DEFAULT_MAX_DESCRIPTION).toInt());
         setMaxKeywordsCount(appSettings.value(appSettings.getMaxKeywordsCountKey(), DEFAULT_MAX_KEYWORDS).toInt());
@@ -148,7 +140,6 @@ namespace Models {
         qInfo() << "Resetting all settings";
 
         setExifToolPath(DEFAULT_EXIFTOOL);
-        setCurlPath(DEFAULT_CURL);
         setMinMegapixelCount(DEFAULT_MIN_MEGAPIXELS);
         setMaxDescriptionLength(DEFAULT_MAX_DESCRIPTION);
         setMaxKeywordsCount(DEFAULT_MAX_KEYWORDS);

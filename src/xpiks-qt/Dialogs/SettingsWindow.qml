@@ -93,24 +93,6 @@ ApplicationWindow {
         }
     }
 
-    FileDialog {
-        id: curlFileDialog
-        title: "Please choose curl location"
-        selectExisting: true
-        selectMultiple: false
-        nameFilters: [ "All files (*)" ]
-
-        onAccepted: {
-            console.log("You chose: " + curlFileDialog.fileUrl)
-            var path = curlFileDialog.fileUrl.toString().replace(/^(file:\/{3})/,"");
-            settingsModel.curlPath = decodeURIComponent(path);
-        }
-
-        onRejected: {
-            console.log("File dialog canceled")
-        }
-    }
-
     function turnMasterPasswordOff () {
         secretsManager.resetMasterPassword()
         settingsModel.clearMasterPasswordSettings();
@@ -444,7 +426,7 @@ ApplicationWindow {
 
                         GridLayout {
                             width: parent.width
-                            rows: 2
+                            rows: 1
                             columns: 4
                             rowSpacing: 20
                             columnSpacing: 15
@@ -472,7 +454,6 @@ ApplicationWindow {
                                     text: settingsModel.exifToolPath
                                     anchors.left: parent.left
                                     anchors.leftMargin: 5
-                                    KeyNavigation.tab: curlText
                                     onTextChanged: settingsModel.exifToolPath = text
                                 }
                             }
@@ -493,48 +474,7 @@ ApplicationWindow {
                                 onClicked: settingsModel.resetExifTool()
                             }
 
-                            StyledText {
-                                Layout.row: 1
-                                Layout.column: 0
-                                Layout.fillWidth: true
-                                Layout.maximumWidth: 80
-                                horizontalAlignment: Text.AlignRight
-                                text: qsTr("Curl path:")
-                            }
 
-                            StyledInputHost {
-                                border.width: curlText.activeFocus ? 1 : 0
-                                Layout.row: 1
-                                Layout.column: 1
-
-                                StyledTextInput {
-                                    id: curlText
-                                    width: 150
-                                    height: 24
-                                    clip: true
-                                    text: settingsModel.curlPath
-                                    anchors.left: parent.left
-                                    anchors.leftMargin: 5
-                                    KeyNavigation.backtab: exifToolText
-                                    onTextChanged: settingsModel.curlPath = text
-                                }
-                            }
-
-                            StyledButton {
-                                Layout.row: 1
-                                Layout.column: 2
-                                text: qsTr("Select...")
-                                width: 70
-                                onClicked: curlFileDialog.open()
-                            }
-
-                            StyledButton {
-                                Layout.row: 1
-                                Layout.column: 3
-                                text: qsTr("Reset")
-                                width: 70
-                                onClicked: settingsModel.resetCurl()
-                            }
                         }
 
                         Item {
