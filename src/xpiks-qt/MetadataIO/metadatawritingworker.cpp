@@ -141,6 +141,10 @@ namespace MetadataIO {
                         (exitStatus == QProcess::NormalExit);
 
                 qDebug() << "Exiftool exitcode =" << exitCode << "exitstatus =" << exitStatus;
+
+                if (!success) {
+                    qWarning() << "Exiftool error string:" << m_ExiftoolProcess->errorString();
+                }
             }
         }
 

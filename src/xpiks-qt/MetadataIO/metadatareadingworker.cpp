@@ -167,6 +167,8 @@ namespace MetadataIO {
             if (success) {
                 QByteArray stdoutByteArray = m_ExiftoolProcess->readAllStandardOutput();
                 parseExiftoolOutput(stdoutByteArray);
+            } else {
+                qWarning() << "Exiftool error string:" << m_ExiftoolProcess->errorString();
             }
 
             if (m_SettingsModel->getSaveBackups()) {
