@@ -23,6 +23,7 @@
 #include <QSemaphore>
 #include <QDebug>
 #include <QThread>
+#include <QCoreApplication>
 #include "curlftpuploader.h"
 #include "../Models/uploadinfo.h"
 
@@ -74,6 +75,7 @@ namespace Conectivity {
                          this, SIGNAL(transferFailed(QString, QString)));
 
         ftpUploader.uploadBatch();
+        QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
     }
 }
 

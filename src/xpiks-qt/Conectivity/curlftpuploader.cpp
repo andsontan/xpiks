@@ -277,6 +277,8 @@ namespace Conectivity {
             }
         }
 
+        reportCurrentFileProgress(0.0);
+
         emit uploadFinished(anyErrors);
         qDebug() << "Uploading finished for" << host;
 
