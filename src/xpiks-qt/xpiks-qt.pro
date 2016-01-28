@@ -236,12 +236,11 @@ CONFIG(debug, debug|release)  {
     message("Building release")
 }
 
-unix:LIBS += -lcurl
-
 macx {
     INCLUDEPATH += "../hunspell-1.3.3/src/hunspell"
     INCLUDEPATH += "../quazip/quazip/"
     LIBS += -lquazip
+    LIBS += -lcurl
 }
 
 win32 {
@@ -258,6 +257,11 @@ linux-g++-64 {
     INCLUDEPATH += "/usr/include/quazip"
     LIBS += -L/lib/x86_64-linux-gnu/
     LIBS += /usr/lib/x86_64-linux-gnu/libquazip-qt5.a
+
+    # uncomment below for openSUSE build
+    #LIBS += -L/usr/lib64/
+    #LIBS += -lquazip
+    #LIBS += /usr/lib64/libcurl.so.4
     QML_IMPORT_PATH += /usr/lib/x86_64-linux-gnu/qt5/imports/
 }
 
