@@ -60,7 +60,7 @@ namespace Conectivity {
 
         int result = progressReporter->cancelRequested() ? 1 : 0;
         if (result) {
-            qDebug() << "Upload cancelled from the progress callback";
+            qDebug() << "Cancelling upload from the progress callback...";
         }
 
         return result;
