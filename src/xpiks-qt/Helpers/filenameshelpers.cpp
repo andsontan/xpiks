@@ -24,12 +24,12 @@
 #include <QFileInfo>
 #include <QDir>
 
-QStringList Helpers::convertToVectorFilenames(const QStringList &items) {
+QStringList Helpers::convertToVectorFilenames(const QStringList &item) {
     QStringList converted;
-    converted.reserve(items.length()*2);
+    converted.reserve(item.length()*2);
     QRegExp regExp("(.*)[.](jpg|jpeg|tiff)", Qt::CaseInsensitive);
 
-    foreach (const QString &item, items) {
+    foreach (const QString &item, item) {
         QString replacedEPS = QString(item).replace(regExp, "\\1.eps");
         QString replacedAI = QString(item).replace(regExp, "\\1.ai");
 

@@ -19,28 +19,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef BASEENTITY
-#define BASEENTITY
+#ifndef CONECTIVITYHELPERS_H
+#define CONECTIVITYHELPERS_H
 
-namespace Commands { class CommandManager; }
+#include <QString>
 
-namespace Common {
-    class BaseEntity {
-    public:
-        BaseEntity() :
-            m_CommandManager(NULL)
-        {}
+namespace Conectivity {
+    class UploadContext;
 
-    public:
-        virtual void setCommandManager(Commands::CommandManager *commandManager) {
-            Q_ASSERT(commandManager != NULL);
-            m_CommandManager = commandManager;
-        }
-
-    protected:
-        Commands::CommandManager *m_CommandManager;
-    };
+    void fillCurlOptions(void *curlHandle, UploadContext *context, const QString &remoteUrl);
+    QString sanitizeHost(const QString &inputHost);
 }
 
-#endif // BASEENTITY
-
+#endif // CONECTIVITYHELPERS_H

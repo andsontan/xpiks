@@ -93,6 +93,7 @@ ApplicationWindow {
         }
     }
 
+<<<<<<< HEAD
     FileDialog {
         id: curlFileDialog
         title: "Please choose curl location"
@@ -130,6 +131,8 @@ ApplicationWindow {
         }
     }
 
+=======
+>>>>>>> libcurl_integration
     function turnMasterPasswordOff () {
         secretsManager.resetMasterPassword()
         settingsModel.clearMasterPasswordSettings();
@@ -464,7 +467,7 @@ ApplicationWindow {
 
                         GridLayout {
                             width: parent.width
-                            rows: 2
+                            rows: 1
                             columns: 4
                             rowSpacing: 20
                             columnSpacing: 15
@@ -492,7 +495,6 @@ ApplicationWindow {
                                     text: settingsModel.exifToolPath
                                     anchors.left: parent.left
                                     anchors.leftMargin: 5
-                                    KeyNavigation.tab: curlText
                                     onTextChanged: settingsModel.exifToolPath = text
                                 }
                             }
@@ -513,15 +515,8 @@ ApplicationWindow {
                                 onClicked: settingsModel.resetExifTool()
                             }
 
-                            StyledText {
-                                Layout.row: 1
-                                Layout.column: 0
-                                Layout.fillWidth: true
-                                Layout.maximumWidth: 80
-                                horizontalAlignment: Text.AlignRight
-                                text: qsTr("Curl path:")
-                            }
 
+<<<<<<< HEAD
                             StyledInputHost {
                                 border.width: curlText.activeFocus ? 1 : 0
                                 Layout.row: 1
@@ -602,6 +597,8 @@ ApplicationWindow {
                                 onClicked: settingsModel.resetDictPath()
                                 visible: Qt.platform.os === "linux"
                             }
+=======
+>>>>>>> libcurl_integration
                         }
 
                         Item {
@@ -835,71 +832,6 @@ ApplicationWindow {
                             StyledText {
                                 text: qsTr("(takes effect after relaunch)")
                                 color: Colors.defaultInputBackground
-                            }
-                        }
-
-                        Item {
-                            height: 5
-                            width: parent.width
-                        }
-
-                        RowLayout {
-                            width: parent.width
-                            spacing: 10
-
-                            StyledText {
-                                Layout.preferredWidth: 130
-                                horizontalAlignment: Text.AlignRight
-                                text: qsTr("Proxy url:")
-                            }
-
-                            StyledInputHost {
-                                border.width: proxyURI.activeFocus ? 1 : 0
-
-                                StyledTextInput {
-                                    id: proxyURI
-                                    width: 100
-                                    height: 24
-                                    clip: true
-                                    text: settingsModel.proxyURI
-                                    anchors.left: parent.left
-                                    anchors.leftMargin: 5
-                                    onTextChanged: {
-                                        if (text.length > 0) {
-                                            settingsModel.proxyURI = parseInt(text)
-                                        }
-                                    }
-                                    KeyNavigation.backtab: timeoutMinutes
-                                    validator: IntValidator {
-                                        bottom: 1
-                                        top: 4
-                                    }
-                                }
-                            }
-
-                            StyledText {
-                                text: qsTr("(see format below)")
-                                color: Colors.defaultInputBackground
-                            }
-                        }
-
-                        RowLayout {
-                            width: parent.width
-                            spacing: 10
-                            StyledText {
-                                Layout.preferredWidth: 130
-                                color: Colors.defaultInputBackground
-                                horizontalAlignment: Text.AlignRight
-                                text: qsTr("Proxy url format:")
-                            }
-
-                            StyledText {
-                                text: qsTr("[protocol://][user:password@]proxyhost[:port]")
-                                color: Colors.defaultInputBackground
-                            }
-
-                            Item {
-                                Layout.fillWidth: true
                             }
                         }
 

@@ -19,37 +19,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TESTCONNECTIONRESULT
-#define TESTCONNECTIONRESULT
+#ifndef TESTCONNECTION_H
+#define TESTCONNECTION_H
 
 #include <QString>
 
-namespace Helpers {
-    class TestConnectionResult {
-    public:
-        TestConnectionResult ():
-            m_Result(false)
-        {}
+namespace Conectivity {
+    class UploadContext;
 
-        TestConnectionResult (bool result, const QString &url) :
-            m_Url(url),
-            m_Result(result)
-        {}
-
-        TestConnectionResult (const TestConnectionResult &copy) :
-            m_Url(copy.m_Url),
+    struct ContextValidationResult {
+        ContextValidationResult(): m_Result(false) {}
+        ContextValidationResult(const ContextValidationResult &copy):
+            m_Host(copy.m_Host),
             m_Result(copy.m_Result)
         {}
 
-    public:
-        bool getResult() const { return m_Result; }
-        QString getUrl() const { return m_Url; }
-
-    private:
-        QString m_Url;
+        QString m_Host;
         bool m_Result;
     };
+
+    ContextValidationResult isContextValid(UploadContext *context);
 }
 
-#endif // TESTCONNECTIONRESULT
-
+#endif // TESTCONNECTION_H

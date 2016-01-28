@@ -214,6 +214,35 @@ ApplicationWindow {
         }
 
         Menu {
+            title: qsTr("Edit")
+
+            MenuItem {
+                text: qsTr("&Remove metadata from selected")
+                enabled: filteredArtItemsModel.selectedArtworksCount > 0
+                onTriggered: {
+                    console.log("Remove metadata from selected triggered")
+                    removeMetadataDialog.open()
+                }
+            }
+
+            MenuItem {
+                text: qsTr("&Cleanup local library in background")
+                onTriggered: {
+                    console.log("Cleanup local library triggered")
+                    helpersWrapper.cleanupLocalLibrary()
+                }
+            }
+
+            MenuItem {
+                text: qsTr("&Manage upload hosts")
+                onTriggered: {
+                    console.log("Manage upload hosts triggered")
+                    openUploadDialog()
+                }
+            }
+        }
+
+        Menu {
             title: qsTr("Tools")
             enabled: applicationWindow.openedDialogsCount == 0
 
@@ -256,23 +285,6 @@ ApplicationWindow {
                     filteredArtItemsModel.spellCheckSelected()
                     Common.launchDialog("Dialogs/SpellCheckDialog.qml",
                                         applicationWindow, {});
-                }
-            }
-
-            MenuItem {
-                text: qsTr("&Remove metadata from selected")
-                enabled: filteredArtItemsModel.selectedArtworksCount > 0
-                onTriggered: {
-                    console.log("Remove metadata from selected triggered")
-                    removeMetadataDialog.open()
-                }
-            }
-
-            MenuItem {
-                text: qsTr("&Cleanup local library in background")
-                onTriggered: {
-                    console.log("Cleanup local library triggered")
-                    helpersWrapper.cleanupLocalLibrary()
                 }
             }
         }

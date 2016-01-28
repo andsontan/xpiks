@@ -29,8 +29,6 @@ SOURCES += main.cpp \
     UndoRedo/modifyartworkshistoryitem.cpp \
     Commands/combinededitcommand.cpp \
     Commands/pastekeywordscommand.cpp \
-    Helpers/uploadworker.cpp \
-    Helpers/uploadcoordinator.cpp \
     Helpers/runguard.cpp \
     Encryption/aes-qt.cpp \
     Models/ziparchiver.cpp \
@@ -38,7 +36,6 @@ SOURCES += main.cpp \
     Suggestion/keywordssuggestor.cpp \
     Suggestion/suggestionqueryengine.cpp \
     Models/settingsmodel.cpp \
-    Helpers/curlwrapper.cpp \
     Helpers/loggingworker.cpp \
     Helpers/logger.cpp \
     Models/logsmodel.cpp \
@@ -67,7 +64,12 @@ SOURCES += main.cpp \
     MetadataIO/metadatareadingworker.cpp \
     MetadataIO/metadataiocoordinator.cpp \
     MetadataIO/saverworkerjobitem.cpp \
-    MetadataIO/metadatawritingworker.cpp
+    MetadataIO/metadatawritingworker.cpp \
+    Conectivity/curlftpuploader.cpp \
+    Conectivity/ftpuploaderworker.cpp \
+    Conectivity/ftpcoordinator.cpp \
+    Conectivity/testconnection.cpp \
+    Conectivity/ftphelpers.cpp
 
 RESOURCES += qml.qrc
 
@@ -101,7 +103,6 @@ HEADERS += \
     Helpers/constants.h \
     Helpers/appsettings.h \
     Models/artworkuploader.h \
-    Helpers/curlwrapper.h \
     Models/artworksprocessor.h \
     Models/uploadinfo.h \
     Models/exportinfo.h \
@@ -112,10 +113,8 @@ HEADERS += \
     Encryption/aes-qt.h \
     ../tiny-aes/aes.h \
     Encryption/secretsmanager.h \
-    Helpers/uploaditem.h \
     Helpers/stringhelper.h \
     Helpers/logger.h \
-    Helpers/testconnectionresult.h \
     Commands/commandmanager.h \
     UndoRedo/historyitem.h \
     UndoRedo/undoredomanager.h \
@@ -129,8 +128,6 @@ HEADERS += \
     UndoRedo/modifyartworkshistoryitem.h \
     Commands/combinededitcommand.h \
     Commands/pastekeywordscommand.h \
-    Helpers/uploadworker.h \
-    Helpers/uploadcoordinator.h \
     Helpers/runguard.h \
     Models/ziparchiver.h \
     Helpers/ziphelper.h \
@@ -173,7 +170,13 @@ HEADERS += \
     MetadataIO/saverworkerjobitem.h \
     MetadataIO/metadatareadingworker.h \
     MetadataIO/metadataiocoordinator.h \
-    MetadataIO/metadatawritingworker.h
+    MetadataIO/metadatawritingworker.h \
+    Conectivity/curlftpuploader.h \
+    Conectivity/ftpuploaderworker.h \
+    Conectivity/ftpcoordinator.h \
+    Conectivity/uploadcontext.h \
+    Conectivity/testconnection.h \
+    Conectivity/ftphelpers.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
@@ -255,12 +258,12 @@ linux-g++-64 {
     QML_IMPORT_PATH += /usr/lib/x86_64-linux-gnu/qt5/imports/
 }
 
-linux-static {
-    CONFIG += static
-    QTPLUGIN += qt5quick
-    DEFINES += STATIC
-    message("Static build.")
-}
+
+CONFIG += static
+QTPLUGIN += qt5quick
+DEFINES += STATIC
+message("Static build.")
+
 
 HUNSPELL_DICT_FILES.files = dict/en_US.aff dict/en_US.dic dict/license.txt dict/README_en_US.txt
 HUNSPELL_DICT_FILES.path = Contents/Resources

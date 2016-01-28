@@ -26,10 +26,18 @@
 #include <QStringList>
 #include <QFutureWatcher>
 #include "artworksprocessor.h"
+#include "../Conectivity/testconnection.h"
 
 namespace Helpers {
     class TestConnectionResult;
-    class UploadCoordinator;
+}
+
+namespace Conectivity {
+    class FtpCoordinator;
+}
+
+namespace Commands {
+    class CommandManager;
 }
 
 namespace Models {
@@ -44,6 +52,7 @@ namespace Models {
 
     public:
          Q_PROPERTY(bool includeVector READ getIncludeVector WRITE setIncludeVector NOTIFY includeVectorChanged)
+         virtual void setCommandManager(Commands::CommandManager *commandManager);
 
     signals:
          void includeVectorChanged(bool);
@@ -63,31 +72,28 @@ namespace Models {
 
      public slots:
          void onUploadStarted();
-         void artworkUploaded(bool status);
-         void allFinished(bool status);
+         void allFinished(bool anyError);
          void credentialsTestingFinished();
 
     private slots:
          void uploaderPercentChanged(double percent);
 
-     private:
-         void artworkUploadedHandler(bool success);
-
      public:
          Q_INVOKABLE void uploadArtworks();
-         Q_INVOKABLE void checkCredentials(const QString &host, const QString &username, const QString &password) const;
+         Q_INVOKABLE void checkCredentials(const QString &host, const QString &username,
+                                           const QString &password, bool disablePassiveMode) const;
          Q_INVOKABLE bool needCreateArchives() const;
 
      private:
          void doUploadArtworks(const QVector<ArtworkMetadata*> &artworkList);
 
     protected:
-        void cancelProcessing();
+        virtual void cancelProcessing();
         virtual void innerResetModel() { m_Percent = 0; }
 
      private:
-         Helpers::UploadCoordinator *m_UploadCoordinator;
-         QFutureWatcher<Helpers::TestConnectionResult> *m_TestingCredentialWatcher;
+         Conectivity::FtpCoordinator *m_FtpCoordinator;
+         QFutureWatcher<Conectivity::ContextValidationResult> *m_TestingCredentialWatcher;
          bool m_IncludeVector;
          int m_Percent;
     };

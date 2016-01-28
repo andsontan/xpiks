@@ -25,6 +25,7 @@
 #include <QByteArray>
 #include <QObject>
 #include <QString>
+#include <QMutex>
 
 namespace Commands { class CommandManager; }
 
@@ -44,21 +45,18 @@ namespace Encryption {
         void setMasterPasswordHash(const QString &hash);
 
     public:
-        QString encodePassword(const QString &password) const;
-        QString decodePassword(const QString &encodedPassword) const;
+        QString encodePassword(const QString &password);
+        QString decodePassword(const QString &encodedPassword);
         // operation executed before setting new master password
         // old data gets reencoded with new master password
         // could be static, but is instnance method for explicity
         QString recodePassword(const QString &encodedPassword,
-                                  const QString &oldMasterPassword, const QString &newMasterPassword) const;
+                                  const QString &oldMasterPassword, const QString &newMasterPassword);
 
     public:
         Q_INVOKABLE QString getMasterPasswordHash() const { return QString::fromLatin1(m_MasterPasswordHash.toHex()); }
         Q_INVOKABLE bool testMasterPassword(const QString &masterPasswordCandidate) const;
         Q_INVOKABLE bool isMasterPasswordSet() const { return !m_MasterPasswordHash.isEmpty(); }
-
-    private:
-        QString getMasterPassword() const;
 
     public:
         Q_INVOKABLE void setMasterPassword(const QString &masterPassword);
@@ -87,6 +85,7 @@ namespace Encryption {
         // used for checks in Upload dialog and changing MP
         QByteArray m_MasterPasswordHash;
         Commands::CommandManager *m_CommandManager;
+        QMutex m_EncodingMutex;
     };
 }
 

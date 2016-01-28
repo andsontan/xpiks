@@ -54,6 +54,8 @@ namespace Suggestion {
         QSet<QString> m_KeywordsSet;
         QString m_Url;
         bool m_IsSelected;
+        bool m_IsLocal;
+
     };
 }
 
