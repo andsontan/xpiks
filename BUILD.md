@@ -17,6 +17,8 @@ If you want to create Xpiks executable for everyday usage, before each `Run qmak
 - [windows] copy builded library (e.g. `z.lib`) from the build directory to the `src/libs` directory
 - open project `src/quazip/quazip/quazip.pro` in Qt Creator, execute `Run qmake`, execute `Build`
 - copy builded library (e.g. `libquazip.a`) from the build directory to the `src/libs` directory
+- [windows] do `git clone https://github.com/blackrosezy/build-libcurl-windows.git` and execute `build.bat`
+- [windows] copy contests of `lib/dll-debug-x64` contents to the `src/libs/` directory
 
 ***Generic build***
 
