@@ -236,6 +236,8 @@ CONFIG(debug, debug|release)  {
     message("Building release")
 }
 
+unix:LIBS += -lcurl
+
 macx {
     INCLUDEPATH += "../hunspell-1.3.3/src/hunspell"
     INCLUDEPATH += "../quazip/quazip/"
@@ -247,6 +249,7 @@ win32 {
     INCLUDEPATH += "../hunspell-1.3.3/src/hunspell"
     INCLUDEPATH += "../quazip/quazip/"
     LIBS += -lquazip
+    LIBS += -llibcurl_debug
 }
 
 linux-g++-64 {
@@ -258,12 +261,12 @@ linux-g++-64 {
     QML_IMPORT_PATH += /usr/lib/x86_64-linux-gnu/qt5/imports/
 }
 
-
-CONFIG += static
-QTPLUGIN += qt5quick
-DEFINES += STATIC
-message("Static build.")
-
+linux-static {
+    CONFIG += static
+    QTPLUGIN += qt5quick
+    DEFINES += STATIC
+    message("Static build.")
+}
 
 HUNSPELL_DICT_FILES.files = dict/en_US.aff dict/en_US.dic dict/license.txt dict/README_en_US.txt
 HUNSPELL_DICT_FILES.path = Contents/Resources
