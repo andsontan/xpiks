@@ -167,7 +167,6 @@ namespace Commands {
         void setupSpellCheckSuggestions(SpellCheck::ISpellCheckable *item, int index, int flags);
         void saveMetadata(Models::ArtworkMetadata *metadata) const;
         void reportUserAction(Conectivity::UserAction userAction) const;
-        void saveLocalLibraryAsync() const;
         void cleanupLocalLibraryAsync() const;
         void afterConstructionCallback();
         void beforeDestructionCallback() const;

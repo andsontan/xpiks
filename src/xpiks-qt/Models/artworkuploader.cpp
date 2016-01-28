@@ -47,7 +47,7 @@ namespace Models {
         QObject::connect(m_FtpCoordinator, SIGNAL(overallProgressChanged(double)), this, SLOT(uploaderPercentChanged(double)));
 
         m_TestingCredentialWatcher = new QFutureWatcher<Conectivity::ContextValidationResult>(this);
-        connect(m_TestingCredentialWatcher, SIGNAL(finished()), SLOT(credentialsTestingFinished()));
+        QObject::connect(m_TestingCredentialWatcher, SIGNAL(finished()), SLOT(credentialsTestingFinished()));
     }
 
     ArtworkUploader::~ArtworkUploader() {

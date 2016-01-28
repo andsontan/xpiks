@@ -173,9 +173,8 @@ namespace MetadataIO {
             qDebug() << "Skipped restoring the backups";
         }
 
-        m_CommandManager->updateArtworks(rangesToUpdate);
         m_CommandManager->addToLibrary(itemsToRead);
-        m_CommandManager->saveLocalLibraryAsync();
+        m_CommandManager->updateArtworks(rangesToUpdate);
         m_CommandManager->submitForSpellCheck(itemsToRead);
     }
 }

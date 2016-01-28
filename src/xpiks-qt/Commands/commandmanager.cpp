@@ -259,8 +259,6 @@ void Commands::CommandManager::readMetadata(const QVector<Models::ArtworkMetadat
 }
 
 void Commands::CommandManager::writeMetadata(const QVector<Models::ArtworkMetadata *> &artworks, bool useBackups) const {
-    saveLocalLibraryAsync();
-
     if (m_MetadataIOCoordinator) {
         m_MetadataIOCoordinator->writeMetadata(artworks, useBackups);
     }
@@ -350,12 +348,6 @@ void Commands::CommandManager::saveMetadata(Models::ArtworkMetadata *metadata) c
 void Commands::CommandManager::reportUserAction(Conectivity::UserAction userAction) const {
     if (m_TelemetryService) {
         m_TelemetryService->reportAction(userAction);
-    }
-}
-
-void Commands::CommandManager::saveLocalLibraryAsync() const {
-    if (m_LocalLibrary) {
-        m_LocalLibrary->saveLibraryAsync();
     }
 }
 

@@ -225,6 +225,7 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&telemetryService);
     commandManager.InjectDependency(&updateService);
     commandManager.InjectDependency(&logsModel);
+    commandManager.InjectDependency(&localLibrary);
     commandManager.InjectDependency(&metadataIOCoordinator);
 
     // other initializations

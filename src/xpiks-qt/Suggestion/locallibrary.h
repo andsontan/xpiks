@@ -27,6 +27,7 @@
 #include <QList>
 #include <QStringList>
 #include <QMutex>
+#include <QFutureWatcher>
 #include "libraryloaderworker.h"
 
 namespace Models {
@@ -36,10 +37,12 @@ namespace Models {
 namespace Suggestion {
     class SuggestionArtwork;
 
-    class LocalLibrary
+    class LocalLibrary : public QObject
     {
+        Q_OBJECT
     public:
-        LocalLibrary() {}
+        LocalLibrary();
+        virtual ~LocalLibrary();
 
     public:
         void setLibraryPath(const QString &filename) { m_Filename = filename; }
@@ -47,16 +50,20 @@ namespace Suggestion {
         void swap(QHash<QString, QStringList> &hash);
         void saveToFile();
         void loadLibraryAsync();
-        void saveLibraryAsync();
         void searchArtworks(const QStringList &query, QVector<SuggestionArtwork *> &searchResults, int maxResults);
         void cleanupLocalLibraryAsync();
         void cleanupTrash();
 
+    private slots:
+        void artworksAdded();
+
     private:
+        void saveLibraryAsync();
         void performAsync(Suggestion::LibraryLoaderWorker::LoadOption option);
         void doAddToLibrary(const QVector<Models::ArtworkMetadata *> artworksList);
 
     private:
+        QFutureWatcher<void> *m_FutureWatcher;
         QHash<QString, QStringList> m_LocalArtworks;
         QMutex m_Mutex;
         QString m_Filename;
