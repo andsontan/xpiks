@@ -224,6 +224,11 @@ namespace Conectivity {
 
         UploadContext *context = m_BatchToUpload->getContext();
 
+        if (m_Cancel) {
+            qWarning() << "CurlUploader: Cancelled before upload." << context->m_Host;
+            return;
+        }
+
         const QStringList &filesToUpload = m_BatchToUpload->getFilesToUpload();
         int size = filesToUpload.size();
 
@@ -238,7 +243,7 @@ namespace Conectivity {
         QObject::connect(this, SIGNAL(cancelCurrentUpload()), &progressReporter, SLOT(cancelHandler()));
 
         emit uploadStarted();
-        qDebug() << "Uploading" << size << "file(s) started for" << host;
+        qDebug() << "Uploading" << size << "file(s) started for" << host << "passive mode =" << context->m_UsePassiveMode;
 
         for (int i = 0; i < size; ++i) {
 
