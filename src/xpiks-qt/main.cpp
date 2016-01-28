@@ -173,6 +173,8 @@ int main(int argc, char *argv[]) {
 
     QApplication app(argc, argv);
 
+    qDebug() << "Working directory of xpiks is:" << QDir::currentPath();
+
     localLibrary.loadLibraryAsync();
 
     QString userId = appSettings.value(QLatin1String(Constants::USER_AGENT_ID)).toString();

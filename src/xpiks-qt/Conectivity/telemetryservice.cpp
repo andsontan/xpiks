@@ -128,7 +128,7 @@ namespace Conectivity {
 #elif defined(Q_OS_WIN)
         request.setRawHeader(QString("User-Agent").toLocal8Bit(), QString("Mozilla/5.0 (Windows %2; rv:1.1) Qt Xpiks/1.1")
                 .arg(QSysInfo::productVersion()).toLocal8Bit());
-#else
+#elif defined(Q_OS_LINUX)
         request.setRawHeader(QString("User-Agent").toLocal8Bit(), QString("Mozilla/5.0 (Linux %2; rv:1.1) Qt Xpiks/1.1")
                 .arg(QSysInfo::productVersion()).toLocal8Bit());
 #endif
@@ -139,9 +139,7 @@ namespace Conectivity {
     }
 
     void TelemetryService::replyReceived(QNetworkReply *networkReply) {
-        if (networkReply->error() == QNetworkReply::NoError) {
-            qDebug() << "Telemetry report submited successfully";
-        } else {
+        if (networkReply->error() != QNetworkReply::NoError) {
             // TODO: add tracking of failed items
 
             qWarning() << "Failed to process a telemetry report." << networkReply->errorString();;

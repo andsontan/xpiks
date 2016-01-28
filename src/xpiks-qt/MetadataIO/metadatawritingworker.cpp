@@ -127,11 +127,20 @@ namespace MetadataIO {
                 arguments << "-IPTC:CodedCharacterSet=UTF8" << "-@" << argumentsFile.fileName();
                 argumentsFile.close();
 
+                qDebug() << "Starting exiftool process:" << exiftoolPath;
+
                 m_ExiftoolProcess->start(exiftoolPath, arguments);
-                success = m_ExiftoolProcess->waitForFinished();
+
+                qDebug() << "Exiftool process finished.";
+
+                int exitCode = m_ExiftoolProcess->exitCode();
+                QProcess::ExitStatus exitStatus = m_ExiftoolProcess->exitStatus();
+
                 success = success &&
-                        (m_ExiftoolProcess->exitCode() == 0) &&
-                        (m_ExiftoolProcess->exitStatus() == QProcess::NormalExit);
+                        (exitCode == 0) &&
+                        (exitStatus == QProcess::NormalExit);
+
+                qDebug() << "Exiftool exitcode =" << exitCode << "exitstatus =" << exitStatus;
             }
         }
 
