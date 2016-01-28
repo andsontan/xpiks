@@ -66,6 +66,7 @@ namespace Conectivity {
                 qDebug()<<"Telemetry enabled by setting";
             } else {
                 qDebug()<<"Telemetry disabled by setting";
+                doReportAction(UserActionTurnOffTelemetry);
             }
         }
 #endif

@@ -34,7 +34,7 @@ ApplicationWindow {
     modality: "ApplicationModal"
     title: qsTr("Settings")
     width: 550
-    height: 280
+    height: 260
     minimumWidth: width
     maximumWidth: width
     minimumHeight: height
@@ -693,7 +693,7 @@ ApplicationWindow {
                     title: qsTr("Upload")
 
                     ColumnLayout {
-                        spacing: 10
+                        spacing: 20
                         anchors.fill: parent
                         anchors.margins: {left: 20; top: 30; right: 20; bottom: 20}
 

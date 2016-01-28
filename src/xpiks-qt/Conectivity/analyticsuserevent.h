@@ -34,7 +34,8 @@ namespace Conectivity {
         UserActionSpellSuggestions,
         UserActionSuggestionRemote,
         UserActionSuggestionLocal,
-        UserActionWarningsCheck
+        UserActionWarningsCheck,
+        UserActionTurnOffTelemetry
     };
 
     class AnalyticsUserEvent {
@@ -55,6 +56,7 @@ namespace Conectivity {
             case UserActionSuggestionRemote: return QLatin1String("SuggestionRemote");
             case UserActionSuggestionLocal: return QLatin1String("SuggestionLocal");
             case UserActionWarningsCheck: return QLatin1String("WarningsCheck");
+            case UserActionTurnOffTelemetry: return QLatin1String("TurnOffTelemetry");
             default: return QLatin1String("Unknown");
             }
         }
