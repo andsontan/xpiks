@@ -243,7 +243,7 @@ namespace Conectivity {
         QObject::connect(this, SIGNAL(cancelCurrentUpload()), &progressReporter, SLOT(cancelHandler()));
 
         emit uploadStarted();
-        qDebug() << "Uploading" << size << "file(s) started for" << host << "passive mode =" << context->m_UsePassiveMode;
+        qDebug() << "Uploading" << size << "file(s) started for" << host << "Passive mode =" << context->m_UsePassiveMode;
 
         for (int i = 0; i < size; ++i) {
 

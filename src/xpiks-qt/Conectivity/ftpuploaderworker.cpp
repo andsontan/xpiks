@@ -75,6 +75,7 @@ namespace Conectivity {
                          this, SIGNAL(transferFailed(QString, QString)));
 
         ftpUploader.uploadBatch();
+        // in order to deliver 100% progressChanged() signal
         QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
     }
 }
