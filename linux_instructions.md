@@ -1,11 +1,13 @@
 ---
 layout: default
-title: linux
+title: Instructions for Linux
 permalink: /linux-instructions/
 ---
 
 <article class="row">
 <section class="small-12 large-8 columns page-content">
+
+<p><strong>General instructions</strong></p>
 
 <p>Install the following packages:</p>
 <ul>
