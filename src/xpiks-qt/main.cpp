@@ -228,6 +228,8 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&localLibrary);
     commandManager.InjectDependency(&metadataIOCoordinator);
 
+    commandManager.ensureDependenciesInjected();
+
     // other initializations
     secretsManager.setMasterPasswordHash(appSettings.value(Constants::MASTER_PASSWORD_HASH, "").toString());
     uploadInfoRepository.initFromString(appSettings.value(Constants::UPLOAD_HOSTS, "").toString());

@@ -141,6 +141,9 @@ namespace Commands {
         void connectEntitiesSignalsSlots() const;
 
     public:
+        void ensureDependenciesInjected();
+
+    public:
         void recodePasswords(const QString &oldMasterPassword,
                                 const QString &newMasterPassword,
                                 const QVector<Models::UploadInfo*> &uploadInfos) const;

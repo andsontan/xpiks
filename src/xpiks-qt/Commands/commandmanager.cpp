@@ -185,6 +185,30 @@ void Commands::CommandManager::connectEntitiesSignalsSlots() const {
                      m_FilteredItemsModel, SLOT(onSpellCheckerAvailable(bool)));
 }
 
+void Commands::CommandManager::ensureDependenciesInjected() {
+    Q_ASSERT(m_ArtworksRepository != NULL);
+    Q_ASSERT(m_ArtItemsModel != NULL);
+    Q_ASSERT(m_FilteredItemsModel != NULL);
+    Q_ASSERT(m_CombinedArtworksModel != NULL);
+    Q_ASSERT(m_ArtworkUploader != NULL);
+    Q_ASSERT(m_UploadInfoRepository != NULL);
+    Q_ASSERT(m_WarningsManager != NULL);
+    Q_ASSERT(m_SecretsManager != NULL);
+    Q_ASSERT(m_UndoRedoManager != NULL);
+    Q_ASSERT(m_ZipArchiver != NULL);
+    Q_ASSERT(m_KeywordsSuggestor != NULL);
+    Q_ASSERT(m_SettingsModel != NULL);
+    Q_ASSERT(m_RecentDirectories != NULL);
+    Q_ASSERT(m_SpellCheckerService != NULL);
+    Q_ASSERT(m_SpellCheckSuggestionModel != NULL);
+    Q_ASSERT(m_MetadataSaverService != NULL);
+    Q_ASSERT(m_TelemetryService != NULL);
+    Q_ASSERT(m_UpdateService != NULL);
+    Q_ASSERT(m_LogsModel != NULL);
+    Q_ASSERT(m_LocalLibrary != NULL);
+    Q_ASSERT(m_MetadataIOCoordinator != NULL);
+}
+
 void Commands::CommandManager::recodePasswords(const QString &oldMasterPassword,
                                                   const QString &newMasterPassword,
                                                   const QVector<Models::UploadInfo *> &uploadInfos) const {
