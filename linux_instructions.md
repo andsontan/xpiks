@@ -7,6 +7,12 @@ permalink: /linux-instructions/
 <article class="row">
 <section class="small-12 large-8 columns page-content">
 
+<p>Install the following packages:</p>
+<ul>
+  <li>hunspell</li>
+  <li>hunspell-en-us</li>
+</ul>
+
 <p><strong>Ubuntu</strong></p>
 
 <p>You have to manually install <i>qtdeclarative5-controls-plugin</i> and <i>qtdeclarative5-quicklayouts-plugin</i>. Also there is an issue with application menu in Qt for Ubuntu which requires a workaround:</p>
