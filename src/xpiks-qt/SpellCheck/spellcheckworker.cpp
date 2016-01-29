@@ -99,7 +99,6 @@ namespace SpellCheck {
                                           dicPath.toUtf8().constData());
                 qDebug() << "Hunspell initialized with AFF" << affPath << "and DIC" << dicPath;
                 initResult = true;
-                //detectAffEncoding();
                 m_Encoding = m_Hunspell->get_dic_encoding();
                 m_Codec = QTextCodec::codecForName(m_Encoding.toLatin1().constData());
             }
@@ -155,33 +154,7 @@ namespace SpellCheck {
 
         return canDelete;
     }
-/*
-    void SpellCheckWorker::detectAffEncoding() {
-        // detect encoding analyzing the SET option in the affix file
-        QDir resourcesDir(getHunspellResourcesPath());
-        QString affPath = resourcesDir.absoluteFilePath(EN_HUNSPELL_AFF);
 
-        m_Encoding = "ISO8859-1";
-        QFile affixFile(affPath);
-
-        if (affixFile.open(QIODevice::ReadOnly)) {
-            QTextStream stream(&affixFile);
-            QRegExp encDetector("^\\s*SET\\s+([A-Z0-9\\-]+)\\s*", Qt::CaseInsensitive);
-
-            for (QString line = stream.readLine(); !line.isEmpty(); line = stream.readLine()) {
-                if (encDetector.indexIn(line) > -1) {
-                    m_Encoding = encDetector.cap(1);
-                    qDebug() << QString("Encoding of AFF set to ") + m_Encoding;
-                    break;
-                }
-            }
-
-            affixFile.close();
-        }
-
-        m_Codec = QTextCodec::codecForName(m_Encoding.toLatin1().constData());
-    }
-*/
     QStringList SpellCheckWorker::retrieveCorrections(const QString &word) {
         QReadLocker locker(&m_SuggestionsLock);
         QStringList result;
