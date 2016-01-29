@@ -235,22 +235,22 @@ LIBS += -lcurl
 LIBS += -lquazip
 
 CONFIG(debug, debug|release)  {
-    message("Debug build.")
+    message("Building debug")
 } else {
     message("Building release")
 }
 
 macx {
     INCLUDEPATH += "../hunspell-1.3.3/src"
-    INCLUDEPATH += "../quazip/quazip/"
+    INCLUDEPATH += "../quazip"
     INCLUDEPATH += "../../libcurl/include"
 }
 
 win32 {
     INCLUDEPATH += "../zlib-1.2.8"
     INCLUDEPATH += "../hunspell-1.3.3/src"
-    INCLUDEPATH += "../quazip/quazip/"
-    INCLUDEPATH += "../../libcurl/include"
+    INCLUDEPATH += "../quazip"
+    INCLUDEPATH += "../libcurl/include"
     LIBS -= -lcurl
     LIBS += -llibcurl_debug
 }
