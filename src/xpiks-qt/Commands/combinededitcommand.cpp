@@ -84,6 +84,7 @@ void Commands::CombinedEditCommand::setKeywords(Models::ArtworkMetadata *metadat
         else {
             if (Common::HasFlag(m_EditFlags, Common::Clear)) {
                 metadata->clearKeywords();
+                metadata->markModified();
             } else {
                 metadata->setKeywords(m_Keywords);
             }
