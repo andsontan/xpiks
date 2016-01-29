@@ -103,7 +103,7 @@ namespace MetadataIO {
 
         QTemporaryFile jsonFile;
         if (jsonFile.open()) {
-            qDebug() << "Serializing artworks to json";
+            qDebug() << "Serializing artworks to json" << jsonFile.fileName();
             QJsonArray objectsToSave;
             artworksToJsonArray(m_ItemsToWrite, objectsToSave);
             QJsonDocument document(objectsToSave);
@@ -113,6 +113,7 @@ namespace MetadataIO {
 
             QTemporaryFile argumentsFile;
             if (argumentsFile.open()) {
+
                 QTextStream out(&argumentsFile);
                 QStringList exiftoolArguments = createArgumentsList(jsonFile.fileName());
                 foreach (const QString &line, exiftoolArguments) {
@@ -120,7 +121,6 @@ namespace MetadataIO {
                 }
 
                 out.flush();
-                argumentsFile.close();
 
                 QString exiftoolPath = m_SettingsModel->getExifToolPath();
                 QStringList arguments;
@@ -130,6 +130,7 @@ namespace MetadataIO {
                 qDebug() << "Starting exiftool process:" << exiftoolPath;
 
                 m_ExiftoolProcess->start(exiftoolPath, arguments);
+                success = m_ExiftoolProcess->waitForFinished();
 
                 qDebug() << "Exiftool process finished.";
 

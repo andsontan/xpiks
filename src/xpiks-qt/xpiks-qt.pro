@@ -1,7 +1,5 @@
 TEMPLATE = app
 
-QMAKE_MAC_SDK = macosx10.11
-
 QT += qml quick widgets concurrent
 CONFIG += qtquickcompiler
 
