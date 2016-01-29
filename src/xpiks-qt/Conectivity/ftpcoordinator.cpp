@@ -32,7 +32,7 @@
 #include "uploadcontext.h"
 #include "ftpuploaderworker.h"
 
-#include "../../libcurl/include/curl/curl.h"
+#include <curl/curl.h>
 
 #define TIMEOUT_SECONDS 10
 #define RETRIES_COUNT 3

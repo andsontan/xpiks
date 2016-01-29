@@ -79,6 +79,7 @@ DEFINES += QT_NO_CAST_TO_ASCII \
            QT_NO_CAST_FROM_BYTEARRAY
 DEFINES += QUAZIP_STATIC
 DEFINES += HUNSPELL_STATIC
+DEFINES += TELEMETRY_ENABLED
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -230,6 +231,9 @@ DISTFILES += \
 LIBS += -L"$$PWD/../libs/"
 LIBS += -lhunspell
 LIBS += -lz
+LIBS += -lcurl
+LIBS += -lquazip
+
 CONFIG(debug, debug|release)  {
     message("Debug build.")
 } else {
@@ -237,32 +241,36 @@ CONFIG(debug, debug|release)  {
 }
 
 macx {
-    INCLUDEPATH += "../hunspell-1.3.3/src/hunspell"
+    INCLUDEPATH += "../hunspell-1.3.3/src"
     INCLUDEPATH += "../quazip/quazip/"
-    LIBS += -lquazip
-    LIBS += -lcurl
+    INCLUDEPATH += "../../libcurl/include"
 }
 
 win32 {
     INCLUDEPATH += "../zlib-1.2.8"
-    INCLUDEPATH += "../hunspell-1.3.3/src/hunspell"
+    INCLUDEPATH += "../hunspell-1.3.3/src"
     INCLUDEPATH += "../quazip/quazip/"
-    LIBS += -lquazip
+    INCLUDEPATH += "../../libcurl/include"
+    LIBS -= -lcurl
     LIBS += -llibcurl_debug
 }
 
 linux-g++-64 {
     target.path=/usr/bin/
-    INCLUDEPATH += "/usr/include/hunspell"
-    INCLUDEPATH += "/usr/include/quazip"
-    LIBS += -L/lib/x86_64-linux-gnu/
-    LIBS += /usr/lib/x86_64-linux-gnu/libquazip-qt5.a
-
-    # uncomment below for openSUSE build
-    #LIBS += -L/usr/lib64/
-    #LIBS += -lquazip
-    #LIBS += /usr/lib64/libcurl.so.4
     QML_IMPORT_PATH += /usr/lib/x86_64-linux-gnu/qt5/imports/
+    UNAME = $$system(cat /proc/version)
+
+    contains(UNAME, Debian): {
+        message("on Debian Linux")
+        LIBS += -L/lib/x86_64-linux-gnu/
+        LIBS -= -lquazip # temporary static link
+        LIBS += /usr/lib/x86_64-linux-gnu/libquazip-qt5.a
+    }
+    contains(UNAME, SUSE): {
+        message("on SUSE Linux")
+        LIBS += -L/usr/lib64/
+        LIBS += /usr/lib64/libcurl.so.4
+    }
 }
 
 linux-static {

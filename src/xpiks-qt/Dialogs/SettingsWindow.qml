@@ -519,7 +519,6 @@ ApplicationWindow {
                                     text: settingsModel.dictionaryPath
                                     anchors.left: parent.left
                                     anchors.leftMargin: 5
-                                    KeyNavigation.backtab: curlText
                                     onTextChanged: settingsModel.dictionaryPath = text
                                 }
                             }

@@ -23,7 +23,7 @@
 #include "uploadcontext.h"
 #include <cstdio>
 #include <cstdlib>
-#include "../../libcurl/include/curl/curl.h"
+#include <curl/curl.h>
 
 namespace Conectivity {
     /* The MinGW headers are missing a few Win32 function definitions,

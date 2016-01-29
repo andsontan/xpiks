@@ -26,6 +26,7 @@
 #include <QCoreApplication>
 #include "curlftpuploader.h"
 #include "../Models/uploadinfo.h"
+#include "../Common/defines.h"
 
 namespace Conectivity {
     FtpUploaderWorker::FtpUploaderWorker(QSemaphore *uploadSemaphore,

@@ -25,6 +25,7 @@
 #include <QDebug>
 #include "uploadinforepository.h"
 #include "uploadinfo.h"
+#include "../Common/defines.h"
 #include "../Helpers/ziphelper.h"
 #include "../Models/artworkmetadata.h"
 #include "../Commands/commandmanager.h"

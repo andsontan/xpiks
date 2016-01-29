@@ -32,7 +32,7 @@
 #include "Helpers/appsettings.h"
 #include "spellcheckitem.h"
 #include "../Common/defines.h"
-#include <hunspell.hxx>
+#include <hunspell/hunspell.hxx>
 
 #define EN_HUNSPELL_DIC "en_US.dic"
 #define EN_HUNSPELL_AFF "en_US.aff"
