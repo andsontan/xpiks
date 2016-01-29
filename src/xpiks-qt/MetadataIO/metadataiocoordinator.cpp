@@ -40,7 +40,8 @@ namespace MetadataIO {
         m_ProcessingItemsCount(0),
         m_IsImportInProgress(false),
         m_CanProcessResults(false),
-        m_IgnoreBackupsAtImport(false)
+        m_IgnoreBackupsAtImport(false),
+        m_HasErrors(false)
     {
     }
 
