@@ -41,10 +41,11 @@ ApplicationWindow {
     title: qsTr("About")
 
     signal dialogDestruction();
+    onClosing: dialogDestruction();
     Component.onDestruction: dialogDestruction();
 
     function closeAbout() {
-        aboutWindow.destroy();
+        aboutWindow.close();
     }
 
     Rectangle {

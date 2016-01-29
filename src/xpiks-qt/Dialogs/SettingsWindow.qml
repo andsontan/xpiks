@@ -42,10 +42,11 @@ ApplicationWindow {
     flags: Qt.Dialog
 
     signal dialogDestruction();
-    Component.onDestruction: dialogDestruction();
+
+    onClosing: dialogDestruction();
 
     function closeSettings() {
-        settingsWindow.destroy();
+        settingsWindow.close()
     }
 
     function onCancelMP(firstTime) {
