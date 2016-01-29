@@ -103,7 +103,6 @@ void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const Q
     }
 }
 
-#define TELEMETRY_ENABLED true
 #define STRINGIZE_(x) #x
 #define STRINGIZE(x) STRINGIZE_(x)
 
@@ -201,8 +200,11 @@ int main(int argc, char *argv[]) {
     MetadataIO::BackupSaverService metadataSaverService;
     Helpers::UpdateService updateService;
     MetadataIO::MetadataIOCoordinator metadataIOCoordinator;
-
-    bool telemetryEnabled = appSettings.value(Constants::USER_STATISTIC, TELEMETRY_ENABLED).toBool();
+#ifdef TELEMETRY_ENABLED
+    bool telemetryEnabled = appSettings.value(Constants::USER_STATISTIC,true ).toBool();
+#else
+    bool telemetryEnabled = appSettings.value(Constants::USER_STATISTIC,false).toBool();
+#endif
     Conectivity::TelemetryService telemetryService(userId, telemetryEnabled);
 
     Commands::CommandManager commandManager;

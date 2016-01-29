@@ -31,6 +31,7 @@
 #include <QNetworkReply>
 #include "telemetryservice.h"
 #include "analyticsuserevent.h"
+#include "Common/defines.h"
 #include "Models/settingsmodel.h"
 #include "../Common/version.h"
 
@@ -46,10 +47,9 @@ namespace Conectivity {
     }
 
     void TelemetryService::reportAction(UserAction action) {
-#ifdef QT_NO_DEBUG
+#if defined(QT_NO_DEBUG) && defined(TELEMETRY_ENABLED)
         if (m_TelemetryEnabled)
         {
-            qDebug() << "Reporting action" << action;
             doReportAction(action);
         }
         else
@@ -58,7 +58,7 @@ namespace Conectivity {
     }
 
     void TelemetryService::changeReporting(bool value) {
-#ifndef QT_NO_DEBUG
+#if defined(QT_NO_DEBUG) && defined(TELEMETRY_ENABLED)
         if (m_TelemetryEnabled != value) {
             m_TelemetryEnabled = value;
 
@@ -69,6 +69,8 @@ namespace Conectivity {
                 doReportAction(UserActionTurnOffTelemetry);
             }
         }
+#else
+        qDebug()<<"Setting telemetry to"<<value<<"but it is disabled at compile time";
 #endif
     }
 
@@ -78,6 +80,7 @@ namespace Conectivity {
 
     void TelemetryService::doReportAction(UserAction action) {
         AnalyticsUserEvent userEvent(action);
+        qInfo() << "Reporting action" << userEvent.getActionString();
 
         QUrlQuery query;
         query.addQueryItem(QLatin1String("idsite"), QLatin1String("1"));
@@ -130,7 +133,11 @@ namespace Conectivity {
                 .arg(QSysInfo::productVersion()).toLocal8Bit());
 #elif defined(Q_OS_LINUX)
         request.setRawHeader(QString("User-Agent").toLocal8Bit(), QString("Mozilla/5.0 (Linux %2; rv:1.1) Qt Xpiks/1.1")
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
                 .arg(QSysInfo::productVersion()).toLocal8Bit());
+#else
+                .arg("?").toLocal8Bit());
+#endif
 #endif
 
         QNetworkReply *reply = m_NetworkManager.get(request);

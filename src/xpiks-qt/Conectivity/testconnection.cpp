@@ -23,7 +23,8 @@
 #include <QDebug>
 #include "uploadcontext.h"
 #include "ftphelpers.h"
-#include "../../libcurl/include/curl/curl.h"
+#include <curl/curl.h>
+#include "Common/defines.h"
 
 namespace Conectivity {
     static size_t throw_away(void *ptr, size_t size, size_t nmemb, void *data) {
