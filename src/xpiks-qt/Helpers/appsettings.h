@@ -148,6 +148,14 @@ namespace Helpers {
                 file.close();
             } else {
                 qWarning() << "whatsnew.txt file is not found on path" << path;
+
+                path = QDir::current().absoluteFilePath(QLatin1String(Constants::WHATS_NEW_FILENAME));
+
+                QFile currDirFile(path);
+                if (currDirFile.open(QIODevice::ReadOnly)) {
+                    text = currDirFile.readAll();
+                    currDirFile.close();
+                }
             }
             return text;
         }
@@ -234,6 +242,14 @@ namespace Helpers {
                 file.close();
             } else {
                 qWarning() << "terms_and_conditions.txt file is not found on path" << path;
+
+                path = QDir::current().absoluteFilePath(QLatin1String(Constants::TERMS_AND_CONDITIONS_FILENAME));
+
+                QFile currDirFile(path);
+                if (currDirFile.open(QIODevice::ReadOnly)) {
+                    text = currDirFile.readAll();
+                    currDirFile.close();
+                }
             }
 
             return text;

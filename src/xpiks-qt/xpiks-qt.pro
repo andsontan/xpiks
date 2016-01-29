@@ -271,6 +271,12 @@ linux-g++-64 {
         LIBS += -L/usr/lib64/
         LIBS += /usr/lib64/libcurl.so.4
     }
+
+    copywhatsnew.commands = $(COPY_DIR) $$PWD/whatsnew.txt $$OUT_PWD/
+    copyterms.commands = $(COPY_DIR) $$PWD/terms_and_conditions.txt $$OUT_PWD/
+
+    QMAKE_EXTRA_TARGETS += copywhatsnew copyterms
+    POST_TARGETDEPS += copywhatsnew copyterms
 }
 
 linux-static {
