@@ -60,6 +60,7 @@ namespace Models {
 
     public:
         virtual void clearModel();
+        virtual bool clearKeywords();
         virtual bool editKeyword(int index, const QString &replacement);
 
     public:
