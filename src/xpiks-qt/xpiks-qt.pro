@@ -244,6 +244,18 @@ macx {
     INCLUDEPATH += "../hunspell-1.3.3/src"
     INCLUDEPATH += "../quazip"
     INCLUDEPATH += "../../libcurl/include"
+
+    HUNSPELL_DICT_FILES.files = dict/en_US.aff dict/en_US.dic dict/license.txt dict/README_en_US.txt
+    HUNSPELL_DICT_FILES.path = Contents/Resources
+    QMAKE_BUNDLE_DATA += HUNSPELL_DICT_FILES
+
+    WHATS_NEW.files = whatsnew.txt
+    WHATS_NEW.path = Contents/Resources
+    QMAKE_BUNDLE_DATA += WHATS_NEW
+
+    TERMS_AND_CONDITIONS.files = terms_and_conditions.txt
+    TERMS_AND_CONDITIONS.path = Contents/Resources
+    QMAKE_BUNDLE_DATA += TERMS_AND_CONDITIONS
 }
 
 win32 {
@@ -253,6 +265,17 @@ win32 {
     INCLUDEPATH += "../libcurl/include"
     LIBS -= -lcurl
     LIBS += -llibcurl_debug
+
+    EXE_DIR = release
+CONFIG(debug, debug|release) {
+    EXE_DIR = debug
+}
+
+    copywhatsnew.commands = $(COPY_FILE) \"$$shell_path($$PWD/whatsnew.txt)\" \"$$shell_path($$OUT_PWD/$$EXE_DIR/)\"
+    copyterms.commands = $(COPY_FILE) \"$$shell_path($$PWD/terms_and_conditions.txt)\" \"$$shell_path($$OUT_PWD/$$EXE_DIR/)\"
+
+    QMAKE_EXTRA_TARGETS += copywhatsnew copyterms
+    POST_TARGETDEPS += copywhatsnew copyterms
 }
 
 linux-g++-64 {
@@ -272,8 +295,8 @@ linux-g++-64 {
         LIBS += /usr/lib64/libcurl.so.4
     }
 
-    copywhatsnew.commands = $(COPY_DIR) $$PWD/whatsnew.txt $$OUT_PWD/
-    copyterms.commands = $(COPY_DIR) $$PWD/terms_and_conditions.txt $$OUT_PWD/
+    copywhatsnew.commands = $(COPY_FILE) $$PWD/whatsnew.txt $$OUT_PWD/
+    copyterms.commands = $(COPY_FILE) $$PWD/terms_and_conditions.txt $$OUT_PWD/
 
     QMAKE_EXTRA_TARGETS += copywhatsnew copyterms
     POST_TARGETDEPS += copywhatsnew copyterms
@@ -285,15 +308,3 @@ linux-static {
     DEFINES += STATIC
     message("Static build.")
 }
-
-HUNSPELL_DICT_FILES.files = dict/en_US.aff dict/en_US.dic dict/license.txt dict/README_en_US.txt
-HUNSPELL_DICT_FILES.path = Contents/Resources
-QMAKE_BUNDLE_DATA += HUNSPELL_DICT_FILES
-
-WHATS_NEW.files = whatsnew.txt
-WHATS_NEW.path = Contents/Resources
-QMAKE_BUNDLE_DATA += WHATS_NEW
-
-TERMS_AND_CONDITIONS.files = terms_and_conditions.txt
-TERMS_AND_CONDITIONS.path = Contents/Resources
-QMAKE_BUNDLE_DATA += TERMS_AND_CONDITIONS
