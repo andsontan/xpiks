@@ -273,9 +273,10 @@ CONFIG(debug, debug|release) {
 
     copywhatsnew.commands = $(COPY_FILE) \"$$shell_path($$PWD/whatsnew.txt)\" \"$$shell_path($$OUT_PWD/$$EXE_DIR/)\"
     copyterms.commands = $(COPY_FILE) \"$$shell_path($$PWD/terms_and_conditions.txt)\" \"$$shell_path($$OUT_PWD/$$EXE_DIR/)\"
+    copydicts.commands = $(COPY_DIR) \"$$shell_path($$PWD/dict)\" \"$$shell_path($$OUT_PWD/$$EXE_DIR/dict)\"
 
-    QMAKE_EXTRA_TARGETS += copywhatsnew copyterms
-    POST_TARGETDEPS += copywhatsnew copyterms
+    QMAKE_EXTRA_TARGETS += copywhatsnew copyterms copydicts
+    POST_TARGETDEPS += copywhatsnew copyterms copydicts
 }
 
 linux-g++-64 {
