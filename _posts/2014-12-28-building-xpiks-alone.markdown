@@ -8,7 +8,7 @@ date: 2014-12-28T09:54:01+02:00
 
 - download Qt 5.2 or higher for your platform from <a href="http://qt.io/">official website</a>
 - while installing, add Qt bin directory to your PATH (Environmental variables)
-- make sure you also have Git bin direcotry in your PATH
+- make sure you also have Git bin directory in your PATH
 - download source code in <a href="{{ site.url }}/downloads">Downloads</a> section or at the <a href="https://github.com/Ribtoks/xpiks">GitHub</a>
 - download source code or initialize the repository of tiny-AES (`git submodule init` and `git submodule update`)
 - rename `tiny-AES/aes.c` to `tiny-AES/aes.cpp` for correct build
