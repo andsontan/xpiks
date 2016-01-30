@@ -21,6 +21,10 @@ If you want to create Xpiks executable for everyday usage, before each `Run qmak
 - [windows] do `git clone https://github.com/blackrosezy/build-libcurl-windows.git` and execute `build.bat`
 - [windows] copy contests of `lib/dll-debug-x64` contents to the `src/libs/` directory
 
+***Linux build***
+
+Install `libcurl-devel`, `hunspell-devel`, `quazip-devel` package (or alternative development packages for your distribution).
+
 ***Generic build***
 
 - install Qt 5.4 or later from official website
