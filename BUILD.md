@@ -5,6 +5,7 @@
 - git clone Xpiks repo
 - git submodule init & git submodule update - update tinyAES repo
 - rename tinyAES/aes.c to tinyAES/aes.cpp
+- ensure you have `git` available in your PATH
 
 If you want to create Xpiks executable for everyday usage, before each `Run qmake` step described below, select `Release` in Qt Creator. Select `Debug` (the default) in all other cases.
 
