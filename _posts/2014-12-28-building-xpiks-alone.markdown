@@ -8,11 +8,13 @@ date: 2014-12-28T09:54:01+02:00
 
 - download Qt 5.2 or higher for your platform from <a href="http://qt.io/">official website</a>
 - while installing, add Qt bin directory to your PATH (Environmental variables)
+- make sure you also have Git bin direcotry in your PATH
 - download source code in <a href="{{ site.url }}/downloads">Downloads</a> section or at the <a href="https://github.com/Ribtoks/xpiks">GitHub</a>
 - download source code or initialize the repository of tiny-AES (`git submodule init` and `git submodule update`)
 - rename `tiny-AES/aes.c` to `tiny-AES/aes.cpp` for correct build
 - <span class="gray">[Windows]</span> if you're building for Windows, build Zlib first (<a href="#zlib">see instructions below</a>)
 - build <a href="#hunspell">Hunspell</a> and <a href="#quazip">Quazip</a> (instructions below)
+- <span class="gray">[Windows]</span> build <a href="#libcurl">libcurl</a> (instructions below)
 - open xpiks-qt.pro file with Qt Creator installed with Qt
 - select build target Release, press "Run qmake" and then "Build"
 - now you can use xpiks-qt on your computer
@@ -33,6 +35,11 @@ date: 2014-12-28T09:54:01+02:00
 
 - open project `src/quazip/quazip/quazip.pro` in Qt Creator, select `Release`, execute `Run qmake`, execute `Build`
 - copy builded library (e.g. `libquazip.a`, `quazip.lib`) from the build directory to the `src/libs` directory
+
+***<span id="libcurl">To build Libcurl do the following:</span>***
+
+- open git bash and type `git clone https://github.com/blackrosezy/build-libcurl-windows.git`
+- execute `build.bat` and after if finishes, copy contents of `lib/dll-debug-x64` to the `src/libs/` directory
 
 ***Redistribution***
 
