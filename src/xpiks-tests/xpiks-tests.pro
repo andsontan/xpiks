@@ -26,6 +26,39 @@ DEFINES += QT_NO_CAST_TO_ASCII \
 LIBS += -L"$$PWD/../libs/"
 LIBS += -lhunspell
 
+macx {
+    INCLUDEPATH += "../hunspell-1.3.3/src"
+    #INCLUDEPATH += "../quazip"
+    #INCLUDEPATH += "../../libcurl/include"
+}
+
+win32 {
+    INCLUDEPATH += "../zlib-1.2.8"
+    INCLUDEPATH += "../hunspell-1.3.3/src"
+    #INCLUDEPATH += "../quazip"
+    #INCLUDEPATH += "../libcurl/include"
+    #LIBS -= -lcurl
+    #LIBS += -llibcurl_debug
+}
+
+linux-g++-64 {
+    target.path=/usr/bin/
+    QML_IMPORT_PATH += /usr/lib/x86_64-linux-gnu/qt5/imports/
+    UNAME = $$system(cat /proc/version)
+
+    #contains(UNAME, Debian): {
+    #    message("on Debian Linux")
+    #    LIBS += -L/lib/x86_64-linux-gnu/
+    #    LIBS -= -lquazip # temporary static link
+    #    LIBS += /usr/lib/x86_64-linux-gnu/libquazip-qt5.a
+    #}
+    #contains(UNAME, SUSE): {
+    #    message("on SUSE Linux")
+    #    LIBS += -L/usr/lib64/
+    #    LIBS += /usr/lib64/libcurl.so.4
+    #}
+}
+
 TEMPLATE = app
 
 SOURCES += main.cpp \

@@ -31,8 +31,8 @@
 #include <QNetworkReply>
 #include "telemetryservice.h"
 #include "analyticsuserevent.h"
-#include "Common/defines.h"
-#include "Models/settingsmodel.h"
+#include "../Common/defines.h"
+#include "../Models/settingsmodel.h"
 #include "../Common/version.h"
 
 namespace Conectivity {

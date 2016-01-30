@@ -29,7 +29,7 @@
 #include <QUrl>
 #include <QCoreApplication>
 #include <QStandardPaths>
-#include "Helpers/appsettings.h"
+#include "../Helpers/appsettings.h"
 #include "spellcheckitem.h"
 #include "../Common/defines.h"
 #include <hunspell/hunspell.hxx>

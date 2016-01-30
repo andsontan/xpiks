@@ -25,7 +25,7 @@
 #include <QObject>
 #include <QNetworkAccessManager>
 #include <QString>
-#include "Helpers/appsettings.h"
+#include "../Helpers/appsettings.h"
 #include "analyticsuserevent.h"
 
 namespace Conectivity {
