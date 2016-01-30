@@ -104,4 +104,20 @@ function launchItemEditing(index, appWnd, callbackObject) {
     }
 }
 
+function safeInsert(textEdit, textToInsert) {
+    var originalLength = textToInsert.length;
+    textToInsert = textToInsert.replace(/(\r\n|\n|\r)/gm, '');
+    var length = textToInsert.length;
+
+    if (length !== originalLength) {
+        if (textEdit.selectedText.length > 0) {
+            textEdit.remove(textEdit.selectionStart, textEdit.selectionEnd);
+        }
+
+        textEdit.insert(textEdit.cursorPosition, textToInsert);
+        return true;
+    }
+
+    return false;
+}
 
