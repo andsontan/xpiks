@@ -71,6 +71,7 @@ SOURCES += main.cpp \
     ../xpiks-qt/Models/artworksrepository.cpp \
     addcommand_tests.cpp \
     ../xpiks-qt/Models/artitemsmodel.cpp \
+	../xpiks-qt/Models/filteredartitemsproxymodel.cpp \
     ../xpiks-qt/Commands/addartworkscommand.cpp \
     ../xpiks-qt/Models/artworksprocessor.cpp \
     ../xpiks-qt/Models/combinedartworksmodel.cpp \
@@ -116,7 +117,8 @@ SOURCES += main.cpp \
     ../xpiks-qt/MetadataIO/saverworkerjobitem.cpp \
     ../xpiks-qt/Suggestion/locallibrary.cpp \
     ../xpiks-qt/Suggestion/libraryloaderworker.cpp \
-    ../xpiks-qt/MetadataIO/metadatawritingworker.cpp
+    ../xpiks-qt/MetadataIO/metadatawritingworker.cpp \
+    filteredmodel_tests.cpp
 
 HEADERS += \
     encryption_tests.h \
@@ -130,6 +132,7 @@ HEADERS += \
     ../xpiks-qt/Models/artworksrepository.h \
     addcommand_tests.h \
     ../xpiks-qt/Models/artitemsmodel.h \
+	../xpiks-qt/Models/filteredartitemsproxymodel.h \
     Mocks/artitemsmodelmock.h \
     ../xpiks-qt/Commands/addartworkscommand.h \
     ../xpiks-qt/Models/artworksprocessor.h \
@@ -183,4 +186,5 @@ HEADERS += \
     ../xpiks-qt/MetadataIO/saverworkerjobitem.h \
     ../xpiks-qt/Suggestion/locallibrary.h \
     ../xpiks-qt/Suggestion/libraryloaderworker.h \
-    ../xpiks-qt/MetadataIO/metadatawritingworker.h
+    ../xpiks-qt/MetadataIO/metadatawritingworker.h \
+    filteredmodel_tests.h
