@@ -36,8 +36,11 @@ namespace Models {
     FilteredArtItemsProxyModel::FilteredArtItemsProxyModel(QObject *parent) :
         QSortFilterProxyModel(parent),
         Common::BaseEntity(),
-        m_SelectedArtworksCount(0)
+        m_SelectedArtworksCount(0),
+        m_SortingEnabled(false)
     {
+        //m_SortingEnabled = true;
+        //this->sort(0);
     }
 
     void FilteredArtItemsProxyModel::setSearchTerm(const QString &value) {
@@ -576,5 +579,36 @@ namespace Models {
 
         bool hasMatch = containsPartsSearch(metadata);
         return hasMatch;
+    }
+
+    bool FilteredArtItemsProxyModel::lessThan(const QModelIndex &sourceLeft, const QModelIndex &sourceRight) const {
+        if (!m_SortingEnabled) {
+            return QSortFilterProxyModel::lessThan(sourceLeft, sourceRight);
+        }
+
+        ArtItemsModel *artItemsModel = getArtItemsModel();
+
+        ArtworkMetadata *leftMetadata = artItemsModel->getArtwork(sourceLeft.row());
+        ArtworkMetadata *rightMetadata = artItemsModel->getArtwork(sourceRight.row());
+
+        const QString &leftFilepath = leftMetadata->getFilepath();
+        const QString &rightFilepath = rightMetadata->getFilepath();
+
+        QFileInfo leftFI(leftFilepath);
+        QFileInfo rightFI(rightFilepath);
+
+        QString leftFilename = leftFI.fileName();
+        QString rightFilename = rightFI.fileName();
+
+        int filenamesResult = QString::compare(leftFilename, rightFilename);
+        bool result = false;
+
+        if (filenamesResult == 0) {
+            result = QString::compare(leftFilepath, rightFilepath) < 0;
+        } else {
+            result = filenamesResult < 0;
+        }
+
+        return result;
     }
 }

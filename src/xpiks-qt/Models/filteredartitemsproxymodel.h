@@ -104,11 +104,13 @@ namespace Models {
 
     protected:
         virtual bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
+        virtual bool lessThan(const QModelIndex & sourceLeft, const QModelIndex & sourceRight) const;
 
     private:
         // ignore default regexp from proxymodel
         QString m_SearchTerm;
         volatile int m_SelectedArtworksCount;
+        volatile bool m_SortingEnabled;
     };
 }
 
