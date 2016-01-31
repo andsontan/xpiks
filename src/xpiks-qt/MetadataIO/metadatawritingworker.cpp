@@ -176,7 +176,8 @@ namespace MetadataIO {
         QStringList arguments;
         arguments.reserve(m_ItemsToWrite.length() + 5);
 
-        arguments << "-j=" + jsonFilePath;
+        // ignore minor warnings
+        arguments << "-m" << "-j=" + jsonFilePath;
 
         if (!m_UseBackups) {
             arguments << "-overwrite_original";
