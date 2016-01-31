@@ -1,13 +1,17 @@
 #ifndef FILTEREDMODELTESTS_H
 #define FILTEREDMODELTESTS_H
 
-#include <QObject>
+
+#include <QtTest/QTest>
+#include "Mocks/artitemsmodelmock.h"
+#include "Mocks/commandmanagermock.h"
+#include "../xpiks-qt/Models/filteredartitemsproxymodel.h"
 
 class FilteredModelTests : public QObject
 {
     Q_OBJECT
 public:
-    explicit FilteredModelTests(QObject *parent = 0);
+    void invertSelectionTest();
 
 signals:
 

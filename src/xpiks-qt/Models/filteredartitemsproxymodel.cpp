@@ -321,6 +321,31 @@ namespace Models {
         emit allItemsSelectedChanged();
     }
 
+    void FilteredArtItemsProxyModel::reverseFilteredItemsSelected() {
+        ArtItemsModel *artItemsModel = getArtItemsModel();
+        QVector<int> indices;
+        int size = this->rowCount();
+        indices.reserve(size);
+
+        for (int row = 0; row < size; ++row) {
+            QModelIndex proxyIndex = this->index(row, 0);
+            QModelIndex originalIndex = this->mapToSource(proxyIndex);
+
+            int index = originalIndex.row();
+            ArtworkMetadata *metadata = artItemsModel->getArtwork(index);
+            Q_ASSERT(metadata != NULL);
+            if (metadata->getIsSelected())
+                metadata->setIsSelected(false);
+            else
+                metadata->setIsSelected(true);
+            indices << index;
+        }
+
+        artItemsModel->updateItems(indices, QVector<int>() << ArtItemsModel::IsSelectedRole);
+        emit allItemsSelectedChanged();
+    }
+
+
     QVector<ArtworkMetadata *> FilteredArtItemsProxyModel::getSelectedOriginalItems() const {
         ArtItemsModel *artItemsModel = getArtItemsModel();
         QVector<ArtworkMetadata *> selectedArtworks;
