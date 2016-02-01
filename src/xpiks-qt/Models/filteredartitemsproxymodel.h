@@ -52,7 +52,7 @@ namespace Models {
 
     public:
         Q_INVOKABLE int getOriginalIndex(int index);
-        Q_INVOKABLE void invertSelectionArtworks() {reverseFilteredItemsSelected();}
+        Q_INVOKABLE void invertSelectionArtworks() {invertFilteredItemsSelected();}
         Q_INVOKABLE void selectFilteredArtworks() { setFilteredItemsSelected(true); }
         Q_INVOKABLE void unselectFilteredArtworks() { setFilteredItemsSelected(false); }
         Q_INVOKABLE void selectDirectory(int directoryIndex);
@@ -95,7 +95,7 @@ namespace Models {
         void removeMetadataInItems(const QVector<Models::ArtItemInfo *> &itemsToClear, int flags) const;
         void removeKeywordsInItem(Models::ArtItemInfo *itemToClear);
         void setFilteredItemsSelected(bool selected);
-        void reverseFilteredItemsSelected();
+        void invertFilteredItemsSelected();
         QVector<ArtworkMetadata *> getSelectedOriginalItems() const;
         QVector<ArtItemInfo *> getSelectedOriginalItemsWithIndices() const;
         QVector<ArtItemInfo *> getAllItemsWithIndices() const;

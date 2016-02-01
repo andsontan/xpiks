@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
     Q_UNUSED(argc);
     Q_UNUSED(argv);
 
-    /*QTEST_CLASS(EncryptionTests, et);
+    QTEST_CLASS(EncryptionTests, et);
     QTEST_CLASS(IndicesToRangesTests, itrt);
     QTEST_CLASS(AddCommand_Tests, act);
     QTEST_CLASS(RemoveCommand_Tests, rct);
@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
     QTEST_CLASS(CombinedModelTests, cmt);
     QTEST_CLASS(StringHelpersTests, sht);
     QTEST_CLASS(KeywordValidationTests, kvt);
-    QTEST_CLASS(ArtworkRepositoryTests, art);*/
+    QTEST_CLASS(ArtworkRepositoryTests, art);
     QTEST_CLASS(FilteredModelTests, fil);
     return 0;
 }

@@ -324,7 +324,7 @@ namespace Models {
         emit allItemsSelectedChanged();
     }
 
-    void FilteredArtItemsProxyModel::reverseFilteredItemsSelected() {
+    void FilteredArtItemsProxyModel::invertFilteredItemsSelected() {
         ArtItemsModel *artItemsModel = getArtItemsModel();
         QVector<int> indices;
         int size = this->rowCount();
