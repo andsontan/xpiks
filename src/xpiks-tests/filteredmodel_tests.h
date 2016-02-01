@@ -10,8 +10,12 @@
 class FilteredModelTests : public QObject
 {
     Q_OBJECT
-public:
-    void invertSelectionTest();
+private slots:
+    void invertSelectionForEmptyTest();
+    void invertSelectionForAllSelectedTest();
+    void invertSelectionForSingleTest();
+    void invertSelectionForHalfSelectedTest();
+    void invertSelectionForThirdSelectedTest();
 
 signals:
 
