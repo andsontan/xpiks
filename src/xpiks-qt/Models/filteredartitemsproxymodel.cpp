@@ -337,10 +337,7 @@ namespace Models {
             int index = originalIndex.row();
             ArtworkMetadata *metadata = artItemsModel->getArtwork(index);
             Q_ASSERT(metadata != NULL);
-            if (metadata->getIsSelected())
-                metadata->setIsSelected(false);
-            else
-                metadata->setIsSelected(true);
+            metadata->invertSelection();
             indices << index;
         }
 
@@ -636,4 +633,10 @@ namespace Models {
 
         return result;
     }
+
+#ifdef TESTS
+        int FilteredArtItemsProxyModel::retrieveNumberOfSelectedItems(){
+            return getSelectedOriginalIndices().size();
+        }
+#endif
 }

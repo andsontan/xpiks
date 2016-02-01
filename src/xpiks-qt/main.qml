@@ -245,7 +245,7 @@ ApplicationWindow {
                 text: qsTr("&Invert selection")
                 onTriggered: {
                     console.log("Invert selection triggered")
-                    filteredArtItemsModel.reverseFilteredArtworks()
+                    filteredArtItemsModel.invertSelectionArtworks()
                 }
             }
         }

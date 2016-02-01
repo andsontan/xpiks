@@ -45,10 +45,14 @@ namespace Models {
         void setSearchTerm(const QString &value);
         int getSelectedArtworksCount() const { return m_SelectedArtworksCount; }
         void spellCheckAllItems();
+#ifdef TESTS
+        int retrieveNumberOfSelectedItems();
+#endif
+
 
     public:
         Q_INVOKABLE int getOriginalIndex(int index);
-        Q_INVOKABLE void reverseFilteredArtworks() {reverseFilteredItemsSelected();}
+        Q_INVOKABLE void invertSelectionArtworks() {reverseFilteredItemsSelected();}
         Q_INVOKABLE void selectFilteredArtworks() { setFilteredItemsSelected(true); }
         Q_INVOKABLE void unselectFilteredArtworks() { setFilteredItemsSelected(false); }
         Q_INVOKABLE void selectDirectory(int directoryIndex);
