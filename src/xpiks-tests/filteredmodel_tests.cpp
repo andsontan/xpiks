@@ -16,7 +16,7 @@ void FilteredModelTests::invertSelectionForEmptyTest(){
     int allItemsCount=filteredArtItemsModel.getItemsCount();
     filteredArtItemsModel.invertSelectionArtworks();
     int selected=filteredArtItemsModel.retrieveNumberOfSelectedItems();
-    QVERIFY(selected==(allItemsCount));
+    QCOMPARE(selected,(allItemsCount));
 
 }
 
@@ -34,12 +34,11 @@ void FilteredModelTests::invertSelectionForAllSelectedTest(){
 
     int allItemsCount=filteredArtItemsModel.getItemsCount();
     for (int i =0; i<allItemsCount; i++){                                   /*set*/
-        int originalIndex = filteredArtItemsModel.getOriginalIndex(i);
-        (artItemsModel->getArtwork(originalIndex))->setIsSelected(true);
+        (artItemsModel->getArtwork(i))->setIsSelected(true);
      }
     filteredArtItemsModel.invertSelectionArtworks();
     int selected=filteredArtItemsModel.retrieveNumberOfSelectedItems();
-    QVERIFY(selected==0);
+    QCOMPARE(selected,0);
 }
 
 void FilteredModelTests::invertSelectionForSingleTest(){
@@ -54,14 +53,11 @@ void FilteredModelTests::invertSelectionForSingleTest(){
     filteredArtItemsModel.setSourceModel(artItemsModel);
     commandManagerMock.InjectDependency(&filteredArtItemsModel);
 
-    int allItemsCount=filteredArtItemsModel.getItemsCount();
-    for (int i =0; i<allItemsCount; i++){                                   /*set*/
-        int originalIndex = filteredArtItemsModel.getOriginalIndex(i);
-        (artItemsModel->getArtwork(originalIndex))->setIsSelected(i==0);
-     }
+    int allItemsCount=filteredArtItemsModel.getItemsCount();                                  /*set*/
+    (artItemsModel->getArtwork(0))->setIsSelected(true);
     filteredArtItemsModel.invertSelectionArtworks();
     int selected=filteredArtItemsModel.retrieveNumberOfSelectedItems();
-    QVERIFY(selected==(allItemsCount-1));
+    QCOMPARE(selected,(allItemsCount-1));
 }
 void FilteredModelTests::invertSelectionForThirdSelectedTest(){
     Mocks::CommandManagerMock commandManagerMock;
@@ -77,12 +73,11 @@ void FilteredModelTests::invertSelectionForThirdSelectedTest(){
 
     int allItemsCount=filteredArtItemsModel.getItemsCount();
     for (int i =0; i<allItemsCount; i++){                                   /*set*/
-        int originalIndex = filteredArtItemsModel.getOriginalIndex(i);
-        (artItemsModel->getArtwork(originalIndex))->setIsSelected(i<allItemsCount/3);
+        (artItemsModel->getArtwork(i))->setIsSelected(i<allItemsCount/3);
      }
     filteredArtItemsModel.invertSelectionArtworks();
     int selected=filteredArtItemsModel.retrieveNumberOfSelectedItems();
-    QVERIFY(selected==(allItemsCount-allItemsCount/3));
+    QCOMPARE(selected,(allItemsCount-allItemsCount/3));
 }
 
 void FilteredModelTests::invertSelectionForHalfSelectedTest(){
@@ -99,11 +94,10 @@ void FilteredModelTests::invertSelectionForHalfSelectedTest(){
 
     int allItemsCount=filteredArtItemsModel.getItemsCount();
     for (int i =0; i<allItemsCount; i++){                                   /*set*/
-        int originalIndex = filteredArtItemsModel.getOriginalIndex(i);
-        (artItemsModel->getArtwork(originalIndex))->setIsSelected(i<allItemsCount/2);
+        (artItemsModel->getArtwork(i))->setIsSelected(i<allItemsCount/2);
      }
     filteredArtItemsModel.invertSelectionArtworks();
     int selected=filteredArtItemsModel.retrieveNumberOfSelectedItems();
-    QVERIFY(selected==(allItemsCount-allItemsCount/2));
+    QCOMPARE(selected,(allItemsCount-allItemsCount/2));
 }
 
