@@ -217,6 +217,15 @@ ApplicationWindow {
             title: qsTr("Edit")
 
             MenuItem {
+                text: qsTr("&Invert selection")
+                enabled: imagesListView.count > 0
+                onTriggered: {
+                    console.log("Invert selection triggered")
+                    filteredArtItemsModel.invertSelectionArtworks()
+                }
+            }
+
+            MenuItem {
                 text: qsTr("&Remove metadata from selected")
                 enabled: filteredArtItemsModel.selectedArtworksCount > 0
                 onTriggered: {
@@ -241,13 +250,6 @@ ApplicationWindow {
                 }
             }
 
-            MenuItem {
-                text: qsTr("&Invert selection")
-                onTriggered: {
-                    console.log("Invert selection triggered")
-                    filteredArtItemsModel.invertSelectionArtworks()
-                }
-            }
         }
 
         Menu {
