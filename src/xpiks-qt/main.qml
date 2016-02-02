@@ -240,6 +240,14 @@ ApplicationWindow {
                     openUploadDialog()
                 }
             }
+
+            MenuItem {
+                text: qsTr("&Invert selection")
+                onTriggered: {
+                    console.log("Invert selection triggered")
+                    filteredArtItemsModel.invertSelectionArtworks()
+                }
+            }
         }
 
         Menu {
