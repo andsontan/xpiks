@@ -72,20 +72,6 @@ Item {
         }
     }
 
-    MessageDialog {
-        id: confirmClearLogsDialog
-        property int itemIndex
-        title: "Confirmation"
-        text: qsTr("Are you sure you want to clear logs?")
-        standardButtons: StandardButton.Yes | StandardButton.No
-        onYes: {
-            clearLogsButton.enabled = false
-            logsModel.clearLogs()
-            logsComponent.logText = logsModel.getAllLogsText()
-            clearLogsButton.enabled = true
-        }
-    }
-
     FocusScope {
         anchors.fill: parent
 
@@ -216,16 +202,6 @@ Item {
 
                 Item {
                     Layout.fillWidth: true
-                }
-
-                StyledButton {
-                    id: clearLogsButton
-                    enabled: logsModel.withLogs
-                    text: qsTr("Clear logs")
-                    width: 100
-                    onClicked: {
-                        confirmClearLogsDialog.open()
-                    }
                 }
 
                 StyledButton {
