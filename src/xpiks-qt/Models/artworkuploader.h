@@ -47,7 +47,7 @@ namespace Models {
     {
         Q_OBJECT
     public:
-         ArtworkUploader(int maxParallelUploads);
+         ArtworkUploader(int maxParallelUploads, int secondsTimeout);
          virtual ~ArtworkUploader();
 
     public:

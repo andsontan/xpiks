@@ -37,7 +37,7 @@
 #define DEFAULT_MAX_DESCRIPTION 200
 #define DEFAULT_MIN_MEGAPIXELS 4.0
 #define DEFAULT_USE_MASTERPASSWORD false
-#define DEFAULT_TIMEOUT 10
+#define DEFAULT_UPLOAD_TIMEOUT 10
 #define DEFAULT_USE_CONFIRMATIONS true
 #define DEFAULT_SAVE_BACKUPS true
 #define DEFAULT_KEYWORD_SIZE_SCALE 1.0
@@ -61,7 +61,7 @@ namespace Models {
         m_ScrollSpeedScale(DEFAULT_SCROLL_SPEED_SCALE),
         m_MaxDescriptionLength(DEFAULT_MAX_DESCRIPTION),
         m_MaxKeywordsCount(DEFAULT_MAX_KEYWORDS),
-        m_UploadTimeout(DEFAULT_TIMEOUT),
+        m_UploadTimeout(DEFAULT_UPLOAD_TIMEOUT),
         m_DismissDuration(DEFAULT_DISMISS_DURATION),
         m_MaxParallelUploads(DEFAULT_MAX_PARALLEL_UPLOADS),
         m_MustUseMasterPassword(DEFAULT_USE_MASTERPASSWORD),
@@ -89,7 +89,7 @@ namespace Models {
         appSettings.setValue(appSettings.getMinMegapixelCountKey(), m_MinMegapixelCount);
         appSettings.setValue(appSettings.getMaxDescriptionLengthKey(), m_MaxDescriptionLength);
         appSettings.setValue(appSettings.getMaxKeywordsCountKey(), m_MaxKeywordsCount);
-        appSettings.setValue(appSettings.getOneUploadMinutesTimeoutKey(), m_UploadTimeout);
+        appSettings.setValue(appSettings.getOneUploadSecondsTimeoutKey(), m_UploadTimeout);
         appSettings.setValue(appSettings.getMustUseMasterPasswordKey(), m_MustUseMasterPassword);
         appSettings.setValue(appSettings.getUseConfirmationDialogsKey(), m_MustUseConfirmations);
         appSettings.setValue(appSettings.getSaveBackupsKey(), m_SaveBackups);
@@ -141,7 +141,7 @@ namespace Models {
         setMinMegapixelCount(appSettings.doubleValue(appSettings.getMinMegapixelCountKey(), DEFAULT_MIN_MEGAPIXELS));
         setMaxDescriptionLength(appSettings.value(appSettings.getMaxDescriptionLengthKey(), DEFAULT_MAX_DESCRIPTION).toInt());
         setMaxKeywordsCount(appSettings.value(appSettings.getMaxKeywordsCountKey(), DEFAULT_MAX_KEYWORDS).toInt());
-        setUploadTimeout(appSettings.value(appSettings.getOneUploadMinutesTimeoutKey(), DEFAULT_TIMEOUT).toInt());
+        setUploadTimeout(appSettings.value(appSettings.getOneUploadSecondsTimeoutKey(), DEFAULT_UPLOAD_TIMEOUT).toInt());
         setMustUseMasterPassword(appSettings.boolValue(appSettings.getMustUseMasterPasswordKey(), DEFAULT_USE_MASTERPASSWORD));
         setMustUseConfirmations(appSettings.boolValue(appSettings.getUseConfirmationDialogsKey(), DEFAULT_USE_CONFIRMATIONS));
         setSaveBackups(appSettings.boolValue(appSettings.getSaveBackupsKey(), DEFAULT_SAVE_BACKUPS));
@@ -163,7 +163,7 @@ namespace Models {
         setMinMegapixelCount(DEFAULT_MIN_MEGAPIXELS);
         setMaxDescriptionLength(DEFAULT_MAX_DESCRIPTION);
         setMaxKeywordsCount(DEFAULT_MAX_KEYWORDS);
-        setUploadTimeout(DEFAULT_TIMEOUT);
+        setUploadTimeout(DEFAULT_UPLOAD_TIMEOUT);
         setMustUseMasterPassword(DEFAULT_USE_MASTERPASSWORD);
         setMustUseConfirmations(DEFAULT_USE_CONFIRMATIONS);
         setSaveBackups(DEFAULT_SAVE_BACKUPS);

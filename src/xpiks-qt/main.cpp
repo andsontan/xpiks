@@ -194,7 +194,7 @@ int main(int argc, char *argv[]) {
     Models::FilteredArtItemsProxyModel filteredArtItemsModel;
     filteredArtItemsModel.setSourceModel(&artItemsModel);
     Models::RecentDirectoriesModel recentDirectorieModel;
-    Models::ArtworkUploader artworkUploader(settingsModel.getMaxParallelUploads());
+    Models::ArtworkUploader artworkUploader(settingsModel.getMaxParallelUploads(), settingsModel.getUploadTimeout());
     SpellCheck::SpellCheckerService spellCheckerService;
     SpellCheck::SpellCheckSuggestionModel spellCheckSuggestionModel;
     MetadataIO::BackupSaverService metadataSaverService;

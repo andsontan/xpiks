@@ -732,7 +732,7 @@ ApplicationWindow {
                             }
 
                             StyledText {
-                                text: qsTr("(minutes)")
+                                text: qsTr("(seconds)")
                                 color: Colors.defaultInputBackground
                             }
                         }

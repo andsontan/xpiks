@@ -70,7 +70,8 @@ namespace Conectivity {
 
     void generateUploadContexts(const QVector<Models::UploadInfo *> &uploadInfos,
                                 QVector<QSharedPointer<UploadContext> > &contexts,
-                                Encryption::SecretsManager *secretsManager) {
+                                Encryption::SecretsManager *secretsManager,
+                                int timeoutSeconds) {
         int size = uploadInfos.size();
         contexts.reserve(size);
 
@@ -84,7 +85,7 @@ namespace Conectivity {
             context->m_UsePassiveMode = !info->getDisableFtpPassiveMode();
 
             // TODO: move to configs/options
-            context->m_TimeoutSeconds = TIMEOUT_SECONDS;
+            context->m_TimeoutSeconds = timeoutSeconds;
             context->m_RetriesCount = RETRIES_COUNT;
 
             contexts.append(QSharedPointer<UploadContext>(context));
@@ -94,6 +95,7 @@ namespace Conectivity {
     QVector<UploadBatch*> generateUploadBatches(const QVector<Models::ArtworkMetadata *> &artworksToUpload,
                                                 const QVector<Models::UploadInfo *> &uploadInfos,
                                                 Encryption::SecretsManager *secretsManager,
+                                                int timeoutSeconds,
                                                 bool includeVector) {
         QVector<UploadBatch*> batches;
 
@@ -102,7 +104,7 @@ namespace Conectivity {
         extractFilePathes(artworksToUpload, filePathes, zipFilePathes, includeVector);
 
         QVector<QSharedPointer<UploadContext> > contexts;
-        generateUploadContexts(uploadInfos, contexts, secretsManager);
+        generateUploadContexts(uploadInfos, contexts, secretsManager, timeoutSeconds);
 
         int size = contexts.size();
         batches.reserve(size);
@@ -123,10 +125,11 @@ namespace Conectivity {
         return batches;
     }
 
-    FtpCoordinator::FtpCoordinator(int maxParallelUploads, QObject *parent) :
+    FtpCoordinator::FtpCoordinator(int maxParallelUploads, int secondsTimeout, QObject *parent) :
         QObject(parent),
         m_UploadSemaphore(maxParallelUploads),
         m_MaxParallelUploads(maxParallelUploads),
+        m_SecondsTimeout(secondsTimeout),
         m_OverallProgress(0.0),
         m_FinishedWorkersCount(0),
         m_AnyFailed(false)
@@ -146,6 +149,7 @@ namespace Conectivity {
         QVector<UploadBatch*> batches = generateUploadBatches(artworksToUpload,
                                                               uploadInfos,
                                                               secretsManager,
+                                                              m_SecondsTimeout,
                                                               includeVectors);
 
         Q_ASSERT(batches.size() == uploadInfos.size());

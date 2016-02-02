@@ -36,12 +36,12 @@
 #include "../Conectivity/uploadcontext.h"
 
 namespace Models {
-    ArtworkUploader::ArtworkUploader(int maxParallelUploads) :
+    ArtworkUploader::ArtworkUploader(int maxParallelUploads, int secondsTimeout) :
         ArtworksProcessor(),
         m_IncludeVector(false),
         m_Percent(0)
     {
-        m_FtpCoordinator = new Conectivity::FtpCoordinator(maxParallelUploads);
+        m_FtpCoordinator = new Conectivity::FtpCoordinator(maxParallelUploads, secondsTimeout);
 
         QObject::connect(m_FtpCoordinator, SIGNAL(uploadStarted()), this, SLOT(onUploadStarted()));
         QObject::connect(m_FtpCoordinator, SIGNAL(uploadFinished(bool)), this, SLOT(allFinished(bool)));

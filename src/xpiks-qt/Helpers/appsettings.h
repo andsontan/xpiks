@@ -77,8 +77,8 @@ namespace Helpers {
         Q_PROPERTY(QString masterPasswordHashKey READ getMasterPasswordHashKey CONSTANT)
         QString getMasterPasswordHashKey() const { return QLatin1String(Constants::MASTER_PASSWORD_HASH); }
 
-        Q_PROPERTY(QString oneUploadMinutesTimeoutKey READ getOneUploadMinutesTimeoutKey CONSTANT)
-        QString getOneUploadMinutesTimeoutKey() const { return QLatin1String(Constants::ONE_UPLOAD_MINUTES_TIMEMOUT); }
+        Q_PROPERTY(QString oneUploadMinutesTimeoutKey READ getOneUploadSecondsTimeoutKey CONSTANT)
+        QString getOneUploadSecondsTimeoutKey() const { return QLatin1String(Constants::ONE_UPLOAD_SECONDS_TIMEMOUT); }
 
         Q_PROPERTY(QString useConfirmationDialogsKey READ getUseConfirmationDialogsKey CONSTANT)
         QString getUseConfirmationDialogsKey() const { return QLatin1String(Constants::USE_CONFIRMATION_DIALOGS); }

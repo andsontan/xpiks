@@ -144,7 +144,7 @@ namespace Models {
             if (m_UploadTimeout == uploadTimeout)
                 return;
 
-            m_UploadTimeout = ensureInBounds(uploadTimeout, 0, 20);
+            m_UploadTimeout = ensureInBounds(uploadTimeout, 5, 30);
             emit uploadTimeoutChanged(m_UploadTimeout);
         }
 
