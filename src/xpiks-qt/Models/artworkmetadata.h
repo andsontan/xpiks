@@ -86,10 +86,7 @@ namespace Models {
             return result;
         }
 
-        void invertSelection()
-        {
-            setIsSelected(!m_IsSelected);
-        }
+        void invertSelection(){setIsSelected(!m_IsSelected);}
 
         void setSize(const QSize &size) { m_ImageSize = size; }
 
