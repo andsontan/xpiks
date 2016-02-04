@@ -130,5 +130,10 @@ namespace SpellCheck {
 
         int index = m_OnlyOneKeyword ? items.first()->m_Index : -1;
         emit resultsReady(m_SpellCheckFlags, index);
+
+        bool releaseResult = m_SpellCheckable->release();
+        if (releaseResult) {
+            qDebug() << "SpellCheckable item was locked for removal";
+        }
     }
 }

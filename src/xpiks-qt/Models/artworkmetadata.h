@@ -30,6 +30,7 @@
 #include <QVector>
 #include <QSet>
 #include <QSize>
+#include <QAtomicInt>
 #include "../Common/basickeywordsmodel.h"
 
 class QTextDocument;

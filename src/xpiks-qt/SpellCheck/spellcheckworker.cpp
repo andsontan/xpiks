@@ -29,6 +29,7 @@
 #include <QUrl>
 #include <QCoreApplication>
 #include <QStandardPaths>
+#include <QThread>
 #include "../Helpers/appsettings.h"
 #include "spellcheckitem.h"
 #include "../Common/defines.h"

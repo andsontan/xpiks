@@ -85,6 +85,7 @@ namespace SpellCheck {
 
             for (int i = 0; i < length; ++i) {
                 SpellCheck::ISpellCheckable *itemToCheck = itemsToCheck.at(i);
+                itemToCheck->acquire();
                 SpellCheckItem *item = new SpellCheckItem(itemToCheck, Common::SpellCheckAll);
                 itemToCheck->connectSignals(item);
                 items.append(item);
@@ -103,6 +104,7 @@ namespace SpellCheck {
         Q_ASSERT(m_SpellCheckWorker != NULL);
 
         if (m_SpellCheckWorker != NULL && !m_SpellCheckWorker->isCancelled()) {
+            itemToCheck->acquire();
             SpellCheckItem *item = new SpellCheckItem(itemToCheck, Common::SpellCheckKeywords, keywordIndex);
             itemToCheck->connectSignals(item);
             m_SpellCheckWorker->submitItem(item);
@@ -115,6 +117,7 @@ namespace SpellCheck {
         Q_ASSERT(m_SpellCheckWorker != NULL);
 
         if (m_SpellCheckWorker != NULL && !m_SpellCheckWorker->isCancelled()) {
+            itemToCheck->acquire();
             SpellCheckItem *item = new SpellCheckItem(itemToCheck, flags);
             itemToCheck->connectSignals(item);
             m_SpellCheckWorker->submitItem(item);

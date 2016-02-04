@@ -41,7 +41,7 @@
 namespace Models {
     ArtItemsModel::~ArtItemsModel() {
         qDeleteAll(m_ArtworkList);
-        m_ArtworkList.clear();
+        qDeleteAll(m_FinalizationList);
     }
 
     ArtworkMetadata *ArtItemsModel::createMetadata(const QString &filepath) const { return new ArtworkMetadata(filepath); }
@@ -230,6 +230,12 @@ namespace Models {
 
     void ArtItemsModel::removeSelectedArtworks(QVector<int> &selectedIndices) {
         doRemoveItemsAtIndices(selectedIndices);
+
+        if (m_ArtworkList.isEmpty()) {
+            qDebug() << "Clearing the finalization list";
+            qDeleteAll(m_FinalizationList);
+            m_FinalizationList.clear();
+        }
     }
 
     void ArtItemsModel::updateSelectedArtworks(const QVector<int> &selectedIndices) {
@@ -645,7 +651,7 @@ namespace Models {
 
     void ArtItemsModel::removeInnerItem(int row) {
         Q_ASSERT(row >= 0 && row < m_ArtworkList.length());
-        ArtworkMetadata *metadata = m_ArtworkList.at(row);
+        ArtworkMetadata *metadata = m_ArtworkList.takeAt(row);
         ArtworksRepository *artworkRepository = m_CommandManager->getArtworksRepository();
         artworkRepository->removeFile(metadata->getFilepath(), metadata->getDirectory());
 
@@ -653,8 +659,13 @@ namespace Models {
             emit selectedArtworkRemoved();
         }
 
-        delete metadata;
-        m_ArtworkList.removeAt(row);
+        if (metadata->release()) {
+            delete metadata;
+        } else {
+            metadata->disconnect();
+            qDebug() << "Metadata at index" << row << "is locked. Postponing destruction...";
+            m_FinalizationList.append(metadata);
+        }
     }
 
     void ArtItemsModel::doRemoveItemsAtIndices(QVector<int> &indicesToRemove) {

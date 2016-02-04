@@ -177,7 +177,8 @@ HEADERS += \
     Conectivity/ftpcoordinator.h \
     Conectivity/uploadcontext.h \
     Conectivity/testconnection.h \
-    Conectivity/ftphelpers.h
+    Conectivity/ftphelpers.h \
+    Common/isafepointer.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

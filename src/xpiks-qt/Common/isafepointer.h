@@ -19,28 +19,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef IWARNINGSCHECKABLE
-#define IWARNINGSCHECKABLE
+#ifndef ISAFEPOINTER
+#define ISAFEPOINTER
 
-#include <QSize>
-#include <QStringList>
-#include "../Common/isafepointer.h"
-
-namespace Warnings {
-    class IWarningsCheckable : public virtual Common::ISafePointer {
+namespace Common {
+    class ISafePointer {
     public:
-        virtual QSize getSize() const = 0;
-        virtual const QString &getDescription() const = 0;
-        virtual const QString &getTitle() const = 0;
-        virtual int getKeywordsCount() const = 0;
-        virtual bool hasTitleSpellError() const = 0;
-        virtual bool hasDescriptionSpellError() const = 0;
-        virtual bool hasKeywordsSpellError() const = 0;
-        virtual QStringList getDescriptionWords() const = 0;
-        virtual QStringList getTitleWords() const = 0;
-        virtual void setWarningsFlags(int warningsFlags) = 0;
+        virtual void acquire() = 0;
+        virtual bool release() = 0;
     };
 }
 
-#endif // IWARNINGSCHECKABLE
+#endif // ISAFEPOINTER
 

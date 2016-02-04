@@ -103,6 +103,11 @@ namespace Common {
         void resetKeywords(const QStringList &keywords);
 
     public:
+        // ISAFEPOINTER
+        virtual void acquire() { m_RefCount.fetchAndAddOrdered(1); }
+        virtual bool release() { return m_RefCount.fetchAndSubOrdered(1) == 1; }
+
+    public:
         SpellCheck::SpellCheckItemInfo *getSpellCheckInfo() const { return m_SpellCheckInfo; }
         void setSpellCheckInfo(SpellCheck::SpellCheckItemInfo *info) { m_SpellCheckInfo = info; }
         void notifySpellCheckResults(int flags);
@@ -153,6 +158,8 @@ namespace Common {
         SpellCheck::SpellCheckItemInfo *m_SpellCheckInfo;
         QString m_Description;
         QString m_Title;
+        // used for background workers
+        QAtomicInt m_RefCount;
         volatile int m_WarningsFlags;
     };
 }
