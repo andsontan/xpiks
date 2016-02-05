@@ -90,7 +90,7 @@ void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const Q
             break;
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 1))
         case QtInfoMsg:
-            logLine = QString("%1 - Info: %2").arg(time).arg(msg);
+            logLine = QString("%1 - Info:  %2").arg(time).arg(msg);
             break;
 #endif
     }
