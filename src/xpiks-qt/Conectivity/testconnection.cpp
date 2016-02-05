@@ -51,19 +51,19 @@ namespace Conectivity {
         curl_easy_setopt(curlHandle, CURLOPT_DIRLISTONLY, 1L);
         curl_easy_setopt(curlHandle, CURLOPT_HEADERFUNCTION, throw_away);
 
-        qDebug() << "About to check credentials for" << host;
+        qDebug() << "isContextValid #" << "About to check credentials for" << host;
         r = curl_easy_perform(curlHandle);
 
         result = (CURLE_OK == r);
 
         if (!result) {
-            qInfo() << "Credentials checking error:" << curl_easy_strerror(r);
+            qInfo() << "isContextValid #" << "Credentials checking error:" << curl_easy_strerror(r);
         }
 
         curl_easy_cleanup(curlHandle);
         curl_global_cleanup();
 
-        qInfo() << "Credentials checking finished" << host;
+        qInfo() << "isContextValid #" << "Credentials checking finished" << host;
         delete context;
 
         ContextValidationResult cvr;

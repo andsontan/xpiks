@@ -213,7 +213,7 @@ void Commands::CommandManager::recodePasswords(const QString &oldMasterPassword,
                                                   const QString &newMasterPassword,
                                                   const QVector<Models::UploadInfo *> &uploadInfos) const {
     if (m_SecretsManager) {
-        qDebug() << "Recoding passwords for" << uploadInfos.length() << "item(s)";
+        qDebug() << "CommandManager::recodePasswords #" << uploadInfos.length() << "item(s)";
         foreach (Models::UploadInfo *info, uploadInfos) {
             if (info->hasPassword()) {
                 QString newPassword = m_SecretsManager->recodePassword(
@@ -225,7 +225,7 @@ void Commands::CommandManager::recodePasswords(const QString &oldMasterPassword,
 }
 
 void Commands::CommandManager::combineArtwork(Models::ArtItemInfo *itemInfo) const {
-    qDebug() << "Combining one item with index" << itemInfo->getOriginalIndex();
+    qDebug() << "CommandManager::combineArtwork #" << "one item with index" << itemInfo->getOriginalIndex();
     if (m_CombinedArtworksModel) {
         m_CombinedArtworksModel->resetModelData();
         m_CombinedArtworksModel->initArtworks(QVector<Models::ArtItemInfo*>() << itemInfo);
@@ -236,7 +236,7 @@ void Commands::CommandManager::combineArtwork(Models::ArtItemInfo *itemInfo) con
 }
 
 void Commands::CommandManager::combineArtworks(const QVector<Models::ArtItemInfo *> &artworks) const {
-    qDebug() << "Combining" << artworks.length() << "artworks";
+    qDebug() << "CommandManager::combineArtworks #" << artworks.length() << "artworks";
     if (m_CombinedArtworksModel) {
         m_CombinedArtworksModel->resetModelData();
         m_CombinedArtworksModel->initArtworks(artworks);
@@ -383,7 +383,7 @@ void Commands::CommandManager::cleanupLocalLibraryAsync() const {
 
 void Commands::CommandManager::afterConstructionCallback()  {
     if (m_AfterInitCalled) {
-        qWarning() << "Attempt to call afterConstructionCallback() second time";
+        qWarning() << "CommandManager::afterConstructionCallback #" << "Attempt to call afterConstructionCallback() second time";
         return;
     }
 
@@ -402,7 +402,7 @@ void Commands::CommandManager::afterConstructionCallback()  {
 }
 
 void Commands::CommandManager::beforeDestructionCallback() const {
-    qDebug() << "Before destruction handler";
+    qDebug() << "CommandManager::beforeDestructionCallback #";
     if (!m_AfterInitCalled) { return; }
 
     // we have a second for important stuff

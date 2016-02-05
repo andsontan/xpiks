@@ -734,7 +734,7 @@ Item {
                                     }
                                 }
                             } else {
-                                console.log("About to cancel upload...")
+                                console.log("UI:UploadArtworks # About to cancel upload...")
                                 enabled = false
                                 artworkUploader.cancelOperation()
                             }

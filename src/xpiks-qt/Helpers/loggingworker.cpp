@@ -42,7 +42,7 @@ namespace Helpers {
         }
 
         logger.flush();
-        qInfo() << "Logging worker stopped";
+        qInfo() << "LoggingWorker::process #" << "Logging worker stopped";
     }
 
     void LoggingWorker::cancel() {

@@ -25,7 +25,6 @@
 #include <QString>
 #include <QFile>
 #include <QDir>
-#include <QDebug>
 #include <QDateTime>
 #include <QTextStream>
 #include <QStandardPaths>

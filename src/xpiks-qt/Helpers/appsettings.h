@@ -147,7 +147,7 @@ namespace Helpers {
                 text = file.readAll();
                 file.close();
             } else {
-                qWarning() << "whatsnew.txt file is not found on path" << path;
+                qWarning() << "AppSettings::getWhatsNewText #" << "whatsnew.txt file is not found on path" << path;
 
                 path = QDir::current().absoluteFilePath(QLatin1String(Constants::WHATS_NEW_FILENAME));
 
@@ -187,7 +187,7 @@ namespace Helpers {
         }
 
         Q_INVOKABLE void saveCurrentVersion() {
-            qDebug() << "Saving current xpiks version";
+            qDebug() << "AppSettings::saveCurrentVersion #" << "Saving current xpiks version";
             setValue(getInstalledVersionKey(), XPIKS_VERSION_INT);
         }
 
@@ -211,10 +211,10 @@ namespace Helpers {
                 if (numberOfLaunches >= 31) {
                     this->setValue(Constants::USER_STATISTIC, true);
                     this->setValue(Constants::NUMBER_OF_LAUNCHES, 0);
-                    qDebug() << "Resetting telemetry to ON";
+                    qDebug() << "AppSettings::protectTelemetry #"<< "Resetting telemetry to ON";
                 } else {
                     this->setValue(Constants::NUMBER_OF_LAUNCHES, numberOfLaunches);
-                    qDebug() << numberOfLaunches << "launches of Xpiks with Telemetry OFF";
+                    qDebug() << "AppSettings::protectTelemetry #"<< numberOfLaunches << "launches of Xpiks with Telemetry OFF";
                 }
             }
         }
@@ -241,7 +241,7 @@ namespace Helpers {
                 text = file.readAll();
                 file.close();
             } else {
-                qWarning() << "terms_and_conditions.txt file is not found on path" << path;
+                qWarning() << "AppSettings::getTermsAndConditionsText #" << "terms_and_conditions.txt file is not found on path" << path;
 
                 path = QDir::current().absoluteFilePath(QLatin1String(Constants::TERMS_AND_CONDITIONS_FILENAME));
 

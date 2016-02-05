@@ -49,7 +49,7 @@ namespace Suggestion {
     }
 
     void LibraryLoaderWorker::read() {
-        qDebug() << "Reading local artworks library...";
+        qDebug() << "LibraryLoaderWorker::read #" << "Loading library...";
 
         QFile file(m_Filepath);
         if (file.exists() && file.open(QIODevice::ReadOnly)) {
@@ -64,13 +64,13 @@ namespace Suggestion {
     }
 
     void LibraryLoaderWorker::write() {
-        qDebug() << "Writing local artworks library...";
+        qDebug() << "LibraryLoaderWorker::write #" << "saving";
 
         m_LocalLibrary->saveToFile();
     }
 
     void LibraryLoaderWorker::cleanup() {
-        qDebug() << "Cleaning up local artworks library...";
+        qDebug() << "LibraryLoaderWorker::cleanup #";
         m_LocalLibrary->cleanupTrash();
     }
 }

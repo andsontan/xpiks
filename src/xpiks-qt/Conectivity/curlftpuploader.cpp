@@ -61,7 +61,7 @@ namespace Conectivity {
 
         int result = progressReporter->cancelRequested() ? 1 : 0;
         if (result) {
-            qDebug() << "Cancelling upload from the progress callback...";
+            qDebug() << "xferinfo #" << "Cancelling upload from the progress callback...";
         }
 
         return result;
@@ -117,7 +117,7 @@ namespace Conectivity {
 
         /* get the file size of the local file */
         if (stat(filepath.toLocal8Bit().data(), &file_info)) {
-            qWarning() << "Failed to open file" << filepath;
+            qWarning() << "uploadFile #" << "Failed to stat file" << filepath;
             return result;
         }
 
@@ -125,7 +125,7 @@ namespace Conectivity {
 
         f = fopen(filepath.toLocal8Bit().data(), "rb");
         if (f == NULL) {
-            qWarning() << "Failed to open file" << filepath;
+            qWarning() << "uploadFile #" << "Failed to open file" << filepath;
             return result;
         }
 
@@ -140,13 +140,13 @@ namespace Conectivity {
             QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
 
             if (r == CURLE_ABORTED_BY_CALLBACK) {
-                qInfo() << "Upload aborted by user...";
+                qInfo() << "uploadFile #" << "Upload aborted by user...";
                 break;
             }
 
             /* are we resuming? */
             if (c) { /* yes */
-                qDebug() << "Attempting to resume upload" << uploaded_len << "try #" << c;
+                qDebug() << "uploadFile #" << "Attempting to resume upload" << uploaded_len << "try #" << c;
                 /* determine the length of the file already written */
                 /*
                * With NOBODY and NOHEADER, libcurl will issue a SIZE
@@ -183,7 +183,7 @@ namespace Conectivity {
         result = (r == CURLE_OK);
 
         if (!result) {
-            qWarning() << "Upload failed! Curl error:" << curl_easy_strerror(r);
+            qWarning() << "uploadFile #" << "Upload failed! Curl error:" << curl_easy_strerror(r);
         }
 
         return result;
@@ -206,7 +206,7 @@ namespace Conectivity {
 
     void CurlProgressReporter::cancelHandler() {
         m_Cancel = true;
-        qDebug() << "Cancelled in the progress reporter...";
+        qDebug() << "CurlProgressReporter::cancelHandler #" << "Cancelled in the progress reporter...";
     }
 
     CurlFtpUploader::CurlFtpUploader(UploadBatch *batchToUpload, QObject *parent) :
@@ -226,7 +226,7 @@ namespace Conectivity {
         UploadContext *context = m_BatchToUpload->getContext();
 
         if (m_Cancel) {
-            qWarning() << "CurlUploader: Cancelled before upload." << context->m_Host;
+            qWarning() << "CurlFtpUploader::uploadBatch #" << "Cancelled before upload." << context->m_Host;
             return;
         }
 
@@ -244,12 +244,12 @@ namespace Conectivity {
         QObject::connect(this, SIGNAL(cancelCurrentUpload()), &progressReporter, SLOT(cancelHandler()));
 
         emit uploadStarted();
-        qDebug() << "Uploading" << size << "file(s) started for" << host << "Passive mode =" << context->m_UsePassiveMode;
+        qDebug() << "CurlFtpUploader::uploadBatch #" << "Uploading" << size << "file(s) started for" << host << "Passive mode =" << context->m_UsePassiveMode;
 
         for (int i = 0; i < size; ++i) {
 
             if (m_Cancel) {
-                qWarning() << "CurlUploader: Cancelled. Breaking..." << host;
+                qWarning() << "CurlFtpUploader::uploadBatch #" << "Cancelled. Breaking..." << host;
                 break;
             }
 
@@ -264,7 +264,7 @@ namespace Conectivity {
             try {
                 uploadSuccess = uploadFile(curlHandle, context, &progressReporter, filepath, remoteUrl);
             } catch (...) {
-                qWarning() << "Upload CRASHED for file" << filepath;
+                qWarning() << "CurlFtpUploader::uploadBatch #" << "CRASHED for file" << filepath << "for host" << host;
             }
 
             if (!uploadSuccess) {
@@ -281,7 +281,7 @@ namespace Conectivity {
         reportCurrentFileProgress(0.0);
 
         emit uploadFinished(anyErrors);
-        qDebug() << "Uploading finished for" << host;
+        qDebug() << "CurlFtpUploader::uploadBatch #" << "Uploading finished for" << host;
 
         curl_easy_cleanup(curlHandle);
         // curl_global_cleanup should be done from coordinator

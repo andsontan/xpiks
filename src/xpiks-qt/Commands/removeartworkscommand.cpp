@@ -34,7 +34,7 @@
 
 Commands::CommandResult *Commands::RemoveArtworksCommand::execute(const Commands::CommandManager *commandManager) const
 {
-    qDebug() << "Remove artworks command: removing" << m_RangesToRemove.length() << "ranges";
+    qInfo() << "RemoveArtworksCommand::execute #" << "removing" << m_RangesToRemove.length() << "ranges received";
     Models::ArtItemsModel *artItemsModel = commandManager->getArtItemsModel();
 
     int count = m_RangesToRemove.count();
@@ -62,7 +62,7 @@ Commands::CommandResult *Commands::RemoveArtworksCommand::execute(const Commands
 
     int artworksToRemoveCount = removedItemsIndices.count();
 
-    qInfo() << "Remove artworks command: removing" << artworksToRemoveCount << "real items";
+    qInfo() << "RemoveArtworksCommand::execute #" << "removing" << artworksToRemoveCount << "real items found";
 
     if (artworksToRemoveCount > 0) {
         QVector<QPair<int, int> > rangesToRemove;

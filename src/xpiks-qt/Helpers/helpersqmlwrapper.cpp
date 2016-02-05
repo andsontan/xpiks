@@ -22,7 +22,6 @@
 #include "helpersqmlwrapper.h"
 #include <QStringList>
 #include <QProcess>
-#include <QDebug>
 #include <QDir>
 #include "keywordvalidator.h"
 #include "../Commands/commandmanager.h"

@@ -29,7 +29,7 @@ namespace Conectivity {
     class UploadContext {
     public:
         ~UploadContext() {
-            qDebug() << "Upload context destructor for host" << m_Host;
+            qDebug() << "UploadContext::~UploadContext #" << "destructor for host" << m_Host;
         }
 
     public:

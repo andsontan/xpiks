@@ -23,7 +23,6 @@
 #include <QColor>
 #include <QSet>
 #include <QString>
-#include <QDebug>
 #include "spellcheckiteminfo.h"
 
 namespace SpellCheck {

@@ -170,23 +170,23 @@ int main(int argc, char *argv[]) {
     logsModel.startLogging();
 
     qInstallMessageHandler(myMessageHandler);
-    qInfo() << "Log started." << "Xpiks" << XPIKS_VERSION_STRING;
+    qInfo() << "main #" << "Log started." << "Xpiks" << XPIKS_VERSION_STRING;
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
-    qInfo() << QSysInfo::productType() << QSysInfo::productVersion();
+    qInfo() << "main #" << QSysInfo::productType() << QSysInfo::productVersion();
 #else
 #ifdef Q_OS_WIN
-    qInfo() << QLatin1String("Windows Qt<5.4");
+    qInfo() << "main #" << QLatin1String("Windows Qt<5.4");
 #elsif Q_OS_DARWIN
-    qInfo() << QLatin1String("OS X Qt<5.4");
+    qInfo() << "main #" << QLatin1String("OS X Qt<5.4");
 #else
-    qInfo() << QLatin1String("LINUX Qt<5.4");
+    qInfo() << "main #" << QLatin1String("LINUX Qt<5.4");
 #endif
 #endif
 
     QApplication app(argc, argv);
 
-    qDebug() << "Working directory of Xpiks is:" << QDir::currentPath();
+    qDebug() << "main #" << "Working directory of Xpiks is:" << QDir::currentPath();
 
     localLibrary.loadLibraryAsync();
 
@@ -285,9 +285,9 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("metadataIOCoordinator", &metadataIOCoordinator);
 
     engine.addImageProvider("global", globalProvider);
-    qDebug() << "About to load main view...";
+    qDebug() << "main #" << "About to load main view...";
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
-    qDebug() << "Main view loaded";
+    qDebug() << "main #" << "Main view loaded";
 
 #ifdef QT_DEBUG
     if (argc > 1) {

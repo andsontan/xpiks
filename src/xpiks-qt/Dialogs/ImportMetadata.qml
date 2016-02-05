@@ -194,7 +194,7 @@ Item {
                         Connections {
                             target: metadataIOCoordinator
                             onMetadataReadingFinished: {
-                                console.log("Import finished UI handler")
+                                console.log("UI::ImportMetadata # Import finished handler")
 
                                 metadataImportComponent.isInProgress = false
 

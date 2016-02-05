@@ -34,7 +34,7 @@ namespace Models {
     }
 
     void ArtworksRepository::cleanupEmptyDirectories() {
-        qDebug() << "Cleaning empty directories";
+        qDebug() << "ArtworksRepository::cleanupEmptyDirectories #";
         int count = m_DirectoriesList.length();
         QVector<int> indicesToRemove;
         indicesToRemove.reserve(count);
@@ -47,7 +47,7 @@ namespace Models {
         }
 
         if (!indicesToRemove.isEmpty()) {
-            qInfo() << "Removing" << indicesToRemove.length() << "empty directory(ies)...";
+            qInfo() << "ArtworksRepository::cleanupEmptyDirectories #" << indicesToRemove.length() << "empty directory(ies)...";
 
             QVector<QPair<int, int> > rangesToRemove;
             Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
@@ -122,7 +122,7 @@ namespace Models {
 
             int occurances = 0;
             if (!m_DirectoriesHash.contains(absolutePath)) {
-                qInfo() << "Adding new directory" << absolutePath << "to repository with index" << m_DirectoriesList.length();
+                qInfo() << "ArtworksRepository::accountFile #" << "Adding new directory" << absolutePath << "with index" << m_DirectoriesList.length();
                 m_DirectoriesList.append(absolutePath);
                 m_DirectoriesSelectedHash.insert(absolutePath, 0);
                 emit artworksSourcesCountChanged();

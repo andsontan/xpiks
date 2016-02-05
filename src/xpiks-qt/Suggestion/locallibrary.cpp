@@ -52,7 +52,7 @@ namespace Suggestion {
     void LocalLibrary::swap(QHash<QString, QStringList> &hash) {
         QMutexLocker locker(&m_Mutex);
         m_LocalArtworks.swap(hash);
-        qDebug() << "Local library swapped with read from db.";
+        qDebug() << "LocalLibrary::swap #" << "swapped with read from db.";
     }
 
     void LocalLibrary::saveToFile() {
@@ -68,7 +68,7 @@ namespace Suggestion {
 
             file.close();
 
-            qDebug() << "Local library saved to" << m_Filename;
+            qDebug() << "LocalLibrary::saveToFile #" << "saved to" << m_Filename;
         }
     }
 
@@ -136,7 +136,7 @@ namespace Suggestion {
             m_LocalArtworks.remove(item);
         }
 
-        qInfo() << "Library cleanup finished." << itemsToRemove.count() << "items removed.";
+        qInfo() << "LocalLibrary::cleanupTrash #" << itemsToRemove.count() << "item(s) removed.";
     }
 
     void LocalLibrary::artworksAdded() {
@@ -164,7 +164,7 @@ namespace Suggestion {
     void LocalLibrary::doAddToLibrary(const QVector<Models::ArtworkMetadata *> artworksList) {
         int length = artworksList.length();
 
-        qDebug() << "Adding" << length << "files to the library";
+        qDebug() << "LocalLibrary::doAddToLibrary #" << length << "file(s)";
 
         QMutexLocker locker(&m_Mutex);
 
@@ -185,7 +185,7 @@ namespace Suggestion {
             m_LocalArtworks.insert(filepath, tags.toList());
         }
 
-        qInfo() << length << "artworks added/updated to/in the local library";
+        qInfo() << "LocalLibrary::doAddToLibrary #" << length << "items updated or added";
     }
 
     void LocalLibrary::cleanupLocalLibraryAsync() {
