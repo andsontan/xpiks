@@ -54,6 +54,7 @@ namespace Models {
         Q_PROPERTY(bool useSpellCheck READ getUseSpellCheck WRITE setUseSpellCheck NOTIFY useSpellCheckChanged)
         Q_PROPERTY(bool userStatistic READ getUserStatistic WRITE setUserStatistic NOTIFY userStatisticChanged)
         Q_PROPERTY(QString dictionaryPath READ getDictionaryPath WRITE setDictionaryPath NOTIFY dictionaryPathChanged)
+
     public:
         explicit SettingsModel(QObject *parent = 0);
         virtual ~SettingsModel() {}

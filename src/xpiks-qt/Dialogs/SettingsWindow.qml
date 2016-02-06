@@ -134,8 +134,8 @@ ApplicationWindow {
                 }
 
                 Common.launchDialog("Dialogs/EnterMasterPasswordDialog.qml",
-                                       settingsWindow,
-                                       {componentParent: settingsWindow, callbackObject: callbackObject})
+                                    settingsWindow,
+                                    {componentParent: settingsWindow, callbackObject: callbackObject})
             } else {
                 turnMasterPasswordOff()
             }
@@ -186,10 +186,10 @@ ApplicationWindow {
                 Layout.fillHeight: true
                 Layout.fillWidth: true
                 Connections {
-                   target: settingsModel
-                   onSettingsReset: {
-                  tabView.getTab(tabView.currentIndex).resetRequested();
-                   }
+                    target: settingsModel
+                    onSettingsReset: {
+                        tabView.getTab(tabView.currentIndex).resetRequested();
+                    }
                 }
 
 
@@ -216,7 +216,7 @@ ApplicationWindow {
                                     settingsModel.mustUseConfirmations = checked
                                 }
                                 function onResetRequested()  {
-                                   checked = settingsModel.mustUseConfirmations
+                                    checked = settingsModel.mustUseConfirmations
                                 }
 
                                 Component.onCompleted: {
@@ -242,8 +242,8 @@ ApplicationWindow {
                                 onCheckedChanged: {
                                     settingsModel.saveBackups = checked
                                 }
-                                 function onResetRequested()  {
-                                   checked = settingsModel.saveBackups
+                                function onResetRequested()  {
+                                    checked = settingsModel.saveBackups
                                 }
 
                                 Component.onCompleted: {
@@ -268,8 +268,8 @@ ApplicationWindow {
                                 onCheckedChanged: {
                                     settingsModel.searchUsingAnd = checked
                                 }
-                                 function onResetRequested()  {
-                                   checked = settingsModel.searchUsingAnd
+                                function onResetRequested()  {
+                                    checked = settingsModel.searchUsingAnd
                                 }
                                 Component.onCompleted: {
                                     checked = settingsModel.searchUsingAnd
@@ -293,8 +293,8 @@ ApplicationWindow {
                                 onCheckedChanged: {
                                     settingsModel.useSpellCheck = checked
                                 }
-                                 function onResetRequested()  {
-                                   checked = settingsModel.useSpellCheck
+                                function onResetRequested()  {
+                                    checked = settingsModel.useSpellCheck
                                 }
 
                                 Component.onCompleted: {
@@ -340,8 +340,8 @@ ApplicationWindow {
                                 onCheckedChanged: {
                                     settingsModel.fitSmallPreview = checked
                                 }
-                                 function onResetRequested()  {
-                                   checked =  settingsModel.fitSmallPreview
+                                function onResetRequested()  {
+                                    checked =  settingsModel.fitSmallPreview
                                 }
 
                                 Component.onCompleted: {
@@ -378,9 +378,9 @@ ApplicationWindow {
                                 }
 
                                 function onResetRequested()  {
-                                  value =  settingsModel.keywordSizeScale
-                                  uxTab.sizeSliderValue = value
-                               }
+                                    value =  settingsModel.keywordSizeScale
+                                    uxTab.sizeSliderValue = value
+                                }
                             }
 
                             Rectangle {
@@ -447,9 +447,9 @@ ApplicationWindow {
                                 }
 
                                 function onResetRequested()  {
-                                  value =  settingsModel.scrollSpeedScale
-                                  uxTab.sizeSliderValue = value
-                               }
+                                    value =  settingsModel.scrollSpeedScale
+                                    uxTab.sizeSliderValue = value
+                                }
                             }
                         }
 
@@ -481,8 +481,8 @@ ApplicationWindow {
                                     }
 
                                     function onResetRequested()  {
-                                      text =  settingsModel.dismissDuration
-                                   }
+                                        text =  settingsModel.dismissDuration
+                                    }
 
                                     validator: IntValidator {
                                         bottom: 5
@@ -547,9 +547,9 @@ ApplicationWindow {
                                     onTextChanged: settingsModel.exifToolPath = text
 
                                     function onResetRequested()  {
-                                      value =  settingsModel.exifToolPath
-                                      text = value
-                                   }
+                                        value =  settingsModel.exifToolPath
+                                        text = value
+                                    }
                                     Component.onCompleted: {
                                         extTab.resetRequested.connect(exifToolText.onResetRequested)
                                     }
@@ -667,9 +667,9 @@ ApplicationWindow {
                                     }
 
                                     function onResetRequested()  {
-                                      value =  settingsModel.minMegapixelCount
-                                      text = value
-                                   }
+                                        value =  settingsModel.minMegapixelCount
+                                        text = value
+                                    }
                                     Component.onCompleted: {
                                         warnTab.resetRequested.connect(megapixelsCount.onResetRequested)
                                     }
@@ -719,9 +719,9 @@ ApplicationWindow {
                                     }
 
                                     function onResetRequested()  {
-                                      value =  settingsModel.maxKeywordsCount
-                                      text = value
-                                   }
+                                        value =  settingsModel.maxKeywordsCount
+                                        text = value
+                                    }
 
                                     Component.onCompleted: {
                                         warnTab.resetRequested.connect(keywordsCount.onResetRequested)
@@ -769,9 +769,9 @@ ApplicationWindow {
                                     }
 
                                     function onResetRequested()  {
-                                      value =  settingsModel.maxDescriptionLength
-                                      text = value
-                                   }
+                                        value =  settingsModel.maxDescriptionLength
+                                        text = value
+                                    }
 
                                     Component.onCompleted: {
                                         warnTab.resetRequested.connect(descriptionLength.onResetRequested)
@@ -835,9 +835,9 @@ ApplicationWindow {
                                     }
 
                                     function onResetRequested()  {
-                                      value =  settingsModel.uploadTimeout
-                                      text = value
-                                   }
+                                        value =  settingsModel.uploadTimeout
+                                        text = value
+                                    }
 
                                     Component.onCompleted: {
                                         uploadTab.resetRequested.connect(timeoutMinutes.onResetRequested)
@@ -884,9 +884,9 @@ ApplicationWindow {
                                     }
 
                                     function onResetRequested()  {
-                                      value =  settingsModel.maxParallelUploads
-                                      text = value
-                                   }
+                                        value =  settingsModel.maxParallelUploads
+                                        text = value
+                                    }
 
                                     Component.onCompleted: {
                                         uploadTab.resetRequested.connect(maxParallelUploads.onResetRequested)
@@ -951,8 +951,8 @@ ApplicationWindow {
                                 }
 
                                 function onResetRequested()  {
-                                  checked =  settingsModel.mustUseMasterPassword
-                               }
+                                    checked =  settingsModel.mustUseMasterPassword
+                                }
                             }
 
                             Item {
