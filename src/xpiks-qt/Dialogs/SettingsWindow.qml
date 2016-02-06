@@ -349,7 +349,7 @@ ApplicationWindow {
 
                                 Component.onCompleted: {
                                     checked = settingsModel.fitSmallPreview
-                                    behaviorTab.resetRequested.connect(fitArtworksCheckbox.onResetRequested)
+                                    uxTab.resetRequested.connect(fitArtworksCheckbox.onResetRequested)
                                 }
                             }
 
@@ -377,7 +377,7 @@ ApplicationWindow {
                                 onValueChanged: uxTab.sizeSliderValue = value
                                 Component.onCompleted:{
                                     value = settingsModel.keywordSizeScale
-                                    behaviorTab.resetRequested.connect(keywordSizeSlider.onResetRequested)
+                                    uxTab.resetRequested.connect(keywordSizeSlider.onResetRequested)
                                 }
 
                                 function onResetRequested()  {
@@ -446,7 +446,7 @@ ApplicationWindow {
                                 onValueChanged: uxTab.scrollSliderValue = value
                                 Component.onCompleted: {
                                     value = settingsModel.scrollSpeedScale
-                                    behaviorTab.resetRequested.connect(scrollSpeedSlider.onResetRequested)
+                                    uxTab.resetRequested.connect(scrollSpeedSlider.onResetRequested)
                                 }
 
                                 function onResetRequested()  {
@@ -507,6 +507,7 @@ ApplicationWindow {
                 }
 
                 Tab {
+                    id: extTab
                     title: qsTr("External")
                     signal resetRequested()
 
@@ -552,6 +553,9 @@ ApplicationWindow {
                                       value =  settingsModel.exifToolPath
                                       text = value
                                    }
+                                    Component.onCompleted: {
+                                        extTab.resetRequested.connect(exifToolText.onResetRequested)
+                                    }
                                 }
                             }
 
@@ -626,6 +630,7 @@ ApplicationWindow {
                 }
 
                 Tab {
+                    id: warnTab
                     title: qsTr("Warnings")
                     signal resetRequested()
 
@@ -668,6 +673,9 @@ ApplicationWindow {
                                       value =  settingsModel.minMegapixelCount
                                       text = value
                                    }
+                                    Component.onCompleted: {
+                                        warnTab.resetRequested.connect(megapixelsCount.onResetRequested)
+                                    }
 
                                     validator: DoubleValidator {
                                         bottom: 0
@@ -718,6 +726,10 @@ ApplicationWindow {
                                       text = value
                                    }
 
+                                    Component.onCompleted: {
+                                        warnTab.resetRequested.connect(keywordsCount.onResetRequested)
+                                    }
+
                                     validator: IntValidator {
                                         bottom: 0
                                         top: 200
@@ -764,6 +776,10 @@ ApplicationWindow {
                                       text = value
                                    }
 
+                                    Component.onCompleted: {
+                                        warnTab.resetRequested.connect(descriptionLength.onResetRequested)
+                                    }
+
                                     validator: IntValidator {
                                         bottom: 0
                                         top: 1000
@@ -784,6 +800,7 @@ ApplicationWindow {
                 }
 
                 Tab {
+                    id:uploadTab
                     title: qsTr("Upload")
                     signal resetRequested()
 
@@ -824,6 +841,10 @@ ApplicationWindow {
                                       value =  settingsModel.uploadTimeout
                                       text = value
                                    }
+
+                                    Component.onCompleted: {
+                                        uploadTab.resetRequested.connect(timeoutMinutes.onResetRequested)
+                                    }
                                     KeyNavigation.tab: maxParallelUploads
                                     validator: IntValidator {
                                         bottom: 1
@@ -869,6 +890,10 @@ ApplicationWindow {
                                       value =  settingsModel.maxParallelUploads
                                       text = value
                                    }
+
+                                    Component.onCompleted: {
+                                        uploadTab.resetRequested.connect(maxParallelUploads.onResetRequested)
+                                    }
                                     KeyNavigation.backtab: timeoutMinutes
                                     validator: IntValidator {
                                         bottom: 1
@@ -890,6 +915,7 @@ ApplicationWindow {
                 }
 
                 Tab {
+                    id : secTab
                     title: qsTr("Security")
                     signal resetRequested()
 
@@ -916,7 +942,7 @@ ApplicationWindow {
 
                                 Component.onCompleted: {
                                     checked = settingsModel.mustUseMasterPassword
-                                    behaviorTab.resetRequested.connect(masterPasswordCheckbox.onResetRequested)
+                                    secTab.resetRequested.connect(masterPasswordCheckbox.onResetRequested)
                                 }
 
                                 Connections {
@@ -1028,7 +1054,6 @@ ApplicationWindow {
 
                                         Component.onCompleted: {
                                             checked = settingsModel.userStatistic
-                                           // behaviorTab.resetRequested.connect(userStatisticCheckBox.onResetRequested)
                                         }
                                     }
 
