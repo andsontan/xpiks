@@ -43,7 +43,10 @@ ApplicationWindow {
 
     signal dialogDestruction();
 
+
     onClosing: dialogDestruction();
+
+
 
     function closeSettings() {
         settingsWindow.close()
@@ -152,6 +155,7 @@ ApplicationWindow {
         title: "Warning"
         text: qsTr("Are you sure you want reset all settings? \nThis action cannot be undone.")
         standardButtons: StandardButton.Yes | StandardButton.No
+
         onYes: {
             secretsManager.removeMasterPassword()
             settingsModel.resetAllValues()
@@ -187,6 +191,17 @@ ApplicationWindow {
                 Tab {
                     id: behaviorTab
                     title: qsTr("Behavior")
+                    Connections {
+                        target: settingsModel
+                        onSettingsReset: {
+                            console.debug("RESET called!")
+                            useConfirmationDialogsCheckbox.reset()
+                            saveBackupsCheckbox.reset()
+                            autoSpellCheckCheckbox.reset()
+                            searchUsingAndCheckbox.reset()
+                            dismissDuration.reset()
+                            }
+                    }
                     property bool useStatistics: settingsModel.userStatistic
 
                     ColumnLayout {
@@ -204,8 +219,12 @@ ApplicationWindow {
                                 onCheckedChanged: {
                                     settingsModel.mustUseConfirmations = checked
                                 }
+                                function reset() {
+                                   checked = settingsModel.mustUseConfirmations
+                                }
 
                                 Component.onCompleted: checked = settingsModel.mustUseConfirmations
+
                             }
 
                             StyledText {
@@ -223,6 +242,9 @@ ApplicationWindow {
                                 text: qsTr("Save backups for artworks")
                                 onCheckedChanged: {
                                     settingsModel.saveBackups = checked
+                                }
+                                 function reset() {
+                                   checked = settingsModel.saveBackups
                                 }
 
                                 Component.onCompleted: checked = settingsModel.saveBackups
@@ -244,7 +266,9 @@ ApplicationWindow {
                                 onCheckedChanged: {
                                     settingsModel.searchUsingAnd = checked
                                 }
-
+                                 function reset() {
+                                   checked = settingsModel.searchUsingAnd
+                                }
                                 Component.onCompleted: checked = settingsModel.searchUsingAnd
                             }
 
@@ -264,6 +288,9 @@ ApplicationWindow {
                                 onCheckedChanged: {
                                     settingsModel.useSpellCheck = checked
                                 }
+                                 function reset() {
+                                   checked = settingsModel.useSpellCheck
+                                }
 
                                 Component.onCompleted: checked = settingsModel.useSpellCheck
                             }
@@ -278,6 +305,7 @@ ApplicationWindow {
                             Layout.fillHeight: true
                         }
                     }
+
                 }
 
                 Tab {
@@ -285,6 +313,18 @@ ApplicationWindow {
                     property double sizeSliderValue: settingsModel.keywordSizeScale
                     property double scrollSliderValue: settingsModel.scrollSpeedScale
                     title: qsTr("Interface")
+
+                    Connections {
+                        target: settingsModel
+                        onSettingsReset: {
+                            console.debug("RESET called!")
+                            fitArtworksCheckbox.reset()
+                            keywordSizeSlider.reset()
+                            scrollSpeedSlider.reset()
+
+
+                            }
+                    }
 
                     ColumnLayout {
                         anchors.fill: parent
@@ -300,6 +340,9 @@ ApplicationWindow {
                                 text: qsTr("Fit artwork's preview")
                                 onCheckedChanged: {
                                     settingsModel.fitSmallPreview = checked
+                                }
+                                 function reset() {
+                                   checked =  settingsModel.fitSmallPreview
                                 }
 
                                 Component.onCompleted: checked = settingsModel.fitSmallPreview
@@ -328,6 +371,11 @@ ApplicationWindow {
                                 orientation: Qt.Horizontal
                                 onValueChanged: uxTab.sizeSliderValue = value
                                 Component.onCompleted: value = settingsModel.keywordSizeScale
+
+                                function reset() {
+                                  value =  settingsModel.keywordSizeScale
+                                  uxTab.sizeSliderValue = value
+                               }
                             }
 
                             Rectangle {
@@ -389,6 +437,11 @@ ApplicationWindow {
                                 orientation: Qt.Horizontal
                                 onValueChanged: uxTab.scrollSliderValue = value
                                 Component.onCompleted: value = settingsModel.scrollSpeedScale
+
+                                function reset() {
+                                  value =  settingsModel.scrollSpeedScale
+                                  uxTab.sizeSliderValue = value
+                               }
                             }
                         }
 
@@ -419,6 +472,10 @@ ApplicationWindow {
                                         }
                                     }
 
+                                    function reset() {
+                                      text =  settingsModel.dismissDuration
+                                   }
+
                                     validator: IntValidator {
                                         bottom: 5
                                         top: 20
@@ -440,6 +497,16 @@ ApplicationWindow {
 
                 Tab {
                     title: qsTr("External")
+
+                    Connections {
+                        target: settingsModel
+                        onSettingsReset: {
+                            console.debug("RESET called!")
+                            exifToolText.reset()
+
+
+                            }
+                    }
 
                     ColumnLayout {
                         anchors.fill: parent
@@ -476,6 +543,11 @@ ApplicationWindow {
                                     anchors.left: parent.left
                                     anchors.leftMargin: 5
                                     onTextChanged: settingsModel.exifToolPath = text
+
+                                    function reset() {
+                                      value =  settingsModel.exifToolPath
+                                      text = value
+                                   }
                                 }
                             }
 
@@ -552,6 +624,17 @@ ApplicationWindow {
                 Tab {
                     title: qsTr("Warnings")
 
+                    Connections {
+                        target: settingsModel
+                        onSettingsReset: {
+                            console.debug("RESET called!")
+                            megapixelsCount.reset()
+                            keywordsCount.reset()
+                            megapixelsCount.reset()
+
+                            }
+                    }
+
                     ColumnLayout {
                         spacing: 20
                         anchors.fill: parent
@@ -584,6 +667,11 @@ ApplicationWindow {
                                             settingsModel.minMegapixelCount = parseFloat(text)
                                         }
                                     }
+
+                                    function reset() {
+                                      value =  settingsModel.minMegapixelCount
+                                      text = value
+                                   }
 
                                     validator: DoubleValidator {
                                         bottom: 0
@@ -629,6 +717,11 @@ ApplicationWindow {
                                         }
                                     }
 
+                                    function reset() {
+                                      value =  settingsModel.maxKeywordsCount
+                                      text = value
+                                   }
+
                                     validator: IntValidator {
                                         bottom: 0
                                         top: 200
@@ -670,6 +763,11 @@ ApplicationWindow {
                                         }
                                     }
 
+                                    function reset() {
+                                      value =  settingsModel.maxDescriptionLength
+                                      text = value
+                                   }
+
                                     validator: IntValidator {
                                         bottom: 0
                                         top: 1000
@@ -692,6 +790,15 @@ ApplicationWindow {
                 Tab {
                     title: qsTr("Upload")
 
+                    Connections {
+                        target: settingsModel
+                        onSettingsReset: {
+                            console.debug("RESET called!")
+                            maxParallelUploads.reset()
+                            timeoutMinutes.reset()
+
+                            }
+                    }
                     ColumnLayout {
                         spacing: 20
                         anchors.fill: parent
@@ -723,6 +830,11 @@ ApplicationWindow {
                                             settingsModel.uploadTimeout = parseInt(text)
                                         }
                                     }
+
+                                    function reset() {
+                                      value =  settingsModel.uploadTimeout
+                                      text = value
+                                   }
                                     KeyNavigation.tab: maxParallelUploads
                                     validator: IntValidator {
                                         bottom: 1
@@ -763,6 +875,11 @@ ApplicationWindow {
                                             settingsModel.maxParallelUploads = parseInt(text)
                                         }
                                     }
+
+                                    function reset() {
+                                      value =  settingsModel.maxParallelUploads
+                                      text = value
+                                   }
                                     KeyNavigation.backtab: timeoutMinutes
                                     validator: IntValidator {
                                         bottom: 1
@@ -785,6 +902,15 @@ ApplicationWindow {
 
                 Tab {
                     title: qsTr("Security")
+
+                    Connections {
+                        target: settingsModel
+                        onSettingsReset: {
+                            console.debug("RESET called!")
+                            masterPasswordCheckbox.reset()
+
+                            }
+                    }
 
                     ColumnLayout {
                         anchors.fill: parent
@@ -814,7 +940,12 @@ ApplicationWindow {
                                     onMustUseMasterPasswordChanged: {
                                         masterPasswordCheckbox.checked = settingsModel.mustUseMasterPassword
                                     }
+
                                 }
+
+                                function reset() {
+                                  checked =  settingsModel.mustUseMasterPassword
+                               }
                             }
 
                             Item {
@@ -1001,5 +1132,7 @@ ApplicationWindow {
     Component.onCompleted: {
         //exifToolText.forceActiveFocus()
     }
+
+
 }
 
