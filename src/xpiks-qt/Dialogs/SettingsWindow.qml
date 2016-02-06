@@ -185,23 +185,22 @@ ApplicationWindow {
             anchors.margins: {left:10; top:10; right:10}
 
             StyledTabView {
+                id: tabView
                 Layout.fillHeight: true
                 Layout.fillWidth: true
+                Connections {
+                   target: settingsModel
+                   onSettingsReset: {
+                  tabView.getTab(tabView.currentIndex).resetRequested();
+                   }
+                }
+
 
                 Tab {
                     id: behaviorTab
                     title: qsTr("Behavior")
-                    Connections {
-                        target: settingsModel
-                        onSettingsReset: {
-                            console.debug("RESET called!")
-                            useConfirmationDialogsCheckbox.reset()
-                            saveBackupsCheckbox.reset()
-                            autoSpellCheckCheckbox.reset()
-                            searchUsingAndCheckbox.reset()
-                            dismissDuration.reset()
-                            }
-                    }
+                    signal resetRequested()
+
                     property bool useStatistics: settingsModel.userStatistic
 
                     ColumnLayout {
@@ -219,11 +218,14 @@ ApplicationWindow {
                                 onCheckedChanged: {
                                     settingsModel.mustUseConfirmations = checked
                                 }
-                                function reset() {
+                                function onResetRequested()  {
                                    checked = settingsModel.mustUseConfirmations
                                 }
 
-                                Component.onCompleted: checked = settingsModel.mustUseConfirmations
+                                Component.onCompleted: {
+                                    checked = settingsModel.mustUseConfirmations
+                                    behaviorTab.resetRequested.connect(useConfirmationDialogsCheckbox.onResetRequested)
+                                }
 
                             }
 
@@ -243,11 +245,14 @@ ApplicationWindow {
                                 onCheckedChanged: {
                                     settingsModel.saveBackups = checked
                                 }
-                                 function reset() {
+                                 function onResetRequested()  {
                                    checked = settingsModel.saveBackups
                                 }
 
-                                Component.onCompleted: checked = settingsModel.saveBackups
+                                Component.onCompleted: {
+                                    checked = settingsModel.saveBackups
+                                    behaviorTab.resetRequested.connect(saveBackupsCheckbox.onResetRequested)
+                                }
                             }
 
                             StyledText {
@@ -266,10 +271,13 @@ ApplicationWindow {
                                 onCheckedChanged: {
                                     settingsModel.searchUsingAnd = checked
                                 }
-                                 function reset() {
+                                 function onResetRequested()  {
                                    checked = settingsModel.searchUsingAnd
                                 }
-                                Component.onCompleted: checked = settingsModel.searchUsingAnd
+                                Component.onCompleted: {
+                                    checked = settingsModel.searchUsingAnd
+                                    behaviorTab.resetRequested.connect(searchUsingAndCheckbox.onResetRequested)
+                                }
                             }
 
                             StyledText {
@@ -288,11 +296,14 @@ ApplicationWindow {
                                 onCheckedChanged: {
                                     settingsModel.useSpellCheck = checked
                                 }
-                                 function reset() {
+                                 function onResetRequested()  {
                                    checked = settingsModel.useSpellCheck
                                 }
 
-                                Component.onCompleted: checked = settingsModel.useSpellCheck
+                                Component.onCompleted: {
+                                    checked = settingsModel.useSpellCheck
+                                    behaviorTab.resetRequested.connect(autoSpellCheckCheckbox.onResetRequested)
+                                }
                             }
 
                             StyledText {
@@ -313,18 +324,9 @@ ApplicationWindow {
                     property double sizeSliderValue: settingsModel.keywordSizeScale
                     property double scrollSliderValue: settingsModel.scrollSpeedScale
                     title: qsTr("Interface")
-
-                    Connections {
-                        target: settingsModel
-                        onSettingsReset: {
-                            console.debug("RESET called!")
-                            fitArtworksCheckbox.reset()
-                            keywordSizeSlider.reset()
-                            scrollSpeedSlider.reset()
+                    signal resetRequested()
 
 
-                            }
-                    }
 
                     ColumnLayout {
                         anchors.fill: parent
@@ -341,11 +343,14 @@ ApplicationWindow {
                                 onCheckedChanged: {
                                     settingsModel.fitSmallPreview = checked
                                 }
-                                 function reset() {
+                                 function onResetRequested()  {
                                    checked =  settingsModel.fitSmallPreview
                                 }
 
-                                Component.onCompleted: checked = settingsModel.fitSmallPreview
+                                Component.onCompleted: {
+                                    checked = settingsModel.fitSmallPreview
+                                    behaviorTab.resetRequested.connect(fitArtworksCheckbox.onResetRequested)
+                                }
                             }
 
                             StyledText {
@@ -370,9 +375,12 @@ ApplicationWindow {
                                 stepSize: 0.0001
                                 orientation: Qt.Horizontal
                                 onValueChanged: uxTab.sizeSliderValue = value
-                                Component.onCompleted: value = settingsModel.keywordSizeScale
+                                Component.onCompleted:{
+                                    value = settingsModel.keywordSizeScale
+                                    behaviorTab.resetRequested.connect(keywordSizeSlider.onResetRequested)
+                                }
 
-                                function reset() {
+                                function onResetRequested()  {
                                   value =  settingsModel.keywordSizeScale
                                   uxTab.sizeSliderValue = value
                                }
@@ -436,9 +444,12 @@ ApplicationWindow {
                                 stepSize: 0.01
                                 orientation: Qt.Horizontal
                                 onValueChanged: uxTab.scrollSliderValue = value
-                                Component.onCompleted: value = settingsModel.scrollSpeedScale
+                                Component.onCompleted: {
+                                    value = settingsModel.scrollSpeedScale
+                                    behaviorTab.resetRequested.connect(scrollSpeedSlider.onResetRequested)
+                                }
 
-                                function reset() {
+                                function onResetRequested()  {
                                   value =  settingsModel.scrollSpeedScale
                                   uxTab.sizeSliderValue = value
                                }
@@ -472,7 +483,7 @@ ApplicationWindow {
                                         }
                                     }
 
-                                    function reset() {
+                                    function onResetRequested()  {
                                       text =  settingsModel.dismissDuration
                                    }
 
@@ -497,16 +508,9 @@ ApplicationWindow {
 
                 Tab {
                     title: qsTr("External")
-
-                    Connections {
-                        target: settingsModel
-                        onSettingsReset: {
-                            console.debug("RESET called!")
-                            exifToolText.reset()
+                    signal resetRequested()
 
 
-                            }
-                    }
 
                     ColumnLayout {
                         anchors.fill: parent
@@ -544,7 +548,7 @@ ApplicationWindow {
                                     anchors.leftMargin: 5
                                     onTextChanged: settingsModel.exifToolPath = text
 
-                                    function reset() {
+                                    function onResetRequested()  {
                                       value =  settingsModel.exifToolPath
                                       text = value
                                    }
@@ -623,17 +627,9 @@ ApplicationWindow {
 
                 Tab {
                     title: qsTr("Warnings")
+                    signal resetRequested()
 
-                    Connections {
-                        target: settingsModel
-                        onSettingsReset: {
-                            console.debug("RESET called!")
-                            megapixelsCount.reset()
-                            keywordsCount.reset()
-                            megapixelsCount.reset()
 
-                            }
-                    }
 
                     ColumnLayout {
                         spacing: 20
@@ -668,7 +664,7 @@ ApplicationWindow {
                                         }
                                     }
 
-                                    function reset() {
+                                    function onResetRequested()  {
                                       value =  settingsModel.minMegapixelCount
                                       text = value
                                    }
@@ -717,7 +713,7 @@ ApplicationWindow {
                                         }
                                     }
 
-                                    function reset() {
+                                    function onResetRequested()  {
                                       value =  settingsModel.maxKeywordsCount
                                       text = value
                                    }
@@ -763,7 +759,7 @@ ApplicationWindow {
                                         }
                                     }
 
-                                    function reset() {
+                                    function onResetRequested()  {
                                       value =  settingsModel.maxDescriptionLength
                                       text = value
                                    }
@@ -789,16 +785,9 @@ ApplicationWindow {
 
                 Tab {
                     title: qsTr("Upload")
+                    signal resetRequested()
 
-                    Connections {
-                        target: settingsModel
-                        onSettingsReset: {
-                            console.debug("RESET called!")
-                            maxParallelUploads.reset()
-                            timeoutMinutes.reset()
 
-                            }
-                    }
                     ColumnLayout {
                         spacing: 20
                         anchors.fill: parent
@@ -831,7 +820,7 @@ ApplicationWindow {
                                         }
                                     }
 
-                                    function reset() {
+                                    function onResetRequested()  {
                                       value =  settingsModel.uploadTimeout
                                       text = value
                                    }
@@ -876,7 +865,7 @@ ApplicationWindow {
                                         }
                                     }
 
-                                    function reset() {
+                                    function onResetRequested()  {
                                       value =  settingsModel.maxParallelUploads
                                       text = value
                                    }
@@ -902,15 +891,9 @@ ApplicationWindow {
 
                 Tab {
                     title: qsTr("Security")
+                    signal resetRequested()
 
-                    Connections {
-                        target: settingsModel
-                        onSettingsReset: {
-                            console.debug("RESET called!")
-                            masterPasswordCheckbox.reset()
 
-                            }
-                    }
 
                     ColumnLayout {
                         anchors.fill: parent
@@ -933,6 +916,7 @@ ApplicationWindow {
 
                                 Component.onCompleted: {
                                     checked = settingsModel.mustUseMasterPassword
+                                    behaviorTab.resetRequested.connect(masterPasswordCheckbox.onResetRequested)
                                 }
 
                                 Connections {
@@ -943,7 +927,7 @@ ApplicationWindow {
 
                                 }
 
-                                function reset() {
+                                function onResetRequested()  {
                                   checked =  settingsModel.mustUseMasterPassword
                                }
                             }
@@ -1042,7 +1026,10 @@ ApplicationWindow {
                                             behaviorTab.useStatistics = checked
                                         }
 
-                                        Component.onCompleted: checked = settingsModel.userStatistic
+                                        Component.onCompleted: {
+                                            checked = settingsModel.userStatistic
+                                           // behaviorTab.resetRequested.connect(userStatisticCheckBox.onResetRequested)
+                                        }
                                     }
 
                                     StyledText {
