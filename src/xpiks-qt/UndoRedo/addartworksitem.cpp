@@ -26,7 +26,7 @@
 #include "../Models/artitemsmodel.h"
 
 void UndoRedo::AddArtworksHistoryItem::undo(const Commands::CommandManager *commandManager) const {
-    qDebug() << "Undo: Add artworks command";
+    qInfo() << "AddArtworksHistoryItem::undo #";
 
     Models::ArtItemsModel *artItemsModel = commandManager->getArtItemsModel();
     artItemsModel->removeArtworks(m_AddedRanges);

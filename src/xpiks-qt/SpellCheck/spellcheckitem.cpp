@@ -133,7 +133,7 @@ namespace SpellCheck {
 
         bool releaseResult = m_SpellCheckable->release();
         if (releaseResult) {
-            qDebug() << "SpellCheckable item was locked for removal";
+            qDebug() << "SpellCheckItem::submitSpellCheckResult #" << "item was locked for removal";
         }
     }
 }

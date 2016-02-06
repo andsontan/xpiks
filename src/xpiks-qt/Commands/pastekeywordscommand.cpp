@@ -33,7 +33,7 @@ Commands::PasteKeywordsCommand::~PasteKeywordsCommand() {
 }
 
 Commands::CommandResult *Commands::PasteKeywordsCommand::execute(const Commands::CommandManager *commandManager) const {
-    qInfo() << "Paste command: pasting to" << m_ArtItemInfos.length() << "item(s)";
+    qInfo() << "PasteKeywordsCommand::execute #" << m_ArtItemInfos.length() << "item(s)";
 
     QVector<int> indicesToUpdate;
     QVector<UndoRedo::ArtworkMetadataBackup*> artworksBackups;

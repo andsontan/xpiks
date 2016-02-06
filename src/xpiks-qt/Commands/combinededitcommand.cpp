@@ -32,7 +32,7 @@
 #include "../Common/defines.h"
 
 Commands::CommandResult *Commands::CombinedEditCommand::execute(const Commands::CommandManager *commandManager) const {
-    qInfo() << "Combined edit command: flags=" << m_EditFlags << "artworks count =" << m_ArtItemInfos.length();
+    qInfo() << "CombinedEditCommand::execute #" << "flags =" << m_EditFlags << "artworks count =" << m_ArtItemInfos.length();
     QVector<int> indicesToUpdate;
     QVector<UndoRedo::ArtworkMetadataBackup*> artworksBackups;
     QVector<SpellCheck::ISpellCheckable*> itemsToCheck;

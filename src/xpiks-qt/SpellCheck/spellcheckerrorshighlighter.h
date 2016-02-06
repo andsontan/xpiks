@@ -25,7 +25,6 @@
 #include <QtGui>
 #include <QSet>
 #include <QString>
-#include <QDebug>
 
 namespace SpellCheck {
     class SpellCheckErrorsInfo;

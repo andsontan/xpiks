@@ -44,7 +44,7 @@ namespace Conectivity {
                            bool includeVector) {
 
         int size = artworkList.length();
-        qDebug() << "Generating filepathes for upload of" << size << "item(s)";
+        qDebug() << "extractFilePathes #" << "Generating filepathes for" << size << "item(s)";
 
         for (int i = 0; i < size; ++i) {
             Models::ArtworkMetadata *metadata = artworkList.at(i);
@@ -141,7 +141,7 @@ namespace Conectivity {
                                         bool includeVectors) {
 
         if (artworksToUpload.isEmpty() || uploadInfos.isEmpty()) {
-            qWarning() << "Trying to upload" << artworksToUpload.size() << "files to" << uploadInfos.size() << "hosts";
+            qWarning() << "FtpCoordinator::uploadArtworks #" << "Trying to upload" << artworksToUpload.size() << "files to" << uploadInfos.size() << "hosts";
             return;
         }
 
@@ -182,12 +182,12 @@ namespace Conectivity {
     }
 
     void FtpCoordinator::cancelUpload() {
-        qDebug() << "Cancelling upload in coordinator";
+        qDebug() << "FtpCoordinator::cancelUpload #";
         emit cancelAll();
     }
 
     void FtpCoordinator::transferFailed(const QString &filepath, const QString &host) {
-        qWarning() << "Upload failed for file [" << filepath << "] to host {" << host << "}";
+        qWarning() << "FtpCoordinator::transferFailed #" << "Upload failed for file [" << filepath << "] to host {" << host << "}";
         // TODO: show failed transfers on the UI
     }
 
@@ -217,7 +217,7 @@ namespace Conectivity {
         m_AllWorkersCount = uploadBatchesCount;
         m_FinishedWorkersCount = 0;
         m_OverallProgress = 0.0;
-        qDebug() << "Initializing CURL";
+        qDebug() << "FtpCoordinator::initUpload #" << "Initializing CURL";
 
         curl_global_init(CURL_GLOBAL_ALL);
     }
@@ -225,6 +225,6 @@ namespace Conectivity {
     void FtpCoordinator::finalizeUpload() {
         Q_ASSERT(m_FinishedWorkersCount == m_AllWorkersCount);
         curl_global_cleanup();
-        qDebug() << "Cleaning up CURL";
+        qDebug() << "FtpCoordinator::finalizeUpload #" << "Cleaning up CURL";
     }
 }

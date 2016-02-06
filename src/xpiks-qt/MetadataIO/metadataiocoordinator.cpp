@@ -46,7 +46,7 @@ namespace MetadataIO {
     }
 
     void MetadataIOCoordinator::readingWorkerFinished(bool success) {
-        qDebug() << "Metadata reading finished with status" << success;
+        qDebug() << "MetadataIOCoordinator::readingWorkerFinished #" << success;
 
         if (m_CanProcessResults) {
             readingFinishedHandler(m_IgnoreBackupsAtImport);
@@ -84,7 +84,7 @@ namespace MetadataIO {
         m_IsImportInProgress = true;
         setProcessingItemsCount(artworksToRead.length());
 
-        qDebug() << "Starting metadata reading thread";
+        qDebug() << "MetadataIOCoordinator::readMetadata #" << "Starting thread...";
         thread->start();
     }
 
@@ -105,13 +105,13 @@ namespace MetadataIO {
         QObject::connect(this, SIGNAL(metadataWritingFinished()), m_WritingWorker, SIGNAL(stopped()));
         setProcessingItemsCount(artworksToWrite.length());
 
-        qDebug() << "Starting metadata writing thread";
+        qDebug() << "MetadataIOCoordinator::writeMetadata #" << "Starting thread...";
         thread->start();
     }
 
     void MetadataIOCoordinator::discardReading() {
         emit discardReadingSignal();
-        qDebug() << "Reading results discarded";
+        qDebug() << "MetadataIOCoordinator::discardReading #" << "Reading results discarded";
     }
 
     void MetadataIOCoordinator::readMetadata(bool ignoreBackups) {
@@ -131,7 +131,7 @@ namespace MetadataIO {
         const QHash<QString, ImportDataResult> &importResult = m_ReadingWorker->getImportResult();
         const QVector<Models::ArtworkMetadata*> &itemsToRead = m_ReadingWorker->getArtworksToImport();
 
-        qDebug() << "Setting imported metadata...";
+        qDebug() << "MetadataIOCoordinator::readingFinishedHandler #" << "Setting imported metadata...";
         int size = itemsToRead.size();
         for (int i = 0; i < size; ++i) {
             Models::ArtworkMetadata *metadata = itemsToRead.at(i);
@@ -148,7 +148,7 @@ namespace MetadataIO {
 
         afterImportHandler(itemsToRead, ignoreBackups);
 
-        qDebug() << "Metadata import finished";
+        qDebug() << "MetadataIOCoordinator::readingFinishedHandler #" << "Metadata import finished";
         emit metadataReadingFinished();
     }
 
@@ -158,7 +158,7 @@ namespace MetadataIO {
         const QVector<QPair<int, int> > &rangesToUpdate = m_ReadingWorker->getRangesToUpdate();
 
         if (!ignoreBackups && settingsModel->getSaveBackups()) {
-            qDebug() << "Restoring the backups...";
+            qDebug() << "MetadataIOCoordinator::afterImportHandler #" << "Restoring the backups...";
             int size = itemsToRead.size();
             for (int i = 0; i < size; ++i) {
                 Models::ArtworkMetadata *metadata = itemsToRead.at(i);
@@ -171,7 +171,7 @@ namespace MetadataIO {
                 }
             }
         } else {
-            qDebug() << "Skipped restoring the backups";
+            qDebug() << "MetadataIOCoordinator::afterImportHandler #" << "Skipped restoring the backups";
         }
 
         m_CommandManager->addToLibrary(itemsToRead);

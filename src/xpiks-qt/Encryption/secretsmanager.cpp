@@ -105,7 +105,7 @@ namespace Encryption {
         // Q_ASSERT(firstTime == m_EncodedMasterPassword.isEmpty());
         Q_ASSERT(firstTime == inputCurrMasterPassword.isEmpty());
 
-        qDebug() << "Changing master password...";
+        qInfo() << "SecretsManager::changeMasterPassword #" << "Changing master password...";
 
         bool changed = false;
 

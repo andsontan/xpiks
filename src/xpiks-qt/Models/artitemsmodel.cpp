@@ -73,7 +73,7 @@ namespace Models {
     }
 
     void ArtItemsModel::removeArtworksDirectory(int index) {
-        qDebug() << "Remove artworks directory at" << index;
+        qDebug() << "ArtItemsModel::removeArtworksDirectory #" << "Remove artworks directory at" << index;
         const QString &directory = m_CommandManager->getArtworksRepository()->getDirectory(index);
         QDir dir(directory);
         QString directoryAbsolutePath = dir.absolutePath();
@@ -131,7 +131,7 @@ namespace Models {
     }
 
     void ArtItemsModel::pasteKeywords(int metadataIndex, const QStringList &keywords) {
-        qDebug() << "Pasting keywords on item" << metadataIndex;
+        qDebug() << "ArtItemsModel::pasteKeywords #" << "item index" << metadataIndex;
         if (metadataIndex >= 0
                 && metadataIndex < m_ArtworkList.length()
                 && !keywords.empty()) {
@@ -145,7 +145,7 @@ namespace Models {
 
             if (!metadata->getIsSelected()) {
                 selectedIndices.append(metadataIndex);
-                qDebug() << "Pasting keywords: item was not selected";
+                qDebug() << "ArtItemsModel::pasteKeywords #" << "item was not selected";
             }
 
             artItemInfos.reserve(selectedIndices.length());
@@ -192,7 +192,7 @@ namespace Models {
     }
 
     int ArtItemsModel::dropFiles(const QList<QUrl> &urls) {
-        qDebug() << "Dropped" << urls.count() << "items(s)";
+        qDebug() << "ArtItemsModel::dropFiles #" << "Dropped" << urls.count() << "items(s)";
         QList<QUrl> directories, files;
         directories.reserve(urls.count()/2);
         files.reserve(urls.count());
@@ -209,13 +209,13 @@ namespace Models {
         int filesAddedCount = addLocalArtworks(files);
         int directoriesAddedCount = addLocalDirectories(directories);
 
-        qDebug() << "Added" << filesAddedCount << "files and" << directoriesAddedCount << "directories";
+        qDebug() << "ArtItemsModel::dropFiles #" << "Added" << filesAddedCount << "files and" << directoriesAddedCount << "directories";
 
         return filesAddedCount + directoriesAddedCount;
     }
 
     void ArtItemsModel::setSelectedItemsSaved(const QVector<int> &selectedIndices) {
-        qDebug() << "Setting selected" << selectedIndices.length() << "item(s) saved";
+        qDebug() << "ArtItemsModel::setSelectedItemsSaved #" << "Setting selected" << selectedIndices.length() << "item(s) saved";
         foreach (int index, selectedIndices) {
             m_ArtworkList.at(index)->resetModified();
         }
@@ -232,7 +232,7 @@ namespace Models {
         doRemoveItemsAtIndices(selectedIndices);
 
         if (m_ArtworkList.isEmpty()) {
-            qDebug() << "Clearing the finalization list";
+            qDebug() << "ArtItemsModel::removeSelectedArtworks #" << "Clearing the finalization list";
             qDeleteAll(m_FinalizationList);
             m_FinalizationList.clear();
         }
@@ -353,7 +353,7 @@ namespace Models {
     }
 
     void ArtItemsModel::plainTextEdit(int metadataIndex, const QString &rawKeywords) {
-        qDebug() << "Plain text edit for item" << metadataIndex;
+        qDebug() << "ArtItemsModel::plainTextEdit #" << "Plain text edit for item" << metadataIndex;
         if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
             ArtItemInfo *itemInfo = new ArtItemInfo(metadata, metadataIndex);
@@ -459,7 +459,7 @@ namespace Models {
     }
 
     int ArtItemsModel::addLocalArtworks(const QList<QUrl> &artworksPaths) {
-        qDebug() << "Adding local files:" << artworksPaths;
+        qDebug() << "ArtItemsModel::addLocalArtworks #" << artworksPaths;
         QStringList fileList;
         fileList.reserve(artworksPaths.length());
 
@@ -472,7 +472,7 @@ namespace Models {
     }
 
     int ArtItemsModel::addLocalDirectories(const QList<QUrl> &directories) {
-        qDebug() << "Adding local directories:" << directories;
+        qDebug() << "ArtItemsModel::addLocalDirectories #" << directories;
         QStringList directoriesList;
         directoriesList.reserve(directories.length());
 
@@ -533,9 +533,8 @@ namespace Models {
         AbstractListModel::updateItemsInRanges(ranges, roles);
     }
 
-    void ArtItemsModel::setAllItemsSelected(bool selected)
-    {
-        qDebug() << "Setting all items selected (" << selected << ")";
+    void ArtItemsModel::setAllItemsSelected(bool selected) {
+        qDebug() << "ArtItemsModel::setAllItemsSelected #" << selected;
         int length = m_ArtworkList.length();
         for (int i = 0; i < length; ++i) {
             ArtworkMetadata *metadata = m_ArtworkList.at(i);
@@ -600,7 +599,7 @@ namespace Models {
                     format == QLatin1String("tiff")) {
                 filenames.append(filepath);
             } else if (format == QLatin1String("png")) {
-                qWarning() << "PNG is unsupported file format";
+                qWarning() << "ArtItemsModel::addFiles #" << "PNG is unsupported file format";
             }
         }
 
@@ -663,7 +662,7 @@ namespace Models {
             delete metadata;
         } else {
             metadata->disconnect();
-            qDebug() << "Metadata at index" << row << "is locked. Postponing destruction...";
+            qDebug() << "ArtItemsModel::removeInnerItem #" << "Metadata at index" << row << "is locked. Postponing destruction...";
             m_FinalizationList.append(metadata);
         }
     }

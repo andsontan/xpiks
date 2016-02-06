@@ -68,7 +68,7 @@ namespace Models {
     }
 
     void ArtworkUploader::allFinished(bool anyError) {
-        qInfo() << "Upload finished with status anyError =" << anyError;
+        qInfo() << "ArtworkUploader::allFinished #" << "anyError =" << anyError;
         setIsError(anyError);
         endProcessing();
         m_Percent = 100;
@@ -82,7 +82,7 @@ namespace Models {
 
     void ArtworkUploader::uploaderPercentChanged(double percent) {
         m_Percent = (int)(percent);
-        qDebug() << "Overall upload progress changed to" << percent;
+        qDebug() << "ArtworkUploader::uploaderPercentChanged #" << "Overall progress =" << percent;
         updateProgress();
         UploadInfoRepository *uploadInfoRepository = m_CommandManager->getUploadInfoRepository();
         uploadInfoRepository->updatePercentages();
@@ -109,7 +109,7 @@ namespace Models {
         foreach (Models::UploadInfo *info, infos) {
             if (info->getIsSelected() && info->getZipBeforeUpload()) {
                 anyZipNeeded = true;
-                qDebug() << "Need create archives at least for" << info->getHost();
+                qDebug() << "ArtworkUploader::needCreateArchives #" << "at least for" << info->getHost();
                 break;
             }
         }
@@ -125,7 +125,7 @@ namespace Models {
 
                 if (!fi.exists()) {
                     needCreate = true;
-                    qDebug() << "Zip needed at least for" << archivePath;
+                    qDebug() << "ArtworkUploader::needCreateArchives #" << "Zip needed at least for" << archivePath;
                     break;
                 }
             }

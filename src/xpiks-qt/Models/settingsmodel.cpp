@@ -82,7 +82,7 @@ namespace Models {
     }
 
     void SettingsModel::saveAllValues() {
-        qInfo() << "Saving settings";
+        qInfo() << "SettingsModel::saveAllValues #";
 
         Helpers::AppSettings appSettings;
         appSettings.setValue(appSettings.getExifToolPathKey(), m_ExifToolPath);
@@ -134,7 +134,7 @@ namespace Models {
     }
 
     void SettingsModel::readAllValues() {
-        qInfo() << "Reading settings values";
+        qInfo() << "SettingsModel::readAllValues #";
 
         Helpers::AppSettings appSettings;
         setExifToolPath(appSettings.value(appSettings.getExifToolPathKey(), DEFAULT_EXIFTOOL).toString());
@@ -157,7 +157,7 @@ namespace Models {
     }
 
     void SettingsModel::resetToDefault() {
-        qInfo() << "Resetting all settings";
+        qInfo() << "SettingsModel::resetToDefault #";
 
         setExifToolPath(DEFAULT_EXIFTOOL);
         setDictionaryPath(DEFAULT_DICT_PATH);

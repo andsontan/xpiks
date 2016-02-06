@@ -55,7 +55,7 @@ ApplicationWindow {
     }
 
     function onMasterPasswordSet() {
-        console.log('Master password changed')
+        console.log('UI:SettingsWindow # Master password changed')
         appSettings.setValue(appSettings.masterPasswordHashKey, secretsManager.getMasterPasswordHash())
         appSettings.setValue(appSettings.mustUseMasterPasswordKey, true)
         settingsModel.mustUseMasterPassword = true
@@ -84,13 +84,13 @@ ApplicationWindow {
         nameFilters: [ "All files (*)" ]
 
         onAccepted: {
-            console.log("You chose: " + exifToolFileDialog.fileUrl)
+            console.log("UI:SettingsWindow # You chose: " + exifToolFileDialog.fileUrl)
             var path = exifToolFileDialog.fileUrl.toString().replace(/^(file:\/{3})/,"");
             settingsModel.exifToolPath = decodeURIComponent(path);
         }
 
         onRejected: {
-            console.log("File dialog canceled")
+            console.log("UI:SettingsWindow # File dialog canceled")
         }
     }
 
@@ -103,13 +103,13 @@ ApplicationWindow {
         nameFilters: [ "All files (*)" ]
 
         onAccepted: {
-            console.log("You chose: " + dictPathDialog.folder)
+            console.log("UI:SettingsWindow # You chose: " + dictPathDialog.folder)
             var path = dictPathDialog.folder.toString().replace(/^(file:\/{2})/,"");
             settingsModel.dictionaryPath = decodeURIComponent(path);
         }
 
         onRejected: {
-            console.log("File dialog canceled")
+            console.log("UI:SettingsWindow # File dialog canceled")
         }
     }
 

@@ -20,7 +20,6 @@
  */
 
 #include "aes-qt.h"
-#include <QDebug>
 #include <QString>
 #include <QDataStream>
 #include <QCryptographicHash>

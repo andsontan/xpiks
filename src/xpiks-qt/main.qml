@@ -88,7 +88,7 @@ ApplicationWindow {
         running: false
         repeat: false
         onTriggered: {
-            console.log("Delayed onOpen timer triggered");
+            console.debug("UI::main # Delayed onOpen timer triggered");
             helpersWrapper.afterConstruction()
 
             if (appSettings.needToShowWhatsNew()) {
@@ -119,7 +119,7 @@ ApplicationWindow {
 
     function onDialogClosed() {
         openedDialogsCount -= 1
-        console.log("Dialog closed. Opened dialogs count is " + openedDialogsCount)
+        console.debug("UI::main # Dialog closed. Opened dialogs count is " + openedDialogsCount)
     }
 
     function mustUseConfirmation() {
@@ -161,7 +161,7 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
-        console.log("Main view onCompleted handler")
+        console.debug("UI::main # onCompleted handler")
         openingTimer.start()
     }
 
@@ -220,7 +220,7 @@ ApplicationWindow {
                 text: qsTr("&Invert selection")
                 enabled: imagesListView.count > 0
                 onTriggered: {
-                    console.log("Invert selection triggered")
+                    console.info("UI::main # Invert selection triggered")
                     filteredArtItemsModel.invertSelectionArtworks()
                 }
             }
@@ -229,7 +229,7 @@ ApplicationWindow {
                 text: qsTr("&Remove metadata from selected")
                 enabled: filteredArtItemsModel.selectedArtworksCount > 0
                 onTriggered: {
-                    console.log("Remove metadata from selected triggered")
+                    console.info("UI::main # Remove metadata from selected triggered")
                     removeMetadataDialog.open()
                 }
             }
@@ -237,7 +237,7 @@ ApplicationWindow {
             MenuItem {
                 text: qsTr("&Cleanup local library in background")
                 onTriggered: {
-                    console.log("Cleanup local library triggered")
+                    console.info("UI::main # Cleanup local library triggered")
                     helpersWrapper.cleanupLocalLibrary()
                 }
             }
@@ -245,7 +245,7 @@ ApplicationWindow {
             MenuItem {
                 text: qsTr("&Manage upload hosts")
                 onTriggered: {
-                    console.log("Manage upload hosts triggered")
+                    console.info("UI::main # Manage upload hosts triggered")
                     openUploadDialog()
                 }
             }
@@ -260,7 +260,7 @@ ApplicationWindow {
                 text: qsTr("&Zip selected artworks")
                 enabled: filteredArtItemsModel.selectedArtworksCount > 0
                 onTriggered: {
-                    console.log("Zip archives triggered")
+                    console.info("UI::main # Zip archives triggered")
 
                     filteredArtItemsModel.setSelectedForZipping()
                     Common.launchDialog("Dialogs/ZipArtworksDialog.qml",
@@ -273,7 +273,7 @@ ApplicationWindow {
                 text: qsTr("&Import metadata from selected")
                 enabled: filteredArtItemsModel.selectedArtworksCount > 0
                 onTriggered: {
-                    console.log("Reimport archives triggered")
+                    console.info("UI::main # Reimport archives triggered")
                     filteredArtItemsModel.reimportMetadataForSelected()
                 }
             }
@@ -282,7 +282,7 @@ ApplicationWindow {
                 text: qsTr("&Overwrite metadata in selected")
                 enabled: filteredArtItemsModel.selectedArtworksCount > 0
                 onTriggered: {
-                    console.log("Overwrite metadata triggered")
+                    console.info("UI::main # Overwrite metadata triggered")
                     Common.launchDialog("Dialogs/ExportMetadata.qml", applicationWindow, {overwriteAll: true})
                 }
             }
@@ -291,7 +291,7 @@ ApplicationWindow {
                 text: qsTr("&Check spelling in selected")
                 enabled: filteredArtItemsModel.selectedArtworksCount > 0
                 onTriggered: {
-                    console.log("Spell check in selected")
+                    console.info("UI::main # Spell check in selected")
                     filteredArtItemsModel.spellCheckSelected()
                     Common.launchDialog("Dialogs/SpellCheckDialog.qml",
                                         applicationWindow, {});
@@ -369,18 +369,18 @@ ApplicationWindow {
         nameFilters: [ "Image files (*.jpg *.tiff)", "All files (*)" ]
 
         onAccepted: {
-            console.log("You chose: " + chooseArtworksDialog.fileUrls)
+            console.debug("UI::main # You chose: " + chooseArtworksDialog.fileUrls)
             var filesAdded = artItemsModel.addLocalArtworks(chooseArtworksDialog.fileUrls)
             if (filesAdded > 0) {
                 saveRecentDirectories()
-                console.log(filesAdded + ' files via Open File(s)')
+                console.debug("UI::main # " + filesAdded + ' files via Open File(s)')
             } else {
                 noNewFilesDialog.open()
             }
         }
 
         onRejected: {
-            console.log("Open files dialog canceled")
+            console.debug("UI::main # Open files dialog canceled")
         }
     }
 
@@ -393,18 +393,18 @@ ApplicationWindow {
         folder: shortcuts.pictures
 
         onAccepted: {
-            console.log("You chose: " + chooseDirectoryDialog.fileUrls)
+            console.debug("UI::main # You chose: " + chooseDirectoryDialog.fileUrls)
             var filesAdded = artItemsModel.addLocalDirectories(chooseDirectoryDialog.fileUrls)
             if (filesAdded > 0) {
                 saveRecentDirectories()
-                console.log(filesAdded + ' files via Open Directory')
+                console.debug("UI::main # " + filesAdded + ' files via Open Directory')
             } else {
                 noNewFilesDialog.open()
             }
         }
 
         onRejected: {
-            console.log("Directory dialog canceled")
+            console.debug("UI::main # Directory dialog canceled")
         }
     }
 
@@ -1036,7 +1036,7 @@ ApplicationWindow {
                             spacing: 4
 
                             function forceUpdateArtworks(index) {
-                                console.log("Force layout magic for artworks list view")
+                                console.debug("UI::main # Force layout magic for artworks list view")
                                 imagesListView.forceLayout()
                                 imagesListView.update()
                                 imagesListView.decrementCurrentIndex()

@@ -100,7 +100,7 @@ namespace Suggestion {
                 m_Suggestor->setSuggestedArtworks(suggestionArtworks);
             }
         } else {
-            qWarning() << "Keywords suggestion error:" << networkReply->errorString();
+            qWarning() << "SuggestionQueryEngine::replyReceived #" << "error:" << networkReply->errorString();
         }
 
         m_Suggestor->unsetInProgress();
