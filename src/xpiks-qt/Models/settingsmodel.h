@@ -68,7 +68,7 @@ namespace Models {
         Q_INVOKABLE void resetDictPath();
         Q_INVOKABLE void readAllValues();
         Q_INVOKABLE void raiseMasterPasswordSignal() { emit mustUseMasterPasswordChanged(m_MustUseMasterPassword); }
-
+        //Q_INVOKABLE void raiseReset() { emit settingsReset(); fprintf(stderr,"I SENT SIGNAL\n"); }
     public:
         QString getExifToolPath() const { return m_ExifToolPath; }
         double getMinMegapixelCount() const { return m_MinMegapixelCount; }
@@ -89,6 +89,7 @@ namespace Models {
         QString getDictionaryPath() const { return m_DictPath; }
 
     signals:
+        void settingsReset();
         void exifToolPathChanged(QString exifToolPath);
         void minMegapixelCountChanged(double minMegapixelCount);
         void maxDescriptionLengthChanged(int maxDescriptionLength);
