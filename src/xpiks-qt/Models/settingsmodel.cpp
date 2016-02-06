@@ -78,6 +78,7 @@ namespace Models {
     void SettingsModel::resetAllValues() {
         resetToDefault();
         saveAllValues();
+        emit settingsReset();
     }
 
     void SettingsModel::saveAllValues() {
