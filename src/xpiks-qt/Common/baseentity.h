@@ -24,16 +24,18 @@
 
 namespace Commands { class CommandManager; }
 
+#include <QtGlobal>
+
 namespace Common {
     class BaseEntity {
     public:
         BaseEntity() :
-            m_CommandManager(NULL)
+            m_CommandManager(0)
         {}
 
     public:
         virtual void setCommandManager(Commands::CommandManager *commandManager) {
-            Q_ASSERT(commandManager != NULL);
+            Q_ASSERT(commandManager != 0);
             m_CommandManager = commandManager;
         }
 

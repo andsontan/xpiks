@@ -33,7 +33,7 @@ namespace Common {
     };
 }
 
-#define ISafePointer_iid "Xpiks.Common.ISafePointer.v1.0"
+#define ISafePointer_iid "Xpiks.Common.ISafePointer.v0.1"
 Q_DECLARE_INTERFACE(Common::ISafePointer, ISafePointer_iid)
 
 #endif // ISAFEPOINTER

@@ -32,7 +32,7 @@ namespace UndoRedo {
     };
 }
 
-#define IUndoRedoManager_iid "Xpiks.UndoRedo.IUndoRedoManager.v1.0"
+#define IUndoRedoManager_iid "Xpiks.UndoRedo.IUndoRedoManager.v0.1"
 Q_DECLARE_INTERFACE(UndoRedo::IUndoRedoManager, IUndoRedoManager_iid)
 
 #endif // IUNDOREDOMANAGER_H

@@ -79,6 +79,10 @@ namespace Conectivity {
     class TelemetryService;
 }
 
+namespace Plugins {
+    class PluginManager;
+}
+
 namespace Commands {
     class CommandManager : public ICommandManager
     {
@@ -129,6 +133,7 @@ namespace Commands {
         void InjectDependency(Models::LogsModel *logsModel);
         void InjectDependency(MetadataIO::MetadataIOCoordinator *metadataIOCoordinator);
         void InjectDependency(Suggestion::LocalLibrary *localLibrary);
+        void InjectDependency(Plugins::PluginManager *pluginManager);
 
     public:
         virtual ICommandResult *processCommand(ICommandBase *command)
@@ -186,6 +191,7 @@ namespace Commands {
         virtual Models::SettingsModel *getSettingsModel() const { return m_SettingsModel; }
         virtual SpellCheck::SpellCheckerService *getSpellCheckerService() const { return m_SpellCheckerService; }
         virtual MetadataIO::BackupSaverService *getBackupSaverService() const { return m_MetadataSaverService; }
+        virtual UndoRedo::UndoRedoManager *getUndoRedoManager() const { return m_UndoRedoManager; }
 
     private:
         Models::ArtworksRepository *m_ArtworksRepository;
@@ -209,6 +215,7 @@ namespace Commands {
         Models::LogsModel *m_LogsModel;
         Suggestion::LocalLibrary *m_LocalLibrary;
         MetadataIO::MetadataIOCoordinator *m_MetadataIOCoordinator;
+        Plugins::PluginManager *m_PluginManager;
         volatile bool m_AfterInitCalled;
     };
 }

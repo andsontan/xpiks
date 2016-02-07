@@ -57,6 +57,7 @@
 #include "Suggestion/locallibrary.h"
 #include "Models/artworkuploader.h"
 #include "Models/warningsmanager.h"
+#include "Plugins/pluginmanager.h"
 #include "Helpers/loggingworker.h"
 #include "Helpers/updateservice.h"
 #include "Models/artitemsmodel.h"
@@ -220,6 +221,7 @@ int main(int argc, char *argv[]) {
     bool telemetryEnabled = appSettings.value(Constants::USER_STATISTIC,false).toBool();
 #endif
     Conectivity::TelemetryService telemetryService(userId, telemetryEnabled);
+    Plugins::PluginManager pluginManager;
 
     Commands::CommandManager commandManager;
     commandManager.InjectDependency(&artworkRepository);
@@ -243,6 +245,7 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&logsModel);
     commandManager.InjectDependency(&localLibrary);
     commandManager.InjectDependency(&metadataIOCoordinator);
+    commandManager.InjectDependency(&pluginManager);
 
     commandManager.ensureDependenciesInjected();
 
@@ -283,6 +286,7 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("spellCheckerService", &spellCheckerService);
     rootContext->setContextProperty("spellCheckSuggestionModel", &spellCheckSuggestionModel);
     rootContext->setContextProperty("metadataIOCoordinator", &metadataIOCoordinator);
+    rootContext->setContextProperty("pluginManager", &pluginManager);
 
     engine.addImageProvider("global", globalProvider);
     qDebug() << "main #" << "About to load main view...";

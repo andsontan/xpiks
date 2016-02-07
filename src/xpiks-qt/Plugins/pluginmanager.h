@@ -19,30 +19,45 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef XPIKSPLUGININTERFACE_H
-#define XPIKSPLUGININTERFACE_H
+#ifndef PLUGINMANAGER_H
+#define PLUGINMANAGER_H
 
-#include <QString>
-#include "../Commands/icommandmanager.h"
-#include "../UndoRedo/iundoredomanager.h"
+#include <QVector>
+#include <QHash>
+#include <QAbstractListModel>
+#include "../Common/baseentity.h"
 
 namespace Plugins {
-    class XpiksPluginInterface {
+    class XpiksPluginInterface;
+
+    class PluginManager : public Common::BaseEntity, public QAbstractListModel
+    {
     public:
-        virtual ~XpiksPluginInterface() {}
+        PluginManager();
 
     public:
-        virtual const QString &getPrettyName() const = 0;
-        virtual const QString &getVersionString() const = 0;
-        virtual const QString &getAuthor() const = 0;
+        enum UploadInfoRepositoryRoles {
+            PrettyNameRole = Qt::UserRole + 1,
+            VersionRole,
+            AuthorRole
+        };
 
     public:
-        virtual void injectCommandManager(Commands::ICommandManager *commandManager) const = 0;
-        virtual void injectUndoRedoManager(UndoRedo::IUndoRedoManager *undoRedoManager) const = 0;
+        void loadPlugins();
+
+    private:
+        void addPlugin(XpiksPluginInterface *plugin);
+
+        // QAbstractItemModel interface
+    public:
+        virtual int rowCount(const QModelIndex &parent) const;
+        virtual QVariant data(const QModelIndex &index, int role) const;
+    protected:
+        virtual QHash<int, QByteArray> roleNames() const;
+
+    private:
+        QVector<XpiksPluginInterface *> m_PluginsList;
     };
 }
 
-#define XpiksPluginInterface_iid "Xpiks.Plugins.XpiksPluginInterface.v0.1"
-Q_DECLARE_INTERFACE(Plugins::XpiksPluginInterface, XpiksPluginInterface_iid)
-
-#endif // XPIKSPLUGININTERFACE_H
+#endif // PLUGINMANAGER_H
