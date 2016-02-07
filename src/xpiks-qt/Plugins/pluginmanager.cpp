@@ -45,16 +45,21 @@ namespace Plugins {
 #elif defined(Q_OS_MAC)
         if (pluginsDir.dirName() == "MacOS") {
             pluginsDir.cdUp();
-            pluginsDir.cdUp();
-            pluginsDir.cdUp();
         }
+
+        pluginsDir.cd("PlugIns");
 #endif
-        pluginsDir.cd("plugins");
+
+        pluginsDir.cd("XpiksPlugins");
+
+        qDebug() << "PluginManager::loadPlugins #" << "Plugins dir:" << pluginsDir.absolutePath();
 
         beginResetModel();
         m_PluginsList.clear();
 
         foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
+            qDebug() << "PluginManager::loadPlugins #" << "Trying file:" << fileName;
+
             QPluginLoader loader(pluginsDir.absoluteFilePath(fileName));
             QObject *plugin = loader.instance();
             if (plugin) {
@@ -62,7 +67,11 @@ namespace Plugins {
 
                 if (xpiksPlugin) {
                     addPlugin(xpiksPlugin);
+                } else {
+                    qDebug() << "PluginManager::loadPlugins #" << "Not Xpiks Plugin";
                 }
+            } else {
+                qDebug() << "PluginManager::loadPlugins #" << loader.errorString();
             }
         }
 

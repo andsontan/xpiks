@@ -23,6 +23,7 @@
 #define XPIKSPLUGININTERFACE_H
 
 #include <QString>
+#include <QtPlugin>
 #include "../Commands/icommandmanager.h"
 #include "../UndoRedo/iundoredomanager.h"
 
