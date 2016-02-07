@@ -182,7 +182,8 @@ HEADERS += \
     Plugins/xpiksplugininterface.h \
     Commands/icommandmanager.h \
     Commands/icommandbase.h \
-    UndoRedo/ihistoryitem.h
+    UndoRedo/ihistoryitem.h \
+    UndoRedo/iundoredomanager.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

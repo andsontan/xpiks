@@ -19,20 +19,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef XPIKSPLUGININTERFACE_H
-#define XPIKSPLUGININTERFACE_H
+#ifndef IUNDOREDOMANAGER_H
+#define IUNDOREDOMANAGER_H
 
-#include <QString>
-#include "../Commands/icommandmanager.h"
-#include "../UndoRedo/iundoredomanager.h"
+#include "ihistoryitem.h"
 
-namespace Plugins {
-    class XpiksPluginInterface {
+namespace UndoRedo {
+    class IUndoRedoManager {
     public:
-        const QString &getPrettyName() const = 0;
-        void injectCommandManager(Commands::ICommandManager *commandManager) const = 0;
-        void injectUndoRedoManager(UndoRedo::IUndoRedoManager *undoRedoManager) const = 0;
+        virtual ~IUndoRedoManager() {}
+        virtual void recordHistoryItem(IHistoryItem *historyItem) = 0;
     };
 }
 
-#endif // XPIKSPLUGININTERFACE_H
+#define IUndoRedoManager_iid "Xpiks.UndoRedo.IUndoRedoManager.v1.0"
+Q_DECLARE_INTERFACE(UndoRedo::IUndoRedoManager, IUndoRedoManager_iid)
+
+#endif // IUNDOREDOMANAGER_H
