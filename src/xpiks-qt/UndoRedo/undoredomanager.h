@@ -56,13 +56,13 @@ namespace UndoRedo {
         QString getUndoDescription() const { return m_HistoryStack.empty() ? "" : m_HistoryStack.top()->getDescription(); }
 
     public:
-        void recordHistoryItem(HistoryItem *historyItem);
+        void recordHistoryItem(IHistoryItem *historyItem);
         Q_INVOKABLE bool undoLastAction();
         Q_INVOKABLE void discardLastAction();
 
     private:
         // stack for future todos
-        QStack<HistoryItem*> m_HistoryStack;
+        QStack<IHistoryItem*> m_HistoryStack;
         QMutex m_Mutex;
     };
 }

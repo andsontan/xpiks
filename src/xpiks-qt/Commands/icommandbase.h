@@ -22,6 +22,8 @@
 #ifndef ICOMMANDBASE_H
 #define ICOMMANDBASE_H
 
+#include <QtPlugin>
+
 namespace Commands {
     class ICommandManager;
 
@@ -38,5 +40,11 @@ namespace Commands {
         virtual ~ICommandBase() {}
     };
 }
+
+#define ICommandResult_iid "Xpiks.Commands.ICommandResult.v1.0"
+#define ICommandBase_iid "Xpiks.Commands.ICommandBase.v1.0"
+
+Q_DECLARE_INTERFACE(Commands::ICommandResult, ICommandResult_iid)
+Q_DECLARE_INTERFACE(Commands::ICommandBase, ICommandBase_iid)
 
 #endif // ICOMMANDBASE_H

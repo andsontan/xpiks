@@ -156,7 +156,7 @@ const
     return result;
 }
 
-void Commands::CommandManager::recordHistoryItem(UndoRedo::HistoryItem *historyItem) const {
+void Commands::CommandManager::recordHistoryItem(UndoRedo::IHistoryItem *historyItem) const {
     if (m_UndoRedoManager) {
         m_UndoRedoManager->recordHistoryItem(historyItem);
     }

@@ -19,27 +19,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ICOMMANDMANAGER_H
-#define ICOMMANDMANAGER_H
+#ifndef IHISTORYITEM_H
+#define IHISTORYITEM_H
 
 #include <QtPlugin>
+#include "../Commands/icommandmanager.h"
 
-namespace Commands {
-    class ICommandBase;
-    class ICommandResult;
-
-    class ICommandManager {
+namespace UndoRedo {
+    class IHistoryItem {
     public:
-        virtual ~ICommandManager() {}
-        virtual ICommandResult *processCommand(ICommandBase *command)
-#ifndef TESTS
-        const
-#endif
-        = 0;
+        virtual void undo(const Commands::ICommandManager *commandManager) const = 0;
+        virtual QString getDescription() const = 0;
+        virtual int getActionType() const = 0;
+        virtual ~IHistoryItem() {}
     };
 }
 
-#define ICommandManager_iid "Xpiks.Commands.ICommandManager.v1.0"
-Q_DECLARE_INTERFACE(Commands::ICommandManager, ICommandManager_iid)
+#define IHistoryItem_iid "Xpiks.UndoRedo.IHistoryItem.v1.0"
+Q_DECLARE_INTERFACE(UndoRedo::IHistoryItem, IHistoryItem_iid)
 
-#endif // ICOMMANDMANAGER_H
+#endif // IHISTORYITEM_H

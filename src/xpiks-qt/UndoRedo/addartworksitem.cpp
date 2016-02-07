@@ -25,8 +25,10 @@
 #include "../Commands/commandmanager.h"
 #include "../Models/artitemsmodel.h"
 
-void UndoRedo::AddArtworksHistoryItem::undo(const Commands::CommandManager *commandManager) const {
+void UndoRedo::AddArtworksHistoryItem::undo(const Commands::ICommandManager *commandManagerInterface) const {
     qInfo() << "AddArtworksHistoryItem::undo #";
+
+    Commands::CommandManager *commandManager = (Commands::CommandManager*)commandManagerInterface;
 
     Models::ArtItemsModel *artItemsModel = commandManager->getArtItemsModel();
     artItemsModel->removeArtworks(m_AddedRanges);

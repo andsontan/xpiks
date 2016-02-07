@@ -181,7 +181,8 @@ HEADERS += \
     Common/isafepointer.h \
     Plugins/xpiksplugininterface.h \
     Commands/icommandmanager.h \
-    Commands/icommandbase.h
+    Commands/icommandbase.h \
+    UndoRedo/ihistoryitem.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

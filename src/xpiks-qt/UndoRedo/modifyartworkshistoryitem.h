@@ -53,7 +53,7 @@ namespace UndoRedo {
         virtual ~ModifyArtworksHistoryItem() { qDeleteAll(m_ArtworksBackups); }
 
     public:
-         virtual void undo(const Commands::CommandManager *commandManager) const;
+         virtual void undo(const Commands::ICommandManager *commandManagerInterface) const;
 
     public:
          virtual QString getDescription() const {

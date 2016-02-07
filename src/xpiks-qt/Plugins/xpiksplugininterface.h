@@ -23,11 +23,13 @@
 #define XPIKSPLUGININTERFACE_H
 
 #include <QString>
+#include "../Commands/icommandmanager.h"
 
 namespace Plugins {
     class XpiksPluginInterface {
     public:
         const QString &getPrettyName() const = 0;
+        void injectCommandManager(Commands::ICommandManager *commandManager) const = 0;
     };
 }
 

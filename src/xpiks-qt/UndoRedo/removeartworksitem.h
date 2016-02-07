@@ -42,7 +42,7 @@ namespace UndoRedo {
         virtual ~RemoveArtworksHistoryItem() { }
 
     public:
-        virtual void undo(const Commands::CommandManager *commandManager) const;
+        virtual void undo(const Commands::ICommandManager *commandManagerInterface) const;
 
     public:
         virtual QString getDescription() const {

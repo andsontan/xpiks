@@ -22,13 +22,19 @@
 #ifndef ISAFEPOINTER
 #define ISAFEPOINTER
 
+#include <QtPlugin>
+
 namespace Common {
     class ISafePointer {
     public:
         virtual void acquire() = 0;
         virtual bool release() = 0;
+        virtual ~ISafePointer() {}
     };
 }
+
+#define ISafePointer_iid "Xpiks.Common.ISafePointer.v1.0"
+Q_DECLARE_INTERFACE(Common::ISafePointer, ISafePointer_iid)
 
 #endif // ISAFEPOINTER
 

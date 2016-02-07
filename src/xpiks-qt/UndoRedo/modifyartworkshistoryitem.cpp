@@ -26,8 +26,10 @@
 #include "../Commands/commandmanager.h"
 #include "../Models/settingsmodel.h"
 
-void UndoRedo::ModifyArtworksHistoryItem::undo(const Commands::CommandManager *commandManager) const {
+void UndoRedo::ModifyArtworksHistoryItem::undo(const Commands::ICommandManager *commandManagerInterface) const {
     qInfo() << "ModifyArtworksHistoryItem::undo #";
+
+    Commands::CommandManager *commandManager = (Commands::CommandManager*)commandManagerInterface;
 
     Models::ArtItemsModel *artItemsModel = commandManager->getArtItemsModel();
     int count = m_Indices.count();

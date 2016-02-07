@@ -24,7 +24,7 @@
 
 #include <QStringList>
 #include <QList>
-#include "../UndoRedo/historyitem.h"
+#include "../UndoRedo/ihistoryitem.h"
 #include "commandbase.h"
 #include "../Conectivity/analyticsuserevent.h"
 #include "../Common/flags.h"
@@ -136,7 +136,7 @@ namespace Commands {
         const
 #endif
         ;
-        void recordHistoryItem(UndoRedo::HistoryItem *historyItem) const;
+        void recordHistoryItem(UndoRedo::IHistoryItem *historyItem) const;
 
     public:
         void connectEntitiesSignalsSlots() const;
