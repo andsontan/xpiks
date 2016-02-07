@@ -131,7 +131,7 @@ namespace Commands {
         void InjectDependency(Suggestion::LocalLibrary *localLibrary);
 
     public:
-        virtual CommandResult *processCommand(CommandBase *command)
+        virtual ICommandResult *processCommand(ICommandBase *command)
 #ifndef TESTS
         const
 #endif

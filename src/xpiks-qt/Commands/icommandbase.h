@@ -19,20 +19,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ICOMMANDMANAGER_H
-#define ICOMMANDMANAGER_H
+#ifndef ICOMMANDBASE_H
+#define ICOMMANDBASE_H
 
 namespace Commands {
-    class ICommandBase;
-    class ICommandResult;
+    class ICommandManager;
 
-    class ICommandManager {
-        virtual ICommandResult *processCommand(ICommandBase *command)
-#ifndef TESTS
-        const
-#endif
-        = 0;
+    class ICommandResult {
+    public:
+        virtual int getStatus() const = 0;
+        virtual ~ICommandResult() {}
+    };
+
+    class ICommandBase {
+    public:
+        virtual ICommandResult *execute(const ICommandManager *commandManager) const = 0;
+        virtual int getCommandType() const = 0;
+        virtual ~ICommandBase() {}
     };
 }
 
-#endif // ICOMMANDMANAGER_H
+#endif // ICOMMANDBASE_H

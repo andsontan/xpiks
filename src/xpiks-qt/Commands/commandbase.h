@@ -22,6 +22,8 @@
 #ifndef COMMANDBASE_H
 #define COMMANDBASE_H
 
+#include "icommandbase.h"
+
 namespace Commands {
 
     enum CommandType {
@@ -34,7 +36,7 @@ namespace Commands {
     class CommandResult;
     class ICommandManager;
 
-    class CommandBase
+    class CommandBase : public ICommandBase
     {
     public:
         CommandBase(CommandType commandType):
@@ -43,17 +45,19 @@ namespace Commands {
         virtual ~CommandBase() {}
 
     public:
-        virtual CommandResult *execute(const ICommandManager *commandManager) const = 0;
-        CommandType getCommandType() const { return m_CommandType; }
+        virtual int getCommandType() const { return (int)m_CommandType; }
 
     private:
         CommandType m_CommandType;
     };
 
-    class CommandResult {
+    class CommandResult : public ICommandResult {
     public:
         CommandResult(){}
         virtual ~CommandResult(){}
+
+    public:
+        virtual int getStatus() const { return 0; }
     };
 }
 

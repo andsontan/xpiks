@@ -180,7 +180,8 @@ HEADERS += \
     Conectivity/ftphelpers.h \
     Common/isafepointer.h \
     Plugins/xpiksplugininterface.h \
-    Commands/icommandmanager.h
+    Commands/icommandmanager.h \
+    Commands/icommandbase.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

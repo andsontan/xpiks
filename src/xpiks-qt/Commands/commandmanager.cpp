@@ -146,12 +146,12 @@ void Commands::CommandManager::InjectDependency(Suggestion::LocalLibrary *localL
     Q_ASSERT(localLibrary != NULL); m_LocalLibrary = localLibrary;
 }
 
-Commands::CommandResult *Commands::CommandManager::processCommand(Commands::CommandBase *command)
+Commands::ICommandResult *Commands::CommandManager::processCommand(ICommandBase *command)
 #ifndef TESTS
 const
 #endif
 {
-    Commands::CommandResult *result = command->execute(this);
+    Commands::ICommandResult *result = command->execute(this);
     delete command;
     return result;
 }
@@ -316,7 +316,7 @@ void Commands::CommandManager::addToRecentDirectories(const QString &path) const
 void Commands::CommandManager::addInitialArtworks(const QStringList &artworksFilepathes)
 {
     Commands::AddArtworksCommand *command = new Commands::AddArtworksCommand(artworksFilepathes);
-    CommandResult *result = this->processCommand(command);
+    ICommandResult *result = this->processCommand(command);
     delete result;
 }
 #endif
