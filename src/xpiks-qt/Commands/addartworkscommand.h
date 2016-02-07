@@ -37,7 +37,7 @@ namespace Commands {
         virtual ~AddArtworksCommand() {}
 
     public:
-        virtual CommandResult *execute(const CommandManager *commandManager) const;
+        virtual CommandResult *execute(const ICommandManager *commandManagerInterface) const;
 
     public:
         QStringList m_FilePathes;

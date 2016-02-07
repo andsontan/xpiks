@@ -19,39 +19,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef REMOVEARTWORKSCOMMAND_H
-#define REMOVEARTWORKSCOMMAND_H
+#ifndef XPIKSPLUGININTERFACE_H
+#define XPIKSPLUGININTERFACE_H
 
-#include <QVector>
-#include <QPair>
-#include "commandbase.h"
-#include "../Helpers/indiceshelper.h"
+#include <QString>
 
-namespace Commands {
-    class RemoveArtworksCommand : public CommandBase
-    {
+namespace Plugins {
+    class XpiksPluginInterface {
     public:
-        RemoveArtworksCommand(const QVector<QPair<int, int> > &rangesToRemove):
-            CommandBase(RemoveArtworksCommandType),
-            m_RangesToRemove(rangesToRemove)
-        {
-        }
-
-    public:
-        virtual CommandResult *execute(const ICommandManager *commandManagerInterface) const;
-
-    private:
-        QVector<QPair<int, int> > m_RangesToRemove;
-    };
-
-    class RemoveArtworksCommandResult : public CommandResult {
-    public:
-        RemoveArtworksCommandResult(int removedCount):
-            m_RemovedArtworksCount(removedCount)
-        {}
-    public:
-        int m_RemovedArtworksCount;
+        const QString &getPrettyName() const = 0;
     };
 }
 
-#endif // REMOVEARTWORKSCOMMAND_H
+#endif // XPIKSPLUGININTERFACE_H

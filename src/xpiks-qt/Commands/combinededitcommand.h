@@ -61,7 +61,7 @@ namespace Commands {
         virtual ~CombinedEditCommand() {}
 
     public:
-        virtual CommandResult *execute(const CommandManager *commandManager) const;
+        virtual CommandResult *execute(const ICommandManager *commandManagerInterface) const;
 
     private:
         void setKeywords(Models::ArtworkMetadata *metadata) const;

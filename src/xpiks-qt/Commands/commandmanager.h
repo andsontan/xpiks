@@ -28,6 +28,7 @@
 #include "commandbase.h"
 #include "../Conectivity/analyticsuserevent.h"
 #include "../Common/flags.h"
+#include "icommandmanager.h"
 
 namespace Encryption {
     class SecretsManager;
@@ -79,7 +80,7 @@ namespace Conectivity {
 }
 
 namespace Commands {
-    class CommandManager
+    class CommandManager : public ICommandManager
     {
     public:
         CommandManager():

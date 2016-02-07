@@ -178,7 +178,9 @@ HEADERS += \
     Conectivity/uploadcontext.h \
     Conectivity/testconnection.h \
     Conectivity/ftphelpers.h \
-    Common/isafepointer.h
+    Common/isafepointer.h \
+    Plugins/xpiksplugininterface.h \
+    Commands/icommandmanager.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

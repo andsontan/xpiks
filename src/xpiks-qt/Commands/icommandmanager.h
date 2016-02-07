@@ -19,39 +19,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef REMOVEARTWORKSCOMMAND_H
-#define REMOVEARTWORKSCOMMAND_H
-
-#include <QVector>
-#include <QPair>
-#include "commandbase.h"
-#include "../Helpers/indiceshelper.h"
+#ifndef ICOMMANDMANAGER_H
+#define ICOMMANDMANAGER_H
 
 namespace Commands {
-    class RemoveArtworksCommand : public CommandBase
-    {
-    public:
-        RemoveArtworksCommand(const QVector<QPair<int, int> > &rangesToRemove):
-            CommandBase(RemoveArtworksCommandType),
-            m_RangesToRemove(rangesToRemove)
-        {
-        }
+    class CommandBase;
+    class CommandResult;
 
-    public:
-        virtual CommandResult *execute(const ICommandManager *commandManagerInterface) const;
-
-    private:
-        QVector<QPair<int, int> > m_RangesToRemove;
-    };
-
-    class RemoveArtworksCommandResult : public CommandResult {
-    public:
-        RemoveArtworksCommandResult(int removedCount):
-            m_RemovedArtworksCount(removedCount)
-        {}
-    public:
-        int m_RemovedArtworksCount;
+    class ICommandManager {
+        virtual CommandResult *processCommand(CommandBase *command)
+#ifndef TESTS
+        const
+#endif
+        = 0;
     };
 }
 
-#endif // REMOVEARTWORKSCOMMAND_H
+#endif // ICOMMANDMANAGER_H

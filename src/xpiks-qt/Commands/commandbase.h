@@ -25,14 +25,14 @@
 namespace Commands {
 
     enum CommandType {
-        AddArtworksCommandType,
-        RemoveArtworksCommandType,
-        CombinedEditCommandType,
-        PasteKeywordsCommandType
+        AddArtworksCommandType = 0,
+        RemoveArtworksCommandType = 1,
+        CombinedEditCommandType = 2,
+        PasteKeywordsCommandType = 3
     };
 
     class CommandResult;
-    class CommandManager;
+    class ICommandManager;
 
     class CommandBase
     {
@@ -43,7 +43,7 @@ namespace Commands {
         virtual ~CommandBase() {}
 
     public:
-        virtual CommandResult *execute(const CommandManager *commandManager) const = 0;
+        virtual CommandResult *execute(const ICommandManager *commandManager) const = 0;
         CommandType getCommandType() const { return m_CommandType; }
 
     private:
@@ -53,7 +53,7 @@ namespace Commands {
     class CommandResult {
     public:
         CommandResult(){}
-        ~CommandResult(){}
+        virtual ~CommandResult(){}
     };
 }
 
