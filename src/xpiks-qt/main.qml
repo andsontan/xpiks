@@ -190,6 +190,14 @@ ApplicationWindow {
             }
 
             MenuItem {
+                text: qsTr("&Plugins")
+                onTriggered: {
+                    Common.launchDialog("Dialogs/PluginsDialog.qml",
+                                        applicationWindow, {});
+                }
+            }
+
+            MenuItem {
                 text: qsTr("&Settings")
                 onTriggered: {
                     settingsModel.readAllValues()
@@ -198,6 +206,7 @@ ApplicationWindow {
                                     function(wnd) {wnd.show();});
                 }
             }
+
             MenuItem {
                 text: qsTr("&About")
                 onTriggered: {
