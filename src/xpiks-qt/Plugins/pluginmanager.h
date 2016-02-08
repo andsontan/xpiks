@@ -25,25 +25,33 @@
 #include <QVector>
 #include <QHash>
 #include <QAbstractListModel>
+#include <QSortFilterProxyModel>
 #include "../Common/baseentity.h"
 
 namespace Plugins {
     class XpiksPluginInterface;
+    class PluginWrapper;
 
-    class PluginManager : public Common::BaseEntity, public QAbstractListModel
+    class PluginManager : public QAbstractListModel, public Common::BaseEntity
     {
+        Q_OBJECT
     public:
         PluginManager();
+        virtual ~PluginManager();
 
     public:
         enum UploadInfoRepositoryRoles {
             PrettyNameRole = Qt::UserRole + 1,
             VersionRole,
-            AuthorRole
+            AuthorRole,
+            PluginIDRole
         };
 
     public:
         void loadPlugins();
+        bool hasExportedActions(int row) const;
+        Q_INVOKABLE QObject *getPluginActions(int index) const;
+        Q_INVOKABLE void triggerPluginAction(int pluginID, int actionID) const;
 
     private:
         void addPlugin(XpiksPluginInterface *plugin);
@@ -56,7 +64,22 @@ namespace Plugins {
         virtual QHash<int, QByteArray> roleNames() const;
 
     private:
-        QVector<XpiksPluginInterface *> m_PluginsList;
+        int getNextPluginID() { return m_LastPluginID++; }
+
+    private:
+        QVector<PluginWrapper *> m_PluginsList;
+        QHash<int, PluginWrapper *> m_PluginsDict;
+        int m_LastPluginID;
+    };
+
+    class PluginsWithActionsModel: public QSortFilterProxyModel {
+        Q_OBJECT
+    public:
+        PluginsWithActionsModel(QObject *parent = 0):
+            QSortFilterProxyModel(parent)
+        {}
+    protected:
+        virtual bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
     };
 }
 

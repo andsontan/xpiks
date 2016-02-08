@@ -70,7 +70,9 @@ SOURCES += main.cpp \
     Conectivity/ftpcoordinator.cpp \
     Conectivity/testconnection.cpp \
     Conectivity/ftphelpers.cpp \
-    Plugins/pluginmanager.cpp
+    Plugins/pluginmanager.cpp \
+    Plugins/pluginwrapper.cpp \
+    Plugins/pluginactionsmodel.cpp
 
 RESOURCES += qml.qrc
 
@@ -185,7 +187,10 @@ HEADERS += \
     Commands/icommandbase.h \
     UndoRedo/ihistoryitem.h \
     UndoRedo/iundoredomanager.h \
-    Plugins/pluginmanager.h
+    Plugins/pluginmanager.h \
+    Plugins/pluginwrapper.h \
+    Plugins/ipluginaction.h \
+    Plugins/pluginactionsmodel.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

@@ -222,6 +222,8 @@ int main(int argc, char *argv[]) {
 #endif
     Conectivity::TelemetryService telemetryService(userId, telemetryEnabled);
     Plugins::PluginManager pluginManager;
+    Plugins::PluginsWithActionsModel pluginsWithActions;
+    pluginsWithActions.setSourceModel(&pluginManager);
 
     Commands::CommandManager commandManager;
     commandManager.InjectDependency(&artworkRepository);
@@ -287,6 +289,7 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("spellCheckSuggestionModel", &spellCheckSuggestionModel);
     rootContext->setContextProperty("metadataIOCoordinator", &metadataIOCoordinator);
     rootContext->setContextProperty("pluginManager", &pluginManager);
+    rootContext->setContextProperty("pluginsWithActions", &pluginsWithActions);
 
     engine.addImageProvider("global", globalProvider);
     qDebug() << "main #" << "About to load main view...";

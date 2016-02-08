@@ -24,15 +24,22 @@
 #include <QApplication>
 #include <QDir>
 #include <QDebug>
+#include <QQmlEngine>
 #include "xpiksplugininterface.h"
 #include "../Commands/commandmanager.h"
 #include "../UndoRedo/undoredomanager.h"
+#include "pluginwrapper.h"
 
 namespace Plugins {
     PluginManager::PluginManager():
-        QAbstractListModel()
+        QAbstractListModel(),
+        m_LastPluginID(0)
     {
 
+    }
+
+    PluginManager::~PluginManager() {
+        qDeleteAll(m_PluginsList);
     }
 
     void PluginManager::loadPlugins() {
@@ -76,12 +83,44 @@ namespace Plugins {
         endResetModel();
     }
 
+    bool PluginManager::hasExportedActions(int row) const {
+        bool hasActions = false;
+
+        if (0 <= row && row < m_PluginsList.length()) {
+            hasActions = m_PluginsList.at(row)->anyActionsProvided();
+        }
+
+        return hasActions;
+    }
+
+    QObject *PluginManager::getPluginActions(int index) const {
+        PluginActionsModel *item = NULL;
+
+        if (0 <= index && index < m_PluginsList.length()) {
+            item = m_PluginsList.at(index)->getActionsModel();
+            QQmlEngine::setObjectOwnership(item, QQmlEngine::CppOwnership);
+        }
+
+        return item;
+    }
+
+    void PluginManager::triggerPluginAction(int pluginID, int actionID) const {
+        PluginWrapper *pluginWrapper = m_PluginsDict.value(pluginID, NULL);
+        if (pluginWrapper != NULL) {
+            pluginWrapper->triggerAction(actionID);
+        }
+    }
+
     void PluginManager::addPlugin(XpiksPluginInterface *plugin) {
-        qInfo() << "PluginManager::addPlugin #" << "name:" << plugin->getPrettyName() << "version:" << plugin->getVersionString();
-        m_PluginsList.append(plugin);
+        int pluginID = getNextPluginID();
+        qInfo() << "PluginManager::addPlugin #" << "ID:" << pluginID << "name:" << plugin->getPrettyName() << "version:" << plugin->getVersionString();
 
         plugin->injectCommandManager(m_CommandManager);
         plugin->injectUndoRedoManager(m_CommandManager->getUndoRedoManager());
+
+        PluginWrapper *pluginWrapper = new PluginWrapper(plugin, pluginID);
+        m_PluginsList.append(pluginWrapper);
+        m_PluginsDict.insert(pluginID, pluginWrapper);
     }
 
     int PluginManager::rowCount(const QModelIndex &parent) const {
@@ -93,7 +132,7 @@ namespace Plugins {
         int row = index.row();
         if (row < 0 || row >= m_PluginsList.length()) { return QVariant(); }
 
-        XpiksPluginInterface *plugin = m_PluginsList.at(row);
+        PluginWrapper *plugin = m_PluginsList.at(row);
 
         switch (role) {
         case PrettyNameRole:
@@ -102,6 +141,8 @@ namespace Plugins {
             return plugin->getAuthor();
         case VersionRole:
             return plugin->getVersionString();
+        case PluginIDRole:
+            return plugin->getPluginID();
         default:
             return QVariant();
         }
@@ -112,6 +153,18 @@ namespace Plugins {
         roles[PrettyNameRole] = "prettyname";
         roles[AuthorRole] = "author";
         roles[VersionRole] = "version";
+        roles[PluginIDRole] = "pluginID";
         return roles;
     }
+
+    bool PluginsWithActionsModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const {
+        Q_UNUSED(sourceParent);
+
+        QAbstractItemModel *sourceItemModel = sourceModel();
+        PluginManager *pluginManager = dynamic_cast<PluginManager *>(sourceItemModel);
+
+        bool result = pluginManager->hasExportedActions(sourceRow);
+        return result;
+    }
+
 }

@@ -190,14 +190,6 @@ ApplicationWindow {
             }
 
             MenuItem {
-                text: qsTr("&Plugins")
-                onTriggered: {
-                    Common.launchDialog("Dialogs/PluginsDialog.qml",
-                                        applicationWindow, {});
-                }
-            }
-
-            MenuItem {
                 text: qsTr("&Settings")
                 onTriggered: {
                     settingsModel.readAllValues()
@@ -259,6 +251,45 @@ ApplicationWindow {
                 }
             }
 
+        }
+
+        Menu {
+            title: qsTr("Plugins")
+            id: pluginsMenu
+
+            Instantiator {
+                model: pluginsWithActions
+                onObjectAdded: pluginsMenu.insertItem( index, object )
+                onObjectRemoved: pluginsMenu.removeItem( object )
+
+                delegate: Menu {
+                    id: pluginActionsMenu
+                    title: prettyname
+
+                    Instantiator {
+                        model: pluginManager.getPluginActions(index)
+                        onObjectAdded: pluginActionsMenu.insertItem( index, object )
+                        onObjectRemoved: pluginActionsMenu.removeItem( object )
+
+                        delegate: MenuItem {
+                            text: aname
+                            onTriggered: {
+                                pluginManager.triggerPluginAction(pluginID, acode)
+                            }
+                        }
+                    }
+                }
+            }
+
+            MenuSeparator { }
+
+            MenuItem {
+                text: qsTr("&Plugin manager")
+                onTriggered: {
+                    Common.launchDialog("Dialogs/PluginsDialog.qml",
+                                        applicationWindow, {});
+                }
+            }
         }
 
         Menu {

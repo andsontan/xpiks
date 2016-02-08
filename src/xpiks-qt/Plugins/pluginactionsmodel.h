@@ -19,37 +19,41 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef XPIKSPLUGININTERFACE_H
-#define XPIKSPLUGININTERFACE_H
+#ifndef PLUGINACTIONSMODEL_H
+#define PLUGINACTIONSMODEL_H
 
-#include <QString>
-#include <QtPlugin>
+#include <QAbstractListModel>
 #include <QVector>
-#include "../Commands/icommandmanager.h"
-#include "../UndoRedo/iundoredomanager.h"
-#include "ipluginaction.h"
 
 namespace Plugins {
-    class XpiksPluginInterface {
+    class IPluginAction;
+
+    class PluginActionsModel: public QAbstractListModel
+    {
+        Q_OBJECT
     public:
-        virtual ~XpiksPluginInterface() {}
+        PluginActionsModel(const QVector<IPluginAction *> &actions, int pluginID);
 
     public:
-        virtual const QString &getPrettyName() const = 0;
-        virtual const QString &getVersionString() const = 0;
-        virtual const QString &getAuthor() const = 0;
+        enum PluginActionsModelRoles {
+            ActionNameRole = Qt::UserRole + 1,
+            ActionCodeRole,
+            PluginIDRole
+        };
 
     public:
-        virtual const QVector<IPluginAction*> &getExportedActions() const = 0;
-        virtual bool executeAction(int actionID) = 0;
+        int size() const { return m_PluginActions.length(); }
 
+        // QAbstractItemModel interface
     public:
-        virtual void injectCommandManager(Commands::ICommandManager *commandManager) = 0;
-        virtual void injectUndoRedoManager(UndoRedo::IUndoRedoManager *undoRedoManager) = 0;
+        virtual int rowCount(const QModelIndex &parent) const;
+        virtual QVariant data(const QModelIndex &index, int role) const;
+        virtual QHash<int, QByteArray> roleNames() const;
+
+    private:
+        QVector<IPluginAction *> m_PluginActions;
+        int m_PluginID;
     };
 }
 
-#define XpiksPluginInterface_iid "Xpiks.Plugins.XpiksPluginInterface.v0.1"
-Q_DECLARE_INTERFACE(Plugins::XpiksPluginInterface, XpiksPluginInterface_iid)
-
-#endif // XPIKSPLUGININTERFACE_H
+#endif // PLUGINACTIONSMODEL_H

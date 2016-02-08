@@ -19,37 +19,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef XPIKSPLUGININTERFACE_H
-#define XPIKSPLUGININTERFACE_H
+#ifndef PLUGINWRAPPER_H
+#define PLUGINWRAPPER_H
 
+#include <QObject>
 #include <QString>
-#include <QtPlugin>
-#include <QVector>
-#include "../Commands/icommandmanager.h"
-#include "../UndoRedo/iundoredomanager.h"
-#include "ipluginaction.h"
+#include "pluginactionsmodel.h"
 
 namespace Plugins {
-    class XpiksPluginInterface {
+    class XpiksPluginInterface;
+
+    class PluginWrapper
+    {
     public:
-        virtual ~XpiksPluginInterface() {}
+        PluginWrapper(XpiksPluginInterface *pluginInterface, int pluginID);
 
     public:
-        virtual const QString &getPrettyName() const = 0;
-        virtual const QString &getVersionString() const = 0;
-        virtual const QString &getAuthor() const = 0;
+        int getPluginID() const { return m_PluginID; }
+        bool getIsEnabled() const { return m_IsEnabled; }
+        const QString &getPrettyName() const;
+        const QString &getVersionString() const;
+        const QString &getAuthor() const;
 
-    public:
-        virtual const QVector<IPluginAction*> &getExportedActions() const = 0;
-        virtual bool executeAction(int actionID) = 0;
+        bool anyActionsProvided() const { return m_ActionsModel.size() > 0; }
+        PluginActionsModel *getActionsModel() { return &m_ActionsModel; }
 
-    public:
-        virtual void injectCommandManager(Commands::ICommandManager *commandManager) = 0;
-        virtual void injectUndoRedoManager(UndoRedo::IUndoRedoManager *undoRedoManager) = 0;
+        void triggerAction(int actionID) const;
+
+    private:
+        XpiksPluginInterface *m_PluginInterface;
+        PluginActionsModel m_ActionsModel;
+        int m_PluginID;
+        bool m_IsEnabled;
     };
 }
 
-#define XpiksPluginInterface_iid "Xpiks.Plugins.XpiksPluginInterface.v0.1"
-Q_DECLARE_INTERFACE(Plugins::XpiksPluginInterface, XpiksPluginInterface_iid)
-
-#endif // XPIKSPLUGININTERFACE_H
+#endif // PLUGINWRAPPER_H
