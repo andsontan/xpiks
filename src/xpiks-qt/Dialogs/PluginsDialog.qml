@@ -144,6 +144,13 @@ Item {
                                 anchors.left: parent.left
                                 anchors.leftMargin: 10
                             }
+
+                            StyledText {
+                                text: version
+                                anchors.verticalCenter: parent.verticalCenter
+                                anchors.right: parent.right
+                                anchors.rightMargin: 10
+                            }
                         }
                     }
                 }
