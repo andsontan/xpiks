@@ -265,9 +265,10 @@ ApplicationWindow {
                 delegate: Menu {
                     id: pluginActionsMenu
                     title: prettyname
+                    property var actionsModel: pluginManager.getPluginActions(index)
 
                     Instantiator {
-                        model: pluginManager.getPluginActions(index)
+                        model: actionsModel
                         onObjectAdded: pluginActionsMenu.insertItem( index, object )
                         onObjectRemoved: pluginActionsMenu.removeItem( object )
 

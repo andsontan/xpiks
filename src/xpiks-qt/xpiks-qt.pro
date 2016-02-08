@@ -72,7 +72,8 @@ SOURCES += main.cpp \
     Conectivity/ftphelpers.cpp \
     Plugins/pluginmanager.cpp \
     Plugins/pluginwrapper.cpp \
-    Plugins/pluginactionsmodel.cpp
+    Plugins/pluginactionsmodel.cpp \
+    Plugins/uiprovider.cpp
 
 RESOURCES += qml.qrc
 
@@ -190,7 +191,9 @@ HEADERS += \
     Plugins/pluginmanager.h \
     Plugins/pluginwrapper.h \
     Plugins/ipluginaction.h \
-    Plugins/pluginactionsmodel.h
+    Plugins/pluginactionsmodel.h \
+    Plugins/uiprovider.h \
+    Plugins/iuiprovider.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

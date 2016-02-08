@@ -24,13 +24,14 @@
 #include <QDir>
 #include <QtQml>
 #include <QFile>
-#include <QtDebug>
 #include <QUuid>
+#include <QtDebug>
 #include <QDateTime>
 #include <QSettings>
 #include <QTextStream>
 #include <QQmlContext>
 #include <QApplication>
+#include <QQuickWindow>
 #include <QStandardPaths>
 #include <QQmlApplicationEngine>
 //-------------------------------------
@@ -295,6 +296,10 @@ int main(int argc, char *argv[]) {
     qDebug() << "main #" << "About to load main view...";
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     qDebug() << "main #" << "Main view loaded";
+
+    pluginManager.getUIProvider()->setQmlEngine(&engine);
+    QQuickWindow *window = qobject_cast<QQuickWindow*>(engine.rootObjects().at(0));
+    pluginManager.getUIProvider()->setRoot(window->contentItem());
 
 #ifdef QT_DEBUG
     if (argc > 1) {

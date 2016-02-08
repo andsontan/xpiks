@@ -18,42 +18,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#ifndef IUIPROVIDER_H
+#define IUIPROVIDER_H
 
-#ifndef PLUGINACTIONSMODEL_H
-#define PLUGINACTIONSMODEL_H
-
-#include <QAbstractListModel>
-#include <QVector>
+#include <QUrl>
+#include <QtPlugin>
 
 namespace Plugins {
-    class IPluginAction;
-
-    class PluginActionsModel: public QAbstractListModel
-    {
-        Q_OBJECT
+    class IUIProvider {
     public:
-        PluginActionsModel(const QVector<IPluginAction *> &actions, int pluginID, QObject *parent=0);
+        virtual ~IUIProvider() {}
 
-    public:
-        enum PluginActionsModelRoles {
-            ActionNameRole = Qt::UserRole + 1,
-            ActionCodeRole,
-            PluginIDRole
-        };
-
-    public:
-        int size() const { return m_PluginActions.length(); }
-
-        // QAbstractItemModel interface
-    public:
-        virtual int rowCount(const QModelIndex &parent) const;
-        virtual QVariant data(const QModelIndex &index, int role) const;
-        virtual QHash<int, QByteArray> roleNames() const;
-
-    private:
-        QVector<IPluginAction *> m_PluginActions;
-        int m_PluginID;
+        virtual void openWindow(const QUrl &rcPath) const = 0;
     };
 }
 
-#endif // PLUGINACTIONSMODEL_H
+#define IUIProvider_iid "Xpiks.Plugins.IUIProvider.v0.1"
+Q_DECLARE_INTERFACE(Plugins::IUIProvider, IUIProvider_iid)
+
+#endif // IUIPROVIDER_H

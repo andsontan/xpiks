@@ -27,6 +27,7 @@
 #include <QAbstractListModel>
 #include <QSortFilterProxyModel>
 #include "../Common/baseentity.h"
+#include "uiprovider.h"
 
 namespace Plugins {
     class XpiksPluginInterface;
@@ -50,6 +51,9 @@ namespace Plugins {
     public:
         void loadPlugins();
         bool hasExportedActions(int row) const;
+        UIProvider *getUIProvider() { return &m_UIProvider; }
+
+    public:
         Q_INVOKABLE QObject *getPluginActions(int index) const;
         Q_INVOKABLE void triggerPluginAction(int pluginID, int actionID) const;
 
@@ -69,6 +73,7 @@ namespace Plugins {
     private:
         QVector<PluginWrapper *> m_PluginsList;
         QHash<int, PluginWrapper *> m_PluginsDict;
+        UIProvider m_UIProvider;
         int m_LastPluginID;
     };
 

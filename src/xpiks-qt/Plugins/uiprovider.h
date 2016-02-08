@@ -19,41 +19,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef PLUGINACTIONSMODEL_H
-#define PLUGINACTIONSMODEL_H
+#ifndef UIPROVIDER_H
+#define UIPROVIDER_H
 
-#include <QAbstractListModel>
-#include <QVector>
+#include "iuiprovider.h"
+#include <QQuickItem>
+#include <QQmlComponent>
+#include <QObject>
+#include <QUrl>
 
 namespace Plugins {
-    class IPluginAction;
-
-    class PluginActionsModel: public QAbstractListModel
+    class UIProvider : public QObject, public IUIProvider
     {
         Q_OBJECT
     public:
-        PluginActionsModel(const QVector<IPluginAction *> &actions, int pluginID, QObject *parent=0);
+        UIProvider(QObject *parent=0);
+        virtual ~UIProvider() {}
 
     public:
-        enum PluginActionsModelRoles {
-            ActionNameRole = Qt::UserRole + 1,
-            ActionCodeRole,
-            PluginIDRole
-        };
+        void setQmlEngine(QQmlEngine *engine) { m_QmlEngine = engine; }
+        void setRoot(QQuickItem *root) { m_Root = root; }
 
+        // IUIProvider interface
     public:
-        int size() const { return m_PluginActions.length(); }
+        virtual void openWindow(const QUrl &rcPath) const;
 
-        // QAbstractItemModel interface
-    public:
-        virtual int rowCount(const QModelIndex &parent) const;
-        virtual QVariant data(const QModelIndex &index, int role) const;
-        virtual QHash<int, QByteArray> roleNames() const;
+    private slots:
+        void viewStatusChanged(QQmlComponent::Status status);
+        void windowDestroyed(QObject *object);
 
     private:
-        QVector<IPluginAction *> m_PluginActions;
-        int m_PluginID;
+        QQmlEngine *m_QmlEngine;
+        QQuickItem *m_Root;
     };
 }
 
-#endif // PLUGINACTIONSMODEL_H
+#endif // UIPROVIDER_H

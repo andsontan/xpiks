@@ -24,8 +24,8 @@
 #include "ipluginaction.h"
 
 namespace Plugins {
-    PluginActionsModel::PluginActionsModel(const QVector<IPluginAction*> &actions, int pluginID) :
-        QAbstractListModel(),
+    PluginActionsModel::PluginActionsModel(const QVector<IPluginAction*> &actions, int pluginID, QObject *parent) :
+        QAbstractListModel(parent),
         m_PluginActions(actions),
         m_PluginID(pluginID)
     {

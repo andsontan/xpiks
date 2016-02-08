@@ -28,6 +28,7 @@
 #include "../Commands/icommandmanager.h"
 #include "../UndoRedo/iundoredomanager.h"
 #include "ipluginaction.h"
+#include "iuiprovider.h"
 
 namespace Plugins {
     class XpiksPluginInterface {
@@ -44,8 +45,12 @@ namespace Plugins {
         virtual bool executeAction(int actionID) = 0;
 
     public:
+        virtual void initializePlugin() = 0;
+
+    public:
         virtual void injectCommandManager(Commands::ICommandManager *commandManager) = 0;
         virtual void injectUndoRedoManager(UndoRedo::IUndoRedoManager *undoRedoManager) = 0;
+        virtual void injectUIProvider(IUIProvider *uiProvider) = 0;
     };
 }
 

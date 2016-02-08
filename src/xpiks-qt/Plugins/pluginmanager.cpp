@@ -35,7 +35,6 @@ namespace Plugins {
         QAbstractListModel(),
         m_LastPluginID(0)
     {
-
     }
 
     PluginManager::~PluginManager() {
@@ -94,6 +93,7 @@ namespace Plugins {
     }
 
     QObject *PluginManager::getPluginActions(int index) const {
+        qDebug() << "PluginManager::getPluginActions #" << index;
         PluginActionsModel *item = NULL;
 
         if (0 <= index && index < m_PluginsList.length()) {
@@ -117,6 +117,9 @@ namespace Plugins {
 
         plugin->injectCommandManager(m_CommandManager);
         plugin->injectUndoRedoManager(m_CommandManager->getUndoRedoManager());
+        plugin->injectUIProvider(&m_UIProvider);
+
+        plugin->initializePlugin();
 
         PluginWrapper *pluginWrapper = new PluginWrapper(plugin, pluginID);
         m_PluginsList.append(pluginWrapper);
