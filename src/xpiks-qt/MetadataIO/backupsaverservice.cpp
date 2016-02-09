@@ -35,7 +35,7 @@ namespace MetadataIO {
 
     void BackupSaverService::startSaving() {
         Q_ASSERT(!m_BackupWorker->isRunning());
-        qDebug() << "Starting backups saver service...";
+        qDebug() << "BackupSaverService::startSaving #";
 
         QThread *thread = new QThread();
         m_BackupWorker->moveToThread(thread);
@@ -78,11 +78,11 @@ namespace MetadataIO {
     }
 
     void BackupSaverService::workerFinished() {
-        qInfo() << "Backup saver service went offline";
+        qInfo() << "BackupSaverService::workerFinished #";
     }
 
     void BackupSaverService::stopSaving() {
-        qDebug() << "Backup saver service: stopping...";
+        qDebug() << "BackupSaverService::stopSaving #" << "stopping...";
         m_BackupWorker->cancelWork();
     }
 }

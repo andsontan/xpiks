@@ -49,6 +49,6 @@ namespace Helpers {
     }
 
     void UpdateService::workerFinished() {
-        qDebug() << "Updates worker finished";
+        qDebug() << "UpdateService::workerFinished #";
     }
 }

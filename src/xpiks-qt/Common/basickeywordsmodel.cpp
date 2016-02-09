@@ -32,6 +32,7 @@ namespace Common {
     BasicKeywordsModel::BasicKeywordsModel(QObject *parent):
         QAbstractListModel(parent),
         m_SpellCheckInfo(NULL),
+        m_RefCount(1),
         m_WarningsFlags(0)
     {
     }
@@ -153,11 +154,11 @@ namespace Common {
 
                     QModelIndex i = this->index(index);
                     emit dataChanged(i, i, QVector<int>() << KeywordRole);
-                    qDebug() << "Keyword edit: common edit";
+                    qDebug() << "BasicKeywordsModel::editKeyword #" << "common case edit";
 
                     result = true;
                 } else if (lowerCasedNew == lowerCasedExisting) {
-                    qDebug() << "Keyword edit: changing case in same keyword";
+                    qDebug() << "BasicKeywordsModel::editKeyword #" << "changing case in same keyword";
                     m_KeywordsList[index] = sanitized;
                     QModelIndex i = this->index(index);
                     emit dataChanged(i, i, QVector<int>() << KeywordRole);
@@ -165,11 +166,11 @@ namespace Common {
                     result = true;
                 }
                 else {
-                    qWarning() << "Attempt to rename keyword to existing one. Use remove instead";
+                    qWarning() << "BasicKeywordsModel::editKeyword #" << "Attempt to rename keyword to existing one. Use remove instead!";
                 }
             }
         } else {
-            qWarning() << "Failed to edit keyword with index" << index;
+            qWarning() << "BasicKeywordsModel::editKeyword #" << "Failed to edit keyword with index" << index;
         }
 
         return result;
@@ -462,7 +463,7 @@ namespace Common {
     }
 
     void BasicKeywordsModel::replaceKeyword(int index, const QString &existing, const QString &replacement) {
-        qDebug() << "Replacing keyword" << existing << "to" << replacement << "with index" << index;
+        qDebug() << "BasicKeywordsModel::replaceKeyword #" << "Replacing" << existing << "to" << replacement << "with index" << index;
         if (0 <= index && index < m_KeywordsList.length()) {
             const QString &internal = m_KeywordsList.at(index);
             if (internal == existing) {
@@ -472,7 +473,7 @@ namespace Common {
                 emit dataChanged(i, i, QVector<int>() << IsCorrectRole);
 
             } else if (internal.contains(existing) && internal.contains(QChar::Space)) {
-                qDebug() << "Replacing composite keyword";
+                qDebug() << "BasicKeywordsModel::replaceKeyword #" << "Replacing composite keyword";
                 QString existingFixed = internal;
                 existingFixed.replace(existing, replacement);
                 this->editKeyword(index, existingFixed);
@@ -484,7 +485,7 @@ namespace Common {
                 emit dataChanged(i, i, QVector<int>() << IsCorrectRole);
             }
         } else {
-            qDebug() << "Failed to replace keyword. Index is negative or exceeds count" << m_KeywordsList.length();
+            qDebug() << "BasicKeywordsModel::replaceKeyword #" << "Failure. Index is negative or exceeds count" << m_KeywordsList.length();
         }
     }
 
@@ -570,7 +571,7 @@ namespace Common {
                 m_SpellCheckResults.append(true);
                 m_KeywordsSet.insert(invariant);
             } else {
-                qWarning() << "Skipping duplicates in keywords...";
+                qWarning() << "BasicKeywordsModel::addKeywords #" << "Skipping duplicates in keywords...";
             }
         }
     }

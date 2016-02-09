@@ -30,6 +30,7 @@
 #include <QVector>
 #include <QSet>
 #include <QSize>
+#include <QAtomicInt>
 #include "../Common/basickeywordsmodel.h"
 
 class QTextDocument;
@@ -85,6 +86,8 @@ namespace Models {
             }
             return result;
         }
+
+        void invertSelection(){setIsSelected(!m_IsSelected);}
 
         void setSize(const QSize &size) { m_ImageSize = size; }
 

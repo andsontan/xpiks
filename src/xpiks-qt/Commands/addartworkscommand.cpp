@@ -31,7 +31,7 @@
 #include "../Common/defines.h"
 
 Commands::CommandResult *Commands::AddArtworksCommand::execute(const CommandManager *commandManager) const {
-    qDebug() << "Add artworks command:" << m_FilePathes.length() << "files";
+    qDebug() << "AddArtworksCommand::execute #" << m_FilePathes.length() << "files received";
     Models::ArtworksRepository *artworksRepository = commandManager->getArtworksRepository();
     Models::ArtItemsModel *artItemsModel = commandManager->getArtItemsModel();
 
@@ -43,7 +43,7 @@ Commands::CommandResult *Commands::AddArtworksCommand::execute(const CommandMana
     artworksToImport.reserve(newFilesCount);
 
     if (newFilesCount > 0) {
-        qInfo() << "Add artworks command:" << newFilesCount << "new files";
+        qInfo() << "AddArtworksCommand::execute #" << newFilesCount << "new files found";
         artItemsModel->beginAccountingFiles(newFilesCount);
 
         int count = m_FilePathes.count();

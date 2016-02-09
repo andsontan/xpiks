@@ -47,14 +47,14 @@ namespace Conectivity {
     void FtpUploaderWorker::process() {
         const QString &host = m_UploadBatch->getContext()->m_Host;
 
-        qDebug() << "Waiting for the semaphore" << host;
+        qDebug() << "FtpUploaderWorker::process #" << "Waiting for the semaphore" << host;
         m_UploadSemaphore->acquire();
 
-        qInfo() << "Starting upload to" << host;
+        qInfo() << "FtpUploaderWorker::process #" << "Starting upload to" << host;
         doUpload();
 
         m_UploadSemaphore->release();
-        qDebug() << "Released semaphore" << host;
+        qDebug() << "FtpUploaderWorker::process #" << "Released semaphore" << host;
 
         emit stopped();
     }

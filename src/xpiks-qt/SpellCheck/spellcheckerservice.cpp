@@ -45,7 +45,7 @@ namespace SpellCheck {
 
     void SpellCheckerService::startChecking() {
         Q_ASSERT(!m_SpellCheckWorker->isRunning());
-        qDebug() << "Starting spellchecker service...";
+        qDebug() << "SpellCheckerService::startChecking #" << "starting thread...";
 
         QThread *thread = new QThread();
         m_SpellCheckWorker->moveToThread(thread);
@@ -85,12 +85,13 @@ namespace SpellCheck {
 
             for (int i = 0; i < length; ++i) {
                 SpellCheck::ISpellCheckable *itemToCheck = itemsToCheck.at(i);
+                itemToCheck->acquire();
                 SpellCheckItem *item = new SpellCheckItem(itemToCheck, Common::SpellCheckAll);
                 itemToCheck->connectSignals(item);
                 items.append(item);
             }
 
-            qInfo() << "SpellCheck service: about to submit" << length << "items";
+            qInfo() << "SpellCheckerService::submitItems #" << length << "item(s)";
 
             m_SpellCheckWorker->submitItems(items);
             m_SpellCheckWorker->submitItem(new SpellCheckSeparatorItem());
@@ -103,6 +104,7 @@ namespace SpellCheck {
         Q_ASSERT(m_SpellCheckWorker != NULL);
 
         if (m_SpellCheckWorker != NULL && !m_SpellCheckWorker->isCancelled()) {
+            itemToCheck->acquire();
             SpellCheckItem *item = new SpellCheckItem(itemToCheck, Common::SpellCheckKeywords, keywordIndex);
             itemToCheck->connectSignals(item);
             m_SpellCheckWorker->submitItem(item);
@@ -115,6 +117,7 @@ namespace SpellCheck {
         Q_ASSERT(m_SpellCheckWorker != NULL);
 
         if (m_SpellCheckWorker != NULL && !m_SpellCheckWorker->isCancelled()) {
+            itemToCheck->acquire();
             SpellCheckItem *item = new SpellCheckItem(itemToCheck, flags);
             itemToCheck->connectSignals(item);
             m_SpellCheckWorker->submitItem(item);
@@ -140,7 +143,7 @@ namespace SpellCheck {
         if (!m_WorkerIsAlive) { return; }
 
         if (m_SpellCheckWorker != NULL) {
-            qInfo() << "SpellCheck service: cancelling current batch";
+            qInfo() << "SpellCheckerService::cancelCurrentBatch #";
             m_SpellCheckWorker->cancelCurrentBatch();
         }
     }
@@ -156,7 +159,7 @@ namespace SpellCheck {
     }
 
     void SpellCheckerService::workerFinished() {
-        qInfo() << "Spellcheck service went offline";
+        qInfo() << "SpellCheckerService::workerFinished #";
         m_WorkerIsAlive = false;
     }
 
@@ -168,8 +171,8 @@ namespace SpellCheck {
         }
     }
 
-    void SpellCheck::SpellCheckerService::stopChecking() {
-        qDebug() << "SpellCheck service: stopping checking...";
+    void SpellCheckerService::stopChecking() {
+        qDebug() << "SpellCheckerService::stopChecking #";
         if (m_WorkerIsAlive) {
             m_SpellCheckWorker->cancelWork();
         }

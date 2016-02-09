@@ -19,33 +19,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "loggingworker.h"
-#include "logger.h"
-#include <QThread>
-#include <QDebug>
-#include "../Common/defines.h"
+#ifndef ISAFEPOINTER
+#define ISAFEPOINTER
 
-namespace Helpers {
-    LoggingWorker::LoggingWorker(QObject *parent) :
-        QObject(parent),
-        m_Cancel(false)
-    {
-    }
-
-    void LoggingWorker::process() {
-        Logger &logger = Logger::getInstance();
-        const int secondsToSleep = 1;
-
-        while (!m_Cancel) {
-            logger.flush();
-            QThread::sleep(secondsToSleep);
-        }
-
-        logger.flush();
-        qInfo() << "LoggingWorker::process #" << "Logging worker stopped";
-    }
-
-    void LoggingWorker::cancel() {
-        m_Cancel = true;
-    }
+namespace Common {
+    class ISafePointer {
+    public:
+        virtual void acquire() = 0;
+        virtual bool release() = 0;
+    };
 }
+
+#endif // ISAFEPOINTER
+

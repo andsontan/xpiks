@@ -29,6 +29,7 @@
 #include <QUrl>
 #include <QCoreApplication>
 #include <QStandardPaths>
+#include <QThread>
 #include "../Helpers/appsettings.h"
 #include "spellcheckitem.h"
 #include "../Common/defines.h"
@@ -50,7 +51,7 @@ namespace SpellCheck {
             delete m_Hunspell;
         }
 
-        qInfo() << "Spellcheck worker finished.";
+        qInfo() << "SpellCheckWorker::~SpellCheckWorker #" << "destroyed";
     }
 
     bool SpellCheckWorker::initWorker() {
@@ -97,16 +98,16 @@ namespace SpellCheck {
             try {
                 m_Hunspell = new Hunspell(affPath.toUtf8().constData(),
                                           dicPath.toUtf8().constData());
-                qDebug() << "Hunspell initialized with AFF" << affPath << "and DIC" << dicPath;
+                qDebug() << "SpellCheckWorker::initWorker #" << "Hunspell with AFF" << affPath << "and DIC" << dicPath;
                 initResult = true;
                 m_Encoding = m_Hunspell->get_dic_encoding();
                 m_Codec = QTextCodec::codecForName(m_Encoding.toLatin1().constData());
             }
             catch(...) {
-                qDebug() << "Error in Hunspell initialization with AFF" << affPath << "and DIC" << dicPath;
+                qDebug() << "SpellCheckWorker::initWorker #" << "Error in Hunspell with AFF" << affPath << "and DIC" << dicPath;
             }
         } else {
-            qWarning() << "DIC or AFF file not found." << dicPath << "||" << affPath;
+            qWarning() << "SpellCheckWorker::initWorker #" << "DIC or AFF file not found." << dicPath << "||" << affPath;
         }
 
         return initResult;
@@ -186,7 +187,7 @@ namespace SpellCheck {
             }
         }
         catch (...) {
-            qDebug() << "Error in suggestCorrections for keyword:" << word;
+            qWarning() << "SpellCheckWorker::suggestCorrections #" << "Error for keyword:" << word;
         }
 
         return suggestions;

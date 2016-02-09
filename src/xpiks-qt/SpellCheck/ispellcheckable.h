@@ -28,9 +28,10 @@
 #include <QHash>
 #include "spellcheckitem.h"
 #include "spellsuggestionsitem.h"
+#include "../Common/isafepointer.h"
 
 namespace SpellCheck {
-    class ISpellCheckable {
+    class ISpellCheckable : public virtual Common::ISafePointer {
     public:
         virtual QString retrieveKeyword(int wordIndex) = 0;
         virtual QStringList getKeywords() = 0;

@@ -163,6 +163,7 @@ namespace Models {
 
     private:
         QVector<ArtworkMetadata*> m_ArtworkList;
+        QVector<ArtworkMetadata*> m_FinalizationList;
     };
 }
 

@@ -44,7 +44,7 @@ namespace Conectivity {
                            bool includeVector) {
 
         int size = artworkList.length();
-        qDebug() << "Generating filepathes for upload of" << size << "item(s)";
+        qDebug() << "extractFilePathes #" << "Generating filepathes for" << size << "item(s)";
 
         for (int i = 0; i < size; ++i) {
             Models::ArtworkMetadata *metadata = artworkList.at(i);
@@ -70,7 +70,8 @@ namespace Conectivity {
 
     void generateUploadContexts(const QVector<Models::UploadInfo *> &uploadInfos,
                                 QVector<QSharedPointer<UploadContext> > &contexts,
-                                Encryption::SecretsManager *secretsManager) {
+                                Encryption::SecretsManager *secretsManager,
+                                int timeoutSeconds) {
         int size = uploadInfos.size();
         contexts.reserve(size);
 
@@ -84,7 +85,7 @@ namespace Conectivity {
             context->m_UsePassiveMode = !info->getDisableFtpPassiveMode();
 
             // TODO: move to configs/options
-            context->m_TimeoutSeconds = TIMEOUT_SECONDS;
+            context->m_TimeoutSeconds = timeoutSeconds;
             context->m_RetriesCount = RETRIES_COUNT;
 
             contexts.append(QSharedPointer<UploadContext>(context));
@@ -94,6 +95,7 @@ namespace Conectivity {
     QVector<UploadBatch*> generateUploadBatches(const QVector<Models::ArtworkMetadata *> &artworksToUpload,
                                                 const QVector<Models::UploadInfo *> &uploadInfos,
                                                 Encryption::SecretsManager *secretsManager,
+                                                int timeoutSeconds,
                                                 bool includeVector) {
         QVector<UploadBatch*> batches;
 
@@ -102,7 +104,7 @@ namespace Conectivity {
         extractFilePathes(artworksToUpload, filePathes, zipFilePathes, includeVector);
 
         QVector<QSharedPointer<UploadContext> > contexts;
-        generateUploadContexts(uploadInfos, contexts, secretsManager);
+        generateUploadContexts(uploadInfos, contexts, secretsManager, timeoutSeconds);
 
         int size = contexts.size();
         batches.reserve(size);
@@ -123,10 +125,11 @@ namespace Conectivity {
         return batches;
     }
 
-    FtpCoordinator::FtpCoordinator(int maxParallelUploads, QObject *parent) :
+    FtpCoordinator::FtpCoordinator(int maxParallelUploads, int secondsTimeout, QObject *parent) :
         QObject(parent),
         m_UploadSemaphore(maxParallelUploads),
         m_MaxParallelUploads(maxParallelUploads),
+        m_SecondsTimeout(secondsTimeout),
         m_OverallProgress(0.0),
         m_FinishedWorkersCount(0),
         m_AnyFailed(false)
@@ -138,7 +141,7 @@ namespace Conectivity {
                                         bool includeVectors) {
 
         if (artworksToUpload.isEmpty() || uploadInfos.isEmpty()) {
-            qWarning() << "Trying to upload" << artworksToUpload.size() << "files to" << uploadInfos.size() << "hosts";
+            qWarning() << "FtpCoordinator::uploadArtworks #" << "Trying to upload" << artworksToUpload.size() << "files to" << uploadInfos.size() << "hosts";
             return;
         }
 
@@ -146,6 +149,7 @@ namespace Conectivity {
         QVector<UploadBatch*> batches = generateUploadBatches(artworksToUpload,
                                                               uploadInfos,
                                                               secretsManager,
+                                                              m_SecondsTimeout,
                                                               includeVectors);
 
         Q_ASSERT(batches.size() == uploadInfos.size());
@@ -178,12 +182,12 @@ namespace Conectivity {
     }
 
     void FtpCoordinator::cancelUpload() {
-        qDebug() << "Cancelling upload in coordinator";
+        qDebug() << "FtpCoordinator::cancelUpload #";
         emit cancelAll();
     }
 
     void FtpCoordinator::transferFailed(const QString &filepath, const QString &host) {
-        qWarning() << "Upload failed for file [" << filepath << "] to host {" << host << "}";
+        qWarning() << "FtpCoordinator::transferFailed #" << "Upload failed for file [" << filepath << "] to host {" << host << "}";
         // TODO: show failed transfers on the UI
     }
 
@@ -213,7 +217,7 @@ namespace Conectivity {
         m_AllWorkersCount = uploadBatchesCount;
         m_FinishedWorkersCount = 0;
         m_OverallProgress = 0.0;
-        qDebug() << "Initializing CURL";
+        qDebug() << "FtpCoordinator::initUpload #" << "Initializing CURL";
 
         curl_global_init(CURL_GLOBAL_ALL);
     }
@@ -221,6 +225,6 @@ namespace Conectivity {
     void FtpCoordinator::finalizeUpload() {
         Q_ASSERT(m_FinishedWorkersCount == m_AllWorkersCount);
         curl_global_cleanup();
-        qDebug() << "Cleaning up CURL";
+        qDebug() << "FtpCoordinator::finalizeUpload #" << "Cleaning up CURL";
     }
 }

@@ -63,14 +63,14 @@ namespace Conectivity {
             m_TelemetryEnabled = value;
 
             if (m_TelemetryEnabled) {
-                qDebug()<<"Telemetry enabled by setting";
+                qDebug() << "TelemetryService::changeReporting #" << "Telemetry enabled by setting";
             } else {
-                qDebug()<<"Telemetry disabled by setting";
+                qDebug() << "TelemetryService::changeReporting #" << "Telemetry disabled by setting";
                 doReportAction(UserActionTurnOffTelemetry);
             }
         }
 #else
-        qDebug()<<"Setting telemetry to"<<value<<"but it is disabled at compile time";
+        qDebug() << "TelemetryService::changeReporting #" << "Setting telemetry to" << value << "but it is disabled at compile time";
 #endif
     }
 
@@ -80,7 +80,7 @@ namespace Conectivity {
 
     void TelemetryService::doReportAction(UserAction action) {
         AnalyticsUserEvent userEvent(action);
-        qInfo() << "Reporting action" << userEvent.getActionString();
+        qInfo() << "TelemetryService::doReportAction #" << "Reporting action" << userEvent.getActionString();
 
         QUrlQuery query;
         query.addQueryItem(QLatin1String("idsite"), QLatin1String("1"));
@@ -120,7 +120,7 @@ namespace Conectivity {
 
 
 #ifdef QT_DEBUG
-        qDebug() << "Telemetry request" << reportingUrl;
+        qDebug() << "TelemetryService::doReportAction #" << "Telemetry request" << reportingUrl;
 #endif
 
         QNetworkRequest request(reportingUrl);
@@ -149,7 +149,7 @@ namespace Conectivity {
         if (networkReply->error() != QNetworkReply::NoError) {
             // TODO: add tracking of failed items
 
-            qWarning() << "Failed to process a telemetry report." << networkReply->errorString();;
+            qWarning() << "TelemetryService::replyReceived #" << "Failed to process a telemetry report." << networkReply->errorString();;
         }
 
         networkReply->deleteLater();

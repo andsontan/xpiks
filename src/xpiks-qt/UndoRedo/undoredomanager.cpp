@@ -26,7 +26,7 @@
 UndoRedo::UndoRedoManager::~UndoRedoManager() { qDeleteAll(m_HistoryStack); }
 
 void UndoRedo::UndoRedoManager::recordHistoryItem(UndoRedo::HistoryItem *historyItem) {
-    qInfo() << "History item about to be recorded:" << historyItem->getActionType();
+    qInfo() << "UndoRedoManager::recordHistoryItem #" << "History item about to be recorded:" << historyItem->getActionType();
 
     QMutexLocker locker(&m_Mutex);
 

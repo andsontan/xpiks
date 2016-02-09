@@ -90,7 +90,7 @@ void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const Q
             break;
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 1))
         case QtInfoMsg:
-            logLine = QString("%1 - Info: %2").arg(time).arg(msg);
+            logLine = QString("%1 - Info:  %2").arg(time).arg(msg);
             break;
 #endif
     }
@@ -143,7 +143,9 @@ int main(int argc, char *argv[]) {
     if (!appDataPath.isEmpty()) {
         QDir appDataDir(appDataPath);
 
-        QString logFilePath = appDataDir.filePath(Constants::LOG_FILENAME);
+        QString time = QDateTime::currentDateTimeUtc().toString("ddMMyyyy-hhmmss-zzz");
+        QString logFilename = QString("xpiks-qt-%1.log").arg(time);
+        QString logFilePath = appDataDir.filePath(logFilename);
         Helpers::Logger &logger = Helpers::Logger::getInstance();
         logger.setLogFilePath(logFilePath);
 
@@ -168,11 +170,23 @@ int main(int argc, char *argv[]) {
     logsModel.startLogging();
 
     qInstallMessageHandler(myMessageHandler);
-    qDebug() << "Log started";
+    qInfo() << "main #" << "Log started." << "Xpiks" << XPIKS_VERSION_STRING;
+
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
+    qInfo() << "main #" << QSysInfo::productType() << QSysInfo::productVersion();
+#else
+#ifdef Q_OS_WIN
+    qInfo() << "main #" << QLatin1String("Windows Qt<5.4");
+#elsif Q_OS_DARWIN
+    qInfo() << "main #" << QLatin1String("OS X Qt<5.4");
+#else
+    qInfo() << "main #" << QLatin1String("LINUX Qt<5.4");
+#endif
+#endif
 
     QApplication app(argc, argv);
 
-    qDebug() << "Working directory of xpiks is:" << QDir::currentPath();
+    qDebug() << "main #" << "Working directory of Xpiks is:" << QDir::currentPath();
 
     localLibrary.loadLibraryAsync();
 
@@ -194,7 +208,7 @@ int main(int argc, char *argv[]) {
     Models::FilteredArtItemsProxyModel filteredArtItemsModel;
     filteredArtItemsModel.setSourceModel(&artItemsModel);
     Models::RecentDirectoriesModel recentDirectorieModel;
-    Models::ArtworkUploader artworkUploader(settingsModel.getMaxParallelUploads());
+    Models::ArtworkUploader artworkUploader(settingsModel.getMaxParallelUploads(), settingsModel.getUploadTimeout());
     SpellCheck::SpellCheckerService spellCheckerService;
     SpellCheck::SpellCheckSuggestionModel spellCheckSuggestionModel;
     MetadataIO::BackupSaverService metadataSaverService;
@@ -271,9 +285,9 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("metadataIOCoordinator", &metadataIOCoordinator);
 
     engine.addImageProvider("global", globalProvider);
-    qDebug() << "About to load main view...";
+    qDebug() << "main #" << "About to load main view...";
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
-    qDebug() << "Main view loaded";
+    qDebug() << "main #" << "Main view loaded";
 
 #ifdef QT_DEBUG
     if (argc > 1) {

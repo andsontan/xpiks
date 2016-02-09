@@ -24,9 +24,10 @@
 
 #include <QSize>
 #include <QStringList>
+#include "../Common/isafepointer.h"
 
 namespace Warnings {
-    class IWarningsCheckable {
+    class IWarningsCheckable : public virtual Common::ISafePointer {
     public:
         virtual QSize getSize() const = 0;
         virtual const QString &getDescription() const = 0;

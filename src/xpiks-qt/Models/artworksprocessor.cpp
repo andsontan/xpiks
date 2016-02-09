@@ -33,37 +33,33 @@ namespace Models {
         updateProgress();
     }
 
-    void ArtworksProcessor::beginProcessing()
-    {
+    void ArtworksProcessor::beginProcessing() {
         m_ExistingMaxThreadsNumber = QThreadPool::globalInstance()->maxThreadCount();
-        qDebug() << "Saving pools max threads" << m_ExistingMaxThreadsNumber;
+        qDebug() << "ArtworksProcessor::beginProcessing #" << "Saving pools max threads" << m_ExistingMaxThreadsNumber;
         m_ArtworksCount = m_ArtworkList.length();
         m_ProcessedArtworksCount = 0;
         updateProgress();
         setInProgress(true);
     }
 
-    void ArtworksProcessor::endProcessing()
-    {
+    void ArtworksProcessor::endProcessing() {
         m_ProcessedArtworksCount = 0;
         m_ArtworksCount = 0;
-        qDebug() << "Restoring pool max threads to" << m_ExistingMaxThreadsNumber;
+        qDebug() << "ArtworksProcessor::endProcessing #" << "Restoring pool max threads to" << m_ExistingMaxThreadsNumber;
         QThreadPool::globalInstance()->setMaxThreadCount(m_ExistingMaxThreadsNumber);
         setInProgress(false);
         emit finishedProcessing();
     }
 
-    void ArtworksProcessor::endAfterFirstError()
-    {
+    void ArtworksProcessor::endAfterFirstError() {
         setIsError(true);
         m_ProcessedArtworksCount = m_ArtworksCount;
         updateProgress();
         endProcessing();
     }
 
-    void ArtworksProcessor::restrictMaxThreads()
-    {
-        qDebug() << "Restricting max threads to" << (int)MAX_WORKER_THREADS;
+    void ArtworksProcessor::restrictMaxThreads() {
+        qDebug() << "ArtworksProcessor::restrictMaxThreads #" << (int)MAX_WORKER_THREADS;
         QThreadPool::globalInstance()->setMaxThreadCount((int)MAX_WORKER_THREADS);
     }
 }

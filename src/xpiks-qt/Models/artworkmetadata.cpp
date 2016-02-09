@@ -43,7 +43,6 @@ namespace Models {
     }
 
     ArtworkMetadata::~ArtworkMetadata() {
-        this->disconnect();
         this->freeSpellCheckInfo();
     }
 

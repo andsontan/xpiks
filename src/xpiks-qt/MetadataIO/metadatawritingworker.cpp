@@ -93,7 +93,7 @@ namespace MetadataIO {
     }
 
     MetadataWritingWorker::~MetadataWritingWorker() {
-        qDebug() << "Writing worker destroyed";
+        qDebug() << " MetadataWritingWorker::~MetadataWritingWorker #" << "destroyed";
     }
 
     void MetadataWritingWorker::process() {
@@ -103,7 +103,7 @@ namespace MetadataIO {
 
         QTemporaryFile jsonFile;
         if (jsonFile.open()) {
-            qDebug() << "Serializing artworks to json" << jsonFile.fileName();
+            qDebug() << "MetadataWritingWorker::process #" << "Serializing artworks to json" << jsonFile.fileName();
             QJsonArray objectsToSave;
             artworksToJsonArray(m_ItemsToWrite, objectsToSave);
             QJsonDocument document(objectsToSave);
@@ -127,12 +127,12 @@ namespace MetadataIO {
                 arguments << "-IPTC:CodedCharacterSet=UTF8" << "-@" << argumentsFile.fileName();
                 argumentsFile.close();
 
-                qDebug() << "Starting exiftool process:" << exiftoolPath;
+                qDebug() << "MetadataWritingWorker::process #" << "Starting exiftool process:" << exiftoolPath;
 
                 m_ExiftoolProcess->start(exiftoolPath, arguments);
                 success = m_ExiftoolProcess->waitForFinished();
 
-                qDebug() << "Exiftool process finished.";
+                qDebug()<< "MetadataWritingWorker::process #"  << "Exiftool process finished.";
 
                 int exitCode = m_ExiftoolProcess->exitCode();
                 QProcess::ExitStatus exitStatus = m_ExiftoolProcess->exitStatus();
@@ -141,10 +141,10 @@ namespace MetadataIO {
                         (exitCode == 0) &&
                         (exitStatus == QProcess::NormalExit);
 
-                qDebug() << "Exiftool exitcode =" << exitCode << "exitstatus =" << exitStatus;
+                qDebug() << "MetadataWritingWorker::process #" << "Exiftool exitcode =" << exitCode << "exitstatus =" << exitStatus;
 
                 if (!success) {
-                    qWarning() << "Exiftool error string:" << m_ExiftoolProcess->errorString();
+                    qWarning() << "MetadataWritingWorker::process #" << "Exiftool error string:" << m_ExiftoolProcess->errorString();
                 }
             }
         }
@@ -154,15 +154,15 @@ namespace MetadataIO {
 
     void MetadataWritingWorker::innerProcessFinished(int exitCode, QProcess::ExitStatus exitStatus) {
         Q_UNUSED(exitStatus);
-        qDebug() << "Exiftool finished with exitcode" << exitCode;
+        qDebug() << "MetadataWritingWorker::innerProcessFinished #" << "Exiftool finished with exitcode" << exitCode;
 
         QByteArray stdoutByteArray = m_ExiftoolProcess->readAllStandardOutput();
         QString stdoutText(stdoutByteArray);
-        qDebug() << "STDOUT [ExifTool]:" << stdoutText;
+        qDebug() << "MetadataWritingWorker::innerProcessFinished #" << "STDOUT [ExifTool]:" << stdoutText;
 
         QByteArray stderrByteArray = m_ExiftoolProcess->readAllStandardError();
         QString stderrText(stderrByteArray);
-        qDebug() << "STDERR [Exiftool]:" << stderrText;
+        qDebug() << "MetadataWritingWorker::innerProcessFinished #" << "STDERR [Exiftool]:" << stderrText;
     }
 
     void MetadataWritingWorker::initWorker() {

@@ -31,7 +31,7 @@ namespace Models {
 
     void UploadInfoRepository::initFromString(const QString &savedString)
     {
-        qInfo() << "Initializing upload infos from string";
+        qInfo() << "UploadInfoRepository::initFromString #";
         QByteArray originalData;
         originalData.append(savedString.toLatin1());
         QByteArray result = QByteArray::fromBase64(originalData);
@@ -54,7 +54,7 @@ namespace Models {
 
     void UploadInfoRepository::addItem() {
         int lastIndex = m_UploadInfos.length();
-        qInfo() << "Appending upload info" << lastIndex;
+        qInfo() << "UploadInfoRepository::addItem #" << lastIndex;
         beginInsertRows(QModelIndex(), lastIndex, lastIndex);
         m_UploadInfos.append(new UploadInfo());
         endInsertRows();
@@ -62,7 +62,7 @@ namespace Models {
     }
 
     QString UploadInfoRepository::getInfoString() const {
-        qInfo() << "Serializing upload infos to string";
+        qDebug() << "UploadInfoRepository::getInfoString #" << "Serializing infos";
         // bad type QList instead of QVector
         // but users already have this
         QList<QHash<int, QString> > items;
@@ -150,7 +150,7 @@ namespace Models {
     }
 
     void UploadInfoRepository::resetPercents() {
-        qDebug() << "Resetting percents for upload items";
+        qDebug() << "UploadInfoRepository::resetPercents #";
         foreach (UploadInfo *info, m_UploadInfos) { info->resetPercent(); }
     }
 
@@ -279,12 +279,12 @@ namespace Models {
 
     void UploadInfoRepository::onBeforeMasterPasswordChanged(const QString &oldMasterPassword,
                                                              const QString &newMasterPassword) {
-        qInfo() << "Before master password change";
+        qInfo() << "UploadInfoRepository::onBeforeMasterPasswordChanged #";
         m_CommandManager->recodePasswords(oldMasterPassword, newMasterPassword, m_UploadInfos);
     }
 
     void UploadInfoRepository::onAfterMasterPasswordReset() {
-        qInfo() << "After master password reset";
+        qInfo() << "UploadInfoRepository::onAfterMasterPasswordReset #";
         foreach (UploadInfo *info, m_UploadInfos) {
             info->dropPassword();
         }

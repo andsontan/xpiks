@@ -240,7 +240,7 @@ Item {
                                             Common.launchItemEditing(itemindex, componentParent,
                                                                      {
                                                                          applyCallback: function() {
-                                                                             console.log("Rechecking [" + imageWrapper.delegateIndex + "] item")
+                                                                             console.log("UI:WarningsDialog # Rechecking [" + imageWrapper.delegateIndex + "] item")
                                                                              warningsManager.recheckItem(imageWrapper.delegateIndex)
                                                                          }
                                                                      })

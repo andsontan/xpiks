@@ -30,7 +30,7 @@
 #include "addartworksitem.h"
 
 void UndoRedo::RemoveArtworksHistoryItem::undo(const Commands::CommandManager *commandManager) const {
-    qDebug() << "Undo: remove artworks command";
+    qInfo() << "RemoveArtworksHistoryItem::undo #";
 
     QVector<QPair<int, int> > ranges;
     Helpers::indicesToRanges(m_RemovedArtworksIndices, ranges);

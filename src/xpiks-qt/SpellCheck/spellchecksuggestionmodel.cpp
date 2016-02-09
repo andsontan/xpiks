@@ -129,7 +129,7 @@ namespace SpellCheck {
 
     void SpellCheckSuggestionModel::setupModel(SpellCheck::ISpellCheckable *item, int index, int flags) {
         Q_ASSERT(item != NULL);
-        qInfo() << "Setting suggestions with flags" << flags;
+        qInfo() << "SpellCheckSuggestionModel::setupModel #" << "flags =" << flags;
         QVector<SpellSuggestionsItem*> requests;
 
         if (Common::HasFlag(flags, Common::CorrectKeywords)) {
@@ -161,7 +161,7 @@ namespace SpellCheck {
     }
 
     QVector<SpellSuggestionsItem *> SpellCheckSuggestionModel::setupSuggestions(const QVector<SpellSuggestionsItem *> &items) {
-        qDebug() << "Suggesting corrections for" << items.length() << "item(s)";
+        qDebug() << "SpellCheckSuggestionModel::setupSuggestions #" << items.length() << "item(s)";
         SpellCheckerService *service = m_CommandManager->getSpellCheckerService();
         // another vector for requests with available suggestions
         QVector<SpellSuggestionsItem*> executedRequests;

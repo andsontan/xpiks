@@ -40,7 +40,7 @@ namespace Conectivity {
     class FtpCoordinator : public QObject, public Common::BaseEntity {
         Q_OBJECT
     public:
-        explicit FtpCoordinator(int maxParallelUploads, QObject *parent = 0);
+        explicit FtpCoordinator(int maxParallelUploads, int secondsTimeout, QObject *parent = 0);
 
     public:
         void uploadArtworks(const QVector<Models::ArtworkMetadata *> &artworksToUpload,
@@ -67,6 +67,7 @@ namespace Conectivity {
         QMutex m_WorkerMutex;
         QSemaphore m_UploadSemaphore;
         int m_MaxParallelUploads;
+        int m_SecondsTimeout;
         double m_OverallProgress;
         QAtomicInt m_FinishedWorkersCount;
         volatile int m_AllWorkersCount;
