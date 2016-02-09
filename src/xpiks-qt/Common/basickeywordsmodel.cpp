@@ -26,7 +26,7 @@
 #include "../SpellCheck/spellcheckiteminfo.h"
 #include "../Helpers/keywordvalidator.h"
 #include "../Helpers/stringhelper.h"
-#include "./Common/flags.h"
+#include "flags.h"
 
 namespace Common {
     BasicKeywordsModel::BasicKeywordsModel(QObject *parent):
@@ -286,13 +286,17 @@ namespace Common {
         clearKeywords();
     }
 
-    void BasicKeywordsModel::clearKeywords() {
+    bool BasicKeywordsModel::clearKeywords() {
+        bool result = !m_KeywordsList.isEmpty();
+
         beginResetModel();
         m_KeywordsList.clear();
         endResetModel();
 
         m_SpellCheckResults.clear();
         m_KeywordsSet.clear();
+
+        return result;
     }
 
     void BasicKeywordsModel::resetKeywords(const QStringList &keywords) {

@@ -63,8 +63,10 @@ namespace Models {
             EditZipBeforeUploadRole,
             EditUploadDirectoryRole,
             PercentRole,
-            FtpPassiveModeRole,
-            EditFtpPassiveModeRole
+            /*DEPRECATED*/FtpPassiveModeRole,
+            /*DEPRECATED*/EditFtpPassiveModeRole,
+            DisableFtpPassiveModeRole,
+            EditDisableFtpPassiveModeRole
         };
 
         int getInfosCount() const { return m_UploadInfos.length(); }
@@ -89,6 +91,7 @@ namespace Models {
         Q_INVOKABLE void initializeAccounts(bool mpIsCorrectOrEmpty);
         Q_INVOKABLE void finalizeAccounts();
         Q_INVOKABLE bool isMasterPasswordCorrectOrEmpty() const { return !m_EmptyPasswordsMode; }
+        Q_INVOKABLE void setAllUnselected();
 
     public:
         void setEmptyPasswordsMode(bool mode) { m_EmptyPasswordsMode = mode; }
@@ -101,6 +104,7 @@ namespace Models {
 
     public:
         const QVector<UploadInfo*> &getUploadInfos() const { return m_UploadInfos; }
+        QVector<UploadInfo*> retrieveSelectedUploadInfos() const;
 
     public:
         virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;

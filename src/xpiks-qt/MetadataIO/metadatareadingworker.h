@@ -77,7 +77,7 @@ namespace MetadataIO {
         void initWorker();
         QStringList createArgumentsList();
         void parseExiftoolOutput(const QByteArray &output);
-        void readBackupsAndSizes();
+        void readBackupsAndSizes(bool exiftoolSuccess);
         void readSizes();
 
     private:

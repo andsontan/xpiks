@@ -136,6 +136,7 @@ namespace MetadataIO {
         QTemporaryFile argumentsFile;
 
         if (argumentsFile.open()) {
+            qDebug() << "Created arguments file" << argumentsFile.fileName();
             QTextStream out(&argumentsFile);
             QStringList exiftoolArguments = createArgumentsList();
             foreach (const QString &line, exiftoolArguments) {
@@ -143,26 +144,36 @@ namespace MetadataIO {
             }
 
             out.flush();
+            argumentsFile.close();
 
             QString exiftoolPath = m_SettingsModel->getExifToolPath();
             QStringList arguments;
             arguments << "-@" << argumentsFile.fileName();
-            argumentsFile.close();
 
+            qDebug() << "Starting exiftool process:" << exiftoolPath;
             m_ExiftoolProcess->start(exiftoolPath, arguments);
 
             success = m_ExiftoolProcess->waitForFinished();
+            qDebug() << "Exiftool process finished.";
+
+            int exitCode = m_ExiftoolProcess->exitCode();
+            QProcess::ExitStatus exitStatus = m_ExiftoolProcess->exitStatus();
+
             success = success &&
-                    (m_ExiftoolProcess->exitCode() == 0) &&
-                    (m_ExiftoolProcess->exitStatus() == QProcess::NormalExit);
+                    (exitCode == 0) &&
+                    (exitStatus == QProcess::NormalExit);
+
+            qDebug() << "Exiftool exitcode =" << exitCode << "exitstatus =" << exitStatus;
 
             if (success) {
                 QByteArray stdoutByteArray = m_ExiftoolProcess->readAllStandardOutput();
                 parseExiftoolOutput(stdoutByteArray);
+            } else {
+                qWarning() << "Exiftool error string:" << m_ExiftoolProcess->errorString();
             }
 
             if (m_SettingsModel->getSaveBackups()) {
-                readBackupsAndSizes();
+                readBackupsAndSizes(success);
             } else {
                 readSizes();
             }
@@ -239,7 +250,7 @@ namespace MetadataIO {
         }
     }
 
-    void MetadataReadingWorker::readBackupsAndSizes() {
+    void MetadataReadingWorker::readBackupsAndSizes(bool exiftoolSuccess) {
         qDebug() << "Reading backups of items...";
         int size = m_ItemsToRead.size();
         for (int i = 0; i < size; ++i) {
@@ -248,7 +259,10 @@ namespace MetadataIO {
 
             MetadataSavingCopy copy(metadata);
             if (copy.readFromFile()) {
-                Q_ASSERT(m_ImportResult.contains(filepath));
+                if (exiftoolSuccess) {
+                    Q_ASSERT(m_ImportResult.contains(filepath));
+                }
+
                 m_ImportResult[filepath].BackupDict = copy.getInfo();
             }
 

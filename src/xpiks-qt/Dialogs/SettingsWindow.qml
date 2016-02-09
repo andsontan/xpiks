@@ -34,7 +34,7 @@ ApplicationWindow {
     modality: "ApplicationModal"
     title: qsTr("Settings")
     width: 550
-    height: 280
+    height: 260
     minimumWidth: width
     maximumWidth: width
     minimumHeight: height
@@ -42,10 +42,11 @@ ApplicationWindow {
     flags: Qt.Dialog
 
     signal dialogDestruction();
-    Component.onDestruction: dialogDestruction();
+
+    onClosing: dialogDestruction();
 
     function closeSettings() {
-        settingsWindow.destroy();
+        settingsWindow.close()
     }
 
     function onCancelMP(firstTime) {
@@ -86,24 +87,6 @@ ApplicationWindow {
             console.log("You chose: " + exifToolFileDialog.fileUrl)
             var path = exifToolFileDialog.fileUrl.toString().replace(/^(file:\/{3})/,"");
             settingsModel.exifToolPath = decodeURIComponent(path);
-        }
-
-        onRejected: {
-            console.log("File dialog canceled")
-        }
-    }
-
-    FileDialog {
-        id: curlFileDialog
-        title: "Please choose curl location"
-        selectExisting: true
-        selectMultiple: false
-        nameFilters: [ "All files (*)" ]
-
-        onAccepted: {
-            console.log("You chose: " + curlFileDialog.fileUrl)
-            var path = curlFileDialog.fileUrl.toString().replace(/^(file:\/{3})/,"");
-            settingsModel.curlPath = decodeURIComponent(path);
         }
 
         onRejected: {
@@ -204,6 +187,7 @@ ApplicationWindow {
                 Tab {
                     id: behaviorTab
                     title: qsTr("Behavior")
+                    property bool useStatistics: settingsModel.userStatistic
 
                     ColumnLayout {
                         anchors.fill: parent
@@ -289,23 +273,7 @@ ApplicationWindow {
                                 color: Colors.defaultInputBackground
                             }
                         }
-                        RowLayout {
-                            width: parent.width
-                            spacing: 10
-                            StyledCheckbox {
-                                id: userStatisticCheckBox
-                                text: qsTr("Collect usage statistic")
-                                onCheckedChanged: {
-                                    settingsModel.userStatistic = checked
-                                }
 
-                                Component.onCompleted: checked = settingsModel.userStatistic
-                            }
-                            StyledText {
-                                text: qsTr("(simple statistic of feature usage)")
-                                color: Colors.defaultInputBackground
-                            }
-                        }
                         Item {
                             Layout.fillHeight: true
                         }
@@ -507,7 +475,6 @@ ApplicationWindow {
                                     text: settingsModel.exifToolPath
                                     anchors.left: parent.left
                                     anchors.leftMargin: 5
-                                    KeyNavigation.tab: curlText
                                     onTextChanged: settingsModel.exifToolPath = text
                                 }
                             }
@@ -528,92 +495,52 @@ ApplicationWindow {
                                 onClicked: settingsModel.resetExifTool()
                             }
 
+
                             StyledText {
-                                Layout.row: 1
+                                Layout.row: 2
                                 Layout.column: 0
                                 Layout.fillWidth: true
                                 Layout.maximumWidth: 80
                                 horizontalAlignment: Text.AlignRight
-                                text: qsTr("Curl path:")
+                                text: qsTr("Dictionary path:")
+                                visible: Qt.platform.os === "linux"
                             }
 
                             StyledInputHost {
-                                border.width: curlText.activeFocus ? 1 : 0
-                                Layout.row: 1
+                                border.width: dictText.activeFocus ? 1 : 0
+                                Layout.row: 2
                                 Layout.column: 1
+                                visible: Qt.platform.os === "linux"
 
                                 StyledTextInput {
-                                    id: curlText
+                                    id: dictText
                                     width: 150
                                     height: 24
                                     clip: true
-                                    text: settingsModel.curlPath
+                                    text: settingsModel.dictionaryPath
                                     anchors.left: parent.left
                                     anchors.leftMargin: 5
-                                    KeyNavigation.backtab: exifToolText
-                                    onTextChanged: settingsModel.curlPath = text
+                                    onTextChanged: settingsModel.dictionaryPath = text
                                 }
                             }
 
                             StyledButton {
-                                Layout.row: 1
+                                Layout.row: 2
                                 Layout.column: 2
                                 text: qsTr("Select...")
                                 width: 70
-                                onClicked: curlFileDialog.open()
+                                onClicked: dictPathDialog.open()
+                                visible: Qt.platform.os === "linux"
                             }
 
                             StyledButton {
-                                Layout.row: 1
+                                Layout.row: 2
                                 Layout.column: 3
                                 text: qsTr("Reset")
                                 width: 70
-                                onClicked: settingsModel.resetCurl()
+                                onClicked: settingsModel.resetDictPath()
+                                visible: Qt.platform.os === "linux"
                             }
-
-                            StyledText {
-                                                            Layout.row: 2
-                                                            Layout.column: 0
-                                                            Layout.fillWidth: true
-                                                            Layout.maximumWidth: 80
-                                                            horizontalAlignment: Text.AlignRight
-                                                            text: qsTr("Dictionary path:")
-                                                        }
-
-                                                        StyledInputHost {
-                                                            border.width: dictText.activeFocus ? 1 : 0
-                                                            Layout.row: 2
-                                                            Layout.column: 1
-
-                                                            StyledTextInput {
-                                                                id: dictText
-                                                                width: 150
-                                                                height: 24
-                                                                clip: true
-                                                                text: settingsModel.dictionaryPath
-                                                                anchors.left: parent.left
-                                                                anchors.leftMargin: 5
-                                                                KeyNavigation.backtab: curlText
-                                                                onTextChanged: settingsModel.dictionaryPath = text
-                                                            }
-                                                        }
-
-                                                        StyledButton {
-                                                            Layout.row: 2
-                                                            Layout.column: 2
-                                                            text: qsTr("Select...")
-                                                            width: 70
-                                                            onClicked: dictPathDialog.open()
-                                                        }
-
-                                                        StyledButton {
-                                                            Layout.row: 2
-                                                            Layout.column: 3
-                                                            text: qsTr("Reset")
-                                                            width: 70
-                                                            onClicked: settingsModel.resetDictPath()
-                                                        }
-
                         }
 
                         Item {
@@ -766,7 +693,7 @@ ApplicationWindow {
                     title: qsTr("Upload")
 
                     ColumnLayout {
-                        spacing: 10
+                        spacing: 20
                         anchors.fill: parent
                         anchors.margins: {left: 20; top: 30; right: 20; bottom: 20}
 
@@ -851,71 +778,6 @@ ApplicationWindow {
                         }
 
                         Item {
-                            height: 5
-                            width: parent.width
-                        }
-
-                        RowLayout {
-                            width: parent.width
-                            spacing: 10
-
-                            StyledText {
-                                Layout.preferredWidth: 130
-                                horizontalAlignment: Text.AlignRight
-                                text: qsTr("Proxy url:")
-                            }
-
-                            StyledInputHost {
-                                border.width: proxyURI.activeFocus ? 1 : 0
-
-                                StyledTextInput {
-                                    id: proxyURI
-                                    width: 100
-                                    height: 24
-                                    clip: true
-                                    text: settingsModel.proxyURI
-                                    anchors.left: parent.left
-                                    anchors.leftMargin: 5
-                                    onTextChanged: {
-                                        if (text.length > 0) {
-                                            settingsModel.proxyURI = parseInt(text)
-                                        }
-                                    }
-                                    KeyNavigation.backtab: timeoutMinutes
-                                    validator: IntValidator {
-                                        bottom: 1
-                                        top: 4
-                                    }
-                                }
-                            }
-
-                            StyledText {
-                                text: qsTr("(see format below)")
-                                color: Colors.defaultInputBackground
-                            }
-                        }
-
-                        RowLayout {
-                            width: parent.width
-                            spacing: 10
-                            StyledText {
-                                Layout.preferredWidth: 130
-                                color: Colors.defaultInputBackground
-                                horizontalAlignment: Text.AlignRight
-                                text: qsTr("Proxy url format:")
-                            }
-
-                            StyledText {
-                                text: qsTr("[protocol://][user:password@]proxyhost[:port]")
-                                color: Colors.defaultInputBackground
-                            }
-
-                            Item {
-                                Layout.fillWidth: true
-                            }
-                        }
-
-                        Item {
                             Layout.fillHeight: true
                         }
                     }
@@ -987,6 +849,80 @@ ApplicationWindow {
                         }
 
                         Item {
+                            id: container
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            height: childrenRect.height
+                            property bool expanded: false
+
+                            StyledText {
+                                id: link
+                                text: qsTr("More...")
+                                color: Colors.artworkActiveColor
+                                anchors.top: parent.top
+                                anchors.left: parent.left
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    cursorShape: Qt.PointingHandCursor
+                                    onClicked: {
+                                        if (container.expanded) {
+                                            container.expanded = false
+                                            contentsRect.height = 0
+                                            link.text = qsTr("More...")
+                                        } else {
+                                            contentsRect.height = 50
+                                            container.expanded = true
+                                            link.text = qsTr("Less...")
+                                        }
+                                    }
+                                }
+                            }
+
+                            Rectangle {
+                                id: contentsRect
+                                color: "transparent"
+                                border.color: Colors.defaultControlColor
+                                border.width: 1
+                                anchors.left: parent.left
+                                anchors.top: link.bottom
+                                anchors.topMargin: 5
+                                height: 0
+                                width: parent.width
+
+                                Behavior on height {
+                                    NumberAnimation {
+                                        duration: 200
+                                        easing.type: Easing.InQuad
+                                    }
+                                }
+
+                                RowLayout {
+                                    visible: container.expanded
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: 10
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    spacing: 10
+
+                                    StyledCheckbox {
+                                        id: userStatisticCheckBox
+                                        text: qsTr("Collect usage statistic")
+                                        onCheckedChanged: {
+                                            behaviorTab.useStatistics = checked
+                                        }
+
+                                        Component.onCompleted: checked = settingsModel.userStatistic
+                                    }
+
+                                    StyledText {
+                                        text: qsTr("(simple statistic of feature usage)")
+                                        color: Colors.defaultInputBackground
+                                    }
+                                }
+                            }
+                        }
+
+                        Item {
                             Layout.fillHeight: true
                         }
                     }
@@ -1032,6 +968,7 @@ ApplicationWindow {
                     onClicked: {
                         settingsModel.keywordSizeScale = uxTab.sizeSliderValue
                         settingsModel.scrollSpeedScale = uxTab.scrollSliderValue
+                        settingsModel.userStatistic = behaviorTab.useStatistics
                         settingsModel.saveAllValues()
                         closeSettings()
                     }

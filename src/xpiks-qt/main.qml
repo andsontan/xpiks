@@ -67,6 +67,7 @@ ApplicationWindow {
             console.debug("No modified artworks found. Exiting...")
             applicationWindow.visibility = "Minimized"
             helpersWrapper.beforeDestruction();
+            appSettings.protectTelemetry();
             closingTimer.start()
         }
     }
@@ -213,6 +214,35 @@ ApplicationWindow {
         }
 
         Menu {
+            title: qsTr("Edit")
+
+            MenuItem {
+                text: qsTr("&Remove metadata from selected")
+                enabled: filteredArtItemsModel.selectedArtworksCount > 0
+                onTriggered: {
+                    console.log("Remove metadata from selected triggered")
+                    removeMetadataDialog.open()
+                }
+            }
+
+            MenuItem {
+                text: qsTr("&Cleanup local library in background")
+                onTriggered: {
+                    console.log("Cleanup local library triggered")
+                    helpersWrapper.cleanupLocalLibrary()
+                }
+            }
+
+            MenuItem {
+                text: qsTr("&Manage upload hosts")
+                onTriggered: {
+                    console.log("Manage upload hosts triggered")
+                    openUploadDialog()
+                }
+            }
+        }
+
+        Menu {
             title: qsTr("Tools")
             enabled: applicationWindow.openedDialogsCount == 0
 
@@ -255,23 +285,6 @@ ApplicationWindow {
                     filteredArtItemsModel.spellCheckSelected()
                     Common.launchDialog("Dialogs/SpellCheckDialog.qml",
                                         applicationWindow, {});
-                }
-            }
-
-            MenuItem {
-                text: qsTr("&Remove metadata from selected")
-                enabled: filteredArtItemsModel.selectedArtworksCount > 0
-                onTriggered: {
-                    console.log("Remove metadata from selected triggered")
-                    removeMetadataDialog.open()
-                }
-            }
-
-            MenuItem {
-                text: qsTr("&Cleanup local library in background")
-                onTriggered: {
-                    console.log("Cleanup local library triggered")
-                    helpersWrapper.cleanupLocalLibrary()
                 }
             }
         }
@@ -1336,10 +1349,9 @@ ApplicationWindow {
                                                         Keys.onPressed: {
                                                             if(event.matches(StandardKey.Paste)) {
                                                                 var clipboardText = clipboard.getText();
-                                                                clipboardText = clipboardText.replace(/(\r\n|\n|\r)/gm, '');
-                                                                // same regexp as in validator
-                                                                descriptionTextInput.insert(descriptionTextInput.cursorPosition, clipboardText)
-                                                                event.accepted = true
+                                                                if (Common.safeInsert(descriptionTextInput, clipboardText)) {
+                                                                    event.accepted = true
+                                                                }
                                                             } else if ((event.key === Qt.Key_Return) || (event.key === Qt.Key_Enter)) {
                                                                 event.accepted = true
                                                             }
@@ -1412,10 +1424,9 @@ ApplicationWindow {
                                                         Keys.onPressed: {
                                                             if (event.matches(StandardKey.Paste)) {
                                                                 var clipboardText = clipboard.getText();
-                                                                clipboardText = clipboardText.replace(/(\r\n|\n|\r)/gm, '');
-                                                                // same regexp as in validator
-                                                                titleTextInput.insert(titleTextInput.cursorPosition, clipboardText)
-                                                                event.accepted = true
+                                                                if (Common.safeInsert(titleTextInput, clipboardText)) {
+                                                                    event.accepted = true
+                                                                }
                                                             } else if ((event.key === Qt.Key_Return) || (event.key === Qt.Key_Enter)) {
                                                                 event.accepted = true
                                                             }

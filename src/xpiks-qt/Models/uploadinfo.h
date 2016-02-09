@@ -22,22 +22,35 @@
 #ifndef UPLOADINFO
 #define UPLOADINFO
 
+#include <QObject>
 #include <QHash>
 #include <QMutex>
 #include <QString>
 #include <QByteArray>
+#include <cmath>
 
 namespace Models {
-    class UploadInfo {
+    class UploadInfo : public QObject {
+        Q_OBJECT
+
     private:
-        enum UField { TitleField = 0, HostField, UsernameField, PasswordField, DirectoryField, ZipField, FtpPassiveModeField };
+        enum UField {
+            TitleField = 0,
+            HostField = 1,
+            UsernameField = 2,
+            PasswordField = 3,
+            DirectoryField = 4,
+            ZipField = 5,
+            /*DEPRECATED*/FtpPassiveModeField = 6,
+            DisableFtpPassiveModeField = 7
+        };
 
     public:
         UploadInfo():
             m_Percent(0),
             m_ZipBeforeUpload(false),
             m_IsSelected(false),
-            m_FtpPassiveMode(false)
+            m_DisableFtpPassiveMode(false)
         {
             m_Title = QString::fromLatin1("Untitled");
         }
@@ -52,8 +65,11 @@ namespace Models {
             m_Username = items.value(UsernameField, emptyString);
             m_EncodedPassword = items.value(PasswordField, emptyString);
             m_ZipBeforeUpload = items.value(ZipField, "false") == QLatin1String("true");
-            m_FtpPassiveMode = items.value(FtpPassiveModeField, "false") == QLatin1String("true");
+            m_DisableFtpPassiveMode = items.value(DisableFtpPassiveModeField, "false") == QLatin1String("true");
         }
+
+    signals:
+        void progressChanged(double percent);
 
     public:
         const QString &getTitle() const { return m_Title; }
@@ -66,8 +82,8 @@ namespace Models {
         bool isSomethingMissing() const { return m_EncodedPassword.isEmpty() || m_Host.isEmpty() || m_Username.isEmpty(); }
         bool isEmpty() const { return m_EncodedPassword.isEmpty() && m_Host.isEmpty() && m_Username.isEmpty() &&
                     (m_Title.isEmpty() || m_Title == QLatin1String("Untitled")); }
-        int getPercent() const { return m_Percent; }
-        bool getFtpPassiveMode() const { return m_FtpPassiveMode; }
+        double getPercent() const { return m_Percent; }
+        bool getDisableFtpPassiveMode() const { return m_DisableFtpPassiveMode; }
 
     public:
         bool setTitle(const QString &value) { bool result = m_Title != value; m_Title = value; return result; }
@@ -92,9 +108,18 @@ namespace Models {
         void restorePassword() { m_EncodedPassword = m_EncodedPasswordBackup; }
         void backupPassword() { m_EncodedPasswordBackup = m_EncodedPassword; }
         void dropPassword() { m_EncodedPassword = ""; }
-        void setPercent(int value) { m_Percent = value; }
+        void setPercent(double value) {
+            if (m_Percent != value) {
+                m_Percent = value;
+                emit progressChanged(value);
+            }
+        }
         void resetPercent() { m_Percent = 0; }
-        bool setFtpPassiveMode(bool value) { bool result = m_FtpPassiveMode != value; m_FtpPassiveMode = value; return result; }
+        bool setDisableFtpPassiveMode(bool value) {
+            bool result = m_DisableFtpPassiveMode != value;
+            m_DisableFtpPassiveMode = value;
+            return result;
+        }
 
     public:
         QHash<int, QString> toHash() {
@@ -104,7 +129,7 @@ namespace Models {
             hash[UsernameField] = m_Username;
             hash[PasswordField] = m_EncodedPassword;
             hash[ZipField] = m_ZipBeforeUpload ? "true" : "false";
-            hash[FtpPassiveModeField] = m_FtpPassiveMode ? "true" : "false";
+            hash[DisableFtpPassiveModeField] = m_DisableFtpPassiveMode ? "true" : "false";
             return hash;
         }
 
@@ -116,10 +141,10 @@ namespace Models {
         QString m_EncodedPassword;
         // used for backup when MP is incorrect
         QString m_EncodedPasswordBackup;
-        volatile int m_Percent;
+        volatile double m_Percent;
         bool m_ZipBeforeUpload;
         bool m_IsSelected;
-        bool m_FtpPassiveMode;
+        bool m_DisableFtpPassiveMode;
     };
 }
 

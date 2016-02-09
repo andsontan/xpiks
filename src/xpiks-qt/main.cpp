@@ -172,6 +172,8 @@ int main(int argc, char *argv[]) {
 
     QApplication app(argc, argv);
 
+    qDebug() << "Working directory of xpiks is:" << QDir::currentPath();
+
     localLibrary.loadLibraryAsync();
 
     QString userId = appSettings.value(QLatin1String(Constants::USER_AGENT_ID)).toString();
@@ -198,8 +200,12 @@ int main(int argc, char *argv[]) {
     MetadataIO::BackupSaverService metadataSaverService;
     Helpers::UpdateService updateService;
     MetadataIO::MetadataIOCoordinator metadataIOCoordinator;
-
-    Conectivity::TelemetryService telemetryService(userId);
+#ifdef TELEMETRY_ENABLED
+    bool telemetryEnabled = appSettings.value(Constants::USER_STATISTIC,true ).toBool();
+#else
+    bool telemetryEnabled = appSettings.value(Constants::USER_STATISTIC,false).toBool();
+#endif
+    Conectivity::TelemetryService telemetryService(userId, telemetryEnabled);
 
     Commands::CommandManager commandManager;
     commandManager.InjectDependency(&artworkRepository);
@@ -221,7 +227,10 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&telemetryService);
     commandManager.InjectDependency(&updateService);
     commandManager.InjectDependency(&logsModel);
+    commandManager.InjectDependency(&localLibrary);
     commandManager.InjectDependency(&metadataIOCoordinator);
+
+    commandManager.ensureDependenciesInjected();
 
     // other initializations
     secretsManager.setMasterPasswordHash(appSettings.value(Constants::MASTER_PASSWORD_HASH, "").toString());

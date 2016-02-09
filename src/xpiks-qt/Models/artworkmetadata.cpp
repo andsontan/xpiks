@@ -97,6 +97,12 @@ namespace Models {
         markModified();
     }
 
+    bool ArtworkMetadata::clearKeywords() {
+        bool result = BasicKeywordsModel::clearKeywords();
+        if (result) { markModified(); }
+        return result;
+    }
+
     bool ArtworkMetadata::editKeyword(int index, const QString &replacement) {
         bool result = BasicKeywordsModel::editKeyword(index, replacement);
         if (result) { markModified(); }

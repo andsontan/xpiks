@@ -29,8 +29,6 @@ SOURCES += main.cpp \
     UndoRedo/modifyartworkshistoryitem.cpp \
     Commands/combinededitcommand.cpp \
     Commands/pastekeywordscommand.cpp \
-    Helpers/uploadworker.cpp \
-    Helpers/uploadcoordinator.cpp \
     Helpers/runguard.cpp \
     Encryption/aes-qt.cpp \
     Models/ziparchiver.cpp \
@@ -38,7 +36,6 @@ SOURCES += main.cpp \
     Suggestion/keywordssuggestor.cpp \
     Suggestion/suggestionqueryengine.cpp \
     Models/settingsmodel.cpp \
-    Helpers/curlwrapper.cpp \
     Helpers/loggingworker.cpp \
     Helpers/logger.cpp \
     Models/logsmodel.cpp \
@@ -67,7 +64,12 @@ SOURCES += main.cpp \
     MetadataIO/metadatareadingworker.cpp \
     MetadataIO/metadataiocoordinator.cpp \
     MetadataIO/saverworkerjobitem.cpp \
-    MetadataIO/metadatawritingworker.cpp
+    MetadataIO/metadatawritingworker.cpp \
+    Conectivity/curlftpuploader.cpp \
+    Conectivity/ftpuploaderworker.cpp \
+    Conectivity/ftpcoordinator.cpp \
+    Conectivity/testconnection.cpp \
+    Conectivity/ftphelpers.cpp
 
 RESOURCES += qml.qrc
 
@@ -77,7 +79,7 @@ DEFINES += QT_NO_CAST_TO_ASCII \
            QT_NO_CAST_FROM_BYTEARRAY
 DEFINES += QUAZIP_STATIC
 DEFINES += HUNSPELL_STATIC
-DEFINES += COLLECT_USER_STATISTIC
+DEFINES += TELEMETRY_ENABLED
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -102,7 +104,6 @@ HEADERS += \
     Helpers/constants.h \
     Helpers/appsettings.h \
     Models/artworkuploader.h \
-    Helpers/curlwrapper.h \
     Models/artworksprocessor.h \
     Models/uploadinfo.h \
     Models/exportinfo.h \
@@ -113,10 +114,8 @@ HEADERS += \
     Encryption/aes-qt.h \
     ../tiny-aes/aes.h \
     Encryption/secretsmanager.h \
-    Helpers/uploaditem.h \
     Helpers/stringhelper.h \
     Helpers/logger.h \
-    Helpers/testconnectionresult.h \
     Commands/commandmanager.h \
     UndoRedo/historyitem.h \
     UndoRedo/undoredomanager.h \
@@ -130,8 +129,6 @@ HEADERS += \
     UndoRedo/modifyartworkshistoryitem.h \
     Commands/combinededitcommand.h \
     Commands/pastekeywordscommand.h \
-    Helpers/uploadworker.h \
-    Helpers/uploadcoordinator.h \
     Helpers/runguard.h \
     Models/ziparchiver.h \
     Helpers/ziphelper.h \
@@ -174,7 +171,13 @@ HEADERS += \
     MetadataIO/saverworkerjobitem.h \
     MetadataIO/metadatareadingworker.h \
     MetadataIO/metadataiocoordinator.h \
-    MetadataIO/metadatawritingworker.h
+    MetadataIO/metadatawritingworker.h \
+    Conectivity/curlftpuploader.h \
+    Conectivity/ftpuploaderworker.h \
+    Conectivity/ftpcoordinator.h \
+    Conectivity/uploadcontext.h \
+    Conectivity/testconnection.h \
+    Conectivity/ftphelpers.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
@@ -228,33 +231,77 @@ DISTFILES += \
 LIBS += -L"$$PWD/../libs/"
 LIBS += -lhunspell
 LIBS += -lz
+LIBS += -lcurl
+LIBS += -lquazip
+
 CONFIG(debug, debug|release)  {
-    message("Debug build.")
+    message("Building debug")
 } else {
     message("Building release")
 }
 
 macx {
-    INCLUDEPATH += "../hunspell-1.3.3/src/hunspell"
-    INCLUDEPATH += "../quazip/quazip/"
-    LIBS += -lquazip
+    INCLUDEPATH += "../hunspell-1.3.3/src"
+    INCLUDEPATH += "../quazip"
+    INCLUDEPATH += "../../libcurl/include"
+
+    HUNSPELL_DICT_FILES.files = dict/en_US.aff dict/en_US.dic dict/license.txt dict/README_en_US.txt
+    HUNSPELL_DICT_FILES.path = Contents/Resources
+    QMAKE_BUNDLE_DATA += HUNSPELL_DICT_FILES
+
+    WHATS_NEW.files = whatsnew.txt
+    WHATS_NEW.path = Contents/Resources
+    QMAKE_BUNDLE_DATA += WHATS_NEW
+
+    TERMS_AND_CONDITIONS.files = terms_and_conditions.txt
+    TERMS_AND_CONDITIONS.path = Contents/Resources
+    QMAKE_BUNDLE_DATA += TERMS_AND_CONDITIONS
 }
 
 win32 {
     INCLUDEPATH += "../zlib-1.2.8"
-    INCLUDEPATH += "../hunspell-1.3.3/src/hunspell"
-    INCLUDEPATH += "../quazip/quazip/"
-    LIBS += -lquazip
+    INCLUDEPATH += "../hunspell-1.3.3/src"
+    INCLUDEPATH += "../quazip"
+    INCLUDEPATH += "../libcurl/include"
+    LIBS -= -lcurl
+    LIBS += -llibcurl_debug
+
+    EXE_DIR = release
+CONFIG(debug, debug|release) {
+    EXE_DIR = debug
+}
+
+    copywhatsnew.commands = $(COPY_FILE) \"$$shell_path($$PWD/whatsnew.txt)\" \"$$shell_path($$OUT_PWD/$$EXE_DIR/)\"
+    copyterms.commands = $(COPY_FILE) \"$$shell_path($$PWD/terms_and_conditions.txt)\" \"$$shell_path($$OUT_PWD/$$EXE_DIR/)\"
+    copydicts.commands = $(COPY_DIR) \"$$shell_path($$PWD/dict)\" \"$$shell_path($$OUT_PWD/$$EXE_DIR/dict)\"
+
+    QMAKE_EXTRA_TARGETS += copywhatsnew copyterms copydicts
+    POST_TARGETDEPS += copywhatsnew copyterms copydicts
 }
 
 linux-g++-64 {
     target.path=/usr/bin/
-    INCLUDEPATH += "/usr/include/hunspell"
-    INCLUDEPATH += "/usr/include/quazip"
-    LIBS += -L/lib/x86_64-linux-gnu/
-    LIBS += /usr/lib/x86_64-linux-gnu/libquazip-qt5.a
     QML_IMPORT_PATH += /usr/lib/x86_64-linux-gnu/qt5/imports/
-    #DEFINES -= COLLECT_USER_STATISTIC
+    UNAME = $$system(cat /proc/version)
+    DEFINES -= TELEMETRY_ENABLED
+
+    contains(UNAME, Debian): {
+        message("on Debian Linux")
+        LIBS += -L/lib/x86_64-linux-gnu/
+        LIBS -= -lquazip # temporary static link
+        LIBS += /usr/lib/x86_64-linux-gnu/libquazip-qt5.a
+    }
+    contains(UNAME, SUSE): {
+        message("on SUSE Linux")
+        LIBS += -L/usr/lib64/
+        LIBS += /usr/lib64/libcurl.so.4
+        copywhatsnew.commands = $(COPY_FILE) "$$PWD/whatsnew.txt" "$$OUT_PWD/"
+        copyterms.commands = $(COPY_FILE) "$$PWD/terms_and_conditions.txt" "$$OUT_PWD/"
+        QMAKE_EXTRA_TARGETS += copywhatsnew copyterms
+	POST_TARGETDEPS += copywhatsnew copyterms
+    }
+
+
 }
 
 linux-static {
@@ -263,15 +310,3 @@ linux-static {
     DEFINES += STATIC
     message("Static build.")
 }
-
-HUNSPELL_DICT_FILES.files = dict/en_US.aff dict/en_US.dic dict/license.txt dict/README_en_US.txt
-HUNSPELL_DICT_FILES.path = Contents/Resources
-QMAKE_BUNDLE_DATA += HUNSPELL_DICT_FILES
-
-WHATS_NEW.files = whatsnew.txt
-WHATS_NEW.path = Contents/Resources
-QMAKE_BUNDLE_DATA += WHATS_NEW
-
-TERMS_AND_CONDITIONS.files = terms_and_conditions.txt
-TERMS_AND_CONDITIONS.path = Contents/Resources
-QMAKE_BUNDLE_DATA += TERMS_AND_CONDITIONS

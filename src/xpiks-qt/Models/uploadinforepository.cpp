@@ -126,6 +126,12 @@ namespace Models {
         }
     }
 
+    void UploadInfoRepository::setAllUnselected() {
+        foreach (UploadInfo *info, m_UploadInfos) {
+            info->setIsSelected(false);
+        }
+    }
+
     void UploadInfoRepository::backupAndDropRealPasswords() {
         foreach (UploadInfo *info, m_UploadInfos) {
             info->backupPassword();
@@ -148,6 +154,19 @@ namespace Models {
         foreach (UploadInfo *info, m_UploadInfos) { info->resetPercent(); }
     }
 
+    QVector<UploadInfo *> UploadInfoRepository::retrieveSelectedUploadInfos() const {
+        QVector<UploadInfo*> uploadInfos;
+        uploadInfos.reserve(m_UploadInfos.size());
+
+        foreach (UploadInfo *info, m_UploadInfos) {
+            if (info->getIsSelected()) {
+                uploadInfos.append(info);
+            }
+        }
+
+        return uploadInfos;
+    }
+
     int UploadInfoRepository::rowCount(const QModelIndex &parent) const {
         Q_UNUSED(parent);
         return m_UploadInfos.count();
@@ -161,27 +180,29 @@ namespace Models {
         UploadInfo *uploadInfo = m_UploadInfos.at(row);
 
         switch (role) {
-        case TitleRole:
-            return uploadInfo->getTitle();
-        case HostRole:
-            return uploadInfo->getHost();
-        case UsernameRole:
-            return uploadInfo->getUsername();
-        case PasswordRole: {
-            const QString &encodedPassword = uploadInfo->getPassword();
-            QString password = m_CommandManager->getSecretsManager()->decodePassword(encodedPassword);
-            return password;
-        }
-        case IsSelectedRole:
-            return uploadInfo->getIsSelected();
-        case ZipBeforeUploadRole:
-            return uploadInfo->getZipBeforeUpload();
-        case PercentRole:
-            return uploadInfo->getPercent();
-        case FtpPassiveModeRole:
-            return uploadInfo->getFtpPassiveMode();
-        default:
-            return QVariant();
+            case TitleRole:
+                return uploadInfo->getTitle();
+            case HostRole:
+                return uploadInfo->getHost();
+            case UsernameRole:
+                return uploadInfo->getUsername();
+            case PasswordRole: {
+                const QString &encodedPassword = uploadInfo->getPassword();
+                QString password = m_CommandManager->getSecretsManager()->decodePassword(encodedPassword);
+                return password;
+            }
+            case IsSelectedRole:
+                return uploadInfo->getIsSelected();
+            case ZipBeforeUploadRole:
+                return uploadInfo->getZipBeforeUpload();
+            case PercentRole:
+                return uploadInfo->getPercent();
+            /*case FtpPassiveModeRole:
+                return uploadInfo->getFtpPassiveMode();*/
+            case DisableFtpPassiveModeRole:
+                return uploadInfo->getDisableFtpPassiveMode();
+            default:
+                return QVariant();
         }
     }
 
@@ -205,45 +226,48 @@ namespace Models {
         int roleToUpdate = 0;
         bool needToUpdate = false;
         switch (role) {
-        case EditTitleRole:
-            roleToUpdate = TitleRole;
-            title = value.toString();
-            needToUpdate = uploadInfo->setTitle(title);
-            // hack for updating checkbox binding
-            if (!needToUpdate) {
-                needToUpdate = true;
-                roleToUpdate = ZipBeforeUploadRole;
+            case EditTitleRole:
+                roleToUpdate = TitleRole;
+                title = value.toString();
+                needToUpdate = uploadInfo->setTitle(title);
+                // hack for updating checkbox binding
+                if (!needToUpdate) {
+                    needToUpdate = true;
+                    roleToUpdate = ZipBeforeUploadRole;
+                }
+                break;
+            case EditHostRole:
+                roleToUpdate = HostRole;
+                needToUpdate = uploadInfo->setHost(value.toString().simplified());
+                break;
+            case EditUsernameRole:
+                roleToUpdate = UsernameRole;
+                needToUpdate = uploadInfo->setUsername(value.toString().simplified());
+                break;
+            case EditPasswordRole: {
+                roleToUpdate = PasswordRole;
+                QString rawPassword = value.toString();
+                QString encodedPassword = m_CommandManager->getSecretsManager()->encodePassword(rawPassword);
+                // skip needUpdate
+                uploadInfo->setPassword(encodedPassword);
+                break;
             }
-            break;
-        case EditHostRole:
-            roleToUpdate = HostRole;
-            needToUpdate = uploadInfo->setHost(value.toString().simplified());
-            break;
-        case EditUsernameRole:
-            roleToUpdate = UsernameRole;
-            needToUpdate = uploadInfo->setUsername(value.toString().simplified());
-            break;
-        case EditPasswordRole: {
-            roleToUpdate = PasswordRole;
-            QString rawPassword = value.toString();
-            QString encodedPassword = m_CommandManager->getSecretsManager()->encodePassword(rawPassword);
-            // skip needUpdate
-            uploadInfo->setPassword(encodedPassword);
-            break;
-        }
-        case EditIsSelectedRole:
-            roleToUpdate = IsSelectedRole;
-            needToUpdate = uploadInfo->setIsSelected(value.toBool());
-            break;
-        case EditZipBeforeUploadRole:
-            roleToUpdate = ZipBeforeUploadRole;
-            needToUpdate = uploadInfo->setZipBeforeUpload(value.toBool());
-            break;
-        case EditFtpPassiveModeRole:
-            roleToUpdate = FtpPassiveModeRole;
-            needToUpdate = uploadInfo->setFtpPassiveMode(value.toBool());
-        default:
-            return false;
+            case EditIsSelectedRole:
+                roleToUpdate = IsSelectedRole;
+                needToUpdate = uploadInfo->setIsSelected(value.toBool());
+                break;
+            case EditZipBeforeUploadRole:
+                roleToUpdate = ZipBeforeUploadRole;
+                needToUpdate = uploadInfo->setZipBeforeUpload(value.toBool());
+                break;
+            /*case EditFtpPassiveModeRole:
+                roleToUpdate = FtpPassiveModeRole;
+                needToUpdate = uploadInfo->setFtpPassiveMode(value.toBool());*/
+            case EditDisableFtpPassiveModeRole:
+                roleToUpdate = DisableFtpPassiveModeRole;
+                needToUpdate = uploadInfo->setDisableFtpPassiveMode(value.toBool());
+            default:
+                return false;
         }
 
         if (needToUpdate) {
@@ -281,8 +305,10 @@ namespace Models {
         roles[ZipBeforeUploadRole] = "zipbeforeupload";
         roles[EditZipBeforeUploadRole] = "editzipbeforeupload";
         roles[PercentRole] = "percent";
-        roles[FtpPassiveModeRole] = "ftppassivemode";
-        roles[EditFtpPassiveModeRole] = "editftppassivemode";
+        /*roles[FtpPassiveModeRole] = "ftppassivemode";
+        roles[EditFtpPassiveModeRole] = "editftppassivemode";*/
+        roles[DisableFtpPassiveModeRole] = "disablepassivemode";
+        roles[EditDisableFtpPassiveModeRole] = "editdisablepassivemode";
         return roles;
     }
 

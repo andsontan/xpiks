@@ -25,7 +25,6 @@
 namespace Constants {
     // common for DEBUG and RELEASE
     const char PATH_TO_EXIFTOOL[] = "PATH_TO_EXIF_TOOL";
-    const char PATH_TO_CURL[] = "PATH_TO_CURL";
     const char ORGANIZATION_NAME[] = "Xpiks";
     const char ORGANIZATION_DOMAIN[] = "ribtoks.github.io";
     const char APPLICATION_NAME[] = "Xpiks";
@@ -41,6 +40,7 @@ namespace Constants {
     const char TERMS_AND_CONDITIONS_FILENAME[] = "terms_and_conditions.txt";
     const char DICT_PATH[] = "DICT_PATH";
     const char USER_STATISTIC[] = "USER_STATISTIC";
+    const char NUMBER_OF_LAUNCHES[] = "NUMBER_OF_LAUNCHES";
 
     // different for DEBUG and RELEASE
 
@@ -55,7 +55,6 @@ namespace Constants {
     const char USE_CONFIRMATION_DIALOGS[] = "USE_CONFIRMATION_DIALOGS";
     const char RECENT_DIRECTORIES[] = "RECENT_DIRECTORIES";
     const char MAX_PARALLEL_UPLOADS[] = "MAX_PARALLEL_UPLOADS";
-    const char PROXY_URI[] = "PROXY_URI";
     const char USE_SPELL_CHECK[] = "USE_SPELL_CHECK";
     const char LIBRARY_FILENAME[] = "xpiks.library";
     const char USER_AGENT_ID[] = "USER_AGENT_ID";
@@ -72,7 +71,6 @@ namespace Constants {
     const char USE_CONFIRMATION_DIALOGS[] = "DEBUG_USE_CONFIRMATION_DIALOGS";
     const char RECENT_DIRECTORIES[] = "DEBUG_RECENT_DIRECTORIES";
     const char MAX_PARALLEL_UPLOADS[] = "DEBUG_MAX_PARALLEL_UPLOADS";
-    const char PROXY_URI[] = "DEBUG_PROXY_URI";
     const char USE_SPELL_CHECK[] = "DEBUG_USE_SPELL_CHECK";
     const char LIBRARY_FILENAME[] = "xpiks.debug.library";
     const char USER_AGENT_ID[] = "DEBUG_USER_AGENT_ID";

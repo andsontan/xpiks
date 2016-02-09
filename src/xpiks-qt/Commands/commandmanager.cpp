@@ -105,6 +105,7 @@ void Commands::CommandManager::InjectDependency(Suggestion::KeywordsSuggestor *k
 
 void Commands::CommandManager::InjectDependency(Models::SettingsModel *settingsModel) {
     Q_ASSERT(settingsModel != NULL); m_SettingsModel = settingsModel;
+    m_SettingsModel->setCommandManager(this);
 }
 
 void Commands::CommandManager::InjectDependency(Models::RecentDirectoriesModel *recentDirectories) {
@@ -177,8 +178,35 @@ void Commands::CommandManager::connectEntitiesSignalsSlots() const {
     QObject::connect(m_ArtItemsModel, SIGNAL(selectedArtworkRemoved()),
                      m_FilteredItemsModel, SLOT(onSelectedArtworksRemoved()));
 
-    QObject::connect(m_SettingsModel, SIGNAL(allValuesSaved()),
-                     m_TelemetryService, SLOT(changeReporting()));
+    QObject::connect(m_SettingsModel, SIGNAL(userStatisticChanged(bool)),
+                     m_TelemetryService, SLOT(changeReporting(bool)));
+
+    QObject::connect(m_SpellCheckerService, SIGNAL(serviceAvailable(bool)),
+                     m_FilteredItemsModel, SLOT(onSpellCheckerAvailable(bool)));
+}
+
+void Commands::CommandManager::ensureDependenciesInjected() {
+    Q_ASSERT(m_ArtworksRepository != NULL);
+    Q_ASSERT(m_ArtItemsModel != NULL);
+    Q_ASSERT(m_FilteredItemsModel != NULL);
+    Q_ASSERT(m_CombinedArtworksModel != NULL);
+    Q_ASSERT(m_ArtworkUploader != NULL);
+    Q_ASSERT(m_UploadInfoRepository != NULL);
+    Q_ASSERT(m_WarningsManager != NULL);
+    Q_ASSERT(m_SecretsManager != NULL);
+    Q_ASSERT(m_UndoRedoManager != NULL);
+    Q_ASSERT(m_ZipArchiver != NULL);
+    Q_ASSERT(m_KeywordsSuggestor != NULL);
+    Q_ASSERT(m_SettingsModel != NULL);
+    Q_ASSERT(m_RecentDirectories != NULL);
+    Q_ASSERT(m_SpellCheckerService != NULL);
+    Q_ASSERT(m_SpellCheckSuggestionModel != NULL);
+    Q_ASSERT(m_MetadataSaverService != NULL);
+    Q_ASSERT(m_TelemetryService != NULL);
+    Q_ASSERT(m_UpdateService != NULL);
+    Q_ASSERT(m_LogsModel != NULL);
+    Q_ASSERT(m_LocalLibrary != NULL);
+    Q_ASSERT(m_MetadataIOCoordinator != NULL);
 }
 
 void Commands::CommandManager::recodePasswords(const QString &oldMasterPassword,
@@ -255,8 +283,6 @@ void Commands::CommandManager::readMetadata(const QVector<Models::ArtworkMetadat
 }
 
 void Commands::CommandManager::writeMetadata(const QVector<Models::ArtworkMetadata *> &artworks, bool useBackups) const {
-    saveLocalLibraryAsync();
-
     if (m_MetadataIOCoordinator) {
         m_MetadataIOCoordinator->writeMetadata(artworks, useBackups);
     }
@@ -349,12 +375,6 @@ void Commands::CommandManager::reportUserAction(Conectivity::UserAction userActi
     }
 }
 
-void Commands::CommandManager::saveLocalLibraryAsync() const {
-    if (m_LocalLibrary) {
-        m_LocalLibrary->saveLibraryAsync();
-    }
-}
-
 void Commands::CommandManager::cleanupLocalLibraryAsync() const {
     if (m_LocalLibrary) {
         m_LocalLibrary->cleanupLocalLibraryAsync();
@@ -392,4 +412,10 @@ void Commands::CommandManager::beforeDestructionCallback() const {
 #ifndef TESTS
     m_LogsModel->stopLogging();
 #endif
+}
+
+void Commands::CommandManager::restartSpellChecking() {
+    if (m_SpellCheckerService) {
+        m_SpellCheckerService->restartWorker();
+    }
 }

@@ -36,8 +36,11 @@ namespace Models {
     FilteredArtItemsProxyModel::FilteredArtItemsProxyModel(QObject *parent) :
         QSortFilterProxyModel(parent),
         Common::BaseEntity(),
-        m_SelectedArtworksCount(0)
+        m_SelectedArtworksCount(0),
+        m_SortingEnabled(false)
     {
+        //m_SortingEnabled = true;
+        //this->sort(0);
     }
 
     void FilteredArtItemsProxyModel::setSearchTerm(const QString &value) {
@@ -49,6 +52,12 @@ namespace Models {
 
         invalidateFilter();
         emit afterInvalidateFilter();
+    }
+
+    void FilteredArtItemsProxyModel::spellCheckAllItems() {
+        QVector<ArtworkMetadata *> allArtworks = getAllOriginalItems();
+        m_CommandManager->submitForSpellCheck(allArtworks);
+        m_CommandManager->reportUserAction(Conectivity::UserActionSpellCheck);
     }
 
     int FilteredArtItemsProxyModel::getOriginalIndex(int index) {
@@ -268,6 +277,12 @@ namespace Models {
         emit selectedArtworksCountChanged();
     }
 
+    void FilteredArtItemsProxyModel::onSpellCheckerAvailable(bool afterRestart) {
+        if (afterRestart) {
+            this->spellCheckAllItems();
+        }
+    }
+
     void FilteredArtItemsProxyModel::removeMetadataInItems(const QVector<ArtItemInfo *> &itemsToClear, int flags) const {
         Commands::CombinedEditCommand *combinedEditCommand = new Commands::CombinedEditCommand(
                     flags,
@@ -372,6 +387,27 @@ namespace Models {
         }
 
         return selectedArtworks;
+    }
+
+    QVector<ArtworkMetadata *> FilteredArtItemsProxyModel::getAllOriginalItems() const {
+        ArtItemsModel *artItemsModel = getArtItemsModel();
+        QVector<ArtworkMetadata *> allArtworks;
+        int size = this->rowCount();
+        allArtworks.reserve(size);
+
+        for (int row = 0; row < size; ++row) {
+            QModelIndex proxyIndex = this->index(row, 0);
+            QModelIndex originalIndex = this->mapToSource(proxyIndex);
+
+            int index = originalIndex.row();
+            ArtworkMetadata *metadata = artItemsModel->getArtwork(index);
+
+            if (metadata != NULL) {
+                allArtworks.append(metadata);
+            }
+        }
+
+        return allArtworks;
     }
 
     QVector<int> FilteredArtItemsProxyModel::getSelectedOriginalIndices() const {
@@ -543,5 +579,36 @@ namespace Models {
 
         bool hasMatch = containsPartsSearch(metadata);
         return hasMatch;
+    }
+
+    bool FilteredArtItemsProxyModel::lessThan(const QModelIndex &sourceLeft, const QModelIndex &sourceRight) const {
+        if (!m_SortingEnabled) {
+            return QSortFilterProxyModel::lessThan(sourceLeft, sourceRight);
+        }
+
+        ArtItemsModel *artItemsModel = getArtItemsModel();
+
+        ArtworkMetadata *leftMetadata = artItemsModel->getArtwork(sourceLeft.row());
+        ArtworkMetadata *rightMetadata = artItemsModel->getArtwork(sourceRight.row());
+
+        const QString &leftFilepath = leftMetadata->getFilepath();
+        const QString &rightFilepath = rightMetadata->getFilepath();
+
+        QFileInfo leftFI(leftFilepath);
+        QFileInfo rightFI(rightFilepath);
+
+        QString leftFilename = leftFI.fileName();
+        QString rightFilename = rightFI.fileName();
+
+        int filenamesResult = QString::compare(leftFilename, rightFilename);
+        bool result = false;
+
+        if (filenamesResult == 0) {
+            result = QString::compare(leftFilepath, rightFilepath) < 0;
+        } else {
+            result = filenamesResult < 0;
+        }
+
+        return result;
     }
 }

@@ -103,7 +103,7 @@ namespace MetadataIO {
 
         QTemporaryFile jsonFile;
         if (jsonFile.open()) {
-            qDebug() << "Serializing artworks to json";
+            qDebug() << "Serializing artworks to json" << jsonFile.fileName();
             QJsonArray objectsToSave;
             artworksToJsonArray(m_ItemsToWrite, objectsToSave);
             QJsonDocument document(objectsToSave);
@@ -113,6 +113,7 @@ namespace MetadataIO {
 
             QTemporaryFile argumentsFile;
             if (argumentsFile.open()) {
+
                 QTextStream out(&argumentsFile);
                 QStringList exiftoolArguments = createArgumentsList(jsonFile.fileName());
                 foreach (const QString &line, exiftoolArguments) {
@@ -120,18 +121,31 @@ namespace MetadataIO {
                 }
 
                 out.flush();
-                argumentsFile.close();
 
                 QString exiftoolPath = m_SettingsModel->getExifToolPath();
                 QStringList arguments;
                 arguments << "-IPTC:CodedCharacterSet=UTF8" << "-@" << argumentsFile.fileName();
                 argumentsFile.close();
 
+                qDebug() << "Starting exiftool process:" << exiftoolPath;
+
                 m_ExiftoolProcess->start(exiftoolPath, arguments);
                 success = m_ExiftoolProcess->waitForFinished();
+
+                qDebug() << "Exiftool process finished.";
+
+                int exitCode = m_ExiftoolProcess->exitCode();
+                QProcess::ExitStatus exitStatus = m_ExiftoolProcess->exitStatus();
+
                 success = success &&
-                        (m_ExiftoolProcess->exitCode() == 0) &&
-                        (m_ExiftoolProcess->exitStatus() == QProcess::NormalExit);
+                        (exitCode == 0) &&
+                        (exitStatus == QProcess::NormalExit);
+
+                qDebug() << "Exiftool exitcode =" << exitCode << "exitstatus =" << exitStatus;
+
+                if (!success) {
+                    qWarning() << "Exiftool error string:" << m_ExiftoolProcess->errorString();
+                }
             }
         }
 
@@ -162,7 +176,8 @@ namespace MetadataIO {
         QStringList arguments;
         arguments.reserve(m_ItemsToWrite.length() + 5);
 
-        arguments << "-j=" + jsonFilePath;
+        // ignore minor warnings
+        arguments << "-m" << "-j=" + jsonFilePath;
 
         if (!m_UseBackups) {
             arguments << "-overwrite_original";

@@ -99,7 +99,7 @@ namespace Common {
         void setWarningsFlags(int flags) { m_WarningsFlags = flags; }
 
         virtual void clearModel();
-        void clearKeywords();
+        virtual bool clearKeywords();
         void resetKeywords(const QStringList &keywords);
 
     public:

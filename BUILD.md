@@ -5,6 +5,7 @@
 - git clone Xpiks repo
 - git submodule init & git submodule update - update tinyAES repo
 - rename tinyAES/aes.c to tinyAES/aes.cpp
+- ensure you have `git` available in your PATH
 
 If you want to create Xpiks executable for everyday usage, before each `Run qmake` step described below, select `Release` in Qt Creator. Select `Debug` (the default) in all other cases.
 
@@ -17,6 +18,12 @@ If you want to create Xpiks executable for everyday usage, before each `Run qmak
 - [windows] copy builded library (e.g. `z.lib`) from the build directory to the `src/libs` directory
 - open project `src/quazip/quazip/quazip.pro` in Qt Creator, execute `Run qmake`, execute `Build`
 - copy builded library (e.g. `libquazip.a`) from the build directory to the `src/libs` directory
+- [windows] do `git clone https://github.com/blackrosezy/build-libcurl-windows.git` and execute `build.bat`
+- [windows] copy contests of `lib/dll-debug-x64` contents to the `src/libs/` directory
+
+***Linux build***
+
+Install `libcurl-devel`, `hunspell-devel`, `quazip-devel` package (or alternative development packages for your distribution).
 
 ***Generic build***
 
@@ -29,6 +36,10 @@ If you want to create Xpiks executable for everyday usage, before each `Run qmak
 - Install build dependecies from repository (QT)
 - cd to _xpiks-qt_ subdirectory
 - `debuild -i -us -uc -b`
+
+***OpenSUSE build***
+- in the _xpiks-qt.pro_ file in the _linux-g++-x64_ section comment out quazip static library paths
+- build _quazip_ separately and add path to the built .a file
 
 ***More***
 

@@ -40,7 +40,8 @@ namespace MetadataIO {
         m_ProcessingItemsCount(0),
         m_IsImportInProgress(false),
         m_CanProcessResults(false),
-        m_IgnoreBackupsAtImport(false)
+        m_IgnoreBackupsAtImport(false),
+        m_HasErrors(false)
     {
     }
 
@@ -173,9 +174,8 @@ namespace MetadataIO {
             qDebug() << "Skipped restoring the backups";
         }
 
-        m_CommandManager->updateArtworks(rangesToUpdate);
         m_CommandManager->addToLibrary(itemsToRead);
-        m_CommandManager->saveLocalLibraryAsync();
+        m_CommandManager->updateArtworks(rangesToUpdate);
         m_CommandManager->submitForSpellCheck(itemsToRead);
     }
 }

@@ -141,6 +141,9 @@ namespace Commands {
         void connectEntitiesSignalsSlots() const;
 
     public:
+        void ensureDependenciesInjected();
+
+    public:
         void recodePasswords(const QString &oldMasterPassword,
                                 const QString &newMasterPassword,
                                 const QVector<Models::UploadInfo*> &uploadInfos) const;
@@ -167,16 +170,16 @@ namespace Commands {
         void setupSpellCheckSuggestions(SpellCheck::ISpellCheckable *item, int index, int flags);
         void saveMetadata(Models::ArtworkMetadata *metadata) const;
         void reportUserAction(Conectivity::UserAction userAction) const;
-        void saveLocalLibraryAsync() const;
         void cleanupLocalLibraryAsync() const;
         void afterConstructionCallback();
         void beforeDestructionCallback() const;
+        void restartSpellChecking();
 
     public:
         // methods for getters
         virtual Models::ArtworksRepository *getArtworksRepository() const { return m_ArtworksRepository; }
         virtual Models::ArtItemsModel *getArtItemsModel() const { return m_ArtItemsModel; }
-        virtual const Encryption::SecretsManager *getSecretsManager() const { return m_SecretsManager; }
+        virtual Encryption::SecretsManager *getSecretsManager() const { return m_SecretsManager; }
         virtual Models::UploadInfoRepository *getUploadInfoRepository() { return m_UploadInfoRepository; }
         virtual Suggestion::KeywordsSuggestor *getKeywordsSuggestor() const { return m_KeywordsSuggestor; }
         virtual Models::SettingsModel *getSettingsModel() const { return m_SettingsModel; }

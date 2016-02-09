@@ -19,17 +19,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CURLWRAPPER
-#define CURLWRAPPER
+#ifndef UPLOADCONTEXT
+#define UPLOADCONTEXT
 
-class QString;
+#include <QString>
+#include <QDebug>
 
-namespace Helpers {
-    class TestConnectionResult;
+namespace Conectivity {
+    class UploadContext {
+    public:
+        ~UploadContext() {
+            qDebug() << "Upload context destructor for host" << m_Host;
+        }
+
+    public:
+        QString m_Host;
+        QString m_Username;
+        QString m_Password;
+        bool m_UsePassiveMode;
+        int m_RetriesCount;
+        int m_TimeoutSeconds;
+        // proxy info
+    };
 }
 
-Helpers::TestConnectionResult isConnectionValid(const QString &host, const QString &username,
-                                                const QString &password, const QString &curlPath);
-
-#endif // CURLWRAPPER
+#endif // UPLOADCONTEXT
 

@@ -32,7 +32,7 @@ namespace Common {
         {}
 
     public:
-        void setCommandManager(Commands::CommandManager *commandManager) {
+        virtual void setCommandManager(Commands::CommandManager *commandManager) {
             Q_ASSERT(commandManager != NULL);
             m_CommandManager = commandManager;
         }

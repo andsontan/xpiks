@@ -16,9 +16,13 @@ Exiftool and curl are packed inside the zip archive. Download and extract Xpiks 
 Install the deb file from latest release with all dependencies.
 
 # Special instructions #
+**Linux**
+
+Install all recommended packages:
+- libhunspell
+- hunspell-en-us
 
 **Ubuntu**
-
 **Mint 17.3 (Rose)**
 
 List of QML plugins to be installed manually (from standard repository):

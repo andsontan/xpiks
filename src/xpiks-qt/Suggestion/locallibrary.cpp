@@ -24,7 +24,7 @@
 #include <QThread>
 #include <QDebug>
 #include <QtConcurrent>
-#include <QFuture>
+#include <QFutureWatcher>
 #include "locallibrary.h"
 #include "../Models/artworkmetadata.h"
 #include "libraryloaderworker.h"
@@ -32,8 +32,21 @@
 #include "../Common/defines.h"
 
 namespace Suggestion {
+    LocalLibrary::LocalLibrary():
+        QObject(),
+        m_FutureWatcher(NULL)
+    {
+        m_FutureWatcher = new QFutureWatcher<void>(this);
+        QObject::connect(m_FutureWatcher, SIGNAL(finished()), this, SLOT(artworksAdded()));
+    }
+
+    LocalLibrary::~LocalLibrary()
+    {
+        delete m_FutureWatcher;
+    }
+
     void LocalLibrary::addToLibrary(const QVector<Models::ArtworkMetadata *> artworksList) {
-        QtConcurrent::run(this, &LocalLibrary::doAddToLibrary, artworksList);
+        m_FutureWatcher->setFuture(QtConcurrent::run(this, &LocalLibrary::doAddToLibrary, artworksList));
     }
 
     void LocalLibrary::swap(QHash<QString, QStringList> &hash) {
@@ -61,10 +74,6 @@ namespace Suggestion {
 
     void LocalLibrary::loadLibraryAsync() {
         performAsync(LibraryLoaderWorker::Load);
-    }
-
-    void LocalLibrary::saveLibraryAsync() {
-        performAsync(LibraryLoaderWorker::Save);
     }
 
     void LocalLibrary::searchArtworks(const QStringList &query, QVector<SuggestionArtwork*> &searchResults, int maxResults) {
@@ -130,6 +139,14 @@ namespace Suggestion {
         qInfo() << "Library cleanup finished." << itemsToRemove.count() << "items removed.";
     }
 
+    void LocalLibrary::artworksAdded() {
+        saveLibraryAsync();
+    }
+
+    void LocalLibrary::saveLibraryAsync() {
+        performAsync(LibraryLoaderWorker::Save);
+    }
+
     void LocalLibrary::performAsync(LibraryLoaderWorker::LoadOption option) {
         LibraryLoaderWorker *worker = new LibraryLoaderWorker(this, m_Filename, option);
         QThread *thread = new QThread();
@@ -145,9 +162,12 @@ namespace Suggestion {
     }
 
     void LocalLibrary::doAddToLibrary(const QVector<Models::ArtworkMetadata *> artworksList) {
+        int length = artworksList.length();
+
+        qDebug() << "Adding" << length << "files to the library";
+
         QMutexLocker locker(&m_Mutex);
 
-        int length = artworksList.length();
         for (int i = 0; i < length; ++i) {
             Models::ArtworkMetadata *metadata = artworksList.at(i);
             const QString &filepath = metadata->getFilepath();
@@ -165,7 +185,7 @@ namespace Suggestion {
             m_LocalArtworks.insert(filepath, tags.toList());
         }
 
-        qInfo() << artworksList.length() << "artworks added/updated to/in the local library";
+        qInfo() << length << "artworks added/updated to/in the local library";
     }
 
     void LocalLibrary::cleanupLocalLibraryAsync() {

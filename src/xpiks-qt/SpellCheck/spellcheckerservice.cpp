@@ -30,9 +30,11 @@
 #include "../Common/flags.h"
 
 namespace SpellCheck {
-    SpellCheckerService::SpellCheckerService() {
+    SpellCheckerService::SpellCheckerService():
+        m_WorkerIsAlive(false),
+        m_RestartRequired(false)
+    {
         m_SpellCheckWorker = new SpellCheckWorker();
-        m_WorkerIsAlive = false;
     }
 
     SpellCheckerService::~SpellCheckerService() {
@@ -63,8 +65,13 @@ namespace SpellCheck {
         QObject::connect(m_SpellCheckWorker, SIGNAL(stopped()),
                          this, SLOT(workerFinished()));
 
+        QObject::connect(m_SpellCheckWorker, SIGNAL(destroyed(QObject*)),
+                         this, SLOT(workerDestroyed()));
+
         thread->start();
         m_WorkerIsAlive = true;
+
+        emit serviceAvailable(m_RestartRequired);
     }
 
     void SpellCheckerService::submitItems(const QVector<ISpellCheckable *> &itemsToCheck) {
@@ -124,6 +131,11 @@ namespace SpellCheck {
         return QStringList();
     }
 
+    void SpellCheckerService::restartWorker() {
+        m_RestartRequired = true;
+        stopChecking();
+    }
+
     void SpellCheckerService::cancelCurrentBatch() {
         if (!m_WorkerIsAlive) { return; }
 
@@ -148,11 +160,18 @@ namespace SpellCheck {
         m_WorkerIsAlive = false;
     }
 
+    void SpellCheckerService::workerDestroyed() {
+        if (m_RestartRequired) {
+            m_SpellCheckWorker = new SpellCheckWorker();
+            startChecking();
+            m_RestartRequired = false;
+        }
+    }
+
     void SpellCheck::SpellCheckerService::stopChecking() {
         qDebug() << "SpellCheck service: stopping checking...";
         if (m_WorkerIsAlive) {
             m_SpellCheckWorker->cancelWork();
         }
     }
-
 }

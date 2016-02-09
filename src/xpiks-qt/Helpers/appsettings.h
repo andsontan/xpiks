@@ -56,9 +56,6 @@ namespace Helpers {
         Q_PROPERTY(QString exifToolPathKey READ getExifToolPathKey CONSTANT)
         QString getExifToolPathKey() const { return QLatin1String(Constants::PATH_TO_EXIFTOOL); }
 
-        Q_PROPERTY(QString curlPathKey READ getCurlPathKey CONSTANT)
-        QString getCurlPathKey() const { return QLatin1String(Constants::PATH_TO_CURL); }
-
         Q_PROPERTY(QString uploadHostsKey READ getUploadHostsKey CONSTANT)
         QString getUploadHostsKey() const { return QLatin1String(Constants::UPLOAD_HOSTS); }
 
@@ -101,9 +98,6 @@ namespace Helpers {
         Q_PROPERTY(QString maxParallelUploadsKey READ getMaxParallelUploadsKey CONSTANT)
         QString getMaxParallelUploadsKey() const { return QLatin1String(Constants::MAX_PARALLEL_UPLOADS); }
 
-        Q_PROPERTY(QString proxyURIKey READ getProxyURIKey CONSTANT)
-        QString getProxyURIKey() const { return QLatin1String(Constants::PROXY_URI); }
-
         Q_PROPERTY(QString fitSmallPreviewKey READ getFitSmallPreviewKey CONSTANT)
         QString getFitSmallPreviewKey() const { return QLatin1String(Constants::FIT_SMALL_PREVIEW); }
 
@@ -128,12 +122,15 @@ namespace Helpers {
         Q_PROPERTY(QString userStatisticKey READ getUserStatisticKey CONSTANT)
         QString getUserStatisticKey() const { return QLatin1String(Constants::USER_STATISTIC); }
 
+        Q_PROPERTY(QString numberOfLaunchesKey READ getNumberOfLaunchesKey CONSTANT)
+        QString getNumberOfLaunchesKey() const { return QLatin1String(Constants::NUMBER_OF_LAUNCHES); }
+
         Q_PROPERTY(QString whatsNewText READ getWhatsNewText CONSTANT)
         QString getWhatsNewText() const {
             QString text;
             QString path;
 
-#if not defined(Q_OS_LINUX)
+#if !defined(Q_OS_LINUX)
             path = QCoreApplication::applicationDirPath();
 
 #if defined(Q_OS_MAC)
@@ -143,7 +140,7 @@ namespace Helpers {
             path += QDir::separator() + QLatin1String(Constants::WHATS_NEW_FILENAME);
             path = QDir::cleanPath(path);
 #else
-            path=QStandardPaths::locate(appDataLocationType, Constants::WHATS_NEW_FILENAME);
+            path = QStandardPaths::locate(appDataLocationType, Constants::WHATS_NEW_FILENAME);
 #endif
             QFile file(path);
             if (file.open(QIODevice::ReadOnly)) {
@@ -151,6 +148,14 @@ namespace Helpers {
                 file.close();
             } else {
                 qWarning() << "whatsnew.txt file is not found on path" << path;
+
+                path = QDir::current().absoluteFilePath(QLatin1String(Constants::WHATS_NEW_FILENAME));
+
+                QFile currDirFile(path);
+                if (currDirFile.open(QIODevice::ReadOnly)) {
+                    text = currDirFile.readAll();
+                    currDirFile.close();
+                }
             }
             return text;
         }
@@ -195,12 +200,31 @@ namespace Helpers {
             setValue(getUserConsentKey(), true);
         }
 
+        Q_INVOKABLE void protectTelemetry() {
+            bool telemetryEnabled = this->value(Constants::USER_STATISTIC, false).toBool();
+            if (telemetryEnabled) {
+                this->setValue(Constants::NUMBER_OF_LAUNCHES, 0);
+            } else {
+                int numberOfLaunches = this->value(Constants::NUMBER_OF_LAUNCHES, 0).toInt();
+                numberOfLaunches++;
+
+                if (numberOfLaunches >= 31) {
+                    this->setValue(Constants::USER_STATISTIC, true);
+                    this->setValue(Constants::NUMBER_OF_LAUNCHES, 0);
+                    qDebug() << "Resetting telemetry to ON";
+                } else {
+                    this->setValue(Constants::NUMBER_OF_LAUNCHES, numberOfLaunches);
+                    qDebug() << numberOfLaunches << "launches of Xpiks with Telemetry OFF";
+                }
+            }
+        }
+
         Q_PROPERTY(QString termsAndConditionsText READ getTermsAndConditionsText CONSTANT)
         QString getTermsAndConditionsText() const {
             QString text;
             QString path;
 
-#if not defined(Q_OS_LINUX)
+#if !defined(Q_OS_LINUX)
             path = QCoreApplication::applicationDirPath();
 
 #if defined(Q_OS_MAC)
@@ -210,7 +234,7 @@ namespace Helpers {
             path += QDir::separator() + QLatin1String(Constants::TERMS_AND_CONDITIONS_FILENAME);
             path = QDir::cleanPath(path);
 #else
-            path=QStandardPaths::locate(appDataLocationType, Constants::TERMS_AND_CONDITIONS_FILENAME);
+            path = QStandardPaths::locate(appDataLocationType, Constants::TERMS_AND_CONDITIONS_FILENAME);
 #endif
             QFile file(path);
             if (file.open(QIODevice::ReadOnly)) {
@@ -218,6 +242,14 @@ namespace Helpers {
                 file.close();
             } else {
                 qWarning() << "terms_and_conditions.txt file is not found on path" << path;
+
+                path = QDir::current().absoluteFilePath(QLatin1String(Constants::TERMS_AND_CONDITIONS_FILENAME));
+
+                QFile currDirFile(path);
+                if (currDirFile.open(QIODevice::ReadOnly)) {
+                    text = currDirFile.readAll();
+                    currDirFile.close();
+                }
             }
 
             return text;

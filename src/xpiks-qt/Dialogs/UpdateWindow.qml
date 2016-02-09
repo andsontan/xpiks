@@ -43,10 +43,10 @@ ApplicationWindow {
     property string updateUrl
 
     signal dialogDestruction();
-    Component.onDestruction: dialogDestruction();
+    onClosing: dialogDestruction();
 
     function closeUpdateWindow() {
-        updateWindow.destroy();
+        updateWindow.close()
     }
 
     Rectangle {

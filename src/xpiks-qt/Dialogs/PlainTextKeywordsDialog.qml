@@ -185,10 +185,9 @@ Item {
                         Keys.onPressed: {
                             if(event.matches(StandardKey.Paste)) {
                                 var clipboardText = clipboard.getText();
-                                clipboardText = clipboardText.replace(/(\r\n|\n|\r)/gm, '');
-                                // same regexp as in validator
-                                textEdit.insert(textEdit.cursorPosition, clipboardText)
-                                event.accepted = true
+                                if (Common.safeInsert(textEdit, clipboardText)) {
+                                    event.accepted = true
+                                }
                             } else if ((event.key === Qt.Key_Return) || (event.key === Qt.Key_Enter)) {
                                 if (event.modifiers === Qt.ControlModifier) {
                                     submitKeywords()

@@ -25,21 +25,21 @@
 #include <QObject>
 #include <QNetworkAccessManager>
 #include <QString>
-#include "Helpers/appsettings.h"
+#include "../Helpers/appsettings.h"
 #include "analyticsuserevent.h"
 
 namespace Conectivity {
     class TelemetryService : public QObject {
         Q_OBJECT
     public:
-        TelemetryService(const QString &userId, QObject *parent=NULL);
+        TelemetryService(const QString &userId, bool telemetryEnabled, QObject *parent=NULL);
 
     public:
         void reportAction(UserAction action);
         void setEndpoint(const QString &endpoint);
 
     public slots:
-        void changeReporting();
+        void changeReporting(bool value);
 
     private:
         void doReportAction(UserAction action);
@@ -55,7 +55,7 @@ namespace Conectivity {
         QNetworkAccessManager m_NetworkManager;
         QString m_ReportingEndpoint;
         QString m_UserAgentId;
-        bool m_TelemetryEnabled;
+        volatile bool m_TelemetryEnabled;
     };
 }
 

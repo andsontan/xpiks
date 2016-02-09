@@ -48,8 +48,7 @@ namespace SpellCheck {
         void submitKeyword(SpellCheck::ISpellCheckable *itemToCheck, int keywordIndex);
         void submitItem(SpellCheck::ISpellCheckable *itemToCheck, int flags);
         QStringList suggestCorrections(const QString &word) const;
-
-    private:
+        void restartWorker();
 
     public:
         Q_INVOKABLE void cancelCurrentBatch();
@@ -58,13 +57,17 @@ namespace SpellCheck {
     signals:
         void cancelSpellChecking();
         void spellCheckQueueIsEmpty();
+        void serviceAvailable(bool afterRestart);
 
     private slots:
         void workerFinished();
+        void workerDestroyed();
 
     private:
         SpellCheckWorker *m_SpellCheckWorker;
         volatile bool m_WorkerIsAlive;
+        volatile bool m_RestartRequired;
+        QString m_DictionariesPath;
     };
 }
 

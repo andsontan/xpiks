@@ -24,6 +24,7 @@
 #include <QDebug>
 #include "../Helpers/appsettings.h"
 #include "../Common/defines.h"
+#include "../Commands/commandmanager.h"
 
 #ifdef Q_OS_MAC
 #define DEFAULT_EXIFTOOL "/usr/bin/exiftool"
@@ -31,7 +32,6 @@
 #define DEFAULT_EXIFTOOL "exiftool"
 #endif
 
-#define DEFAULT_CURL "curl"
 #define DEFAULT_DICT_PATH ""
 #define DEFAULT_MAX_KEYWORDS 50
 #define DEFAULT_MAX_DESCRIPTION 200
@@ -43,20 +43,18 @@
 #define DEFAULT_KEYWORD_SIZE_SCALE 1.0
 #define DEFAULT_DISMISS_DURATION 10
 #define DEFAULT_MAX_PARALLEL_UPLOADS 2
-#define DEFAULT_PROXY ""
 #define DEFAULT_FIT_SMALL_PREVIEW false
 #define DEFAULT_SEARCH_USING_AND true
 #define DEFAULT_SCROLL_SPEED_SCALE 1.0
 #define DEFAULT_USE_SPELL_CHECK true
 #define DEFAULT_HAVE_USER_CONSENT false
+#define DEFAULT_COLLECT_USER_STATISTIC true
 
 
 namespace Models {
     SettingsModel::SettingsModel(QObject *parent) :
         QObject(parent),
         m_ExifToolPath(DEFAULT_EXIFTOOL),
-        m_CurlPath(DEFAULT_CURL),
-        m_ProxyURI(DEFAULT_PROXY),
         m_DictPath(DEFAULT_DICT_PATH),
         m_MinMegapixelCount(DEFAULT_MIN_MEGAPIXELS),
         m_KeywordSizeScale(DEFAULT_KEYWORD_SIZE_SCALE),
@@ -72,7 +70,8 @@ namespace Models {
         m_FitSmallPreview(DEFAULT_FIT_SMALL_PREVIEW),
         m_SearchUsingAnd(DEFAULT_SEARCH_USING_AND),
         m_UseSpellCheck(DEFAULT_USE_SPELL_CHECK),
-        m_UserStatistic(DEFAULT_COLLECT_USER_STATISTIC)
+        m_UserStatistic(DEFAULT_COLLECT_USER_STATISTIC),
+        m_DictsPathChanged(false)
     {
     }
 
@@ -86,7 +85,6 @@ namespace Models {
 
         Helpers::AppSettings appSettings;
         appSettings.setValue(appSettings.getExifToolPathKey(), m_ExifToolPath);
-        appSettings.setValue(appSettings.getCurlPathKey(), m_CurlPath);
         appSettings.setValue(appSettings.getDictionaryPathKey(), m_DictPath);
         appSettings.setValue(appSettings.getMinMegapixelCountKey(), m_MinMegapixelCount);
         appSettings.setValue(appSettings.getMaxDescriptionLengthKey(), m_MaxDescriptionLength);
@@ -98,7 +96,6 @@ namespace Models {
         appSettings.setValue(appSettings.getKeywordSizeScaleKey(), m_KeywordSizeScale);
         appSettings.setValue(appSettings.getDismissDurationKey(), m_DismissDuration);
         appSettings.setValue(appSettings.getMaxParallelUploadsKey(), m_MaxParallelUploads);
-        appSettings.setValue(appSettings.getProxyURIKey(), m_ProxyURI);
         appSettings.setValue(appSettings.getFitSmallPreviewKey(), m_FitSmallPreview);
         appSettings.setValue(appSettings.getSearchUsingAndKey(), m_SearchUsingAnd);
         appSettings.setValue(appSettings.getScrollSpeedScaleKey(), m_ScrollSpeedScale);
@@ -110,7 +107,14 @@ namespace Models {
         }
 
         emit keywordSizeScaleChanged(m_KeywordSizeScale);
-        emit allValuesSaved();
+
+#if defined(Q_OS_LINUX)
+        if (m_DictsPathChanged) {
+            // TODO: check if need to restart depending on path
+            m_CommandManager->restartSpellChecking();
+            m_DictsPathChanged = false;
+        }
+#endif
     }
 
     void SettingsModel::clearMasterPasswordSettings() {
@@ -124,19 +128,15 @@ namespace Models {
         setExifToolPath(DEFAULT_EXIFTOOL);
     }
 
-    void SettingsModel::resetCurl() {
-        setCurlPath(DEFAULT_CURL);
-    }
-
     void SettingsModel::resetDictPath() {
         setDictionaryPath(DEFAULT_DICT_PATH);
     }
+
     void SettingsModel::readAllValues() {
         qInfo() << "Reading settings values";
 
         Helpers::AppSettings appSettings;
         setExifToolPath(appSettings.value(appSettings.getExifToolPathKey(), DEFAULT_EXIFTOOL).toString());
-        setCurlPath(appSettings.value(appSettings.getCurlPathKey(), DEFAULT_CURL).toString());
         setDictionaryPath(appSettings.value(appSettings.getDictionaryPathKey(), DEFAULT_DICT_PATH).toString());
         setMinMegapixelCount(appSettings.doubleValue(appSettings.getMinMegapixelCountKey(), DEFAULT_MIN_MEGAPIXELS));
         setMaxDescriptionLength(appSettings.value(appSettings.getMaxDescriptionLengthKey(), DEFAULT_MAX_DESCRIPTION).toInt());
@@ -148,7 +148,6 @@ namespace Models {
         setKeywordSizeScale(appSettings.doubleValue(appSettings.getKeywordSizeScaleKey(), DEFAULT_KEYWORD_SIZE_SCALE));
         setDismissDuration(appSettings.value(appSettings.getDismissDurationKey(), DEFAULT_DISMISS_DURATION).toInt());
         setMaxParallelUploads(appSettings.value(appSettings.getMaxParallelUploadsKey(), DEFAULT_MAX_PARALLEL_UPLOADS).toInt());
-        setProxyURI(appSettings.value(appSettings.getProxyURIKey(), DEFAULT_PROXY).toString());
         setFitSmallPreview(appSettings.boolValue(appSettings.getFitSmallPreviewKey(), DEFAULT_FIT_SMALL_PREVIEW));
         setSearchUsingAnd(appSettings.boolValue(appSettings.getSearchUsingAndKey(), DEFAULT_SEARCH_USING_AND));
         setScrollSpeedScale(appSettings.doubleValue(appSettings.getScrollSpeedScaleKey(), DEFAULT_SCROLL_SPEED_SCALE));
@@ -160,7 +159,6 @@ namespace Models {
         qInfo() << "Resetting all settings";
 
         setExifToolPath(DEFAULT_EXIFTOOL);
-        setCurlPath(DEFAULT_CURL);
         setDictionaryPath(DEFAULT_DICT_PATH);
         setMinMegapixelCount(DEFAULT_MIN_MEGAPIXELS);
         setMaxDescriptionLength(DEFAULT_MAX_DESCRIPTION);
@@ -172,7 +170,6 @@ namespace Models {
         setKeywordSizeScale(DEFAULT_KEYWORD_SIZE_SCALE);
         setDismissDuration(DEFAULT_DISMISS_DURATION);
         setMaxParallelUploads(DEFAULT_MAX_PARALLEL_UPLOADS);
-        setProxyURI(DEFAULT_PROXY);
         setFitSmallPreview(DEFAULT_FIT_SMALL_PREVIEW);
         setSearchUsingAnd(DEFAULT_SEARCH_USING_AND);
         setScrollSpeedScale(DEFAULT_SCROLL_SPEED_SCALE);

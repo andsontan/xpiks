@@ -31,41 +31,46 @@
 #include <QNetworkReply>
 #include "telemetryservice.h"
 #include "analyticsuserevent.h"
-#include "Models/settingsmodel.h"
+#include "../Common/defines.h"
+#include "../Models/settingsmodel.h"
 #include "../Common/version.h"
 
 namespace Conectivity {
-    TelemetryService::TelemetryService(const QString &userId, QObject *parent) :
+    TelemetryService::TelemetryService(const QString &userId, bool telemetryEnabled, QObject *parent) :
         QObject(parent),
         m_NetworkManager(this),
-        m_UserAgentId(userId)
+        m_UserAgentId(userId),
+        m_TelemetryEnabled(telemetryEnabled)
     {
         QObject::connect(&m_NetworkManager, SIGNAL(finished(QNetworkReply*)),
                          this, SLOT(replyReceived(QNetworkReply*)));
-        m_TelemetryEnabled=appSettings.value(Constants::USER_STATISTIC, DEFAULT_COLLECT_USER_STATISTIC).toBool();
     }
 
     void TelemetryService::reportAction(UserAction action) {
-#ifdef QT_NO_DEBUG
-        if(m_TelemetryEnabled)
-	{
-            qDebug() << "Reporting action" << action;
+#if defined(QT_NO_DEBUG) && defined(TELEMETRY_ENABLED)
+        if (m_TelemetryEnabled)
+        {
             doReportAction(action);
-	}
+        }
         else
 #endif
             Q_UNUSED(action);
-
     }
 
-    void TelemetryService::changeReporting() {
-        m_TelemetryEnabled=appSettings.value(Constants::USER_STATISTIC, DEFAULT_COLLECT_USER_STATISTIC).toBool();
-#ifndef QT_NO_DEBUG
-        if(m_TelemetryEnabled) {
-            qDebug()<<"Telemetry enabled by setting";
-        } else {
-            qDebug()<<"Telemetry disabled by setting";
+    void TelemetryService::changeReporting(bool value) {
+#if defined(QT_NO_DEBUG) && defined(TELEMETRY_ENABLED)
+        if (m_TelemetryEnabled != value) {
+            m_TelemetryEnabled = value;
+
+            if (m_TelemetryEnabled) {
+                qDebug()<<"Telemetry enabled by setting";
+            } else {
+                qDebug()<<"Telemetry disabled by setting";
+                doReportAction(UserActionTurnOffTelemetry);
+            }
         }
+#else
+        qDebug()<<"Setting telemetry to"<<value<<"but it is disabled at compile time";
 #endif
     }
 
@@ -75,6 +80,7 @@ namespace Conectivity {
 
     void TelemetryService::doReportAction(UserAction action) {
         AnalyticsUserEvent userEvent(action);
+        qInfo() << "Reporting action" << userEvent.getActionString();
 
         QUrlQuery query;
         query.addQueryItem(QLatin1String("idsite"), QLatin1String("1"));
@@ -98,9 +104,9 @@ namespace Conectivity {
         query.addQueryItem(QLatin1String("_cvar"),
                            QString("{\"1\":[\"OS_type\",\"%1\"],\"2\":[\"OS_version\",\"%2\"],\"3\":[\"Xpiks_version\",\"%3\"]}")
 #ifdef Q_OS_WIN
-                           .arg(QString("Windows QT<5.4"))
+                           .arg(QString("windows"))
 #elsif Q_OS_DARWIN
-                           .arg(QString("Mac OS QT<5.4"))
+                           .arg(QString("osx"))
 #else
                            .arg(QString("Linux QT<5.4"))
 #endif
@@ -125,6 +131,13 @@ namespace Conectivity {
 #elif defined(Q_OS_WIN)
         request.setRawHeader(QString("User-Agent").toLocal8Bit(), QString("Mozilla/5.0 (Windows %2; rv:1.1) Qt Xpiks/1.1")
                 .arg(QSysInfo::productVersion()).toLocal8Bit());
+#elif defined(Q_OS_LINUX)
+        request.setRawHeader(QString("User-Agent").toLocal8Bit(), QString("Mozilla/5.0 (Linux %2; rv:1.1) Qt Xpiks/1.1")
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
+                .arg(QSysInfo::productVersion()).toLocal8Bit());
+#else
+                .arg("?").toLocal8Bit());
+#endif
 #endif
 
         QNetworkReply *reply = m_NetworkManager.get(request);
@@ -133,9 +146,7 @@ namespace Conectivity {
     }
 
     void TelemetryService::replyReceived(QNetworkReply *networkReply) {
-        if (networkReply->error() == QNetworkReply::NoError) {
-            qDebug() << "Telemetry report submited successfully";
-        } else {
+        if (networkReply->error() != QNetworkReply::NoError) {
             // TODO: add tracking of failed items
 
             qWarning() << "Failed to process a telemetry report." << networkReply->errorString();;
