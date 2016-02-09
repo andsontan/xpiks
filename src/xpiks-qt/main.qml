@@ -282,7 +282,9 @@ ApplicationWindow {
                 }
             }
 
-            MenuSeparator { }
+            MenuSeparator {
+                visible: pluginsMenu.items.length > 2
+            }
 
             MenuItem {
                 text: qsTr("&Plugin manager")

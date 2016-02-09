@@ -154,6 +154,17 @@ Item {
                         }
                     }
                 }
+
+                Item {
+                    visible: pluginsListView.count == 0
+                    anchors.fill: parent
+
+                    StyledText {
+                        text: qsTr("No plugins available")
+                        anchors.centerIn: parent
+                        color: Colors.selectedMetadataColor
+                    }
+                }
             }
 
             RowLayout {
