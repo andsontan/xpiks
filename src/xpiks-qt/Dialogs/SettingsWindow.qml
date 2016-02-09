@@ -34,7 +34,7 @@ ApplicationWindow {
     modality: "ApplicationModal"
     title: qsTr("Settings")
     width: 550
-    height: 260
+    height: 280
     minimumWidth: width
     maximumWidth: width
     minimumHeight: height
@@ -204,6 +204,33 @@ ApplicationWindow {
                         anchors.fill: parent
                         anchors.margins: {left: 20; top: 30; right: 20; bottom: 20}
                         spacing: 20
+
+                        RowLayout {
+                            width: parent.width
+                            spacing: 10
+
+                            StyledCheckbox {
+                                id: checkForUpdatesCheckbox
+                                text: qsTr("Check for updates")
+                                onCheckedChanged: {
+                                    settingsModel.updateService = checked
+                                }
+                                function onResetRequested()  {
+                                    checked = settingsModel.updateService
+                                }
+
+                                Component.onCompleted: {
+                                    checked = settingsModel.updateService
+                                    behaviorTab.resetRequested.connect(checkForUpdatesCheckbox.onResetRequested)
+                                }
+
+                            }
+                            StyledText {
+                                text: qsTr("(needs restart)")
+                                color: Colors.defaultInputBackground
+                            }
+
+                        }
 
                         RowLayout {
                             width: parent.width
@@ -1045,13 +1072,20 @@ ApplicationWindow {
                                     StyledCheckbox {
                                         id: userStatisticCheckBox
                                         text: qsTr("Collect usage statistic")
-                                        onCheckedChanged: {
-                                            behaviorTab.useStatistics = checked
+
+                                        function onResetRequested()  {
+                                            checked = settingsModel.userStatistic
                                         }
 
                                         Component.onCompleted: {
                                             checked = settingsModel.userStatistic
+                                            behaviorTab.resetRequested.connect(userStatisticCheckBox.onResetRequested)
                                         }
+
+                                        onCheckedChanged: {
+                                            settingsModel.mustUseConfirmations = checked
+                                        }
+
                                     }
 
                                     StyledText {

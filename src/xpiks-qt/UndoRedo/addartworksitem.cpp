@@ -24,6 +24,7 @@
 #include "addartworksitem.h"
 #include "../Commands/commandmanager.h"
 #include "../Models/artitemsmodel.h"
+#include "../Common/defines.h"
 
 void UndoRedo::AddArtworksHistoryItem::undo(const Commands::CommandManager *commandManager) const {
     qInfo() << "AddArtworksHistoryItem::undo #";

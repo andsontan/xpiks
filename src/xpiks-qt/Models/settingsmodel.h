@@ -53,6 +53,7 @@ namespace Models {
         Q_PROPERTY(double scrollSpeedScale READ getScrollSpeedScale WRITE setScrollSpeedScale NOTIFY scrollSpeedScaleChanged)
         Q_PROPERTY(bool useSpellCheck READ getUseSpellCheck WRITE setUseSpellCheck NOTIFY useSpellCheckChanged)
         Q_PROPERTY(bool userStatistic READ getUserStatistic WRITE setUserStatistic NOTIFY userStatisticChanged)
+        Q_PROPERTY(bool updateService READ getUpdateService WRITE setUpdateService NOTIFY updateServiceChanged)
         Q_PROPERTY(QString dictionaryPath READ getDictionaryPath WRITE setDictionaryPath NOTIFY dictionaryPathChanged)
 
     public:
@@ -86,6 +87,7 @@ namespace Models {
         double getScrollSpeedScale() const { return m_ScrollSpeedScale; }
         bool getUseSpellCheck() const { return m_UseSpellCheck; }
         bool getUserStatistic() const { return m_UserStatistic; }
+        bool getUpdateService() const { return m_UpdateService; }
         QString getDictionaryPath() const { return m_DictPath; }
 
     signals:
@@ -106,6 +108,7 @@ namespace Models {
         void scrollSpeedScaleChanged(double value);
         void useSpellCheckChanged(bool value);
         void userStatisticChanged(bool value);
+        void updateServiceChanged(bool value);
         void dictionaryPathChanged(QString path);
 
     public:
@@ -237,6 +240,14 @@ namespace Models {
             emit userStatisticChanged(userStatistic);
         }
 
+        void setUpdateService(bool updateService) {
+            if (m_UpdateService == updateService)
+                return;
+
+            m_UpdateService = updateService;
+            emit updateServiceChanged(updateService);
+        }
+
         void setDictionaryPath(QString path) {
             if (m_DictPath == path)
                 return;
@@ -267,6 +278,7 @@ namespace Models {
         bool m_SearchUsingAnd;
         bool m_UseSpellCheck;
         bool m_UserStatistic;
+        bool m_UpdateService;
         bool m_DictsPathChanged;
     };
 }
