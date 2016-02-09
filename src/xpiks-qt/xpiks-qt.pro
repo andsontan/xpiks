@@ -283,7 +283,7 @@ linux-g++-64 {
     target.path=/usr/bin/
     QML_IMPORT_PATH += /usr/lib/x86_64-linux-gnu/qt5/imports/
     UNAME = $$system(cat /proc/version)
-    DEFINES -= TELEMETRY_ENABLED
+    #DEFINES -= TELEMETRY_ENABLED
 
     contains(UNAME, Debian): {
         message("on Debian Linux")
