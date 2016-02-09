@@ -37,7 +37,7 @@ namespace Plugins {
     {
     }
 
-    void PluginWrapper::triggerAction(int actionID) const {
+    void PluginWrapper::triggerActionSafe(int actionID) const {
         qInfo() << "PluginWrapper::triggerAction #" << getPrettyName() << "executing action:" << actionID;
 
         try {

@@ -107,13 +107,15 @@ namespace Plugins {
     void PluginManager::triggerPluginAction(int pluginID, int actionID) const {
         PluginWrapper *pluginWrapper = m_PluginsDict.value(pluginID, NULL);
         if (pluginWrapper != NULL) {
-            pluginWrapper->triggerAction(actionID);
+            pluginWrapper->triggerActionSafe(actionID);
         }
     }
 
     void PluginManager::addPlugin(XpiksPluginInterface *plugin) {
         int pluginID = getNextPluginID();
         qInfo() << "PluginManager::addPlugin #" << "ID:" << pluginID << "name:" << plugin->getPrettyName() << "version:" << plugin->getVersionString();
+
+        PluginWrapper *pluginWrapper = NULL;
 
         try {
             plugin->injectCommandManager(m_CommandManager);
@@ -122,14 +124,17 @@ namespace Plugins {
 
             plugin->initializePlugin();
 
-            PluginWrapper *pluginWrapper = new PluginWrapper(plugin, pluginID);
+            pluginWrapper = new PluginWrapper(plugin, pluginID);
         }
         catch(...) {
             qWarning() << "PluginManager::addPlugin #" << "Fail initializing plugin with ID:" << pluginID;
+            pluginWrapper = NULL;
         }
 
-        m_PluginsList.append(pluginWrapper);
-        m_PluginsDict.insert(pluginID, pluginWrapper);
+        if (pluginWrapper != NULL) {
+            m_PluginsList.append(pluginWrapper);
+            m_PluginsDict.insert(pluginID, pluginWrapper);
+        }
     }
 
     int PluginManager::rowCount(const QModelIndex &parent) const {
