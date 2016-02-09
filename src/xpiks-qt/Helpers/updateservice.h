@@ -33,7 +33,7 @@ namespace Helpers {
     {
         Q_OBJECT
     public:
-        UpdateService();
+        UpdateService(bool start);
 
     public:
         void startChecking();
@@ -46,6 +46,7 @@ namespace Helpers {
         void updateAvailable(QString updateLink);
 
     private:
+        bool    m_StartWorker;
         Conectivity::UpdatesCheckerWorker *m_UpdatesCheckerWorker;
     };
 }

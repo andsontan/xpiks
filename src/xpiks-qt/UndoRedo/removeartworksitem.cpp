@@ -23,6 +23,7 @@
 #include <QFileInfo>
 #include "removeartworksitem.h"
 #include "../Commands/commandmanager.h"
+#include "../Common/defines.h"
 #include "../Helpers/indiceshelper.h"
 #include "../Models/artworksrepository.h"
 #include "../Models/artitemsmodel.h"

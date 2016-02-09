@@ -25,27 +25,32 @@
 #include "../Conectivity/updatescheckerworker.h"
 
 namespace Helpers {
-    UpdateService::UpdateService() {
+    UpdateService::UpdateService(bool start) {
+        m_StartWorker=start;
         m_UpdatesCheckerWorker = new Conectivity::UpdatesCheckerWorker();
     }
 
     void UpdateService::startChecking() {
-        QThread *thread = new QThread();
-        m_UpdatesCheckerWorker->moveToThread(thread);
+        if (m_StartWorker){
+            QThread *thread = new QThread();
+            m_UpdatesCheckerWorker->moveToThread(thread);
 
-        QObject::connect(thread, SIGNAL(started()), m_UpdatesCheckerWorker, SLOT(process()));
-        QObject::connect(m_UpdatesCheckerWorker, SIGNAL(stopped()), thread, SLOT(quit()));
+            QObject::connect(thread, SIGNAL(started()), m_UpdatesCheckerWorker, SLOT(process()));
+            QObject::connect(m_UpdatesCheckerWorker, SIGNAL(stopped()), thread, SLOT(quit()));
 
-        QObject::connect(m_UpdatesCheckerWorker, SIGNAL(stopped()), m_UpdatesCheckerWorker, SLOT(deleteLater()));
-        QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+            QObject::connect(m_UpdatesCheckerWorker, SIGNAL(stopped()), m_UpdatesCheckerWorker, SLOT(deleteLater()));
+            QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
 
-        QObject::connect(m_UpdatesCheckerWorker, SIGNAL(updateAvailable(QString)),
-                         this, SIGNAL(updateAvailable(QString)));
+            QObject::connect(m_UpdatesCheckerWorker, SIGNAL(updateAvailable(QString)),
+                             this, SIGNAL(updateAvailable(QString)));
 
-        QObject::connect(m_UpdatesCheckerWorker, SIGNAL(stopped()),
-                         this, SLOT(workerFinished()));
+            QObject::connect(m_UpdatesCheckerWorker, SIGNAL(stopped()),
+                             this, SLOT(workerFinished()));
 
-        thread->start();
+            thread->start();
+        } else {
+            qDebug() << "UpdateService::startChecking #" << "Update service disabled";
+        }
     }
 
     void UpdateService::workerFinished() {

@@ -446,12 +446,9 @@ ApplicationWindow {
     Connections {
         target: updateService
         onUpdateAvailable: {
-            if (Qt.platform.os !== "linux") {
-                Common.launchDialog("Dialogs/UpdateWindow.qml",
-                                    applicationWindow, {updateUrl: updateLink},
-                                    function(wnd) {wnd.show();});
-            }
-
+            Common.launchDialog("Dialogs/UpdateWindow.qml",
+                                applicationWindow, {updateUrl: updateLink},
+                                function(wnd) {wnd.show();});
             applicationWindow.showUpdateLink = true
         }
     }

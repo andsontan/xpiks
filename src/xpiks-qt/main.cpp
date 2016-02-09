@@ -212,7 +212,10 @@ int main(int argc, char *argv[]) {
     SpellCheck::SpellCheckerService spellCheckerService;
     SpellCheck::SpellCheckSuggestionModel spellCheckSuggestionModel;
     MetadataIO::BackupSaverService metadataSaverService;
-    Helpers::UpdateService updateService;
+
+    bool updateEnabled=appSettings.value(Constants::UPDATE_SERVICE,true ).toBool();
+    Helpers::UpdateService updateService(updateEnabled);
+
     MetadataIO::MetadataIOCoordinator metadataIOCoordinator;
 #ifdef TELEMETRY_ENABLED
     bool telemetryEnabled = appSettings.value(Constants::USER_STATISTIC,true ).toBool();

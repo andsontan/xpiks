@@ -49,6 +49,7 @@
 #define DEFAULT_USE_SPELL_CHECK true
 #define DEFAULT_HAVE_USER_CONSENT false
 #define DEFAULT_COLLECT_USER_STATISTIC true
+#define DEFAULT_UPDATE_SERVICE true
 
 
 namespace Models {
@@ -71,6 +72,7 @@ namespace Models {
         m_SearchUsingAnd(DEFAULT_SEARCH_USING_AND),
         m_UseSpellCheck(DEFAULT_USE_SPELL_CHECK),
         m_UserStatistic(DEFAULT_COLLECT_USER_STATISTIC),
+        m_UpdateService(DEFAULT_UPDATE_SERVICE),
         m_DictsPathChanged(false)
     {
     }
@@ -102,6 +104,7 @@ namespace Models {
         appSettings.setValue(appSettings.getScrollSpeedScaleKey(), m_ScrollSpeedScale);
         appSettings.setValue(appSettings.getUseSpellCheckKey(), m_UseSpellCheck);
         appSettings.setValue(appSettings.getUserStatisticKey(), m_UserStatistic);
+        appSettings.setValue(appSettings.getUpdateServiceKey(), m_UpdateService);
 
         if (!m_MustUseMasterPassword) {
             appSettings.setValue(appSettings.getMasterPasswordHashKey(), "");
@@ -154,6 +157,7 @@ namespace Models {
         setScrollSpeedScale(appSettings.doubleValue(appSettings.getScrollSpeedScaleKey(), DEFAULT_SCROLL_SPEED_SCALE));
         setUseSpellCheck(appSettings.boolValue(appSettings.getUseSpellCheckKey(), DEFAULT_USE_SPELL_CHECK));
         setUserStatistic(appSettings.boolValue(appSettings.getUserStatisticKey(), DEFAULT_COLLECT_USER_STATISTIC));
+        setUpdateService(appSettings.boolValue(appSettings.getUpdateServiceKey(), DEFAULT_UPDATE_SERVICE));
     }
 
     void SettingsModel::resetToDefault() {
@@ -176,6 +180,7 @@ namespace Models {
         setScrollSpeedScale(DEFAULT_SCROLL_SPEED_SCALE);
         setUseSpellCheck(DEFAULT_USE_SPELL_CHECK);
         setUserStatistic(DEFAULT_COLLECT_USER_STATISTIC);
+        setUpdateService(DEFAULT_UPDATE_SERVICE);
 
 #if defined(QT_DEBUG)
         Helpers::AppSettings appSettings;

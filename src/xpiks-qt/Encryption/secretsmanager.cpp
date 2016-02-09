@@ -23,6 +23,7 @@
 #include "aes-qt.h"
 #include <QDebug>
 #include <QCryptographicHash>
+#include "../Common/defines.h"
 
 #define STRINGIZE_(x) #x
 #define STRINGIZE(x) STRINGIZE_(x)
