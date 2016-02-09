@@ -30,25 +30,22 @@ namespace Plugins {
         m_PluginInterface(pluginInterface),
         m_ActionsModel(pluginInterface->getExportedActions(), pluginID),
         m_PluginID(pluginID),
-        m_IsEnabled(true)
+        m_IsEnabled(true),
+        m_PrettyName(pluginInterface->getPrettyName()),
+        m_VersionString(pluginInterface->getVersionString()),
+        m_Author(pluginInterface->getAuthor())
     {
-    }
-
-    const QString &PluginWrapper::getPrettyName() const {
-        return m_PluginInterface->getPrettyName();
-    }
-
-    const QString &PluginWrapper::getVersionString() const {
-        return m_PluginInterface->getVersionString();
-    }
-
-    const QString &PluginWrapper::getAuthor() const {
-        return m_PluginInterface->getAuthor();
     }
 
     void PluginWrapper::triggerAction(int actionID) const {
         qInfo() << "PluginWrapper::triggerAction #" << getPrettyName() << "executing action:" << actionID;
-        m_PluginInterface->executeAction(actionID);
+
+        try {
+            m_PluginInterface->executeAction(actionID);
+        }
+        catch (...) {
+            qWarning() << "PluginWrapper::triggerAction #" << "Exception while triggering action for plugin ID" << m_PluginID;
+        }
     }
 }
 

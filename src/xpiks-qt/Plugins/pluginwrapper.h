@@ -37,9 +37,9 @@ namespace Plugins {
     public:
         int getPluginID() const { return m_PluginID; }
         bool getIsEnabled() const { return m_IsEnabled; }
-        const QString &getPrettyName() const;
-        const QString &getVersionString() const;
-        const QString &getAuthor() const;
+        const QString &getPrettyName() const { return m_PrettyName; }
+        const QString &getVersionString() const { return m_VersionString; }
+        const QString &getAuthor() const { return m_Author; }
 
         bool anyActionsProvided() const { return m_ActionsModel.size() > 0; }
         PluginActionsModel *getActionsModel() { return &m_ActionsModel; }
@@ -51,6 +51,9 @@ namespace Plugins {
         PluginActionsModel m_ActionsModel;
         int m_PluginID;
         bool m_IsEnabled;
+        const QString &m_PrettyName;
+        const QString &m_VersionString;
+        const QString &m_Author;
     };
 }
 

@@ -115,13 +115,19 @@ namespace Plugins {
         int pluginID = getNextPluginID();
         qInfo() << "PluginManager::addPlugin #" << "ID:" << pluginID << "name:" << plugin->getPrettyName() << "version:" << plugin->getVersionString();
 
-        plugin->injectCommandManager(m_CommandManager);
-        plugin->injectUndoRedoManager(m_CommandManager->getUndoRedoManager());
-        plugin->injectUIProvider(&m_UIProvider);
+        try {
+            plugin->injectCommandManager(m_CommandManager);
+            plugin->injectUndoRedoManager(m_CommandManager->getUndoRedoManager());
+            plugin->injectUIProvider(&m_UIProvider);
 
-        plugin->initializePlugin();
+            plugin->initializePlugin();
 
-        PluginWrapper *pluginWrapper = new PluginWrapper(plugin, pluginID);
+            PluginWrapper *pluginWrapper = new PluginWrapper(plugin, pluginID);
+        }
+        catch(...) {
+            qWarning() << "PluginManager::addPlugin #" << "Fail initializing plugin with ID:" << pluginID;
+        }
+
         m_PluginsList.append(pluginWrapper);
         m_PluginsDict.insert(pluginID, pluginWrapper);
     }
