@@ -166,6 +166,8 @@ namespace Plugins {
             return plugin->getVersionString();
         case PluginIDRole:
             return plugin->getPluginID();
+        case IsEnabledRole:
+            return plugin->getIsEnabled();
         default:
             return QVariant();
         }
@@ -177,6 +179,7 @@ namespace Plugins {
         roles[AuthorRole] = "author";
         roles[VersionRole] = "version";
         roles[PluginIDRole] = "pluginID";
+        roles[IsEnabledRole] = "enabled";
         return roles;
     }
 

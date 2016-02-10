@@ -45,7 +45,8 @@ namespace Plugins {
             PrettyNameRole = Qt::UserRole + 1,
             VersionRole,
             AuthorRole,
-            PluginIDRole
+            PluginIDRole,
+            IsEnabledRole
         };
 
     public:

@@ -264,7 +264,8 @@ ApplicationWindow {
 
                 delegate: Menu {
                     id: pluginActionsMenu
-                    title: prettyname
+                    title: model.prettyname
+                    enabled: model.enabled
                     property var actionsModel: pluginManager.getPluginActions(index)
 
                     Instantiator {

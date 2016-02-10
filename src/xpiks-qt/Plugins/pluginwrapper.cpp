@@ -56,11 +56,7 @@ namespace Plugins {
         qInfo() << "PluginWrapper::finalizePlugin #" << getPrettyName();
 
         try {
-            if (m_IsEnabled) {
-                m_PluginInterface->finalizePlugin();
-            } else {
-                qWarning() << "PluginWrapper::finalizePlugin #" << "Plugin is disabled";
-            }
+            m_PluginInterface->finalizePlugin();
         }
         catch (...) {
             qWarning() << "PluginWrapper::finalizePlugin #" << "Exception on finalization";
