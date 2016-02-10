@@ -36,7 +36,7 @@ namespace Warnings {
     }
 
     void WarningsService::startService() {
-        m_WarningsWorker = new WarningsCheckingWorker(m_CommandManager->getSettingsModel(), this);
+        m_WarningsWorker = new WarningsCheckingWorker(m_CommandManager->getSettingsModel());
 
         QThread *thread = new QThread();
         m_WarningsWorker->moveToThread(thread);

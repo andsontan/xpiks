@@ -44,8 +44,8 @@ namespace Plugins {
         bool anyActionsProvided() const { return m_ActionsModel.size() > 0; }
         PluginActionsModel *getActionsModel() { return &m_ActionsModel; }
 
-        void enablePlugin() { m_IsEnabled = true; }
-        void disablePlugin() { m_IsEnabled = false; }
+        void enablePlugin();
+        void disablePlugin();
 
         void triggerActionSafe(int actionID) const;
         void finalizePlugin();

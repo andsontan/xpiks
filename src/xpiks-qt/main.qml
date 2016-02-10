@@ -58,16 +58,18 @@ ApplicationWindow {
     }
 
     function closeHandler(close) {
+        console.info("UI::main # closeHandler")
         saveRecentDirectories()
 
         if (artItemsModel.modifiedArtworksCount > 0) {
             close.accepted = false
             configExitDialog.open()
         } else {
-            console.debug("No modified artworks found. Exiting...")
+            console.debug("UI::main # No modified artworks found. Exiting...")
             applicationWindow.visibility = "Minimized"
             helpersWrapper.beforeDestruction();
             appSettings.protectTelemetry();
+            close.accepted = false
             closingTimer.start()
         }
     }

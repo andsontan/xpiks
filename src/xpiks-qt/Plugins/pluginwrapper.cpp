@@ -37,6 +37,31 @@ namespace Plugins {
     {
     }
 
+    void PluginWrapper::enablePlugin() {
+        qInfo() << "PluginWrapper::enablePlugin #" << getPrettyName();
+
+        try {
+            m_PluginInterface->enablePlugin();
+            m_IsEnabled = true;
+        }
+        catch(...) {
+            qWarning() << "PluginWrapper::enablePlugin #" << "Exception while enabling plugin";
+        }
+    }
+
+    void PluginWrapper::disablePlugin() {
+        qInfo() << "PluginWrapper::disablePlugin #" << getPrettyName();
+
+        try {
+            // set disabled in any case
+            m_IsEnabled = false;
+            m_PluginInterface->disablePlugin();
+        }
+        catch(...) {
+            qWarning() << "PluginWrapper::disablePlugin #" << "Exception while disabling plugin";
+        }
+    }
+
     void PluginWrapper::triggerActionSafe(int actionID) const {
         qInfo() << "PluginWrapper::triggerAction #" << getPrettyName() << "executing action:" << actionID;
 

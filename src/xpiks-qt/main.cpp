@@ -52,6 +52,7 @@
 #include "Encryption/secretsmanager.h"
 #include "Models/artworksrepository.h"
 #include "Helpers/settingsprovider.h"
+#include "Warnings/warningsservice.h"
 #include "UndoRedo/undoredomanager.h"
 #include "Helpers/clipboardhelper.h"
 #include "Commands/commandmanager.h"
@@ -200,6 +201,7 @@ int main(int argc, char *argv[]) {
     Models::CombinedArtworksModel combinedArtworksModel;
     Models::UploadInfoRepository uploadInfoRepository;
     Models::WarningsManager warningsManager;
+    Warnings::WarningsService warningsService;
     Models::SettingsModel settingsModel;
     settingsModel.readAllValues();
     Encryption::SecretsManager secretsManager;
@@ -234,6 +236,7 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&artworkUploader);
     commandManager.InjectDependency(&uploadInfoRepository);
     commandManager.InjectDependency(&warningsManager);
+    commandManager.InjectDependency(&warningsService);
     commandManager.InjectDependency(&secretsManager);
     commandManager.InjectDependency(&undoRedoManager);
     commandManager.InjectDependency(&zipArchiver);

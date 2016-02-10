@@ -48,6 +48,8 @@ namespace Plugins {
     public:
         virtual void initializePlugin() = 0;
         virtual void finalizePlugin() = 0;
+        virtual void enablePlugin() = 0;
+        virtual void disablePlugin() = 0;
 
     public:
         virtual void injectCommandManager(Commands::ICommandManager *commandManager) = 0;

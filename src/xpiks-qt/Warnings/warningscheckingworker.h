@@ -49,6 +49,10 @@ namespace Warnings {
         virtual void notifyQueueIsEmpty() { emit queueIsEmpty(); }
         virtual void notifyStopped() { emit stopped(); }
 
+    public slots:
+        void process() { doWork(); }
+        void cancel() { stopWorking(); }
+
     signals:
         void stopped();
         void queueIsEmpty();
