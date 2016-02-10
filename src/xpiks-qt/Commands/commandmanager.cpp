@@ -170,7 +170,9 @@ const
 }
 
 void Commands::CommandManager::addWarningsService(Common::IServiceBase<Warnings::IWarningsCheckable> *service) {
-    m_WarningsCheckers.append(service);
+    if (service != NULL) {
+        m_WarningsCheckers.append(service);
+    }
 }
 
 void Commands::CommandManager::recordHistoryItem(UndoRedo::IHistoryItem *historyItem) const {
