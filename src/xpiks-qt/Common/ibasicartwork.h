@@ -21,8 +21,6 @@
 
 #ifndef IBASICARTWORK
 #define IBASICARTWORK
-
-#include <QtPlugin>
 #include "isafepointer.h"
 
 namespace Common {

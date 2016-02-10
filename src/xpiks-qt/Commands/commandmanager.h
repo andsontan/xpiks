@@ -24,11 +24,14 @@
 
 #include <QStringList>
 #include <QList>
+#include <QVector>
 #include "../UndoRedo/ihistoryitem.h"
 #include "commandbase.h"
 #include "../Conectivity/analyticsuserevent.h"
 #include "../Common/flags.h"
 #include "icommandmanager.h"
+#include "../Common/iservicebase.h"
+#include "../Warnings/iwarningscheckable.h"
 
 namespace Encryption {
     class SecretsManager;
@@ -83,6 +86,10 @@ namespace Plugins {
     class PluginManager;
 }
 
+namespace Warnings {
+    class WarningsService;
+}
+
 namespace Commands {
     class CommandManager : public ICommandManager
     {
@@ -119,6 +126,7 @@ namespace Commands {
         void InjectDependency(Models::ArtworkUploader *artworkUploader);
         void InjectDependency(Models::UploadInfoRepository *uploadInfoRepository);
         void InjectDependency(Models::WarningsManager *warningsManager);
+        void InjectDependency(Warnings::WarningsService *warningsService);
         void InjectDependency(Encryption::SecretsManager *secretsManager);
         void InjectDependency(UndoRedo::UndoRedoManager *undoRedoManager);
         void InjectDependency(Models::ZipArchiver *zipArchiver);
@@ -141,12 +149,11 @@ namespace Commands {
         const
 #endif
         ;
+        virtual void addWarningsService(Common::IServiceBase<Warnings::IWarningsCheckable> *service);
+
+    public:
         void recordHistoryItem(UndoRedo::IHistoryItem *historyItem) const;
-
-    public:
         void connectEntitiesSignalsSlots() const;
-
-    public:
         void ensureDependenciesInjected();
 
     public:
@@ -169,11 +176,19 @@ namespace Commands {
 #ifdef QT_DEBUG
         void addInitialArtworks(const QStringList &artworksFilepathes);
 #endif
+
+    public:
         void submitKeywordForSpellCheck(SpellCheck::ISpellCheckable *item, int keywordIndex) const;
         void submitForSpellCheck(const QVector<Models::ArtworkMetadata*> &items) const;
         void submitForSpellCheck(const QVector<SpellCheck::ISpellCheckable *> &items) const;
         void submitItemForSpellCheck(SpellCheck::ISpellCheckable *item, int flags = Common::SpellCheckAll) const;
         void setupSpellCheckSuggestions(SpellCheck::ISpellCheckable *item, int index, int flags);
+
+    public:
+        void submitForWarningsCheck(const QVector<Models::ArtworkMetadata*> &items) const;
+        void submitForWarningsCheck(const QVector<Warnings::IWarningsCheckable*> &items) const;
+
+    public:
         void saveMetadata(Models::ArtworkMetadata *metadata) const;
         void reportUserAction(Conectivity::UserAction userAction) const;
         void cleanupLocalLibraryAsync() const;
@@ -200,7 +215,8 @@ namespace Commands {
         Models::CombinedArtworksModel *m_CombinedArtworksModel;
         Models::ArtworkUploader *m_ArtworkUploader;
         Models::UploadInfoRepository *m_UploadInfoRepository;
-        Models::WarningsManager *m_WarningsManager;
+        Models::WarningsManager *m_WarningsManager; // TO BE DEPRECATED
+        Warnings::WarningsService *m_WarningsService;
         Encryption::SecretsManager *m_SecretsManager;
         UndoRedo::UndoRedoManager *m_UndoRedoManager;
         Models::ZipArchiver *m_ZipArchiver;
@@ -216,6 +232,9 @@ namespace Commands {
         Suggestion::LocalLibrary *m_LocalLibrary;
         MetadataIO::MetadataIOCoordinator *m_MetadataIOCoordinator;
         Plugins::PluginManager *m_PluginManager;
+
+        QVector<Common::IServiceBase<Warnings::IWarningsCheckable> *> m_WarningsCheckers;
+
         volatile bool m_AfterInitCalled;
     };
 }

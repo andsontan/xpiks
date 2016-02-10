@@ -48,6 +48,7 @@
 #include "../MetadataIO/metadataiocoordinator.h"
 #include "../Suggestion/locallibrary.h"
 #include "../Plugins/pluginmanager.h"
+#include "../Warnings/warningsservice.h"
 
 void Commands::CommandManager::InjectDependency(Models::ArtworksRepository *artworkRepository) {
     Q_ASSERT(artworkRepository != NULL); m_ArtworksRepository = artworkRepository;
@@ -82,6 +83,12 @@ void Commands::CommandManager::InjectDependency(Models::UploadInfoRepository *up
 void Commands::CommandManager::InjectDependency(Models::WarningsManager *warningsManager) {
     Q_ASSERT(warningsManager != NULL); m_WarningsManager = warningsManager;
     m_WarningsManager->setCommandManager(this);
+}
+
+void Commands::CommandManager::InjectDependency(Warnings::WarningsService *warningsService) {
+    Q_ASSERT(warningsService != NULL); m_WarningsService = warningsService;
+    m_WarningsService->setCommandManager(this);
+    m_WarningsCheckers.append(warningsService);
 }
 
 void Commands::CommandManager::InjectDependency(Encryption::SecretsManager *secretsManager) {
@@ -162,6 +169,10 @@ const
     return result;
 }
 
+void Commands::CommandManager::addWarningsService(Common::IServiceBase<Warnings::IWarningsCheckable> *service) {
+    m_WarningsCheckers.append(service);
+}
+
 void Commands::CommandManager::recordHistoryItem(UndoRedo::IHistoryItem *historyItem) const {
     if (m_UndoRedoManager) {
         m_UndoRedoManager->recordHistoryItem(historyItem);
@@ -199,6 +210,7 @@ void Commands::CommandManager::ensureDependenciesInjected() {
     Q_ASSERT(m_ArtworkUploader != NULL);
     Q_ASSERT(m_UploadInfoRepository != NULL);
     Q_ASSERT(m_WarningsManager != NULL);
+    Q_ASSERT(m_WarningsService != NULL);
     Q_ASSERT(m_SecretsManager != NULL);
     Q_ASSERT(m_UndoRedoManager != NULL);
     Q_ASSERT(m_ZipArchiver != NULL);
@@ -367,6 +379,32 @@ void Commands::CommandManager::setupSpellCheckSuggestions(SpellCheck::ISpellChec
     if (m_SpellCheckSuggestionModel) {
         m_SpellCheckSuggestionModel->setupModel(item, index, flags);
         reportUserAction(Conectivity::UserActionSpellSuggestions);
+    }
+}
+
+void Commands::CommandManager::submitForWarningsCheck(const QVector<Models::ArtworkMetadata *> &items) const {
+    if (m_WarningsService) {
+        QVector<Warnings::IWarningsCheckable*> itemsToSubmit;
+        int count = items.length();
+        itemsToSubmit.reserve(count);
+
+        for (int i = 0; i < count; ++i) {
+            itemsToSubmit << items.at(i);
+        }
+
+        this->submitForWarningsCheck(itemsToSubmit);
+    }
+}
+
+void Commands::CommandManager::submitForWarningsCheck(const QVector<Warnings::IWarningsCheckable *> &items) const {
+    if (m_WarningsService) {
+        int count = m_WarningsCheckers.length();
+        for (int i = 0; i < count; ++i) {
+            Common::IServiceBase<Warnings::IWarningsCheckable> *checker = m_WarningsCheckers.at(i);
+            if (checker->isAvailable()) {
+                checker->submitItems(items);
+            }
+        }
     }
 }
 

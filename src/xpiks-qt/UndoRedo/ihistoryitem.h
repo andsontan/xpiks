@@ -22,16 +22,21 @@
 #ifndef IHISTORYITEM_H
 #define IHISTORYITEM_H
 
-#include <QtPlugin>
-#include "../Commands/icommandmanager.h"
+#include <QString>
+
+namespace Commands {
+    class ICommandManager;
+}
 
 namespace UndoRedo {
+
     class IHistoryItem {
     public:
+        virtual ~IHistoryItem() {}
+
         virtual void undo(const Commands::ICommandManager *commandManager) const = 0;
         virtual QString getDescription() const = 0;
         virtual int getActionType() const = 0;
-        virtual ~IHistoryItem() {}
     };
 }
 

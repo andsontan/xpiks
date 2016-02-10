@@ -22,7 +22,6 @@
 #define IUIPROVIDER_H
 
 #include <QUrl>
-#include <QtPlugin>
 
 namespace Plugins {
     class IUIProvider {

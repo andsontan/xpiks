@@ -22,14 +22,13 @@
 #ifndef ISAFEPOINTER
 #define ISAFEPOINTER
 
-#include <QtPlugin>
-
 namespace Common {
     class ISafePointer {
     public:
+        virtual ~ISafePointer() {}
+
         virtual void acquire() = 0;
         virtual bool release() = 0;
-        virtual ~ISafePointer() {}
     };
 }
 

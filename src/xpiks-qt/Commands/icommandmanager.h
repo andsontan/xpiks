@@ -22,7 +22,8 @@
 #ifndef ICOMMANDMANAGER_H
 #define ICOMMANDMANAGER_H
 
-#include <QtPlugin>
+#include "../Common/iservicebase.h"
+#include "../Warnings/iwarningscheckable.h"
 
 namespace Commands {
     class ICommandBase;
@@ -31,11 +32,14 @@ namespace Commands {
     class ICommandManager {
     public:
         virtual ~ICommandManager() {}
+
         virtual ICommandResult *processCommand(ICommandBase *command)
 #ifndef TESTS
         const
 #endif
         = 0;
+
+        virtual void addWarningsService(Common::IServiceBase<Warnings::IWarningsCheckable> *service) = 0;
     };
 }
 

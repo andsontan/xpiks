@@ -22,22 +22,22 @@
 #ifndef ICOMMANDBASE_H
 #define ICOMMANDBASE_H
 
-#include <QtPlugin>
-
 namespace Commands {
     class ICommandManager;
 
     class ICommandResult {
     public:
-        virtual int getStatus() const = 0;
         virtual ~ICommandResult() {}
+
+        virtual int getStatus() const = 0;
     };
 
     class ICommandBase {
     public:
+        virtual ~ICommandBase() {}
+
         virtual ICommandResult *execute(const ICommandManager *commandManager) const = 0;
         virtual int getCommandType() const = 0;
-        virtual ~ICommandBase() {}
     };
 }
 

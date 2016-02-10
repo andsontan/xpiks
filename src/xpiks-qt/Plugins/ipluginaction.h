@@ -23,12 +23,12 @@
 #define IPLUGINACTION
 
 #include <QString>
-#include <QtPlugin>
 
 namespace Plugins {
     class IPluginAction {
     public:
         virtual ~IPluginAction() {}
+
         virtual const QString &getActionName() const = 0;
         virtual int getActionID() const = 0;
     };
