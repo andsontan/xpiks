@@ -548,6 +548,15 @@ namespace Models {
         }
     }
 
+    Common::IBasicArtwork *ArtItemsModel::getBasicArtwork(int index) const {
+        Common::IBasicArtwork *result = NULL;
+        if (0 <= index && index < m_ArtworkList.length()) {
+            result = m_ArtworkList.at(index);
+        }
+
+        return result;
+    }
+
     void ArtItemsModel::updateItemAtIndex(int metadataIndex) {
         QVector<int> roles;
         fillStandardRoles(roles);

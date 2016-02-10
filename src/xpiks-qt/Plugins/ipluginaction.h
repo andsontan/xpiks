@@ -34,8 +34,5 @@ namespace Plugins {
     };
 }
 
-#define IPluginAction_iid "Xpiks.Plugins.IPluginAction.v0.1"
-Q_DECLARE_INTERFACE(Plugins::IPluginAction, IPluginAction_iid)
-
 #endif // IPLUGINACTION
 

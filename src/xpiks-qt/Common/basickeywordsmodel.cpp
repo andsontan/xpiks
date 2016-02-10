@@ -361,10 +361,6 @@ namespace Common {
         return keyword;
     }
 
-    QStringList BasicKeywordsModel::getKeywords() {
-        return m_KeywordsList;
-    }
-
     void BasicKeywordsModel::setSpellCheckResults(const QVector<SpellCheck::SpellCheckQueryItem *> &items, bool onlyOneKeyword) {
         Q_ASSERT(m_KeywordsList.length() == m_SpellCheckResults.length());
 

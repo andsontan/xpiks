@@ -44,7 +44,11 @@ namespace Plugins {
         bool anyActionsProvided() const { return m_ActionsModel.size() > 0; }
         PluginActionsModel *getActionsModel() { return &m_ActionsModel; }
 
+        void enablePlugin() { m_IsEnabled = true; }
+        void disablePlugin() { m_IsEnabled = false; }
+
         void triggerActionSafe(int actionID) const;
+        void finalizePlugin();
 
     private:
         XpiksPluginInterface *m_PluginInterface;

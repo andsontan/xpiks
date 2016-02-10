@@ -39,7 +39,4 @@ namespace Commands {
     };
 }
 
-#define ICommandManager_iid "Xpiks.Commands.ICommandManager.v0.1"
-Q_DECLARE_INTERFACE(Commands::ICommandManager, ICommandManager_iid)
-
 #endif // ICOMMANDMANAGER_H

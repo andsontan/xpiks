@@ -193,7 +193,9 @@ HEADERS += \
     Plugins/ipluginaction.h \
     Plugins/pluginactionsmodel.h \
     Plugins/uiprovider.h \
-    Plugins/iuiprovider.h
+    Plugins/iuiprovider.h \
+    Common/ibasicartwork.h \
+    Common/iartworkssource.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

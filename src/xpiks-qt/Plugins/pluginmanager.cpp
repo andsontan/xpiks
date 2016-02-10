@@ -82,6 +82,15 @@ namespace Plugins {
         endResetModel();
     }
 
+    void PluginManager::unloadPlugins() {
+        int size = m_PluginsList.length();
+
+        for (int i = 0; i < size; ++i) {
+            PluginWrapper *wrapper = m_PluginsList.at(i);
+            wrapper->finalizePlugin();
+        }
+    }
+
     bool PluginManager::hasExportedActions(int row) const {
         bool hasActions = false;
 

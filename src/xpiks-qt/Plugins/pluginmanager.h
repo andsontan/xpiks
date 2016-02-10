@@ -50,6 +50,7 @@ namespace Plugins {
 
     public:
         void loadPlugins();
+        void unloadPlugins();
         bool hasExportedActions(int row) const;
         UIProvider *getUIProvider() { return &m_UIProvider; }
 

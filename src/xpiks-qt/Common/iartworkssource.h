@@ -18,19 +18,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef IUIPROVIDER_H
-#define IUIPROVIDER_H
 
-#include <QUrl>
-#include <QtPlugin>
+#ifndef IARTWORKSSOURCE
+#define IARTWORKSSOURCE
 
-namespace Plugins {
-    class IUIProvider {
+#include "ibasicartwork.h"
+
+namespace Common {
+    class IArtworksSource {
     public:
-        virtual ~IUIProvider() {}
+        virtual ~IArtworksSource() {}
 
-        virtual void openWindow(const QUrl &rcPath) const = 0;
+        virtual IBasicArtwork *getBasicArtwork(int index) const = 0;
+        virtual int getArtworksCount() const = 0;
     };
 }
 
-#endif // IUIPROVIDER_H
+#endif // IARTWORKSSOURCE
+

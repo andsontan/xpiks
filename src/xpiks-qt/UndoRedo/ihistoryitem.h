@@ -35,7 +35,4 @@ namespace UndoRedo {
     };
 }
 
-#define IHistoryItem_iid "Xpiks.UndoRedo.IHistoryItem.v0.1"
-Q_DECLARE_INTERFACE(UndoRedo::IHistoryItem, IHistoryItem_iid)
-
 #endif // IHISTORYITEM_H

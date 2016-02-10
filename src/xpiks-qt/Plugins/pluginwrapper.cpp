@@ -41,10 +41,29 @@ namespace Plugins {
         qInfo() << "PluginWrapper::triggerAction #" << getPrettyName() << "executing action:" << actionID;
 
         try {
-            m_PluginInterface->executeAction(actionID);
+            if (m_IsEnabled) {
+                m_PluginInterface->executeAction(actionID);
+            } else {
+                qWarning() << "PluginWrapper::triggerAction #" << getPrettyName() << "is disabled";
+            }
         }
         catch (...) {
             qWarning() << "PluginWrapper::triggerAction #" << "Exception while triggering action for plugin ID" << m_PluginID;
+        }
+    }
+
+    void PluginWrapper::finalizePlugin() {
+        qInfo() << "PluginWrapper::finalizePlugin #" << getPrettyName();
+
+        try {
+            if (m_IsEnabled) {
+                m_PluginInterface->finalizePlugin();
+            } else {
+                qWarning() << "PluginWrapper::finalizePlugin #" << "Plugin is disabled";
+            }
+        }
+        catch (...) {
+            qWarning() << "PluginWrapper::finalizePlugin #" << "Exception on finalization";
         }
     }
 }

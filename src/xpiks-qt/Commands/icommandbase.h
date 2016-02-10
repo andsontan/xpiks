@@ -41,10 +41,4 @@ namespace Commands {
     };
 }
 
-#define ICommandResult_iid "Xpiks.Commands.ICommandResult.v0.1"
-#define ICommandBase_iid "Xpiks.Commands.ICommandBase.v0.1"
-
-Q_DECLARE_INTERFACE(Commands::ICommandResult, ICommandResult_iid)
-Q_DECLARE_INTERFACE(Commands::ICommandBase, ICommandBase_iid)
-
 #endif // ICOMMANDBASE_H
