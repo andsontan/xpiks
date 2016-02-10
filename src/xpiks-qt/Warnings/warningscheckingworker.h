@@ -35,6 +35,9 @@ namespace Warnings {
     class WarningsCheckingWorker: public QObject, public Common::ItemProcessingWorker<WarningsItem>
     {
         Q_OBJECT
+    public:
+        WarningsCheckingWorker(Models::SettingsModel *settingsModel, QObject *parent=0);
+
     protected:
         virtual bool initWorker();
         virtual bool processOneItem(WarningsItem *item);

@@ -396,7 +396,7 @@ void Commands::CommandManager::afterConstructionCallback()  {
 
     m_AfterInitCalled = true;
 
-    m_SpellCheckerService->startChecking();
+    m_SpellCheckerService->startService();
     m_MetadataSaverService->startSaving();
 
     const QString reportingEndpoint = QLatin1String("cc39a47f60e1ed812e2403b33678dd1c529f1cc43f66494998ec478a4d13496269a3dfa01f882941766dba246c76b12b2a0308e20afd84371c41cf513260f8eb8b71f8c472cafb1abf712c071938ec0791bbf769ab9625c3b64827f511fa3fbb");
@@ -416,7 +416,7 @@ void Commands::CommandManager::beforeDestructionCallback() const {
 
     // we have a second for important stuff
     m_TelemetryService->reportAction(Conectivity::UserActionClose);
-    m_SpellCheckerService->stopChecking();
+    m_SpellCheckerService->stopService();
     m_MetadataSaverService->stopSaving();
     m_PluginManager->unloadPlugins();
 #ifndef TESTS

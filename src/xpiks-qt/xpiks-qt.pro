@@ -73,7 +73,8 @@ SOURCES += main.cpp \
     Plugins/pluginmanager.cpp \
     Plugins/pluginwrapper.cpp \
     Plugins/pluginactionsmodel.cpp \
-    Plugins/uiprovider.cpp
+    Plugins/uiprovider.cpp \
+    Warnings/warningsservice.cpp
 
 RESOURCES += qml.qrc
 
@@ -195,7 +196,9 @@ HEADERS += \
     Plugins/uiprovider.h \
     Plugins/iuiprovider.h \
     Common/ibasicartwork.h \
-    Common/iartworkssource.h
+    Common/iartworkssource.h \
+    Warnings/warningsservice.h \
+    Common/iservicebase.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

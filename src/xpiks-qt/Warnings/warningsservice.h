@@ -19,30 +19,42 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef WARNINGSQUERYITEM
-#define WARNINGSQUERYITEM
+#ifndef WARNINGSSERVICE_H
+#define WARNINGSSERVICE_H
 
+#include <QObject>
+#include "../Common/baseentity.h"
+#include "../Common/iservicebase.h"
 #include "iwarningscheckable.h"
 
 namespace Warnings {
-    class WarningsItem {
+    class WarningsCheckingWorker;
+
+    class WarningsService :
+            public QObject,
+            public Common::BaseEntity,
+            public Common::IServiceBase<IWarningsCheckable>
+    {
+        Q_OBJECT
     public:
-        WarningsItem(IWarningsCheckable *checkableItem):
-            m_CheckableItem(checkableItem)
-        { }
+        explicit WarningsService(QObject *parent = 0);
+        virtual ~WarningsService() {}
 
     public:
-        void submitWarnings() {
-            m_CheckableItem->setWarningsFlags(m_WarningsFlags);
-        }
+        virtual void startService();
+        virtual void stopService();
 
-        IWarningsCheckable *getCheckableItem() const { return m_CheckableItem; }
+        virtual bool isAvailable() const { return true; }
+
+        virtual void submitItem(IWarningsCheckable *item);
+        virtual void submitItems(const QVector<IWarningsCheckable*> &items);
+
+    private slots:
+        void workerDestoyed(QObject *object);
 
     private:
-        IWarningsCheckable *m_CheckableItem;
-        int m_WarningsFlags;
+        WarningsCheckingWorker *m_WarningsWorker;
     };
 }
 
-#endif // WARNINGSQUERYITEM
-
+#endif // WARNINGSSERVICE_H

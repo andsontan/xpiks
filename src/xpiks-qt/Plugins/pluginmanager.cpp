@@ -29,6 +29,7 @@
 #include "../Commands/commandmanager.h"
 #include "../UndoRedo/undoredomanager.h"
 #include "pluginwrapper.h"
+#include "../Models/artitemsmodel.h"
 
 namespace Plugins {
     PluginManager::PluginManager():
@@ -130,6 +131,7 @@ namespace Plugins {
             plugin->injectCommandManager(m_CommandManager);
             plugin->injectUndoRedoManager(m_CommandManager->getUndoRedoManager());
             plugin->injectUIProvider(&m_UIProvider);
+            plugin->injectArtworksSource(m_CommandManager->getArtItemsModel());
 
             plugin->initializePlugin();
 

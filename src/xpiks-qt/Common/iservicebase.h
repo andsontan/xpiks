@@ -19,30 +19,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef WARNINGSQUERYITEM
-#define WARNINGSQUERYITEM
+#ifndef ISERVICEBASE_H
+#define ISERVICEBASE_H
 
-#include "iwarningscheckable.h"
+#include <QVector>
 
-namespace Warnings {
-    class WarningsItem {
+namespace Common {
+    template<typename T>
+    class IServiceBase {
     public:
-        WarningsItem(IWarningsCheckable *checkableItem):
-            m_CheckableItem(checkableItem)
-        { }
+        virtual ~IServiceBase() {}
 
-    public:
-        void submitWarnings() {
-            m_CheckableItem->setWarningsFlags(m_WarningsFlags);
-        }
+        virtual void startService() = 0;
+        virtual void stopService() = 0;
 
-        IWarningsCheckable *getCheckableItem() const { return m_CheckableItem; }
+        virtual bool isAvailable() const = 0;
 
-    private:
-        IWarningsCheckable *m_CheckableItem;
-        int m_WarningsFlags;
+        virtual void submitItem(T *item) = 0;
+        virtual void submitItems(const QVector<T*> &items) = 0;
     };
 }
 
-#endif // WARNINGSQUERYITEM
-
+#endif // ISERVICEBASE_H

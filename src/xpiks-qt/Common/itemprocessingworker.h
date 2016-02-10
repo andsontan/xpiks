@@ -91,7 +91,7 @@ namespace Common {
             notifyStopped();
         }
 
-        void cancelWork() {
+        void stopWorking() {
             m_Cancel = true;
             submitItem(NULL);
         }
