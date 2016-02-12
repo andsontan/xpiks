@@ -42,7 +42,7 @@ namespace Plugins {
 
         // IUIProvider interface
     public:
-        virtual void openWindow(const QUrl &rcPath) const;
+        virtual void openWindow(const QUrl &rcPath, const QHash<QString, QObject*> &contextModels = QHash<QString, QObject*>()) const;
 
     private slots:
         void viewStatusChanged(QQmlComponent::Status status);

@@ -27,7 +27,9 @@
 #include <QQuickView>
 #include <QQmlProperty>
 #include <QQmlContext>
+#include <QQuickWindow>
 #include <QDebug>
+#include <QHash>
 
 namespace Plugins {
     UIProvider::UIProvider(QObject *parent):
@@ -35,21 +37,36 @@ namespace Plugins {
     {
     }
 
-    void UIProvider::openWindow(const QUrl &rcPath) const {
+    void UIProvider::openWindow(const QUrl &rcPath, const QHash<QString, QObject *> &contextModels) const {
         QQmlComponent component(m_QmlEngine, rcPath);
 
         QObject::connect(&component, SIGNAL(statusChanged(QQmlComponent::Status)),
                          this, SLOT(viewStatusChanged(QQmlComponent::Status)));
 
-        QQmlContext *context = new QQmlContext(m_QmlEngine);
-        QObject *object = component.create(context);
+        //QQuickWindow *existingWindow = m_QmlEngine->findChild<QQuickWindow *>();
 
-        QObject::connect(object, SIGNAL(destroyed(QObject*)),
-                         this, SLOT(windowDestroyed(QObject*)));
+        //if (existingWindow == NULL) {
+            qDebug() << "UIProvider::openWindow #" << "Creating a new window";
+            QQmlContext *context = new QQmlContext(m_QmlEngine);
 
-        QQmlEngine::setObjectOwnership(object, QQmlEngine::CppOwnership);
+            QHashIterator<QString, QObject*> i(contextModels);
+            while (i.hasNext()) {
+                i.next();
+                context->setContextProperty(i.key(), i.value());
+            }
 
-        object->setParent(m_Root);
+            QObject *object = component.create(context);
+
+            QObject::connect(object, SIGNAL(destroyed(QObject*)),
+                             this, SLOT(windowDestroyed(QObject*)));
+
+            //QQmlEngine::setObjectOwnership(object, QQmlEngine::CppOwnership);
+
+            object->setParent(m_Root);
+        /*} else {
+            qDebug() << "UIProvider::openWindow #" << "Showing existing window";
+            existingWindow->show();
+        }*/
     }
 
     void UIProvider::viewStatusChanged(QQmlComponent::Status status) {

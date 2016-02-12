@@ -22,13 +22,16 @@
 #define IUIPROVIDER_H
 
 #include <QUrl>
+#include <QHash>
+#include <QObject>
+#include <QString>
 
 namespace Plugins {
     class IUIProvider {
     public:
         virtual ~IUIProvider() {}
 
-        virtual void openWindow(const QUrl &rcPath) const = 0;
+        virtual void openWindow(const QUrl &rcPath, const QHash<QString, QObject*> &contextModels = QHash<QString, QObject*>()) const = 0;
     };
 }
 
