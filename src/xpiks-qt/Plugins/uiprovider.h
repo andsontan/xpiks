@@ -25,6 +25,7 @@
 #include "iuiprovider.h"
 #include <QQuickItem>
 #include <QQmlComponent>
+#include <QQuickWindow>
 #include <QObject>
 #include <QUrl>
 
@@ -47,6 +48,8 @@ namespace Plugins {
     private slots:
         void viewStatusChanged(QQmlComponent::Status status);
         void windowDestroyed(QObject *object);
+        void contextDestroyed(QObject *object);
+        void windowClosing(QQuickCloseEvent* closeEvent);
 
     private:
         QQmlEngine *m_QmlEngine;

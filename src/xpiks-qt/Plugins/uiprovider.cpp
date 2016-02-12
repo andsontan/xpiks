@@ -38,35 +38,46 @@ namespace Plugins {
     }
 
     void UIProvider::openWindow(const QUrl &rcPath, const QHash<QString, QObject *> &contextModels) const {
-        QQmlComponent component(m_QmlEngine, rcPath);
+        QQmlComponent component(m_QmlEngine);
 
         QObject::connect(&component, SIGNAL(statusChanged(QQmlComponent::Status)),
                          this, SLOT(viewStatusChanged(QQmlComponent::Status)));
 
-        //QQuickWindow *existingWindow = m_QmlEngine->findChild<QQuickWindow *>();
+        component.loadUrl(rcPath, QQmlComponent::PreferSynchronous);
 
-        //if (existingWindow == NULL) {
-            qDebug() << "UIProvider::openWindow #" << "Creating a new window";
-            QQmlContext *context = new QQmlContext(m_QmlEngine);
+        if (!component.isReady()) {
+            qWarning() << "UIProvider::openWindow #" << "Component" << rcPath << "is not ready";
+            return;
+        }
 
-            QHashIterator<QString, QObject*> i(contextModels);
-            while (i.hasNext()) {
-                i.next();
-                context->setContextProperty(i.key(), i.value());
-            }
+        qDebug() << "UIProvider::openWindow #" << "Creating a new window";
+        QQmlContext *context = new QQmlContext(m_QmlEngine);
+        QObject::connect(context, SIGNAL(destroyed(QObject*)),
+                         this, SLOT(contextDestroyed(QObject*)));
 
-            QObject *object = component.create(context);
+        QHashIterator<QString, QObject*> i(contextModels);
+        while (i.hasNext()) {
+            i.next();
+            context->setContextProperty(i.key(), i.value());
+        }
 
+        QObject *object = component.create(context);
+
+        if (object != NULL) {
             QObject::connect(object, SIGNAL(destroyed(QObject*)),
                              this, SLOT(windowDestroyed(QObject*)));
+
+            QQuickWindow *window = qobject_cast<QQuickWindow*>(object);
+            if (window != NULL) {
+                QObject::connect(window, SIGNAL(closing(QQuickCloseEvent*)),
+                                 this, SLOT(windowClosing(QQuickCloseEvent*)));
+            }
 
             //QQmlEngine::setObjectOwnership(object, QQmlEngine::CppOwnership);
 
             object->setParent(m_Root);
-        /*} else {
-            qDebug() << "UIProvider::openWindow #" << "Showing existing window";
-            existingWindow->show();
-        }*/
+            context->setParent(object);
+        }
     }
 
     void UIProvider::viewStatusChanged(QQmlComponent::Status status) {
@@ -82,5 +93,16 @@ namespace Plugins {
     void UIProvider::windowDestroyed(QObject *object) {
         Q_UNUSED(object);
         qInfo() << "UIProvider::windowDestroyed #" << "Plugin window destroyed";
+    }
+
+    void UIProvider::contextDestroyed(QObject *object) {
+        Q_UNUSED(object);
+        qInfo() << "UIProvider::contextDestroyed #";
+    }
+
+    void UIProvider::windowClosing(QQuickCloseEvent *closeEvent) {
+        Q_UNUSED(closeEvent);
+        qInfo() << "UIProvider::windowClosing #";
+        sender()->deleteLater();
     }
 }
