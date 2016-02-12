@@ -20,6 +20,7 @@
  */
 
 #include "commandmanager.h"
+#include "../Common/defines.h"
 #include "../Models/artworksrepository.h"
 #include "../Models/artitemsmodel.h"
 #include "../Models/combinedartworksmodel.h"
@@ -443,10 +444,10 @@ void Commands::CommandManager::afterConstructionCallback()  {
     QString endpoint = Encryption::decodeText(reportingEndpoint, "reporting");
     m_TelemetryService->setEndpoint(endpoint);
 
-#if !defined(Q_OS_LINUX)
+#ifdef WITH_PLUGINS
     m_PluginManager->loadPlugins();
+#endif
 
-#if !defined(Q_OS_LINUX)
     m_UpdateService->startChecking();
 }
 
