@@ -19,30 +19,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef WARNINGSQUERYITEM
-#define WARNINGSQUERYITEM
+#ifndef ICOMMANDMANAGER_H
+#define ICOMMANDMANAGER_H
 
-#include "iwarningscheckable.h"
+#include "../Common/iservicebase.h"
+#include "../Warnings/iwarningscheckable.h"
 
-namespace Warnings {
-    class WarningsItem {
+namespace Commands {
+    class ICommandBase;
+    class ICommandResult;
+
+    class ICommandManager {
     public:
-        WarningsItem(IWarningsCheckable *checkableItem):
-            m_CheckableItem(checkableItem)
-        { }
+        virtual ~ICommandManager() {}
 
-    public:
-        void submitWarnings() {
-            m_CheckableItem->setWarningsFlags(m_WarningsFlags);
-        }
+        virtual ICommandResult *processCommand(ICommandBase *command)
+#ifndef TESTS
+        const
+#endif
+        = 0;
 
-        IWarningsCheckable *getCheckableItem() const { return m_CheckableItem; }
-
-    private:
-        IWarningsCheckable *m_CheckableItem;
-        int m_WarningsFlags;
+        virtual void addWarningsService(Common::IServiceBase<Warnings::IWarningsCheckable> *service) = 0;
     };
 }
 
-#endif // WARNINGSQUERYITEM
-
+#endif // ICOMMANDMANAGER_H

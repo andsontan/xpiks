@@ -48,5 +48,6 @@
         <file>Dialogs/PlainTextKeywordsDialog.qml</file>
         <file>Dialogs/WhatsNewDialog.qml</file>
         <file>Dialogs/TermsAndConditionsDialog.qml</file>
+        <file>Dialogs/PluginsDialog.qml</file>
     </qresource>
 </RCC>

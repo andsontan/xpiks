@@ -19,30 +19,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef WARNINGSQUERYITEM
-#define WARNINGSQUERYITEM
+#ifndef IBASICARTWORK
+#define IBASICARTWORK
+#include "isafepointer.h"
 
-#include "iwarningscheckable.h"
-
-namespace Warnings {
-    class WarningsItem {
+namespace Common {
+    class IBasicArtwork : public ISafePointer {
     public:
-        WarningsItem(IWarningsCheckable *checkableItem):
-            m_CheckableItem(checkableItem)
-        { }
+        virtual ~IBasicArtwork() {}
 
-    public:
-        void submitWarnings() {
-            m_CheckableItem->setWarningsFlags(m_WarningsFlags);
-        }
+        virtual const QSet<QString> &getKeywordsSet() const = 0;
+        virtual const QStringList &getKeywords() const = 0;
+        virtual bool isEmpty() const = 0;
 
-        IWarningsCheckable *getCheckableItem() const { return m_CheckableItem; }
-
-    private:
-        IWarningsCheckable *m_CheckableItem;
-        int m_WarningsFlags;
+        virtual const QString &getDescription() const = 0;
+        virtual const QString &getTitle() const = 0;
+        virtual const QString &getFilepath() const = 0;
     };
 }
 
-#endif // WARNINGSQUERYITEM
+#endif // IBASICARTWORK
 

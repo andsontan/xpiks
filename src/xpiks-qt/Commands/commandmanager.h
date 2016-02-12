@@ -24,10 +24,14 @@
 
 #include <QStringList>
 #include <QList>
-#include "../UndoRedo/historyitem.h"
+#include <QVector>
+#include "../UndoRedo/ihistoryitem.h"
 #include "commandbase.h"
 #include "../Conectivity/analyticsuserevent.h"
 #include "../Common/flags.h"
+#include "icommandmanager.h"
+#include "../Common/iservicebase.h"
+#include "../Warnings/iwarningscheckable.h"
 
 namespace Encryption {
     class SecretsManager;
@@ -78,8 +82,16 @@ namespace Conectivity {
     class TelemetryService;
 }
 
+namespace Plugins {
+    class PluginManager;
+}
+
+namespace Warnings {
+    class WarningsService;
+}
+
 namespace Commands {
-    class CommandManager
+    class CommandManager : public ICommandManager
     {
     public:
         CommandManager():
@@ -114,6 +126,7 @@ namespace Commands {
         void InjectDependency(Models::ArtworkUploader *artworkUploader);
         void InjectDependency(Models::UploadInfoRepository *uploadInfoRepository);
         void InjectDependency(Models::WarningsManager *warningsManager);
+        void InjectDependency(Warnings::WarningsService *warningsService);
         void InjectDependency(Encryption::SecretsManager *secretsManager);
         void InjectDependency(UndoRedo::UndoRedoManager *undoRedoManager);
         void InjectDependency(Models::ZipArchiver *zipArchiver);
@@ -128,19 +141,19 @@ namespace Commands {
         void InjectDependency(Models::LogsModel *logsModel);
         void InjectDependency(MetadataIO::MetadataIOCoordinator *metadataIOCoordinator);
         void InjectDependency(Suggestion::LocalLibrary *localLibrary);
+        void InjectDependency(Plugins::PluginManager *pluginManager);
 
     public:
-        virtual CommandResult *processCommand(CommandBase *command)
+        virtual ICommandResult *processCommand(ICommandBase *command)
 #ifndef TESTS
         const
 #endif
         ;
-        void recordHistoryItem(UndoRedo::HistoryItem *historyItem) const;
+        virtual void addWarningsService(Common::IServiceBase<Warnings::IWarningsCheckable> *service);
 
     public:
+        void recordHistoryItem(UndoRedo::IHistoryItem *historyItem) const;
         void connectEntitiesSignalsSlots() const;
-
-    public:
         void ensureDependenciesInjected();
 
     public:
@@ -163,11 +176,19 @@ namespace Commands {
 #ifdef QT_DEBUG
         void addInitialArtworks(const QStringList &artworksFilepathes);
 #endif
+
+    public:
         void submitKeywordForSpellCheck(SpellCheck::ISpellCheckable *item, int keywordIndex) const;
         void submitForSpellCheck(const QVector<Models::ArtworkMetadata*> &items) const;
         void submitForSpellCheck(const QVector<SpellCheck::ISpellCheckable *> &items) const;
         void submitItemForSpellCheck(SpellCheck::ISpellCheckable *item, int flags = Common::SpellCheckAll) const;
         void setupSpellCheckSuggestions(SpellCheck::ISpellCheckable *item, int index, int flags);
+
+    public:
+        void submitForWarningsCheck(const QVector<Models::ArtworkMetadata*> &items) const;
+        void submitForWarningsCheck(const QVector<Warnings::IWarningsCheckable*> &items) const;
+
+    public:
         void saveMetadata(Models::ArtworkMetadata *metadata) const;
         void reportUserAction(Conectivity::UserAction userAction) const;
         void cleanupLocalLibraryAsync() const;
@@ -185,6 +206,7 @@ namespace Commands {
         virtual Models::SettingsModel *getSettingsModel() const { return m_SettingsModel; }
         virtual SpellCheck::SpellCheckerService *getSpellCheckerService() const { return m_SpellCheckerService; }
         virtual MetadataIO::BackupSaverService *getBackupSaverService() const { return m_MetadataSaverService; }
+        virtual UndoRedo::UndoRedoManager *getUndoRedoManager() const { return m_UndoRedoManager; }
 
     private:
         Models::ArtworksRepository *m_ArtworksRepository;
@@ -193,7 +215,8 @@ namespace Commands {
         Models::CombinedArtworksModel *m_CombinedArtworksModel;
         Models::ArtworkUploader *m_ArtworkUploader;
         Models::UploadInfoRepository *m_UploadInfoRepository;
-        Models::WarningsManager *m_WarningsManager;
+        Models::WarningsManager *m_WarningsManager; // TO BE DEPRECATED
+        Warnings::WarningsService *m_WarningsService;
         Encryption::SecretsManager *m_SecretsManager;
         UndoRedo::UndoRedoManager *m_UndoRedoManager;
         Models::ZipArchiver *m_ZipArchiver;
@@ -208,6 +231,10 @@ namespace Commands {
         Models::LogsModel *m_LogsModel;
         Suggestion::LocalLibrary *m_LocalLibrary;
         MetadataIO::MetadataIOCoordinator *m_MetadataIOCoordinator;
+        Plugins::PluginManager *m_PluginManager;
+
+        QVector<Common::IServiceBase<Warnings::IWarningsCheckable> *> m_WarningsCheckers;
+
         volatile bool m_AfterInitCalled;
     };
 }

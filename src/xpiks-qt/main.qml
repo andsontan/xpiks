@@ -58,16 +58,18 @@ ApplicationWindow {
     }
 
     function closeHandler(close) {
+        console.info("UI::main # closeHandler")
         saveRecentDirectories()
 
         if (artItemsModel.modifiedArtworksCount > 0) {
             close.accepted = false
             configExitDialog.open()
         } else {
-            console.debug("No modified artworks found. Exiting...")
+            console.debug("UI::main # No modified artworks found. Exiting...")
             applicationWindow.visibility = "Minimized"
             helpersWrapper.beforeDestruction();
             appSettings.protectTelemetry();
+            close.accepted = false
             closingTimer.start()
         }
     }
@@ -198,6 +200,7 @@ ApplicationWindow {
                                     function(wnd) {wnd.show();});
                 }
             }
+
             MenuItem {
                 text: qsTr("&About")
                 onTriggered: {
@@ -250,6 +253,49 @@ ApplicationWindow {
                 }
             }
 
+        }
+
+        Menu {
+            title: qsTr("Plugins")
+            id: pluginsMenu
+
+            Instantiator {
+                model: pluginsWithActions
+                onObjectAdded: pluginsMenu.insertItem( index, object )
+                onObjectRemoved: pluginsMenu.removeItem( object )
+
+                delegate: Menu {
+                    id: pluginActionsMenu
+                    title: model.prettyname
+                    enabled: model.enabled
+                    property var actionsModel: pluginManager.getPluginActions(index)
+
+                    Instantiator {
+                        model: actionsModel
+                        onObjectAdded: pluginActionsMenu.insertItem( index, object )
+                        onObjectRemoved: pluginActionsMenu.removeItem( object )
+
+                        delegate: MenuItem {
+                            text: aname
+                            onTriggered: {
+                                pluginManager.triggerPluginAction(pluginID, acode)
+                            }
+                        }
+                    }
+                }
+            }
+
+            MenuSeparator {
+                visible: pluginsMenu.items.length > 2
+            }
+
+            MenuItem {
+                text: qsTr("&Plugin manager")
+                onTriggered: {
+                    Common.launchDialog("Dialogs/PluginsDialog.qml",
+                                        applicationWindow, {});
+                }
+            }
         }
 
         Menu {

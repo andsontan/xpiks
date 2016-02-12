@@ -24,13 +24,14 @@
 #include <QDir>
 #include <QtQml>
 #include <QFile>
-#include <QtDebug>
 #include <QUuid>
+#include <QtDebug>
 #include <QDateTime>
 #include <QSettings>
 #include <QTextStream>
 #include <QQmlContext>
 #include <QApplication>
+#include <QQuickWindow>
 #include <QStandardPaths>
 #include <QQmlApplicationEngine>
 //-------------------------------------
@@ -51,12 +52,14 @@
 #include "Encryption/secretsmanager.h"
 #include "Models/artworksrepository.h"
 #include "Helpers/settingsprovider.h"
+#include "Warnings/warningsservice.h"
 #include "UndoRedo/undoredomanager.h"
 #include "Helpers/clipboardhelper.h"
 #include "Commands/commandmanager.h"
 #include "Suggestion/locallibrary.h"
 #include "Models/artworkuploader.h"
 #include "Models/warningsmanager.h"
+#include "Plugins/pluginmanager.h"
 #include "Helpers/loggingworker.h"
 #include "Helpers/updateservice.h"
 #include "Models/artitemsmodel.h"
@@ -198,6 +201,7 @@ int main(int argc, char *argv[]) {
     Models::CombinedArtworksModel combinedArtworksModel;
     Models::UploadInfoRepository uploadInfoRepository;
     Models::WarningsManager warningsManager;
+    Warnings::WarningsService warningsService;
     Models::SettingsModel settingsModel;
     settingsModel.readAllValues();
     Encryption::SecretsManager secretsManager;
@@ -223,6 +227,9 @@ int main(int argc, char *argv[]) {
     bool telemetryEnabled = appSettings.value(Constants::USER_STATISTIC,false).toBool();
 #endif
     Conectivity::TelemetryService telemetryService(userId, telemetryEnabled);
+    Plugins::PluginManager pluginManager;
+    Plugins::PluginsWithActionsModel pluginsWithActions;
+    pluginsWithActions.setSourceModel(&pluginManager);
 
     Commands::CommandManager commandManager;
     commandManager.InjectDependency(&artworkRepository);
@@ -232,6 +239,7 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&artworkUploader);
     commandManager.InjectDependency(&uploadInfoRepository);
     commandManager.InjectDependency(&warningsManager);
+    commandManager.InjectDependency(&warningsService);
     commandManager.InjectDependency(&secretsManager);
     commandManager.InjectDependency(&undoRedoManager);
     commandManager.InjectDependency(&zipArchiver);
@@ -246,6 +254,7 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&logsModel);
     commandManager.InjectDependency(&localLibrary);
     commandManager.InjectDependency(&metadataIOCoordinator);
+    commandManager.InjectDependency(&pluginManager);
 
     commandManager.ensureDependenciesInjected();
 
@@ -286,11 +295,17 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("spellCheckerService", &spellCheckerService);
     rootContext->setContextProperty("spellCheckSuggestionModel", &spellCheckSuggestionModel);
     rootContext->setContextProperty("metadataIOCoordinator", &metadataIOCoordinator);
+    rootContext->setContextProperty("pluginManager", &pluginManager);
+    rootContext->setContextProperty("pluginsWithActions", &pluginsWithActions);
 
     engine.addImageProvider("global", globalProvider);
     qDebug() << "main #" << "About to load main view...";
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     qDebug() << "main #" << "Main view loaded";
+
+    pluginManager.getUIProvider()->setQmlEngine(&engine);
+    QQuickWindow *window = qobject_cast<QQuickWindow*>(engine.rootObjects().at(0));
+    pluginManager.getUIProvider()->setRoot(window->contentItem());
 
 #ifdef QT_DEBUG
     if (argc > 1) {

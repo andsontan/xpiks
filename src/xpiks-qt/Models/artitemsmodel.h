@@ -33,6 +33,8 @@
 #include <QVector>
 #include "abstractlistmodel.h"
 #include "../Common/baseentity.h"
+#include "../Common/ibasicartwork.h"
+#include "../Common/iartworkssource.h"
 
 namespace Models {
     class ArtworkMetadata;
@@ -40,7 +42,8 @@ namespace Models {
 
     class ArtItemsModel :
             public AbstractListModel,
-            public Common::BaseEntity
+            public Common::BaseEntity,
+            public Common::IArtworksSource
     {
         Q_OBJECT
         Q_PROPERTY(int modifiedArtworksCount READ getModifiedArtworksCount NOTIFY modifiedArtworksCountChanged)
@@ -129,6 +132,11 @@ namespace Models {
         void updateItemsAtIndices(const QVector<int> &indices);
         void updateItemsInRanges(const QVector<QPair<int, int> > &ranges);
         void setAllItemsSelected(bool selected);
+
+    public:
+        // IARTWORKSSOURCE
+        virtual Common::IBasicArtwork *getBasicArtwork(int index) const;
+        virtual int getArtworksCount() const { return m_ArtworkList.length(); }
 
     private:
         void updateItemAtIndex(int metadataIndex);

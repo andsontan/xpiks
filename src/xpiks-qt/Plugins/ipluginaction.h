@@ -19,30 +19,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef WARNINGSQUERYITEM
-#define WARNINGSQUERYITEM
+#ifndef IPLUGINACTION
+#define IPLUGINACTION
 
-#include "iwarningscheckable.h"
+#include <QString>
 
-namespace Warnings {
-    class WarningsItem {
+namespace Plugins {
+    class IPluginAction {
     public:
-        WarningsItem(IWarningsCheckable *checkableItem):
-            m_CheckableItem(checkableItem)
-        { }
+        virtual ~IPluginAction() {}
 
-    public:
-        void submitWarnings() {
-            m_CheckableItem->setWarningsFlags(m_WarningsFlags);
-        }
-
-        IWarningsCheckable *getCheckableItem() const { return m_CheckableItem; }
-
-    private:
-        IWarningsCheckable *m_CheckableItem;
-        int m_WarningsFlags;
+        virtual const QString &getActionName() const = 0;
+        virtual int getActionID() const = 0;
     };
 }
 
-#endif // WARNINGSQUERYITEM
+#endif // IPLUGINACTION
 

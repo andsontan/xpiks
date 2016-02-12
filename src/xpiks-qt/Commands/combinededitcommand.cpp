@@ -31,11 +31,13 @@
 #include "../Models/settingsmodel.h"
 #include "../Common/defines.h"
 
-Commands::CommandResult *Commands::CombinedEditCommand::execute(const Commands::CommandManager *commandManager) const {
+Commands::CommandResult *Commands::CombinedEditCommand::execute(const ICommandManager *commandManagerInterface) const {
     qInfo() << "CombinedEditCommand::execute #" << "flags =" << m_EditFlags << "artworks count =" << m_ArtItemInfos.length();
     QVector<int> indicesToUpdate;
     QVector<UndoRedo::ArtworkMetadataBackup*> artworksBackups;
     QVector<SpellCheck::ISpellCheckable*> itemsToCheck;
+
+    CommandManager *commandManager = (CommandManager*)commandManagerInterface;
 
     int size = m_ArtItemInfos.length();
     indicesToUpdate.reserve(size);

@@ -26,6 +26,12 @@
 
 namespace Warnings {
 
+    WarningsCheckingWorker::WarningsCheckingWorker(Models::SettingsModel *settingsModel, QObject *parent):
+        QObject(parent),
+        m_SettingsModel(settingsModel)
+    {
+    }
+
     bool WarningsCheckingWorker::initWorker() {
         return true;
     }

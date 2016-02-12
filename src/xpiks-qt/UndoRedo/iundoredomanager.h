@@ -19,30 +19,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef WARNINGSQUERYITEM
-#define WARNINGSQUERYITEM
+#ifndef IUNDOREDOMANAGER_H
+#define IUNDOREDOMANAGER_H
 
-#include "iwarningscheckable.h"
+#include "ihistoryitem.h"
 
-namespace Warnings {
-    class WarningsItem {
+namespace UndoRedo {
+    class IUndoRedoManager {
     public:
-        WarningsItem(IWarningsCheckable *checkableItem):
-            m_CheckableItem(checkableItem)
-        { }
-
-    public:
-        void submitWarnings() {
-            m_CheckableItem->setWarningsFlags(m_WarningsFlags);
-        }
-
-        IWarningsCheckable *getCheckableItem() const { return m_CheckableItem; }
-
-    private:
-        IWarningsCheckable *m_CheckableItem;
-        int m_WarningsFlags;
+        virtual ~IUndoRedoManager() {}
+        virtual void recordHistoryItem(IHistoryItem *historyItem) = 0;
     };
 }
 
-#endif // WARNINGSQUERYITEM
-
+#endif // IUNDOREDOMANAGER_H

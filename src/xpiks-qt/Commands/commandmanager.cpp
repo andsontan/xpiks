@@ -47,6 +47,8 @@
 #include "../Encryption/aes-qt.h"
 #include "../MetadataIO/metadataiocoordinator.h"
 #include "../Suggestion/locallibrary.h"
+#include "../Plugins/pluginmanager.h"
+#include "../Warnings/warningsservice.h"
 
 void Commands::CommandManager::InjectDependency(Models::ArtworksRepository *artworkRepository) {
     Q_ASSERT(artworkRepository != NULL); m_ArtworksRepository = artworkRepository;
@@ -81,6 +83,12 @@ void Commands::CommandManager::InjectDependency(Models::UploadInfoRepository *up
 void Commands::CommandManager::InjectDependency(Models::WarningsManager *warningsManager) {
     Q_ASSERT(warningsManager != NULL); m_WarningsManager = warningsManager;
     m_WarningsManager->setCommandManager(this);
+}
+
+void Commands::CommandManager::InjectDependency(Warnings::WarningsService *warningsService) {
+    Q_ASSERT(warningsService != NULL); m_WarningsService = warningsService;
+    m_WarningsService->setCommandManager(this);
+    m_WarningsCheckers.append(warningsService);
 }
 
 void Commands::CommandManager::InjectDependency(Encryption::SecretsManager *secretsManager) {
@@ -146,17 +154,28 @@ void Commands::CommandManager::InjectDependency(Suggestion::LocalLibrary *localL
     Q_ASSERT(localLibrary != NULL); m_LocalLibrary = localLibrary;
 }
 
-Commands::CommandResult *Commands::CommandManager::processCommand(Commands::CommandBase *command)
+void Commands::CommandManager::InjectDependency(Plugins::PluginManager *pluginManager) {
+    Q_ASSERT(pluginManager != NULL); m_PluginManager = pluginManager;
+    m_PluginManager->setCommandManager(this);
+}
+
+Commands::ICommandResult *Commands::CommandManager::processCommand(ICommandBase *command)
 #ifndef TESTS
 const
 #endif
 {
-    Commands::CommandResult *result = command->execute(this);
+    Commands::ICommandResult *result = command->execute(this);
     delete command;
     return result;
 }
 
-void Commands::CommandManager::recordHistoryItem(UndoRedo::HistoryItem *historyItem) const {
+void Commands::CommandManager::addWarningsService(Common::IServiceBase<Warnings::IWarningsCheckable> *service) {
+    if (service != NULL) {
+        m_WarningsCheckers.append(service);
+    }
+}
+
+void Commands::CommandManager::recordHistoryItem(UndoRedo::IHistoryItem *historyItem) const {
     if (m_UndoRedoManager) {
         m_UndoRedoManager->recordHistoryItem(historyItem);
     }
@@ -193,6 +212,7 @@ void Commands::CommandManager::ensureDependenciesInjected() {
     Q_ASSERT(m_ArtworkUploader != NULL);
     Q_ASSERT(m_UploadInfoRepository != NULL);
     Q_ASSERT(m_WarningsManager != NULL);
+    Q_ASSERT(m_WarningsService != NULL);
     Q_ASSERT(m_SecretsManager != NULL);
     Q_ASSERT(m_UndoRedoManager != NULL);
     Q_ASSERT(m_ZipArchiver != NULL);
@@ -207,6 +227,7 @@ void Commands::CommandManager::ensureDependenciesInjected() {
     Q_ASSERT(m_LogsModel != NULL);
     Q_ASSERT(m_LocalLibrary != NULL);
     Q_ASSERT(m_MetadataIOCoordinator != NULL);
+    Q_ASSERT(m_PluginManager != NULL);
 }
 
 void Commands::CommandManager::recodePasswords(const QString &oldMasterPassword,
@@ -316,7 +337,7 @@ void Commands::CommandManager::addToRecentDirectories(const QString &path) const
 void Commands::CommandManager::addInitialArtworks(const QStringList &artworksFilepathes)
 {
     Commands::AddArtworksCommand *command = new Commands::AddArtworksCommand(artworksFilepathes);
-    CommandResult *result = this->processCommand(command);
+    ICommandResult *result = this->processCommand(command);
     delete result;
 }
 #endif
@@ -363,6 +384,32 @@ void Commands::CommandManager::setupSpellCheckSuggestions(SpellCheck::ISpellChec
     }
 }
 
+void Commands::CommandManager::submitForWarningsCheck(const QVector<Models::ArtworkMetadata *> &items) const {
+    if (m_WarningsService) {
+        QVector<Warnings::IWarningsCheckable*> itemsToSubmit;
+        int count = items.length();
+        itemsToSubmit.reserve(count);
+
+        for (int i = 0; i < count; ++i) {
+            itemsToSubmit << items.at(i);
+        }
+
+        this->submitForWarningsCheck(itemsToSubmit);
+    }
+}
+
+void Commands::CommandManager::submitForWarningsCheck(const QVector<Warnings::IWarningsCheckable *> &items) const {
+    if (m_WarningsService) {
+        int count = m_WarningsCheckers.length();
+        for (int i = 0; i < count; ++i) {
+            Common::IServiceBase<Warnings::IWarningsCheckable> *checker = m_WarningsCheckers.at(i);
+            if (checker->isAvailable()) {
+                checker->submitItems(items);
+            }
+        }
+    }
+}
+
 void Commands::CommandManager::saveMetadata(Models::ArtworkMetadata *metadata) const {
     if (m_SettingsModel->getSaveBackups() && m_MetadataSaverService != NULL) {
         m_MetadataSaverService->saveArtwork(metadata);
@@ -389,13 +436,17 @@ void Commands::CommandManager::afterConstructionCallback()  {
 
     m_AfterInitCalled = true;
 
-    m_SpellCheckerService->startChecking();
+    m_SpellCheckerService->startService();
     m_MetadataSaverService->startSaving();
 
     const QString reportingEndpoint = QLatin1String("cc39a47f60e1ed812e2403b33678dd1c529f1cc43f66494998ec478a4d13496269a3dfa01f882941766dba246c76b12b2a0308e20afd84371c41cf513260f8eb8b71f8c472cafb1abf712c071938ec0791bbf769ab9625c3b64827f511fa3fbb");
     QString endpoint = Encryption::decodeText(reportingEndpoint, "reporting");
     m_TelemetryService->setEndpoint(endpoint);
 
+#if !defined(Q_OS_LINUX)
+    m_PluginManager->loadPlugins();
+
+#if !defined(Q_OS_LINUX)
     m_UpdateService->startChecking();
 }
 
@@ -405,8 +456,9 @@ void Commands::CommandManager::beforeDestructionCallback() const {
 
     // we have a second for important stuff
     m_TelemetryService->reportAction(Conectivity::UserActionClose);
-    m_SpellCheckerService->stopChecking();
+    m_SpellCheckerService->stopService();
     m_MetadataSaverService->stopSaving();
+    m_PluginManager->unloadPlugins();
 #ifndef TESTS
     m_LogsModel->stopLogging();
 #endif

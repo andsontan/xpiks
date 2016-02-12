@@ -25,6 +25,8 @@
 namespace Common {
     class ISafePointer {
     public:
+        virtual ~ISafePointer() {}
+
         virtual void acquire() = 0;
         virtual bool release() = 0;
     };

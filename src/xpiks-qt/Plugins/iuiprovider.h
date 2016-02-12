@@ -18,31 +18,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#ifndef IUIPROVIDER_H
+#define IUIPROVIDER_H
 
-#ifndef WARNINGSQUERYITEM
-#define WARNINGSQUERYITEM
+#include <QUrl>
+#include <QHash>
+#include <QObject>
+#include <QString>
 
-#include "iwarningscheckable.h"
-
-namespace Warnings {
-    class WarningsItem {
+namespace Plugins {
+    class IUIProvider {
     public:
-        WarningsItem(IWarningsCheckable *checkableItem):
-            m_CheckableItem(checkableItem)
-        { }
+        virtual ~IUIProvider() {}
 
-    public:
-        void submitWarnings() {
-            m_CheckableItem->setWarningsFlags(m_WarningsFlags);
-        }
-
-        IWarningsCheckable *getCheckableItem() const { return m_CheckableItem; }
-
-    private:
-        IWarningsCheckable *m_CheckableItem;
-        int m_WarningsFlags;
+        virtual void openWindow(const QUrl &rcPath, const QHash<QString, QObject*> &contextModels = QHash<QString, QObject*>()) const = 0;
     };
 }
 
-#endif // WARNINGSQUERYITEM
-
+#endif // IUIPROVIDER_H

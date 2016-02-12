@@ -19,30 +19,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef WARNINGSQUERYITEM
-#define WARNINGSQUERYITEM
+#ifndef IARTWORKSSOURCE
+#define IARTWORKSSOURCE
 
-#include "iwarningscheckable.h"
+#include "ibasicartwork.h"
 
-namespace Warnings {
-    class WarningsItem {
+namespace Common {
+    class IArtworksSource {
     public:
-        WarningsItem(IWarningsCheckable *checkableItem):
-            m_CheckableItem(checkableItem)
-        { }
+        virtual ~IArtworksSource() {}
 
-    public:
-        void submitWarnings() {
-            m_CheckableItem->setWarningsFlags(m_WarningsFlags);
-        }
-
-        IWarningsCheckable *getCheckableItem() const { return m_CheckableItem; }
-
-    private:
-        IWarningsCheckable *m_CheckableItem;
-        int m_WarningsFlags;
+        virtual IBasicArtwork *getBasicArtwork(int index) const = 0;
+        virtual int getArtworksCount() const = 0;
     };
 }
 
-#endif // WARNINGSQUERYITEM
+#endif // IARTWORKSSOURCE
 

@@ -32,55 +32,58 @@
 #include "../UndoRedo/removeartworksitem.h"
 #include "../Common/defines.h"
 
-Commands::CommandResult *Commands::RemoveArtworksCommand::execute(const Commands::CommandManager *commandManager) const
-{
-    qInfo() << "RemoveArtworksCommand::execute #" << "removing" << m_RangesToRemove.length() << "ranges received";
-    Models::ArtItemsModel *artItemsModel = commandManager->getArtItemsModel();
+namespace Commands {
+    CommandResult *RemoveArtworksCommand::execute(const ICommandManager *commandManagerInterface) const {
+        qInfo() << "RemoveArtworksCommand::execute #" << "removing" << m_RangesToRemove.length() << "ranges received";
+        CommandManager *commandManager = (CommandManager*)commandManagerInterface;
 
-    int count = m_RangesToRemove.count();
+        Models::ArtItemsModel *artItemsModel = commandManager->getArtItemsModel();
 
-    QVector<int> removedItemsIndices;
-    removedItemsIndices.reserve(count);
+        int count = m_RangesToRemove.count();
 
-    QStringList removedItemsFilepathes;
-    removedItemsFilepathes.reserve(count);
+        QVector<int> removedItemsIndices;
+        removedItemsIndices.reserve(count);
 
-    for (int k = 0; k < count; ++k) {
-        const QPair<int, int> &item = m_RangesToRemove[k];
-        int first = item.first;
-        int last = item.second;
+        QStringList removedItemsFilepathes;
+        removedItemsFilepathes.reserve(count);
 
-        for (int i = first; i <= last; ++i) {
-            Models::ArtworkMetadata *metadata = artItemsModel->getArtwork(i);
-            if (metadata != NULL) {
-                const QString &filepath = metadata->getFilepath();
-                removedItemsIndices.append(i);
-                removedItemsFilepathes.append(filepath);
+        for (int k = 0; k < count; ++k) {
+            const QPair<int, int> &item = m_RangesToRemove[k];
+            int first = item.first;
+            int last = item.second;
+
+            for (int i = first; i <= last; ++i) {
+                Models::ArtworkMetadata *metadata = artItemsModel->getArtwork(i);
+                if (metadata != NULL) {
+                    const QString &filepath = metadata->getFilepath();
+                    removedItemsIndices.append(i);
+                    removedItemsFilepathes.append(filepath);
+                }
             }
         }
+
+        int artworksToRemoveCount = removedItemsIndices.count();
+
+        qInfo() << "RemoveArtworksCommand::execute #" << "removing" << artworksToRemoveCount << "real items found";
+
+        if (artworksToRemoveCount > 0) {
+            QVector<QPair<int, int> > rangesToRemove;
+            Helpers::indicesToRanges(removedItemsIndices, rangesToRemove);
+            artItemsModel->removeItemsAtIndices(rangesToRemove);
+
+            Models::ArtworksRepository *artworkRepository = commandManager->getArtworksRepository();
+            artworkRepository->cleanupEmptyDirectories();
+            artworkRepository->updateCountsForExistingDirectories();
+
+            artItemsModel->updateModifiedCount();
+
+            UndoRedo::RemoveArtworksHistoryItem *removeArtworksItem = new UndoRedo::RemoveArtworksHistoryItem(removedItemsIndices,
+                                                                                                              removedItemsFilepathes);
+            commandManager->recordHistoryItem(removeArtworksItem);
+        }
+
+        // TODO: to be filled with useful return data in future
+        RemoveArtworksCommandResult *result = new RemoveArtworksCommandResult(artworksToRemoveCount);
+        return result;
     }
-
-    int artworksToRemoveCount = removedItemsIndices.count();
-
-    qInfo() << "RemoveArtworksCommand::execute #" << "removing" << artworksToRemoveCount << "real items found";
-
-    if (artworksToRemoveCount > 0) {
-        QVector<QPair<int, int> > rangesToRemove;
-        Helpers::indicesToRanges(removedItemsIndices, rangesToRemove);
-        artItemsModel->removeItemsAtIndices(rangesToRemove);
-
-        Models::ArtworksRepository *artworkRepository = commandManager->getArtworksRepository();
-        artworkRepository->cleanupEmptyDirectories();
-        artworkRepository->updateCountsForExistingDirectories();
-
-        artItemsModel->updateModifiedCount();
-
-        UndoRedo::RemoveArtworksHistoryItem *removeArtworksItem = new UndoRedo::RemoveArtworksHistoryItem(removedItemsIndices,
-                                                                                                          removedItemsFilepathes);
-        commandManager->recordHistoryItem(removeArtworksItem);
-    }
-
-    // TODO: to be filled with useful return data in future
-    Commands::RemoveArtworksCommandResult *result = new Commands::RemoveArtworksCommandResult(artworksToRemoveCount);
-    return result;
 }

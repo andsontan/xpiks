@@ -83,7 +83,7 @@ namespace MetadataIO {
 
     void BackupSaverService::stopSaving() {
         qDebug() << "BackupSaverService::stopSaving #" << "stopping...";
-        m_BackupWorker->cancelWork();
+        m_BackupWorker->stopWorking();
     }
 }
 

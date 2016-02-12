@@ -30,8 +30,10 @@
 #include "../UndoRedo/addartworksitem.h"
 #include "../Common/defines.h"
 
-Commands::CommandResult *Commands::AddArtworksCommand::execute(const CommandManager *commandManager) const {
+Commands::CommandResult *Commands::AddArtworksCommand::execute(const ICommandManager *commandManagerInterface) const {
     qDebug() << "AddArtworksCommand::execute #" << m_FilePathes.length() << "files received";
+    CommandManager *commandManager = (CommandManager*)commandManagerInterface;
+
     Models::ArtworksRepository *artworksRepository = commandManager->getArtworksRepository();
     Models::ArtItemsModel *artItemsModel = commandManager->getArtItemsModel();
 

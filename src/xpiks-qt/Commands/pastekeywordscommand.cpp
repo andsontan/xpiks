@@ -32,8 +32,10 @@ Commands::PasteKeywordsCommand::~PasteKeywordsCommand() {
     qDeleteAll(m_ArtItemInfos);
 }
 
-Commands::CommandResult *Commands::PasteKeywordsCommand::execute(const Commands::CommandManager *commandManager) const {
+Commands::CommandResult *Commands::PasteKeywordsCommand::execute(const ICommandManager *commandManagerInterface) const {
     qInfo() << "PasteKeywordsCommand::execute #" << m_ArtItemInfos.length() << "item(s)";
+
+    CommandManager *commandManager = (CommandManager*)commandManagerInterface;
 
     QVector<int> indicesToUpdate;
     QVector<UndoRedo::ArtworkMetadataBackup*> artworksBackups;

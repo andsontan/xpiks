@@ -49,7 +49,6 @@ namespace Models {
         int retrieveNumberOfSelectedItems();
 #endif
 
-
     public:
         Q_INVOKABLE int getOriginalIndex(int index);
         Q_INVOKABLE void invertSelectionArtworks() {invertFilteredItemsSelected();}

@@ -157,7 +157,7 @@ namespace Models {
             }
 
             Commands::PasteKeywordsCommand *pasteCommand = new Commands::PasteKeywordsCommand(artItemInfos, keywords);
-            Commands::CommandResult *result = m_CommandManager->processCommand(pasteCommand);
+            Commands::ICommandResult *result = m_CommandManager->processCommand(pasteCommand);
             delete result;
 
             QModelIndex index = this->index(metadataIndex);
@@ -368,7 +368,7 @@ namespace Models {
                         "", "",
                         keywords);
 
-            Commands::CommandResult *result = m_CommandManager->processCommand(combinedEditCommand);
+            Commands::ICommandResult *result = m_CommandManager->processCommand(combinedEditCommand);
             Commands::CombinedEditCommandResult *combinedResult = static_cast<Commands::CombinedEditCommandResult*>(result);
             updateItemAtIndex(metadataIndex);
 
@@ -548,6 +548,15 @@ namespace Models {
         }
     }
 
+    Common::IBasicArtwork *ArtItemsModel::getBasicArtwork(int index) const {
+        Common::IBasicArtwork *result = NULL;
+        if (0 <= index && index < m_ArtworkList.length()) {
+            result = m_ArtworkList.at(index);
+        }
+
+        return result;
+    }
+
     void ArtItemsModel::updateItemAtIndex(int metadataIndex) {
         QVector<int> roles;
         fillStandardRoles(roles);
@@ -604,7 +613,7 @@ namespace Models {
         }
 
         Commands::AddArtworksCommand *addArtworksCommand = new Commands::AddArtworksCommand(filenames);
-        Commands::CommandResult *result = m_CommandManager->processCommand(addArtworksCommand);
+        Commands::ICommandResult *result = m_CommandManager->processCommand(addArtworksCommand);
         Commands::AddArtworksCommandResult *addArtworksResult = static_cast<Commands::AddArtworksCommandResult*>(result);
         int newFilesCount = addArtworksResult->m_NewFilesAdded;
         delete result;
@@ -676,7 +685,7 @@ namespace Models {
 
     void ArtItemsModel::doRemoveItemsInRanges(const QVector<QPair<int, int> > &rangesToRemove) {
         Commands::RemoveArtworksCommand *removeArtworksCommand = new Commands::RemoveArtworksCommand(rangesToRemove);
-        Commands::CommandResult *result = m_CommandManager->processCommand(removeArtworksCommand);
+        Commands::ICommandResult *result = m_CommandManager->processCommand(removeArtworksCommand);
         delete result;
     }
 

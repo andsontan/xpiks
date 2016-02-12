@@ -63,11 +63,10 @@ namespace Common {
         virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
 
     public:
-        const QStringList &getKeywords() const { return m_KeywordsList; }
         virtual const QString &getDescription() const { return m_Description; }
         virtual const QString &getTitle() const { return m_Title; }
         int getKeywordsCount() const { return m_KeywordsSet.count(); }
-        const QSet<QString> &getKeywordsSet() const { return m_KeywordsSet; }
+        virtual const QSet<QString> &getKeywordsSet() const { return m_KeywordsSet; }
         const QVector<bool> &getSpellStatuses() const { return m_SpellCheckResults; }
         QString getKeywordsString() { return m_KeywordsList.join(", "); }
         int getWarningsFlags() const { return m_WarningsFlags; }
@@ -82,7 +81,7 @@ namespace Common {
 
         virtual bool setDescription(const QString &value);
         virtual bool setTitle(const QString &value);
-        bool isEmpty() const;
+        virtual bool isEmpty() const;
         bool isTitleEmpty() const;
         bool isDescriptionEmpty() const;
         bool containsKeyword(const QString &searchTerm, bool exactMatch=false);
@@ -92,6 +91,7 @@ namespace Common {
         virtual bool hasTitleSpellError() const;
 
         virtual QSize getSize() const { throw 0; }
+        virtual const QString &getFilepath() const { throw 0; }
 
         bool hasSpellErrors() const;
 
@@ -121,7 +121,7 @@ namespace Common {
     public:
         // ISPELLCHECKABLE
         virtual QString retrieveKeyword(int wordIndex);
-        virtual QStringList getKeywords();
+        virtual const QStringList &getKeywords() const { return m_KeywordsList; }
         virtual void setSpellCheckResults(const QVector<SpellCheck::SpellCheckQueryItem*> &items, bool onlyOneKeyword);
         virtual void setSpellCheckResults(const QHash<QString, bool> &results, int flags);
         virtual QVector<SpellCheck::SpellSuggestionsItem *> createKeywordsSuggestionsList();

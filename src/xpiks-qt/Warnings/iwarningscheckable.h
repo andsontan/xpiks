@@ -24,14 +24,14 @@
 
 #include <QSize>
 #include <QStringList>
-#include "../Common/isafepointer.h"
+#include "../Common/ibasicartwork.h"
 
 namespace Warnings {
-    class IWarningsCheckable : public virtual Common::ISafePointer {
+    class IWarningsCheckable : public virtual Common::IBasicArtwork {
     public:
+        virtual ~IWarningsCheckable() {}
+
         virtual QSize getSize() const = 0;
-        virtual const QString &getDescription() const = 0;
-        virtual const QString &getTitle() const = 0;
         virtual int getKeywordsCount() const = 0;
         virtual bool hasTitleSpellError() const = 0;
         virtual bool hasDescriptionSpellError() const = 0;

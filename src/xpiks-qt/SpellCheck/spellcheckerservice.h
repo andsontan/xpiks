@@ -24,7 +24,9 @@
 
 #include <QObject>
 #include <QString>
-#include <QList>
+#include <QVector>
+#include "ispellcheckable.h"
+#include "../Common/iservicebase.h"
 
 namespace Models {
     class ArtworkMetadata;
@@ -32,9 +34,10 @@ namespace Models {
 
 namespace SpellCheck {
     class SpellCheckWorker;
-    class ISpellCheckable;
 
-    class SpellCheckerService : public QObject
+    class SpellCheckerService :
+            public QObject,
+            public Common::IServiceBase<ISpellCheckable>
     {
         Q_OBJECT
     public:
@@ -42,11 +45,15 @@ namespace SpellCheck {
         virtual ~SpellCheckerService();
 
     public:
-        void startChecking();
-        void stopChecking();
-        void submitItems(const QVector<ISpellCheckable *> &itemsToCheck);
-        void submitKeyword(SpellCheck::ISpellCheckable *itemToCheck, int keywordIndex);
+        virtual void startService();
+        virtual void stopService();
+
+        virtual bool isAvailable() const { return true; }
+
+        virtual void submitItem(SpellCheck::ISpellCheckable *itemToCheck);
         void submitItem(SpellCheck::ISpellCheckable *itemToCheck, int flags);
+        virtual void submitItems(const QVector<ISpellCheckable *> &itemsToCheck);
+        void submitKeyword(SpellCheck::ISpellCheckable *itemToCheck, int keywordIndex);
         QStringList suggestCorrections(const QString &word) const;
         void restartWorker();
 
@@ -61,11 +68,10 @@ namespace SpellCheck {
 
     private slots:
         void workerFinished();
-        void workerDestroyed();
+        void workerDestroyed(QObject* object);
 
     private:
         SpellCheckWorker *m_SpellCheckWorker;
-        volatile bool m_WorkerIsAlive;
         volatile bool m_RestartRequired;
         QString m_DictionariesPath;
     };

@@ -19,30 +19,41 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef WARNINGSQUERYITEM
-#define WARNINGSQUERYITEM
+#ifndef PLUGINACTIONSMODEL_H
+#define PLUGINACTIONSMODEL_H
 
-#include "iwarningscheckable.h"
+#include <QAbstractListModel>
+#include <QVector>
 
-namespace Warnings {
-    class WarningsItem {
+namespace Plugins {
+    class IPluginAction;
+
+    class PluginActionsModel: public QAbstractListModel
+    {
+        Q_OBJECT
     public:
-        WarningsItem(IWarningsCheckable *checkableItem):
-            m_CheckableItem(checkableItem)
-        { }
+        PluginActionsModel(const QVector<IPluginAction *> &actions, int pluginID, QObject *parent=0);
 
     public:
-        void submitWarnings() {
-            m_CheckableItem->setWarningsFlags(m_WarningsFlags);
-        }
+        enum PluginActionsModelRoles {
+            ActionNameRole = Qt::UserRole + 1,
+            ActionCodeRole,
+            PluginIDRole
+        };
 
-        IWarningsCheckable *getCheckableItem() const { return m_CheckableItem; }
+    public:
+        int size() const { return m_PluginActions.length(); }
+
+        // QAbstractItemModel interface
+    public:
+        virtual int rowCount(const QModelIndex &parent) const;
+        virtual QVariant data(const QModelIndex &index, int role) const;
+        virtual QHash<int, QByteArray> roleNames() const;
 
     private:
-        IWarningsCheckable *m_CheckableItem;
-        int m_WarningsFlags;
+        QVector<IPluginAction *> m_PluginActions;
+        int m_PluginID;
     };
 }
 
-#endif // WARNINGSQUERYITEM
-
+#endif // PLUGINACTIONSMODEL_H

@@ -49,7 +49,7 @@ namespace Models {
                         const QString &description, const QStringList &rawKeywords, bool overwrite = true);
 
     public:
-        const QString &getFilepath() const { return m_ArtworkFilepath; }
+        virtual const QString &getFilepath() const { return m_ArtworkFilepath; }
         virtual QString getDirectory() const { QFileInfo fi(m_ArtworkFilepath); return fi.absolutePath(); }
 
     public:
@@ -71,7 +71,7 @@ namespace Models {
             return result;
         }
 
-        bool setTitle(const QString &value) {
+        virtual bool setTitle(const QString &value) {
             bool result = BasicKeywordsModel::setTitle(value);
             if (result) { markModified(); }
             return result;

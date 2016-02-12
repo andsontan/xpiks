@@ -30,8 +30,10 @@
 #include "../Models/artworkmetadata.h"
 #include "addartworksitem.h"
 
-void UndoRedo::RemoveArtworksHistoryItem::undo(const Commands::CommandManager *commandManager) const {
+void UndoRedo::RemoveArtworksHistoryItem::undo(const Commands::ICommandManager *commandManagerInterface) const {
     qInfo() << "RemoveArtworksHistoryItem::undo #";
+
+    Commands::CommandManager *commandManager = (Commands::CommandManager*)commandManagerInterface;
 
     QVector<QPair<int, int> > ranges;
     Helpers::indicesToRanges(m_RemovedArtworksIndices, ranges);

@@ -22,6 +22,8 @@
 #ifndef HISTORYITEM_H
 #define HISTORYITEM_H
 
+#include "ihistoryitem.h"
+
 class QString;
 
 namespace Commands {
@@ -36,18 +38,14 @@ namespace UndoRedo {
         ModifyArtworksActionType
     };
 
-    class HistoryItem
+    class HistoryItem : public IHistoryItem
     {
     public:
         HistoryItem(HistoryActionType actionType) : m_ActionType(actionType){}
         virtual ~HistoryItem() {}
 
     public:
-        virtual void undo(const Commands::CommandManager *commandManager) const = 0;
-
-    public:
-        virtual QString getDescription() const = 0;
-        HistoryActionType getActionType() const { return m_ActionType; }
+        virtual int getActionType() const { return (int)m_ActionType; }
 
     private:
         HistoryActionType m_ActionType;

@@ -28,13 +28,14 @@
 #include <QHash>
 #include "spellcheckitem.h"
 #include "spellsuggestionsitem.h"
-#include "../Common/isafepointer.h"
+#include "../Common/ibasicartwork.h"
 
 namespace SpellCheck {
-    class ISpellCheckable : public virtual Common::ISafePointer {
+    class ISpellCheckable : public virtual Common::IBasicArtwork {
     public:
+        virtual ~ISpellCheckable() {}
+
         virtual QString retrieveKeyword(int wordIndex) = 0;
-        virtual QStringList getKeywords() = 0;
         virtual void setSpellCheckResults(const QVector<SpellCheckQueryItem*> &items, bool onlyOneKeyword) = 0;
         virtual void setSpellCheckResults(const QHash<QString, bool> &results, int flags) = 0;
         virtual QVector<SpellSuggestionsItem*> createKeywordsSuggestionsList() = 0;

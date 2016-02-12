@@ -289,7 +289,7 @@ namespace Models {
                     m_CommonKeywordsModel.getTitle(),
                     m_CommonKeywordsModel.getKeywords());
 
-        Commands::CommandResult *result = m_CommandManager->processCommand(combinedEditCommand);
+        Commands::ICommandResult *result = m_CommandManager->processCommand(combinedEditCommand);
         Commands::CombinedEditCommandResult *combinedResult = static_cast<Commands::CombinedEditCommandResult*>(result);
         m_CommandManager->updateArtworks(combinedResult->m_IndicesToUpdate);
 

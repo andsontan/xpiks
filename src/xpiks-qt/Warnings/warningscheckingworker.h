@@ -35,6 +35,9 @@ namespace Warnings {
     class WarningsCheckingWorker: public QObject, public Common::ItemProcessingWorker<WarningsItem>
     {
         Q_OBJECT
+    public:
+        WarningsCheckingWorker(Models::SettingsModel *settingsModel, QObject *parent=0);
+
     protected:
         virtual bool initWorker();
         virtual bool processOneItem(WarningsItem *item);
@@ -45,6 +48,10 @@ namespace Warnings {
     protected:
         virtual void notifyQueueIsEmpty() { emit queueIsEmpty(); }
         virtual void notifyStopped() { emit stopped(); }
+
+    public slots:
+        void process() { doWork(); }
+        void cancel() { stopWorking(); }
 
     signals:
         void stopped();

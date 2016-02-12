@@ -19,30 +19,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef WARNINGSQUERYITEM
-#define WARNINGSQUERYITEM
+#ifndef IHISTORYITEM_H
+#define IHISTORYITEM_H
 
-#include "iwarningscheckable.h"
+#include <QString>
 
-namespace Warnings {
-    class WarningsItem {
+namespace Commands {
+    class ICommandManager;
+}
+
+namespace UndoRedo {
+
+    class IHistoryItem {
     public:
-        WarningsItem(IWarningsCheckable *checkableItem):
-            m_CheckableItem(checkableItem)
-        { }
+        virtual ~IHistoryItem() {}
 
-    public:
-        void submitWarnings() {
-            m_CheckableItem->setWarningsFlags(m_WarningsFlags);
-        }
-
-        IWarningsCheckable *getCheckableItem() const { return m_CheckableItem; }
-
-    private:
-        IWarningsCheckable *m_CheckableItem;
-        int m_WarningsFlags;
+        virtual void undo(const Commands::ICommandManager *commandManager) const = 0;
+        virtual QString getDescription() const = 0;
+        virtual int getActionType() const = 0;
     };
 }
 
-#endif // WARNINGSQUERYITEM
-
+#endif // IHISTORYITEM_H

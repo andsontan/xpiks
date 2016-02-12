@@ -27,11 +27,15 @@
 #include <QMutex>
 #include "../Commands/commandmanager.h"
 #include "../Common/baseentity.h"
+#include "iundoredomanager.h"
 
 namespace UndoRedo {
     class HistoryItem;
 
-    class UndoRedoManager: public QObject, public Common::BaseEntity
+    class UndoRedoManager:
+            public QObject,
+            public Common::BaseEntity,
+            public IUndoRedoManager
     {
         Q_OBJECT
         Q_PROPERTY(bool canUndo READ getCanUndo NOTIFY canUndoChanged)
@@ -56,13 +60,13 @@ namespace UndoRedo {
         QString getUndoDescription() const { return m_HistoryStack.empty() ? "" : m_HistoryStack.top()->getDescription(); }
 
     public:
-        void recordHistoryItem(HistoryItem *historyItem);
+        virtual void recordHistoryItem(IHistoryItem *historyItem);
         Q_INVOKABLE bool undoLastAction();
         Q_INVOKABLE void discardLastAction();
 
     private:
         // stack for future todos
-        QStack<HistoryItem*> m_HistoryStack;
+        QStack<IHistoryItem*> m_HistoryStack;
         QMutex m_Mutex;
     };
 }

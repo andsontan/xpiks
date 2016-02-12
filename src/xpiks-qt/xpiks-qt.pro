@@ -69,7 +69,12 @@ SOURCES += main.cpp \
     Conectivity/ftpuploaderworker.cpp \
     Conectivity/ftpcoordinator.cpp \
     Conectivity/testconnection.cpp \
-    Conectivity/ftphelpers.cpp
+    Conectivity/ftphelpers.cpp \
+    Plugins/pluginmanager.cpp \
+    Plugins/pluginwrapper.cpp \
+    Plugins/pluginactionsmodel.cpp \
+    Plugins/uiprovider.cpp \
+    Warnings/warningsservice.cpp
 
 RESOURCES += qml.qrc
 
@@ -178,7 +183,22 @@ HEADERS += \
     Conectivity/uploadcontext.h \
     Conectivity/testconnection.h \
     Conectivity/ftphelpers.h \
-    Common/isafepointer.h
+    Common/isafepointer.h \
+    Plugins/xpiksplugininterface.h \
+    Commands/icommandmanager.h \
+    Commands/icommandbase.h \
+    UndoRedo/ihistoryitem.h \
+    UndoRedo/iundoredomanager.h \
+    Plugins/pluginmanager.h \
+    Plugins/pluginwrapper.h \
+    Plugins/ipluginaction.h \
+    Plugins/pluginactionsmodel.h \
+    Plugins/uiprovider.h \
+    Plugins/iuiprovider.h \
+    Common/ibasicartwork.h \
+    Common/iartworkssource.h \
+    Warnings/warningsservice.h \
+    Common/iservicebase.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
@@ -227,7 +247,8 @@ DISTFILES += \
     Dialogs/EditKeywordDialog.qml \
     Dialogs/PlainTextKeywordsDialog.qml \
     Dialogs/WhatsNewDialog.qml \
-    Dialogs/TermsAndConditionsDialog.qml
+    Dialogs/TermsAndConditionsDialog.qml \
+    Dialogs/PluginsDialog.qml
 
 LIBS += -L"$$PWD/../libs/"
 LIBS += -lhunspell

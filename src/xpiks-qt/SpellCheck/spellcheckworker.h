@@ -53,7 +53,7 @@ namespace SpellCheck {
 
     public slots:
         void process() { doWork(); }
-        void cancel() { cancelWork(); }
+        void cancel() { stopWorking(); }
 
     signals:
         void stopped();
