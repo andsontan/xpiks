@@ -55,6 +55,7 @@ Commands::CommandResult *Commands::PasteKeywordsCommand::execute(const ICommandM
     }
 
     commandManager->submitForSpellCheck(itemsToCheck);
+    commandManager->updateArtworks(indicesToUpdate);
 
     UndoRedo::ModifyArtworksHistoryItem *modifyArtworksItem =
             new UndoRedo::ModifyArtworksHistoryItem(artworksBackups, indicesToUpdate,
