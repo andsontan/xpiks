@@ -61,6 +61,7 @@ Check out other downloads at <a href="https://github.com/Ribtoks/xpiks/releases/
 <p>
 If you'd like to build Xpiks for your own platform, please, refer to <a href="{{site.url}}/blog/2014/building-xpiks-alone">this post</a>.
 </p>
+<!--
 <p>
 <strong>If you like Xpiks and you wish to support it's development and progress, consider donation any sum via Moneybookers (Skrill)</strong>
 </p>
@@ -83,6 +84,6 @@ If you'd like to build Xpiks for your own platform, please, refer to <a href="{{
     <input type="submit" value="Donate" />
     <input type="hidden" name="detail1_description" value="Donate to support Xpiks development" />
 <input type="hidden" name="detail1_text" value="donate to support Xpiks development" />
-    </form>
+    </form>-->
 </section>
 </article>
