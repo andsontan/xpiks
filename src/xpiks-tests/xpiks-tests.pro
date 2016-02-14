@@ -187,4 +187,13 @@ HEADERS += \
     ../xpiks-qt/Suggestion/locallibrary.h \
     ../xpiks-qt/Suggestion/libraryloaderworker.h \
     ../xpiks-qt/MetadataIO/metadatawritingworker.h \
-    filteredmodel_tests.h
+    filteredmodel_tests.h \
+    ../xpiks-qt/Common/baseentity.h \
+    ../xpiks-qt/Common/defines.h \
+    ../xpiks-qt/Common/iartworkssource.h \
+    ../xpiks-qt/Common/ibasicartwork.h \
+    ../xpiks-qt/Common/isafepointer.h \
+    ../xpiks-qt/Common/iservicebase.h \
+    ../xpiks-qt/Common/version.h \
+    ../xpiks-qt/Commands/icommandbase.h \
+    ../xpiks-qt/Commands/icommandmanager.h

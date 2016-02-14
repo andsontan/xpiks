@@ -41,7 +41,7 @@ namespace Mocks {
             }
         }
 
-        virtual Commands::CommandResult *processCommand(Commands::CommandBase *command) {
+        virtual Commands::ICommandResult *processCommand(Commands::ICommandBase *command) {
             m_AnyCommandProcessed = true;
             if (m_CanExecuteCommands) {
                 return Commands::CommandManager::processCommand(command);

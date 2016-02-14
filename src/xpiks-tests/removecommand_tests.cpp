@@ -31,7 +31,7 @@ void RemoveCommand_Tests::removeArtworksFromEmptyRepository() {
 
     QSignalSpy modifiedFilesChanged(&artItemsMock, SIGNAL(modifiedArtworksCountChanged()));
 
-    Commands::CommandResult *result = commandManagerMock.processCommand(removeArtworkCommand);
+    Commands::ICommandResult *result = commandManagerMock.processCommand(removeArtworkCommand);
     Commands::RemoveArtworksCommandResult *removeArtworksResult = static_cast<Commands::RemoveArtworksCommandResult*>(result);
     int artworksRemovedCount = removeArtworksResult->m_RemovedArtworksCount;
     delete result;
@@ -75,7 +75,7 @@ void RemoveCommand_Tests::removeAllArtworksFromRepository() {
 
     QSignalSpy modifiedFilesChanged(&artItemsMock, SIGNAL(modifiedArtworksCountChanged()));
 
-    Commands::CommandResult *result = commandManagerMock.processCommand(removeArtworkCommand);
+    Commands::ICommandResult *result = commandManagerMock.processCommand(removeArtworkCommand);
     Commands::RemoveArtworksCommandResult *removeArtworksResult = static_cast<Commands::RemoveArtworksCommandResult*>(result);
     int artworksRemovedCount = removeArtworksResult->m_RemovedArtworksCount;
     delete result;

@@ -445,8 +445,10 @@ void Commands::CommandManager::afterConstructionCallback()  {
     QString endpoint = Encryption::decodeText(reportingEndpoint, "reporting");
     m_TelemetryService->setEndpoint(endpoint);
 
+#ifndef TESTS
 #ifdef WITH_PLUGINS
     m_PluginManager->loadPlugins();
+#endif
 #endif
 
     m_UpdateService->startChecking();
@@ -460,8 +462,9 @@ void Commands::CommandManager::beforeDestructionCallback() const {
     m_TelemetryService->reportAction(Conectivity::UserActionClose);
     m_SpellCheckerService->stopService();
     m_MetadataSaverService->stopSaving();
-    m_PluginManager->unloadPlugins();
+
 #ifndef TESTS
+    m_PluginManager->unloadPlugins();
     m_LogsModel->stopLogging();
 #endif
 }
