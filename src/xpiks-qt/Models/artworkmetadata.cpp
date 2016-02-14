@@ -60,8 +60,8 @@ namespace Models {
             BasicKeywordsModel::setDescription(description);
         }
 
-        if (overwrite && !rawKeywords.isEmpty()) {
-            anythingModified = true;
+        if (overwrite) {
+            anythingModified = anythingModified || (!(areKeywordsEmpty() && rawKeywords.isEmpty()));
             beginResetModel();
             BasicKeywordsModel::resetKeywords();
             BasicKeywordsModel::addKeywords(rawKeywords);

@@ -84,6 +84,7 @@ namespace Common {
         virtual bool isEmpty() const;
         bool isTitleEmpty() const;
         bool isDescriptionEmpty() const;
+        bool areKeywordsEmpty() const { return m_KeywordsList.isEmpty(); }
         bool containsKeyword(const QString &searchTerm, bool exactMatch=false);
 
         virtual bool hasKeywordsSpellError() const;
