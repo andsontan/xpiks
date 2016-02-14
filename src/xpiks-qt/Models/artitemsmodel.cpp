@@ -155,7 +155,7 @@ namespace Models {
             foreach (int index, selectedIndices) {
                 // only one keyword in added to the edit field
                 // but not added as a new keyword
-                if (onlyOneKeyword && index == metadataIndex) { continue; }
+                if (onlyOneKeyword && (index == metadataIndex)) { continue; }
 
                 ArtworkMetadata *metadata = m_ArtworkList.at(index);
                 ArtItemInfo *item = new ArtItemInfo(metadata, index);
@@ -204,7 +204,7 @@ namespace Models {
         if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
             metadata->clearKeywords();
-            // do not save metadata - give change to restore from .xpks
+            // do not save metadata - give chance to restore from .xpks
             //m_CommandManager->saveMetadata(metadata);
         }
     }
