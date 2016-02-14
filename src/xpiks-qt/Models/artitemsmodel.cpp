@@ -152,6 +152,10 @@ namespace Models {
 
             bool onlyOneKeyword = keywords.length() == 1;
 
+            if (onlyOneKeyword) {
+                qDebug() << "ArtItemsModel::pasteKeywords #" << "Pasting only one keyword";
+            }
+
             foreach (int index, selectedIndices) {
                 // only one keyword in added to the edit field
                 // but not added as a new keyword
