@@ -93,7 +93,7 @@ namespace MetadataIO {
     }
 
     MetadataWritingWorker::~MetadataWritingWorker() {
-        qDebug() << " MetadataWritingWorker::~MetadataWritingWorker #" << "destroyed";
+        qDebug() << "MetadataWritingWorker::~MetadataWritingWorker #" << "destroyed";
     }
 
     void MetadataWritingWorker::process() {

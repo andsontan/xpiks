@@ -1692,7 +1692,7 @@ ApplicationWindow {
                                                         onClicked: {
                                                             var callbackObject = {
                                                                 promoteKeywords: function(keywords) {
-                                                                    artItemsModel.pasteKeywords(rowWrapper.getIndex(), keywords)
+                                                                    artItemsModel.addSuggestedKeywords(rowWrapper.getIndex(), keywords)
                                                                 }
                                                             }
 

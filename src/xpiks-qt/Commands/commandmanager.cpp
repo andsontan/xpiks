@@ -172,6 +172,7 @@ const
 
 void Commands::CommandManager::addWarningsService(Common::IServiceBase<Warnings::IWarningsCheckable> *service) {
     if (service != NULL) {
+        // TODO: check if we don't have such checker
         m_WarningsCheckers.append(service);
     }
 }

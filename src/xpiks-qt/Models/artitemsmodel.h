@@ -84,6 +84,7 @@ namespace Models {
         Q_INVOKABLE void removeLastKeyword(int metadataIndex);
         Q_INVOKABLE void appendKeyword(int metadataIndex, const QString &keyword);
         Q_INVOKABLE void pasteKeywords(int metadataIndex, const QStringList &keywords);
+        Q_INVOKABLE void addSuggestedKeywords(int metadataIndex, const QStringList &keywords);
         Q_INVOKABLE void suggestCorrections(int metadataIndex);
         Q_INVOKABLE void clearKeywords(int metadataIndex);
         Q_INVOKABLE void backupItem(int metadataIndex);

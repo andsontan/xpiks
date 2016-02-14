@@ -247,7 +247,7 @@ Flickable {
 
                         var words = clipboardText.split(/,|;/);
 
-                        if (words.length > 1) {
+                        if (words.length > 0) {
                             for (var i = 0; i < words.length; i++) {
                                 var sanitizedTagText = helpersWrapper.sanitizeKeyword(words[i]);
                                 if (helpersWrapper.isKeywordValid(sanitizedTagText)) {
@@ -256,7 +256,10 @@ Flickable {
                             }
 
                             tagsPasted(keywordsToAdd);
-                            event.accepted = true;
+
+                            if (words.length > 1) {
+                                event.accepted = true;
+                            }
                         }
                     }
                     else if (event.matches(StandardKey.Copy)) {

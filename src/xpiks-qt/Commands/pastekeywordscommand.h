@@ -50,7 +50,15 @@ namespace Commands {
     };
 
     class PasteKeywordsCommandResult : public CommandResult {
+    public:
+        PasteKeywordsCommandResult(const QVector<int> &indicesToUpdate) :
+            m_IndicesToUpdate(indicesToUpdate)
+        {
+        }
 
+    public:
+        QVector<int> m_IndicesToUpdate;
+        // list of Ids to update!
     };
 }
 

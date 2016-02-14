@@ -55,13 +55,12 @@ Commands::CommandResult *Commands::PasteKeywordsCommand::execute(const ICommandM
     }
 
     commandManager->submitForSpellCheck(itemsToCheck);
-    commandManager->updateArtworks(indicesToUpdate);
 
     UndoRedo::ModifyArtworksHistoryItem *modifyArtworksItem =
             new UndoRedo::ModifyArtworksHistoryItem(artworksBackups, indicesToUpdate,
                                                     UndoRedo::PasteModificationType);
     commandManager->recordHistoryItem(modifyArtworksItem);
 
-    PasteKeywordsCommandResult *result = new PasteKeywordsCommandResult();
+    PasteKeywordsCommandResult *result = new PasteKeywordsCommandResult(indicesToUpdate);
     return result;
 }

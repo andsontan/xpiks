@@ -150,7 +150,13 @@ namespace Models {
 
             artItemInfos.reserve(selectedIndices.length());
 
+            bool onlyOneKeyword = keywords.length() == 1;
+
             foreach (int index, selectedIndices) {
+                // only one keyword in added to the edit field
+                // but not added as a new keyword
+                if (onlyOneKeyword && index == metadataIndex) { continue; }
+
                 ArtworkMetadata *metadata = m_ArtworkList.at(index);
                 ArtItemInfo *item = new ArtItemInfo(metadata, index);
                 artItemInfos.append(item);
@@ -158,10 +164,29 @@ namespace Models {
 
             Commands::PasteKeywordsCommand *pasteCommand = new Commands::PasteKeywordsCommand(artItemInfos, keywords);
             Commands::ICommandResult *result = m_CommandManager->processCommand(pasteCommand);
-            delete result;
+            Commands::PasteKeywordsCommandResult *pasteResult = static_cast<Commands::PasteKeywordsCommandResult*>(result);
+            updateItems(pasteResult->m_IndicesToUpdate, QVector<int>() << IsModifiedRole << KeywordsCountRole);
+            delete pasteResult;
+        }
+    }
 
-            QModelIndex index = this->index(metadataIndex);
-            emit dataChanged(index, index, QVector<int>() << IsModifiedRole << KeywordsCountRole);
+    void ArtItemsModel::addSuggestedKeywords(int metadataIndex, const QStringList &keywords) {
+        qDebug() << "ArtItemsModel::suggestKeywords #" << "item index" << metadataIndex;
+        if (metadataIndex >= 0
+                && metadataIndex < m_ArtworkList.length()
+                && !keywords.empty()) {
+
+            QVector<ArtItemInfo*> artItemInfos;
+
+            ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
+            ArtItemInfo *item = new ArtItemInfo(metadata, metadataIndex);
+            artItemInfos.append(item);
+
+            Commands::PasteKeywordsCommand *pasteCommand = new Commands::PasteKeywordsCommand(artItemInfos, keywords);
+            Commands::ICommandResult *result = m_CommandManager->processCommand(pasteCommand);
+            Commands::PasteKeywordsCommandResult *pasteResult = static_cast<Commands::PasteKeywordsCommandResult*>(result);
+            updateItems(pasteResult->m_IndicesToUpdate, QVector<int>() << IsModifiedRole << KeywordsCountRole);
+            delete pasteResult;
         }
     }
 
