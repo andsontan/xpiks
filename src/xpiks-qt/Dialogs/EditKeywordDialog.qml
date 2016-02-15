@@ -39,8 +39,11 @@ Item {
     Component.onDestruction: dialogDestruction();
 
     function submitKeyword() {
-        callbackObject.onSuccess(keywordInput.text)
-        closePopup()
+        var keyword = keywordInput.text
+        if (helpersWrapper.isKeywordValid(keyword)) {
+            callbackObject.onSuccess(keyword)
+            closePopup()
+        }
     }
 
     Keys.onEscapePressed: closePopup()
@@ -131,6 +134,12 @@ Item {
 
                         Keys.onTabPressed: {
                             event.accepted = true
+                        }
+
+                        Keys.onPressed: {
+                            if (event.key === Qt.Key_Comma) {
+                                event.accepted = true
+                            }
                         }
                     }
                 }
