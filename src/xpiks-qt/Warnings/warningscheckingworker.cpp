@@ -63,7 +63,7 @@ namespace Warnings {
 
     int WarningsCheckingWorker::checkDimensions(IWarningsCheckable *item) const {
         int warningsInfo = 0;
-        QSize size = item->getSize();
+        QSize size = item->getImageSize();
 
         double currentProd = size.width() * size.height() / 1000000.0;
         if (currentProd < m_MinimumMegapixels) {

@@ -49,7 +49,7 @@ namespace Models {
             ArtworkMetadata *metadata = m_ArtworkInfo->getOrigin();
             m_Filepath = metadata->getFilepath();
             if (metadata->isInitialized()) {
-                m_Dimensions = metadata->getSize();
+                m_Dimensions = metadata->getImageSize();
             } else {
                 QImageReader reader(m_Filepath);
                 m_Dimensions = reader.size();

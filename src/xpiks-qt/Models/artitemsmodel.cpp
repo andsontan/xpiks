@@ -313,7 +313,7 @@ namespace Models {
         QSize size;
 
         if (metadata->isInitialized()) {
-            size = metadata->getSize();
+            size = metadata->getImageSize();
         } else {
             QImageReader reader(metadata->getFilepath());
             size = reader.size();
@@ -326,8 +326,16 @@ namespace Models {
         if (metadataIndex < 0 || metadataIndex >= m_ArtworkList.length()) { return QLatin1String("-"); }
 
         ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
-        QFileInfo fi(metadata->getFilepath());
-        double size = fi.size(); // in bytes
+
+        double size = 0;
+
+        if (metadata->isInitialized()) {
+            size = metadata->getFileSize();
+        } else {
+            QFileInfo fi(metadata->getFilepath());
+            size = fi.size(); // in bytes
+        }
+
         size /= 1024.0*1024.0;
 
         QString sizeDescription;

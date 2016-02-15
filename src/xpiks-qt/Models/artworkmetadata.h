@@ -57,7 +57,8 @@ namespace Models {
         bool isModified() const { return m_IsModified; }
         bool getIsSelected() const { return m_IsSelected; }
         bool isInitialized() const { return m_IsInitialized; }
-        QSize getSize() const { return m_ImageSize; }
+        virtual QSize getImageSize() const { return m_ImageSize; }
+        virtual qint64 getFileSize() const { return m_FileSize; }
 
     public:
         virtual void clearModel();
@@ -89,7 +90,8 @@ namespace Models {
 
         void invertSelection(){setIsSelected(!m_IsSelected);}
 
-        void setSize(const QSize &size) { m_ImageSize = size; }
+        void setImageSize(const QSize &size) { m_ImageSize = size; }
+        void setFileSize(qint64 size) { m_FileSize = size; }
 
         void resetSelected() {
             if (m_IsSelected) {
@@ -118,6 +120,7 @@ namespace Models {
 
     private:
          QSize m_ImageSize;
+         qint64 m_FileSize; // in bytes
          QString m_ArtworkFilepath;
          volatile bool m_IsModified;
          volatile bool m_IsSelected;

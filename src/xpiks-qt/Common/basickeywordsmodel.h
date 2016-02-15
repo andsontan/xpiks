@@ -91,7 +91,8 @@ namespace Common {
         virtual bool hasDescriptionSpellError() const;
         virtual bool hasTitleSpellError() const;
 
-        virtual QSize getSize() const { throw 0; }
+        virtual QSize getImageSize() const { throw 0; }
+        virtual qint64 getFileSize() const { throw 0; }
         virtual const QString &getFilepath() const { throw 0; }
 
         bool hasSpellErrors() const;

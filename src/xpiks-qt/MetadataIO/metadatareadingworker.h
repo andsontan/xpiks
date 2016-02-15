@@ -45,7 +45,8 @@ namespace MetadataIO {
         QString Title;
         QString Description;
         QStringList Keywords;
-        QSize Size;
+        QSize ImageSize;
+        qint64 FileSize;
         QHash<QString, QString> BackupDict;
     };
 

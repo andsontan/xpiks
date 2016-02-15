@@ -142,7 +142,8 @@ namespace MetadataIO {
                 metadata->initialize(importResultItem.Title,
                                      importResultItem.Description,
                                      importResultItem.Keywords);
-                metadata->setSize(importResultItem.Size);
+                metadata->setImageSize(importResultItem.ImageSize);
+                metadata->setFileSize(importResultItem.FileSize);
             }
         }
 

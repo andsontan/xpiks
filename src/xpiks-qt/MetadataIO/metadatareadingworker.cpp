@@ -266,8 +266,13 @@ namespace MetadataIO {
                 m_ImportResult[filepath].BackupDict = copy.getInfo();
             }
 
+            ImportDataResult &importResultItem = m_ImportResult[filepath];
+
             QImageReader reader(filepath);
-            m_ImportResult[filepath].Size = reader.size();
+            importResultItem.ImageSize = reader.size();
+
+            QFileInfo fi(filepath);
+            importResultItem.FileSize = fi.size();
         }
     }
 
@@ -279,8 +284,13 @@ namespace MetadataIO {
             const QString &filepath = metadata->getFilepath();
 
             Q_ASSERT(m_ImportResult.contains(filepath));
+            ImportDataResult &importResultItem = m_ImportResult[filepath];
+
             QImageReader reader(filepath);
-            m_ImportResult[filepath].Size = reader.size();
+            importResultItem.ImageSize = reader.size();
+
+            QFileInfo fi(filepath);
+            importResultItem.FileSize = fi.size();
         }
     }
 }

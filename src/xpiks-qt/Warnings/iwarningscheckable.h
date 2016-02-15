@@ -31,7 +31,8 @@ namespace Warnings {
     public:
         virtual ~IWarningsCheckable() {}
 
-        virtual QSize getSize() const = 0;
+        virtual QSize getImageSize() const = 0;
+        virtual qint64 getFileSize() const = 0;
         virtual int getKeywordsCount() const = 0;
         virtual bool hasTitleSpellError() const = 0;
         virtual bool hasDescriptionSpellError() const = 0;
