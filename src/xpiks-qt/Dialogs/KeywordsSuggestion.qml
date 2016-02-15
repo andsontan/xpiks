@@ -243,7 +243,7 @@ Item {
                 CustomScrollbar {
                     anchors.topMargin: 0
                     anchors.bottomMargin: 0
-                    anchors.rightMargin: -20
+                    anchors.rightMargin: -15
                     flickable: suggestionsWrapper
                 }
 
