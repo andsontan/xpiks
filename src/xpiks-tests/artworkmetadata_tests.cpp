@@ -115,6 +115,28 @@ void ArtworkMetadataTests::initializeNoOverwriteTest() {
     QCOMPARE(metadata.isInitialized(), true);
 }
 
+void ArtworkMetadataTests::initializeOverwriteWithEmptyTest() {
+    Mocks::ArtworkMetadataMock metadata("file.jpg");
+
+    metadata.setDescription("Existing Description");
+    metadata.setTitle("Existing Title");
+    metadata.setKeywords(QStringList() << "keyword1" << "keyword3" << "keyword2" );
+
+    QString title;
+    QString description;
+    QStringList rawKeywords;
+
+    bool result = metadata.initialize(title, description, rawKeywords, true);
+
+    QCOMPARE(result, true);
+
+    QVERIFY(metadata.isTitleEmpty());
+    QVERIFY(metadata.isDescriptionEmpty());
+    QVERIFY(metadata.areKeywordsEmpty());
+
+    QCOMPARE(metadata.isInitialized(), true);
+}
+
 void ArtworkMetadataTests::freshObjectTest() {
     QString filepath = "/path/to/my/file.jpg";
     Mocks::ArtworkMetadataMock metadata(filepath);

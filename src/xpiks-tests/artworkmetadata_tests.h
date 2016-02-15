@@ -12,6 +12,7 @@ private slots:
     void initializeNoOverwriteButEmptyTest();
     void initializeNoOverwriteNotEmptyTest();
     void initializeNoOverwriteTest();
+    void initializeOverwriteWithEmptyTest();
     void freshObjectTest();
     void markModifiedShouldEmitSignalTest();
     void modifiedIsNotMarkedModifiedAgainTest();
