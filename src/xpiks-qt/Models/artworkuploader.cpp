@@ -62,6 +62,7 @@ namespace Models {
     }
 
     void ArtworkUploader::onUploadStarted() {
+        qDebug() << "ArtworkUploader::onUploadStarted #";
         beginProcessing();
         m_Percent = 0;
         updateProgress();

@@ -97,6 +97,7 @@ namespace Conectivity {
                                                 Encryption::SecretsManager *secretsManager,
                                                 int timeoutSeconds,
                                                 bool includeVector) {
+        qDebug() << "generateUploadBatches #" << artworksToUpload.length() << "file(s)";
         QVector<UploadBatch*> batches;
 
         QStringList filePathes;
@@ -139,9 +140,12 @@ namespace Conectivity {
     void FtpCoordinator::uploadArtworks(const QVector<Models::ArtworkMetadata *> &artworksToUpload,
                                         const QVector<Models::UploadInfo *> &uploadInfos,
                                         bool includeVectors) {
+        qInfo() << "FtpCoordinator::uploadArtworks #" << "Trying to upload" << artworksToUpload.size() <<
+                   "file(s) to" << uploadInfos.size() << "host(s)";
+
 
         if (artworksToUpload.isEmpty() || uploadInfos.isEmpty()) {
-            qWarning() << "FtpCoordinator::uploadArtworks #" << "Trying to upload" << artworksToUpload.size() << "files to" << uploadInfos.size() << "hosts";
+            qWarning() << "FtpCoordinator::uploadArtworks #" << "Nothing or nowhere to upload. Skipping...";
             return;
         }
 
@@ -157,6 +161,7 @@ namespace Conectivity {
         int size = batches.size();
 
         initUpload(size);
+        emit uploadStarted();
 
         for (int i = 0; i < size; ++i) {
             FtpUploaderWorker *worker = new FtpUploaderWorker(&m_UploadSemaphore,
@@ -169,7 +174,7 @@ namespace Conectivity {
             QObject::connect(worker, SIGNAL(stopped()), worker, SLOT(deleteLater()));
             QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
 
-            QObject::connect(worker, SIGNAL(uploadStarted()), this, SIGNAL(uploadStarted()));
+            //QObject::connect(worker, SIGNAL(uploadStarted()), this, SIGNAL(uploadStarted()));
             QObject::connect(worker, SIGNAL(uploadFinished(bool)), this, SLOT(workerFinished(bool)));
             QObject::connect(this, SIGNAL(cancelAll()), worker, SIGNAL(workerCancelled()));
             QObject::connect(worker, SIGNAL(progressChanged(double,double)),
@@ -199,6 +204,8 @@ namespace Conectivity {
     }
 
     void FtpCoordinator::workerFinished(bool anyErrors) {
+        qDebug() << "FtpCoordinator::workerFinished #" << "anyErrors =" << anyErrors;
+
         if (anyErrors) {
             m_AnyFailed = true;
         }
