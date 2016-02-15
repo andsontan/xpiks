@@ -368,7 +368,7 @@ void Commands::CommandManager::submitForSpellCheck(const QVector<Models::Artwork
 }
 
 void Commands::CommandManager::submitForSpellCheck(const QVector<SpellCheck::ISpellCheckable *> &items) const {
-    if (m_SettingsModel->getUseSpellCheck() && m_SpellCheckerService != NULL) {
+    if ((m_SettingsModel != NULL) && m_SettingsModel->getUseSpellCheck() && m_SpellCheckerService != NULL) {
         m_SpellCheckerService->submitItems(items);
     }
 }
@@ -413,7 +413,7 @@ void Commands::CommandManager::submitForWarningsCheck(const QVector<Warnings::IW
 }
 
 void Commands::CommandManager::saveMetadata(Models::ArtworkMetadata *metadata) const {
-    if (m_SettingsModel->getSaveBackups() && m_MetadataSaverService != NULL) {
+    if ((m_SettingsModel != NULL) && m_SettingsModel->getSaveBackups() && m_MetadataSaverService != NULL) {
         m_MetadataSaverService->saveArtwork(metadata);
     }
 }

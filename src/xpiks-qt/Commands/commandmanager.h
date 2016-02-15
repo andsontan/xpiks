@@ -101,18 +101,23 @@ namespace Commands {
             m_CombinedArtworksModel(NULL),
             m_ArtworkUploader(NULL),
             m_UploadInfoRepository(NULL),
-            m_WarningsManager(NULL),
+            m_WarningsManager(NULL), // TO BE DEPRECATED
+            m_WarningsService(NULL),
             m_SecretsManager(NULL),
             m_UndoRedoManager(NULL),
             m_ZipArchiver(NULL),
             m_KeywordsSuggestor(NULL),
+            m_SettingsModel(NULL),
             m_RecentDirectories(NULL),
+            m_SpellCheckerService(NULL),
+            m_SpellCheckSuggestionModel(NULL),
             m_MetadataSaverService(NULL),
             m_TelemetryService(NULL),
             m_UpdateService(NULL),
             m_LogsModel(NULL),
             m_LocalLibrary(NULL),
             m_MetadataIOCoordinator(NULL),
+            m_PluginManager(NULL),
             m_AfterInitCalled(false)
         { }
 

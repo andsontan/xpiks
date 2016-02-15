@@ -35,5 +35,6 @@ int main(int argc, char *argv[]) {
     QTEST_CLASS(KeywordValidationTests, kvt);
     QTEST_CLASS(ArtworkRepositoryTests, art);
     QTEST_CLASS(FilteredModelTests, fil);
+    QThread::sleep(1);
     return 0;
 }

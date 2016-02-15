@@ -64,6 +64,7 @@ Commands::CommandResult *Commands::CombinedEditCommand::execute(const ICommandMa
             commandManager->saveMetadata(metadata);
         }
 
+
         itemsToCheck.append(metadata);
     }
 

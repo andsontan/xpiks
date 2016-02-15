@@ -1,103 +1,107 @@
 #include "filteredmodel_tests.h"
 
+#define DECLARE_MODELS_AND_GENERATE(count) \
+    Mocks::CommandManagerMock commandManagerMock;\
+    Mocks::ArtItemsModelMock artItemsModelMock;\
+    Models::ArtworksRepository artworksRepository;\
+    Models::FilteredArtItemsProxyModel filteredItemsModel;\
+    commandManagerMock.InjectDependency(&artworksRepository);\
+    commandManagerMock.InjectDependency(&artItemsModelMock);\
+    filteredItemsModel.setSourceModel(&artItemsModelMock);\
+    commandManagerMock.InjectDependency(&filteredItemsModel);\
+    commandManagerMock.generateAndAddArtworks(count);
 
 void FilteredModelTests::invertSelectionForEmptyTest(){
-    Mocks::CommandManagerMock commandManagerMock;
-    Mocks::ArtItemsModelMock artItemsMock;
-    Models::ArtworksRepository artworksRepository;
-    commandManagerMock.InjectDependency(&artworksRepository);
-    Models::ArtItemsModel *artItemsModel = &artItemsMock;
-    commandManagerMock.InjectDependency(artItemsModel);
-    commandManagerMock.generateAndAddArtworks(10);
-    Models::FilteredArtItemsProxyModel filteredArtItemsModel;
-    filteredArtItemsModel.setSourceModel(artItemsModel);
-    commandManagerMock.InjectDependency(&filteredArtItemsModel);
+    DECLARE_MODELS_AND_GENERATE(10);
 
-    int allItemsCount=filteredArtItemsModel.getItemsCount();
-    filteredArtItemsModel.invertSelectionArtworks();
-    int selected=filteredArtItemsModel.retrieveNumberOfSelectedItems();
-    QCOMPARE(selected,(allItemsCount));
+    int allItemsCount = filteredItemsModel.getItemsCount();
 
+    filteredItemsModel.invertSelectionArtworks();
+
+    int selected = filteredItemsModel.retrieveNumberOfSelectedItems();
+    QCOMPARE(selected, allItemsCount);
 }
 
 void FilteredModelTests::invertSelectionForAllSelectedTest(){
-    Mocks::CommandManagerMock commandManagerMock;
-    Mocks::ArtItemsModelMock artItemsMock;
-    Models::ArtworksRepository artworksRepository;
-    commandManagerMock.InjectDependency(&artworksRepository);
-    Models::ArtItemsModel *artItemsModel = &artItemsMock;
-    commandManagerMock.InjectDependency(artItemsModel);
-    commandManagerMock.generateAndAddArtworks(10);
-    Models::FilteredArtItemsProxyModel filteredArtItemsModel;
-    filteredArtItemsModel.setSourceModel(artItemsModel);
-    commandManagerMock.InjectDependency(&filteredArtItemsModel);
+    DECLARE_MODELS_AND_GENERATE(10);
 
-    int allItemsCount=filteredArtItemsModel.getItemsCount();
-    for (int i =0; i<allItemsCount; i++){                                   /*set*/
-        (artItemsModel->getArtwork(i))->setIsSelected(true);
-     }
-    filteredArtItemsModel.invertSelectionArtworks();
-    int selected=filteredArtItemsModel.retrieveNumberOfSelectedItems();
-    QCOMPARE(selected,0);
+    int allItemsCount = filteredItemsModel.getItemsCount();
+    for (int i =0; i < allItemsCount; i++) {
+        artItemsModelMock.getArtwork(i)->setIsSelected(true);
+    }
+
+    filteredItemsModel.invertSelectionArtworks();
+
+    int selected = filteredItemsModel.retrieveNumberOfSelectedItems();
+    QCOMPARE(selected, 0);
 }
 
 void FilteredModelTests::invertSelectionForSingleTest(){
-    Mocks::CommandManagerMock commandManagerMock;
-    Mocks::ArtItemsModelMock artItemsMock;
-    Models::ArtworksRepository artworksRepository;
-    commandManagerMock.InjectDependency(&artworksRepository);
-    Models::ArtItemsModel *artItemsModel = &artItemsMock;
-    commandManagerMock.InjectDependency(artItemsModel);
-    commandManagerMock.generateAndAddArtworks(10);
-    Models::FilteredArtItemsProxyModel filteredArtItemsModel;
-    filteredArtItemsModel.setSourceModel(artItemsModel);
-    commandManagerMock.InjectDependency(&filteredArtItemsModel);
+    DECLARE_MODELS_AND_GENERATE(10);
 
-    int allItemsCount=filteredArtItemsModel.getItemsCount();                                  /*set*/
-    (artItemsModel->getArtwork(0))->setIsSelected(true);
-    filteredArtItemsModel.invertSelectionArtworks();
-    int selected=filteredArtItemsModel.retrieveNumberOfSelectedItems();
-    QCOMPARE(selected,(allItemsCount-1));
-}
-void FilteredModelTests::invertSelectionForThirdSelectedTest(){
-    Mocks::CommandManagerMock commandManagerMock;
-    Mocks::ArtItemsModelMock artItemsMock;
-    Models::ArtworksRepository artworksRepository;
-    commandManagerMock.InjectDependency(&artworksRepository);
-    Models::ArtItemsModel *artItemsModel = &artItemsMock;
-    commandManagerMock.InjectDependency(artItemsModel);
-    commandManagerMock.generateAndAddArtworks(10);
-    Models::FilteredArtItemsProxyModel filteredArtItemsModel;
-    filteredArtItemsModel.setSourceModel(artItemsModel);
-    commandManagerMock.InjectDependency(&filteredArtItemsModel);
+    int allItemsCount = filteredItemsModel.getItemsCount();
 
-    int allItemsCount=filteredArtItemsModel.getItemsCount();
-    for (int i =0; i<allItemsCount; i++){                                   /*set*/
-        (artItemsModel->getArtwork(i))->setIsSelected(i<allItemsCount/3);
-     }
-    filteredArtItemsModel.invertSelectionArtworks();
-    int selected=filteredArtItemsModel.retrieveNumberOfSelectedItems();
-    QCOMPARE(selected,(allItemsCount-allItemsCount/3));
+    artItemsModelMock.getArtwork(0)->setIsSelected(true);
+
+    filteredItemsModel.invertSelectionArtworks();
+
+    int selected = filteredItemsModel.retrieveNumberOfSelectedItems();
+    QCOMPARE(selected, (allItemsCount-1));
 }
 
 void FilteredModelTests::invertSelectionForHalfSelectedTest(){
-    Mocks::CommandManagerMock commandManagerMock;
-    Mocks::ArtItemsModelMock artItemsMock;
-    Models::ArtworksRepository artworksRepository;
-    commandManagerMock.InjectDependency(&artworksRepository);
-    Models::ArtItemsModel *artItemsModel = &artItemsMock;
-    commandManagerMock.InjectDependency(artItemsModel);
-    commandManagerMock.generateAndAddArtworks(10);
-    Models::FilteredArtItemsProxyModel filteredArtItemsModel;
-    filteredArtItemsModel.setSourceModel(artItemsModel);
-    commandManagerMock.InjectDependency(&filteredArtItemsModel);
+    DECLARE_MODELS_AND_GENERATE(10);
 
-    int allItemsCount=filteredArtItemsModel.getItemsCount();
-    for (int i =0; i<allItemsCount; i++){                                   /*set*/
-        (artItemsModel->getArtwork(i))->setIsSelected(i<allItemsCount/2);
-     }
-    filteredArtItemsModel.invertSelectionArtworks();
-    int selected=filteredArtItemsModel.retrieveNumberOfSelectedItems();
-    QCOMPARE(selected,(allItemsCount-allItemsCount/2));
+    int allItemsCount = filteredItemsModel.getItemsCount();
+    for (int i =0; i < allItemsCount; i++) {
+        artItemsModelMock.getArtwork(i)->setIsSelected(i < allItemsCount/2);
+    }
+
+    filteredItemsModel.invertSelectionArtworks();
+
+    int selected = filteredItemsModel.retrieveNumberOfSelectedItems();
+    QCOMPARE(selected, (allItemsCount - allItemsCount/2));
 }
+
+void FilteredModelTests::invertSelectionForEvenCountTest(){
+    DECLARE_MODELS_AND_GENERATE(10);
+
+    int allItemsCount = filteredItemsModel.getItemsCount();
+    for (int i =0; i<allItemsCount; i++) {
+        artItemsModelMock.getArtwork(i)->setIsSelected(i < allItemsCount/3);
+    }
+
+    filteredItemsModel.invertSelectionArtworks();
+
+    int selected = filteredItemsModel.retrieveNumberOfSelectedItems();
+    QCOMPARE(selected, (allItemsCount - allItemsCount/3));
+}
+
+void FilteredModelTests::invertSelectionForOddCountTest(){
+    DECLARE_MODELS_AND_GENERATE(11);
+
+    int allItemsCount = filteredItemsModel.getItemsCount();
+    for (int i =0; i<allItemsCount; i++) {
+        artItemsModelMock.getArtwork(i)->setIsSelected(i < allItemsCount/3);
+    }
+
+    filteredItemsModel.invertSelectionArtworks();
+
+    int selected = filteredItemsModel.retrieveNumberOfSelectedItems();
+    QCOMPARE(selected, (allItemsCount - allItemsCount/3));
+}
+
+void FilteredModelTests::removeMetadataMarksAsModifiedTest() {
+    DECLARE_MODELS_AND_GENERATE(1);
+
+    Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(0);
+
+    QVERIFY(!metadata->isModified());
+
+    metadata->setIsSelected(true);
+    filteredItemsModel.removeMetadataInSelected();
+
+    QVERIFY(metadata->isModified());
+}
+
 

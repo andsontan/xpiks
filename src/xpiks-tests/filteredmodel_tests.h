@@ -6,6 +6,7 @@
 #include "Mocks/artitemsmodelmock.h"
 #include "Mocks/commandmanagermock.h"
 #include "../xpiks-qt/Models/filteredartitemsproxymodel.h"
+#include "../xpiks-qt/Models/artworksrepository.h"
 
 class FilteredModelTests : public QObject
 {
@@ -15,11 +16,9 @@ private slots:
     void invertSelectionForAllSelectedTest();
     void invertSelectionForSingleTest();
     void invertSelectionForHalfSelectedTest();
-    void invertSelectionForThirdSelectedTest();
-
-signals:
-
-public slots:
+    void invertSelectionForEvenCountTest();
+    void invertSelectionForOddCountTest();
+    void removeMetadataMarksAsModifiedTest();
 };
 
 #endif // FILTEREDMODELTESTS_H
