@@ -1377,7 +1377,7 @@ ApplicationWindow {
                                                         width: descriptionFlick.width
                                                         height: descriptionFlick.height
                                                         text: description
-                                                        font.pixelSize: 12 * settingsModel.keywordSizeScale
+                                                        font.pointSize: 9 * settingsModel.keywordSizeScale
                                                         color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.defaultInputBackground
                                                         onTextChanged: model.editdescription = text
 
@@ -1456,7 +1456,7 @@ ApplicationWindow {
 
                                                     StyledTextEdit {
                                                         id: titleTextInput
-                                                        font.pixelSize: 12 * settingsModel.keywordSizeScale
+                                                        font.pointSize: 9 * settingsModel.keywordSizeScale
                                                         width: titleFlick.width
                                                         height: titleFlick.height
                                                         text: title

@@ -218,7 +218,7 @@ Flickable {
                 anchors.bottom: parent.bottom
                 color: Colors.defaultLightColor
                 font.family: "Helvetica"
-                font.pixelSize: 12*settingsModel.keywordSizeScale
+                font.pointSize: 9*settingsModel.keywordSizeScale
                 verticalAlignment: TextInput.AlignVCenter
                 renderType: TextInput.NativeRendering
                 focus: true

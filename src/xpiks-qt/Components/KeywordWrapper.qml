@@ -62,7 +62,7 @@ Rectangle {
                 verticalAlignment: Text.AlignVCenter
                 text: itemWrapper.keywordText
                 color: itemWrapper.isHighlighted ? Colors.defaultControlColor : Colors.defaultLightColor
-                font.pixelSize: 12 * settingsModel.keywordSizeScale
+                font.pointSize: 9 * settingsModel.keywordSizeScale
             }
 
             MouseArea {

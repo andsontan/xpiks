@@ -433,7 +433,7 @@ ApplicationWindow {
                                             verticalAlignment: Text.AlignVCenter
                                             text: "keyword"
                                             color: Colors.defaultControlColor
-                                            font.pixelSize: 12 * keywordSizeSlider.value
+                                            font.pointSize: 9 * keywordSizeSlider.value
                                         }
                                     }
 

@@ -190,7 +190,7 @@ Item {
                             width: descriptionFlick.width
                             height: descriptionFlick.height
                             text: combinedArtworks.description
-                            font.pixelSize: 12*settingsModel.keywordSizeScale
+                            font.pointSize: 9*settingsModel.keywordSizeScale
                             onTextChanged: combinedArtworks.description = text
                             KeyNavigation.tab: titleTextInput
 
@@ -284,7 +284,7 @@ Item {
                             focus: true
                             width: titleFlick.width
                             height: titleFlick.height
-                            font.pixelSize: 12*settingsModel.keywordSizeScale
+                            font.pointSize: 9*settingsModel.keywordSizeScale
                             text: combinedArtworks.title
                             onTextChanged: combinedArtworks.title = text
                             KeyNavigation.backtab: descriptionTextInput
