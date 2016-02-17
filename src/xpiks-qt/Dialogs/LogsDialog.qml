@@ -156,7 +156,7 @@ Item {
                         text: logsComponent.logText
                         selectionColor: Colors.selectedArtworkColor
                         readOnly: true
-                        font.pointSize: 9*settingsModel.keywordSizeScale
+                        font.pixelSize: 12*settingsModel.keywordSizeScale
 
                         Component.onCompleted: {
                             scrollToBottom()

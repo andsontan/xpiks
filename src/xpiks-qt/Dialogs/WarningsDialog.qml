@@ -144,12 +144,11 @@ Item {
 
                                     ColumnLayout {
                                         anchors.centerIn: parent
-                                        width: 90
                                         anchors.verticalCenterOffset: 7
                                         spacing: 7
 
                                         Item {
-                                            width: parent.width
+                                            width: 90
                                             height: 60
                                             anchors.horizontalCenter: parent.horizontalCenter
 
@@ -164,13 +163,12 @@ Item {
                                         }
 
                                         StyledText {
-                                            id: caption
-                                            color: Colors.defaultInputBackground
-                                            text: filename.split(/[\\/]/).pop()
-                                            font.pointSize: 8
-                                            horizontalAlignment: Text.AlignHCenter
                                             Layout.fillWidth: true
                                             elide: Text.ElideMiddle
+                                            color: Colors.defaultInputBackground
+                                            horizontalAlignment: Text.AlignHCenter
+                                            text: filename.split(/[\\/]/).pop()
+                                            font.pixelSize: 10
                                         }
 
                                         Item {

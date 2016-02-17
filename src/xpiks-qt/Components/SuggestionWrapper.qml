@@ -50,7 +50,7 @@ Rectangle {
         anchors.leftMargin: 5
         text: itemWrapper.suggestionText
         color: isSelected ? (innerMA.containsMouse ? Colors.selectedMetadataColor : Colors.defaultControlColor) : (innerMA.containsMouse ? Colors.defaultLightColor : Colors.defaultInputBackground)
-        font.pointSize: 9 * settingsModel.keywordSizeScale
+        font.pixelSize: 12 * settingsModel.keywordSizeScale
     }
 
     MouseArea {

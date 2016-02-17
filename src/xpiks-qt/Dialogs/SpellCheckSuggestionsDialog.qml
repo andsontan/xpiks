@@ -164,7 +164,7 @@ Item {
                                             anchors.horizontalCenter: parent.horizontalCenter
                                             verticalAlignment: Text.AlignVCenter
                                             text: word
-                                            font.pointSize: 9 * settingsModel.keywordSizeScale
+                                            font.pixelSize: 12 * settingsModel.keywordSizeScale
                                             color: Colors.artworkModifiedColor
                                             elide: Text.ElideMiddle
                                         }
@@ -174,7 +174,7 @@ Item {
                                             verticalAlignment: Text.AlignVCenter
                                             visible: replacementorigin != word
                                             text: replacementorigin
-                                            font.pointSize: 8
+                                            font.pixelSize: 10
                                             color: Colors.selectedMetadataColor
                                             elide: Text.ElideMiddle
                                         }

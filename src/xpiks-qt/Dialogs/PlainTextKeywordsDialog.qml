@@ -170,7 +170,7 @@ Item {
                         height: flick.height
                         focus: true
                         text: plainTextKeywordsComponent.keywordsText
-                        font.pointSize: 9*settingsModel.keywordSizeScale
+                        font.pixelSize: 12*settingsModel.keywordSizeScale
                         selectionColor: Colors.selectedArtworkColor
                         wrapMode: TextEdit.Wrap
                         horizontalAlignment: TextEdit.AlignLeft

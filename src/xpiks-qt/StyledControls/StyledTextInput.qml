@@ -25,7 +25,7 @@ import "../Constants/Colors.js" as Colors
 
 TextInput {
     font.family: "Helvetica"
-    font.pointSize: 9
+    font.pixelSize: 12
     verticalAlignment: TextInput.AlignVCenter
     selectedTextColor: Colors.defaultLightColor
     selectionColor: Colors.defaultControlColor

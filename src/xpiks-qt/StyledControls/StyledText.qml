@@ -27,6 +27,6 @@ Text {
     color: enabled ? Colors.defaultLightColor : Colors.itemsSourceSelected
     renderType: Text.NativeRendering
     font.family: "Helvetica"
-    font.pointSize: 9
+    font.pixelSize: 12
 }
 
