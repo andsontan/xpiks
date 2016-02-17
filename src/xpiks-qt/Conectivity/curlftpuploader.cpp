@@ -161,6 +161,7 @@ namespace Conectivity {
 
                 r = curl_easy_perform(curlHandle);
                 if (r != CURLE_OK) {
+                    qWarning() << "uploadFile #" << "Attempt failed! Curl error:" << curl_easy_strerror(r);
                     continue;
                 }
 
