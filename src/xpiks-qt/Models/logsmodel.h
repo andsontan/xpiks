@@ -23,6 +23,7 @@
 #define LOGSMODEL
 
 #include <QObject>
+#include <QQuickTextDocument>
 
 namespace Helpers {
     class LoggingWorker;
@@ -45,6 +46,7 @@ namespace Models {
 
     public:
         Q_INVOKABLE QString getAllLogsText(bool moreLogs=false);
+        Q_INVOKABLE void initLogHighlighting(QQuickTextDocument *document);
         Q_INVOKABLE void clearLogs();        
         bool getWithLogs() const { return m_WithLogs; }
 
