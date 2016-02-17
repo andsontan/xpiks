@@ -125,11 +125,45 @@ void ensureUserIdExists(Helpers::AppSettings *settings) {
     }
 }
 
+static const char *setHighDpiEnvironmentVariable()
+{
+    const char* envVarName = 0;
+    static const char ENV_VAR_QT_DEVICE_PIXEL_RATIO[] = "QT_DEVICE_PIXEL_RATIO";
+
+#ifdef Q_OS_WIN
+    bool isWindows = true;
+#else
+    bool isWindows = false;
+#endif
+
+#if (QT_VERSION < QT_VERSION_CHECK(5, 6, 0))
+    if (isWindows
+            && !qEnvironmentVariableIsSet(ENV_VAR_QT_DEVICE_PIXEL_RATIO)) {
+        envVarName = ENV_VAR_QT_DEVICE_PIXEL_RATIO;
+        qputenv(envVarName, "auto");
+    }
+#else
+    if (isWindows
+            && !qEnvironmentVariableIsSet(ENV_VAR_QT_DEVICE_PIXEL_RATIO) // legacy in 5.6, but still functional
+            && !qEnvironmentVariableIsSet("QT_AUTO_SCREEN_SCALE_FACTOR")
+            && !qEnvironmentVariableIsSet("QT_SCALE_FACTOR")
+            && !qEnvironmentVariableIsSet("QT_SCREEN_SCALE_FACTORS")) {
+        QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    }
+#endif // < Qt 5.6
+    return envVarName;
+}
+
 int main(int argc, char *argv[]) {
     Helpers::RunGuard guard("xpiks");
     if (!guard.tryToRun()) {
         std::cerr << "Xpiks is already running";
         return -1;
+    }
+
+    const char *highDpiEnvironmentVariable = setHighDpiEnvironmentVariable();
+    if (highDpiEnvironmentVariable) {
+        qunsetenv(highDpiEnvironmentVariable);
     }
 
     initQSettings();
