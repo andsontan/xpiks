@@ -286,11 +286,15 @@ win32 {
     INCLUDEPATH += "../quazip"
     INCLUDEPATH += "../libcurl/include"
     LIBS -= -lcurl
-    LIBS += -llibcurl_debug
 
-    EXE_DIR = release
 CONFIG(debug, debug|release) {
     EXE_DIR = debug
+    LIBS += -llibcurl_debug
+}
+
+CONFIG(release, debug|release) {
+    EXE_DIR = release
+    LIBS += -llibcurl
 }
 
     copywhatsnew.commands = $(COPY_FILE) \"$$shell_path($$PWD/whatsnew.txt)\" \"$$shell_path($$OUT_PWD/$$EXE_DIR/)\"

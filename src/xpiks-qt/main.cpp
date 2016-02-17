@@ -162,9 +162,6 @@ int main(int argc, char *argv[]) {
     }
 
     const char *highDpiEnvironmentVariable = setHighDpiEnvironmentVariable();
-    if (highDpiEnvironmentVariable) {
-        qunsetenv(highDpiEnvironmentVariable);
-    }
 
     initQSettings();
     Helpers::AppSettings appSettings;
@@ -224,6 +221,10 @@ int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
 
     qDebug() << "main #" << "Working directory of Xpiks is:" << QDir::currentPath();
+
+    if (highDpiEnvironmentVariable) {
+        qunsetenv(highDpiEnvironmentVariable);
+    }
 
     localLibrary.loadLibraryAsync();
 
