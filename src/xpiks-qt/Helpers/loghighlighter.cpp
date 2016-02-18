@@ -1,52 +1,35 @@
 #include "loghighlighter.h"
-
 #include <QColor>
 
-LogHighlighter::LogHighlighter(QTextDocument *document) :
-    QSyntaxHighlighter(document){
+namespace Helpers {
+    LogHighlighter::LogHighlighter(QTextDocument *document) :
+        QSyntaxHighlighter(document){
+        //from Colors.js
+        destructiveColor = QColor::fromRgb(209, 11, 11);
+        artworkModifiedColor  = QColor::fromRgb(244,156,18);
+        defaultInputBackground = QColor::fromRgb(153,153,153);
+    }
 
-
+    void LogHighlighter::highlightBlock(const QString &text){
+        int size = text.size();
+        QString word = text.mid(24, 24+11);
+        if (word.mid(0,7)==QLatin1Literal("- Info:"))
+            return;
+        if (word.mid(0,8)==QLatin1Literal("- Debug:")){
+            setFormat(0, size, defaultInputBackground);
+            return;
+        }
+        if (word.mid(0,11)==QLatin1Literal("- Critical:")){
+            setFormat(0, size, destructiveColor);
+            return;
+        }
+        if (word.mid(0,8)==QLatin1Literal("- Fatal:")){
+            setFormat(0, size, destructiveColor);
+            return;
+        }
+        if (word.mid(0,10)==QLatin1Literal("- Warning:")){
+            setFormat(0, size, artworkModifiedColor);
+            return;
+        }
+    }
 }
-
-void LogHighlighter::highlightBlock(const QString &text){
-
-    int i = 0;
-    int size = text.size();
-
-    QColor white      = QColor::fromRgb(255,255,255);
-    QColor red        = QColor::fromRgb(255,0,0);
-    QColor orange     = QColor::fromRgb(255,165,0);
-    QColor grey       = QColor::fromRgb(169,169,169);
-
-    while (i < size) {
-                QString word = text.mid(i, i+11);
-                if (word.mid(0,7)=="- Info:") {
-                    setFormat(0, size, white);
-                    break;
-                }
-                if (word.mid(0,8)=="- Debug:"){
-                    setFormat(0, size, grey);
-                    break;
-
-                }
-                if (word.mid(0,11)=="- Critical:"){
-                    setFormat(0, size, red);
-                    break;
-
-                }
-                if (word.mid(0,8)=="- Fatal:"){
-                    setFormat(0, size, red);
-                    break;
-
-                }
-                if (word.mid(0,10)=="- Warning:"){
-                    setFormat(0, size, orange);
-                    break;
-                }
-        i++;
-    }
-
-
-    }
-
-

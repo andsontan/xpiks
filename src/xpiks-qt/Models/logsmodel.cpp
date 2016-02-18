@@ -92,7 +92,7 @@ namespace Models {
     }
 
     void LogsModel::initLogHighlighting(QQuickTextDocument *document){
-        LogHighlighter *highlighter = new LogHighlighter(document->textDocument());
+        Helpers::LogHighlighter *highlighter = new Helpers::LogHighlighter(document->textDocument());
     }
 
     void LogsModel::clearLogs() {

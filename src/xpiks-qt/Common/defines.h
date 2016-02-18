@@ -24,12 +24,12 @@
 
 #include <QtGlobal>
 
-#ifdef QT_NO_DEBUG
+//#ifdef QT_NO_DEBUG
 #define WITH_LOGS
-#else
+//#else
 // will be enabled in Xpiks 1.3 at least
-#define WITH_PLUGINS
-#endif
+//#define WITH_PLUGINS
+//#endif
 
 // 4*(avg word size 10 * avg keywords size 50)
 #define MAX_PASTE_SIZE 2000
