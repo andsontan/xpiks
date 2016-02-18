@@ -1515,6 +1515,7 @@ ApplicationWindow {
                                                     id: plainTextMA
                                                     anchors.fill: parent
                                                     hoverEnabled: true
+                                                    enabled: rowWrapper.isHighlighted
                                                     cursorShape: rowWrapper.isHighlighted ? Qt.PointingHandCursor : Qt.ArrowCursor
                                                     onClicked: {
                                                         var callbackObject = {

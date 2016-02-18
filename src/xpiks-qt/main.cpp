@@ -204,7 +204,7 @@ int main(int argc, char *argv[]) {
     logsModel.startLogging();
 
     qInstallMessageHandler(myMessageHandler);
-    qInfo() << "main #" << "Log started." << "Xpiks" << XPIKS_VERSION_STRING;
+    qInfo() << "main #" << "Log started." << "Xpiks" << XPIKS_VERSION_STRING << "-" << STRINGIZE(BUILDNUMBER);
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
     qInfo() << "main #" << QSysInfo::productType() << QSysInfo::productVersion();
