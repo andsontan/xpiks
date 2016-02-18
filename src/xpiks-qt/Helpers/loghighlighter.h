@@ -15,9 +15,9 @@ namespace Helpers {
 
     private:
         //from Colors.js
-        QColor destructiveColor;
-        QColor artworkModifiedColor;
-        QColor defaultInputBackground;
+        QColor m_DestructiveColor;
+        QColor m_ArtworkModifiedColor;
+        QColor m_DefaultInputBackground;
     };
 }
 #endif // LOGHIGHLIGHTER_H
