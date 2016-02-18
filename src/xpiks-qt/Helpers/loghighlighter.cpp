@@ -12,21 +12,25 @@ namespace Helpers {
 
     void LogHighlighter::highlightBlock(const QString &text){
         int size = text.size();
-        QString word = text.mid(24, 24+11);
-        if (word.startsWith(QLatin1Literal("- Debug:"))){
+        QString word = text.mid(26, 26+8);
+        if (word.startsWith(QLatin1Literal("Debug"))){
             setFormat(0, size, m_DefaultInputBackground);
-        }
-        if (word.startsWith(QLatin1Literal("- Info:")));
-
-        if (word.startsWith(QLatin1Literal("- Warning:"))){
-            setFormat(0, size, m_ArtworkModifiedColor);
-        }
-        if (word.startsWith(QLatin1Literal("- Critical:"))){
-            setFormat(0, size, m_DestructiveColor);
-        }
-        if (word.startsWith(QLatin1Literal("- Fatal:"))){
-            setFormat(0, size, m_DestructiveColor);
-        }
+        } else {
+            if (word.startsWith(QLatin1Literal("Info"))){
+            } else{
+                if (word.startsWith(QLatin1Literal("Warning"))){
+                    setFormat(0, size, m_ArtworkModifiedColor);
+                } else {
+                    if (word.startsWith(QLatin1Literal("Critical"))){
+                        setFormat(0, size, m_DestructiveColor);
+                    } else {
+                        if (word.startsWith(QLatin1Literal("Fatal"))){
+                            setFormat(0, size, m_DestructiveColor);
+                        }
+                    }
+                }
+            }
+       }
 
         return;
     }
