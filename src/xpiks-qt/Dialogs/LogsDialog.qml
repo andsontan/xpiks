@@ -160,6 +160,7 @@ Item {
 
                         Component.onCompleted: {
                             scrollToBottom()
+                            logsModel.initLogHighlighting(textEdit.textDocument)
                         }
                     }
                 }

@@ -30,6 +30,7 @@
 #include <QStandardPaths>
 #include "../Helpers/stringhelper.h"
 #include "../Helpers/logger.h"
+#include "../Helpers/loghighlighter.h"
 #include "../Common/defines.h"
 
 namespace Models {
@@ -88,6 +89,10 @@ namespace Models {
 #endif
         return result;
 
+    }
+
+    void LogsModel::initLogHighlighting(QQuickTextDocument *document){
+        Helpers::LogHighlighter *highlighter = new Helpers::LogHighlighter(document->textDocument());
     }
 
     void LogsModel::clearLogs() {
