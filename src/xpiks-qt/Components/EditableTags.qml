@@ -60,11 +60,13 @@ Flickable {
     signal copyRequest();
     signal backTabPressed();
     signal tabPressed();
+    signal editActivated();
 
     function activateEdit() {
         if (editEnabled && !nextTagTextInput.activeFocus) {
             scrollToBottom()
             nextTagTextInput.forceActiveFocus()
+            editActivated();
         }
     }
 

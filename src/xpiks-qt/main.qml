@@ -1078,12 +1078,18 @@ ApplicationWindow {
                             boundsBehavior: Flickable.StopAtBounds
                             spacing: 4
 
-                            function forceUpdateArtworks(index) {
-                                console.debug("UI::main # Force layout magic for artworks list view")
+                            function forceUpdateArtworks(needToMoveCurrentItem) {
+                                console.debug("UI::forceUpdateArtworks # updating main listview")
                                 imagesListView.forceLayout()
                                 imagesListView.update()
-                                imagesListView.decrementCurrentIndex()
-                                imagesListView.positionViewAtIndex(imagesListView.currentIndex, ListView.Visible)
+
+                                // this piece of code is here in order to beat caching of ListView
+                                // when you remove all items but few it fails to draw them
+                                if (needToMoveCurrentItem) {
+                                    console.debug("UI::forceUpdateArtworks # Moving into current item " + imagesListView.currentIndex)
+                                    imagesListView.decrementCurrentIndex()
+                                    imagesListView.positionViewAtIndex(imagesListView.currentIndex, ListView.Visible)
+                                }
                             }
 
                             add: Transition {
@@ -1215,6 +1221,7 @@ ApplicationWindow {
                                         StyledCheckbox {
                                             id: itemCheckedCheckbox
                                             //checked: isselected
+                                            focus: true
                                             anchors.centerIn: parent
                                             activeFocusOnPress: true
                                             onClicked: editisselected = checked
@@ -1363,7 +1370,6 @@ ApplicationWindow {
                                                     flickableDirection: Flickable.HorizontalFlick
                                                     height: 30
                                                     clip: true
-                                                    focus: false
 
                                                     function ensureVisible(r) {
                                                         if (contentX >= r.x)
@@ -1377,6 +1383,7 @@ ApplicationWindow {
                                                         width: descriptionFlick.width
                                                         height: descriptionFlick.height
                                                         text: description
+                                                        focus: true
                                                         font.pixelSize: 12 * settingsModel.keywordSizeScale
                                                         color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.defaultInputBackground
                                                         onTextChanged: model.editdescription = text
@@ -1445,7 +1452,6 @@ ApplicationWindow {
                                                     clip: true
                                                     flickableDirection: Flickable.HorizontalFlick
                                                     interactive: false
-                                                    focus: false
 
                                                     function ensureVisible(r) {
                                                         if (contentX >= r.x)
@@ -1460,6 +1466,7 @@ ApplicationWindow {
                                                         width: titleFlick.width
                                                         height: titleFlick.height
                                                         text: title
+                                                        focus: true
                                                         color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.defaultInputBackground
                                                         onTextChanged: model.edittitle = text
                                                         KeyNavigation.backtab: descriptionTextInput
@@ -1575,6 +1582,7 @@ ApplicationWindow {
                                                     property int keywordHeight: 20 * settingsModel.keywordSizeScale + (settingsModel.keywordSizeScale - 1)*10
                                                     scrollStep: keywordHeight
                                                     stealWheel: false
+                                                    focus: true
 
                                                     delegate: KeywordWrapper {
                                                         id: kw
@@ -1768,7 +1776,7 @@ ApplicationWindow {
 
                             Connections {
                                 target: artItemsModel
-                                onArtworksChanged: imagesListView.forceUpdateArtworks()
+                                onArtworksChanged: imagesListView.forceUpdateArtworks(needToMoveCurrentItem)
                             }
 
                             Connections {

@@ -254,7 +254,7 @@ namespace Models {
         AbstractListModel::updateItemsInRanges(rangesToUpdate, QVector<int>() << IsModifiedRole);
 
         updateModifiedCount();
-        emit artworksChanged();
+        emit artworksChanged(false);
     }
 
     void ArtItemsModel::removeSelectedArtworks(QVector<int> &selectedIndices) {
@@ -274,7 +274,7 @@ namespace Models {
         fillStandardRoles(roles);
         AbstractListModel::updateItemsInRanges(rangesToUpdate, roles);
 
-        emit artworksChanged();
+        emit artworksChanged(false);
     }
 
     void ArtItemsModel::saveSelectedArtworks(const QVector<int> &selectedIndices, bool overwriteAll, bool useBackups) {
@@ -523,6 +523,11 @@ namespace Models {
 
         int addedFilesCount = addDirectories(directoriesList);
         return addedFilesCount;
+    }
+
+    void ArtItemsModel::removeItemsAtIndices(const QVector<QPair<int, int> > &ranges) {
+        AbstractListModel::removeItemsAtIndices(ranges);
+        emit artworksChanged(true);
     }
 
     void ArtItemsModel::beginAccountingFiles(int filesCount) {

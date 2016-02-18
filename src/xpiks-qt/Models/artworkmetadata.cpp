@@ -130,6 +130,7 @@ namespace Models {
 
     int ArtworkMetadata::appendKeywords(const QStringList &keywordsList) {
         int result = BasicKeywordsModel::appendKeywords(keywordsList);
+        qDebug() << "ArtworkMetadata::appendKeywords #" << "Appended" << result << "keywords out of" << keywordsList.length();
         if (result > 0) { markModified(); }
         return result;
     }

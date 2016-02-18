@@ -119,6 +119,8 @@ namespace Common {
         }
 
         size = keywordsToAdd.size();
+        Q_ASSERT(size == appendedCount);
+
         if (size > 0) {
             int rowsCount = m_KeywordsList.length();
             beginInsertRows(QModelIndex(), rowsCount, rowsCount + size - 1);

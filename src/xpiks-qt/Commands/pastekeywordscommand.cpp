@@ -33,7 +33,7 @@ Commands::PasteKeywordsCommand::~PasteKeywordsCommand() {
 }
 
 Commands::CommandResult *Commands::PasteKeywordsCommand::execute(const ICommandManager *commandManagerInterface) const {
-    qInfo() << "PasteKeywordsCommand::execute #" << m_ArtItemInfos.length() << "item(s)";
+    qInfo() << "PasteKeywordsCommand::execute #" << "Pasting" << m_KeywordsList.length() << "keywords to" << m_ArtItemInfos.length() << "item(s)";
 
     CommandManager *commandManager = (CommandManager*)commandManagerInterface;
 
@@ -52,6 +52,7 @@ Commands::CommandResult *Commands::PasteKeywordsCommand::execute(const ICommandM
 
         metadata->appendKeywords(m_KeywordsList);
         commandManager->saveMetadata(metadata);
+        itemsToCheck.append(metadata);
     }
 
     commandManager->submitForSpellCheck(itemsToCheck);

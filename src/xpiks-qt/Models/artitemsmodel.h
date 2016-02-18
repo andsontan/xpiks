@@ -120,6 +120,7 @@ namespace Models {
         void itemModifiedChanged(bool) { updateModifiedCount(); }
 
     public:
+        virtual void removeItemsAtIndices(const QVector<QPair<int, int> > &ranges);
         void beginAccountingFiles(int filesCount);
         void beginAccountingFiles(int start, int end);
         void endAccountingFiles();
@@ -152,7 +153,7 @@ namespace Models {
     signals:
         void needCheckItemsForWarnings(const QVector<ArtItemInfo*> &artworks);
         void modifiedArtworksCountChanged();
-        void artworksChanged();
+        void artworksChanged(bool needToMoveCurrentItem);
         void artworksAdded(int count);
         void selectedArtworkRemoved();
 
