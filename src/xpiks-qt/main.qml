@@ -481,11 +481,15 @@ ApplicationWindow {
     Connections {
         target: artItemsModel
         onArtworksAdded: {
-           if (count > 0) {
-               Common.launchDialog("Dialogs/ImportMetadata.qml", applicationWindow, {})
-           } else {
-               console.debug("Warning: artworksAdded() signal with no new items!")
-           }
+            var latestDir = recentDirectories.getLatestDirectory()
+            chooseArtworksDialog.folder = latestDir
+            chooseDirectoryDialog.folder = latestDir
+
+            if (count > 0) {
+                Common.launchDialog("Dialogs/ImportMetadata.qml", applicationWindow, {})
+            } else {
+                console.debug("Warning: artworksAdded() signal with no new items!")
+            }
         }
     }
 

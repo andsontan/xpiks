@@ -27,6 +27,7 @@
 #include <QString>
 #include <QSet>
 #include <QHash>
+#include <QUrl>
 
 namespace Models {
     class RecentDirectoriesModel : public QAbstractListModel
@@ -39,6 +40,10 @@ namespace Models {
         Q_INVOKABLE QString serializeForSettings();
         void deserializeFromSettings(const QString &serialized);
         void pushDirectory(const QString &directoryPath);
+        Q_INVOKABLE QUrl getLatestDirectory() const;
+
+    private:
+        bool doPushDirectory(const QString &directoryPath);
 
     public:
         int rowCount(const QModelIndex & parent = QModelIndex()) const { Q_UNUSED(parent); return m_RecentDirectories.length(); }
@@ -51,6 +56,7 @@ namespace Models {
         QSet<QString> m_DirectoriesSet;
         QQueue<QString> m_RecentDirectories;
         int m_MaxRecentDirectories;
+        QString m_LatestUsedDirectory;
     };
 }
 

@@ -21,6 +21,8 @@
 
 #include "recentdirectoriesmodel.h"
 #include <QDataStream>
+#include <QUrl>
+#include <QDebug>
 
 namespace Models {
     RecentDirectoriesModel::RecentDirectoriesModel():
@@ -46,11 +48,25 @@ namespace Models {
         ds >> items;
 
         foreach (const QString &item, items) {
-            this->pushDirectory(item);
+            doPushDirectory(item);
         }
     }
 
     void RecentDirectoriesModel::pushDirectory(const QString &directoryPath) {
+        if (doPushDirectory(directoryPath)) {
+            qDebug() << "RecentDirectoriesModel::pushDirectory #" << "Added new recent directory";
+        }
+
+        m_LatestUsedDirectory = directoryPath;
+    }
+
+    QUrl RecentDirectoriesModel::getLatestDirectory() const {
+        return QUrl::fromLocalFile(m_LatestUsedDirectory);
+    }
+
+    bool RecentDirectoriesModel::doPushDirectory(const QString &directoryPath) {
+        bool added = false;
+
         if (!m_DirectoriesSet.contains(directoryPath)) {
             m_DirectoriesSet.insert(directoryPath);
 
@@ -66,7 +82,11 @@ namespace Models {
                 endRemoveRows();
                 m_DirectoriesSet.remove(directoryToRemove);
             }
+
+            added = true;
         }
+
+        return added;
     }
 
     QVariant RecentDirectoriesModel::data(const QModelIndex &index, int role) const {
