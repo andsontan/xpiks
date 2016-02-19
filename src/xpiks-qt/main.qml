@@ -44,6 +44,7 @@ ApplicationWindow {
     property int openedDialogsCount: 0
     property bool showUpdateLink: false
     property bool needToCenter: true
+    property bool listLayout: true
 
     onVisibleChanged: {
         if (needToCenter) {
@@ -678,8 +679,19 @@ ApplicationWindow {
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
-                    anchors.leftMargin: 10
+                    anchors.leftMargin: 0
                     anchors.rightMargin: mainScrollView.areScrollbarsVisible ? 20 : 10
+
+                    Item {
+                        width: 5
+                    }
+
+                    LayoutButton {
+                        enabled: artworkRepository.artworksSourcesCount > 0
+                        isListLayout: applicationWindow.listLayout
+                        onLayoutChanged: applicationWindow.listLayout = !applicationWindow.listLayout
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
 
                     Item {
                         Layout.fillWidth: true
@@ -981,19 +993,15 @@ ApplicationWindow {
                             }
                         ]
 
+                        Rectangle {
+                            anchors.left: parent.left
+                            color: Colors.artworkSavedColor
+                            width: applicationWindow.listLayout ? 6 : 3
+                            height: parent.height
+                        }
+
                         RowLayout {
-                            anchors.fill: parent
-                            spacing: 10
-
-                            Rectangle {
-                                color: Colors.artworkSavedColor
-                                width: 6
-                                Layout.fillHeight: true
-                            }
-
-                            Item {
-                                Layout.fillWidth: true
-                            }
+                            anchors.centerIn: parent
 
                             StyledText {
                                 id: undoDescription
@@ -1035,31 +1043,28 @@ ApplicationWindow {
                                 }
                             }
 
-                            Item {
-                                Layout.fillWidth: true
-                            }
+                        }
 
-                            Timer {
-                                id: autoDismissTimer
-                                property int iterations: 0
-                                interval: 1000
-                                repeat: true
-                                running: undoRedoManager.canUndo
-                                onTriggered: {
-                                    iterations += 1
+                        Timer {
+                            id: autoDismissTimer
+                            property int iterations: 0
+                            interval: 1000
+                            repeat: true
+                            running: undoRedoManager.canUndo
+                            onTriggered: {
+                                iterations += 1
 
-                                    if (iterations % (settingsModel.dismissDuration + 1) === settingsModel.dismissDuration) {
-                                        undoRedoManager.discardLastAction()
-                                        iterations = 0
-                                    }
+                                if (iterations % (settingsModel.dismissDuration + 1) === settingsModel.dismissDuration) {
+                                    undoRedoManager.discardLastAction()
+                                    iterations = 0
                                 }
                             }
+                        }
 
-                            Connections {
-                                target: undoRedoManager
-                                onItemRecorded: {
-                                    autoDismissTimer.iterations = 0
-                                }
+                        Connections {
+                            target: undoRedoManager
+                            onItemRecorded: {
+                                autoDismissTimer.iterations = 0
                             }
                         }
                     }
@@ -1076,11 +1081,13 @@ ApplicationWindow {
                         // does not work for now in Qt 5.4.1 in combination with ListView
                         //verticalScrollBarPolicy: Qt.ScrollBarAlwaysOn
 
-                        ListView {
+                        GridView {
                             id: imagesListView
                             model: filteredArtItemsModel
                             boundsBehavior: Flickable.StopAtBounds
-                            spacing: 4
+                            property int cellSpacing: 4
+                            cellHeight: applicationWindow.listLayout ? (200 + 80*(settingsModel.keywordSizeScale - 1.0) + cellSpacing) : (200 + cellSpacing)
+                            cellWidth: applicationWindow.listLayout ? imagesListView.width : (208 + cellSpacing)
 
                             function forceUpdateArtworks(needToMoveCurrentItem) {
                                 console.debug("UI::forceUpdateArtworks # updating main listview")
@@ -1091,7 +1098,7 @@ ApplicationWindow {
                                 // when you remove all items but few it fails to draw them
                                 if (needToMoveCurrentItem) {
                                     console.debug("UI::forceUpdateArtworks # Moving into current item " + imagesListView.currentIndex)
-                                    imagesListView.decrementCurrentIndex()
+                                    imagesListView.moveCurrentIndexDown()
                                     imagesListView.positionViewAtIndex(imagesListView.currentIndex, ListView.Visible)
                                 }
                             }
@@ -1123,6 +1130,8 @@ ApplicationWindow {
                                 color: isHighlighted ? Colors.selectedArtworkColor : Colors.artworkImageBackground
                                 property var artworkModel: artItemsModel.getArtworkItself(rowWrapper.getIndex())
                                 property int delegateIndex: index
+                                width: applicationWindow.listLayout ? parent.width : 208
+                                height: applicationWindow.listLayout ? (200 + 80*(settingsModel.keywordSizeScale - 1.0)) : 200
 
                                 function getIndex() {
                                     return filteredArtItemsModel.getOriginalIndex(index)
@@ -1153,9 +1162,6 @@ ApplicationWindow {
                                     ListView.view.currentIndex = rowWrapper.delegateIndex
                                 }
 
-                                width: parent.width
-                                height: 200 + 80*(settingsModel.keywordSizeScale - 1.0)
-
                                 Connections {
                                     target: rowWrapper.artworkModel
                                     onSpellCheckResultsReady: {
@@ -1178,12 +1184,12 @@ ApplicationWindow {
 
                                 Item {
                                     anchors.fill: parent
-                                    anchors.rightMargin: 10
+                                    anchors.rightMargin: applicationWindow.listLayout ? 10 : 0
 
                                     Rectangle {
                                         id: isModifiedRectangle
                                         color: ismodified ? Colors.artworkModifiedColor : Colors.artworkSavedColor
-                                        width: 6
+                                        width: applicationWindow.listLayout ? 6 : 3
                                         anchors.left: parent.left
                                         anchors.top: parent.top
                                         anchors.bottom: parent.bottom
@@ -1191,7 +1197,7 @@ ApplicationWindow {
 
                                     Item {
                                         id: checkboxSpacer
-                                        width: 5
+                                        width: applicationWindow.listLayout ? 5 : 0
                                         anchors.left: isModifiedRectangle.right
                                         anchors.leftMargin: 5
                                         anchors.top: parent.top
@@ -1199,6 +1205,7 @@ ApplicationWindow {
 
                                         MouseArea {
                                             anchors.fill: parent
+                                            enabled: applicationWindow.listLayout
                                             onClicked: {
                                                 rowWrapper.switchChecked()
                                                 rowWrapper.focusIfNeeded()
@@ -1241,9 +1248,9 @@ ApplicationWindow {
 
                                     Item {
                                         id: imageColumnWrapper
-                                        width: 180
+                                        width: applicationWindow.listLayout ? 180 : 150
                                         anchors.left: checkboxRectangle.right
-                                        anchors.leftMargin: 5
+                                        anchors.leftMargin: applicationWindow.listLayout ? 5 : 0
                                         anchors.top: parent.top
                                         anchors.bottom: parent.bottom
 
@@ -1257,7 +1264,8 @@ ApplicationWindow {
 
                                         ColumnLayout {
                                             anchors.fill: parent
-                                            anchors.margins: { left: 15; right: 15 }
+                                            anchors.leftMargin: applicationWindow.listLayout ? 15 : 5
+                                            anchors.rightMargin: applicationWindow.listLayout ? 15 : 0
                                             spacing: 5
 
                                             Item {
@@ -1321,11 +1329,12 @@ ApplicationWindow {
 
                                     Rectangle {
                                         id: columnRectangle
-                                        anchors.top: parent.top
-                                        anchors.bottom: parent.bottom
-                                        anchors.left: imageColumnWrapper.right
-                                        anchors.leftMargin: 5
-                                        anchors.right: parent.right
+                                        visible: applicationWindow.listLayout
+                                        anchors.top: applicationWindow.listLayout ? parent.top : undefined
+                                        anchors.bottom: applicationWindow.listLayout ? parent.bottom : undefined
+                                        anchors.left: applicationWindow.listLayout ? imageColumnWrapper.right : undefined
+                                        anchors.leftMargin: applicationWindow.listLayout ? 5 : 0
+                                        anchors.right: applicationWindow.listLayout ? parent.right : undefined
                                         color: rowWrapper.isHighlighted  ? Colors.selectedMetadataColor : Colors.artworkBackground
 
                                         Item {

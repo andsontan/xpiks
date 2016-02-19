@@ -250,7 +250,8 @@ DISTFILES += \
     Dialogs/PlainTextKeywordsDialog.qml \
     Dialogs/WhatsNewDialog.qml \
     Dialogs/TermsAndConditionsDialog.qml \
-    Dialogs/PluginsDialog.qml
+    Dialogs/PluginsDialog.qml \
+    Components/LayoutButton.qml
 
 LIBS += -L"$$PWD/../libs/"
 LIBS += -lhunspell

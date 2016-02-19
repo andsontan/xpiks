@@ -49,5 +49,6 @@
         <file>Dialogs/WhatsNewDialog.qml</file>
         <file>Dialogs/TermsAndConditionsDialog.qml</file>
         <file>Dialogs/PluginsDialog.qml</file>
+        <file>Components/LayoutButton.qml</file>
     </qresource>
 </RCC>
