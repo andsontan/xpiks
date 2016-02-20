@@ -458,8 +458,6 @@ void Commands::CommandManager::beforeDestructionCallback() const {
     qDebug() << "CommandManager::beforeDestructionCallback #";
     if (!m_AfterInitCalled) { return; }
 
-    // we have a second for important stuff
-    m_TelemetryService->reportAction(Conectivity::UserActionClose);
     m_SpellCheckerService->stopService();
     m_MetadataSaverService->stopSaving();
 
@@ -467,6 +465,9 @@ void Commands::CommandManager::beforeDestructionCallback() const {
     m_PluginManager->unloadPlugins();
     m_LogsModel->stopLogging();
 #endif
+
+    // we have a second for important stuff
+    m_TelemetryService->reportAction(Conectivity::UserActionClose);
 }
 
 void Commands::CommandManager::restartSpellChecking() {
