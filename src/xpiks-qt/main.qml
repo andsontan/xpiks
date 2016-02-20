@@ -1269,12 +1269,12 @@ ApplicationWindow {
                                             spacing: 5
 
                                             Item {
-                                                height: 15
+                                                height: 30
                                             }
 
                                             Item {
                                                 width: 150
-                                                height: 130
+                                                height: 132
                                                 anchors.horizontalCenter: parent.horizontalCenter
 
                                                 Image {
