@@ -1069,12 +1069,22 @@ ApplicationWindow {
                         }
                     }
 
-                    StyledScrollView {
-                        id: mainScrollView
+                    Rectangle {
+                        id: separator
                         anchors.left: parent.left
                         anchors.right: parent.right
                         anchors.topMargin: 4
                         anchors.top: undoRedoRect.bottom
+                        height: visible ? 2 : 0
+                        color: Colors.defaultDarkColor
+                        visible: !undoRedoManager.canUndo && (artworkRepository.artworksSourcesCount > 0)
+                    }
+
+                    StyledScrollView {
+                        id: mainScrollView
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.top: separator.bottom
                         anchors.bottom: parent.bottom
                         property bool areScrollbarsVisible: flickableItem.contentHeight > flickableItem.height
                         __wheelAreaScrollSpeed: 50 + 10*settingsModel.scrollSpeedScale
