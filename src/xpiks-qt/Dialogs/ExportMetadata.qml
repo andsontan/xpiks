@@ -182,6 +182,7 @@ Item {
 
                     StyledButton {
                         id: exportButton
+                        isDefault: true
                         text: qsTr("Start Export")
                         width: 130
                         enabled: !metadataExportComponent.isInProgress

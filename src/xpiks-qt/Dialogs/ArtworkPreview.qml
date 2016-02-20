@@ -186,13 +186,13 @@ Item {
                     }
 
                     RowLayout {
-                        width: parent.width
                         anchors.left: parent.left
+                        anchors.right: parent.right
                         spacing: 10
 
                         StyledButton {
                             text: qsTr("100%")
-                            width: 50
+                            width: 60
                             onClicked: {
                                 previewImage.width = previewImage.sourceSize.width
                                 previewImage.height = previewImage.sourceSize.height
@@ -202,9 +202,13 @@ Item {
                             }
                         }
 
+                        Item {
+                            Layout.fillWidth: true
+                        }
+
                         StyledButton {
                             text: qsTr("Fit")
-                            width: 50
+                            width: 60
                             onClicked: {
                                 previewImage.width = boundsRect.width - 20
                                 previewImage.height = boundsRect.height - 20
@@ -213,12 +217,17 @@ Item {
                                 previewImage.fillMode = Image.PreserveAspectFit
                             }
                         }
+                    }
 
-                        StyledButton {
-                            text: qsTr("Close")
-                            width: 50
-                            onClicked: closePopup()
-                        }
+                    Item {
+                        height: 1
+                    }
+
+                    StyledButton {
+                        text: qsTr("Close")
+                        width: parent.width
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        onClicked: closePopup()
                     }
                 }
             }

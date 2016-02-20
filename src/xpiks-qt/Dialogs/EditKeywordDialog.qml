@@ -150,7 +150,7 @@ Item {
                     spacing: 15
 
                     StyledButton {
-                        text: qsTr("Ok")
+                        text: qsTr("Save")
                         width: 70
                         onClicked: submitKeyword()
                     }
