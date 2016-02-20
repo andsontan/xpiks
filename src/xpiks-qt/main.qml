@@ -1073,7 +1073,7 @@ ApplicationWindow {
                         id: separator
                         anchors.left: parent.left
                         anchors.right: parent.right
-                        anchors.topMargin: 4
+                        anchors.topMargin: visible ? 2 : 4
                         anchors.top: undoRedoRect.bottom
                         height: visible ? 2 : 0
                         color: Colors.defaultDarkColor
@@ -1534,6 +1534,7 @@ ApplicationWindow {
                                             }
 
                                             StyledText {
+                                                id: plainTextText
                                                 text: qsTr("<u>edit in plain text</u>")
                                                 color: plainTextMA.containsMouse ? Colors.defaultLightGrayColor : Colors.defaultInputBackground
                                                 visible: rowWrapper.isHighlighted
@@ -1546,8 +1547,12 @@ ApplicationWindow {
                                                     anchors.fill: parent
                                                     hoverEnabled: true
                                                     enabled: rowWrapper.isHighlighted
-                                                    cursorShape: rowWrapper.isHighlighted ? Qt.PointingHandCursor : Qt.ArrowCursor
+                                                    preventStealing: true
+                                                    cursorShape: containsMouse ? Qt.PointingHandCursor : Qt.ArrowCursor
                                                     onClicked: {
+                                                        // strange bug with clicking on the keywords field
+                                                        if (!containsMouse) { return; }
+
                                                         var callbackObject = {
                                                             onSuccess: function(text) {
                                                                 artItemsModel.plainTextEdit(rowWrapper.getIndex(), text)
