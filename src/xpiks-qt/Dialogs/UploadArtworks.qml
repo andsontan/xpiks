@@ -705,7 +705,8 @@ Item {
                         MouseArea {
                             id: uploadWarmingsMA
                             anchors.fill: parent
-                            cursorShape: Qt.PointingHandCursor
+                            cursorShape: warningsModel.warningsCount > 0 ? Qt.PointingHandCursor : Qt.ArrowCursor
+                            enabled: warningsModel.warningsCount > 0
                             onClicked: {
                                 if (warningsModel.warningsCount > 0) {
                                     Common.launchDialog("Dialogs/WarningsDialog.qml",
