@@ -23,6 +23,10 @@
 #include <QThread>
 #include <QDebug>
 #include <QHash>
+#include <QFutureWatcher>
+#include <QtConcurrent>
+#include <QFileInfo>
+#include <QProcess>
 #include "metadatareadingworker.h"
 #include "metadatawritingworker.h"
 #include "backupsaverservice.h"
@@ -31,8 +35,28 @@
 #include "../Commands/commandmanager.h"
 #include "../Suggestion/locallibrary.h"
 #include "saverworkerjobitem.h"
+#include "../Models/settingsmodel.h"
 
 namespace MetadataIO {
+    bool tryGetExiftoolVersion(const QString &path, QString &version) {
+        QProcess process;
+        process.start(path, QStringList() << "-ver");
+        bool success = process.waitForFinished(2000);
+
+        int exitCode = process.exitCode();
+        QProcess::ExitStatus exitStatus = process.exitStatus();
+
+        success = success &&
+                (exitCode == 0) &&
+                (exitStatus == QProcess::NormalExit);
+
+        if (success) {
+            version = process.readAll();
+        }
+
+        return success;
+    }
+
     MetadataIOCoordinator::MetadataIOCoordinator():
         Common::BaseEntity(),
         m_ReadingWorker(NULL),
@@ -41,8 +65,12 @@ namespace MetadataIO {
         m_IsImportInProgress(false),
         m_CanProcessResults(false),
         m_IgnoreBackupsAtImport(false),
-        m_HasErrors(false)
+        m_HasErrors(false),
+        m_ExiftoolNotFound(false)
     {
+        m_ExiftoolDiscoveryFuture = new QFutureWatcher<void>(this);
+        QObject::connect(m_ExiftoolDiscoveryFuture, SIGNAL(finished()),
+                         this, SLOT(exiftoolDiscoveryFinished()));
     }
 
     void MetadataIOCoordinator::readingWorkerFinished(bool success) {
@@ -59,6 +87,21 @@ namespace MetadataIO {
     void MetadataIOCoordinator::writingWorkerFinished(bool success) {
         setHasErrors(!success);
         emit metadataWritingFinished();
+    }
+
+    void MetadataIOCoordinator::exiftoolDiscoveryFinished() {
+        if (!m_ExiftoolNotFound && !m_RecommendedExiftoolPath.isEmpty()) {
+            qDebug() << "MetadataIOCoordinator::exiftoolDiscoveryFinished #" << "Recommended exiftool path is" << m_RecommendedExiftoolPath;
+
+            Models::SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
+            QString existingExiftoolPath = settingsModel->getExifToolPath();
+
+            if (existingExiftoolPath != m_RecommendedExiftoolPath) {
+                qInfo() << "MetadataIOCoordinator::exiftoolDiscoveryFinished #" << "Setting exiftool path to recommended";
+                settingsModel->setExifToolPath(m_RecommendedExiftoolPath);
+                settingsModel->saveExiftool();
+            }
+        }
     }
 
     void MetadataIOCoordinator::readMetadata(const QVector<Models::ArtworkMetadata *> &artworksToRead,
@@ -107,6 +150,10 @@ namespace MetadataIO {
 
         qDebug() << "MetadataIOCoordinator::writeMetadata #" << "Starting thread...";
         thread->start();
+    }
+
+    void MetadataIOCoordinator::autoDiscoverExiftool()  {
+        m_ExiftoolDiscoveryFuture->setFuture(QtConcurrent::run(this, &MetadataIOCoordinator::tryToLaunchExiftool));
     }
 
     void MetadataIOCoordinator::discardReading() {
@@ -179,6 +226,40 @@ namespace MetadataIO {
         m_CommandManager->updateArtworks(rangesToUpdate);
         m_CommandManager->submitForSpellCheck(itemsToRead);
         m_CommandManager->submitForWarningsCheck(itemsToRead);
+    }
+
+    void MetadataIOCoordinator::tryToLaunchExiftool() {
+        qDebug() << "MetadataIOCoordinator::tryToLaunchExiftool #";
+        // SHOULD BE UNDER DEFINE OS X
+        QStringList possiblePaths;
+        possiblePaths << "/usr/bin/exiftool" << "/usr/local/bin/exiftool";
+
+        QString exiftoolPath;
+        QString exiftoolVersion;
+
+        foreach (const QString &path, possiblePaths) {
+            qDebug() << "MetadataIOCoordinator::tryToLaunchExiftool #" << "Trying path" << path;
+            QFileInfo fi(path);
+            if (fi.exists()) {
+                if (tryGetExiftoolVersion(path, exiftoolVersion)) {
+                    qInfo() << "MetadataIOCoordinator::tryToLaunchExiftool #" << "Exiftool version:" << exiftoolVersion;
+                    exiftoolPath = path;
+                    break;
+                }
+            }
+        }
+
+        if (exiftoolPath.isEmpty()) {
+            const QString path = "exiftool";
+            qDebug() << "MetadataIOCoordinator::tryToLaunchExiftool #" << "Trying ordinary exiftool in PATH";
+            if (tryGetExiftoolVersion(path, exiftoolVersion)) {
+                qInfo() << "MetadataIOCoordinator::tryToLaunchExiftool #" << "Exiftool version:" << exiftoolVersion;
+                exiftoolPath = path;
+            }
+        }
+
+        setExiftoolNotFound(exiftoolPath.isEmpty());
+        m_RecommendedExiftoolPath = exiftoolPath;
     }
 }
 

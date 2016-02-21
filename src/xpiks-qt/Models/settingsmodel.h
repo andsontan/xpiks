@@ -61,6 +61,7 @@ namespace Models {
         virtual ~SettingsModel() {}
 
     public:
+        void saveExiftool();
 
     public:
         Q_INVOKABLE void resetAllValues();
