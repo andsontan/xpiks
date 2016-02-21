@@ -38,8 +38,8 @@ namespace Warnings {
         int getWarningsCount() const { return rowCount(); }
 
     public:
-        Q_INVOKABLE void setShowSelected() { m_ShowOnlySelected = true; }
-        Q_INVOKABLE void resetShowSelected() { m_ShowOnlySelected = false; }
+        Q_INVOKABLE void setShowSelected() { m_ShowOnlySelected = true; update(); }
+        Q_INVOKABLE void resetShowSelected() { m_ShowOnlySelected = false; update(); }
         Q_INVOKABLE QStringList describeWarnings(int index) const;
         Q_INVOKABLE void update();
         Q_INVOKABLE int getOriginalIndex(int index) const;

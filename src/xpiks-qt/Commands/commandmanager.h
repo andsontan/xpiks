@@ -49,7 +49,6 @@ namespace Models {
     class CombinedArtworksModel;
     class ArtworkUploader;
     class UploadInfoRepository;
-    class WarningsManager;
     class UploadInfo;
     class ArtworkMetadata;
     class ZipArchiver;

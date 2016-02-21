@@ -47,6 +47,7 @@ Item {
 
     function closePopup() {
         secretsManager.purgeMasterPassword()
+        warningsModel.resetShowSelected()
         uploadInfos.finalizeAccounts()
         saveSettings()
         uploadArtworksComponent.destroy()
@@ -698,15 +699,15 @@ Item {
 
                     StyledText {
                         enabled: uploadArtworksComponent.uploadEnabled
-                        text: warningsManager.warningsCount == 1 ? qsTr("1 warning") : qsTr("%1 warnings").arg(warningsManager.warningsCount)
-                        color: uploadWarmingsMA.pressed ? Colors.defaultLightGrayColor : warningsManager.warningsCount > 0 ? Colors.artworkModifiedColor : Colors.defaultInputBackground
+                        text: warningsModel.warningsCount == 1 ? qsTr("1 warning") : qsTr("%1 warnings").arg(warningsModel.warningsCount)
+                        color: uploadWarmingsMA.pressed ? Colors.defaultLightGrayColor : warningsModel.warningsCount > 0 ? Colors.artworkModifiedColor : Colors.defaultInputBackground
 
                         MouseArea {
                             id: uploadWarmingsMA
                             anchors.fill: parent
                             cursorShape: Qt.PointingHandCursor
                             onClicked: {
-                                if (warningsManager.warningsCount > 0) {
+                                if (warningsModel.warningsCount > 0) {
                                     Common.launchDialog("Dialogs/WarningsDialog.qml",
                                                         uploadArtworksComponent.componentParent,
                                                         {

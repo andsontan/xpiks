@@ -150,6 +150,7 @@ ApplicationWindow {
         filteredArtItemsModel.setSelectedForUpload()
         uploadInfos.initializeAccounts(masterPasswordCorrectOrEmpty)
 
+        warningsModel.setShowSelected()
         Common.launchDialog("Dialogs/UploadArtworks.qml",
                      applicationWindow,
                      {componentParent: applicationWindow})
@@ -1106,7 +1107,7 @@ ApplicationWindow {
                                 if (needToMoveCurrentItem) {
                                     console.debug("UI::forceUpdateArtworks # Moving into current item " + imagesListView.currentIndex)
                                     imagesListView.moveCurrentIndexDown()
-                                    imagesListView.positionViewAtIndex(imagesListView.currentIndex, ListView.Visible)
+                                    imagesListView.positionViewAtIndex(imagesListView.currentIndex, GridView.Visible)
                                 }
                             }
 
@@ -1166,7 +1167,7 @@ ApplicationWindow {
                                 function switchChecked() {
                                     editisselected = !isselected
                                     itemCheckedCheckbox.checked = isselected
-                                    ListView.view.currentIndex = rowWrapper.delegateIndex
+                                    GridView.view.currentIndex = rowWrapper.delegateIndex
                                 }
 
                                 Connections {
