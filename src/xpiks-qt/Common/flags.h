@@ -76,14 +76,19 @@ namespace Common {
         WarningTypeKeywordsGroup = WarningTypeNoKeywords |
             WarningTypeTooFewKeywords |
             WarningTypeTooManyKeywords |
-            WarningTypeSpellErrorsInKeywords
+            WarningTypeSpellErrorsInKeywords,
+
+        WarningTypeSpellingGroup = WarningTypeSpellErrorsInKeywords |
+            WarningTypeSpellErrorsInDescription |
+            WarningTypeSpellErrorsInTitle
     };
 
     enum WarningsCheckFlags {
         WarningsCheckAll = 0,
         WarningsCheckKeywords = 1,
         WarningsCheckTitle = 2,
-        WarningsCheckDescription = 3
+        WarningsCheckDescription = 3,
+        WarningsCheckSpelling = 4
     };
 
     template<typename FlagType>

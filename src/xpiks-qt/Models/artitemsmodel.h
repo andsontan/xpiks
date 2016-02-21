@@ -115,6 +115,7 @@ namespace Models {
         int addLocalArtworks(const QList<QUrl> &artworksPaths);
         int addLocalDirectories(const QList<QUrl> &directories);
         void itemModifiedChanged(bool) { updateModifiedCount(); }
+        void spellCheckErrorsChanged();
 
     public:
         virtual void removeItemsAtIndices(const QVector<QPair<int, int> > &ranges);

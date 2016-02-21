@@ -1907,6 +1907,7 @@ ApplicationWindow {
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
+                        warningsModel.update()
                         //filteredArtItemsModel.checkForWarnings()
                         Common.launchDialog("Dialogs/WarningsDialog.qml", applicationWindow, {
                                                 componentParent: applicationWindow

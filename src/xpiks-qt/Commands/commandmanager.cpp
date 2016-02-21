@@ -272,6 +272,9 @@ void Commands::CommandManager::connectArtworkSignals(Models::ArtworkMetadata *me
     if (m_ArtItemsModel) {
         QObject::connect(metadata, SIGNAL(modifiedChanged(bool)),
                          m_ArtItemsModel, SLOT(itemModifiedChanged(bool)));
+
+        QObject::connect(metadata, SIGNAL(spellCheckErrorsChanged()),
+                         m_ArtItemsModel, SLOT(spellCheckErrorsChanged()));
     }
     
     if (m_FilteredItemsModel) {

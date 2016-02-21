@@ -62,6 +62,9 @@ namespace Warnings {
             case Common::WarningsCheckTitle:
                 warningsFlags |= checkTitle(checkableItem);
                 break;
+            case Common::WarningsCheckSpelling:
+                warningsFlags |= checkSpelling(checkableItem);
+                break;
             }
         }
 
@@ -158,6 +161,24 @@ namespace Warnings {
             if (item->hasTitleSpellError()) {
                 Common::SetFlag(warningsInfo, Common::WarningTypeSpellErrorsInTitle);
             }
+        }
+
+        return warningsInfo;
+    }
+
+    int WarningsCheckingWorker::checkSpelling(IWarningsCheckable *item) const {
+        int warningsInfo = 0;
+
+        if (item->hasKeywordsSpellError()) {
+            Common::SetFlag(warningsInfo, Common::WarningTypeSpellErrorsInKeywords);
+        }
+
+        if (item->hasDescriptionSpellError()) {
+            Common::SetFlag(warningsInfo, Common::WarningTypeSpellErrorsInDescription);
+        }
+
+        if (item->hasTitleSpellError()) {
+            Common::SetFlag(warningsInfo, Common::WarningTypeSpellErrorsInTitle);
         }
 
         return warningsInfo;

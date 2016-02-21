@@ -50,11 +50,16 @@ namespace Warnings {
                 case Common::WarningsCheckTitle:
                     flagsToDrop = Common::WarningTypeTitleGroup;
                     break;
+                case Common::WarningsCheckSpelling:
+                    flagsToDrop = Common::WarningTypeSpellingGroup;
+                    break;
                 }
 
                 m_CheckableItem->dropWarningsFlags(flagsToDrop);
                 m_CheckableItem->addWarningsFlags(warningsFlags);
             }
+
+            m_CheckableItem->release();
         }
 
         bool needCheckAll() const { return m_CheckingFlags == Common::WarningsCheckAll; }
