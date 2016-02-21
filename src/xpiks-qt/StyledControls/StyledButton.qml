@@ -26,19 +26,40 @@ import "../Constants"
 import "../Constants/Colors.js" as Colors
 
 Button {
+    property bool isDefault: false
+
     style: ButtonStyle {
         background: Rectangle {
-            color: control.enabled ? (control.hovered ? Colors.buttonHoverBackground : Colors.defaultControlColor) : Colors.defaultControlColor
             implicitWidth: control.width
             implicitHeight: 24
+            color: {
+                var result = Colors.defaultControlColor;
+
+                if (control.isDefault ||
+                        (control.enabled && control.hovered)) {
+                    result = Colors.buttonHoverBackground;
+                }
+
+                return result
+            }
         }
 
         label: StyledText {
             font.bold: true
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
-            color: control.enabled ? (control.hovered ? (control.pressed ? Colors.buttonPressedForeground : Colors.defaultLightColor) : (control.pressed ? Colors.buttonPressedForeground : Colors.defaultLightColor)) : Colors.buttonDisabledForeground
             text: control.text
+            color: {
+                var result = Colors.defaultControlColor;
+
+                if (control.enabled) {
+                    result = control.pressed ? Colors.buttonPressedForeground : Colors.defaultLightColor;
+                } else {
+                    result = Colors.buttonDisabledForeground;
+                }
+
+                return result
+            }
         }
     }
 }

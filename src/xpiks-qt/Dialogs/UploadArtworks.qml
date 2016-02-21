@@ -365,8 +365,11 @@ Item {
 
                                 StyledAddHostButton {
                                     Layout.fillWidth: true
-                                    onClicked: uploadInfos.addItem()
                                     text: qsTr("Add FTP host")
+                                    onClicked: {
+                                        uploadInfos.addItem()
+                                        uploadHostsListView.currentIndex = uploadHostsListView.count - 1
+                                    }
                                 }
 
                                 Item {
