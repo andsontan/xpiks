@@ -384,7 +384,6 @@ ApplicationWindow {
 
     function doRemoveSelectedArtworks() {
         filteredArtItemsModel.removeSelectedArtworks()
-        filteredArtItemsModel.checkForWarnings()
     }
 
     function tryUploadArtworks() {
@@ -403,7 +402,6 @@ ApplicationWindow {
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
             filteredArtItemsModel.removeArtworksDirectory(directoryIndex)
-            filteredArtItemsModel.checkForWarnings()
         }
     }
 
@@ -643,7 +641,6 @@ ApplicationWindow {
                                             confirmRemoveDirectoryDialog.open()
                                         } else {
                                             filteredArtItemsModel.removeArtworksDirectory(sourceWrapper.delegateIndex)
-                                            filteredArtItemsModel.checkForWarnings()
                                         }
                                     }
                                 }
@@ -1903,14 +1900,14 @@ ApplicationWindow {
 
             StyledText {
                 text: qsTr("Check warnings")
-                color: warningsMA.pressed ? Colors.defaultInputBackground : warningsManager.warningsCount > 0 ? Colors.artworkModifiedColor : Colors.selectedMetadataColor
+                color: warningsMA.pressed ? Colors.defaultInputBackground : warningsModel.warningsCount > 0 ? Colors.artworkModifiedColor : Colors.selectedMetadataColor
 
                 MouseArea {
                     id: warningsMA
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
-                        filteredArtItemsModel.checkForWarnings()
+                        //filteredArtItemsModel.checkForWarnings()
                         Common.launchDialog("Dialogs/WarningsDialog.qml", applicationWindow, {
                                                 componentParent: applicationWindow
                                             });

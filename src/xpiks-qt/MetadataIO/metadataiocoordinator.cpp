@@ -178,6 +178,7 @@ namespace MetadataIO {
         m_CommandManager->addToLibrary(itemsToRead);
         m_CommandManager->updateArtworks(rangesToUpdate);
         m_CommandManager->submitForSpellCheck(itemsToRead);
+        m_CommandManager->submitForWarningsCheck(itemsToRead);
     }
 }
 

@@ -122,7 +122,7 @@ Item {
 
                         ListView {
                             id: warningsListView
-                            model: warningsManager
+                            model: warningsModel
                             spacing: 10
 
                             delegate: Rectangle {
@@ -197,7 +197,8 @@ Item {
                                         anchors.topMargin: 10
 
                                         Repeater {
-                                            model: warnings
+                                            id: warningsDescriptions
+                                            model: warningsModel.describeWarnings(imageWrapper.delegateIndex)
 
                                             delegate: RowLayout {
                                                 width: warningsTextList.width
@@ -237,11 +238,12 @@ Item {
                                         enabled: !isRestricted && warningsListView.count > 0
 
                                         onClicked: {
-                                            Common.launchItemEditing(itemindex, componentParent,
+                                            var index = warningsModel.getOriginalIndex(imageWrapper.delegateIndex);
+                                            Common.launchItemEditing(index, componentParent,
                                                                      {
                                                                          applyCallback: function() {
                                                                              console.log("UI:WarningsDialog # Rechecking [" + imageWrapper.delegateIndex + "] item")
-                                                                             warningsManager.recheckItem(imageWrapper.delegateIndex)
+                                                                             warningsDescriptions.model = warningsModel.describeWarnings(imageWrapper.delegateIndex)
                                                                          }
                                                                      })
                                         }

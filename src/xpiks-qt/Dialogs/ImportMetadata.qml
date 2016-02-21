@@ -198,6 +198,7 @@ Item {
                                 console.log("UI::ImportMetadata # Import finished handler")
 
                                 metadataImportComponent.isInProgress = false
+                                warningsModel.update()
 
                                 if (metadataIOCoordinator.hasErrors) {
                                     errorsNotification.open()

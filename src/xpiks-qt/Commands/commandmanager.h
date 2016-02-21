@@ -101,7 +101,6 @@ namespace Commands {
             m_CombinedArtworksModel(NULL),
             m_ArtworkUploader(NULL),
             m_UploadInfoRepository(NULL),
-            m_WarningsManager(NULL), // TO BE DEPRECATED
             m_WarningsService(NULL),
             m_SecretsManager(NULL),
             m_UndoRedoManager(NULL),
@@ -130,7 +129,6 @@ namespace Commands {
         void InjectDependency(Models::CombinedArtworksModel *combinedArtworksModel);
         void InjectDependency(Models::ArtworkUploader *artworkUploader);
         void InjectDependency(Models::UploadInfoRepository *uploadInfoRepository);
-        void InjectDependency(Models::WarningsManager *warningsManager);
         void InjectDependency(Warnings::WarningsService *warningsService);
         void InjectDependency(Encryption::SecretsManager *secretsManager);
         void InjectDependency(UndoRedo::UndoRedoManager *undoRedoManager);
@@ -190,6 +188,8 @@ namespace Commands {
         void setupSpellCheckSuggestions(SpellCheck::ISpellCheckable *item, int index, int flags);
 
     public:
+        void submitKeywordsForWarningsCheck(Models::ArtworkMetadata *item) const;
+        void submitForWarningsCheck(Models::ArtworkMetadata *item, int flags = Common::WarningsCheckAll) const;
         void submitForWarningsCheck(const QVector<Models::ArtworkMetadata*> &items) const;
         void submitForWarningsCheck(const QVector<Warnings::IWarningsCheckable*> &items) const;
 
@@ -220,7 +220,6 @@ namespace Commands {
         Models::CombinedArtworksModel *m_CombinedArtworksModel;
         Models::ArtworkUploader *m_ArtworkUploader;
         Models::UploadInfoRepository *m_UploadInfoRepository;
-        Models::WarningsManager *m_WarningsManager; // TO BE DEPRECATED
         Warnings::WarningsService *m_WarningsService;
         Encryption::SecretsManager *m_SecretsManager;
         UndoRedo::UndoRedoManager *m_UndoRedoManager;

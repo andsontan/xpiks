@@ -39,12 +39,21 @@
 #include "../Commands/combinededitcommand.h"
 
 namespace Models {
+    ArtItemsModel::ArtItemsModel(QObject *parent):
+        AbstractListModel(parent),
+        Common::BaseEntity(),
+        m_LastID(0)
+    {}
+
     ArtItemsModel::~ArtItemsModel() {
         qDeleteAll(m_ArtworkList);
         qDeleteAll(m_FinalizationList);
     }
 
-    ArtworkMetadata *ArtItemsModel::createMetadata(const QString &filepath) const { return new ArtworkMetadata(filepath); }
+    ArtworkMetadata *ArtItemsModel::createMetadata(const QString &filepath) {
+        int id = m_LastID++;
+        return new ArtworkMetadata(filepath, id);
+    }
 
     int ArtItemsModel::getModifiedArtworksCount() {
         int modifiedCount = 0;
@@ -101,6 +110,7 @@ namespace Models {
             if (metadata->removeKeywordAt(keywordIndex)) {
                 QModelIndex index = this->index(metadataIndex);
                 emit dataChanged(index, index, QVector<int>() << IsModifiedRole << KeywordsCountRole);
+                m_CommandManager->submitKeywordsForWarningsCheck(metadata);
                 m_CommandManager->saveMetadata(metadata);
             }
         }
@@ -113,6 +123,7 @@ namespace Models {
             if (metadata->removeLastKeyword()) {
                 QModelIndex index = this->index(metadataIndex);
                 emit dataChanged(index, index, QVector<int>() << IsModifiedRole << KeywordsCountRole);
+                m_CommandManager->submitKeywordsForWarningsCheck(metadata);
                 m_CommandManager->saveMetadata(metadata);
             }
         }
@@ -125,6 +136,7 @@ namespace Models {
                 QModelIndex index = this->index(metadataIndex);
                 emit dataChanged(index, index, QVector<int>() << IsModifiedRole << KeywordsCountRole);
                 m_CommandManager->submitKeywordForSpellCheck(metadata, metadata->rowCount() - 1);
+                m_CommandManager->submitKeywordsForWarningsCheck(metadata);
                 m_CommandManager->saveMetadata(metadata);
             }
         }
@@ -208,6 +220,7 @@ namespace Models {
         if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
             metadata->clearKeywords();
+            m_CommandManager->submitKeywordsForWarningsCheck(metadata);
             // do not save metadata - give chance to restore from .xpks
             //m_CommandManager->saveMetadata(metadata);
         }
@@ -384,6 +397,7 @@ namespace Models {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
             if (metadata->editKeyword(keywordIndex, replacement)) {
                 m_CommandManager->submitKeywordForSpellCheck(metadata, keywordIndex);
+                m_CommandManager->submitKeywordsForWarningsCheck(metadata);
                 m_CommandManager->saveMetadata(metadata);
             }
         }

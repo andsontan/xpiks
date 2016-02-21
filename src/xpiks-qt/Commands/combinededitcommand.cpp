@@ -30,19 +30,22 @@
 #include "../Common/flags.h"
 #include "../Models/settingsmodel.h"
 #include "../Common/defines.h"
+#include "../Warnings/iwarningscheckable.h"
 
 Commands::CommandResult *Commands::CombinedEditCommand::execute(const ICommandManager *commandManagerInterface) const {
     qInfo() << "CombinedEditCommand::execute #" << "flags =" << m_EditFlags << "artworks count =" << m_ArtItemInfos.length();
     QVector<int> indicesToUpdate;
     QVector<UndoRedo::ArtworkMetadataBackup*> artworksBackups;
-    QVector<SpellCheck::ISpellCheckable*> itemsToCheck;
+    QVector<SpellCheck::ISpellCheckable*> itemsToCheckSpelling;
+    QVector<Warnings::IWarningsCheckable*> itemsToCheckWarnings;
 
     CommandManager *commandManager = (CommandManager*)commandManagerInterface;
 
     int size = m_ArtItemInfos.length();
     indicesToUpdate.reserve(size);
     artworksBackups.reserve(size);
-    itemsToCheck.reserve(size);
+    itemsToCheckSpelling.reserve(size);
+    itemsToCheckWarnings.reserve(size);
 
     bool needToClear = Common::HasFlag(m_EditFlags, Common::Clear);
 
@@ -65,10 +68,12 @@ Commands::CommandResult *Commands::CombinedEditCommand::execute(const ICommandMa
         }
 
 
-        itemsToCheck.append(metadata);
+        itemsToCheckSpelling.append(metadata);
+        itemsToCheckWarnings.append(metadata);
     }
 
-    commandManager->submitForSpellCheck(itemsToCheck);
+    commandManager->submitForSpellCheck(itemsToCheckSpelling);
+    commandManager->submitForWarningsCheck(itemsToCheckWarnings);
 
     UndoRedo::ModifyArtworksHistoryItem *modifyArtworksItem =
             new UndoRedo::ModifyArtworksHistoryItem(artworksBackups, indicesToUpdate,

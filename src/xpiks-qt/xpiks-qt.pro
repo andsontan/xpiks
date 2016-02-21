@@ -15,7 +15,6 @@ SOURCES += main.cpp \
     Models/artworkuploader.cpp \
     Models/artworksprocessor.cpp \
     Models/uploadinforepository.cpp \
-    Models/warningsmanager.cpp \
     ../tiny-aes/aes.cpp \
     Encryption/secretsmanager.cpp \
     Helpers/stringhelper.cpp \
@@ -75,7 +74,8 @@ SOURCES += main.cpp \
     Plugins/pluginactionsmodel.cpp \
     Plugins/uiprovider.cpp \
     Warnings/warningsservice.cpp \
-    Helpers/loghighlighter.cpp
+    Helpers/loghighlighter.cpp \
+    Warnings/warningsmodel.cpp
 
 RESOURCES += qml.qrc
 
@@ -115,8 +115,6 @@ HEADERS += \
     Models/exportinfo.h \
     Models/uploadinforepository.h \
     Models/logsmodel.h \
-    Models/warningsinfo.h \
-    Models/warningsmanager.h \
     Encryption/aes-qt.h \
     ../tiny-aes/aes.h \
     Encryption/secretsmanager.h \
@@ -200,7 +198,8 @@ HEADERS += \
     Common/iartworkssource.h \
     Warnings/warningsservice.h \
     Common/iservicebase.h \
-    Helpers/loghighlighter.h
+    Helpers/loghighlighter.h \
+    Warnings/warningsmodel.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

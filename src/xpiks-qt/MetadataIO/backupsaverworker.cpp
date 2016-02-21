@@ -22,9 +22,15 @@
 #include "backupsaverworker.h"
 #include <QFile>
 #include <QDataStream>
+#include <QDebug>
 #include "../Helpers/constants.h"
 
 namespace MetadataIO {
+    bool BackupSaverWorker::initWorker() {
+        qDebug() << "BackupSaverWorker::initWorker #";
+        return true;
+    }
+
     bool BackupSaverWorker::processOneItem(SaverWorkerJobItem *item) {
         Q_ASSERT(item != NULL);
 

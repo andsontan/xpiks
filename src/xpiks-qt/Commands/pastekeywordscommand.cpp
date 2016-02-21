@@ -27,6 +27,7 @@
 #include "../Models/artiteminfo.h"
 #include "../Commands/commandmanager.h"
 #include "../Common/defines.h"
+#include "../Warnings/iwarningscheckable.h"
 
 Commands::PasteKeywordsCommand::~PasteKeywordsCommand() {
     qDeleteAll(m_ArtItemInfos);
@@ -39,12 +40,16 @@ Commands::CommandResult *Commands::PasteKeywordsCommand::execute(const ICommandM
 
     QVector<int> indicesToUpdate;
     QVector<UndoRedo::ArtworkMetadataBackup*> artworksBackups;
-    QVector<SpellCheck::ISpellCheckable*> itemsToCheck;
-    indicesToUpdate.reserve(m_ArtItemInfos.length());
-    artworksBackups.reserve(m_ArtItemInfos.length());
-    itemsToCheck.reserve(m_ArtItemInfos.length());
+    QVector<SpellCheck::ISpellCheckable*> itemsToSpellCheck;
+    QVector<Warnings::IWarningsCheckable*> itemsToCheckWarnings;
+    int size = m_ArtItemInfos.length();
+    indicesToUpdate.reserve(size);
+    artworksBackups.reserve(size);
+    itemsToSpellCheck.reserve(size);
+    itemsToCheckWarnings.reserve(size);
 
-    foreach (Models::ArtItemInfo *itemInfo, m_ArtItemInfos) {
+    for (int i = 0; i < size; ++i) {
+        Models::ArtItemInfo *itemInfo = m_ArtItemInfos.at(i);
         Models::ArtworkMetadata *metadata = itemInfo->getOrigin();
 
         indicesToUpdate.append(itemInfo->getOriginalIndex());
@@ -52,10 +57,12 @@ Commands::CommandResult *Commands::PasteKeywordsCommand::execute(const ICommandM
 
         metadata->appendKeywords(m_KeywordsList);
         commandManager->saveMetadata(metadata);
-        itemsToCheck.append(metadata);
+        itemsToSpellCheck.append(metadata);
+        itemsToCheckWarnings.append(metadata);
     }
 
-    commandManager->submitForSpellCheck(itemsToCheck);
+    commandManager->submitForSpellCheck(itemsToSpellCheck);
+    commandManager->submitForWarningsCheck(itemsToCheckWarnings);
 
     UndoRedo::ModifyArtworksHistoryItem *modifyArtworksItem =
             new UndoRedo::ModifyArtworksHistoryItem(artworksBackups, indicesToUpdate,

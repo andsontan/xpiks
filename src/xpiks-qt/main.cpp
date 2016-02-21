@@ -58,7 +58,7 @@
 #include "Commands/commandmanager.h"
 #include "Suggestion/locallibrary.h"
 #include "Models/artworkuploader.h"
-#include "Models/warningsmanager.h"
+#include "Warnings/warningsmodel.h"
 #include "Plugins/pluginmanager.h"
 #include "Helpers/loggingworker.h"
 #include "Helpers/updateservice.h"
@@ -235,7 +235,6 @@ int main(int argc, char *argv[]) {
     Models::ArtItemsModel artItemsModel;
     Models::CombinedArtworksModel combinedArtworksModel;
     Models::UploadInfoRepository uploadInfoRepository;
-    Models::WarningsManager warningsManager;
     Warnings::WarningsService warningsService;
     Models::SettingsModel settingsModel;
     settingsModel.readAllValues();
@@ -251,6 +250,8 @@ int main(int argc, char *argv[]) {
     SpellCheck::SpellCheckerService spellCheckerService;
     SpellCheck::SpellCheckSuggestionModel spellCheckSuggestionModel;
     MetadataIO::BackupSaverService metadataSaverService;
+    Warnings::WarningsModel warningsModel;
+    warningsModel.setSourceModel(&artItemsModel);
 
     bool updateEnabled=appSettings.value(Constants::UPDATE_SERVICE,true ).toBool();
     Helpers::UpdateService updateService(updateEnabled);
@@ -273,7 +274,6 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&combinedArtworksModel);
     commandManager.InjectDependency(&artworkUploader);
     commandManager.InjectDependency(&uploadInfoRepository);
-    commandManager.InjectDependency(&warningsManager);
     commandManager.InjectDependency(&warningsService);
     commandManager.InjectDependency(&secretsManager);
     commandManager.InjectDependency(&undoRedoManager);
@@ -317,7 +317,6 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("artworkUploader", &artworkUploader);
     rootContext->setContextProperty("uploadInfos", &uploadInfoRepository);
     rootContext->setContextProperty("logsModel", &logsModel);
-    rootContext->setContextProperty("warningsManager", &warningsManager);
     rootContext->setContextProperty("secretsManager", &secretsManager);
     rootContext->setContextProperty("undoRedoManager", &undoRedoManager);
     rootContext->setContextProperty("zipArchiver", &zipArchiver);
@@ -332,6 +331,7 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("metadataIOCoordinator", &metadataIOCoordinator);
     rootContext->setContextProperty("pluginManager", &pluginManager);
     rootContext->setContextProperty("pluginsWithActions", &pluginsWithActions);
+    rootContext->setContextProperty("warningsModel", &warningsModel);
 
     engine.addImageProvider("global", globalProvider);
     qDebug() << "main #" << "About to load main view...";
@@ -342,15 +342,15 @@ int main(int argc, char *argv[]) {
     QQuickWindow *window = qobject_cast<QQuickWindow*>(engine.rootObjects().at(0));
     pluginManager.getUIProvider()->setRoot(window->contentItem());
 
-#ifdef QT_DEBUG
-    if (argc > 1) {
-        QStringList pathes;
-        for (int i = 1; i < argc; ++i) {
-            pathes.append(QString(argv[i]));
-        }
-        commandManager.addInitialArtworks(pathes);
-    }
-#endif
+//#ifdef QT_DEBUG
+//    if (argc > 1) {
+//        QStringList pathes;
+//        for (int i = 1; i < argc; ++i) {
+//            pathes.append(QString(argv[i]));
+//        }
+//        commandManager.addInitialArtworks(pathes);
+//    }
+//#endif
 
     return app.exec();
 }

@@ -31,7 +31,7 @@ namespace MetadataIO {
     {
         Q_OBJECT
     protected:
-        virtual bool initWorker() { return true; }
+        virtual bool initWorker();
         virtual bool processOneItem(SaverWorkerJobItem *item);
 
     protected:

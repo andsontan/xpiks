@@ -129,9 +129,6 @@ namespace Models {
     void FilteredArtItemsProxyModel::setSelectedForUpload() {
         QVector<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
         m_CommandManager->setArtworksForUpload(selectedArtworks);
-
-        QVector<ArtItemInfo *> selectedArtworksWithIndices = getSelectedOriginalItemsWithIndices();
-        emit needCheckItemsForWarnings(selectedArtworksWithIndices);
     }
 
     void FilteredArtItemsProxyModel::setSelectedForZipping() {
@@ -167,16 +164,6 @@ namespace Models {
         ArtItemsModel *artItemsModel = getArtItemsModel();
         artItemsModel->removeArtworksDirectory(index);
         emit selectedArtworksCountChanged();
-    }
-
-    void FilteredArtItemsProxyModel::checkForWarnings() {
-        QVector<ArtItemInfo *> selectedArtworks = getSelectedOriginalItemsWithIndices();
-
-        if (selectedArtworks.isEmpty()) {
-            selectedArtworks = getAllItemsWithIndices();
-        }
-
-        emit needCheckItemsForWarnings(selectedArtworks);
     }
 
     void FilteredArtItemsProxyModel::reimportMetadataForSelected() {
@@ -252,6 +239,8 @@ namespace Models {
             if (!metadata->getDescription().trimmed().isEmpty()) {
                 m_CommandManager->submitItemForSpellCheck(metadata, Common::SpellCheckDescription);
             }
+
+            m_CommandManager->submitForWarningsCheck(metadata, Common::WarningsCheckDescription);
         }
     }
 
@@ -263,6 +252,8 @@ namespace Models {
             if (!metadata->getTitle().trimmed().isEmpty()) {
                 m_CommandManager->submitItemForSpellCheck(metadata, Common::SpellCheckTitle);
             }
+
+            m_CommandManager->submitForWarningsCheck(metadata, Common::WarningsCheckTitle);
         }
     }
 

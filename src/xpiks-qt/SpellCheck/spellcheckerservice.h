@@ -51,7 +51,7 @@ namespace SpellCheck {
         virtual bool isAvailable() const { return true; }
 
         virtual void submitItem(SpellCheck::ISpellCheckable *itemToCheck);
-        void submitItem(SpellCheck::ISpellCheckable *itemToCheck, int flags);
+        virtual void submitItem(SpellCheck::ISpellCheckable *itemToCheck, int flags);
         virtual void submitItems(const QVector<ISpellCheckable *> &itemsToCheck);
         void submitKeyword(SpellCheck::ISpellCheckable *itemToCheck, int keywordIndex);
         QStringList suggestCorrections(const QString &word) const;

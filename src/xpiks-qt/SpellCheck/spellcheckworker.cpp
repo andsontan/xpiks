@@ -55,6 +55,8 @@ namespace SpellCheck {
     }
 
     bool SpellCheckWorker::initWorker() {
+        qDebug() << "SpellCheckWorker::initWorker #";
+
         QString resourcesPath;
         QString affPath;
         QString dicPath;

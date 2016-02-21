@@ -40,6 +40,8 @@ namespace Warnings {
         virtual QStringList getDescriptionWords() const = 0;
         virtual QStringList getTitleWords() const = 0;
         virtual void setWarningsFlags(int warningsFlags) = 0;
+        virtual void addWarningsFlags(int warningsFlags) = 0;
+        virtual void dropWarningsFlags(int flagsToDrop) = 0;
     };
 }
 

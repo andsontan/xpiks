@@ -26,7 +26,6 @@
 #include "../Models/combinedartworksmodel.h"
 #include "../Models/artworkuploader.h"
 #include "../Models/uploadinforepository.h"
-#include "../Models/warningsmanager.h"
 #include "../Models/uploadinfo.h"
 #include "../Models/artworkmetadata.h"
 #include "../Encryption/secretsmanager.h"
@@ -79,11 +78,6 @@ void Commands::CommandManager::InjectDependency(Models::ArtworkUploader *artwork
 void Commands::CommandManager::InjectDependency(Models::UploadInfoRepository *uploadInfoRepository) {
     Q_ASSERT(uploadInfoRepository != NULL); m_UploadInfoRepository = uploadInfoRepository;
     m_UploadInfoRepository->setCommandManager(this);
-}
-
-void Commands::CommandManager::InjectDependency(Models::WarningsManager *warningsManager) {
-    Q_ASSERT(warningsManager != NULL); m_WarningsManager = warningsManager;
-    m_WarningsManager->setCommandManager(this);
 }
 
 void Commands::CommandManager::InjectDependency(Warnings::WarningsService *warningsService) {
@@ -190,12 +184,6 @@ void Commands::CommandManager::connectEntitiesSignalsSlots() const {
     QObject::connect(m_SecretsManager, SIGNAL(afterMasterPasswordReset()),
                      m_UploadInfoRepository, SLOT(onAfterMasterPasswordReset()));
 
-    QObject::connect(m_ArtItemsModel, SIGNAL(needCheckItemsForWarnings(QVector<ArtItemInfo*>)),
-                     m_WarningsManager, SLOT(onCheckWarnings(QVector<ArtItemInfo*>)));
-
-    QObject::connect(m_FilteredItemsModel, SIGNAL(needCheckItemsForWarnings(QVector<ArtItemInfo*>)),
-                     m_WarningsManager, SLOT(onCheckWarnings(QVector<ArtItemInfo*>)));
-
     QObject::connect(m_ArtItemsModel, SIGNAL(selectedArtworkRemoved()),
                      m_FilteredItemsModel, SLOT(onSelectedArtworksRemoved()));
 
@@ -213,7 +201,6 @@ void Commands::CommandManager::ensureDependenciesInjected() {
     Q_ASSERT(m_CombinedArtworksModel != NULL);
     Q_ASSERT(m_ArtworkUploader != NULL);
     Q_ASSERT(m_UploadInfoRepository != NULL);
-    Q_ASSERT(m_WarningsManager != NULL);
     Q_ASSERT(m_WarningsService != NULL);
     Q_ASSERT(m_SecretsManager != NULL);
     Q_ASSERT(m_UndoRedoManager != NULL);
@@ -386,28 +373,38 @@ void Commands::CommandManager::setupSpellCheckSuggestions(SpellCheck::ISpellChec
     }
 }
 
-void Commands::CommandManager::submitForWarningsCheck(const QVector<Models::ArtworkMetadata *> &items) const {
-    if (m_WarningsService) {
-        QVector<Warnings::IWarningsCheckable*> itemsToSubmit;
-        int count = items.length();
-        itemsToSubmit.reserve(count);
+void Commands::CommandManager::submitKeywordsForWarningsCheck(Models::ArtworkMetadata *item) const {
+    this->submitForWarningsCheck(item, Common::WarningsCheckKeywords);
+}
 
-        for (int i = 0; i < count; ++i) {
-            itemsToSubmit << items.at(i);
+void Commands::CommandManager::submitForWarningsCheck(Models::ArtworkMetadata *item, int flags) const {
+    int count = m_WarningsCheckers.length();
+    for (int i = 0; i < count; ++i) {
+        Common::IServiceBase<Warnings::IWarningsCheckable> *checker = m_WarningsCheckers.at(i);
+        if (checker->isAvailable()) {
+            checker->submitItem(item, flags);
         }
-
-        this->submitForWarningsCheck(itemsToSubmit);
     }
 }
 
+void Commands::CommandManager::submitForWarningsCheck(const QVector<Models::ArtworkMetadata *> &items) const {
+    QVector<Warnings::IWarningsCheckable*> itemsToSubmit;
+    int count = items.length();
+    itemsToSubmit.reserve(count);
+
+    for (int i = 0; i < count; ++i) {
+        itemsToSubmit << items.at(i);
+    }
+
+    this->submitForWarningsCheck(itemsToSubmit);
+}
+
 void Commands::CommandManager::submitForWarningsCheck(const QVector<Warnings::IWarningsCheckable *> &items) const {
-    if (m_WarningsService) {
-        int count = m_WarningsCheckers.length();
-        for (int i = 0; i < count; ++i) {
-            Common::IServiceBase<Warnings::IWarningsCheckable> *checker = m_WarningsCheckers.at(i);
-            if (checker->isAvailable()) {
-                checker->submitItems(items);
-            }
+    int count = m_WarningsCheckers.length();
+    for (int i = 0; i < count; ++i) {
+        Common::IServiceBase<Warnings::IWarningsCheckable> *checker = m_WarningsCheckers.at(i);
+        if (checker->isAvailable()) {
+            checker->submitItems(items);
         }
     }
 }
@@ -439,6 +436,7 @@ void Commands::CommandManager::afterConstructionCallback()  {
     m_AfterInitCalled = true;
 
     m_SpellCheckerService->startService();
+    m_WarningsService->startService();
     m_MetadataSaverService->startSaving();
 
     const QString reportingEndpoint = QLatin1String("cc39a47f60e1ed812e2403b33678dd1c529f1cc43f66494998ec478a4d13496269a3dfa01f882941766dba246c76b12b2a0308e20afd84371c41cf513260f8eb8b71f8c472cafb1abf712c071938ec0791bbf769ab9625c3b64827f511fa3fbb");
@@ -459,6 +457,7 @@ void Commands::CommandManager::beforeDestructionCallback() const {
     if (!m_AfterInitCalled) { return; }
 
     m_SpellCheckerService->stopService();
+    m_WarningsService->stopService();
     m_MetadataSaverService->stopSaving();
 
 #ifndef TESTS

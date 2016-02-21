@@ -60,7 +60,30 @@ namespace Common {
         WarningTypeTitleTooBig = 1 << 10,
         WarningTypeSpellErrorsInKeywords = 1 << 11,
         WarningTypeSpellErrorsInDescription = 1 << 12,
-        WarningTypeSpellErrorsInTitle = 1 << 13
+        WarningTypeSpellErrorsInTitle = 1 << 13,
+
+        WarningTypeDescriptionGroup = WarningTypeDescriptionIsEmpty |
+            WarningTypeDescriptionNotEnoughWords |
+            WarningTypeDescriptionTooBig |
+            WarningTypeSpellErrorsInDescription,
+
+        WarningTypeTitleGroup = WarningTypeTitleIsEmpty |
+            WarningTypeTitleNotEnoughWords |
+            WarningTypeTitleTooManyWords |
+            WarningTypeTitleTooBig |
+            WarningTypeSpellErrorsInTitle,
+
+        WarningTypeKeywordsGroup = WarningTypeNoKeywords |
+            WarningTypeTooFewKeywords |
+            WarningTypeTooManyKeywords |
+            WarningTypeSpellErrorsInKeywords
+    };
+
+    enum WarningsCheckFlags {
+        WarningsCheckAll = 0,
+        WarningsCheckKeywords = 1,
+        WarningsCheckTitle = 2,
+        WarningsCheckDescription = 3
     };
 
     template<typename FlagType>

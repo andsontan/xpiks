@@ -47,6 +47,7 @@ namespace Warnings {
         virtual bool isAvailable() const { return true; }
 
         virtual void submitItem(IWarningsCheckable *item);
+        virtual void submitItem(IWarningsCheckable *item, int flags);
         virtual void submitItems(const QVector<IWarningsCheckable*> &items);
 
     private slots:
