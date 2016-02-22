@@ -14,7 +14,7 @@ FAQ section contains solutions to the most typical Xpiks user problems so far.
 <div>
   <ul>
     <li><strong>I downloaded <i>Xpiks-qt-v1.1.4.zip</i> and what the hell I have to do next?</strong></li>
-    <li>Xpiks will have an installer for Windows soon. Meanwhile extract zip archive to any place ou want to (e.g. "C:\"), go inside and double-click at file <strong>xpiks-qt.exe</strong></li>
+    <li>Xpiks will have an installer for Windows soon. Meanwhile extract zip archive to any place you want to (e.g. "C:\"), go inside and double-click the file <strong>xpiks-qt.exe</strong></li>
   </ul>
 </div>
 
