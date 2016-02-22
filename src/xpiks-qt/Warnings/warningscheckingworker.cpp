@@ -20,11 +20,20 @@
  */
 
 #include "warningscheckingworker.h"
+#include <QSet>
 #include "../Common/defines.h"
 #include "../Common/flags.h"
 #include "../Models/settingsmodel.h"
 
 namespace Warnings {
+    QSet<QString> toLowerSet(const QStringList &from) {
+        QSet<QString> result;
+        result.reserve(from.length());
+        foreach(const QString &str, from) {
+            result.insert(str.toLower());
+        }
+        return result;
+    }
 
     WarningsCheckingWorker::WarningsCheckingWorker(Models::SettingsModel *settingsModel, QObject *parent):
         QObject(parent),
@@ -58,6 +67,7 @@ namespace Warnings {
                 break;
             case Common::WarningsCheckKeywords:
                 warningsFlags |= checkKeywords(checkableItem);
+                warningsFlags |= checkDuplicates(checkableItem);
                 break;
             case Common::WarningsCheckTitle:
                 warningsFlags |= checkTitle(checkableItem);
@@ -133,13 +143,22 @@ namespace Warnings {
                 Common::SetFlag(warningsInfo, Common::WarningTypeDescriptionTooBig);
             }
 
-            int wordsLength = item->getDescriptionWords().length();
+            QStringList descriptionWords = item->getDescriptionWords();
+
+            int wordsLength = descriptionWords.length();
             if (wordsLength < 3) {
                 Common::SetFlag(warningsInfo, Common::WarningTypeDescriptionNotEnoughWords);
             }
 
             if (item->hasDescriptionSpellError()) {
                 Common::SetFlag(warningsInfo, Common::WarningTypeSpellErrorsInDescription);
+            }
+
+            QSet<QString> descriptionWordsSet = toLowerSet(descriptionWords);
+            QSet<QString> intersection = descriptionWordsSet.intersect(item->getKeywordsSet());
+
+            if (!intersection.isEmpty()) {
+                Common::SetFlag(warningsInfo, Common::WarningTypeKeywordsInDescription);
             }
         }
 
@@ -154,7 +173,8 @@ namespace Warnings {
         if (titleLength == 0) {
             Common::SetFlag(warningsInfo, Common::WarningTypeTitleIsEmpty);
         } else {
-            int partsLength = item->getTitleWords().length();
+            QStringList titleWords = item->getTitleWords();
+            int partsLength = titleWords.length();
 
             if (partsLength < 3) {
                 Common::SetFlag(warningsInfo, Common::WarningTypeTitleNotEnoughWords);
@@ -166,6 +186,13 @@ namespace Warnings {
 
             if (item->hasTitleSpellError()) {
                 Common::SetFlag(warningsInfo, Common::WarningTypeSpellErrorsInTitle);
+            }
+
+            QSet<QString> titleWordsSet = toLowerSet(titleWords);
+            QSet<QString> intersection = titleWordsSet.intersect(item->getKeywordsSet());
+
+            if (!intersection.isEmpty()) {
+                Common::SetFlag(warningsInfo, Common::WarningTypeKeywordsInTitle);
             }
         }
 
@@ -185,6 +212,36 @@ namespace Warnings {
 
         if (item->hasTitleSpellError()) {
             Common::SetFlag(warningsInfo, Common::WarningTypeSpellErrorsInTitle);
+        }
+
+        return warningsInfo;
+    }
+
+    int WarningsCheckingWorker::checkDuplicates(IWarningsCheckable *item) const {
+        int warningsInfo = 0;
+
+        if (item->getKeywordsCount() == 0) { return warningsInfo; }
+
+        const QSet<QString> &keywordsSet = item->getKeywordsSet();
+
+        QStringList titleWords = item->getTitleWords();
+        if (!titleWords.isEmpty()) {
+            QSet<QString> titleWordsSet = toLowerSet(titleWords);
+            QSet<QString> intersection = titleWordsSet.intersect(keywordsSet);
+
+            if (!intersection.isEmpty()) {
+                Common::SetFlag(warningsInfo, Common::WarningTypeKeywordsInTitle);
+            }
+        }
+
+        QStringList descriptionWords = item->getDescriptionWords();
+        if (!descriptionWords.isEmpty()) {
+            QSet<QString> descriptionWordsSet = toLowerSet(descriptionWords);
+            QSet<QString> intersection = descriptionWordsSet.intersect(keywordsSet);
+
+            if (!intersection.isEmpty()) {
+                Common::SetFlag(warningsInfo, Common::WarningTypeKeywordsInDescription);
+            }
         }
 
         return warningsInfo;

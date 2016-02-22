@@ -87,6 +87,14 @@ namespace Warnings {
         if (Common::HasFlag(warningsFlags, Common::WarningTypeFileIsTooBig)) {
             descriptions.append(QLatin1String("File is larger than 15 MB"));
         }
+
+        if (Common::HasFlag(warningsFlags, Common::WarningTypeKeywordsInDescription)) {
+            descriptions.append(QLatin1String("Description contains some of the keywords"));
+        }
+
+        if (Common::HasFlag(warningsFlags, Common::WarningTypeKeywordsInTitle)) {
+            descriptions.append(QLatin1String("Title contains some of the keywords"));
+        }
     }
 
     WarningsModel::WarningsModel(QObject *parent):

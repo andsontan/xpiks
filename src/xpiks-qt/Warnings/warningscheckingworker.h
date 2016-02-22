@@ -63,6 +63,7 @@ namespace Warnings {
         int checkDescription(IWarningsCheckable *item) const;
         int checkTitle(IWarningsCheckable *item) const;
         int checkSpelling(IWarningsCheckable *item) const;
+        int checkDuplicates(IWarningsCheckable *item) const;
 
     private:
         Models::SettingsModel *m_SettingsModel;

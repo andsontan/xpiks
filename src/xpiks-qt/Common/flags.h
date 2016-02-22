@@ -62,22 +62,28 @@ namespace Common {
         WarningTypeSpellErrorsInDescription = 1 << 12,
         WarningTypeSpellErrorsInTitle = 1 << 13,
         WarningTypeFileIsTooBig = 1 << 14,
+        WarningTypeKeywordsInDescription = 1 << 15,
+        WarningTypeKeywordsInTitle = 1 << 16,
 
         WarningTypeDescriptionGroup = WarningTypeDescriptionIsEmpty |
             WarningTypeDescriptionNotEnoughWords |
             WarningTypeDescriptionTooBig |
-            WarningTypeSpellErrorsInDescription,
+            WarningTypeSpellErrorsInDescription |
+            WarningTypeKeywordsInDescription,
 
         WarningTypeTitleGroup = WarningTypeTitleIsEmpty |
             WarningTypeTitleNotEnoughWords |
             WarningTypeTitleTooManyWords |
             WarningTypeTitleTooBig |
-            WarningTypeSpellErrorsInTitle,
+            WarningTypeSpellErrorsInTitle |
+            WarningTypeKeywordsInTitle,
 
         WarningTypeKeywordsGroup = WarningTypeNoKeywords |
             WarningTypeTooFewKeywords |
             WarningTypeTooManyKeywords |
-            WarningTypeSpellErrorsInKeywords,
+            WarningTypeSpellErrorsInKeywords |
+            WarningTypeKeywordsInDescription |
+            WarningTypeKeywordsInTitle,
 
         WarningTypeSpellingGroup = WarningTypeSpellErrorsInKeywords |
             WarningTypeSpellErrorsInDescription |
