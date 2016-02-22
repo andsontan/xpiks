@@ -235,11 +235,9 @@ namespace Helpers {
         Q_INVOKABLE void setAppPosY(const int & y){
           setValue(AppPosYKey(), y);
        }
-
         int getNumScreen(const int & defaultNum){
           return intValue(AppNumScreenKey(),defaultNum);
        }
-
         void setNumScreen(int & num){
             setValue(AppNumScreenKey(),num);
         }
