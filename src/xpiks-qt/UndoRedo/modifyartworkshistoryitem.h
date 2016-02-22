@@ -58,11 +58,10 @@ namespace UndoRedo {
     public:
          virtual QString getDescription() const {
              int count = m_ArtworksBackups.count();
-             return count > 1 ? QString("%1 items modified").arg(count) :
-                                  QString("1 item modified");
+             QString typeStr = getModificationTypeDescription(m_ModificationType);
+             return count > 1 ? QString("(%1)  %2 items modified").arg(typeStr).arg(count) :
+                                  QString("(%1)  1 item modified").arg(typeStr);
          }
-
-        virtual QString getActionTypeDescription() const { return getModificationTypeDescription(m_ModificationType); }
 
 
     private:

@@ -40,47 +40,34 @@ namespace UndoRedo {
         Q_OBJECT
         Q_PROPERTY(bool canUndo READ getCanUndo NOTIFY canUndoChanged)
         Q_PROPERTY(QString undoDescription READ getUndoDescription NOTIFY undoDescriptionChanged)
-        Q_PROPERTY(QString actionTypeDescription READ getActionDescription NOTIFY undoDescriptionChanged)
-        Q_PROPERTY(bool uiCanUndo READ getUiCanUndo WRITE setUiCanUndo NOTIFY uiCanUndoChanged)
-
     public:
         UndoRedoManager(QObject *parent=0):
             QObject(parent),
-            Common::BaseEntity(),
-            m_UICanUndo(false)
+            Common::BaseEntity()
         {}
 
         virtual ~UndoRedoManager();
 
     public:
         bool getCanUndo() const { return !m_HistoryStack.empty(); }
-        bool getUiCanUndo() const { return m_UICanUndo; }
-        void setUiCanUndo(bool uiCanUndo) {
-            if (m_UICanUndo != uiCanUndo) {
-                m_UICanUndo = uiCanUndo;
-                emit uiCanUndoChanged(uiCanUndo);
-            }
-        }
 
     signals:
         void canUndoChanged();
         void undoDescriptionChanged();
         void itemRecorded();
-        void uiCanUndoChanged(bool uiCanUndo);
 
     private:
         QString getUndoDescription() const { return m_HistoryStack.empty() ? "" : m_HistoryStack.top()->getDescription(); }
-        QString getActionDescription() const { return m_HistoryStack.empty() ? "" : m_HistoryStack.top()->getActionTypeDescription(); }
 
     public:
         virtual void recordHistoryItem(IHistoryItem *historyItem);
         Q_INVOKABLE bool undoLastAction();
+        Q_INVOKABLE void discardLastAction();
 
     private:
         // stack for future todos
         QStack<IHistoryItem*> m_HistoryStack;
         QMutex m_Mutex;
-        bool m_UICanUndo;
     };
 }
 

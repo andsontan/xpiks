@@ -28,18 +28,14 @@ UndoRedo::UndoRedoManager::~UndoRedoManager() { qDeleteAll(m_HistoryStack); }
 void UndoRedo::UndoRedoManager::recordHistoryItem(UndoRedo::IHistoryItem *historyItem) {
     qInfo() << "UndoRedoManager::recordHistoryItem #" << "History item about to be recorded:" << historyItem->getActionType();
 
-    m_Mutex.lock();
-    {
-        if (!m_HistoryStack.empty()) {
-            IHistoryItem *oldItem = m_HistoryStack.pop();
-            delete oldItem;
-        }
+    QMutexLocker locker(&m_Mutex);
 
-        m_HistoryStack.append(historyItem);
+    if (!m_HistoryStack.empty()) {
+        IHistoryItem *oldItem = m_HistoryStack.pop();
+        delete oldItem;
     }
-    m_Mutex.unlock();
 
-    setUiCanUndo(true);
+    m_HistoryStack.append(historyItem);
     emit canUndoChanged();
     emit itemRecorded();
     emit undoDescriptionChanged();
@@ -65,4 +61,23 @@ bool UndoRedo::UndoRedoManager::undoLastAction()
     }
 
     return anyItem;
+}
+
+void UndoRedo::UndoRedoManager::discardLastAction()
+{
+    m_Mutex.lock();
+
+    bool anyItem = false;
+    anyItem = !m_HistoryStack.empty();
+
+    if (anyItem) {
+        IHistoryItem *historyItem = m_HistoryStack.pop();
+        m_Mutex.unlock();
+
+        emit canUndoChanged();
+        emit undoDescriptionChanged();
+        delete historyItem;
+    } else {
+        m_Mutex.unlock();
+    }
 }
