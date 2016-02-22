@@ -210,35 +210,35 @@ namespace Helpers {
             setValue(getUserConsentKey(), true);
         }
 
-         Q_INVOKABLE int getAppWidth(const int &  defaultWidth){
+         Q_INVOKABLE int getAppWidth(const int defaultWidth){
            return intValue(getAppWidthKey(),defaultWidth);
         }
-        Q_INVOKABLE void setAppWidth(const int &  width){
+        Q_INVOKABLE void setAppWidth(const int width){
           setValue(getAppWidthKey(), width);
        }
 
-        Q_INVOKABLE int getAppHeight(const int &  defaultHeight){
+        Q_INVOKABLE int getAppHeight(const int defaultHeight){
           return intValue(getAppHeightKey(),defaultHeight);
        }
-        Q_INVOKABLE void setAppHeight(const int & height){
+        Q_INVOKABLE void setAppHeight(const int height){
           setValue(getAppHeightKey(), height);
        }
-        Q_INVOKABLE int getAppPosX(const int & defaultPosX){
+        Q_INVOKABLE int getAppPosX(const int defaultPosX){
           return intValue(getAppPosXKey(),defaultPosX);
        }
-        Q_INVOKABLE void setAppPosX(const int &  x){
+        Q_INVOKABLE void setAppPosX(const int x){
           setValue(getAppPosXKey(), x);
        }
-        Q_INVOKABLE int getAppPosY(const int & defaultPosY){
+        Q_INVOKABLE int getAppPosY(const int defaultPosY){
           return intValue(getAppPosYKey(),defaultPosY);
        }
-        Q_INVOKABLE void setAppPosY(const int & y){
+        Q_INVOKABLE void setAppPosY(const int y){
           setValue(getAppPosYKey(), y);
        }
-        int getNumScreen(const int & defaultNum){
+        int getNumScreen(const int defaultNum){
           return intValue(getAppNumScreenKey(),defaultNum);
        }
-        void setNumScreen(int & num){
+        void setNumScreen(const int num){
             setValue(getAppNumScreenKey(),num);
         }
 
