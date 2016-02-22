@@ -6,9 +6,8 @@ permalink: /support/
 
 <article class="row">
   <section class="small-12 large-8 columns page-content">
-
-    First of all please refer to post which contains howto instructions. It's possible it has answers to your questions.
-    <a href="{{site.url}}/blog/2015/how-to-use-xpiks-part-1">How to use Xpiks</a>
+  
+  Before posting a new question make sure you read <strong><a href="{{site.url}}/faq/" target="_blank">FAQ</a></strong>.
 
     <iframe id="forum_embed"
             src="javascript:void(0)"
