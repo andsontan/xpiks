@@ -51,6 +51,7 @@ namespace UndoRedo {
                                QString("1 item removed");
         }
 
+        virtual QString getActionTypeDescription() const { return QString("Remove"); }
 
     private:
         QVector<int> m_RemovedArtworksIndices;

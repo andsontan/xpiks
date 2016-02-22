@@ -230,6 +230,15 @@ ApplicationWindow {
             title: qsTr("Edit")
 
             MenuItem {
+                text: undoRedoManager.canUndo ? qsTr("&Undo") + ' (' + undoRedoManager.undoDescription + ')' : qsTr("&Undo")
+                enabled: undoRedoManager.canUndo
+                onTriggered: {
+                    console.info("UI::main # Invert selection triggered")
+                    undoRedoManager.undoLastAction()
+                }
+            }
+
+            MenuItem {
                 text: qsTr("&Invert selection")
                 enabled: imagesListView.count > 0
                 onTriggered: {
@@ -931,7 +940,7 @@ ApplicationWindow {
                         states: [
                             State {
                                 name: "canundo"
-                                when: undoRedoManager.canUndo
+                                when: undoRedoManager.uiCanUndo
                                 PropertyChanges {
                                     target: undoRedoRect
                                     height: 40
@@ -1012,7 +1021,7 @@ ApplicationWindow {
 
                             StyledText {
                                 id: undoDescription
-                                text: undoRedoManager.undoDescription
+                                text: "(%1) %2".arg(undoRedoManager.actionTypeDescription).arg(undoRedoManager.undoDescription)
                             }
 
                             Item {
@@ -1026,9 +1035,10 @@ ApplicationWindow {
                                 MouseArea {
                                     id: undoMA
                                     anchors.fill: parent
-                                    enabled: undoRedoManager.canUndo
+                                    enabled: undoRedoManager.uiCanUndo
                                     cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
                                     onClicked: {
+                                        undoRedoManager.uiCanUndo = false
                                         undoRedoManager.undoLastAction()
                                         filteredArtItemsModel.updateFilter()
                                     }
@@ -1042,10 +1052,10 @@ ApplicationWindow {
                                 MouseArea {
                                     id: dismissUndoMA
                                     anchors.fill: parent
-                                    enabled: undoRedoManager.canUndo
+                                    enabled: undoRedoManager.uiCanUndo
                                     cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
                                     onClicked: {
-                                        undoRedoManager.discardLastAction()
+                                        undoRedoManager.uiCanUndo = false
                                     }
                                 }
                             }
@@ -1057,12 +1067,12 @@ ApplicationWindow {
                             property int iterations: 0
                             interval: 1000
                             repeat: true
-                            running: undoRedoManager.canUndo
+                            running: undoRedoManager.uiCanUndo
                             onTriggered: {
                                 iterations += 1
 
                                 if (iterations % (settingsModel.dismissDuration + 1) === settingsModel.dismissDuration) {
-                                    undoRedoManager.discardLastAction()
+                                    undoRedoManager.uiCanUndo = false
                                     iterations = 0
                                 }
                             }
@@ -1084,7 +1094,7 @@ ApplicationWindow {
                         anchors.top: undoRedoRect.bottom
                         height: visible ? 2 : 0
                         color: Colors.defaultDarkColor
-                        visible: !undoRedoManager.canUndo && (artworkRepository.artworksSourcesCount > 0)
+                        visible: !undoRedoManager.uiCanUndo && (artworkRepository.artworksSourcesCount > 0)
                     }
 
                     StyledScrollView {

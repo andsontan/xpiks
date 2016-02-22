@@ -58,6 +58,8 @@ namespace UndoRedo {
                                  QString("1 item added");
         }
 
+        virtual QString getActionTypeDescription() const { return QString("Add"); }
+
     private:
         QVector<QPair<int, int> > m_AddedRanges;
     };
