@@ -243,9 +243,10 @@ namespace Helpers {
         Q_INVOKABLE void setAppPosY(int y) {
             setValue(getAppPosYKey(), y);
         }
-        bool telemetryEnabled = this->value(Constants::USER_STATISTIC, false).toBool();
 
         Q_INVOKABLE void protectTelemetry() {
+            bool telemetryEnabled = this->value(Constants::USER_STATISTIC, false).toBool();
+
             if (telemetryEnabled) {
                 this->setValue(Constants::NUMBER_OF_LAUNCHES, 0);
             } else {
