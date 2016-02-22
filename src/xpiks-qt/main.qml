@@ -364,6 +364,7 @@ ApplicationWindow {
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
             applicationWindow.visibility = "Minimized"
+            helpersWrapper.beforeDestruction();
             saveAppGeometry()
             closingTimer.start()
         }
