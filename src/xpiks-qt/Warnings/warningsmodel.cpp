@@ -83,6 +83,10 @@ namespace Warnings {
         if (Common::HasFlag(warningsFlags, Common::WarningTypeSpellErrorsInTitle)) {
             descriptions.append(QLatin1String("Title has spelling error(s)"));
         }
+
+        if (Common::HasFlag(warningsFlags, Common::WarningTypeFileIsTooBig)) {
+            descriptions.append(QLatin1String("File is larger than 15 MB"));
+        }
     }
 
     WarningsModel::WarningsModel(QObject *parent):

@@ -88,6 +88,12 @@ namespace Warnings {
             Common::SetFlag(warningsInfo, Common::WarningTypeSizeLessThanMinimum);
         }
 
+        qint64 filesize = item->getFileSize();
+        const qint64 maxSize = 15*1024*1024; // 15 MB
+        if (filesize >= maxSize) {
+            Common::SetFlag(warningsInfo, Common::WarningTypeFileIsTooBig);
+        }
+
         return warningsInfo;
     }
 

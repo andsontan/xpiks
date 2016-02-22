@@ -61,6 +61,7 @@ namespace Common {
         WarningTypeSpellErrorsInKeywords = 1 << 11,
         WarningTypeSpellErrorsInDescription = 1 << 12,
         WarningTypeSpellErrorsInTitle = 1 << 13,
+        WarningTypeFileIsTooBig = 1 << 14,
 
         WarningTypeDescriptionGroup = WarningTypeDescriptionIsEmpty |
             WarningTypeDescriptionNotEnoughWords |
