@@ -77,7 +77,14 @@ namespace Models {
     {
     }
 
+    void SettingsModel::saveExiftool() {
+        qDebug() << "SettingsModel::saveExiftool #";
+        Helpers::AppSettings appSettings;
+        appSettings.setValue(appSettings.getExifToolPathKey(), m_ExifToolPath);
+    }
+
     void SettingsModel::resetAllValues() {
+        qDebug() << "SettingsModel::resetAllValues #";
         resetToDefault();
         saveAllValues();
         emit settingsReset();

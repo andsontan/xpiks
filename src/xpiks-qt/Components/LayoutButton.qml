@@ -22,71 +22,79 @@
 import QtQuick 2.2
 import "../Constants"
 import "../Constants/Colors.js" as Colors
+import "../StyledControls"
 
 Item {
     id: container
-    width: 24
+    width: childrenRect.width
     height: 24
 
     property bool isListLayout: true
     signal layoutChanged()
+    property color currentColor: enabled ? (layoutMA.containsMouse ? Colors.defaultInputBackground : Colors.selectedArtworkColor) : Colors.defaultControlColor
 
-    Item {
-        anchors.fill: parent
+    Column {
+        width: height
+        height: parent.height
+        anchors.left: parent.left
+        anchors.top: parent.top
         visible: !isListLayout
+        spacing: 5
 
-        Rectangle {
-            color: layoutMA.containsMouse ? Colors.selectedArtworkColor : Colors.defaultControlColor
-            anchors.left: parent.left
-            anchors.top: parent.top
-            width: parent.width
-            height: parent.height/2 - 2
-        }
+        Repeater {
+            model: 3
+            delegate: Item {
+                id: row
+                width: parent.width
+                height: parent.height / 3 - 3
 
-        Rectangle {
-            color: layoutMA.containsMouse ? Colors.selectedArtworkColor : Colors.defaultControlColor
-            anchors.left: parent.left
-            anchors.bottom: parent.bottom
-            width: parent.width
-            height: parent.height/2 - 2
+                Rectangle {
+                    anchors.left: parent.left
+                    anchors.top: parent.top
+                    height: parent.height
+                    width: height
+                    color: container.currentColor
+                }
+
+                Rectangle {
+                    anchors.right: parent.right
+                    anchors.top: parent.top
+                    height: parent.height
+                    width: row.width * 0.6
+                    color: container.currentColor
+                }
+            }
         }
     }
 
-    Item {
-        anchors.fill: parent
+    Grid {
+        columns: 3
+        rows: 3
+        width: height
+        height: parent.height
         visible: isListLayout
+        columnSpacing: 5
+        rowSpacing: 5
 
-        Rectangle {
-            color: layoutMA.containsMouse ? Colors.selectedArtworkColor : Colors.defaultControlColor
-            anchors.left: parent.left
-            anchors.top: parent.top
-            width: parent.width/2 - 2
-            height: parent.height/2 - 2
-        }
+        Repeater {
+            model: 9
 
-        Rectangle {
-            color: layoutMA.containsMouse ? Colors.selectedArtworkColor : Colors.defaultControlColor
-            anchors.right: parent.right
-            anchors.top: parent.top
-            width: parent.width/2 - 2
-            height: parent.height/2 - 2
+            Rectangle {
+                width: parent.width / 3 - 3
+                height: parent.height / 3 - 3
+                color: container.currentColor
+            }
         }
+    }
 
-        Rectangle {
-            color: layoutMA.containsMouse ? Colors.selectedArtworkColor : Colors.defaultControlColor
-            anchors.left: parent.left
-            anchors.bottom: parent.bottom
-            width: parent.width/2 - 2
-            height: parent.height/2 - 2
-        }
+    StyledText {
+        anchors.left: parent.left
+        anchors.leftMargin: parent.height + 7
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.verticalCenterOffset: 2
 
-        Rectangle {
-            color: layoutMA.containsMouse ? Colors.selectedArtworkColor : Colors.defaultControlColor
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-            width: parent.width/2 - 2
-            height: parent.height/2 - 2
-        }
+        text: isListLayout ? qsTr("Grid") : qsTr("List")
+        color: container.currentColor
     }
 
     MouseArea {

@@ -24,6 +24,7 @@
 
 #include <QObject>
 #include <QVector>
+#include <QFutureWatcher>
 #include "../Common/baseentity.h"
 
 namespace Models {
@@ -39,6 +40,7 @@ namespace MetadataIO {
         Q_OBJECT
         Q_PROPERTY(int processingItemsCount READ getProcessingItemsCount WRITE setProcessingItemsCount NOTIFY processingItemsCountChanged)
         Q_PROPERTY(bool hasErrors READ getHasErrors WRITE setHasErrors NOTIFY hasErrorsChanged)
+        Q_PROPERTY(bool exiftoolNotFound READ getExiftoolNotFound WRITE setExiftoolNotFound NOTIFY exiftoolNotFoundChanged)
     public:
         MetadataIOCoordinator();
 
@@ -48,12 +50,23 @@ namespace MetadataIO {
         void processingItemsCountChanged(int value);
         void discardReadingSignal();
         void hasErrorsChanged(bool value);
+        void exiftoolNotFoundChanged();
 
     private slots:
         void readingWorkerFinished(bool success);
         void writingWorkerFinished(bool success);
+        void exiftoolDiscoveryFinished();
 
     public:
+        bool getExiftoolNotFound() const { return m_ExiftoolNotFound; }
+        void setExiftoolNotFound(bool value) {
+            if (value != m_ExiftoolNotFound) {
+                qInfo() << "MetadataIOCoordinator::setExiftoolNotFound #" << value;
+                m_ExiftoolNotFound = value;
+                emit exiftoolNotFoundChanged();
+            }
+        }
+
         int getProcessingItemsCount() const { return m_ProcessingItemsCount; }
         void setProcessingItemsCount(int value) {
             if (value != m_ProcessingItemsCount) {
@@ -73,21 +86,26 @@ namespace MetadataIO {
     public:
         void readMetadata(const QVector<Models::ArtworkMetadata*> &artworksToRead, const QVector<QPair<int, int> > &rangesToUpdate);
         void writeMetadata(const QVector<Models::ArtworkMetadata*> &artworksToWrite, bool useBackups);
+        void autoDiscoverExiftool();
         Q_INVOKABLE void discardReading();
         Q_INVOKABLE void readMetadata(bool ignoreBackups);
 
     private:
         void readingFinishedHandler(bool ignoreBackups);
         void afterImportHandler(const QVector<Models::ArtworkMetadata*> &itemsToRead, bool ignoreBackups);
+        void tryToLaunchExiftool(const QString &settingsExiftoolPath);
 
     private:
         MetadataReadingWorker *m_ReadingWorker;
         MetadataWritingWorker *m_WritingWorker;
+        QFutureWatcher<void> *m_ExiftoolDiscoveryFuture;
+        QString m_RecommendedExiftoolPath;
         int m_ProcessingItemsCount;
         volatile bool m_IsImportInProgress;
         volatile bool m_CanProcessResults;
         volatile bool m_IgnoreBackupsAtImport;
         volatile bool m_HasErrors;
+        volatile bool m_ExiftoolNotFound;
     };
 }
 

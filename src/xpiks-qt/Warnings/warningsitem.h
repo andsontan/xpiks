@@ -23,24 +23,53 @@
 #define WARNINGSQUERYITEM
 
 #include "iwarningscheckable.h"
+#include "../Common/flags.h"
 
 namespace Warnings {
     class WarningsItem {
     public:
-        WarningsItem(IWarningsCheckable *checkableItem):
-            m_CheckableItem(checkableItem)
+        WarningsItem(IWarningsCheckable *checkableItem, int checkingFlags = Common::WarningsCheckAll):
+            m_CheckableItem(checkableItem),
+            m_CheckingFlags(checkingFlags)
         { }
 
     public:
-        void submitWarnings() {
-            m_CheckableItem->setWarningsFlags(m_WarningsFlags);
+        void submitWarnings(int warningsFlags) {
+            if (m_CheckingFlags == Common::WarningsCheckAll) {
+                m_CheckableItem->setWarningsFlags(warningsFlags);
+            } else {
+                int flagsToDrop = 0;
+
+                switch (m_CheckingFlags) {
+                case Common::WarningsCheckDescription:
+                    flagsToDrop = Common::WarningTypeDescriptionGroup;
+                    break;
+                case Common::WarningsCheckKeywords:
+                    flagsToDrop = Common::WarningTypeKeywordsGroup;
+                    break;
+                case Common::WarningsCheckTitle:
+                    flagsToDrop = Common::WarningTypeTitleGroup;
+                    break;
+                case Common::WarningsCheckSpelling:
+                    flagsToDrop = Common::WarningTypeSpellingGroup;
+                    break;
+                }
+
+                m_CheckableItem->dropWarningsFlags(flagsToDrop);
+                m_CheckableItem->addWarningsFlags(warningsFlags);
+            }
+
+            m_CheckableItem->release();
         }
+
+        bool needCheckAll() const { return m_CheckingFlags == Common::WarningsCheckAll; }
+        int getCheckingFlags() const { return m_CheckingFlags; }
 
         IWarningsCheckable *getCheckableItem() const { return m_CheckableItem; }
 
     private:
         IWarningsCheckable *m_CheckableItem;
-        int m_WarningsFlags;
+        int m_CheckingFlags;
     };
 }
 

@@ -41,7 +41,7 @@ namespace Models {
     class ArtworkMetadata : public Common::BasicKeywordsModel {
         Q_OBJECT
     public:
-        ArtworkMetadata(const QString &filepath);
+        ArtworkMetadata(const QString &filepath, qint64 ID);
         virtual ~ArtworkMetadata();
 
     public:
@@ -59,6 +59,7 @@ namespace Models {
         bool isInitialized() const { return m_IsInitialized; }
         virtual QSize getImageSize() const { return m_ImageSize; }
         virtual qint64 getFileSize() const { return m_FileSize; }
+        virtual qint64 getItemID() const { return m_ID; }
 
     public:
         virtual void clearModel();
@@ -122,6 +123,7 @@ namespace Models {
          QSize m_ImageSize;
          qint64 m_FileSize; // in bytes
          QString m_ArtworkFilepath;
+         qint64 m_ID;
          volatile bool m_IsModified;
          volatile bool m_IsSelected;
          volatile bool m_IsInitialized;

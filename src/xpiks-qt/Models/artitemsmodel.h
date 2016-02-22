@@ -48,10 +48,7 @@ namespace Models {
         Q_OBJECT
         Q_PROPERTY(int modifiedArtworksCount READ getModifiedArtworksCount NOTIFY modifiedArtworksCountChanged)
     public:
-        ArtItemsModel(QObject *parent = 0) :
-            AbstractListModel(parent),
-            Common::BaseEntity()
-        {}
+        ArtItemsModel(QObject *parent = 0);
 
         virtual ~ArtItemsModel();
 
@@ -70,7 +67,7 @@ namespace Models {
         };
 
     public:
-        virtual ArtworkMetadata *createMetadata(const QString &filepath) const;
+        virtual ArtworkMetadata *createMetadata(const QString &filepath);
 
     public:
         int getModifiedArtworksCount();
@@ -118,6 +115,7 @@ namespace Models {
         int addLocalArtworks(const QList<QUrl> &artworksPaths);
         int addLocalDirectories(const QList<QUrl> &directories);
         void itemModifiedChanged(bool) { updateModifiedCount(); }
+        void spellCheckErrorsChanged();
 
     public:
         virtual void removeItemsAtIndices(const QVector<QPair<int, int> > &ranges);
@@ -151,7 +149,6 @@ namespace Models {
         void doCombineArtwork(int index);
 
     signals:
-        void needCheckItemsForWarnings(const QVector<ArtItemInfo*> &artworks);
         void modifiedArtworksCountChanged();
         void artworksChanged(bool needToMoveCurrentItem);
         void artworksAdded(int count);
@@ -174,6 +171,7 @@ namespace Models {
     private:
         QVector<ArtworkMetadata*> m_ArtworkList;
         QVector<ArtworkMetadata*> m_FinalizationList;
+        qint64 m_LastID;
     };
 }
 

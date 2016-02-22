@@ -36,6 +36,7 @@ namespace Common {
         virtual bool isAvailable() const = 0;
 
         virtual void submitItem(T *item) = 0;
+        virtual void submitItem(T *item, int flags) = 0;
         virtual void submitItems(const QVector<T*> &items) = 0;
     };
 }

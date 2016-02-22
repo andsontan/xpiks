@@ -122,7 +122,7 @@ Item {
 
                         ListView {
                             id: warningsListView
-                            model: warningsManager
+                            model: warningsModel
                             spacing: 10
 
                             delegate: Rectangle {
@@ -146,6 +146,7 @@ Item {
                                         anchors.centerIn: parent
                                         anchors.verticalCenterOffset: 7
                                         spacing: 7
+                                        width: 110
 
                                         Item {
                                             width: 90
@@ -197,7 +198,8 @@ Item {
                                         anchors.topMargin: 10
 
                                         Repeater {
-                                            model: warnings
+                                            id: warningsDescriptions
+                                            model: warningsModel.describeWarnings(imageWrapper.delegateIndex)
 
                                             delegate: RowLayout {
                                                 width: warningsTextList.width
@@ -216,6 +218,7 @@ Item {
                                                     Layout.fillWidth: true
                                                     text: modelData
                                                     color: Colors.artworkModifiedColor
+                                                    anchors.verticalCenter: parent.verticalCenter
                                                 }
                                             }
                                         }
@@ -237,11 +240,12 @@ Item {
                                         enabled: !isRestricted && warningsListView.count > 0
 
                                         onClicked: {
-                                            Common.launchItemEditing(itemindex, componentParent,
+                                            var index = warningsModel.getOriginalIndex(imageWrapper.delegateIndex);
+                                            Common.launchItemEditing(index, componentParent,
                                                                      {
                                                                          applyCallback: function() {
                                                                              console.log("UI:WarningsDialog # Rechecking [" + imageWrapper.delegateIndex + "] item")
-                                                                             warningsManager.recheckItem(imageWrapper.delegateIndex)
+                                                                             warningsDescriptions.model = warningsModel.describeWarnings(imageWrapper.delegateIndex)
                                                                          }
                                                                      })
                                         }

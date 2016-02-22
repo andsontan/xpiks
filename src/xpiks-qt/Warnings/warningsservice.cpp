@@ -71,6 +71,15 @@ namespace Warnings {
         m_WarningsWorker->submitItem(wItem);
     }
 
+    void WarningsService::submitItem(IWarningsCheckable *item, int flags) {
+        if (m_WarningsWorker == NULL) { return; }
+
+        item->acquire();
+
+        WarningsItem *wItem = new WarningsItem(item, flags);
+        m_WarningsWorker->submitItem(wItem);
+    }
+
     void WarningsService::submitItems(const QVector<IWarningsCheckable *> &items) {
         if (m_WarningsWorker == NULL) { return; }
 

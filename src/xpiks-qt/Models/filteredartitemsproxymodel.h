@@ -66,7 +66,6 @@ namespace Models {
         Q_INVOKABLE void spellCheckSelected();
         Q_INVOKABLE int getModifiedSelectedCount(bool overwriteAll=false) const;
         Q_INVOKABLE void removeArtworksDirectory(int index);
-        Q_INVOKABLE void checkForWarnings();
         Q_INVOKABLE int getItemsCount() const { return rowCount(); }
         Q_INVOKABLE void reimportMetadataForSelected();
         Q_INVOKABLE int findSelectedItemIndex() const;
@@ -85,7 +84,6 @@ namespace Models {
 
     signals:
         void searchTermChanged(const QString &searchTerm);
-        void needCheckItemsForWarnings(const QVector<ArtItemInfo*> &artworks);
         void selectedArtworksCountChanged();
         void afterInvalidateFilter();
         void allItemsSelectedChanged();

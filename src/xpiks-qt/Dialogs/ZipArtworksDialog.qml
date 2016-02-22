@@ -141,6 +141,7 @@ Item {
 
                     StyledButton {
                         id: importButton
+                        isDefault: true
                         width: 130
                         text: qsTr("Start Zipping")
                         enabled: !zipArchiver.inProgress

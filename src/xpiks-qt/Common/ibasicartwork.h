@@ -21,7 +21,9 @@
 
 #ifndef IBASICARTWORK
 #define IBASICARTWORK
+
 #include "isafepointer.h"
+#include <QtGlobal>
 
 namespace Common {
     class IBasicArtwork : public ISafePointer {
@@ -35,6 +37,8 @@ namespace Common {
         virtual const QString &getDescription() const = 0;
         virtual const QString &getTitle() const = 0;
         virtual const QString &getFilepath() const = 0;
+
+        virtual qint64 getItemID() const { return -1; }
     };
 }
 

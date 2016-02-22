@@ -33,7 +33,7 @@ namespace Common {
         QAbstractListModel(parent),
         m_SpellCheckInfo(NULL),
         m_RefCount(1),
-        m_WarningsFlags(0)
+        m_WarningsFlags(Common::WarningTypeNoWarnings)
     {
     }
 

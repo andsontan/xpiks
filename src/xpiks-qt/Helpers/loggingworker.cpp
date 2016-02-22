@@ -21,6 +21,7 @@
 
 #include "loggingworker.h"
 #include "logger.h"
+#include <iostream>
 #include <QThread>
 #include <QDebug>
 #include "../Common/defines.h"
@@ -36,13 +37,18 @@ namespace Helpers {
         Logger &logger = Logger::getInstance();
         const int secondsToSleep = 1;
 
-        while (!m_Cancel) {
-            logger.flush();
-            QThread::sleep(secondsToSleep);
-        }
+        try {
+            while (!m_Cancel) {
+                logger.flush();
+                QThread::sleep(secondsToSleep);
+            }
 
-        logger.flush();
-        qInfo() << "LoggingWorker::process #" << "Logging worker stopped";
+            qInfo() << "LoggingWorker::process #" << "Logging worker stopped";
+            logger.flush();
+        }
+        catch(...) {
+            std::cerr << "Error while saving logs" << std::endl;
+        }
     }
 
     void LoggingWorker::cancel() {

@@ -65,6 +65,31 @@ Item {
         }
     }
 
+    MessageDialog {
+        id: installExiftoolDialog
+        title: "Warning"
+        text: qsTr("Please install Exiftool to import metadata")
+        informativeText: qsTr('<a href="http://www.sno.phy.queensu.ca/~phil/exiftool/">Official Exiftool website</a>')
+        standardButtons: StandardButton.Abort | StandardButton.Ignore
+        onRejected: {
+            closePopup()
+        }
+        onAccepted: {
+            continueImport()
+        }
+    }
+
+    function continueImport() {
+        importButton.text = qsTr("Importing...")
+        metadataImportComponent.isInProgress = true
+
+        spinner.height = spinner.width
+        dialogWindow.height += spinner.height + column.spacing
+        spinner.running = true
+
+        metadataIOCoordinator.readMetadata(ignoreAutosavesCheckbox.checked)
+    }
+
     PropertyAnimation { target: metadataImportComponent; property: "opacity";
         duration: 400; from: 0; to: 1;
         easing.type: Easing.InOutQuad ; running: true }
@@ -177,18 +202,16 @@ Item {
 
                     StyledButton {
                         id: importButton
+                        isDefault: true
                         width: 130
                         text: qsTr("Start Import")
                         enabled: !metadataImportComponent.isInProgress
                         onClicked: {
-                            text = qsTr("Importing...")
-                            metadataImportComponent.isInProgress = true
-
-                            spinner.height = spinner.width
-                            dialogWindow.height += spinner.height + column.spacing
-                            spinner.running = true
-
-                            metadataIOCoordinator.readMetadata(ignoreAutosavesCheckbox.checked)
+                            if (metadataIOCoordinator.exiftoolNotFound) {
+                                installExiftoolDialog.open()
+                            } else {
+                                continueImport()
+                            }
                         }
 
                         Connections {
@@ -197,6 +220,7 @@ Item {
                                 console.log("UI::ImportMetadata # Import finished handler")
 
                                 metadataImportComponent.isInProgress = false
+                                warningsModel.update()
 
                                 if (metadataIOCoordinator.hasErrors) {
                                     errorsNotification.open()

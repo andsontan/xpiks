@@ -33,6 +33,7 @@ namespace Warnings {
     }
 
     bool WarningsCheckingWorker::initWorker() {
+        qDebug() << "WarningsCheckingWorker::initWorker #";
         return true;
     }
 
@@ -42,15 +43,32 @@ namespace Warnings {
         int warningsFlags = 0;
 
         initValuesFromSettings();
-
         IWarningsCheckable *checkableItem = item->getCheckableItem();
-        warningsFlags |= checkDimensions(checkableItem);
-        warningsFlags |= checkDescriptionLength(checkableItem);
-        warningsFlags |= checkTitleWordsCount(checkableItem);
-        warningsFlags |= checkKeywordsCount(checkableItem);
-        warningsFlags |= checkSpellCheckErrors(checkableItem);
 
-        checkableItem->setWarningsFlags(warningsFlags);
+        if (item->needCheckAll()) {
+            warningsFlags |= checkDimensions(checkableItem);
+            warningsFlags |= checkDescription(checkableItem);
+            warningsFlags |= checkTitle(checkableItem);
+            warningsFlags |= checkKeywords(checkableItem);
+        } else {
+            int checkingFlags = item->getCheckingFlags();
+            switch (checkingFlags) {
+            case Common::WarningsCheckDescription:
+                warningsFlags |= checkDescription(checkableItem);
+                break;
+            case Common::WarningsCheckKeywords:
+                warningsFlags |= checkKeywords(checkableItem);
+                break;
+            case Common::WarningsCheckTitle:
+                warningsFlags |= checkTitle(checkableItem);
+                break;
+            case Common::WarningsCheckSpelling:
+                warningsFlags |= checkSpelling(checkableItem);
+                break;
+            }
+        }
+
+        item->submitWarnings(warningsFlags);
 
         return true;
     }
@@ -73,23 +91,31 @@ namespace Warnings {
         return warningsInfo;
     }
 
-    int WarningsCheckingWorker::checkKeywordsCount(IWarningsCheckable *item) const {
+    int WarningsCheckingWorker::checkKeywords(IWarningsCheckable *item) const {
         int warningsInfo = 0;
 
         int keywordsCount = item->getKeywordsCount();
 
         if (keywordsCount == 0) {
             Common::SetFlag(warningsInfo, Common::WarningTypeNoKeywords);
-        }
+        } else {
+            if (keywordsCount < 7) {
+                Common::SetFlag(warningsInfo, Common::WarningTypeTooFewKeywords);
+            }
 
-        if (keywordsCount > m_MaximumKeywordsCount) {
-            Common::SetFlag(warningsInfo, Common::WarningTypeTooManyKeywords);
+            if (keywordsCount > m_MaximumKeywordsCount) {
+                Common::SetFlag(warningsInfo, Common::WarningTypeTooManyKeywords);
+            }
+
+            if (item->hasKeywordsSpellError()) {
+                Common::SetFlag(warningsInfo, Common::WarningTypeSpellErrorsInKeywords);
+            }
         }
 
         return warningsInfo;
     }
 
-    int WarningsCheckingWorker::checkDescriptionLength(IWarningsCheckable *item) const {
+    int WarningsCheckingWorker::checkDescription(IWarningsCheckable *item) const {
         int warningsInfo = 0;
 
         int descriptionLength = item->getDescription().length();
@@ -105,17 +131,23 @@ namespace Warnings {
             if (wordsLength < 3) {
                 Common::SetFlag(warningsInfo, Common::WarningTypeDescriptionNotEnoughWords);
             }
+
+            if (item->hasDescriptionSpellError()) {
+                Common::SetFlag(warningsInfo, Common::WarningTypeSpellErrorsInDescription);
+            }
         }
 
         return warningsInfo;
     }
 
-    int WarningsCheckingWorker::checkTitleWordsCount(IWarningsCheckable *item) const {
+    int WarningsCheckingWorker::checkTitle(IWarningsCheckable *item) const {
         int warningsInfo = 0;
 
         int titleLength = item->getTitle().length();
 
-        if (titleLength > 0) {
+        if (titleLength == 0) {
+            Common::SetFlag(warningsInfo, Common::WarningTypeTitleIsEmpty);
+        } else {
             int partsLength = item->getTitleWords().length();
 
             if (partsLength < 3) {
@@ -125,14 +157,16 @@ namespace Warnings {
             if (partsLength > 10) {
                 Common::SetFlag(warningsInfo, Common::WarningTypeTitleTooManyWords);
             }
-        } else {
-            Common::SetFlag(warningsInfo, Common::WarningTypeTitleIsEmpty);
+
+            if (item->hasTitleSpellError()) {
+                Common::SetFlag(warningsInfo, Common::WarningTypeSpellErrorsInTitle);
+            }
         }
 
         return warningsInfo;
     }
 
-    int WarningsCheckingWorker::checkSpellCheckErrors(IWarningsCheckable *item) const {
+    int WarningsCheckingWorker::checkSpelling(IWarningsCheckable *item) const {
         int warningsInfo = 0;
 
         if (item->hasKeywordsSpellError()) {

@@ -478,7 +478,7 @@ Item {
 
                     StyledButton {
                         width: 70
-                        text: qsTr("Apply")
+                        text: qsTr("Save")
                         onClicked: {
                             combinedArtworks.saveEdits()
                             callbackObject.applyCallback()

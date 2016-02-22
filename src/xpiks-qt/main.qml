@@ -154,6 +154,7 @@ ApplicationWindow {
         filteredArtItemsModel.setSelectedForUpload()
         uploadInfos.initializeAccounts(masterPasswordCorrectOrEmpty)
 
+        warningsModel.setShowSelected()
         Common.launchDialog("Dialogs/UploadArtworks.qml",
                      applicationWindow,
                      {componentParent: applicationWindow})
@@ -392,7 +393,6 @@ ApplicationWindow {
 
     function doRemoveSelectedArtworks() {
         filteredArtItemsModel.removeSelectedArtworks()
-        filteredArtItemsModel.checkForWarnings()
     }
 
     function tryUploadArtworks() {
@@ -411,7 +411,6 @@ ApplicationWindow {
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
             filteredArtItemsModel.removeArtworksDirectory(directoryIndex)
-            filteredArtItemsModel.checkForWarnings()
         }
     }
 
@@ -651,7 +650,6 @@ ApplicationWindow {
                                             confirmRemoveDirectoryDialog.open()
                                         } else {
                                             filteredArtItemsModel.removeArtworksDirectory(sourceWrapper.delegateIndex)
-                                            filteredArtItemsModel.checkForWarnings()
                                         }
                                     }
                                 }
@@ -1077,12 +1075,22 @@ ApplicationWindow {
                         }
                     }
 
+                    Rectangle {
+                        id: separator
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.topMargin: visible ? 2 : 4
+                        anchors.top: undoRedoRect.bottom
+                        height: visible ? 2 : 0
+                        color: Colors.defaultDarkColor
+                        visible: !undoRedoManager.canUndo && (artworkRepository.artworksSourcesCount > 0)
+                    }
+
                     StyledScrollView {
                         id: mainScrollView
                         anchors.left: parent.left
                         anchors.right: parent.right
-                        anchors.topMargin: 4
-                        anchors.top: undoRedoRect.bottom
+                        anchors.top: separator.bottom
                         anchors.bottom: parent.bottom
                         property bool areScrollbarsVisible: flickableItem.contentHeight > flickableItem.height
                         __wheelAreaScrollSpeed: 50 + 10*settingsModel.scrollSpeedScale
@@ -1107,7 +1115,7 @@ ApplicationWindow {
                                 if (needToMoveCurrentItem) {
                                     console.debug("UI::forceUpdateArtworks # Moving into current item " + imagesListView.currentIndex)
                                     imagesListView.moveCurrentIndexDown()
-                                    imagesListView.positionViewAtIndex(imagesListView.currentIndex, ListView.Visible)
+                                    imagesListView.positionViewAtIndex(imagesListView.currentIndex, GridView.Visible)
                                 }
                             }
 
@@ -1167,7 +1175,7 @@ ApplicationWindow {
                                 function switchChecked() {
                                     editisselected = !isselected
                                     itemCheckedCheckbox.checked = isselected
-                                    ListView.view.currentIndex = rowWrapper.delegateIndex
+                                    GridView.view.currentIndex = rowWrapper.delegateIndex
                                 }
 
                                 Connections {
@@ -1277,12 +1285,12 @@ ApplicationWindow {
                                             spacing: 5
 
                                             Item {
-                                                height: 15
+                                                height: 30
                                             }
 
                                             Item {
                                                 width: 150
-                                                height: 130
+                                                height: 132
                                                 anchors.horizontalCenter: parent.horizontalCenter
 
                                                 Image {
@@ -1532,6 +1540,7 @@ ApplicationWindow {
                                             }
 
                                             StyledText {
+                                                id: plainTextText
                                                 text: qsTr("<u>edit in plain text</u>")
                                                 color: plainTextMA.containsMouse ? Colors.defaultLightGrayColor : Colors.defaultInputBackground
                                                 visible: rowWrapper.isHighlighted
@@ -1544,8 +1553,12 @@ ApplicationWindow {
                                                     anchors.fill: parent
                                                     hoverEnabled: true
                                                     enabled: rowWrapper.isHighlighted
-                                                    cursorShape: rowWrapper.isHighlighted ? Qt.PointingHandCursor : Qt.ArrowCursor
+                                                    preventStealing: true
+                                                    cursorShape: containsMouse ? Qt.PointingHandCursor : Qt.ArrowCursor
                                                     onClicked: {
+                                                        // strange bug with clicking on the keywords field
+                                                        if (!containsMouse) { return; }
+
                                                         var callbackObject = {
                                                             onSuccess: function(text) {
                                                                 artItemsModel.plainTextEdit(rowWrapper.getIndex(), text)
@@ -1896,14 +1909,15 @@ ApplicationWindow {
 
             StyledText {
                 text: qsTr("Check warnings")
-                color: warningsMA.pressed ? Colors.defaultInputBackground : warningsManager.warningsCount > 0 ? Colors.artworkModifiedColor : Colors.selectedMetadataColor
+                color: warningsMA.pressed ? Colors.defaultInputBackground : warningsModel.warningsCount > 0 ? Colors.artworkModifiedColor : Colors.selectedMetadataColor
 
                 MouseArea {
                     id: warningsMA
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
-                        filteredArtItemsModel.checkForWarnings()
+                        warningsModel.update()
+                        //filteredArtItemsModel.checkForWarnings()
                         Common.launchDialog("Dialogs/WarningsDialog.qml", applicationWindow, {
                                                 componentParent: applicationWindow
                                             });

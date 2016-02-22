@@ -47,6 +47,7 @@ Item {
 
     function closePopup() {
         secretsManager.purgeMasterPassword()
+        warningsModel.resetShowSelected()
         uploadInfos.finalizeAccounts()
         saveSettings()
         uploadArtworksComponent.destroy()
@@ -365,8 +366,11 @@ Item {
 
                                 StyledAddHostButton {
                                     Layout.fillWidth: true
-                                    onClicked: uploadInfos.addItem()
                                     text: qsTr("Add FTP host")
+                                    onClicked: {
+                                        uploadInfos.addItem()
+                                        uploadHostsListView.currentIndex = uploadHostsListView.count - 1
+                                    }
                                 }
 
                                 Item {
@@ -695,15 +699,16 @@ Item {
 
                     StyledText {
                         enabled: uploadArtworksComponent.uploadEnabled
-                        text: warningsManager.warningsCount == 1 ? qsTr("1 warning") : qsTr("%1 warnings").arg(warningsManager.warningsCount)
-                        color: uploadWarmingsMA.pressed ? Colors.defaultLightGrayColor : warningsManager.warningsCount > 0 ? Colors.artworkModifiedColor : Colors.defaultInputBackground
+                        text: warningsModel.warningsCount == 1 ? qsTr("1 warning") : qsTr("%1 warnings").arg(warningsModel.warningsCount)
+                        color: uploadWarmingsMA.pressed ? Colors.defaultLightGrayColor : warningsModel.warningsCount > 0 ? Colors.artworkModifiedColor : Colors.defaultInputBackground
 
                         MouseArea {
                             id: uploadWarmingsMA
                             anchors.fill: parent
-                            cursorShape: Qt.PointingHandCursor
+                            cursorShape: warningsModel.warningsCount > 0 ? Qt.PointingHandCursor : Qt.ArrowCursor
+                            enabled: warningsModel.warningsCount > 0
                             onClicked: {
-                                if (warningsManager.warningsCount > 0) {
+                                if (warningsModel.warningsCount > 0) {
                                     Common.launchDialog("Dialogs/WarningsDialog.qml",
                                                         uploadArtworksComponent.componentParent,
                                                         {

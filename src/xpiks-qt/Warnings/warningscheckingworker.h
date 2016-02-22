@@ -59,10 +59,10 @@ namespace Warnings {
 
     private:
         int checkDimensions(IWarningsCheckable *item) const;
-        int checkKeywordsCount(IWarningsCheckable *item) const;
-        int checkDescriptionLength(IWarningsCheckable *item) const;
-        int checkTitleWordsCount(IWarningsCheckable *item) const;
-        int checkSpellCheckErrors(IWarningsCheckable *item) const;
+        int checkKeywords(IWarningsCheckable *item) const;
+        int checkDescription(IWarningsCheckable *item) const;
+        int checkTitle(IWarningsCheckable *item) const;
+        int checkSpelling(IWarningsCheckable *item) const;
 
     private:
         Models::SettingsModel *m_SettingsModel;

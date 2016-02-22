@@ -98,7 +98,9 @@ namespace Common {
         bool hasSpellErrors() const;
 
         void setSpellStatuses(const QVector<bool> &statuses);
-        void setWarningsFlags(int flags) { m_WarningsFlags = flags; }
+        virtual void setWarningsFlags(int flags) { m_WarningsFlags = flags; }
+        virtual void addWarningsFlags(int flags) { m_WarningsFlags |= flags; }
+        virtual void dropWarningsFlags(int flagsToDrop) { m_WarningsFlags &= (~flagsToDrop); }
 
         virtual void clearModel();
         virtual bool clearKeywords();
