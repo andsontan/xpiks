@@ -50,7 +50,9 @@
 #define DEFAULT_HAVE_USER_CONSENT false
 #define DEFAULT_COLLECT_USER_STATISTIC true
 #define DEFAULT_UPDATE_SERVICE true
-
+#define DEFAULT_APP_WIDTH 900
+#define DEFAULT_APP_HEIGHT 725
+#define DEFAULT_APP_POSITION -1
 
 namespace Models {
     SettingsModel::SettingsModel(QObject *parent) :
@@ -189,11 +191,18 @@ namespace Models {
         setUserStatistic(DEFAULT_COLLECT_USER_STATISTIC);
         setUpdateService(DEFAULT_UPDATE_SERVICE);
 
-#if defined(QT_DEBUG)
         Helpers::AppSettings appSettings;
+#if defined(QT_DEBUG)
         appSettings.setValue(appSettings.getUserConsentKey(), DEFAULT_HAVE_USER_CONSENT);
         appSettings.setValue(appSettings.getInstalledVersionKey(), 0);
 #endif
+
+        // resetting position in settings is pretty useless because
+        // we will overwrite them on Xpiks exit. But anyway for the future...
+        appSettings.setValue(appSettings.getAppHeightKey(), DEFAULT_APP_HEIGHT);
+        appSettings.setValue(appSettings.getAppWidthKey(), DEFAULT_APP_WIDTH);
+        appSettings.setValue(appSettings.getAppPosXKey(), DEFAULT_APP_POSITION);
+        appSettings.setValue(appSettings.getAppPosYKey(), DEFAULT_APP_POSITION);
     }
 
     int ensureInBounds(int value, int boundA, int boundB) {
