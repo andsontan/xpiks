@@ -7,7 +7,7 @@ permalink: /support/
 <article class="row">
   <section class="small-12 large-8 columns page-content">
   
-  Before posting a new question make sure you read <strong><a href="{{site.url}}/faq/" target="_blank">FAQ</a></strong>.
+  Before posting a new question make sure you have read the <strong><a href="{{site.url}}/faq/" target="_blank">FAQ</a></strong>.
 
     <iframe id="forum_embed"
             src="javascript:void(0)"
