@@ -34,6 +34,7 @@
 #include <QQuickWindow>
 #include <QStandardPaths>
 #include <QQmlApplicationEngine>
+#include <QDesktopWidget>
 //-------------------------------------
 #include "SpellCheck/spellchecksuggestionmodel.h"
 #include "Models/filteredartitemsproxymodel.h"
@@ -351,6 +352,9 @@ int main(int argc, char *argv[]) {
         commandManager.addInitialArtworks(pathes);
     }
 #endif
+    int NumScreen_o = appSettings.getNumScreen(0);
+    int NumScreen(app.desktop()->screenNumber());
+    appSettings.setNumScreen(NumScreen);
 
     return app.exec();
 }
