@@ -53,11 +53,11 @@ namespace Helpers {
             //qDebug()<< "Extra files search locations: "<<QStandardPaths::standardLocations(appDataLocationType);
         }
 
-        QString AppWidthKey()   const { return QLatin1String(Constants::APP_WINDOW_WIDTH); }
-        QString AppHeightKey()  const { return QLatin1String(Constants::APP_WINDOW_HEIGHT); }
-        QString AppPosXKey()    const { return QLatin1String(Constants::APP_WINDOW_X); }
-        QString AppPosYKey()    const { return QLatin1String(Constants::APP_WINDOW_Y); }
-        QString AppNumScreenKey() const {return QLatin1String(Constants::APP_SCREEN);}
+        QString getAppWidthKey()   const { return QLatin1String(Constants::APP_WINDOW_WIDTH); }
+        QString getAppHeightKey()  const { return QLatin1String(Constants::APP_WINDOW_HEIGHT); }
+        QString getAppPosXKey()    const { return QLatin1String(Constants::APP_WINDOW_X); }
+        QString getAppPosYKey()    const { return QLatin1String(Constants::APP_WINDOW_Y); }
+        QString getAppNumScreenKey() const {return QLatin1String(Constants::APP_SCREEN);}
 
 
         Q_PROPERTY(QString exifToolPathKey READ getExifToolPathKey CONSTANT)
@@ -211,35 +211,35 @@ namespace Helpers {
         }
 
          Q_INVOKABLE int getAppWidth(const int &  defaultWidth){
-           return intValue(AppWidthKey(),defaultWidth);
+           return intValue(getAppWidthKey(),defaultWidth);
         }
         Q_INVOKABLE void setAppWidth(const int &  width){
-          setValue(AppWidthKey(), width);
+          setValue(getAppWidthKey(), width);
        }
 
         Q_INVOKABLE int getAppHeight(const int &  defaultHeight){
-          return intValue(AppHeightKey(),defaultHeight);
+          return intValue(getAppHeightKey(),defaultHeight);
        }
         Q_INVOKABLE void setAppHeight(const int & height){
-          setValue(AppHeightKey(), height);
+          setValue(getAppHeightKey(), height);
        }
         Q_INVOKABLE int getAppPosX(const int & defaultPosX){
-          return intValue(AppPosXKey(),defaultPosX);
+          return intValue(getAppPosXKey(),defaultPosX);
        }
         Q_INVOKABLE void setAppPosX(const int &  x){
-          setValue(AppPosXKey(), x);
+          setValue(getAppPosXKey(), x);
        }
         Q_INVOKABLE int getAppPosY(const int & defaultPosY){
-          return intValue(AppPosYKey(),defaultPosY);
+          return intValue(getAppPosYKey(),defaultPosY);
        }
         Q_INVOKABLE void setAppPosY(const int & y){
-          setValue(AppPosYKey(), y);
+          setValue(getAppPosYKey(), y);
        }
         int getNumScreen(const int & defaultNum){
-          return intValue(AppNumScreenKey(),defaultNum);
+          return intValue(getAppNumScreenKey(),defaultNum);
        }
         void setNumScreen(int & num){
-            setValue(AppNumScreenKey(),num);
+            setValue(getAppNumScreenKey(),num);
         }
 
         Q_INVOKABLE void protectTelemetry() {
