@@ -7,7 +7,9 @@ permalink: /faq/
 <article class="row">
 <section class="small-12 large-8 columns page-content">
 
+<div>
 FAQ section contains solutions to the most typical Xpiks user problems so far.
+</div>
 
 <div>
   <ul>
