@@ -146,6 +146,7 @@ Item {
                                         anchors.centerIn: parent
                                         anchors.verticalCenterOffset: 7
                                         spacing: 7
+                                        width: 110
 
                                         Item {
                                             width: 90
@@ -217,6 +218,7 @@ Item {
                                                     Layout.fillWidth: true
                                                     text: modelData
                                                     color: Colors.artworkModifiedColor
+                                                    anchors.verticalCenter: parent.verticalCenter
                                                 }
                                             }
                                         }
