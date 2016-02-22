@@ -93,7 +93,7 @@ namespace MetadataIO {
     private:
         void readingFinishedHandler(bool ignoreBackups);
         void afterImportHandler(const QVector<Models::ArtworkMetadata*> &itemsToRead, bool ignoreBackups);
-        void tryToLaunchExiftool();
+        void tryToLaunchExiftool(const QString &settingsExiftoolPath);
 
     private:
         MetadataReadingWorker *m_ReadingWorker;

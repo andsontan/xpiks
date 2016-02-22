@@ -152,8 +152,12 @@ namespace MetadataIO {
         thread->start();
     }
 
-    void MetadataIOCoordinator::autoDiscoverExiftool()  {
-        m_ExiftoolDiscoveryFuture->setFuture(QtConcurrent::run(this, &MetadataIOCoordinator::tryToLaunchExiftool));
+    void MetadataIOCoordinator::autoDiscoverExiftool() {
+        Models::SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
+        QString existingExiftoolPath = settingsModel->getExifToolPath();
+        m_ExiftoolDiscoveryFuture->setFuture(QtConcurrent::run(this,
+                                                               &MetadataIOCoordinator::tryToLaunchExiftool,
+                                                               existingExiftoolPath));
     }
 
     void MetadataIOCoordinator::discardReading() {
@@ -228,11 +232,11 @@ namespace MetadataIO {
         m_CommandManager->submitForWarningsCheck(itemsToRead);
     }
 
-    void MetadataIOCoordinator::tryToLaunchExiftool() {
-        qDebug() << "MetadataIOCoordinator::tryToLaunchExiftool #";
+    void MetadataIOCoordinator::tryToLaunchExiftool(const QString &settingsExiftoolPath) {
+        qDebug() << "MetadataIOCoordinator::tryToLaunchExiftool #" << "Default path is" << settingsExiftoolPath;
         // SHOULD BE UNDER DEFINE OS X
         QStringList possiblePaths;
-        possiblePaths << "/usr/bin/exiftool" << "/usr/local/bin/exiftool";
+        possiblePaths << settingsExiftoolPath << "/usr/bin/exiftool" << "/usr/local/bin/exiftool";
 
         QString exiftoolPath;
         QString exiftoolVersion;
