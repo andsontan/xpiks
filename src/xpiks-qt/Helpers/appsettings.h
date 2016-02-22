@@ -53,6 +53,13 @@ namespace Helpers {
             //qDebug()<< "Extra files search locations: "<<QStandardPaths::standardLocations(appDataLocationType);
         }
 
+        QString getAppWidthKey()   const { return QLatin1String(Constants::APP_WINDOW_WIDTH); }
+        QString getAppHeightKey()  const { return QLatin1String(Constants::APP_WINDOW_HEIGHT); }
+        QString getAppPosXKey()    const { return QLatin1String(Constants::APP_WINDOW_X); }
+        QString getAppPosYKey()    const { return QLatin1String(Constants::APP_WINDOW_Y); }
+        QString getAppNumScreenKey() const {return QLatin1String(Constants::APP_SCREEN);}
+
+
         Q_PROPERTY(QString exifToolPathKey READ getExifToolPathKey CONSTANT)
         QString getExifToolPathKey() const { return QLatin1String(Constants::PATH_TO_EXIFTOOL); }
 
@@ -201,6 +208,38 @@ namespace Helpers {
 
         Q_INVOKABLE void userAgreeHandler() {
             setValue(getUserConsentKey(), true);
+        }
+
+         Q_INVOKABLE int getAppWidth(const int defaultWidth){
+           return intValue(getAppWidthKey(),defaultWidth);
+        }
+        Q_INVOKABLE void setAppWidth(const int width){
+          setValue(getAppWidthKey(), width);
+       }
+
+        Q_INVOKABLE int getAppHeight(const int defaultHeight){
+          return intValue(getAppHeightKey(),defaultHeight);
+       }
+        Q_INVOKABLE void setAppHeight(const int height){
+          setValue(getAppHeightKey(), height);
+       }
+        Q_INVOKABLE int getAppPosX(const int defaultPosX){
+          return intValue(getAppPosXKey(),defaultPosX);
+       }
+        Q_INVOKABLE void setAppPosX(const int x){
+          setValue(getAppPosXKey(), x);
+       }
+        Q_INVOKABLE int getAppPosY(const int defaultPosY){
+          return intValue(getAppPosYKey(),defaultPosY);
+       }
+        Q_INVOKABLE void setAppPosY(const int y){
+          setValue(getAppPosYKey(), y);
+       }
+        int getNumScreen(const int defaultNum){
+          return intValue(getAppNumScreenKey(),defaultNum);
+       }
+        void setNumScreen(const int num){
+            setValue(getAppNumScreenKey(),num);
         }
 
         Q_INVOKABLE void protectTelemetry() {

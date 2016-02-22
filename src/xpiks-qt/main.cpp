@@ -34,6 +34,7 @@
 #include <QQuickWindow>
 #include <QStandardPaths>
 #include <QQmlApplicationEngine>
+#include <QDesktopWidget>
 //-------------------------------------
 #include "SpellCheck/spellchecksuggestionmodel.h"
 #include "Models/filteredartitemsproxymodel.h"

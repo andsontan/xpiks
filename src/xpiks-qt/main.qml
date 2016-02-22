@@ -36,8 +36,8 @@ import "Common.js" as Common
 ApplicationWindow {
     id: applicationWindow
     visible: true
-    width: 900
-    height: 725
+    width: appSettings.getAppWidth(900)
+    height: appSettings.getAppHeight(725)
     minimumHeight: 670
     minimumWidth: 900
     title: qsTr("Xpiks")
@@ -49,8 +49,8 @@ ApplicationWindow {
     onVisibleChanged: {
         if (needToCenter) {
             needToCenter = false
-            applicationWindow.x = (Screen.width - applicationWindow.width) / 2
-            applicationWindow.y = (Screen.height - applicationWindow.height) / 2
+            applicationWindow.x = appSettings.getAppPosX((Screen.width - applicationWindow.width) / 2)
+            applicationWindow.y = appSettings.getAppPosY((Screen.height - applicationWindow.height) / 2)
         }
     }
 
@@ -71,8 +71,16 @@ ApplicationWindow {
             helpersWrapper.beforeDestruction();
             appSettings.protectTelemetry();
             close.accepted = false
+            saveAppGeometry()
             closingTimer.start()
         }
+    }
+
+    function saveAppGeometry() {
+        appSettings.setAppWidth(applicationWindow.width)
+        appSettings.setAppHeight(applicationWindow.height)
+        appSettings.setAppPosX(applicationWindow.x)
+        appSettings.setAppPosY(applicationWindow.y)
     }
 
     onClosing: closeHandler(close)
@@ -357,6 +365,7 @@ ApplicationWindow {
         onYes: {
             applicationWindow.visibility = "Minimized"
             helpersWrapper.beforeDestruction();
+            saveAppGeometry()
             closingTimer.start()
         }
     }
