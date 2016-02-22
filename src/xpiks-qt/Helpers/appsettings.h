@@ -53,10 +53,10 @@ namespace Helpers {
             //qDebug()<< "Extra files search locations: "<<QStandardPaths::standardLocations(appDataLocationType);
         }
 
-        QString AppWidthKey()   const { return QLatin1String(Constants::APP_WIDTH); }
-        QString AppHeightKey()  const { return QLatin1String(Constants::APP_HEIGHT); }
-        QString AppPosXKey()    const { return QLatin1String(Constants::APP_X); }
-        QString AppPosYKey()    const { return QLatin1String(Constants::APP_Y); }
+        QString AppWidthKey()   const { return QLatin1String(Constants::APP_WINDOW_WIDTH); }
+        QString AppHeightKey()  const { return QLatin1String(Constants::APP_WINDOW_HEIGHT); }
+        QString AppPosXKey()    const { return QLatin1String(Constants::APP_WINDOW_X); }
+        QString AppPosYKey()    const { return QLatin1String(Constants::APP_WINDOW_Y); }
         QString AppNumScreenKey() const {return QLatin1String(Constants::APP_SCREEN);}
 
 

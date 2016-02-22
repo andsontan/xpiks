@@ -71,12 +71,16 @@ ApplicationWindow {
             helpersWrapper.beforeDestruction();
             appSettings.protectTelemetry();
             close.accepted = false
-            appSettings.setAppWidth(applicationWindow.width)
-            appSettings.setAppHeight(applicationWindow.height)
-            appSettings.setAppPosX(applicationWindow.x)
-            appSettings.setAppPosY(applicationWindow.y)
+            saveAppGeometry()
             closingTimer.start()
         }
+    }
+
+    function saveAppGeometry() {
+        appSettings.setAppWidth(applicationWindow.width)
+        appSettings.setAppHeight(applicationWindow.height)
+        appSettings.setAppPosX(applicationWindow.x)
+        appSettings.setAppPosY(applicationWindow.y)
     }
 
     onClosing: closeHandler(close)
@@ -360,11 +364,7 @@ ApplicationWindow {
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
             applicationWindow.visibility = "Minimized"
-            helpersWrapper.beforeDestruction()
-            appSettings.setAppWidth(applicationWindow.width)
-            appSettings.setAppHeight(applicationWindow.height)
-            appSettings.setAppPosX(applicationWindow.x)
-            appSettings.setAppPosY(applicationWindow.y)
+            saveAppGeometry()
             closingTimer.start()
         }
     }
