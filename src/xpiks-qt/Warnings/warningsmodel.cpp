@@ -26,7 +26,7 @@
 #include "../Common/flags.h"
 
 namespace Warnings {
-    void describeWarningFlags(int warningsFlags, QStringList &descriptions) {
+    void describeWarningFlags(int warningsFlags, Models::ArtworkMetadata *metadata, QStringList &descriptions) {
 
         if (Common::HasFlag(warningsFlags, Common::WarningTypeSizeLessThanMinimum)) {
             descriptions.append(QLatin1String("Size is less than minimal"));
@@ -41,15 +41,11 @@ namespace Warnings {
         }
 
         if (Common::HasFlag(warningsFlags, Common::WarningTypeTooManyKeywords)) {
-            descriptions.append(QLatin1String("There's more than 50 keywords"));
+            descriptions.append(QString("There are too many keywords (%1)").arg(metadata->getKeywordsCount()));
         }
 
         if (Common::HasFlag(warningsFlags, Common::WarningTypeDescriptionIsEmpty)) {
             descriptions.append(QLatin1String("Description is empty"));
-        }
-
-        if (Common::HasFlag(warningsFlags, Common::WarningTypeDescriptionTooBig)) {
-            descriptions.append(QLatin1String("Description is too long"));
         }
 
         if (Common::HasFlag(warningsFlags, Common::WarningTypeDescriptionNotEnoughWords)) {
@@ -57,7 +53,7 @@ namespace Warnings {
         }
 
         if (Common::HasFlag(warningsFlags, Common::WarningTypeDescriptionTooBig)) {
-            descriptions.append(QLatin1String("Description is too long"));
+            descriptions.append(QString("Description is too long (%1 symbols)").arg(metadata->getDescription().length()));
         }
 
         if (Common::HasFlag(warningsFlags, Common::WarningTypeTitleIsEmpty)) {
@@ -73,7 +69,7 @@ namespace Warnings {
         }
 
         if (Common::HasFlag(warningsFlags, Common::WarningTypeTitleTooBig)) {
-            descriptions.append(QLatin1String("Title is too long"));
+            descriptions.append(QString("Title is too long (%1 symbols)").arg(metadata->getTitle().length()));
         }
 
         if (Common::HasFlag(warningsFlags, Common::WarningTypeSpellErrorsInKeywords)) {
@@ -106,7 +102,7 @@ namespace Warnings {
             Models::ArtworkMetadata *metadata = artItemsModel->getArtwork(row);
 
             int warningsFlags = metadata->getWarningsFlags();
-            describeWarningFlags(warningsFlags, descriptions);
+            describeWarningFlags(warningsFlags, metadata, descriptions);
         }
 
         return descriptions;

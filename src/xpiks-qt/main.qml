@@ -77,6 +77,7 @@ ApplicationWindow {
     }
 
     function saveAppGeometry() {
+        console.debug("UI::main # Saving application geometry")
         appSettings.setAppWidth(applicationWindow.width)
         appSettings.setAppHeight(applicationWindow.height)
         appSettings.setAppPosX(applicationWindow.x)
