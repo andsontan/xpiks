@@ -22,6 +22,7 @@
 #include <QDebug>
 #include <QFileInfo>
 #include <QVector>
+#include <QHash>
 #include "addartworkscommand.h"
 #include "commandmanager.h"
 #include "../Models/artworksrepository.h"
@@ -72,6 +73,9 @@ Commands::CommandResult *Commands::AddArtworksCommand::execute(const ICommandMan
 
     artworksRepository->endAccountingFiles(filesWereAccounted);
 
+    QHash<QString, QPair<QString, QString> > vectorsHash;
+    decomposeVectors(vectorsHash);
+
     if (newFilesCount > 0) {
         int length = artItemsModel->rowCount();
         int start = length - newFilesCount, end = length - 1;
@@ -88,4 +92,13 @@ Commands::CommandResult *Commands::AddArtworksCommand::execute(const ICommandMan
 
     AddArtworksCommandResult *result = new AddArtworksCommandResult(newFilesCount);
     return result;
+}
+
+void Commands::AddArtworksCommand::decomposeVectors(QHash<QString, QPair<QString, QString> > &vectors) const {
+    int size = m_VectorsPathes.size();
+    for (int i = 0; i < size; ++i) {
+        const QString &path = m_VectorsPathes.at(i);
+        QFileInfo fi(path);
+        vectors.insert(fi.absolutePath(), qMakePair(fi.baseName(), path));
+    }
 }

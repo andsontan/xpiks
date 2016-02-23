@@ -23,15 +23,18 @@
 #define ADDARTWORKSCOMMAND_H
 
 #include <QStringList>
+#include <QHash>
+#include <QPair>
 #include "commandbase.h"
 
 namespace Commands {
     class AddArtworksCommand : public CommandBase
     {
     public:
-        AddArtworksCommand(const QStringList &pathes) :
+        AddArtworksCommand(const QStringList &pathes, const QStringList &vectorPathes) :
             CommandBase(AddArtworksCommandType),
-            m_FilePathes(pathes)
+            m_FilePathes(pathes),
+            m_VectorsPathes(vectorPathes)
         {}
 
         virtual ~AddArtworksCommand() {}
@@ -39,8 +42,12 @@ namespace Commands {
     public:
         virtual CommandResult *execute(const ICommandManager *commandManagerInterface) const;
 
+    private:
+        void decomposeVectors(QHash<QString, QPair<QString, QString> > &vectors) const;
+
     public:
         QStringList m_FilePathes;
+        QStringList m_VectorsPathes;
     };
 
     class AddArtworksCommandResult : public CommandResult {

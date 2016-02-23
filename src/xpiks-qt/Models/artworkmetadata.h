@@ -57,9 +57,12 @@ namespace Models {
         bool isModified() const { return m_IsModified; }
         bool getIsSelected() const { return m_IsSelected; }
         bool isInitialized() const { return m_IsInitialized; }
+        bool hasVectorAttached() const { return m_HasAttachedVector; }
         virtual QSize getImageSize() const { return m_ImageSize; }
         virtual qint64 getFileSize() const { return m_FileSize; }
         virtual qint64 getItemID() const { return m_ID; }
+        const QString &getAttachedVectorPath() const { Q_ASSERT(m_HasAttachedVector); return m_AttachedVector; }
+        void attachVector(const QString &vectorFilepath);
 
     public:
         virtual void clearModel();
@@ -84,22 +87,23 @@ namespace Models {
             if (result) {
                 m_IsSelected = value;
                 selectedChanged(value);
-                fileSelectedChanged(m_ArtworkFilepath, value);
+                emit fileSelectedChanged(m_ArtworkFilepath, value);
             }
+
             return result;
         }
 
-        void invertSelection(){setIsSelected(!m_IsSelected);}
-
-        void setImageSize(const QSize &size) { m_ImageSize = size; }
-        void setFileSize(qint64 size) { m_FileSize = size; }
+        void invertSelection() { setIsSelected(!m_IsSelected); }
 
         void resetSelected() {
             if (m_IsSelected) {
                 m_IsSelected = false;
-                fileSelectedChanged(m_ArtworkFilepath, false);
+                emit fileSelectedChanged(m_ArtworkFilepath, false);
             }
         }
+
+        void setImageSize(const QSize &size) { m_ImageSize = size; }
+        void setFileSize(qint64 size) { m_FileSize = size; }
 
     public:
         bool removeKeywordAt(int index);
@@ -123,10 +127,12 @@ namespace Models {
          QSize m_ImageSize;
          qint64 m_FileSize; // in bytes
          QString m_ArtworkFilepath;
+         QString m_AttachedVector;
          qint64 m_ID;
          volatile bool m_IsModified;
          volatile bool m_IsSelected;
          volatile bool m_IsInitialized;
+         volatile bool m_HasAttachedVector;
     };
 }
 

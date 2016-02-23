@@ -176,7 +176,7 @@ namespace Commands {
         void updateArtworks(const QVector<QPair<int, int> > &rangesToUpdate) const;
         void addToRecentDirectories(const QString &path) const;
 #ifdef QT_DEBUG
-        void addInitialArtworks(const QStringList &artworksFilepathes);
+        void addInitialArtworks(const QStringList &artworksFilepathes, const QStringList &vectors);
 #endif
 
     public:

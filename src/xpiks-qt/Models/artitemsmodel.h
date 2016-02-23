@@ -29,6 +29,7 @@
 #include <QPair>
 #include <QUrl>
 #include <QSize>
+#include <QHash>
 #include <QQuickTextDocument>
 #include <QVector>
 #include "abstractlistmodel.h"
@@ -63,7 +64,8 @@ namespace Models {
             KeywordsCountRole,
             IsModifiedRole,
             IsSelectedRole,
-            EditIsSelectedRole
+            EditIsSelectedRole,
+            HasVectorAttachedRole
         };
 
     public:
@@ -132,6 +134,7 @@ namespace Models {
         virtual void updateItemsAtIndices(const QVector<int> &indices);
         virtual void updateItemsInRanges(const QVector<QPair<int, int> > &ranges);
         void setAllItemsSelected(bool selected);
+        int attachVectors(const QHash<QString, QPair<QString, QString> > &vectorsPaths) const;
 
     public:
         // IARTWORKSSOURCE

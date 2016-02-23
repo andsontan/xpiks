@@ -38,7 +38,8 @@ namespace Models {
         m_ID(ID),
         m_IsModified(false),
         m_IsSelected(false),
-        m_IsInitialized(false)
+        m_IsInitialized(false),
+        m_HasAttachedVector(false)
     {
         setSpellCheckInfo(new SpellCheck::SpellCheckItemInfo());
     }
@@ -90,6 +91,11 @@ namespace Models {
         }
 
         return isInDir;
+    }
+
+    void ArtworkMetadata::attachVector(const QString &vectorFilepath) {
+        m_HasAttachedVector = true;
+        m_AttachedVector = vectorFilepath;
     }
 
     void ArtworkMetadata::clearModel() {

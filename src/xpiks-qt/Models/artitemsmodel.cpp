@@ -24,6 +24,7 @@
 #include <QImageReader>
 #include <QDebug>
 #include <QList>
+#include <QHash>
 #include "artitemsmodel.h"
 #include "artiteminfo.h"
 #include "../Helpers/indiceshelper.h"
@@ -455,6 +456,8 @@ namespace Models {
             return metadata->getIsSelected();
         case KeywordsCountRole:
             return metadata->getKeywordsCount();
+        case HasVectorAttachedRole:
+            return metadata->hasVectorAttached();
         default:
             return QVariant();
         }
@@ -609,6 +612,32 @@ namespace Models {
         }
     }
 
+    int ArtItemsModel::attachVectors(const QHash<QString, QPair<QString, QString> > &vectorsPaths) const {
+        qDebug() << "ArtItemsModel::attachVectors #" << vectorsPaths.size() << "vectors";
+
+        int attachedVectors = 0;
+
+        int size = m_ArtworkList.length();
+        for (int i = 0; i < size; ++i) {
+            ArtworkMetadata *metadata = m_ArtworkList.at(i);
+            const QString &filepath = metadata->getFilepath();
+            QFileInfo fi(filepath);
+
+            const QString &directory = fi.absolutePath();
+            if (vectorsPaths.contains(directory)) {
+                const QPair<QString, QString> &pair = vectorsPaths.value(directory);
+
+                const QString &filename = fi.baseName();
+                if (QString::compare(filename, pair.first, Qt::CaseInsensitive) == 0) {
+                    metadata->attachVector(pair.second);
+                    attachedVectors++;
+                }
+            }
+        }
+
+        return attachedVectors;
+    }
+
     Common::IBasicArtwork *ArtItemsModel::getBasicArtwork(int index) const {
         Common::IBasicArtwork *result = NULL;
         if (0 <= index && index < m_ArtworkList.length()) {
@@ -655,25 +684,33 @@ namespace Models {
         }
     }
 
-    int ArtItemsModel::addFiles(const QStringList &rawFilenames)
-    {
-        QStringList filenames;
+    int ArtItemsModel::addFiles(const QStringList &rawFilenames) {
+        QStringList filenames, vectors;
         filenames.reserve(rawFilenames.length());
+        vectors.reserve(rawFilenames.length());
 
         foreach (const QString &filepath, rawFilenames) {
             QImageReader imageReader(filepath);
 
             QString format = imageReader.format().toLower();
 
+            qDebug() << "ArtItemsModel::addFiles #" << format;
             if (format == QLatin1String("jpeg") ||
                     format == QLatin1String("tiff")) {
                 filenames.append(filepath);
             } else if (format == QLatin1String("png")) {
                 qWarning() << "ArtItemsModel::addFiles #" << "PNG is unsupported file format";
+            } else {
+                QFileInfo fi(filepath);
+                QString suffix = fi.completeSuffix().toLower();
+                if (suffix == QLatin1String("eps") ||
+                        suffix == QLatin1String("ai")) {
+                    vectors.append(filepath);
+                }
             }
         }
 
-        Commands::AddArtworksCommand *addArtworksCommand = new Commands::AddArtworksCommand(filenames);
+        Commands::AddArtworksCommand *addArtworksCommand = new Commands::AddArtworksCommand(filenames, vectors);
         Commands::ICommandResult *result = m_CommandManager->processCommand(addArtworksCommand);
         Commands::AddArtworksCommandResult *addArtworksResult = static_cast<Commands::AddArtworksCommandResult*>(result);
         int newFilesCount = addArtworksResult->m_NewFilesAdded;
@@ -715,6 +752,7 @@ namespace Models {
         roles[IsSelectedRole] = "isselected";
         roles[EditIsSelectedRole] = "editisselected";
         roles[KeywordsCountRole] = "keywordscount";
+        roles[HasVectorAttachedRole] = "hasvectorattached";
         return roles;
     }
 
