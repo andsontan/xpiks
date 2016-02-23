@@ -180,10 +180,11 @@ ApplicationWindow {
 
     menuBar: MenuBar {
         Menu {
-            title: qsTr("File")
+            title: qsTr("&File")
+
             Menu {
                 id: recentDirectoriesMenu
-                title: qsTr("Recent directories")
+                title: qsTr("&Recent directories")
 
                 Instantiator {
                     model: recentDirectories
@@ -222,13 +223,13 @@ ApplicationWindow {
             }
 
             MenuItem {
-                text: qsTr("Exit")
+                text: qsTr("&Exit")
                 onTriggered: closeHandler({accepted: false});
             }
         }
 
         Menu {
-            title: qsTr("Edit")
+            title: qsTr("&Edit")
 
             MenuItem {
                 text: qsTr("&Invert selection")
@@ -259,6 +260,15 @@ ApplicationWindow {
             }
 
             MenuItem {
+                text: qsTr("&Detach vectors from selected")
+                enabled: filteredArtItemsModel.selectedArtworksCount > 0
+                onTriggered: {
+                    console.info("UI::main # Detach vectors from selected triggered")
+                    filteredArtItemsModel.detachVectorFromSelected()
+                }
+            }
+
+            MenuItem {
                 text: qsTr("&Cleanup local library in background")
                 onTriggered: {
                     console.info("UI::main # Cleanup local library triggered")
@@ -277,7 +287,7 @@ ApplicationWindow {
         }
 
         Menu {
-            title: qsTr("Plugins")
+            title: qsTr("&Plugins")
             id: pluginsMenu
 
             Instantiator {
@@ -320,7 +330,7 @@ ApplicationWindow {
         }
 
         Menu {
-            title: qsTr("Tools")
+            title: qsTr("&Tools")
             enabled: applicationWindow.openedDialogsCount == 0
 
             MenuItem {

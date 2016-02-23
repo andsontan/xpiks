@@ -75,7 +75,6 @@ Commands::CommandResult *Commands::AddArtworksCommand::execute(const ICommandMan
 
     QHash<QString, QPair<QString, QString> > vectorsHash;
     decomposeVectors(vectorsHash);
-
     int attachedCount = artItemsModel->attachVectors(vectorsHash);
 
     if (newFilesCount > 0) {

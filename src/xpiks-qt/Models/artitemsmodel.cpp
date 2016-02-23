@@ -646,7 +646,7 @@ namespace Models {
             }
         }
 
-        qInfo() << "ArtItemsModel::attachVectors #" << "Found matches to" << attachedVectors << "files";
+        qInfo() << "ArtItemsModel::attachVectors #" << "Found matches to" << attachedVectors << "file(s)";
 
         return attachedVectors;
     }
@@ -707,7 +707,6 @@ namespace Models {
 
             QString format = imageReader.format().toLower();
 
-            qDebug() << "ArtItemsModel::addFiles #" << format;
             if (format == QLatin1String("jpeg") ||
                     format == QLatin1String("tiff")) {
                 filenames.append(filepath);
