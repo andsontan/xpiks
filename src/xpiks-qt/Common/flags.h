@@ -64,6 +64,7 @@ namespace Common {
         WarningTypeFileIsTooBig = 1 << 14,
         WarningTypeKeywordsInDescription = 1 << 15,
         WarningTypeKeywordsInTitle = 1 << 16,
+        WarningTypeFilenameSymbols = 1 << 17,
 
         WarningTypeDescriptionGroup = WarningTypeDescriptionIsEmpty |
             WarningTypeDescriptionNotEnoughWords |

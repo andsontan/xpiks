@@ -21,6 +21,7 @@
 
 #include "warningscheckingworker.h"
 #include <QSet>
+#include <QFileInfo>
 #include "../Common/defines.h"
 #include "../Common/flags.h"
 #include "../Models/settingsmodel.h"
@@ -102,6 +103,19 @@ namespace Warnings {
         const qint64 maxSize = 15*1024*1024; // 15 MB
         if (filesize >= maxSize) {
             Common::SetFlag(warningsInfo, Common::WarningTypeFileIsTooBig);
+        }
+
+        QFileInfo fi(item->getFilepath());
+        QString filename = fi.fileName();
+        int length = filename.length();
+        for (int i = 0; i < length; ++i) {
+            QChar c = filename[i];
+            bool isOk = c.isLetter() || c.isDigit() ||
+                    (c == '_') || (c == '.');
+            if (!isOk) {
+                Common::SetFlag(warningsInfo, Common::WarningTypeFilenameSymbols);
+                break;
+            }
         }
 
         return warningsInfo;

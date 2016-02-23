@@ -95,6 +95,10 @@ namespace Warnings {
         if (Common::HasFlag(warningsFlags, Common::WarningTypeKeywordsInTitle)) {
             descriptions.append(QLatin1String("Title contains some of the keywords"));
         }
+
+        if (Common::HasFlag(warningsFlags, Common::WarningTypeFilenameSymbols)) {
+            descriptions.append(QLatin1String("Filename contains special characters or spaces"));
+        }
     }
 
     WarningsModel::WarningsModel(QObject *parent):
