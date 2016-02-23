@@ -240,6 +240,16 @@ ApplicationWindow {
             }
 
             MenuItem {
+                text: checked ? qsTr("&Default sort order") : qsTr("&Sort by filename")
+                enabled: imagesListView.count > 0
+                checkable: true
+                onToggled: {
+                    console.info("UI::main # Sort by filename")
+                    filteredArtItemsModel.toggleSorted();
+                }
+            }
+
+            MenuItem {
                 text: qsTr("&Remove metadata from selected")
                 enabled: filteredArtItemsModel.selectedArtworksCount > 0
                 onTriggered: {

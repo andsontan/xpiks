@@ -257,6 +257,18 @@ namespace Models {
         }
     }
 
+    void FilteredArtItemsProxyModel::toggleSorted() {
+        if (!m_SortingEnabled) {
+            m_SortingEnabled = true;
+            setSortRole(Qt::DisplayRole);
+            invalidate();
+        } else {
+            m_SortingEnabled = false;
+            setSortRole(Qt::InitialSortOrderRole);
+            invalidate();
+        }
+    }
+
     void FilteredArtItemsProxyModel::itemSelectedChanged(bool value) {
         int plus = value ? +1 : -1;
         m_SelectedArtworksCount += plus;
