@@ -133,6 +133,9 @@ namespace Helpers {
         Q_PROPERTY(QString numberOfLaunchesKey READ getNumberOfLaunchesKey CONSTANT)
         QString getNumberOfLaunchesKey() const { return QLatin1String(Constants::NUMBER_OF_LAUNCHES); }
 
+        Q_PROPERTY(QString autoFindVectorsKey READ getAutoFindVectorsKey CONSTANT)
+        QString getAutoFindVectorsKey() const { return QLatin1String(Constants::AUTO_FIND_VECTORS); }
+
         Q_PROPERTY(QString whatsNewText READ getWhatsNewText CONSTANT)
         QString getWhatsNewText() const {
             QString text;

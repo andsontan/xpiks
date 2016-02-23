@@ -722,7 +722,10 @@ namespace Models {
             }
         }
 
-        Commands::AddArtworksCommand *addArtworksCommand = new Commands::AddArtworksCommand(filenames, vectors);
+        Models::SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
+        bool autoFindVectors = settingsModel->getAutoFindVectors();
+
+        Commands::AddArtworksCommand *addArtworksCommand = new Commands::AddArtworksCommand(filenames, vectors, autoFindVectors);
         Commands::ICommandResult *result = m_CommandManager->processCommand(addArtworksCommand);
         Commands::AddArtworksCommandResult *addArtworksResult = static_cast<Commands::AddArtworksCommandResult*>(result);
         int newFilesCount = addArtworksResult->m_NewFilesAdded;

@@ -53,6 +53,7 @@
 #define DEFAULT_APP_WIDTH 900
 #define DEFAULT_APP_HEIGHT 725
 #define DEFAULT_APP_POSITION -1
+#define DEFAULT_AUTO_FIND_VECTORS false
 
 namespace Models {
     SettingsModel::SettingsModel(QObject *parent) :
@@ -114,6 +115,7 @@ namespace Models {
         appSettings.setValue(appSettings.getUseSpellCheckKey(), m_UseSpellCheck);
         appSettings.setValue(appSettings.getUserStatisticKey(), m_UserStatistic);
         appSettings.setValue(appSettings.getUpdateServiceKey(), m_UpdateService);
+        appSettings.setValue(appSettings.getAutoFindVectorsKey(), m_AutoFindVectors);
 
         if (!m_MustUseMasterPassword) {
             appSettings.setValue(appSettings.getMasterPasswordHashKey(), "");
@@ -167,6 +169,7 @@ namespace Models {
         setUseSpellCheck(appSettings.boolValue(appSettings.getUseSpellCheckKey(), DEFAULT_USE_SPELL_CHECK));
         setUserStatistic(appSettings.boolValue(appSettings.getUserStatisticKey(), DEFAULT_COLLECT_USER_STATISTIC));
         setUpdateService(appSettings.boolValue(appSettings.getUpdateServiceKey(), DEFAULT_UPDATE_SERVICE));
+        setAutoFindVectors(appSettings.boolValue(appSettings.getAutoFindVectorsKey(), DEFAULT_AUTO_FIND_VECTORS));
     }
 
     void SettingsModel::resetToDefault() {
@@ -190,6 +193,7 @@ namespace Models {
         setUseSpellCheck(DEFAULT_USE_SPELL_CHECK);
         setUserStatistic(DEFAULT_COLLECT_USER_STATISTIC);
         setUpdateService(DEFAULT_UPDATE_SERVICE);
+        setAutoFindVectors(DEFAULT_AUTO_FIND_VECTORS);
 
         Helpers::AppSettings appSettings;
 #if defined(QT_DEBUG)

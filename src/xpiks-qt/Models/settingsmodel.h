@@ -55,6 +55,7 @@ namespace Models {
         Q_PROPERTY(bool userStatistic READ getUserStatistic WRITE setUserStatistic NOTIFY userStatisticChanged)
         Q_PROPERTY(bool updateService READ getUpdateService WRITE setUpdateService NOTIFY updateServiceChanged)
         Q_PROPERTY(QString dictionaryPath READ getDictionaryPath WRITE setDictionaryPath NOTIFY dictionaryPathChanged)
+        Q_PROPERTY(bool autoFindVectors READ getAutoFindVectors WRITE setAutoFindVectors NOTIFY autoFindVectorsChanged)
 
     public:
         explicit SettingsModel(QObject *parent = 0);
@@ -90,6 +91,7 @@ namespace Models {
         bool getUserStatistic() const { return m_UserStatistic; }
         bool getUpdateService() const { return m_UpdateService; }
         QString getDictionaryPath() const { return m_DictPath; }
+        bool getAutoFindVectors() const { return m_AutoFindVectors; }
 
     signals:
         void settingsReset();
@@ -111,6 +113,7 @@ namespace Models {
         void userStatisticChanged(bool value);
         void updateServiceChanged(bool value);
         void dictionaryPathChanged(QString path);
+        void autoFindVectorsChanged(bool value);
 
     public:
         void setExifToolPath(QString exifToolPath) {
@@ -258,6 +261,13 @@ namespace Models {
             m_DictsPathChanged = true;
         }
 
+        void setAutoFindVectors(bool value) {
+            if (value != m_AutoFindVectors) {
+                m_AutoFindVectors = value;
+                emit autoFindVectorsChanged(value);
+            }
+        }
+
     private:
         void resetToDefault();
 
@@ -281,6 +291,7 @@ namespace Models {
         bool m_UserStatistic;
         bool m_UpdateService;
         bool m_DictsPathChanged;
+        bool m_AutoFindVectors;
     };
 }
 

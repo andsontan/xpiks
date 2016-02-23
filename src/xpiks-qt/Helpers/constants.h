@@ -47,6 +47,7 @@ namespace Constants {
     const char APP_WINDOW_HEIGHT [] = "WindowSizeY";
     const char APP_WINDOW_X[] = "WindowPosX";
     const char APP_WINDOW_Y[] = "WindowPosY";
+    const char AUTO_FIND_VECTORS[] = "AUTO_FIND_VECTORS";
 
     // different for DEBUG and RELEASE
 

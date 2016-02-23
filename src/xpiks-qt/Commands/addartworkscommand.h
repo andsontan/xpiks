@@ -31,10 +31,11 @@ namespace Commands {
     class AddArtworksCommand : public CommandBase
     {
     public:
-        AddArtworksCommand(const QStringList &pathes, const QStringList &vectorPathes) :
+        AddArtworksCommand(const QStringList &pathes, const QStringList &vectorPathes, bool autoDetectVectors) :
             CommandBase(AddArtworksCommandType),
             m_FilePathes(pathes),
-            m_VectorsPathes(vectorPathes)
+            m_VectorsPathes(vectorPathes),
+            m_AutoDetectVectors(autoDetectVectors)
         {}
 
         virtual ~AddArtworksCommand() {}
@@ -48,6 +49,7 @@ namespace Commands {
     public:
         QStringList m_FilePathes;
         QStringList m_VectorsPathes;
+        bool m_AutoDetectVectors;
     };
 
     class AddArtworksCommandResult : public CommandResult {

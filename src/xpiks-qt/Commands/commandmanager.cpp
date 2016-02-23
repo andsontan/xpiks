@@ -328,7 +328,7 @@ void Commands::CommandManager::addToRecentDirectories(const QString &path) const
 #ifdef QT_DEBUG
 void Commands::CommandManager::addInitialArtworks(const QStringList &artworksFilepathes, const QStringList &vectors)
 {
-    Commands::AddArtworksCommand *command = new Commands::AddArtworksCommand(artworksFilepathes, vectors);
+    Commands::AddArtworksCommand *command = new Commands::AddArtworksCommand(artworksFilepathes, vectors, false);
     ICommandResult *result = this->processCommand(command);
     delete result;
 }
