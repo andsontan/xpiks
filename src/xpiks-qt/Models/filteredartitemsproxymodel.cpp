@@ -173,7 +173,7 @@ namespace Models {
 
         m_CommandManager->readMetadata(selectedArtworks, ranges);
         ArtItemsModel *artItemsModel = getArtItemsModel();
-        artItemsModel->raiseArtworksAdded(selectedArtworks.count());
+        artItemsModel->raiseArtworksAdded(selectedArtworks.count(), 0);
     }
 
     int FilteredArtItemsProxyModel::findSelectedItemIndex() const {
@@ -267,6 +267,12 @@ namespace Models {
             setSortRole(Qt::InitialSortOrderRole);
             invalidate();
         }
+    }
+
+    void FilteredArtItemsProxyModel::detachVectorFromSelected() {
+        QVector<int> indices = getSelectedOriginalIndices();
+        ArtItemsModel *artItemsModel = getArtItemsModel();
+        artItemsModel->detachVectorsFromSelected(indices);
     }
 
     void FilteredArtItemsProxyModel::itemSelectedChanged(bool value) {

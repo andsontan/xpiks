@@ -63,6 +63,7 @@ namespace Models {
         virtual qint64 getItemID() const { return m_ID; }
         const QString &getAttachedVectorPath() const { Q_ASSERT(m_HasAttachedVector); return m_AttachedVector; }
         void attachVector(const QString &vectorFilepath);
+        void detachVector();
 
     public:
         virtual void clearModel();

@@ -498,6 +498,13 @@ ApplicationWindow {
         text: qsTr("All selected items are already saved")
     }
 
+    MessageDialog {
+        id: vectorsAttachedDialog
+        title: "Information"
+        property int vectorsAttached: 0
+        text: vectorsAttached > 1 ? qsTr("%1 vectors attached").arg(vectorsAttached) : qsTr("1 vector attached")
+    }
+
     Connections {
         target: artItemsModel
         onArtworksAdded: {
@@ -505,8 +512,11 @@ ApplicationWindow {
             chooseArtworksDialog.folder = latestDir
             chooseDirectoryDialog.folder = latestDir
 
-            if (count > 0) {
+            if (imagesCount > 0) {
                 Common.launchDialog("Dialogs/ImportMetadata.qml", applicationWindow, {})
+            } else if (vectorsCount > 0) {
+                vectorsAttachedDialog.vectorsAttached = vectorsCount
+                vectorsAttachedDialog.open()
             } else {
                 console.debug("Warning: artworksAdded() signal with no new items!")
             }

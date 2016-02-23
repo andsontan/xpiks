@@ -33,10 +33,12 @@ namespace UndoRedo {
     {
     public:
         RemoveArtworksHistoryItem(const QVector<int> &removedArtworksIndices,
-                                  const QStringList &removedArtworksFilepathes):
+                                  const QStringList &removedArtworksFilepathes,
+                                  const QStringList &removedAttachedVectors):
             HistoryItem(RemovedArtworksActionType),
             m_RemovedArtworksIndices(removedArtworksIndices),
-            m_RemovedArtworksPathes(removedArtworksFilepathes)
+            m_RemovedArtworksPathes(removedArtworksFilepathes),
+            m_RemovedAttachedVectors(removedAttachedVectors)
         {}
 
         virtual ~RemoveArtworksHistoryItem() { }
@@ -55,6 +57,7 @@ namespace UndoRedo {
     private:
         QVector<int> m_RemovedArtworksIndices;
         QStringList m_RemovedArtworksPathes;
+        QStringList m_RemovedAttachedVectors;
     };
 }
 

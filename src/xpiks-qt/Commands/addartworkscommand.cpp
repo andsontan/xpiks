@@ -76,6 +76,8 @@ Commands::CommandResult *Commands::AddArtworksCommand::execute(const ICommandMan
     QHash<QString, QPair<QString, QString> > vectorsHash;
     decomposeVectors(vectorsHash);
 
+    int attachedCount = artItemsModel->attachVectors(vectorsHash);
+
     if (newFilesCount > 0) {
         int length = artItemsModel->rowCount();
         int start = length - newFilesCount, end = length - 1;
@@ -84,10 +86,14 @@ Commands::CommandResult *Commands::AddArtworksCommand::execute(const ICommandMan
         commandManager->readMetadata(artworksToImport, ranges);
 
         artworksRepository->updateCountsForExistingDirectories();
-        artItemsModel->raiseArtworksAdded(newFilesCount);
 
         UndoRedo::AddArtworksHistoryItem *addArtworksItem = new UndoRedo::AddArtworksHistoryItem(initialCount, newFilesCount);
         commandManager->recordHistoryItem(addArtworksItem);
+    }
+
+    if ((newFilesCount > 0) ||
+        (attachedCount > 0)) {
+        artItemsModel->raiseArtworksAdded(newFilesCount, attachedCount);
     }
 
     AddArtworksCommandResult *result = new AddArtworksCommandResult(newFilesCount);
@@ -95,6 +101,8 @@ Commands::CommandResult *Commands::AddArtworksCommand::execute(const ICommandMan
 }
 
 void Commands::AddArtworksCommand::decomposeVectors(QHash<QString, QPair<QString, QString> > &vectors) const {
+    qDebug() << "AddArtworksCommand::decomposeVectors #";
+
     int size = m_VectorsPathes.size();
     for (int i = 0; i < size; ++i) {
         const QString &path = m_VectorsPathes.at(i);

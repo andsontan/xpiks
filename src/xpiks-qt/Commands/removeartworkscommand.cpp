@@ -45,7 +45,9 @@ namespace Commands {
         removedItemsIndices.reserve(count);
 
         QStringList removedItemsFilepathes;
+        QStringList removedAttachedVectors;
         removedItemsFilepathes.reserve(count);
+        removedAttachedVectors.reserve(count);
 
         for (int k = 0; k < count; ++k) {
             const QPair<int, int> &item = m_RangesToRemove[k];
@@ -58,6 +60,12 @@ namespace Commands {
                     const QString &filepath = metadata->getFilepath();
                     removedItemsIndices.append(i);
                     removedItemsFilepathes.append(filepath);
+
+                    if (metadata->hasVectorAttached()) {
+                        removedAttachedVectors.append(metadata->getAttachedVectorPath());
+                    } else {
+                        removedAttachedVectors.append("");
+                    }
                 }
             }
         }
@@ -77,8 +85,10 @@ namespace Commands {
 
             artItemsModel->updateModifiedCount();
 
-            UndoRedo::RemoveArtworksHistoryItem *removeArtworksItem = new UndoRedo::RemoveArtworksHistoryItem(removedItemsIndices,
-                                                                                                              removedItemsFilepathes);
+            UndoRedo::RemoveArtworksHistoryItem *removeArtworksItem =
+                    new UndoRedo::RemoveArtworksHistoryItem(removedItemsIndices,
+                                                            removedItemsFilepathes,
+                                                            removedAttachedVectors);
             commandManager->recordHistoryItem(removeArtworksItem);
         }
 

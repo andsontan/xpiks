@@ -107,6 +107,8 @@ namespace Models {
         Q_INVOKABLE void editKeyword(int metadataIndex, int keywordIndex, const QString &replacement);
         Q_INVOKABLE void plainTextEdit(int metadataIndex, const QString &rawKeywords);
 
+        /*Q_INVOKABLE*/ void detachVectorsFromSelected(const QVector<int> &selectedIndices);
+
     public:
         virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
         virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
@@ -130,7 +132,7 @@ namespace Models {
         void appendMetadata(ArtworkMetadata *metadata);
         void removeArtworks(const QVector<QPair<int, int> > &ranges) { doRemoveItemsInRanges(ranges); }
         ArtworkMetadata *getArtwork(int index) const;
-        void raiseArtworksAdded(int count) { emit artworksAdded(count); }
+        void raiseArtworksAdded(int imagesCount, int vectorsCount) { emit artworksAdded(imagesCount, vectorsCount); }
         virtual void updateItemsAtIndices(const QVector<int> &indices);
         virtual void updateItemsInRanges(const QVector<QPair<int, int> > &ranges);
         void setAllItemsSelected(bool selected);
@@ -154,7 +156,7 @@ namespace Models {
     signals:
         void modifiedArtworksCountChanged();
         void artworksChanged(bool needToMoveCurrentItem);
-        void artworksAdded(int count);
+        void artworksAdded(int imagesCount, int vectorsCount);
         void selectedArtworkRemoved();
 
     protected:

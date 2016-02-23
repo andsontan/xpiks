@@ -429,6 +429,17 @@ namespace Models {
         }
     }
 
+    void ArtItemsModel::detachVectorsFromSelected(const QVector<int> &selectedIndices) {
+        qDebug() << "ArtItemsModel::detachVectorsFromSelected #" << selectedIndices.length() << "item(s) affected";
+        foreach (int index, selectedIndices) {
+            m_ArtworkList.at(index)->detachVector();
+        }
+
+        QVector<QPair<int, int> > rangesToUpdate;
+        Helpers::indicesToRanges(selectedIndices, rangesToUpdate);
+        AbstractListModel::updateItemsInRanges(rangesToUpdate, QVector<int>() << HasVectorAttachedRole);
+    }
+
     int ArtItemsModel::rowCount(const QModelIndex &parent) const {
         Q_UNUSED(parent);
         return m_ArtworkList.count();
@@ -613,7 +624,7 @@ namespace Models {
     }
 
     int ArtItemsModel::attachVectors(const QHash<QString, QPair<QString, QString> > &vectorsPaths) const {
-        qDebug() << "ArtItemsModel::attachVectors #" << vectorsPaths.size() << "vectors";
+        qDebug() << "ArtItemsModel::attachVectors #" << vectorsPaths.size() << "vector(s)";
 
         int attachedVectors = 0;
 
@@ -634,6 +645,8 @@ namespace Models {
                 }
             }
         }
+
+        qInfo() << "ArtItemsModel::attachVectors #" << "Found matches to" << attachedVectors << "files";
 
         return attachedVectors;
     }
@@ -800,6 +813,6 @@ namespace Models {
 
     void ArtItemsModel::fillStandardRoles(QVector<int> &roles) const {
         roles << ArtworkDescriptionRole << IsModifiedRole <<
-                 ArtworkTitleRole << KeywordsCountRole;
+                 ArtworkTitleRole << KeywordsCountRole << HasVectorAttachedRole;
     }
 }

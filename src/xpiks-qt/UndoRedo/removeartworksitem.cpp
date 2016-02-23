@@ -46,7 +46,7 @@ void UndoRedo::RemoveArtworksHistoryItem::undo(const Commands::ICommandManager *
 
     bool filesWereAccounted = artworksRepository->beginAccountingFiles(m_RemovedArtworksPathes);
 
-    int usedCount = 0;
+    int usedCount = 0, attachedVectors = 0;
     int rangesCount = ranges.count();
     for (int i = 0; i < rangesCount; ++i) {
         int startRow = ranges[i].first;
@@ -64,6 +64,12 @@ void UndoRedo::RemoveArtworksHistoryItem::undo(const Commands::ICommandManager *
 
                 artItemsModel->insertArtwork(j + startRow, metadata);
                 artworksToImport.append(metadata);
+
+                const QString &vectorPath = m_RemovedAttachedVectors.at(i);
+                if (!vectorPath.isEmpty()) {
+                    metadata->attachVector(vectorPath);
+                    attachedVectors++;
+                }
             }
         }
 
@@ -78,5 +84,5 @@ void UndoRedo::RemoveArtworksHistoryItem::undo(const Commands::ICommandManager *
     commandManager->recordHistoryItem(addArtworksItem);
 
     commandManager->readMetadata(artworksToImport, ranges);
-    artItemsModel->raiseArtworksAdded(usedCount);
+    artItemsModel->raiseArtworksAdded(usedCount, attachedVectors);
 }

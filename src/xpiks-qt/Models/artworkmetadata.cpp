@@ -98,6 +98,11 @@ namespace Models {
         m_AttachedVector = vectorFilepath;
     }
 
+    void ArtworkMetadata::detachVector() {
+        m_HasAttachedVector = false;
+        m_AttachedVector.clear();
+    }
+
     void ArtworkMetadata::clearModel() {
         BasicKeywordsModel::clearModel();
         markModified();
