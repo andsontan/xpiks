@@ -240,7 +240,7 @@ ApplicationWindow {
             }
 
             MenuItem {
-                text: checked ? qsTr("&Default sort order") : qsTr("&Sort by filename")
+                text: qsTr("&Sort by filename")
                 enabled: imagesListView.count > 0
                 checkable: true
                 onToggled: {

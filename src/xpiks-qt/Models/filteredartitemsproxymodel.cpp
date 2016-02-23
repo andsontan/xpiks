@@ -260,7 +260,7 @@ namespace Models {
     void FilteredArtItemsProxyModel::toggleSorted() {
         if (!m_SortingEnabled) {
             m_SortingEnabled = true;
-            setSortRole(Qt::DisplayRole);
+            sort(0);
             invalidate();
         } else {
             m_SortingEnabled = false;
