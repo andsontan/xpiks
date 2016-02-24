@@ -44,8 +44,7 @@ namespace Conectivity {
 
     public:
         void uploadArtworks(const QVector<Models::ArtworkMetadata *> &artworksToUpload,
-                            const QVector<Models::UploadInfo *> &uploadInfos,
-                            bool includeVectors);
+                            const QVector<Models::UploadInfo *> &uploadInfos);
         void cancelUpload();
 
     signals:

@@ -686,13 +686,6 @@ Item {
                     height: 24
                     spacing: 15
 
-                    StyledCheckbox {
-                        text: qsTr("Include vector (.eps, .ai)")
-                        checked: artworkUploader.includeVector
-                        onCheckedChanged: artworkUploader.includeVector = checked
-                        enabled: !artworkUploader.inProgress && uploadArtworksComponent.uploadEnabled
-                    }
-
                     Item {
                         Layout.fillWidth: true
                     }

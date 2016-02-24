@@ -51,22 +51,12 @@ namespace Models {
          virtual ~ArtworkUploader();
 
     public:
-         Q_PROPERTY(bool includeVector READ getIncludeVector WRITE setIncludeVector NOTIFY includeVectorChanged)
          virtual void setCommandManager(Commands::CommandManager *commandManager);
 
     signals:
-         void includeVectorChanged(bool);
          void credentialsChecked(bool result, const QString &url);
 
     public:
-         bool getIncludeVector() const { return m_IncludeVector; }
-         void setIncludeVector(bool value) {
-             if (m_IncludeVector != value) {
-                 m_IncludeVector = value;
-                 emit includeVectorChanged(value);
-             }
-         }
-
          virtual int getPercent() const { return m_Percent; }
 
 
@@ -94,7 +84,6 @@ namespace Models {
      private:
          Conectivity::FtpCoordinator *m_FtpCoordinator;
          QFutureWatcher<Conectivity::ContextValidationResult> *m_TestingCredentialWatcher;
-         bool m_IncludeVector;
          int m_Percent;
     };
 }

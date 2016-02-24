@@ -30,6 +30,34 @@
 #include "../Models/artitemsmodel.h"
 #include "../UndoRedo/addartworksitem.h"
 #include "../Common/defines.h"
+#include "../Models/settingsmodel.h"
+#include "../Helpers/filenameshelpers.h"
+
+int findAndAttachVectors(const QVector<Models::ArtworkMetadata*> &artworksList) {
+    int attachedCount = 0;
+
+    int size = artworksList.length();
+    for (int i = 0; i < size; ++i) {
+        Models::ArtworkMetadata *metadata = artworksList.at(i);
+        if (metadata->hasVectorAttached()) {
+            attachedCount++;
+            continue;
+        }
+
+        const QString &filepath = metadata->getFilepath();
+        QStringList vectors = Helpers::convertToVectorFilenames(QStringList() << filepath);
+
+        foreach (const QString &item, vectors) {
+            if (QFileInfo(item).exists()) {
+                metadata->attachVector(item);
+                attachedCount++;
+                break;
+            }
+        }
+    }
+
+    return attachedCount;
+}
 
 Commands::CommandResult *Commands::AddArtworksCommand::execute(const ICommandManager *commandManagerInterface) const {
     qDebug() << "AddArtworksCommand::execute #" << m_FilePathes.length() << "files received";
@@ -77,6 +105,11 @@ Commands::CommandResult *Commands::AddArtworksCommand::execute(const ICommandMan
     decomposeVectors(vectorsHash);
     int attachedCount = artItemsModel->attachVectors(vectorsHash);
 
+    Models::SettingsModel *settingsModel = commandManager->getSettingsModel();
+    if (settingsModel->getAutoFindVectors()) {
+        attachedCount = findAndAttachVectors(artworksToImport);
+    }
+
     if (newFilesCount > 0) {
         int length = artItemsModel->rowCount();
         int start = length - newFilesCount, end = length - 1;
@@ -90,8 +123,7 @@ Commands::CommandResult *Commands::AddArtworksCommand::execute(const ICommandMan
         commandManager->recordHistoryItem(addArtworksItem);
     }
 
-    if ((newFilesCount > 0) ||
-        (attachedCount > 0)) {
+    if ((newFilesCount > 0) || (attachedCount > 0)) {
         artItemsModel->raiseArtworksAdded(newFilesCount, attachedCount);
     }
 

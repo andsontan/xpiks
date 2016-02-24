@@ -40,10 +40,11 @@
 namespace Conectivity {
     void extractFilePathes(const QVector<Models::ArtworkMetadata *> &artworkList,
                            QStringList &filePathes,
-                           QStringList &zipsPathes,
-                           bool includeVector) {
+                           QStringList &zipsPathes) {
 
         int size = artworkList.length();
+        filePathes.reserve(size);
+        zipsPathes.reserve(size);
         qDebug() << "extractFilePathes #" << "Generating filepathes for" << size << "item(s)";
 
         for (int i = 0; i < size; ++i) {
@@ -51,15 +52,8 @@ namespace Conectivity {
             QString filepath = metadata->getFilepath();
             filePathes.append(filepath);
 
-            if (includeVector) {
-                QStringList vectors = Helpers::convertToVectorFilenames(QStringList() << filepath);
-
-                foreach (const QString &item, vectors) {
-                    if (QFileInfo(item).exists()) {
-                        filePathes.append(item);
-                        break;
-                    }
-                }
+            if (metadata->hasVectorAttached()) {
+                filePathes.append(metadata->getAttachedVectorPath());
             }
 
             // TODO: maybe there's a sense zipping only vectors?
@@ -95,14 +89,13 @@ namespace Conectivity {
     QVector<UploadBatch*> generateUploadBatches(const QVector<Models::ArtworkMetadata *> &artworksToUpload,
                                                 const QVector<Models::UploadInfo *> &uploadInfos,
                                                 Encryption::SecretsManager *secretsManager,
-                                                int timeoutSeconds,
-                                                bool includeVector) {
+                                                int timeoutSeconds) {
         qDebug() << "generateUploadBatches #" << artworksToUpload.length() << "file(s)";
         QVector<UploadBatch*> batches;
 
         QStringList filePathes;
         QStringList zipFilePathes;
-        extractFilePathes(artworksToUpload, filePathes, zipFilePathes, includeVector);
+        extractFilePathes(artworksToUpload, filePathes, zipFilePathes);
 
         QVector<QSharedPointer<UploadContext> > contexts;
         generateUploadContexts(uploadInfos, contexts, secretsManager, timeoutSeconds);
@@ -138,8 +131,7 @@ namespace Conectivity {
     }
 
     void FtpCoordinator::uploadArtworks(const QVector<Models::ArtworkMetadata *> &artworksToUpload,
-                                        const QVector<Models::UploadInfo *> &uploadInfos,
-                                        bool includeVectors) {
+                                        const QVector<Models::UploadInfo *> &uploadInfos) {
         qInfo() << "FtpCoordinator::uploadArtworks #" << "Trying to upload" << artworksToUpload.size() <<
                    "file(s) to" << uploadInfos.size() << "host(s)";
 
@@ -153,8 +145,7 @@ namespace Conectivity {
         QVector<UploadBatch*> batches = generateUploadBatches(artworksToUpload,
                                                               uploadInfos,
                                                               secretsManager,
-                                                              m_SecondsTimeout,
-                                                              includeVectors);
+                                                              m_SecondsTimeout);
 
         Q_ASSERT(batches.size() == uploadInfos.size());
 

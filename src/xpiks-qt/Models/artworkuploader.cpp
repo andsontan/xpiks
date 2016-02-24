@@ -38,7 +38,6 @@
 namespace Models {
     ArtworkUploader::ArtworkUploader(int maxParallelUploads, int secondsTimeout) :
         ArtworksProcessor(),
-        m_IncludeVector(false),
         m_Percent(0)
     {
         m_FtpCoordinator = new Conectivity::FtpCoordinator(maxParallelUploads, secondsTimeout);
@@ -147,7 +146,7 @@ namespace Models {
         uploadInfoRepository->resetPercents();
         uploadInfoRepository->updatePercentages();
 
-        m_FtpCoordinator->uploadArtworks(artworkList, selectedInfos, m_IncludeVector);
+        m_FtpCoordinator->uploadArtworks(artworkList, selectedInfos);
         m_CommandManager->reportUserAction(Conectivity::UserActionUpload);
     }
 
