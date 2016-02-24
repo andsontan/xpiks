@@ -23,7 +23,7 @@ void AddCommand_Tests::addNoArtworksToEmptyRepositoryTest()
 
     QStringList filenames;
 
-    Commands::AddArtworksCommand *addArtworksCommand = new Commands::AddArtworksCommand(filenames);
+    Commands::AddArtworksCommand *addArtworksCommand = new Commands::AddArtworksCommand(filenames, QStringList(), false);
     Commands::ICommandResult *result = commandManagerMock.processCommand(addArtworksCommand);
     Commands::AddArtworksCommandResult *addArtworksResult = static_cast<Commands::AddArtworksCommandResult*>(result);
     int newFilesCount = addArtworksResult->m_NewFilesAdded;
@@ -56,7 +56,7 @@ void AddCommand_Tests::addOneArtworkToEmptyRepositoryTest()
     QStringList filenames;
     filenames.append("somefile.jpg");
 
-    Commands::AddArtworksCommand *addArtworksCommand = new Commands::AddArtworksCommand(filenames);
+    Commands::AddArtworksCommand *addArtworksCommand = new Commands::AddArtworksCommand(filenames, QStringList(), false);
     Commands::ICommandResult *result = commandManagerMock.processCommand(addArtworksCommand);
     Commands::AddArtworksCommandResult *addArtworksResult = static_cast<Commands::AddArtworksCommandResult*>(result);
     int newFilesCount = addArtworksResult->m_NewFilesAdded;
