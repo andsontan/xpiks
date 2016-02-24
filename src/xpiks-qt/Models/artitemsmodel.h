@@ -130,9 +130,9 @@ namespace Models {
     public:
         void insertArtwork(int index, ArtworkMetadata *metadata);
         void appendMetadata(ArtworkMetadata *metadata);
-        void removeArtworks(const QVector<QPair<int, int> > &ranges) { doRemoveItemsInRanges(ranges); }
+        void removeArtworks(const QVector<QPair<int, int> > &ranges);
         ArtworkMetadata *getArtwork(int index) const;
-        void raiseArtworksAdded(int imagesCount, int vectorsCount) { emit artworksAdded(imagesCount, vectorsCount); }
+        void raiseArtworksAdded(int imagesCount, int vectorsCount);
         virtual void updateItemsAtIndices(const QVector<int> &indices);
         virtual void updateItemsInRanges(const QVector<QPair<int, int> > &ranges);
         void setAllItemsSelected(bool selected);

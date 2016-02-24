@@ -41,8 +41,8 @@ void UndoRedo::UndoRedoManager::recordHistoryItem(UndoRedo::IHistoryItem *histor
     emit undoDescriptionChanged();
 }
 
-bool UndoRedo::UndoRedoManager::undoLastAction()
-{
+bool UndoRedo::UndoRedoManager::undoLastAction() {
+    qDebug() << "UndoRedoManager::undoLastAction #";
     m_Mutex.lock();
 
     bool anyItem = false;
@@ -58,13 +58,14 @@ bool UndoRedo::UndoRedoManager::undoLastAction()
         delete historyItem;
     } else {
         m_Mutex.unlock();
+        qWarning() << "UndoRedoManager::undoLastAction #" << "No item for undo";
     }
 
     return anyItem;
 }
 
-void UndoRedo::UndoRedoManager::discardLastAction()
-{
+void UndoRedo::UndoRedoManager::discardLastAction() {
+    qDebug() << "UndoRedoManager::discardLastAction #";
     m_Mutex.lock();
 
     bool anyItem = false;

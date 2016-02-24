@@ -518,6 +518,11 @@ ApplicationWindow {
     Connections {
         target: artItemsModel
         onArtworksAdded: {
+            if (imagesCount == 0 && vectorsCount == 0) {
+                noNewFilesDialog.open();
+                return;
+            }
+
             var latestDir = recentDirectories.getLatestDirectory()
             chooseArtworksDialog.folder = latestDir
             chooseDirectoryDialog.folder = latestDir
@@ -527,8 +532,6 @@ ApplicationWindow {
             } else if (vectorsCount > 0) {
                 vectorsAttachedDialog.vectorsAttached = vectorsCount
                 vectorsAttachedDialog.open()
-            } else {
-                console.debug("Warning: artworksAdded() signal with no new items!")
             }
         }
     }
@@ -556,8 +559,6 @@ ApplicationWindow {
                     if (filesCount > 0) {
                         saveRecentDirectories()
                         console.debug(filesCount + ' files added via drag&drop')
-                    } else {
-                        noNewFilesDialog.open()
                     }
                 }
             }

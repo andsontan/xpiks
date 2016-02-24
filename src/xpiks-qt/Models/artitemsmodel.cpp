@@ -587,6 +587,11 @@ namespace Models {
         m_ArtworkList.append(metadata);
     }
 
+    void ArtItemsModel::removeArtworks(const QVector<QPair<int, int> > &ranges) {
+        qDebug() << "ArtItemsModel::removeArtworks #" << ranges.count() << "range(s)";
+        doRemoveItemsInRanges(ranges);
+    }
+
     ArtworkMetadata *ArtItemsModel::getArtwork(int index) const {
         ArtworkMetadata *result = NULL;
         if (0 <= index && index < m_ArtworkList.length()) {
@@ -594,6 +599,11 @@ namespace Models {
         }
 
         return result;
+    }
+
+    void ArtItemsModel::raiseArtworksAdded(int imagesCount, int vectorsCount) {
+        emit artworksAdded(imagesCount, vectorsCount);
+        qDebug() << "ArtItemsModel::raiseArtworksAdded #" << imagesCount << "images" << vectorsCount << "vectors";
     }
 
     void ArtItemsModel::updateItemsAtIndices(const QVector<int> &indices) {

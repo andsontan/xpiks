@@ -121,9 +121,7 @@ Commands::CommandResult *Commands::AddArtworksCommand::execute(const ICommandMan
         commandManager->recordHistoryItem(addArtworksItem);
     }
 
-    if ((newFilesCount > 0) || (attachedCount > 0)) {
-        artItemsModel->raiseArtworksAdded(newFilesCount, attachedCount);
-    }
+    artItemsModel->raiseArtworksAdded(newFilesCount, attachedCount);
 
     AddArtworksCommandResult *result = new AddArtworksCommandResult(newFilesCount);
     return result;
