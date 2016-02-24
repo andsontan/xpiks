@@ -30,7 +30,6 @@
 #include "../Models/artitemsmodel.h"
 #include "../UndoRedo/addartworksitem.h"
 #include "../Common/defines.h"
-#include "../Models/settingsmodel.h"
 #include "../Helpers/filenameshelpers.h"
 
 int findAndAttachVectors(const QVector<Models::ArtworkMetadata*> &artworksList) {
@@ -105,8 +104,7 @@ Commands::CommandResult *Commands::AddArtworksCommand::execute(const ICommandMan
     decomposeVectors(vectorsHash);
     int attachedCount = artItemsModel->attachVectors(vectorsHash);
 
-    Models::SettingsModel *settingsModel = commandManager->getSettingsModel();
-    if (settingsModel->getAutoFindVectors()) {
+    if (m_AutoDetectVectors) {
         attachedCount = findAndAttachVectors(artworksToImport);
     }
 

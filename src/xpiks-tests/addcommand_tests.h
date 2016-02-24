@@ -11,6 +11,11 @@ class AddCommand_Tests : public QObject
 private slots:
     void addNoArtworksToEmptyRepositoryTest();
     void addOneArtworkToEmptyRepositoryTest();
+    void addAndAttachVectorsTest();
+    void addAndAttachVectorsLaterTest();
+    void addAndDontAttachVectorsOtherDirTest();
+    void addAndDontAttachVectorsEmptyDirTest();
+    void addAndDontAttachVectorsStartsWithTest();
 };
 
 #endif // ADDCOMMAND_TESTS_H
