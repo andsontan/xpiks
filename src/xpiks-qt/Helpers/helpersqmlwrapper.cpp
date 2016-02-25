@@ -100,6 +100,8 @@ namespace Helpers {
 #ifdef Q_OS_WIN
         if (!m_WinTaskbarButtonApplicable) { return; }
         m_TaskbarButton->setWindow(window);
+#else
+        Q_UNUSED(window);
 #endif
     }
 
@@ -120,6 +122,8 @@ namespace Helpers {
         qDebug() << "HelpersQmlWrapper::setTaskbarProgress #" << value;
         QWinTaskbarProgress *progress = m_TaskbarButton->progress();
         progress->setValue((int)value);
+#else
+        Q_UNUSED(value);
 #endif
     }
 
