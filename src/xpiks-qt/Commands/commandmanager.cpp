@@ -466,7 +466,9 @@ void Commands::CommandManager::beforeDestructionCallback() const {
     qDebug() << "CommandManager::beforeDestructionCallback #";
     if (!m_AfterInitCalled) { return; }
 
+    m_ArtItemsModel->disconnect();
     m_ArtItemsModel->deleteAllItems();
+    m_FilteredItemsModel->disconnect();
 
     m_SpellCheckerService->stopService();
     m_WarningsService->stopService();
