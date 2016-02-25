@@ -1806,28 +1806,7 @@ ApplicationWindow {
                                                 }
 
                                                 StyledText {
-                                                    text: qsTr("Edit")
-                                                    color: moreEditsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
-
-                                                    MouseArea {
-                                                        id: moreEditsMA
-                                                        anchors.fill: parent
-                                                        cursorShape: Qt.PointingHandCursor
-                                                        onClicked: Common.launchItemEditing(rowWrapper.getIndex(), applicationWindow, {
-                                                                                                applyCallback: function() {
-                                                                                                }
-                                                                                            })
-                                                    }
-                                                }
-
-                                                StyledText {
-                                                    text: "|"
-                                                    color: rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.selectedMetadataColor
-                                                    verticalAlignment: Text.AlignVCenter
-                                                }
-
-                                                StyledText {
-                                                    text: qsTr("Copy all")
+                                                    text: qsTr("Copy")
                                                     color: copyKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
 
                                                     MouseArea {
