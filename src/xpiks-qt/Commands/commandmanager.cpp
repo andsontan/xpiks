@@ -466,12 +466,16 @@ void Commands::CommandManager::beforeDestructionCallback() const {
     qDebug() << "CommandManager::beforeDestructionCallback #";
     if (!m_AfterInitCalled) { return; }
 
+    m_ArtItemsModel->deleteAllItems();
+
     m_SpellCheckerService->stopService();
     m_WarningsService->stopService();
     m_MetadataSaverService->stopSaving();
 
 #ifndef TESTS
+#ifdef WITH_PLUGINS
     m_PluginManager->unloadPlugins();
+#endif
     m_LogsModel->stopLogging();
 #endif
 

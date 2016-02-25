@@ -70,6 +70,7 @@ namespace Models {
 
     public:
         virtual ArtworkMetadata *createMetadata(const QString &filepath);
+        void deleteAllItems();
 
     public:
         int getModifiedArtworksCount();

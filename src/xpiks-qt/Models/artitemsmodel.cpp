@@ -56,6 +56,16 @@ namespace Models {
         return new ArtworkMetadata(filepath, id);
     }
 
+    void ArtItemsModel::deleteAllItems() {
+        qDebug() << "ArtItemsModel::deleteAllItems #";
+        // should be called only from beforeDestruction() !
+        // will not cause sync issues on shutdown if no items
+        beginResetModel();
+        qDeleteAll(m_ArtworkList);
+        m_ArtworkList.clear();
+        endResetModel();
+    }
+
     int ArtItemsModel::getModifiedArtworksCount() {
         int modifiedCount = 0;
         int length = m_ArtworkList.length();

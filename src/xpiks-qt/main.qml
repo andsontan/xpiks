@@ -1255,7 +1255,6 @@ ApplicationWindow {
 
                                 Item {
                                     anchors.fill: parent
-                                    anchors.rightMargin: applicationWindow.listLayout ? 10 : 0
 
                                     Rectangle {
                                         id: isModifiedRectangle
@@ -1268,9 +1267,8 @@ ApplicationWindow {
 
                                     Item {
                                         id: checkboxSpacer
-                                        width: applicationWindow.listLayout ? 5 : 0
+                                        width: applicationWindow.listLayout ? 15 : 8
                                         anchors.left: isModifiedRectangle.right
-                                        anchors.leftMargin: 5
                                         anchors.top: parent.top
                                         anchors.bottom: parent.bottom
 
@@ -1287,10 +1285,9 @@ ApplicationWindow {
                                     Item {
                                         id: checkboxRectangle
                                         anchors.left: checkboxSpacer.right
-                                        anchors.leftMargin: 5
                                         anchors.top: parent.top
                                         anchors.bottom: parent.bottom
-                                        width: itemCheckedCheckbox.width
+                                        width: 20
 
                                         MouseArea {
                                             anchors.fill: parent
@@ -1304,7 +1301,8 @@ ApplicationWindow {
                                             id: itemCheckedCheckbox
                                             //checked: isselected
                                             focus: true
-                                            anchors.centerIn: parent
+                                            anchors.left: parent.left
+                                            anchors.verticalCenter: parent.verticalCenter
                                             activeFocusOnPress: true
                                             onClicked: editisselected = checked
                                             Component.onCompleted: itemCheckedCheckbox.checked = isselected
@@ -1319,9 +1317,8 @@ ApplicationWindow {
 
                                     Item {
                                         id: imageColumnWrapper
-                                        width: applicationWindow.listLayout ? 180 : 150
+                                        width: applicationWindow.listLayout ? 180 : 160
                                         anchors.left: checkboxRectangle.right
-                                        anchors.leftMargin: applicationWindow.listLayout ? 5 : 0
                                         anchors.top: parent.top
                                         anchors.bottom: parent.bottom
 
@@ -1335,7 +1332,7 @@ ApplicationWindow {
 
                                         ColumnLayout {
                                             anchors.fill: parent
-                                            anchors.leftMargin: applicationWindow.listLayout ? 15 : 5
+                                            anchors.leftMargin: applicationWindow.listLayout ? 10 : 0
                                             anchors.rightMargin: applicationWindow.listLayout ? 15 : 0
                                             spacing: 5
 
