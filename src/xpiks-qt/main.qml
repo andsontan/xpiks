@@ -376,6 +376,25 @@ ApplicationWindow {
                 }
             }
         }
+
+        Menu {
+            title: qsTr("&Help")
+
+            MenuItem {
+                text: qsTr("&Video tutorial")
+                onTriggered: Qt.openUrlExternally("http://ribtoks.github.io/xpiks/blog/2016/videos")
+            }
+
+            MenuItem {
+                text: qsTr("&FAQ")
+                onTriggered: Qt.openUrlExternally("http://ribtoks.github.io/xpiks/faq/")
+            }
+
+            MenuItem {
+                text: qsTr("&Support")
+                onTriggered: Qt.openUrlExternally("http://ribtoks.github.io/xpiks/support/")
+            }
+        }
     }
 
     MessageDialog {
