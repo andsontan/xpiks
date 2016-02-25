@@ -16,7 +16,7 @@ permalink: /faq/
 <div>
   <ul>
     <li><strong>I downloaded <i>Xpiks-qt-v1.1.4.zip</i> and what the hell I have to do next?</strong></li>
-    <li>Xpiks will have an installer for Windows soon. Meanwhile extract zip archive to any place you want to (e.g. "C:\"), go inside and double-click the file <strong>xpiks-qt.exe</strong></li>
+    <li>Xpiks will have an installer for Windows soon. Meanwhile extract zip archive to any place you want to (e.g. <code class="highlighter-rouge">C:\</code>), go inside and double-click the file <strong>xpiks-qt.exe</strong></li>
   </ul>
 </div>
 
@@ -30,7 +30,7 @@ permalink: /faq/
 <div>
   <ul>
     <li><strong>"Import/Export finished with errors. See logs for details."</strong></li>
-    <li>Usually this error appears if Xpiks fails to find Exiftool. If you didn't install it, please visit <a href="http://www.sno.phy.queensu.ca/~phil/exiftool/" target="_blank">Official Exiftool Website</a> and install it. If you have Exiftool installed and still you see this error, then please go in Xpiks to Settings -> External and select correct path to `exiftool` executable (for example, if it's "/usr/bin/exiftool" try to change it to "/usr/local/bin/exiftool" without quotes and vice versa)</li>
+    <li>Usually this error appears if Xpiks fails to find Exiftool. If you didn't install it, please visit <a href="http://www.sno.phy.queensu.ca/~phil/exiftool/" target="_blank">Official Exiftool Website</a> and install it. If you have Exiftool installed and still you see this error, then please go in Xpiks to Settings -> External and select correct path to `exiftool` executable (for example, if it's <code class="highlighter-rouge">/usr/bin/exiftool</code> try to change it to <code class="highlighter-rouge">/usr/local/bin/exiftool</code> without quotes and vice versa)</li>
   </ul>
 </div>
 
@@ -44,7 +44,7 @@ permalink: /faq/
 <div>
   <ul>
     <li><strong>Text looks ugly small at my beautiful Surface Pro 3 with Windows 8.1</strong></li>
-    <li>1. Press "windows" button, search for "environmental variables", select "Edit system environmental variables". 2. In the upper section "Add new variable". For a variable name use "QT_DEVICE_PIXEL_RATIO" (without quotes) and for it's value use "2" (without quotes as well). Press "Ok", "Apply" or what ever you need to save and quit. 3. Open Xpiks</li>
+    <li>1. Press "windows" button, search for "environmental variables", select "Edit system environmental variables". 2. In the upper section "Add new variable". For a variable name use <code class="highlighter-rouge">QT_DEVICE_PIXEL_RATIO</code> and for it's value use "2" (without quotes as well). Press "Ok", "Apply" or what ever you need to save and quit. 3. Open Xpiks</li>
   </ul>
 </div>
 
