@@ -18,9 +18,9 @@ As of Xpiks 1.1, you can easily find them in Logs View (leftmost link in the bot
 - on OS X they should be at `~/Library/Application Support/Xpiks/` directory
 - on Linux they should be at `~/.local/share/xpiks/` directory
 
-Please, paste the contents of the logfile to <a href="http://pastebin.com/">PasteBin</a>.
+Please, **paste the contents of the logfile to <a href="http://pastebin.com/">PasteBin</a>**.
 
-Now you can navigate to the <a href="{{ site.url }}/support">Support</a> part of this website (Google group) and to create a new topic, where you are kindly asked to include:
+Now you can navigate to the <a href="{{ site.url }}/support">Support</a> part of this website (Google group) and to **create a new topic**, where you are kindly asked to include:
 
 - short description of your system (name, version, architecture)
 - description of what you done before the crash (see above)
