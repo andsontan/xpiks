@@ -38,6 +38,7 @@ namespace Helpers {
     class HelpersQmlWrapper : public QObject
     {
         Q_OBJECT
+        Q_PROPERTY(bool pluginsAvailable READ getPluginsAvailable CONSTANT)
     public:
         HelpersQmlWrapper(Commands::CommandManager *commandManager);
 
@@ -53,6 +54,9 @@ namespace Helpers {
         Q_INVOKABLE void turnTaskbarProgressOn();
         Q_INVOKABLE void setTaskbarProgress(double value);
         Q_INVOKABLE void turnTaskbarProgressOff();
+
+    public:
+        bool getPluginsAvailable() const;
 
     private:
         Commands::CommandManager *m_CommandManager;

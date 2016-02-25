@@ -290,6 +290,8 @@ ApplicationWindow {
         Menu {
             title: qsTr("&Plugins")
             id: pluginsMenu
+            enabled: helpersWrapper.pluginsAvailable
+            visible: helpersWrapper.pluginsAvailable
 
             Instantiator {
                 model: pluginsWithActions
@@ -381,7 +383,7 @@ ApplicationWindow {
             title: qsTr("&Help")
 
             MenuItem {
-                text: qsTr("&Video tutorial")
+                text: qsTr("&Video tutorials")
                 onTriggered: Qt.openUrlExternally("http://ribtoks.github.io/xpiks/blog/2016/videos")
             }
 

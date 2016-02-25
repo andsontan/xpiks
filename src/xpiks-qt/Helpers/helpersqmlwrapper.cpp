@@ -30,6 +30,7 @@
 #include "../Commands/commandmanager.h"
 #include "../Common/defines.h"
 #include "logger.h"
+#include "../Common/defines.h"
 
 #ifdef Q_OS_WIN
 #include <QWinTaskbarButton>
@@ -129,6 +130,14 @@ namespace Helpers {
         QWinTaskbarProgress *progress = m_TaskbarButton->progress();
         progress->setVisible(false);
 #endif
+    }
+
+    bool HelpersQmlWrapper::getPluginsAvailable() const {
+        bool result = false;
+#ifdef WITH_PLUGINS
+        result = true;
+#endif
+        return result;
     }
 }
 
