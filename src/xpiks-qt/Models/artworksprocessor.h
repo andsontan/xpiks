@@ -76,6 +76,7 @@ namespace Models {
     signals:
         void inProgressChanged();
         void isErrorChanged();
+        void startedProcessing();
         void percentChanged();
         void finishedProcessing();
         void itemsCountChanged();

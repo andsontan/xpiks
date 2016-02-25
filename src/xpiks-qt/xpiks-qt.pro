@@ -283,6 +283,7 @@ macx {
 }
 
 win32 {
+    QT += winextras
     INCLUDEPATH += "../zlib-1.2.8"
     INCLUDEPATH += "../hunspell-1.3.3/src"
     INCLUDEPATH += "../quazip"

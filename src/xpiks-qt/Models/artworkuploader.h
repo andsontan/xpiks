@@ -47,44 +47,43 @@ namespace Models {
     {
         Q_OBJECT
     public:
-         ArtworkUploader(int maxParallelUploads, int secondsTimeout);
-         virtual ~ArtworkUploader();
+        ArtworkUploader(int maxParallelUploads, int secondsTimeout);
+        virtual ~ArtworkUploader();
 
     public:
-         virtual void setCommandManager(Commands::CommandManager *commandManager);
+        virtual void setCommandManager(Commands::CommandManager *commandManager);
 
     signals:
-         void credentialsChecked(bool result, const QString &url);
+        void credentialsChecked(bool result, const QString &url);
 
     public:
-         virtual int getPercent() const { return m_Percent; }
+        virtual int getPercent() const { return m_Percent; }
 
-
-     public slots:
-         void onUploadStarted();
-         void allFinished(bool anyError);
-         void credentialsTestingFinished();
+    public slots:
+        void onUploadStarted();
+        void allFinished(bool anyError);
+        void credentialsTestingFinished();
 
     private slots:
-         void uploaderPercentChanged(double percent);
+        void uploaderPercentChanged(double percent);
 
-     public:
-         Q_INVOKABLE void uploadArtworks();
-         Q_INVOKABLE void checkCredentials(const QString &host, const QString &username,
-                                           const QString &password, bool disablePassiveMode) const;
-         Q_INVOKABLE bool needCreateArchives() const;
+    public:
+        Q_INVOKABLE void uploadArtworks();
+        Q_INVOKABLE void checkCredentials(const QString &host, const QString &username,
+                                          const QString &password, bool disablePassiveMode) const;
+        Q_INVOKABLE bool needCreateArchives() const;
 
-     private:
-         void doUploadArtworks(const QVector<ArtworkMetadata*> &artworkList);
+    private:
+        void doUploadArtworks(const QVector<ArtworkMetadata*> &artworkList);
 
     protected:
         virtual void cancelProcessing();
         virtual void innerResetModel() { m_Percent = 0; }
 
-     private:
-         Conectivity::FtpCoordinator *m_FtpCoordinator;
-         QFutureWatcher<Conectivity::ContextValidationResult> *m_TestingCredentialWatcher;
-         int m_Percent;
+    private:
+        Conectivity::FtpCoordinator *m_FtpCoordinator;
+        QFutureWatcher<Conectivity::ContextValidationResult> *m_TestingCredentialWatcher;
+        int m_Percent;
     };
 }
 

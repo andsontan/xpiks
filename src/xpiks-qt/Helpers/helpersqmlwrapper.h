@@ -29,12 +29,18 @@ namespace Commands {
     class CommandManager;
 }
 
+class QQuickWindow;
+#ifdef Q_OS_WIN
+class QWinTaskbarButton;
+#endif
+
 namespace Helpers {
     class HelpersQmlWrapper : public QObject
     {
         Q_OBJECT
     public:
         HelpersQmlWrapper(Commands::CommandManager *commandManager);
+
     public:
         Q_INVOKABLE bool isKeywordValid(const QString &keyword) const;
         Q_INVOKABLE QString sanitizeKeyword(const QString &keyword) const;
@@ -43,9 +49,17 @@ namespace Helpers {
         Q_INVOKABLE void revealLogFile();
         Q_INVOKABLE void reportOpen();
         Q_INVOKABLE void cleanupLocalLibrary() const;
+        Q_INVOKABLE void setProgressIndicator(QQuickWindow *window);
+        Q_INVOKABLE void turnTaskbarProgressOn();
+        Q_INVOKABLE void setTaskbarProgress(double value);
+        Q_INVOKABLE void turnTaskbarProgressOff();
 
     private:
         Commands::CommandManager *m_CommandManager;
+#ifdef Q_OS_WIN
+        QWinTaskbarButton *m_TaskbarButton;
+        bool m_WinTaskbarButtonApplicable;
+#endif
     };
 }
 

@@ -23,13 +23,26 @@
 #include <QStringList>
 #include <QProcess>
 #include <QDir>
+#include <QDebug>
+#include <QQuickWindow>
+#include <QSysInfo>
 #include "keywordvalidator.h"
 #include "../Commands/commandmanager.h"
+#include "../Common/defines.h"
 #include "logger.h"
+
+#ifdef Q_OS_WIN
+#include <QWinTaskbarButton>
+#include <QWinTaskbarProgress>
+#endif
 
 namespace Helpers {
     HelpersQmlWrapper::HelpersQmlWrapper(Commands::CommandManager *commandManager) {
         m_CommandManager = commandManager;
+#ifdef Q_OS_WIN
+        m_TaskbarButton = new QWinTaskbarButton(this);
+        m_WinTaskbarButtonApplicable = QSysInfo::windowsVersion() >= QSysInfo::WV_WINDOWS7;
+#endif
     }
 
     bool HelpersQmlWrapper::isKeywordValid(const QString &keyword) const {
@@ -78,6 +91,41 @@ namespace Helpers {
         m_CommandManager->cleanupLocalLibraryAsync();
     }
 
+    void HelpersQmlWrapper::setProgressIndicator(QQuickWindow *window) {
+#ifdef Q_OS_WIN
+        if (!m_WinTaskbarButtonApplicable) { return; }
+        m_TaskbarButton->setWindow(window);
+#endif
+    }
+
+    void HelpersQmlWrapper::turnTaskbarProgressOn() {
+#ifdef Q_OS_WIN
+        if (!m_WinTaskbarButtonApplicable) { return; }
+        qDebug() << "HelpersQmlWrapper::turnTaskbarProgressOn #" << "Turning on taskbar button in Windows";
+        QWinTaskbarProgress *progress = m_TaskbarButton->progress();
+        progress->setVisible(true);
+        progress->setRange(0, 100);
+        progress->setValue(0);
+#endif
+    }
+
+    void HelpersQmlWrapper::setTaskbarProgress(double value) {
+#ifdef Q_OS_WIN
+        if (!m_WinTaskbarButtonApplicable) { return; }
+        qDebug() << "HelpersQmlWrapper::setTaskbarProgress #" << value;
+        QWinTaskbarProgress *progress = m_TaskbarButton->progress();
+        progress->setValue((int)value);
+#endif
+    }
+
+    void HelpersQmlWrapper::turnTaskbarProgressOff() {
+#ifdef Q_OS_WIN
+        if (!m_WinTaskbarButtonApplicable) { return; }
+        qDebug() << "HelpersQmlWrapper::turnTaskbarProgressOff #" << "Turning off taskbar button in Windows";
+        QWinTaskbarProgress *progress = m_TaskbarButton->progress();
+        progress->setVisible(false);
+#endif
+    }
 }
 
 

@@ -102,6 +102,7 @@ ApplicationWindow {
         onTriggered: {
             console.debug("UI::main # Delayed onOpen timer triggered");
             helpersWrapper.afterConstruction()
+            helpersWrapper.setProgressIndicator(applicationWindow)
 
             if (appSettings.needToShowWhatsNew()) {
                 var text = appSettings.whatsNewText;

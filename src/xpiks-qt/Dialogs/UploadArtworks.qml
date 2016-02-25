@@ -740,8 +740,15 @@ Item {
 
                         Connections {
                             target: artworkUploader
+                            onStartedProcessing: {
+                                helpersWrapper.turnTaskbarProgressOn()
+                            }
+                            onPercentChanged: {
+                                helpersWrapper.setTaskbarProgress(artworkUploader.percent)
+                            }
                             onFinishedProcessing: {
                                 uploadButton.enabled = true
+                                helpersWrapper.turnTaskbarProgressOff()
                             }
                         }
                     }
