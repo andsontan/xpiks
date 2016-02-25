@@ -29,8 +29,8 @@ permalink: /faq/
 
 <div>
   <ul>
-    <li><strong>"Import finished with errors. See logs for details."</strong></li>
-    <li>Usually this error appears if Xpiks fails to find Exiftool. If you didn't install it, please visit <a href="http://www.sno.phy.queensu.ca/~phil/exiftool/" target="_blank">Official Exiftool Website</a> and install it. If you have Exiftool instlled and still you see this error, then please go in Xpiks to Settings -> External and select correct path to `exiftool` executable</li>
+    <li><strong>"Import/Export finished with errors. See logs for details."</strong></li>
+    <li>Usually this error appears if Xpiks fails to find Exiftool. If you didn't install it, please visit <a href="http://www.sno.phy.queensu.ca/~phil/exiftool/" target="_blank">Official Exiftool Website</a> and install it. If you have Exiftool installed and still you see this error, then please go in Xpiks to Settings -> External and select correct path to `exiftool` executable</li>
   </ul>
 </div>
 
