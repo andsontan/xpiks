@@ -38,7 +38,7 @@ Item {
     // if MasterPassword wasn't entered do not show passwords
     property bool emptyPasswords: false
     property variant componentParent
-    property bool uploadEnabled: artworkRepository.artworksSourcesCount > 0
+    property bool uploadEnabled: (artworkRepository.artworksSourcesCount > 0) && (filteredArtItemsModel.selectedArtworksCount > 0)
 
     signal dialogDestruction();
     Component.onDestruction: dialogDestruction();
