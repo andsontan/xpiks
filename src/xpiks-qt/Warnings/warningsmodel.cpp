@@ -29,7 +29,10 @@ namespace Warnings {
     void describeWarningFlags(int warningsFlags, Models::ArtworkMetadata *metadata, QStringList &descriptions) {
 
         if (Common::HasFlag(warningsFlags, Common::WarningTypeSizeLessThanMinimum)) {
-            descriptions.append(QLatin1String("Size is less than minimal"));
+            QSize size = metadata->getImageSize();
+            int x = size.width();
+            int y = size.height();
+            descriptions.append(QString("Image size %1 x %2 is less than minimal").arg(x).arg(y));
         }
 
         if (Common::HasFlag(warningsFlags, Common::WarningTypeNoKeywords)) {
@@ -49,7 +52,7 @@ namespace Warnings {
         }
 
         if (Common::HasFlag(warningsFlags, Common::WarningTypeDescriptionNotEnoughWords)) {
-            descriptions.append(QLatin1String("Description has too few words"));
+            descriptions.append(QLatin1String("Description should have more than 2 words"));
         }
 
         if (Common::HasFlag(warningsFlags, Common::WarningTypeDescriptionTooBig)) {
@@ -61,7 +64,7 @@ namespace Warnings {
         }
 
         if (Common::HasFlag(warningsFlags, Common::WarningTypeTitleNotEnoughWords)) {
-            descriptions.append(QLatin1String("Title has too few words"));
+            descriptions.append(QLatin1String("Title should have more than 2 words"));
         }
 
         if (Common::HasFlag(warningsFlags, Common::WarningTypeTitleTooManyWords)) {
