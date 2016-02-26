@@ -34,9 +34,9 @@
 
 int findAndAttachVectors(const QVector<Models::ArtworkMetadata*> &artworksList, QVector<int> &modifiedIndices) {
     int attachedCount = 0;
-
     int size = artworksList.length();
     modifiedIndices.reserve(size);
+
     for (int i = 0; i < size; ++i) {
         Models::ArtworkMetadata *metadata = artworksList.at(i);
         if (metadata->hasVectorAttached()) {

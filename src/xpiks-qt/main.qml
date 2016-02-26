@@ -741,7 +741,7 @@ ApplicationWindow {
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.leftMargin: 0
-                    anchors.rightMargin: mainScrollView.areScrollbarsVisible ? 30 : 20
+                    anchors.rightMargin: mainScrollView.areScrollbarsVisible ? 35 : 20
 
                     Item {
                         width: 5
@@ -961,7 +961,7 @@ ApplicationWindow {
                             id: searchButton
                             anchors.right: parent.right
                             anchors.verticalCenter: parent.verticalCenter
-                            anchors.rightMargin:  mainScrollView.areScrollbarsVisible ? 30 : 20
+                            anchors.rightMargin:  mainScrollView.areScrollbarsVisible ? 35 : 20
                             width: 90
                             text: qsTr("Search")
                             enabled: artworkRepository.artworksSourcesCount > 0
@@ -1197,7 +1197,7 @@ ApplicationWindow {
                                 color: isHighlighted ? Colors.selectedArtworkColor : Colors.artworkImageBackground
                                 property var artworkModel: artItemsModel.getArtworkItself(rowWrapper.getIndex())
                                 property int delegateIndex: index
-                                width: applicationWindow.listLayout ? parent.width : 208
+                                width: applicationWindow.listLayout ? (mainScrollView.areScrollbarsVisible ? (parent.width - 5) : parent.width) : 208
                                 height: applicationWindow.listLayout ? (200 + 80*(settingsModel.keywordSizeScale - 1.0)) : 200
 
                                 function getIndex() {
