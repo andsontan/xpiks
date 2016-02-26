@@ -168,6 +168,7 @@ Item {
                         text: qsTr("Assign from selected")
                         width: 150
                         enabled: combinedArtworks.selectedArtworksCount == 1
+                        tooltip: qsTr("Set metadata from selected artwork to all fields")
                         onClicked: {
                             combinedArtworks.assignFromSelected()
                         }
@@ -180,6 +181,7 @@ Item {
                     StyledButton {
                         text: qsTr("Remove selected")
                         width: 150
+                        tooltip: qsTr("Remove selected artworks from this dialog")
                         enabled: combinedArtworks.selectedArtworksCount > 0
                         onClicked: {
                             if (mustUseConfirmation()) {
