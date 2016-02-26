@@ -741,7 +741,7 @@ ApplicationWindow {
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.leftMargin: 0
-                    anchors.rightMargin: mainScrollView.areScrollbarsVisible ? 20 : 10
+                    anchors.rightMargin: mainScrollView.areScrollbarsVisible ? 30 : 20
 
                     Item {
                         width: 5
@@ -847,10 +847,6 @@ ApplicationWindow {
                                 tryUploadArtworks();
                             }
                         }
-                    }
-
-                    Item {
-                        width: 10
                     }
                 }
             }
@@ -965,7 +961,7 @@ ApplicationWindow {
                             id: searchButton
                             anchors.right: parent.right
                             anchors.verticalCenter: parent.verticalCenter
-                            anchors.rightMargin:  mainScrollView.areScrollbarsVisible ? 40 : 30
+                            anchors.rightMargin:  mainScrollView.areScrollbarsVisible ? 30 : 20
                             width: 90
                             text: qsTr("Search")
                             enabled: artworkRepository.artworksSourcesCount > 0
