@@ -1353,6 +1353,17 @@ ApplicationWindow {
                                                     sourceSize.height: 150
                                                     fillMode: settingsModel.fitSmallPreview ? Image.PreserveAspectFit : Image.PreserveAspectCrop
                                                     asynchronous: true
+                                                    cache: true
+                                                }
+
+                                                Image {
+                                                    id: imageTypeIcon
+                                                    source: hasvectorattached ? "qrc:/Graphics/vector-icon.svg" : "qrc:/Graphics/image-icon.svg"
+                                                    sourceSize.width: 20
+                                                    sourceSize.height: 20
+                                                    anchors.left: artworkImage.left
+                                                    anchors.bottom: artworkImage.bottom
+                                                    cache: true
                                                 }
 
                                                 MouseArea {
