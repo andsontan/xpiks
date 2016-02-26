@@ -643,12 +643,15 @@ namespace Models {
         }
     }
 
-    int ArtItemsModel::attachVectors(const QHash<QString, QPair<QString, QString> > &vectorsPaths) const {
-        qDebug() << "ArtItemsModel::attachVectors #" << vectorsPaths.size() << "vector(s)";
+    int ArtItemsModel::attachVectors(const QHash<QString, QHash<QString, QString> > &vectorsPaths, QVector<int> &indicesToUpdate) const {
+        qDebug() << "ArtItemsModel::attachVectors #";
 
         int attachedVectors = 0;
+        QString defaultPath;
 
         int size = m_ArtworkList.length();
+        indicesToUpdate.reserve(size);
+
         for (int i = 0; i < size; ++i) {
             ArtworkMetadata *metadata = m_ArtworkList.at(i);
             const QString &filepath = metadata->getFilepath();
@@ -656,11 +659,14 @@ namespace Models {
 
             const QString &directory = fi.absolutePath();
             if (vectorsPaths.contains(directory)) {
-                const QPair<QString, QString> &pair = vectorsPaths.value(directory);
+                const QHash<QString, QString> &innerHash = vectorsPaths[directory];
 
-                const QString &filename = fi.baseName();
-                if (QString::compare(filename, pair.first, Qt::CaseInsensitive) == 0) {
-                    metadata->attachVector(pair.second);
+                const QString &filename = fi.baseName().toLower();
+
+                QString vectorsPath = innerHash.value(filename, defaultPath);
+                if (!vectorsPath.isEmpty()) {
+                    metadata->attachVector(vectorsPath);
+                    indicesToUpdate.append(i);
                     attachedVectors++;
                 }
             }

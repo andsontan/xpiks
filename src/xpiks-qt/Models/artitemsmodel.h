@@ -26,7 +26,6 @@
 #include <QStringList>
 #include <QList>
 #include <QVector>
-#include <QPair>
 #include <QUrl>
 #include <QSize>
 #include <QHash>
@@ -137,7 +136,7 @@ namespace Models {
         virtual void updateItemsAtIndices(const QVector<int> &indices);
         virtual void updateItemsInRanges(const QVector<QPair<int, int> > &ranges);
         void setAllItemsSelected(bool selected);
-        int attachVectors(const QHash<QString, QPair<QString, QString> > &vectorsPaths) const;
+        int attachVectors(const QHash<QString, QHash<QString, QString> > &vectorsPaths, QVector<int> &indicesToUpdate) const;
 
     public:
         // IARTWORKSSOURCE

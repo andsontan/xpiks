@@ -24,7 +24,6 @@
 
 #include <QStringList>
 #include <QHash>
-#include <QPair>
 #include "commandbase.h"
 
 namespace Commands {
@@ -44,7 +43,7 @@ namespace Commands {
         virtual CommandResult *execute(const ICommandManager *commandManagerInterface) const;
 
     private:
-        void decomposeVectors(QHash<QString, QPair<QString, QString> > &vectors) const;
+        void decomposeVectors(QHash<QString, QHash<QString, QString> > &vectors) const;
 
     public:
         QStringList m_FilePathes;

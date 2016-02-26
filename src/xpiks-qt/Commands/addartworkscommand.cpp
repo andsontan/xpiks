@@ -32,14 +32,16 @@
 #include "../Common/defines.h"
 #include "../Helpers/filenameshelpers.h"
 
-int findAndAttachVectors(const QVector<Models::ArtworkMetadata*> &artworksList) {
+int findAndAttachVectors(const QVector<Models::ArtworkMetadata*> &artworksList, QVector<int> &modifiedIndices) {
     int attachedCount = 0;
 
     int size = artworksList.length();
+    modifiedIndices.reserve(size);
     for (int i = 0; i < size; ++i) {
         Models::ArtworkMetadata *metadata = artworksList.at(i);
         if (metadata->hasVectorAttached()) {
             attachedCount++;
+            modifiedIndices.append(i);
             continue;
         }
 
@@ -50,6 +52,7 @@ int findAndAttachVectors(const QVector<Models::ArtworkMetadata*> &artworksList) 
             if (QFileInfo(item).exists()) {
                 metadata->attachVector(item);
                 attachedCount++;
+                modifiedIndices.append(i);
                 break;
             }
         }
@@ -100,12 +103,14 @@ Commands::CommandResult *Commands::AddArtworksCommand::execute(const ICommandMan
 
     artworksRepository->endAccountingFiles(filesWereAccounted);
 
-    QHash<QString, QPair<QString, QString> > vectorsHash;
+    QHash<QString, QHash<QString, QString> > vectorsHash;
     decomposeVectors(vectorsHash);
-    int attachedCount = artItemsModel->attachVectors(vectorsHash);
+    QVector<int> modifiedIndices;
+    int attachedCount = artItemsModel->attachVectors(vectorsHash, modifiedIndices);
 
     if (m_AutoDetectVectors) {
-        attachedCount = findAndAttachVectors(artworksToImport);
+        modifiedIndices.clear();
+        attachedCount = findAndAttachVectors(artworksToImport, modifiedIndices);
     }
 
     if (newFilesCount > 0) {
@@ -119,6 +124,8 @@ Commands::CommandResult *Commands::AddArtworksCommand::execute(const ICommandMan
 
         UndoRedo::AddArtworksHistoryItem *addArtworksItem = new UndoRedo::AddArtworksHistoryItem(initialCount, newFilesCount);
         commandManager->recordHistoryItem(addArtworksItem);
+    } else if (attachedCount > 0) {
+        artItemsModel->updateItems(modifiedIndices, QVector<int>() << Models::ArtItemsModel::HasVectorAttachedRole);
     }
 
     artItemsModel->raiseArtworksAdded(newFilesCount, attachedCount);
@@ -127,13 +134,19 @@ Commands::CommandResult *Commands::AddArtworksCommand::execute(const ICommandMan
     return result;
 }
 
-void Commands::AddArtworksCommand::decomposeVectors(QHash<QString, QPair<QString, QString> > &vectors) const {
+void Commands::AddArtworksCommand::decomposeVectors(QHash<QString, QHash<QString, QString> > &vectors) const {
     qDebug() << "AddArtworksCommand::decomposeVectors #";
 
     int size = m_VectorsPathes.size();
     for (int i = 0; i < size; ++i) {
         const QString &path = m_VectorsPathes.at(i);
         QFileInfo fi(path);
-        vectors.insert(fi.absolutePath(), qMakePair(fi.baseName(), path));
+        const QString &absolutePath = fi.absolutePath();
+
+        if (!vectors.contains(absolutePath)) {
+            vectors.insert(absolutePath, QHash<QString, QString>());
+        }
+
+        vectors[absolutePath].insert(fi.baseName().toLower(), path);
     }
 }
