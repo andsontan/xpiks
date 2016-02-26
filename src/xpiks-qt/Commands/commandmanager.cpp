@@ -187,7 +187,7 @@ void Commands::CommandManager::connectEntitiesSignalsSlots() const {
     QObject::connect(m_ArtItemsModel, SIGNAL(selectedArtworkRemoved()),
                      m_FilteredItemsModel, SLOT(onSelectedArtworksRemoved()));
 
-    QObject::connect(m_SettingsModel, SIGNAL(userStatisticChanged(bool)),
+    QObject::connect(m_SettingsModel, SIGNAL(userStatisticsChanged(bool)),
                      m_TelemetryService, SLOT(changeReporting(bool)));
 
     QObject::connect(m_SpellCheckerService, SIGNAL(serviceAvailable(bool)),
