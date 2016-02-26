@@ -106,6 +106,7 @@ namespace Conectivity {
 
     bool uploadFile(CURL *curlHandle, UploadContext *context, CurlProgressReporter *progressReporter,
                     const QString &filepath, const QString &remoteUrl) {
+        qDebug() << "uploadFile #" << filepath << "-->" << remoteUrl;
         bool result = false;
 
         FILE *f;

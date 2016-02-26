@@ -666,12 +666,12 @@ ApplicationWindow {
                             height: 31
                             Layout.minimumWidth: 237
 
-                            MouseArea {
+                            /*MouseArea {
                                 anchors.fill: parent
                                 onClicked: {
                                     filteredArtItemsModel.selectDirectory(sourceWrapper.delegateIndex)
                                 }
-                            }
+                            }*/
 
                             RowLayout {
                                 spacing: 10

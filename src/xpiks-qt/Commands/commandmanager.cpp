@@ -283,8 +283,8 @@ void Commands::CommandManager::connectArtworkSignals(Models::ArtworkMetadata *me
     }
 
     if (m_ArtworksRepository) {
-        QObject::connect(metadata, SIGNAL(fileSelectedChanged(QString,bool)),
-                         m_ArtworksRepository, SLOT(fileSelectedChanged(QString,bool)));
+        //QObject::connect(metadata, SIGNAL(fileSelectedChanged(QString,bool)),
+        //                 m_ArtworksRepository, SLOT(fileSelectedChanged(QString,bool)));
     }
 }
 

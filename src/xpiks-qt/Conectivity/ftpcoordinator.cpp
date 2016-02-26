@@ -83,6 +83,10 @@ namespace Conectivity {
             context->m_TimeoutSeconds = timeoutSeconds;
             context->m_RetriesCount = RETRIES_COUNT;
 
+            if (context->m_Host.contains("dreamstime")) {
+                context->m_DirForVectors = "additional";
+            }
+
             contexts.append(QSharedPointer<UploadContext>(context));
         }
     }

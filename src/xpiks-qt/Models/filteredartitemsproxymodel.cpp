@@ -260,6 +260,8 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::toggleSorted() {
+        forceUnselectAllItems();
+
         if (!m_SortingEnabled) {
             m_SortingEnabled = true;
             sort(0);
@@ -267,6 +269,7 @@ namespace Models {
         } else {
             m_SortingEnabled = false;
             setSortRole(Qt::InitialSortOrderRole);
+            sort(-1);
             invalidate();
         }
     }
