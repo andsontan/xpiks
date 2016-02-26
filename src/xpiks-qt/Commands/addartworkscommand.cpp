@@ -106,6 +106,7 @@ Commands::CommandResult *Commands::AddArtworksCommand::execute(const ICommandMan
     QHash<QString, QHash<QString, QString> > vectorsHash;
     decomposeVectors(vectorsHash);
     QVector<int> modifiedIndices;
+
     int attachedCount = artItemsModel->attachVectors(vectorsHash, modifiedIndices);
 
     if (m_AutoDetectVectors) {
@@ -135,9 +136,9 @@ Commands::CommandResult *Commands::AddArtworksCommand::execute(const ICommandMan
 }
 
 void Commands::AddArtworksCommand::decomposeVectors(QHash<QString, QHash<QString, QString> > &vectors) const {
-    qDebug() << "AddArtworksCommand::decomposeVectors #";
-
     int size = m_VectorsPathes.size();
+    qDebug() << "AddArtworksCommand::decomposeVectors #" << size << "item(s)";
+
     for (int i = 0; i < size; ++i) {
         const QString &path = m_VectorsPathes.at(i);
         QFileInfo fi(path);

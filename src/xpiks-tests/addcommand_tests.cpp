@@ -230,3 +230,69 @@ void AddCommand_Tests::addAndDontAttachVectorsStartsWithTest() {
         QVERIFY(!artItemsModel->getArtwork(i)->hasVectorAttached());
     }
 }
+
+void AddCommand_Tests::addAndAttachFromSingleDirectoryTest() {
+    Mocks::CommandManagerMock commandManagerMock;
+    Mocks::ArtItemsModelMock artItemsMock;
+
+    Models::ArtworksRepository artworksRepository;
+    commandManagerMock.InjectDependency(&artworksRepository);
+
+    Models::ArtItemsModel *artItemsModel = &artItemsMock;
+    commandManagerMock.InjectDependency(artItemsModel);
+
+    QStringList filenames, vectors;
+    filenames << "/path/to/somefile1.jpg" << "/path/to/somefile2.jpg" << "/another/path/to/somefile1.jpg" << "/another/path/to/somefile2.jpg";
+    vectors << "/path/to/somefile1.eps" << "/path/to/somefile2.eps" << "/another/path/to/somefile1.eps" << "/another/path/to/somefile2.eps";
+
+    Commands::AddArtworksCommand *addArtworksCommand = new Commands::AddArtworksCommand(filenames, vectors, false);
+    Commands::ICommandResult *result = commandManagerMock.processCommand(addArtworksCommand);
+    Commands::AddArtworksCommandResult *addArtworksResult = static_cast<Commands::AddArtworksCommandResult*>(result);
+    int newFilesCount = addArtworksResult->m_NewFilesAdded;
+    delete result;
+
+    QCOMPARE(newFilesCount, filenames.length());
+
+    for (int i = 0; i < filenames.length(); ++i) {
+        QVERIFY(artItemsModel->getArtwork(i)->hasVectorAttached());
+    }
+}
+
+void AddCommand_Tests::addSingleDirectoryAndAttachLaterTest() {
+    Mocks::CommandManagerMock commandManagerMock;
+    Mocks::ArtItemsModelMock artItemsMock;
+
+    Models::ArtworksRepository artworksRepository;
+    commandManagerMock.InjectDependency(&artworksRepository);
+
+    Models::ArtItemsModel *artItemsModel = &artItemsMock;
+    commandManagerMock.InjectDependency(artItemsModel);
+
+    QStringList filenames, vectors;
+    filenames << "/path/to/somefile1.jpg" << "/path/to/somefile2.jpg" << "/another/path/to/somefile1.jpg" << "/another/path/to/somefile2.jpg";
+    vectors << "/path/to/somefile1.eps" << "/path/to/somefile2.eps" << "/another/path/to/somefile1.eps" << "/another/path/to/somefile2.eps";
+
+    Commands::AddArtworksCommand *addArtworksCommand = new Commands::AddArtworksCommand(filenames, QStringList(), false);
+    Commands::ICommandResult *result = commandManagerMock.processCommand(addArtworksCommand);
+    Commands::AddArtworksCommandResult *addArtworksResult = static_cast<Commands::AddArtworksCommandResult*>(result);
+    int newFilesCount = addArtworksResult->m_NewFilesAdded;
+    delete result;
+
+    QCOMPARE(newFilesCount, filenames.length());
+
+    for (int i = 0; i < filenames.length(); ++i) {
+        QVERIFY(!artItemsModel->getArtwork(i)->hasVectorAttached());
+    }
+
+    addArtworksCommand = new Commands::AddArtworksCommand(QStringList(), vectors, false);
+    result = commandManagerMock.processCommand(addArtworksCommand);
+    addArtworksResult = static_cast<Commands::AddArtworksCommandResult*>(result);
+    newFilesCount = addArtworksResult->m_NewFilesAdded;
+    delete result;
+
+    QCOMPARE(newFilesCount, 0);
+
+    for (int i = 0; i < filenames.length(); ++i) {
+        QVERIFY(artItemsModel->getArtwork(i)->hasVectorAttached());
+    }
+}

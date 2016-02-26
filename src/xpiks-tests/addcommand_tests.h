@@ -16,6 +16,8 @@ private slots:
     void addAndDontAttachVectorsOtherDirTest();
     void addAndDontAttachVectorsEmptyDirTest();
     void addAndDontAttachVectorsStartsWithTest();
+    void addAndAttachFromSingleDirectoryTest();
+    void addSingleDirectoryAndAttachLaterTest();
 };
 
 #endif // ADDCOMMAND_TESTS_H

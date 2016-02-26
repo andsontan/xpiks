@@ -259,8 +259,8 @@ namespace Models {
             }
         }
 
-        int filesAddedCount = addLocalArtworks(files);
-        int directoriesAddedCount = addLocalDirectories(directories);
+        int filesAddedCount = files.isEmpty() ? 0 : addLocalArtworks(files);
+        int directoriesAddedCount = directories.isEmpty() ? 0 : addLocalDirectories(directories);
 
         qDebug() << "ArtItemsModel::dropFiles #" << "Added" << filesAddedCount << "files and" << directoriesAddedCount << "directories";
 

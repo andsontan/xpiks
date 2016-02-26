@@ -540,7 +540,7 @@ ApplicationWindow {
     Connections {
         target: artItemsModel
         onArtworksAdded: {
-            if (imagesCount == 0 && vectorsCount == 0) {
+            if ((imagesCount === 0) && (vectorsCount === 0)) {
                 noNewFilesDialog.open();
                 return;
             }
@@ -1354,7 +1354,9 @@ ApplicationWindow {
 
                                                 Image {
                                                     id: imageTypeIcon
-                                                    source: hasvectorattached ? "qrc:/Graphics/vector-icon.svg" : "qrc:/Graphics/image-icon.svg"
+                                                    visible: hasvectorattached
+                                                    enabled: hasvectorattached
+                                                    source: "qrc:/Graphics/vector-icon.svg"
                                                     sourceSize.width: 20
                                                     sourceSize.height: 20
                                                     anchors.left: artworkImage.left

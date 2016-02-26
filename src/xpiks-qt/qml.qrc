@@ -50,7 +50,6 @@
         <file>Dialogs/TermsAndConditionsDialog.qml</file>
         <file>Dialogs/PluginsDialog.qml</file>
         <file>Components/LayoutButton.qml</file>
-        <file>Graphics/image-icon.svg</file>
         <file>Graphics/vector-icon.svg</file>
     </qresource>
 </RCC>
