@@ -146,6 +146,7 @@ namespace Models {
         Q_INVOKABLE void initTitleHighlighting(QQuickTextDocument *document);
         Q_INVOKABLE void spellCheckDescription();
         Q_INVOKABLE void spellCheckTitle();
+        Q_INVOKABLE void assignFromSelected();
 
     private:
         void processCombinedEditCommand() const;

@@ -281,6 +281,32 @@ namespace Models {
         }
     }
 
+    void CombinedArtworksModel::assignFromSelected() {
+        int selectedCount = 0;
+        int count = m_ArtworksList.length();
+        ArtItemInfo *firstSelected = NULL;
+        for (int i = 0; i < count; ++i) {
+            if (m_ArtworksList.at(i)->isSelected()) {
+                selectedCount++;
+
+                if (firstSelected == NULL) {
+                    firstSelected = m_ArtworksList.at(i);
+                }
+            }
+        }
+
+        if (selectedCount == 1) {
+            Q_ASSERT(firstSelected != NULL);
+            qDebug() << "CombinedArtworksModel::assignFromSelected #" << "Assigning fields";
+            ArtworkMetadata *metadata = firstSelected->getOrigin();
+            setTitle(metadata->getTitle());
+            setDescription(metadata->getDescription());
+            setKeywords(metadata->getKeywords());
+        } else {
+            qWarning() << "CombinedArtworksModel::assignFromSelected #" << "Method called with" << count << "items selected";
+        }
+    }
+
     void CombinedArtworksModel::processCombinedEditCommand() const {
         Commands::CombinedEditCommand *combinedEditCommand = new Commands::CombinedEditCommand(
                     m_EditFlags,

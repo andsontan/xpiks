@@ -164,11 +164,13 @@ Item {
                     width: parent.width
                     height: 40
 
-                    StyledText {
-                        height: parent.height
-                        text: qsTr("Select to remove")
-                        verticalAlignment: Text.AlignBottom
-                        color: Colors.defaultInputBackground
+                    StyledButton {
+                        text: qsTr("Assign from selected")
+                        width: 150
+                        enabled: combinedArtworks.selectedArtworksCount == 1
+                        onClicked: {
+                            combinedArtworks.assignFromSelected()
+                        }
                     }
 
                     Item {
@@ -176,8 +178,8 @@ Item {
                     }
 
                     StyledButton {
-                        text: qsTr("Remove")
-                        width: 100
+                        text: qsTr("Remove selected")
+                        width: 150
                         enabled: combinedArtworks.selectedArtworksCount > 0
                         onClicked: {
                             if (mustUseConfirmation()) {
