@@ -259,9 +259,9 @@ int main(int argc, char *argv[]) {
 
     MetadataIO::MetadataIOCoordinator metadataIOCoordinator;
 #ifdef TELEMETRY_ENABLED
-    bool telemetryEnabled = appSettings.value(Constants::USER_STATISTIC,true ).toBool();
+    bool telemetryEnabled = appSettings.value(Constants::USER_STATISTICS, true).toBool();
 #else
-    bool telemetryEnabled = appSettings.value(Constants::USER_STATISTIC,false).toBool();
+    bool telemetryEnabled = appSettings.value(Constants::USER_STATISTICS, false).toBool();
 #endif
     Conectivity::TelemetryService telemetryService(userId, telemetryEnabled);
     Plugins::PluginManager pluginManager;

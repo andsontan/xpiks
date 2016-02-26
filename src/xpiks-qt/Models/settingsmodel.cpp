@@ -48,7 +48,7 @@
 #define DEFAULT_SCROLL_SPEED_SCALE 1.0
 #define DEFAULT_USE_SPELL_CHECK true
 #define DEFAULT_HAVE_USER_CONSENT false
-#define DEFAULT_COLLECT_USER_STATISTIC true
+#define DEFAULT_COLLECT_USER_STATISTICS true
 #define DEFAULT_UPDATE_SERVICE true
 #define DEFAULT_APP_WIDTH 900
 #define DEFAULT_APP_HEIGHT 725
@@ -74,7 +74,7 @@ namespace Models {
         m_FitSmallPreview(DEFAULT_FIT_SMALL_PREVIEW),
         m_SearchUsingAnd(DEFAULT_SEARCH_USING_AND),
         m_UseSpellCheck(DEFAULT_USE_SPELL_CHECK),
-        m_UserStatistic(DEFAULT_COLLECT_USER_STATISTIC),
+        m_UserStatistics(DEFAULT_COLLECT_USER_STATISTICS),
         m_UpdateService(DEFAULT_UPDATE_SERVICE),
         m_DictsPathChanged(false)
     {
@@ -113,7 +113,7 @@ namespace Models {
         appSettings.setValue(appSettings.getSearchUsingAndKey(), m_SearchUsingAnd);
         appSettings.setValue(appSettings.getScrollSpeedScaleKey(), m_ScrollSpeedScale);
         appSettings.setValue(appSettings.getUseSpellCheckKey(), m_UseSpellCheck);
-        appSettings.setValue(appSettings.getUserStatisticKey(), m_UserStatistic);
+        appSettings.setValue(appSettings.getUserStatisticsKey(), m_UserStatistics);
         appSettings.setValue(appSettings.getUpdateServiceKey(), m_UpdateService);
         appSettings.setValue(appSettings.getAutoFindVectorsKey(), m_AutoFindVectors);
 
@@ -167,7 +167,7 @@ namespace Models {
         setSearchUsingAnd(appSettings.boolValue(appSettings.getSearchUsingAndKey(), DEFAULT_SEARCH_USING_AND));
         setScrollSpeedScale(appSettings.doubleValue(appSettings.getScrollSpeedScaleKey(), DEFAULT_SCROLL_SPEED_SCALE));
         setUseSpellCheck(appSettings.boolValue(appSettings.getUseSpellCheckKey(), DEFAULT_USE_SPELL_CHECK));
-        setUserStatistic(appSettings.boolValue(appSettings.getUserStatisticKey(), DEFAULT_COLLECT_USER_STATISTIC));
+        setUserStatistics(appSettings.boolValue(appSettings.getUserStatisticsKey(), DEFAULT_COLLECT_USER_STATISTICS));
         setUpdateService(appSettings.boolValue(appSettings.getUpdateServiceKey(), DEFAULT_UPDATE_SERVICE));
         setAutoFindVectors(appSettings.boolValue(appSettings.getAutoFindVectorsKey(), DEFAULT_AUTO_FIND_VECTORS));
     }
@@ -191,7 +191,7 @@ namespace Models {
         setSearchUsingAnd(DEFAULT_SEARCH_USING_AND);
         setScrollSpeedScale(DEFAULT_SCROLL_SPEED_SCALE);
         setUseSpellCheck(DEFAULT_USE_SPELL_CHECK);
-        setUserStatistic(DEFAULT_COLLECT_USER_STATISTIC);
+        setUserStatistics(DEFAULT_COLLECT_USER_STATISTICS);
         setUpdateService(DEFAULT_UPDATE_SERVICE);
         setAutoFindVectors(DEFAULT_AUTO_FIND_VECTORS);
 

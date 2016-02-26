@@ -52,7 +52,7 @@ namespace Models {
         Q_PROPERTY(bool searchUsingAnd READ getSearchUsingAnd WRITE setSearchUsingAnd NOTIFY searchUsingAndChanged)
         Q_PROPERTY(double scrollSpeedScale READ getScrollSpeedScale WRITE setScrollSpeedScale NOTIFY scrollSpeedScaleChanged)
         Q_PROPERTY(bool useSpellCheck READ getUseSpellCheck WRITE setUseSpellCheck NOTIFY useSpellCheckChanged)
-        Q_PROPERTY(bool userStatistic READ getUserStatistic WRITE setUserStatistic NOTIFY userStatisticChanged)
+        Q_PROPERTY(bool userStatistics READ getUserStatistics WRITE setUserStatistics NOTIFY userStatisticsChanged)
         Q_PROPERTY(bool updateService READ getUpdateService WRITE setUpdateService NOTIFY updateServiceChanged)
         Q_PROPERTY(QString dictionaryPath READ getDictionaryPath WRITE setDictionaryPath NOTIFY dictionaryPathChanged)
         Q_PROPERTY(bool autoFindVectors READ getAutoFindVectors WRITE setAutoFindVectors NOTIFY autoFindVectorsChanged)
@@ -72,6 +72,7 @@ namespace Models {
         Q_INVOKABLE void resetDictPath();
         Q_INVOKABLE void readAllValues();
         Q_INVOKABLE void raiseMasterPasswordSignal() { emit mustUseMasterPasswordChanged(m_MustUseMasterPassword); }
+
     public:
         QString getExifToolPath() const { return m_ExifToolPath; }
         double getMinMegapixelCount() const { return m_MinMegapixelCount; }
@@ -88,7 +89,7 @@ namespace Models {
         bool getSearchUsingAnd() const { return m_SearchUsingAnd; }
         double getScrollSpeedScale() const { return m_ScrollSpeedScale; }
         bool getUseSpellCheck() const { return m_UseSpellCheck; }
-        bool getUserStatistic() const { return m_UserStatistic; }
+        bool getUserStatistics() const { return m_UserStatistics; }
         bool getUpdateService() const { return m_UpdateService; }
         QString getDictionaryPath() const { return m_DictPath; }
         bool getAutoFindVectors() const { return m_AutoFindVectors; }
@@ -110,7 +111,7 @@ namespace Models {
         void searchUsingAndChanged(bool value);
         void scrollSpeedScaleChanged(double value);
         void useSpellCheckChanged(bool value);
-        void userStatisticChanged(bool value);
+        void userStatisticsChanged(bool value);
         void updateServiceChanged(bool value);
         void dictionaryPathChanged(QString path);
         void autoFindVectorsChanged(bool value);
@@ -236,20 +237,20 @@ namespace Models {
             emit useSpellCheckChanged(value);
         }
 
-        void setUserStatistic(bool userStatistic) {
-            if (m_UserStatistic == userStatistic)
+        void setUserStatistics(bool value) {
+            if (m_UserStatistics == value)
                 return;
 
-            m_UserStatistic = userStatistic;
-            emit userStatisticChanged(userStatistic);
+            m_UserStatistics = value;
+            emit userStatisticsChanged(value);
         }
 
-        void setUpdateService(bool updateService) {
-            if (m_UpdateService == updateService)
+        void setUpdateService(bool value) {
+            if (m_UpdateService == value)
                 return;
 
-            m_UpdateService = updateService;
-            emit updateServiceChanged(updateService);
+            m_UpdateService = value;
+            emit updateServiceChanged(value);
         }
 
         void setDictionaryPath(QString path) {
@@ -288,7 +289,7 @@ namespace Models {
         bool m_FitSmallPreview;
         bool m_SearchUsingAnd;
         bool m_UseSpellCheck;
-        bool m_UserStatistic;
+        bool m_UserStatistics;
         bool m_UpdateService;
         bool m_DictsPathChanged;
         bool m_AutoFindVectors;

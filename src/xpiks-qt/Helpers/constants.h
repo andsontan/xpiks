@@ -40,7 +40,7 @@ namespace Constants {
     const char WHATS_NEW_FILENAME[] = "whatsnew.txt";
     const char TERMS_AND_CONDITIONS_FILENAME[] = "terms_and_conditions.txt";
     const char DICT_PATH[] = "DICT_PATH";
-    const char USER_STATISTIC[] = "USER_STATISTIC";
+    const char USER_STATISTICS[] = "USER_STATISTICS";
     const char UPDATE_SERVICE[] = "UPDATE_SERVICE";
     const char NUMBER_OF_LAUNCHES[] = "NUMBER_OF_LAUNCHES";
     const char APP_WINDOW_WIDTH []  = "WindowSizeX";

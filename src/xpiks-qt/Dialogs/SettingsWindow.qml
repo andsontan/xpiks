@@ -177,350 +177,145 @@ ApplicationWindow {
         Component.onCompleted: focus = true
         Keys.onEscapePressed: closeSettings()
 
-        ColumnLayout {
-            anchors.fill: parent
-            anchors.margins: {left:10; top:10; right:10}
+        StyledTabView {
+            id: tabView
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.bottom: bottomRow.top
 
-            StyledTabView {
-                id: tabView
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                Connections {
-                    target: settingsModel
-                    onSettingsReset: {
-                        tabView.getTab(tabView.currentIndex).resetRequested();
-                    }
+            anchors.margins: 10
+
+            Connections {
+                target: settingsModel
+                onSettingsReset: {
+                    tabView.getTab(tabView.currentIndex).resetRequested();
                 }
+            }
 
+            Tab {
+                id: behaviorTab
+                title: qsTr("Behavior")
+                signal resetRequested()
 
-                Tab {
-                    id: behaviorTab
-                    title: qsTr("Behavior")
-                    signal resetRequested()
-
-                    property bool useStatistics: settingsModel.userStatistic
+                Item {
+                    anchors.fill: parent
 
                     ColumnLayout {
-                        anchors.fill: parent
+                        id: leftColumn
+                        anchors.left: parent.left
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        width: parent.width / 2
+                        anchors.margins: {left: 20; top: 30; bottom: 20}
+                        spacing: 20
+
+                        StyledCheckbox {
+                            id: checkForUpdatesCheckbox
+                            text: qsTr("Check for updates")
+                            onCheckedChanged: {
+                                settingsModel.updateService = checked
+                            }
+                            function onResetRequested()  {
+                                checked = settingsModel.updateService
+                            }
+
+                            Component.onCompleted: {
+                                checked = settingsModel.updateService
+                                behaviorTab.resetRequested.connect(checkForUpdatesCheckbox.onResetRequested)
+                            }
+                        }
+
+                        StyledCheckbox {
+                            id: useConfirmationDialogsCheckbox
+                            text: qsTr("Use confirmation dialogs")
+                            onCheckedChanged: {
+                                settingsModel.mustUseConfirmations = checked
+                            }
+                            function onResetRequested()  {
+                                checked = settingsModel.mustUseConfirmations
+                            }
+
+                            Component.onCompleted: {
+                                checked = settingsModel.mustUseConfirmations
+                                behaviorTab.resetRequested.connect(useConfirmationDialogsCheckbox.onResetRequested)
+                            }
+
+                        }
+
+                        StyledCheckbox {
+                            id: searchUsingAndCheckbox
+                            text: qsTr("Search match all terms")
+                            onCheckedChanged: {
+                                settingsModel.searchUsingAnd = checked
+                            }
+                            function onResetRequested()  {
+                                checked = settingsModel.searchUsingAnd
+                            }
+                            Component.onCompleted: {
+                                checked = settingsModel.searchUsingAnd
+                                behaviorTab.resetRequested.connect(searchUsingAndCheckbox.onResetRequested)
+                            }
+                        }
+
+                        Item {
+                            Layout.fillHeight: true
+                        }
+                    }
+
+                    ColumnLayout {
+                        anchors.left: leftColumn.right
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        anchors.right: parent.right
                         anchors.margins: {left: 20; top: 30; right: 20; bottom: 20}
                         spacing: 20
 
-                        RowLayout {
-                            width: parent.width
-                            spacing: 10
-
-                            StyledCheckbox {
-                                id: checkForUpdatesCheckbox
-                                text: qsTr("Check for updates")
-                                onCheckedChanged: {
-                                    settingsModel.updateService = checked
-                                }
-                                function onResetRequested()  {
-                                    checked = settingsModel.updateService
-                                }
-
-                                Component.onCompleted: {
-                                    checked = settingsModel.updateService
-                                    behaviorTab.resetRequested.connect(checkForUpdatesCheckbox.onResetRequested)
-                                }
-
+                        StyledCheckbox {
+                            id: searchForVectorCheckbox
+                            text: qsTr("Attach vector automatically")
+                            onCheckedChanged: {
+                                settingsModel.autoFindVectors = checked
                             }
-                            StyledText {
-                                text: qsTr("(needs restart)")
-                                color: Colors.defaultInputBackground
+                            function onResetRequested()  {
+                                checked = settingsModel.autoFindVectors
                             }
 
-                        }
-
-                        RowLayout {
-                            width: parent.width
-                            spacing: 10
-
-                            StyledCheckbox {
-                                id: useConfirmationDialogsCheckbox
-                                text: qsTr("Use confirmation dialogs")
-                                onCheckedChanged: {
-                                    settingsModel.mustUseConfirmations = checked
-                                }
-                                function onResetRequested()  {
-                                    checked = settingsModel.mustUseConfirmations
-                                }
-
-                                Component.onCompleted: {
-                                    checked = settingsModel.mustUseConfirmations
-                                    behaviorTab.resetRequested.connect(useConfirmationDialogsCheckbox.onResetRequested)
-                                }
-
-                            }
-
-                            StyledText {
-                                text: qsTr("(with destructive actions)")
-                                color: Colors.defaultInputBackground
+                            Component.onCompleted: {
+                                checked = settingsModel.autoFindVectors
+                                behaviorTab.resetRequested.connect(searchForVectorCheckbox.onResetRequested)
                             }
                         }
 
-                        RowLayout {
-                            width: parent.width
-                            spacing: 10
-
-                            StyledCheckbox {
-                                id: saveBackupsCheckbox
-                                text: qsTr("Save backups for artworks")
-                                onCheckedChanged: {
-                                    settingsModel.saveBackups = checked
-                                }
-                                function onResetRequested()  {
-                                    checked = settingsModel.saveBackups
-                                }
-
-                                Component.onCompleted: {
-                                    checked = settingsModel.saveBackups
-                                    behaviorTab.resetRequested.connect(saveBackupsCheckbox.onResetRequested)
-                                }
+                        StyledCheckbox {
+                            id: saveBackupsCheckbox
+                            text: qsTr("Save backups for artworks")
+                            onCheckedChanged: {
+                                settingsModel.saveBackups = checked
+                            }
+                            function onResetRequested()  {
+                                checked = settingsModel.saveBackups
                             }
 
-                            StyledText {
-                                text: qsTr("(edited but not saved)")
-                                color: Colors.defaultInputBackground
+                            Component.onCompleted: {
+                                checked = settingsModel.saveBackups
+                                behaviorTab.resetRequested.connect(saveBackupsCheckbox.onResetRequested)
                             }
                         }
 
-                        RowLayout {
-                            width: parent.width
-                            spacing: 10
-
-                            StyledCheckbox {
-                                id: searchUsingAndCheckbox
-                                text: qsTr("Search match all terms")
-                                onCheckedChanged: {
-                                    settingsModel.searchUsingAnd = checked
-                                }
-                                function onResetRequested()  {
-                                    checked = settingsModel.searchUsingAnd
-                                }
-                                Component.onCompleted: {
-                                    checked = settingsModel.searchUsingAnd
-                                    behaviorTab.resetRequested.connect(searchUsingAndCheckbox.onResetRequested)
-                                }
+                        StyledCheckbox {
+                            id: autoSpellCheckCheckbox
+                            text: qsTr("Check spelling automatically")
+                            onCheckedChanged: {
+                                settingsModel.useSpellCheck = checked
+                            }
+                            function onResetRequested()  {
+                                checked = settingsModel.useSpellCheck
                             }
 
-                            StyledText {
-                                text: qsTr("(instead of any occurance)")
-                                color: Colors.defaultInputBackground
-                            }
-                        }
-
-                        RowLayout {
-                            width: parent.width
-                            spacing: 10
-
-                            StyledCheckbox {
-                                id: autoSpellCheckCheckbox
-                                text: qsTr("Check spelling automatically")
-                                onCheckedChanged: {
-                                    settingsModel.useSpellCheck = checked
-                                }
-                                function onResetRequested()  {
-                                    checked = settingsModel.useSpellCheck
-                                }
-
-                                Component.onCompleted: {
-                                    checked = settingsModel.useSpellCheck
-                                    behaviorTab.resetRequested.connect(autoSpellCheckCheckbox.onResetRequested)
-                                }
-                            }
-
-                            StyledText {
-                                text: qsTr("(for typed keywords)")
-                                color: Colors.defaultInputBackground
-                            }
-                        }
-
-                        Item {
-                            Layout.fillHeight: true
-                        }
-                    }
-
-                }
-
-                Tab {
-                    id: uxTab
-                    property double sizeSliderValue: settingsModel.keywordSizeScale
-                    property double scrollSliderValue: settingsModel.scrollSpeedScale
-                    title: qsTr("Interface")
-                    signal resetRequested()
-
-
-
-                    ColumnLayout {
-                        anchors.fill: parent
-                        anchors.margins: {left: 20; top: 30; right: 20; bottom: 20}
-                        spacing: 20
-
-                        RowLayout {
-                            width: parent.width
-                            spacing: 10
-
-                            StyledCheckbox {
-                                id: fitArtworksCheckbox
-                                text: qsTr("Fit artwork's preview")
-                                onCheckedChanged: {
-                                    settingsModel.fitSmallPreview = checked
-                                }
-                                function onResetRequested()  {
-                                    checked =  settingsModel.fitSmallPreview
-                                }
-
-                                Component.onCompleted: {
-                                    checked = settingsModel.fitSmallPreview
-                                    uxTab.resetRequested.connect(fitArtworksCheckbox.onResetRequested)
-                                }
-                            }
-
-                            StyledText {
-                                text: qsTr("(instead of filling the square)")
-                                color: Colors.defaultInputBackground
-                            }
-                        }
-
-                        RowLayout {
-                            width: parent.width
-                            spacing: 10
-
-                            StyledText {
-                                text: qsTr("Keywords size")
-                            }
-
-                            StyledSlider {
-                                id: keywordSizeSlider
-                                width: 150
-                                minimumValue: 1.0
-                                maximumValue: 1.2
-                                stepSize: 0.0001
-                                orientation: Qt.Horizontal
-                                onValueChanged: uxTab.sizeSliderValue = value
-                                Component.onCompleted:{
-                                    value = settingsModel.keywordSizeScale
-                                    uxTab.resetRequested.connect(keywordSizeSlider.onResetRequested)
-                                }
-
-                                function onResetRequested()  {
-                                    value =  settingsModel.keywordSizeScale
-                                    uxTab.sizeSliderValue = value
-                                }
-                            }
-
-                            Rectangle {
-                                id: keywordPreview
-                                color: Colors.defaultLightGrayColor
-
-                                width: childrenRect.width
-                                height: childrenRect.height
-
-                                Row {
-                                    spacing: 0
-
-                                    Item {
-                                        id: tagTextRect
-                                        width: childrenRect.width + 5*keywordSizeSlider.value
-                                        height: 20 * keywordSizeSlider.value + (keywordSizeSlider.value - 1)*10
-
-                                        StyledText {
-                                            anchors.top: parent.top
-                                            anchors.bottom: parent.bottom
-                                            anchors.left: parent.left
-                                            anchors.leftMargin: 5 + (keywordSizeSlider.value - 1)*10
-                                            verticalAlignment: Text.AlignVCenter
-                                            text: "keyword"
-                                            color: Colors.defaultControlColor
-                                            font.pixelSize: 12 * keywordSizeSlider.value
-                                        }
-                                    }
-
-                                    Item {
-                                        height: 20 * keywordSizeSlider.value + (keywordSizeSlider.value - 1)*10
-                                        width: height
-
-                                        CloseIcon {
-                                            width: 14 * keywordSizeSlider.value
-                                            height: 14 * keywordSizeSlider.value
-                                            isActive: true
-                                            anchors.centerIn: parent
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        RowLayout {
-                            width: parent.width
-                            spacing: 20
-
-                            StyledText {
-                                text: qsTr("Scroll speed")
-                            }
-
-                            StyledSlider {
-                                id: scrollSpeedSlider
-                                width: 150
-                                minimumValue: 1.0
-                                maximumValue: 6
-                                stepSize: 0.01
-                                orientation: Qt.Horizontal
-                                onValueChanged: uxTab.scrollSliderValue = value
-                                Component.onCompleted: {
-                                    value = settingsModel.scrollSpeedScale
-                                    uxTab.resetRequested.connect(scrollSpeedSlider.onResetRequested)
-                                }
-
-                                function onResetRequested()  {
-                                    value =  settingsModel.scrollSpeedScale
-                                    uxTab.sizeSliderValue = value
-                                }
-                            }
-                        }
-
-                        RowLayout {
-                            width: parent.width
-                            spacing: 10
-
-                            StyledText {
-                                Layout.preferredWidth: 130
-                                horizontalAlignment: Text.AlignLeft
-                                text: qsTr("Undo dismiss duration:")
-                            }
-
-                            StyledInputHost {
-                                border.width: dismissDuration.activeFocus ? 1 : 0
-
-                                StyledTextInput {
-                                    id: dismissDuration
-                                    width: 100
-                                    height: 24
-                                    clip: true
-                                    text: settingsModel.dismissDuration
-                                    anchors.left: parent.left
-                                    anchors.leftMargin: 5
-                                    onTextChanged: {
-                                        if (text.length > 0) {
-                                            settingsModel.dismissDuration = parseInt(text)
-                                        }
-                                    }
-
-                                    function onResetRequested()  {
-                                        text =  settingsModel.dismissDuration
-                                    }
-
-                                    validator: IntValidator {
-                                        bottom: 5
-                                        top: 20
-                                    }
-                                }
-                            }
-
-                            StyledText {
-                                text: qsTr("(seconds)")
-                                color: Colors.defaultInputBackground
+                            Component.onCompleted: {
+                                checked = settingsModel.useSpellCheck
+                                behaviorTab.resetRequested.connect(autoSpellCheckCheckbox.onResetRequested)
                             }
                         }
 
@@ -529,653 +324,829 @@ ApplicationWindow {
                         }
                     }
                 }
+            }
 
-                Tab {
-                    id: extTab
-                    title: qsTr("External")
-                    signal resetRequested()
+            Tab {
+                id: uxTab
+                property double sizeSliderValue: settingsModel.keywordSizeScale
+                property double scrollSliderValue: settingsModel.scrollSpeedScale
+                title: qsTr("Interface")
+                signal resetRequested()
 
+                ColumnLayout {
+                    anchors.fill: parent
+                    anchors.margins: {left: 20; top: 30; right: 20; bottom: 20}
+                    spacing: 20
 
+                    RowLayout {
+                        width: parent.width
+                        spacing: 10
 
-                    ColumnLayout {
-                        anchors.fill: parent
-                        anchors.margins: {left: 5; top: 30; right: 20; bottom: 20}
-
-                        GridLayout {
-                            width: parent.width
-                            rows: 2
-                            columns: 4
-                            rowSpacing: 20
-                            columnSpacing: 15
-
-                            StyledText {
-                                Layout.row: 0
-                                Layout.column: 0
-                                Layout.fillWidth: true
-                                Layout.maximumWidth: 80
-
-                                horizontalAlignment: Text.AlignRight
-                                text: qsTr("ExifTool path:")
+                        StyledCheckbox {
+                            id: fitArtworksCheckbox
+                            text: qsTr("Fit artwork's preview")
+                            onCheckedChanged: {
+                                settingsModel.fitSmallPreview = checked
+                            }
+                            function onResetRequested()  {
+                                checked =  settingsModel.fitSmallPreview
                             }
 
-                            StyledInputHost {
-                                border.width: exifToolText.activeFocus ? 1 : 0
-                                Layout.row: 0
-                                Layout.column: 1
-
-                                StyledTextInput {
-                                    id: exifToolText
-                                    width: 150
-                                    height: 24
-                                    clip: true
-                                    text: settingsModel.exifToolPath
-                                    anchors.left: parent.left
-                                    anchors.leftMargin: 5
-                                    onTextChanged: settingsModel.exifToolPath = text
-
-                                    function onResetRequested()  {
-                                        value =  settingsModel.exifToolPath
-                                        text = value
-                                    }
-                                    Component.onCompleted: {
-                                        extTab.resetRequested.connect(exifToolText.onResetRequested)
-                                    }
-                                }
-                            }
-
-                            StyledButton {
-                                Layout.row: 0
-                                Layout.column: 2
-                                text: qsTr("Select...")
-                                width: 70
-                                onClicked: exifToolFileDialog.open()
-                            }
-
-                            StyledButton {
-                                Layout.row: 0
-                                Layout.column: 3
-                                text: qsTr("Reset")
-                                width: 70
-                                onClicked: settingsModel.resetExifTool()
-                            }
-
-
-                            StyledText {
-                                Layout.row: 2
-                                Layout.column: 0
-                                Layout.fillWidth: true
-                                Layout.maximumWidth: 80
-                                horizontalAlignment: Text.AlignRight
-                                text: qsTr("Dictionary path:")
-                                visible: Qt.platform.os === "linux"
-                            }
-
-                            StyledInputHost {
-                                border.width: dictText.activeFocus ? 1 : 0
-                                Layout.row: 2
-                                Layout.column: 1
-                                visible: Qt.platform.os === "linux"
-
-                                StyledTextInput {
-                                    id: dictText
-                                    width: 150
-                                    height: 24
-                                    clip: true
-                                    text: settingsModel.dictionaryPath
-                                    anchors.left: parent.left
-                                    anchors.leftMargin: 5
-                                    onTextChanged: settingsModel.dictionaryPath = text
-                                }
-                            }
-
-                            StyledButton {
-                                Layout.row: 2
-                                Layout.column: 2
-                                text: qsTr("Select...")
-                                width: 70
-                                onClicked: dictPathDialog.open()
-                                visible: Qt.platform.os === "linux"
-                            }
-
-                            StyledButton {
-                                Layout.row: 2
-                                Layout.column: 3
-                                text: qsTr("Reset")
-                                width: 70
-                                onClicked: settingsModel.resetDictPath()
-                                visible: Qt.platform.os === "linux"
+                            Component.onCompleted: {
+                                checked = settingsModel.fitSmallPreview
+                                uxTab.resetRequested.connect(fitArtworksCheckbox.onResetRequested)
                             }
                         }
 
-                        Item {
-                            Layout.fillHeight: true
+                        StyledText {
+                            text: qsTr("(instead of filling the square)")
+                            color: Colors.defaultInputBackground
                         }
                     }
-                }
 
-                Tab {
-                    id: warnTab
-                    title: qsTr("Warnings")
-                    signal resetRequested()
+                    RowLayout {
+                        width: parent.width
+                        spacing: 10
 
+                        StyledText {
+                            text: qsTr("Keywords size")
+                        }
 
-
-                    ColumnLayout {
-                        spacing: 20
-                        anchors.fill: parent
-                        anchors.margins: {left: 20; top: 30; right: 20; bottom: 20}
-
-                        RowLayout {
-                            width: parent.width
-                            spacing: 10
-
-                            StyledText {
-                                Layout.preferredWidth: 130
-                                horizontalAlignment: Text.AlignRight
-                                text: qsTr("Minimum megapixels:")
+                        StyledSlider {
+                            id: keywordSizeSlider
+                            width: 150
+                            minimumValue: 1.0
+                            maximumValue: 1.2
+                            stepSize: 0.0001
+                            orientation: Qt.Horizontal
+                            onValueChanged: uxTab.sizeSliderValue = value
+                            Component.onCompleted:{
+                                value = settingsModel.keywordSizeScale
+                                uxTab.resetRequested.connect(keywordSizeSlider.onResetRequested)
                             }
 
-                            StyledInputHost {
-                                border.width: megapixelsCount.activeFocus ? 1 : 0
-
-                                StyledTextInput {
-                                    id: megapixelsCount
-                                    width: 100
-                                    height: 24
-                                    clip: true
-                                    text: settingsModel.minMegapixelCount
-                                    anchors.left: parent.left
-                                    anchors.leftMargin: 5
-                                    KeyNavigation.tab: keywordsCount
-                                    onTextChanged: {
-                                        if (text.length > 0) {
-                                            settingsModel.minMegapixelCount = parseFloat(text)
-                                        }
-                                    }
-
-                                    function onResetRequested()  {
-                                        value =  settingsModel.minMegapixelCount
-                                        text = value
-                                    }
-                                    Component.onCompleted: {
-                                        warnTab.resetRequested.connect(megapixelsCount.onResetRequested)
-                                    }
-
-                                    validator: DoubleValidator {
-                                        bottom: 0
-                                        top: 100
-                                        decimals: 1
-                                        notation: "StandardNotation"
-                                    }
-                                }
-                            }
-
-                            StyledText {
-                                text: qsTr("(can be real)")
-                                color: Colors.defaultInputBackground
+                            function onResetRequested()  {
+                                value = settingsModel.keywordSizeScale
+                                uxTab.sizeSliderValue = value
                             }
                         }
 
-                        RowLayout {
-                            width: parent.width
-                            spacing: 10
+                        Rectangle {
+                            id: keywordPreview
+                            color: Colors.defaultLightGrayColor
 
-                            StyledText {
-                                Layout.preferredWidth: 130
-                                horizontalAlignment: Text.AlignRight
-                                text: qsTr("Max keywords count:")
-                            }
-
-                            StyledInputHost {
-                                border.width: keywordsCount.activeFocus ? 1 : 0
-
-                                StyledTextInput {
-                                    id: keywordsCount
-                                    width: 100
-                                    height: 24
-                                    clip: true
-                                    text: settingsModel.maxKeywordsCount
-                                    anchors.left: parent.left
-                                    anchors.leftMargin: 5
-                                    KeyNavigation.backtab: megapixelsCount
-                                    KeyNavigation.tab: descriptionLength
-                                    onTextChanged: {
-                                        if (text.length > 0) {
-                                            settingsModel.maxKeywordsCount = parseInt(text)
-                                        }
-                                    }
-
-                                    function onResetRequested()  {
-                                        value =  settingsModel.maxKeywordsCount
-                                        text = value
-                                    }
-
-                                    Component.onCompleted: {
-                                        warnTab.resetRequested.connect(keywordsCount.onResetRequested)
-                                    }
-
-                                    validator: IntValidator {
-                                        bottom: 0
-                                        top: 200
-                                    }
-                                }
-                            }
-
-                            StyledText {
-                                text: qsTr("(keywords)")
-                                color: Colors.defaultInputBackground
-                            }
-                        }
-
-                        RowLayout {
-                            width: parent.width
-                            spacing: 10
-
-                            StyledText {
-                                Layout.preferredWidth: 130
-                                horizontalAlignment: Text.AlignRight
-                                text: qsTr("Max description length:")
-                            }
-
-                            StyledInputHost {
-                                border.width: descriptionLength.activeFocus ? 1 : 0
-
-                                StyledTextInput {
-                                    id: descriptionLength
-                                    width: 100
-                                    height: 24
-                                    clip: true
-                                    text: settingsModel.maxDescriptionLength
-                                    anchors.left: parent.left
-                                    anchors.leftMargin: 5
-                                    KeyNavigation.backtab: keywordsCount
-                                    onTextChanged: {
-                                        if (text.length > 0) {
-                                            settingsModel.maxDescriptionLength = parseInt(text)
-                                        }
-                                    }
-
-                                    function onResetRequested()  {
-                                        value =  settingsModel.maxDescriptionLength
-                                        text = value
-                                    }
-
-                                    Component.onCompleted: {
-                                        warnTab.resetRequested.connect(descriptionLength.onResetRequested)
-                                    }
-
-                                    validator: IntValidator {
-                                        bottom: 0
-                                        top: 1000
-                                    }
-                                }
-                            }
-
-                            StyledText {
-                                text: qsTr("(characters)")
-                                color: Colors.defaultInputBackground
-                            }
-                        }
-
-                        Item {
-                            Layout.fillHeight: true
-                        }
-                    }
-                }
-
-                Tab {
-                    id:uploadTab
-                    title: qsTr("Upload")
-                    signal resetRequested()
-
-
-                    ColumnLayout {
-                        spacing: 20
-                        anchors.fill: parent
-                        anchors.margins: {left: 20; top: 30; right: 20; bottom: 20}
-
-                        RowLayout {
-                            width: parent.width
-                            spacing: 10
-
-                            StyledText {
-                                Layout.preferredWidth: 130
-                                horizontalAlignment: Text.AlignRight
-                                text: qsTr("File upload timeout:")
-                            }
-
-                            StyledInputHost {
-                                border.width: timeoutMinutes.activeFocus ? 1 : 0
-
-                                StyledTextInput {
-                                    id: timeoutMinutes
-                                    width: 100
-                                    height: 24
-                                    clip: true
-                                    text: settingsModel.uploadTimeout
-                                    anchors.left: parent.left
-                                    anchors.leftMargin: 5
-                                    onTextChanged: {
-                                        if (text.length > 0) {
-                                            settingsModel.uploadTimeout = parseInt(text)
-                                        }
-                                    }
-
-                                    function onResetRequested()  {
-                                        value =  settingsModel.uploadTimeout
-                                        text = value
-                                    }
-
-                                    Component.onCompleted: {
-                                        uploadTab.resetRequested.connect(timeoutMinutes.onResetRequested)
-                                    }
-                                    KeyNavigation.tab: maxParallelUploads
-                                    validator: IntValidator {
-                                        bottom: 1
-                                        top: 30
-                                    }
-                                }
-                            }
-
-                            StyledText {
-                                text: qsTr("(seconds)")
-                                color: Colors.defaultInputBackground
-                            }
-                        }
-
-                        RowLayout {
-                            width: parent.width
-                            spacing: 10
-
-                            StyledText {
-                                Layout.preferredWidth: 130
-                                horizontalAlignment: Text.AlignRight
-                                text: qsTr("Max parallel uploads:")
-                            }
-
-                            StyledInputHost {
-                                border.width: maxParallelUploads.activeFocus ? 1 : 0
-
-                                StyledTextInput {
-                                    id: maxParallelUploads
-                                    width: 100
-                                    height: 24
-                                    clip: true
-                                    text: settingsModel.maxParallelUploads
-                                    anchors.left: parent.left
-                                    anchors.leftMargin: 5
-                                    onTextChanged: {
-                                        if (text.length > 0) {
-                                            settingsModel.maxParallelUploads = parseInt(text)
-                                        }
-                                    }
-
-                                    function onResetRequested()  {
-                                        value =  settingsModel.maxParallelUploads
-                                        text = value
-                                    }
-
-                                    Component.onCompleted: {
-                                        uploadTab.resetRequested.connect(maxParallelUploads.onResetRequested)
-                                    }
-                                    KeyNavigation.backtab: timeoutMinutes
-                                    validator: IntValidator {
-                                        bottom: 1
-                                        top: 4
-                                    }
-                                }
-                            }
-
-                            StyledText {
-                                text: qsTr("(takes effect after relaunch)")
-                                color: Colors.defaultInputBackground
-                            }
-                        }
-
-                        Item {
-                            Layout.fillHeight: true
-                        }
-                    }
-                }
-
-                Tab {
-                    id : secTab
-                    title: qsTr("Security")
-                    signal resetRequested()
-
-
-
-                    ColumnLayout {
-                        anchors.fill: parent
-                        anchors.margins: {left: 20; top: 30; right: 20; bottom: 20}
-
-                        RowLayout {
-                            StyledCheckbox {
-                                id: masterPasswordCheckbox
-                                text: qsTr("Use Master password")
-                                onClicked: {
-                                    if (checked) {
-                                        if (!settingsModel.mustUseMasterPassword) {
-                                            var firstTime = true;
-                                            openMasterPasswordDialog(firstTime)
-                                        }
-                                    } else {
-                                        masterPasswordOffWarningDialog.open()
-                                    }
-                                }
-
-                                Component.onCompleted: {
-                                    checked = settingsModel.mustUseMasterPassword
-                                    secTab.resetRequested.connect(masterPasswordCheckbox.onResetRequested)
-                                }
-
-                                Connections {
-                                    target: settingsModel
-                                    onMustUseMasterPasswordChanged: {
-                                        masterPasswordCheckbox.checked = settingsModel.mustUseMasterPassword
-                                    }
-
-                                }
-
-                                function onResetRequested()  {
-                                    checked =  settingsModel.mustUseMasterPassword
-                                }
-                            }
-
-                            Item {
-                                Layout.fillWidth: true
-                            }
-
-                            StyledButton {
-                                width: 190
-                                text: qsTr("Change Master password")
-                                enabled: masterPasswordCheckbox.checked
-
-                                onClicked: {
-                                    openMasterPasswordDialog(false)
-                                }
-                            }
-                        }
-
-                        RowLayout {
-                            Item {
-                                Layout.fillWidth: true
-                            }
-
-                            StyledButton {
-                                width: 190
-                                text: qsTr("Reset Master password")
-                                enabled: masterPasswordCheckbox.checked
-
-                                onClicked: {
-                                    resetMPDialog.open()
-                                }
-                            }
-                        }
-
-                        Item {
-                            id: container
-                            anchors.left: parent.left
-                            anchors.right: parent.right
+                            width: childrenRect.width
                             height: childrenRect.height
-                            property bool expanded: false
 
-                            StyledText {
-                                id: link
-                                text: qsTr("More...")
-                                color: Colors.artworkActiveColor
-                                anchors.top: parent.top
-                                anchors.left: parent.left
+                            Row {
+                                spacing: 0
 
-                                MouseArea {
-                                    anchors.fill: parent
-                                    cursorShape: Qt.PointingHandCursor
-                                    onClicked: {
-                                        if (container.expanded) {
-                                            container.expanded = false
-                                            contentsRect.height = 0
-                                            link.text = qsTr("More...")
-                                        } else {
-                                            contentsRect.height = 50
-                                            container.expanded = true
-                                            link.text = qsTr("Less...")
-                                        }
-                                    }
-                                }
-                            }
-
-                            Rectangle {
-                                id: contentsRect
-                                color: "transparent"
-                                border.color: Colors.defaultControlColor
-                                border.width: 1
-                                anchors.left: parent.left
-                                anchors.top: link.bottom
-                                anchors.topMargin: 5
-                                height: 0
-                                width: parent.width
-
-                                Behavior on height {
-                                    NumberAnimation {
-                                        duration: 200
-                                        easing.type: Easing.InQuad
-                                    }
-                                }
-
-                                RowLayout {
-                                    visible: container.expanded
-                                    anchors.left: parent.left
-                                    anchors.leftMargin: 10
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    spacing: 10
-
-                                    StyledCheckbox {
-                                        id: userStatisticCheckBox
-                                        text: qsTr("Collect usage statistic")
-
-                                        function onResetRequested()  {
-                                            checked = settingsModel.userStatistic
-                                        }
-
-                                        Component.onCompleted: {
-                                            checked = settingsModel.userStatistic
-                                            behaviorTab.resetRequested.connect(userStatisticCheckBox.onResetRequested)
-                                        }
-
-                                        onCheckedChanged: {
-                                            settingsModel.mustUseConfirmations = checked
-                                        }
-
-                                    }
+                                Item {
+                                    id: tagTextRect
+                                    width: childrenRect.width + 5*keywordSizeSlider.value
+                                    height: 20 * keywordSizeSlider.value + (keywordSizeSlider.value - 1)*10
 
                                     StyledText {
-                                        text: qsTr("(simple statistic of feature usage)")
-                                        color: Colors.defaultInputBackground
+                                        anchors.top: parent.top
+                                        anchors.bottom: parent.bottom
+                                        anchors.left: parent.left
+                                        anchors.leftMargin: 5 + (keywordSizeSlider.value - 1)*10
+                                        verticalAlignment: Text.AlignVCenter
+                                        text: "keyword"
+                                        color: Colors.defaultControlColor
+                                        font.pixelSize: 12 * keywordSizeSlider.value
+                                    }
+                                }
+
+                                Item {
+                                    height: 20 * keywordSizeSlider.value + (keywordSizeSlider.value - 1)*10
+                                    width: height
+
+                                    CloseIcon {
+                                        width: 14 * keywordSizeSlider.value
+                                        height: 14 * keywordSizeSlider.value
+                                        isActive: true
+                                        anchors.centerIn: parent
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    RowLayout {
+                        width: parent.width
+                        spacing: 20
+
+                        StyledText {
+                            text: qsTr("Scroll speed")
+                        }
+
+                        StyledSlider {
+                            id: scrollSpeedSlider
+                            width: 150
+                            minimumValue: 1.0
+                            maximumValue: 6
+                            stepSize: 0.01
+                            orientation: Qt.Horizontal
+                            onValueChanged: uxTab.scrollSliderValue = value
+                            Component.onCompleted: {
+                                value = settingsModel.scrollSpeedScale
+                                uxTab.resetRequested.connect(scrollSpeedSlider.onResetRequested)
+                            }
+
+                            function onResetRequested() {
+                                value = settingsModel.scrollSpeedScale
+                                uxTab.sizeSliderValue = value
+                            }
+                        }
+                    }
+
+                    RowLayout {
+                        width: parent.width
+                        spacing: 10
+
+                        StyledText {
+                            Layout.preferredWidth: 130
+                            horizontalAlignment: Text.AlignLeft
+                            text: qsTr("Undo dismiss duration:")
+                        }
+
+                        StyledInputHost {
+                            border.width: dismissDuration.activeFocus ? 1 : 0
+
+                            StyledTextInput {
+                                id: dismissDuration
+                                width: 100
+                                height: 24
+                                clip: true
+                                text: settingsModel.dismissDuration
+                                anchors.left: parent.left
+                                anchors.leftMargin: 5
+                                onTextChanged: {
+                                    if (text.length > 0) {
+                                        settingsModel.dismissDuration = parseInt(text)
+                                    }
+                                }
+
+                                function onResetRequested()  {
+                                    text = settingsModel.dismissDuration
+                                }
+
+                                validator: IntValidator {
+                                    bottom: 5
+                                    top: 20
+                                }
+                            }
+                        }
+
+                        StyledText {
+                            text: qsTr("(seconds)")
+                            color: Colors.defaultInputBackground
+                        }
+                    }
+
+                    Item {
+                        Layout.fillHeight: true
+                    }
+                }
+            }
+
+            Tab {
+                id: extTab
+                title: qsTr("External")
+                signal resetRequested()
+
+                ColumnLayout {
+                    anchors.fill: parent
+                    anchors.margins: {left: 5; top: 30; right: 20; bottom: 20}
+
+                    GridLayout {
+                        width: parent.width
+                        rows: 2
+                        columns: 4
+                        rowSpacing: 20
+                        columnSpacing: 15
+
+                        StyledText {
+                            Layout.row: 0
+                            Layout.column: 0
+                            Layout.fillWidth: true
+                            Layout.maximumWidth: 80
+
+                            horizontalAlignment: Text.AlignRight
+                            text: qsTr("ExifTool path:")
+                        }
+
+                        StyledInputHost {
+                            border.width: exifToolText.activeFocus ? 1 : 0
+                            Layout.row: 0
+                            Layout.column: 1
+
+                            StyledTextInput {
+                                id: exifToolText
+                                width: 150
+                                height: 24
+                                clip: true
+                                text: settingsModel.exifToolPath
+                                anchors.left: parent.left
+                                anchors.leftMargin: 5
+                                onTextChanged: settingsModel.exifToolPath = text
+
+                                function onResetRequested()  {
+                                    value =  settingsModel.exifToolPath
+                                    text = value
+                                }
+                                Component.onCompleted: {
+                                    extTab.resetRequested.connect(exifToolText.onResetRequested)
+                                }
+                            }
+                        }
+
+                        StyledButton {
+                            Layout.row: 0
+                            Layout.column: 2
+                            text: qsTr("Select...")
+                            width: 70
+                            onClicked: exifToolFileDialog.open()
+                        }
+
+                        StyledButton {
+                            Layout.row: 0
+                            Layout.column: 3
+                            text: qsTr("Reset")
+                            width: 70
+                            onClicked: settingsModel.resetExifTool()
+                        }
+
+
+                        StyledText {
+                            Layout.row: 2
+                            Layout.column: 0
+                            Layout.fillWidth: true
+                            Layout.maximumWidth: 80
+                            horizontalAlignment: Text.AlignRight
+                            text: qsTr("Dictionary path:")
+                            visible: Qt.platform.os === "linux"
+                        }
+
+                        StyledInputHost {
+                            border.width: dictText.activeFocus ? 1 : 0
+                            Layout.row: 2
+                            Layout.column: 1
+                            visible: Qt.platform.os === "linux"
+
+                            StyledTextInput {
+                                id: dictText
+                                width: 150
+                                height: 24
+                                clip: true
+                                text: settingsModel.dictionaryPath
+                                anchors.left: parent.left
+                                anchors.leftMargin: 5
+                                onTextChanged: settingsModel.dictionaryPath = text
+                            }
+                        }
+
+                        StyledButton {
+                            Layout.row: 2
+                            Layout.column: 2
+                            text: qsTr("Select...")
+                            width: 70
+                            onClicked: dictPathDialog.open()
+                            visible: Qt.platform.os === "linux"
+                        }
+
+                        StyledButton {
+                            Layout.row: 2
+                            Layout.column: 3
+                            text: qsTr("Reset")
+                            width: 70
+                            onClicked: settingsModel.resetDictPath()
+                            visible: Qt.platform.os === "linux"
+                        }
+                    }
+
+                    Item {
+                        Layout.fillHeight: true
+                    }
+                }
+            }
+
+            Tab {
+                id: warnTab
+                title: qsTr("Warnings")
+                signal resetRequested()
+
+                ColumnLayout {
+                    spacing: 20
+                    anchors.fill: parent
+                    anchors.margins: {left: 20; top: 30; right: 20; bottom: 20}
+
+                    RowLayout {
+                        width: parent.width
+                        spacing: 10
+
+                        StyledText {
+                            Layout.preferredWidth: 130
+                            horizontalAlignment: Text.AlignRight
+                            text: qsTr("Minimum megapixels:")
+                        }
+
+                        StyledInputHost {
+                            border.width: megapixelsCount.activeFocus ? 1 : 0
+
+                            StyledTextInput {
+                                id: megapixelsCount
+                                width: 100
+                                height: 24
+                                clip: true
+                                text: settingsModel.minMegapixelCount
+                                anchors.left: parent.left
+                                anchors.leftMargin: 5
+                                KeyNavigation.tab: keywordsCount
+                                onTextChanged: {
+                                    if (text.length > 0) {
+                                        settingsModel.minMegapixelCount = parseFloat(text)
+                                    }
+                                }
+
+                                function onResetRequested()  {
+                                    value =  settingsModel.minMegapixelCount
+                                    text = value
+                                }
+                                Component.onCompleted: {
+                                    warnTab.resetRequested.connect(megapixelsCount.onResetRequested)
+                                }
+
+                                validator: DoubleValidator {
+                                    bottom: 0
+                                    top: 100
+                                    decimals: 1
+                                    notation: "StandardNotation"
+                                }
+                            }
+                        }
+
+                        StyledText {
+                            text: qsTr("(can be real)")
+                            color: Colors.defaultInputBackground
+                        }
+                    }
+
+                    RowLayout {
+                        width: parent.width
+                        spacing: 10
+
+                        StyledText {
+                            Layout.preferredWidth: 130
+                            horizontalAlignment: Text.AlignRight
+                            text: qsTr("Max keywords count:")
+                        }
+
+                        StyledInputHost {
+                            border.width: keywordsCount.activeFocus ? 1 : 0
+
+                            StyledTextInput {
+                                id: keywordsCount
+                                width: 100
+                                height: 24
+                                clip: true
+                                text: settingsModel.maxKeywordsCount
+                                anchors.left: parent.left
+                                anchors.leftMargin: 5
+                                KeyNavigation.backtab: megapixelsCount
+                                KeyNavigation.tab: descriptionLength
+                                onTextChanged: {
+                                    if (text.length > 0) {
+                                        settingsModel.maxKeywordsCount = parseInt(text)
+                                    }
+                                }
+
+                                function onResetRequested()  {
+                                    value =  settingsModel.maxKeywordsCount
+                                    text = value
+                                }
+
+                                Component.onCompleted: {
+                                    warnTab.resetRequested.connect(keywordsCount.onResetRequested)
+                                }
+
+                                validator: IntValidator {
+                                    bottom: 0
+                                    top: 200
+                                }
+                            }
+                        }
+
+                        StyledText {
+                            text: qsTr("(keywords)")
+                            color: Colors.defaultInputBackground
+                        }
+                    }
+
+                    RowLayout {
+                        width: parent.width
+                        spacing: 10
+
+                        StyledText {
+                            Layout.preferredWidth: 130
+                            horizontalAlignment: Text.AlignRight
+                            text: qsTr("Max description length:")
+                        }
+
+                        StyledInputHost {
+                            border.width: descriptionLength.activeFocus ? 1 : 0
+
+                            StyledTextInput {
+                                id: descriptionLength
+                                width: 100
+                                height: 24
+                                clip: true
+                                text: settingsModel.maxDescriptionLength
+                                anchors.left: parent.left
+                                anchors.leftMargin: 5
+                                KeyNavigation.backtab: keywordsCount
+                                onTextChanged: {
+                                    if (text.length > 0) {
+                                        settingsModel.maxDescriptionLength = parseInt(text)
+                                    }
+                                }
+
+                                function onResetRequested()  {
+                                    value =  settingsModel.maxDescriptionLength
+                                    text = value
+                                }
+
+                                Component.onCompleted: {
+                                    warnTab.resetRequested.connect(descriptionLength.onResetRequested)
+                                }
+
+                                validator: IntValidator {
+                                    bottom: 0
+                                    top: 1000
+                                }
+                            }
+                        }
+
+                        StyledText {
+                            text: qsTr("(characters)")
+                            color: Colors.defaultInputBackground
+                        }
+                    }
+
+                    Item {
+                        Layout.fillHeight: true
+                    }
+                }
+            }
+
+            Tab {
+                id:uploadTab
+                title: qsTr("Upload")
+                signal resetRequested()
+
+                ColumnLayout {
+                    spacing: 20
+                    anchors.fill: parent
+                    anchors.margins: {left: 20; top: 30; right: 20; bottom: 20}
+
+                    RowLayout {
+                        width: parent.width
+                        spacing: 10
+
+                        StyledText {
+                            Layout.preferredWidth: 130
+                            horizontalAlignment: Text.AlignRight
+                            text: qsTr("File upload timeout:")
+                        }
+
+                        StyledInputHost {
+                            border.width: timeoutMinutes.activeFocus ? 1 : 0
+
+                            StyledTextInput {
+                                id: timeoutMinutes
+                                width: 100
+                                height: 24
+                                clip: true
+                                text: settingsModel.uploadTimeout
+                                anchors.left: parent.left
+                                anchors.leftMargin: 5
+                                onTextChanged: {
+                                    if (text.length > 0) {
+                                        settingsModel.uploadTimeout = parseInt(text)
+                                    }
+                                }
+
+                                function onResetRequested()  {
+                                    value =  settingsModel.uploadTimeout
+                                    text = value
+                                }
+
+                                Component.onCompleted: {
+                                    uploadTab.resetRequested.connect(timeoutMinutes.onResetRequested)
+                                }
+                                KeyNavigation.tab: maxParallelUploads
+                                validator: IntValidator {
+                                    bottom: 1
+                                    top: 30
+                                }
+                            }
+                        }
+
+                        StyledText {
+                            text: qsTr("(seconds)")
+                            color: Colors.defaultInputBackground
+                        }
+                    }
+
+                    RowLayout {
+                        width: parent.width
+                        spacing: 10
+
+                        StyledText {
+                            Layout.preferredWidth: 130
+                            horizontalAlignment: Text.AlignRight
+                            text: qsTr("Max parallel uploads:")
+                        }
+
+                        StyledInputHost {
+                            border.width: maxParallelUploads.activeFocus ? 1 : 0
+
+                            StyledTextInput {
+                                id: maxParallelUploads
+                                width: 100
+                                height: 24
+                                clip: true
+                                text: settingsModel.maxParallelUploads
+                                anchors.left: parent.left
+                                anchors.leftMargin: 5
+                                onTextChanged: {
+                                    if (text.length > 0) {
+                                        settingsModel.maxParallelUploads = parseInt(text)
+                                    }
+                                }
+
+                                function onResetRequested()  {
+                                    value =  settingsModel.maxParallelUploads
+                                    text = value
+                                }
+
+                                Component.onCompleted: {
+                                    uploadTab.resetRequested.connect(maxParallelUploads.onResetRequested)
+                                }
+                                KeyNavigation.backtab: timeoutMinutes
+                                validator: IntValidator {
+                                    bottom: 1
+                                    top: 4
+                                }
+                            }
+                        }
+
+                        StyledText {
+                            text: qsTr("(takes effect after relaunch)")
+                            color: Colors.defaultInputBackground
+                        }
+                    }
+
+                    Item {
+                        Layout.fillHeight: true
+                    }
+                }
+            }
+
+            Tab {
+                id : secTab
+                title: qsTr("Security")
+                signal resetRequested()
+
+                property bool useStatistics: settingsModel.userStatistics
+
+                ColumnLayout {
+                    anchors.fill: parent
+                    anchors.margins: {left: 20; top: 30; right: 20; bottom: 20}
+
+                    RowLayout {
+                        StyledCheckbox {
+                            id: masterPasswordCheckbox
+                            text: qsTr("Use Master password")
+                            onClicked: {
+                                if (checked) {
+                                    if (!settingsModel.mustUseMasterPassword) {
+                                        var firstTime = true;
+                                        openMasterPasswordDialog(firstTime)
+                                    }
+                                } else {
+                                    masterPasswordOffWarningDialog.open()
+                                }
+                            }
+
+                            Component.onCompleted: {
+                                checked = settingsModel.mustUseMasterPassword
+                                secTab.resetRequested.connect(masterPasswordCheckbox.onResetRequested)
+                            }
+
+                            Connections {
+                                target: settingsModel
+                                onMustUseMasterPasswordChanged: {
+                                    masterPasswordCheckbox.checked = settingsModel.mustUseMasterPassword
+                                }
+
+                            }
+
+                            function onResetRequested()  {
+                                checked =  settingsModel.mustUseMasterPassword
+                            }
+                        }
+
+                        Item {
+                            Layout.fillWidth: true
+                        }
+
+                        StyledButton {
+                            width: 190
+                            text: qsTr("Change Master password")
+                            enabled: masterPasswordCheckbox.checked
+
+                            onClicked: {
+                                openMasterPasswordDialog(false)
+                            }
+                        }
+                    }
+
+                    RowLayout {
+                        Item {
+                            Layout.fillWidth: true
+                        }
+
+                        StyledButton {
+                            width: 190
+                            text: qsTr("Reset Master password")
+                            enabled: masterPasswordCheckbox.checked
+
+                            onClicked: {
+                                resetMPDialog.open()
+                            }
+                        }
+                    }
+
+                    Item {
+                        id: container
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        height: childrenRect.height
+                        property bool expanded: false
+
+                        StyledText {
+                            id: link
+                            text: qsTr("More...")
+                            color: Colors.artworkActiveColor
+                            anchors.top: parent.top
+                            anchors.left: parent.left
+
+                            MouseArea {
+                                anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: {
+                                    if (container.expanded) {
+                                        container.expanded = false
+                                        contentsRect.height = 0
+                                        link.text = qsTr("More...")
+                                    } else {
+                                        contentsRect.height = 50
+                                        container.expanded = true
+                                        link.text = qsTr("Less...")
                                     }
                                 }
                             }
                         }
 
-                        Item {
-                            Layout.fillHeight: true
+                        Rectangle {
+                            id: contentsRect
+                            color: "transparent"
+                            border.color: Colors.defaultControlColor
+                            border.width: 1
+                            anchors.left: parent.left
+                            anchors.top: link.bottom
+                            anchors.topMargin: 5
+                            height: 0
+                            width: parent.width
+
+                            Behavior on height {
+                                NumberAnimation {
+                                    duration: 200
+                                    easing.type: Easing.InQuad
+                                }
+                            }
+
+                            RowLayout {
+                                visible: container.expanded
+                                anchors.left: parent.left
+                                anchors.leftMargin: 10
+                                anchors.verticalCenter: parent.verticalCenter
+                                spacing: 10
+
+                                StyledCheckbox {
+                                    id: userStatisticCheckBox
+                                    text: qsTr("Collect usage statistics")
+
+                                    function onResetRequested()  {
+                                        checked = settingsModel.userStatistics
+                                    }
+
+                                    Component.onCompleted: {
+                                        checked = settingsModel.userStatistics
+                                        secTab.resetRequested.connect(userStatisticCheckBox.onResetRequested)
+                                    }
+
+                                    onCheckedChanged: {
+                                        secTab.useStatistics = checked
+                                    }
+
+                                }
+
+                                StyledText {
+                                    text: qsTr("(simple statistic of feature usage)")
+                                    color: Colors.defaultInputBackground
+                                }
+                            }
                         }
                     }
-                }
-            }
 
-            Item {
-                height: 10
-            }
-
-            RowLayout {
-                height: 24
-                spacing: 0
-                width: parent.width
-
-                Item {
-                    width: 10
-                }
-
-                StyledButton {
-                    text: qsTr("Reset to defaults")
-                    width: 120
-                    onClicked: {
-                        resetSettingsDialog.open()
-
-                        if (typeof useConfirmationDialogsCheckbox !== "undefined") {
-                            useConfirmationDialogsCheckbox.checked = settingsModel.mustUseConfirmations
-                        }
-
-                        if (typeof masterPasswordCheckbox !== "undefined") {
-                            masterPasswordCheckbox.checked = settingsModel.mustUseMasterPassword;
-                        }
+                    Item {
+                        Layout.fillHeight: true
                     }
                 }
-
-                Item {
-                    Layout.fillWidth: true
-                }
-
-                StyledButton {
-                    text: qsTr("Save and Close")
-                    width: 120
-                    onClicked: {
-                        settingsModel.keywordSizeScale = uxTab.sizeSliderValue
-                        settingsModel.scrollSpeedScale = uxTab.scrollSliderValue
-                        settingsModel.userStatistic = behaviorTab.useStatistics
-                        settingsModel.saveAllValues()
-                        closeSettings()
-                    }
-                }
-
-                Item {
-                    width: 10
-                }
-
-                StyledButton {
-                    text: qsTr("Close")
-                    width: 60
-                    onClicked: {
-                        settingsModel.readAllValues()
-                        closeSettings()
-                    }
-                }
-
-                Item {
-                    width: 10
-                }
-            }
-
-            Item {
-                height: 5
             }
         }
+
+        RowLayout {
+            id: bottomRow
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            anchors.margins: {left: 20; bottom: 20; right: 20}
+            height: 24
+            spacing: 0
+            width: parent.width
+
+            Item {
+                width: 10
+            }
+
+            StyledButton {
+                text: qsTr("Reset to defaults")
+                width: 120
+                onClicked: {
+                    resetSettingsDialog.open()
+
+                    if (typeof useConfirmationDialogsCheckbox !== "undefined") {
+                        useConfirmationDialogsCheckbox.checked = settingsModel.mustUseConfirmations
+                    }
+
+                    if (typeof masterPasswordCheckbox !== "undefined") {
+                        masterPasswordCheckbox.checked = settingsModel.mustUseMasterPassword;
+                    }
+                }
+            }
+
+            Item {
+                Layout.fillWidth: true
+            }
+
+            StyledButton {
+                text: qsTr("Save and Close")
+                width: 120
+                onClicked: {
+                    settingsModel.keywordSizeScale = uxTab.sizeSliderValue
+                    settingsModel.scrollSpeedScale = uxTab.scrollSliderValue
+                    settingsModel.userStatistic = secTab.useStatistics
+                    settingsModel.saveAllValues()
+                    closeSettings()
+                }
+            }
+
+            Item {
+                width: 20
+            }
+
+            StyledButton {
+                text: qsTr("Close")
+                width: 60
+                onClicked: {
+                    settingsModel.readAllValues()
+                    closeSettings()
+                }
+            }
+
+            Item {
+                width: 10
+            }
+        }
+
     }
 
     Component.onCompleted: {
         //exifToolText.forceActiveFocus()
     }
-
-
 }
 

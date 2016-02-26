@@ -124,8 +124,8 @@ namespace Helpers {
         Q_PROPERTY(QString dictionaryPathKey READ getDictionaryPathKey CONSTANT)
         QString getDictionaryPathKey() const { return QLatin1String(Constants::DICT_PATH); }
 
-        Q_PROPERTY(QString userStatisticKey READ getUserStatisticKey CONSTANT)
-        QString getUserStatisticKey() const { return QLatin1String(Constants::USER_STATISTIC); }
+        Q_PROPERTY(QString userStatisticsKey READ getUserStatisticsKey CONSTANT)
+        QString getUserStatisticsKey() const { return QLatin1String(Constants::USER_STATISTICS); }
 
         Q_PROPERTY(QString updateServiceKey READ getUpdateServiceKey CONSTANT)
         QString getUpdateServiceKey() const { return QLatin1String(Constants::UPDATE_SERVICE); }
@@ -248,7 +248,7 @@ namespace Helpers {
         }
 
         Q_INVOKABLE void protectTelemetry() {
-            bool telemetryEnabled = this->value(Constants::USER_STATISTIC, false).toBool();
+            bool telemetryEnabled = this->value(Constants::USER_STATISTICS, false).toBool();
 
             if (telemetryEnabled) {
                 this->setValue(Constants::NUMBER_OF_LAUNCHES, 0);
@@ -257,7 +257,7 @@ namespace Helpers {
                 numberOfLaunches++;
 
                 if (numberOfLaunches >= 31) {
-                    this->setValue(Constants::USER_STATISTIC, true);
+                    this->setValue(Constants::USER_STATISTICS, true);
                     this->setValue(Constants::NUMBER_OF_LAUNCHES, 0);
                     qDebug() << "AppSettings::protectTelemetry #"<< "Resetting telemetry to ON";
                 } else {
