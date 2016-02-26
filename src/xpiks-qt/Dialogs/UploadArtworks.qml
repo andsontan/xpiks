@@ -686,10 +686,6 @@ Item {
                     height: 24
                     spacing: 15
 
-                    Item {
-                        Layout.fillWidth: true
-                    }
-
                     StyledText {
                         enabled: uploadArtworksComponent.uploadEnabled
                         text: warningsModel.warningsCount == 1 ? qsTr("1 warning") : qsTr("%1 warnings").arg(warningsModel.warningsCount)
@@ -711,6 +707,10 @@ Item {
                                 }
                             }
                         }
+                    }
+
+                    Item {
+                        Layout.fillWidth: true
                     }
 
                     StyledButton {
