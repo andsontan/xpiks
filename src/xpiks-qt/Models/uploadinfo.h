@@ -40,7 +40,7 @@ namespace Models {
             UsernameField = 2,
             PasswordField = 3,
             DirectoryField = 4,
-            ZipField = 5,
+            ZipPreviewAndVectorField = 5,
             /*DEPRECATED*/FtpPassiveModeField = 6,
             DisableFtpPassiveModeField = 7
         };
@@ -55,7 +55,7 @@ namespace Models {
             m_Title = QString::fromLatin1("Untitled");
         }
 
-        UploadInfo(const QHash<int, QString>& items) :
+        UploadInfo(const QHash<int, QString> &items) :
             m_Percent(0),
             m_IsSelected(false)
         {
@@ -64,7 +64,7 @@ namespace Models {
             m_Host = items.value(HostField, emptyString);
             m_Username = items.value(UsernameField, emptyString);
             m_EncodedPassword = items.value(PasswordField, emptyString);
-            m_ZipBeforeUpload = items.value(ZipField, "false") == QLatin1String("true");
+            m_ZipBeforeUpload = items.value(ZipPreviewAndVectorField, "false") == QLatin1String("true");
             m_DisableFtpPassiveMode = items.value(DisableFtpPassiveModeField, "false") == QLatin1String("true");
         }
 
@@ -128,7 +128,7 @@ namespace Models {
             hash[HostField] = m_Host;
             hash[UsernameField] = m_Username;
             hash[PasswordField] = m_EncodedPassword;
-            hash[ZipField] = m_ZipBeforeUpload ? "true" : "false";
+            hash[ZipPreviewAndVectorField] = m_ZipBeforeUpload ? "true" : "false";
             hash[DisableFtpPassiveModeField] = m_DisableFtpPassiveMode ? "true" : "false";
             return hash;
         }

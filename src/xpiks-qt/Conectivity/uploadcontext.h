@@ -36,6 +36,8 @@ namespace Conectivity {
         QString m_Host;
         QString m_Username;
         QString m_Password;
+        QString m_DirForVectors;
+        QString m_DirForImages;
         bool m_UsePassiveMode;
         int m_RetriesCount;
         int m_TimeoutSeconds;

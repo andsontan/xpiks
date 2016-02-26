@@ -24,6 +24,7 @@
 
 #include <QFutureWatcher>
 #include <QPair>
+#include <QVector>
 #include "artworksprocessor.h"
 
 class QStringList;
@@ -36,6 +37,9 @@ namespace Models {
     public:
         ZipArchiver();
         virtual ~ZipArchiver() { delete m_ArchiveCreator; }
+
+    public:
+        virtual int getItemsCount() const;
 
     public slots:
         void archiveCreated(int);

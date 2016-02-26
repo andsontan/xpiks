@@ -110,7 +110,7 @@ Item {
                     Layout.fillWidth: true
 
                     StyledText {
-                        text: qsTr("Zip selected artworks with vector files (.ai or .eps)")
+                        text: qsTr("Zip vectors with previews")
                     }
 
                     Item {

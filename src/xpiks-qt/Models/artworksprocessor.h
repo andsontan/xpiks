@@ -67,7 +67,7 @@ namespace Models {
         void updateProgress() { emit percentChanged(); }
         bool getIsError() const { return m_IsError; }
         void setIsError(bool value) { m_IsError = value; emit isErrorChanged(); }
-        int getItemsCount() const { return m_ArtworkList.length(); }
+        virtual int getItemsCount() const { return m_ArtworkList.length(); }
 
     public:
         Q_INVOKABLE void resetModel();
@@ -88,7 +88,6 @@ namespace Models {
 
     protected:
         const QVector<ArtworkMetadata*> &getArtworkList() const { return m_ArtworkList; }
-        Commands::CommandManager *getCommandManager() { return m_CommandManager; }
         virtual void cancelProcessing() = 0;
         virtual void innerResetModel() { /*BUMP*/ }
         void beginProcessing();

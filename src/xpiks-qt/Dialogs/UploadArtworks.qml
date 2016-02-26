@@ -620,7 +620,7 @@ Item {
 
                                     StyledCheckbox {
                                         id: zipBeforeUploadCheckBox
-                                        text: qsTr("Zip with vector (eps/ai) before upload")
+                                        text: qsTr("Zip vector with preview")
                                         Component.onCompleted: checked = uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.zipbeforeupload : false
 
                                         onClicked: {

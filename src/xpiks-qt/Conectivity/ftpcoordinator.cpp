@@ -54,11 +54,12 @@ namespace Conectivity {
 
             if (metadata->hasVectorAttached()) {
                 filePathes.append(metadata->getAttachedVectorPath());
-            }
 
-            // TODO: maybe there's a sense zipping only vectors?
-            QString zipPath = Helpers::getArchivePath(filepath);
-            zipsPathes.append(zipPath);
+                QString zipPath = Helpers::getArchivePath(filepath);
+                zipsPathes.append(zipPath);
+            } else {
+                zipsPathes.append(filepath);
+            }
         }
     }
 

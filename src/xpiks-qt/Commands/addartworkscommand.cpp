@@ -59,7 +59,7 @@ int findAndAttachVectors(const QVector<Models::ArtworkMetadata*> &artworksList) 
 }
 
 Commands::CommandResult *Commands::AddArtworksCommand::execute(const ICommandManager *commandManagerInterface) const {
-    qDebug() << "AddArtworksCommand::execute #" << m_FilePathes.length() << "files received";
+    qDebug() << "AddArtworksCommand::execute #" << m_FilePathes.length() << "images," << m_VectorsPathes.length() << "vectors";
     CommandManager *commandManager = (CommandManager*)commandManagerInterface;
 
     Models::ArtworksRepository *artworksRepository = commandManager->getArtworksRepository();

@@ -54,10 +54,11 @@ namespace Models {
         virtual void setCommandManager(Commands::CommandManager *commandManager);
 
     signals:
+        void percentChanged();
         void credentialsChecked(bool result, const QString &url);
 
     public:
-        virtual int getPercent() const { return m_Percent; }
+        int getPercent() const { return m_Percent; }
 
     public slots:
         void onUploadStarted();

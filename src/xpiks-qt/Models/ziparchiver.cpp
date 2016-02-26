@@ -37,6 +37,18 @@ namespace Models {
         connect(m_ArchiveCreator, SIGNAL(finished()), SLOT(allFinished()));
     }
 
+    int ZipArchiver::getItemsCount() const {
+        const QVector<Models::ArtworkMetadata *> items = getArtworkList();
+        int size = items.size(), count = 0;
+        for (int i = 0; i < size; ++i) {
+            if (items[i]->hasVectorAttached()) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
     void ZipArchiver::archiveCreated(int) {
         incProgress();
     }
@@ -52,6 +64,7 @@ namespace Models {
         fillFilenamesHash(itemsWithSameName);
 
         if (itemsWithSameName.empty()) {
+            qInfo() << "ZipArchiver::archiveArtworks #" << "No items to zip. Exiting...";
             return;
         }
 
@@ -68,23 +81,18 @@ namespace Models {
         QVector<Models::ArtworkMetadata*> artworksList = getArtworkList();
 
         foreach (Models::ArtworkMetadata *metadata, artworksList) {
-            QString filepath = metadata->getFilepath();
+            const QString &filepath = metadata->getFilepath();
+
             QFileInfo fi(filepath);
             QString basename = fi.baseName();
 
-            if (!hash.contains(basename)) {
-                hash.insert(basename, QStringList());
-            }
-
-            hash[basename].append(filepath);
-
-            QStringList vectors = Helpers::convertToVectorFilenames(QStringList() << filepath);
-
-            foreach (const QString &item, vectors) {
-                if (QFileInfo(item).exists()) {
-                    hash[basename].append(item);
-                    break;
+            if (metadata->hasVectorAttached()) {
+                if (!hash.contains(basename)) {
+                    hash.insert(basename, QStringList());
                 }
+
+                hash[basename].append(filepath);
+                hash[basename].append(metadata->getAttachedVectorPath());
             }
         }
     }

@@ -133,6 +133,8 @@ namespace Models {
 
     void FilteredArtItemsProxyModel::setSelectedForZipping() {
         QVector<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
+        qInfo() << "FilteredArtItemsProxyModel::setSelectedForZipping #" << selectedArtworks.length() << "item(s)";
+
         m_CommandManager->setArtworksForZipping(selectedArtworks);
     }
 

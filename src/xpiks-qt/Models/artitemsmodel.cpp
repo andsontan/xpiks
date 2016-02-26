@@ -715,6 +715,8 @@ namespace Models {
             QString filepath = items.at(i).absoluteFilePath();
             filesList.append(filepath);
         }
+
+        qInfo() << "ArtItemsModel::doAddDirectory #" << filesList.length() << "file(s) found";
     }
 
     int ArtItemsModel::addFiles(const QStringList &rawFilenames) {

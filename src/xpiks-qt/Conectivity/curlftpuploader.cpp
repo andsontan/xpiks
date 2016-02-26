@@ -190,6 +190,53 @@ namespace Conectivity {
         return result;
     }
 
+    QString generateRemoteAddress(const QString &host, const QString &filepath, UploadContext *context) {
+        QFileInfo fi(filepath);
+        QString extension = fi.completeSuffix().toLower();
+        QString filename = fi.fileName();
+        QString result;
+
+        // TODO: refactor to ::isSupportedVectorExtension()
+        if (extension == QLatin1String("eps") ||
+                extension == QLatin1String("ai")) {
+            QString vectorsDir = context->m_DirForVectors.trimmed();
+
+            if (!vectorsDir.isEmpty()) {
+                const QChar slash('/');
+                if (vectorsDir.startsWith(slash)) {
+                    vectorsDir.remove(0, 1);
+                }
+
+                if (!vectorsDir.endsWith(slash)) {
+                    vectorsDir.append(slash);
+                }
+
+                result = host + vectorsDir + filename;
+            } else {
+                result = host + filename;
+            }
+        } else {
+            // TODO: assume it's image, but add video later here
+            QString imagesDir = context->m_DirForImages.trimmed();
+            if (!imagesDir.isEmpty()) {
+                const QChar slash('/');
+                if (imagesDir.startsWith(slash)) {
+                    imagesDir.remove(0, 1);
+                }
+
+                if (!imagesDir.endsWith(slash)) {
+                    imagesDir.append(slash);
+                }
+
+                result = host + imagesDir + filename;
+            } else {
+                result = host + filename;
+            }
+        }
+
+        return result;
+    }
+
     CurlProgressReporter::CurlProgressReporter(void *curl):
         QObject(),
         m_LastTime(0.0),
@@ -258,9 +305,7 @@ namespace Conectivity {
             reportCurrentFileProgress(0.0);
 
             const QString &filepath = filesToUpload.at(i);
-            QFileInfo fi(filepath);
-            QString remoteUrl = host + fi.fileName();
-
+            QString remoteUrl = generateRemoteAddress(host, filepath, context);
             bool uploadSuccess = false;
 
             try {

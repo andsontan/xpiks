@@ -37,7 +37,6 @@
 
 namespace Models {
     ArtworkUploader::ArtworkUploader(int maxParallelUploads, int secondsTimeout) :
-        ArtworksProcessor(),
         m_Percent(0)
     {
         m_FtpCoordinator = new Conectivity::FtpCoordinator(maxParallelUploads, secondsTimeout);
@@ -56,7 +55,7 @@ namespace Models {
     }
 
     void ArtworkUploader::setCommandManager(Commands::CommandManager *commandManager) {
-        ArtworksProcessor::setCommandManager(commandManager);
+        Common::BaseEntity::setCommandManager(commandManager);
         m_FtpCoordinator->setCommandManager(commandManager);
     }
 
@@ -119,6 +118,8 @@ namespace Models {
         if (anyZipNeeded) {
             const QVector<ArtworkMetadata*> &artworkList = this->getArtworkList();
             foreach (ArtworkMetadata *metadata, artworkList) {
+                if (!metadata->hasVectorAttached()) { continue; }
+
                 const QString &filepath = metadata->getFilepath();
                 QString archivePath = Helpers::getArchivePath(filepath);
                 QFileInfo fi(archivePath);
