@@ -23,6 +23,12 @@
 
 * save items with some already saved
 
+## Operations with artworks
+
+* filtering artworks
+* searching artworks
+* combinations
+
 ## Spellchecking
 
 * description, title, keywords
