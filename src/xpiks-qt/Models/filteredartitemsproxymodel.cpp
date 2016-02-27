@@ -260,6 +260,7 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::toggleSorted() {
+        qDebug() << "FilteredArtItemsProxyModel::toggleSorted #" << "current sorted is" << m_SortingEnabled;
         forceUnselectAllItems();
 
         if (!m_SortingEnabled) {
@@ -298,6 +299,7 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::removeMetadataInItems(const QVector<ArtItemInfo *> &itemsToClear, int flags) const {
+        qDebug() << "FilteredArtItemsProxyModel::removeMetadataInItems #" << itemsToClear.length() << "item(s) with flags =" << flags;
         Commands::CombinedEditCommand *combinedEditCommand = new Commands::CombinedEditCommand(
                     flags,
                     itemsToClear);
@@ -339,6 +341,7 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::invertFilteredItemsSelected() {
+        qDebug() << "FilteredArtItemsProxyModel::invertFilteredItemsSelected #";
         ArtItemsModel *artItemsModel = getArtItemsModel();
         QVector<int> indices;
         int size = this->rowCount();
@@ -468,6 +471,7 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::forceUnselectAllItems() {
+        qDebug() << "FilteredArtItemsProxyModel::forceUnselectAllItems #";
         ArtItemsModel *artItemsModel = getArtItemsModel();
         artItemsModel->forceUnselectAllItems();
         m_SelectedArtworksCount = 0;
@@ -490,6 +494,8 @@ namespace Models {
             hasMatch = metadata->isEmpty();
         } else if (searchTerm == QLatin1String("x:selected")) {
             hasMatch = metadata->getIsSelected();
+        } else if (searchTerm == QLatin1String("x:vector")) {
+            hasMatch = metadata->hasVectorAttached();
         }
 
         return hasMatch;

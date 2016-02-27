@@ -66,6 +66,7 @@ namespace MetadataIO {
     }
 
     void BackupSaverService::readArtworks(const QVector<Models::ArtworkMetadata *> &artworks) const {
+        qDebug() << "BackupSaverService::readArtworks #" << artworks.size() << "artwork(s)";
         QVector<SaverWorkerJobItem *> jobs;
         jobs.reserve(artworks.length());
 

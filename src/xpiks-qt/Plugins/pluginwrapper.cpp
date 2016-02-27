@@ -24,6 +24,7 @@
 #include "xpiksplugininterface.h"
 #include "ipluginaction.h"
 #include "pluginactionsmodel.h"
+#include "../Common/defines.h"
 
 namespace Plugins {
     PluginWrapper::PluginWrapper(XpiksPluginInterface *pluginInterface, int pluginID):

@@ -29,9 +29,8 @@
 namespace Models {
     UploadInfoRepository::~UploadInfoRepository() { qDeleteAll(m_UploadInfos); m_UploadInfos.clear();  }
 
-    void UploadInfoRepository::initFromString(const QString &savedString)
-    {
-        qInfo() << "UploadInfoRepository::initFromString #";
+    void UploadInfoRepository::initFromString(const QString &savedString) {
+        qDebug() << "UploadInfoRepository::initFromString #";
         QByteArray originalData;
         originalData.append(savedString.toLatin1());
         QByteArray result = QByteArray::fromBase64(originalData);
@@ -50,6 +49,8 @@ namespace Models {
             UploadInfo *info = new UploadInfo(hash);
             m_UploadInfos.append(info);
         }
+
+        qInfo() << "UploadInfoRepository::initFromString #" << length << "item(s) found";
     }
 
     void UploadInfoRepository::addItem() {
@@ -62,7 +63,7 @@ namespace Models {
     }
 
     QString UploadInfoRepository::getInfoString() const {
-        qDebug() << "UploadInfoRepository::getInfoString #" << "Serializing infos";
+        qDebug() << "UploadInfoRepository::getInfoString #" << "Serializing" << m_UploadInfos.length() << "info(s)";
         // bad type QList instead of QVector
         // but users already have this
         QList<QHash<int, QString> > items;
@@ -119,8 +120,7 @@ namespace Models {
         }
     }
 
-    void UploadInfoRepository::finalizeAccounts()
-    {
+    void UploadInfoRepository::finalizeAccounts() {
         if (m_EmptyPasswordsMode) {
             this->restoreRealPasswords();
         }

@@ -381,6 +381,7 @@ namespace Models {
     }
 
     int ArtItemsModel::addRecentDirectory(const QString &directory) {
+        qDebug() << "ArtItemsModel::addRecentDirectory #" << directory;
         int filesAdded = addDirectories(QStringList() << directory);
         return filesAdded;
     }
@@ -726,6 +727,7 @@ namespace Models {
     }
 
     int ArtItemsModel::addFiles(const QStringList &rawFilenames) {
+        qDebug() << "ArtItemsModel::addFiles #" << rawFilenames.length() << "file(s)";
         QStringList filenames, vectors;
         filenames.reserve(rawFilenames.length());
         vectors.reserve(rawFilenames.length());
@@ -773,6 +775,7 @@ namespace Models {
     }
 
     void ArtItemsModel::doCombineArtwork(int index) {
+        qDebug() << "ArtItemsModel::doCombineArtwork #" << "index" << index;
         if (0 <= index && index < m_ArtworkList.length()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(index);
             //QModelIndex qmIndex = this->index(index);

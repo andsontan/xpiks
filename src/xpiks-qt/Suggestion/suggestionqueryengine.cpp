@@ -32,6 +32,7 @@
 #include "../Encryption/aes-qt.h"
 #include "libraryqueryworker.h"
 #include "locallibrary.h"
+#include "../Common/defines.h"
 
 #define MAX_LOCAL_RESULTS 100
 
@@ -49,6 +50,7 @@ namespace Suggestion {
     }
 
     void SuggestionQueryEngine::submitQuery(const QStringList &queryKeywords) {
+        qDebug() << "SuggestionQueryEngine::submitQuery #" << queryKeywords;
         QUrl url = buildQuery(queryKeywords);
         QNetworkRequest request(url);
 
@@ -65,6 +67,7 @@ namespace Suggestion {
     }
 
     void SuggestionQueryEngine::submitLocalQuery(LocalLibrary *localLibrary, const QStringList &queryKeywords) {
+        qDebug() << "SuggestionQueryEngine::submitLocalQuery #" << queryKeywords;
         LibraryQueryWorker *worker = new LibraryQueryWorker(localLibrary, queryKeywords, MAX_LOCAL_RESULTS);
         QThread *thread = new QThread();
         worker->moveToThread(thread);
@@ -85,10 +88,12 @@ namespace Suggestion {
     }
 
     void SuggestionQueryEngine::cancelQueries() {
+        qDebug() << "SuggestionQueryEngine::cancelQueries #";
         emit cancelAllQueries();
     }
 
     void SuggestionQueryEngine::replyReceived(QNetworkReply *networkReply) {
+        qDebug() << "SuggestionQueryEngine::replyReceived #";
         if (networkReply->error() == QNetworkReply::NoError) {
             QJsonDocument document = QJsonDocument::fromJson(networkReply->readAll());
             QJsonObject jsonObject = document.object();
@@ -108,11 +113,13 @@ namespace Suggestion {
     }
 
     void SuggestionQueryEngine::artworksFound(QVector<SuggestionArtwork *> *suggestions) {
+        qDebug() << "SuggestionQueryEngine::artworksFound #";
         m_Suggestor->setSuggestedArtworks(*suggestions);
         delete suggestions;
     }
 
     void SuggestionQueryEngine::parseResponse(const QJsonArray &jsonArray, QVector<SuggestionArtwork*> &suggestionArtworks) {
+        qDebug() << "SuggestionQueryEngine::parseResponse #";
         foreach (const QJsonValue &value, jsonArray) {
             QJsonObject imageResult = value.toObject();
 

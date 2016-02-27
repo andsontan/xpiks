@@ -98,6 +98,7 @@ namespace SpellCheck {
     }
 
     void SpellCheckSuggestionModel::submitCorrections() const {
+        qDebug() << "SpellCheckSuggestionModel::submitCorrections #";
         bool anyChanged = false;
 
         foreach (SpellSuggestionsItem *item, m_SuggestionsList) {

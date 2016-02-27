@@ -28,10 +28,10 @@
 #include "../Helpers/ziphelper.h"
 #include "../Models/artworkmetadata.h"
 #include "../Helpers/filenameshelpers.h"
+#include "../Common/defines.h"
 
 namespace Models {
-    ZipArchiver::ZipArchiver()
-    {
+    ZipArchiver::ZipArchiver() {
         m_ArchiveCreator = new QFutureWatcher<QStringList>(this);
         connect(m_ArchiveCreator, SIGNAL(resultReadyAt(int)), SLOT(archiveCreated(int)));
         connect(m_ArchiveCreator, SIGNAL(finished()), SLOT(allFinished()));

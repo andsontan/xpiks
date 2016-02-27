@@ -77,6 +77,7 @@ namespace Suggestion {
     }
 
     void LocalLibrary::searchArtworks(const QStringList &query, QVector<SuggestionArtwork*> &searchResults, int maxResults) {
+        qDebug() << "LocalLibrary::searchArtworks #" << "max results" << maxResults;
         QMutexLocker locker(&m_Mutex);
 
         QHashIterator<QString, QStringList> i(m_LocalArtworks);
@@ -148,6 +149,7 @@ namespace Suggestion {
     }
 
     void LocalLibrary::performAsync(LibraryLoaderWorker::LoadOption option) {
+        qDebug() << "LocalLibrary::performAsync #" << option;
         LibraryLoaderWorker *worker = new LibraryLoaderWorker(this, m_Filename, option);
         QThread *thread = new QThread();
         worker->moveToThread(thread);

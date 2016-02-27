@@ -127,6 +127,7 @@ namespace Encryption {
     }
 
     void SecretsManager::removeMasterPassword() {
+        qInfo() << "SecretsManager::removeMasterPassword #";
          m_EncodedMasterPassword.clear();
          m_MasterPasswordHash.clear();
          emit afterMasterPasswordReset();
@@ -144,8 +145,7 @@ namespace Encryption {
         return key;
     }
 
-    QByteArray SecretsManager::getPasswordHash(const QString &password) const
-    {
+    QByteArray SecretsManager::getPasswordHash(const QString &password) const {
         QCryptographicHash hash(QCryptographicHash::Sha256);
         QString data = m_DefaultMasterPassword + password;
         hash.addData(data.toUtf8());

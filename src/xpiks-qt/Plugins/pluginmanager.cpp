@@ -30,6 +30,7 @@
 #include "../UndoRedo/undoredomanager.h"
 #include "pluginwrapper.h"
 #include "../Models/artitemsmodel.h"
+#include "../Common/defines.h"
 
 namespace Plugins {
     PluginManager::PluginManager():
@@ -55,7 +56,12 @@ namespace Plugins {
         pluginsDir.cd("PlugIns");
 #endif
 
-        pluginsDir.cd("XpiksPlugins");
+        bool pluginsFound = pluginsDir.cd("XpiksPlugins");
+
+        if (!pluginsFound) {
+            qWarning() << "PluginManager::loadPlugins #" << "Plugins directory not found";
+            return;
+        }
 
         qDebug() << "PluginManager::loadPlugins #" << "Plugins dir:" << pluginsDir.absolutePath();
 
@@ -85,6 +91,7 @@ namespace Plugins {
 
     void PluginManager::unloadPlugins() {
         int size = m_PluginsList.length();
+        qDebug() << "PluginManager::unloadPlugins #" << size << "plugin(s)";
 
         for (int i = 0; i < size; ++i) {
             PluginWrapper *wrapper = m_PluginsList.at(i);
@@ -115,6 +122,7 @@ namespace Plugins {
     }
 
     void PluginManager::triggerPluginAction(int pluginID, int actionID) const {
+        qDebug() << "PluginManager::triggerPluginAction #" << "Plugin ID" << pluginID << "action ID" << actionID;
         PluginWrapper *pluginWrapper = m_PluginsDict.value(pluginID, NULL);
         if (pluginWrapper != NULL) {
             pluginWrapper->triggerActionSafe(actionID);

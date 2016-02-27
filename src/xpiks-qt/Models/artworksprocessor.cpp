@@ -23,8 +23,8 @@
 #include <QtConcurrent>
 
 namespace Models {
-    void ArtworksProcessor::resetModel()
-    {
+    void ArtworksProcessor::resetModel() {
+        qDebug() << "ArtworksProcessor::resetModel #";
         setInProgress(false);
         setIsError(false);
         innerResetModel();

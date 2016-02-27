@@ -30,6 +30,7 @@
 #include <QQuickWindow>
 #include <QDebug>
 #include <QHash>
+#include "../Common/defines.h"
 
 namespace Plugins {
     UIProvider::UIProvider(QObject *parent):

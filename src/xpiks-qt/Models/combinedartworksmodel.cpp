@@ -162,6 +162,7 @@ namespace Models {
     }
 
     void CombinedArtworksModel::pasteKeywords(const QStringList &keywords) {
+        qDebug() << "CombinedArtworksModel::pasteKeywords #" << keywords.length() << "keyword(s)";
         if (m_CommonKeywordsModel.appendKeywords(keywords) > 0) {
             emit keywordsCountChanged();
             m_AreKeywordsModified = true;

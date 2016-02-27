@@ -67,6 +67,7 @@ namespace Helpers {
     }
 
     void HelpersQmlWrapper::revealLogFile() {
+        qDebug() << "HelpersQmlWrapper::revealLogFile #";
         QString logFilePath = Logger::getInstance().getLogFilePath();
 #ifdef Q_OS_MAC
         QStringList args;

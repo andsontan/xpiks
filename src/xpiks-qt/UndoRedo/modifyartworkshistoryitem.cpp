@@ -28,7 +28,7 @@
 #include "../Common/defines.h"
 
 void UndoRedo::ModifyArtworksHistoryItem::undo(const Commands::ICommandManager *commandManagerInterface) const {
-    qInfo() << "ModifyArtworksHistoryItem::undo #";
+    qInfo() << "ModifyArtworksHistoryItem::undo #" << m_Indices.count() << "item(s) affected";
 
     Commands::CommandManager *commandManager = (Commands::CommandManager*)commandManagerInterface;
 

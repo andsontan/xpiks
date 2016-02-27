@@ -22,8 +22,7 @@
 #include "artworkmetadatabackup.h"
 #include "../Models/artworkmetadata.h"
 
-UndoRedo::ArtworkMetadataBackup::ArtworkMetadataBackup(Models::ArtworkMetadata *metadata)
-{
+UndoRedo::ArtworkMetadataBackup::ArtworkMetadataBackup(Models::ArtworkMetadata *metadata) {
     m_Description = metadata->getDescription();
     m_Title = metadata->getTitle();
     m_KeywordsList = metadata->getKeywords();
@@ -33,8 +32,7 @@ UndoRedo::ArtworkMetadataBackup::ArtworkMetadataBackup(Models::ArtworkMetadata *
     }
 }
 
-void UndoRedo::ArtworkMetadataBackup::restore(Models::ArtworkMetadata *metadata) const
-{
+void UndoRedo::ArtworkMetadataBackup::restore(Models::ArtworkMetadata *metadata) const {
     metadata->setDescription(m_Description);
     metadata->setTitle(m_Title);
     metadata->setKeywords(m_KeywordsList);

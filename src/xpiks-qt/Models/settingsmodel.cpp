@@ -53,7 +53,7 @@
 #define DEFAULT_APP_WIDTH 900
 #define DEFAULT_APP_HEIGHT 725
 #define DEFAULT_APP_POSITION -1
-#define DEFAULT_AUTO_FIND_VECTORS false
+#define DEFAULT_AUTO_FIND_VECTORS true
 
 namespace Models {
     SettingsModel::SettingsModel(QObject *parent) :

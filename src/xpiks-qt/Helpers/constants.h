@@ -43,10 +43,10 @@ namespace Constants {
     const char USER_STATISTICS[] = "USER_STATISTICS";
     const char UPDATE_SERVICE[] = "UPDATE_SERVICE";
     const char NUMBER_OF_LAUNCHES[] = "NUMBER_OF_LAUNCHES";
-    const char APP_WINDOW_WIDTH []  = "WindowSizeX";
-    const char APP_WINDOW_HEIGHT [] = "WindowSizeY";
-    const char APP_WINDOW_X[] = "WindowPosX";
-    const char APP_WINDOW_Y[] = "WindowPosY";
+    const char APP_WINDOW_WIDTH []  = "WINDOW_SIZE_X";
+    const char APP_WINDOW_HEIGHT [] = "WINDOW_SIZE_Y";
+    const char APP_WINDOW_X[] = "WINDOW_POSITION_X";
+    const char APP_WINDOW_Y[] = "WINDOW_POSITION_Y";
     const char AUTO_FIND_VECTORS[] = "AUTO_FIND_VECTORS";
 
     // different for DEBUG and RELEASE
