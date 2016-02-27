@@ -182,6 +182,21 @@ Item {
                     }
 
                     Item {
+                        Layout.fillWidth: true
+                        height: 90
+
+                        StyledText {
+                            wrapMode: TextEdit.Wrap
+                            anchors.fill: parent
+                            color: Colors.selectedMetadataColor
+                            text: '*'
+                            Component.onCompleted: text = artItemsModel.getAttachedVectorPath(artworkIndex)
+                            height: 90
+                            elide: Text.ElideRight
+                        }
+                    }
+
+                    Item {
                         Layout.fillHeight: true
                     }
 

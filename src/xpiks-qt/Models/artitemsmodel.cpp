@@ -384,6 +384,13 @@ namespace Models {
         return metadata->getFilepath();
     }
 
+    QString ArtItemsModel::getAttachedVectorPath(int metadataIndex) const {
+        if (metadataIndex < 0 || metadataIndex >= m_ArtworkList.length()) { return QLatin1String(""); }
+
+        ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
+        return metadata->getAttachedVectorPath();
+    }
+
     int ArtItemsModel::addRecentDirectory(const QString &directory) {
         qDebug() << "ArtItemsModel::addRecentDirectory #" << directory;
         int filesAdded = addDirectories(QStringList() << directory);
