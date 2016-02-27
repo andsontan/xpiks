@@ -1131,6 +1131,7 @@ ApplicationWindow {
                         id: separator
                         anchors.left: parent.left
                         anchors.right: parent.right
+                        anchors.rightMargin: imagesListView.count > 3 ? 15 : 0
                         anchors.topMargin: visible ? 2 : 4
                         anchors.top: undoRedoRect.bottom
                         height: visible ? 2 : 0
