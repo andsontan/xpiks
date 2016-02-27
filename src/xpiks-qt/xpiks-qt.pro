@@ -2,7 +2,7 @@ TEMPLATE = app
 
 QMAKE_MAC_SDK = macosx10.11
 
-QT += qml quick widgets concurrent
+QT += qml quick widgets concurrent svg
 CONFIG += qtquickcompiler
 
 SOURCES += main.cpp \
@@ -250,7 +250,8 @@ DISTFILES += \
     Dialogs/WhatsNewDialog.qml \
     Dialogs/TermsAndConditionsDialog.qml \
     Dialogs/PluginsDialog.qml \
-    Components/LayoutButton.qml
+    Components/LayoutButton.qml \
+    Graphics/vector-icon.svg
 
 LIBS += -L"$$PWD/../libs/"
 LIBS += -lhunspell
