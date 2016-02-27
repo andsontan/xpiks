@@ -186,6 +186,7 @@ ApplicationWindow {
             Menu {
                 id: recentDirectoriesMenu
                 title: qsTr("&Recent directories")
+                enabled: applicationWindow.openedDialogsCount == 0
 
                 Instantiator {
                     model: recentDirectories
@@ -1193,7 +1194,7 @@ ApplicationWindow {
                             delegate: Rectangle {
                                 id: rowWrapper
                                 objectName: "artworkDelegate"
-                                property bool isHighlighted: (isselected || descriptionTextInput.activeFocus || flv.isFocused || titleTextInput.activeFocus)
+                                property bool isHighlighted: isselected || (descriptionTextInput.activeFocus || flv.isFocused || titleTextInput.activeFocus)
                                 color: isHighlighted ? Colors.selectedArtworkColor : Colors.artworkImageBackground
                                 property var artworkModel: artItemsModel.getArtworkItself(rowWrapper.getIndex())
                                 property int delegateIndex: index

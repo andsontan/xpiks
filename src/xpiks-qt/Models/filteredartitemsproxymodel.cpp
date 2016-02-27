@@ -365,7 +365,6 @@ namespace Models {
         emit allItemsSelectedChanged();
     }
 
-
     QVector<ArtworkMetadata *> FilteredArtItemsProxyModel::getSelectedOriginalItems() const {
         ArtItemsModel *artItemsModel = getArtItemsModel();
         QVector<ArtworkMetadata *> selectedArtworks;

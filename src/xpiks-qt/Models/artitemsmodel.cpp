@@ -81,7 +81,9 @@ namespace Models {
 
     void ArtItemsModel::updateItems(const QVector<int> &indices, const QVector<int> &roles) {
         QVector<QPair<int, int> > rangesToUpdate;
-        Helpers::indicesToRanges(indices, rangesToUpdate);
+        QVector<int> sortedIndices(indices);
+        qSort(sortedIndices);
+        Helpers::indicesToRanges(sortedIndices, rangesToUpdate);
         AbstractListModel::updateItemsInRanges(rangesToUpdate, roles);
     }
 
@@ -629,8 +631,10 @@ namespace Models {
     }
 
     void ArtItemsModel::updateItemsAtIndices(const QVector<int> &indices) {
+        QVector<int> sortedIndices(indices);
+        qSort(sortedIndices);
         QVector<QPair<int, int> > ranges;
-        Helpers::indicesToRanges(indices, ranges);
+        Helpers::indicesToRanges(sortedIndices, ranges);
         updateItemsInRanges(ranges);
     }
 

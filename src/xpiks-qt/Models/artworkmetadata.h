@@ -87,7 +87,7 @@ namespace Models {
             bool result = m_IsSelected != value;
             if (result) {
                 m_IsSelected = value;
-                selectedChanged(value);
+                emit selectedChanged(value);
                 //emit fileSelectedChanged(m_ArtworkFilepath, value);
             }
 
