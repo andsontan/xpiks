@@ -205,7 +205,7 @@ Item {
                         StyledTextEdit {
                             id: titleTextInput
                             focus: true
-                            width: paintedWidth > titleFlick.width ? paintedWidth : titleFlick.width
+                            width: titleFlick.width
                             height: titleFlick.height
                             font.pixelSize: 12*settingsModel.keywordSizeScale
                             text: combinedArtworks.title
@@ -297,18 +297,15 @@ Item {
                                 contentX = r.x;
                             else if (contentX+width <= r.x+r.width)
                                 contentX = r.x+r.width-width;
-                            if (contentY >= r.y)
-                                contentY = r.y;
-                            else if (contentY+height <= r.y+r.height)
-                                contentY = r.y+r.height-height;
                         }
 
                         StyledTextEdit {
                             id: descriptionTextInput
-                            width: paintedWidth > descriptionFlick.width ? paintedWidth : descriptionFlick.width
+                            width: descriptionFlick.width
                             height: descriptionFlick.height
                             text: combinedArtworks.description
                             font.pixelSize: 12*settingsModel.keywordSizeScale
+                            focus: true
                             property string previousText: text
                             property int maximumLength: 300
                             onTextChanged: {

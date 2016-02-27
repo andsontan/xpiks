@@ -50,7 +50,7 @@ Item {
 
     Component.onCompleted: {
         focus = true
-        descriptionTextInput.forceActiveFocus()
+        titleTextInput.forceActiveFocus()
     }
 
     Keys.onEscapePressed: closePopup()
@@ -113,8 +113,8 @@ Item {
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
-            width: previewImage.width < 650 ? 690 : previewImage.width + 40
-            height: parent.height - 60
+            width: previewImage.width < fields.width ? 710 : previewImage.width + 40
+            height: parent.height - 30
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
@@ -144,187 +144,94 @@ Item {
                 id: fields
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 20
-                height: 275
-                width: 650
+                height: 335
+                width: 670
                 anchors.horizontalCenter: parent.horizontalCenter
                 spacing: 0
 
-                Item {
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    height: childrenRect.height
+                RowLayout {
+                    spacing: 5
 
-                    ColumnLayout {
-                        id: descriptionColumn
-                        width: parent.width / 2 - 10
-                        anchors.left: parent.left
-                        anchors.top: parent.top
-                        spacing: 5
-
-                        StyledText {
-                            text: qsTr("Description:")
-                        }
-
-                        Rectangle {
-                            id: rect
-                            anchors.left: parent.left
-                            anchors.right: parent.right
-                            height: 25
-                            color: Colors.defaultInputBackground
-                            border.color: Colors.artworkActiveColor
-                            border.width: descriptionTextInput.activeFocus ? 1 : 0
-                            clip: true
-
-                            Flickable {
-                                id: descriptionFlick
-                                contentWidth: descriptionTextInput.paintedWidth
-                                contentHeight: descriptionTextInput.paintedHeight
-                                anchors.left: parent.left
-                                anchors.right: parent.right
-                                anchors.leftMargin: 5
-                                anchors.rightMargin: 5
-                                anchors.verticalCenter: parent.verticalCenter
-                                interactive: false
-                                flickableDirection: Flickable.HorizontalFlick
-                                height: 30
-                                clip: true
-
-                                function ensureVisible(r) {
-                                    if (contentX >= r.x)
-                                        contentX = r.x;
-                                    else if (contentX+width <= r.x+r.width)
-                                        contentX = r.x+r.width-width;
-                                }
-
-                                StyledTextEdit {
-                                    id: descriptionTextInput
-                                    text: combinedArtworks.description
-                                    width: paintedWidth > descriptionFlick.width ? paintedWidth : descriptionFlick.width
-                                    height: descriptionFlick.height
-                                    font.pixelSize: 12*settingsModel.keywordSizeScale
-                                    onTextChanged: combinedArtworks.description = text
-                                    focus: true
-
-                                    Component.onCompleted: {
-                                        combinedArtworks.initDescriptionHighlighting(descriptionTextInput.textDocument)
-                                    }
-
-                                    Keys.onBacktabPressed: {
-                                        event.accepted = true
-                                    }
-
-                                    Keys.onTabPressed: titleTextInput.forceActiveFocus()
-
-                                    onCursorRectangleChanged: descriptionFlick.ensureVisible(cursorRectangle)
-
-                                    onActiveFocusChanged: {
-                                        if (descriptionTextInput.length > 0) {
-                                            combinedArtworks.spellCheckDescription()
-                                        }
-                                    }
-
-                                    Keys.onPressed: {
-                                        if(event.matches(StandardKey.Paste)) {
-                                            var clipboardText = clipboard.getText();
-                                            if (Common.safeInsert(descriptionTextInput, clipboardText)) {
-                                                event.accepted = true
-                                            }
-                                        } else if ((event.key === Qt.Key_Return) || (event.key === Qt.Key_Enter)) {
-                                            event.accepted = true
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                    StyledText {
+                        text: qsTr("Title:")
                     }
 
-                    ColumnLayout {
-                        spacing: 5
-                        anchors.top: parent.top
+                    StyledText {
+                        text: qsTr("(same as Description if empty)")
+                        color: Colors.defaultInputBackground
+                    }
+                }
+
+                Item {
+                    height: 5
+                }
+
+                Rectangle {
+                    id: anotherRect
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: 25
+                    color: Colors.defaultInputBackground
+                    border.color: Colors.artworkActiveColor
+                    border.width: titleTextInput.activeFocus ? 1 : 0
+                    clip: true
+
+                    Flickable {
+                        id: titleFlick
+                        contentWidth: titleTextInput.paintedWidth
+                        contentHeight: titleTextInput.paintedHeight
+                        height: 30
+                        anchors.left: parent.left
                         anchors.right: parent.right
-                        width: parent.width/2 - 10
+                        anchors.leftMargin: 5
+                        anchors.rightMargin: 5
+                        anchors.verticalCenter: parent.verticalCenter
+                        clip: true
+                        flickableDirection: Flickable.HorizontalFlick
+                        interactive: false
 
-                        RowLayout {
-                            spacing: 5
-
-                            StyledText {
-                                text: qsTr("Title:")
-                            }
-
-                            StyledText {
-                                text: qsTr("(same as Description if empty)")
-                                color: Colors.defaultInputBackground
-                            }
+                        function ensureVisible(r) {
+                            if (contentX >= r.x)
+                                contentX = r.x;
+                            else if (contentX+width <= r.x+r.width)
+                                contentX = r.x+r.width-width;
                         }
 
-                        Rectangle {
-                            id: anotherRect
-                            anchors.left: parent.left
-                            anchors.right: parent.right
-                            height: 25
-                            color: Colors.defaultInputBackground
-                            border.color: Colors.artworkActiveColor
-                            border.width: titleTextInput.activeFocus ? 1 : 0
-                            clip: true
+                        StyledTextEdit {
+                            id: titleTextInput
+                            width: titleFlick.width
+                            height: titleFlick.height
+                            focus: true
+                            font.pixelSize: 12*settingsModel.keywordSizeScale
+                            text: combinedArtworks.title
+                            onTextChanged: combinedArtworks.title = text
 
-                            Flickable {
-                                id: titleFlick
-                                contentWidth: titleTextInput.paintedWidth
-                                contentHeight: titleTextInput.paintedHeight
-                                height: 30
-                                anchors.left: parent.left
-                                anchors.right: parent.right
-                                anchors.leftMargin: 5
-                                anchors.rightMargin: 5
-                                anchors.verticalCenter: parent.verticalCenter
-                                clip: true
-                                flickableDirection: Flickable.HorizontalFlick
-                                interactive: false
+                            Keys.onBacktabPressed: {
+                                event.accepted = true
+                            }
 
-                                function ensureVisible(r) {
-                                    if (contentX >= r.x)
-                                        contentX = r.x;
-                                    else if (contentX+width <= r.x+r.width)
-                                        contentX = r.x+r.width-width;
+                            Keys.onTabPressed: descriptionTextInput.forceActiveFocus()
+
+                            Component.onCompleted: {
+                                combinedArtworks.initTitleHighlighting(titleTextInput.textDocument)
+                            }
+
+                            onCursorRectangleChanged: titleFlick.ensureVisible(cursorRectangle)
+
+                            onActiveFocusChanged: {
+                                if (titleTextInput.length > 0) {
+                                    combinedArtworks.spellCheckTitle()
                                 }
+                            }
 
-                                StyledTextEdit {
-                                    id: titleTextInput
-                                    width: paintedWidth > titleFlick.width ? paintedWidth : titleFlick.width
-                                    height: titleFlick.height
-                                    focus: true
-                                    font.pixelSize: 12*settingsModel.keywordSizeScale
-                                    text: combinedArtworks.title
-                                    onTextChanged: combinedArtworks.title = text
-
-                                    Keys.onBacktabPressed: descriptionTextInput.forceActiveFocus()
-
-                                    Keys.onTabPressed: {
-                                        flv.activateEdit()
+                            Keys.onPressed: {
+                                if(event.matches(StandardKey.Paste)) {
+                                    var clipboardText = clipboard.getText();
+                                    if (Common.safeInsert(titleTextInput, clipboardText)) {
+                                        event.accepted = true
                                     }
-
-                                    Component.onCompleted: {
-                                        combinedArtworks.initTitleHighlighting(titleTextInput.textDocument)
-                                    }
-
-                                    onCursorRectangleChanged: titleFlick.ensureVisible(cursorRectangle)
-
-                                    onActiveFocusChanged: {
-                                        if (titleTextInput.length > 0) {
-                                            combinedArtworks.spellCheckTitle()
-                                        }
-                                    }
-
-                                    Keys.onPressed: {
-                                        if(event.matches(StandardKey.Paste)) {
-                                            var clipboardText = clipboard.getText();
-                                            if (Common.safeInsert(titleTextInput, clipboardText)) {
-                                                event.accepted = true
-                                            }
-                                        } else if ((event.key === Qt.Key_Return) || (event.key === Qt.Key_Enter)) {
-                                            event.accepted = true
-                                        }
-                                    }
+                                } else if ((event.key === Qt.Key_Return) || (event.key === Qt.Key_Enter)) {
+                                    event.accepted = true
                                 }
                             }
                         }
@@ -332,7 +239,124 @@ Item {
                 }
 
                 Item {
-                    height: 20
+                    height: 10
+                }
+
+                RowLayout {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+
+                    StyledText {
+                        text: qsTr("Description:")
+                    }
+
+                    Item {
+                        Layout.fillWidth: true
+                    }
+
+                    StyledText {
+                        text: descriptionTextInput.length
+                        color: Colors.defaultInputBackground
+                    }
+                }
+
+                Item {
+                    height: 5
+                }
+
+                Rectangle {
+                    id: rect
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: 50
+                    color: Colors.defaultInputBackground
+                    border.color: Colors.artworkActiveColor
+                    border.width: descriptionTextInput.activeFocus ? 1 : 0
+                    clip: true
+
+                    Flickable {
+                        id: descriptionFlick
+                        contentWidth: descriptionTextInput.paintedWidth
+                        contentHeight: descriptionTextInput.paintedHeight
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.verticalCenter: parent.verticalCenter
+                        interactive: false
+                        flickableDirection: Flickable.HorizontalFlick
+                        height: parent.height
+                        clip: true
+
+                        function ensureVisible(r) {
+                            if (contentX >= r.x)
+                                contentX = r.x;
+                            else if (contentX+width <= r.x+r.width)
+                                contentX = r.x+r.width-width;
+                        }
+
+                        StyledTextEdit {
+                            id: descriptionTextInput
+                            text: combinedArtworks.description
+                            width: descriptionFlick.width
+                            height: descriptionFlick.height
+                            font.pixelSize: 12*settingsModel.keywordSizeScale
+                            focus: true
+                            property string previousText: text
+                            property int maximumLength: 300
+                            onTextChanged: {
+                                if (text.length > maximumLength) {
+                                    var cursor = cursorPosition;
+                                    text = previousText;
+                                    if (cursor > text.length) {
+                                        cursorPosition = text.length;
+                                    } else {
+                                        cursorPosition = cursor-1;
+                                    }
+                                }
+
+                                previousText = text
+                                combinedArtworks.description = text
+                            }
+
+                            wrapMode: TextEdit.Wrap
+                            horizontalAlignment: TextEdit.AlignLeft
+                            verticalAlignment: TextEdit.AlignTop
+                            textFormat: TextEdit.PlainText
+                            textMargin: 5
+
+                            Component.onCompleted: {
+                                combinedArtworks.initDescriptionHighlighting(descriptionTextInput.textDocument)
+                            }
+
+                            Keys.onBacktabPressed: titleTextInput.forceActiveFocus()
+
+                            Keys.onTabPressed: {
+                                flv.activateEdit()
+                            }
+
+                            onCursorRectangleChanged: descriptionFlick.ensureVisible(cursorRectangle)
+
+                            onActiveFocusChanged: {
+                                if (descriptionTextInput.length > 0) {
+                                    combinedArtworks.spellCheckDescription()
+                                }
+                            }
+
+                            Keys.onPressed: {
+                                if(event.matches(StandardKey.Paste)) {
+                                    var clipboardText = clipboard.getText();
+                                    if (Common.safeInsert(descriptionTextInput, clipboardText)) {
+                                        event.accepted = true
+                                    }
+                                } else if ((event.key === Qt.Key_Return) || (event.key === Qt.Key_Enter)) {
+                                    event.accepted = true
+                                }
+                            }
+                        }
+                    }
+                }
+
+                Item {
+                    height: 10
                 }
 
                 RowLayout {
@@ -436,7 +460,7 @@ Item {
                         }
 
                         onBackTabPressed: {
-                            titleTextInput.forceActiveFocus()
+                            descriptionTextInput.forceActiveFocus()
                         }
                     }
 

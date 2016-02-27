@@ -393,7 +393,7 @@ Item {
                                     StyledTextEdit {
                                         id: titleTextInput
                                         focus: true
-                                        width: paintedWidth > titleFlick.width ? paintedWidth : titleFlick.width
+                                        width: titleFlick.width
                                         height: titleFlick.height
                                         font.pixelSize: 12*settingsModel.keywordSizeScale
                                         text: combinedArtworks.title
@@ -560,10 +560,11 @@ Item {
 
                                     StyledTextEdit {
                                         id: descriptionTextInput
-                                        width: paintedWidth > descriptionFlick.width ? paintedWidth : descriptionFlick.width
+                                        width: descriptionFlick.width
                                         height: descriptionFlick.height
                                         text: combinedArtworks.description
                                         font.pixelSize: 12*settingsModel.keywordSizeScale
+                                        focus: true
                                         property string previousText: text
                                         property int maximumLength: 300
                                         onTextChanged: {
