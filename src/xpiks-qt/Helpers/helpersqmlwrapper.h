@@ -58,6 +58,9 @@ namespace Helpers {
     public:
         bool getPluginsAvailable() const;
 
+    signals:
+        void globalCloseRequested();
+
     private:
         Commands::CommandManager *m_CommandManager;
 #ifdef Q_OS_WIN

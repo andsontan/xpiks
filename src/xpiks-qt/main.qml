@@ -67,13 +67,17 @@ ApplicationWindow {
             configExitDialog.open()
         } else {
             console.debug("UI::main # No modified artworks found. Exiting...")
-            applicationWindow.visibility = "Minimized"
-            helpersWrapper.beforeDestruction();
-            appSettings.protectTelemetry();
+            shutdownEverything()
             close.accepted = false
-            saveAppGeometry()
-            closingTimer.start()
         }
+    }
+
+    function shutdownEverything() {
+        applicationWindow.visibility = "Minimized"
+        helpersWrapper.beforeDestruction();
+        appSettings.protectTelemetry();
+        saveAppGeometry()
+        closingTimer.start()
     }
 
     function saveAppGeometry() {
@@ -406,12 +410,7 @@ ApplicationWindow {
         title: "Confirmation"
         text: qsTr("You have some artworks modified. Really exit?")
         standardButtons: StandardButton.Yes | StandardButton.No
-        onYes: {
-            applicationWindow.visibility = "Minimized"
-            helpersWrapper.beforeDestruction();
-            saveAppGeometry()
-            closingTimer.start()
-        }
+        onYes: shutdownEverything()
     }
 
     MessageDialog {
@@ -1472,7 +1471,7 @@ ApplicationWindow {
 
                                                     StyledTextEdit {
                                                         id: descriptionTextInput
-                                                        width: descriptionFlick.width
+                                                        width: paintedWidth > descriptionFlick.width ? paintedWidth : descriptionFlick.width
                                                         height: descriptionFlick.height
                                                         text: description
                                                         focus: true
@@ -1555,7 +1554,7 @@ ApplicationWindow {
                                                     StyledTextEdit {
                                                         id: titleTextInput
                                                         font.pixelSize: 12 * settingsModel.keywordSizeScale
-                                                        width: titleFlick.width
+                                                        width: paintedWidth > titleFlick.width ? paintedWidth : titleFlick.width
                                                         height: titleFlick.height
                                                         text: title
                                                         focus: true

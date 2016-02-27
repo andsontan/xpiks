@@ -52,6 +52,14 @@ Item {
         descriptionTextInput.forceActiveFocus()
     }
 
+    Connections {
+        target: helpersWrapper
+        onGlobalCloseRequested: {
+            console.debug("UI:EditArtworkHorizontalDialog # globalCloseRequested")
+            closePopup()
+        }
+    }
+
     Keys.onEscapePressed: closePopup()
 
     PropertyAnimation { target: artworkEditHorizontalDialog; property: "opacity";
@@ -187,7 +195,7 @@ Item {
 
                         StyledTextEdit {
                             id: descriptionTextInput
-                            width: descriptionFlick.width
+                            width: paintedWidth > descriptionFlick.width ? paintedWidth : descriptionFlick.width
                             height: descriptionFlick.height
                             text: combinedArtworks.description
                             font.pixelSize: 12*settingsModel.keywordSizeScale
@@ -282,7 +290,7 @@ Item {
                         StyledTextEdit {
                             id: titleTextInput
                             focus: true
-                            width: titleFlick.width
+                            width: paintedWidth > titleFlick.width ? paintedWidth : titleFlick.width
                             height: titleFlick.height
                             font.pixelSize: 12*settingsModel.keywordSizeScale
                             text: combinedArtworks.title

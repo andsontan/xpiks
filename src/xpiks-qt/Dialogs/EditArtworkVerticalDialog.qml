@@ -73,6 +73,14 @@ Item {
         }
     }
 
+    Connections {
+        target: helpersWrapper
+        onGlobalCloseRequested: {
+            console.debug("UI:EditArtworkVerticalDialog # globalCloseRequested")
+            closePopup()
+        }
+    }
+
     FocusScope {
         anchors.fill: parent
         id: focusScope
@@ -180,7 +188,6 @@ Item {
                                 flickableDirection: Flickable.HorizontalFlick
                                 height: 30
                                 clip: true
-                                focus: false
 
                                 function ensureVisible(r) {
                                     if (contentX >= r.x)
@@ -192,11 +199,12 @@ Item {
                                 StyledTextEdit {
                                     id: descriptionTextInput
                                     text: combinedArtworks.description
-                                    width: descriptionFlick.width
+                                    width: paintedWidth > descriptionFlick.width ? paintedWidth : descriptionFlick.width
                                     height: descriptionFlick.height
                                     font.pixelSize: 12*settingsModel.keywordSizeScale
                                     onTextChanged: combinedArtworks.description = text
                                     KeyNavigation.tab: titleTextInput
+                                    focus: true
 
                                     Component.onCompleted: {
                                         combinedArtworks.initDescriptionHighlighting(descriptionTextInput.textDocument)
@@ -273,7 +281,6 @@ Item {
                                 clip: true
                                 flickableDirection: Flickable.HorizontalFlick
                                 interactive: false
-                                focus: false
 
                                 function ensureVisible(r) {
                                     if (contentX >= r.x)
@@ -284,7 +291,7 @@ Item {
 
                                 StyledTextEdit {
                                     id: titleTextInput
-                                    width: titleFlick.width
+                                    width: paintedWidth > titleFlick.width ? paintedWidth : titleFlick.width
                                     height: titleFlick.height
                                     focus: true
                                     font.pixelSize: 12*settingsModel.keywordSizeScale

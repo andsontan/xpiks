@@ -26,6 +26,7 @@
 #include <QDebug>
 #include <QQuickWindow>
 #include <QSysInfo>
+#include <QCoreApplication>
 #include "keywordvalidator.h"
 #include "../Commands/commandmanager.h"
 #include "../Common/defines.h"
@@ -63,6 +64,9 @@ namespace Helpers {
     }
 
     void HelpersQmlWrapper::beforeDestruction() {
+        qDebug() << "HelpersQmlWrapper::beforeDestruction #" << "emitting signal";
+        emit globalCloseRequested();
+        QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
         m_CommandManager->beforeDestructionCallback();
     }
 

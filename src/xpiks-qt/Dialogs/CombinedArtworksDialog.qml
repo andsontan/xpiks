@@ -50,6 +50,14 @@ Item {
         return appSettings.boolValue(appSettings.useConfirmationDialogsKey, true)
     }
 
+    Connections {
+        target: helpersWrapper
+        onGlobalCloseRequested: {
+            console.debug("UI:CombinedArtworksDialog # globalCloseRequested")
+            closePopup()
+        }
+    }
+
     PropertyAnimation { target: dialogComponent; property: "opacity";
         duration: 400; from: 0; to: 1;
         easing.type: Easing.InOutQuad ; running: true }
@@ -373,7 +381,7 @@ Item {
 
                                     StyledTextEdit {
                                         id: descriptionTextInput
-                                        width: descriptionFlick.width
+                                        width: paintedWidth > descriptionFlick.width ? paintedWidth : descriptionFlick.width
                                         height: descriptionFlick.height
                                         text: combinedArtworks.description
                                         font.pixelSize: 12*settingsModel.keywordSizeScale
@@ -527,7 +535,7 @@ Item {
                                     StyledTextEdit {
                                         id: titleTextInput
                                         focus: true
-                                        width: titleFlick.width
+                                        width: paintedWidth > titleFlick.width ? paintedWidth : titleFlick.width
                                         height: titleFlick.height
                                         font.pixelSize: 12*settingsModel.keywordSizeScale
                                         text: combinedArtworks.title
