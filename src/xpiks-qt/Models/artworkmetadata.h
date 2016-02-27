@@ -61,7 +61,7 @@ namespace Models {
         virtual QSize getImageSize() const { return m_ImageSize; }
         virtual qint64 getFileSize() const { return m_FileSize; }
         virtual qint64 getItemID() const { return m_ID; }
-        const QString &getAttachedVectorPath() const { Q_ASSERT(m_HasAttachedVector); return m_AttachedVector; }
+        const QString &getAttachedVectorPath() const { return m_AttachedVector; }
         void attachVector(const QString &vectorFilepath);
         void detachVector();
 

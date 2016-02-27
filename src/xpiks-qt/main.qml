@@ -1134,7 +1134,7 @@ ApplicationWindow {
                         anchors.top: undoRedoRect.bottom
                         height: visible ? 2 : 0
                         color: Colors.defaultDarkColor
-                        visible: !undoRedoManager.canUndo && (artworkRepository.artworksSourcesCount > 0)
+                        visible: !undoRedoManager.canUndo && (imagesListView.count > 0)
                     }
 
                     StyledScrollView {

@@ -11,6 +11,7 @@
 * add keywords with typing keywords
 * add keywords with copy-pasting (copy-paste to many)
 * add keywords with suggestion (local/remote options)
+* undo adding keywords
 
 ## Editing artworks
 
@@ -18,6 +19,7 @@
 * edit several items
 * plain text edit
 * keyword edit
+* undo editing
 
 ## Saving artworks
 

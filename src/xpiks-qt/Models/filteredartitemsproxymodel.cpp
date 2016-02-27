@@ -499,6 +499,8 @@ namespace Models {
             hasMatch = metadata->getIsSelected();
         } else if (searchTerm == QLatin1String("x:vector")) {
             hasMatch = metadata->hasVectorAttached();
+        } else if (searchTerm == QLatin1String("x:image")) {
+            hasMatch = !metadata->hasVectorAttached();
         }
 
         return hasMatch;
