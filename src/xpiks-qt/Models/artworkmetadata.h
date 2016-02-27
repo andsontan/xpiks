@@ -88,7 +88,7 @@ namespace Models {
             if (result) {
                 m_IsSelected = value;
                 selectedChanged(value);
-                emit fileSelectedChanged(m_ArtworkFilepath, value);
+                //emit fileSelectedChanged(m_ArtworkFilepath, value);
             }
 
             return result;
@@ -99,7 +99,7 @@ namespace Models {
         void resetSelected() {
             if (m_IsSelected) {
                 m_IsSelected = false;
-                emit fileSelectedChanged(m_ArtworkFilepath, false);
+                //emit fileSelectedChanged(m_ArtworkFilepath, false);
             }
         }
 
