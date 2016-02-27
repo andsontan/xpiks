@@ -273,6 +273,9 @@ namespace Models {
             sort(-1);
             invalidate();
         }
+
+        ArtItemsModel *artItemsModel = getArtItemsModel();
+        artItemsModel->updateAllItems();
     }
 
     void FilteredArtItemsProxyModel::detachVectorFromSelected() {

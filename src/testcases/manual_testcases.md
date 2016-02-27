@@ -26,7 +26,7 @@
 ## Operations with artworks
 
 * filtering artworks
-* searching artworks
+* sorting artworks
 * combinations
 
 ## Spellchecking

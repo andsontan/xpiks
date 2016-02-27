@@ -92,6 +92,10 @@ namespace Models {
         }
     }
 
+    void ArtItemsModel::updateAllItems() {
+        updateItemsInRanges(QVector<QPair<int, int> >() << qMakePair(0, m_ArtworkList.length() - 1));
+    }
+
     void ArtItemsModel::removeArtworksDirectory(int index) {
         qDebug() << "ArtItemsModel::removeArtworksDirectory #" << "Remove artworks directory at" << index;
         const QString &directory = m_CommandManager->getArtworksRepository()->getDirectory(index);
