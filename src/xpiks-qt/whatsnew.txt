@@ -1,37 +1,11 @@
-This is Xpiks 1.1 bugfix update 4. Fixes:
+This is Xpiks 1.2 release. It provides following features:
 
-- upload stability and retrying
-- bug with local library not saved
-- bug with dropping files
-- various UI glitches
+- ability to attach vectors to previews
+- changing view from list to grid
+- automatic exiftool detection on OS X
+- upload progress reporing in taskbar on Windows
+- ability to correctly upload vectors to Dreamtimes
+- Plugin API for building extensions for Xpiks
+- various small UI fixes and improvements
 
-Xpiks 1.1 bugfix update 3. Fixes:
-
-- bug when Xpiks writes metadata incorrectly
-- known issue of 1.1 release with duplicates in spell suggestions
-- improvements for importing and exporting speed
-- removing of image causes focus to jump
-
-Xpiks 1.1 bugfix update 2. Fixes:
-
-- exiftool downgraded to previous version
-  (speed regression in Windows)
-- bug with editing of capitalized keyword
-- issue with case-sensitive spellcheck suggestions
-- issue with update dialog preventing update
-
-Xpiks 1.1 bugfix update 1. Fixes:
-
-- bug with logs missing in Windows
-
-Xpiks 1.1 release provides following features:
-
-- Automatic spell checking for all metadata
-- Automatic checking for updates
-- Added plain text mode for keywords editing
-- Speed improvements with large collections
-- A lot of minor improvements for look and feel, search,
-suggestions and keywords pasting
-
-And this fancy "What's new" dialog as well.
 Enjoy!

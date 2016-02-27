@@ -23,17 +23,17 @@
 #define VERSION_H
 
 // About dialog
-#define XPIKS_VERSION 1.1
+#define XPIKS_VERSION 1.2
 #define XPIKS_VERSION_SUFFIX release
 
 // update.json (values from 0..9)
 #define XPIKS_MAJOR_VERSION 1
-#define XPIKS_MINOR_VERSION 1
-#define XPIKS_FIX_VERSION 4
+#define XPIKS_MINOR_VERSION 2
+#define XPIKS_FIX_VERSION 0
 
 #define XPIKS_VERSION_INT (XPIKS_MAJOR_VERSION*100 + XPIKS_MINOR_VERSION*10 + XPIKS_FIX_VERSION)
 
-#define XPIKS_VERSION_STRING "1.1.4"
+#define XPIKS_VERSION_STRING "1.2"
 
 #endif // VERSION_H
 
