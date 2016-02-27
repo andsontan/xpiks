@@ -131,7 +131,7 @@ Item {
         Rectangle {
             id: dialogWindow
             width: 730
-            height: 615
+            height: 645
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
@@ -306,152 +306,6 @@ Item {
                         Rectangle {
                             color: Colors.defaultInputBackground
                             anchors.fill: parent
-                            opacity: descriptionCheckBox.checked ? 0.1 : dialogWindow.disabledOpacity
-                        }
-
-                        StyledCheckbox {
-                            anchors.left: parent.left
-                            anchors.top: parent.top
-                            anchors.leftMargin: 5
-                            anchors.topMargin: 25
-                            text: ''
-                            id: descriptionCheckBox
-                            /*indicatorWidth: 24
-                            indicatorHeight: 24*/
-                            onClicked: {
-                                combinedArtworks.changeDescription = checked
-                                if (checked) { descriptionTextInput.forceActiveFocus(); }
-                            }
-
-                            Component.onCompleted: descriptionCheckBox.checked = combinedArtworks.changeDescription
-                        }
-                    }
-
-                    Item {
-                        Layout.fillWidth: true
-                        height: parent.height
-                        enabled: descriptionCheckBox.checked
-
-                        Rectangle {
-                            color: Colors.defaultInputBackground
-                            anchors.fill: parent
-                            opacity: descriptionCheckBox.checked ? 0.1 : 0
-                        }
-
-                        ColumnLayout {
-                            anchors.fill: parent
-                            anchors.margins: 3
-                            spacing: 3
-
-                            StyledText {
-                                text: qsTr("Description:")
-                            }
-
-                            Rectangle {
-                                id: rect
-                                anchors.left: parent.left
-                                anchors.right: parent.right
-                                height: 25
-                                color: Colors.defaultInputBackground
-                                border.color: Colors.artworkActiveColor
-                                border.width: descriptionTextInput.activeFocus ? 1 : 0
-                                clip: true
-
-                                Flickable {
-                                    id: descriptionFlick
-                                    contentWidth: descriptionTextInput.paintedWidth
-                                    contentHeight: descriptionTextInput.paintedHeight
-                                    anchors.left: parent.left
-                                    anchors.right: parent.right
-                                    anchors.leftMargin: 5
-                                    anchors.rightMargin: 5
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    interactive: false
-                                    flickableDirection: Flickable.HorizontalFlick
-                                    height: 30
-                                    clip: true
-                                    focus: false
-
-                                    function ensureVisible(r) {
-                                        if (contentX >= r.x)
-                                            contentX = r.x;
-                                        else if (contentX+width <= r.x+r.width)
-                                            contentX = r.x+r.width-width;
-                                    }
-
-                                    StyledTextEdit {
-                                        id: descriptionTextInput
-                                        width: paintedWidth > descriptionFlick.width ? paintedWidth : descriptionFlick.width
-                                        height: descriptionFlick.height
-                                        text: combinedArtworks.description
-                                        font.pixelSize: 12*settingsModel.keywordSizeScale
-                                        onTextChanged: combinedArtworks.description = text
-
-                                        Component.onCompleted: {
-                                            combinedArtworks.initDescriptionHighlighting(descriptionTextInput.textDocument)
-                                        }
-
-                                        onActiveFocusChanged: {
-                                            if (descriptionTextInput.length > 0) {
-                                                combinedArtworks.spellCheckDescription()
-                                            }
-                                        }
-
-                                        onCursorRectangleChanged: descriptionFlick.ensureVisible(cursorRectangle)
-
-                                        Keys.onBacktabPressed: {
-                                            event.accepted = true
-                                        }
-
-                                        Keys.onTabPressed: {
-                                            if (titleCheckBox.checked) {
-                                                titleTextInput.forceActiveFocus()
-                                                event.accepted = true
-                                            } else if (keywordsCheckBox.checked) {
-                                                flv.activateEdit()
-                                                event.accepted = true
-                                            }
-                                        }
-
-                                        Keys.onPressed: {
-                                            if(event.matches(StandardKey.Paste)) {
-                                                var clipboardText = clipboard.getText();
-                                                if (Common.safeInsert(descriptionTextInput, clipboardText)) {
-                                                    event.accepted = true
-                                                }
-                                            } else if ((event.key === Qt.Key_Return) || (event.key === Qt.Key_Enter)) {
-                                                event.accepted = true
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        Rectangle {
-                            color: Colors.defaultInputBackground
-                            anchors.fill: parent
-                            opacity: descriptionCheckBox.checked ? 0 : dialogWindow.disabledOpacity
-                        }
-                    }
-                }
-
-                Item {
-                    height: 1
-                }
-
-                RowLayout {
-                    width: parent.width
-                    height: 50
-                    spacing: 0
-
-                    Item {
-                        width: 25
-                        height: parent.height
-
-                        Rectangle {
-                            color: Colors.defaultInputBackground
-                            anchors.fill: parent
                             opacity: titleCheckBox.checked ? 0.1 : dialogWindow.disabledOpacity
                         }
 
@@ -485,7 +339,11 @@ Item {
                         ColumnLayout {
                             anchors.fill: parent
                             anchors.margins: 3
-                            spacing: 3
+                            spacing: 2
+
+                            Item {
+                                height: 1
+                            }
 
                             RowLayout {
                                 spacing: 5
@@ -543,14 +401,14 @@ Item {
                                         KeyNavigation.backtab: descriptionTextInput
 
                                         Keys.onBacktabPressed: {
-                                            if (descriptionCheckBox.checked) {
-                                                descriptionTextInput.forceActiveFocus()
-                                                event.accepted = true
-                                            }
+                                            event.accepted = true
                                         }
 
                                         Keys.onTabPressed: {
-                                            if (keywordsCheckBox.checked) {
+                                            if (descriptionCheckBox.checked) {
+                                                descriptionTextInput.forceActiveFocus()
+                                                event.accepted = true
+                                            } else if (keywordsCheckBox.checked) {
                                                 flv.activateEdit()
                                                 event.accepted = true
                                             }
@@ -587,6 +445,193 @@ Item {
                             color: Colors.defaultInputBackground
                             anchors.fill: parent
                             opacity: titleCheckBox.checked ? 0 : dialogWindow.disabledOpacity
+                        }
+                    }
+                }
+
+                Item {
+                    height: 1
+                }
+
+                RowLayout {
+                    width: parent.width
+                    height: 80
+                    spacing: 0
+
+                    Item {
+                        width: 25
+                        height: parent.height
+
+                        Rectangle {
+                            color: Colors.defaultInputBackground
+                            anchors.fill: parent
+                            opacity: descriptionCheckBox.checked ? 0.1 : dialogWindow.disabledOpacity
+                        }
+
+                        StyledCheckbox {
+                            anchors.left: parent.left
+                            anchors.top: parent.top
+                            anchors.leftMargin: 5
+                            anchors.topMargin: 25
+                            text: ''
+                            id: descriptionCheckBox
+                            /*indicatorWidth: 24
+                            indicatorHeight: 24*/
+                            onClicked: {
+                                combinedArtworks.changeDescription = checked
+                                if (checked) { descriptionTextInput.forceActiveFocus(); }
+                            }
+
+                            Component.onCompleted: descriptionCheckBox.checked = combinedArtworks.changeDescription
+                        }
+                    }
+
+                    Item {
+                        Layout.fillWidth: true
+                        height: parent.height
+                        enabled: descriptionCheckBox.checked
+
+                        Rectangle {
+                            color: Colors.defaultInputBackground
+                            anchors.fill: parent
+                            opacity: descriptionCheckBox.checked ? 0.1 : 0
+                        }
+
+                        ColumnLayout {
+                            anchors.fill: parent
+                            anchors.margins: 3
+                            spacing: 2
+
+                            Item {
+                                height: 1
+                            }
+
+                            RowLayout {
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+
+                                StyledText {
+                                    text: qsTr("Description:")
+                                }
+
+                                Item {
+                                    Layout.fillWidth: true
+                                }
+
+                                StyledText {
+                                    text: descriptionTextInput.length
+                                    color: Colors.defaultInputBackground
+                                }
+                            }
+
+                            Rectangle {
+                                id: rect
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                height: 50
+                                color: Colors.defaultInputBackground
+                                border.color: Colors.artworkActiveColor
+                                border.width: descriptionTextInput.activeFocus ? 1 : 0
+                                clip: true
+
+                                Flickable {
+                                    id: descriptionFlick
+                                    contentWidth: descriptionTextInput.paintedWidth
+                                    contentHeight: descriptionTextInput.paintedHeight
+                                    anchors.left: parent.left
+                                    anchors.right: parent.right
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    interactive: false
+                                    flickableDirection: Flickable.HorizontalFlick
+                                    height: parent.height
+                                    clip: true
+                                    focus: false
+
+                                    function ensureVisible(r) {
+                                        if (contentX >= r.x)
+                                            contentX = r.x;
+                                        else if (contentX+width <= r.x+r.width)
+                                            contentX = r.x+r.width-width;
+                                        if (contentY >= r.y)
+                                            contentY = r.y;
+                                        else if (contentY+height <= r.y+r.height)
+                                            contentY = r.y+r.height-height;
+                                    }
+
+                                    StyledTextEdit {
+                                        id: descriptionTextInput
+                                        width: paintedWidth > descriptionFlick.width ? paintedWidth : descriptionFlick.width
+                                        height: descriptionFlick.height
+                                        text: combinedArtworks.description
+                                        property string previousText: text
+                                        property int maximumLength: 300
+                                        font.pixelSize: 12*settingsModel.keywordSizeScale
+                                        onTextChanged: {
+                                            if (text.length > maximumLength) {
+                                                var cursor = cursorPosition;
+                                                text = previousText;
+                                                if (cursor > text.length) {
+                                                    cursorPosition = text.length;
+                                                } else {
+                                                    cursorPosition = cursor-1;
+                                                }
+                                            }
+
+                                            previousText = text
+                                            combinedArtworks.description = text
+                                        }
+
+                                        wrapMode: TextEdit.Wrap
+                                        horizontalAlignment: TextEdit.AlignLeft
+                                        verticalAlignment: TextEdit.AlignTop
+                                        textFormat: TextEdit.PlainText
+                                        textMargin: 5
+
+                                        Component.onCompleted: {
+                                            combinedArtworks.initDescriptionHighlighting(descriptionTextInput.textDocument)
+                                        }
+
+                                        onActiveFocusChanged: {
+                                            if (descriptionTextInput.length > 0) {
+                                                combinedArtworks.spellCheckDescription()
+                                            }
+                                        }
+
+                                        onCursorRectangleChanged: descriptionFlick.ensureVisible(cursorRectangle)
+
+                                        Keys.onBacktabPressed: {
+                                            if (titleCheckBox.checked) {
+                                                titleTextInput.forceActiveFocus()
+                                                event.accepted = true
+                                            }
+                                        }
+
+                                        Keys.onTabPressed: {
+                                            if (keywordsCheckBox.checked) {
+                                                flv.activateEdit()
+                                                event.accepted = true
+                                            }
+                                        }
+
+                                        Keys.onPressed: {
+                                            if(event.matches(StandardKey.Paste)) {
+                                                var clipboardText = clipboard.getText();
+                                                if (Common.safeInsert(descriptionTextInput, clipboardText)) {
+                                                    event.accepted = true
+                                                }
+                                            } else if ((event.key === Qt.Key_Return) || (event.key === Qt.Key_Enter)) {
+                                                event.accepted = true
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        Rectangle {
+                            color: Colors.defaultInputBackground
+                            anchors.fill: parent
+                            opacity: descriptionCheckBox.checked ? 0 : dialogWindow.disabledOpacity
                         }
                     }
                 }
@@ -742,10 +787,10 @@ Item {
                                     }
 
                                     onBackTabPressed: {
-                                        if (titleCheckBox.checked) {
-                                            titleTextInput.forceActiveFocus()
-                                        } else if (descriptionCheckBox.checked) {
+                                        if (descriptionCheckBox.checked) {
                                             descriptionTextInput.forceActiveFocus()
+                                        } else if (titleCheckBox.checked) {
+                                            titleTextInput.forceActiveFocus()
                                         }
                                     }
                                 }
@@ -900,6 +945,6 @@ Item {
 
     Component.onCompleted: {
         focus = true
-        descriptionTextInput.forceActiveFocus()
+        titleTextInput.forceActiveFocus()
     }
 }
