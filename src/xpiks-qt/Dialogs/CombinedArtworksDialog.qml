@@ -563,9 +563,9 @@ Item {
                                         width: paintedWidth > descriptionFlick.width ? paintedWidth : descriptionFlick.width
                                         height: descriptionFlick.height
                                         text: combinedArtworks.description
+                                        font.pixelSize: 12*settingsModel.keywordSizeScale
                                         property string previousText: text
                                         property int maximumLength: 300
-                                        font.pixelSize: 12*settingsModel.keywordSizeScale
                                         onTextChanged: {
                                             if (text.length > maximumLength) {
                                                 var cursor = cursorPosition;

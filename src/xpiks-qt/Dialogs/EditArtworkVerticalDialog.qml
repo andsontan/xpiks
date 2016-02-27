@@ -203,7 +203,6 @@ Item {
                                     height: descriptionFlick.height
                                     font.pixelSize: 12*settingsModel.keywordSizeScale
                                     onTextChanged: combinedArtworks.description = text
-                                    KeyNavigation.tab: titleTextInput
                                     focus: true
 
                                     Component.onCompleted: {
