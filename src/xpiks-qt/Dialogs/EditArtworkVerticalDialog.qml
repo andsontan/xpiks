@@ -180,12 +180,8 @@ Item {
                         id: titleFlick
                         contentWidth: titleTextInput.paintedWidth
                         contentHeight: titleTextInput.paintedHeight
-                        height: 30
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        anchors.leftMargin: 5
-                        anchors.rightMargin: 5
-                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.fill: parent
+                        anchors.margins: 5
                         clip: true
                         flickableDirection: Flickable.HorizontalFlick
                         interactive: false
@@ -278,12 +274,10 @@ Item {
                         id: descriptionFlick
                         contentWidth: descriptionTextInput.paintedWidth
                         contentHeight: descriptionTextInput.paintedHeight
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.fill: parent
+                        anchors.margins: 5
                         interactive: false
                         flickableDirection: Flickable.HorizontalFlick
-                        height: parent.height
                         clip: true
 
                         function ensureVisible(r) {
@@ -291,6 +285,10 @@ Item {
                                 contentX = r.x;
                             else if (contentX+width <= r.x+r.width)
                                 contentX = r.x+r.width-width;
+                            if (contentY >= r.y)
+                                contentY = r.y;
+                            else if (contentY+height <= r.y+r.height)
+                                contentY = r.y+r.height-height;
                         }
 
                         StyledTextEdit {
@@ -301,7 +299,7 @@ Item {
                             font.pixelSize: 12*settingsModel.keywordSizeScale
                             focus: true
                             property string previousText: text
-                            property int maximumLength: 300
+                            property int maximumLength: 280
                             onTextChanged: {
                                 if (text.length > maximumLength) {
                                     var cursor = cursorPosition;
@@ -321,7 +319,6 @@ Item {
                             horizontalAlignment: TextEdit.AlignLeft
                             verticalAlignment: TextEdit.AlignTop
                             textFormat: TextEdit.PlainText
-                            textMargin: 5
 
                             Component.onCompleted: {
                                 combinedArtworks.initDescriptionHighlighting(descriptionTextInput.textDocument)
