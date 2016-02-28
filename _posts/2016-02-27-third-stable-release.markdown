@@ -16,7 +16,7 @@ Small changelog:
 - ability to explicitly attach vectors to previews
 - automatic exiftool detection for OS X users
 - upload progress reporting in taskbar on Windows
-- ability to correctly upload vectors to Dreamtimes (to the 'additional' directory)
+- ability to correctly upload vectors to Dreamstime (to the 'additional' directory)
 - logs are now highlighted
 
 Minor stuff:
