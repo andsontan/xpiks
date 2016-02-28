@@ -24,6 +24,8 @@ Minor stuff:
 - logs are now splitted to file-per-session
 - window size is saved and restored
 
+Although Xpiks now can correctly upload vectors with previews to Dreamstime, the latter sometimes fails to attach previews to vectors by itself. It's not a problem of Xpiks, because Dreamstime fails to do so even when uploading with FileZilla.
+
 Also Xpiks has Plugin API for building extensions now available. So separate developers can build their own extensions.
 
 <div class="download-link"><a href="{{ site.url }}/downloads">Download</a></div>
