@@ -19,6 +19,11 @@ Small changelog:
 - ability to correctly upload vectors to Dreamtimes (to the 'additional' directory)
 - logs are now highlighted
 
+Minor stuff:
+
+- logs are now splitted to file-per-session
+- window size is saved and restored
+
 Also Xpiks has Plugin API for building extensions now available. So separate developers can build their own extensions.
 
 <div class="download-link"><a href="{{ site.url }}/downloads">Download</a></div>
