@@ -14,6 +14,8 @@ TARGET = xpiks-tests
 CONFIG   += console
 CONFIG   -= app_bundle
 
+win32:QT += winextras
+
 win32:INCLUDEPATH += ../tiny-aes
 win32:INCLUDEPATH += ../xpiks-qt/Encryption
 INCLUDEPATH += "../hunspell-1.3.3/src/hunspell"
