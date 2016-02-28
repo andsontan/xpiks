@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package>
+    <DisplayName>Xpiks-qt</DisplayName>
+    <Description>Xpiks is a free and open source keywording and uploading tool for microstock photographers and illustrators.</Description>
+    <Version>1.2.0</Version>
+    <ReleaseDate>2016-02-27</ReleaseDate>
+    <Licenses>
+        <License name="GPL v3" file="license.txt" />
+    </Licenses>
+	<Name>Xpiks</Name>
+    <Default>true</Default>
+    <Script>installxpiks.qs</Script>
+	<ForcedInstallation>true</ForcedInstallation>
+	<RequiresAdminRights>false</RequiresAdminRights>
+</Package>

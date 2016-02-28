@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Installer>
+    <Name>Xpiks</Name>
+    <Version>1.2.0</Version>
+    <Title>Xpiks Installer</Title>
+	<ProductUrl>http://ribtoks.github.io/xpiks/</ProductUrl>
+    <StartMenuDir>Xpiks</StartMenuDir>
+    <TargetDir>@ApplicationsDir@/Xpiks</TargetDir>
+	<RunProgram>@TargetDir@/xpiks-qt.exe</RunProgram>
+	<InstallerApplicationIcon>xpiks</InstallerApplicationIcon>
+	<InstallerWindowIcon>xpiks.png</InstallerWindowIcon>
+</Installer>
