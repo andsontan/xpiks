@@ -178,12 +178,6 @@ int main(int argc, char *argv[]) {
     if (!appDataPath.isEmpty()) {
         QDir appDataDir(appDataPath);
 
-        QString time = QDateTime::currentDateTimeUtc().toString("ddMMyyyy-hhmmss-zzz");
-        QString logFilename = QString("xpiks-qt-%1.log").arg(time);
-        QString logFilePath = appDataDir.filePath(logFilename);
-        Helpers::Logger &logger = Helpers::Logger::getInstance();
-        logger.setLogFilePath(logFilePath);
-
         QString libraryFilePath = appDataDir.filePath(Constants::LIBRARY_FILENAME);
         localLibrary.setLibraryPath(libraryFilePath);
     } else {
@@ -191,14 +185,23 @@ int main(int argc, char *argv[]) {
     }
 
 #ifdef WITH_LOGS
-    const QString &logFileDir = appDataPath;
+    const QString &logFileDir = QDir::cleanPath(appDataPath + QDir::separator() + "logs");
     if (!logFileDir.isEmpty()) {
         QDir dir(logFileDir);
         if (!dir.exists()) {
             bool created = QDir().mkpath(logFileDir);
             Q_UNUSED(created);
         }
+
+        QString time = QDateTime::currentDateTimeUtc().toString("ddMMyyyy-hhmmss-zzz");
+        QString logFilename = QString("xpiks-qt-%1.log").arg(time);
+
+        QString logFilePath = dir.filePath(logFilename);
+
+        Helpers::Logger &logger = Helpers::Logger::getInstance();
+        logger.setLogFilePath(logFilePath);
     }
+
 #endif
 
     Models::LogsModel logsModel;
