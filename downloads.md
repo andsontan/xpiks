@@ -36,6 +36,18 @@ permalink: /downloads/
 
 <div style="clear:both;">&nbsp;</div>
 
+<div class="download-package">
+<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.2/xpiks-qt-v1.2-setup.exe">
+<div><img src="{{site.url}}/images/windows_setup.png" style="vertical-align: middle;width:70px;" />
+<span style="vertical-align: middle;">Setup for Win x64</span>
+</div>
+</a>
+</div>
+
+<p>Download the Xpiks setup from the link on the left and open it. Please, note that this build does work <strong>only for Windows 7 x64 and later with x64 architecture</strong>.</p>
+
+<div style="clear:both;">&nbsp;</div>
+
 <h2><strong>Linux instructions</strong></h2>
 
 <div class="download-package">
