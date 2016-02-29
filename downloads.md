@@ -34,6 +34,7 @@ permalink: /downloads/
 
 <p>Download the Xpiks zip archive from the link on the left, unpack it where you want and it's ready to go. Please, note that this build does work <strong>only for Windows 7 x64 and later with x64 architecture</strong>.</p>
 
+<!--
 <div style="clear:both;">&nbsp;</div>
 
 <div class="download-package">
@@ -45,6 +46,7 @@ permalink: /downloads/
 </div>
 
 <p>Download the Xpiks setup from the link on the left and open it. Please, note that this build does work <strong>only for Windows 7 x64 and later with x64 architecture</strong>.</p>
+-->
 
 <div style="clear:both;">&nbsp;</div>
 
