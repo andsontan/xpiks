@@ -7,6 +7,6 @@
     <StartMenuDir>Xpiks</StartMenuDir>
     <TargetDir>@ApplicationsDir@/Xpiks</TargetDir>
 	<RunProgram>@TargetDir@/xpiks-qt.exe</RunProgram>
-	<InstallerApplicationIcon>xpiks</InstallerApplicationIcon>
-	<InstallerWindowIcon>xpiks.png</InstallerWindowIcon>
+	<InstallerApplicationIcon>xpiks-qt</InstallerApplicationIcon>
+	<InstallerWindowIcon>xpiks-qt.png</InstallerWindowIcon>
 </Installer>

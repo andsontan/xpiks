@@ -1,0 +1,2 @@
+Open CMD and execute in this directory following command
+binarycreator -c config/config.xml -p packages xpiks-1.2-setup
