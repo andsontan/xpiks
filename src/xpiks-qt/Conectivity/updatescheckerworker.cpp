@@ -23,8 +23,10 @@
 
 #if defined(Q_OS_DARWIN)
 #define UPDATE_JSON_URL "http://ribtoks.github.io/xpiks/update-osx.json"
-#elif defined(Q_OS_WIN)
+#elif defined(Q_OS_WIN64)
 #define UPDATE_JSON_URL "http://ribtoks.github.io/xpiks/update-windows.json"
+#elif defined(Q_OS_WIN32)
+#define UPDATE_JSON_URL "http://ribtoks.github.io/xpiks/update-windows-32.json"
 #else
 #define UPDATE_JSON_URL "http://ribtoks.github.io/xpiks/update.json"
 #endif
