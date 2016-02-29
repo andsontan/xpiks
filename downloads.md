@@ -27,7 +27,7 @@ permalink: /downloads/
 <div class="download-package">
 <a href="https://github.com/Ribtoks/xpiks/releases/download/v1.2/Xpiks-qt-v1.2.zip">
 <div><img src="{{site.url}}/images/windows_installer.jpg" style="vertical-align: middle;width:70px;" />
-<span style="vertical-align: middle;">Package for Win x64</span>
+<span style="vertical-align: middle;">Archive for Win x64</span>
 </div>
 </a>
 </div>
