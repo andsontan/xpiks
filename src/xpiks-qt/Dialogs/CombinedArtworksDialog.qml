@@ -158,7 +158,7 @@ Item {
                     }
 
                     StyledText {
-                        text: combinedArtworks.artworksCount == 1 ? qsTr("1 artwork begin edited") : qsTr("%1 artworks being edited").arg(combinedArtworks.artworksCount)
+                        text: combinedArtworks.artworksCount == 1 ? qsTr("1 artwork being edited") : qsTr("%1 artworks being edited").arg(combinedArtworks.artworksCount)
                         color: Colors.defaultInputBackground
                     }
                 }

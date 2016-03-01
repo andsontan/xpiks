@@ -107,6 +107,7 @@ ApplicationWindow {
             console.debug("UI::main # Delayed onOpen timer triggered");
             helpersWrapper.afterConstruction()
             helpersWrapper.setProgressIndicator(applicationWindow)
+            languagesModel.loadLanguages()
 
             if (appSettings.needToShowWhatsNew()) {
                 var text = appSettings.whatsNewText;
@@ -340,6 +341,23 @@ ApplicationWindow {
         Menu {
             title: qsTr("&Tools")
             enabled: applicationWindow.openedDialogsCount == 0
+
+            Menu {
+                title: qsTr("&Change language")
+                id: languagesMenu
+
+                Instantiator {
+                    model: languagesModel
+                    onObjectAdded: languagesMenu.insertItem( index, object )
+                    onObjectRemoved: languagesMenu.removeItem( object )
+
+                    delegate: MenuItem {
+                        text: display
+                        onTriggered: {
+                        }
+                    }
+                }
+            }
 
             MenuItem {
                 text: qsTr("&Zip selected artworks")

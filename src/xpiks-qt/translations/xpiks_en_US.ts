@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="uk_UA">
+<TS version="2.1" language="en_US" sourcelanguage="en_US">
 <context>
     <name>AboutWindow</name>
     <message>
@@ -61,12 +61,12 @@
     </message>
     <message>
         <location filename="../Dialogs/CombinedArtworksDialog.qml" line="161"/>
-        <source>1 artwork begin edited</source>
+        <source>%1 artworks being edited</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../Dialogs/CombinedArtworksDialog.qml" line="161"/>
-        <source>%1 artworks being edited</source>
+        <source>1 artwork being edited</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

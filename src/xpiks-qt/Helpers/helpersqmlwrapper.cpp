@@ -29,7 +29,6 @@
 #include <QCoreApplication>
 #include "keywordvalidator.h"
 #include "../Commands/commandmanager.h"
-#include "../Common/defines.h"
 #include "logger.h"
 #include "../Common/defines.h"
 

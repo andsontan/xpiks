@@ -75,7 +75,8 @@ SOURCES += main.cpp \
     Plugins/uiprovider.cpp \
     Warnings/warningsservice.cpp \
     Helpers/loghighlighter.cpp \
-    Warnings/warningsmodel.cpp
+    Warnings/warningsmodel.cpp \
+    Models/languagesmodel.cpp
 
 RESOURCES += qml.qrc
 
@@ -96,6 +97,9 @@ RC_ICONS = xpiks-qt.ico
 
 # Default rules for deployment.
 include(deployment.pri)
+
+TRANSLATIONS = translations\xpiks_lang_en_US.ts \
+               translations\xpiks_lang_uk_UA.ts
 
 HEADERS += \
     Models/artitemsmodel.h \
@@ -199,7 +203,8 @@ HEADERS += \
     Warnings/warningsservice.h \
     Common/iservicebase.h \
     Helpers/loghighlighter.h \
-    Warnings/warningsmodel.h
+    Warnings/warningsmodel.h \
+    Models/languagesmodel.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

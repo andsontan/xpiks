@@ -62,6 +62,7 @@
 #include "Warnings/warningsmodel.h"
 #include "Plugins/pluginmanager.h"
 #include "Helpers/loggingworker.h"
+#include "Models/languagesmodel.h"
 #include "Helpers/updateservice.h"
 #include "Models/artitemsmodel.h"
 #include "Models/settingsmodel.h"
@@ -256,6 +257,7 @@ int main(int argc, char *argv[]) {
     MetadataIO::BackupSaverService metadataSaverService;
     Warnings::WarningsModel warningsModel;
     warningsModel.setSourceModel(&artItemsModel);
+    Models::LanguagesModel languagesModel;
 
     bool updateEnabled=appSettings.value(Constants::UPDATE_SERVICE,true ).toBool();
     Helpers::UpdateService updateService(updateEnabled);
@@ -336,6 +338,7 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("pluginManager", &pluginManager);
     rootContext->setContextProperty("pluginsWithActions", &pluginsWithActions);
     rootContext->setContextProperty("warningsModel", &warningsModel);
+    rootContext->setContextProperty("languagesModel", &languagesModel);
 
     engine.addImageProvider("global", globalProvider);
     qDebug() << "main #" << "About to load main view...";
