@@ -22,6 +22,7 @@
 #ifndef MODIFYARTWORKHISTORYITEM_H
 #define MODIFYARTWORKHISTORYITEM_H
 
+#include <QObject>
 #include <QVector>
 #include <QString>
 #include "historyitem.h"
@@ -59,8 +60,8 @@ namespace UndoRedo {
          virtual QString getDescription() const {
              int count = m_ArtworksBackups.count();
              QString typeStr = getModificationTypeDescription(m_ModificationType);
-             return count > 1 ? QString("(%1)  %2 items modified").arg(typeStr).arg(count) :
-                                  QString("(%1)  1 item modified").arg(typeStr);
+             return count > 1 ? QObject::tr("(%1)  %2 items modified").arg(typeStr).arg(count) :
+                                  QObject::tr("(%1)  1 item modified").arg(typeStr);
          }
 
 

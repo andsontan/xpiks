@@ -20,6 +20,7 @@
  */
 
 #include "warningsmodel.h"
+#include <QObject>
 #include <QStringList>
 #include "../Models/artitemsmodel.h"
 #include "../Models/artworkmetadata.h"
@@ -32,75 +33,75 @@ namespace Warnings {
             QSize size = metadata->getImageSize();
             int x = size.width();
             int y = size.height();
-            descriptions.append(QString("Image size %1 x %2 is less than minimal").arg(x).arg(y));
+            descriptions.append(QObject::tr("Image size %1 x %2 is less than minimal").arg(x).arg(y));
         }
 
         if (Common::HasFlag(warningsFlags, Common::WarningTypeNoKeywords)) {
-            descriptions.append(QLatin1String("Item has no keywords"));
+            descriptions.append(QObject::tr("Item has no keywords"));
         }
 
         if (Common::HasFlag(warningsFlags, Common::WarningTypeTooFewKeywords)) {
-            descriptions.append(QLatin1String("There's less than 7 keywords"));
+            descriptions.append(QObject::tr("There's less than 7 keywords"));
         }
 
         if (Common::HasFlag(warningsFlags, Common::WarningTypeTooManyKeywords)) {
-            descriptions.append(QString("There are too many keywords (%1)").arg(metadata->getKeywordsCount()));
+            descriptions.append(QObject::tr("There are too many keywords (%1)").arg(metadata->getKeywordsCount()));
         }
 
         if (Common::HasFlag(warningsFlags, Common::WarningTypeDescriptionIsEmpty)) {
-            descriptions.append(QLatin1String("Description is empty"));
+            descriptions.append(QObject::tr("Description is empty"));
         }
 
         if (Common::HasFlag(warningsFlags, Common::WarningTypeDescriptionNotEnoughWords)) {
-            descriptions.append(QLatin1String("Description should have more than 2 words"));
+            descriptions.append(QObject::tr("Description should have more than 2 words"));
         }
 
         if (Common::HasFlag(warningsFlags, Common::WarningTypeDescriptionTooBig)) {
-            descriptions.append(QString("Description is too long (%1 symbols)").arg(metadata->getDescription().length()));
+            descriptions.append(QObject::tr("Description is too long (%1 symbols)").arg(metadata->getDescription().length()));
         }
 
         if (Common::HasFlag(warningsFlags, Common::WarningTypeTitleIsEmpty)) {
-            descriptions.append(QLatin1String("Title is empty"));
+            descriptions.append(QObject::tr("Title is empty"));
         }
 
         if (Common::HasFlag(warningsFlags, Common::WarningTypeTitleNotEnoughWords)) {
-            descriptions.append(QLatin1String("Title should have more than 2 words"));
+            descriptions.append(QObject::tr("Title should have more than 2 words"));
         }
 
         if (Common::HasFlag(warningsFlags, Common::WarningTypeTitleTooManyWords)) {
-            descriptions.append(QLatin1String("Title has too many words"));
+            descriptions.append(QObject::tr("Title has too many words"));
         }
 
         if (Common::HasFlag(warningsFlags, Common::WarningTypeTitleTooBig)) {
-            descriptions.append(QString("Title is too long (%1 symbols)").arg(metadata->getTitle().length()));
+            descriptions.append(QObject::tr("Title is too long (%1 symbols)").arg(metadata->getTitle().length()));
         }
 
         if (Common::HasFlag(warningsFlags, Common::WarningTypeSpellErrorsInKeywords)) {
-            descriptions.append(QLatin1String("Keywords have spelling error(s)"));
+            descriptions.append(QObject::tr("Keywords have spelling error(s)"));
         }
 
         if (Common::HasFlag(warningsFlags, Common::WarningTypeSpellErrorsInDescription)) {
-            descriptions.append(QLatin1String("Description has spelling error(s)"));
+            descriptions.append(QObject::tr("Description has spelling error(s)"));
         }
 
         if (Common::HasFlag(warningsFlags, Common::WarningTypeSpellErrorsInTitle)) {
-            descriptions.append(QLatin1String("Title has spelling error(s)"));
+            descriptions.append(QObject::tr("Title has spelling error(s)"));
         }
 
         if (Common::HasFlag(warningsFlags, Common::WarningTypeFileIsTooBig)) {
-            descriptions.append(QLatin1String("File is larger than 15 MB"));
+            descriptions.append(QObject::tr("File is larger than 15 MB"));
         }
 
         if (Common::HasFlag(warningsFlags, Common::WarningTypeKeywordsInDescription)) {
-            descriptions.append(QLatin1String("Description contains some of the keywords"));
+            descriptions.append(QObject::tr("Description contains some of the keywords"));
         }
 
         if (Common::HasFlag(warningsFlags, Common::WarningTypeKeywordsInTitle)) {
-            descriptions.append(QLatin1String("Title contains some of the keywords"));
+            descriptions.append(QObject::tr("Title contains some of the keywords"));
         }
 
         if (Common::HasFlag(warningsFlags, Common::WarningTypeFilenameSymbols)) {
-            descriptions.append(QLatin1String("Filename contains special characters or spaces"));
+            descriptions.append(QObject::tr("Filename contains special characters or spaces"));
         }
     }
 

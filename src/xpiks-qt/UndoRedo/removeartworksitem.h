@@ -22,6 +22,7 @@
 #ifndef REMOVEARTWORKSITEM_H
 #define REMOVEARTWORKSITEM_H
 
+#include <QObject>
 #include <QVector>
 #include <QPair>
 #include <QString>
@@ -49,8 +50,8 @@ namespace UndoRedo {
     public:
         virtual QString getDescription() const {
             int count = m_RemovedArtworksIndices.length();
-            return count > 1 ? QString("%1 items removed").arg(count) :
-                               QString("1 item removed");
+            return count > 1 ? QObject::tr("%1 items removed").arg(count) :
+                               QObject::tr("1 item removed");
         }
 
 

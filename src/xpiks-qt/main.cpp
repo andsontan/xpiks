@@ -211,7 +211,7 @@ int main(int argc, char *argv[]) {
     qInfo() << "main #" << "Log started." << "Xpiks" << XPIKS_VERSION_STRING << "-" << STRINGIZE(BUILDNUMBER);
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
-    qInfo() << "main #" << QSysInfo::productType() << QSysInfo::productVersion();
+    qInfo() << "main #" << QSysInfo::productType() << QSysInfo::productVersion() << QSysInfo::currentCpuArchitecture();
 #else
 #ifdef Q_OS_WIN
     qInfo() << "main #" << QLatin1String("Windows Qt<5.4");

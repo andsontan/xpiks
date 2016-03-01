@@ -13,3 +13,5 @@ hunspell-1.3.3
 *.lib
 *.o
 moc_*.cpp
+*.exe
+installer/packages/xpiks/data/

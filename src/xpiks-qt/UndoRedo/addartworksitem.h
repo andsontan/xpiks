@@ -22,6 +22,7 @@
 #ifndef ADDARTWORKITEM_H
 #define ADDARTWORKITEM_H
 
+#include <QObject>
 #include <QVector>
 #include <QPair>
 #include "historyitem.h"
@@ -54,8 +55,8 @@ namespace UndoRedo {
    public:
         virtual QString getDescription() const {
             int count = Helpers::getRangesLength(m_AddedRanges);
-            return count > 1 ? QString("%1 items added").arg(count) :
-                                 QString("1 item added");
+            return count > 1 ? QObject::tr("%1 items added").arg(count) :
+                                 QObject::tr("1 item added");
         }
 
     private:
