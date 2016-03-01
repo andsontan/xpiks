@@ -296,6 +296,7 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&localLibrary);
     commandManager.InjectDependency(&metadataIOCoordinator);
     commandManager.InjectDependency(&pluginManager);
+    commandManager.InjectDependency(&languagesModel);
 
     commandManager.ensureDependenciesInjected();
 

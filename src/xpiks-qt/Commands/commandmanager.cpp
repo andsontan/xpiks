@@ -49,6 +49,7 @@
 #include "../Suggestion/locallibrary.h"
 #include "../Plugins/pluginmanager.h"
 #include "../Warnings/warningsservice.h"
+#include "../Models/languagesmodel.h"
 
 void Commands::CommandManager::InjectDependency(Models::ArtworksRepository *artworkRepository) {
     Q_ASSERT(artworkRepository != NULL); m_ArtworksRepository = artworkRepository;
@@ -154,6 +155,11 @@ void Commands::CommandManager::InjectDependency(Plugins::PluginManager *pluginMa
     m_PluginManager->setCommandManager(this);
 }
 
+void Commands::CommandManager::InjectDependency(Models::LanguagesModel *languagesModel) {
+    Q_ASSERT(languagesModel != NULL); m_LanguagesModel = languagesModel;
+    m_LanguagesModel->setCommandManager(this);
+}
+
 Commands::ICommandResult *Commands::CommandManager::processCommand(ICommandBase *command)
 #ifndef TESTS
 const
@@ -217,6 +223,7 @@ void Commands::CommandManager::ensureDependenciesInjected() {
     Q_ASSERT(m_LocalLibrary != NULL);
     Q_ASSERT(m_MetadataIOCoordinator != NULL);
     Q_ASSERT(m_PluginManager != NULL);
+    Q_ASSERT(m_LanguagesModel != NULL);
 }
 
 void Commands::CommandManager::recodePasswords(const QString &oldMasterPassword,

@@ -54,12 +54,14 @@
 #define DEFAULT_APP_HEIGHT 725
 #define DEFAULT_APP_POSITION -1
 #define DEFAULT_AUTO_FIND_VECTORS true
+#define DEFAULT_LOCALE "en_US"
 
 namespace Models {
     SettingsModel::SettingsModel(QObject *parent) :
         QObject(parent),
         m_ExifToolPath(DEFAULT_EXIFTOOL),
         m_DictPath(DEFAULT_DICT_PATH),
+        m_SelectedLocale(DEFAULT_LOCALE),
         m_MinMegapixelCount(DEFAULT_MIN_MEGAPIXELS),
         m_KeywordSizeScale(DEFAULT_KEYWORD_SIZE_SCALE),
         m_ScrollSpeedScale(DEFAULT_SCROLL_SPEED_SCALE),
@@ -84,6 +86,12 @@ namespace Models {
         qDebug() << "SettingsModel::saveExiftool #";
         Helpers::AppSettings appSettings;
         appSettings.setValue(appSettings.getExifToolPathKey(), m_ExifToolPath);
+    }
+
+    void SettingsModel::saveLocale() {
+        qDebug() << "SettingsModel::saveLocale #";
+        Helpers::AppSettings appSettings;
+        appSettings.setValue(appSettings.getSelectedLocaleKey(), m_SelectedLocale);
     }
 
     void SettingsModel::resetAllValues() {
@@ -170,6 +178,7 @@ namespace Models {
         setUserStatistics(appSettings.boolValue(appSettings.getUserStatisticsKey(), DEFAULT_COLLECT_USER_STATISTICS));
         setUpdateService(appSettings.boolValue(appSettings.getUpdateServiceKey(), DEFAULT_UPDATE_SERVICE));
         setAutoFindVectors(appSettings.boolValue(appSettings.getAutoFindVectorsKey(), DEFAULT_AUTO_FIND_VECTORS));
+        setSelectedLocale(appSettings.value(appSettings.getSelectedLocaleKey(), DEFAULT_LOCALE).toString());
     }
 
     void SettingsModel::resetToDefault() {
@@ -194,6 +203,7 @@ namespace Models {
         setUserStatistics(DEFAULT_COLLECT_USER_STATISTICS);
         setUpdateService(DEFAULT_UPDATE_SERVICE);
         setAutoFindVectors(DEFAULT_AUTO_FIND_VECTORS);
+        setSelectedLocale(DEFAULT_LOCALE);
 
         Helpers::AppSettings appSettings;
 #if defined(QT_DEBUG)

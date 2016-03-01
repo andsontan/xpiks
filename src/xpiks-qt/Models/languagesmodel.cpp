@@ -27,6 +27,8 @@
 #include <QDebug>
 #include <QLibraryInfo>
 #include "../Common/defines.h"
+#include "../Commands/commandmanager.h"
+#include "../Models/settingsmodel.h"
 
 namespace Models {
     LanguagesModel::LanguagesModel(QObject *parent):
@@ -35,8 +37,6 @@ namespace Models {
     {
         m_XpiksTranslator = new QTranslator(this);
         m_QtTranslator = new QTranslator(this);
-
-        qInfo() << "LanguagesModel::LanguagesModel #" << QLibraryInfo::location(QLibraryInfo::TranslationsPath);
     }
 
     void LanguagesModel::loadLanguages() {
@@ -51,8 +51,13 @@ namespace Models {
 #endif
 #endif
 
+        Models::SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
+        QString selectedLocale = settingsModel->getSelectedLocale();
+
+        qDebug() << "LanguagesModel::loadTranslators #" << "Current locale is" << selectedLocale;
+
         m_LanguagesDirectory = translationsPath;
-        loadTranslators(QDir(m_LanguagesDirectory));
+        loadTranslators(QDir(m_LanguagesDirectory), selectedLocale);
     }
 
     void LanguagesModel::switchLanguage(int index) {
@@ -63,7 +68,9 @@ namespace Models {
         QDir languagesDir(m_LanguagesDirectory);
 
         QLocale locale = QLocale(langPair.first);
-        QLocale::setDefault(locale);
+        Models::SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
+        settingsModel->setSelectedLocale(langPair.first);
+        settingsModel->saveLocale();
 
         QCoreApplication *app = QCoreApplication::instance();
         app->removeTranslator(m_QtTranslator);
@@ -100,11 +107,8 @@ namespace Models {
         return roles;
     }
 
-    void LanguagesModel::loadTranslators(const QDir &dir) {
+    void LanguagesModel::loadTranslators(const QDir &dir, const QString &selectedLocale) {
         qDebug() << "LanguagesModel::loadTranslators #" << dir.absolutePath();
-
-        QString defaultLocale = QLocale::system().name();
-        qDebug() << "LanguagesModel::loadTranslators #" << "Current locale is" << defaultLocale;
         
         const QString filter = QLatin1String("xpiks_*.qm");
         QDir::Filters filters = QDir::Files | QDir::Readable;
@@ -128,7 +132,7 @@ namespace Models {
             //if (translator->load(file.absoluteFilePath())) {
             QString locale = language + "_" + country;
 
-            if (defaultLocale == locale) { m_CurrentLanguageIndex = lastIndex; }
+            if (selectedLocale == locale) { m_CurrentLanguageIndex = lastIndex; }
 
             QString lang = QLocale::languageToString(QLocale(locale).language());
 

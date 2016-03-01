@@ -21,7 +21,7 @@
     <message>
         <location filename="../Dialogs/AboutWindow.qml" line="101"/>
         <source>The program is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE</source>
-        <translation type="unfinished">The program is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE</translation>
+        <translation>Ця програма надається без будь-яких гарантій, включаючи гарантії дизайну, прибутковості чи застовування під певні потреби</translation>
     </message>
 </context>
 <context>
@@ -47,7 +47,7 @@
     <message>
         <location filename="../Dialogs/CombinedArtworksDialog.qml" line="69"/>
         <source>Are you sure you want to remove %1 item(s)?</source>
-        <translation>Справді видалити %1 елементів(-та)?</translation>
+        <translation>Справді видалити %1 файл(и)?</translation>
     </message>
     <message>
         <location filename="../Dialogs/CombinedArtworksDialog.qml" line="101"/>
@@ -57,22 +57,22 @@
     <message>
         <location filename="../Dialogs/CombinedArtworksDialog.qml" line="153"/>
         <source>Edit multiple artworks</source>
-        <translation>Редагувати кілька файлів</translation>
+        <translation>Редагування кількох файлів</translation>
     </message>
     <message>
         <location filename="../Dialogs/CombinedArtworksDialog.qml" line="161"/>
         <source>%1 artworks being edited</source>
-        <translation>%1 файл було змінено</translation>
+        <translation>регадується %1 файли(-ів)</translation>
     </message>
     <message>
         <location filename="../Dialogs/CombinedArtworksDialog.qml" line="161"/>
         <source>1 artwork being edited</source>
-        <translation>1 файл було змінено</translation>
+        <translation>редагується 1 файл</translation>
     </message>
     <message>
         <location filename="../Dialogs/CombinedArtworksDialog.qml" line="177"/>
         <source>Assign from selected</source>
-        <translation type="unfinished">Поля із вибраного</translation>
+        <translation>Присвоїти з вибраного</translation>
     </message>
     <message>
         <location filename="../Dialogs/CombinedArtworksDialog.qml" line="180"/>
@@ -122,12 +122,12 @@
     <message>
         <location filename="../Dialogs/CombinedArtworksDialog.qml" line="818"/>
         <source>Fix spelling</source>
-        <translation>Виправити орфографію</translation>
+        <translation>Орфографія</translation>
     </message>
     <message>
         <location filename="../Dialogs/CombinedArtworksDialog.qml" line="836"/>
         <source>Suggest keywords</source>
-        <translation type="unfinished">Підказка слів</translation>
+        <translation>Підказка слів</translation>
     </message>
     <message>
         <location filename="../Dialogs/CombinedArtworksDialog.qml" line="858"/>
@@ -203,27 +203,27 @@
     <message>
         <location filename="../Dialogs/EditArtworkVerticalDialog.qml" line="156"/>
         <source>Title:</source>
-        <translation type="unfinished">Назва:</translation>
+        <translation>Назва:</translation>
     </message>
     <message>
         <location filename="../Dialogs/EditArtworkVerticalDialog.qml" line="160"/>
         <source>(same as Description if empty)</source>
-        <translation type="unfinished">(скопіюється із Опису, якщо пуста)</translation>
+        <translation>(скопіюється із Опису, якщо пуста)</translation>
     </message>
     <message>
         <location filename="../Dialogs/EditArtworkVerticalDialog.qml" line="246"/>
         <source>Description:</source>
-        <translation type="unfinished">Опис:</translation>
+        <translation>Опис:</translation>
     </message>
     <message>
         <location filename="../Dialogs/EditArtworkVerticalDialog.qml" line="366"/>
         <source>Keywords:</source>
-        <translation type="unfinished">Ключові слова:</translation>
+        <translation>Ключові слова:</translation>
     </message>
     <message>
         <location filename="../Dialogs/EditArtworkVerticalDialog.qml" line="370"/>
         <source>(comma-separated)</source>
-        <translation type="unfinished">(розділені комами)</translation>
+        <translation>(розділені комами)</translation>
     </message>
     <message>
         <location filename="../Dialogs/EditArtworkVerticalDialog.qml" line="481"/>
@@ -233,12 +233,12 @@
     <message>
         <location filename="../Dialogs/EditArtworkVerticalDialog.qml" line="498"/>
         <source>Fix spelling</source>
-        <translation type="unfinished">Виправити орфографію</translation>
+        <translation>Орфографію</translation>
     </message>
     <message>
         <location filename="../Dialogs/EditArtworkVerticalDialog.qml" line="514"/>
         <source>Save</source>
-        <translation type="unfinished">Зберегти</translation>
+        <translation>Зберегти</translation>
     </message>
     <message>
         <location filename="../Dialogs/EditArtworkVerticalDialog.qml" line="524"/>
@@ -1133,7 +1133,7 @@ All upload hosts&apos; passwords will be purged.</source>
     <message>
         <location filename="../main.qml" line="287"/>
         <source>&amp;Manage upload hosts</source>
-        <translation>&amp;Керувати завантаженнями</translation>
+        <translation type="unfinished">&amp;Керувати завантаженнями</translation>
     </message>
     <message>
         <location filename="../main.qml" line="297"/>
@@ -1153,7 +1153,7 @@ All upload hosts&apos; passwords will be purged.</source>
     <message>
         <location filename="../main.qml" line="346"/>
         <source>&amp;Change language</source>
-        <translation type="unfinished"></translation>
+        <translation>Змінити мову</translation>
     </message>
     <message>
         <location filename="../main.qml" line="366"/>
@@ -1218,7 +1218,7 @@ All upload hosts&apos; passwords will be purged.</source>
     <message>
         <location filename="../main.qml" line="533"/>
         <source>Please, save selected items before upload</source>
-        <translation>Будь ласка, збережіть вибрані файли перед завантаженням</translation>
+        <translation>Будь ласка, спочатку збережіть вибрані файли</translation>
     </message>
     <message>
         <location filename="../main.qml" line="539"/>

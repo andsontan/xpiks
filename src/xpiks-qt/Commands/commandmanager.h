@@ -55,6 +55,7 @@ namespace Models {
     class SettingsModel;
     class RecentDirectoriesModel;
     class LogsModel;
+    class LanguagesModel;
 }
 
 namespace Suggestion {
@@ -116,6 +117,7 @@ namespace Commands {
             m_LocalLibrary(NULL),
             m_MetadataIOCoordinator(NULL),
             m_PluginManager(NULL),
+            m_LanguagesModel(NULL),
             m_AfterInitCalled(false)
         { }
 
@@ -144,6 +146,7 @@ namespace Commands {
         void InjectDependency(MetadataIO::MetadataIOCoordinator *metadataIOCoordinator);
         void InjectDependency(Suggestion::LocalLibrary *localLibrary);
         void InjectDependency(Plugins::PluginManager *pluginManager);
+        void InjectDependency(Models::LanguagesModel *languagesModel);
 
     public:
         virtual ICommandResult *processCommand(ICommandBase *command)
@@ -235,6 +238,7 @@ namespace Commands {
         Suggestion::LocalLibrary *m_LocalLibrary;
         MetadataIO::MetadataIOCoordinator *m_MetadataIOCoordinator;
         Plugins::PluginManager *m_PluginManager;
+        Models::LanguagesModel *m_LanguagesModel;
 
         QVector<Common::IServiceBase<Warnings::IWarningsCheckable> *> m_WarningsCheckers;
 

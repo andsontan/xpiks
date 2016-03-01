@@ -67,6 +67,7 @@ namespace Constants {
     const char USER_AGENT_ID[] = "USER_AGENT_ID";
     const char INSTALLED_VERSION[] = "INSTALLED_VERSION";
     const char USER_CONSENT[] = "USER_CONSENT_1_0";
+    const char SELECTED_LOCALE[] = "SELECTED_LOCALE";
 #else
     const char UPLOAD_HOSTS[] = "DEBUG_UPLOAD_HOSTS_HASH";
     const char MAX_KEYWORD_COUNT[] = "DEBUG_MAX_KEYWORD_COUNT";
@@ -83,6 +84,7 @@ namespace Constants {
     const char USER_AGENT_ID[] = "DEBUG_USER_AGENT_ID";
     const char INSTALLED_VERSION[] = "DEBUG_INSTALLED_VERSION";
     const char USER_CONSENT[] = "DEBUG_USER_CONSENT_1_0";
+    const char SELECTED_LOCALE[] = "DEBUG_SELECTED_LOCALE";
 #endif // QT_NO_DEBUG
 }
 

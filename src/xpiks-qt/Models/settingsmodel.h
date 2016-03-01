@@ -56,6 +56,7 @@ namespace Models {
         Q_PROPERTY(bool updateService READ getUpdateService WRITE setUpdateService NOTIFY updateServiceChanged)
         Q_PROPERTY(QString dictionaryPath READ getDictionaryPath WRITE setDictionaryPath NOTIFY dictionaryPathChanged)
         Q_PROPERTY(bool autoFindVectors READ getAutoFindVectors WRITE setAutoFindVectors NOTIFY autoFindVectorsChanged)
+        Q_PROPERTY(QString selectedLocale READ getSelectedLocale WRITE setSelectedLocale NOTIFY selectedLocaleChanged)
 
     public:
         explicit SettingsModel(QObject *parent = 0);
@@ -63,6 +64,7 @@ namespace Models {
 
     public:
         void saveExiftool();
+        void saveLocale();
 
     public:
         Q_INVOKABLE void resetAllValues();
@@ -93,6 +95,7 @@ namespace Models {
         bool getUpdateService() const { return m_UpdateService; }
         QString getDictionaryPath() const { return m_DictPath; }
         bool getAutoFindVectors() const { return m_AutoFindVectors; }
+        QString getSelectedLocale() const { return m_SelectedLocale; }
 
     signals:
         void settingsReset();
@@ -115,6 +118,7 @@ namespace Models {
         void updateServiceChanged(bool value);
         void dictionaryPathChanged(QString path);
         void autoFindVectorsChanged(bool value);
+        void selectedLocaleChanged(QString value);
 
     public:
         void setExifToolPath(QString exifToolPath) {
@@ -269,12 +273,20 @@ namespace Models {
             }
         }
 
+        void setSelectedLocale(QString value) {
+            if (value != m_SelectedLocale) {
+                m_SelectedLocale = value;
+                emit selectedLocaleChanged(value);
+            }
+        }
+
     private:
         void resetToDefault();
 
     private:
         QString m_ExifToolPath;
         QString m_DictPath;
+        QString m_SelectedLocale;
         double m_MinMegapixelCount;
         double m_KeywordSizeScale;
         double m_ScrollSpeedScale;

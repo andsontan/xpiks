@@ -27,11 +27,12 @@
 #include <QString>
 #include <QPair>
 #include <QDir>
+#include "../Common/baseentity.h"
 
 class QTranslator;
 
 namespace Models {
-    class LanguagesModel: public QAbstractListModel
+    class LanguagesModel: public QAbstractListModel, public Common::BaseEntity
     {
         Q_OBJECT
         Q_PROPERTY(QString n READ getEmptyString() NOTIFY languageChanged)
@@ -60,7 +61,7 @@ namespace Models {
         virtual QHash<int, QByteArray> roleNames() const;
 
     private:
-        void loadTranslators(const QDir &dir);
+        void loadTranslators(const QDir &dir, const QString &selectedLocale);
 
     private:
         QVector<QPair<QString, QString> > m_LanguagesList;

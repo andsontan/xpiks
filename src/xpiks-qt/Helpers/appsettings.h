@@ -136,6 +136,9 @@ namespace Helpers {
         Q_PROPERTY(QString autoFindVectorsKey READ getAutoFindVectorsKey CONSTANT)
         QString getAutoFindVectorsKey() const { return QLatin1String(Constants::AUTO_FIND_VECTORS); }
 
+        Q_PROPERTY(QString selectedLocaleKey READ getSelectedLocaleKey CONSTANT)
+        QString getSelectedLocaleKey() const { return QLatin1String(Constants::SELECTED_LOCALE); }
+
         Q_PROPERTY(QString whatsNewText READ getWhatsNewText CONSTANT)
         QString getWhatsNewText() const {
             QString text;
