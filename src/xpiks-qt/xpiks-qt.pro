@@ -253,6 +253,14 @@ DISTFILES += \
     Components/LayoutButton.qml \
     Graphics/vector-icon.svg
 
+lupdate_only {
+SOURCES = *.qml \
+          *.js \
+          Components/*.qml \
+          Dialogs/*.qml \
+          StyledControls/*.qml
+}
+
 LIBS += -L"$$PWD/../libs/"
 LIBS += -lhunspell
 LIBS += -lz
