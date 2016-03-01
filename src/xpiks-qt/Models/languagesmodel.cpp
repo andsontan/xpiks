@@ -25,6 +25,7 @@
 #include <QTranslator>
 #include <QCoreApplication>
 #include <QDebug>
+#include <QLibraryInfo>
 #include "../Common/defines.h"
 
 namespace Models {
@@ -34,6 +35,8 @@ namespace Models {
     {
         m_XpiksTranslator = new QTranslator(this);
         m_QtTranslator = new QTranslator(this);
+
+        qInfo() << "LanguagesModel::LanguagesModel #" << QLibraryInfo::location(QLibraryInfo::TranslationsPath);
     }
 
     void LanguagesModel::loadLanguages() {
@@ -42,7 +45,7 @@ namespace Models {
 #if !defined(Q_OS_LINUX)
         translationsPath = QCoreApplication::applicationDirPath();
 #if defined(Q_OS_MAC)
-        translationsPath += "/../Resources/";
+        translationsPath += "/../Resources/translations/";
 #elif defined(Q_OS_WIN)
         translationsPath += "/translations/";
 #endif

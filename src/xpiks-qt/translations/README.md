@@ -3,6 +3,7 @@ lupdate.exe -pro xpiks-qt.pro -ts translations/xpiks_en_US.ts
 
 Create .qm files (to be put in the translations/ dir)
 lrelease.exe *.ts
+mv xpiks_*.qm qm/
 
 Copy resulted qm files to the translations/ dir
 

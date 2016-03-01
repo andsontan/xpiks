@@ -294,6 +294,11 @@ macx {
     TERMS_AND_CONDITIONS.files = terms_and_conditions.txt
     TERMS_AND_CONDITIONS.path = Contents/Resources
     QMAKE_BUNDLE_DATA += TERMS_AND_CONDITIONS
+
+    TRANSLATIONS_FILES_LIST = $$system(ls $$PWD/translations/*.qm)
+    XPIKS_TRANSLATIONS.files = $$TRANSLATIONS_FILES_LIST
+    XPIKS_TRANSLATIONS.path = Contents/Resources/translations
+    QMAKE_BUNDLE_DATA += XPIKS_TRANSLATIONS
 }
 
 win32 {
