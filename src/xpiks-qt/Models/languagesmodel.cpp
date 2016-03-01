@@ -30,7 +30,7 @@
 namespace Models {
     LanguagesModel::LanguagesModel(QObject *parent):
         QAbstractListModel(parent),
-        m_CurrentLanguageIndex(0)
+        m_CurrentLanguageIndex(-1)
     {
         m_XpiksTranslator = new QTranslator(this);
         m_QtTranslator = new QTranslator(this);
@@ -66,17 +66,20 @@ namespace Models {
         app->removeTranslator(m_QtTranslator);
         app->removeTranslator(m_XpiksTranslator);
 
-        QString qtTranslatorPath = languagesDir.filePath(QString("qt_%1").arg(langPair.first));
+        QString qtTranslatorPath = languagesDir.filePath(QString("qt_%1.qm").arg(langPair.first));
         if (m_QtTranslator->load(qtTranslatorPath)) {
+            qDebug() << "LanguagesModel::switchLanguage #" << "Loaded" << qtTranslatorPath;
             app->installTranslator(m_QtTranslator);
         }
 
-        QString xpiksTranslatorPath = languagesDir.filePath(QString("xpiks_%1").arg(langPair.first));
+        QString xpiksTranslatorPath = languagesDir.filePath(QString("xpiks_%1.qm").arg(langPair.first));
         if (m_XpiksTranslator->load(xpiksTranslatorPath)) {
+            qDebug() << "LanguagesModel::switchLanguage #" << "Loaded" << xpiksTranslatorPath;
             app->installTranslator(m_XpiksTranslator);
         }
 
         qInfo() << "LanguagesModel::switchLanguage #" << "Switched to" << langPair.first;
+        emit languageChanged();
     }
     
     QVariant LanguagesModel::data(const QModelIndex &index, int role) const {
@@ -98,6 +101,7 @@ namespace Models {
         qDebug() << "LanguagesModel::loadTranslators #" << dir.absolutePath();
 
         QString defaultLocale = QLocale::system().name();
+        qDebug() << "LanguagesModel::loadTranslators #" << "Current locale is" << defaultLocale;
         
         const QString filter = QLatin1String("xpiks_*.qm");
         QDir::Filters filters = QDir::Files | QDir::Readable;

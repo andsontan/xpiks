@@ -107,7 +107,7 @@ Item {
                 anchors.left: parent.left
                 anchors.topMargin: 20
                 anchors.leftMargin: 20
-                text: qsTr("Plugins")
+                text: i18.n + qsTr("Plugins")
             }
 
             Rectangle {
@@ -160,7 +160,7 @@ Item {
                     anchors.fill: parent
 
                     StyledText {
-                        text: qsTr("No plugins available")
+                        text: i18.n + qsTr("No plugins available")
                         anchors.centerIn: parent
                         color: Colors.selectedMetadataColor
                     }
@@ -183,7 +183,7 @@ Item {
                 }
 
                 StyledButton {
-                    text: qsTr("Close")
+                    text: i18.n + qsTr("Close")
                     width: 100
                     onClicked: {
                         closePopup()

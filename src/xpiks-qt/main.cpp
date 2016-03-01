@@ -339,6 +339,7 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("pluginsWithActions", &pluginsWithActions);
     rootContext->setContextProperty("warningsModel", &warningsModel);
     rootContext->setContextProperty("languagesModel", &languagesModel);
+    rootContext->setContextProperty("i18", &languagesModel);
 
     engine.addImageProvider("global", globalProvider);
     qDebug() << "main #" << "About to load main view...";

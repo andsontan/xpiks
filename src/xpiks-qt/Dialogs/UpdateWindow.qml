@@ -38,7 +38,7 @@ ApplicationWindow {
     minimumHeight: height
     maximumHeight: height
     flags: Qt.Dialog
-    title: qsTr("Update")
+    title: i18.n + qsTr("Update")
 
     property string updateUrl
 
@@ -66,12 +66,12 @@ ApplicationWindow {
 
             StyledText {
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: qsTr("Xpiks update is available!")
+                text: i18.n + qsTr("Xpiks update is available!")
             }
 
             StyledText {
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: qsTr("<u>Download Xpiks update</u>")
+                text: i18.n + qsTr("<u>Download Xpiks update</u>")
                 color: downloadMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
 
                 MouseArea {

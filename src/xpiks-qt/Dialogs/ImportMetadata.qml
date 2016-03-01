@@ -58,7 +58,7 @@ Item {
     MessageDialog {
         id: errorsNotification
         title: "Warning"
-        text: qsTr("Import finished with errors. See logs for details.")
+        text: i18.n + qsTr("Import finished with errors. See logs for details.")
 
         onAccepted: {
             closePopup()
@@ -68,8 +68,8 @@ Item {
     MessageDialog {
         id: installExiftoolDialog
         title: "Warning"
-        text: qsTr("Please install Exiftool to import metadata")
-        informativeText: qsTr('<a href="http://www.sno.phy.queensu.ca/~phil/exiftool/">Official Exiftool website</a>')
+        text: i18.n + qsTr("Please install Exiftool to import metadata")
+        informativeText: i18.n + qsTr('<a href="http://www.sno.phy.queensu.ca/~phil/exiftool/">Official Exiftool website</a>')
         standardButtons: StandardButton.Abort | StandardButton.Ignore
         onRejected: {
             closePopup()
@@ -80,7 +80,7 @@ Item {
     }
 
     function continueImport() {
-        importButton.text = qsTr("Importing...")
+        importButton.text = i18.n + qsTr("Importing...")
         metadataImportComponent.isInProgress = true
 
         spinner.height = spinner.width
@@ -170,12 +170,12 @@ Item {
 
                     StyledText {
                         anchors.left: parent.left
-                        text: qsTr("Import existing metadata")
+                        text: i18.n + qsTr("Import existing metadata")
                     }
 
                     StyledText {
                         anchors.right: parent.right
-                        text: qsTr("from %1 image(s)").arg(metadataIOCoordinator.processingItemsCount)
+                        text: i18.n + qsTr("from %1 image(s)").arg(metadataIOCoordinator.processingItemsCount)
                         color: Colors.defaultInputBackground
                     }
                 }
@@ -190,7 +190,7 @@ Item {
 
                 StyledCheckbox {
                     id: ignoreAutosavesCheckbox
-                    text: qsTr("Ignore autosaves (.xpks)")
+                    text: i18.n + qsTr("Ignore autosaves (.xpks)")
                     enabled: settingsModel.saveBackups && !metadataImportComponent.isInProgress
                     checked: false
                 }
@@ -204,7 +204,7 @@ Item {
                         id: importButton
                         isDefault: true
                         width: 130
-                        text: qsTr("Start Import")
+                        text: i18.n + qsTr("Start Import")
                         enabled: !metadataImportComponent.isInProgress
                         onClicked: {
                             if (metadataIOCoordinator.exiftoolNotFound) {
@@ -225,7 +225,7 @@ Item {
                                 if (metadataIOCoordinator.hasErrors) {
                                     errorsNotification.open()
                                 } else {
-                                    importButton.text = qsTr("Start Import")
+                                    importButton.text = i18.n + qsTr("Start Import")
                                     closePopup()
                                 }
                             }
@@ -237,7 +237,7 @@ Item {
                     }
 
                     StyledButton {
-                        text: qsTr("Close")
+                        text: i18.n + qsTr("Close")
                         width: 100
                         enabled: !metadataImportComponent.isInProgress
                         onClicked: {

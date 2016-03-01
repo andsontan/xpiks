@@ -112,7 +112,7 @@ Item {
                 anchors.margins: 20
 
                 StyledText {
-                    text: qsTr("Suggestions")
+                    text: i18.n + qsTr("Suggestions")
                 }
 
                 Rectangle {
@@ -125,7 +125,7 @@ Item {
                         anchors.fill: parent
 
                         StyledText {
-                            text: qsTr("No suggestions available.")
+                            text: i18.n + qsTr("No suggestions available.")
                             color: Colors.selectedMetadataColor
                             anchors.centerIn: parent
                         }
@@ -226,7 +226,7 @@ Item {
                     spacing: 20
 
                     StyledButton {
-                        text: qsTr("Reset all")
+                        text: i18.n + qsTr("Reset all")
                         width: 100
                         onClicked: spellCheckSuggestionModel.resetAllSuggestions()
                     }
@@ -236,7 +236,7 @@ Item {
                     }
 
                     StyledButton {
-                        text: qsTr("Replace")
+                        text: i18.n + qsTr("Replace")
                         width: 100
                         onClicked: {
                             spellCheckSuggestionModel.submitCorrections()
@@ -245,7 +245,7 @@ Item {
                     }
 
                     StyledButton {
-                        text: qsTr("Cancel")
+                        text: i18.n + qsTr("Cancel")
                         width: 80
                         onClicked: closePopup()
                     }

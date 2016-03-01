@@ -54,7 +54,7 @@ Item {
     MessageDialog {
         id: errorsNotification
         title: "Warning"
-        text: qsTr("Export finished with errors. See logs for details.")
+        text: i18.n + qsTr("Export finished with errors. See logs for details.")
 
         onAccepted: {
             closePopup()
@@ -150,12 +150,12 @@ Item {
 
                     StyledText {
                         anchors.left: parent.left
-                        text: qsTr("Export metadata")
+                        text: i18.n + qsTr("Export metadata")
                     }
 
                     StyledText {
                         anchors.right: parent.right
-                        text: qsTr("%1 modified image(s) selected").arg(filteredArtItemsModel.getModifiedSelectedCount(overwriteAll))
+                        text: i18.n + qsTr("%1 modified image(s) selected").arg(filteredArtItemsModel.getModifiedSelectedCount(overwriteAll))
                         color: Colors.defaultInputBackground
                     }
                 }
@@ -170,7 +170,7 @@ Item {
 
                 StyledCheckbox {
                     id: useBackupsCheckbox
-                    text: qsTr("Backup each image")
+                    text: i18.n + qsTr("Backup each image")
                     checked: false
                     enabled: !metadataExportComponent.isInProgress
                 }
@@ -183,11 +183,11 @@ Item {
                     StyledButton {
                         id: exportButton
                         isDefault: true
-                        text: qsTr("Start Export")
+                        text: i18.n + qsTr("Start Export")
                         width: 130
                         enabled: !metadataExportComponent.isInProgress
                         onClicked: {
-                            text = qsTr("Exporting...")
+                            text = i18.n + qsTr("Exporting...")
                             metadataExportComponent.isInProgress = true
                             spinner.height = spinner.width
                             dialogWindow.height += spinner.height + column.spacing
@@ -204,7 +204,7 @@ Item {
                                     filteredArtItemsModel.setSelectedItemsSaved()
                                     filteredArtItemsModel.updateSelectedArtworks()
 
-                                    exportButton.text = qsTr("Start Export")
+                                    exportButton.text = i18.n + qsTr("Start Export")
                                     closePopup()
                                 } else {
                                     errorsNotification.open()
@@ -218,7 +218,7 @@ Item {
                     }
 
                     StyledButton {
-                        text: qsTr("Close")
+                        text: i18.n + qsTr("Close")
                         width: 100
                         enabled: !metadataExportComponent.isInProgress
                         onClicked: {

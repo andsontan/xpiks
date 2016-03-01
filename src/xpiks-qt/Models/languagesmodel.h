@@ -34,6 +34,7 @@ namespace Models {
     class LanguagesModel: public QAbstractListModel
     {
         Q_OBJECT
+        Q_PROPERTY(QString n READ getEmptyString() NOTIFY languageChanged)
     public:
         LanguagesModel(QObject *parent=0);
 
@@ -42,6 +43,10 @@ namespace Models {
             IsCurrentRole = Qt::UserRole + 1
         };
 
+        const QString &getEmptyString() const { return m_EmptyString; }
+
+    signals:
+        void languageChanged();
 
     public:
         Q_INVOKABLE void loadLanguages();
@@ -62,6 +67,7 @@ namespace Models {
         QTranslator *m_XpiksTranslator;
         QTranslator *m_QtTranslator;
         QString m_LanguagesDirectory;
+        QString m_EmptyString;
         int m_CurrentLanguageIndex;
     };
 }

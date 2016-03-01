@@ -108,7 +108,7 @@ Item {
 
                 StyledText {
                     anchors.horizontalCenter: parent.horizontalCenter
-                    text: qsTr("Checking selected items...")
+                    text: i18.n + qsTr("Checking selected items...")
                 }
 
                 StyledBusyIndicator {
@@ -120,7 +120,7 @@ Item {
                 }
 
                 StyledButton {
-                    text: qsTr("Cancel")
+                    text: i18.n + qsTr("Cancel")
                     width: 100
                     anchors.horizontalCenter: parent.horizontalCenter
                     onClicked: spellCheckerService.cancelCurrentBatch()

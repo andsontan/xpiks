@@ -104,7 +104,7 @@ Item {
         id: confirmRemoveItemDialog
         property int itemIndex
         title: "Confirmation"
-        text: qsTr("Are you sure you want to remove this item?")
+        text: i18.n + qsTr("Are you sure you want to remove this item?")
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
             uploadInfos.removeItem(itemIndex)
@@ -123,7 +123,7 @@ Item {
         id: noPasswordDialog
         property string agenciesList
         title: "Warning"
-        text: qsTr("Some agencies (%1) miss FTP credentials. Start upload anyway?").arg(agenciesList)
+        text: i18.n + qsTr("Some agencies (%1) miss FTP credentials. Start upload anyway?").arg(agenciesList)
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
             startUpload()
@@ -133,7 +133,7 @@ Item {
     MessageDialog {
         id: selectHostsMessageBox
         title: "Warning"
-        text: qsTr("Please, select some hosts first")
+        text: i18.n + qsTr("Please, select some hosts first")
     }
 
     FocusScope {
@@ -189,7 +189,7 @@ Item {
                     Layout.fillWidth: true
 
                     StyledText {
-                        text: qsTr("Upload artworks")
+                        text: i18.n + qsTr("Upload artworks")
                     }
 
                     Item {
@@ -197,7 +197,7 @@ Item {
                     }
 
                     StyledText {
-                        text: artworkUploader.itemsCount == 1 ? qsTr("1 artwork selected") : qsTr("%1 artworks selected").arg(artworkUploader.itemsCount)
+                        text: artworkUploader.itemsCount == 1 ? i18.n + qsTr("1 artwork selected") : i18.n + qsTr("%1 artworks selected").arg(artworkUploader.itemsCount)
                         color: Colors.defaultInputBackground
                     }
                 }
@@ -366,7 +366,7 @@ Item {
 
                                 StyledAddHostButton {
                                     Layout.fillWidth: true
-                                    text: qsTr("Add FTP host")
+                                    text: i18.n + qsTr("Add FTP host")
                                     onClicked: {
                                         uploadInfos.addItem()
                                         uploadHostsListView.currentIndex = uploadHostsListView.count - 1
@@ -395,7 +395,7 @@ Item {
                             enabled: uploadInfos.infosCount > 0
 
                             Tab {
-                                title: qsTr("General")
+                                title: i18.n + qsTr("General")
 
                                 ColumnLayout {
                                     anchors.fill: parent
@@ -403,7 +403,7 @@ Item {
                                     spacing: 4
 
                                     StyledText {
-                                        text: qsTr("Title:")
+                                        text: i18.n + qsTr("Title:")
                                     }
 
                                     Rectangle {
@@ -455,7 +455,7 @@ Item {
                                     }
 
                                     StyledText {
-                                        text: qsTr("Host:")
+                                        text: i18.n + qsTr("Host:")
                                     }
 
                                     Rectangle {
@@ -489,7 +489,7 @@ Item {
                                     }
 
                                     StyledText {
-                                        text: qsTr("Username:")
+                                        text: i18.n + qsTr("Username:")
                                     }
 
                                     Rectangle {
@@ -522,7 +522,7 @@ Item {
                                     }
 
                                     StyledText {
-                                        text: qsTr("Password:")
+                                        text: i18.n + qsTr("Password:")
                                     }
 
                                     Rectangle {
@@ -562,7 +562,7 @@ Item {
 
                                         StyledCheckbox {
                                             id: showPasswordCheckBox
-                                            text: qsTr("Show password")
+                                            text: i18.n + qsTr("Show password")
                                         }
 
                                         Item {
@@ -579,7 +579,7 @@ Item {
 
                                         StyledButton {
                                             id: testButton
-                                            text: qsTr("Test connection")
+                                            text: i18.n + qsTr("Test connection")
                                             height: 24
                                             width: 120
                                             onClicked: {
@@ -611,7 +611,7 @@ Item {
                             }
 
                             Tab {
-                                title: qsTr("Advanced")
+                                title: i18.n + qsTr("Advanced")
 
                                 ColumnLayout {
                                     anchors.fill: parent
@@ -620,7 +620,7 @@ Item {
 
                                     StyledCheckbox {
                                         id: zipBeforeUploadCheckBox
-                                        text: qsTr("Zip vector with preview")
+                                        text: i18.n + qsTr("Zip vector with preview")
                                         Component.onCompleted: checked = uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.zipbeforeupload : false
 
                                         onClicked: {
@@ -639,7 +639,7 @@ Item {
 
                                     StyledCheckbox {
                                         id: ftpPassiveModeCheckBox
-                                        text: qsTr("Disable FTP passive mode")
+                                        text: i18.n + qsTr("Disable FTP passive mode")
                                         Component.onCompleted: checked = uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.disablepassivemode : false
 
                                         onClicked: {
@@ -688,7 +688,7 @@ Item {
 
                     StyledText {
                         enabled: uploadArtworksComponent.uploadEnabled
-                        text: warningsModel.warningsCount == 1 ? qsTr("1 warning") : qsTr("%1 warnings").arg(warningsModel.warningsCount)
+                        text: warningsModel.warningsCount == 1 ? i18.n + qsTr("1 warning") : i18.n + qsTr("%1 warnings").arg(warningsModel.warningsCount)
                         color: uploadWarmingsMA.pressed ? Colors.defaultLightGrayColor : warningsModel.warningsCount > 0 ? Colors.artworkModifiedColor : Colors.defaultInputBackground
 
                         MouseArea {
@@ -716,7 +716,7 @@ Item {
                     StyledButton {
                         id: uploadButton
                         enabled: uploadArtworksComponent.uploadEnabled
-                        text: artworkUploader.inProgress ? qsTr("Stop") : qsTr("Start Upload")
+                        text: artworkUploader.inProgress ? i18.n + qsTr("Stop") : i18.n + qsTr("Start Upload")
                         width: 130
                         onClicked: {
                             if (!artworkUploader.inProgress) {
@@ -754,7 +754,7 @@ Item {
                     }
 
                     StyledButton {
-                        text: qsTr("Close")
+                        text: i18.n + qsTr("Close")
                         width: 120
                         enabled: !artworkUploader.inProgress
                         onClicked: {

@@ -108,7 +108,7 @@ Item {
                 anchors.margins: 20
 
                 StyledText {
-                    text: qsTr("Warnings")
+                    text: i18.n + qsTr("Warnings")
                 }
 
                 Rectangle {
@@ -234,7 +234,7 @@ Item {
                                     color: Colors.selectedArtworkColor
 
                                     StyledButton {
-                                        text: qsTr("Fix")
+                                        text: i18.n + qsTr("Fix")
                                         width: 30
                                         anchors.centerIn: parent
                                         enabled: !isRestricted && warningsListView.count > 0
@@ -260,7 +260,7 @@ Item {
                         visible: warningsListView.count == 0
 
                         StyledText {
-                            text: qsTr("There are no warnings")
+                            text: i18.n + qsTr("There are no warnings")
                             anchors.centerIn: parent
                             color: Colors.selectedMetadataColor
                         }
@@ -280,7 +280,7 @@ Item {
                     }
 
                     StyledButton {
-                        text: qsTr("Close")
+                        text: i18.n + qsTr("Close")
                         width: 100
                         onClicked: {
                             closePopup()

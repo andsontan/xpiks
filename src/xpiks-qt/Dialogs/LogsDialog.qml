@@ -120,7 +120,7 @@ Item {
                 anchors.rightMargin: 20
 
                 StyledText {
-                    text: qsTr("Logs")
+                    text: i18.n + qsTr("Logs")
                 }
 
                 Item {
@@ -130,7 +130,7 @@ Item {
                 StyledText {
                     property int linesNumber : 100
                     id: oneHunderdLinesWarning
-                    text: qsTr("(showing last %1 lines)").arg(linesNumber)
+                    text: i18.n + qsTr("(showing last %1 lines)").arg(linesNumber)
                     color: Colors.defaultInputBackground
                 }
             }
@@ -179,7 +179,7 @@ Item {
 
                 StyledButton {
                     id: loadMoreButton
-                    text: qsTr("Load more logs")
+                    text: i18.n + qsTr("Load more logs")
                     enabled: logsModel.withLogs
                     width: 120
                     onClicked: {
@@ -192,7 +192,7 @@ Item {
 
                 StyledButton {
                     id: revealFileButton
-                    text: qsTr("Reveal logfile")
+                    text: i18.n + qsTr("Reveal logfile")
                     visible: Qt.platform.os !== "linux"
                     width: 120
                     onClicked: {
@@ -206,7 +206,7 @@ Item {
                 }
 
                 StyledButton {
-                    text: qsTr("Close")
+                    text: i18.n + qsTr("Close")
                     width: 100
                     onClicked: {
                         closePopup()

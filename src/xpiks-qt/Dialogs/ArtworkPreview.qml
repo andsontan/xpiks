@@ -206,7 +206,7 @@ Item {
                         spacing: 10
 
                         StyledButton {
-                            text: qsTr("100%")
+                            text: i18.n + qsTr("100%")
                             width: 60
                             onClicked: {
                                 previewImage.width = previewImage.sourceSize.width
@@ -222,7 +222,7 @@ Item {
                         }
 
                         StyledButton {
-                            text: qsTr("Fit")
+                            text: i18.n + qsTr("Fit")
                             width: 60
                             onClicked: {
                                 previewImage.width = boundsRect.width - 20
@@ -239,7 +239,7 @@ Item {
                     }
 
                     StyledButton {
-                        text: qsTr("Close")
+                        text: i18.n + qsTr("Close")
                         width: parent.width
                         anchors.horizontalCenter: parent.horizontalCenter
                         onClicked: closePopup()

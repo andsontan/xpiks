@@ -110,7 +110,7 @@ Item {
                     Layout.fillWidth: true
 
                     StyledText {
-                        text: qsTr("Zip vectors with previews")
+                        text: i18.n + qsTr("Zip vectors with previews")
                     }
 
                     Item {
@@ -118,7 +118,7 @@ Item {
                     }
 
                     StyledText {
-                        text: zipArchiver.itemsCount == 1 ? qsTr("1 artwork") : qsTr("%1 artworks").arg(zipArchiver.itemsCount)
+                        text: zipArchiver.itemsCount == 1 ? i18.n + qsTr("1 artwork") : i18.n + qsTr("%1 artworks").arg(zipArchiver.itemsCount)
                         color: Colors.defaultInputBackground
                     }
                 }
@@ -143,10 +143,10 @@ Item {
                         id: importButton
                         isDefault: true
                         width: 130
-                        text: qsTr("Start Zipping")
+                        text: i18.n + qsTr("Start Zipping")
                         enabled: !zipArchiver.inProgress
                         onClicked: {
-                            text = qsTr("Zipping...")
+                            text = i18.n + qsTr("Zipping...")
                             zipArchiver.resetModel()
                             zipArchiver.archiveArtworks()
                         }
@@ -154,7 +154,7 @@ Item {
                         Connections {
                             target: zipArchiver
                             onFinishedProcessing: {
-                                importButton.text = qsTr("Start Zipping")
+                                importButton.text = i18.n + qsTr("Start Zipping")
 
                                 if (immediateProcessing) {
                                     if (typeof callbackObject !== "undefined") {
@@ -176,7 +176,7 @@ Item {
                     }
 
                     StyledButton {
-                        text: qsTr("Close")
+                        text: i18.n + qsTr("Close")
                         width: 100
                         enabled: !zipArchiver.inProgress
                         onClicked: {

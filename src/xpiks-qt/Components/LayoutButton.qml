@@ -93,7 +93,7 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
         anchors.verticalCenterOffset: 2
 
-        text: isListLayout ? qsTr("Grid") : qsTr("List")
+        text: isListLayout ? i18.n + qsTr("Grid") : i18.n + qsTr("List")
         color: container.currentColor
     }
 

@@ -157,11 +157,11 @@ Item {
                     spacing: 5
 
                     StyledText {
-                        text: qsTr("Title:")
+                        text: i18.n + qsTr("Title:")
                     }
 
                     StyledText {
-                        text: qsTr("(same as Description if empty)")
+                        text: i18.n + qsTr("(same as Description if empty)")
                         color: Colors.defaultInputBackground
                     }
                 }
@@ -248,7 +248,7 @@ Item {
                     anchors.right: parent.right
 
                     StyledText {
-                        text: qsTr("Description:")
+                        text: i18.n + qsTr("Description:")
                     }
 
                     Item {
@@ -366,11 +366,11 @@ Item {
 
                     StyledText {
                         id: keywordsLabel
-                        text: qsTr("Keywords:")
+                        text: i18.n + qsTr("Keywords:")
                     }
 
                     StyledText {
-                        text: qsTr("(comma-separated)")
+                        text: i18.n + qsTr("(comma-separated)")
                         color: Colors.defaultInputBackground
                     }
 
@@ -481,7 +481,7 @@ Item {
 
                     StyledButton {
                         width: 150
-                        text: qsTr("Suggest keywords")
+                        text: i18.n + qsTr("Suggest keywords")
 
                         onClicked: {
                             var callbackObject = {
@@ -498,7 +498,7 @@ Item {
 
                     StyledButton {
                         width: 100
-                        text: qsTr("Fix spelling")
+                        text: i18.n + qsTr("Fix spelling")
 
                         onClicked: {
                             combinedArtworks.suggestCorrections()
@@ -514,7 +514,7 @@ Item {
 
                     StyledButton {
                         width: 70
-                        text: qsTr("Save")
+                        text: i18.n + qsTr("Save")
                         onClicked: {
                             combinedArtworks.saveEdits()
                             callbackObject.applyCallback()
@@ -524,7 +524,7 @@ Item {
 
                     StyledButton {
                         width: 70
-                        text: qsTr("Close")
+                        text: i18.n + qsTr("Close")
                         onClicked: {
                             closePopup()
                         }

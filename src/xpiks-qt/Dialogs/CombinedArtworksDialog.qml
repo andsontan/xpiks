@@ -66,7 +66,7 @@ Item {
         id: confirmRemoveArtworksDialog
         property int itemsCount
         title: "Confirmation"
-        text: qsTr("Are you sure you want to remove %1 item(s)?").arg(itemsCount)
+        text: i18.n + qsTr("Are you sure you want to remove %1 item(s)?").arg(itemsCount)
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
             doRemoveSelectedArtworks()
@@ -98,7 +98,7 @@ Item {
         id: clearKeywordsDialog
 
         title: "Confirmation"
-        text: qsTr("Clear all keywords?")
+        text: i18.n + qsTr("Clear all keywords?")
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: combinedArtworks.clearKeywords()
     }
@@ -150,7 +150,7 @@ Item {
                     width: parent.width
 
                     StyledText {
-                        text: qsTr("Edit multiple artworks")
+                        text: i18.n + qsTr("Edit multiple artworks")
                     }
 
                     Item {
@@ -158,7 +158,7 @@ Item {
                     }
 
                     StyledText {
-                        text: combinedArtworks.artworksCount == 1 ? qsTr("1 artwork being edited") : qsTr("%1 artworks being edited").arg(combinedArtworks.artworksCount)
+                        text: combinedArtworks.artworksCount == 1 ? i18.n + qsTr("1 artwork being edited") : i18.n + qsTr("%1 artworks being edited").arg(combinedArtworks.artworksCount)
                         color: Colors.defaultInputBackground
                     }
                 }
@@ -173,10 +173,10 @@ Item {
                     height: 40
 
                     StyledButton {
-                        text: qsTr("Assign from selected")
+                        text: i18.n + qsTr("Assign from selected")
                         width: 150
                         enabled: combinedArtworks.selectedArtworksCount == 1
-                        tooltip: qsTr("Set metadata from selected artwork to all fields")
+                        tooltip: i18.n + qsTr("Set metadata from selected artwork to all fields")
                         onClicked: {
                             combinedArtworks.assignFromSelected()
                         }
@@ -187,9 +187,9 @@ Item {
                     }
 
                     StyledButton {
-                        text: qsTr("Remove selected")
+                        text: i18.n + qsTr("Remove selected")
                         width: 150
-                        tooltip: qsTr("Remove selected artworks from this dialog")
+                        tooltip: i18.n + qsTr("Remove selected artworks from this dialog")
                         enabled: combinedArtworks.selectedArtworksCount > 0
                         onClicked: {
                             if (mustUseConfirmation()) {
@@ -349,11 +349,11 @@ Item {
                                 spacing: 5
 
                                 StyledText {
-                                    text: qsTr("Title:")
+                                    text: i18.n + qsTr("Title:")
                                 }
 
                                 StyledText {
-                                    text: qsTr("(same as Description if empty)")
+                                    text: i18.n + qsTr("(same as Description if empty)")
                                     color: Colors.defaultInputBackground
                                 }
                             }
@@ -506,7 +506,7 @@ Item {
                                 anchors.right: parent.right
 
                                 StyledText {
-                                    text: qsTr("Description:")
+                                    text: i18.n + qsTr("Description:")
                                 }
 
                                 Item {
@@ -686,11 +686,11 @@ Item {
 
                                 StyledText {
                                     id: keywordsLabel
-                                    text: qsTr("Keywords:")
+                                    text: i18.n + qsTr("Keywords:")
                                 }
 
                                 StyledText {
-                                    text: qsTr("(comma-separated)")
+                                    text: i18.n + qsTr("(comma-separated)")
                                     color: Colors.defaultInputBackground
                                 }
 
@@ -804,7 +804,7 @@ Item {
                                 spacing: 10
                                 StyledCheckbox {
                                     id: appendKeywordsCheckbox
-                                    text: qsTr("Only append new keywords")
+                                    text: i18.n + qsTr("Only append new keywords")
                                     onClicked: combinedArtworks.appendKeywords = checked
                                     Component.onCompleted: appendKeywordsCheckbox.checked = combinedArtworks.appendKeywords
                                 }
@@ -814,7 +814,7 @@ Item {
                                 }
 
                                 StyledText {
-                                    text: qsTr("Fix spelling")
+                                    text: i18.n + qsTr("Fix spelling")
                                     enabled: keywordsWrapper.keywordsModel ? keywordsWrapper.keywordsModel.hasSpellErrors : false
                                     color: enabled ? (fixSpellingMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor) : Colors.defaultInputBackground
 
@@ -832,7 +832,7 @@ Item {
                                 }
 
                                 StyledText {
-                                    text: qsTr("Suggest keywords")
+                                    text: i18.n + qsTr("Suggest keywords")
                                     color: enabled ? (suggestKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor) : Colors.defaultInputBackground
 
                                     MouseArea {
@@ -854,7 +854,7 @@ Item {
                                 }
 
                                 StyledText {
-                                    text: qsTr("Clear keywords")
+                                    text: i18.n + qsTr("Clear keywords")
                                     color: enabled ? (clearKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor) : Colors.defaultInputBackground
 
                                     MouseArea {
@@ -892,7 +892,7 @@ Item {
                         spacing: 10
 
                         StyledText {
-                            text: qsTr("Select changes to save using checkboxes above")
+                            text: i18.n + qsTr("Select changes to save using checkboxes above")
                         }
 
                         Item {
@@ -900,7 +900,7 @@ Item {
                         }
 
                         StyledButton {
-                            text: qsTr("Save")
+                            text: i18.n + qsTr("Save")
                             width: 100
                             onClicked: {
                                 combinedArtworks.saveEdits()
@@ -915,7 +915,7 @@ Item {
                         }
 
                         StyledButton {
-                            text: qsTr("Cancel")
+                            text: i18.n + qsTr("Cancel")
                             width: 100
                             onClicked: {
                                 closePopup()

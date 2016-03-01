@@ -38,7 +38,7 @@ ApplicationWindow {
     minimumHeight: height
     maximumHeight: height
     flags: Qt.Dialog
-    title: qsTr("About")
+    title: i18.n + qsTr("About")
 
     signal dialogDestruction();
     onClosing: dialogDestruction();
@@ -65,13 +65,13 @@ ApplicationWindow {
 
             StyledText {
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: qsTr("Version: %1").arg(appSettings.appVersion)
+                text: i18.n + qsTr("Version: %1").arg(appSettings.appVersion)
             }
 
             StyledText {
                 focus: true
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: qsTr("<u>Home webpage of Xpiks</u>")
+                text: i18.n + qsTr("<u>Home webpage of Xpiks</u>")
                 color: aboutMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
 
                 MouseArea {
@@ -98,7 +98,7 @@ ApplicationWindow {
                     wrapMode: TextEdit.Wrap
                     anchors.fill: parent
                     horizontalAlignment: Text.AlignHCenter
-                    text: qsTr("The program is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE")
+                    text: i18.n + qsTr("The program is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE")
                 }
             }
         }

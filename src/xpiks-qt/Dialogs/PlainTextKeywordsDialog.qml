@@ -130,7 +130,7 @@ Item {
                 anchors.left: parent.left
                 anchors.topMargin: 20
                 anchors.leftMargin: 20
-                text: qsTr("Keywords")
+                text: i18.n + qsTr("Keywords")
             }
 
             Rectangle {
@@ -234,13 +234,13 @@ Item {
 
                 StyledButton {
                     id: okButton
-                    text: qsTr("Save")
+                    text: i18.n + qsTr("Save")
                     width: 100
                     onClicked: submitKeywords()
                 }
 
                 StyledButton {
-                    text: qsTr("Cancel")
+                    text: i18.n + qsTr("Cancel")
                     width: 100
                     onClicked: closePopup()
                 }

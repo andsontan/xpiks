@@ -113,7 +113,7 @@ Item {
                     height: 20
 
                     StyledText {
-                        text: qsTr("Enter current Master Password:")
+                        text: i18.n + qsTr("Enter current Master Password:")
                     }
 
                     Item {
@@ -155,7 +155,7 @@ Item {
 
                     StyledCheckbox {
                         id: showPasswordCheckBox
-                        text: qsTr("Show password")
+                        text: i18.n + qsTr("Show password")
                     }
 
                     Item {
@@ -163,14 +163,14 @@ Item {
                     }
 
                     StyledButton {
-                        text: qsTr("Ok")
+                        text: i18.n + qsTr("Ok")
                         width: 57
                         onClicked: testPassword()
                     }
 
                     StyledButton {
-                        text: qsTr("Cancel")
-                        tooltip: qsTr("This will leave password fields blank")
+                        text: i18.n + qsTr("Cancel")
+                        tooltip: i18.n + qsTr("This will leave password fields blank")
                         width: 58
                         onClicked: {
                             callbackObject.onFail()

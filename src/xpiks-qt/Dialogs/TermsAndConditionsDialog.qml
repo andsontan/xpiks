@@ -88,7 +88,7 @@ Item {
                 anchors.left: parent.left
                 anchors.topMargin: 20
                 anchors.leftMargin: 20
-                text: qsTr("Terms and conditions:")
+                text: i18.n + qsTr("Terms and conditions:")
             }
 
             Rectangle {
@@ -136,7 +136,7 @@ Item {
 
                 StyledButton {
                     id: agreeButton
-                    text: qsTr("Agree")
+                    text: i18.n + qsTr("Agree")
                     width: 100
                     onClicked: {
                         appSettings.userAgreeHandler()
@@ -146,9 +146,9 @@ Item {
                 }
 
                 StyledButton {
-                    text: qsTr("Disagree")
+                    text: i18.n + qsTr("Disagree")
                     width: 100
-                    tooltip: qsTr("Close Xpiks")
+                    tooltip: i18.n + qsTr("Close Xpiks")
                     onClicked: {
                         closePopup()
                         Qt.quit()

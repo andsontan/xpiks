@@ -89,14 +89,14 @@ Item {
     MessageDialog {
         id: notEqualPasswordsDialog
         title: "Warning"
-        text: qsTr("Passwords are not equal")
+        text: i18.n + qsTr("Passwords are not equal")
         standardButtons: StandardButton.Ok
     }
 
     MessageDialog {
         id: wrongCurrentMPDialog
         title: "Warning"
-        text: qsTr("Please, enter correct current master password")
+        text: i18.n + qsTr("Please, enter correct current master password")
         standardButtons: StandardButton.Ok
         onAccepted: {
             currentPassword.forceActiveFocus()
@@ -153,7 +153,7 @@ Item {
                         Layout.fillWidth: true
                         Layout.preferredWidth: 130
                         horizontalAlignment: Text.AlignRight
-                        text: qsTr("Current Master Password:")
+                        text: i18.n + qsTr("Current Master Password:")
                     }
 
                     StyledInputHost {
@@ -194,7 +194,7 @@ Item {
                         Layout.fillWidth: true
                         Layout.preferredWidth: 130
                         horizontalAlignment: Text.AlignRight
-                        text: qsTr("New Master Password:")
+                        text: i18.n + qsTr("New Master Password:")
                     }
 
                     StyledInputHost {
@@ -231,7 +231,7 @@ Item {
                         Layout.fillWidth: true
                         Layout.preferredWidth: 130
                         horizontalAlignment: Text.AlignRight
-                        text: qsTr("Repeat Master Password:")
+                        text: i18.n + qsTr("Repeat Master Password:")
                     }
 
                     StyledInputHost {
@@ -262,13 +262,13 @@ Item {
                     }
 
                     StyledButton {
-                        text: qsTr("Ok")
+                        text: i18.n + qsTr("Ok")
                         width: 57
                         onClicked: trySetupMP()
                     }
 
                     StyledButton {
-                        text: qsTr("Cancel")
+                        text: i18.n + qsTr("Cancel")
                         width: 58
                         onClicked: {
                             callbackObject.onCancel(firstTime)

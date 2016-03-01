@@ -32,7 +32,7 @@ import "../Common.js" as Common
 ApplicationWindow {
     id: settingsWindow
     modality: "ApplicationModal"
-    title: qsTr("Settings")
+    title: i18.n + qsTr("Settings")
     width: 550
     height: 280
     minimumWidth: width
@@ -121,7 +121,7 @@ ApplicationWindow {
     MessageDialog {
         id: masterPasswordOffWarningDialog
         title: "Warning"
-        text: qsTr("Switching off master password will make your passwords storage less secure. Continue?")
+        text: i18.n + qsTr("Switching off master password will make your passwords storage less secure. Continue?")
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
             if (secretsManager.isMasterPasswordSet()) {
@@ -150,7 +150,7 @@ ApplicationWindow {
     MessageDialog {
         id: resetSettingsDialog
         title: "Warning"
-        text: qsTr("Are you sure you want reset all settings? \nThis action cannot be undone.")
+        text: i18.n + qsTr("Are you sure you want reset all settings? \nThis action cannot be undone.")
         standardButtons: StandardButton.Yes | StandardButton.No
 
         onYes: {
@@ -162,7 +162,7 @@ ApplicationWindow {
     MessageDialog {
         id: resetMPDialog
         title: "Warning"
-        text: qsTr("Are you sure you want reset Master password? \nAll upload hosts' passwords will be purged.")
+        text: i18.n + qsTr("Are you sure you want reset Master password? \nAll upload hosts' passwords will be purged.")
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
             secretsManager.removeMasterPassword()
@@ -195,7 +195,7 @@ ApplicationWindow {
 
             Tab {
                 id: behaviorTab
-                title: qsTr("Behavior")
+                title: i18.n + qsTr("Behavior")
                 signal resetRequested()
 
                 Item {
@@ -212,7 +212,7 @@ ApplicationWindow {
 
                         StyledCheckbox {
                             id: checkForUpdatesCheckbox
-                            text: qsTr("Check for updates")
+                            text: i18.n + qsTr("Check for updates")
                             onCheckedChanged: {
                                 settingsModel.updateService = checked
                             }
@@ -228,7 +228,7 @@ ApplicationWindow {
 
                         StyledCheckbox {
                             id: useConfirmationDialogsCheckbox
-                            text: qsTr("Use confirmation dialogs")
+                            text: i18.n + qsTr("Use confirmation dialogs")
                             onCheckedChanged: {
                                 settingsModel.mustUseConfirmations = checked
                             }
@@ -245,7 +245,7 @@ ApplicationWindow {
 
                         StyledCheckbox {
                             id: searchUsingAndCheckbox
-                            text: qsTr("Search match all terms")
+                            text: i18.n + qsTr("Search match all terms")
                             onCheckedChanged: {
                                 settingsModel.searchUsingAnd = checked
                             }
@@ -273,7 +273,7 @@ ApplicationWindow {
 
                         StyledCheckbox {
                             id: searchForVectorCheckbox
-                            text: qsTr("Attach vector automatically")
+                            text: i18.n + qsTr("Attach vector automatically")
                             onCheckedChanged: {
                                 settingsModel.autoFindVectors = checked
                             }
@@ -289,7 +289,7 @@ ApplicationWindow {
 
                         StyledCheckbox {
                             id: saveBackupsCheckbox
-                            text: qsTr("Save backups for artworks")
+                            text: i18.n + qsTr("Save backups for artworks")
                             onCheckedChanged: {
                                 settingsModel.saveBackups = checked
                             }
@@ -305,7 +305,7 @@ ApplicationWindow {
 
                         StyledCheckbox {
                             id: autoSpellCheckCheckbox
-                            text: qsTr("Check spelling automatically")
+                            text: i18.n + qsTr("Check spelling automatically")
                             onCheckedChanged: {
                                 settingsModel.useSpellCheck = checked
                             }
@@ -330,7 +330,7 @@ ApplicationWindow {
                 id: uxTab
                 property double sizeSliderValue: settingsModel.keywordSizeScale
                 property double scrollSliderValue: settingsModel.scrollSpeedScale
-                title: qsTr("Interface")
+                title: i18.n + qsTr("Interface")
                 signal resetRequested()
 
                 ColumnLayout {
@@ -344,7 +344,7 @@ ApplicationWindow {
 
                         StyledCheckbox {
                             id: fitArtworksCheckbox
-                            text: qsTr("Fit artwork's preview")
+                            text: i18.n + qsTr("Fit artwork's preview")
                             onCheckedChanged: {
                                 settingsModel.fitSmallPreview = checked
                             }
@@ -359,7 +359,7 @@ ApplicationWindow {
                         }
 
                         StyledText {
-                            text: qsTr("(instead of filling the square)")
+                            text: i18.n + qsTr("(instead of filling the square)")
                             color: Colors.defaultInputBackground
                         }
                     }
@@ -369,7 +369,7 @@ ApplicationWindow {
                         spacing: 10
 
                         StyledText {
-                            text: qsTr("Keywords size")
+                            text: i18.n + qsTr("Keywords size")
                         }
 
                         StyledSlider {
@@ -438,7 +438,7 @@ ApplicationWindow {
                         spacing: 20
 
                         StyledText {
-                            text: qsTr("Scroll speed")
+                            text: i18.n + qsTr("Scroll speed")
                         }
 
                         StyledSlider {
@@ -468,7 +468,7 @@ ApplicationWindow {
                         StyledText {
                             Layout.preferredWidth: 130
                             horizontalAlignment: Text.AlignLeft
-                            text: qsTr("Undo dismiss duration:")
+                            text: i18.n + qsTr("Undo dismiss duration:")
                         }
 
                         StyledInputHost {
@@ -500,7 +500,7 @@ ApplicationWindow {
                         }
 
                         StyledText {
-                            text: qsTr("(seconds)")
+                            text: i18.n + qsTr("(seconds)")
                             color: Colors.defaultInputBackground
                         }
                     }
@@ -513,7 +513,7 @@ ApplicationWindow {
 
             Tab {
                 id: extTab
-                title: qsTr("External")
+                title: i18.n + qsTr("External")
                 signal resetRequested()
 
                 ColumnLayout {
@@ -534,7 +534,7 @@ ApplicationWindow {
                             Layout.maximumWidth: 80
 
                             horizontalAlignment: Text.AlignRight
-                            text: qsTr("ExifTool path:")
+                            text: i18.n + qsTr("ExifTool path:")
                         }
 
                         StyledInputHost {
@@ -565,7 +565,7 @@ ApplicationWindow {
                         StyledButton {
                             Layout.row: 0
                             Layout.column: 2
-                            text: qsTr("Select...")
+                            text: i18.n + qsTr("Select...")
                             width: 70
                             onClicked: exifToolFileDialog.open()
                         }
@@ -573,7 +573,7 @@ ApplicationWindow {
                         StyledButton {
                             Layout.row: 0
                             Layout.column: 3
-                            text: qsTr("Reset")
+                            text: i18.n + qsTr("Reset")
                             width: 70
                             onClicked: settingsModel.resetExifTool()
                         }
@@ -585,7 +585,7 @@ ApplicationWindow {
                             Layout.fillWidth: true
                             Layout.maximumWidth: 80
                             horizontalAlignment: Text.AlignRight
-                            text: qsTr("Dictionary path:")
+                            text: i18.n + qsTr("Dictionary path:")
                             visible: Qt.platform.os === "linux"
                         }
 
@@ -610,7 +610,7 @@ ApplicationWindow {
                         StyledButton {
                             Layout.row: 2
                             Layout.column: 2
-                            text: qsTr("Select...")
+                            text: i18.n + qsTr("Select...")
                             width: 70
                             onClicked: dictPathDialog.open()
                             visible: Qt.platform.os === "linux"
@@ -619,7 +619,7 @@ ApplicationWindow {
                         StyledButton {
                             Layout.row: 2
                             Layout.column: 3
-                            text: qsTr("Reset")
+                            text: i18.n + qsTr("Reset")
                             width: 70
                             onClicked: settingsModel.resetDictPath()
                             visible: Qt.platform.os === "linux"
@@ -634,7 +634,7 @@ ApplicationWindow {
 
             Tab {
                 id: warnTab
-                title: qsTr("Warnings")
+                title: i18.n + qsTr("Warnings")
                 signal resetRequested()
 
                 ColumnLayout {
@@ -649,7 +649,7 @@ ApplicationWindow {
                         StyledText {
                             Layout.preferredWidth: 130
                             horizontalAlignment: Text.AlignRight
-                            text: qsTr("Minimum megapixels:")
+                            text: i18.n + qsTr("Minimum megapixels:")
                         }
 
                         StyledInputHost {
@@ -688,7 +688,7 @@ ApplicationWindow {
                         }
 
                         StyledText {
-                            text: qsTr("(can be real)")
+                            text: i18.n + qsTr("(can be real)")
                             color: Colors.defaultInputBackground
                         }
                     }
@@ -700,7 +700,7 @@ ApplicationWindow {
                         StyledText {
                             Layout.preferredWidth: 130
                             horizontalAlignment: Text.AlignRight
-                            text: qsTr("Max keywords count:")
+                            text: i18.n + qsTr("Max keywords count:")
                         }
 
                         StyledInputHost {
@@ -739,7 +739,7 @@ ApplicationWindow {
                         }
 
                         StyledText {
-                            text: qsTr("(keywords)")
+                            text: i18.n + qsTr("(keywords)")
                             color: Colors.defaultInputBackground
                         }
                     }
@@ -751,7 +751,7 @@ ApplicationWindow {
                         StyledText {
                             Layout.preferredWidth: 130
                             horizontalAlignment: Text.AlignRight
-                            text: qsTr("Max description length:")
+                            text: i18.n + qsTr("Max description length:")
                         }
 
                         StyledInputHost {
@@ -789,7 +789,7 @@ ApplicationWindow {
                         }
 
                         StyledText {
-                            text: qsTr("(characters)")
+                            text: i18.n + qsTr("(characters)")
                             color: Colors.defaultInputBackground
                         }
                     }
@@ -802,7 +802,7 @@ ApplicationWindow {
 
             Tab {
                 id:uploadTab
-                title: qsTr("Upload")
+                title: i18.n + qsTr("Upload")
                 signal resetRequested()
 
                 ColumnLayout {
@@ -817,7 +817,7 @@ ApplicationWindow {
                         StyledText {
                             Layout.preferredWidth: 130
                             horizontalAlignment: Text.AlignRight
-                            text: qsTr("File upload timeout:")
+                            text: i18.n + qsTr("File upload timeout:")
                         }
 
                         StyledInputHost {
@@ -854,7 +854,7 @@ ApplicationWindow {
                         }
 
                         StyledText {
-                            text: qsTr("(seconds)")
+                            text: i18.n + qsTr("(seconds)")
                             color: Colors.defaultInputBackground
                         }
                     }
@@ -866,7 +866,7 @@ ApplicationWindow {
                         StyledText {
                             Layout.preferredWidth: 130
                             horizontalAlignment: Text.AlignRight
-                            text: qsTr("Max parallel uploads:")
+                            text: i18.n + qsTr("Max parallel uploads:")
                         }
 
                         StyledInputHost {
@@ -903,7 +903,7 @@ ApplicationWindow {
                         }
 
                         StyledText {
-                            text: qsTr("(takes effect after relaunch)")
+                            text: i18.n + qsTr("(takes effect after relaunch)")
                             color: Colors.defaultInputBackground
                         }
                     }
@@ -916,7 +916,7 @@ ApplicationWindow {
 
             Tab {
                 id : secTab
-                title: qsTr("Security")
+                title: i18.n + qsTr("Security")
                 signal resetRequested()
 
                 property bool useStatistics: settingsModel.userStatistics
@@ -928,7 +928,7 @@ ApplicationWindow {
                     RowLayout {
                         StyledCheckbox {
                             id: masterPasswordCheckbox
-                            text: qsTr("Use Master password")
+                            text: i18.n + qsTr("Use Master password")
                             onClicked: {
                                 if (checked) {
                                     if (!settingsModel.mustUseMasterPassword) {
@@ -964,7 +964,7 @@ ApplicationWindow {
 
                         StyledButton {
                             width: 190
-                            text: qsTr("Change Master password")
+                            text: i18.n + qsTr("Change Master password")
                             enabled: masterPasswordCheckbox.checked
 
                             onClicked: {
@@ -980,7 +980,7 @@ ApplicationWindow {
 
                         StyledButton {
                             width: 190
-                            text: qsTr("Reset Master password")
+                            text: i18.n + qsTr("Reset Master password")
                             enabled: masterPasswordCheckbox.checked
 
                             onClicked: {
@@ -998,7 +998,7 @@ ApplicationWindow {
 
                         StyledText {
                             id: link
-                            text: qsTr("More...")
+                            text: i18.n + qsTr("More...")
                             color: Colors.artworkActiveColor
                             anchors.top: parent.top
                             anchors.left: parent.left
@@ -1010,11 +1010,11 @@ ApplicationWindow {
                                     if (container.expanded) {
                                         container.expanded = false
                                         contentsRect.height = 0
-                                        link.text = qsTr("More...")
+                                        link.text = i18.n + qsTr("More...")
                                     } else {
                                         contentsRect.height = 50
                                         container.expanded = true
-                                        link.text = qsTr("Less...")
+                                        link.text = i18.n + qsTr("Less...")
                                     }
                                 }
                             }
@@ -1047,7 +1047,7 @@ ApplicationWindow {
 
                                 StyledCheckbox {
                                     id: userStatisticCheckBox
-                                    text: qsTr("Collect usage statistics")
+                                    text: i18.n + qsTr("Collect usage statistics")
 
                                     function onResetRequested()  {
                                         checked = settingsModel.userStatistics
@@ -1065,7 +1065,7 @@ ApplicationWindow {
                                 }
 
                                 StyledText {
-                                    text: qsTr("(simple statistic of feature usage)")
+                                    text: i18.n + qsTr("(simple statistic of feature usage)")
                                     color: Colors.defaultInputBackground
                                 }
                             }
@@ -1094,7 +1094,7 @@ ApplicationWindow {
             }
 
             StyledButton {
-                text: qsTr("Reset to defaults")
+                text: i18.n + qsTr("Reset to defaults")
                 width: 120
                 onClicked: {
                     resetSettingsDialog.open()
@@ -1114,7 +1114,7 @@ ApplicationWindow {
             }
 
             StyledButton {
-                text: qsTr("Save and Close")
+                text: i18.n + qsTr("Save and Close")
                 width: 120
                 onClicked: {
                     settingsModel.keywordSizeScale = uxTab.sizeSliderValue
@@ -1130,7 +1130,7 @@ ApplicationWindow {
             }
 
             StyledButton {
-                text: qsTr("Close")
+                text: i18.n + qsTr("Close")
                 width: 60
                 onClicked: {
                     settingsModel.readAllValues()

@@ -150,13 +150,13 @@ Item {
                     spacing: 15
 
                     StyledButton {
-                        text: qsTr("Save")
+                        text: i18.n + qsTr("Save")
                         width: 70
                         onClicked: submitKeyword()
                     }
 
                     StyledButton {
-                        text: qsTr("Cancel")
+                        text: i18.n + qsTr("Cancel")
                         width: 85
                         onClicked: closePopup()
                     }

@@ -142,7 +142,7 @@ Item {
                 }
 
                 StyledButton {
-                    text: qsTr("Search")
+                    text: i18.n + qsTr("Search")
                     width: 70
                     activeFocusOnPress: true
                     enabled: !keywordsSuggestor.isInProgress
@@ -155,7 +155,7 @@ Item {
 
                 StyledCheckbox {
                     id: searchUsingAndCheckbox
-                    text: qsTr("Use only local source")
+                    text: i18.n + qsTr("Use only local source")
                     onCheckedChanged: {
                         keywordsSuggestor.useLocal = checked
                     }
@@ -260,7 +260,7 @@ Item {
 
                     StyledText {
                         anchors.centerIn: parent
-                        text: qsTr("No results found")
+                        text: i18.n + qsTr("No results found")
                         color: Colors.selectedMetadataColor
                     }
                 }
@@ -286,7 +286,7 @@ Item {
 
                 RowLayout {
                     StyledText {
-                        text: qsTr("Suggested keywords:")
+                        text: i18.n + qsTr("Suggested keywords:")
                         color: Colors.defaultInputBackground
                     }
 
@@ -357,7 +357,7 @@ Item {
 
                 RowLayout {
                     StyledText {
-                        text: qsTr("Other keywords:")
+                        text: i18.n + qsTr("Other keywords:")
                         color: Colors.defaultInputBackground
                     }
 
@@ -443,19 +443,19 @@ Item {
                         repeat: false
                         running: false
                         onTriggered: {
-                            addKeywordsButton.text = qsTr("Add suggested keywords")
+                            addKeywordsButton.text = i18.n + qsTr("Add suggested keywords")
                             addKeywordsButton.enabled = true
                         }
                     }
 
                     StyledButton {
                         id: addKeywordsButton
-                        text: qsTr("Add suggested keywords")
+                        text: i18.n + qsTr("Add suggested keywords")
                         enabled: !keywordsSuggestor.isInProgress
                         width: 200
                         onClicked: {
                             callbackObject.promoteKeywords(keywordsSuggestor.getSuggestedKeywords())
-                            text = qsTr("Added!")
+                            text = i18.n + qsTr("Added!")
                             addKeywordsButton.enabled = false
                             suggestedAddedTimer.start()
                         }
@@ -463,7 +463,7 @@ Item {
 
                     StyledButton {
                         width: 70
-                        text: qsTr("Close")
+                        text: i18.n + qsTr("Close")
                         onClicked: closePopup()
                     }
                 }

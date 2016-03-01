@@ -40,7 +40,7 @@ ApplicationWindow {
     height: appSettings.getAppHeight(725)
     minimumHeight: 670
     minimumWidth: 900
-    title: qsTr("Xpiks")
+    title: i18.n + qsTr("Xpiks")
     property int openedDialogsCount: 0
     property bool showUpdateLink: false
     property bool needToCenter: true
@@ -186,11 +186,11 @@ ApplicationWindow {
 
     menuBar: MenuBar {
         Menu {
-            title: qsTr("&File")
+            title: i18.n + qsTr("&File")
 
             Menu {
                 id: recentDirectoriesMenu
-                title: qsTr("&Recent directories")
+                title: i18.n + qsTr("&Recent directories")
                 enabled: applicationWindow.openedDialogsCount == 0
 
                 Instantiator {
@@ -211,7 +211,7 @@ ApplicationWindow {
             }
 
             MenuItem {
-                text: qsTr("&Settings")
+                text: i18.n + qsTr("&Settings")
                 onTriggered: {
                     settingsModel.readAllValues()
                     Common.launchDialog("Dialogs/SettingsWindow.qml",
@@ -221,7 +221,7 @@ ApplicationWindow {
             }
 
             MenuItem {
-                text: qsTr("&About")
+                text: i18.n + qsTr("&About")
                 onTriggered: {
                     Common.launchDialog("Dialogs/AboutWindow.qml",
                                     applicationWindow, {},
@@ -230,16 +230,16 @@ ApplicationWindow {
             }
 
             MenuItem {
-                text: qsTr("&Exit")
+                text: i18.n + qsTr("&Exit")
                 onTriggered: closeHandler({accepted: false});
             }
         }
 
         Menu {
-            title: qsTr("&Edit")
+            title: i18.n + qsTr("&Edit")
 
             MenuItem {
-                text: qsTr("&Invert selection")
+                text: i18.n + qsTr("&Invert selection")
                 enabled: imagesListView.count > 0
                 onTriggered: {
                     console.info("UI::main # Invert selection triggered")
@@ -248,7 +248,7 @@ ApplicationWindow {
             }
 
             MenuItem {
-                text: qsTr("&Sort by filename")
+                text: i18.n + qsTr("&Sort by filename")
                 enabled: imagesListView.count > 0
                 checkable: true
                 onToggled: {
@@ -258,7 +258,7 @@ ApplicationWindow {
             }
 
             MenuItem {
-                text: qsTr("&Remove metadata from selected")
+                text: i18.n + qsTr("&Remove metadata from selected")
                 enabled: filteredArtItemsModel.selectedArtworksCount > 0
                 onTriggered: {
                     console.info("UI::main # Remove metadata from selected triggered")
@@ -267,7 +267,7 @@ ApplicationWindow {
             }
 
             MenuItem {
-                text: qsTr("&Detach vectors from selected")
+                text: i18.n + qsTr("&Detach vectors from selected")
                 enabled: filteredArtItemsModel.selectedArtworksCount > 0
                 onTriggered: {
                     console.info("UI::main # Detach vectors from selected triggered")
@@ -276,7 +276,7 @@ ApplicationWindow {
             }
 
             MenuItem {
-                text: qsTr("&Cleanup local library in background")
+                text: i18.n + qsTr("&Cleanup local library in background")
                 onTriggered: {
                     console.info("UI::main # Cleanup local library triggered")
                     helpersWrapper.cleanupLocalLibrary()
@@ -284,7 +284,7 @@ ApplicationWindow {
             }
 
             MenuItem {
-                text: qsTr("&Manage upload hosts")
+                text: i18.n + qsTr("&Manage upload hosts")
                 onTriggered: {
                     console.info("UI::main # Manage upload hosts triggered")
                     openUploadDialog()
@@ -294,7 +294,7 @@ ApplicationWindow {
         }
 
         Menu {
-            title: qsTr("&Plugins")
+            title: i18.n + qsTr("&Plugins")
             id: pluginsMenu
             enabled: helpersWrapper.pluginsAvailable
             visible: helpersWrapper.pluginsAvailable
@@ -330,7 +330,7 @@ ApplicationWindow {
             }
 
             MenuItem {
-                text: qsTr("&Plugin manager")
+                text: i18.n + qsTr("&Plugin manager")
                 onTriggered: {
                     Common.launchDialog("Dialogs/PluginsDialog.qml",
                                         applicationWindow, {});
@@ -339,11 +339,11 @@ ApplicationWindow {
         }
 
         Menu {
-            title: qsTr("&Tools")
+            title: i18.n + qsTr("&Tools")
             enabled: applicationWindow.openedDialogsCount == 0
 
             Menu {
-                title: qsTr("&Change language")
+                title: i18.n + qsTr("&Change language")
                 id: languagesMenu
 
                 Instantiator {
@@ -352,15 +352,18 @@ ApplicationWindow {
                     onObjectRemoved: languagesMenu.removeItem( object )
 
                     delegate: MenuItem {
+                        checkable: true
+                        checked: iscurrent
                         text: display
                         onTriggered: {
+                            languagesModel.switchLanguage(index)
                         }
                     }
                 }
             }
 
             MenuItem {
-                text: qsTr("&Zip selected artworks")
+                text: i18.n + qsTr("&Zip selected artworks")
                 enabled: filteredArtItemsModel.selectedArtworksCount > 0
                 onTriggered: {
                     console.info("UI::main # Zip archives triggered")
@@ -373,7 +376,7 @@ ApplicationWindow {
             }
 
             MenuItem {
-                text: qsTr("&Import metadata from selected")
+                text: i18.n + qsTr("&Import metadata from selected")
                 enabled: filteredArtItemsModel.selectedArtworksCount > 0
                 onTriggered: {
                     console.info("UI::main # Reimport archives triggered")
@@ -382,7 +385,7 @@ ApplicationWindow {
             }
 
             MenuItem {
-                text: qsTr("&Overwrite metadata in selected")
+                text: i18.n + qsTr("&Overwrite metadata in selected")
                 enabled: filteredArtItemsModel.selectedArtworksCount > 0
                 onTriggered: {
                     console.info("UI::main # Overwrite metadata triggered")
@@ -391,7 +394,7 @@ ApplicationWindow {
             }
 
             MenuItem {
-                text: qsTr("&Check spelling in selected")
+                text: i18.n + qsTr("&Check spelling in selected")
                 enabled: filteredArtItemsModel.selectedArtworksCount > 0
                 onTriggered: {
                     console.info("UI::main # Spell check in selected")
@@ -403,20 +406,20 @@ ApplicationWindow {
         }
 
         Menu {
-            title: qsTr("&Help")
+            title: i18.n + qsTr("&Help")
 
             MenuItem {
-                text: qsTr("&Video tutorials")
+                text: i18.n + qsTr("&Video tutorials")
                 onTriggered: Qt.openUrlExternally("http://ribtoks.github.io/xpiks/blog/2016/videos")
             }
 
             MenuItem {
-                text: qsTr("&FAQ")
+                text: i18.n + qsTr("&FAQ")
                 onTriggered: Qt.openUrlExternally("http://ribtoks.github.io/xpiks/faq/")
             }
 
             MenuItem {
-                text: qsTr("&Support")
+                text: i18.n + qsTr("&Support")
                 onTriggered: Qt.openUrlExternally("http://ribtoks.github.io/xpiks/support/")
             }
         }
@@ -426,7 +429,7 @@ ApplicationWindow {
         id: configExitDialog
 
         title: "Confirmation"
-        text: qsTr("You have some artworks modified. Really exit?")
+        text: i18.n + qsTr("You have some artworks modified. Really exit?")
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: shutdownEverything()
     }
@@ -435,7 +438,7 @@ ApplicationWindow {
         id: removeMetadataDialog
 
         title: "Confirmation"
-        text: qsTr("Remove metadata from selected artworks?")
+        text: i18.n + qsTr("Remove metadata from selected artworks?")
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
             filteredArtItemsModel.removeMetadataInSelected()
@@ -446,7 +449,7 @@ ApplicationWindow {
         id: confirmRemoveSelectedDialog
         property int itemsCount
         title: "Confirmation"
-        text: qsTr("Are you sure you want to remove %1 item(s)?").arg(itemsCount)
+        text: i18.n + qsTr("Are you sure you want to remove %1 item(s)?").arg(itemsCount)
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
             doRemoveSelectedArtworks()
@@ -469,7 +472,7 @@ ApplicationWindow {
         id: confirmRemoveDirectoryDialog
         property int directoryIndex
         title: "Confirmation"
-        text: qsTr("Are you sure you want to remove this directory?")
+        text: i18.n + qsTr("Are you sure you want to remove this directory?")
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
             filteredArtItemsModel.removeArtworksDirectory(directoryIndex)
@@ -527,32 +530,32 @@ ApplicationWindow {
     MessageDialog {
         id: mustSaveWarning
         title: "Warning"
-        text: qsTr("Please, save selected items before upload")
+        text: i18.n + qsTr("Please, save selected items before upload")
     }
 
     MessageDialog {
         id: mustSelectDialog
         title: "Warning"
-        text: qsTr("Please, select some artworks first")
+        text: i18.n + qsTr("Please, select some artworks first")
     }
 
     MessageDialog {
         id: noNewFilesDialog
         title: "Information"
-        text: qsTr("No new files were added")
+        text: i18.n + qsTr("No new files were added")
     }
 
     MessageDialog {
         id: alreadySavedDialog
         title: "Information"
-        text: qsTr("All selected items are already saved")
+        text: i18.n + qsTr("All selected items are already saved")
     }
 
     MessageDialog {
         id: vectorsAttachedDialog
         title: "Information"
         property int vectorsAttached: 0
-        text: vectorsAttached > 1 ? qsTr("%1 vectors attached").arg(vectorsAttached) : qsTr("1 vector attached")
+        text: vectorsAttached > 1 ? i18.n + qsTr("%1 vectors attached").arg(vectorsAttached) : i18.n + qsTr("1 vector attached")
     }
 
     Connections {
@@ -623,7 +626,7 @@ ApplicationWindow {
                     anchors.leftMargin: 10
                     anchors.verticalCenter: parent.verticalCenter
                     id: addDirectoryButton
-                    text: qsTr("Add directory")
+                    text: i18.n + qsTr("Add directory")
                     width: 120
                     onClicked: chooseDirectoryDialog.open()
                 }
@@ -632,7 +635,7 @@ ApplicationWindow {
                     anchors.leftMargin: 10
                     anchors.left: addDirectoryButton.right
                     anchors.verticalCenter: parent.verticalCenter
-                    text: qsTr("Add files")
+                    text: i18.n + qsTr("Add files")
                     width: 100
                     onClicked: chooseArtworksDialog.open()
                 }
@@ -777,7 +780,7 @@ ApplicationWindow {
                     }
 
                     StyledButton {
-                        text: qsTr("Remove")
+                        text: i18.n + qsTr("Remove")
                         enabled: artworkRepository.artworksSourcesCount > 0
                         width: 80
                         onClicked: {
@@ -799,7 +802,7 @@ ApplicationWindow {
                     }
 
                     StyledButton {
-                        text: qsTr("Edit")
+                        text: i18.n + qsTr("Edit")
                         width: mainScrollView.areScrollbarsVisible ? 72 : 82
                         enabled: artworkRepository.artworksSourcesCount > 0
                         onClicked: {
@@ -831,7 +834,7 @@ ApplicationWindow {
                     }
 
                     StyledButton {
-                        text: qsTr("Save")
+                        text: i18.n + qsTr("Save")
                         width: 80
                         enabled: artworkRepository.artworksSourcesCount > 0
                         onClicked: {
@@ -853,7 +856,7 @@ ApplicationWindow {
                     }
 
                     StyledButton {
-                        text: qsTr("Upload")
+                        text: i18.n + qsTr("Upload")
                         width: 90
                         enabled: artworkRepository.artworksSourcesCount > 0
                         onClicked: {
@@ -900,7 +903,7 @@ ApplicationWindow {
                             anchors.verticalCenter: parent.verticalCenter
                             isContrast: true
                             enabled: artworkRepository.artworksSourcesCount > 0
-                            text: filteredArtItemsModel.selectedArtworksCount === 0 ? qsTr("Select all") : qsTr("Select none")
+                            text: filteredArtItemsModel.selectedArtworksCount === 0 ? i18.n + qsTr("Select all") : i18.n + qsTr("Select none")
                             checked: filteredArtItemsModel.selectedArtworksCount > 0
 
                             onClicked: {
@@ -959,7 +962,7 @@ ApplicationWindow {
                             }
 
                             StyledText {
-                                text: qsTr("Search...   x:empty  x:modified")
+                                text: i18.n + qsTr("Search...   x:empty  x:modified")
                                 color: Colors.defaultInputBackground
                                 opacity: (filterClearTimer.running || filterText.activeFocus || (filterText.length > 0)) ? 0 : 0.1
                                 anchors.left: parent.left
@@ -981,7 +984,7 @@ ApplicationWindow {
                             anchors.verticalCenter: parent.verticalCenter
                             anchors.rightMargin:  mainScrollView.areScrollbarsVisible ? 35 : 20
                             width: 90
-                            text: qsTr("Search")
+                            text: i18.n + qsTr("Search")
                             enabled: artworkRepository.artworksSourcesCount > 0
                             onClicked: filteredArtItemsModel.searchTerm = filterText.text
                         }
@@ -1088,7 +1091,7 @@ ApplicationWindow {
                             }
 
                             StyledText {
-                                text: qsTr("Undo")
+                                text: i18.n + qsTr("Undo")
                                 color: undoMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
 
                                 MouseArea {
@@ -1104,7 +1107,7 @@ ApplicationWindow {
                             }
 
                             StyledText {
-                                text: qsTr("Dismiss (%1)").arg(settingsModel.dismissDuration - (autoDismissTimer.iterations % (settingsModel.dismissDuration + 1)))
+                                text: i18.n + qsTr("Dismiss (%1)").arg(settingsModel.dismissDuration - (autoDismissTimer.iterations % (settingsModel.dismissDuration + 1)))
                                 color: dismissUndoMA.pressed ? Colors.defaultLightColor : Colors.defaultInputBackground
 
                                 MouseArea {
@@ -1443,7 +1446,7 @@ ApplicationWindow {
                                                 id: descriptionText
                                                 anchors.left: parent.left
                                                 anchors.top: parent.top
-                                                text: qsTr("Description:")
+                                                text: i18.n + qsTr("Description:")
                                             }
 
                                             StyledText {
@@ -1451,7 +1454,7 @@ ApplicationWindow {
                                                 anchors.left: titleRect.left
                                                 anchors.top: parent.top
                                                 visible: columnLayout.isWideEnough
-                                                text: qsTr("Title:")
+                                                text: i18.n + qsTr("Title:")
                                             }
 
                                             Rectangle {
@@ -1616,12 +1619,12 @@ ApplicationWindow {
                                                 anchors.left: parent.left
                                                 anchors.top: descriptionRect.bottom
                                                 anchors.topMargin: 7
-                                                text: qsTr("Keywords:")
+                                                text: i18.n + qsTr("Keywords:")
                                             }
 
                                             StyledText {
                                                 id: plainTextText
-                                                text: qsTr("<u>edit in plain text</u>")
+                                                text: i18.n + qsTr("<u>edit in plain text</u>")
                                                 color: plainTextMA.containsMouse ? Colors.defaultLightGrayColor : Colors.defaultInputBackground
                                                 visible: rowWrapper.isHighlighted
                                                 anchors.right: parent.right
@@ -1781,7 +1784,7 @@ ApplicationWindow {
 
                                                 StyledText {
                                                     id: fixSpellingText
-                                                    text: qsTr("Fix spelling")
+                                                    text: i18.n + qsTr("Fix spelling")
                                                     enabled: rowWrapper.artworkModel ? rowWrapper.artworkModel.hasSpellErrors : false
                                                     color: enabled ? Colors.artworkActiveColor : (rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.selectedArtworkColor)
 
@@ -1805,7 +1808,7 @@ ApplicationWindow {
                                                 }
 
                                                 StyledText {
-                                                    text: qsTr("Suggest")
+                                                    text: i18.n + qsTr("Suggest")
                                                     color: suggestKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
 
                                                     MouseArea {
@@ -1833,7 +1836,7 @@ ApplicationWindow {
                                                 }
 
                                                 StyledText {
-                                                    text: qsTr("Copy")
+                                                    text: i18.n + qsTr("Copy")
                                                     color: copyKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
 
                                                     MouseArea {
@@ -1851,7 +1854,7 @@ ApplicationWindow {
                                                 }
 
                                                 StyledText {
-                                                    text: qsTr("Clear")
+                                                    text: i18.n + qsTr("Clear")
                                                     color: clearKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
 
                                                     MouseArea {
@@ -1888,12 +1891,12 @@ ApplicationWindow {
                             spacing: 5
 
                             StyledText {
-                                text: qsTr("No items available.")
+                                text: i18.n + qsTr("No items available.")
                                 color: Colors.selectedMetadataColor
                             }
 
                             StyledText {
-                                text: qsTr("Add files")
+                                text: i18.n + qsTr("Add files")
                                 color: addFilesMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
 
                                 MouseArea {
@@ -1905,12 +1908,12 @@ ApplicationWindow {
                             }
 
                             StyledText {
-                                text: qsTr("or")
+                                text: i18.n + qsTr("or")
                                 color: Colors.selectedMetadataColor
                             }
 
                             StyledText {
-                                text: qsTr("clear the filter")
+                                text: i18.n + qsTr("clear the filter")
                                 color: clearFilterMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
 
                                 MouseArea {
@@ -1943,7 +1946,7 @@ ApplicationWindow {
             }
 
             StyledText {
-                text: qsTr("Show logs")
+                text: i18.n + qsTr("Show logs")
                 color: logsMA.pressed ? Colors.defaultInputBackground : Colors.selectedMetadataColor
 
                 MouseArea {
@@ -1967,7 +1970,7 @@ ApplicationWindow {
             }
 
             StyledText {
-                text: qsTr("Check warnings")
+                text: i18.n + qsTr("Check warnings")
                 color: warningsMA.pressed ? Colors.defaultInputBackground : warningsModel.warningsCount > 0 ? Colors.artworkModifiedColor : Colors.selectedMetadataColor
 
                 MouseArea {
@@ -1994,7 +1997,7 @@ ApplicationWindow {
             StyledText {
                 visible: applicationWindow.showUpdateLink
                 enabled: applicationWindow.showUpdateLink
-                text: qsTr("Update available!")
+                text: i18.n + qsTr("Update available!")
                 color: updateMA.pressed ? Colors.defaultInputBackground : Colors.greenColor
 
                 MouseArea {
@@ -2013,16 +2016,16 @@ ApplicationWindow {
 
             StyledText {
                 id: filteredCountText
-                text: qsTr("No items available")
+                text: i18.n + qsTr("No items available")
                 color: Colors.selectedMetadataColor
                 verticalAlignment: Text.AlignVCenter
 
                 function updateText() {
                     var itemsCount = filteredArtItemsModel.getItemsCount()
                     if (itemsCount > 0) {
-                        text = itemsCount > 1 ? qsTr("%1 items available").arg(itemsCount) : qsTr("1 item available")
+                        text = itemsCount > 1 ? i18.n + qsTr("%1 items available").arg(itemsCount) : i18.n + qsTr("1 item available")
                     } else {
-                        text = qsTr("No items available")
+                        text = i18.n + qsTr("No items available")
                     }
                 }
 
@@ -2041,7 +2044,7 @@ ApplicationWindow {
             }
 
             StyledText {
-                text: filteredArtItemsModel.selectedArtworksCount > 1 ? qsTr("%1 selected items").arg(filteredArtItemsModel.selectedArtworksCount) : (filteredArtItemsModel.selectedArtworksCount === 1 ? qsTr("1 selected item") : qsTr("No selected items"))
+                text: filteredArtItemsModel.selectedArtworksCount > 1 ? i18.n + qsTr("%1 selected items").arg(filteredArtItemsModel.selectedArtworksCount) : (filteredArtItemsModel.selectedArtworksCount === 1 ? i18.n + qsTr("1 selected item") : i18.n + qsTr("No selected items"))
                 color: Colors.selectedMetadataColor
                 verticalAlignment: Text.AlignVCenter
 
@@ -2064,7 +2067,7 @@ ApplicationWindow {
             }
 
             StyledText {
-                text: artItemsModel.modifiedArtworksCount > 1 ? qsTr("%1 modified items").arg(artItemsModel.modifiedArtworksCount) : (artItemsModel.modifiedArtworksCount === 1 ? qsTr("1 modified item") : qsTr("No modified items"))
+                text: artItemsModel.modifiedArtworksCount > 1 ? i18.n + qsTr("%1 modified items").arg(artItemsModel.modifiedArtworksCount) : (artItemsModel.modifiedArtworksCount === 1 ? i18.n + qsTr("1 modified item") : i18.n + qsTr("No modified items"))
                 verticalAlignment: Text.AlignVCenter
                 color: artItemsModel.modifiedArtworksCount > 0 ? Colors.artworkModifiedColor : Colors.selectedMetadataColor
 
