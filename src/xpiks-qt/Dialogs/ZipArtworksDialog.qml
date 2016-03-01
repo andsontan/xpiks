@@ -118,7 +118,8 @@ Item {
                     }
 
                     StyledText {
-                        text: zipArchiver.itemsCount == 1 ? i18.n + qsTr("1 artwork") : i18.n + qsTr("%1 artworks").arg(zipArchiver.itemsCount)
+                        property string originalText: zipArchiver.itemsCount == 1 ? qsTr("1 artwork") : qsTr("%1 artworks").arg(zipArchiver.itemsCount)
+                        text: i18.n + originalText
                         color: Colors.defaultInputBackground
                     }
                 }

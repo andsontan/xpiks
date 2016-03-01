@@ -555,7 +555,8 @@ ApplicationWindow {
         id: vectorsAttachedDialog
         title: "Information"
         property int vectorsAttached: 0
-        text: vectorsAttached > 1 ? i18.n + qsTr("%1 vectors attached").arg(vectorsAttached) : i18.n + qsTr("1 vector attached")
+        property string originalText: vectorsAttached > 1 ? qsTr("%1 vectors attached").arg(vectorsAttached) : qsTr("1 vector attached")
+        text: i18.n + originalText
     }
 
     Connections {
@@ -903,7 +904,8 @@ ApplicationWindow {
                             anchors.verticalCenter: parent.verticalCenter
                             isContrast: true
                             enabled: artworkRepository.artworksSourcesCount > 0
-                            text: filteredArtItemsModel.selectedArtworksCount === 0 ? i18.n + qsTr("Select all") : i18.n + qsTr("Select none")
+                            property string originalText: filteredArtItemsModel.selectedArtworksCount === 0 ? qsTr("Select all") : qsTr("Select none")
+                            text: i18.n + originalText
                             checked: filteredArtItemsModel.selectedArtworksCount > 0
 
                             onClicked: {
@@ -2023,9 +2025,9 @@ ApplicationWindow {
                 function updateText() {
                     var itemsCount = filteredArtItemsModel.getItemsCount()
                     if (itemsCount > 0) {
-                        text = itemsCount > 1 ? i18.n + qsTr("%1 items available").arg(itemsCount) : i18.n + qsTr("1 item available")
+                        text = itemsCount > 1 ? qsTr("%1 items available").arg(itemsCount) : qsTr("1 item available")
                     } else {
-                        text = i18.n + qsTr("No items available")
+                        text = qsTr("No items available")
                     }
                 }
 
@@ -2044,7 +2046,8 @@ ApplicationWindow {
             }
 
             StyledText {
-                text: filteredArtItemsModel.selectedArtworksCount > 1 ? i18.n + qsTr("%1 selected items").arg(filteredArtItemsModel.selectedArtworksCount) : (filteredArtItemsModel.selectedArtworksCount === 1 ? i18.n + qsTr("1 selected item") : i18.n + qsTr("No selected items"))
+                property string originalText: filteredArtItemsModel.selectedArtworksCount > 1 ? qsTr("%1 selected items").arg(filteredArtItemsModel.selectedArtworksCount) : (filteredArtItemsModel.selectedArtworksCount === 1 ? qsTr("1 selected item") : qsTr("No selected items"))
+                text: i18.n + originalText
                 color: Colors.selectedMetadataColor
                 verticalAlignment: Text.AlignVCenter
 
@@ -2067,7 +2070,8 @@ ApplicationWindow {
             }
 
             StyledText {
-                text: artItemsModel.modifiedArtworksCount > 1 ? i18.n + qsTr("%1 modified items").arg(artItemsModel.modifiedArtworksCount) : (artItemsModel.modifiedArtworksCount === 1 ? i18.n + qsTr("1 modified item") : i18.n + qsTr("No modified items"))
+                property string originalText: artItemsModel.modifiedArtworksCount > 1 ? qsTr("%1 modified items").arg(artItemsModel.modifiedArtworksCount) : (artItemsModel.modifiedArtworksCount === 1 ? qsTr("1 modified item") : qsTr("No modified items"))
+                text: i18.n + originalText
                 verticalAlignment: Text.AlignVCenter
                 color: artItemsModel.modifiedArtworksCount > 0 ? Colors.artworkModifiedColor : Colors.selectedMetadataColor
 

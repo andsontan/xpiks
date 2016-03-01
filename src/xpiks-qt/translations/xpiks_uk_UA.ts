@@ -70,82 +70,82 @@
         <translation>1 файл було змінено</translation>
     </message>
     <message>
-        <location filename="../Dialogs/CombinedArtworksDialog.qml" line="176"/>
+        <location filename="../Dialogs/CombinedArtworksDialog.qml" line="177"/>
         <source>Assign from selected</source>
         <translation type="unfinished">Поля із вибраного</translation>
     </message>
     <message>
-        <location filename="../Dialogs/CombinedArtworksDialog.qml" line="179"/>
+        <location filename="../Dialogs/CombinedArtworksDialog.qml" line="180"/>
         <source>Set metadata from selected artwork to all fields</source>
         <translation>Присвоїти дані із вибраного файлу у всі поля</translation>
     </message>
     <message>
-        <location filename="../Dialogs/CombinedArtworksDialog.qml" line="190"/>
+        <location filename="../Dialogs/CombinedArtworksDialog.qml" line="191"/>
         <source>Remove selected</source>
         <translation>Вилучити вибрані</translation>
     </message>
     <message>
-        <location filename="../Dialogs/CombinedArtworksDialog.qml" line="192"/>
+        <location filename="../Dialogs/CombinedArtworksDialog.qml" line="193"/>
         <source>Remove selected artworks from this dialog</source>
         <translation>Вилучити вибрані файли з цього діалогу</translation>
     </message>
     <message>
-        <location filename="../Dialogs/CombinedArtworksDialog.qml" line="352"/>
+        <location filename="../Dialogs/CombinedArtworksDialog.qml" line="353"/>
         <source>Title:</source>
         <translation>Назва:</translation>
     </message>
     <message>
-        <location filename="../Dialogs/CombinedArtworksDialog.qml" line="356"/>
+        <location filename="../Dialogs/CombinedArtworksDialog.qml" line="357"/>
         <source>(same as Description if empty)</source>
         <translation>(скопіюється із Опису, якщо пуста)</translation>
     </message>
     <message>
-        <location filename="../Dialogs/CombinedArtworksDialog.qml" line="509"/>
+        <location filename="../Dialogs/CombinedArtworksDialog.qml" line="510"/>
         <source>Description:</source>
         <translation>Опис:</translation>
     </message>
     <message>
-        <location filename="../Dialogs/CombinedArtworksDialog.qml" line="689"/>
+        <location filename="../Dialogs/CombinedArtworksDialog.qml" line="690"/>
         <source>Keywords:</source>
         <translation>Ключові слова:</translation>
     </message>
     <message>
-        <location filename="../Dialogs/CombinedArtworksDialog.qml" line="693"/>
+        <location filename="../Dialogs/CombinedArtworksDialog.qml" line="694"/>
         <source>(comma-separated)</source>
         <translation>(розділені комами)</translation>
     </message>
     <message>
-        <location filename="../Dialogs/CombinedArtworksDialog.qml" line="807"/>
+        <location filename="../Dialogs/CombinedArtworksDialog.qml" line="808"/>
         <source>Only append new keywords</source>
         <translation>Лише додати нові ключові слова</translation>
     </message>
     <message>
-        <location filename="../Dialogs/CombinedArtworksDialog.qml" line="817"/>
+        <location filename="../Dialogs/CombinedArtworksDialog.qml" line="818"/>
         <source>Fix spelling</source>
         <translation>Виправити орфографію</translation>
     </message>
     <message>
-        <location filename="../Dialogs/CombinedArtworksDialog.qml" line="835"/>
+        <location filename="../Dialogs/CombinedArtworksDialog.qml" line="836"/>
         <source>Suggest keywords</source>
         <translation type="unfinished">Підказка слів</translation>
     </message>
     <message>
-        <location filename="../Dialogs/CombinedArtworksDialog.qml" line="857"/>
+        <location filename="../Dialogs/CombinedArtworksDialog.qml" line="858"/>
         <source>Clear keywords</source>
         <translation>Очистити</translation>
     </message>
     <message>
-        <location filename="../Dialogs/CombinedArtworksDialog.qml" line="895"/>
+        <location filename="../Dialogs/CombinedArtworksDialog.qml" line="896"/>
         <source>Select changes to save using checkboxes above</source>
         <translation>Будуть застосовані зміни із прапорцями</translation>
     </message>
     <message>
-        <location filename="../Dialogs/CombinedArtworksDialog.qml" line="903"/>
+        <location filename="../Dialogs/CombinedArtworksDialog.qml" line="904"/>
         <source>Save</source>
         <translation>Зберегти</translation>
     </message>
     <message>
-        <location filename="../Dialogs/CombinedArtworksDialog.qml" line="918"/>
+        <location filename="../Dialogs/CombinedArtworksDialog.qml" line="919"/>
         <source>Cancel</source>
         <translation>Скасувати</translation>
     </message>
@@ -203,42 +203,42 @@
     <message>
         <location filename="../Dialogs/EditArtworkVerticalDialog.qml" line="156"/>
         <source>Title:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Назва:</translation>
     </message>
     <message>
         <location filename="../Dialogs/EditArtworkVerticalDialog.qml" line="160"/>
         <source>(same as Description if empty)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">(скопіюється із Опису, якщо пуста)</translation>
     </message>
     <message>
         <location filename="../Dialogs/EditArtworkVerticalDialog.qml" line="246"/>
         <source>Description:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Опис:</translation>
     </message>
     <message>
         <location filename="../Dialogs/EditArtworkVerticalDialog.qml" line="366"/>
         <source>Keywords:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ключові слова:</translation>
     </message>
     <message>
         <location filename="../Dialogs/EditArtworkVerticalDialog.qml" line="370"/>
         <source>(comma-separated)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">(розділені комами)</translation>
     </message>
     <message>
         <location filename="../Dialogs/EditArtworkVerticalDialog.qml" line="481"/>
         <source>Suggest keywords</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Підказка слів</translation>
     </message>
     <message>
         <location filename="../Dialogs/EditArtworkVerticalDialog.qml" line="498"/>
         <source>Fix spelling</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Виправити орфографію</translation>
     </message>
     <message>
         <location filename="../Dialogs/EditArtworkVerticalDialog.qml" line="514"/>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Зберегти</translation>
     </message>
     <message>
         <location filename="../Dialogs/EditArtworkVerticalDialog.qml" line="524"/>
@@ -729,7 +729,7 @@ All upload hosts&apos; passwords will be purged.</source>
     <message>
         <location filename="../Dialogs/SettingsWindow.qml" line="805"/>
         <source>Upload</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Завантажити</translation>
     </message>
     <message>
         <location filename="../Dialogs/SettingsWindow.qml" line="820"/>
@@ -813,7 +813,7 @@ All upload hosts&apos; passwords will be purged.</source>
     <message>
         <location filename="../Dialogs/SpellCheckDialog.qml" line="123"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Скасувати</translation>
     </message>
 </context>
 <context>
@@ -841,7 +841,7 @@ All upload hosts&apos; passwords will be purged.</source>
     <message>
         <location filename="../Dialogs/SpellCheckSuggestionsDialog.qml" line="248"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Скасувати</translation>
     </message>
 </context>
 <context>
@@ -918,82 +918,82 @@ All upload hosts&apos; passwords will be purged.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Dialogs/UploadArtworks.qml" line="369"/>
+        <location filename="../Dialogs/UploadArtworks.qml" line="370"/>
         <source>Add FTP host</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Dialogs/UploadArtworks.qml" line="398"/>
+        <location filename="../Dialogs/UploadArtworks.qml" line="399"/>
         <source>General</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Dialogs/UploadArtworks.qml" line="406"/>
+        <location filename="../Dialogs/UploadArtworks.qml" line="407"/>
         <source>Title:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Назва:</translation>
     </message>
     <message>
-        <location filename="../Dialogs/UploadArtworks.qml" line="458"/>
+        <location filename="../Dialogs/UploadArtworks.qml" line="459"/>
         <source>Host:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Dialogs/UploadArtworks.qml" line="492"/>
+        <location filename="../Dialogs/UploadArtworks.qml" line="493"/>
         <source>Username:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Dialogs/UploadArtworks.qml" line="525"/>
+        <location filename="../Dialogs/UploadArtworks.qml" line="526"/>
         <source>Password:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Dialogs/UploadArtworks.qml" line="565"/>
+        <location filename="../Dialogs/UploadArtworks.qml" line="566"/>
         <source>Show password</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Показувати пароль</translation>
     </message>
     <message>
-        <location filename="../Dialogs/UploadArtworks.qml" line="582"/>
+        <location filename="../Dialogs/UploadArtworks.qml" line="583"/>
         <source>Test connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Dialogs/UploadArtworks.qml" line="614"/>
+        <location filename="../Dialogs/UploadArtworks.qml" line="615"/>
         <source>Advanced</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Dialogs/UploadArtworks.qml" line="623"/>
+        <location filename="../Dialogs/UploadArtworks.qml" line="624"/>
         <source>Zip vector with preview</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Dialogs/UploadArtworks.qml" line="642"/>
+        <location filename="../Dialogs/UploadArtworks.qml" line="643"/>
         <source>Disable FTP passive mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Dialogs/UploadArtworks.qml" line="691"/>
+        <location filename="../Dialogs/UploadArtworks.qml" line="692"/>
         <source>1 warning</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Dialogs/UploadArtworks.qml" line="691"/>
+        <location filename="../Dialogs/UploadArtworks.qml" line="692"/>
         <source>%1 warnings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Dialogs/UploadArtworks.qml" line="719"/>
+        <location filename="../Dialogs/UploadArtworks.qml" line="721"/>
         <source>Stop</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Dialogs/UploadArtworks.qml" line="719"/>
+        <location filename="../Dialogs/UploadArtworks.qml" line="721"/>
         <source>Start Upload</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Dialogs/UploadArtworks.qml" line="757"/>
+        <location filename="../Dialogs/UploadArtworks.qml" line="760"/>
         <source>Close</source>
         <translation type="unfinished">Закрити</translation>
     </message>
@@ -1052,18 +1052,18 @@ All upload hosts&apos; passwords will be purged.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Dialogs/ZipArtworksDialog.qml" line="146"/>
-        <location filename="../Dialogs/ZipArtworksDialog.qml" line="157"/>
+        <location filename="../Dialogs/ZipArtworksDialog.qml" line="147"/>
+        <location filename="../Dialogs/ZipArtworksDialog.qml" line="158"/>
         <source>Start Zipping</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Dialogs/ZipArtworksDialog.qml" line="149"/>
+        <location filename="../Dialogs/ZipArtworksDialog.qml" line="150"/>
         <source>Zipping...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Dialogs/ZipArtworksDialog.qml" line="179"/>
+        <location filename="../Dialogs/ZipArtworksDialog.qml" line="180"/>
         <source>Close</source>
         <translation type="unfinished">Закрити</translation>
     </message>
@@ -1076,344 +1076,349 @@ All upload hosts&apos; passwords will be purged.</source>
         <translation>Xpiks</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="188"/>
+        <location filename="../main.qml" line="189"/>
         <source>&amp;File</source>
         <translation>&amp;Файл</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="192"/>
+        <location filename="../main.qml" line="193"/>
         <source>&amp;Recent directories</source>
         <translation>&amp;Останні папки</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="213"/>
+        <location filename="../main.qml" line="214"/>
         <source>&amp;Settings</source>
         <translation>&amp;Налаштування</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="223"/>
+        <location filename="../main.qml" line="224"/>
         <source>&amp;About</source>
         <translation>&amp;Про програму</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="232"/>
+        <location filename="../main.qml" line="233"/>
         <source>&amp;Exit</source>
         <translation>&amp;Вихід</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="238"/>
+        <location filename="../main.qml" line="239"/>
         <source>&amp;Edit</source>
         <translation>&amp;Редагування</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="241"/>
+        <location filename="../main.qml" line="242"/>
         <source>&amp;Invert selection</source>
         <translation>&amp;Інвертувати вибір</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="250"/>
+        <location filename="../main.qml" line="251"/>
         <source>&amp;Sort by filename</source>
         <translation>&amp;Сортувати за іменем файлу</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="260"/>
+        <location filename="../main.qml" line="261"/>
         <source>&amp;Remove metadata from selected</source>
         <translation>&amp;Стерти метадані із вибраних</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="269"/>
+        <location filename="../main.qml" line="270"/>
         <source>&amp;Detach vectors from selected</source>
         <translation>&amp;Відчепити вектори від вибраних</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="278"/>
+        <location filename="../main.qml" line="279"/>
         <source>&amp;Cleanup local library in background</source>
         <translation>&amp;Очистити локальну бібліотеку</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="286"/>
+        <location filename="../main.qml" line="287"/>
         <source>&amp;Manage upload hosts</source>
         <translation>&amp;Керувати завантаженнями</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="296"/>
+        <location filename="../main.qml" line="297"/>
         <source>&amp;Plugins</source>
         <translation>&amp;Додатки</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="332"/>
+        <location filename="../main.qml" line="333"/>
         <source>&amp;Plugin manager</source>
         <translation>&amp;Менеджер додатків</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="341"/>
+        <location filename="../main.qml" line="342"/>
         <source>&amp;Tools</source>
         <translation>&amp;Інструменти</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="345"/>
+        <location filename="../main.qml" line="346"/>
+        <source>&amp;Change language</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../main.qml" line="366"/>
         <source>&amp;Zip selected artworks</source>
         <translation>&amp;Архівувати вибрані файли</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="358"/>
+        <location filename="../main.qml" line="379"/>
         <source>&amp;Import metadata from selected</source>
         <translation>&amp;Імпортувати метадані із вибраних</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="367"/>
+        <location filename="../main.qml" line="388"/>
         <source>&amp;Overwrite metadata in selected</source>
         <translation>&amp;Перезаписати метадані у вибраних</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="376"/>
+        <location filename="../main.qml" line="397"/>
         <source>&amp;Check spelling in selected</source>
         <translation>&amp;Перевірити орфографію у вибраних</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="388"/>
+        <location filename="../main.qml" line="409"/>
         <source>&amp;Help</source>
         <translation>&amp;Допомога</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="391"/>
+        <location filename="../main.qml" line="412"/>
         <source>&amp;Video tutorials</source>
         <translation>&amp;Відеоуроки</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="396"/>
+        <location filename="../main.qml" line="417"/>
         <source>&amp;FAQ</source>
         <translation>&amp;Поширені запитання</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="401"/>
+        <location filename="../main.qml" line="422"/>
         <source>&amp;Support</source>
         <translation>&amp;Підтримка</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="411"/>
+        <location filename="../main.qml" line="432"/>
         <source>You have some artworks modified. Really exit?</source>
         <translation>Деякі файли змінено. Вийти без збереження?</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="420"/>
+        <location filename="../main.qml" line="441"/>
         <source>Remove metadata from selected artworks?</source>
         <translation>Стерти метадані у вибраних файлів?</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="431"/>
+        <location filename="../main.qml" line="452"/>
         <source>Are you sure you want to remove %1 item(s)?</source>
         <translation>Справді видалити %1 елементів(-та)?</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="454"/>
+        <location filename="../main.qml" line="475"/>
         <source>Are you sure you want to remove this directory?</source>
         <translation>Справді видалити цю папку?</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="512"/>
+        <location filename="../main.qml" line="533"/>
         <source>Please, save selected items before upload</source>
         <translation>Будь ласка, збережіть вибрані файли перед завантаженням</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="518"/>
+        <location filename="../main.qml" line="539"/>
         <source>Please, select some artworks first</source>
         <translation>Будь ласка, спочатку виберіть файли</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="524"/>
+        <location filename="../main.qml" line="545"/>
         <source>No new files were added</source>
         <translation>Не додано жодних нових файлів</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="530"/>
+        <location filename="../main.qml" line="551"/>
         <source>All selected items are already saved</source>
         <translation>Вибрані файли вже збережено</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="537"/>
+        <location filename="../main.qml" line="558"/>
         <source>%1 vectors attached</source>
         <translation>%1 векторів додано</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="537"/>
+        <location filename="../main.qml" line="558"/>
         <source>1 vector attached</source>
         <translation>1 вектор додано</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="608"/>
+        <location filename="../main.qml" line="630"/>
         <source>Add directory</source>
         <translation>Додати папку</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="617"/>
-        <location filename="../main.qml" line="1878"/>
+        <location filename="../main.qml" line="639"/>
+        <location filename="../main.qml" line="1901"/>
         <source>Add files</source>
         <translation>Додати файли</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="762"/>
+        <location filename="../main.qml" line="784"/>
         <source>Remove</source>
         <translation>Видалити</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="784"/>
+        <location filename="../main.qml" line="806"/>
         <source>Edit</source>
         <translation>Редагувати</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="816"/>
+        <location filename="../main.qml" line="838"/>
         <source>Save</source>
         <translation>Зберегти</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="838"/>
+        <location filename="../main.qml" line="860"/>
         <source>Upload</source>
         <translation>Завантажити</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="885"/>
+        <location filename="../main.qml" line="907"/>
         <source>Select all</source>
         <translation>Вибрати всі</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="885"/>
+        <location filename="../main.qml" line="907"/>
         <source>Select none</source>
         <translation>Зняти виділення</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="944"/>
+        <location filename="../main.qml" line="967"/>
         <source>Search...   x:empty  x:modified</source>
         <translation>Пошук...   x:empty  x:modified</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="966"/>
+        <location filename="../main.qml" line="989"/>
         <source>Search</source>
         <translation>Пошук</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="1073"/>
+        <location filename="../main.qml" line="1096"/>
         <source>Undo</source>
         <translation>Скасувати</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="1089"/>
+        <location filename="../main.qml" line="1112"/>
         <source>Dismiss (%1)</source>
         <translation>Закрити (%1)</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="1428"/>
+        <location filename="../main.qml" line="1451"/>
         <source>Description:</source>
         <translation>Опис:</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="1436"/>
+        <location filename="../main.qml" line="1459"/>
         <source>Title:</source>
         <translation>Назва:</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="1601"/>
+        <location filename="../main.qml" line="1624"/>
         <source>Keywords:</source>
         <translation>Ключові слова:</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="1606"/>
+        <location filename="../main.qml" line="1629"/>
         <source>&lt;u&gt;edit in plain text&lt;/u&gt;</source>
         <translation>&lt;u&gt;редагувати як текст&lt;/u&gt;</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="1766"/>
+        <location filename="../main.qml" line="1789"/>
         <source>Fix spelling</source>
         <translation>Виправити орфографію</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="1790"/>
+        <location filename="../main.qml" line="1813"/>
         <source>Suggest</source>
         <translation>Пропонувати слова</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="1818"/>
+        <location filename="../main.qml" line="1841"/>
         <source>Copy</source>
         <translation>Копіювати</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="1836"/>
+        <location filename="../main.qml" line="1859"/>
         <source>Clear</source>
         <translation>Очистити</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="1873"/>
+        <location filename="../main.qml" line="1896"/>
         <source>No items available.</source>
         <translation>Немає жодних файлів.</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="1890"/>
+        <location filename="../main.qml" line="1913"/>
         <source>or</source>
         <translation>або</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="1895"/>
+        <location filename="../main.qml" line="1918"/>
         <source>clear the filter</source>
         <translation>очистіть фільтр</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="1928"/>
+        <location filename="../main.qml" line="1951"/>
         <source>Show logs</source>
         <translation>Переглянути логи</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="1952"/>
+        <location filename="../main.qml" line="1975"/>
         <source>Check warnings</source>
         <translation>Перевірити помилки</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="1979"/>
+        <location filename="../main.qml" line="2002"/>
         <source>Update available!</source>
         <translation>Доступне оновлення!</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="1998"/>
-        <location filename="../main.qml" line="2007"/>
+        <location filename="../main.qml" line="2021"/>
+        <location filename="../main.qml" line="2030"/>
         <source>No items available</source>
         <translation>Немає файлів</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="2005"/>
+        <location filename="../main.qml" line="2028"/>
         <source>%1 items available</source>
         <translation>%1 файлів</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="2005"/>
+        <location filename="../main.qml" line="2028"/>
         <source>1 item available</source>
         <translation>1 файл</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="2026"/>
+        <location filename="../main.qml" line="2049"/>
         <source>%1 selected items</source>
         <translation>%1 вибраних файлів</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="2026"/>
+        <location filename="../main.qml" line="2049"/>
         <source>1 selected item</source>
         <translation>1 вибраний файл</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="2026"/>
+        <location filename="../main.qml" line="2049"/>
         <source>No selected items</source>
         <translation>Немає вибраних файлів</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="2049"/>
+        <location filename="../main.qml" line="2073"/>
         <source>%1 modified items</source>
         <translation>%1 змінених файлів</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="2049"/>
+        <location filename="../main.qml" line="2073"/>
         <source>1 modified item</source>
         <translation>1 змінений файл</translation>
     </message>
     <message>
-        <location filename="../main.qml" line="2049"/>
+        <location filename="../main.qml" line="2073"/>
         <source>No modified items</source>
         <translation>Немає змінених файлів</translation>
     </message>

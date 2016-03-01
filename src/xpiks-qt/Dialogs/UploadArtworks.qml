@@ -197,7 +197,8 @@ Item {
                     }
 
                     StyledText {
-                        text: artworkUploader.itemsCount == 1 ? i18.n + qsTr("1 artwork selected") : i18.n + qsTr("%1 artworks selected").arg(artworkUploader.itemsCount)
+                        property string originalText: artworkUploader.itemsCount == 1 ? qsTr("1 artwork selected") : qsTr("%1 artworks selected").arg(artworkUploader.itemsCount)
+                        text: i18.n + originalText
                         color: Colors.defaultInputBackground
                     }
                 }
@@ -688,7 +689,8 @@ Item {
 
                     StyledText {
                         enabled: uploadArtworksComponent.uploadEnabled
-                        text: warningsModel.warningsCount == 1 ? i18.n + qsTr("1 warning") : i18.n + qsTr("%1 warnings").arg(warningsModel.warningsCount)
+                        property string originalText: warningsModel.warningsCount == 1 ? qsTr("1 warning") : qsTr("%1 warnings").arg(warningsModel.warningsCount)
+                        text: i18.n + originalText
                         color: uploadWarmingsMA.pressed ? Colors.defaultLightGrayColor : warningsModel.warningsCount > 0 ? Colors.artworkModifiedColor : Colors.defaultInputBackground
 
                         MouseArea {
@@ -716,7 +718,8 @@ Item {
                     StyledButton {
                         id: uploadButton
                         enabled: uploadArtworksComponent.uploadEnabled
-                        text: artworkUploader.inProgress ? i18.n + qsTr("Stop") : i18.n + qsTr("Start Upload")
+                        property string originalText: artworkUploader.inProgress ? qsTr("Stop") : qsTr("Start Upload")
+                        text: i18.n + originalText
                         width: 130
                         onClicked: {
                             if (!artworkUploader.inProgress) {
