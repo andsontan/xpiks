@@ -53,9 +53,9 @@ permalink: /downloads/
 <h2><strong>Linux instructions</strong></h2>
 
 <div class="download-package">
-<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.1/xpiks_1.1.4-1_amd64.deb">
+<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.2/xpiks_1.2-1_amd64.deb">
 <div><img src="{{site.url}}/images/linux_installer.jpg" style="vertical-align: middle;width:70px;" />
-<span style="vertical-align: middle;">Package for Linux</span>
+<span style="vertical-align: middle;">Package for Debian</span>
 </div>
 </a>
 </div>
