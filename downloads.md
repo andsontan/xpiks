@@ -67,7 +67,7 @@ permalink: /downloads/
 <div class="download-package">
 <a href="https://github.com/Ribtoks/xpiks/releases/download/v1.2/xpiks-1.2-1.x86_64.rpm">
 <div><img src="{{site.url}}/images/rpm.png" style="vertical-align: middle;width:70px;" />
-<span style="vertical-align: middle;">Package for OpenSUSE</span>
+<span style="vertical-align: middle;">Package for SUSE</span>
 </div>
 </a>
 </div>
