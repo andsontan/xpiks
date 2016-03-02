@@ -64,6 +64,18 @@ permalink: /downloads/
 
 <div style="clear:both;height: 30px;">&nbsp;</div>
 
+<div class="download-package">
+<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.2/xpiks-1.2-1.x86_64.rpm">
+<div><img src="{{site.url}}/images/rpm.png" style="vertical-align: middle;width:70px;" />
+<span style="vertical-align: middle;">Package for OpenSUSE</span>
+</div>
+</a>
+</div>
+
+<p>Package is only for rpm-based distros (OpenSUSE, Fedora etc.) with x64 architecture. See <a href="{{site.url}}/linux-instructions/">installation instructions for Linux</a> page.</p>
+
+<div style="clear:both;height: 30px;">&nbsp;</div>
+
 <h2><strong>Other systems and versions</strong></h2>
 
 <!--
