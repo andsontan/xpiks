@@ -322,8 +322,10 @@ CONFIG(release, debug|release) {
     copyterms.commands = $(COPY_FILE) \"$$shell_path($$PWD/terms_and_conditions.txt)\" \"$$shell_path($$OUT_PWD/$$EXE_DIR/)\"
     copydicts.commands = $(COPY_DIR) \"$$shell_path($$PWD/dict)\" \"$$shell_path($$OUT_PWD/$$EXE_DIR/dict)\"
 
-    QMAKE_EXTRA_TARGETS += copywhatsnew copyterms copydicts
-    POST_TARGETDEPS += copywhatsnew copyterms copydicts
+    copytranslations.commands = $(COPY_FILE) \"$$shell_path($$PWD/translations/xpiks_*.qm)\" \"$$shell_path($$OUT_PWD/$$EXE_DIR/translations/)\"
+
+    QMAKE_EXTRA_TARGETS += copywhatsnew copyterms copydicts copytranslations
+    POST_TARGETDEPS += copywhatsnew copyterms copydicts copytranslations
 }
 
 linux-g++-64 {
