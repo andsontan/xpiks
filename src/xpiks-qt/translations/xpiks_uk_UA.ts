@@ -601,7 +601,7 @@ All upload hosts&apos; passwords will be purged.</source>
     <message>
         <location filename="../Dialogs/SettingsWindow.qml" line="215"/>
         <source>Check for updates</source>
-        <translation>Слідкувати за оновленнями</translation>
+        <translation>Перевіряти оновлення</translation>
     </message>
     <message>
         <location filename="../Dialogs/SettingsWindow.qml" line="231"/>
@@ -611,7 +611,7 @@ All upload hosts&apos; passwords will be purged.</source>
     <message>
         <location filename="../Dialogs/SettingsWindow.qml" line="248"/>
         <source>Search match all terms</source>
-        <translation>Шукати використовуючи всі входження</translation>
+        <translation>Шукати всі входження</translation>
     </message>
     <message>
         <location filename="../Dialogs/SettingsWindow.qml" line="276"/>
@@ -621,12 +621,12 @@ All upload hosts&apos; passwords will be purged.</source>
     <message>
         <location filename="../Dialogs/SettingsWindow.qml" line="292"/>
         <source>Save backups for artworks</source>
-        <translation>Зберігати резервні копії під час роботи</translation>
+        <translation>Зберігати резервні копії</translation>
     </message>
     <message>
         <location filename="../Dialogs/SettingsWindow.qml" line="308"/>
         <source>Check spelling automatically</source>
-        <translation>Перевіряти орфографію автоматично</translation>
+        <translation>Перевіряти орфографію</translation>
     </message>
     <message>
         <location filename="../Dialogs/SettingsWindow.qml" line="333"/>
@@ -662,39 +662,39 @@ All upload hosts&apos; passwords will be purged.</source>
         <location filename="../Dialogs/SettingsWindow.qml" line="503"/>
         <location filename="../Dialogs/SettingsWindow.qml" line="857"/>
         <source>(seconds)</source>
-        <translation type="unfinished"></translation>
+        <translation>(секунд)</translation>
     </message>
     <message>
         <location filename="../Dialogs/SettingsWindow.qml" line="516"/>
         <source>External</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Зовнішнє</translation>
     </message>
     <message>
         <location filename="../Dialogs/SettingsWindow.qml" line="537"/>
         <source>ExifTool path:</source>
-        <translation type="unfinished"></translation>
+        <translation>Шлях до Exiftool:</translation>
     </message>
     <message>
         <location filename="../Dialogs/SettingsWindow.qml" line="568"/>
         <location filename="../Dialogs/SettingsWindow.qml" line="613"/>
         <source>Select...</source>
-        <translation type="unfinished"></translation>
+        <translation>Вибрати...</translation>
     </message>
     <message>
         <location filename="../Dialogs/SettingsWindow.qml" line="576"/>
         <location filename="../Dialogs/SettingsWindow.qml" line="622"/>
         <source>Reset</source>
-        <translation type="unfinished"></translation>
+        <translation>Скинути</translation>
     </message>
     <message>
         <location filename="../Dialogs/SettingsWindow.qml" line="588"/>
         <source>Dictionary path:</source>
-        <translation type="unfinished"></translation>
+        <translation>Словники:</translation>
     </message>
     <message>
         <location filename="../Dialogs/SettingsWindow.qml" line="637"/>
         <source>Warnings</source>
-        <translation type="unfinished"></translation>
+        <translation>Помилки</translation>
     </message>
     <message>
         <location filename="../Dialogs/SettingsWindow.qml" line="652"/>
@@ -704,83 +704,83 @@ All upload hosts&apos; passwords will be purged.</source>
     <message>
         <location filename="../Dialogs/SettingsWindow.qml" line="691"/>
         <source>(can be real)</source>
-        <translation type="unfinished"></translation>
+        <translation>(може бути дійсне)</translation>
     </message>
     <message>
         <location filename="../Dialogs/SettingsWindow.qml" line="703"/>
         <source>Max keywords count:</source>
-        <translation type="unfinished"></translation>
+        <translation>Максимум слів:</translation>
     </message>
     <message>
         <location filename="../Dialogs/SettingsWindow.qml" line="742"/>
         <source>(keywords)</source>
-        <translation type="unfinished"></translation>
+        <translation>(ключові слова)</translation>
     </message>
     <message>
         <location filename="../Dialogs/SettingsWindow.qml" line="754"/>
         <source>Max description length:</source>
-        <translation type="unfinished"></translation>
+        <translation>Довжина опису:</translation>
     </message>
     <message>
         <location filename="../Dialogs/SettingsWindow.qml" line="792"/>
         <source>(characters)</source>
-        <translation type="unfinished"></translation>
+        <translation>(символів)</translation>
     </message>
     <message>
         <location filename="../Dialogs/SettingsWindow.qml" line="805"/>
         <source>Upload</source>
-        <translation type="unfinished">Завантажити</translation>
+        <translation>Завантаження</translation>
     </message>
     <message>
         <location filename="../Dialogs/SettingsWindow.qml" line="820"/>
         <source>File upload timeout:</source>
-        <translation type="unfinished"></translation>
+        <translation>Таймаут:</translation>
     </message>
     <message>
         <location filename="../Dialogs/SettingsWindow.qml" line="869"/>
         <source>Max parallel uploads:</source>
-        <translation type="unfinished"></translation>
+        <translation>Завантажувати паралельно:</translation>
     </message>
     <message>
         <location filename="../Dialogs/SettingsWindow.qml" line="906"/>
         <source>(takes effect after relaunch)</source>
-        <translation type="unfinished"></translation>
+        <translation>(потрібен перезапуск)</translation>
     </message>
     <message>
         <location filename="../Dialogs/SettingsWindow.qml" line="919"/>
         <source>Security</source>
-        <translation type="unfinished"></translation>
+        <translation>Безпека</translation>
     </message>
     <message>
         <location filename="../Dialogs/SettingsWindow.qml" line="931"/>
         <source>Use Master password</source>
-        <translation type="unfinished"></translation>
+        <translation>Використовувати Головний пароль</translation>
     </message>
     <message>
         <location filename="../Dialogs/SettingsWindow.qml" line="967"/>
         <source>Change Master password</source>
-        <translation type="unfinished"></translation>
+        <translation>Змінити Головний пароль</translation>
     </message>
     <message>
         <location filename="../Dialogs/SettingsWindow.qml" line="983"/>
         <source>Reset Master password</source>
-        <translation type="unfinished"></translation>
+        <translation>Скинути Головний пароль</translation>
     </message>
     <message>
         <location filename="../Dialogs/SettingsWindow.qml" line="1001"/>
         <location filename="../Dialogs/SettingsWindow.qml" line="1013"/>
         <source>More...</source>
-        <translation type="unfinished"></translation>
+        <translation>Більше...</translation>
     </message>
     <message>
         <location filename="../Dialogs/SettingsWindow.qml" line="1017"/>
         <source>Less...</source>
-        <translation type="unfinished"></translation>
+        <translation>Менше...</translation>
     </message>
     <message>
         <location filename="../Dialogs/SettingsWindow.qml" line="1050"/>
         <source>Collect usage statistics</source>
-        <translation type="unfinished"></translation>
+        <translation>Зберігати статистику</translation>
     </message>
     <message>
         <location filename="../Dialogs/SettingsWindow.qml" line="1068"/>
@@ -790,17 +790,17 @@ All upload hosts&apos; passwords will be purged.</source>
     <message>
         <location filename="../Dialogs/SettingsWindow.qml" line="1097"/>
         <source>Reset to defaults</source>
-        <translation type="unfinished"></translation>
+        <translation>Скинути до заводських</translation>
     </message>
     <message>
         <location filename="../Dialogs/SettingsWindow.qml" line="1117"/>
         <source>Save and Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Зберегти</translation>
     </message>
     <message>
         <location filename="../Dialogs/SettingsWindow.qml" line="1133"/>
         <source>Close</source>
-        <translation type="unfinished">Закрити</translation>
+        <translation>Закрити</translation>
     </message>
 </context>
 <context>
@@ -808,12 +808,12 @@ All upload hosts&apos; passwords will be purged.</source>
     <message>
         <location filename="../Dialogs/SpellCheckDialog.qml" line="111"/>
         <source>Checking selected items...</source>
-        <translation type="unfinished"></translation>
+        <translation>Перевіряю вибрані...</translation>
     </message>
     <message>
         <location filename="../Dialogs/SpellCheckDialog.qml" line="123"/>
         <source>Cancel</source>
-        <translation type="unfinished">Скасувати</translation>
+        <translation>Скасувати</translation>
     </message>
 </context>
 <context>
