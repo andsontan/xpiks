@@ -412,7 +412,7 @@ ApplicationWindow {
                                         anchors.left: parent.left
                                         anchors.leftMargin: 5 + (keywordSizeSlider.value - 1)*10
                                         verticalAlignment: Text.AlignVCenter
-                                        text: "keyword"
+                                        text: qsTr("keyword", "standalone")
                                         color: Colors.defaultControlColor
                                         font.pixelSize: 12 * keywordSizeSlider.value
                                     }
