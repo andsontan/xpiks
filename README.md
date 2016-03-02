@@ -5,6 +5,8 @@ Cross-Platform Image Keywording Software
 
 Official website: http://ribtoks.github.io/xpiks/
 
+Translations: https://crowdin.com/project/xpiks/invite
+
 Xpiks is a free and open source keywording and uploading tool for microstock photographers and illustrators. It was written from scratch with aim to make it more usefull, convenient and quicker than existing tools.
 
 **Main features:**
@@ -32,11 +34,4 @@ Please see the INSTALL.md file
 
 **How to contribute**
 
-- read the CONTRIBUTOR_GUIDELINES.md file
-- Try to build Xpiks locally
-- Read [Xpiks Wiki pages](https://github.com/Ribtoks/xpiks/wiki) about architecture overview and others
-- open Issues page and select an issue (I'll provide you with all details and explanations as needed)
-- send your ideas and proposals in comments, issues or via email
-- send your pull requests
-
-C++ knowledge and experience in programming is required. Qt knowledge would be a plus.
+Please see the CONTRIBUTING.md file
