@@ -95,10 +95,10 @@ namespace Models {
         if (index == m_CurrentLanguageIndex) { return; }
 
         const QPair<QString, QString> &langPair = m_LanguagesList.at(index);
+        m_CurrentLanguageIndex = index;
 
         QDir languagesDir(m_TranslationsPath);
 
-        QLocale locale = QLocale(langPair.first);
         Models::SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
         settingsModel->setSelectedLocale(langPair.first);
         settingsModel->saveLocale();
@@ -121,6 +121,7 @@ namespace Models {
 
         qInfo() << "LanguagesModel::switchLanguage #" << "Switched to" << langPair.first;
         emit languageChanged();
+        emit dataChanged(this->index(0), this->index(m_LanguagesList.length() - 1));
     }
     
     QVariant LanguagesModel::data(const QModelIndex &index, int role) const {

@@ -628,7 +628,7 @@ ApplicationWindow {
                     anchors.verticalCenter: parent.verticalCenter
                     id: addDirectoryButton
                     text: i18.n + qsTr("Add directory")
-                    width: 120
+                    width: 110
                     onClicked: chooseDirectoryDialog.open()
                 }
 
@@ -637,7 +637,7 @@ ApplicationWindow {
                     anchors.left: addDirectoryButton.right
                     anchors.verticalCenter: parent.verticalCenter
                     text: i18.n + qsTr("Add files")
-                    width: 100
+                    width: 110
                     onClicked: chooseArtworksDialog.open()
                 }
             }
