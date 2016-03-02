@@ -31,6 +31,7 @@
 #include <QHash>
 #include <QQuickTextDocument>
 #include <QVector>
+#include <QQueue>
 #include "abstractlistmodel.h"
 #include "../Common/baseentity.h"
 #include "../Common/ibasicartwork.h"
@@ -122,6 +123,7 @@ namespace Models {
         int addLocalDirectories(const QList<QUrl> &directories);
         void itemModifiedChanged(bool) { updateModifiedCount(); }
         void spellCheckErrorsChanged();
+        void FileDeleted(QSet<QString> & paths);
 
     public:
         virtual void removeItemsAtIndices(const QVector<QPair<int, int> > &ranges);
@@ -160,6 +162,7 @@ namespace Models {
         void artworksChanged(bool needToMoveCurrentItem);
         void artworksAdded(int imagesCount, int vectorsCount);
         void selectedArtworkRemoved();
+        void ArtItemsDeleted();
 
     protected:
        virtual QHash<int, QByteArray> roleNames() const;
@@ -169,7 +172,7 @@ namespace Models {
 
     private:
         void doRemoveItemsAtIndices(QVector<int> &indicesToRemove);
-        void doRemoveItemsInRanges(const QVector<QPair<int, int> > &rangesToRemove);
+        void doRemoveItemsInRanges(const QVector<QPair<int, int> > &rangesToRemove,bool Backup=true);
         void getSelectedItemsIndices(QVector<int> &indices);
 
     private:

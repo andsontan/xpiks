@@ -27,8 +27,10 @@
 #include <QList>
 #include <QPair>
 #include <QSet>
+#include <QTimer>
 #include "abstractlistmodel.h"
 #include "../Common/baseentity.h"
+#include <QFileSystemWatcher>
 
 namespace Models {
     class ArtworksRepository : public AbstractListModel, public Common::BaseEntity {
@@ -37,7 +39,15 @@ namespace Models {
     public:
         ArtworksRepository(QObject *parent = 0) :
             AbstractListModel(parent)
-        {}
+        {
+            QObject::connect(&m_Fileswatcher, SIGNAL(fileChanged(const QString &)),
+                         this, SLOT(checkFileDeleted(const QString &) ) );
+            m_timer.setInterval(1000); //1 sec
+            m_timer.setSingleShot(false); //not single shot
+            QObject::connect(&m_timer, SIGNAL(timeout()), this, SLOT(onTimer()));
+            m_timer.start();
+
+        }
 
         ArtworksRepository(const ArtworksRepository &copy):
             AbstractListModel(),
@@ -45,7 +55,18 @@ namespace Models {
             m_DirectoriesList(copy.m_DirectoriesList),
             m_DirectoriesHash(copy.m_DirectoriesHash),
             m_FilesSet(copy.m_FilesSet)
-        {}
+        {
+
+            m_Fileswatcher.addPaths(copy.m_DirectoriesList);
+
+
+
+            QObject::connect(&m_Fileswatcher, SIGNAL(fileChanged(const QString &)),
+                          this, SLOT(checkFileDeleted(const QString &) ) );
+            m_timer.setInterval(1000); //1 sec
+            m_timer.setSingleShot(true); //not single shot
+            QObject::connect(&m_timer, SIGNAL(timeout()), this, SLOT(onTimer()));
+        }
 
         virtual ~ArtworksRepository() {}
 
@@ -71,10 +92,13 @@ namespace Models {
 
     signals:
         void artworksSourcesCountChanged();
+        void fileChanged(const QString & path);
+        void FileDeleted(QSet<QString> & paths);
 
     public slots:
         void fileSelectedChanged(const QString &filepath, bool isSelected) { setFileSelected(filepath, isSelected); }
-
+        void checkFileDeleted(const QString & path);
+        void onTimer();
     public:
         bool accountFile(const QString &filepath);
         bool removeFile(const QString &filepath, const QString &fileDirectory);
@@ -107,6 +131,9 @@ namespace Models {
         QHash<QString, int> m_DirectoriesHash;
         QSet<QString> m_FilesSet;
         QHash<QString, int> m_DirectoriesSelectedHash;
+        QFileSystemWatcher  m_Fileswatcher;
+        QTimer m_timer;
+        QSet<QString> m_DeletedFiles;
     };
 }
 

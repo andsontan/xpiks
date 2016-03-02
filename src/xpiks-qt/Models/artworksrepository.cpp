@@ -131,6 +131,9 @@ namespace Models {
                 occurances = m_DirectoriesHash[absolutePath];
             }
 
+            qInfo()<<"Tasha "<<filepath;
+            /*if (!occurances)*/ m_Fileswatcher.addPath(filepath);
+
             m_FilesSet.insert(filepath);
             m_DirectoriesHash[absolutePath] = occurances + 1;
             wasModified = true;
@@ -148,7 +151,7 @@ namespace Models {
 
             m_DirectoriesHash[fileDirectory] = occurances;
             m_DirectoriesSelectedHash[fileDirectory] = selectedCount;
-
+            m_Fileswatcher.removePath(filepath);
             m_FilesSet.remove(filepath);
             result = true;
         }
@@ -219,4 +222,23 @@ namespace Models {
 
         return exists;
     }
+
+    void ArtworksRepository::checkFileDeleted(const QString & path){
+     QFileInfo fi(path);
+     if (!fi.exists()){
+         m_DeletedFiles.insert(fi.absoluteFilePath());
+         m_timer.start();
+     }
+
+
+    }
+
+    void ArtworksRepository::onTimer(){
+
+        if (m_DeletedFiles.size()){
+            emit FileDeleted(m_DeletedFiles);
+        }
+    }
 }
+
+

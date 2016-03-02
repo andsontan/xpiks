@@ -426,4 +426,9 @@ namespace Models {
         delete info;
         m_ArtworksList.removeAt(row);
     }
+
+    void CombinedArtworksModel::ArtItemsDeleted(){
+     recombineArtworks();
+     emit artworksCountChanged();
+    }
 }

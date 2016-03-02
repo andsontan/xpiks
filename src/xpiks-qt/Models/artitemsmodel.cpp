@@ -843,8 +843,8 @@ namespace Models {
         doRemoveItemsInRanges(rangesToRemove);
     }
 
-    void ArtItemsModel::doRemoveItemsInRanges(const QVector<QPair<int, int> > &rangesToRemove) {
-        Commands::RemoveArtworksCommand *removeArtworksCommand = new Commands::RemoveArtworksCommand(rangesToRemove);
+    void ArtItemsModel::doRemoveItemsInRanges(const QVector<QPair<int, int> > &rangesToRemove, bool Backup) {
+        Commands::RemoveArtworksCommand *removeArtworksCommand = new Commands::RemoveArtworksCommand(rangesToRemove,Backup);
         Commands::ICommandResult *result = m_CommandManager->processCommand(removeArtworksCommand);
         delete result;
     }
@@ -862,5 +862,23 @@ namespace Models {
     void ArtItemsModel::fillStandardRoles(QVector<int> &roles) const {
         roles << ArtworkDescriptionRole << IsModifiedRole <<
                  ArtworkTitleRole << KeywordsCountRole << HasVectorAttachedRole;
+    }
+
+    void ArtItemsModel::FileDeleted(QSet<QString> & paths){
+        QVector<int> indicesToRemove;
+        indicesToRemove.reserve(paths.size());
+        int count = m_ArtworkList.length();
+        for (int i = 0; i < count; ++i) {
+            if (paths.contains(m_ArtworkList.at(i)->getFilepath())) {
+                indicesToRemove.append(i);
+                paths.remove(m_ArtworkList.at(i)->getFilepath());
+           }
+        }
+
+        qSort(indicesToRemove);
+        QVector<QPair<int, int> > rangesToRemove;
+        Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
+        doRemoveItemsInRanges(rangesToRemove,0);
+        emit ArtItemsDeleted();
     }
 }

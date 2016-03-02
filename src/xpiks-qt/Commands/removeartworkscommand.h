@@ -31,9 +31,10 @@ namespace Commands {
     class RemoveArtworksCommand : public CommandBase
     {
     public:
-        RemoveArtworksCommand(const QVector<QPair<int, int> > &rangesToRemove):
+        RemoveArtworksCommand(const QVector<QPair<int, int> > &rangesToRemove, bool Backup=true):
             CommandBase(RemoveArtworksCommandType),
-            m_RangesToRemove(rangesToRemove)
+            m_RangesToRemove(rangesToRemove),
+            m_Backup(Backup)
         {
         }
 
@@ -42,6 +43,7 @@ namespace Commands {
 
     private:
         QVector<QPair<int, int> > m_RangesToRemove;
+        bool m_Backup;
     };
 
     class RemoveArtworksCommandResult : public CommandResult {
