@@ -31,6 +31,7 @@
 #include "../Common/flags.h"
 #include "../SpellCheck/ispellcheckable.h"
 #include "../Helpers/indiceshelper.h"
+#include "../Common/defines.h"
 
 namespace Models {
     FilteredArtItemsProxyModel::FilteredArtItemsProxyModel(QObject *parent) :

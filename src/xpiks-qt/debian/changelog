@@ -1,3 +1,18 @@
+xpiks (1.2-1) UNRELEASED; urgency=medium
+
+    **Major features of this release:**
+
+    - switching between list and grid view options
+    - ability to explicitly attach vectors to previews
+    - automatic exiftool detection for OS X users
+    - upload progress reporting in taskbar on Windows
+    - ability to correctly upload vectors to Dreamtimes (to the 'additional' directory)
+    - larger description field in all popups
+    - logs are now highlighted
+
+ -- Artiom.M <a.mv@gmx.fr>  Wed, 2 Mar 2016 08:00:00 +0200
+
+
 xpiks (1.1.4-1) UNRELEASED; urgency=medium
 
     **Xpiks 1.1 bugfix update 4**. Fixes:

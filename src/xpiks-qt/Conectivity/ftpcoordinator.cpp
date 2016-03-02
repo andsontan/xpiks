@@ -31,6 +31,7 @@
 #include "curlftpuploader.h"
 #include "uploadcontext.h"
 #include "ftpuploaderworker.h"
+#include "../Common/defines.h"
 
 #include <curl/curl.h>
 

@@ -38,6 +38,7 @@
 #include "../SpellCheck/spellcheckiteminfo.h"
 #include "../Common/flags.h"
 #include "../Commands/combinededitcommand.h"
+#include "../Common/defines.h"
 
 namespace Models {
     ArtItemsModel::ArtItemsModel(QObject *parent):
