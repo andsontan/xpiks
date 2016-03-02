@@ -73,6 +73,18 @@ Item {
         }
     }
 
+    MessageDialog {
+        id: deletionFilesDetected
+        title: "Warning"
+        text: qsTr("Some files you have been working on do not exist anymore! Xpiks will remove them from the workflow.")
+        standardButtons: StandardButton.Yes
+        onYes: {
+            doRemoveDeletedArtworks()
+            closePopup()
+        }
+    }
+
+
     function doRemoveSelectedArtworks() {
         combinedArtworks.removeSelectedArtworks()
         if (combinedArtworks.artworksCount === 0) {
