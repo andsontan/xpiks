@@ -1254,7 +1254,7 @@ All upload hosts&apos; passwords will be purged.</source>
         <location filename="../main.qml" line="639"/>
         <location filename="../main.qml" line="1901"/>
         <source>Add files</source>
-        <translation>Додати файли</translation>
+        <translation>Додайте файли</translation>
     </message>
     <message>
         <location filename="../main.qml" line="784"/>

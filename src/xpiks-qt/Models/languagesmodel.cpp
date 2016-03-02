@@ -92,6 +92,7 @@ namespace Models {
     }
 
     void LanguagesModel::switchLanguage(int index) {
+        qDebug() << "LanguagesModel::switchLanguage #" << "index" << index;
         if (index == m_CurrentLanguageIndex) { return; }
 
         const QPair<QString, QString> &langPair = m_LanguagesList.at(index);

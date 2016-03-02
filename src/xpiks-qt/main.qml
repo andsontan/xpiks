@@ -636,7 +636,7 @@ ApplicationWindow {
                     anchors.leftMargin: 10
                     anchors.left: addDirectoryButton.right
                     anchors.verticalCenter: parent.verticalCenter
-                    text: i18.n + qsTr("Add files")
+                    text: i18.n + qsTr("Add files", "button")
                     width: 110
                     onClicked: chooseArtworksDialog.open()
                 }
@@ -1898,7 +1898,7 @@ ApplicationWindow {
                             }
 
                             StyledText {
-                                text: i18.n + qsTr("Add files")
+                                text: i18.n + qsTr("Add files", "link")
                                 color: addFilesMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
 
                                 MouseArea {
