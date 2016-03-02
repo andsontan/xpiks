@@ -650,7 +650,7 @@ ApplicationWindow {
 
             Rectangle {
                 Layout.fillHeight: true
-                width: 250
+                width: 270
 
                 color: Colors.defaultControlColor
 

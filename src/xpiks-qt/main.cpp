@@ -52,7 +52,6 @@
 #include "Helpers/helpersqmlwrapper.h"
 #include "Encryption/secretsmanager.h"
 #include "Models/artworksrepository.h"
-#include "Helpers/settingsprovider.h"
 #include "Warnings/warningsservice.h"
 #include "UndoRedo/undoredomanager.h"
 #include "Helpers/clipboardhelper.h"
@@ -305,9 +304,9 @@ int main(int argc, char *argv[]) {
     uploadInfoRepository.initFromString(appSettings.value(Constants::UPLOAD_HOSTS, "").toString());
     recentDirectorieModel.deserializeFromSettings(appSettings.value(Constants::RECENT_DIRECTORIES, "").toString());
 
-    Helpers::SettingsProvider::getInstance().setSettingsModelInstance(&settingsModel);
-
     commandManager.connectEntitiesSignalsSlots();
+
+    languagesModel.initFirstLanguage();
 
     qmlRegisterType<Helpers::ClipboardHelper>("xpiks", 1, 0, "ClipboardHelper");
 

@@ -50,6 +50,7 @@ namespace Models {
         void languageChanged();
 
     public:
+        void initFirstLanguage();
         Q_INVOKABLE void loadLanguages();
         Q_INVOKABLE void switchLanguage(int index);
 
@@ -62,13 +63,14 @@ namespace Models {
 
     private:
         void loadTranslators(const QDir &dir, const QString &selectedLocale);
+        QString getTranslationsPath() const;
 
     private:
         QVector<QPair<QString, QString> > m_LanguagesList;
         QTranslator *m_XpiksTranslator;
         QTranslator *m_QtTranslator;
-        QString m_LanguagesDirectory;
         QString m_EmptyString;
+        QString m_TranslationsPath;
         int m_CurrentLanguageIndex;
     };
 }

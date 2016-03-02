@@ -37,10 +37,7 @@ namespace Models {
     {
         m_XpiksTranslator = new QTranslator(this);
         m_QtTranslator = new QTranslator(this);
-    }
 
-    void LanguagesModel::loadLanguages() {
-        //QCoreApplication *app = QCoreApplication::instance();
         QString translationsPath;
 #if !defined(Q_OS_LINUX)
         translationsPath = QCoreApplication::applicationDirPath();
@@ -51,13 +48,47 @@ namespace Models {
 #endif
 #endif
 
+        m_TranslationsPath = translationsPath;
+    }
+
+    void LanguagesModel::initFirstLanguage() {
+        Models::SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
+        QString selectedLocale = settingsModel->getSelectedLocale();
+
+        QDir languagesDir(m_TranslationsPath);
+        QCoreApplication *app = QCoreApplication::instance();
+
+        QString qtTranslatorPath = languagesDir.filePath(QString("qt_%1.qm").arg(selectedLocale));
+        if (m_QtTranslator->load(qtTranslatorPath)) {
+            qDebug() << "LanguagesModel::initFirstLanguage #" << "Loaded" << qtTranslatorPath;
+            app->installTranslator(m_QtTranslator);
+        }
+
+        QString xpiksTranslatorPath = languagesDir.filePath(QString("xpiks_%1.qm").arg(selectedLocale));
+        if (m_XpiksTranslator->load(xpiksTranslatorPath)) {
+            qDebug() << "LanguagesModel::initFirstLanguage #" << "Loaded" << xpiksTranslatorPath;
+            app->installTranslator(m_XpiksTranslator);
+        } else {
+            selectedLocale = "en_US";
+            settingsModel->setSelectedLocale(selectedLocale);
+            settingsModel->saveLocale();
+
+            xpiksTranslatorPath = languagesDir.filePath(QLatin1String("xpiks_en_US.qm"));
+            if (m_XpiksTranslator->load(xpiksTranslatorPath)) {
+                qDebug() << "LanguagesModel::initFirstLanguage #" << "Loaded" << xpiksTranslatorPath;
+                app->installTranslator(m_XpiksTranslator);
+            }
+        }
+
+        qInfo() << "LanguagesModel::initFirstLanguage #" << "Switched to" << selectedLocale;
+    }
+
+    void LanguagesModel::loadLanguages() {
         Models::SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
         QString selectedLocale = settingsModel->getSelectedLocale();
 
         qDebug() << "LanguagesModel::loadTranslators #" << "Current locale is" << selectedLocale;
-
-        m_LanguagesDirectory = translationsPath;
-        loadTranslators(QDir(m_LanguagesDirectory), selectedLocale);
+        loadTranslators(QDir(m_TranslationsPath), selectedLocale);
     }
 
     void LanguagesModel::switchLanguage(int index) {
@@ -65,7 +96,7 @@ namespace Models {
 
         const QPair<QString, QString> &langPair = m_LanguagesList.at(index);
 
-        QDir languagesDir(m_LanguagesDirectory);
+        QDir languagesDir(m_TranslationsPath);
 
         QLocale locale = QLocale(langPair.first);
         Models::SettingsModel *settingsModel = m_CommandManager->getSettingsModel();

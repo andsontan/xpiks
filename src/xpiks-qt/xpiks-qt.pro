@@ -153,7 +153,6 @@ HEADERS += \
     Helpers/keywordvalidator.h \
     Helpers/helpersqmlwrapper.h \
     Models/recentdirectoriesmodel.h \
-    Helpers/settingsprovider.h \
     Common/version.h \
     Suggestion/locallibrary.h \
     Suggestion/libraryqueryworker.h \
