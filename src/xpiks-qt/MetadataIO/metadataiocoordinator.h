@@ -26,6 +26,7 @@
 #include <QVector>
 #include <QFutureWatcher>
 #include "../Common/baseentity.h"
+#include "../Common/defines.h"
 
 namespace Models {
     class ArtworkMetadata;

@@ -308,15 +308,15 @@ win32 {
     INCLUDEPATH += "../libcurl/include"
     LIBS -= -lcurl
 
-CONFIG(debug, debug|release) {
-    EXE_DIR = debug
-    LIBS += -llibcurl_debug
-}
+    CONFIG(debug, debug|release) {
+	EXE_DIR = debug
+        LIBS += -llibcurl_debug
+    }
 
-CONFIG(release, debug|release) {
-    EXE_DIR = release
-    LIBS += -llibcurl
-}
+    CONFIG(release, debug|release) {
+        EXE_DIR = release
+        LIBS += -llibcurl
+    }
 
     copywhatsnew.commands = $(COPY_FILE) \"$$shell_path($$PWD/whatsnew.txt)\" \"$$shell_path($$OUT_PWD/$$EXE_DIR/)\"
     copyterms.commands = $(COPY_FILE) \"$$shell_path($$PWD/terms_and_conditions.txt)\" \"$$shell_path($$OUT_PWD/$$EXE_DIR/)\"
@@ -329,28 +329,33 @@ CONFIG(release, debug|release) {
 }
 
 linux-g++-64 {
+    message("for Linux")
     target.path=/usr/bin/
     QML_IMPORT_PATH += /usr/lib/x86_64-linux-gnu/qt5/imports/
-    UNAME = $$system(cat /proc/version)
     #DEFINES -= TELEMETRY_ENABLED
+    LIBS += -L/lib/x86_64-linux-gnu/
 
-    contains(UNAME, Debian): {
-        message("on Debian Linux")
-        LIBS += -L/lib/x86_64-linux-gnu/
+    UNAME = $$system(cat /proc/version | tr -d \'()\')
+    contains( UNAME, Debian ) {
+        message("distribution : Debian")
         LIBS -= -lquazip # temporary static link
         LIBS += /usr/lib/x86_64-linux-gnu/libquazip-qt5.a
     }
-    contains(UNAME, SUSE): {
-        message("on SUSE Linux")
+    contains( UNAME, SUSE ) {
+        message("distribution : SUSE")
+    }
+
+
+}
+
+linux-qtcreator {
+        message("in QtCreator")
         LIBS += -L/usr/lib64/
         LIBS += /usr/lib64/libcurl.so.4
         copywhatsnew.commands = $(COPY_FILE) "$$PWD/whatsnew.txt" "$$OUT_PWD/"
         copyterms.commands = $(COPY_FILE) "$$PWD/terms_and_conditions.txt" "$$OUT_PWD/"
         QMAKE_EXTRA_TARGETS += copywhatsnew copyterms
 	POST_TARGETDEPS += copywhatsnew copyterms
-    }
-
-
 }
 
 linux-static {
