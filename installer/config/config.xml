@@ -9,4 +9,6 @@
 	<RunProgram>@TargetDir@/xpiks-qt.exe</RunProgram>
 	<InstallerApplicationIcon>xpiks-qt</InstallerApplicationIcon>
 	<InstallerWindowIcon>xpiks-qt.png</InstallerWindowIcon>
+	<Watermark>xpiks-watermark.png</Watermark>
+	<WizardStyle>Modern</WizardStyle>
 </Installer>
