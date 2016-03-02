@@ -57,6 +57,7 @@ namespace Models {
 
         QDir languagesDir(m_TranslationsPath);
         QCoreApplication *app = QCoreApplication::instance();
+        Q_UNUSED(app);
 
         QString qtTranslatorPath = languagesDir.filePath(QString("qt_%1.qm").arg(selectedLocale));
         if (m_QtTranslator->load(qtTranslatorPath)) {
@@ -105,6 +106,7 @@ namespace Models {
         settingsModel->saveLocale();
 
         QCoreApplication *app = QCoreApplication::instance();
+        Q_UNUSED(app);
         app->removeTranslator(m_QtTranslator);
         app->removeTranslator(m_XpiksTranslator);
 
@@ -167,10 +169,13 @@ namespace Models {
 
             if (selectedLocale == locale) { m_CurrentLanguageIndex = lastIndex; }
 
-            QString lang = QLocale::languageToString(QLocale(locale).language());
+            QLocale localeVar(locale);
+            QString lang = QLocale::languageToString(localeVar.language());
+            QString nativeLang = localeVar.nativeLanguageName();
+            nativeLang.replace(0, 1, nativeLang[0].toUpper());
 
             beginInsertRows(QModelIndex(), lastIndex, lastIndex);
-            m_LanguagesList << qMakePair(locale, lang);
+            m_LanguagesList << qMakePair(locale, QString("%1 (%2)").arg(nativeLang).arg(lang));
             endInsertRows();
 
             lastIndex++;
