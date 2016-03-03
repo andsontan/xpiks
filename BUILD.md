@@ -1,15 +1,14 @@
 **How to build:**
 
-***Prepare source tree***
+***Prepare the source tree***
 
 - git clone Xpiks repo
 - git submodule init & git submodule update - update tinyAES repo
 - rename tinyAES/aes.c to tinyAES/aes.cpp
 - ensure you have `git` available in your PATH
 
-If you want to create Xpiks executable for everyday usage, before each `Run qmake` step described below, select `Release` in Qt Creator. Select `Debug` (the default) in all other cases.
+***Mac OS X / Windows : build third-parties***
 
-***Obtain and build third-parties***
 - download **Hunspell 1.3.3** from http://hunspell.sourceforge.net/ and extract it in the `src/` directory
 - open project `src/hunspell/hunspell.pro` in Qt Creator, execute `Run qmake`, execute `Build`
 - copy builded library (e.g. `libhunspell.a`) from the build directory to the `src/libs` directory
@@ -21,15 +20,23 @@ If you want to create Xpiks executable for everyday usage, before each `Run qmak
 - [windows] do `git clone https://github.com/blackrosezy/build-libcurl-windows.git` and execute `build.bat`
 - [windows] copy contests of `lib/dll-debug-x64` contents to the `src/libs/` directory
 
-***Linux build***
 
-Install `libcurl-devel`, `hunspell-devel`, `quazip-devel` package (or alternative development packages for your distribution).
-
-***Generic build***
-
-- install Qt 5.4 or later from official website
+***Manual build***
+- install Qt 5.4 or later from official website (or 5.2 or later from repository in case of Linux)
+- [linux] install development packages for `lubcurl`, `hunspell`, `quazip`, `zlib` 
+- [linux] install `exiftool`
 - open main project in Qt Creator, execute `Run qmake`, execute `Build`
 - you can open, build and run tests project (`src/xpiks-tests/xpiks-tests.pro`) additionally
+
+If you want to create Xpiks executable for everyday usage, before each `Run qmake` step described below, select `Release` in Qt Creator. Select `Debug` (the default) in all other cases.
+
+**Linux package build**
+
+This chapter assumes that you have installed generic development packages for your OS.
+
+***Additional requirements***
+
+In some cases you neet to install `libcurl-devel`, `hunspell-devel`, `quazip-devel` packages (they can have slightly different names in your distribution) if it is not installed as a build requirement.
 
 ***Debian package build***
 
@@ -37,9 +44,14 @@ Install `libcurl-devel`, `hunspell-devel`, `quazip-devel` package (or alternativ
 - cd to _xpiks-qt_ subdirectory
 - `debuild -i -us -uc -b`
 
-***OpenSUSE build***
-- in the _xpiks-qt.pro_ file in the _linux-g++-x64_ section comment out quazip static library paths
-- build _quazip_ separately and add path to the built .a file
+***OpenSUSE RPM build***
+
+- Install rpmbuild.
+- Create _~/rpmbuild/{RPMS,SRPMS,SPECS,BUILD,BUILDROOT,SOURCES}_
+- Create a tar.gz from the source tree containing only _xpiks-qt_ and _tiny-aes_ folders
+- Drop this source tarball in _~/rpmbuild/SOURCES_
+- Drop the the spec file found in xpiks-qt/rpm folder in _~/rpmbuild/SPECS_
+- `rpmbuild -ba ~/rpmbuild/SPECS/xpiks.spec`
 
 ***More***
 
