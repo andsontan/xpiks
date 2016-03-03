@@ -235,7 +235,7 @@ namespace Models {
     void ArtworksRepository::onTimer(){
 
         if (m_DeletedFiles.size()){
-            emit FileDeleted(m_DeletedFiles);
+            emit fileDeleted(m_DeletedFiles);
         }
     }
 }

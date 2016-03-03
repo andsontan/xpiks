@@ -158,7 +158,7 @@ namespace Models {
     private slots:
         void spellCheckErrorsChangedHandler();
     public slots:
-        void ArtItemsDeleted();
+        void onFileDeletedHandler();
 
     public:
         enum CombinedArtworksModelRoles {

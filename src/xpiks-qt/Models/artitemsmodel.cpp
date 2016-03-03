@@ -864,7 +864,7 @@ namespace Models {
                  ArtworkTitleRole << KeywordsCountRole << HasVectorAttachedRole;
     }
 
-    void ArtItemsModel::FileDeleted(QSet<QString> & paths){
+    void ArtItemsModel::onFilesDeletedHandler(QSet<QString> & paths){
         QVector<int> indicesToRemove;
         indicesToRemove.reserve(paths.size());
         int count = m_ArtworkList.length();
@@ -879,6 +879,6 @@ namespace Models {
         QVector<QPair<int, int> > rangesToRemove;
         Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
         doRemoveItemsInRanges(rangesToRemove,0);
-        emit ArtItemsDeleted();
+        emit fileDeleted();
     }
 }

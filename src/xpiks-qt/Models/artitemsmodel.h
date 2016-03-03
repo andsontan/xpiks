@@ -123,7 +123,7 @@ namespace Models {
         int addLocalDirectories(const QList<QUrl> &directories);
         void itemModifiedChanged(bool) { updateModifiedCount(); }
         void spellCheckErrorsChanged();
-        void FileDeleted(QSet<QString> & paths);
+        void onFilesDeletedHandler(QSet<QString> & paths);
 
     public:
         virtual void removeItemsAtIndices(const QVector<QPair<int, int> > &ranges);
@@ -162,7 +162,7 @@ namespace Models {
         void artworksChanged(bool needToMoveCurrentItem);
         void artworksAdded(int imagesCount, int vectorsCount);
         void selectedArtworkRemoved();
-        void ArtItemsDeleted();
+        void fileDeleted();
 
     protected:
        virtual QHash<int, QByteArray> roleNames() const;

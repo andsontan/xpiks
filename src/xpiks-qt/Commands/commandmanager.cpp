@@ -198,9 +198,9 @@ void Commands::CommandManager::connectEntitiesSignalsSlots() const {
 
     QObject::connect(m_SpellCheckerService, SIGNAL(serviceAvailable(bool)),
                      m_FilteredItemsModel, SLOT(onSpellCheckerAvailable(bool)));
-    QObject::connect(m_ArtworksRepository, SIGNAL(FileDeleted(QSet<QString> &)),
-                     m_ArtItemsModel, SLOT(FileDeleted(QSet<QString> &)));
-    QObject::connect(m_ArtItemsModel,SIGNAL(ArtItemsDeleted()),m_CombinedArtworksModel,SLOT(ArtItemsDeleted()));
+    QObject::connect(m_ArtworksRepository, SIGNAL(fileDeleted(QSet<QString> &)),
+                     m_ArtItemsModel, SLOT(onFilesDeletedHandler(QSet<QString> &)));
+    QObject::connect(m_ArtItemsModel,SIGNAL(fileDeleted()),m_CombinedArtworksModel,SLOT(onFileDeletedHandler()));
 }
 
 void Commands::CommandManager::ensureDependenciesInjected() {

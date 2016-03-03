@@ -93,7 +93,7 @@ namespace Models {
     signals:
         void artworksSourcesCountChanged();
         void fileChanged(const QString & path);
-        void FileDeleted(QSet<QString> & paths);
+        void fileDeleted(QSet<QString> & paths);
 
     public slots:
         void fileSelectedChanged(const QString &filepath, bool isSelected) { setFileSelected(filepath, isSelected); }
