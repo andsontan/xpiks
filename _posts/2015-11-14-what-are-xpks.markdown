@@ -13,3 +13,8 @@ In case of any emergency (blackout, application crash, OS crash, misclick, exift
 So even if you don't have the exiftool installed (e.g. network unreachable) you can fill metadata of your files which will be backed up in the xpks files. After you will get the exiftool you can resave all your files to get metadata written to files.
 
 If you don't like to have those backups you can easily turn them off in Settings in the Behavior tab, but my recomendation is to always have them available. They saved my butt much more than once.
+
+Please also check out this video:
+
+<iframe src="https://player.vimeo.com/video/155427686" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+<p><a href="https://vimeo.com/155427686">Effective backups with Xpiks</a> from <a href="https://vimeo.com/user16537965">Taras Kushnir</a> on <a href="https://vimeo.com">Vimeo</a>.</p>
