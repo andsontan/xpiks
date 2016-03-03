@@ -186,7 +186,7 @@ int main(int argc, char *argv[]) {
     Models::LogsModel logsModel;
     logsModel.startLogging();
 
-    qSetMessagePattern("%{time hh:mm:ss.zzz} %{type} %{threadid} %{function} %{message}");
+    qSetMessagePattern("%{time hh:mm:ss.zzz} %{type} T#%{threadid} %{function} - %{message}");
     qInstallMessageHandler(myMessageHandler);
 
     LOG_INFO << "Log started. Today is" << QDateTime::currentDateTimeUtc().toString("dd.MM.yyyy");
