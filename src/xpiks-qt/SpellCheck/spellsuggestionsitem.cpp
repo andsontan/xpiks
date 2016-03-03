@@ -20,7 +20,6 @@
  */
 
 #include "spellsuggestionsitem.h"
-#include <QDebug>
 #include "ispellcheckable.h"
 #include "../Common/defines.h"
 
@@ -155,7 +154,7 @@ namespace SpellCheck {
     }
 
     void KeywordSpellSuggestions::replaceToSuggested(ISpellCheckable *item, const QString &word, const QString &replacement) {
-        qInfo() << "KeywordSpellSuggestions::replaceToSuggested #" << word << "-->" << replacement;
+        LOG_INFO << word << "-->" << replacement;
         item->replaceKeyword(m_OriginalIndex, word, replacement);
     }
 
@@ -173,7 +172,7 @@ namespace SpellCheck {
     }
 
     void DescriptionSpellSuggestions::replaceToSuggested(ISpellCheckable *item, const QString &word, const QString &replacement) {
-        qInfo() << "DescriptionSpellSuggestions::replaceToSuggested #" << word << "-->" << replacement;
+        LOG_INFO << word << "-->" << replacement;
         item->replaceWordInDescription(word, replacement);
     }
 
@@ -191,7 +190,7 @@ namespace SpellCheck {
     }
 
     void TitleSpellSuggestions::replaceToSuggested(ISpellCheckable *item, const QString &word, const QString &replacement) {
-        qInfo() << "TitleSpellSuggestions::replaceToSuggested #" << word << "-->" << replacement;
+        LOG_INFO << word << "-->" << replacement;
         item->replaceWordInTitle(word, replacement);
     }
 
@@ -216,7 +215,7 @@ namespace SpellCheck {
 
     void CombinedSpellSuggestions::replaceToSuggested(ISpellCheckable *item, const QString &word, const QString &replacement) {
         int size = m_SpellSuggestions.length();
-        qInfo() << "CombinedSpellSuggestions::replaceToSuggested #" << size << "item(s)";
+        LOG_INFO << size << "item(s)";
 
         for (int i = 0; i < size; ++i) {
             SpellSuggestionsItem *suggestionItem = m_SpellSuggestions.at(i);

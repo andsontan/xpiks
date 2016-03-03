@@ -19,7 +19,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QDebug>
 #include <QFileInfo>
 #include <QVector>
 #include <QHash>
@@ -62,7 +61,7 @@ int findAndAttachVectors(const QVector<Models::ArtworkMetadata*> &artworksList, 
 }
 
 Commands::CommandResult *Commands::AddArtworksCommand::execute(const ICommandManager *commandManagerInterface) const {
-    qDebug() << "AddArtworksCommand::execute #" << m_FilePathes.length() << "images," << m_VectorsPathes.length() << "vectors";
+    LOG_DEBUG << m_FilePathes.length() << "images," << m_VectorsPathes.length() << "vectors";
     CommandManager *commandManager = (CommandManager*)commandManagerInterface;
 
     Models::ArtworksRepository *artworksRepository = commandManager->getArtworksRepository();
@@ -76,7 +75,7 @@ Commands::CommandResult *Commands::AddArtworksCommand::execute(const ICommandMan
     artworksToImport.reserve(newFilesCount);
 
     if (newFilesCount > 0) {
-        qInfo() << "AddArtworksCommand::execute #" << newFilesCount << "new files found";
+        LOG_INFO << newFilesCount << "new files found";
         artItemsModel->beginAccountingFiles(newFilesCount);
 
         int count = m_FilePathes.count();
@@ -137,7 +136,7 @@ Commands::CommandResult *Commands::AddArtworksCommand::execute(const ICommandMan
 
 void Commands::AddArtworksCommand::decomposeVectors(QHash<QString, QHash<QString, QString> > &vectors) const {
     int size = m_VectorsPathes.size();
-    qDebug() << "AddArtworksCommand::decomposeVectors #" << size << "item(s)";
+    LOG_DEBUG << size << "item(s)";
 
     for (int i = 0; i < size; ++i) {
         const QString &path = m_VectorsPathes.at(i);

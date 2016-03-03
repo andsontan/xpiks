@@ -20,8 +20,6 @@
  */
 
 #include "metadataiocoordinator.h"
-#include <QThread>
-#include <QDebug>
 #include <QHash>
 #include <QFutureWatcher>
 #include <QtConcurrent>
@@ -36,6 +34,7 @@
 #include "../Suggestion/locallibrary.h"
 #include "saverworkerjobitem.h"
 #include "../Models/settingsmodel.h"
+#include "../Common/defines.h"
 
 namespace MetadataIO {
     bool tryGetExiftoolVersion(const QString &path, QString &version) {
@@ -74,7 +73,7 @@ namespace MetadataIO {
     }
 
     void MetadataIOCoordinator::readingWorkerFinished(bool success) {
-        qDebug() << "MetadataIOCoordinator::readingWorkerFinished #" << success;
+        LOG_DEBUG << success;
 
         if (m_CanProcessResults) {
             readingFinishedHandler(m_IgnoreBackupsAtImport);
@@ -91,13 +90,13 @@ namespace MetadataIO {
 
     void MetadataIOCoordinator::exiftoolDiscoveryFinished() {
         if (!m_ExiftoolNotFound && !m_RecommendedExiftoolPath.isEmpty()) {
-            qDebug() << "MetadataIOCoordinator::exiftoolDiscoveryFinished #" << "Recommended exiftool path is" << m_RecommendedExiftoolPath;
+            LOG_DEBUG << "Recommended exiftool path is" << m_RecommendedExiftoolPath;
 
             Models::SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
             QString existingExiftoolPath = settingsModel->getExifToolPath();
 
             if (existingExiftoolPath != m_RecommendedExiftoolPath) {
-                qInfo() << "MetadataIOCoordinator::exiftoolDiscoveryFinished #" << "Setting exiftool path to recommended";
+                LOG_INFO << "Setting exiftool path to recommended";
                 settingsModel->setExifToolPath(m_RecommendedExiftoolPath);
                 settingsModel->saveExiftool();
             }
@@ -127,7 +126,7 @@ namespace MetadataIO {
         m_IsImportInProgress = true;
         setProcessingItemsCount(artworksToRead.length());
 
-        qDebug() << "MetadataIOCoordinator::readMetadata #" << "Starting thread...";
+        LOG_DEBUG << "Starting thread...";
         thread->start();
     }
 
@@ -148,7 +147,7 @@ namespace MetadataIO {
         QObject::connect(this, SIGNAL(metadataWritingFinished()), m_WritingWorker, SIGNAL(stopped()));
         setProcessingItemsCount(artworksToWrite.length());
 
-        qDebug() << "MetadataIOCoordinator::writeMetadata #" << "Starting thread...";
+        LOG_DEBUG << "Starting thread...";
         thread->start();
     }
 
@@ -162,7 +161,7 @@ namespace MetadataIO {
 
     void MetadataIOCoordinator::discardReading() {
         emit discardReadingSignal();
-        qDebug() << "MetadataIOCoordinator::discardReading #" << "Reading results discarded";
+        LOG_DEBUG << "Reading results discarded";
     }
 
     void MetadataIOCoordinator::readMetadata(bool ignoreBackups) {
@@ -182,7 +181,7 @@ namespace MetadataIO {
         const QHash<QString, ImportDataResult> &importResult = m_ReadingWorker->getImportResult();
         const QVector<Models::ArtworkMetadata*> &itemsToRead = m_ReadingWorker->getArtworksToImport();
 
-        qDebug() << "MetadataIOCoordinator::readingFinishedHandler #" << "Setting imported metadata...";
+        LOG_DEBUG  << "Setting imported metadata...";
         int size = itemsToRead.size();
         for (int i = 0; i < size; ++i) {
             Models::ArtworkMetadata *metadata = itemsToRead.at(i);
@@ -200,7 +199,7 @@ namespace MetadataIO {
 
         afterImportHandler(itemsToRead, ignoreBackups);
 
-        qDebug() << "MetadataIOCoordinator::readingFinishedHandler #" << "Metadata import finished";
+        LOG_DEBUG << "Metadata import finished";
         emit metadataReadingFinished();
     }
 
@@ -210,7 +209,7 @@ namespace MetadataIO {
         const QVector<QPair<int, int> > &rangesToUpdate = m_ReadingWorker->getRangesToUpdate();
 
         if (!ignoreBackups && settingsModel->getSaveBackups()) {
-            qDebug() << "MetadataIOCoordinator::afterImportHandler #" << "Restoring the backups...";
+            LOG_DEBUG << "Restoring the backups...";
             int size = itemsToRead.size();
             for (int i = 0; i < size; ++i) {
                 Models::ArtworkMetadata *metadata = itemsToRead.at(i);
@@ -223,7 +222,7 @@ namespace MetadataIO {
                 }
             }
         } else {
-            qDebug() << "MetadataIOCoordinator::afterImportHandler #" << "Skipped restoring the backups";
+            LOG_DEBUG << "Skipped restoring the backups";
         }
 
         m_CommandManager->addToLibrary(itemsToRead);
@@ -233,7 +232,7 @@ namespace MetadataIO {
     }
 
     void MetadataIOCoordinator::tryToLaunchExiftool(const QString &settingsExiftoolPath) {
-        qDebug() << "MetadataIOCoordinator::tryToLaunchExiftool #" << "Default path is" << settingsExiftoolPath;
+        LOG_DEBUG << "Default path is" << settingsExiftoolPath;
         // SHOULD BE UNDER DEFINE OS X
         QStringList possiblePaths;
         possiblePaths << settingsExiftoolPath << "/usr/bin/exiftool" << "/usr/local/bin/exiftool";
@@ -242,11 +241,11 @@ namespace MetadataIO {
         QString exiftoolVersion;
 
         foreach (const QString &path, possiblePaths) {
-            qDebug() << "MetadataIOCoordinator::tryToLaunchExiftool #" << "Trying path" << path;
+            LOG_DEBUG << "Trying path" << path;
             QFileInfo fi(path);
             if (fi.exists()) {
                 if (tryGetExiftoolVersion(path, exiftoolVersion)) {
-                    qInfo() << "MetadataIOCoordinator::tryToLaunchExiftool #" << "Exiftool version:" << exiftoolVersion;
+                    LOG_INFO << "Exiftool version:" << exiftoolVersion;
                     exiftoolPath = path;
                     break;
                 }
@@ -255,9 +254,9 @@ namespace MetadataIO {
 
         if (exiftoolPath.isEmpty()) {
             const QString path = "exiftool";
-            qDebug() << "MetadataIOCoordinator::tryToLaunchExiftool #" << "Trying ordinary exiftool in PATH";
+            LOG_DEBUG << "Trying ordinary exiftool in PATH";
             if (tryGetExiftoolVersion(path, exiftoolVersion)) {
-                qInfo() << "MetadataIOCoordinator::tryToLaunchExiftool #" << "Exiftool version:" << exiftoolVersion;
+                LOG_INFO << "Exiftool version:" << exiftoolVersion;
                 exiftoolPath = path;
             }
         }

@@ -23,6 +23,9 @@
 #define DEFINES
 
 #include <QtGlobal>
+#include <QThread>
+#include <QDebug>
+#include <QDateTime>
 
 #ifdef QT_NO_DEBUG
 #define WITH_LOGS
@@ -37,6 +40,10 @@
 #if (QT_VERSION <= QT_VERSION_CHECK(5, 4, 2))
 #define qInfo qDebug
 #endif
+
+#define LOG_DEBUG qDebug()
+#define LOG_INFO qInfo()
+#define LOG_WARNING qWarning()
 
 #endif // DEFINES
 

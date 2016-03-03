@@ -59,14 +59,14 @@ ApplicationWindow {
     }
 
     function closeHandler(close) {
-        console.info("UI::main # closeHandler")
+        console.info("closeHandler")
         saveRecentDirectories()
 
         if (artItemsModel.modifiedArtworksCount > 0) {
             close.accepted = false
             configExitDialog.open()
         } else {
-            console.debug("UI::main # No modified artworks found. Exiting...")
+            console.debug("No modified artworks found. Exiting...")
             shutdownEverything()
             close.accepted = false
         }
@@ -81,7 +81,7 @@ ApplicationWindow {
     }
 
     function saveAppGeometry() {
-        console.debug("UI::main # Saving application geometry")
+        console.debug("Saving application geometry")
         appSettings.setAppWidth(applicationWindow.width)
         appSettings.setAppHeight(applicationWindow.height)
         appSettings.setAppPosX(applicationWindow.x)
@@ -104,7 +104,7 @@ ApplicationWindow {
         running: false
         repeat: false
         onTriggered: {
-            console.debug("UI::main # Delayed onOpen timer triggered");
+            console.debug("Delayed onOpen timer triggered");
             helpersWrapper.afterConstruction()
             helpersWrapper.setProgressIndicator(applicationWindow)
             languagesModel.loadLanguages()
@@ -137,7 +137,7 @@ ApplicationWindow {
 
     function onDialogClosed() {
         openedDialogsCount -= 1
-        console.debug("UI::main # Dialog closed. Opened dialogs count is " + openedDialogsCount)
+        console.debug("Dialog closed. Opened dialogs count is " + openedDialogsCount)
     }
 
     function mustUseConfirmation() {
@@ -180,7 +180,7 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
-        console.debug("UI::main # onCompleted handler")
+        console.debug("onCompleted handler")
         openingTimer.start()
     }
 
@@ -242,7 +242,7 @@ ApplicationWindow {
                 text: i18.n + qsTr("&Invert selection")
                 enabled: imagesListView.count > 0
                 onTriggered: {
-                    console.info("UI::main # Invert selection triggered")
+                    console.info("Invert selection triggered")
                     filteredArtItemsModel.invertSelectionArtworks()
                 }
             }
@@ -252,7 +252,7 @@ ApplicationWindow {
                 enabled: imagesListView.count > 0
                 checkable: true
                 onToggled: {
-                    console.info("UI::main # Sort by filename")
+                    console.info("Sort by filename")
                     filteredArtItemsModel.toggleSorted();
                 }
             }
@@ -261,7 +261,7 @@ ApplicationWindow {
                 text: i18.n + qsTr("&Remove metadata from selected")
                 enabled: filteredArtItemsModel.selectedArtworksCount > 0
                 onTriggered: {
-                    console.info("UI::main # Remove metadata from selected triggered")
+                    console.info("Remove metadata from selected triggered")
                     removeMetadataDialog.open()
                 }
             }
@@ -270,7 +270,7 @@ ApplicationWindow {
                 text: i18.n + qsTr("&Detach vectors from selected")
                 enabled: filteredArtItemsModel.selectedArtworksCount > 0
                 onTriggered: {
-                    console.info("UI::main # Detach vectors from selected triggered")
+                    console.info("Detach vectors from selected triggered")
                     filteredArtItemsModel.detachVectorFromSelected()
                 }
             }
@@ -278,7 +278,7 @@ ApplicationWindow {
             MenuItem {
                 text: i18.n + qsTr("&Cleanup local library in background")
                 onTriggered: {
-                    console.info("UI::main # Cleanup local library triggered")
+                    console.info("Cleanup local library triggered")
                     helpersWrapper.cleanupLocalLibrary()
                 }
             }
@@ -286,7 +286,7 @@ ApplicationWindow {
             MenuItem {
                 text: i18.n + qsTr("&Manage upload hosts")
                 onTriggered: {
-                    console.info("UI::main # Manage upload hosts triggered")
+                    console.info("Manage upload hosts triggered")
                     openUploadDialog()
                 }
             }
@@ -366,7 +366,7 @@ ApplicationWindow {
                 text: i18.n + qsTr("&Zip selected artworks")
                 enabled: filteredArtItemsModel.selectedArtworksCount > 0
                 onTriggered: {
-                    console.info("UI::main # Zip archives triggered")
+                    console.info("Zip archives triggered")
 
                     filteredArtItemsModel.setSelectedForZipping()
                     Common.launchDialog("Dialogs/ZipArtworksDialog.qml",
@@ -379,7 +379,7 @@ ApplicationWindow {
                 text: i18.n + qsTr("&Import metadata from selected")
                 enabled: filteredArtItemsModel.selectedArtworksCount > 0
                 onTriggered: {
-                    console.info("UI::main # Reimport archives triggered")
+                    console.info("Reimport archives triggered")
                     filteredArtItemsModel.reimportMetadataForSelected()
                 }
             }
@@ -388,7 +388,7 @@ ApplicationWindow {
                 text: i18.n + qsTr("&Overwrite metadata in selected")
                 enabled: filteredArtItemsModel.selectedArtworksCount > 0
                 onTriggered: {
-                    console.info("UI::main # Overwrite metadata triggered")
+                    console.info("Overwrite metadata triggered")
                     Common.launchDialog("Dialogs/ExportMetadata.qml", applicationWindow, {overwriteAll: true})
                 }
             }
@@ -397,7 +397,7 @@ ApplicationWindow {
                 text: i18.n + qsTr("&Check spelling in selected")
                 enabled: filteredArtItemsModel.selectedArtworksCount > 0
                 onTriggered: {
-                    console.info("UI::main # Spell check in selected")
+                    console.info("Spell check in selected")
                     filteredArtItemsModel.spellCheckSelected()
                     Common.launchDialog("Dialogs/SpellCheckDialog.qml",
                                         applicationWindow, {});
@@ -488,18 +488,18 @@ ApplicationWindow {
         nameFilters: [ "Image files (*.jpg *.tiff *.eps *.ai)", "All files (*)" ]
 
         onAccepted: {
-            console.debug("UI::main # You chose: " + chooseArtworksDialog.fileUrls)
+            console.debug("You chose: " + chooseArtworksDialog.fileUrls)
             var filesAdded = artItemsModel.addLocalArtworks(chooseArtworksDialog.fileUrls)
             if (filesAdded > 0) {
                 saveRecentDirectories()
-                console.debug("UI::main # " + filesAdded + ' files via Open File(s)')
+                console.debug("" + filesAdded + ' files via Open File(s)')
             } else {
                 noNewFilesDialog.open()
             }
         }
 
         onRejected: {
-            console.debug("UI::main # Open files dialog canceled")
+            console.debug("Open files dialog canceled")
         }
     }
 
@@ -512,18 +512,18 @@ ApplicationWindow {
         folder: shortcuts.pictures
 
         onAccepted: {
-            console.debug("UI::main # You chose: " + chooseDirectoryDialog.fileUrls)
+            console.debug("You chose: " + chooseDirectoryDialog.fileUrls)
             var filesAdded = artItemsModel.addLocalDirectories(chooseDirectoryDialog.fileUrls)
             if (filesAdded > 0) {
                 saveRecentDirectories()
-                console.debug("UI::main # " + filesAdded + ' files via Open Directory')
+                console.debug("" + filesAdded + ' files via Open Directory')
             } else {
                 noNewFilesDialog.open()
             }
         }
 
         onRejected: {
-            console.debug("UI::main # Directory dialog canceled")
+            console.debug("Directory dialog canceled")
         }
     }
 

@@ -22,15 +22,15 @@
 #ifndef APPSETTINGS_H
 #define APPSETTINGS_H
 
-#include <QDebug>
 #include <QString>
 #include <QSettings>
 #include <QCoreApplication>
 #include <QStandardPaths>
-#include "constants.h"
-#include "../Common/version.h"
 #include <QFile>
 #include <QDir>
+#include "constants.h"
+#include "../Common/version.h"
+#include "../Common/defines.h"
 
 namespace Helpers {
     class AppSettings : public QSettings
@@ -50,7 +50,7 @@ namespace Helpers {
             #else
                 appDataLocationType = QStandardPaths::DataLocation;
             #endif
-            //qDebug()<< "Extra files search locations: "<<QStandardPaths::standardLocations(appDataLocationType);
+            //LOG_DEBUG<< "Extra files search locations: "<<QStandardPaths::standardLocations(appDataLocationType);
         }
 
         QString getAppWidthKey()   const { return QLatin1String(Constants::APP_WINDOW_WIDTH); }
@@ -161,7 +161,7 @@ namespace Helpers {
                 text = file.readAll();
                 file.close();
             } else {
-                qWarning() << "AppSettings::getWhatsNewText #" << "whatsnew.txt file is not found on path" << path;
+                LOG_WARNING << "whatsnew.txt file is not found on path" << path;
 
                 path = QDir::current().absoluteFilePath(QLatin1String(Constants::WHATS_NEW_FILENAME));
 
@@ -201,7 +201,7 @@ namespace Helpers {
         }
 
         Q_INVOKABLE void saveCurrentVersion() {
-            qDebug() << "AppSettings::saveCurrentVersion #" << "Saving current xpiks version";
+            LOG_DEBUG << "Saving current xpiks version";
             setValue(getInstalledVersionKey(), XPIKS_VERSION_INT);
         }
 
@@ -262,10 +262,10 @@ namespace Helpers {
                 if (numberOfLaunches >= 31) {
                     this->setValue(Constants::USER_STATISTICS, true);
                     this->setValue(Constants::NUMBER_OF_LAUNCHES, 0);
-                    qDebug() << "AppSettings::protectTelemetry #"<< "Resetting telemetry to ON";
+                    LOG_DEBUG << "Resetting telemetry to ON";
                 } else {
                     this->setValue(Constants::NUMBER_OF_LAUNCHES, numberOfLaunches);
-                    qDebug() << "AppSettings::protectTelemetry #"<< numberOfLaunches << "launches of Xpiks with Telemetry OFF";
+                    LOG_DEBUG << numberOfLaunches << "launches of Xpiks with Telemetry OFF";
                 }
             }
         }
@@ -292,7 +292,7 @@ namespace Helpers {
                 text = file.readAll();
                 file.close();
             } else {
-                qWarning() << "AppSettings::getTermsAndConditionsText #" << "terms_and_conditions.txt file is not found on path" << path;
+                LOG_WARNING << "terms_and_conditions.txt file is not found on path" << path;
 
                 path = QDir::current().absoluteFilePath(QLatin1String(Constants::TERMS_AND_CONDITIONS_FILENAME));
 

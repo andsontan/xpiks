@@ -19,13 +19,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QDebug>
 #include <QUrlQuery>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QByteArray>
 #include <QString>
-#include <QThread>
 #include "suggestionqueryengine.h"
 #include "suggestionartwork.h"
 #include "keywordssuggestor.h"
@@ -50,7 +48,7 @@ namespace Suggestion {
     }
 
     void SuggestionQueryEngine::submitQuery(const QStringList &queryKeywords) {
-        qDebug() << "SuggestionQueryEngine::submitQuery #" << queryKeywords;
+        LOG_DEBUG << queryKeywords;
         QUrl url = buildQuery(queryKeywords);
         QNetworkRequest request(url);
 
@@ -67,7 +65,7 @@ namespace Suggestion {
     }
 
     void SuggestionQueryEngine::submitLocalQuery(LocalLibrary *localLibrary, const QStringList &queryKeywords) {
-        qDebug() << "SuggestionQueryEngine::submitLocalQuery #" << queryKeywords;
+        LOG_DEBUG << queryKeywords;
         LibraryQueryWorker *worker = new LibraryQueryWorker(localLibrary, queryKeywords, MAX_LOCAL_RESULTS);
         QThread *thread = new QThread();
         worker->moveToThread(thread);
@@ -88,12 +86,12 @@ namespace Suggestion {
     }
 
     void SuggestionQueryEngine::cancelQueries() {
-        qDebug() << "SuggestionQueryEngine::cancelQueries #";
+        LOG_DEBUG << "#";
         emit cancelAllQueries();
     }
 
     void SuggestionQueryEngine::replyReceived(QNetworkReply *networkReply) {
-        qDebug() << "SuggestionQueryEngine::replyReceived #";
+        LOG_DEBUG << "#";
         if (networkReply->error() == QNetworkReply::NoError) {
             QJsonDocument document = QJsonDocument::fromJson(networkReply->readAll());
             QJsonObject jsonObject = document.object();
@@ -105,7 +103,7 @@ namespace Suggestion {
                 m_Suggestor->setSuggestedArtworks(suggestionArtworks);
             }
         } else {
-            qWarning() << "SuggestionQueryEngine::replyReceived #" << "error:" << networkReply->errorString();
+            LOG_WARNING << "error:" << networkReply->errorString();
         }
 
         m_Suggestor->unsetInProgress();
@@ -113,13 +111,13 @@ namespace Suggestion {
     }
 
     void SuggestionQueryEngine::artworksFound(QVector<SuggestionArtwork *> *suggestions) {
-        qDebug() << "SuggestionQueryEngine::artworksFound #";
+        LOG_DEBUG << "#";
         m_Suggestor->setSuggestedArtworks(*suggestions);
         delete suggestions;
     }
 
     void SuggestionQueryEngine::parseResponse(const QJsonArray &jsonArray, QVector<SuggestionArtwork*> &suggestionArtworks) {
-        qDebug() << "SuggestionQueryEngine::parseResponse #";
+        LOG_DEBUG << "#";
         foreach (const QJsonValue &value, jsonArray) {
             QJsonObject imageResult = value.toObject();
 

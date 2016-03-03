@@ -19,7 +19,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QDebug>
 #include <QFileInfo>
 #include "removeartworksitem.h"
 #include "../Commands/commandmanager.h"
@@ -31,7 +30,7 @@
 #include "addartworksitem.h"
 
 void UndoRedo::RemoveArtworksHistoryItem::undo(const Commands::ICommandManager *commandManagerInterface) const {
-    qInfo() << "RemoveArtworksHistoryItem::undo #";
+    LOG_INFO << "#";
 
     Commands::CommandManager *commandManager = (Commands::CommandManager*)commandManagerInterface;
 

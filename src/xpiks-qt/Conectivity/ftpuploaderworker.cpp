@@ -21,8 +21,6 @@
 
 #include "ftpuploaderworker.h"
 #include <QSemaphore>
-#include <QDebug>
-#include <QThread>
 #include <QCoreApplication>
 #include "curlftpuploader.h"
 #include "../Models/uploadinfo.h"
@@ -47,14 +45,14 @@ namespace Conectivity {
     void FtpUploaderWorker::process() {
         const QString &host = m_UploadBatch->getContext()->m_Host;
 
-        qDebug() << "FtpUploaderWorker::process #" << "Waiting for the semaphore" << host;
+        LOG_DEBUG << "Waiting for the semaphore" << host;
         m_UploadSemaphore->acquire();
 
-        qInfo() << "FtpUploaderWorker::process #" << "Starting upload to" << host;
+        LOG_INFO << "Starting upload to" << host;
         doUpload();
 
         m_UploadSemaphore->release();
-        qDebug() << "FtpUploaderWorker::process #" << "Released semaphore" << host;
+        LOG_DEBUG << "Released semaphore" << host;
 
         emit stopped();
     }

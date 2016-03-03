@@ -62,7 +62,7 @@ namespace MetadataIO {
         bool getExiftoolNotFound() const { return m_ExiftoolNotFound; }
         void setExiftoolNotFound(bool value) {
             if (value != m_ExiftoolNotFound) {
-                qInfo() << "MetadataIOCoordinator::setExiftoolNotFound #" << value;
+                LOG_INFO << value;
                 m_ExiftoolNotFound = value;
                 emit exiftoolNotFoundChanged();
             }

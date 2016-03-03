@@ -27,7 +27,6 @@
 #include <QSysInfo>
 #include <QNetworkRequest>
 #include <QByteArray>
-#include <QDebug>
 #include <QNetworkReply>
 #include "telemetryservice.h"
 #include "analyticsuserevent.h"
@@ -63,14 +62,14 @@ namespace Conectivity {
             m_TelemetryEnabled = value;
 
             if (m_TelemetryEnabled) {
-                qDebug() << "TelemetryService::changeReporting #" << "Telemetry enabled by setting";
+                LOG_DEBUG << "Telemetry enabled by setting";
             } else {
-                qDebug() << "TelemetryService::changeReporting #" << "Telemetry disabled by setting";
+                LOG_DEBUG << "Telemetry disabled by setting";
                 doReportAction(UserActionTurnOffTelemetry);
             }
         }
 #else
-        qDebug() << "TelemetryService::changeReporting #" << "Setting telemetry to" << value << "but it is disabled at compile time";
+        LOG_DEBUG << "Setting telemetry to" << value << "but it is disabled at compile time";
 #endif
     }
 
@@ -80,7 +79,7 @@ namespace Conectivity {
 
     void TelemetryService::doReportAction(UserAction action) {
         AnalyticsUserEvent userEvent(action);
-        qInfo() << "TelemetryService::doReportAction #" << "Reporting action" << userEvent.getActionString();
+        LOG_INFO << "Reporting action" << userEvent.getActionString();
 
         QUrlQuery query;
         query.addQueryItem(QLatin1String("idsite"), QLatin1String("1"));
@@ -120,7 +119,7 @@ namespace Conectivity {
 
 
 #ifdef QT_DEBUG
-        qDebug() << "TelemetryService::doReportAction #" << "Telemetry request" << reportingUrl;
+        LOG_DEBUG << "Telemetry request" << reportingUrl;
 #endif
 
         QNetworkRequest request(reportingUrl);
@@ -149,7 +148,7 @@ namespace Conectivity {
         if (networkReply->error() != QNetworkReply::NoError) {
             // TODO: add tracking of failed items
 
-            qWarning() << "TelemetryService::replyReceived #" << "Failed to process a telemetry report." << networkReply->errorString();;
+            LOG_WARNING << "Failed to process a telemetry report." << networkReply->errorString();;
         }
 
         networkReply->deleteLater();

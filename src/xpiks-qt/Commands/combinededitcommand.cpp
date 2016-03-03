@@ -21,7 +21,6 @@
 
 #include "combinededitcommand.h"
 #include <QVector>
-#include <QDebug>
 #include "../Commands/commandmanager.h"
 #include "../UndoRedo/artworkmetadatabackup.h"
 #include "../UndoRedo/modifyartworkshistoryitem.h"
@@ -33,7 +32,7 @@
 #include "../Warnings/iwarningscheckable.h"
 
 Commands::CommandResult *Commands::CombinedEditCommand::execute(const ICommandManager *commandManagerInterface) const {
-    qInfo() << "CombinedEditCommand::execute #" << "flags =" << m_EditFlags << "artworks count =" << m_ArtItemInfos.length();
+    LOG_INFO << "flags =" << m_EditFlags << "artworks count =" << m_ArtItemInfos.length();
     QVector<int> indicesToUpdate;
     QVector<UndoRedo::ArtworkMetadataBackup*> artworksBackups;
     QVector<SpellCheck::ISpellCheckable*> itemsToCheckSpelling;

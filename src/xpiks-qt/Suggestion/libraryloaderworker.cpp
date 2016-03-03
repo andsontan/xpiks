@@ -24,9 +24,9 @@
 #include <QString>
 #include <QStringList>
 #include <QDataStream>
-#include <QDebug>
 #include "libraryloaderworker.h"
 #include "locallibrary.h"
+#include "../Common/defines.h"
 
 namespace Suggestion {
     LibraryLoaderWorker::LibraryLoaderWorker(Suggestion::LocalLibrary *localLibrary, const QString &filepath, LoadOption option):
@@ -49,7 +49,7 @@ namespace Suggestion {
     }
 
     void LibraryLoaderWorker::read() {
-        qDebug() << "LibraryLoaderWorker::read #" << "Loading library...";
+        LOG_DEBUG << "Loading library...";
 
         QFile file(m_Filepath);
         if (file.exists() && file.open(QIODevice::ReadOnly)) {
@@ -64,13 +64,13 @@ namespace Suggestion {
     }
 
     void LibraryLoaderWorker::write() {
-        qDebug() << "LibraryLoaderWorker::write #" << "saving";
+        LOG_DEBUG << "Saving library...";
 
         m_LocalLibrary->saveToFile();
     }
 
     void LibraryLoaderWorker::cleanup() {
-        qDebug() << "LibraryLoaderWorker::cleanup #";
+        LOG_DEBUG << "#";
         m_LocalLibrary->cleanupTrash();
     }
 }

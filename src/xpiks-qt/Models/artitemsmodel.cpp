@@ -22,7 +22,6 @@
 #include <QStringList>
 #include <QDirIterator>
 #include <QImageReader>
-#include <QDebug>
 #include <QList>
 #include <QHash>
 #include "artitemsmodel.h"
@@ -58,7 +57,7 @@ namespace Models {
     }
 
     void ArtItemsModel::deleteAllItems() {
-        qDebug() << "ArtItemsModel::deleteAllItems #";
+        LOG_DEBUG << "#";
         // should be called only from beforeDestruction() !
         // will not cause sync issues on shutdown if no items
         beginResetModel();
@@ -100,7 +99,7 @@ namespace Models {
     }
 
     void ArtItemsModel::removeArtworksDirectory(int index) {
-        qDebug() << "ArtItemsModel::removeArtworksDirectory #" << "Remove artworks directory at" << index;
+        LOG_DEBUG << "Remove artworks directory at" << index;
         const QString &directory = m_CommandManager->getArtworksRepository()->getDirectory(index);
         QDir dir(directory);
         QString directoryAbsolutePath = dir.absolutePath();
@@ -161,7 +160,7 @@ namespace Models {
     }
 
     void ArtItemsModel::pasteKeywords(int metadataIndex, const QStringList &keywords) {
-        qDebug() << "ArtItemsModel::pasteKeywords #" << "item index" << metadataIndex;
+        LOG_DEBUG << "item index" << metadataIndex;
         if (metadataIndex >= 0
                 && metadataIndex < m_ArtworkList.length()
                 && !keywords.empty()) {
@@ -175,7 +174,7 @@ namespace Models {
 
             if (!metadata->getIsSelected()) {
                 selectedIndices.append(metadataIndex);
-                qDebug() << "ArtItemsModel::pasteKeywords #" << "item was not selected";
+                LOG_DEBUG << "item was not selected";
             }
 
             artItemInfos.reserve(selectedIndices.length());
@@ -183,7 +182,7 @@ namespace Models {
             bool onlyOneKeyword = keywords.length() == 1;
 
             if (onlyOneKeyword) {
-                qDebug() << "ArtItemsModel::pasteKeywords #" << "Pasting only one keyword";
+                LOG_DEBUG << "Pasting only one keyword";
             }
 
             foreach (int index, selectedIndices) {
@@ -205,7 +204,7 @@ namespace Models {
     }
 
     void ArtItemsModel::addSuggestedKeywords(int metadataIndex, const QStringList &keywords) {
-        qDebug() << "ArtItemsModel::suggestKeywords #" << "item index" << metadataIndex;
+        LOG_DEBUG << "item index" << metadataIndex;
         if (metadataIndex >= 0
                 && metadataIndex < m_ArtworkList.length()
                 && !keywords.empty()) {
@@ -252,7 +251,7 @@ namespace Models {
     }
 
     int ArtItemsModel::dropFiles(const QList<QUrl> &urls) {
-        qDebug() << "ArtItemsModel::dropFiles #" << "Dropped" << urls.count() << "items(s)";
+        LOG_DEBUG << "Dropped" << urls.count() << "items(s)";
         QList<QUrl> directories, files;
         directories.reserve(urls.count()/2);
         files.reserve(urls.count());
@@ -269,13 +268,13 @@ namespace Models {
         int filesAddedCount = files.isEmpty() ? 0 : addLocalArtworks(files);
         int directoriesAddedCount = directories.isEmpty() ? 0 : addLocalDirectories(directories);
 
-        qDebug() << "ArtItemsModel::dropFiles #" << "Added" << filesAddedCount << "files and" << directoriesAddedCount << "directories";
+        LOG_DEBUG << "Added" << filesAddedCount << "files and" << directoriesAddedCount << "directories";
 
         return filesAddedCount + directoriesAddedCount;
     }
 
     void ArtItemsModel::setSelectedItemsSaved(const QVector<int> &selectedIndices) {
-        qDebug() << "ArtItemsModel::setSelectedItemsSaved #" << "Setting selected" << selectedIndices.length() << "item(s) saved";
+        LOG_DEBUG << "Setting selected" << selectedIndices.length() << "item(s) saved";
         foreach (int index, selectedIndices) {
             m_ArtworkList.at(index)->resetModified();
         }
@@ -292,7 +291,7 @@ namespace Models {
         doRemoveItemsAtIndices(selectedIndices);
 
         if (m_ArtworkList.isEmpty()) {
-            qDebug() << "ArtItemsModel::removeSelectedArtworks #" << "Clearing the finalization list";
+            LOG_DEBUG << "Clearing the finalization list";
             qDeleteAll(m_FinalizationList);
             m_FinalizationList.clear();
         }
@@ -395,7 +394,7 @@ namespace Models {
     }
 
     int ArtItemsModel::addRecentDirectory(const QString &directory) {
-        qDebug() << "ArtItemsModel::addRecentDirectory #" << directory;
+        LOG_DEBUG << directory;
         int filesAdded = addDirectories(QStringList() << directory);
         return filesAdded;
     }
@@ -430,7 +429,7 @@ namespace Models {
     }
 
     void ArtItemsModel::plainTextEdit(int metadataIndex, const QString &rawKeywords) {
-        qDebug() << "ArtItemsModel::plainTextEdit #" << "Plain text edit for item" << metadataIndex;
+        LOG_DEBUG << "Plain text edit for item" << metadataIndex;
         if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
             ArtItemInfo *itemInfo = new ArtItemInfo(metadata, metadataIndex);
@@ -455,7 +454,7 @@ namespace Models {
     }
 
     void ArtItemsModel::detachVectorsFromSelected(const QVector<int> &selectedIndices) {
-        qDebug() << "ArtItemsModel::detachVectorsFromSelected #" << selectedIndices.length() << "item(s) affected";
+        LOG_DEBUG << selectedIndices.length() << "item(s) affected";
         foreach (int index, selectedIndices) {
             m_ArtworkList.at(index)->detachVector();
         }
@@ -549,7 +548,7 @@ namespace Models {
     }
 
     int ArtItemsModel::addLocalArtworks(const QList<QUrl> &artworksPaths) {
-        qDebug() << "ArtItemsModel::addLocalArtworks #" << artworksPaths;
+        LOG_DEBUG << artworksPaths;
         QStringList fileList;
         fileList.reserve(artworksPaths.length());
 
@@ -562,7 +561,7 @@ namespace Models {
     }
 
     int ArtItemsModel::addLocalDirectories(const QList<QUrl> &directories) {
-        qDebug() << "ArtItemsModel::addLocalDirectories #" << directories;
+        LOG_DEBUG << directories;
         QStringList directoriesList;
         directoriesList.reserve(directories.length());
 
@@ -613,7 +612,7 @@ namespace Models {
     }
 
     void ArtItemsModel::removeArtworks(const QVector<QPair<int, int> > &ranges) {
-        qDebug() << "ArtItemsModel::removeArtworks #" << ranges.count() << "range(s)";
+        LOG_DEBUG << ranges.count() << "range(s)";
         doRemoveItemsInRanges(ranges);
     }
 
@@ -628,7 +627,7 @@ namespace Models {
 
     void ArtItemsModel::raiseArtworksAdded(int imagesCount, int vectorsCount) {
         emit artworksAdded(imagesCount, vectorsCount);
-        qDebug() << "ArtItemsModel::raiseArtworksAdded #" << imagesCount << "images" << vectorsCount << "vectors";
+        LOG_DEBUG << imagesCount << "images" << vectorsCount << "vectors";
     }
 
     void ArtItemsModel::updateItemsAtIndices(const QVector<int> &indices) {
@@ -646,7 +645,7 @@ namespace Models {
     }
 
     void ArtItemsModel::setAllItemsSelected(bool selected) {
-        qDebug() << "ArtItemsModel::setAllItemsSelected #" << selected;
+        LOG_DEBUG << selected;
         int length = m_ArtworkList.length();
         for (int i = 0; i < length; ++i) {
             ArtworkMetadata *metadata = m_ArtworkList.at(i);
@@ -661,7 +660,7 @@ namespace Models {
     }
 
     int ArtItemsModel::attachVectors(const QHash<QString, QHash<QString, QString> > &vectorsPaths, QVector<int> &indicesToUpdate) const {
-        qDebug() << "ArtItemsModel::attachVectors #";
+        LOG_DEBUG << "#";
 
         int attachedVectors = 0;
         QString defaultPath;
@@ -689,7 +688,7 @@ namespace Models {
             }
         }
 
-        qInfo() << "ArtItemsModel::attachVectors #" << "Found matches to" << attachedVectors << "file(s)";
+        LOG_INFO << "Found matches to" << attachedVectors << "file(s)";
 
         return attachedVectors;
     }
@@ -739,11 +738,11 @@ namespace Models {
             filesList.append(filepath);
         }
 
-        qInfo() << "ArtItemsModel::doAddDirectory #" << filesList.length() << "file(s) found";
+        LOG_INFO << filesList.length() << "file(s) found";
     }
 
     int ArtItemsModel::addFiles(const QStringList &rawFilenames) {
-        qDebug() << "ArtItemsModel::addFiles #" << rawFilenames.length() << "file(s)";
+        LOG_DEBUG << rawFilenames.length() << "file(s)";
         QStringList filenames, vectors;
         filenames.reserve(rawFilenames.length());
         vectors.reserve(rawFilenames.length());
@@ -757,7 +756,7 @@ namespace Models {
                     format == QLatin1String("tiff")) {
                 filenames.append(filepath);
             } else if (format == QLatin1String("png")) {
-                qWarning() << "ArtItemsModel::addFiles #" << "PNG is unsupported file format";
+                LOG_WARNING << "PNG is unsupported file format";
             } else {
                 QFileInfo fi(filepath);
                 QString suffix = fi.completeSuffix().toLower();
@@ -791,7 +790,7 @@ namespace Models {
     }
 
     void ArtItemsModel::doCombineArtwork(int index) {
-        qDebug() << "ArtItemsModel::doCombineArtwork #" << "index" << index;
+        LOG_DEBUG << "index" << index;
         if (0 <= index && index < m_ArtworkList.length()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(index);
             //QModelIndex qmIndex = this->index(index);
@@ -832,7 +831,7 @@ namespace Models {
             delete metadata;
         } else {
             metadata->disconnect();
-            qDebug() << "ArtItemsModel::removeInnerItem #" << "Metadata at index" << row << "is locked. Postponing destruction...";
+            LOG_DEBUG << "Metadata at index" << row << "is locked. Postponing destruction...";
             m_FinalizationList.append(metadata);
         }
     }

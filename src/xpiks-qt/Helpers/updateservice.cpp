@@ -20,9 +20,8 @@
  */
 
 #include "updateservice.h"
-#include <QThread>
-#include <QDebug>
 #include "../Conectivity/updatescheckerworker.h"
+#include "../Common/defines.h"
 
 namespace Helpers {
     UpdateService::UpdateService(bool start) {
@@ -49,11 +48,11 @@ namespace Helpers {
 
             thread->start();
         } else {
-            qDebug() << "UpdateService::startChecking #" << "Update service disabled";
+            LOG_INFO << "Update service disabled";
         }
     }
 
     void UpdateService::workerFinished() {
-        qDebug() << "UpdateService::workerFinished #";
+        LOG_DEBUG << "#";
     }
 }

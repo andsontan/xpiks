@@ -23,13 +23,13 @@
 #define UPLOADCONTEXT
 
 #include <QString>
-#include <QDebug>
+#include "../Common/defines.h"
 
 namespace Conectivity {
     class UploadContext {
     public:
         ~UploadContext() {
-            qDebug() << "UploadContext::~UploadContext #" << "destructor for host" << m_Host;
+            LOG_DEBUG << "destructor for host" << m_Host;
         }
 
     public:

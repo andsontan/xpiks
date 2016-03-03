@@ -21,9 +21,9 @@
 
 #include "ziphelper.h"
 #include <QFileInfo>
-#include <QDebug>
 #include <quazip/JlCompress.h>
 #include "filenameshelpers.h"
+#include "../Common/defines.h"
 
 namespace Helpers {
     QStringList zipFiles(QStringList filepathes) {
@@ -40,11 +40,11 @@ namespace Helpers {
         try {
             result = JlCompress::compressFiles(archivePath, filepathes);
         } catch (...) {
-            qWarning() << "zipArtworkAndVector #" << "Exception while zipping with QuaZip";
+            LOG_WARNING << "Exception while zipping with QuaZip";
         }
 
         if (!result) {
-            qWarning() << "zipArtworkAndVector #" << "Failed to create zip" << archivePath;
+            LOG_WARNING << "Failed to create zip" << archivePath;
         }
 
         zipFilePath = archivePath;

@@ -25,7 +25,6 @@
 #include <QWaitCondition>
 #include <QMutex>
 #include <QVector>
-#include <QDebug>
 #include "../Common/defines.h"
 
 namespace Common {
@@ -105,7 +104,7 @@ namespace Common {
         void runWorkerLoop() {
             for (;;) {
                 if (m_Cancel) {
-                    qInfo() << "ItemProcessingWorker::runWorkerLoop #" << "Cancelled. Exiting...";
+                    LOG_INFO << "Cancelled. Exiting...";
                     break;
                 }
 
@@ -139,7 +138,7 @@ namespace Common {
                     canDelete = processOneItem(item);
                 }
                 catch (...) {
-                    qWarning() << "ItemProcessingWorker::runWorkerLoop #" << "Exception while processing item!";
+                    LOG_WARNING << "Exception while processing item!";
                 }
 
                 if (canDelete) {

@@ -22,12 +22,12 @@
 #include "backupsaverworker.h"
 #include <QFile>
 #include <QDataStream>
-#include <QDebug>
 #include "../Helpers/constants.h"
+#include "../Common/defines.h"
 
 namespace MetadataIO {
     bool BackupSaverWorker::initWorker() {
-        qDebug() << "BackupSaverWorker::initWorker #";
+        LOG_DEBUG << "#";
         return true;
     }
 

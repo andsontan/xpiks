@@ -24,7 +24,6 @@
 #include <QFileInfo>
 #include <QRegExp>
 #include <QDir>
-#include <QDebug>
 #include "../Helpers/ziphelper.h"
 #include "../Models/artworkmetadata.h"
 #include "../Helpers/filenameshelpers.h"
@@ -54,17 +53,17 @@ namespace Models {
     }
 
     void ZipArchiver::allFinished() {
-        qInfo() << "ZipArchiver::allFinished #";
+        LOG_INFO << "#";
         endProcessing();
     }
 
     void ZipArchiver::archiveArtworks() {
-        qDebug() << "ZipArchiver::archiveArtworks #";
+        LOG_DEBUG << "#";
         QHash<QString, QStringList> itemsWithSameName;
         fillFilenamesHash(itemsWithSameName);
 
         if (itemsWithSameName.empty()) {
-            qInfo() << "ZipArchiver::archiveArtworks #" << "No items to zip. Exiting...";
+            LOG_INFO << "No items to zip. Exiting...";
             return;
         }
 
@@ -73,7 +72,7 @@ namespace Models {
 
         QList<QStringList> items = itemsWithSameName.values();
 
-        qInfo() << "ZipArchiver::archiveArtworks #" << "Creating zip archives for" << items.length() << "item(s)";
+        LOG_INFO << "Creating zip archives for" << items.length() << "item(s)";
         m_ArchiveCreator->setFuture(QtConcurrent::mapped(items, Helpers::zipFiles));
     }
 

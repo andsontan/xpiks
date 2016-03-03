@@ -46,7 +46,7 @@ namespace Conectivity {
         int size = artworkList.length();
         filePathes.reserve(size);
         zipsPathes.reserve(size);
-        qDebug() << "extractFilePathes #" << "Generating filepathes for" << size << "item(s)";
+        LOG_DEBUG << "Generating filepathes for" << size << "item(s)";
 
         for (int i = 0; i < size; ++i) {
             Models::ArtworkMetadata *metadata = artworkList.at(i);
@@ -96,7 +96,7 @@ namespace Conectivity {
                                                 const QVector<Models::UploadInfo *> &uploadInfos,
                                                 Encryption::SecretsManager *secretsManager,
                                                 int timeoutSeconds) {
-        qDebug() << "generateUploadBatches #" << artworksToUpload.length() << "file(s)";
+        LOG_DEBUG << artworksToUpload.length() << "file(s)";
         QVector<UploadBatch*> batches;
 
         QStringList filePathes;
@@ -138,12 +138,12 @@ namespace Conectivity {
 
     void FtpCoordinator::uploadArtworks(const QVector<Models::ArtworkMetadata *> &artworksToUpload,
                                         const QVector<Models::UploadInfo *> &uploadInfos) {
-        qInfo() << "FtpCoordinator::uploadArtworks #" << "Trying to upload" << artworksToUpload.size() <<
+        LOG_INFO << "Trying to upload" << artworksToUpload.size() <<
                    "file(s) to" << uploadInfos.size() << "host(s)";
 
 
         if (artworksToUpload.isEmpty() || uploadInfos.isEmpty()) {
-            qWarning() << "FtpCoordinator::uploadArtworks #" << "Nothing or nowhere to upload. Skipping...";
+            LOG_WARNING << "Nothing or nowhere to upload. Skipping...";
             return;
         }
 
@@ -184,12 +184,12 @@ namespace Conectivity {
     }
 
     void FtpCoordinator::cancelUpload() {
-        qDebug() << "FtpCoordinator::cancelUpload #";
+        LOG_DEBUG << "#";
         emit cancelAll();
     }
 
     void FtpCoordinator::transferFailed(const QString &filepath, const QString &host) {
-        qWarning() << "FtpCoordinator::transferFailed #" << "Upload failed for file [" << filepath << "] to host {" << host << "}";
+        LOG_WARNING << "Upload failed for file [" << filepath << "] to host {" << host << "}";
         // TODO: show failed transfers on the UI
     }
 
@@ -201,7 +201,7 @@ namespace Conectivity {
     }
 
     void FtpCoordinator::workerFinished(bool anyErrors) {
-        qDebug() << "FtpCoordinator::workerFinished #" << "anyErrors =" << anyErrors;
+        LOG_DEBUG << "anyErrors =" << anyErrors;
 
         if (anyErrors) {
             m_AnyFailed = true;
@@ -221,7 +221,7 @@ namespace Conectivity {
         m_AllWorkersCount = uploadBatchesCount;
         m_FinishedWorkersCount = 0;
         m_OverallProgress = 0.0;
-        qDebug() << "FtpCoordinator::initUpload #" << "Initializing CURL";
+        LOG_DEBUG << "Initializing CURL";
 
         curl_global_init(CURL_GLOBAL_ALL);
     }
@@ -229,6 +229,6 @@ namespace Conectivity {
     void FtpCoordinator::finalizeUpload() {
         Q_ASSERT(m_FinishedWorkersCount == m_AllWorkersCount);
         curl_global_cleanup();
-        qDebug() << "FtpCoordinator::finalizeUpload #" << "Cleaning up CURL";
+        LOG_DEBUG << "Cleaning up CURL";
     }
 }

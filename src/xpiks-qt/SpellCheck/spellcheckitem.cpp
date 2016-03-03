@@ -22,10 +22,10 @@
 #include "spellcheckitem.h"
 #include "../Models/artworkmetadata.h"
 #include <QStringList>
-#include <QDebug>
 #include "../Helpers/indiceshelper.h"
 #include "ispellcheckable.h"
 #include "../Common/flags.h"
+#include "../Common/defines.h"
 
 namespace SpellCheck {
     SpellCheckItemBase::~SpellCheckItemBase() {
@@ -133,7 +133,7 @@ namespace SpellCheck {
 
         bool releaseResult = m_SpellCheckable->release();
         if (releaseResult) {
-            qWarning() << "SpellCheckItem::submitSpellCheckResult #" << "item was locked for removal";
+            LOG_WARNING << "item was locked for removal";
         }
     }
 }

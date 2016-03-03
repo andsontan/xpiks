@@ -21,10 +21,11 @@
 
 #include "artworksprocessor.h"
 #include <QtConcurrent>
+#include "../Common/defines.h"
 
 namespace Models {
     void ArtworksProcessor::resetModel() {
-        qDebug() << "ArtworksProcessor::resetModel #";
+        LOG_DEBUG << "#";
         setInProgress(false);
         setIsError(false);
         innerResetModel();
@@ -35,7 +36,7 @@ namespace Models {
 
     void ArtworksProcessor::beginProcessing() {
         m_ExistingMaxThreadsNumber = QThreadPool::globalInstance()->maxThreadCount();
-        qDebug() << "ArtworksProcessor::beginProcessing #" << "Saving pools max threads" << m_ExistingMaxThreadsNumber;
+        LOG_DEBUG << "Saving pools max threads" << m_ExistingMaxThreadsNumber;
         m_ArtworksCount = m_ArtworkList.length();
         m_ProcessedArtworksCount = 0;
         updateProgress();
@@ -46,7 +47,7 @@ namespace Models {
     void ArtworksProcessor::endProcessing() {
         m_ProcessedArtworksCount = 0;
         m_ArtworksCount = 0;
-        qDebug() << "ArtworksProcessor::endProcessing #" << "Restoring pool max threads to" << m_ExistingMaxThreadsNumber;
+        LOG_DEBUG << "Restoring pool max threads to" << m_ExistingMaxThreadsNumber;
         QThreadPool::globalInstance()->setMaxThreadCount(m_ExistingMaxThreadsNumber);
         setInProgress(false);
         emit finishedProcessing();
@@ -60,7 +61,7 @@ namespace Models {
     }
 
     void ArtworksProcessor::restrictMaxThreads() {
-        qDebug() << "ArtworksProcessor::restrictMaxThreads #" << (int)MAX_WORKER_THREADS;
+        LOG_DEBUG << (int)MAX_WORKER_THREADS;
         QThreadPool::globalInstance()->setMaxThreadCount((int)MAX_WORKER_THREADS);
     }
 }

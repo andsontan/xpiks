@@ -21,8 +21,6 @@
 
 #include <QFile>
 #include <QDataStream>
-#include <QThread>
-#include <QDebug>
 #include <QtConcurrent>
 #include <QFutureWatcher>
 #include "locallibrary.h"
@@ -52,7 +50,7 @@ namespace Suggestion {
     void LocalLibrary::swap(QHash<QString, QStringList> &hash) {
         QMutexLocker locker(&m_Mutex);
         m_LocalArtworks.swap(hash);
-        qDebug() << "LocalLibrary::swap #" << "swapped with read from db.";
+        LOG_DEBUG << "swapped with read from db.";
     }
 
     void LocalLibrary::saveToFile() {
@@ -68,7 +66,7 @@ namespace Suggestion {
 
             file.close();
 
-            qDebug() << "LocalLibrary::saveToFile #" << "saved to" << m_Filename;
+            LOG_DEBUG << "saved to" << m_Filename;
         }
     }
 
@@ -77,7 +75,7 @@ namespace Suggestion {
     }
 
     void LocalLibrary::searchArtworks(const QStringList &query, QVector<SuggestionArtwork*> &searchResults, int maxResults) {
-        qDebug() << "LocalLibrary::searchArtworks #" << "max results" << maxResults;
+        LOG_DEBUG << "max results" << maxResults;
         QMutexLocker locker(&m_Mutex);
 
         QHashIterator<QString, QStringList> i(m_LocalArtworks);
@@ -137,7 +135,7 @@ namespace Suggestion {
             m_LocalArtworks.remove(item);
         }
 
-        qInfo() << "LocalLibrary::cleanupTrash #" << itemsToRemove.count() << "item(s) removed.";
+        LOG_INFO << itemsToRemove.count() << "item(s) removed.";
     }
 
     void LocalLibrary::artworksAdded() {
@@ -149,7 +147,7 @@ namespace Suggestion {
     }
 
     void LocalLibrary::performAsync(LibraryLoaderWorker::LoadOption option) {
-        qDebug() << "LocalLibrary::performAsync #" << option;
+        LOG_DEBUG << option;
         LibraryLoaderWorker *worker = new LibraryLoaderWorker(this, m_Filename, option);
         QThread *thread = new QThread();
         worker->moveToThread(thread);
@@ -166,7 +164,7 @@ namespace Suggestion {
     void LocalLibrary::doAddToLibrary(const QVector<Models::ArtworkMetadata *> artworksList) {
         int length = artworksList.length();
 
-        qDebug() << "LocalLibrary::doAddToLibrary #" << length << "file(s)";
+        LOG_DEBUG << length << "file(s)";
 
         QMutexLocker locker(&m_Mutex);
 
@@ -187,7 +185,7 @@ namespace Suggestion {
             m_LocalArtworks.insert(filepath, tags.toList());
         }
 
-        qInfo() << "LocalLibrary::doAddToLibrary #" << length << "items updated or added";
+        LOG_INFO << length << "items updated or added";
     }
 
     void LocalLibrary::cleanupLocalLibraryAsync() {

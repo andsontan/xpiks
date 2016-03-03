@@ -134,7 +134,7 @@ namespace Models {
 
     void FilteredArtItemsProxyModel::setSelectedForZipping() {
         QVector<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
-        qInfo() << "FilteredArtItemsProxyModel::setSelectedForZipping #" << selectedArtworks.length() << "item(s)";
+        LOG_INFO << selectedArtworks.length() << "item(s)";
 
         m_CommandManager->setArtworksForZipping(selectedArtworks);
     }
@@ -261,7 +261,7 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::toggleSorted() {
-        qDebug() << "FilteredArtItemsProxyModel::toggleSorted #" << "current sorted is" << m_SortingEnabled;
+        LOG_DEBUG << "current sorted is" << m_SortingEnabled;
         forceUnselectAllItems();
 
         if (!m_SortingEnabled) {
@@ -303,7 +303,7 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::removeMetadataInItems(const QVector<ArtItemInfo *> &itemsToClear, int flags) const {
-        qDebug() << "FilteredArtItemsProxyModel::removeMetadataInItems #" << itemsToClear.length() << "item(s) with flags =" << flags;
+        LOG_DEBUG << itemsToClear.length() << "item(s) with flags =" << flags;
         Commands::CombinedEditCommand *combinedEditCommand = new Commands::CombinedEditCommand(
                     flags,
                     itemsToClear);
@@ -345,7 +345,7 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::invertFilteredItemsSelected() {
-        qDebug() << "FilteredArtItemsProxyModel::invertFilteredItemsSelected #";
+        LOG_DEBUG << "#";
         ArtItemsModel *artItemsModel = getArtItemsModel();
         QVector<int> indices;
         int size = this->rowCount();
@@ -474,7 +474,7 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::forceUnselectAllItems() {
-        qDebug() << "FilteredArtItemsProxyModel::forceUnselectAllItems #";
+        LOG_DEBUG << "#";
         ArtItemsModel *artItemsModel = getArtItemsModel();
         artItemsModel->forceUnselectAllItems();
         m_SelectedArtworksCount = 0;

@@ -19,7 +19,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QDebug>
 #include "modifyartworkshistoryitem.h"
 #include "../Models/artitemsmodel.h"
 #include "../Models/artworkmetadata.h"
@@ -28,7 +27,7 @@
 #include "../Common/defines.h"
 
 void UndoRedo::ModifyArtworksHistoryItem::undo(const Commands::ICommandManager *commandManagerInterface) const {
-    qInfo() << "ModifyArtworksHistoryItem::undo #" << m_Indices.count() << "item(s) affected";
+    LOG_INFO << m_Indices.count() << "item(s) affected";
 
     Commands::CommandManager *commandManager = (Commands::CommandManager*)commandManagerInterface;
 

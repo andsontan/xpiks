@@ -28,7 +28,6 @@
 #include <QQmlProperty>
 #include <QQmlContext>
 #include <QQuickWindow>
-#include <QDebug>
 #include <QHash>
 #include "../Common/defines.h"
 
@@ -47,11 +46,11 @@ namespace Plugins {
         component.loadUrl(rcPath, QQmlComponent::PreferSynchronous);
 
         if (!component.isReady()) {
-            qWarning() << "UIProvider::openWindow #" << "Component" << rcPath << "is not ready";
+            LOG_WARNING << "Component" << rcPath << "is not ready";
             return;
         }
 
-        qDebug() << "UIProvider::openWindow #" << "Creating a new window";
+        LOG_DEBUG << "Creating a new window";
         QQmlContext *context = new QQmlContext(m_QmlEngine);
         QObject::connect(context, SIGNAL(destroyed(QObject*)),
                          this, SLOT(contextDestroyed(QObject*)));
@@ -86,24 +85,24 @@ namespace Plugins {
             QQmlComponent *view = qobject_cast<QQmlComponent*>(sender());
 
             foreach (const QQmlError &error, view->errors()) {
-                qWarning() << "UIProvider::viewStatusChanged #" << error.description();
+                LOG_WARNING << error.description();
             }
         }
     }
 
     void UIProvider::windowDestroyed(QObject *object) {
         Q_UNUSED(object);
-        qInfo() << "UIProvider::windowDestroyed #" << "Plugin window destroyed";
+        LOG_INFO << "Plugin window destroyed";
     }
 
     void UIProvider::contextDestroyed(QObject *object) {
         Q_UNUSED(object);
-        qInfo() << "UIProvider::contextDestroyed #";
+        LOG_INFO << "#";
     }
 
     void UIProvider::windowClosing(QQuickCloseEvent *closeEvent) {
         Q_UNUSED(closeEvent);
-        qInfo() << "UIProvider::windowClosing #";
+        LOG_INFO << "#";
         sender()->deleteLater();
     }
 }

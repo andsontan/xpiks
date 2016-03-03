@@ -14,17 +14,17 @@ namespace Helpers {
     void LogHighlighter::highlightBlock(const QString &text) {
         int size = text.size();
 
-        QString word = text.mid(26, 26+8);
+        QString word = text.mid(13, 13+8).toLower();
 
-        if (word.startsWith(QLatin1Literal("Debug"))){
+        if (word.startsWith(QLatin1Literal("debug"))){
             setFormat(0, size, m_DefaultInputBackground);
-        } else if (word.startsWith(QLatin1Literal("Info"))) {
+        } else if (word.startsWith(QLatin1Literal("info"))) {
             // DO NOTHING - USE DEFAULT COLOR
-        } else if (word.startsWith(QLatin1Literal("Warning"))) {
+        } else if (word.startsWith(QLatin1Literal("warning"))) {
             setFormat(0, size, m_ArtworkModifiedColor);
-        } else if (word.startsWith(QLatin1Literal("Critical"))) {
+        } else if (word.startsWith(QLatin1Literal("critical"))) {
             setFormat(0, size, m_DestructiveColor);
-        } else if (word.startsWith(QLatin1Literal("Fatal"))) {
+        } else if (word.startsWith(QLatin1Literal("fatal"))) {
             setFormat(0, size, m_DestructiveColor);
         }
     }

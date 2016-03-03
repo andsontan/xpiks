@@ -21,7 +21,6 @@
 
 #include "settingsmodel.h"
 #include <QQmlEngine>
-#include <QDebug>
 #include "../Helpers/appsettings.h"
 #include "../Common/defines.h"
 #include "../Commands/commandmanager.h"
@@ -83,26 +82,26 @@ namespace Models {
     }
 
     void SettingsModel::saveExiftool() {
-        qDebug() << "SettingsModel::saveExiftool #";
+        LOG_DEBUG << "#";
         Helpers::AppSettings appSettings;
         appSettings.setValue(appSettings.getExifToolPathKey(), m_ExifToolPath);
     }
 
     void SettingsModel::saveLocale() {
-        qDebug() << "SettingsModel::saveLocale #";
+        LOG_DEBUG << "#";
         Helpers::AppSettings appSettings;
         appSettings.setValue(appSettings.getSelectedLocaleKey(), m_SelectedLocale);
     }
 
     void SettingsModel::resetAllValues() {
-        qDebug() << "SettingsModel::resetAllValues #";
+        LOG_DEBUG << "#";
         resetToDefault();
         saveAllValues();
         emit settingsReset();
     }
 
     void SettingsModel::saveAllValues() {
-        qInfo() << "SettingsModel::saveAllValues #";
+        LOG_INFO << "#";
 
         Helpers::AppSettings appSettings;
         appSettings.setValue(appSettings.getExifToolPathKey(), m_ExifToolPath);
@@ -156,7 +155,7 @@ namespace Models {
     }
 
     void SettingsModel::readAllValues() {
-        qInfo() << "SettingsModel::readAllValues #";
+        LOG_INFO << "#";
 
         Helpers::AppSettings appSettings;
         setExifToolPath(appSettings.value(appSettings.getExifToolPathKey(), DEFAULT_EXIFTOOL).toString());
@@ -182,7 +181,7 @@ namespace Models {
     }
 
     void SettingsModel::resetToDefault() {
-        qInfo() << "SettingsModel::resetToDefault #";
+        LOG_INFO << "#";
 
         setExifToolPath(DEFAULT_EXIFTOOL);
         setDictionaryPath(DEFAULT_DICT_PATH);
