@@ -43,7 +43,7 @@ namespace Warnings {
     }
 
     bool WarningsCheckingWorker::initWorker() {
-        qDebug() << "WarningsCheckingWorker::initWorker #";
+        LOG_DEBUG << "#";
         return true;
     }
 

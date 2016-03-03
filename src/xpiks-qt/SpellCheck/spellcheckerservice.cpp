@@ -20,9 +20,6 @@
  */
 
 #include "spellcheckerservice.h"
-#include <QThread>
-#include <QDebug>
-
 #include "../Models/artworkmetadata.h"
 #include "spellcheckworker.h"
 #include "spellcheckitem.h"
@@ -41,7 +38,7 @@ namespace SpellCheck {
 
     void SpellCheckerService::startService() {
         if (m_SpellCheckWorker != NULL) {
-            qWarning() << "SpellCheckerService::startService #" << "Attempt to start running worker";
+            LOG_WARNING << "Attempt to start running worker";
             return;
         }
 
@@ -68,14 +65,14 @@ namespace SpellCheck {
         QObject::connect(m_SpellCheckWorker, SIGNAL(destroyed(QObject*)),
                          this, SLOT(workerDestroyed(QObject*)));
 
-        qDebug() << "SpellCheckerService::startChecking #" << "starting thread...";
+        LOG_DEBUG << "starting thread...";
         thread->start();
 
         emit serviceAvailable(m_RestartRequired);
     }
 
     void SpellCheckerService::stopService() {
-        qDebug() << "SpellCheckerService::stopChecking #";
+        LOG_DEBUG << "#";
         if (m_SpellCheckWorker != NULL) {
             m_SpellCheckWorker->stopWorking();
         }
@@ -110,7 +107,7 @@ namespace SpellCheck {
             items.append(item);
         }
 
-        qInfo() << "SpellCheckerService::submitItems #" << length << "item(s)";
+        LOG_INFO << length << "item(s)";
 
         m_SpellCheckWorker->submitItems(items);
         m_SpellCheckWorker->submitItem(new SpellCheckSeparatorItem());
@@ -137,7 +134,7 @@ namespace SpellCheck {
     }
 
     void SpellCheckerService::cancelCurrentBatch() {
-        qInfo() << "SpellCheckerService::cancelCurrentBatch #";
+        LOG_INFO << "#";
 
         if (m_SpellCheckWorker == NULL) { return; }
 
@@ -155,16 +152,16 @@ namespace SpellCheck {
     }
 
     void SpellCheckerService::workerFinished() {
-        qInfo() << "SpellCheckerService::workerFinished #";
+        LOG_INFO << "#";
     }
 
     void SpellCheckerService::workerDestroyed(QObject *object) {
         Q_UNUSED(object);
-        qDebug() << "SpellCheckerService::workerDestroyed #";
+        LOG_DEBUG << "#";
         m_SpellCheckWorker = NULL;
 
         if (m_RestartRequired) {
-            qInfo() << "SpellCheckerService::workerDestroyed #" << "Restarting worker...";
+            LOG_INFO << "Restarting worker...";
             startService();
             m_RestartRequired = false;
         }

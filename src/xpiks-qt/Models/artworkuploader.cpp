@@ -22,7 +22,6 @@
 #include "artworkuploader.h"
 #include <QtConcurrent>
 #include <QFileInfo>
-#include <QDebug>
 #include "uploadinforepository.h"
 #include "uploadinfo.h"
 #include "../Common/defines.h"
@@ -60,14 +59,14 @@ namespace Models {
     }
 
     void ArtworkUploader::onUploadStarted() {
-        qDebug() << "ArtworkUploader::onUploadStarted #";
+        LOG_DEBUG << "#";
         beginProcessing();
         m_Percent = 0;
         updateProgress();
     }
 
     void ArtworkUploader::allFinished(bool anyError) {
-        qInfo() << "ArtworkUploader::allFinished #" << "anyError =" << anyError;
+        LOG_INFO << "anyError =" << anyError;
         setIsError(anyError);
         endProcessing();
         m_Percent = 100;
@@ -81,7 +80,7 @@ namespace Models {
 
     void ArtworkUploader::uploaderPercentChanged(double percent) {
         m_Percent = (int)(percent);
-        qDebug() << "ArtworkUploader::uploaderPercentChanged #" << "Overall progress =" << percent;
+        LOG_DEBUG << "Overall progress =" << percent;
         updateProgress();
         UploadInfoRepository *uploadInfoRepository = m_CommandManager->getUploadInfoRepository();
         uploadInfoRepository->updatePercentages();
@@ -108,7 +107,7 @@ namespace Models {
         foreach (Models::UploadInfo *info, infos) {
             if (info->getIsSelected() && info->getZipBeforeUpload()) {
                 anyZipNeeded = true;
-                qDebug() << "ArtworkUploader::needCreateArchives #" << "at least for" << info->getHost();
+                LOG_DEBUG << "at least for" << info->getHost();
                 break;
             }
         }
@@ -126,7 +125,7 @@ namespace Models {
 
                 if (!fi.exists()) {
                     needCreate = true;
-                    qDebug() << "ArtworkUploader::needCreateArchives #" << "Zip needed at least for" << archivePath;
+                    LOG_DEBUG << "Zip needed at least for" << archivePath;
                     break;
                 }
             }

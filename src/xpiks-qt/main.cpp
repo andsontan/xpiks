@@ -77,28 +77,7 @@
 void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg) {
     Q_UNUSED(context);
 
-    QString logLine;
-    QString time = QDateTime::currentDateTimeUtc().toString("dd.MM.yyyy hh:mm:ss.zzz");
-    switch (type) {
-        case QtDebugMsg:
-            logLine = QString("%1 - Debug: %2").arg(time).arg(msg);
-            break;
-        case QtWarningMsg:
-            logLine = QString("%1 - Warning: %2").arg(time).arg(msg);
-            break;
-        case QtCriticalMsg:
-            logLine = QString("%1 - Critical: %2").arg(time).arg(msg);
-            break;
-        case QtFatalMsg:
-            logLine = QString("%1 - Fatal: %2").arg(time).arg(msg);
-            break;
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 1))
-        case QtInfoMsg:
-            logLine = QString("%1 - Info:  %2").arg(time).arg(msg);
-            break;
-#endif
-    }
-
+    QString logLine = qFormatLogMessage(type, context, msg);
     Helpers::Logger &logger = Helpers::Logger::getInstance();
     logger.log(logLine);
 
@@ -207,24 +186,27 @@ int main(int argc, char *argv[]) {
     Models::LogsModel logsModel;
     logsModel.startLogging();
 
+    qSetMessagePattern("%{time hh:mm:ss.zzz} %{type} %{threadid} %{function} %{message}");
     qInstallMessageHandler(myMessageHandler);
-    qInfo() << "main #" << "Log started." << "Xpiks" << XPIKS_VERSION_STRING << "-" << STRINGIZE(BUILDNUMBER);
+
+    LOG_INFO << "Log started. Today is" << QDateTime::currentDateTimeUtc().toString("dd.MM.yyyy");
+    LOG_INFO << "Xpiks" << XPIKS_VERSION_STRING << "-" << STRINGIZE(BUILDNUMBER);
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
-    qInfo() << "main #" << QSysInfo::productType() << QSysInfo::productVersion() << QSysInfo::currentCpuArchitecture();
+    LOG_INFO << QSysInfo::productType() << QSysInfo::productVersion() << QSysInfo::currentCpuArchitecture();
 #else
 #ifdef Q_OS_WIN
-    qInfo() << "main #" << QLatin1String("Windows Qt<5.4");
+    LOG_INFO << QLatin1String("Windows Qt<5.4");
 #elsif Q_OS_DARWIN
-    qInfo() << "main #" << QLatin1String("OS X Qt<5.4");
+    LOG_INFO << QLatin1String("OS X Qt<5.4");
 #else
-    qInfo() << "main #" << QLatin1String("LINUX Qt<5.4");
+    LOG_INFO << QLatin1String("LINUX Qt<5.4");
 #endif
 #endif
 
     QApplication app(argc, argv);
 
-    qDebug() << "main #" << "Working directory of Xpiks is:" << QDir::currentPath();
+    LOG_DEBUG << "Working directory of Xpiks is:" << QDir::currentPath();
 
     if (highDpiEnvironmentVariable) {
         qunsetenv(highDpiEnvironmentVariable);
@@ -342,9 +324,9 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("i18", &languagesModel);
 
     engine.addImageProvider("global", globalProvider);
-    qDebug() << "main #" << "About to load main view...";
+    LOG_DEBUG << "About to load main view...";
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
-    qDebug() << "main #" << "Main view loaded";
+    LOG_DEBUG << "Main view loaded";
 
     pluginManager.getUIProvider()->setQmlEngine(&engine);
     QQuickWindow *window = qobject_cast<QQuickWindow*>(engine.rootObjects().at(0));

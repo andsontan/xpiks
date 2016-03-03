@@ -20,13 +20,12 @@
  */
 
 #include "undoredomanager.h"
-#include <QDebug>
 #include "../Common/defines.h"
 
 UndoRedo::UndoRedoManager::~UndoRedoManager() { qDeleteAll(m_HistoryStack); }
 
 void UndoRedo::UndoRedoManager::recordHistoryItem(UndoRedo::IHistoryItem *historyItem) {
-    qInfo() << "UndoRedoManager::recordHistoryItem #" << "History item about to be recorded:" << historyItem->getActionType();
+    LOG_INFO << "History item about to be recorded:" << historyItem->getActionType();
 
     QMutexLocker locker(&m_Mutex);
 
@@ -42,7 +41,7 @@ void UndoRedo::UndoRedoManager::recordHistoryItem(UndoRedo::IHistoryItem *histor
 }
 
 bool UndoRedo::UndoRedoManager::undoLastAction() {
-    qDebug() << "UndoRedoManager::undoLastAction #";
+    LOG_DEBUG << "#";
     m_Mutex.lock();
 
     bool anyItem = false;
@@ -58,14 +57,14 @@ bool UndoRedo::UndoRedoManager::undoLastAction() {
         delete historyItem;
     } else {
         m_Mutex.unlock();
-        qWarning() << "UndoRedoManager::undoLastAction #" << "No item for undo";
+        LOG_WARNING << "No item for undo";
     }
 
     return anyItem;
 }
 
 void UndoRedo::UndoRedoManager::discardLastAction() {
-    qDebug() << "UndoRedoManager::discardLastAction #";
+    LOG_DEBUG << "#";
     m_Mutex.lock();
 
     bool anyItem = false;

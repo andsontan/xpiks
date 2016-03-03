@@ -20,11 +20,9 @@
  */
 
 #include "metadatareadingworker.h"
-#include "../Common/defines.h"
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
-#include <QDebug>
 #include <QFile>
 #include <QTemporaryFile>
 #include <QTextStream>
@@ -33,6 +31,7 @@
 #include "../Models/artworkmetadata.h"
 #include "../Helpers/constants.h"
 #include "saverworkerjobitem.h"
+#include "../Common/defines.h"
 
 #define SOURCEFILE QLatin1String("SourceFile")
 #define TITLE QLatin1String("Title")
@@ -98,7 +97,7 @@ namespace MetadataIO {
                 parseJsonKeywords(keywords.toArray(), result);
                 keywordsSet = true;
             } else {
-                qWarning() << "jsonObjectToImportResult #" << "Keywords object in json is not array";
+                LOG_WARNING << "Keywords object in json is not array";
                 QString keywordsStr = object.value(KEYWORDS).toString().trimmed();
                 keywordsSet = parseStringKeywords(keywordsStr, result);
             }
@@ -126,7 +125,7 @@ namespace MetadataIO {
     }
 
     MetadataReadingWorker::~MetadataReadingWorker() {
-        qDebug() << "MetadataReadingWorker::~MetadataReadingWorker #" << "Reading worker destroyed";
+        LOG_DEBUG << "Reading worker destroyed";
     }
 
     void MetadataReadingWorker::process() {
@@ -136,7 +135,7 @@ namespace MetadataIO {
         QTemporaryFile argumentsFile;
 
         if (argumentsFile.open()) {
-            qDebug() << "MetadataReadingWorker::process #" << "Created arguments file" << argumentsFile.fileName();
+            LOG_DEBUG << "Created arguments file" << argumentsFile.fileName();
             QTextStream out(&argumentsFile);
             QStringList exiftoolArguments = createArgumentsList();
             foreach (const QString &line, exiftoolArguments) {
@@ -150,11 +149,11 @@ namespace MetadataIO {
             QStringList arguments;
             arguments << "-@" << argumentsFile.fileName();
 
-            qDebug() << "MetadataReadingWorker::process #" << "Starting exiftool process:" << exiftoolPath;
+            LOG_DEBUG << "Starting exiftool process:" << exiftoolPath;
             m_ExiftoolProcess->start(exiftoolPath, arguments);
 
             success = m_ExiftoolProcess->waitForFinished();
-            qDebug() << "MetadataReadingWorker::process #" << "Exiftool process finished.";
+            LOG_DEBUG << "Exiftool process finished.";
 
             int exitCode = m_ExiftoolProcess->exitCode();
             QProcess::ExitStatus exitStatus = m_ExiftoolProcess->exitStatus();
@@ -163,13 +162,13 @@ namespace MetadataIO {
                     (exitCode == 0) &&
                     (exitStatus == QProcess::NormalExit);
 
-            qDebug() << "MetadataReadingWorker::process #" << "Exiftool exitcode =" << exitCode << "exitstatus =" << exitStatus;
+            LOG_DEBUG << "Exiftool exitcode =" << exitCode << "exitstatus =" << exitStatus;
 
             if (success) {
                 QByteArray stdoutByteArray = m_ExiftoolProcess->readAllStandardOutput();
                 parseExiftoolOutput(stdoutByteArray);
             } else {
-                qWarning() << "MetadataReadingWorker::process #" << "Exiftool error string:" << m_ExiftoolProcess->errorString();
+                LOG_WARNING << "Exiftool error string:" << m_ExiftoolProcess->errorString();
             }
 
             if (m_SettingsModel->getSaveBackups()) {
@@ -183,21 +182,21 @@ namespace MetadataIO {
     }
 
     void MetadataReadingWorker::cancel() {
-        qInfo() << "MetadataReadingWorker::cancel #" << "Cancelling...";
+        LOG_INFO << "Cancelling...";
 
         if (m_ExiftoolProcess && m_ExiftoolProcess->state() != QProcess::NotRunning) {
             m_ExiftoolProcess->kill();
-            qInfo() << "MetadataReadingWorker::cancel #" << "Exiftool process killed";
+            LOG_INFO << "Exiftool process killed";
         }
     }
 
     void MetadataReadingWorker::innerProcessFinished(int exitCode, QProcess::ExitStatus exitStatus) {
         Q_UNUSED(exitStatus);
-        qDebug() << "MetadataReadingWorker::innerProcessFinished #" << "Exiftool finished with exitcode" << exitCode;
+        LOG_DEBUG << "Exiftool finished with exitcode" << exitCode;
 
         QByteArray stderrByteArray = m_ExiftoolProcess->readAllStandardError();
         QString stderrText(stderrByteArray);
-        qDebug() << "MetadataReadingWorker::innerProcessFinished #" << "STDERR [Exiftool]:" << stderrText;
+        LOG_DEBUG << "STDERR [Exiftool]:" << stderrText;
     }
 
     void MetadataReadingWorker::initWorker() {
@@ -226,7 +225,7 @@ namespace MetadataIO {
     }
 
     void MetadataReadingWorker::parseExiftoolOutput(const QByteArray &output) {
-        qDebug() << "MetadataReadingWorker::parseExiftoolOutput #" << "Parsing JSON output of exiftool...";
+        LOG_DEBUG << "Parsing JSON output of exiftool...";
         QJsonDocument document = QJsonDocument::fromJson(output);
         if (document.isArray()) {
             QJsonArray filesArray = document.array();
@@ -246,12 +245,12 @@ namespace MetadataIO {
                 }
             }
         } else {
-            qWarning() << "MetadataReadingWorker::parseExiftoolOutput #" << "Exiftool Json Error: Main element is not array";
+            LOG_WARNING << "Exiftool Json Error: Main element is not array";
         }
     }
 
     void MetadataReadingWorker::readBackupsAndSizes(bool exiftoolSuccess) {
-        qDebug() << "MetadataReadingWorker::readBackupsAndSizes #" << "exiftool success is" << exiftoolSuccess;
+        LOG_DEBUG << "exiftool success is" << exiftoolSuccess;
         int size = m_ItemsToRead.size();
         for (int i = 0; i < size; ++i) {
             Models::ArtworkMetadata *metadata = m_ItemsToRead.at(i);
@@ -277,7 +276,7 @@ namespace MetadataIO {
     }
 
     void MetadataReadingWorker::readSizes() {
-        qDebug() << "MetadataReadingWorker::readSizes #";
+        LOG_DEBUG << "#";
         int size = m_ItemsToRead.size();
         for (int i = 0; i < size; ++i) {
             Models::ArtworkMetadata *metadata = m_ItemsToRead.at(i);

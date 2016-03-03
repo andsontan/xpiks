@@ -19,7 +19,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QDebug>
 #include <QList>
 #include "pastekeywordscommand.h"
 #include "../UndoRedo/modifyartworkshistoryitem.h"
@@ -34,7 +33,7 @@ Commands::PasteKeywordsCommand::~PasteKeywordsCommand() {
 }
 
 Commands::CommandResult *Commands::PasteKeywordsCommand::execute(const ICommandManager *commandManagerInterface) const {
-    qInfo() << "PasteKeywordsCommand::execute #" << "Pasting" << m_KeywordsList.length() << "keywords to" << m_ArtItemInfos.length() << "item(s)";
+    LOG_INFO << "Pasting" << m_KeywordsList.length() << "keywords to" << m_ArtItemInfos.length() << "item(s)";
 
     CommandManager *commandManager = (CommandManager*)commandManagerInterface;
 

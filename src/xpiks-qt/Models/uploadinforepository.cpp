@@ -20,7 +20,6 @@
  */
 
 #include "uploadinforepository.h"
-#include <QDebug>
 #include "uploadinfo.h"
 #include "../Commands/commandmanager.h"
 #include "../Encryption/secretsmanager.h"
@@ -30,7 +29,7 @@ namespace Models {
     UploadInfoRepository::~UploadInfoRepository() { qDeleteAll(m_UploadInfos); m_UploadInfos.clear();  }
 
     void UploadInfoRepository::initFromString(const QString &savedString) {
-        qDebug() << "UploadInfoRepository::initFromString #";
+        LOG_DEBUG << "#";
         QByteArray originalData;
         originalData.append(savedString.toLatin1());
         QByteArray result = QByteArray::fromBase64(originalData);
@@ -50,12 +49,12 @@ namespace Models {
             m_UploadInfos.append(info);
         }
 
-        qInfo() << "UploadInfoRepository::initFromString #" << length << "item(s) found";
+        LOG_INFO << length << "item(s) found";
     }
 
     void UploadInfoRepository::addItem() {
         int lastIndex = m_UploadInfos.length();
-        qInfo() << "UploadInfoRepository::addItem #" << lastIndex;
+        LOG_INFO << lastIndex;
         beginInsertRows(QModelIndex(), lastIndex, lastIndex);
         m_UploadInfos.append(new UploadInfo());
         endInsertRows();
@@ -63,7 +62,7 @@ namespace Models {
     }
 
     QString UploadInfoRepository::getInfoString() const {
-        qDebug() << "UploadInfoRepository::getInfoString #" << "Serializing" << m_UploadInfos.length() << "info(s)";
+        LOG_DEBUG << "Serializing" << m_UploadInfos.length() << "info(s)";
         // bad type QList instead of QVector
         // but users already have this
         QList<QHash<int, QString> > items;
@@ -88,7 +87,6 @@ namespace Models {
         for (int i = 0; i < count; ++i) {
             if (m_UploadInfos.at(i)->getIsSelected()) {
                 selectedCount++;
-
             }
         }
 
@@ -150,7 +148,7 @@ namespace Models {
     }
 
     void UploadInfoRepository::resetPercents() {
-        qDebug() << "UploadInfoRepository::resetPercents #";
+        LOG_DEBUG << "#";
         foreach (UploadInfo *info, m_UploadInfos) { info->resetPercent(); }
     }
 
@@ -279,12 +277,12 @@ namespace Models {
 
     void UploadInfoRepository::onBeforeMasterPasswordChanged(const QString &oldMasterPassword,
                                                              const QString &newMasterPassword) {
-        qInfo() << "UploadInfoRepository::onBeforeMasterPasswordChanged #";
+        LOG_INFO << "#";
         m_CommandManager->recodePasswords(oldMasterPassword, newMasterPassword, m_UploadInfos);
     }
 
     void UploadInfoRepository::onAfterMasterPasswordReset() {
-        qInfo() << "UploadInfoRepository::onAfterMasterPasswordReset #";
+        LOG_INFO << "#";
         foreach (UploadInfo *info, m_UploadInfos) {
             info->dropPassword();
         }

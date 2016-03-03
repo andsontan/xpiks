@@ -21,7 +21,6 @@
 
 #include <QHash>
 #include <QString>
-#include <QDebug>
 #include "keywordssuggestor.h"
 #include "suggestionartwork.h"
 #include "../Commands/commandmanager.h"
@@ -29,7 +28,7 @@
 
 namespace Suggestion {
     void KeywordsSuggestor::setSuggestedArtworks(const QVector<SuggestionArtwork *> &suggestedArtworks) {
-        qDebug() << "KeywordsSuggestor::setSuggestedArtworks #" << suggestedArtworks.length() << "item(s)";
+        LOG_DEBUG << suggestedArtworks.length() << "item(s)";
         m_SelectedArtworksCount = 0;
         m_KeywordsHash.clear();
         m_SuggestedKeywords.clearModel();
@@ -44,7 +43,7 @@ namespace Suggestion {
     }
 
     void KeywordsSuggestor::clear() {
-        qDebug() << "KeywordsSuggestor::clear #";
+        LOG_DEBUG << "#";
         m_SelectedArtworksCount = 0;
         m_KeywordsHash.clear();
         m_SuggestedKeywords.clearModel();
@@ -90,7 +89,7 @@ namespace Suggestion {
     }
 
     void KeywordsSuggestor::searchArtworks(const QString &searchTerm) {
-        qDebug() << "KeywordsSuggestor::searchArtworks #" << searchTerm;
+        LOG_DEBUG << searchTerm;
         if (!m_IsInProgress && !searchTerm.trimmed().isEmpty()) {
             setInProgress();
 

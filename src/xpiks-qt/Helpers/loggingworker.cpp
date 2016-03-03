@@ -22,8 +22,6 @@
 #include "loggingworker.h"
 #include "logger.h"
 #include <iostream>
-#include <QThread>
-#include <QDebug>
 #include "../Common/defines.h"
 
 namespace Helpers {
@@ -43,7 +41,7 @@ namespace Helpers {
                 QThread::sleep(secondsToSleep);
             }
 
-            qInfo() << "LoggingWorker::process #" << "Logging worker stopped";
+            LOG_INFO << "Logging worker stopped";
             logger.flush();
         }
         catch(...) {

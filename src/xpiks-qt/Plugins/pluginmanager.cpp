@@ -23,7 +23,6 @@
 #include <QPluginLoader>
 #include <QApplication>
 #include <QDir>
-#include <QDebug>
 #include <QQmlEngine>
 #include "xpiksplugininterface.h"
 #include "../Commands/commandmanager.h"
@@ -44,7 +43,7 @@ namespace Plugins {
     }
 
     void PluginManager::loadPlugins() {
-        qDebug() << "PluginManager::loadPlugins #";
+        LOG_DEBUG << "#";
 
         QDir pluginsDir(QCoreApplication::applicationDirPath());
 #if defined(Q_OS_WIN)
@@ -59,17 +58,17 @@ namespace Plugins {
         bool pluginsFound = pluginsDir.cd("XpiksPlugins");
 
         if (!pluginsFound) {
-            qWarning() << "PluginManager::loadPlugins #" << "Plugins directory not found";
+            LOG_WARNING << "Plugins directory not found";
             return;
         }
 
-        qDebug() << "PluginManager::loadPlugins #" << "Plugins dir:" << pluginsDir.absolutePath();
+        LOG_DEBUG<< "Plugins dir:" << pluginsDir.absolutePath();
 
         beginResetModel();
         m_PluginsList.clear();
 
         foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
-            qDebug() << "PluginManager::loadPlugins #" << "Trying file:" << fileName;
+            LOG_DEBUG << "Trying file:" << fileName;
 
             QPluginLoader loader(pluginsDir.absoluteFilePath(fileName));
             QObject *plugin = loader.instance();
@@ -79,10 +78,10 @@ namespace Plugins {
                 if (xpiksPlugin) {
                     addPlugin(xpiksPlugin);
                 } else {
-                    qDebug() << "PluginManager::loadPlugins #" << "Not Xpiks Plugin";
+                    LOG_DEBUG << "Not Xpiks Plugin";
                 }
             } else {
-                qDebug() << "PluginManager::loadPlugins #" << loader.errorString();
+                LOG_DEBUG << loader.errorString();
             }
         }
 
@@ -91,7 +90,7 @@ namespace Plugins {
 
     void PluginManager::unloadPlugins() {
         int size = m_PluginsList.length();
-        qDebug() << "PluginManager::unloadPlugins #" << size << "plugin(s)";
+        LOG_DEBUG << size << "plugin(s)";
 
         for (int i = 0; i < size; ++i) {
             PluginWrapper *wrapper = m_PluginsList.at(i);
@@ -110,7 +109,7 @@ namespace Plugins {
     }
 
     QObject *PluginManager::getPluginActions(int index) const {
-        qDebug() << "PluginManager::getPluginActions #" << index;
+        LOG_DEBUG << index;
         PluginActionsModel *item = NULL;
 
         if (0 <= index && index < m_PluginsList.length()) {
@@ -122,7 +121,7 @@ namespace Plugins {
     }
 
     void PluginManager::triggerPluginAction(int pluginID, int actionID) const {
-        qDebug() << "PluginManager::triggerPluginAction #" << "Plugin ID" << pluginID << "action ID" << actionID;
+        LOG_DEBUG << "Plugin ID" << pluginID << "action ID" << actionID;
         PluginWrapper *pluginWrapper = m_PluginsDict.value(pluginID, NULL);
         if (pluginWrapper != NULL) {
             pluginWrapper->triggerActionSafe(actionID);
@@ -131,7 +130,7 @@ namespace Plugins {
 
     void PluginManager::addPlugin(XpiksPluginInterface *plugin) {
         int pluginID = getNextPluginID();
-        qInfo() << "PluginManager::addPlugin #" << "ID:" << pluginID << "name:" << plugin->getPrettyName() << "version:" << plugin->getVersionString();
+        LOG_INFO << "ID:" << pluginID << "name:" << plugin->getPrettyName() << "version:" << plugin->getVersionString();
 
         PluginWrapper *pluginWrapper = NULL;
 
@@ -146,7 +145,7 @@ namespace Plugins {
             pluginWrapper = new PluginWrapper(plugin, pluginID);
         }
         catch(...) {
-            qWarning() << "PluginManager::addPlugin #" << "Fail initializing plugin with ID:" << pluginID;
+            LOG_WARNING << "Fail initializing plugin with ID:" << pluginID;
             pluginWrapper = NULL;
         }
 

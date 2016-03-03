@@ -23,7 +23,6 @@
 #include <QStringList>
 #include <QProcess>
 #include <QDir>
-#include <QDebug>
 #include <QQuickWindow>
 #include <QSysInfo>
 #include <QCoreApplication>
@@ -63,14 +62,14 @@ namespace Helpers {
     }
 
     void HelpersQmlWrapper::beforeDestruction() {
-        qDebug() << "HelpersQmlWrapper::beforeDestruction #" << "emitting signal";
+        LOG_DEBUG << "emitting signal";
         emit globalCloseRequested();
         QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
         m_CommandManager->beforeDestructionCallback();
     }
 
     void HelpersQmlWrapper::revealLogFile() {
-        qDebug() << "HelpersQmlWrapper::revealLogFile #";
+        LOG_DEBUG << "#";
         QString logFilePath = Logger::getInstance().getLogFilePath();
 #ifdef Q_OS_MAC
         QStringList args;
@@ -112,7 +111,7 @@ namespace Helpers {
     void HelpersQmlWrapper::turnTaskbarProgressOn() {
 #ifdef Q_OS_WIN
         if (!m_WinTaskbarButtonApplicable) { return; }
-        qDebug() << "HelpersQmlWrapper::turnTaskbarProgressOn #" << "Turning on taskbar button in Windows";
+        LOG_DEBUG << "Turning on taskbar button in Windows";
         QWinTaskbarProgress *progress = m_TaskbarButton->progress();
         progress->setVisible(true);
         progress->setRange(0, 100);
@@ -123,7 +122,7 @@ namespace Helpers {
     void HelpersQmlWrapper::setTaskbarProgress(double value) {
 #ifdef Q_OS_WIN
         if (!m_WinTaskbarButtonApplicable) { return; }
-        qDebug() << "HelpersQmlWrapper::setTaskbarProgress #" << value;
+        LOG_DEBUG << value;
         QWinTaskbarProgress *progress = m_TaskbarButton->progress();
         progress->setValue((int)value);
 #else
@@ -134,7 +133,7 @@ namespace Helpers {
     void HelpersQmlWrapper::turnTaskbarProgressOff() {
 #ifdef Q_OS_WIN
         if (!m_WinTaskbarButtonApplicable) { return; }
-        qDebug() << "HelpersQmlWrapper::turnTaskbarProgressOff #" << "Turning off taskbar button in Windows";
+        LOG_DEBUG << "Turning off taskbar button in Windows";
         QWinTaskbarProgress *progress = m_TaskbarButton->progress();
         progress->setVisible(false);
 #endif

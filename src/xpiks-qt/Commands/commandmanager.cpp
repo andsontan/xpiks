@@ -230,7 +230,7 @@ void Commands::CommandManager::recodePasswords(const QString &oldMasterPassword,
                                                   const QString &newMasterPassword,
                                                   const QVector<Models::UploadInfo *> &uploadInfos) const {
     if (m_SecretsManager) {
-        qDebug() << "CommandManager::recodePasswords #" << uploadInfos.length() << "item(s)";
+        LOG_DEBUG << uploadInfos.length() << "item(s)";
         foreach (Models::UploadInfo *info, uploadInfos) {
             if (info->hasPassword()) {
                 QString newPassword = m_SecretsManager->recodePassword(
@@ -242,7 +242,7 @@ void Commands::CommandManager::recodePasswords(const QString &oldMasterPassword,
 }
 
 void Commands::CommandManager::combineArtwork(Models::ArtItemInfo *itemInfo) const {
-    qDebug() << "CommandManager::combineArtwork #" << "one item with index" << itemInfo->getOriginalIndex();
+    LOG_DEBUG << "one item with index" << itemInfo->getOriginalIndex();
     if (m_CombinedArtworksModel) {
         m_CombinedArtworksModel->resetModelData();
         m_CombinedArtworksModel->initArtworks(QVector<Models::ArtItemInfo*>() << itemInfo);
@@ -253,7 +253,7 @@ void Commands::CommandManager::combineArtwork(Models::ArtItemInfo *itemInfo) con
 }
 
 void Commands::CommandManager::combineArtworks(const QVector<Models::ArtItemInfo *> &artworks) const {
-    qDebug() << "CommandManager::combineArtworks #" << artworks.length() << "artworks";
+    LOG_DEBUG << artworks.length() << "artworks";
     if (m_CombinedArtworksModel) {
         m_CombinedArtworksModel->resetModelData();
         m_CombinedArtworksModel->initArtworks(artworks);
@@ -439,7 +439,7 @@ void Commands::CommandManager::cleanupLocalLibraryAsync() const {
 
 void Commands::CommandManager::afterConstructionCallback()  {
     if (m_AfterInitCalled) {
-        qWarning() << "CommandManager::afterConstructionCallback #" << "Attempt to call afterConstructionCallback() second time";
+        LOG_WARNING << "Attempt to call afterConstructionCallback() second time";
         return;
     }
 
@@ -470,7 +470,7 @@ void Commands::CommandManager::afterConstructionCallback()  {
 }
 
 void Commands::CommandManager::beforeDestructionCallback() const {
-    qDebug() << "CommandManager::beforeDestructionCallback #";
+    LOG_DEBUG << "Shutting down...";
     if (!m_AfterInitCalled) { return; }
 
     m_ArtItemsModel->disconnect();

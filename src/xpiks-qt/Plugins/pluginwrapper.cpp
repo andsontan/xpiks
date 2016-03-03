@@ -20,7 +20,6 @@
  */
 
 #include "pluginwrapper.h"
-#include <QDebug>
 #include "xpiksplugininterface.h"
 #include "ipluginaction.h"
 #include "pluginactionsmodel.h"
@@ -39,19 +38,19 @@ namespace Plugins {
     }
 
     void PluginWrapper::enablePlugin() {
-        qInfo() << "PluginWrapper::enablePlugin #" << getPrettyName();
+        LOG_INFO << getPrettyName();
 
         try {
             m_PluginInterface->enablePlugin();
             m_IsEnabled = true;
         }
         catch(...) {
-            qWarning() << "PluginWrapper::enablePlugin #" << "Exception while enabling plugin";
+            LOG_WARNING << "Exception while enabling plugin";
         }
     }
 
     void PluginWrapper::disablePlugin() {
-        qInfo() << "PluginWrapper::disablePlugin #" << getPrettyName();
+        LOG_INFO << getPrettyName();
 
         try {
             // set disabled in any case
@@ -59,33 +58,33 @@ namespace Plugins {
             m_PluginInterface->disablePlugin();
         }
         catch(...) {
-            qWarning() << "PluginWrapper::disablePlugin #" << "Exception while disabling plugin";
+            LOG_WARNING << "Exception while disabling plugin";
         }
     }
 
     void PluginWrapper::triggerActionSafe(int actionID) const {
-        qInfo() << "PluginWrapper::triggerAction #" << getPrettyName() << "executing action:" << actionID;
+        LOG_INFO << getPrettyName() << "executing action:" << actionID;
 
         try {
             if (m_IsEnabled) {
                 m_PluginInterface->executeAction(actionID);
             } else {
-                qWarning() << "PluginWrapper::triggerAction #" << getPrettyName() << "is disabled";
+                LOG_WARNING << getPrettyName() << "is disabled";
             }
         }
         catch (...) {
-            qWarning() << "PluginWrapper::triggerAction #" << "Exception while triggering action for plugin ID" << m_PluginID;
+            LOG_WARNING << "Exception while triggering action for plugin ID" << m_PluginID;
         }
     }
 
     void PluginWrapper::finalizePlugin() {
-        qInfo() << "PluginWrapper::finalizePlugin #" << getPrettyName();
+        LOG_INFO << getPrettyName();
 
         try {
             m_PluginInterface->finalizePlugin();
         }
         catch (...) {
-            qWarning() << "PluginWrapper::finalizePlugin #" << "Exception on finalization";
+            LOG_WARNING << "Exception on finalization";
         }
     }
 }

@@ -28,6 +28,7 @@
 #include "artworkmetadata.h"
 #include "artiteminfo.h"
 #include "../SpellCheck/spellcheckiteminfo.h"
+#include "../Common/defines.h"
 
 namespace Models {
     CombinedArtworksModel::CombinedArtworksModel(QObject *parent) :
@@ -61,7 +62,7 @@ namespace Models {
     }
 
     void CombinedArtworksModel::recombineArtworks() {
-        qDebug() << "CombinedArtworksModel::recombineArtworks #" << m_ArtworksList.length() << "artwork(s)";
+        LOG_DEBUG << m_ArtworksList.length() << "artwork(s)";
         if (m_ArtworksList.length() == 1) {
             assignFromOneArtwork();
             ArtworkMetadata *metadata = m_ArtworksList.first()->getOrigin();
@@ -162,7 +163,7 @@ namespace Models {
     }
 
     void CombinedArtworksModel::pasteKeywords(const QStringList &keywords) {
-        qDebug() << "CombinedArtworksModel::pasteKeywords #" << keywords.length() << "keyword(s)";
+        LOG_DEBUG << keywords.length() << "keyword(s)";
         if (m_CommonKeywordsModel.appendKeywords(keywords) > 0) {
             emit keywordsCountChanged();
             m_AreKeywordsModified = true;
@@ -298,13 +299,13 @@ namespace Models {
 
         if (selectedCount == 1) {
             Q_ASSERT(firstSelected != NULL);
-            qDebug() << "CombinedArtworksModel::assignFromSelected #" << "Assigning fields";
+            LOG_DEBUG << "Assigning fields";
             ArtworkMetadata *metadata = firstSelected->getOrigin();
             setTitle(metadata->getTitle());
             setDescription(metadata->getDescription());
             setKeywords(metadata->getKeywords());
         } else {
-            qWarning() << "CombinedArtworksModel::assignFromSelected #" << "Method called with" << count << "items selected";
+            LOG_WARNING << "Method called with" << count << "items selected";
         }
     }
 

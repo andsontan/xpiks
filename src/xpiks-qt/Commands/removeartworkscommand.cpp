@@ -22,7 +22,6 @@
 #include <QVector>
 #include <QPair>
 #include <QString>
-#include <QDebug>
 #include "removeartworkscommand.h"
 #include "commandmanager.h"
 #include "../Models/artworksrepository.h"
@@ -34,7 +33,7 @@
 
 namespace Commands {
     CommandResult *RemoveArtworksCommand::execute(const ICommandManager *commandManagerInterface) const {
-        qInfo() << "RemoveArtworksCommand::execute #" << "removing" << m_RangesToRemove.length() << "ranges received";
+        LOG_INFO << "removing" << m_RangesToRemove.length() << "ranges received";
         CommandManager *commandManager = (CommandManager*)commandManagerInterface;
 
         Models::ArtItemsModel *artItemsModel = commandManager->getArtItemsModel();
@@ -72,7 +71,7 @@ namespace Commands {
 
         int artworksToRemoveCount = removedItemsIndices.count();
 
-        qInfo() << "RemoveArtworksCommand::execute #" << "removing" << artworksToRemoveCount << "real items found";
+        LOG_INFO << "removing" << artworksToRemoveCount << "real items found";
 
         if (artworksToRemoveCount > 0) {
             QVector<QPair<int, int> > rangesToRemove;

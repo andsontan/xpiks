@@ -22,7 +22,7 @@
 #include "recentdirectoriesmodel.h"
 #include <QDataStream>
 #include <QUrl>
-#include <QDebug>
+#include "../Common/defines.h"
 
 namespace Models {
     RecentDirectoriesModel::RecentDirectoriesModel():
@@ -54,7 +54,7 @@ namespace Models {
 
     void RecentDirectoriesModel::pushDirectory(const QString &directoryPath) {
         if (doPushDirectory(directoryPath)) {
-            qDebug() << "RecentDirectoriesModel::pushDirectory #" << "Added new recent directory";
+            LOG_DEBUG << "Added new recent directory";
         }
 
         m_LatestUsedDirectory = directoryPath;

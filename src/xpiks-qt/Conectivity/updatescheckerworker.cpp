@@ -46,7 +46,6 @@
 #include <QJsonObject>
 #include <QtGlobal>
 #include <QEventLoop>
-#include <QDebug>
 #include "../Common/defines.h"
 #include "../Common/version.h"
 #include "../Common/defines.h"
@@ -71,7 +70,7 @@ namespace Conectivity {
     }
 
     void UpdatesCheckerWorker::processOneItem() {
-        qInfo() << "UpdatesCheckerWorker::processOneItem #" << "Update service: checking for updates...";
+        LOG_INFO << "Update service: checking for updates...";
         QString queryString = QString(UPDATE_JSON_URL);
         QUrl url;
         url.setUrl(queryString);
@@ -103,7 +102,7 @@ namespace Conectivity {
                 int availableVersion = majorVersion*100 + minorVersion*10 + fixVersion;
                 int currVersion = XPIKS_MAJOR_VERSION*100 + XPIKS_MINOR_VERSION*10 + XPIKS_FIX_VERSION;
 
-                qInfo() << "UpdatesCheckerWorker::replyReceived #" << "Update service: available =" << availableVersion << "current =" << currVersion;
+                LOG_INFO << "Update service: available =" << availableVersion << "current =" << currVersion;
 
                 if (availableVersion > currVersion) {
                     QString updateUrl = DEFAULT_UPDATE_URL;
@@ -115,13 +114,13 @@ namespace Conectivity {
                 }
             }
         } else {
-            qWarning() << "UpdatesCheckerWorker::replyReceived #" << "Update check failed:" << networkReply->errorString();
+            LOG_WARNING << "Update check failed:" << networkReply->errorString();
         }
 
         networkReply->deleteLater();
         emit stopped();
         emit requestFinished();
 
-        qInfo() << "UpdatesCheckerWorker::replyReceived #" << "Updates checking loop finished";
+        LOG_INFO << "Updates checking loop finished";
     }
 }

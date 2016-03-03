@@ -20,7 +20,6 @@
  */
 
 #include "artworkmetadata.h"
-#include <QDebug>
 #include <QReadLocker>
 #include <QWriteLocker>
 #include <QStringBuilder>
@@ -30,6 +29,7 @@
 #include "../SpellCheck/spellsuggestionsitem.h"
 #include "../SpellCheck/spellcheckitem.h"
 #include "../SpellCheck/spellcheckiteminfo.h"
+#include "../Common/defines.h"
 
 namespace Models {
     ArtworkMetadata::ArtworkMetadata(const QString &filepath, qint64 ID) :
@@ -142,7 +142,7 @@ namespace Models {
 
     int ArtworkMetadata::appendKeywords(const QStringList &keywordsList) {
         int result = BasicKeywordsModel::appendKeywords(keywordsList);
-        qDebug() << "ArtworkMetadata::appendKeywords #" << "Appended" << result << "keywords out of" << keywordsList.length();
+        LOG_DEBUG << "Appended" << result << "keywords out of" << keywordsList.length();
         if (result > 0) { markModified(); }
         return result;
     }

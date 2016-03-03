@@ -20,7 +20,6 @@
  */
 
 #include "curlftpuploader.h"
-#include <QDebug>
 #include <QCoreApplication>
 #include <QFileInfo>
 #include <sys/stat.h>
@@ -61,7 +60,7 @@ namespace Conectivity {
 
         int result = progressReporter->cancelRequested() ? 1 : 0;
         if (result) {
-            qDebug() << "xferinfo #" << "Cancelling upload from the progress callback...";
+            LOG_DEBUG << "Cancelling upload from the progress callback...";
         }
 
         return result;
@@ -106,7 +105,7 @@ namespace Conectivity {
 
     bool uploadFile(CURL *curlHandle, UploadContext *context, CurlProgressReporter *progressReporter,
                     const QString &filepath, const QString &remoteUrl) {
-        qDebug() << "uploadFile #" << filepath << "-->" << remoteUrl;
+        LOG_DEBUG << filepath << "-->" << remoteUrl;
         bool result = false;
 
         FILE *f;
@@ -118,7 +117,7 @@ namespace Conectivity {
 
         /* get the file size of the local file */
         if (stat(filepath.toLocal8Bit().data(), &file_info)) {
-            qWarning() << "uploadFile #" << "Failed to stat file" << filepath;
+            LOG_WARNING << "Failed to stat file" << filepath;
             return result;
         }
 
@@ -126,7 +125,7 @@ namespace Conectivity {
 
         f = fopen(filepath.toLocal8Bit().data(), "rb");
         if (f == NULL) {
-            qWarning() << "uploadFile #" << "Failed to open file" << filepath;
+            LOG_WARNING << "Failed to open file" << filepath;
             return result;
         }
 
@@ -141,13 +140,13 @@ namespace Conectivity {
             QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
 
             if (r == CURLE_ABORTED_BY_CALLBACK) {
-                qInfo() << "uploadFile #" << "Upload aborted by user...";
+                LOG_INFO << "Upload aborted by user...";
                 break;
             }
 
             /* are we resuming? */
             if (c) { /* yes */
-                qDebug() << "uploadFile #" << "Attempting to resume upload" << uploaded_len << "try #" << c;
+                LOG_DEBUG << "Attempting to resume upload" << uploaded_len << "try #" << c;
                 /* determine the length of the file already written */
                 /*
                * With NOBODY and NOHEADER, libcurl will issue a SIZE
@@ -162,7 +161,7 @@ namespace Conectivity {
 
                 r = curl_easy_perform(curlHandle);
                 if (r != CURLE_OK) {
-                    qWarning() << "uploadFile #" << "Attempt failed! Curl error:" << curl_easy_strerror(r);
+                    LOG_WARNING << "Attempt failed! Curl error:" << curl_easy_strerror(r);
                     continue;
                 }
 
@@ -185,7 +184,7 @@ namespace Conectivity {
         result = (r == CURLE_OK);
 
         if (!result) {
-            qWarning() << "uploadFile #" << "Upload failed! Curl error:" << curl_easy_strerror(r);
+            LOG_WARNING << "Upload failed! Curl error:" << curl_easy_strerror(r);
         }
 
         return result;
@@ -255,7 +254,7 @@ namespace Conectivity {
 
     void CurlProgressReporter::cancelHandler() {
         m_Cancel = true;
-        qDebug() << "CurlProgressReporter::cancelHandler #" << "Cancelled in the progress reporter...";
+        LOG_DEBUG << "Cancelled in the progress reporter...";
     }
 
     CurlFtpUploader::CurlFtpUploader(UploadBatch *batchToUpload, QObject *parent) :
@@ -275,7 +274,7 @@ namespace Conectivity {
         UploadContext *context = m_BatchToUpload->getContext();
 
         if (m_Cancel) {
-            qWarning() << "CurlFtpUploader::uploadBatch #" << "Cancelled before upload." << context->m_Host;
+            LOG_WARNING << "Cancelled before upload." << context->m_Host;
             return;
         }
 
@@ -294,12 +293,12 @@ namespace Conectivity {
 
         // temporary do not emit started signal: not used
         //emit uploadStarted();
-        qDebug() << "CurlFtpUploader::uploadBatch #" << "Uploading" << size << "file(s) started for" << host << "Passive mode =" << context->m_UsePassiveMode;
+        LOG_DEBUG << "Uploading" << size << "file(s) started for" << host << "Passive mode =" << context->m_UsePassiveMode;
 
         for (int i = 0; i < size; ++i) {
 
             if (m_Cancel) {
-                qWarning() << "CurlFtpUploader::uploadBatch #" << "Cancelled. Breaking..." << host;
+                LOG_WARNING << "Cancelled. Breaking..." << host;
                 break;
             }
 
@@ -312,7 +311,7 @@ namespace Conectivity {
             try {
                 uploadSuccess = uploadFile(curlHandle, context, &progressReporter, filepath, remoteUrl);
             } catch (...) {
-                qWarning() << "CurlFtpUploader::uploadBatch #" << "CRASHED for file" << filepath << "for host" << host;
+                LOG_WARNING << "CRASHED for file" << filepath << "for host" << host;
             }
 
             if (!uploadSuccess) {
@@ -329,7 +328,7 @@ namespace Conectivity {
         reportCurrentFileProgress(0.0);
 
         emit uploadFinished(anyErrors);
-        qDebug() << "CurlFtpUploader::uploadBatch #" << "Uploading finished for" << host;
+        LOG_DEBUG << "Uploading finished for" << host;
 
         curl_easy_cleanup(curlHandle);
         // curl_global_cleanup should be done from coordinator

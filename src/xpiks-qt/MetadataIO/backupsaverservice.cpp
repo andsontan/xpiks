@@ -20,11 +20,10 @@
  */
 
 #include "backupsaverservice.h"
-#include <QThread>
-#include <QDebug>
 #include "backupsaverworker.h"
 #include "../Models/artworkmetadata.h"
 #include "saverworkerjobitem.h"
+#include "../Common/defines.h"
 
 namespace MetadataIO {
     BackupSaverService::BackupSaverService():
@@ -35,7 +34,7 @@ namespace MetadataIO {
 
     void BackupSaverService::startSaving() {
         Q_ASSERT(!m_BackupWorker->isRunning());
-        qDebug() << "BackupSaverService::startSaving #";
+        LOG_DEBUG << "#";
 
         QThread *thread = new QThread();
         m_BackupWorker->moveToThread(thread);
@@ -66,7 +65,7 @@ namespace MetadataIO {
     }
 
     void BackupSaverService::readArtworks(const QVector<Models::ArtworkMetadata *> &artworks) const {
-        qDebug() << "BackupSaverService::readArtworks #" << artworks.size() << "artwork(s)";
+        LOG_DEBUG << artworks.size() << "artwork(s)";
         QVector<SaverWorkerJobItem *> jobs;
         jobs.reserve(artworks.length());
 
@@ -79,11 +78,11 @@ namespace MetadataIO {
     }
 
     void BackupSaverService::workerFinished() {
-        qInfo() << "BackupSaverService::workerFinished #";
+        LOG_INFO << "#";
     }
 
     void BackupSaverService::stopSaving() {
-        qDebug() << "BackupSaverService::stopSaving #" << "stopping...";
+        LOG_DEBUG << "stopping...";
         m_BackupWorker->stopWorking();
     }
 }

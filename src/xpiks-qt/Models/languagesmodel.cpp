@@ -24,7 +24,6 @@
 #include <QString>
 #include <QTranslator>
 #include <QCoreApplication>
-#include <QDebug>
 #include <QLibraryInfo>
 #include "../Common/defines.h"
 #include "../Commands/commandmanager.h"
@@ -61,13 +60,13 @@ namespace Models {
 
         QString qtTranslatorPath = languagesDir.filePath(QString("qt_%1.qm").arg(selectedLocale));
         if (m_QtTranslator->load(qtTranslatorPath)) {
-            qDebug() << "LanguagesModel::initFirstLanguage #" << "Loaded" << qtTranslatorPath;
+            LOG_DEBUG << "Loaded" << qtTranslatorPath;
             app->installTranslator(m_QtTranslator);
         }
 
         QString xpiksTranslatorPath = languagesDir.filePath(QString("xpiks_%1.qm").arg(selectedLocale));
         if (m_XpiksTranslator->load(xpiksTranslatorPath)) {
-            qDebug() << "LanguagesModel::initFirstLanguage #" << "Loaded" << xpiksTranslatorPath;
+            LOG_DEBUG << "Loaded" << xpiksTranslatorPath;
             app->installTranslator(m_XpiksTranslator);
         } else {
             selectedLocale = "en_US";
@@ -76,24 +75,24 @@ namespace Models {
 
             xpiksTranslatorPath = languagesDir.filePath(QLatin1String("xpiks_en_US.qm"));
             if (m_XpiksTranslator->load(xpiksTranslatorPath)) {
-                qDebug() << "LanguagesModel::initFirstLanguage #" << "Loaded" << xpiksTranslatorPath;
+                LOG_DEBUG << "Loaded" << xpiksTranslatorPath;
                 app->installTranslator(m_XpiksTranslator);
             }
         }
 
-        qInfo() << "LanguagesModel::initFirstLanguage #" << "Switched to" << selectedLocale;
+        LOG_INFO << "Initialized with" << selectedLocale;
     }
 
     void LanguagesModel::loadLanguages() {
         Models::SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
         QString selectedLocale = settingsModel->getSelectedLocale();
 
-        qDebug() << "LanguagesModel::loadTranslators #" << "Current locale is" << selectedLocale;
+        LOG_DEBUG << "Current locale is" << selectedLocale;
         loadTranslators(QDir(m_TranslationsPath), selectedLocale);
     }
 
     void LanguagesModel::switchLanguage(int index) {
-        qDebug() << "LanguagesModel::switchLanguage #" << "index" << index;
+        LOG_DEBUG << "index" << index;
         if (index == m_CurrentLanguageIndex) { return; }
 
         const QPair<QString, QString> &langPair = m_LanguagesList.at(index);
@@ -112,17 +111,17 @@ namespace Models {
 
         QString qtTranslatorPath = languagesDir.filePath(QString("qt_%1.qm").arg(langPair.first));
         if (m_QtTranslator->load(qtTranslatorPath)) {
-            qDebug() << "LanguagesModel::switchLanguage #" << "Loaded" << qtTranslatorPath;
+            LOG_DEBUG << "Loaded" << qtTranslatorPath;
             app->installTranslator(m_QtTranslator);
         }
 
         QString xpiksTranslatorPath = languagesDir.filePath(QString("xpiks_%1.qm").arg(langPair.first));
         if (m_XpiksTranslator->load(xpiksTranslatorPath)) {
-            qDebug() << "LanguagesModel::switchLanguage #" << "Loaded" << xpiksTranslatorPath;
+            LOG_DEBUG << "Loaded" << xpiksTranslatorPath;
             app->installTranslator(m_XpiksTranslator);
         }
 
-        qInfo() << "LanguagesModel::switchLanguage #" << "Switched to" << langPair.first;
+        LOG_INFO << "Switched to" << langPair.first;
         emit languageChanged();
         emit dataChanged(this->index(0), this->index(m_LanguagesList.length() - 1));
     }
@@ -143,7 +142,7 @@ namespace Models {
     }
 
     void LanguagesModel::loadTranslators(const QDir &dir, const QString &selectedLocale) {
-        qDebug() << "LanguagesModel::loadTranslators #" << dir.absolutePath();
+        LOG_DEBUG << dir.absolutePath();
         
         const QString filter = QLatin1String("xpiks_*.qm");
         QDir::Filters filters = QDir::Files | QDir::Readable;
@@ -180,7 +179,7 @@ namespace Models {
 
             lastIndex++;
                 
-            qInfo() << "LanguagesModel::loadTranslators #" << "Found" << locale << "translation for language:" << lang;
+            LOG_INFO << "Found" << locale << "translation for language:" << lang;
         }
     }
 }

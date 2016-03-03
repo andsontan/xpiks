@@ -21,7 +21,6 @@
 
 #include "secretsmanager.h"
 #include "aes-qt.h"
-#include <QDebug>
 #include <QCryptographicHash>
 #include "../Common/defines.h"
 
@@ -106,7 +105,7 @@ namespace Encryption {
         // Q_ASSERT(firstTime == m_EncodedMasterPassword.isEmpty());
         Q_ASSERT(firstTime == inputCurrMasterPassword.isEmpty());
 
-        qInfo() << "SecretsManager::changeMasterPassword #" << "Changing master password...";
+        LOG_INFO << "Changing master password...";
 
         bool changed = false;
 
@@ -127,7 +126,7 @@ namespace Encryption {
     }
 
     void SecretsManager::removeMasterPassword() {
-        qInfo() << "SecretsManager::removeMasterPassword #";
+        LOG_INFO << "#";
          m_EncodedMasterPassword.clear();
          m_MasterPasswordHash.clear();
          emit afterMasterPasswordReset();

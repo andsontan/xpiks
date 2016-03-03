@@ -20,11 +20,10 @@
  */
 
 #include "testconnection.h"
-#include <QDebug>
 #include "uploadcontext.h"
 #include "ftphelpers.h"
 #include <curl/curl.h>
-#include "Common/defines.h"
+#include "../Common/defines.h"
 
 namespace Conectivity {
     static size_t throw_away(void *ptr, size_t size, size_t nmemb, void *data) {
@@ -51,19 +50,19 @@ namespace Conectivity {
         curl_easy_setopt(curlHandle, CURLOPT_DIRLISTONLY, 1L);
         curl_easy_setopt(curlHandle, CURLOPT_HEADERFUNCTION, throw_away);
 
-        qDebug() << "isContextValid #" << "About to check credentials for" << host;
+        LOG_DEBUG << "About to check credentials for" << host;
         r = curl_easy_perform(curlHandle);
 
         result = (CURLE_OK == r);
 
         if (!result) {
-            qInfo() << "isContextValid #" << "Credentials checking error:" << curl_easy_strerror(r);
+            LOG_INFO << "Credentials checking error:" << curl_easy_strerror(r);
         }
 
         curl_easy_cleanup(curlHandle);
         curl_global_cleanup();
 
-        qInfo() << "isContextValid #" << "Credentials checking finished" << host;
+        LOG_INFO << "Credentials checking finished" << host;
         delete context;
 
         ContextValidationResult cvr;

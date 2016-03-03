@@ -21,7 +21,6 @@
 
 #include "spellchecksuggestionmodel.h"
 #include <QQmlEngine>
-#include <QDebug>
 #include <QHash>
 #include <QString>
 #include "spellsuggestionsitem.h"
@@ -98,7 +97,7 @@ namespace SpellCheck {
     }
 
     void SpellCheckSuggestionModel::submitCorrections() const {
-        qDebug() << "SpellCheckSuggestionModel::submitCorrections #";
+        LOG_DEBUG << "#";
         bool anyChanged = false;
 
         foreach (SpellSuggestionsItem *item, m_SuggestionsList) {
@@ -130,7 +129,7 @@ namespace SpellCheck {
 
     void SpellCheckSuggestionModel::setupModel(SpellCheck::ISpellCheckable *item, int index, int flags) {
         Q_ASSERT(item != NULL);
-        qInfo() << "SpellCheckSuggestionModel::setupModel #" << "flags =" << flags;
+        LOG_INFO << "flags =" << flags;
         QVector<SpellSuggestionsItem*> requests;
 
         if (Common::HasFlag(flags, Common::CorrectKeywords)) {
@@ -162,7 +161,7 @@ namespace SpellCheck {
     }
 
     QVector<SpellSuggestionsItem *> SpellCheckSuggestionModel::setupSuggestions(const QVector<SpellSuggestionsItem *> &items) {
-        qDebug() << "SpellCheckSuggestionModel::setupSuggestions #" << items.length() << "item(s)";
+        LOG_DEBUG << items.length() << "item(s)";
         SpellCheckerService *service = m_CommandManager->getSpellCheckerService();
         // another vector for requests with available suggestions
         QVector<SpellSuggestionsItem*> executedRequests;

@@ -20,8 +20,6 @@
  */
 
 #include "warningsservice.h"
-#include <QThread>
-#include <QDebug>
 #include <QVector>
 #include "../Common/defines.h"
 #include "warningscheckingworker.h"
@@ -50,14 +48,14 @@ namespace Warnings {
         QObject::connect(m_WarningsWorker, SIGNAL(destroyed(QObject*)),
                          this, SLOT(workerDestoyed(QObject*)));
 
-        qInfo() << "WarningsService::startService #" << "Starting worker";
+        LOG_INFO << "Starting worker";
 
         thread->start();
     }
 
     void WarningsService::stopService() {
         if (m_WarningsWorker != NULL) {
-            qInfo() << "WarningsService::stopService #" << "Stopping worker";
+            LOG_INFO << "Stopping worker";
             m_WarningsWorker->stopWorking();
         }
     }
@@ -95,13 +93,13 @@ namespace Warnings {
             itemsToSubmit.append(itemToSubmit);
         }
 
-        qInfo() << "WarningsService::submitItems #" << "Submitting" << length << "items";
+        LOG_INFO << "Submitting" << length << "items";
         m_WarningsWorker->submitItems(itemsToSubmit);
     }
 
     void WarningsService::workerDestoyed(QObject *object) {
         Q_UNUSED(object);
-        qDebug() << "WarningsService::workerDestoyed #";
+        LOG_DEBUG << "#";
         m_WarningsWorker = NULL;
     }
 }
