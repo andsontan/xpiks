@@ -113,6 +113,7 @@ namespace Models {
         void changeKeywordsChanged();
         void changeTitleChanged();
         void appendKeywordsChanged();
+        void artworksFileSystemDeleted();
 
     public:
         int getSelectedArtworksCount() const;

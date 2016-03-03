@@ -429,6 +429,7 @@ namespace Models {
     }
 
     void CombinedArtworksModel::ArtItemsDeleted(){
+     emit artworksFileSystemDeleted();
      recombineArtworks();
      emit artworksCountChanged();
     }
