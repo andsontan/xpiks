@@ -17,7 +17,7 @@ before_install:
 install:
   - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++ gcc; export CXX="g++" CC="gcc"; $CXX --version; fi
   - if [ "$QT_BASE" = "55" ]; then sudo apt-get install -qq qt55base; source /opt/qt55/bin/qt55-env.sh; fi
-  - sudo apt-get install qt5-qmake qt55base-dev qt55declarative-dev libcurl4-openssl-dev libhunspell-dev libquazip0-dev zlib1g-dev
+  - sudo apt-get install qt55base qt55quickcontrols qt55svg qt55declarative libcurl4-openssl-dev libhunspell-dev libquazip0-dev zlib1g-dev
 
 script:
   - cd src/xpiks-qt/
