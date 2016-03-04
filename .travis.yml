@@ -6,13 +6,20 @@ os:
 compiler:
   - gcc
 
+env:
+  - QT_BASE=55
+
 before_install:
-  - sudo add-apt-repository --yes ppa:ubuntu-sdk-team/ppa
+  - if [ "$CXX" = "g++" ]; then sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y; fi
+  - if [ "$QT_BASE" = "55" ]; then sudo add-apt-repository ppa:beineri/opt-qt551 -y; fi
   - sudo apt-get update -qq
-  - sudo apt-get install qt5-qmake qtbase5-dev qtdeclarative5-dev libcurl-dev hunspell-dev quazip-dev zlib-dev
+
+install:
+  - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++ gcc; export CXX="g++" CC="gcc"; $CXX --version; fi
+  - if [ "$QT_BASE" = "55" ]; then sudo apt-get install -qq qt55base; source /opt/qt55/bin/qt55-env.sh; fi
+  - sudo apt-get install qt5-qmake qt55base-dev qt55declarative-dev libcurl4-openssl-dev libhunspell-dev libquazip0-dev zlib1g-dev
 
 script:
-  - qmake -qt=qt5 -v
   - cd src/xpiks-qt/
   - qname -qt=qt5
   - make
