@@ -103,5 +103,6 @@ If you'd like to build Xpiks for your own platform, please, refer to <a href="{{
 </section>
 
   {% include asides/donate.html %}
+  {% include asides/fake_popular_posts.html %}
 
 </article>
