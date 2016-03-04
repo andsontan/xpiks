@@ -100,6 +100,8 @@ Check out other downloads at <a href="https://github.com/Ribtoks/xpiks/releases/
 If you'd like to build Xpiks for your own platform, please, refer to <a href="{{site.url}}/blog/2014/building-xpiks-alone">this post</a>.
 </p>
 
-  {% include asides/donate.html %}
 </section>
+
+  {% include asides/donate.html %}
+
 </article>
