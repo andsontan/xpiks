@@ -18,7 +18,7 @@ permalink: /downloads/
 </a>
 </div>
 
-<p>Download the Xpiks package from the link on the left, unpack and drag'n'drop it to the Applications. <strong>You will need to install the Exiftool to use Xpiks.</strong> Download and install <i>Exiftool</i> from the <a href="http://owl.phy.queensu.ca/%7Ephil/exiftool/">official website</a>.</p>
+<p class="download-description">Download the Xpiks package from the link on the left, unpack and drag'n'drop it to the Applications. <strong>You will need to install the Exiftool to use Xpiks.</strong> Download and install <i>Exiftool</i> from the <a href="http://owl.phy.queensu.ca/%7Ephil/exiftool/">official website</a>.</p>
 
 <div style="clear:both; height: 25px;">&nbsp;</div>
 
@@ -32,7 +32,7 @@ permalink: /downloads/
 </a>
 </div>
 
-<p>Download the Xpiks zip archive from the link on the left, unpack it where you want and it's ready to go. Please, note that this build does work <strong>only for Windows 7 x64 and later with x64 architecture</strong>.</p>
+<p class="download-description">Download the Xpiks zip archive from the link on the left, unpack it where you want and it's ready to go. Please, note that this build does work <strong>only for Windows 7 x64 and later with x64 architecture</strong>.</p>
 
 <div style="clear:both;">&nbsp;</div>
 
@@ -44,7 +44,7 @@ permalink: /downloads/
 </a>
 </div>
 
-<p>Download the Xpiks zip archive from the link on the left, unpack it where you want and it's ready to go. Please, note that this build does work <strong>only for Windows 7 x32 and later with x32 architecture</strong>.</p>
+<p class="download-description">Download the Xpiks zip archive from the link on the left, unpack it where you want and it's ready to go. Please, note that this build does work <strong>only for Windows 7 x32 and later with x32 architecture</strong>.</p>
 
 <!--
 <div style="clear:both;">&nbsp;</div>
@@ -72,7 +72,7 @@ permalink: /downloads/
 </a>
 </div>
 
-<p>Package is only for Debian-based operating systems (Ubuntu, Debian, Mint, etc.) with x64 architecture. See <a href="{{site.url}}/linux-instructions/">installation instructions for Linux</a> page.</p>
+<p class="download-description">Package is only for Debian-based operating systems (Ubuntu, Debian, Mint, etc.) with x64 architecture. See <a href="{{site.url}}/linux-instructions/">installation instructions for Linux</a> page.</p>
 
 <div style="clear:both;height: 30px;">&nbsp;</div>
 
@@ -84,7 +84,7 @@ permalink: /downloads/
 </a>
 </div>
 
-<p>Package is only for rpm-based distros (OpenSUSE, Fedora etc.) with x64 architecture. See <a href="{{site.url}}/linux-instructions/">installation instructions for Linux</a> page.</p>
+<p class="download-description">Package is only for rpm-based distros (OpenSUSE, Fedora etc.) with x64 architecture. See <a href="{{site.url}}/linux-instructions/">installation instructions for Linux</a> page.</p>
 
 <div style="clear:both;height: 30px;">&nbsp;</div>
 
