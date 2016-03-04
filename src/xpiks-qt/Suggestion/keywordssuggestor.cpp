@@ -82,6 +82,7 @@ namespace Suggestion {
         int sign = newState ? +1 : -1;
         accountKeywords(suggestionArtwork->getKeywordsSet(), sign);
         m_SelectedArtworksCount += sign;
+        emit selectedArtworksCountChanged();
 
         QModelIndex qIndex = this->index(index);
         emit dataChanged(qIndex, qIndex, QVector<int>() << IsSelectedRole);
@@ -160,46 +161,48 @@ namespace Suggestion {
     }
 
     void KeywordsSuggestor::updateSuggestedKeywords() {
-        QStringList keywords;
+        QStringList keywords, otherKeywords;
 
         QHash<QString, int>::const_iterator it = m_KeywordsHash.constBegin();
         QHash<QString, int>::const_iterator itEnd = m_KeywordsHash.constEnd();
 
-        int threshold = 0;
+        int lowerThreshold = 0;
+        int upperThreshold = 0;
+
         if (m_SelectedArtworksCount <= 2) {
-            threshold = qMax(m_SelectedArtworksCount, 1);
+            lowerThreshold = 1;
+            upperThreshold = qMax(m_SelectedArtworksCount, 1);
+        } else if (m_SelectedArtworksCount <= 4) {
+            lowerThreshold = 1;
+            upperThreshold = 2;
         } else if (m_SelectedArtworksCount <= 5) {
-            threshold = 2;
-        } else if (m_SelectedArtworksCount <= 8) {
-            threshold = 3;
-        } else if (m_SelectedArtworksCount <= 10) {
-            threshold = 4;
+            lowerThreshold = 2;
+            upperThreshold = 3;
+        } else if (m_SelectedArtworksCount <= 9) {
+            upperThreshold = m_SelectedArtworksCount / 2;
+            lowerThreshold = upperThreshold - 1;
+        } else if (m_SelectedArtworksCount <= 15) {
+            upperThreshold = m_SelectedArtworksCount / 2 - 1;
+            lowerThreshold = upperThreshold - 2;
         } else {
-            threshold = m_SelectedArtworksCount / 2 - 1;
+            upperThreshold = m_SelectedArtworksCount / 2;
+            lowerThreshold = upperThreshold - 2;
         }
 
+        keywords.reserve(m_KeywordsHash.count() / upperThreshold);
+        otherKeywords.reserve(m_KeywordsHash.count() / lowerThreshold);
+
         for (; it != itEnd; ++it) {
-            if (it.value() >= threshold) {
+            int frequency = it.value();
+            if (frequency >= upperThreshold) {
                 keywords.append(it.key());
+            } else if (frequency >= lowerThreshold) {
+                otherKeywords.append(it.key());
             }
         }
 
         m_SuggestedKeywords.resetKeywords(keywords);
-
-        if (m_SelectedArtworksCount != 0) {
-            QSet<QString> allKeywords = getSelectedArtworksKeywords();
-            QSet<QString> suggestedKeywords = keywords.toSet();
-            QSet<QString> otherKeywords = allKeywords.subtract(suggestedKeywords);
-
-            m_AllOtherKeywords.resetKeywords(otherKeywords.toList());
-        }
-#ifndef QT_DEBUG
-        else {
-            m_AllOtherKeywords.clearKeywords();
-            m_SuggestedKeywords.clearKeywords();
-            m_KeywordsHash.clear();
-        }
-#endif
+        m_AllOtherKeywords.resetKeywords(otherKeywords);
 
         emit suggestedKeywordsCountChanged();
         emit otherKeywordsCountChanged();

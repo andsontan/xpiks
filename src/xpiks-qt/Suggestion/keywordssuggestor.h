@@ -43,6 +43,7 @@ namespace Suggestion {
         Q_PROPERTY(int otherKeywordsCount READ getOtherKeywordsCount NOTIFY otherKeywordsCountChanged)
         Q_PROPERTY(bool isInProgress READ getIsInProgress NOTIFY isInProgressChanged)
         Q_PROPERTY(bool useLocal READ getUseLocal WRITE setUseLocal NOTIFY useLocalChanged)
+        Q_PROPERTY(int selectedArtworksCount READ getSelectedArtworksCount NOTIFY selectedArtworksCountChanged)
     public:
         KeywordsSuggestor(QObject *parent=NULL) :
             QAbstractListModel(parent),
@@ -75,6 +76,7 @@ namespace Suggestion {
         int getSuggestedKeywordsCount() const { return m_SuggestedKeywords.rowCount(); }
         int getOtherKeywordsCount() const { return m_AllOtherKeywords.rowCount(); }
         bool getIsInProgress() const { return m_IsInProgress; }
+        int getSelectedArtworksCount() const { return m_SelectedArtworksCount; }
 
     signals:
         void suggestedKeywordsCountChanged();
@@ -82,6 +84,7 @@ namespace Suggestion {
         void isInProgressChanged();
         void useLocalChanged();
         void suggestionArrived();
+        void selectedArtworksCountChanged();
 
     private:
         void setInProgress() { m_IsInProgress = true; emit isInProgressChanged(); }
