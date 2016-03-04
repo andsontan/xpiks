@@ -34,6 +34,18 @@ permalink: /downloads/
 
 <p>Download the Xpiks zip archive from the link on the left, unpack it where you want and it's ready to go. Please, note that this build does work <strong>only for Windows 7 x64 and later with x64 architecture</strong>.</p>
 
+<div style="clear:both;">&nbsp;</div>
+
+<div class="download-package">
+<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.2/Xpiks-qt-32-v1.2.zip">
+<div><img src="{{site.url}}/images/windows_installer.jpg" style="vertical-align: middle;width:70px;" />
+<span style="vertical-align: middle;">Archive for Win x32</span>
+</div>
+</a>
+</div>
+
+<p>Download the Xpiks zip archive from the link on the left, unpack it where you want and it's ready to go. Please, note that this build does work <strong>only for Windows 7 x32 and later with x32 architecture</strong>.</p>
+
 <!--
 <div style="clear:both;">&nbsp;</div>
 
