@@ -1,0 +1,18 @@
+language: cpp
+
+os:
+  - linux
+
+compiler:
+  - gcc
+
+before_install:
+  - sudo add-apt-repository --yes ppa:ubuntu-sdk-team/ppa
+  - sudo apt-get update -qq
+  - sudo apt-get install qt5-qmake qtbase5-dev qtdeclarative5-dev libcurl-dev hunspell-dev quazip-dev zlib-dev
+
+script:
+  - qmake -qt=qt5 -v
+  - cd src/xpiks-qt/
+  - qname -qt=qt5
+  - make
