@@ -21,6 +21,8 @@ install:
   - sudo apt-get install qt55base qt55quickcontrols qt55svg qt55declarative libcurl4-openssl-dev libhunspell-dev libquazip0-dev zlib1g-dev
 
 script:
-  - cd src/xpiks-qt/
+  - cd src/
+  - mv tiny-aes/aes.c tiny-aes/aes.cpp
+  - cd xpiks-qt/
   - qmake "CONFIG+=debug" xpiks-qt.pro
   - make
