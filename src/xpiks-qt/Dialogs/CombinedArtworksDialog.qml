@@ -51,14 +51,6 @@ Item {
     }
 
     Connections {
-        target: combinedArtworks
-        onArtworksFileSystemDeleted: {
-            console.debug("Got ArtWorksDeleted signal")
-            deletionFilesDetected.open()
-        }
-    }
-
-    Connections {
         target: helpersWrapper
         onGlobalCloseRequested: {
             console.debug("UI:CombinedArtworksDialog # globalCloseRequested")
@@ -80,17 +72,6 @@ Item {
             doRemoveSelectedArtworks()
         }
     }
-
-    MessageDialog {
-        id: deletionFilesDetected
-        title: "Warning"
-        text: qsTr("Some files you have been working on do not exist anymore! Xpiks will remove them from the workflow.")
-        standardButtons: StandardButton.Yes
-        onYes: {
-            closePopup()
-        }
-    }
-
 
 
     function doRemoveSelectedArtworks() {

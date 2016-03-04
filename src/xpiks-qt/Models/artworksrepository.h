@@ -28,6 +28,7 @@
 #include <QPair>
 #include <QSet>
 #include <QTimer>
+#include <QMutex>
 #include "abstractlistmodel.h"
 #include "../Common/baseentity.h"
 #include <QFileSystemWatcher>
@@ -42,10 +43,10 @@ namespace Models {
         {
             QObject::connect(&m_Fileswatcher, SIGNAL(fileChanged(const QString &)),
                          this, SLOT(checkFileDeleted(const QString &) ) );
-            m_timer.setInterval(1000); //1 sec
-            m_timer.setSingleShot(false); //not single shot
-            QObject::connect(&m_timer, SIGNAL(timeout()), this, SLOT(onTimer()));
-            m_timer.start();
+            m_Timer.setInterval(1000); //1 sec
+            m_Timer.setSingleShot(true); //single shot
+            QObject::connect(&m_Timer, SIGNAL(timeout()), this, SLOT(onTimer()));
+            m_Timer.start();
 
         }
 
@@ -63,9 +64,9 @@ namespace Models {
 
             QObject::connect(&m_Fileswatcher, SIGNAL(fileChanged(const QString &)),
                           this, SLOT(checkFileDeleted(const QString &) ) );
-            m_timer.setInterval(1000); //1 sec
-            m_timer.setSingleShot(true); //not single shot
-            QObject::connect(&m_timer, SIGNAL(timeout()), this, SLOT(onTimer()));
+            m_Timer.setInterval(1000); //1 sec
+            m_Timer.setSingleShot(true); //not single shot
+            QObject::connect(&m_Timer, SIGNAL(timeout()), this, SLOT(onTimer()));
         }
 
         virtual ~ArtworksRepository() {}
@@ -93,7 +94,7 @@ namespace Models {
     signals:
         void artworksSourcesCountChanged();
         void fileChanged(const QString & path);
-        void fileDeleted(QSet<QString> & paths);
+        void fileDeleted();
 
     public slots:
         void fileSelectedChanged(const QString &filepath, bool isSelected) { setFileSelected(filepath, isSelected); }
@@ -108,11 +109,12 @@ namespace Models {
 #ifdef TESTS
         int getFilesCountForDirectory(const QString &directory) const { return m_DirectoriesHash[directory]; }
 #endif
+        bool isFileRemoved(const QString &filepath) const {return (m_DeletedFiles.find(filepath)!=m_DeletedFiles.end());}
 
     public:
         virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
         virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
-
+        void RemoveFromDeletedList(const QString &filepath);
     protected:
         virtual QHash<int, QByteArray> roleNames() const;
 
@@ -132,8 +134,9 @@ namespace Models {
         QSet<QString> m_FilesSet;
         QHash<QString, int> m_DirectoriesSelectedHash;
         QFileSystemWatcher  m_Fileswatcher;
-        QTimer m_timer;
+        QTimer m_Timer;
         QSet<QString> m_DeletedFiles;
+        QMutex m_Mutex;
     };
 }
 

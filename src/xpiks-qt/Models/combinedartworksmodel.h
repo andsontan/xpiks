@@ -113,7 +113,7 @@ namespace Models {
         void changeKeywordsChanged();
         void changeTitleChanged();
         void appendKeywordsChanged();
-        void artworksFileSystemDeleted();
+        void FileDeleted();
 
     public:
         int getSelectedArtworksCount() const;
@@ -157,8 +157,6 @@ namespace Models {
 
     private slots:
         void spellCheckErrorsChangedHandler();
-    public slots:
-        void onFileDeletedHandler();
 
     public:
         enum CombinedArtworksModelRoles {

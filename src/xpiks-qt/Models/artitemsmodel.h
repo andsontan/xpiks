@@ -123,7 +123,7 @@ namespace Models {
         int addLocalDirectories(const QList<QUrl> &directories);
         void itemModifiedChanged(bool) { updateModifiedCount(); }
         void spellCheckErrorsChanged();
-        void onFilesDeletedHandler(QSet<QString> & paths);
+        void onFilesDeletedHandler();
 
     public:
         virtual void removeItemsAtIndices(const QVector<QPair<int, int> > &ranges);

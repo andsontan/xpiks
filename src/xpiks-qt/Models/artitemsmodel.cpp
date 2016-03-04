@@ -864,14 +864,13 @@ namespace Models {
                  ArtworkTitleRole << KeywordsCountRole << HasVectorAttachedRole;
     }
 
-    void ArtItemsModel::onFilesDeletedHandler(QSet<QString> & paths){
+    void ArtItemsModel::onFilesDeletedHandler(){
         QVector<int> indicesToRemove;
-        indicesToRemove.reserve(paths.size());
         int count = m_ArtworkList.length();
         for (int i = 0; i < count; ++i) {
-            if (paths.contains(m_ArtworkList.at(i)->getFilepath())) {
+            if (m_CommandManager->isFileRemoved(m_ArtworkList.at(i)->getFilepath())) {
                 indicesToRemove.append(i);
-                paths.remove(m_ArtworkList.at(i)->getFilepath());
+              //  paths.remove(m_ArtworkList.at(i)->getFilepath());
            }
         }
 

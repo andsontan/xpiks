@@ -198,9 +198,9 @@ void Commands::CommandManager::connectEntitiesSignalsSlots() const {
 
     QObject::connect(m_SpellCheckerService, SIGNAL(serviceAvailable(bool)),
                      m_FilteredItemsModel, SLOT(onSpellCheckerAvailable(bool)));
-    QObject::connect(m_ArtworksRepository, SIGNAL(fileDeleted(QSet<QString> &)),
-                     m_ArtItemsModel, SLOT(onFilesDeletedHandler(QSet<QString> &)));
-    QObject::connect(m_ArtItemsModel,SIGNAL(fileDeleted()),m_CombinedArtworksModel,SLOT(onFileDeletedHandler()));
+    QObject::connect(m_ArtworksRepository, SIGNAL(fileDeleted()),
+                     m_ArtItemsModel, SLOT(onFilesDeletedHandler()));
+    QObject::connect(m_ArtworksRepository,SIGNAL(fileDeleted()),m_CombinedArtworksModel,SIGNAL(fileDeleted()));
 }
 
 void Commands::CommandManager::ensureDependenciesInjected() {
@@ -499,4 +499,10 @@ void Commands::CommandManager::restartSpellChecking() {
     if (m_SpellCheckerService) {
         m_SpellCheckerService->restartWorker();
     }
+}
+
+bool Commands::CommandManager::isFileRemoved(const QString & path){
+    bool result= m_ArtworksRepository->isFileRemoved(path);
+    if (result) m_ArtworksRepository->RemoveFromDeletedList(path);
+    return result;
 }

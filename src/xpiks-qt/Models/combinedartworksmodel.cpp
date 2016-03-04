@@ -427,9 +427,4 @@ namespace Models {
         delete info;
         m_ArtworksList.removeAt(row);
     }
-
-    void CombinedArtworksModel::onFileDeletedHandler(){
-     emit artworksFileSystemDeleted();
-     qWarning()<<"OKI DOKI";
-    }
 }

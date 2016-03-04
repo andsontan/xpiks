@@ -225,17 +225,22 @@ namespace Models {
     void ArtworksRepository::checkFileDeleted(const QString & path){
      QFileInfo fi(path);
      if (!fi.exists()){
+         m_Mutex.lock();
          m_DeletedFiles.insert(fi.absoluteFilePath());
-         m_timer.start();
+         m_Mutex.unlock();
+         m_Timer.start();
      }
+    }
 
-
+    void ArtworksRepository::RemoveFromDeletedList(const QString &filepath){
+        m_Mutex.lock();
+        m_DeletedFiles.remove(filepath);
+        m_Mutex.unlock();
     }
 
     void ArtworksRepository::onTimer(){
-
         if (m_DeletedFiles.size()){
-            emit fileDeleted(m_DeletedFiles);
+            emit fileDeleted();
         }
     }
 }

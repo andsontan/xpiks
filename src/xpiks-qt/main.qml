@@ -435,6 +435,17 @@ ApplicationWindow {
     }
 
     MessageDialog {
+        id: deletionFilesDetected
+        title: "Warning"
+        text: qsTr("Some files you have been working on do not exist anymore! Xpiks will remove them from the workflow.")
+        standardButtons: StandardButton.Yes
+        onYes: {
+
+        }
+        Component.onCompleted: visible = false
+    }
+
+    MessageDialog {
         id: removeMetadataDialog
 
         title: "Confirmation"
@@ -561,6 +572,10 @@ ApplicationWindow {
 
     Connections {
         target: artItemsModel
+        onFileDeleted: {
+                console.debug("Got FilesDeleted signal")
+                deletionFilesDetected.open()
+            }
         onArtworksAdded: {
             if ((imagesCount === 0) && (vectorsCount === 0)) {
                 noNewFilesDialog.open();
