@@ -55,6 +55,6 @@ In some cases you neet to install `libcurl-devel`, `hunspell-devel`, `quazip-dev
 
 ***More***
 
-More instructions can be found at this page http://ribtoks.github.io/xpiks/blog/2014/building-xpiks-alone/
+More instructions can be found at this page http://ribtoks.github.io/xpiks/blog/2014/building-xpiks-alone
 
 Xpiks uses English dictionaries from http://cgit.freedesktop.org/libreoffice/dictionaries/tree/. In Windows they are stored in the `dict/` subdirectory, in OS X they are in the `Resources/` directory of a bundle.
