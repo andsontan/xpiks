@@ -29,8 +29,6 @@ script:
   - cd xpiks-qt/
   - qmake "CONFIG+=debug" xpiks-qt.pro
   - make
-
-after_success:
   - cd ../xpiks-tests/
   - qmake "CONFIG+=debug" xpiks-tests.pro
   - make

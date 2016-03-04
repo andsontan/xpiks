@@ -130,6 +130,7 @@ namespace Suggestion {
         void accountKeywords(const QSet<QString> &keywords, int sign);
         QSet<QString> getSelectedArtworksKeywords() const;
         void updateSuggestedKeywords();
+        void calculateBounds(int &lowerBound, int &upperBound) const;
 
     private:
         QHash<QString, int> m_KeywordsHash;
