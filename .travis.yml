@@ -10,8 +10,8 @@ git:
   depth: 3
 
 env:
-  - XPIKS_BINARY
-  - XPIKS_TESTS
+  - XPIKS_BINARY=binary
+  - XPIKS_TESTS=tests
 
 before_install:
   - if [ "$CXX" = "g++" ]; then sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y; fi
