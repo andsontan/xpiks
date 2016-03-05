@@ -13,6 +13,11 @@ private slots:
     void digitsAreValidTest();
     void simpleKeywordIsValidTest();
     void keywordsFromDigitsAreValidTest();
+    void sanitizeKeywordWithBackCommaTest();
+    void sanitizeKeywordWithSpacesTest();
+    void sanitizeKeywordWithFrontCommaTest();
+    void sanitizeKeywordWithAllowedComplexTest();
+    void sanitizeOneLetterKeywordTest();
 };
 
 #endif // KEYWORDVALIDATIONTESTS_H

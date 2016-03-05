@@ -257,9 +257,8 @@ Flickable {
                                 }
                             }
 
-                            tagsPasted(keywordsToAdd);
-
-                            if (words.length > 1) {
+                            if (keywordsToAdd.length > 1) {
+                                tagsPasted(keywordsToAdd);
                                 event.accepted = true;
                             }
                         }

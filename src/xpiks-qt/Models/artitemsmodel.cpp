@@ -164,32 +164,25 @@ namespace Models {
         if (metadataIndex >= 0
                 && metadataIndex < m_ArtworkList.length()
                 && !keywords.empty()) {
-
-            ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
-
             QVector<ArtItemInfo*> artItemInfos;
             QVector<int> selectedIndices;
 
-            getSelectedItemsIndices(selectedIndices);
-
-            if (!metadata->getIsSelected()) {
-                selectedIndices.append(metadataIndex);
-                LOG_DEBUG << "item was not selected";
-            }
+            // TODO: to be changed in future to the dialog
+            // getSelectedItemsIndices(selectedIndices);
+            // if (!metadata->getIsSelected()) {
+            selectedIndices.append(metadataIndex);
+            // }
 
             artItemInfos.reserve(selectedIndices.length());
 
             bool onlyOneKeyword = keywords.length() == 1;
 
             if (onlyOneKeyword) {
-                LOG_DEBUG << "Pasting only one keyword";
+                LOG_DEBUG << "Pasting only one keyword. Leaving it in the edit box.";
+                return;
             }
 
             foreach (int index, selectedIndices) {
-                // only one keyword in added to the edit field
-                // but not added as a new keyword
-                if (onlyOneKeyword && (index == metadataIndex)) { continue; }
-
                 ArtworkMetadata *metadata = m_ArtworkList.at(index);
                 ArtItemInfo *item = new ArtItemInfo(metadata, index);
                 artItemInfos.append(item);

@@ -25,18 +25,18 @@ int main(int argc, char *argv[]) {
 
     int result = 0;
 
-    QTEST_CLASS(EncryptionTests, et, result);
-    QTEST_CLASS(IndicesToRangesTests, itrt, result);
-    QTEST_CLASS(AddCommand_Tests, act, result);
-    QTEST_CLASS(RemoveCommand_Tests, rct, result);
-    QTEST_CLASS(VectorFileNamesTests, vfnt, result);
-    QTEST_CLASS(ArtworkMetadataTests, amt, result);
-    QTEST_CLASS(BasicKeywordsModelTests, bkt, result);
-    QTEST_CLASS(CombinedModelTests, cmt, result);
-    QTEST_CLASS(StringHelpersTests, sht, result);
+//    QTEST_CLASS(EncryptionTests, et, result);
+//    QTEST_CLASS(IndicesToRangesTests, itrt, result);
+//    QTEST_CLASS(AddCommand_Tests, act, result);
+//    QTEST_CLASS(RemoveCommand_Tests, rct, result);
+//    QTEST_CLASS(VectorFileNamesTests, vfnt, result);
+//    QTEST_CLASS(ArtworkMetadataTests, amt, result);
+//    QTEST_CLASS(BasicKeywordsModelTests, bkt, result);
+//    QTEST_CLASS(CombinedModelTests, cmt, result);
+//    QTEST_CLASS(StringHelpersTests, sht, result);
     QTEST_CLASS(KeywordValidationTests, kvt, result);
-    QTEST_CLASS(ArtworkRepositoryTests, art, result);
-    QTEST_CLASS(FilteredModelTests, fil, result);
+//    QTEST_CLASS(ArtworkRepositoryTests, art, result);
+//    QTEST_CLASS(FilteredModelTests, fil, result);
 
     QThread::sleep(1);
 
