@@ -150,7 +150,6 @@ namespace Models {
         int addDirectories(const QStringList &directories);
         void doAddDirectory(const QString &directory, QStringList &filesList);
         int addFiles(const QStringList &filepath);
-        void getSelectedArtworks(QVector<ArtworkMetadata *> &selectedArtworks) const;
 
     private:
         void doCombineArtwork(int index);

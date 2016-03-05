@@ -32,99 +32,11 @@
 #include "uploadcontext.h"
 #include "ftpuploaderworker.h"
 #include "../Common/defines.h"
+#include "conectivityhelpers.h"
 
 #include <curl/curl.h>
 
-#define TIMEOUT_SECONDS 10
-#define RETRIES_COUNT 3
-
 namespace Conectivity {
-    void extractFilePathes(const QVector<Models::ArtworkMetadata *> &artworkList,
-                           QStringList &filePathes,
-                           QStringList &zipsPathes) {
-
-        int size = artworkList.length();
-        filePathes.reserve(size);
-        zipsPathes.reserve(size);
-        LOG_DEBUG << "Generating filepathes for" << size << "item(s)";
-
-        for (int i = 0; i < size; ++i) {
-            Models::ArtworkMetadata *metadata = artworkList.at(i);
-            QString filepath = metadata->getFilepath();
-            filePathes.append(filepath);
-
-            if (metadata->hasVectorAttached()) {
-                filePathes.append(metadata->getAttachedVectorPath());
-
-                QString zipPath = Helpers::getArchivePath(filepath);
-                zipsPathes.append(zipPath);
-            } else {
-                zipsPathes.append(filepath);
-            }
-        }
-    }
-
-    void generateUploadContexts(const QVector<Models::UploadInfo *> &uploadInfos,
-                                QVector<QSharedPointer<UploadContext> > &contexts,
-                                Encryption::SecretsManager *secretsManager,
-                                int timeoutSeconds) {
-        int size = uploadInfos.size();
-        contexts.reserve(size);
-
-        for (int i = 0; i < size; ++i) {
-            UploadContext *context = new UploadContext();
-            Models::UploadInfo *info = uploadInfos.at(i);
-
-            context->m_Host = info->getHost();
-            context->m_Username = info->getUsername();
-            context->m_Password = secretsManager->decodePassword(info->getPassword());
-            context->m_UsePassiveMode = !info->getDisableFtpPassiveMode();
-
-            // TODO: move to configs/options
-            context->m_TimeoutSeconds = timeoutSeconds;
-            context->m_RetriesCount = RETRIES_COUNT;
-
-            if (context->m_Host.contains("dreamstime")) {
-                context->m_DirForVectors = "additional";
-            }
-
-            contexts.append(QSharedPointer<UploadContext>(context));
-        }
-    }
-
-    QVector<UploadBatch*> generateUploadBatches(const QVector<Models::ArtworkMetadata *> &artworksToUpload,
-                                                const QVector<Models::UploadInfo *> &uploadInfos,
-                                                Encryption::SecretsManager *secretsManager,
-                                                int timeoutSeconds) {
-        LOG_DEBUG << artworksToUpload.length() << "file(s)";
-        QVector<UploadBatch*> batches;
-
-        QStringList filePathes;
-        QStringList zipFilePathes;
-        extractFilePathes(artworksToUpload, filePathes, zipFilePathes);
-
-        QVector<QSharedPointer<UploadContext> > contexts;
-        generateUploadContexts(uploadInfos, contexts, secretsManager, timeoutSeconds);
-
-        int size = contexts.size();
-        batches.reserve(size);
-
-        for (int i = 0; i < size; ++i) {
-            UploadBatch *batch;
-            const QSharedPointer<UploadContext> &context = contexts.at(i);
-
-            if (uploadInfos[i]->getZipBeforeUpload()) {
-                batch = new UploadBatch(context, zipFilePathes);
-            } else {
-                batch = new UploadBatch(context, filePathes);
-            }
-
-            batches.append(batch);
-        }
-
-        return batches;
-    }
-
     FtpCoordinator::FtpCoordinator(int maxParallelUploads, int secondsTimeout, QObject *parent) :
         QObject(parent),
         m_UploadSemaphore(maxParallelUploads),

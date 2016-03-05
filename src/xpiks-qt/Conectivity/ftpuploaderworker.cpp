@@ -25,6 +25,7 @@
 #include "curlftpuploader.h"
 #include "../Models/uploadinfo.h"
 #include "../Common/defines.h"
+#include "uploadbatch.h"
 
 namespace Conectivity {
     FtpUploaderWorker::FtpUploaderWorker(QSemaphore *uploadSemaphore,

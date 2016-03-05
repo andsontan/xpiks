@@ -780,16 +780,6 @@ namespace Models {
         return newFilesCount;
     }
 
-    void ArtItemsModel::getSelectedArtworks(QVector<ArtworkMetadata *> &selectedArtworks) const {
-        int count = m_ArtworkList.length();
-        for (int i = 0; i < count; ++i) {
-            ArtworkMetadata *metadata = m_ArtworkList.at(i);
-            if (metadata->getIsSelected()) {
-                selectedArtworks.append(metadata);
-            }
-        }
-    }
-
     void ArtItemsModel::doCombineArtwork(int index) {
         LOG_DEBUG << "index" << index;
         if (0 <= index && index < m_ArtworkList.length()) {

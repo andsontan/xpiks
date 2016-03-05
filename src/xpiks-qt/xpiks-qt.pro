@@ -76,7 +76,8 @@ SOURCES += main.cpp \
     Warnings/warningsservice.cpp \
     Helpers/loghighlighter.cpp \
     Warnings/warningsmodel.cpp \
-    Models/languagesmodel.cpp
+    Models/languagesmodel.cpp \
+    Conectivity/conectivityhelpers.cpp
 
 RESOURCES += qml.qrc
 
@@ -203,7 +204,9 @@ HEADERS += \
     Common/iservicebase.h \
     Helpers/loghighlighter.h \
     Warnings/warningsmodel.h \
-    Models/languagesmodel.h
+    Models/languagesmodel.h \
+    Conectivity/conectivityhelpers.h \
+    Conectivity/uploadbatch.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

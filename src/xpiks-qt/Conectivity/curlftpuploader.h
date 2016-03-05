@@ -30,25 +30,7 @@
 #include "uploadcontext.h"
 
 namespace Conectivity {
-    class UploadBatch {
-    public:
-        UploadBatch(const QSharedPointer<UploadContext> &context, const QStringList &filesList):
-            m_FilesList(filesList),
-            m_UploadContext(context)
-        {}
-
-        ~UploadBatch() {
-            m_UploadContext.clear();
-        }
-
-    public:
-        const QStringList &getFilesToUpload() const { return m_FilesList; }
-        UploadContext *getContext() const { return m_UploadContext.data(); }
-        
-    private:
-        QStringList m_FilesList;
-        QSharedPointer<UploadContext> m_UploadContext;
-    };
+    class UploadBatch;
 
     class CurlProgressReporter : public QObject {
         Q_OBJECT
