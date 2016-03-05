@@ -258,12 +258,19 @@ namespace Models {
             }
         }
 
-        int filesAddedCount = files.isEmpty() ? 0 : addLocalArtworks(files);
-        int directoriesAddedCount = directories.isEmpty() ? 0 : addLocalDirectories(directories);
+        QStringList filesToImport;
+        filesToImport.reserve(files.size() + directories.size() * 10);
 
-        LOG_DEBUG << "Added" << filesAddedCount << "files and" << directoriesAddedCount << "directories";
+        foreach (const QUrl &fileUrl, files) {
+            filesToImport.append(fileUrl.toLocalFile());
+        }
 
-        return filesAddedCount + directoriesAddedCount;
+        foreach (const QUrl &dirUrl, directories) {
+            doAddDirectory(dirUrl.toLocalFile(), filesToImport);
+        }
+
+        int importedCount = addFiles(filesToImport);
+        return importedCount;
     }
 
     void ArtItemsModel::setSelectedItemsSaved(const QVector<int> &selectedIndices) {
@@ -725,7 +732,8 @@ namespace Models {
 
         QFileInfoList items = dir.entryInfoList();
         int size = items.size();
-        filesList.reserve(size);
+        filesList.reserve(filesList.size() + size);
+
         for (int i = 0; i < size; ++i) {
             QString filepath = items.at(i).absoluteFilePath();
             filesList.append(filepath);
