@@ -14,6 +14,7 @@
 #include "keywordvalidation_tests.h"
 #include "artworkrepository_tests.h"
 #include "filteredmodel_tests.h"
+#include "conectivityhelpers_tests.h"
 
 #define QTEST_CLASS(TestObject, vName, result) \
     TestObject vName; \
@@ -37,6 +38,7 @@ int main(int argc, char *argv[]) {
     QTEST_CLASS(KeywordValidationTests, kvt, result);
     QTEST_CLASS(ArtworkRepositoryTests, art, result);
     QTEST_CLASS(FilteredModelTests, fil, result);
+    QTEST_CLASS(ConectivityHelpersTests, cht, result);
 
     QThread::sleep(1);
 

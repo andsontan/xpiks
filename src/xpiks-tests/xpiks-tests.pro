@@ -120,7 +120,9 @@ SOURCES += main.cpp \
     ../xpiks-qt/Suggestion/locallibrary.cpp \
     ../xpiks-qt/Suggestion/libraryloaderworker.cpp \
     ../xpiks-qt/MetadataIO/metadatawritingworker.cpp \
-    filteredmodel_tests.cpp
+    filteredmodel_tests.cpp \
+    conectivityhelpers_tests.cpp \
+    ../xpiks-qt/Conectivity/conectivityhelpers.cpp
 
 HEADERS += \
     encryption_tests.h \
@@ -198,4 +200,8 @@ HEADERS += \
     ../xpiks-qt/Common/iservicebase.h \
     ../xpiks-qt/Common/version.h \
     ../xpiks-qt/Commands/icommandbase.h \
-    ../xpiks-qt/Commands/icommandmanager.h
+    ../xpiks-qt/Commands/icommandmanager.h \
+    conectivityhelpers_tests.h \
+    ../xpiks-qt/Conectivity/conectivityhelpers.h \
+    ../xpiks-qt/Conectivity/uploadbatch.h \
+    ../xpiks-qt/Conectivity/uploadcontext.h
