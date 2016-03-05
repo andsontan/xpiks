@@ -1,10 +1,12 @@
 [Desktop Entry]
 Name=Xpiks
 Exec=xpiks-qt
+GenericName=Xpiks
 Comment=Cross-platform (X) Photo Keywording Software
 Icon=xpiks
 Type=Application
 Terminal=false
 StartupNotify=true
 Encoding=UTF-8
-Categories=Graphics;
+Categories=Graphics;Photography;
+

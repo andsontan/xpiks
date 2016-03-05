@@ -10,26 +10,26 @@ git:
   depth: 3
 
 env:
-  - QT_BASE=55
+  - XPIKS_BINARY=binary
+  - XPIKS_TESTS=tests
 
 before_install:
   - if [ "$CXX" = "g++" ]; then sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y; fi
-  - if [ "$QT_BASE" = "55" ]; then sudo add-apt-repository ppa:beineri/opt-qt551 -y; fi
+  - sudo add-apt-repository ppa:beineri/opt-qt551 -y
   - sudo add-apt-repository ppa:kubuntu-ppa/backports -y
   - sudo apt-get update -qq
 
 install:
   - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++ gcc; export CXX="g++" CC="gcc"; $CXX --version; fi
-  - if [ "$QT_BASE" = "55" ]; then sudo apt-get install -qq qt55base; source /opt/qt55/bin/qt55-env.sh; fi
+  - sudo apt-get install -qq qt55base; source /opt/qt55/bin/qt55-env.sh
   - sudo apt-get install qt55base qt55quickcontrols qt55svg qt55declarative libcurl4-openssl-dev libhunspell-dev libquazip0-dev zlib1g-dev
 
 script:
   - cd src/
   - mv tiny-aes/aes.c tiny-aes/aes.cpp
-  - cd xpiks-qt/
-  - qmake "CONFIG+=debug" xpiks-qt.pro
+  - if [ -n "$XPIKS_BINARY" ]; then cd xpiks-qt/; fi
+  - if [ -n "$XPIKS_TESTS" ]; then cd xpiks-tests/; fi
+  - if [ -n "$XPIKS_BINARY" ]; then qmake "CONFIG+=debug" xpiks-qt.pro; fi
+  - if [ -n "$XPIKS_TESTS" ]; then qmake "CONFIG+=debug" xpiks-tests.pro; fi
   - make
-  - cd ../xpiks-tests/
-  - qmake "CONFIG+=debug" xpiks-tests.pro
-  - make
-  - ./xpiks-tests
+  - if [ -n "$XPIKS_TESTS" ]; then ./xpiks-tests; fi

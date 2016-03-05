@@ -6,7 +6,7 @@ License: GPLv3
 Group: Applications/Internet
 Source: xpiks-qt.tar.gz
 BuildRoot: /var/tmp/%{name}-buildroot
-BuildRequires: libqt5-qtdeclarative-devel libqt5-qtsvg-devel libqt5-qttools-devel libquazip1 libqt5-qtquick1-devel quazip-devel hunspell-devel curl-devel
+BuildRequires: libqt5-qtdeclarative-devel libqt5-qtsvg-devel libqt5-qttools-devel libquazip1 libqt5-qtquick1-devel quazip-devel hunspell-devel curl-devel libQt5Concurrent-devel update-desktop-files
 
 %description
 Cross-platform (X) Photo Keywording Software
@@ -25,12 +25,14 @@ qmake-qt5 -r -spec linux-g++-64
 rm -rf %{buildroot}
 make install INSTALL_ROOT="%buildroot";
 mkdir -p %{buildroot}%{_datadir}/applications/
-install -D %{_builddir}/xpiks-qt/debian/xpiks.desktop %{buildroot}%{_datadir}/applications/
 mkdir -p %{buildroot}%{_datadir}/icons/
 install -D %{_builddir}/xpiks-qt/debian/xpiks.png %{buildroot}%{_datadir}/icons/
 mkdir -p %{buildroot}%{_datadir}/Xpiks/Xpiks/
 install -D %{_builddir}/xpiks-qt/whatsnew.txt %{buildroot}%{_datadir}/Xpiks/Xpiks/
 install -D %{_builddir}/xpiks-qt/terms_and_conditions.txt %{buildroot}%{_datadir}/Xpiks/Xpiks/
+
+#desktop-file-install --dir=%{buildroot}%{_datadir}/applications %{_builddir}/xpiks-qt/debian/xpiks.desktop 
+%suse_update_desktop_file -i %{_builddir}/xpiks-qt/debian/xpiks.desktop
 
 %clean
 rm -rf %{buildroot}
