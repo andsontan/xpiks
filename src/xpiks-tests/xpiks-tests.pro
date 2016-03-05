@@ -122,7 +122,8 @@ SOURCES += main.cpp \
     ../xpiks-qt/MetadataIO/metadatawritingworker.cpp \
     filteredmodel_tests.cpp \
     conectivityhelpers_tests.cpp \
-    ../xpiks-qt/Conectivity/conectivityhelpers.cpp
+    ../xpiks-qt/Conectivity/conectivityhelpers.cpp \
+    undoredo_tests.cpp
 
 HEADERS += \
     encryption_tests.h \
@@ -204,4 +205,5 @@ HEADERS += \
     conectivityhelpers_tests.h \
     ../xpiks-qt/Conectivity/conectivityhelpers.h \
     ../xpiks-qt/Conectivity/uploadbatch.h \
-    ../xpiks-qt/Conectivity/uploadcontext.h
+    ../xpiks-qt/Conectivity/uploadcontext.h \
+    undoredo_tests.h

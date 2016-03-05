@@ -28,7 +28,8 @@ namespace Common {
         EditDesctiption = 2,
         EditKeywords = 4,
         AppendKeywords = 8,
-        Clear = 16
+        Clear = 16,
+        EditEverything = EditTitle | EditDesctiption | EditKeywords
     };
 
     enum SuggestCorrectionsFlags {

@@ -7,7 +7,6 @@
 class AddCommand_Tests : public QObject
 {
     Q_OBJECT
-
 private slots:
     void addNoArtworksToEmptyRepositoryTest();
     void addOneArtworkToEmptyRepositoryTest();
