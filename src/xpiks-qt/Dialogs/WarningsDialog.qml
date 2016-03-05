@@ -216,7 +216,7 @@ Item {
 
                                                 StyledText {
                                                     Layout.fillWidth: true
-                                                    text: modelData
+                                                    text: i18.n + modelData
                                                     color: Colors.artworkModifiedColor
                                                     anchors.verticalCenter: parent.verticalCenter
                                                 }

@@ -102,10 +102,6 @@ namespace Models {
         QVector<int> getSelectedOriginalIndices() const;
         void forceUnselectAllItems();
         ArtItemsModel *getArtItemsModel() const;
-        bool fitsSpecialKeywords(const QString &searchTerm, const ArtworkMetadata *metadata) const;
-        bool containsPartsSearch(ArtworkMetadata *metadata) const;
-        bool containsAnyPartsSearch(ArtworkMetadata *metadata) const;
-        bool containsAllPartsSearch(ArtworkMetadata *metadata) const;
 
     protected:
         virtual bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;

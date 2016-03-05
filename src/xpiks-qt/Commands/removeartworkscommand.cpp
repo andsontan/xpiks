@@ -89,6 +89,8 @@ namespace Commands {
                                                             removedItemsFilepathes,
                                                             removedAttachedVectors);
             commandManager->recordHistoryItem(removeArtworksItem);
+        } else {
+            LOG_WARNING << "No items to remove found!";
         }
 
         // TODO: to be filled with useful return data in future
