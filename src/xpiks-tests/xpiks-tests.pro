@@ -124,7 +124,8 @@ SOURCES += main.cpp \
     conectivityhelpers_tests.cpp \
     ../xpiks-qt/Conectivity/conectivityhelpers.cpp \
     undoredo_tests.cpp \
-    ../xpiks-qt/Helpers/filterhelpers.cpp
+    ../xpiks-qt/Helpers/filterhelpers.cpp \
+    artworkfilter_tests.cpp
 
 HEADERS += \
     encryption_tests.h \
@@ -208,4 +209,5 @@ HEADERS += \
     ../xpiks-qt/Conectivity/uploadbatch.h \
     ../xpiks-qt/Conectivity/uploadcontext.h \
     undoredo_tests.h \
-    ../xpiks-qt/Helpers/filterhelpers.h
+    ../xpiks-qt/Helpers/filterhelpers.h \
+    artworkfilter_tests.h

@@ -77,7 +77,7 @@ namespace Helpers {
                 QString searchTerm = searchTerms[i];
                 bool strictMatch = false;
 
-                if ((searchTerm.length() > 0) && searchTerm[0] == QChar('!')) {
+                if ((searchTerm.length() > 1) && searchTerm[0] == QChar('!')) {
                     strictMatch = true;
                     searchTerm.remove(0, 1);
                 }
@@ -121,7 +121,7 @@ namespace Helpers {
             }
 
             if (!anyContains) {
-                if ((searchTerm.length() > 0) && searchTerm[0] == QChar('!')) {
+                if ((searchTerm.length() > 1) && searchTerm[0] == QChar('!')) {
                     strictMatch = true;
                     searchTerm.remove(0, 1);
                 }

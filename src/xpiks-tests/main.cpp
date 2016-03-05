@@ -16,6 +16,7 @@
 #include "filteredmodel_tests.h"
 #include "conectivityhelpers_tests.h"
 #include "undoredo_tests.h"
+#include "artworkfilter_tests.h"
 
 #define QTEST_CLASS(TestObject, vName, result) \
     TestObject vName; \
@@ -41,6 +42,7 @@ int main(int argc, char *argv[]) {
     QTEST_CLASS(FilteredModelTests, fil, result);
     QTEST_CLASS(ConectivityHelpersTests, cht, result);
     QTEST_CLASS(UndoRedoTests, urt, result);
+    QTEST_CLASS(ArtworkFilterTests, aft, result);
 
     QThread::sleep(1);
 
