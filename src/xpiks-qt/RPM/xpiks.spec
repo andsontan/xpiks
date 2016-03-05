@@ -6,7 +6,7 @@ License: GPLv3
 Group: Applications/Internet
 Source: xpiks-qt.tar.gz
 BuildRoot: /var/tmp/%{name}-buildroot
-BuildRequires: libqt5-qtdeclarative-devel libqt5-qtsvg-devel libqt5-qttools-devel libquazip-qt5-devel libqt5-qtquick1-devel quazip-devel hunspell-devel curl-devel
+BuildRequires: libqt5-qtdeclarative-devel libqt5-qtsvg-devel libqt5-qttools-devel libquazip1 libqt5-qtquick1-devel quazip-devel hunspell-devel curl-devel
 
 %description
 Cross-platform (X) Photo Keywording Software
