@@ -104,4 +104,66 @@ void FilteredModelTests::removeMetadataMarksAsModifiedTest() {
     QVERIFY(metadata->isModified());
 }
 
+void FilteredModelTests::removeMetadataDeletesMetadataTest() {
+    DECLARE_MODELS_AND_GENERATE(10);
 
+    for (int i = 0; i < 10; ++i) {
+        Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
+        metadata->initialize("title", "description", QStringList() << "keyword1" << "keyword2");
+        metadata->setIsSelected(true);
+    }
+
+    filteredItemsModel.removeMetadataInSelected();
+
+    for (int i = 0; i < 10; ++i) {
+        Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
+        QVERIFY(metadata->isDescriptionEmpty());
+        QVERIFY(metadata->isTitleEmpty());
+        QVERIFY(metadata->areKeywordsEmpty());
+        QVERIFY(metadata->isModified());
+    }
+}
+
+void FilteredModelTests::findSelectedIndexTest() {
+    DECLARE_MODELS_AND_GENERATE(10);
+    artItemsModelMock.getArtwork(4)->setIsSelected(true);
+    int index = filteredItemsModel.findSelectedItemIndex();
+    QCOMPARE(index, 4);
+
+    artItemsModelMock.getArtwork(9)->setIsSelected(true);
+    index = filteredItemsModel.findSelectedItemIndex();
+    QCOMPARE(index, -1);
+}
+
+void FilteredModelTests::clearKeywordsTest() {
+    DECLARE_MODELS_AND_GENERATE(1);
+
+    Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(0);
+    metadata->initialize("title", "description", QStringList() << "keyword1" << "keyword2");
+
+    filteredItemsModel.clearKeywords(0);
+
+    QVERIFY(!metadata->isDescriptionEmpty());
+    QVERIFY(!metadata->isTitleEmpty());
+    QVERIFY(metadata->areKeywordsEmpty());
+    QVERIFY(metadata->isModified());
+}
+
+void FilteredModelTests::detachVectorFromSelectedTest() {
+    DECLARE_MODELS_AND_GENERATE(10);
+
+    for (int i = 0; i < 10; ++i) {
+        Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
+        metadata->initialize("title", "description", QStringList() << "keyword1" << "keyword2");
+        metadata->attachVector(QString(metadata->getFilepath()).replace(".jpg", ".eps"));
+        metadata->setIsSelected(true);
+    }
+
+    filteredItemsModel.detachVectorFromSelected();
+
+    for (int i = 0; i < 10; ++i) {
+        Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
+        QVERIFY(!metadata->isModified());
+        QVERIFY(!metadata->hasVectorAttached());
+    }
+}

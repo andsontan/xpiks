@@ -19,6 +19,10 @@ private slots:
     void invertSelectionForEvenCountTest();
     void invertSelectionForOddCountTest();
     void removeMetadataMarksAsModifiedTest();
+    void removeMetadataDeletesMetadataTest();
+    void findSelectedIndexTest();
+    void clearKeywordsTest();
+    void detachVectorFromSelectedTest();
 };
 
 #endif // FILTEREDMODELTESTS_H
