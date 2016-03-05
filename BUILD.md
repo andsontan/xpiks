@@ -23,7 +23,7 @@
 
 ***Manual build***
 - install Qt 5.4 or later from official website (or 5.2 or later from repository in case of Linux)
-- [linux] install development packages for `lubcurl`, `hunspell`, `quazip`, `zlib` 
+- [linux] install development packages for `lubcurl`, `hunspell`, `quazip`, `zlib`
 - [linux] install `exiftool`
 - open main project in Qt Creator, execute `Run qmake`, execute `Build`
 - you can open, build and run tests project (`src/xpiks-tests/xpiks-tests.pro`) additionally
@@ -47,10 +47,10 @@ In some cases you neet to install `libcurl-devel`, `hunspell-devel`, `quazip-dev
 ***OpenSUSE RPM build***
 
 - Install rpmbuild.
-- Create _~/rpmbuild/{RPMS,SRPMS,SPECS,BUILD,BUILDROOT,SOURCES}_
-- Create a tar.gz from the source tree containing only _xpiks-qt_ and _tiny-aes_ folders
-- Drop this source tarball in _~/rpmbuild/SOURCES_
-- Drop the the spec file found in xpiks-qt/rpm folder in _~/rpmbuild/SPECS_
+- `mkdir -p ~/rpmbuild/{RPMS,SRPMS,SPECS,BUILD,BUILDROOT,SOURCES}`
+- `tar -czf xpiks-qt.tar.gz xpiks-qt/ tiny-aes/`
+- Drop this source tarball in `~/rpmbuild/SOURCES`
+- Drop the the spec file found in `xpiks-qt/RPM` folder to `~/rpmbuild/SPECS`
 - `rpmbuild -ba ~/rpmbuild/SPECS/xpiks.spec`
 
 ***More***
