@@ -128,6 +128,7 @@ Flickable {
         anchors.top: parent.top
         width: parent.width
         height: flowListView.contentHeight > flowListView.height ? flowListView.contentHeight : flowListView.height
+
         onClicked: {
             activateEdit()
             mouse.accepted = false
@@ -243,7 +244,7 @@ Flickable {
                 }
 
                 Keys.onPressed: {
-                    if(event.matches(StandardKey.Paste)) {
+                    if (event.matches(StandardKey.Paste)) {
                         var clipboardText = clipboard.getText();
                         clipboardText = clipboardText.replace(/(\r\n|\n|\r)/gm, '');
                         var keywordsToAdd = [];
