@@ -33,4 +33,3 @@ script:
   - if [ -n "$XPIKS_TESTS" ]; then qmake "CONFIG+=debug" xpiks-tests.pro; fi
   - make
   - if [ -n "$XPIKS_TESTS" ]; then xpiks-tests-core/xpiks-tests; fi
-  - if [ -n "$XPIKS_TESTS" ]; then xpiks-tests-ui/xpiks-tests-ui; fi
