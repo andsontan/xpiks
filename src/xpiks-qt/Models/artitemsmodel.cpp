@@ -873,7 +873,6 @@ namespace Models {
               //  paths.remove(m_ArtworkList.at(i)->getFilepath());
            }
         }
-
         qSort(indicesToRemove);
         QVector<QPair<int, int> > rangesToRemove;
         Helpers::indicesToRanges(indicesToRemove, rangesToRemove);

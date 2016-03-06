@@ -14,6 +14,7 @@
 #include "keywordvalidation_tests.h"
 #include "artworkrepository_tests.h"
 #include "filteredmodel_tests.h"
+#include "removefilesfs_tests.h"
 
 #define QTEST_CLASS(TestObject, vName) \
     TestObject vName; \
@@ -35,6 +36,7 @@ int main(int argc, char *argv[]) {
     QTEST_CLASS(KeywordValidationTests, kvt);
     QTEST_CLASS(ArtworkRepositoryTests, art);
     QTEST_CLASS(FilteredModelTests, fil);
+    QTEST_CLASS(RemoveFilesFs_Tests, del);
     QThread::sleep(1);
     return 0;
 }

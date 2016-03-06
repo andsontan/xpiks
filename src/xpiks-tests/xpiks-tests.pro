@@ -120,7 +120,8 @@ SOURCES += main.cpp \
     ../xpiks-qt/Suggestion/locallibrary.cpp \
     ../xpiks-qt/Suggestion/libraryloaderworker.cpp \
     ../xpiks-qt/MetadataIO/metadatawritingworker.cpp \
-    filteredmodel_tests.cpp
+    filteredmodel_tests.cpp \
+    removefilesfs_tests.cpp
 
 HEADERS += \
     encryption_tests.h \
@@ -198,4 +199,6 @@ HEADERS += \
     ../xpiks-qt/Common/iservicebase.h \
     ../xpiks-qt/Common/version.h \
     ../xpiks-qt/Commands/icommandbase.h \
-    ../xpiks-qt/Commands/icommandmanager.h
+    ../xpiks-qt/Commands/icommandmanager.h \
+    Mocks/artworksrepositorymock.h \
+    removefilesfs_tests.h
