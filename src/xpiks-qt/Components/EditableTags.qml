@@ -211,6 +211,7 @@ Flickable {
 
             TextInput {
                 id: nextTagTextInput
+                objectName: "nextTagTextInput"
                 maximumLength: 30
                 selectedTextColor: Colors.defaultLightColor
                 selectionColor: Colors.defaultControlColor
