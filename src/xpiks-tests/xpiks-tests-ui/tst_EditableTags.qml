@@ -47,6 +47,12 @@ Item {
         signalName: "tagsPasted"
     }
 
+    SignalSpy {
+        id: copyAllSpy
+        target: editableTags
+        signalName: "copyRequest"
+    }
+
     ClipboardHelper {
         id: clipboard
     }
@@ -174,6 +180,17 @@ Item {
             compare(tagsPastedSpy.count, 1)
             var list = tagsPastedSpy.signalArguments[0][0]
             compare(list, ["keyword1", "keyword2"])
+        }
+
+        function test_CopyRequestWhenEmpty() {
+            copyAllSpy.clear()
+            input.text = ""
+
+            input.forceActiveFocus()
+            keyClick(Qt.Key_C, Qt.ControlModifier)
+
+            compare(input.text, "")
+            compare(copyAllSpy.count, 1)
         }
     }
 }
