@@ -47,7 +47,8 @@ namespace Models {
         enum { MAX_WORKER_THREADS = 10};
 
     public:
-        ArtworksProcessor() :
+        ArtworksProcessor(QObject *parent=0) :
+            QObject(parent),
             Common::BaseEntity(),
             m_ProcessedArtworksCount(0),
             m_ArtworksCount(0),
@@ -86,8 +87,14 @@ namespace Models {
         void addArtworks(const QVector<ArtworkMetadata*> &artworkList) { m_ArtworkList << artworkList; emit itemsCountChanged(); }
         void resetArtworks() { m_ArtworkList.clear(); }
 
+#ifdef TESTS
+    public:
+#else
     protected:
+#endif
         const QVector<ArtworkMetadata*> &getArtworkList() const { return m_ArtworkList; }
+
+    protected:
         virtual void cancelProcessing() = 0;
         virtual void innerResetModel() { /*BUMP*/ }
         void beginProcessing();

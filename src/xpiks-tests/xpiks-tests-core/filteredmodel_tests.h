@@ -1,12 +1,8 @@
 #ifndef FILTEREDMODELTESTS_H
 #define FILTEREDMODELTESTS_H
 
-
+#include <QObject>
 #include <QtTest/QTest>
-#include "Mocks/artitemsmodelmock.h"
-#include "Mocks/commandmanagermock.h"
-#include "../../xpiks-qt/Models/filteredartitemsproxymodel.h"
-#include "../../xpiks-qt/Models/artworksrepository.h"
 
 class FilteredModelTests : public QObject
 {
@@ -23,6 +19,7 @@ private slots:
     void findSelectedIndexTest();
     void clearKeywordsTest();
     void detachVectorFromSelectedTest();
+    void setSelectedForUploadTest();
 };
 
 #endif // FILTEREDMODELTESTS_H

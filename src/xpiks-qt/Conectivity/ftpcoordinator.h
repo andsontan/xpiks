@@ -26,6 +26,7 @@
 #include <QVector>
 #include <QSemaphore>
 #include "../Common/baseentity.h"
+#include "iftpcoordinator.h"
 #include <QAtomicInt>
 #include <QMutex>
 
@@ -37,15 +38,20 @@ namespace Models {
 namespace Conectivity {
     class UploadContext;
 
-    class FtpCoordinator : public QObject, public Common::BaseEntity {
+    class FtpCoordinator :
+            public QObject,
+            public Common::BaseEntity,
+            public IFtpCoordinator
+    {
         Q_OBJECT
     public:
         explicit FtpCoordinator(int maxParallelUploads, int secondsTimeout, QObject *parent = 0);
 
     public:
-        void uploadArtworks(const QVector<Models::ArtworkMetadata *> &artworksToUpload,
+        // IFTPCOORDINATOR
+        virtual void uploadArtworks(const QVector<Models::ArtworkMetadata *> &artworksToUpload,
                             const QVector<Models::UploadInfo *> &uploadInfos);
-        void cancelUpload();
+        virtual void cancelUpload();
 
     signals:
         void uploadStarted();

@@ -1,4 +1,9 @@
 #include "filteredmodel_tests.h"
+#include "Mocks/artitemsmodelmock.h"
+#include "Mocks/commandmanagermock.h"
+#include "../../xpiks-qt/Models/filteredartitemsproxymodel.h"
+#include "../../xpiks-qt/Models/artworksrepository.h"
+#include "../../xpiks-qt/Models/artworkuploader.h"
 
 #define DECLARE_MODELS_AND_GENERATE(count) \
     Mocks::CommandManagerMock commandManagerMock;\
@@ -166,4 +171,24 @@ void FilteredModelTests::detachVectorFromSelectedTest() {
         QVERIFY(!metadata->isModified());
         QVERIFY(!metadata->hasVectorAttached());
     }
+}
+
+void FilteredModelTests::setSelectedForUploadTest() {
+    DECLARE_MODELS_AND_GENERATE(10);
+    Models::ArtworkUploader uploader(NULL);
+    commandManagerMock.InjectDependency(&uploader);
+
+    for (int i = 0; i < 10; ++i) {
+        Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
+        metadata->initialize("title", "description", QStringList() << "keyword1" << "keyword2");
+
+        if (i % 2) {
+            metadata->setIsSelected(true);
+        }
+    }
+
+    filteredItemsModel.setSelectedForUpload();
+
+    const QVector<Models::ArtworkMetadata*> &artworks = uploader.getArtworkList();
+    QCOMPARE(artworks.length(), 5);
 }

@@ -49,6 +49,7 @@
 #include "Conectivity/telemetryservice.h"
 #include "Helpers/globalimageprovider.h"
 #include "Models/uploadinforepository.h"
+#include "Conectivity/ftpcoordinator.h"
 #include "Helpers/helpersqmlwrapper.h"
 #include "Encryption/secretsmanager.h"
 #include "Models/artworksrepository.h"
@@ -262,7 +263,9 @@ int main(int argc, char *argv[]) {
     Models::FilteredArtItemsProxyModel filteredArtItemsModel;
     filteredArtItemsModel.setSourceModel(&artItemsModel);
     Models::RecentDirectoriesModel recentDirectorieModel;
-    Models::ArtworkUploader artworkUploader(settingsModel.getMaxParallelUploads(), settingsModel.getUploadTimeout());
+    Conectivity::FtpCoordinator *ftpCoordinator = new Conectivity::FtpCoordinator(
+                settingsModel.getMaxParallelUploads(), settingsModel.getUploadTimeout());
+    Models::ArtworkUploader artworkUploader(ftpCoordinator);
     SpellCheck::SpellCheckerService spellCheckerService;
     SpellCheck::SpellCheckSuggestionModel spellCheckSuggestionModel;
     MetadataIO::BackupSaverService metadataSaverService;
