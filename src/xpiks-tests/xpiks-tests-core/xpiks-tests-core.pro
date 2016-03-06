@@ -176,7 +176,6 @@ HEADERS += \
     ../../xpiks-qt/SpellCheck/ispellcheckable.h \
     ../../xpiks-qt/SpellCheck/spellcheckiteminfo.h \
     ../../xpiks-qt/SpellCheck/spellsuggestionsitem.h \
-    ../hunspell-1.3.3/src/hunspell/hunspell.hxx \
     ../../xpiks-qt/SpellCheck/spellcheckerrorshighlighter.h \
     artworkmetadata_tests.h \
     basickeywordsmodel_tests.h \
