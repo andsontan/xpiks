@@ -131,7 +131,6 @@ namespace Models {
             for (auto it =m_FilesSet.begin(); (it!=m_FilesSet.end()) && (k--);++it ){
                 m_DeletedFiles.insert(*it);
             }
-            //m_Timer.start();
             emit fileDeleted();
         }
 

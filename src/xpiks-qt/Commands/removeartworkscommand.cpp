@@ -84,6 +84,8 @@ namespace Commands {
 
             artItemsModel->updateModifiedCount();
 
+            UndoRedo::RemoveArtworksHistoryItem *removeArtworksItem =
+                    new UndoRedo::RemoveArtworksHistoryItem(removedItemsIndices,
                                                             removedItemsFilepathes,
                                                             removedAttachedVectors);
             commandManager->recordHistoryItem(removeArtworksItem);

@@ -18,6 +18,8 @@
 #include "conectivityhelpers_tests.h"
 #include "undoredo_tests.h"
 #include "artworkfilter_tests.h"
+#include "artworkfilter_tests.h"
+#include "removefilesfs_tests.h"
 
 #define QTEST_CLASS(TestObject, vName, result) \
     TestObject vName; \
@@ -44,6 +46,7 @@ int main(int argc, char *argv[]) {
     QTEST_CLASS(ConectivityHelpersTests, cht, result);
     QTEST_CLASS(UndoRedoTests, urt, result);
     QTEST_CLASS(ArtworkFilterTests, aft, result);
+    QTEST_CLASS(RemoveFilesFs_Tests, del,result);
 
     QThread::sleep(1);
 
