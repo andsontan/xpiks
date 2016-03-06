@@ -4,8 +4,8 @@
 #include "removecommand_tests.h"
 #include "Mocks/commandmanagermock.h"
 #include "Mocks/artitemsmodelmock.h"
-#include "../xpiks-qt/Commands/removeartworkscommand.h"
-#include "../xpiks-qt/Models/artworksrepository.h"
+#include "../../xpiks-qt/Commands/removeartworkscommand.h"
+#include "../../xpiks-qt/Models/artworksrepository.h"
 
 void RemoveCommand_Tests::removeArtworksFromEmptyRepository() {
     Mocks::CommandManagerMock commandManagerMock;

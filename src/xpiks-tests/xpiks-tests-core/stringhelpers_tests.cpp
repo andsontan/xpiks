@@ -1,5 +1,5 @@
 #include "stringhelpers_tests.h"
-#include "../xpiks-qt/Helpers/stringhelper.h"
+#include "../../xpiks-qt/Helpers/stringhelper.h"
 #include <QStringList>
 
 void StringHelpersTests::splitEmptyStringTest() {

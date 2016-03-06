@@ -1,5 +1,5 @@
 #include "indicestoranges_tests.h"
-#include "../xpiks-qt/Helpers/indiceshelper.h"
+#include "../../xpiks-qt/Helpers/indiceshelper.h"
 
 #include <QDebug>
 #include <QList>

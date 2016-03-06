@@ -1,9 +1,9 @@
 #ifndef COMMANDMANAGERMOCK_H
 #define COMMANDMANAGERMOCK_H
 
-#include "../xpiks-qt/Commands/commandmanager.h"
-#include "../xpiks-qt/Models/artitemsmodel.h"
-#include "../xpiks-qt/Models/artworksrepository.h"
+#include "../../xpiks-qt/Commands/commandmanager.h"
+#include "../../xpiks-qt/Models/artitemsmodel.h"
+#include "../../xpiks-qt/Models/artworksrepository.h"
 
 namespace Mocks {
     class CommandManagerMock : public Commands::CommandManager

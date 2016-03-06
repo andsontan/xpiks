@@ -3,7 +3,7 @@
 
 #include <QtTest/QtTest>
 #include "Mocks/commandmanagermock.h"
-#include "../xpiks-qt/Models/settingsmodel.h"
+#include "../../xpiks-qt/Models/settingsmodel.h"
 
 class CombinedModelTests : public QObject {
     Q_OBJECT

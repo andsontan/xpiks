@@ -2,12 +2,12 @@
 #include <QStringList>
 #include <QVector>
 #include <QSignalSpy>
-#include "../xpiks-qt/Models/combinedartworksmodel.h"
+#include "../../xpiks-qt/Models/combinedartworksmodel.h"
 #include "Mocks/artitemsmodelmock.h"
 #include "Mocks/commandmanagermock.h"
-#include "../xpiks-qt/Models/artiteminfo.h"
-#include "../xpiks-qt/Common/basickeywordsmodel.h"
-#include "../xpiks-qt/Models/settingsmodel.h"
+#include "../../xpiks-qt/Models/artiteminfo.h"
+#include "../../xpiks-qt/Common/basickeywordsmodel.h"
+#include "../../xpiks-qt/Models/settingsmodel.h"
 
 Models::ArtItemInfo *createArtworkMetadata(const QString &desc, const QString &title, const QStringList &keywords, int index=0) {
     Mocks::ArtworkMetadataMock *metadata = new Mocks::ArtworkMetadataMock("/random/file/path.jpg");

@@ -1,5 +1,5 @@
 #include "conectivityhelpers_tests.h"
-#include "../xpiks-qt/Conectivity/conectivityhelpers.h"
+#include "../../xpiks-qt/Conectivity/conectivityhelpers.h"
 #include "Mocks/artworkmetadatamock.h"
 
 void ConectivityHelpersTests::generateMixedFilepathesTest() {

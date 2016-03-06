@@ -1,6 +1,6 @@
 #include "artworkrepository_tests.h"
 #include <QSignalSpy>
-#include "../xpiks-qt/Models/artworksrepository.h"
+#include "../../xpiks-qt/Models/artworksrepository.h"
 
 void ArtworkRepositoryTests::simpleAccountFileTest() {
     Models::ArtworksRepository repository;

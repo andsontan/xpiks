@@ -5,8 +5,8 @@
 #include <QtTest/QTest>
 #include "Mocks/artitemsmodelmock.h"
 #include "Mocks/commandmanagermock.h"
-#include "../xpiks-qt/Models/filteredartitemsproxymodel.h"
-#include "../xpiks-qt/Models/artworksrepository.h"
+#include "../../xpiks-qt/Models/filteredartitemsproxymodel.h"
+#include "../../xpiks-qt/Models/artworksrepository.h"
 
 class FilteredModelTests : public QObject
 {

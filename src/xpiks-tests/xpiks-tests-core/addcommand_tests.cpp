@@ -3,8 +3,8 @@
 #include "addcommand_tests.h"
 #include "Mocks/commandmanagermock.h"
 #include "Mocks/artitemsmodelmock.h"
-#include "../xpiks-qt/Commands/addartworkscommand.h"
-#include "../xpiks-qt/Models/settingsmodel.h"
+#include "../../xpiks-qt/Commands/addartworkscommand.h"
+#include "../../xpiks-qt/Models/settingsmodel.h"
 
 void AddCommand_Tests::addNoArtworksToEmptyRepositoryTest() {
     Mocks::CommandManagerMock commandManagerMock;

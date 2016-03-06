@@ -270,6 +270,8 @@ SOURCES = *.qml \
           StyledControls/*.qml
 }
 
+INCLUDEPATH += ../tiny-aes
+
 LIBS += -L"$$PWD/../libs/"
 LIBS += -lhunspell
 LIBS += -lz

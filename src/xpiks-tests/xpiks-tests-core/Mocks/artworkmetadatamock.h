@@ -2,7 +2,7 @@
 #define ARTWORKMETADATAMOCK
 
 #include <QString>
-#include "../xpiks-qt/Models/artworkmetadata.h"
+#include "../../xpiks-qt/Models/artworkmetadata.h"
 
 namespace Mocks {
     class ArtworkMetadataMock : public Models::ArtworkMetadata {

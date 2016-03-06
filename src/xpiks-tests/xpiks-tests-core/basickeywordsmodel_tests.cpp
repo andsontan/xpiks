@@ -1,6 +1,6 @@
 #include "basickeywordsmodel_tests.h"
 #include <QSignalSpy>
-#include "../xpiks-qt/Common/basickeywordsmodel.h"
+#include "../../xpiks-qt/Common/basickeywordsmodel.h"
 
 void BasicKeywordsModelTests::constructEmptyTest() {
     Common::BasicKeywordsModel basicModel;

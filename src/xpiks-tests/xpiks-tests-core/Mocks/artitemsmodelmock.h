@@ -3,8 +3,8 @@
 
 #include <QVector>
 #include <QPair>
-#include "../xpiks-qt/Models/artitemsmodel.h"
-#include "../xpiks-qt/Models/artworkmetadata.h"
+#include "../../xpiks-qt/Models/artitemsmodel.h"
+#include "../../xpiks-qt/Models/artworkmetadata.h"
 #include "artworkmetadatamock.h"
 
 namespace Mocks {

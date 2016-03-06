@@ -1,6 +1,6 @@
 #include "artworkfilter_tests.h"
 #include "Mocks/artworkmetadatamock.h"
-#include "../xpiks-qt/Helpers/filterhelpers.h"
+#include "../../xpiks-qt/Helpers/filterhelpers.h"
 
 void ArtworkFilterTests::searchImageVectorTest() {
     Mocks::ArtworkMetadataMock metadata("/path/to/file.jpg");

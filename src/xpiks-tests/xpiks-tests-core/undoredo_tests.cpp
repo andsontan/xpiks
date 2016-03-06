@@ -3,13 +3,13 @@
 #include <QSignalSpy>
 #include "Mocks/commandmanagermock.h"
 #include "Mocks/artitemsmodelmock.h"
-#include "../xpiks-qt/Commands/addartworkscommand.h"
-#include "../xpiks-qt/Commands/removeartworkscommand.h"
-#include "../xpiks-qt/Commands/combinededitcommand.h"
-#include "../xpiks-qt/Models/settingsmodel.h"
-#include "../xpiks-qt/UndoRedo/undoredomanager.h"
-#include "../xpiks-qt/Common/flags.h"
-#include "../xpiks-qt/Models/artiteminfo.h"
+#include "../../xpiks-qt/Commands/addartworkscommand.h"
+#include "../../xpiks-qt/Commands/removeartworkscommand.h"
+#include "../../xpiks-qt/Commands/combinededitcommand.h"
+#include "../../xpiks-qt/Models/settingsmodel.h"
+#include "../../xpiks-qt/UndoRedo/undoredomanager.h"
+#include "../../xpiks-qt/Common/flags.h"
+#include "../../xpiks-qt/Models/artiteminfo.h"
 
 #define SETUP_TEST \
     Mocks::CommandManagerMock commandManagerMock;\
