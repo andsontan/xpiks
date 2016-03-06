@@ -15,14 +15,13 @@ Item {
 
     QtObject {
         id: helpersWrapper
-        property bool isValidMock: true
 
         function sanitizeKeyword(keyword) {
             return keyword;
         }
 
         function isKeywordValid(keyword) {
-            return isValidMock;
+            return keyword.length >= 2 || keyword === "$"
         }
     }
 
@@ -79,11 +78,6 @@ Item {
 
         function test_RaiseTagAdded() {
             tagAddedSpy.clear()
-            compare(tagAddedSpy.count, 0)
-            helpersWrapper.isValidMock = false
-            editableTags.raiseAddTag("any text")
-            compare(tagAddedSpy.count, 0)
-            helpersWrapper.isValidMock = true
             editableTags.raiseAddTag("any text")
             compare(tagAddedSpy.count, 1)
         }
@@ -108,7 +102,7 @@ Item {
             compare(removeLastSpy.count, 1)
         }
 
-        function test_PasteNoComma() {
+        function test_SimplePasteNoComma() {
             tagAddedSpy.clear()
             tagsPastedSpy.clear()
             input.text = ""
@@ -122,11 +116,55 @@ Item {
             compare(tagsPastedSpy.count, 0)
         }
 
-        function test_PasteWithComma() {
+        function test_SimplePasteWithComma() {
             tagAddedSpy.clear()
             tagsPastedSpy.clear()
             input.text = ""
             clipboard.setText("keyword1,keyword2")
+
+            input.forceActiveFocus()
+            keyClick(Qt.Key_V, Qt.ControlModifier)
+
+            compare(input.text, "")
+            compare(tagAddedSpy.count, 0)
+            compare(tagsPastedSpy.count, 1)
+            var list = tagsPastedSpy.signalArguments[0][0]
+            compare(list, ["keyword1", "keyword2"])
+        }
+
+        function test_PasteOneItemWithComma() {
+            tagAddedSpy.clear()
+            tagsPastedSpy.clear()
+            input.text = ""
+            clipboard.setText("keyword , ")
+
+            input.forceActiveFocus()
+            keyClick(Qt.Key_V, Qt.ControlModifier)
+
+            compare(input.text, "keyword , ")
+            compare(tagsPastedSpy.count, 0)
+            compare(tagAddedSpy.count, 0)
+        }
+
+        function test_PasteOnlyCommas() {
+            tagAddedSpy.clear()
+            tagsPastedSpy.clear()
+            input.text = ""
+            clipboard.setText(" , , ")
+
+            input.forceActiveFocus()
+            keyClick(Qt.Key_V, Qt.ControlModifier)
+
+            compare(input.text, " , , ")
+            compare(tagsPastedSpy.count, 0)
+            compare(tagAddedSpy.count, 0)
+        }
+
+        function test_SimplePasteWithSemicolon() {
+            tagAddedSpy.clear()
+            tagsPastedSpy.clear()
+            input.text = ""
+            clipboard.setText(";;keyword1;keyword2;;;")
 
             input.forceActiveFocus()
             keyClick(Qt.Key_V, Qt.ControlModifier)
