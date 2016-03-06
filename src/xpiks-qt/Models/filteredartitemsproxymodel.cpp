@@ -32,6 +32,7 @@
 #include "../SpellCheck/ispellcheckable.h"
 #include "../Helpers/indiceshelper.h"
 #include "../Common/defines.h"
+#include "../Helpers/filterhelpers.h"
 
 namespace Models {
     FilteredArtItemsProxyModel::FilteredArtItemsProxyModel(QObject *parent) :
@@ -488,134 +489,6 @@ namespace Models {
         return artItemsModel;
     }
 
-    bool FilteredArtItemsProxyModel::fitsSpecialKeywords(const QString &searchTerm, const ArtworkMetadata *metadata) const {
-        bool hasMatch = false;
-
-        if (searchTerm == QLatin1String("x:modified")) {
-            hasMatch = metadata->isModified();
-        } else if (searchTerm == QLatin1String("x:empty")) {
-            hasMatch = metadata->isEmpty();
-        } else if (searchTerm == QLatin1String("x:selected")) {
-            hasMatch = metadata->getIsSelected();
-        } else if (searchTerm == QLatin1String("x:vector")) {
-            hasMatch = metadata->hasVectorAttached();
-        } else if (searchTerm == QLatin1String("x:image")) {
-            hasMatch = !metadata->hasVectorAttached();
-        }
-
-        return hasMatch;
-    }
-
-    bool FilteredArtItemsProxyModel::containsPartsSearch(ArtworkMetadata *metadata) const {
-        bool hasMatch = false;
-        Models::SettingsModel *settings = m_CommandManager->getSettingsModel();
-
-        if (settings->getSearchUsingAnd()) {
-            hasMatch = containsAllPartsSearch(metadata);
-        } else {
-            hasMatch = containsAnyPartsSearch(metadata);
-        }
-
-        return hasMatch;
-    }
-
-    bool FilteredArtItemsProxyModel::containsAnyPartsSearch(ArtworkMetadata *metadata) const {
-        bool hasMatch = false;
-        QStringList searchTerms = m_SearchTerm.split(QChar::Space, QString::SkipEmptyParts);
-
-        const QString &description = metadata->getDescription();
-        const QString &title = metadata->getTitle();
-        const QString &filepath = metadata->getFilepath();
-
-        int length = searchTerms.length();
-
-        for (int i = 0; i < length; ++i) {
-            const QString &searchTerm = searchTerms.at(i);
-
-            hasMatch = fitsSpecialKeywords(searchTerm, metadata);
-
-            if (!hasMatch) {
-                hasMatch = description.contains(searchTerm, Qt::CaseInsensitive);
-            }
-
-            if (!hasMatch) {
-                hasMatch = title.contains(searchTerm, Qt::CaseInsensitive);
-            }
-
-            if (!hasMatch) {
-                hasMatch = filepath.contains(searchTerm, Qt::CaseInsensitive);
-            }
-
-            if (hasMatch) { break; }
-        }
-
-        if (!hasMatch) {
-            for (int i = 0; i < length; ++i) {
-                QString searchTerm = searchTerms[i];
-                bool strictMatch = false;
-
-                if ((searchTerm.length() > 0) && searchTerm[0] == QChar('!')) {
-                    strictMatch = true;
-                    searchTerm.remove(0, 1);
-                }
-
-                hasMatch = metadata->containsKeyword(searchTerm, strictMatch);
-                if (hasMatch) { break; }
-            }
-        }
-
-        return hasMatch;
-    }
-
-    bool FilteredArtItemsProxyModel::containsAllPartsSearch(ArtworkMetadata *metadata) const {
-        bool hasMatch = false;
-        QStringList searchTerms = m_SearchTerm.split(QChar::Space, QString::SkipEmptyParts);
-
-        const QString &description = metadata->getDescription();
-        const QString &title = metadata->getTitle();
-        const QString &filepath = metadata->getFilepath();
-
-        bool anyError = false;
-        int length = searchTerms.length();
-
-        for (int i = 0; i < length; ++i) {
-            QString searchTerm = searchTerms[i];
-            bool anyContains = false;
-            bool strictMatch = false;
-
-            anyContains = fitsSpecialKeywords(searchTerm, metadata);
-
-            if (!anyContains) {
-                anyContains = description.contains(searchTerm, Qt::CaseInsensitive);
-            }
-
-            if (!anyContains) {
-                anyContains = title.contains(searchTerm, Qt::CaseInsensitive);
-            }
-
-            if (!anyContains) {
-                anyContains = filepath.contains(searchTerm, Qt::CaseInsensitive);
-            }
-
-            if (!anyContains) {
-                if ((searchTerm.length() > 0) && searchTerm[0] == QChar('!')) {
-                    strictMatch = true;
-                    searchTerm.remove(0, 1);
-                }
-
-                anyContains = metadata->containsKeyword(searchTerm, strictMatch);
-            }
-
-            if (!anyContains) {
-                anyError = true;
-                break;
-            }
-        }
-
-        hasMatch = !anyError;
-        return hasMatch;
-    }
-
     bool FilteredArtItemsProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const {
         Q_UNUSED(sourceParent);
 
@@ -624,7 +497,10 @@ namespace Models {
         ArtItemsModel *artItemsModel = getArtItemsModel();
         ArtworkMetadata *metadata = artItemsModel->getArtwork(sourceRow);
 
-        bool hasMatch = containsPartsSearch(metadata);
+        SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
+        bool searchUsingAnd = settingsModel->getSearchUsingAnd();
+
+        bool hasMatch = Helpers::containsPartsSearch(m_SearchTerm, metadata, searchUsingAnd);
         return hasMatch;
     }
 

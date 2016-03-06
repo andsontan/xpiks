@@ -51,7 +51,7 @@ namespace Models {
 
     public:
         Q_INVOKABLE int getOriginalIndex(int index);
-        Q_INVOKABLE void invertSelectionArtworks() {invertFilteredItemsSelected();}
+        Q_INVOKABLE void invertSelectionArtworks() { invertFilteredItemsSelected(); }
         Q_INVOKABLE void selectFilteredArtworks() { setFilteredItemsSelected(true); }
         Q_INVOKABLE void unselectFilteredArtworks() { setFilteredItemsSelected(false); }
         Q_INVOKABLE void selectDirectory(int directoryIndex);
@@ -102,10 +102,6 @@ namespace Models {
         QVector<int> getSelectedOriginalIndices() const;
         void forceUnselectAllItems();
         ArtItemsModel *getArtItemsModel() const;
-        bool fitsSpecialKeywords(const QString &searchTerm, const ArtworkMetadata *metadata) const;
-        bool containsPartsSearch(ArtworkMetadata *metadata) const;
-        bool containsAnyPartsSearch(ArtworkMetadata *metadata) const;
-        bool containsAllPartsSearch(ArtworkMetadata *metadata) const;
 
     protected:
         virtual bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;

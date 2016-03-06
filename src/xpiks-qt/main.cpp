@@ -77,7 +77,37 @@
 void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg) {
     Q_UNUSED(context);
 
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
     QString logLine = qFormatLogMessage(type, context, msg);
+#else
+    QString msgType;
+    switch (type) {
+    case QtDebugMsg:
+        msgType = "debug";
+        break;
+    case QtWarningMsg:
+        msgType = "warning";
+        break;
+    case QtCriticalMsg:
+        msgType = "critical";
+        break;
+    case QtFatalMsg:
+        msgType = "fatal";
+        break;
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 1))
+    case QtInfoMsg:
+        msgType = "info";
+        break;
+#endif
+    }
+    // %{time hh:mm:ss.zzz} %{type} T#%{threadid} %{function} - %{message}
+    QString time = QDateTime::currentDateTimeUtc().toString("hh:mm:ss.zzz");
+    QString logLine = QString("%1 %2 T#%3 %4 - %5")
+            .arg(time).arg(msgType)
+            .arg(0).arg(context.function)
+            .arg(msg);
+#endif
+
     Helpers::Logger &logger = Helpers::Logger::getInstance();
     logger.log(logLine);
 
@@ -186,7 +216,7 @@ int main(int argc, char *argv[]) {
     Models::LogsModel logsModel;
     logsModel.startLogging();
 
-    qSetMessagePattern("%{time hh:mm:ss.zzz} %{type} %{threadid} %{function} %{message}");
+    qSetMessagePattern("%{time hh:mm:ss.zzz} %{type} T#%{threadid} %{function} - %{message}");
     qInstallMessageHandler(myMessageHandler);
 
     LOG_INFO << "Log started. Today is" << QDateTime::currentDateTimeUtc().toString("dd.MM.yyyy");
@@ -306,7 +336,8 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("uploadInfos", &uploadInfoRepository);
     rootContext->setContextProperty("logsModel", &logsModel);
     rootContext->setContextProperty("secretsManager", &secretsManager);
-    rootContext->setContextProperty("undoRedoManager", &undoRedoManager);
+    rootContext->setContextProperty("un"
+                                    "doRedoManager", &undoRedoManager);
     rootContext->setContextProperty("zipArchiver", &zipArchiver);
     rootContext->setContextProperty("keywordsSuggestor", &keywordsSuggestor);
     rootContext->setContextProperty("settingsModel", &settingsModel);

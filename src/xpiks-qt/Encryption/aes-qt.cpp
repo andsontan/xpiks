@@ -24,7 +24,7 @@
 #include <QDataStream>
 #include <QCryptographicHash>
 #include <cstdio>
-#include "../tiny-aes/aes.h"
+#include <aes.h>
 
 #define MAX_ENCRYPTION_LENGTH 2048
 

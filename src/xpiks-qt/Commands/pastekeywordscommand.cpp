@@ -60,13 +60,17 @@ Commands::CommandResult *Commands::PasteKeywordsCommand::execute(const ICommandM
         itemsToCheckWarnings.append(metadata);
     }
 
-    commandManager->submitForSpellCheck(itemsToSpellCheck);
-    commandManager->submitForWarningsCheck(itemsToCheckWarnings);
+    if (size > 0) {
+        commandManager->submitForSpellCheck(itemsToSpellCheck);
+        commandManager->submitForWarningsCheck(itemsToCheckWarnings);
 
-    UndoRedo::ModifyArtworksHistoryItem *modifyArtworksItem =
-            new UndoRedo::ModifyArtworksHistoryItem(artworksBackups, indicesToUpdate,
-                                                    UndoRedo::PasteModificationType);
-    commandManager->recordHistoryItem(modifyArtworksItem);
+        UndoRedo::ModifyArtworksHistoryItem *modifyArtworksItem =
+                new UndoRedo::ModifyArtworksHistoryItem(artworksBackups, indicesToUpdate,
+                                                        UndoRedo::PasteModificationType);
+        commandManager->recordHistoryItem(modifyArtworksItem);
+    } else {
+        LOG_WARNING << "Pasted zero real words!";
+    }
 
     PasteKeywordsCommandResult *result = new PasteKeywordsCommandResult(indicesToUpdate);
     return result;

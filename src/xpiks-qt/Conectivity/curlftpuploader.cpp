@@ -29,6 +29,7 @@
 #include <curl/curl.h>
 #include "ftphelpers.h"
 #include "../Common/defines.h"
+#include "uploadbatch.h"
 
 #define MINIMAL_PROGRESS_FUNCTIONALITY_INTERVAL 2
 

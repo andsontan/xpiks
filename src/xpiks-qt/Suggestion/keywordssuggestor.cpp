@@ -21,6 +21,7 @@
 
 #include <QHash>
 #include <QString>
+#include <QMultiMap>
 #include "keywordssuggestor.h"
 #include "suggestionartwork.h"
 #include "../Commands/commandmanager.h"
@@ -82,6 +83,7 @@ namespace Suggestion {
         int sign = newState ? +1 : -1;
         accountKeywords(suggestionArtwork->getKeywordsSet(), sign);
         m_SelectedArtworksCount += sign;
+        emit selectedArtworksCountChanged();
 
         QModelIndex qIndex = this->index(index);
         emit dataChanged(qIndex, qIndex, QVector<int>() << IsSelectedRole);
@@ -160,48 +162,78 @@ namespace Suggestion {
     }
 
     void KeywordsSuggestor::updateSuggestedKeywords() {
-        QStringList keywords;
+        QStringList suggestedKeywords, otherKeywords;
+        QMultiMap<int, QString> selectedKeywords;
+        int lowerThreshold, upperThreshold;
+        calculateBounds(lowerThreshold, upperThreshold);
 
-        QHash<QString, int>::const_iterator it = m_KeywordsHash.constBegin();
-        QHash<QString, int>::const_iterator itEnd = m_KeywordsHash.constEnd();
+        QHash<QString, int>::const_iterator hashIt = m_KeywordsHash.constBegin();
+        QHash<QString, int>::const_iterator hashItEnd = m_KeywordsHash.constEnd();
 
-        int threshold = 0;
-        if (m_SelectedArtworksCount <= 2) {
-            threshold = qMax(m_SelectedArtworksCount, 1);
-        } else if (m_SelectedArtworksCount <= 5) {
-            threshold = 2;
-        } else if (m_SelectedArtworksCount <= 8) {
-            threshold = 3;
-        } else if (m_SelectedArtworksCount <= 10) {
-            threshold = 4;
-        } else {
-            threshold = m_SelectedArtworksCount / 2 - 1;
+        for (; hashIt != hashItEnd; ++hashIt) {
+            selectedKeywords.insert(hashIt.value(), hashIt.key());
         }
 
-        for (; it != itEnd; ++it) {
-            if (it.value() >= threshold) {
-                keywords.append(it.key());
+        QMultiMap<int, QString>::const_iterator it = selectedKeywords.constEnd();
+        QMultiMap<int, QString>::const_iterator itBegin = selectedKeywords.constBegin();
+
+        qsrand(QTime::currentTime().msec());
+        int maxSuggested = 23 + (qrand() % 7);
+        int maxOthers = 37 + (qrand() % 13);
+
+        suggestedKeywords.reserve(maxSuggested);
+        otherKeywords.reserve(maxOthers);
+
+        while (it != itBegin) {
+            --it;
+
+            int frequency = it.key();
+
+            if (frequency == 0) { continue; }
+
+            bool canAddToSuggested = frequency >= upperThreshold,
+                    canAddToOthers = frequency >= lowerThreshold;
+
+            const QString &frequentKeyword = it.value();
+
+            if (canAddToSuggested ||
+                    (canAddToOthers && (suggestedKeywords.length() <= maxSuggested))) {
+                suggestedKeywords.append(frequentKeyword);
+            } else if (canAddToOthers || (otherKeywords.length() <= maxOthers)) {
+                otherKeywords.append(frequentKeyword);
+
+                if (otherKeywords.length() > maxOthers) {
+                    break;
+                }
             }
         }
 
-        m_SuggestedKeywords.resetKeywords(keywords);
-
-        if (m_SelectedArtworksCount != 0) {
-            QSet<QString> allKeywords = getSelectedArtworksKeywords();
-            QSet<QString> suggestedKeywords = keywords.toSet();
-            QSet<QString> otherKeywords = allKeywords.subtract(suggestedKeywords);
-
-            m_AllOtherKeywords.resetKeywords(otherKeywords.toList());
-        }
-#ifndef QT_DEBUG
-        else {
-            m_AllOtherKeywords.clearKeywords();
-            m_SuggestedKeywords.clearKeywords();
-            m_KeywordsHash.clear();
-        }
-#endif
+        m_SuggestedKeywords.resetKeywords(suggestedKeywords);
+        m_AllOtherKeywords.resetKeywords(otherKeywords);
 
         emit suggestedKeywordsCountChanged();
         emit otherKeywordsCountChanged();
+    }
+
+    void KeywordsSuggestor::calculateBounds(int &lowerBound, int &upperBound) const {
+        if (m_SelectedArtworksCount <= 2) {
+            lowerBound = 1;
+            upperBound = qMax(m_SelectedArtworksCount, 1);
+        } else if (m_SelectedArtworksCount <= 4) {
+            lowerBound = 1;
+            upperBound = 2;
+        } else if (m_SelectedArtworksCount <= 5) {
+            lowerBound = 2;
+            upperBound = 3;
+        } else if (m_SelectedArtworksCount <= 9) {
+            upperBound = m_SelectedArtworksCount / 2;
+            lowerBound = upperBound - 1;
+        } else if (m_SelectedArtworksCount <= 15) {
+            upperBound = m_SelectedArtworksCount / 2 - 1;
+            lowerBound = upperBound - 2;
+        } else {
+            upperBound = m_SelectedArtworksCount / 2;
+            lowerBound = upperBound - 2;
+        }
     }
 }

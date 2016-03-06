@@ -46,6 +46,38 @@ namespace Helpers {
     }
 
     QString doSanitizeKeyword(const QString &keyword) {
-        return keyword.simplified();
+        QString allowed = QString(ALLOWED_SYMBOLS);
+        int start = 0;
+        int length = keyword.length();
+        QChar c;
+        while (start < length) {
+            c = keyword.at(start);
+            if (c.isLetterOrNumber() ||
+                    allowed.contains(c) ||
+                    c.category() == QChar::Symbol_Currency) {
+                break;
+            } else {
+                start++;
+            }
+        }
+
+        int end = length - 1;
+        while (end >= 0) {
+            c = keyword.at(end);
+            if (c.isLetterOrNumber() ||
+                    allowed.contains(c) ||
+                    c.category() == QChar::Symbol_Currency) {
+                break;
+            } else {
+                end--;
+            }
+        }
+
+        QString result;
+        if (start <= end) {
+            result = keyword.mid(start, end - start + 1).simplified();
+        }
+
+        return result;
     }
 }

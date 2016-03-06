@@ -164,32 +164,25 @@ namespace Models {
         if (metadataIndex >= 0
                 && metadataIndex < m_ArtworkList.length()
                 && !keywords.empty()) {
-
-            ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
-
             QVector<ArtItemInfo*> artItemInfos;
             QVector<int> selectedIndices;
 
-            getSelectedItemsIndices(selectedIndices);
-
-            if (!metadata->getIsSelected()) {
-                selectedIndices.append(metadataIndex);
-                LOG_DEBUG << "item was not selected";
-            }
+            // TODO: to be changed in future to the dialog
+            // getSelectedItemsIndices(selectedIndices);
+            // if (!metadata->getIsSelected()) {
+            selectedIndices.append(metadataIndex);
+            // }
 
             artItemInfos.reserve(selectedIndices.length());
 
             bool onlyOneKeyword = keywords.length() == 1;
 
             if (onlyOneKeyword) {
-                LOG_DEBUG << "Pasting only one keyword";
+                LOG_DEBUG << "Pasting only one keyword. Leaving it in the edit box.";
+                return;
             }
 
             foreach (int index, selectedIndices) {
-                // only one keyword in added to the edit field
-                // but not added as a new keyword
-                if (onlyOneKeyword && (index == metadataIndex)) { continue; }
-
                 ArtworkMetadata *metadata = m_ArtworkList.at(index);
                 ArtItemInfo *item = new ArtItemInfo(metadata, index);
                 artItemInfos.append(item);
@@ -265,12 +258,19 @@ namespace Models {
             }
         }
 
-        int filesAddedCount = files.isEmpty() ? 0 : addLocalArtworks(files);
-        int directoriesAddedCount = directories.isEmpty() ? 0 : addLocalDirectories(directories);
+        QStringList filesToImport;
+        filesToImport.reserve(files.size() + directories.size() * 10);
 
-        LOG_DEBUG << "Added" << filesAddedCount << "files and" << directoriesAddedCount << "directories";
+        foreach (const QUrl &fileUrl, files) {
+            filesToImport.append(fileUrl.toLocalFile());
+        }
 
-        return filesAddedCount + directoriesAddedCount;
+        foreach (const QUrl &dirUrl, directories) {
+            doAddDirectory(dirUrl.toLocalFile(), filesToImport);
+        }
+
+        int importedCount = addFiles(filesToImport);
+        return importedCount;
     }
 
     void ArtItemsModel::setSelectedItemsSaved(const QVector<int> &selectedIndices) {
@@ -732,7 +732,8 @@ namespace Models {
 
         QFileInfoList items = dir.entryInfoList();
         int size = items.size();
-        filesList.reserve(size);
+        filesList.reserve(filesList.size() + size);
+
         for (int i = 0; i < size; ++i) {
             QString filepath = items.at(i).absoluteFilePath();
             filesList.append(filepath);
@@ -777,16 +778,6 @@ namespace Models {
         delete result;
 
         return newFilesCount;
-    }
-
-    void ArtItemsModel::getSelectedArtworks(QVector<ArtworkMetadata *> &selectedArtworks) const {
-        int count = m_ArtworkList.length();
-        for (int i = 0; i < count; ++i) {
-            ArtworkMetadata *metadata = m_ArtworkList.at(i);
-            if (metadata->getIsSelected()) {
-                selectedArtworks.append(metadata);
-            }
-        }
     }
 
     void ArtItemsModel::doCombineArtwork(int index) {

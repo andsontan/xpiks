@@ -1,5 +1,6 @@
 #include "loghighlighter.h"
 #include <QColor>
+#include <QtGlobal>
 
 namespace Helpers {
     LogHighlighter::LogHighlighter(QTextDocument *document) :
@@ -17,7 +18,11 @@ namespace Helpers {
         QString word = text.mid(13, 13+8).toLower();
 
         if (word.startsWith(QLatin1Literal("debug"))){
+            // for Qt < 5.5.1 "info" msgtype does not exist
+            // so we will use default color for debug in old Qt
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 1))
             setFormat(0, size, m_DefaultInputBackground);
+#endif
         } else if (word.startsWith(QLatin1Literal("info"))) {
             // DO NOTHING - USE DEFAULT COLOR
         } else if (word.startsWith(QLatin1Literal("warning"))) {

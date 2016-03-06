@@ -211,6 +211,7 @@ Flickable {
 
             TextInput {
                 id: nextTagTextInput
+                objectName: "nextTagTextInput"
                 maximumLength: 30
                 selectedTextColor: Colors.defaultLightColor
                 selectionColor: Colors.defaultControlColor
@@ -257,9 +258,8 @@ Flickable {
                                 }
                             }
 
-                            tagsPasted(keywordsToAdd);
-
-                            if (words.length > 1) {
+                            if (keywordsToAdd.length > 1) {
+                                tagsPasted(keywordsToAdd);
                                 event.accepted = true;
                             }
                         }

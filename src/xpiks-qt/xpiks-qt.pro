@@ -76,7 +76,9 @@ SOURCES += main.cpp \
     Warnings/warningsservice.cpp \
     Helpers/loghighlighter.cpp \
     Warnings/warningsmodel.cpp \
-    Models/languagesmodel.cpp
+    Models/languagesmodel.cpp \
+    Conectivity/conectivityhelpers.cpp \
+    Helpers/filterhelpers.cpp
 
 RESOURCES += qml.qrc
 
@@ -203,7 +205,10 @@ HEADERS += \
     Common/iservicebase.h \
     Helpers/loghighlighter.h \
     Warnings/warningsmodel.h \
-    Models/languagesmodel.h
+    Models/languagesmodel.h \
+    Conectivity/conectivityhelpers.h \
+    Conectivity/uploadbatch.h \
+    Helpers/filterhelpers.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
@@ -264,6 +269,8 @@ SOURCES = *.qml \
           Dialogs/*.qml \
           StyledControls/*.qml
 }
+
+INCLUDEPATH += ../tiny-aes
 
 LIBS += -L"$$PWD/../libs/"
 LIBS += -lhunspell
