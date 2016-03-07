@@ -20,6 +20,7 @@ private slots:
     void clearKeywordsTest();
     void detachVectorFromSelectedTest();
     void setSelectedForUploadTest();
+    void setSelectedForZippingTest();
 };
 
 #endif // FILTEREDMODELTESTS_H

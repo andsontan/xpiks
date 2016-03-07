@@ -4,6 +4,7 @@
 #include "../../xpiks-qt/Models/filteredartitemsproxymodel.h"
 #include "../../xpiks-qt/Models/artworksrepository.h"
 #include "../../xpiks-qt/Models/artworkuploader.h"
+#include "../../xpiks-qt/Models/ziparchiver.h"
 
 #define DECLARE_MODELS_AND_GENERATE(count) \
     Mocks::CommandManagerMock commandManagerMock;\
@@ -190,5 +191,25 @@ void FilteredModelTests::setSelectedForUploadTest() {
     filteredItemsModel.setSelectedForUpload();
 
     const QVector<Models::ArtworkMetadata*> &artworks = uploader.getArtworkList();
+    QCOMPARE(artworks.length(), 5);
+}
+
+void FilteredModelTests::setSelectedForZippingTest() {
+    DECLARE_MODELS_AND_GENERATE(10);
+    Models::ZipArchiver zipArchiver;
+    commandManagerMock.InjectDependency(&zipArchiver);
+
+    for (int i = 0; i < 10; ++i) {
+        Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
+        metadata->initialize("title", "description", QStringList() << "keyword1" << "keyword2");
+
+        if (i % 2) {
+            metadata->setIsSelected(true);
+        }
+    }
+
+    filteredItemsModel.setSelectedForZipping();
+
+    const QVector<Models::ArtworkMetadata*> &artworks = zipArchiver.getArtworkList();
     QCOMPARE(artworks.length(), 5);
 }
