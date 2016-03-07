@@ -332,12 +332,17 @@ void Commands::CommandManager::addToRecentDirectories(const QString &path) const
     }
 }
 
-#ifdef QT_DEBUG
-void Commands::CommandManager::addInitialArtworks(const QStringList &artworksFilepathes, const QStringList &vectors)
-{
-    Commands::AddArtworksCommand *command = new Commands::AddArtworksCommand(artworksFilepathes, vectors, false);
+void Commands::CommandManager::openInitialFiles() {
+    if (m_InitialImagesToOpen.isEmpty()) { return; }
+    Commands::AddArtworksCommand *command = new Commands::AddArtworksCommand(m_InitialImagesToOpen, m_InitialVectorsToOpen, false);
     ICommandResult *result = this->processCommand(command);
     delete result;
+}
+
+#ifdef QT_DEBUG
+void Commands::CommandManager::addInitialArtworks(const QStringList &artworksFilepathes, const QStringList &vectors) {
+    m_InitialImagesToOpen = artworksFilepathes;
+    m_InitialVectorsToOpen = vectors;
 }
 #endif
 
@@ -466,6 +471,10 @@ void Commands::CommandManager::afterConstructionCallback()  {
 #ifdef Q_OS_MAC
     QCoreApplication::processEvents();
     m_MetadataIOCoordinator->autoDiscoverExiftool();
+#endif
+
+#ifdef QT_DEBUG
+    openInitialFiles();
 #endif
 }
 

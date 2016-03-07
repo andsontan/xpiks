@@ -366,15 +366,16 @@ int main(int argc, char *argv[]) {
     QQuickWindow *window = qobject_cast<QQuickWindow*>(engine.rootObjects().at(0));
     pluginManager.getUIProvider()->setRoot(window->contentItem());
 
-//#ifdef QT_DEBUG
-//    if (argc > 1) {
-//        QStringList pathes;
-//        for (int i = 1; i < argc; ++i) {
-//            pathes.append(QString(argv[i]));
-//        }
-//        commandManager.addInitialArtworks(pathes);
-//    }
-//#endif
+#ifdef QT_DEBUG
+    if (argc > 1) {
+        QStringList pathes;
+        for (int i = 1; i < argc; ++i) {
+            pathes.append(QString(argv[i]));
+        }
+
+        commandManager.addInitialArtworks(pathes, QStringList());
+    }
+#endif
 
     return app.exec();
 }

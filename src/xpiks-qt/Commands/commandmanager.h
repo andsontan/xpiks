@@ -179,6 +179,9 @@ namespace Commands {
         void updateArtworks(const QVector<QPair<int, int> > &rangesToUpdate) const;
         void addToRecentDirectories(const QString &path) const;
 #ifdef QT_DEBUG
+    private:
+        void openInitialFiles();
+    public:
         void addInitialArtworks(const QStringList &artworksFilepathes, const QStringList &vectors);
 #endif
 
@@ -241,6 +244,10 @@ namespace Commands {
         Models::LanguagesModel *m_LanguagesModel;
 
         QVector<Common::IServiceBase<Warnings::IWarningsCheckable> *> m_WarningsCheckers;
+#ifdef QT_DEBUG
+        QStringList m_InitialImagesToOpen;
+        QStringList m_InitialVectorsToOpen;
+#endif
 
         volatile bool m_AfterInitCalled;
     };
