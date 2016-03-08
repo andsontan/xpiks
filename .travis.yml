@@ -44,6 +44,6 @@ deploy:
   username: "Ribtoks"
   dist: "debian"
   skip_cleanup: true
-  package_glob: *.deb
   token:
     secure: TyxJv/xUOjX4+h+E/Xsmi/S/K9F6m/WDAjncX4ceXqJYmVDuwY/o2QyriecS448uVMyJrsiEzxIkhsSX58Fxvuc3v6eOtGdMhIHbZJJPDOvcJBoGoAPM8RNS3TvntAGCpyFZ7jj6A+//fzo711qFRRvuJyfST0VCPqRNZJYX6pY5ADECelBRltG//4m5SQm6/XwFWxZH1V6+q9AKb6yxrVzn3q3AUw4cToNxZ9J8skauvnpwdNRNUTW8w4tPtIQ1MDt0rtn6TjCYdAbrZIN36GwRMuAmHWU4p9NklwL8IK7TWvctcG2yt7E0gNomYC8EiUOADh9AlTZu0oOT2rPtfdN7Kaz9ZP3YhOwvoIKW1kc+3/fcQI7XtlsgGPqHYrDXyUiiMxW/4r5+1uYXGr+YHj4xP80K5BEaeY2HtoiAvsjBE6JDrCBXw9VQ4matg83SVnWUk0cm7KJ4NzQ0v5Ba4sqoHi5Yhe1+e+dpe2c03wJDosIKIWJ9KC0Var7Scsv1R+/2HLwAgVtiEtulOPGj0SsImbWYhumw8blaGmWQSotCEEJJ4Jrg54uVZEvMrL8Kx6pp0Y6qYAx+ePwF+uzUXJQ2pSrCkVigzGXHAiGeSnC3wHuODoNBFb23ev1t0TY3a6OfHaK1DL/wqLuWGDQgEHs36X8CuWogUd7rQlyYYus=
+
