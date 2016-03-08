@@ -1,35 +1,45 @@
 language: cpp
-
 os:
-  - linux
-
+- linux
 compiler:
-  - gcc
-
+- gcc
 git:
   depth: 3
-
 env:
-  - XPIKS_BINARY=binary
-  - XPIKS_TESTS=tests
-
+- XPIKS_BINARY=binary
+- XPIKS_TESTS=tests
 before_install:
-  - if [ "$CXX" = "g++" ]; then sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y; fi
-  - sudo add-apt-repository ppa:beineri/opt-qt551 -y
-  - sudo add-apt-repository ppa:kubuntu-ppa/backports -y
-  - sudo apt-get update -qq
-
+- if [ "$CXX" = "g++" ]; then sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+  -y; fi
+- sudo add-apt-repository ppa:beineri/opt-qt551 -y
+- sudo add-apt-repository ppa:kubuntu-ppa/backports -y
+- sudo apt-get update -qq
 install:
-  - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++ gcc; export CXX="g++" CC="gcc"; $CXX --version; fi
-  - sudo apt-get install -qq qt55base; source /opt/qt55/bin/qt55-env.sh
-  - sudo apt-get install qt55base qt55quickcontrols qt55svg qt55declarative libcurl4-openssl-dev libhunspell-dev libquazip0-dev zlib1g-dev
-
+- if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++ gcc; export CXX="g++" CC="gcc";
+  $CXX --version; fi
+- sudo apt-get install -qq qt55base; source /opt/qt55/bin/qt55-env.sh
+- sudo apt-get install qt55base qt55quickcontrols qt55svg qt55declarative libcurl4-openssl-dev
+  libhunspell-dev libquazip0-dev zlib1g-dev devscripts
 script:
-  - cd src/
-  - mv tiny-aes/aes.c tiny-aes/aes.cpp
-  - if [ -n "$XPIKS_BINARY" ]; then cd xpiks-qt/; fi
-  - if [ -n "$XPIKS_TESTS" ]; then cd xpiks-tests/; fi
-  - if [ -n "$XPIKS_BINARY" ]; then qmake "CONFIG+=debug" xpiks-qt.pro; fi
-  - if [ -n "$XPIKS_TESTS" ]; then qmake "CONFIG+=debug" xpiks-tests.pro; fi
-  - make
-  - if [ -n "$XPIKS_TESTS" ]; then xpiks-tests-core/xpiks-tests; fi
+- cd src/
+- mv tiny-aes/aes.c tiny-aes/aes.cpp
+- if [ -n "$XPIKS_BINARY" ]; then cd xpiks-qt/; fi
+- if [ -n "$XPIKS_TESTS" ]; then cd xpiks-tests/; fi
+- if [ -n "$XPIKS_BINARY" ]; then qmake "CONFIG+=debug" xpiks-qt.pro; fi
+- if [ -n "$XPIKS_TESTS" ]; then qmake "CONFIG+=debug" xpiks-tests.pro; fi
+- make
+- if [ -n "$XPIKS_TESTS" ]; then xpiks-tests-core/xpiks-tests; fi
+
+after_success:
+- cd ../xpiks-qt
+- debuild -i -us -uc -b
+
+deploy:
+  provider: packagecloud
+  repository: "xpiks"
+  username: "Ribtoks"
+  dist: "debian"
+  skip_cleanup: true
+  package_glob: *.deb
+  token:
+    secure: TyxJv/xUOjX4+h+E/Xsmi/S/K9F6m/WDAjncX4ceXqJYmVDuwY/o2QyriecS448uVMyJrsiEzxIkhsSX58Fxvuc3v6eOtGdMhIHbZJJPDOvcJBoGoAPM8RNS3TvntAGCpyFZ7jj6A+//fzo711qFRRvuJyfST0VCPqRNZJYX6pY5ADECelBRltG//4m5SQm6/XwFWxZH1V6+q9AKb6yxrVzn3q3AUw4cToNxZ9J8skauvnpwdNRNUTW8w4tPtIQ1MDt0rtn6TjCYdAbrZIN36GwRMuAmHWU4p9NklwL8IK7TWvctcG2yt7E0gNomYC8EiUOADh9AlTZu0oOT2rPtfdN7Kaz9ZP3YhOwvoIKW1kc+3/fcQI7XtlsgGPqHYrDXyUiiMxW/4r5+1uYXGr+YHj4xP80K5BEaeY2HtoiAvsjBE6JDrCBXw9VQ4matg83SVnWUk0cm7KJ4NzQ0v5Ba4sqoHi5Yhe1+e+dpe2c03wJDosIKIWJ9KC0Var7Scsv1R+/2HLwAgVtiEtulOPGj0SsImbWYhumw8blaGmWQSotCEEJJ4Jrg54uVZEvMrL8Kx6pp0Y6qYAx+ePwF+uzUXJQ2pSrCkVigzGXHAiGeSnC3wHuODoNBFb23ev1t0TY3a6OfHaK1DL/wqLuWGDQgEHs36X8CuWogUd7rQlyYYus=
