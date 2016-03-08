@@ -109,6 +109,7 @@ namespace Models {
 
         Q_INVOKABLE void editKeyword(int metadataIndex, int keywordIndex, const QString &replacement);
         Q_INVOKABLE void plainTextEdit(int metadataIndex, const QString &rawKeywords);
+        Q_INVOKABLE void handleDeleted();
 
         /*Q_INVOKABLE*/ void detachVectorsFromSelected(const QVector<int> &selectedIndices);
 
@@ -161,7 +162,7 @@ namespace Models {
         void artworksChanged(bool needToMoveCurrentItem);
         void artworksAdded(int imagesCount, int vectorsCount);
         void selectedArtworkRemoved();
-        void fileDeleted();
+        void fileDeleted(int index);
 
     protected:
        virtual QHash<int, QByteArray> roleNames() const;
@@ -180,6 +181,7 @@ namespace Models {
     private:
         QVector<ArtworkMetadata*> m_ArtworkList;
         QVector<ArtworkMetadata*> m_FinalizationList;
+        QVector<int> m_IndicesToRemove;
         qint64 m_LastID;
     };
 }

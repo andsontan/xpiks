@@ -56,6 +56,7 @@ namespace Models {
         bool isInDirectory(const QString &directoryAbsolutePath) const;
         bool isModified() const { return m_IsModified; }
         bool getIsSelected() const { return m_IsSelected; }
+        bool getIsRemoved() const { return m_IsRemoved; }
         bool isInitialized() const { return m_IsInitialized; }
         bool hasVectorAttached() const { return m_HasAttachedVector; }
         virtual QSize getImageSize() const { return m_ImageSize; }
@@ -115,6 +116,7 @@ namespace Models {
     public:
         void markModified();
         void setModified() { m_IsModified = true; }
+        void markRemoved(){m_IsRemoved = true;}
         void resetModified() { m_IsModified = false; }
         void requestFocus(int directionSign) { emit focusRequested(directionSign); }
 
@@ -134,6 +136,7 @@ namespace Models {
          volatile bool m_IsSelected;
          volatile bool m_IsInitialized;
          volatile bool m_HasAttachedVector;
+         volatile bool m_IsRemoved;
     };
 }
 

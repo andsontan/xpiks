@@ -35,6 +35,7 @@ Item {
     id: plainTextKeywordsComponent
     property string keywordsText
     property var callbackObject
+    property int artworkIndex: -1
     anchors.fill: parent
 
     signal dialogDestruction();
@@ -48,6 +49,14 @@ Item {
     Component.onCompleted: {
         focus = true
         textEdit.forceActiveFocus()
+    }
+    Connections {
+        target: artItemsModel
+        onFileDeleted: {
+            if (artworkIndex==index){
+                closePopup()
+            }
+        }
     }
 
     Keys.onEscapePressed: closePopup()

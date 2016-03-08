@@ -856,18 +856,27 @@ namespace Models {
     }
 
     void ArtItemsModel::onFilesDeletedHandler(){
-        QVector<int> indicesToRemove;
         int count = m_ArtworkList.length();
         for (int i = 0; i < count; ++i) {
             if (m_CommandManager->isFileRemoved(m_ArtworkList.at(i)->getFilepath())) {
-                indicesToRemove.append(i);
-              //  paths.remove(m_ArtworkList.at(i)->getFilepath());
+                m_IndicesToRemove.append(i);
+                m_ArtworkList.at(i)->markRemoved();
+                //if (m_ArtworkList.at(i)->getIsSelected())
+                //    emit selectedArtworkRemoved();
+                emit fileDeleted(i);
+                m_FinalizationList.append(m_ArtworkList.at(i));
            }
         }
-        qSort(indicesToRemove);
-        QVector<QPair<int, int> > rangesToRemove;
-        Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
-        doRemoveItemsInRanges(rangesToRemove,0);
-        emit fileDeleted();
+        m_CommandManager->handleAllDependentModels();
+        //emit fileDeleted();
+        //QVector<QPair<int, int> > rangesToRemove;
+        //Helpers::indicesToRanges(m_IndicesToRemove, rangesToRemove);
+        //doRemoveItemsInRanges(rangesToRemove,0);
+
+
+    }
+
+    void ArtItemsModel::handleDeleted(){
+
     }
 }

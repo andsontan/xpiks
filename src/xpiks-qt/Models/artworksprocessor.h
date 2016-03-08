@@ -25,7 +25,7 @@
 #include <QObject>
 #include <QVector>
 #include "../Common/baseentity.h"
-
+#include "../Helpers/ifilenotavailablemodel.h"
 namespace Commands {
     class CommandManager;
 }
@@ -35,7 +35,7 @@ namespace Models {
 }
 
 namespace Models {
-    class ArtworksProcessor : public QObject, public Common::BaseEntity
+    class ArtworksProcessor : public QObject, public Common::BaseEntity, public Helpers::IFileNotAvailableModel
     {
         Q_OBJECT
         Q_PROPERTY(bool inProgress READ getInProgress WRITE setInProgress NOTIFY inProgressChanged)

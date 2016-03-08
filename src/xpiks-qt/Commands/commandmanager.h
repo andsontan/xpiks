@@ -32,7 +32,7 @@
 #include "icommandmanager.h"
 #include "../Common/iservicebase.h"
 #include "../Warnings/iwarningscheckable.h"
-
+#include "../Helpers/ifilenotavailablemodel.h"
 namespace Encryption {
     class SecretsManager;
 }
@@ -161,6 +161,7 @@ namespace Commands {
         void connectEntitiesSignalsSlots() const;
         void ensureDependenciesInjected();
         bool isFileRemoved(const QString & path);
+        void handleAllDependentModels();
 
     public:
         void recodePasswords(const QString &oldMasterPassword,
@@ -242,6 +243,7 @@ namespace Commands {
         Models::LanguagesModel *m_LanguagesModel;
 
         QVector<Common::IServiceBase<Warnings::IWarningsCheckable> *> m_WarningsCheckers;
+        QVector<Helpers::IFileNotAvailableModel*> m_AvailabilityListeners;
 
         volatile bool m_AfterInitCalled;
     };

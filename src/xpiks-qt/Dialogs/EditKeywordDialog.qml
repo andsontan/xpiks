@@ -33,6 +33,7 @@ Item {
     id: editKeywordComponent
     property var callbackObject
     property string previousKeyword: ''
+    property int artworkIndex: -1
     anchors.fill: parent
 
     signal dialogDestruction();
@@ -43,6 +44,14 @@ Item {
         if (helpersWrapper.isKeywordValid(keyword)) {
             callbackObject.onSuccess(keyword)
             closePopup()
+        }
+    }
+    Connections {
+        target: artItemsModel
+        onFileDeleted: {
+            if (artworkIndex==index){
+                closePopup()
+            }
         }
     }
 

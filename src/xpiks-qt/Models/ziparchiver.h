@@ -40,7 +40,11 @@ namespace Models {
 
     public:
         virtual int getItemsCount() const;
+        virtual void removeUnavailableItems();
+        virtual void UpdateMyself();
 
+    signals:
+        void CloseWindow();
     public slots:
         void archiveCreated(int);
         void allFinished();

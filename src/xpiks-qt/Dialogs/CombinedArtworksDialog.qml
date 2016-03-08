@@ -57,6 +57,13 @@ Item {
             closePopup()
         }
     }
+    Connections {
+        target: combinedArtworks
+        onCloseWindow: {
+                closePopup();
+        }
+    }
+
 
     PropertyAnimation { target: dialogComponent; property: "opacity";
         duration: 400; from: 0; to: 1;
@@ -765,7 +772,8 @@ Item {
                                                                 componentParent,
                                                                 {
                                                                     callbackObject: callbackObject,
-                                                                    previousKeyword: keyword
+                                                                    previousKeyword: keyword,
+                                                                    artworkIndex: index
                                                                 })
                                         }
                                     }

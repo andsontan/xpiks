@@ -60,6 +60,14 @@ Item {
         }
     }
 
+    Connections {
+        target: combinedArtworks
+        onArtworkDeleted: {
+            if (artworkIndex==index)
+                closePopup();
+        }
+    }
+
     Keys.onEscapePressed: closePopup()
 
     PropertyAnimation { target: artworkEditHorizontalDialog; property: "opacity";
@@ -437,7 +445,8 @@ Item {
                                                     componentParent,
                                                     {
                                                         callbackObject: callbackObject,
-                                                        previousKeyword: keyword
+                                                        previousKeyword: keyword,
+                                                        artworkIndex: artworkEditHorizontalDialog.artworkIndex
                                                     })
                             }
                         }

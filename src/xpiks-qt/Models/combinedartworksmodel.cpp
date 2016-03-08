@@ -427,4 +427,27 @@ namespace Models {
         delete info;
         m_ArtworksList.removeAt(row);
     }
+
+    void CombinedArtworksModel::removeUnavailableItems(){
+        int i =0;
+        QVector<ArtItemInfo*> m_ArtworksList_new;
+        for (auto it = m_ArtworksList.begin(); it!=m_ArtworksList.end(); it++, i++){
+            if ((*it)->getOrigin()->getIsRemoved())
+                emit artworkDeleted(i); // for single ArtItem Dialog
+            else
+                m_ArtworksList_new.append(*it);
+        }
+        m_ArtworksList=m_ArtworksList_new;
+        emit layoutChanged(); // for multi ArtItem Dialog. ListView needs to be notified about chanes in model
+    }
+
+    void CombinedArtworksModel::UpdateMyself(){
+        if (!m_ArtworksList.size())
+            emit closeWindow();
+
+    }
+
+
+
+
 }

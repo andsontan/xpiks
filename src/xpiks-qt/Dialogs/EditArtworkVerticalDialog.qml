@@ -80,6 +80,13 @@ Item {
             closePopup()
         }
     }
+    Connections {
+        target: combinedArtworks
+        onArtworkDeleted: {
+            if (artworkIndex==index)
+                closePopup();
+        }
+    }
 
     FocusScope {
         anchors.fill: parent
@@ -434,7 +441,8 @@ Item {
                                                     componentParent,
                                                     {
                                                         callbackObject: callbackObject,
-                                                        previousKeyword: keyword
+                                                        previousKeyword: keyword,
+                                                        artworkIndex: artworkEditVerticalDialog.artworkIndex
                                                     })
                             }
                         }

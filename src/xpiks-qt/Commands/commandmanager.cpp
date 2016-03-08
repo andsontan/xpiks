@@ -69,11 +69,13 @@ void Commands::CommandManager::InjectDependency(Models::FilteredArtItemsProxyMod
 void Commands::CommandManager::InjectDependency(Models::CombinedArtworksModel *combinedArtworksModel) {
     Q_ASSERT(combinedArtworksModel != NULL); m_CombinedArtworksModel = combinedArtworksModel;
     m_CombinedArtworksModel->setCommandManager(this);
+    m_AvailabilityListeners.append(combinedArtworksModel);
 }
 
 void Commands::CommandManager::InjectDependency(Models::ArtworkUploader *artworkUploader) {
     Q_ASSERT(artworkUploader != NULL); m_ArtworkUploader = artworkUploader;
     m_ArtworkUploader->setCommandManager(this);
+    m_AvailabilityListeners.append(m_ArtworkUploader);
 }
 
 void Commands::CommandManager::InjectDependency(Models::UploadInfoRepository *uploadInfoRepository) {
@@ -100,6 +102,7 @@ void Commands::CommandManager::InjectDependency(UndoRedo::UndoRedoManager *undoR
 void Commands::CommandManager::InjectDependency(Models::ZipArchiver *zipArchiver) {
     Q_ASSERT(zipArchiver != NULL); m_ZipArchiver = zipArchiver;
     m_ZipArchiver->setCommandManager(this);
+    m_AvailabilityListeners.append(zipArchiver);
 }
 
 void Commands::CommandManager::InjectDependency(Suggestion::KeywordsSuggestor *keywordsSuggestor) {
@@ -200,7 +203,6 @@ void Commands::CommandManager::connectEntitiesSignalsSlots() const {
                      m_FilteredItemsModel, SLOT(onSpellCheckerAvailable(bool)));
     QObject::connect(m_ArtworksRepository, SIGNAL(fileDeleted()),
                      m_ArtItemsModel, SLOT(onFilesDeletedHandler()));
-    QObject::connect(m_ArtworksRepository,SIGNAL(fileDeleted()),m_CombinedArtworksModel,SIGNAL(fileDeleted()));
 }
 
 void Commands::CommandManager::ensureDependenciesInjected() {
@@ -505,4 +507,12 @@ bool Commands::CommandManager::isFileRemoved(const QString & path){
     bool result= m_ArtworksRepository->isFileRemoved(path);
     if (result) m_ArtworksRepository->RemoveFromDeletedList(path);
     return result;
+}
+
+void Commands::CommandManager::handleAllDependentModels(){
+    for (auto it=m_AvailabilityListeners.begin(); it!=m_AvailabilityListeners.end(); it++){
+        (*it)->removeUnavailableItems();
+        (*it)->UpdateMyself();
+    }
+
 }

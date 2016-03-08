@@ -574,6 +574,7 @@ ApplicationWindow {
         target: artItemsModel
         onFileDeleted: {
                 console.debug("Got FilesDeleted signal")
+                selectAllCheckbox.checked = filteredArtItemsModel.selectedArtworksCount > 0
                 deletionFilesDetected.open()
             }
         onArtworksAdded: {
@@ -1672,7 +1673,8 @@ ApplicationWindow {
                                                                             applicationWindow,
                                                                             {
                                                                                 callbackObject: callbackObject,
-                                                                                keywordsText: keywordsstring
+                                                                                keywordsText: keywordsstring,
+                                                                                artworkIndex: rowWrapper.getIndex()
                                                                             });
                                                     }
                                                 }
@@ -1741,7 +1743,8 @@ ApplicationWindow {
                                                                                 applicationWindow,
                                                                                 {
                                                                                     callbackObject: callbackObject,
-                                                                                    previousKeyword: keyword
+                                                                                    previousKeyword: keyword,
+                                                                                    artworkIndex: rowWrapper.getIndex()
                                                                                 })
                                                         }
                                                     }

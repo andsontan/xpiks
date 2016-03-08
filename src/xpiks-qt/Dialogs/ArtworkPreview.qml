@@ -40,9 +40,18 @@ Item {
     signal dialogDestruction();
     Component.onDestruction: dialogDestruction();
 
-    function closePopup() {
+    function fileDeleted() {
         artworkPreviewDialog.destroy()
     }
+
+    Connections {
+        target: artItemsModel
+        onFileDeleted: {
+            if (artworkIndex==index)
+                closePopup()
+        }
+    }
+
 
     Component.onCompleted: focus = true
     Keys.onEscapePressed: closePopup()

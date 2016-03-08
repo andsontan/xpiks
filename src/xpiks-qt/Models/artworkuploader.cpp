@@ -153,4 +153,24 @@ namespace Models {
     void ArtworkUploader::cancelProcessing() {
         m_FtpCoordinator->cancelUpload();
     }
+
+
+    void ArtworkUploader::removeUnavailableItems(){
+        int i =0;
+        QVector<ArtworkMetadata*> m_ArtworksList_new;
+        QVector<ArtworkMetadata*> m_ArtworksList_old=getArtworkList();
+        for (auto it = m_ArtworksList_old.begin(); it!=m_ArtworksList_old.end(); it++, i++){
+            if ((*it)->getIsRemoved()){
+                m_ArtworksList_new.append(*it);
+            }
+        }
+        m_ArtworksList_old=m_ArtworksList_new;
+    }
+
+    void ArtworkUploader::UpdateMyself(){
+        QVector<ArtworkMetadata*> m_ArtworksList_new=getArtworkList();
+        if (!m_ArtworksList_new.size())
+            emit CloseWindow();
+
+    }
 }

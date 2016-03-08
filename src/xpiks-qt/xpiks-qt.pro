@@ -208,7 +208,8 @@ HEADERS += \
     Models/languagesmodel.h \
     Conectivity/conectivityhelpers.h \
     Conectivity/uploadbatch.h \
-    Helpers/filterhelpers.h
+    Helpers/filterhelpers.h \
+    Helpers/ifilenotavailablemodel.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

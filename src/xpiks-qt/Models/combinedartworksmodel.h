@@ -34,13 +34,15 @@
 #include "../Common/basickeywordsmodel.h"
 #include "../Common/flags.h"
 #include "../SpellCheck/spellcheckiteminfo.h"
+#include "../Helpers/ifilenotavailablemodel.h"
 
 namespace Models {
     class ArtItemInfo;
 
     class CombinedArtworksModel :
             public AbstractListModel,
-            public Common::BaseEntity
+            public Common::BaseEntity,
+            public Helpers::IFileNotAvailableModel
     {
         Q_OBJECT
         Q_PROPERTY(QString description READ getDescription WRITE setDescription NOTIFY descriptionChanged)
@@ -113,7 +115,8 @@ namespace Models {
         void changeKeywordsChanged();
         void changeTitleChanged();
         void appendKeywordsChanged();
-        void FileDeleted();
+        void artworkDeleted(int index);
+        void closeWindow();
 
     public:
         int getSelectedArtworksCount() const;
@@ -158,6 +161,7 @@ namespace Models {
     private slots:
         void spellCheckErrorsChangedHandler();
 
+
     public:
         enum CombinedArtworksModelRoles {
             PathRole = Qt::UserRole + 1,
@@ -167,6 +171,8 @@ namespace Models {
     public:
         virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
         virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+        virtual void removeUnavailableItems();
+        virtual void UpdateMyself();
 
     protected:
         virtual QHash<int, QByteArray> roleNames() const;
