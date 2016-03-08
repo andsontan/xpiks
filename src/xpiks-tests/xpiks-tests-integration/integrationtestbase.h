@@ -1,6 +1,8 @@
 #ifndef INTEGRATIONTESTBASE
 #define INTEGRATIONTESTBASE
 
+#include <QString>
+
 namespace Commands {
     class CommandManager;
 }
@@ -12,8 +14,9 @@ public:
     {}
     virtual ~IntegrationTestBase() {}
 
+    virtual QString testName() = 0;
     virtual void setup() = 0;
-    virtual void doTest() = 0;
+    virtual int doTest() = 0;
     virtual void teardown() = 0;
 
 protected:

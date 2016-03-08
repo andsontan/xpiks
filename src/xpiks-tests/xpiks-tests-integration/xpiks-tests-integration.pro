@@ -91,7 +91,8 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Warnings/warningscheckingworker.cpp \
     ../../xpiks-qt/Warnings/warningsmodel.cpp \
     ../../xpiks-qt/Warnings/warningsservice.cpp \
-    ../../tiny-aes/aes.cpp
+    ../../tiny-aes/aes.cpp \
+    addfilesbasictest.cpp
 
 RESOURCES +=
 
@@ -208,7 +209,8 @@ HEADERS += \
     ../../xpiks-qt/Warnings/warningsmodel.h \
     ../../xpiks-qt/Warnings/warningsservice.h \
     ../../tiny-aes/aes.h \
-    integrationtestbase.h
+    integrationtestbase.h \
+    addfilesbasictest.h
 
 INCLUDEPATH += ../../tiny-aes
 

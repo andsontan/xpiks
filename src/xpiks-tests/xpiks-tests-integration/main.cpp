@@ -1,4 +1,5 @@
 #include <iostream>
+#include <QDebug>
 
 #include "../../xpiks-qt/SpellCheck/spellchecksuggestionmodel.h"
 #include "../../xpiks-qt/Models/filteredartitemsproxymodel.h"
@@ -39,6 +40,9 @@
 #include "../../xpiks-qt/Common/version.h"
 #include "../../xpiks-qt/Common/defines.h"
 
+#include "integrationtestbase.h"
+#include "addfilesbasictest.h"
+
 #if defined(WITH_LOGS)
 #undef WITH_LOGS
 #endif
@@ -50,6 +54,8 @@
 int main(int argc, char *argv[]) {
     Q_UNUSED(argc);
     Q_UNUSED(argv);
+
+    qSetMessagePattern("%{time hh:mm:ss.zzz} %{type} T#%{threadid} %{function} - %{message}");
 
     Helpers::AppSettings appSettings;
     Suggestion::LocalLibrary localLibrary;
@@ -137,8 +143,27 @@ int main(int argc, char *argv[]) {
 
     commandManager.connectEntitiesSignalsSlots();
 
+    int result = 0;
 
+    QVector<IntegrationTestBase*> integrationTests;
 
-    return 0;
+    integrationTests.append(new AddFilesBasicTest(&commandManager));
+
+    foreach (IntegrationTestBase *test, integrationTests) {
+        try {
+            qInfo("Running test: %s", test->testName());
+            test->setup();
+            result += test->doTest();
+            test->teardown();
+        }
+        catch (...) {
+            qWarning() << "Test crashed!";
+            result += 1;
+        }
+    }
+
+    qDeleteAll(integrationTests);
+
+    return result;
 }
 
