@@ -2,7 +2,6 @@
 
 #include <QCoreApplication>
 #include <QtTest/QtTest>
-#include <QtQuickTest/quicktest.h>
 #include "encryption_tests.h"
 #include "indicestoranges_tests.h"
 #include "addcommand_tests.h"

@@ -352,8 +352,6 @@ linux-g++-64 {
     contains( UNAME, SUSE ) {
         message("distribution : SUSE")
     }
-
-
 }
 
 linux-qtcreator {
