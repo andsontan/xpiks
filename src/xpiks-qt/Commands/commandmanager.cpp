@@ -506,3 +506,15 @@ void Commands::CommandManager::restartSpellChecking() {
         m_SpellCheckerService->restartWorker();
     }
 }
+
+#ifdef INTEGRATION_TESTS
+void Commands::CommandManager::cleanup() {
+    m_CombinedArtworksModel->resetModelData();
+    m_ZipArchiver->resetArtworks();
+    m_ZipArchiver->resetModel();
+    m_ArtworkUploader->resetArtworks();
+    m_ArtworkUploader->resetModel();
+    m_ArtworksRepository->resetEverything();
+    m_ArtItemsModel->deleteAllItems();
+}
+#endif

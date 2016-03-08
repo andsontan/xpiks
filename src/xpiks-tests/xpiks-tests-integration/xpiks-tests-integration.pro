@@ -16,6 +16,8 @@ DEFINES += QUAZIP_STATIC
 DEFINES += HUNSPELL_STATIC
 DEFINES += TELEMETRY_ENABLED
 
+DEFINES += INTEGRATION_TESTS
+
 SOURCES += main.cpp \
     ../../xpiks-qt/Commands/addartworkscommand.cpp \
     ../../xpiks-qt/Commands/combinededitcommand.cpp \
@@ -205,7 +207,8 @@ HEADERS += \
     ../../xpiks-qt/Warnings/warningsitem.h \
     ../../xpiks-qt/Warnings/warningsmodel.h \
     ../../xpiks-qt/Warnings/warningsservice.h \
-    ../../tiny-aes/aes.h
+    ../../tiny-aes/aes.h \
+    integrationtestbase.h
 
 INCLUDEPATH += ../../tiny-aes
 

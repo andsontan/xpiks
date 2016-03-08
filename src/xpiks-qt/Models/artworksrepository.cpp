@@ -169,6 +169,15 @@ namespace Models {
         }
     }
 
+#ifdef INTEGRATION_TESTS
+    void ArtworksRepository::resetEverything() {
+        m_DirectoriesHash.clear();
+        m_DirectoriesList.clear();
+        m_DirectoriesSelectedHash.clear();
+        m_FilesSet.clear();
+    }
+#endif
+
     int ArtworksRepository::rowCount(const QModelIndex &parent) const {
         Q_UNUSED(parent);
         return m_DirectoriesList.count();

@@ -85,6 +85,10 @@ namespace Models {
         int getFilesCountForDirectory(const QString &directory) const { return m_DirectoriesHash[directory]; }
 #endif
 
+#ifdef INTEGRATION_TESTS
+        void resetEverything();
+#endif
+
     public:
         virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
         virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;

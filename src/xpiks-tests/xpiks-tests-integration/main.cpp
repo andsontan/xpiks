@@ -39,7 +39,18 @@
 #include "../../xpiks-qt/Common/version.h"
 #include "../../xpiks-qt/Common/defines.h"
 
+#if defined(WITH_LOGS)
+#undef WITH_LOGS
+#endif
+
+#if defined(WITH_PLUGINS)
+#undef WITH_PLUGINS
+#endif
+
 int main(int argc, char *argv[]) {
+    Q_UNUSED(argc);
+    Q_UNUSED(argv);
+
     Helpers::AppSettings appSettings;
     Suggestion::LocalLibrary localLibrary;
 

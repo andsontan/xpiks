@@ -206,6 +206,10 @@ namespace Commands {
         void beforeDestructionCallback() const;
         void restartSpellChecking();
 
+#ifdef INTEGRATION_TESTS
+        void cleanup();
+#endif
+
     public:
         // methods for getters
         virtual Models::ArtworksRepository *getArtworksRepository() const { return m_ArtworksRepository; }

@@ -339,8 +339,7 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("uploadInfos", &uploadInfoRepository);
     rootContext->setContextProperty("logsModel", &logsModel);
     rootContext->setContextProperty("secretsManager", &secretsManager);
-    rootContext->setContextProperty("un"
-                                    "doRedoManager", &undoRedoManager);
+    rootContext->setContextProperty("undoRedoManager", &undoRedoManager);
     rootContext->setContextProperty("zipArchiver", &zipArchiver);
     rootContext->setContextProperty("keywordsSuggestor", &keywordsSuggestor);
     rootContext->setContextProperty("settingsModel", &settingsModel);
