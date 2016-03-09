@@ -68,7 +68,7 @@ namespace Models {
                 delete metadata;
             } else {
                 metadata->disconnect();
-                LOG_DEBUG << "Metadata at index" << row << "is locked. Postponing destruction...";
+                LOG_DEBUG << "Metadata at index" << i << "is locked. Postponing destruction...";
                 m_FinalizationList.append(metadata);
             }
         }
