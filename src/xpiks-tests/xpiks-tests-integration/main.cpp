@@ -1,6 +1,6 @@
 #include <iostream>
 #include <QDebug>
-#include <QApplication>
+#include <QCoreApplication>
 
 #include "../../xpiks-qt/SpellCheck/spellchecksuggestionmodel.h"
 #include "../../xpiks-qt/Models/filteredartitemsproxymodel.h"
@@ -53,7 +53,7 @@
 #endif
 
 int main(int argc, char *argv[]) {
-    QApplication app(argc, argv);
+    QCoreApplication app(argc, argv);
 
     qSetMessagePattern("%{time hh:mm:ss.zzz} %{type} T#%{threadid} %{function} - %{message}");
 
