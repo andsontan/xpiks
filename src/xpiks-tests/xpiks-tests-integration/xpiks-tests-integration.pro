@@ -1,4 +1,5 @@
 TEMPLATE = app
+TARGET = xpiks-tests-integration
 
 QT += qml quick widgets concurrent svg
 

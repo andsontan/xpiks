@@ -22,7 +22,7 @@ before_install:
 install:
   - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++ gcc; export CXX="g++" CC="gcc"; $CXX --version; fi
   - sudo apt-get install -qq qt55base; source /opt/qt55/bin/qt55-env.sh
-  - sudo apt-get install qt55base qt55quickcontrols qt55svg qt55declarative libcurl4-openssl-dev libhunspell-dev libquazip0-dev zlib1g-dev devscripts
+  - sudo apt-get install qt55base qt55quickcontrols qt55svg qt55declarative libcurl4-openssl-dev libhunspell-dev libquazip0-dev zlib1g-dev exiftool
   
 script:
   - cd src/
@@ -32,5 +32,6 @@ script:
   - if [ -n "$XPIKS_BINARY" ]; then qmake "CONFIG+=debug" xpiks-qt.pro; fi
   - if [ -n "$XPIKS_TESTS" ]; then qmake "CONFIG+=debug" xpiks-tests.pro; fi
   - make
-  - if [ -n "$XPIKS_TESTS" ]; then xpiks-tests-core/xpiks-tests; fi
+  - if [ -n "$XPIKS_TESTS" ]; then xpiks-tests-core/xpiks-tests-core; fi
+  - if [ -n "$XPIKS_TESTS" ]; then xpiks-tests-integration/xpiks-tests-integration; fi
 

@@ -10,7 +10,7 @@ QT       += core testlib qml quick concurrent
 
 QT       -= gui
 
-TARGET = xpiks-tests
+TARGET = xpiks-tests-core
 CONFIG   += console
 CONFIG   -= app_bundle
 
