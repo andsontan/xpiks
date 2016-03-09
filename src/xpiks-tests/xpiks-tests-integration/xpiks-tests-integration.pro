@@ -2,6 +2,7 @@ TEMPLATE = app
 TARGET = xpiks-tests-integration
 
 QT += qml quick widgets concurrent svg
+QT -= gui
 
 CONFIG   += console
 CONFIG   -= app_bundle
