@@ -170,12 +170,16 @@ int main(int argc, char *argv[]) {
             }
         }
         catch (...) {
-            qWarning() << "Test crashed!";
+            qWarning("Test %s CRASHED", test->testName().toStdString().c_str());
             result += 1;
         }
     }
 
     qDeleteAll(integrationTests);
+
+    commandManager.beforeDestructionCallback();
+
+    QThread::sleep(1);
 
     return result;
 }
