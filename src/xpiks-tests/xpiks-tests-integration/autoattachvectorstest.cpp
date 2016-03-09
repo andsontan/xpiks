@@ -39,14 +39,12 @@ int AutoAttachVectorsTest::doTest() {
         VERIFY(false, "Timeout exceeded for reading metadata.");
     }
 
+    VERIFY(!ioCoordinator->getHasErrors(), "Errors in IO Coordinator while reading");
+
     for (int i = 0; i < files.length(); ++i) {
         Models::ArtworkMetadata *metadata = artItemsModel->getArtwork(i);
         VERIFY(metadata->hasVectorAttached(), "Vector is not attached!");
     }
 
     return 0;
-}
-
-void AutoAttachVectorsTest::teardown() {
-    m_CommandManager->cleanup();
 }

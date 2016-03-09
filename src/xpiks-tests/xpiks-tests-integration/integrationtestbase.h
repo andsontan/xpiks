@@ -3,10 +3,7 @@
 
 #include <QString>
 #include <QDebug>
-
-namespace Commands {
-    class CommandManager;
-}
+#include "../../xpiks-qt/Commands/commandmanager.h"
 
 #define VERIFY(condition, message) \
     if (!(condition)) {\
@@ -24,7 +21,7 @@ public:
     virtual QString testName() = 0;
     virtual void setup() = 0;
     virtual int doTest() = 0;
-    virtual void teardown() = 0;
+    virtual void teardown() { m_CommandManager->cleanup(); }
 
 protected:
     Commands::CommandManager *m_CommandManager;

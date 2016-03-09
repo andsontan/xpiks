@@ -1,4 +1,4 @@
-#include "addfilesbasictest.h"
+#include "savefilebasictest.h"
 #include <QUrl>
 #include <QFileInfo>
 #include <QStringList>
@@ -9,20 +9,19 @@
 #include "../../xpiks-qt/MetadataIO/metadataiocoordinator.h"
 #include "../../xpiks-qt/Models/artworkmetadata.h"
 #include "../../xpiks-qt/Models/settingsmodel.h"
+#include "../../xpiks-qt/Models/filteredartitemsproxymodel.h"
 
-QString AddFilesBasicTest::testName() {
-    return QLatin1String("AddFilesBasicTest");
+QString SaveFileBasicTest::testName() {
+    return QLatin1String("SaveFileBasicTest");
 }
 
-void AddFilesBasicTest::setup() {
-    Models::SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
-    settingsModel->setAutoFindVectors(false);
+void SaveFileBasicTest::setup() {
 }
 
-int AddFilesBasicTest::doTest() {
+int SaveFileBasicTest::doTest() {
     Models::ArtItemsModel *artItemsModel = m_CommandManager->getArtItemsModel();
     QList<QUrl> files;
-    files << QUrl::fromLocalFile(QFileInfo("images-for-tests/vector/026.jpg").absoluteFilePath());
+    files << QUrl::fromLocalFile(QFileInfo("images-for-tests/pixmap/seagull.jpg").absoluteFilePath());
 
     int addedCount = artItemsModel->addLocalArtworks(files);
 
@@ -41,11 +40,22 @@ int AddFilesBasicTest::doTest() {
     VERIFY(!ioCoordinator->getHasErrors(), "Errors in IO Coordinator while reading");
 
     Models::ArtworkMetadata *metadata = artItemsModel->getArtwork(0);
-    const QStringList &keywords = metadata->getKeywords();
+    metadata->setDescription("Brand new description");
+    metadata->setTitle("Brand new title");
+    metadata->resetKeywords(QStringList() << "keyword 1" << "keyword 2" << "$");
+    metadata->setIsSelected(true);
 
-    QStringList expectedKeywords = QString("abstract,art,black,blue,creative,dark,decor,decoration,decorative,design,dot,drops,elegance,element,geometric,interior,light,modern,old,ornate,paper,pattern,purple,retro,seamless,style,textile,texture,vector,wall,wallpaper").split(',');
+    bool doOverwrite = true, dontSaveBackups = false;
 
-    VERIFY(expectedKeywords == keywords, "Keywords are not the same!");
+    artItemsModel->saveSelectedArtworks(QVector<int>() << 0, doOverwrite, dontSaveBackups);
+
+    QObject::connect(ioCoordinator, SIGNAL(metadataWritingFinished()), &waiter, SIGNAL(finished()));
+    if (!waiter.wait(20)) {
+        VERIFY(false, "Timeout exceeded for writing metadata.");
+    }
+
+    VERIFY(!ioCoordinator->getHasErrors(), "Errors in IO Coordinator while writing");
 
     return 0;
 }
+

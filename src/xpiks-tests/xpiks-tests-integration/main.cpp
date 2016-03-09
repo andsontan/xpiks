@@ -44,6 +44,7 @@
 #include "integrationtestbase.h"
 #include "addfilesbasictest.h"
 #include "autoattachvectorstest.h"
+#include "savefilebasictest.h"
 
 #if defined(WITH_LOGS)
 #undef WITH_LOGS
@@ -151,6 +152,7 @@ int main(int argc, char *argv[]) {
 
     integrationTests.append(new AddFilesBasicTest(&commandManager));
     integrationTests.append(new AutoAttachVectorsTest(&commandManager));
+    integrationTests.append(new SaveFileBasicTest(&commandManager));
 
     foreach (IntegrationTestBase *test, integrationTests) {
         try {

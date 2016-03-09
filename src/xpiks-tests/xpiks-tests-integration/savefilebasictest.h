@@ -1,12 +1,12 @@
-#ifndef ADDFILESBASICTEST_H
-#define ADDFILESBASICTEST_H
+#ifndef SAVEFILEBASICTEST_H
+#define SAVEFILEBASICTEST_H
 
 #include "integrationtestbase.h"
 
-class AddFilesBasicTest : public IntegrationTestBase
+class SaveFileBasicTest : public IntegrationTestBase
 {
 public:
-    AddFilesBasicTest(Commands::CommandManager *commandManager):
+    SaveFileBasicTest(Commands::CommandManager *commandManager):
         IntegrationTestBase(commandManager)
     {}
 
@@ -17,4 +17,4 @@ public:
     virtual int doTest();
 };
 
-#endif // ADDFILESBASICTEST_H
+#endif // SAVEFILEBASICTEST_H

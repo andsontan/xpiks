@@ -3,11 +3,6 @@
 
 #include "integrationtestbase.h"
 
-namespace Commands {
-    class CommandManager;
-}
-
-
 class AutoAttachVectorsTest : public IntegrationTestBase
 {
 public:
@@ -20,7 +15,6 @@ public:
     virtual QString testName();
     virtual void setup();
     virtual int doTest();
-    virtual void teardown();
 };
 
 #endif // AUTOATTACHVECTORSTEST_H
