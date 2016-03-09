@@ -23,6 +23,10 @@ install:
   - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++ gcc; export CXX="g++" CC="gcc"; $CXX --version; fi
   - sudo apt-get install -qq qt55base; source /opt/qt55/bin/qt55-env.sh
   - sudo apt-get install qt55base qt55quickcontrols qt55svg qt55declarative libcurl4-openssl-dev libhunspell-dev libquazip0-dev zlib1g-dev libimage-exiftool-perl
+  - sudo apt-get install -y gdb
+
+before_script:
+  - ulimit -c unlimited -S       # enable core dumps
   
 script:
   - cd src/
@@ -35,3 +39,6 @@ script:
   - if [ -n "$XPIKS_TESTS" ]; then xpiks-tests-core/xpiks-tests-core; fi
   - if [ -n "$XPIKS_TESTS" ]; then xpiks-tests-integration/xpiks-tests-integration; fi
 
+after_failure:
+  - COREFILE=$(find . -maxdepth 1 -name "core*" | head -n 1) # find core file
+  - if [[ -f "$COREFILE" ]]; then gdb -c "$COREFILE" example -ex "thread apply all bt" -ex "set pagination 0" -batch; fi
