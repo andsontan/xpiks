@@ -175,9 +175,6 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    delete integrationTests[0];
-    integrationTests[0]->setup();
-
     qDeleteAll(integrationTests);
 
     commandManager.beforeDestructionCallback();
