@@ -94,7 +94,8 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Warnings/warningsmodel.cpp \
     ../../xpiks-qt/Warnings/warningsservice.cpp \
     ../../tiny-aes/aes.cpp \
-    addfilesbasictest.cpp
+    addfilesbasictest.cpp \
+    autoattachvectorstest.cpp
 
 RESOURCES +=
 
@@ -213,7 +214,8 @@ HEADERS += \
     ../../tiny-aes/aes.h \
     integrationtestbase.h \
     addfilesbasictest.h \
-    signalwaiter.h
+    signalwaiter.h \
+    autoattachvectorstest.h
 
 INCLUDEPATH += ../../tiny-aes
 

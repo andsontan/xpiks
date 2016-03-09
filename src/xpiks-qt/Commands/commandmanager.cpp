@@ -516,5 +516,6 @@ void Commands::CommandManager::cleanup() {
     m_ArtworkUploader->resetModel();
     m_ArtworksRepository->resetEverything();
     m_ArtItemsModel->deleteAllItems();
+    m_SettingsModel->resetToDefault();
 }
 #endif

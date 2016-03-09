@@ -280,7 +280,11 @@ namespace Models {
             }
         }
 
+#ifndef INTEGRATION_TESTS
     private:
+#else
+    public:
+#endif
         void resetToDefault();
 
     private:

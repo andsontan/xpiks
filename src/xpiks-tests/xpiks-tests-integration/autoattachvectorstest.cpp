@@ -1,4 +1,4 @@
-#include "addfilesbasictest.h"
+#include "autoattachvectorstest.h"
 #include <QUrl>
 #include <QFileInfo>
 #include <QStringList>
@@ -10,23 +10,24 @@
 #include "../../xpiks-qt/Models/artworkmetadata.h"
 #include "../../xpiks-qt/Models/settingsmodel.h"
 
-QString AddFilesBasicTest::testName() {
-    return QLatin1String("AddFilesBasicTest");
+QString AutoAttachVectorsTest::testName() {
+    return QLatin1String("AutoAttachVectorsTest");
 }
 
-void AddFilesBasicTest::setup() {
+void AutoAttachVectorsTest::setup() {
     Models::SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
-    settingsModel->setAutoFindVectors(false);
+    settingsModel->setAutoFindVectors(true);
 }
 
-int AddFilesBasicTest::doTest() {
+int AutoAttachVectorsTest::doTest() {
     Models::ArtItemsModel *artItemsModel = m_CommandManager->getArtItemsModel();
     QList<QUrl> files;
     files << QUrl::fromLocalFile(QFileInfo("images-for-tests/vector/026.jpg").absoluteFilePath());
+    files << QUrl::fromLocalFile(QFileInfo("images-for-tests/vector/027.jpg").absoluteFilePath());
 
     int addedCount = artItemsModel->addLocalArtworks(files);
 
-    VERIFY(addedCount == 1, "Failed to add file");
+    VERIFY(addedCount == 2, "Failed to add files");
 
     MetadataIO::MetadataIOCoordinator *ioCoordinator = m_CommandManager->getMetadataIOCoordinator();
     SignalWaiter waiter;
@@ -38,16 +39,14 @@ int AddFilesBasicTest::doTest() {
         VERIFY(false, "Timeout exceeded for reading metadata.");
     }
 
-    Models::ArtworkMetadata *metadata = artItemsModel->getArtwork(0);
-    const QStringList &keywords = metadata->getKeywords();
-
-    QStringList expectedKeywords = QString("abstract,art,black,blue,creative,dark,decor,decoration,decorative,design,dot,drops,elegance,element,geometric,interior,light,modern,old,ornate,paper,pattern,purple,retro,seamless,style,textile,texture,vector,wall,wallpaper").split(',');
-
-    VERIFY(expectedKeywords == keywords, "Keywords are not the same!");
+    for (int i = 0; i < files.length(); ++i) {
+        Models::ArtworkMetadata *metadata = artItemsModel->getArtwork(i);
+        VERIFY(metadata->hasVectorAttached(), "Vector is not attached!");
+    }
 
     return 0;
 }
 
-void AddFilesBasicTest::teardown() {
+void AutoAttachVectorsTest::teardown() {
     m_CommandManager->cleanup();
 }

@@ -43,6 +43,7 @@
 
 #include "integrationtestbase.h"
 #include "addfilesbasictest.h"
+#include "autoattachvectorstest.h"
 
 #if defined(WITH_LOGS)
 #undef WITH_LOGS
@@ -109,7 +110,6 @@ int main(int argc, char *argv[]) {
     MetadataIO::MetadataIOCoordinator metadataIOCoordinator;
     Conectivity::TelemetryService telemetryService("1234567890", false);
     Plugins::PluginManager pluginManager;
-    settingsModel.setAutoFindVectors(false);
 
     Commands::CommandManager commandManager;
     commandManager.InjectDependency(&artworkRepository);
@@ -150,9 +150,11 @@ int main(int argc, char *argv[]) {
     QVector<IntegrationTestBase*> integrationTests;
 
     integrationTests.append(new AddFilesBasicTest(&commandManager));
+    integrationTests.append(new AutoAttachVectorsTest(&commandManager));
 
     foreach (IntegrationTestBase *test, integrationTests) {
         try {
+            qDebug("---------------------------------------------------------");
             qInfo("Running test: %s", test->testName().toStdString().c_str());
             test->setup();
             int testResult = test->doTest();
