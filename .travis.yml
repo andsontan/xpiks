@@ -40,5 +40,5 @@ script:
   - if [ -n "$XPIKS_TESTS" ]; then xpiks-tests-integration/xpiks-tests-integration; fi
 
 after_failure:
-  - for i in $(find ./ -maxdepth 1 -name 'core*' -print); do gdb $(pwd)/xpiks-tests-core core* -ex "thread apply all bt" -ex "set pagination 0" -batch; done;
-  - for i in $(find ./ -maxdepth 1 -name 'core*' -print); do gdb $(pwd)/xpiks-tests-integration core* -ex "thread apply all bt" -ex "set pagination 0" -batch; done;
+  - for i in $(find ./ -maxdepth 1 -name 'core*' -print); do gdb $(pwd)/xpiks-tests-core//xpiks-tests-core core* -ex "thread apply all bt" -ex "set pagination 0" -batch; done;
+  - for i in $(find ./ -maxdepth 1 -name 'core*' -print); do gdb $(pwd)/xpiks-tests-integration/xpiks-tests-integration core* -ex "thread apply all bt" -ex "set pagination 0" -batch; done;
