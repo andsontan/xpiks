@@ -151,7 +151,7 @@ int main(int argc, char *argv[]) {
 
     foreach (IntegrationTestBase *test, integrationTests) {
         try {
-            qInfo("Running test: %s", test->testName());
+            qInfo("Running test: %s", test->testName().toStdString().c_str());
             test->setup();
             result += test->doTest();
             test->teardown();

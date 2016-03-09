@@ -222,6 +222,10 @@ namespace Commands {
         virtual MetadataIO::BackupSaverService *getBackupSaverService() const { return m_MetadataSaverService; }
         virtual UndoRedo::UndoRedoManager *getUndoRedoManager() const { return m_UndoRedoManager; }
 
+#ifdef INTEGRATION_TESTS
+        virtual MetadataIO::MetadataIOCoordinator *getMetadataIOCoordinator() const { return m_MetadataIOCoordinator; }
+#endif
+
     private:
         Models::ArtworksRepository *m_ArtworksRepository;
         Models::ArtItemsModel *m_ArtItemsModel;
