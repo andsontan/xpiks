@@ -61,7 +61,17 @@ namespace Models {
         // should be called only from beforeDestruction() !
         // will not cause sync issues on shutdown if no items
         beginResetModel();
-        qDeleteAll(m_ArtworkList);
+        int size = m_ArtworkList.length();
+        for (int i = 0; i < size; ++i) {
+            ArtworkMetadata *metadata = m_ArtworkList.at(i);
+            if (metadata->release()) {
+                delete metadata;
+            } else {
+                metadata->disconnect();
+                LOG_DEBUG << "Metadata at index" << row << "is locked. Postponing destruction...";
+                m_FinalizationList.append(metadata);
+            }
+        }
         m_ArtworkList.clear();
         endResetModel();
     }
