@@ -1,5 +1,6 @@
 #include <iostream>
 #include <QDebug>
+#include <QApplication>
 
 #include "../../xpiks-qt/SpellCheck/spellchecksuggestionmodel.h"
 #include "../../xpiks-qt/Models/filteredartitemsproxymodel.h"
@@ -52,8 +53,7 @@
 #endif
 
 int main(int argc, char *argv[]) {
-    Q_UNUSED(argc);
-    Q_UNUSED(argv);
+    QApplication app(argc, argv);
 
     qSetMessagePattern("%{time hh:mm:ss.zzz} %{type} T#%{threadid} %{function} - %{message}");
 
@@ -109,6 +109,7 @@ int main(int argc, char *argv[]) {
     MetadataIO::MetadataIOCoordinator metadataIOCoordinator;
     Conectivity::TelemetryService telemetryService("1234567890", false);
     Plugins::PluginManager pluginManager;
+    settingsModel.setAutoFindVectors(false);
 
     Commands::CommandManager commandManager;
     commandManager.InjectDependency(&artworkRepository);
@@ -141,7 +142,8 @@ int main(int argc, char *argv[]) {
     uploadInfoRepository.initFromString(appSettings.value(Constants::UPLOAD_HOSTS, "").toString());
     recentDirectorieModel.deserializeFromSettings(appSettings.value(Constants::RECENT_DIRECTORIES, "").toString());
 
-    commandManager.connectEntitiesSignalsSlots();
+    commandManager.connectEntitiesSignalsSlots();    
+    commandManager.afterConstructionCallback();
 
     int result = 0;
 
@@ -153,8 +155,15 @@ int main(int argc, char *argv[]) {
         try {
             qInfo("Running test: %s", test->testName().toStdString().c_str());
             test->setup();
-            result += test->doTest();
+            int testResult = test->doTest();
             test->teardown();
+
+            result += testResult;
+            if (testResult == 0) {
+                qInfo("Test %s PASSED", test->testName().toStdString().c_str());
+            } else {
+                qWarning("Test %s FAILED", test->testName().toStdString().c_str());
+            }
         }
         catch (...) {
             qWarning() << "Test crashed!";

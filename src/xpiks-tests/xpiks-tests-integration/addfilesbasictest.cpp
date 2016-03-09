@@ -3,7 +3,9 @@
 #include <QEventLoop>
 #include <QFileInfo>
 #include <QStringList>
+#include <QTimer>
 #include "integrationtestbase.h"
+#include "signalwaiter.h"
 #include "../../xpiks-qt/Commands/commandmanager.h"
 #include "../../xpiks-qt/Models/artitemsmodel.h"
 #include "../../xpiks-qt/MetadataIO/metadataiocoordinator.h"
@@ -19,23 +21,21 @@ void AddFilesBasicTest::setup() {
 int AddFilesBasicTest::doTest() {
     Models::ArtItemsModel *artItemsModel = m_CommandManager->getArtItemsModel();
     QList<QUrl> files;
-    files << QUrl::fromLocalFile(QFileInfo("images-for-tests/vectors/026.jpg").absoluteFilePath());
-
-    QEventLoop waitForArtworksAdded;
-    QObject::connect(artItemsModel, SIGNAL(artworksAdded(int,int)), &waitForArtworksAdded, SLOT(quit()));
+    files << QUrl::fromLocalFile(QFileInfo("images-for-tests/vector/026.jpg").absoluteFilePath());
 
     int addedCount = artItemsModel->addLocalArtworks(files);
-    waitForArtworksAdded.exec();
 
     VERIFY(addedCount == 1, "Failed to add file");
 
     MetadataIO::MetadataIOCoordinator *ioCoordinator = m_CommandManager->getMetadataIOCoordinator();
+    SignalWaiter waiter;
+    QObject::connect(ioCoordinator, SIGNAL(metadataReadingFinished()), &waiter, SIGNAL(finished()));
 
-    QEventLoop waitForImportFinished;
-    QObject::connect(ioCoordinator, SIGNAL(metadataReadingFinished()), &waitForImportFinished, SLOT(quit()));
+    ioCoordinator->continueReading(true);
 
-    ioCoordinator->readMetadata(true);
-    waitForImportFinished.exec();
+    if (!waiter.wait(20)) {
+        VERIFY(false, "Timeout exceeded for reading metadata.");
+    }
 
     Models::ArtworkMetadata *metadata = artItemsModel->getArtwork(0);
     const QStringList &keywords = metadata->getKeywords();

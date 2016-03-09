@@ -210,7 +210,8 @@ HEADERS += \
     ../../xpiks-qt/Warnings/warningsservice.h \
     ../../tiny-aes/aes.h \
     integrationtestbase.h \
-    addfilesbasictest.h
+    addfilesbasictest.h \
+    signalwaiter.h
 
 INCLUDEPATH += ../../tiny-aes
 

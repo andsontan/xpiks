@@ -87,7 +87,7 @@ Item {
         dialogWindow.height += spinner.height + column.spacing
         spinner.running = true
 
-        metadataIOCoordinator.readMetadata(ignoreAutosavesCheckbox.checked)
+        metadataIOCoordinator.continueReading(ignoreAutosavesCheckbox.checked)
     }
 
     PropertyAnimation { target: metadataImportComponent; property: "opacity";

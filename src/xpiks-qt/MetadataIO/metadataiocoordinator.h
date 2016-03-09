@@ -89,7 +89,7 @@ namespace MetadataIO {
         void writeMetadata(const QVector<Models::ArtworkMetadata*> &artworksToWrite, bool useBackups);
         void autoDiscoverExiftool();
         Q_INVOKABLE void discardReading();
-        Q_INVOKABLE void readMetadata(bool ignoreBackups);
+        Q_INVOKABLE void continueReading(bool ignoreBackups);
 
     private:
         void readingFinishedHandler(bool ignoreBackups);
