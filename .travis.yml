@@ -22,7 +22,7 @@ before_install:
 install:
   - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++ gcc; export CXX="g++" CC="gcc"; $CXX --version; fi
   - sudo apt-get install -qq qt55base; source /opt/qt55/bin/qt55-env.sh
-  - sudo apt-get install qt55base qt55quickcontrols qt55svg qt55declarative libcurl4-openssl-dev libhunspell-dev libquazip0-dev zlib1g-dev exiftool
+  - sudo apt-get install qt55base qt55quickcontrols qt55svg qt55declarative libcurl4-openssl-dev libhunspell-dev libquazip0-dev zlib1g-dev libimage-exiftool-perl
   
 script:
   - cd src/
