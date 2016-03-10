@@ -179,6 +179,9 @@ int main(int argc, char *argv[]) {
 
     commandManager.beforeDestructionCallback();
 
+    // for the logs to appear
+    app.processEvents();
+
     QThread::sleep(1);
 
     return result;

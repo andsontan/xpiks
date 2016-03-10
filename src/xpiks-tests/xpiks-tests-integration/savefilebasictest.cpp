@@ -40,9 +40,10 @@ int SaveFileBasicTest::doTest() {
     VERIFY(!ioCoordinator->getHasErrors(), "Errors in IO Coordinator while reading");
 
     Models::ArtworkMetadata *metadata = artItemsModel->getArtwork(0);
+    QStringList keywords; keywords << "keyword 1" << "keyword 2" << "$";
     metadata->setDescription("Brand new description");
     metadata->setTitle("Brand new title");
-    metadata->resetKeywords(QStringList() << "keyword 1" << "keyword 2" << "$");
+    metadata->resetKeywords(keywords);
     metadata->setIsSelected(true);
 
     bool doOverwrite = true, dontSaveBackups = false;
@@ -55,6 +56,27 @@ int SaveFileBasicTest::doTest() {
     }
 
     VERIFY(!ioCoordinator->getHasErrors(), "Errors in IO Coordinator while writing");
+
+    artItemsModel->removeSelectedArtworks(QVector<int>() << 0);
+
+    addedCount = artItemsModel->addLocalArtworks(files);
+
+    VERIFY(addedCount == 1, "Failed to add file");
+
+    QObject::connect(ioCoordinator, SIGNAL(metadataReadingFinished()), &waiter, SIGNAL(finished()));
+
+    ioCoordinator->continueReading(true);
+
+    if (!waiter.wait(20)) {
+        VERIFY(false, "Timeout exceeded for reading metadata.");
+    }
+
+    VERIFY(!ioCoordinator->getHasErrors(), "Errors in IO Coordinator while reading");
+
+    metadata = artItemsModel->getArtwork(0);
+    const QStringList &actualKeywords = metadata->getKeywords();
+
+    VERIFY(actualKeywords == keywords, "Read keywords are not the same");
 
     return 0;
 }
