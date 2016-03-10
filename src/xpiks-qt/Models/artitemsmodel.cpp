@@ -861,14 +861,16 @@ namespace Models {
             if (m_CommandManager->isFileRemoved(m_ArtworkList.at(i)->getFilepath())) {
                 m_IndicesToRemove.append(i);
                 m_ArtworkList.at(i)->markRemoved();
-                emit fileDeleted(i);
                 m_FinalizationList.append(m_ArtworkList.at(i));
            }
+            emit showWarnDialog();
         }
         m_CommandManager->handleAllDependentModels();
     }
 
     void ArtItemsModel::handleDeleted(){
+        for (auto it=m_IndicesToRemove.begin();it!=m_IndicesToRemove.end();++it)
+            emit fileDeleted(*it);
         QVector<QPair<int, int> > rangesToRemove;
         Helpers::indicesToRanges(m_IndicesToRemove, rangesToRemove);
         doRemoveItemsInRanges(rangesToRemove,0);

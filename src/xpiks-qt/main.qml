@@ -572,7 +572,7 @@ ApplicationWindow {
 
     Connections {
         target: artItemsModel
-        onFileDeleted: {
+        onShowWarnDialog: {
                 console.debug("Got FilesDeleted signal")
                 selectAllCheckbox.checked = filteredArtItemsModel.selectedArtworksCount > 0
                 deletionFilesDetected.open()

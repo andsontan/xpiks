@@ -163,6 +163,7 @@ namespace Models {
         void artworksAdded(int imagesCount, int vectorsCount);
         void selectedArtworkRemoved();
         void fileDeleted(int index);
+        void showWarnDialog();
 
     protected:
        virtual QHash<int, QByteArray> roleNames() const;
