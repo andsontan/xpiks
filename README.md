@@ -5,7 +5,7 @@ Cross-Platform Image Keywording Software
 
 Official website: http://ribtoks.github.io/xpiks/
 
-Translations: https://crowdin.com/project/xpiks/invite
+Translations: https://crowdin.com/project/xpiks/
 
 Master build status: [![Build Status](https://travis-ci.org/Ribtoks/xpiks.svg?branch=master)](https://travis-ci.org/Ribtoks/xpiks)
 
