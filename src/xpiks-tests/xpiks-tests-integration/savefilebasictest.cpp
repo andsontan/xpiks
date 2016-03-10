@@ -40,7 +40,7 @@ int SaveFileBasicTest::doTest() {
     VERIFY(!ioCoordinator->getHasErrors(), "Errors in IO Coordinator while reading");
 
     Models::ArtworkMetadata *metadata = artItemsModel->getArtwork(0);
-    QStringList keywords; keywords << "keyword 1" << "keyword 2" << "$";
+    QStringList keywords; keywords << "picture" << "seagull" << "bird";
     metadata->setDescription("Brand new description");
     metadata->setTitle("Brand new title");
     metadata->resetKeywords(keywords);

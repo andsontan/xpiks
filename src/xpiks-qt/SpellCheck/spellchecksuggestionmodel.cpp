@@ -148,7 +148,10 @@ namespace SpellCheck {
         }
 
         QVector<SpellSuggestionsItem*> combinedRequests = combineSuggestionRequests(requests);
+        LOG_INFO << combinedRequests.length() << "combined request(s)";
+
         QVector<SpellSuggestionsItem*> executedRequests = setupSuggestions(combinedRequests);
+        LOG_INFO << executedRequests.length() << "executed request(s)";
 
         beginResetModel();
         m_CurrentItem = item;

@@ -96,7 +96,8 @@ SOURCES += main.cpp \
     ../../tiny-aes/aes.cpp \
     addfilesbasictest.cpp \
     autoattachvectorstest.cpp \
-    savefilebasictest.cpp
+    savefilebasictest.cpp \
+    spellcheckmultireplacetest.cpp
 
 RESOURCES +=
 
@@ -217,7 +218,8 @@ HEADERS += \
     addfilesbasictest.h \
     signalwaiter.h \
     autoattachvectorstest.h \
-    savefilebasictest.h
+    savefilebasictest.h \
+    spellcheckmultireplacetest.h
 
 INCLUDEPATH += ../../tiny-aes
 
