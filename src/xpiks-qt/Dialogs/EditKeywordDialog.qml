@@ -47,7 +47,7 @@ Item {
         }
     }
     Connections {
-        target: artItemsModel
+        target: combinedArtworks
         onFileDeleted: {
             if (artworkIndex==index){
                 closePopup()

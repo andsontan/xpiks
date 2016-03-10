@@ -861,22 +861,19 @@ namespace Models {
             if (m_CommandManager->isFileRemoved(m_ArtworkList.at(i)->getFilepath())) {
                 m_IndicesToRemove.append(i);
                 m_ArtworkList.at(i)->markRemoved();
-                //if (m_ArtworkList.at(i)->getIsSelected())
-                //    emit selectedArtworkRemoved();
                 emit fileDeleted(i);
                 m_FinalizationList.append(m_ArtworkList.at(i));
            }
         }
         m_CommandManager->handleAllDependentModels();
-        //emit fileDeleted();
-        //QVector<QPair<int, int> > rangesToRemove;
-        //Helpers::indicesToRanges(m_IndicesToRemove, rangesToRemove);
-        //doRemoveItemsInRanges(rangesToRemove,0);
-
-
     }
 
     void ArtItemsModel::handleDeleted(){
+        QVector<QPair<int, int> > rangesToRemove;
+        Helpers::indicesToRanges(m_IndicesToRemove, rangesToRemove);
+        doRemoveItemsInRanges(rangesToRemove,0);
+        m_FinalizationList.clear();
+        m_IndicesToRemove.clear();
 
     }
 }

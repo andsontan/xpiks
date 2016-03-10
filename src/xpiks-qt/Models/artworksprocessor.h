@@ -88,6 +88,7 @@ namespace Models {
 
     protected:
         const QVector<ArtworkMetadata*> &getArtworkList() const { return m_ArtworkList; }
+        void setArtworkList(QVector<ArtworkMetadata*> &newArtworkList){m_ArtworkList=newArtworkList;}
         virtual void cancelProcessing() = 0;
         virtual void innerResetModel() { /*BUMP*/ }
         void beginProcessing();
@@ -95,6 +96,8 @@ namespace Models {
         void endAfterFirstError();
         virtual void restrictMaxThreads();
 
+    protected:
+        QVector<ArtworkMetadata*> m_ArtworksList_new;
     private:
         QVector<ArtworkMetadata*> m_ArtworkList;
         volatile int m_ProcessedArtworksCount;

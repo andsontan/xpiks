@@ -78,6 +78,7 @@ namespace Models {
         void updateItems(const QVector<int> &indices, const QVector<int> &roles);
         void forceUnselectAllItems() const;
         void updateAllItems();
+        void handleDeleted();
 
     public:
         /*Q_INVOKABLE*/ void removeArtworksDirectory(int index);
@@ -109,7 +110,6 @@ namespace Models {
 
         Q_INVOKABLE void editKeyword(int metadataIndex, int keywordIndex, const QString &replacement);
         Q_INVOKABLE void plainTextEdit(int metadataIndex, const QString &rawKeywords);
-        Q_INVOKABLE void handleDeleted();
 
         /*Q_INVOKABLE*/ void detachVectorsFromSelected(const QVector<int> &selectedIndices);
 

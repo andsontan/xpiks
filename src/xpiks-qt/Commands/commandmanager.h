@@ -162,6 +162,7 @@ namespace Commands {
         void ensureDependenciesInjected();
         bool isFileRemoved(const QString & path);
         void handleAllDependentModels();
+        void updateAllDependentModels();
 
     public:
         void recodePasswords(const QString &oldMasterPassword,

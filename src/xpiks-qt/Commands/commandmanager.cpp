@@ -512,7 +512,13 @@ bool Commands::CommandManager::isFileRemoved(const QString & path){
 void Commands::CommandManager::handleAllDependentModels(){
     for (auto it=m_AvailabilityListeners.begin(); it!=m_AvailabilityListeners.end(); it++){
         (*it)->removeUnavailableItems();
-        (*it)->UpdateMyself();
     }
 
+}
+
+void Commands::CommandManager::updateAllDependentModels(){
+    for (auto it=m_AvailabilityListeners.begin(); it!=m_AvailabilityListeners.end(); it++){
+        (*it)->UpdateMyself();
+    }
+    m_ArtItemsModel->handleDeleted();
 }

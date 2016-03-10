@@ -188,6 +188,7 @@ namespace Models {
         bool m_AreKeywordsModified;
         bool m_IsDescriptionModified;
         bool m_IsTitleModified;
+        QVector<int> m_indicesToRemove;
     };
 }
 

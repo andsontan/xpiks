@@ -430,21 +430,25 @@ namespace Models {
 
     void CombinedArtworksModel::removeUnavailableItems(){
         int i =0;
-        QVector<ArtItemInfo*> m_ArtworksList_new;
         for (auto it = m_ArtworksList.begin(); it!=m_ArtworksList.end(); it++, i++){
-            if ((*it)->getOrigin()->getIsRemoved())
-                emit artworkDeleted(i); // for single ArtItem Dialog
-            else
-                m_ArtworksList_new.append(*it);
+            if ((*it)->getOrigin()->getIsRemoved()){
+                m_indicesToRemove.append(i);
+            }
         }
-        m_ArtworksList=m_ArtworksList_new;
-        emit layoutChanged(); // for multi ArtItem Dialog. ListView needs to be notified about chanes in model
+
     }
 
     void CombinedArtworksModel::UpdateMyself(){
+        for (auto it=m_indicesToRemove.begin(); it!=m_indicesToRemove.end();it++)
+            emit artworkDeleted(*it); // for single ArtItem Dialog
+        QVector<QPair<int, int> > rangesToRemove;
+        Helpers::indicesToRanges(m_indicesToRemove, rangesToRemove);
+        removeItemsAtIndices(rangesToRemove);
+        recombineArtworks();
+        emit artworksCountChanged();
         if (!m_ArtworksList.size())
             emit closeWindow();
-
+        m_indicesToRemove.clear();
     }
 
 

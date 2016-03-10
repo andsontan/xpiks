@@ -88,7 +88,9 @@ namespace Commands {
                     new UndoRedo::RemoveArtworksHistoryItem(removedItemsIndices,
                                                             removedItemsFilepathes,
                                                             removedAttachedVectors);
-            commandManager->recordHistoryItem(removeArtworksItem);
+
+            if (m_Backup)
+                commandManager->recordHistoryItem(removeArtworksItem);
         } else {
             LOG_WARNING << "No items to remove found!";
         }
