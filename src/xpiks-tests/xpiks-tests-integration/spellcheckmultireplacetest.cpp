@@ -52,17 +52,20 @@ int SpellCheckMultireplaceTest::doTest() {
     metadata->appendKeyword("correct part " + wrongWord);
     metadata->setIsSelected(true);
 
+    // wait for after-add spellchecking
     QThread::sleep(1);
 
     Models::FilteredArtItemsProxyModel *filteredModel = m_CommandManager->getFilteredArtItemsModel();
     QObject::connect(metadata, SIGNAL(spellCheckErrorsChanged()), &waiter, SIGNAL(finished()));
 
     filteredModel->spellCheckSelected();
-    QThread::sleep(1);
 
     if (!waiter.wait(5)) {
         VERIFY(false, "Timeout for waiting for spellcheck results");
     }
+
+    // wait for finding suggestions
+    QThread::sleep(1);
 
     VERIFY(metadata->hasDescriptionSpellError(), "Description spell error not detected");
     VERIFY(metadata->hasTitleSpellError(), "Title spell error not detected");
