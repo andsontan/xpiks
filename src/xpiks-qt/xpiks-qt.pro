@@ -338,7 +338,7 @@ win32 {
 
 travis-ci {
     message("for Travis CI")
-    LIBS += -L/usr/lib/gcc/x86_64-linux-gnu/
+    LIBS += -L/usr/lib/x86_64-linux-gnu/
 }
 
 linux-g++-64 {
