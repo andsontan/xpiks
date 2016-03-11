@@ -5,6 +5,7 @@
 #include "../../xpiks-qt/Models/artworksrepository.h"
 #include "../../xpiks-qt/Models/artworkuploader.h"
 #include "../../xpiks-qt/Models/ziparchiver.h"
+#include "../../xpiks-qt/Models/settingsmodel.h"
 
 #define DECLARE_MODELS_AND_GENERATE(count) \
     Mocks::CommandManagerMock commandManagerMock;\
@@ -212,4 +213,241 @@ void FilteredModelTests::setSelectedForZippingTest() {
 
     const QVector<Models::ArtworkMetadata*> &artworks = zipArchiver.getArtworkList();
     QCOMPARE(artworks.length(), 5);
+}
+
+void FilteredModelTests::filterModifiedItemsTest() {
+    DECLARE_MODELS_AND_GENERATE(10);
+    Models::SettingsModel settingsModel;
+    settingsModel.setSearchUsingAnd(false);
+    commandManagerMock.InjectDependency(&settingsModel);
+
+    for (int i = 0; i < 10; ++i) {
+        Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
+        metadata->initialize("title", "description", QStringList() << "keyword1" << "keyword2");
+
+        if (i % 2) {
+            metadata->setModified();
+        }
+    }
+
+    filteredItemsModel.setSearchTerm("x:modified");
+    QCOMPARE(filteredItemsModel.getItemsCount(), 5);
+}
+
+void FilteredModelTests::filterEmptyItemsTest() {
+    DECLARE_MODELS_AND_GENERATE(10);
+    Models::SettingsModel settingsModel;
+    settingsModel.setSearchUsingAnd(false);
+    commandManagerMock.InjectDependency(&settingsModel);
+
+    for (int i = 0; i < 10; ++i) {
+        Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
+
+        if (i % 2) {
+            metadata->initialize("title", "description", QStringList() << "keyword1" << "keyword2");
+        } else {
+            metadata->initialize("", "", QStringList());
+        }
+    }
+
+    filteredItemsModel.setSearchTerm("x:empty");
+    QCOMPARE(filteredItemsModel.getItemsCount(), 5);
+}
+
+void FilteredModelTests::filterKeywordsUsingAndTest() {
+    DECLARE_MODELS_AND_GENERATE(10);
+    Models::SettingsModel settingsModel;
+    settingsModel.setSearchUsingAnd(true);
+    commandManagerMock.InjectDependency(&settingsModel);
+
+    for (int i = 0; i < 10; ++i) {
+        Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
+
+        if (i % 2 == 0) {
+            metadata->initialize("title", "description", QStringList() << "keyword1" << "keyword2" << "mess2");
+            if (i % 4 == 0) {
+                metadata->setModified();
+            }
+        } else {
+            metadata->initialize("", "", QStringList());
+        }
+    }
+
+    filteredItemsModel.setSearchTerm("keyword1 keyword2");
+    QCOMPARE(filteredItemsModel.getItemsCount(), 5);
+
+    filteredItemsModel.setSearchTerm("keyword1 keyword2 x:modified");
+    QCOMPARE(filteredItemsModel.getItemsCount(), 3);
+}
+
+void FilteredModelTests::filterKeywordsUsingOrTest() {
+    DECLARE_MODELS_AND_GENERATE(10);
+    Models::SettingsModel settingsModel;
+    settingsModel.setSearchUsingAnd(false);
+    commandManagerMock.InjectDependency(&settingsModel);
+
+    for (int i = 0; i < 10; ++i) {
+        Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
+
+        if (i % 2 == 0) {
+            metadata->initialize("title", "description", QStringList() << "keyword1" << "mess1");
+        } else {
+            metadata->initialize("title", "description", QStringList() << "keyword2" << "mess2");
+        }
+    }
+
+    filteredItemsModel.setSearchTerm("keyword1");
+    QCOMPARE(filteredItemsModel.getItemsCount(), 5);
+
+    filteredItemsModel.setSearchTerm("keyword1 keyword2");
+    QCOMPARE(filteredItemsModel.getItemsCount(), 10);
+}
+
+void FilteredModelTests::filterStrictKeywordTest() {
+    DECLARE_MODELS_AND_GENERATE(10);
+    Models::SettingsModel settingsModel;
+    settingsModel.setSearchUsingAnd(false);
+    commandManagerMock.InjectDependency(&settingsModel);
+
+    for (int i = 0; i < 10; ++i) {
+        Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
+
+        if (i % 2 == 0) {
+            metadata->initialize("title", "description", QStringList() << "keyword1" << "mess1");
+        } else {
+            metadata->initialize("title", "description", QStringList() << "keyword2" << "mess2");
+        }
+    }
+
+    filteredItemsModel.setSearchTerm("keyword");
+    QCOMPARE(filteredItemsModel.getItemsCount(), 10);
+
+    filteredItemsModel.setSearchTerm("!keyword");
+    QCOMPARE(filteredItemsModel.getItemsCount(), 0);
+
+
+    filteredItemsModel.setSearchTerm("!keyword1");
+    QCOMPARE(filteredItemsModel.getItemsCount(), 5);
+}
+
+void FilteredModelTests::filterDescriptionTest() {
+    DECLARE_MODELS_AND_GENERATE(10);
+    Models::SettingsModel settingsModel;
+    settingsModel.setSearchUsingAnd(false);
+    commandManagerMock.InjectDependency(&settingsModel);
+
+    for (int i = 0; i < 10; ++i) {
+        Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
+
+        if (i % 2) {
+            metadata->initialize("title", "description", QStringList() << "keyword1" << "keyword2");
+        } else {
+            metadata->initialize("", "", QStringList());
+        }
+    }
+
+    filteredItemsModel.setSearchTerm("desc");
+    QCOMPARE(filteredItemsModel.getItemsCount(), 5);
+
+    filteredItemsModel.setSearchTerm("!desc");
+    QCOMPARE(filteredItemsModel.getItemsCount(), 0);
+
+    filteredItemsModel.setSearchTerm("description");
+    QCOMPARE(filteredItemsModel.getItemsCount(), 5);
+
+    // strict match does not work for description/title
+    filteredItemsModel.setSearchTerm("!description");
+    QCOMPARE(filteredItemsModel.getItemsCount(), 0);
+}
+
+void FilteredModelTests::filterTitleTest() {
+    DECLARE_MODELS_AND_GENERATE(10);
+    Models::SettingsModel settingsModel;
+    settingsModel.setSearchUsingAnd(false);
+    commandManagerMock.InjectDependency(&settingsModel);
+
+    for (int i = 0; i < 10; ++i) {
+        Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
+
+        if (i % 2) {
+            metadata->initialize("title", "description", QStringList() << "keyword1" << "keyword2");
+        } else {
+            metadata->initialize("", "", QStringList());
+        }
+    }
+
+    filteredItemsModel.setSearchTerm("tit");
+    QCOMPARE(filteredItemsModel.getItemsCount(), 5);
+
+    filteredItemsModel.setSearchTerm("!tit");
+    QCOMPARE(filteredItemsModel.getItemsCount(), 0);
+
+    filteredItemsModel.setSearchTerm("title");
+    QCOMPARE(filteredItemsModel.getItemsCount(), 5);
+
+    // strict match does not work for description/title
+    filteredItemsModel.setSearchTerm("!title");
+    QCOMPARE(filteredItemsModel.getItemsCount(), 0);
+}
+
+void FilteredModelTests::filterDescriptionAndKeywordsTest() {
+    DECLARE_MODELS_AND_GENERATE(10);
+    Models::SettingsModel settingsModel;
+    settingsModel.setSearchUsingAnd(false);
+    commandManagerMock.InjectDependency(&settingsModel);
+
+    for (int i = 0; i < 10; ++i) {
+        Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
+
+        if (i % 2 == 0) {
+            metadata->initialize("title", "description", QStringList() << "keyword1" << "mess1");
+        } else {
+            metadata->initialize("title", "description", QStringList() << "keyword2" << "mess2");
+        }
+    }
+
+    filteredItemsModel.setSearchTerm("keyword1 desc");
+    QCOMPARE(filteredItemsModel.getItemsCount(), 10);
+
+    filteredItemsModel.setSearchTerm("!keyword desc");
+    QCOMPARE(filteredItemsModel.getItemsCount(), 10);
+
+    settingsModel.setSearchUsingAnd(true);
+
+    filteredItemsModel.setSearchTerm("!keyword desc");
+    QCOMPARE(filteredItemsModel.getItemsCount(), 0);
+
+    filteredItemsModel.setSearchTerm("!keyword2 description");
+    QCOMPARE(filteredItemsModel.getItemsCount(), 5);
+}
+
+void FilteredModelTests::filterTitleAndKeywordsTest() {
+    DECLARE_MODELS_AND_GENERATE(10);
+    Models::SettingsModel settingsModel;
+    settingsModel.setSearchUsingAnd(false);
+    commandManagerMock.InjectDependency(&settingsModel);
+
+    for (int i = 0; i < 10; ++i) {
+        Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
+
+        if (i % 2 == 0) {
+            metadata->initialize("title", "description", QStringList() << "keyword1" << "mess1");
+        } else {
+            metadata->initialize("title", "description", QStringList() << "keyword2" << "mess2");
+        }
+    }
+
+    filteredItemsModel.setSearchTerm("keyword1 tit");
+    QCOMPARE(filteredItemsModel.getItemsCount(), 10);
+
+    filteredItemsModel.setSearchTerm("!keyword tit");
+    QCOMPARE(filteredItemsModel.getItemsCount(), 10);
+
+    settingsModel.setSearchUsingAnd(true);
+
+    filteredItemsModel.setSearchTerm("!keyword tit");
+    QCOMPARE(filteredItemsModel.getItemsCount(), 0);
+
+    filteredItemsModel.setSearchTerm("!keyword2 title");
+    QCOMPARE(filteredItemsModel.getItemsCount(), 5);
 }

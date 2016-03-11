@@ -21,6 +21,15 @@ private slots:
     void detachVectorFromSelectedTest();
     void setSelectedForUploadTest();
     void setSelectedForZippingTest();
+    void filterModifiedItemsTest();
+    void filterEmptyItemsTest();
+    void filterKeywordsUsingAndTest();
+    void filterKeywordsUsingOrTest();
+    void filterStrictKeywordTest();
+    void filterDescriptionTest();
+    void filterTitleTest();
+    void filterDescriptionAndKeywordsTest();
+    void filterTitleAndKeywordsTest();
 };
 
 #endif // FILTEREDMODELTESTS_H
