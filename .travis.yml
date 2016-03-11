@@ -30,6 +30,9 @@ before_script:
   
 script:
   - cd src/
+  - cd quazip/
+  - qmake "CONFIG+=debug" quazip/quazip.pro
+  - cp libquazip.so ../libs/
   - mv tiny-aes/aes.c tiny-aes/aes.cpp
   - if [ -n "$XPIKS_BINARY" ]; then cd xpiks-qt/; fi
   - if [ -n "$XPIKS_TESTS" ]; then cd xpiks-tests/; fi

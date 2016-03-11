@@ -340,7 +340,6 @@ linux-g++-64 {
     message("for Linux")
     target.path=/usr/bin/
     QML_IMPORT_PATH += /usr/lib/x86_64-linux-gnu/qt5/imports/
-    #DEFINES -= TELEMETRY_ENABLED
     LIBS += -L/lib/x86_64-linux-gnu/
 
     UNAME = $$system(cat /proc/version | tr -d \'()\')
