@@ -98,7 +98,8 @@ SOURCES += main.cpp \
     autoattachvectorstest.cpp \
     savefilebasictest.cpp \
     spellcheckmultireplacetest.cpp \
-    spellcheckcombinedmodeltest.cpp
+    spellcheckcombinedmodeltest.cpp \
+    zipartworkstest.cpp
 
 RESOURCES +=
 
@@ -221,7 +222,8 @@ HEADERS += \
     autoattachvectorstest.h \
     savefilebasictest.h \
     spellcheckmultireplacetest.h \
-    spellcheckcombinedmodeltest.h
+    spellcheckcombinedmodeltest.h \
+    zipartworkstest.h
 
 INCLUDEPATH += ../../tiny-aes
 

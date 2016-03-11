@@ -227,6 +227,7 @@ namespace Commands {
         virtual Models::FilteredArtItemsProxyModel *getFilteredArtItemsModel() const { return m_FilteredItemsModel; }
         virtual SpellCheck::SpellCheckSuggestionModel *getSpellSuggestionsModel() const { return m_SpellCheckSuggestionModel; }
         virtual Models::CombinedArtworksModel *getCombinedArtworksModel() const { return m_CombinedArtworksModel; }
+        virtual Models::ZipArchiver *getZipArchiver() const { return m_ZipArchiver; }
 #endif
 
     private:
