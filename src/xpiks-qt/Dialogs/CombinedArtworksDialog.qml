@@ -472,6 +472,7 @@ Item {
                             anchors.topMargin: 25
                             text: ''
                             id: descriptionCheckBox
+                            objectName: "descriptionCheckBox"
                             /*indicatorWidth: 24
                             indicatorHeight: 24*/
                             onClicked: {

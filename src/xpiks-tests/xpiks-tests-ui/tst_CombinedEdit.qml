@@ -66,19 +66,47 @@ Item {
         property var descriptionInput
         property var titleInput
         property var keywordsInput
+        property var descriptionCheckBox
 
         function initTestCase() {
             titleInput = findChild(combinedDialog, "titleTextInput")
             descriptionInput = findChild(combinedDialog, "descriptionTextInput")
             keywordsInput = findChild(combinedDialog, "keywordsInput")
+            descriptionCheckBox = findChild(combinedDialog, "descriptionCheckBox")
         }
 
         function test_TabTopToBottom() {
+            combinedArtworks.changeTitle = true
+            descriptionCheckBox.checked = true
+            combinedArtworks.changeKeywords = true
+
             titleInput.forceActiveFocus()
             keyClick(Qt.Key_Tab)
             verify(descriptionInput.activeFocus)
             keyClick(Qt.Key_Tab)
             verify(keywordsInput.isFocused)
+        }
+
+        function test_TabOverTitle() {
+            combinedArtworks.changeTitle = true
+            descriptionCheckBox.checked = false
+            combinedArtworks.changeKeywords = true
+
+            titleInput.forceActiveFocus()
+            keyClick(Qt.Key_Tab)
+            verify(!(descriptionInput.activeFocus))
+            verify(keywordsInput.isFocused)
+        }
+
+        function test_TabFromKeywords() {
+            combinedArtworks.changeTitle = true
+            descriptionCheckBox.checked = false
+            combinedArtworks.changeKeywords = true
+
+            keywordsInput.activateEdit()
+            keyClick(Qt.Key_Backtab)
+            verify(!(descriptionInput.activeFocus))
+            verify(titleInput.activeFocus)
         }
     }
 }
