@@ -276,3 +276,9 @@ linux-g++-64 {
         message("distribution : SUSE")
     }
 }
+
+travis-ci {
+    message("for Travis CI")
+    LIBS -= -lz
+    LIBS += /usr/lib/x86_64-linux-gnu/libz.so
+}
