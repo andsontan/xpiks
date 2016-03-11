@@ -46,6 +46,7 @@
 #include "autoattachvectorstest.h"
 #include "savefilebasictest.h"
 #include "spellcheckmultireplacetest.h"
+#include "spellcheckcombinedmodeltest.h"
 
 #if defined(WITH_LOGS)
 #undef WITH_LOGS
@@ -155,6 +156,7 @@ int main(int argc, char *argv[]) {
     integrationTests.append(new AutoAttachVectorsTest(&commandManager));
     integrationTests.append(new SaveFileBasicTest(&commandManager));
     integrationTests.append(new SpellCheckMultireplaceTest(&commandManager));
+    integrationTests.append(new SpellCheckCombinedModelTest(&commandManager));
 
     foreach (IntegrationTestBase *test, integrationTests) {
         try {

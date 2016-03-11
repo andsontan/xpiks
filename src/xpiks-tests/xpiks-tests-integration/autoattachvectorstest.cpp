@@ -27,7 +27,7 @@ int AutoAttachVectorsTest::doTest() {
 
     int addedCount = artItemsModel->addLocalArtworks(files);
 
-    VERIFY(addedCount == 2, "Failed to add files");
+    VERIFY(addedCount == files.length(), "Failed to add files");
 
     MetadataIO::MetadataIOCoordinator *ioCoordinator = m_CommandManager->getMetadataIOCoordinator();
     SignalWaiter waiter;

@@ -25,7 +25,7 @@ int SaveFileBasicTest::doTest() {
 
     int addedCount = artItemsModel->addLocalArtworks(files);
 
-    VERIFY(addedCount == 1, "Failed to add file");
+    VERIFY(addedCount == files.length(), "Failed to add file");
 
     MetadataIO::MetadataIOCoordinator *ioCoordinator = m_CommandManager->getMetadataIOCoordinator();
     SignalWaiter waiter;

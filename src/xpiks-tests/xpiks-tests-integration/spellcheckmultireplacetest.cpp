@@ -26,11 +26,12 @@ void SpellCheckMultireplaceTest::setup() {
 int SpellCheckMultireplaceTest::doTest() {
     Models::ArtItemsModel *artItemsModel = m_CommandManager->getArtItemsModel();
     QList<QUrl> files;
-    files << QUrl::fromLocalFile(QFileInfo("images-for-tests/pixmap/seagull.jpg").absoluteFilePath());
+    files << QUrl::fromLocalFile(QFileInfo("images-for-tests/vector/026.jpg").absoluteFilePath());
+    files << QUrl::fromLocalFile(QFileInfo("images-for-tests/vector/027.jpg").absoluteFilePath());
 
     int addedCount = artItemsModel->addLocalArtworks(files);
 
-    VERIFY(addedCount == 1, "Failed to add file");
+    VERIFY(addedCount == files.length(), "Failed to add file");
 
     MetadataIO::MetadataIOCoordinator *ioCoordinator = m_CommandManager->getMetadataIOCoordinator();
     SignalWaiter waiter;
