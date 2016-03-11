@@ -389,6 +389,7 @@ Item {
 
                                     StyledTextEdit {
                                         id: titleTextInput
+                                        objectName: "titleTextInput"
                                         focus: true
                                         width: titleFlick.width
                                         height: titleFlick.height
@@ -555,6 +556,7 @@ Item {
 
                                     StyledTextEdit {
                                         id: descriptionTextInput
+                                        objectName: "descriptionTextInput"
                                         width: descriptionFlick.width
                                         height: descriptionFlick.height
                                         text: combinedArtworks.description
@@ -737,6 +739,7 @@ Item {
 
                                 EditableTags {
                                     id: flv
+                                    objectName: "keywordsInput"
                                     anchors.fill: parent
                                     model: keywordsWrapper.keywordsModel
                                     property int keywordHeight: 20 * settingsModel.keywordSizeScale + (settingsModel.keywordSizeScale - 1)*10
