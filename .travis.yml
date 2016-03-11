@@ -38,8 +38,8 @@ script:
   - mv tiny-aes/aes.c tiny-aes/aes.cpp
   - if [ -n "$XPIKS_BINARY" ]; then cd xpiks-qt/; fi
   - if [ -n "$XPIKS_TESTS" ]; then cd xpiks-tests/; fi
-  - if [ -n "$XPIKS_BINARY" ]; then qmake "CONFIG+=debug" xpiks-qt.pro; fi
-  - if [ -n "$XPIKS_TESTS" ]; then qmake "CONFIG+=debug" xpiks-tests.pro; fi
+  - if [ -n "$XPIKS_BINARY" ]; then qmake "CONFIG+= debug travis-ci" xpiks-qt.pro; fi
+  - if [ -n "$XPIKS_TESTS" ]; then qmake "CONFIG+=debug travis-ci" xpiks-tests.pro; fi
   - make
   - if [ -n "$XPIKS_TESTS" ]; then xpiks-tests-core/xpiks-tests-core; fi
   - if [ -n "$XPIKS_TESTS" ]; then xpiks-tests-integration/xpiks-tests-integration; fi

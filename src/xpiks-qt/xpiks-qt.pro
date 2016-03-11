@@ -336,6 +336,11 @@ win32 {
     POST_TARGETDEPS += copywhatsnew copyterms copydicts copytranslations
 }
 
+travis-ci {
+    message("for Travis CI")
+    LIBS += -L/usr/lib/gcc/x86_64-linux-gnu/
+}
+
 linux-g++-64 {
     message("for Linux")
     target.path=/usr/bin/
