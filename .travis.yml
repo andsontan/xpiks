@@ -32,6 +32,7 @@ script:
   - cd src/
   - cd quazip/quazip/
   - qmake "CONFIG+=debug" quazip.pro
+  - make
   - cp libquazip.so ../../libs/
   - cd ../../
   - mv tiny-aes/aes.c tiny-aes/aes.cpp
