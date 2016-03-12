@@ -1559,7 +1559,8 @@ ApplicationWindow {
                                                     id: titleFlick
                                                     contentWidth: titleTextInput.paintedWidth
                                                     contentHeight: titleTextInput.paintedHeight
-                                                    height: 30
+                                                    height: parent.height - parent.border.width*2
+                                                    anchors.verticalCenter: parent.verticalCenter
                                                     anchors.left: parent.left
                                                     anchors.right: parent.right
                                                     anchors.leftMargin: 5
@@ -1626,42 +1627,11 @@ ApplicationWindow {
                                             }
 
                                             StyledText {
-                                                id: plainTextText
-                                                text: i18.n + qsTr("<u>edit in plain text</u>")
-                                                color: plainTextMA.containsMouse ? Colors.defaultLightGrayColor : Colors.defaultInputBackground
-                                                visible: rowWrapper.isHighlighted
+                                                text: keywordscount
                                                 anchors.right: parent.right
                                                 anchors.top: descriptionRect.bottom
                                                 anchors.topMargin: 7
-
-                                                MouseArea {
-                                                    id: plainTextMA
-                                                    anchors.fill: parent
-                                                    hoverEnabled: true
-                                                    enabled: rowWrapper.isHighlighted
-                                                    preventStealing: true
-                                                    cursorShape: containsMouse ? Qt.PointingHandCursor : Qt.ArrowCursor
-                                                    onClicked: {
-                                                        // strange bug with clicking on the keywords field
-                                                        if (!containsMouse) { return; }
-
-                                                        var callbackObject = {
-                                                            onSuccess: function(text) {
-                                                                artItemsModel.plainTextEdit(rowWrapper.getIndex(), text)
-                                                            },
-                                                            onClose: function() {
-                                                                flv.activateEdit()
-                                                            }
-                                                        }
-
-                                                        Common.launchDialog("Dialogs/PlainTextKeywordsDialog.qml",
-                                                                            applicationWindow,
-                                                                            {
-                                                                                callbackObject: callbackObject,
-                                                                                keywordsText: keywordsstring
-                                                                            });
-                                                    }
-                                                }
+                                                color: rowWrapper.isHighlighted ? Colors.defaultControlColor : Colors.selectedArtworkColor
                                             }
 
                                             Rectangle {
@@ -1776,9 +1746,41 @@ ApplicationWindow {
                                                 anchors.topMargin: 3
                                                 spacing: 5
 
+
                                                 StyledText {
-                                                    text: keywordscount
-                                                    color: rowWrapper.isHighlighted ? Colors.defaultControlColor : Colors.selectedArtworkColor
+                                                    id: plainTextText
+                                                    text: i18.n + qsTr("<u>edit in plain text</u>")
+                                                    color: plainTextMA.containsMouse ? Colors.defaultLightGrayColor : Colors.defaultInputBackground
+                                                    visible: rowWrapper.isHighlighted
+
+                                                    MouseArea {
+                                                        id: plainTextMA
+                                                        anchors.fill: parent
+                                                        hoverEnabled: true
+                                                        enabled: rowWrapper.isHighlighted
+                                                        preventStealing: true
+                                                        cursorShape: containsMouse ? Qt.PointingHandCursor : Qt.ArrowCursor
+                                                        onClicked: {
+                                                            // strange bug with clicking on the keywords field
+                                                            if (!containsMouse) { return; }
+
+                                                            var callbackObject = {
+                                                                onSuccess: function(text) {
+                                                                    artItemsModel.plainTextEdit(rowWrapper.getIndex(), text)
+                                                                },
+                                                                onClose: function() {
+                                                                    flv.activateEdit()
+                                                                }
+                                                            }
+
+                                                            Common.launchDialog("Dialogs/PlainTextKeywordsDialog.qml",
+                                                                                applicationWindow,
+                                                                                {
+                                                                                    callbackObject: callbackObject,
+                                                                                    keywordsText: keywordsstring
+                                                                                });
+                                                        }
+                                                    }
                                                 }
 
                                                 Item {

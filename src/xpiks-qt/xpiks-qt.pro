@@ -262,7 +262,8 @@ DISTFILES += \
     Dialogs/PluginsDialog.qml \
     Components/LayoutButton.qml \
     Graphics/vector-icon.svg \
-    Constants/UIConfig.js
+    Constants/UIConfig.js \
+    Components/SelectedIcon.qml
 
 lupdate_only {
 SOURCES = *.qml \

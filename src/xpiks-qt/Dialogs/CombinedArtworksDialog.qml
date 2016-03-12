@@ -272,10 +272,11 @@ Item {
                                         opacity: isselected ? (mouseArea.containsMouse ? 0.6 : 0.7) : (mouseArea.containsMouse ? 0.4 : 0)
                                     }
 
-                                    LargeRemoveIcon {
+                                    SelectedIcon {
                                         opacity: isselected ? (mouseArea.containsMouse ? 0.85 : 1) : (mouseArea.containsMouse ? 0.6 : 0)
-                                        width: parent.width
-                                        height: parent.height
+                                        width: parent.width * 0.33
+                                        height: parent.height * 0.33
+                                        anchors.centerIn: parent
                                     }
 
                                     MouseArea {
@@ -356,6 +357,15 @@ Item {
 
                                 StyledText {
                                     text: i18.n + qsTr("(same as Description if empty)")
+                                    color: Colors.defaultInputBackground
+                                }
+
+                                Item {
+                                    Layout.fillWidth: true
+                                }
+
+                                StyledText {
+                                    text: titleTextInput.length
                                     color: Colors.defaultInputBackground
                                 }
                             }
@@ -807,7 +817,8 @@ Item {
 
                             RowLayout {
                                 width: parent.width
-                                spacing: 10
+                                spacing:5
+
                                 StyledCheckbox {
                                     id: appendKeywordsCheckbox
                                     text: i18.n + qsTr("Only append new keywords")
@@ -838,7 +849,13 @@ Item {
                                 }
 
                                 StyledText {
-                                    text: i18.n + qsTr("Suggest keywords")
+                                    text: "|"
+                                    color: Colors.defaultInputBackground
+                                    verticalAlignment: Text.AlignVCenter
+                                }
+
+                                StyledText {
+                                    text: i18.n + qsTr("Suggest")
                                     color: enabled ? (suggestKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor) : Colors.defaultInputBackground
 
                                     MouseArea {
@@ -860,7 +877,13 @@ Item {
                                 }
 
                                 StyledText {
-                                    text: i18.n + qsTr("Clear keywords")
+                                    text: "|"
+                                    color: Colors.defaultInputBackground
+                                    verticalAlignment: Text.AlignVCenter
+                                }
+
+                                StyledText {
+                                    text: i18.n + qsTr("Clear")
                                     color: enabled ? (clearKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor) : Colors.defaultInputBackground
 
                                     MouseArea {
@@ -868,6 +891,24 @@ Item {
                                         anchors.fill: parent
                                         cursorShape: Qt.PointingHandCursor
                                         onClicked: clearKeywordsDialog.open()
+                                    }
+                                }
+
+                                StyledText {
+                                    text: "|"
+                                    color: Colors.defaultInputBackground
+                                    verticalAlignment: Text.AlignVCenter
+                                }
+
+                                StyledText {
+                                    text: i18.n + qsTr("Copy")
+                                    color: copyKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
+
+                                    MouseArea {
+                                        id: copyKeywordsMA
+                                        anchors.fill: parent
+                                        cursorShape: Qt.PointingHandCursor
+                                        onClicked: clipboard.setText(combinedArtworks.getKeywordsString())
                                     }
                                 }
                             }

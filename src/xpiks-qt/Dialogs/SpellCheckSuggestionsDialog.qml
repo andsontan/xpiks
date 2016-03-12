@@ -168,7 +168,7 @@ Item {
                                             verticalAlignment: Text.AlignVCenter
                                             visible: replacementorigin != word
                                             text: replacementorigin
-                                            font.pixelSize: 10
+                                            font.pixelSize: 11
                                             color: Colors.selectedMetadataColor
                                             elide: Text.ElideMiddle
                                         }
