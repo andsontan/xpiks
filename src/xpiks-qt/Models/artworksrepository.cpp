@@ -222,11 +222,11 @@ namespace Models {
         return exists;
     }
 
-    void ArtworksRepository::checkFileDeleted(const QString & path){
+    void ArtworksRepository::checkfileUnavailable(const QString & path){
      QFileInfo fi(path);
      if (!fi.exists()){
          m_Mutex.lock();
-         m_DeletedFiles.insert(fi.absoluteFilePath());
+         m_UnavailableFiles.insert(fi.absoluteFilePath());
          m_Mutex.unlock();
          m_Timer.start();
      }
@@ -234,13 +234,14 @@ namespace Models {
 
     void ArtworksRepository::RemoveFromDeletedList(const QString &filepath){
         m_Mutex.lock();
-        m_DeletedFiles.remove(filepath);
+        m_UnavailableFiles.remove(filepath);
+        m_Fileswatcher.removePath(filepath);
         m_Mutex.unlock();
     }
 
     void ArtworksRepository::onTimer(){
-        if (m_DeletedFiles.size()){
-            emit fileDeleted();
+        if (m_UnavailableFiles.size()){
+            emit fileUnavailable();
         }
     }
 }

@@ -772,8 +772,7 @@ Item {
                                                                 componentParent,
                                                                 {
                                                                     callbackObject: callbackObject,
-                                                                    previousKeyword: keyword,
-                                                                    artworkIndex: index
+                                                                    previousKeyword: keyword
                                                                 })
                                         }
                                     }

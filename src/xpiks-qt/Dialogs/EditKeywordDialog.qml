@@ -46,12 +46,19 @@ Item {
             closePopup()
         }
     }
+
     Connections {
-        target: combinedArtworks
-        onFileDeleted: {
+        target: artItemsModel
+        onFileUnavailable: {
             if (artworkIndex==index){
                 closePopup()
             }
+        }
+    }
+    Connections {
+        target: combinedArtworks
+        onCloseWindow: {
+                closePopup();
         }
     }
 

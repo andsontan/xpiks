@@ -97,21 +97,17 @@ namespace Models {
     }
 
     void ZipArchiver::removeUnavailableItems(){
-        int i =0;
-        QVector<ArtworkMetadata*> m_ArtworksList_old=getArtworkList();
-        for (auto it = m_ArtworksList_old.begin(); it!=m_ArtworksList_old.end(); it++, i++){
-            if ((*it)->getIsRemoved()){
-                m_ArtworksList_new.append(*it);
-            }
+        const QVector<ArtworkMetadata*> & ArtworksList_old=getArtworkList();
+        QVector<ArtworkMetadata*> ArtworksList_new;
+        for (int i = 0; i<ArtworksList_old.size();  i++){
+             ArtworkMetadata* ArtItemInfoElement=ArtworksList_old[i];
+            if (!ArtItemInfoElement->getIsRemoved())
+                ArtworksList_new.append(ArtItemInfoElement);
         }
-    }
-
-    void ZipArchiver::UpdateMyself(){
-        setArtworkList(m_ArtworksList_new);
-        if (!m_ArtworksList_new.size())
-            emit CloseWindow();
-        m_ArtworksList_new.clear();
-
+        setArtworkList(ArtworksList_new);
+        if (!ArtworksList_new.size())
+            emit closeWindow();
+        emit numberItemsChanged();
     }
 }
 

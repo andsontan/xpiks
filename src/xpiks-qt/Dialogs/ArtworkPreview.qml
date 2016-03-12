@@ -40,13 +40,13 @@ Item {
     signal dialogDestruction();
     Component.onDestruction: dialogDestruction();
 
-    function fileDeleted() {
+    function fileUnavailable() {
         artworkPreviewDialog.destroy()
     }
 
     Connections {
         target: artItemsModel
-        onFileDeleted: {
+        onfileUnavailable: {
             if (artworkIndex==index)
                 closePopup()
         }

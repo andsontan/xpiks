@@ -172,7 +172,6 @@ namespace Models {
         virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
         virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
         virtual void removeUnavailableItems();
-        virtual void UpdateMyself();
 
     protected:
         virtual QHash<int, QByteArray> roleNames() const;
@@ -188,7 +187,6 @@ namespace Models {
         bool m_AreKeywordsModified;
         bool m_IsDescriptionModified;
         bool m_IsTitleModified;
-        QVector<int> m_indicesToRemove;
     };
 }
 

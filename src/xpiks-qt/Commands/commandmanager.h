@@ -160,8 +160,7 @@ namespace Commands {
         void recordHistoryItem(UndoRedo::IHistoryItem *historyItem) const;
         void connectEntitiesSignalsSlots() const;
         void ensureDependenciesInjected();
-        bool isFileRemoved(const QString & path);
-        void handleAllDependentModels();
+        bool isFileUnavailable(const QString & path);
         void updateAllDependentModels();
 
     public:

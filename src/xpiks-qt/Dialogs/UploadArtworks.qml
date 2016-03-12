@@ -53,6 +53,7 @@ Item {
         uploadArtworksComponent.destroy()
     }
 
+
     function saveSettings() {
         appSettings.setValue(uploadhostskey, uploadInfos.getInfoString())
     }
@@ -197,9 +198,17 @@ Item {
                     }
 
                     StyledText {
+                        id: stext
                         property string originalText: artworkUploader.itemsCount == 1 ? qsTr("1 artwork selected") : qsTr("%1 artworks selected").arg(artworkUploader.itemsCount)
                         text: i18.n + originalText
                         color: Colors.defaultInputBackground
+                        Connections {
+                            target: artworkUploader
+                            onNumberItemsChanged: {
+                               stext.originalText=artworkUploader.itemsCount == 1 ? qsTr("1 artwork selected") : qsTr("%1 artworks selected").arg(artworkUploader.itemsCount)
+                               stext.text=i18.n + originalText
+                            }
+                        }
                     }
                 }
 
@@ -752,6 +761,9 @@ Item {
                             onFinishedProcessing: {
                                 uploadButton.enabled = true
                                 helpersWrapper.turnTaskbarProgressOff()
+                            }
+                            onCloseWindow: {
+                                        closePopup();
                             }
                         }
                     }

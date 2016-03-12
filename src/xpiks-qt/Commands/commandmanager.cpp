@@ -201,8 +201,8 @@ void Commands::CommandManager::connectEntitiesSignalsSlots() const {
 
     QObject::connect(m_SpellCheckerService, SIGNAL(serviceAvailable(bool)),
                      m_FilteredItemsModel, SLOT(onSpellCheckerAvailable(bool)));
-    QObject::connect(m_ArtworksRepository, SIGNAL(fileDeleted()),
-                     m_ArtItemsModel, SLOT(onFilesDeletedHandler()));
+    QObject::connect(m_ArtworksRepository, SIGNAL(fileUnavailable()),
+                     m_ArtItemsModel, SLOT(onFilesUnavailableHandler()));
 }
 
 void Commands::CommandManager::ensureDependenciesInjected() {
@@ -503,22 +503,16 @@ void Commands::CommandManager::restartSpellChecking() {
     }
 }
 
-bool Commands::CommandManager::isFileRemoved(const QString & path){
-    bool result= m_ArtworksRepository->isFileRemoved(path);
+bool Commands::CommandManager::isFileUnavailable(const QString & path){
+    bool result= m_ArtworksRepository->isFileUnavailable(path);
     if (result) m_ArtworksRepository->RemoveFromDeletedList(path);
     return result;
 }
 
-void Commands::CommandManager::handleAllDependentModels(){
-    for (auto it=m_AvailabilityListeners.begin(); it!=m_AvailabilityListeners.end(); it++){
-        (*it)->removeUnavailableItems();
-    }
-
-}
 
 void Commands::CommandManager::updateAllDependentModels(){
     for (auto it=m_AvailabilityListeners.begin(); it!=m_AvailabilityListeners.end(); it++){
-        (*it)->UpdateMyself();
+        (*it)->removeUnavailableItems();
     }
-    m_ArtItemsModel->handleDeleted();
+    m_ArtItemsModel->handleUnavailable();
 }

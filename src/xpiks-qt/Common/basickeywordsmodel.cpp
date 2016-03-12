@@ -275,6 +275,7 @@ namespace Common {
     }
 
     void BasicKeywordsModel::setSpellStatuses(const QVector<bool> &statuses) {
+        LOG_WARNING<<statuses.length()<<" "<<m_SpellCheckResults.length();
         Q_ASSERT(statuses.length() == m_SpellCheckResults.length());
 
         int size = statuses.length();

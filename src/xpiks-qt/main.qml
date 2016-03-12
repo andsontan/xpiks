@@ -435,7 +435,7 @@ ApplicationWindow {
     }
 
     MessageDialog {
-        id: deletionFilesDetected
+        id: unavailableFilesDetected
         title: "Warning"
         text: qsTr("Some files you have been working on do not exist anymore! Xpiks will remove them from the workflow.")
         standardButtons: StandardButton.Yes
@@ -572,10 +572,10 @@ ApplicationWindow {
 
     Connections {
         target: artItemsModel
-        onShowWarnDialog: {
-                console.debug("Got FilesDeleted signal")
+        onFilesUnavaliable: {
+                console.debug("Got FilesUnavailable signal")
                 selectAllCheckbox.checked = filteredArtItemsModel.selectedArtworksCount > 0
-                deletionFilesDetected.open()
+                unavailableFilesDetected.open()
             }
         onArtworksAdded: {
             if ((imagesCount === 0) && (vectorsCount === 0)) {

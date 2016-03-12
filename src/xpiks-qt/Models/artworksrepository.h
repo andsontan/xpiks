@@ -42,7 +42,7 @@ namespace Models {
             AbstractListModel(parent)
         {
             QObject::connect(&m_Fileswatcher, SIGNAL(fileChanged(const QString &)),
-                         this, SLOT(checkFileDeleted(const QString &) ) );
+                         this, SLOT(checkfileUnavailable(const QString &) ) );
             m_Timer.setInterval(1000); //1 sec
             m_Timer.setSingleShot(true); //single shot
             QObject::connect(&m_Timer, SIGNAL(timeout()), this, SLOT(onTimer()));
@@ -63,9 +63,9 @@ namespace Models {
 
 
             QObject::connect(&m_Fileswatcher, SIGNAL(fileChanged(const QString &)),
-                          this, SLOT(checkFileDeleted(const QString &) ) );
+                          this, SLOT(checkfileUnavailable(const QString &) ) );
             m_Timer.setInterval(1000); //1 sec
-            m_Timer.setSingleShot(true); //not single shot
+            m_Timer.setSingleShot(true); //single shot
             QObject::connect(&m_Timer, SIGNAL(timeout()), this, SLOT(onTimer()));
         }
 
@@ -94,11 +94,11 @@ namespace Models {
     signals:
         void artworksSourcesCountChanged();
         void fileChanged(const QString & path);
-        void fileDeleted();
+        void fileUnavailable();
 
     public slots:
         void fileSelectedChanged(const QString &filepath, bool isSelected) { setFileSelected(filepath, isSelected); }
-        void checkFileDeleted(const QString & path);
+        void checkfileUnavailable(const QString & path);
         void onTimer();
     public:
         bool accountFile(const QString &filepath);
@@ -109,7 +109,7 @@ namespace Models {
 #ifdef TESTS
         int getFilesCountForDirectory(const QString &directory) const { return m_DirectoriesHash[directory]; }
 #endif
-        bool isFileRemoved(const QString &filepath) const {return (m_DeletedFiles.find(filepath)!=m_DeletedFiles.end());}
+        bool isFileUnavailable(const QString &filepath) const {return (m_UnavailableFiles.find(filepath)!=m_UnavailableFiles.end());}
 
     public:
         virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
@@ -128,10 +128,13 @@ namespace Models {
 
         void removeFilesAndEmitSignal(int num){
             size_t k=num;
-            for (auto it =m_FilesSet.begin(); (it!=m_FilesSet.end()) && (k--);++it ){
-                m_DeletedFiles.insert(*it);
+            QSet<QString>::iterator begin=m_FilesSet.begin();
+            QSet<QString>::iterator  end=m_FilesSet.end();
+
+            for (QSet<QString>::iterator  it =begin; (it!=end) && (k--);++it ){
+                m_UnavailableFiles.insert(*it);
             }
-            emit fileDeleted();
+            emit fileUnavailable();
         }
 
         virtual bool checkFileExists(const QString &filename, QString &directory) const;
@@ -143,7 +146,7 @@ namespace Models {
         QHash<QString, int> m_DirectoriesSelectedHash;
         QFileSystemWatcher  m_Fileswatcher;
         QTimer m_Timer;
-        QSet<QString> m_DeletedFiles;
+        QSet<QString> m_UnavailableFiles;
         QMutex m_Mutex;
     };
 }

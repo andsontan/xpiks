@@ -428,27 +428,23 @@ namespace Models {
         m_ArtworksList.removeAt(row);
     }
 
+
     void CombinedArtworksModel::removeUnavailableItems(){
-        int i =0;
-        for (auto it = m_ArtworksList.begin(); it!=m_ArtworksList.end(); it++, i++){
-            if ((*it)->getOrigin()->getIsRemoved()){
-                m_indicesToRemove.append(i);
+        QVector<int> indicesToRemove;
+        for (int i= 0; i<m_ArtworksList.size(); i++){
+            ArtItemInfo* ArtItemInfoElement=m_ArtworksList[i];
+            if (ArtItemInfoElement->getOrigin()->getIsRemoved()){
+                emit artworkDeleted(i); // for single ArtItem Dialog
+                indicesToRemove.append(i);
             }
-        }
-
-    }
-
-    void CombinedArtworksModel::UpdateMyself(){
-        for (auto it=m_indicesToRemove.begin(); it!=m_indicesToRemove.end();it++)
-            emit artworkDeleted(*it); // for single ArtItem Dialog
+         }
         QVector<QPair<int, int> > rangesToRemove;
-        Helpers::indicesToRanges(m_indicesToRemove, rangesToRemove);
+        Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
         removeItemsAtIndices(rangesToRemove);
-        recombineArtworks();
+       // recombineArtworks(); the application crashes when it is called
         emit artworksCountChanged();
         if (!m_ArtworksList.size())
             emit closeWindow();
-        m_indicesToRemove.clear();
     }
 
 

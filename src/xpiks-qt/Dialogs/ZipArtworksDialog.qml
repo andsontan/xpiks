@@ -42,6 +42,12 @@ Item {
     function closePopup() {
         zipArtworksComponent.destroy()
     }
+    Connections {
+        target: zipArtworksComponent
+        onCloseWindow: {
+                closePopup();
+        }
+    }
 
     PropertyAnimation { target: zipArtworksComponent; property: "opacity";
         duration: 400; from: 0; to: 1;
@@ -118,9 +124,17 @@ Item {
                     }
 
                     StyledText {
+                        id:stext
                         property string originalText: zipArchiver.itemsCount == 1 ? qsTr("1 artwork") : qsTr("%1 artworks").arg(zipArchiver.itemsCount)
                         text: i18.n + originalText
                         color: Colors.defaultInputBackground
+                        Connections {
+                            target: zipArchiver
+                            onNumberItemsChanged: {
+                               stext.originalText=zipArchiver.itemsCount == 1 ? qsTr("1 artwork") : qsTr("%1 artworks").arg(zipArchiver.itemsCount)
+                               stext.text=i18.n + originalText
+                            y}
+                       }
                     }
                 }
 

@@ -855,27 +855,27 @@ namespace Models {
                  ArtworkTitleRole << KeywordsCountRole << HasVectorAttachedRole;
     }
 
-    void ArtItemsModel::onFilesDeletedHandler(){
+    void ArtItemsModel::onFilesUnavailableHandler(){
         int count = m_ArtworkList.length();
         for (int i = 0; i < count; ++i) {
-            if (m_CommandManager->isFileRemoved(m_ArtworkList.at(i)->getFilepath())) {
-                m_IndicesToRemove.append(i);
+            if (m_CommandManager->isFileUnavailable(m_ArtworkList.at(i)->getFilepath())) {
                 m_ArtworkList.at(i)->markRemoved();
-                m_FinalizationList.append(m_ArtworkList.at(i));
            }
-            emit showWarnDialog();
         }
-        m_CommandManager->handleAllDependentModels();
+      emit filesUnavaliable();
     }
 
-    void ArtItemsModel::handleDeleted(){
-        for (auto it=m_IndicesToRemove.begin();it!=m_IndicesToRemove.end();++it)
-            emit fileDeleted(*it);
+    void ArtItemsModel::handleUnavailable(){
+        QVector<int> indicesToRemove;
         QVector<QPair<int, int> > rangesToRemove;
-        Helpers::indicesToRanges(m_IndicesToRemove, rangesToRemove);
-        doRemoveItemsInRanges(rangesToRemove,0);
-        m_FinalizationList.clear();
-        m_IndicesToRemove.clear();
 
+        int count = m_ArtworkList.length();
+        for (int i = 0; i < count; ++i) {
+            if (m_ArtworkList.at(i)->getIsRemoved())
+                indicesToRemove.append(i);
+                emit fileUnavailable(i);
+            }
+        Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
+        doRemoveItemsInRanges(rangesToRemove,0);
     }
 }

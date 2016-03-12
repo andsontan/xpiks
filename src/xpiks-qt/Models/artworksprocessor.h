@@ -96,8 +96,6 @@ namespace Models {
         void endAfterFirstError();
         virtual void restrictMaxThreads();
 
-    protected:
-        QVector<ArtworkMetadata*> m_ArtworksList_new;
     private:
         QVector<ArtworkMetadata*> m_ArtworkList;
         volatile int m_ProcessedArtworksCount;

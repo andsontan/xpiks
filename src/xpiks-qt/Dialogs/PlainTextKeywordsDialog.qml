@@ -52,7 +52,7 @@ Item {
     }
     Connections {
         target: artItemsModel
-        onFileDeleted: {
+        onFileUnavailable: {
             if (artworkIndex==index){
                 closePopup()
             }
