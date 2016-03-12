@@ -62,8 +62,8 @@ Item {
     }
 
     Connections {
-        target: combinedArtworks
-        onArtworkDeleted: {
+        target: artItemsModel
+        onFileUnavailable: {
             if (artworkIndex==index)
                 closePopup();
         }

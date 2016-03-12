@@ -115,7 +115,6 @@ namespace Models {
         void changeKeywordsChanged();
         void changeTitleChanged();
         void appendKeywordsChanged();
-        void artworkDeleted(int index);
         void closeWindow();
 
     public:

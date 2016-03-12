@@ -434,7 +434,6 @@ namespace Models {
         for (int i= 0; i<m_ArtworksList.size(); i++){
             ArtItemInfo* ArtItemInfoElement=m_ArtworksList[i];
             if (ArtItemInfoElement->getOrigin()->getIsRemoved()){
-                emit artworkDeleted(i); // for single ArtItem Dialog
                 indicesToRemove.append(i);
             }
          }

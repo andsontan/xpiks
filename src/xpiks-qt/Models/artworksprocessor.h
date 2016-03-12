@@ -87,8 +87,13 @@ namespace Models {
         void addArtworks(const QVector<ArtworkMetadata*> &artworkList) { m_ArtworkList << artworkList; emit itemsCountChanged(); }
         void resetArtworks() { m_ArtworkList.clear(); }
 
-    protected:
+#ifdef TESTS
+        public:
+#else
+        protected:
+#endif
         const QVector<ArtworkMetadata*> &getArtworkList() const { return m_ArtworkList; }
+        protected:
         void setArtworkList(QVector<ArtworkMetadata*> &newArtworkList){m_ArtworkList=newArtworkList;}
         virtual void cancelProcessing() = 0;
         virtual void innerResetModel() { /*BUMP*/ }

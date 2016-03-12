@@ -40,7 +40,7 @@ Item {
     signal dialogDestruction();
     Component.onDestruction: dialogDestruction();
 
-    function fileUnavailable() {
+    function closePopup() {
         artworkPreviewDialog.destroy()
     }
 
