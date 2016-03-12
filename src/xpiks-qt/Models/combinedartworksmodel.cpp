@@ -440,10 +440,11 @@ namespace Models {
         QVector<QPair<int, int> > rangesToRemove;
         Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
         removeItemsAtIndices(rangesToRemove);
-       // recombineArtworks(); the application crashes when it is called
+        recombineArtworks(); //the application crashes when it is called
         emit artworksCountChanged();
-        if (!m_ArtworksList.size())
+        if ( m_ArtworksList.size() == 0 ){
             emit closeWindow();
+        }
     }
 
 

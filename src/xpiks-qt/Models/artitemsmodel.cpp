@@ -866,16 +866,19 @@ namespace Models {
     }
 
     void ArtItemsModel::onFilesUnavailableHandler(){
+        Models::ArtworksRepository * artworksRepository =m_CommandManager->getArtworksRepository();
         int count = m_ArtworkList.length();
         for (int i = 0; i < count; ++i) {
-            if (m_CommandManager->isFileUnavailable(m_ArtworkList.at(i)->getFilepath())) {
+            QString path=m_ArtworkList.at(i)->getFilepath();
+            if (artworksRepository->isFileUnavailable(path)) {
                 m_ArtworkList.at(i)->markRemoved();
+                artworksRepository->removeFromDeletedList(path);
            }
         }
       emit filesUnavaliable();
     }
 
-    void ArtItemsModel::handleUnavailable(){
+    void ArtItemsModel::removeUnavailableItems(){
         QVector<int> indicesToRemove;
         QVector<QPair<int, int> > rangesToRemove;
 

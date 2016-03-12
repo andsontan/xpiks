@@ -116,7 +116,7 @@ namespace Models {
     public:
         void markModified();
         void setModified() { m_IsModified = true; }
-        void markRemoved(){m_IsRemoved = true;}
+        void markRemoved() { m_IsRemoved = true; }
         void resetModified() { m_IsModified = false; }
         void requestFocus(int directionSign) { emit focusRequested(directionSign); }
 

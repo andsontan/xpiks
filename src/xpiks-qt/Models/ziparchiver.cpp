@@ -109,7 +109,7 @@ namespace Models {
             if (!ArtItemInfoElement->getIsRemoved())
                 ArtworksList_new.append(ArtItemInfoElement);
         }
-        setArtworkList(ArtworksList_new);
+        setArtworks(ArtworksList_new);
         if (!ArtworksList_new.size())
             emit closeWindow();
         emit numberItemsChanged();

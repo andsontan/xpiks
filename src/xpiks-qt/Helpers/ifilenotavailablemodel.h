@@ -21,7 +21,6 @@
 
 #ifndef IFILENOTAVAILABLEMODEL_H
 #define IFILENOTAVAILABLEMODEL_H
-#include <QObject>
 
 namespace Helpers {
 class IFileNotAvailableModel

@@ -78,7 +78,7 @@ namespace Models {
         void updateItems(const QVector<int> &indices, const QVector<int> &roles);
         void forceUnselectAllItems() const;
         void updateAllItems();
-        void handleUnavailable();
+        void removeUnavailableItems();
 
     public:
         /*Q_INVOKABLE*/ void removeArtworksDirectory(int index);

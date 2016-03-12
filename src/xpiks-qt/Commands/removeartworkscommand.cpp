@@ -89,7 +89,7 @@ namespace Commands {
                                                             removedItemsFilepathes,
                                                             removedAttachedVectors);
 
-            if (m_Backup)
+            if (m_IsUndoable)
                 commandManager->recordHistoryItem(removeArtworksItem);
         } else {
             LOG_WARNING << "No items to remove found!";

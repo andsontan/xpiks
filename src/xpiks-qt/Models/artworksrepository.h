@@ -41,7 +41,7 @@ namespace Models {
         ArtworksRepository(QObject *parent = 0) :
             AbstractListModel(parent)
         {
-            QObject::connect(&m_Fileswatcher, SIGNAL(fileChanged(const QString &)),
+            QObject::connect(&m_FilesWatcher, SIGNAL(fileChanged(const QString &)),
                          this, SLOT(checkfileUnavailable(const QString &) ) );
             m_Timer.setInterval(1000); //1 sec
             m_Timer.setSingleShot(true); //single shot
@@ -58,11 +58,11 @@ namespace Models {
             m_FilesSet(copy.m_FilesSet)
         {
 
-            m_Fileswatcher.addPaths(copy.m_DirectoriesList);
+            m_FilesWatcher.addPaths(copy.m_DirectoriesList);
 
 
 
-            QObject::connect(&m_Fileswatcher, SIGNAL(fileChanged(const QString &)),
+            QObject::connect(&m_FilesWatcher, SIGNAL(fileChanged(const QString &)),
                           this, SLOT(checkfileUnavailable(const QString &) ) );
             m_Timer.setInterval(1000); //1 sec
             m_Timer.setSingleShot(true); //single shot
@@ -118,7 +118,7 @@ namespace Models {
     public:
         virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
         virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
-        void RemoveFromDeletedList(const QString &filepath);
+        void removeFromDeletedList(const QString &filepath);
     protected:
         virtual QHash<int, QByteArray> roleNames() const;
 
@@ -148,7 +148,7 @@ namespace Models {
         QHash<QString, int> m_DirectoriesHash;
         QSet<QString> m_FilesSet;
         QHash<QString, int> m_DirectoriesSelectedHash;
-        QFileSystemWatcher  m_Fileswatcher;
+        QFileSystemWatcher  m_FilesWatcher;
         QTimer m_Timer;
         QSet<QString> m_UnavailableFiles;
         QMutex m_Mutex;

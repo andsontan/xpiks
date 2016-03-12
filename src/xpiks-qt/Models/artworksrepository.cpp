@@ -130,8 +130,8 @@ namespace Models {
                 occurances = m_DirectoriesHash[absolutePath];
             }
 
-            qInfo()<<"Tasha "<<filepath;
-            /*if (!occurances)*/ m_Fileswatcher.addPath(filepath);
+            /*if (!occurances)*/
+            m_FilesWatcher.addPath(filepath);
 
             m_FilesSet.insert(filepath);
             m_DirectoriesHash[absolutePath] = occurances + 1;
@@ -150,7 +150,7 @@ namespace Models {
 
             m_DirectoriesHash[fileDirectory] = occurances;
             m_DirectoriesSelectedHash[fileDirectory] = selectedCount;
-            m_Fileswatcher.removePath(filepath);
+            m_FilesWatcher.removePath(filepath);
             m_FilesSet.remove(filepath);
             result = true;
         }
@@ -241,15 +241,15 @@ namespace Models {
      }
     }
 
-    void ArtworksRepository::RemoveFromDeletedList(const QString &filepath){
+    void ArtworksRepository::removeFromDeletedList(const QString &filepath){
         m_Mutex.lock();
         m_UnavailableFiles.remove(filepath);
-        m_Fileswatcher.removePath(filepath);
+        m_FilesWatcher.removePath(filepath);
         m_Mutex.unlock();
     }
 
     void ArtworksRepository::onTimer(){
-        if (m_UnavailableFiles.size()){
+        if ( m_UnavailableFiles.size() > 0 ){
             emit fileUnavailable();
         }
     }

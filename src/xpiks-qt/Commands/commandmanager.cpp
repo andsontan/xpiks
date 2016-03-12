@@ -512,18 +512,13 @@ void Commands::CommandManager::restartSpellChecking() {
     }
 }
 
-bool Commands::CommandManager::isFileUnavailable(const QString & path){
-    bool result= m_ArtworksRepository->isFileUnavailable(path);
-    if (result) m_ArtworksRepository->RemoveFromDeletedList(path);
-    return result;
-}
-
 
 void Commands::CommandManager::updateAllDependentModels(){
-    for (auto it=m_AvailabilityListeners.begin(); it!=m_AvailabilityListeners.end(); it++){
-        (*it)->removeUnavailableItems();
+    int size = m_AvailabilityListeners.size();
+    for (int i=0; i<size; i++){
+        m_AvailabilityListeners[i]->removeUnavailableItems();
     }
-    m_ArtItemsModel->handleUnavailable();
+    m_ArtItemsModel->removeUnavailableItems();
 }
 #ifdef INTEGRATION_TESTS
 void Commands::CommandManager::cleanup() {

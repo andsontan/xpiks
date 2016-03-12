@@ -94,7 +94,6 @@ namespace Models {
 #endif
         const QVector<ArtworkMetadata*> &getArtworkList() const { return m_ArtworkList; }
         protected:
-        void setArtworkList(QVector<ArtworkMetadata*> &newArtworkList){m_ArtworkList=newArtworkList;}
         virtual void cancelProcessing() = 0;
         virtual void innerResetModel() { /*BUMP*/ }
         void beginProcessing();

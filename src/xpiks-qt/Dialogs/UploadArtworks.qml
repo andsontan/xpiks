@@ -198,15 +198,15 @@ Item {
                     }
 
                     StyledText {
-                        id: stext
+                        id: textItemsAvailable
                         property string originalText: artworkUploader.itemsCount == 1 ? qsTr("1 artwork selected") : qsTr("%1 artworks selected").arg(artworkUploader.itemsCount)
                         text: i18.n + originalText
                         color: Colors.defaultInputBackground
                         Connections {
                             target: artworkUploader
                             onNumberItemsChanged: {
-                               stext.originalText=artworkUploader.itemsCount == 1 ? qsTr("1 artwork selected") : qsTr("%1 artworks selected").arg(artworkUploader.itemsCount)
-                               stext.text=i18.n + originalText
+                               textItemsAvailable.originalText=artworkUploader.itemsCount == 1 ? qsTr("1 artwork selected") : qsTr("%1 artworks selected").arg(artworkUploader.itemsCount)
+                               textItemsAvailable.text=i18.n + originalText
                             }
                         }
                     }
