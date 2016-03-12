@@ -588,14 +588,14 @@ Item {
                 }
 
                 RowLayout {
-                    spacing: 12
+                    spacing: 20
 
                     Item {
                         Layout.fillWidth: true
                     }
 
                     StyledButton {
-                        width: 70
+                        width: 100
                         text: i18.n + qsTr("Save")
                         onClicked: {
                             combinedArtworks.saveEdits()
@@ -605,7 +605,7 @@ Item {
                     }
 
                     StyledButton {
-                        width: 70
+                        width: 100
                         text: i18.n + qsTr("Close")
                         onClicked: {
                             closePopup()

@@ -203,11 +203,11 @@ Item {
                     RowLayout {
                         anchors.left: parent.left
                         anchors.right: parent.right
-                        spacing: 10
+                        spacing: 20
 
                         StyledButton {
                             text: i18.n + qsTr("100%")
-                            width: 60
+                            width: parent.width / 2 - 10
                             onClicked: {
                                 previewImage.width = previewImage.sourceSize.width
                                 previewImage.height = previewImage.sourceSize.height
@@ -217,13 +217,9 @@ Item {
                             }
                         }
 
-                        Item {
-                            Layout.fillWidth: true
-                        }
-
                         StyledButton {
                             text: i18.n + qsTr("Fit")
-                            width: 60
+                            width: parent.width / 2 - 10
                             onClicked: {
                                 previewImage.width = boundsRect.width - 20
                                 previewImage.height = boundsRect.height - 20

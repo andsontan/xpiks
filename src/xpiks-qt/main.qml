@@ -37,10 +37,10 @@ import "Constants/UIConfig.js" as UIConfig
 ApplicationWindow {
     id: applicationWindow
     visible: true
-    width: appSettings.getAppWidth(900)
+    width: appSettings.getAppWidth(930)
     height: appSettings.getAppHeight(725)
     minimumHeight: 670
-    minimumWidth: 900
+    minimumWidth: 930
     title: i18.n + qsTr("Xpiks")
     property int openedDialogsCount: 0
     property bool showUpdateLink: false
@@ -784,7 +784,7 @@ ApplicationWindow {
                     StyledButton {
                         text: i18.n + qsTr("Remove")
                         enabled: artworkRepository.artworksSourcesCount > 0
-                        width: 80
+                        width: 90
                         onClicked: {
                             if (filteredArtItemsModel.selectedArtworksCount === 0) {
                                 mustSelectDialog.open()
@@ -805,7 +805,7 @@ ApplicationWindow {
 
                     StyledButton {
                         text: i18.n + qsTr("Edit")
-                        width: mainScrollView.areScrollbarsVisible ? 72 : 82
+                        width: 90
                         enabled: artworkRepository.artworksSourcesCount > 0
                         onClicked: {
                             if (filteredArtItemsModel.selectedArtworksCount === 0) {
@@ -837,7 +837,7 @@ ApplicationWindow {
 
                     StyledButton {
                         text: i18.n + qsTr("Save")
-                        width: 80
+                        width: mainScrollView.areScrollbarsVisible ? 88 : 98
                         enabled: artworkRepository.artworksSourcesCount > 0
                         onClicked: {
                             if (filteredArtItemsModel.selectedArtworksCount == 0) {
@@ -859,7 +859,7 @@ ApplicationWindow {
 
                     StyledButton {
                         text: i18.n + qsTr("Upload")
-                        width: 90
+                        width: 100
                         enabled: artworkRepository.artworksSourcesCount > 0
                         onClicked: {
                             if (filteredArtItemsModel.selectedArtworksCount === 0) {
@@ -931,12 +931,12 @@ ApplicationWindow {
                             anchors.rightMargin: 10
                             anchors.verticalCenter: parent.verticalCenter
                             color: Colors.defaultDarkColor
-                            width: (artworkRepository.artworksSourcesCount > 0 && mainScrollView.areScrollbarsVisible) ? 252 : 262
+                            width: (artworkRepository.artworksSourcesCount > 0 && mainScrollView.areScrollbarsVisible) ? 288 : 298
                             height: 24
 
                             StyledTextInput {
                                 id: filterText
-                                width: (artworkRepository.artworksSourcesCount > 0 && mainScrollView.areScrollbarsVisible) ? 220 : 230
+                                width: (artworkRepository.artworksSourcesCount > 0 && mainScrollView.areScrollbarsVisible) ? 250 : 260
                                 height: 24
                                 clip: true
                                 anchors.left: parent.left
@@ -986,7 +986,7 @@ ApplicationWindow {
                             anchors.right: parent.right
                             anchors.verticalCenter: parent.verticalCenter
                             anchors.rightMargin:  mainScrollView.areScrollbarsVisible ? 35 : 20
-                            width: 90
+                            width: 100
                             text: i18.n + qsTr("Search")
                             enabled: artworkRepository.artworksSourcesCount > 0
                             onClicked: filteredArtItemsModel.searchTerm = filterText.text
@@ -1363,7 +1363,7 @@ ApplicationWindow {
 
                                             Item {
                                                 width: 150
-                                                height: 132
+                                                height: 134
                                                 anchors.horizontalCenter: parent.horizontalCenter
 
                                                 Image {
@@ -1484,7 +1484,8 @@ ApplicationWindow {
                                                     anchors.rightMargin: 5
                                                     interactive: false
                                                     flickableDirection: Flickable.HorizontalFlick
-                                                    height: 30
+                                                    height: parent.height - parent.border.width*2
+                                                    anchors.verticalCenter: parent.verticalCenter
                                                     clip: true
 
                                                     function ensureVisible(r) {
@@ -1541,6 +1542,14 @@ ApplicationWindow {
                                                         onCursorRectangleChanged: descriptionFlick.ensureVisible(cursorRectangle)
                                                     }
                                                 }
+                                            }
+
+                                            StyledText {
+                                                text: descriptionTextInput.length
+                                                anchors.right: descriptionRect.right
+                                                anchors.bottom: descriptionRect.top
+                                                anchors.bottomMargin: 4
+                                                color: rowWrapper.isHighlighted ? Colors.defaultControlColor : Colors.selectedArtworkColor
                                             }
 
                                             Rectangle {
@@ -1617,6 +1626,15 @@ ApplicationWindow {
                                                         onCursorRectangleChanged: titleFlick.ensureVisible(cursorRectangle)
                                                     }
                                                 }
+                                            }
+
+                                            StyledText {
+                                                text: titleTextInput.length
+                                                anchors.right: titleRect.right
+                                                anchors.bottom: titleRect.top
+                                                anchors.bottomMargin: 4
+                                                color: rowWrapper.isHighlighted ? Colors.defaultControlColor : Colors.selectedArtworkColor
+                                                visible: columnLayout.isWideEnough
                                             }
 
                                             StyledText {

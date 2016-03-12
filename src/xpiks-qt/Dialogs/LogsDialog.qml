@@ -182,7 +182,7 @@ Item {
                     id: loadMoreButton
                     text: i18.n + qsTr("Load more logs")
                     enabled: logsModel.withLogs
-                    width: 120
+                    width: 130
                     onClicked: {
                         logsComponent.logText = logsModel.getAllLogsText(true)
                         oneHunderdLinesWarning.linesNumber = 1000
@@ -195,7 +195,7 @@ Item {
                     id: revealFileButton
                     text: i18.n + qsTr("Reveal logfile")
                     visible: Qt.platform.os !== "linux"
-                    width: 120
+                    width: 130
                     onClicked: {
                         helpersWrapper.revealLogFile()
                     }
@@ -208,7 +208,7 @@ Item {
 
                 StyledButton {
                     text: i18.n + qsTr("Close")
-                    width: 100
+                    width: 110
                     onClicked: {
                         closePopup()
                     }

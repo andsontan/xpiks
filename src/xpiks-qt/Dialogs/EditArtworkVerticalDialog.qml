@@ -158,6 +158,15 @@ Item {
                         text: i18.n + qsTr("(same as Description if empty)")
                         color: Colors.defaultInputBackground
                     }
+
+                    Item {
+                        Layout.fillWidth: true
+                    }
+
+                    StyledText {
+                        text: titleTextInput.length
+                        color: Colors.defaultInputBackground
+                    }
                 }
 
                 Item {
