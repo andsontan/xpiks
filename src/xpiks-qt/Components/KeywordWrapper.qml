@@ -25,6 +25,7 @@ import QtQuick.Layouts 1.1
 import "../Constants"
 import "../Constants/Colors.js" as Colors
 import "../StyledControls"
+import "../Constants/UIConfig.js" as UIConfig
 
 Rectangle {
     id: itemWrapper
@@ -62,7 +63,7 @@ Rectangle {
                 verticalAlignment: Text.AlignVCenter
                 text: itemWrapper.keywordText
                 color: itemWrapper.isHighlighted ? Colors.defaultControlColor : Colors.defaultLightColor
-                font.pixelSize: 12 * settingsModel.keywordSizeScale
+                font.pixelSize: UIConfig.fontPixelSize * settingsModel.keywordSizeScale
             }
 
             MouseArea {

@@ -30,6 +30,7 @@ import "../Constants/Colors.js" as Colors;
 import "../Common.js" as Common;
 import "../Components"
 import "../StyledControls"
+import "../Constants/UIConfig.js" as UIConfig
 
 Item {
     id: plainTextKeywordsComponent
@@ -165,7 +166,7 @@ Item {
                         height: flick.height
                         focus: true
                         text: plainTextKeywordsComponent.keywordsText
-                        font.pixelSize: 12*settingsModel.keywordSizeScale
+                        font.pixelSize: UIConfig.fontPixelSize*settingsModel.keywordSizeScale
                         selectionColor: Colors.selectedArtworkColor
                         wrapMode: TextEdit.Wrap
                         horizontalAlignment: TextEdit.AlignLeft

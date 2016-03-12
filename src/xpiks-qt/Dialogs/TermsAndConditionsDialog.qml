@@ -29,6 +29,7 @@ import "../Constants/Colors.js" as Colors;
 import "../Common.js" as Common;
 import "../Components"
 import "../StyledControls"
+import "../Constants/UIConfig.js" as UIConfig
 
 Item {
     id: termsComponent
@@ -111,7 +112,7 @@ Item {
                         id: textEdit
                         width: 600
                         text: termsComponent.termsText
-                        font.pixelSize: 12*settingsModel.keywordSizeScale
+                        font.pixelSize: UIConfig.fontPixelSize*settingsModel.keywordSizeScale
                         wrapMode: TextEdit.Wrap
                         selectionColor: Colors.selectedArtworkColor
                         readOnly: true

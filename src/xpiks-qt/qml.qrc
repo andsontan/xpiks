@@ -51,5 +51,6 @@
         <file>Dialogs/PluginsDialog.qml</file>
         <file>Components/LayoutButton.qml</file>
         <file>Graphics/vector-icon.svg</file>
+        <file>Constants/UIConfig.js</file>
     </qresource>
 </RCC>

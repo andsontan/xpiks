@@ -28,6 +28,7 @@ import "../Constants/Colors.js" as Colors;
 import "../Components"
 import "../StyledControls"
 import "../Common.js" as Common
+import "../Constants/UIConfig.js" as UIConfig
 
 ApplicationWindow {
     id: settingsWindow
@@ -414,7 +415,7 @@ ApplicationWindow {
                                         verticalAlignment: Text.AlignVCenter
                                         text: qsTr("keyword", "standalone")
                                         color: Colors.defaultControlColor
-                                        font.pixelSize: 12 * keywordSizeSlider.value
+                                        font.pixelSize: UIConfig.fontPixelSize * keywordSizeSlider.value
                                     }
                                 }
 

@@ -26,6 +26,7 @@ import xpiks 1.0
 import "../Constants"
 import "../Constants/Colors.js" as Colors
 import "../StyledControls"
+import "../Constants/UIConfig.js" as UIConfig
 
 Flickable {
     id: flowListView
@@ -222,7 +223,7 @@ Flickable {
                 anchors.bottom: parent.bottom
                 color: Colors.defaultLightColor
                 font.family: "Helvetica"
-                font.pixelSize: 12*settingsModel.keywordSizeScale
+                font.pixelSize: UIConfig.fontPixelSize*settingsModel.keywordSizeScale
                 verticalAlignment: TextInput.AlignVCenter
                 renderType: TextInput.NativeRendering
                 focus: true

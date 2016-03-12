@@ -261,7 +261,8 @@ DISTFILES += \
     Dialogs/TermsAndConditionsDialog.qml \
     Dialogs/PluginsDialog.qml \
     Components/LayoutButton.qml \
-    Graphics/vector-icon.svg
+    Graphics/vector-icon.svg \
+    Constants/UIConfig.js
 
 lupdate_only {
 SOURCES = *.qml \
