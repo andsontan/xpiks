@@ -31,7 +31,6 @@
 #include <QHash>
 #include <QQuickTextDocument>
 #include <QVector>
-#include <QQueue>
 #include "abstractlistmodel.h"
 #include "../Common/baseentity.h"
 #include "../Common/ibasicartwork.h"
@@ -173,7 +172,7 @@ namespace Models {
 
     private:
         void doRemoveItemsAtIndices(QVector<int> &indicesToRemove);
-        void doRemoveItemsInRanges(const QVector<QPair<int, int> > &rangesToRemove,bool Backup=true);
+        void doRemoveItemsInRanges(const QVector<QPair<int, int> > &rangesToRemove,bool isUndoable=true);
         void getSelectedItemsIndices(QVector<int> &indices);
 
     private:

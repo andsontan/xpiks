@@ -181,7 +181,8 @@ namespace Models {
     void ArtworkUploader::removeUnavailableItems(){
         const QVector<ArtworkMetadata*> & ArtworksList_old=getArtworkList();
         QVector<ArtworkMetadata*> ArtworksList_new;
-        for (int i = 0; i<ArtworksList_old.size();  i++){
+        int size = ArtworksList_old.size();
+        for (int i = 0; i < size; ++i){
              ArtworkMetadata* ArtItemInfoElement=ArtworksList_old[i];
             if (!ArtItemInfoElement->getIsRemoved()){
                 ArtworksList_new.append(ArtItemInfoElement);

@@ -84,13 +84,14 @@ namespace Commands {
 
             artItemsModel->updateModifiedCount();
 
-            UndoRedo::RemoveArtworksHistoryItem *removeArtworksItem =
-                    new UndoRedo::RemoveArtworksHistoryItem(removedItemsIndices,
+            if (m_IsUndoable){
+                UndoRedo::RemoveArtworksHistoryItem *removeArtworksItem =
+                        new UndoRedo::RemoveArtworksHistoryItem(removedItemsIndices,
                                                             removedItemsFilepathes,
                                                             removedAttachedVectors);
-
-            if (m_IsUndoable)
                 commandManager->recordHistoryItem(removeArtworksItem);
+            }
+
         } else {
             LOG_WARNING << "No items to remove found!";
         }

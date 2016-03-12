@@ -53,7 +53,6 @@ Item {
         uploadArtworksComponent.destroy()
     }
 
-
     function saveSettings() {
         appSettings.setValue(uploadhostskey, uploadInfos.getInfoString())
     }

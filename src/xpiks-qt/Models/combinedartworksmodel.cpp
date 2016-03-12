@@ -428,7 +428,6 @@ namespace Models {
         m_ArtworksList.removeAt(row);
     }
 
-
     void CombinedArtworksModel::removeUnavailableItems(){
         QVector<int> indicesToRemove;
         for (int i= 0; i<m_ArtworksList.size(); i++){
@@ -442,12 +441,9 @@ namespace Models {
         removeItemsAtIndices(rangesToRemove);
         recombineArtworks(); //the application crashes when it is called
         emit artworksCountChanged();
-        if ( m_ArtworksList.size() == 0 ){
+        if ( m_ArtworksList.size() == 0){
             emit closeWindow();
         }
     }
-
-
-
 
 }

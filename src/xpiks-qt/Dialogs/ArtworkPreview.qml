@@ -47,7 +47,7 @@ Item {
     Connections {
         target: artItemsModel
         onfileUnavailable: {
-            if (artworkIndex==index)
+            if (artworkIndex == index)
                 closePopup()
         }
     }

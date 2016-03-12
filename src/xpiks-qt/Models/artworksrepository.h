@@ -59,9 +59,6 @@ namespace Models {
         {
 
             m_FilesWatcher.addPaths(copy.m_DirectoriesList);
-
-
-
             QObject::connect(&m_FilesWatcher, SIGNAL(fileChanged(const QString &)),
                           this, SLOT(checkfileUnavailable(const QString &) ) );
             m_Timer.setInterval(1000); //1 sec
@@ -109,7 +106,7 @@ namespace Models {
 #ifdef TESTS
         int getFilesCountForDirectory(const QString &directory) const { return m_DirectoriesHash[directory]; }
 #endif
-        bool isFileUnavailable(const QString &filepath) const {return (m_UnavailableFiles.find(filepath)!=m_UnavailableFiles.end());}
+        bool isFileUnavailable(const QString &filepath) const { return (m_UnavailableFiles.find(filepath) != m_UnavailableFiles.end()); }
 
 #ifdef INTEGRATION_TESTS
         void resetEverything();
@@ -132,10 +129,10 @@ namespace Models {
 
         void removeFilesAndEmitSignal(int num){
             size_t k=num;
-            QSet<QString>::iterator begin=m_FilesSet.begin();
-            QSet<QString>::iterator  end=m_FilesSet.end();
+            QSet<QString>::iterator begin = m_FilesSet.begin();
+            QSet<QString>::iterator end = m_FilesSet.end();
 
-            for (QSet<QString>::iterator  it =begin; (it!=end) && (k--);++it ){
+            for (QSet<QString>::iterator it = begin; ((it!=end) && (k--)); ++it){
                 m_UnavailableFiles.insert(*it);
             }
             emit fileUnavailable();

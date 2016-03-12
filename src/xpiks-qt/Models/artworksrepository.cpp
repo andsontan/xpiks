@@ -130,9 +130,7 @@ namespace Models {
                 occurances = m_DirectoriesHash[absolutePath];
             }
 
-            /*if (!occurances)*/
             m_FilesWatcher.addPath(filepath);
-
             m_FilesSet.insert(filepath);
             m_DirectoriesHash[absolutePath] = occurances + 1;
             wasModified = true;

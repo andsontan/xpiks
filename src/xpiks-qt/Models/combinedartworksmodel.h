@@ -164,7 +164,6 @@ namespace Models {
     private slots:
         void spellCheckErrorsChangedHandler();
 
-
     public:
         enum CombinedArtworksModelRoles {
             PathRole = Qt::UserRole + 1,

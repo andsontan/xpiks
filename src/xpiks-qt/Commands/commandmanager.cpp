@@ -515,7 +515,7 @@ void Commands::CommandManager::restartSpellChecking() {
 
 void Commands::CommandManager::updateAllDependentModels(){
     int size = m_AvailabilityListeners.size();
-    for (int i=0; i<size; i++){
+    for ( int i = 0; i < size; ++i){
         m_AvailabilityListeners[i]->removeUnavailableItems();
     }
     m_ArtItemsModel->removeUnavailableItems();

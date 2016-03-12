@@ -844,8 +844,8 @@ namespace Models {
         doRemoveItemsInRanges(rangesToRemove);
     }
 
-    void ArtItemsModel::doRemoveItemsInRanges(const QVector<QPair<int, int> > &rangesToRemove, bool Backup) {
-        Commands::RemoveArtworksCommand *removeArtworksCommand = new Commands::RemoveArtworksCommand(rangesToRemove,Backup);
+    void ArtItemsModel::doRemoveItemsInRanges(const QVector<QPair<int, int> > &rangesToRemove, bool isUndoable) {
+        Commands::RemoveArtworksCommand *removeArtworksCommand = new Commands::RemoveArtworksCommand(rangesToRemove,isUndoable);
         Commands::ICommandResult *result = m_CommandManager->processCommand(removeArtworksCommand);
         delete result;
     }
@@ -871,9 +871,9 @@ namespace Models {
         for (int i = 0; i < count; ++i) {
             QString path=m_ArtworkList.at(i)->getFilepath();
             if (artworksRepository->isFileUnavailable(path)) {
-                m_ArtworkList.at(i)->markRemoved();
+                m_ArtworkList.at(i)->setRemoved();
                 artworksRepository->removeFromDeletedList(path);
-           }
+            }
         }
       emit filesUnavaliable();
     }
