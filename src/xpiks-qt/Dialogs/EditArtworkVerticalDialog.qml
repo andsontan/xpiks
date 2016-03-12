@@ -466,40 +466,106 @@ Item {
                 }
 
                 Item {
+                    height: 4
+                }
+
+                RowLayout {
+                    width: parent.width
+                    spacing:5
+
+                    Item {
+                        Layout.fillWidth: true
+                    }
+
+                    StyledText {
+                        text: i18.n + qsTr("Fix spelling")
+                        enabled: keywordsWrapper.keywordsModel ? keywordsWrapper.keywordsModel.hasSpellErrors : false
+                        color: enabled ? (fixSpellingMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor) : Colors.defaultInputBackground
+
+                        MouseArea {
+                            id: fixSpellingMA
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: {
+                                combinedArtworks.suggestCorrections()
+                                Common.launchDialog("Dialogs/SpellCheckSuggestionsDialog.qml",
+                                                    componentParent,
+                                                    {})
+                            }
+                        }
+                    }
+
+                    StyledText {
+                        text: "|"
+                        color: Colors.defaultInputBackground
+                        verticalAlignment: Text.AlignVCenter
+                    }
+
+                    StyledText {
+                        text: i18.n + qsTr("Suggest")
+                        color: enabled ? (suggestKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor) : Colors.defaultInputBackground
+
+                        MouseArea {
+                            id: suggestKeywordsMA
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: {
+                                var callbackObject = {
+                                    promoteKeywords: function(keywords) {
+                                        combinedArtworks.pasteKeywords(keywords)
+                                    }
+                                }
+
+                                Common.launchDialog("Dialogs/KeywordsSuggestion.qml",
+                                                    componentParent,
+                                                    {callbackObject: callbackObject});
+                            }
+                        }
+                    }
+
+                    StyledText {
+                        text: "|"
+                        color: Colors.defaultInputBackground
+                        verticalAlignment: Text.AlignVCenter
+                    }
+
+                    StyledText {
+                        text: i18.n + qsTr("Clear")
+                        color: enabled ? (clearKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor) : Colors.defaultInputBackground
+
+                        MouseArea {
+                            id: clearKeywordsMA
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: clearKeywordsDialog.open()
+                        }
+                    }
+
+                    StyledText {
+                        text: "|"
+                        color: Colors.defaultInputBackground
+                        verticalAlignment: Text.AlignVCenter
+                    }
+
+                    StyledText {
+                        text: i18.n + qsTr("Copy")
+                        color: copyKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
+
+                        MouseArea {
+                            id: copyKeywordsMA
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: clipboard.setText(combinedArtworks.getKeywordsString())
+                        }
+                    }
+                }
+
+                Item {
                     Layout.fillHeight: true
                 }
 
                 RowLayout {
                     spacing: 20
-
-                    StyledButton {
-                        width: 150
-                        text: i18.n + qsTr("Suggest keywords")
-
-                        onClicked: {
-                            var callbackObject = {
-                                promoteKeywords: function(keywords) {
-                                    combinedArtworks.pasteKeywords(keywords)
-                                }
-                            }
-
-                            Common.launchDialog("Dialogs/KeywordsSuggestion.qml",
-                                                componentParent,
-                                                {callbackObject: callbackObject});
-                        }
-                    }
-
-                    StyledButton {
-                        width: 100
-                        text: i18.n + qsTr("Fix spelling")
-
-                        onClicked: {
-                            combinedArtworks.suggestCorrections()
-                            Common.launchDialog("Dialogs/SpellCheckSuggestionsDialog.qml",
-                                                componentParent,
-                                                {})
-                        }
-                    }
 
                     Item {
                         Layout.fillWidth: true

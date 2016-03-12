@@ -61,6 +61,15 @@ Item {
         }
     }
 
+    MessageDialog {
+        id: clearKeywordsDialog
+
+        title: "Confirmation"
+        text: i18.n + qsTr("Clear all keywords?")
+        standardButtons: StandardButton.Yes | StandardButton.No
+        onYes: combinedArtworks.clearKeywords()
+    }
+
     Keys.onEscapePressed: closePopup()
 
     PropertyAnimation { target: artworkEditHorizontalDialog; property: "opacity";
@@ -109,10 +118,12 @@ Item {
         Rectangle {
             id: dialogWindow
             width: parent.width - 50
-            height: parent.height - 150
+            height: parent.height - 120
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
+
+            property var keywordsModel: combinedArtworks.getKeywordsModel()
 
             Rectangle {
                 id: boundsRect
@@ -158,6 +169,15 @@ Item {
 
                     StyledText {
                         text: i18.n + qsTr("(same as Description if empty)")
+                        color: Colors.defaultInputBackground
+                    }
+
+                    Item {
+                        Layout.fillWidth: true
+                    }
+
+                    StyledText {
+                        text: titleTextInput.length
                         color: Colors.defaultInputBackground
                     }
                 }
@@ -469,40 +489,106 @@ Item {
                 }
 
                 Item {
+                    height: 4
+                }
+
+                RowLayout {
+                    width: parent.width
+                    spacing:5
+
+                    Item {
+                        Layout.fillWidth: true
+                    }
+
+                    StyledText {
+                        text: i18.n + qsTr("Fix spelling")
+                        enabled: dialogWindow.keywordsModel ? dialogWindow.keywordsModel.hasSpellErrors : false
+                        color: enabled ? (fixSpellingMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor) : Colors.defaultInputBackground
+
+                        MouseArea {
+                            id: fixSpellingMA
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: {
+                                combinedArtworks.suggestCorrections()
+                                Common.launchDialog("Dialogs/SpellCheckSuggestionsDialog.qml",
+                                                    componentParent,
+                                                    {})
+                            }
+                        }
+                    }
+
+                    StyledText {
+                        text: "|"
+                        color: Colors.defaultInputBackground
+                        verticalAlignment: Text.AlignVCenter
+                    }
+
+                    StyledText {
+                        text: i18.n + qsTr("Suggest")
+                        color: enabled ? (suggestKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor) : Colors.defaultInputBackground
+
+                        MouseArea {
+                            id: suggestKeywordsMA
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: {
+                                var callbackObject = {
+                                    promoteKeywords: function(keywords) {
+                                        combinedArtworks.pasteKeywords(keywords)
+                                    }
+                                }
+
+                                Common.launchDialog("Dialogs/KeywordsSuggestion.qml",
+                                                    componentParent,
+                                                    {callbackObject: callbackObject});
+                            }
+                        }
+                    }
+
+                    StyledText {
+                        text: "|"
+                        color: Colors.defaultInputBackground
+                        verticalAlignment: Text.AlignVCenter
+                    }
+
+                    StyledText {
+                        text: i18.n + qsTr("Clear")
+                        color: enabled ? (clearKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor) : Colors.defaultInputBackground
+
+                        MouseArea {
+                            id: clearKeywordsMA
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: clearKeywordsDialog.open()
+                        }
+                    }
+
+                    StyledText {
+                        text: "|"
+                        color: Colors.defaultInputBackground
+                        verticalAlignment: Text.AlignVCenter
+                    }
+
+                    StyledText {
+                        text: i18.n + qsTr("Copy")
+                        color: copyKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
+
+                        MouseArea {
+                            id: copyKeywordsMA
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: clipboard.setText(combinedArtworks.getKeywordsString())
+                        }
+                    }
+                }
+
+                Item {
                     Layout.fillHeight: true
                 }
 
                 RowLayout {
-                    spacing: 15
-
-                    StyledButton {
-                        width: 150
-                        text: i18.n + qsTr("Suggest keywords")
-
-                        onClicked: {
-                            var callbackObject = {
-                                promoteKeywords: function(keywords) {
-                                    combinedArtworks.pasteKeywords(keywords)
-                                }
-                            }
-
-                            Common.launchDialog("Dialogs/KeywordsSuggestion.qml",
-                                                componentParent,
-                                                {callbackObject: callbackObject});
-                        }
-                    }
-
-                    StyledButton {
-                        width: 100
-                        text: i18.n + qsTr("Fix spelling")
-
-                        onClicked: {
-                            combinedArtworks.suggestCorrections()
-                            Common.launchDialog("Dialogs/SpellCheckSuggestionsDialog.qml",
-                                                componentParent,
-                                                {})
-                        }
-                    }
+                    spacing: 12
 
                     Item {
                         Layout.fillWidth: true
