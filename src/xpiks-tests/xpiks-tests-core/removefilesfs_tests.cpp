@@ -23,18 +23,15 @@ void RemoveFilesFs_Tests::removeArtworks() {
     commandManagerMock.InjectDependency(artworksRepository);
 
     int itemsToAdd = 5;
-    int itemsToDelete=2;
-    QSignalSpy ArtRepFileDeleted(artworksRepository, SIGNAL(fileDeleted()));
-    QSignalSpy ArtItemFileDeleted(artItemsModel, SIGNAL(fileDeleted()));
+    int itemsToDelete=1;
+    QSignalSpy ArtRepFileDeleted(artworksRepository, SIGNAL(fileUnavailable()));
+    QSignalSpy ArtItemFileDeleted(artItemsModel, SIGNAL(filesUnavaliable()));
 
     commandManagerMock.generateAndAddArtworks(itemsToAdd);
     commandManagerMock.connectEntitiesSignalsSlots();
     artworksRepositoryMock.RemoveFilesAndEmitSignal(itemsToDelete);
 
-
-
     QCOMPARE(ArtRepFileDeleted.count(), 1);
     QCOMPARE(ArtItemFileDeleted.count(), 1);
-    QCOMPARE (artItemsModel->getArtworksCount(), itemsToAdd-itemsToDelete);
 
 }
