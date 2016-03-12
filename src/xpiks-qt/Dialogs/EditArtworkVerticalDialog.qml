@@ -30,6 +30,7 @@ import "../Constants/Colors.js" as Colors;
 import "../Common.js" as Common;
 import "../Components"
 import "../StyledControls"
+import "../Constants/UIConfig.js" as UIConfig
 
 Item {
     id: artworkEditVerticalDialog
@@ -200,7 +201,7 @@ Item {
                             width: titleFlick.width
                             height: titleFlick.height
                             focus: true
-                            font.pixelSize: 12*settingsModel.keywordSizeScale
+                            font.pixelSize: UIConfig.fontPixelSize*settingsModel.keywordSizeScale
                             text: combinedArtworks.title
                             onTextChanged: combinedArtworks.title = text
 
@@ -298,7 +299,7 @@ Item {
                             text: combinedArtworks.description
                             width: descriptionFlick.width
                             height: descriptionFlick.height
-                            font.pixelSize: 12*settingsModel.keywordSizeScale
+                            font.pixelSize: UIConfig.fontPixelSize*settingsModel.keywordSizeScale
                             focus: true
                             property string previousText: text
                             property int maximumLength: 280

@@ -26,6 +26,7 @@ import xpiks 1.0
 import "../Constants"
 import "../Constants/Colors.js" as Colors
 import "../StyledControls"
+import "../Constants/UIConfig.js" as UIConfig
 
 Flickable {
     id: flowListView
@@ -128,6 +129,7 @@ Flickable {
         anchors.top: parent.top
         width: parent.width
         height: flowListView.contentHeight > flowListView.height ? flowListView.contentHeight : flowListView.height
+
         onClicked: {
             activateEdit()
             mouse.accepted = false
@@ -221,7 +223,7 @@ Flickable {
                 anchors.bottom: parent.bottom
                 color: Colors.defaultLightColor
                 font.family: "Helvetica"
-                font.pixelSize: 12*settingsModel.keywordSizeScale
+                font.pixelSize: UIConfig.fontPixelSize*settingsModel.keywordSizeScale
                 verticalAlignment: TextInput.AlignVCenter
                 renderType: TextInput.NativeRendering
                 focus: true
@@ -243,7 +245,7 @@ Flickable {
                 }
 
                 Keys.onPressed: {
-                    if(event.matches(StandardKey.Paste)) {
+                    if (event.matches(StandardKey.Paste)) {
                         var clipboardText = clipboard.getText();
                         clipboardText = clipboardText.replace(/(\r\n|\n|\r)/gm, '');
                         var keywordsToAdd = [];

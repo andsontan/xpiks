@@ -30,32 +30,47 @@
 #include "../Commands/commandmanager.h"
 #include "../Models/settingsmodel.h"
 #include "../Helpers/filenameshelpers.h"
-#include "../Conectivity/ftpcoordinator.h"
+#include "../Conectivity/iftpcoordinator.h"
 #include "../Conectivity/testconnection.h"
 #include "../Conectivity/uploadcontext.h"
 
+#ifndef TESTS
+#include "../Conectivity/ftpcoordinator.h"
+#endif
+
 namespace Models {
-    ArtworkUploader::ArtworkUploader(int maxParallelUploads, int secondsTimeout) :
+    ArtworkUploader::ArtworkUploader(Conectivity::IFtpCoordinator *ftpCoordinator, QObject *parent) :
+        ArtworksProcessor(parent),
+        m_FtpCoordinator(ftpCoordinator),
         m_Percent(0)
     {
-        m_FtpCoordinator = new Conectivity::FtpCoordinator(maxParallelUploads, secondsTimeout);
-
-        QObject::connect(m_FtpCoordinator, SIGNAL(uploadStarted()), this, SLOT(onUploadStarted()));
-        QObject::connect(m_FtpCoordinator, SIGNAL(uploadFinished(bool)), this, SLOT(allFinished(bool)));
-        QObject::connect(m_FtpCoordinator, SIGNAL(overallProgressChanged(double)), this, SLOT(uploaderPercentChanged(double)));
+#ifndef TESTS
+        Conectivity::FtpCoordinator *coordinator = dynamic_cast<Conectivity::FtpCoordinator*>(ftpCoordinator);
+        QObject::connect(coordinator, SIGNAL(uploadStarted()), this, SLOT(onUploadStarted()));
+        QObject::connect(coordinator, SIGNAL(uploadFinished(bool)), this, SLOT(allFinished(bool)));
+        QObject::connect(coordinator, SIGNAL(overallProgressChanged(double)), this, SLOT(uploaderPercentChanged(double)));
 
         m_TestingCredentialWatcher = new QFutureWatcher<Conectivity::ContextValidationResult>(this);
         QObject::connect(m_TestingCredentialWatcher, SIGNAL(finished()), SLOT(credentialsTestingFinished()));
+#endif
     }
 
     ArtworkUploader::~ArtworkUploader() {
+#ifndef TESTS
         delete m_TestingCredentialWatcher;
-        delete m_FtpCoordinator;
+#endif
+
+        if (m_FtpCoordinator != NULL) {
+            delete m_FtpCoordinator;
+        }
     }
 
     void ArtworkUploader::setCommandManager(Commands::CommandManager *commandManager) {
         Common::BaseEntity::setCommandManager(commandManager);
-        m_FtpCoordinator->setCommandManager(commandManager);
+#ifndef TESTS
+        Conectivity::FtpCoordinator *coordinator = dynamic_cast<Conectivity::FtpCoordinator*>(m_FtpCoordinator);
+        coordinator->setCommandManager(commandManager);
+#endif
     }
 
     void ArtworkUploader::onUploadStarted() {
@@ -74,18 +89,23 @@ namespace Models {
     }
 
     void ArtworkUploader::credentialsTestingFinished() {
+#ifndef TESTS
         Conectivity::ContextValidationResult result = m_TestingCredentialWatcher->result();
         emit credentialsChecked(result.m_Result, result.m_Host);
+#endif
     }
 
     void ArtworkUploader::uploaderPercentChanged(double percent) {
         m_Percent = (int)(percent);
         LOG_DEBUG << "Overall progress =" << percent;
         updateProgress();
+#ifndef TESTS
         UploadInfoRepository *uploadInfoRepository = m_CommandManager->getUploadInfoRepository();
         uploadInfoRepository->updatePercentages();
+#endif
     }
 
+#ifndef TESTS
     void ArtworkUploader::uploadArtworks() { doUploadArtworks(getArtworkList()); }
 
     void ArtworkUploader::checkCredentials(const QString &host, const QString &username,
@@ -99,6 +119,7 @@ namespace Models {
 
         m_TestingCredentialWatcher->setFuture(QtConcurrent::run(Conectivity::isContextValid, context));
     }
+#endif
 
     bool ArtworkUploader::needCreateArchives() const {
         bool anyZipNeeded = false;
@@ -134,6 +155,7 @@ namespace Models {
         return needCreate;
     }
 
+#ifndef TESTS
     void ArtworkUploader::doUploadArtworks(const QVector<ArtworkMetadata *> &artworkList) {
         int artworksCount = artworkList.length();
         if (artworksCount == 0) {
@@ -149,6 +171,7 @@ namespace Models {
         m_FtpCoordinator->uploadArtworks(artworkList, selectedInfos);
         m_CommandManager->reportUserAction(Conectivity::UserActionUpload);
     }
+#endif
 
     void ArtworkUploader::cancelProcessing() {
         m_FtpCoordinator->cancelUpload();

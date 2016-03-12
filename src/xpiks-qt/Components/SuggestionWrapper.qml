@@ -25,6 +25,7 @@ import QtQuick.Layouts 1.1
 import "../Constants"
 import "../Constants/Colors.js" as Colors
 import "../StyledControls"
+import "../Constants/UIConfig.js" as UIConfig
 
 Rectangle {
     id: itemWrapper
@@ -50,7 +51,7 @@ Rectangle {
         anchors.leftMargin: 5
         text: itemWrapper.suggestionText
         color: isSelected ? (innerMA.containsMouse ? Colors.selectedMetadataColor : Colors.defaultControlColor) : (innerMA.containsMouse ? Colors.defaultLightColor : Colors.defaultInputBackground)
-        font.pixelSize: 12 * settingsModel.keywordSizeScale
+        font.pixelSize: UIConfig.fontPixelSize * settingsModel.keywordSizeScale
     }
 
     MouseArea {

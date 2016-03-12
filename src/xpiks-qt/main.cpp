@@ -49,6 +49,7 @@
 #include "Conectivity/telemetryservice.h"
 #include "Helpers/globalimageprovider.h"
 #include "Models/uploadinforepository.h"
+#include "Conectivity/ftpcoordinator.h"
 #include "Helpers/helpersqmlwrapper.h"
 #include "Encryption/secretsmanager.h"
 #include "Models/artworksrepository.h"
@@ -262,7 +263,9 @@ int main(int argc, char *argv[]) {
     Models::FilteredArtItemsProxyModel filteredArtItemsModel;
     filteredArtItemsModel.setSourceModel(&artItemsModel);
     Models::RecentDirectoriesModel recentDirectorieModel;
-    Models::ArtworkUploader artworkUploader(settingsModel.getMaxParallelUploads(), settingsModel.getUploadTimeout());
+    Conectivity::FtpCoordinator *ftpCoordinator = new Conectivity::FtpCoordinator(
+                settingsModel.getMaxParallelUploads(), settingsModel.getUploadTimeout());
+    Models::ArtworkUploader artworkUploader(ftpCoordinator);
     SpellCheck::SpellCheckerService spellCheckerService;
     SpellCheck::SpellCheckSuggestionModel spellCheckSuggestionModel;
     MetadataIO::BackupSaverService metadataSaverService;
@@ -336,8 +339,7 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("uploadInfos", &uploadInfoRepository);
     rootContext->setContextProperty("logsModel", &logsModel);
     rootContext->setContextProperty("secretsManager", &secretsManager);
-    rootContext->setContextProperty("un"
-                                    "doRedoManager", &undoRedoManager);
+    rootContext->setContextProperty("undoRedoManager", &undoRedoManager);
     rootContext->setContextProperty("zipArchiver", &zipArchiver);
     rootContext->setContextProperty("keywordsSuggestor", &keywordsSuggestor);
     rootContext->setContextProperty("settingsModel", &settingsModel);
@@ -363,15 +365,16 @@ int main(int argc, char *argv[]) {
     QQuickWindow *window = qobject_cast<QQuickWindow*>(engine.rootObjects().at(0));
     pluginManager.getUIProvider()->setRoot(window->contentItem());
 
-//#ifdef QT_DEBUG
-//    if (argc > 1) {
-//        QStringList pathes;
-//        for (int i = 1; i < argc; ++i) {
-//            pathes.append(QString(argv[i]));
-//        }
-//        commandManager.addInitialArtworks(pathes);
-//    }
-//#endif
+#ifdef QT_DEBUG
+    if (argc > 1) {
+        QStringList pathes;
+        for (int i = 1; i < argc; ++i) {
+            pathes.append(QString(argv[i]));
+        }
+
+        commandManager.addInitialArtworks(pathes, QStringList());
+    }
+#endif
 
     return app.exec();
 }

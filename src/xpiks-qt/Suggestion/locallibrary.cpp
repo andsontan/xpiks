@@ -44,7 +44,11 @@ namespace Suggestion {
     }
 
     void LocalLibrary::addToLibrary(const QVector<Models::ArtworkMetadata *> artworksList) {
+#ifndef INTEGRATION_TESTS
         m_FutureWatcher->setFuture(QtConcurrent::run(this, &LocalLibrary::doAddToLibrary, artworksList));
+#else
+        doAddToLibrary(artworksList);
+#endif
     }
 
     void LocalLibrary::swap(QHash<QString, QStringList> &hash) {

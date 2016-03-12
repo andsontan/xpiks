@@ -29,6 +29,7 @@ import "../Constants/Colors.js" as Colors;
 import "../Common.js" as Common;
 import "../Components"
 import "../StyledControls"
+import "../Constants/UIConfig.js" as UIConfig
 
 Item {
     id: spellCheckSuggestionsDialog
@@ -157,7 +158,7 @@ Item {
                                             anchors.horizontalCenter: parent.horizontalCenter
                                             verticalAlignment: Text.AlignVCenter
                                             text: word
-                                            font.pixelSize: 12 * settingsModel.keywordSizeScale
+                                            font.pixelSize: UIConfig.fontPixelSize * settingsModel.keywordSizeScale
                                             color: Colors.artworkModifiedColor
                                             elide: Text.ElideMiddle
                                         }

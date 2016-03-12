@@ -122,6 +122,10 @@ namespace Models {
         int getSelectedArtworksCount() const;
         int getArtworksCount() const { return m_ArtworksList.length(); }
 
+#ifdef INTEGRATION_TESTS
+        Common::BasicKeywordsModel *getBasicKeywordsModel() { return &m_CommonKeywordsModel; }
+#endif
+
 #if defined(TESTS)
         const QStringList &getKeywords() const;
         bool getAreKeywordsModified() const { return m_AreKeywordsModified; }

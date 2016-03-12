@@ -74,7 +74,6 @@ namespace MetadataIO {
 
     void MetadataIOCoordinator::readingWorkerFinished(bool success) {
         LOG_DEBUG << success;
-
         if (m_CanProcessResults) {
             readingFinishedHandler(m_IgnoreBackupsAtImport);
         }
@@ -164,8 +163,10 @@ namespace MetadataIO {
         LOG_DEBUG << "Reading results discarded";
     }
 
-    void MetadataIOCoordinator::readMetadata(bool ignoreBackups) {
+    void MetadataIOCoordinator::continueReading(bool ignoreBackups) {
         m_CanProcessResults = true;
+
+        LOG_DEBUG << "Is in progress:" << m_IsImportInProgress;
 
         if (!m_IsImportInProgress) {
             readingFinishedHandler(ignoreBackups);

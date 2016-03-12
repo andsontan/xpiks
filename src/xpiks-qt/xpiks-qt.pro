@@ -210,6 +210,7 @@ HEADERS += \
     Conectivity/uploadbatch.h \
     Helpers/filterhelpers.h \
     Helpers/ifilenotavailablemodel.h
+    Conectivity/iftpcoordinator.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
@@ -261,7 +262,8 @@ DISTFILES += \
     Dialogs/TermsAndConditionsDialog.qml \
     Dialogs/PluginsDialog.qml \
     Components/LayoutButton.qml \
-    Graphics/vector-icon.svg
+    Graphics/vector-icon.svg \
+    Constants/UIConfig.js
 
 lupdate_only {
 SOURCES = *.qml \
@@ -336,11 +338,16 @@ win32 {
     POST_TARGETDEPS += copywhatsnew copyterms copydicts copytranslations
 }
 
+travis-ci {
+    message("for Travis CI")
+    LIBS -= -lz
+    LIBS += /usr/lib/x86_64-linux-gnu/libz.so
+}
+
 linux-g++-64 {
     message("for Linux")
     target.path=/usr/bin/
     QML_IMPORT_PATH += /usr/lib/x86_64-linux-gnu/qt5/imports/
-    #DEFINES -= TELEMETRY_ENABLED
     LIBS += -L/lib/x86_64-linux-gnu/
 
     UNAME = $$system(cat /proc/version | tr -d \'()\')
@@ -352,8 +359,6 @@ linux-g++-64 {
     contains( UNAME, SUSE ) {
         message("distribution : SUSE")
     }
-
-
 }
 
 linux-qtcreator {

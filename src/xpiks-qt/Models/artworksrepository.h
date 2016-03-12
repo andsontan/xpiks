@@ -111,6 +111,10 @@ namespace Models {
 #endif
         bool isFileUnavailable(const QString &filepath) const {return (m_UnavailableFiles.find(filepath)!=m_UnavailableFiles.end());}
 
+#ifdef INTEGRATION_TESTS
+        void resetEverything();
+#endif
+
     public:
         virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
         virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;

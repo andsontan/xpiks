@@ -47,7 +47,8 @@ namespace Models {
         enum { MAX_WORKER_THREADS = 10};
 
     public:
-        ArtworksProcessor() :
+        ArtworksProcessor(QObject *parent=0) :
+            QObject(parent),
             Common::BaseEntity(),
             m_ProcessedArtworksCount(0),
             m_ArtworksCount(0),

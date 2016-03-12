@@ -30,6 +30,7 @@ import "../Constants/Colors.js" as Colors;
 import "../Common.js" as Common;
 import "../Components"
 import "../StyledControls"
+import "../Constants/UIConfig.js" as UIConfig
 
 Item {
     id: dialogComponent
@@ -397,10 +398,11 @@ Item {
 
                                     StyledTextEdit {
                                         id: titleTextInput
+                                        objectName: "titleTextInput"
                                         focus: true
                                         width: titleFlick.width
                                         height: titleFlick.height
-                                        font.pixelSize: 12*settingsModel.keywordSizeScale
+                                        font.pixelSize: UIConfig.fontPixelSize*settingsModel.keywordSizeScale
                                         text: combinedArtworks.title
                                         onTextChanged: combinedArtworks.title = text
 
@@ -479,6 +481,7 @@ Item {
                             anchors.topMargin: 25
                             text: ''
                             id: descriptionCheckBox
+                            objectName: "descriptionCheckBox"
                             /*indicatorWidth: 24
                             indicatorHeight: 24*/
                             onClicked: {
@@ -563,10 +566,11 @@ Item {
 
                                     StyledTextEdit {
                                         id: descriptionTextInput
+                                        objectName: "descriptionTextInput"
                                         width: descriptionFlick.width
                                         height: descriptionFlick.height
                                         text: combinedArtworks.description
-                                        font.pixelSize: 12*settingsModel.keywordSizeScale
+                                        font.pixelSize: UIConfig.fontPixelSize*settingsModel.keywordSizeScale
                                         focus: true
                                         property string previousText: text
                                         property int maximumLength: 280
@@ -745,6 +749,7 @@ Item {
 
                                 EditableTags {
                                     id: flv
+                                    objectName: "keywordsInput"
                                     anchors.fill: parent
                                     model: keywordsWrapper.keywordsModel
                                     property int keywordHeight: 20 * settingsModel.keywordSizeScale + (settingsModel.keywordSizeScale - 1)*10

@@ -33,7 +33,7 @@ namespace Helpers {
 }
 
 namespace Conectivity {
-    class FtpCoordinator;
+    class IFtpCoordinator;
 }
 
 namespace Commands {
@@ -47,7 +47,7 @@ namespace Models {
     {
         Q_OBJECT
     public:
-        ArtworkUploader(int maxParallelUploads, int secondsTimeout);
+        ArtworkUploader(Conectivity::IFtpCoordinator *ftpCoordinator, QObject *parent=0);
         virtual ~ArtworkUploader();
 
     public:
@@ -72,21 +72,27 @@ namespace Models {
         void uploaderPercentChanged(double percent);
 
     public:
+#ifndef TESTS
         Q_INVOKABLE void uploadArtworks();
         Q_INVOKABLE void checkCredentials(const QString &host, const QString &username,
                                           const QString &password, bool disablePassiveMode) const;
+#endif
         Q_INVOKABLE bool needCreateArchives() const;
 
     private:
+#ifndef TESTS
         void doUploadArtworks(const QVector<ArtworkMetadata*> &artworkList);
+#endif
 
     protected:
         virtual void cancelProcessing();
         virtual void innerResetModel() { m_Percent = 0; }
 
     private:
-        Conectivity::FtpCoordinator *m_FtpCoordinator;
+        Conectivity::IFtpCoordinator *m_FtpCoordinator;
+#ifndef TESTS
         QFutureWatcher<Conectivity::ContextValidationResult> *m_TestingCredentialWatcher;
+#endif
         int m_Percent;
     };
 }

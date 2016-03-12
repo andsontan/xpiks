@@ -29,6 +29,7 @@ import "../Constants/Colors.js" as Colors;
 import "../Common.js" as Common;
 import "../Components"
 import "../StyledControls"
+import "../Constants/UIConfig.js" as UIConfig
 
 Item {
     id: logsComponent
@@ -156,7 +157,7 @@ Item {
                         text: logsComponent.logText
                         selectionColor: Colors.selectedArtworkColor
                         readOnly: true
-                        font.pixelSize: 12*settingsModel.keywordSizeScale
+                        font.pixelSize: UIConfig.fontPixelSize*settingsModel.keywordSizeScale
 
                         Component.onCompleted: {
                             scrollToBottom()

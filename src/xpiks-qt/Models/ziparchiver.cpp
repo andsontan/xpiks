@@ -24,10 +24,13 @@
 #include <QFileInfo>
 #include <QRegExp>
 #include <QDir>
-#include "../Helpers/ziphelper.h"
 #include "../Models/artworkmetadata.h"
 #include "../Helpers/filenameshelpers.h"
 #include "../Common/defines.h"
+
+#ifndef TESTS
+#include "../Helpers/ziphelper.h"
+#endif
 
 namespace Models {
     ZipArchiver::ZipArchiver() {
@@ -73,7 +76,9 @@ namespace Models {
         QList<QStringList> items = itemsWithSameName.values();
 
         LOG_INFO << "Creating zip archives for" << items.length() << "item(s)";
+#ifndef TESTS
         m_ArchiveCreator->setFuture(QtConcurrent::mapped(items, Helpers::zipFiles));
+#endif
     }
 
     void ZipArchiver::fillFilenamesHash(QHash<QString, QStringList> &hash) {

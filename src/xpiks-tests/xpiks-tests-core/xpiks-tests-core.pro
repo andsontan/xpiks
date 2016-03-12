@@ -10,7 +10,7 @@ QT       += core testlib qml quick concurrent
 
 QT       -= gui
 
-TARGET = xpiks-tests
+TARGET = xpiks-tests-core
 CONFIG   += console
 CONFIG   -= app_bundle
 
@@ -127,6 +127,8 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Helpers/filterhelpers.cpp \
     artworkfilter_tests.cpp \
     removefilesfs_tests.cpp
+    ../../xpiks-qt/Models/artworkuploader.cpp \
+    ../../xpiks-qt/Models/ziparchiver.cpp
 
 HEADERS += \
     encryption_tests.h \
@@ -212,3 +214,6 @@ HEADERS += \
     ../../xpiks-qt/Helpers/filterhelpers.h \
     artworkfilter_tests.h \
     removefilesfs_tests.h
+    ../../xpiks-qt/Models/artworkuploader.h \
+    ../../xpiks-qt/Conectivity/iftpcoordinator.h \
+    ../../xpiks-qt/Models/ziparchiver.h

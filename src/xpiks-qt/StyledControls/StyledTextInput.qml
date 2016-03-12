@@ -22,10 +22,11 @@
 import QtQuick 2.2
 import "../Constants"
 import "../Constants/Colors.js" as Colors
+import "../Constants/UIConfig.js" as UIConfig
 
 TextInput {
     font.family: "Helvetica"
-    font.pixelSize: 12
+    font.pixelSize: UIConfig.fontPixelSize
     verticalAlignment: TextInput.AlignVCenter
     selectedTextColor: Colors.defaultLightColor
     selectionColor: Colors.defaultControlColor

@@ -111,6 +111,8 @@ namespace MetadataIO {
             jsonFile.flush();
             jsonFile.close();
 
+            int numberOfItems = m_ItemsToWrite.length();
+
             QTemporaryFile argumentsFile;
             if (argumentsFile.open()) {
 
@@ -130,7 +132,8 @@ namespace MetadataIO {
                 LOG_DEBUG << "Starting exiftool process:" << exiftoolPath;
 
                 m_ExiftoolProcess->start(exiftoolPath, arguments);
-                success = m_ExiftoolProcess->waitForFinished();
+                const int oneFileTimeout = 5000;
+                success = m_ExiftoolProcess->waitForFinished(oneFileTimeout*numberOfItems);
 
                 LOG_DEBUG << "Exiftool process finished.";
 

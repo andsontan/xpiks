@@ -181,6 +181,9 @@ namespace Commands {
         void updateArtworks(const QVector<QPair<int, int> > &rangesToUpdate) const;
         void addToRecentDirectories(const QString &path) const;
 #ifdef QT_DEBUG
+    private:
+        void openInitialFiles();
+    public:
         void addInitialArtworks(const QStringList &artworksFilepathes, const QStringList &vectors);
 #endif
 
@@ -205,6 +208,10 @@ namespace Commands {
         void beforeDestructionCallback() const;
         void restartSpellChecking();
 
+#ifdef INTEGRATION_TESTS
+        void cleanup();
+#endif
+
     public:
         // methods for getters
         virtual Models::ArtworksRepository *getArtworksRepository() const { return m_ArtworksRepository; }
@@ -216,6 +223,14 @@ namespace Commands {
         virtual SpellCheck::SpellCheckerService *getSpellCheckerService() const { return m_SpellCheckerService; }
         virtual MetadataIO::BackupSaverService *getBackupSaverService() const { return m_MetadataSaverService; }
         virtual UndoRedo::UndoRedoManager *getUndoRedoManager() const { return m_UndoRedoManager; }
+
+#ifdef INTEGRATION_TESTS
+        virtual MetadataIO::MetadataIOCoordinator *getMetadataIOCoordinator() const { return m_MetadataIOCoordinator; }
+        virtual Models::FilteredArtItemsProxyModel *getFilteredArtItemsModel() const { return m_FilteredItemsModel; }
+        virtual SpellCheck::SpellCheckSuggestionModel *getSpellSuggestionsModel() const { return m_SpellCheckSuggestionModel; }
+        virtual Models::CombinedArtworksModel *getCombinedArtworksModel() const { return m_CombinedArtworksModel; }
+        virtual Models::ZipArchiver *getZipArchiver() const { return m_ZipArchiver; }
+#endif
 
     private:
         Models::ArtworksRepository *m_ArtworksRepository;
@@ -244,6 +259,10 @@ namespace Commands {
 
         QVector<Common::IServiceBase<Warnings::IWarningsCheckable> *> m_WarningsCheckers;
         QVector<Helpers::IFileNotAvailableModel*> m_AvailabilityListeners;
+#ifdef QT_DEBUG
+        QStringList m_InitialImagesToOpen;
+        QStringList m_InitialVectorsToOpen;
+#endif
 
         volatile bool m_AfterInitCalled;
     };

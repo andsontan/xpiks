@@ -59,6 +59,9 @@ namespace SpellCheck {
 
     public:
         void setupModel(SpellCheck::ISpellCheckable *item, int index, int flags);
+#ifdef INTEGRATION_TESTS
+        SpellSuggestionsItem *getItem(int i) const { return m_SuggestionsList.at(i); }
+#endif
 
     private:
         QVector<SpellSuggestionsItem *> setupSuggestions(const QVector<SpellSuggestionsItem *> &items);

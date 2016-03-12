@@ -32,6 +32,7 @@ import "Components"
 import "StyledControls"
 import "Dialogs"
 import "Common.js" as Common
+import "Constants/UIConfig.js" as UIConfig
 
 ApplicationWindow {
     id: applicationWindow
@@ -1514,7 +1515,7 @@ ApplicationWindow {
                                                         height: descriptionFlick.height
                                                         text: description
                                                         focus: true
-                                                        font.pixelSize: 12 * settingsModel.keywordSizeScale
+                                                        font.pixelSize: UIConfig.fontPixelSize * settingsModel.keywordSizeScale
                                                         color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.defaultInputBackground
                                                         onTextChanged: model.editdescription = text
 
@@ -1592,7 +1593,7 @@ ApplicationWindow {
 
                                                     StyledTextEdit {
                                                         id: titleTextInput
-                                                        font.pixelSize: 12 * settingsModel.keywordSizeScale
+                                                        font.pixelSize: UIConfig.fontPixelSize * settingsModel.keywordSizeScale
                                                         width: paintedWidth > titleFlick.width ? paintedWidth : titleFlick.width
                                                         height: titleFlick.height
                                                         text: title
