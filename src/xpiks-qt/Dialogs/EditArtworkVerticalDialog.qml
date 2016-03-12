@@ -115,6 +115,8 @@ Item {
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
 
+            property var keywordsModel: combinedArtworks.getKeywordsModel()
+
             Rectangle {
                 id: boundsRect
                 color: Colors.defaultControlColor
@@ -473,13 +475,9 @@ Item {
                     width: parent.width
                     spacing:5
 
-                    Item {
-                        Layout.fillWidth: true
-                    }
-
                     StyledText {
                         text: i18.n + qsTr("Fix spelling")
-                        enabled: keywordsWrapper.keywordsModel ? keywordsWrapper.keywordsModel.hasSpellErrors : false
+                        enabled: dialogWindow.keywordsModel ? dialogWindow.keywordsModel.hasSpellErrors : false
                         color: enabled ? (fixSpellingMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor) : Colors.defaultInputBackground
 
                         MouseArea {
@@ -557,6 +555,10 @@ Item {
                             cursorShape: Qt.PointingHandCursor
                             onClicked: clipboard.setText(combinedArtworks.getKeywordsString())
                         }
+                    }
+
+                    Item {
+                        Layout.fillWidth: true
                     }
                 }
 

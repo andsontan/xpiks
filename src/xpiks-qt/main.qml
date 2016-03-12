@@ -1407,6 +1407,7 @@ ApplicationWindow {
                                                 color: moreInfoMA.pressed ? Colors.defaultLightColor : Colors.defaultInputBackground
                                                 horizontalAlignment: Text.AlignHCenter
                                                 text: filename.split(/[\\/]/).pop()
+                                                font.pixelSize: 12
 
                                                 MouseArea {
                                                     id: moreInfoMA
