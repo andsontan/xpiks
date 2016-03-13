@@ -62,6 +62,7 @@ Flickable {
     signal backTabPressed();
     signal tabPressed();
     signal editActivated();
+    signal clickedInside()
 
     function activateEdit() {
         if (editEnabled && !nextTagTextInput.activeFocus) {
@@ -69,6 +70,8 @@ Flickable {
             nextTagTextInput.forceActiveFocus()
             editActivated();
         }
+
+        clickedInside()
     }
 
     function getEditedText() {

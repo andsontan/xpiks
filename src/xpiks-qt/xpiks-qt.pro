@@ -78,7 +78,8 @@ SOURCES += main.cpp \
     Warnings/warningsmodel.cpp \
     Models/languagesmodel.cpp \
     Conectivity/conectivityhelpers.cpp \
-    Helpers/filterhelpers.cpp
+    Helpers/filterhelpers.cpp \
+    QMLExtensions/triangleelement.cpp
 
 RESOURCES += qml.qrc
 
@@ -209,7 +210,8 @@ HEADERS += \
     Conectivity/conectivityhelpers.h \
     Conectivity/uploadbatch.h \
     Helpers/filterhelpers.h \
-    Conectivity/iftpcoordinator.h
+    Conectivity/iftpcoordinator.h \
+    QMLExtensions/triangleelement.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
@@ -263,7 +265,8 @@ DISTFILES += \
     Components/LayoutButton.qml \
     Graphics/vector-icon.svg \
     Constants/UIConfig.js \
-    Components/SelectedIcon.qml
+    Components/SelectedIcon.qml \
+    Components/CustomComboBox.qml
 
 lupdate_only {
 SOURCES = *.qml \

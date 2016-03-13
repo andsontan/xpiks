@@ -44,6 +44,7 @@
 #include "SpellCheck/spellcheckerservice.h"
 #include "Models/recentdirectoriesmodel.h"
 #include "MetadataIO/backupsaverservice.h"
+#include "QMLExtensions/triangleelement.h"
 #include "Suggestion/keywordssuggestor.h"
 #include "Models/combinedartworksmodel.h"
 #include "Conectivity/telemetryservice.h"
@@ -324,6 +325,7 @@ int main(int argc, char *argv[]) {
     languagesModel.initFirstLanguage();
 
     qmlRegisterType<Helpers::ClipboardHelper>("xpiks", 1, 0, "ClipboardHelper");
+    qmlRegisterType<QMLExtensions::TriangleElement>("xpiks", 1, 0, "TriangleElement");
 
     QQmlApplicationEngine engine;
     Helpers::GlobalImageProvider *globalProvider = new Helpers::GlobalImageProvider(QQmlImageProviderBase::Image);

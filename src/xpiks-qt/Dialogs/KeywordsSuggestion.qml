@@ -87,6 +87,8 @@ Item {
                 var tmp = mapToItem(keywordsSuggestionComponent, mouse.x, mouse.y);
                 old_x = tmp.x;
                 old_y = tmp.y;
+
+                sourceComboBox.closePopup()
             }
 
             onPositionChanged: {
@@ -106,6 +108,7 @@ Item {
             color: Colors.selectedArtworkColor
             anchors.horizontalCenter: parent.horizontalCenter
             Component.onCompleted: anchors.horizontalCenter = undefined
+            z: 1000
 
             RowLayout {
                 id: searchRow
@@ -117,6 +120,7 @@ Item {
                 anchors.rightMargin: 20
                 height: 24
                 spacing: 20
+                z: 15000
 
                 StyledInputHost {
                     border.width: queryText.activeFocus ? 1 : 0
@@ -146,7 +150,75 @@ Item {
                     Layout.fillWidth: true
                 }
 
-                StyledCheckbox {
+                CustomComboBox {
+                    id: sourceComboBox
+                    width: 150
+                    height: 24
+
+                    model: ListModel {
+                        ListElement {
+                            text: "Item 1"
+                        }
+
+                        ListElement {
+                            text: "Item 2"
+                        }
+
+                        ListElement {
+                            text: "Item 3"
+                        }
+
+                        ListElement {
+                            text: "Item 1"
+                        }
+
+                        ListElement {
+                            text: "Item 2"
+                        }
+
+                        ListElement {
+                            text: "Item 3"
+                        }
+
+                        ListElement {
+                            text: "Item 1"
+                        }
+
+                        ListElement {
+                            text: "Item 2"
+                        }
+
+                        ListElement {
+                            text: "Item 3"
+                        }
+
+                        ListElement {
+                            text: "Item 1"
+                        }
+
+                        ListElement {
+                            text: "Item 2"
+                        }
+
+                        ListElement {
+                            text: "Item 3"
+                        }
+
+                        ListElement {
+                            text: "Item 1"
+                        }
+
+                        ListElement {
+                            text: "Item 2"
+                        }
+
+                        ListElement {
+                            text: "Item 3"
+                        }
+                    }
+                }
+
+                /*StyledCheckbox {
                     id: searchUsingAndCheckbox
                     text: i18.n + qsTr("Use only local source")
                     onCheckedChanged: {
@@ -154,7 +226,7 @@ Item {
                     }
 
                     Component.onCompleted: checked = keywordsSuggestor.useLocal
-                }
+                }*/
             }
 
             Rectangle {
@@ -178,6 +250,13 @@ Item {
                     enabled: !keywordsSuggestor.isInProgress
                     flickableDirection: Flickable.VerticalFlick
                     boundsBehavior: Flickable.StopAtBounds
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            sourceComboBox.closePopup()
+                        }
+                    }
 
                     Flow {
                         id: flow
@@ -226,6 +305,7 @@ Item {
                                     hoverEnabled: true
                                     onClicked: {
                                         keywordsSuggestor.setArtworkSelected(delegateIndex, !isselected)
+                                        sourceComboBox.closePopup()
                                     }
                                 }
                             }
@@ -255,6 +335,13 @@ Item {
                         anchors.centerIn: parent
                         text: i18.n + qsTr("No results found")
                         color: Colors.selectedMetadataColor
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            sourceComboBox.closePopup()
+                        }
                     }
                 }
 
@@ -334,6 +421,10 @@ Item {
                         onTagsPasted: {
                             //suggestedKeywordsWrapper.pasteKeywords(tagsList)
                         }
+
+                        onClickedInside: {
+                            sourceComboBox.closePopup()
+                        }
                     }
 
                     CustomScrollbar {
@@ -405,6 +496,10 @@ Item {
 
                         onTagsPasted: {
                             //keywordsWrapper.pasteKeywords(tagsList)
+                        }
+
+                        onClickedInside: {
+                            sourceComboBox.closePopup()
                         }
                     }
 
