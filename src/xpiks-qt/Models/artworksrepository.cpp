@@ -229,7 +229,7 @@ namespace Models {
         return exists;
     }
 
-    void ArtworksRepository::checkfileUnavailable(const QString & path){
+    void ArtworksRepository::checkFileUnavailable(const QString & path){
      QFileInfo fi(path);
      if (!fi.exists()){
          m_Mutex.lock();

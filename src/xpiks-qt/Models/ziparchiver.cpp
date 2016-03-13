@@ -102,17 +102,17 @@ namespace Models {
     }
 
     void ZipArchiver::removeUnavailableItems(){
-        const QVector<ArtworkMetadata*> & ArtworksList_old=getArtworkList();
-        QVector<ArtworkMetadata*> ArtworksList_new;
-        int size = ArtworksList_old.size();
+        const QVector<ArtworkMetadata*> & ArtworksListOld=getArtworkList();
+        QVector<ArtworkMetadata*> ArtworksListNew;
+        int size = ArtworksListOld.size();
         for (int i = 0; i < size; ++i){
-            ArtworkMetadata* ArtItemInfoElement=ArtworksList_old[i];
-            if (!ArtItemInfoElement->getIsRemoved())
-                ArtworksList_new.append(ArtItemInfoElement);
+            ArtworkMetadata* ArtItemInfoElement=ArtworksListOld[i];
+            if (!ArtItemInfoElement->getIsUnavailable())
+                ArtworksListNew.append(ArtItemInfoElement);
         }
 
-        setArtworks(ArtworksList_new);
-        if (ArtworksList_new.size() == 0){
+        setArtworks(ArtworksListNew);
+        if (ArtworksListNew.size() == 0){
             emit closeWindow();
          }
         emit numberItemsChanged();

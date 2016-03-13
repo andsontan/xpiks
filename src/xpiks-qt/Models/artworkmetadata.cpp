@@ -37,7 +37,7 @@ namespace Models {
         m_ArtworkFilepath(filepath),
         m_ID(ID),
         m_IsModified(false),
-        m_IsRemoved(false),
+        m_IsUnavailable(false),
         m_IsSelected(false),
         m_IsInitialized(false),
         m_HasAttachedVector(false)

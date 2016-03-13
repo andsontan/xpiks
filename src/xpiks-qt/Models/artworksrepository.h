@@ -42,7 +42,7 @@ namespace Models {
             AbstractListModel(parent)
         {
             QObject::connect(&m_FilesWatcher, SIGNAL(fileChanged(const QString &)),
-                         this, SLOT(checkfileUnavailable(const QString &) ) );
+                         this, SLOT(checkFileUnavailable(const QString &) ) );
             m_Timer.setInterval(1000); //1 sec
             m_Timer.setSingleShot(true); //single shot
             QObject::connect(&m_Timer, SIGNAL(timeout()), this, SLOT(onTimer()));
@@ -58,9 +58,9 @@ namespace Models {
             m_FilesSet(copy.m_FilesSet)
         {
 
-            m_FilesWatcher.addPaths(copy.m_DirectoriesList);
+            m_FilesWatcher.addPaths(QList<QString>::fromSet(copy.m_FilesSet));
             QObject::connect(&m_FilesWatcher, SIGNAL(fileChanged(const QString &)),
-                          this, SLOT(checkfileUnavailable(const QString &) ) );
+                          this, SLOT(checkFileUnavailable(const QString &) ) );
             m_Timer.setInterval(1000); //1 sec
             m_Timer.setSingleShot(true); //single shot
             QObject::connect(&m_Timer, SIGNAL(timeout()), this, SLOT(onTimer()));
@@ -95,7 +95,8 @@ namespace Models {
 
     public slots:
         void fileSelectedChanged(const QString &filepath, bool isSelected) { setFileSelected(filepath, isSelected); }
-        void checkfileUnavailable(const QString & path);
+    private slots:
+        void checkFileUnavailable(const QString & path);
         void onTimer();
     public:
         bool accountFile(const QString &filepath);
@@ -127,14 +128,8 @@ namespace Models {
             emit artworksSourcesCountChanged();
         }
 
-        void removeFilesAndEmitSignal(int num){
-            size_t k=num;
-            QSet<QString>::iterator begin = m_FilesSet.begin();
-            QSet<QString>::iterator end = m_FilesSet.end();
-
-            for (QSet<QString>::iterator it = begin; ((it!=end) && (k--)); ++it){
-                m_UnavailableFiles.insert(*it);
-            }
+        void removeFileAndEmitSignal(){
+            m_UnavailableFiles.insert(*m_FilesSet.begin());
             emit fileUnavailable();
         }
 

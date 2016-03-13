@@ -172,7 +172,7 @@ namespace Models {
 
     private:
         void doRemoveItemsAtIndices(QVector<int> &indicesToRemove);
-        void doRemoveItemsInRanges(const QVector<QPair<int, int> > &rangesToRemove,bool isUndoable=true);
+        void doRemoveItemsInRanges(const QVector<QPair<int, int> > &rangesToRemove);
         void getSelectedItemsIndices(QVector<int> &indices);
 
     private:

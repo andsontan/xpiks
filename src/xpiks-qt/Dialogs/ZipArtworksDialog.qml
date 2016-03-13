@@ -133,7 +133,7 @@ Item {
                             onNumberItemsChanged: {
                                textItemsAvailable.originalText=zipArchiver.itemsCount == 1 ? qsTr("1 artwork") : qsTr("%1 artworks").arg(zipArchiver.itemsCount)
                                textItemsAvailable.text=i18.n + originalText
-                            y}
+                            }
                        }
                     }
                 }

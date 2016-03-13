@@ -432,7 +432,7 @@ namespace Models {
         QVector<int> indicesToRemove;
         for (int i= 0; i<m_ArtworksList.size(); i++){
             ArtItemInfo* ArtItemInfoElement=m_ArtworksList[i];
-            if (ArtItemInfoElement->getOrigin()->getIsRemoved()){
+            if (ArtItemInfoElement->getOrigin()->getIsUnavailable()){
                 indicesToRemove.append(i);
             }
          }

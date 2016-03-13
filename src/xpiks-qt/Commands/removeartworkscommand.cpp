@@ -56,15 +56,19 @@ namespace Commands {
             for (int i = first; i <= last; ++i) {
                 Models::ArtworkMetadata *metadata = artItemsModel->getArtwork(i);
                 if (metadata != NULL) {
-                    const QString &filepath = metadata->getFilepath();
                     removedItemsIndices.append(i);
-                    removedItemsFilepathes.append(filepath);
 
-                    if (metadata->hasVectorAttached()) {
-                        removedAttachedVectors.append(metadata->getAttachedVectorPath());
-                    } else {
-                        removedAttachedVectors.append("");
+                    if (!artItemsModel->getArtwork(i)->getIsUnavailable()){
+                        const QString &filepath = metadata->getFilepath();
+                        removedItemsFilepathes.append(filepath);
+
+                        if (metadata->hasVectorAttached()) {
+                            removedAttachedVectors.append(metadata->getAttachedVectorPath());
+                        } else {
+                            removedAttachedVectors.append("");
+                        }
                     }
+
                 }
             }
         }
@@ -84,7 +88,7 @@ namespace Commands {
 
             artItemsModel->updateModifiedCount();
 
-            if (m_IsUndoable){
+            if (!removedItemsFilepathes.empty()){
                 UndoRedo::RemoveArtworksHistoryItem *removeArtworksItem =
                         new UndoRedo::RemoveArtworksHistoryItem(removedItemsIndices,
                                                             removedItemsFilepathes,

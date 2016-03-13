@@ -115,6 +115,7 @@ namespace Models {
         void changeKeywordsChanged();
         void changeTitleChanged();
         void appendKeywordsChanged();
+        void artworkUnavailable(int index);
         void closeWindow();
 
     public:
@@ -163,6 +164,7 @@ namespace Models {
 
     private slots:
         void spellCheckErrorsChangedHandler();
+
 
     public:
         enum CombinedArtworksModelRoles {

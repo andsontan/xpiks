@@ -844,8 +844,8 @@ namespace Models {
         doRemoveItemsInRanges(rangesToRemove);
     }
 
-    void ArtItemsModel::doRemoveItemsInRanges(const QVector<QPair<int, int> > &rangesToRemove, bool isUndoable) {
-        Commands::RemoveArtworksCommand *removeArtworksCommand = new Commands::RemoveArtworksCommand(rangesToRemove,isUndoable);
+    void ArtItemsModel::doRemoveItemsInRanges(const QVector<QPair<int, int> > &rangesToRemove) {
+        Commands::RemoveArtworksCommand *removeArtworksCommand = new Commands::RemoveArtworksCommand(rangesToRemove);
         Commands::ICommandResult *result = m_CommandManager->processCommand(removeArtworksCommand);
         delete result;
     }
@@ -869,9 +869,10 @@ namespace Models {
         Models::ArtworksRepository * artworksRepository =m_CommandManager->getArtworksRepository();
         int count = m_ArtworkList.length();
         for (int i = 0; i < count; ++i) {
-            QString path=m_ArtworkList.at(i)->getFilepath();
+            ArtworkMetadata* artwork = m_ArtworkList.at(i);
+            const QString & path = artwork->getFilepath();
             if (artworksRepository->isFileUnavailable(path)) {
-                m_ArtworkList.at(i)->setRemoved();
+                artwork->setUnavailable();
                 artworksRepository->removeFromDeletedList(path);
             }
         }
@@ -884,11 +885,11 @@ namespace Models {
 
         int count = m_ArtworkList.length();
         for (int i = 0; i < count; ++i) {
-            if (m_ArtworkList.at(i)->getIsRemoved())
+            if (m_ArtworkList.at(i)->getIsUnavailable())
                 indicesToRemove.append(i);
                 emit fileUnavailable(i);
             }
         Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
-        doRemoveItemsInRanges(rangesToRemove,0);
+        doRemoveItemsInRanges(rangesToRemove);
     }
 }

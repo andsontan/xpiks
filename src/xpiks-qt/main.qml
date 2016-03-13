@@ -443,7 +443,6 @@ ApplicationWindow {
         onYes: {
             helpersWrapper.updateAllAfterDelete()
         }
-        Component.onCompleted: visible = false
     }
 
     MessageDialog {
@@ -575,7 +574,6 @@ ApplicationWindow {
         target: artItemsModel
         onFilesUnavaliable: {
                 console.debug("Got FilesUnavailable signal")
-                selectAllCheckbox.checked = filteredArtItemsModel.selectedArtworksCount > 0
                 unavailableFilesDetected.open()
             }
         onArtworksAdded: {
