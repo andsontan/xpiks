@@ -4,7 +4,6 @@
 
 #include "../../xpiks-qt/SpellCheck/spellchecksuggestionmodel.h"
 #include "../../xpiks-qt/Models/filteredartitemsproxymodel.h"
-#include "../../xpiks-qt/Suggestion/suggestionqueryengine.h"
 #include "../../xpiks-qt/MetadataIO/metadataiocoordinator.h"
 #include "../../xpiks-qt/Conectivity/analyticsuserevent.h"
 #include "../../xpiks-qt/SpellCheck/spellcheckerservice.h"
@@ -94,8 +93,7 @@ int main(int argc, char *argv[]) {
     Encryption::SecretsManager secretsManager;
     UndoRedo::UndoRedoManager undoRedoManager;
     Models::ZipArchiver zipArchiver;
-    Suggestion::KeywordsSuggestor keywordsSuggestor;
-    keywordsSuggestor.setLocalLibrary(&localLibrary);
+    Suggestion::KeywordsSuggestor keywordsSuggestor(&localLibrary);
     Models::FilteredArtItemsProxyModel filteredArtItemsModel;
     filteredArtItemsModel.setSourceModel(&artItemsModel);
     Models::RecentDirectoriesModel recentDirectorieModel;
