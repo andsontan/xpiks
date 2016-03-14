@@ -175,7 +175,7 @@ Item {
         Rectangle {
             id: dialogWindow
             width: 610
-            height: Qt.platform.os == "windows" ? 470 : (Qt.platform.os == "linux" ? 470 : 450)
+            height: Qt.platform.os == "windows" ? 470 : (Qt.platform.os == "linux" ? 475 : 450)
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
