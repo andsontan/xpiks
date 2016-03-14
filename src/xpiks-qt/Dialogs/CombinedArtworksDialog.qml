@@ -132,7 +132,7 @@ Item {
         Rectangle {
             id: dialogWindow
             width: 730
-            height: 645
+            height: Qt.platform.os === "windows" ? 655 : 645
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
@@ -651,7 +651,7 @@ Item {
 
                 RowLayout {
                     width: parent.width
-                    height: 200
+                    height: Qt.platform.os === "windows" ? 205 : 200
                     spacing: 0
 
                     Item {
