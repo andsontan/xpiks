@@ -19,41 +19,40 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef LIBRARYQUERYWORKER_H
-#define LIBRARYQUERYWORKER_H
+#ifndef ISUGGESTIONQUERYENGINE_H
+#define ISUGGESTIONQUERYENGINE_H
 
-#include <QObject>
-#include <QVector>
 #include <QStringList>
+#include <QVector>
+#include <QObject>
+#include "suggestionartwork.h"
 
 namespace Suggestion {
-    class LocalLibrary;
-    class SuggestionArtwork;
 
-    class LibraryQueryWorker : public QObject
-    {
+    class SuggestionQueryEngineBase: public QObject {
         Q_OBJECT
     public:
-        LibraryQueryWorker(Suggestion::LocalLibrary *localLibrary, const QStringList &query, int maxResults);
+        virtual ~SuggestionQueryEngineBase() { }
 
-        void doShutdown() { emit stopped(); }
-        const QVector<SuggestionArtwork*> &getResults() const { return m_Results; }
+        virtual void submitQuery(const QStringList &queryKeywords) = 0;
+        virtual QString getName() const = 0;
+
+    public:
+        void cancelQueries() { emit cancelAllQueries(); }
+        const QVector<SuggestionArtwork *> &getLastResults() const { return m_LastResults; }
+
+        void setResults(const QVector<SuggestionArtwork *> &results) {
+            m_LastResults.clear();
+            m_LastResults.append(results);
+        }
 
     signals:
-        void stopped();
-        void resultsFound();
-
-    public slots:
-        void process();
-        void cancel();
+        void resultsAvailable();
+        void cancelAllQueries();
 
     private:
-        Suggestion::LocalLibrary *m_LocalLibrary;
-        QVector<SuggestionArtwork *> m_Results;
-        QStringList m_Query;
-        int m_MaxResults;
-        volatile bool m_Cancel;
+        QVector<SuggestionArtwork *> m_LastResults;
     };
 }
 
-#endif // LIBRARYQUERYWORKER_H
+#endif // ISUGGESTIONQUERYENGINE_H

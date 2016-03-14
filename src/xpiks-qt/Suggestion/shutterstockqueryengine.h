@@ -27,30 +27,25 @@
 #include <QNetworkReply>
 #include <QStringList>
 #include <QJsonArray>
+#include "suggestionqueryenginebase.h"
 
 namespace Suggestion {
     class KeywordsSuggestor;
     class LocalLibrary;
     class SuggestionArtwork;
 
-    class SuggestionQueryEngine : public QObject
+    class ShutterstockQueryEngine : public SuggestionQueryEngineBase
     {
         Q_OBJECT
     public:
-        SuggestionQueryEngine(KeywordsSuggestor *keywordsSuggestor);
+        ShutterstockQueryEngine();
 
     public:
-        void submitQuery(const QStringList &queryKeywords);
-        void submitLocalQuery(LocalLibrary *localLibrary, const QStringList &queryKeywords);
-        void cancelQueries();
+        virtual void submitQuery(const QStringList &queryKeywords);
+        virtual QString getName() const { return tr("Shutterstock"); }
 
     private slots:
         void replyReceived(QNetworkReply *networkReply);
-        void artworksFound(QVector<SuggestionArtwork *> *suggestions);
-
-    signals:
-        void searchResultsRetrieved(const QVector<SuggestionArtwork*> &artworks);
-        void cancelAllQueries();
 
     private:
         void parseResponse(const QJsonArray &jsonArray, QVector<SuggestionArtwork *> &suggestionArtworks);
@@ -58,7 +53,6 @@ namespace Suggestion {
 
     private:
         QNetworkAccessManager m_NetworkManager;
-        KeywordsSuggestor *m_Suggestor;
         QString m_ClientId;
         QString m_ClientSecret;
     };

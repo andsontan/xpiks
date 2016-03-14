@@ -38,7 +38,6 @@
 //-------------------------------------
 #include "SpellCheck/spellchecksuggestionmodel.h"
 #include "Models/filteredartitemsproxymodel.h"
-#include "Suggestion/suggestionqueryengine.h"
 #include "MetadataIO/metadataiocoordinator.h"
 #include "Conectivity/analyticsuserevent.h"
 #include "SpellCheck/spellcheckerservice.h"
@@ -259,8 +258,7 @@ int main(int argc, char *argv[]) {
     Encryption::SecretsManager secretsManager;
     UndoRedo::UndoRedoManager undoRedoManager;
     Models::ZipArchiver zipArchiver;
-    Suggestion::KeywordsSuggestor keywordsSuggestor;
-    keywordsSuggestor.setLocalLibrary(&localLibrary);
+    Suggestion::KeywordsSuggestor keywordsSuggestor(&localLibrary);
     Models::FilteredArtItemsProxyModel filteredArtItemsModel;
     filteredArtItemsModel.setSourceModel(&artItemsModel);
     Models::RecentDirectoriesModel recentDirectorieModel;

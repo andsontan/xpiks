@@ -38,9 +38,8 @@ namespace QMLExtensions {
         m_Material.setColor(m_Color);
     }
 
-    QSGNode* TriangleElement::updatePaintNode(QSGNode* n, UpdatePaintNodeData*)
-    {
-        if (!n) {
+    QSGNode* TriangleElement::updatePaintNode(QSGNode* n, UpdatePaintNodeData*) {
+        if (n == NULL) {
             n = new QSGNode;
         }
 
@@ -72,37 +71,7 @@ namespace QMLExtensions {
         return n;
     }
 
-    /*void TriangleElement::paint(QPainter *painter) {
-        QRectF rect = boundingRect();
-        QPolygonF triangle;
-
-        if (m_IsFlipped) {
-            QPointF topApex(rect.bottomLeft());
-            qreal middle = rect.width() / 2.0;
-            topApex.setX(topApex.x() + middle);
-
-            QPointF bottomLeft(rect.topLeft());
-            QPointF bottomRight(rect.topRight());
-
-            triangle << bottomLeft << topApex << bottomRight;
-        } else {
-            QPointF topApex(rect.topLeft());
-            qreal middle = rect.width() / 2.0;
-            topApex.setX(topApex.x() + middle);
-
-            QPointF bottomLeft(rect.bottomLeft());
-            QPointF bottomRight(rect.bottomRight());
-
-            triangle << bottomLeft << topApex << bottomRight;
-        }
-
-        painter->setBrush(m_Brush);
-        painter->setRenderHints(QPainter::Antialiasing, true);
-        painter->drawPolygon(triangle, Qt::WindingFill);
-    }*/
-
     void TriangleElement::setColor(const QColor &color) {
-        qDebug() << "Setting" << color.name();
         if (m_Color != color) {
             m_Color = color;
             m_Material.setColor(m_Color);

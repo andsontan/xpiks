@@ -33,18 +33,14 @@ namespace Suggestion {
     }
 
     void LibraryQueryWorker::process() {
-        QVector<SuggestionArtwork *> *results = new QVector<SuggestionArtwork *>();
-
-        m_LocalLibrary->searchArtworks(m_Query, *results, m_MaxResults);
+        m_LocalLibrary->searchArtworks(m_Query, m_Results, m_MaxResults);
 
         if (m_Cancel) {
-            qDeleteAll(*results);
-            delete results;
+            qDeleteAll(m_Results);
+            doShutdown();
         } else {
-            emit resultsFound(results);
+            emit resultsFound();
         }
-
-        emit stopped();
     }
 
     void LibraryQueryWorker::cancel() {

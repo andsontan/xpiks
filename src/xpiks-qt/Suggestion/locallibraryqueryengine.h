@@ -19,41 +19,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef LIBRARYQUERYWORKER_H
-#define LIBRARYQUERYWORKER_H
+#ifndef LOCALLIBRARYQUERYENGINE_H
+#define LOCALLIBRARYQUERYENGINE_H
 
 #include <QObject>
-#include <QVector>
-#include <QStringList>
+#include <QString>
+#include "suggestionqueryenginebase.h"
 
 namespace Suggestion {
     class LocalLibrary;
-    class SuggestionArtwork;
 
-    class LibraryQueryWorker : public QObject
+    class LocalLibraryQueryEngine : public SuggestionQueryEngineBase
     {
         Q_OBJECT
     public:
-        LibraryQueryWorker(Suggestion::LocalLibrary *localLibrary, const QStringList &query, int maxResults);
+        LocalLibraryQueryEngine(LocalLibrary *localLibrary);
 
-        void doShutdown() { emit stopped(); }
-        const QVector<SuggestionArtwork*> &getResults() const { return m_Results; }
+        // ISuggestionQueryEngine interface
+    public:
+        virtual void submitQuery(const QStringList &queryKeywords);
+        virtual QString getName() const { return tr("Local files"); }
 
-    signals:
-        void stopped();
-        void resultsFound();
-
-    public slots:
-        void process();
-        void cancel();
+    private slots:
+        void resultsFoundHandler();
 
     private:
-        Suggestion::LocalLibrary *m_LocalLibrary;
-        QVector<SuggestionArtwork *> m_Results;
-        QStringList m_Query;
-        int m_MaxResults;
-        volatile bool m_Cancel;
+        LocalLibrary *m_LocalLibrary;
     };
 }
 
-#endif // LIBRARYQUERYWORKER_H
+#endif // LOCALLIBRARYQUERYENGINE_H

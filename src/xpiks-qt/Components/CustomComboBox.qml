@@ -25,11 +25,12 @@ import "../Constants"
 import "../Constants/Colors.js" as Colors
 import "../StyledControls"
 import xpiks 1.0
+import QtGraphicalEffects 1.0
 
 Item {
     id: comboBox
-    property color highlightedItemColor: Colors.selectedMetadataColor
-    property bool showColorSign: false
+    property color highlightedItemColor: Colors.artworkActiveColor
+    property bool showColorSign: true
     property double headerHeight: comboBox.height
     property double itemHeight: comboBox.height
     property double maxHeight: 150
@@ -39,6 +40,17 @@ Item {
 
     function closePopup() {
         comboBox.state = ""
+    }
+
+    RectangularGlow {
+        anchors.fill: dropDown
+        anchors.topMargin: glowRadius / 2
+        visible: dropDown.visible
+        height: dropDown.height
+        glowRadius: 6
+        spread: 0.1
+        color: Colors.defaultDarkColor
+        cornerRadius: glowRadius
     }
 
     Item {
@@ -71,7 +83,7 @@ Item {
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 anchors.left: parent.left
-                anchors.leftMargin: 5
+                anchors.leftMargin: 10
                 verticalAlignment: TextInput.AlignVCenter
             }
         }
@@ -81,13 +93,13 @@ Item {
             anchors.right: parent.right
             anchors.top: parent.top
             anchors.bottom: parent.bottom
-            width: 15
-            color: Colors.artworkActiveColor
+            width: 20
+            color: Colors.artworkBackground
 
             TriangleElement {
                 anchors.centerIn: parent
                 anchors.verticalCenterOffset: isFlipped ? height*0.3 : 0
-                color: Colors.checkboxCheckedColor
+                color: (headerMA.containsMouse || comboBox.state === "dropDown") ? Colors.defaultLightGrayColor : Colors.defaultInputBackground
                 isFlipped: comboBox.state === ""
                 width: parent.width * 0.6
                 height: width * 0.5
@@ -95,6 +107,8 @@ Item {
         }
 
         MouseArea {
+            id: headerMA
+            hoverEnabled: true
             anchors.fill: parent;
             onClicked: {
                 comboBox.state = comboBox.state === "dropDown" ? "" : "dropDown"
@@ -108,12 +122,9 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: header.bottom
-        color: Colors.itemsSourceBackground
-        anchors.topMargin: 1
+        color: Colors.selectedMetadataColor
         visible: false
         height: 0
-        border.width: 1
-        border.color: Colors.selectedMetadataColor
         focus: true
         clip: true
 
@@ -131,19 +142,33 @@ Item {
             boundsBehavior: Flickable.StopAtBounds
 
             delegate: Rectangle {
+                id: currentDelegate
                 color: itemMA.containsMouse ? Colors.artworkActiveColor : Colors.selectedArtworkColor
                 property var itemText: modelData
+                property bool isCurrentItem: index == comboBox.selectedIndex
+                property bool isLastItem: index == (comboBox.count - 1)
                 anchors.left: parent.left
                 anchors.right: parent.right
-                height: itemHeight
+                height: itemHeight + 1
 
                 StyledText {
                     text: itemText
                     anchors.left: parent.left
                     anchors.verticalCenter: parent.verticalCenter
-                    anchors.leftMargin: 10
-                    color: itemMA.containsMouse ? Colors.checkboxCheckedColor : Colors.defaultLightColor
-                    font.bold: index == comboBox.selectedIndex
+                    anchors.leftMargin: 16
+                    color: itemMA.containsMouse ? Colors.checkboxCheckedColor : (isCurrentItem ? Colors.artworkActiveColor : Colors.defaultLightColor)
+                }
+
+                Rectangle {
+                    visible: !currentDelegate.isLastItem
+                    enabled: !currentDelegate.isLastItem
+                    height: 1
+                    color: itemMA.containsMouse ? Colors.artworkActiveColor : Colors.selectedMetadataColor
+                    anchors.bottom: parent.bottom
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.leftMargin: 6
+                    anchors.rightMargin: 20
                 }
 
                 MouseArea {
@@ -165,7 +190,7 @@ Item {
 
         CustomScrollbar {
             id: scrollBar
-            visible: comboBox.itemHeight * dropDownItems.count > maxHeight
+            visible: (comboBox.itemHeight + 1) * dropDownItems.count > maxHeight
             anchors.rightMargin: -12
             flickable: dropDownItems
         }
@@ -175,7 +200,7 @@ Item {
         name: "dropDown";
         PropertyChanges {
             target: dropDown;
-            height: (comboBox.itemHeight * dropDownItems.count) > maxHeight ? maxHeight : (comboBox.itemHeight * dropDownItems.count)
+            height: ((comboBox.itemHeight + 1) * dropDownItems.count) > maxHeight ? maxHeight : ((comboBox.itemHeight + 1) * dropDownItems.count)
             visible: true
         }
     }

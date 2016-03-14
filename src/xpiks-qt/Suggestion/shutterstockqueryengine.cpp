@@ -24,7 +24,7 @@
 #include <QJsonObject>
 #include <QByteArray>
 #include <QString>
-#include "suggestionqueryengine.h"
+#include "shutterstockqueryengine.h"
 #include "suggestionartwork.h"
 #include "keywordssuggestor.h"
 #include "../Encryption/aes-qt.h"
@@ -32,13 +32,9 @@
 #include "locallibrary.h"
 #include "../Common/defines.h"
 
-#define MAX_LOCAL_RESULTS 100
-
 namespace Suggestion {
-    SuggestionQueryEngine::SuggestionQueryEngine(KeywordsSuggestor *keywordsSuggestor):
-                    QObject(keywordsSuggestor),
-                    m_NetworkManager(this),
-                    m_Suggestor(keywordsSuggestor)
+    ShutterstockQueryEngine::ShutterstockQueryEngine():
+        m_NetworkManager(this)
     {
         m_ClientId = "28a2a9b917961a0cbc343c81b2dd0f6618377f9210aa3182e5cc9f5588f914d918ede1533c9e06b91769c89e80909743";
         m_ClientSecret = "5092d9a967c2f19b57aac29bc09ac3b9e6ae5baec1a371331b73ff24f1625d95c4f3fef90bdacfbe9b0b3803b48c269192bc55f14bb9c2b5a16d650cd641b746eb384fcf9dbd53a96f1f81215921b04409f3635ecf846ffdf01ee04ba76624c9";
@@ -47,7 +43,7 @@ namespace Suggestion {
                          this, SLOT(replyReceived(QNetworkReply*)));
     }
 
-    void SuggestionQueryEngine::submitQuery(const QStringList &queryKeywords) {
+    void ShutterstockQueryEngine::submitQuery(const QStringList &queryKeywords) {
         LOG_DEBUG << queryKeywords;
         QUrl url = buildQuery(queryKeywords);
         QNetworkRequest request(url);
@@ -64,33 +60,7 @@ namespace Suggestion {
                          reply, SLOT(abort()));
     }
 
-    void SuggestionQueryEngine::submitLocalQuery(LocalLibrary *localLibrary, const QStringList &queryKeywords) {
-        LOG_DEBUG << queryKeywords;
-        LibraryQueryWorker *worker = new LibraryQueryWorker(localLibrary, queryKeywords, MAX_LOCAL_RESULTS);
-        QThread *thread = new QThread();
-        worker->moveToThread(thread);
-
-        QObject::connect(thread, SIGNAL(started()), worker, SLOT(process()));
-        QObject::connect(worker, SIGNAL(stopped()), thread, SLOT(quit()));
-
-        QObject::connect(worker, SIGNAL(stopped()), worker, SLOT(deleteLater()));
-        QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
-
-        QObject::connect(this, SIGNAL(cancelAllQueries()),
-                         worker, SLOT(cancel()));
-
-        QObject::connect(worker, SIGNAL(resultsFound(QVector<SuggestionArtwork*> *)),
-                         this, SLOT(artworksFound(QVector<SuggestionArtwork*> *)));
-
-        thread->start();
-    }
-
-    void SuggestionQueryEngine::cancelQueries() {
-        LOG_DEBUG << "#";
-        emit cancelAllQueries();
-    }
-
-    void SuggestionQueryEngine::replyReceived(QNetworkReply *networkReply) {
+    void ShutterstockQueryEngine::replyReceived(QNetworkReply *networkReply) {
         LOG_DEBUG << "#";
         if (networkReply->error() == QNetworkReply::NoError) {
             QJsonDocument document = QJsonDocument::fromJson(networkReply->readAll());
@@ -100,23 +70,18 @@ namespace Suggestion {
             if (dataValue.isArray()) {
                 QVector<SuggestionArtwork*> suggestionArtworks;
                 parseResponse(dataValue.toArray(), suggestionArtworks);
-                m_Suggestor->setSuggestedArtworks(suggestionArtworks);
+                setResults(suggestionArtworks);
+                emit resultsAvailable();
             }
         } else {
             LOG_WARNING << "error:" << networkReply->errorString();
         }
 
-        m_Suggestor->unsetInProgress();
         networkReply->deleteLater();
     }
 
-    void SuggestionQueryEngine::artworksFound(QVector<SuggestionArtwork *> *suggestions) {
-        LOG_DEBUG << "#";
-        m_Suggestor->setSuggestedArtworks(*suggestions);
-        delete suggestions;
-    }
-
-    void SuggestionQueryEngine::parseResponse(const QJsonArray &jsonArray, QVector<SuggestionArtwork*> &suggestionArtworks) {
+    void ShutterstockQueryEngine::parseResponse(const QJsonArray &jsonArray,
+                                                QVector<SuggestionArtwork*> &suggestionArtworks) {
         LOG_DEBUG << "#";
         foreach (const QJsonValue &value, jsonArray) {
             QJsonObject imageResult = value.toObject();
@@ -143,12 +108,13 @@ namespace Suggestion {
         }
     }
 
-    QUrl SuggestionQueryEngine::buildQuery(const QStringList &queryKeywords) const {
+    QUrl ShutterstockQueryEngine::buildQuery(const QStringList &queryKeywords) const {
         QUrlQuery urlQuery;
 
         urlQuery.addQueryItem("language", "en");
         urlQuery.addQueryItem("view", "full");
         urlQuery.addQueryItem("per_page", "100");
+        urlQuery.addQueryItem("sort", "popular");
         urlQuery.addQueryItem("query", queryKeywords.join(' '));
 
         QUrl url;

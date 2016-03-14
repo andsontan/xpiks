@@ -26,8 +26,34 @@
 #include "suggestionartwork.h"
 #include "../Commands/commandmanager.h"
 #include "../Common/defines.h"
+#include "suggestionqueryenginebase.h"
+#include "shutterstockqueryengine.h"
+#include "locallibraryqueryengine.h"
 
 namespace Suggestion {
+    KeywordsSuggestor::KeywordsSuggestor(LocalLibrary *library, QObject *parent):
+        QAbstractListModel(parent),
+        Common::BaseEntity(),
+        m_LocalLibrary(library),
+        m_SuggestedKeywords(this),
+        m_AllOtherKeywords(this),
+        m_SelectedArtworksCount(0),
+        m_SelectedSourceIndex(0),
+        m_IsInProgress(false)
+    {
+        m_QueryEngines.append(new ShutterstockQueryEngine());
+        m_QueryEngines.append(new LocalLibraryQueryEngine(m_LocalLibrary));
+
+        int length = m_QueryEngines.length();
+        for (int i = 0; i < length; ++i) {
+            SuggestionQueryEngineBase *engine = m_QueryEngines.at(i);
+            m_QueryEnginesNames.append(engine->getName());
+
+            QObject::connect(engine, SIGNAL(resultsAvailable()),
+                             this, SLOT(resultsAvailableHandler()));
+        }
+    }
+
     void KeywordsSuggestor::setSuggestedArtworks(const QVector<SuggestionArtwork *> &suggestedArtworks) {
         LOG_DEBUG << suggestedArtworks.length() << "item(s)";
         m_SelectedArtworksCount = 0;
@@ -54,6 +80,24 @@ namespace Suggestion {
         m_Suggestions.clear();
         endResetModel();
         unsetInProgress();
+    }
+
+    void KeywordsSuggestor::setSelectedSourceIndex(int value) {
+        if (!m_IsInProgress && (value != m_SelectedSourceIndex)) {
+            if (0 <= value &&
+                    value < m_QueryEngines.length()) {
+                LOG_INFO << "Selected query source index:" << value;
+                m_SelectedSourceIndex = value;
+                emit selectedSourceIndexChanged();
+            }
+        }
+    }
+
+    void KeywordsSuggestor::resultsAvailableHandler() {
+        unsetInProgress();
+        SuggestionQueryEngineBase *engine = m_QueryEngines.at(m_SelectedSourceIndex);
+        const QVector<SuggestionArtwork*> &results = engine->getLastResults();
+        setSuggestedArtworks(results);
     }
 
     QString KeywordsSuggestor::removeSuggestedKeywordAt(int keywordIndex) {
@@ -97,14 +141,21 @@ namespace Suggestion {
 
             QStringList searchTerms = searchTerm.split(QChar::Space, QString::SkipEmptyParts);
 
-            if (m_UseLocal) {
-                m_QueryEngine.submitLocalQuery(m_LocalLibrary, searchTerms);
-                m_CommandManager->reportUserAction(Conectivity::UserActionSuggestionLocal);
-            } else {
-                m_QueryEngine.submitQuery(searchTerms);
+            SuggestionQueryEngineBase *engine = m_QueryEngines.at(m_SelectedSourceIndex);
+            engine->submitQuery(searchTerms);
+
+
+            if (dynamic_cast<LocalLibraryQueryEngine*>(engine) == NULL) {
                 m_CommandManager->reportUserAction(Conectivity::UserActionSuggestionRemote);
+            } else {
+                m_CommandManager->reportUserAction(Conectivity::UserActionSuggestionLocal);
             }
         }
+    }
+
+    void KeywordsSuggestor::cancelSearch() {
+        SuggestionQueryEngineBase *engine = m_QueryEngines.at(m_SelectedSourceIndex);
+        engine->cancelQueries();
     }
 
     int KeywordsSuggestor::rowCount(const QModelIndex &parent) const {

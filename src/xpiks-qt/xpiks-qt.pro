@@ -33,7 +33,6 @@ SOURCES += main.cpp \
     Models/ziparchiver.cpp \
     Helpers/ziphelper.cpp \
     Suggestion/keywordssuggestor.cpp \
-    Suggestion/suggestionqueryengine.cpp \
     Models/settingsmodel.cpp \
     Helpers/loggingworker.cpp \
     Helpers/logger.cpp \
@@ -79,7 +78,9 @@ SOURCES += main.cpp \
     Models/languagesmodel.cpp \
     Conectivity/conectivityhelpers.cpp \
     Helpers/filterhelpers.cpp \
-    QMLExtensions/triangleelement.cpp
+    QMLExtensions/triangleelement.cpp \
+    Suggestion/shutterstockqueryengine.cpp \
+    Suggestion/locallibraryqueryengine.cpp
 
 RESOURCES += qml.qrc
 
@@ -144,7 +145,6 @@ HEADERS += \
     Common/basickeywordsmodel.h \
     Suggestion/keywordssuggestor.h \
     Suggestion/suggestionartwork.h \
-    Suggestion/suggestionqueryengine.h \
     Models/settingsmodel.h \
     Helpers/loggingworker.h \
     Common/defines.h \
@@ -209,7 +209,10 @@ HEADERS += \
     Conectivity/uploadbatch.h \
     Helpers/filterhelpers.h \
     Conectivity/iftpcoordinator.h \
-    QMLExtensions/triangleelement.h
+    QMLExtensions/triangleelement.h \
+    Suggestion/shutterstockqueryengine.h \
+    Suggestion/locallibraryqueryengine.h \
+    Suggestion/suggestionqueryenginebase.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

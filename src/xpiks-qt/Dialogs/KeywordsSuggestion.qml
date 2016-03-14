@@ -129,7 +129,7 @@ Item {
 
                     StyledTextInput {
                         id: queryText
-                        width: 380
+                        width: 300
                         height: 24
                         clip: true
                         anchors.left: parent.left
@@ -140,7 +140,7 @@ Item {
 
                 StyledButton {
                     text: i18.n + qsTr("Search")
-                    width: 70
+                    width: 100
                     activeFocusOnPress: true
                     enabled: !keywordsSuggestor.isInProgress
                     onClicked: keywordsSuggestor.searchArtworks(queryText.text)
@@ -152,69 +152,12 @@ Item {
 
                 CustomComboBox {
                     id: sourceComboBox
-                    width: 150
+                    model: keywordsSuggestor.getEngineNames()
+                    width: 200
                     height: 24
 
-                    model: ListModel {
-                        ListElement {
-                            text: "Item 1"
-                        }
-
-                        ListElement {
-                            text: "Item 2"
-                        }
-
-                        ListElement {
-                            text: "Item 3"
-                        }
-
-                        ListElement {
-                            text: "Item 1"
-                        }
-
-                        ListElement {
-                            text: "Item 2"
-                        }
-
-                        ListElement {
-                            text: "Item 3"
-                        }
-
-                        ListElement {
-                            text: "Item 1"
-                        }
-
-                        ListElement {
-                            text: "Item 2"
-                        }
-
-                        ListElement {
-                            text: "Item 3"
-                        }
-
-                        ListElement {
-                            text: "Item 1"
-                        }
-
-                        ListElement {
-                            text: "Item 2"
-                        }
-
-                        ListElement {
-                            text: "Item 3"
-                        }
-
-                        ListElement {
-                            text: "Item 1"
-                        }
-
-                        ListElement {
-                            text: "Item 2"
-                        }
-
-                        ListElement {
-                            text: "Item 3"
-                        }
+                    onComboIndexChanged: {
+                        keywordsSuggestor.selectedSourceIndex = sourceComboBox.selectedIndex
                     }
                 }
 
