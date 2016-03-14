@@ -26,7 +26,7 @@ import "../Constants/UIConfig.js" as UIConfig
 
 TextInput {
     font.family: "Helvetica"
-    font.pixelSize: UIConfig.fontPixelSize
+    font.pixelSize: UIConfig.fontPixelSize * settingsModel.keywordSizeScale
     verticalAlignment: TextInput.AlignVCenter
     selectedTextColor: Colors.defaultLightColor
     selectionColor: Colors.defaultControlColor

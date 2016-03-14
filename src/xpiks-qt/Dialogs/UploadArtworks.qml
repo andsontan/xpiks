@@ -174,8 +174,8 @@ Item {
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
-            width: 600
-            height: Qt.platform.os == "windows" ? 460 : (Qt.platform.os == "linux" ? 470 : 450)
+            width: 610
+            height: Qt.platform.os == "windows" ? 475 : (Qt.platform.os == "linux" ? 470 : 450)
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
@@ -685,7 +685,7 @@ Item {
 
                 RowLayout {
                     height: 24
-                    spacing: 15
+                    spacing: 20
 
                     StyledText {
                         enabled: uploadArtworksComponent.uploadEnabled

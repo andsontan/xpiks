@@ -96,18 +96,22 @@ Item {
         Rectangle {
             id: dialogWindow
             width: 480
-            height: 150
+            height: childrenRect.height + 40
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
 
-            ColumnLayout {
-                spacing: 10
-                anchors.fill: parent
+            Column {
+                spacing: 20
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.top: parent.top
+                height: childrenRect.height
                 anchors.margins: 20
 
                 RowLayout {
-                    Layout.fillWidth: true
+                    anchors.left: parent.left
+                    anchors.right: parent.right
 
                     StyledText {
                         text: i18.n + qsTr("Zip vectors with previews")
@@ -134,7 +138,10 @@ Item {
                 }
 
                 RowLayout {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
                     height: 24
+                    spacing: 20
 
                     Item {
                         Layout.fillWidth: true
@@ -170,10 +177,6 @@ Item {
                                 //}
                             }
                         }
-                    }
-
-                    Item {
-                        width: 10
                     }
 
                     StyledButton {

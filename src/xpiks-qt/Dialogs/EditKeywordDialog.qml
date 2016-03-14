@@ -98,16 +98,19 @@ Item {
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
-            width: 200
-            height: 100
+            width: 240
+            height: childrenRect.height + 40
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
 
-            ColumnLayout {
-                anchors.fill: parent
-                anchors.margins: 15
-                spacing: 10
+            Column {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.top: parent.top
+                height: childrenRect.height
+                anchors.margins: 20
+                spacing: 20
 
                 StyledInputHost {
                     border.width: keywordInput.activeFocus ? 1 : 0
@@ -115,8 +118,8 @@ Item {
 
                     StyledTextInput {
                         id: keywordInput
-                        width: 155
-                        height: 24
+                        width: 185
+                        height: 30
                         clip: true
                         anchors.left: parent.left
                         anchors.leftMargin: 5
@@ -142,17 +145,17 @@ Item {
                 RowLayout {
                     width: parent.width
                     height: 20
-                    spacing: 15
+                    spacing: 20
 
                     StyledButton {
                         text: i18.n + qsTr("Save")
-                        width: 70
+                        width: 90
                         onClicked: submitKeyword()
                     }
 
                     StyledButton {
                         text: i18.n + qsTr("Cancel")
-                        width: 85
+                        width: 90
                         onClicked: closePopup()
                     }
                 }

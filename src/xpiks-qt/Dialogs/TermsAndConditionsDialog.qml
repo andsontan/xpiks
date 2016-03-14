@@ -112,7 +112,6 @@ Item {
                         id: textEdit
                         width: 600
                         text: termsComponent.termsText
-                        font.pixelSize: UIConfig.fontPixelSize*settingsModel.keywordSizeScale
                         wrapMode: TextEdit.Wrap
                         selectionColor: Colors.selectedArtworkColor
                         readOnly: true

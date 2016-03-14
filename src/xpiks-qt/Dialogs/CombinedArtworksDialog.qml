@@ -404,7 +404,6 @@ Item {
                                         focus: true
                                         width: titleFlick.width
                                         height: titleFlick.height
-                                        font.pixelSize: UIConfig.fontPixelSize*settingsModel.keywordSizeScale
                                         text: combinedArtworks.title
                                         onTextChanged: combinedArtworks.title = text
 
@@ -572,7 +571,6 @@ Item {
                                         width: descriptionFlick.width
                                         height: descriptionFlick.height
                                         text: combinedArtworks.description
-                                        font.pixelSize: UIConfig.fontPixelSize*settingsModel.keywordSizeScale
                                         focus: true
                                         property string previousText: text
                                         property int maximumLength: 280

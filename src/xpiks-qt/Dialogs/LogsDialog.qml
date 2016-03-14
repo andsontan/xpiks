@@ -157,7 +157,6 @@ Item {
                         text: logsComponent.logText
                         selectionColor: Colors.selectedArtworkColor
                         readOnly: true
-                        font.pixelSize: UIConfig.fontPixelSize*settingsModel.keywordSizeScale
 
                         Component.onCompleted: {
                             scrollToBottom()
