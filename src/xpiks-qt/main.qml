@@ -1352,20 +1352,19 @@ ApplicationWindow {
                                             }
                                         }
 
-                                        ColumnLayout {
+                                        Item {
                                             anchors.fill: parent
                                             anchors.leftMargin: applicationWindow.listLayout ? 10 : 0
                                             anchors.rightMargin: applicationWindow.listLayout ? 15 : 0
-                                            spacing: 5
 
                                             Item {
-                                                height: 30
-                                            }
-
-                                            Item {
-                                                width: 150
-                                                height: 134
+                                                id: imageHost
+                                                anchors.top: parent.top
+                                                anchors.topMargin: descriptionText.height + 24
                                                 anchors.horizontalCenter: parent.horizontalCenter
+                                                width: 150
+                                                property double desiredHeight: descriptionRect.height + keywordsWrapper.height + keywordsLabel.height + 10
+                                                height: desiredHeight > 150 ? 150 : desiredHeight
 
                                                 Image {
                                                     id: artworkImage
@@ -1403,7 +1402,9 @@ ApplicationWindow {
                                             }
 
                                             StyledText {
-                                                Layout.fillWidth: true
+                                                anchors.top: imageHost.bottom
+                                                anchors.topMargin: 3
+                                                width: parent.width
                                                 elide: Text.ElideMiddle
                                                 color: moreInfoMA.pressed ? Colors.defaultLightColor : Colors.defaultInputBackground
                                                 horizontalAlignment: Text.AlignHCenter
@@ -1423,10 +1424,6 @@ ApplicationWindow {
                                                     }
                                                 }
                                             }
-
-                                            Item {
-                                                Layout.fillHeight: true
-                                            }
                                         }
                                     }
 
@@ -1443,8 +1440,10 @@ ApplicationWindow {
                                         Item {
                                             id: columnLayout
                                             anchors.fill: parent
-                                            anchors.margins: { left: 20; right: 20 }
-                                            property bool isWideEnough: width > 400
+                                            anchors.leftMargin: 20
+                                            anchors.rightMargin: 20
+                                            anchors.topMargin: 20
+                                            property bool isWideEnough: width > 450
 
                                             StyledText {
                                                 id: descriptionText
@@ -1547,7 +1546,7 @@ ApplicationWindow {
                                                 text: descriptionTextInput.length
                                                 anchors.right: descriptionRect.right
                                                 anchors.bottom: descriptionRect.top
-                                                anchors.bottomMargin: 4
+                                                anchors.bottomMargin: 3
                                                 color: rowWrapper.isHighlighted ? Colors.defaultControlColor : Colors.selectedArtworkColor
                                             }
 
@@ -1630,7 +1629,7 @@ ApplicationWindow {
                                                 text: titleTextInput.length
                                                 anchors.right: titleRect.right
                                                 anchors.bottom: titleRect.top
-                                                anchors.bottomMargin: 4
+                                                anchors.bottomMargin: 3
                                                 color: rowWrapper.isHighlighted ? Colors.defaultControlColor : Colors.selectedArtworkColor
                                                 visible: columnLayout.isWideEnough
                                             }
@@ -1759,10 +1758,10 @@ ApplicationWindow {
                                             RowLayout {
                                                 anchors.left: parent.left
                                                 anchors.right: parent.right
+                                                anchors.rightMargin: 3
                                                 anchors.top: keywordsWrapper.bottom
                                                 anchors.topMargin: 3
                                                 spacing: 5
-
 
                                                 StyledText {
                                                     id: plainTextText
