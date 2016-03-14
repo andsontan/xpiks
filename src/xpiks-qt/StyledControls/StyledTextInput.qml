@@ -25,7 +25,7 @@ import "../Constants/Colors.js" as Colors
 import "../Constants/UIConfig.js" as UIConfig
 
 TextInput {
-    font.family: "Helvetica"
+    font.family: Qt.platform.os === "windows" ? "Arial" : "Helvetica"
     font.pixelSize: UIConfig.fontPixelSize * settingsModel.keywordSizeScale
     verticalAlignment: TextInput.AlignVCenter
     selectedTextColor: Colors.defaultLightColor

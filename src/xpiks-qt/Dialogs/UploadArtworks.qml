@@ -175,7 +175,7 @@ Item {
         Rectangle {
             id: dialogWindow
             width: 610
-            height: Qt.platform.os == "windows" ? 475 : (Qt.platform.os == "linux" ? 470 : 450)
+            height: Qt.platform.os == "windows" ? 470 : (Qt.platform.os == "linux" ? 470 : 450)
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
@@ -386,7 +386,7 @@ Item {
                         anchors.leftMargin: 10
                         anchors.left: uploadInfosStack.right
                         anchors.right: parent.right
-                        width: 280
+                        width: 290
                         height: Qt.platform.os == "windows" ? parent.height + 10 : parent.height
 
                         StyledTabView {
@@ -582,7 +582,7 @@ Item {
                                             id: testButton
                                             text: i18.n + qsTr("Test connection")
                                             height: 24
-                                            width: 120
+                                            width: 130
                                             onClicked: {
                                                 testButton.enabled = false
                                                 credentialsStatus.enabled = false

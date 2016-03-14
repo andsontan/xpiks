@@ -26,7 +26,7 @@ import "../Constants/Colors.js" as Colors
 Text {
     color: enabled ? Colors.defaultLightColor : Colors.itemsSourceSelected
     renderType: Text.NativeRendering
-    font.family: "Helvetica"
+    font.family: Qt.platform.os === "windows" ? "Arial" : "Helvetica"
     font.pixelSize: Qt.platform.os === "windows" ? 14 : 13
 }
 
