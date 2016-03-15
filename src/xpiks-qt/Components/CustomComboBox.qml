@@ -127,7 +127,7 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: header.bottom
-        color: Colors.selectedMetadataColor
+        color: Colors.selectedArtworkColor
         visible: false
         height: 0
         focus: true
@@ -142,16 +142,18 @@ Item {
         ListView {
             id: dropDownItems
             anchors.fill: parent
+            anchors.topMargin: 5
+            anchors.bottomMargin: 5
             anchors.rightMargin: scrollBar.visible ? 14 : 0
             anchors.margins: 1
             boundsBehavior: Flickable.StopAtBounds
 
             delegate: Rectangle {
                 id: currentDelegate
-                color: itemMA.containsMouse ? Colors.artworkActiveColor : Colors.selectedArtworkColor
+                color: itemMA.containsMouse ? highlightedItemColor : Colors.selectedArtworkColor
                 property var itemText: modelData
                 property bool isCurrentItem: index == comboBox.selectedIndex
-                property bool isLastItem: index == (comboBox.count - 1)
+                property bool isLastItem: index === (dropDownItems.count - 1)
                 anchors.left: parent.left
                 anchors.right: parent.right
                 height: itemHeight + 1
@@ -161,14 +163,14 @@ Item {
                     anchors.left: parent.left
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.leftMargin: 16
-                    color: itemMA.containsMouse ? Colors.checkboxCheckedColor : (isCurrentItem ? Colors.artworkActiveColor : Colors.defaultLightColor)
+                    color: itemMA.containsMouse ? Colors.checkboxCheckedColor : (isCurrentItem ? highlightedItemColor : Colors.defaultLightColor)
                 }
 
                 Rectangle {
                     visible: !currentDelegate.isLastItem
                     enabled: !currentDelegate.isLastItem
                     height: 1
-                    color: itemMA.containsMouse ? Colors.artworkActiveColor : Colors.selectedMetadataColor
+                    color: itemMA.containsMouse ? highlightedItemColor : Colors.selectedMetadataColor
                     anchors.bottom: parent.bottom
                     anchors.left: parent.left
                     anchors.right: parent.right
@@ -206,7 +208,7 @@ Item {
         name: "dropDown";
         PropertyChanges {
             target: dropDown;
-            height: dropDownItems.count > maxCount ? (maxCount * (comboBox.itemHeight + 1)) : ((comboBox.itemHeight + 1) * dropDownItems.count)
+            height: dropDownItems.count > maxCount ? (maxCount * (comboBox.itemHeight + 1) + 10) : ((comboBox.itemHeight + 1) * dropDownItems.count + 10)
             visible: true
         }
     }
