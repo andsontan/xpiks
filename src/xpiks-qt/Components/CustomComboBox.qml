@@ -43,7 +43,11 @@ Item {
     }
 
     RectangularGlow {
-        anchors.fill: dropDown
+        anchors.left: header.left
+        anchors.right: header.right
+        anchors.top: header.top
+        anchors.bottom: dropDown.bottom
+        anchors.topMargin: glowRadius/2
         anchors.bottomMargin: -glowRadius
         visible: dropDown.visible
         height: dropDown.height
@@ -52,6 +56,71 @@ Item {
         color: Colors.defaultDarkColor
         cornerRadius: glowRadius
     }
+
+    Item {
+        id: header
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: parent.top
+        height: headerHeight
+
+        Rectangle {
+            id: colorSign
+            anchors.left: parent.left
+            width: showColorSign ? 6 : 0
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            color: highlightedItemColor
+        }
+
+        Rectangle {
+            id: selectedItem
+            anchors.left: colorSign.right
+            anchors.right: arrowRect.left
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            color: Colors.defaultControlColor
+
+            StyledText {
+                id: selectedText
+                text: dropDownItems.currentItem.itemText
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                anchors.left: parent.left
+                anchors.leftMargin: 10
+                verticalAlignment: TextInput.AlignVCenter
+            }
+        }
+
+        Rectangle {
+            id: arrowRect
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            width: 20
+            color: Colors.artworkBackground
+
+            TriangleElement {
+                anchors.centerIn: parent
+                anchors.verticalCenterOffset: isFlipped ? height*0.3 : 0
+                color: (headerMA.containsMouse || comboBox.state === "dropDown") ? Colors.defaultLightGrayColor : Colors.defaultInputBackground
+                isFlipped: comboBox.state === ""
+                width: parent.width * 0.6
+                height: width * 0.5
+            }
+        }
+
+        MouseArea {
+            id: headerMA
+            hoverEnabled: true
+            anchors.fill: parent;
+            onClicked: {
+                comboBox.state = comboBox.state === "dropDown" ? "" : "dropDown"
+                dropDown.forceActiveFocus()
+            }
+        }
+    }
+
 
     Rectangle {
         id: dropDown
@@ -132,85 +201,6 @@ Item {
             flickable: dropDownItems
         }
     }
-
-    RectangularGlow {
-        anchors.fill: header
-        anchors.leftMargin: glowRadius/2
-        anchors.rightMargin: glowRadius/2
-        anchors.topMargin: glowRadius
-        visible: dropDown.visible
-        height: dropDown.height
-        glowRadius: 3
-        spread: 0.1
-        color: Colors.defaultControlColor
-        cornerRadius: glowRadius
-    }
-
-
-    Item {
-        id: header
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.top: parent.top
-        height: headerHeight
-
-        Rectangle {
-            id: colorSign
-            anchors.left: parent.left
-            width: showColorSign ? 6 : 0
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            color: highlightedItemColor
-        }
-
-        Rectangle {
-            id: selectedItem
-            anchors.left: colorSign.right
-            anchors.right: arrowRect.left
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            color: Colors.defaultControlColor
-
-            StyledText {
-                id: selectedText
-                text: dropDownItems.currentItem.itemText
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                anchors.left: parent.left
-                anchors.leftMargin: 10
-                verticalAlignment: TextInput.AlignVCenter
-            }
-        }
-
-        Rectangle {
-            id: arrowRect
-            anchors.right: parent.right
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            width: 20
-            color: Colors.artworkBackground
-
-            TriangleElement {
-                anchors.centerIn: parent
-                anchors.verticalCenterOffset: isFlipped ? height*0.3 : 0
-                color: (headerMA.containsMouse || comboBox.state === "dropDown") ? Colors.defaultLightGrayColor : Colors.defaultInputBackground
-                isFlipped: comboBox.state === ""
-                width: parent.width * 0.6
-                height: width * 0.5
-            }
-        }
-
-        MouseArea {
-            id: headerMA
-            hoverEnabled: true
-            anchors.fill: parent;
-            onClicked: {
-                comboBox.state = comboBox.state === "dropDown" ? "" : "dropDown"
-                dropDown.forceActiveFocus()
-            }
-        }
-    }
-
 
     states: State {
         name: "dropDown";
