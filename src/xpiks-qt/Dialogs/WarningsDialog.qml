@@ -97,7 +97,7 @@ Item {
         RectangularGlow {
             anchors.fill: dialogWindow
             glowRadius: 4
-            spread: 0.1
+            spread: 0.0
             color: Colors.defaultControlColor
             cornerRadius: glowRadius
         }

@@ -175,7 +175,7 @@ Item {
         RectangularGlow {
             anchors.fill: dialogWindow
             glowRadius: 4
-            spread: 0.1
+            spread: 0.0
             color: Colors.defaultControlColor
             cornerRadius: glowRadius
         }
@@ -573,6 +573,7 @@ Item {
                                         StyledCheckbox {
                                             id: showPasswordCheckBox
                                             text: i18.n + qsTr("Show password")
+                                            checked: false
                                         }
 
                                         Item {

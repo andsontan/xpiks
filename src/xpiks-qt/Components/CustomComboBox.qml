@@ -44,12 +44,11 @@ Item {
 
     RectangularGlow {
         anchors.fill: dropDown
-        anchors.topMargin: glowRadius / 2
-        anchors.bottomMargin: -glowRadius / 2
+        anchors.bottomMargin: -glowRadius
         visible: dropDown.visible
         height: dropDown.height
         glowRadius: 4
-        spread: 0.1
+        spread: 0.0
         color: Colors.defaultDarkColor
         cornerRadius: glowRadius
     }
@@ -136,12 +135,12 @@ Item {
 
     RectangularGlow {
         anchors.fill: header
-        anchors.leftMargin: 1
-        anchors.rightMargin: 1
-        anchors.topMargin: 3
+        anchors.leftMargin: glowRadius/2
+        anchors.rightMargin: glowRadius/2
+        anchors.topMargin: glowRadius
         visible: dropDown.visible
         height: dropDown.height
-        glowRadius: 2
+        glowRadius: 3
         spread: 0.1
         color: Colors.defaultControlColor
         cornerRadius: glowRadius
