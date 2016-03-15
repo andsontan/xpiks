@@ -86,7 +86,6 @@ namespace Models {
         Q_INVOKABLE void pasteKeywords(int metadataIndex, const QStringList &keywords);
         Q_INVOKABLE void addSuggestedKeywords(int metadataIndex, const QStringList &keywords);
         Q_INVOKABLE void suggestCorrections(int metadataIndex);
-        Q_INVOKABLE void clearKeywords(int metadataIndex);
         Q_INVOKABLE void backupItem(int metadataIndex);
         Q_INVOKABLE void combineArtwork(int index) { doCombineArtwork(index); }
         Q_INVOKABLE int dropFiles(const QList<QUrl> &urls);

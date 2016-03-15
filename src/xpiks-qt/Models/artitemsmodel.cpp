@@ -236,16 +236,6 @@ namespace Models {
         }
     }
 
-    void ArtItemsModel::clearKeywords(int metadataIndex) {
-        if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
-            ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
-            metadata->clearKeywords();
-            m_CommandManager->submitKeywordsForWarningsCheck(metadata);
-            // do not save metadata - give chance to restore from .xpks
-            //m_CommandManager->saveMetadata(metadata);
-        }
-    }
-
     void ArtItemsModel::backupItem(int metadataIndex) {
         if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);

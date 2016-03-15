@@ -83,6 +83,15 @@ Item {
         }
     }
 
+    MessageDialog {
+        id: clearKeywordsDialog
+
+        title: "Confirmation"
+        text: i18.n + qsTr("Clear all keywords?")
+        standardButtons: StandardButton.Yes | StandardButton.No
+        onYes: combinedArtworks.clearKeywords()
+    }
+
     FocusScope {
         anchors.fill: parent
         id: focusScope
