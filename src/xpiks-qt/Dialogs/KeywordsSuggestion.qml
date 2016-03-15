@@ -164,21 +164,11 @@ Item {
                     model: keywordsSuggestor.getEngineNames()
                     width: 200
                     height: 24
-
+                    itemHeight: 28
                     onComboIndexChanged: {
                         keywordsSuggestor.selectedSourceIndex = sourceComboBox.selectedIndex
                     }
                 }
-
-                /*StyledCheckbox {
-                    id: searchUsingAndCheckbox
-                    text: i18.n + qsTr("Use only local source")
-                    onCheckedChanged: {
-                        keywordsSuggestor.useLocal = checked
-                    }
-
-                    Component.onCompleted: checked = keywordsSuggestor.useLocal
-                }*/
             }
 
             Rectangle {

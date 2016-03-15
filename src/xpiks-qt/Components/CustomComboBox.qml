@@ -33,7 +33,7 @@ Item {
     property bool showColorSign: true
     property double headerHeight: comboBox.height
     property double itemHeight: comboBox.height
-    property double maxHeight: 150
+    property double maxCount: 5
     property alias model: dropDownItems.model
     property alias selectedIndex: dropDownItems.currentIndex
     signal comboIndexChanged();
@@ -45,13 +45,108 @@ Item {
     RectangularGlow {
         anchors.fill: dropDown
         anchors.topMargin: glowRadius / 2
+        anchors.bottomMargin: -glowRadius / 2
         visible: dropDown.visible
         height: dropDown.height
-        glowRadius: 6
+        glowRadius: 4
         spread: 0.1
         color: Colors.defaultDarkColor
         cornerRadius: glowRadius
     }
+
+    Rectangle {
+        id: dropDown
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: header.bottom
+        color: Colors.selectedMetadataColor
+        visible: false
+        height: 0
+        focus: true
+        clip: true
+
+        onActiveFocusChanged: {
+            if (!activeFocus) {
+                comboBox.state = ""
+            }
+        }
+
+        ListView {
+            id: dropDownItems
+            anchors.fill: parent
+            anchors.rightMargin: scrollBar.visible ? 14 : 0
+            anchors.margins: 1
+            boundsBehavior: Flickable.StopAtBounds
+
+            delegate: Rectangle {
+                id: currentDelegate
+                color: itemMA.containsMouse ? Colors.artworkActiveColor : Colors.selectedArtworkColor
+                property var itemText: modelData
+                property bool isCurrentItem: index == comboBox.selectedIndex
+                property bool isLastItem: index == (comboBox.count - 1)
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: itemHeight + 1
+
+                StyledText {
+                    text: itemText
+                    anchors.left: parent.left
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.leftMargin: 16
+                    color: itemMA.containsMouse ? Colors.checkboxCheckedColor : (isCurrentItem ? Colors.artworkActiveColor : Colors.defaultLightColor)
+                }
+
+                Rectangle {
+                    visible: !currentDelegate.isLastItem
+                    enabled: !currentDelegate.isLastItem
+                    height: 1
+                    color: itemMA.containsMouse ? Colors.artworkActiveColor : Colors.selectedMetadataColor
+                    anchors.bottom: parent.bottom
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.leftMargin: 6
+                    anchors.rightMargin: 20
+                    anchors.bottomMargin: -height/2
+                }
+
+                MouseArea {
+                    id: itemMA
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    onClicked: {
+                        if (index === comboBox.selectedIndex) {
+                            return;
+                        }
+
+                        comboBox.selectedIndex = index
+                        comboBox.state = ""
+                        comboIndexChanged()
+                    }
+                }
+            }
+        }
+
+        CustomScrollbar {
+            id: scrollBar
+            visible: dropDownItems.count > maxCount
+            anchors.rightMargin: -12
+            flickable: dropDownItems
+        }
+    }
+
+    RectangularGlow {
+        anchors.fill: header
+        anchors.leftMargin: 1
+        anchors.rightMargin: 1
+        anchors.topMargin: 3
+        visible: dropDown.visible
+        height: dropDown.height
+        glowRadius: 2
+        spread: 0.1
+        color: Colors.defaultControlColor
+        cornerRadius: glowRadius
+    }
+
 
     Item {
         id: header
@@ -117,90 +212,12 @@ Item {
         }
     }
 
-    Rectangle {
-        id: dropDown
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.top: header.bottom
-        color: Colors.selectedMetadataColor
-        visible: false
-        height: 0
-        focus: true
-        clip: true
-
-        onActiveFocusChanged: {
-            if (!activeFocus) {
-                comboBox.state = ""
-            }
-        }
-
-        ListView {
-            id: dropDownItems
-            anchors.fill: parent
-            anchors.rightMargin: scrollBar.visible ? 14 : 0
-            anchors.margins: 1
-            boundsBehavior: Flickable.StopAtBounds
-
-            delegate: Rectangle {
-                id: currentDelegate
-                color: itemMA.containsMouse ? Colors.artworkActiveColor : Colors.selectedArtworkColor
-                property var itemText: modelData
-                property bool isCurrentItem: index == comboBox.selectedIndex
-                property bool isLastItem: index == (comboBox.count - 1)
-                anchors.left: parent.left
-                anchors.right: parent.right
-                height: itemHeight + 1
-
-                StyledText {
-                    text: itemText
-                    anchors.left: parent.left
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.leftMargin: 16
-                    color: itemMA.containsMouse ? Colors.checkboxCheckedColor : (isCurrentItem ? Colors.artworkActiveColor : Colors.defaultLightColor)
-                }
-
-                Rectangle {
-                    visible: !currentDelegate.isLastItem
-                    enabled: !currentDelegate.isLastItem
-                    height: 1
-                    color: itemMA.containsMouse ? Colors.artworkActiveColor : Colors.selectedMetadataColor
-                    anchors.bottom: parent.bottom
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    anchors.leftMargin: 6
-                    anchors.rightMargin: 20
-                }
-
-                MouseArea {
-                    id: itemMA
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    onClicked: {
-                        if (index === comboBox.selectedIndex) {
-                            return;
-                        }
-
-                        comboBox.selectedIndex = index
-                        comboBox.state = ""
-                        comboIndexChanged()
-                    }
-                }
-            }
-        }
-
-        CustomScrollbar {
-            id: scrollBar
-            visible: (comboBox.itemHeight + 1) * dropDownItems.count > maxHeight
-            anchors.rightMargin: -12
-            flickable: dropDownItems
-        }
-    }
 
     states: State {
         name: "dropDown";
         PropertyChanges {
             target: dropDown;
-            height: ((comboBox.itemHeight + 1) * dropDownItems.count) > maxHeight ? maxHeight : ((comboBox.itemHeight + 1) * dropDownItems.count)
+            height: dropDownItems.count > maxCount ? (maxCount * (comboBox.itemHeight + 1)) : ((comboBox.itemHeight + 1) * dropDownItems.count)
             visible: true
         }
     }
