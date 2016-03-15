@@ -49,17 +49,16 @@ Item {
     }
 
     Connections {
-        target: artItemsModel
-        onFileUnavailable: {
-            if (artworkIndex == index){
-                closePopup()
-            }
+        target: artItemsModel.getArtworkItself(artworkIndex)
+        onAboutToBeRemoved: {
+            closePopup()
         }
     }
     Connections {
-        target: combinedArtworks
-        onCloseWindow: {
-                closePopup();
+        target: combinedArtworks.getKeywordsModel()
+        onAboutToBeRemoved: {
+                console.info("About to be removed")
+                closePopup()
         }
     }
 

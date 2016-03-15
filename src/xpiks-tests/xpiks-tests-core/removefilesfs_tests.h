@@ -7,7 +7,8 @@ class RemoveFilesFs_Tests: public QObject
 {
     Q_OBJECT
 private slots:
-    void removeArtworks();
+    void removeArtworksSignals();
+    void removeArtworksNumberItems();
 };
 
 #endif // REMOVEFILESFS_TESTS_H
