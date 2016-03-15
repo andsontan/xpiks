@@ -18,6 +18,7 @@ private slots:
     void combineCommonInDescriptionTest();
     void recombineAfterRemoveDifferentTest();
     void recombineAfterRemoveAllButOneTest();
+    void recombineAfterChangesTest();
     void twoTimesInARowRecombineTest();
     void isNotModifiedAfterTitleDescEditTest();
     void isModifiedAfterKeywordsAppendTest();
