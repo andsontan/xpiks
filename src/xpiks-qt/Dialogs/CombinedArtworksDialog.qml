@@ -24,6 +24,7 @@ import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.1
 import QtQuick.Controls.Styles 1.1
+import QtGraphicalEffects 1.0
 import xpiks 1.0
 import "../Constants"
 import "../Constants/Colors.js" as Colors;
@@ -126,6 +127,14 @@ Item {
                 var old_xy = Common.movePopupInsideComponent(dialogComponent, dialogWindow, mouse, old_x, old_y);
                 old_x = old_xy[0]; old_y = old_xy[1];
             }
+        }
+
+        RectangularGlow {
+            anchors.fill: dialogWindow
+            glowRadius: 4
+            spread: 0.1
+            color: Colors.defaultControlColor
+            cornerRadius: glowRadius
         }
 
         // This rectangle is the actual popup
@@ -881,14 +890,14 @@ Item {
                                 }
 
                                 StyledText {
-                                    text: i18.n + qsTr("Clear")
-                                    color: enabled ? (clearKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor) : Colors.defaultInputBackground
+                                    text: i18.n + qsTr("Copy")
+                                    color: copyKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
 
                                     MouseArea {
-                                        id: clearKeywordsMA
+                                        id: copyKeywordsMA
                                         anchors.fill: parent
                                         cursorShape: Qt.PointingHandCursor
-                                        onClicked: clearKeywordsDialog.open()
+                                        onClicked: clipboard.setText(combinedArtworks.getKeywordsString())
                                     }
                                 }
 
@@ -899,14 +908,14 @@ Item {
                                 }
 
                                 StyledText {
-                                    text: i18.n + qsTr("Copy")
-                                    color: copyKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
+                                    text: i18.n + qsTr("Clear")
+                                    color: enabled ? (clearKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor) : Colors.defaultInputBackground
 
                                     MouseArea {
-                                        id: copyKeywordsMA
+                                        id: clearKeywordsMA
                                         anchors.fill: parent
                                         cursorShape: Qt.PointingHandCursor
-                                        onClicked: clipboard.setText(combinedArtworks.getKeywordsString())
+                                        onClicked: clearKeywordsDialog.open()
                                     }
                                 }
                             }

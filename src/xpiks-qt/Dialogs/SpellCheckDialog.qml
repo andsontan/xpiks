@@ -24,6 +24,7 @@ import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.1
 import QtQuick.Controls.Styles 1.1
+import QtGraphicalEffects 1.0
 import "../Constants"
 import "../Constants/Colors.js" as Colors;
 import "../Common.js" as Common;
@@ -90,6 +91,14 @@ Item {
             onWheel: wheel.accepted = true
             onClicked: mouse.accepted = true
             onDoubleClicked: mouse.accepted = true
+        }
+
+        RectangularGlow {
+            anchors.fill: dialogWindow
+            glowRadius: 4
+            spread: 0.1
+            color: Colors.defaultControlColor
+            cornerRadius: glowRadius
         }
 
         // This rectangle is the actual popup

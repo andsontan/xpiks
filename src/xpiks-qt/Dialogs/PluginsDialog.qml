@@ -24,6 +24,7 @@ import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.1
 import QtQuick.Controls.Styles 1.1
+import QtGraphicalEffects 1.0
 import "../Constants"
 import "../Constants/Colors.js" as Colors;
 import "../Common.js" as Common;
@@ -90,6 +91,14 @@ Item {
                 var old_xy = Common.movePopupInsideComponent(pluginsComponent, dialogWindow, mouse, old_x, old_y);
                 old_x = old_xy[0]; old_y = old_xy[1];
             }
+        }
+
+        RectangularGlow {
+            anchors.fill: dialogWindow
+            glowRadius: 4
+            spread: 0.1
+            color: Colors.defaultControlColor
+            cornerRadius: glowRadius
         }
 
         // This rectangle is the actual popup
