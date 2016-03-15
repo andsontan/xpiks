@@ -1673,7 +1673,8 @@ ApplicationWindow {
                                                                             {
                                                                                 callbackObject: callbackObject,
                                                                                 keywordsText: keywordsstring,
-                                                                                artworkIndex: rowWrapper.getIndex()
+                                                                                artworkIndex: rowWrapper.getIndex(),
+                                                                                keywordObject: rowWrapper.getKeywordObject()
                                                                             });
                                                     }
                                                 }

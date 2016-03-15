@@ -121,6 +121,7 @@ namespace Models {
     public:
         int getSelectedArtworksCount() const;
         int getArtworksCount() const { return m_ArtworksList.length(); }
+        void generateAboutToBeRemoved();
 
 #ifdef INTEGRATION_TESTS
         Common::BasicKeywordsModel *getBasicKeywordsModel() { return &m_CommonKeywordsModel; }
@@ -176,6 +177,7 @@ namespace Models {
         virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
         virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
         virtual void removeUnavailableItems();
+
 
     protected:
         virtual QHash<int, QByteArray> roleNames() const;

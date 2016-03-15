@@ -17,7 +17,6 @@
 #include "conectivityhelpers_tests.h"
 #include "undoredo_tests.h"
 #include "artworkfilter_tests.h"
-#include "artworkfilter_tests.h"
 #include "removefilesfs_tests.h"
 
 #define QTEST_CLASS(TestObject, vName, result) \

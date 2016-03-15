@@ -878,6 +878,14 @@ namespace Models {
         }
       emit filesUnavaliable();
     }
+    void ArtItemsModel::generateAboutToBeRemoved(){
+        int count = m_ArtworkList.length();
+        for (int i = 0; i < count; ++i) {
+            if (m_ArtworkList.at(i)->getIsUnavailable())
+                m_ArtworkList.at(i)->generateAboutToBeRemoved();
+            }
+    }
+
 
     void ArtItemsModel::removeUnavailableItems(){
         QVector<int> indicesToRemove;

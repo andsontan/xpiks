@@ -78,6 +78,7 @@ namespace Models {
         void forceUnselectAllItems() const;
         void updateAllItems();
         void removeUnavailableItems();
+        void  generateAboutToBeRemoved();
 
     public:
         /*Q_INVOKABLE*/ void removeArtworksDirectory(int index);

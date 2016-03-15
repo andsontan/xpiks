@@ -13,9 +13,9 @@ namespace Mocks {
 
 
     public:
-        void RemoveFilesAndEmitSignal(int num){
+        void publicRemoveFileAndEmitSignal(){
 
-             Models::ArtworksRepository::removeFilesAndEmitSignal(num);
+             Models::ArtworksRepository::removeFileAndEmitSignal();
         }
 
 };

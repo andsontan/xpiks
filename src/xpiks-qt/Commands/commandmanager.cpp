@@ -515,10 +515,14 @@ void Commands::CommandManager::restartSpellChecking() {
 
 void Commands::CommandManager::updateAllDependentModels(){
     int size = m_AvailabilityListeners.size();
+    m_CombinedArtworksModel->generateAboutToBeRemoved();
+    m_ArtItemsModel->generateAboutToBeRemoved();
+    QCoreApplication::processEvents();
     for ( int i = 0; i < size; ++i){
         m_AvailabilityListeners[i]->removeUnavailableItems();
     }
     m_ArtItemsModel->removeUnavailableItems();
+    m_UndoRedoManager->discardLastAction();
 }
 #ifdef INTEGRATION_TESTS
 void Commands::CommandManager::cleanup() {

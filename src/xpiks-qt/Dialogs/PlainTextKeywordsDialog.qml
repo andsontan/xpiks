@@ -52,11 +52,9 @@ Item {
         textEdit.forceActiveFocus()
     }
     Connections {
-        target: artItemsModel
-        onFileUnavailable: {
-            if (artworkIndex == index){
-                closePopup()
-            }
+        target: artItemsModel.getArtworkItself(artworkIndex)
+        onAboutToBeRemoved: {
+            closePopup()
         }
     }
 
