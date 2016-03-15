@@ -54,7 +54,6 @@ void UndoRedo::ModifyArtworksHistoryItem::undo(const Commands::ICommandManager *
     artItemsModel->updateModifiedCount();
 }
 
-
 QString UndoRedo::getModificationTypeDescription(UndoRedo::ModificationType type) {
     switch (type) {
     case PasteModificationType:

@@ -100,7 +100,8 @@ SOURCES += main.cpp \
     spellcheckcombinedmodeltest.cpp \
     zipartworkstest.cpp \
     ../../xpiks-qt/Suggestion/locallibraryqueryengine.cpp \
-    ../../xpiks-qt/Suggestion/shutterstockqueryengine.cpp
+    ../../xpiks-qt/Suggestion/shutterstockqueryengine.cpp \
+    spellcheckundotest.cpp
 
 RESOURCES +=
 
@@ -226,7 +227,8 @@ HEADERS += \
     zipartworkstest.h \
     ../../xpiks-qt/Suggestion/locallibraryqueryengine.h \
     ../../xpiks-qt/Suggestion/shutterstockqueryengine.h \
-    ../../xpiks-qt/Suggestion/suggestionqueryenginebase.h
+    ../../xpiks-qt/Suggestion/suggestionqueryenginebase.h \
+    spellcheckundotest.h
 
 INCLUDEPATH += ../../tiny-aes
 

@@ -47,6 +47,7 @@
 #include "spellcheckmultireplacetest.h"
 #include "spellcheckcombinedmodeltest.h"
 #include "zipartworkstest.h"
+#include "spellcheckundotest.h"
 
 #if defined(WITH_LOGS)
 #undef WITH_LOGS
@@ -157,6 +158,7 @@ int main(int argc, char *argv[]) {
     integrationTests.append(new SpellCheckMultireplaceTest(&commandManager));
     integrationTests.append(new SpellCheckCombinedModelTest(&commandManager));
     integrationTests.append(new ZipArtworksTest(&commandManager));
+    integrationTests.append(new SpellCheckUndoTest(&commandManager));
 
     foreach (IntegrationTestBase *test, integrationTests) {
         try {
