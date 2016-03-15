@@ -45,6 +45,9 @@ namespace MetadataIO {
         void stopped();
         void finished(bool success);
 
+    public:
+        const QVector<Models::ArtworkMetadata *> &getArtworksToExport() const { return m_ItemsToWrite; }
+
     public slots:
         void process();
         //void cancel();

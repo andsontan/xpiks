@@ -38,12 +38,13 @@ namespace Suggestion {
         QObject::connect(m_FutureWatcher, SIGNAL(finished()), this, SLOT(artworksAdded()));
     }
 
-    LocalLibrary::~LocalLibrary()
-    {
+    LocalLibrary::~LocalLibrary() {
         delete m_FutureWatcher;
     }
 
     void LocalLibrary::addToLibrary(const QVector<Models::ArtworkMetadata *> artworksList) {
+        // adding to library will be complicated in future
+        // so always do it in the background
 #ifndef INTEGRATION_TESTS
         m_FutureWatcher->setFuture(QtConcurrent::run(this, &LocalLibrary::doAddToLibrary, artworksList));
 #else
@@ -189,7 +190,7 @@ namespace Suggestion {
             m_LocalArtworks.insert(filepath, tags.toList());
         }
 
-        LOG_INFO << length << "items updated or added";
+        LOG_INFO << length << "item(s) updated or added";
     }
 
     void LocalLibrary::cleanupLocalLibraryAsync() {
