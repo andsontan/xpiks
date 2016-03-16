@@ -871,8 +871,9 @@ namespace Models {
     void ArtItemsModel::generateAboutToBeRemoved(){
         int count = m_ArtworkList.length();
         for (int i = 0; i < count; ++i) {
-            if (m_ArtworkList.at(i)->getIsUnavailable())
-                m_ArtworkList.at(i)->generateAboutToBeRemoved();
+                ArtworkMetadata * metadata=m_ArtworkList.at(i);
+            if (metadata->getIsUnavailable())
+                metadata->generateAboutToBeRemoved();
             }
     }
 
