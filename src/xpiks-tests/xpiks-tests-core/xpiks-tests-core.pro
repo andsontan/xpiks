@@ -216,4 +216,5 @@ HEADERS += \
     ../../xpiks-qt/Models/artworkuploader.h \
     ../../xpiks-qt/Conectivity/iftpcoordinator.h \
     ../../xpiks-qt/Models/ziparchiver.h \
-    removefilesfs_tests.h
+    removefilesfs_tests.h \
+    Mocks/artworksrepositorymock.h
