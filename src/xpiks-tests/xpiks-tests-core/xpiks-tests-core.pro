@@ -218,3 +218,4 @@ HEADERS += \
     ../../xpiks-qt/Models/ziparchiver.h \
     removefilesfs_tests.h \
     Mocks/artworksrepositorymock.h
+    removefilesfs_tests.h
