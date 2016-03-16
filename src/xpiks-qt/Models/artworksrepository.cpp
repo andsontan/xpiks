@@ -246,9 +246,9 @@ namespace Models {
         m_Mutex.unlock();
     }
 
-    void ArtworksRepository::onTimer(){
+    void ArtworksRepository::onAvailabilityTimer(){
         if ( m_UnavailableFiles.size() > 0 ){
-            emit fileUnavailable();
+            emit filesUnavailable();
         }
     }
 }

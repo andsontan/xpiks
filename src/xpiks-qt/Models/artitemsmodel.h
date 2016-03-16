@@ -161,8 +161,8 @@ namespace Models {
         void artworksChanged(bool needToMoveCurrentItem);
         void artworksAdded(int imagesCount, int vectorsCount);
         void selectedArtworkRemoved();
-        void fileUnavailable(int index);
-        void filesUnavaliable();
+        void filewithIndexUnavailable(int index);
+        void launchUnavailableFilesWarning();
 
     protected:
        virtual QHash<int, QByteArray> roleNames() const;

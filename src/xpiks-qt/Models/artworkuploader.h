@@ -52,13 +52,10 @@ namespace Models {
 
     public:
         virtual void setCommandManager(Commands::CommandManager *commandManager);
-        virtual void removeUnavailableItems();
 
     signals:
         void percentChanged();
         void credentialsChecked(bool result, const QString &url);
-        void requestCloseWindow();
-        void numberItemsChanged();
 
     public:
         int getPercent() const { return m_Percent; }

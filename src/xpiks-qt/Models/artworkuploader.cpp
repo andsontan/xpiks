@@ -177,21 +177,4 @@ namespace Models {
         m_FtpCoordinator->cancelUpload();
     }
 
-
-    void ArtworkUploader::removeUnavailableItems(){
-        const QVector<ArtworkMetadata*> & ArtworksListOld=getArtworkList();
-        QVector<ArtworkMetadata*> ArtworksListNew;
-        int size = ArtworksListOld.size();
-        for (int i = 0; i < size; ++i){
-             ArtworkMetadata* ArtItemInfoElement=ArtworksListOld[i];
-            if (!ArtItemInfoElement->getIsUnavailable()){
-                ArtworksListNew.append(ArtItemInfoElement);
-            }
-        }
-        setArtworks(ArtworksListNew);
-        if (ArtworksListNew.size()==0){
-            emit requestCloseWindow();
-        }
-            emit numberItemsChanged();
-    }
 }

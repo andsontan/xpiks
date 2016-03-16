@@ -6,22 +6,14 @@
 #include "../xpiks-qt/Models/artworksrepository.h"
 
 namespace Mocks {
-    class ArtWorksRepositoryMock : public Models::ArtworksRepository
-    {
+    class ArtWorksRepositoryMock : public Models::ArtworksRepository{
     public:
         ArtWorksRepositoryMock() {}
 
-
-    public:
         void publicRemoveFileAndEmitSignal(){
-
              Models::ArtworksRepository::removeFileAndEmitSignal();
         }
-
-};
-
+    };
 }
-
-
 #endif // ARTWORKSREPOSITORYMOCK_H
 

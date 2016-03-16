@@ -58,7 +58,7 @@ namespace Commands {
                 if (metadata != NULL) {
                     removedItemsIndices.append(i);
 
-                    if (!artItemsModel->getArtwork(i)->getIsUnavailable()){
+                    if (!metadata->getIsUnavailable()){
                         const QString &filepath = metadata->getFilepath();
                         removedItemsFilepathes.append(filepath);
 

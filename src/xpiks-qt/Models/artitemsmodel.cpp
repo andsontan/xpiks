@@ -866,7 +866,7 @@ namespace Models {
                 artworksRepository->removeFromDeletedList(path);
             }
         }
-      emit filesUnavaliable();
+      emit launchUnavailableFilesWarning();
     }
     void ArtItemsModel::generateAboutToBeRemoved(){
         int count = m_ArtworkList.length();
@@ -886,7 +886,7 @@ namespace Models {
         for (int i = 0; i < count; ++i) {
             if (m_ArtworkList.at(i)->getIsUnavailable())
                 indicesToRemove.append(i);
-                emit fileUnavailable(i);
+                emit filewithIndexUnavailable(i);
             }
         Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
         doRemoveItemsInRanges(rangesToRemove);

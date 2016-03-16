@@ -117,7 +117,7 @@ namespace Models {
         void appendKeywordsChanged();
         void artworkUnavailable(int index);
         void requestCloseWindow();
-        void numberItemsChanged();
+        void itemsNumberChanged();
 
     public:
         int getSelectedArtworksCount() const;

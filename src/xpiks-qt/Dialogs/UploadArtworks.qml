@@ -773,6 +773,7 @@ Item {
                                 helpersWrapper.turnTaskbarProgressOff()
                             }
                             onRequestCloseWindow: {
+                                        console.info("got closing signal")
                                         closePopup();
                             }
                         }

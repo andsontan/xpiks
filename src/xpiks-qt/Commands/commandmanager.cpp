@@ -201,7 +201,7 @@ void Commands::CommandManager::connectEntitiesSignalsSlots() const {
 
     QObject::connect(m_SpellCheckerService, SIGNAL(serviceAvailable(bool)),
                      m_FilteredItemsModel, SLOT(onSpellCheckerAvailable(bool)));
-    QObject::connect(m_ArtworksRepository, SIGNAL(fileUnavailable()),
+    QObject::connect(m_ArtworksRepository, SIGNAL(filesUnavailable()),
                      m_ArtItemsModel, SLOT(onFilesUnavailableHandler()));
 }
 

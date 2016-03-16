@@ -44,8 +44,8 @@ void RemoveFilesFsTests::removeArtworksSignals() {
     commandManagerMock.InjectDependency(artworksRepository);
 
     int itemsToAdd = 5;
-    QSignalSpy artRepositoryFileDeleted(artworksRepository, SIGNAL(fileUnavailable()));
-    QSignalSpy ArtItemFileDeleted(artItemsModel, SIGNAL(filesUnavaliable()));
+    QSignalSpy artRepositoryFileDeleted(artworksRepository, SIGNAL(filesUnavailable()));
+    QSignalSpy ArtItemFileDeleted(artItemsModel, SIGNAL(launchUnavailableFilesWarning()));
 
     commandManagerMock.generateAndAddArtworks(itemsToAdd);
     commandManagerMock.connectEntitiesSignalsSlots();

@@ -45,7 +45,7 @@ namespace Models {
                          this, SLOT(checkFileUnavailable(const QString &) ) );
             m_Timer.setInterval(1000); //1 sec
             m_Timer.setSingleShot(true); //single shot
-            QObject::connect(&m_Timer, SIGNAL(timeout()), this, SLOT(onTimer()));
+            QObject::connect(&m_Timer, SIGNAL(timeout()), this, SLOT(onAvailabilityTimer()));
             m_Timer.start();
 
         }
@@ -63,7 +63,7 @@ namespace Models {
                           this, SLOT(checkFileUnavailable(const QString &) ) );
             m_Timer.setInterval(1000); //1 sec
             m_Timer.setSingleShot(true); //single shot
-            QObject::connect(&m_Timer, SIGNAL(timeout()), this, SLOT(onTimer()));
+            QObject::connect(&m_Timer, SIGNAL(timeout()), this, SLOT(onAvailabilityTimer()));
         }
 
         virtual ~ArtworksRepository() {}
@@ -91,13 +91,13 @@ namespace Models {
     signals:
         void artworksSourcesCountChanged();
         void fileChanged(const QString & path);
-        void fileUnavailable();
+        void filesUnavailable();
 
     public slots:
         void fileSelectedChanged(const QString &filepath, bool isSelected) { setFileSelected(filepath, isSelected); }
     private slots:
         void checkFileUnavailable(const QString & path);
-        void onTimer();
+        void onAvailabilityTimer();
     public:
         bool accountFile(const QString &filepath);
         bool removeFile(const QString &filepath, const QString &fileDirectory);
@@ -130,7 +130,7 @@ namespace Models {
 
         void removeFileAndEmitSignal(){
             m_UnavailableFiles.insert(*m_FilesSet.begin());
-            emit fileUnavailable();
+            emit filesUnavailable();
         }
 
         virtual bool checkFileExists(const QString &filename, QString &directory) const;

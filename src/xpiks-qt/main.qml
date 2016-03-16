@@ -572,7 +572,7 @@ ApplicationWindow {
 
     Connections {
         target: artItemsModel
-        onFilesUnavaliable: {
+        onLaunchUnavailableFilesWarning: {
                 console.debug("Got FilesUnavailable signal")
                 unavailableFilesDetected.open()
             }
@@ -1728,7 +1728,7 @@ ApplicationWindow {
                                                                                 {
                                                                                     callbackObject: callbackObject,
                                                                                     previousKeyword: keyword,
-                                                                                    artworkIndex: rowWrapper.getIndex()
+                                                                                    keywordsModel: artItemsModel.getArtworkItself(rowWrapper.getIndex())
                                                                                 })
                                                         }
                                                     }

@@ -26,13 +26,12 @@
 #include <QVector>
 #include "../Common/baseentity.h"
 #include "../Helpers/ifilenotavailablemodel.h"
+#include "../Models/artworkmetadata.h"
 namespace Commands {
     class CommandManager;
 }
 
-namespace Models {
-    class ArtworkMetadata;
-}
+
 
 namespace Models {
     class ArtworksProcessor : public QObject, public Common::BaseEntity, public Helpers::IFileNotAvailableModel
@@ -81,11 +80,29 @@ namespace Models {
         void percentChanged();
         void finishedProcessing();
         void itemsCountChanged();
+        void itemsNumberChanged();
+        void requestCloseWindow();
 
     public:
         void setArtworks(const QVector<ArtworkMetadata*> &artworkList) { resetArtworks(); addArtworks(artworkList); }
-        void addArtworks(const QVector<ArtworkMetadata*> &artworkList) { m_ArtworkList << artworkList; emit itemsCountChanged(); }
+        void addArtworks(const QVector<Models::ArtworkMetadata*> &artworkList) { m_ArtworkList << artworkList; emit itemsCountChanged(); }
         void resetArtworks() { m_ArtworkList.clear(); }
+        void removeUnavailableItems(){
+            const QVector<Models::ArtworkMetadata*> & artworksListOld=getArtworkList();
+            QVector<Models::ArtworkMetadata*> artworksListNew;
+            int size = artworksListOld.size();
+            for (int i = 0; i < size; ++i){
+                 Models::ArtworkMetadata* artItemInfoElement=artworksListOld[i];
+                if (!artItemInfoElement->getIsUnavailable()){
+                    artworksListNew.append(artItemInfoElement);
+                }
+            }
+            setArtworks(artworksListNew);
+            if (artworksListNew.size()==0){
+                emit requestCloseWindow();
+            }
+                emit itemsNumberChanged();
+        }
 
 #ifdef TESTS
         public:

@@ -803,7 +803,8 @@ Item {
                                                                 componentParent,
                                                                 {
                                                                     callbackObject: callbackObject,
-                                                                    previousKeyword: keyword
+                                                                    previousKeyword: keyword,
+                                                                    keywordsModel: combinedArtworks.getKeywordsModel()
                                                                 })
                                         }
                                     }

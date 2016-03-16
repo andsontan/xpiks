@@ -438,14 +438,13 @@ namespace Models {
 
     void CombinedArtworksModel::generateAboutToBeRemoved(){
          m_CommonKeywordsModel.generateAboutToBeRemoved();
-         removeLastKeyword();
     }
 
     void CombinedArtworksModel::removeUnavailableItems(){
         QVector<int> indicesToRemove;
         for (int i= 0; i<m_ArtworksList.size(); i++){
-            ArtItemInfo* ArtItemInfoElement=m_ArtworksList[i];
-            if (ArtItemInfoElement->getOrigin()->getIsUnavailable()){
+            ArtItemInfo* artItemInfoElement=m_ArtworksList[i];
+            if (artItemInfoElement->getOrigin()->getIsUnavailable()){
                 indicesToRemove.append(i);
             }
          }
@@ -456,7 +455,7 @@ namespace Models {
         if ( m_ArtworksList.size() == 0){
             emit requestCloseWindow();
         }
-        emit numberItemsChanged();
+        emit itemsNumberChanged();
     }
 
 }

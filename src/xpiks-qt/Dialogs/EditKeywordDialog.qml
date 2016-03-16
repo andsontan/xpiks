@@ -34,7 +34,7 @@ Item {
     id: editKeywordComponent
     property var callbackObject
     property string previousKeyword: ''
-    property int artworkIndex: -1
+    property var keywordsModel
     anchors.fill: parent
 
     signal dialogDestruction();
@@ -49,16 +49,10 @@ Item {
     }
 
     Connections {
-        target: artItemsModel.getArtworkItself(artworkIndex)
+        target: keywordsModel
         onAboutToBeRemoved: {
+            console.info("About to be removed")
             closePopup()
-        }
-    }
-    Connections {
-        target: combinedArtworks.getKeywordsModel()
-        onAboutToBeRemoved: {
-                console.info("About to be removed")
-                closePopup()
         }
     }
 

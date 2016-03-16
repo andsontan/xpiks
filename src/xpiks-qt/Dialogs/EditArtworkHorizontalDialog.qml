@@ -64,7 +64,7 @@ Item {
 
     Connections {
         target: artItemsModel
-        onFileUnavailable: {
+        onFilewithIndexUnavailable: {
             if (artworkIndex == index){
                 console.debug("Artwork unavailable")
                 closePopup()
@@ -477,7 +477,7 @@ Item {
                                                     {
                                                         callbackObject: callbackObject,
                                                         previousKeyword: keyword,
-                                                        artworkIndex: artworkEditHorizontalDialog.artworkIndex
+                                                        keywordsModel: combinedArtworks.getKeywordsModel()
                                                     })
                             }
                         }
