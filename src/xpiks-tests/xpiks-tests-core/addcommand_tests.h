@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QtTest/QtTest>
 
-class AddCommand_Tests : public QObject
+class AddCommandTests : public QObject
 {
     Q_OBJECT
 private slots:

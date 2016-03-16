@@ -6,7 +6,7 @@
 #include "../../xpiks-qt/Commands/addartworkscommand.h"
 #include "../../xpiks-qt/Models/settingsmodel.h"
 
-void AddCommand_Tests::addNoArtworksToEmptyRepositoryTest() {
+void AddCommandTests::addNoArtworksToEmptyRepositoryTest() {
     Mocks::CommandManagerMock commandManagerMock;
     Mocks::ArtItemsModelMock artItemsMock;
 
@@ -37,7 +37,7 @@ void AddCommand_Tests::addNoArtworksToEmptyRepositoryTest() {
     QCOMPARE(artworkRepoEndInsertSpy.count(), 0);
 }
 
-void AddCommand_Tests::addOneArtworkToEmptyRepositoryTest() {
+void AddCommandTests::addOneArtworkToEmptyRepositoryTest() {
     Mocks::CommandManagerMock commandManagerMock;
     Mocks::ArtItemsModelMock artItemsMock;
 
@@ -84,7 +84,7 @@ void AddCommand_Tests::addOneArtworkToEmptyRepositoryTest() {
     QCOMPARE(artworkRepSpyArgs.at(2).toInt(), 0);
 }
 
-void AddCommand_Tests::addAndAttachVectorsTest() {
+void AddCommandTests::addAndAttachVectorsTest() {
     Mocks::CommandManagerMock commandManagerMock;
     Mocks::ArtItemsModelMock artItemsMock;
 
@@ -111,7 +111,7 @@ void AddCommand_Tests::addAndAttachVectorsTest() {
     }
 }
 
-void AddCommand_Tests::addAndAttachVectorsLaterTest() {
+void AddCommandTests::addAndAttachVectorsLaterTest() {
     Mocks::CommandManagerMock commandManagerMock;
     Mocks::ArtItemsModelMock artItemsMock;
 
@@ -150,7 +150,7 @@ void AddCommand_Tests::addAndAttachVectorsLaterTest() {
     }
 }
 
-void AddCommand_Tests::addAndDontAttachVectorsOtherDirTest() {
+void AddCommandTests::addAndDontAttachVectorsOtherDirTest() {
     Mocks::CommandManagerMock commandManagerMock;
     Mocks::ArtItemsModelMock artItemsMock;
 
@@ -177,7 +177,7 @@ void AddCommand_Tests::addAndDontAttachVectorsOtherDirTest() {
     }
 }
 
-void AddCommand_Tests::addAndDontAttachVectorsEmptyDirTest() {
+void AddCommandTests::addAndDontAttachVectorsEmptyDirTest() {
     Mocks::CommandManagerMock commandManagerMock;
     Mocks::ArtItemsModelMock artItemsMock;
 
@@ -204,7 +204,7 @@ void AddCommand_Tests::addAndDontAttachVectorsEmptyDirTest() {
     }
 }
 
-void AddCommand_Tests::addAndDontAttachVectorsStartsWithTest() {
+void AddCommandTests::addAndDontAttachVectorsStartsWithTest() {
     Mocks::CommandManagerMock commandManagerMock;
     Mocks::ArtItemsModelMock artItemsMock;
 
@@ -231,7 +231,7 @@ void AddCommand_Tests::addAndDontAttachVectorsStartsWithTest() {
     }
 }
 
-void AddCommand_Tests::addAndAttachFromSingleDirectoryTest() {
+void AddCommandTests::addAndAttachFromSingleDirectoryTest() {
     Mocks::CommandManagerMock commandManagerMock;
     Mocks::ArtItemsModelMock artItemsMock;
 
@@ -258,7 +258,7 @@ void AddCommand_Tests::addAndAttachFromSingleDirectoryTest() {
     }
 }
 
-void AddCommand_Tests::addSingleDirectoryAndAttachLaterTest() {
+void AddCommandTests::addSingleDirectoryAndAttachLaterTest() {
     Mocks::CommandManagerMock commandManagerMock;
     Mocks::ArtItemsModelMock artItemsMock;
 
