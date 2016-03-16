@@ -24,14 +24,22 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QFile>
+#include <QDir>
 #include <QTemporaryFile>
-#include <QTextStream>
 #include <QImageReader>
 #include "../Models/settingsmodel.h"
 #include "../Models/artworkmetadata.h"
 #include "../Helpers/constants.h"
 #include "saverworkerjobitem.h"
 #include "../Common/defines.h"
+
+#ifdef Q_OS_WIN
+#define _X86_
+#include <fileapi.h>
+#include <io.h>
+#else
+#include <unistd.h>
+#endif
 
 #define SOURCEFILE QLatin1String("SourceFile")
 #define TITLE QLatin1String("Title")
@@ -136,17 +144,35 @@ namespace MetadataIO {
 
         if (argumentsFile.open()) {
             LOG_DEBUG << "Created arguments file" << argumentsFile.fileName();
-            QTextStream out(&argumentsFile);
+
             QStringList exiftoolArguments = createArgumentsList();
             foreach (const QString &line, exiftoolArguments) {
-                out << line << endl;
+                argumentsFile.write(line.toUtf8());
+#ifdef Q_OS_WIN
+                argumentsFile.write("\r\n");
+#else
+                argumentsFile.write("\n");
+#endif
             }
 
-            out.flush();
+            argumentsFile.flush();
+
+            LOG_DEBUG << "Waiting for tempfile bytes written...";
+#ifdef Q_OS_WIN
+            HANDLE fileHandle = (HANDLE)_get_osfhandle(argumentsFile.handle());
+            bool flushResult = FlushFileBuffers(fileHandle);
+            LOG_DEBUG << "Windows flush result:" << flushResult;
+            // TODO: FIXME: Windows bug with UTF-8 and Exiftool
+            QThread::sleep(1);
+#else
+            int fsyncResult = fsync(argumentsFile.handle());
+            LOG_DEBUG << "fsync result:" << fsyncResult;
+#endif
             argumentsFile.close();
 
             QString exiftoolPath = m_SettingsModel->getExifToolPath();
             QStringList arguments;
+            arguments << "-charset" << "FileName=UTF8";
             arguments << "-@" << argumentsFile.fileName();
 
             LOG_DEBUG << "Starting exiftool process:" << exiftoolPath;
@@ -162,7 +188,8 @@ namespace MetadataIO {
                     (exitCode == 0) &&
                     (exitStatus == QProcess::NormalExit);
 
-            LOG_DEBUG << "Exiftool exitcode =" << exitCode << "exitstatus =" << exitStatus;
+            LOG_INFO << "Exiftool exitcode =" << exitCode << "exitstatus =" << exitStatus;
+            LOG_DEBUG << "Temporary file:" << argumentsFile.fileName();
 
             if (success) {
                 QByteArray stdoutByteArray = m_ExiftoolProcess->readAllStandardOutput();

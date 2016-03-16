@@ -239,10 +239,10 @@ namespace MetadataIO {
         LOG_DEBUG << "Default path is" << settingsExiftoolPath;
         // SHOULD BE UNDER DEFINE OS X
         QStringList possiblePaths;
-        possiblePaths << settingsExiftoolPath << "/usr/bin/exiftool" << "/usr/local/bin/exiftool";
-
         QString exiftoolPath;
         QString exiftoolVersion;
+
+        possiblePaths << settingsExiftoolPath << "/usr/bin/exiftool" << "/usr/local/bin/exiftool";
 
         foreach (const QString &path, possiblePaths) {
             LOG_DEBUG << "Trying path" << path;
