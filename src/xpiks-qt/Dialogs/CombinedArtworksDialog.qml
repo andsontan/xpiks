@@ -177,9 +177,17 @@ Item {
                     }
 
                     StyledText {
+                        id: textItemsAvailable
                         property string originalText: combinedArtworks.artworksCount == 1 ? qsTr("1 artwork being edited") : qsTr("%1 artworks being edited").arg(combinedArtworks.artworksCount)
                         text: i18.n + originalText
                         color: Colors.defaultInputBackground
+                        Connections {
+                            target: combinedArtworks
+                            onNumberItemsChanged: {
+                               textItemsAvailable.originalText=combinedArtworks.artworksCount == 1 ? qsTr("1 artwork being edited") : qsTr("%1 artworks being edited").arg(combinedArtworks.artworksCount)
+                               textItemsAvailable.text=i18.n + originalText
+                            }
+                        }
                     }
                 }
 

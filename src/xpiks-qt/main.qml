@@ -439,8 +439,8 @@ ApplicationWindow {
         id: unavailableFilesDetected
         title: "Warning"
         text: qsTr("Some files you have been working on do not exist anymore! Xpiks will remove them from the workflow.")
-        standardButtons: StandardButton.Yes
-        onYes: {
+        standardButtons: StandardButton.Ok
+        onAccepted: {
             helpersWrapper.updateAllAfterDelete()
         }
     }

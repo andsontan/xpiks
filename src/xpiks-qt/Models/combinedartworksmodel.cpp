@@ -456,6 +456,7 @@ namespace Models {
         if ( m_ArtworksList.size() == 0){
             emit closeWindow();
         }
+        emit numberItemsChanged();
     }
 
 }
