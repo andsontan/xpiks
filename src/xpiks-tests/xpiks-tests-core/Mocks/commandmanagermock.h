@@ -36,6 +36,7 @@ namespace Mocks {
                 if (artworksRepository->accountFile(filename))
                 {
                     Models::ArtworkMetadata *metadata = artItemsModel->createMetadata(filename);
+                    metadata->attachVector("dummyPath");
                     artItemsModel->appendMetadata(metadata);
                 }
 

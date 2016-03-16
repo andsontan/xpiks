@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
     QTEST_CLASS(ConectivityHelpersTests, cht, result);
     QTEST_CLASS(UndoRedoTests, urt, result);
     QTEST_CLASS(ArtworkFilterTests, aft, result);
-    QTEST_CLASS(RemoveFilesFs_Tests, del,result);
+    QTEST_CLASS(RemoveFilesFsTests, del,result);
 
     QThread::sleep(1);
 

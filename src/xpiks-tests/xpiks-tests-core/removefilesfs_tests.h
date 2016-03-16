@@ -3,12 +3,13 @@
 
 #include <QObject>
 
-class RemoveFilesFs_Tests: public QObject
+class RemoveFilesFsTests: public QObject
 {
     Q_OBJECT
 private slots:
     void removeArtworksSignals();
     void removeArtworksNumberItems();
+    void removeArtworksAllItems();
 };
 
 #endif // REMOVEFILESFS_TESTS_H
