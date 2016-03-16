@@ -43,7 +43,7 @@ namespace Models {
         virtual void removeUnavailableItems();
 
     signals:
-        void closeWindow();
+        void requestCloseWindow();
         void numberItemsChanged();
     public slots:
         void archiveCreated(int);

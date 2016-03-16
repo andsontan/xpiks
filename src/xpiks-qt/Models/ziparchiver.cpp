@@ -113,7 +113,7 @@ namespace Models {
 
         setArtworks(ArtworksListNew);
         if (ArtworksListNew.size() == 0){
-            emit closeWindow();
+            emit requestCloseWindow();
          }
         emit numberItemsChanged();
     }

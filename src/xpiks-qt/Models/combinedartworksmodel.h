@@ -116,7 +116,7 @@ namespace Models {
         void changeTitleChanged();
         void appendKeywordsChanged();
         void artworkUnavailable(int index);
-        void closeWindow();
+        void requestCloseWindow();
         void numberItemsChanged();
 
     public:

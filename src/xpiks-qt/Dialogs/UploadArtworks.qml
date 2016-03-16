@@ -772,7 +772,7 @@ Item {
                                 uploadButton.enabled = true
                                 helpersWrapper.turnTaskbarProgressOff()
                             }
-                            onCloseWindow: {
+                            onRequestCloseWindow: {
                                         closePopup();
                             }
                         }

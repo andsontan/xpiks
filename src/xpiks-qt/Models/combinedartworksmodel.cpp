@@ -454,7 +454,7 @@ namespace Models {
         removeItemsAtIndices(rangesToRemove);
         recombineArtworks(); //the application crashes when it is called
         if ( m_ArtworksList.size() == 0){
-            emit closeWindow();
+            emit requestCloseWindow();
         }
         emit numberItemsChanged();
     }

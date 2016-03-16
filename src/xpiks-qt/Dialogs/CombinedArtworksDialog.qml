@@ -61,7 +61,7 @@ Item {
     }
     Connections {
         target: combinedArtworks
-        onCloseWindow: {
+        onRequestCloseWindow: {
                 closePopup();
         }
     }

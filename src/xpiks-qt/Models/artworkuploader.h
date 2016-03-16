@@ -57,7 +57,7 @@ namespace Models {
     signals:
         void percentChanged();
         void credentialsChecked(bool result, const QString &url);
-        void closeWindow();
+        void requestCloseWindow();
         void numberItemsChanged();
 
     public:

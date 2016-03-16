@@ -45,7 +45,7 @@ Item {
     }
     Connections {
         target: zipArchiver
-        onCloseWindow: {
+        onRequestCloseWindow: {
                 console.info("got closing signal")
                 closePopup();
         }
