@@ -517,12 +517,17 @@ void Commands::CommandManager::updateAllDependentModels(){
     int size = m_AvailabilityListeners.size();
     m_CombinedArtworksModel->generateAboutToBeRemoved();
     m_ArtItemsModel->generateAboutToBeRemoved();
+    LOG_DEBUG << "generated about to be removed...";
     QCoreApplication::processEvents();
     for ( int i = 0; i < size; ++i){
         m_AvailabilityListeners[i]->removeUnavailableItems();
     }
+    LOG_DEBUG << "removed from availabilityListeners....";
     m_ArtItemsModel->removeUnavailableItems();
+    LOG_DEBUG << "removed from ArtitemsModel....";
+#ifndef TESTS
     m_UndoRedoManager->discardLastAction();
+#endif
 }
 #ifdef INTEGRATION_TESTS
 void Commands::CommandManager::cleanup() {
