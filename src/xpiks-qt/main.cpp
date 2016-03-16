@@ -125,7 +125,8 @@ void initQSettings() {
     QCoreApplication::setOrganizationDomain(Constants::ORGANIZATION_DOMAIN);
     QCoreApplication::setApplicationName(Constants::APPLICATION_NAME);
     QString appVersion(STRINGIZE(BUILDNUMBER));
-    QCoreApplication::setApplicationVersion(STRINGIZE(XPIKS_VERSION)" "STRINGIZE(XPIKS_VERSION_SUFFIX)" - " + appVersion.left(10));
+    QCoreApplication::setApplicationVersion(STRINGIZE(XPIKS_VERSION) " " STRINGIZE(XPIKS_VERSION_SUFFIX) " - " +
+                                            appVersion.left(10));
 }
 
 void ensureUserIdExists(Helpers::AppSettings *settings) {

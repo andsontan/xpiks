@@ -26,13 +26,13 @@ import QtQuick.Controls.Styles 1.1
 import QtQuick.Layouts 1.1
 import QtQuick.Window 2.0
 import xpiks 1.0
-import "Constants"
-import "Constants/Colors.js" as Colors
+import "Constants" 1.0
 import "Components"
 import "StyledControls"
 import "Dialogs"
 import "Common.js" as Common
 import "Constants/UIConfig.js" as UIConfig
+import "Constants/Themes.js" as Themes
 
 ApplicationWindow {
     id: applicationWindow
@@ -46,6 +46,15 @@ ApplicationWindow {
     property bool showUpdateLink: false
     property bool needToCenter: true
     property bool listLayout: true
+    property bool initializedColors: false
+
+    onBeforeRendering: {
+        if (!initializedColors) {
+            initializedColors = true
+            console.debug("Initializing theme with index " + settingsModel.selectedThemeIndex)
+            Colors.initTheme(Themes.availableThemes[settingsModel.selectedThemeIndex])
+        }
+    }
 
     onVisibleChanged: {
         if (needToCenter) {

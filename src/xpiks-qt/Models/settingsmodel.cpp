@@ -54,6 +54,7 @@
 #define DEFAULT_APP_POSITION -1
 #define DEFAULT_AUTO_FIND_VECTORS true
 #define DEFAULT_LOCALE "en_US"
+#define DEFAULT_SELECTED_THEME_INDEX 0
 
 namespace Models {
     SettingsModel::SettingsModel(QObject *parent) :
@@ -69,6 +70,7 @@ namespace Models {
         m_UploadTimeout(DEFAULT_UPLOAD_TIMEOUT),
         m_DismissDuration(DEFAULT_DISMISS_DURATION),
         m_MaxParallelUploads(DEFAULT_MAX_PARALLEL_UPLOADS),
+        m_SelectedThemeIndex(DEFAULT_SELECTED_THEME_INDEX),
         m_MustUseMasterPassword(DEFAULT_USE_MASTERPASSWORD),
         m_MustUseConfirmations(DEFAULT_USE_CONFIRMATIONS),
         m_SaveBackups(DEFAULT_SAVE_BACKUPS),
@@ -123,6 +125,7 @@ namespace Models {
         appSettings.setValue(appSettings.getUserStatisticsKey(), m_UserStatistics);
         appSettings.setValue(appSettings.getUpdateServiceKey(), m_UpdateService);
         appSettings.setValue(appSettings.getAutoFindVectorsKey(), m_AutoFindVectors);
+        appSettings.setValue(appSettings.getSelectedThemeIndexKey(), m_SelectedThemeIndex);
 
         if (!m_MustUseMasterPassword) {
             appSettings.setValue(appSettings.getMasterPasswordHashKey(), "");
@@ -178,6 +181,7 @@ namespace Models {
         setUpdateService(appSettings.boolValue(appSettings.getUpdateServiceKey(), DEFAULT_UPDATE_SERVICE));
         setAutoFindVectors(appSettings.boolValue(appSettings.getAutoFindVectorsKey(), DEFAULT_AUTO_FIND_VECTORS));
         setSelectedLocale(appSettings.value(appSettings.getSelectedLocaleKey(), DEFAULT_LOCALE).toString());
+        setSelectedThemeIndex(appSettings.value(appSettings.getSelectedThemeIndexKey(), DEFAULT_SELECTED_THEME_INDEX).toInt());
     }
 
     void SettingsModel::resetToDefault() {
@@ -203,6 +207,7 @@ namespace Models {
         setUpdateService(DEFAULT_UPDATE_SERVICE);
         setAutoFindVectors(DEFAULT_AUTO_FIND_VECTORS);
         setSelectedLocale(DEFAULT_LOCALE);
+        setSelectedThemeIndex(DEFAULT_SELECTED_THEME_INDEX);
 
         Helpers::AppSettings appSettings;
 #if defined(QT_DEBUG)

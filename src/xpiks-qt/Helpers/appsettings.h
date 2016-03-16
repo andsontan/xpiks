@@ -139,6 +139,9 @@ namespace Helpers {
         Q_PROPERTY(QString selectedLocaleKey READ getSelectedLocaleKey CONSTANT)
         QString getSelectedLocaleKey() const { return QLatin1String(Constants::SELECTED_LOCALE); }
 
+        Q_PROPERTY(QString selectedThemeIndexKey READ getSelectedThemeIndexKey CONSTANT)
+        QString getSelectedThemeIndexKey() const { return QLatin1String(Constants::SELECTED_THEME_INDEX); }
+
         Q_PROPERTY(QString whatsNewText READ getWhatsNewText CONSTANT)
         QString getWhatsNewText() const {
             QString text;

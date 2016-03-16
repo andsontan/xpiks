@@ -27,7 +27,6 @@ import QtQuick.Controls.Styles 1.1
 import xpiks 1.0
 import QtGraphicalEffects 1.0
 import "../Constants"
-import "../Constants/Colors.js" as Colors;
 import "../Common.js" as Common;
 import "../Components"
 import "../StyledControls"

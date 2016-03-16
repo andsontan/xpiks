@@ -20,7 +20,7 @@
  */
 
 import QtQuick 2.2
-import "../Constants/Colors.js" as Colors
+import "../Constants"
 
 Item {
     id: scrollbar;

@@ -26,7 +26,6 @@ import QtQuick.Dialogs 1.1
 import QtQuick.Controls.Styles 1.1
 import "../Components"
 import "../Constants"
-import "../Constants/Colors.js" as Colors
 
 TabView {
     property double tabBarHeight: 1

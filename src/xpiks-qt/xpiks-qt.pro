@@ -220,7 +220,6 @@ DISTFILES += \
     Components/CloseIcon.qml \
     Components/EditableTags.qml \
     Components/LargeRemoveIcon.qml \
-    Constants/Colors.js \
     StyledControls/SimpleProgressBar.qml \
     StyledControls/StyledButton.qml \
     StyledControls/StyledCheckbox.qml \
@@ -269,7 +268,9 @@ DISTFILES += \
     Graphics/vector-icon.svg \
     Constants/UIConfig.js \
     Components/SelectedIcon.qml \
-    Components/CustomComboBox.qml
+    Components/CustomComboBox.qml \
+    Constants/Colors.qml \
+    Constants/Themes.js
 
 lupdate_only {
 SOURCES = *.qml \

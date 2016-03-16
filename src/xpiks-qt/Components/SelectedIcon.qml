@@ -21,13 +21,12 @@
 
 import QtQuick 2.2
 import "../Constants"
-import "../Constants/Colors.js" as Colors
 
 Item {
     id: item
     signal itemClicked();
     property bool isVisible: true
-    property color linesColor: Colors.checkboxCheckedColor
+    property color linesColor: Colors.whiteColor
 
     Item {
         anchors.fill: parent

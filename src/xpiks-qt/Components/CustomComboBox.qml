@@ -22,7 +22,6 @@
 import QtQuick 2.2
 import QtQuick.Controls 1.2
 import "../Constants"
-import "../Constants/Colors.js" as Colors
 import "../StyledControls"
 import xpiks 1.0
 import QtGraphicalEffects 1.0
@@ -163,7 +162,7 @@ Item {
                     anchors.left: parent.left
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.leftMargin: 16
-                    color: itemMA.containsMouse ? Colors.checkboxCheckedColor : (isCurrentItem ? highlightedItemColor : Colors.defaultLightColor)
+                    color: itemMA.containsMouse ? Colors.whiteColor : (isCurrentItem ? highlightedItemColor : Colors.defaultLightColor)
                 }
 
                 Rectangle {

@@ -21,7 +21,6 @@
 
 import QtQuick 2.2
 import "../Constants"
-import "../Constants/Colors.js" as Colors
 
 Item {
     id: item

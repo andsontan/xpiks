@@ -57,6 +57,7 @@ namespace Models {
         Q_PROPERTY(QString dictionaryPath READ getDictionaryPath WRITE setDictionaryPath NOTIFY dictionaryPathChanged)
         Q_PROPERTY(bool autoFindVectors READ getAutoFindVectors WRITE setAutoFindVectors NOTIFY autoFindVectorsChanged)
         Q_PROPERTY(QString selectedLocale READ getSelectedLocale WRITE setSelectedLocale NOTIFY selectedLocaleChanged)
+        Q_PROPERTY(int selectedThemeIndex READ getSelectedThemeIndex WRITE setSelectedThemeIndex NOTIFY selectedThemeIndexChanged)
 
     public:
         explicit SettingsModel(QObject *parent = 0);
@@ -96,6 +97,7 @@ namespace Models {
         QString getDictionaryPath() const { return m_DictPath; }
         bool getAutoFindVectors() const { return m_AutoFindVectors; }
         QString getSelectedLocale() const { return m_SelectedLocale; }
+        int getSelectedThemeIndex() const { return m_SelectedThemeIndex; }
 
     signals:
         void settingsReset();
@@ -119,6 +121,7 @@ namespace Models {
         void dictionaryPathChanged(QString path);
         void autoFindVectorsChanged(bool value);
         void selectedLocaleChanged(QString value);
+        void selectedThemeIndexChanged(int value);
 
     public:
         void setExifToolPath(QString exifToolPath) {
@@ -280,6 +283,13 @@ namespace Models {
             }
         }
 
+        void setSelectedThemeIndex(int value) {
+            if (value != m_SelectedThemeIndex) {
+                m_SelectedThemeIndex = value;
+                emit selectedThemeIndexChanged(value);
+            }
+        }
+
 #ifndef INTEGRATION_TESTS
     private:
 #else
@@ -299,6 +309,7 @@ namespace Models {
         int m_UploadTimeout; // in minutes
         int m_DismissDuration;
         int m_MaxParallelUploads;
+        int m_SelectedThemeIndex;
         bool m_MustUseMasterPassword;
         bool m_MustUseConfirmations;
         bool m_SaveBackups;

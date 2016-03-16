@@ -23,7 +23,6 @@ import QtQuick 2.2
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import "../Constants"
-import "../Constants/Colors.js" as Colors
 import "../StyledControls"
 import "../Constants/UIConfig.js" as UIConfig
 

@@ -24,11 +24,11 @@ import QtQuick.Dialogs 1.1
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import "../Constants"
-import "../Constants/Colors.js" as Colors;
 import "../Components"
 import "../StyledControls"
 import "../Common.js" as Common
 import "../Constants/UIConfig.js" as UIConfig
+import "../Constants/Themes.js" as Themes;
 
 ApplicationWindow {
     id: settingsWindow
@@ -208,7 +208,10 @@ ApplicationWindow {
                         anchors.top: parent.top
                         anchors.bottom: parent.bottom
                         width: parent.width / 2
-                        anchors.margins: {left: 20; top: 30; bottom: 20}
+                        anchors.leftMargin: 20
+                        anchors.rightMargin: 20
+                        anchors.topMargin: 20
+                        anchors.bottomMargin: 10
                         spacing: 20
 
                         StyledCheckbox {
@@ -269,7 +272,10 @@ ApplicationWindow {
                         anchors.top: parent.top
                         anchors.bottom: parent.bottom
                         anchors.right: parent.right
-                        anchors.margins: {left: 20; top: 30; right: 20; bottom: 20}
+                        anchors.leftMargin: 20
+                        anchors.rightMargin: 20
+                        anchors.topMargin: 20
+                        anchors.bottomMargin: 10
                         spacing: 20
 
                         StyledCheckbox {
@@ -331,17 +337,23 @@ ApplicationWindow {
                 id: uxTab
                 property double sizeSliderValue: settingsModel.keywordSizeScale
                 property double scrollSliderValue: settingsModel.scrollSpeedScale
+                property int themeIndex: settingsModel.selectedThemeIndex
                 title: i18.n + qsTr("Interface")
                 signal resetRequested()
 
                 ColumnLayout {
                     anchors.fill: parent
-                    anchors.margins: {left: 20; top: 30; right: 20; bottom: 20}
+                    anchors.leftMargin: 20
+                    anchors.rightMargin: 20
+                    anchors.topMargin: 20
+                    anchors.bottomMargin: 10
                     spacing: 20
 
                     RowLayout {
-                        width: parent.width
-                        spacing: 10
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        spacing: 20
+                        z: 10000
 
                         StyledCheckbox {
                             id: fitArtworksCheckbox
@@ -359,9 +371,32 @@ ApplicationWindow {
                             }
                         }
 
+                        Item {
+                            width: 20
+                        }
+
                         StyledText {
-                            text: i18.n + qsTr("(instead of filling the square)")
-                            color: Colors.defaultInputBackground
+                            text: i18.n + qsTr("Theme:")
+                        }
+
+                        CustomComboBox {
+                            id: themeComboBox
+                            model: Themes.names
+                            width: 100
+                            height: 24
+                            itemHeight: 28
+                            onComboIndexChanged: {
+                                uxTab.themeIndex = themeComboBox.selectedIndex
+                            }
+
+                            function onResetRequested()  {
+                                selectedIndex  = settingsModel.selectedThemeIndex
+                            }
+
+                            Component.onCompleted: {
+                                themeComboBox.selectedIndex = settingsModel.selectedThemeIndex
+                                uxTab.resetRequested.connect(themeComboBox.onResetRequested)
+                            }
                         }
                     }
 
@@ -519,7 +554,10 @@ ApplicationWindow {
 
                 ColumnLayout {
                     anchors.fill: parent
-                    anchors.margins: {left: 5; top: 30; right: 20; bottom: 20}
+                    anchors.leftMargin: 5
+                    anchors.rightMargin: 20
+                    anchors.topMargin: 20
+                    anchors.bottomMargin: 10
 
                     GridLayout {
                         width: parent.width
@@ -641,7 +679,10 @@ ApplicationWindow {
                 ColumnLayout {
                     spacing: 20
                     anchors.fill: parent
-                    anchors.margins: {left: 20; top: 30; right: 20; bottom: 20}
+                    anchors.leftMargin: 20
+                    anchors.rightMargin: 20
+                    anchors.topMargin: 20
+                    anchors.bottomMargin: 10
 
                     RowLayout {
                         width: parent.width
@@ -809,7 +850,10 @@ ApplicationWindow {
                 ColumnLayout {
                     spacing: 20
                     anchors.fill: parent
-                    anchors.margins: {left: 20; top: 30; right: 20; bottom: 20}
+                    anchors.leftMargin: 20
+                    anchors.rightMargin: 20
+                    anchors.topMargin: 20
+                    anchors.bottomMargin: 10
 
                     RowLayout {
                         width: parent.width
@@ -924,7 +968,10 @@ ApplicationWindow {
 
                 ColumnLayout {
                     anchors.fill: parent
-                    anchors.margins: {left: 20; top: 30; right: 20; bottom: 20}
+                    anchors.leftMargin: 20
+                    anchors.rightMargin: 20
+                    anchors.topMargin: 20
+                    anchors.bottomMargin: 10
 
                     RowLayout {
                         StyledCheckbox {
@@ -1085,7 +1132,9 @@ ApplicationWindow {
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom
-            anchors.margins: {left: 20; bottom: 20; right: 20}
+            anchors.leftMargin: 20
+            anchors.rightMargin: 20
+            anchors.bottomMargin: 20
             height: 24
             spacing: 0
             width: parent.width
@@ -1120,9 +1169,11 @@ ApplicationWindow {
                 onClicked: {
                     settingsModel.keywordSizeScale = uxTab.sizeSliderValue
                     settingsModel.scrollSpeedScale = uxTab.scrollSliderValue
+                    settingsModel.selectedThemeIndex = uxTab.themeIndex
                     settingsModel.userStatistic = secTab.useStatistics
                     settingsModel.saveAllValues()
                     closeSettings()
+                    Colors.initTheme(Themes.availableThemes[settingsModel.selectedThemeIndex])
                 }
             }
 

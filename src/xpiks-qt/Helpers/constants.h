@@ -68,6 +68,7 @@ namespace Constants {
     const char INSTALLED_VERSION[] = "INSTALLED_VERSION";
     const char USER_CONSENT[] = "USER_CONSENT_1_0";
     const char SELECTED_LOCALE[] = "SELECTED_LOCALE";
+    const char SELECTED_THEME_INDEX[] = "SELECTED_THEME_INDEX";
 #else
     const char MAX_KEYWORD_COUNT[] = "DEBUG_MAX_KEYWORD_COUNT";
     const char MAX_DESCRIPTION_LENGTH[] = "DEBUG_MAX_DESCRIPTION_LENGTH";
@@ -80,6 +81,7 @@ namespace Constants {
     const char INSTALLED_VERSION[] = "DEBUG_INSTALLED_VERSION";
     const char USER_CONSENT[] = "DEBUG_USER_CONSENT_1_0";
     const char SELECTED_LOCALE[] = "DEBUG_SELECTED_LOCALE";
+    const char SELECTED_THEME_INDEX[] = "DEBUG_SELECTED_THEME_INDEX";
 
 #ifdef INTEGRATION_TESTS
     const char LIBRARY_FILENAME[] = "xpiks.integration.library";
