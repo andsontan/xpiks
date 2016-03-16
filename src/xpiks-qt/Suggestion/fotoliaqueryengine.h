@@ -19,41 +19,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ISUGGESTIONQUERYENGINE_H
-#define ISUGGESTIONQUERYENGINE_H
+#ifndef FOTOLIAQUERYENGINE_H
+#define FOTOLIAQUERYENGINE_H
 
-#include <QStringList>
-#include <QVector>
-#include <QObject>
-#include "suggestionartwork.h"
+#include <QString>
+#include <QNetworkAccessManager>
+#include "suggestionqueryenginebase.h"
 
 namespace Suggestion {
-
-    class SuggestionQueryEngineBase: public QObject {
+    class FotoliaQueryEngine : public SuggestionQueryEngineBase
+    {
         Q_OBJECT
     public:
-        virtual ~SuggestionQueryEngineBase() { }
-
-        virtual void submitQuery(const QStringList &queryKeywords) = 0;
-        virtual QString getName() const = 0;
+        FotoliaQueryEngine();
 
     public:
-        void cancelQueries() { emit cancelAllQueries(); }
-        const QVector<SuggestionArtwork *> &getLastResults() const { return m_LastResults; }
+        virtual void submitQuery(const QStringList &queryKeywords);
+        virtual QString getName() const { return tr("Fotolia"); }
 
-        void setResults(const QVector<SuggestionArtwork *> &results) {
-            m_LastResults.clear();
-            m_LastResults.append(results);
-        }
-
-    signals:
-        void resultsAvailable();
-        void cancelAllQueries();
-        void errorReceived(const QString &error);
+    private slots:
+        void replyReceived(QNetworkReply *networkReply);
 
     private:
-        QVector<SuggestionArtwork *> m_LastResults;
+        void parseResponse(const QJsonObject &jsonObject, int count, QVector<SuggestionArtwork *> &suggestionArtworks);
+        QUrl buildQuery(const QStringList &queryKeywords) const;
+
+    private:
+        QNetworkAccessManager m_NetworkManager;
+        QString m_FotoliaAPIKey;
     };
 }
 
-#endif // ISUGGESTIONQUERYENGINE_H
+#endif // FOTOLIAQUERYENGINE_H

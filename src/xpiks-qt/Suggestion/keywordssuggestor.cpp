@@ -29,6 +29,7 @@
 #include "suggestionqueryenginebase.h"
 #include "shutterstockqueryengine.h"
 #include "locallibraryqueryengine.h"
+#include "fotoliaqueryengine.h"
 
 namespace Suggestion {
     KeywordsSuggestor::KeywordsSuggestor(LocalLibrary *library, QObject *parent):
@@ -41,7 +42,10 @@ namespace Suggestion {
         m_SelectedSourceIndex(0),
         m_IsInProgress(false)
     {
+        setLastErrorString(tr("No results found"));
+
         m_QueryEngines.append(new ShutterstockQueryEngine());
+        m_QueryEngines.append(new FotoliaQueryEngine());
         m_QueryEngines.append(new LocalLibraryQueryEngine(m_LocalLibrary));
 
         int length = m_QueryEngines.length();
@@ -51,6 +55,9 @@ namespace Suggestion {
 
             QObject::connect(engine, SIGNAL(resultsAvailable()),
                              this, SLOT(resultsAvailableHandler()));
+
+            QObject::connect(engine, SIGNAL(errorReceived(QString)),
+                             this, SLOT(errorsReceivedHandler(QString)));
         }
     }
 
@@ -98,6 +105,11 @@ namespace Suggestion {
         SuggestionQueryEngineBase *engine = m_QueryEngines.at(m_SelectedSourceIndex);
         const QVector<SuggestionArtwork*> &results = engine->getLastResults();
         setSuggestedArtworks(results);
+    }
+
+    void KeywordsSuggestor::errorsReceivedHandler(const QString &error) {
+        unsetInProgress();
+        setLastErrorString(error);
     }
 
     QString KeywordsSuggestor::removeSuggestedKeywordAt(int keywordIndex) {

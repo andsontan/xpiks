@@ -276,7 +276,7 @@ Item {
 
                     StyledText {
                         anchors.centerIn: parent
-                        text: i18.n + qsTr("No results found")
+                        text: keywordsSuggestor.lastErrorString
                         color: Colors.selectedMetadataColor
                     }
 

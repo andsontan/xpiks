@@ -45,6 +45,7 @@ namespace Suggestion {
         Q_PROPERTY(bool isInProgress READ getIsInProgress NOTIFY isInProgressChanged)
         Q_PROPERTY(int selectedArtworksCount READ getSelectedArtworksCount NOTIFY selectedArtworksCountChanged)
         Q_PROPERTY(int selectedSourceIndex READ getSelectedSourceIndex WRITE setSelectedSourceIndex NOTIFY selectedSourceIndexChanged)
+        Q_PROPERTY(QString lastErrorString READ getLastErrorString WRITE setLastErrorString NOTIFY lastErrorStringChanged)
 
     public:
         KeywordsSuggestor(LocalLibrary *library, QObject *parent=NULL);
@@ -57,11 +58,19 @@ namespace Suggestion {
         int getSelectedSourceIndex() const { return m_SelectedSourceIndex; }
         void setSelectedSourceIndex(int value);
 
-    private:
+        void setLastErrorString(const QString &value) {
+            if (value != m_LastErrorString) {
+                m_LastErrorString = value;
+                emit lastErrorStringChanged();
+            }
+        }
+
+    public:
         int getSuggestedKeywordsCount() const { return m_SuggestedKeywords.rowCount(); }
         int getOtherKeywordsCount() const { return m_AllOtherKeywords.rowCount(); }
         bool getIsInProgress() const { return m_IsInProgress; }
         int getSelectedArtworksCount() const { return m_SelectedArtworksCount; }
+        const QString &getLastErrorString() const { return m_LastErrorString; }
 
     signals:
         void suggestedKeywordsCountChanged();
@@ -70,9 +79,11 @@ namespace Suggestion {
         void selectedSourceIndexChanged();
         void suggestionArrived();
         void selectedArtworksCountChanged();
+        void lastErrorStringChanged();
 
     private slots:
         void resultsAvailableHandler();
+        void errorsReceivedHandler(const QString &error);
 
     private:
         void setInProgress() { m_IsInProgress = true; emit isInProgressChanged(); }
@@ -126,6 +137,7 @@ namespace Suggestion {
         QVector<SuggestionQueryEngineBase*> m_QueryEngines;
         LocalLibrary *m_LocalLibrary;
         QStringList m_QueryEnginesNames;
+        QString m_LastErrorString;
         Common::BasicKeywordsModel m_SuggestedKeywords;
         Common::BasicKeywordsModel m_AllOtherKeywords;
         int m_SelectedArtworksCount;

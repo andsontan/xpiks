@@ -75,6 +75,7 @@ namespace Suggestion {
             }
         } else {
             LOG_WARNING << "error:" << networkReply->errorString();
+            emit errorReceived(networkReply->errorString());
         }
 
         networkReply->deleteLater();

@@ -80,7 +80,8 @@ SOURCES += main.cpp \
     Helpers/filterhelpers.cpp \
     QMLExtensions/triangleelement.cpp \
     Suggestion/shutterstockqueryengine.cpp \
-    Suggestion/locallibraryqueryengine.cpp
+    Suggestion/locallibraryqueryengine.cpp \
+    Suggestion/fotoliaqueryengine.cpp
 
 RESOURCES += qml.qrc
 
@@ -212,7 +213,8 @@ HEADERS += \
     QMLExtensions/triangleelement.h \
     Suggestion/shutterstockqueryengine.h \
     Suggestion/locallibraryqueryengine.h \
-    Suggestion/suggestionqueryenginebase.h
+    Suggestion/suggestionqueryenginebase.h \
+    Suggestion/fotoliaqueryengine.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
