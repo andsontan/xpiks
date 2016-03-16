@@ -4,7 +4,6 @@
 
 #include "../../xpiks-qt/SpellCheck/spellchecksuggestionmodel.h"
 #include "../../xpiks-qt/Models/filteredartitemsproxymodel.h"
-#include "../../xpiks-qt/Suggestion/suggestionqueryengine.h"
 #include "../../xpiks-qt/MetadataIO/metadataiocoordinator.h"
 #include "../../xpiks-qt/Conectivity/analyticsuserevent.h"
 #include "../../xpiks-qt/SpellCheck/spellcheckerservice.h"
@@ -48,6 +47,7 @@
 #include "spellcheckmultireplacetest.h"
 #include "spellcheckcombinedmodeltest.h"
 #include "zipartworkstest.h"
+#include "spellcheckundotest.h"
 
 #if defined(WITH_LOGS)
 #undef WITH_LOGS
@@ -94,8 +94,7 @@ int main(int argc, char *argv[]) {
     Encryption::SecretsManager secretsManager;
     UndoRedo::UndoRedoManager undoRedoManager;
     Models::ZipArchiver zipArchiver;
-    Suggestion::KeywordsSuggestor keywordsSuggestor;
-    keywordsSuggestor.setLocalLibrary(&localLibrary);
+    Suggestion::KeywordsSuggestor keywordsSuggestor(&localLibrary);
     Models::FilteredArtItemsProxyModel filteredArtItemsModel;
     filteredArtItemsModel.setSourceModel(&artItemsModel);
     Models::RecentDirectoriesModel recentDirectorieModel;
@@ -159,6 +158,7 @@ int main(int argc, char *argv[]) {
     integrationTests.append(new SpellCheckMultireplaceTest(&commandManager));
     integrationTests.append(new SpellCheckCombinedModelTest(&commandManager));
     integrationTests.append(new ZipArtworksTest(&commandManager));
+    integrationTests.append(new SpellCheckUndoTest(&commandManager));
 
     foreach (IntegrationTestBase *test, integrationTests) {
         try {

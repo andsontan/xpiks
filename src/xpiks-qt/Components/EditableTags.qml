@@ -62,6 +62,7 @@ Flickable {
     signal backTabPressed();
     signal tabPressed();
     signal editActivated();
+    signal clickedInside()
 
     function activateEdit() {
         if (editEnabled && !nextTagTextInput.activeFocus) {
@@ -69,6 +70,8 @@ Flickable {
             nextTagTextInput.forceActiveFocus()
             editActivated();
         }
+
+        clickedInside()
     }
 
     function getEditedText() {
@@ -222,7 +225,7 @@ Flickable {
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 color: Colors.defaultLightColor
-                font.family: "Helvetica"
+                font.family: Qt.platform.os === "windows" ? "Arial" : "Helvetica"
                 font.pixelSize: UIConfig.fontPixelSize*settingsModel.keywordSizeScale
                 verticalAlignment: TextInput.AlignVCenter
                 renderType: TextInput.NativeRendering

@@ -24,6 +24,7 @@ import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.1
 import QtQuick.Controls.Styles 1.1
+import QtGraphicalEffects 1.0
 import "../Constants"
 import "../Constants/Colors.js" as Colors;
 import "../Common.js" as Common;
@@ -102,6 +103,15 @@ Item {
             }
         }
 
+        RectangularGlow {
+            anchors.fill: dialogWindow
+            anchors.topMargin: glowRadius/2
+            glowRadius: 4
+            spread: 0.0
+            color: Colors.defaultControlColor
+            cornerRadius: glowRadius
+        }
+
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
@@ -157,7 +167,6 @@ Item {
                         text: logsComponent.logText
                         selectionColor: Colors.selectedArtworkColor
                         readOnly: true
-                        font.pixelSize: UIConfig.fontPixelSize*settingsModel.keywordSizeScale
 
                         Component.onCompleted: {
                             scrollToBottom()
@@ -182,7 +191,7 @@ Item {
                     id: loadMoreButton
                     text: i18.n + qsTr("Load more logs")
                     enabled: logsModel.withLogs
-                    width: 120
+                    width: 130
                     onClicked: {
                         logsComponent.logText = logsModel.getAllLogsText(true)
                         oneHunderdLinesWarning.linesNumber = 1000
@@ -195,7 +204,7 @@ Item {
                     id: revealFileButton
                     text: i18.n + qsTr("Reveal logfile")
                     visible: Qt.platform.os !== "linux"
-                    width: 120
+                    width: 130
                     onClicked: {
                         helpersWrapper.revealLogFile()
                     }
@@ -208,7 +217,7 @@ Item {
 
                 StyledButton {
                     text: i18.n + qsTr("Close")
-                    width: 100
+                    width: 110
                     onClicked: {
                         closePopup()
                     }

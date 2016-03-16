@@ -30,11 +30,12 @@
 #include <QSet>
 #include "../Common/baseentity.h"
 #include "../Common/basickeywordsmodel.h"
-#include "suggestionqueryengine.h"
+#include "shutterstockqueryengine.h"
 #include "suggestionartwork.h"
 
 namespace Suggestion {
     class LocalLibrary;
+    class SuggestionQueryEngineBase;
 
     class KeywordsSuggestor : public QAbstractListModel, public Common::BaseEntity
     {
@@ -42,35 +43,19 @@ namespace Suggestion {
         Q_PROPERTY(int suggestedKeywordsCount READ getSuggestedKeywordsCount NOTIFY suggestedKeywordsCountChanged)
         Q_PROPERTY(int otherKeywordsCount READ getOtherKeywordsCount NOTIFY otherKeywordsCountChanged)
         Q_PROPERTY(bool isInProgress READ getIsInProgress NOTIFY isInProgressChanged)
-        Q_PROPERTY(bool useLocal READ getUseLocal WRITE setUseLocal NOTIFY useLocalChanged)
         Q_PROPERTY(int selectedArtworksCount READ getSelectedArtworksCount NOTIFY selectedArtworksCountChanged)
-    public:
-        KeywordsSuggestor(QObject *parent=NULL) :
-            QAbstractListModel(parent),
-            Common::BaseEntity(),
-            m_QueryEngine(this),
-            m_LocalLibrary(NULL),
-            m_SuggestedKeywords(this),
-            m_AllOtherKeywords(this),
-            m_SelectedArtworksCount(0),
-            m_IsInProgress(false),
-            m_UseLocal(false)
-        {}
+        Q_PROPERTY(int selectedSourceIndex READ getSelectedSourceIndex WRITE setSelectedSourceIndex NOTIFY selectedSourceIndexChanged)
 
+    public:
+        KeywordsSuggestor(LocalLibrary *library, QObject *parent=NULL);
         ~KeywordsSuggestor() { qDeleteAll(m_Suggestions); }
 
     public:
-        void setLocalLibrary(LocalLibrary *library) { m_LocalLibrary = library; }
         void setSuggestedArtworks(const QVector<SuggestionArtwork *> &suggestedArtworks);
         void clear();
 
-        bool getUseLocal() const { return m_UseLocal; }
-        void setUseLocal(bool value) {
-            if (value != m_UseLocal) {
-                m_UseLocal = value;
-                emit useLocalChanged();
-            }
-        }
+        int getSelectedSourceIndex() const { return m_SelectedSourceIndex; }
+        void setSelectedSourceIndex(int value);
 
     private:
         int getSuggestedKeywordsCount() const { return m_SuggestedKeywords.rowCount(); }
@@ -82,13 +67,15 @@ namespace Suggestion {
         void suggestedKeywordsCountChanged();
         void otherKeywordsCountChanged();
         void isInProgressChanged();
-        void useLocalChanged();
+        void selectedSourceIndexChanged();
         void suggestionArrived();
         void selectedArtworksCountChanged();
 
+    private slots:
+        void resultsAvailableHandler();
+
     private:
         void setInProgress() { m_IsInProgress = true; emit isInProgressChanged(); }
-    public:
         void unsetInProgress() { m_IsInProgress = false; emit isInProgressChanged(); }
 
     public:
@@ -98,9 +85,10 @@ namespace Suggestion {
         Q_INVOKABLE QString removeOtherKeywordAt(int keywordIndex);
         Q_INVOKABLE void setArtworkSelected(int index, bool newState);
         Q_INVOKABLE void searchArtworks(const QString &searchTerm);
-        Q_INVOKABLE void cancelSearch() { m_QueryEngine.cancelQueries(); }
+        Q_INVOKABLE void cancelSearch();
         Q_INVOKABLE void close() { clear(); }
         Q_INVOKABLE QStringList getSuggestedKeywords() const { return m_SuggestedKeywords.getKeywords(); }
+        Q_INVOKABLE QStringList getEngineNames() const { return m_QueryEnginesNames; }
 
         Q_INVOKABLE QObject *getSuggestedKeywordsModel() {
             QObject *item = &m_SuggestedKeywords;
@@ -135,13 +123,14 @@ namespace Suggestion {
     private:
         QHash<QString, int> m_KeywordsHash;
         QVector<SuggestionArtwork *> m_Suggestions;
-        SuggestionQueryEngine m_QueryEngine;
+        QVector<SuggestionQueryEngineBase*> m_QueryEngines;
         LocalLibrary *m_LocalLibrary;
+        QStringList m_QueryEnginesNames;
         Common::BasicKeywordsModel m_SuggestedKeywords;
         Common::BasicKeywordsModel m_AllOtherKeywords;
         int m_SelectedArtworksCount;
+        int m_SelectedSourceIndex;
         volatile bool m_IsInProgress;
-        volatile bool m_UseLocal;
     };
 }
 

@@ -29,6 +29,7 @@ CheckBox {
     property bool isContrast: false
     property int indicatorWidth: 17
     property int indicatorHeight: 17
+    checked: true
 
     style: CheckBoxStyle {
         spacing: 8
@@ -42,23 +43,25 @@ CheckBox {
             Rectangle {
                 visible: control.checked
                 color: Colors.checkboxCheckedColor
-                width: parent.width * 0.7
-                height: 2
-                radius: 1
-                transformOrigin: Item.Center
-                rotation: 120
-                transform: Translate { x: parent.width * 0.3; y: parent.height * 0.45 }
+                width: parent.width * 0.55
+                height: parent.width*0.1
+                radius: height / 2
+                transformOrigin: Item.TopLeft
+                rotation: 235
+                x: parent.width * 0.45 + radius
+                y: parent.height * 0.8 + radius
             }
 
             Rectangle {
                 visible: control.checked
                 color: Colors.checkboxCheckedColor
-                width: parent.width / 2
-                radius: 1
-                height: 2
-                transformOrigin: Item.Center
-                rotation: 65
-                transform: Translate { x: parent.width * 0.15; y: parent.height * 0.55 }
+                width: parent.width * 0.7
+                radius: height / 2
+                height: parent.width*0.1
+                transformOrigin: Item.TopLeft
+                rotation: 300
+                x: parent.width * 0.45
+                y: parent.height * 0.8
             }
         }
 

@@ -252,6 +252,39 @@ void CombinedModelTests::recombineAfterRemoveAllButOneTest() {
     freeArtworks(items);
 }
 
+void CombinedModelTests::recombineAfterChangesTest() {
+    Models::CombinedArtworksModel combinedModel;
+    combinedModel.setCommandManager(&m_CommandManagerMock);
+
+    QVector<Models::ArtItemInfo *> items;
+    items << createArtworkMetadata("Description1", "title1", QStringList() << "Keyword1" << "adfafdaf", 0);
+    items << createArtworkMetadata("Description2", "title2", QStringList() << "Keyword2" << "21345425421", 1);
+    items << createArtworkMetadata("Description3", "title3", QStringList() << "Keyword3" << "(*&^*&^*&&^%", 2);
+
+    combinedModel.initArtworks(items);
+    combinedModel.recombineArtworks();
+
+    combinedModel.appendKeyword("brand new keyword");
+    combinedModel.setDescription(combinedModel.getDescription() + " new stuff here");
+    combinedModel.setTitle(combinedModel.getTitle() + " new stuff here");
+
+    items[1]->setSelected(true);
+    items[2]->setSelected(true);
+    combinedModel.removeSelectedArtworks();
+    Models::ArtworkMetadata *first = items.first()->getOrigin();
+
+    QCOMPARE(combinedModel.getArtworksCount(), 1);
+    QVERIFY(combinedModel.getTitle() != first->getTitle());
+    QVERIFY(combinedModel.getDescription() != first->getDescription());
+    QVERIFY(combinedModel.getKeywordsCount() != first->getKeywordsCount());
+    QVERIFY(combinedModel.getKeywords() != first->getKeywords());
+    QCOMPARE(combinedModel.getAreKeywordsModified(), true);
+
+    items.removeAt(items.length() - 1);
+    items.removeAt(items.length() - 1);
+    freeArtworks(items);
+}
+
 void CombinedModelTests::twoTimesInARowRecombineTest() {
     Models::CombinedArtworksModel combinedModel;
     combinedModel.setCommandManager(&m_CommandManagerMock);

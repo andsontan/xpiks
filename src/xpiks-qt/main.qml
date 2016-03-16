@@ -37,10 +37,10 @@ import "Constants/UIConfig.js" as UIConfig
 ApplicationWindow {
     id: applicationWindow
     visible: true
-    width: appSettings.getAppWidth(900)
+    width: appSettings.getAppWidth(930)
     height: appSettings.getAppHeight(725)
     minimumHeight: 670
-    minimumWidth: 900
+    minimumWidth: 930
     title: i18.n + qsTr("Xpiks")
     property int openedDialogsCount: 0
     property bool showUpdateLink: false
@@ -241,7 +241,7 @@ ApplicationWindow {
 
             MenuItem {
                 text: i18.n + qsTr("&Invert selection")
-                enabled: imagesListView.count > 0
+                enabled: artworksHost.count > 0
                 onTriggered: {
                     console.info("Invert selection triggered")
                     filteredArtItemsModel.invertSelectionArtworks()
@@ -250,7 +250,7 @@ ApplicationWindow {
 
             MenuItem {
                 text: i18.n + qsTr("&Sort by filename")
-                enabled: imagesListView.count > 0
+                enabled: artworksHost.count > 0
                 checkable: true
                 onToggled: {
                     console.info("Sort by filename")
@@ -798,7 +798,7 @@ ApplicationWindow {
                     StyledButton {
                         text: i18.n + qsTr("Remove")
                         enabled: artworkRepository.artworksSourcesCount > 0
-                        width: 80
+                        width: 90
                         onClicked: {
                             if (filteredArtItemsModel.selectedArtworksCount === 0) {
                                 mustSelectDialog.open()
@@ -819,7 +819,7 @@ ApplicationWindow {
 
                     StyledButton {
                         text: i18.n + qsTr("Edit")
-                        width: mainScrollView.areScrollbarsVisible ? 72 : 82
+                        width: 90
                         enabled: artworkRepository.artworksSourcesCount > 0
                         onClicked: {
                             if (filteredArtItemsModel.selectedArtworksCount === 0) {
@@ -851,7 +851,7 @@ ApplicationWindow {
 
                     StyledButton {
                         text: i18.n + qsTr("Save")
-                        width: 80
+                        width: mainScrollView.areScrollbarsVisible ? 88 : 98
                         enabled: artworkRepository.artworksSourcesCount > 0
                         onClicked: {
                             if (filteredArtItemsModel.selectedArtworksCount == 0) {
@@ -873,7 +873,7 @@ ApplicationWindow {
 
                     StyledButton {
                         text: i18.n + qsTr("Upload")
-                        width: 90
+                        width: 100
                         enabled: artworkRepository.artworksSourcesCount > 0
                         onClicked: {
                             if (filteredArtItemsModel.selectedArtworksCount === 0) {
@@ -945,12 +945,12 @@ ApplicationWindow {
                             anchors.rightMargin: 10
                             anchors.verticalCenter: parent.verticalCenter
                             color: Colors.defaultDarkColor
-                            width: (artworkRepository.artworksSourcesCount > 0 && mainScrollView.areScrollbarsVisible) ? 252 : 262
+                            width: (artworkRepository.artworksSourcesCount > 0 && mainScrollView.areScrollbarsVisible) ? 288 : 298
                             height: 24
 
                             StyledTextInput {
                                 id: filterText
-                                width: (artworkRepository.artworksSourcesCount > 0 && mainScrollView.areScrollbarsVisible) ? 220 : 230
+                                width: (artworkRepository.artworksSourcesCount > 0 && mainScrollView.areScrollbarsVisible) ? 250 : 260
                                 height: 24
                                 clip: true
                                 anchors.left: parent.left
@@ -1000,7 +1000,7 @@ ApplicationWindow {
                             anchors.right: parent.right
                             anchors.verticalCenter: parent.verticalCenter
                             anchors.rightMargin:  mainScrollView.areScrollbarsVisible ? 35 : 20
-                            width: 90
+                            width: 100
                             text: i18.n + qsTr("Search")
                             enabled: artworkRepository.artworksSourcesCount > 0
                             onClicked: filteredArtItemsModel.searchTerm = filterText.text
@@ -1168,12 +1168,12 @@ ApplicationWindow {
                         id: separator
                         anchors.left: parent.left
                         anchors.right: parent.right
-                        anchors.rightMargin: imagesListView.count > 3 ? 15 : 0
+                        anchors.rightMargin: artworksHost.count > 3 ? 15 : 0
                         anchors.topMargin: visible ? 2 : 4
                         anchors.top: undoRedoRect.bottom
                         height: visible ? 2 : 0
                         color: Colors.defaultDarkColor
-                        visible: !undoRedoManager.canUndo && (imagesListView.count > 0)
+                        visible: !undoRedoManager.canUndo && (artworksHost.count > 0)
                     }
 
                     StyledScrollView {
@@ -1188,24 +1188,25 @@ ApplicationWindow {
                         //verticalScrollBarPolicy: Qt.ScrollBarAlwaysOn
 
                         GridView {
-                            id: imagesListView
+                            id: artworksHost
                             model: filteredArtItemsModel
                             boundsBehavior: Flickable.StopAtBounds
                             property int cellSpacing: 4
-                            cellHeight: applicationWindow.listLayout ? (200 + 80*(settingsModel.keywordSizeScale - 1.0) + cellSpacing) : (200 + cellSpacing)
-                            cellWidth: applicationWindow.listLayout ? imagesListView.width : (208 + cellSpacing)
+                            property double defaultRowHeight: 205
+                            cellHeight: applicationWindow.listLayout ? (defaultRowHeight + 80*(settingsModel.keywordSizeScale - 1.0) + cellSpacing) : (defaultRowHeight + cellSpacing)
+                            cellWidth: applicationWindow.listLayout ? artworksHost.width : (208 + cellSpacing)
 
                             function forceUpdateArtworks(needToMoveCurrentItem) {
                                 console.debug("UI::forceUpdateArtworks # updating main listview")
-                                imagesListView.forceLayout()
-                                imagesListView.update()
+                                artworksHost.forceLayout()
+                                artworksHost.update()
 
                                 // this piece of code is here in order to beat caching of ListView
                                 // when you remove all items but few it fails to draw them
                                 if (needToMoveCurrentItem) {
-                                    console.debug("UI::forceUpdateArtworks # Moving into current item " + imagesListView.currentIndex)
-                                    imagesListView.moveCurrentIndexDown()
-                                    imagesListView.positionViewAtIndex(imagesListView.currentIndex, GridView.Visible)
+                                    console.debug("UI::forceUpdateArtworks # Moving into current item " + artworksHost.currentIndex)
+                                    artworksHost.moveCurrentIndexDown()
+                                    artworksHost.positionViewAtIndex(artworksHost.currentIndex, GridView.Visible)
                                 }
                             }
 
@@ -1237,7 +1238,7 @@ ApplicationWindow {
                                 property var artworkModel: artItemsModel.getArtworkItself(rowWrapper.getIndex())
                                 property int delegateIndex: index
                                 width: applicationWindow.listLayout ? (mainScrollView.areScrollbarsVisible ? (parent.width - 5) : parent.width) : 208
-                                height: applicationWindow.listLayout ? (200 + 80*(settingsModel.keywordSizeScale - 1.0)) : 200
+                                height: applicationWindow.listLayout ? (artworksHost.defaultRowHeight + 80*(settingsModel.keywordSizeScale - 1.0)) : artworksHost.defaultRowHeight
 
                                 function getIndex() {
                                     return filteredArtItemsModel.getOriginalIndex(index)
@@ -1284,7 +1285,7 @@ ApplicationWindow {
                                             flv.activateEdit()
                                         }
 
-                                        imagesListView.positionViewAtIndex(rowWrapper.delegateIndex, ListView.Contain)
+                                        artworksHost.positionViewAtIndex(rowWrapper.delegateIndex, ListView.Contain)
                                     }
                                 }
 
@@ -1365,20 +1366,19 @@ ApplicationWindow {
                                             }
                                         }
 
-                                        ColumnLayout {
+                                        Item {
                                             anchors.fill: parent
                                             anchors.leftMargin: applicationWindow.listLayout ? 10 : 0
                                             anchors.rightMargin: applicationWindow.listLayout ? 15 : 0
-                                            spacing: 5
 
                                             Item {
-                                                height: 30
-                                            }
-
-                                            Item {
-                                                width: 150
-                                                height: 132
+                                                id: imageHost
+                                                anchors.top: parent.top
+                                                anchors.topMargin: descriptionText.height + 24
                                                 anchors.horizontalCenter: parent.horizontalCenter
+                                                width: 150
+                                                property double desiredHeight: descriptionRect.height + keywordsWrapper.height + keywordsLabel.height + 10
+                                                height: desiredHeight > 150 ? 150 : desiredHeight
 
                                                 Image {
                                                     id: artworkImage
@@ -1416,7 +1416,9 @@ ApplicationWindow {
                                             }
 
                                             StyledText {
-                                                Layout.fillWidth: true
+                                                anchors.top: imageHost.bottom
+                                                anchors.topMargin: 3
+                                                width: parent.width
                                                 elide: Text.ElideMiddle
                                                 color: moreInfoMA.pressed ? Colors.defaultLightColor : Colors.defaultInputBackground
                                                 horizontalAlignment: Text.AlignHCenter
@@ -1436,10 +1438,6 @@ ApplicationWindow {
                                                     }
                                                 }
                                             }
-
-                                            Item {
-                                                Layout.fillHeight: true
-                                            }
                                         }
                                     }
 
@@ -1456,8 +1454,10 @@ ApplicationWindow {
                                         Item {
                                             id: columnLayout
                                             anchors.fill: parent
-                                            anchors.margins: { left: 20; right: 20 }
-                                            property bool isWideEnough: width > 400
+                                            anchors.leftMargin: 20
+                                            anchors.rightMargin: 20
+                                            anchors.topMargin: 20
+                                            property bool isWideEnough: width > 450
 
                                             StyledText {
                                                 id: descriptionText
@@ -1497,7 +1497,8 @@ ApplicationWindow {
                                                     anchors.rightMargin: 5
                                                     interactive: false
                                                     flickableDirection: Flickable.HorizontalFlick
-                                                    height: 30
+                                                    height: parent.height - parent.border.width*2
+                                                    anchors.verticalCenter: parent.verticalCenter
                                                     clip: true
 
                                                     function ensureVisible(r) {
@@ -1513,7 +1514,6 @@ ApplicationWindow {
                                                         height: descriptionFlick.height
                                                         text: description
                                                         focus: true
-                                                        font.pixelSize: UIConfig.fontPixelSize * settingsModel.keywordSizeScale
                                                         color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.defaultInputBackground
                                                         onTextChanged: model.editdescription = text
 
@@ -1556,6 +1556,14 @@ ApplicationWindow {
                                                 }
                                             }
 
+                                            StyledText {
+                                                text: descriptionTextInput.length
+                                                anchors.right: descriptionRect.right
+                                                anchors.bottom: descriptionRect.top
+                                                anchors.bottomMargin: 3
+                                                color: rowWrapper.isHighlighted ? Colors.defaultControlColor : Colors.selectedArtworkColor
+                                            }
+
                                             Rectangle {
                                                 id: titleRect
                                                 height: 30
@@ -1573,7 +1581,8 @@ ApplicationWindow {
                                                     id: titleFlick
                                                     contentWidth: titleTextInput.paintedWidth
                                                     contentHeight: titleTextInput.paintedHeight
-                                                    height: 30
+                                                    height: parent.height - parent.border.width*2
+                                                    anchors.verticalCenter: parent.verticalCenter
                                                     anchors.left: parent.left
                                                     anchors.right: parent.right
                                                     anchors.leftMargin: 5
@@ -1591,7 +1600,6 @@ ApplicationWindow {
 
                                                     StyledTextEdit {
                                                         id: titleTextInput
-                                                        font.pixelSize: UIConfig.fontPixelSize * settingsModel.keywordSizeScale
                                                         width: paintedWidth > titleFlick.width ? paintedWidth : titleFlick.width
                                                         height: titleFlick.height
                                                         text: title
@@ -1632,6 +1640,15 @@ ApplicationWindow {
                                             }
 
                                             StyledText {
+                                                text: titleTextInput.length
+                                                anchors.right: titleRect.right
+                                                anchors.bottom: titleRect.top
+                                                anchors.bottomMargin: 3
+                                                color: rowWrapper.isHighlighted ? Colors.defaultControlColor : Colors.selectedArtworkColor
+                                                visible: columnLayout.isWideEnough
+                                            }
+
+                                            StyledText {
                                                 id: keywordsLabel
                                                 anchors.left: parent.left
                                                 anchors.top: descriptionRect.bottom
@@ -1640,43 +1657,11 @@ ApplicationWindow {
                                             }
 
                                             StyledText {
-                                                id: plainTextText
-                                                text: i18.n + qsTr("<u>edit in plain text</u>")
-                                                color: plainTextMA.containsMouse ? Colors.defaultLightGrayColor : Colors.defaultInputBackground
-                                                visible: rowWrapper.isHighlighted
+                                                text: keywordscount
                                                 anchors.right: parent.right
                                                 anchors.top: descriptionRect.bottom
                                                 anchors.topMargin: 7
-
-                                                MouseArea {
-                                                    id: plainTextMA
-                                                    anchors.fill: parent
-                                                    hoverEnabled: true
-                                                    enabled: rowWrapper.isHighlighted
-                                                    preventStealing: true
-                                                    cursorShape: containsMouse ? Qt.PointingHandCursor : Qt.ArrowCursor
-                                                    onClicked: {
-                                                        // strange bug with clicking on the keywords field
-                                                        if (!containsMouse) { return; }
-
-                                                        var callbackObject = {
-                                                            onSuccess: function(text) {
-                                                                artItemsModel.plainTextEdit(rowWrapper.getIndex(), text)
-                                                            },
-                                                            onClose: function() {
-                                                                flv.activateEdit()
-                                                            }
-                                                        }
-
-                                                        Common.launchDialog("Dialogs/PlainTextKeywordsDialog.qml",
-                                                                            applicationWindow,
-                                                                            {
-                                                                                callbackObject: callbackObject,
-                                                                                keywordsText: keywordsstring,
-                                                                                artworkIndex: rowWrapper.getIndex()
-                                                                            });
-                                                    }
-                                                }
+                                                color: rowWrapper.isHighlighted ? Colors.defaultControlColor : Colors.selectedArtworkColor
                                             }
 
                                             Rectangle {
@@ -1788,13 +1773,46 @@ ApplicationWindow {
                                             RowLayout {
                                                 anchors.left: parent.left
                                                 anchors.right: parent.right
+                                                anchors.rightMargin: 3
                                                 anchors.top: keywordsWrapper.bottom
                                                 anchors.topMargin: 3
                                                 spacing: 5
 
                                                 StyledText {
-                                                    text: keywordscount
-                                                    color: rowWrapper.isHighlighted ? Colors.defaultControlColor : Colors.selectedArtworkColor
+                                                    id: plainTextText
+                                                    text: i18.n + qsTr("<u>edit in plain text</u>")
+                                                    color: plainTextMA.containsMouse ? Colors.defaultLightGrayColor : Colors.defaultInputBackground
+                                                    visible: rowWrapper.isHighlighted
+
+                                                    MouseArea {
+                                                        id: plainTextMA
+                                                        anchors.fill: parent
+                                                        hoverEnabled: true
+                                                        enabled: rowWrapper.isHighlighted
+                                                        preventStealing: true
+                                                        cursorShape: containsMouse ? Qt.PointingHandCursor : Qt.ArrowCursor
+                                                        onClicked: {
+                                                            // strange bug with clicking on the keywords field
+                                                            if (!containsMouse) { return; }
+
+                                                            var callbackObject = {
+                                                                onSuccess: function(text) {
+                                                                    artItemsModel.plainTextEdit(rowWrapper.getIndex(), text)
+                                                                },
+                                                                onClose: function() {
+                                                                    flv.activateEdit()
+                                                                }
+                                                            }
+
+                                                            Common.launchDialog("Dialogs/PlainTextKeywordsDialog.qml",
+                                                                                applicationWindow,
+                                                                                {
+                                                                                    callbackObject: callbackObject,
+                                                                                    keywordsText: keywordsstring,
+                                                                                    artworkIndex: rowWrapper.getIndex()
+                                                                                });
+                                                        }
+                                                    }
                                                 }
 
                                                 Item {
@@ -1891,18 +1909,18 @@ ApplicationWindow {
 
                             Connections {
                                 target: artItemsModel
-                                onArtworksChanged: imagesListView.forceUpdateArtworks(needToMoveCurrentItem)
+                                onArtworksChanged: artworksHost.forceUpdateArtworks(needToMoveCurrentItem)
                             }
 
                             Connections {
                                 target: filteredArtItemsModel
-                                onAfterInvalidateFilter: imagesListView.forceUpdateArtworks()
+                                onAfterInvalidateFilter: artworksHost.forceUpdateArtworks()
                             }
                         }
                     }
 
                     Item {
-                        visible: imagesListView.count == 0
+                        visible: artworksHost.count == 0
                         anchors.fill: parent
 
                         RowLayout {

@@ -24,6 +24,7 @@ import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.1
 import QtQuick.Controls.Styles 1.1
+import QtGraphicalEffects 1.0
 import xpiks 1.0
 import "../Constants"
 import "../Constants/Colors.js" as Colors;
@@ -89,6 +90,15 @@ Item {
         }
     }
 
+    MessageDialog {
+        id: clearKeywordsDialog
+
+        title: "Confirmation"
+        text: i18.n + qsTr("Clear all keywords?")
+        standardButtons: StandardButton.Yes | StandardButton.No
+        onYes: combinedArtworks.clearKeywords()
+    }
+
     FocusScope {
         anchors.fill: parent
         id: focusScope
@@ -113,6 +123,16 @@ Item {
                 old_x = old_xy[0]; old_y = old_xy[1];
             }
         }
+
+        RectangularGlow {
+            anchors.fill: dialogWindow
+            anchors.topMargin: glowRadius/2
+            glowRadius: 4
+            spread: 0.0
+            color: Colors.defaultControlColor
+            cornerRadius: glowRadius
+        }
+
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
@@ -121,6 +141,8 @@ Item {
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
+
+            property var keywordsModel: combinedArtworks.getKeywordsModel()
 
             Rectangle {
                 id: boundsRect
@@ -163,6 +185,15 @@ Item {
                         text: i18.n + qsTr("(same as Description if empty)")
                         color: Colors.defaultInputBackground
                     }
+
+                    Item {
+                        Layout.fillWidth: true
+                    }
+
+                    StyledText {
+                        text: titleTextInput.length
+                        color: Colors.defaultInputBackground
+                    }
                 }
 
                 Item {
@@ -201,7 +232,6 @@ Item {
                             width: titleFlick.width
                             height: titleFlick.height
                             focus: true
-                            font.pixelSize: UIConfig.fontPixelSize*settingsModel.keywordSizeScale
                             text: combinedArtworks.title
                             onTextChanged: combinedArtworks.title = text
 
@@ -299,7 +329,6 @@ Item {
                             text: combinedArtworks.description
                             width: descriptionFlick.width
                             height: descriptionFlick.height
-                            font.pixelSize: UIConfig.fontPixelSize*settingsModel.keywordSizeScale
                             focus: true
                             property string previousText: text
                             property int maximumLength: 280
@@ -474,40 +503,106 @@ Item {
                 }
 
                 Item {
+                    height: 4
+                }
+
+                RowLayout {
+                    width: parent.width
+                    spacing:5
+
+                    StyledText {
+                        text: i18.n + qsTr("Fix spelling")
+                        enabled: dialogWindow.keywordsModel ? dialogWindow.keywordsModel.hasSpellErrors : false
+                        color: enabled ? (fixSpellingMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor) : Colors.defaultInputBackground
+
+                        MouseArea {
+                            id: fixSpellingMA
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: {
+                                combinedArtworks.suggestCorrections()
+                                Common.launchDialog("Dialogs/SpellCheckSuggestionsDialog.qml",
+                                                    componentParent,
+                                                    {})
+                            }
+                        }
+                    }
+
+                    StyledText {
+                        text: "|"
+                        color: Colors.defaultInputBackground
+                        verticalAlignment: Text.AlignVCenter
+                    }
+
+                    StyledText {
+                        text: i18.n + qsTr("Suggest")
+                        color: enabled ? (suggestKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor) : Colors.defaultInputBackground
+
+                        MouseArea {
+                            id: suggestKeywordsMA
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: {
+                                var callbackObject = {
+                                    promoteKeywords: function(keywords) {
+                                        combinedArtworks.pasteKeywords(keywords)
+                                    }
+                                }
+
+                                Common.launchDialog("Dialogs/KeywordsSuggestion.qml",
+                                                    componentParent,
+                                                    {callbackObject: callbackObject});
+                            }
+                        }
+                    }
+
+                    StyledText {
+                        text: "|"
+                        color: Colors.defaultInputBackground
+                        verticalAlignment: Text.AlignVCenter
+                    }
+
+                    StyledText {
+                        text: i18.n + qsTr("Copy")
+                        color: copyKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
+
+                        MouseArea {
+                            id: copyKeywordsMA
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: clipboard.setText(combinedArtworks.getKeywordsString())
+                        }
+                    }
+
+                    StyledText {
+                        text: "|"
+                        color: Colors.defaultInputBackground
+                        verticalAlignment: Text.AlignVCenter
+                    }
+
+                    StyledText {
+                        text: i18.n + qsTr("Clear")
+                        color: enabled ? (clearKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor) : Colors.defaultInputBackground
+
+                        MouseArea {
+                            id: clearKeywordsMA
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: clearKeywordsDialog.open()
+                        }
+                    }
+
+                    Item {
+                        Layout.fillWidth: true
+                    }
+                }
+
+                Item {
                     Layout.fillHeight: true
                 }
 
                 RowLayout {
                     spacing: 20
-
-                    StyledButton {
-                        width: 150
-                        text: i18.n + qsTr("Suggest keywords")
-
-                        onClicked: {
-                            var callbackObject = {
-                                promoteKeywords: function(keywords) {
-                                    combinedArtworks.pasteKeywords(keywords)
-                                }
-                            }
-
-                            Common.launchDialog("Dialogs/KeywordsSuggestion.qml",
-                                                componentParent,
-                                                {callbackObject: callbackObject});
-                        }
-                    }
-
-                    StyledButton {
-                        width: 100
-                        text: i18.n + qsTr("Fix spelling")
-
-                        onClicked: {
-                            combinedArtworks.suggestCorrections()
-                            Common.launchDialog("Dialogs/SpellCheckSuggestionsDialog.qml",
-                                                componentParent,
-                                                {})
-                        }
-                    }
 
                     Item {
                         Layout.fillWidth: true

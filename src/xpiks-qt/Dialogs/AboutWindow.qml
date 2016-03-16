@@ -32,7 +32,7 @@ ApplicationWindow {
     id: aboutWindow
     modality: "ApplicationModal"
     width: 250
-    height: Qt.platform.os === "linux" ? 180 : 150
+    height: Qt.platform.os === "linux" ? 200 : 170
     minimumWidth: width
     maximumWidth: width
     minimumHeight: height

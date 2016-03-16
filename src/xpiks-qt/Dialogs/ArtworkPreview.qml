@@ -24,6 +24,7 @@ import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.1
 import QtQuick.Controls.Styles 1.1
+import QtGraphicalEffects 1.0
 import "../Constants"
 import "../Constants/Colors.js" as Colors;
 import "../Common.js" as Common;
@@ -103,6 +104,16 @@ Item {
                 old_x = old_xy[0]; old_y = old_xy[1];
             }
         }
+
+        RectangularGlow {
+            anchors.fill: dialogWindow
+            anchors.topMargin: glowRadius/2
+            glowRadius: 4
+            spread: 0.0
+            color: Colors.defaultControlColor
+            cornerRadius: glowRadius
+        }
+
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
@@ -212,11 +223,11 @@ Item {
                     RowLayout {
                         anchors.left: parent.left
                         anchors.right: parent.right
-                        spacing: 10
+                        spacing: 20
 
                         StyledButton {
                             text: i18.n + qsTr("100%")
-                            width: 60
+                            width: parent.width / 2 - 10
                             onClicked: {
                                 previewImage.width = previewImage.sourceSize.width
                                 previewImage.height = previewImage.sourceSize.height
@@ -226,13 +237,9 @@ Item {
                             }
                         }
 
-                        Item {
-                            Layout.fillWidth: true
-                        }
-
                         StyledButton {
                             text: i18.n + qsTr("Fit")
-                            width: 60
+                            width: parent.width / 2 - 10
                             onClicked: {
                                 previewImage.width = boundsRect.width - 20
                                 previewImage.height = boundsRect.height - 20

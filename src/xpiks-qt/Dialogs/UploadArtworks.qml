@@ -24,6 +24,7 @@ import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.1
 import QtQuick.Controls.Styles 1.1
+import QtGraphicalEffects 1.0
 import xpiks 1.0
 import "../Constants"
 import "../Constants/Colors.js" as Colors;
@@ -171,11 +172,20 @@ Item {
             id: clipboard
         }
 
+        RectangularGlow {
+            anchors.fill: dialogWindow
+            anchors.topMargin: glowRadius/2
+            glowRadius: 4
+            spread: 0.0
+            color: Colors.defaultControlColor
+            cornerRadius: glowRadius
+        }
+
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
-            width: 600
-            height: Qt.platform.os == "windows" ? 460 : (Qt.platform.os == "linux" ? 470 : 450)
+            width: 610
+            height: Qt.platform.os == "windows" ? 470 : (Qt.platform.os == "linux" ? 475 : 455)
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
@@ -394,7 +404,7 @@ Item {
                         anchors.leftMargin: 10
                         anchors.left: uploadInfosStack.right
                         anchors.right: parent.right
-                        width: 280
+                        width: 290
                         height: Qt.platform.os == "windows" ? parent.height + 10 : parent.height
 
                         StyledTabView {
@@ -572,6 +582,7 @@ Item {
                                         StyledCheckbox {
                                             id: showPasswordCheckBox
                                             text: i18.n + qsTr("Show password")
+                                            checked: false
                                         }
 
                                         Item {
@@ -590,7 +601,7 @@ Item {
                                             id: testButton
                                             text: i18.n + qsTr("Test connection")
                                             height: 24
-                                            width: 120
+                                            width: 130
                                             onClicked: {
                                                 testButton.enabled = false
                                                 credentialsStatus.enabled = false
@@ -693,7 +704,7 @@ Item {
 
                 RowLayout {
                     height: 24
-                    spacing: 15
+                    spacing: 20
 
                     StyledText {
                         enabled: uploadArtworksComponent.uploadEnabled

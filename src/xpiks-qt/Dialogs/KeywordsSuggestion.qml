@@ -24,6 +24,7 @@ import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.1
 import QtQuick.Controls.Styles 1.1
+import QtGraphicalEffects 1.0
 import "../Constants"
 import "../Constants/Colors.js" as Colors;
 import "../Common.js" as Common;
@@ -87,12 +88,23 @@ Item {
                 var tmp = mapToItem(keywordsSuggestionComponent, mouse.x, mouse.y);
                 old_x = tmp.x;
                 old_y = tmp.y;
+
+                sourceComboBox.closePopup()
             }
 
             onPositionChanged: {
                 var old_xy = Common.movePopupInsideComponent(keywordsSuggestionComponent, dialogWindow, mouse, old_x, old_y);
                 old_x = old_xy[0]; old_y = old_xy[1];
             }
+        }
+
+        RectangularGlow {
+            anchors.fill: dialogWindow
+            anchors.topMargin: glowRadius/2
+            glowRadius: 4
+            spread: 0.0
+            color: Colors.defaultControlColor
+            cornerRadius: glowRadius
         }
 
         // This rectangle is the actual popup
@@ -106,6 +118,7 @@ Item {
             color: Colors.selectedArtworkColor
             anchors.horizontalCenter: parent.horizontalCenter
             Component.onCompleted: anchors.horizontalCenter = undefined
+            z: 1000
 
             RowLayout {
                 id: searchRow
@@ -117,6 +130,7 @@ Item {
                 anchors.rightMargin: 20
                 height: 24
                 spacing: 20
+                z: 15000
 
                 StyledInputHost {
                     border.width: queryText.activeFocus ? 1 : 0
@@ -125,7 +139,7 @@ Item {
 
                     StyledTextInput {
                         id: queryText
-                        width: 380
+                        width: 300
                         height: 24
                         clip: true
                         anchors.left: parent.left
@@ -136,7 +150,7 @@ Item {
 
                 StyledButton {
                     text: i18.n + qsTr("Search")
-                    width: 70
+                    width: 100
                     activeFocusOnPress: true
                     enabled: !keywordsSuggestor.isInProgress
                     onClicked: keywordsSuggestor.searchArtworks(queryText.text)
@@ -146,14 +160,15 @@ Item {
                     Layout.fillWidth: true
                 }
 
-                StyledCheckbox {
-                    id: searchUsingAndCheckbox
-                    text: i18.n + qsTr("Use only local source")
-                    onCheckedChanged: {
-                        keywordsSuggestor.useLocal = checked
+                CustomComboBox {
+                    id: sourceComboBox
+                    model: keywordsSuggestor.getEngineNames()
+                    width: 200
+                    height: 24
+                    itemHeight: 28
+                    onComboIndexChanged: {
+                        keywordsSuggestor.selectedSourceIndex = sourceComboBox.selectedIndex
                     }
-
-                    Component.onCompleted: checked = keywordsSuggestor.useLocal
                 }
             }
 
@@ -178,6 +193,13 @@ Item {
                     enabled: !keywordsSuggestor.isInProgress
                     flickableDirection: Flickable.VerticalFlick
                     boundsBehavior: Flickable.StopAtBounds
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            sourceComboBox.closePopup()
+                        }
+                    }
 
                     Flow {
                         id: flow
@@ -226,6 +248,7 @@ Item {
                                     hoverEnabled: true
                                     onClicked: {
                                         keywordsSuggestor.setArtworkSelected(delegateIndex, !isselected)
+                                        sourceComboBox.closePopup()
                                     }
                                 }
                             }
@@ -255,6 +278,13 @@ Item {
                         anchors.centerIn: parent
                         text: i18.n + qsTr("No results found")
                         color: Colors.selectedMetadataColor
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            sourceComboBox.closePopup()
+                        }
                     }
                 }
 
@@ -334,6 +364,10 @@ Item {
                         onTagsPasted: {
                             //suggestedKeywordsWrapper.pasteKeywords(tagsList)
                         }
+
+                        onClickedInside: {
+                            sourceComboBox.closePopup()
+                        }
                     }
 
                     CustomScrollbar {
@@ -405,6 +439,10 @@ Item {
 
                         onTagsPasted: {
                             //keywordsWrapper.pasteKeywords(tagsList)
+                        }
+
+                        onClickedInside: {
+                            sourceComboBox.closePopup()
                         }
                     }
 

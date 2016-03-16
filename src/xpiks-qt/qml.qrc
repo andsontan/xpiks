@@ -52,5 +52,7 @@
         <file>Components/LayoutButton.qml</file>
         <file>Graphics/vector-icon.svg</file>
         <file>Constants/UIConfig.js</file>
+        <file>Components/SelectedIcon.qml</file>
+        <file>Components/CustomComboBox.qml</file>
     </qresource>
 </RCC>

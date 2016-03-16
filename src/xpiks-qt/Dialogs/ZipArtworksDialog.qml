@@ -24,6 +24,7 @@ import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.1
 import QtQuick.Controls.Styles 1.1
+import QtGraphicalEffects 1.0
 import "../Constants"
 import "../Constants/Colors.js" as Colors;
 import "../Common.js" as Common;
@@ -43,8 +44,9 @@ Item {
         zipArtworksComponent.destroy()
     }
     Connections {
-        target: zipArtworksComponent
+        target: zipArchiver
         onCloseWindow: {
+                console.info("got closing signal")
                 closePopup();
         }
     }
@@ -98,22 +100,35 @@ Item {
             }
         }
 
+        RectangularGlow {
+            anchors.fill: dialogWindow
+            anchors.topMargin: glowRadius/2
+            glowRadius: 4
+            spread: 0.0
+            color: Colors.defaultControlColor
+            cornerRadius: glowRadius
+        }
+
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
             width: 480
-            height: 150
+            height: childrenRect.height + 40
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
 
-            ColumnLayout {
-                spacing: 10
-                anchors.fill: parent
+            Column {
+                spacing: 20
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.top: parent.top
+                height: childrenRect.height
                 anchors.margins: 20
 
                 RowLayout {
-                    Layout.fillWidth: true
+                    anchors.left: parent.left
+                    anchors.right: parent.right
 
                     StyledText {
                         text: i18.n + qsTr("Zip vectors with previews")
@@ -148,7 +163,10 @@ Item {
                 }
 
                 RowLayout {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
                     height: 24
+                    spacing: 20
 
                     Item {
                         Layout.fillWidth: true
@@ -184,10 +202,6 @@ Item {
                                 //}
                             }
                         }
-                    }
-
-                    Item {
-                        width: 10
                     }
 
                     StyledButton {

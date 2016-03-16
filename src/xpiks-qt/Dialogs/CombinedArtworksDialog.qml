@@ -24,6 +24,7 @@ import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.1
 import QtQuick.Controls.Styles 1.1
+import QtGraphicalEffects 1.0
 import xpiks 1.0
 import "../Constants"
 import "../Constants/Colors.js" as Colors;
@@ -136,11 +137,20 @@ Item {
             }
         }
 
+        RectangularGlow {
+            anchors.fill: dialogWindow
+            anchors.topMargin: glowRadius/2
+            glowRadius: 4
+            spread: 0.0
+            color: Colors.defaultControlColor
+            cornerRadius: glowRadius
+        }
+
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
             width: 730
-            height: 645
+            height: Qt.platform.os === "windows" ? 655 : 645
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
@@ -280,10 +290,11 @@ Item {
                                         opacity: isselected ? (mouseArea.containsMouse ? 0.6 : 0.7) : (mouseArea.containsMouse ? 0.4 : 0)
                                     }
 
-                                    LargeRemoveIcon {
+                                    SelectedIcon {
                                         opacity: isselected ? (mouseArea.containsMouse ? 0.85 : 1) : (mouseArea.containsMouse ? 0.6 : 0)
-                                        width: parent.width
-                                        height: parent.height
+                                        width: parent.width * 0.33
+                                        height: parent.height * 0.33
+                                        anchors.centerIn: parent
                                     }
 
                                     MouseArea {
@@ -366,6 +377,15 @@ Item {
                                     text: i18.n + qsTr("(same as Description if empty)")
                                     color: Colors.defaultInputBackground
                                 }
+
+                                Item {
+                                    Layout.fillWidth: true
+                                }
+
+                                StyledText {
+                                    text: titleTextInput.length
+                                    color: Colors.defaultInputBackground
+                                }
                             }
 
                             Rectangle {
@@ -402,7 +422,6 @@ Item {
                                         focus: true
                                         width: titleFlick.width
                                         height: titleFlick.height
-                                        font.pixelSize: UIConfig.fontPixelSize*settingsModel.keywordSizeScale
                                         text: combinedArtworks.title
                                         onTextChanged: combinedArtworks.title = text
 
@@ -570,7 +589,6 @@ Item {
                                         width: descriptionFlick.width
                                         height: descriptionFlick.height
                                         text: combinedArtworks.description
-                                        font.pixelSize: UIConfig.fontPixelSize*settingsModel.keywordSizeScale
                                         focus: true
                                         property string previousText: text
                                         property int maximumLength: 280
@@ -649,7 +667,7 @@ Item {
 
                 RowLayout {
                     width: parent.width
-                    height: 200
+                    height: Qt.platform.os === "windows" ? 205 : 200
                     spacing: 0
 
                     Item {
@@ -815,7 +833,8 @@ Item {
 
                             RowLayout {
                                 width: parent.width
-                                spacing: 10
+                                spacing:5
+
                                 StyledCheckbox {
                                     id: appendKeywordsCheckbox
                                     text: i18.n + qsTr("Only append new keywords")
@@ -846,7 +865,13 @@ Item {
                                 }
 
                                 StyledText {
-                                    text: i18.n + qsTr("Suggest keywords")
+                                    text: "|"
+                                    color: Colors.defaultInputBackground
+                                    verticalAlignment: Text.AlignVCenter
+                                }
+
+                                StyledText {
+                                    text: i18.n + qsTr("Suggest")
                                     color: enabled ? (suggestKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor) : Colors.defaultInputBackground
 
                                     MouseArea {
@@ -868,7 +893,31 @@ Item {
                                 }
 
                                 StyledText {
-                                    text: i18.n + qsTr("Clear keywords")
+                                    text: "|"
+                                    color: Colors.defaultInputBackground
+                                    verticalAlignment: Text.AlignVCenter
+                                }
+
+                                StyledText {
+                                    text: i18.n + qsTr("Copy")
+                                    color: copyKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
+
+                                    MouseArea {
+                                        id: copyKeywordsMA
+                                        anchors.fill: parent
+                                        cursorShape: Qt.PointingHandCursor
+                                        onClicked: clipboard.setText(combinedArtworks.getKeywordsString())
+                                    }
+                                }
+
+                                StyledText {
+                                    text: "|"
+                                    color: Colors.defaultInputBackground
+                                    verticalAlignment: Text.AlignVCenter
+                                }
+
+                                StyledText {
+                                    text: i18.n + qsTr("Clear")
                                     color: enabled ? (clearKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor) : Colors.defaultInputBackground
 
                                     MouseArea {

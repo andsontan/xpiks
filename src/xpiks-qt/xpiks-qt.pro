@@ -33,7 +33,6 @@ SOURCES += main.cpp \
     Models/ziparchiver.cpp \
     Helpers/ziphelper.cpp \
     Suggestion/keywordssuggestor.cpp \
-    Suggestion/suggestionqueryengine.cpp \
     Models/settingsmodel.cpp \
     Helpers/loggingworker.cpp \
     Helpers/logger.cpp \
@@ -78,12 +77,13 @@ SOURCES += main.cpp \
     Warnings/warningsmodel.cpp \
     Models/languagesmodel.cpp \
     Conectivity/conectivityhelpers.cpp \
-    Helpers/filterhelpers.cpp
+    Helpers/filterhelpers.cpp \
+    QMLExtensions/triangleelement.cpp \
+    Suggestion/shutterstockqueryengine.cpp \
+    Suggestion/locallibraryqueryengine.cpp
 
 RESOURCES += qml.qrc
 
-BUILDNO = $$system(git log -n 1 --pretty=format:"%H")
-DEFINES += BUILDNUMBER=$${BUILDNO}
 DEFINES += QT_NO_CAST_TO_ASCII \
            QT_NO_CAST_FROM_BYTEARRAY
 DEFINES += QUAZIP_STATIC
@@ -145,7 +145,6 @@ HEADERS += \
     Common/basickeywordsmodel.h \
     Suggestion/keywordssuggestor.h \
     Suggestion/suggestionartwork.h \
-    Suggestion/suggestionqueryengine.h \
     Models/settingsmodel.h \
     Helpers/loggingworker.h \
     Common/defines.h \
@@ -209,8 +208,12 @@ HEADERS += \
     Conectivity/conectivityhelpers.h \
     Conectivity/uploadbatch.h \
     Helpers/filterhelpers.h \
+    Conectivity/iftpcoordinator.h \
+    QMLExtensions/triangleelement.h \
+    Suggestion/shutterstockqueryengine.h \
+    Suggestion/locallibraryqueryengine.h \
+    Suggestion/suggestionqueryenginebase.h \
     Helpers/ifilenotavailablemodel.h
-    Conectivity/iftpcoordinator.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
@@ -263,7 +266,9 @@ DISTFILES += \
     Dialogs/PluginsDialog.qml \
     Components/LayoutButton.qml \
     Graphics/vector-icon.svg \
-    Constants/UIConfig.js
+    Constants/UIConfig.js \
+    Components/SelectedIcon.qml \
+    Components/CustomComboBox.qml
 
 lupdate_only {
 SOURCES = *.qml \
@@ -280,6 +285,7 @@ LIBS += -lhunspell
 LIBS += -lz
 LIBS += -lcurl
 LIBS += -lquazip
+BUILDNO = $$system(git log -n 1 --pretty=format:"%H")
 
 CONFIG(debug, debug|release)  {
     message("Building debug")
@@ -349,6 +355,7 @@ linux-g++-64 {
     target.path=/usr/bin/
     QML_IMPORT_PATH += /usr/lib/x86_64-linux-gnu/qt5/imports/
     LIBS += -L/lib/x86_64-linux-gnu/
+    BUILDNO = $$system(od -An -N8 -tx8 </dev/urandom)
 
     UNAME = $$system(cat /proc/version | tr -d \'()\')
     contains( UNAME, Debian ) {
@@ -365,6 +372,8 @@ linux-qtcreator {
         message("in QtCreator")
         LIBS += -L/usr/lib64/
         LIBS += /usr/lib64/libcurl.so.4
+        BUILDNO = $$system(od -An -N8 -tx8 </dev/urandom)
+        
         copywhatsnew.commands = $(COPY_FILE) "$$PWD/whatsnew.txt" "$$OUT_PWD/"
         copyterms.commands = $(COPY_FILE) "$$PWD/terms_and_conditions.txt" "$$OUT_PWD/"
         QMAKE_EXTRA_TARGETS += copywhatsnew copyterms
@@ -377,3 +386,4 @@ linux-static {
     DEFINES += STATIC
     message("Static build.")
 }
+DEFINES += BUILDNUMBER=$${BUILDNO}

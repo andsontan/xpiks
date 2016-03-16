@@ -66,7 +66,6 @@ Commands::CommandResult *Commands::CombinedEditCommand::execute(const ICommandMa
             commandManager->saveMetadata(metadata);
         }
 
-
         itemsToCheckSpelling.append(metadata);
         itemsToCheckWarnings.append(metadata);
     }

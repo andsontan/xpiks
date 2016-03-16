@@ -24,6 +24,7 @@ import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.1
 import QtQuick.Controls.Styles 1.1
+import QtGraphicalEffects 1.0
 import "../Constants"
 import "../Constants/Colors.js" as Colors;
 import "../Common.js" as Common;
@@ -133,11 +134,20 @@ Item {
             }
         }
 
+        RectangularGlow {
+            anchors.fill: dialogWindow
+            anchors.topMargin: glowRadius/2
+            glowRadius: 4
+            spread: 0.0
+            color: Colors.defaultControlColor
+            cornerRadius: glowRadius
+        }
+
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
             width: 380
-            height: 130
+            height: childrenRect.height + 40
             color: Colors.selectedArtworkColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
@@ -152,7 +162,10 @@ Item {
             Column {
                 id: column
                 spacing: 20
-                anchors.fill: parent
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: childrenRect.height
                 anchors.margins: 20
 
                 add: Transition {

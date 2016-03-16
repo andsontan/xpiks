@@ -73,7 +73,7 @@ namespace MetadataIO {
     }
 
     void MetadataIOCoordinator::readingWorkerFinished(bool success) {
-        LOG_DEBUG << success;
+        LOG_INFO << success;
         if (m_CanProcessResults) {
             readingFinishedHandler(m_IgnoreBackupsAtImport);
         }
@@ -83,7 +83,10 @@ namespace MetadataIO {
     }
 
     void MetadataIOCoordinator::writingWorkerFinished(bool success) {
+        LOG_INFO << success;
         setHasErrors(!success);
+        const QVector<Models::ArtworkMetadata*> &artworksToWrite = m_WritingWorker->getArtworksToExport();
+        m_CommandManager->addToLibrary(artworksToWrite);
         emit metadataWritingFinished();
     }
 

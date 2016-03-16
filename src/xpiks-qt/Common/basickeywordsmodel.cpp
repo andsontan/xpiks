@@ -299,6 +299,8 @@ namespace Common {
         m_SpellCheckResults.clear();
         m_KeywordsSet.clear();
 
+        emit spellCheckErrorsChanged();
+
         return result;
     }
 

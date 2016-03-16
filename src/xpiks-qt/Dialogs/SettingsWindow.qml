@@ -567,7 +567,7 @@ ApplicationWindow {
                             Layout.row: 0
                             Layout.column: 2
                             text: i18.n + qsTr("Select...")
-                            width: 70
+                            width: 100
                             onClicked: exifToolFileDialog.open()
                         }
 
@@ -575,7 +575,7 @@ ApplicationWindow {
                             Layout.row: 0
                             Layout.column: 3
                             text: i18.n + qsTr("Reset")
-                            width: 70
+                            width: 100
                             onClicked: settingsModel.resetExifTool()
                         }
 
@@ -612,7 +612,7 @@ ApplicationWindow {
                             Layout.row: 2
                             Layout.column: 2
                             text: i18.n + qsTr("Select...")
-                            width: 70
+                            width: 100
                             onClicked: dictPathDialog.open()
                             visible: Qt.platform.os === "linux"
                         }
@@ -621,7 +621,7 @@ ApplicationWindow {
                             Layout.row: 2
                             Layout.column: 3
                             text: i18.n + qsTr("Reset")
-                            width: 70
+                            width: 100
                             onClicked: settingsModel.resetDictPath()
                             visible: Qt.platform.os === "linux"
                         }
@@ -1096,7 +1096,7 @@ ApplicationWindow {
 
             StyledButton {
                 text: i18.n + qsTr("Reset to defaults")
-                width: 120
+                width: 140
                 onClicked: {
                     resetSettingsDialog.open()
 
@@ -1115,8 +1115,8 @@ ApplicationWindow {
             }
 
             StyledButton {
-                text: i18.n + qsTr("Save and Close")
-                width: 120
+                text: i18.n + qsTr("Save")
+                width: 100
                 onClicked: {
                     settingsModel.keywordSizeScale = uxTab.sizeSliderValue
                     settingsModel.scrollSpeedScale = uxTab.scrollSliderValue
@@ -1132,7 +1132,7 @@ ApplicationWindow {
 
             StyledButton {
                 text: i18.n + qsTr("Close")
-                width: 60
+                width: 100
                 onClicked: {
                     settingsModel.readAllValues()
                     closeSettings()

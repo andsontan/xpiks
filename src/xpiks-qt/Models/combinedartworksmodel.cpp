@@ -65,9 +65,6 @@ namespace Models {
         LOG_DEBUG << m_ArtworksList.length() << "artwork(s)";
         if (m_ArtworksList.length() == 1) {
             assignFromOneArtwork();
-            ArtworkMetadata *metadata = m_ArtworksList.first()->getOrigin();
-            m_CommonKeywordsModel.setSpellCheckInfo(metadata->getSpellCheckInfo());
-            m_CommonKeywordsModel.setSpellStatuses(metadata->getSpellStatuses());
         } else {
             assignFromManyArtworks();
             m_CommonKeywordsModel.setSpellCheckInfo(&m_SpellCheckInfo);
@@ -332,14 +329,25 @@ namespace Models {
 
     void CombinedArtworksModel::assignFromOneArtwork() {
         Q_ASSERT(m_ArtworksList.length() == 1);
-        ArtItemInfo *info = m_ArtworksList[0];
+        ArtItemInfo *info = m_ArtworksList.at(0);
         ArtworkMetadata *metadata = info->getOrigin();
 
-        initDescription(metadata->getDescription());
-        initTitle(metadata->getTitle());
+        if (!m_IsDescriptionModified) {
+            initDescription(metadata->getDescription());
+        }
+
+        if (!m_IsTitleModified) {
+            initTitle(metadata->getTitle());
+        }
+
+        if (!m_IsDescriptionModified && !m_IsTitleModified) {
+            // TODO: would be better to merge errors instead of assignment
+            m_CommonKeywordsModel.setSpellCheckInfo(metadata->getSpellCheckInfo());
+        }
 
         if (!m_AreKeywordsModified) {
             initKeywords(metadata->getKeywords());
+            m_CommonKeywordsModel.setSpellStatuses(metadata->getSpellStatuses());
         }
     }
 

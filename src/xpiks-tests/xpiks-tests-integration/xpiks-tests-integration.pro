@@ -84,7 +84,6 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Suggestion/libraryloaderworker.cpp \
     ../../xpiks-qt/Suggestion/libraryqueryworker.cpp \
     ../../xpiks-qt/Suggestion/locallibrary.cpp \
-    ../../xpiks-qt/Suggestion/suggestionqueryengine.cpp \
     ../../xpiks-qt/UndoRedo/addartworksitem.cpp \
     ../../xpiks-qt/UndoRedo/artworkmetadatabackup.cpp \
     ../../xpiks-qt/UndoRedo/modifyartworkshistoryitem.cpp \
@@ -99,7 +98,10 @@ SOURCES += main.cpp \
     savefilebasictest.cpp \
     spellcheckmultireplacetest.cpp \
     spellcheckcombinedmodeltest.cpp \
-    zipartworkstest.cpp
+    zipartworkstest.cpp \
+    ../../xpiks-qt/Suggestion/locallibraryqueryengine.cpp \
+    ../../xpiks-qt/Suggestion/shutterstockqueryengine.cpp \
+    spellcheckundotest.cpp
 
 RESOURCES +=
 
@@ -201,7 +203,6 @@ HEADERS += \
     ../../xpiks-qt/Suggestion/libraryqueryworker.h \
     ../../xpiks-qt/Suggestion/locallibrary.h \
     ../../xpiks-qt/Suggestion/suggestionartwork.h \
-    ../../xpiks-qt/Suggestion/suggestionqueryengine.h \
     ../../xpiks-qt/UndoRedo/addartworksitem.h \
     ../../xpiks-qt/UndoRedo/artworkmetadatabackup.h \
     ../../xpiks-qt/UndoRedo/historyitem.h \
@@ -223,7 +224,11 @@ HEADERS += \
     savefilebasictest.h \
     spellcheckmultireplacetest.h \
     spellcheckcombinedmodeltest.h \
-    zipartworkstest.h
+    zipartworkstest.h \
+    ../../xpiks-qt/Suggestion/locallibraryqueryengine.h \
+    ../../xpiks-qt/Suggestion/shutterstockqueryengine.h \
+    ../../xpiks-qt/Suggestion/suggestionqueryenginebase.h \
+    spellcheckundotest.h
 
 INCLUDEPATH += ../../tiny-aes
 

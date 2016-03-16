@@ -25,6 +25,7 @@
 #include "../Commands/commandmanager.h"
 #include "../Models/settingsmodel.h"
 #include "../Common/defines.h"
+#include "../SpellCheck/ispellcheckable.h"
 
 void UndoRedo::ModifyArtworksHistoryItem::undo(const Commands::ICommandManager *commandManagerInterface) const {
     LOG_INFO << m_Indices.count() << "item(s) affected";
@@ -34,6 +35,9 @@ void UndoRedo::ModifyArtworksHistoryItem::undo(const Commands::ICommandManager *
     Models::ArtItemsModel *artItemsModel = commandManager->getArtItemsModel();
     int count = m_Indices.count();
 
+    QVector<SpellCheck::ISpellCheckable*> itemsToSpellcheck;
+    itemsToSpellcheck.reserve(count);
+
     for (int i = 0; i < count; ++i) {
         int index = m_Indices[i];
         Models::ArtworkMetadata *metadata = artItemsModel->getArtwork(index);
@@ -41,13 +45,14 @@ void UndoRedo::ModifyArtworksHistoryItem::undo(const Commands::ICommandManager *
             ArtworkMetadataBackup *backup = m_ArtworksBackups[i];
             backup->restore(metadata);
             commandManager->saveMetadata(metadata);
+            itemsToSpellcheck.append(metadata);
         }
     }
 
+    commandManager->submitForSpellCheck(itemsToSpellcheck);
     artItemsModel->updateItemsAtIndices(m_Indices);
     artItemsModel->updateModifiedCount();
 }
-
 
 QString UndoRedo::getModificationTypeDescription(UndoRedo::ModificationType type) {
     switch (type) {
