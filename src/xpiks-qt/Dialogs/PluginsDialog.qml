@@ -106,7 +106,7 @@ Item {
             id: dialogWindow
             width: 500
             height: 400
-            color: Colors.selectedArtworkColor
+            color: Colors.selectedImageBackground
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
 
@@ -171,7 +171,7 @@ Item {
                     StyledText {
                         text: i18.n + qsTr("No plugins available")
                         anchors.centerIn: parent
-                        color: Colors.selectedMetadataColor
+                        color: Colors.selectedArtworkBackground
                     }
                 }
             }

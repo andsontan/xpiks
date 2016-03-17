@@ -185,7 +185,7 @@ Item {
             id: dialogWindow
             width: 610
             height: Qt.platform.os == "windows" ? 470 : (Qt.platform.os == "linux" ? 475 : 455)
-            color: Colors.selectedArtworkColor
+            color: Colors.selectedImageBackground
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
 
@@ -208,7 +208,7 @@ Item {
                     StyledText {
                         property string originalText: artworkUploader.itemsCount === 1 ? qsTr("1 artwork selected") : qsTr("%1 artworks selected").arg(artworkUploader.itemsCount)
                         text: i18.n + originalText
-                        color: Colors.defaultInputBackground
+                        color: Colors.inputBackgroundColor
                     }
                 }
 
@@ -420,7 +420,7 @@ Item {
                                         border.width: titleText.activeFocus ? 1 : 0
                                         border.color: Colors.artworkActiveColor
                                         Layout.fillWidth: true
-                                        color: Colors.defaultInputBackground
+                                        color: Colors.inputBackgroundColor
                                         height: 30
 
                                         StyledTextInput {
@@ -472,7 +472,7 @@ Item {
                                         border.width: ftpHost.activeFocus ? 1 : 0
                                         border.color: Colors.artworkActiveColor
                                         Layout.fillWidth: true
-                                        color: Colors.defaultInputBackground
+                                        color: Colors.inputBackgroundColor
                                         height: 30
 
                                         StyledTextInput {
@@ -506,7 +506,7 @@ Item {
                                         border.width: ftpUsername.activeFocus ? 1 : 0
                                         border.color: Colors.artworkActiveColor
                                         Layout.fillWidth: true
-                                        color: Colors.defaultInputBackground
+                                        color: Colors.inputBackgroundColor
                                         height: 30
 
                                         StyledTextInput {
@@ -540,7 +540,7 @@ Item {
                                         border.color: Colors.artworkActiveColor
                                         Layout.fillWidth: true
                                         height: 30
-                                        color: Colors.defaultInputBackground
+                                        color: Colors.inputBackgroundColor
 
                                         StyledTextInput {
                                             id: ftpPassword
@@ -677,7 +677,7 @@ Item {
                         Rectangle {
                             id: overlayRectangle
                             anchors.fill: parent
-                            color: Colors.selectedArtworkColor
+                            color: Colors.selectedImageBackground
                             opacity: 0.6
                             visible: (uploadInfos.infosCount == 0) || artworkUploader.inProgress
                         }
@@ -701,7 +701,7 @@ Item {
                         enabled: uploadArtworksComponent.uploadEnabled
                         property string originalText: warningsModel.warningsCount == 1 ? qsTr("1 warning") : qsTr("%1 warnings").arg(warningsModel.warningsCount)
                         text: i18.n + originalText
-                        color: uploadWarmingsMA.pressed ? Colors.defaultLightGrayColor : warningsModel.warningsCount > 0 ? Colors.artworkModifiedColor : Colors.defaultInputBackground
+                        color: uploadWarmingsMA.pressed ? Colors.defaultLightGrayColor : warningsModel.warningsCount > 0 ? Colors.artworkModifiedColor : Colors.inputBackgroundColor
 
                         MouseArea {
                             id: uploadWarmingsMA

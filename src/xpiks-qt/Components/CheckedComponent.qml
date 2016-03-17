@@ -31,7 +31,7 @@ Item {
         border.color: Colors.defaultLightColor
         radius: parent.width / 2
         anchors.fill: parent
-        color: enabled ? (isGreen ? Colors.greenColor : Colors.destructiveColor) : Colors.selectedMetadataColor
+        color: enabled ? (isGreen ? Colors.greenColor : Colors.destructiveColor) : Colors.selectedArtworkBackground
 
         Rectangle {
             visible: item.isGreen

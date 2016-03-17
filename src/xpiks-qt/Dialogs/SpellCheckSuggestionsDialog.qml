@@ -105,7 +105,7 @@ Item {
             id: dialogWindow
             width: 730
             height: 610
-            color: Colors.selectedArtworkColor
+            color: Colors.selectedImageBackground
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
 
@@ -129,7 +129,7 @@ Item {
 
                         StyledText {
                             text: i18.n + qsTr("No suggestions available.")
-                            color: Colors.selectedMetadataColor
+                            color: Colors.selectedArtworkBackground
                             anchors.centerIn: parent
                         }
                     }
@@ -178,7 +178,7 @@ Item {
                                             visible: replacementorigin != word
                                             text: replacementorigin
                                             font.pixelSize: 11
-                                            color: Colors.selectedMetadataColor
+                                            color: Colors.selectedArtworkBackground
                                             elide: Text.ElideMiddle
                                         }
                                     }

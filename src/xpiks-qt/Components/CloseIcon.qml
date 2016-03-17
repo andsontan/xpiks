@@ -44,7 +44,7 @@ Item {
         }
 
         Rectangle {
-            color: enabled ? wrapperRect.getPressColor() : Colors.selectedArtworkColor
+            color: enabled ? wrapperRect.getPressColor() : Colors.selectedImageBackground
             width: isPlus ? parent.width - 2 : parent.width
             height: item.thickness
             radius: item.thickness/2
@@ -54,7 +54,7 @@ Item {
         }
 
         Rectangle {
-            color: enabled ? wrapperRect.getPressColor() : Colors.selectedArtworkColor
+            color: enabled ? wrapperRect.getPressColor() : Colors.selectedImageBackground
             width: isPlus ? parent.width - 2 : parent.width
             height: item.thickness
             radius: item.thickness/2

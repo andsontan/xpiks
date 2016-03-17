@@ -17,7 +17,7 @@ namespace Helpers {
         //from Colors.js
         QColor m_DestructiveColor;
         QColor m_ArtworkModifiedColor;
-        QColor m_DefaultInputBackground;
+        QColor m_inputBackgroundColor;
     };
 }
 #endif // LOGHIGHLIGHTER_H

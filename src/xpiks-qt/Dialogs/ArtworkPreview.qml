@@ -112,7 +112,7 @@ Item {
             anchors.topMargin: 60
             anchors.bottomMargin: 60
             anchors.horizontalCenter: parent.horizontalCenter
-            color: Colors.selectedArtworkColor
+            color: Colors.selectedImageBackground
             width: childrenRect.width
 
             Component.onCompleted: anchors.horizontalCenter = undefined
@@ -162,7 +162,7 @@ Item {
 
                     StyledText {
                         id: dimensionsText
-                        color: Colors.selectedMetadataColor
+                        color: Colors.selectedArtworkBackground
                         text: '*'
                         Component.onCompleted: {
                             var size = artItemsModel.retrieveImageSize(artworkIndex)
@@ -172,7 +172,7 @@ Item {
 
                     StyledText {
                         id: sizeText
-                        color: Colors.selectedMetadataColor
+                        color: Colors.selectedArtworkBackground
                         text: '*'
                         Component.onCompleted: text = artItemsModel.retrieveFileSize(artworkIndex)
                     }
@@ -184,7 +184,7 @@ Item {
                         StyledText {
                             wrapMode: TextEdit.Wrap
                             anchors.fill: parent
-                            color: Colors.selectedMetadataColor
+                            color: Colors.selectedArtworkBackground
                             text: imagePath
                             height: 90
                             elide: Text.ElideRight
@@ -198,7 +198,7 @@ Item {
                         StyledText {
                             wrapMode: TextEdit.Wrap
                             anchors.fill: parent
-                            color: Colors.selectedMetadataColor
+                            color: Colors.selectedArtworkBackground
                             text: '*'
                             Component.onCompleted: text = artItemsModel.getAttachedVectorPath(artworkIndex)
                             height: 90

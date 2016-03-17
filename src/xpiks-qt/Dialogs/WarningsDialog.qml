@@ -107,7 +107,7 @@ Item {
             id: dialogWindow
             width: 700
             height: 580
-            color: Colors.selectedArtworkColor
+            color: Colors.selectedImageBackground
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
 
@@ -175,7 +175,7 @@ Item {
                                         StyledText {
                                             Layout.fillWidth: true
                                             elide: Text.ElideMiddle
-                                            color: Colors.defaultInputBackground
+                                            color: Colors.inputBackgroundColor
                                             horizontalAlignment: Text.AlignHCenter
                                             text: filename.split(/[\\/]/).pop()
                                             font.pixelSize: 11
@@ -220,7 +220,7 @@ Item {
                                                     width: height
                                                     radius: height/2
                                                     anchors.verticalCenter: parent.verticalCenter
-                                                    color: Colors.selectedArtworkColor
+                                                    color: Colors.selectedImageBackground
                                                 }
 
                                                 StyledText {
@@ -240,7 +240,7 @@ Item {
                                     anchors.right: parent.right
                                     width: 40
                                     height: columnRectangle.height
-                                    color: Colors.selectedArtworkColor
+                                    color: Colors.selectedImageBackground
 
                                     StyledButton {
                                         text: i18.n + qsTr("Fix")
@@ -271,7 +271,7 @@ Item {
                         StyledText {
                             text: i18.n + qsTr("There are no warnings")
                             anchors.centerIn: parent
-                            color: Colors.selectedMetadataColor
+                            color: Colors.selectedArtworkBackground
                         }
                     }
                 }

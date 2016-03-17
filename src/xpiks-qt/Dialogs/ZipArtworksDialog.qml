@@ -106,7 +106,7 @@ Item {
             id: dialogWindow
             width: 480
             height: childrenRect.height + 40
-            color: Colors.selectedArtworkColor
+            color: Colors.selectedImageBackground
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
 
@@ -133,7 +133,7 @@ Item {
                     StyledText {
                         property string originalText: zipArchiver.itemsCount == 1 ? qsTr("1 artwork") : qsTr("%1 artworks").arg(zipArchiver.itemsCount)
                         text: i18.n + originalText
-                        color: Colors.defaultInputBackground
+                        color: Colors.inputBackgroundColor
                     }
                 }
 

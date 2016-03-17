@@ -125,7 +125,7 @@ Item {
             id: dialogWindow
             width: 600
             height: 400
-            color: Colors.selectedArtworkColor
+            color: Colors.selectedImageBackground
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
 
@@ -176,7 +176,7 @@ Item {
                         focus: true
                         text: plainTextKeywordsComponent.keywordsText
                         font.pixelSize: UIConfig.fontPixelSize*settingsModel.keywordSizeScale
-                        selectionColor: Colors.selectedArtworkColor
+                        selectionColor: Colors.selectedImageBackground
                         wrapMode: TextEdit.Wrap
                         horizontalAlignment: TextEdit.AlignLeft
                         verticalAlignment: TextEdit.AlignTop

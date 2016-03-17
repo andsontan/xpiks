@@ -30,7 +30,7 @@ import "../Constants"
 TabView {
     property double tabBarHeight: 1
     property double tabsHeight: 25
-    property color backgroundColor: Colors.selectedArtworkColor
+    property color backgroundColor: Colors.selectedImageBackground
 
     style: TabViewStyle {
         frameOverlap: -tabBarHeight
@@ -69,7 +69,7 @@ TabView {
                 anchors.centerIn: parent
                 anchors.verticalCenterOffset: styleData.selected ? 1 : -1
                 text: styleData.title
-                color: styleData.hovered ? Colors.artworkActiveColor : (styleData.selected ? Colors.defaultLightColor : Colors.defaultInputBackground)
+                color: styleData.hovered ? Colors.artworkActiveColor : (styleData.selected ? Colors.defaultLightColor : Colors.inputBackgroundColor)
             }
 
             Rectangle {

@@ -49,7 +49,7 @@ ApplicationWindow {
     }
 
     Rectangle {
-        color: Colors.selectedArtworkColor
+        color: Colors.selectedImageBackground
         anchors.fill: parent
 
         Component.onCompleted: focus = true

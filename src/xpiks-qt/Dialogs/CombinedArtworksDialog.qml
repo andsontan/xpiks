@@ -142,7 +142,7 @@ Item {
             id: dialogWindow
             width: 730
             height: Qt.platform.os === "windows" ? 655 : 645
-            color: Colors.selectedArtworkColor
+            color: Colors.selectedImageBackground
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
 
@@ -170,7 +170,7 @@ Item {
                     StyledText {
                         property string originalText: combinedArtworks.artworksCount == 1 ? qsTr("1 artwork being edited") : qsTr("%1 artworks being edited").arg(combinedArtworks.artworksCount)
                         text: i18.n + originalText
-                        color: Colors.defaultInputBackground
+                        color: Colors.inputBackgroundColor
                     }
                 }
 
@@ -316,7 +316,7 @@ Item {
                         height: parent.height
 
                         Rectangle {
-                            color: Colors.defaultInputBackground
+                            color: Colors.inputBackgroundColor
                             anchors.fill: parent
                             opacity: titleCheckBox.checked ? 0.1 : dialogWindow.disabledOpacity
                         }
@@ -343,7 +343,7 @@ Item {
                         enabled: titleCheckBox.checked
 
                         Rectangle {
-                            color: Colors.defaultInputBackground
+                            color: Colors.inputBackgroundColor
                             anchors.fill: parent
                             opacity: titleCheckBox.checked ? 0.1 : 0
                         }
@@ -366,7 +366,7 @@ Item {
 
                                 StyledText {
                                     text: i18.n + qsTr("(same as Description if empty)")
-                                    color: Colors.defaultInputBackground
+                                    color: Colors.inputBackgroundColor
                                 }
 
                                 Item {
@@ -375,7 +375,7 @@ Item {
 
                                 StyledText {
                                     text: titleTextInput.length
-                                    color: Colors.defaultInputBackground
+                                    color: Colors.inputBackgroundColor
                                 }
                             }
 
@@ -384,7 +384,7 @@ Item {
                                 anchors.left: parent.left
                                 anchors.right: parent.right
                                 height: 25
-                                color: Colors.defaultInputBackground
+                                color: Colors.inputBackgroundColor
                                 border.color: Colors.artworkActiveColor
                                 border.width: titleTextInput.activeFocus ? 1 : 0
                                 clip: true
@@ -458,7 +458,7 @@ Item {
                         }
 
                         Rectangle {
-                            color: Colors.defaultInputBackground
+                            color: Colors.inputBackgroundColor
                             anchors.fill: parent
                             opacity: titleCheckBox.checked ? 0 : dialogWindow.disabledOpacity
                         }
@@ -479,7 +479,7 @@ Item {
                         height: parent.height
 
                         Rectangle {
-                            color: Colors.defaultInputBackground
+                            color: Colors.inputBackgroundColor
                             anchors.fill: parent
                             opacity: descriptionCheckBox.checked ? 0.1 : dialogWindow.disabledOpacity
                         }
@@ -509,7 +509,7 @@ Item {
                         enabled: descriptionCheckBox.checked
 
                         Rectangle {
-                            color: Colors.defaultInputBackground
+                            color: Colors.inputBackgroundColor
                             anchors.fill: parent
                             opacity: descriptionCheckBox.checked ? 0.1 : 0
                         }
@@ -537,7 +537,7 @@ Item {
 
                                 StyledText {
                                     text: descriptionTextInput.length
-                                    color: Colors.defaultInputBackground
+                                    color: Colors.inputBackgroundColor
                                 }
                             }
 
@@ -546,7 +546,7 @@ Item {
                                 anchors.left: parent.left
                                 anchors.right: parent.right
                                 height: 50
-                                color: Colors.defaultInputBackground
+                                color: Colors.inputBackgroundColor
                                 border.color: Colors.artworkActiveColor
                                 border.width: descriptionTextInput.activeFocus ? 1 : 0
                                 clip: true
@@ -645,7 +645,7 @@ Item {
                         }
 
                         Rectangle {
-                            color: Colors.defaultInputBackground
+                            color: Colors.inputBackgroundColor
                             anchors.fill: parent
                             opacity: descriptionCheckBox.checked ? 0 : dialogWindow.disabledOpacity
                         }
@@ -666,7 +666,7 @@ Item {
                         height: parent.height
 
                         Rectangle {
-                            color: Colors.defaultInputBackground
+                            color: Colors.inputBackgroundColor
                             anchors.fill: parent
                             opacity: keywordsCheckBox.checked ? 0.1 : dialogWindow.disabledOpacity
                         }
@@ -693,7 +693,7 @@ Item {
                         enabled: keywordsCheckBox.checked
 
                         Rectangle {
-                            color: Colors.defaultInputBackground
+                            color: Colors.inputBackgroundColor
                             anchors.fill: parent
                             opacity: keywordsCheckBox.checked ? 0.1 : 0
                         }
@@ -713,7 +713,7 @@ Item {
 
                                 StyledText {
                                     text: i18.n + qsTr("(comma-separated)")
-                                    color: Colors.defaultInputBackground
+                                    color: Colors.inputBackgroundColor
                                 }
 
                                 Item {
@@ -722,7 +722,7 @@ Item {
 
                                 StyledText {
                                     text: combinedArtworks.keywordsCount
-                                    color: Colors.defaultInputBackground
+                                    color: Colors.inputBackgroundColor
                                 }
                             }
 
@@ -737,7 +737,7 @@ Item {
                                 height: 155
                                 anchors.rightMargin: 20
                                 Layout.fillWidth: true
-                                color: Colors.defaultInputBackground
+                                color: Colors.inputBackgroundColor
                                 property var keywordsModel: combinedArtworks.getKeywordsModel()
 
                                 function removeKeyword(index) {
@@ -840,7 +840,7 @@ Item {
                                 StyledText {
                                     text: i18.n + qsTr("Fix spelling")
                                     enabled: keywordsWrapper.keywordsModel ? keywordsWrapper.keywordsModel.hasSpellErrors : false
-                                    color: enabled ? (fixSpellingMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor) : Colors.defaultInputBackground
+                                    color: enabled ? (fixSpellingMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor) : Colors.inputBackgroundColor
 
                                     MouseArea {
                                         id: fixSpellingMA
@@ -857,13 +857,13 @@ Item {
 
                                 StyledText {
                                     text: "|"
-                                    color: Colors.defaultInputBackground
+                                    color: Colors.inputBackgroundColor
                                     verticalAlignment: Text.AlignVCenter
                                 }
 
                                 StyledText {
                                     text: i18.n + qsTr("Suggest")
-                                    color: enabled ? (suggestKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor) : Colors.defaultInputBackground
+                                    color: enabled ? (suggestKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor) : Colors.inputBackgroundColor
 
                                     MouseArea {
                                         id: suggestKeywordsMA
@@ -885,7 +885,7 @@ Item {
 
                                 StyledText {
                                     text: "|"
-                                    color: Colors.defaultInputBackground
+                                    color: Colors.inputBackgroundColor
                                     verticalAlignment: Text.AlignVCenter
                                 }
 
@@ -903,13 +903,13 @@ Item {
 
                                 StyledText {
                                     text: "|"
-                                    color: Colors.defaultInputBackground
+                                    color: Colors.inputBackgroundColor
                                     verticalAlignment: Text.AlignVCenter
                                 }
 
                                 StyledText {
                                     text: i18.n + qsTr("Clear")
-                                    color: enabled ? (clearKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor) : Colors.defaultInputBackground
+                                    color: enabled ? (clearKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor) : Colors.inputBackgroundColor
 
                                     MouseArea {
                                         id: clearKeywordsMA
@@ -926,7 +926,7 @@ Item {
                         }
 
                         Rectangle {
-                            color: Colors.defaultInputBackground
+                            color: Colors.inputBackgroundColor
                             anchors.fill: parent
                             opacity: keywordsCheckBox.checked ? 0 : dialogWindow.disabledOpacity
                         }

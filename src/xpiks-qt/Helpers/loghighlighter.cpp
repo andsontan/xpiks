@@ -9,7 +9,7 @@ namespace Helpers {
         //from Colors.js
         m_DestructiveColor = QColor::fromRgb(209, 11, 11);
         m_ArtworkModifiedColor  = QColor::fromRgb(244, 156, 18);
-        m_DefaultInputBackground = QColor::fromRgb(153, 153, 153);
+        m_inputBackgroundColor = QColor::fromRgb(153, 153, 153);
     }
 
     void LogHighlighter::highlightBlock(const QString &text) {
@@ -21,7 +21,7 @@ namespace Helpers {
             // for Qt < 5.5.1 "info" msgtype does not exist
             // so we will use default color for debug in old Qt
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 1))
-            setFormat(0, size, m_DefaultInputBackground);
+            setFormat(0, size, m_inputBackgroundColor);
 #endif
         } else if (word.startsWith(QLatin1Literal("info"))) {
             // DO NOTHING - USE DEFAULT COLOR

@@ -116,7 +116,7 @@ Item {
             id: dialogWindow
             width: logsComponent.width * 0.75
             height: logsComponent.height - 60
-            color: Colors.selectedArtworkColor
+            color: Colors.selectedImageBackground
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
 
@@ -141,7 +141,7 @@ Item {
                     property int linesNumber : 100
                     id: oneHunderdLinesWarning
                     text: i18.n + qsTr("(showing last %1 lines)").arg(linesNumber)
-                    color: Colors.defaultInputBackground
+                    color: Colors.inputBackgroundColor
                 }
             }
 
@@ -164,7 +164,7 @@ Item {
                     StyledTextEdit {
                         id: textEdit
                         text: logsComponent.logText
-                        selectionColor: Colors.selectedArtworkColor
+                        selectionColor: Colors.selectedImageBackground
                         readOnly: true
 
                         Component.onCompleted: {

@@ -106,7 +106,7 @@ Item {
             id: dialogWindow
             width: 500
             height: 400
-            color: Colors.selectedArtworkColor
+            color: Colors.selectedImageBackground
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
 

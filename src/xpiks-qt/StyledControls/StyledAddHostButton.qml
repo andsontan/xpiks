@@ -28,7 +28,7 @@ Button {
     style: ButtonStyle {
         background: Rectangle {
             radius: 1
-            color: control.enabled ? (control.hovered ? Colors.buttonHoverBackground : Colors.selectedArtworkColor) : Colors.defaultControlColor
+            color: control.enabled ? (control.hovered ? Colors.buttonHoverBackground : Colors.selectedImageBackground) : Colors.defaultControlColor
             implicitWidth: control.width
             implicitHeight: 24
         }

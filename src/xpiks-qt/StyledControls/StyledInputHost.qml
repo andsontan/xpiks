@@ -32,7 +32,7 @@ import "../StyledControls"
 Rectangle {
     height: childrenRect.height
     width: childrenRect.width + 15
-    color: enabled ? Colors.defaultInputBackground : Colors.itemsSourceSelected
+    color: enabled ? Colors.inputBackgroundColor : Colors.itemsSourceSelected
     border.color: Colors.artworkActiveColor
 }
 

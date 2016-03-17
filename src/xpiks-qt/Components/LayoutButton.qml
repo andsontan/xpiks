@@ -30,7 +30,7 @@ Item {
 
     property bool isListLayout: true
     signal layoutChanged()
-    property color currentColor: enabled ? (layoutMA.containsMouse ? Colors.defaultInputBackground : Colors.selectedArtworkColor) : Colors.defaultControlColor
+    property color currentColor: enabled ? (layoutMA.containsMouse ? Colors.inputBackgroundColor : Colors.selectedImageBackground) : Colors.defaultControlColor
 
     Column {
         width: height

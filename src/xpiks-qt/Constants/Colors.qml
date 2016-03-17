@@ -24,49 +24,51 @@ import QtQuick 2.0
 QtObject {
     property color defaultDarkColor: "#1e1e1e";
     property color defaultControlColor: "#292929";
+    property color whiteColor: "#ffffff";
 
-    property color defaultLightColor: "#E0E0E0";
-    property color defaultLightGrayColor: "#D0D0D0";
-
-    property color itemsSourceBackground: "#232323";
-    property color itemsSourceSelected: "#333333";
-    property color itemsSourceForeground: "#e6e6e6";
-
-    property color buttonHoverBackground: "#12b9bc";
-    property color buttonPressedBackground: "#41b1b7";
-    property color buttonDisabledForeground: "#283c3f";
-    property color buttonPressedForeground: "#283c3f";
+    property color inputBackgroundColor: "#999999";
+    property color inputForegroundColor: whiteColor
+    property color inputInactiveForeground: "#e6e7e8";
+    property color labelInactiveForeground: "#545456";
+    property color inputActiveForeground: inputBackgroundColor
 
     property color artworkBackground: "#031619";
-    property color artworkImageBackground: "#071215";
+    property color artworkImageBackground: "#081215";
     property color artworkModifiedColor: "#f49c12";
     property color artworkSavedColor: "#435151";
     property color artworkActiveColor: "#12b9bc"
 
-    property color selectedArtworkColor: "#545456";
-    property color selectedMetadataColor: "#5d5d5d";
+    property color defaultLightColor: inputInactiveForeground;
+    property color defaultLightGrayColor: "#D0D0D0";
+
+    property color itemsSourceBackground: "#232323";
+    property color itemsSourceSelected: "#333333";
+    property color itemsSourceForeground: inputInactiveForeground;
+
+    property color buttonHoverBackground: artworkActiveColor;
+    property color buttonPressedBackground: "#41b1b7";
+    property color buttonPressedForeground: "#283c3f";
+    property color buttonDisabledForeground: buttonPressedForeground
+
+    property color selectedImageBackground: "#545456";
+    property color selectedArtworkBackground: "#5d5d5d";
     property color checkboxCheckedColor: "#ffffff";
-    property color defaultInputBackground: "#999999";
 
     property color destructiveColor: "#d10b0b";
     property color greenColor: "#2daf02";
-    property color whiteColor: "#ffffff";
 
     function initTheme(theme) {
         defaultDarkColor = theme.defaultDarkColor
         defaultControlColor = theme.defaultControlColor
+        whiteColor = theme.whiteColor
 
         defaultLightColor = theme.defaultLightColor
         defaultLightGrayColor = theme.defaultLightGrayColor
 
-        itemsSourceBackground = theme.itemsSourceBackground
-        itemsSourceSelected = theme.itemsSourceSelected
-        itemsSourceForeground = theme.itemsSourceForeground
-
-        buttonHoverBackground = theme.buttonHoverBackground
-        buttonPressedBackground = theme.buttonPressedBackground
-        buttonDisabledForeground = theme.buttonDisabledForeground
-        buttonPressedForeground = theme.buttonPressedForeground
+        inputBackgroundColor = theme.inputBackgroundColor
+        inputForegroundColor = theme.inputForegroundColor
+        inputInactiveForeground = theme.inputInactiveForeground
+        inputActiveForeground = theme.inputActiveForeground
 
         artworkBackground = theme.artworkBackground
         artworkImageBackground = theme.artworkImageBackground
@@ -74,13 +76,20 @@ QtObject {
         artworkSavedColor = theme.artworkSavedColor
         artworkActiveColor = theme.artworkActiveColor
 
-        selectedArtworkColor = theme.selectedArtworkColor
-        selectedMetadataColor = theme.selectedMetadataColor
+        itemsSourceBackground = theme.itemsSourceBackground
+        itemsSourceSelected = theme.itemsSourceSelected
+        itemsSourceForeground = theme.itemsSourceForeground
+
+        buttonHoverBackground = theme.buttonHoverBackground
+        buttonPressedBackground = theme.buttonPressedBackground
+        buttonPressedForeground = theme.buttonPressedForeground
+        buttonDisabledForeground = theme.buttonDisabledForeground
+
+        selectedImageBackground = theme.selectedImageBackground
+        selectedArtworkBackground = theme.selectedArtworkBackground
         checkboxCheckedColor = theme.checkboxCheckedColor
-        defaultInputBackground = theme.defaultInputBackground
 
         destructiveColor = theme.destructiveColor
         greenColor = theme.greenColor
-        whiteColor = theme.whiteColor
     }
 }

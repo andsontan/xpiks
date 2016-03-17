@@ -147,7 +147,7 @@ Item {
             id: dialogWindow
             width: 380
             height: childrenRect.height + 40
-            color: Colors.selectedArtworkColor
+            color: Colors.selectedImageBackground
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
 
@@ -188,7 +188,7 @@ Item {
                     StyledText {
                         anchors.right: parent.right
                         text: i18.n + qsTr("from %1 image(s)").arg(metadataIOCoordinator.processingItemsCount)
-                        color: Colors.defaultInputBackground
+                        color: Colors.inputBackgroundColor
                     }
                 }
 

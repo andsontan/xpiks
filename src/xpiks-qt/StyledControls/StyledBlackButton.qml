@@ -36,7 +36,7 @@ Button {
             font.bold: true
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
-            color: control.enabled ? (control.hovered ? (control.pressed ? Colors.buttonPressedForeground : Colors.defaultLightColor) : (control.pressed ? Colors.buttonPressedForeground : Colors.defaultInputBackground)) : Colors.buttonDisabledForeground
+            color: control.enabled ? (control.hovered ? (control.pressed ? Colors.buttonPressedForeground : Colors.defaultLightColor) : (control.pressed ? Colors.buttonPressedForeground : Colors.inputBackgroundColor)) : Colors.buttonDisabledForeground
             text: control.text
         }
     }

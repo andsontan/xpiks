@@ -19,39 +19,44 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-var BlackTheme = {
-    name: "black",
+var BlackTheme = { name: "black" };
 
-    defaultDarkColor: "#1e1e1e",
-    defaultControlColor: "#292929",
+BlackTheme.defaultDarkColor = "#1e1e1e";
+BlackTheme.defaultControlColor = "#292929";
+BlackTheme.whiteColor = "#ffffff";
 
-    defaultLightColor: "#E0E0E0",
-    defaultLightGrayColor: "#D0D0D0",
+BlackTheme.inputBackgroundColor = "#999999";
+BlackTheme.inputForegroundColor = BlackTheme.whiteColor
+BlackTheme.inputInactiveForeground = "#e6e7e8";
+BlackTheme.labelInactiveForeground = "#545456";
+BlackTheme.inputActiveForeground = BlackTheme.inputBackgroundColor
 
-    itemsSourceBackground: "#232323",
-    itemsSourceSelected: "#333333",
-    itemsSourceForeground: "#e6e6e6",
+BlackTheme.artworkBackground = "#031619";
+BlackTheme.artworkImageBackground = "#071215";
+BlackTheme.artworkModifiedColor = "#f49c12";
+BlackTheme.artworkSavedColor = "#435151";
+BlackTheme.artworkActiveColor = "#12b9bc";
 
-    buttonHoverBackground: "#12b9bc",
-    buttonPressedBackground: "#41b1b7",
-    buttonDisabledForeground: "#283c3f",
-    buttonPressedForeground: "#283c3f",
+BlackTheme.defaultLightColor = BlackTheme.inputInactiveForeground;
+BlackTheme.defaultLightGrayColor = "#D0D0D0";
 
-    artworkBackground: "#031619",
-    artworkImageBackground: "#071215",
-    artworkModifiedColor: "#f49c12",
-    artworkSavedColor: "#435151",
-    artworkActiveColor: "#12b9bc",
+BlackTheme.itemsSourceBackground = "#232323";
+BlackTheme.itemsSourceSelected = "#333333";
+BlackTheme.itemsSourceForeground = BlackTheme.inputInactiveForeground;
 
-    selectedArtworkColor: "#545456",
-    selectedMetadataColor: "#5d5d5d",
-    checkboxCheckedColor: "#ffffff",
-    defaultInputBackground: "#999999",
+BlackTheme.buttonHoverBackground = BlackTheme.artworkActiveColor;
+BlackTheme.buttonPressedBackground = "#41b1b7";
+BlackTheme.buttonPressedForeground = "#283c3f";
+BlackTheme.buttonDisabledForeground = BlackTheme.buttonPressedForeground;
 
-    destructiveColor: "#d10b0b",
-    greenColor: "#2daf02",
-    whiteColor: "#ffffff"
-};
+BlackTheme.selectedImageBackground = "#545456";
+BlackTheme.selectedArtworkBackground = "#5d5d5d";
+BlackTheme.checkboxCheckedColor = "#ffffff";
+
+BlackTheme.destructiveColor = "#d10b0b";
+BlackTheme.greenColor = "#2daf02";
+
+// ---------------------------------------------------------------
 
 var GrayTheme = {
     name: "gray",
@@ -77,10 +82,10 @@ var GrayTheme = {
     artworkSavedColor: "#435151",
     artworkActiveColor: "#2ec1c3",
 
-    selectedArtworkColor: "#3e434d",
-    selectedMetadataColor: "#474b54",
+    selectedImageBackground: "#3e434d",
+    selectedArtworkBackground: "#474b54",
     checkboxCheckedColor: "#ffffff",
-    defaultInputBackground: "#7a7e86",
+    inputBackgroundColor: "#7a7e86",
 
     destructiveColor: "#d10b0b",
     greenColor: "#2daf02",

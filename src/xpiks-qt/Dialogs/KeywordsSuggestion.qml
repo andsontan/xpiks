@@ -114,7 +114,7 @@ Item {
             anchors.topMargin: 15
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 15
-            color: Colors.selectedArtworkColor
+            color: Colors.selectedImageBackground
             anchors.horizontalCenter: parent.horizontalCenter
             Component.onCompleted: anchors.horizontalCenter = undefined
             z: 1000
@@ -264,7 +264,7 @@ Item {
 
                 Rectangle {
                     anchors.fill: parent
-                    color: Colors.selectedArtworkColor
+                    color: Colors.selectedImageBackground
                     opacity: 0.4
                     visible: keywordsSuggestor.isInProgress
                 }
@@ -276,7 +276,7 @@ Item {
                     StyledText {
                         anchors.centerIn: parent
                         text: keywordsSuggestor.lastErrorString
-                        color: Colors.selectedMetadataColor
+                        color: Colors.selectedArtworkBackground
                     }
 
                     MouseArea {
@@ -309,7 +309,7 @@ Item {
                 RowLayout {
                     StyledText {
                         text: i18.n + qsTr("Suggested keywords:")
-                        color: Colors.defaultInputBackground
+                        color: Colors.inputBackgroundColor
                     }
 
                     Item {
@@ -318,7 +318,7 @@ Item {
 
                     StyledText {
                         text: keywordsSuggestor.suggestedKeywordsCount
-                        color: Colors.defaultInputBackground
+                        color: Colors.inputBackgroundColor
                     }
                 }
 
@@ -329,7 +329,7 @@ Item {
                     height: 80
                     anchors.rightMargin: 20
                     Layout.fillWidth: true
-                    color: Colors.defaultInputBackground
+                    color: Colors.inputBackgroundColor
 
                     function removeKeyword(index) {
                         var keyword = keywordsSuggestor.removeSuggestedKeywordAt(index)
@@ -384,7 +384,7 @@ Item {
                 RowLayout {
                     StyledText {
                         text: i18.n + qsTr("Other keywords:")
-                        color: Colors.defaultInputBackground
+                        color: Colors.inputBackgroundColor
                     }
 
                     Item {
@@ -393,7 +393,7 @@ Item {
 
                     StyledText {
                         text: keywordsSuggestor.otherKeywordsCount
-                        color: Colors.defaultInputBackground
+                        color: Colors.inputBackgroundColor
                     }
                 }
 
@@ -404,7 +404,7 @@ Item {
                     height: 80
                     anchors.rightMargin: 20
                     Layout.fillWidth: true
-                    color: Colors.defaultInputBackground
+                    color: Colors.inputBackgroundColor
 
                     function removeKeyword(index) {
                         var keyword = keywordsSuggestor.removeOtherKeywordAt(index)
@@ -465,7 +465,7 @@ Item {
                     StyledText {
                         property string originalText: keywordsSuggestor.selectedArtworksCount !== 1 ? qsTr("%1 selected items").arg(keywordsSuggestor.selectedArtworksCount) : qsTr("1 selected item")
                         text: i18.n + originalText
-                        color: Colors.defaultInputBackground
+                        color: Colors.inputBackgroundColor
                     }
 
                     Item {

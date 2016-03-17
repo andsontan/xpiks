@@ -102,7 +102,7 @@ Item {
             TriangleElement {
                 anchors.centerIn: parent
                 anchors.verticalCenterOffset: isFlipped ? height*0.3 : 0
-                color: (headerMA.containsMouse || comboBox.state === "dropDown") ? Colors.defaultLightGrayColor : Colors.defaultInputBackground
+                color: (headerMA.containsMouse || comboBox.state === "dropDown") ? Colors.defaultLightGrayColor : Colors.inputBackgroundColor
                 isFlipped: comboBox.state === ""
                 width: parent.width * 0.6
                 height: width * 0.5
@@ -126,7 +126,7 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: header.bottom
-        color: Colors.selectedArtworkColor
+        color: Colors.selectedImageBackground
         visible: false
         height: 0
         focus: true
@@ -149,7 +149,7 @@ Item {
 
             delegate: Rectangle {
                 id: currentDelegate
-                color: itemMA.containsMouse ? highlightedItemColor : Colors.selectedArtworkColor
+                color: itemMA.containsMouse ? highlightedItemColor : Colors.selectedImageBackground
                 property var itemText: modelData
                 property bool isCurrentItem: index == comboBox.selectedIndex
                 property bool isLastItem: index === (dropDownItems.count - 1)
@@ -169,7 +169,7 @@ Item {
                     visible: !currentDelegate.isLastItem
                     enabled: !currentDelegate.isLastItem
                     height: 1
-                    color: itemMA.containsMouse ? highlightedItemColor : Colors.selectedMetadataColor
+                    color: itemMA.containsMouse ? highlightedItemColor : Colors.selectedArtworkBackground
                     anchors.bottom: parent.bottom
                     anchors.left: parent.left
                     anchors.right: parent.right

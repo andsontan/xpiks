@@ -172,7 +172,7 @@ ApplicationWindow {
     }
 
     Rectangle {
-        color: Colors.selectedArtworkColor
+        color: Colors.selectedImageBackground
         anchors.fill: parent
 
         Component.onCompleted: focus = true
@@ -537,7 +537,7 @@ ApplicationWindow {
 
                         StyledText {
                             text: i18.n + qsTr("(seconds)")
-                            color: Colors.defaultInputBackground
+                            color: Colors.inputBackgroundColor
                         }
                     }
 
@@ -731,7 +731,7 @@ ApplicationWindow {
 
                         StyledText {
                             text: i18.n + qsTr("(can be real)")
-                            color: Colors.defaultInputBackground
+                            color: Colors.inputBackgroundColor
                         }
                     }
 
@@ -782,7 +782,7 @@ ApplicationWindow {
 
                         StyledText {
                             text: i18.n + qsTr("(keywords)")
-                            color: Colors.defaultInputBackground
+                            color: Colors.inputBackgroundColor
                         }
                     }
 
@@ -832,7 +832,7 @@ ApplicationWindow {
 
                         StyledText {
                             text: i18.n + qsTr("(characters)")
-                            color: Colors.defaultInputBackground
+                            color: Colors.inputBackgroundColor
                         }
                     }
 
@@ -900,7 +900,7 @@ ApplicationWindow {
 
                         StyledText {
                             text: i18.n + qsTr("(seconds)")
-                            color: Colors.defaultInputBackground
+                            color: Colors.inputBackgroundColor
                         }
                     }
 
@@ -949,7 +949,7 @@ ApplicationWindow {
 
                         StyledText {
                             text: i18.n + qsTr("(takes effect after relaunch)")
-                            color: Colors.defaultInputBackground
+                            color: Colors.inputBackgroundColor
                         }
                     }
 
@@ -1114,7 +1114,7 @@ ApplicationWindow {
 
                                 StyledText {
                                     text: i18.n + qsTr("(simple statistic of feature usage)")
-                                    color: Colors.defaultInputBackground
+                                    color: Colors.inputBackgroundColor
                                 }
                             }
                         }

@@ -88,7 +88,7 @@ Item {
             id: dialogWindow
             width: 500
             height: 600
-            color: Colors.selectedArtworkColor
+            color: Colors.selectedImageBackground
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
 
@@ -122,7 +122,7 @@ Item {
                     StyledTextEdit {
                         id: textEdit
                         text: whatsNewComponent.whatsNewText
-                        selectionColor: Colors.selectedArtworkColor
+                        selectionColor: Colors.selectedImageBackground
                         readOnly: true
                     }
                 }

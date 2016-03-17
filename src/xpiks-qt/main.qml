@@ -950,7 +950,7 @@ ApplicationWindow {
                                 clip: true
                                 anchors.left: parent.left
                                 anchors.leftMargin: 5
-                                color: Colors.defaultInputBackground
+                                color: Colors.inputBackgroundColor
                                 enabled: artworkRepository.artworksSourcesCount > 0
 
                                 onAccepted: {
@@ -975,7 +975,7 @@ ApplicationWindow {
 
                             StyledText {
                                 text: i18.n + qsTr("Search...   x:empty  x:modified")
-                                color: Colors.defaultInputBackground
+                                color: Colors.inputBackgroundColor
                                 opacity: (filterClearTimer.running || filterText.activeFocus || (filterText.length > 0)) ? 0 : 0.1
                                 anchors.left: parent.left
                                 anchors.leftMargin: 7
@@ -1120,7 +1120,7 @@ ApplicationWindow {
 
                             StyledText {
                                 text: i18.n + qsTr("Dismiss (%1)").arg(settingsModel.dismissDuration - (autoDismissTimer.iterations % (settingsModel.dismissDuration + 1)))
-                                color: dismissUndoMA.pressed ? Colors.defaultLightColor : Colors.defaultInputBackground
+                                color: dismissUndoMA.pressed ? Colors.defaultLightColor : Colors.inputBackgroundColor
 
                                 MouseArea {
                                     id: dismissUndoMA
@@ -1229,7 +1229,7 @@ ApplicationWindow {
                                 id: rowWrapper
                                 objectName: "artworkDelegate"
                                 property bool isHighlighted: isselected || (descriptionTextInput.activeFocus || flv.isFocused || titleTextInput.activeFocus)
-                                color: isHighlighted ? Colors.selectedArtworkColor : Colors.artworkImageBackground
+                                color: isHighlighted ? Colors.selectedImageBackground : Colors.artworkImageBackground
                                 property var artworkModel: artItemsModel.getArtworkItself(rowWrapper.getIndex())
                                 property int delegateIndex: index
                                 width: applicationWindow.listLayout ? (mainScrollView.areScrollbarsVisible ? (parent.width - 5) : parent.width) : 208
@@ -1415,7 +1415,7 @@ ApplicationWindow {
                                                 anchors.topMargin: 3
                                                 width: parent.width
                                                 elide: Text.ElideMiddle
-                                                color: moreInfoMA.pressed ? Colors.defaultLightColor : Colors.defaultInputBackground
+                                                color: moreInfoMA.pressed ? Colors.defaultLightColor : Colors.inputBackgroundColor
                                                 horizontalAlignment: Text.AlignHCenter
                                                 text: filename.split(/[\\/]/).pop()
 
@@ -1444,7 +1444,7 @@ ApplicationWindow {
                                         anchors.left: applicationWindow.listLayout ? imageColumnWrapper.right : undefined
                                         anchors.leftMargin: applicationWindow.listLayout ? 5 : 0
                                         anchors.right: applicationWindow.listLayout ? parent.right : undefined
-                                        color: rowWrapper.isHighlighted  ? Colors.selectedMetadataColor : Colors.artworkBackground
+                                        color: rowWrapper.isHighlighted  ? Colors.selectedArtworkBackground : Colors.artworkBackground
 
                                         Item {
                                             id: columnLayout
@@ -1459,7 +1459,7 @@ ApplicationWindow {
                                                 anchors.left: parent.left
                                                 anchors.top: parent.top
                                                 text: i18.n + qsTr("Description:")
-                                                color: Colors.defaultInputBackground
+                                                color: Colors.inputBackgroundColor
                                             }
 
                                             StyledText {
@@ -1468,7 +1468,7 @@ ApplicationWindow {
                                                 anchors.top: parent.top
                                                 visible: columnLayout.isWideEnough
                                                 text: i18.n + qsTr("Title:")
-                                                color: Colors.defaultInputBackground
+                                                color: Colors.inputBackgroundColor
                                             }
 
                                             Rectangle {
@@ -1479,7 +1479,7 @@ ApplicationWindow {
                                                 anchors.rightMargin: columnLayout.isWideEnough ? 20 : 0
                                                 anchors.top: descriptionText.bottom
                                                 anchors.topMargin: 3
-                                                color: rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.defaultControlColor
+                                                color: rowWrapper.isHighlighted ? Colors.inputBackgroundColor : Colors.defaultControlColor
                                                 border.color: Colors.artworkActiveColor
                                                 border.width: descriptionTextInput.activeFocus ? 1 : 0
                                                 clip: true
@@ -1511,7 +1511,7 @@ ApplicationWindow {
                                                         height: descriptionFlick.height
                                                         text: description
                                                         focus: true
-                                                        color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.defaultInputBackground
+                                                        color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.inputBackgroundColor
                                                         onTextChanged: model.editdescription = text
 
                                                         Keys.onTabPressed: {
@@ -1558,7 +1558,7 @@ ApplicationWindow {
                                                 anchors.right: descriptionRect.right
                                                 anchors.bottom: descriptionRect.top
                                                 anchors.bottomMargin: 3
-                                                color: rowWrapper.isHighlighted ? Colors.defaultControlColor : Colors.selectedArtworkColor
+                                                color: rowWrapper.isHighlighted ? Colors.defaultControlColor : Colors.selectedImageBackground
                                             }
 
                                             Rectangle {
@@ -1569,7 +1569,7 @@ ApplicationWindow {
                                                 anchors.right: parent.right
                                                 anchors.top: descriptionText.bottom
                                                 anchors.topMargin: 3
-                                                color: rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.defaultControlColor
+                                                color: rowWrapper.isHighlighted ? Colors.inputBackgroundColor : Colors.defaultControlColor
                                                 border.color: Colors.artworkActiveColor
                                                 border.width: titleTextInput.activeFocus ? 1 : 0
                                                 clip: true
@@ -1601,7 +1601,7 @@ ApplicationWindow {
                                                         height: titleFlick.height
                                                         text: title
                                                         focus: true
-                                                        color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.defaultInputBackground
+                                                        color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.inputBackgroundColor
                                                         onTextChanged: model.edittitle = text
                                                         KeyNavigation.backtab: descriptionTextInput
 
@@ -1641,7 +1641,7 @@ ApplicationWindow {
                                                 anchors.right: titleRect.right
                                                 anchors.bottom: titleRect.top
                                                 anchors.bottomMargin: 3
-                                                color: rowWrapper.isHighlighted ? Colors.defaultControlColor : Colors.selectedArtworkColor
+                                                color: rowWrapper.isHighlighted ? Colors.defaultControlColor : Colors.selectedImageBackground
                                                 visible: columnLayout.isWideEnough
                                             }
 
@@ -1651,7 +1651,7 @@ ApplicationWindow {
                                                 anchors.top: descriptionRect.bottom
                                                 anchors.topMargin: 7
                                                 text: i18.n + qsTr("Keywords:")
-                                                color: Colors.defaultInputBackground
+                                                color: Colors.inputBackgroundColor
                                             }
 
                                             StyledText {
@@ -1659,7 +1659,7 @@ ApplicationWindow {
                                                 anchors.right: parent.right
                                                 anchors.top: descriptionRect.bottom
                                                 anchors.topMargin: 7
-                                                color: rowWrapper.isHighlighted ? Colors.defaultControlColor : Colors.selectedArtworkColor
+                                                color: rowWrapper.isHighlighted ? Colors.defaultControlColor : Colors.selectedImageBackground
                                             }
 
                                             Rectangle {
@@ -1671,7 +1671,7 @@ ApplicationWindow {
                                                 height: 80*settingsModel.keywordSizeScale
                                                 border.color: Colors.artworkActiveColor
                                                 border.width: flv.isFocused ? 1 : 0
-                                                color: rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.defaultControlColor
+                                                color: rowWrapper.isHighlighted ? Colors.inputBackgroundColor : Colors.defaultControlColor
 
                                                 function removeKeyword(index) {
                                                     artItemsModel.removeKeywordAt(rowWrapper.getIndex(), index)
@@ -1778,7 +1778,7 @@ ApplicationWindow {
                                                 StyledText {
                                                     id: plainTextText
                                                     text: i18.n + qsTr("<u>edit in plain text</u>")
-                                                    color: plainTextMA.containsMouse ? Colors.defaultLightGrayColor : Colors.defaultInputBackground
+                                                    color: plainTextMA.containsMouse ? Colors.defaultLightGrayColor : Colors.inputBackgroundColor
                                                     visible: rowWrapper.isHighlighted
 
                                                     MouseArea {
@@ -1819,7 +1819,7 @@ ApplicationWindow {
                                                     id: fixSpellingText
                                                     text: i18.n + qsTr("Fix spelling")
                                                     enabled: rowWrapper.artworkModel ? rowWrapper.artworkModel.hasSpellErrors : false
-                                                    color: enabled ? Colors.artworkActiveColor : (rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.selectedArtworkColor)
+                                                    color: enabled ? Colors.artworkActiveColor : (rowWrapper.isHighlighted ? Colors.inputBackgroundColor : Colors.selectedImageBackground)
 
                                                     MouseArea {
                                                         anchors.fill: parent
@@ -1836,7 +1836,7 @@ ApplicationWindow {
 
                                                 StyledText {
                                                     text: "|"
-                                                    color: rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.selectedMetadataColor
+                                                    color: rowWrapper.isHighlighted ? Colors.inputBackgroundColor : Colors.selectedArtworkBackground
                                                     verticalAlignment: Text.AlignVCenter
                                                 }
 
@@ -1864,7 +1864,7 @@ ApplicationWindow {
 
                                                 StyledText {
                                                     text: "|"
-                                                    color: rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.selectedMetadataColor
+                                                    color: rowWrapper.isHighlighted ? Colors.inputBackgroundColor : Colors.selectedArtworkBackground
                                                     verticalAlignment: Text.AlignVCenter
                                                 }
 
@@ -1882,7 +1882,7 @@ ApplicationWindow {
 
                                                 StyledText {
                                                     text: "|"
-                                                    color: rowWrapper.isHighlighted ? Colors.defaultInputBackground : Colors.selectedMetadataColor
+                                                    color: rowWrapper.isHighlighted ? Colors.inputBackgroundColor : Colors.selectedArtworkBackground
                                                     verticalAlignment: Text.AlignVCenter
                                                 }
 
@@ -1925,7 +1925,7 @@ ApplicationWindow {
 
                             StyledText {
                                 text: i18.n + qsTr("No items available.")
-                                color: Colors.selectedMetadataColor
+                                color: Colors.selectedArtworkBackground
                             }
 
                             StyledText {
@@ -1942,7 +1942,7 @@ ApplicationWindow {
 
                             StyledText {
                                 text: i18.n + qsTr("or")
-                                color: Colors.selectedMetadataColor
+                                color: Colors.selectedArtworkBackground
                             }
 
                             StyledText {
@@ -1980,7 +1980,7 @@ ApplicationWindow {
 
             StyledText {
                 text: i18.n + qsTr("Show logs")
-                color: logsMA.pressed ? Colors.defaultInputBackground : Colors.selectedMetadataColor
+                color: logsMA.pressed ? Colors.inputBackgroundColor : Colors.selectedArtworkBackground
 
                 MouseArea {
                     id: logsMA
@@ -1998,13 +1998,13 @@ ApplicationWindow {
 
             StyledText {
                 text: "|"
-                color: Colors.selectedMetadataColor
+                color: Colors.selectedArtworkBackground
                 verticalAlignment: Text.AlignVCenter
             }
 
             StyledText {
                 text: i18.n + qsTr("Check warnings")
-                color: warningsMA.pressed ? Colors.defaultInputBackground : warningsModel.warningsCount > 0 ? Colors.artworkModifiedColor : Colors.selectedMetadataColor
+                color: warningsMA.pressed ? Colors.inputBackgroundColor : warningsModel.warningsCount > 0 ? Colors.artworkModifiedColor : Colors.selectedArtworkBackground
 
                 MouseArea {
                     id: warningsMA
@@ -2023,7 +2023,7 @@ ApplicationWindow {
             StyledText {
                 visible: applicationWindow.showUpdateLink
                 text: "|"
-                color: Colors.selectedMetadataColor
+                color: Colors.selectedArtworkBackground
                 verticalAlignment: Text.AlignVCenter
             }
 
@@ -2031,7 +2031,7 @@ ApplicationWindow {
                 visible: applicationWindow.showUpdateLink
                 enabled: applicationWindow.showUpdateLink
                 text: i18.n + qsTr("Update available!")
-                color: updateMA.pressed ? Colors.defaultInputBackground : Colors.greenColor
+                color: updateMA.pressed ? Colors.inputBackgroundColor : Colors.greenColor
 
                 MouseArea {
                     id: updateMA
@@ -2050,7 +2050,7 @@ ApplicationWindow {
             StyledText {
                 id: filteredCountText
                 text: i18.n + qsTr("No items available")
-                color: Colors.selectedMetadataColor
+                color: Colors.selectedArtworkBackground
                 verticalAlignment: Text.AlignVCenter
 
                 function updateText() {
@@ -2072,14 +2072,14 @@ ApplicationWindow {
 
             StyledText {
                 text: "|"
-                color: Colors.selectedMetadataColor
+                color: Colors.selectedArtworkBackground
                 verticalAlignment: Text.AlignVCenter
             }
 
             StyledText {
                 property string originalText: filteredArtItemsModel.selectedArtworksCount > 1 ? qsTr("%1 selected items").arg(filteredArtItemsModel.selectedArtworksCount) : (filteredArtItemsModel.selectedArtworksCount === 1 ? qsTr("1 selected item") : qsTr("No selected items"))
                 text: i18.n + originalText
-                color: Colors.selectedMetadataColor
+                color: Colors.selectedArtworkBackground
                 verticalAlignment: Text.AlignVCenter
 
                 MouseArea {
@@ -2096,7 +2096,7 @@ ApplicationWindow {
 
             StyledText {
                 text: "|"
-                color: Colors.selectedMetadataColor
+                color: Colors.selectedArtworkBackground
                 verticalAlignment: Text.AlignVCenter
             }
 
@@ -2104,7 +2104,7 @@ ApplicationWindow {
                 property string originalText: artItemsModel.modifiedArtworksCount > 1 ? qsTr("%1 modified items").arg(artItemsModel.modifiedArtworksCount) : (artItemsModel.modifiedArtworksCount === 1 ? qsTr("1 modified item") : qsTr("No modified items"))
                 text: i18.n + originalText
                 verticalAlignment: Text.AlignVCenter
-                color: artItemsModel.modifiedArtworksCount > 0 ? Colors.artworkModifiedColor : Colors.selectedMetadataColor
+                color: artItemsModel.modifiedArtworksCount > 0 ? Colors.artworkModifiedColor : Colors.selectedArtworkBackground
 
                 MouseArea {
                     id: selectModifiedMA

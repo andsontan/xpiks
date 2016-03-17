@@ -129,7 +129,7 @@ Item {
             id: dialogWindow
             width: parent.width - 50
             height: parent.height - 120
-            color: Colors.selectedArtworkColor
+            color: Colors.selectedImageBackground
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
 
@@ -179,7 +179,7 @@ Item {
 
                     StyledText {
                         text: i18.n + qsTr("(same as Description if empty)")
-                        color: Colors.defaultInputBackground
+                        color: Colors.inputBackgroundColor
                     }
 
                     Item {
@@ -188,7 +188,7 @@ Item {
 
                     StyledText {
                         text: titleTextInput.length
-                        color: Colors.defaultInputBackground
+                        color: Colors.inputBackgroundColor
                     }
                 }
 
@@ -201,7 +201,7 @@ Item {
                     anchors.left: parent.left
                     anchors.right: parent.right
                     height: 25
-                    color: Colors.defaultInputBackground
+                    color: Colors.inputBackgroundColor
                     border.color: Colors.artworkActiveColor
                     border.width: titleTextInput.activeFocus ? 1 : 0
                     clip: true
@@ -282,7 +282,7 @@ Item {
 
                     StyledText {
                         text: descriptionTextInput.length
-                        color: Colors.defaultInputBackground
+                        color: Colors.inputBackgroundColor
                     }
                 }
 
@@ -295,7 +295,7 @@ Item {
                     anchors.left: parent.left
                     anchors.right: parent.right
                     height: 60
-                    color: Colors.defaultInputBackground
+                    color: Colors.inputBackgroundColor
                     border.color: Colors.artworkActiveColor
                     border.width: descriptionTextInput.activeFocus ? 1 : 0
                     clip: true
@@ -395,7 +395,7 @@ Item {
 
                     StyledText {
                         text: i18.n + qsTr("(comma-separated)")
-                        color: Colors.defaultInputBackground
+                        color: Colors.inputBackgroundColor
                     }
 
                     Item {
@@ -404,7 +404,7 @@ Item {
 
                     StyledText {
                         text: combinedArtworks.keywordsCount
-                        color: Colors.defaultInputBackground
+                        color: Colors.inputBackgroundColor
                     }
                 }
 
@@ -419,7 +419,7 @@ Item {
                     height: 255
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    color: Colors.defaultInputBackground
+                    color: Colors.inputBackgroundColor
 
                     function removeKeyword(index) {
                         combinedArtworks.removeKeywordAt(index)
@@ -511,7 +511,7 @@ Item {
                     StyledText {
                         text: i18.n + qsTr("Fix spelling")
                         enabled: dialogWindow.keywordsModel ? dialogWindow.keywordsModel.hasSpellErrors : false
-                        color: enabled ? (fixSpellingMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor) : Colors.defaultInputBackground
+                        color: enabled ? (fixSpellingMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor) : Colors.inputBackgroundColor
 
                         MouseArea {
                             id: fixSpellingMA
@@ -528,13 +528,13 @@ Item {
 
                     StyledText {
                         text: "|"
-                        color: Colors.defaultInputBackground
+                        color: Colors.inputBackgroundColor
                         verticalAlignment: Text.AlignVCenter
                     }
 
                     StyledText {
                         text: i18.n + qsTr("Suggest")
-                        color: enabled ? (suggestKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor) : Colors.defaultInputBackground
+                        color: enabled ? (suggestKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor) : Colors.inputBackgroundColor
 
                         MouseArea {
                             id: suggestKeywordsMA
@@ -556,7 +556,7 @@ Item {
 
                     StyledText {
                         text: "|"
-                        color: Colors.defaultInputBackground
+                        color: Colors.inputBackgroundColor
                         verticalAlignment: Text.AlignVCenter
                     }
 
@@ -574,13 +574,13 @@ Item {
 
                     StyledText {
                         text: "|"
-                        color: Colors.defaultInputBackground
+                        color: Colors.inputBackgroundColor
                         verticalAlignment: Text.AlignVCenter
                     }
 
                     StyledText {
                         text: i18.n + qsTr("Clear")
-                        color: enabled ? (clearKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor) : Colors.defaultInputBackground
+                        color: enabled ? (clearKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor) : Colors.inputBackgroundColor
 
                         MouseArea {
                             id: clearKeywordsMA
