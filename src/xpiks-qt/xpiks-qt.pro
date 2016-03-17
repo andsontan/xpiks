@@ -319,6 +319,7 @@ macx {
 }
 
 win32 {
+    DEFINES += QT_NO_PROCESS_COMBINED_ARGUMENT_START
     QT += winextras
     INCLUDEPATH += "../zlib-1.2.8"
     INCLUDEPATH += "../hunspell-1.3.3/src"

@@ -141,8 +141,6 @@ namespace MetadataIO {
                 HANDLE fileHandle = (HANDLE)_get_osfhandle(argumentsFile.handle());
                 bool flushResult = FlushFileBuffers(fileHandle);
                 LOG_DEBUG << "Windows flush result:" << flushResult;
-                // TODO: FIXME: Windows bug with UTF-8 and Exiftool
-                QThread::sleep(1);
     #else
                 int fsyncResult = fsync(argumentsFile.handle());
                 LOG_DEBUG << "fsync result:" << fsyncResult;
@@ -151,7 +149,6 @@ namespace MetadataIO {
 
                 QString exiftoolPath = m_SettingsModel->getExifToolPath();
                 QStringList arguments;
-                arguments << "-charset" << "FileName=UTF8";
                 arguments << "-IPTC:CodedCharacterSet=UTF8" << "-@" << argumentsFile.fileName();
 
                 LOG_DEBUG << "Starting exiftool process:" << exiftoolPath;
@@ -205,6 +202,9 @@ namespace MetadataIO {
         QStringList arguments;
         arguments.reserve(m_ItemsToWrite.length() + 5);
 
+#ifdef Q_OS_WIN
+        arguments << "-charset" << "FileName=UTF8";
+#endif
         // ignore minor warnings
         arguments << "-m" << "-j=" + jsonFilePath;
 
