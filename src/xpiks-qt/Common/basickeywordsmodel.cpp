@@ -275,6 +275,7 @@ namespace Common {
     }
 
     void BasicKeywordsModel::setSpellStatuses(const QVector<bool> &statuses) {
+        // sync issue between adding/removing/undo/spellcheck
         Q_ASSERT(statuses.length() == m_SpellCheckResults.length());
 
         int size = statuses.length();
@@ -366,6 +367,13 @@ namespace Common {
     }
 
     void BasicKeywordsModel::setSpellCheckResults(const QVector<SpellCheck::SpellCheckQueryItem *> &items, bool onlyOneKeyword) {
+#ifdef INTEGRATION_TESTS
+        if (m_KeywordsList.length() != m_SpellCheckResults.length()) {
+            LOG_DEBUG << "Current keywords list length:" << m_KeywordsList.length();
+            LOG_DEBUG << "SpellCheck list length:" << m_SpellCheckResults.length();
+        }
+#endif
+        // sync issue between adding/removing/undo/spellcheck
         Q_ASSERT(m_KeywordsList.length() == m_SpellCheckResults.length());
 
         if (!onlyOneKeyword) {

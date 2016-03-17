@@ -50,6 +50,10 @@ namespace Models {
 
     bool ArtworkMetadata::initialize(const QString &title,
                                      const QString &description, const QStringList &rawKeywords, bool overwrite) {
+#ifdef INTEGRATION_TESTS
+        LOG_DEBUG << title << description << rawKeywords << overwrite;
+#endif
+
         bool anythingModified = false;
 
         if (overwrite || (isTitleEmpty() && !title.trimmed().isEmpty())) {

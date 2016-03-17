@@ -119,7 +119,8 @@ namespace SpellCheck {
     void SpellCheckItem::submitSpellCheckResult() {
         const QVector<SpellCheckQueryItem*> &items = getQueries();
 
-        if (Common::HasFlag(m_SpellCheckFlags, Common::SpellCheckKeywords)) {
+        // can be empty in case of clear command
+        if (Common::HasFlag(m_SpellCheckFlags, Common::SpellCheckKeywords) && !items.isEmpty()) {
             m_SpellCheckable->setSpellCheckResults(items, m_OnlyOneKeyword);
         }
 

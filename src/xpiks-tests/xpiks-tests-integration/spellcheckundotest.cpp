@@ -16,7 +16,7 @@
 #include "../../xpiks-qt/UndoRedo/undoredomanager.h"
 
 QString SpellCheckUndoTest::testName() {
-    return QLatin1String("SpellcheckUndoTest");
+    return QLatin1String("SpellCheckUndoTest");
 }
 
 void SpellCheckUndoTest::setup() {
@@ -73,6 +73,9 @@ int SpellCheckUndoTest::doTest() {
     VERIFY(metadata->hasKeywordsSpellError(), "Keywords spell error not detected");
 
     filteredModel->clearKeywords(0);
+    QThread::sleep(1);
+
+    VERIFY(!metadata->hasKeywordsSpellError(), "Keywords spell error not cleared");
 
     UndoRedo::UndoRedoManager *undoRedoManager = m_CommandManager->getUndoRedoManager();
     undoRedoManager->undoLastAction();
