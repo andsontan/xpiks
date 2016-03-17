@@ -183,7 +183,7 @@ Item {
                         color: Colors.defaultInputBackground
                         Connections {
                             target: combinedArtworks
-                            onNumberItemsChanged: {
+                            onItemsNumberChanged: {
                                textItemsAvailable.originalText=combinedArtworks.artworksCount == 1 ? qsTr("1 artwork being edited") : qsTr("%1 artworks being edited").arg(combinedArtworks.artworksCount)
                                textItemsAvailable.text=i18.n + originalText
                             }

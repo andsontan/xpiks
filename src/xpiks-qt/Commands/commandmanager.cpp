@@ -513,13 +513,13 @@ void Commands::CommandManager::restartSpellChecking() {
 }
 
 
-void Commands::CommandManager::updateAllDependentModels(){
+void Commands::CommandManager::updateAllDependentModels() {
     int size = m_AvailabilityListeners.size();
     m_CombinedArtworksModel->generateAboutToBeRemoved();
     m_ArtItemsModel->generateAboutToBeRemoved();
     LOG_DEBUG << "generated about to be removed...";
     QCoreApplication::processEvents();
-    for ( int i = 0; i < size; ++i){
+    for ( int i = 0; i < size; ++i) {
         m_AvailabilityListeners[i]->removeUnavailableItems();
     }
     LOG_DEBUG << "removed from availabilityListeners....";

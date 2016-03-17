@@ -229,9 +229,9 @@ namespace Models {
         return exists;
     }
 
-    void ArtworksRepository::checkFileUnavailable(const QString & path){
+    void ArtworksRepository::checkFileUnavailable(const QString & path) {
      QFileInfo fi(path);
-     if (!fi.exists()){
+     if (!fi.exists()) {
          m_Mutex.lock();
          m_UnavailableFiles.insert(fi.absoluteFilePath());
          m_Mutex.unlock();
@@ -239,15 +239,15 @@ namespace Models {
      }
     }
 
-    void ArtworksRepository::removeFromDeletedList(const QString &filepath){
+    void ArtworksRepository::removeFromDeletedList(const QString &filepath) {
         m_Mutex.lock();
         m_UnavailableFiles.remove(filepath);
         m_FilesWatcher.removePath(filepath);
         m_Mutex.unlock();
     }
 
-    void ArtworksRepository::onAvailabilityTimer(){
-        if ( m_UnavailableFiles.size() > 0 ){
+    void ArtworksRepository::onAvailabilityTimer() {
+        if ( m_UnavailableFiles.size() > 0 ) {
             emit filesUnavailable();
         }
     }

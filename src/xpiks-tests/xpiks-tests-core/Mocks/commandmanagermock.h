@@ -53,8 +53,8 @@ namespace Mocks {
             }
         }
 
-     void mockDeletion(int count){
-       for (int i =0; i < count; ++i){
+     void mockDeletion(int count) {
+       for (int i =0; i < count; ++i) {
             CommandManager::getArtItemsModel()->getArtwork(i)->setUnavailable();
        }
      }

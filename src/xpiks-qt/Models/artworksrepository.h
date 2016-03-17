@@ -128,7 +128,7 @@ namespace Models {
             emit artworksSourcesCountChanged();
         }
 
-        void removeFileAndEmitSignal(){
+        void removeFileAndEmitSignal() {
             m_UnavailableFiles.insert(*m_FilesSet.begin());
             emit filesUnavailable();
         }

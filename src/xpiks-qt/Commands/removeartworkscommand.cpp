@@ -58,7 +58,7 @@ namespace Commands {
                 if (metadata != NULL) {
                     removedItemsIndices.append(i);
 
-                    if (!metadata->getIsUnavailable()){
+                    if (!metadata->getIsUnavailable()) {
                         const QString &filepath = metadata->getFilepath();
                         removedItemsFilepathes.append(filepath);
 
@@ -88,7 +88,7 @@ namespace Commands {
 
             artItemsModel->updateModifiedCount();
 
-            if (!removedItemsFilepathes.empty()){
+            if (!removedItemsFilepathes.empty()) {
                 UndoRedo::RemoveArtworksHistoryItem *removeArtworksItem =
                         new UndoRedo::RemoveArtworksHistoryItem(removedItemsIndices,
                                                             removedItemsFilepathes,

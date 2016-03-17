@@ -64,8 +64,8 @@ Item {
 
     Connections {
         target: artItemsModel
-        onFilewithIndexUnavailable: {
-            if (artworkIndex == index){
+        onFileWithIndexUnavailable: {
+            if (artworkIndex == index) {
                 console.debug("Artwork unavailable")
                 closePopup()
             }

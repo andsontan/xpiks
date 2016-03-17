@@ -87,18 +87,18 @@ namespace Models {
         void setArtworks(const QVector<ArtworkMetadata*> &artworkList) { resetArtworks(); addArtworks(artworkList); }
         void addArtworks(const QVector<Models::ArtworkMetadata*> &artworkList) { m_ArtworkList << artworkList; emit itemsCountChanged(); }
         void resetArtworks() { m_ArtworkList.clear(); }
-        void removeUnavailableItems(){
+        void removeUnavailableItems() {
             const QVector<Models::ArtworkMetadata*> & artworksListOld=getArtworkList();
             QVector<Models::ArtworkMetadata*> artworksListNew;
             int size = artworksListOld.size();
-            for (int i = 0; i < size; ++i){
+            for (int i = 0; i < size; ++i) {
                  Models::ArtworkMetadata* artItemInfoElement=artworksListOld[i];
-                if (!artItemInfoElement->getIsUnavailable()){
+                if (!artItemInfoElement->getIsUnavailable()) {
                     artworksListNew.append(artItemInfoElement);
                 }
             }
             setArtworks(artworksListNew);
-            if (artworksListNew.size()==0){
+            if (artworksListNew.size()==0) {
                 emit requestCloseWindow();
             }
                 emit itemsNumberChanged();

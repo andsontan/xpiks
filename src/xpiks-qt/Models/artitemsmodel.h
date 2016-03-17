@@ -161,7 +161,7 @@ namespace Models {
         void artworksChanged(bool needToMoveCurrentItem);
         void artworksAdded(int imagesCount, int vectorsCount);
         void selectedArtworkRemoved();
-        void filewithIndexUnavailable(int index);
+        void fileWithIndexUnavailable(int index);
         void launchUnavailableFilesWarning();
 
     protected:

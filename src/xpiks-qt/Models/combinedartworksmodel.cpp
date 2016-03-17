@@ -436,23 +436,23 @@ namespace Models {
         m_ArtworksList.removeAt(row);
     }
 
-    void CombinedArtworksModel::generateAboutToBeRemoved(){
+    void CombinedArtworksModel::generateAboutToBeRemoved() {
          m_CommonKeywordsModel.generateAboutToBeRemoved();
     }
 
-    void CombinedArtworksModel::removeUnavailableItems(){
+    void CombinedArtworksModel::removeUnavailableItems() {
         QVector<int> indicesToRemove;
-        for (int i= 0; i<m_ArtworksList.size(); i++){
+        for (int i= 0; i<m_ArtworksList.size(); i++) {
             ArtItemInfo* artItemInfoElement=m_ArtworksList[i];
-            if (artItemInfoElement->getOrigin()->getIsUnavailable()){
+            if (artItemInfoElement->getOrigin()->getIsUnavailable()) {
                 indicesToRemove.append(i);
             }
          }
         QVector<QPair<int, int> > rangesToRemove;
         Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
         removeItemsAtIndices(rangesToRemove);
-        recombineArtworks(); //the application crashes when it is called
-        if ( m_ArtworksList.size() == 0){
+        recombineArtworks();
+        if ( m_ArtworksList.size() == 0) {
             emit requestCloseWindow();
         }
         emit itemsNumberChanged();

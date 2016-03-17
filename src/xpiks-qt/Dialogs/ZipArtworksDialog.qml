@@ -46,8 +46,8 @@ Item {
     Connections {
         target: zipArchiver
         onRequestCloseWindow: {
-                console.info("got closing signal")
-                closePopup();
+            console.info("got closing signal")
+            closePopup();
         }
     }
 
@@ -145,7 +145,7 @@ Item {
                         color: Colors.defaultInputBackground
                         Connections {
                             target: zipArchiver
-                            onNumberItemsChanged: {
+                            onItemsNumberChanged: {
                                textItemsAvailable.originalText=zipArchiver.itemsCount == 1 ? qsTr("1 artwork") : qsTr("%1 artworks").arg(zipArchiver.itemsCount)
                                textItemsAvailable.text=i18.n + originalText
                             }
