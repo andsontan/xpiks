@@ -53,39 +53,39 @@ var BlackTheme = {
     whiteColor: "#ffffff"
 };
 
-var WhiteTheme = {
-    name: "white",
+var GrayTheme = {
+    name: "gray",
 
-    defaultDarkColor: "#dddddd",
-    defaultControlColor: "#eeeeee",
+    defaultDarkColor: "#22252c",
+    defaultControlColor: "#30333b",
 
     defaultLightColor: "#E0E0E0",
     defaultLightGrayColor: "#D0D0D0",
 
     itemsSourceBackground: "#232323",
     itemsSourceSelected: "#333333",
-    itemsSourceForeground: "#e6e6e6",
+    itemsSourceForeground: "#979ca5",
 
     buttonHoverBackground: "#12b9bc",
     buttonPressedBackground: "#41b1b7",
     buttonDisabledForeground: "#283c3f",
     buttonPressedForeground: "#283c3f",
 
-    artworkBackground: "#031619",
-    artworkImageBackground: "#071215",
+    artworkBackground: "#22252c",
+    artworkImageBackground: "#1c2025",
     artworkModifiedColor: "#f49c12",
     artworkSavedColor: "#435151",
-    artworkActiveColor: "#12b9bc",
+    artworkActiveColor: "#2ec1c3",
 
-    selectedArtworkColor: "#545456",
-    selectedMetadataColor: "#5d5d5d",
+    selectedArtworkColor: "#3e434d",
+    selectedMetadataColor: "#474b54",
     checkboxCheckedColor: "#ffffff",
-    defaultInputBackground: "#999999",
+    defaultInputBackground: "#7a7e86",
 
     destructiveColor: "#d10b0b",
     greenColor: "#2daf02",
     whiteColor: "#ffffff"
 };
 
-var availableThemes = [BlackTheme, WhiteTheme];
+var availableThemes = [BlackTheme, GrayTheme];
 var names = availableThemes.map(function(theme) { return theme.name; })

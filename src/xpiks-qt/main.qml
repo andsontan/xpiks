@@ -1459,6 +1459,7 @@ ApplicationWindow {
                                                 anchors.left: parent.left
                                                 anchors.top: parent.top
                                                 text: i18.n + qsTr("Description:")
+                                                color: Colors.defaultInputBackground
                                             }
 
                                             StyledText {
@@ -1467,6 +1468,7 @@ ApplicationWindow {
                                                 anchors.top: parent.top
                                                 visible: columnLayout.isWideEnough
                                                 text: i18.n + qsTr("Title:")
+                                                color: Colors.defaultInputBackground
                                             }
 
                                             Rectangle {
@@ -1649,6 +1651,7 @@ ApplicationWindow {
                                                 anchors.top: descriptionRect.bottom
                                                 anchors.topMargin: 7
                                                 text: i18.n + qsTr("Keywords:")
+                                                color: Colors.defaultInputBackground
                                             }
 
                                             StyledText {

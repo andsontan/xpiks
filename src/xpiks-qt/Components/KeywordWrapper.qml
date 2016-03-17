@@ -61,7 +61,7 @@ Rectangle {
                 anchors.bottom: parent.bottom
                 verticalAlignment: Text.AlignVCenter
                 text: itemWrapper.keywordText
-                color: itemWrapper.isHighlighted ? Colors.defaultControlColor : Colors.defaultLightColor
+                color: itemWrapper.isHighlighted ? Colors.defaultControlColor : Colors.defaultInputBackground
                 font.pixelSize: UIConfig.fontPixelSize * settingsModel.keywordSizeScale
             }
 
