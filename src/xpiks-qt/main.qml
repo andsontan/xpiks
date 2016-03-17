@@ -1809,7 +1809,8 @@ ApplicationWindow {
                                                                                 {
                                                                                     callbackObject: callbackObject,
                                                                                     keywordsText: keywordsstring,
-                                                                                    artworkIndex: rowWrapper.getIndex()
+                                                                                    keywordsModel: artItemsModel.getArtworkItself(rowWrapper.getIndex())
+
                                                                                 });
                                                         }
                                                     }

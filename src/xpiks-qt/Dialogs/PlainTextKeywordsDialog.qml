@@ -37,7 +37,7 @@ Item {
     id: plainTextKeywordsComponent
     property string keywordsText
     property var callbackObject
-    property int artworkIndex: -1
+    property var keywordsModel
     anchors.fill: parent
 
     signal dialogDestruction();
@@ -53,7 +53,7 @@ Item {
         textEdit.forceActiveFocus()
     }
     Connections {
-        target: artItemsModel.getArtworkItself(artworkIndex)
+        target: keywordsModel
         onAboutToBeRemoved: {
             closePopup()
         }
