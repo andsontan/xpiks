@@ -176,5 +176,4 @@ namespace Models {
     void ArtworkUploader::cancelProcessing() {
         m_FtpCoordinator->cancelUpload();
     }
-
 }

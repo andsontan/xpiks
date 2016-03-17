@@ -115,7 +115,7 @@ namespace Common {
         SpellCheck::SpellCheckItemInfo *getSpellCheckInfo() const { return m_SpellCheckInfo; }
         void setSpellCheckInfo(SpellCheck::SpellCheckItemInfo *info) { m_SpellCheckInfo = info; }
         void notifySpellCheckResults(int flags);
-        void generateAboutToBeRemoved() {emit aboutToBeRemoved();}
+        void generateAboutToBeRemoved() { emit aboutToBeRemoved(); }
 
     private:
         void updateDescriptionSpellErrors(const QHash<QString, bool> &results);
