@@ -38,7 +38,7 @@ BusyIndicator {
 
         property real opacity: 0.7
         property string color: "#7B756B"
-        property string highlightColor: Colors.defaultLightColor
+        property string highlightColor: Colors.inputForegroundColor
         property string bgColor: "transparent"
 
         indicator: Rectangle {

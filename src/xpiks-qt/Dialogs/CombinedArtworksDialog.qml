@@ -170,7 +170,6 @@ Item {
                     StyledText {
                         property string originalText: combinedArtworks.artworksCount == 1 ? qsTr("1 artwork being edited") : qsTr("%1 artworks being edited").arg(combinedArtworks.artworksCount)
                         text: i18.n + originalText
-                        color: Colors.inputBackgroundColor
                     }
                 }
 
@@ -362,11 +361,12 @@ Item {
 
                                 StyledText {
                                     text: i18.n + qsTr("Title:")
+                                    color: Colors.labelActiveForeground
                                 }
 
                                 StyledText {
                                     text: i18.n + qsTr("(same as Description if empty)")
-                                    color: Colors.inputBackgroundColor
+                                    color: Colors.labelActiveForeground
                                 }
 
                                 Item {
@@ -529,6 +529,7 @@ Item {
 
                                 StyledText {
                                     text: i18.n + qsTr("Description:")
+                                    color: Colors.labelActiveForeground
                                 }
 
                                 Item {
@@ -537,7 +538,7 @@ Item {
 
                                 StyledText {
                                     text: descriptionTextInput.length
-                                    color: Colors.inputBackgroundColor
+                                    color: Colors.labelActiveForeground
                                 }
                             }
 
@@ -709,11 +710,12 @@ Item {
                                 StyledText {
                                     id: keywordsLabel
                                     text: i18.n + qsTr("Keywords:")
+                                    color: Colors.labelActiveForeground
                                 }
 
                                 StyledText {
                                     text: i18.n + qsTr("(comma-separated)")
-                                    color: Colors.inputBackgroundColor
+                                    color: Colors.labelActiveForeground
                                 }
 
                                 Item {
@@ -722,7 +724,7 @@ Item {
 
                                 StyledText {
                                     text: combinedArtworks.keywordsCount
-                                    color: Colors.inputBackgroundColor
+                                    color: Colors.labelActiveForeground
                                 }
                             }
 
@@ -829,6 +831,7 @@ Item {
                                 StyledCheckbox {
                                     id: appendKeywordsCheckbox
                                     text: i18.n + qsTr("Only append new keywords")
+                                    labelColor: Colors.labelActiveForeground
                                     onClicked: combinedArtworks.appendKeywords = checked
                                     Component.onCompleted: appendKeywordsCheckbox.checked = combinedArtworks.appendKeywords
                                 }
@@ -840,7 +843,7 @@ Item {
                                 StyledText {
                                     text: i18.n + qsTr("Fix spelling")
                                     enabled: keywordsWrapper.keywordsModel ? keywordsWrapper.keywordsModel.hasSpellErrors : false
-                                    color: enabled ? (fixSpellingMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor) : Colors.inputBackgroundColor
+                                    color: enabled ? (fixSpellingMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor) : Colors.labelActiveForeground
 
                                     MouseArea {
                                         id: fixSpellingMA
@@ -857,13 +860,12 @@ Item {
 
                                 StyledText {
                                     text: "|"
-                                    color: Colors.inputBackgroundColor
                                     verticalAlignment: Text.AlignVCenter
                                 }
 
                                 StyledText {
                                     text: i18.n + qsTr("Suggest")
-                                    color: enabled ? (suggestKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor) : Colors.inputBackgroundColor
+                                    color: enabled ? (suggestKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor) : Colors.labelActiveForeground
 
                                     MouseArea {
                                         id: suggestKeywordsMA
@@ -891,7 +893,7 @@ Item {
 
                                 StyledText {
                                     text: i18.n + qsTr("Copy")
-                                    color: copyKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
+                                    color: copyKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor
 
                                     MouseArea {
                                         id: copyKeywordsMA
@@ -903,13 +905,12 @@ Item {
 
                                 StyledText {
                                     text: "|"
-                                    color: Colors.inputBackgroundColor
                                     verticalAlignment: Text.AlignVCenter
                                 }
 
                                 StyledText {
                                     text: i18.n + qsTr("Clear")
-                                    color: enabled ? (clearKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor) : Colors.inputBackgroundColor
+                                    color: enabled ? (clearKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor) : Colors.labelActiveForeground
 
                                     MouseArea {
                                         id: clearKeywordsMA

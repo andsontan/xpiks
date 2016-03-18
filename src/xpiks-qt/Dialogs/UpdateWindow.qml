@@ -71,7 +71,7 @@ ApplicationWindow {
             StyledText {
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: i18.n + qsTr("<u>Download Xpiks update</u>")
-                color: downloadMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
+                color: downloadMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor
 
                 MouseArea {
                     id: downloadMA

@@ -23,7 +23,8 @@ import QtQuick 2.2
 import "../Constants"
 
 Text {
-    color: enabled ? Colors.defaultLightColor : Colors.itemsSourceSelected
+    property bool isActive: true
+    color: (isActive && enabled) ? Colors.labelActiveForeground : Colors.labelInactiveForeground
     renderType: Text.NativeRendering
     font.family: Qt.platform.os === "windows" ? "Arial" : "Helvetica"
     font.pixelSize: Qt.platform.os === "windows" ? 14 : 13

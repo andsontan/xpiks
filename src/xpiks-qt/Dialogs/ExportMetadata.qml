@@ -168,7 +168,7 @@ Item {
                     StyledText {
                         anchors.right: parent.right
                         text: i18.n + qsTr("%1 modified image(s) selected").arg(filteredArtItemsModel.getModifiedSelectedCount(overwriteAll))
-                        color: Colors.inputBackgroundColor
+                        color: Colors.inputForegroundColor
                     }
                 }
 

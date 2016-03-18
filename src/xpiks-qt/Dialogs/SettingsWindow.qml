@@ -537,7 +537,6 @@ ApplicationWindow {
 
                         StyledText {
                             text: i18.n + qsTr("(seconds)")
-                            color: Colors.inputBackgroundColor
                         }
                     }
 
@@ -731,7 +730,6 @@ ApplicationWindow {
 
                         StyledText {
                             text: i18.n + qsTr("(can be real)")
-                            color: Colors.inputBackgroundColor
                         }
                     }
 
@@ -782,7 +780,6 @@ ApplicationWindow {
 
                         StyledText {
                             text: i18.n + qsTr("(keywords)")
-                            color: Colors.inputBackgroundColor
                         }
                     }
 
@@ -832,7 +829,6 @@ ApplicationWindow {
 
                         StyledText {
                             text: i18.n + qsTr("(characters)")
-                            color: Colors.inputBackgroundColor
                         }
                     }
 
@@ -949,7 +945,6 @@ ApplicationWindow {
 
                         StyledText {
                             text: i18.n + qsTr("(takes effect after relaunch)")
-                            color: Colors.inputBackgroundColor
                         }
                     }
 
@@ -1113,8 +1108,7 @@ ApplicationWindow {
                                 }
 
                                 StyledText {
-                                    text: i18.n + qsTr("(simple statistic of feature usage)")
-                                    color: Colors.inputBackgroundColor
+                                    text: i18.n + qsTr("(simple statistics of feature usage)")
                                 }
                             }
                         }

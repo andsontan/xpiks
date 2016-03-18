@@ -950,7 +950,6 @@ ApplicationWindow {
                                 clip: true
                                 anchors.left: parent.left
                                 anchors.leftMargin: 5
-                                color: Colors.inputBackgroundColor
                                 enabled: artworkRepository.artworksSourcesCount > 0
 
                                 onAccepted: {
@@ -975,8 +974,8 @@ ApplicationWindow {
 
                             StyledText {
                                 text: i18.n + qsTr("Search...   x:empty  x:modified")
-                                color: Colors.inputBackgroundColor
-                                opacity: (filterClearTimer.running || filterText.activeFocus || (filterText.length > 0)) ? 0 : 0.1
+                                visible: !(filterClearTimer.running || filterText.activeFocus || (filterText.length > 0))
+                                color: Colors.selectedArtworkBackground
                                 anchors.left: parent.left
                                 anchors.leftMargin: 7
                                 anchors.verticalCenter: parent.verticalCenter
@@ -1104,7 +1103,7 @@ ApplicationWindow {
 
                             StyledText {
                                 text: i18.n + qsTr("Undo")
-                                color: undoMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
+                                color: undoMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor
 
                                 MouseArea {
                                     id: undoMA
@@ -1120,7 +1119,7 @@ ApplicationWindow {
 
                             StyledText {
                                 text: i18.n + qsTr("Dismiss (%1)").arg(settingsModel.dismissDuration - (autoDismissTimer.iterations % (settingsModel.dismissDuration + 1)))
-                                color: dismissUndoMA.pressed ? Colors.defaultLightColor : Colors.inputBackgroundColor
+                                color: dismissUndoMA.pressed ? Colors.linkClickedColor : Colors.labelActiveForeground
 
                                 MouseArea {
                                     id: dismissUndoMA
@@ -1415,7 +1414,7 @@ ApplicationWindow {
                                                 anchors.topMargin: 3
                                                 width: parent.width
                                                 elide: Text.ElideMiddle
-                                                color: moreInfoMA.pressed ? Colors.defaultLightColor : Colors.inputBackgroundColor
+                                                color: moreInfoMA.pressed ? Colors.linkClickedColor : Colors.labelActiveForeground
                                                 horizontalAlignment: Text.AlignHCenter
                                                 text: filename.split(/[\\/]/).pop()
 
@@ -1459,7 +1458,7 @@ ApplicationWindow {
                                                 anchors.left: parent.left
                                                 anchors.top: parent.top
                                                 text: i18.n + qsTr("Description:")
-                                                color: Colors.inputBackgroundColor
+                                                isActive: rowWrapper.isHighlighted
                                             }
 
                                             StyledText {
@@ -1468,7 +1467,7 @@ ApplicationWindow {
                                                 anchors.top: parent.top
                                                 visible: columnLayout.isWideEnough
                                                 text: i18.n + qsTr("Title:")
-                                                color: Colors.inputBackgroundColor
+                                                isActive: rowWrapper.isHighlighted
                                             }
 
                                             Rectangle {
@@ -1511,7 +1510,7 @@ ApplicationWindow {
                                                         height: descriptionFlick.height
                                                         text: description
                                                         focus: true
-                                                        color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.inputBackgroundColor
+                                                        isActive: rowWrapper.isHighlighted
                                                         onTextChanged: model.editdescription = text
 
                                                         Keys.onTabPressed: {
@@ -1558,7 +1557,7 @@ ApplicationWindow {
                                                 anchors.right: descriptionRect.right
                                                 anchors.bottom: descriptionRect.top
                                                 anchors.bottomMargin: 3
-                                                color: rowWrapper.isHighlighted ? Colors.defaultControlColor : Colors.selectedImageBackground
+                                                isActive: rowWrapper.isHighlighted
                                             }
 
                                             Rectangle {
@@ -1601,7 +1600,7 @@ ApplicationWindow {
                                                         height: titleFlick.height
                                                         text: title
                                                         focus: true
-                                                        color: rowWrapper.isHighlighted ? Colors.defaultLightColor : Colors.inputBackgroundColor
+                                                        isActive: rowWrapper.isHighlighted
                                                         onTextChanged: model.edittitle = text
                                                         KeyNavigation.backtab: descriptionTextInput
 
@@ -1641,7 +1640,7 @@ ApplicationWindow {
                                                 anchors.right: titleRect.right
                                                 anchors.bottom: titleRect.top
                                                 anchors.bottomMargin: 3
-                                                color: rowWrapper.isHighlighted ? Colors.defaultControlColor : Colors.selectedImageBackground
+                                                isActive: rowWrapper.isHighlighted
                                                 visible: columnLayout.isWideEnough
                                             }
 
@@ -1651,7 +1650,7 @@ ApplicationWindow {
                                                 anchors.top: descriptionRect.bottom
                                                 anchors.topMargin: 7
                                                 text: i18.n + qsTr("Keywords:")
-                                                color: Colors.inputBackgroundColor
+                                                isActive: rowWrapper.isHighlighted
                                             }
 
                                             StyledText {
@@ -1659,7 +1658,7 @@ ApplicationWindow {
                                                 anchors.right: parent.right
                                                 anchors.top: descriptionRect.bottom
                                                 anchors.topMargin: 7
-                                                color: rowWrapper.isHighlighted ? Colors.defaultControlColor : Colors.selectedImageBackground
+                                                isActive: rowWrapper.isHighlighted
                                             }
 
                                             Rectangle {
@@ -1778,7 +1777,7 @@ ApplicationWindow {
                                                 StyledText {
                                                     id: plainTextText
                                                     text: i18.n + qsTr("<u>edit in plain text</u>")
-                                                    color: plainTextMA.containsMouse ? Colors.defaultLightGrayColor : Colors.inputBackgroundColor
+                                                    color: plainTextMA.containsMouse ? Colors.linkClickedColor : Colors.labelActiveForeground
                                                     visible: rowWrapper.isHighlighted
 
                                                     MouseArea {
@@ -1819,9 +1818,10 @@ ApplicationWindow {
                                                     id: fixSpellingText
                                                     text: i18.n + qsTr("Fix spelling")
                                                     enabled: rowWrapper.artworkModel ? rowWrapper.artworkModel.hasSpellErrors : false
-                                                    color: enabled ? Colors.artworkActiveColor : (rowWrapper.isHighlighted ? Colors.inputBackgroundColor : Colors.selectedImageBackground)
+                                                    color: enabled ? (fixSpellingMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor)  : (rowWrapper.isHighlighted ? Colors.labelActiveForeground : Colors.labelInactiveForeground)
 
                                                     MouseArea {
+                                                        id: fixSpellingMA
                                                         anchors.fill: parent
                                                         cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
 
@@ -1836,13 +1836,13 @@ ApplicationWindow {
 
                                                 StyledText {
                                                     text: "|"
-                                                    color: rowWrapper.isHighlighted ? Colors.inputBackgroundColor : Colors.selectedArtworkBackground
+                                                    isActive: rowWrapper.isHighlighted
                                                     verticalAlignment: Text.AlignVCenter
                                                 }
 
                                                 StyledText {
                                                     text: i18.n + qsTr("Suggest")
-                                                    color: suggestKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
+                                                    color: suggestKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor
 
                                                     MouseArea {
                                                         id: suggestKeywordsMA
@@ -1864,13 +1864,13 @@ ApplicationWindow {
 
                                                 StyledText {
                                                     text: "|"
-                                                    color: rowWrapper.isHighlighted ? Colors.inputBackgroundColor : Colors.selectedArtworkBackground
+                                                    isActive: rowWrapper.isHighlighted
                                                     verticalAlignment: Text.AlignVCenter
                                                 }
 
                                                 StyledText {
                                                     text: i18.n + qsTr("Copy")
-                                                    color: copyKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
+                                                    color: copyKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor
 
                                                     MouseArea {
                                                         id: copyKeywordsMA
@@ -1882,13 +1882,13 @@ ApplicationWindow {
 
                                                 StyledText {
                                                     text: "|"
-                                                    color: rowWrapper.isHighlighted ? Colors.inputBackgroundColor : Colors.selectedArtworkBackground
+                                                    isActive: rowWrapper.isHighlighted
                                                     verticalAlignment: Text.AlignVCenter
                                                 }
 
                                                 StyledText {
                                                     text: i18.n + qsTr("Clear")
-                                                    color: clearKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
+                                                    color: clearKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor
 
                                                     MouseArea {
                                                         id: clearKeywordsMA
@@ -1930,7 +1930,7 @@ ApplicationWindow {
 
                             StyledText {
                                 text: i18.n + qsTr("Add files", "link")
-                                color: addFilesMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
+                                color: addFilesMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor
 
                                 MouseArea {
                                     id: addFilesMA
@@ -1947,7 +1947,7 @@ ApplicationWindow {
 
                             StyledText {
                                 text: i18.n + qsTr("clear the filter")
-                                color: clearFilterMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
+                                color: clearFilterMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor
 
                                 MouseArea {
                                     id: clearFilterMA
@@ -1980,7 +1980,7 @@ ApplicationWindow {
 
             StyledText {
                 text: i18.n + qsTr("Show logs")
-                color: logsMA.pressed ? Colors.inputBackgroundColor : Colors.selectedArtworkBackground
+                color: logsMA.pressed ? Colors.linkClickedColor : Colors.labelInactiveForeground
 
                 MouseArea {
                     id: logsMA
@@ -1998,13 +1998,13 @@ ApplicationWindow {
 
             StyledText {
                 text: "|"
-                color: Colors.selectedArtworkBackground
+                color: Colors.labelInactiveForeground
                 verticalAlignment: Text.AlignVCenter
             }
 
             StyledText {
                 text: i18.n + qsTr("Check warnings")
-                color: warningsMA.pressed ? Colors.inputBackgroundColor : warningsModel.warningsCount > 0 ? Colors.artworkModifiedColor : Colors.selectedArtworkBackground
+                color: warningsMA.pressed ? Colors.linkClickedColor : warningsModel.warningsCount > 0 ? Colors.artworkModifiedColor : Colors.labelInactiveForeground
 
                 MouseArea {
                     id: warningsMA
@@ -2023,7 +2023,7 @@ ApplicationWindow {
             StyledText {
                 visible: applicationWindow.showUpdateLink
                 text: "|"
-                color: Colors.selectedArtworkBackground
+                color: Colors.labelInactiveForeground
                 verticalAlignment: Text.AlignVCenter
             }
 
@@ -2031,7 +2031,7 @@ ApplicationWindow {
                 visible: applicationWindow.showUpdateLink
                 enabled: applicationWindow.showUpdateLink
                 text: i18.n + qsTr("Update available!")
-                color: updateMA.pressed ? Colors.inputBackgroundColor : Colors.greenColor
+                color: updateMA.pressed ? Colors.linkClickedColor : Colors.greenColor
 
                 MouseArea {
                     id: updateMA
@@ -2050,7 +2050,7 @@ ApplicationWindow {
             StyledText {
                 id: filteredCountText
                 text: i18.n + qsTr("No items available")
-                color: Colors.selectedArtworkBackground
+                color: Colors.labelInactiveForeground
                 verticalAlignment: Text.AlignVCenter
 
                 function updateText() {
@@ -2072,14 +2072,14 @@ ApplicationWindow {
 
             StyledText {
                 text: "|"
-                color: Colors.selectedArtworkBackground
+                color: Colors.labelInactiveForeground
                 verticalAlignment: Text.AlignVCenter
             }
 
             StyledText {
                 property string originalText: filteredArtItemsModel.selectedArtworksCount > 1 ? qsTr("%1 selected items").arg(filteredArtItemsModel.selectedArtworksCount) : (filteredArtItemsModel.selectedArtworksCount === 1 ? qsTr("1 selected item") : qsTr("No selected items"))
                 text: i18.n + originalText
-                color: Colors.selectedArtworkBackground
+                color: Colors.labelInactiveForeground
                 verticalAlignment: Text.AlignVCenter
 
                 MouseArea {
@@ -2096,7 +2096,7 @@ ApplicationWindow {
 
             StyledText {
                 text: "|"
-                color: Colors.selectedArtworkBackground
+                color: Colors.labelInactiveForeground
                 verticalAlignment: Text.AlignVCenter
             }
 
@@ -2104,7 +2104,7 @@ ApplicationWindow {
                 property string originalText: artItemsModel.modifiedArtworksCount > 1 ? qsTr("%1 modified items").arg(artItemsModel.modifiedArtworksCount) : (artItemsModel.modifiedArtworksCount === 1 ? qsTr("1 modified item") : qsTr("No modified items"))
                 text: i18.n + originalText
                 verticalAlignment: Text.AlignVCenter
-                color: artItemsModel.modifiedArtworksCount > 0 ? Colors.artworkModifiedColor : Colors.selectedArtworkBackground
+                color: artItemsModel.modifiedArtworksCount > 0 ? Colors.artworkModifiedColor : Colors.labelInactiveForeground
 
                 MouseArea {
                     id: selectModifiedMA

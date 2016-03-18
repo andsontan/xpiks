@@ -27,12 +27,12 @@ TextInput {
     font.family: Qt.platform.os === "windows" ? "Arial" : "Helvetica"
     font.pixelSize: UIConfig.fontPixelSize * settingsModel.keywordSizeScale
     verticalAlignment: TextInput.AlignVCenter
-    selectedTextColor: Colors.defaultLightColor
+    selectedTextColor: Colors.inputForegroundColor
     selectionColor: Colors.defaultControlColor
     renderType: Text.NativeRendering
     selectByMouse: true
     clip: true
-    color: enabled ? Colors.defaultLightColor : Colors.itemsSourceForeground
+    color: enabled ? Colors.inputForegroundColor : Colors.inputInactiveForeground
     KeyNavigation.priority: KeyNavigation.BeforeItem
     maximumLength: 300
 }

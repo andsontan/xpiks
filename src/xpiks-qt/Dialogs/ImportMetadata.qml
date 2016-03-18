@@ -188,7 +188,6 @@ Item {
                     StyledText {
                         anchors.right: parent.right
                         text: i18.n + qsTr("from %1 image(s)").arg(metadataIOCoordinator.processingItemsCount)
-                        color: Colors.inputBackgroundColor
                     }
                 }
 

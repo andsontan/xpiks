@@ -36,7 +36,17 @@ Button {
             font.bold: true
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
-            color: control.enabled ? (control.hovered ? (control.pressed ? Colors.buttonPressedForeground : Colors.defaultLightColor) : (control.pressed ? Colors.buttonPressedForeground : Colors.inputBackgroundColor)) : Colors.buttonDisabledForeground
+            color: {
+                var result = Colors.defaultControlColor;
+
+                if (control.enabled) {
+                    result = control.pressed ? Colors.buttonPressedForeground : Colors.inputForegroundColor;
+                } else {
+                    result = Colors.buttonDisabledForeground;
+                }
+
+                return result
+            }
             text: control.text
         }
     }

@@ -52,7 +52,7 @@ Button {
                 var result = Colors.defaultControlColor;
 
                 if (control.enabled) {
-                    result = control.pressed ? Colors.buttonPressedForeground : Colors.defaultLightColor;
+                    result = control.pressed ? Colors.buttonPressedForeground : Colors.inputForegroundColor;
                 } else {
                     result = Colors.buttonDisabledForeground;
                 }

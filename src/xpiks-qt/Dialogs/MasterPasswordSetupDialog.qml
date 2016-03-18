@@ -140,15 +140,15 @@ Item {
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
-            width: 300
-            height: 180
+            width: 360
+            height: 220
             color: Colors.selectedImageBackground
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
 
             ColumnLayout {
                 anchors.fill: parent
-                anchors.margins: 10
+                anchors.margins: 20
                 spacing: 10
 
                 RowLayout {
@@ -163,6 +163,7 @@ Item {
                         Layout.preferredWidth: 130
                         horizontalAlignment: Text.AlignRight
                         text: i18.n + qsTr("Current Master Password:")
+                        color: Colors.labelActiveForeground
                     }
 
                     StyledInputHost {
@@ -262,9 +263,10 @@ Item {
                 }
 
                 RowLayout {
-                    width: parent.width
-                    height: 20
-                    spacing: 10
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: 24
+                    spacing: 20
 
                     Item {
                         Layout.fillWidth: true
@@ -272,13 +274,13 @@ Item {
 
                     StyledButton {
                         text: i18.n + qsTr("Ok")
-                        width: 57
+                        width: 80
                         onClicked: trySetupMP()
                     }
 
                     StyledButton {
                         text: i18.n + qsTr("Cancel")
-                        width: 58
+                        width: 80
                         onClicked: {
                             callbackObject.onCancel(firstTime)
                             closePopup()

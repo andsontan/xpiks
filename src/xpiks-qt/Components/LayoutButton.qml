@@ -30,7 +30,22 @@ Item {
 
     property bool isListLayout: true
     signal layoutChanged()
-    property color currentColor: enabled ? (layoutMA.containsMouse ? Colors.inputBackgroundColor : Colors.selectedImageBackground) : Colors.defaultControlColor
+    property color currentColor: {
+        var resultColor = Colors.labelActiveForeground
+        if (enabled) {
+            if (layoutMA.pressed) {
+                resultColor = Colors.linkClickedColor
+            } else if (layoutMA.containsMouse) {
+                resultColor = Colors.labelActiveForeground
+            } else {
+                resultColor = Colors.labelInactiveForeground
+            }
+        } else {
+            resultColor = Colors.defaultControlColor
+        }
+
+        return resultColor
+    }
 
     Column {
         width: height

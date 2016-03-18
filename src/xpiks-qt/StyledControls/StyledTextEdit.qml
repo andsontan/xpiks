@@ -24,16 +24,17 @@ import "../Constants"
 import "../Constants/UIConfig.js" as UIConfig
 
 TextEdit {
+    property bool isActive: true
     font.family: Qt.platform.os === "windows" ? "Arial" : "Helvetica"
     font.pixelSize: UIConfig.fontPixelSize * settingsModel.keywordSizeScale
     verticalAlignment: TextInput.AlignVCenter
-    selectedTextColor: Colors.defaultLightColor
+    selectedTextColor: Colors.inputForegroundColor
     selectionColor: Colors.defaultControlColor
     renderType: Text.NativeRendering
     selectByMouse: true
     cursorVisible: false
     wrapMode: TextEdit.NoWrap
     activeFocusOnPress: true
-    color: enabled ? Colors.defaultLightColor : Colors.itemsSourceForeground
+    color: (enabled && isActive) ? Colors.inputForegroundColor : Colors.inputInactiveForeground
 }
 

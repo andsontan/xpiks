@@ -71,7 +71,7 @@ ApplicationWindow {
                 focus: true
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: i18.n + qsTr("<u>Home webpage of Xpiks</u>")
-                color: aboutMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
+                color: aboutMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor
 
                 MouseArea {
                     id: aboutMA

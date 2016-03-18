@@ -175,7 +175,6 @@ Item {
                                         StyledText {
                                             Layout.fillWidth: true
                                             elide: Text.ElideMiddle
-                                            color: Colors.inputBackgroundColor
                                             horizontalAlignment: Text.AlignHCenter
                                             text: filename.split(/[\\/]/).pop()
                                             font.pixelSize: 11

@@ -141,7 +141,6 @@ Item {
                     property int linesNumber : 100
                     id: oneHunderdLinesWarning
                     text: i18.n + qsTr("(showing last %1 lines)").arg(linesNumber)
-                    color: Colors.inputBackgroundColor
                 }
             }
 

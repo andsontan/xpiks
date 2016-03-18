@@ -175,7 +175,6 @@ Item {
 
                     StyledText {
                         text: i18.n + qsTr("(same as Description if empty)")
-                        color: Colors.inputBackgroundColor
                     }
 
                     Item {
@@ -184,7 +183,6 @@ Item {
 
                     StyledText {
                         text: titleTextInput.length
-                        color: Colors.inputBackgroundColor
                     }
                 }
 
@@ -277,7 +275,6 @@ Item {
 
                     StyledText {
                         text: descriptionTextInput.length
-                        color: Colors.inputBackgroundColor
                     }
                 }
 
@@ -392,7 +389,6 @@ Item {
 
                     StyledText {
                         text: i18.n + qsTr("(comma-separated)")
-                        color: Colors.inputBackgroundColor
                     }
 
                     Item {
@@ -401,7 +397,6 @@ Item {
 
                     StyledText {
                         text: combinedArtworks.keywordsCount
-                        color: Colors.inputBackgroundColor
                     }
                 }
 
@@ -504,7 +499,7 @@ Item {
                     StyledText {
                         text: i18.n + qsTr("Fix spelling")
                         enabled: dialogWindow.keywordsModel ? dialogWindow.keywordsModel.hasSpellErrors : false
-                        color: enabled ? (fixSpellingMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor) : Colors.inputBackgroundColor
+                        color: enabled ? (fixSpellingMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor) : Colors.labelActiveForeground
 
                         MouseArea {
                             id: fixSpellingMA
@@ -521,13 +516,12 @@ Item {
 
                     StyledText {
                         text: "|"
-                        color: Colors.inputBackgroundColor
                         verticalAlignment: Text.AlignVCenter
                     }
 
                     StyledText {
                         text: i18.n + qsTr("Suggest")
-                        color: enabled ? (suggestKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor) : Colors.inputBackgroundColor
+                        color: enabled ? (suggestKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor) : Colors.labelActiveForeground
 
                         MouseArea {
                             id: suggestKeywordsMA
@@ -549,13 +543,12 @@ Item {
 
                     StyledText {
                         text: "|"
-                        color: Colors.inputBackgroundColor
                         verticalAlignment: Text.AlignVCenter
                     }
 
                     StyledText {
                         text: i18.n + qsTr("Copy")
-                        color: copyKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor
+                        color: copyKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor
 
                         MouseArea {
                             id: copyKeywordsMA
@@ -567,13 +560,12 @@ Item {
 
                     StyledText {
                         text: "|"
-                        color: Colors.inputBackgroundColor
                         verticalAlignment: Text.AlignVCenter
                     }
 
                     StyledText {
                         text: i18.n + qsTr("Clear")
-                        color: enabled ? (clearKeywordsMA.pressed ? Colors.defaultLightColor : Colors.artworkActiveColor) : Colors.inputBackgroundColor
+                        color: enabled ? (clearKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor) : Colors.labelActiveForeground
 
                         MouseArea {
                             id: clearKeywordsMA

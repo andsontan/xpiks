@@ -69,7 +69,7 @@ TabView {
                 anchors.centerIn: parent
                 anchors.verticalCenterOffset: styleData.selected ? 1 : -1
                 text: styleData.title
-                color: styleData.hovered ? Colors.artworkActiveColor : (styleData.selected ? Colors.defaultLightColor : Colors.inputBackgroundColor)
+                color: styleData.hovered ? Colors.artworkActiveColor : (styleData.selected ? Colors.inputForegroundColor : Colors.labelActiveForeground)
             }
 
             Rectangle {

@@ -39,7 +39,7 @@ Item {
             if (closeIconMouseArea.containsMouse) {
                 return Colors.artworkModifiedColor;
             } else {
-                return isActive ? Colors.defaultControlColor : Colors.defaultLightColor;
+                return isActive ? Colors.defaultControlColor : Colors.inputForegroundColor;
             }
         }
 

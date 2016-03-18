@@ -309,7 +309,6 @@ Item {
                 RowLayout {
                     StyledText {
                         text: i18.n + qsTr("Suggested keywords:")
-                        color: Colors.inputBackgroundColor
                     }
 
                     Item {
@@ -318,7 +317,6 @@ Item {
 
                     StyledText {
                         text: keywordsSuggestor.suggestedKeywordsCount
-                        color: Colors.inputBackgroundColor
                     }
                 }
 
@@ -384,7 +382,6 @@ Item {
                 RowLayout {
                     StyledText {
                         text: i18.n + qsTr("Other keywords:")
-                        color: Colors.inputBackgroundColor
                     }
 
                     Item {
@@ -393,7 +390,6 @@ Item {
 
                     StyledText {
                         text: keywordsSuggestor.otherKeywordsCount
-                        color: Colors.inputBackgroundColor
                     }
                 }
 
@@ -465,7 +461,6 @@ Item {
                     StyledText {
                         property string originalText: keywordsSuggestor.selectedArtworksCount !== 1 ? qsTr("%1 selected items").arg(keywordsSuggestor.selectedArtworksCount) : qsTr("1 selected item")
                         text: i18.n + originalText
-                        color: Colors.inputBackgroundColor
                     }
 
                     Item {

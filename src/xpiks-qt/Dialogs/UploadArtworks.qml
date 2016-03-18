@@ -208,7 +208,6 @@ Item {
                     StyledText {
                         property string originalText: artworkUploader.itemsCount === 1 ? qsTr("1 artwork selected") : qsTr("%1 artworks selected").arg(artworkUploader.itemsCount)
                         text: i18.n + originalText
-                        color: Colors.inputBackgroundColor
                     }
                 }
 
@@ -701,7 +700,7 @@ Item {
                         enabled: uploadArtworksComponent.uploadEnabled
                         property string originalText: warningsModel.warningsCount == 1 ? qsTr("1 warning") : qsTr("%1 warnings").arg(warningsModel.warningsCount)
                         text: i18.n + originalText
-                        color: uploadWarmingsMA.pressed ? Colors.defaultLightGrayColor : warningsModel.warningsCount > 0 ? Colors.artworkModifiedColor : Colors.inputBackgroundColor
+                        color: uploadWarmingsMA.pressed ? Colors.linkClickedColor : warningsModel.warningsCount > 0 ? Colors.artworkModifiedColor : Colors.labelActiveForeground
 
                         MouseArea {
                             id: uploadWarmingsMA

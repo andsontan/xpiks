@@ -27,10 +27,10 @@ QtObject {
     property color whiteColor: "#ffffff";
 
     property color inputBackgroundColor: "#999999";
-    property color inputForegroundColor: whiteColor
-    property color inputInactiveForeground: "#e6e7e8";
+    property color inputForegroundColor: "#e6e7e8";
+    property color inputInactiveForeground: inputBackgroundColor;
+    property color labelActiveForeground: inputBackgroundColor;
     property color labelInactiveForeground: "#545456";
-    property color inputActiveForeground: inputBackgroundColor
 
     property color artworkBackground: "#031619";
     property color artworkImageBackground: "#081215";
@@ -50,7 +50,9 @@ QtObject {
     property color buttonPressedForeground: "#283c3f";
     property color buttonDisabledForeground: buttonPressedForeground
 
-    property color selectedImageBackground: "#545456";
+    property color linkClickedColor: inputForegroundColor
+
+    property color selectedImageBackground: labelInactiveForeground
     property color selectedArtworkBackground: "#5d5d5d";
     property color checkboxCheckedColor: "#ffffff";
 
@@ -68,7 +70,8 @@ QtObject {
         inputBackgroundColor = theme.inputBackgroundColor
         inputForegroundColor = theme.inputForegroundColor
         inputInactiveForeground = theme.inputInactiveForeground
-        inputActiveForeground = theme.inputActiveForeground
+        labelInactiveForeground = theme.labelInactiveForeground
+        labelActiveForeground = theme.labelActiveForeground
 
         artworkBackground = theme.artworkBackground
         artworkImageBackground = theme.artworkImageBackground
@@ -84,6 +87,8 @@ QtObject {
         buttonPressedBackground = theme.buttonPressedBackground
         buttonPressedForeground = theme.buttonPressedForeground
         buttonDisabledForeground = theme.buttonDisabledForeground
+
+        linkClickedColor = theme.linkClickedColor
 
         selectedImageBackground = theme.selectedImageBackground
         selectedArtworkBackground = theme.selectedArtworkBackground
