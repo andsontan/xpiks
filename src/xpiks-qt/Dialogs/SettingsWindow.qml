@@ -400,77 +400,90 @@ ApplicationWindow {
                         }
                     }
 
-                    RowLayout {
-                        width: parent.width
-                        spacing: 10
+                    Item {
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        height: row.height
 
-                        StyledText {
-                            text: i18.n + qsTr("Keywords size")
-                        }
+                        RowLayout {
+                            anchors.left: parent.left
+                            id: row
+                            spacing: 10
 
-                        StyledSlider {
-                            id: keywordSizeSlider
-                            width: 150
-                            minimumValue: 1.0
-                            maximumValue: 1.2
-                            stepSize: 0.0001
-                            orientation: Qt.Horizontal
-                            onValueChanged: uxTab.sizeSliderValue = value
-                            Component.onCompleted:{
-                                value = settingsModel.keywordSizeScale
-                                uxTab.resetRequested.connect(keywordSizeSlider.onResetRequested)
+                            StyledText {
+                                text: i18.n + qsTr("Keywords size")
                             }
 
-                            function onResetRequested()  {
-                                value = settingsModel.keywordSizeScale
-                                uxTab.sizeSliderValue = value
+                            StyledSlider {
+                                id: keywordSizeSlider
+                                width: 150
+                                minimumValue: 1.0
+                                maximumValue: 1.2
+                                stepSize: 0.0001
+                                orientation: Qt.Horizontal
+                                onValueChanged: uxTab.sizeSliderValue = value
+                                Component.onCompleted: {
+                                    value = uxTab.sizeSliderValue
+                                    uxTab.resetRequested.connect(keywordSizeSlider.onResetRequested)
+                                }
+
+                                function onResetRequested()  {
+                                    value = settingsModel.keywordSizeScale
+                                    uxTab.sizeSliderValue = value
+                                }
                             }
                         }
 
                         Rectangle {
                             id: keywordPreview
-                            color: Colors.defaultLightGrayColor
+                            anchors.left: row.right
+                            anchors.leftMargin: 10
+                            anchors.verticalCenter: row.verticalCenter
+                            color: Colors.inputForegroundColor
 
                             width: childrenRect.width
                             height: childrenRect.height
 
-                            Row {
-                                spacing: 0
+                            Item {
+                                anchors.left: parent.left
+                                anchors.top: parent.top
+                                id: tagTextRect
+                                width: childrenRect.width + 5
+                                height: 20*uxTab.sizeSliderValue + (uxTab.sizeSliderValue - 1)*10
 
-                                Item {
-                                    id: tagTextRect
-                                    width: childrenRect.width + 5*keywordSizeSlider.value
-                                    height: 20 * keywordSizeSlider.value + (keywordSizeSlider.value - 1)*10
-
-                                    StyledText {
-                                        anchors.top: parent.top
-                                        anchors.bottom: parent.bottom
-                                        anchors.left: parent.left
-                                        anchors.leftMargin: 5 + (keywordSizeSlider.value - 1)*10
-                                        verticalAlignment: Text.AlignVCenter
-                                        text: qsTr("keyword", "standalone")
-                                        color: Colors.defaultControlColor
-                                        font.pixelSize: UIConfig.fontPixelSize * keywordSizeSlider.value
-                                    }
+                                StyledText {
+                                    id: keywordText
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: 5 + (uxTab.sizeSliderValue - 1)*10
+                                    anchors.top: parent.top
+                                    anchors.bottom: parent.bottom
+                                    verticalAlignment: Text.AlignVCenter
+                                    text: qsTr("keyword", "standalone")
+                                    color: Colors.defaultControlColor
+                                    font.pixelSize: UIConfig.fontPixelSize * uxTab.sizeSliderValue
                                 }
+                            }
 
-                                Item {
-                                    height: 20 * keywordSizeSlider.value + (keywordSizeSlider.value - 1)*10
-                                    width: height
+                            Item {
+                                anchors.left: tagTextRect.right
+                                anchors.top: parent.top
+                                height: 20 * uxTab.sizeSliderValue + (uxTab.sizeSliderValue - 1)*10
+                                width: height
 
-                                    CloseIcon {
-                                        width: 14 * keywordSizeSlider.value
-                                        height: 14 * keywordSizeSlider.value
-                                        isActive: true
-                                        anchors.centerIn: parent
-                                    }
+                                CloseIcon {
+                                    isPlus: false
+                                    width: 14*uxTab.sizeSliderValue
+                                    height: 14*uxTab.sizeSliderValue
+                                    isActive: true
+                                    anchors.centerIn: parent
                                 }
                             }
                         }
                     }
 
                     RowLayout {
-                        width: parent.width
+                        anchors.left: parent.left
+                        anchors.right: parent.right
                         spacing: 20
 
                         StyledText {
@@ -486,7 +499,7 @@ ApplicationWindow {
                             orientation: Qt.Horizontal
                             onValueChanged: uxTab.scrollSliderValue = value
                             Component.onCompleted: {
-                                value = settingsModel.scrollSpeedScale
+                                value = uxTab.scrollSliderValue
                                 uxTab.resetRequested.connect(scrollSpeedSlider.onResetRequested)
                             }
 
@@ -502,7 +515,6 @@ ApplicationWindow {
                         spacing: 10
 
                         StyledText {
-                            Layout.preferredWidth: 130
                             horizontalAlignment: Text.AlignLeft
                             text: i18.n + qsTr("Undo dismiss duration:")
                         }

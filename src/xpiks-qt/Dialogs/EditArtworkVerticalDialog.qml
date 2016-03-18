@@ -493,7 +493,8 @@ Item {
                 }
 
                 RowLayout {
-                    width: parent.width
+                    anchors.left: parent.left
+                    anchors.right: parent.right
                     spacing:5
 
                     StyledText {

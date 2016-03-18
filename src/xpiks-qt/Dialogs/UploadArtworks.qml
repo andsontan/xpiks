@@ -413,13 +413,14 @@ Item {
 
                                     StyledText {
                                         text: i18.n + qsTr("Title:")
+                                        color: Colors.labelActiveForeground
                                     }
 
                                     Rectangle {
                                         border.width: titleText.activeFocus ? 1 : 0
                                         border.color: Colors.artworkActiveColor
                                         Layout.fillWidth: true
-                                        color: Colors.inputBackgroundColor
+                                        color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
                                         height: 30
 
                                         StyledTextInput {
@@ -465,13 +466,14 @@ Item {
 
                                     StyledText {
                                         text: i18.n + qsTr("Host:")
+                                        color: Colors.labelActiveForeground
                                     }
 
                                     Rectangle {
                                         border.width: ftpHost.activeFocus ? 1 : 0
                                         border.color: Colors.artworkActiveColor
                                         Layout.fillWidth: true
-                                        color: Colors.inputBackgroundColor
+                                        color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
                                         height: 30
 
                                         StyledTextInput {
@@ -499,13 +501,14 @@ Item {
 
                                     StyledText {
                                         text: i18.n + qsTr("Username:")
+                                        color: Colors.labelActiveForeground
                                     }
 
                                     Rectangle {
                                         border.width: ftpUsername.activeFocus ? 1 : 0
                                         border.color: Colors.artworkActiveColor
                                         Layout.fillWidth: true
-                                        color: Colors.inputBackgroundColor
+                                        color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
                                         height: 30
 
                                         StyledTextInput {
@@ -532,6 +535,7 @@ Item {
 
                                     StyledText {
                                         text: i18.n + qsTr("Password:")
+                                        color: Colors.labelActiveForeground
                                     }
 
                                     Rectangle {
@@ -539,7 +543,7 @@ Item {
                                         border.color: Colors.artworkActiveColor
                                         Layout.fillWidth: true
                                         height: 30
-                                        color: Colors.inputBackgroundColor
+                                        color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
 
                                         StyledTextInput {
                                             id: ftpPassword

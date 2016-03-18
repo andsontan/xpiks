@@ -655,7 +655,7 @@ ApplicationWindow {
             Rectangle {
                 height: 1
                 width: parent.width
-                color: Colors.itemsSourceSelected
+                color: Colors.labelInactiveForeground
             }
 
             Rectangle {
@@ -887,7 +887,7 @@ ApplicationWindow {
                 height: 1
                 anchors.left: parent.left
                 anchors.right: parent.right
-                color: Colors.itemsSourceSelected
+                color: Colors.labelInactiveForeground
             }
 
             Rectangle {
@@ -1478,7 +1478,7 @@ ApplicationWindow {
                                                 anchors.rightMargin: columnLayout.isWideEnough ? 20 : 0
                                                 anchors.top: descriptionText.bottom
                                                 anchors.topMargin: 3
-                                                color: rowWrapper.isHighlighted ? Colors.inputBackgroundColor : Colors.defaultControlColor
+                                                color: rowWrapper.isHighlighted ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
                                                 border.color: Colors.artworkActiveColor
                                                 border.width: descriptionTextInput.activeFocus ? 1 : 0
                                                 clip: true
@@ -1568,7 +1568,7 @@ ApplicationWindow {
                                                 anchors.right: parent.right
                                                 anchors.top: descriptionText.bottom
                                                 anchors.topMargin: 3
-                                                color: rowWrapper.isHighlighted ? Colors.inputBackgroundColor : Colors.defaultControlColor
+                                                color: rowWrapper.isHighlighted ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
                                                 border.color: Colors.artworkActiveColor
                                                 border.width: titleTextInput.activeFocus ? 1 : 0
                                                 clip: true
@@ -1670,7 +1670,7 @@ ApplicationWindow {
                                                 height: 80*settingsModel.keywordSizeScale
                                                 border.color: Colors.artworkActiveColor
                                                 border.width: flv.isFocused ? 1 : 0
-                                                color: rowWrapper.isHighlighted ? Colors.inputBackgroundColor : Colors.defaultControlColor
+                                                color: rowWrapper.isHighlighted ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
 
                                                 function removeKeyword(index) {
                                                     artItemsModel.removeKeywordAt(rowWrapper.getIndex(), index)

@@ -496,12 +496,9 @@ Item {
                 }
 
                 RowLayout {
-                    width: parent.width
-                    spacing:5
-
-                    Item {
-                        Layout.fillWidth: true
-                    }
+                    anchors.right: parent.right
+                    anchors.rightMargin: 3
+                    spacing: 5
 
                     StyledText {
                         text: i18.n + qsTr("Fix spelling")

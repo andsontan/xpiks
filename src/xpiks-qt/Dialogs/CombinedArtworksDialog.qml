@@ -307,7 +307,7 @@ Item {
 
                 RowLayout {
                     width: parent.width
-                    height: 50
+                    height: 55
                     spacing: 0
 
                     Item {
@@ -324,7 +324,7 @@ Item {
                             anchors.left: parent.left
                             anchors.top: parent.top
                             anchors.leftMargin: 5
-                            anchors.topMargin: 25
+                            anchors.topMargin: 30
                             text: ''
                             id: titleCheckBox
                             onClicked: {
@@ -384,7 +384,7 @@ Item {
                                 anchors.left: parent.left
                                 anchors.right: parent.right
                                 height: 25
-                                color: Colors.inputBackgroundColor
+                                color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
                                 border.color: Colors.artworkActiveColor
                                 border.width: titleTextInput.activeFocus ? 1 : 0
                                 clip: true
@@ -488,7 +488,7 @@ Item {
                             anchors.left: parent.left
                             anchors.top: parent.top
                             anchors.leftMargin: 5
-                            anchors.topMargin: 25
+                            anchors.topMargin: 30
                             text: ''
                             id: descriptionCheckBox
                             objectName: "descriptionCheckBox"
@@ -547,7 +547,7 @@ Item {
                                 anchors.left: parent.left
                                 anchors.right: parent.right
                                 height: 50
-                                color: Colors.inputBackgroundColor
+                                color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
                                 border.color: Colors.artworkActiveColor
                                 border.width: descriptionTextInput.activeFocus ? 1 : 0
                                 clip: true
@@ -739,7 +739,7 @@ Item {
                                 height: 155
                                 anchors.rightMargin: 20
                                 Layout.fillWidth: true
-                                color: Colors.inputBackgroundColor
+                                color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
                                 property var keywordsModel: combinedArtworks.getKeywordsModel()
 
                                 function removeKeyword(index) {
@@ -768,7 +768,7 @@ Item {
 
                                     delegate: KeywordWrapper {
                                         id: kw
-                                        isHighlighted: true
+                                        isHighlighted: keywordsCheckBox.checked
                                         keywordText: keyword
                                         hasSpellCheckError: !iscorrect
                                         delegateIndex: index

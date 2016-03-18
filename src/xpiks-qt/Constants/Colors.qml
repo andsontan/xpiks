@@ -27,6 +27,7 @@ QtObject {
     property color whiteColor: "#ffffff";
 
     property color inputBackgroundColor: "#999999";
+    property color inputInactiveBackground: defaultControlColor
     property color inputForegroundColor: "#e6e7e8";
     property color inputInactiveForeground: inputBackgroundColor;
     property color labelActiveForeground: inputBackgroundColor;
@@ -41,10 +42,6 @@ QtObject {
     property color defaultLightColor: inputInactiveForeground;
     property color defaultLightGrayColor: "#D0D0D0";
 
-    property color itemsSourceBackground: "#232323";
-    property color itemsSourceSelected: "#333333";
-    property color itemsSourceForeground: inputInactiveForeground;
-
     property color buttonHoverBackground: artworkActiveColor;
     property color buttonPressedBackground: "#41b1b7";
     property color buttonPressedForeground: "#283c3f";
@@ -55,6 +52,10 @@ QtObject {
     property color selectedImageBackground: labelInactiveForeground
     property color selectedArtworkBackground: "#5d5d5d";
     property color checkboxCheckedColor: "#ffffff";
+
+    property color itemsSourceBackground: defaultDarkColor;
+    property color itemsSourceSelected: selectedImageBackground;
+    property color itemsSourceForeground: inputInactiveForeground;
 
     property color destructiveColor: "#d10b0b";
     property color greenColor: "#2daf02";
@@ -68,6 +69,7 @@ QtObject {
         defaultLightGrayColor = theme.defaultLightGrayColor
 
         inputBackgroundColor = theme.inputBackgroundColor
+        inputInactiveBackground = theme.inputInactiveBackground
         inputForegroundColor = theme.inputForegroundColor
         inputInactiveForeground = theme.inputInactiveForeground
         labelInactiveForeground = theme.labelInactiveForeground
@@ -79,10 +81,6 @@ QtObject {
         artworkSavedColor = theme.artworkSavedColor
         artworkActiveColor = theme.artworkActiveColor
 
-        itemsSourceBackground = theme.itemsSourceBackground
-        itemsSourceSelected = theme.itemsSourceSelected
-        itemsSourceForeground = theme.itemsSourceForeground
-
         buttonHoverBackground = theme.buttonHoverBackground
         buttonPressedBackground = theme.buttonPressedBackground
         buttonPressedForeground = theme.buttonPressedForeground
@@ -93,6 +91,10 @@ QtObject {
         selectedImageBackground = theme.selectedImageBackground
         selectedArtworkBackground = theme.selectedArtworkBackground
         checkboxCheckedColor = theme.checkboxCheckedColor
+
+        itemsSourceBackground = theme.itemsSourceBackground
+        itemsSourceSelected = theme.selectedImageBackground
+        itemsSourceForeground = theme.inputInactiveForeground
 
         destructiveColor = theme.destructiveColor
         greenColor = theme.greenColor

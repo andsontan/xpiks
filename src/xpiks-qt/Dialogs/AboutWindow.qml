@@ -31,7 +31,7 @@ ApplicationWindow {
     id: aboutWindow
     modality: "ApplicationModal"
     width: 250
-    height: Qt.platform.os === "linux" ? 200 : 170
+    height: Qt.platform.os === "linux" ? 200 : 190
     minimumWidth: width
     maximumWidth: width
     minimumHeight: height
@@ -63,6 +63,7 @@ ApplicationWindow {
             anchors.centerIn: parent
 
             StyledText {
+                color: Colors.inputForegroundColor
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: i18.n + qsTr("Version: %1").arg(appSettings.appVersion)
             }
@@ -89,11 +90,12 @@ ApplicationWindow {
             }
 
             Item {
-                height: Qt.platform.os === "linux" ? 80 : 50
+                height: Qt.platform.os === "linux" ? 100 : 80
                 width: 220
                 anchors.margins: 10
 
                 StyledText {
+                    color: Colors.inputForegroundColor
                     wrapMode: TextEdit.Wrap
                     anchors.fill: parent
                     horizontalAlignment: Text.AlignHCenter
