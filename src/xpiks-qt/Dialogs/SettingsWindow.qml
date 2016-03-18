@@ -519,17 +519,22 @@ ApplicationWindow {
                             text: i18.n + qsTr("Undo dismiss duration:")
                         }
 
-                        StyledInputHost {
+                        Rectangle {
+                            color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
+                            border.color: Colors.artworkActiveColor
                             border.width: dismissDuration.activeFocus ? 1 : 0
+                            width: 115
+                            height: 24
+                            clip: true
 
                             StyledTextInput {
                                 id: dismissDuration
-                                width: 100
-                                height: 24
-                                clip: true
                                 text: settingsModel.dismissDuration
                                 anchors.left: parent.left
+                                anchors.right: parent.right
                                 anchors.leftMargin: 5
+                                anchors.rightMargin: 5
+                                anchors.verticalCenter: parent.verticalCenter
                                 onTextChanged: {
                                     if (text.length > 0) {
                                         settingsModel.dismissDuration = parseInt(text)
@@ -587,19 +592,24 @@ ApplicationWindow {
                             text: i18.n + qsTr("ExifTool path:")
                         }
 
-                        StyledInputHost {
+                        Rectangle {
+                            color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
+                            border.color: Colors.artworkActiveColor
                             border.width: exifToolText.activeFocus ? 1 : 0
                             Layout.row: 0
                             Layout.column: 1
+                            width: 165
+                            height: 24
+                            clip: true
 
                             StyledTextInput {
                                 id: exifToolText
-                                width: 150
-                                height: 24
-                                clip: true
                                 text: settingsModel.exifToolPath
                                 anchors.left: parent.left
+                                anchors.right: parent.right
                                 anchors.leftMargin: 5
+                                anchors.rightMargin: 5
+                                anchors.verticalCenter: parent.verticalCenter
                                 onTextChanged: settingsModel.exifToolPath = text
 
                                 function onResetRequested()  {
@@ -628,7 +638,6 @@ ApplicationWindow {
                             onClicked: settingsModel.resetExifTool()
                         }
 
-
                         StyledText {
                             Layout.row: 2
                             Layout.column: 0
@@ -639,20 +648,25 @@ ApplicationWindow {
                             visible: Qt.platform.os === "linux"
                         }
 
-                        StyledInputHost {
+                        Rectangle {
+                            color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
+                            border.color: Colors.artworkActiveColor
                             border.width: dictText.activeFocus ? 1 : 0
                             Layout.row: 2
                             Layout.column: 1
+                            width: 165
+                            height: 24
+                            clip: true
                             visible: Qt.platform.os === "linux"
 
                             StyledTextInput {
                                 id: dictText
-                                width: 150
-                                height: 24
-                                clip: true
                                 text: settingsModel.dictionaryPath
                                 anchors.left: parent.left
+                                anchors.right: parent.right
                                 anchors.leftMargin: 5
+                                anchors.rightMargin: 5
+                                anchors.verticalCenter: parent.verticalCenter
                                 onTextChanged: settingsModel.dictionaryPath = text
                             }
                         }
@@ -705,17 +719,22 @@ ApplicationWindow {
                             text: i18.n + qsTr("Minimum megapixels:")
                         }
 
-                        StyledInputHost {
+                        Rectangle {
+                            color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
                             border.width: megapixelsCount.activeFocus ? 1 : 0
+                            border.color: Colors.artworkActiveColor
+                            width: 115
+                            height: 24
+                            clip: true
 
                             StyledTextInput {
                                 id: megapixelsCount
-                                width: 100
-                                height: 24
-                                clip: true
                                 text: settingsModel.minMegapixelCount
                                 anchors.left: parent.left
+                                anchors.right: parent.right
                                 anchors.leftMargin: 5
+                                anchors.rightMargin: 5
+                                anchors.verticalCenter: parent.verticalCenter
                                 KeyNavigation.tab: keywordsCount
                                 onTextChanged: {
                                     if (text.length > 0) {
@@ -727,6 +746,7 @@ ApplicationWindow {
                                     value =  settingsModel.minMegapixelCount
                                     text = value
                                 }
+
                                 Component.onCompleted: {
                                     warnTab.resetRequested.connect(megapixelsCount.onResetRequested)
                                 }
@@ -755,17 +775,22 @@ ApplicationWindow {
                             text: i18.n + qsTr("Max keywords count:")
                         }
 
-                        StyledInputHost {
+                        Rectangle {
+                            color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
+                            border.color: Colors.artworkActiveColor
                             border.width: keywordsCount.activeFocus ? 1 : 0
+                            width: 115
+                            height: 24
+                            clip: true
 
                             StyledTextInput {
                                 id: keywordsCount
-                                width: 100
-                                height: 24
-                                clip: true
                                 text: settingsModel.maxKeywordsCount
                                 anchors.left: parent.left
+                                anchors.right: parent.right
                                 anchors.leftMargin: 5
+                                anchors.rightMargin: 5
+                                anchors.verticalCenter: parent.verticalCenter
                                 KeyNavigation.backtab: megapixelsCount
                                 KeyNavigation.tab: descriptionLength
                                 onTextChanged: {
@@ -805,17 +830,22 @@ ApplicationWindow {
                             text: i18.n + qsTr("Max description length:")
                         }
 
-                        StyledInputHost {
+                        Rectangle {
+                            color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
                             border.width: descriptionLength.activeFocus ? 1 : 0
+                            border.color: Colors.artworkActiveColor
+                            width: 115
+                            height: 24
+                            clip: true
 
                             StyledTextInput {
                                 id: descriptionLength
-                                width: 100
-                                height: 24
-                                clip: true
                                 text: settingsModel.maxDescriptionLength
                                 anchors.left: parent.left
+                                anchors.right: parent.right
                                 anchors.leftMargin: 5
+                                anchors.rightMargin: 5
+                                anchors.verticalCenter: parent.verticalCenter
                                 KeyNavigation.backtab: keywordsCount
                                 onTextChanged: {
                                     if (text.length > 0) {
@@ -873,17 +903,22 @@ ApplicationWindow {
                             text: i18.n + qsTr("File upload timeout:")
                         }
 
-                        StyledInputHost {
+                        Rectangle {
+                            color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
                             border.width: timeoutMinutes.activeFocus ? 1 : 0
+                            border.color: Colors.artworkActiveColor
+                            width: 115
+                            height: 24
+                            clip: true
 
                             StyledTextInput {
                                 id: timeoutMinutes
-                                width: 100
-                                height: 24
-                                clip: true
                                 text: settingsModel.uploadTimeout
                                 anchors.left: parent.left
+                                anchors.right: parent.right
                                 anchors.leftMargin: 5
+                                anchors.rightMargin: 5
+                                anchors.verticalCenter: parent.verticalCenter
                                 onTextChanged: {
                                     if (text.length > 0) {
                                         settingsModel.uploadTimeout = parseInt(text)
@@ -898,6 +933,7 @@ ApplicationWindow {
                                 Component.onCompleted: {
                                     uploadTab.resetRequested.connect(timeoutMinutes.onResetRequested)
                                 }
+
                                 KeyNavigation.tab: maxParallelUploads
                                 validator: IntValidator {
                                     bottom: 1
@@ -922,17 +958,22 @@ ApplicationWindow {
                             text: i18.n + qsTr("Max parallel uploads:")
                         }
 
-                        StyledInputHost {
+                        Rectangle {
+                            color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
                             border.width: maxParallelUploads.activeFocus ? 1 : 0
+                            border.color: Colors.artworkActiveColor
+                            width: 115
+                            height: 24
+                            clip: true
 
                             StyledTextInput {
                                 id: maxParallelUploads
-                                width: 100
-                                height: 24
-                                clip: true
                                 text: settingsModel.maxParallelUploads
                                 anchors.left: parent.left
+                                anchors.right: parent.right
                                 anchors.leftMargin: 5
+                                anchors.rightMargin: 5
+                                anchors.verticalCenter: parent.verticalCenter
                                 onTextChanged: {
                                     if (text.length > 0) {
                                         settingsModel.maxParallelUploads = parseInt(text)

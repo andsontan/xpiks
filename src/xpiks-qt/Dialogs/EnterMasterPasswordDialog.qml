@@ -122,19 +122,23 @@ Item {
                     text: i18.n + qsTr("Enter current Master Password:")
                 }
 
-                StyledInputHost {
+                Rectangle {
                     width: 220
                     height: 24
                     anchors.left: parent.left
+                    color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
                     border.width: masterPassword.activeFocus ? 1 : 0
                     border.color: wrongTry ? Colors.destructiveColor : Colors.artworkActiveColor
+                    clip: true
 
                     StyledTextInput {
                         id: masterPassword
-                        clip: true
                         anchors.left: parent.left
+                        anchors.right: parent.right
                         anchors.leftMargin: 5
+                        anchors.rightMargin: 5
                         echoMode: showPasswordCheckBox.checked ? TextInput.Normal : TextInput.Password
+                        anchors.verticalCenter: parent.verticalCenter
 
                         Keys.onBacktabPressed: {
                             event.accepted = true

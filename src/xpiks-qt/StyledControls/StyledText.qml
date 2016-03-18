@@ -27,6 +27,6 @@ Text {
     color: (isActive && enabled) ? Colors.labelActiveForeground : Colors.labelInactiveForeground
     renderType: Text.NativeRendering
     font.family: Qt.platform.os === "windows" ? "Arial" : "Helvetica"
-    font.pixelSize: Qt.platform.os === "windows" ? 14 : 13
+    font.pixelSize: 14
 }
 

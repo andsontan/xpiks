@@ -61,45 +61,45 @@ BlackTheme.greenColor = "#2daf02";
 
 // ---------------------------------------------------------------
 
-var GraySlateTheme = { name: "grayslate" };
+var SlateGrayTheme = { name: "slategray" };
 
-GraySlateTheme.defaultDarkColor = "#22252c";
-GraySlateTheme.defaultControlColor = "#30333b";
-GraySlateTheme.whiteColor = "#ffffff";
+SlateGrayTheme.defaultDarkColor = "#22252c";
+SlateGrayTheme.defaultControlColor = "#30333b";
+SlateGrayTheme.whiteColor = "#ffffff";
 
-GraySlateTheme.inputBackgroundColor = "#7a7e86";
-GraySlateTheme.inputInactiveBackground = "#30333b";
-GraySlateTheme.inputForegroundColor = "#c7ccd3";
-GraySlateTheme.inputInactiveForeground = "#7a7e86";
-GraySlateTheme.labelInactiveForeground = "#474b54";
-GraySlateTheme.labelActiveForeground = GraySlateTheme.inputBackgroundColor;
+SlateGrayTheme.inputBackgroundColor = "#7a7e86";
+SlateGrayTheme.inputInactiveBackground = "#30333b";
+SlateGrayTheme.inputForegroundColor = "#c7ccd3";
+SlateGrayTheme.inputInactiveForeground = "#7a7e86";
+SlateGrayTheme.labelInactiveForeground = "#474b54";
+SlateGrayTheme.labelActiveForeground = SlateGrayTheme.inputBackgroundColor;
 
-GraySlateTheme.artworkBackground = "#22252c";
-GraySlateTheme.artworkImageBackground = "#1c2025";
-GraySlateTheme.artworkModifiedColor = "#f49c12";
-GraySlateTheme.artworkSavedColor = "#435151";
-GraySlateTheme.artworkActiveColor = "#2ec1c3";
+SlateGrayTheme.artworkBackground = "#22252c";
+SlateGrayTheme.artworkImageBackground = "#1c2025";
+SlateGrayTheme.artworkModifiedColor = "#f49c12";
+SlateGrayTheme.artworkSavedColor = "#435151";
+SlateGrayTheme.artworkActiveColor = "#2ec1c3";
 
-GraySlateTheme.defaultLightColor = "#E0E0E0";
-GraySlateTheme.defaultLightGrayColor = "#D0D0D0";
+SlateGrayTheme.defaultLightColor = "#E0E0E0";
+SlateGrayTheme.defaultLightGrayColor = "#D0D0D0";
 
-GraySlateTheme.buttonHoverBackground = "#12b9bc";
-GraySlateTheme.buttonPressedBackground = "#41b1b7";
-GraySlateTheme.buttonDisabledForeground = "#283c3f";
-GraySlateTheme.buttonPressedForeground = "#283c3f";
+SlateGrayTheme.buttonHoverBackground = "#12b9bc";
+SlateGrayTheme.buttonPressedBackground = "#41b1b7";
+SlateGrayTheme.buttonDisabledForeground = "#283c3f";
+SlateGrayTheme.buttonPressedForeground = "#283c3f";
 
-GraySlateTheme.linkClickedColor = GraySlateTheme.inputForegroundColor;
+SlateGrayTheme.linkClickedColor = SlateGrayTheme.inputForegroundColor;
 
-GraySlateTheme.selectedImageBackground = "#3e434d";
-GraySlateTheme.selectedArtworkBackground = "#474b54";
-GraySlateTheme.checkboxCheckedColor = "#ffffff";
+SlateGrayTheme.selectedImageBackground = "#3e434d";
+SlateGrayTheme.selectedArtworkBackground = "#474b54";
+SlateGrayTheme.checkboxCheckedColor = "#ffffff";
 
-GraySlateTheme.itemsSourceBackground = GraySlateTheme.defaultDarkColor;
-GraySlateTheme.itemsSourceSelected = GraySlateTheme.selectedImageBackground;
-GraySlateTheme.itemsSourceForeground = GraySlateTheme.inputInactiveForeground;
+SlateGrayTheme.itemsSourceBackground = SlateGrayTheme.defaultDarkColor;
+SlateGrayTheme.itemsSourceSelected = SlateGrayTheme.selectedImageBackground;
+SlateGrayTheme.itemsSourceForeground = SlateGrayTheme.inputInactiveForeground;
 
-GraySlateTheme.destructiveColor = "#d10b0b";
-GraySlateTheme.greenColor = "#2daf02";
+SlateGrayTheme.destructiveColor = "#d10b0b";
+SlateGrayTheme.greenColor = "#2daf02";
 
-var availableThemes = [BlackTheme, GraySlateTheme];
+var availableThemes = [BlackTheme, SlateGrayTheme];
 var names = availableThemes.map(function(theme) { return theme.name; })

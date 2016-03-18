@@ -151,7 +151,7 @@ Item {
             ColumnLayout {
                 anchors.fill: parent
                 anchors.leftMargin: 20
-                anchors.rightMargin: 30
+                anchors.rightMargin: 20
                 anchors.topMargin: 20
                 anchors.bottomMargin: 10
                 spacing: 3
@@ -184,7 +184,7 @@ Item {
 
                     StyledButton {
                         text: i18.n + qsTr("Assign from selected")
-                        width: 150
+                        width: 160
                         enabled: combinedArtworks.selectedArtworksCount == 1
                         tooltip: i18.n + qsTr("Set metadata from selected artwork to all fields")
                         onClicked: {
@@ -307,7 +307,7 @@ Item {
 
                 RowLayout {
                     width: parent.width
-                    height: 55
+                    height: 50
                     spacing: 0
 
                     Item {
@@ -324,7 +324,7 @@ Item {
                             anchors.left: parent.left
                             anchors.top: parent.top
                             anchors.leftMargin: 5
-                            anchors.topMargin: 30
+                            anchors.topMargin: 25
                             text: ''
                             id: titleCheckBox
                             onClicked: {
@@ -471,7 +471,7 @@ Item {
 
                 RowLayout {
                     width: parent.width
-                    height: 90
+                    height: 85
                     spacing: 0
 
                     Item {
@@ -488,7 +488,7 @@ Item {
                             anchors.left: parent.left
                             anchors.top: parent.top
                             anchors.leftMargin: 5
-                            anchors.topMargin: 30
+                            anchors.topMargin: 25
                             text: ''
                             id: descriptionCheckBox
                             objectName: "descriptionCheckBox"
@@ -659,7 +659,7 @@ Item {
 
                 RowLayout {
                     width: parent.width
-                    height: Qt.platform.os === "windows" ? 205 : 200
+                    height: Qt.platform.os === "windows" ? 210 : 205
                     spacing: 0
 
                     Item {
@@ -676,7 +676,7 @@ Item {
                             anchors.left: parent.left
                             anchors.top: parent.top
                             anchors.leftMargin: 5
-                            anchors.topMargin: 20
+                            anchors.topMargin: 25
                             text: ''
                             id: keywordsCheckBox
                             onClicked: {
@@ -702,7 +702,11 @@ Item {
                         ColumnLayout {
                             anchors.fill: parent
                             anchors.margins: 3
-                            spacing: 0
+                            spacing: 2
+
+                            Item {
+                                height: 1
+                            }
 
                             RowLayout {
                                 spacing: 5
@@ -726,10 +730,6 @@ Item {
                                     text: combinedArtworks.keywordsCount
                                     color: Colors.labelActiveForeground
                                 }
-                            }
-
-                            Item {
-                                height: 4
                             }
 
                             Rectangle {
@@ -860,6 +860,7 @@ Item {
 
                                 StyledText {
                                     text: "|"
+                                    color: Colors.inputBackgroundColor
                                     verticalAlignment: Text.AlignVCenter
                                 }
 
@@ -893,7 +894,7 @@ Item {
 
                                 StyledText {
                                     text: i18.n + qsTr("Copy")
-                                    color: copyKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor
+                                    color: enabled ? (copyKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor) : Colors.labelActiveForeground
 
                                     MouseArea {
                                         id: copyKeywordsMA
@@ -905,6 +906,7 @@ Item {
 
                                 StyledText {
                                     text: "|"
+                                    color: Colors.inputBackgroundColor
                                     verticalAlignment: Text.AlignVCenter
                                 }
 

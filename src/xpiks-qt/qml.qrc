@@ -22,7 +22,6 @@
         <file>Dialogs/AboutWindow.qml</file>
         <file>StyledControls/StyledAddHostButton.qml</file>
         <file>Common.js</file>
-        <file>StyledControls/StyledInputHost.qml</file>
         <file>Dialogs/EnterMasterPasswordDialog.qml</file>
         <file>Dialogs/MasterPasswordSetupDialog.qml</file>
         <file>Components/CheckedComponent.qml</file>

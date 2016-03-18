@@ -166,18 +166,22 @@ Item {
                         color: Colors.labelActiveForeground
                     }
 
-                    StyledInputHost {
+                    Rectangle {
+                        color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
                         border.width: (currentPassword.activeFocus || emptyMP) ? 1 : 0
                         border.color: (emptyMP || wrongMP) ? Colors.artworkModifiedColor : Colors.artworkActiveColor
+                        width: 135
+                        height: 24
+                        clip: true
 
                         StyledTextInput {
                             id: currentPassword
-                            width: 120
-                            height: 24
-                            clip: true
                             anchors.left: parent.left
+                            anchors.right: parent.right
                             anchors.leftMargin: 5
+                            anchors.rightMargin: 5
                             echoMode: TextInput.Password
+                            anchors.verticalCenter: parent.verticalCenter
 
                             Keys.onBacktabPressed: {
                                 event.accepted = true
@@ -207,19 +211,24 @@ Item {
                         text: i18.n + qsTr("New Master Password:")
                     }
 
-                    StyledInputHost {
+                    Rectangle {
+                        color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
                         border.width: newMasterPassword.activeFocus ? 1 : 0
+                        border.color: Colors.artworkActiveColor
+                        width: 135
+                        height: 24
+                        clip: true
 
                         StyledTextInput {
                             id: newMasterPassword
-                            width: 120
-                            height: 24
-                            clip: true
                             anchors.left: parent.left
+                            anchors.right: parent.right
                             anchors.leftMargin: 5
+                            anchors.rightMargin: 5
                             echoMode: TextInput.Password
                             KeyNavigation.backtab: currentPassword
                             KeyNavigation.tab: repeatMasterPassword
+                            anchors.verticalCenter: parent.verticalCenter
 
                             onAccepted: {
                                 if (repeatMasterPassword.text != newMasterPassword.text) {
@@ -244,17 +253,21 @@ Item {
                         text: i18.n + qsTr("Repeat Master Password:")
                     }
 
-                    StyledInputHost {
+                    Rectangle {
                         border.width: enabled ? ((repeatMasterPassword.activeFocus || newMasterPassword.length > 0) ? 1 : 0) : 0
                         border.color: repeatMasterPassword.text == newMasterPassword.text ? Colors.artworkActiveColor : Colors.artworkModifiedColor
+                        color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
+                        width: 135
+                        height: 24
+                        clip: true
 
                         StyledTextInput {
                             id: repeatMasterPassword
-                            width: 120
-                            height: 24
-                            clip: true
                             anchors.left: parent.left
+                            anchors.right: parent.right
                             anchors.leftMargin: 5
+                            anchors.rightMargin: 5
+                            anchors.verticalCenter: parent.verticalCenter
                             echoMode: TextInput.Password
                             KeyNavigation.backtab: newMasterPassword
                             onAccepted: trySetupMP()

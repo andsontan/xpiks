@@ -131,18 +131,23 @@ Item {
                 spacing: 20
                 z: 15000
 
-                StyledInputHost {
+                Rectangle {
+                    color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
                     border.width: queryText.activeFocus ? 1 : 0
+                    border.color: Colors.artworkActiveColor
+                    width: 300
+                    height: 24
+                    clip: true
                     Layout.row: 0
                     Layout.column: 1
 
                     StyledTextInput {
                         id: queryText
-                        width: 300
-                        height: 24
-                        clip: true
                         anchors.left: parent.left
+                        anchors.right: parent.right
                         anchors.leftMargin: 5
+                        anchors.rightMargin: 5
+                        anchors.verticalCenter: parent.verticalCenter
                         onAccepted: keywordsSuggestor.searchArtworks(queryText.text)
                     }
                 }

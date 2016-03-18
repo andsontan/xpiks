@@ -121,17 +121,21 @@ Item {
                 anchors.margins: 20
                 spacing: 20
 
-                StyledInputHost {
+                Rectangle {
+                    color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
                     border.width: keywordInput.activeFocus ? 1 : 0
                     border.color: Colors.artworkActiveColor
+                    width: 200
+                    height: 30
+                    clip: true
 
                     StyledTextInput {
                         id: keywordInput
-                        width: 185
-                        height: 30
-                        clip: true
                         anchors.left: parent.left
+                        anchors.right: parent.right
                         anchors.leftMargin: 5
+                        anchors.rightMargin: 5
+                        anchors.verticalCenter: parent.verticalCenter
                         onAccepted: submitKeyword()
                         Component.onCompleted: keywordInput.text = previousKeyword
 

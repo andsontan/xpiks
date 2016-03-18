@@ -237,7 +237,6 @@ DISTFILES += \
     xpiks-qt.ico \
     Dialogs/AboutWindow.qml \
     StyledControls/StyledAddHostButton.qml \
-    StyledControls/StyledInputHost.qml \
     Dialogs/EnterMasterPasswordDialog.qml \
     Dialogs/MasterPasswordSetupDialog.qml \
     Components/CheckedComponent.qml \

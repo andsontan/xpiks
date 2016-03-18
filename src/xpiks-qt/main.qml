@@ -1443,7 +1443,7 @@ ApplicationWindow {
                                         anchors.left: applicationWindow.listLayout ? imageColumnWrapper.right : undefined
                                         anchors.leftMargin: applicationWindow.listLayout ? 5 : 0
                                         anchors.right: applicationWindow.listLayout ? parent.right : undefined
-                                        color: rowWrapper.isHighlighted  ? Colors.selectedArtworkBackground : Colors.artworkBackground
+                                        color: rowWrapper.isHighlighted ? Colors.selectedArtworkBackground : Colors.artworkBackground
 
                                         Item {
                                             id: columnLayout
