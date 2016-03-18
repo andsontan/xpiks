@@ -106,81 +106,76 @@ Item {
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
-            width: 340
-            height: 100
+            width: 260
+            height: 185
             color: Colors.selectedImageBackground
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
 
             ColumnLayout {
                 anchors.fill: parent
-                anchors.margins: 15
+                anchors.margins: 20
                 spacing: 10
 
-                RowLayout {
-                    width: parent.width
-                    height: 20
+                StyledText {
+                    anchors.left: parent.left
+                    text: i18.n + qsTr("Enter current Master Password:")
+                }
 
-                    StyledText {
-                        text: i18.n + qsTr("Enter current Master Password:")
-                    }
+                StyledInputHost {
+                    width: 220
+                    height: 24
+                    anchors.left: parent.left
+                    border.width: masterPassword.activeFocus ? 1 : 0
+                    border.color: wrongTry ? Colors.destructiveColor : Colors.artworkActiveColor
 
-                    Item {
-                        Layout.fillWidth: true
-                    }
+                    StyledTextInput {
+                        id: masterPassword
+                        clip: true
+                        anchors.left: parent.left
+                        anchors.leftMargin: 5
+                        echoMode: showPasswordCheckBox.checked ? TextInput.Normal : TextInput.Password
 
-                    StyledInputHost {
-                        border.width: masterPassword.activeFocus ? 1 : 0
-                        border.color: wrongTry ? Colors.destructiveColor : Colors.artworkActiveColor
+                        Keys.onBacktabPressed: {
+                            event.accepted = true
+                        }
 
-                        StyledTextInput {
-                            id: masterPassword
-                            width: 120
-                            height: 24
-                            clip: true
-                            anchors.left: parent.left
-                            anchors.leftMargin: 5
-                            echoMode: showPasswordCheckBox.checked ? TextInput.Normal : TextInput.Password
+                        Keys.onTabPressed: {
+                            event.accepted = true
+                        }
 
-                            Keys.onBacktabPressed: {
-                                event.accepted = true
-                            }
-
-                            Keys.onTabPressed: {
-                                event.accepted = true
-                            }
-
-                            onAccepted: {
-                                testPassword()
-                            }
+                        onAccepted: {
+                            testPassword()
                         }
                     }
                 }
 
-                RowLayout {
-                    width: parent.width
-                    height: 20
-                    spacing: 10
+                StyledCheckbox {
+                    anchors.left: parent.left
+                    id: showPasswordCheckBox
+                    text: i18.n + qsTr("Show password")
+                }
 
-                    StyledCheckbox {
-                        id: showPasswordCheckBox
-                        text: i18.n + qsTr("Show password")
+                RowLayout {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: 24
+                    spacing: 0
+
+                    StyledButton {
+                        text: i18.n + qsTr("Ok")
+                        width: 90
+                        onClicked: testPassword()
                     }
 
                     Item {
                         Layout.fillWidth: true
-                    }
-
-                    StyledButton {
-                        text: i18.n + qsTr("Ok")
-                        width: 57
-                        onClicked: testPassword()
                     }
 
                     StyledButton {
                         text: i18.n + qsTr("Cancel")
                         tooltip: i18.n + qsTr("This will leave password fields blank")
-                        width: 58
+                        width: 90
                         onClicked: {
                             callbackObject.onFail()
                             closePopup()

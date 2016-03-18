@@ -22,15 +22,38 @@
 #include "secretsmanager.h"
 #include "aes-qt.h"
 #include <QCryptographicHash>
+#include <QTime>
 #include "../Common/defines.h"
 
 #define STRINGIZE_(x) #x
 #define STRINGIZE(x) STRINGIZE_(x)
 
+void shuffleString(QString &str) {
+    qsrand(QTime::currentTime().msec());
+
+    int length = str.length();
+    for (int i = 0; i < length; ++i) {
+        int nextIndex = i + (qrand() % (length - i));
+
+        QChar temp = str[i];
+        str[i] = str[nextIndex];
+        str[nextIndex] = temp;
+    }
+}
+
 namespace Encryption {
     SecretsManager::SecretsManager()
     {
-        m_PasswordForMasterPassword = STRINGIZE(BUILDNUMBER);
+        QString possibleCharacters("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
+        shuffleString(possibleCharacters);
+
+        QString randomString;
+
+        int rlength = 25 + qrand() % 10;
+        randomString = possibleCharacters.left(rlength);
+        LOG_DEBUG << "Generated random password:" << randomString;
+
+        m_PasswordForMasterPassword = randomString;
         m_DefaultMasterPassword = "DefaultMasterPassword";
     }
 
