@@ -863,7 +863,6 @@ namespace Models {
             const QString & path = artwork->getFilepath();
             if (artworksRepository->isFileUnavailable(path)) {
                 artwork->setUnavailable();
-                artworksRepository->removeFromDeletedList(path);
             }
         }
       emit launchUnavailableFilesWarning();

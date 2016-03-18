@@ -232,23 +232,18 @@ namespace Models {
     void ArtworksRepository::checkFileUnavailable(const QString & path) {
      QFileInfo fi(path);
      if (!fi.exists()) {
-         m_Mutex.lock();
          m_UnavailableFiles.insert(fi.absoluteFilePath());
-         m_Mutex.unlock();
-         m_Timer.start();
+         if (m_Timer.timerId() == -1) {
+            m_Timer.start();
+         }
      }
     }
 
-    void ArtworksRepository::removeFromDeletedList(const QString &filepath) {
-        m_Mutex.lock();
-        m_UnavailableFiles.remove(filepath);
-        m_FilesWatcher.removePath(filepath);
-        m_Mutex.unlock();
-    }
 
     void ArtworksRepository::onAvailabilityTimer() {
-        if ( m_UnavailableFiles.size() > 0 ) {
-            emit filesUnavailable();
+        if ( m_UnavailableFiles.size() > m_LastUnavailableFilesCount ) {
+                emit filesUnavailable();
+                m_LastUnavailableFilesCount = m_UnavailableFiles.size();
         }
     }
 }

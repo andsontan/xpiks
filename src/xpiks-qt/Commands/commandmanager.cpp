@@ -528,6 +528,10 @@ void Commands::CommandManager::updateAllDependentModels() {
 #ifndef TESTS
     m_UndoRedoManager->discardLastAction();
 #endif
+    if ( m_ArtworksRepository->getUnavailableFilesCount() == m_ArtworksRepository->getLastUnavailableFilesCount()) {
+        m_ArtworksRepository->resetLastUnavailableFilesCount();
+    }
+
 }
 #ifdef INTEGRATION_TESTS
 void Commands::CommandManager::cleanup() {

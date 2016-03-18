@@ -28,7 +28,6 @@
 #include <QPair>
 #include <QSet>
 #include <QTimer>
-#include <QMutex>
 #include "abstractlistmodel.h"
 #include "../Common/baseentity.h"
 #include <QFileSystemWatcher>
@@ -43,11 +42,11 @@ namespace Models {
         {
             QObject::connect(&m_FilesWatcher, SIGNAL(fileChanged(const QString &)),
                          this, SLOT(checkFileUnavailable(const QString &) ) );
-            m_Timer.setInterval(1000); //1 sec
+            m_Timer.setInterval(4000); //4 sec
             m_Timer.setSingleShot(true); //single shot
             QObject::connect(&m_Timer, SIGNAL(timeout()), this, SLOT(onAvailabilityTimer()));
             m_Timer.start();
-
+            m_LastUnavailableFilesCount=0;
         }
 
         ArtworksRepository(const ArtworksRepository &copy):
@@ -61,9 +60,10 @@ namespace Models {
             m_FilesWatcher.addPaths(QList<QString>::fromSet(copy.m_FilesSet));
             QObject::connect(&m_FilesWatcher, SIGNAL(fileChanged(const QString &)),
                           this, SLOT(checkFileUnavailable(const QString &) ) );
-            m_Timer.setInterval(1000); //1 sec
+            m_Timer.setInterval(4000); //4 sec
             m_Timer.setSingleShot(true); //single shot
             QObject::connect(&m_Timer, SIGNAL(timeout()), this, SLOT(onAvailabilityTimer()));
+            m_LastUnavailableFilesCount = copy.getLastUnavailableFilesCount();
         }
 
         virtual ~ArtworksRepository() {}
@@ -78,6 +78,7 @@ namespace Models {
     public:
         void updateCountsForExistingDirectories();
         void cleanupEmptyDirectories();
+        void resetLastUnavailableFilesCount() { m_LastUnavailableFilesCount=0; }
 
     public:
         bool beginAccountingFiles(const QStringList &items);
@@ -87,6 +88,8 @@ namespace Models {
         virtual int getNewDirectoriesCount(const QStringList &items) const;
         int getNewFilesCount(const QStringList &items) const;
         int getArtworksSourcesCount() const { return m_DirectoriesList.length(); }
+        int getLastUnavailableFilesCount() const { return m_LastUnavailableFilesCount; }
+        int getUnavailableFilesCount() const { return m_UnavailableFiles.size(); }
 
     signals:
         void artworksSourcesCountChanged();
@@ -116,7 +119,6 @@ namespace Models {
     public:
         virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
         virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
-        void removeFromDeletedList(const QString &filepath);
     protected:
         virtual QHash<int, QByteArray> roleNames() const;
 
@@ -143,7 +145,7 @@ namespace Models {
         QFileSystemWatcher  m_FilesWatcher;
         QTimer m_Timer;
         QSet<QString> m_UnavailableFiles;
-        QMutex m_Mutex;
+        int m_LastUnavailableFilesCount;
     };
 }
 
