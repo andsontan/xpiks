@@ -141,7 +141,7 @@ Item {
         Rectangle {
             id: dialogWindow
             width: 730
-            height: Qt.platform.os === "windows" ? 655 : 645
+            height: Qt.platform.os === "windows" ? 665 : 655
             color: Colors.selectedImageBackground
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
@@ -471,7 +471,7 @@ Item {
 
                 RowLayout {
                     width: parent.width
-                    height: 80
+                    height: 90
                     spacing: 0
 
                     Item {
@@ -546,7 +546,7 @@ Item {
                                 id: rect
                                 anchors.left: parent.left
                                 anchors.right: parent.right
-                                height: 50
+                                height: 60
                                 color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
                                 border.color: Colors.artworkActiveColor
                                 border.width: descriptionTextInput.activeFocus ? 1 : 0

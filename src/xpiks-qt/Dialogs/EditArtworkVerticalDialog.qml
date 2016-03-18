@@ -161,7 +161,7 @@ Item {
                 id: fields
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 20
-                height: 335
+                height: 355
                 width: 670
                 anchors.horizontalCenter: parent.horizontalCenter
                 spacing: 0
@@ -286,7 +286,7 @@ Item {
                     id: rect
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    height: 50
+                    height: 60
                     color: Colors.inputBackgroundColor
                     border.color: Colors.artworkActiveColor
                     border.width: descriptionTextInput.activeFocus ? 1 : 0

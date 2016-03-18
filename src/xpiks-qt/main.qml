@@ -38,8 +38,8 @@ ApplicationWindow {
     id: applicationWindow
     visible: true
     width: appSettings.getAppWidth(930)
-    height: appSettings.getAppHeight(725)
-    minimumHeight: 670
+    height: appSettings.getAppHeight(750)
+    minimumHeight: 750
     minimumWidth: 930
     title: i18.n + qsTr("Xpiks")
     property int openedDialogsCount: 0
