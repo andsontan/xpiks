@@ -382,7 +382,7 @@ ApplicationWindow {
                         CustomComboBox {
                             id: themeComboBox
                             model: Themes.names
-                            width: 100
+                            width: 130
                             height: 24
                             itemHeight: 28
                             onComboIndexChanged: {
@@ -484,7 +484,7 @@ ApplicationWindow {
                     RowLayout {
                         anchors.left: parent.left
                         anchors.right: parent.right
-                        spacing: 20
+                        spacing: 24
 
                         StyledText {
                             text: i18.n + qsTr("Scroll speed")
