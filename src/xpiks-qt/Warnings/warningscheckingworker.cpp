@@ -38,7 +38,10 @@ namespace Warnings {
 
     WarningsCheckingWorker::WarningsCheckingWorker(Models::SettingsModel *settingsModel, QObject *parent):
         QObject(parent),
-        m_SettingsModel(settingsModel)
+        m_SettingsModel(settingsModel),
+        m_MinimumMegapixels(4),
+        m_MaximumKeywordsCount(50),
+        m_MaximumDescriptionLength(200)
     {
     }
 

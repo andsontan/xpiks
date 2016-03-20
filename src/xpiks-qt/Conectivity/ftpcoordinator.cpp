@@ -44,6 +44,7 @@ namespace Conectivity {
         m_SecondsTimeout(secondsTimeout),
         m_OverallProgress(0.0),
         m_FinishedWorkersCount(0),
+        m_AllWorkersCount(0),
         m_AnyFailed(false)
     {
     }
