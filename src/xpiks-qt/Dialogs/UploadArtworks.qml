@@ -45,6 +45,14 @@ Item {
 
     Component.onCompleted: focus = true
 
+    Connections {
+        target: helpersWrapper
+        onGlobalCloseRequested: {
+            console.debug("UI:UploadArtworks # globalCloseRequested")
+            closePopup()
+        }
+    }
+
     function closePopup() {
         secretsManager.purgeMasterPassword()
         warningsModel.resetShowSelected()

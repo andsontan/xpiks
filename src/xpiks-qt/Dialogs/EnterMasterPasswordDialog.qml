@@ -107,15 +107,18 @@ Item {
         Rectangle {
             id: dialogWindow
             width: 260
-            height: 185
+            height: childrenRect.height + 40
             color: Colors.selectedImageBackground
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
 
             ColumnLayout {
-                anchors.fill: parent
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: childrenRect.height
                 anchors.margins: 20
-                spacing: 10
+                spacing: 20
 
                 StyledText {
                     anchors.left: parent.left
@@ -155,6 +158,7 @@ Item {
                 }
 
                 StyledCheckbox {
+                    checked: false
                     anchors.left: parent.left
                     id: showPasswordCheckBox
                     text: i18.n + qsTr("Show password")
