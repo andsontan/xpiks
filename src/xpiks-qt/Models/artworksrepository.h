@@ -27,8 +27,10 @@
 #include <QList>
 #include <QPair>
 #include <QSet>
+#include <QTimer>
 #include "abstractlistmodel.h"
 #include "../Common/baseentity.h"
+#include <QFileSystemWatcher>
 
 namespace Models {
     class ArtworksRepository : public AbstractListModel, public Common::BaseEntity {
@@ -37,7 +39,15 @@ namespace Models {
     public:
         ArtworksRepository(QObject *parent = 0) :
             AbstractListModel(parent)
-        {}
+        {
+            QObject::connect(&m_FilesWatcher, SIGNAL(fileChanged(const QString &)),
+                         this, SLOT(checkFileUnavailable(const QString &) ) );
+            m_Timer.setInterval(4000); //4 sec
+            m_Timer.setSingleShot(true); //single shot
+            QObject::connect(&m_Timer, SIGNAL(timeout()), this, SLOT(onAvailabilityTimer()));
+            m_Timer.start();
+            m_LastUnavailableFilesCount=0;
+        }
 
         ArtworksRepository(const ArtworksRepository &copy):
             AbstractListModel(),
@@ -45,7 +55,16 @@ namespace Models {
             m_DirectoriesList(copy.m_DirectoriesList),
             m_DirectoriesHash(copy.m_DirectoriesHash),
             m_FilesSet(copy.m_FilesSet)
-        {}
+        {
+
+            m_FilesWatcher.addPaths(QList<QString>::fromSet(copy.m_FilesSet));
+            QObject::connect(&m_FilesWatcher, SIGNAL(fileChanged(const QString &)),
+                          this, SLOT(checkFileUnavailable(const QString &) ) );
+            m_Timer.setInterval(4000); //4 sec
+            m_Timer.setSingleShot(true); //single shot
+            QObject::connect(&m_Timer, SIGNAL(timeout()), this, SLOT(onAvailabilityTimer()));
+            m_LastUnavailableFilesCount = copy.getLastUnavailableFilesCount();
+        }
 
         virtual ~ArtworksRepository() {}
 
@@ -59,6 +78,7 @@ namespace Models {
     public:
         void updateCountsForExistingDirectories();
         void cleanupEmptyDirectories();
+        void resetLastUnavailableFilesCount() { m_LastUnavailableFilesCount=0; }
 
     public:
         bool beginAccountingFiles(const QStringList &items);
@@ -68,13 +88,19 @@ namespace Models {
         virtual int getNewDirectoriesCount(const QStringList &items) const;
         int getNewFilesCount(const QStringList &items) const;
         int getArtworksSourcesCount() const { return m_DirectoriesList.length(); }
+        int getLastUnavailableFilesCount() const { return m_LastUnavailableFilesCount; }
+        int getUnavailableFilesCount() const { return m_UnavailableFiles.size(); }
 
     signals:
         void artworksSourcesCountChanged();
+        void fileChanged(const QString & path);
+        void filesUnavailable();
 
     public slots:
         void fileSelectedChanged(const QString &filepath, bool isSelected) { setFileSelected(filepath, isSelected); }
-
+    private slots:
+        void checkFileUnavailable(const QString & path);
+        void onAvailabilityTimer();
     public:
         bool accountFile(const QString &filepath);
         bool removeFile(const QString &filepath, const QString &fileDirectory);
@@ -84,6 +110,7 @@ namespace Models {
 #ifdef TESTS
         int getFilesCountForDirectory(const QString &directory) const { return m_DirectoriesHash[directory]; }
 #endif
+        bool isFileUnavailable(const QString &filepath) const { return (m_UnavailableFiles.find(filepath) != m_UnavailableFiles.end()); }
 
 #ifdef INTEGRATION_TESTS
         void resetEverything();
@@ -92,7 +119,6 @@ namespace Models {
     public:
         virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
         virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
-
     protected:
         virtual QHash<int, QByteArray> roleNames() const;
 
@@ -104,6 +130,11 @@ namespace Models {
             emit artworksSourcesCountChanged();
         }
 
+        void removeFileAndEmitSignal() {
+            m_UnavailableFiles.insert(*m_FilesSet.begin());
+            emit filesUnavailable();
+        }
+
         virtual bool checkFileExists(const QString &filename, QString &directory) const;
 
     private:
@@ -111,6 +142,10 @@ namespace Models {
         QHash<QString, int> m_DirectoriesHash;
         QSet<QString> m_FilesSet;
         QHash<QString, int> m_DirectoriesSelectedHash;
+        QFileSystemWatcher  m_FilesWatcher;
+        QTimer m_Timer;
+        QSet<QString> m_UnavailableFiles;
+        int m_LastUnavailableFilesCount;
     };
 }
 

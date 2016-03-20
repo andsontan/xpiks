@@ -214,8 +214,16 @@ Item {
                     }
 
                     StyledText {
-                        property string originalText: artworkUploader.itemsCount === 1 ? qsTr("1 artwork selected") : qsTr("%1 artworks selected").arg(artworkUploader.itemsCount)
+                        id: textItemsAvailable
+                        property string originalText: artworkUploader.itemsCount == 1 ? qsTr("1 artwork selected") : qsTr("%1 artworks selected").arg(artworkUploader.itemsCount)
                         text: i18.n + originalText
+                        Connections {
+                            target: artworkUploader
+                            onItemsNumberChanged: {
+                               textItemsAvailable.originalText=artworkUploader.itemsCount == 1 ? qsTr("1 artwork selected") : qsTr("%1 artworks selected").arg(artworkUploader.itemsCount)
+                               textItemsAvailable.text=i18.n + originalText
+                            }
+                        }
                     }
                 }
 
@@ -773,6 +781,10 @@ Item {
                             onFinishedProcessing: {
                                 uploadButton.enabled = true
                                 helpersWrapper.turnTaskbarProgressOff()
+                            }
+                            onRequestCloseWindow: {
+                                console.info("got closing signal")
+                                closePopup();
                             }
                         }
                     }

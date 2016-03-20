@@ -214,6 +214,7 @@ HEADERS += \
     Suggestion/shutterstockqueryengine.h \
     Suggestion/locallibraryqueryengine.h \
     Suggestion/suggestionqueryenginebase.h \
+    Helpers/ifilenotavailablemodel.h \
     Suggestion/fotoliaqueryengine.h
 
 DISTFILES += \

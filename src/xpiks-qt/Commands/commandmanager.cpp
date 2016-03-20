@@ -69,11 +69,13 @@ void Commands::CommandManager::InjectDependency(Models::FilteredArtItemsProxyMod
 void Commands::CommandManager::InjectDependency(Models::CombinedArtworksModel *combinedArtworksModel) {
     Q_ASSERT(combinedArtworksModel != NULL); m_CombinedArtworksModel = combinedArtworksModel;
     m_CombinedArtworksModel->setCommandManager(this);
+    m_AvailabilityListeners.append(combinedArtworksModel);
 }
 
 void Commands::CommandManager::InjectDependency(Models::ArtworkUploader *artworkUploader) {
     Q_ASSERT(artworkUploader != NULL); m_ArtworkUploader = artworkUploader;
     m_ArtworkUploader->setCommandManager(this);
+    m_AvailabilityListeners.append(m_ArtworkUploader);
 }
 
 void Commands::CommandManager::InjectDependency(Models::UploadInfoRepository *uploadInfoRepository) {
@@ -100,6 +102,7 @@ void Commands::CommandManager::InjectDependency(UndoRedo::UndoRedoManager *undoR
 void Commands::CommandManager::InjectDependency(Models::ZipArchiver *zipArchiver) {
     Q_ASSERT(zipArchiver != NULL); m_ZipArchiver = zipArchiver;
     m_ZipArchiver->setCommandManager(this);
+    m_AvailabilityListeners.append(zipArchiver);
 }
 
 void Commands::CommandManager::InjectDependency(Suggestion::KeywordsSuggestor *keywordsSuggestor) {
@@ -198,6 +201,8 @@ void Commands::CommandManager::connectEntitiesSignalsSlots() const {
 
     QObject::connect(m_SpellCheckerService, SIGNAL(serviceAvailable(bool)),
                      m_FilteredItemsModel, SLOT(onSpellCheckerAvailable(bool)));
+    QObject::connect(m_ArtworksRepository, SIGNAL(filesUnavailable()),
+                     m_ArtItemsModel, SLOT(onFilesUnavailableHandler()));
 }
 
 void Commands::CommandManager::ensureDependenciesInjected() {
@@ -507,6 +512,27 @@ void Commands::CommandManager::restartSpellChecking() {
     }
 }
 
+
+void Commands::CommandManager::updateAllDependentModels() {
+    int size = m_AvailabilityListeners.size();
+    m_CombinedArtworksModel->generateAboutToBeRemoved();
+    m_ArtItemsModel->generateAboutToBeRemoved();
+    LOG_DEBUG << "generated about to be removed...";
+    QCoreApplication::processEvents();
+    for ( int i = 0; i < size; ++i) {
+        m_AvailabilityListeners[i]->removeUnavailableItems();
+    }
+    LOG_DEBUG << "removed from availabilityListeners....";
+    m_ArtItemsModel->removeUnavailableItems();
+    LOG_DEBUG << "removed from ArtitemsModel....";
+#ifndef TESTS
+    m_UndoRedoManager->discardLastAction();
+#endif
+    if ( m_ArtworksRepository->getUnavailableFilesCount() == m_ArtworksRepository->getLastUnavailableFilesCount()) {
+        m_ArtworksRepository->resetLastUnavailableFilesCount();
+    }
+
+}
 #ifdef INTEGRATION_TESTS
 void Commands::CommandManager::cleanup() {
     m_CombinedArtworksModel->resetModelData();

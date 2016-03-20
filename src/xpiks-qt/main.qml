@@ -445,6 +445,16 @@ ApplicationWindow {
     }
 
     MessageDialog {
+        id: unavailableFilesDetected
+        title: "Warning"
+        text: qsTr("Some files you have been working on do not exist anymore! Xpiks will remove them from the workflow.")
+        standardButtons: StandardButton.Ok
+        onAccepted: {
+            helpersWrapper.updateAllAfterDelete()
+        }
+    }
+
+    MessageDialog {
         id: removeMetadataDialog
 
         title: "Confirmation"
@@ -571,6 +581,10 @@ ApplicationWindow {
 
     Connections {
         target: artItemsModel
+        onLaunchUnavailableFilesWarning: {
+                console.debug("Got FilesUnavailable signal")
+                unavailableFilesDetected.open()
+            }
         onArtworksAdded: {
             if ((imagesCount === 0) && (vectorsCount === 0)) {
                 noNewFilesDialog.open();
@@ -1724,7 +1738,8 @@ ApplicationWindow {
                                                                                 applicationWindow,
                                                                                 {
                                                                                     callbackObject: callbackObject,
-                                                                                    previousKeyword: keyword
+                                                                                    previousKeyword: keyword,
+                                                                                    keywordsModel: artItemsModel.getArtworkItself(rowWrapper.getIndex())
                                                                                 })
                                                         }
                                                     }
@@ -1804,7 +1819,9 @@ ApplicationWindow {
                                                                                 applicationWindow,
                                                                                 {
                                                                                     callbackObject: callbackObject,
-                                                                                    keywordsText: keywordsstring
+                                                                                    keywordsText: keywordsstring,
+                                                                                    keywordsModel: artItemsModel.getArtworkItself(rowWrapper.getIndex())
+
                                                                                 });
                                                         }
                                                     }

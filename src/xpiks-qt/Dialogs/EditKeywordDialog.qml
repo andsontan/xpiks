@@ -33,6 +33,7 @@ Item {
     id: editKeywordComponent
     property var callbackObject
     property string previousKeyword: ''
+    property var keywordsModel
     anchors.fill: parent
 
     signal dialogDestruction();
@@ -42,6 +43,14 @@ Item {
         var keyword = keywordInput.text
         if (helpersWrapper.isKeywordValid(keyword)) {
             callbackObject.onSuccess(keyword)
+            closePopup()
+        }
+    }
+
+    Connections {
+        target: keywordsModel
+        onAboutToBeRemoved: {
+            console.info("About to be removed")
             closePopup()
         }
     }

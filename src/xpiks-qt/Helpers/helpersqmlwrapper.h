@@ -54,6 +54,7 @@ namespace Helpers {
         Q_INVOKABLE void turnTaskbarProgressOn();
         Q_INVOKABLE void setTaskbarProgress(double value);
         Q_INVOKABLE void turnTaskbarProgressOff();
+        Q_INVOKABLE void updateAllAfterDelete();
 
     public:
         bool getPluginsAvailable() const;

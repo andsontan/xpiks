@@ -56,15 +56,19 @@ namespace Commands {
             for (int i = first; i <= last; ++i) {
                 Models::ArtworkMetadata *metadata = artItemsModel->getArtwork(i);
                 if (metadata != NULL) {
-                    const QString &filepath = metadata->getFilepath();
                     removedItemsIndices.append(i);
-                    removedItemsFilepathes.append(filepath);
 
-                    if (metadata->hasVectorAttached()) {
-                        removedAttachedVectors.append(metadata->getAttachedVectorPath());
-                    } else {
-                        removedAttachedVectors.append("");
+                    if (!metadata->getIsUnavailable()) {
+                        const QString &filepath = metadata->getFilepath();
+                        removedItemsFilepathes.append(filepath);
+
+                        if (metadata->hasVectorAttached()) {
+                            removedAttachedVectors.append(metadata->getAttachedVectorPath());
+                        } else {
+                            removedAttachedVectors.append("");
+                        }
                     }
+
                 }
             }
         }
@@ -84,11 +88,14 @@ namespace Commands {
 
             artItemsModel->updateModifiedCount();
 
-            UndoRedo::RemoveArtworksHistoryItem *removeArtworksItem =
-                    new UndoRedo::RemoveArtworksHistoryItem(removedItemsIndices,
+            if (!removedItemsFilepathes.empty()) {
+                UndoRedo::RemoveArtworksHistoryItem *removeArtworksItem =
+                        new UndoRedo::RemoveArtworksHistoryItem(removedItemsIndices,
                                                             removedItemsFilepathes,
                                                             removedAttachedVectors);
-            commandManager->recordHistoryItem(removeArtworksItem);
+                commandManager->recordHistoryItem(removeArtworksItem);
+            }
+
         } else {
             LOG_WARNING << "No items to remove found!";
         }

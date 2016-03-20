@@ -81,6 +81,15 @@ Item {
             closePopup()
         }
     }
+    Connections {
+        target: artItemsModel
+        onFileWithIndexUnavailable: {
+            if (artworkIndex == index) {
+                console.debug("Artwork unavailable")
+                closePopup()
+            }
+        }
+    }
 
     MessageDialog {
         id: clearKeywordsDialog
@@ -458,7 +467,8 @@ Item {
                                                     componentParent,
                                                     {
                                                         callbackObject: callbackObject,
-                                                        previousKeyword: keyword
+                                                        previousKeyword: keyword,
+                                                        keywordsModel: combinedArtworks.getKeywordsModel()
                                                     })
                             }
                         }
