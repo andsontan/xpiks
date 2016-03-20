@@ -1,5 +1,7 @@
 #include "vectorfilenames_tests.h"
 #include <QStringList>
+#include <QString>
+#include <string>
 #include "../../xpiks-qt/Helpers/filenameshelpers.h"
 
 void CompareLists(const QStringList &actual, const QStringList &expected) {

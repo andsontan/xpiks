@@ -6,9 +6,9 @@
 #include "../xpiks-qt/Models/artworksrepository.h"
 
 namespace Mocks {
-    class ArtWorksRepositoryMock : public Models::ArtworksRepository{
+    class ArtworksRepositoryMock : public Models::ArtworksRepository {
     public:
-        ArtWorksRepositoryMock() {}
+        ArtworksRepositoryMock() {}
 
         void publicRemoveFileAndEmitSignal() {
              Models::ArtworksRepository::removeFileAndEmitSignal();

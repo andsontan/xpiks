@@ -19,7 +19,7 @@ namespace Mocks {
         bool anyCommandProcessed() const { return m_AnyCommandProcessed; }
         void resetAnyCommandProcessed() { m_AnyCommandProcessed = false; }
         void disableCommands() { m_CanExecuteCommands = false; }
-        void mockAcceptDeletion() {Commands::CommandManager::updateAllDependentModels();}
+        void mockAcceptDeletion() {Commands::CommandManager::removeUnavailableFiles();}
 
     public:
         virtual void connectArtworkSignals(Models::ArtworkMetadata *metadata) const { Q_UNUSED(metadata); /*DO NOTHING*/ }

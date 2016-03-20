@@ -78,6 +78,14 @@ namespace Models {
         void fileChanged(const QString & path);
         void filesUnavailable();
 
+#ifdef TESTS
+    public:
+        void removeFileAndEmitSignal() {
+            m_UnavailableFiles.insert(*m_FilesSet.begin());
+            emit filesUnavailable();
+        }
+#endif
+
     public slots:
         void fileSelectedChanged(const QString &filepath, bool isSelected) { setFileSelected(filepath, isSelected); }
 

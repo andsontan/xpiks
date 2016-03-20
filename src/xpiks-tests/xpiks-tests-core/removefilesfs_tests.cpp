@@ -36,7 +36,7 @@
 void RemoveFilesFsTests::removeArtworksSignals() {
     Mocks::CommandManagerMock commandManagerMock;
     Mocks::ArtItemsModelMock artItemsMock;
-    Mocks::ArtWorksRepositoryMock artworksRepositoryMock;
+    Mocks::ArtworksRepositoryMock artworksRepositoryMock;
 
     Models::ArtworksRepository *artworksRepository = &artworksRepositoryMock;
     Models::ArtItemsModel *artItemsModel = &artItemsMock;

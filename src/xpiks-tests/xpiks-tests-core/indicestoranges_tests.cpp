@@ -5,6 +5,7 @@
 #include <QList>
 #include <QPair>
 #include <cstdarg>
+#include <string>
 
 typedef QPair<int, int> Pair;
 typedef QVector<Pair > Pairs;
