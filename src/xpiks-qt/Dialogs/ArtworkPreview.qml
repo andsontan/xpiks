@@ -44,6 +44,15 @@ Item {
         artworkPreviewDialog.destroy()
     }
 
+    Connections {
+        target: artItemsModel
+        onFileWithIndexUnavailable: {
+            if (artworkIndex == index)
+                closePopup()
+        }
+    }
+
+
     Component.onCompleted: focus = true
     Keys.onEscapePressed: closePopup()
 

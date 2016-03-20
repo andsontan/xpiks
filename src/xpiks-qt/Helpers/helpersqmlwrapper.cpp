@@ -146,6 +146,10 @@ namespace Helpers {
 #endif
         return result;
     }
+
+    void HelpersQmlWrapper::updateAllAfterDelete() {
+        m_CommandManager->updateAllDependentModels();
+    }
 }
 
 

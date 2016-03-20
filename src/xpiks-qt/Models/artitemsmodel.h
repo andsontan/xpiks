@@ -77,6 +77,8 @@ namespace Models {
         void updateItems(const QVector<int> &indices, const QVector<int> &roles);
         void forceUnselectAllItems() const;
         void updateAllItems();
+        void removeUnavailableItems();
+        void  generateAboutToBeRemoved();
 
     public:
         /*Q_INVOKABLE*/ void removeArtworksDirectory(int index);
@@ -121,6 +123,7 @@ namespace Models {
         int addLocalDirectories(const QList<QUrl> &directories);
         void itemModifiedChanged(bool) { updateModifiedCount(); }
         void spellCheckErrorsChanged();
+        void onFilesUnavailableHandler();
 
     public:
         virtual void removeItemsAtIndices(const QVector<QPair<int, int> > &ranges);
@@ -158,6 +161,8 @@ namespace Models {
         void artworksChanged(bool needToMoveCurrentItem);
         void artworksAdded(int imagesCount, int vectorsCount);
         void selectedArtworkRemoved();
+        void fileWithIndexUnavailable(int index);
+        void launchUnavailableFilesWarning();
 
     protected:
        virtual QHash<int, QByteArray> roleNames() const;

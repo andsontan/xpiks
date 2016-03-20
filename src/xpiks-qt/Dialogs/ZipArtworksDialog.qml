@@ -42,6 +42,13 @@ Item {
     function closePopup() {
         zipArtworksComponent.destroy()
     }
+    Connections {
+        target: zipArchiver
+        onRequestCloseWindow: {
+            console.info("got closing signal")
+            closePopup();
+        }
+    }
 
     PropertyAnimation { target: zipArtworksComponent; property: "opacity";
         duration: 400; from: 0; to: 1;
@@ -131,8 +138,16 @@ Item {
                     }
 
                     StyledText {
+                        id:textItemsAvailable
                         property string originalText: zipArchiver.itemsCount == 1 ? qsTr("1 artwork") : qsTr("%1 artworks").arg(zipArchiver.itemsCount)
                         text: i18.n + originalText
+                        Connections {
+                            target: zipArchiver
+                            onItemsNumberChanged: {
+                               textItemsAvailable.originalText=zipArchiver.itemsCount == 1 ? qsTr("1 artwork") : qsTr("%1 artworks").arg(zipArchiver.itemsCount)
+                               textItemsAvailable.text=i18.n + originalText
+                            }
+                       }
                     }
                 }
 

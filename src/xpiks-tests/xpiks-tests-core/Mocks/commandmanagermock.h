@@ -4,6 +4,7 @@
 #include "../../xpiks-qt/Commands/commandmanager.h"
 #include "../../xpiks-qt/Models/artitemsmodel.h"
 #include "../../xpiks-qt/Models/artworksrepository.h"
+#include "../../xpiks-qt/Models/artworkmetadata.h"
 
 namespace Mocks {
     class CommandManagerMock : public Commands::CommandManager
@@ -18,6 +19,7 @@ namespace Mocks {
         bool anyCommandProcessed() const { return m_AnyCommandProcessed; }
         void resetAnyCommandProcessed() { m_AnyCommandProcessed = false; }
         void disableCommands() { m_CanExecuteCommands = false; }
+        void mockAcceptDeletion() {Commands::CommandManager::updateAllDependentModels();}
 
     public:
         virtual void connectArtworkSignals(Models::ArtworkMetadata *metadata) const { Q_UNUSED(metadata); /*DO NOTHING*/ }
@@ -34,6 +36,7 @@ namespace Mocks {
                 if (artworksRepository->accountFile(filename))
                 {
                     Models::ArtworkMetadata *metadata = artItemsModel->createMetadata(filename);
+                    metadata->attachVector("dummyPath");
                     artItemsModel->appendMetadata(metadata);
                 }
 
@@ -49,6 +52,12 @@ namespace Mocks {
                 return NULL;
             }
         }
+
+     void mockDeletion(int count) {
+       for (int i =0; i < count; ++i) {
+            CommandManager::getArtItemsModel()->getArtwork(i)->setUnavailable();
+       }
+     }
 
     private:
         bool m_AnyCommandProcessed;

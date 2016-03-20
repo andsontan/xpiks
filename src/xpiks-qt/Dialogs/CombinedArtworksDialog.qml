@@ -54,10 +54,18 @@ Item {
     Connections {
         target: helpersWrapper
         onGlobalCloseRequested: {
-            console.debug("UI:CombinedArtworksDialog # globalCloseRequested")
+            console.debug("UI:CombinedArtworksDialog # global
+CloseRequested")
             closePopup()
         }
     }
+    Connections {
+        target: combinedArtworks
+        onRequetCloseWindow: {
+                closePopup();
+        }
+    }
+
 
     PropertyAnimation { target: dialogComponent; property: "opacity";
         duration: 400; from: 0; to: 1;
@@ -73,6 +81,7 @@ Item {
             doRemoveSelectedArtworks()
         }
     }
+
 
     function doRemoveSelectedArtworks() {
         combinedArtworks.removeSelectedArtworks()
@@ -168,8 +177,16 @@ Item {
                     }
 
                     StyledText {
+                        id: textItemsAvailable
                         property string originalText: combinedArtworks.artworksCount == 1 ? qsTr("1 artwork being edited") : qsTr("%1 artworks being edited").arg(combinedArtworks.artworksCount)
                         text: i18.n + originalText
+                        Connections {
+                            target: combinedArtworks
+                            onItemsNumberChanged: {
+                               textItemsAvailable.originalText=combinedArtworks.artworksCount == 1 ? qsTr("1 artwork being edited") : qsTr("%1 artworks being edited").arg(combinedArtworks.artworksCount)
+                               textItemsAvailable.text=i18.n + originalText
+                            }
+                        }
                     }
                 }
 
@@ -788,7 +805,8 @@ Item {
                                                                 componentParent,
                                                                 {
                                                                     callbackObject: callbackObject,
-                                                                    previousKeyword: keyword
+                                                                    previousKeyword: keyword,
+                                                                    keywordsModel: combinedArtworks.getKeywordsModel()
                                                                 })
                                         }
                                     }

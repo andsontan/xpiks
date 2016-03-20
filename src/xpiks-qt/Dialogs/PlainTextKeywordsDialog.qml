@@ -36,6 +36,7 @@ Item {
     id: plainTextKeywordsComponent
     property string keywordsText
     property var callbackObject
+    property var keywordsModel
     anchors.fill: parent
 
     signal dialogDestruction();
@@ -49,6 +50,12 @@ Item {
     Component.onCompleted: {
         focus = true
         textEdit.forceActiveFocus()
+    }
+    Connections {
+        target: keywordsModel
+        onAboutToBeRemoved: {
+            closePopup()
+        }
     }
 
     Keys.onEscapePressed: closePopup()

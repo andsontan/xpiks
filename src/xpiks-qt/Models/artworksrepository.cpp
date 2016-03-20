@@ -130,6 +130,7 @@ namespace Models {
                 occurances = m_DirectoriesHash[absolutePath];
             }
 
+            m_FilesWatcher.addPath(filepath);
             m_FilesSet.insert(filepath);
             m_DirectoriesHash[absolutePath] = occurances + 1;
             wasModified = true;
@@ -147,7 +148,7 @@ namespace Models {
 
             m_DirectoriesHash[fileDirectory] = occurances;
             m_DirectoriesSelectedHash[fileDirectory] = selectedCount;
-
+            m_FilesWatcher.removePath(filepath);
             m_FilesSet.remove(filepath);
             result = true;
         }
@@ -227,4 +228,24 @@ namespace Models {
 
         return exists;
     }
+
+    void ArtworksRepository::checkFileUnavailable(const QString & path) {
+     QFileInfo fi(path);
+     if (!fi.exists()) {
+         m_UnavailableFiles.insert(fi.absoluteFilePath());
+         if (m_Timer.timerId() == -1) {
+            m_Timer.start();
+         }
+     }
+    }
+
+
+    void ArtworksRepository::onAvailabilityTimer() {
+        if ( m_UnavailableFiles.size() > m_LastUnavailableFilesCount ) {
+                emit filesUnavailable();
+                m_LastUnavailableFilesCount = m_UnavailableFiles.size();
+        }
+    }
 }
+
+

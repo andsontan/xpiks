@@ -854,4 +854,42 @@ namespace Models {
         roles << ArtworkDescriptionRole << IsModifiedRole <<
                  ArtworkTitleRole << KeywordsCountRole << HasVectorAttachedRole;
     }
+
+    void ArtItemsModel::onFilesUnavailableHandler() {
+        Models::ArtworksRepository * artworksRepository =m_CommandManager->getArtworksRepository();
+        int count = m_ArtworkList.length();
+        for (int i = 0; i < count; ++i) {
+            ArtworkMetadata* artwork = m_ArtworkList.at(i);
+            const QString & path = artwork->getFilepath();
+            if (artworksRepository->isFileUnavailable(path)) {
+                artwork->setUnavailable();
+            }
+        }
+      emit launchUnavailableFilesWarning();
+    }
+    void ArtItemsModel::generateAboutToBeRemoved() {
+        int count = m_ArtworkList.length();
+        for (int i = 0; i < count; ++i) {
+                ArtworkMetadata * metadata=m_ArtworkList.at(i);
+            if (metadata->getIsUnavailable()) {
+                metadata->generateAboutToBeRemoved();
+            }
+        }
+    }
+
+
+    void ArtItemsModel::removeUnavailableItems() {
+        QVector<int> indicesToRemove;
+        QVector<QPair<int, int> > rangesToRemove;
+
+        int count = m_ArtworkList.length();
+        for (int i = 0; i < count; ++i) {
+            if (m_ArtworkList.at(i)->getIsUnavailable()) {
+                indicesToRemove.append(i);
+                emit fileWithIndexUnavailable(i);
+            }
+        }
+        Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
+        doRemoveItemsInRanges(rangesToRemove);
+    }
 }

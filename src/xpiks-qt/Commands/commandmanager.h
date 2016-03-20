@@ -32,7 +32,7 @@
 #include "icommandmanager.h"
 #include "../Common/iservicebase.h"
 #include "../Warnings/iwarningscheckable.h"
-
+#include "../Helpers/ifilenotavailablemodel.h"
 namespace Encryption {
     class SecretsManager;
 }
@@ -160,6 +160,7 @@ namespace Commands {
         void recordHistoryItem(UndoRedo::IHistoryItem *historyItem) const;
         void connectEntitiesSignalsSlots() const;
         void ensureDependenciesInjected();
+        void updateAllDependentModels();
 
     public:
         void recodePasswords(const QString &oldMasterPassword,
@@ -256,6 +257,7 @@ namespace Commands {
         Models::LanguagesModel *m_LanguagesModel;
 
         QVector<Common::IServiceBase<Warnings::IWarningsCheckable> *> m_WarningsCheckers;
+        QVector<Helpers::IFileNotAvailableModel*> m_AvailabilityListeners;
 #ifdef QT_DEBUG
         QStringList m_InitialImagesToOpen;
         QStringList m_InitialVectorsToOpen;

@@ -73,7 +73,7 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Models/artworksrepository.cpp \
     addcommand_tests.cpp \
     ../../xpiks-qt/Models/artitemsmodel.cpp \
-	../../xpiks-qt/Models/filteredartitemsproxymodel.cpp \
+        ../../xpiks-qt/Models/filteredartitemsproxymodel.cpp \
     ../../xpiks-qt/Commands/addartworkscommand.cpp \
     ../../xpiks-qt/Models/artworksprocessor.cpp \
     ../../xpiks-qt/Models/combinedartworksmodel.cpp \
@@ -127,7 +127,8 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Helpers/filterhelpers.cpp \
     artworkfilter_tests.cpp \
     ../../xpiks-qt/Models/artworkuploader.cpp \
-    ../../xpiks-qt/Models/ziparchiver.cpp
+    ../../xpiks-qt/Models/ziparchiver.cpp \
+    removefilesfs_tests.cpp
 
 HEADERS += \
     encryption_tests.h \
@@ -141,7 +142,7 @@ HEADERS += \
     ../../xpiks-qt/Models/artworksrepository.h \
     addcommand_tests.h \
     ../../xpiks-qt/Models/artitemsmodel.h \
-	../../xpiks-qt/Models/filteredartitemsproxymodel.h \
+        ../../xpiks-qt/Models/filteredartitemsproxymodel.h \
     Mocks/artitemsmodelmock.h \
     ../../xpiks-qt/Commands/addartworkscommand.h \
     ../../xpiks-qt/Models/artworksprocessor.h \
@@ -214,4 +215,7 @@ HEADERS += \
     artworkfilter_tests.h \
     ../../xpiks-qt/Models/artworkuploader.h \
     ../../xpiks-qt/Conectivity/iftpcoordinator.h \
-    ../../xpiks-qt/Models/ziparchiver.h
+    ../../xpiks-qt/Models/ziparchiver.h \
+    removefilesfs_tests.h \
+    Mocks/artworksrepositorymock.h
+    removefilesfs_tests.h
