@@ -239,7 +239,7 @@ namespace Helpers {
             return posX;
         }
 
-        Q_INVOKABLE void setAppPosX(int x){
+        Q_INVOKABLE void setAppPosX(int x) {
             setValue(getAppPosXKey(), x);
         }
 

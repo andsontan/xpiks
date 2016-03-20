@@ -35,6 +35,7 @@
 #include "../Common/baseentity.h"
 #include "../Common/ibasicartwork.h"
 #include "../Common/iartworkssource.h"
+#include "../Helpers/ifilenotavailablemodel.h"
 
 namespace Models {
     class ArtworkMetadata;
@@ -43,7 +44,8 @@ namespace Models {
     class ArtItemsModel :
             public AbstractListModel,
             public Common::BaseEntity,
-            public Common::IArtworksSource
+            public Common::IArtworksSource,
+            public Helpers::IFileNotAvailableModel
     {
         Q_OBJECT
         Q_PROPERTY(int modifiedArtworksCount READ getModifiedArtworksCount NOTIFY modifiedArtworksCountChanged)
@@ -77,7 +79,7 @@ namespace Models {
         void updateItems(const QVector<int> &indices, const QVector<int> &roles);
         void forceUnselectAllItems() const;
         void updateAllItems();
-        void removeUnavailableItems();
+        virtual void removeUnavailableItems();
         void  generateAboutToBeRemoved();
 
     public:

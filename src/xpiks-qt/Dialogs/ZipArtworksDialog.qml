@@ -42,10 +42,10 @@ Item {
     function closePopup() {
         zipArtworksComponent.destroy()
     }
+
     Connections {
         target: zipArchiver
         onRequestCloseWindow: {
-            console.info("got closing signal")
             closePopup();
         }
     }

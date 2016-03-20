@@ -215,12 +215,12 @@ Item {
 
                     StyledText {
                         id: textItemsAvailable
-                        property string originalText: artworkUploader.itemsCount == 1 ? qsTr("1 artwork selected") : qsTr("%1 artworks selected").arg(artworkUploader.itemsCount)
+                        property string originalText: artworkUploader.itemsCount === 1 ? qsTr("1 artwork selected") : qsTr("%1 artworks selected").arg(artworkUploader.itemsCount)
                         text: i18.n + originalText
                         Connections {
                             target: artworkUploader
                             onItemsNumberChanged: {
-                               textItemsAvailable.originalText=artworkUploader.itemsCount == 1 ? qsTr("1 artwork selected") : qsTr("%1 artworks selected").arg(artworkUploader.itemsCount)
+                               textItemsAvailable.originalText = artworkUploader.itemsCount === 1 ? qsTr("1 artwork selected") : qsTr("%1 artworks selected").arg(artworkUploader.itemsCount)
                                textItemsAvailable.text=i18.n + originalText
                             }
                         }
@@ -783,7 +783,6 @@ Item {
                                 helpersWrapper.turnTaskbarProgressOff()
                             }
                             onRequestCloseWindow: {
-                                console.info("got closing signal")
                                 closePopup();
                             }
                         }

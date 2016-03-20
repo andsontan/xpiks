@@ -147,8 +147,8 @@ namespace Helpers {
         return result;
     }
 
-    void HelpersQmlWrapper::updateAllAfterDelete() {
-        m_CommandManager->updateAllDependentModels();
+    void HelpersQmlWrapper::removeUnavailableFiles() {
+        m_CommandManager->removeUnavailableFiles();
     }
 }
 

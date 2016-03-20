@@ -160,7 +160,7 @@ namespace Commands {
         void recordHistoryItem(UndoRedo::IHistoryItem *historyItem) const;
         void connectEntitiesSignalsSlots() const;
         void ensureDependenciesInjected();
-        void updateAllDependentModels();
+        void removeUnavailableFiles();
 
     public:
         void recodePasswords(const QString &oldMasterPassword,

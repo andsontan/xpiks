@@ -170,6 +170,12 @@ namespace Models {
         }
     }
 
+    void ArtworksRepository::purgeUnavailableFiles() {
+        LOG_DEBUG << "#";
+        m_UnavailableFiles.clear();
+        m_LastUnavailableFilesCount = 0;
+    }
+
 #ifdef INTEGRATION_TESTS
     void ArtworksRepository::resetEverything() {
         m_DirectoriesHash.clear();
@@ -230,20 +236,20 @@ namespace Models {
     }
 
     void ArtworksRepository::checkFileUnavailable(const QString & path) {
-     QFileInfo fi(path);
-     if (!fi.exists()) {
-         m_UnavailableFiles.insert(fi.absoluteFilePath());
-         if (m_Timer.timerId() == -1) {
-            m_Timer.start();
-         }
-     }
+        QFileInfo fi(path);
+        if (!fi.exists()) {
+            m_UnavailableFiles.insert(fi.absoluteFilePath());
+            if (!m_Timer.isActive()) {
+                m_Timer.start();
+            }
+        }
     }
 
-
     void ArtworksRepository::onAvailabilityTimer() {
-        if ( m_UnavailableFiles.size() > m_LastUnavailableFilesCount ) {
-                emit filesUnavailable();
-                m_LastUnavailableFilesCount = m_UnavailableFiles.size();
+        int currentUnavailableSize = m_UnavailableFiles.size();
+        if ( currentUnavailableSize > m_LastUnavailableFilesCount ) {
+            emit filesUnavailable();
+            m_LastUnavailableFilesCount = currentUnavailableSize;
         }
     }
 }

@@ -34,6 +34,29 @@ namespace Models {
         updateProgress();
     }
 
+    void ArtworksProcessor::removeUnavailableItems() {
+        LOG_DEBUG << "#";
+
+        const QVector<Models::ArtworkMetadata*> & artworksListOld = getArtworkList();
+        QVector<Models::ArtworkMetadata*> artworksListNew;
+        int size = artworksListOld.size();
+        for (int i = 0; i < size; ++i) {
+            Models::ArtworkMetadata* artItemInfoElement = artworksListOld.at(i);
+
+            if (!artItemInfoElement->getIsUnavailable()) {
+                artworksListNew.append(artItemInfoElement);
+            }
+        }
+
+        setArtworks(artworksListNew);
+
+        if (artworksListNew.isEmpty()) {
+            emit requestCloseWindow();
+        }
+
+        emit itemsNumberChanged();
+    }
+
     void ArtworksProcessor::beginProcessing() {
         m_ExistingMaxThreadsNumber = QThreadPool::globalInstance()->maxThreadCount();
         LOG_DEBUG << "Saving pools max threads" << m_ExistingMaxThreadsNumber;

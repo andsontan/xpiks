@@ -93,7 +93,7 @@ namespace Models {
         }
     }
 
-    void CombinedArtworksModel::setChangeKeywords(bool value){
+    void CombinedArtworksModel::setChangeKeywords(bool value) {
         if (Common::HasFlag(m_EditFlags, Common::EditKeywords) != value) {
             Common::ApplyFlag(m_EditFlags, value, Common::EditKeywords);
             emit changeKeywordsChanged();
@@ -321,7 +321,7 @@ namespace Models {
         delete combinedResult;
     }
 
-    void CombinedArtworksModel::enableAllFields(){
+    void CombinedArtworksModel::enableAllFields() {
         setChangeDescription(true);
         setChangeTitle(true);
         setChangeKeywords(true);
@@ -441,21 +441,27 @@ namespace Models {
     }
 
     void CombinedArtworksModel::removeUnavailableItems() {
+        LOG_DEBUG << "#";
         QVector<int> indicesToRemove;
-        for (int i= 0; i<m_ArtworksList.size(); i++) {
-            ArtItemInfo* artItemInfoElement=m_ArtworksList[i];
+        int size = m_ArtworksList.size();
+        for (int i = 0; i < size; i++) {
+            ArtItemInfo *artItemInfoElement = m_ArtworksList.at(i);
+
             if (artItemInfoElement->getOrigin()->getIsUnavailable()) {
                 indicesToRemove.append(i);
             }
-         }
+        }
+
         QVector<QPair<int, int> > rangesToRemove;
         Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
+
         removeItemsAtIndices(rangesToRemove);
         recombineArtworks();
-        if ( m_ArtworksList.size() == 0) {
+
+        if (m_ArtworksList.isEmpty()) {
             emit requestCloseWindow();
         }
+
         emit itemsNumberChanged();
     }
-
 }

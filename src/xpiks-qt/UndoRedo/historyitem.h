@@ -41,7 +41,7 @@ namespace UndoRedo {
     class HistoryItem : public IHistoryItem
     {
     public:
-        HistoryItem(HistoryActionType actionType) : m_ActionType(actionType){}
+        HistoryItem(HistoryActionType actionType) : m_ActionType(actionType) {}
         virtual ~HistoryItem() {}
 
     public:

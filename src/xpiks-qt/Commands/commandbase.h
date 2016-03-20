@@ -53,8 +53,8 @@ namespace Commands {
 
     class CommandResult : public ICommandResult {
     public:
-        CommandResult(){}
-        virtual ~CommandResult(){}
+        CommandResult() {}
+        virtual ~CommandResult() {}
 
     public:
         virtual int getStatus() const { return 0; }

@@ -38,32 +38,15 @@ namespace Models {
         Q_PROPERTY(int artworksSourcesCount READ getArtworksSourcesCount NOTIFY artworksSourcesCountChanged)
     public:
         ArtworksRepository(QObject *parent = 0) :
-            AbstractListModel(parent)
+            AbstractListModel(parent),
+            m_LastUnavailableFilesCount(0)
         {
             QObject::connect(&m_FilesWatcher, SIGNAL(fileChanged(const QString &)),
-                         this, SLOT(checkFileUnavailable(const QString &) ) );
+                         this, SLOT(checkFileUnavailable(const QString &)));
+
             m_Timer.setInterval(4000); //4 sec
             m_Timer.setSingleShot(true); //single shot
             QObject::connect(&m_Timer, SIGNAL(timeout()), this, SLOT(onAvailabilityTimer()));
-            m_Timer.start();
-            m_LastUnavailableFilesCount=0;
-        }
-
-        ArtworksRepository(const ArtworksRepository &copy):
-            AbstractListModel(),
-            Common::BaseEntity(),
-            m_DirectoriesList(copy.m_DirectoriesList),
-            m_DirectoriesHash(copy.m_DirectoriesHash),
-            m_FilesSet(copy.m_FilesSet)
-        {
-
-            m_FilesWatcher.addPaths(QList<QString>::fromSet(copy.m_FilesSet));
-            QObject::connect(&m_FilesWatcher, SIGNAL(fileChanged(const QString &)),
-                          this, SLOT(checkFileUnavailable(const QString &) ) );
-            m_Timer.setInterval(4000); //4 sec
-            m_Timer.setSingleShot(true); //single shot
-            QObject::connect(&m_Timer, SIGNAL(timeout()), this, SLOT(onAvailabilityTimer()));
-            m_LastUnavailableFilesCount = copy.getLastUnavailableFilesCount();
         }
 
         virtual ~ArtworksRepository() {}
@@ -88,8 +71,7 @@ namespace Models {
         virtual int getNewDirectoriesCount(const QStringList &items) const;
         int getNewFilesCount(const QStringList &items) const;
         int getArtworksSourcesCount() const { return m_DirectoriesList.length(); }
-        int getLastUnavailableFilesCount() const { return m_LastUnavailableFilesCount; }
-        int getUnavailableFilesCount() const { return m_UnavailableFiles.size(); }
+        bool canPurgeUnavailableFiles() const { return m_UnavailableFiles.size() == m_LastUnavailableFilesCount; }
 
     signals:
         void artworksSourcesCountChanged();
@@ -98,19 +80,22 @@ namespace Models {
 
     public slots:
         void fileSelectedChanged(const QString &filepath, bool isSelected) { setFileSelected(filepath, isSelected); }
+
     private slots:
         void checkFileUnavailable(const QString & path);
         void onAvailabilityTimer();
+
     public:
         bool accountFile(const QString &filepath);
         bool removeFile(const QString &filepath, const QString &fileDirectory);
         void setFileSelected(const QString &filepath, bool selected);
+        void purgeUnavailableFiles();
 
         const QString &getDirectory(int index) const { return m_DirectoriesList[index]; }
 #ifdef TESTS
         int getFilesCountForDirectory(const QString &directory) const { return m_DirectoriesHash[directory]; }
 #endif
-        bool isFileUnavailable(const QString &filepath) const { return (m_UnavailableFiles.find(filepath) != m_UnavailableFiles.end()); }
+        bool isFileUnavailable(const QString &filepath) const { return m_UnavailableFiles.contains(filepath); }
 
 #ifdef INTEGRATION_TESTS
         void resetEverything();
@@ -128,11 +113,6 @@ namespace Models {
             m_DirectoriesSelectedHash.remove(directoryToRemove);
             m_DirectoriesHash.remove(directoryToRemove);
             emit artworksSourcesCountChanged();
-        }
-
-        void removeFileAndEmitSignal() {
-            m_UnavailableFiles.insert(*m_FilesSet.begin());
-            emit filesUnavailable();
         }
 
         virtual bool checkFileExists(const QString &filename, QString &directory) const;

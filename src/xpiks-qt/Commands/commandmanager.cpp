@@ -59,6 +59,7 @@ void Commands::CommandManager::InjectDependency(Models::ArtworksRepository *artw
 void Commands::CommandManager::InjectDependency(Models::ArtItemsModel *artItemsModel) {
     Q_ASSERT(artItemsModel != NULL); m_ArtItemsModel = artItemsModel;
     m_ArtItemsModel->setCommandManager(this);
+    // do not add to availabilityListeners
 }
 
 void Commands::CommandManager::InjectDependency(Models::FilteredArtItemsProxyModel *filteredItemsModel) {
@@ -201,6 +202,7 @@ void Commands::CommandManager::connectEntitiesSignalsSlots() const {
 
     QObject::connect(m_SpellCheckerService, SIGNAL(serviceAvailable(bool)),
                      m_FilteredItemsModel, SLOT(onSpellCheckerAvailable(bool)));
+
     QObject::connect(m_ArtworksRepository, SIGNAL(filesUnavailable()),
                      m_ArtItemsModel, SLOT(onFilesUnavailableHandler()));
 }
@@ -512,27 +514,31 @@ void Commands::CommandManager::restartSpellChecking() {
     }
 }
 
+void Commands::CommandManager::removeUnavailableFiles() {
+    LOG_DEBUG << "#";
 
-void Commands::CommandManager::updateAllDependentModels() {
-    int size = m_AvailabilityListeners.size();
     m_CombinedArtworksModel->generateAboutToBeRemoved();
     m_ArtItemsModel->generateAboutToBeRemoved();
-    LOG_DEBUG << "generated about to be removed...";
-    QCoreApplication::processEvents();
-    for ( int i = 0; i < size; ++i) {
+    QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+
+    int size = m_AvailabilityListeners.size();
+    for (int i = 0; i < size; ++i) {
         m_AvailabilityListeners[i]->removeUnavailableItems();
     }
-    LOG_DEBUG << "removed from availabilityListeners....";
+
     m_ArtItemsModel->removeUnavailableItems();
-    LOG_DEBUG << "removed from ArtitemsModel....";
+
 #ifndef TESTS
     m_UndoRedoManager->discardLastAction();
 #endif
-    if ( m_ArtworksRepository->getUnavailableFilesCount() == m_ArtworksRepository->getLastUnavailableFilesCount()) {
-        m_ArtworksRepository->resetLastUnavailableFilesCount();
-    }
 
+    if (m_ArtworksRepository->canPurgeUnavailableFiles()) {
+        m_ArtworksRepository->purgeUnavailableFiles();
+    } else {
+        LOG_INFO << "Unavailable files purging postponed";
+    }
 }
+
 #ifdef INTEGRATION_TESTS
 void Commands::CommandManager::cleanup() {
     m_CombinedArtworksModel->resetModelData();

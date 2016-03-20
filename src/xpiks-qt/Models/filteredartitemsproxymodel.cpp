@@ -536,7 +536,7 @@ namespace Models {
     }
 
 #ifdef TESTS
-        int FilteredArtItemsProxyModel::retrieveNumberOfSelectedItems(){
+        int FilteredArtItemsProxyModel::retrieveNumberOfSelectedItems() {
             return getSelectedOriginalIndices().size();
         }
 #endif

@@ -30,7 +30,7 @@ namespace Helpers {
     }
 
     void UpdateService::startChecking() {
-        if (m_StartWorker){
+        if (m_StartWorker) {
             QThread *thread = new QThread();
             m_UpdatesCheckerWorker->moveToThread(thread);
 

@@ -23,10 +23,11 @@
 #define IFILENOTAVAILABLEMODEL_H
 
 namespace Helpers {
-class IFileNotAvailableModel
-{
-public:
-    virtual void removeUnavailableItems()=0;
-};
+    class IFileNotAvailableModel
+    {
+    public:
+        virtual void removeUnavailableItems()=0;
+        virtual ~IFileNotAvailableModel() {}
+    };
 }
 #endif // IFILENOTAVAILABLEMODEL_H

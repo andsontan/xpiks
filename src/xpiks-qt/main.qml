@@ -447,10 +447,10 @@ ApplicationWindow {
     MessageDialog {
         id: unavailableFilesDetected
         title: "Warning"
-        text: qsTr("Some files you have been working on do not exist anymore! Xpiks will remove them from the workflow.")
+        text: qsTr("Some files you have been working on are not available anymore.\nXpiks will remove them from the workflow.")
         standardButtons: StandardButton.Ok
         onAccepted: {
-            helpersWrapper.updateAllAfterDelete()
+            helpersWrapper.removeUnavailableFiles()
         }
     }
 
@@ -581,10 +581,12 @@ ApplicationWindow {
 
     Connections {
         target: artItemsModel
+
         onLaunchUnavailableFilesWarning: {
-                console.debug("Got FilesUnavailable signal")
-                unavailableFilesDetected.open()
-            }
+            console.debug("UI:onLaunchUnavailableFilesWarning")
+            unavailableFilesDetected.open()
+        }
+
         onArtworksAdded: {
             if ((imagesCount === 0) && (vectorsCount === 0)) {
                 noNewFilesDialog.open();
