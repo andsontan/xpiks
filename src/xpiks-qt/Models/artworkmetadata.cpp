@@ -99,6 +99,7 @@ namespace Models {
     }
 
     void ArtworkMetadata::attachVector(const QString &vectorFilepath) {
+        LOG_INFO << "Attaching vector file:" << vectorFilepath << "to file" << getFilepath();
         m_HasAttachedVector = true;
         m_AttachedVector = vectorFilepath;
     }
