@@ -32,6 +32,7 @@
 #include <QDateTime>
 #include <QStandardPaths>
 #include <iostream>
+#include <string>
 #include "../Common/defines.h"
 
 namespace Helpers {

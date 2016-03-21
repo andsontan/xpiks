@@ -315,7 +315,7 @@ namespace Models {
         for (int i = 0; i < count; ++i) {
             int index = selectedIndices.at(i);
             ArtworkMetadata *metadata = getArtwork(index);
-            if (metadata != NULL && metadata->getIsSelected()) {
+            if (metadata != NULL && metadata->isSelected()) {
                 if (metadata->isModified() || overwriteAll) {
                     modifiedSelectedArtworks.append(metadata);
                 }
@@ -488,7 +488,7 @@ namespace Models {
         case IsModifiedRole:
             return metadata->isModified();
         case IsSelectedRole:
-            return metadata->getIsSelected();
+            return metadata->isSelected();
         case KeywordsCountRole:
             return metadata->getKeywordsCount();
         case HasVectorAttachedRole:
@@ -814,7 +814,7 @@ namespace Models {
         ArtworksRepository *artworkRepository = m_CommandManager->getArtworksRepository();
         artworkRepository->removeFile(metadata->getFilepath(), metadata->getDirectory());
 
-        if (metadata->getIsSelected()) {
+        if (metadata->isSelected()) {
             emit selectedArtworkRemoved();
         }
 
@@ -846,7 +846,7 @@ namespace Models {
         int count = m_ArtworkList.length();
         indices.reserve(count / 3);
         for (int i = 0; i < count; ++i) {
-            if (m_ArtworkList.at(i)->getIsSelected()) {
+            if (m_ArtworkList.at(i)->isSelected()) {
                 indices.append(i);
             }
         }
@@ -892,7 +892,7 @@ namespace Models {
         for (int i = 0; i < count; ++i) {
             ArtworkMetadata *metadata = m_ArtworkList.at(i);
 
-            if (metadata->getIsUnavailable()) {
+            if (metadata->isUnavailable()) {
                 metadata->generateAboutToBeRemoved();
             }
         }
@@ -905,7 +905,7 @@ namespace Models {
 
         int count = m_ArtworkList.length();
         for (int i = 0; i < count; ++i) {
-            if (m_ArtworkList.at(i)->getIsUnavailable()) {
+            if (m_ArtworkList.at(i)->isUnavailable()) {
                 indicesToRemove.append(i);
                 emit fileWithIndexUnavailable(i);
             }

@@ -113,12 +113,31 @@ namespace Common {
     }
 
     template<typename FlagType>
+    void SetFlag(volatile int &value, FlagType flag) {
+        value |= static_cast<int>(flag);
+    }
+
+    template<typename FlagType>
     void UnsetFlag(int &value, FlagType flag) {
         value &= ~(static_cast<int>(flag));
     }
 
     template<typename FlagType>
+    void UnsetFlag(volatile int &value, FlagType flag) {
+        value &= ~(static_cast<int>(flag));
+    }
+
+    template<typename FlagType>
     void ApplyFlag(int &value, bool applySwitch, FlagType flag) {
+        if (applySwitch) {
+            SetFlag(value, flag);
+        } else {
+            UnsetFlag(value, flag);
+        }
+    }
+
+    template<typename FlagType>
+    void ApplyFlag(volatile int &value, bool applySwitch, FlagType flag) {
         if (applySwitch) {
             SetFlag(value, flag);
         } else {

@@ -164,7 +164,7 @@ namespace Warnings {
         bool rowIsOk = anyWarnings;
 
         if (m_ShowOnlySelected) {
-            rowIsOk = metadata->getIsSelected() && anyWarnings;
+            rowIsOk = metadata->isSelected() && anyWarnings;
         }
 
         return rowIsOk;

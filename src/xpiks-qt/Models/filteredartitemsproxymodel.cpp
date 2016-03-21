@@ -89,7 +89,7 @@ namespace Models {
 
             if (metadata->isInDirectory(directoryAbsolutePath)) {
                 directoryItems.append(index);
-                metadata->setIsSelected(!metadata->getIsSelected());
+                metadata->setIsSelected(!metadata->isSelected());
             }
         }
 
@@ -380,7 +380,7 @@ namespace Models {
             int index = originalIndex.row();
             ArtworkMetadata *metadata = artItemsModel->getArtwork(index);
 
-            if (metadata != NULL && metadata->getIsSelected()) {
+            if (metadata != NULL && metadata->isSelected()) {
                 selectedArtworks.append(metadata);
             }
         }
@@ -401,7 +401,7 @@ namespace Models {
             int index = originalIndex.row();
             ArtworkMetadata *metadata = artItemsModel->getArtwork(index);
 
-            if (metadata != NULL && metadata->getIsSelected()) {
+            if (metadata != NULL && metadata->isSelected()) {
                 ArtItemInfo *info = new ArtItemInfo(metadata, index);
                 selectedArtworks.append(info);
             }
@@ -466,7 +466,7 @@ namespace Models {
             int index = originalIndex.row();
             ArtworkMetadata *metadata = artItemsModel->getArtwork(index);
 
-            if (metadata != NULL && metadata->getIsSelected()) {
+            if (metadata != NULL && metadata->isSelected()) {
                 selectedIndices.append(index);
             }
         }

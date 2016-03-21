@@ -32,6 +32,7 @@
 #include <QSize>
 #include <QAtomicInt>
 #include "../Common/basickeywordsmodel.h"
+#include "../Common/flags.h"
 
 class QTextDocument;
 
@@ -44,6 +45,15 @@ namespace Models {
         ArtworkMetadata(const QString &filepath, qint64 ID);
         virtual ~ArtworkMetadata();
 
+    private:
+        enum MetadataFlags {
+            FlagIsModified = 1 << 0,
+            FlagsIsSelected = 1 << 1,
+            FlagIsInitialized = 1 << 2,
+            FlagHasVectorAttached = 1 << 3,
+            FlagIsUnavailable = 1 << 4
+        };
+
     public:
         bool initialize(const QString &title,
                         const QString &description, const QStringList &rawKeywords, bool overwrite = true);
@@ -54,11 +64,11 @@ namespace Models {
 
     public:
         bool isInDirectory(const QString &directoryAbsolutePath) const;
-        bool isModified() const { return m_IsModified; }
-        bool getIsSelected() const { return m_IsSelected; }
-        bool getIsUnavailable() const { return m_IsUnavailable; }
-        bool isInitialized() const { return m_IsInitialized; }
-        bool hasVectorAttached() const { return m_HasAttachedVector; }
+        bool isModified() const { return Common::HasFlag(m_MetadataFlags, FlagIsModified); }
+        bool isSelected() const { return Common::HasFlag(m_MetadataFlags, FlagsIsSelected); }
+        bool isUnavailable() const { return Common::HasFlag(m_MetadataFlags, FlagIsUnavailable); }
+        bool isInitialized() const { return Common::HasFlag(m_MetadataFlags, FlagIsInitialized); }
+        bool hasVectorAttached() const { return Common::HasFlag(m_MetadataFlags, FlagHasVectorAttached); }
         virtual QSize getImageSize() const { return m_ImageSize; }
         virtual qint64 getFileSize() const { return m_FileSize; }
         virtual qint64 getItemID() const { return m_ID; }
@@ -85,21 +95,21 @@ namespace Models {
         }
 
         bool setIsSelected(bool value) {
-            bool result = m_IsSelected != value;
+            bool result = Common::HasFlag(m_MetadataFlags, FlagsIsSelected) != value;
             if (result) {
-                m_IsSelected = value;
-                emit selectedChanged(value);
+                Common::ApplyFlag(m_MetadataFlags, value, FlagsIsSelected);
                 //emit fileSelectedChanged(m_ArtworkFilepath, value);
+                emit selectedChanged(value);
             }
 
             return result;
         }
 
-        void invertSelection() { setIsSelected(!m_IsSelected); }
+        void invertSelection() { setIsSelected(!isSelected()); }
 
         void resetSelected() {
-            if (m_IsSelected) {
-                m_IsSelected = false;
+            if (Common::HasFlag(m_MetadataFlags, FlagsIsSelected)) {
+                Common::UnsetFlag(m_MetadataFlags, FlagsIsSelected);
                 //emit fileSelectedChanged(m_ArtworkFilepath, false);
             }
         }
@@ -115,9 +125,9 @@ namespace Models {
 
     public:
         void markModified();
-        void setModified() { m_IsModified = true; }
-        void setUnavailable() { m_IsUnavailable = true; }
-        void resetModified() { m_IsModified = false; }
+        void setModified() { Common::SetFlag(m_MetadataFlags, FlagIsModified); }
+        void setUnavailable() { Common::SetFlag(m_MetadataFlags, FlagIsUnavailable); }
+        void resetModified() { Common::UnsetFlag(m_MetadataFlags, FlagIsModified); }
         void requestFocus(int directionSign) { emit focusRequested(directionSign); }
 
     signals:
@@ -126,18 +136,13 @@ namespace Models {
          void fileSelectedChanged(const QString &filepath, bool newValue);
          void focusRequested(int directionSign);
 
-
     private:
          QSize m_ImageSize;
          qint64 m_FileSize; // in bytes
          QString m_ArtworkFilepath;
          QString m_AttachedVector;
          qint64 m_ID;
-         volatile bool m_IsModified;
-         volatile bool m_IsSelected;
-         volatile bool m_IsInitialized;
-         volatile bool m_HasAttachedVector;
-         volatile bool m_IsUnavailable;
+         volatile int m_MetadataFlags;
     };
 }
 

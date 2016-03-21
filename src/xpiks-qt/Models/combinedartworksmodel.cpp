@@ -447,7 +447,7 @@ namespace Models {
         for (int i = 0; i < size; i++) {
             ArtItemInfo *artItemInfoElement = m_ArtworksList.at(i);
 
-            if (artItemInfoElement->getOrigin()->getIsUnavailable()) {
+            if (artItemInfoElement->getOrigin()->isUnavailable()) {
                 indicesToRemove.append(i);
             }
         }

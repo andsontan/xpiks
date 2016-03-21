@@ -32,7 +32,7 @@ namespace Helpers {
         } else if (searchTerm == QLatin1String("x:empty")) {
             hasMatch = metadata->isEmpty();
         } else if (searchTerm == QLatin1String("x:selected")) {
-            hasMatch = metadata->getIsSelected();
+            hasMatch = metadata->isSelected();
         } else if (searchTerm == QLatin1String("x:vector")) {
             hasMatch = metadata->hasVectorAttached();
         } else if (searchTerm == QLatin1String("x:image")) {
