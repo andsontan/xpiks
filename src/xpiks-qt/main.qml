@@ -445,13 +445,20 @@ ApplicationWindow {
     }
 
     MessageDialog {
-        id: unavailableFilesDetected
+        id: unavailableArtworksDialog
         title: "Warning"
-        text: qsTr("Some files you have been working on are not available anymore.\nXpiks will remove them from the workflow.")
+        text: qsTr("Some files are not available anymore.\nThey will be removed from the workflow.")
         standardButtons: StandardButton.Ok
         onAccepted: {
             helpersWrapper.removeUnavailableFiles()
         }
+    }
+
+    MessageDialog {
+        id: unavailableVectorsDialog
+        title: "Warning"
+        text: qsTr("Some vectors are not available anymore.\nThey will be detached automatically.")
+        standardButtons: StandardButton.Ok
     }
 
     MessageDialog {
@@ -582,9 +589,14 @@ ApplicationWindow {
     Connections {
         target: artItemsModel
 
-        onLaunchUnavailableFilesWarning: {
-            console.debug("UI:onLaunchUnavailableFilesWarning")
-            unavailableFilesDetected.open()
+        onUnavailableArtworksFound: {
+            console.debug("UI:onUnavailableArtworksFound")
+            unavailableArtworksDialog.open()
+        }
+
+        onUnavailableVectorsFound: {
+            console.debug("UI:onUnavailableVectorsFound")
+            unavailableVectorsDialog.open()
         }
 
         onArtworksAdded: {

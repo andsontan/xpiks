@@ -164,7 +164,8 @@ namespace Models {
         void artworksAdded(int imagesCount, int vectorsCount);
         void selectedArtworkRemoved();
         void fileWithIndexUnavailable(int index);
-        void launchUnavailableFilesWarning();
+        void unavailableArtworksFound();
+        void unavailableVectorsFound();
 
     protected:
        virtual QHash<int, QByteArray> roleNames() const;

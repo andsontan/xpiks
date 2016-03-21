@@ -818,6 +818,8 @@ namespace Models {
             emit selectedArtworkRemoved();
         }
 
+        LOG_INFO << "File removed:" << metadata->getFilepath();
+
         if (metadata->release()) {
             delete metadata;
         } else {
@@ -860,15 +862,29 @@ namespace Models {
         Models::ArtworksRepository *artworksRepository = m_CommandManager->getArtworksRepository();
         int count = m_ArtworkList.length();
 
+        bool anyArtworkUnavailable = false;
+        bool anyVectorUnavailable = false;
+
         for (int i = 0; i < count; ++i) {
             ArtworkMetadata* artwork = m_ArtworkList.at(i);
             const QString &path = artwork->getFilepath();
             if (artworksRepository->isFileUnavailable(path)) {
                 artwork->setUnavailable();
+                anyArtworkUnavailable = true;
+            } else if (artwork->hasVectorAttached()) {
+                const QString &vectorPath = artwork->getAttachedVectorPath();
+                if (artworksRepository->isFileUnavailable(vectorPath)) {
+                    artwork->detachVector();
+                    anyVectorUnavailable = true;
+                }
             }
         }
 
-        emit launchUnavailableFilesWarning();
+        if (anyArtworkUnavailable) {
+            emit unavailableArtworksFound();
+        } else if (anyVectorUnavailable) {
+            emit unavailableVectorsFound();
+        }
     }
 
     void ArtItemsModel::generateAboutToBeRemoved() {

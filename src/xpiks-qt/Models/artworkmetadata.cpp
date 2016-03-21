@@ -105,6 +105,7 @@ namespace Models {
     }
 
     void ArtworkMetadata::detachVector() {
+        LOG_INFO << "#";
         m_HasAttachedVector = false;
         m_AttachedVector.clear();
     }
