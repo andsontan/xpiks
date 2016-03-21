@@ -24,7 +24,7 @@ namespace Mocks {
     public:
         virtual void connectArtworkSignals(Models::ArtworkMetadata *metadata) const { Q_UNUSED(metadata); /*DO NOTHING*/ }
 
-        void generateAndAddArtworks(int count) {
+        void generateAndAddArtworks(int count, bool withVector=true) {
             Q_ASSERT(count >= 0);
             int i = 0;
             Models::ArtworksRepository *artworksRepository = getArtworksRepository();
@@ -32,11 +32,15 @@ namespace Mocks {
 
             while (i < count) {
                 QString filename = QString("/path/to/somedirectory/artwork%1.jpg").arg(i);
+                QString vectorname = QString("/path/to/somedirectory/artwork%1.eps").arg(i);
 
-                if (artworksRepository->accountFile(filename))
-                {
+                if (artworksRepository->accountFile(filename)) {
                     Models::ArtworkMetadata *metadata = artItemsModel->createMetadata(filename);
-                    metadata->attachVector("dummyPath");
+
+                    if (withVector) {
+                        metadata->attachVector(vectorname);
+                    }
+
                     artItemsModel->appendMetadata(metadata);
                 }
 

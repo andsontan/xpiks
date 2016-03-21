@@ -11,7 +11,11 @@ namespace Mocks {
         ArtworksRepositoryMock() {}
 
         void publicRemoveFileAndEmitSignal() {
-             Models::ArtworksRepository::removeFileAndEmitSignal();
+            Models::ArtworksRepository::removeFileAndEmitSignal();
+        }
+
+        void publicRemoveVectorAndEmitSignal() {
+            Models::ArtworksRepository::removeVectorAndEmitSignal();
         }
     };
 }

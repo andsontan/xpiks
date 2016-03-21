@@ -74,6 +74,13 @@ namespace Models {
             m_UnavailableFiles.insert(*m_FilesSet.begin());
             emit filesUnavailable();
         }
+
+        void removeVectorAndEmitSignal() {
+            QString vector = *m_FilesSet.begin();
+            vector.replace(".jpg", ".eps");
+            m_UnavailableFiles.insert(vector);
+            emit filesUnavailable();
+        }
 #endif
 
     public slots:
