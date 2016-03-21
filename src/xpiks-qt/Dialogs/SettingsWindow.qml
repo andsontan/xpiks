@@ -382,6 +382,7 @@ ApplicationWindow {
                         CustomComboBox {
                             id: themeComboBox
                             model: Themes.names
+                            showColorSign: false
                             width: 130
                             height: 24
                             itemHeight: 28

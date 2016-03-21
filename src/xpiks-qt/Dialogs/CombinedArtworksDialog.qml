@@ -62,7 +62,7 @@ CloseRequested")
 
     Connections {
         target: combinedArtworks
-        onRequetCloseWindow: {
+        onRequestCloseWindow: {
             closePopup();
         }
     }
@@ -323,8 +323,9 @@ CloseRequested")
                 }
 
                 RowLayout {
-                    width: parent.width
-                    height: 50
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: Qt.platform.os === 'windows' ? 53 : 50
                     spacing: 0
 
                     Item {
@@ -487,8 +488,9 @@ CloseRequested")
                 }
 
                 RowLayout {
-                    width: parent.width
-                    height: 85
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: Qt.platform.os === 'windows' ? 88 : 85
                     spacing: 0
 
                     Item {
@@ -674,14 +676,17 @@ CloseRequested")
                     height: 1
                 }
 
-                RowLayout {
-                    width: parent.width
-                    height: Qt.platform.os === "windows" ? 210 : 205
-                    spacing: 0
+                Item {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: Qt.platform.os === 'windows' ? 208 : 205
 
                     Item {
+                        id: checkboxPane
+                        anchors.left: parent.left
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
                         width: 25
-                        height: parent.height
 
                         Rectangle {
                             color: Colors.inputBackgroundColor
@@ -706,8 +711,10 @@ CloseRequested")
                     }
 
                     Item {
-                        Layout.fillWidth: true
-                        height: parent.height
+                        anchors.left: checkboxPane.right
+                        anchors.right: parent.right
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
                         enabled: keywordsCheckBox.checked
 
                         Rectangle {
@@ -840,13 +847,16 @@ CloseRequested")
                                 }
                             }
 
-                            Item { height: 5 }
+                            Item { height: 3 }
 
-                            RowLayout {
-                                width: parent.width
-                                spacing:5
+                            Item {
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                height: childrenRect.height
 
                                 StyledCheckbox {
+                                    anchors.left: parent.left
+                                    anchors.top: parent.top
                                     id: appendKeywordsCheckbox
                                     text: i18.n + qsTr("Only append new keywords")
                                     labelColor: Colors.labelActiveForeground
@@ -854,89 +864,92 @@ CloseRequested")
                                     Component.onCompleted: appendKeywordsCheckbox.checked = combinedArtworks.appendKeywords
                                 }
 
-                                Item {
-                                    Layout.fillWidth: true
-                                }
+                                RowLayout {
+                                    anchors.top: parent.top
+                                    anchors.right: parent.right
+                                    anchors.rightMargin: 3
+                                    spacing: 5
 
-                                StyledText {
-                                    text: i18.n + qsTr("Fix spelling")
-                                    enabled: keywordsWrapper.keywordsModel ? keywordsWrapper.keywordsModel.hasSpellErrors : false
-                                    color: enabled ? (fixSpellingMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor) : Colors.labelActiveForeground
+                                    StyledText {
+                                        text: i18.n + qsTr("Fix spelling")
+                                        enabled: keywordsWrapper.keywordsModel ? keywordsWrapper.keywordsModel.hasSpellErrors : false
+                                        color: enabled ? (fixSpellingMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor) : Colors.labelActiveForeground
 
-                                    MouseArea {
-                                        id: fixSpellingMA
-                                        anchors.fill: parent
-                                        cursorShape: Qt.PointingHandCursor
-                                        onClicked: {
-                                            combinedArtworks.suggestCorrections()
-                                            Common.launchDialog("Dialogs/SpellCheckSuggestionsDialog.qml",
-                                                                componentParent,
-                                                                {})
-                                        }
-                                    }
-                                }
-
-                                StyledText {
-                                    text: "|"
-                                    color: Colors.inputBackgroundColor
-                                    verticalAlignment: Text.AlignVCenter
-                                }
-
-                                StyledText {
-                                    text: i18.n + qsTr("Suggest")
-                                    color: enabled ? (suggestKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor) : Colors.labelActiveForeground
-
-                                    MouseArea {
-                                        id: suggestKeywordsMA
-                                        anchors.fill: parent
-                                        cursorShape: Qt.PointingHandCursor
-                                        onClicked: {
-                                            var callbackObject = {
-                                                promoteKeywords: function(keywords) {
-                                                    combinedArtworks.pasteKeywords(keywords)
-                                                }
+                                        MouseArea {
+                                            id: fixSpellingMA
+                                            anchors.fill: parent
+                                            cursorShape: Qt.PointingHandCursor
+                                            onClicked: {
+                                                combinedArtworks.suggestCorrections()
+                                                Common.launchDialog("Dialogs/SpellCheckSuggestionsDialog.qml",
+                                                                    componentParent,
+                                                                    {})
                                             }
-
-                                            Common.launchDialog("Dialogs/KeywordsSuggestion.qml",
-                                                                componentParent,
-                                                                {callbackObject: callbackObject});
                                         }
                                     }
-                                }
 
-                                StyledText {
-                                    text: "|"
-                                    color: Colors.inputBackgroundColor
-                                    verticalAlignment: Text.AlignVCenter
-                                }
-
-                                StyledText {
-                                    text: i18.n + qsTr("Copy")
-                                    color: enabled ? (copyKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor) : Colors.labelActiveForeground
-
-                                    MouseArea {
-                                        id: copyKeywordsMA
-                                        anchors.fill: parent
-                                        cursorShape: Qt.PointingHandCursor
-                                        onClicked: clipboard.setText(combinedArtworks.getKeywordsString())
+                                    StyledText {
+                                        text: "|"
+                                        color: Colors.inputBackgroundColor
+                                        verticalAlignment: Text.AlignVCenter
                                     }
-                                }
 
-                                StyledText {
-                                    text: "|"
-                                    color: Colors.inputBackgroundColor
-                                    verticalAlignment: Text.AlignVCenter
-                                }
+                                    StyledText {
+                                        text: i18.n + qsTr("Suggest")
+                                        color: enabled ? (suggestKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor) : Colors.labelActiveForeground
 
-                                StyledText {
-                                    text: i18.n + qsTr("Clear")
-                                    color: enabled ? (clearKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor) : Colors.labelActiveForeground
+                                        MouseArea {
+                                            id: suggestKeywordsMA
+                                            anchors.fill: parent
+                                            cursorShape: Qt.PointingHandCursor
+                                            onClicked: {
+                                                var callbackObject = {
+                                                    promoteKeywords: function(keywords) {
+                                                        combinedArtworks.pasteKeywords(keywords)
+                                                    }
+                                                }
 
-                                    MouseArea {
-                                        id: clearKeywordsMA
-                                        anchors.fill: parent
-                                        cursorShape: Qt.PointingHandCursor
-                                        onClicked: clearKeywordsDialog.open()
+                                                Common.launchDialog("Dialogs/KeywordsSuggestion.qml",
+                                                                    componentParent,
+                                                                    {callbackObject: callbackObject});
+                                            }
+                                        }
+                                    }
+
+                                    StyledText {
+                                        text: "|"
+                                        color: Colors.inputBackgroundColor
+                                        verticalAlignment: Text.AlignVCenter
+                                    }
+
+                                    StyledText {
+                                        text: i18.n + qsTr("Copy")
+                                        color: enabled ? (copyKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor) : Colors.labelActiveForeground
+
+                                        MouseArea {
+                                            id: copyKeywordsMA
+                                            anchors.fill: parent
+                                            cursorShape: Qt.PointingHandCursor
+                                            onClicked: clipboard.setText(combinedArtworks.getKeywordsString())
+                                        }
+                                    }
+
+                                    StyledText {
+                                        text: "|"
+                                        color: Colors.inputBackgroundColor
+                                        verticalAlignment: Text.AlignVCenter
+                                    }
+
+                                    StyledText {
+                                        text: i18.n + qsTr("Clear")
+                                        color: enabled ? (clearKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor) : Colors.labelActiveForeground
+
+                                        MouseArea {
+                                            id: clearKeywordsMA
+                                            anchors.fill: parent
+                                            cursorShape: Qt.PointingHandCursor
+                                            onClicked: clearKeywordsDialog.open()
+                                        }
                                     }
                                 }
                             }
