@@ -29,6 +29,7 @@
 #include "artiteminfo.h"
 #include "../SpellCheck/spellcheckiteminfo.h"
 #include "../Common/defines.h"
+#include "../QMLExtensions/colorsmodel.h"
 
 namespace Models {
     CombinedArtworksModel::CombinedArtworksModel(QObject *parent) :
@@ -251,7 +252,8 @@ namespace Models {
             info = &m_SpellCheckInfo;
         }
 
-        info->createHighlighterForDescription(document->textDocument(), &m_CommonKeywordsModel);
+        QMLExtensions::ColorsModel *colorsModel = m_CommandManager->getColorsModel();
+        info->createHighlighterForDescription(document->textDocument(), colorsModel, &m_CommonKeywordsModel);
         m_CommonKeywordsModel.notifySpellCheckResults(Common::SpellCheckDescription);
     }
 
@@ -264,7 +266,8 @@ namespace Models {
             info = &m_SpellCheckInfo;
         }
 
-        info->createHighlighterForTitle(document->textDocument(), &m_CommonKeywordsModel);
+        QMLExtensions::ColorsModel *colorsModel = m_CommandManager->getColorsModel();
+        info->createHighlighterForTitle(document->textDocument(), colorsModel, &m_CommonKeywordsModel);
         m_CommonKeywordsModel.notifySpellCheckResults(Common::SpellCheckTitle);
     }
 

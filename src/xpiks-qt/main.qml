@@ -51,8 +51,11 @@ ApplicationWindow {
     onBeforeRendering: {
         if (!initializedColors) {
             initializedColors = true
-            console.debug("Initializing theme with index " + settingsModel.selectedThemeIndex)
-            Colors.initTheme(Themes.availableThemes[settingsModel.selectedThemeIndex])
+
+            Colors.registerTheme(Themes.BlackTheme);
+            Colors.registerTheme(Themes.SlateGrayTheme)
+
+            Colors.applyTheme(settingsModel.selectedThemeIndex)
         }
     }
 

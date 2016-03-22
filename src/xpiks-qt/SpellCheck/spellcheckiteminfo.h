@@ -32,6 +32,10 @@ namespace Common {
     class BasicKeywordsModel;
 }
 
+namespace QMLExtensions {
+    class ColorsModel;
+}
+
 namespace SpellCheck {
     class SpellCheckErrorsHighlighter;
 
@@ -51,8 +55,10 @@ namespace SpellCheck {
     public:
         void setDescriptionErrors(const QSet<QString> &errors);
         void setTitleErrors(const QSet<QString> &errors);
-        void createHighlighterForDescription(QTextDocument *document, Common::BasicKeywordsModel *basicKeywordsModel);
-        void createHighlighterForTitle(QTextDocument *document, Common::BasicKeywordsModel *basicKeywordsModel);
+        void createHighlighterForDescription(QTextDocument *document, QMLExtensions::ColorsModel *colorsModel,
+                                             Common::BasicKeywordsModel *basicKeywordsModel);
+        void createHighlighterForTitle(QTextDocument *document, QMLExtensions::ColorsModel *colorsModel,
+                                       Common::BasicKeywordsModel *basicKeywordsModel);
         bool hasDescriptionError(const QString &word) const { return m_DescriptionErrors.hasWrongSpelling(word); }
         bool hasTitleError(const QString &word) const { return m_TitleErrors.hasWrongSpelling(word); }
 

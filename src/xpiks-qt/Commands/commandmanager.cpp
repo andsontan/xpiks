@@ -164,6 +164,10 @@ void Commands::CommandManager::InjectDependency(Models::LanguagesModel *language
     m_LanguagesModel->setCommandManager(this);
 }
 
+void Commands::CommandManager::InjectDependency(QMLExtensions::ColorsModel *colorsModel) {
+    Q_ASSERT(colorsModel != NULL); m_ColorsModel = colorsModel;
+}
+
 Commands::ICommandResult *Commands::CommandManager::processCommand(ICommandBase *command)
 #ifndef TESTS
 const
@@ -241,6 +245,7 @@ void Commands::CommandManager::ensureDependenciesInjected() {
     Q_ASSERT(m_MetadataIOCoordinator != NULL);
     Q_ASSERT(m_PluginManager != NULL);
     Q_ASSERT(m_LanguagesModel != NULL);
+    Q_ASSERT(m_ColorsModel != NULL);
 }
 
 void Commands::CommandManager::recodePasswords(const QString &oldMasterPassword,

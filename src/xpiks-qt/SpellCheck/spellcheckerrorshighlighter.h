@@ -26,6 +26,10 @@
 #include <QSet>
 #include <QString>
 
+namespace QMLExtensions {
+    class ColorsModel;
+}
+
 namespace SpellCheck {
     class SpellCheckErrorsInfo;
 
@@ -33,13 +37,15 @@ namespace SpellCheck {
     {
         Q_OBJECT
     public:
-        SpellCheckErrorsHighlighter(QTextDocument *document, SpellCheckErrorsInfo *errorsInfo);
+        SpellCheckErrorsHighlighter(QTextDocument *document, QMLExtensions::ColorsModel *colorsModel,
+                                    SpellCheckErrorsInfo *errorsInfo);
 
     protected:
         virtual void highlightBlock(const QString &text);
 
     private:
         SpellCheckErrorsInfo *m_SpellCheckErrors;
+        QMLExtensions::ColorsModel *m_ColorsModel;
     };
 }
 

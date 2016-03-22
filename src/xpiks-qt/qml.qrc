@@ -53,7 +53,5 @@
         <file>Constants/UIConfig.js</file>
         <file>Components/SelectedIcon.qml</file>
         <file>Components/CustomComboBox.qml</file>
-        <file>Constants/qmldir</file>
-        <file>Constants/Colors.qml</file>
     </qresource>
 </RCC>

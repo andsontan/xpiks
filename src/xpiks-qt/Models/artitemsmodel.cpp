@@ -38,6 +38,7 @@
 #include "../Common/flags.h"
 #include "../Commands/combinededitcommand.h"
 #include "../Common/defines.h"
+#include "../QMLExtensions/colorsmodel.h"
 
 namespace Models {
     ArtItemsModel::ArtItemsModel(QObject *parent):
@@ -403,7 +404,8 @@ namespace Models {
         if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
             SpellCheck::SpellCheckItemInfo *info = metadata->getSpellCheckInfo();
-            info->createHighlighterForDescription(document->textDocument(), metadata);
+            QMLExtensions::ColorsModel *colorsModel = m_CommandManager->getColorsModel();
+            info->createHighlighterForDescription(document->textDocument(), colorsModel, metadata);
             metadata->notifySpellCheckResults(Common::SpellCheckDescription);
         }
     }
@@ -412,7 +414,8 @@ namespace Models {
         if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
             SpellCheck::SpellCheckItemInfo *info = metadata->getSpellCheckInfo();
-            info->createHighlighterForTitle(document->textDocument(), metadata);
+            QMLExtensions::ColorsModel *colorsModel = m_CommandManager->getColorsModel();
+            info->createHighlighterForTitle(document->textDocument(), colorsModel, metadata);
             metadata->notifySpellCheckResults(Common::SpellCheckTitle);
         }
     }

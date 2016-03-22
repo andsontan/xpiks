@@ -90,6 +90,10 @@ namespace Warnings {
     class WarningsService;
 }
 
+namespace QMLExtensions {
+    class ColorsModel;
+}
+
 namespace Commands {
     class CommandManager : public ICommandManager
     {
@@ -147,6 +151,7 @@ namespace Commands {
         void InjectDependency(Suggestion::LocalLibrary *localLibrary);
         void InjectDependency(Plugins::PluginManager *pluginManager);
         void InjectDependency(Models::LanguagesModel *languagesModel);
+        void InjectDependency(QMLExtensions::ColorsModel *colorsModel);
 
     public:
         virtual ICommandResult *processCommand(ICommandBase *command)
@@ -222,6 +227,7 @@ namespace Commands {
         virtual SpellCheck::SpellCheckerService *getSpellCheckerService() const { return m_SpellCheckerService; }
         virtual MetadataIO::BackupSaverService *getBackupSaverService() const { return m_MetadataSaverService; }
         virtual UndoRedo::UndoRedoManager *getUndoRedoManager() const { return m_UndoRedoManager; }
+        virtual QMLExtensions::ColorsModel *getColorsModel() const { return m_ColorsModel; }
 
 #ifdef INTEGRATION_TESTS
         virtual MetadataIO::MetadataIOCoordinator *getMetadataIOCoordinator() const { return m_MetadataIOCoordinator; }
@@ -255,6 +261,7 @@ namespace Commands {
         MetadataIO::MetadataIOCoordinator *m_MetadataIOCoordinator;
         Plugins::PluginManager *m_PluginManager;
         Models::LanguagesModel *m_LanguagesModel;
+        QMLExtensions::ColorsModel *m_ColorsModel;
 
         QVector<Common::IServiceBase<Warnings::IWarningsCheckable> *> m_WarningsCheckers;
         QVector<Helpers::IFileNotAvailableModel*> m_AvailabilityListeners;

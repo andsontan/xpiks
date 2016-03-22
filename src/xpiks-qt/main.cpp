@@ -53,6 +53,7 @@
 #include "Helpers/helpersqmlwrapper.h"
 #include "Encryption/secretsmanager.h"
 #include "Models/artworksrepository.h"
+#include "QMLExtensions/colorsmodel.h"
 #include "Warnings/warningsservice.h"
 #include "UndoRedo/undoredomanager.h"
 #include "Helpers/clipboardhelper.h"
@@ -215,7 +216,8 @@ int main(int argc, char *argv[]) {
 
 #endif
 
-    Models::LogsModel logsModel;
+    QMLExtensions::ColorsModel colorsModel;
+    Models::LogsModel logsModel(&colorsModel);
     logsModel.startLogging();
 
     qSetMessagePattern("%{time hh:mm:ss.zzz} %{type} T#%{threadid} %{function} - %{message}");
@@ -311,6 +313,7 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&metadataIOCoordinator);
     commandManager.InjectDependency(&pluginManager);
     commandManager.InjectDependency(&languagesModel);
+    commandManager.InjectDependency(&colorsModel);
 
     commandManager.ensureDependenciesInjected();
 
@@ -356,6 +359,7 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("warningsModel", &warningsModel);
     rootContext->setContextProperty("languagesModel", &languagesModel);
     rootContext->setContextProperty("i18", &languagesModel);
+    rootContext->setContextProperty("Colors", &colorsModel);
 
     engine.addImageProvider("global", globalProvider);
     LOG_DEBUG << "About to load main view...";

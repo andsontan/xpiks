@@ -35,9 +35,10 @@
 
 namespace Models {
 
-    LogsModel::LogsModel(QObject *parent) :
+    LogsModel::LogsModel(QMLExtensions::ColorsModel *colorsModel, QObject *parent) :
         QObject(parent),
-        m_LoggingWorker(new Helpers::LoggingWorker())
+        m_LoggingWorker(new Helpers::LoggingWorker()),
+        m_ColorsModel(colorsModel)
     {
 #ifdef WITH_LOGS
         m_WithLogs = true;
@@ -92,7 +93,7 @@ namespace Models {
     }
 
     void LogsModel::initLogHighlighting(QQuickTextDocument *document) {
-        Helpers::LogHighlighter *highlighter = new Helpers::LogHighlighter(document->textDocument());
+        Helpers::LogHighlighter *highlighter = new Helpers::LogHighlighter(m_ColorsModel, document->textDocument());
         Q_UNUSED(highlighter);
     }
 

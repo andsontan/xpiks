@@ -5,19 +5,21 @@
 #include <QString>
 #include <QTextDocument>
 
+namespace QMLExtensions {
+    class ColorsModel;
+}
+
 namespace Helpers {
     class LogHighlighter: public QSyntaxHighlighter {
         Q_OBJECT
     public:
-        LogHighlighter(QTextDocument* document = 0);
+        LogHighlighter(QMLExtensions::ColorsModel *colorsModel, QTextDocument* document = 0);
+
     protected:
         void highlightBlock(const QString &text);
 
     private:
-        //from Colors.js
-        QColor m_DestructiveColor;
-        QColor m_ArtworkModifiedColor;
-        QColor m_inputBackgroundColor;
+        QMLExtensions::ColorsModel *m_ColorsModel;
     };
 }
 #endif // LOGHIGHLIGHTER_H

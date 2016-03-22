@@ -100,6 +100,3 @@ SlateGrayTheme.itemsSourceForeground = SlateGrayTheme.inputInactiveForeground;
 
 SlateGrayTheme.destructiveColor = "#d10b0b";
 SlateGrayTheme.greenColor = "#2daf02";
-
-var availableThemes = [BlackTheme, SlateGrayTheme];
-var names = availableThemes.map(function(theme) { return theme.name; })

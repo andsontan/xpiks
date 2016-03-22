@@ -102,7 +102,8 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Suggestion/locallibraryqueryengine.cpp \
     ../../xpiks-qt/Suggestion/shutterstockqueryengine.cpp \
     spellcheckundotest.cpp \
-    ../../xpiks-qt/Suggestion/fotoliaqueryengine.cpp
+    ../../xpiks-qt/Suggestion/fotoliaqueryengine.cpp \
+    ../../xpiks-qt/QMLExtensions/colorsmodel.cpp
 
 RESOURCES +=
 
@@ -230,7 +231,8 @@ HEADERS += \
     ../../xpiks-qt/Suggestion/shutterstockqueryengine.h \
     ../../xpiks-qt/Suggestion/suggestionqueryenginebase.h \
     spellcheckundotest.h \
-    ../../xpiks-qt/Suggestion/fotoliaqueryengine.h
+    ../../xpiks-qt/Suggestion/fotoliaqueryengine.h \
+    ../../xpiks-qt/QMLExtensions/colorsmodel.h
 
 INCLUDEPATH += ../../tiny-aes
 

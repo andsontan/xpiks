@@ -80,7 +80,7 @@ namespace Models {
         void forceUnselectAllItems() const;
         void updateAllItems();
         virtual void removeUnavailableItems();
-        void  generateAboutToBeRemoved();
+        void generateAboutToBeRemoved();
 
     public:
         /*Q_INVOKABLE*/ void removeArtworksDirectory(int index);
