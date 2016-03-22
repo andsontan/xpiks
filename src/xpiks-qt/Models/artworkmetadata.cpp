@@ -74,8 +74,8 @@ namespace Models {
             anythingModified = anythingModified || (appendedCount > 0);
         }
 
-        Common::UnsetFlag(m_MetadataFlags, FlagIsModified);
-        Common::SetFlag(m_MetadataFlags, FlagIsInitialized);
+        setIsModifiedFlag(false);
+        setIsInitializedFlag(true);
 
         return anythingModified;
     }
@@ -96,13 +96,13 @@ namespace Models {
 
     void ArtworkMetadata::attachVector(const QString &vectorFilepath) {
         LOG_INFO << "Attaching vector file:" << vectorFilepath << "to file" << getFilepath();
-        Common::SetFlag(m_MetadataFlags, FlagHasVectorAttached);
+        setHasVectorAttachedFlag(true);
         m_AttachedVector = vectorFilepath;
     }
 
     void ArtworkMetadata::detachVector() {
         LOG_INFO << "#";
-        Common::UnsetFlag(m_MetadataFlags, FlagHasVectorAttached);
+        setHasVectorAttachedFlag(false);
         m_AttachedVector.clear();
     }
 
@@ -151,8 +151,8 @@ namespace Models {
     }
 
     void ArtworkMetadata::markModified() {
-        if (!Common::HasFlag(m_MetadataFlags, FlagIsModified)) {
-            Common::SetFlag(m_MetadataFlags, FlagIsModified);
+        if (!getIsModifiedFlag()) {
+            setIsModifiedFlag(true);
             emit modifiedChanged(true);
         }
     }

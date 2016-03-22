@@ -54,6 +54,18 @@ namespace Models {
             FlagIsUnavailable = 1 << 4
         };
 
+        inline bool getIsModifiedFlag() const { return Common::HasFlag(m_MetadataFlags, FlagIsModified); }
+        inline bool getIsSelectedFlag() const { return Common::HasFlag(m_MetadataFlags, FlagsIsSelected); }
+        inline bool getIsUnavailableFlag() const { return Common::HasFlag(m_MetadataFlags, FlagIsUnavailable); }
+        inline bool getIsInitializedFlag() const { return Common::HasFlag(m_MetadataFlags, FlagIsInitialized); }
+        inline bool getHasVectorAttachedFlag() const { return Common::HasFlag(m_MetadataFlags, FlagHasVectorAttached); }
+
+        inline void setIsModifiedFlag(bool value) { Common::ApplyFlag(m_MetadataFlags, value, FlagIsModified); }
+        inline void setIsSelectedFlag(bool value) { Common::ApplyFlag(m_MetadataFlags, value, FlagsIsSelected); }
+        inline void setIsUnavailableFlag(bool value) { Common::ApplyFlag(m_MetadataFlags, value, FlagIsUnavailable); }
+        inline void setIsInitializedFlag(bool value) { Common::ApplyFlag(m_MetadataFlags, value, FlagIsInitialized); }
+        inline void setHasVectorAttachedFlag(bool value) { Common::ApplyFlag(m_MetadataFlags, value, FlagHasVectorAttached); }
+
     public:
         bool initialize(const QString &title,
                         const QString &description, const QStringList &rawKeywords, bool overwrite = true);
@@ -64,11 +76,11 @@ namespace Models {
 
     public:
         bool isInDirectory(const QString &directoryAbsolutePath) const;
-        bool isModified() const { return Common::HasFlag(m_MetadataFlags, FlagIsModified); }
-        bool isSelected() const { return Common::HasFlag(m_MetadataFlags, FlagsIsSelected); }
-        bool isUnavailable() const { return Common::HasFlag(m_MetadataFlags, FlagIsUnavailable); }
-        bool isInitialized() const { return Common::HasFlag(m_MetadataFlags, FlagIsInitialized); }
-        bool hasVectorAttached() const { return Common::HasFlag(m_MetadataFlags, FlagHasVectorAttached); }
+        bool isModified() const { return getIsModifiedFlag(); }
+        bool isSelected() const { return getIsSelectedFlag(); }
+        bool isUnavailable() const { return getIsUnavailableFlag(); }
+        bool isInitialized() const { return getIsInitializedFlag(); }
+        bool hasVectorAttached() const { return getHasVectorAttachedFlag(); }
         virtual QSize getImageSize() const { return m_ImageSize; }
         virtual qint64 getFileSize() const { return m_FileSize; }
         virtual qint64 getItemID() const { return m_ID; }
@@ -95,9 +107,9 @@ namespace Models {
         }
 
         bool setIsSelected(bool value) {
-            bool result = Common::HasFlag(m_MetadataFlags, FlagsIsSelected) != value;
+            bool result = getIsSelectedFlag() != value;
             if (result) {
-                Common::ApplyFlag(m_MetadataFlags, value, FlagsIsSelected);
+                setIsSelectedFlag(value);
                 //emit fileSelectedChanged(m_ArtworkFilepath, value);
                 emit selectedChanged(value);
             }
@@ -105,11 +117,11 @@ namespace Models {
             return result;
         }
 
-        void invertSelection() { setIsSelected(!isSelected()); }
+        void invertSelection() { setIsSelected(!getIsSelectedFlag()); }
 
         void resetSelected() {
-            if (Common::HasFlag(m_MetadataFlags, FlagsIsSelected)) {
-                Common::UnsetFlag(m_MetadataFlags, FlagsIsSelected);
+            if (getIsSelectedFlag()) {
+                setIsSelectedFlag(false);
                 //emit fileSelectedChanged(m_ArtworkFilepath, false);
             }
         }
@@ -125,9 +137,9 @@ namespace Models {
 
     public:
         void markModified();
-        void setModified() { Common::SetFlag(m_MetadataFlags, FlagIsModified); }
-        void setUnavailable() { Common::SetFlag(m_MetadataFlags, FlagIsUnavailable); }
-        void resetModified() { Common::UnsetFlag(m_MetadataFlags, FlagIsModified); }
+        void setModified() { setIsModifiedFlag(true); }
+        void setUnavailable() { setIsUnavailableFlag(true); }
+        void resetModified() { setIsModifiedFlag(false); }
         void requestFocus(int directionSign) { emit focusRequested(directionSign); }
 
     signals:
