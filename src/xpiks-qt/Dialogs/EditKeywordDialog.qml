@@ -34,12 +34,15 @@ Item {
     property var callbackObject
     property string previousKeyword: ''
     property var keywordsModel
+    property bool anyError: false
     anchors.fill: parent
 
     signal dialogDestruction();
     Component.onDestruction: dialogDestruction();
 
     function submitKeyword() {
+        if (anyError) { return; }
+
         var keyword = keywordInput.text
         if (helpersWrapper.isKeywordValid(keyword)) {
             callbackObject.onSuccess(keyword)
@@ -133,7 +136,7 @@ Item {
                 Rectangle {
                     color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
                     border.width: keywordInput.activeFocus ? 1 : 0
-                    border.color: Colors.artworkActiveColor
+                    border.color: editKeywordComponent.anyError ? Colors.artworkModifiedColor : Colors.artworkActiveColor
                     width: 200
                     height: 30
                     clip: true
@@ -161,6 +164,8 @@ Item {
                                 event.accepted = true
                             }
                         }
+
+                        onTextChanged: editKeywordComponent.anyError = !keywordsModel.hasKeyword(text) && (previousKeyword !== text)
                     }
                 }
 
@@ -172,6 +177,7 @@ Item {
                     StyledButton {
                         text: i18.n + qsTr("Save")
                         width: 90
+                        enabled: !editKeywordComponent.anyError
                         onClicked: submitKeyword()
                     }
 
