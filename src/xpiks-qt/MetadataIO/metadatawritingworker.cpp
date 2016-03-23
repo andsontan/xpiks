@@ -149,6 +149,9 @@ namespace MetadataIO {
 
                 QString exiftoolPath = m_SettingsModel->getExifToolPath();
                 QStringList arguments;
+#ifdef Q_OS_WIN
+                arguments << "-charset" << "FileName=UTF8";
+#endif
                 arguments << "-IPTC:CodedCharacterSet=UTF8" << "-@" << argumentsFile.fileName();
 
                 LOG_DEBUG << "Starting exiftool process:" << exiftoolPath;
@@ -202,9 +205,9 @@ namespace MetadataIO {
         QStringList arguments;
         arguments.reserve(m_ItemsToWrite.length() + 5);
 
-#ifdef Q_OS_WIN
-        arguments << "-charset" << "FileName=UTF8";
-#endif
+//#ifdef Q_OS_WIN
+//        arguments << "-charset" << "FileName=UTF8";
+//#endif
         // ignore minor warnings
         arguments << "-m" << "-j=" + jsonFilePath;
 
