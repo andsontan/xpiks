@@ -386,6 +386,13 @@ namespace Models {
         return metadata->getFilepath();
     }
 
+    QString ArtItemsModel::getArtworkDateTaken(int metadataIndex) const {
+        if (metadataIndex < 0 || metadataIndex >= m_ArtworkList.length()) { return QLatin1String(""); }
+
+        ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
+        return metadata->getDateTaken();
+    }
+
     QString ArtItemsModel::getAttachedVectorPath(int metadataIndex) const {
         if (metadataIndex < 0 || metadataIndex >= m_ArtworkList.length()) { return QLatin1String(""); }
 

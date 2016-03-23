@@ -57,6 +57,7 @@ namespace Models {
         bool isModified() const { return m_IsModified; }
         bool getIsSelected() const { return m_IsSelected; }
         bool getIsUnavailable() const { return m_IsUnavailable; }
+        const QString &getDateTaken() const { return m_DateTaken; }
         bool isInitialized() const { return m_IsInitialized; }
         bool hasVectorAttached() const { return m_HasAttachedVector; }
         virtual QSize getImageSize() const { return m_ImageSize; }
@@ -106,6 +107,7 @@ namespace Models {
 
         void setImageSize(const QSize &size) { m_ImageSize = size; }
         void setFileSize(qint64 size) { m_FileSize = size; }
+        void setDateTaken(const QString &date) { m_DateTaken = date; }
 
     public:
         bool removeKeywordAt(int index);
@@ -133,6 +135,7 @@ namespace Models {
          QString m_ArtworkFilepath;
          QString m_AttachedVector;
          qint64 m_ID;
+         QString m_DateTaken;
          volatile bool m_IsModified;
          volatile bool m_IsSelected;
          volatile bool m_IsInitialized;

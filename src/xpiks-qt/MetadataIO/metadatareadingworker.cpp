@@ -49,6 +49,7 @@
 #define CAPTIONABSTRACT QLatin1String("Caption-Abstract")
 #define KEYWORDS QLatin1String("Keywords")
 #define SUBJECT QLatin1String("Subject")
+#define DATETAKEN QLatin1String("DateTimeOriginal")
 
 namespace MetadataIO {
     void parseJsonKeywords(const QJsonArray &array, ImportDataResult &result) {
@@ -95,6 +96,10 @@ namespace MetadataIO {
             result.Description = object.value(CAPTIONABSTRACT).toString();
         } else if (object.contains(IMAGEDESCRIPTION)) {
             result.Description = object.value(IMAGEDESCRIPTION).toString();
+        }
+
+        if (object.contains(DATETAKEN)) {
+            result.DateTaken = object.value(DATETAKEN).toString();
         }
 
         bool keywordsSet = false;
@@ -241,7 +246,7 @@ namespace MetadataIO {
         arguments << "-ObjectName" << "-Title";
         arguments << "-ImageDescription" << "-Description" << "-Caption-Abstract";
         arguments << "-Keywords" << "-Subject";
-
+        arguments << "-DateTimeOriginal";
         int size = m_ItemsToRead.length();
         for (int i = 0; i < size; ++i) {
             Models::ArtworkMetadata *metadata = m_ItemsToRead.at(i);

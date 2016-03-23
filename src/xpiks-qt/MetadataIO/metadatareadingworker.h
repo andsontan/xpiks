@@ -48,6 +48,7 @@ namespace MetadataIO {
         QSize ImageSize;
         qint64 FileSize;
         QHash<QString, QString> BackupDict;
+        QString DateTaken;
     };
 
     class MetadataReadingWorker : public QObject

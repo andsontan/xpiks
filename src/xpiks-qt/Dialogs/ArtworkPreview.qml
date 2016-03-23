@@ -185,6 +185,12 @@ Item {
                         text: '*'
                         Component.onCompleted: text = artItemsModel.retrieveFileSize(artworkIndex)
                     }
+                    StyledText {
+                        id: dateText
+                        color: Colors.selectedArtworkBackground
+                        text: '*'
+                        Component.onCompleted: text = artItemsModel.getArtworkDateTaken(artworkIndex)
+                    }
 
                     Item {
                         Layout.fillWidth: true
