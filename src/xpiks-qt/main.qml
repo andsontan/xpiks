@@ -1306,6 +1306,7 @@ ApplicationWindow {
                                     onFocusRequested: {
                                         if (directionSign === +1) {
                                             descriptionTextInput.forceActiveFocus()
+                                            descriptionTextInput.cursorPosition = descriptionTextInput.text.length
                                         } else {
                                             flv.activateEdit()
                                         }
@@ -1505,8 +1506,7 @@ ApplicationWindow {
                                                 id: descriptionRect
                                                 height: 30
                                                 anchors.left: parent.left
-                                                anchors.right: titleRect.left
-                                                anchors.rightMargin: columnLayout.isWideEnough ? 20 : 0
+                                                width: columnLayout.isWideEnough ? (columnLayout.width / 2 - 10) : columnLayout.width
                                                 anchors.top: descriptionText.bottom
                                                 anchors.topMargin: 3
                                                 color: rowWrapper.isHighlighted ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
@@ -1547,6 +1547,7 @@ ApplicationWindow {
                                                         Keys.onTabPressed: {
                                                             if (columnLayout.isWideEnough) {
                                                                 titleTextInput.forceActiveFocus()
+                                                                titleTextInput.cursorPosition = titleTextInput.text.length
                                                             } else {
                                                                 flv.activateEdit()
                                                             }
@@ -1594,8 +1595,10 @@ ApplicationWindow {
                                             Rectangle {
                                                 id: titleRect
                                                 height: 30
-                                                width: columnLayout.isWideEnough ? ((columnLayout.width / 2) - 10 ): 0
                                                 visible: columnLayout.isWideEnough
+                                                enabled: columnLayout.isWideEnough
+                                                anchors.left: columnLayout.isWideEnough ? descriptionRect.right : undefined
+                                                anchors.leftMargin: 20
                                                 anchors.right: parent.right
                                                 anchors.top: descriptionText.bottom
                                                 anchors.topMargin: 3
@@ -1633,10 +1636,14 @@ ApplicationWindow {
                                                         focus: true
                                                         isActive: rowWrapper.isHighlighted
                                                         onTextChanged: model.edittitle = text
-                                                        KeyNavigation.backtab: descriptionTextInput
 
                                                         Keys.onTabPressed: {
                                                             flv.activateEdit()
+                                                        }
+
+                                                        Keys.onBacktabPressed: {
+                                                            descriptionTextInput.forceActiveFocus()
+                                                            descriptionTextInput.cursorPosition = descriptionTextInput.text.length
                                                         }
 
                                                         onActiveFocusChanged: {
