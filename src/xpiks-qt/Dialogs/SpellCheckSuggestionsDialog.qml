@@ -148,7 +148,7 @@ Item {
                             delegate: Rectangle {
                                 id: suggestionsWrapper
                                 property int delegateIndex: index
-                                color: Colors.itemsSourceBackground
+                                color: Colors.defaultDarkColor
                                 width: parent.width - 10
                                 height: suggestionsListRect.height
 
@@ -182,6 +182,14 @@ Item {
                                             elide: Text.ElideMiddle
                                         }
                                     }
+                                }
+
+                                Rectangle {
+                                    anchors.left: wordsColumn.right
+                                    anchors.bottom: parent.bottom
+                                    anchors.top: parent.top
+                                    width: 1
+                                    color: Colors.defaultControlColor
                                 }
 
                                 Rectangle {

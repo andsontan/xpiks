@@ -750,10 +750,9 @@ ApplicationWindow {
                                     Layout.fillWidth: true
                                     anchors.verticalCenter: parent.verticalCenter
                                     height: 31
-                                    color: Colors.itemsSourceForeground
+                                    color: Colors.inputForegroundColor
                                     text: path + " (" + usedimagescount + ")"
                                     elide: Text.ElideMiddle
-                                    font.bold: true
                                 }
 
                                 CloseIcon {
@@ -761,6 +760,7 @@ ApplicationWindow {
                                     height: 14
                                     anchors.verticalCenter: parent.verticalCenter
                                     isActive: false
+                                    crossOpacity: 1
 
                                     onItemClicked: {
                                         if (mustUseConfirmation()) {
