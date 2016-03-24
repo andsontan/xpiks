@@ -18,6 +18,7 @@
 #include "../../xpiks-qt/Helpers/helpersqmlwrapper.h"
 #include "../../xpiks-qt/Encryption/secretsmanager.h"
 #include "../../xpiks-qt/Models/artworksrepository.h"
+#include "../../xpiks-qt/QMLExtensions/colorsmodel.h"
 #include "../../xpiks-qt/Warnings/warningsservice.h"
 #include "../../xpiks-qt/UndoRedo/undoredomanager.h"
 #include "../../xpiks-qt/Helpers/clipboardhelper.h"
@@ -79,7 +80,8 @@ int main(int argc, char *argv[]) {
         std::cerr << "AppDataPath is empty!";
     }
 
-    Models::LogsModel logsModel;
+    QMLExtensions::ColorsModel colorsModel;
+    Models::LogsModel logsModel(&colorsModel);
     logsModel.startLogging();
 
     localLibrary.loadLibraryAsync();
@@ -138,6 +140,7 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&metadataIOCoordinator);
     commandManager.InjectDependency(&pluginManager);
     commandManager.InjectDependency(&languagesModel);
+    commandManager.InjectDependency(&colorsModel);
 
     commandManager.ensureDependenciesInjected();
 
@@ -161,9 +164,10 @@ int main(int argc, char *argv[]) {
     integrationTests.append(new SpellCheckUndoTest(&commandManager));
 
     foreach (IntegrationTestBase *test, integrationTests) {
+        qDebug("---------------------------------------------------------");
+        qInfo("Running test: %s", test->testName().toStdString().c_str());
+
         try {
-            qDebug("---------------------------------------------------------");
-            qInfo("Running test: %s", test->testName().toStdString().c_str());
             test->setup();
             int testResult = test->doTest();
             test->teardown();

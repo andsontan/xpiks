@@ -10,6 +10,7 @@ private slots:
     void removeArtworksSignals();
     void removeArtworksNumberItems();
     void removeArtworksAllItems();
+    void removeVectorSmokeTest();
 };
 
 #endif // REMOVEFILESFS_TESTS_H

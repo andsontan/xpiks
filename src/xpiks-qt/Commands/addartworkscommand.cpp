@@ -32,6 +32,7 @@
 #include "../Helpers/filenameshelpers.h"
 
 int findAndAttachVectors(const QVector<Models::ArtworkMetadata*> &artworksList, QVector<int> &modifiedIndices) {
+    LOG_DEBUG << "#";
     int attachedCount = 0;
     int size = artworksList.length();
     modifiedIndices.reserve(size);
@@ -76,6 +77,7 @@ Commands::CommandResult *Commands::AddArtworksCommand::execute(const ICommandMan
 
     if (newFilesCount > 0) {
         LOG_INFO << newFilesCount << "new files found";
+        LOG_INFO << "Current files count is" << artItemsModel->getArtworksCount();
         artItemsModel->beginAccountingFiles(newFilesCount);
 
         int count = m_FilePathes.count();
@@ -84,16 +86,19 @@ Commands::CommandResult *Commands::AddArtworksCommand::execute(const ICommandMan
         for (int i = 0; i < count; ++i) {
             const QString &filename = m_FilePathes[i];
 
-            if (artworksRepository->accountFile(filename))
-            {
+            if (artworksRepository->accountFile(filename)) {
                 Models::ArtworkMetadata *metadata = artItemsModel->createMetadata(filename);
                 commandManager->connectArtworkSignals(metadata);
 
                 artItemsModel->appendMetadata(metadata);
                 artworksToImport.append(metadata);
 
+                LOG_INFO << "Added file:" << filename;
+
                 const QString &dirPath = QFileInfo(filename).absolutePath();
                 commandManager->addToRecentDirectories(dirPath);
+            } else {
+                LOG_INFO << "Rejected file:" << filename;
             }
         }
 

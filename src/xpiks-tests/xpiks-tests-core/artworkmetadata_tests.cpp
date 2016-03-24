@@ -147,7 +147,7 @@ void ArtworkMetadataTests::freshObjectTest() {
     QCOMPARE(metadata.isTitleEmpty(), true);
     QCOMPARE(metadata.isModified(), false);
     QCOMPARE(metadata.isEmpty(), true);
-    QCOMPARE(metadata.getIsSelected(), false);
+    QCOMPARE(metadata.isSelected(), false);
 }
 
 void ArtworkMetadataTests::markModifiedShouldEmitSignalTest() {

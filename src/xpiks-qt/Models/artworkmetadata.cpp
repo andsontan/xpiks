@@ -36,11 +36,7 @@ namespace Models {
         Common::BasicKeywordsModel(),
         m_ArtworkFilepath(filepath),
         m_ID(ID),
-        m_IsModified(false),
-        m_IsSelected(false),
-        m_IsInitialized(false),
-        m_HasAttachedVector(false),
-        m_IsUnavailable(false)
+        m_MetadataFlags(0)
     {
         setSpellCheckInfo(new SpellCheck::SpellCheckItemInfo());
     }
@@ -78,8 +74,8 @@ namespace Models {
             anythingModified = anythingModified || (appendedCount > 0);
         }
 
-        m_IsModified = false;
-        m_IsInitialized = true;
+        setIsModifiedFlag(false);
+        setIsInitializedFlag(true);
 
         return anythingModified;
     }
@@ -99,12 +95,14 @@ namespace Models {
     }
 
     void ArtworkMetadata::attachVector(const QString &vectorFilepath) {
-        m_HasAttachedVector = true;
+        LOG_INFO << "Attaching vector file:" << vectorFilepath << "to file" << getFilepath();
+        setHasVectorAttachedFlag(true);
         m_AttachedVector = vectorFilepath;
     }
 
     void ArtworkMetadata::detachVector() {
-        m_HasAttachedVector = false;
+        LOG_INFO << "#";
+        setHasVectorAttachedFlag(false);
         m_AttachedVector.clear();
     }
 
@@ -153,9 +151,9 @@ namespace Models {
     }
 
     void ArtworkMetadata::markModified() {
-        if (!m_IsModified) {
-            m_IsModified = true;
-            emit modifiedChanged(m_IsModified);
+        if (!getIsModifiedFlag()) {
+            setIsModifiedFlag(true);
+            emit modifiedChanged(true);
         }
     }
 }

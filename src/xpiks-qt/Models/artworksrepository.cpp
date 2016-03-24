@@ -28,6 +28,18 @@
 #include "../Helpers/indiceshelper.h"
 
 namespace Models {
+    ArtworksRepository::ArtworksRepository(QObject *parent) :
+        AbstractListModel(parent),
+        m_LastUnavailableFilesCount(0)
+    {
+        QObject::connect(&m_FilesWatcher, SIGNAL(fileChanged(const QString &)),
+                     this, SLOT(checkFileUnavailable(const QString &)));
+
+        m_Timer.setInterval(4000); //4 sec
+        m_Timer.setSingleShot(true); //single shot
+        QObject::connect(&m_Timer, SIGNAL(timeout()), this, SLOT(onAvailabilityTimer()));
+    }
+
     void ArtworksRepository::updateCountsForExistingDirectories() {
         emit dataChanged(index(0), index(rowCount() - 1), QVector<int>() << UsedImagesCountRole << IsSelectedRole);
     }
@@ -235,11 +247,13 @@ namespace Models {
         return exists;
     }
 
-    void ArtworksRepository::checkFileUnavailable(const QString & path) {
+    void ArtworksRepository::checkFileUnavailable(const QString &path) {
         QFileInfo fi(path);
         if (!fi.exists()) {
+            LOG_INFO << "File become unavailable:" << path;
             m_UnavailableFiles.insert(fi.absoluteFilePath());
             if (!m_Timer.isActive()) {
+                LOG_DEBUG << "Starting availability timer...";
                 m_Timer.start();
             }
         }
@@ -247,9 +261,10 @@ namespace Models {
 
     void ArtworksRepository::onAvailabilityTimer() {
         int currentUnavailableSize = m_UnavailableFiles.size();
+        LOG_DEBUG << "Current:" << currentUnavailableSize << "Last:" << m_LastUnavailableFilesCount;
         if ( currentUnavailableSize > m_LastUnavailableFilesCount ) {
-            emit filesUnavailable();
             m_LastUnavailableFilesCount = currentUnavailableSize;
+            emit filesUnavailable();
         }
     }
 }

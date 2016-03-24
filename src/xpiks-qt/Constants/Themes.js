@@ -98,8 +98,5 @@ SlateGrayTheme.itemsSourceBackground = SlateGrayTheme.defaultDarkColor;
 SlateGrayTheme.itemsSourceSelected = SlateGrayTheme.selectedImageBackground;
 SlateGrayTheme.itemsSourceForeground = SlateGrayTheme.inputInactiveForeground;
 
-SlateGrayTheme.destructiveColor = "#d10b0b";
+SlateGrayTheme.destructiveColor = "#A81A1A";
 SlateGrayTheme.greenColor = "#2daf02";
-
-var availableThemes = [BlackTheme, SlateGrayTheme];
-var names = availableThemes.map(function(theme) { return theme.name; })

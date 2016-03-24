@@ -181,8 +181,22 @@ namespace MetadataIO {
 
             QString exiftoolPath = m_SettingsModel->getExifToolPath();
             QStringList arguments;
-            arguments << "-@" << argumentsFile.fileName();
+#ifdef Q_OS_WIN
+            // TODO: FIXME: dirty hack for Windows and UTF8-encoded paths
+            QThread::sleep(1);
+            arguments << "-charset" << "FileName=UTF8";
 
+            /*
+            QString exiftoolCommand = QString("\"\"%1\" -charset filename=UTF8 -@ \"%2\"\"").arg(exiftoolPath).arg(tempFilename);
+            LOG_DEBUG << "Windows command is:" << exiftoolCommand;
+            m_ExiftoolProcess->setTextModeEnabled(false);
+            m_ExiftoolProcess->setProgram("cmd.exe");
+            m_ExiftoolProcess->setArguments(QStringList() << "/U" << "/c");
+            m_ExiftoolProcess->setNativeArguments(exiftoolCommand);
+            m_ExiftoolProcess->start();
+            */
+#endif
+            arguments << "-@" << argumentsFile.fileName();
             LOG_DEBUG << "Starting exiftool process:" << exiftoolPath;
             m_ExiftoolProcess->start(exiftoolPath, arguments);
 
@@ -199,12 +213,8 @@ namespace MetadataIO {
             LOG_INFO << "Exiftool exitcode =" << exitCode << "exitstatus =" << exitStatus;
             LOG_DEBUG << "Temporary file:" << argumentsFile.fileName();
 
-            if (success) {
-                QByteArray stdoutByteArray = m_ExiftoolProcess->readAllStandardOutput();
-                parseExiftoolOutput(stdoutByteArray);
-            } else {
-                LOG_WARNING << "Exiftool error string:" << m_ExiftoolProcess->errorString();
-            }
+            QByteArray stdoutByteArray = m_ExiftoolProcess->readAllStandardOutput();
+            parseExiftoolOutput(stdoutByteArray);
 
             if (m_SettingsModel->getSaveBackups()) {
                 readBackupsAndSizes(success);
@@ -245,9 +255,12 @@ namespace MetadataIO {
         QStringList arguments;
         arguments.reserve(m_ItemsToRead.length() + 10);
 
+        /*
+         * Related to the hack in windows for UTF8-encoded paths
 #ifdef Q_OS_WIN
         arguments << "-charset" << "FileName=UTF8";
 #endif
+*/
         arguments << "-json" << "-ignoreMinorErrors" << "-e";
         arguments << "-ObjectName" << "-Title";
         arguments << "-ImageDescription" << "-Description" << "-Caption-Abstract";
@@ -280,10 +293,11 @@ namespace MetadataIO {
                     Q_ASSERT(!m_ImportResult.contains(result.FilePath));
 
                     m_ImportResult.insert(result.FilePath, result);
+                    LOG_DEBUG << "Parsed file:" << result.FilePath;
                 }
             }
         } else {
-            LOG_WARNING << "Exiftool Json Error: Main element is not array";
+            LOG_WARNING << "Exiftool Output Parsing Error";
         }
     }
 

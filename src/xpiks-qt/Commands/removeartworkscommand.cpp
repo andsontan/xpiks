@@ -58,7 +58,7 @@ namespace Commands {
                 if (metadata != NULL) {
                     removedItemsIndices.append(i);
 
-                    if (!metadata->getIsUnavailable()) {
+                    if (!metadata->isUnavailable()) {
                         const QString &filepath = metadata->getFilepath();
                         removedItemsFilepathes.append(filepath);
 

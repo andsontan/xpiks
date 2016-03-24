@@ -81,7 +81,8 @@ SOURCES += main.cpp \
     QMLExtensions/triangleelement.cpp \
     Suggestion/shutterstockqueryengine.cpp \
     Suggestion/locallibraryqueryengine.cpp \
-    Suggestion/fotoliaqueryengine.cpp
+    Suggestion/fotoliaqueryengine.cpp \
+    QMLExtensions/colorsmodel.cpp
 
 RESOURCES += qml.qrc
 
@@ -215,7 +216,8 @@ HEADERS += \
     Suggestion/locallibraryqueryengine.h \
     Suggestion/suggestionqueryenginebase.h \
     Helpers/ifilenotavailablemodel.h \
-    Suggestion/fotoliaqueryengine.h
+    Suggestion/fotoliaqueryengine.h \
+    QMLExtensions/colorsmodel.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
@@ -269,7 +271,6 @@ DISTFILES += \
     Constants/UIConfig.js \
     Components/SelectedIcon.qml \
     Components/CustomComboBox.qml \
-    Constants/Colors.qml \
     Constants/Themes.js
 
 lupdate_only {

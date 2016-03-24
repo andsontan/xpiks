@@ -73,12 +73,15 @@ namespace MetadataIO {
     }
 
     void MetadataIOCoordinator::readingWorkerFinished(bool success) {
-        LOG_INFO << success;
+        LOG_INFO << "Success:" << success;
+        setHasErrors(!success);
+
         if (m_CanProcessResults) {
             readingFinishedHandler(m_IgnoreBackupsAtImport);
+        } else {
+            LOG_INFO << "Can't process results. Waiting for user interaction...";
         }
 
-        setHasErrors(!success);
         m_IsImportInProgress = false;
     }
 
@@ -230,7 +233,10 @@ namespace MetadataIO {
             LOG_DEBUG << "Skipped restoring the backups";
         }
 
-        m_CommandManager->addToLibrary(itemsToRead);
+        if (!getHasErrors()) {
+            m_CommandManager->addToLibrary(itemsToRead);
+        }
+
         m_CommandManager->updateArtworks(rangesToUpdate);
         m_CommandManager->submitForSpellCheck(itemsToRead);
         m_CommandManager->submitForWarningsCheck(itemsToRead);

@@ -37,17 +37,7 @@ namespace Models {
         Q_OBJECT
         Q_PROPERTY(int artworksSourcesCount READ getArtworksSourcesCount NOTIFY artworksSourcesCountChanged)
     public:
-        ArtworksRepository(QObject *parent = 0) :
-            AbstractListModel(parent),
-            m_LastUnavailableFilesCount(0)
-        {
-            QObject::connect(&m_FilesWatcher, SIGNAL(fileChanged(const QString &)),
-                         this, SLOT(checkFileUnavailable(const QString &)));
-
-            m_Timer.setInterval(4000); //4 sec
-            m_Timer.setSingleShot(true); //single shot
-            QObject::connect(&m_Timer, SIGNAL(timeout()), this, SLOT(onAvailabilityTimer()));
-        }
+        ArtworksRepository(QObject *parent = 0);
 
         virtual ~ArtworksRepository() {}
 
@@ -82,6 +72,13 @@ namespace Models {
     public:
         void removeFileAndEmitSignal() {
             m_UnavailableFiles.insert(*m_FilesSet.begin());
+            emit filesUnavailable();
+        }
+
+        void removeVectorAndEmitSignal() {
+            QString vector = *m_FilesSet.begin();
+            vector.replace(".jpg", ".eps");
+            m_UnavailableFiles.insert(vector);
             emit filesUnavailable();
         }
 #endif

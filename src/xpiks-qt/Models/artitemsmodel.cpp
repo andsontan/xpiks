@@ -38,6 +38,7 @@
 #include "../Common/flags.h"
 #include "../Commands/combinededitcommand.h"
 #include "../Common/defines.h"
+#include "../QMLExtensions/colorsmodel.h"
 
 namespace Models {
     ArtItemsModel::ArtItemsModel(QObject *parent):
@@ -315,7 +316,7 @@ namespace Models {
         for (int i = 0; i < count; ++i) {
             int index = selectedIndices.at(i);
             ArtworkMetadata *metadata = getArtwork(index);
-            if (metadata != NULL && metadata->getIsSelected()) {
+            if (metadata != NULL && metadata->isSelected()) {
                 if (metadata->isModified() || overwriteAll) {
                     modifiedSelectedArtworks.append(metadata);
                 }
@@ -410,7 +411,8 @@ namespace Models {
         if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
             SpellCheck::SpellCheckItemInfo *info = metadata->getSpellCheckInfo();
-            info->createHighlighterForDescription(document->textDocument(), metadata);
+            QMLExtensions::ColorsModel *colorsModel = m_CommandManager->getColorsModel();
+            info->createHighlighterForDescription(document->textDocument(), colorsModel, metadata);
             metadata->notifySpellCheckResults(Common::SpellCheckDescription);
         }
     }
@@ -419,7 +421,8 @@ namespace Models {
         if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
             SpellCheck::SpellCheckItemInfo *info = metadata->getSpellCheckInfo();
-            info->createHighlighterForTitle(document->textDocument(), metadata);
+            QMLExtensions::ColorsModel *colorsModel = m_CommandManager->getColorsModel();
+            info->createHighlighterForTitle(document->textDocument(), colorsModel, metadata);
             metadata->notifySpellCheckResults(Common::SpellCheckTitle);
         }
     }
@@ -495,7 +498,7 @@ namespace Models {
         case IsModifiedRole:
             return metadata->isModified();
         case IsSelectedRole:
-            return metadata->getIsSelected();
+            return metadata->isSelected();
         case KeywordsCountRole:
             return metadata->getKeywordsCount();
         case HasVectorAttachedRole:
@@ -821,9 +824,11 @@ namespace Models {
         ArtworksRepository *artworkRepository = m_CommandManager->getArtworksRepository();
         artworkRepository->removeFile(metadata->getFilepath(), metadata->getDirectory());
 
-        if (metadata->getIsSelected()) {
+        if (metadata->isSelected()) {
             emit selectedArtworkRemoved();
         }
+
+        LOG_INFO << "File removed:" << metadata->getFilepath();
 
         if (metadata->release()) {
             delete metadata;
@@ -851,7 +856,7 @@ namespace Models {
         int count = m_ArtworkList.length();
         indices.reserve(count / 3);
         for (int i = 0; i < count; ++i) {
-            if (m_ArtworkList.at(i)->getIsSelected()) {
+            if (m_ArtworkList.at(i)->isSelected()) {
                 indices.append(i);
             }
         }
@@ -867,15 +872,29 @@ namespace Models {
         Models::ArtworksRepository *artworksRepository = m_CommandManager->getArtworksRepository();
         int count = m_ArtworkList.length();
 
+        bool anyArtworkUnavailable = false;
+        bool anyVectorUnavailable = false;
+
         for (int i = 0; i < count; ++i) {
             ArtworkMetadata* artwork = m_ArtworkList.at(i);
             const QString &path = artwork->getFilepath();
             if (artworksRepository->isFileUnavailable(path)) {
                 artwork->setUnavailable();
+                anyArtworkUnavailable = true;
+            } else if (artwork->hasVectorAttached()) {
+                const QString &vectorPath = artwork->getAttachedVectorPath();
+                if (artworksRepository->isFileUnavailable(vectorPath)) {
+                    artwork->detachVector();
+                    anyVectorUnavailable = true;
+                }
             }
         }
 
-        emit launchUnavailableFilesWarning();
+        if (anyArtworkUnavailable) {
+            emit unavailableArtworksFound();
+        } else if (anyVectorUnavailable) {
+            emit unavailableVectorsFound();
+        }
     }
 
     void ArtItemsModel::generateAboutToBeRemoved() {
@@ -883,7 +902,7 @@ namespace Models {
         for (int i = 0; i < count; ++i) {
             ArtworkMetadata *metadata = m_ArtworkList.at(i);
 
-            if (metadata->getIsUnavailable()) {
+            if (metadata->isUnavailable()) {
                 metadata->generateAboutToBeRemoved();
             }
         }
@@ -896,7 +915,7 @@ namespace Models {
 
         int count = m_ArtworkList.length();
         for (int i = 0; i < count; ++i) {
-            if (m_ArtworkList.at(i)->getIsUnavailable()) {
+            if (m_ArtworkList.at(i)->isUnavailable()) {
                 indicesToRemove.append(i);
                 emit fileWithIndexUnavailable(i);
             }

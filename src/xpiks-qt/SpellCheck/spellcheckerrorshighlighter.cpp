@@ -24,12 +24,14 @@
 #include <QSet>
 #include <QString>
 #include "spellcheckiteminfo.h"
+#include "../QMLExtensions/colorsmodel.h"
 
 namespace SpellCheck {
-    SpellCheckErrorsHighlighter::SpellCheckErrorsHighlighter(QTextDocument *document,
+    SpellCheckErrorsHighlighter::SpellCheckErrorsHighlighter(QTextDocument *document, QMLExtensions::ColorsModel *colorsModel,
                                                              SpellCheckErrorsInfo *errorsInfo) :
         QSyntaxHighlighter(document),
-        m_SpellCheckErrors(errorsInfo)
+        m_SpellCheckErrors(errorsInfo),
+        m_ColorsModel(colorsModel)
     {
     }
 
@@ -40,8 +42,7 @@ namespace SpellCheck {
         int size = text.size();
         int lastStart = -1;
 
-        // destructiveColor from Colors.js
-        QColor destructiveColor = QColor::fromRgb(209, 11, 11);
+        QColor destructiveColor = m_ColorsModel->destructiveColor();
 
         while (i < size) {
             QChar c = text[i];

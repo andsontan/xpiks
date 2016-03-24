@@ -51,8 +51,11 @@ ApplicationWindow {
     onBeforeRendering: {
         if (!initializedColors) {
             initializedColors = true
-            console.debug("Initializing theme with index " + settingsModel.selectedThemeIndex)
-            Colors.initTheme(Themes.availableThemes[settingsModel.selectedThemeIndex])
+
+            Colors.registerTheme(Themes.BlackTheme);
+            Colors.registerTheme(Themes.SlateGrayTheme)
+
+            Colors.applyTheme(settingsModel.selectedThemeIndex)
         }
     }
 
@@ -445,13 +448,20 @@ ApplicationWindow {
     }
 
     MessageDialog {
-        id: unavailableFilesDetected
+        id: unavailableArtworksDialog
         title: "Warning"
-        text: qsTr("Some files you have been working on are not available anymore.\nXpiks will remove them from the workflow.")
+        text: qsTr("Some files are not available anymore.\nThey will be removed from the workflow.")
         standardButtons: StandardButton.Ok
         onAccepted: {
             helpersWrapper.removeUnavailableFiles()
         }
+    }
+
+    MessageDialog {
+        id: unavailableVectorsDialog
+        title: "Warning"
+        text: qsTr("Some vectors are not available anymore.\nThey will be detached automatically.")
+        standardButtons: StandardButton.Ok
     }
 
     MessageDialog {
@@ -582,9 +592,14 @@ ApplicationWindow {
     Connections {
         target: artItemsModel
 
-        onLaunchUnavailableFilesWarning: {
-            console.debug("UI:onLaunchUnavailableFilesWarning")
-            unavailableFilesDetected.open()
+        onUnavailableArtworksFound: {
+            console.debug("UI:onUnavailableArtworksFound")
+            unavailableArtworksDialog.open()
+        }
+
+        onUnavailableVectorsFound: {
+            console.debug("UI:onUnavailableVectorsFound")
+            unavailableVectorsDialog.open()
         }
 
         onArtworksAdded: {
@@ -735,10 +750,9 @@ ApplicationWindow {
                                     Layout.fillWidth: true
                                     anchors.verticalCenter: parent.verticalCenter
                                     height: 31
-                                    color: Colors.itemsSourceForeground
+                                    color: Colors.inputForegroundColor
                                     text: path + " (" + usedimagescount + ")"
                                     elide: Text.ElideMiddle
-                                    font.bold: true
                                 }
 
                                 CloseIcon {
@@ -746,6 +760,7 @@ ApplicationWindow {
                                     height: 14
                                     anchors.verticalCenter: parent.verticalCenter
                                     isActive: false
+                                    crossOpacity: 1
 
                                     onItemClicked: {
                                         if (mustUseConfirmation()) {
@@ -1291,6 +1306,7 @@ ApplicationWindow {
                                     onFocusRequested: {
                                         if (directionSign === +1) {
                                             descriptionTextInput.forceActiveFocus()
+                                            descriptionTextInput.cursorPosition = descriptionTextInput.text.length
                                         } else {
                                             flv.activateEdit()
                                         }
@@ -1490,8 +1506,7 @@ ApplicationWindow {
                                                 id: descriptionRect
                                                 height: 30
                                                 anchors.left: parent.left
-                                                anchors.right: titleRect.left
-                                                anchors.rightMargin: columnLayout.isWideEnough ? 20 : 0
+                                                width: columnLayout.isWideEnough ? (columnLayout.width / 2 - 10) : columnLayout.width
                                                 anchors.top: descriptionText.bottom
                                                 anchors.topMargin: 3
                                                 color: rowWrapper.isHighlighted ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
@@ -1532,6 +1547,7 @@ ApplicationWindow {
                                                         Keys.onTabPressed: {
                                                             if (columnLayout.isWideEnough) {
                                                                 titleTextInput.forceActiveFocus()
+                                                                titleTextInput.cursorPosition = titleTextInput.text.length
                                                             } else {
                                                                 flv.activateEdit()
                                                             }
@@ -1579,8 +1595,10 @@ ApplicationWindow {
                                             Rectangle {
                                                 id: titleRect
                                                 height: 30
-                                                width: columnLayout.isWideEnough ? ((columnLayout.width / 2) - 10 ): 0
                                                 visible: columnLayout.isWideEnough
+                                                enabled: columnLayout.isWideEnough
+                                                anchors.left: columnLayout.isWideEnough ? descriptionRect.right : undefined
+                                                anchors.leftMargin: 20
                                                 anchors.right: parent.right
                                                 anchors.top: descriptionText.bottom
                                                 anchors.topMargin: 3
@@ -1618,10 +1636,14 @@ ApplicationWindow {
                                                         focus: true
                                                         isActive: rowWrapper.isHighlighted
                                                         onTextChanged: model.edittitle = text
-                                                        KeyNavigation.backtab: descriptionTextInput
 
                                                         Keys.onTabPressed: {
                                                             flv.activateEdit()
+                                                        }
+
+                                                        Keys.onBacktabPressed: {
+                                                            descriptionTextInput.forceActiveFocus()
+                                                            descriptionTextInput.cursorPosition = descriptionTextInput.text.length
                                                         }
 
                                                         onActiveFocusChanged: {

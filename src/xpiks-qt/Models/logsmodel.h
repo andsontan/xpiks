@@ -29,6 +29,10 @@ namespace Helpers {
     class LoggingWorker;
 }
 
+namespace QMLExtensions {
+    class ColorsModel;
+}
+
 class QString;
 
 namespace Models {
@@ -37,7 +41,7 @@ namespace Models {
         Q_PROPERTY(bool withLogs READ getWithLogs CONSTANT)
 
     public:
-        LogsModel(QObject *parent=NULL);
+        LogsModel(QMLExtensions::ColorsModel *colorsModel, QObject *parent=NULL);
         virtual ~LogsModel();
 
     public:
@@ -52,6 +56,7 @@ namespace Models {
 
     private:
         Helpers::LoggingWorker *m_LoggingWorker;
+        QMLExtensions::ColorsModel *m_ColorsModel;
         bool m_WithLogs;
     };
 }

@@ -45,83 +45,112 @@ void RemoveFilesFsTests::removeArtworksSignals() {
 
     int itemsToAdd = 5;
     QSignalSpy artRepositoryFileDeleted(artworksRepository, SIGNAL(filesUnavailable()));
-    QSignalSpy ArtItemFileDeleted(artItemsModel, SIGNAL(launchUnavailableFilesWarning()));
+    QSignalSpy ArtItemFileDeleted(artItemsModel, SIGNAL(unavailableArtworksFound()));
 
     commandManagerMock.generateAndAddArtworks(itemsToAdd);
     commandManagerMock.connectEntitiesSignalsSlots();
     artworksRepositoryMock.publicRemoveFileAndEmitSignal();
+
 // signals
     QCOMPARE(artRepositoryFileDeleted.count(), 1);
     QCOMPARE(ArtItemFileDeleted.count(), 1);
 }
 
 void RemoveFilesFsTests::removeArtworksNumberItems() {
-
     int itemsToAdd = 10, itemsToDelete = 5;
     DECLARE_MODELS_AND_GENERATE_(itemsToAdd);
+
     combinedModel.resetModelData();
-    QVector<Models::ArtItemInfo *> items;
-    QVector<Models::ArtworkMetadata *> items_mod;
-    for (int i =0; i< itemsToAdd; i++) {
-         Models::ArtworkMetadata * metadata =  commandManagerMock.getArtItemsModel()->getArtwork(i);
-         items.append(new Models::ArtItemInfo(metadata, i));
-         items_mod.append(metadata);
+
+    QVector<Models::ArtItemInfo *> itemInfos;
+    QVector<Models::ArtworkMetadata *> artworksList;
+
+    for (int i = 0; i < itemsToAdd; i++) {
+         Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
+         itemInfos.append(new Models::ArtItemInfo(metadata, i));
+         artworksList.append(metadata);
     }
+
     combinedModel.resetModelData();
-    combinedModel.initArtworks(items);
+    combinedModel.initArtworks(itemInfos);
     combinedModel.recombineArtworks();
 
-    zipArchive.setArtworks(items_mod);
+    zipArchive.setArtworks(artworksList);
 
-    artworkUpload.setArtworks(items_mod);
-
-
+    artworkUpload.setArtworks(artworksList);
 
 // delete
    commandManagerMock.mockDeletion(itemsToDelete);
 
 // send accept
     commandManagerMock.mockAcceptDeletion();
+
 //items
-    QCOMPARE(artItemsModelMock.getArtworksCount(), itemsToAdd-itemsToDelete);
-    QCOMPARE(combinedModel.getArtworksCount(), itemsToAdd-itemsToDelete);
-    QCOMPARE(filteredItemsModel.getItemsCount(), itemsToAdd-itemsToDelete);
-    QCOMPARE(zipArchive.getItemsCount(), itemsToAdd-itemsToDelete);
-    QCOMPARE(artworkUpload.getItemsCount(), itemsToAdd-itemsToDelete);
+    QCOMPARE(artItemsModelMock.getArtworksCount(), itemsToAdd - itemsToDelete);
+    QCOMPARE(combinedModel.getArtworksCount(), itemsToAdd - itemsToDelete);
+    QCOMPARE(filteredItemsModel.getItemsCount(), itemsToAdd - itemsToDelete);
+    QCOMPARE(zipArchive.getItemsCount(), itemsToAdd - itemsToDelete);
+    QCOMPARE(artworkUpload.getItemsCount(), itemsToAdd - itemsToDelete);
 }
 
-
 void RemoveFilesFsTests::removeArtworksAllItems() {
-
     int itemsToAdd = 10, itemsToDelete = 10;
     DECLARE_MODELS_AND_GENERATE_(itemsToAdd);
+
     combinedModel.resetModelData();
-    QVector<Models::ArtItemInfo *> items;
-    QVector<Models::ArtworkMetadata *> items_mod;
-    for (int i =0; i< itemsToAdd; i++) {
-         Models::ArtworkMetadata * metadata =  commandManagerMock.getArtItemsModel()->getArtwork(i);
-         items.append(new Models::ArtItemInfo(metadata, i));
-         items_mod.append(metadata);
+    QVector<Models::ArtItemInfo *> itemInfos;
+    QVector<Models::ArtworkMetadata *> artworksList;
+
+    for (int i = 0; i < itemsToAdd; i++) {
+         Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
+         itemInfos.append(new Models::ArtItemInfo(metadata, i));
+         artworksList.append(metadata);
     }
+
     combinedModel.resetModelData();
-    combinedModel.initArtworks(items);
+    combinedModel.initArtworks(itemInfos);
     combinedModel.recombineArtworks();
 
-    zipArchive.setArtworks(items_mod);
+    zipArchive.setArtworks(artworksList);
 
-    artworkUpload.setArtworks(items_mod);
-
-
+    artworkUpload.setArtworks(artworksList);
 
 // delete
    commandManagerMock.mockDeletion(itemsToDelete);
 
 // send accept
     commandManagerMock.mockAcceptDeletion();
+
 //items
-    QCOMPARE(artItemsModelMock.getArtworksCount(), itemsToAdd-itemsToDelete);
-    QCOMPARE(combinedModel.getArtworksCount(), itemsToAdd-itemsToDelete);
-    QCOMPARE(filteredItemsModel.getItemsCount(), itemsToAdd-itemsToDelete);
-    QCOMPARE(zipArchive.getItemsCount(), itemsToAdd-itemsToDelete);
-    QCOMPARE(artworkUpload.getItemsCount(), itemsToAdd-itemsToDelete);
+    QCOMPARE(artItemsModelMock.getArtworksCount(), itemsToAdd - itemsToDelete);
+    QCOMPARE(combinedModel.getArtworksCount(), itemsToAdd - itemsToDelete);
+    QCOMPARE(filteredItemsModel.getItemsCount(), itemsToAdd - itemsToDelete);
+    QCOMPARE(zipArchive.getItemsCount(), itemsToAdd - itemsToDelete);
+    QCOMPARE(artworkUpload.getItemsCount(), itemsToAdd - itemsToDelete);
+}
+
+void RemoveFilesFsTests::removeVectorSmokeTest() {
+    Mocks::CommandManagerMock commandManagerMock;
+    Mocks::ArtItemsModelMock artItemsMock;
+    Mocks::ArtworksRepositoryMock artworksRepositoryMock;
+
+    Models::ArtworksRepository *artworksRepository = &artworksRepositoryMock;
+    Models::ArtItemsModel *artItemsModel = &artItemsMock;
+    commandManagerMock.InjectDependency(artItemsModel);
+    commandManagerMock.InjectDependency(artworksRepository);
+
+    int itemsToAdd = 5;
+    QSignalSpy artRepositoryFileDeleted(artworksRepository, SIGNAL(filesUnavailable()));
+    QSignalSpy vectorRemovedSpy(artItemsModel, SIGNAL(unavailableVectorsFound()));
+    QSignalSpy artworkRemovedSpy(artItemsModel, SIGNAL(unavailableArtworksFound()));
+
+    commandManagerMock.generateAndAddArtworks(itemsToAdd);
+    commandManagerMock.connectEntitiesSignalsSlots();
+
+    artworksRepositoryMock.publicRemoveVectorAndEmitSignal();
+
+// signals
+    QCOMPARE(artRepositoryFileDeleted.count(), 1);
+    QCOMPARE(vectorRemovedSpy.count(), 1);
+    QCOMPARE(artworkRemovedSpy.count(), 0);
 }

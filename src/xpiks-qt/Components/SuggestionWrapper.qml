@@ -32,16 +32,13 @@ Rectangle {
     property bool isSelected
     property string suggestionText
     property alias itemHeight: suggestionText.height
-    border.color: Colors.inputForegroundColor
-    border.width: innerMA.containsMouse ? 1 : 0
 
     signal actionClicked();
 
-    color: isSelected ? Colors.inputForegroundColor : Colors.inputBackgroundColor
+    color: innerMA.containsMouse ? Colors.artworkActiveColor : (isSelected ? Colors.inputForegroundColor : Colors.labelInactiveForeground)
 
     width: suggestionText.width + 10
     height: childrenRect.height
-    radius: 4
 
     StyledText {
         id: suggestionText
@@ -49,7 +46,7 @@ Rectangle {
         anchors.left: parent.left
         anchors.leftMargin: 5
         text: itemWrapper.suggestionText
-        color: isSelected ? (innerMA.containsMouse ? Colors.selectedArtworkBackground : Colors.defaultControlColor) : Colors.inputForegroundColor
+        color: innerMA.containsMouse ? Colors.inputForegroundColor : (isSelected ? Colors.defaultControlColor : Colors.labelActiveForeground)
         font.pixelSize: UIConfig.fontPixelSize * settingsModel.keywordSizeScale
     }
 

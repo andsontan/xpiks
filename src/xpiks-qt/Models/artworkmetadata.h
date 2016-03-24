@@ -32,6 +32,7 @@
 #include <QSize>
 #include <QAtomicInt>
 #include "../Common/basickeywordsmodel.h"
+#include "../Common/flags.h"
 
 class QTextDocument;
 
@@ -44,6 +45,27 @@ namespace Models {
         ArtworkMetadata(const QString &filepath, qint64 ID);
         virtual ~ArtworkMetadata();
 
+    private:
+        enum MetadataFlags {
+            FlagIsModified = 1 << 0,
+            FlagsIsSelected = 1 << 1,
+            FlagIsInitialized = 1 << 2,
+            FlagHasVectorAttached = 1 << 3,
+            FlagIsUnavailable = 1 << 4
+        };
+
+        inline bool getIsModifiedFlag() const { return Common::HasFlag(m_MetadataFlags, FlagIsModified); }
+        inline bool getIsSelectedFlag() const { return Common::HasFlag(m_MetadataFlags, FlagsIsSelected); }
+        inline bool getIsUnavailableFlag() const { return Common::HasFlag(m_MetadataFlags, FlagIsUnavailable); }
+        inline bool getIsInitializedFlag() const { return Common::HasFlag(m_MetadataFlags, FlagIsInitialized); }
+        inline bool getHasVectorAttachedFlag() const { return Common::HasFlag(m_MetadataFlags, FlagHasVectorAttached); }
+
+        inline void setIsModifiedFlag(bool value) { Common::ApplyFlag(m_MetadataFlags, value, FlagIsModified); }
+        inline void setIsSelectedFlag(bool value) { Common::ApplyFlag(m_MetadataFlags, value, FlagsIsSelected); }
+        inline void setIsUnavailableFlag(bool value) { Common::ApplyFlag(m_MetadataFlags, value, FlagIsUnavailable); }
+        inline void setIsInitializedFlag(bool value) { Common::ApplyFlag(m_MetadataFlags, value, FlagIsInitialized); }
+        inline void setHasVectorAttachedFlag(bool value) { Common::ApplyFlag(m_MetadataFlags, value, FlagHasVectorAttached); }
+
     public:
         bool initialize(const QString &title,
                         const QString &description, const QStringList &rawKeywords, bool overwrite = true);
@@ -54,12 +76,11 @@ namespace Models {
 
     public:
         bool isInDirectory(const QString &directoryAbsolutePath) const;
-        bool isModified() const { return m_IsModified; }
-        bool getIsSelected() const { return m_IsSelected; }
-        bool getIsUnavailable() const { return m_IsUnavailable; }
-        const QString &getDateTaken() const { return m_DateTaken; }
-        bool isInitialized() const { return m_IsInitialized; }
-        bool hasVectorAttached() const { return m_HasAttachedVector; }
+        bool isModified() const { return getIsModifiedFlag(); }
+        bool isSelected() const { return getIsSelectedFlag(); }
+        bool isUnavailable() const { return getIsUnavailableFlag(); }
+        bool isInitialized() const { return getIsInitializedFlag(); }
+        bool hasVectorAttached() const { return getHasVectorAttachedFlag(); }
         virtual QSize getImageSize() const { return m_ImageSize; }
         virtual qint64 getFileSize() const { return m_FileSize; }
         virtual qint64 getItemID() const { return m_ID; }
@@ -86,21 +107,21 @@ namespace Models {
         }
 
         bool setIsSelected(bool value) {
-            bool result = m_IsSelected != value;
+            bool result = getIsSelectedFlag() != value;
             if (result) {
-                m_IsSelected = value;
-                emit selectedChanged(value);
+                setIsSelectedFlag(value);
                 //emit fileSelectedChanged(m_ArtworkFilepath, value);
+                emit selectedChanged(value);
             }
 
             return result;
         }
 
-        void invertSelection() { setIsSelected(!m_IsSelected); }
+        void invertSelection() { setIsSelected(!getIsSelectedFlag()); }
 
         void resetSelected() {
-            if (m_IsSelected) {
-                m_IsSelected = false;
+            if (getIsSelectedFlag()) {
+                setIsSelectedFlag(false);
                 //emit fileSelectedChanged(m_ArtworkFilepath, false);
             }
         }
@@ -117,9 +138,9 @@ namespace Models {
 
     public:
         void markModified();
-        void setModified() { m_IsModified = true; }
-        void setUnavailable() { m_IsUnavailable = true; }
-        void resetModified() { m_IsModified = false; }
+        void setModified() { setIsModifiedFlag(true); }
+        void setUnavailable() { setIsUnavailableFlag(true); }
+        void resetModified() { setIsModifiedFlag(false); }
         void requestFocus(int directionSign) { emit focusRequested(directionSign); }
 
     signals:
@@ -128,19 +149,13 @@ namespace Models {
          void fileSelectedChanged(const QString &filepath, bool newValue);
          void focusRequested(int directionSign);
 
-
     private:
          QSize m_ImageSize;
          qint64 m_FileSize; // in bytes
          QString m_ArtworkFilepath;
          QString m_AttachedVector;
          qint64 m_ID;
-         QString m_DateTaken;
-         volatile bool m_IsModified;
-         volatile bool m_IsSelected;
-         volatile bool m_IsInitialized;
-         volatile bool m_HasAttachedVector;
-         volatile bool m_IsUnavailable;
+         volatile int m_MetadataFlags;
     };
 }
 

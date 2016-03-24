@@ -164,6 +164,10 @@ void Commands::CommandManager::InjectDependency(Models::LanguagesModel *language
     m_LanguagesModel->setCommandManager(this);
 }
 
+void Commands::CommandManager::InjectDependency(QMLExtensions::ColorsModel *colorsModel) {
+    Q_ASSERT(colorsModel != NULL); m_ColorsModel = colorsModel;
+}
+
 Commands::ICommandResult *Commands::CommandManager::processCommand(ICommandBase *command)
 #ifndef TESTS
 const
@@ -188,23 +192,33 @@ void Commands::CommandManager::recordHistoryItem(UndoRedo::IHistoryItem *history
 }
 
 void Commands::CommandManager::connectEntitiesSignalsSlots() const {
-    QObject::connect(m_SecretsManager, SIGNAL(beforeMasterPasswordChange(QString,QString)),
-                     m_UploadInfoRepository, SLOT(onBeforeMasterPasswordChanged(QString,QString)));
+    if (m_SecretsManager != NULL && m_UploadInfoRepository != NULL) {
+        QObject::connect(m_SecretsManager, SIGNAL(beforeMasterPasswordChange(QString,QString)),
+                         m_UploadInfoRepository, SLOT(onBeforeMasterPasswordChanged(QString,QString)));
 
-    QObject::connect(m_SecretsManager, SIGNAL(afterMasterPasswordReset()),
-                     m_UploadInfoRepository, SLOT(onAfterMasterPasswordReset()));
+        QObject::connect(m_SecretsManager, SIGNAL(afterMasterPasswordReset()),
+                         m_UploadInfoRepository, SLOT(onAfterMasterPasswordReset()));
+    }
 
-    QObject::connect(m_ArtItemsModel, SIGNAL(selectedArtworkRemoved()),
-                     m_FilteredItemsModel, SLOT(onSelectedArtworksRemoved()));
+    if (m_ArtItemsModel != NULL && m_FilteredItemsModel != NULL) {
+        QObject::connect(m_ArtItemsModel, SIGNAL(selectedArtworkRemoved()),
+                         m_FilteredItemsModel, SLOT(onSelectedArtworksRemoved()));
+    }
 
-    QObject::connect(m_SettingsModel, SIGNAL(userStatisticsChanged(bool)),
-                     m_TelemetryService, SLOT(changeReporting(bool)));
+    if (m_SettingsModel != NULL && m_TelemetryService != NULL) {
+        QObject::connect(m_SettingsModel, SIGNAL(userStatisticsChanged(bool)),
+                         m_TelemetryService, SLOT(changeReporting(bool)));
+    }
 
-    QObject::connect(m_SpellCheckerService, SIGNAL(serviceAvailable(bool)),
-                     m_FilteredItemsModel, SLOT(onSpellCheckerAvailable(bool)));
+    if (m_SpellCheckerService != NULL && m_FilteredItemsModel != NULL) {
+        QObject::connect(m_SpellCheckerService, SIGNAL(serviceAvailable(bool)),
+                         m_FilteredItemsModel, SLOT(onSpellCheckerAvailable(bool)));
+    }
 
-    QObject::connect(m_ArtworksRepository, SIGNAL(filesUnavailable()),
-                     m_ArtItemsModel, SLOT(onFilesUnavailableHandler()));
+    if (m_ArtworksRepository != NULL && m_ArtItemsModel != NULL) {
+        QObject::connect(m_ArtworksRepository, SIGNAL(filesUnavailable()),
+                         m_ArtItemsModel, SLOT(onFilesUnavailableHandler()));
+    }
 }
 
 void Commands::CommandManager::ensureDependenciesInjected() {
@@ -231,6 +245,7 @@ void Commands::CommandManager::ensureDependenciesInjected() {
     Q_ASSERT(m_MetadataIOCoordinator != NULL);
     Q_ASSERT(m_PluginManager != NULL);
     Q_ASSERT(m_LanguagesModel != NULL);
+    Q_ASSERT(m_ColorsModel != NULL);
 }
 
 void Commands::CommandManager::recodePasswords(const QString &oldMasterPassword,

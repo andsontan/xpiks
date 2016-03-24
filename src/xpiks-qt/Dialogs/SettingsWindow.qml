@@ -381,7 +381,8 @@ ApplicationWindow {
 
                         CustomComboBox {
                             id: themeComboBox
-                            model: Themes.names
+                            model: Colors.getThemeNames()
+                            showColorSign: false
                             width: 130
                             height: 24
                             itemHeight: 28
@@ -1220,7 +1221,7 @@ ApplicationWindow {
                     settingsModel.userStatistic = secTab.useStatistics
                     settingsModel.saveAllValues()
                     closeSettings()
-                    Colors.initTheme(Themes.availableThemes[settingsModel.selectedThemeIndex])
+                    Colors.applyTheme(settingsModel.selectedThemeIndex)
                 }
             }
 
