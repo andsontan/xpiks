@@ -50,6 +50,7 @@
 #define KEYWORDS QLatin1String("Keywords")
 #define SUBJECT QLatin1String("Subject")
 #define DATETAKEN QLatin1String("DateTimeOriginal")
+#define TIMEZONE  QLatin1String("TimeZoneOffset")
 
 namespace MetadataIO {
     void parseJsonKeywords(const QJsonArray &array, ImportDataResult &result) {
@@ -100,6 +101,11 @@ namespace MetadataIO {
 
         if (object.contains(DATETAKEN)) {
             result.DateTaken = object.value(DATETAKEN).toString();
+            if (object.contains(TIMEZONE)){
+                int timeZone = object.value(TIMEZONE).toInt();
+                QString sign = (timeZone < 0) ? "-" : "+";
+                result.DateTaken.append(QString(" GMT") + sign + QString::number(std::abs(timeZone)));
+            }
         }
 
         bool keywordsSet = false;
@@ -246,7 +252,7 @@ namespace MetadataIO {
         arguments << "-ObjectName" << "-Title";
         arguments << "-ImageDescription" << "-Description" << "-Caption-Abstract";
         arguments << "-Keywords" << "-Subject";
-        arguments << "-DateTimeOriginal";
+        arguments << "-DateTimeOriginal" << "-TimeZoneOffset";
         int size = m_ItemsToRead.length();
         for (int i = 0; i < size; ++i) {
             Models::ArtworkMetadata *metadata = m_ItemsToRead.at(i);
