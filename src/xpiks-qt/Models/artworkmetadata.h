@@ -85,6 +85,7 @@ namespace Models {
         virtual qint64 getFileSize() const { return m_FileSize; }
         virtual qint64 getItemID() const { return m_ID; }
         const QString &getAttachedVectorPath() const { return m_AttachedVector; }
+        const QString &getDateTaken() const { return m_DateTaken; }
         void attachVector(const QString &vectorFilepath);
         void detachVector();
 
@@ -154,6 +155,7 @@ namespace Models {
          qint64 m_FileSize; // in bytes
          QString m_ArtworkFilepath;
          QString m_AttachedVector;
+         QString m_DateTaken;
          qint64 m_ID;
          volatile int m_MetadataFlags;
     };
