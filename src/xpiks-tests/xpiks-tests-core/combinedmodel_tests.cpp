@@ -577,7 +577,8 @@ void CombinedModelTests::notSavedAfterAllDisabledTest() {
     QString commonDescription = "a common Description1";
 
     QVector<Models::ArtItemInfo *> items;
-    items << createArtworkMetadata(commonDescription, "title1", QStringList() << "Keyword1", 0);
+    items << createArtworkMetadata(commonDescription, "title1", QStringList() << "Keyword1" << "keyword2", 0);
+    items << createArtworkMetadata(commonDescription, "title2", QStringList() << "Keyword2", 0);
 
     combinedModel.resetModelData();
     combinedModel.initArtworks(items);

@@ -204,11 +204,16 @@ namespace Models {
     void CombinedArtworksModel::saveEdits() const {
         bool needToSave = false;
 
-        needToSave = needToSave || (getChangeKeywords() && m_AreKeywordsModified);
-        needToSave = needToSave || (getChangeTitle() && m_IsTitleModified);
-        needToSave = needToSave || (getChangeDescription() && m_IsDescriptionModified);
+        if (getChangeTitle() ||
+                getChangeDescription() ||
+                getChangeKeywords()) {
+            needToSave = m_ArtworksList.length() > 1;
+            needToSave = needToSave || (getChangeKeywords() && m_AreKeywordsModified);
+            needToSave = needToSave || (getChangeTitle() && m_IsTitleModified);
+            needToSave = needToSave || (getChangeDescription() && m_IsDescriptionModified);
+        }
 
-        if (!m_ArtworksList.isEmpty() && needToSave) {
+        if (needToSave) {
             processCombinedEditCommand();
         }
     }
