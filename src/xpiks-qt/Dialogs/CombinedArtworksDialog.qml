@@ -140,6 +140,7 @@ CloseRequested")
         RectangularGlow {
             anchors.fill: dialogWindow
             anchors.topMargin: glowRadius/2
+            anchors.bottomMargin: -glowRadius/2
             glowRadius: 4
             spread: 0.0
             color: Colors.defaultControlColor
