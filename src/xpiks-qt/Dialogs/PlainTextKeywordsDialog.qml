@@ -51,6 +51,7 @@ Item {
         focus = true
         textEdit.forceActiveFocus()
     }
+
     Connections {
         target: keywordsModel
         onAboutToBeRemoved: {
