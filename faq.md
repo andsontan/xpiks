@@ -48,5 +48,12 @@ permalink: /faq/
   </ul>
 </div>
 
+<div>
+  <ul>
+    <li><strong>I can't upload via FTP to my favorite stock XYZ</strong></li>
+    <li>First of all, check if you didn't make a typo in a Host, Username and Password field. Use "Show Password" checkbox to see if you typed it correctly. Try to use "Test connection" button before upload and see if it works. Try to login with and without Passive Mode (in the Advanced tab).</li>
+  </ul>
+</div>
+
 </section>
 </article>
