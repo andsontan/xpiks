@@ -50,7 +50,7 @@
 #define KEYWORDS QLatin1String("Keywords")
 #define SUBJECT QLatin1String("Subject")
 #define DATETAKEN QLatin1String("DateTimeOriginal")
-#define TIMEZONE  QLatin1String("TimeZoneOffset")
+#define TIMEZONE QLatin1String("TimeZoneOffset")
 
 namespace MetadataIO {
     void parseJsonKeywords(const QJsonArray &array, ImportDataResult &result) {
@@ -80,6 +80,21 @@ namespace MetadataIO {
         return parsed;
     }
 
+    int parseTimeZoneOffset(const QJsonObject &object) {
+        // NOT the standard tag
+        // from the spec it contains 1 or 2 values
+        QJsonValue timeZone = object.value(TIMEZONE);
+        int timeZoneOffset;
+        if (timeZone.isArray()) {
+            QJsonArray timeZoneArray = timeZone.toArray();
+            timeZoneOffset = timeZoneArray.at(0).toInt();
+        } else {
+            timeZoneOffset = timeZone.toInt();
+        }
+
+        return timeZoneOffset;
+    }
+
     void jsonObjectToImportResult(const QJsonObject &object, ImportDataResult &result) {
         if (object.contains(SOURCEFILE)) {
             result.FilePath = object.value(SOURCEFILE).toString();
@@ -101,10 +116,10 @@ namespace MetadataIO {
 
         if (object.contains(DATETAKEN)) {
             result.DateTaken = object.value(DATETAKEN).toString();
-            if (object.contains(TIMEZONE)){
-                int timeZone = object.value(TIMEZONE).toInt();
-                QString sign = (timeZone < 0) ? "-" : "+";
-                result.DateTaken.append(QString(" GMT") + sign + QString::number(std::abs(timeZone)));
+            if (object.contains(TIMEZONE)) {
+                int timeZoneOffset = parseTimeZoneOffset(object);
+                QLatin1Char signChar = (timeZoneOffset < 0) ? QLatin1Char('-') : QLatin1Char('+');
+                result.DateTaken.append(QString(" GMT%1%2").arg(signChar).arg(qAbs(timeZoneOffset)));
             }
         }
 
