@@ -85,6 +85,7 @@ namespace Models {
         virtual qint64 getFileSize() const { return m_FileSize; }
         virtual qint64 getItemID() const { return m_ID; }
         const QString &getAttachedVectorPath() const { return m_AttachedVector; }
+        const QString &getDateTaken() const { return m_DateTaken; }
         void attachVector(const QString &vectorFilepath);
         void detachVector();
 
@@ -128,6 +129,7 @@ namespace Models {
 
         void setImageSize(const QSize &size) { m_ImageSize = size; }
         void setFileSize(qint64 size) { m_FileSize = size; }
+        void setDateTaken(const QString &date) { m_DateTaken = date; }
 
     public:
         bool removeKeywordAt(int index);
@@ -153,6 +155,7 @@ namespace Models {
          qint64 m_FileSize; // in bytes
          QString m_ArtworkFilepath;
          QString m_AttachedVector;
+         QString m_DateTaken;
          qint64 m_ID;
          volatile int m_MetadataFlags;
     };

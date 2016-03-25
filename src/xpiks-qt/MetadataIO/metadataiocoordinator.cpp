@@ -201,6 +201,7 @@ namespace MetadataIO {
                                      importResultItem.Keywords);
                 metadata->setImageSize(importResultItem.ImageSize);
                 metadata->setFileSize(importResultItem.FileSize);
+                metadata->setDateTaken(importResultItem.DateTaken);
             }
         }
 
