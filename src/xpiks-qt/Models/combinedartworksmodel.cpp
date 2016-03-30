@@ -64,10 +64,14 @@ namespace Models {
 
     void CombinedArtworksModel::recombineArtworks() {
         LOG_DEBUG << m_ArtworksList.length() << "artwork(s)";
+
         if (m_ArtworksList.length() == 1) {
             assignFromOneArtwork();
         } else {
             assignFromManyArtworks();
+        }
+
+        if (m_CommonKeywordsModel.getSpellCheckInfo() == NULL) {
             m_CommonKeywordsModel.setSpellCheckInfo(&m_SpellCheckInfo);
         }
 
