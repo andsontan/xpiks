@@ -170,7 +170,7 @@ namespace Models {
             emit keywordsCountChanged();
             m_AreKeywordsModified = true;
 
-            m_CommandManager->submitItemForSpellCheck(&m_CommonKeywordsModel);
+            m_CommandManager->submitItemForSpellCheck(&m_CommonKeywordsModel, Common::SpellCheckKeywords);
         }
     }
 
