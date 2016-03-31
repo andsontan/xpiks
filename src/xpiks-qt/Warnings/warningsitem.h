@@ -23,6 +23,10 @@
 #define WARNINGSQUERYITEM
 
 #include "iwarningscheckable.h"
+#include <QStringList>
+#include <QString>
+#include <QSet>
+#include "../Helpers/stringhelper.h"
 #include "../Common/flags.h"
 
 namespace Warnings {
@@ -31,7 +35,11 @@ namespace Warnings {
         WarningsItem(IWarningsCheckable *checkableItem, int checkingFlags = Common::WarningsCheckAll):
             m_CheckableItem(checkableItem),
             m_CheckingFlags(checkingFlags)
-        { }
+        {
+            m_Description = checkableItem->getDescription();
+            m_Title = checkableItem->getTitle();
+            m_KeywordsSet = checkableItem->getKeywordsSet();
+        }
 
     public:
         void submitWarnings(int warningsFlags) {
@@ -64,11 +72,29 @@ namespace Warnings {
 
         bool needCheckAll() const { return m_CheckingFlags == Common::WarningsCheckAll; }
         int getCheckingFlags() const { return m_CheckingFlags; }
+        const QString &getDescription() const { return m_Description; }
+        const QString &getTitle() const { return m_Title; }
+        const QSet<QString> &getKeywordsSet() const { return m_KeywordsSet; }
+
+        QStringList getDescriptionWords() const {
+            QStringList words;
+            Helpers::splitText(m_Description, words);
+            return words;
+        }
+
+        QStringList getTitleWords() const {
+            QStringList words;
+            Helpers::splitText(m_Title, words);
+            return words;
+        }
 
         IWarningsCheckable *getCheckableItem() const { return m_CheckableItem; }
 
     private:
         IWarningsCheckable *m_CheckableItem;
+        QString m_Description;
+        QString m_Title;
+        QSet<QString> m_KeywordsSet;
         int m_CheckingFlags;
     };
 }

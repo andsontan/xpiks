@@ -56,28 +56,27 @@ namespace Warnings {
         int warningsFlags = 0;
 
         initValuesFromSettings();
-        IWarningsCheckable *checkableItem = item->getCheckableItem();
 
         if (item->needCheckAll()) {
-            warningsFlags |= checkDimensions(checkableItem);
-            warningsFlags |= checkDescription(checkableItem);
-            warningsFlags |= checkTitle(checkableItem);
-            warningsFlags |= checkKeywords(checkableItem);
+            warningsFlags |= checkDimensions(item);
+            warningsFlags |= checkDescription(item);
+            warningsFlags |= checkTitle(item);
+            warningsFlags |= checkKeywords(item);
         } else {
             int checkingFlags = item->getCheckingFlags();
             switch (checkingFlags) {
             case Common::WarningsCheckDescription:
-                warningsFlags |= checkDescription(checkableItem);
+                warningsFlags |= checkDescription(item);
                 break;
             case Common::WarningsCheckKeywords:
-                warningsFlags |= checkKeywords(checkableItem);
-                warningsFlags |= checkDuplicates(checkableItem);
+                warningsFlags |= checkKeywords(item);
+                warningsFlags |= checkDuplicates(item);
                 break;
             case Common::WarningsCheckTitle:
-                warningsFlags |= checkTitle(checkableItem);
+                warningsFlags |= checkTitle(item);
                 break;
             case Common::WarningsCheckSpelling:
-                warningsFlags |= checkSpelling(checkableItem);
+                warningsFlags |= checkSpelling(item);
                 break;
             }
         }
@@ -93,7 +92,8 @@ namespace Warnings {
         m_MaximumKeywordsCount = m_SettingsModel->getMaxKeywordsCount();
     }
 
-    int WarningsCheckingWorker::checkDimensions(IWarningsCheckable *item) const {
+    int WarningsCheckingWorker::checkDimensions(WarningsItem *wi) const {
+        IWarningsCheckable *item = wi->getCheckableItem();
         int warningsInfo = 0;
         QSize size = item->getImageSize();
 
@@ -124,8 +124,9 @@ namespace Warnings {
         return warningsInfo;
     }
 
-    int WarningsCheckingWorker::checkKeywords(IWarningsCheckable *item) const {
+    int WarningsCheckingWorker::checkKeywords(WarningsItem *wi) const {
         int warningsInfo = 0;
+        IWarningsCheckable *item = wi->getCheckableItem();
 
         int keywordsCount = item->getKeywordsCount();
 
@@ -148,10 +149,11 @@ namespace Warnings {
         return warningsInfo;
     }
 
-    int WarningsCheckingWorker::checkDescription(IWarningsCheckable *item) const {
+    int WarningsCheckingWorker::checkDescription(WarningsItem *wi) const {
         int warningsInfo = 0;
+        IWarningsCheckable *item = wi->getCheckableItem();
 
-        int descriptionLength = item->getDescription().length();
+        int descriptionLength = wi->getDescription().length();
 
         if (descriptionLength == 0) {
             Common::SetFlag(warningsInfo, Common::WarningTypeDescriptionIsEmpty);
@@ -160,7 +162,7 @@ namespace Warnings {
                 Common::SetFlag(warningsInfo, Common::WarningTypeDescriptionTooBig);
             }
 
-            QStringList descriptionWords = item->getDescriptionWords();
+            QStringList descriptionWords = wi->getDescriptionWords();
 
             int wordsLength = descriptionWords.length();
             if (wordsLength < 3) {
@@ -182,15 +184,16 @@ namespace Warnings {
         return warningsInfo;
     }
 
-    int WarningsCheckingWorker::checkTitle(IWarningsCheckable *item) const {
+    int WarningsCheckingWorker::checkTitle(WarningsItem *wi) const {
         int warningsInfo = 0;
+        IWarningsCheckable *item = wi->getCheckableItem();
 
-        int titleLength = item->getTitle().length();
+        int titleLength = wi->getTitle().length();
 
         if (titleLength == 0) {
             Common::SetFlag(warningsInfo, Common::WarningTypeTitleIsEmpty);
         } else {
-            QStringList titleWords = item->getTitleWords();
+            QStringList titleWords = wi->getTitleWords();
             int partsLength = titleWords.length();
 
             if (partsLength < 3) {
@@ -216,8 +219,9 @@ namespace Warnings {
         return warningsInfo;
     }
 
-    int WarningsCheckingWorker::checkSpelling(IWarningsCheckable *item) const {
+    int WarningsCheckingWorker::checkSpelling(WarningsItem *wi) const {
         int warningsInfo = 0;
+        IWarningsCheckable *item = wi->getCheckableItem();
 
         if (item->hasKeywordsSpellError()) {
             Common::SetFlag(warningsInfo, Common::WarningTypeSpellErrorsInKeywords);
@@ -234,14 +238,15 @@ namespace Warnings {
         return warningsInfo;
     }
 
-    int WarningsCheckingWorker::checkDuplicates(IWarningsCheckable *item) const {
+    int WarningsCheckingWorker::checkDuplicates(WarningsItem *wi) const {
         int warningsInfo = 0;
+        IWarningsCheckable *item = wi->getCheckableItem();
 
         if (item->getKeywordsCount() == 0) { return warningsInfo; }
 
-        const QSet<QString> &keywordsSet = item->getKeywordsSet();
+        const QSet<QString> &keywordsSet = wi->getKeywordsSet();
 
-        QStringList titleWords = item->getTitleWords();
+        QStringList titleWords = wi->getTitleWords();
         if (!titleWords.isEmpty()) {
             QSet<QString> titleWordsSet = toLowerSet(titleWords);
             QSet<QString> intersection = titleWordsSet.intersect(keywordsSet);
@@ -251,7 +256,7 @@ namespace Warnings {
             }
         }
 
-        QStringList descriptionWords = item->getDescriptionWords();
+        QStringList descriptionWords = wi->getDescriptionWords();
         if (!descriptionWords.isEmpty()) {
             QSet<QString> descriptionWordsSet = toLowerSet(descriptionWords);
             QSet<QString> intersection = descriptionWordsSet.intersect(keywordsSet);

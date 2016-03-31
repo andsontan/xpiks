@@ -58,12 +58,12 @@ namespace Warnings {
         void queueIsEmpty();
 
     private:
-        int checkDimensions(IWarningsCheckable *item) const;
-        int checkKeywords(IWarningsCheckable *item) const;
-        int checkDescription(IWarningsCheckable *item) const;
-        int checkTitle(IWarningsCheckable *item) const;
-        int checkSpelling(IWarningsCheckable *item) const;
-        int checkDuplicates(IWarningsCheckable *item) const;
+        int checkDimensions(WarningsItem *wi) const;
+        int checkKeywords(WarningsItem *wi) const;
+        int checkDescription(WarningsItem *wi) const;
+        int checkTitle(WarningsItem *wi) const;
+        int checkSpelling(WarningsItem *wi) const;
+        int checkDuplicates(WarningsItem *wi) const;
 
     private:
         Models::SettingsModel *m_SettingsModel;
