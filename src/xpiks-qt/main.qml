@@ -1727,10 +1727,6 @@ ApplicationWindow {
                                                     artItemsModel.pasteKeywords(rowWrapper.getIndex(), keywords)
                                                 }
 
-                                                function saveBackup() {
-                                                    artItemsModel.backupItem(rowWrapper.getIndex())
-                                                }
-
                                                 EditableTags {
                                                     id: flv
                                                     model: rowWrapper.artworkModel
@@ -1791,11 +1787,6 @@ ApplicationWindow {
 
                                                     onTabPressed: {
                                                         filteredArtItemsModel.focusNextItem(rowWrapper.delegateIndex)
-                                                    }
-
-                                                    onFocusLost: {
-                                                        console.debug("Keyword TextEdit > focusLost() signal")
-                                                        keywordsWrapper.saveBackup()
                                                     }
 
                                                     onCopyRequest: clipboard.setText(keywordsstring)

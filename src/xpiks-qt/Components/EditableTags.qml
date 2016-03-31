@@ -55,7 +55,6 @@ Flickable {
 
     signal tagAdded(string text)
     signal removeLast()
-    signal focusLost()
     signal tagsPasted(var tagsList)
     signal copyRequest();
     signal backTabPressed();
@@ -242,8 +241,6 @@ Flickable {
                     if (raiseAddTag(tagText)) {
                         nextTagTextInput.text = '';
                     }
-
-                    focusLost()
                 }
 
                 Keys.onPressed: {
