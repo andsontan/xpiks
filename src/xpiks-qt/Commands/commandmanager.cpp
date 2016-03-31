@@ -302,6 +302,9 @@ void Commands::CommandManager::connectArtworkSignals(Models::ArtworkMetadata *me
 
         QObject::connect(metadata, SIGNAL(spellCheckErrorsChanged()),
                          m_ArtItemsModel, SLOT(spellCheckErrorsChanged()));
+
+        QObject::connect(metadata, SIGNAL(backupRequired()),
+                         m_ArtItemsModel, SLOT(artworkBackupRequested()));
     }
     
     if (m_FilteredItemsModel) {
@@ -444,9 +447,15 @@ void Commands::CommandManager::submitForWarningsCheck(const QVector<Warnings::IW
     }
 }
 
-void Commands::CommandManager::saveMetadata(Models::ArtworkMetadata *metadata) const {
+void Commands::CommandManager::saveArtworkBackup(Models::ArtworkMetadata *metadata) const {
     if ((m_SettingsModel != NULL) && m_SettingsModel->getSaveBackups() && m_MetadataSaverService != NULL) {
         m_MetadataSaverService->saveArtwork(metadata);
+    }
+}
+
+void Commands::CommandManager::saveArtworksBackups(const QVector<Models::ArtworkMetadata*> &artworks) const {
+    if ((m_SettingsModel != NULL) && m_SettingsModel->getSaveBackups() && m_MetadataSaverService != NULL) {
+        m_MetadataSaverService->saveArtworks(artworks);
     }
 }
 

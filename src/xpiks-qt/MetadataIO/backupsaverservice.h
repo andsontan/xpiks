@@ -42,6 +42,7 @@ namespace MetadataIO {
         void startSaving();
         void stopSaving();
         void saveArtwork(Models::ArtworkMetadata *metadata) const;
+        void saveArtworks(const QVector<Models::ArtworkMetadata *> &artworks) const;
         void readArtwork(Models::ArtworkMetadata *metadata) const;
         void readArtworks(const QVector<Models::ArtworkMetadata *> &artworks) const;
 

@@ -1296,6 +1296,7 @@ ApplicationWindow {
 
                                 Connections {
                                     target: rowWrapper.artworkModel
+
                                     onSpellCheckResultsReady: {
                                         descriptionTextInput.deselect()
                                         if (columnLayout.isWideEnough) {
@@ -1726,7 +1727,7 @@ ApplicationWindow {
                                                     artItemsModel.pasteKeywords(rowWrapper.getIndex(), keywords)
                                                 }
 
-                                                function saveKeywords() {
+                                                function saveBackup() {
                                                     artItemsModel.backupItem(rowWrapper.getIndex())
                                                 }
 
@@ -1792,7 +1793,10 @@ ApplicationWindow {
                                                         filteredArtItemsModel.focusNextItem(rowWrapper.delegateIndex)
                                                     }
 
-                                                    onFocusLost: keywordsWrapper.saveKeywords()
+                                                    onFocusLost: {
+                                                        console.debug("Keyword TextEdit > focusLost() signal")
+                                                        keywordsWrapper.saveBackup()
+                                                    }
 
                                                     onCopyRequest: clipboard.setText(keywordsstring)
                                                 }

@@ -205,7 +205,8 @@ namespace Commands {
         void submitForWarningsCheck(const QVector<Warnings::IWarningsCheckable*> &items) const;
 
     public:
-        void saveMetadata(Models::ArtworkMetadata *metadata) const;
+        void saveArtworkBackup(Models::ArtworkMetadata *metadata) const;
+        void saveArtworksBackups(const QVector<Models::ArtworkMetadata *> &artworks) const;
         void reportUserAction(Conectivity::UserAction userAction) const;
         void cleanupLocalLibraryAsync() const;
         void afterConstructionCallback();

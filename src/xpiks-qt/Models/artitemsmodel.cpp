@@ -132,6 +132,7 @@ namespace Models {
     }
 
     void ArtItemsModel::removeKeywordAt(int metadataIndex, int keywordIndex) {
+        LOG_DEBUG << "metadata index" << metadataIndex << "| keyword index" << keywordIndex;
         if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
 
@@ -139,12 +140,13 @@ namespace Models {
                 QModelIndex index = this->index(metadataIndex);
                 emit dataChanged(index, index, QVector<int>() << IsModifiedRole << KeywordsCountRole);
                 m_CommandManager->submitKeywordsForWarningsCheck(metadata);
-                m_CommandManager->saveMetadata(metadata);
+                metadata->requestBackup();
             }
         }
     }
 
     void ArtItemsModel::removeLastKeyword(int metadataIndex) {
+        LOG_DEBUG << "index" << metadataIndex;
         if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
 
@@ -152,12 +154,13 @@ namespace Models {
                 QModelIndex index = this->index(metadataIndex);
                 emit dataChanged(index, index, QVector<int>() << IsModifiedRole << KeywordsCountRole);
                 m_CommandManager->submitKeywordsForWarningsCheck(metadata);
-                m_CommandManager->saveMetadata(metadata);
+                metadata->requestBackup();
             }
         }
     }
 
     void ArtItemsModel::appendKeyword(int metadataIndex, const QString &keyword) {
+        LOG_DEBUG << "metadata index" << metadataIndex << "| keyword" << keyword;
         if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
             if (metadata->appendKeyword(keyword)) {
@@ -165,7 +168,7 @@ namespace Models {
                 emit dataChanged(index, index, QVector<int>() << IsModifiedRole << KeywordsCountRole);
                 m_CommandManager->submitKeywordForSpellCheck(metadata, metadata->rowCount() - 1);
                 m_CommandManager->submitKeywordsForWarningsCheck(metadata);
-                m_CommandManager->saveMetadata(metadata);
+                metadata->requestBackup();
             }
         }
     }
@@ -240,7 +243,7 @@ namespace Models {
     void ArtItemsModel::backupItem(int metadataIndex) {
         if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
-            m_CommandManager->saveMetadata(metadata);
+            m_CommandManager->saveArtworkBackup(metadata);
         }
     }
 
@@ -433,7 +436,7 @@ namespace Models {
             if (metadata->editKeyword(keywordIndex, replacement)) {
                 m_CommandManager->submitKeywordForSpellCheck(metadata, keywordIndex);
                 m_CommandManager->submitKeywordsForWarningsCheck(metadata);
-                m_CommandManager->saveMetadata(metadata);
+                metadata->requestBackup();
             }
         }
     }
@@ -549,7 +552,7 @@ namespace Models {
             if (role == EditArtworkDescriptionRole ||
                     role == EditArtworkTitleRole) {
                 if (metadata->isInitialized()) {
-                    m_CommandManager->saveMetadata(metadata);
+                    metadata->requestBackup();
                 }
             }
         }
@@ -894,6 +897,14 @@ namespace Models {
             emit unavailableArtworksFound();
         } else if (anyVectorUnavailable) {
             emit unavailableVectorsFound();
+        }
+    }
+
+    void ArtItemsModel::artworkBackupRequested() {
+        LOG_DEBUG << "#";
+        ArtworkMetadata *metadata = qobject_cast<ArtworkMetadata*>(sender());
+        if (metadata != NULL) {
+            m_CommandManager->saveArtworkBackup(metadata);
         }
     }
 

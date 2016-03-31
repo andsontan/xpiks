@@ -37,6 +37,7 @@ Commands::CommandResult *Commands::CombinedEditCommand::execute(const ICommandMa
     QVector<UndoRedo::ArtworkMetadataBackup*> artworksBackups;
     QVector<SpellCheck::ISpellCheckable*> itemsToCheckSpelling;
     QVector<Warnings::IWarningsCheckable*> itemsToCheckWarnings;
+    QVector<Models::ArtworkMetadata *> itemsToSave;
 
     CommandManager *commandManager = (CommandManager*)commandManagerInterface;
 
@@ -45,6 +46,7 @@ Commands::CommandResult *Commands::CombinedEditCommand::execute(const ICommandMa
     artworksBackups.reserve(size);
     itemsToCheckSpelling.reserve(size);
     itemsToCheckWarnings.reserve(size);
+    itemsToSave.reserve(size);
 
     bool needToClear = Common::HasFlag(m_EditFlags, Common::Clear);
 
@@ -63,13 +65,14 @@ Commands::CommandResult *Commands::CombinedEditCommand::execute(const ICommandMa
         // do not save if Сlear flag present
         // to be able to restore from .xpks
         if (!needToClear) {
-            commandManager->saveMetadata(metadata);
+            itemsToSave.append(metadata);
         }
 
         itemsToCheckSpelling.append(metadata);
         itemsToCheckWarnings.append(metadata);
     }
 
+    commandManager->saveArtworksBackups(itemsToSave);
     commandManager->submitForSpellCheck(itemsToCheckSpelling);
     commandManager->submitForWarningsCheck(itemsToCheckWarnings);
 

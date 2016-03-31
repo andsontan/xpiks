@@ -41,11 +41,13 @@ Commands::CommandResult *Commands::PasteKeywordsCommand::execute(const ICommandM
     QVector<UndoRedo::ArtworkMetadataBackup*> artworksBackups;
     QVector<SpellCheck::ISpellCheckable*> itemsToSpellCheck;
     QVector<Warnings::IWarningsCheckable*> itemsToCheckWarnings;
+    QVector<Models::ArtworkMetadata*> itemsToSave;
     int size = m_ArtItemInfos.length();
     indicesToUpdate.reserve(size);
     artworksBackups.reserve(size);
     itemsToSpellCheck.reserve(size);
     itemsToCheckWarnings.reserve(size);
+    itemsToSave.reserve(size);
 
     for (int i = 0; i < size; ++i) {
         Models::ArtItemInfo *itemInfo = m_ArtItemInfos.at(i);
@@ -55,7 +57,7 @@ Commands::CommandResult *Commands::PasteKeywordsCommand::execute(const ICommandM
         artworksBackups.append(new UndoRedo::ArtworkMetadataBackup(metadata));
 
         metadata->appendKeywords(m_KeywordsList);
-        commandManager->saveMetadata(metadata);
+        itemsToSave.append(metadata);
         itemsToSpellCheck.append(metadata);
         itemsToCheckWarnings.append(metadata);
     }
@@ -63,6 +65,7 @@ Commands::CommandResult *Commands::PasteKeywordsCommand::execute(const ICommandM
     if (size > 0) {
         commandManager->submitForSpellCheck(itemsToSpellCheck);
         commandManager->submitForWarningsCheck(itemsToCheckWarnings);
+        commandManager->saveArtworksBackups(itemsToSave);
 
         UndoRedo::ModifyArtworksHistoryItem *modifyArtworksItem =
                 new UndoRedo::ModifyArtworksHistoryItem(artworksBackups, indicesToUpdate,

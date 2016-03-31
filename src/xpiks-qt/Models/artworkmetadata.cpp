@@ -39,6 +39,8 @@ namespace Models {
         m_MetadataFlags(0)
     {
         setSpellCheckInfo(new SpellCheck::SpellCheckItemInfo());
+        m_BackupTimer.setSingleShot(true);
+        QObject::connect(&m_BackupTimer, SIGNAL(timeout()), this, SLOT(backupTimerTriggered()));
     }
 
     ArtworkMetadata::~ArtworkMetadata() {

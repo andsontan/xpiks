@@ -31,6 +31,7 @@
 #include <QSet>
 #include <QSize>
 #include <QAtomicInt>
+#include <QTimer>
 #include "../Common/basickeywordsmodel.h"
 #include "../Common/flags.h"
 
@@ -143,12 +144,17 @@ namespace Models {
         void setUnavailable() { setIsUnavailableFlag(true); }
         void resetModified() { setIsModifiedFlag(false); }
         void requestFocus(int directionSign) { emit focusRequested(directionSign); }
+        void requestBackup() { m_BackupTimer.start(1000); }
 
     signals:
          void modifiedChanged(bool newValue);
          void selectedChanged(bool newValue);
          void fileSelectedChanged(const QString &filepath, bool newValue);
          void focusRequested(int directionSign);
+         void backupRequired();
+
+    private slots:
+         void backupTimerTriggered() { emit backupRequired(); }
 
     private:
          QSize m_ImageSize;
@@ -156,6 +162,7 @@ namespace Models {
          QString m_ArtworkFilepath;
          QString m_AttachedVector;
          QString m_DateTaken;
+         QTimer m_BackupTimer;
          qint64 m_ID;
          volatile int m_MetadataFlags;
     };

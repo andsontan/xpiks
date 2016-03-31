@@ -127,6 +127,7 @@ namespace Models {
         void itemModifiedChanged(bool) { updateModifiedCount(); }
         void spellCheckErrorsChanged();
         void onFilesUnavailableHandler();
+        void artworkBackupRequested();
 
     public:
         virtual void removeItemsAtIndices(const QVector<QPair<int, int> > &ranges);
