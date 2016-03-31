@@ -67,6 +67,7 @@ namespace Warnings {
 
     private:
         Models::SettingsModel *m_SettingsModel;
+        QString m_AllowedFilenameCharacters;
         double m_MinimumMegapixels;
         int m_MaximumKeywordsCount;
         int m_MaximumDescriptionLength;

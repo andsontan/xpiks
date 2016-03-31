@@ -39,6 +39,7 @@ namespace Warnings {
     WarningsCheckingWorker::WarningsCheckingWorker(Models::SettingsModel *settingsModel, QObject *parent):
         QObject(parent),
         m_SettingsModel(settingsModel),
+        m_AllowedFilenameCharacters(".,_-@ "),
         m_MinimumMegapixels(4),
         m_MaximumKeywordsCount(50),
         m_MaximumDescriptionLength(200)
@@ -114,7 +115,7 @@ namespace Warnings {
         for (int i = 0; i < length; ++i) {
             QChar c = filename[i];
             bool isOk = c.isLetter() || c.isDigit() ||
-                    (c == '_') || (c == '.');
+                    m_AllowedFilenameCharacters.contains(c);
             if (!isOk) {
                 Common::SetFlag(warningsInfo, Common::WarningTypeFilenameSymbols);
                 break;
