@@ -9,6 +9,7 @@ namespace Conectivity {
 #else
     QString path = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
 #endif
+
         QDir dir(path);
         path = dir.filePath(Constants::FTP_STOCKS_FILENAME);
         m_StocksFilePath = path;
