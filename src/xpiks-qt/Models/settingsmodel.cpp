@@ -78,7 +78,7 @@ namespace Models {
         m_SearchUsingAnd(DEFAULT_SEARCH_USING_AND),
         m_UseSpellCheck(DEFAULT_USE_SPELL_CHECK),
         m_UserStatistics(DEFAULT_COLLECT_USER_STATISTICS),
-        m_UpdateService(DEFAULT_UPDATE_SERVICE),
+        m_CheckForUpdates(DEFAULT_UPDATE_SERVICE),
         m_DictsPathChanged(false)
     {
     }
@@ -123,7 +123,7 @@ namespace Models {
         appSettings.setValue(appSettings.getScrollSpeedScaleKey(), m_ScrollSpeedScale);
         appSettings.setValue(appSettings.getUseSpellCheckKey(), m_UseSpellCheck);
         appSettings.setValue(appSettings.getUserStatisticsKey(), m_UserStatistics);
-        appSettings.setValue(appSettings.getUpdateServiceKey(), m_UpdateService);
+        appSettings.setValue(appSettings.getUpdateServiceKey(), m_CheckForUpdates);
         appSettings.setValue(appSettings.getAutoFindVectorsKey(), m_AutoFindVectors);
         appSettings.setValue(appSettings.getSelectedThemeIndexKey(), m_SelectedThemeIndex);
 

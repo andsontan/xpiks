@@ -41,7 +41,7 @@ namespace Constants {
     const char TERMS_AND_CONDITIONS_FILENAME[] = "terms_and_conditions.txt";
     const char DICT_PATH[] = "DICT_PATH";
     const char USER_STATISTICS[] = "USER_STATISTICS";
-    const char UPDATE_SERVICE[] = "UPDATE_SERVICE";
+    const char CHECK_FOR_UPDATES[] = "CHECK_FOR_UPDATES";
     const char NUMBER_OF_LAUNCHES[] = "NUMBER_OF_LAUNCHES";
     const char APP_WINDOW_WIDTH []  = "WINDOW_SIZE_X";
     const char APP_WINDOW_HEIGHT [] = "WINDOW_SIZE_Y";

@@ -128,7 +128,7 @@ namespace Helpers {
         QString getUserStatisticsKey() const { return QLatin1String(Constants::USER_STATISTICS); }
 
         Q_PROPERTY(QString updateServiceKey READ getUpdateServiceKey CONSTANT)
-        QString getUpdateServiceKey() const { return QLatin1String(Constants::UPDATE_SERVICE); }
+        QString getUpdateServiceKey() const { return QLatin1String(Constants::CHECK_FOR_UPDATES); }
 
         Q_PROPERTY(QString numberOfLaunchesKey READ getNumberOfLaunchesKey CONSTANT)
         QString getNumberOfLaunchesKey() const { return QLatin1String(Constants::NUMBER_OF_LAUNCHES); }

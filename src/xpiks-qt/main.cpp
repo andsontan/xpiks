@@ -275,8 +275,8 @@ int main(int argc, char *argv[]) {
     warningsModel.setSourceModel(&artItemsModel);
     Models::LanguagesModel languagesModel;
 
-    bool updateEnabled=appSettings.value(Constants::UPDATE_SERVICE,true ).toBool();
-    Helpers::UpdateService updateService(updateEnabled);
+    bool checkForUpdates = appSettings.value(Constants::CHECK_FOR_UPDATES, true).toBool();
+    Helpers::UpdateService updateService(checkForUpdates);
 
     MetadataIO::MetadataIOCoordinator metadataIOCoordinator;
 #ifdef TELEMETRY_ENABLED

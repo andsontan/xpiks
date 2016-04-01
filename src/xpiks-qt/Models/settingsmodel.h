@@ -93,7 +93,7 @@ namespace Models {
         double getScrollSpeedScale() const { return m_ScrollSpeedScale; }
         bool getUseSpellCheck() const { return m_UseSpellCheck; }
         bool getUserStatistics() const { return m_UserStatistics; }
-        bool getUpdateService() const { return m_UpdateService; }
+        bool getUpdateService() const { return m_CheckForUpdates; }
         QString getDictionaryPath() const { return m_DictPath; }
         bool getAutoFindVectors() const { return m_AutoFindVectors; }
         QString getSelectedLocale() const { return m_SelectedLocale; }
@@ -253,10 +253,10 @@ namespace Models {
         }
 
         void setUpdateService(bool value) {
-            if (m_UpdateService == value)
+            if (m_CheckForUpdates == value)
                 return;
 
-            m_UpdateService = value;
+            m_CheckForUpdates = value;
             emit updateServiceChanged(value);
         }
 
@@ -317,7 +317,7 @@ namespace Models {
         bool m_SearchUsingAnd;
         bool m_UseSpellCheck;
         bool m_UserStatistics;
-        bool m_UpdateService;
+        bool m_CheckForUpdates;
         bool m_DictsPathChanged;
         bool m_AutoFindVectors;
     };
