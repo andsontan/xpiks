@@ -1,15 +1,3 @@
-#include "removeconfigupdater.h"
-
-#define FTP_LIST_URL  "https://raw.githubusercontent.com/RostaTasha/muha_slon/master/trash/stocks_ftp.json"
-namespace Conectivity {
-
-    RemoveConfigUpdater::RemoveConfigUpdater() {
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
-    QString path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-#else
-    QString path = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
-#endif
-
         QDir dir(path);
         path = dir.filePath(Constants::FTP_STOCKS_FILENAME);
         m_StocksFilePath = path;
