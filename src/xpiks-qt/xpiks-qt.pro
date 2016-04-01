@@ -82,7 +82,8 @@ SOURCES += main.cpp \
     Suggestion/shutterstockqueryengine.cpp \
     Suggestion/locallibraryqueryengine.cpp \
     Suggestion/fotoliaqueryengine.cpp \
-    QMLExtensions/colorsmodel.cpp
+    QMLExtensions/colorsmodel.cpp \
+    Conectivity/removeconfigupdater.cpp
 
 RESOURCES += qml.qrc
 
@@ -217,7 +218,8 @@ HEADERS += \
     Suggestion/suggestionqueryenginebase.h \
     Helpers/ifilenotavailablemodel.h \
     Suggestion/fotoliaqueryengine.h \
-    QMLExtensions/colorsmodel.h
+    QMLExtensions/colorsmodel.h \
+    Conectivity/removeconfigupdater.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

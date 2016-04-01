@@ -82,6 +82,7 @@ namespace Constants {
     const char USER_CONSENT[] = "DEBUG_USER_CONSENT_1_0";
     const char SELECTED_LOCALE[] = "DEBUG_SELECTED_LOCALE";
     const char SELECTED_THEME_INDEX[] = "DEBUG_SELECTED_THEME_INDEX";
+    const char FTP_STOCKS_FILENAME[] = "stocks_ftp.json";
 
 #ifdef INTEGRATION_TESTS
     const char LIBRARY_FILENAME[] = "xpiks.integration.library";

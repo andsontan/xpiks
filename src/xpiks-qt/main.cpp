@@ -75,6 +75,7 @@
 #include "Helpers/logger.h"
 #include "Common/version.h"
 #include "Common/defines.h"
+#include "Conectivity/removeconfigupdater.h"
 
 void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg) {
     Q_UNUSED(context);
@@ -285,6 +286,10 @@ int main(int argc, char *argv[]) {
     bool telemetryEnabled = appSettings.value(Constants::USER_STATISTICS, false).toBool();
 #endif
     Conectivity::TelemetryService telemetryService(userId, telemetryEnabled);
+    Conectivity::RemoveConfigUpdater remoteConfigUpdater;
+    remoteConfigUpdater.initFromFile();
+    remoteConfigUpdater.process();
+
     Plugins::PluginManager pluginManager;
     Plugins::PluginsWithActionsModel pluginsWithActions;
     pluginsWithActions.setSourceModel(&pluginManager);
