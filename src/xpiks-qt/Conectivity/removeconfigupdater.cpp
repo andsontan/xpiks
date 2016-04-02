@@ -96,7 +96,6 @@ namespace Conectivity {
         if (networkReply->error() == QNetworkReply::NoError) {
             QJsonDocument document = QJsonDocument::fromJson(networkReply->readAll());
             int version = getVersionFromJson(document);
-            LOG_WARNING << version;
             if (version > m_StocksFtpVersion) {
                 m_StocksFtpVersion = version;
                 QMap<QString,QString> remote = getStocksFromJson(document);
