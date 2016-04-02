@@ -119,11 +119,9 @@ namespace Conectivity {
             for (it = start; it != end; it++){
                 QString key = it.key();
                 QString value = it.value();
-                QJsonObject object
-                {
-                    {"name", key},
-                    {"ftp", value}
-                };
+                QJsonObject object;
+                object.insert("name", key);
+                object.insert("ftp", value);
                 array.append(object);
             }
             QJsonObject all;

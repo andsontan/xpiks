@@ -92,7 +92,6 @@ namespace Models {
         QFutureWatcher<Conectivity::ContextValidationResult> *m_TestingCredentialWatcher;
 #endif
         int m_Percent;
-        QMap<QString,QString> m_StocksFtp;
     };
 }
 
