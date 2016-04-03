@@ -1050,6 +1050,7 @@ CloseRequested")
                             text: i18.n + qsTr("Save")
                             width: 100
                             onClicked: {
+                                flv.onBeforeClose()
                                 combinedArtworks.saveEdits()
                                 closePopup()
                             }

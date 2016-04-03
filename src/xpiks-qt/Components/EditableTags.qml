@@ -145,6 +145,13 @@ Flickable {
         // bump
     }
 
+    function onBeforeClose() {
+        var tagText = getEditedText();
+        if (raiseAddTag(tagText)) {
+            nextTagTextInput.text = '';
+        }
+    }
+
     MouseArea {
         anchors.left: parent.left
         anchors.top: parent.top

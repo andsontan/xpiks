@@ -665,6 +665,7 @@ Item {
                         width: 100
                         text: i18.n + qsTr("Save")
                         onClicked: {
+                            flv.onBeforeClose()
                             combinedArtworks.saveEdits()
                             callbackObject.applyCallback()
                             closePopup()
