@@ -278,7 +278,8 @@ DISTFILES += \
     Components/SelectedIcon.qml \
     Components/CustomComboBox.qml \
     Constants/Themes.js \
-    Components/CompletionBox.qml
+    Components/CompletionBox.qml \
+    Components/EditIcon.qml
 
 lupdate_only {
 SOURCES = *.qml \

@@ -137,7 +137,7 @@ Item {
 
                             delegate: Rectangle {
                                 property int delegateIndex: index
-                                color: Colors.itemsSourceBackground
+                                color: Colors.artworkBackground
                                 id: imageWrapper
                                 anchors.left: parent.left
                                 anchors.right: parent.right
@@ -191,9 +191,9 @@ Item {
                                     id: columnRectangle
                                     anchors.left: imageItem.right
                                     anchors.top: parent.top
-                                    anchors.right: fixItRect.left
+                                    anchors.right: parent.right
                                     height: (childrenRect.height < 80) ? 100 : (childrenRect.height + 20)
-                                    color: Colors.itemsSourceSelected
+                                    color: Colors.defaultDarkColor
 
                                     Column {
                                         id: warningsTextList
@@ -234,30 +234,24 @@ Item {
                                     }
                                 }
 
-                                Rectangle {
-                                    id: fixItRect
-                                    anchors.top: parent.top
+                                EditIcon {
+                                    backgroundColor: parent.color
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    anchors.verticalCenterOffset: -5
                                     anchors.right: parent.right
-                                    width: 40
-                                    height: columnRectangle.height
-                                    color: Colors.selectedImageBackground
+                                    anchors.rightMargin: 10
+                                    enabled: !isRestricted && warningsListView.count > 0
+                                    visible: enabled
 
-                                    StyledButton {
-                                        text: i18.n + qsTr("Fix")
-                                        width: 30
-                                        anchors.centerIn: parent
-                                        enabled: !isRestricted && warningsListView.count > 0
-
-                                        onClicked: {
-                                            var index = warningsModel.getOriginalIndex(imageWrapper.delegateIndex);
-                                            Common.launchItemEditing(index, componentParent,
-                                                                     {
-                                                                         applyCallback: function() {
-                                                                             console.log("UI:WarningsDialog # Rechecking [" + imageWrapper.delegateIndex + "] item")
-                                                                             warningsDescriptions.model = warningsModel.describeWarnings(imageWrapper.delegateIndex)
-                                                                         }
-                                                                     })
-                                        }
+                                    onActionInvoked: {
+                                        var index = warningsModel.getOriginalIndex(imageWrapper.delegateIndex);
+                                        Common.launchItemEditing(index, componentParent,
+                                                                 {
+                                                                     applyCallback: function() {
+                                                                         console.log("UI:WarningsDialog # Rechecking [" + imageWrapper.delegateIndex + "] item")
+                                                                         warningsDescriptions.model = warningsModel.describeWarnings(imageWrapper.delegateIndex)
+                                                                     }
+                                                                 })
                                     }
                                 }
                             }
