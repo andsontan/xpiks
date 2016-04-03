@@ -164,7 +164,7 @@ namespace Commands {
 
     public:
         virtual ICommandResult *processCommand(ICommandBase *command)
-#ifndef TESTS
+#ifndef CORE_TESTS
         const
 #endif
         ;
@@ -221,7 +221,7 @@ namespace Commands {
         void afterConstructionCallback();
         void beforeDestructionCallback() const;
         void restartSpellChecking();
-#ifndef TESTS
+#ifndef CORE_TESTS
         void autoCompleteKeyword(const QString &keyword, QObject *notifyObject) const;
 #endif
 

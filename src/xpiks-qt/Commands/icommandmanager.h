@@ -34,7 +34,7 @@ namespace Commands {
         virtual ~ICommandManager() {}
 
         virtual ICommandResult *processCommand(ICommandBase *command)
-#ifndef TESTS
+#ifndef CORE_TESTS
         const
 #endif
         = 0;

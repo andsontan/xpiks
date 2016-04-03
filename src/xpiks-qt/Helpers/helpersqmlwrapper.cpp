@@ -152,7 +152,7 @@ namespace Helpers {
     }
 
     void HelpersQmlWrapper::autoCompleteKeyword(const QString &keyword, QObject *notifyObject) {
-#ifndef TESTS
+#ifndef CORE_TESTS
         m_CommandManager->autoCompleteKeyword(keyword, notifyObject);
 #endif
     }

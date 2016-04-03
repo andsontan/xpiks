@@ -20,7 +20,7 @@ INCLUDEPATH += ../../tiny-aes
 win32:INCLUDEPATH += ../../xpiks-qt/Encryption
 INCLUDEPATH += "../../hunspell-1.3.3/src/hunspell"
 DEFINES += HUNSPELL_STATIC
-DEFINES += TESTS
+DEFINES += CORE_TESTS
 
 DEFINES += QT_NO_CAST_TO_ASCII \
            QT_NO_CAST_FROM_BYTEARRAY

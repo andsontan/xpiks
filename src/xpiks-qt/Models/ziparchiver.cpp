@@ -28,7 +28,7 @@
 #include "../Helpers/filenameshelpers.h"
 #include "../Common/defines.h"
 
-#ifndef TESTS
+#ifndef CORE_TESTS
 #include "../Helpers/ziphelper.h"
 #endif
 
@@ -76,7 +76,7 @@ namespace Models {
         QList<QStringList> items = itemsWithSameName.values();
 
         LOG_INFO << "Creating zip archives for" << items.length() << "item(s)";
-#ifndef TESTS
+#ifndef CORE_TESTS
         m_ArchiveCreator->setFuture(QtConcurrent::mapped(items, Helpers::zipFiles));
 #endif
     }

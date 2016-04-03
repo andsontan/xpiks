@@ -68,7 +68,7 @@ namespace Models {
         void fileChanged(const QString & path);
         void filesUnavailable();
 
-#ifdef TESTS
+#ifdef CORE_TESTS
     public:
         void removeFileAndEmitSignal() {
             m_UnavailableFiles.insert(*m_FilesSet.begin());
@@ -97,7 +97,7 @@ namespace Models {
         void purgeUnavailableFiles();
 
         const QString &getDirectory(int index) const { return m_DirectoriesList[index]; }
-#ifdef TESTS
+#ifdef CORE_TESTS
         int getFilesCountForDirectory(const QString &directory) const { return m_DirectoriesHash[directory]; }
 #endif
         bool isFileUnavailable(const QString &filepath) const { return m_UnavailableFiles.contains(filepath); }

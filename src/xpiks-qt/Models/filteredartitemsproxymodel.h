@@ -45,7 +45,7 @@ namespace Models {
         void setSearchTerm(const QString &value);
         int getSelectedArtworksCount() const { return m_SelectedArtworksCount; }
         void spellCheckAllItems();
-#ifdef TESTS
+#ifdef CORE_TESTS
         int retrieveNumberOfSelectedItems();
 #endif
 

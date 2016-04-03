@@ -142,7 +142,7 @@ namespace Models {
                 occurances = m_DirectoriesHash[absolutePath];
             }
 
-#ifndef TESTS
+#ifndef CORE_TESTS
             m_FilesWatcher.addPath(filepath);
 #endif
             m_FilesSet.insert(filepath);
@@ -236,7 +236,7 @@ namespace Models {
         bool exists = false;
         QFileInfo fi(filename);
 
-#ifndef TESTS
+#ifndef CORE_TESTS
         exists = fi.exists();
 #else
         exists = true;

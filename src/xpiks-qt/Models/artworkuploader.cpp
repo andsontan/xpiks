@@ -34,7 +34,7 @@
 #include "../Conectivity/testconnection.h"
 #include "../Conectivity/uploadcontext.h"
 
-#ifndef TESTS
+#ifndef CORE_TESTS
 #include "../Conectivity/ftpcoordinator.h"
 #endif
 
@@ -44,7 +44,7 @@ namespace Models {
         m_FtpCoordinator(ftpCoordinator),
         m_Percent(0)
     {
-#ifndef TESTS
+#ifndef CORE_TESTS
         Conectivity::FtpCoordinator *coordinator = dynamic_cast<Conectivity::FtpCoordinator*>(ftpCoordinator);
         QObject::connect(coordinator, SIGNAL(uploadStarted()), this, SLOT(onUploadStarted()));
         QObject::connect(coordinator, SIGNAL(uploadFinished(bool)), this, SLOT(allFinished(bool)));
@@ -56,7 +56,7 @@ namespace Models {
     }
 
     ArtworkUploader::~ArtworkUploader() {
-#ifndef TESTS
+#ifndef CORE_TESTS
         delete m_TestingCredentialWatcher;
 #endif
 
@@ -67,7 +67,7 @@ namespace Models {
 
     void ArtworkUploader::setCommandManager(Commands::CommandManager *commandManager) {
         Common::BaseEntity::setCommandManager(commandManager);
-#ifndef TESTS
+#ifndef CORE_TESTS
         Conectivity::FtpCoordinator *coordinator = dynamic_cast<Conectivity::FtpCoordinator*>(m_FtpCoordinator);
         coordinator->setCommandManager(commandManager);
 #endif
@@ -89,7 +89,7 @@ namespace Models {
     }
 
     void ArtworkUploader::credentialsTestingFinished() {
-#ifndef TESTS
+#ifndef CORE_TESTS
         Conectivity::ContextValidationResult result = m_TestingCredentialWatcher->result();
         emit credentialsChecked(result.m_Result, result.m_Host);
 #endif
@@ -99,13 +99,13 @@ namespace Models {
         m_Percent = (int)(percent);
         LOG_DEBUG << "Overall progress =" << percent;
         updateProgress();
-#ifndef TESTS
+#ifndef CORE_TESTS
         UploadInfoRepository *uploadInfoRepository = m_CommandManager->getUploadInfoRepository();
         uploadInfoRepository->updatePercentages();
 #endif
     }
 
-#ifndef TESTS
+#ifndef CORE_TESTS
     void ArtworkUploader::uploadArtworks() { doUploadArtworks(getArtworkList()); }
 
     void ArtworkUploader::checkCredentials(const QString &host, const QString &username,
@@ -155,7 +155,7 @@ namespace Models {
         return needCreate;
     }
 
-#ifndef TESTS
+#ifndef CORE_TESTS
     void ArtworkUploader::doUploadArtworks(const QVector<ArtworkMetadata *> &artworkList) {
         int artworksCount = artworkList.length();
         if (artworksCount == 0) {

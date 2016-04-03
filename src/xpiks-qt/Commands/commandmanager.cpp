@@ -174,7 +174,7 @@ void Commands::CommandManager::InjectDependency(AutoComplete::AutoCompleteServic
 }
 
 Commands::ICommandResult *Commands::CommandManager::processCommand(ICommandBase *command)
-#ifndef TESTS
+#ifndef CORE_TESTS
 const
 #endif
 {
@@ -496,7 +496,7 @@ void Commands::CommandManager::afterConstructionCallback()  {
     QString endpoint = Encryption::decodeText(reportingEndpoint, "reporting");
     m_TelemetryService->setEndpoint(endpoint);
 
-#ifndef TESTS
+#ifndef CORE_TESTS
 #ifdef WITH_PLUGINS
     m_PluginManager->loadPlugins();
 #endif
@@ -526,7 +526,7 @@ void Commands::CommandManager::beforeDestructionCallback() const {
     m_WarningsService->stopService();
     m_MetadataSaverService->stopSaving();
 
-#ifndef TESTS
+#ifndef CORE_TESTS
 #ifdef WITH_PLUGINS
     m_PluginManager->unloadPlugins();
 #endif
@@ -543,7 +543,7 @@ void Commands::CommandManager::restartSpellChecking() {
     }
 }
 
-#ifndef TESTS
+#ifndef CORE_TESTS
 void Commands::CommandManager::autoCompleteKeyword(const QString &keyword, QObject *notifyObject) const {
     if ((m_SettingsModel != NULL) && m_SettingsModel->getUseAutoComplete() && (m_AutoCompleteService != NULL)) {
         m_AutoCompleteService->findKeywordCompletions(keyword, notifyObject);
@@ -565,7 +565,7 @@ void Commands::CommandManager::removeUnavailableFiles() {
 
     m_ArtItemsModel->removeUnavailableItems();
 
-#ifndef TESTS
+#ifndef CORE_TESTS
     m_UndoRedoManager->discardLastAction();
 #endif
 

@@ -69,7 +69,7 @@ namespace Models {
         void uploaderPercentChanged(double percent);
 
     public:
-#ifndef TESTS
+#ifndef CORE_TESTS
         Q_INVOKABLE void uploadArtworks();
         Q_INVOKABLE void checkCredentials(const QString &host, const QString &username,
                                           const QString &password, bool disablePassiveMode) const;
@@ -77,7 +77,7 @@ namespace Models {
         Q_INVOKABLE bool needCreateArchives() const;
 
     private:
-#ifndef TESTS
+#ifndef CORE_TESTS
         void doUploadArtworks(const QVector<ArtworkMetadata*> &artworkList);
 #endif
 
@@ -87,7 +87,7 @@ namespace Models {
 
     private:
         Conectivity::IFtpCoordinator *m_FtpCoordinator;
-#ifndef TESTS
+#ifndef CORE_TESTS
         QFutureWatcher<Conectivity::ContextValidationResult> *m_TestingCredentialWatcher;
 #endif
         int m_Percent;

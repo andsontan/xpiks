@@ -89,7 +89,7 @@ namespace Models {
         void resetArtworks() { m_ArtworkList.clear(); }
         virtual void removeUnavailableItems();
 
-#ifdef TESTS
+#ifdef CORE_TESTS
     public:
 #else
     protected:
