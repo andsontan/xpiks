@@ -36,6 +36,10 @@ script:
   - cp libquazip.a ../../libs/
   - cd ../../
   - mv tiny-aes/aes.c tiny-aes/aes.cpp
+  - cd cpp-libface
+  - make lib-face
+  - cp libface.a ../libs/
+  - cd ../
   - if [ -n "$XPIKS_BINARY" ]; then cd xpiks-qt/; fi
   - if [ -n "$XPIKS_TESTS" ]; then cd xpiks-tests/; fi
   - if [ -n "$XPIKS_BINARY" ]; then qmake "CONFIG+= debug travis-ci" xpiks-qt.pro; fi

@@ -19,27 +19,43 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ISERVICEBASE_H
-#define ISERVICEBASE_H
+#ifndef AUTOCOMPLETEWORKER_H
+#define AUTOCOMPLETEWORKER_H
 
-#include <QVector>
+#include <QObject>
+#include "../Common/itemprocessingworker.h"
+#include "completionquery.h"
+#include <src/libfaceapi.hpp>
 
-namespace Common {
-    template<typename T>
-    class IServiceBase {
+namespace AutoComplete {
+    class AutoCompleteWorker :
+            public QObject,
+            public Common::ItemProcessingWorker<CompletionQuery>
+    {
+        Q_OBJECT
     public:
-        virtual ~IServiceBase() {}
+        explicit AutoCompleteWorker(QObject *parent = 0);
+        virtual ~AutoCompleteWorker();
 
-        virtual void startService() = 0;
-        virtual void stopService() = 0;
+    protected:
+        virtual bool initWorker();
+        virtual bool processOneItem(CompletionQuery *item);
 
-        // if service is provided via plugin it can be turned off
-        virtual bool isAvailable() const = 0;
+    protected:
+        virtual void notifyQueueIsEmpty() { emit queueIsEmpty(); }
+        virtual void notifyStopped() { emit stopped(); }
 
-        virtual void submitItem(T *item) = 0;
-        virtual void submitItem(T *item, int flags) = 0;
-        virtual void submitItems(const QVector<T*> &items) = 0;
+    public slots:
+        void process() { doWork(); }
+        void cancel() { stopWorking(); }
+
+    signals:
+        void stopped();
+        void queueIsEmpty();
+
+    private:
+        Souffleur *m_Soufleur;
     };
 }
 
-#endif // ISERVICEBASE_H
+#endif // AUTOCOMPLETEWORKER_H

@@ -118,6 +118,7 @@ namespace Models {
         void artworkUnavailable(int index);
         void requestCloseWindow();
         void itemsNumberChanged();
+        void completionsAvailable();
 
     public:
         int getSelectedArtworksCount() const;

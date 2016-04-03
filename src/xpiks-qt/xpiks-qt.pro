@@ -82,7 +82,10 @@ SOURCES += main.cpp \
     Suggestion/shutterstockqueryengine.cpp \
     Suggestion/locallibraryqueryengine.cpp \
     Suggestion/fotoliaqueryengine.cpp \
-    QMLExtensions/colorsmodel.cpp
+    QMLExtensions/colorsmodel.cpp \
+    AutoComplete/autocompletemodel.cpp \
+    AutoComplete/autocompleteworker.cpp \
+    AutoComplete/autocompleteservice.cpp
 
 RESOURCES += qml.qrc
 
@@ -91,6 +94,7 @@ DEFINES += QT_NO_CAST_TO_ASCII \
 DEFINES += QUAZIP_STATIC
 DEFINES += HUNSPELL_STATIC
 DEFINES += TELEMETRY_ENABLED
+DEFINES += LIBFACE_STATIC
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -102,8 +106,6 @@ RC_ICONS = xpiks-qt.ico
 # Default rules for deployment.
 include(deployment.pri)
 
-TRANSLATIONS = translations\xpiks_lang_en_US.ts \
-               translations\xpiks_lang_uk_UA.ts
 
 HEADERS += \
     Models/artitemsmodel.h \
@@ -217,7 +219,11 @@ HEADERS += \
     Suggestion/suggestionqueryenginebase.h \
     Helpers/ifilenotavailablemodel.h \
     Suggestion/fotoliaqueryengine.h \
-    QMLExtensions/colorsmodel.h
+    QMLExtensions/colorsmodel.h \
+    AutoComplete/autocompletemodel.h \
+    AutoComplete/autocompleteworker.h \
+    AutoComplete/completionquery.h \
+    AutoComplete/autocompleteservice.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
@@ -271,7 +277,8 @@ DISTFILES += \
     Constants/UIConfig.js \
     Components/SelectedIcon.qml \
     Components/CustomComboBox.qml \
-    Constants/Themes.js
+    Constants/Themes.js \
+    Components/CompletionBox.qml
 
 lupdate_only {
 SOURCES = *.qml \
@@ -282,12 +289,15 @@ SOURCES = *.qml \
 }
 
 INCLUDEPATH += ../tiny-aes
+INCLUDEPATH += ../cpp-libface
 
 LIBS += -L"$$PWD/../libs/"
 LIBS += -lhunspell
 LIBS += -lz
 LIBS += -lcurl
 LIBS += -lquazip
+LIBS += -lface
+
 BUILDNO = $$system(git log -n 1 --pretty=format:"%H")
 
 CONFIG(debug, debug|release)  {
@@ -301,22 +311,26 @@ macx {
     INCLUDEPATH += "../quazip"
     INCLUDEPATH += "../../libcurl/include"
 
-    HUNSPELL_DICT_FILES.files = dict/en_US.aff dict/en_US.dic dict/license.txt dict/README_en_US.txt
+    HUNSPELL_DICT_FILES.files = deps/dict/en_US.aff deps/dict/en_US.dic deps/dict/license.txt deps/dict/README_en_US.txt
     HUNSPELL_DICT_FILES.path = Contents/Resources
     QMAKE_BUNDLE_DATA += HUNSPELL_DICT_FILES
 
-    WHATS_NEW.files = whatsnew.txt
+    WHATS_NEW.files = deps/whatsnew.txt
     WHATS_NEW.path = Contents/Resources
     QMAKE_BUNDLE_DATA += WHATS_NEW
 
-    TERMS_AND_CONDITIONS.files = terms_and_conditions.txt
+    TERMS_AND_CONDITIONS.files = deps/terms_and_conditions.txt
     TERMS_AND_CONDITIONS.path = Contents/Resources
     QMAKE_BUNDLE_DATA += TERMS_AND_CONDITIONS
 
-    TRANSLATIONS_FILES_LIST = $$system(ls $$PWD/translations/*.qm)
+    TRANSLATIONS_FILES_LIST = $$system(ls $$PWD/deps/translations/*.qm)
     XPIKS_TRANSLATIONS.files = $$TRANSLATIONS_FILES_LIST
     XPIKS_TRANSLATIONS.path = Contents/Resources/translations
     QMAKE_BUNDLE_DATA += XPIKS_TRANSLATIONS
+
+    FREQ_TABLES.files = deps/en_wordlist.tsv
+    FREQ_TABLES.path = Contents/Resources
+    QMAKE_BUNDLE_DATA += FREQ_TABLES
 }
 
 win32 {
@@ -338,11 +352,13 @@ win32 {
         LIBS += -llibcurl
     }
 
-    copywhatsnew.commands = $(COPY_FILE) \"$$shell_path($$PWD/whatsnew.txt)\" \"$$shell_path($$OUT_PWD/$$EXE_DIR/)\"
-    copyterms.commands = $(COPY_FILE) \"$$shell_path($$PWD/terms_and_conditions.txt)\" \"$$shell_path($$OUT_PWD/$$EXE_DIR/)\"
-    copydicts.commands = $(COPY_DIR) \"$$shell_path($$PWD/dict)\" \"$$shell_path($$OUT_PWD/$$EXE_DIR/dict)\"
+    LIBS += -lmman
 
-    copytranslations.commands = $(COPY_FILE) \"$$shell_path($$PWD/translations/xpiks_*.qm)\" \"$$shell_path($$OUT_PWD/$$EXE_DIR/translations/)\"
+    copywhatsnew.commands = $(COPY_FILE) \"$$shell_path($$PWD/deps/whatsnew.txt)\" \"$$shell_path($$OUT_PWD/$$EXE_DIR/)\"
+    copyterms.commands = $(COPY_FILE) \"$$shell_path($$PWD/deps/terms_and_conditions.txt)\" \"$$shell_path($$OUT_PWD/$$EXE_DIR/)\"
+    copydicts.commands = $(COPY_DIR) \"$$shell_path($$PWD/deps/dict)\" \"$$shell_path($$OUT_PWD/$$EXE_DIR/dict)\"
+
+    copytranslations.commands = $(COPY_FILE) \"$$shell_path($$PWD/deps/translations/xpiks_*.qm)\" \"$$shell_path($$OUT_PWD/$$EXE_DIR/translations/)\"
 
     QMAKE_EXTRA_TARGETS += copywhatsnew copyterms copydicts copytranslations
     POST_TARGETDEPS += copywhatsnew copyterms copydicts copytranslations
@@ -378,8 +394,8 @@ linux-qtcreator {
         LIBS += /usr/lib64/libcurl.so.4
         BUILDNO = $$system(od -An -N8 -tx8 </dev/urandom)
         
-        copywhatsnew.commands = $(COPY_FILE) "$$PWD/whatsnew.txt" "$$OUT_PWD/"
-        copyterms.commands = $(COPY_FILE) "$$PWD/terms_and_conditions.txt" "$$OUT_PWD/"
+        copywhatsnew.commands = $(COPY_FILE) "$$PWD/deps/whatsnew.txt" "$$OUT_PWD/"
+        copyterms.commands = $(COPY_FILE) "$$PWD/deps/terms_and_conditions.txt" "$$OUT_PWD/"
         QMAKE_EXTRA_TARGETS += copywhatsnew copyterms
 	POST_TARGETDEPS += copywhatsnew copyterms
 }
@@ -390,4 +406,5 @@ linux-static {
     DEFINES += STATIC
     message("Static build.")
 }
+
 DEFINES += BUILDNUMBER=$${BUILDNO}

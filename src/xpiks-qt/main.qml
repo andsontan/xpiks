@@ -38,8 +38,8 @@ ApplicationWindow {
     id: applicationWindow
     visible: true
     width: appSettings.getAppWidth(930)
-    height: appSettings.getAppHeight(750)
-    minimumHeight: 750
+    height: appSettings.getAppHeight(725)
+    minimumHeight: 725
     minimumWidth: 930
     title: i18.n + qsTr("Xpiks")
     property int openedDialogsCount: 0
@@ -928,8 +928,14 @@ ApplicationWindow {
                 color: Colors.defaultControlColor
 
                 Item {
+                    id: workflowHost
                     anchors.topMargin: 10
                     anchors.fill: parent
+                    property var autoCompleteBox
+
+                    function onAutoCompleteClose() {
+                        autoCompleteBox = undefined
+                    }
 
                     Item {
                         id: filterRect
@@ -1212,6 +1218,12 @@ ApplicationWindow {
                         // does not work for now in Qt 5.4.1 in combination with ListView
                         //verticalScrollBarPolicy: Qt.ScrollBarAlwaysOn
 
+                        flickableItem.onContentYChanged: {
+                            if (typeof workflowHost.autoCompleteBox !== "undefined") {
+                                workflowHost.autoCompleteBox.closePopup()
+                            }
+                        }
+
                         GridView {
                             id: artworksHost
                             model: filteredArtItemsModel
@@ -1283,7 +1295,6 @@ ApplicationWindow {
                                     }
 
                                     if (!isselected) {
-                                        descriptionTextInput.focus = false
                                         flv.removeFocus()
                                     }
                                 }
@@ -1313,6 +1324,51 @@ ApplicationWindow {
                                         }
 
                                         artworksHost.positionViewAtIndex(rowWrapper.delegateIndex, ListView.Contain)
+                                    }
+
+                                    onCompletionsAvailable: {
+                                        if (typeof workflowHost.autoCompleteBox !== "undefined") {
+                                            // update completion
+                                            return
+                                        }
+
+                                        var directParent = mainScrollView;
+                                        var tmp = flv.editControl.mapToItem(directParent,
+                                                                            flv.editControl.cursorRectangle.x,
+                                                                            flv.editControl.height)
+
+                                        var visibleItemsCount = Math.min(acSource.getCount(), 5);
+                                        var popupHeight = visibleItemsCount * (25 + 1) + 10
+
+                                        var isBelow = (tmp.y + popupHeight) < directParent.height;
+
+                                        var options = {
+                                            editableTags: flv,
+                                            isBelowEdit: isBelow,
+                                            "anchors.left": directParent.left,
+                                            "anchors.leftMargin": Math.min(tmp.x, directParent.width - 200)
+                                        }
+
+                                        if (isBelow) {
+                                            options["anchors.top"] = directParent.top
+                                            options["anchors.topMargin"] = tmp.y
+                                        } else {
+                                            options["anchors.bottom"] = directParent.bottom
+                                            options["anchors.bottomMargin"] = directParent.height - tmp.y + flv.editControl.height
+                                        }
+
+                                        var component = Qt.createComponent("Components/CompletionBox.qml");
+                                        if (component.status !== Component.Ready) {
+                                            console.debug("Component Error: " + component.errorString());
+                                        } else {
+                                            var instance = component.createObject(directParent, options);
+
+                                            instance.boxDestruction.connect(workflowHost.onAutoCompleteClose)
+                                            instance.itemSelected.connect(flv.editControl.acceptCompletion)
+                                            workflowHost.autoCompleteBox = instance
+
+                                            instance.openPopup()
+                                        }
                                     }
                                 }
 
@@ -1790,6 +1846,11 @@ ApplicationWindow {
                                                     }
 
                                                     onCopyRequest: clipboard.setText(keywordsstring)
+
+                                                    onCompletionRequested: {
+                                                        helpersWrapper.autoCompleteKeyword(prefix,
+                                                                                           rowWrapper.artworkModel)
+                                                    }
                                                 }
 
                                                 CustomScrollbar {

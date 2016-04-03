@@ -17,6 +17,7 @@ DEFINES += QT_NO_CAST_TO_ASCII \
 DEFINES += QUAZIP_STATIC
 DEFINES += HUNSPELL_STATIC
 DEFINES += TELEMETRY_ENABLED
+DEFINES += LIBFACE_STATIC
 
 DEFINES += INTEGRATION_TESTS
 
@@ -103,7 +104,10 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Suggestion/shutterstockqueryengine.cpp \
     spellcheckundotest.cpp \
     ../../xpiks-qt/Suggestion/fotoliaqueryengine.cpp \
-    ../../xpiks-qt/QMLExtensions/colorsmodel.cpp
+    ../../xpiks-qt/QMLExtensions/colorsmodel.cpp \
+    ../../xpiks-qt/AutoComplete/autocompletemodel.cpp \
+    ../../xpiks-qt/AutoComplete/autocompleteservice.cpp \
+    ../../xpiks-qt/AutoComplete/autocompleteworker.cpp
 
 RESOURCES +=
 
@@ -232,22 +236,27 @@ HEADERS += \
     ../../xpiks-qt/Suggestion/suggestionqueryenginebase.h \
     spellcheckundotest.h \
     ../../xpiks-qt/Suggestion/fotoliaqueryengine.h \
-    ../../xpiks-qt/QMLExtensions/colorsmodel.h
+    ../../xpiks-qt/QMLExtensions/colorsmodel.h \
+    ../../xpiks-qt/AutoComplete/autocompletemodel.h \
+    ../../xpiks-qt/AutoComplete/autocompleteservice.h \
+    ../../xpiks-qt/AutoComplete/autocompleteworker.h \
+    ../../xpiks-qt/AutoComplete/completionquery.h
 
 INCLUDEPATH += ../../tiny-aes
+INCLUDEPATH += ../../cpp-libface
 
 LIBS += -L"$$PWD/../../libs/"
 LIBS += -lhunspell
 LIBS += -lz
 LIBS += -lcurl
 LIBS += -lquazip
+LIBS += -lface
 
 macx {
     INCLUDEPATH += "../../hunspell-1.3.3/src"
     INCLUDEPATH += "../../quazip"
     INCLUDEPATH += "../../../libcurl/include"
 }
-
 
 win32 {
     QT += winextras
@@ -256,6 +265,8 @@ win32 {
     INCLUDEPATH += "../../quazip"
     INCLUDEPATH += "../../libcurl/include"
     LIBS -= -lcurl
+    LIBS -= -lface
+    LIBS += -llibface
 
     CONFIG(debug, debug|release) {
         EXE_DIR = debug

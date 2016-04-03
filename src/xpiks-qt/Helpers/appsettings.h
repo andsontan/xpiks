@@ -142,6 +142,9 @@ namespace Helpers {
         Q_PROPERTY(QString selectedThemeIndexKey READ getSelectedThemeIndexKey CONSTANT)
         QString getSelectedThemeIndexKey() const { return QLatin1String(Constants::SELECTED_THEME_INDEX); }
 
+        Q_PROPERTY(QString useAutoCompleteKey READ getUseAutoCompleteKey CONSTANT)
+        QString getUseAutoCompleteKey() const { return QLatin1String(Constants::USE_AUTO_COMPLETE); }
+
         Q_PROPERTY(QString whatsNewText READ getWhatsNewText CONSTANT)
         QString getWhatsNewText() const {
             QString text;

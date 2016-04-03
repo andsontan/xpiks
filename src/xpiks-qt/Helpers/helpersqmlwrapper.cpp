@@ -150,6 +150,12 @@ namespace Helpers {
     void HelpersQmlWrapper::removeUnavailableFiles() {
         m_CommandManager->removeUnavailableFiles();
     }
+
+    void HelpersQmlWrapper::autoCompleteKeyword(const QString &keyword, QObject *notifyObject) {
+#ifndef TESTS
+        m_CommandManager->autoCompleteKeyword(keyword, notifyObject);
+#endif
+    }
 }
 
 

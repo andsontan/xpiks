@@ -147,6 +147,7 @@ namespace Common {
         void spellCheckResultsReady();
         void spellCheckErrorsChanged();
         void aboutToBeRemoved();
+        void completionsAvailable();
 
     protected slots:
          void spellCheckRequestReady(int flags, int index);

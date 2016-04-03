@@ -58,6 +58,7 @@ namespace Models {
         Q_PROPERTY(bool autoFindVectors READ getAutoFindVectors WRITE setAutoFindVectors NOTIFY autoFindVectorsChanged)
         Q_PROPERTY(QString selectedLocale READ getSelectedLocale WRITE setSelectedLocale NOTIFY selectedLocaleChanged)
         Q_PROPERTY(int selectedThemeIndex READ getSelectedThemeIndex WRITE setSelectedThemeIndex NOTIFY selectedThemeIndexChanged)
+        Q_PROPERTY(bool useAutoComplete READ getUseAutoComplete WRITE setUseAutoComplete NOTIFY useAutoCompleteChanged)
 
     public:
         explicit SettingsModel(QObject *parent = 0);
@@ -98,6 +99,7 @@ namespace Models {
         bool getAutoFindVectors() const { return m_AutoFindVectors; }
         QString getSelectedLocale() const { return m_SelectedLocale; }
         int getSelectedThemeIndex() const { return m_SelectedThemeIndex; }
+        bool getUseAutoComplete() const { return m_UseAutoComplete; }
 
     signals:
         void settingsReset();
@@ -122,6 +124,7 @@ namespace Models {
         void autoFindVectorsChanged(bool value);
         void selectedLocaleChanged(QString value);
         void selectedThemeIndexChanged(int value);
+        void useAutoCompleteChanged(bool value);
 
     public:
         void setExifToolPath(QString exifToolPath) {
@@ -290,6 +293,13 @@ namespace Models {
             }
         }
 
+        void setUseAutoComplete(bool value) {
+            if (value != m_UseAutoComplete) {
+                m_UseAutoComplete = value;
+                emit useAutoCompleteChanged(value);
+            }
+        }
+
 #ifndef INTEGRATION_TESTS
     private:
 #else
@@ -320,6 +330,7 @@ namespace Models {
         bool m_CheckForUpdates;
         bool m_DictsPathChanged;
         bool m_AutoFindVectors;
+        bool m_UseAutoComplete;
     };
 }
 

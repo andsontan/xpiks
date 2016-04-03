@@ -55,6 +55,7 @@ namespace Helpers {
         Q_INVOKABLE void setTaskbarProgress(double value);
         Q_INVOKABLE void turnTaskbarProgressOff();
         Q_INVOKABLE void removeUnavailableFiles();
+        Q_INVOKABLE void autoCompleteKeyword(const QString &keyword, QObject *notifyObject);
 
     public:
         bool getPluginsAvailable() const;

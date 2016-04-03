@@ -89,7 +89,7 @@ namespace SpellCheck {
 
         bool initResult = false;
 
-        if (QFile(affPath).exists() && QFile(dicPath).exists()) {
+        if (QFileInfo(affPath).exists() && QFileInfo(dicPath).exists()) {
 #ifdef Q_OS_WIN
             // specific Hunspell handling of UTF-8 encoded pathes
             affPath = "\\\\?\\" + QDir::toNativeSeparators(affPath);
@@ -106,6 +106,7 @@ namespace SpellCheck {
             }
             catch(...) {
                 LOG_DEBUG << "Error in Hunspell with AFF" << affPath << "and DIC" << dicPath;
+                m_Hunspell = NULL;
             }
         } else {
             LOG_WARNING << "DIC or AFF file not found." << dicPath << "||" << affPath;

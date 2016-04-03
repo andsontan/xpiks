@@ -157,6 +157,59 @@ CloseRequested")
             Component.onCompleted: anchors.centerIn = undefined
 
             property double disabledOpacity: 0.3
+            property var autoCompleteBox
+
+            function onAutoCompleteClose() {
+                autoCompleteBox = undefined
+            }
+
+            Connections {
+                target: combinedArtworks
+                onCompletionsAvailable: {
+                    if (typeof dialogWindow.autoCompleteBox !== "undefined") {
+                        // update completion
+                        return
+                    }
+
+                    var directParent = dialogWindow;
+                    var tmp = flv.editControl.mapToItem(directParent,
+                                                        flv.editControl.cursorRectangle.x,
+                                                        flv.editControl.height)
+
+                    var visibleItemsCount = Math.min(acSource.getCount(), 5);
+                    var popupHeight = visibleItemsCount * (25 + 1) + 10
+
+                    var isBelow = (tmp.y + popupHeight) < directParent.height;
+
+                    var options = {
+                        editableTags: flv,
+                        isBelowEdit: isBelow,
+                        "anchors.left": directParent.left,
+                        "anchors.leftMargin": Math.min(tmp.x, directParent.width - 200)
+                    }
+
+                    if (isBelow) {
+                        options["anchors.top"] = directParent.top
+                        options["anchors.topMargin"] = tmp.y
+                    } else {
+                        options["anchors.bottom"] = directParent.bottom
+                        options["anchors.bottomMargin"] = directParent.height - tmp.y + flv.editControl.height
+                    }
+
+                    var component = Qt.createComponent("../Components/CompletionBox.qml");
+                    if (component.status !== Component.Ready) {
+                        console.debug("Component Error: " + component.errorString());
+                    } else {
+                        var instance = component.createObject(directParent, options);
+
+                        instance.boxDestruction.connect(dialogWindow.onAutoCompleteClose)
+                        instance.itemSelected.connect(flv.editControl.acceptCompletion)
+                        dialogWindow.autoCompleteBox = instance
+
+                        instance.openPopup()
+                    }
+                }
+            }
 
             ColumnLayout {
                 anchors.fill: parent
@@ -837,6 +890,11 @@ CloseRequested")
                                         } else if (titleCheckBox.checked) {
                                             titleTextInput.forceActiveFocus()
                                         }
+                                    }
+
+                                    onCompletionRequested: {
+                                        helpersWrapper.autoCompleteKeyword(prefix,
+                                                                           keywordsWrapper.keywordsModel)
                                     }
                                 }
 

@@ -53,5 +53,6 @@
         <file>Constants/UIConfig.js</file>
         <file>Components/SelectedIcon.qml</file>
         <file>Components/CustomComboBox.qml</file>
+        <file>Components/CompletionBox.qml</file>
     </qresource>
 </RCC>

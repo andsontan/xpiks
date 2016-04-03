@@ -5,8 +5,10 @@
 #include "../../xpiks-qt/SpellCheck/spellchecksuggestionmodel.h"
 #include "../../xpiks-qt/Models/filteredartitemsproxymodel.h"
 #include "../../xpiks-qt/MetadataIO/metadataiocoordinator.h"
+#include "../../xpiks-qt/AutoComplete/autocompleteservice.h"
 #include "../../xpiks-qt/Conectivity/analyticsuserevent.h"
 #include "../../xpiks-qt/SpellCheck/spellcheckerservice.h"
+#include "../../xpiks-qt/AutoComplete/autocompletemodel.h"
 #include "../../xpiks-qt/Models/recentdirectoriesmodel.h"
 #include "../../xpiks-qt/MetadataIO/backupsaverservice.h"
 #include "../../xpiks-qt/Suggestion/keywordssuggestor.h"
@@ -109,6 +111,8 @@ int main(int argc, char *argv[]) {
     Warnings::WarningsModel warningsModel;
     warningsModel.setSourceModel(&artItemsModel);
     Models::LanguagesModel languagesModel;
+    AutoComplete::AutoCompleteModel autoCompleteModel;
+    AutoComplete::AutoCompleteService autoCompleteService(&autoCompleteModel);
 
     Helpers::UpdateService updateService(false);
 
@@ -141,6 +145,7 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&pluginManager);
     commandManager.InjectDependency(&languagesModel);
     commandManager.InjectDependency(&colorsModel);
+    commandManager.InjectDependency(&autoCompleteService);
 
     commandManager.ensureDependenciesInjected();
 

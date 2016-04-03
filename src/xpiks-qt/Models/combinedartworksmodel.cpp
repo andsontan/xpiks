@@ -43,6 +43,9 @@ namespace Models {
     {
         QObject::connect(&m_CommonKeywordsModel, SIGNAL(spellCheckErrorsChanged()),
                          this, SLOT(spellCheckErrorsChangedHandler()));
+
+        QObject::connect(&m_CommonKeywordsModel, SIGNAL(completionsAvailable()),
+                         this, SIGNAL(completionsAvailable()));
     }
 
     CombinedArtworksModel::~CombinedArtworksModel() { qDeleteAll(m_ArtworksList); }

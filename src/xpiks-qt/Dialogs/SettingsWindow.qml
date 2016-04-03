@@ -326,6 +326,22 @@ ApplicationWindow {
                             }
                         }
 
+                        StyledCheckbox {
+                            id: autoCompleteCheckbox
+                            text: i18.n + qsTr("Autocomplete keywords")
+                            onCheckedChanged: {
+                                settingsModel.useAutoComplete = checked
+                            }
+                            function onResetRequested()  {
+                                checked = settingsModel.useAutoComplete
+                            }
+
+                            Component.onCompleted: {
+                                checked = settingsModel.useAutoComplete
+                                behaviorTab.resetRequested.connect(autoCompleteCheckbox.onResetRequested)
+                            }
+                        }
+
                         Item {
                             Layout.fillHeight: true
                         }

@@ -55,6 +55,7 @@
 #define DEFAULT_AUTO_FIND_VECTORS true
 #define DEFAULT_LOCALE "en_US"
 #define DEFAULT_SELECTED_THEME_INDEX 0
+#define DEFAULT_USE_AUTO_COMPLETE true
 
 namespace Models {
     SettingsModel::SettingsModel(QObject *parent) :
@@ -79,7 +80,8 @@ namespace Models {
         m_UseSpellCheck(DEFAULT_USE_SPELL_CHECK),
         m_UserStatistics(DEFAULT_COLLECT_USER_STATISTICS),
         m_CheckForUpdates(DEFAULT_UPDATE_SERVICE),
-        m_DictsPathChanged(false)
+        m_DictsPathChanged(false),
+        m_UseAutoComplete(DEFAULT_USE_AUTO_COMPLETE)
     {
     }
 
@@ -126,6 +128,7 @@ namespace Models {
         appSettings.setValue(appSettings.getUpdateServiceKey(), m_CheckForUpdates);
         appSettings.setValue(appSettings.getAutoFindVectorsKey(), m_AutoFindVectors);
         appSettings.setValue(appSettings.getSelectedThemeIndexKey(), m_SelectedThemeIndex);
+        appSettings.setValue(appSettings.getUseAutoCompleteKey(), m_UseAutoComplete);
 
         if (!m_MustUseMasterPassword) {
             appSettings.setValue(appSettings.getMasterPasswordHashKey(), "");
@@ -182,6 +185,7 @@ namespace Models {
         setAutoFindVectors(appSettings.boolValue(appSettings.getAutoFindVectorsKey(), DEFAULT_AUTO_FIND_VECTORS));
         setSelectedLocale(appSettings.value(appSettings.getSelectedLocaleKey(), DEFAULT_LOCALE).toString());
         setSelectedThemeIndex(appSettings.value(appSettings.getSelectedThemeIndexKey(), DEFAULT_SELECTED_THEME_INDEX).toInt());
+        setUseAutoComplete(appSettings.boolValue(appSettings.getUseAutoCompleteKey(), DEFAULT_USE_AUTO_COMPLETE));
     }
 
     void SettingsModel::resetToDefault() {
@@ -208,6 +212,7 @@ namespace Models {
         setAutoFindVectors(DEFAULT_AUTO_FIND_VECTORS);
         setSelectedLocale(DEFAULT_LOCALE);
         setSelectedThemeIndex(DEFAULT_SELECTED_THEME_INDEX);
+        setUseAutoComplete(DEFAULT_USE_AUTO_COMPLETE);
 
         Helpers::AppSettings appSettings;
 #if defined(QT_DEBUG)

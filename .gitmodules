@@ -1,3 +1,6 @@
 [submodule "src/tiny-aes"]
 	path = src/tiny-aes
 	url = https://github.com/kokke/tiny-AES128-C.git
+[submodule "src/cpp-libface"]
+	path = src/cpp-libface
+	url = https://github.com/Ribtoks/cpp-libface.git

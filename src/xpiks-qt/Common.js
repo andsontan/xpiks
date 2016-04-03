@@ -59,14 +59,14 @@ function launchDialog(componentName, directParent, options, functor) {
     } else {
         var instance = component.createObject(directParent, options);        
 
-        if (typeof instance.onDialogDestruction !== "undefined") {
+        if (typeof instance.dialogDestruction !== "undefined") {
             if (typeof directParent.openedDialogsCount !== "undefined") {
                 directParent.openedDialogsCount += 1
                 console.debug("Opened dialog " + componentName + ". Opened dialogs count is " + directParent.openedDialogsCount);
             }
 
             if (typeof directParent.onDialogClosed !== "undefined") {
-                instance.onDialogDestruction.connect(directParent.onDialogClosed);
+                instance.dialogDestruction.connect(directParent.onDialogClosed);
             }
         }
 
@@ -120,4 +120,3 @@ function safeInsert(textEdit, textToInsert) {
 
     return false;
 }
-

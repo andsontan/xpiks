@@ -50,6 +50,7 @@
 #include "../Plugins/pluginmanager.h"
 #include "../Warnings/warningsservice.h"
 #include "../Models/languagesmodel.h"
+#include "../AutoComplete/autocompleteservice.h"
 
 void Commands::CommandManager::InjectDependency(Models::ArtworksRepository *artworkRepository) {
     Q_ASSERT(artworkRepository != NULL); m_ArtworksRepository = artworkRepository;
@@ -168,6 +169,10 @@ void Commands::CommandManager::InjectDependency(QMLExtensions::ColorsModel *colo
     Q_ASSERT(colorsModel != NULL); m_ColorsModel = colorsModel;
 }
 
+void Commands::CommandManager::InjectDependency(AutoComplete::AutoCompleteService *autoCompleteService) {
+    Q_ASSERT(autoCompleteService != NULL); m_AutoCompleteService = autoCompleteService;
+}
+
 Commands::ICommandResult *Commands::CommandManager::processCommand(ICommandBase *command)
 #ifndef TESTS
 const
@@ -246,6 +251,7 @@ void Commands::CommandManager::ensureDependenciesInjected() {
     Q_ASSERT(m_PluginManager != NULL);
     Q_ASSERT(m_LanguagesModel != NULL);
     Q_ASSERT(m_ColorsModel != NULL);
+    Q_ASSERT(m_AutoCompleteService != NULL);
 }
 
 void Commands::CommandManager::recodePasswords(const QString &oldMasterPassword,
@@ -482,6 +488,7 @@ void Commands::CommandManager::afterConstructionCallback()  {
     m_SpellCheckerService->startService();
     m_WarningsService->startService();
     m_MetadataSaverService->startSaving();
+    m_AutoCompleteService->startService();
 
     QCoreApplication::processEvents();
 
@@ -535,6 +542,14 @@ void Commands::CommandManager::restartSpellChecking() {
         m_SpellCheckerService->restartWorker();
     }
 }
+
+#ifndef TESTS
+void Commands::CommandManager::autoCompleteKeyword(const QString &keyword, QObject *notifyObject) const {
+    if ((m_SettingsModel != NULL) && m_SettingsModel->getUseAutoComplete() && (m_AutoCompleteService != NULL)) {
+        m_AutoCompleteService->findKeywordCompletions(keyword, notifyObject);
+    }
+}
+#endif
 
 void Commands::CommandManager::removeUnavailableFiles() {
     LOG_DEBUG << "#";

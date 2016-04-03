@@ -19,27 +19,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ISERVICEBASE_H
-#define ISERVICEBASE_H
+#ifndef COMPLETIONQUERY_H
+#define COMPLETIONQUERY_H
 
-#include <QVector>
+#include <QObject>
+#include <QString>
+#include <QStringList>
+#include "autocompletemodel.h"
 
-namespace Common {
-    template<typename T>
-    class IServiceBase {
+namespace AutoComplete {
+    class CompletionQuery : public QObject {
+        Q_OBJECT
     public:
-        virtual ~IServiceBase() {}
+        CompletionQuery(const QString &prefix, AutoCompleteModel *autoCompleteModel) :
+            m_Prefix(prefix),
+            m_AutoCompleteModel(autoCompleteModel)
+        {
+        }
 
-        virtual void startService() = 0;
-        virtual void stopService() = 0;
+        const QString &getPrefix() const { return m_Prefix; }
 
-        // if service is provided via plugin it can be turned off
-        virtual bool isAvailable() const = 0;
+        void setCompletions(const QStringList &completions) {
+            m_AutoCompleteModel->setCompletions(completions);
+            emit completionsAvailable();
+        }
 
-        virtual void submitItem(T *item) = 0;
-        virtual void submitItem(T *item, int flags) = 0;
-        virtual void submitItems(const QVector<T*> &items) = 0;
+    signals:
+        void completionsAvailable();
+
+    private:
+        QString m_Prefix;
+        AutoCompleteModel *m_AutoCompleteModel;
     };
 }
 
-#endif // ISERVICEBASE_H
+#endif // COMPLETIONQUERY_H

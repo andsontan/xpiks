@@ -52,6 +52,8 @@ Flickable {
     property alias editEnabled: editWrapper.enabled
     property int flowSpacing: 5
     property bool stealWheel: true
+    property alias editControl: nextTagTextInput
+    property bool autoCompleteActive: acSource.isActive
 
     signal tagAdded(string text)
     signal removeLast()
@@ -60,7 +62,25 @@ Flickable {
     signal backTabPressed();
     signal tabPressed();
     signal editActivated();
-    signal clickedInside()
+    signal clickedInside();
+
+    signal completionRequested(string prefix);
+
+    function completionCancel() {
+        acSource.cancelCompletion();
+    }
+
+    function moveSelectionUp() {
+        acSource.moveSelectionUp();
+    }
+
+    function moveSelectionDown() {
+        acSource.moveSelectionDown();
+    }
+
+    function acceptSelected() {
+        acSource.acceptSelected()
+    }
 
     function activateEdit() {
         if (editEnabled && !nextTagTextInput.activeFocus) {
@@ -122,7 +142,7 @@ Flickable {
     }
 
     function removeFocus() {
-        nextTagTextInput.focus = false
+        // bump
     }
 
     MouseArea {
@@ -229,18 +249,68 @@ Flickable {
                 renderType: TextInput.NativeRendering
                 focus: true
 
+                function getCurrentWordStart() {
+                    var pos = nextTagTextInput.cursorPosition
+                    if (pos === text.length || text.charAt(pos) === ' ') { pos-- }
+                    while ((pos >= 0) && (text.charAt(pos) !== ' ')) {
+                        pos--;
+                    }
+
+                    return pos + 1;
+                }
+
+                function getCurrentWordEnd() {
+                    var pos = nextTagTextInput.cursorPosition
+                    var len = text.length
+                    while ((pos < len) && (text.charAt(pos) !== ' ')) {
+                        pos++
+                    }
+
+                    // substr does not include end
+                    return pos
+                }
+
+                function requestCompletion() {
+                    var start = getCurrentWordStart()
+                    var end = getCurrentWordEnd()
+                    if (end - start >= 3) {
+                        var prefix = text.substring(start, end)
+                        completionRequested(prefix)
+                    }
+                }
+
+                function acceptCompletion(completion) {
+                    var start = getCurrentWordStart()
+                    var end = getCurrentWordEnd()
+                    var currText = nextTagTextInput.text;
+                    var newText = currText.slice(0, start) + completion + currText.slice(end);
+                    var newCursorPosition = start + completion.length
+
+                    nextTagTextInput.text = newText
+                    nextTagTextInput.cursorPosition = newCursorPosition
+                }
+
                 /*validator: RegExpValidator {
                     // copy paste in keys.onpressed Paste
                     regExp: /^(?:\c+(?:-| |$))+$/
                 }*/
 
-                //onFocusChanged: focusLost()
+                onActiveFocusChanged: {
+                    if (!activeFocus) {
+                        completionCancel()
+                    }
+                }
 
                 onEditingFinished: {
                     var tagText = getEditedText();
                     if (raiseAddTag(tagText)) {
                         nextTagTextInput.text = '';
                     }
+                    completionCancel()
+                }
+
+                onCursorPositionChanged: {
+                    //completionCancel()
                 }
 
                 Keys.onPressed: {
@@ -278,11 +348,14 @@ Flickable {
                         }
 
                         event.accepted = true;
+                        completionCancel()
                     }
                     else if (event.key === Qt.Key_Backspace) {
                         if (nextTagTextInput.length == 0) {
                             removeLast();
                             event.accepted = true;
+                        } else {
+                            completionCancel()
                         }
                     }
                     else if (event.key === Qt.Key_Tab) {
@@ -292,9 +365,42 @@ Flickable {
                     else if (event.key === Qt.Key_Backtab) {
                         backTabPressed()
                         event.accepted = true;
+                    } else if (event.key === Qt.Key_Space) {
+                        if ((event.modifiers & Qt.ControlModifier) ||
+                                (event.modifiers & Qt.MetaModifier)) {
+                            requestCompletion()
+                            event.accepted = true;
+                        } else {
+                            completionCancel()
+                        }
+                    } else if (autoCompleteActive && (event.key === Qt.Key_Return)) {
+                        acceptSelected();
+                        event.accepted = true
+                    } else if (autoCompleteActive && (event.key === Qt.Key_Up)) {
+                        moveSelectionUp()
+                        event.accepted = true
+                    } else if (autoCompleteActive && (event.key === Qt.Key_Down)) {
+                        moveSelectionDown()
+                        event.accepted = true;
+                    } else if (autoCompleteActive && (event.key === Qt.Key_Escape)) {
+                        completionCancel()
+                        event.accepted = true;
                     }
 
                     scrollToBottom()
+                }
+
+                Keys.onReleased: {
+                    if (Qt.Key_A <= event.key && event.key <= Qt.Key_Z) {
+                        if (text.length >= 3) {
+                            requestCompletion()
+                        }
+                    } else if ((event.key === Qt.Key_Left) ||
+                               (event.key === Qt.Key_Right)) {
+                        if (autoCompleteActive) {
+                            completionCancel()
+                        }
+                    }
                 }
             }
         }

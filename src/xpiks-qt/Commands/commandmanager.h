@@ -25,6 +25,7 @@
 #include <QStringList>
 #include <QList>
 #include <QVector>
+#include <QObject>
 #include "../UndoRedo/ihistoryitem.h"
 #include "commandbase.h"
 #include "../Conectivity/analyticsuserevent.h"
@@ -33,6 +34,7 @@
 #include "../Common/iservicebase.h"
 #include "../Warnings/iwarningscheckable.h"
 #include "../Helpers/ifilenotavailablemodel.h"
+
 namespace Encryption {
     class SecretsManager;
 }
@@ -94,6 +96,10 @@ namespace QMLExtensions {
     class ColorsModel;
 }
 
+namespace AutoComplete {
+    class AutoCompleteService;
+}
+
 namespace Commands {
     class CommandManager : public ICommandManager
     {
@@ -122,6 +128,8 @@ namespace Commands {
             m_MetadataIOCoordinator(NULL),
             m_PluginManager(NULL),
             m_LanguagesModel(NULL),
+            m_ColorsModel(NULL),
+            m_AutoCompleteService(NULL),
             m_AfterInitCalled(false)
         { }
 
@@ -152,6 +160,7 @@ namespace Commands {
         void InjectDependency(Plugins::PluginManager *pluginManager);
         void InjectDependency(Models::LanguagesModel *languagesModel);
         void InjectDependency(QMLExtensions::ColorsModel *colorsModel);
+        void InjectDependency(AutoComplete::AutoCompleteService *autoCompleteService);
 
     public:
         virtual ICommandResult *processCommand(ICommandBase *command)
@@ -212,6 +221,9 @@ namespace Commands {
         void afterConstructionCallback();
         void beforeDestructionCallback() const;
         void restartSpellChecking();
+#ifndef TESTS
+        void autoCompleteKeyword(const QString &keyword, QObject *notifyObject) const;
+#endif
 
 #ifdef INTEGRATION_TESTS
         void cleanup();
@@ -263,6 +275,7 @@ namespace Commands {
         Plugins::PluginManager *m_PluginManager;
         Models::LanguagesModel *m_LanguagesModel;
         QMLExtensions::ColorsModel *m_ColorsModel;
+        AutoComplete::AutoCompleteService *m_AutoCompleteService;
 
         QVector<Common::IServiceBase<Warnings::IWarningsCheckable> *> m_WarningsCheckers;
         QVector<Helpers::IFileNotAvailableModel*> m_AvailabilityListeners;

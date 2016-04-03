@@ -39,8 +39,10 @@
 #include "SpellCheck/spellchecksuggestionmodel.h"
 #include "Models/filteredartitemsproxymodel.h"
 #include "MetadataIO/metadataiocoordinator.h"
+#include "AutoComplete/autocompleteservice.h"
 #include "Conectivity/analyticsuserevent.h"
 #include "SpellCheck/spellcheckerservice.h"
+#include "AutoComplete/autocompletemodel.h"
 #include "Models/recentdirectoriesmodel.h"
 #include "MetadataIO/backupsaverservice.h"
 #include "QMLExtensions/triangleelement.h"
@@ -168,7 +170,12 @@ static const char *setHighDpiEnvironmentVariable()
 }
 
 int main(int argc, char *argv[]) {
-    Helpers::RunGuard guard("xpiks");
+#ifdef QT_NO_DEBUG
+    const QString runGuardName = "xpiks";
+#else
+    const QString runGuardName = "xpiks-debug";
+#endif
+    Helpers::RunGuard guard(runGuardName);
     if (!guard.tryToRun()) {
         std::cerr << "Xpiks is already running";
         return -1;
@@ -274,6 +281,8 @@ int main(int argc, char *argv[]) {
     Warnings::WarningsModel warningsModel;
     warningsModel.setSourceModel(&artItemsModel);
     Models::LanguagesModel languagesModel;
+    AutoComplete::AutoCompleteModel autoCompleteModel;
+    AutoComplete::AutoCompleteService autoCompleteService(&autoCompleteModel);
 
     bool checkForUpdates = appSettings.value(Constants::CHECK_FOR_UPDATES, true).toBool();
     Helpers::UpdateService updateService(checkForUpdates);
@@ -314,6 +323,7 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&pluginManager);
     commandManager.InjectDependency(&languagesModel);
     commandManager.InjectDependency(&colorsModel);
+    commandManager.InjectDependency(&autoCompleteService);
 
     commandManager.ensureDependenciesInjected();
 
@@ -360,6 +370,8 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("languagesModel", &languagesModel);
     rootContext->setContextProperty("i18", &languagesModel);
     rootContext->setContextProperty("Colors", &colorsModel);
+    rootContext->setContextProperty("acSource", &autoCompleteModel);
+    rootContext->setContextProperty("autoCompleteService", &autoCompleteService);
 
     engine.addImageProvider("global", globalProvider);
     LOG_DEBUG << "About to load main view...";
