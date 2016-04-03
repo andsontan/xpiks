@@ -129,7 +129,7 @@ namespace Models {
         Common::BasicKeywordsModel *getBasicKeywordsModel() { return &m_CommonKeywordsModel; }
 #endif
 
-#if defined(TESTS)
+#ifdef CORE_TESTS
         const QStringList &getKeywords() const;
         bool getAreKeywordsModified() const { return m_AreKeywordsModified; }
         bool getIsDescriptionModified() const { return m_IsDescriptionModified; }

@@ -127,7 +127,7 @@ namespace Models {
         return selectedCount;
     }
 
-#if defined(TESTS)
+#ifdef CORE_TESTS
         const QStringList &CombinedArtworksModel::getKeywords() const {
             return m_CommonKeywordsModel.getKeywords();
         }
