@@ -197,8 +197,6 @@ namespace MetadataIO {
             QString exiftoolPath = m_SettingsModel->getExifToolPath();
             QStringList arguments;
 #ifdef Q_OS_WIN
-            // TODO: FIXME: dirty hack for Windows and UTF8-encoded paths
-            QThread::sleep(1);
             arguments << "-charset" << "FileName=UTF8";
 
             /*
