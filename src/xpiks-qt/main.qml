@@ -1207,25 +1207,22 @@ ApplicationWindow {
                         visible: !undoRedoManager.canUndo && (artworksHost.count > 0)
                     }
 
-                    StyledScrollView {
+                    Item {
                         id: mainScrollView
                         anchors.left: parent.left
                         anchors.right: parent.right
                         anchors.top: separator.bottom
                         anchors.bottom: parent.bottom
-                        property bool areScrollbarsVisible: flickableItem.contentHeight > flickableItem.height
-                        __wheelAreaScrollSpeed: 50 + 10*settingsModel.scrollSpeedScale
+                        clip: true
+                        property bool areScrollbarsVisible: artworksHost.contentHeight > artworksHost.height
+                        //__wheelAreaScrollSpeed: 50 + 10*settingsModel.scrollSpeedScale
                         // does not work for now in Qt 5.4.1 in combination with ListView
                         //verticalScrollBarPolicy: Qt.ScrollBarAlwaysOn
 
-                        flickableItem.onContentYChanged: {
-                            if (typeof workflowHost.autoCompleteBox !== "undefined") {
-                                workflowHost.autoCompleteBox.closePopup()
-                            }
-                        }
-
                         GridView {
                             id: artworksHost
+                            anchors.fill: parent
+                            anchors.rightMargin: mainScrollView.areScrollbarsVisible ? 10 : 0
                             model: filteredArtItemsModel
                             boundsBehavior: Flickable.StopAtBounds
                             property int cellSpacing: 4
@@ -1265,6 +1262,12 @@ ApplicationWindow {
 
                             removeDisplaced: Transition {
                                 NumberAnimation { properties: "x,y"; duration: 230 }
+                            }
+
+                            onContentYChanged: {
+                                if (typeof workflowHost.autoCompleteBox !== "undefined") {
+                                    workflowHost.autoCompleteBox.closePopup()
+                                }
                             }
 
                             delegate: Rectangle {
@@ -2009,6 +2012,13 @@ ApplicationWindow {
                                 target: filteredArtItemsModel
                                 onAfterInvalidateFilter: artworksHost.forceUpdateArtworks()
                             }
+                        }
+
+                        CustomScrollbar {
+                            anchors.topMargin: 0
+                            anchors.bottomMargin: 0
+                            anchors.rightMargin: -10
+                            flickable: artworksHost
                         }
                     }
 

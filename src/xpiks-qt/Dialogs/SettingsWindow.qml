@@ -352,7 +352,6 @@ ApplicationWindow {
             Tab {
                 id: uxTab
                 property double sizeSliderValue: settingsModel.keywordSizeScale
-                property double scrollSliderValue: settingsModel.scrollSpeedScale
                 property int themeIndex: settingsModel.selectedThemeIndex
                 title: i18.n + qsTr("Interface")
                 signal resetRequested()
@@ -368,28 +367,8 @@ ApplicationWindow {
                     RowLayout {
                         anchors.left: parent.left
                         anchors.right: parent.right
-                        spacing: 20
                         z: 10000
-
-                        StyledCheckbox {
-                            id: fitArtworksCheckbox
-                            text: i18.n + qsTr("Fit artwork's preview")
-                            onCheckedChanged: {
-                                settingsModel.fitSmallPreview = checked
-                            }
-                            function onResetRequested()  {
-                                checked =  settingsModel.fitSmallPreview
-                            }
-
-                            Component.onCompleted: {
-                                checked = settingsModel.fitSmallPreview
-                                uxTab.resetRequested.connect(fitArtworksCheckbox.onResetRequested)
-                            }
-                        }
-
-                        Item {
-                            width: 20
-                        }
+                        spacing: 20
 
                         StyledText {
                             text: i18.n + qsTr("Theme:")
@@ -413,6 +392,28 @@ ApplicationWindow {
                             Component.onCompleted: {
                                 themeComboBox.selectedIndex = settingsModel.selectedThemeIndex
                                 uxTab.resetRequested.connect(themeComboBox.onResetRequested)
+                            }
+                        }
+                    }
+
+                    RowLayout {
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        spacing: 20
+
+                        StyledCheckbox {
+                            id: fitArtworksCheckbox
+                            text: i18.n + qsTr("Fit artwork's preview")
+                            onCheckedChanged: {
+                                settingsModel.fitSmallPreview = checked
+                            }
+                            function onResetRequested()  {
+                                checked =  settingsModel.fitSmallPreview
+                            }
+
+                            Component.onCompleted: {
+                                checked = settingsModel.fitSmallPreview
+                                uxTab.resetRequested.connect(fitArtworksCheckbox.onResetRequested)
                             }
                         }
                     }
@@ -494,35 +495,6 @@ ApplicationWindow {
                                     isActive: true
                                     anchors.centerIn: parent
                                 }
-                            }
-                        }
-                    }
-
-                    RowLayout {
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        spacing: 24
-
-                        StyledText {
-                            text: i18.n + qsTr("Scroll speed")
-                        }
-
-                        StyledSlider {
-                            id: scrollSpeedSlider
-                            width: 150
-                            minimumValue: 1.0
-                            maximumValue: 6
-                            stepSize: 0.01
-                            orientation: Qt.Horizontal
-                            onValueChanged: uxTab.scrollSliderValue = value
-                            Component.onCompleted: {
-                                value = uxTab.scrollSliderValue
-                                uxTab.resetRequested.connect(scrollSpeedSlider.onResetRequested)
-                            }
-
-                            function onResetRequested() {
-                                value = settingsModel.scrollSpeedScale
-                                uxTab.sizeSliderValue = value
                             }
                         }
                     }
@@ -1232,7 +1204,6 @@ ApplicationWindow {
                 width: 100
                 onClicked: {
                     settingsModel.keywordSizeScale = uxTab.sizeSliderValue
-                    settingsModel.scrollSpeedScale = uxTab.scrollSliderValue
                     settingsModel.selectedThemeIndex = uxTab.themeIndex
                     settingsModel.userStatistic = secTab.useStatistics
                     settingsModel.saveAllValues()
