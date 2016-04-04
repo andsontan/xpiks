@@ -34,6 +34,7 @@
 namespace Models {
     ArtworkMetadata::ArtworkMetadata(const QString &filepath, qint64 ID) :
         Common::BasicKeywordsModel(),
+        m_FileSize(0),
         m_ArtworkFilepath(filepath),
         m_ID(ID),
         m_MetadataFlags(0)

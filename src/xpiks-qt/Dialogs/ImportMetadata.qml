@@ -219,6 +219,7 @@ Item {
                         text: i18.n + qsTr("Start Import")
                         enabled: !metadataImportComponent.isInProgress
                         onClicked: {
+                            console.debug("Start Import pressed")
                             if (metadataIOCoordinator.exiftoolNotFound) {
                                 installExiftoolDialog.open()
                             } else {
@@ -253,6 +254,8 @@ Item {
                         width: 100
                         enabled: !metadataImportComponent.isInProgress
                         onClicked: {
+                            console.debug("Close without Import pressed")
+                            metadataIOCoordinator.continueWithoutReading()
                             closePopup()
                         }
                     }

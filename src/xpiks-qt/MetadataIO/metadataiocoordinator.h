@@ -90,6 +90,7 @@ namespace MetadataIO {
         void autoDiscoverExiftool();
         Q_INVOKABLE void discardReading();
         Q_INVOKABLE void continueReading(bool ignoreBackups);
+        Q_INVOKABLE void continueWithoutReading();
 
     private:
         void readingFinishedHandler(bool ignoreBackups);
