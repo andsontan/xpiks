@@ -101,6 +101,12 @@ ApplicationWindow {
         appSettings.setAppPosY(applicationWindow.y)
     }
 
+    function closeAutoComplete() {
+        if (typeof workflowHost.autoCompleteBox !== "undefined") {
+            workflowHost.autoCompleteBox.closePopup()
+        }
+    }
+
     onClosing: closeHandler(close)
 
     Timer {
@@ -982,9 +988,12 @@ ApplicationWindow {
 
                     LayoutButton {
                         enabled: artworkRepository.artworksSourcesCount > 0
-                        isListLayout: applicationWindow.listLayout
-                        onLayoutChanged: applicationWindow.listLayout = !applicationWindow.listLayout
                         anchors.verticalCenter: parent.verticalCenter
+                        isListLayout: applicationWindow.listLayout
+                        onLayoutChanged: {
+                            applicationWindow.listLayout = !applicationWindow.listLayout
+                            closeAutoComplete()
+                        }
                     }
 
                     Item {
@@ -1367,11 +1376,7 @@ ApplicationWindow {
                                 NumberAnimation { properties: "x,y"; duration: 230 }
                             }
 
-                            onContentYChanged: {
-                                if (typeof workflowHost.autoCompleteBox !== "undefined") {
-                                    workflowHost.autoCompleteBox.closePopup()
-                                }
-                            }
+                            onContentYChanged: closeAutoComplete()
 
                             delegate: Rectangle {
                                 id: rowWrapper
