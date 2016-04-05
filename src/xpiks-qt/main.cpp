@@ -373,6 +373,12 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("acSource", &autoCompleteModel);
     rootContext->setContextProperty("autoCompleteService", &autoCompleteService);
 
+#ifdef QT_DEBUG
+    rootContext->setContextProperty("debug", true);
+#else
+    rootContext->setContextProperty("debug", false);
+#endif
+
     engine.addImageProvider("global", globalProvider);
     LOG_DEBUG << "About to load main view...";
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));

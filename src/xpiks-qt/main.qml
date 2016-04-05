@@ -436,6 +436,50 @@ ApplicationWindow {
                 onTriggered: Qt.openUrlExternally("http://ribtoks.github.io/xpiks/support/")
             }
         }
+
+        Menu {
+            title: "Debug"
+            visible: debug
+            enabled: debug
+
+            MenuItem {
+                text: "Keywords Suggestion"
+                onTriggered: {
+                    var callbackObject = {
+                        promoteKeywords: function(keywords) {
+                            // bump
+                        }
+                    }
+
+                    Common.launchDialog("Dialogs/KeywordsSuggestion.qml",
+                                        applicationWindow,
+                                        {callbackObject: callbackObject});
+                }
+            }
+
+            MenuItem {
+                text: "Update window"
+                onTriggered: {
+                    Common.launchDialog("Dialogs/UpdateWindow.qml",
+                                        applicationWindow, {updateUrl: "http://ribtoks.github.io/xpiks/downloads/"},
+                                        function(wnd) {wnd.show();});
+                }
+            }
+
+            MenuItem {
+                text: "What's new dialog"
+                onTriggered: {
+                    var text = appSettings.whatsNewText;
+                    if (text.length > 0) {
+                        Common.launchDialog("Dialogs/WhatsNewDialog.qml",
+                                            applicationWindow,
+                                            {
+                                                whatsNewText: text
+                                            })
+                    }
+                }
+            }
+        }
     }
 
     MessageDialog {
