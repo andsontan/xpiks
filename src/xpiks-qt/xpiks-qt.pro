@@ -83,7 +83,9 @@ SOURCES += main.cpp \
     Suggestion/locallibraryqueryengine.cpp \
     Suggestion/fotoliaqueryengine.cpp \
     QMLExtensions/colorsmodel.cpp \
-    Conectivity/removeconfigupdater.cpp
+    Helpers/remoteconfig.cpp \
+    Helpers/localconfig.cpp \
+    Helpers/jsonhelper.cpp
 
 RESOURCES += qml.qrc
 
@@ -219,7 +221,9 @@ HEADERS += \
     Helpers/ifilenotavailablemodel.h \
     Suggestion/fotoliaqueryengine.h \
     QMLExtensions/colorsmodel.h \
-    Conectivity/removeconfigupdater.h
+    Helpers/remoteconfig.h \
+    Helpers/localconfig.h \
+    Helpers/jsonhelper.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
