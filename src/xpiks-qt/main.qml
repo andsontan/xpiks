@@ -376,6 +376,7 @@ ApplicationWindow {
 
         Menu {
             title: i18.n + qsTr("&Edit")
+            enabled: applicationWindow.openedDialogsCount == 0
 
             MenuItem {
                 text: i18.n + qsTr("&Invert selection")
