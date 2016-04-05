@@ -6,9 +6,13 @@ Coding guidelines:
 
 - curly bracket opens on the same line as previous statement
 - always put a class into a namespace
-- class fields variables should be private except special cases when they can be protected
+- asterisk or ampersand should be aligned with variable/method name
+- class fields should go last
+- class fields variables should be private except very special cases when they can be protected
 - class fields should be named using the `m_CamelCase` style (starting with "m_" and then the name starting with the capital letter)
 - try to move as much includes from the header to implementation as possible
+- methods should be separated by 1 empty line as well as all files should have 1 last empty line
+- always put space around assignments, after comma, before curly bracket etc.
 
 Take a look at the [Xpiks Wiki pages](https://github.com/Ribtoks/xpiks/wiki). They contain a lot of topics of how to develop this or that feature.
 
