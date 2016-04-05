@@ -77,7 +77,7 @@ SlateGrayTheme.labelActiveForeground = SlateGrayTheme.inputBackgroundColor;
 SlateGrayTheme.artworkBackground = "#22252c";
 SlateGrayTheme.artworkImageBackground = "#1c2025";
 SlateGrayTheme.artworkModifiedColor = "#f49c12";
-SlateGrayTheme.artworkSavedColor = "#435151";
+SlateGrayTheme.artworkSavedColor = "#7a7e86";
 SlateGrayTheme.artworkActiveColor = "#2ec1c3";
 
 SlateGrayTheme.defaultLightColor = "#E0E0E0";
