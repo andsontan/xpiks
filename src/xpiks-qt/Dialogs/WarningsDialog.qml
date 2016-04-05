@@ -216,11 +216,11 @@ Item {
                                                 spacing: 5
 
                                                 Rectangle {
-                                                    height: 8
+                                                    height: 6
                                                     width: height
                                                     radius: height/2
                                                     anchors.verticalCenter: parent.verticalCenter
-                                                    color: Colors.selectedImageBackground
+                                                    color: Colors.labelActiveForeground
                                                 }
 
                                                 StyledText {
