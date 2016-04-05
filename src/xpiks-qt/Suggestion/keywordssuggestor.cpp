@@ -30,6 +30,7 @@
 #include "shutterstockqueryengine.h"
 #include "locallibraryqueryengine.h"
 #include "fotoliaqueryengine.h"
+#include "gettyqueryengine.h"
 
 namespace Suggestion {
     KeywordsSuggestor::KeywordsSuggestor(LocalLibrary *library, QObject *parent):
@@ -45,7 +46,10 @@ namespace Suggestion {
         setLastErrorString(tr("No results found"));
 
         m_QueryEngines.append(new ShutterstockQueryEngine());
+        m_QueryEngines.append(new GettyQueryEngine());
+#ifdef QT_DEBUG
         m_QueryEngines.append(new FotoliaQueryEngine());
+#endif
         m_QueryEngines.append(new LocalLibraryQueryEngine(m_LocalLibrary));
 
         int length = m_QueryEngines.length();

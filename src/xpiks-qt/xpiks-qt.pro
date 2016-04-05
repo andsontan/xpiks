@@ -85,7 +85,8 @@ SOURCES += main.cpp \
     QMLExtensions/colorsmodel.cpp \
     AutoComplete/autocompletemodel.cpp \
     AutoComplete/autocompleteworker.cpp \
-    AutoComplete/autocompleteservice.cpp
+    AutoComplete/autocompleteservice.cpp \
+    Suggestion/gettyqueryengine.cpp
 
 RESOURCES += qml.qrc
 
@@ -223,7 +224,8 @@ HEADERS += \
     AutoComplete/autocompletemodel.h \
     AutoComplete/autocompleteworker.h \
     AutoComplete/completionquery.h \
-    AutoComplete/autocompleteservice.h
+    AutoComplete/autocompleteservice.h \
+    Suggestion/gettyqueryengine.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
