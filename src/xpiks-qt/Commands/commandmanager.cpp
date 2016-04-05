@@ -361,6 +361,7 @@ void Commands::CommandManager::addToRecentDirectories(const QString &path) const
     }
 }
 
+#ifdef QT_DEBUG
 void Commands::CommandManager::openInitialFiles() {
     if (m_InitialImagesToOpen.isEmpty()) { return; }
     Commands::AddArtworksCommand *command = new Commands::AddArtworksCommand(m_InitialImagesToOpen, m_InitialVectorsToOpen, false);
@@ -368,7 +369,6 @@ void Commands::CommandManager::openInitialFiles() {
     delete result;
 }
 
-#ifdef QT_DEBUG
 void Commands::CommandManager::addInitialArtworks(const QStringList &artworksFilepathes, const QStringList &vectors) {
     m_InitialImagesToOpen = artworksFilepathes;
     m_InitialVectorsToOpen = vectors;
