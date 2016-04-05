@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import QtQuick 2.2
+import QtQuick 2.5
 import QtQuick.Dialogs 1.1
 import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.1
@@ -197,6 +197,143 @@ ApplicationWindow {
         openingTimer.start()
     }
 
+    Action {
+        id: openSettingsAction
+        text: i18.n + qsTr("&Settings")
+        shortcut: StandardKey.Preferences
+        onTriggered: {
+            settingsModel.readAllValues()
+            Common.launchDialog("Dialogs/SettingsWindow.qml",
+                            applicationWindow, {},
+                            function(wnd) {wnd.show();});
+        }
+    }
+
+    Action {
+        id: quitAction
+        text: i18.n + qsTr("&Exit")
+        shortcut: StandardKey.Quit
+        onTriggered: closeHandler({accepted: false});
+    }
+
+    Action {
+        id: editAction
+        shortcut: "Ctrl+E"
+        enabled: artworkRepository.artworksSourcesCount > 0
+        onTriggered: {
+            if (filteredArtItemsModel.selectedArtworksCount === 0) {
+                mustSelectDialog.open()
+            }
+            else {
+                var launched = false
+
+                if (filteredArtItemsModel.selectedArtworksCount == 1) {
+                    var index = filteredArtItemsModel.findSelectedItemIndex()
+
+                    if (index !== -1) {
+                        Common.launchItemEditing(index, applicationWindow, {
+                                                     applyCallback: function() {}
+                                                 })
+                        launched = true
+                    }
+                }
+
+                if (!launched) {
+                    // also as fallback in case of errors in findSelectedIndex
+                    filteredArtItemsModel.combineSelectedArtworks();
+                    Common.launchDialog("Dialogs/CombinedArtworksDialog.qml",
+                                        applicationWindow, {componentParent: applicationWindow});
+                }
+            }
+        }
+    }
+
+    Action {
+        id: saveAction
+        shortcut: StandardKey.Save
+        enabled: artworkRepository.artworksSourcesCount > 0
+        onTriggered: {
+            if (filteredArtItemsModel.selectedArtworksCount == 0) {
+                mustSelectDialog.open()
+            }
+            else {
+                var modifiedSelectedCount = filteredArtItemsModel.getModifiedSelectedCount();
+
+                if (filteredArtItemsModel.selectedArtworksCount > 0 && modifiedSelectedCount > 0) {
+                    Common.launchDialog("Dialogs/ExportMetadata.qml", applicationWindow, {})
+                } else {
+                    if (modifiedSelectedCount === 0) {
+                        alreadySavedDialog.open()
+                    }
+                }
+            }
+        }
+    }
+
+    Action {
+        id: searchAction
+        shortcut: StandardKey.Find
+        onTriggered: filterText.forceActiveFocus()
+        enabled: artworkRepository.artworksSourcesCount > 0
+    }
+
+    Action {
+        id: selectAllAction
+        shortcut: StandardKey.SelectAll
+        enabled: artworkRepository.artworksSourcesCount > 0
+        onTriggered: {
+            if (selectAllCheckbox.checked) {
+                filteredArtItemsModel.selectFilteredArtworks();
+            }
+            else {
+                filteredArtItemsModel.unselectFilteredArtworks();
+            }
+        }
+    }
+
+    Action {
+        id: removeAction
+        shortcut: "Ctrl+Del"
+        enabled: artworkRepository.artworksSourcesCount > 0
+        onTriggered: {
+            if (filteredArtItemsModel.selectedArtworksCount === 0) {
+                mustSelectDialog.open()
+            }
+            else {
+                var itemsCount = filteredArtItemsModel.selectedArtworksCount
+                if (itemsCount > 0) {
+                    if (mustUseConfirmation()) {
+                        confirmRemoveSelectedDialog.itemsCount = itemsCount
+                        confirmRemoveSelectedDialog.open()
+                    } else {
+                        doRemoveSelectedArtworks()
+                    }
+                }
+            }
+        }
+    }
+
+    Action {
+        id: uploadAction
+        shortcut: "Shift+Ctrl+U"
+        enabled: artworkRepository.artworksSourcesCount > 0
+        onTriggered: {
+            if (filteredArtItemsModel.selectedArtworksCount === 0) {
+                filteredArtItemsModel.selectFilteredArtworks();
+            }
+
+            if (filteredArtItemsModel.selectedArtworksCount > 0) {
+                tryUploadArtworks();
+            }
+        }
+    }
+
+    Action {
+        id: addFilesAction
+        shortcut: StandardKey.Open
+        onTriggered: chooseArtworksDialog.open()
+    }
+
     menuBar: MenuBar {
         Menu {
             title: i18.n + qsTr("&File")
@@ -223,15 +360,7 @@ ApplicationWindow {
                 }
             }
 
-            MenuItem {
-                text: i18.n + qsTr("&Settings")
-                onTriggered: {
-                    settingsModel.readAllValues()
-                    Common.launchDialog("Dialogs/SettingsWindow.qml",
-                                    applicationWindow, {},
-                                    function(wnd) {wnd.show();});
-                }
-            }
+            MenuItem { action: openSettingsAction }
 
             MenuItem {
                 text: i18.n + qsTr("&About")
@@ -242,10 +371,7 @@ ApplicationWindow {
                 }
             }
 
-            MenuItem {
-                text: i18.n + qsTr("&Exit")
-                onTriggered: closeHandler({accepted: false});
-            }
+            MenuItem { action: quitAction }
         }
 
         Menu {
@@ -303,7 +429,6 @@ ApplicationWindow {
                     openUploadDialog()
                 }
             }
-
         }
 
         Menu {
@@ -723,7 +848,7 @@ ApplicationWindow {
                     anchors.verticalCenter: parent.verticalCenter
                     text: i18.n + qsTr("Add files", "button")
                     width: 110
-                    onClicked: chooseArtworksDialog.open()
+                    action: addFilesAction
                 }
             }
 
@@ -867,93 +992,26 @@ ApplicationWindow {
 
                     StyledButton {
                         text: i18.n + qsTr("Remove")
-                        enabled: artworkRepository.artworksSourcesCount > 0
                         width: 90
-                        onClicked: {
-                            if (filteredArtItemsModel.selectedArtworksCount === 0) {
-                                mustSelectDialog.open()
-                            }
-                            else {
-                                var itemsCount = filteredArtItemsModel.selectedArtworksCount
-                                if (itemsCount > 0) {
-                                    if (mustUseConfirmation()) {
-                                        confirmRemoveSelectedDialog.itemsCount = itemsCount
-                                        confirmRemoveSelectedDialog.open()
-                                    } else {
-                                        doRemoveSelectedArtworks()
-                                    }
-                                }
-                            }
-                        }
+                        action: removeAction
                     }
 
                     StyledButton {
                         text: i18.n + qsTr("Edit")
                         width: 90
-                        enabled: artworkRepository.artworksSourcesCount > 0
-                        onClicked: {
-                            if (filteredArtItemsModel.selectedArtworksCount === 0) {
-                                mustSelectDialog.open()
-                            }
-                            else {
-                                var launched = false
-
-                                if (filteredArtItemsModel.selectedArtworksCount == 1) {
-                                    var index = filteredArtItemsModel.findSelectedItemIndex()
-
-                                    if (index !== -1) {
-                                        Common.launchItemEditing(index, applicationWindow, {
-                                                                     applyCallback: function() {}
-                                                                 })
-                                        launched = true
-                                    }
-                                }
-
-                                if (!launched) {
-                                    // also as fallback in case of errors in findSelectedIndex
-                                    filteredArtItemsModel.combineSelectedArtworks();
-                                    Common.launchDialog("Dialogs/CombinedArtworksDialog.qml",
-                                                        applicationWindow, {componentParent: applicationWindow});
-                                }
-                            }
-                        }
+                        action: editAction
                     }
 
                     StyledButton {
                         text: i18.n + qsTr("Save")
                         width: mainScrollView.areScrollbarsVisible ? 88 : 98
-                        enabled: artworkRepository.artworksSourcesCount > 0
-                        onClicked: {
-                            if (filteredArtItemsModel.selectedArtworksCount == 0) {
-                                mustSelectDialog.open()
-                            }
-                            else {
-                                var modifiedSelectedCount = filteredArtItemsModel.getModifiedSelectedCount();
-
-                                if (filteredArtItemsModel.selectedArtworksCount > 0 && modifiedSelectedCount > 0) {
-                                    Common.launchDialog("Dialogs/ExportMetadata.qml", applicationWindow, {})
-                                } else {
-                                    if (modifiedSelectedCount === 0) {
-                                        alreadySavedDialog.open()
-                                    }
-                                }
-                            }
-                        }
+                        action: saveAction
                     }
 
                     StyledButton {
                         text: i18.n + qsTr("Upload")
                         width: 100
-                        enabled: artworkRepository.artworksSourcesCount > 0
-                        onClicked: {
-                            if (filteredArtItemsModel.selectedArtworksCount === 0) {
-                                filteredArtItemsModel.selectFilteredArtworks();
-                            }
-
-                            if (filteredArtItemsModel.selectedArtworksCount > 0) {
-                                tryUploadArtworks();
-                            }
-                        }
+                        action: uploadAction
                     }
                 }
             }
