@@ -518,6 +518,8 @@ void Commands::CommandManager::beforeDestructionCallback() const {
     LOG_DEBUG << "Shutting down...";
     if (!m_AfterInitCalled) { return; }
 
+    m_ArtworksRepository->stopListeningToUnavailableFiles();
+
     m_ArtItemsModel->disconnect();
     m_ArtItemsModel->deleteAllItems();
     m_FilteredItemsModel->disconnect();

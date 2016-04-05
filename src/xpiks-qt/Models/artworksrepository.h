@@ -52,6 +52,7 @@ namespace Models {
         void updateCountsForExistingDirectories();
         void cleanupEmptyDirectories();
         void resetLastUnavailableFilesCount() { m_LastUnavailableFilesCount=0; }
+        void stopListeningToUnavailableFiles();
 
     public:
         bool beginAccountingFiles(const QStringList &items);
