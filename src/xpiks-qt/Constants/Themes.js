@@ -22,6 +22,7 @@
 var BlackTheme = { name: "black" };
 
 BlackTheme.defaultDarkColor = "#1e1e1e";
+BlackTheme.defaultDarkerColor = "#333333";
 BlackTheme.defaultControlColor = "#292929";
 BlackTheme.whiteColor = "#ffffff";
 
@@ -64,6 +65,7 @@ BlackTheme.greenColor = "#2daf02";
 var SlateGrayTheme = { name: "slate gray" };
 
 SlateGrayTheme.defaultDarkColor = "#22252c";
+SlateGrayTheme.defaultDarkerColor = "#35383e";
 SlateGrayTheme.defaultControlColor = "#30333b";
 SlateGrayTheme.whiteColor = "#ffffff";
 

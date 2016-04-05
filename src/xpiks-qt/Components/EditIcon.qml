@@ -46,7 +46,7 @@ Item {
         anchors.leftMargin: 9
 
         Rectangle {
-            height: 5
+            height: 3.5
             width: 1
             anchors.left: parent.left
             anchors.bottom: parent.bottom
@@ -56,7 +56,7 @@ Item {
 
         Rectangle {
             height: 1
-            width: 5
+            width: 3.5
             anchors.left: parent.left
             anchors.bottom: parent.bottom
             color: host.iconColor
@@ -66,19 +66,19 @@ Item {
         Rectangle {
             color: host.backgroundColor
             height: 11
-            width: 16.5
+            width: 19
             rotation: 135
             transformOrigin: Item.Center
             anchors.centerIn: parent
             anchors.verticalCenterOffset: 0.5
-            anchors.horizontalCenterOffset: -1
+            anchors.horizontalCenterOffset: -0.5
 
             Rectangle {
                 anchors.fill: parent
                 anchors.leftMargin: 2
                 anchors.rightMargin: -2
-                anchors.topMargin: 2
-                anchors.bottomMargin: 2
+                anchors.topMargin: 3
+                anchors.bottomMargin: 3
                 color: host.iconColor
             }
 
@@ -87,11 +87,11 @@ Item {
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 anchors.leftMargin: -4
-                anchors.topMargin: 2
-                anchors.bottomMargin: 2
+                anchors.topMargin: 3
+                anchors.bottomMargin: 3
 
                 color: host.iconColor
-                width: 4
+                width: 3
             }
         }
     }

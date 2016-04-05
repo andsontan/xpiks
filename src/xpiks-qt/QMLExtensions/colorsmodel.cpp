@@ -26,6 +26,7 @@
 #include "../Common/defines.h"
 
 #define DEFAULT_DARK_COLOR "#1e1e1e"
+#define DEFAULT_DARKER_COLOR "#333333"
 #define DEFAULT_CONTROL_COLOR "#292929"
 #define DEFAULT_WHITE_COLOR "#ffffff"
 
@@ -67,6 +68,7 @@ namespace QMLExtensions {
     ColorsModel::ColorsModel(QObject *parent) : QObject(parent)
     {
         setDefaultDarkColor(QColor(DEFAULT_DARK_COLOR));
+        setDefaultDarkerColor(QColor(DEFAULT_DARKER_COLOR));
         setDefaultControlColor(QColor(DEFAULT_CONTROL_COLOR));
         setWhiteColor(QColor(DEFAULT_WHITE_COLOR));
 
@@ -119,6 +121,7 @@ namespace QMLExtensions {
         const QJsonObject &theme = m_RegisteredThemes.at(index);
 
         setDefaultDarkColor(QColor(theme["defaultDarkColor"].toString(DEFAULT_DARK_COLOR)));
+        setDefaultDarkerColor(QColor(theme["defaultDarkerColor"].toString(DEFAULT_DARKER_COLOR)));
         setDefaultControlColor(QColor(theme["defaultControlColor"].toString(DEFAULT_CONTROL_COLOR)));
         setWhiteColor(QColor(theme["whiteColor"].toString(DEFAULT_WHITE_COLOR)));
 

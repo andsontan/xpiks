@@ -137,7 +137,7 @@ Item {
 
                             delegate: Rectangle {
                                 property int delegateIndex: index
-                                color: Colors.artworkBackground
+                                color: Colors.defaultDarkColor
                                 id: imageWrapper
                                 anchors.left: parent.left
                                 anchors.right: parent.right
@@ -193,7 +193,7 @@ Item {
                                     anchors.top: parent.top
                                     anchors.right: parent.right
                                     height: (childrenRect.height < 80) ? 100 : (childrenRect.height + 20)
-                                    color: Colors.defaultDarkColor
+                                    color: Colors.defaultDarkerColor
 
                                     Column {
                                         id: warningsTextList
@@ -235,7 +235,7 @@ Item {
                                 }
 
                                 EditIcon {
-                                    backgroundColor: parent.color
+                                    backgroundColor: columnRectangle.color
                                     anchors.verticalCenter: parent.verticalCenter
                                     anchors.verticalCenterOffset: -5
                                     anchors.right: parent.right
