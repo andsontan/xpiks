@@ -180,7 +180,7 @@ Flickable {
                     scrollToBottom()
                     wheel.accepted = false
                 }
-            } else {
+            } else if (wheel.angleDelta.y > 0) {
                 if (flowListView.contentY > scrollStep) {
                     scrollUp()
                 } else {
