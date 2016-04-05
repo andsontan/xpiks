@@ -303,6 +303,7 @@ BUILDNO = $$system(git log -n 1 --pretty=format:"%H")
 
 CONFIG(debug, debug|release)  {
     message("Building debug")
+    #QMAKE_CXXFLAGS += -fsanitize=thread
 } else {
     message("Building release")
 }

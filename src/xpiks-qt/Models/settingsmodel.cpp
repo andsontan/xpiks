@@ -81,6 +81,7 @@ namespace Models {
         m_UserStatistics(DEFAULT_COLLECT_USER_STATISTICS),
         m_CheckForUpdates(DEFAULT_UPDATE_SERVICE),
         m_DictsPathChanged(false),
+        m_AutoFindVectors(DEFAULT_AUTO_FIND_VECTORS),
         m_UseAutoComplete(DEFAULT_USE_AUTO_COMPLETE)
     {
     }
