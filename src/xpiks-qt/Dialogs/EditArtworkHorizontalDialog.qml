@@ -160,9 +160,11 @@ Item {
                     }
 
                     var directParent = dialogWindow;
+                    var currWordStartRect = flv.editControl.getCurrentWordStartRect()
+
                     var tmp = flv.editControl.mapToItem(directParent,
-                                                        flv.editControl.cursorRectangle.x,
-                                                        flv.editControl.height)
+                                                        currWordStartRect.x - 17,
+                                                        flv.editControl.height + 1)
 
                     var visibleItemsCount = Math.min(acSource.getCount(), 5);
                     var popupHeight = visibleItemsCount * (25 + 1) + 10

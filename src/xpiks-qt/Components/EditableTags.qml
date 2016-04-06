@@ -269,6 +269,11 @@ Flickable {
                     return pos + 1;
                 }
 
+                function getCurrentWordStartRect() {
+                    var start = getCurrentWordStart();
+                    return positionToRectangle(start);
+                }
+
                 function getCurrentWordEnd() {
                     var pos = nextTagTextInput.cursorPosition
                     var len = text.length
