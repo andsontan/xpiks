@@ -51,6 +51,7 @@ Item {
     Component.onCompleted: {
         focus = true
         titleTextInput.forceActiveFocus()
+        titleTextInput.cursorPosition = titleTextInput.text.length
     }
 
     Connections {
@@ -297,7 +298,10 @@ Item {
                                 event.accepted = true
                             }
 
-                            Keys.onTabPressed: descriptionTextInput.forceActiveFocus()
+                            Keys.onTabPressed: {
+                                descriptionTextInput.forceActiveFocus()
+                                descriptionTextInput.cursorPosition = descriptionTextInput.text.length
+                            }
 
                             Component.onCompleted: {
                                 combinedArtworks.initTitleHighlighting(titleTextInput.textDocument)
@@ -413,7 +417,10 @@ Item {
                                 combinedArtworks.initDescriptionHighlighting(descriptionTextInput.textDocument)
                             }
 
-                            Keys.onBacktabPressed: titleTextInput.forceActiveFocus()
+                            Keys.onBacktabPressed: {
+                                titleTextInput.forceActiveFocus()
+                                titleTextInput.cursorPosition = titleTextInput.text.length
+                            }
 
                             Keys.onTabPressed: {
                                 flv.activateEdit()
@@ -544,6 +551,7 @@ Item {
 
                         onBackTabPressed: {
                             descriptionTextInput.forceActiveFocus()
+                            descriptionTextInput.cursorPosition = descriptionTextInput.text.length
                         }
 
                         onCompletionRequested: {

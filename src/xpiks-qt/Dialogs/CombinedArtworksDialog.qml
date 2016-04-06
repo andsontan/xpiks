@@ -495,6 +495,7 @@ CloseRequested")
                                         Keys.onTabPressed: {
                                             if (descriptionCheckBox.checked) {
                                                 descriptionTextInput.forceActiveFocus()
+                                                descriptionTextInput.cursorPosition = descriptionTextInput.text.length
                                                 event.accepted = true
                                             } else if (keywordsCheckBox.checked) {
                                                 flv.activateEdit()
@@ -692,6 +693,7 @@ CloseRequested")
                                         Keys.onBacktabPressed: {
                                             if (titleCheckBox.checked) {
                                                 titleTextInput.forceActiveFocus()
+                                                titleTextInput.cursorPosition = titleTextInput.text.length
                                                 event.accepted = true
                                             }
                                         }
@@ -887,8 +889,10 @@ CloseRequested")
                                     onBackTabPressed: {
                                         if (descriptionCheckBox.checked) {
                                             descriptionTextInput.forceActiveFocus()
+                                            descriptionTextInput.cursorPosition = descriptionTextInput.text.length
                                         } else if (titleCheckBox.checked) {
                                             titleTextInput.forceActiveFocus()
+                                            titleTextInput.cursorPosition = titleTextInput.text.length
                                         }
                                     }
 
@@ -1088,5 +1092,6 @@ CloseRequested")
     Component.onCompleted: {
         focus = true
         titleTextInput.forceActiveFocus()
+        titleTextInput.cursorPosition = titleTextInput.text.length
     }
 }
