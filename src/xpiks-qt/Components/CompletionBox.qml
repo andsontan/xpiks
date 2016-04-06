@@ -95,7 +95,6 @@ Item {
             anchors.rightMargin: scrollBar.visible ? 14 : 0
             anchors.margins: 1
             boundsBehavior: Flickable.StopAtBounds
-            model: acSource
 
             delegate: Rectangle {
                 id: currentDelegate

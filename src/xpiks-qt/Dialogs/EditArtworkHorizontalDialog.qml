@@ -172,6 +172,7 @@ Item {
                     var isBelow = (tmp.y + popupHeight) < directParent.height;
 
                     var options = {
+                        model: acSource,
                         editableTags: flv,
                         isBelowEdit: isBelow,
                         "anchors.left": directParent.left,
