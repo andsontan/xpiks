@@ -107,7 +107,8 @@ SOURCES += main.cpp \
     ../../xpiks-qt/QMLExtensions/colorsmodel.cpp \
     ../../xpiks-qt/AutoComplete/autocompletemodel.cpp \
     ../../xpiks-qt/AutoComplete/autocompleteservice.cpp \
-    ../../xpiks-qt/AutoComplete/autocompleteworker.cpp
+    ../../xpiks-qt/AutoComplete/autocompleteworker.cpp \
+    ../../xpiks-qt/Suggestion/gettyqueryengine.cpp
 
 RESOURCES +=
 
@@ -240,7 +241,8 @@ HEADERS += \
     ../../xpiks-qt/AutoComplete/autocompletemodel.h \
     ../../xpiks-qt/AutoComplete/autocompleteservice.h \
     ../../xpiks-qt/AutoComplete/autocompleteworker.h \
-    ../../xpiks-qt/AutoComplete/completionquery.h
+    ../../xpiks-qt/AutoComplete/completionquery.h \
+    ../../xpiks-qt/Suggestion/gettyqueryengine.h
 
 INCLUDEPATH += ../../tiny-aes
 INCLUDEPATH += ../../cpp-libface

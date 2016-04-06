@@ -54,6 +54,7 @@ Flickable {
     property bool stealWheel: true
     property alias editControl: nextTagTextInput
     property bool autoCompleteActive: acSource.isActive
+    property double epsilon: 0.000001
 
     signal tagAdded(string text)
     signal removeLast()
@@ -172,7 +173,9 @@ Flickable {
                 return
             }
 
-            if (wheel.angleDelta.y < 0) {
+            var shift = wheel.angleDelta.y
+
+            if (shift < -epsilon) {
                 var maxScrollPos = flowListView.contentHeight - flowListView.height
                 if (Math.abs(flowListView.contentY - maxScrollPos) > scrollStep) {
                     scrollDown()
@@ -180,7 +183,7 @@ Flickable {
                     scrollToBottom()
                     wheel.accepted = false
                 }
-            } else if (wheel.angleDelta.y > 0) {
+            } else if (shift > epsilon) {
                 if (flowListView.contentY > scrollStep) {
                     scrollUp()
                 } else {
