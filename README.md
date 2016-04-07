@@ -7,7 +7,12 @@ Official website: http://ribtoks.github.io/xpiks/
 
 Translations: https://crowdin.com/project/xpiks/
 
-Master build status: [![Build Status](https://travis-ci.org/Ribtoks/xpiks.svg?branch=master)](https://travis-ci.org/Ribtoks/xpiks)
+Linux build status: [![Build Status](https://travis-ci.org/Ribtoks/xpiks.svg?branch=master)](https://travis-ci.org/Ribtoks/xpiks)
+
+Coverity scan: <a href="https://scan.coverity.com/projects/xpiks-qt">
+  <img alt="Coverity Scan Build Status"
+       src="https://scan.coverity.com/projects/8498/badge.svg"/>
+</a>
 
 Xpiks is a free and open source keywording and uploading tool for microstock photographers and illustrators. It was written from scratch with aim to make it more usefull, convenient and quicker than existing tools.
 
