@@ -43,18 +43,18 @@ namespace Common {
             m_QueueMutex.lock();
             {
                 m_Queue.append(item);
+                m_WaitAnyItem.wakeOne();
             }
             m_QueueMutex.unlock();
-            m_WaitAnyItem.wakeOne();
         }
 
         void submitItems(const QVector<T*> &items) {
             m_QueueMutex.lock();
             {
                 m_Queue << items;
+                m_WaitAnyItem.wakeOne();
             }
             m_QueueMutex.unlock();
-            m_WaitAnyItem.wakeOne();
         }
 
         void cancelCurrentBatch() {
@@ -62,10 +62,10 @@ namespace Common {
             {
                 qDeleteAll(m_Queue);
                 m_Queue.clear();
+                m_WaitAnyItem.wakeOne();
             }
             m_QueueMutex.unlock();
 
-            m_WaitAnyItem.wakeOne();
             notifyQueueIsEmpty();
         }
 
@@ -113,7 +113,9 @@ namespace Common {
                 m_QueueMutex.lock();
 
                 if (m_Queue.isEmpty()) {
-                    m_WaitAnyItem.wait(&m_QueueMutex);
+                    // spurious wakeup fix
+                    while (!m_WaitAnyItem.wait(&m_QueueMutex))
+                        LOG_INFO << "Spurious wakeup. Waiting again...";;
 
                     // can be cleared by clearCurrectRequests()
                     if (m_Queue.isEmpty()) {
