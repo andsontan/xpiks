@@ -286,12 +286,17 @@ Flickable {
                 }
 
                 function requestCompletion() {
+                    var canAutoComplete = false;
                     var start = getCurrentWordStart()
                     var end = getCurrentWordEnd()
-                    if (end - start >= 3) {
+
+                    canAutoComplete = end - start >= 3
+                    if (canAutoComplete) {
                         var prefix = text.substring(start, end)
                         completionRequested(prefix)
                     }
+
+                    return canAutoComplete;
                 }
 
                 function acceptCompletion(completion) {
@@ -365,14 +370,6 @@ Flickable {
                         event.accepted = true;
                         completionCancel()
                     }
-                    else if (event.key === Qt.Key_Backspace) {
-                        if (nextTagTextInput.length == 0) {
-                            removeLast();
-                            event.accepted = true;
-                        } else {
-                            completionCancel()
-                        }
-                    }
                     else if (event.key === Qt.Key_Tab) {
                         tabPressed()
                         event.accepted = true;
@@ -414,6 +411,15 @@ Flickable {
                                (event.key === Qt.Key_Right)) {
                         if (autoCompleteActive) {
                             completionCancel()
+                        }
+                    } else if (event.key === Qt.Key_Backspace) {
+                        if (nextTagTextInput.length == 0) {
+                            removeLast();
+                            event.accepted = true;
+                        } else {
+                            if (!requestCompletion()) {
+                                completionCancel()
+                            }
                         }
                     }
                 }
