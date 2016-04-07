@@ -307,11 +307,7 @@ Item {
 
                             onCursorRectangleChanged: titleFlick.ensureVisible(cursorRectangle)
 
-                            onActiveFocusChanged: {
-                                if (titleTextInput.length > 0) {
-                                    combinedArtworks.spellCheckTitle()
-                                }
-                            }
+                            onActiveFocusChanged: combinedArtworks.spellCheckTitle()
 
                             Keys.onPressed: {
                                 if(event.matches(StandardKey.Paste)) {
@@ -426,11 +422,7 @@ Item {
 
                             onCursorRectangleChanged: descriptionFlick.ensureVisible(cursorRectangle)
 
-                            onActiveFocusChanged: {
-                                if (descriptionTextInput.length > 0) {
-                                    combinedArtworks.spellCheckDescription()
-                                }
-                            }
+                            onActiveFocusChanged: combinedArtworks.spellCheckDescription()
 
                             Keys.onPressed: {
                                 if(event.matches(StandardKey.Paste)) {

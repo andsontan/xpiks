@@ -506,11 +506,7 @@ CloseRequested")
                                             }
                                         }
 
-                                        onActiveFocusChanged: {
-                                            if (titleTextInput.length > 0) {
-                                                combinedArtworks.spellCheckTitle()
-                                            }
-                                        }
+                                        onActiveFocusChanged: combinedArtworks.spellCheckTitle()
 
                                         Component.onCompleted: {
                                             combinedArtworks.initTitleHighlighting(titleTextInput.textDocument)
@@ -685,11 +681,7 @@ CloseRequested")
                                             combinedArtworks.initDescriptionHighlighting(descriptionTextInput.textDocument)
                                         }
 
-                                        onActiveFocusChanged: {
-                                            if (descriptionTextInput.length > 0) {
-                                                combinedArtworks.spellCheckDescription()
-                                            }
-                                        }
+                                        onActiveFocusChanged: combinedArtworks.spellCheckDescription()
 
                                         onCursorRectangleChanged: descriptionFlick.ensureVisible(cursorRectangle)
 

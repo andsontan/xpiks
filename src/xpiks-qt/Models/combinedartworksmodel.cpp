@@ -285,12 +285,16 @@ namespace Models {
     void CombinedArtworksModel::spellCheckDescription() {
         if (!m_CommonKeywordsModel.getDescription().trimmed().isEmpty()) {
             m_CommandManager->submitItemForSpellCheck(&m_CommonKeywordsModel, Common::SpellCheckDescription);
+        } else {
+            m_CommonKeywordsModel.notifySpellCheckResults(Common::SpellCheckDescription);
         }
     }
 
     void CombinedArtworksModel::spellCheckTitle() {
         if (!m_CommonKeywordsModel.getTitle().trimmed().isEmpty()) {
             m_CommandManager->submitItemForSpellCheck(&m_CommonKeywordsModel, Common::SpellCheckTitle);
+        } else {
+            m_CommonKeywordsModel.notifySpellCheckResults(Common::SpellCheckTitle);
         }
     }
 
