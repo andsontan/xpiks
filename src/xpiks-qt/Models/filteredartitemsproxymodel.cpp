@@ -236,12 +236,16 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::spellCheckDescription(int index) {
+        LOG_DEBUG << "index:" << index;
         if (0 <= index && index < rowCount()) {
             int originalIndex = getOriginalIndex(index);
             ArtItemsModel *artItemsModel = getArtItemsModel();
             ArtworkMetadata *metadata = artItemsModel->getArtwork(originalIndex);
             if (!metadata->getDescription().trimmed().isEmpty()) {
                 m_CommandManager->submitItemForSpellCheck(metadata, Common::SpellCheckDescription);
+            } else {
+                LOG_INFO << "description is empty";
+                metadata->notifySpellCheckResults(Common::SpellCheckDescription);
             }
 
             m_CommandManager->submitForWarningsCheck(metadata, Common::WarningsCheckDescription);
@@ -249,12 +253,16 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::spellCheckTitle(int index) {
+        LOG_DEBUG << "index:" << index;
         if (0 <= index && index < rowCount()) {
             int originalIndex = getOriginalIndex(index);
             ArtItemsModel *artItemsModel = getArtItemsModel();
             ArtworkMetadata *metadata = artItemsModel->getArtwork(originalIndex);
             if (!metadata->getTitle().trimmed().isEmpty()) {
                 m_CommandManager->submitItemForSpellCheck(metadata, Common::SpellCheckTitle);
+            } else {
+                LOG_INFO << "title is empty";
+                metadata->notifySpellCheckResults(Common::SpellCheckTitle);
             }
 
             m_CommandManager->submitForWarningsCheck(metadata, Common::WarningsCheckTitle);

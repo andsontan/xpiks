@@ -1725,9 +1725,7 @@ ApplicationWindow {
                                                         }
 
                                                         onActiveFocusChanged: {
-                                                            if (descriptionTextInput.length > 0) {
-                                                                filteredArtItemsModel.spellCheckDescription(rowWrapper.delegateIndex)
-                                                            }
+                                                            filteredArtItemsModel.spellCheckDescription(rowWrapper.delegateIndex)
                                                         }
 
                                                         Keys.onBacktabPressed: {
@@ -1818,9 +1816,7 @@ ApplicationWindow {
                                                         }
 
                                                         onActiveFocusChanged: {
-                                                            if (titleTextInput.length > 0) {
-                                                                filteredArtItemsModel.spellCheckTitle(rowWrapper.delegateIndex)
-                                                            }
+                                                            filteredArtItemsModel.spellCheckTitle(rowWrapper.delegateIndex)
                                                         }
 
                                                         Keys.onPressed: {
