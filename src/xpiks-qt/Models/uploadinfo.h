@@ -42,7 +42,8 @@ namespace Models {
             DirectoryField = 4,
             ZipPreviewAndVectorField = 5,
             /*DEPRECATED*/FtpPassiveModeField = 6,
-            DisableFtpPassiveModeField = 7
+            DisableFtpPassiveModeField = 7,
+            IsSelectedField = 8
         };
 
     public:
@@ -66,6 +67,7 @@ namespace Models {
             m_EncodedPassword = items.value(PasswordField, emptyString);
             m_ZipBeforeUpload = items.value(ZipPreviewAndVectorField, "false") == QLatin1String("true");
             m_DisableFtpPassiveMode = items.value(DisableFtpPassiveModeField, "false") == QLatin1String("true");
+            m_IsSelected = items.value(IsSelectedField, "false") == QLatin1String("true");
         }
 
     signals:
@@ -130,6 +132,7 @@ namespace Models {
             hash[PasswordField] = m_EncodedPassword;
             hash[ZipPreviewAndVectorField] = m_ZipBeforeUpload ? "true" : "false";
             hash[DisableFtpPassiveModeField] = m_DisableFtpPassiveMode ? "true" : "false";
+            hash[IsSelectedField] = m_IsSelected ? "true" : "false";
             return hash;
         }
 
