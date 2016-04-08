@@ -139,7 +139,7 @@ Item {
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
-            width: previewImage.width < fields.width ? 710 : previewImage.width + 40
+            width: previewImage.width < fields.width ? 760 : previewImage.width + 40
             height: parent.height - 30
             color: Colors.selectedImageBackground
             anchors.centerIn: parent
@@ -228,8 +228,8 @@ Item {
                 id: fields
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 20
-                height: 355
-                width: 670
+                height: 380
+                width: 720
                 anchors.horizontalCenter: parent.horizontalCenter
                 spacing: 0
 
@@ -473,7 +473,7 @@ Item {
                     id: keywordsWrapper
                     border.color: Colors.artworkActiveColor
                     border.width: flv.isFocused ? 1 : 0
-                    height: 145
+                    height: 170
                     anchors.left: parent.left
                     anchors.right: parent.right
                     color: Colors.inputBackgroundColor
