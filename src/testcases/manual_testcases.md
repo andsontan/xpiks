@@ -37,10 +37,18 @@
 * replace, multireplace
 * spellchecking in multiple edit and one-item edit dialogs
 
+## Autocomplete
+
+* autocomplete in a normal place, too close to the border/bottom
+* autocomplete in the edit artwork vertical/horizontal, combined edit (in the top/bottom)
+* stocks autocomplete in Upload dialog
+* selecting item, scrolling, clicking with a mouse
+
 ## Warnings
 
 * empty fields
 * non-empty fields
+* changing metadata changes warnings flag
 
 ## Upload
 
