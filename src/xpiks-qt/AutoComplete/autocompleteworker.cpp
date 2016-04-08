@@ -33,7 +33,8 @@
 namespace AutoComplete {
     AutoCompleteWorker::AutoCompleteWorker(QObject *parent) :
         QObject(parent),
-        m_Soufleur(NULL)
+        m_Soufleur(NULL),
+        m_CompletionsCount(8)
     {
     }
 
@@ -85,7 +86,7 @@ namespace AutoComplete {
     bool AutoCompleteWorker::processOneItem(CompletionQuery *item) {
         const QString &prefix = item->getPrefix();
 
-        vp_t completions = m_Soufleur->prompt(prefix.toStdString());
+        vp_t completions = m_Soufleur->prompt(prefix.toStdString(), m_CompletionsCount);
 
         QStringList completionsList;
 

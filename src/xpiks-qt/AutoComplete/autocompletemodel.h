@@ -64,6 +64,7 @@ namespace AutoComplete {
         Q_INVOKABLE void cancelCompletion() { setIsActive(false); emit dismissPopupRequested(); }
         Q_INVOKABLE void acceptSelected();
         Q_INVOKABLE int getCount() const { return qMax(m_CompletionList.length(), m_LastGeneratedCompletions.length()); }
+        Q_INVOKABLE bool hasSelectedCompletion() { return (0 <= m_SelectedIndex) && (m_SelectedIndex < m_CompletionList.length()); }
 
     signals:
         void selectedIndexChanged(int index);

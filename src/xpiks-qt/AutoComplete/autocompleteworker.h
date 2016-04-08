@@ -55,6 +55,7 @@ namespace AutoComplete {
 
     private:
         Souffleur *m_Soufleur;
+        const int m_CompletionsCount;
     };
 }
 

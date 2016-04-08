@@ -83,6 +83,10 @@ Flickable {
         acSource.acceptSelected()
     }
 
+    function hasSelectedCompletion() {
+        return acSource.hasSelectedCompletion()
+    }
+
     function activateEdit() {
         if (editEnabled && !nextTagTextInput.activeFocus) {
             scrollToBottom()
@@ -146,11 +150,15 @@ Flickable {
         // bump
     }
 
-    function onBeforeClose() {
+    function submitCurrentKeyword() {
         var tagText = getEditedText();
         if (raiseAddTag(tagText)) {
             nextTagTextInput.text = '';
         }
+    }
+
+    function onBeforeClose() {
+        submitCurrentKeyword()
     }
 
     MouseArea {
@@ -191,6 +199,8 @@ Flickable {
                     wheel.accepted = false
                 }
             }
+
+            completionCancel()
         }
     }
 
@@ -299,6 +309,12 @@ Flickable {
                     return canAutoComplete;
                 }
 
+                function getWordsCount() {
+                    var inputText = nextTagTextInput.text
+                    var array = inputText.split(' ').filter(function(el) {return el.length !== 0});
+                    return array.length;
+                }
+
                 function acceptCompletion(completion) {
                     var start = getCurrentWordStart()
                     var end = getCurrentWordEnd()
@@ -308,6 +324,10 @@ Flickable {
 
                     nextTagTextInput.text = newText
                     nextTagTextInput.cursorPosition = newCursorPosition
+
+                    if (getWordsCount() === 1) {
+                        submitCurrentKeyword()
+                    }
                 }
 
                 /*validator: RegExpValidator {
@@ -322,10 +342,7 @@ Flickable {
                 }
 
                 onEditingFinished: {
-                    var tagText = getEditedText();
-                    if (raiseAddTag(tagText)) {
-                        nextTagTextInput.text = '';
-                    }
+                    submitCurrentKeyword()
                     completionCancel()
                 }
 
@@ -362,13 +379,9 @@ Flickable {
                         }
                     }
                     else if (event.key === Qt.Key_Comma) {
-                        var tagText = getEditedText();
-                        if (raiseAddTag(tagText)) {
-                            nextTagTextInput.text = '';
-                        }
-
-                        event.accepted = true;
+                        submitCurrentKeyword()
                         completionCancel()
+                        event.accepted = true;
                     }
                     else if (event.key === Qt.Key_Tab) {
                         tabPressed()
@@ -387,7 +400,9 @@ Flickable {
                         }
                     } else if (autoCompleteActive && (event.key === Qt.Key_Return)) {
                         acceptSelected();
-                        event.accepted = true
+                        if (hasSelectedCompletion()) {
+                            event.accepted = true
+                        }
                     } else if (autoCompleteActive && (event.key === Qt.Key_Up)) {
                         moveSelectionUp()
                         event.accepted = true

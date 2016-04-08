@@ -1460,15 +1460,14 @@ ApplicationWindow {
                                             editableTags: flv,
                                             isBelowEdit: isBelow,
                                             "anchors.left": directParent.left,
-                                            "anchors.leftMargin": Math.min(tmp.x, directParent.width - 200)
+                                            "anchors.leftMargin": Math.min(tmp.x, directParent.width - 200),
+                                            "anchors.top": directParent.top
                                         }
 
                                         if (isBelow) {
-                                            options["anchors.top"] = directParent.top
                                             options["anchors.topMargin"] = tmp.y
                                         } else {
-                                            options["anchors.bottom"] = directParent.bottom
-                                            options["anchors.bottomMargin"] = directParent.height - tmp.y + flv.editControl.height
+                                            options["anchors.topMargin"] = tmp.y - popupHeight - flv.editControl.height - 2
                                         }
 
                                         var component = Qt.createComponent("Components/CompletionBox.qml");

@@ -53,15 +53,13 @@ namespace AutoComplete {
     }
 
     void AutoCompleteModel::acceptSelected() {
-        Q_ASSERT(0 <= m_SelectedIndex && m_SelectedIndex < m_CompletionList.length());
-        LOG_DEBUG << "#";
+        LOG_DEBUG << "Selected index:" << m_SelectedIndex;
 
         if (0 <= m_SelectedIndex && m_SelectedIndex < m_CompletionList.length()) {
             emit completionAccepted(m_CompletionList.at(m_SelectedIndex));
-            emit dismissPopupRequested();
-        } else {
-            LOG_WARNING << "Selected index is out of bounds";
         }
+
+        emit dismissPopupRequested();
 
         setIsActive(false);
     }
@@ -78,7 +76,7 @@ namespace AutoComplete {
 
         endResetModel();
 
-        setSelectedIndex(0);
+        setSelectedIndex(-1);
         setIsActive(true);
     }
 
