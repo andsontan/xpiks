@@ -69,6 +69,7 @@ namespace Models {
         Common::BaseEntity::setCommandManager(commandManager);
 #ifndef CORE_TESTS
         Conectivity::FtpCoordinator *coordinator = dynamic_cast<Conectivity::FtpCoordinator*>(m_FtpCoordinator);
+        Q_ASSERT(coordinator != NULL);
         coordinator->setCommandManager(commandManager);
 #endif
     }

@@ -58,7 +58,7 @@ namespace Helpers {
         void clearStream();
 
     private:
-        Logger() {}
+        Logger(): m_ActiveIndex(0) {}
         Logger(Logger const&);
         void operator=(Logger const&);
 

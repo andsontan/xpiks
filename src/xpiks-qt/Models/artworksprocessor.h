@@ -27,11 +27,10 @@
 #include "../Common/baseentity.h"
 #include "../Helpers/ifilenotavailablemodel.h"
 #include "../Models/artworkmetadata.h"
+
 namespace Commands {
     class CommandManager;
 }
-
-
 
 namespace Models {
     class ArtworksProcessor : public QObject, public Common::BaseEntity, public Helpers::IFileNotAvailableModel
@@ -51,6 +50,7 @@ namespace Models {
             Common::BaseEntity(),
             m_ProcessedArtworksCount(0),
             m_ArtworksCount(0),
+            m_ExistingMaxThreadsNumber(0),
             m_IsInProgress(false),
             m_IsError(false)
         {}

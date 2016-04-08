@@ -108,9 +108,8 @@ namespace Suggestion {
             }
 
             if (!anyError) {
-                SuggestionArtwork *artwork = new SuggestionArtwork(i.key(), keywords);
-
                 if (QFile(i.key()).exists()) {
+                    SuggestionArtwork *artwork = new SuggestionArtwork(i.key(), keywords);
                     searchResults.append(artwork);
 
                     if (searchResults.length() >= maxResults) {

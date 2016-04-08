@@ -67,7 +67,7 @@ namespace Models {
         }
 
         if (overwrite) {
-            anythingModified = anythingModified || (!(areKeywordsEmpty() && rawKeywords.isEmpty()));
+            anythingModified = true;
             beginResetModel();
             BasicKeywordsModel::resetKeywords();
             BasicKeywordsModel::addKeywords(rawKeywords);

@@ -117,6 +117,7 @@ namespace Warnings {
         if (0 <= index && index < rowCount()) {
             QAbstractItemModel *sourceItemModel = sourceModel();
             Models::ArtItemsModel *artItemsModel = dynamic_cast<Models::ArtItemsModel *>(sourceItemModel);
+            Q_ASSERT(artItemsModel != NULL);
             QModelIndex originalIndex = mapToSource(this->index(index, 0));
             int row = originalIndex.row();
             Models::ArtworkMetadata *metadata = artItemsModel->getArtwork(row);
@@ -156,6 +157,7 @@ namespace Warnings {
 
         QAbstractItemModel *sourceItemModel = sourceModel();
         Models::ArtItemsModel *artItemsModel = dynamic_cast<Models::ArtItemsModel *>(sourceItemModel);
+        Q_ASSERT(artItemsModel != NULL);
         Models::ArtworkMetadata *metadata = artItemsModel->getArtwork(sourceRow);
 
         int warningsFlags = metadata->getWarningsFlags();

@@ -197,7 +197,7 @@ namespace Plugins {
 
         QAbstractItemModel *sourceItemModel = sourceModel();
         PluginManager *pluginManager = dynamic_cast<PluginManager *>(sourceItemModel);
-
+        Q_ASSERT(pluginManager != NULL);
         bool result = pluginManager->hasExportedActions(sourceRow);
         return result;
     }

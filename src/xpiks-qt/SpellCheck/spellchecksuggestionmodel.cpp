@@ -69,6 +69,7 @@ namespace SpellCheck {
     SpellCheckSuggestionModel::SpellCheckSuggestionModel():
         QAbstractListModel(),
         Common::BaseEntity(),
+        m_CurrentItem(NULL),
         m_ItemIndex(-1)
     {
     }
