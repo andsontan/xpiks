@@ -13,9 +13,7 @@ class LocalConfig {
     LocalConfig(QString fileName);
     void initConfig();
     void saveToFile();
-    QJsonDocument & getConfig() {
-        return m_Config;
-    }
+    QJsonDocument& getConfig() { return m_Config; }
 
   private:
     QString m_FileName;

@@ -11,12 +11,10 @@ namespace Helpers {
 class RemoteConfig: public QObject {
     Q_OBJECT
   public:
-    RemoteConfig(QString Url);
+    RemoteConfig(QString &Url);
     ~RemoteConfig();
     void requestInitConfig();
-    QJsonDocument & getConfig() {
-        return m_Config;
-    }
+    QJsonDocument& getConfig() { return m_Config; }
 
   signals:
     void updateIsReady();

@@ -24,7 +24,7 @@ void JsonMergeTests::mergeTwoFiles() {
     locConfWith.initConfig();
     locConfTo.initConfig();
     locConfGold.initConfig();
-    Helpers::mergeJson(locConfTo.getConfig(),locConfWith.getConfig(),0);
+    Helpers::mergeJson(locConfTo.getConfig(),locConfWith.getConfig(),0,*this);
 
     QVERIFY(locConfGold.getConfig() == locConfTo.getConfig());
 

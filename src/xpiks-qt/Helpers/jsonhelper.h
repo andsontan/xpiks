@@ -5,12 +5,12 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QStringList>
+#include <QSet>
 #include "../Common/defines.h"
+#include "comparevaluesjson.h"
 
 namespace Helpers {
-
-    void mergeJson(QJsonDocument &mergeTo, const QJsonDocument &mergeWith, int overwrite);
-    void mergeArray(QJsonArray & mergeTo, const QJsonArray & mergeFrom);
+   void mergeJson(QJsonDocument &mergeTo, const QJsonDocument &mergeWith, int overwrite,CompareValuesJson &comparator);
 }
 
 #endif // JSONHELPER_H

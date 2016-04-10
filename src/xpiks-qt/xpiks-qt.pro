@@ -85,7 +85,8 @@ SOURCES += main.cpp \
     QMLExtensions/colorsmodel.cpp \
     Helpers/remoteconfig.cpp \
     Helpers/localconfig.cpp \
-    Helpers/jsonhelper.cpp
+    Helpers/jsonhelper.cpp \
+    Models/abstractupdaterconfigmodel.cpp
 
 RESOURCES += qml.qrc
 
@@ -223,7 +224,9 @@ HEADERS += \
     QMLExtensions/colorsmodel.h \
     Helpers/remoteconfig.h \
     Helpers/localconfig.h \
-    Helpers/jsonhelper.h
+    Helpers/jsonhelper.h \
+    Models/abstractupdaterconfigmodel.h \
+    Helpers/comparevaluesjson.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
