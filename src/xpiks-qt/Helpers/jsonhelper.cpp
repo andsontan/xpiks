@@ -23,29 +23,24 @@ namespace Helpers {
         QJsonArray arrayMerged;
         int  type = arrayTo[0].type();
         if (type == QJsonValue::Object) {
-            int i = 0,k = 0;
-            while (k < minSize && i < minSize) {
+            int k = 0;
+            while (k < minSize) {
                 QJsonObject objectTo(arrayTo[k].toObject());
-                QJsonObject objectWhat(arrayWhat[i].toObject());
+                QJsonObject objectWhat(arrayWhat[k].toObject());
                 if (isEqual(objectTo, objectWhat)) {
-                    arrayMerged.append(objectWhat);
                     k++;
-                    i++;
                 } else {
                     break;
                 }
             }
-            int sizeWhat = arrayWhat.size();
-            for (; i <sizeWhat; i++) {
-                arrayMerged.append(arrayWhat[i].toObject());
-            }
+            arrayMerged = arrayWhat;
             int sizeTo = arrayTo.size();
             QJsonArray arrayMergedAdd;
-            int sizeMerged = arrayMerged.size();
+            int searchLimit = k;
             for (; k<sizeTo; k++) {
                 QJsonObject objectTo(arrayTo[k].toObject());
                 bool found=false;
-                for (int t=0; t<sizeMerged; t++) {
+                for (int t=0; t<searchLimit; t++) {
                     QJsonObject objectWhat(arrayMerged[t].toObject());
                     if  (isEqual(objectTo, objectWhat)) {
                         found = true;

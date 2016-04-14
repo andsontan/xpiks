@@ -1,0 +1,8 @@
+{
+    "ftp_list": [
+            "ftp": "ftp://bigstockphoto.com",
+            "ftp": "ftp://ftp.canstockphoto.com",
+            "ftp": "ftp://ftp.depositphotos.com"
+    ],
+    "version": 0
+}

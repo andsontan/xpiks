@@ -14,7 +14,8 @@ class JsonMergeTests : public QObject,public Helpers::CompareValuesJson {
   }
 
   private slots:
-    void mergeTwoFiles();
+    void mergeTwoFilesObjects();
+    void mergeTwoFilesStrings();
 };
 
 #endif // JSONMERGE_TESTS_H
