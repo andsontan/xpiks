@@ -131,8 +131,7 @@ namespace SpellCheck {
             int length = queryItems.length();
             for (int i = 0; i < length; ++i) {
                 SpellCheckQueryItem *queryItem = queryItems.at(i);
-                bool isOk = isWordSpelledOk(queryItem->m_Word);
-                queryItem->m_IsCorrect = isOk;
+                bool isOk = checkWordSpelling(queryItem);
                 item->accountResultAt(i);
                 anyWrong = anyWrong || !isOk;
             }
@@ -195,16 +194,29 @@ namespace SpellCheck {
         return suggestions;
     }
 
-    bool SpellCheckWorker::isWordSpelledOk(const QString &word) const {
-        bool isOk = isHunspellSpellingCorrect(word);
+    bool SpellCheckWorker::checkWordSpelling(SpellCheckQueryItem *queryItem) {
+        bool isOk = false;
+
+        const QString &word = queryItem->m_Word;
+        bool isCached = m_WrongWords.contains(word);
+
+        if (!isCached) {
+            isOk = isHunspellSpellingCorrect(word);
+
+            if (!isOk) {
+                QString capitalized = word;
+                capitalized[0] = capitalized[0].toUpper();
+
+                if (isHunspellSpellingCorrect(capitalized)) {
+                    isOk = true;
+                }
+            }
+        }
+
+        queryItem->m_IsCorrect = isOk;
 
         if (!isOk) {
-            QString capitalized = word;
-            capitalized[0] = capitalized[0].toUpper();
-
-            if (isHunspellSpellingCorrect(capitalized)) {
-                isOk = true;
-            }
+            m_WrongWords.insert(word);
         }
 
         return isOk;

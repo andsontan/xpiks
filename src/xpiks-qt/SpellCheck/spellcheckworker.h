@@ -26,6 +26,7 @@
 #include <QStringList>
 #include <QReadWriteLock>
 #include <QHash>
+#include <QSet>
 #include "../Common/itemprocessingworker.h"
 #include "spellcheckitem.h"
 
@@ -62,12 +63,13 @@ namespace SpellCheck {
     private:
         void detectAffEncoding();
         QStringList suggestCorrections(const QString &word);
-        bool isWordSpelledOk(const QString &word) const;
+        bool checkWordSpelling(SpellCheckQueryItem *queryItem);
         bool isHunspellSpellingCorrect(const QString &word) const;
         void findSuggestions(const QString &word);
 
     private:
         QHash<QString, QStringList> m_Suggestions;
+        QSet<QString> m_WrongWords;
         QReadWriteLock m_SuggestionsLock;
         QString m_Encoding;
         Hunspell *m_Hunspell;
