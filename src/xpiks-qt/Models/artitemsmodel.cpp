@@ -293,12 +293,6 @@ namespace Models {
 
     void ArtItemsModel::removeSelectedArtworks(QVector<int> &selectedIndices) {
         doRemoveItemsAtIndices(selectedIndices);
-
-        if (m_ArtworkList.isEmpty()) {
-            LOG_DEBUG << "Clearing the finalization list";
-            qDeleteAll(m_FinalizationList);
-            m_FinalizationList.clear();
-        }
     }
 
     void ArtItemsModel::updateSelectedArtworks(const QVector<int> &selectedIndices) {
@@ -905,6 +899,16 @@ namespace Models {
         ArtworkMetadata *metadata = qobject_cast<ArtworkMetadata*>(sender());
         if (metadata != NULL) {
             m_CommandManager->saveArtworkBackup(metadata);
+        }
+    }
+
+    void ArtItemsModel::onUndoStackEmpty() {
+        if (m_ArtworkList.isEmpty()) {
+            if (!m_FinalizationList.isEmpty()) {
+                LOG_DEBUG << "Clearing the finalization list";
+                qDeleteAll(m_FinalizationList);
+                m_FinalizationList.clear();
+            }
         }
     }
 

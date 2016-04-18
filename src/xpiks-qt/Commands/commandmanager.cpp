@@ -224,6 +224,11 @@ void Commands::CommandManager::connectEntitiesSignalsSlots() const {
         QObject::connect(m_ArtworksRepository, SIGNAL(filesUnavailable()),
                          m_ArtItemsModel, SLOT(onFilesUnavailableHandler()));
     }
+
+    if (m_ArtItemsModel != NULL && m_UndoRedoManager != NULL) {
+        QObject::connect(m_UndoRedoManager, SIGNAL(undoStackEmpty()),
+                         m_ArtItemsModel, SLOT(undoHistoryEmptyHandler()));
+    }
 }
 
 void Commands::CommandManager::ensureDependenciesInjected() {

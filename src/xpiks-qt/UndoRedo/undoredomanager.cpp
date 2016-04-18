@@ -72,11 +72,18 @@ void UndoRedo::UndoRedoManager::discardLastAction() {
 
     if (anyItem) {
         IHistoryItem *historyItem = m_HistoryStack.pop();
+        bool isNowEmpty = m_HistoryStack.isEmpty();
+
         m_Mutex.unlock();
+
+        delete historyItem;
 
         emit canUndoChanged();
         emit undoDescriptionChanged();
-        delete historyItem;
+
+        if (isNowEmpty) {
+            emit undoStackEmpty();
+        }
     } else {
         m_Mutex.unlock();
     }

@@ -128,6 +128,7 @@ namespace Models {
         void spellCheckErrorsChanged();
         void onFilesUnavailableHandler();
         void artworkBackupRequested();
+        void onUndoStackEmpty();
 
     public:
         virtual void removeItemsAtIndices(const QVector<QPair<int, int> > &ranges);
