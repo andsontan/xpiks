@@ -48,8 +48,6 @@ namespace Models {
     }
 
     LogsModel::~LogsModel() {
-        m_LoggingWorker->cancel();
-        m_LoggingWorker->deleteLater();
     }
 
     void LogsModel::startLogging() {
