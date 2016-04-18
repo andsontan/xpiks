@@ -42,8 +42,12 @@ namespace Common {
         void submitItem(T *item) {
             m_QueueMutex.lock();
             {
+                bool wasEmpty = m_Queue.isEmpty();
                 m_Queue.append(item);
-                m_WaitAnyItem.wakeOne();
+
+                if (wasEmpty) {
+                    m_WaitAnyItem.wakeOne();
+                }
             }
             m_QueueMutex.unlock();
         }
@@ -51,8 +55,12 @@ namespace Common {
         void submitItems(const QVector<T*> &items) {
             m_QueueMutex.lock();
             {
+                bool wasEmpty = m_Queue.isEmpty();
                 m_Queue << items;
-                m_WaitAnyItem.wakeOne();
+
+                if (wasEmpty) {
+                    m_WaitAnyItem.wakeOne();
+                }
             }
             m_QueueMutex.unlock();
         }
@@ -62,7 +70,6 @@ namespace Common {
             {
                 qDeleteAll(m_Queue);
                 m_Queue.clear();
-                m_WaitAnyItem.wakeOne();
             }
             m_QueueMutex.unlock();
 
@@ -92,7 +99,22 @@ namespace Common {
 
         void stopWorking() {
             m_Cancel = true;
-            submitItem(NULL);
+
+            m_QueueMutex.lock();
+            {
+                qDeleteAll(m_Queue);
+                m_Queue.clear();
+
+                T *stopItem = NULL;
+
+                bool wasEmpty = m_Queue.isEmpty();
+                m_Queue.append(stopItem);
+
+                if (wasEmpty) {
+                    m_WaitAnyItem.wakeOne();
+                }
+            }
+            m_QueueMutex.unlock();
         }
 
     protected:
@@ -112,16 +134,10 @@ namespace Common {
 
                 m_QueueMutex.lock();
 
-                if (m_Queue.isEmpty()) {
-                    // spurious wakeup fix
-                    while (!m_WaitAnyItem.wait(&m_QueueMutex))
-                        LOG_INFO << "Spurious wakeup. Waiting again...";;
-
-                    // can be cleared by clearCurrectRequests()
-                    if (m_Queue.isEmpty()) {
-                        notifyQueueIsEmpty();
-                        m_QueueMutex.unlock();
-                        continue;
+                while (m_Queue.isEmpty()) {
+                    bool waitResult = m_WaitAnyItem.wait(&m_QueueMutex);
+                    if (!waitResult) {
+                        LOG_WARNING << "Waiting failed for new items";
                     }
                 }
 
