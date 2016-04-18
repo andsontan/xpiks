@@ -106,8 +106,10 @@ namespace SpellCheck {
                 QStringList parts = word.split(QChar::Space, QString::SkipEmptyParts);
                 foreach (const QString &part, parts) {
                     QString item = part.trimmed();
-                    SpellCheckQueryItem *queryItem = new SpellCheckQueryItem(index, item);
-                    appendItem(queryItem);
+                    if (item.length() >= 2) {
+                        SpellCheckQueryItem *queryItem = new SpellCheckQueryItem(index, item);
+                        appendItem(queryItem);
+                    }
                 }
             }
 
