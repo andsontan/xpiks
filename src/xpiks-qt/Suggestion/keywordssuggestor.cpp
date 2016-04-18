@@ -47,9 +47,7 @@ namespace Suggestion {
 
         m_QueryEngines.append(new ShutterstockQueryEngine());
         m_QueryEngines.append(new GettyQueryEngine());
-#ifdef QT_DEBUG
         m_QueryEngines.append(new FotoliaQueryEngine());
-#endif
         m_QueryEngines.append(new LocalLibraryQueryEngine(m_LocalLibrary));
 
         int length = m_QueryEngines.length();

@@ -42,7 +42,7 @@ namespace Suggestion {
 
     private:
         void parseResponse(const QJsonObject &jsonObject, int count, QVector<SuggestionArtwork *> &suggestionArtworks);
-        QUrl buildQuery(const QStringList &queryKeywords) const;
+        QUrl buildQuery(const QString &apiKey, const QStringList &queryKeywords) const;
 
     private:
         QNetworkAccessManager m_NetworkManager;

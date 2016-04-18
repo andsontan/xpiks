@@ -44,13 +44,11 @@ namespace Suggestion {
 
     void FotoliaQueryEngine::submitQuery(const QStringList &queryKeywords) {
         LOG_DEBUG << queryKeywords;
-        QUrl url = buildQuery(queryKeywords);
-        QNetworkRequest request(url);
-
 
         QString decodedAPIKey = Encryption::decodeText(m_FotoliaAPIKey, "MasterPassword");
-        QString headerData = "Basic " + decodedAPIKey.toLocal8Bit().toBase64();
-        request.setRawHeader("Authorization", headerData.toLocal8Bit());
+
+        QUrl url = buildQuery(decodedAPIKey, queryKeywords);
+        QNetworkRequest request(url);
 
         QNetworkReply *reply = m_NetworkManager.get(request);
         QObject::connect(this, SIGNAL(cancelAllQueries()),
@@ -100,18 +98,23 @@ namespace Suggestion {
         }
     }
 
-    QUrl FotoliaQueryEngine::buildQuery(const QStringList &queryKeywords) const {
+    QUrl FotoliaQueryEngine::buildQuery(const QString &apiKey, const QStringList &queryKeywords) const {
         QUrlQuery urlQuery;
 
-        urlQuery.addQueryItem("search_parameters%5Blanguage_id%5D", "2");
-        urlQuery.addQueryItem("search_parameters%5Bhumbnail_size%5D", "160");
-        urlQuery.addQueryItem("search_parameters%5Blimit%5D", "100");
-        urlQuery.addQueryItem("search_parameters%5Brder%5D", "nb_downloads");
-        urlQuery.addQueryItem("search_parameters%5Bwords%5D", queryKeywords.join(' '));
-        urlQuery.addQueryItem("result_columns", "nb_results,title,keywords,thumbnail_url");
+        urlQuery.addQueryItem("search_parameters[language_id]", "2");
+        urlQuery.addQueryItem("search_parameters[thumbnail_size]", "160");
+        urlQuery.addQueryItem("search_parameters[limit]", "100");
+        urlQuery.addQueryItem("search_parameters[order]", "nb_downloads");
+        urlQuery.addQueryItem("search_parameters[words]", queryKeywords.join(' '));
+        urlQuery.addQueryItem("result_columns[0]", "nb_results");
+        urlQuery.addQueryItem("result_columns[1]", "title");
+        urlQuery.addQueryItem("result_columns[2]", "keywords");
+        urlQuery.addQueryItem("result_columns[3]", "thumbnail_url");
 
         QUrl url;
         url.setUrl(QLatin1String("http://api.fotolia.com/Rest/1/search/getSearchResults"));
+        url.setUserName(apiKey);
+        //url.setPassword("");
         url.setQuery(urlQuery);
         return url;
     }
