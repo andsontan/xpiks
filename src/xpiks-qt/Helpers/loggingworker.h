@@ -30,11 +30,10 @@ namespace Helpers {
         Q_OBJECT
     public:
         explicit LoggingWorker(QObject *parent = 0);
-        virtual ~LoggingWorker() {emit stopped(); emit finished();}
+        virtual ~LoggingWorker() {}
 
     signals:
         void stopped();
-        void finished();
 
     public slots:
         void process();

@@ -24,7 +24,7 @@
 
 #include <QStringList>
 #include <QString>
-#include <QMutexLocker>
+#include <QWaitCondition>
 #include <QMutex>
 
 namespace Helpers {
@@ -45,29 +45,29 @@ namespace Helpers {
 
         QString getLogFilePath() const { return m_LogFilepath; }
 
-        void log(const QString &message) {
-            QMutexLocker locker(&m_Mutex);
-            m_LogsStorage[m_ActiveIndex].append(message);
+        void log(const QString &message);
+        void flush();
+
+    private:
+        void flushStream(QStringList *logItems);
+
+    private:
+        Logger() {
+            m_QueueLogTo = &m_LogsStorage[0];
+            m_QueueFlushFrom = &m_LogsStorage[1];
         }
 
-        void flush();
-        void clear();
-
-    private:
-        void flushStream(int index);
-        void clearStream();
-
-    private:
-        Logger(): m_ActiveIndex(0) {}
         Logger(Logger const&);
         void operator=(Logger const&);
 
     private:
         QString m_LogFilepath;
         QStringList m_LogsStorage[2];
-        QMutex m_Mutex;
-        QMutex m_StreamMutex;
-        volatile int m_ActiveIndex;
+        QStringList *m_QueueFlushFrom;
+        QStringList *m_QueueLogTo;
+        QMutex m_LogMutex;
+        QMutex m_FlushMutex;
+        QWaitCondition m_AnyLogsToFlush;
     };
 }
 

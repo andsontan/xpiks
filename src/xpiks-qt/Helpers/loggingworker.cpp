@@ -35,21 +35,20 @@ namespace Helpers {
         Logger &logger = Logger::getInstance();
         const int secondsToSleep = 1;
 
-        try {
-            while (!m_Cancel) {
-                logger.flush();
-                QThread::sleep(secondsToSleep);
-            }
-
-            LOG_INFO << "Logging worker stopped";
+        while (!m_Cancel) {
             logger.flush();
+            QThread::sleep(secondsToSleep);
         }
-        catch(...) {
-            std::cerr << "Error while saving logs" << std::endl;
-        }
+
+        LOG_INFO << "Logging worker stopped";
+        logger.log("Logging is off now");
+        logger.flush();
+
+        emit stopped();
     }
 
     void LoggingWorker::cancel() {
+        LOG_INFO << "#";
         m_Cancel = true;
     }
 }

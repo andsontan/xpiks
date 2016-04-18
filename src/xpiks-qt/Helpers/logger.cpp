@@ -31,69 +31,60 @@
 #include <QDir>
 #include <QDateTime>
 #include <QStandardPaths>
+#include <QElapsedTimer>
 #include <iostream>
 #include <string>
+#include <ctime>
 #include "../Common/defines.h"
 
+#define MIN_FIRE_SIZE 20
+#define LOGGING_TIMEOUT 5
+
 namespace Helpers {
+    void Logger::log(const QString &message) {
+        QMutexLocker locker(&m_LogMutex);
+        m_QueueLogTo->append(message);
+        m_AnyLogsToFlush.wakeOne();
+    }
+
     void Logger::flush() {
-        int previousIndex = 0;
+        QMutexLocker flushLocker(&m_FlushMutex);
 
-        m_Mutex.lock();
-        {
-            previousIndex = m_ActiveIndex;
-            m_ActiveIndex = (previousIndex + 1) % 2;
+        while (m_QueueFlushFrom->isEmpty()) {
+            QMutexLocker logLocker(&m_LogMutex);
+
+            if (m_QueueLogTo->isEmpty()) {
+                m_AnyLogsToFlush.wait(&m_LogMutex);
+            } else {
+                qSwap(m_QueueLogTo, m_QueueFlushFrom);
+            }
         }
-        m_Mutex.unlock();
 
-        flushStream(previousIndex);
+        flushStream(m_QueueFlushFrom);
     }
 
-    void Logger::clear() {
-        m_Mutex.lock();
-        {
-            m_LogsStorage[0].clear();
-            m_LogsStorage[1].clear();
-            m_ActiveIndex = 0;
-        }
-        m_Mutex.unlock();
-
-        clearStream();
-    }
-
-    void Logger::flushStream(int index) {
-        QStringList &logItems = m_LogsStorage[index];
-
-        if (logItems.length() > 0) {
-            QMutexLocker locker(&m_StreamMutex);
+    void Logger::flushStream(QStringList *logItems) {
+        Q_ASSERT(logItems->length() > 0);
 
 #ifdef WITH_LOGS
-            QFile outFile(m_LogFilepath);
-            if (outFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append)) {
-                QTextStream ts(&outFile);
-
-                foreach (const QString &logItem, logItems) {
-                    ts << logItem;
-                    endl(ts);
-                }
-            }
-#else
-            foreach (const QString &logItem, logItems) {
-                std::cout << logItem.toLocal8Bit().data() << std::endl;
-            }
-#endif
-            logItems.clear();
-        }
-    }
-
-    void Logger::clearStream() {
-        QMutexLocker locker(&m_StreamMutex);
-
         QFile outFile(m_LogFilepath);
-        if (outFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
+        if (outFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append)) {
             QTextStream ts(&outFile);
-            ts << QDateTime::currentDateTimeUtc().toString("dd.MM.yyyy hh:mm:ss.zzz") << " - cleared log";
-            endl(ts);
+
+            int size = logItems->size();
+            for (int i = 0; i < size; ++i) {
+                const QString &line = logItems->at(i);
+                ts << line;
+                endl(ts);
+            }
         }
+#else
+        int size = logItems->size();
+        for (int i = 0; i < size; ++i) {
+            const QString &line = logItems->at(i);
+            std::cout << line.toLocal8Bit().data() << std::endl;
+        }
+#endif
+        logItems->clear();
     }
 }
