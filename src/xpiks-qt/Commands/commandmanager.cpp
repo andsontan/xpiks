@@ -227,7 +227,7 @@ void Commands::CommandManager::connectEntitiesSignalsSlots() const {
 
     if (m_ArtItemsModel != NULL && m_UndoRedoManager != NULL) {
         QObject::connect(m_UndoRedoManager, SIGNAL(undoStackEmpty()),
-                         m_ArtItemsModel, SLOT(undoHistoryEmptyHandler()));
+                         m_ArtItemsModel, SLOT(onUndoStackEmpty()));
     }
 }
 
