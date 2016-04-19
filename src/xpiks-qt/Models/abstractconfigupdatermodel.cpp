@@ -40,7 +40,7 @@ namespace Models {
         QJsonDocument &localDocument = m_LocalConfig.getConfig();
         const QJsonDocument &remoteDocument = m_RemoteConfig.getConfig();
 
-        Helpers::mergeJson(localDocument, remoteDocument, m_Overwrite, *this);
+        Helpers::mergeJson(remoteDocument, localDocument, m_Overwrite, *this);
 
         m_LocalConfig.saveToFile();
         initializeConfigList(localDocument);

@@ -31,8 +31,8 @@
 #include "comparevaluesjson.h"
 
 namespace Helpers {
-    void mergeJson(QJsonDocument &mergeTo, const QJsonDocument &mergeWith,
-                   bool overwrite, CompareValuesJson &comparator);
+    void mergeJson(const QJsonDocument &mergeFrom, QJsonDocument &mergeTo,
+                   bool overwrite, CompareValuesJson &comparer);
 }
 
 #endif // JSONHELPER_H

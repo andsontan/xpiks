@@ -22,14 +22,14 @@
 #include "jsonhelper.h"
 
 namespace Helpers {
-    bool mergeJsonArrays (QJsonArray &arrayTo, const QJsonArray &arrayFrom, CompareValuesJson &comparer);
-    bool mergeJsonObjects (QJsonObject &jsonToObj, QJsonObject &jsonWhatObj, CompareValuesJson &comparer);
+    bool mergeJsonArrays (const QJsonArray &arrayFrom, QJsonArray &arrayTo, CompareValuesJson &comparer);
+    bool mergeJsonObjects (const QJsonObject &objectMergeFrom, QJsonObject &objectMergeTo, CompareValuesJson &comparer);
 
-    bool mergeArraysOfObjects(QJsonArray &arrayTo, const QJsonArray &arrayFrom, CompareValuesJson &comparer);
-    bool containsObject(const QJsonArray &array, int maxIndex, const QJsonObject &object, CompareValuesJson &comparer);
-    bool mergeArraysOfStrings(QJsonArray &arrayTo, const QJsonArray &arrayFrom);
+    bool mergeArraysOfObjects(const QJsonArray &arrayFrom, QJsonArray &arrayTo, CompareValuesJson &comparer);
+    bool containsObject(const QJsonArray &array, int minIndex, const QJsonObject &object, CompareValuesJson &comparer);
+    bool mergeArraysOfStrings(const QJsonArray &arrayFrom, QJsonArray &arrayTo);
 
-    bool mergeJsonArrays (QJsonArray &arrayTo, const QJsonArray &arrayFrom, CompareValuesJson &comparer) {
+    bool mergeJsonArrays (const QJsonArray &arrayFrom, QJsonArray &arrayTo, CompareValuesJson &comparer) {
         LOG_DEBUG << "#";
 
         if (arrayTo.isEmpty()) {
@@ -52,9 +52,9 @@ namespace Helpers {
         int type = arrayTo.first().type();
 
         if (type == QJsonValue::Object) {
-            mergeResult = mergeArraysOfObjects(arrayTo, arrayFrom, comparer);
+            mergeResult = mergeArraysOfObjects(arrayFrom, arrayTo, comparer);
         } else if (type == QJsonValue::String) {
-            mergeResult = mergeArraysOfStrings(arrayTo, arrayFrom);
+            mergeResult = mergeArraysOfStrings(arrayFrom, arrayTo);
         } else {
             LOG_WARNING << "Unsupported type of QJsonArray:" << type;
         }
@@ -62,7 +62,7 @@ namespace Helpers {
         return mergeResult;
     }
 
-    bool mergeArraysOfObjects(QJsonArray &arrayTo, const QJsonArray &arrayFrom, CompareValuesJson &comparer) {
+    bool mergeArraysOfObjects(const QJsonArray &arrayFrom, QJsonArray &arrayTo, CompareValuesJson &comparer) {
         LOG_DEBUG << "#";
 
         int minSize = qMin(arrayTo.size(), arrayFrom.size());
@@ -71,9 +71,9 @@ namespace Helpers {
         // skip same elements
         while (i < minSize) {
             QJsonObject objectTo = arrayTo[i].toObject();
-            QJsonObject objectWhat = arrayFrom[i].toObject();
+            QJsonObject objectFrom = arrayFrom[i].toObject();
 
-            if (comparer(objectTo, objectWhat) == 0) {
+            if (comparer(objectTo, objectFrom) == 0) {
                 i++;
             } else {
                 break;
@@ -84,37 +84,40 @@ namespace Helpers {
 
         int maxIndexOfEqual = i;
 
-        QJsonArray arrayMerged = arrayFrom;
+        QJsonArray mergedArray = arrayTo;
 
-        int sizeTo = arrayTo.size();
-        QJsonArray arrayMergedAdd;
+        int sizeFrom = arrayFrom.size();
+        QJsonArray elementsToAdd;
 
-        for (; i < sizeTo; i++) {
-            QJsonObject objectTo = arrayTo[i].toObject();
+        for (; i < sizeFrom; i++) {
+            Q_ASSERT(arrayFrom[i].isObject());
+            QJsonObject objectToAdd = arrayFrom[i].toObject();
 
-            bool exists = containsObject(arrayFrom, maxIndexOfEqual, objectTo, comparer);
-            if (!exists) {
-                arrayMergedAdd.append(objectTo);
+            bool alreadyExists = containsObject(arrayTo, maxIndexOfEqual, objectToAdd, comparer);
+            if (!alreadyExists) {
+                elementsToAdd.append(objectToAdd);
             }
         }
 
-        LOG_DEBUG << arrayMergedAdd.size() << "new elements to be added";
+        LOG_DEBUG << elementsToAdd.size() << "new elements to be added";
 
-        int sizeMergedAdd = arrayMergedAdd.size();
+        int sizeMergedAdd = elementsToAdd.size();
         for (int t = 0; t < sizeMergedAdd; t++) {
-            arrayMerged.append(arrayMergedAdd[t]);
+            mergedArray.append(elementsToAdd[t]);
         }
 
-        arrayTo = arrayMerged;
+        arrayTo = mergedArray;
 
         return true;
     }
 
-    bool containsObject(const QJsonArray &array, int maxIndex, const QJsonObject &object, CompareValuesJson &comparer) {
+    bool containsObject(const QJsonArray &array, int minIndex, const QJsonObject &object, CompareValuesJson &comparer) {
         bool found = false;
-        Q_ASSERT(maxIndex <= array.size());
+        Q_ASSERT(minIndex < array.size());
 
-        for (int i = 0; i < maxIndex; ++i) {
+        int size = array.size();
+
+        for (int i = minIndex; i < size; ++i) {
             Q_ASSERT(array[i].type() == QJsonValue::Object);
 
             QJsonObject objectInArray = array[i].toObject();
@@ -128,7 +131,7 @@ namespace Helpers {
         return found;
     }
 
-    bool mergeArraysOfStrings(QJsonArray &arrayTo, const QJsonArray &arrayFrom) {
+    bool mergeArraysOfStrings(const QJsonArray &arrayFrom, QJsonArray &arrayTo) {
         QJsonArray arrayMerged;
 
         QSet<QString> commonValues;
@@ -158,7 +161,7 @@ namespace Helpers {
         return true;
     }
 
-    bool mergeJsonObjects (QJsonObject &objectMergeTo, QJsonObject &objectMergeFrom, CompareValuesJson &comparer) {
+    bool mergeJsonObjects (const QJsonObject &objectMergeFrom, QJsonObject &objectMergeTo, CompareValuesJson &comparer) {
         LOG_DEBUG << "#";
 
         QStringList keysMergeFrom = objectMergeFrom.keys();
@@ -182,7 +185,7 @@ namespace Helpers {
                     QJsonObject objectTo = valueTo.toObject();
                     QJsonObject objectFrom = valueFrom.toObject();
 
-                    if (mergeJsonObjects(objectTo, objectFrom, comparer)) {
+                    if (mergeJsonObjects(objectFrom, objectTo, comparer)) {
                         valueTo = objectTo;
                     } else {
                         anyError = true;
@@ -192,7 +195,7 @@ namespace Helpers {
                     QJsonArray arrayTo = valueTo.toArray();
                     QJsonArray arrayFrom = valueFrom.toArray();
 
-                    if (mergeJsonArrays(arrayTo, arrayFrom, comparer)) {
+                    if (mergeJsonArrays(arrayFrom, arrayTo, comparer)) {
                         valueTo = arrayTo;
                     } else {
                         anyError = true;
@@ -213,29 +216,29 @@ namespace Helpers {
         return mergeResult;
     }
 
-    void mergeJson(QJsonDocument &mergeTo, const QJsonDocument &mergeWith, bool overwrite, CompareValuesJson &isEqual) {
-        if (mergeWith.isNull()) {
+    void mergeJson(const QJsonDocument &mergeFrom, QJsonDocument &mergeTo, bool overwrite, CompareValuesJson &comparer) {
+        if (mergeFrom.isNull()) {
             LOG_WARNING << "attempted to merge with Null json document";
             return;
         }
 
         if (overwrite || mergeTo.isNull()) {
             LOG_DEBUG << "Overwriting the document";
-            mergeTo = mergeWith;
+            mergeTo = mergeFrom;
         } else {
-            if (mergeWith.isArray()) {
-                QJsonArray arrayWith = mergeWith.array();
+            if (mergeFrom.isArray()) {
+                QJsonArray arrayFrom = mergeFrom.array();
                 QJsonArray arrayTo = mergeTo.array();
 
-                if (mergeJsonArrays(arrayTo, arrayWith, isEqual)) {
+                if (mergeJsonArrays(arrayFrom, arrayTo, comparer)) {
                     mergeTo.setArray(arrayTo);
                 }
             } else {
-                QJsonObject objWith = mergeWith.object();
-                QJsonObject objTo = mergeTo.object();
+                QJsonObject objectFrom = mergeFrom.object();
+                QJsonObject objectTo = mergeTo.object();
 
-                if (mergeJsonObjects(objTo, objWith, isEqual)) {
-                    mergeTo.setObject(objTo);
+                if (mergeJsonObjects(objectFrom, objectTo, comparer)) {
+                    mergeTo.setObject(objectTo);
                 }
             }
         }
