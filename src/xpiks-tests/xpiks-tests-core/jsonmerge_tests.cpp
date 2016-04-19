@@ -1,5 +1,5 @@
 #include "jsonmerge_tests.h"
-#include "../Common/defines.h"
+#include "../../xpiks-qt/Common/defines.h"
 #include "../../xpiks-qt/Helpers/jsonhelper.h"
 #include "../../xpiks-qt/Helpers/localconfig.h"
 
