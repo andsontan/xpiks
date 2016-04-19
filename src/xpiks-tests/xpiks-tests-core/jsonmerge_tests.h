@@ -15,6 +15,7 @@ protected:
     }
 
 private slots:
+    void initTestCase();
     void mergeTwoFilesObjects();
     void mergeTwoFilesStrings();
 };
