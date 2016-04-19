@@ -83,6 +83,7 @@ namespace Constants {
     const char USER_CONSENT[] = "DEBUG_USER_CONSENT_1_0";
     const char SELECTED_LOCALE[] = "DEBUG_SELECTED_LOCALE";
     const char SELECTED_THEME_INDEX[] = "DEBUG_SELECTED_THEME_INDEX";
+    const char FTP_STOCKS_FILENAME[] = "stocks_ftp.json";
     const char USE_AUTO_COMPLETE[] = "DEBUG_USE_AUTO_COMPLETE";
 
 #ifdef INTEGRATION_TESTS

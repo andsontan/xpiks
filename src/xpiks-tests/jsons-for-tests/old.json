@@ -1,0 +1,21 @@
+{
+    "stocks_ftp": [
+        {
+            "_name": "Bigstockphoto",
+            "ftp": "ftp://bigstockphoto.com"
+        },
+        {
+            "_name": "Bigstockphoto_copy",
+            "ftp": "ftp://bigstockphoto.com"
+        },
+        {
+            "_name": "Canstockphoto",
+            "ftp": "ftp://ftp.canstockphoto.com"
+        },
+        {
+            "_name": "Depositphotos",
+            "ftp": "ftp://ftp.depositphotos.com"
+        }
+    ],
+    "version": 0
+}

@@ -83,10 +83,14 @@ SOURCES += main.cpp \
     Suggestion/locallibraryqueryengine.cpp \
     Suggestion/fotoliaqueryengine.cpp \
     QMLExtensions/colorsmodel.cpp \
+    Helpers/remoteconfig.cpp \
+    Helpers/localconfig.cpp \
+    Helpers/jsonhelper.cpp \
     AutoComplete/autocompletemodel.cpp \
     AutoComplete/autocompleteworker.cpp \
     AutoComplete/autocompleteservice.cpp \
-    Suggestion/gettyqueryengine.cpp
+    Suggestion/gettyqueryengine.cpp \
+    Models/abstractconfigupdatermodel.cpp
 
 RESOURCES += qml.qrc
 
@@ -221,11 +225,16 @@ HEADERS += \
     Helpers/ifilenotavailablemodel.h \
     Suggestion/fotoliaqueryengine.h \
     QMLExtensions/colorsmodel.h \
+    Helpers/remoteconfig.h \
+    Helpers/localconfig.h \
+    Helpers/jsonhelper.h \
+    Helpers/comparevaluesjson.h \
     AutoComplete/autocompletemodel.h \
     AutoComplete/autocompleteworker.h \
     AutoComplete/completionquery.h \
     AutoComplete/autocompleteservice.h \
-    Suggestion/gettyqueryengine.h
+    Suggestion/gettyqueryengine.h \
+    Models/abstractconfigupdatermodel.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

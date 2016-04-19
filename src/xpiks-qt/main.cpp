@@ -294,6 +294,7 @@ int main(int argc, char *argv[]) {
     bool telemetryEnabled = appSettings.value(Constants::USER_STATISTICS, false).toBool();
 #endif
     Conectivity::TelemetryService telemetryService(userId, telemetryEnabled);
+
     Plugins::PluginManager pluginManager;
     Plugins::PluginsWithActionsModel pluginsWithActions;
     pluginsWithActions.setSourceModel(&pluginManager);
