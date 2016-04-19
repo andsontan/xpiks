@@ -128,7 +128,11 @@ SOURCES += main.cpp \
     artworkfilter_tests.cpp \
     ../../xpiks-qt/Models/artworkuploader.cpp \
     ../../xpiks-qt/Models/ziparchiver.cpp \
-    removefilesfs_tests.cpp
+    removefilesfs_tests.cpp \
+    jsonmerge_tests.cpp \
+    ../../xpiks-qt/Helpers/jsonhelper.cpp \
+    ../../xpiks-qt/Helpers/localconfig.cpp \
+    ../../xpiks-qt/Helpers/remoteconfig.cpp
 
 HEADERS += \
     encryption_tests.h \
@@ -217,5 +221,9 @@ HEADERS += \
     ../../xpiks-qt/Conectivity/iftpcoordinator.h \
     ../../xpiks-qt/Models/ziparchiver.h \
     removefilesfs_tests.h \
-    Mocks/artworksrepositorymock.h
+    Mocks/artworksrepositorymock.h \
+    jsonmerge_tests.h \
+    ../../xpiks-qt/Helpers/jsonhelper.h \
+    ../../xpiks-qt/Helpers/localconfig.h \
+    ../../xpiks-qt/Helpers/remoteconfig.h
     removefilesfs_tests.h
