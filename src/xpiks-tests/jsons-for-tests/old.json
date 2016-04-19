@@ -5,16 +5,16 @@
             "ftp": "ftp://bigstockphoto.com"
         },
         {
-            "name": "Bigstockphoto_copy",
-            "ftp": "ftp://bigstockphoto.com"
-        },
-        {
             "name": "Canstockphoto",
             "ftp": "ftp://ftp.canstockphoto.com"
         },
         {
             "name": "Depositphotos",
             "ftp": "ftp://ftp.depositphotos.com"
+        },
+		{
+            "name": "Bigstockphoto_copy",
+            "ftp": "ftp://bigstockphoto.com"
         }
     ],
     "version": 0
