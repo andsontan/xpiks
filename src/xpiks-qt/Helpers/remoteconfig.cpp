@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "RemoteConfig.h"
+#include "remoteconfig.h"
 
 namespace Helpers {
     RemoteConfig::RemoteConfig(const QString &url):
