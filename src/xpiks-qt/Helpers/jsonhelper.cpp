@@ -27,7 +27,7 @@ namespace Helpers {
 
     bool mergeArraysOfObjects(QJsonArray &arrayTo, const QJsonArray &arrayFrom, CompareValuesJson &comparer);
     bool containsObject(const QJsonArray &array, int maxIndex, const QJsonObject &object, CompareValuesJson &comparer);
-    bool mergeArraysOfStrings(QJsonArray &arrayTo, const QJsonArray &arrayFrom, CompareValuesJson &comparer);
+    bool mergeArraysOfStrings(QJsonArray &arrayTo, const QJsonArray &arrayFrom);
 
     bool mergeJsonArrays (QJsonArray &arrayTo, const QJsonArray &arrayFrom, CompareValuesJson &comparer) {
         LOG_DEBUG << "#";
@@ -54,7 +54,7 @@ namespace Helpers {
         if (type == QJsonValue::Object) {
             mergeResult = mergeArraysOfObjects(arrayTo, arrayFrom, comparer);
         } else if (type == QJsonValue::String) {
-            mergeResult = mergeArraysOfStrings(arrayTo, arrayFrom, comparer);
+            mergeResult = mergeArraysOfStrings(arrayTo, arrayFrom);
         } else {
             LOG_WARNING << "Unsupported type of QJsonArray:" << type;
         }
@@ -128,44 +128,29 @@ namespace Helpers {
         return found;
     }
 
-    bool mergeArraysOfStrings(QJsonArray &arrayTo, const QJsonArray &arrayFrom, CompareValuesJson &comparer) {
+    bool mergeArraysOfStrings(QJsonArray &arrayTo, const QJsonArray &arrayFrom) {
         QJsonArray arrayMerged;
 
-        Q_UNUSED(comparer);
+        QSet<QString> commonValues;
+        commonValues.reserve(arrayTo.size() + arrayFrom.size());
 
         int i = 0;
-        QSet<QString> commonValues;
-
-        int minSize = qMin(arrayFrom.size(), arrayTo.size());
-
-        for (i = 0; i < minSize; i++ ) {
-            Q_ASSERT(arrayTo[i].type() == arrayFrom[i].type());
-
+        int sizeTo = arrayTo.size();
+        for (i = 0; i < sizeTo; ++i) {
+            Q_ASSERT(arrayTo[i].type() == QJsonValue::String);
             commonValues.insert(arrayTo[i].toString());
-            commonValues.insert(arrayFrom[i].toString());
         }
 
-        // allow reordering of first values
-        Q_ASSERT(commonValues.size() == minSize);
-
-        int fromSize = arrayFrom.size();
-        int toSize = arrayTo.size();
-
-        if (fromSize >= toSize) {
-            for (; i < fromSize; ++i) {
-                commonValues.insert(arrayFrom[i].toString());
-            }
-        } else {
-            for (; i < toSize; i++ ) {
-                commonValues.insert(arrayTo[i].toString());
-            }
+        int sizeFrom = arrayFrom.size();
+        for (i = 0; i < sizeFrom; ++i) {
+            Q_ASSERT(arrayFrom[i].type() == QJsonValue::String);
+            commonValues.insert(arrayFrom[i].toString());
         }
 
         QSet<QString>::iterator begin = commonValues.begin();
         QSet<QString>::iterator end = commonValues.end();
-        QSet<QString>::iterator it;
 
-        for (it = begin; it != end; ++it) {
+        for (QSet<QString>::iterator it = begin; it != end; ++it) {
             arrayMerged.append(*it);
         }
 
