@@ -1,10 +1,10 @@
 {
     "ftp_list": [
-            "ftp": "ftp://bigstockphoto.com",
-			"ftp": "ftp://ftp.canstockphoto.com",
-            "ftp": "ftp://ftp.canstockphoto.com__",
-			"ftp": "ftp://ftp.depositphotos.com",
-            "ftp": "ftp://ftp.depositphotos.com__"
+            "ftp://bigstockphoto.com",
+			"ftp://ftp.canstockphoto.com",
+            "ftp://ftp.canstockphoto.com__",
+			"ftp://ftp.depositphotos.com",
+            "ftp://ftp.depositphotos.com__"
     ],
-    "version": 0
+    "version": 1
 }

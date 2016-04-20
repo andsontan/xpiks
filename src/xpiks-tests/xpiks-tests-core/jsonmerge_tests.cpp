@@ -28,7 +28,7 @@ void JsonMergeTests::mergeTwoFilesObjects() {
     localConfigTo.initConfig();
     localConfigGold.initConfig();
 
-    Helpers::mergeJson(localConfigTo.getConfig(), localConfigWith.getConfig(), 0, *this);
+    Helpers::mergeJson(localConfigWith.getConfig(), localConfigTo.getConfig(), 0, *this);
 
     QVERIFY(localConfigGold.getConfig() == localConfigTo.getConfig());
 }
@@ -54,7 +54,23 @@ void JsonMergeTests::mergeTwoFilesStrings() {
     localConfigTo.initConfig();
     localConfigGold.initConfig();
 
-    Helpers::mergeJson(localConfigTo.getConfig(), localConfigWith.getConfig(), 0, *this);
+    Helpers::mergeJson(localConfigWith.getConfig(), localConfigTo.getConfig(), 0, *this);
+    QJsonDocument goldConfig = localConfigGold.getConfig();
+    QJsonDocument testConfig = localConfigTo.getConfig();
+    QJsonObject goldObject = goldConfig.object();
+    QJsonObject testObject = testConfig.object();
+    QJsonArray goldArray = goldObject["ftp_list"].toArray();
+    QJsonArray testArray = testObject["ftp_list"].toArray();
+    QSet<QString> goldSet;
+    QSet<QString> testSet;
+    int goldSize = goldArray.size();
+    int testSize = testArray.size();
 
-    QVERIFY(localConfigGold.getConfig() == localConfigTo.getConfig());
+    for (int i = 0; i < goldSize; i++ ){
+        goldSet.insert(goldArray[i].toString());
+    }
+    for (int i = 0; i < testSize; i++ ){
+        testSet.insert(testArray[i].toString());
+    }
+    QVERIFY(testSet == goldSet);
 }

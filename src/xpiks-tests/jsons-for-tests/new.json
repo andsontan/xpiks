@@ -1,16 +1,21 @@
 {
-	"stocks_ftp": [{
-		"_name": "Bigstockphoto",
-		"ftp": "ftp://bigstockphoto.com"
-	}, {
-		"_name": "Canstockphoto",
-		"ftp": "ftp://ftp.canstockphoto.com"
-	}, {
-		"_name": "Depositphotos",
-		"ftp": "ftp://ftp.depositphotos.com"
-	}, {
-		"_name": "Shutterstock",
-		"ftp": "ftp://ftp.shutterstock.com"
-	}],
-	"version": 1
+    "stocks_ftp": [
+        {
+            "ftp": "ftp://bigstockphoto.com",
+            "name": "Bigstockphoto"
+        },
+        {
+            "ftp": "ftp://ftp.canstockphoto.com",
+            "name": "Canstockphoto"
+        },
+        {
+            "ftp": "ftp://ftp.depositphotos.com",
+            "name": "Depositphotos"
+        },
+        {
+            "ftp": "ftp://ftp.shutterstock.com",
+            "name": "Shutterstock"
+        }
+    ],
+    "version": 1
 }
