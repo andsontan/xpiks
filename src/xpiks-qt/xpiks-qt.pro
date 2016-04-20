@@ -290,7 +290,8 @@ DISTFILES += \
     Components/CustomComboBox.qml \
     Constants/Themes.js \
     Components/CompletionBox.qml \
-    Components/EditIcon.qml
+    Components/EditIcon.qml \
+    uncrustify.cfg
 
 lupdate_only {
 SOURCES = *.qml \
