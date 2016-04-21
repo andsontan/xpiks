@@ -5,31 +5,31 @@
             name: "Shutterstock",
             ftp: "ftp.shutterstock.com"
         },
-		{
+        {
             name: "Fotolia",
             ftp: "ftp://submit.fotolia.com"
         },
-		{
+        {
             name: "Depositphotos",
             ftp: "ftp.depositphotos.com"
         },
-		{
+        {
             name: "123rf",
             ftp: "ftp.123rf.com"
         },
-		{
+        {
             name: "BigStock",
             ftp: "ftp.bigstockphoto.com"
         },
-		{
+        {
             name: "Dreamtimes",
             ftp: "ftp://upload.dreamstime.com"
         },
-		{
+        {
             name: "CanStock",
             ftp: "ftp.canstockphoto.com"
         },
-		{
+        {
             name: "ColourBox",
             ftp: "ftp.skyfish.com"
         }
