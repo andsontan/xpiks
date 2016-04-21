@@ -20,13 +20,13 @@ void JsonMergeTests::mergeTwoFilesObjects() {
     QVERIFY(infoNew.exists());
     QVERIFY(infoGold.exists());
 
-    Helpers::LocalConfig localConfigWith(pathWith);
-    Helpers::LocalConfig localConfigTo(pathTo);
-    Helpers::LocalConfig localConfigGold(pathGold);
+    Helpers::LocalConfig localConfigWith;
+    Helpers::LocalConfig localConfigTo;
+    Helpers::LocalConfig localConfigGold;
 
-    localConfigWith.initConfig();
-    localConfigTo.initConfig();
-    localConfigGold.initConfig();
+    localConfigWith.initConfig(pathWith);
+    localConfigTo.initConfig(pathTo);
+    localConfigGold.initConfig(pathGold);
 
     Helpers::mergeJson(localConfigWith.getConfig(), localConfigTo.getConfig(), 0, *this);
 
@@ -46,17 +46,18 @@ void JsonMergeTests::mergeTwoFilesStrings() {
     QVERIFY(infoNew.exists());
     QVERIFY(infoGold.exists());
 
-    Helpers::LocalConfig localConfigWith(pathWith);
-    Helpers::LocalConfig localConfigTo(pathTo);
-    Helpers::LocalConfig localConfigGold(pathGold);
+    Helpers::LocalConfig localConfigWith;
+    Helpers::LocalConfig localConfigTo;
+    Helpers::LocalConfig localConfigGold;
 
-    localConfigWith.initConfig();
-    localConfigTo.initConfig();
-    localConfigGold.initConfig();
+    localConfigWith.initConfig(pathWith);
+    localConfigTo.initConfig(pathTo);
+    localConfigGold.initConfig(pathGold);
 
     Helpers::mergeJson(localConfigWith.getConfig(), localConfigTo.getConfig(), 0, *this);
-    QJsonDocument goldConfig = localConfigGold.getConfig();
-    QJsonDocument testConfig = localConfigTo.getConfig();
+
+    const QJsonDocument &goldConfig = localConfigGold.getConfig();
+    const QJsonDocument &testConfig = localConfigTo.getConfig();
     QJsonObject goldObject = goldConfig.object();
     QJsonObject testObject = testConfig.object();
     QJsonArray goldArray = goldObject["ftp_list"].toArray();
@@ -69,8 +70,10 @@ void JsonMergeTests::mergeTwoFilesStrings() {
     for (int i = 0; i < goldSize; i++ ){
         goldSet.insert(goldArray[i].toString());
     }
+
     for (int i = 0; i < testSize; i++ ){
         testSet.insert(testArray[i].toString());
     }
+
     QVERIFY(testSet == goldSet);
 }
