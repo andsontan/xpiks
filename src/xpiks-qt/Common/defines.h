@@ -45,5 +45,11 @@
 #define LOG_INFO qInfo()
 #define LOG_WARNING qWarning()
 
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
+#define XPIKS_USERDATA_PATH QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+#else
+#define XPIKS_USERDATA_PATH QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+#endif
+
 #endif // DEFINES
 

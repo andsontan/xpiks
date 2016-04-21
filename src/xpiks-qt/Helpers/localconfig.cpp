@@ -20,33 +20,34 @@
  */
 
 #include "localconfig.h"
+#include <QDir>
+#include <QStandardPaths>
 
 namespace Helpers {
-    LocalConfig::LocalConfig(const QString &fileName):
-        m_FileName(fileName)
-    {
+    LocalConfig::LocalConfig() {
     }
 
-    void LocalConfig::initConfig() {
-        QFile file(m_FileName);
+    void LocalConfig::initConfig(const QString &configPath) {
+        m_FilePath = configPath;
+        QFile file(m_FilePath);
 
         if (file.open(QIODevice::ReadOnly)) {
             QString text = file.readAll();
             file.close();
             m_Config = QJsonDocument::fromJson(text.toUtf8());
         } else {
-            LOG_WARNING << "Opening file" << m_FileName << "failed";
+            LOG_WARNING << "Opening file" << m_FilePath << "failed";
         }
     }
 
     void LocalConfig::saveToFile() {
-        QFile file(m_FileName);
+        QFile file(m_FilePath);
 
         if (file.open(QIODevice::WriteOnly)) {
             file.write(m_Config.toJson(QJsonDocument::Indented));
             file.close();
         } else {
-            LOG_WARNING << "Opening file" << m_FileName << "failed";
+            LOG_WARNING << "Opening file" << m_FilePath << "failed";
         }
     }
 }

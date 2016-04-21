@@ -30,15 +30,16 @@
 namespace Helpers {    
     class LocalConfig {
     public:
-        LocalConfig(const QString &fileName);
+        LocalConfig();
 
     public:
         QJsonDocument& getConfig() { return m_Config; }
-        void initConfig();
+        const QJsonDocument& getConfig() const { return m_Config; }
+        void initConfig(const QString &configPath);
         void saveToFile();
 
     private:
-        QString m_FileName;
+        QString m_FilePath;
         QJsonDocument m_Config;
     };
 }

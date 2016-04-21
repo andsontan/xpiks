@@ -32,21 +32,21 @@ namespace Helpers {
     class RemoteConfig : public QObject {
         Q_OBJECT
     public:
-        RemoteConfig(const QString &url);
+        RemoteConfig();
         virtual ~RemoteConfig();
 
     public:
-        void requestInitConfig();
+        void requestInitConfig(const QString &configUrl);
         const QJsonDocument& getConfig() const { return m_Config; }
 
     signals:
-        void updateIsReady();
+        void configArrived();
 
     private slots:
         void replyReceived(QNetworkReply *networkReply);
 
     private:
-        QString m_Url;
+        QString m_ConfigUrl;
         QNetworkAccessManager *m_NetworkManager;
         QJsonDocument m_Config;
     };

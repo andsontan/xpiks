@@ -189,11 +189,7 @@ int main(int argc, char *argv[]) {
 
     Suggestion::LocalLibrary localLibrary;
 
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
-    QString appDataPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-#else
-    QString appDataPath = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
-#endif
+    QString appDataPath = XPIKS_USERDATA_PATH;
     if (!appDataPath.isEmpty()) {
         QDir appDataDir(appDataPath);
 

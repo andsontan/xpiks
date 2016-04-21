@@ -22,9 +22,7 @@
 #include "remoteconfig.h"
 
 namespace Helpers {
-    RemoteConfig::RemoteConfig(const QString &url):
-        m_Url(url)
-    {
+    RemoteConfig::RemoteConfig() {
         m_NetworkManager = new QNetworkAccessManager();
 
         QObject::connect(m_NetworkManager, SIGNAL(finished(QNetworkReply*)),
@@ -35,11 +33,13 @@ namespace Helpers {
         delete m_NetworkManager;
     }
 
-    void RemoteConfig::requestInitConfig() {
-        LOG_DEBUG << m_Url;
+    void RemoteConfig::requestInitConfig(const QString &configUrl) {
+        m_ConfigUrl = configUrl;
+
+        LOG_DEBUG << m_ConfigUrl;
 
         QUrl url;
-        url.setUrl(m_Url);
+        url.setUrl(m_ConfigUrl);
 
         QNetworkRequest request(url);
         QNetworkReply *reply = m_NetworkManager->get(request);
@@ -54,7 +54,7 @@ namespace Helpers {
             m_Config = QJsonDocument::fromJson(networkReply->readAll(), &error);
 
             if (error.error == QJsonParseError::NoError) {
-                emit updateIsReady();
+                emit configArrived();
             } else {
                 LOG_WARNING << "Failed to parse remote json" << error.errorString();
             }
