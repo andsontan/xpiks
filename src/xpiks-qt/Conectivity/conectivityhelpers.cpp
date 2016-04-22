@@ -82,6 +82,11 @@ namespace Conectivity {
                 context->m_DirForVectors = "additional";
             }
 
+            if (context->m_Host.contains("alamy")) {
+                context->m_DirForImages = "Stock";
+                context->m_DirForVectors = "Vector";
+            }
+
             contexts.append(QSharedPointer<UploadContext>(context));
         }
     }
