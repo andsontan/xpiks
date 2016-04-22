@@ -107,6 +107,7 @@ namespace Suggestion {
         SuggestionQueryEngineBase *engine = m_QueryEngines.at(m_SelectedSourceIndex);
         const QVector<SuggestionArtwork*> &results = engine->getLastResults();
         setSuggestedArtworks(results);
+        qsrand(QTime::currentTime().msec());
     }
 
     void KeywordsSuggestor::errorsReceivedHandler(const QString &error) {
@@ -242,9 +243,8 @@ namespace Suggestion {
         QMultiMap<int, QString>::const_iterator it = selectedKeywords.constEnd();
         QMultiMap<int, QString>::const_iterator itBegin = selectedKeywords.constBegin();
 
-        qsrand(QTime::currentTime().msec());
-        int maxSuggested = 23 + (qrand() % 7);
-        int maxOthers = 37 + (qrand() % 13);
+        int maxSuggested = 25 + (qrand() % 10);
+        int maxOthers = 35 + (qrand() % 15);
 
         suggestedKeywords.reserve(maxSuggested);
         otherKeywords.reserve(maxOthers);
