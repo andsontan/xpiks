@@ -132,7 +132,10 @@ SOURCES += main.cpp \
     jsonmerge_tests.cpp \
     ../../xpiks-qt/Helpers/jsonhelper.cpp \
     ../../xpiks-qt/Helpers/localconfig.cpp \
-    ../../xpiks-qt/Helpers/remoteconfig.cpp
+    ../../xpiks-qt/Helpers/remoteconfig.cpp \
+    ../../xpiks-qt/AutoComplete/stocksftplistmodel.cpp \
+    ../../xpiks-qt/AutoComplete/stringfilterproxymodel.cpp \
+    ../../xpiks-qt/Models/abstractconfigupdatermodel.cpp
 
 HEADERS += \
     encryption_tests.h \
@@ -225,5 +228,8 @@ HEADERS += \
     jsonmerge_tests.h \
     ../../xpiks-qt/Helpers/jsonhelper.h \
     ../../xpiks-qt/Helpers/localconfig.h \
-    ../../xpiks-qt/Helpers/remoteconfig.h
+    ../../xpiks-qt/Helpers/remoteconfig.h \
+    ../../xpiks-qt/AutoComplete/stocksftplistmodel.h \
+    ../../xpiks-qt/AutoComplete/stringfilterproxymodel.h \
+    ../../xpiks-qt/Models/abstractconfigupdatermodel.h
     removefilesfs_tests.h

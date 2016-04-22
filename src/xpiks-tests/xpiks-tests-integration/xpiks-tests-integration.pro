@@ -108,7 +108,13 @@ SOURCES += main.cpp \
     ../../xpiks-qt/AutoComplete/autocompletemodel.cpp \
     ../../xpiks-qt/AutoComplete/autocompleteservice.cpp \
     ../../xpiks-qt/AutoComplete/autocompleteworker.cpp \
-    ../../xpiks-qt/Suggestion/gettyqueryengine.cpp
+    ../../xpiks-qt/Suggestion/gettyqueryengine.cpp \
+    ../../xpiks-qt/AutoComplete/stocksftplistmodel.cpp \
+    ../../xpiks-qt/AutoComplete/stringfilterproxymodel.cpp \
+    ../../xpiks-qt/Models/abstractconfigupdatermodel.cpp \
+    ../../xpiks-qt/Helpers/jsonhelper.cpp \
+    ../../xpiks-qt/Helpers/localconfig.cpp \
+    ../../xpiks-qt/Helpers/remoteconfig.cpp
 
 RESOURCES +=
 
@@ -242,7 +248,13 @@ HEADERS += \
     ../../xpiks-qt/AutoComplete/autocompleteservice.h \
     ../../xpiks-qt/AutoComplete/autocompleteworker.h \
     ../../xpiks-qt/AutoComplete/completionquery.h \
-    ../../xpiks-qt/Suggestion/gettyqueryengine.h
+    ../../xpiks-qt/Suggestion/gettyqueryengine.h \
+    ../../xpiks-qt/AutoComplete/stocksftplistmodel.h \
+    ../../xpiks-qt/AutoComplete/stringfilterproxymodel.h \
+    ../../xpiks-qt/Models/abstractconfigupdatermodel.h \
+    ../../xpiks-qt/Helpers/jsonhelper.h \
+    ../../xpiks-qt/Helpers/localconfig.h \
+    ../../xpiks-qt/Helpers/remoteconfig.h
 
 INCLUDEPATH += ../../tiny-aes
 INCLUDEPATH += ../../cpp-libface
@@ -267,8 +279,7 @@ win32 {
     INCLUDEPATH += "../../quazip"
     INCLUDEPATH += "../../libcurl/include"
     LIBS -= -lcurl
-    LIBS -= -lface
-    LIBS += -llibface
+    LIBS += -lmman
 
     CONFIG(debug, debug|release) {
         EXE_DIR = debug
