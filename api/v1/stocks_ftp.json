@@ -32,6 +32,26 @@
         {
             name: "ColourBox",
             ftp: "ftp.skyfish.com"
+        },
+        {
+            name: "Alamy",
+            ftp: "ftp://upload.alamy.com"
+        },
+        {
+            name: "iClipart",
+            ftp: "ftp.iclipart.com"
+        },
+        {
+            name: "Yaymicro",
+            ftp: "ftp.yaymicro.com"
+        },
+        {
+            name: "Mostphotos",
+            ftp: "ftp.mostphotos.com"
+        },
+        {
+            name: "Crestock",
+            ftp: "ftp.crestock.com"
         }
     ]
 }
