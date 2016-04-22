@@ -27,6 +27,8 @@
 #include <QFutureWatcher>
 #include "artworksprocessor.h"
 #include "../Conectivity/testconnection.h"
+#include "../AutoComplete/stringfilterproxymodel.h"
+#include "../AutoComplete/stocksftplistmodel.h"
 
 namespace Helpers {
     class TestConnectionResult;
@@ -51,6 +53,7 @@ namespace Models {
         virtual ~ArtworkUploader();
 
     public:
+        AutoComplete::StringFilterProxyModel *getStocksCompletionSource() { return &m_StocksCompletionSource; }
         virtual void setCommandManager(Commands::CommandManager *commandManager);
 
     signals:
@@ -67,6 +70,7 @@ namespace Models {
 
     private slots:
         void uploaderPercentChanged(double percent);
+        void stocksListUpdated();
 
     public:
 #ifndef CORE_TESTS
@@ -75,6 +79,7 @@ namespace Models {
                                           const QString &password, bool disablePassiveMode) const;
 #endif
         Q_INVOKABLE bool needCreateArchives() const;
+        void initializeStocksList();
 
     private:
 #ifndef CORE_TESTS
@@ -87,6 +92,8 @@ namespace Models {
 
     private:
         Conectivity::IFtpCoordinator *m_FtpCoordinator;
+        AutoComplete::StringFilterProxyModel m_StocksCompletionSource;
+        AutoComplete::StocksFtpListModel m_StocksFtpList;
 #ifndef CORE_TESTS
         QFutureWatcher<Conectivity::ContextValidationResult> *m_TestingCredentialWatcher;
 #endif

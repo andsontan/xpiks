@@ -41,8 +41,7 @@
 namespace AutoComplete {
     StocksFtpListModel::StocksFtpListModel():
         Models::AbstractConfigUpdaterModel(OVERWRITE_STOCKS_CONFIG)
-    {
-    }
+    { }
 
     void StocksFtpListModel::initializeConfigs() {
         QString localConfigPath;
@@ -144,6 +143,7 @@ namespace AutoComplete {
         if (!hash.isEmpty()) {
             LOG_INFO << "Replacing stocks hash with" << hash.size() << "key-values";
             m_StocksHash.swap(hash);
+            emit stocksListUpdated();
         }
     }
 

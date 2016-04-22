@@ -91,7 +91,8 @@ SOURCES += main.cpp \
     AutoComplete/autocompleteservice.cpp \
     Suggestion/gettyqueryengine.cpp \
     Models/abstractconfigupdatermodel.cpp \
-    AutoComplete/stocksftplistmodel.cpp
+    AutoComplete/stocksftplistmodel.cpp \
+    AutoComplete/stringfilterproxymodel.cpp
 
 RESOURCES += qml.qrc
 
@@ -236,7 +237,8 @@ HEADERS += \
     AutoComplete/autocompleteservice.h \
     Suggestion/gettyqueryengine.h \
     Models/abstractconfigupdatermodel.h \
-    AutoComplete/stocksftplistmodel.h
+    AutoComplete/stocksftplistmodel.h \
+    AutoComplete/stringfilterproxymodel.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

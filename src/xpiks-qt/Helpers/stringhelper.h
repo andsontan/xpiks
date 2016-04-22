@@ -28,6 +28,7 @@ class QStringList;
 namespace Helpers {
     QString getLastNLines(const QString &text, int N);
     void splitText(const QString &text, QStringList &parts);
+    int levensteinDistance(const QString &s1, const QString &s2);
 }
 
 #endif // STRINGHELPER

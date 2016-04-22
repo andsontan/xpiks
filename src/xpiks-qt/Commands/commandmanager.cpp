@@ -508,6 +508,7 @@ void Commands::CommandManager::afterConstructionCallback()  {
 #endif
 
     m_UpdateService->startChecking();
+    m_ArtworkUploader->initializeStocksList();
 
 #ifdef Q_OS_MAC
     QCoreApplication::processEvents();

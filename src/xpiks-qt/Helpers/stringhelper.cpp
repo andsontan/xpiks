@@ -24,7 +24,9 @@
 #include <QTextStream>
 #include <QStringRef>
 #include <QVector>
+#include <QString>
 #include <QtGlobal>
+#include <vector>
 
 namespace Helpers {
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
@@ -37,7 +39,10 @@ namespace Helpers {
 
         if (length > 0) {
             int startIndex = length - N;
-            if (startIndex < 0) { startIndex = 0; }
+            if (startIndex < 0) {
+                startIndex = 0;
+            }
+
             int pos = items[startIndex].position();
             result = text.right(text.length() - pos);
         } else {
@@ -46,6 +51,7 @@ namespace Helpers {
 
         return result;
     }
+
 #else
     QString getLastNLines(const QString &text, int N) {
         QString result;
@@ -57,7 +63,9 @@ namespace Helpers {
 
         if (length > 0) {
             int startIndex = length - N;
-            if (startIndex < 0) { startIndex = 0; }
+            if (startIndex < 0) {
+                startIndex = 0;
+            }
 
             for (int pos = startIndex; pos < length; pos++) {
                 lastNLines.append(items[pos]);
@@ -68,8 +76,9 @@ namespace Helpers {
             result = text;
         }
 
-         return result;
+        return result;
     }
+
 #endif
 
     void splitText(const QString &text, QStringList &parts) {
@@ -102,6 +111,27 @@ namespace Helpers {
             parts.append(word);
         }
     }
+
+    int levensteinDistance(const QString &s1, const QString &s2) {
+        const std::size_t len1 = s1.size(), len2 = s2.size();
+        std::vector<unsigned int> col(len2 + 1), prevCol(len2 + 1);
+
+        for (unsigned int i = 0; i < prevCol.size(); i++) {
+            prevCol[i] = i;
+        }
+
+        for (unsigned int i = 0; i < len1; i++) {
+            col[0] = i + 1;
+
+            for (unsigned int j = 0; j < len2; j++) {
+                col[j + 1] = std::min(
+                    std::min(prevCol[1 + j] + 1, col[j] + 1),
+                    prevCol[j] + (s1[i] == s2[j] ? 0 : 1));
+            }
+
+            col.swap(prevCol);
+        }
+
+        return prevCol[len2];
+    }
 }
-
-

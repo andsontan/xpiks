@@ -53,6 +53,8 @@ namespace Models {
         m_TestingCredentialWatcher = new QFutureWatcher<Conectivity::ContextValidationResult>(this);
         QObject::connect(m_TestingCredentialWatcher, SIGNAL(finished()), SLOT(credentialsTestingFinished()));
 #endif
+
+        QObject::connect(&m_StocksFtpList, SIGNAL(stocksListUpdated()), this, SLOT(stocksListUpdated()));
     }
 
     ArtworkUploader::~ArtworkUploader() {
@@ -106,6 +108,13 @@ namespace Models {
 #endif
     }
 
+    void ArtworkUploader::stocksListUpdated() {
+        LOG_DEBUG << "#";
+
+        QStringList stocks = m_StocksFtpList.getStockNamesList();
+        m_StocksCompletionSource.setStrings(stocks);
+    }
+
 #ifndef CORE_TESTS
     void ArtworkUploader::uploadArtworks() { doUploadArtworks(getArtworkList()); }
 
@@ -154,6 +163,10 @@ namespace Models {
         }
 
         return needCreate;
+    }
+
+    void ArtworkUploader::initializeStocksList() {
+        m_StocksFtpList.initializeConfigs();
     }
 
 #ifndef CORE_TESTS
