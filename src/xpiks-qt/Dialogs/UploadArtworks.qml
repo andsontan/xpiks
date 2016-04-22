@@ -43,7 +43,9 @@ Item {
     signal dialogDestruction();
     Component.onDestruction: dialogDestruction();
 
-    Component.onCompleted: focus = true
+    Component.onCompleted: {
+        ftpListAC.searchTerm = ''
+    }
 
     Connections {
         target: helpersWrapper
@@ -396,6 +398,7 @@ Item {
                                     onClicked: {
                                         uploadInfos.addItem()
                                         uploadHostsListView.currentIndex = uploadHostsListView.count - 1
+                                        tabView.getTab(0).titleFocusRequested()
                                     }
                                 }
 
@@ -415,13 +418,59 @@ Item {
                         height: Qt.platform.os == "windows" ? parent.height + 10 : parent.height
 
                         StyledTabView {
+                            id: tabView
                             anchors.fill: parent
                             anchors.leftMargin: 10
                             anchors.topMargin: 1
                             enabled: uploadInfos.infosCount > 0
 
                             Tab {
+                                id: generalTab
                                 title: i18.n + qsTr("General")
+                                property var autoCompleteBox
+                                signal titleFocusRequested();
+
+                                function onAutoCompleteClose() {
+                                    autoCompleteBox = undefined
+                                    ftpListAC.isActive = false
+                                }
+
+                                function showStockCompletion(textField) {
+                                    if (typeof generalTab.autoCompleteBox !== "undefined") {
+                                        ftpListAC.selectedIndex = -1
+                                        // update completion
+                                        return
+                                    }
+
+                                    var directParent = generalTab;
+                                    var tmp = textField.parent.mapToItem(directParent, 0, textField.parent.height + 1)
+                                    var isBelow = true
+
+                                    var options = {
+                                        model: ftpListAC,
+                                        isBelowEdit: isBelow,
+                                        autoCompleteSource: ftpListAC,
+                                        "anchors.left": directParent.left,
+                                        "anchors.leftMargin": tmp.x,
+                                        "anchors.top": directParent.top,
+                                        "anchors.topMargin": tmp.y
+                                    }
+
+                                    var component = Qt.createComponent("../Components/CompletionBox.qml");
+                                    if (component.status !== Component.Ready) {
+                                        console.debug("Component Error: " + component.errorString());
+                                    } else {
+                                        var instance = component.createObject(directParent, options);
+
+                                        instance.boxDestruction.connect(generalTab.onAutoCompleteClose)
+                                        instance.itemSelected.connect(textField.acceptCompletion)
+                                        textField.completionCancel.connect(instance.closePopup)
+                                        generalTab.autoCompleteBox = instance
+
+                                        ftpListAC.isActive = true
+                                        instance.openPopup()
+                                    }
+                                }
 
                                 ColumnLayout {
                                     anchors.fill: parent
@@ -434,11 +483,21 @@ Item {
                                     }
 
                                     Rectangle {
+                                        id: titleWrapper
                                         border.width: titleText.activeFocus ? 1 : 0
                                         border.color: Colors.artworkActiveColor
                                         Layout.fillWidth: true
                                         color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
                                         height: 30
+
+                                        function onTitleFocusRequested() {
+                                            titleText.forceActiveFocus()
+                                            titleText.cursorPosition = titleText.text.length
+                                        }
+
+                                        Component.onCompleted: {
+                                            generalTab.titleFocusRequested.connect(titleWrapper.onTitleFocusRequested)
+                                        }
 
                                         StyledTextInput {
                                             id: titleText
@@ -448,6 +507,10 @@ Item {
                                             anchors.rightMargin: 5
                                             text: uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.title : ""
                                             anchors.leftMargin: 5
+
+                                            signal completionCancel();
+                                            property bool autoCompleteActive: ftpListAC.isActive
+
                                             onTextChanged: {
                                                 if (uploadHostsListView.currentItem) {
                                                     uploadHostsListView.currentItem.myData.edittitle = text
@@ -460,18 +523,59 @@ Item {
                                                 }
                                             }
 
+                                            onActiveFocusChanged: {
+                                                if (!activeFocus) {
+                                                    completionCancel()
+                                                }
+                                            }
+
+                                            function acceptCompletion(completion) {
+                                                if (uploadHostsListView.currentItem) {
+                                                    uploadHostsListView.currentItem.myData.edittitle = completion
+                                                    uploadHostsListView.currentItem.myData.edithost = artworkUploader.getFtpAddress(completion)
+                                                }
+                                            }
+
                                             validator: RegExpValidator {
                                                 // copy paste in keys.onpressed Paste
                                                 regExp: /[a-zA-Z0-9 _-]*$/
                                             }
 
                                             Keys.onPressed: {
-                                                if(event.matches(StandardKey.Paste)) {
+                                                if (event.matches(StandardKey.Paste)) {
                                                     var clipboardText = clipboard.getText();
                                                     // same regexp as in validator
                                                     var sanitizedText = clipboardText.replace(/[^a-zA-Z0-9 _-]/g, '');
                                                     titleText.paste(sanitizedText)
                                                     event.accepted = true
+                                                } else if (autoCompleteActive && (event.key === Qt.Key_Return)) {
+                                                    ftpListAC.acceptSelected()
+                                                    if (ftpListAC.hasSelectedCompletion()) {
+                                                        event.accepted = true
+                                                    }
+                                                } else if (autoCompleteActive && (event.key === Qt.Key_Up)) {
+                                                    ftpListAC.moveSelectionUp()
+                                                    event.accepted = true
+                                                } else if (autoCompleteActive && (event.key === Qt.Key_Down)) {
+                                                    ftpListAC.moveSelectionDown()
+                                                    event.accepted = true;
+                                                } else if (autoCompleteActive && (event.key === Qt.Key_Escape)) {
+                                                    ftpListAC.cancelCompletion()
+                                                    event.accepted = true;
+                                                }
+                                            }
+
+                                            Keys.onReleased: {
+                                                if (event.key === Qt.Key_Escape) {
+                                                    return
+                                                }
+
+                                                if ((Qt.Key_A <= event.key && event.key <= Qt.Key_Z) ||
+                                                        (text.length === 0 && !ftpListAC.isActive)) {
+                                                    generalTab.showStockCompletion(titleText)
+                                                    ftpListAC.searchTerm = text
+                                                } else if (event.key === Qt.Key_Backspace) {
+                                                    ftpListAC.searchTerm = text
                                                 }
                                             }
                                         }

@@ -32,16 +32,45 @@ namespace AutoComplete {
     {
         Q_OBJECT
         Q_PROPERTY(QString searchTerm READ getSearchTerm WRITE setSearchTerm NOTIFY searchTermChanged)
+        Q_PROPERTY(int selectedIndex READ getSelectedIndex WRITE setSelectedIndex NOTIFY selectedIndexChanged)
+        Q_PROPERTY(bool isActive READ getIsActive WRITE setIsActive NOTIFY isActiveChanged)
     public:
         StringFilterProxyModel();
 
     public:
+        int getSelectedIndex() const { return m_SelectedIndex; }
+        bool getIsActive() const { return m_IsActive; }
         const QString &getSearchTerm() const { return m_SearchTerm; }
         void setSearchTerm(const QString &value);
+        void setSelectedIndex(int value) {
+            if (value != m_SelectedIndex) {
+                m_SelectedIndex = value;
+                emit selectedIndexChanged(value);
+            }
+        }
+
+        void setIsActive(bool value) {
+            if (value != m_IsActive) {
+                m_IsActive = value;
+                emit isActiveChanged(value);
+            }
+        }
+
+    public:
         void setStrings(const QStringList &list);
+        Q_INVOKABLE int getCount() const { return m_StringsList.length(); }
+        Q_INVOKABLE bool moveSelectionUp();
+        Q_INVOKABLE bool moveSelectionDown();
+        Q_INVOKABLE void cancelCompletion() { setIsActive(false); emit dismissPopupRequested(); }
+        Q_INVOKABLE void acceptSelected();
+        Q_INVOKABLE bool hasSelectedCompletion() { return (0 <= m_SelectedIndex) && (m_SelectedIndex < m_StringsList.length()); }
 
     signals:
         void searchTermChanged(const QString &value);
+        void selectedIndexChanged(int index);
+        void isActiveChanged(bool value);
+        void dismissPopupRequested();
+        void completionAccepted(const QString &completion);
 
         // QSortFilterProxyModel interface
     protected:
@@ -50,9 +79,11 @@ namespace AutoComplete {
     private:
         // ignore default regexp from proxymodel
         QString m_SearchTerm;
-        int m_Threshold;
         QStringListModel m_StringsModel;
         QStringList m_StringsList;
+        int m_Threshold;
+        int m_SelectedIndex;
+        bool m_IsActive;
     };
 }
 

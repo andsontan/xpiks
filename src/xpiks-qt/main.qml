@@ -1457,7 +1457,6 @@ ApplicationWindow {
 
                                         var options = {
                                             model: acSource,
-                                            editableTags: flv,
                                             isBelowEdit: isBelow,
                                             "anchors.left": directParent.left,
                                             "anchors.leftMargin": Math.min(tmp.x, directParent.width - 200),
@@ -1694,7 +1693,7 @@ ApplicationWindow {
                                                     anchors.rightMargin: 5
                                                     interactive: false
                                                     flickableDirection: Flickable.HorizontalFlick
-                                                    height: parent.height - parent.border.width*2
+                                                    height: parent.height
                                                     anchors.verticalCenter: parent.verticalCenter
                                                     clip: true
 
@@ -1779,7 +1778,7 @@ ApplicationWindow {
                                                     id: titleFlick
                                                     contentWidth: titleTextInput.paintedWidth
                                                     contentHeight: titleTextInput.paintedHeight
-                                                    height: parent.height - parent.border.width*2
+                                                    height: parent.height
                                                     anchors.verticalCenter: parent.verticalCenter
                                                     anchors.left: parent.left
                                                     anchors.right: parent.right

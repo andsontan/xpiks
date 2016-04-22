@@ -22,11 +22,18 @@
 #include "stringfilterproxymodel.h"
 #include <QSortFilterProxyModel>
 #include <QStringListModel>
+#include <QString>
 #include "../Helpers/stringhelper.h"
+#include "../Common/defines.h"
 
 namespace AutoComplete {
-    StringFilterProxyModel::StringFilterProxyModel()
-    { }
+    StringFilterProxyModel::StringFilterProxyModel():
+        m_Threshold(2),
+        m_SelectedIndex(-1),
+        m_IsActive(false)
+    {
+        setSourceModel(&m_StringsModel);
+    }
 
     void StringFilterProxyModel::setSearchTerm(const QString &value) {
         if (value != m_SearchTerm) {
@@ -38,8 +45,41 @@ namespace AutoComplete {
     }
 
     void StringFilterProxyModel::setStrings(const QStringList &list) {
+        LOG_DEBUG << "Adding" << list.length() << "values";
         m_StringsList = list;
         m_StringsModel.setStringList(m_StringsList);
+    }
+
+    bool StringFilterProxyModel::moveSelectionUp() {
+        bool canMove = m_SelectedIndex > 0;
+        if (canMove) {
+            setSelectedIndex(m_SelectedIndex - 1);
+        }
+        return canMove;
+    }
+
+    bool StringFilterProxyModel::moveSelectionDown() {
+        bool canMove = m_SelectedIndex < rowCount() - 1;
+        if (canMove) {
+            setSelectedIndex(m_SelectedIndex + 1);
+        }
+        return canMove;
+    }
+
+    void StringFilterProxyModel::acceptSelected() {
+        LOG_DEBUG << "Selected index:" << m_SelectedIndex;
+
+        if (0 <= m_SelectedIndex && m_SelectedIndex < rowCount()) {
+            QModelIndex proxyIndex = this->index(m_SelectedIndex, 0);
+            QModelIndex originalIndex = this->mapToSource(proxyIndex);
+            int index = originalIndex.row();
+
+            emit completionAccepted(m_StringsList.at(index));
+        }
+
+        emit dismissPopupRequested();
+
+        setIsActive(false);
     }
 
     bool StringFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const {
@@ -47,9 +87,10 @@ namespace AutoComplete {
         if (sourceRow < 0 || sourceRow >= m_StringsList.length()) { return false; }
         if (m_SearchTerm.trimmed().isEmpty()) { return true; }
 
-        const QString &item = m_StringsList.at(sourceRow);
-        int distance = Helpers::levensteinDistance(item, m_SearchTerm);
+        QString item = m_StringsList.at(sourceRow).toLower();
+        if (item.startsWith(m_SearchTerm)) { return true; }
 
-        return distance < m_Threshold;
+        int distance = Helpers::levensteinDistance(item.left(m_SearchTerm.length()), m_SearchTerm);
+        return distance <= m_Threshold;
     }
 }

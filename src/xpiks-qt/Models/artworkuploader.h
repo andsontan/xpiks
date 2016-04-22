@@ -79,6 +79,7 @@ namespace Models {
                                           const QString &password, bool disablePassiveMode) const;
 #endif
         Q_INVOKABLE bool needCreateArchives() const;
+        Q_INVOKABLE QString getFtpAddress(const QString &stockName) const { return m_StocksFtpList.getFtpAddress(stockName); }
         void initializeStocksList();
 
     private:

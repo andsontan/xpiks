@@ -28,8 +28,8 @@ Item {
     property color highlightedItemColor: Colors.artworkActiveColor
     property double maxCount: 5
     property bool isBelowEdit: true
-    property Item editableTags
     property alias model: dropDownItems.model
+    property var autoCompleteSource: acSource
     property real itemHeight: 25
 
     signal boxDestruction();
@@ -50,10 +50,10 @@ Item {
     }
 
     Connections {
-        target: acSource
+        target: autoCompleteSource
         onDismissPopupRequested: closePopup()
         onCompletionAccepted: itemSelected(completion)
-        onSelectedIndexChanged: dropDownItems.positionViewAtIndex(acSource.selectedIndex, ListView.Contain)
+        onSelectedIndexChanged: dropDownItems.positionViewAtIndex(autoCompleteSource.selectedIndex, ListView.Contain)
     }
 
     RectangularGlow {
@@ -101,7 +101,7 @@ Item {
                 color: isSelected ? highlightedItemColor : Colors.inputForegroundColor
                 property var itemText: display
                 property bool isLastItem: index === (dropDownItems.count - 1)
-                property bool isSelected: index === acSource.selectedIndex
+                property bool isSelected: index === autoCompleteSource.selectedIndex
                 anchors.left: parent.left
                 anchors.right: parent.right
                 height: itemHeight + 1
@@ -132,11 +132,11 @@ Item {
                     anchors.fill: parent
                     hoverEnabled: true
                     onClicked: {
-                        acSource.acceptSelected()
+                        autoCompleteSource.acceptSelected()
                     }
 
                     onPositionChanged: {
-                        acSource.selectedIndex = index
+                        autoCompleteSource.selectedIndex = index
                     }
                 }
             }

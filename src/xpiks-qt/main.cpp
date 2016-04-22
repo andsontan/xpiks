@@ -369,6 +369,7 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("Colors", &colorsModel);
     rootContext->setContextProperty("acSource", &autoCompleteModel);
     rootContext->setContextProperty("autoCompleteService", &autoCompleteService);
+    rootContext->setContextProperty("ftpListAC", artworkUploader.getStocksCompletionSource());
 
 #ifdef QT_DEBUG
     rootContext->setContextProperty("debug", true);
