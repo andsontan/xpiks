@@ -108,16 +108,7 @@ namespace Models {
             return result;
         }
 
-        bool setIsSelected(bool value) {
-            bool result = getIsSelectedFlag() != value;
-            if (result) {
-                setIsSelectedFlag(value);
-                //emit fileSelectedChanged(m_ArtworkFilepath, value);
-                emit selectedChanged(value);
-            }
-
-            return result;
-        }
+        bool setIsSelected(bool value);
 
         void invertSelection() { setIsSelected(!getIsSelectedFlag()); }
 

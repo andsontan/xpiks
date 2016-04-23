@@ -46,14 +46,15 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::setSearchTerm(const QString &value) {
-        if (value != m_SearchTerm) {
+        bool anyChangesNeeded = value != m_SearchTerm;
+        if (anyChangesNeeded) {
             m_SearchTerm = value;
             emit searchTermChanged(value);
-            forceUnselectAllItems();
         }
 
         invalidateFilter();
         emit afterInvalidateFilter();
+        forceUnselectAllItems();
     }
 
     void FilteredArtItemsProxyModel::spellCheckAllItems() {
