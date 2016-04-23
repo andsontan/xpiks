@@ -38,7 +38,7 @@ namespace AutoComplete {
     public:
         void initializeConfigs();
         QString getFtpAddress(const QString &stockName) const { return m_StocksHash.value(stockName, ""); }
-        QList<QString> getStockNamesList() const { return m_StocksHash.keys(); }
+        const QStringList &getStockNamesList() const { return m_StockNames; }
 
         // AbstractConfigUpdaterModel interface
     protected:
@@ -57,6 +57,7 @@ namespace AutoComplete {
 
     private:
         QHash<QString, QString> m_StocksHash;
+        QStringList m_StockNames;
     };
 }
 

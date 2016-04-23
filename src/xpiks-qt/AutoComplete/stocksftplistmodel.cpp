@@ -116,7 +116,9 @@ namespace AutoComplete {
 
     void StocksFtpListModel::parseFtpArray(const QJsonArray &array) {
         QHash<QString, QString> hash;
+        QStringList keys;
         int size = array.size();
+        keys.reserve(size);
 
         for (int i = 0; i < size; ++i) {
             QJsonValue item = array.at(i);
@@ -137,12 +139,14 @@ namespace AutoComplete {
                 continue;
             }
 
+            keys.append(nameValue.toString());
             hash[nameValue.toString()] = addressValue.toString();
         }
 
         if (!hash.isEmpty()) {
             LOG_INFO << "Replacing stocks hash with" << hash.size() << "key-values";
             m_StocksHash.swap(hash);
+            m_StockNames.swap(keys);
             emit stocksListUpdated();
         }
     }
