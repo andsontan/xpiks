@@ -58,12 +58,11 @@ namespace AutoComplete {
 
     public:
         void setStrings(const QStringList &list);
-        Q_INVOKABLE int getCount() const { return m_StringsList.length(); }
         Q_INVOKABLE bool moveSelectionUp();
         Q_INVOKABLE bool moveSelectionDown();
         Q_INVOKABLE void cancelCompletion() { setIsActive(false); emit dismissPopupRequested(); }
         Q_INVOKABLE void acceptSelected();
-        Q_INVOKABLE bool hasSelectedCompletion() { return (0 <= m_SelectedIndex) && (m_SelectedIndex < m_StringsList.length()); }
+        Q_INVOKABLE bool hasSelectedCompletion() { return (0 <= m_SelectedIndex) && (m_SelectedIndex < rowCount()); }
 
     signals:
         void searchTermChanged(const QString &value);

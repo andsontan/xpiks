@@ -45,6 +45,7 @@ Item {
     }
 
     function closePopup() {
+        console.debug("Closing completion popup")
         completeBox.state = ""
         completeBox.destroy()
     }

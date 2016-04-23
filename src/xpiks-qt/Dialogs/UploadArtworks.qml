@@ -432,13 +432,12 @@ Item {
 
                                 function onAutoCompleteClose() {
                                     autoCompleteBox = undefined
-                                    ftpListAC.isActive = false
                                 }
 
                                 function showStockCompletion(textField) {
                                     if (typeof generalTab.autoCompleteBox !== "undefined") {
-                                        ftpListAC.selectedIndex = -1
                                         // update completion
+                                        ftpListAC.selectedIndex = -1
                                         return
                                     }
 
@@ -464,7 +463,6 @@ Item {
 
                                         instance.boxDestruction.connect(generalTab.onAutoCompleteClose)
                                         instance.itemSelected.connect(textField.acceptCompletion)
-                                        textField.completionCancel.connect(instance.closePopup)
                                         generalTab.autoCompleteBox = instance
 
                                         ftpListAC.isActive = true
@@ -508,7 +506,6 @@ Item {
                                             text: uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.title : ""
                                             anchors.leftMargin: 5
 
-                                            signal completionCancel();
                                             property bool autoCompleteActive: ftpListAC.isActive
 
                                             onTextChanged: {
@@ -525,7 +522,7 @@ Item {
 
                                             onActiveFocusChanged: {
                                                 if (!activeFocus) {
-                                                    completionCancel()
+                                                    ftpListAC.cancelCompletion()
                                                 }
                                             }
 
@@ -571,6 +568,7 @@ Item {
                                                 }
 
                                                 if ((Qt.Key_A <= event.key && event.key <= Qt.Key_Z) ||
+                                                        (Qt.Key_0 <= event.key && event.key <= Qt.Key_9) ||
                                                         (text.length === 0 && !ftpListAC.isActive)) {
                                                     generalTab.showStockCompletion(titleText)
                                                     ftpListAC.searchTerm = text

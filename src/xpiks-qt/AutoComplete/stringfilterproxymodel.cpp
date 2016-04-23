@@ -74,6 +74,8 @@ namespace AutoComplete {
             QModelIndex originalIndex = this->mapToSource(proxyIndex);
             int index = originalIndex.row();
 
+            LOG_DEBUG << "Real index:" << index;
+
             emit completionAccepted(m_StringsList.at(index));
         }
 
@@ -88,9 +90,9 @@ namespace AutoComplete {
         if (m_SearchTerm.trimmed().isEmpty()) { return true; }
 
         QString item = m_StringsList.at(sourceRow).toLower();
-        if (item.startsWith(m_SearchTerm)) { return true; }
+        if (item.contains(m_SearchTerm, Qt::CaseInsensitive)) { return true; }
 
-        int distance = Helpers::levensteinDistance(item.left(m_SearchTerm.length()), m_SearchTerm);
+        int distance = Helpers::levensteinDistance(item.left(m_SearchTerm.length() + m_Threshold - 1), m_SearchTerm);
         return distance <= m_Threshold;
     }
 }
