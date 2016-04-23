@@ -123,32 +123,48 @@ Item {
                 property list<Item> whatsNewSlides: [
                     PresentationSlide {
                         parent: slidesHost
-                        id: firstMyScreen
-                        title: "First MyScreen"
+                        id: firstSlide
+                        title: i18.n + qsTr("Autocompletion for keywords")
                         color: "blue"
                         width: slidesHost.width
                         height: slidesHost.height
                     },
                     PresentationSlide {
                         parent: slidesHost
-                        id: secondMyScreen
-                        title: "Second MyScreen"
+                        id: secondSlide
+                        title: i18.n + qsTr("Localization of interface to %1 languages").arg(5)
                         color: "red"
                         width: slidesHost.width
                         height: slidesHost.height
                     },
                     PresentationSlide {
                         parent: slidesHost
-                        id: thirdMyScreen
-                        title: "Third MyScreen"
+                        id: thirdSlide
+                        title: i18.n + qsTr("iStock and Fotolia suggestion providers")
+                        color: "red"
+                        width: slidesHost.width
+                        height: slidesHost.height
+                    },
+                    PresentationSlide {
+                        parent: slidesHost
+                        id: fourthSlide
+                        title: i18.n + qsTr("Brand new theme for Xpiks")
                         color: "green"
                         width: slidesHost.width
                         height: slidesHost.height
                     },
                     PresentationSlide {
                         parent: slidesHost
-                        id: fourthMyScreen
-                        title: "Fourth MyScreen"
+                        id: fifthSlide
+                        title: i18.n + qsTr("Predefined FTP addresses")
+                        color: "orange"
+                        width: slidesHost.width
+                        height: slidesHost.height
+                    },
+                    PresentationSlide {
+                        parent: slidesHost
+                        id: sixsSlide
+                        title: i18.n + qsTr("Bug fixes and improvements")
                         color: "orange"
                         width: slidesHost.width
                         height: slidesHost.height
@@ -159,14 +175,14 @@ Item {
                     slidesHost.currentSlideIndex = 0;
                     slidesHost.previousSlideIndex = 0;
 
-                    for(var i = 0; i < whatsNewSlides.length; ++i) {
+                    for (var i = 0; i < whatsNewSlides.length; ++i) {
                         whatsNewSlides[i].hide();
                     }
 
                     whatsNewSlides[0].show(0);
                 }
 
-                function showMyScreen(screenIndex, direction) {
+                function showSlide(screenIndex, direction) {
                     whatsNewSlides[previousSlideIndex].hide();
                     var xVal = direction === -1 ? 400 : -400;
                     whatsNewSlides[screenIndex].show(xVal);
@@ -177,7 +193,7 @@ Item {
                         previousSlideIndex = currentSlideIndex;
                         currentSlideIndex = currentSlideIndex + 1;
 
-                        showMyScreen(currentSlideIndex, -1)
+                        showSlide(currentSlideIndex, -1)
                     }
                 }
 
@@ -186,7 +202,7 @@ Item {
                         previousSlideIndex = currentSlideIndex;
                         currentSlideIndex = currentSlideIndex - 1;
 
-                        showMyScreen(currentSlideIndex, 1)
+                        showSlide(currentSlideIndex, 1)
                     }
                 }
 
