@@ -85,6 +85,9 @@ namespace Suggestion {
         void resultsAvailableHandler();
         void errorsReceivedHandler(const QString &error);
 
+    public slots:
+        void onLanguageChanged();
+
     private:
         void setInProgress() { m_IsInProgress = true; emit isInProgressChanged(); }
         void unsetInProgress() { m_IsInProgress = false; emit isInProgressChanged(); }

@@ -81,6 +81,7 @@ namespace Models {
         }
 
         LOG_INFO << "Initialized with" << selectedLocale;
+        emit languageChanged();
     }
 
     void LanguagesModel::loadLanguages() {

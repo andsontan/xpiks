@@ -164,27 +164,30 @@ ApplicationWindow {
         return mustUse
     }
 
-    function openUploadDialog() {
-        if (appSettings.boolValue(appSettings.mustUseMasterPasswordKey, false)) {
+    function openUploadDialog(skipUploadItems) {
+        if (appSettings.boolValue(appSettings.mustUseMasterPasswordKey, skipUploadItems)) {
             var callbackObject = {
-                onSuccess: function() { doOpenUploadDialog(true) },
-                onFail: function() { doOpenUploadDialog(false) }
+                onSuccess: function() { doOpenUploadDialog(true, skipUploadItems) },
+                onFail: function() { doOpenUploadDialog(false, skipUploadItems) }
             }
 
             Common.launchDialog("Dialogs/EnterMasterPasswordDialog.qml",
                          applicationWindow,
                          {callbackObject: callbackObject})
         } else {
-            doOpenUploadDialog(true)
+            doOpenUploadDialog(true, skipUploadItems)
         }
     }
 
-    function doOpenUploadDialog(masterPasswordCorrectOrEmpty) {
+    function doOpenUploadDialog(masterPasswordCorrectOrEmpty, skipUploadItems) {
         artworkUploader.resetModel()
-        filteredArtItemsModel.setSelectedForUpload()
-        uploadInfos.initializeAccounts(masterPasswordCorrectOrEmpty)
 
-        warningsModel.setShowSelected()
+        if (!skipUploadItems) {
+            filteredArtItemsModel.setSelectedForUpload()
+            warningsModel.setShowSelected()
+        }
+
+        uploadInfos.initializeAccounts(masterPasswordCorrectOrEmpty)
         Common.launchDialog("Dialogs/UploadArtworks.qml",
                      applicationWindow,
                      {componentParent: applicationWindow})
@@ -433,7 +436,7 @@ ApplicationWindow {
                 text: i18.n + qsTr("&Manage upload hosts")
                 onTriggered: {
                     console.info("Manage upload hosts triggered")
-                    openUploadDialog()
+                    openUploadDialog(true)
                 }
             }
         }
@@ -668,7 +671,7 @@ ApplicationWindow {
 
     function tryUploadArtworks() {
         if (filteredArtItemsModel.areSelectedArtworksSaved()) {
-            openUploadDialog()
+            openUploadDialog(false)
         } else {
             mustSaveWarning.open()
         }
@@ -1063,9 +1066,12 @@ ApplicationWindow {
                             anchors.verticalCenter: parent.verticalCenter
                             isContrast: true
                             enabled: artworkRepository.artworksSourcesCount > 0
-                            property string originalText: filteredArtItemsModel.selectedArtworksCount === 0 ? qsTr("Select all") : qsTr("Select none")
-                            text: i18.n + originalText
+                            text: i18.n + getOriginalText()
                             checked: filteredArtItemsModel.selectedArtworksCount > 0
+
+                            function getOriginalText() {
+                                return filteredArtItemsModel.selectedArtworksCount === 0 ? qsTr("Select all") : qsTr("Select none")
+                            }
 
                             onClicked: {
                                 if (checked) {
@@ -2280,6 +2286,11 @@ ApplicationWindow {
                     onRowsInserted: filteredCountText.updateText()
                     onRowsRemoved: filteredCountText.updateText()
                 }
+
+                Connections {
+                    target: languagesModel
+                    onLanguageChanged: filteredCountText.updateText()
+                }
             }
 
             StyledText {
@@ -2289,10 +2300,13 @@ ApplicationWindow {
             }
 
             StyledText {
-                property string originalText: filteredArtItemsModel.selectedArtworksCount > 1 ? qsTr("%1 selected items").arg(filteredArtItemsModel.selectedArtworksCount) : (filteredArtItemsModel.selectedArtworksCount === 1 ? qsTr("1 selected item") : qsTr("No selected items"))
-                text: i18.n + originalText
+                text: i18.n + getOriginalText()
                 color: Colors.labelInactiveForeground
                 verticalAlignment: Text.AlignVCenter
+
+                function getOriginalText() {
+                    return filteredArtItemsModel.selectedArtworksCount > 1 ? qsTr("%1 selected items").arg(filteredArtItemsModel.selectedArtworksCount) : (filteredArtItemsModel.selectedArtworksCount === 1 ? qsTr("1 selected item") : qsTr("No selected items"))
+                }
 
                 MouseArea {
                     id: selectSelectedMA
@@ -2313,10 +2327,13 @@ ApplicationWindow {
             }
 
             StyledText {
-                property string originalText: artItemsModel.modifiedArtworksCount > 1 ? qsTr("%1 modified items").arg(artItemsModel.modifiedArtworksCount) : (artItemsModel.modifiedArtworksCount === 1 ? qsTr("1 modified item") : qsTr("No modified items"))
-                text: i18.n + originalText
+                text: i18.n + getOriginalText()
                 verticalAlignment: Text.AlignVCenter
                 color: artItemsModel.modifiedArtworksCount > 0 ? Colors.artworkModifiedColor : Colors.labelInactiveForeground
+
+                function getOriginalText() {
+                    return artItemsModel.modifiedArtworksCount > 1 ? qsTr("%1 modified items").arg(artItemsModel.modifiedArtworksCount) : (artItemsModel.modifiedArtworksCount === 1 ? qsTr("1 modified item") : qsTr("No modified items"))
+                }
 
                 MouseArea {
                     id: selectModifiedMA

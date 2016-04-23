@@ -499,7 +499,7 @@ Item {
                     }
 
                     StyledButton {
-                        width: 70
+                        width: 80
                         text: i18.n + qsTr("Close")
                         onClicked: closePopup()
                     }

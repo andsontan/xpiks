@@ -67,6 +67,7 @@ namespace Models {
 
         if (itemsWithSameName.empty()) {
             LOG_INFO << "No items to zip. Exiting...";
+            endProcessing();
             return;
         }
 

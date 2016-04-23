@@ -140,12 +140,12 @@ Item {
 
                     StyledText {
                         id:textItemsAvailable
-                        property string originalText: zipArchiver.itemsCount == 1 ? qsTr("1 artwork") : qsTr("%1 artworks").arg(zipArchiver.itemsCount)
+                        property string originalText: zipArchiver.itemsCount == 1 ? qsTr("1 artwork with vector") : qsTr("%1 artworks with vectors").arg(zipArchiver.itemsCount)
                         text: i18.n + originalText
                         Connections {
                             target: zipArchiver
                             onItemsNumberChanged: {
-                               textItemsAvailable.originalText=zipArchiver.itemsCount == 1 ? qsTr("1 artwork") : qsTr("%1 artworks").arg(zipArchiver.itemsCount)
+                               textItemsAvailable.originalText=zipArchiver.itemsCount == 1 ? qsTr("1 artwork with vector") : qsTr("%1 artworks with vectors").arg(zipArchiver.itemsCount)
                                textItemsAvailable.text=i18.n + originalText
                             }
                        }

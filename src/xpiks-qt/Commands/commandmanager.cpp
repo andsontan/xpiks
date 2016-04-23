@@ -229,6 +229,11 @@ void Commands::CommandManager::connectEntitiesSignalsSlots() const {
         QObject::connect(m_UndoRedoManager, SIGNAL(undoStackEmpty()),
                          m_ArtItemsModel, SLOT(onUndoStackEmpty()));
     }
+
+    if (m_LanguagesModel != NULL && m_KeywordsSuggestor != NULL) {
+        QObject::connect(m_LanguagesModel, SIGNAL(languageChanged()),
+                         m_KeywordsSuggestor, SLOT(onLanguageChanged()));
+    }
 }
 
 void Commands::CommandManager::ensureDependenciesInjected() {

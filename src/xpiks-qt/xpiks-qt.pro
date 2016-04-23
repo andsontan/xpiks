@@ -113,7 +113,6 @@ RC_ICONS = xpiks-qt.ico
 # Default rules for deployment.
 include(deployment.pri)
 
-
 HEADERS += \
     Models/artitemsmodel.h \
     Models/artworkmetadata.h \
@@ -299,7 +298,7 @@ DISTFILES += \
     Components/PresentationSlide.qml
 
 lupdate_only {
-SOURCES = *.qml \
+SOURCES += *.qml \
           *.js \
           Components/*.qml \
           Dialogs/*.qml \

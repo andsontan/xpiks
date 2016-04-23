@@ -115,6 +115,16 @@ namespace Suggestion {
         setLastErrorString(error);
     }
 
+    void KeywordsSuggestor::onLanguageChanged() {
+        m_QueryEnginesNames.clear();
+        int length = m_QueryEngines.length();
+
+        for (int i = 0; i < length; ++i) {
+            SuggestionQueryEngineBase *engine = m_QueryEngines.at(i);
+            m_QueryEnginesNames.append(engine->getName());
+        }
+    }
+
     QString KeywordsSuggestor::removeSuggestedKeywordAt(int keywordIndex) {
         QString keyword;
         if (m_SuggestedKeywords.takeKeywordAt(keywordIndex, keyword)) {

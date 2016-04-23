@@ -158,7 +158,7 @@ Item {
                 height: itemHeight + 1
 
                 StyledText {
-                    text: itemText
+                    text: i18.n + itemText
                     anchors.left: parent.left
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.leftMargin: 16

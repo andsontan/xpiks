@@ -194,8 +194,8 @@ Item {
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
-            width: 610
-            height: Qt.platform.os == "windows" ? 470 : (Qt.platform.os == "linux" ? 475 : 455)
+            width: 630
+            height: Qt.platform.os == "windows" ? 470 : (Qt.platform.os == "linux" ? 475 : 460)
             color: Colors.selectedImageBackground
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined

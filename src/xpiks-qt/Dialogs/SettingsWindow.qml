@@ -207,7 +207,7 @@ ApplicationWindow {
                         anchors.left: parent.left
                         anchors.top: parent.top
                         anchors.bottom: parent.bottom
-                        width: parent.width / 2
+                        width: (parent.width / 2) - 10
                         anchors.leftMargin: 20
                         anchors.rightMargin: 20
                         anchors.topMargin: 20
