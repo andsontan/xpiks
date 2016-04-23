@@ -1547,7 +1547,7 @@ They will be detached automatically.</source>
     <message>
         <location filename="../../main.qml" line="1257"/>
         <source>Undo</source>
-        <translation>Скасувати</translation>
+        <translation>Відмінити</translation>
     </message>
     <message>
         <location filename="../../main.qml" line="1273"/>
