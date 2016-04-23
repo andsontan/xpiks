@@ -218,8 +218,12 @@ Item {
 
                     StyledText {
                         id: textItemsAvailable
-                        property string originalText: artworkUploader.itemsCount === 1 ? qsTr("1 artwork selected") : qsTr("%1 artworks selected").arg(artworkUploader.itemsCount)
-                        text: i18.n + originalText
+                        text: i18.n + getOriginalText()
+
+                        function getOriginalText() {
+                            return artworkUploader.itemsCount === 1 ? qsTr("1 artwork selected") : qsTr("%1 artworks selected").arg(artworkUploader.itemsCount)
+                        }
+
                         Connections {
                             target: artworkUploader
                             onItemsNumberChanged: {
@@ -821,9 +825,12 @@ Item {
 
                     StyledText {
                         enabled: uploadArtworksComponent.uploadEnabled
-                        property string originalText: warningsModel.warningsCount == 1 ? qsTr("1 warning") : qsTr("%1 warnings").arg(warningsModel.warningsCount)
-                        text: i18.n + originalText
+                        text: i18.n + getOriginalText()
                         color: uploadWarmingsMA.pressed ? Colors.linkClickedColor : warningsModel.warningsCount > 0 ? Colors.artworkModifiedColor : Colors.labelActiveForeground
+
+                        function getOriginalText() {
+                            return warningsModel.warningsCount == 1 ? qsTr("1 warning") : qsTr("%1 warnings").arg(warningsModel.warningsCount)
+                        }
 
                         MouseArea {
                             id: uploadWarmingsMA
@@ -850,8 +857,7 @@ Item {
                     StyledButton {
                         id: uploadButton
                         enabled: uploadArtworksComponent.uploadEnabled
-                        property string originalText: artworkUploader.inProgress ? qsTr("Stop") : qsTr("Start Upload")
-                        text: i18.n + originalText
+                        text: i18.n + (artworkUploader.inProgress ? qsTr("Stop") : qsTr("Start Upload"))
                         width: 130
                         onClicked: {
                             if (!artworkUploader.inProgress) {

@@ -235,8 +235,12 @@ CloseRequested")
 
                     StyledText {
                         id: textItemsAvailable
-                        property string originalText: combinedArtworks.artworksCount == 1 ? qsTr("1 artwork being edited") : qsTr("%1 artworks being edited").arg(combinedArtworks.artworksCount)
-                        text: i18.n + originalText
+                        text: i18.n + getOriginalText()
+
+                        function getOriginalText() {
+                            return combinedArtworks.artworksCount == 1 ? qsTr("1 artwork being edited") : qsTr("%1 artworks being edited").arg(combinedArtworks.artworksCount)
+                        }
+
                         Connections {
                             target: combinedArtworks
                             onItemsNumberChanged: {

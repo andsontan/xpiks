@@ -106,9 +106,7 @@ Item {
         anchors.leftMargin: parent.height + 7
         anchors.verticalCenter: parent.verticalCenter
         anchors.verticalCenterOffset: 2
-
-        property string originalText: i18.n + (isListLayout ? qsTr("Grid") : qsTr("List"))
-        text: i18.n + originalText
+        text: i18.n + (isListLayout ? qsTr("Grid") : qsTr("List"))
         color: container.currentColor
     }
 
