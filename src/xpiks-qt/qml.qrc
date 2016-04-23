@@ -55,5 +55,6 @@
         <file>Components/CustomComboBox.qml</file>
         <file>Components/CompletionBox.qml</file>
         <file>Components/EditIcon.qml</file>
+        <file>Components/PresentationSlide.qml</file>
     </qresource>
 </RCC>

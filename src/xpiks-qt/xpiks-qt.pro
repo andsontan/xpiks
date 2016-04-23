@@ -295,7 +295,8 @@ DISTFILES += \
     Constants/Themes.js \
     Components/CompletionBox.qml \
     Components/EditIcon.qml \
-    uncrustify.cfg
+    uncrustify.cfg \
+    Components/PresentationSlide.qml
 
 lupdate_only {
 SOURCES = *.qml \

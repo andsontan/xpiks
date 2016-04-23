@@ -87,8 +87,8 @@ Item {
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
-            width: 500
-            height: 600
+            width: 700
+            height: 500
             color: Colors.selectedImageBackground
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
@@ -105,6 +105,7 @@ Item {
             }
 
             Rectangle {
+                id: slidesHost
                 anchors.top: header.bottom
                 anchors.left: parent.left
                 anchors.right: parent.right
@@ -114,18 +115,83 @@ Item {
                 anchors.bottom: footer.top
                 anchors.bottomMargin: 20
                 color: Colors.defaultControlColor
+                clip: true
 
-                StyledScrollView {
-                    id: scrollView
-                    anchors.fill: parent
-                    anchors.margins: 10
+                property int currentSlideIndex: 0
+                property int previousSlideIndex: 0
 
-                    StyledTextEdit {
-                        id: textEdit
-                        text: whatsNewComponent.whatsNewText
-                        selectionColor: Colors.selectedImageBackground
-                        readOnly: true
+                property list<Item> whatsNewSlides: [
+                    PresentationSlide {
+                        parent: slidesHost
+                        id: firstMyScreen
+                        title: "First MyScreen"
+                        color: "blue"
+                        width: slidesHost.width
+                        height: slidesHost.height
+                    },
+                    PresentationSlide {
+                        parent: slidesHost
+                        id: secondMyScreen
+                        title: "Second MyScreen"
+                        color: "red"
+                        width: slidesHost.width
+                        height: slidesHost.height
+                    },
+                    PresentationSlide {
+                        parent: slidesHost
+                        id: thirdMyScreen
+                        title: "Third MyScreen"
+                        color: "green"
+                        width: slidesHost.width
+                        height: slidesHost.height
+                    },
+                    PresentationSlide {
+                        parent: slidesHost
+                        id: fourthMyScreen
+                        title: "Fourth MyScreen"
+                        color: "orange"
+                        width: slidesHost.width
+                        height: slidesHost.height
                     }
+                ]
+
+                Component.onCompleted: {
+                    slidesHost.currentSlideIndex = 0;
+                    slidesHost.previousSlideIndex = 0;
+
+                    for(var i = 0; i < whatsNewSlides.length; ++i) {
+                        whatsNewSlides[i].hide();
+                    }
+
+                    whatsNewSlides[0].show(0);
+                }
+
+                function showMyScreen(screenIndex, direction) {
+                    whatsNewSlides[previousSlideIndex].hide();
+                    var xVal = direction === -1 ? 400 : -400;
+                    whatsNewSlides[screenIndex].show(xVal);
+                }
+
+                function swipeForward() {
+                    if (currentSlideIndex < whatsNewSlides.length - 1) {
+                        previousSlideIndex = currentSlideIndex;
+                        currentSlideIndex = currentSlideIndex + 1;
+
+                        showMyScreen(currentSlideIndex, -1)
+                    }
+                }
+
+                function swipeBackward() {
+                    if (currentSlideIndex > 0) {
+                        previousSlideIndex = currentSlideIndex;
+                        currentSlideIndex = currentSlideIndex - 1;
+
+                        showMyScreen(currentSlideIndex, 1)
+                    }
+                }
+
+                function isFinished() {
+                    return currentSlideIndex === whatsNewSlides.length - 1
                 }
             }
 
@@ -140,16 +206,54 @@ Item {
                 height: 24
                 spacing: 20
 
+                StyledText {
+                    text: i18.n + qsTr("Skip")
+                    color: skipMA.pressed ? Colors.linkClickedColor : Colors.labelActiveForeground
+
+                    MouseArea {
+                        id: skipMA
+                        anchors.fill: parent
+                        cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
+                        onClicked: {
+                            appSettings.saveCurrentVersion()
+                            closePopup()
+                        }
+                    }
+                }
+
                 Item {
                     Layout.fillWidth: true
                 }
 
+                StyledText {
+                    text: i18.n + qsTr("Previous")
+                    color: previousMA.pressed ? Colors.linkClickedColor : Colors.labelActiveForeground
+
+                    MouseArea {
+                        id: previousMA
+                        anchors.fill: parent
+                        cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
+                        onClicked: {
+                            slidesHost.swipeBackward()
+                            actionButton.text = qsTr("Next")
+                        }
+                    }
+                }
+
                 StyledButton {
-                    text: i18.n + qsTr("Ok")
+                    id: actionButton
+                    text: i18.n + qsTr("Next")
                     width: 100
                     onClicked: {
-                        appSettings.saveCurrentVersion()
-                        closePopup()
+                        if (slidesHost.isFinished()) {
+                            appSettings.saveCurrentVersion()
+                            closePopup()
+                        } else {
+                            slidesHost.swipeForward()
+                            if (slidesHost.isFinished()) {
+                                actionButton.text = qsTr("Close")
+                            }
+                        }
                     }
                 }
             }
