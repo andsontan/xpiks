@@ -412,6 +412,12 @@ Flickable {
                     } else if (autoCompleteActive && (event.key === Qt.Key_Escape)) {
                         completionCancel()
                         event.accepted = true;
+                    } else if (event.key === Qt.Key_Backspace) {
+                        if (nextTagTextInput.length == 0) {
+                            removeLast();
+                            completionCancel()
+                            event.accepted = true;
+                        }
                     }
 
                     scrollToBottom()
@@ -428,13 +434,8 @@ Flickable {
                             completionCancel()
                         }
                     } else if (event.key === Qt.Key_Backspace) {
-                        if (nextTagTextInput.length == 0) {
-                            removeLast();
-                            event.accepted = true;
-                        } else {
-                            if (!requestCompletion()) {
-                                completionCancel()
-                            }
+                        if (!requestCompletion()) {
+                            completionCancel()
                         }
                     }
                 }
