@@ -1681,7 +1681,8 @@ ApplicationWindow {
                                                 id: descriptionRect
                                                 height: 30
                                                 anchors.left: parent.left
-                                                width: columnLayout.isWideEnough ? (columnLayout.width / 2 - 10) : columnLayout.width
+                                                anchors.right: titleRect.left
+                                                anchors.rightMargin: columnLayout.isWideEnough ? 20 : 0
                                                 anchors.top: descriptionText.bottom
                                                 anchors.topMargin: 3
                                                 color: rowWrapper.isHighlighted ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
@@ -1770,8 +1771,7 @@ ApplicationWindow {
                                                 height: 30
                                                 visible: columnLayout.isWideEnough
                                                 enabled: columnLayout.isWideEnough
-                                                anchors.left: columnLayout.isWideEnough ? descriptionRect.right : undefined
-                                                anchors.leftMargin: 20
+                                                width: columnLayout.isWideEnough ? ((columnLayout.width / 2) - 10) : 0
                                                 anchors.right: parent.right
                                                 anchors.top: descriptionText.bottom
                                                 anchors.topMargin: 3
