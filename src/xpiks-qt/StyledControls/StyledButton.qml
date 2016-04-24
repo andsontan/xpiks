@@ -34,8 +34,8 @@ Button {
             color: {
                 var result = Colors.defaultControlColor;
 
-                if (control.isDefault ||
-                        (control.enabled && control.hovered)) {
+                if (control.enabled &&
+                        (control.isDefault || control.hovered)) {
                     result = Colors.buttonHoverBackground;
                 }
 
