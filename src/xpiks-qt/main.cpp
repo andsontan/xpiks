@@ -372,10 +372,11 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("ftpListAC", artworkUploader.getStocksCompletionSource());
 
 #ifdef QT_DEBUG
-    rootContext->setContextProperty("debug", true);
+    QVariant isDebug(true);
 #else
-    rootContext->setContextProperty("debug", false);
+    QVariant isDebug(false);
 #endif
+    rootContext->setContextProperty("debug", isDebug);
 
     engine.addImageProvider("global", globalProvider);
     LOG_DEBUG << "About to load main view...";

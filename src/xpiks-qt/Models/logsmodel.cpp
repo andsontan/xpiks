@@ -94,11 +94,4 @@ namespace Models {
         Helpers::LogHighlighter *highlighter = new Helpers::LogHighlighter(m_ColorsModel, document->textDocument());
         Q_UNUSED(highlighter);
     }
-
-    void LogsModel::clearLogs() {
-#ifdef WITH_LOGS
-        Helpers::Logger &logger = Helpers::Logger::getInstance();
-        logger.clear();
-#endif
-    }
 }
