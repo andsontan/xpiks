@@ -248,6 +248,7 @@ namespace Commands {
         virtual SpellCheck::SpellCheckSuggestionModel *getSpellSuggestionsModel() const { return m_SpellCheckSuggestionModel; }
         virtual Models::CombinedArtworksModel *getCombinedArtworksModel() const { return m_CombinedArtworksModel; }
         virtual Models::ZipArchiver *getZipArchiver() const { return m_ZipArchiver; }
+        virtual AutoComplete::AutoCompleteService *getAutoCompleteService() const { return m_AutoCompleteService; }
 #endif
 
     private:

@@ -114,7 +114,8 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Models/abstractconfigupdatermodel.cpp \
     ../../xpiks-qt/Helpers/jsonhelper.cpp \
     ../../xpiks-qt/Helpers/localconfig.cpp \
-    ../../xpiks-qt/Helpers/remoteconfig.cpp
+    ../../xpiks-qt/Helpers/remoteconfig.cpp \
+    autocompletebasictest.cpp
 
 RESOURCES +=
 
@@ -254,7 +255,8 @@ HEADERS += \
     ../../xpiks-qt/Models/abstractconfigupdatermodel.h \
     ../../xpiks-qt/Helpers/jsonhelper.h \
     ../../xpiks-qt/Helpers/localconfig.h \
-    ../../xpiks-qt/Helpers/remoteconfig.h
+    ../../xpiks-qt/Helpers/remoteconfig.h \
+    autocompletebasictest.h
 
 INCLUDEPATH += ../../tiny-aes
 INCLUDEPATH += ../../cpp-libface
@@ -314,4 +316,5 @@ travis-ci {
     message("for Travis CI")
     LIBS -= -lz
     LIBS += /usr/lib/x86_64-linux-gnu/libz.so
+    DEFINES += TRAVIS_CI
 }

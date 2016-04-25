@@ -63,6 +63,11 @@ namespace AutoComplete {
         void cancelAutoCompletion();
         void serviceAvailable(bool afterRestart);
 
+#ifdef INTEGRATION_TESTS
+    public:
+        AutoCompleteModel *getAutoCompleteModel() const { return m_AutoCompleteModel; }
+#endif
+
     private:
         AutoCompleteWorker *m_AutoCompleteWorker;
         AutoCompleteModel *m_AutoCompleteModel;

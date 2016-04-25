@@ -81,6 +81,10 @@ namespace AutoComplete {
         virtual QVariant data(const QModelIndex &index, int role) const;
         virtual QHash<int, QByteArray> roleNames() const;
 
+#ifdef INTEGRATION_TESTS
+        bool containsWord(const QString &word) { return m_CompletionList.contains(word); }
+#endif
+
     private:
         QVector<QString> m_CompletionList;
         QStringList m_LastGeneratedCompletions;
