@@ -378,8 +378,10 @@ win32 {
 
     copytranslations.commands = $(COPY_FILE) \"$$shell_path($$PWD/deps/translations/xpiks_*.qm)\" \"$$shell_path($$OUT_PWD/$$EXE_DIR/translations/)\"
 
-    QMAKE_EXTRA_TARGETS += copywhatsnew copyterms copydicts copytranslations
-    POST_TARGETDEPS += copywhatsnew copyterms copydicts copytranslations
+    copyfreqtables.commands = $(COPY_FILE) \"$$shell_path($$PWD/deps/en_wordlist.tsv)\" \"$$shell_path($$OUT_PWD/$$EXE_DIR/ac_sources/en_wordlist.tsv)\"
+
+    QMAKE_EXTRA_TARGETS += copywhatsnew copyterms copydicts copytranslations copyfreqtables
+    POST_TARGETDEPS += copywhatsnew copyterms copydicts copytranslations copyfreqtables
 }
 
 travis-ci {
