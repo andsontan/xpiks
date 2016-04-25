@@ -14,6 +14,7 @@ date: 2014-12-28T09:54:01+02:00
 - rename `tiny-AES/aes.c` to `tiny-AES/aes.cpp` for correct build
 - <span class="gray">[Windows]</span> if you're building for Windows, build Zlib first (<a href="#zlib">see instructions below</a>)
 - build <a href="#hunspell">Hunspell</a> and <a href="#quazip">Quazip</a> (instructions below)
+- build <a href="#libface">cpp-libface</a> (instructions below)
 - <span class="gray">[Windows]</span> build <a href="#libcurl">libcurl</a> (instructions below)
 - open xpiks-qt.pro file with Qt Creator installed with Qt
 - select build target Release, press "Run qmake" and then "Build"
@@ -23,18 +24,24 @@ date: 2014-12-28T09:54:01+02:00
 
 - download zlib (1.2.8) source code and extract to `scr/zlib-1.2.8`
 - open `src\zlib-project\zlib.pro` in Qt Creator, select `Release`, execute `Run qmake`, execute `Build`
-- copy builded library `.lib` (and z.pdb if you builded for Debug) to `src/libs` directory
+- copy built library `.lib` (and z.pdb if you builded for Debug) to `src/libs` directory
 
 ***<span id="hunspell">To build Hunspell do the following:</span>***
 
 - download **Hunspell 1.3.3** from http://hunspell.sourceforge.net/ and extract it in the `src/` directory
 - open project `src/hunspell/hunspell.pro` in Qt Creator, select `Release`, execute `Run qmake`, execute `Build`
-- copy builded library (e.g. `libhunspell.a`, `hunspell.lib`) from the build directory to the `src/libs` directory
+- copy built library (e.g. `libhunspell.a`, `hunspell.lib`) from the build directory to the `src/libs` directory
 
 ***<span id="quazip">To build Quazip do the following:</span>***
 
 - open project `src/quazip/quazip/quazip.pro` in Qt Creator, select `Release`, execute `Run qmake`, execute `Build`
-- copy builded library (e.g. `libquazip.a`, `quazip.lib`) from the build directory to the `src/libs` directory
+- copy built library (e.g. `libquazip.a`, `quazip.lib`) from the build directory to the `src/libs` directory
+- 
+***<span id="libface">To build libface do the following:</span>***
+
+- open file `src/cpp-libface/README.md` and follow instructions for your platform
+- copy built library (e.g. `libface.a`, `face.lib`) from the build directory to the `src/libs` directory
+- for Windows you will also need mman32 library (`mman.lib`) to be in the `src/libs` directory
 
 ***<span id="libcurl">To build Libcurl do the following:</span>***
 
