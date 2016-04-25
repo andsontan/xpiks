@@ -61,7 +61,7 @@ namespace AutoComplete {
 #elif defined(Q_OS_WIN)
         resourcesPath += "/ac_sources/";
 #elif defined(TRAVIS_CI)
-        resourcesPath += "../xpiks-qt/deps/";
+        resourcesPath += "/../xpiks-qt/deps/";
 #endif
 
         QDir resourcesDir(resourcesPath);
@@ -80,6 +80,8 @@ namespace AutoComplete {
             catch (...) {
                 LOG_WARNING << "Exception while initializing LIBFACE with" << wordlistPath;
             }
+        } else {
+            LOG_WARNING << "File not found:" << wordlistPath;
         }
 
         return importResult;

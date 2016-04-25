@@ -170,7 +170,7 @@ int main(int argc, char *argv[]) {
     integrationTests.append(new SpellCheckUndoTest(&commandManager));
     integrationTests.append(new AutoCompleteBasicTest(&commandManager));
 
-    qDebug("\n\n\n");
+    qDebug("\n");
 
     foreach (IntegrationTestBase *test, integrationTests) {
         qDebug("---------------------------------------------------------");
@@ -193,7 +193,7 @@ int main(int argc, char *argv[]) {
             result += 1;
         }
 
-        qDebug("\n\n\n");
+        qDebug("\n");
     }
 
     qDeleteAll(integrationTests);
