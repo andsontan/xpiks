@@ -60,4 +60,6 @@ int AutoCompleteBasicTest::doTest() {
 
     VERIFY(acModel->getCount() > 0, "AC model didn't receive the completions");
     VERIFY(acModel->containsWord("test"), "AC model has irrelevant results");
+
+    return 0;
 }
