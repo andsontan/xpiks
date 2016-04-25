@@ -59,9 +59,9 @@ namespace AutoComplete {
 #if defined(Q_OS_MAC)
         resourcesPath += "/../Resources/";
 #elif defined(Q_OS_WIN)
-        resourcePath += "/ac_sources/";
+        resourcesPath += "/ac_sources/";
 #elif defined(TRAVIS_CI)
-        resourcePath += "../xpiks-qt/deps/"
+        resourcesPath += "../xpiks-qt/deps/"
 #endif
 
         QDir resourcesDir(resourcesPath);
