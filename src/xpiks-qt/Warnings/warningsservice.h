@@ -52,6 +52,7 @@ namespace Warnings {
 
     private slots:
         void workerDestoyed(QObject *object);
+        void workerStopped();
 
     private:
         WarningsCheckingWorker *m_WarningsWorker;

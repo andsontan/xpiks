@@ -42,6 +42,7 @@ namespace Helpers {
 
         LOG_INFO << "Logging worker stopped";
         logger.log("Logging is off now");
+        logger.stop();
         logger.flush();
 
         emit stopped();

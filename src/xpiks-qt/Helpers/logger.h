@@ -47,6 +47,7 @@ namespace Helpers {
 
         void log(const QString &message);
         void flush();
+        void stop() { m_Stopped = true; }
 
     private:
         void flushStream(QStringList *logItems);
@@ -55,6 +56,7 @@ namespace Helpers {
         Logger() {
             m_QueueLogTo = &m_LogsStorage[0];
             m_QueueFlushFrom = &m_LogsStorage[1];
+            m_Stopped = false;
         }
 
         Logger(Logger const&);
@@ -68,6 +70,7 @@ namespace Helpers {
         QMutex m_LogMutex;
         QMutex m_FlushMutex;
         QWaitCondition m_AnyLogsToFlush;
+        volatile bool m_Stopped;
     };
 }
 

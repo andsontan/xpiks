@@ -51,6 +51,7 @@
 #include "spellcheckcombinedmodeltest.h"
 #include "zipartworkstest.h"
 #include "spellcheckundotest.h"
+#include "autocompletebasictest.h"
 
 #if defined(WITH_LOGS)
 #undef WITH_LOGS
@@ -167,6 +168,9 @@ int main(int argc, char *argv[]) {
     integrationTests.append(new SpellCheckCombinedModelTest(&commandManager));
     integrationTests.append(new ZipArtworksTest(&commandManager));
     integrationTests.append(new SpellCheckUndoTest(&commandManager));
+    integrationTests.append(new AutoCompleteBasicTest(&commandManager));
+
+    qDebug("\n");
 
     foreach (IntegrationTestBase *test, integrationTests) {
         qDebug("---------------------------------------------------------");
@@ -188,6 +192,8 @@ int main(int argc, char *argv[]) {
             qWarning("Test %s CRASHED", test->testName().toStdString().c_str());
             result += 1;
         }
+
+        qDebug("\n");
     }
 
     qDeleteAll(integrationTests);

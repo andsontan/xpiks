@@ -48,6 +48,9 @@ namespace Warnings {
         QObject::connect(m_WarningsWorker, SIGNAL(destroyed(QObject*)),
                          this, SLOT(workerDestoyed(QObject*)));
 
+        QObject::connect(m_WarningsWorker, SIGNAL(stopped()),
+                         this, SLOT(workerStopped()));
+
         LOG_INFO << "Starting worker";
 
         thread->start();
@@ -57,6 +60,8 @@ namespace Warnings {
         if (m_WarningsWorker != NULL) {
             LOG_INFO << "Stopping worker";
             m_WarningsWorker->stopWorking();
+        } else {
+            LOG_WARNING << "Worker was destroyed";
         }
     }
 
@@ -101,5 +106,9 @@ namespace Warnings {
         Q_UNUSED(object);
         LOG_DEBUG << "#";
         m_WarningsWorker = NULL;
+    }
+
+    void WarningsService::workerStopped() {
+        LOG_DEBUG << "#";
     }
 }

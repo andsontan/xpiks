@@ -42,6 +42,8 @@
 
 namespace Helpers {
     void Logger::log(const QString &message) {
+        if (m_Stopped) { return; }
+
         QMutexLocker locker(&m_LogMutex);
         m_QueueLogTo->append(message);
         m_AnyLogsToFlush.wakeOne();

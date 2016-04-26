@@ -101,6 +101,11 @@ namespace AutoComplete {
     }
 
     void AutoCompleteService::findKeywordCompletions(const QString &prefix, QObject *notifyObject) {
+        if (m_AutoCompleteWorker == NULL) {
+            LOG_WARNING << "Worker is NULL";
+            return;
+        }
+
         LOG_INFO << "Requested for" << prefix;
         CompletionQuery *query = new CompletionQuery(prefix, m_AutoCompleteModel);
 

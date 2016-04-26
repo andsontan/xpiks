@@ -538,6 +538,7 @@ void Commands::CommandManager::beforeDestructionCallback() const {
     m_SpellCheckerService->stopService();
     m_WarningsService->stopService();
     m_MetadataSaverService->stopSaving();
+    m_AutoCompleteService->stopService();
 
 #ifndef CORE_TESTS
 #ifdef WITH_PLUGINS
