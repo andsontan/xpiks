@@ -1,10 +1,8 @@
 Create several strings files in the translations directory (run command from xpiks-qt.pro directory)
-lupdate.exe -pro xpiks-qt.pro -ts translations/xpiks_en_US.ts
+`lupdate.exe -pro xpiks-qt.pro -ts translations/xpiks_en_US.ts`
 
-Create .qm files (to be put in the translations/ dir)
-lrelease.exe *.ts
-mv xpiks_*.qm qm/
+To build .qm files out of .ts files, run
+`lrelease.exe *.ts`
 
-Copy resulted qm files to the translations/ dir
+.qm files should remain in the `src/xpiks-qt/deps/translations` directory. When you will `Run qmake` and `Build` on the _xpiks-qt_ project, they will be automatically added to `translations/` directory next to _xpiks-qt_ executable. 
 
-mv *.qm ../../build-xpiks-qt-Desktop_Qt_5_5_1_MSVC2013_64bit-Debug/debug/translations/
