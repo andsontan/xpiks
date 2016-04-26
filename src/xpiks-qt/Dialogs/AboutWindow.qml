@@ -71,7 +71,7 @@ ApplicationWindow {
             StyledText {
                 focus: true
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: i18.n + qsTr("<u>Home webpage of Xpiks</u>")
+                text: i18.n + qsTr("<u>Xpiks webpage</u>")
                 color: aboutMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor
 
                 MouseArea {

@@ -259,6 +259,7 @@ Item {
                 StyledButton {
                     id: actionButton
                     text: i18.n + qsTr("Next")
+                    isDefault: true
                     width: 100
                     onClicked: {
                         if (slidesHost.isFinished()) {

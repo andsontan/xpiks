@@ -151,7 +151,7 @@ ApplicationWindow {
     MessageDialog {
         id: resetSettingsDialog
         title: "Warning"
-        text: i18.n + qsTr("Are you sure you want reset all settings? \nThis action cannot be undone.")
+        text: i18.n + qsTr("Are you sure you want to reset all settings? \nThis action cannot be undone.")
         standardButtons: StandardButton.Yes | StandardButton.No
 
         onYes: {
@@ -163,7 +163,7 @@ ApplicationWindow {
     MessageDialog {
         id: resetMPDialog
         title: "Warning"
-        text: i18.n + qsTr("Are you sure you want reset Master password? \nAll upload hosts' passwords will be purged.")
+        text: i18.n + qsTr("Are you sure you want to reset Master password? \nAll upload hosts' passwords will be purged.")
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
             secretsManager.removeMasterPassword()

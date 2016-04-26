@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="ru" sourcelanguage="en">
+<TS version="2.1" language="ca" sourcelanguage="en">
   <context>
     <name>AboutWindow</name>
     <message>
       <location filename="../../Dialogs/AboutWindow.qml" line="40"/>
       <source>About</source>
-      <translation>О программе</translation>
+      <translation>Sobre</translation>
     </message>
     <message>
       <location filename="../../Dialogs/AboutWindow.qml" line="68"/>
       <source>Version: %1</source>
-      <translation>Версия: %1</translation>
+      <translation>Versió: %1</translation>
     </message>
     <message>
       <location filename="../../Dialogs/AboutWindow.qml" line="74"/>
       <source>&lt;u&gt;Xpiks webpage&lt;/u&gt;</source>
-      <translation>&lt;u&gt;Домашняя страница Xpiks&lt;/u&gt;</translation>
+      <translation>&lt;u&gt;Pàgina d'inici de Xpiks&lt;/u&gt;</translation>
     </message>
     <message>
       <location filename="../../Dialogs/AboutWindow.qml" line="102"/>
       <source>The program is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE</source>
-      <translation>Программа предоставляются по принципу "как есть" без каких-либо явных или подразумеваемых гарантий, включая гарантии по дизайну, коммерческой ценности и пригодности для определенной цели</translation>
+      <translation>El programa es proporciona COM ÉS amb cap garantia de cap tipus, incloent-hi la garantia de disseny, comercialització i idoneïtat per una finalitat determinada</translation>
     </message>
   </context>
   <context>
@@ -34,12 +34,12 @@
     <message>
       <location filename="../../Dialogs/ArtworkPreview.qml" line="247"/>
       <source>Fit</source>
-      <translation>По размеру</translation>
+      <translation>Ajusta</translation>
     </message>
     <message>
       <location filename="../../Dialogs/ArtworkPreview.qml" line="264"/>
       <source>Close</source>
-      <translation>Закрыть</translation>
+      <translation>Tancar</translation>
     </message>
   </context>
   <context>
@@ -47,114 +47,114 @@
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="78"/>
       <source>Are you sure you want to remove %1 item(s)?</source>
-      <translation>Вы уверены, что хотите удалить %1 элемент(ов)?</translation>
+      <translation>Esteu segur que voleu suprimir %1 element(s)?</translation>
     </message>
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="111"/>
       <source>Clear all keywords?</source>
-      <translation>Удалить все ключевые слова?</translation>
+      <translation>Esborrar totes les paraules clau?</translation>
     </message>
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="229"/>
       <source>Edit multiple artworks</source>
-      <translation>Редактировать несколько файлов</translation>
+      <translation>Editar múltiples arxius</translation>
     </message>
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="241"/>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="247"/>
       <source>%1 artworks being edited</source>
-      <translation>редактируется %1 файла(ов)</translation>
+      <translation>Editant %1 arxius</translation>
     </message>
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="241"/>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="247"/>
       <source>1 artwork being edited</source>
-      <translation>редактируется 1 файл</translation>
+      <translation>Editant 1 arxiu</translation>
     </message>
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="264"/>
       <source>Assign from selected</source>
-      <translation>Присвоить из выбранного</translation>
+      <translation>Copiar des de la selecció</translation>
     </message>
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="267"/>
       <source>Set metadata from selected artwork to all fields</source>
-      <translation>Скопировать метаданные из выбранного файла во все поля</translation>
+      <translation>Còpia les metadades des del arxiu seleccionat a la resta de arxius</translation>
     </message>
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="278"/>
       <source>Remove selected</source>
-      <translation>Удалить выбранные</translation>
+      <translation>Eliminar seleccionats</translation>
     </message>
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="280"/>
       <source>Remove selected artworks from this dialog</source>
-      <translation>Убрать выбранные файлы из диалогового окна</translation>
+      <translation>Eliminar arxius seleccionats en aquesta finestra</translation>
     </message>
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="442"/>
       <source>Title:</source>
-      <translation>Название:</translation>
+      <translation>Títol:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="447"/>
       <source>(same as Description if empty)</source>
-      <translation>(будет скопировано из описания, если будет оставлено пустым)</translation>
+      <translation>(deixar en blanc si és igual que Descripció)</translation>
     </message>
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="608"/>
       <source>Description:</source>
-      <translation>Описание:</translation>
+      <translation>Descripció:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="795"/>
       <source>Keywords:</source>
-      <translation>Ключевые слова:</translation>
+      <translation>Paraules clau:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="800"/>
       <source>(comma-separated)</source>
-      <translation>(через запятую)</translation>
+      <translation>(separats per comes)</translation>
     </message>
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="923"/>
       <source>Only append new keywords</source>
-      <translation>Добавить только новые ключевые слова</translation>
+      <translation>Només afegir paraules clau noves</translation>
     </message>
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="936"/>
       <source>Fix spelling</source>
-      <translation>Исправить правописание</translation>
+      <translation>Corrector ortogràfic</translation>
     </message>
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="960"/>
       <source>Suggest</source>
-      <translation>Автоподбор</translation>
+      <translation>Suggerir</translation>
     </message>
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="988"/>
       <source>Copy</source>
-      <translation>Копировать</translation>
+      <translation>Copiar</translation>
     </message>
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="1006"/>
       <source>Clear</source>
-      <translation>Очистить</translation>
+      <translation>Esborrar</translation>
     </message>
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="1045"/>
       <source>Select changes to save using checkboxes above</source>
-      <translation>Используя флажки, выберите изменения, которые необходимо сохранить</translation>
+      <translation>Indicar canvis a desar usant les caixes de selecció</translation>
     </message>
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="1053"/>
       <source>Save</source>
-      <translation>Сохранить</translation>
+      <translation>Desar</translation>
     </message>
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="1069"/>
       <source>Cancel</source>
-      <translation>Отмена</translation>
+      <translation>Cancel·lar</translation>
     </message>
   </context>
   <context>
@@ -162,62 +162,62 @@
     <message>
       <location filename="../../Dialogs/EditArtworkHorizontalDialog.qml" line="78"/>
       <source>Clear all keywords?</source>
-      <translation>Удалить все ключевые слова?</translation>
+      <translation>Esborrar totes les paraules clau?</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EditArtworkHorizontalDialog.qml" line="244"/>
       <source>Title:</source>
-      <translation>Название:</translation>
+      <translation>Títol:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EditArtworkHorizontalDialog.qml" line="248"/>
       <source>(same as Description if empty)</source>
-      <translation>(будет скопировано из описания, если будет оставлено пустым)</translation>
+      <translation>(deixar en blanc si és igual que Descripció)</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EditArtworkHorizontalDialog.qml" line="340"/>
       <source>Description:</source>
-      <translation>Описание:</translation>
+      <translation>Descripció:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EditArtworkHorizontalDialog.qml" line="455"/>
       <source>Keywords:</source>
-      <translation>Ключевые слова:</translation>
+      <translation>Paraules clau:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EditArtworkHorizontalDialog.qml" line="459"/>
       <source>(comma-separated)</source>
-      <translation>(через запятую)</translation>
+      <translation>(separats per comes)</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EditArtworkHorizontalDialog.qml" line="576"/>
       <source>Fix spelling</source>
-      <translation>Исправить правописание</translation>
+      <translation>Corrector ortogràfic</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EditArtworkHorizontalDialog.qml" line="599"/>
       <source>Suggest</source>
-      <translation>Автоподбор</translation>
+      <translation>Suggerir</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EditArtworkHorizontalDialog.qml" line="626"/>
       <source>Copy</source>
-      <translation>Копировать</translation>
+      <translation>Copiar</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EditArtworkHorizontalDialog.qml" line="643"/>
       <source>Clear</source>
-      <translation>Очистить</translation>
+      <translation>Esborrar</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EditArtworkHorizontalDialog.qml" line="668"/>
       <source>Save</source>
-      <translation>Сохранить</translation>
+      <translation>Desar</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EditArtworkHorizontalDialog.qml" line="679"/>
       <source>Close</source>
-      <translation>Закрыть</translation>
+      <translation>Tancar</translation>
     </message>
   </context>
   <context>
@@ -225,62 +225,62 @@
     <message>
       <location filename="../../Dialogs/EditArtworkVerticalDialog.qml" line="99"/>
       <source>Clear all keywords?</source>
-      <translation>Удалить все ключевые слова?</translation>
+      <translation>Esborrar totes les paraules clau?</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EditArtworkVerticalDialog.qml" line="240"/>
       <source>Title:</source>
-      <translation>Название:</translation>
+      <translation>Títol:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EditArtworkVerticalDialog.qml" line="244"/>
       <source>(same as Description if empty)</source>
-      <translation>(будет скопировано из описания, если будет оставлено пустым)</translation>
+      <translation>(deixar en blanc si és igual que Descripció)</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EditArtworkVerticalDialog.qml" line="335"/>
       <source>Description:</source>
-      <translation>Описание:</translation>
+      <translation>Descripció:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EditArtworkVerticalDialog.qml" line="452"/>
       <source>Keywords:</source>
-      <translation>Ключевые слова:</translation>
+      <translation>Paraules clau:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EditArtworkVerticalDialog.qml" line="456"/>
       <source>(comma-separated)</source>
-      <translation>(через запятую)</translation>
+      <translation>(separats per comes)</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EditArtworkVerticalDialog.qml" line="573"/>
       <source>Fix spelling</source>
-      <translation>Исправить правописание</translation>
+      <translation>Corrector ortogràfic</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EditArtworkVerticalDialog.qml" line="596"/>
       <source>Suggest</source>
-      <translation>Автоподбор</translation>
+      <translation>Suggerir</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EditArtworkVerticalDialog.qml" line="623"/>
       <source>Copy</source>
-      <translation>Копировать</translation>
+      <translation>Copiar</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EditArtworkVerticalDialog.qml" line="640"/>
       <source>Clear</source>
-      <translation>Очистить</translation>
+      <translation>Esborrar</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EditArtworkVerticalDialog.qml" line="669"/>
       <source>Save</source>
-      <translation>Сохранить</translation>
+      <translation>Desar</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EditArtworkVerticalDialog.qml" line="680"/>
       <source>Close</source>
-      <translation>Закрыть</translation>
+      <translation>Tancar</translation>
     </message>
   </context>
   <context>
@@ -288,12 +288,12 @@
     <message>
       <location filename="../../Dialogs/EditKeywordDialog.qml" line="179"/>
       <source>Save</source>
-      <translation>Сохранить</translation>
+      <translation>Desar</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EditKeywordDialog.qml" line="186"/>
       <source>Cancel</source>
-      <translation>Отмена</translation>
+      <translation>Cancel·lar</translation>
     </message>
   </context>
   <context>
@@ -301,27 +301,27 @@
     <message>
       <location filename="../../Dialogs/EnterMasterPasswordDialog.qml" line="126"/>
       <source>Enter current Master Password:</source>
-      <translation>Введите текущий мастер-пароль:</translation>
+      <translation>Introduïu la Contrasenya Mestra actual:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EnterMasterPasswordDialog.qml" line="165"/>
       <source>Show password</source>
-      <translation>Показать пароль</translation>
+      <translation>Mostra la contrasenya</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EnterMasterPasswordDialog.qml" line="175"/>
       <source>Ok</source>
-      <translation>Ок</translation>
+      <translation>Acceptar</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EnterMasterPasswordDialog.qml" line="185"/>
       <source>Cancel</source>
-      <translation>Отмена</translation>
+      <translation>Cancel·lar</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EnterMasterPasswordDialog.qml" line="186"/>
       <source>This will leave password fields blank</source>
-      <translation>Поля "Пароль" будут пустыми</translation>
+      <translation>Això buida els camps de contrasenya</translation>
     </message>
   </context>
   <context>
@@ -329,38 +329,38 @@
     <message>
       <location filename="../../Dialogs/ExportMetadata.qml" line="57"/>
       <source>Export finished with errors. See logs for details.</source>
-      <translation>Экспорт завершился с ошибками. Просмотрите логи, чтобы узнать подробности.</translation>
+      <translation>Errors en l'exportació. Més informació al Arxiu de registre.</translation>
     </message>
     <message>
       <location filename="../../Dialogs/ExportMetadata.qml" line="166"/>
       <source>Export metadata</source>
-      <translation>Экспорт метаданных</translation>
+      <translation>Exportar metadades</translation>
     </message>
     <message>
       <location filename="../../Dialogs/ExportMetadata.qml" line="171"/>
       <source>%1 modified image(s) selected</source>
-      <translation>Выбран(ы) %1 измененн(ый/ых) файл(ов)</translation>
+      <translation>%1 imatge(s) modificad(a/es) seleccionad(a/es)</translation>
     </message>
     <message>
       <location filename="../../Dialogs/ExportMetadata.qml" line="186"/>
       <source>Backup each image</source>
-      <translation>Создать резервную копию</translation>
+      <translation>Fer còpia de cada imatge</translation>
     </message>
     <message>
       <location filename="../../Dialogs/ExportMetadata.qml" line="199"/>
       <location filename="../../Dialogs/ExportMetadata.qml" line="220"/>
       <source>Start Export</source>
-      <translation>Начать экспорт</translation>
+      <translation>Començar exportació</translation>
     </message>
     <message>
       <location filename="../../Dialogs/ExportMetadata.qml" line="203"/>
       <source>Exporting...</source>
-      <translation>Экспорт...</translation>
+      <translation>Exportant...</translation>
     </message>
     <message>
       <location filename="../../Dialogs/ExportMetadata.qml" line="234"/>
       <source>Close</source>
-      <translation>Закрыть</translation>
+      <translation>Tancar</translation>
     </message>
   </context>
   <context>
@@ -368,48 +368,48 @@
     <message>
       <location filename="../../Dialogs/ImportMetadata.qml" line="61"/>
       <source>Import finished with errors. See logs for details.</source>
-      <translation>Импорт завершился с ошибками. Просмотрите логи, чтобы узнать подробности.</translation>
+      <translation>Errors en l'importació. Més informació al Arxiu de registre.</translation>
     </message>
     <message>
       <location filename="../../Dialogs/ImportMetadata.qml" line="71"/>
       <source>Please install Exiftool to import metadata</source>
-      <translation>Пожалуйста, установите Exiftool для импорта метаданных</translation>
+      <translation>Si us plau, insta·lar ExifTool per importar metadades</translation>
     </message>
     <message>
       <location filename="../../Dialogs/ImportMetadata.qml" line="72"/>
       <source>&lt;a href="http://www.sno.phy.queensu.ca/~phil/exiftool/"&gt;Official Exiftool website&lt;/a&gt;</source>
-      <translation>&lt;a href="http://www.sno.phy.queensu.ca/~phil/exiftool/"&gt; Официальный сайт Exiftool&lt;/a&gt;</translation>
+      <translation>&lt;a href="http://www.sno.phy.queensu.ca/~phil/exiftool/"&gt;Pàgina oficial d'Exiftool&lt;/a&gt;</translation>
     </message>
     <message>
       <location filename="../../Dialogs/ImportMetadata.qml" line="83"/>
       <source>Importing...</source>
-      <translation>Импортирование...</translation>
+      <translation>Important...</translation>
     </message>
     <message>
       <location filename="../../Dialogs/ImportMetadata.qml" line="186"/>
       <source>Import existing metadata</source>
-      <translation>Импорт метаданных</translation>
+      <translation>Importar metadades existents</translation>
     </message>
     <message>
       <location filename="../../Dialogs/ImportMetadata.qml" line="191"/>
       <source>from %1 image(s)</source>
-      <translation>из %1 файла(ов)</translation>
+      <translation>de %1 imatge(s)</translation>
     </message>
     <message>
       <location filename="../../Dialogs/ImportMetadata.qml" line="205"/>
       <source>Ignore autosaves (.xpks)</source>
-      <translation>Игнорировать автосохранения (.xpks)</translation>
+      <translation>Ignorar desar automàticament (.xpks)</translation>
     </message>
     <message>
       <location filename="../../Dialogs/ImportMetadata.qml" line="219"/>
       <location filename="../../Dialogs/ImportMetadata.qml" line="241"/>
       <source>Start Import</source>
-      <translation>Начать импорт</translation>
+      <translation>Començar importació</translation>
     </message>
     <message>
       <location filename="../../Dialogs/ImportMetadata.qml" line="253"/>
       <source>Close</source>
-      <translation>Закрыть</translation>
+      <translation>Tancar</translation>
     </message>
   </context>
   <context>
@@ -417,43 +417,43 @@
     <message>
       <location filename="../../Dialogs/KeywordsSuggestion.qml" line="157"/>
       <source>Search</source>
-      <translation>Поиск</translation>
+      <translation>Cercar</translation>
     </message>
     <message>
       <location filename="../../Dialogs/KeywordsSuggestion.qml" line="317"/>
       <source>Suggested keywords:</source>
-      <translation>Предложенные слова:</translation>
+      <translation>Paraules clau suggerides:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/KeywordsSuggestion.qml" line="390"/>
       <source>Other keywords:</source>
-      <translation>Другие ключевые слова:</translation>
+      <translation>Altres paraules clau:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/KeywordsSuggestion.qml" line="468"/>
       <source>%1 selected items</source>
-      <translation>%1 выбранных файла(ов)</translation>
+      <translation>%1 elements seleccionats</translation>
     </message>
     <message>
       <location filename="../../Dialogs/KeywordsSuggestion.qml" line="468"/>
       <source>1 selected item</source>
-      <translation>1 выбранный файл</translation>
+      <translation>1 element seleccionat</translation>
     </message>
     <message>
       <location filename="../../Dialogs/KeywordsSuggestion.qml" line="482"/>
       <location filename="../../Dialogs/KeywordsSuggestion.qml" line="489"/>
       <source>Add suggested keywords</source>
-      <translation>Добавить предложенные ключевые слова</translation>
+      <translation>Afegir paraules clau suggerides</translation>
     </message>
     <message>
       <location filename="../../Dialogs/KeywordsSuggestion.qml" line="494"/>
       <source>Added!</source>
-      <translation>Добавлено!</translation>
+      <translation>Afegides!</translation>
     </message>
     <message>
       <location filename="../../Dialogs/KeywordsSuggestion.qml" line="502"/>
       <source>Close</source>
-      <translation>Закрыть</translation>
+      <translation>Tancar</translation>
     </message>
   </context>
   <context>
@@ -461,12 +461,12 @@
     <message>
       <location filename="../../Components/LayoutButton.qml" line="109"/>
       <source>Grid</source>
-      <translation>Сетка</translation>
+      <translation>Quadrícula</translation>
     </message>
     <message>
       <location filename="../../Components/LayoutButton.qml" line="109"/>
       <source>List</source>
-      <translation>Список</translation>
+      <translation>Llista</translation>
     </message>
   </context>
   <context>
@@ -474,27 +474,27 @@
     <message>
       <location filename="../../Dialogs/LogsDialog.qml" line="134"/>
       <source>Logs</source>
-      <translation>Логи</translation>
+      <translation>Arxiu de registre</translation>
     </message>
     <message>
       <location filename="../../Dialogs/LogsDialog.qml" line="144"/>
       <source>(showing last %1 lines)</source>
-      <translation>(показаны последние %1 строк(и))</translation>
+      <translation>(mostrant les últimes %1 línies)</translation>
     </message>
     <message>
       <location filename="../../Dialogs/LogsDialog.qml" line="191"/>
       <source>Load more logs</source>
-      <translation>Показать больше</translation>
+      <translation>Carregar més registres</translation>
     </message>
     <message>
       <location filename="../../Dialogs/LogsDialog.qml" line="204"/>
       <source>Reveal logfile</source>
-      <translation>Показать файл логов на диске</translation>
+      <translation>Mostrar el Arxiu de registre</translation>
     </message>
     <message>
       <location filename="../../Dialogs/LogsDialog.qml" line="218"/>
       <source>Close</source>
-      <translation>Закрыть</translation>
+      <translation>Tancar</translation>
     </message>
   </context>
   <context>
@@ -502,37 +502,37 @@
     <message>
       <location filename="../../Dialogs/MasterPasswordSetupDialog.qml" line="92"/>
       <source>Passwords are not equal</source>
-      <translation>Пароли не совпадают</translation>
+      <translation>Les contrasenyes no coincideixen</translation>
     </message>
     <message>
       <location filename="../../Dialogs/MasterPasswordSetupDialog.qml" line="99"/>
       <source>Please, enter correct current master password</source>
-      <translation>Пожалуйста, введите правильный мастер-пароль</translation>
+      <translation>Si us plau, introdueixi la Contrasenya Mestra correctament</translation>
     </message>
     <message>
       <location filename="../../Dialogs/MasterPasswordSetupDialog.qml" line="166"/>
       <source>Current Master Password:</source>
-      <translation>Текущий мастер-пароль:</translation>
+      <translation>Contrasenya Mestra actual:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/MasterPasswordSetupDialog.qml" line="212"/>
       <source>New Master Password:</source>
-      <translation>Новый мастер-пароль:</translation>
+      <translation>Nou Contrasenya Mestra:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/MasterPasswordSetupDialog.qml" line="254"/>
       <source>Repeat Master Password:</source>
-      <translation>Повторите мастер-пароль:</translation>
+      <translation>Repetir Contrasenya Mestra:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/MasterPasswordSetupDialog.qml" line="290"/>
       <source>Ok</source>
-      <translation>Ок</translation>
+      <translation>Acceptar</translation>
     </message>
     <message>
       <location filename="../../Dialogs/MasterPasswordSetupDialog.qml" line="296"/>
       <source>Cancel</source>
-      <translation>Отмена</translation>
+      <translation>Cancel·lar</translation>
     </message>
   </context>
   <context>
@@ -540,17 +540,17 @@
     <message>
       <location filename="../../Dialogs/PlainTextKeywordsDialog.qml" line="147"/>
       <source>Keywords</source>
-      <translation>Ключевые слова</translation>
+      <translation>Paraules clau</translation>
     </message>
     <message>
       <location filename="../../Dialogs/PlainTextKeywordsDialog.qml" line="251"/>
       <source>Save</source>
-      <translation>Сохранить</translation>
+      <translation>Desar</translation>
     </message>
     <message>
       <location filename="../../Dialogs/PlainTextKeywordsDialog.qml" line="257"/>
       <source>Cancel</source>
-      <translation>Отмена</translation>
+      <translation>Cancel·lar</translation>
     </message>
   </context>
   <context>
@@ -558,17 +558,17 @@
     <message>
       <location filename="../../Dialogs/PluginsDialog.qml" line="120"/>
       <source>Plugins</source>
-      <translation>Плагины</translation>
+      <translation>Connectors</translation>
     </message>
     <message>
       <location filename="../../Dialogs/PluginsDialog.qml" line="173"/>
       <source>No plugins available</source>
-      <translation>0 доступных плагинов</translation>
+      <translation>No hi ha connectors disponibles</translation>
     </message>
     <message>
       <location filename="../../Dialogs/PluginsDialog.qml" line="196"/>
       <source>Close</source>
-      <translation>Закрыть</translation>
+      <translation>Tancar</translation>
     </message>
   </context>
   <context>
@@ -576,7 +576,7 @@
     <message>
       <location filename="../../QMLExtensions/colorsmodel.cpp" line="111"/>
       <source>Unknown</source>
-      <translation>Не указано</translation>
+      <translation>Desconegut</translation>
     </message>
   </context>
   <context>
@@ -584,122 +584,122 @@
     <message>
       <location filename="../../UndoRedo/addartworksitem.h" line="58"/>
       <source>%1 items added</source>
-      <translation>%1 файла(ов) добавлены</translation>
+      <translation>%1 elements afegits</translation>
     </message>
     <message>
       <location filename="../../UndoRedo/addartworksitem.h" line="59"/>
       <source>1 item added</source>
-      <translation>1 файл добавлен</translation>
+      <translation>1 element afegit</translation>
     </message>
     <message>
       <location filename="../../UndoRedo/modifyartworkshistoryitem.h" line="63"/>
       <source>(%1)  %2 items modified</source>
-      <translation>(%1) %2 файла(ов) изменены</translation>
+      <translation>(%1) %2 elements modificats</translation>
     </message>
     <message>
       <location filename="../../UndoRedo/modifyartworkshistoryitem.h" line="64"/>
       <source>(%1)  1 item modified</source>
-      <translation>(%1) 1 файл изменен</translation>
+      <translation>(%1) 1 element modificat</translation>
     </message>
     <message>
       <location filename="../../UndoRedo/removeartworksitem.h" line="53"/>
       <source>%1 items removed</source>
-      <translation>%1 файла(ов) удалены</translation>
+      <translation>%1 elements suprimits</translation>
     </message>
     <message>
       <location filename="../../UndoRedo/removeartworksitem.h" line="54"/>
       <source>1 item removed</source>
-      <translation>1 файл удален</translation>
+      <translation>1 element suprimit</translation>
     </message>
     <message>
       <location filename="../../Warnings/warningsmodel.cpp" line="36"/>
       <source>Image size %1 x %2 is less than minimal</source>
-      <translation>Размер изображения %1 x %2 меньше минимального</translation>
+      <translation>La grandària de la imatge (%1 x %2) està per sota del mínim</translation>
     </message>
     <message>
       <location filename="../../Warnings/warningsmodel.cpp" line="40"/>
       <source>Item has no keywords</source>
-      <translation>Нет ключевых слов</translation>
+      <translation>L'element no té paraules clau</translation>
     </message>
     <message>
       <location filename="../../Warnings/warningsmodel.cpp" line="44"/>
       <source>There's less than 7 keywords</source>
-      <translation>Количество ключевых слов меньше 7</translation>
+      <translation>Hi ha menys de 7 paraules clau</translation>
     </message>
     <message>
       <location filename="../../Warnings/warningsmodel.cpp" line="48"/>
       <source>There are too many keywords (%1)</source>
-      <translation>Ключевых слов слишком много (%1)</translation>
+      <translation>Hi ha moltes paraules clau (%1)</translation>
     </message>
     <message>
       <location filename="../../Warnings/warningsmodel.cpp" line="52"/>
       <source>Description is empty</source>
-      <translation>Отсутствует описание</translation>
+      <translation>La descripció és buida</translation>
     </message>
     <message>
       <location filename="../../Warnings/warningsmodel.cpp" line="56"/>
       <source>Description should have more than 2 words</source>
-      <translation>Описание должно состоять из более чем 2 слов</translation>
+      <translation>La descripció ha de tenir més de 2 paraules</translation>
     </message>
     <message>
       <location filename="../../Warnings/warningsmodel.cpp" line="60"/>
       <source>Description is too long (%1 symbols)</source>
-      <translation>Описание содержит слишком много символов (%1)</translation>
+      <translation>La descripció és massa llarga (%1 símbols)</translation>
     </message>
     <message>
       <location filename="../../Warnings/warningsmodel.cpp" line="64"/>
       <source>Title is empty</source>
-      <translation>Пустое название</translation>
+      <translation>El títol esta vuit</translation>
     </message>
     <message>
       <location filename="../../Warnings/warningsmodel.cpp" line="68"/>
       <source>Title should have more than 2 words</source>
-      <translation>Название должно иметь состоять из более чем 2 слов</translation>
+      <translation>El títol hauria de tenir més de 2 paraules</translation>
     </message>
     <message>
       <location filename="../../Warnings/warningsmodel.cpp" line="72"/>
       <source>Title has too many words</source>
-      <translation>Название содержит слишком много слов</translation>
+      <translation>El títol té massa paraules</translation>
     </message>
     <message>
       <location filename="../../Warnings/warningsmodel.cpp" line="76"/>
       <source>Title is too long (%1 symbols)</source>
-      <translation>Название слишком длинное (%1 символов)</translation>
+      <translation>El títol és massa llarg (%1 símbols)</translation>
     </message>
     <message>
       <location filename="../../Warnings/warningsmodel.cpp" line="80"/>
       <source>Keywords have spelling error(s)</source>
-      <translation>Ключевые слова содержат орфографические ошибки</translation>
+      <translation>Les paraules clau tenen error(és) ortogràfic(s)</translation>
     </message>
     <message>
       <location filename="../../Warnings/warningsmodel.cpp" line="84"/>
       <source>Description has spelling error(s)</source>
-      <translation>Описание содержит орфографические ошибки</translation>
+      <translation>La descripció té error(s) ortogràfic(s)</translation>
     </message>
     <message>
       <location filename="../../Warnings/warningsmodel.cpp" line="88"/>
       <source>Title has spelling error(s)</source>
-      <translation>Название содержит орфографические ошибки</translation>
+      <translation>El títol té error(és) ortogràfic(s)</translation>
     </message>
     <message>
       <location filename="../../Warnings/warningsmodel.cpp" line="92"/>
       <source>File is larger than 15 MB</source>
-      <translation>Размер файла превышает 15 МБ</translation>
+      <translation>Lárxiu és més gran que 15 Mb.</translation>
     </message>
     <message>
       <location filename="../../Warnings/warningsmodel.cpp" line="96"/>
       <source>Description contains some of the keywords</source>
-      <translation>Описание содержит ключевые слова</translation>
+      <translation>La descripció conté algunes de les paraules clau</translation>
     </message>
     <message>
       <location filename="../../Warnings/warningsmodel.cpp" line="100"/>
       <source>Title contains some of the keywords</source>
-      <translation>Название содержит ключевые слова</translation>
+      <translation>El títol conté algunes de les paraules clau</translation>
     </message>
     <message>
       <location filename="../../Warnings/warningsmodel.cpp" line="104"/>
       <source>Filename contains special characters or spaces</source>
-      <translation>Имя файла содержит специальные символы или пробелы</translation>
+      <translation>El nom del arxiu conté caràcters especials o espais</translation>
     </message>
   </context>
   <context>
@@ -707,241 +707,241 @@
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="36"/>
       <source>Settings</source>
-      <translation>Настройки</translation>
+      <translation>Configuració</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="125"/>
       <source>Switching off master password will make your passwords storage less secure. Continue?</source>
-      <translation>Отключение мастер-пароля сделает хранение Ваших паролей менее безопасным. Продолжить?</translation>
+      <translation>Apagar la contrasenya mestra farà el seu emmagatzematge de contrasenyes menys segur. Voleu continuar?</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="199"/>
       <source>Behavior</source>
-      <translation>Опции</translation>
+      <translation>Opcions</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="219"/>
       <source>Check for updates</source>
-      <translation>Проверить наличие обновлений</translation>
+      <translation>Cercar actualitzatió</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="235"/>
       <source>Use confirmation dialogs</source>
-      <translation>Использовать подтвержение</translation>
+      <translation>Demanar confirmació</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="252"/>
       <source>Search match all terms</source>
-      <translation>Поиск по всем словам</translation>
+      <translation>Cercar incloent totes les paraules</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="283"/>
       <source>Attach vector automatically</source>
-      <translation>Прикреплять вектор автоматически</translation>
+      <translation>Adjuntar vector automáticament</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="299"/>
       <source>Save backups for artworks</source>
-      <translation>Сохранять резервные копии</translation>
+      <translation>Fer còpia dels arxius</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="315"/>
       <source>Check spelling automatically</source>
-      <translation>Проверять правописание автоматически</translation>
+      <translation>Corrector ortogràfic automàtic</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="331"/>
       <source>Autocomplete keywords</source>
-      <translation>Автозаполнение ключевых слов</translation>
+      <translation>Auto-completar paraules clau</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="356"/>
       <source>Interface</source>
-      <translation>Интерфейс</translation>
+      <translation>Interfície</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="374"/>
       <source>Theme:</source>
-      <translation>Тема:</translation>
+      <translation>Tema:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="406"/>
       <source>Fit artwork's preview</source>
-      <translation>По размеру изображения предпросмотра</translation>
+      <translation>Ajustar vista prèvia d'arxiu</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="432"/>
       <source>Keywords size</source>
-      <translation>Размер ключевых слов</translation>
+      <translation>Mida de paraula clau</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="479"/>
       <source>keyword</source>
       <comment>standalone</comment>
-      <translation>ключевое слово</translation>
+      <translation>paraula clau</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="508"/>
       <source>Undo dismiss duration:</source>
-      <translation>Время на отмену действия:</translation>
+      <translation>Temps per desfer:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="545"/>
       <location filename="../../Dialogs/SettingsWindow.qml" line="935"/>
       <source>(seconds)</source>
-      <translation>(секунды)</translation>
+      <translation>(segons)</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="557"/>
       <source>External</source>
-      <translation>Зависимости</translation>
+      <translation>Aplicacions</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="581"/>
       <source>ExifTool path:</source>
-      <translation>Путь к ExifTool:</translation>
+      <translation>Ruta de ExifTool:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="617"/>
       <location filename="../../Dialogs/SettingsWindow.qml" line="666"/>
       <source>Select...</source>
-      <translation>Выбрать...</translation>
+      <translation>Seleccionar...</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="625"/>
       <location filename="../../Dialogs/SettingsWindow.qml" line="675"/>
       <source>Reset</source>
-      <translation>Сбросить</translation>
+      <translation>Restablir</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="636"/>
       <source>Dictionary path:</source>
-      <translation>Путь к словарям:</translation>
+      <translation>Ruta del diccionari:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="690"/>
       <source>Warnings</source>
-      <translation>Предупреждения</translation>
+      <translation>Avisos</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="708"/>
       <source>Minimum megapixels:</source>
-      <translation>Минимальное количество мегапикселей:</translation>
+      <translation>Megapíxels. Mínim:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="753"/>
       <source>(can be real)</source>
-      <translation>(может быть вещественным)</translation>
+      <translation>(pot ser real)</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="764"/>
       <source>Max keywords count:</source>
-      <translation>Количество ключевых слов. Максимум:</translation>
+      <translation>Paraules clau. Màxim:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="808"/>
       <source>(keywords)</source>
-      <translation>(ключевых слов(а))</translation>
+      <translation>(paraules clau)</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="819"/>
       <source>Max description length:</source>
-      <translation>Длина описания. Максимум:</translation>
+      <translation>Longitud de la descripció. Màxim:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="862"/>
       <source>(characters)</source>
-      <translation>(символа(ов))</translation>
+      <translation>(caràcters)</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="874"/>
       <source>Upload</source>
-      <translation>Загрузка</translation>
+      <translation>Pujades</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="892"/>
       <source>File upload timeout:</source>
-      <translation>Таймаут:</translation>
+      <translation>Temps d'espera. Màxim:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="947"/>
       <source>Max parallel uploads:</source>
-      <translation>Число одновременных загрузок. Максимум:</translation>
+      <translation>Pujades concurrents. Màxim:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="989"/>
       <source>(takes effect after relaunch)</source>
-      <translation>(необходим перезапуск)</translation>
+      <translation>(tindrà efecte després de reiniciar)</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="1001"/>
       <source>Security</source>
-      <translation>Безопасность</translation>
+      <translation>Securetat</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="1016"/>
       <source>Use Master password</source>
-      <translation>Использовать мастер-пароль</translation>
+      <translation>Utilitzar Contrasenya Mestra</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="1052"/>
       <source>Change Master password</source>
-      <translation>Изменить мастер-пароль</translation>
+      <translation>Canviar la Contrasenya Mestra</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="1068"/>
       <source>Reset Master password</source>
-      <translation>Сбросить мастер-пароль</translation>
+      <translation>Restablir la Contrasenya Mestra</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="1086"/>
       <location filename="../../Dialogs/SettingsWindow.qml" line="1098"/>
       <source>More...</source>
-      <translation>Больше...</translation>
+      <translation>Més...</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="1102"/>
       <source>Less...</source>
-      <translation>Меньше...</translation>
+      <translation>Menys...</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="1135"/>
       <source>Collect usage statistics</source>
-      <translation>Собирать статистику использования приложения</translation>
+      <translation>Recollir informació</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="1153"/>
       <source>(simple statistics of feature usage)</source>
-      <translation>(статистика использования)</translation>
+      <translation>(estadístiques d'ús)</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="1203"/>
       <source>Save</source>
-      <translation>Сохранить</translation>
+      <translation>Desar</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="1183"/>
       <source>Reset to defaults</source>
-      <translation>Восстановить настройки по умолчанию</translation>
+      <translation>Restablir els valors predeterminats</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="154"/>
       <source>Are you sure you want to reset all settings? 
 This action cannot be undone.</source>
-      <translation>Вы уверены, что вы хотите восстановить настройки по умолчанию? 
-Это действие не может быть отменено.</translation>
+      <translation>Segur que vols restablir la ocnfiguració?
+Aquesta acció no es pot desfer.</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="166"/>
       <source>Are you sure you want to reset Master password? 
 All upload hosts' passwords will be purged.</source>
-      <translation>Вы уверены, что вы хотите сбросить мастер-пароль? 
-Все пароли FTP-подключений также будут сброшены.</translation>
+      <translation>Segur que vols restablir l Contrasenya Mestra? 
+Totes les contrasenyes de les agències seran esborrades.</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="1220"/>
       <source>Close</source>
-      <translation>Закрыть</translation>
+      <translation>Tancar</translation>
     </message>
   </context>
   <context>
@@ -949,7 +949,7 @@ All upload hosts' passwords will be purged.</source>
     <message>
       <location filename="../../SpellCheck/spellsuggestionsitem.cpp" line="198"/>
       <source>multireplace</source>
-      <translation>мультизамена</translation>
+      <translation>reemplaçament múltiple</translation>
     </message>
   </context>
   <context>
@@ -957,12 +957,12 @@ All upload hosts' passwords will be purged.</source>
     <message>
       <location filename="../../Dialogs/SpellCheckDialog.qml" line="121"/>
       <source>Checking selected items...</source>
-      <translation>Проверка выбранных...</translation>
+      <translation>Comprovant elements seleccionats...</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SpellCheckDialog.qml" line="133"/>
       <source>Cancel</source>
-      <translation>Отмена</translation>
+      <translation>Cancel·lar</translation>
     </message>
   </context>
   <context>
@@ -970,27 +970,27 @@ All upload hosts' passwords will be purged.</source>
     <message>
       <location filename="../../Dialogs/SpellCheckSuggestionsDialog.qml" line="119"/>
       <source>Suggestions</source>
-      <translation>Исправления</translation>
+      <translation>Suggeriments</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SpellCheckSuggestionsDialog.qml" line="132"/>
       <source>No suggestions available.</source>
-      <translation>Нет доступных исправлений.</translation>
+      <translation>No hi ha suggeriments.</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SpellCheckSuggestionsDialog.qml" line="241"/>
       <source>Reset all</source>
-      <translation>Сбросить все</translation>
+      <translation>Restablir tot</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SpellCheckSuggestionsDialog.qml" line="251"/>
       <source>Replace</source>
-      <translation>Заменить</translation>
+      <translation>Reemplaçar</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SpellCheckSuggestionsDialog.qml" line="260"/>
       <source>Cancel</source>
-      <translation>Отмена</translation>
+      <translation>Cancel·lar</translation>
     </message>
   </context>
   <context>
@@ -1014,7 +1014,7 @@ All upload hosts' passwords will be purged.</source>
     <message>
       <location filename="../../Suggestion/keywordssuggestor.cpp" line="46"/>
       <source>No results found</source>
-      <translation>Ничего не найдено</translation>
+      <translation>No hi ha resultats</translation>
     </message>
   </context>
   <context>
@@ -1022,7 +1022,7 @@ All upload hosts' passwords will be purged.</source>
     <message>
       <location filename="../../Suggestion/locallibraryqueryengine.h" line="41"/>
       <source>Local files</source>
-      <translation>Локальные файлы</translation>
+      <translation>Arxius locales</translation>
     </message>
   </context>
   <context>
@@ -1038,22 +1038,22 @@ All upload hosts' passwords will be purged.</source>
     <message>
       <location filename="../../Dialogs/TermsAndConditionsDialog.qml" line="102"/>
       <source>Terms and conditions:</source>
-      <translation>Пользовательское соглашение:</translation>
+      <translation>Termes i condicions d'us:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/TermsAndConditionsDialog.qml" line="149"/>
       <source>Agree</source>
-      <translation>Принять</translation>
+      <translation>Estic d'acord</translation>
     </message>
     <message>
       <location filename="../../Dialogs/TermsAndConditionsDialog.qml" line="159"/>
       <source>Disagree</source>
-      <translation>Отклонить</translation>
+      <translation>NO estic d'acord</translation>
     </message>
     <message>
       <location filename="../../Dialogs/TermsAndConditionsDialog.qml" line="161"/>
       <source>Close Xpiks</source>
-      <translation>Закрыть Xpiks</translation>
+      <translation>Tancar Xpiks</translation>
     </message>
   </context>
   <context>
@@ -1061,17 +1061,17 @@ All upload hosts' passwords will be purged.</source>
     <message>
       <location filename="../../Dialogs/UpdateWindow.qml" line="40"/>
       <source>Update</source>
-      <translation>Обновления</translation>
+      <translation>Actualitzar</translation>
     </message>
     <message>
       <location filename="../../Dialogs/UpdateWindow.qml" line="68"/>
       <source>Xpiks update is available!</source>
-      <translation>Доступно обновление для Xpiks!</translation>
+      <translation>Hi ha una actualització de Xpiks disponible!</translation>
     </message>
     <message>
       <location filename="../../Dialogs/UpdateWindow.qml" line="73"/>
       <source>&lt;u&gt;Download Xpiks update&lt;/u&gt;</source>
-      <translation>&lt;u&gt;Скачать обновление Xpiks&lt;/u&gt;</translation>
+      <translation>&lt;u&gt;Descarregar actualització de Xpiks&lt;/u&gt;</translation>
     </message>
   </context>
   <context>
@@ -1079,114 +1079,114 @@ All upload hosts' passwords will be purged.</source>
     <message>
       <location filename="../../Dialogs/UploadArtworks.qml" line="117"/>
       <source>Are you sure you want to remove this item?</source>
-      <translation>Вы уверены, что хотите удалить этот элемент?</translation>
+      <translation>Segur què vols suprimir aquest element?</translation>
     </message>
     <message>
       <location filename="../../Dialogs/UploadArtworks.qml" line="136"/>
       <source>Some agencies (%1) miss FTP credentials. Start upload anyway?</source>
-      <translation>Для сервера(ов) (%1) отсутствуют FTP логин или пароль. Начать загрузку в любом случае?</translation>
+      <translation>Falten credencials FTP d'algunes agències (%1). ¿Començar pujada?</translation>
     </message>
     <message>
       <location filename="../../Dialogs/UploadArtworks.qml" line="146"/>
       <source>Please, select some hosts first</source>
-      <translation>Пожалуйста, выберите FTP-сервер(ы)</translation>
+      <translation>Si us plau, seleccionar agències abans</translation>
     </message>
     <message>
       <location filename="../../Dialogs/UploadArtworks.qml" line="212"/>
       <source>Upload artworks</source>
-      <translation>Загрузить работы</translation>
+      <translation>Pujar arxius</translation>
     </message>
     <message>
       <location filename="../../Dialogs/UploadArtworks.qml" line="224"/>
       <location filename="../../Dialogs/UploadArtworks.qml" line="230"/>
       <source>1 artwork selected</source>
-      <translation>Выбрана одна работа</translation>
+      <translation>1 arxiu seleccionat</translation>
     </message>
     <message>
       <location filename="../../Dialogs/UploadArtworks.qml" line="224"/>
       <location filename="../../Dialogs/UploadArtworks.qml" line="230"/>
       <source>%1 artworks selected</source>
-      <translation>Выбраны %1 работ(ы)</translation>
+      <translation>%1 arxius seleccionats</translation>
     </message>
     <message>
       <location filename="../../Dialogs/UploadArtworks.qml" line="401"/>
       <source>Add FTP host</source>
-      <translation>Добавить FTP</translation>
+      <translation>Afegir FTP d'agència</translation>
     </message>
     <message>
       <location filename="../../Dialogs/UploadArtworks.qml" line="433"/>
       <source>General</source>
-      <translation>Общие</translation>
+      <translation>General</translation>
     </message>
     <message>
       <location filename="../../Dialogs/UploadArtworks.qml" line="483"/>
       <source>Title:</source>
-      <translation>Название:</translation>
+      <translation>Títol:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/UploadArtworks.qml" line="591"/>
       <source>Host:</source>
-      <translation>Хост:</translation>
+      <translation>URL:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/UploadArtworks.qml" line="626"/>
       <source>Username:</source>
-      <translation>Имя пользователя:</translation>
+      <translation>Usuari:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/UploadArtworks.qml" line="660"/>
       <source>Password:</source>
-      <translation>Пароль:</translation>
+      <translation>Contrasenya:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/UploadArtworks.qml" line="701"/>
       <source>Show password</source>
-      <translation>Показать пароль</translation>
+      <translation>Mostrar la contrasenya</translation>
     </message>
     <message>
       <location filename="../../Dialogs/UploadArtworks.qml" line="719"/>
       <source>Test connection</source>
-      <translation>Проверить подключение</translation>
+      <translation>Prova de connexió</translation>
     </message>
     <message>
       <location filename="../../Dialogs/UploadArtworks.qml" line="751"/>
       <source>Advanced</source>
-      <translation>Дополнительно</translation>
+      <translation>Avançat</translation>
     </message>
     <message>
       <location filename="../../Dialogs/UploadArtworks.qml" line="760"/>
       <source>Zip vector with preview</source>
-      <translation>Архивировать файл вектора вместе с файлом предпросмотра</translation>
+      <translation>Comprimir vector amb vista prèvia</translation>
     </message>
     <message>
       <location filename="../../Dialogs/UploadArtworks.qml" line="779"/>
       <source>Disable FTP passive mode</source>
-      <translation>Выключить пассивный режим FTP</translation>
+      <translation>Desactivar FTP passiu</translation>
     </message>
     <message>
       <location filename="../../Dialogs/UploadArtworks.qml" line="832"/>
       <source>1 warning</source>
-      <translation>1 предупреждение</translation>
+      <translation>1 avís</translation>
     </message>
     <message>
       <location filename="../../Dialogs/UploadArtworks.qml" line="832"/>
       <source>%1 warnings</source>
-      <translation>%1 предупреждений</translation>
+      <translation>%1 avisos</translation>
     </message>
     <message>
       <location filename="../../Dialogs/UploadArtworks.qml" line="860"/>
       <source>Stop</source>
-      <translation>Остановить</translation>
+      <translation>Aturar</translation>
     </message>
     <message>
       <location filename="../../Dialogs/UploadArtworks.qml" line="860"/>
       <source>Start Upload</source>
-      <translation>Начать загрузку</translation>
+      <translation>Començar pujada</translation>
     </message>
     <message>
       <location filename="../../Dialogs/UploadArtworks.qml" line="901"/>
       <source>Close</source>
-      <translation>Закрыть</translation>
+      <translation>Tancar</translation>
     </message>
   </context>
   <context>
@@ -1194,17 +1194,17 @@ All upload hosts' passwords will be purged.</source>
     <message>
       <location filename="../../Dialogs/WarningsDialog.qml" line="121"/>
       <source>Warnings</source>
-      <translation>Предупреждения</translation>
+      <translation>Avisos</translation>
     </message>
     <message>
       <location filename="../../Dialogs/WarningsDialog.qml" line="266"/>
       <source>There are no warnings</source>
-      <translation>0 предупреждений</translation>
+      <translation>No hi ha avisos</translation>
     </message>
     <message>
       <location filename="../../Dialogs/WarningsDialog.qml" line="286"/>
       <source>Close</source>
-      <translation>Закрыть</translation>
+      <translation>Tancar</translation>
     </message>
   </context>
   <context>
@@ -1212,58 +1212,58 @@ All upload hosts' passwords will be purged.</source>
     <message>
       <location filename="../../Dialogs/WhatsNewDialog.qml" line="104"/>
       <source>What's new</source>
-      <translation>Что нового</translation>
+      <translation>Novetats</translation>
     </message>
     <message>
       <location filename="../../Dialogs/WhatsNewDialog.qml" line="127"/>
       <source>Autocompletion for keywords</source>
-      <translation>Автозаполнение ключевых слов</translation>
+      <translation>Autocompletat de paraules clau</translation>
     </message>
     <message>
       <location filename="../../Dialogs/WhatsNewDialog.qml" line="135"/>
       <source>Localization of interface to %1 languages</source>
-      <translation>Локализация интерфейса на %1 языка(ов)</translation>
+      <translation>Localització d'interfície per llengües %1</translation>
     </message>
     <message>
       <location filename="../../Dialogs/WhatsNewDialog.qml" line="143"/>
       <source>iStock and Fotolia suggestion providers</source>
-      <translation>Автоподбор ключевых слов из стоков iStock и Fotolia</translation>
+      <translation>Suggeriments proporcionats per iStock i Fotolia</translation>
     </message>
     <message>
       <location filename="../../Dialogs/WhatsNewDialog.qml" line="151"/>
       <source>Brand new theme for Xpiks</source>
-      <translation>Новая тема для Xpiks</translation>
+      <translation>Nou tema per Xpiks</translation>
     </message>
     <message>
       <location filename="../../Dialogs/WhatsNewDialog.qml" line="159"/>
       <source>Predefined FTP addresses</source>
-      <translation>Список FTP адресов</translation>
+      <translation>Adreces FTP predefinides</translation>
     </message>
     <message>
       <location filename="../../Dialogs/WhatsNewDialog.qml" line="167"/>
       <source>Bug fixes and improvements</source>
-      <translation>Исправления ошибок и улучшения</translation>
+      <translation>Correccions i millores</translation>
     </message>
     <message>
       <location filename="../../Dialogs/WhatsNewDialog.qml" line="226"/>
       <source>Skip</source>
-      <translation>Пропустить</translation>
+      <translation>Saltar</translation>
     </message>
     <message>
       <location filename="../../Dialogs/WhatsNewDialog.qml" line="245"/>
       <source>Previous</source>
-      <translation>Назад</translation>
+      <translation>Anterior</translation>
     </message>
     <message>
       <location filename="../../Dialogs/WhatsNewDialog.qml" line="254"/>
       <location filename="../../Dialogs/WhatsNewDialog.qml" line="261"/>
       <source>Next</source>
-      <translation>Далее</translation>
+      <translation>Següent</translation>
     </message>
     <message>
       <location filename="../../Dialogs/WhatsNewDialog.qml" line="271"/>
       <source>Close</source>
-      <translation>Закрыть</translation>
+      <translation>Tancar</translation>
     </message>
   </context>
   <context>
@@ -1271,35 +1271,35 @@ All upload hosts' passwords will be purged.</source>
     <message>
       <location filename="../../Dialogs/ZipArtworksDialog.qml" line="134"/>
       <source>Zip vectors with previews</source>
-      <translation>Архивировать файлы векторов вместе с файлами предпросмотра</translation>
+      <translation>Comprimir vectors amb vistes prèvies</translation>
     </message>
     <message>
       <location filename="../../Dialogs/ZipArtworksDialog.qml" line="146"/>
       <location filename="../../Dialogs/ZipArtworksDialog.qml" line="152"/>
       <source>1 artwork with vector</source>
-      <translation>1 работа с вектором</translation>
+      <translation>1 arxiu amb vector</translation>
     </message>
     <message>
       <location filename="../../Dialogs/ZipArtworksDialog.qml" line="146"/>
       <location filename="../../Dialogs/ZipArtworksDialog.qml" line="152"/>
       <source>%1 artworks with vectors</source>
-      <translation>%1 работ(ы) с вектором</translation>
+      <translation>%1 arxius amb vectors</translation>
     </message>
     <message>
       <location filename="../../Dialogs/ZipArtworksDialog.qml" line="182"/>
       <location filename="../../Dialogs/ZipArtworksDialog.qml" line="193"/>
       <source>Start Zipping</source>
-      <translation>Начать сжатие</translation>
+      <translation>Començar compressió</translation>
     </message>
     <message>
       <location filename="../../Dialogs/ZipArtworksDialog.qml" line="185"/>
       <source>Zipping...</source>
-      <translation>Сжатие...</translation>
+      <translation>Comprimint...</translation>
     </message>
     <message>
       <location filename="../../Dialogs/ZipArtworksDialog.qml" line="211"/>
       <source>Close</source>
-      <translation>Закрыть</translation>
+      <translation>Tancar</translation>
     </message>
   </context>
   <context>
@@ -1312,367 +1312,367 @@ All upload hosts' passwords will be purged.</source>
     <message>
       <location filename="../../main.qml" line="348"/>
       <source>&amp;File</source>
-      <translation>&amp;Файл</translation>
+      <translation>&amp;Arxiu</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="352"/>
       <source>&amp;Recent directories</source>
-      <translation>&amp;Недавние каталоги</translation>
+      <translation>Directories &amp;Recent</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="211"/>
       <source>&amp;Settings</source>
-      <translation>&amp;Настройки</translation>
+      <translation>&amp;Configuració</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="375"/>
       <source>&amp;About</source>
-      <translation>&amp;О программе</translation>
+      <translation>&amp;Sobre</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="223"/>
       <source>&amp;Exit</source>
-      <translation>&amp;Выйти</translation>
+      <translation>&amp;Sortir</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="387"/>
       <source>&amp;Edit</source>
-      <translation>&amp;Редактировать</translation>
+      <translation>&amp;Editar</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="391"/>
       <source>&amp;Invert selection</source>
-      <translation>&amp;Обратить выделение</translation>
+      <translation>&amp;Inverteix la selecció</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="400"/>
       <source>&amp;Sort by filename</source>
-      <translation>&amp;Сортировать по имени файла</translation>
+      <translation>&amp;Ordenar pel nom</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="410"/>
       <source>&amp;Remove metadata from selected</source>
-      <translation>&amp;Удалить метаданные из выбранных</translation>
+      <translation>&amp;Esborrar metadades de la selecció</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="419"/>
       <source>&amp;Detach vectors from selected</source>
-      <translation>&amp; Открепить векторы от выбранных</translation>
+      <translation>&amp;Treure vectors de la selecció</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="428"/>
       <source>&amp;Cleanup local library in background</source>
-      <translation>&amp; Очистить локальную библиотеку в фоновом режиме</translation>
+      <translation>&amp;Netejar biblioteca local en segon pla</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="436"/>
       <source>&amp;Manage upload hosts</source>
-      <translation>&amp;Управление удаленными FTP серверами</translation>
+      <translation>&amp;Administrar agències</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="445"/>
       <source>&amp;Plugins</source>
-      <translation>&amp;Плагины</translation>
+      <translation>&amp;Connectors</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="481"/>
       <source>&amp;Plugin manager</source>
-      <translation>&amp;Менеджер плагинов</translation>
+      <translation>&amp;Administrar connectors</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="490"/>
       <source>&amp;Tools</source>
-      <translation>&amp;Инструменты</translation>
+      <translation>&amp;Eines</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="494"/>
       <source>&amp;Change language</source>
-      <translation>&amp;Изменить язык</translation>
+      <translation>&amp;Canviar l'idioma</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="514"/>
       <source>&amp;Zip selected artworks</source>
-      <translation>&amp;Архивировать выбранные файлы</translation>
+      <translation>&amp;Comprimir arxius seleccionats</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="527"/>
       <source>&amp;Import metadata from selected</source>
-      <translation>&amp;Импортировать метаданные из выбранных</translation>
+      <translation>&amp;Importar metadades des de la selecció</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="536"/>
       <source>&amp;Overwrite metadata in selected</source>
-      <translation>&amp;Перезаписать метаданные в выбранных</translation>
+      <translation>&amp;Sobreescriure metadades de la selecció</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="545"/>
       <source>&amp;Check spelling in selected</source>
-      <translation>&amp; Проверить правописание в выбранных</translation>
+      <translation>&amp;Corrector ortogràfic en la selecció</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="557"/>
       <source>&amp;Help</source>
-      <translation>&amp;Помощь</translation>
+      <translation>&amp;Ajuda</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="560"/>
       <source>&amp;Video tutorials</source>
-      <translation>&amp;Видеоуроки</translation>
+      <translation>Tutorials en &amp;Vídeo</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="565"/>
       <source>&amp;FAQ</source>
-      <translation>&amp;Часто задаваемые вопросы</translation>
+      <translation>Preguntes &amp;Freqüents</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="570"/>
       <source>&amp;Support</source>
-      <translation>&amp;Поддержка</translation>
+      <translation>&amp;Suport</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="624"/>
       <source>You have some artworks modified. Really exit?</source>
-      <translation>Некоторые файлы изменены. Вы действительно хотите выйти?</translation>
+      <translation>S'han modificat arxius. Sortir?</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="632"/>
       <source>Some files are not available anymore.
 They will be removed from the workflow.</source>
-      <translation>Некоторые файлы больше не доступны. Они будут автоматически удалены.</translation>
+      <translation>Alguns arxius ja no estan disponibles. Es trauran de flux de treball.</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="642"/>
       <source>Some vectors are not available anymore.
 They will be detached automatically.</source>
-      <translation>Некоторые векторы больше не доступны. Они будут автоматически откреплены.</translation>
+      <translation>Alguns vectors ja no estan disponibles. Seran separats automàticament.</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="650"/>
       <source>Remove metadata from selected artworks?</source>
-      <translation>Удалить метаданные из выбранных файлов?</translation>
+      <translation>Esborrar les metadades de la selecció?</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="661"/>
       <source>Are you sure you want to remove %1 item(s)?</source>
-      <translation>Вы уверены, что вы хотите удалить файл(ы) %1?</translation>
+      <translation>Segur que vols suprimir %1 element(s)?</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="684"/>
       <source>Are you sure you want to remove this directory?</source>
-      <translation>Вы уверены, что хотите удалить этот каталог?</translation>
+      <translation>Segur que vols suprimir aquest directori?</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="742"/>
       <source>Please, save selected items before upload</source>
-      <translation>Пожалуйста сохраните выбранные файлы перед загрузкой</translation>
+      <translation>Si us plau, desa els elements seleccionats abans de pujar-los</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="748"/>
       <source>Please, select some artworks first</source>
-      <translation>Пожалуйста, сначала выберите файлы</translation>
+      <translation>Si us plau, selecciona algun arxiu abans</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="754"/>
       <source>No new files were added</source>
-      <translation>Было добавлено 0 новых файлов</translation>
+      <translation>No es van afegir nous arxius</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="760"/>
       <source>All selected items are already saved</source>
-      <translation>Все выбранные файлы уже сохранены</translation>
+      <translation>Tots els elements seleccionats ja estaven desats</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="767"/>
       <source>%1 vectors attached</source>
-      <translation>%1 вектора(ов) прикреплены</translation>
+      <translation>%1 vectors adjuntats</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="767"/>
       <source>1 vector attached</source>
-      <translation>1 вектор прикреплен</translation>
+      <translation>1 vector adjuntat</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="850"/>
       <source>Add directory</source>
-      <translation>Добавить каталог</translation>
+      <translation>Afegir directori</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="859"/>
       <source>Add files</source>
       <comment>button</comment>
-      <translation>Добавить файлы</translation>
+      <translation>Afegir arxius</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="1007"/>
       <source>Remove</source>
-      <translation>Удалить</translation>
+      <translation>Suprimir</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="1013"/>
       <source>Edit</source>
-      <translation>Редактировать</translation>
+      <translation>Editar</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="1019"/>
       <source>Save</source>
-      <translation>Сохранить</translation>
+      <translation>Desar</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="1025"/>
       <source>Upload</source>
-      <translation>Загрузить</translation>
+      <translation>Pujar</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="1073"/>
       <source>Select all</source>
-      <translation>Выделить все</translation>
+      <translation>Seleccionar tot</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="1073"/>
       <source>Select none</source>
-      <translation>Снять выделение</translation>
+      <translation>Cancel·lar la selecció</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="1131"/>
       <source>Search...   x:empty  x:modified</source>
-      <translation>Поиск...   x:empty  x:modified</translation>
+      <translation>Cercant... x:buit x:modificat</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="1153"/>
       <source>Search</source>
-      <translation>Поиск</translation>
+      <translation>Cercar</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="1260"/>
       <source>Undo</source>
-      <translation>Отменить</translation>
+      <translation>Desfer</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="1276"/>
       <source>Dismiss (%1)</source>
-      <translation>Осталось (%1)</translation>
+      <translation>Descartar (%1)</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="1667"/>
       <source>Description:</source>
-      <translation>Описание:</translation>
+      <translation>Descripció:</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="1676"/>
       <source>Title:</source>
-      <translation>Название:</translation>
+      <translation>Títol:</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="1861"/>
       <source>Keywords:</source>
-      <translation>Ключевые слова:</translation>
+      <translation>Paraules clau:</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="1988"/>
       <source>&lt;u&gt;edit in plain text&lt;/u&gt;</source>
-      <translation>&lt;u&gt;редактировать в виде текста&lt;/u&gt;</translation>
+      <translation>&lt;u&gt;Editar en text pla&lt;/u&gt;</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="2030"/>
       <source>Fix spelling</source>
-      <translation>Исправить правописание</translation>
+      <translation>Corrector ortogràfic</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="2055"/>
       <source>Suggest</source>
-      <translation>Предложить слова</translation>
+      <translation>Suggerir</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="2083"/>
       <source>Copy</source>
-      <translation>Копировать</translation>
+      <translation>Copiar</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="2101"/>
       <source>Clear</source>
-      <translation>Очистить</translation>
+      <translation>Esborrar</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="2145"/>
       <source>No items available.</source>
-      <translation>Нет доступных файлов.</translation>
+      <translation>No hi ha elements.</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="2150"/>
       <source>Add files</source>
       <comment>link</comment>
-      <translation>Добавить файлы</translation>
+      <translation>Afegir arxius</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="2162"/>
       <source>or</source>
-      <translation>или</translation>
+      <translation>o</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="2167"/>
       <source>clear the filter</source>
-      <translation>очистить фильтр</translation>
+      <translation>treure el filtre</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="2200"/>
       <source>Show logs</source>
-      <translation>Показать логи</translation>
+      <translation>Mostrar el Arxiu de registre</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="2224"/>
       <source>Check warnings</source>
-      <translation>Проверить предупреждения</translation>
+      <translation>Comprovar avisos</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="2251"/>
       <source>Update available!</source>
-      <translation>Доступно обновление!</translation>
+      <translation>Actualització disponible!</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="2270"/>
       <location filename="../../main.qml" line="2279"/>
       <source>No items available</source>
-      <translation>0 файлов</translation>
+      <translation>No hi ha elements</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="2277"/>
       <source>%1 items available</source>
-      <translation>%1 файла(ов)</translation>
+      <translation>%1 elements disponibles</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="2277"/>
       <source>1 item available</source>
-      <translation>1 файл</translation>
+      <translation>1 element disponible</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="2308"/>
       <source>%1 selected items</source>
-      <translation>%1 выбранных файла(ов)</translation>
+      <translation>%1 elements seleccionats</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="2308"/>
       <source>1 selected item</source>
-      <translation>1 выбранный файл</translation>
+      <translation>1 element seleccionat</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="2308"/>
       <source>No selected items</source>
-      <translation>0 выбранных файлов</translation>
+      <translation>Cap element seleccionat</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="2335"/>
       <source>%1 modified items</source>
-      <translation>%1 измененных файла(ов)</translation>
+      <translation>%1 elements modificats</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="2335"/>
       <source>1 modified item</source>
-      <translation>1 измененный файл</translation>
+      <translation>1 element modificat</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="2335"/>
       <source>No modified items</source>
-      <translation>0 измененных файлов</translation>
+      <translation>Cap element modificat</translation>
     </message>
   </context>
 </TS>

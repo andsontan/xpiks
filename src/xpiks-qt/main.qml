@@ -488,7 +488,7 @@ ApplicationWindow {
 
         Menu {
             title: i18.n + qsTr("&Tools")
-            enabled: applicationWindow.openedDialogsCount == 0
+            enabled: (applicationWindow.openedDialogsCount == 0) || debug
 
             Menu {
                 title: i18.n + qsTr("&Change language")
