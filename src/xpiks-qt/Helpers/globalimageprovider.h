@@ -32,7 +32,7 @@ namespace Helpers
         Q_OBJECT
     public:
         GlobalImageProvider(ImageType type, Flags flags = 0) : QQuickImageProvider(type, flags) {}
-        ~GlobalImageProvider() {}
+        virtual ~GlobalImageProvider() {}
 
         QImage requestImage(const QString &id, QSize *size, const QSize& requestedSize);
         QPixmap requestPixmap(const QString &id, QSize *size, const QSize& requestedSize);
