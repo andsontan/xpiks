@@ -228,7 +228,7 @@ ApplicationWindow {
     Action {
         id: editAction
         shortcut: "Ctrl+E"
-        enabled: artworkRepository.artworksSourcesCount > 0
+        enabled: (artworkRepository.artworksSourcesCount > 0) && (applicationWindow.openedDialogsCount == 0)
         onTriggered: {
             if (filteredArtItemsModel.selectedArtworksCount === 0) {
                 mustSelectDialog.open()
@@ -260,7 +260,7 @@ ApplicationWindow {
     Action {
         id: saveAction
         shortcut: StandardKey.Save
-        enabled: artworkRepository.artworksSourcesCount > 0
+        enabled: (artworkRepository.artworksSourcesCount > 0) && (applicationWindow.openedDialogsCount == 0)
         onTriggered: {
             if (filteredArtItemsModel.selectedArtworksCount == 0) {
                 mustSelectDialog.open()
@@ -283,13 +283,13 @@ ApplicationWindow {
         id: searchAction
         shortcut: StandardKey.Find
         onTriggered: filterText.forceActiveFocus()
-        enabled: artworkRepository.artworksSourcesCount > 0
+        enabled: (artworkRepository.artworksSourcesCount > 0) && (applicationWindow.openedDialogsCount == 0)
     }
 
     Action {
         id: selectAllAction
         shortcut: StandardKey.SelectAll
-        enabled: artworkRepository.artworksSourcesCount > 0
+        enabled: (artworkRepository.artworksSourcesCount > 0) && (applicationWindow.openedDialogsCount == 0)
         onTriggered: {
             if (selectAllCheckbox.checked) {
                 filteredArtItemsModel.selectFilteredArtworks();
@@ -303,7 +303,7 @@ ApplicationWindow {
     Action {
         id: removeAction
         shortcut: "Ctrl+Del"
-        enabled: artworkRepository.artworksSourcesCount > 0
+        enabled: (artworkRepository.artworksSourcesCount > 0) && (applicationWindow.openedDialogsCount == 0)
         onTriggered: {
             if (filteredArtItemsModel.selectedArtworksCount === 0) {
                 mustSelectDialog.open()
@@ -325,7 +325,7 @@ ApplicationWindow {
     Action {
         id: uploadAction
         shortcut: "Shift+Ctrl+U"
-        enabled: artworkRepository.artworksSourcesCount > 0
+        enabled: (artworkRepository.artworksSourcesCount > 0) && (applicationWindow.openedDialogsCount == 0)
         onTriggered: {
             if (filteredArtItemsModel.selectedArtworksCount === 0) {
                 filteredArtItemsModel.selectFilteredArtworks();
@@ -341,6 +341,7 @@ ApplicationWindow {
         id: addFilesAction
         shortcut: StandardKey.Open
         onTriggered: chooseArtworksDialog.open()
+        enabled: (applicationWindow.openedDialogsCount == 0)
     }
 
     menuBar: MenuBar {

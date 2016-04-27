@@ -62,7 +62,7 @@ Item {
         anchors.right: dropDown.right
         anchors.top: dropDown.top
         anchors.bottom: dropDown.bottom
-        anchors.topMargin: isBelowEdit ? glowRadius : -glowRadius
+        anchors.topMargin: isBelowEdit ? glowRadius : -glowRadius/2
         anchors.bottomMargin: isBelowEdit ? -glowRadius : glowRadius
         visible: dropDown.visible
         height: dropDown.height

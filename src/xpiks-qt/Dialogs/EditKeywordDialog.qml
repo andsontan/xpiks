@@ -166,7 +166,10 @@ Item {
                             }
                         }
 
-                        onTextChanged: editKeywordComponent.anyError = !keywordsModel.hasKeyword(text) && (previousKeyword !== text)
+                        onTextChanged: {
+                            editKeywordComponent.anyError = keywordsModel.hasKeyword(text) &&
+                                    (previousKeyword !== text)
+                        }
                     }
                 }
 

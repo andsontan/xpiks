@@ -124,7 +124,7 @@ namespace Common {
         bool canBeAdded(const QString &keyword) const;
 
     public:
-        Q_INVOKABLE bool hasKeyword(const QString &keyword) const { return canBeAdded(keyword.simplified()); }
+        Q_INVOKABLE bool hasKeyword(const QString &keyword) const { return !canBeAdded(keyword.simplified()); }
 
     public:
         // ISPELLCHECKABLE
