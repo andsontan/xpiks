@@ -25,7 +25,7 @@
 #include <QObject>
 #include "../Common/baseentity.h"
 #include "../Common/iservicebase.h"
-#include "iwarningscheckable.h"
+#include "../Models/artworkmetadata.h"
 
 namespace Warnings {
     class WarningsCheckingWorker;
@@ -33,7 +33,7 @@ namespace Warnings {
     class WarningsService :
             public QObject,
             public Common::BaseEntity,
-            public Common::IServiceBase<IWarningsCheckable>
+            public Common::IServiceBase<Models::ArtworkMetadata>
     {
         Q_OBJECT
     public:
@@ -46,9 +46,9 @@ namespace Warnings {
 
         virtual bool isAvailable() const { return true; }
 
-        virtual void submitItem(IWarningsCheckable *item);
-        virtual void submitItem(IWarningsCheckable *item, int flags);
-        virtual void submitItems(const QVector<IWarningsCheckable*> &items);
+        virtual void submitItem(Models::ArtworkMetadata *item);
+        virtual void submitItem(Models::ArtworkMetadata *item, int flags);
+        virtual void submitItems(const QVector<Models::ArtworkMetadata*> &items);
 
     private slots:
         void workerDestoyed(QObject *object);

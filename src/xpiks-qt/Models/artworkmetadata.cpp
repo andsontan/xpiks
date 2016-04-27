@@ -32,20 +32,19 @@
 #include "../Common/defines.h"
 
 namespace Models {
-    ArtworkMetadata::ArtworkMetadata(const QString &filepath, qint64 ID) :
-        Common::BasicKeywordsModel(),
+    ArtworkMetadata::ArtworkMetadata(const QString &filepath, qint64 ID):
         m_FileSize(0),
         m_ArtworkFilepath(filepath),
         m_ID(ID),
-        m_MetadataFlags(0)
+        m_MetadataFlags(0),
+        m_RefCount(1)
     {
-        setSpellCheckInfo(new SpellCheck::SpellCheckItemInfo());
+        m_KeywordsModel.setSpellCheckInfo(new SpellCheck::SpellCheckItemInfo());
         m_BackupTimer.setSingleShot(true);
         QObject::connect(&m_BackupTimer, SIGNAL(timeout()), this, SLOT(backupTimerTriggered()));
     }
 
     ArtworkMetadata::~ArtworkMetadata() {
-        this->freeSpellCheckInfo();
     }
 
     bool ArtworkMetadata::initialize(const QString &title,
@@ -56,24 +55,21 @@ namespace Models {
 
         bool anythingModified = false;
 
-        if (overwrite || (isTitleEmpty() && !title.trimmed().isEmpty())) {
+        if (overwrite || (m_KeywordsModel.isTitleEmpty() && !title.trimmed().isEmpty())) {
             anythingModified = true;
-            BasicKeywordsModel::setTitle(title);
+            m_KeywordsModel.setTitle(title);
         }
 
-        if (overwrite || (isDescriptionEmpty() && !description.trimmed().isEmpty())) {
+        if (overwrite || (m_KeywordsModel.isDescriptionEmpty() && !description.trimmed().isEmpty())) {
             anythingModified = true;
-            BasicKeywordsModel::setDescription(description);
+            m_KeywordsModel.setDescription(description);
         }
 
         if (overwrite) {
             anythingModified = true;
-            beginResetModel();
-            BasicKeywordsModel::resetKeywords();
-            BasicKeywordsModel::addKeywords(rawKeywords);
-            endResetModel();
+            m_KeywordsModel.resetKeywords(rawKeywords);
         } else if (!rawKeywords.isEmpty()) {
-            int appendedCount = appendKeywords(rawKeywords);
+            int appendedCount = m_KeywordsModel.appendKeywords(rawKeywords);
             anythingModified = anythingModified || (appendedCount > 0);
         }
 
@@ -97,31 +93,19 @@ namespace Models {
         return isInDir;
     }
 
-    void ArtworkMetadata::attachVector(const QString &vectorFilepath) {
-        LOG_INFO << "Attaching vector file:" << vectorFilepath << "to file" << getFilepath();
-        setHasVectorAttachedFlag(true);
-        m_AttachedVector = vectorFilepath;
-    }
-
-    void ArtworkMetadata::detachVector() {
-        LOG_INFO << "#";
-        setHasVectorAttachedFlag(false);
-        m_AttachedVector.clear();
-    }
-
     void ArtworkMetadata::clearModel() {
-        BasicKeywordsModel::clearModel();
+        m_KeywordsModel.clearModel();
         markModified();
     }
 
     bool ArtworkMetadata::clearKeywords() {
-        bool result = BasicKeywordsModel::clearKeywords();
+        bool result = m_KeywordsModel.clearKeywords();
         if (result) { markModified(); }
         return result;
     }
 
     bool ArtworkMetadata::editKeyword(int index, const QString &replacement) {
-        bool result = BasicKeywordsModel::editKeyword(index, replacement);
+        bool result = m_KeywordsModel.editKeyword(index, replacement);
         if (result) { markModified(); }
         return result;
     }
@@ -139,26 +123,26 @@ namespace Models {
 
     bool ArtworkMetadata::removeKeywordAt(int index) {
         QString removed;
-        bool result = BasicKeywordsModel::takeKeywordAt(index, removed);
+        bool result = m_KeywordsModel.takeKeywordAt(index, removed);
         if (result) { markModified(); }
         return result;
     }
 
     bool ArtworkMetadata::removeLastKeyword() {
         QString removed;
-        bool result = BasicKeywordsModel::takeLastKeyword(removed);
+        bool result = m_KeywordsModel.takeLastKeyword(removed);
         if (result) { markModified(); }
         return result;
     }
 
     bool ArtworkMetadata::appendKeyword(const QString &keyword) {
-        bool result = BasicKeywordsModel::appendKeyword(keyword);
+        bool result = m_KeywordsModel.appendKeyword(keyword);
         if (result) { markModified(); }
         return result;
     }
 
     int ArtworkMetadata::appendKeywords(const QStringList &keywordsList) {
-        int result = BasicKeywordsModel::appendKeywords(keywordsList);
+        int result = m_KeywordsModel.appendKeywords(keywordsList);
         LOG_DEBUG << "Appended" << result << "keywords out of" << keywordsList.length();
         if (result > 0) { markModified(); }
         return result;

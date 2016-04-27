@@ -32,9 +32,14 @@ namespace Common {
     BasicKeywordsModel::BasicKeywordsModel(QObject *parent):
         QAbstractListModel(parent),
         m_SpellCheckInfo(NULL),
-        m_RefCount(1),
         m_WarningsFlags(Common::WarningTypeNoWarnings)
     {
+    }
+
+    BasicKeywordsModel::~BasicKeywordsModel() {
+        if (m_SpellCheckInfo != NULL) {
+            delete m_SpellCheckInfo;
+        }
     }
 
     QVariant BasicKeywordsModel::data(const QModelIndex &index, int role) const {
@@ -559,34 +564,5 @@ namespace Common {
         roles[KeywordRole] = "keyword";
         roles[IsCorrectRole] = "iscorrect";
         return roles;
-    }
-
-    void BasicKeywordsModel::resetKeywords() {
-        m_KeywordsList.clear();
-        m_KeywordsSet.clear();
-        m_SpellCheckResults.clear();
-    }
-
-    void BasicKeywordsModel::addKeywords(const QStringList &rawKeywords) {
-        int size = rawKeywords.size();
-
-        for (int i = 0; i < size; ++i) {
-            const QString &keyword = rawKeywords.at(i).simplified();
-            QString invariant = keyword.toLower();
-
-            if (!m_KeywordsSet.contains(invariant)) {
-                m_KeywordsList.append(keyword);
-                m_SpellCheckResults.append(true);
-                m_KeywordsSet.insert(invariant);
-            } else {
-                LOG_WARNING << "Skipping duplicates in keywords...";
-            }
-        }
-    }
-
-    void BasicKeywordsModel::freeSpellCheckInfo() {
-        if (m_SpellCheckInfo != NULL) {
-            delete m_SpellCheckInfo;
-        }
     }
 }

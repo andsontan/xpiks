@@ -47,7 +47,7 @@ void UndoRedo::ModifyArtworksHistoryItem::undo(const Commands::ICommandManager *
             ArtworkMetadataBackup *backup = m_ArtworksBackups[i];
             backup->restore(metadata);
             itemsToSave.append(metadata);
-            itemsToSpellcheck.append(metadata);
+            itemsToSpellcheck.append(metadata->getKeywordsModel());
         }
     }
 

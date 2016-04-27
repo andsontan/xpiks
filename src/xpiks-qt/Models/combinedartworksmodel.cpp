@@ -360,12 +360,14 @@ namespace Models {
 
         if (!m_IsDescriptionModified && !m_IsTitleModified) {
             // TODO: would be better to merge errors instead of assignment
-            m_CommonKeywordsModel.setSpellCheckInfo(metadata->getSpellCheckInfo());
+            Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
+            m_CommonKeywordsModel.setSpellCheckInfo(keywordsModel->getSpellCheckInfo());
         }
 
         if (!m_AreKeywordsModified) {
             initKeywords(metadata->getKeywords());
-            m_CommonKeywordsModel.setSpellStatuses(metadata->getSpellStatuses());
+            Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
+            m_CommonKeywordsModel.setSpellStatuses(keywordsModel->getSpellStatuses());
         }
     }
 
@@ -455,7 +457,7 @@ namespace Models {
     }
 
     void CombinedArtworksModel::generateAboutToBeRemoved() {
-         m_CommonKeywordsModel.generateAboutToBeRemoved();
+         emit aboutToBeRemoved();
     }
 
     void CombinedArtworksModel::removeUnavailableItems() {

@@ -32,7 +32,6 @@
 #include "../Common/flags.h"
 #include "icommandmanager.h"
 #include "../Common/iservicebase.h"
-#include "../Warnings/iwarningscheckable.h"
 #include "../Helpers/ifilenotavailablemodel.h"
 
 namespace Encryption {
@@ -168,7 +167,7 @@ namespace Commands {
         const
 #endif
         ;
-        virtual void addWarningsService(Common::IServiceBase<Warnings::IWarningsCheckable> *service);
+        virtual void addWarningsService(Common::IServiceBase<Common::IBasicArtwork> *service);
 
     public:
         void recordHistoryItem(UndoRedo::IHistoryItem *historyItem) const;
@@ -211,7 +210,7 @@ namespace Commands {
         void submitKeywordsForWarningsCheck(Models::ArtworkMetadata *item) const;
         void submitForWarningsCheck(Models::ArtworkMetadata *item, int flags = Common::WarningsCheckAll) const;
         void submitForWarningsCheck(const QVector<Models::ArtworkMetadata*> &items) const;
-        void submitForWarningsCheck(const QVector<Warnings::IWarningsCheckable*> &items) const;
+        void submitForWarningsCheck(const QVector<Common::IBasicArtwork *> &items) const;
 
     public:
         void saveArtworkBackup(Models::ArtworkMetadata *metadata) const;
@@ -278,7 +277,7 @@ namespace Commands {
         QMLExtensions::ColorsModel *m_ColorsModel;
         AutoComplete::AutoCompleteService *m_AutoCompleteService;
 
-        QVector<Common::IServiceBase<Warnings::IWarningsCheckable> *> m_WarningsCheckers;
+        QVector<Common::IServiceBase<Common::IBasicArtwork> *> m_WarningsCheckers;
         QVector<Helpers::IFileNotAvailableModel*> m_AvailabilityListeners;
 #ifdef QT_DEBUG
         QStringList m_InitialImagesToOpen;

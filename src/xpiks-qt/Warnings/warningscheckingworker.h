@@ -25,7 +25,6 @@
 #include <QObject>
 #include "../Common/itemprocessingworker.h"
 #include "warningsitem.h"
-#include "iwarningscheckable.h"
 
 namespace Models{
     class SettingsModel;

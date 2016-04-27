@@ -25,6 +25,7 @@
 #include <QRegExp>
 #include <QDir>
 #include "../Models/artworkmetadata.h"
+#include "../Models/imageartwork.h"
 #include "../Helpers/filenameshelpers.h"
 #include "../Common/defines.h"
 
@@ -43,7 +44,8 @@ namespace Models {
         const QVector<Models::ArtworkMetadata *> items = getArtworkList();
         int size = items.size(), count = 0;
         for (int i = 0; i < size; ++i) {
-            if (items[i]->hasVectorAttached()) {
+            ImageArtwork *image = dynamic_cast<ImageArtwork *>(items.at(i));
+            if (image != NULL && image->hasVectorAttached()) {
                 count++;
             }
         }
@@ -91,13 +93,15 @@ namespace Models {
             QFileInfo fi(filepath);
             QString basename = fi.baseName();
 
-            if (metadata->hasVectorAttached()) {
+            ImageArtwork *image = dynamic_cast<ImageArtwork*>(metadata);
+
+            if (image != NULL && image->hasVectorAttached()) {
                 if (!hash.contains(basename)) {
                     hash.insert(basename, QStringList());
                 }
 
                 hash[basename].append(filepath);
-                hash[basename].append(metadata->getAttachedVectorPath());
+                hash[basename].append(image->getAttachedVectorPath());
             }
         }
     }

@@ -88,7 +88,6 @@ void Commands::CommandManager::InjectDependency(Models::UploadInfoRepository *up
 void Commands::CommandManager::InjectDependency(Warnings::WarningsService *warningsService) {
     Q_ASSERT(warningsService != NULL); m_WarningsService = warningsService;
     m_WarningsService->setCommandManager(this);
-    m_WarningsCheckers.append(warningsService);
 }
 
 void Commands::CommandManager::InjectDependency(Encryption::SecretsManager *secretsManager) {
@@ -183,7 +182,7 @@ const
     return result;
 }
 
-void Commands::CommandManager::addWarningsService(Common::IServiceBase<Warnings::IWarningsCheckable> *service) {
+void Commands::CommandManager::addWarningsService(Common::IServiceBase<Common::IBasicArtwork> *service) {
     if (service != NULL) {
         // TODO: check if we don't have such checker
         m_WarningsCheckers.append(service);
@@ -401,7 +400,8 @@ void Commands::CommandManager::submitForSpellCheck(const QVector<Models::Artwork
         itemsToSubmit.reserve(count);
 
         for (int i = 0; i < count; ++i) {
-            itemsToSubmit << items.at(i);
+            Models::ArtworkMetadata *metadata = items.at(i);
+            itemsToSubmit << metadata->getKeywordsModel();
         }
 
         this->submitForSpellCheck(itemsToSubmit);
@@ -432,9 +432,11 @@ void Commands::CommandManager::submitKeywordsForWarningsCheck(Models::ArtworkMet
 }
 
 void Commands::CommandManager::submitForWarningsCheck(Models::ArtworkMetadata *item, int flags) const {
+    m_WarningsService->submitItem(item);
+
     int count = m_WarningsCheckers.length();
     for (int i = 0; i < count; ++i) {
-        Common::IServiceBase<Warnings::IWarningsCheckable> *checker = m_WarningsCheckers.at(i);
+        Common::IServiceBase<Common::IBasicArtwork> *checker = m_WarningsCheckers.at(i);
         if (checker->isAvailable()) {
             checker->submitItem(item, flags);
         }
@@ -442,7 +444,9 @@ void Commands::CommandManager::submitForWarningsCheck(Models::ArtworkMetadata *i
 }
 
 void Commands::CommandManager::submitForWarningsCheck(const QVector<Models::ArtworkMetadata *> &items) const {
-    QVector<Warnings::IWarningsCheckable*> itemsToSubmit;
+    m_WarningsService->submitItems(items);
+
+    QVector<Common::IBasicArtwork *> itemsToSubmit;
     int count = items.length();
     itemsToSubmit.reserve(count);
 
@@ -453,10 +457,10 @@ void Commands::CommandManager::submitForWarningsCheck(const QVector<Models::Artw
     this->submitForWarningsCheck(itemsToSubmit);
 }
 
-void Commands::CommandManager::submitForWarningsCheck(const QVector<Warnings::IWarningsCheckable *> &items) const {
+void Commands::CommandManager::submitForWarningsCheck(const QVector<Common::IBasicArtwork *> &items) const {
     int count = m_WarningsCheckers.length();
     for (int i = 0; i < count; ++i) {
-        Common::IServiceBase<Warnings::IWarningsCheckable> *checker = m_WarningsCheckers.at(i);
+        Common::IServiceBase<Common::IBasicArtwork> *checker = m_WarningsCheckers.at(i);
         if (checker->isAvailable()) {
             checker->submitItems(items);
         }

@@ -31,7 +31,6 @@
 #include <QVector>
 #include "baseentity.h"
 #include "../SpellCheck/ispellcheckable.h"
-#include "../Warnings/iwarningscheckable.h"
 
 namespace SpellCheck {
     class SpellCheckQueryItem;
@@ -43,14 +42,13 @@ namespace SpellCheck {
 namespace Common {
     class BasicKeywordsModel :
             public QAbstractListModel,
-            public SpellCheck::ISpellCheckable,
-            public Warnings::IWarningsCheckable
+            public SpellCheck::ISpellCheckable
     {
         Q_OBJECT
         Q_PROPERTY(bool hasSpellErrors READ hasSpellErrors NOTIFY spellCheckErrorsChanged)
     public:
         BasicKeywordsModel(QObject *parent=0);
-        virtual ~BasicKeywordsModel() {}
+        virtual ~BasicKeywordsModel();
 
     public:
         enum BasicKeywordsModellRoles {
@@ -59,8 +57,8 @@ namespace Common {
         };
 
     public:
-        virtual int rowCount(const QModelIndex & parent = QModelIndex()) const { Q_UNUSED(parent); return m_KeywordsList.length(); }
-        virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+        virtual int rowCount(const QModelIndex &parent=QModelIndex()) const { Q_UNUSED(parent); return m_KeywordsList.length(); }
+        virtual QVariant data(const QModelIndex &index, int role=Qt::DisplayRole) const;
 
     public:
         virtual const QString &getDescription() const { return m_Description; }
@@ -68,8 +66,7 @@ namespace Common {
         int getKeywordsCount() const { return m_KeywordsSet.count(); }
         virtual const QSet<QString> &getKeywordsSet() const { return m_KeywordsSet; }
         const QVector<bool> &getSpellStatuses() const { return m_SpellCheckResults; }
-        QString getKeywordsString() { return m_KeywordsList.join(", "); }
-        int getWarningsFlags() const { return m_WarningsFlags; }
+        QString getKeywordsString() const { return m_KeywordsList.join(", "); }
 
     public:
         virtual bool appendKeyword(const QString &keyword);
@@ -91,31 +88,17 @@ namespace Common {
         virtual bool hasDescriptionSpellError() const;
         virtual bool hasTitleSpellError() const;
 
-        virtual QSize getImageSize() const { throw 0; }
-        virtual qint64 getFileSize() const { throw 0; }
-        virtual const QString &getFilepath() const { throw 0; }
-
         bool hasSpellErrors() const;
-
         void setSpellStatuses(const QVector<bool> &statuses);
-        virtual void setWarningsFlags(int flags) { m_WarningsFlags = flags; }
-        virtual void addWarningsFlags(int flags) { m_WarningsFlags |= flags; }
-        virtual void dropWarningsFlags(int flagsToDrop) { m_WarningsFlags &= (~flagsToDrop); }
 
         virtual void clearModel();
         virtual bool clearKeywords();
         void resetKeywords(const QStringList &keywords);
 
     public:
-        // ISAFEPOINTER
-        virtual void acquire() { m_RefCount.fetchAndAddOrdered(1); }
-        virtual bool release() { return m_RefCount.fetchAndSubOrdered(1) == 1; }
-
-    public:
         SpellCheck::SpellCheckItemInfo *getSpellCheckInfo() const { return m_SpellCheckInfo; }
         void setSpellCheckInfo(SpellCheck::SpellCheckItemInfo *info) { m_SpellCheckInfo = info; }
         void notifySpellCheckResults(int flags);
-        void generateAboutToBeRemoved() { emit aboutToBeRemoved(); }
 
     private:
         void updateDescriptionSpellErrors(const QHash<QString, bool> &results);
@@ -146,7 +129,6 @@ namespace Common {
     signals:
         void spellCheckResultsReady();
         void spellCheckErrorsChanged();
-        void aboutToBeRemoved();
         void completionsAvailable();
 
     protected slots:
@@ -157,9 +139,6 @@ namespace Common {
 
     protected:
         virtual QHash<int, QByteArray> roleNames() const;
-        void resetKeywords();
-        void addKeywords(const QStringList &rawKeywords);
-        void freeSpellCheckInfo();
 
     private:
         QStringList m_KeywordsList;
@@ -168,9 +147,6 @@ namespace Common {
         SpellCheck::SpellCheckItemInfo *m_SpellCheckInfo;
         QString m_Description;
         QString m_Title;
-        // used for background workers
-        QAtomicInt m_RefCount;
-        volatile int m_WarningsFlags;
     };
 }
 

@@ -31,7 +31,7 @@
 #include "../Common/ibasicartwork.h"
 
 namespace SpellCheck {
-    class ISpellCheckable : public virtual Common::IBasicArtwork {
+    class ISpellCheckable {
     public:
         virtual ~ISpellCheckable() {}
 

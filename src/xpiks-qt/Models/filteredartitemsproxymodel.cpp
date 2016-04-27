@@ -246,7 +246,8 @@ namespace Models {
                 m_CommandManager->submitItemForSpellCheck(metadata, Common::SpellCheckDescription);
             } else {
                 LOG_INFO << "description is empty";
-                metadata->notifySpellCheckResults(Common::SpellCheckDescription);
+                Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
+                keywordsModel->notifySpellCheckResults(Common::SpellCheckDescription);
             }
 
             m_CommandManager->submitForWarningsCheck(metadata, Common::WarningsCheckDescription);
@@ -263,7 +264,8 @@ namespace Models {
                 m_CommandManager->submitItemForSpellCheck(metadata, Common::SpellCheckTitle);
             } else {
                 LOG_INFO << "title is empty";
-                metadata->notifySpellCheckResults(Common::SpellCheckTitle);
+                Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
+                keywordsModel->notifySpellCheckResults(Common::SpellCheckTitle);
             }
 
             m_CommandManager->submitForWarningsCheck(metadata, Common::WarningsCheckTitle);

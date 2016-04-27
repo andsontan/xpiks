@@ -33,6 +33,7 @@
 #include "../Conectivity/iftpcoordinator.h"
 #include "../Conectivity/testconnection.h"
 #include "../Conectivity/uploadcontext.h"
+#include "../Models/imageartwork.h"
 
 #ifndef CORE_TESTS
 #include "../Conectivity/ftpcoordinator.h"
@@ -148,7 +149,8 @@ namespace Models {
         if (anyZipNeeded) {
             const QVector<ArtworkMetadata*> &artworkList = this->getArtworkList();
             foreach (ArtworkMetadata *metadata, artworkList) {
-                if (!metadata->hasVectorAttached()) { continue; }
+                ImageArtwork *image = dynamic_cast<ImageArtwork*>(metadata);
+                if (image == NULL || !image->hasVectorAttached()) { continue; }
 
                 const QString &filepath = metadata->getFilepath();
                 QString archivePath = Helpers::getArchivePath(filepath);

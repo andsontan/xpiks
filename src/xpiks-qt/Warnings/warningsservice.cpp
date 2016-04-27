@@ -65,7 +65,7 @@ namespace Warnings {
         }
     }
 
-    void WarningsService::submitItem(IWarningsCheckable *item) {
+    void WarningsService::submitItem(Models::ArtworkMetadata *item) {
         if (m_WarningsWorker == NULL) { return; }
 
         item->acquire();
@@ -74,7 +74,7 @@ namespace Warnings {
         m_WarningsWorker->submitItem(wItem);
     }
 
-    void WarningsService::submitItem(IWarningsCheckable *item, int flags) {
+    void WarningsService::submitItem(Models::ArtworkMetadata *item, int flags) {
         if (m_WarningsWorker == NULL) { return; }
 
         item->acquire();
@@ -83,7 +83,7 @@ namespace Warnings {
         m_WarningsWorker->submitItem(wItem);
     }
 
-    void WarningsService::submitItems(const QVector<IWarningsCheckable *> &items) {
+    void WarningsService::submitItems(const QVector<Models::ArtworkMetadata *> &items) {
         if (m_WarningsWorker == NULL) { return; }
 
         int length = items.length();
