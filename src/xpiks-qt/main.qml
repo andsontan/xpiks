@@ -615,6 +615,20 @@ ApplicationWindow {
                     }
                 }
             }
+
+            MenuItem {
+                text: "Master password"
+                onTriggered: {
+                    var callbackObject = {
+                        onSuccess: function() { },
+                        onFail: function() { }
+                    }
+
+                    Common.launchDialog("Dialogs/EnterMasterPasswordDialog.qml",
+                                 applicationWindow,
+                                 {callbackObject: callbackObject})
+                }
+            }
         }
     }
 
