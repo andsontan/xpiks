@@ -36,7 +36,7 @@ namespace Models {
             m_IsSelected(false)
         {}
 
-        ~ArtItemInfo() {}
+        virtual ~ArtItemInfo() {}
 
     public:        
         bool isSelected() const { return m_IsSelected; }

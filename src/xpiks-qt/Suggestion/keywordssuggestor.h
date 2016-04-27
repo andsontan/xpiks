@@ -49,7 +49,7 @@ namespace Suggestion {
 
     public:
         KeywordsSuggestor(LocalLibrary *library, QObject *parent=NULL);
-        ~KeywordsSuggestor() { qDeleteAll(m_Suggestions); }
+        virtual ~KeywordsSuggestor() { qDeleteAll(m_Suggestions); }
 
     public:
         void setSuggestedArtworks(const QVector<SuggestionArtwork *> &suggestedArtworks);

@@ -253,11 +253,14 @@ namespace Suggestion {
         QMultiMap<int, QString>::const_iterator it = selectedKeywords.constEnd();
         QMultiMap<int, QString>::const_iterator itBegin = selectedKeywords.constBegin();
 
-        int maxSuggested = 25 + (qrand() % 10);
-        int maxOthers = 35 + (qrand() % 15);
+        int maxSuggested = 35 + (qrand() % 10);
+        int maxUpperBound = 40 + (qrand() % 5);
+        int maxOthers = 35 + (qrand() % 10);
 
         suggestedKeywords.reserve(maxSuggested);
         otherKeywords.reserve(maxOthers);
+
+        bool canAddToSuggested, canAddToOthers;
 
         while (it != itBegin) {
             --it;
@@ -266,13 +269,15 @@ namespace Suggestion {
 
             if (frequency == 0) { continue; }
 
-            bool canAddToSuggested = frequency >= upperThreshold,
-                    canAddToOthers = frequency >= lowerThreshold;
+            int suggestedCount = suggestedKeywords.length();
+
+            canAddToSuggested = (frequency >= upperThreshold) && (suggestedCount <= maxUpperBound);
+            canAddToOthers = frequency >= lowerThreshold;
 
             const QString &frequentKeyword = it.value();
 
             if (canAddToSuggested ||
-                    (canAddToOthers && (suggestedKeywords.length() <= maxSuggested))) {
+                    (canAddToOthers && (suggestedCount <= maxSuggested))) {
                 suggestedKeywords.append(frequentKeyword);
             } else if (canAddToOthers || (otherKeywords.length() <= maxOthers)) {
                 otherKeywords.append(frequentKeyword);
@@ -295,8 +300,8 @@ namespace Suggestion {
             lowerBound = 1;
             upperBound = qMax(m_SelectedArtworksCount, 1);
         } else if (m_SelectedArtworksCount <= 4) {
-            lowerBound = 1;
-            upperBound = 2;
+            lowerBound = 2;
+            upperBound = 3;
         } else if (m_SelectedArtworksCount <= 5) {
             lowerBound = 2;
             upperBound = 3;
