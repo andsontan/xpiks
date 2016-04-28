@@ -21,6 +21,8 @@ namespace Mocks {
             return metadata;
         }
 
+        ArtworkMetadataMock *getMockArtwork(int index) const { return dynamic_cast<ArtworkMetadataMock*>(getArtwork(index)); }
+
         void removeAll() { this->removeArtworks(QVector<QPair<int, int> >() << qMakePair(0, rowCount() - 1)); }
 
         virtual void updateItemsAtIndices(const QVector<int> &indices) {  Q_UNUSED(indices); /* DO NOTHING */ }

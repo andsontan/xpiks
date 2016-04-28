@@ -2,15 +2,23 @@
 #define ARTWORKMETADATAMOCK
 
 #include <QString>
-#include "../../xpiks-qt/Models/artworkmetadata.h"
+#include "../../xpiks-qt/Models/imageartwork.h"
 
 namespace Mocks {
-    class ArtworkMetadataMock : public Models::ArtworkMetadata {
+    class ArtworkMetadataMock : public Models::ImageArtwork {
     public:
         ArtworkMetadataMock(const QString &filepath):
-            Models::ArtworkMetadata(filepath, 0)
+            Models::ImageArtwork(filepath, 0)
         {
         }
+
+        QString retrieveKeyword(int index) { return getKeywordsModel()->retrieveKeyword(index); }
+        int rowCount() const { return getKeywordsModel()->rowCount(); }
+
+        bool isTitleEmpty() const { return getKeywordsModel()->isTitleEmpty(); }
+        bool isDescriptionEmpty() const { return getKeywordsModel()->isDescriptionEmpty(); }
+
+        bool areKeywordsEmpty() const { return getKeywordsModel()->areKeywordsEmpty(); }
 
         //virtual QString getDirectory() const { return "somedirectory"; }
     };

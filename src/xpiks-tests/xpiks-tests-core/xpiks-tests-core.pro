@@ -135,7 +135,8 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Helpers/remoteconfig.cpp \
     ../../xpiks-qt/AutoComplete/stocksftplistmodel.cpp \
     ../../xpiks-qt/AutoComplete/stringfilterproxymodel.cpp \
-    ../../xpiks-qt/Models/abstractconfigupdatermodel.cpp
+    ../../xpiks-qt/Models/abstractconfigupdatermodel.cpp \
+    ../../xpiks-qt/Models/imageartwork.cpp
 
 HEADERS += \
     encryption_tests.h \
@@ -208,7 +209,6 @@ HEADERS += \
     ../../xpiks-qt/Common/defines.h \
     ../../xpiks-qt/Common/iartworkssource.h \
     ../../xpiks-qt/Common/ibasicartwork.h \
-    ../../xpiks-qt/Common/isafepointer.h \
     ../../xpiks-qt/Common/iservicebase.h \
     ../../xpiks-qt/Common/version.h \
     ../../xpiks-qt/Commands/icommandbase.h \
@@ -231,5 +231,7 @@ HEADERS += \
     ../../xpiks-qt/Helpers/remoteconfig.h \
     ../../xpiks-qt/AutoComplete/stocksftplistmodel.h \
     ../../xpiks-qt/AutoComplete/stringfilterproxymodel.h \
-    ../../xpiks-qt/Models/abstractconfigupdatermodel.h
+    ../../xpiks-qt/Models/abstractconfigupdatermodel.h \
+    ../../xpiks-qt/Models/imageartwork.h \
+    ../../xpiks-qt/Common/hold.h
     removefilesfs_tests.h

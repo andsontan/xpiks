@@ -2,6 +2,7 @@
 #define BASICKEYWORDSMODELTESTS_H
 
 #include <QtTest/QtTest>
+#include "../../xpiks-qt/Common/hold.h"
 
 class BasicKeywordsModelTests: public QObject
 {
@@ -28,6 +29,9 @@ private slots:
     void editKeywordToSameTest();
     void addRemoveAddUpperCaseWordTest();
     void editToUpperCaseTest();
+
+private:
+    Common::Hold m_FakeHold;
 };
 
 #endif // BASICKEYWORDSMODELTESTS_H

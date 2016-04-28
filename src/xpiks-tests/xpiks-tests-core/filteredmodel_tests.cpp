@@ -123,7 +123,7 @@ void FilteredModelTests::removeMetadataDeletesMetadataTest() {
     filteredItemsModel.removeMetadataInSelected();
 
     for (int i = 0; i < 10; ++i) {
-        Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
+        Mocks::ArtworkMetadataMock *metadata = artItemsModelMock.getMockArtwork(i);
         QVERIFY(metadata->isDescriptionEmpty());
         QVERIFY(metadata->isTitleEmpty());
         QVERIFY(metadata->areKeywordsEmpty());
@@ -145,7 +145,7 @@ void FilteredModelTests::findSelectedIndexTest() {
 void FilteredModelTests::clearKeywordsTest() {
     DECLARE_MODELS_AND_GENERATE(1);
 
-    Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(0);
+    Mocks::ArtworkMetadataMock *metadata = artItemsModelMock.getMockArtwork(0);
     metadata->initialize("title", "description", QStringList() << "keyword1" << "keyword2");
 
     filteredItemsModel.clearKeywords(0);
@@ -160,7 +160,7 @@ void FilteredModelTests::detachVectorFromSelectedTest() {
     DECLARE_MODELS_AND_GENERATE(10);
 
     for (int i = 0; i < 10; ++i) {
-        Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
+        Mocks::ArtworkMetadataMock *metadata = artItemsModelMock.getMockArtwork(i);
         metadata->initialize("title", "description", QStringList() << "keyword1" << "keyword2");
         metadata->attachVector(QString(metadata->getFilepath()).replace(".jpg", ".eps"));
         metadata->setIsSelected(true);
@@ -169,7 +169,7 @@ void FilteredModelTests::detachVectorFromSelectedTest() {
     filteredItemsModel.detachVectorFromSelected();
 
     for (int i = 0; i < 10; ++i) {
-        Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
+        Mocks::ArtworkMetadataMock *metadata = artItemsModelMock.getMockArtwork(i);
         QVERIFY(!metadata->isModified());
         QVERIFY(!metadata->hasVectorAttached());
     }

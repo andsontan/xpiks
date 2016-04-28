@@ -3,7 +3,7 @@
 #include "../../xpiks-qt/Common/basickeywordsmodel.h"
 
 void BasicKeywordsModelTests::constructEmptyTest() {
-    Common::BasicKeywordsModel basicModel;
+    Common::BasicKeywordsModel basicModel(m_FakeHold);
 
     QCOMPARE(basicModel.isDescriptionEmpty(), true);
     QCOMPARE(basicModel.isTitleEmpty(), true);
@@ -13,7 +13,7 @@ void BasicKeywordsModelTests::constructEmptyTest() {
 }
 
 void BasicKeywordsModelTests::simpleAddKeywordTest() {
-    Common::BasicKeywordsModel basicModel;
+    Common::BasicKeywordsModel basicModel(m_FakeHold);
 
     QSignalSpy addSignalSpy(&basicModel, SIGNAL(rowsInserted(QModelIndex,int,int)));
 
@@ -28,7 +28,7 @@ void BasicKeywordsModelTests::simpleAddKeywordTest() {
 }
 
 void BasicKeywordsModelTests::addExistingKeywordTest() {
-    Common::BasicKeywordsModel basicModel;
+    Common::BasicKeywordsModel basicModel(m_FakeHold);
 
     bool result = basicModel.appendKeyword("test keyword");
     QCOMPARE(result, true);
@@ -43,7 +43,7 @@ void BasicKeywordsModelTests::addExistingKeywordTest() {
 }
 
 void BasicKeywordsModelTests::addSeveralKeywordsTest() {
-    Common::BasicKeywordsModel basicModel;
+    Common::BasicKeywordsModel basicModel(m_FakeHold);
 
     QSignalSpy addSignalSpy(&basicModel, SIGNAL(rowsInserted(QModelIndex,int,int)));
 
@@ -61,7 +61,7 @@ void BasicKeywordsModelTests::addSeveralKeywordsTest() {
 }
 
 void BasicKeywordsModelTests::removeExistingKeywordTest() {
-    Common::BasicKeywordsModel basicModel;
+    Common::BasicKeywordsModel basicModel(m_FakeHold);
 
     QString keyword = "test keyword";
     int appendedCount = basicModel.appendKeyword(keyword);
@@ -83,7 +83,7 @@ void BasicKeywordsModelTests::removeExistingKeywordTest() {
 }
 
 void BasicKeywordsModelTests::removeNonExistingKeywordTest() {
-    Common::BasicKeywordsModel basicModel;
+    Common::BasicKeywordsModel basicModel(m_FakeHold);
 
     bool result = basicModel.appendKeyword("test keyword");
     QCOMPARE(result, true);
@@ -103,7 +103,7 @@ void BasicKeywordsModelTests::removeNonExistingKeywordTest() {
 }
 
 void BasicKeywordsModelTests::appendSameKeywordsTest() {
-    Common::BasicKeywordsModel basicModel;
+    Common::BasicKeywordsModel basicModel(m_FakeHold);
 
     QSignalSpy addSignalSpy(&basicModel, SIGNAL(rowsInserted(QModelIndex,int,int)));
 
@@ -122,7 +122,7 @@ void BasicKeywordsModelTests::appendSameKeywordsTest() {
 }
 
 void BasicKeywordsModelTests::appendSameChangedKeywordTest() {
-    Common::BasicKeywordsModel basicModel;
+    Common::BasicKeywordsModel basicModel(m_FakeHold);
 
     QSignalSpy addSignalSpy(&basicModel, SIGNAL(rowsInserted(QModelIndex,int,int)));
 
@@ -140,7 +140,7 @@ void BasicKeywordsModelTests::appendSameChangedKeywordTest() {
 }
 
 void BasicKeywordsModelTests::appendNoKeywordsTest() {
-    Common::BasicKeywordsModel basicModel;
+    Common::BasicKeywordsModel basicModel(m_FakeHold);
 
     QSignalSpy addSignalSpy(&basicModel, SIGNAL(rowsInserted(QModelIndex,int,int)));
 
@@ -154,7 +154,7 @@ void BasicKeywordsModelTests::appendNoKeywordsTest() {
 }
 
 void BasicKeywordsModelTests::clearKeywordsTest() {
-    Common::BasicKeywordsModel basicModel;
+    Common::BasicKeywordsModel basicModel(m_FakeHold);
 
     QStringList keywords;
     keywords << "keyword1" << "keyword2" << "keyword3";
@@ -176,7 +176,7 @@ void BasicKeywordsModelTests::clearKeywordsTest() {
 }
 
 void BasicKeywordsModelTests::clearModelTest() {
-    Common::BasicKeywordsModel basicModel;
+    Common::BasicKeywordsModel basicModel(m_FakeHold);
 
     QStringList keywords;
     keywords << "keyword1" << "keyword2" << "keyword3";
@@ -198,7 +198,7 @@ void BasicKeywordsModelTests::clearModelTest() {
 }
 
 void BasicKeywordsModelTests::containsKeywordTest() {
-    Common::BasicKeywordsModel basicModel;
+    Common::BasicKeywordsModel basicModel(m_FakeHold);
 
     QStringList keywords;
     keywords << "keyword1" << "keyword2" << "keyword3";
@@ -208,7 +208,7 @@ void BasicKeywordsModelTests::containsKeywordTest() {
 }
 
 void BasicKeywordsModelTests::containsKeywordStrictTest() {
-    Common::BasicKeywordsModel basicModel;
+    Common::BasicKeywordsModel basicModel(m_FakeHold);
 
     QStringList keywords;
     keywords << "something_keyword1" << "keyword2" << "keyword3";
@@ -221,7 +221,7 @@ void BasicKeywordsModelTests::containsKeywordStrictTest() {
 }
 
 void BasicKeywordsModelTests::containsKeywordFuzzyTest() {
-    Common::BasicKeywordsModel basicModel;
+    Common::BasicKeywordsModel basicModel(m_FakeHold);
 
     QStringList keywords;
     keywords << "something_keyword1" << "keyword2" << "KeyworD3";
@@ -234,7 +234,7 @@ void BasicKeywordsModelTests::containsKeywordFuzzyTest() {
 }
 
 void BasicKeywordsModelTests::doesNotContainKeywordTest() {
-    Common::BasicKeywordsModel basicModel;
+    Common::BasicKeywordsModel basicModel(m_FakeHold);
 
     QStringList keywords;
     keywords << "keyword1" << "keyword2" << "keyword3";
@@ -247,7 +247,7 @@ void BasicKeywordsModelTests::doesNotContainKeywordTest() {
 }
 
 void BasicKeywordsModelTests::setSameTitleTest() {
-    Common::BasicKeywordsModel basicModel;
+    Common::BasicKeywordsModel basicModel(m_FakeHold);
     bool result = basicModel.setTitle("new title");
     QCOMPARE(result, true);
     result = basicModel.setTitle("new title");
@@ -255,7 +255,7 @@ void BasicKeywordsModelTests::setSameTitleTest() {
 }
 
 void BasicKeywordsModelTests::setSameDescriptionTest() {
-    Common::BasicKeywordsModel basicModel;
+    Common::BasicKeywordsModel basicModel(m_FakeHold);
     bool result = basicModel.setDescription("new description");
     QCOMPARE(result, true);
     result = basicModel.setDescription("new description");
@@ -263,7 +263,7 @@ void BasicKeywordsModelTests::setSameDescriptionTest() {
 }
 
 void BasicKeywordsModelTests::editKeywordToAnotherTest() {
-    Common::BasicKeywordsModel basicModel;
+    Common::BasicKeywordsModel basicModel(m_FakeHold);
 
     QStringList keywords;
     keywords << "keyword1" << "keyword2" << "keyword3";
@@ -277,7 +277,7 @@ void BasicKeywordsModelTests::editKeywordToAnotherTest() {
 }
 
 void BasicKeywordsModelTests::editKeywordToSameTest() {
-    Common::BasicKeywordsModel basicModel;
+    Common::BasicKeywordsModel basicModel(m_FakeHold);
 
     QStringList keywords;
     keywords << "keyword1" << "keyword2" << "keyword3";
@@ -293,7 +293,7 @@ void BasicKeywordsModelTests::editKeywordToSameTest() {
 void BasicKeywordsModelTests::addRemoveAddUpperCaseWordTest() {
     const QString keyword = "Test";
 
-    Common::BasicKeywordsModel basicModel;
+    Common::BasicKeywordsModel basicModel(m_FakeHold);
 
     bool addResult = basicModel.appendKeyword(keyword);
     QCOMPARE(addResult, true);
@@ -308,7 +308,7 @@ void BasicKeywordsModelTests::addRemoveAddUpperCaseWordTest() {
 }
 
 void BasicKeywordsModelTests::editToUpperCaseTest() {
-    Common::BasicKeywordsModel basicModel;
+    Common::BasicKeywordsModel basicModel(m_FakeHold);
 
     QStringList keywords;
     keywords << "keyword1" << "keyword2" << "keyword3";

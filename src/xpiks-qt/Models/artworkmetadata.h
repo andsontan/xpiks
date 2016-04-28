@@ -94,6 +94,7 @@ namespace Models {
         }
 
         Common::BasicKeywordsModel *getKeywordsModel() { return &m_KeywordsModel; }
+        const Common::BasicKeywordsModel *getKeywordsModel() const { return &m_KeywordsModel; }
 
         virtual void clearModel();
         virtual bool clearKeywords();

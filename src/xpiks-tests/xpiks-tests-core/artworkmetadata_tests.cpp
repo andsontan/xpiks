@@ -59,6 +59,7 @@ void ArtworkMetadataTests::initializeNoOverwriteButEmptyTest() {
 void ArtworkMetadataTests::initializeNoOverwriteNotEmptyTest() {
     Mocks::ArtworkMetadataMock metadata("file.jpg");
 
+
     metadata.setDescription("Test Description");
     metadata.setTitle("");
     metadata.setKeywords(QStringList() << "keyword1" << "keyword3");
