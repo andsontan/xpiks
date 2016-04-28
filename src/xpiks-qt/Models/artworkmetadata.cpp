@@ -42,7 +42,9 @@ namespace Models {
     {
         m_KeywordsModel.setSpellCheckInfo(&m_SpellCheckInfo);
         m_BackupTimer.setSingleShot(true);
+
         QObject::connect(&m_BackupTimer, SIGNAL(timeout()), this, SLOT(backupTimerTriggered()));
+        QObject::connect(&m_KeywordsModel, SIGNAL(spellCheckErrorsChanged()), this, SIGNAL(spellCheckErrorsChanged()));
     }
 
     ArtworkMetadata::~ArtworkMetadata() {

@@ -625,7 +625,13 @@ namespace Models {
 
     void ArtItemsModel::spellCheckErrorsChanged() {
         ArtworkMetadata *item = qobject_cast<ArtworkMetadata*>(sender());
-        m_CommandManager->submitForWarningsCheck(item, Common::WarningsCheckSpelling);
+
+#ifndef QT_DEBUG
+        if (item != NULL)
+#endif
+        {
+            m_CommandManager->submitForWarningsCheck(item, Common::WarningsCheckSpelling);
+        }
     }
 
     void ArtItemsModel::removeItemsAtIndices(const QVector<QPair<int, int> > &ranges) {

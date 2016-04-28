@@ -166,6 +166,7 @@ namespace Models {
          void focusRequested(int directionSign);
          void backupRequired();
          void aboutToBeRemoved();
+         void spellCheckErrorsChanged();
 
     private slots:
          void backupTimerTriggered() { emit backupRequired(); }
