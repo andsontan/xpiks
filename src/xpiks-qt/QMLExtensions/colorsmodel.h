@@ -50,6 +50,7 @@ namespace QMLExtensions {
         Q_PROPERTY(QColor artworkSavedColor READ artworkSavedColor WRITE setArtworkSavedColor NOTIFY artworkSavedColorChanged)
         Q_PROPERTY(QColor artworkActiveColor READ artworkActiveColor WRITE setArtworkActiveColor NOTIFY artworkActiveColorChanged)
 
+        Q_PROPERTY(QColor listSeparatorColor READ listSeparatorColor WRITE setListSeparatorColor NOTIFY listSeparatorColorChanged)
         Q_PROPERTY(QColor defaultLightColor READ defaultLightColor WRITE setDefaultLightColor NOTIFY defaultLightColorChanged)
         Q_PROPERTY(QColor defaultLightGrayColor READ defaultLightGrayColor WRITE setDefaultLightGrayColor NOTIFY defaultLightGrayColorChanged)
 
@@ -106,6 +107,8 @@ namespace QMLExtensions {
 
         QVector<QJsonObject> m_RegisteredThemes;
         QStringList m_ThemeNames;
+
+        QColor m_listSeparatorColor;
 
     public:
         explicit ColorsModel(QObject *parent = 0);
@@ -264,6 +267,11 @@ namespace QMLExtensions {
             return m_defaultDarkerColor;
         }
 
+        QColor listSeparatorColor() const
+        {
+            return m_listSeparatorColor;
+        }
+
     signals:
         void themeChanged();
         void defaultDarkColorChanged(QColor defaultDarkColor);
@@ -296,6 +304,7 @@ namespace QMLExtensions {
         void destructiveColorChanged(QColor destructiveColor);
         void greenColorChanged(QColor greenColor);        
         void defaultDarkerColorChanged(QColor defaultDarkerColor);
+        void listSeparatorColorChanged(QColor listSeparatorColor);
 
     public slots:
         void setDefaultDarkColor(QColor defaultDarkColor)
@@ -537,6 +546,14 @@ namespace QMLExtensions {
 
             m_defaultDarkerColor = defaultDarkerColor;
             emit defaultDarkerColorChanged(defaultDarkerColor);
+        }
+        void setListSeparatorColor(QColor listSeparatorColor)
+        {
+            if (m_listSeparatorColor == listSeparatorColor)
+                return;
+
+            m_listSeparatorColor = listSeparatorColor;
+            emit listSeparatorColorChanged(listSeparatorColor);
         }
     };
 }

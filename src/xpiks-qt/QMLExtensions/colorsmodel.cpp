@@ -45,6 +45,7 @@
 
 #define DEFAULT_LIGHT_COLOR DEFAULT_INPUT_INACTIVE_FOREGROUND
 #define DEFAULT_LIGHT_GRAY_COLOR "#D0D0D0"
+#define DEFAULT_LIST_SEPARATOR_COLOR "#ffffff"
 
 #define DEFAULT_BUTTON_HOVER_BACKGROUND DEFAULT_ARTWORK_ACTIVE_COLOR
 #define DEFAULT_BUTTON_PRESSED_BACKGROUND "#41b1b7"
@@ -87,6 +88,7 @@ namespace QMLExtensions {
 
         setDefaultLightColor(QColor(DEFAULT_LIGHT_COLOR));
         setDefaultLightGrayColor(QColor(DEFAULT_LIGHT_GRAY_COLOR));
+        setListSeparatorColor(QColor(DEFAULT_LIST_SEPARATOR_COLOR));
 
         setButtonHoverBackground(QColor(DEFAULT_BUTTON_HOVER_BACKGROUND));
         setButtonPressedBackground(QColor(DEFAULT_BUTTON_PRESSED_BACKGROUND));
@@ -140,6 +142,7 @@ namespace QMLExtensions {
 
         setDefaultLightColor(QColor(theme["defaultLightColor"].toString(DEFAULT_LIGHT_COLOR)));
         setDefaultLightGrayColor(QColor(theme["defaultLightGrayColor"].toString(DEFAULT_LIGHT_GRAY_COLOR)));
+        setListSeparatorColor(QColor(theme["listSeparatorColor"].toString(DEFAULT_LIST_SEPARATOR_COLOR)));
 
         setButtonHoverBackground(QColor(theme["buttonHoverBackground"].toString(DEFAULT_BUTTON_HOVER_BACKGROUND)));
         setButtonPressedBackground(QColor(theme["buttonPressedBackground"].toString(DEFAULT_BUTTON_PRESSED_BACKGROUND)));

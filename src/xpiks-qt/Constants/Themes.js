@@ -41,6 +41,7 @@ BlackTheme.artworkActiveColor = "#12b9bc";
 
 BlackTheme.defaultLightColor = BlackTheme.inputInactiveForeground;
 BlackTheme.defaultLightGrayColor = "#D0D0D0";
+BlackTheme.listSeparatorColor = BlackTheme.whiteColor;
 
 BlackTheme.buttonHoverBackground = BlackTheme.artworkActiveColor;
 BlackTheme.buttonPressedBackground = "#41b1b7";
@@ -84,6 +85,7 @@ SlateGrayTheme.artworkActiveColor = "#2ec1c3";
 
 SlateGrayTheme.defaultLightColor = "#E0E0E0";
 SlateGrayTheme.defaultLightGrayColor = "#D0D0D0";
+SlateGrayTheme.listSeparatorColor = SlateGrayTheme.defaultLightColor;
 
 SlateGrayTheme.buttonHoverBackground = "#12b9bc";
 SlateGrayTheme.buttonPressedBackground = "#41b1b7";

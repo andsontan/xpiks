@@ -119,7 +119,7 @@ Item {
                     visible: !currentDelegate.isLastItem
                     enabled: !currentDelegate.isLastItem
                     height: 1
-                    color: isSelected ? highlightedItemColor : Colors.whiteColor
+                    color: isSelected ? highlightedItemColor : Colors.listSeparatorColor
                     anchors.bottom: parent.bottom
                     anchors.left: parent.left
                     anchors.right: parent.right
