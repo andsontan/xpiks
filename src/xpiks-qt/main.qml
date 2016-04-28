@@ -189,8 +189,11 @@ ApplicationWindow {
 
         uploadInfos.initializeAccounts(masterPasswordCorrectOrEmpty)
         Common.launchDialog("Dialogs/UploadArtworks.qml",
-                     applicationWindow,
-                     {componentParent: applicationWindow})
+                            applicationWindow,
+                            {
+                                componentParent: applicationWindow,
+                                skipUploadItems: skipUploadItems
+                            })
     }
 
     function clearFilter() {

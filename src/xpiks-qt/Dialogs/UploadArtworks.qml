@@ -37,6 +37,7 @@ Item {
     property string uploadhostskey: appSettings.uploadHostsKey
     // if MasterPassword wasn't entered do not show passwords
     property bool emptyPasswords: false
+    property bool skipUploadItems: false
     property variant componentParent
     property bool uploadEnabled: (artworkRepository.artworksSourcesCount > 0) && (filteredArtItemsModel.selectedArtworksCount > 0)
 
@@ -218,6 +219,8 @@ Item {
 
                     StyledText {
                         id: textItemsAvailable
+                        enabled: !skipUploadItems
+                        visible: !skipUploadItems
                         text: i18.n + getOriginalText()
 
                         function getOriginalText() {
@@ -824,7 +827,8 @@ Item {
                     spacing: 20
 
                     StyledText {
-                        enabled: uploadArtworksComponent.uploadEnabled
+                        visible: !skipUploadItems
+                        enabled: uploadArtworksComponent.uploadEnabled && !skipUploadItems
                         text: i18.n + getOriginalText()
                         color: uploadWarmingsMA.pressed ? Colors.linkClickedColor : warningsModel.warningsCount > 0 ? Colors.artworkModifiedColor : Colors.labelActiveForeground
 
@@ -856,7 +860,7 @@ Item {
 
                     StyledButton {
                         id: uploadButton
-                        enabled: uploadArtworksComponent.uploadEnabled
+                        enabled: uploadArtworksComponent.uploadEnabled && !skipUploadItems
                         text: i18.n + (artworkUploader.inProgress ? qsTr("Stop") : qsTr("Start Upload"))
                         width: 130
                         onClicked: {
