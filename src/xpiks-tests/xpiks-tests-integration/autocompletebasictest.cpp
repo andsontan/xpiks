@@ -52,7 +52,7 @@ int AutoCompleteBasicTest::doTest() {
 
     VERIFY(acModel->getCount() == 0, "AC model was not empty");
 
-    m_CommandManager->autoCompleteKeyword("tes", metadata);
+    m_CommandManager->autoCompleteKeyword("tes", metadata->getKeywordsModel());
 
     if (!completionWaiter.wait(10)) {
         VERIFY(false, "Timeout while waiting for the completion");
