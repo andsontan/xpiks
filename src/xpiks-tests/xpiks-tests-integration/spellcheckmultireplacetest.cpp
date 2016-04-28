@@ -68,9 +68,11 @@ int SpellCheckMultireplaceTest::doTest() {
     // wait for finding suggestions
     QThread::sleep(1);
 
-    VERIFY(metadata->hasDescriptionSpellError(), "Description spell error not detected");
-    VERIFY(metadata->hasTitleSpellError(), "Title spell error not detected");
-    VERIFY(metadata->hasKeywordsSpellError(), "Keywords spell error not detected");
+    Common::BasicKeywordsModel *basicKeywordsModel = metadata->getKeywordsModel();
+
+    VERIFY(basicKeywordsModel->hasDescriptionSpellError(), "Description spell error not detected");
+    VERIFY(basicKeywordsModel->hasTitleSpellError(), "Title spell error not detected");
+    VERIFY(basicKeywordsModel->hasKeywordsSpellError(), "Keywords spell error not detected");
 
     artItemsModel->suggestCorrections(0);
 
@@ -90,9 +92,9 @@ int SpellCheckMultireplaceTest::doTest() {
         VERIFY(false, "Timeout for waiting for corrected spellcheck results");
     }
 
-    VERIFY(!metadata->hasDescriptionSpellError(), "Description spell error was not fixed");
-    VERIFY(!metadata->hasTitleSpellError(), "Title spell error was not fixed");
-    VERIFY(!metadata->hasKeywordsSpellError(), "Keywords spell error was not fixed");
+    VERIFY(!basicKeywordsModel->hasDescriptionSpellError(), "Description spell error was not fixed");
+    VERIFY(!basicKeywordsModel->hasTitleSpellError(), "Title spell error was not fixed");
+    VERIFY(!basicKeywordsModel->hasKeywordsSpellError(), "Keywords spell error was not fixed");
 
     return 0;
 }

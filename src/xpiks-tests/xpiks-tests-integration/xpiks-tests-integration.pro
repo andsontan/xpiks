@@ -115,7 +115,8 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Helpers/jsonhelper.cpp \
     ../../xpiks-qt/Helpers/localconfig.cpp \
     ../../xpiks-qt/Helpers/remoteconfig.cpp \
-    autocompletebasictest.cpp
+    autocompletebasictest.cpp \
+    ../../xpiks-qt/Models/imageartwork.cpp
 
 RESOURCES +=
 
@@ -140,7 +141,6 @@ HEADERS += \
     ../../xpiks-qt/Common/flags.h \
     ../../xpiks-qt/Common/iartworkssource.h \
     ../../xpiks-qt/Common/ibasicartwork.h \
-    ../../xpiks-qt/Common/isafepointer.h \
     ../../xpiks-qt/Common/iservicebase.h \
     ../../xpiks-qt/Common/itemprocessingworker.h \
     ../../xpiks-qt/Common/version.h \
@@ -225,7 +225,6 @@ HEADERS += \
     ../../xpiks-qt/UndoRedo/modifyartworkshistoryitem.h \
     ../../xpiks-qt/UndoRedo/removeartworksitem.h \
     ../../xpiks-qt/UndoRedo/undoredomanager.h \
-    ../../xpiks-qt/Warnings/iwarningscheckable.h \
     ../../xpiks-qt/Warnings/warningscheckingworker.h \
     ../../xpiks-qt/Warnings/warningsitem.h \
     ../../xpiks-qt/Warnings/warningsmodel.h \
@@ -256,7 +255,9 @@ HEADERS += \
     ../../xpiks-qt/Helpers/jsonhelper.h \
     ../../xpiks-qt/Helpers/localconfig.h \
     ../../xpiks-qt/Helpers/remoteconfig.h \
-    autocompletebasictest.h
+    autocompletebasictest.h \
+    ../../xpiks-qt/Common/hold.h \
+    ../../xpiks-qt/Models/imageartwork.h
 
 INCLUDEPATH += ../../tiny-aes
 INCLUDEPATH += ../../cpp-libface

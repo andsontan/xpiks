@@ -9,6 +9,7 @@
 #include "../../xpiks-qt/MetadataIO/metadataiocoordinator.h"
 #include "../../xpiks-qt/Models/artworkmetadata.h"
 #include "../../xpiks-qt/Models/settingsmodel.h"
+#include "../../xpiks-qt/Models/imageartwork.h"
 
 QString AutoAttachVectorsTest::testName() {
     return QLatin1String("AutoAttachVectorsTest");
@@ -43,7 +44,8 @@ int AutoAttachVectorsTest::doTest() {
 
     for (int i = 0; i < files.length(); ++i) {
         Models::ArtworkMetadata *metadata = artItemsModel->getArtwork(i);
-        VERIFY(metadata->hasVectorAttached(), "Vector is not attached!");
+        Models::ImageArtwork *image = dynamic_cast<Models::ImageArtwork *>(metadata);
+        VERIFY(image != NULL && image->hasVectorAttached(), "Vector is not attached!");
     }
 
     return 0;

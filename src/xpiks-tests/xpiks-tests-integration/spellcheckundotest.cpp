@@ -67,15 +67,16 @@ int SpellCheckUndoTest::doTest() {
 
     // wait for finding suggestions
     QThread::sleep(1);
+    Common::BasicKeywordsModel *basicKeywordsModel = metadata->getKeywordsModel();
 
-    VERIFY(metadata->hasDescriptionSpellError(), "Description spell error not detected");
-    VERIFY(metadata->hasTitleSpellError(), "Title spell error not detected");
-    VERIFY(metadata->hasKeywordsSpellError(), "Keywords spell error not detected");
+    VERIFY(basicKeywordsModel->hasDescriptionSpellError(), "Description spell error not detected");
+    VERIFY(basicKeywordsModel->hasTitleSpellError(), "Title spell error not detected");
+    VERIFY(basicKeywordsModel->hasKeywordsSpellError(), "Keywords spell error not detected");
 
     filteredModel->clearKeywords(0);
     QThread::sleep(1);
 
-    VERIFY(!metadata->hasKeywordsSpellError(), "Keywords spell error not cleared");
+    VERIFY(!basicKeywordsModel->hasKeywordsSpellError(), "Keywords spell error not cleared");
 
     UndoRedo::UndoRedoManager *undoRedoManager = m_CommandManager->getUndoRedoManager();
     undoRedoManager->undoLastAction();
@@ -87,9 +88,9 @@ int SpellCheckUndoTest::doTest() {
     // wait for finding suggestions
     QThread::sleep(1);
 
-    VERIFY(metadata->hasDescriptionSpellError(), "Description spell error not detected on the second time");
-    VERIFY(metadata->hasTitleSpellError(), "Title spell error not detected on the second time");
-    VERIFY(metadata->hasKeywordsSpellError(), "Keywords spell error not detected on the second time");
+    VERIFY(basicKeywordsModel->hasDescriptionSpellError(), "Description spell error not detected on the second time");
+    VERIFY(basicKeywordsModel->hasTitleSpellError(), "Title spell error not detected on the second time");
+    VERIFY(basicKeywordsModel->hasKeywordsSpellError(), "Keywords spell error not detected on the second time");
 
     return 0;
 }
