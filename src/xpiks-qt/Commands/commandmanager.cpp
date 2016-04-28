@@ -279,6 +279,7 @@ void Commands::CommandManager::recodePasswords(const QString &oldMasterPassword,
 }
 
 void Commands::CommandManager::combineArtwork(Models::ArtItemInfo *itemInfo) const {
+    Q_ASSERT(itemInfo != NULL);
     LOG_DEBUG << "one item with index" << itemInfo->getOriginalIndex();
     if (m_CombinedArtworksModel) {
         m_CombinedArtworksModel->resetModelData();
@@ -385,6 +386,7 @@ void Commands::CommandManager::addInitialArtworks(const QStringList &artworksFil
 #endif
 
 void Commands::CommandManager::submitKeywordForSpellCheck(Common::BasicKeywordsModel *item, int keywordIndex) const {
+    Q_ASSERT(item != NULL);
     if ((m_SettingsModel != NULL) && m_SettingsModel->getUseSpellCheck() && (m_SpellCheckerService != NULL)) {
         m_SpellCheckerService->submitKeyword(item, keywordIndex);
     }
@@ -415,12 +417,14 @@ void Commands::CommandManager::submitForSpellCheck(const QVector<Common::BasicKe
 }
 
 void Commands::CommandManager::submitItemForSpellCheck(Common::BasicKeywordsModel *item, int flags) const {
+    Q_ASSERT(item != NULL);
     if ((m_SettingsModel != NULL) && m_SettingsModel->getUseSpellCheck() && (m_SpellCheckerService != NULL)) {
         m_SpellCheckerService->submitItem(item, flags);
     }
 }
 
 void Commands::CommandManager::setupSpellCheckSuggestions(Common::BasicKeywordsModel *item, int index, int flags) {
+    Q_ASSERT(item != NULL);
     if (m_SpellCheckSuggestionModel) {
         m_SpellCheckSuggestionModel->setupModel(item, index, flags);
         reportUserAction(Conectivity::UserActionSpellSuggestions);
@@ -428,10 +432,13 @@ void Commands::CommandManager::setupSpellCheckSuggestions(Common::BasicKeywordsM
 }
 
 void Commands::CommandManager::submitKeywordsForWarningsCheck(Models::ArtworkMetadata *item) const {
+    Q_ASSERT(item != NULL);
     this->submitForWarningsCheck(item, Common::WarningsCheckKeywords);
 }
 
 void Commands::CommandManager::submitForWarningsCheck(Models::ArtworkMetadata *item, int flags) const {
+    Q_ASSERT(item != NULL);
+
     if (m_WarningsService != NULL) {
         m_WarningsService->submitItem(item);
     }
@@ -472,6 +479,7 @@ void Commands::CommandManager::submitForWarningsCheck(const QVector<Common::IBas
 }
 
 void Commands::CommandManager::saveArtworkBackup(Models::ArtworkMetadata *metadata) const {
+    Q_ASSERT(metadata != NULL);
     if ((m_SettingsModel != NULL) && m_SettingsModel->getSaveBackups() && m_MetadataSaverService != NULL) {
         m_MetadataSaverService->saveArtwork(metadata);
     }
