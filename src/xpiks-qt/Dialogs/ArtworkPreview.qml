@@ -52,7 +52,6 @@ Item {
         }
     }
 
-
     Component.onCompleted: focus = true
     Keys.onEscapePressed: closePopup()
 
@@ -162,6 +161,7 @@ Item {
                 width: 210
 
                 ColumnLayout {
+                    id: column
                     anchors.fill: parent
                     anchors.margins: 20
                     spacing: 10
@@ -226,9 +226,9 @@ Item {
                         Layout.fillHeight: true
                     }
 
-                    RowLayout {
-                        anchors.left: parent.left
-                        anchors.right: parent.right
+                    Row {
+                        anchors.left: column.left
+                        anchors.right: column.right
                         spacing: 20
 
                         StyledButton {
