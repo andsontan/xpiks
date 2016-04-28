@@ -434,7 +434,9 @@ void Commands::CommandManager::submitKeywordsForWarningsCheck(Models::ArtworkMet
 }
 
 void Commands::CommandManager::submitForWarningsCheck(Models::ArtworkMetadata *item, int flags) const {
-    m_WarningsService->submitItem(item);
+    if (m_WarningsService != NULL) {
+        m_WarningsService->submitItem(item);
+    }
 
     int count = m_WarningsCheckers.length();
     for (int i = 0; i < count; ++i) {
@@ -446,7 +448,9 @@ void Commands::CommandManager::submitForWarningsCheck(Models::ArtworkMetadata *i
 }
 
 void Commands::CommandManager::submitForWarningsCheck(const QVector<Models::ArtworkMetadata *> &items) const {
-    m_WarningsService->submitItems(items);
+    if (m_WarningsService != NULL) {
+        m_WarningsService->submitItems(items);
+    }
 
     QVector<Common::IBasicArtwork *> itemsToSubmit;
     int count = items.length();
