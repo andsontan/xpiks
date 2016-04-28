@@ -196,7 +196,6 @@ HEADERS += \
     Conectivity/uploadcontext.h \
     Conectivity/testconnection.h \
     Conectivity/ftphelpers.h \
-    Common/isafepointer.h \
     Plugins/xpiksplugininterface.h \
     Commands/icommandmanager.h \
     Commands/icommandbase.h \
@@ -238,7 +237,8 @@ HEADERS += \
     Models/abstractconfigupdatermodel.h \
     AutoComplete/stocksftplistmodel.h \
     AutoComplete/stringfilterproxymodel.h \
-    Models/imageartwork.h
+    Models/imageartwork.h \
+    Common/hold.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

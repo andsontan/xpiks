@@ -35,6 +35,7 @@
 #include "saverworkerjobitem.h"
 #include "../Models/settingsmodel.h"
 #include "../Common/defines.h"
+#include "../Models/imageartwork.h"
 
 namespace MetadataIO {
     bool tryGetExiftoolVersion(const QString &path, QString &version) {
@@ -195,9 +196,13 @@ namespace MetadataIO {
             if (importResult.contains(filepath)) {
                 const ImportDataResult &importResultItem = importResult.value(filepath);
 
-                metadata->setImageSize(importResultItem.ImageSize);
+                Models::ImageArtwork *image = dynamic_cast<Models::ImageArtwork*>(metadata);
+                if (image != NULL) {
+                    image->setImageSize(importResultItem.ImageSize);
+                    image->setDateTaken(importResultItem.DateTaken);
+                }
+
                 metadata->setFileSize(importResultItem.FileSize);
-                metadata->setDateTaken(importResultItem.DateTaken);
             }
         }
     }
@@ -220,9 +225,14 @@ namespace MetadataIO {
                 metadata->initialize(importResultItem.Title,
                                      importResultItem.Description,
                                      importResultItem.Keywords);
-                metadata->setImageSize(importResultItem.ImageSize);
+
+                Models::ImageArtwork *image = dynamic_cast<Models::ImageArtwork*>(metadata);
+                if (image != NULL) {
+                    image->setImageSize(importResultItem.ImageSize);
+                    image->setDateTaken(importResultItem.DateTaken);
+                }
+
                 metadata->setFileSize(importResultItem.FileSize);
-                metadata->setDateTaken(importResultItem.DateTaken);
             }
         }
 

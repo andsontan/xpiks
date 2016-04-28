@@ -22,11 +22,10 @@
 #ifndef IBASICARTWORK
 #define IBASICARTWORK
 
-#include "isafepointer.h"
 #include <QtGlobal>
 
 namespace Common {
-    class IBasicArtwork : public ISafePointer {
+    class IBasicArtwork {
     public:
         virtual ~IBasicArtwork() {}
 

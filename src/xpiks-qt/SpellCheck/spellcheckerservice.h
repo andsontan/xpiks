@@ -25,7 +25,7 @@
 #include <QObject>
 #include <QString>
 #include <QVector>
-#include "ispellcheckable.h"
+#include "../Common/basickeywordsmodel.h"
 #include "../Common/iservicebase.h"
 
 namespace Models {
@@ -37,7 +37,7 @@ namespace SpellCheck {
 
     class SpellCheckerService :
             public QObject,
-            public Common::IServiceBase<ISpellCheckable>
+            public Common::IServiceBase<Common::BasicKeywordsModel>
     {
         Q_OBJECT
     public:
@@ -50,10 +50,10 @@ namespace SpellCheck {
 
         virtual bool isAvailable() const { return true; }
 
-        virtual void submitItem(SpellCheck::ISpellCheckable *itemToCheck);
-        virtual void submitItem(SpellCheck::ISpellCheckable *itemToCheck, int flags);
-        virtual void submitItems(const QVector<ISpellCheckable *> &itemsToCheck);
-        void submitKeyword(SpellCheck::ISpellCheckable *itemToCheck, int keywordIndex);
+        virtual void submitItem(Common::BasicKeywordsModel *itemToCheck);
+        virtual void submitItem(Common::BasicKeywordsModel *itemToCheck, int flags);
+        virtual void submitItems(const QVector<Common::BasicKeywordsModel *> &itemsToCheck);
+        void submitKeyword(Common::BasicKeywordsModel *itemToCheck, int keywordIndex);
         QStringList suggestCorrections(const QString &word) const;
         void restartWorker();
 

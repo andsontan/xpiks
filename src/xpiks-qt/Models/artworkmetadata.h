@@ -29,12 +29,12 @@
 #include <QString>
 #include <QVector>
 #include <QSet>
-#include <QAtomicInt>
 #include <QTimer>
 #include <QQmlEngine>
 #include "../Common/basickeywordsmodel.h"
 #include "../Common/flags.h"
 #include "../Common/ibasicartwork.h"
+#include "../Common/hold.h"
 
 class QTextDocument;
 
@@ -137,9 +137,8 @@ namespace Models {
         virtual int appendKeywords(const QStringList &keywordsList);
 
     public:
-        // ISAFEPOINTER
-        virtual void acquire() { m_RefCount.fetchAndAddOrdered(1); }
-        virtual bool release() { return m_RefCount.fetchAndSubOrdered(1) == 1; }
+        void acquire() { m_Hold.acquire(); }
+        bool release() { return m_Hold.release(); }
 
     public:
          // IBasicArtwork interface
@@ -148,10 +147,6 @@ namespace Models {
          virtual bool isEmpty() const { return m_KeywordsModel.isEmpty(); }
          virtual const QString &getDescription() const { return m_KeywordsModel.getDescription(); }
          virtual const QString &getTitle() const { return m_KeywordsModel.getTitle(); }
-
-    public:
-        int getKeywordsCount() const { return m_KeywordsModel.getKeywordsCount(); }
-        QString getKeywordsString() const { return m_KeywordsModel.getKeywordsString(); }
 
     public:
         void markModified();
@@ -174,6 +169,7 @@ namespace Models {
          void backupTimerTriggered() { emit backupRequired(); }
 
     private:
+         Common::Hold m_Hold;
          Common::BasicKeywordsModel m_KeywordsModel;
          qint64 m_FileSize; // in bytes
          QString m_ArtworkFilepath;
@@ -181,8 +177,6 @@ namespace Models {
          qint64 m_ID;
          volatile int m_WarningsFlags;
          volatile int m_MetadataFlags;
-         // used for background workers
-         QAtomicInt m_RefCount;
     };
 }
 

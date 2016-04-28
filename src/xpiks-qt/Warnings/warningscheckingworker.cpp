@@ -22,9 +22,12 @@
 #include "warningscheckingworker.h"
 #include <QSet>
 #include <QFileInfo>
+#include <QSize>
 #include "../Common/defines.h"
 #include "../Common/flags.h"
 #include "../Models/settingsmodel.h"
+#include "../Models/artworkmetadata.h"
+#include "../Models/imageartwork.h"
 
 namespace Warnings {
     QSet<QString> toLowerSet(const QStringList &from) {
@@ -94,13 +97,17 @@ namespace Warnings {
     }
 
     int WarningsCheckingWorker::checkDimensions(WarningsItem *wi) const {
-        IWarningsCheckable *item = wi->getCheckableItem();
+        Models::ArtworkMetadata *item = wi->getCheckableItem();
         int warningsInfo = 0;
-        QSize size = item->getImageSize();
 
-        double currentProd = size.width() * size.height() / 1000000.0;
-        if (currentProd < m_MinimumMegapixels) {
-            Common::SetFlag(warningsInfo, Common::WarningTypeSizeLessThanMinimum);
+        Models::ImageArtwork *image = dynamic_cast<Models::ImageArtwork *>(item);
+        if (image != NULL) {
+            QSize size = image->getImageSize();
+
+            double currentProd = size.width() * size.height() / 1000000.0;
+            if (currentProd < m_MinimumMegapixels) {
+                Common::SetFlag(warningsInfo, Common::WarningTypeSizeLessThanMinimum);
+            }
         }
 
         qint64 filesize = item->getFileSize();
@@ -127,9 +134,10 @@ namespace Warnings {
 
     int WarningsCheckingWorker::checkKeywords(WarningsItem *wi) const {
         int warningsInfo = 0;
-        IWarningsCheckable *item = wi->getCheckableItem();
+        Models::ArtworkMetadata *item = wi->getCheckableItem();
+        Common::BasicKeywordsModel *keywordsModel = item->getKeywordsModel();
 
-        int keywordsCount = item->getKeywordsCount();
+        int keywordsCount = keywordsModel->getKeywordsCount();
 
         if (keywordsCount == 0) {
             Common::SetFlag(warningsInfo, Common::WarningTypeNoKeywords);
@@ -142,7 +150,7 @@ namespace Warnings {
                 Common::SetFlag(warningsInfo, Common::WarningTypeTooManyKeywords);
             }
 
-            if (item->hasKeywordsSpellError()) {
+            if (keywordsModel->hasKeywordsSpellError()) {
                 Common::SetFlag(warningsInfo, Common::WarningTypeSpellErrorsInKeywords);
             }
         }
@@ -152,13 +160,15 @@ namespace Warnings {
 
     int WarningsCheckingWorker::checkDescription(WarningsItem *wi) const {
         int warningsInfo = 0;
-        IWarningsCheckable *item = wi->getCheckableItem();
+        Models::ArtworkMetadata *item = wi->getCheckableItem();
 
         int descriptionLength = wi->getDescription().length();
 
         if (descriptionLength == 0) {
             Common::SetFlag(warningsInfo, Common::WarningTypeDescriptionIsEmpty);
         } else {
+            Common::BasicKeywordsModel *keywordsModel = item->getKeywordsModel();
+
             if (descriptionLength > m_MaximumDescriptionLength) {
                 Common::SetFlag(warningsInfo, Common::WarningTypeDescriptionTooBig);
             }
@@ -170,7 +180,7 @@ namespace Warnings {
                 Common::SetFlag(warningsInfo, Common::WarningTypeDescriptionNotEnoughWords);
             }
 
-            if (item->hasDescriptionSpellError()) {
+            if (keywordsModel->hasDescriptionSpellError()) {
                 Common::SetFlag(warningsInfo, Common::WarningTypeSpellErrorsInDescription);
             }
 
@@ -187,13 +197,15 @@ namespace Warnings {
 
     int WarningsCheckingWorker::checkTitle(WarningsItem *wi) const {
         int warningsInfo = 0;
-        IWarningsCheckable *item = wi->getCheckableItem();
+        Models::ArtworkMetadata *item = wi->getCheckableItem();
 
         int titleLength = wi->getTitle().length();
 
         if (titleLength == 0) {
             Common::SetFlag(warningsInfo, Common::WarningTypeTitleIsEmpty);
         } else {
+            Common::BasicKeywordsModel *keywordsModel = item->getKeywordsModel();
+
             QStringList titleWords = wi->getTitleWords();
             int partsLength = titleWords.length();
 
@@ -205,7 +217,7 @@ namespace Warnings {
                 Common::SetFlag(warningsInfo, Common::WarningTypeTitleTooManyWords);
             }
 
-            if (item->hasTitleSpellError()) {
+            if (keywordsModel->hasTitleSpellError()) {
                 Common::SetFlag(warningsInfo, Common::WarningTypeSpellErrorsInTitle);
             }
 
@@ -222,17 +234,18 @@ namespace Warnings {
 
     int WarningsCheckingWorker::checkSpelling(WarningsItem *wi) const {
         int warningsInfo = 0;
-        IWarningsCheckable *item = wi->getCheckableItem();
+        Models::ArtworkMetadata *item = wi->getCheckableItem();
+        Common::BasicKeywordsModel *keywordsModel = item->getKeywordsModel();
 
-        if (item->hasKeywordsSpellError()) {
+        if (keywordsModel->hasKeywordsSpellError()) {
             Common::SetFlag(warningsInfo, Common::WarningTypeSpellErrorsInKeywords);
         }
 
-        if (item->hasDescriptionSpellError()) {
+        if (keywordsModel->hasDescriptionSpellError()) {
             Common::SetFlag(warningsInfo, Common::WarningTypeSpellErrorsInDescription);
         }
 
-        if (item->hasTitleSpellError()) {
+        if (keywordsModel->hasTitleSpellError()) {
             Common::SetFlag(warningsInfo, Common::WarningTypeSpellErrorsInTitle);
         }
 
@@ -241,9 +254,10 @@ namespace Warnings {
 
     int WarningsCheckingWorker::checkDuplicates(WarningsItem *wi) const {
         int warningsInfo = 0;
-        IWarningsCheckable *item = wi->getCheckableItem();
+        Models::ArtworkMetadata *item = wi->getCheckableItem();
+        Common::BasicKeywordsModel *keywordsModel = item->getKeywordsModel();
 
-        if (item->getKeywordsCount() == 0) { return warningsInfo; }
+        if (keywordsModel->getKeywordsCount() == 0) { return warningsInfo; }
 
         const QSet<QString> &keywordsSet = wi->getKeywordsSet();
 

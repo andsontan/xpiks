@@ -34,7 +34,6 @@ Commands::CommandResult *Commands::CombinedEditCommand::execute(const ICommandMa
     LOG_INFO << "flags =" << m_EditFlags << "artworks count =" << m_ArtItemInfos.length();
     QVector<int> indicesToUpdate;
     QVector<UndoRedo::ArtworkMetadataBackup*> artworksBackups;
-    QVector<SpellCheck::ISpellCheckable*> itemsToCheckSpelling;
     QVector<Models::ArtworkMetadata *> itemsToSave;
 
     CommandManager *commandManager = (CommandManager*)commandManagerInterface;
@@ -42,7 +41,6 @@ Commands::CommandResult *Commands::CombinedEditCommand::execute(const ICommandMa
     int size = m_ArtItemInfos.length();
     indicesToUpdate.reserve(size);
     artworksBackups.reserve(size);
-    itemsToCheckSpelling.reserve(size);
     itemsToSave.reserve(size);
 
     bool needToClear = Common::HasFlag(m_EditFlags, Common::Clear);
@@ -64,13 +62,10 @@ Commands::CommandResult *Commands::CombinedEditCommand::execute(const ICommandMa
         if (!needToClear) {
             itemsToSave.append(metadata);
         }
-
-        Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
-        itemsToCheckSpelling.append(keywordsModel);
     }
 
     commandManager->saveArtworksBackups(itemsToSave);
-    commandManager->submitForSpellCheck(itemsToCheckSpelling);
+    commandManager->submitForSpellCheck(itemsToSave);
     commandManager->submitForWarningsCheck(itemsToSave);
 
     UndoRedo::ModifyArtworksHistoryItem *modifyArtworksItem =

@@ -28,6 +28,7 @@
 #include "../Helpers/stringhelper.h"
 #include "../Common/flags.h"
 #include "../Models/artworkmetadata.h"
+#include "../Common/defines.h"
 
 namespace Warnings {
     class WarningsItem {
@@ -36,9 +37,16 @@ namespace Warnings {
             m_CheckableItem(checkableItem),
             m_CheckingFlags(checkingFlags)
         {
+            checkableItem->acquire();
             m_Description = checkableItem->getDescription();
             m_Title = checkableItem->getTitle();
             m_KeywordsSet = checkableItem->getKeywordsSet();
+        }
+
+        ~WarningsItem() {
+            if (m_CheckableItem->release()) {
+                LOG_WARNING << "item was locked for removal";
+            }
         }
 
     public:
@@ -66,8 +74,6 @@ namespace Warnings {
                 m_CheckableItem->dropWarningsFlags(flagsToDrop);
                 m_CheckableItem->addWarningsFlags(warningsFlags);
             }
-
-            m_CheckableItem->release();
         }
 
         bool needCheckAll() const { return m_CheckingFlags == Common::WarningsCheckAll; }

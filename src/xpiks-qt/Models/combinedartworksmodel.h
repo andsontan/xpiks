@@ -35,6 +35,7 @@
 #include "../Common/flags.h"
 #include "../SpellCheck/spellcheckiteminfo.h"
 #include "../Helpers/ifilenotavailablemodel.h"
+#include "../Common/hold.h"
 
 namespace Models {
     class ArtItemInfo;
@@ -190,6 +191,7 @@ namespace Models {
 
     private:
         QVector<ArtItemInfo*> m_ArtworksList;
+        Common::Hold m_HoldPlaceholder;
         Common::BasicKeywordsModel m_CommonKeywordsModel;
         SpellCheck::SpellCheckItemInfo m_SpellCheckInfo;
         int m_EditFlags;

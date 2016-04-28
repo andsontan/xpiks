@@ -150,13 +150,14 @@ namespace Common {
 
                 if (item == NULL) { break; }
 
-                bool canDelete = true;
+                bool canDelete = false;
 
                 try {
                     canDelete = processOneItem(item);
                 }
                 catch (...) {
                     LOG_WARNING << "Exception while processing item!";
+                    canDelete = true;
                 }
 
                 if (canDelete) {

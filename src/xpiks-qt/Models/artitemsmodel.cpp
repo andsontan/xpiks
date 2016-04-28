@@ -167,7 +167,9 @@ namespace Models {
             if (metadata->appendKeyword(keyword)) {
                 QModelIndex index = this->index(metadataIndex);
                 emit dataChanged(index, index, QVector<int>() << IsModifiedRole << KeywordsCountRole);
-                m_CommandManager->submitKeywordForSpellCheck(metadata->getKeywordsModel(), metadata->getKeywordsCount() - 1);
+                Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
+
+                m_CommandManager->submitKeywordForSpellCheck(keywordsModel, keywordsModel->getKeywordsCount() - 1);
                 m_CommandManager->submitKeywordsForWarningsCheck(metadata);
                 metadata->requestBackup();
             }
@@ -521,14 +523,18 @@ namespace Models {
             return metadata->getFilepath();
         case ArtworkTitleRole:
             return metadata->getTitle();
-        case KeywordsStringRole:
-            return metadata->getKeywordsString();
+        case KeywordsStringRole: {
+                Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
+                return keywordsModel->getKeywordsString();
+            }
         case IsModifiedRole:
             return metadata->isModified();
         case IsSelectedRole:
             return metadata->isSelected();
-        case KeywordsCountRole:
-            return metadata->getKeywordsCount();
+        case KeywordsCountRole: {
+                Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
+                return keywordsModel->getKeywordsCount();
+            }
         case HasVectorAttachedRole: {
                 ImageArtwork *image = dynamic_cast<ImageArtwork*>(metadata);
                 return (image != NULL) && image->hasVectorAttached();

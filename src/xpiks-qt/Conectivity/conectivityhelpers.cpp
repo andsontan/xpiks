@@ -28,6 +28,7 @@
 #include "uploadcontext.h"
 #include "uploadbatch.h"
 #include "../Helpers/filenameshelpers.h"
+#include "../Models/imageartwork.h"
 
 #define TIMEOUT_SECONDS 10
 #define RETRIES_COUNT 3
@@ -47,8 +48,10 @@ namespace Conectivity {
             QString filepath = metadata->getFilepath();
             filePathes.append(filepath);
 
-            if (metadata->hasVectorAttached()) {
-                filePathes.append(metadata->getAttachedVectorPath());
+            Models::ImageArtwork *image = dynamic_cast<Models::ImageArtwork*>(metadata);
+
+            if (image != NULL && image->hasVectorAttached()) {
+                filePathes.append(image->getAttachedVectorPath());
 
                 QString zipPath = Helpers::getArchivePath(filepath);
                 zipsPathes.append(zipPath);

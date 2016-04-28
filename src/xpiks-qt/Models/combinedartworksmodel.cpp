@@ -35,7 +35,7 @@ namespace Models {
     CombinedArtworksModel::CombinedArtworksModel(QObject *parent) :
         AbstractListModel(parent),
         Common::BaseEntity(),
-        m_CommonKeywordsModel(this),
+        m_CommonKeywordsModel(m_HoldPlaceholder, this),
         m_EditFlags(0),
         m_AreKeywordsModified(false),
         m_IsDescriptionModified(false),

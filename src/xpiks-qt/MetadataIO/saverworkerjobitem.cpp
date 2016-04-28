@@ -23,6 +23,7 @@
 #include <QFile>
 #include <QDataStream>
 #include "../Helpers/constants.h"
+#include "../Common/basickeywordsmodel.h"
 
 namespace MetadataIO {
     MetadataSavingCopy::MetadataSavingCopy(Models::ArtworkMetadata *metadata):
@@ -41,7 +42,9 @@ namespace MetadataIO {
     void MetadataSavingCopy::readFromMetadata() {
         m_MetadataInfo["title"] = m_Metadata->getTitle();
         m_MetadataInfo["description"] = m_Metadata->getDescription();
-        m_MetadataInfo["keywords"] = m_Metadata->getKeywordsString();
+
+        Common::BasicKeywordsModel *keywordsModel = m_Metadata->getKeywordsModel();
+        m_MetadataInfo["keywords"] = keywordsModel->getKeywordsString();
     }
 
     void MetadataSavingCopy::saveToFile() const {

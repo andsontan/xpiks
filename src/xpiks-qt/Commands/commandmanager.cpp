@@ -384,7 +384,7 @@ void Commands::CommandManager::addInitialArtworks(const QStringList &artworksFil
 }
 #endif
 
-void Commands::CommandManager::submitKeywordForSpellCheck(SpellCheck::ISpellCheckable *item, int keywordIndex) const {
+void Commands::CommandManager::submitKeywordForSpellCheck(Common::BasicKeywordsModel *item, int keywordIndex) const {
     if ((m_SettingsModel != NULL) && m_SettingsModel->getUseSpellCheck() && (m_SpellCheckerService != NULL)) {
         m_SpellCheckerService->submitKeyword(item, keywordIndex);
     }
@@ -395,7 +395,7 @@ void Commands::CommandManager::submitForSpellCheck(const QVector<Models::Artwork
             m_SettingsModel->getUseSpellCheck() &&
             (m_SpellCheckerService != NULL) &&
             !items.isEmpty()) {
-        QVector<SpellCheck::ISpellCheckable*> itemsToSubmit;
+        QVector<Common::BasicKeywordsModel *> itemsToSubmit;
         int count = items.length();
         itemsToSubmit.reserve(count);
 
@@ -408,19 +408,19 @@ void Commands::CommandManager::submitForSpellCheck(const QVector<Models::Artwork
     }
 }
 
-void Commands::CommandManager::submitForSpellCheck(const QVector<SpellCheck::ISpellCheckable *> &items) const {
+void Commands::CommandManager::submitForSpellCheck(const QVector<Common::BasicKeywordsModel *> &items) const {
     if ((m_SettingsModel != NULL) && m_SettingsModel->getUseSpellCheck() && m_SpellCheckerService != NULL) {
         m_SpellCheckerService->submitItems(items);
     }
 }
 
-void Commands::CommandManager::submitItemForSpellCheck(SpellCheck::ISpellCheckable *item, int flags) const {
+void Commands::CommandManager::submitItemForSpellCheck(Common::BasicKeywordsModel *item, int flags) const {
     if ((m_SettingsModel != NULL) && m_SettingsModel->getUseSpellCheck() && (m_SpellCheckerService != NULL)) {
         m_SpellCheckerService->submitItem(item, flags);
     }
 }
 
-void Commands::CommandManager::setupSpellCheckSuggestions(SpellCheck::ISpellCheckable *item, int index, int flags) {
+void Commands::CommandManager::setupSpellCheckSuggestions(Common::BasicKeywordsModel *item, int index, int flags) {
     if (m_SpellCheckSuggestionModel) {
         m_SpellCheckSuggestionModel->setupModel(item, index, flags);
         reportUserAction(Conectivity::UserActionSpellSuggestions);

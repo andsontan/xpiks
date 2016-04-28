@@ -33,11 +33,12 @@
 
 namespace Models {
     ArtworkMetadata::ArtworkMetadata(const QString &filepath, qint64 ID):
+        m_KeywordsModel(m_Hold),
         m_FileSize(0),
         m_ArtworkFilepath(filepath),
         m_ID(ID),
         m_MetadataFlags(0),
-        m_RefCount(1)
+        m_WarningsFlags(Common::WarningTypeNoWarnings)
     {
         m_KeywordsModel.setSpellCheckInfo(new SpellCheck::SpellCheckItemInfo());
         m_BackupTimer.setSingleShot(true);

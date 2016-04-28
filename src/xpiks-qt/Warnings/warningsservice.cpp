@@ -92,8 +92,7 @@ namespace Warnings {
         itemsToSubmit.reserve(length);
 
         for (int i = 0; i < length; ++i) {
-            IWarningsCheckable *item = items.at(i);
-            item->acquire();
+            Models::ArtworkMetadata *item = items.at(i);
             WarningsItem *itemToSubmit = new WarningsItem(item);
             itemsToSubmit.append(itemToSubmit);
         }

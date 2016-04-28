@@ -42,6 +42,10 @@ namespace UndoRedo {
     class UndoRedoManager;
 }
 
+namespace Common {
+    class BasicKeywordsModel;
+}
+
 namespace Models {
     class ArtworksRepository;
     class ArtItemsModel;
@@ -200,11 +204,11 @@ namespace Commands {
 #endif
 
     public:
-        void submitKeywordForSpellCheck(SpellCheck::ISpellCheckable *item, int keywordIndex) const;
+        void submitKeywordForSpellCheck(Common::BasicKeywordsModel *item, int keywordIndex) const;
         void submitForSpellCheck(const QVector<Models::ArtworkMetadata*> &items) const;
-        void submitForSpellCheck(const QVector<SpellCheck::ISpellCheckable *> &items) const;
-        void submitItemForSpellCheck(SpellCheck::ISpellCheckable *item, int flags = Common::SpellCheckAll) const;
-        void setupSpellCheckSuggestions(SpellCheck::ISpellCheckable *item, int index, int flags);
+        void submitForSpellCheck(const QVector<Common::BasicKeywordsModel *> &items) const;
+        void submitItemForSpellCheck(Common::BasicKeywordsModel *item, int flags = Common::SpellCheckAll) const;
+        void setupSpellCheckSuggestions(Common::BasicKeywordsModel *item, int index, int flags);
 
     public:
         void submitKeywordsForWarningsCheck(Models::ArtworkMetadata *item) const;

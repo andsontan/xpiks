@@ -26,6 +26,7 @@
 #include "ispellcheckable.h"
 #include "../Common/flags.h"
 #include "../Common/defines.h"
+#include "../Common/basickeywordsmodel.h"
 
 namespace SpellCheck {
     SpellCheckItemBase::~SpellCheckItemBase() {
@@ -48,7 +49,7 @@ namespace SpellCheck {
         m_QueryItems.append(item);
     }
 
-    SpellCheckItem::SpellCheckItem(ISpellCheckable *spellCheckable, int spellCheckFlags, int keywordIndex) :
+    SpellCheckItem::SpellCheckItem(Common::BasicKeywordsModel *spellCheckable, int spellCheckFlags, int keywordIndex) :
         SpellCheckItemBase(),
         m_SpellCheckable(spellCheckable),
         m_SpellCheckFlags(spellCheckFlags),
@@ -70,7 +71,7 @@ namespace SpellCheck {
         }
     }
 
-    SpellCheckItem::SpellCheckItem(ISpellCheckable *spellCheckable, int spellCheckFlags) :
+    SpellCheckItem::SpellCheckItem(Common::BasicKeywordsModel *spellCheckable, int spellCheckFlags) :
         SpellCheckItemBase(),
         m_SpellCheckable(spellCheckable),
         m_SpellCheckFlags(spellCheckFlags),
@@ -92,6 +93,12 @@ namespace SpellCheck {
             QStringList titleWords = spellCheckable->getTitleWords();
             reserve(titleWords.length());
             addWords(titleWords, 100000);
+        }
+    }
+
+    SpellCheckItem::~SpellCheckItem() {
+        if (m_SpellCheckable->release()) {
+            LOG_WARNING << "item was locked for removal";
         }
     }
 
@@ -133,10 +140,5 @@ namespace SpellCheck {
 
         int index = m_OnlyOneKeyword ? items.first()->m_Index : -1;
         emit resultsReady(m_SpellCheckFlags, index);
-
-        bool releaseResult = m_SpellCheckable->release();
-        if (releaseResult) {
-            LOG_WARNING << "item was locked for removal";
-        }
     }
 }

@@ -29,10 +29,10 @@
 #include "../Common/defines.h"
 
 namespace Common {
-    BasicKeywordsModel::BasicKeywordsModel(QObject *parent):
+    BasicKeywordsModel::BasicKeywordsModel(Hold &hold, QObject *parent):
         QAbstractListModel(parent),
-        m_SpellCheckInfo(NULL),
-        m_WarningsFlags(Common::WarningTypeNoWarnings)
+        m_Hold(hold),
+        m_SpellCheckInfo(NULL)
     {
     }
 

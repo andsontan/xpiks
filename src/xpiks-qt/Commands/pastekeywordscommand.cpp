@@ -38,12 +38,10 @@ Commands::CommandResult *Commands::PasteKeywordsCommand::execute(const ICommandM
 
     QVector<int> indicesToUpdate;
     QVector<UndoRedo::ArtworkMetadataBackup*> artworksBackups;
-    QVector<SpellCheck::ISpellCheckable*> itemsToSpellCheck;
     QVector<Models::ArtworkMetadata*> itemsToSave;
     int size = m_ArtItemInfos.length();
     indicesToUpdate.reserve(size);
     artworksBackups.reserve(size);
-    itemsToSpellCheck.reserve(size);
     itemsToSave.reserve(size);
 
     for (int i = 0; i < size; ++i) {
@@ -55,13 +53,10 @@ Commands::CommandResult *Commands::PasteKeywordsCommand::execute(const ICommandM
 
         metadata->appendKeywords(m_KeywordsList);
         itemsToSave.append(metadata);
-
-        Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
-        itemsToSpellCheck.append(keywordsModel);
     }
 
     if (size > 0) {
-        commandManager->submitForSpellCheck(itemsToSpellCheck);
+        commandManager->submitForSpellCheck(itemsToSave);
         commandManager->submitForWarningsCheck(itemsToSave);
         commandManager->saveArtworksBackups(itemsToSave);
 

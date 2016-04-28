@@ -30,6 +30,7 @@
 #include <QSet>
 #include <QVector>
 #include "baseentity.h"
+#include "hold.h"
 #include "../SpellCheck/ispellcheckable.h"
 
 namespace SpellCheck {
@@ -47,7 +48,7 @@ namespace Common {
         Q_OBJECT
         Q_PROPERTY(bool hasSpellErrors READ hasSpellErrors NOTIFY spellCheckErrorsChanged)
     public:
-        BasicKeywordsModel(QObject *parent=0);
+        BasicKeywordsModel(Common::Hold &hold, QObject *parent=0);
         virtual ~BasicKeywordsModel();
 
     public:
@@ -100,6 +101,10 @@ namespace Common {
         void setSpellCheckInfo(SpellCheck::SpellCheckItemInfo *info) { m_SpellCheckInfo = info; }
         void notifySpellCheckResults(int flags);
 
+    public:
+        void acquire() { m_Hold.acquire(); }
+        bool release() { return m_Hold.release(); }
+
     private:
         void updateDescriptionSpellErrors(const QHash<QString, bool> &results);
         void updateTitleSpellErrors(const QHash<QString, bool> &results);
@@ -141,6 +146,7 @@ namespace Common {
         virtual QHash<int, QByteArray> roleNames() const;
 
     private:
+        Common::Hold &m_Hold;
         QStringList m_KeywordsList;
         QSet<QString> m_KeywordsSet;
         QVector<bool> m_SpellCheckResults;

@@ -242,11 +242,12 @@ namespace Models {
             int originalIndex = getOriginalIndex(index);
             ArtItemsModel *artItemsModel = getArtItemsModel();
             ArtworkMetadata *metadata = artItemsModel->getArtwork(originalIndex);
+            Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
+
             if (!metadata->getDescription().trimmed().isEmpty()) {
-                m_CommandManager->submitItemForSpellCheck(metadata, Common::SpellCheckDescription);
+                m_CommandManager->submitItemForSpellCheck(keywordsModel, Common::SpellCheckDescription);
             } else {
                 LOG_INFO << "description is empty";
-                Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
                 keywordsModel->notifySpellCheckResults(Common::SpellCheckDescription);
             }
 
@@ -260,11 +261,12 @@ namespace Models {
             int originalIndex = getOriginalIndex(index);
             ArtItemsModel *artItemsModel = getArtItemsModel();
             ArtworkMetadata *metadata = artItemsModel->getArtwork(originalIndex);
+            Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
+
             if (!metadata->getTitle().trimmed().isEmpty()) {
-                m_CommandManager->submitItemForSpellCheck(metadata, Common::SpellCheckTitle);
+                m_CommandManager->submitItemForSpellCheck(keywordsModel, Common::SpellCheckTitle);
             } else {
                 LOG_INFO << "title is empty";
-                Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
                 keywordsModel->notifySpellCheckResults(Common::SpellCheckTitle);
             }
 

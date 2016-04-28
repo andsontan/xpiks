@@ -28,6 +28,7 @@
 #include "libraryloaderworker.h"
 #include "suggestionartwork.h"
 #include "../Common/defines.h"
+#include "../Common/basickeywordsmodel.h"
 
 namespace Suggestion {
     LocalLibrary::LocalLibrary():
@@ -179,8 +180,9 @@ namespace Suggestion {
             QSet<QString> tags;
             tags.unite(metadata->getKeywordsSet());
 
-            QStringList descriptionWords = metadata->getDescriptionWords();
-            QStringList titleWords = metadata->getTitleWords();
+            Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
+            QStringList descriptionWords = keywordsModel->getDescriptionWords();
+            QStringList titleWords = keywordsModel->getTitleWords();
 
             tags.unite(descriptionWords.toSet());
             tags.unite(titleWords.toSet());
