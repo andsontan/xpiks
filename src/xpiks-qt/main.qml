@@ -868,6 +868,7 @@ ApplicationWindow {
                     text: i18.n + qsTr("Add directory")
                     width: 110
                     onClicked: chooseDirectoryDialog.open()
+                    enabled: (applicationWindow.openedDialogsCount == 0)
                 }
 
                 StyledButton {
