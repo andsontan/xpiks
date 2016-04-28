@@ -35,6 +35,7 @@
 #include "../Common/flags.h"
 #include "../Common/ibasicartwork.h"
 #include "../Common/hold.h"
+#include "../SpellCheck/spellcheckiteminfo.h"
 
 class QTextDocument;
 
@@ -171,6 +172,7 @@ namespace Models {
 
     private:
          Common::Hold m_Hold;
+         SpellCheck::SpellCheckItemInfo m_SpellCheckInfo;
          Common::BasicKeywordsModel m_KeywordsModel;
          qint64 m_FileSize; // in bytes
          QString m_ArtworkFilepath;

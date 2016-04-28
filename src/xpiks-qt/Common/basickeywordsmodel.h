@@ -49,7 +49,7 @@ namespace Common {
         Q_PROPERTY(bool hasSpellErrors READ hasSpellErrors NOTIFY spellCheckErrorsChanged)
     public:
         BasicKeywordsModel(Common::Hold &hold, QObject *parent=0);
-        virtual ~BasicKeywordsModel();
+        virtual ~BasicKeywordsModel() { }
 
     public:
         enum BasicKeywordsModellRoles {

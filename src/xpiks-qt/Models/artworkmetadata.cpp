@@ -40,7 +40,7 @@ namespace Models {
         m_MetadataFlags(0),
         m_WarningsFlags(Common::WarningTypeNoWarnings)
     {
-        m_KeywordsModel.setSpellCheckInfo(new SpellCheck::SpellCheckItemInfo());
+        m_KeywordsModel.setSpellCheckInfo(&m_SpellCheckInfo);
         m_BackupTimer.setSingleShot(true);
         QObject::connect(&m_BackupTimer, SIGNAL(timeout()), this, SLOT(backupTimerTriggered()));
     }

@@ -51,10 +51,11 @@ namespace Models {
     CombinedArtworksModel::~CombinedArtworksModel() { qDeleteAll(m_ArtworksList); }
 
     void CombinedArtworksModel::initArtworks(const QVector<ArtItemInfo *> &artworks) {
-        int innerLength = m_ArtworksList.length();
-        int start = innerLength == 0 ? 0 : innerLength - 1;
         int paramLength = artworks.length();
+
         if (paramLength > 0) {
+            int innerLength = m_ArtworksList.length();
+            int start = innerLength == 0 ? 0 : innerLength - 1;
             beginInsertRows(QModelIndex(), start, start + paramLength - 1);
             m_ArtworksList << artworks;
             endInsertRows();
@@ -67,6 +68,7 @@ namespace Models {
 
     void CombinedArtworksModel::recombineArtworks() {
         LOG_DEBUG << m_ArtworksList.length() << "artwork(s)";
+        if (m_ArtworksList.isEmpty()) { return; }
 
         if (m_ArtworksList.length() == 1) {
             assignFromOneArtwork();

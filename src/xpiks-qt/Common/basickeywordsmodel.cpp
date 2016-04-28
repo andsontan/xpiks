@@ -36,12 +36,6 @@ namespace Common {
     {
     }
 
-    BasicKeywordsModel::~BasicKeywordsModel() {
-        if (m_SpellCheckInfo != NULL) {
-            delete m_SpellCheckInfo;
-        }
-    }
-
     QVariant BasicKeywordsModel::data(const QModelIndex &index, int role) const {
         int row = index.row();
         if (row < 0 || row >= m_KeywordsList.length()) {
