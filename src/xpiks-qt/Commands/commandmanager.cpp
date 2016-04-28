@@ -311,11 +311,13 @@ void Commands::CommandManager::setArtworksForZipping(const QVector<Models::Artwo
 
 /*virtual*/
 void Commands::CommandManager::connectArtworkSignals(Models::ArtworkMetadata *metadata) const {
+    Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
+
     if (m_ArtItemsModel) {
         QObject::connect(metadata, SIGNAL(modifiedChanged(bool)),
                          m_ArtItemsModel, SLOT(itemModifiedChanged(bool)));
 
-        QObject::connect(metadata, SIGNAL(spellCheckErrorsChanged()),
+        QObject::connect(keywordsModel, SIGNAL(spellCheckErrorsChanged()),
                          m_ArtItemsModel, SLOT(spellCheckErrorsChanged()));
 
         QObject::connect(metadata, SIGNAL(backupRequired()),

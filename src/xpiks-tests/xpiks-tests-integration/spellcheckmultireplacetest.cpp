@@ -57,7 +57,7 @@ int SpellCheckMultireplaceTest::doTest() {
     QThread::sleep(1);
 
     Models::FilteredArtItemsProxyModel *filteredModel = m_CommandManager->getFilteredArtItemsModel();
-    QObject::connect(metadata, SIGNAL(spellCheckErrorsChanged()), &waiter, SIGNAL(finished()));
+    QObject::connect(metadata->getKeywordsModel(), SIGNAL(spellCheckErrorsChanged()), &waiter, SIGNAL(finished()));
 
     filteredModel->spellCheckSelected();
 
