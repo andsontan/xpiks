@@ -45,7 +45,7 @@ int AutoCompleteBasicTest::doTest() {
     Models::ArtworkMetadata *metadata = artItemsModel->getArtwork(0);
 
     SignalWaiter completionWaiter;
-    QObject::connect(metadata, SIGNAL(completionsAvailable()), &completionWaiter, SIGNAL(finished()));
+    QObject::connect(metadata->getKeywordsModel(), SIGNAL(completionsAvailable()), &completionWaiter, SIGNAL(finished()));
 
     AutoComplete::AutoCompleteService *acService = m_CommandManager->getAutoCompleteService();
     AutoComplete::AutoCompleteModel *acModel = acService->getAutoCompleteModel();
