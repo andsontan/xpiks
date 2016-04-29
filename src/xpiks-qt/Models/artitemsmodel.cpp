@@ -69,8 +69,13 @@ namespace Models {
             if (metadata->release()) {
                 delete metadata;
             } else {
-                metadata->disconnect();
                 LOG_DEBUG << "Metadata at index" << i << "is locked. Postponing destruction...";
+
+                metadata->disconnect();
+                Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
+                keywordsModel->disconnect();
+                keywordsModel->clearModel();
+
                 m_FinalizationList.append(metadata);
             }
         }
@@ -360,7 +365,7 @@ namespace Models {
 
         QSize size;
 
-        if (metadata->isInitialized()) {
+        if (image->isInitialized()) {
             size = image->getImageSize();
         } else {
             QImageReader reader(image->getFilepath());
@@ -889,8 +894,13 @@ namespace Models {
         if (metadata->release()) {
             delete metadata;
         } else {
-            metadata->disconnect();
             LOG_DEBUG << "Metadata at index" << row << "is locked. Postponing destruction...";
+
+            metadata->disconnect();
+            Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
+            keywordsModel->disconnect();
+            keywordsModel->clearModel();
+
             m_FinalizationList.append(metadata);
         }
     }
