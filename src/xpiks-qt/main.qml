@@ -1389,7 +1389,8 @@ ApplicationWindow {
                                 objectName: "artworkDelegate"
                                 property bool isHighlighted: isselected || (descriptionTextInput.activeFocus || flv.isFocused || titleTextInput.activeFocus)
                                 color: isHighlighted ? Colors.selectedImageBackground : Colors.artworkImageBackground
-                                property var artworkModel: artItemsModel.getArtworkItself(rowWrapper.getIndex())
+                                property var artworkModel: filteredArtItemsModel.getArtworkMetadata(index)
+                                property var keywordsModel: filteredArtItemsModel.getKeywordsModel(index)
                                 property int delegateIndex: index
                                 width: applicationWindow.listLayout ? (mainScrollView.areScrollbarsVisible ? (parent.width - 5) : parent.width) : 208
                                 height: applicationWindow.listLayout ? (artworksHost.defaultRowHeight + 80*(settingsModel.keywordSizeScale - 1.0)) : artworksHost.defaultRowHeight
@@ -1425,13 +1426,6 @@ ApplicationWindow {
                                 Connections {
                                     target: rowWrapper.artworkModel
 
-                                    onSpellCheckResultsReady: {
-                                        descriptionTextInput.deselect()
-                                        if (columnLayout.isWideEnough) {
-                                            titleTextInput.deselect()
-                                        }
-                                    }
-
                                     onFocusRequested: {
                                         if (directionSign === +1) {
                                             descriptionTextInput.forceActiveFocus()
@@ -1441,6 +1435,17 @@ ApplicationWindow {
                                         }
 
                                         artworksHost.positionViewAtIndex(rowWrapper.delegateIndex, ListView.Contain)
+                                    }
+                                }
+
+                                Connections {
+                                    target: rowWrapper.keywordsModel
+
+                                    onSpellCheckResultsReady: {
+                                        descriptionTextInput.deselect()
+                                        if (columnLayout.isWideEnough) {
+                                            titleTextInput.deselect()
+                                        }
                                     }
 
                                     onCompletionsAvailable: {
@@ -1899,7 +1904,7 @@ ApplicationWindow {
 
                                                 EditableTags {
                                                     id: flv
-                                                    model: rowWrapper.artworkModel
+                                                    model: rowWrapper.keywordsModel
                                                     anchors.fill: parent
                                                     property int keywordHeight: 20 * settingsModel.keywordSizeScale + (settingsModel.keywordSizeScale - 1)*10
                                                     scrollStep: keywordHeight
@@ -1963,7 +1968,7 @@ ApplicationWindow {
 
                                                     onCompletionRequested: {
                                                         helpersWrapper.autoCompleteKeyword(prefix,
-                                                                                           rowWrapper.artworkModel)
+                                                                                           rowWrapper.keywordsModel)
                                                     }
                                                 }
 
@@ -2028,7 +2033,7 @@ ApplicationWindow {
                                                 StyledText {
                                                     id: fixSpellingText
                                                     text: i18.n + qsTr("Fix spelling")
-                                                    enabled: rowWrapper.artworkModel ? rowWrapper.artworkModel.hasSpellErrors : false
+                                                    enabled: rowWrapper.keywordsModel ? rowWrapper.keywordsModel.hasSpellErrors : false
                                                     color: enabled ? (fixSpellingMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor)  : (rowWrapper.isHighlighted ? Colors.labelActiveForeground : Colors.labelInactiveForeground)
 
                                                     MouseArea {

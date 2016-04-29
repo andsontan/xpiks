@@ -250,6 +250,7 @@ namespace Models {
 
     void CombinedArtworksModel::clearKeywords() {
         m_CommonKeywordsModel.clearKeywords();
+        m_AreKeywordsModified = true;
     }
 
     void CombinedArtworksModel::suggestCorrections() {

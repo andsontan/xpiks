@@ -328,7 +328,7 @@ namespace Models {
         m_CommandManager->writeMetadata(modifiedSelectedArtworks, useBackups);
     }
 
-    QObject *ArtItemsModel::getArtworkItself(int index) const {
+    ArtworkMetadata *ArtItemsModel::getArtworkMetadata(int index) const {
         ArtworkMetadata *item = NULL;
 
         if (0 <= index && index < m_ArtworkList.length()) {
@@ -337,6 +337,17 @@ namespace Models {
         }
 
         return item;
+    }
+
+    Common::BasicKeywordsModel *ArtItemsModel::getKeywordsModel(int index) const {
+        Common::BasicKeywordsModel *keywordsModel = NULL;
+
+        if (0 <= index && index < m_ArtworkList.length()) {
+            keywordsModel = m_ArtworkList.at(index)->getKeywordsModel();
+            QQmlEngine::setObjectOwnership(keywordsModel, QQmlEngine::CppOwnership);
+        }
+
+        return keywordsModel;
     }
 
     QSize ArtItemsModel::retrieveImageSize(int metadataIndex) const {

@@ -88,12 +88,6 @@ namespace Models {
         void dropWarningsFlags(int flagsToDrop) { m_WarningsFlags &= (~flagsToDrop); }
 
     public:
-        Q_INVOKABLE QObject *getKeywordsModelObject() {
-            QObject *item = &m_KeywordsModel;
-            QQmlEngine::setObjectOwnership(item, QQmlEngine::CppOwnership);
-            return item;
-        }
-
         Common::BasicKeywordsModel *getKeywordsModel() { return &m_KeywordsModel; }
         const Common::BasicKeywordsModel *getKeywordsModel() const { return &m_KeywordsModel; }
 

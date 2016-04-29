@@ -299,6 +299,20 @@ namespace Models {
         artItemsModel->detachVectorsFromSelected(indices);
     }
 
+    QObject *FilteredArtItemsProxyModel::getArtworkMetadata(int index) {
+        int originalIndex = getOriginalIndex(index);
+        ArtItemsModel *artItemsModel = getArtItemsModel();
+        QObject *item = artItemsModel->getArtworkMetadata(originalIndex);
+        return item;
+    }
+
+    QObject *FilteredArtItemsProxyModel::getKeywordsModel(int index) {
+        int originalIndex = getOriginalIndex(index);
+        ArtItemsModel *artItemsModel = getArtItemsModel();
+        QObject *item = artItemsModel->getKeywordsModel(originalIndex);
+        return item;
+    }
+
     void FilteredArtItemsProxyModel::itemSelectedChanged(bool value) {
         int plus = value ? +1 : -1;
         m_SelectedArtworksCount += plus;
