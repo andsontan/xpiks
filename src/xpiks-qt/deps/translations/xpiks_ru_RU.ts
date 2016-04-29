@@ -1510,7 +1510,7 @@ They will be detached automatically.</source>
     <message>
         <location filename="../../main.qml" line="1013"/>
         <source>Edit</source>
-        <translation>Редактировать</translation>
+        <translation>Править</translation>
     </message>
     <message>
         <location filename="../../main.qml" line="1019"/>
