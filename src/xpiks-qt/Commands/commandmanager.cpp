@@ -457,15 +457,17 @@ void Commands::CommandManager::submitForWarningsCheck(const QVector<Models::Artw
         m_WarningsService->submitItems(items);
     }
 
-    QVector<Common::IBasicArtwork *> itemsToSubmit;
-    int count = items.length();
-    itemsToSubmit.reserve(count);
+    if (!m_WarningsCheckers.isEmpty()) {
+        QVector<Common::IBasicArtwork *> itemsToSubmit;
+        int count = items.length();
+        itemsToSubmit.reserve(count);
 
-    for (int i = 0; i < count; ++i) {
-        itemsToSubmit << items.at(i);
+        for (int i = 0; i < count; ++i) {
+            itemsToSubmit << items.at(i);
+        }
+
+        this->submitForWarningsCheck(itemsToSubmit);
     }
-
-    this->submitForWarningsCheck(itemsToSubmit);
 }
 
 void Commands::CommandManager::submitForWarningsCheck(const QVector<Common::IBasicArtwork *> &items) const {

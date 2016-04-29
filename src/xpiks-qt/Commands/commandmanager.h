@@ -214,6 +214,8 @@ namespace Commands {
         void submitKeywordsForWarningsCheck(Models::ArtworkMetadata *item) const;
         void submitForWarningsCheck(Models::ArtworkMetadata *item, int flags = Common::WarningsCheckAll) const;
         void submitForWarningsCheck(const QVector<Models::ArtworkMetadata*> &items) const;
+
+    private:
         void submitForWarningsCheck(const QVector<Common::IBasicArtwork *> &items) const;
 
     public:
