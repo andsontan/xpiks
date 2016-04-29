@@ -402,6 +402,29 @@ void CombinedModelTests::isModifiedAfterKeywordEditTest() {
     freeArtworks(items);
 }
 
+void CombinedModelTests::isModifiedAfterKeywordsClearTest() {
+    Models::CombinedArtworksModel combinedModel;
+    combinedModel.setCommandManager(&m_CommandManagerMock);
+
+    QString commonKeyword = "a common keyword";
+
+    QVector<Models::ArtItemInfo *> items;
+    items << createArtworkMetadata("Description1", "title1", QStringList() << "Keyword1" << commonKeyword, 0);
+    items << createArtworkMetadata("Description2", "title2", QStringList() << "Keyword2" << commonKeyword, 1);
+    items << createArtworkMetadata("Description3", "title3", QStringList() << "Keyword3" << commonKeyword, 2);
+
+    combinedModel.initArtworks(items);
+    combinedModel.recombineArtworks();
+
+    QCOMPARE(combinedModel.getAreKeywordsModified(), false);
+
+    combinedModel.clearKeywords();
+
+    QCOMPARE(combinedModel.getAreKeywordsModified(), true);
+
+    freeArtworks(items);
+}
+
 void CombinedModelTests::initArtworksEmitsRowsInsertTest() {
     Models::CombinedArtworksModel combinedModel;
     combinedModel.setCommandManager(&m_CommandManagerMock);

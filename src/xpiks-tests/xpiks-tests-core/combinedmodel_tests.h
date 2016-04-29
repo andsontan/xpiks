@@ -24,6 +24,7 @@ private slots:
     void isModifiedAfterKeywordsAppendTest();
     void isModifiedAfterKeywordRemovalTest();
     void isModifiedAfterKeywordEditTest();
+    void isModifiedAfterKeywordsClearTest();
     void initArtworksEmitsRowsInsertTest();
     void initEmptyArtworksDoesNotEmitTest();
     void initOneArtworkEnablesAllFields();
