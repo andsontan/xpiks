@@ -1494,13 +1494,13 @@ They will be detached automatically.</source>
     <message>
         <location filename="../../main.qml" line="850"/>
         <source>Add directory</source>
-        <translation>Добавить папку</translation>
+        <translation>Добав. папку</translation>
     </message>
     <message>
         <location filename="../../main.qml" line="859"/>
         <source>Add files</source>
         <comment>button</comment>
-        <translation>Добавить файлы</translation>
+        <translation>Добав. файлы</translation>
     </message>
     <message>
         <location filename="../../main.qml" line="1007"/>
