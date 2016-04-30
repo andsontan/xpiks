@@ -125,7 +125,7 @@ Item {
                         parent: slidesHost
                         id: firstSlide
                         title: i18.n + qsTr("Autocompletion for keywords")
-                        color: "blue"
+                        imageUrl: "qrc:/Graphics/autocomplete.png"
                         width: slidesHost.width
                         height: slidesHost.height
                     },
@@ -133,7 +133,7 @@ Item {
                         parent: slidesHost
                         id: secondSlide
                         title: i18.n + qsTr("Localization of interface to %1 languages").arg(5)
-                        color: "red"
+                        imageUrl: "qrc:/Graphics/localization.png"
                         width: slidesHost.width
                         height: slidesHost.height
                     },
@@ -141,7 +141,7 @@ Item {
                         parent: slidesHost
                         id: thirdSlide
                         title: i18.n + qsTr("iStock and Fotolia suggestion providers")
-                        color: "red"
+                        imageUrl: "qrc:/Graphics/suggestion.png"
                         width: slidesHost.width
                         height: slidesHost.height
                     },
@@ -149,7 +149,7 @@ Item {
                         parent: slidesHost
                         id: fourthSlide
                         title: i18.n + qsTr("Brand new theme for Xpiks")
-                        color: "green"
+                        imageUrl: "qrc:/Graphics/newtheme.png"
                         width: slidesHost.width
                         height: slidesHost.height
                     },
@@ -157,7 +157,7 @@ Item {
                         parent: slidesHost
                         id: fifthSlide
                         title: i18.n + qsTr("Predefined FTP addresses")
-                        color: "orange"
+                        imageUrl: "qrc:/Graphics/predefinedftp.png"
                         width: slidesHost.width
                         height: slidesHost.height
                     },
@@ -165,7 +165,7 @@ Item {
                         parent: slidesHost
                         id: sixsSlide
                         title: i18.n + qsTr("Bug fixes and improvements")
-                        color: "orange"
+                        imageUrl: "qrc:/Graphics/gears.png"
                         width: slidesHost.width
                         height: slidesHost.height
                     }

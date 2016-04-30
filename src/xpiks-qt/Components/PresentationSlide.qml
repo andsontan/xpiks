@@ -24,7 +24,7 @@ import "../StyledControls"
 
 Item {
     id: screen
-    property string color: "red"
+    property string imageUrl
     property string title: "title"
     opacity: 1
     clip: true
@@ -39,11 +39,14 @@ Item {
         screen.state  = 'show';
     }
 
-    Rectangle {
+    Image {
         id: rect
         width: screen.width
         height: screen.height - 50
-        color: screen.color
+        source: screen.imageUrl
+        //fillMode: Image.PreserveAspectFit
+        asynchronous: true
+        cache: false
     }
 
     Rectangle {
