@@ -402,6 +402,7 @@ linux-g++-64 {
     QML_IMPORT_PATH += /usr/lib/x86_64-linux-gnu/qt5/imports/
     LIBS += -L/lib/x86_64-linux-gnu/
     BUILDNO = $$system(od -An -N8 -tx8 </dev/urandom)
+    DEFINES -= TELEMETRY_ENABLED
 
     UNAME = $$system(cat /proc/version | tr -d \'()\')
     contains( UNAME, Debian ) {
