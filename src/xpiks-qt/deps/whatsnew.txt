@@ -1,11 +1,22 @@
-This is Xpiks 1.2 release. It provides following features:
+This is Xpiks 1.3 release. 
 
-- ability to attach vectors to previews
-- changing view from list to grid
-- automatic exiftool detection on OS X
-- upload progress reporing in taskbar on Windows
-- ability to correctly upload vectors to Dreamtimes
-- Plugin API for building extensions for Xpiks
-- various small UI fixes and improvements
+It provides following features:
+
+- autocompletion for keywords
+- localization to 6 languages (Ukrainian, Portugese, Spanish, Catalan, Russian, French)
+- keywords suggestion from iStock and Fotolia
+- brand new color theme
+- dozen of predefined FTP addresses of stocks
+- basic hotkeys support
+- watching for removal of images and vectors on disk
+- improvements for keywords suggestion algorithm
+- fixes in the UI (unification, effects for popups)
+
+And bugfixes:
+
+- scrolling jumps
+- incorrect warnings for non-existent properties
+- preliminary fix for paths with unicode characters in Windows
+
 
 Enjoy!
