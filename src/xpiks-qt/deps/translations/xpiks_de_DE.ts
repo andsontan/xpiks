@@ -99,7 +99,7 @@
     <message>
         <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="447"/>
         <source>(same as Description if empty)</source>
-        <translation>( falls leer wird von Beschreibungsfeld kopiert)</translation>
+        <translation>(falls leer wird von Beschreibungsfeld kopiert)</translation>
     </message>
     <message>
         <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="608"/>
@@ -172,7 +172,7 @@
     <message>
         <location filename="../../Dialogs/EditArtworkHorizontalDialog.qml" line="248"/>
         <source>(same as Description if empty)</source>
-        <translation>( falls leer wird von Beschreibungsfeld kopiert)</translation>
+        <translation>(falls leer wird von Beschreibungsfeld kopiert)</translation>
     </message>
     <message>
         <location filename="../../Dialogs/EditArtworkHorizontalDialog.qml" line="340"/>
@@ -235,7 +235,7 @@
     <message>
         <location filename="../../Dialogs/EditArtworkVerticalDialog.qml" line="244"/>
         <source>(same as Description if empty)</source>
-        <translation>( falls leer wird von Beschreibungsfeld kopiert)</translation>
+        <translation>(falls leer wird von Beschreibungsfeld kopiert)</translation>
     </message>
     <message>
         <location filename="../../Dialogs/EditArtworkVerticalDialog.qml" line="335"/>
@@ -443,7 +443,7 @@
         <location filename="../../Dialogs/KeywordsSuggestion.qml" line="482"/>
         <location filename="../../Dialogs/KeywordsSuggestion.qml" line="489"/>
         <source>Add suggested keywords</source>
-        <translation>Vorgeschlagene Stichwörter hinzufügen</translation>
+        <translation>die Vorgeschlagene hinzufügen</translation>
     </message>
     <message>
         <location filename="../../Dialogs/KeywordsSuggestion.qml" line="494"/>
