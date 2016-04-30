@@ -301,7 +301,7 @@
     <message>
         <location filename="../../Dialogs/EnterMasterPasswordDialog.qml" line="126"/>
         <source>Enter current Master Password:</source>
-        <translation>Geben Sie das aktuelle Master-Passwort bitte ein:</translation>
+        <translation>Aktuelle Master-Passwort:</translation>
     </message>
     <message>
         <location filename="../../Dialogs/EnterMasterPasswordDialog.qml" line="165"/>
