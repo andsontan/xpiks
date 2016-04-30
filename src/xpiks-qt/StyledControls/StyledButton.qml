@@ -26,6 +26,7 @@ import "../Constants"
 
 Button {
     property bool isDefault: false
+    clip: true
 
     style: ButtonStyle {
         background: Rectangle {

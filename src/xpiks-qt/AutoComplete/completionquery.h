@@ -26,6 +26,7 @@
 #include <QString>
 #include <QStringList>
 #include "autocompletemodel.h"
+#include "../Common/defines.h"
 
 namespace AutoComplete {
     class CompletionQuery : public QObject {
