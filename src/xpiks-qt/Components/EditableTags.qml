@@ -91,10 +91,7 @@ Flickable {
         if (editEnabled && !nextTagTextInput.activeFocus) {
             scrollToBottom()
             nextTagTextInput.forceActiveFocus()
-            editActivated();
         }
-
-        clickedInside()
     }
 
     function getEditedText() {
@@ -169,6 +166,7 @@ Flickable {
 
         onClicked: {
             activateEdit()
+            clickedInside()
             mouse.accepted = false
         }
 
@@ -338,6 +336,8 @@ Flickable {
                 onActiveFocusChanged: {
                     if (!activeFocus) {
                         completionCancel()
+                    } else {
+                        editActivated();
                     }
                 }
 

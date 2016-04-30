@@ -1366,6 +1366,7 @@ ApplicationWindow {
                             property double defaultRowHeight: 205
                             cellHeight: applicationWindow.listLayout ? (defaultRowHeight + 80*(settingsModel.keywordSizeScale - 1.0) + cellSpacing) : (defaultRowHeight + cellSpacing)
                             cellWidth: applicationWindow.listLayout ? artworksHost.width : (208 + cellSpacing)
+                            highlightFollowsCurrentItem: false
 
                             function forceUpdateArtworks(needToMoveCurrentItem) {
                                 console.debug("UI::forceUpdateArtworks # updating main listview")
@@ -1438,6 +1439,10 @@ ApplicationWindow {
                                 function switchChecked() {
                                     editisselected = !isselected
                                     itemCheckedCheckbox.checked = isselected
+                                    GridView.view.currentIndex = rowWrapper.delegateIndex
+                                }
+
+                                function updateCurrentIndex() {
                                     GridView.view.currentIndex = rowWrapper.delegateIndex
                                 }
 
@@ -1750,6 +1755,9 @@ ApplicationWindow {
 
                                                         onActiveFocusChanged: {
                                                             filteredArtItemsModel.spellCheckDescription(rowWrapper.delegateIndex)
+                                                            if (activeFocus) {
+                                                                rowWrapper.updateCurrentIndex()
+                                                            }
                                                         }
 
                                                         Keys.onBacktabPressed: {
@@ -1840,6 +1848,9 @@ ApplicationWindow {
 
                                                         onActiveFocusChanged: {
                                                             filteredArtItemsModel.spellCheckTitle(rowWrapper.delegateIndex)
+                                                            if (activeFocus) {
+                                                                rowWrapper.updateCurrentIndex()
+                                                            }
                                                         }
 
                                                         Keys.onPressed: {
@@ -1983,6 +1994,11 @@ ApplicationWindow {
                                                     onCompletionRequested: {
                                                         helpersWrapper.autoCompleteKeyword(prefix,
                                                                                            rowWrapper.artworkModel)
+                                                    }
+
+                                                    onEditActivated: {
+                                                        rowWrapper.updateCurrentIndex()
+                                                        flv.activateEdit()
                                                     }
                                                 }
 
