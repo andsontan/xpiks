@@ -38,19 +38,12 @@ namespace Helpers {
         Q_OBJECT
 
     public:
-        QStandardPaths::StandardLocation appDataLocationType;
-
         explicit AppSettings(QObject *parent = 0) : QSettings(QSettings::UserScope,
                                                               QCoreApplication::instance()->organizationName(),
                                                               QCoreApplication::instance()->applicationName(),
                                                               parent)
         {
-            #if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
-                appDataLocationType = QStandardPaths::AppDataLocation;
-            #else
-                appDataLocationType = QStandardPaths::DataLocation;
-            #endif
-            //LOG_DEBUG<< "Extra files search locations: "<<QStandardPaths::standardLocations(appDataLocationType);
+            LOG_DEBUG<< "Extra files search locations: "<<QStandardPaths::standardLocations(XPIKS_DATA_LOCATION_TYPE);
         }
 
         QString getAppWidthKey()   const { return QLatin1String(Constants::APP_WINDOW_WIDTH); }
@@ -160,7 +153,7 @@ namespace Helpers {
             path += QDir::separator() + QLatin1String(Constants::WHATS_NEW_FILENAME);
             path = QDir::cleanPath(path);
 #else
-            path = QStandardPaths::locate(appDataLocationType, Constants::WHATS_NEW_FILENAME);
+            path = QStandardPaths::locate(XPIKS_DATA_LOCATION_TYPE, Constants::WHATS_NEW_FILENAME);
 #endif
             QFile file(path);
             if (file.open(QIODevice::ReadOnly)) {
@@ -291,7 +284,7 @@ namespace Helpers {
             path += QDir::separator() + QLatin1String(Constants::TERMS_AND_CONDITIONS_FILENAME);
             path = QDir::cleanPath(path);
 #else
-            path = QStandardPaths::locate(appDataLocationType, Constants::TERMS_AND_CONDITIONS_FILENAME);
+            path = QStandardPaths::locate(XPIKS_DATA_LOCATION_TYPE, Constants::TERMS_AND_CONDITIONS_FILENAME);
 #endif
             QFile file(path);
             if (file.open(QIODevice::ReadOnly)) {

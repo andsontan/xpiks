@@ -26,6 +26,7 @@
 #include <QThread>
 #include <QDebug>
 #include <QDateTime>
+#include <QStandardPaths>
 
 #ifdef QT_NO_DEBUG
 #define WITH_LOGS
@@ -46,8 +47,10 @@
 #define LOG_WARNING qWarning()
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
+#define XPIKS_DATA_LOCATION_TYPE QStandardPaths::AppDataLocation
 #define XPIKS_USERDATA_PATH QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
 #else
+#define XPIKS_DATA_LOCATION_TYPE QStandardPaths::DataLocation
 #define XPIKS_USERDATA_PATH QStandardPaths::writableLocation(QStandardPaths::DataLocation);
 #endif
 

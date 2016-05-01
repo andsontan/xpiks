@@ -33,6 +33,7 @@ List of QML plugins to be installed manually (from standard repository):
 - qtdeclarative5-quicklayouts-plugin
 - qtdeclarative5-window-plugin
 - qtdeclarative5-controls-plugin
+- qml-module-qtgraphicaleffects
 
 Also there is an issue with application menu in Qt for Ubuntu which requires a workaround:
 
