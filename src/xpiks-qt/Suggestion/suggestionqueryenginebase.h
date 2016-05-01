@@ -43,7 +43,7 @@ namespace Suggestion {
 
         void setResults(const QVector<SuggestionArtwork *> &results) {
             m_LastResults.clear();
-            m_LastResults+=results;
+            m_LastResults += results;
         }
 
     signals:

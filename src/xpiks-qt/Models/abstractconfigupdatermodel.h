@@ -46,7 +46,7 @@ namespace Models {
 
     protected:
         virtual void processRemoteConfig(const QJsonDocument &remoteDocument, bool overwriteLocal);
-        virtual void parseConfig(const QJsonDocument &document) = 0;
+        virtual bool parseConfig(const QJsonDocument &document) = 0;
 
     private:
         Helpers::RemoteConfig m_RemoteConfig;

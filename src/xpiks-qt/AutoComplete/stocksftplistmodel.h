@@ -43,7 +43,7 @@ namespace AutoComplete {
         // AbstractConfigUpdaterModel interface
     protected:
         virtual void processRemoteConfig(const QJsonDocument &remoteDocument, bool overwriteLocal);
-        virtual void parseConfig(const QJsonDocument &document);
+        virtual bool parseConfig(const QJsonDocument &document);
 
     private:
         void parseFtpArray(const QJsonArray &array);
