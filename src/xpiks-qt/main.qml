@@ -172,8 +172,8 @@ ApplicationWindow {
             }
 
             Common.launchDialog("Dialogs/EnterMasterPasswordDialog.qml",
-                         applicationWindow,
-                         {callbackObject: callbackObject})
+                                applicationWindow,
+                                {callbackObject: callbackObject})
         } else {
             doOpenUploadDialog(true, skipUploadItems)
         }
@@ -216,8 +216,8 @@ ApplicationWindow {
         onTriggered: {
             settingsModel.readAllValues()
             Common.launchDialog("Dialogs/SettingsWindow.qml",
-                            applicationWindow, {},
-                            function(wnd) {wnd.show();});
+                                applicationWindow, {},
+                                function(wnd) {wnd.show();});
         }
     }
 
@@ -379,8 +379,8 @@ ApplicationWindow {
                 text: i18.n + qsTr("&About")
                 onTriggered: {
                     Common.launchDialog("Dialogs/AboutWindow.qml",
-                                    applicationWindow, {},
-                                    function(wnd) {wnd.show();});
+                                        applicationWindow, {},
+                                        function(wnd) {wnd.show();});
                 }
             }
 
@@ -522,8 +522,8 @@ ApplicationWindow {
 
                     filteredArtItemsModel.setSelectedForZipping()
                     Common.launchDialog("Dialogs/ZipArtworksDialog.qml",
-                                    applicationWindow,
-                                    {});
+                                        applicationWindow,
+                                        {});
                 }
             }
 
@@ -628,8 +628,8 @@ ApplicationWindow {
                     }
 
                     Common.launchDialog("Dialogs/EnterMasterPasswordDialog.qml",
-                                 applicationWindow,
-                                 {callbackObject: callbackObject})
+                                        applicationWindow,
+                                        {callbackObject: callbackObject})
                 }
             }
         }
@@ -1367,6 +1367,8 @@ ApplicationWindow {
                             cellHeight: applicationWindow.listLayout ? (defaultRowHeight + 80*(settingsModel.keywordSizeScale - 1.0) + cellSpacing) : (defaultRowHeight + cellSpacing)
                             cellWidth: applicationWindow.listLayout ? artworksHost.width : (208 + cellSpacing)
                             highlightFollowsCurrentItem: false
+                            currentIndex: -1
+                            focus: true
 
                             function forceUpdateArtworks(needToMoveCurrentItem) {
                                 console.debug("UI::forceUpdateArtworks # updating main listview")
@@ -1404,751 +1406,760 @@ ApplicationWindow {
 
                             onContentYChanged: closeAutoComplete()
 
-                            delegate: Rectangle {
-                                id: rowWrapper
-                                objectName: "artworkDelegate"
-                                property bool isHighlighted: isselected || (descriptionTextInput.activeFocus || flv.isFocused || titleTextInput.activeFocus)
-                                color: isHighlighted ? Colors.selectedImageBackground : Colors.artworkImageBackground
-                                property var artworkModel: artItemsModel.getArtworkItself(rowWrapper.getIndex())
-                                property int delegateIndex: index
+                            delegate: FocusScope {
+                                id: wrappersScope
                                 width: applicationWindow.listLayout ? (mainScrollView.areScrollbarsVisible ? (parent.width - 5) : parent.width) : 208
                                 height: applicationWindow.listLayout ? (artworksHost.defaultRowHeight + 80*(settingsModel.keywordSizeScale - 1.0)) : artworksHost.defaultRowHeight
-
-                                function getIndex() {
-                                    return filteredArtItemsModel.getOriginalIndex(index)
-                                }
-
-                                function focusInputs() {
-                                    descriptionTextInput.forceActiveFocus()
-                                }
-
-                                function isAnyFocused() {
-                                    return descriptionTextInput.activeFocus || flv.isFocused || titleTextInput.activeFocus;
-                                }
-
-                                function focusIfNeeded() {
-                                    if (!isAnyFocused()) {
-                                        focusInputs()
-                                    }
-
-                                    if (!isselected) {
-                                        flv.removeFocus()
-                                    }
-                                }
-
-                                function switchChecked() {
-                                    editisselected = !isselected
-                                    itemCheckedCheckbox.checked = isselected
-                                    GridView.view.currentIndex = rowWrapper.delegateIndex
-                                }
 
                                 function updateCurrentIndex() {
                                     GridView.view.currentIndex = rowWrapper.delegateIndex
                                 }
 
-                                Connections {
-                                    target: rowWrapper.artworkModel
-
-                                    onSpellCheckResultsReady: {
-                                        descriptionTextInput.deselect()
-                                        if (columnLayout.isWideEnough) {
-                                            titleTextInput.deselect()
-                                        }
-                                    }
-
-                                    onFocusRequested: {
-                                        if (directionSign === +1) {
-                                            descriptionTextInput.forceActiveFocus()
-                                            descriptionTextInput.cursorPosition = descriptionTextInput.text.length
-                                        } else {
-                                            flv.activateEdit()
-                                        }
-
-                                        artworksHost.positionViewAtIndex(rowWrapper.delegateIndex, ListView.Contain)
-                                    }
-
-                                    onCompletionsAvailable: {
-                                        if (typeof workflowHost.autoCompleteBox !== "undefined") {
-                                            // update completion
-                                            return
-                                        }
-
-                                        var directParent = mainScrollView;
-                                        var currWordStartRect = flv.editControl.getCurrentWordStartRect()
-
-                                        var tmp = flv.editControl.mapToItem(directParent,
-                                                                            currWordStartRect.x - 17,
-                                                                            flv.editControl.height + 1)
-
-                                        var visibleItemsCount = Math.min(acSource.getCount(), 5);
-                                        var popupHeight = visibleItemsCount * (25 + 1) + 10
-
-                                        var isBelow = (tmp.y + popupHeight) < directParent.height;
-
-                                        var options = {
-                                            model: acSource,
-                                            isBelowEdit: isBelow,
-                                            "anchors.left": directParent.left,
-                                            "anchors.leftMargin": Math.min(tmp.x, directParent.width - 200),
-                                            "anchors.top": directParent.top
-                                        }
-
-                                        if (isBelow) {
-                                            options["anchors.topMargin"] = tmp.y
-                                        } else {
-                                            options["anchors.topMargin"] = tmp.y - popupHeight - flv.editControl.height - 2
-                                        }
-
-                                        var component = Qt.createComponent("Components/CompletionBox.qml");
-                                        if (component.status !== Component.Ready) {
-                                            console.debug("Component Error: " + component.errorString());
-                                        } else {
-                                            var instance = component.createObject(directParent, options);
-
-                                            instance.boxDestruction.connect(workflowHost.onAutoCompleteClose)
-                                            instance.itemSelected.connect(flv.editControl.acceptCompletion)
-                                            workflowHost.autoCompleteBox = instance
-
-                                            instance.openPopup()
-                                        }
-                                    }
-                                }
-
-                                Item {
+                                Rectangle {
+                                    id: rowWrapper
+                                    objectName: "artworkDelegate"
+                                    property bool isHighlighted: isselected || wrappersScope.GridView.isCurrentItem
+                                    color: isHighlighted ? Colors.selectedImageBackground : Colors.artworkImageBackground
+                                    property var artworkModel: artItemsModel.getArtworkItself(rowWrapper.getIndex())
+                                    property int delegateIndex: index
                                     anchors.fill: parent
 
-                                    Rectangle {
-                                        id: isModifiedRectangle
-                                        color: ismodified ? Colors.artworkModifiedColor : Colors.artworkSavedColor
-                                        width: applicationWindow.listLayout ? 6 : 3
-                                        anchors.left: parent.left
-                                        anchors.top: parent.top
-                                        anchors.bottom: parent.bottom
+                                    function getIndex() {
+                                        return filteredArtItemsModel.getOriginalIndex(index)
                                     }
 
-                                    Item {
-                                        id: checkboxSpacer
-                                        width: applicationWindow.listLayout ? 15 : 8
-                                        anchors.left: isModifiedRectangle.right
-                                        anchors.top: parent.top
-                                        anchors.bottom: parent.bottom
+                                    function focusDescription() {
+                                        descriptionTextInput.forceActiveFocus()
+                                        descriptionTextInput.cursorPosition = descriptionTextInput.text.length
+                                    }
 
-                                        MouseArea {
-                                            anchors.fill: parent
-                                            enabled: applicationWindow.listLayout
-                                            onClicked: {
-                                                rowWrapper.switchChecked()
-                                                rowWrapper.focusIfNeeded()
+                                    function isAnyFocused() {
+                                        return descriptionTextInput.activeFocus || flv.isFocused || titleTextInput.activeFocus;
+                                    }
+
+                                    function focusIfNeeded() {
+                                        if (!isAnyFocused()) {
+                                            focusDescription()
+                                        }
+
+                                        if (!isselected) {
+                                            flv.removeFocus()
+                                        }
+                                    }
+
+                                    function switchChecked() {
+                                        editisselected = !isselected
+                                        itemCheckedCheckbox.checked = isselected
+                                        wrappersScope.updateCurrentIndex()
+                                    }
+
+                                    Connections {
+                                        target: rowWrapper.artworkModel
+
+                                        onSpellCheckResultsReady: {
+                                            descriptionTextInput.deselect()
+                                            if (columnLayout.isWideEnough) {
+                                                titleTextInput.deselect()
+                                            }
+                                        }
+
+                                        onFocusRequested: {
+                                            if (directionSign === +1) {
+                                                rowWrapper.focusDescription()
+                                            } else {
+                                                flv.activateEdit()
+                                            }
+
+                                            artworksHost.positionViewAtIndex(rowWrapper.delegateIndex, ListView.Contain)
+                                        }
+
+                                        onCompletionsAvailable: {
+                                            if (typeof workflowHost.autoCompleteBox !== "undefined") {
+                                                // update completion
+                                                return
+                                            }
+
+                                            var directParent = mainScrollView;
+                                            var currWordStartRect = flv.editControl.getCurrentWordStartRect()
+
+                                            var tmp = flv.editControl.mapToItem(directParent,
+                                                                                currWordStartRect.x - 17,
+                                                                                flv.editControl.height + 1)
+
+                                            var visibleItemsCount = Math.min(acSource.getCount(), 5);
+                                            var popupHeight = visibleItemsCount * (25 + 1) + 10
+
+                                            var isBelow = (tmp.y + popupHeight) < directParent.height;
+
+                                            var options = {
+                                                model: acSource,
+                                                isBelowEdit: isBelow,
+                                                "anchors.left": directParent.left,
+                                                "anchors.leftMargin": Math.min(tmp.x, directParent.width - 200),
+                                                "anchors.top": directParent.top
+                                            }
+
+                                            if (isBelow) {
+                                                options["anchors.topMargin"] = tmp.y
+                                            } else {
+                                                options["anchors.topMargin"] = tmp.y - popupHeight - flv.editControl.height - 2
+                                            }
+
+                                            var component = Qt.createComponent("Components/CompletionBox.qml");
+                                            if (component.status !== Component.Ready) {
+                                                console.debug("Component Error: " + component.errorString());
+                                            } else {
+                                                var instance = component.createObject(directParent, options);
+
+                                                instance.boxDestruction.connect(workflowHost.onAutoCompleteClose)
+                                                instance.itemSelected.connect(flv.editControl.acceptCompletion)
+                                                workflowHost.autoCompleteBox = instance
+
+                                                instance.openPopup()
                                             }
                                         }
                                     }
 
                                     Item {
-                                        id: checkboxRectangle
-                                        anchors.left: checkboxSpacer.right
-                                        anchors.top: parent.top
-                                        anchors.bottom: parent.bottom
-                                        width: 20
+                                        anchors.fill: parent
 
-                                        MouseArea {
-                                            anchors.fill: parent
-                                            onClicked: {
-                                                rowWrapper.switchChecked()
-                                                rowWrapper.focusIfNeeded()
-                                            }
-                                        }
-
-                                        StyledCheckbox {
-                                            id: itemCheckedCheckbox
-                                            //checked: isselected
-                                            focus: true
+                                        Rectangle {
+                                            id: isModifiedRectangle
+                                            color: ismodified ? Colors.artworkModifiedColor : Colors.artworkSavedColor
+                                            width: applicationWindow.listLayout ? 6 : 3
                                             anchors.left: parent.left
-                                            anchors.verticalCenter: parent.verticalCenter
-                                            activeFocusOnPress: true
-                                            onClicked: editisselected = checked
-                                            Component.onCompleted: itemCheckedCheckbox.checked = isselected
-                                            Connections {
-                                                target: filteredArtItemsModel
-                                                onAllItemsSelectedChanged: {
-                                                    itemCheckedCheckbox.checked = isselected
-                                                }
-                                            }
+                                            anchors.top: parent.top
+                                            anchors.bottom: parent.bottom
                                         }
-                                    }
 
-                                    Item {
-                                        id: imageColumnWrapper
-                                        width: applicationWindow.listLayout ? 180 : 160
-                                        anchors.left: checkboxRectangle.right
-                                        anchors.top: parent.top
-                                        anchors.bottom: parent.bottom
+                                        Item {
+                                            id: checkboxSpacer
+                                            width: applicationWindow.listLayout ? 15 : 8
+                                            anchors.left: isModifiedRectangle.right
+                                            anchors.top: parent.top
+                                            anchors.bottom: parent.bottom
 
-                                        MouseArea {
-                                            anchors.fill: parent
-                                            onClicked: {
-                                                rowWrapper.switchChecked()
-                                                rowWrapper.focusIfNeeded()
+                                            MouseArea {
+                                                anchors.fill: parent
+                                                enabled: applicationWindow.listLayout
+                                                onClicked: {
+                                                    rowWrapper.switchChecked()
+                                                    rowWrapper.focusIfNeeded()
+                                                }
                                             }
                                         }
 
                                         Item {
-                                            anchors.fill: parent
-                                            anchors.leftMargin: applicationWindow.listLayout ? 10 : 0
-                                            anchors.rightMargin: applicationWindow.listLayout ? 15 : 0
+                                            id: checkboxRectangle
+                                            anchors.left: checkboxSpacer.right
+                                            anchors.top: parent.top
+                                            anchors.bottom: parent.bottom
+                                            width: 20
+
+                                            MouseArea {
+                                                anchors.fill: parent
+                                                onClicked: {
+                                                    rowWrapper.switchChecked()
+                                                    rowWrapper.focusIfNeeded()
+                                                }
+                                            }
+
+                                            StyledCheckbox {
+                                                id: itemCheckedCheckbox
+                                                //checked: isselected
+                                                focus: false
+                                                anchors.left: parent.left
+                                                anchors.verticalCenter: parent.verticalCenter
+                                                activeFocusOnPress: false
+                                                onClicked: editisselected = checked
+                                                Component.onCompleted: itemCheckedCheckbox.checked = isselected
+                                                Connections {
+                                                    target: filteredArtItemsModel
+                                                    onAllItemsSelectedChanged: {
+                                                        itemCheckedCheckbox.checked = isselected
+                                                    }
+                                                }
+                                            }
+                                        }
+
+                                        Item {
+                                            id: imageColumnWrapper
+                                            width: applicationWindow.listLayout ? 180 : 160
+                                            anchors.left: checkboxRectangle.right
+                                            anchors.top: parent.top
+                                            anchors.bottom: parent.bottom
+
+                                            MouseArea {
+                                                anchors.fill: parent
+                                                onClicked: {
+                                                    rowWrapper.switchChecked()
+                                                    rowWrapper.focusIfNeeded()
+                                                }
+                                            }
 
                                             Item {
-                                                id: imageHost
-                                                anchors.top: parent.top
-                                                anchors.topMargin: descriptionText.height + 24
-                                                anchors.horizontalCenter: parent.horizontalCenter
-                                                width: 150
-                                                property double desiredHeight: descriptionRect.height + keywordsWrapper.height + keywordsLabel.height + 10
-                                                height: desiredHeight > 150 ? 150 : desiredHeight
+                                                anchors.fill: parent
+                                                anchors.leftMargin: applicationWindow.listLayout ? 10 : 0
+                                                anchors.rightMargin: applicationWindow.listLayout ? 15 : 0
 
-                                                Image {
-                                                    id: artworkImage
-                                                    anchors.fill: parent
-                                                    source: "image://global/" + filename
-                                                    sourceSize.width: 150
-                                                    sourceSize.height: 150
-                                                    fillMode: settingsModel.fitSmallPreview ? Image.PreserveAspectFit : Image.PreserveAspectCrop
-                                                    asynchronous: true
-                                                    cache: true
-                                                }
+                                                Item {
+                                                    id: imageHost
+                                                    anchors.top: parent.top
+                                                    anchors.topMargin: descriptionText.height + 24
+                                                    anchors.horizontalCenter: parent.horizontalCenter
+                                                    width: 150
+                                                    property double desiredHeight: descriptionRect.height + keywordsWrapper.height + keywordsLabel.height + 10
+                                                    height: desiredHeight > 150 ? 150 : desiredHeight
 
-                                                Image {
-                                                    id: imageTypeIcon
-                                                    visible: hasvectorattached
-                                                    enabled: hasvectorattached
-                                                    source: "qrc:/Graphics/vector-icon.svg"
-                                                    sourceSize.width: 20
-                                                    sourceSize.height: 20
-                                                    anchors.left: artworkImage.left
-                                                    anchors.bottom: artworkImage.bottom
-                                                    cache: true
-                                                }
-
-                                                MouseArea {
-                                                    anchors.fill: parent
-                                                    onClicked: {
-                                                        rowWrapper.switchChecked()
-                                                        rowWrapper.focusIfNeeded()
-                                                    }
-                                                    onDoubleClicked: Common.launchItemEditing(rowWrapper.getIndex(), applicationWindow, {
-                                                                                                  applyCallback: function() {}
-                                                                                              })
-                                                }
-                                            }
-
-                                            StyledText {
-                                                anchors.top: imageHost.bottom
-                                                anchors.topMargin: 3
-                                                width: parent.width
-                                                elide: Text.ElideMiddle
-                                                color: moreInfoMA.pressed ? Colors.linkClickedColor : Colors.labelActiveForeground
-                                                horizontalAlignment: Text.AlignHCenter
-                                                text: filename.split(/[\\/]/).pop()
-
-                                                MouseArea {
-                                                    id: moreInfoMA
-                                                    anchors.fill: parent
-                                                    cursorShape: Qt.PointingHandCursor
-
-                                                    onClicked: {
-                                                        Common.launchDialog("Dialogs/ArtworkPreview.qml", applicationWindow,
-                                                                            {
-                                                                                imagePath: filename,
-                                                                                artworkIndex: rowWrapper.getIndex()
-                                                                            });
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-
-                                    Rectangle {
-                                        id: columnRectangle
-                                        visible: applicationWindow.listLayout
-                                        anchors.top: applicationWindow.listLayout ? parent.top : undefined
-                                        anchors.bottom: applicationWindow.listLayout ? parent.bottom : undefined
-                                        anchors.left: applicationWindow.listLayout ? imageColumnWrapper.right : undefined
-                                        anchors.leftMargin: applicationWindow.listLayout ? 5 : 0
-                                        anchors.right: applicationWindow.listLayout ? parent.right : undefined
-                                        color: rowWrapper.isHighlighted ? Colors.selectedArtworkBackground : Colors.artworkBackground
-
-                                        Item {
-                                            id: columnLayout
-                                            anchors.fill: parent
-                                            anchors.leftMargin: 20
-                                            anchors.rightMargin: 20
-                                            anchors.topMargin: 20
-                                            property bool isWideEnough: width > 450
-
-                                            StyledText {
-                                                id: descriptionText
-                                                anchors.left: parent.left
-                                                anchors.top: parent.top
-                                                text: i18.n + qsTr("Description:")
-                                                isActive: rowWrapper.isHighlighted
-                                            }
-
-                                            StyledText {
-                                                id: titleText
-                                                anchors.left: titleRect.left
-                                                anchors.top: parent.top
-                                                visible: columnLayout.isWideEnough
-                                                text: i18.n + qsTr("Title:")
-                                                isActive: rowWrapper.isHighlighted
-                                            }
-
-                                            Rectangle {
-                                                id: descriptionRect
-                                                height: 30
-                                                anchors.left: parent.left
-                                                anchors.right: titleRect.left
-                                                anchors.rightMargin: columnLayout.isWideEnough ? 20 : 0
-                                                anchors.top: descriptionText.bottom
-                                                anchors.topMargin: 3
-                                                color: rowWrapper.isHighlighted ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
-                                                border.color: Colors.artworkActiveColor
-                                                border.width: descriptionTextInput.activeFocus ? 1 : 0
-                                                clip: true
-
-                                                Flickable {
-                                                    id: descriptionFlick
-                                                    contentWidth: descriptionTextInput.paintedWidth
-                                                    contentHeight: descriptionTextInput.paintedHeight
-                                                    anchors.left: parent.left
-                                                    anchors.right: parent.right
-                                                    anchors.leftMargin: 5
-                                                    anchors.rightMargin: 5
-                                                    interactive: false
-                                                    flickableDirection: Flickable.HorizontalFlick
-                                                    height: parent.height
-                                                    anchors.verticalCenter: parent.verticalCenter
-                                                    clip: true
-
-                                                    function ensureVisible(r) {
-                                                        if (contentX >= r.x)
-                                                            contentX = r.x;
-                                                        else if (contentX+width <= r.x+r.width)
-                                                            contentX = r.x+r.width-width;
+                                                    Image {
+                                                        id: artworkImage
+                                                        anchors.fill: parent
+                                                        source: "image://global/" + filename
+                                                        sourceSize.width: 150
+                                                        sourceSize.height: 150
+                                                        fillMode: settingsModel.fitSmallPreview ? Image.PreserveAspectFit : Image.PreserveAspectCrop
+                                                        asynchronous: true
+                                                        cache: true
                                                     }
 
-                                                    StyledTextEdit {
-                                                        id: descriptionTextInput
-                                                        width: paintedWidth > descriptionFlick.width ? paintedWidth : descriptionFlick.width
-                                                        height: descriptionFlick.height
-                                                        text: description
-                                                        focus: true
-                                                        isActive: rowWrapper.isHighlighted
-                                                        onTextChanged: model.editdescription = text
-
-                                                        Keys.onTabPressed: {
-                                                            if (columnLayout.isWideEnough) {
-                                                                titleTextInput.forceActiveFocus()
-                                                                titleTextInput.cursorPosition = titleTextInput.text.length
-                                                            } else {
-                                                                flv.activateEdit()
-                                                            }
-                                                        }
-
-                                                        onActiveFocusChanged: {
-                                                            filteredArtItemsModel.spellCheckDescription(rowWrapper.delegateIndex)
-                                                            if (activeFocus) {
-                                                                rowWrapper.updateCurrentIndex()
-                                                            }
-                                                        }
-
-                                                        Keys.onBacktabPressed: {
-                                                            filteredArtItemsModel.focusPreviousItem(rowWrapper.delegateIndex)
-                                                        }
-
-                                                        Keys.onPressed: {
-                                                            if(event.matches(StandardKey.Paste)) {
-                                                                var clipboardText = clipboard.getText();
-                                                                if (Common.safeInsert(descriptionTextInput, clipboardText)) {
-                                                                    event.accepted = true
-                                                                }
-                                                            } else if ((event.key === Qt.Key_Return) || (event.key === Qt.Key_Enter)) {
-                                                                event.accepted = true
-                                                            }
-                                                        }
-
-                                                        Component.onCompleted: {
-                                                            var index = rowWrapper.getIndex()
-                                                            artItemsModel.initDescriptionHighlighting(index, descriptionTextInput.textDocument)
-                                                        }
-
-                                                        onCursorRectangleChanged: descriptionFlick.ensureVisible(cursorRectangle)
+                                                    Image {
+                                                        id: imageTypeIcon
+                                                        visible: hasvectorattached
+                                                        enabled: hasvectorattached
+                                                        source: "qrc:/Graphics/vector-icon.svg"
+                                                        sourceSize.width: 20
+                                                        sourceSize.height: 20
+                                                        anchors.left: artworkImage.left
+                                                        anchors.bottom: artworkImage.bottom
+                                                        cache: true
                                                     }
-                                                }
-                                            }
-
-                                            StyledText {
-                                                text: descriptionTextInput.length
-                                                anchors.right: descriptionRect.right
-                                                anchors.bottom: descriptionRect.top
-                                                anchors.bottomMargin: 3
-                                                isActive: rowWrapper.isHighlighted
-                                            }
-
-                                            Rectangle {
-                                                id: titleRect
-                                                height: 30
-                                                visible: columnLayout.isWideEnough
-                                                enabled: columnLayout.isWideEnough
-                                                width: columnLayout.isWideEnough ? ((columnLayout.width / 2) - 10) : 0
-                                                anchors.right: parent.right
-                                                anchors.top: descriptionText.bottom
-                                                anchors.topMargin: 3
-                                                color: rowWrapper.isHighlighted ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
-                                                border.color: Colors.artworkActiveColor
-                                                border.width: titleTextInput.activeFocus ? 1 : 0
-                                                clip: true
-
-                                                Flickable {
-                                                    id: titleFlick
-                                                    contentWidth: titleTextInput.paintedWidth
-                                                    contentHeight: titleTextInput.paintedHeight
-                                                    height: parent.height
-                                                    anchors.verticalCenter: parent.verticalCenter
-                                                    anchors.left: parent.left
-                                                    anchors.right: parent.right
-                                                    anchors.leftMargin: 5
-                                                    anchors.rightMargin: 5
-                                                    clip: true
-                                                    flickableDirection: Flickable.HorizontalFlick
-                                                    interactive: false
-
-                                                    function ensureVisible(r) {
-                                                        if (contentX >= r.x)
-                                                            contentX = r.x;
-                                                        else if (contentX+width <= r.x+r.width)
-                                                            contentX = r.x+r.width-width;
-                                                    }
-
-                                                    StyledTextEdit {
-                                                        id: titleTextInput
-                                                        width: paintedWidth > titleFlick.width ? paintedWidth : titleFlick.width
-                                                        height: titleFlick.height
-                                                        text: title
-                                                        focus: true
-                                                        isActive: rowWrapper.isHighlighted
-                                                        onTextChanged: model.edittitle = text
-
-                                                        Keys.onTabPressed: {
-                                                            flv.activateEdit()
-                                                        }
-
-                                                        Keys.onBacktabPressed: {
-                                                            descriptionTextInput.forceActiveFocus()
-                                                            descriptionTextInput.cursorPosition = descriptionTextInput.text.length
-                                                        }
-
-                                                        onActiveFocusChanged: {
-                                                            filteredArtItemsModel.spellCheckTitle(rowWrapper.delegateIndex)
-                                                            if (activeFocus) {
-                                                                rowWrapper.updateCurrentIndex()
-                                                            }
-                                                        }
-
-                                                        Keys.onPressed: {
-                                                            if (event.matches(StandardKey.Paste)) {
-                                                                var clipboardText = clipboard.getText();
-                                                                if (Common.safeInsert(titleTextInput, clipboardText)) {
-                                                                    event.accepted = true
-                                                                }
-                                                            } else if ((event.key === Qt.Key_Return) || (event.key === Qt.Key_Enter)) {
-                                                                event.accepted = true
-                                                            }
-                                                        }
-
-                                                        Component.onCompleted: {
-                                                            var index = rowWrapper.getIndex()
-                                                            artItemsModel.initTitleHighlighting(index, titleTextInput.textDocument)
-                                                        }
-
-                                                        onCursorRectangleChanged: titleFlick.ensureVisible(cursorRectangle)
-                                                    }
-                                                }
-                                            }
-
-                                            StyledText {
-                                                text: titleTextInput.length
-                                                anchors.right: titleRect.right
-                                                anchors.bottom: titleRect.top
-                                                anchors.bottomMargin: 3
-                                                isActive: rowWrapper.isHighlighted
-                                                visible: columnLayout.isWideEnough
-                                            }
-
-                                            StyledText {
-                                                id: keywordsLabel
-                                                anchors.left: parent.left
-                                                anchors.top: descriptionRect.bottom
-                                                anchors.topMargin: 7
-                                                text: i18.n + qsTr("Keywords:")
-                                                isActive: rowWrapper.isHighlighted
-                                            }
-
-                                            StyledText {
-                                                text: keywordscount
-                                                anchors.right: parent.right
-                                                anchors.top: descriptionRect.bottom
-                                                anchors.topMargin: 7
-                                                isActive: rowWrapper.isHighlighted
-                                            }
-
-                                            Rectangle {
-                                                id: keywordsWrapper
-                                                anchors.top: keywordsLabel.bottom
-                                                anchors.topMargin: 3
-                                                anchors.left: parent.left
-                                                anchors.right: parent.right
-                                                height: 80*settingsModel.keywordSizeScale
-                                                border.color: Colors.artworkActiveColor
-                                                border.width: flv.isFocused ? 1 : 0
-                                                color: rowWrapper.isHighlighted ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
-
-                                                function removeKeyword(index) {
-                                                    artItemsModel.removeKeywordAt(rowWrapper.getIndex(), index)
-                                                }
-
-                                                function removeLastKeyword() {
-                                                    artItemsModel.removeLastKeyword(rowWrapper.getIndex())
-                                                }
-
-                                                function appendKeyword(keyword) {
-                                                    artItemsModel.appendKeyword(rowWrapper.getIndex(), keyword)
-                                                }
-
-                                                function pasteKeywords(keywords) {
-                                                    artItemsModel.pasteKeywords(rowWrapper.getIndex(), keywords)
-                                                }
-
-                                                EditableTags {
-                                                    id: flv
-                                                    model: rowWrapper.artworkModel
-                                                    anchors.fill: parent
-                                                    property int keywordHeight: 20 * settingsModel.keywordSizeScale + (settingsModel.keywordSizeScale - 1)*10
-                                                    scrollStep: keywordHeight
-                                                    stealWheel: false
-                                                    focus: true
-
-                                                    delegate: KeywordWrapper {
-                                                        id: kw
-                                                        isHighlighted: rowWrapper.isHighlighted
-                                                        delegateIndex: index
-                                                        keywordText: keyword
-                                                        itemHeight: flv.keywordHeight
-                                                        hasSpellCheckError: !iscorrect
-                                                        onRemoveClicked: keywordsWrapper.removeKeyword(kw.delegateIndex)
-
-                                                        onActionDoubleClicked: {
-                                                            var callbackObject = {
-                                                                onSuccess: function(replacement) {
-                                                                    artItemsModel.editKeyword(rowWrapper.getIndex(), kw.delegateIndex, replacement)
-                                                                },
-                                                                onClose: function() {
-                                                                    flv.activateEdit()
-                                                                }
-                                                            }
-
-                                                            Common.launchDialog("Dialogs/EditKeywordDialog.qml",
-                                                                                applicationWindow,
-                                                                                {
-                                                                                    callbackObject: callbackObject,
-                                                                                    previousKeyword: keyword,
-                                                                                    keywordsModel: artItemsModel.getArtworkItself(rowWrapper.getIndex())
-                                                                                })
-                                                        }
-                                                    }
-
-                                                    onTagAdded: {
-                                                        keywordsWrapper.appendKeyword(text)
-                                                    }
-
-                                                    onTagsPasted: {
-                                                        keywordsWrapper.pasteKeywords(tagsList)
-                                                    }
-
-                                                    onRemoveLast: {
-                                                        keywordsWrapper.removeLastKeyword()
-                                                    }
-
-                                                    onBackTabPressed: {
-                                                        if (columnLayout.isWideEnough) {
-                                                            titleTextInput.forceActiveFocus()
-                                                        } else {
-                                                            descriptionTextInput.forceActiveFocus()
-                                                        }
-                                                    }
-
-                                                    onTabPressed: {
-                                                        filteredArtItemsModel.focusNextItem(rowWrapper.delegateIndex)
-                                                    }
-
-                                                    onCopyRequest: clipboard.setText(keywordsstring)
-
-                                                    onCompletionRequested: {
-                                                        helpersWrapper.autoCompleteKeyword(prefix,
-                                                                                           rowWrapper.artworkModel)
-                                                    }
-
-                                                    onEditActivated: {
-                                                        rowWrapper.updateCurrentIndex()
-                                                        flv.activateEdit()
-                                                    }
-                                                }
-
-                                                CustomScrollbar {
-                                                    anchors.topMargin: -5
-                                                    anchors.bottomMargin: -5
-                                                    anchors.rightMargin: -15
-                                                    flickable: flv
-                                                }
-                                            }
-
-                                            RowLayout {
-                                                anchors.left: parent.left
-                                                anchors.right: parent.right
-                                                anchors.rightMargin: 3
-                                                anchors.top: keywordsWrapper.bottom
-                                                anchors.topMargin: 3
-                                                spacing: 5
-
-                                                StyledText {
-                                                    id: plainTextText
-                                                    text: i18.n + qsTr("<u>edit in plain text</u>")
-                                                    color: plainTextMA.containsMouse ? Colors.linkClickedColor : Colors.labelActiveForeground
-                                                    visible: rowWrapper.isHighlighted
 
                                                     MouseArea {
-                                                        id: plainTextMA
                                                         anchors.fill: parent
-                                                        hoverEnabled: true
-                                                        enabled: rowWrapper.isHighlighted
-                                                        preventStealing: true
-                                                        cursorShape: containsMouse ? Qt.PointingHandCursor : Qt.ArrowCursor
                                                         onClicked: {
-                                                            // strange bug with clicking on the keywords field
-                                                            if (!containsMouse) { return; }
+                                                            rowWrapper.switchChecked()
+                                                            rowWrapper.focusIfNeeded()
+                                                        }
+                                                        onDoubleClicked: Common.launchItemEditing(rowWrapper.getIndex(), applicationWindow, {
+                                                                                                      applyCallback: function() {}
+                                                                                                  })
+                                                    }
+                                                }
 
-                                                            var callbackObject = {
-                                                                onSuccess: function(text) {
-                                                                    artItemsModel.plainTextEdit(rowWrapper.getIndex(), text)
-                                                                },
-                                                                onClose: function() {
-                                                                    flv.activateEdit()
-                                                                }
-                                                            }
+                                                StyledText {
+                                                    anchors.top: imageHost.bottom
+                                                    anchors.topMargin: 3
+                                                    width: parent.width
+                                                    elide: Text.ElideMiddle
+                                                    color: moreInfoMA.pressed ? Colors.linkClickedColor : Colors.labelActiveForeground
+                                                    horizontalAlignment: Text.AlignHCenter
+                                                    text: filename.split(/[\\/]/).pop()
 
-                                                            Common.launchDialog("Dialogs/PlainTextKeywordsDialog.qml",
-                                                                                applicationWindow,
+                                                    MouseArea {
+                                                        id: moreInfoMA
+                                                        anchors.fill: parent
+                                                        cursorShape: Qt.PointingHandCursor
+
+                                                        onClicked: {
+                                                            Common.launchDialog("Dialogs/ArtworkPreview.qml", applicationWindow,
                                                                                 {
-                                                                                    callbackObject: callbackObject,
-                                                                                    keywordsText: keywordsstring,
-                                                                                    keywordsModel: artItemsModel.getArtworkItself(rowWrapper.getIndex())
-
+                                                                                    imagePath: filename,
+                                                                                    artworkIndex: rowWrapper.getIndex()
                                                                                 });
                                                         }
                                                     }
                                                 }
+                                            }
+                                        }
 
-                                                Item {
-                                                    Layout.fillWidth: true
-                                                }
+                                        Rectangle {
+                                            id: columnRectangle
+                                            visible: applicationWindow.listLayout
+                                            anchors.top: applicationWindow.listLayout ? parent.top : undefined
+                                            anchors.bottom: applicationWindow.listLayout ? parent.bottom : undefined
+                                            anchors.left: applicationWindow.listLayout ? imageColumnWrapper.right : undefined
+                                            anchors.leftMargin: applicationWindow.listLayout ? 5 : 0
+                                            anchors.right: applicationWindow.listLayout ? parent.right : undefined
+                                            color: rowWrapper.isHighlighted ? Colors.selectedArtworkBackground : Colors.artworkBackground
 
-                                                StyledText {
-                                                    id: fixSpellingText
-                                                    text: i18.n + qsTr("Fix spelling")
-                                                    enabled: rowWrapper.artworkModel ? rowWrapper.artworkModel.hasSpellErrors : false
-                                                    color: enabled ? (fixSpellingMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor)  : (rowWrapper.isHighlighted ? Colors.labelActiveForeground : Colors.labelInactiveForeground)
-
-                                                    MouseArea {
-                                                        id: fixSpellingMA
-                                                        anchors.fill: parent
-                                                        cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
-
-                                                        onClicked: {
-                                                            artItemsModel.suggestCorrections(rowWrapper.getIndex())
-                                                            Common.launchDialog("Dialogs/SpellCheckSuggestionsDialog.qml",
-                                                                                applicationWindow,
-                                                                                {})
-                                                        }
-                                                    }
-                                                }
+                                            Item {
+                                                id: columnLayout
+                                                anchors.fill: parent
+                                                anchors.leftMargin: 20
+                                                anchors.rightMargin: 20
+                                                anchors.topMargin: 20
+                                                property bool isWideEnough: width > 450
 
                                                 StyledText {
-                                                    text: "|"
+                                                    id: descriptionText
+                                                    anchors.left: parent.left
+                                                    anchors.top: parent.top
+                                                    text: i18.n + qsTr("Description:")
                                                     isActive: rowWrapper.isHighlighted
-                                                    verticalAlignment: Text.AlignVCenter
                                                 }
 
                                                 StyledText {
-                                                    text: i18.n + qsTr("Suggest")
-                                                    color: suggestKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor
+                                                    id: titleText
+                                                    anchors.left: titleRect.left
+                                                    anchors.top: parent.top
+                                                    visible: columnLayout.isWideEnough
+                                                    text: i18.n + qsTr("Title:")
+                                                    isActive: rowWrapper.isHighlighted
+                                                }
 
-                                                    MouseArea {
-                                                        id: suggestKeywordsMA
-                                                        anchors.fill: parent
-                                                        cursorShape: Qt.PointingHandCursor
-                                                        onClicked: {
-                                                            var callbackObject = {
-                                                                promoteKeywords: function(keywords) {
-                                                                    artItemsModel.addSuggestedKeywords(rowWrapper.getIndex(), keywords)
+                                                Rectangle {
+                                                    id: descriptionRect
+                                                    height: 30
+                                                    anchors.left: parent.left
+                                                    anchors.right: titleRect.left
+                                                    anchors.rightMargin: columnLayout.isWideEnough ? 20 : 0
+                                                    anchors.top: descriptionText.bottom
+                                                    anchors.topMargin: 3
+                                                    color: rowWrapper.isHighlighted ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
+                                                    border.color: Colors.artworkActiveColor
+                                                    border.width: descriptionTextInput.activeFocus ? 1 : 0
+                                                    clip: true
+                                                    focus: false
+
+                                                    Flickable {
+                                                        id: descriptionFlick
+                                                        contentWidth: descriptionTextInput.paintedWidth
+                                                        contentHeight: descriptionTextInput.paintedHeight
+                                                        anchors.left: parent.left
+                                                        anchors.right: parent.right
+                                                        anchors.leftMargin: 5
+                                                        anchors.rightMargin: 5
+                                                        interactive: false
+                                                        flickableDirection: Flickable.HorizontalFlick
+                                                        height: parent.height
+                                                        anchors.verticalCenter: parent.verticalCenter
+                                                        clip: true
+                                                        focus: false
+
+                                                        function ensureVisible(r) {
+                                                            if (contentX >= r.x)
+                                                                contentX = r.x;
+                                                            else if (contentX+width <= r.x+r.width)
+                                                                contentX = r.x+r.width-width;
+                                                        }
+
+                                                        StyledTextEdit {
+                                                            id: descriptionTextInput
+                                                            width: paintedWidth > descriptionFlick.width ? paintedWidth : descriptionFlick.width
+                                                            height: descriptionFlick.height
+                                                            text: description
+                                                            focus: true
+                                                            isActive: rowWrapper.isHighlighted
+                                                            onTextChanged: model.editdescription = text
+
+                                                            Keys.onTabPressed: {
+                                                                if (columnLayout.isWideEnough) {
+                                                                    titleTextInput.forceActiveFocus()
+                                                                    titleTextInput.cursorPosition = titleTextInput.text.length
+                                                                } else {
+                                                                    flv.activateEdit()
                                                                 }
                                                             }
 
-                                                            Common.launchDialog("Dialogs/KeywordsSuggestion.qml",
-                                                                                applicationWindow,
-                                                                                {callbackObject: callbackObject});
+                                                            onActiveFocusChanged: {
+                                                                filteredArtItemsModel.spellCheckDescription(rowWrapper.delegateIndex)
+                                                                if (activeFocus) {
+                                                                    wrappersScope.updateCurrentIndex()
+                                                                }
+                                                            }
+
+                                                            Keys.onBacktabPressed: {
+                                                                filteredArtItemsModel.focusPreviousItem(rowWrapper.delegateIndex)
+                                                            }
+
+                                                            Keys.onPressed: {
+                                                                if(event.matches(StandardKey.Paste)) {
+                                                                    var clipboardText = clipboard.getText();
+                                                                    if (Common.safeInsert(descriptionTextInput, clipboardText)) {
+                                                                        event.accepted = true
+                                                                    }
+                                                                } else if ((event.key === Qt.Key_Return) || (event.key === Qt.Key_Enter)) {
+                                                                    event.accepted = true
+                                                                }
+                                                            }
+
+                                                            Component.onCompleted: {
+                                                                var index = rowWrapper.getIndex()
+                                                                artItemsModel.initDescriptionHighlighting(index, descriptionTextInput.textDocument)
+                                                            }
+
+                                                            onCursorRectangleChanged: descriptionFlick.ensureVisible(cursorRectangle)
                                                         }
                                                     }
                                                 }
 
                                                 StyledText {
-                                                    text: "|"
+                                                    text: descriptionTextInput.length
+                                                    anchors.right: descriptionRect.right
+                                                    anchors.bottom: descriptionRect.top
+                                                    anchors.bottomMargin: 3
                                                     isActive: rowWrapper.isHighlighted
-                                                    verticalAlignment: Text.AlignVCenter
                                                 }
 
-                                                StyledText {
-                                                    text: i18.n + qsTr("Copy")
-                                                    color: copyKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor
+                                                Rectangle {
+                                                    id: titleRect
+                                                    height: 30
+                                                    visible: columnLayout.isWideEnough
+                                                    enabled: columnLayout.isWideEnough
+                                                    width: columnLayout.isWideEnough ? ((columnLayout.width / 2) - 10) : 0
+                                                    anchors.right: parent.right
+                                                    anchors.top: descriptionText.bottom
+                                                    anchors.topMargin: 3
+                                                    color: rowWrapper.isHighlighted ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
+                                                    border.color: Colors.artworkActiveColor
+                                                    border.width: titleTextInput.activeFocus ? 1 : 0
+                                                    clip: true
+                                                    focus: false
 
-                                                    MouseArea {
-                                                        id: copyKeywordsMA
-                                                        anchors.fill: parent
-                                                        cursorShape: Qt.PointingHandCursor
-                                                        onClicked: clipboard.setText(keywordsstring)
+                                                    Flickable {
+                                                        id: titleFlick
+                                                        contentWidth: titleTextInput.paintedWidth
+                                                        contentHeight: titleTextInput.paintedHeight
+                                                        height: parent.height
+                                                        anchors.verticalCenter: parent.verticalCenter
+                                                        anchors.left: parent.left
+                                                        anchors.right: parent.right
+                                                        anchors.leftMargin: 5
+                                                        anchors.rightMargin: 5
+                                                        clip: true
+                                                        flickableDirection: Flickable.HorizontalFlick
+                                                        interactive: false
+                                                        focus: false
+
+                                                        function ensureVisible(r) {
+                                                            if (contentX >= r.x)
+                                                                contentX = r.x;
+                                                            else if (contentX+width <= r.x+r.width)
+                                                                contentX = r.x+r.width-width;
+                                                        }
+
+                                                        StyledTextEdit {
+                                                            id: titleTextInput
+                                                            width: paintedWidth > titleFlick.width ? paintedWidth : titleFlick.width
+                                                            height: titleFlick.height
+                                                            text: title
+                                                            focus: true
+                                                            isActive: rowWrapper.isHighlighted
+                                                            onTextChanged: model.edittitle = text
+
+                                                            Keys.onTabPressed: {
+                                                                flv.activateEdit()
+                                                            }
+
+                                                            Keys.onBacktabPressed: {
+                                                                descriptionTextInput.forceActiveFocus()
+                                                                descriptionTextInput.cursorPosition = descriptionTextInput.text.length
+                                                            }
+
+                                                            onActiveFocusChanged: {
+                                                                filteredArtItemsModel.spellCheckTitle(rowWrapper.delegateIndex)
+                                                                if (activeFocus) {
+                                                                    wrappersScope.updateCurrentIndex()
+                                                                }
+                                                            }
+
+                                                            Keys.onPressed: {
+                                                                if (event.matches(StandardKey.Paste)) {
+                                                                    var clipboardText = clipboard.getText();
+                                                                    if (Common.safeInsert(titleTextInput, clipboardText)) {
+                                                                        event.accepted = true
+                                                                    }
+                                                                } else if ((event.key === Qt.Key_Return) || (event.key === Qt.Key_Enter)) {
+                                                                    event.accepted = true
+                                                                }
+                                                            }
+
+                                                            Component.onCompleted: {
+                                                                var index = rowWrapper.getIndex()
+                                                                artItemsModel.initTitleHighlighting(index, titleTextInput.textDocument)
+                                                            }
+
+                                                            onCursorRectangleChanged: titleFlick.ensureVisible(cursorRectangle)
+                                                        }
                                                     }
                                                 }
 
                                                 StyledText {
-                                                    text: "|"
+                                                    text: titleTextInput.length
+                                                    anchors.right: titleRect.right
+                                                    anchors.bottom: titleRect.top
+                                                    anchors.bottomMargin: 3
                                                     isActive: rowWrapper.isHighlighted
-                                                    verticalAlignment: Text.AlignVCenter
+                                                    visible: columnLayout.isWideEnough
                                                 }
 
                                                 StyledText {
-                                                    text: i18.n + qsTr("Clear")
-                                                    color: clearKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor
+                                                    id: keywordsLabel
+                                                    anchors.left: parent.left
+                                                    anchors.top: descriptionRect.bottom
+                                                    anchors.topMargin: 7
+                                                    text: i18.n + qsTr("Keywords:")
+                                                    isActive: rowWrapper.isHighlighted
+                                                }
 
-                                                    MouseArea {
-                                                        id: clearKeywordsMA
+                                                StyledText {
+                                                    text: keywordscount
+                                                    anchors.right: parent.right
+                                                    anchors.top: descriptionRect.bottom
+                                                    anchors.topMargin: 7
+                                                    isActive: rowWrapper.isHighlighted
+                                                }
+
+                                                Rectangle {
+                                                    id: keywordsWrapper
+                                                    anchors.top: keywordsLabel.bottom
+                                                    anchors.topMargin: 3
+                                                    anchors.left: parent.left
+                                                    anchors.right: parent.right
+                                                    height: 80*settingsModel.keywordSizeScale
+                                                    border.color: Colors.artworkActiveColor
+                                                    border.width: flv.isFocused ? 1 : 0
+                                                    color: rowWrapper.isHighlighted ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
+
+                                                    function removeKeyword(index) {
+                                                        artItemsModel.removeKeywordAt(rowWrapper.getIndex(), index)
+                                                    }
+
+                                                    function removeLastKeyword() {
+                                                        artItemsModel.removeLastKeyword(rowWrapper.getIndex())
+                                                    }
+
+                                                    function appendKeyword(keyword) {
+                                                        artItemsModel.appendKeyword(rowWrapper.getIndex(), keyword)
+                                                    }
+
+                                                    function pasteKeywords(keywords) {
+                                                        artItemsModel.pasteKeywords(rowWrapper.getIndex(), keywords)
+                                                    }
+
+                                                    EditableTags {
+                                                        id: flv
+                                                        model: rowWrapper.artworkModel
                                                         anchors.fill: parent
-                                                        cursorShape: Qt.PointingHandCursor
-                                                        onClicked: filteredArtItemsModel.clearKeywords(rowWrapper.delegateIndex)
+                                                        property int keywordHeight: 20 * settingsModel.keywordSizeScale + (settingsModel.keywordSizeScale - 1)*10
+                                                        scrollStep: keywordHeight
+                                                        stealWheel: false
+                                                        focus: true
+
+                                                        delegate: KeywordWrapper {
+                                                            id: kw
+                                                            isHighlighted: rowWrapper.isHighlighted
+                                                            delegateIndex: index
+                                                            keywordText: keyword
+                                                            itemHeight: flv.keywordHeight
+                                                            hasSpellCheckError: !iscorrect
+                                                            onRemoveClicked: keywordsWrapper.removeKeyword(kw.delegateIndex)
+
+                                                            onActionDoubleClicked: {
+                                                                var callbackObject = {
+                                                                    onSuccess: function(replacement) {
+                                                                        artItemsModel.editKeyword(rowWrapper.getIndex(), kw.delegateIndex, replacement)
+                                                                    },
+                                                                    onClose: function() {
+                                                                        flv.activateEdit()
+                                                                    }
+                                                                }
+
+                                                                Common.launchDialog("Dialogs/EditKeywordDialog.qml",
+                                                                                    applicationWindow,
+                                                                                    {
+                                                                                        callbackObject: callbackObject,
+                                                                                        previousKeyword: keyword,
+                                                                                        keywordsModel: artItemsModel.getArtworkItself(rowWrapper.getIndex())
+                                                                                    })
+                                                            }
+                                                        }
+
+                                                        onTagAdded: {
+                                                            keywordsWrapper.appendKeyword(text)
+                                                        }
+
+                                                        onTagsPasted: {
+                                                            keywordsWrapper.pasteKeywords(tagsList)
+                                                        }
+
+                                                        onRemoveLast: {
+                                                            keywordsWrapper.removeLastKeyword()
+                                                        }
+
+                                                        onBackTabPressed: {
+                                                            if (columnLayout.isWideEnough) {
+                                                                titleTextInput.forceActiveFocus()
+                                                            } else {
+                                                                descriptionTextInput.forceActiveFocus()
+                                                            }
+                                                        }
+
+                                                        onTabPressed: {
+                                                            filteredArtItemsModel.focusNextItem(rowWrapper.delegateIndex)
+                                                        }
+
+                                                        onCopyRequest: clipboard.setText(keywordsstring)
+
+                                                        onCompletionRequested: {
+                                                            helpersWrapper.autoCompleteKeyword(prefix,
+                                                                                               rowWrapper.artworkModel)
+                                                        }
+
+                                                        onEditActivated: {
+                                                            wrappersScope.updateCurrentIndex()
+                                                            flv.activateEdit()
+                                                        }
+                                                    }
+
+                                                    CustomScrollbar {
+                                                        anchors.topMargin: -5
+                                                        anchors.bottomMargin: -5
+                                                        anchors.rightMargin: -15
+                                                        flickable: flv
+                                                    }
+                                                }
+
+                                                RowLayout {
+                                                    anchors.left: parent.left
+                                                    anchors.right: parent.right
+                                                    anchors.rightMargin: 3
+                                                    anchors.top: keywordsWrapper.bottom
+                                                    anchors.topMargin: 3
+                                                    spacing: 5
+
+                                                    StyledText {
+                                                        id: plainTextText
+                                                        text: i18.n + qsTr("<u>edit in plain text</u>")
+                                                        color: plainTextMA.containsMouse ? Colors.linkClickedColor : Colors.labelActiveForeground
+                                                        visible: rowWrapper.isHighlighted
+
+                                                        MouseArea {
+                                                            id: plainTextMA
+                                                            anchors.fill: parent
+                                                            hoverEnabled: true
+                                                            enabled: rowWrapper.isHighlighted
+                                                            preventStealing: true
+                                                            cursorShape: containsMouse ? Qt.PointingHandCursor : Qt.ArrowCursor
+                                                            onClicked: {
+                                                                // strange bug with clicking on the keywords field
+                                                                if (!containsMouse) { return; }
+
+                                                                var callbackObject = {
+                                                                    onSuccess: function(text) {
+                                                                        artItemsModel.plainTextEdit(rowWrapper.getIndex(), text)
+                                                                    },
+                                                                    onClose: function() {
+                                                                        flv.activateEdit()
+                                                                    }
+                                                                }
+
+                                                                Common.launchDialog("Dialogs/PlainTextKeywordsDialog.qml",
+                                                                                    applicationWindow,
+                                                                                    {
+                                                                                        callbackObject: callbackObject,
+                                                                                        keywordsText: keywordsstring,
+                                                                                        keywordsModel: artItemsModel.getArtworkItself(rowWrapper.getIndex())
+
+                                                                                    });
+                                                            }
+                                                        }
+                                                    }
+
+                                                    Item {
+                                                        Layout.fillWidth: true
+                                                    }
+
+                                                    StyledText {
+                                                        id: fixSpellingText
+                                                        text: i18.n + qsTr("Fix spelling")
+                                                        enabled: rowWrapper.artworkModel ? rowWrapper.artworkModel.hasSpellErrors : false
+                                                        color: enabled ? (fixSpellingMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor)  : (rowWrapper.isHighlighted ? Colors.labelActiveForeground : Colors.labelInactiveForeground)
+
+                                                        MouseArea {
+                                                            id: fixSpellingMA
+                                                            anchors.fill: parent
+                                                            cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
+
+                                                            onClicked: {
+                                                                artItemsModel.suggestCorrections(rowWrapper.getIndex())
+                                                                Common.launchDialog("Dialogs/SpellCheckSuggestionsDialog.qml",
+                                                                                    applicationWindow,
+                                                                                    {})
+                                                            }
+                                                        }
+                                                    }
+
+                                                    StyledText {
+                                                        text: "|"
+                                                        isActive: rowWrapper.isHighlighted
+                                                        verticalAlignment: Text.AlignVCenter
+                                                    }
+
+                                                    StyledText {
+                                                        text: i18.n + qsTr("Suggest")
+                                                        color: suggestKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor
+
+                                                        MouseArea {
+                                                            id: suggestKeywordsMA
+                                                            anchors.fill: parent
+                                                            cursorShape: Qt.PointingHandCursor
+                                                            onClicked: {
+                                                                var callbackObject = {
+                                                                    promoteKeywords: function(keywords) {
+                                                                        artItemsModel.addSuggestedKeywords(rowWrapper.getIndex(), keywords)
+                                                                    }
+                                                                }
+
+                                                                Common.launchDialog("Dialogs/KeywordsSuggestion.qml",
+                                                                                    applicationWindow,
+                                                                                    {callbackObject: callbackObject});
+                                                            }
+                                                        }
+                                                    }
+
+                                                    StyledText {
+                                                        text: "|"
+                                                        isActive: rowWrapper.isHighlighted
+                                                        verticalAlignment: Text.AlignVCenter
+                                                    }
+
+                                                    StyledText {
+                                                        text: i18.n + qsTr("Copy")
+                                                        color: copyKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor
+
+                                                        MouseArea {
+                                                            id: copyKeywordsMA
+                                                            anchors.fill: parent
+                                                            cursorShape: Qt.PointingHandCursor
+                                                            onClicked: clipboard.setText(keywordsstring)
+                                                        }
+                                                    }
+
+                                                    StyledText {
+                                                        text: "|"
+                                                        isActive: rowWrapper.isHighlighted
+                                                        verticalAlignment: Text.AlignVCenter
+                                                    }
+
+                                                    StyledText {
+                                                        text: i18.n + qsTr("Clear")
+                                                        color: clearKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor
+
+                                                        MouseArea {
+                                                            id: clearKeywordsMA
+                                                            anchors.fill: parent
+                                                            cursorShape: Qt.PointingHandCursor
+                                                            onClicked: filteredArtItemsModel.clearKeywords(rowWrapper.delegateIndex)
+                                                        }
                                                     }
                                                 }
                                             }
                                         }
                                     }
                                 }
-                            }
 
+                            }
                             Connections {
                                 target: artItemsModel
                                 onArtworksChanged: artworksHost.forceUpdateArtworks(needToMoveCurrentItem)
