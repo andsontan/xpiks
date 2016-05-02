@@ -132,7 +132,7 @@ namespace Models {
 #endif
 
 #ifdef CORE_TESTS
-        const QStringList &getKeywords() const;
+        QStringList getKeywords();
         bool getAreKeywordsModified() const { return m_AreKeywordsModified; }
         bool getIsDescriptionModified() const { return m_IsDescriptionModified; }
 #endif

@@ -18,7 +18,7 @@ namespace Mocks {
         bool isTitleEmpty() const { return getKeywordsModel()->isTitleEmpty(); }
         bool isDescriptionEmpty() const { return getKeywordsModel()->isDescriptionEmpty(); }
 
-        bool areKeywordsEmpty() const { return getKeywordsModel()->areKeywordsEmpty(); }
+        bool areKeywordsEmpty() { return getKeywordsModel()->areKeywordsEmpty(); }
 
         //virtual QString getDirectory() const { return "somedirectory"; }
     };

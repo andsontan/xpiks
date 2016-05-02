@@ -130,7 +130,7 @@ namespace Models {
     }
 
 #ifdef CORE_TESTS
-        const QStringList &CombinedArtworksModel::getKeywords() const {
+        QStringList CombinedArtworksModel::getKeywords() {
             return m_CommonKeywordsModel.getKeywords();
         }
 #endif
