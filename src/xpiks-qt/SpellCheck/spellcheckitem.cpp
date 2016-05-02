@@ -97,7 +97,7 @@ namespace SpellCheck {
     }
 
     SpellCheckItem::~SpellCheckItem() {
-        if (m_SpellCheckable->release()) {
+        if (!m_SpellCheckable->release()) {
             LOG_WARNING << "item was locked for removal";
         }
     }

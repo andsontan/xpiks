@@ -81,11 +81,11 @@ namespace Common {
 
     private:
         bool appendKeywordUnsafe(const QString &keyword);
-        bool takeKeywordAtUnsafe(int index, QString &removedKeyword);
+        bool takeKeywordAtUnsafe(int index, QString &removedKeyword, bool &wasCorrect);
         void setKeywordsUnsafe(const QStringList &keywordsList);
         int appendKeywordsUnsafe(const QStringList &keywordsList);
         bool editKeywordUnsafe(int index, const QString &replacement);
-        void replaceKeywordUnsafe(int index, const QString &existing, const QString &replacement);
+        bool replaceKeywordUnsafe(int index, const QString &existing, const QString &replacement);
         bool clearKeywordsUnsafe();
         bool containsKeywordUnsafe(const QString &searchTerm, bool exactMatch=false);
         bool hasKeywordsSpellErrorUnsafe() const;
