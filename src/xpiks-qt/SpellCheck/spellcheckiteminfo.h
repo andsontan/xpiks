@@ -27,6 +27,7 @@
 #include <QObject>
 #include <QStringList>
 #include <QTextDocument>
+#include <QReadWriteLock>
 
 namespace Common {
     class BasicKeywordsModel;
@@ -41,13 +42,14 @@ namespace SpellCheck {
 
     class SpellCheckErrorsInfo {
     public:
-        bool hasWrongSpelling(const QString& word) const { return m_WordsWithErrors.contains(word); }
-        void setErrorWords(const QSet<QString> &errors) { /*m_WordsWithErrors.clear();*/ m_WordsWithErrors.unite(errors); }
-        bool anyError() const { return !m_WordsWithErrors.isEmpty(); }
-        QStringList toList() const { return QStringList::fromSet(m_WordsWithErrors); }
+        bool hasWrongSpelling(const QString& word);
+        void setErrorWords(const QSet<QString> &errors);
+        bool anyError();
+        QStringList toList();
 
     private:
         QSet<QString> m_WordsWithErrors;
+        QReadWriteLock m_ErrorsLock;
     };
 
     class SpellCheckItemInfo
@@ -59,8 +61,8 @@ namespace SpellCheck {
                                              Common::BasicKeywordsModel *basicKeywordsModel);
         void createHighlighterForTitle(QTextDocument *document, QMLExtensions::ColorsModel *colorsModel,
                                        Common::BasicKeywordsModel *basicKeywordsModel);
-        bool hasDescriptionError(const QString &word) const { return m_DescriptionErrors.hasWrongSpelling(word); }
-        bool hasTitleError(const QString &word) const { return m_TitleErrors.hasWrongSpelling(word); }
+        bool hasDescriptionError(const QString &word) { return m_DescriptionErrors.hasWrongSpelling(word); }
+        bool hasTitleError(const QString &word) { return m_TitleErrors.hasWrongSpelling(word); }
 
     private:
         SpellCheckErrorsInfo m_DescriptionErrors;

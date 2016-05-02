@@ -173,8 +173,8 @@ namespace Models {
          QString m_ArtworkFilepath;
          QTimer m_BackupTimer;
          qint64 m_ID;
-         volatile int m_WarningsFlags;
          volatile int m_MetadataFlags;
+         volatile int m_WarningsFlags;
     };
 }
 
