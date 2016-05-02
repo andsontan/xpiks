@@ -25,8 +25,8 @@
     result = result + QTest::qExec(&vName, argc, argv); \
 
 int main(int argc, char *argv[]) {
-    Q_UNUSED(argc);
-    Q_UNUSED(argv);
+    QCoreApplication app(argc, argv);
+    Q_UNUSED(app);
 
     int result = 0;
 
