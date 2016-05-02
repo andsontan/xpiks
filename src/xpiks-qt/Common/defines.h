@@ -44,10 +44,10 @@
 #define LOG_DEBUG qDebug()
 #define LOG_INFO qInfo()
 
-#ifndef INTEGRATION_TESTS
-#define LOG_WARNING qWarning()
-#else
+#if defined(INTEGRATION_TESTS) || defined(CORE_TESTS)
 #define LOG_WARNING qInfo() << "FAKE_WARNING"
+#else
+#define LOG_WARNING qWarning()
 #endif
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
