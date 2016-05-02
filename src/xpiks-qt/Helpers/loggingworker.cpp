@@ -49,7 +49,9 @@ namespace Helpers {
     }
 
     void LoggingWorker::cancel() {
-        LOG_INFO << "#";
         m_Cancel = true;
+        LOG_INFO << "#";
+        Logger &logger = Logger::getInstance();
+        logger.log("StopMessage");
     }
 }
