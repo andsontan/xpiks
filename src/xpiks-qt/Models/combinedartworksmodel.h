@@ -64,7 +64,7 @@ namespace Models {
         void initArtworks(const QVector<ArtItemInfo *> &artworks);
 
     private:
-        void initKeywords(const QStringList &ek) { m_CommonKeywordsModel.resetKeywords(ek); m_AreKeywordsModified = false; }
+        void initKeywords(const QStringList &ek) { m_CommonKeywordsModel.setKeywords(ek); m_AreKeywordsModified = false; }
         void initDescription(const QString &description) { setDescription(description); m_IsDescriptionModified = false; }
         void initTitle(const QString &title) { setTitle(title); m_IsTitleModified = false; }
 
@@ -75,7 +75,7 @@ namespace Models {
         virtual void acceptSuggestedKeywords(const QStringList &keywords);
 
     public:
-        void setKeywords(const QStringList& keywords) { m_CommonKeywordsModel.resetKeywords(keywords); }
+        void setKeywords(const QStringList& keywords) { m_CommonKeywordsModel.setKeywords(keywords); }
         const QString &getDescription() const { return m_CommonKeywordsModel.getDescription(); }
         void setDescription(const QString &value) {
             if (m_CommonKeywordsModel.setDescription(value)) {
@@ -92,7 +92,7 @@ namespace Models {
             }
         }
 
-        int getKeywordsCount() const { return m_CommonKeywordsModel.getKeywordsCount(); }
+        int getKeywordsCount() { return m_CommonKeywordsModel.getKeywordsCount(); }
 
         bool getChangeDescription() const { return Common::HasFlag(m_EditFlags, Common::EditDesctiption); }
         void setChangeDescription(bool value);
@@ -145,7 +145,7 @@ namespace Models {
         Q_INVOKABLE void pasteKeywords(const QStringList &keywords);
         Q_INVOKABLE void setArtworksSelected(int index, bool newState);
         Q_INVOKABLE void removeSelectedArtworks();
-        Q_INVOKABLE void saveEdits() const;
+        Q_INVOKABLE void saveEdits();
         Q_INVOKABLE void resetModelData();
         Q_INVOKABLE void clearKeywords();
         Q_INVOKABLE QString getKeywordsString() { return m_CommonKeywordsModel.getKeywordsString(); }
@@ -162,7 +162,7 @@ namespace Models {
         Q_INVOKABLE void assignFromSelected();
 
     private:
-        void processCombinedEditCommand() const;
+        void processCombinedEditCommand();
         void enableAllFields();
         void assignFromOneArtwork();
         void assignFromManyArtworks();

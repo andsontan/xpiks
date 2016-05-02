@@ -288,8 +288,8 @@ namespace Suggestion {
             }
         }
 
-        m_SuggestedKeywords.resetKeywords(suggestedKeywords);
-        m_AllOtherKeywords.resetKeywords(otherKeywords);
+        m_SuggestedKeywords.setKeywords(suggestedKeywords);
+        m_AllOtherKeywords.setKeywords(otherKeywords);
 
         emit suggestedKeywordsCountChanged();
         emit otherKeywordsCountChanged();

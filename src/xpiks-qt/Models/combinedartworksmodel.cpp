@@ -210,7 +210,7 @@ namespace Models {
         emit artworksCountChanged();
     }
 
-    void CombinedArtworksModel::saveEdits() const {
+    void CombinedArtworksModel::saveEdits() {
         bool needToSave = false;
 
         if (getChangeTitle() ||
@@ -327,7 +327,7 @@ namespace Models {
         }
     }
 
-    void CombinedArtworksModel::processCombinedEditCommand() const {
+    void CombinedArtworksModel::processCombinedEditCommand() {
         Commands::CombinedEditCommand *combinedEditCommand = new Commands::CombinedEditCommand(
                     m_EditFlags,
                     m_ArtworksList,
@@ -370,7 +370,7 @@ namespace Models {
         if (!m_AreKeywordsModified) {
             initKeywords(metadata->getKeywords());
             Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
-            m_CommonKeywordsModel.setSpellStatuses(keywordsModel->getSpellStatuses());
+            m_CommonKeywordsModel.setSpellStatuses(keywordsModel);
         }
     }
 

@@ -70,7 +70,7 @@ namespace Models {
 
         if (overwrite) {
             anythingModified = true;
-            m_KeywordsModel.resetKeywords(rawKeywords);
+            m_KeywordsModel.setKeywords(rawKeywords);
         } else if (!rawKeywords.isEmpty()) {
             int appendedCount = m_KeywordsModel.appendKeywords(rawKeywords);
             anythingModified = anythingModified || (appendedCount > 0);

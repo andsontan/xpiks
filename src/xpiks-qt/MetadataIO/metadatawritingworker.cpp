@@ -76,7 +76,7 @@ namespace MetadataIO {
         jsonObject.insert(EXIF_IMAGEDESCRIPTION, descriptionValue);
         jsonObject.insert(IPTC_CAPTIONABSTRACT, descriptionValue);
 
-        const QStringList &keywords = metadata->getKeywords();
+        QStringList keywords = metadata->getKeywords();
         QJsonArray keywordsArray;
         keywordsToJsonArray(keywords, keywordsArray);
         jsonObject.insert(IPTC_KEYWORDS, keywordsArray);

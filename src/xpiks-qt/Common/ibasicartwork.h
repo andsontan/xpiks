@@ -23,14 +23,17 @@
 #define IBASICARTWORK
 
 #include <QtGlobal>
+#include <QStringList>
+#include <QSet>
+#include <QString>
 
 namespace Common {
     class IBasicArtwork {
     public:
         virtual ~IBasicArtwork() {}
 
-        virtual const QSet<QString> &getKeywordsSet() const = 0;
-        virtual const QStringList &getKeywords() const = 0;
+        virtual QSet<QString> getKeywordsSet() = 0;
+        virtual QStringList getKeywords() = 0;
         virtual bool isEmpty() const = 0;
 
         virtual const QString &getDescription() const = 0;
