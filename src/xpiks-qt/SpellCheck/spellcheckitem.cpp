@@ -56,6 +56,9 @@ namespace SpellCheck {
         m_OnlyOneKeyword(true)
     {
         Q_ASSERT(Common::HasFlag(spellCheckFlags, Common::SpellCheckKeywords));
+        Q_ASSERT(spellCheckable != NULL);
+
+        spellCheckable->acquire();
 
         QString keyword = m_SpellCheckable->retrieveKeyword(keywordIndex);
         if (!keyword.contains(QChar::Space)) {
@@ -77,6 +80,9 @@ namespace SpellCheck {
         m_SpellCheckFlags(spellCheckFlags),
         m_OnlyOneKeyword(false)
     {
+        Q_ASSERT(spellCheckable != NULL);
+        spellCheckable->acquire();
+
         if (Common::HasFlag(spellCheckFlags, Common::SpellCheckKeywords)) {
             QStringList keywords = spellCheckable->getKeywords();
             reserve(keywords.length());

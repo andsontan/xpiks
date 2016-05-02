@@ -87,7 +87,6 @@ namespace SpellCheck {
     void SpellCheckerService::submitItem(Common::BasicKeywordsModel *itemToCheck, int flags) {
         if (m_SpellCheckWorker == NULL) { return; }
 
-        itemToCheck->acquire();
         SpellCheckItem *item = new SpellCheckItem(itemToCheck, flags);
         itemToCheck->connectSignals(item);
         m_SpellCheckWorker->submitItem(item);
@@ -117,7 +116,6 @@ namespace SpellCheck {
     void SpellCheckerService::submitKeyword(Common::BasicKeywordsModel *itemToCheck, int keywordIndex) {
         if (m_SpellCheckWorker == NULL) { return; }
 
-        itemToCheck->acquire();
         SpellCheckItem *item = new SpellCheckItem(itemToCheck, Common::SpellCheckKeywords, keywordIndex);
         itemToCheck->connectSignals(item);
         m_SpellCheckWorker->submitItem(item);
