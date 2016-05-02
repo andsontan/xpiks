@@ -76,6 +76,9 @@ namespace Suggestion {
         endResetModel();
         unsetInProgress();
         emit suggestionArrived();
+        emit suggestedKeywordsCountChanged();
+        emit otherKeywordsCountChanged();
+        emit selectedArtworksCountChanged();
     }
 
     void KeywordsSuggestor::clear() {
@@ -89,6 +92,9 @@ namespace Suggestion {
         m_Suggestions.clear();
         endResetModel();
         unsetInProgress();
+        emit suggestedKeywordsCountChanged();
+        emit otherKeywordsCountChanged();
+        emit selectedArtworksCountChanged();
     }
 
     void KeywordsSuggestor::setSelectedSourceIndex(int value) {

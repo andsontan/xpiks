@@ -28,5 +28,6 @@ Text {
     renderType: Text.NativeRendering
     font.family: Qt.platform.os === "windows" ? "Arial" : "Helvetica"
     font.pixelSize: 14
+    focus: false
 }
 

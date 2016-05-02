@@ -70,6 +70,7 @@ namespace AutoComplete {
 
         m_CompletionList.clear();
         m_CompletionList.reserve(m_LastGeneratedCompletions.length());
+
         foreach (const QString &item, m_LastGeneratedCompletions) {
             m_CompletionList.append(item);
         }

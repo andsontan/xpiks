@@ -38,15 +38,17 @@ namespace Models {
         m_QtTranslator = new QTranslator(this);
 
         QString translationsPath;
-#if !defined(Q_OS_LINUX)
+
+#if defined(Q_OS_LINUX)
+        translationsPath = QStandardPaths::locate(XPIKS_DATA_LOCATION_TYPE, "/translations/",QStandardPaths::LocateDirectory);
+#else
         translationsPath = QCoreApplication::applicationDirPath();
 #if defined(Q_OS_MAC)
         translationsPath += "/../Resources/translations/";
-#elif defined(Q_OS_WIN)
+#else
         translationsPath += "/translations/";
 #endif
 #endif
-
         m_TranslationsPath = translationsPath;
     }
 

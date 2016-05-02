@@ -82,7 +82,7 @@ namespace AutoComplete {
         Models::AbstractConfigUpdaterModel::processRemoteConfig(remoteDocument, overwrite);
     }
 
-    void StocksFtpListModel::parseConfig(const QJsonDocument &document) {
+    bool StocksFtpListModel::parseConfig(const QJsonDocument &document) {
         bool anyError = false;
 
         m_StocksHash.clear();
@@ -112,6 +112,8 @@ namespace AutoComplete {
             parseFtpArray(ftpArray);
 
         } while (false);
+
+        return anyError;
     }
 
     void StocksFtpListModel::parseFtpArray(const QJsonArray &array) {

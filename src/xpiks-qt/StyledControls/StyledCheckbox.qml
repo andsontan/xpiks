@@ -29,7 +29,7 @@ CheckBox {
     property int indicatorWidth: 17
     property int indicatorHeight: 17
     checked: true
-    property color labelColor: enabled ? Colors.inputForegroundColor : (isContrast ? Colors.selectedImageBackground : Colors.itemsSourceSelected)
+    property color labelColor: enabled ? Colors.inputForegroundColor : (isContrast ? Colors.selectedImageBackground : Colors.inputInactiveForeground)
 
     style: CheckBoxStyle {
         spacing: 8

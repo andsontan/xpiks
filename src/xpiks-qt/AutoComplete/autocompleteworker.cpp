@@ -93,17 +93,23 @@ namespace AutoComplete {
         vp_t completions = m_Soufleur->prompt(prefix.toStdString(), m_CompletionsCount);
 
         QStringList completionsList;
+        QSet<QString> completionsSet;
 
         size_t size = completions.size(), i = 0;
         completions.reserve(size);
+        completionsSet.reserve(size);
 
         for (; i < size; ++i) {
             const phrase_t &suggestion = completions[i];
-            QString phrase = QString::fromStdString(suggestion.phrase);
-            completionsList.append(phrase.trimmed());
+            QString phrase = QString::fromStdString(suggestion.phrase).trimmed();
+
+            if (!completionsSet.contains(phrase)) {
+                completionsList.append(phrase);
+                completionsSet.insert(phrase);
+            }
         }
 
-        if (size > 0) {
+        if (!completionsList.isEmpty()) {
             item->setCompletions(completionsList);
         }
 

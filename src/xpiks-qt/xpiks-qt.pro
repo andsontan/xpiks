@@ -295,7 +295,13 @@ DISTFILES += \
     Components/CompletionBox.qml \
     Components/EditIcon.qml \
     uncrustify.cfg \
-    Components/PresentationSlide.qml
+    Components/PresentationSlide.qml \
+    Graphics/autocomplete.png \
+    Graphics/gears.png \
+    Graphics/localization.png \
+    Graphics/newtheme.png \
+    Graphics/predefinedftp.png \
+    Graphics/suggestion.png
 
 lupdate_only {
 SOURCES += *.qml \
@@ -396,6 +402,7 @@ linux-g++-64 {
     QML_IMPORT_PATH += /usr/lib/x86_64-linux-gnu/qt5/imports/
     LIBS += -L/lib/x86_64-linux-gnu/
     BUILDNO = $$system(od -An -N8 -tx8 </dev/urandom)
+    #DEFINES -= TELEMETRY_ENABLED
 
     UNAME = $$system(cat /proc/version | tr -d \'()\')
     contains( UNAME, Debian ) {
@@ -411,7 +418,7 @@ linux-g++-64 {
 linux-qtcreator {
         message("in QtCreator")
         LIBS += -L/usr/lib64/
-        LIBS += /usr/lib64/libcurl.so.4
+        LIBS += -L/lib/x86_64-linux-gnu/
         BUILDNO = $$system(od -An -N8 -tx8 </dev/urandom)
         
         copywhatsnew.commands = $(COPY_FILE) "$$PWD/deps/whatsnew.txt" "$$OUT_PWD/"
