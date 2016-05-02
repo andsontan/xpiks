@@ -75,6 +75,8 @@ namespace SpellCheck {
         LOG_DEBUG << "#";
         if (m_SpellCheckWorker != NULL) {
             m_SpellCheckWorker->stopWorking();
+        } else {
+            LOG_WARNING << "SpellCheckWorker is NULL";
         }
     }
 

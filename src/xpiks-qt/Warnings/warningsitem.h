@@ -45,7 +45,7 @@ namespace Warnings {
 
         ~WarningsItem() {
             if (!m_CheckableItem->release()) {
-                LOG_WARNING << "item was locked for removal";
+                LOG_WARNING << "Item could have been removed";
             }
         }
 

@@ -43,7 +43,12 @@
 
 #define LOG_DEBUG qDebug()
 #define LOG_INFO qInfo()
+
+#ifndef INTEGRATION_TESTS
 #define LOG_WARNING qWarning()
+#else
+#define LOG_WARNING qInfo() << "FAKE_WARNING"
+#endif
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
 #define XPIKS_USERDATA_PATH QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);

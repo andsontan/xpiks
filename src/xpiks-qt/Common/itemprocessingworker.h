@@ -107,12 +107,8 @@ namespace Common {
 
                 T *stopItem = NULL;
 
-                bool wasEmpty = m_Queue.isEmpty();
                 m_Queue.append(stopItem);
-
-                if (wasEmpty) {
-                    m_WaitAnyItem.wakeOne();
-                }
+                m_WaitAnyItem.wakeOne();
             }
             m_QueueMutex.unlock();
         }

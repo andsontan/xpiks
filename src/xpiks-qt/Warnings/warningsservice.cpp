@@ -61,7 +61,7 @@ namespace Warnings {
             LOG_INFO << "Stopping worker";
             m_WarningsWorker->stopWorking();
         } else {
-            LOG_WARNING << "Worker was destroyed";
+            LOG_WARNING << "Warnings Worker was NULL";
         }
     }
 
