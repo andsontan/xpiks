@@ -1,24 +1,24 @@
-* Idea, initial UX and implementation:* 
+**Idea, initial UX and implementation:** 
 
 - Taras Kushnir
 
-* Development:* 
+**Development:** 
 - Taras Kushnir
 - Natalia Abrashitova
 - Artiom Molchanov
 
-* Debian/RPM package maintainer:* 
+**Debian/RPM package maintainer:** 
 
 - Artiom Molchanov
 
-* UI design:* 
+**UI design:** 
 
 - Julia Korchevska
 
-* Translations:* 
+**Translations:** 
 
-- Ukrainian - Taras Kushnir
-- Russian, German - Natalia Abrashitova
-- Spanish, Catalan - Guillermo Obispo
-- Portugese - Luís Santos
-- French - Artiom Molchanov
+- Ukrainian: Taras Kushnir
+- Russian, German: Natalia Abrashitova
+- Spanish, Catalan: Guillermo Obispo
+- Portugese: Luís Santos
+- French: Artiom Molchanov
