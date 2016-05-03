@@ -1935,7 +1935,7 @@ ApplicationWindow {
                                                                                 {
                                                                                     callbackObject: callbackObject,
                                                                                     previousKeyword: keyword,
-                                                                                    keywordsModel: artItemsModel.getArtworkItself(rowWrapper.getIndex())
+                                                                                    keywordsModel: filteredArtItemsModel.getArtworkMetadata(rowWrapper.delegateIndex)
                                                                                 })
                                                         }
                                                     }
@@ -2019,7 +2019,7 @@ ApplicationWindow {
                                                                                 {
                                                                                     callbackObject: callbackObject,
                                                                                     keywordsText: keywordsstring,
-                                                                                    keywordsModel: artItemsModel.getArtworkItself(rowWrapper.getIndex())
+                                                                                    keywordsModel: filteredArtItemsModel.getArtworkMetadata(rowWrapper.delegateIndex)
 
                                                                                 });
                                                         }
