@@ -124,7 +124,7 @@
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="936"/>
       <source>Fix spelling</source>
-      <translation>Corrector ortográfico</translation>
+      <translation>Ortografía</translation>
     </message>
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="960"/>
@@ -192,7 +192,7 @@
     <message>
       <location filename="../../Dialogs/EditArtworkHorizontalDialog.qml" line="576"/>
       <source>Fix spelling</source>
-      <translation>Corrector ortográfico</translation>
+      <translation>Ortografía</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EditArtworkHorizontalDialog.qml" line="599"/>
@@ -255,7 +255,7 @@
     <message>
       <location filename="../../Dialogs/EditArtworkVerticalDialog.qml" line="573"/>
       <source>Fix spelling</source>
-      <translation>Corrector ortográfico</translation>
+      <translation>Ortografía</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EditArtworkVerticalDialog.qml" line="596"/>
@@ -799,7 +799,7 @@
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="581"/>
       <source>ExifTool path:</source>
-      <translation>Ruta de ExifTool:</translation>
+      <translation>ExifTool:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="617"/>
@@ -846,7 +846,7 @@
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="819"/>
       <source>Max description length:</source>
-      <translation>Longitud de la descripción. Máximo:</translation>
+      <translation>Descripción. Máximo:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="862"/>
@@ -861,12 +861,12 @@
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="892"/>
       <source>File upload timeout:</source>
-      <translation>Tiempo de espera. Máximo:</translation>
+      <translation>En espera. Máximo:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="947"/>
       <source>Max parallel uploads:</source>
-      <translation>Subidas concurrentes. Máximo:</translation>
+      <translation>Concurrencia. Máximo:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="989"/>
@@ -1494,7 +1494,7 @@ They will be detached automatically.</source>
     <message>
       <location filename="../../main.qml" line="850"/>
       <source>Add directory</source>
-      <translation>Añadir directorio</translation>
+      <translation>Añadir carpeta</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="859"/>
@@ -1575,7 +1575,7 @@ They will be detached automatically.</source>
     <message>
       <location filename="../../main.qml" line="2030"/>
       <source>Fix spelling</source>
-      <translation>Corrector ortográfico</translation>
+      <translation>Ortografía</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="2055"/>
