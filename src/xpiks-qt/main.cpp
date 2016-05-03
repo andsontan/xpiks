@@ -335,6 +335,7 @@ int main(int argc, char *argv[]) {
     commandManager.connectEntitiesSignalsSlots();
 
     languagesModel.initFirstLanguage();
+    languagesModel.loadLanguages();
 
     qmlRegisterType<Helpers::ClipboardHelper>("xpiks", 1, 0, "ClipboardHelper");
     qmlRegisterType<QMLExtensions::TriangleElement>("xpiks", 1, 0, "TriangleElement");
@@ -400,6 +401,8 @@ int main(int argc, char *argv[]) {
         commandManager.addInitialArtworks(pathes, QStringList());
     }
 #endif
+
+    commandManager.afterConstructionCallback();
 
     return app.exec();
 }

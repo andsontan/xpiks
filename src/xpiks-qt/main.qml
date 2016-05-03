@@ -124,9 +124,7 @@ ApplicationWindow {
         repeat: false
         onTriggered: {
             console.debug("Delayed onOpen timer triggered");
-            helpersWrapper.afterConstruction()
             helpersWrapper.setProgressIndicator(applicationWindow)
-            languagesModel.loadLanguages()
 
             if (appSettings.needToShowWhatsNew()) {
                 var text = appSettings.whatsNewText;
