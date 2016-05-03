@@ -244,6 +244,7 @@ int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
 
     LOG_DEBUG << "Working directory of Xpiks is:" << QDir::currentPath();
+    LOG_DEBUG << "Extra files search locations:" << QStandardPaths::standardLocations(XPIKS_DATA_LOCATION_TYPE);
 
     if (highDpiEnvironmentVariable) {
         qunsetenv(highDpiEnvironmentVariable);
@@ -294,6 +295,8 @@ int main(int argc, char *argv[]) {
     Plugins::PluginManager pluginManager;
     Plugins::PluginsWithActionsModel pluginsWithActions;
     pluginsWithActions.setSourceModel(&pluginManager);
+
+    LOG_INFO << "Models created";
 
     Commands::CommandManager commandManager;
     commandManager.InjectDependency(&artworkRepository);

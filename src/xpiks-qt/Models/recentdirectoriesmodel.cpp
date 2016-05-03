@@ -39,6 +39,8 @@ namespace Models {
     }
 
     void RecentDirectoriesModel::deserializeFromSettings(const QString &serialized) {
+        LOG_DEBUG << "#";
+
         QByteArray originalData;
         originalData.append(serialized.toLatin1());
         QByteArray serializedBA = QByteArray::fromBase64(originalData);
@@ -47,9 +49,18 @@ namespace Models {
         QDataStream ds(&serializedBA, QIODevice::ReadOnly);
         ds >> items;
 
+        QQueue<QString> deserialized;
+        QSet<QString> toBeAdded;
+
         foreach (const QString &item, items) {
-            doPushDirectory(item);
+            if (!toBeAdded.contains(item)) {
+                toBeAdded.insert(item);
+                deserialized.push_back(item);
+            }
         }
+
+        m_DirectoriesSet = toBeAdded;
+        m_RecentDirectories = deserialized;
     }
 
     void RecentDirectoriesModel::pushDirectory(const QString &directoryPath) {

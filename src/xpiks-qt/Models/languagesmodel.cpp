@@ -40,7 +40,7 @@ namespace Models {
         QString translationsPath;
 
 #if defined(Q_OS_LINUX)
-        translationsPath = QStandardPaths::locate(XPIKS_DATA_LOCATION_TYPE, "/translations/",QStandardPaths::LocateDirectory);
+        translationsPath = QStandardPaths::locate(XPIKS_DATA_LOCATION_TYPE, "/translations/", QStandardPaths::LocateDirectory);
 #else
         translationsPath = QCoreApplication::applicationDirPath();
 #if defined(Q_OS_MAC)
@@ -152,12 +152,8 @@ namespace Models {
         QDir::SortFlags sort = QDir::Name;
         QFileInfoList entries = dir.entryInfoList(QStringList() << filter, filters, sort);
 
-        beginResetModel();
-        m_LanguagesList.clear();
-        endResetModel();
-        
-        int lastIndex = 0;
-        
+        QVector<QPair<QString, QString> > foundLocales;
+
         int size = entries.size();
         for (int i = 0; i < size; ++i) {
             const QFileInfo &file = entries.at(i);
@@ -169,21 +165,21 @@ namespace Models {
             //if (translator->load(file.absoluteFilePath())) {
             QString locale = language + "_" + country;
 
-            if (selectedLocale == locale) { m_CurrentLanguageIndex = lastIndex; }
+            if (selectedLocale == locale) { m_CurrentLanguageIndex = i; }
 
             QLocale localeVar(locale);
             QString lang = QLocale::languageToString(localeVar.language());
             QString nativeLang = localeVar.nativeLanguageName();
             nativeLang.replace(0, 1, nativeLang[0].toUpper());
 
-            beginInsertRows(QModelIndex(), lastIndex, lastIndex);
-            m_LanguagesList << qMakePair(locale, QString("%1 (%2)").arg(nativeLang).arg(lang));
-            endInsertRows();
-
-            lastIndex++;
+            foundLocales << qMakePair(locale, QString("%1 (%2)").arg(nativeLang).arg(lang));
                 
             LOG_INFO << "Found" << locale << "translation for language:" << lang;
         }
+
+        beginResetModel();
+        m_LanguagesList = foundLocales;
+        endResetModel();
     }
 }
 

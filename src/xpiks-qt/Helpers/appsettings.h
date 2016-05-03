@@ -43,7 +43,6 @@ namespace Helpers {
                                                               QCoreApplication::instance()->applicationName(),
                                                               parent)
         {
-            LOG_DEBUG<< "Extra files search locations: "<<QStandardPaths::standardLocations(XPIKS_DATA_LOCATION_TYPE);
         }
 
         QString getAppWidthKey()   const { return QLatin1String(Constants::APP_WINDOW_WIDTH); }

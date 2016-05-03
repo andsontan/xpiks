@@ -58,8 +58,7 @@ namespace Encryption {
         m_DefaultMasterPassword = "DefaultMasterPassword";
     }
 
-    void SecretsManager::setMasterPasswordHash(const QString &hash)
-    {
+    void SecretsManager::setMasterPasswordHash(const QString &hash) {
         m_MasterPasswordHash = QByteArray::fromHex(hash.toLatin1());
     }
 

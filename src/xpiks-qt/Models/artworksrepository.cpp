@@ -68,8 +68,16 @@ namespace Models {
 
     void ArtworksRepository::stopListeningToUnavailableFiles() {
         LOG_DEBUG << "#";
-        m_FilesWatcher.removePaths(m_FilesWatcher.files());
-        m_FilesWatcher.removePaths(m_FilesWatcher.directories());
+
+        QStringList files = m_FilesWatcher.files();
+        if (!files.isEmpty()) {
+            m_FilesWatcher.removePaths(files);
+        }
+
+        QStringList directories = m_FilesWatcher.directories();
+        if (!directories.isEmpty()) {
+            m_FilesWatcher.removePaths(directories);
+        }
     }
 
     bool ArtworksRepository::beginAccountingFiles(const QStringList &items) {
