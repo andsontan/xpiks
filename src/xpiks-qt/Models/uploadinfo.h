@@ -53,7 +53,7 @@ namespace Models {
             m_IsSelected(false),
             m_DisableFtpPassiveMode(false)
         {
-            m_Title = QString::fromLatin1("Untitled");
+            m_Title = QObject::tr("Untitled");
         }
 
         UploadInfo(const QHash<int, QString> &items) :
@@ -61,7 +61,7 @@ namespace Models {
             m_IsSelected(false)
         {
             QString emptyString = QString::fromLatin1("");
-            m_Title = items.value(TitleField, QString::fromLatin1("Untitled"));
+            m_Title = items.value(TitleField, QObject::tr("Untitled"));
             m_Host = items.value(HostField, emptyString);
             m_Username = items.value(UsernameField, emptyString);
             m_EncodedPassword = items.value(PasswordField, emptyString);
@@ -83,7 +83,7 @@ namespace Models {
         bool getZipBeforeUpload() const { return m_ZipBeforeUpload; }
         bool isSomethingMissing() const { return m_EncodedPassword.isEmpty() || m_Host.isEmpty() || m_Username.isEmpty(); }
         bool isEmpty() const { return m_EncodedPassword.isEmpty() && m_Host.isEmpty() && m_Username.isEmpty() &&
-                    (m_Title.isEmpty() || m_Title == QLatin1String("Untitled")); }
+                    (m_Title.isEmpty() || m_Title == QObject::tr("Untitled")); }
         double getPercent() const { return m_Percent; }
         bool getDisableFtpPassiveMode() const { return m_DisableFtpPassiveMode; }
 
@@ -126,7 +126,7 @@ namespace Models {
     public:
         QHash<int, QString> toHash() {
             QHash<int, QString> hash;
-            hash[TitleField] = m_Title.simplified().isEmpty() ? QString::fromLatin1("Untitled") : m_Title;
+            hash[TitleField] = m_Title.simplified().isEmpty() ? QObject::tr("Untitled") : m_Title;
             hash[HostField] = m_Host;
             hash[UsernameField] = m_Username;
             hash[PasswordField] = m_EncodedPassword;

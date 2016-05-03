@@ -129,6 +129,8 @@ namespace Suggestion {
             SuggestionQueryEngineBase *engine = m_QueryEngines.at(i);
             m_QueryEnginesNames.append(engine->getName());
         }
+
+        setLastErrorString(tr("No results found"));
     }
 
     QString KeywordsSuggestor::removeSuggestedKeywordAt(int keywordIndex) {

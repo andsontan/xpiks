@@ -523,7 +523,7 @@ Item {
                                             KeyNavigation.tab: ftpHost
                                             onEditingFinished: {
                                                 if (text.length == 0) {
-                                                    uploadHostsListView.currentItem.myData.edittitle = "Untitled"
+                                                    uploadHostsListView.currentItem.myData.edittitle = qsTr("Untitled")
                                                 }
                                             }
 
