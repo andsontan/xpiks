@@ -1,0 +1,69 @@
+# version format
+version: 1.0.{build}-{branch}
+
+os: Visual Studio 2015
+
+platform: 
+  - x64
+
+environment:
+  QTDIR: C:\Qt\5.6\msvc2015_64
+
+branches:
+  # blacklist
+  except:
+    - gh-pages
+
+# Do not build on tags (GitHub only)
+skip_tags: true
+
+skip_commits:
+  message: /.*\[ci\ skip\]/       # Regex for matching commit message
+
+# clone directory
+clone_folder: c:\projects\xpiks
+
+# set clone depth
+clone_depth: 3                      # clone entire repository history if not defined
+
+# environment variables
+# environment:
+#  my_var1: value1
+#  my_var2: value2
+
+matrix:
+  fast_finish: true
+
+install:
+  - git clone --depth=3 https://bitbucket.org/ribtoks/xpiks-deps.git c:\projects\xpiks-deps
+  - cmd: 'cd c:\projects\xpiks-deps'
+  - cmd: 'cd c:\projects\xpiks'
+  - git submodule update --init --recursive
+  - cmd: set QT_FATAL_WARNINGS=true
+  - qmake -v
+
+before_build:
+  - cmd: 'xcopy /s c:\projects\xpiks-deps\windows-libs\debug-x64 c:\projects\xpiks\src\libs'
+  - cmd: 'cd c:\projects\xpiks'
+  - cmd: 'ren src\tiny-aes\aes.c src\tiny-aes\aes.cpp'
+  - cmd: 'copy libs\mman.* cpp-libface\libs\ '
+  
+build_script:
+  - cmd: 'cd src'
+  - cmd: 'cd quazip/quazip'
+  - qmake "CONFIG+=debug" quazip.pro
+  - nmake.exe
+  - cmd: 'copy quazip.lib ..\..\libs\ '
+  - cmd: 'cd ..\..\ '
+  - cmd: 'cd cpp-libface\libface-project'
+  - qmake "CONFIG+=debug" libface.pro
+  - nmake.exe
+  - cmd: 'copy face.lib ..\..\libs\ '
+  - cmd: 'cd ..\..\ '
+  - cmd: 'cd xpiks-qt'
+  - qmake "CONFIG+=debug" xpiks-qt.pro
+  - nmake.exe
+
+
+    
+  
