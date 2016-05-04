@@ -141,7 +141,7 @@ namespace Models {
          virtual QSet<QString> getKeywordsSet() { return m_KeywordsModel.getKeywordsSet(); }
          virtual QStringList getKeywords() { return m_KeywordsModel.getKeywords(); }
          virtual bool isEmpty() const { return m_KeywordsModel.isEmpty(); }
-         virtual const QString &getDescription() const { return m_KeywordsModel.getDescription(); }
+         virtual QString getDescription() { return m_KeywordsModel.getDescription(); }
          virtual const QString &getTitle() const { return m_KeywordsModel.getTitle(); }
 
     public:

@@ -63,7 +63,7 @@ namespace Common {
         virtual QVariant data(const QModelIndex &index, int role=Qt::DisplayRole) const;
 
     public:
-        const QString &getDescription() const { return m_Description; }
+        QString getDescription();
         const QString &getTitle() const { return m_Title; }
         int getKeywordsCount();
         QSet<QString> getKeywordsSet();
@@ -104,7 +104,7 @@ namespace Common {
         bool containsKeyword(const QString &searchTerm, bool exactMatch=false);
 
         bool hasKeywordsSpellError();
-        bool hasDescriptionSpellError() const;
+        bool hasDescriptionSpellError();
         bool hasTitleSpellError() const;
 
         bool hasSpellErrors();
@@ -144,7 +144,7 @@ namespace Common {
         virtual void replaceWordInTitle(const QString &word, const QString &replacement);
         virtual void afterReplaceCallback();
         virtual void connectSignals(SpellCheck::SpellCheckItem *item);
-        virtual QStringList getDescriptionWords() const;
+        virtual QStringList getDescriptionWords();
         virtual QStringList getTitleWords() const;
 
     signals:
@@ -166,6 +166,7 @@ namespace Common {
         QStringList m_KeywordsList;
         QSet<QString> m_KeywordsSet;
         QReadWriteLock m_KeywordsLock;
+        QReadWriteLock m_DescriptionLock;
         QVector<bool> m_SpellCheckResults;
         SpellCheck::SpellCheckItemInfo *m_SpellCheckInfo;
         QString m_Description;

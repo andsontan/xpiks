@@ -69,6 +69,13 @@ namespace Common {
         }
     }
 
+    QString BasicKeywordsModel::getDescription() {
+        QReadLocker readLocker(&m_DescriptionLock);
+        Q_UNUSED(readLocker);
+
+        return m_Description;
+    }
+
     int BasicKeywordsModel::getKeywordsCount() {
         QReadLocker readLocker(&m_KeywordsLock);
         Q_UNUSED(readLocker);
@@ -383,6 +390,9 @@ namespace Common {
     }
 
     bool BasicKeywordsModel::setDescription(const QString &value) {
+        QWriteLocker writeLocker(&m_DescriptionLock);
+        Q_UNUSED(writeLocker);
+
         bool result = value != m_Description;
         if (result) { m_Description = value; }
         return result;
@@ -420,7 +430,7 @@ namespace Common {
         return hasKeywordsSpellErrorUnsafe();
     }
 
-    bool BasicKeywordsModel::hasDescriptionSpellError() const {
+    bool BasicKeywordsModel::hasDescriptionSpellError() {
         bool anyError = false;
 
         const QStringList &descriptionWords = getDescriptionWords();
@@ -683,13 +693,13 @@ namespace Common {
     }
 
     void BasicKeywordsModel::replaceWordInDescription(const QString &word, const QString &replacement) {
-        QString description = m_Description;
+        QString description = getDescription();
         description.replace(word, replacement);
         setDescription(description);
     }
 
     void BasicKeywordsModel::replaceWordInTitle(const QString &word, const QString &replacement) {
-        QString title = m_Title;
+        QString title = getTitle();
         title.replace(word, replacement);
         setTitle(title);
     }
@@ -702,7 +712,10 @@ namespace Common {
         QObject::connect(item, SIGNAL(resultsReady(int, int)), this, SLOT(spellCheckRequestReady(int, int)));
     }
 
-    QStringList BasicKeywordsModel::getDescriptionWords() const {
+    QStringList BasicKeywordsModel::getDescriptionWords() {
+        QReadLocker readLocker(&m_DescriptionLock);
+        Q_UNUSED(readLocker);
+
         QStringList words;
         Helpers::splitText(m_Description, words);
         return words;

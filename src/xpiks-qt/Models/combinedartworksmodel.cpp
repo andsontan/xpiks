@@ -395,7 +395,7 @@ namespace Models {
                 continue;
             }
 
-            const QString &currDescription = metadata->getDescription();
+            QString currDescription = metadata->getDescription();
             const QString &currTitle = metadata->getTitle();
             descriptionsDiffer = descriptionsDiffer || description != currDescription;
             titleDiffer = titleDiffer || title != currTitle;

@@ -50,7 +50,7 @@ namespace Helpers {
         bool hasMatch = false;
         QStringList searchTerms = mainSearchTerm.split(QChar::Space, QString::SkipEmptyParts);
 
-        const QString &description = metadata->getDescription();
+        QString description = metadata->getDescription();
         const QString &title = metadata->getTitle();
         const QString &filepath = metadata->getFilepath();
 
