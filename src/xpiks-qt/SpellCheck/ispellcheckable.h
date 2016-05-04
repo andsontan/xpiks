@@ -46,8 +46,8 @@ namespace SpellCheck {
         virtual void replaceWordInTitle(const QString &word, const QString &replacement) = 0;
         virtual void afterReplaceCallback() = 0;
         virtual void connectSignals(SpellCheckItem *item) = 0;
-        virtual QStringList getDescriptionWords() const = 0;
-        virtual QStringList getTitleWords() const = 0;
+        virtual QStringList getDescriptionWords() = 0;
+        virtual QStringList getTitleWords() = 0;
     };
 }
 

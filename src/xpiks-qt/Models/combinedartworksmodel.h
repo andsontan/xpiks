@@ -76,7 +76,7 @@ namespace Models {
 
     public:
         void setKeywords(const QStringList& keywords) { m_CommonKeywordsModel.setKeywords(keywords); }
-        const QString &getDescription() const { return m_CommonKeywordsModel.getDescription(); }
+        QString getDescription() { return m_CommonKeywordsModel.getDescription(); }
         void setDescription(const QString &value) {
             if (m_CommonKeywordsModel.setDescription(value)) {
                 emit descriptionChanged();
@@ -84,7 +84,7 @@ namespace Models {
             }
         }
 
-        const QString &getTitle() const { return m_CommonKeywordsModel.getTitle(); }
+        QString getTitle() { return m_CommonKeywordsModel.getTitle(); }
         void setTitle(const QString &value) {
             if (m_CommonKeywordsModel.setTitle(value)) {
                 emit titleChanged();

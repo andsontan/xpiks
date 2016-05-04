@@ -63,8 +63,8 @@ namespace Common {
         virtual QVariant data(const QModelIndex &index, int role=Qt::DisplayRole) const;
 
     public:
-        const QString &getDescription() const { return m_Description; }
-        const QString &getTitle() const { return m_Title; }
+        QString getDescription();
+        QString getTitle();
         int getKeywordsCount();
         QSet<QString> getKeywordsSet();
         QString getKeywordsString();
@@ -98,14 +98,14 @@ namespace Common {
     public:
         bool setDescription(const QString &value);
         bool setTitle(const QString &value);
-        bool isEmpty() const;
-        bool isTitleEmpty() const;
-        bool isDescriptionEmpty() const;
+        bool isEmpty();
+        bool isTitleEmpty();
+        bool isDescriptionEmpty();
         bool containsKeyword(const QString &searchTerm, bool exactMatch=false);
 
         bool hasKeywordsSpellError();
-        bool hasDescriptionSpellError() const;
-        bool hasTitleSpellError() const;
+        bool hasDescriptionSpellError();
+        bool hasTitleSpellError();
 
         bool hasSpellErrors();
         void setSpellStatuses(BasicKeywordsModel *keywordsModel);
@@ -144,8 +144,8 @@ namespace Common {
         virtual void replaceWordInTitle(const QString &word, const QString &replacement);
         virtual void afterReplaceCallback();
         virtual void connectSignals(SpellCheck::SpellCheckItem *item);
-        virtual QStringList getDescriptionWords() const;
-        virtual QStringList getTitleWords() const;
+        virtual QStringList getDescriptionWords();
+        virtual QStringList getTitleWords();
 
     signals:
         void spellCheckResultsReady();
@@ -166,6 +166,8 @@ namespace Common {
         QStringList m_KeywordsList;
         QSet<QString> m_KeywordsSet;
         QReadWriteLock m_KeywordsLock;
+        QReadWriteLock m_DescriptionLock;
+        QReadWriteLock m_TitleLock;
         QVector<bool> m_SpellCheckResults;
         SpellCheck::SpellCheckItemInfo *m_SpellCheckInfo;
         QString m_Description;

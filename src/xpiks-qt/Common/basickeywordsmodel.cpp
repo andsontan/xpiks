@@ -69,6 +69,20 @@ namespace Common {
         }
     }
 
+    QString BasicKeywordsModel::getDescription() {
+        QReadLocker readLocker(&m_DescriptionLock);
+        Q_UNUSED(readLocker);
+
+        return m_Description;
+    }
+
+    QString BasicKeywordsModel::getTitle() {
+        QReadLocker readLocker(&m_TitleLock);
+        Q_UNUSED(readLocker);
+
+        return m_Title;
+    }
+
     int BasicKeywordsModel::getKeywordsCount() {
         QReadLocker readLocker(&m_KeywordsLock);
         Q_UNUSED(readLocker);
@@ -383,26 +397,44 @@ namespace Common {
     }
 
     bool BasicKeywordsModel::setDescription(const QString &value) {
+        QWriteLocker writeLocker(&m_DescriptionLock);
+        Q_UNUSED(writeLocker);
+
         bool result = value != m_Description;
         if (result) { m_Description = value; }
         return result;
     }
 
     bool BasicKeywordsModel::setTitle(const QString &value) {
+        QWriteLocker writeLocker(&m_TitleLock);
+        Q_UNUSED(writeLocker);
+
         bool result = value != m_Title;
         if (result) { m_Title = value; }
         return result;
     }
 
-    bool BasicKeywordsModel::isEmpty() const {
+    bool BasicKeywordsModel::isEmpty() {
+        QReadLocker readKeywordsLock(&m_KeywordsLock);
+        Q_UNUSED(readKeywordsLock);
+
+        QReadLocker readDescriptionLock(&m_DescriptionLock);
+        Q_UNUSED(readDescriptionLock);
+
         return m_KeywordsList.isEmpty() || m_Description.trimmed().isEmpty();
     }
 
-    bool BasicKeywordsModel::isTitleEmpty() const {
+    bool BasicKeywordsModel::isTitleEmpty() {
+        QReadLocker readLocker(&m_TitleLock);
+        Q_UNUSED(readLocker);
+
         return m_Title.trimmed().isEmpty();
     }
 
-    bool BasicKeywordsModel::isDescriptionEmpty() const {
+    bool BasicKeywordsModel::isDescriptionEmpty() {
+        QReadLocker readLocker(&m_DescriptionLock);
+        Q_UNUSED(readLocker);
+
         return m_Description.trimmed().isEmpty();
     }
 
@@ -420,7 +452,7 @@ namespace Common {
         return hasKeywordsSpellErrorUnsafe();
     }
 
-    bool BasicKeywordsModel::hasDescriptionSpellError() const {
+    bool BasicKeywordsModel::hasDescriptionSpellError() {
         bool anyError = false;
 
         const QStringList &descriptionWords = getDescriptionWords();
@@ -434,7 +466,7 @@ namespace Common {
         return anyError;
     }
 
-    bool BasicKeywordsModel::hasTitleSpellError() const {
+    bool BasicKeywordsModel::hasTitleSpellError() {
         bool anyError = false;
 
         const QStringList &titleWords = getTitleWords();
@@ -683,13 +715,13 @@ namespace Common {
     }
 
     void BasicKeywordsModel::replaceWordInDescription(const QString &word, const QString &replacement) {
-        QString description = m_Description;
+        QString description = getDescription();
         description.replace(word, replacement);
         setDescription(description);
     }
 
     void BasicKeywordsModel::replaceWordInTitle(const QString &word, const QString &replacement) {
-        QString title = m_Title;
+        QString title = getTitle();
         title.replace(word, replacement);
         setTitle(title);
     }
@@ -702,13 +734,19 @@ namespace Common {
         QObject::connect(item, SIGNAL(resultsReady(int, int)), this, SLOT(spellCheckRequestReady(int, int)));
     }
 
-    QStringList BasicKeywordsModel::getDescriptionWords() const {
+    QStringList BasicKeywordsModel::getDescriptionWords() {
+        QReadLocker readLocker(&m_DescriptionLock);
+        Q_UNUSED(readLocker);
+
         QStringList words;
         Helpers::splitText(m_Description, words);
         return words;
     }
 
-    QStringList BasicKeywordsModel::getTitleWords() const {
+    QStringList BasicKeywordsModel::getTitleWords() {
+        QReadLocker readLocker(&m_TitleLock);
+        Q_UNUSED(readLocker);
+
         QStringList words;
         Helpers::splitText(m_Title, words);
         return words;
