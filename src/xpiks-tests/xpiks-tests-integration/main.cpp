@@ -154,6 +154,10 @@ int main(int argc, char *argv[]) {
     uploadInfoRepository.initFromString(appSettings.value(Constants::UPLOAD_HOSTS, "").toString());
     recentDirectorieModel.deserializeFromSettings(appSettings.value(Constants::RECENT_DIRECTORIES, "").toString());
 
+#if defined(APPVEYOR)
+    settingsModel.setExifToolPath("c:/projects/xpiks-deps/windows-3rd-party-bin");
+#endif
+
     commandManager.connectEntitiesSignalsSlots();    
     commandManager.afterConstructionCallback();
 
