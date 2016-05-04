@@ -47,7 +47,7 @@ before_build:
   - cmd: 'xcopy /s c:\projects\xpiks-deps\windows-libs\debug-x64 c:\projects\xpiks\src\libs'
   - cmd: 'cd c:\projects\xpiks'
   - cmd: 'ren src\tiny-aes\aes.c aes.cpp'
-  - cmd: 'copy libs\mman.* cpp-libface\libs\ '
+  - cmd: 'copy src\libs\mman.* src\cpp-libface\libs'
   
 build_script:
   - cmd: 'cd src'
