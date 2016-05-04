@@ -15,8 +15,8 @@ namespace Mocks {
         QString retrieveKeyword(int index) { return getKeywordsModel()->retrieveKeyword(index); }
         int rowCount() const { return getKeywordsModel()->rowCount(); }
 
-        bool isTitleEmpty() const { return getKeywordsModel()->isTitleEmpty(); }
-        bool isDescriptionEmpty() const { return getKeywordsModel()->isDescriptionEmpty(); }
+        bool isTitleEmpty() { return getKeywordsModel()->isTitleEmpty(); }
+        bool isDescriptionEmpty() { return getKeywordsModel()->isDescriptionEmpty(); }
 
         bool areKeywordsEmpty() { return getKeywordsModel()->areKeywordsEmpty(); }
 
