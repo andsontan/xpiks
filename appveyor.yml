@@ -51,7 +51,6 @@ before_build:
   - cmd: 'ren src\tiny-aes\aes.c aes.cpp'
   - cmd: 'copy src\libs\mman.* src\cpp-libface\libs'
   - cmd: 'call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat"'
-  - cmd: 'lrelease.exe c:\projects\xpiks\src\xpiks-qt\deps\translations\*.ts'
   
 build_script:
   - cmd: 'cd src'
@@ -66,7 +65,7 @@ build_script:
   - cmd: 'copy debug\face.lib ..\..\libs'
   - cmd: 'cd ..\..'
   - cmd: 'cd xpiks-qt'
-  - qmake "CONFIG+=debug" xpiks-qt.pro
+  - qmake "CONFIG+=debug appveyor" xpiks-qt.pro
   - nmake.exe
 
 

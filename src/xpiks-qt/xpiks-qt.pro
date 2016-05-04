@@ -382,7 +382,12 @@ win32 {
     copyterms.commands = $(COPY_FILE) \"$$shell_path($$PWD/deps/terms_and_conditions.txt)\" \"$$shell_path($$OUT_PWD/$$EXE_DIR/)\"
     copydicts.commands = $(COPY_DIR) \"$$shell_path($$PWD/deps/dict)\" \"$$shell_path($$OUT_PWD/$$EXE_DIR/dict)\"
 
-    copytranslations.commands = $(COPY_FILE) \"$$shell_path($$PWD/deps/translations/xpiks_*.qm)\" \"$$shell_path($$OUT_PWD/$$EXE_DIR/translations/)\"
+    appveyor {
+        copytranslations.commands = echo "Skip translations"
+    } else {
+        copytranslations.commands = $(COPY_FILE) \"$$shell_path($$PWD/deps/translations/xpiks_*.qm)\" \"$$shell_path($$OUT_PWD/$$EXE_DIR/translations/)\"
+    }
+    
 
     copyfreqtables.commands = $(COPY_FILE) \"$$shell_path($$PWD/deps/en_wordlist.tsv)\" \"$$shell_path($$OUT_PWD/$$EXE_DIR/ac_sources/en_wordlist.tsv)\"
 
