@@ -18,7 +18,7 @@ branches:
 skip_tags: true
 
 skip_commits:
-  message: /.*\[ci\ skip\]/       # Regex for matching commit message
+  message: /.*\[skip\]/       # Regex for matching commit message
 
 # clone directory
 clone_folder: c:\projects\xpiks
@@ -40,6 +40,7 @@ install:
   - cmd: 'cd c:\projects\xpiks'
   - git submodule update --init --recursive
   - cmd: set QT_FATAL_WARNINGS=true
+  - cmd: set PATH=%PATH%;%QTDIR%\bin
   - qmake -v
 
 before_build:
