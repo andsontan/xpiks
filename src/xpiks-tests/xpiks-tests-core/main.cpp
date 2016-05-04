@@ -19,6 +19,7 @@
 #include "artworkfilter_tests.h"
 #include "removefilesfs_tests.h"
 #include "jsonmerge_tests.h"
+#include "recentdirectories_tests.h"
 
 #define QTEST_CLASS(TestObject, vName, result) \
     TestObject vName; \
@@ -47,6 +48,7 @@ int main(int argc, char *argv[]) {
     QTEST_CLASS(ArtworkFilterTests, aft, result);
     QTEST_CLASS(RemoveFilesFsTests, del,result);
     QTEST_CLASS(JsonMergeTests, jmerge, result);
+    QTEST_CLASS(RecentDirectoriesTests, rdt, result);
 
     QThread::sleep(1);
 

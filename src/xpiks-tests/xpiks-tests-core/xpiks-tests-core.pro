@@ -135,7 +135,8 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Helpers/remoteconfig.cpp \
     ../../xpiks-qt/AutoComplete/stocksftplistmodel.cpp \
     ../../xpiks-qt/AutoComplete/stringfilterproxymodel.cpp \
-    ../../xpiks-qt/Models/abstractconfigupdatermodel.cpp
+    ../../xpiks-qt/Models/abstractconfigupdatermodel.cpp \
+    recentdirectories_tests.cpp
 
 HEADERS += \
     encryption_tests.h \
@@ -231,5 +232,6 @@ HEADERS += \
     ../../xpiks-qt/Helpers/remoteconfig.h \
     ../../xpiks-qt/AutoComplete/stocksftplistmodel.h \
     ../../xpiks-qt/AutoComplete/stringfilterproxymodel.h \
-    ../../xpiks-qt/Models/abstractconfigupdatermodel.h
+    ../../xpiks-qt/Models/abstractconfigupdatermodel.h \
+    recentdirectories_tests.h
     removefilesfs_tests.h

@@ -41,6 +41,11 @@ namespace Models {
         void deserializeFromSettings(const QString &serialized);
         void pushDirectory(const QString &directoryPath);
         Q_INVOKABLE QUrl getLatestDirectory() const;
+        int getMaxRecentDirectories() const { return m_MaxRecentDirectories; }
+
+#ifdef CORE_TESTS
+        QString getLatestUsedDirectory() const { return m_LatestUsedDirectory; }
+#endif
 
     private:
         bool doPushDirectory(const QString &directoryPath);

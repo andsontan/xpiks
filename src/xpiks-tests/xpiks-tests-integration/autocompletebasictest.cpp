@@ -24,7 +24,7 @@ void AutoCompleteBasicTest::setup() {
 int AutoCompleteBasicTest::doTest() {
     Models::ArtItemsModel *artItemsModel = m_CommandManager->getArtItemsModel();
     QList<QUrl> files;
-    files << QUrl::fromLocalFile(QFileInfo(TESTS_FILES_PREFIX "images-for-tests/vector/026.jpg").absoluteFilePath());
+    files << QUrl::fromLocalFile(QFileInfo("images-for-tests/vector/026.jpg").absoluteFilePath());
 
     int addedCount = artItemsModel->addLocalArtworks(files);
 

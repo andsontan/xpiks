@@ -11,12 +11,6 @@
     return 1;\
     }
 
-#if defined(APPVEYOR)
-#define TESTS_FILES_PREFIX ""
-#else
-#define TESTS_FILES_PREFIX ""
-#endif
-
 class IntegrationTestBase {
 public:
     IntegrationTestBase(Commands::CommandManager *commandManager):
