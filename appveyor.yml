@@ -12,7 +12,6 @@ environment:
     - XPIKS_BINARY: true
     - XPIKS_TESTS: true
 
-
 branches:
   # blacklist
   except:
@@ -44,9 +43,10 @@ install:
   - cmd: 'cd c:\projects\xpiks-deps'
   - cmd: 'cd c:\projects\xpiks'
   - git submodule update --init --recursive
-  - cmd: set QT_FATAL_WARNINGS=true
   - cmd: set PATH=%PATH%;%QTDIR%\bin
   - qmake -v
+
+#  - cmd: set QT_FATAL_WARNINGS=true
 
 before_build:
   - cmd: 'xcopy /s c:\projects\xpiks-deps\windows-libs\debug-x64 c:\projects\xpiks\src\libs'
