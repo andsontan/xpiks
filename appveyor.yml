@@ -45,6 +45,8 @@ install:
 
 before_build:
   - cmd: 'xcopy /s c:\projects\xpiks-deps\windows-libs\debug-x64 c:\projects\xpiks\src\libs'
+  - cmd: 'move c:\projects\xpiks-deps\hunspell-1.3.3 c:\projects\xpiks\src'
+  - cmd: 'move c:\projects\xpiks-deps\zlib-1.2.8 c:\projects\xpiks\src'
   - cmd: 'cd c:\projects\xpiks'
   - cmd: 'ren src\tiny-aes\aes.c aes.cpp'
   - cmd: 'copy src\libs\mman.* src\cpp-libface\libs'
