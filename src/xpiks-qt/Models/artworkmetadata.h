@@ -140,7 +140,7 @@ namespace Models {
          // IBasicArtwork interface
          virtual QSet<QString> getKeywordsSet() { return m_KeywordsModel.getKeywordsSet(); }
          virtual QStringList getKeywords() { return m_KeywordsModel.getKeywords(); }
-         virtual bool isEmpty() const { return m_KeywordsModel.isEmpty(); }
+         virtual bool isEmpty() { return m_KeywordsModel.isEmpty(); }
          virtual QString getDescription() { return m_KeywordsModel.getDescription(); }
          virtual const QString &getTitle() const { return m_KeywordsModel.getTitle(); }
 

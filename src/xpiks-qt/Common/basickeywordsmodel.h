@@ -98,9 +98,9 @@ namespace Common {
     public:
         bool setDescription(const QString &value);
         bool setTitle(const QString &value);
-        bool isEmpty() const;
+        bool isEmpty();
         bool isTitleEmpty() const;
-        bool isDescriptionEmpty() const;
+        bool isDescriptionEmpty();
         bool containsKeyword(const QString &searchTerm, bool exactMatch=false);
 
         bool hasKeywordsSpellError();

@@ -404,7 +404,13 @@ namespace Common {
         return result;
     }
 
-    bool BasicKeywordsModel::isEmpty() const {
+    bool BasicKeywordsModel::isEmpty() {
+        QReadLocker readKeywordsLock(&m_KeywordsLock);
+        Q_UNUSED(readKeywordsLock);
+
+        QReadLocker readDescriptionLock(&m_DescriptionLock);
+        Q_UNUSED(readDescriptionLock);
+
         return m_KeywordsList.isEmpty() || m_Description.trimmed().isEmpty();
     }
 
@@ -412,7 +418,10 @@ namespace Common {
         return m_Title.trimmed().isEmpty();
     }
 
-    bool BasicKeywordsModel::isDescriptionEmpty() const {
+    bool BasicKeywordsModel::isDescriptionEmpty() {
+        QReadLocker readLocker(&m_DescriptionLock);
+        Q_UNUSED(readLocker);
+
         return m_Description.trimmed().isEmpty();
     }
 

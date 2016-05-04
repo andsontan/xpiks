@@ -34,7 +34,7 @@ namespace Common {
 
         virtual QSet<QString> getKeywordsSet() = 0;
         virtual QStringList getKeywords() = 0;
-        virtual bool isEmpty() const = 0;
+        virtual bool isEmpty() = 0;
 
         virtual QString getDescription() = 0;
         virtual const QString &getTitle() const = 0;

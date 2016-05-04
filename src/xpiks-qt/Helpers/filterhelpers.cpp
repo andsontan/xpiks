@@ -26,7 +26,7 @@
 #include "../Common/basickeywordsmodel.h"
 
 namespace Helpers {
-    bool fitsSpecialKeywords(const QString &searchTerm, const Models::ArtworkMetadata *metadata) {
+    bool fitsSpecialKeywords(const QString &searchTerm, Models::ArtworkMetadata *metadata) {
         bool hasMatch = false;
 
         const Models::ImageArtwork *image = dynamic_cast<const Models::ImageArtwork*>(metadata);
