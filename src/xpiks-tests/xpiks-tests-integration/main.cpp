@@ -62,7 +62,11 @@
 #endif
 
 int main(int argc, char *argv[]) {
+    std::cout << "Started integration tests";
+
     QCoreApplication app(argc, argv);
+
+    std::cout << "Initialized application";
 
     qSetMessagePattern("%{time hh:mm:ss.zzz} %{type} T#%{threadid} %{function} - %{message}");
 
@@ -155,7 +159,7 @@ int main(int argc, char *argv[]) {
     recentDirectorieModel.deserializeFromSettings(appSettings.value(Constants::RECENT_DIRECTORIES, "").toString());
 
 #if defined(APPVEYOR)
-    settingsModel.setExifToolPath("c:/projects/xpiks-deps/windows-3rd-party-bin");
+    settingsModel.setExifToolPath("c:/projects/xpiks-deps/windows-3rd-party-bin/exiftool.exe");
 #endif
 
     commandManager.connectEntitiesSignalsSlots();    
