@@ -84,7 +84,7 @@ namespace Models {
             }
         }
 
-        const QString &getTitle() const { return m_CommonKeywordsModel.getTitle(); }
+        QString getTitle() { return m_CommonKeywordsModel.getTitle(); }
         void setTitle(const QString &value) {
             if (m_CommonKeywordsModel.setTitle(value)) {
                 emit titleChanged();

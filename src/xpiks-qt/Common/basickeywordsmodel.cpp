@@ -76,6 +76,13 @@ namespace Common {
         return m_Description;
     }
 
+    QString BasicKeywordsModel::getTitle() {
+        QReadLocker readLocker(&m_TitleLock);
+        Q_UNUSED(readLocker);
+
+        return m_Title;
+    }
+
     int BasicKeywordsModel::getKeywordsCount() {
         QReadLocker readLocker(&m_KeywordsLock);
         Q_UNUSED(readLocker);
@@ -399,6 +406,9 @@ namespace Common {
     }
 
     bool BasicKeywordsModel::setTitle(const QString &value) {
+        QWriteLocker writeLocker(&m_TitleLock);
+        Q_UNUSED(writeLocker);
+
         bool result = value != m_Title;
         if (result) { m_Title = value; }
         return result;
@@ -414,7 +424,10 @@ namespace Common {
         return m_KeywordsList.isEmpty() || m_Description.trimmed().isEmpty();
     }
 
-    bool BasicKeywordsModel::isTitleEmpty() const {
+    bool BasicKeywordsModel::isTitleEmpty() {
+        QReadLocker readLocker(&m_TitleLock);
+        Q_UNUSED(readLocker);
+
         return m_Title.trimmed().isEmpty();
     }
 
@@ -453,7 +466,7 @@ namespace Common {
         return anyError;
     }
 
-    bool BasicKeywordsModel::hasTitleSpellError() const {
+    bool BasicKeywordsModel::hasTitleSpellError() {
         bool anyError = false;
 
         const QStringList &titleWords = getTitleWords();
@@ -730,7 +743,10 @@ namespace Common {
         return words;
     }
 
-    QStringList BasicKeywordsModel::getTitleWords() const {
+    QStringList BasicKeywordsModel::getTitleWords() {
+        QReadLocker readLocker(&m_TitleLock);
+        Q_UNUSED(readLocker);
+
         QStringList words;
         Helpers::splitText(m_Title, words);
         return words;
