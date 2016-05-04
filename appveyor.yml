@@ -48,6 +48,7 @@ before_build:
   - cmd: 'cd c:\projects\xpiks'
   - cmd: 'ren src\tiny-aes\aes.c aes.cpp'
   - cmd: 'copy src\libs\mman.* src\cpp-libface\libs'
+  - cmd: 'call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat"'
   
 build_script:
   - cmd: 'cd src'
