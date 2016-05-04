@@ -76,5 +76,5 @@ build_script:
   - nmake.exe
 
 test_script:
-  - if defined XPIKS_TESTS xpiks-tests-core/xpiks-tests-core.exe
+  - if defined XPIKS_TESTS debug\xpiks-tests-core.exe
   
