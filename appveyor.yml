@@ -33,6 +33,8 @@ clone_depth: 3                      # clone entire repository history if not def
 
 matrix:
   fast_finish: true
+  - XPIKS_BINARY
+  - XPIKS_TESTS
 
 install:
   - if %QTDIR:_64=%==%QTDIR% ( set ARCH=x86 ) else set ARCH=x64
@@ -65,10 +67,14 @@ build_script:
   - nmake.exe
   - cmd: 'copy debug\face.lib ..\..\libs'
   - cmd: 'cd ..\..'
-  - cmd: 'cd xpiks-qt'
-  - qmake "CONFIG+=debug appveyor" xpiks-qt.pro
+  - if defined XPIKS_BINARY cd xpiks-qt
+  - if defined XPIKS_TESTS cd xpiks-tests
+  - if defined XPIKS_BINARY qmake "CONFIG+=debug appveyor" xpiks-qt.pro
+  - if defined XPIKS_TESTS qmake "CONFIG+=debug appveyor" xpiks-tests.pro
   - nmake.exe
 
+test_script:
+  - if defined XPIKS_TESTS xpiks-tests-core/xpiks-tests-core.exe
 
     
   
