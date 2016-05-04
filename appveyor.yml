@@ -35,6 +35,7 @@ matrix:
   fast_finish: true
 
 install:
+  - if %QTDIR:_64=%==%QTDIR% ( set ARCH=x86 ) else set ARCH=x64
   - git clone --depth=3 https://bitbucket.org/ribtoks/xpiks-deps.git c:\projects\xpiks-deps
   - cmd: 'cd c:\projects\xpiks-deps'
   - cmd: 'cd c:\projects\xpiks'
@@ -50,7 +51,7 @@ before_build:
   - cmd: 'cd c:\projects\xpiks'
   - cmd: 'ren src\tiny-aes\aes.c aes.cpp'
   - cmd: 'copy src\libs\mman.* src\cpp-libface\libs'
-  - cmd: 'call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat"'
+  - cmd: 'call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %ARCH%'
   
 build_script:
   - cmd: 'cd src'
