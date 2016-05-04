@@ -1,5 +1,5 @@
 # version format
-version: 1.0.{build}-{branch}
+version: 1.2.{build}-{branch}
 
 os: Visual Studio 2015
 
@@ -76,5 +76,5 @@ build_script:
   - nmake.exe
 
 test_script:
-  - if defined XPIKS_TESTS debug\xpiks-tests-core.exe
+  - if defined XPIKS_TESTS xpiks-tests-core\debug\xpiks-tests-core.exe
   
