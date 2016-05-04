@@ -57,13 +57,13 @@ build_script:
   - cmd: 'cd quazip/quazip'
   - qmake "CONFIG+=debug" quazip.pro
   - nmake.exe
-  - cmd: 'copy quazip.lib ..\..\libs\ '
-  - cmd: 'cd ..\..\ '
+  - cmd: 'copy debug\quazip.lib ..\..\libs'
+  - cmd: 'cd ..\..'
   - cmd: 'cd cpp-libface\libface-project'
   - qmake "CONFIG+=debug" libface.pro
   - nmake.exe
-  - cmd: 'copy face.lib ..\..\libs\ '
-  - cmd: 'cd ..\..\ '
+  - cmd: 'copy debug\face.lib ..\..\libs'
+  - cmd: 'cd ..\..'
   - cmd: 'cd xpiks-qt'
   - qmake "CONFIG+=debug" xpiks-qt.pro
   - nmake.exe
