@@ -384,10 +384,11 @@ win32 {
 
     appveyor {
         copytranslations.commands = echo "Skip translations"
+        create_ac_sources.commands = $(MKDIR) \"$$shell_path($$OUT_PWD/$$EXE_DIR/ac_sources)\"
+        QMAKE_EXTRA_TARGETS += create_ac_sources
     } else {
         copytranslations.commands = $(COPY_FILE) \"$$shell_path($$PWD/deps/translations/xpiks_*.qm)\" \"$$shell_path($$OUT_PWD/$$EXE_DIR/translations/)\"
     }
-    
 
     copyfreqtables.commands = $(COPY_FILE) \"$$shell_path($$PWD/deps/en_wordlist.tsv)\" \"$$shell_path($$OUT_PWD/$$EXE_DIR/ac_sources/en_wordlist.tsv)\"
 
