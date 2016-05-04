@@ -77,4 +77,5 @@ build_script:
 
 test_script:
   - if defined XPIKS_TESTS xpiks-tests-core\debug\xpiks-tests-core.exe
+  - if defined XPIKS_TESTS xpiks-tests-integration\debug\xpiks-tests-integragion.exe
   

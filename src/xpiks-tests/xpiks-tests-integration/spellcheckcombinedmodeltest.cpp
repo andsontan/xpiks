@@ -28,7 +28,7 @@ void SpellCheckCombinedModelTest::setup() {
 int SpellCheckCombinedModelTest::doTest() {
     Models::ArtItemsModel *artItemsModel = m_CommandManager->getArtItemsModel();
     QList<QUrl> files;
-    files << QUrl::fromLocalFile(QFileInfo("images-for-tests/pixmap/seagull.jpg").absoluteFilePath());
+    files << QUrl::fromLocalFile(QFileInfo(TESTS_FILES_PREFIX "images-for-tests/pixmap/seagull.jpg").absoluteFilePath());
 
     int addedCount = artItemsModel->addLocalArtworks(files);
 

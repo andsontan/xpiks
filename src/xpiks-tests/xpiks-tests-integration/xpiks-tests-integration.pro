@@ -318,3 +318,8 @@ travis-ci {
     LIBS += /usr/lib/x86_64-linux-gnu/libz.so
     DEFINES += TRAVIS_CI
 }
+
+appveyor {
+    message("for Appveyor")
+    DEFINES += APPVEYOR
+}
