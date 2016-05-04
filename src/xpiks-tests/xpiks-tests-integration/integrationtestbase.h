@@ -12,7 +12,7 @@
     }
 
 #if defined(APPVEYOR)
-#define TESTS_FILES_PREFIX "../../"
+#define TESTS_FILES_PREFIX ""
 #else
 #define TESTS_FILES_PREFIX ""
 #endif

@@ -74,6 +74,9 @@ build_script:
   - if defined XPIKS_BINARY qmake "CONFIG+=debug appveyor" xpiks-qt.pro
   - if defined XPIKS_TESTS qmake "CONFIG+=debug appveyor" xpiks-tests.pro
   - nmake.exe
+  
+before_tests:
+  - cmd: 'copy ..\libs\libcurl_debug.dll .'
 
 test_script:
   - if defined XPIKS_TESTS xpiks-tests-core\debug\xpiks-tests-core.exe
