@@ -55,6 +55,7 @@ install:
 #  - cmd: set QT_FATAL_WARNINGS=true
 
 before_build:
+  - cmd: 'echo %cd%'
   - cmd: 'xcopy /s c:\projects\xpiks-deps\windows-libs\%configuration%-x64 c:\projects\xpiks\src\libs'
   - cmd: 'move c:\projects\xpiks-deps\hunspell-1.3.3 c:\projects\xpiks\src'
   - cmd: 'move c:\projects\xpiks-deps\zlib-1.2.8 c:\projects\xpiks\src'
@@ -64,6 +65,7 @@ before_build:
   - cmd: 'call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %ARCH%'
   
 build_script:
+  - cmd: 'echo %cd%'
   - cmd: 'cd src'
   - cmd: 'cd quazip/quazip'
   - qmake "CONFIG+=%configuration%" quazip.pro
@@ -82,19 +84,24 @@ build_script:
   - nmake.exe
 
 after_build:
+  - cmd: 'echo %cd%'
   - if defined XPIKS_BINARY cd %configuration%
   - if defined XPIKS_BINARY windeployqt.exe --qmldir=../../xpiks-qt/Components/ --qmldir=../../xpiks-qt/Constants/ --qmldir=../../xpiks-qt/Dialogs/ --qmldir=../../xpiks-qt/StyledControls/ xpiks-qt.exe
   - if defined XPIKS_BINARY xcopy /Y /s c:\projects\xpiks\src\xpiks-qt\deps .
   - if defined XPIKS_BINARY copy /Y ..\..\libs\libcurl*.dll .
+  - if defined XPIKS_BINARY del *.obj
+  - if defined XPIKS_BINARY del *.cpp
   - if defined XPIKS_BINARY cd ..
-  - if defined XPIKS_BINARY 7z a xpiks-qt.zip %configuration%
-  - if defined XPIKS_BINARY appveyor PushArtifact xpiks-qt.zip
+  - if defined XPIKS_BINARY 7z a xpiks-qt-%configuration%.zip %configuration%
+  - if defined XPIKS_BINARY appveyor PushArtifact xpiks-qt-%configuration%.zip
   
 before_test:
+  - cmd: 'echo %cd%'
   - cmd: 'copy ..\libs\libcurl_debug.dll .'
   - cmd: 'copy ..\libs\libcurl.dll .'
 
 test_script:
+  - cmd: 'echo %cd%'
   - if defined XPIKS_TESTS xpiks-tests-core\%configuration%\xpiks-tests-core.exe
   - if defined XPIKS_TESTS xpiks-tests-integration\%configuration%\xpiks-tests-integration.exe
   

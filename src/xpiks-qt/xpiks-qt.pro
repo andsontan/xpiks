@@ -383,6 +383,8 @@ win32 {
     copydicts.commands = $(COPY_DIR) \"$$shell_path($$PWD/deps/dict)\" \"$$shell_path($$OUT_PWD/$$EXE_DIR/dict)\"
 
     appveyor {
+        DEFINES += WITH_TESTS
+    
         copytranslations.commands = echo "Skip translations"
         create_ac_sources.commands = $(MKDIR) \"$$shell_path($$OUT_PWD/$$EXE_DIR/ac_sources)\"
         QMAKE_EXTRA_TARGETS += create_ac_sources
