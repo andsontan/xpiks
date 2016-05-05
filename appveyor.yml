@@ -40,6 +40,8 @@ clone_depth: 3                      # clone entire repository history if not def
 
 matrix:
   fast_finish: true
+  allow_failures:
+    - configuration: release
   
 install:
   - if %QTDIR:_64=%==%QTDIR% ( set ARCH=x86 ) else set ARCH=x64
@@ -82,8 +84,8 @@ build_script:
 after_build:
   - if defined XPIKS_BINARY cd %configuration%
   - if defined XPIKS_BINARY windeployqt.exe --qmldir=../../xpiks-qt/Components/ --qmldir=../../xpiks-qt/Constants/ --qmldir=../../xpiks-qt/Dialogs/ --qmldir=../../xpiks-qt/StyledControls/ xpiks-qt.exe
-  - if defined XPIKS_BINARY xcopy /s c:\projects\xpiks\src\xpiks-qt\deps .
-  - if defined XPIKS_BINARY copy ..\..\libs\libcurl*.dll .
+  - if defined XPIKS_BINARY xcopy /Y /s c:\projects\xpiks\src\xpiks-qt\deps .
+  - if defined XPIKS_BINARY copy /Y ..\..\libs\libcurl*.dll .
   - if defined XPIKS_BINARY cd ..
   - if defined XPIKS_BINARY 7z a xpiks-qt.zip %configuration%
   - if defined XPIKS_BINARY appveyor PushArtifact xpiks-qt.zip
