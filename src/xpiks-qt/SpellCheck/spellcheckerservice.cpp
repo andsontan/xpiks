@@ -85,6 +85,8 @@ namespace SpellCheck {
     void SpellCheckerService::submitItem(ISpellCheckable *itemToCheck, int flags) {
         if (m_SpellCheckWorker == NULL) { return; }
 
+        LOG_INFO << "flags:" << flags;
+
         itemToCheck->acquire();
         SpellCheckItem *item = new SpellCheckItem(itemToCheck, flags);
         itemToCheck->connectSignals(item);

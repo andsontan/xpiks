@@ -443,7 +443,13 @@ void Commands::CommandManager::submitKeywordsForWarningsCheck(Models::ArtworkMet
 }
 
 void Commands::CommandManager::submitForWarningsCheck(Models::ArtworkMetadata *item, int flags) const {
+    Q_ASSERT(item != NULL);
     int count = m_WarningsCheckers.length();
+
+#ifdef INTEGRATION_TESTS
+    LOG_DEBUG << count << "checkers available";
+#endif
+
     for (int i = 0; i < count; ++i) {
         Common::IServiceBase<Warnings::IWarningsCheckable> *checker = m_WarningsCheckers.at(i);
         if (checker->isAvailable()) {
