@@ -79,6 +79,10 @@ namespace AutoComplete {
 
         setSelectedIndex(-1);
         setIsActive(true);
+
+#ifdef INTEGRATION_TESTS
+        emit completionsUpdated();
+#endif
     }
 
     QVariant AutoCompleteModel::data(const QModelIndex &index, int role) const {

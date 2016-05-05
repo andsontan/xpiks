@@ -71,6 +71,9 @@ namespace AutoComplete {
         void dismissPopupRequested();
         void completionAccepted(const QString &completion);
         void isActiveChanged(bool value);
+#ifdef INTEGRATION_TESTS
+        void completionsUpdated();
+#endif
 
     public slots:
         void completionsArrived();
