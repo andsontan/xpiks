@@ -45,11 +45,12 @@ int AutoCompleteBasicTest::doTest() {
 
     Models::ArtworkMetadata *metadata = artItemsModel->getArtwork(0);
 
+    AutoComplete::AutoCompleteService *acService = m_CommandManager->getAutoCompleteService();
+    AutoComplete::AutoCompleteModel *acModel = acService->getAutoCompleteModel();
+
     SignalWaiter completionWaiter;
     QObject::connect(acModel, SIGNAL(completionsUpdated()), &completionWaiter, SIGNAL(finished()));
 
-    AutoComplete::AutoCompleteService *acService = m_CommandManager->getAutoCompleteService();
-    AutoComplete::AutoCompleteModel *acModel = acService->getAutoCompleteModel();
 
     VERIFY(acModel->getCount() == 0, "AC model was not empty");
 
