@@ -52,6 +52,7 @@
 #include "zipartworkstest.h"
 #include "spellcheckundotest.h"
 #include "autocompletebasictest.h"
+#include "spellingproduceswarningstest.h"
 
 #if defined(WITH_LOGS)
 #undef WITH_LOGS
@@ -177,6 +178,7 @@ int main(int argc, char *argv[]) {
     integrationTests.append(new ZipArtworksTest(&commandManager));
     integrationTests.append(new SpellCheckUndoTest(&commandManager));
     integrationTests.append(new AutoCompleteBasicTest(&commandManager));
+    integrationTests.append(new SpellingProducesWarningsTest(&commandManager));
 
     qDebug("\n");
 

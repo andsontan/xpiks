@@ -115,7 +115,8 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Helpers/jsonhelper.cpp \
     ../../xpiks-qt/Helpers/localconfig.cpp \
     ../../xpiks-qt/Helpers/remoteconfig.cpp \
-    autocompletebasictest.cpp
+    autocompletebasictest.cpp \
+    spellingproduceswarningstest.cpp
 
 RESOURCES +=
 
@@ -256,7 +257,8 @@ HEADERS += \
     ../../xpiks-qt/Helpers/jsonhelper.h \
     ../../xpiks-qt/Helpers/localconfig.h \
     ../../xpiks-qt/Helpers/remoteconfig.h \
-    autocompletebasictest.h
+    autocompletebasictest.h \
+    spellingproduceswarningstest.h
 
 INCLUDEPATH += ../../tiny-aes
 INCLUDEPATH += ../../cpp-libface
