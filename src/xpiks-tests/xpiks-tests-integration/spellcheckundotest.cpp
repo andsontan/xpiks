@@ -57,7 +57,8 @@ int SpellCheckUndoTest::doTest() {
     QThread::sleep(1);
 
     Models::FilteredArtItemsProxyModel *filteredModel = m_CommandManager->getFilteredArtItemsModel();
-    QObject::connect(metadata, SIGNAL(spellCheckErrorsChanged()), &waiter, SIGNAL(finished()));
+    SpellCheck::SpellCheckerService *spellCheckService = m_CommandManager->getSpellCheckerService();
+    QObject::connect(spellCheckService, SIGNAL(spellCheckQueueIsEmpty()), &waiter, SIGNAL(finished()));
 
     filteredModel->spellCheckSelected();
 

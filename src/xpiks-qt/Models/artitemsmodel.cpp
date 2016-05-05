@@ -585,6 +585,9 @@ namespace Models {
     }
 
     void ArtItemsModel::spellCheckErrorsChanged() {
+#ifdef INTEGRATION_TESTS
+        LOG_DEBUG << "#";
+#endif
         ArtworkMetadata *item = qobject_cast<ArtworkMetadata*>(sender());
         m_CommandManager->submitForWarningsCheck(item, Common::WarningsCheckSpelling);
     }

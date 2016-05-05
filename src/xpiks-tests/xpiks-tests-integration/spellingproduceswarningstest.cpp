@@ -64,7 +64,8 @@ int SpellingProducesWarningsTest::doTest() {
     QThread::sleep(1);
 
     Models::FilteredArtItemsProxyModel *filteredModel = m_CommandManager->getFilteredArtItemsModel();
-    QObject::connect(metadata, SIGNAL(spellCheckErrorsChanged()), &waiter, SIGNAL(finished()));
+    SpellCheck::SpellCheckerService *spellCheckService = m_CommandManager->getSpellCheckerService();
+    QObject::connect(spellCheckService, SIGNAL(spellCheckQueueIsEmpty()), &waiter, SIGNAL(finished()));
 
     // wait for checking warnings
     Warnings::WarningsService *warningsService = m_CommandManager->getWarningsService();
@@ -87,9 +88,12 @@ int SpellingProducesWarningsTest::doTest() {
     VERIFY(metadata->hasTitleSpellError(), "Title spell error not detected");
     VERIFY(metadata->hasKeywordsSpellError(), "Keywords spell error not detected");
 
-    VERIFY(Common::HasFlag(metadata->getWarningsFlags(), Common::WarningTypeSpellErrorsInTitle), "Warning was not produced for title spelling error");
-    VERIFY(Common::HasFlag(metadata->getWarningsFlags(), Common::WarningTypeSpellErrorsInDescription), "Warning was not produced for description spelling error");
-    VERIFY(Common::HasFlag(metadata->getWarningsFlags(), Common::WarningTypeSpellErrorsInKeywords), "Warning was not produced for keywords spelling error");
+    VERIFY(Common::HasFlag(metadata->getWarningsFlags(), Common::WarningTypeSpellErrorsInTitle),
+           "Warning was not produced for title spelling error");
+    VERIFY(Common::HasFlag(metadata->getWarningsFlags(), Common::WarningTypeSpellErrorsInDescription),
+           "Warning was not produced for description spelling error");
+    VERIFY(Common::HasFlag(metadata->getWarningsFlags(), Common::WarningTypeSpellErrorsInKeywords),
+           "Warning was not produced for keywords spelling error");
 
     return 0;
 }

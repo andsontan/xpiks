@@ -63,11 +63,11 @@
 #endif
 
 int main(int argc, char *argv[]) {
-    std::cout << "Started integration tests";
+    std::cout << "Started integration tests" << std::endl;
 
     QCoreApplication app(argc, argv);
 
-    std::cout << "Initialized application";
+    std::cout << "Initialized application" << std::endl;
 
     qSetMessagePattern("%{time hh:mm:ss.zzz} %{type} T#%{threadid} %{function} - %{message}");
 
@@ -85,7 +85,7 @@ int main(int argc, char *argv[]) {
         QString libraryFilePath = appDataDir.filePath(Constants::LIBRARY_FILENAME);
         localLibrary.setLibraryPath(libraryFilePath);
     } else {
-        std::cerr << "AppDataPath is empty!";
+        std::cerr << "AppDataPath is empty!" << std::endl;
     }
 
     QMLExtensions::ColorsModel colorsModel;
