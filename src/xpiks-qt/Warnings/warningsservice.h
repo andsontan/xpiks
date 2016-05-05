@@ -54,6 +54,11 @@ namespace Warnings {
         void workerDestoyed(QObject *object);
         void workerStopped();
 
+#ifdef INTEGRATION_TESTS
+    signals:
+        void queueIsEmpty();
+#endif
+
     private:
         WarningsCheckingWorker *m_WarningsWorker;
     };

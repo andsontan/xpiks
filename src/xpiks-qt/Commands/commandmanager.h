@@ -249,6 +249,7 @@ namespace Commands {
         virtual Models::CombinedArtworksModel *getCombinedArtworksModel() const { return m_CombinedArtworksModel; }
         virtual Models::ZipArchiver *getZipArchiver() const { return m_ZipArchiver; }
         virtual AutoComplete::AutoCompleteService *getAutoCompleteService() const { return m_AutoCompleteService; }
+        virtual Warnings::WarningsService *getWarningsService() const { return m_WarningsService; }
 #endif
 
     private:

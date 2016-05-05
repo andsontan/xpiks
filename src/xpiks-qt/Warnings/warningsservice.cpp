@@ -51,6 +51,11 @@ namespace Warnings {
         QObject::connect(m_WarningsWorker, SIGNAL(stopped()),
                          this, SLOT(workerStopped()));
 
+#ifdef INTEGRATION_TESTS
+        QObject::connect(m_WarningsWorker, SIGNAL(queueIsEmpty()),
+                         this, SIGNAL(queueIsEmpty()));
+#endif
+
         LOG_INFO << "Starting worker";
 
         thread->start();

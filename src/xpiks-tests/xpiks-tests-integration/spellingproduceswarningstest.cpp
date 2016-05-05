@@ -16,6 +16,7 @@
 #include "../../xpiks-qt/Models/combinedartworksmodel.h"
 #include "../../xpiks-qt/Common/basickeywordsmodel.h"
 #include "../../xpiks-qt/Common/flags.h"
+#include "../../xpiks-qt/Warnings/warningsservice.h"
 
 QString SpellingProducesWarningsTest::testName() {
     return QLatin1String("SpellingProducesWarningsTest");
@@ -65,14 +66,22 @@ int SpellingProducesWarningsTest::doTest() {
     Models::FilteredArtItemsProxyModel *filteredModel = m_CommandManager->getFilteredArtItemsModel();
     QObject::connect(metadata, SIGNAL(spellCheckErrorsChanged()), &waiter, SIGNAL(finished()));
 
+    // wait for checking warnings
+    Warnings::WarningsService *warningsService = m_CommandManager->getWarningsService();
+    SignalWaiter warningsQueueWaiter;
+    QObject::connect(warningsService, SIGNAL(queueIsEmpty()), &warningsQueueWaiter, SIGNAL(finished()));
+
     filteredModel->spellCheckSelected();
 
     if (!waiter.wait(5)) {
         VERIFY(false, "Timeout for waiting for first spellcheck results");
     }
 
-    // wait for checking warnings
-    QThread::sleep(2);
+    if (!warningsQueueWaiter.wait(5)) {
+        if (metadata->getWarningsFlags() == 0) {
+            VERIFY(false, "Timeout for waiting for warnings checker");
+        }
+    }
 
     VERIFY(metadata->hasDescriptionSpellError(), "Description spell error not detected");
     VERIFY(metadata->hasTitleSpellError(), "Title spell error not detected");
