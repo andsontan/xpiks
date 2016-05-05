@@ -17,6 +17,10 @@ branches:
   except:
     - gh-pages
 
+configuration:
+  - debug
+  - release
+
 # Do not build on tags (GitHub only)
 skip_tags: true
 
@@ -49,7 +53,7 @@ install:
 #  - cmd: set QT_FATAL_WARNINGS=true
 
 before_build:
-  - cmd: 'xcopy /s c:\projects\xpiks-deps\windows-libs\debug-x64 c:\projects\xpiks\src\libs'
+  - cmd: 'xcopy /s c:\projects\xpiks-deps\windows-libs\$(configuration)-x64 c:\projects\xpiks\src\libs'
   - cmd: 'move c:\projects\xpiks-deps\hunspell-1.3.3 c:\projects\xpiks\src'
   - cmd: 'move c:\projects\xpiks-deps\zlib-1.2.8 c:\projects\xpiks\src'
   - cmd: 'cd c:\projects\xpiks'
@@ -60,25 +64,35 @@ before_build:
 build_script:
   - cmd: 'cd src'
   - cmd: 'cd quazip/quazip'
-  - qmake "CONFIG+=debug" quazip.pro
+  - qmake "CONFIG+=$(configuration)" quazip.pro
   - nmake.exe
-  - cmd: 'copy debug\quazip.lib ..\..\libs'
+  - cmd: 'copy $(configuration)\quazip.lib ..\..\libs'
   - cmd: 'cd ..\..'
   - cmd: 'cd cpp-libface\libface-project'
-  - qmake "CONFIG+=debug" libface.pro
+  - qmake "CONFIG+=$(configuration)" libface.pro
   - nmake.exe
-  - cmd: 'copy debug\face.lib ..\..\libs'
+  - cmd: 'copy $(configuration)\face.lib ..\..\libs'
   - cmd: 'cd ..\..'
   - if defined XPIKS_BINARY cd xpiks-qt
   - if defined XPIKS_TESTS cd xpiks-tests
-  - if defined XPIKS_BINARY qmake "CONFIG+=debug appveyor" xpiks-qt.pro
-  - if defined XPIKS_TESTS qmake "CONFIG+=debug appveyor" xpiks-tests.pro
+  - if defined XPIKS_BINARY qmake "CONFIG+=$(configuration) appveyor" xpiks-qt.pro
+  - if defined XPIKS_TESTS qmake "CONFIG+=$(configuration) appveyor" xpiks-tests.pro
   - nmake.exe
+
+after_build:
+  - if defined XPIKS_BINARY cd $configuration
+  - if defined XPIKS_BINARY windeployqt.exe --qmldir=../../xpiks-qt/Components/ --qmldir=../../xpiks-qt/Constants/ --qmldir=../../xpiks-qt/Dialogs/ --qmldir=../../xpiks-qt/StyledControls/ xpiks-qt.exe
+  - if defined XPIKS_BINARY xcopy /s c:\projects\xpiks\src\xpiks-qt\deps .
+  - if defined XPIKS_BINARY copy ..\..\libs\libcurl*.dll .
+  - if defined XPIKS_BINARY cd ..
+  - if defined XPIKS_BINARY 7z a xpiks-qt.zip $(configuration)
+  - if defined XPIKS_BINARY appveyor PushArtifact xpiks-qt.zip
   
 before_test:
   - cmd: 'copy ..\libs\libcurl_debug.dll .'
+  - cmd: 'copy ..\libs\libcurl.dll .'
 
 test_script:
-  - if defined XPIKS_TESTS xpiks-tests-core\debug\xpiks-tests-core.exe
-  - if defined XPIKS_TESTS xpiks-tests-integration\debug\xpiks-tests-integration.exe
+  - if defined XPIKS_TESTS xpiks-tests-core\$(configuration)\xpiks-tests-core.exe
+  - if defined XPIKS_TESTS xpiks-tests-integration\$(configuration)\xpiks-tests-integration.exe
   

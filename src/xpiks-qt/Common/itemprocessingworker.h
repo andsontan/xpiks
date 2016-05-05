@@ -160,7 +160,12 @@ namespace Common {
                 }
 
                 if (canDelete) {
-                    delete item;
+                    QObject *object = dynamic_cast<QObject*>(item);
+                    if (object != NULL) {
+                        object->deleteLater();
+                    } else {
+                        delete item;
+                    }
                 }
 
                 if (noMoreItems) {
