@@ -17,6 +17,7 @@
 #include "../../xpiks-qt/Common/basickeywordsmodel.h"
 #include "../../xpiks-qt/Common/flags.h"
 #include "../../xpiks-qt/Warnings/warningsservice.h"
+#include "../../xpiks-qt/SpellCheck/spellcheckerservice.h"
 
 QString SpellingProducesWarningsTest::testName() {
     return QLatin1String("SpellingProducesWarningsTest");

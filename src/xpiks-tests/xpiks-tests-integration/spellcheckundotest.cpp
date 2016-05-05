@@ -14,6 +14,7 @@
 #include "../../xpiks-qt/SpellCheck/spellchecksuggestionmodel.h"
 #include "../../xpiks-qt/SpellCheck/spellsuggestionsitem.h"
 #include "../../xpiks-qt/UndoRedo/undoredomanager.h"
+#include "../../xpiks-qt/SpellCheck/spellcheckerservice.h"
 
 QString SpellCheckUndoTest::testName() {
     return QLatin1String("SpellCheckUndoTest");

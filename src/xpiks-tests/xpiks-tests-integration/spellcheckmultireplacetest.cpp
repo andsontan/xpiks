@@ -13,6 +13,7 @@
 #include "../../xpiks-qt/Models/filteredartitemsproxymodel.h"
 #include "../../xpiks-qt/SpellCheck/spellchecksuggestionmodel.h"
 #include "../../xpiks-qt/SpellCheck/spellsuggestionsitem.h"
+#include "../../xpiks-qt/SpellCheck/spellcheckerservice.h"
 
 QString SpellCheckMultireplaceTest::testName() {
     return QLatin1String("SpellCheckMultireplaceTest");
