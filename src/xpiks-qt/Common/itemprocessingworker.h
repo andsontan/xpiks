@@ -160,18 +160,17 @@ namespace Common {
                 }
 
                 if (canDelete) {
-                    QObject *object = dynamic_cast<QObject*>(item);
-                    if (object != NULL) {
-                        object->deleteLater();
-                    } else {
-                        delete item;
-                    }
+                    deleteItem(item);
                 }
 
                 if (noMoreItems) {
                     notifyQueueIsEmpty();
                 }
             }
+        }
+
+        virtual void deleteItem(T* item) const {
+            delete item;
         }
 
     private:

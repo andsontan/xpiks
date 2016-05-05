@@ -40,6 +40,7 @@ namespace AutoComplete {
     protected:
         virtual bool initWorker();
         virtual bool processOneItem(CompletionQuery *item);
+        virtual void deleteItem(CompletionQuery* item) const;
 
     protected:
         virtual void notifyQueueIsEmpty() { emit queueIsEmpty(); }

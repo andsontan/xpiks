@@ -47,6 +47,7 @@ namespace SpellCheck {
     protected:
         virtual bool initWorker();
         virtual bool processOneItem(SpellCheckItemBase *item);
+        virtual void deleteItem(SpellCheckItemBase *item) const;
 
     protected:
         virtual void notifyQueueIsEmpty() { emit queueIsEmpty(); }

@@ -117,4 +117,8 @@ namespace AutoComplete {
 
         return true;
     }
+
+    void AutoCompleteWorker::deleteItem(CompletionQuery *item) const {
+        item->deleteLater();
+    }
 }

@@ -160,6 +160,10 @@ namespace SpellCheck {
         return canDelete;
     }
 
+    void SpellCheckWorker::deleteItem(SpellCheckItemBase *item) const {
+        item->deleteLater();
+    }
+
     QStringList SpellCheckWorker::retrieveCorrections(const QString &word) {
         QReadLocker locker(&m_SuggestionsLock);
         QStringList result;
