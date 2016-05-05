@@ -19,7 +19,8 @@ branches:
 
 configuration:
   - debug
-  - release
+
+# - release
 
 # Do not build on tags (GitHub only)
 skip_tags: true
