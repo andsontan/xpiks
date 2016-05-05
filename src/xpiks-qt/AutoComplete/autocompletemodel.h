@@ -83,6 +83,7 @@ namespace AutoComplete {
 
 #ifdef INTEGRATION_TESTS
         bool containsWord(const QString &word) { return m_CompletionList.contains(word); }
+        const QStringList &getLastGeneratedCompletions() const { return m_LastGeneratedCompletions; }
 #endif
 
     private:
