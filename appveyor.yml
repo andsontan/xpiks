@@ -97,8 +97,8 @@ after_build:
   
 before_test:
   - cmd: 'echo %cd%'
-  - cmd: 'copy ..\libs\libcurl_debug.dll .'
-  - cmd: 'copy ..\libs\libcurl.dll .'
+  - cmd: if %configuration% == debug (copy ..\libs\libcurl_debug.dll .)
+  - cmd: if %configuration% == release (copy ..\libs\libcurl.dll .)
 
 test_script:
   - cmd: 'echo %cd%'
