@@ -62,11 +62,12 @@ namespace SpellCheck {
 
 #if !defined(Q_OS_LINUX)
         resourcesPath = QCoreApplication::applicationDirPath();
+        qDebug() << "App path:" << resourcesPath;
 
 #if defined(Q_OS_MAC)
         resourcesPath += "/../Resources/";
 #elif defined(APPVEYOR)
-        resourcesPath += "../../../xpiks-qt/dict/";
+        resourcesPath += "/../../../../xpiks-qt/deps/dict/";
 #elif defined(Q_OS_WIN)
         resourcesPath += "/dict/";
 #endif
