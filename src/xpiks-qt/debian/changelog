@@ -1,9 +1,24 @@
-xpiks (1.3) UNRELEASED; urgency=medium
+xpiks (1.3-1) UNRELEASED; urgency=medium
 
     **Major features of this release:**
 
+    - autocompletion for keywords
+    - localization to 6 languages (Ukrainian, Portugese, Spanish, Catalan, Russian, French, German)
+    - keywords suggestion from iStock and Fotolia
+    - brand new color theme
+    - dozen of predefined FTP addresses of stocks
+    - basic hotkeys support
+    - watching for removal of images and vectors on disk
+    - improvements for keywords suggestion algorithm
+    - fixes in the UI (unification, effects for popups)
 
- -- Artiom.M <a.mv@gmx.fr>  Tue, 26 Apr 2016 08:00:00 +0200
+    **And bugfixes:**
+
+    - scrolling jumps
+    - incorrect warnings for non-existent properties
+    - preliminary fix for paths with unicode characters in Windows
+
+ -- Artiom.M <a.mv@gmx.fr>  Sat, 7 May 2016 08:00:00 +0200
 
 
 xpiks (1.2-1) UNRELEASED; urgency=medium
