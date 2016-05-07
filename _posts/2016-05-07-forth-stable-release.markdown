@@ -12,7 +12,7 @@ Today I announce release of Xpiks 1.3! This is a very big release which introduc
 - localization to 5 languages (Ukrainian, Spanish, Catalan, Russian, German) and 2 more ongoing (French and Portuguese)
 - keywords suggestion from iStock and Fotolia (in addition to Shutterstock and Local files)
 - brand new color theme for Xpiks
-- basic hotkeys support (_Ctrl+A_ - Select All, _Ctrl+E_ - Edit selected, _Ctrl+S_ - Save selected, _Ctrl+F_ - search/filter, _Ctrl+Del_ - delete selected, _Shift+Ctrl+U_ - Upload selected)
+- basic hotkeys support (Ctrl+A - Select All, Ctrl+E - Edit selected, Ctrl+S - Save selected, Ctrl+F - search/filter, Ctrl+Del - delete selected, Shift+Ctrl+U - Upload selected)
 - dozen of predefined FTP addresses of stocks
 - improvements for keywords suggestion algorithm
 - watching for removal of files, edited in Xpiks and appropriate notifications
