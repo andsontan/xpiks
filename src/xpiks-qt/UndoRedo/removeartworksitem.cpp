@@ -64,7 +64,7 @@ void UndoRedo::RemoveArtworksHistoryItem::undo(const Commands::ICommandManager *
                 artItemsModel->insertArtwork(j + startRow, metadata);
                 artworksToImport.append(metadata);
 
-                const QString &vectorPath = m_RemovedAttachedVectors.at(i);
+                const QString &vectorPath = m_RemovedAttachedVectors.at(j);
                 if (!vectorPath.isEmpty()) {
                     metadata->attachVector(vectorPath);
                     attachedVectors++;
