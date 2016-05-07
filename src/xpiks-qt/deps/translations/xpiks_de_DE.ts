@@ -52,7 +52,7 @@
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="111"/>
       <source>Clear all keywords?</source>
-      <translation>Sollen alle Keywords gelöscht werden?</translation>
+      <translation>Sollen alle Stichwörter gelöscht werden?</translation>
     </message>
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="229"/>
@@ -99,7 +99,7 @@
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="447"/>
       <source>(same as Description if empty)</source>
-      <translation>( falls leer wird von Beschreibungsfeld kopiert)</translation>
+      <translation>(falls leer wird von Beschreibungsfeld kopiert)</translation>
     </message>
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="608"/>
@@ -109,7 +109,7 @@
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="795"/>
       <source>Keywords:</source>
-      <translation>Keywords:</translation>
+      <translation>Stichwörter:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="800"/>
@@ -119,12 +119,12 @@
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="923"/>
       <source>Only append new keywords</source>
-      <translation>Nur neue Keywords hinzufügen</translation>
+      <translation>Nur neue Stichwörter hinzufügen</translation>
     </message>
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="936"/>
       <source>Fix spelling</source>
-      <translation>Rechtschreibung korrigieren lassen</translation>
+      <translation>Rechtschreibung</translation>
     </message>
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="960"/>
@@ -144,7 +144,7 @@
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="1045"/>
       <source>Select changes to save using checkboxes above</source>
-      <translation>Geben Sie mithilfe der Checkboxen an, welche Veränderungen gespeichert werden</translation>
+      <translation>Wählen Sie bitte, welche Veränderungen gespeichert werden</translation>
     </message>
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="1053"/>
@@ -162,7 +162,7 @@
     <message>
       <location filename="../../Dialogs/EditArtworkHorizontalDialog.qml" line="78"/>
       <source>Clear all keywords?</source>
-      <translation>Alle Keywords löschen?</translation>
+      <translation>Alle Stichwörter löschen?</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EditArtworkHorizontalDialog.qml" line="244"/>
@@ -172,7 +172,7 @@
     <message>
       <location filename="../../Dialogs/EditArtworkHorizontalDialog.qml" line="248"/>
       <source>(same as Description if empty)</source>
-      <translation>( falls leer wird von Beschreibungsfeld kopiert)</translation>
+      <translation>(falls leer wird von Beschreibungsfeld kopiert)</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EditArtworkHorizontalDialog.qml" line="340"/>
@@ -182,7 +182,7 @@
     <message>
       <location filename="../../Dialogs/EditArtworkHorizontalDialog.qml" line="455"/>
       <source>Keywords:</source>
-      <translation>Keywords:</translation>
+      <translation>Stichwörter:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EditArtworkHorizontalDialog.qml" line="459"/>
@@ -192,7 +192,7 @@
     <message>
       <location filename="../../Dialogs/EditArtworkHorizontalDialog.qml" line="576"/>
       <source>Fix spelling</source>
-      <translation>Rechtschreibung korrigieren lassen</translation>
+      <translation>Rechtschreibung</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EditArtworkHorizontalDialog.qml" line="599"/>
@@ -225,7 +225,7 @@
     <message>
       <location filename="../../Dialogs/EditArtworkVerticalDialog.qml" line="99"/>
       <source>Clear all keywords?</source>
-      <translation>Alle Keywords löschen?</translation>
+      <translation>Alle Stichwörter löschen?</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EditArtworkVerticalDialog.qml" line="240"/>
@@ -235,7 +235,7 @@
     <message>
       <location filename="../../Dialogs/EditArtworkVerticalDialog.qml" line="244"/>
       <source>(same as Description if empty)</source>
-      <translation>( falls leer wird von Beschreibungsfeld kopiert)</translation>
+      <translation>(falls leer wird von Beschreibungsfeld kopiert)</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EditArtworkVerticalDialog.qml" line="335"/>
@@ -245,7 +245,7 @@
     <message>
       <location filename="../../Dialogs/EditArtworkVerticalDialog.qml" line="452"/>
       <source>Keywords:</source>
-      <translation>Keywords:</translation>
+      <translation>Stichwörter:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EditArtworkVerticalDialog.qml" line="456"/>
@@ -255,7 +255,7 @@
     <message>
       <location filename="../../Dialogs/EditArtworkVerticalDialog.qml" line="573"/>
       <source>Fix spelling</source>
-      <translation>Rechtschreibung korrigieren lassen</translation>
+      <translation>Rechtschreibung</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EditArtworkVerticalDialog.qml" line="596"/>
@@ -301,7 +301,7 @@
     <message>
       <location filename="../../Dialogs/EnterMasterPasswordDialog.qml" line="126"/>
       <source>Enter current Master Password:</source>
-      <translation>Geben Sie das aktuelle Master-Passwort bitte ein:</translation>
+      <translation>Aktuelle Master-Passwort:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EnterMasterPasswordDialog.qml" line="165"/>
@@ -339,7 +339,7 @@
     <message>
       <location filename="../../Dialogs/ExportMetadata.qml" line="171"/>
       <source>%1 modified image(s) selected</source>
-      <translation>%1 geänderte(r) Element(e) ausgewählt</translation>
+      <translation>%1 geänderte(r) Element(e)</translation>
     </message>
     <message>
       <location filename="../../Dialogs/ExportMetadata.qml" line="186"/>
@@ -422,12 +422,12 @@
     <message>
       <location filename="../../Dialogs/KeywordsSuggestion.qml" line="317"/>
       <source>Suggested keywords:</source>
-      <translation>Vorgeschlagene Keywords:</translation>
+      <translation>Vorgeschlagene Stichwörter:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/KeywordsSuggestion.qml" line="390"/>
       <source>Other keywords:</source>
-      <translation>Andere Keywords:</translation>
+      <translation>Andere Stichwörter:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/KeywordsSuggestion.qml" line="468"/>
@@ -443,7 +443,7 @@
       <location filename="../../Dialogs/KeywordsSuggestion.qml" line="482"/>
       <location filename="../../Dialogs/KeywordsSuggestion.qml" line="489"/>
       <source>Add suggested keywords</source>
-      <translation>Vorgeschlagene Keywords hinzufügen</translation>
+      <translation>die Vorgeschlagene hinzufügen</translation>
     </message>
     <message>
       <location filename="../../Dialogs/KeywordsSuggestion.qml" line="494"/>
@@ -540,7 +540,7 @@
     <message>
       <location filename="../../Dialogs/PlainTextKeywordsDialog.qml" line="147"/>
       <source>Keywords</source>
-      <translation>Keywords</translation>
+      <translation>Stichwörter</translation>
     </message>
     <message>
       <location filename="../../Dialogs/PlainTextKeywordsDialog.qml" line="251"/>
@@ -619,17 +619,17 @@
     <message>
       <location filename="../../Warnings/warningsmodel.cpp" line="40"/>
       <source>Item has no keywords</source>
-      <translation>Element enthält keine Keywords</translation>
+      <translation>Element enthält keine Stichwörter</translation>
     </message>
     <message>
       <location filename="../../Warnings/warningsmodel.cpp" line="44"/>
       <source>There's less than 7 keywords</source>
-      <translation>Es gibt weniger als 7 Keywords</translation>
+      <translation>Es gibt weniger als 7 Stichwörter</translation>
     </message>
     <message>
       <location filename="../../Warnings/warningsmodel.cpp" line="48"/>
       <source>There are too many keywords (%1)</source>
-      <translation>Es gibt zu viele Keywords (%1)</translation>
+      <translation>Es gibt zu viele Stichwörter (%1)</translation>
     </message>
     <message>
       <location filename="../../Warnings/warningsmodel.cpp" line="52"/>
@@ -669,7 +669,7 @@
     <message>
       <location filename="../../Warnings/warningsmodel.cpp" line="80"/>
       <source>Keywords have spelling error(s)</source>
-      <translation>Keywords enthalten Fehler</translation>
+      <translation>Stichwörter enthalten Fehler</translation>
     </message>
     <message>
       <location filename="../../Warnings/warningsmodel.cpp" line="84"/>
@@ -689,12 +689,12 @@
     <message>
       <location filename="../../Warnings/warningsmodel.cpp" line="96"/>
       <source>Description contains some of the keywords</source>
-      <translation>Die Beschreibung enthält Keywords</translation>
+      <translation>Die Beschreibung enthält Stichwörter</translation>
     </message>
     <message>
       <location filename="../../Warnings/warningsmodel.cpp" line="100"/>
       <source>Title contains some of the keywords</source>
-      <translation>Der Titel enthält Keywords</translation>
+      <translation>Der Titel enthält Stichwörter</translation>
     </message>
     <message>
       <location filename="../../Warnings/warningsmodel.cpp" line="104"/>
@@ -755,12 +755,12 @@
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="315"/>
       <source>Check spelling automatically</source>
-      <translation>Lassen Rechtschreibung automatisch prüfen</translation>
+      <translation>Autokorrektur</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="331"/>
       <source>Autocomplete keywords</source>
-      <translation>Automatisches Ausfüllen der Keywords</translation>
+      <translation>Stichwörter automatisch ausfüllen</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="356"/>
@@ -780,18 +780,18 @@
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="432"/>
       <source>Keywords size</source>
-      <translation>Keywordsgröße</translation>
+      <translation>Stichwortgröße</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="479"/>
       <source>keyword</source>
       <comment>standalone</comment>
-      <translation>Keywörter</translation>
+      <translation>Stichwort</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="508"/>
       <source>Undo dismiss duration:</source>
-      <translation>Zeit für der letzten vorgenommenen Aktion rückgängigmachen:</translation>
+      <translation>Zeit für die Rücknahme der letzten Änderung:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="545"/>
@@ -807,7 +807,7 @@
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="581"/>
       <source>ExifTool path:</source>
-      <translation>ExifTool Pfadname:</translation>
+      <translation>ExifTool:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="617"/>
@@ -834,7 +834,7 @@
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="708"/>
       <source>Minimum megapixels:</source>
-      <translation>Mindestanzahl Megapixel:</translation>
+      <translation>Megapixelzahl:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="753"/>
@@ -844,17 +844,17 @@
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="764"/>
       <source>Max keywords count:</source>
-      <translation>Keywordsanzahl:</translation>
+      <translation>Stichwörteranzahl:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="808"/>
       <source>(keywords)</source>
-      <translation>(Keywords)</translation>
+      <translation>(Stichwörter)</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="819"/>
       <source>Max description length:</source>
-      <translation>Maximale Beschreibungslänge:</translation>
+      <translation>Beschreibungslänge:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="862"/>
@@ -874,12 +874,12 @@
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="947"/>
       <source>Max parallel uploads:</source>
-      <translation>Maximalanzahl von gleichzeitigen Hochladen:</translation>
+      <translation>Max. gleichzt. Uploads:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="989"/>
       <source>(takes effect after relaunch)</source>
-      <translation>(nur bei Neustart angewendet wird)</translation>
+      <translation>(ein Neustart ist erforderlich)</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="1001"/>
@@ -920,7 +920,7 @@
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="1153"/>
       <source>(simple statistics of feature usage)</source>
-      <translation>(Nutzungsstatistik)</translation>
+      <translation>(Nutzung von Funktionen)</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="1203"/>
@@ -930,7 +930,7 @@
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="1183"/>
       <source>Reset to defaults</source>
-      <translation>Einstellungen zurücksetzen</translation>
+      <translation>Xpiks zurücksetzen</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="154"/>
@@ -1168,7 +1168,7 @@ All upload hosts' passwords will be purged.</source>
     <message>
       <location filename="../../Dialogs/UploadArtworks.qml" line="763"/>
       <source>Zip vector with preview</source>
-      <translation>Komprimieren einen Vektor mit einem Vorschaubild</translation>
+      <translation>Zippen Vektor mit einem Vorschaubild</translation>
     </message>
     <message>
       <location filename="../../Dialogs/UploadArtworks.qml" line="782"/>
@@ -1229,7 +1229,7 @@ All upload hosts' passwords will be purged.</source>
     <message>
       <location filename="../../Dialogs/WhatsNewDialog.qml" line="127"/>
       <source>Autocompletion for keywords</source>
-      <translation>Autovervollständigung für Keywords</translation>
+      <translation>Autovervollständigung für Stichwörter</translation>
     </message>
     <message>
       <location filename="../../Dialogs/WhatsNewDialog.qml" line="135"/>
@@ -1283,7 +1283,7 @@ All upload hosts' passwords will be purged.</source>
     <message>
       <location filename="../../Dialogs/ZipArtworksDialog.qml" line="134"/>
       <source>Zip vectors with previews</source>
-      <translation>Komprimieren Vektoren mit Vorschaubilder</translation>
+      <translation>Zippen Vektoren mit Vorschaubilder</translation>
     </message>
     <message>
       <location filename="../../Dialogs/ZipArtworksDialog.qml" line="146"/>
@@ -1301,7 +1301,7 @@ All upload hosts' passwords will be purged.</source>
       <location filename="../../Dialogs/ZipArtworksDialog.qml" line="182"/>
       <location filename="../../Dialogs/ZipArtworksDialog.qml" line="193"/>
       <source>Start Zipping</source>
-      <translation>Komprimieren</translation>
+      <translation>Zippen</translation>
     </message>
     <message>
       <location filename="../../Dialogs/ZipArtworksDialog.qml" line="185"/>
@@ -1329,7 +1329,7 @@ All upload hosts' passwords will be purged.</source>
     <message>
       <location filename="../../main.qml" line="354"/>
       <source>&amp;Recent directories</source>
-      <translation>&amp;letzte Kataloge</translation>
+      <translation>&amp;Letzte Ordner</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="212"/>
@@ -1399,12 +1399,12 @@ All upload hosts' passwords will be purged.</source>
     <message>
       <location filename="../../main.qml" line="496"/>
       <source>&amp;Change language</source>
-      <translation>Sprache ändern</translation>
+      <translation>&amp;Sprache ändern</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="516"/>
       <source>&amp;Zip selected artworks</source>
-      <translation>Komprimieren ewählte Vorlagen</translation>
+      <translation>&amp;Zippen ewählte Vorlagen</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="529"/>
@@ -1424,12 +1424,12 @@ All upload hosts' passwords will be purged.</source>
     <message>
       <location filename="../../main.qml" line="559"/>
       <source>&amp;Help</source>
-      <translation>&amp; Hilfe</translation>
+      <translation>&amp;Hilfe</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="562"/>
       <source>&amp;Video tutorials</source>
-      <translation>Video-tutorials</translation>
+      <translation>&amp;Video-tutorials</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="567"/>
@@ -1506,13 +1506,13 @@ They will be detached automatically.</source>
     <message>
       <location filename="../../main.qml" line="866"/>
       <source>Add directory</source>
-      <translation>Katalog hinzufügen</translation>
+      <translation>Ordner zufügen</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="876"/>
       <source>Add files</source>
       <comment>button</comment>
-      <translation>Dateien hinzufügen</translation>
+      <translation>Datei zufügen</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="1024"/>
@@ -1577,7 +1577,7 @@ They will be detached automatically.</source>
     <message>
       <location filename="../../main.qml" line="1899"/>
       <source>Keywords:</source>
-      <translation>Keywords:</translation>
+      <translation>Stichwörter:</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="2031"/>
@@ -1587,7 +1587,7 @@ They will be detached automatically.</source>
     <message>
       <location filename="../../main.qml" line="2073"/>
       <source>Fix spelling</source>
-      <translation>Rechtschreibung korrigieren lassen</translation>
+      <translation>Rechtschreibung</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="2098"/>
@@ -1602,7 +1602,7 @@ They will be detached automatically.</source>
     <message>
       <location filename="../../main.qml" line="2144"/>
       <source>Clear</source>
-      <translation>Alles löschen</translation>
+      <translation>Löschen</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="2189"/>
@@ -1613,7 +1613,7 @@ They will be detached automatically.</source>
       <location filename="../../main.qml" line="2194"/>
       <source>Add files</source>
       <comment>link</comment>
-      <translation>Dateien hinzufügen</translation>
+      <translation>Datei zufügen</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="2206"/>
@@ -1623,7 +1623,7 @@ They will be detached automatically.</source>
     <message>
       <location filename="../../main.qml" line="2211"/>
       <source>clear the filter</source>
-      <translation>löschen den Filter</translation>
+      <translation>löschen Sie den Filter</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="2244"/>
@@ -1633,7 +1633,7 @@ They will be detached automatically.</source>
     <message>
       <location filename="../../main.qml" line="2268"/>
       <source>Check warnings</source>
-      <translation>Warnungen anzeigen</translation>
+      <translation>Warnungen</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="2295"/>

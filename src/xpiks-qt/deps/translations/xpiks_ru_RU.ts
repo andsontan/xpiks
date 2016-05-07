@@ -21,7 +21,7 @@
     <message>
       <location filename="../../Dialogs/AboutWindow.qml" line="102"/>
       <source>The program is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE</source>
-      <translation>Программа предоставляются по принципу "как есть" без каких-либо явных или подразумеваемых гарантий, включая гарантии по дизайну, коммерческой ценности и пригодности для определенной цели</translation>
+      <translation>Программа предоставляется по принципу "как есть" без каких-либо гарантий, включая гарантии дизайна, коммерческой ценности и пригодности для определенной цели</translation>
     </message>
   </context>
   <context>
@@ -99,7 +99,7 @@
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="447"/>
       <source>(same as Description if empty)</source>
-      <translation>(будет скопировано из описания, если будет оставлено пустым)</translation>
+      <translation>(будет взято из описания, если оставлено пустым)</translation>
     </message>
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="608"/>
@@ -119,12 +119,12 @@
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="923"/>
       <source>Only append new keywords</source>
-      <translation>Добавить только новые ключевые слова</translation>
+      <translation>Добавить только новые</translation>
     </message>
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="936"/>
       <source>Fix spelling</source>
-      <translation>Исправить правописание</translation>
+      <translation>Орфография</translation>
     </message>
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="960"/>
@@ -144,7 +144,7 @@
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="1045"/>
       <source>Select changes to save using checkboxes above</source>
-      <translation>Используя флажки, выберите изменения, которые необходимо сохранить</translation>
+      <translation>Выберите изменения, которые необходимо сохранить</translation>
     </message>
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="1053"/>
@@ -172,7 +172,7 @@
     <message>
       <location filename="../../Dialogs/EditArtworkHorizontalDialog.qml" line="248"/>
       <source>(same as Description if empty)</source>
-      <translation>(будет скопировано из описания, если будет оставлено пустым)</translation>
+      <translation>(будет взято из описания, если оставлено пустым)</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EditArtworkHorizontalDialog.qml" line="340"/>
@@ -192,7 +192,7 @@
     <message>
       <location filename="../../Dialogs/EditArtworkHorizontalDialog.qml" line="576"/>
       <source>Fix spelling</source>
-      <translation>Исправить правописание</translation>
+      <translation>Орфография</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EditArtworkHorizontalDialog.qml" line="599"/>
@@ -235,7 +235,7 @@
     <message>
       <location filename="../../Dialogs/EditArtworkVerticalDialog.qml" line="244"/>
       <source>(same as Description if empty)</source>
-      <translation>(будет скопировано из описания, если будет оставлено пустым)</translation>
+      <translation>(будет взято из описания, если оставлено пустым)</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EditArtworkVerticalDialog.qml" line="335"/>
@@ -255,7 +255,7 @@
     <message>
       <location filename="../../Dialogs/EditArtworkVerticalDialog.qml" line="573"/>
       <source>Fix spelling</source>
-      <translation>Исправить правописание</translation>
+      <translation>Орфография</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EditArtworkVerticalDialog.qml" line="596"/>
@@ -339,7 +339,7 @@
     <message>
       <location filename="../../Dialogs/ExportMetadata.qml" line="171"/>
       <source>%1 modified image(s) selected</source>
-      <translation>Выбран(ы) %1 измененн(ый/ых) файл(ов)</translation>
+      <translation>%1 файл(а/ов) изменен(ы)</translation>
     </message>
     <message>
       <location filename="../../Dialogs/ExportMetadata.qml" line="186"/>
@@ -443,7 +443,7 @@
       <location filename="../../Dialogs/KeywordsSuggestion.qml" line="482"/>
       <location filename="../../Dialogs/KeywordsSuggestion.qml" line="489"/>
       <source>Add suggested keywords</source>
-      <translation>Добавить предложенные ключевые слова</translation>
+      <translation>Добавить предложенные</translation>
     </message>
     <message>
       <location filename="../../Dialogs/KeywordsSuggestion.qml" line="494"/>
@@ -489,7 +489,7 @@
     <message>
       <location filename="../../Dialogs/LogsDialog.qml" line="204"/>
       <source>Reveal logfile</source>
-      <translation>Показать файл логов на диске</translation>
+      <translation>Показать на диске</translation>
     </message>
     <message>
       <location filename="../../Dialogs/LogsDialog.qml" line="218"/>
@@ -634,7 +634,7 @@
     <message>
       <location filename="../../Warnings/warningsmodel.cpp" line="52"/>
       <source>Description is empty</source>
-      <translation>Отсутствует описание</translation>
+      <translation>Пустое описание</translation>
     </message>
     <message>
       <location filename="../../Warnings/warningsmodel.cpp" line="56"/>
@@ -745,7 +745,7 @@
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="283"/>
       <source>Attach vector automatically</source>
-      <translation>Прикреплять вектор автоматически</translation>
+      <translation>Прикреплять вектор автом.</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="299"/>
@@ -755,7 +755,7 @@
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="315"/>
       <source>Check spelling automatically</source>
-      <translation>Проверять правописание автоматически</translation>
+      <translation>Автом. проверка орфографии</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="331"/>
@@ -775,7 +775,7 @@
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="406"/>
       <source>Fit artwork's preview</source>
-      <translation>По размеру изображения предпросмотра</translation>
+      <translation>По размеру превью</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="432"/>
@@ -786,7 +786,7 @@
       <location filename="../../Dialogs/SettingsWindow.qml" line="479"/>
       <source>keyword</source>
       <comment>standalone</comment>
-      <translation>ключевое слово</translation>
+      <translation>слово</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="508"/>
@@ -797,7 +797,7 @@
       <location filename="../../Dialogs/SettingsWindow.qml" line="545"/>
       <location filename="../../Dialogs/SettingsWindow.qml" line="935"/>
       <source>(seconds)</source>
-      <translation>(секунды)</translation>
+      <translation>(секунд(ы))</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="557"/>
@@ -807,7 +807,7 @@
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="581"/>
       <source>ExifTool path:</source>
-      <translation>Путь к ExifTool:</translation>
+      <translation>ExifTool:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="617"/>
@@ -834,7 +834,7 @@
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="708"/>
       <source>Minimum megapixels:</source>
-      <translation>Минимальное количество мегапикселей:</translation>
+      <translation>Мин. мегапикселей:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="753"/>
@@ -844,7 +844,7 @@
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="764"/>
       <source>Max keywords count:</source>
-      <translation>Количество ключевых слов. Максимум:</translation>
+      <translation>Макс. ключевых слов:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="808"/>
@@ -854,7 +854,7 @@
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="819"/>
       <source>Max description length:</source>
-      <translation>Длина описания. Максимум:</translation>
+      <translation>Макс. длина описания:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="862"/>
@@ -874,7 +874,7 @@
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="947"/>
       <source>Max parallel uploads:</source>
-      <translation>Число одновременных загрузок. Максимум:</translation>
+      <translation> Макс. парал. загрузок:</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="989"/>
@@ -915,7 +915,7 @@
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="1135"/>
       <source>Collect usage statistics</source>
-      <translation>Собирать статистику использования приложения</translation>
+      <translation>Собирать статистику</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="1153"/>
@@ -930,7 +930,7 @@
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="1183"/>
       <source>Reset to defaults</source>
-      <translation>Восстановить настройки по умолчанию</translation>
+      <translation>Настройки по умолчанию</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="154"/>
@@ -1080,7 +1080,7 @@ All upload hosts' passwords will be purged.</source>
     <message>
       <location filename="../../Dialogs/UpdateWindow.qml" line="73"/>
       <source>&lt;u&gt;Download Xpiks update&lt;/u&gt;</source>
-      <translation>&lt;u&gt;Скачать обновление Xpiks&lt;/u&gt;</translation>
+      <translation>&lt;u&gt;Скачать обновление&lt;/u&gt;</translation>
     </message>
   </context>
   <context>
@@ -1160,7 +1160,7 @@ All upload hosts' passwords will be purged.</source>
     <message>
       <location filename="../../Dialogs/UploadArtworks.qml" line="722"/>
       <source>Test connection</source>
-      <translation>Проверить подключение</translation>
+      <translation>Проверить</translation>
     </message>
     <message>
       <location filename="../../Dialogs/UploadArtworks.qml" line="754"/>
@@ -1170,7 +1170,7 @@ All upload hosts' passwords will be purged.</source>
     <message>
       <location filename="../../Dialogs/UploadArtworks.qml" line="763"/>
       <source>Zip vector with preview</source>
-      <translation>Архивировать файл вектора вместе с файлом предпросмотра</translation>
+      <translation>Архивировать вектор с превью</translation>
     </message>
     <message>
       <location filename="../../Dialogs/UploadArtworks.qml" line="782"/>
@@ -1241,7 +1241,7 @@ All upload hosts' passwords will be purged.</source>
     <message>
       <location filename="../../Dialogs/WhatsNewDialog.qml" line="143"/>
       <source>iStock and Fotolia suggestion providers</source>
-      <translation>Автоподбор ключевых слов из стоков iStock и Fotolia</translation>
+      <translation>Ключевые слова из стоков iStock и Fotolia</translation>
     </message>
     <message>
       <location filename="../../Dialogs/WhatsNewDialog.qml" line="151"/>
@@ -1285,7 +1285,7 @@ All upload hosts' passwords will be purged.</source>
     <message>
       <location filename="../../Dialogs/ZipArtworksDialog.qml" line="134"/>
       <source>Zip vectors with previews</source>
-      <translation>Архивировать файлы векторов вместе с файлами предпросмотра</translation>
+      <translation>Архивировать вектор с превью</translation>
     </message>
     <message>
       <location filename="../../Dialogs/ZipArtworksDialog.qml" line="146"/>
@@ -1331,7 +1331,7 @@ All upload hosts' passwords will be purged.</source>
     <message>
       <location filename="../../main.qml" line="354"/>
       <source>&amp;Recent directories</source>
-      <translation>&amp;Недавние каталоги</translation>
+      <translation>&amp;Недавние папки</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="212"/>
@@ -1366,17 +1366,17 @@ All upload hosts' passwords will be purged.</source>
     <message>
       <location filename="../../main.qml" line="412"/>
       <source>&amp;Remove metadata from selected</source>
-      <translation>&amp;Удалить метаданные из выбранных</translation>
+      <translation>&amp;Удалить метаданные в выбранных</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="421"/>
       <source>&amp;Detach vectors from selected</source>
-      <translation>&amp; Открепить векторы от выбранных</translation>
+      <translation>&amp;Открепить векторы от выбранных</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="430"/>
       <source>&amp;Cleanup local library in background</source>
-      <translation>&amp; Очистить локальную библиотеку в фоновом режиме</translation>
+      <translation>&amp;Очистить локальную библиотеку в фоновом режиме</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="438"/>
@@ -1421,7 +1421,7 @@ All upload hosts' passwords will be purged.</source>
     <message>
       <location filename="../../main.qml" line="547"/>
       <source>&amp;Check spelling in selected</source>
-      <translation>&amp; Проверить правописание в выбранных</translation>
+      <translation>&amp;Орфография в выбранных</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="559"/>
@@ -1473,7 +1473,7 @@ They will be detached automatically.</source>
     <message>
       <location filename="../../main.qml" line="700"/>
       <source>Are you sure you want to remove this directory?</source>
-      <translation>Вы уверены, что хотите удалить этот каталог?</translation>
+      <translation>Вы уверены, что хотите удалить эту папку?</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="758"/>
@@ -1508,13 +1508,13 @@ They will be detached automatically.</source>
     <message>
       <location filename="../../main.qml" line="866"/>
       <source>Add directory</source>
-      <translation>Добавить каталог</translation>
+      <translation>Добав. папку</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="876"/>
       <source>Add files</source>
       <comment>button</comment>
-      <translation>Добавить файлы</translation>
+      <translation>Добав. файлы</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="1024"/>
@@ -1524,7 +1524,7 @@ They will be detached automatically.</source>
     <message>
       <location filename="../../main.qml" line="1030"/>
       <source>Edit</source>
-      <translation>Редактировать</translation>
+      <translation>Править</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="1036"/>
@@ -1564,7 +1564,7 @@ They will be detached automatically.</source>
     <message>
       <location filename="../../main.qml" line="1293"/>
       <source>Dismiss (%1)</source>
-      <translation>Осталось (%1)</translation>
+      <translation>Продолжить (%1)</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="1695"/>
@@ -1584,17 +1584,17 @@ They will be detached automatically.</source>
     <message>
       <location filename="../../main.qml" line="2031"/>
       <source>&lt;u&gt;edit in plain text&lt;/u&gt;</source>
-      <translation>&lt;u&gt;редактировать в виде текста&lt;/u&gt;</translation>
+      <translation>&lt;u&gt;в виде текста&lt;/u&gt;</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="2073"/>
       <source>Fix spelling</source>
-      <translation>Исправить правописание</translation>
+      <translation>Орфография</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="2098"/>
       <source>Suggest</source>
-      <translation>Предложить слова</translation>
+      <translation>Автоподбор</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="2126"/>
@@ -1625,7 +1625,7 @@ They will be detached automatically.</source>
     <message>
       <location filename="../../main.qml" line="2211"/>
       <source>clear the filter</source>
-      <translation>очистить фильтр</translation>
+      <translation>очистите фильтр</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="2244"/>
@@ -1635,7 +1635,7 @@ They will be detached automatically.</source>
     <message>
       <location filename="../../main.qml" line="2268"/>
       <source>Check warnings</source>
-      <translation>Проверить предупреждения</translation>
+      <translation>Предупреждения</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="2295"/>
@@ -1676,12 +1676,12 @@ They will be detached automatically.</source>
     <message>
       <location filename="../../main.qml" line="2379"/>
       <source>%1 modified items</source>
-      <translation>%1 измененных файла(ов)</translation>
+      <translation>%1 файла(ов) изменены</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="2379"/>
       <source>1 modified item</source>
-      <translation>1 измененный файл</translation>
+      <translation>1 файл изменен</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="2379"/>

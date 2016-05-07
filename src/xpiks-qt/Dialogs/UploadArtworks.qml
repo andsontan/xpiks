@@ -697,7 +697,7 @@ Item {
                                     RowLayout {
                                         height: 25
                                         Layout.fillWidth: true
-                                        spacing: 5
+                                        spacing: 0
 
                                         StyledCheckbox {
                                             id: showPasswordCheckBox
@@ -715,6 +715,10 @@ Item {
                                             id: credentialsStatus
                                             enabled: false
                                             isGreen: false
+                                        }
+
+                                        Item {
+                                            width: 5
                                         }
 
                                         StyledButton {
