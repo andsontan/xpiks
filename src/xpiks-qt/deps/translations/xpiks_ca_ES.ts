@@ -306,7 +306,7 @@
     <message>
       <location filename="../../Dialogs/EnterMasterPasswordDialog.qml" line="165"/>
       <source>Show password</source>
-      <translation>Mostra la contrasenya</translation>
+      <translation>Veure contrasenya</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EnterMasterPasswordDialog.qml" line="175"/>
@@ -1155,7 +1155,7 @@ Totes les contrasenyes de les agències seran esborrades.</translation>
     <message>
       <location filename="../../Dialogs/UploadArtworks.qml" line="704"/>
       <source>Show password</source>
-      <translation>Mostrar la contras.</translation>
+      <translation>Veure contrasenya</translation>
     </message>
     <message>
       <location filename="../../Dialogs/UploadArtworks.qml" line="722"/>
