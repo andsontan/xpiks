@@ -1163,7 +1163,7 @@ All upload hosts' passwords will be purged.</source>
     <message>
       <location filename="../../Dialogs/UploadArtworks.qml" line="722"/>
       <source>Test connection</source>
-      <translation>Vérifier la connexion</translation>
+      <translation>Vérifier</translation>
     </message>
     <message>
       <location filename="../../Dialogs/UploadArtworks.qml" line="754"/>
