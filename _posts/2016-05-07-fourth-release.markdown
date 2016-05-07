@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Xpiks 1.3 is released!"
+title: "Xpiks 1.3 is out!"
 date: 2016-05-07T19:55:42+02:00
 ---
 
