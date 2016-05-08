@@ -15,7 +15,7 @@ permalink: /screenshots/
 
     <div>
       <p>Main window in slategray theme</p>
-      <img src="{{site.url}}/images/xpiks-qt-slategray.jpg" />
+      <img src="{{site.url}}/images/screenshots/xpiks-qt-slategray.jpg" />
     </div>
 
     <br />
