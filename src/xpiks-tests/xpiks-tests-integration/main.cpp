@@ -53,6 +53,7 @@
 #include "spellcheckundotest.h"
 #include "autocompletebasictest.h"
 #include "spellingproduceswarningstest.h"
+#include "undoaddwithvectorstest.h"
 
 #if defined(WITH_LOGS)
 #undef WITH_LOGS
@@ -179,6 +180,7 @@ int main(int argc, char *argv[]) {
     integrationTests.append(new SpellCheckUndoTest(&commandManager));
     integrationTests.append(new AutoCompleteBasicTest(&commandManager));
     integrationTests.append(new SpellingProducesWarningsTest(&commandManager));
+    integrationTests.append(new UndoAddWithVectorsTest(&commandManager));
 
     qDebug("\n");
 

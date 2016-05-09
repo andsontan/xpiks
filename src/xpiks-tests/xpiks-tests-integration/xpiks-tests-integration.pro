@@ -117,7 +117,8 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Helpers/remoteconfig.cpp \
     autocompletebasictest.cpp \
     ../../xpiks-qt/Models/imageartwork.cpp \
-    spellingproduceswarningstest.cpp
+    spellingproduceswarningstest.cpp \
+    undoaddwithvectorstest.cpp
 
 RESOURCES +=
 
@@ -258,7 +259,8 @@ HEADERS += \
     ../../xpiks-qt/Helpers/remoteconfig.h \
     autocompletebasictest.h \
     ../../xpiks-qt/Common/hold.h \
-    ../../xpiks-qt/Models/imageartwork.h
+    ../../xpiks-qt/Models/imageartwork.h \
+    undoaddwithvectorstest.h
     spellingproduceswarningstest.h
 
 INCLUDEPATH += ../../tiny-aes
@@ -301,7 +303,6 @@ linux-g++-64 {
     message("for Linux")
     target.path=/usr/bin/
     QML_IMPORT_PATH += /usr/lib/x86_64-linux-gnu/qt5/imports/
-    #DEFINES -= TELEMETRY_ENABLED
     LIBS += -L/lib/x86_64-linux-gnu/
 
     UNAME = $$system(cat /proc/version | tr -d \'()\')

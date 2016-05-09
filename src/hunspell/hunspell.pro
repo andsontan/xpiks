@@ -11,6 +11,8 @@ TEMPLATE = lib
 CONFIG += staticlib
 DEFINES += HUNSPELL_STATIC
 
+CONFIG += c++11
+
 INCLUDEPATH += "../hunspell-1.3.3/src/hunspell/"
 INCLUDEPATH += "../hunspell-1.3.3/src/win_api/"
 
