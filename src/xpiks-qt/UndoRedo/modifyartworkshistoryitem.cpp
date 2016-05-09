@@ -35,9 +35,7 @@ void UndoRedo::ModifyArtworksHistoryItem::undo(const Commands::ICommandManager *
     Models::ArtItemsModel *artItemsModel = commandManager->getArtItemsModel();
     int count = m_Indices.count();
 
-    QVector<SpellCheck::ISpellCheckable*> itemsToSpellcheck;
     QVector<Models::ArtworkMetadata*> itemsToSave;
-    itemsToSpellcheck.reserve(count);
     itemsToSave.reserve(count);
 
     for (int i = 0; i < count; ++i) {
@@ -47,11 +45,10 @@ void UndoRedo::ModifyArtworksHistoryItem::undo(const Commands::ICommandManager *
             ArtworkMetadataBackup *backup = m_ArtworksBackups[i];
             backup->restore(metadata);
             itemsToSave.append(metadata);
-            itemsToSpellcheck.append(metadata);
         }
     }
 
-    commandManager->submitForSpellCheck(itemsToSpellcheck);
+    commandManager->submitForSpellCheck(itemsToSave);
     commandManager->saveArtworksBackups(itemsToSave);
     artItemsModel->updateItemsAtIndices(m_Indices);
     artItemsModel->updateModifiedCount();

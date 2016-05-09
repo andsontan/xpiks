@@ -66,11 +66,11 @@ namespace Warnings {
             LOG_INFO << "Stopping worker";
             m_WarningsWorker->stopWorking();
         } else {
-            LOG_WARNING << "Worker was destroyed";
+            LOG_WARNING << "Warnings Worker was NULL";
         }
     }
 
-    void WarningsService::submitItem(IWarningsCheckable *item) {
+    void WarningsService::submitItem(Models::ArtworkMetadata *item) {
         if (m_WarningsWorker == NULL) { return; }
 
         item->acquire();
@@ -79,7 +79,7 @@ namespace Warnings {
         m_WarningsWorker->submitItem(wItem);
     }
 
-    void WarningsService::submitItem(IWarningsCheckable *item, int flags) {
+    void WarningsService::submitItem(Models::ArtworkMetadata *item, int flags) {
         if (m_WarningsWorker == NULL) { return; }
 
         item->acquire();
@@ -88,7 +88,7 @@ namespace Warnings {
         m_WarningsWorker->submitItem(wItem);
     }
 
-    void WarningsService::submitItems(const QVector<IWarningsCheckable *> &items) {
+    void WarningsService::submitItems(const QVector<Models::ArtworkMetadata *> &items) {
         if (m_WarningsWorker == NULL) { return; }
 
         int length = items.length();
@@ -97,8 +97,7 @@ namespace Warnings {
         itemsToSubmit.reserve(length);
 
         for (int i = 0; i < length; ++i) {
-            IWarningsCheckable *item = items.at(i);
-            item->acquire();
+            Models::ArtworkMetadata *item = items.at(i);
             WarningsItem *itemToSubmit = new WarningsItem(item);
             itemsToSubmit.append(itemToSubmit);
         }

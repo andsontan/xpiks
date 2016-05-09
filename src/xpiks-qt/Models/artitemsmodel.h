@@ -37,6 +37,10 @@
 #include "../Common/iartworkssource.h"
 #include "../Helpers/ifilenotavailablemodel.h"
 
+namespace Common {
+    class BasicKeywordsModel;
+}
+
 namespace Models {
     class ArtworkMetadata;
     class ArtItemInfo;
@@ -99,7 +103,9 @@ namespace Models {
         /*Q_INVOKABLE*/ void updateSelectedArtworks(const QVector<int> &selectedIndices);
         /*Q_INVOKABLE*/ void saveSelectedArtworks(const QVector<int> &selectedIndices, bool overwriteAll, bool useBackups);
 
-        Q_INVOKABLE QObject *getArtworkItself(int index) const;
+        /*Q_INVOKABLE*/ ArtworkMetadata *getArtworkMetadata(int index) const;
+        /*Q_INVOKABLE*/ Common::BasicKeywordsModel *getKeywordsModel(int index) const;
+
         Q_INVOKABLE QSize retrieveImageSize(int metadataIndex) const;
         Q_INVOKABLE QString retrieveFileSize(int metadataIndex) const;
         Q_INVOKABLE QString getArtworkFilepath(int index) const;

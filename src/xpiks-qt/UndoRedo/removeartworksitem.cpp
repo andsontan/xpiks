@@ -27,6 +27,7 @@
 #include "../Models/artworksrepository.h"
 #include "../Models/artitemsmodel.h"
 #include "../Models/artworkmetadata.h"
+#include "../Models/imageartwork.h"
 #include "addartworksitem.h"
 
 void UndoRedo::RemoveArtworksHistoryItem::undo(const Commands::ICommandManager *commandManagerInterface) const {
@@ -66,8 +67,14 @@ void UndoRedo::RemoveArtworksHistoryItem::undo(const Commands::ICommandManager *
 
                 const QString &vectorPath = m_RemovedAttachedVectors.at(j);
                 if (!vectorPath.isEmpty()) {
-                    metadata->attachVector(vectorPath);
-                    attachedVectors++;
+                    Models::ImageArtwork *image = dynamic_cast<Models::ImageArtwork*>(metadata);
+                    if (image != NULL) {
+                        image->attachVector(vectorPath);
+                        attachedVectors++;
+                    }
+                    else {
+                        LOG_WARNING << "Vector was attached not to an image!";
+                    }
                 }
             }
         }

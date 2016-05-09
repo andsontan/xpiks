@@ -22,23 +22,31 @@
 #ifndef WARNINGSQUERYITEM
 #define WARNINGSQUERYITEM
 
-#include "iwarningscheckable.h"
 #include <QStringList>
 #include <QString>
 #include <QSet>
 #include "../Helpers/stringhelper.h"
 #include "../Common/flags.h"
+#include "../Models/artworkmetadata.h"
+#include "../Common/defines.h"
 
 namespace Warnings {
     class WarningsItem {
     public:
-        WarningsItem(IWarningsCheckable *checkableItem, int checkingFlags = Common::WarningsCheckAll):
+        WarningsItem(Models::ArtworkMetadata *checkableItem, int checkingFlags = Common::WarningsCheckAll):
             m_CheckableItem(checkableItem),
             m_CheckingFlags(checkingFlags)
         {
+            checkableItem->acquire();
             m_Description = checkableItem->getDescription();
             m_Title = checkableItem->getTitle();
             m_KeywordsSet = checkableItem->getKeywordsSet();
+        }
+
+        ~WarningsItem() {
+            if (!m_CheckableItem->release()) {
+                LOG_WARNING << "Item could have been removed";
+            }
         }
 
     public:
@@ -66,8 +74,6 @@ namespace Warnings {
                 m_CheckableItem->dropWarningsFlags(flagsToDrop);
                 m_CheckableItem->addWarningsFlags(warningsFlags);
             }
-
-            m_CheckableItem->release();
         }
 
         bool needCheckAll() const { return m_CheckingFlags == Common::WarningsCheckAll; }
@@ -88,10 +94,10 @@ namespace Warnings {
             return words;
         }
 
-        IWarningsCheckable *getCheckableItem() const { return m_CheckableItem; }
+        Models::ArtworkMetadata *getCheckableItem() const { return m_CheckableItem; }
 
     private:
-        IWarningsCheckable *m_CheckableItem;
+        Models::ArtworkMetadata *m_CheckableItem;
         QString m_Description;
         QString m_Title;
         QSet<QString> m_KeywordsSet;

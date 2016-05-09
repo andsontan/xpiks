@@ -13,7 +13,7 @@ void AddCommandTests::addNoArtworksToEmptyRepositoryTest() {
     Models::ArtworksRepository artworksRepository;
     commandManagerMock.InjectDependency(&artworksRepository);
 
-    Models::ArtItemsModel *artItemsModel = &artItemsMock;
+    Mocks::ArtItemsModelMock *artItemsModel = &artItemsMock;
     commandManagerMock.InjectDependency(artItemsModel);
 
     QSignalSpy artItemsBeginInsertSpy(&artItemsMock, SIGNAL(rowsAboutToBeInserted(QModelIndex,int,int)));
@@ -44,7 +44,7 @@ void AddCommandTests::addOneArtworkToEmptyRepositoryTest() {
     Models::ArtworksRepository artworksRepository;
     commandManagerMock.InjectDependency(&artworksRepository);
 
-    Models::ArtItemsModel *artItemsModel = &artItemsMock;
+    Mocks::ArtItemsModelMock *artItemsModel = &artItemsMock;
     commandManagerMock.InjectDependency(artItemsModel);
 
     QSignalSpy artItemsBeginInsertSpy(&artItemsMock, SIGNAL(rowsAboutToBeInserted(QModelIndex,int,int)));
@@ -91,7 +91,7 @@ void AddCommandTests::addAndAttachVectorsTest() {
     Models::ArtworksRepository artworksRepository;
     commandManagerMock.InjectDependency(&artworksRepository);
 
-    Models::ArtItemsModel *artItemsModel = &artItemsMock;
+    Mocks::ArtItemsModelMock *artItemsModel = &artItemsMock;
     commandManagerMock.InjectDependency(artItemsModel);
 
     QStringList filenames, vectors;
@@ -107,7 +107,7 @@ void AddCommandTests::addAndAttachVectorsTest() {
     QCOMPARE(newFilesCount, 2);
 
     for (int i = 0; i < 2; ++i) {
-        QVERIFY(artItemsModel->getArtwork(i)->hasVectorAttached());
+        QVERIFY(artItemsModel->getMockArtwork(i)->hasVectorAttached());
     }
 }
 
@@ -118,7 +118,7 @@ void AddCommandTests::addAndAttachVectorsLaterTest() {
     Models::ArtworksRepository artworksRepository;
     commandManagerMock.InjectDependency(&artworksRepository);
 
-    Models::ArtItemsModel *artItemsModel = &artItemsMock;
+    Mocks::ArtItemsModelMock *artItemsModel = &artItemsMock;
     commandManagerMock.InjectDependency(artItemsModel);
 
     QStringList filenames, vectors;
@@ -134,7 +134,7 @@ void AddCommandTests::addAndAttachVectorsLaterTest() {
     QCOMPARE(newFilesCount, 2);
 
     for (int i = 0; i < 2; ++i) {
-        QVERIFY(!artItemsModel->getArtwork(i)->hasVectorAttached());
+        QVERIFY(!artItemsModel->getMockArtwork(i)->hasVectorAttached());
     }
 
     addArtworksCommand = new Commands::AddArtworksCommand(QStringList(), vectors, false);
@@ -146,7 +146,7 @@ void AddCommandTests::addAndAttachVectorsLaterTest() {
     QCOMPARE(newFilesCount, 0);
 
     for (int i = 0; i < 2; ++i) {
-        QVERIFY(artItemsModel->getArtwork(i)->hasVectorAttached());
+        QVERIFY(artItemsModel->getMockArtwork(i)->hasVectorAttached());
     }
 }
 
@@ -157,7 +157,7 @@ void AddCommandTests::addAndDontAttachVectorsOtherDirTest() {
     Models::ArtworksRepository artworksRepository;
     commandManagerMock.InjectDependency(&artworksRepository);
 
-    Models::ArtItemsModel *artItemsModel = &artItemsMock;
+    Mocks::ArtItemsModelMock *artItemsModel = &artItemsMock;
     commandManagerMock.InjectDependency(artItemsModel);
 
     QStringList filenames, vectors;
@@ -173,7 +173,7 @@ void AddCommandTests::addAndDontAttachVectorsOtherDirTest() {
     QCOMPARE(newFilesCount, 2);
 
     for (int i = 0; i < 2; ++i) {
-        QVERIFY(!artItemsModel->getArtwork(i)->hasVectorAttached());
+        QVERIFY(!artItemsModel->getMockArtwork(i)->hasVectorAttached());
     }
 }
 
@@ -184,7 +184,7 @@ void AddCommandTests::addAndDontAttachVectorsEmptyDirTest() {
     Models::ArtworksRepository artworksRepository;
     commandManagerMock.InjectDependency(&artworksRepository);
 
-    Models::ArtItemsModel *artItemsModel = &artItemsMock;
+    Mocks::ArtItemsModelMock *artItemsModel = &artItemsMock;
     commandManagerMock.InjectDependency(artItemsModel);
 
     QStringList filenames, vectors;
@@ -200,7 +200,7 @@ void AddCommandTests::addAndDontAttachVectorsEmptyDirTest() {
     QCOMPARE(newFilesCount, 2);
 
     for (int i = 0; i < 2; ++i) {
-        QVERIFY(!artItemsModel->getArtwork(i)->hasVectorAttached());
+        QVERIFY(!artItemsModel->getMockArtwork(i)->hasVectorAttached());
     }
 }
 
@@ -211,7 +211,7 @@ void AddCommandTests::addAndDontAttachVectorsStartsWithTest() {
     Models::ArtworksRepository artworksRepository;
     commandManagerMock.InjectDependency(&artworksRepository);
 
-    Models::ArtItemsModel *artItemsModel = &artItemsMock;
+    Mocks::ArtItemsModelMock *artItemsModel = &artItemsMock;
     commandManagerMock.InjectDependency(artItemsModel);
 
     QStringList filenames, vectors;
@@ -227,7 +227,7 @@ void AddCommandTests::addAndDontAttachVectorsStartsWithTest() {
     QCOMPARE(newFilesCount, 2);
 
     for (int i = 0; i < 2; ++i) {
-        QVERIFY(!artItemsModel->getArtwork(i)->hasVectorAttached());
+        QVERIFY(!artItemsModel->getMockArtwork(i)->hasVectorAttached());
     }
 }
 
@@ -238,7 +238,7 @@ void AddCommandTests::addAndAttachFromSingleDirectoryTest() {
     Models::ArtworksRepository artworksRepository;
     commandManagerMock.InjectDependency(&artworksRepository);
 
-    Models::ArtItemsModel *artItemsModel = &artItemsMock;
+    Mocks::ArtItemsModelMock *artItemsModel = &artItemsMock;
     commandManagerMock.InjectDependency(artItemsModel);
 
     QStringList filenames, vectors;
@@ -254,7 +254,7 @@ void AddCommandTests::addAndAttachFromSingleDirectoryTest() {
     QCOMPARE(newFilesCount, filenames.length());
 
     for (int i = 0; i < filenames.length(); ++i) {
-        QVERIFY(artItemsModel->getArtwork(i)->hasVectorAttached());
+        QVERIFY(artItemsModel->getMockArtwork(i)->hasVectorAttached());
     }
 }
 
@@ -265,7 +265,7 @@ void AddCommandTests::addSingleDirectoryAndAttachLaterTest() {
     Models::ArtworksRepository artworksRepository;
     commandManagerMock.InjectDependency(&artworksRepository);
 
-    Models::ArtItemsModel *artItemsModel = &artItemsMock;
+    Mocks::ArtItemsModelMock *artItemsModel = &artItemsMock;
     commandManagerMock.InjectDependency(artItemsModel);
 
     QStringList filenames, vectors;
@@ -281,7 +281,7 @@ void AddCommandTests::addSingleDirectoryAndAttachLaterTest() {
     QCOMPARE(newFilesCount, filenames.length());
 
     for (int i = 0; i < filenames.length(); ++i) {
-        QVERIFY(!artItemsModel->getArtwork(i)->hasVectorAttached());
+        QVERIFY(!artItemsModel->getMockArtwork(i)->hasVectorAttached());
     }
 
     addArtworksCommand = new Commands::AddArtworksCommand(QStringList(), vectors, false);
@@ -293,6 +293,6 @@ void AddCommandTests::addSingleDirectoryAndAttachLaterTest() {
     QCOMPARE(newFilesCount, 0);
 
     for (int i = 0; i < filenames.length(); ++i) {
-        QVERIFY(artItemsModel->getArtwork(i)->hasVectorAttached());
+        QVERIFY(artItemsModel->getMockArtwork(i)->hasVectorAttached());
     }
 }

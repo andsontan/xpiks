@@ -128,7 +128,7 @@ namespace Models {
         QHash<QString, int> m_DirectoriesHash;
         QSet<QString> m_FilesSet;
         QHash<QString, int> m_DirectoriesSelectedHash;
-        QFileSystemWatcher  m_FilesWatcher;
+        QFileSystemWatcher m_FilesWatcher;
         QTimer m_Timer;
         QSet<QString> m_UnavailableFiles;
         int m_LastUnavailableFilesCount;

@@ -88,7 +88,6 @@ void Commands::CommandManager::InjectDependency(Models::UploadInfoRepository *up
 void Commands::CommandManager::InjectDependency(Warnings::WarningsService *warningsService) {
     Q_ASSERT(warningsService != NULL); m_WarningsService = warningsService;
     m_WarningsService->setCommandManager(this);
-    m_WarningsCheckers.append(warningsService);
 }
 
 void Commands::CommandManager::InjectDependency(Encryption::SecretsManager *secretsManager) {
@@ -183,7 +182,7 @@ const
     return result;
 }
 
-void Commands::CommandManager::addWarningsService(Common::IServiceBase<Warnings::IWarningsCheckable> *service) {
+void Commands::CommandManager::addWarningsService(Common::IServiceBase<Common::IBasicArtwork> *service) {
     if (service != NULL) {
         // TODO: check if we don't have such checker
         m_WarningsCheckers.append(service);
@@ -280,6 +279,7 @@ void Commands::CommandManager::recodePasswords(const QString &oldMasterPassword,
 }
 
 void Commands::CommandManager::combineArtwork(Models::ArtItemInfo *itemInfo) const {
+    Q_ASSERT(itemInfo != NULL);
     LOG_DEBUG << "one item with index" << itemInfo->getOriginalIndex();
     if (m_CombinedArtworksModel) {
         m_CombinedArtworksModel->resetModelData();
@@ -396,7 +396,8 @@ void Commands::CommandManager::addInitialArtworks(const QStringList &artworksFil
 }
 #endif
 
-void Commands::CommandManager::submitKeywordForSpellCheck(SpellCheck::ISpellCheckable *item, int keywordIndex) const {
+void Commands::CommandManager::submitKeywordForSpellCheck(Common::BasicKeywordsModel *item, int keywordIndex) const {
+    Q_ASSERT(item != NULL);
     if ((m_SettingsModel != NULL) && m_SettingsModel->getUseSpellCheck() && (m_SpellCheckerService != NULL)) {
         m_SpellCheckerService->submitKeyword(item, keywordIndex);
     }
@@ -407,31 +408,34 @@ void Commands::CommandManager::submitForSpellCheck(const QVector<Models::Artwork
             m_SettingsModel->getUseSpellCheck() &&
             (m_SpellCheckerService != NULL) &&
             !items.isEmpty()) {
-        QVector<SpellCheck::ISpellCheckable*> itemsToSubmit;
+        QVector<Common::BasicKeywordsModel *> itemsToSubmit;
         int count = items.length();
         itemsToSubmit.reserve(count);
 
         for (int i = 0; i < count; ++i) {
-            itemsToSubmit << items.at(i);
+            Models::ArtworkMetadata *metadata = items.at(i);
+            itemsToSubmit << metadata->getKeywordsModel();
         }
 
         this->submitForSpellCheck(itemsToSubmit);
     }
 }
 
-void Commands::CommandManager::submitForSpellCheck(const QVector<SpellCheck::ISpellCheckable *> &items) const {
+void Commands::CommandManager::submitForSpellCheck(const QVector<Common::BasicKeywordsModel *> &items) const {
     if ((m_SettingsModel != NULL) && m_SettingsModel->getUseSpellCheck() && m_SpellCheckerService != NULL) {
         m_SpellCheckerService->submitItems(items);
     }
 }
 
-void Commands::CommandManager::submitItemForSpellCheck(SpellCheck::ISpellCheckable *item, int flags) const {
+void Commands::CommandManager::submitItemForSpellCheck(Common::BasicKeywordsModel *item, int flags) const {
+    Q_ASSERT(item != NULL);
     if ((m_SettingsModel != NULL) && m_SettingsModel->getUseSpellCheck() && (m_SpellCheckerService != NULL)) {
         m_SpellCheckerService->submitItem(item, flags);
     }
 }
 
-void Commands::CommandManager::setupSpellCheckSuggestions(SpellCheck::ISpellCheckable *item, int index, int flags) {
+void Commands::CommandManager::setupSpellCheckSuggestions(Common::BasicKeywordsModel *item, int index, int flags) {
+    Q_ASSERT(item != NULL);
     if (m_SpellCheckSuggestionModel) {
         m_SpellCheckSuggestionModel->setupModel(item, index, flags);
         reportUserAction(Conectivity::UserActionSpellSuggestions);
@@ -439,11 +443,17 @@ void Commands::CommandManager::setupSpellCheckSuggestions(SpellCheck::ISpellChec
 }
 
 void Commands::CommandManager::submitKeywordsForWarningsCheck(Models::ArtworkMetadata *item) const {
+    Q_ASSERT(item != NULL);
     this->submitForWarningsCheck(item, Common::WarningsCheckKeywords);
 }
 
 void Commands::CommandManager::submitForWarningsCheck(Models::ArtworkMetadata *item, int flags) const {
     Q_ASSERT(item != NULL);
+
+    if (m_WarningsService != NULL) {
+        m_WarningsService->submitItem(item);
+    }
+
     int count = m_WarningsCheckers.length();
 
 #ifdef INTEGRATION_TESTS
@@ -451,7 +461,7 @@ void Commands::CommandManager::submitForWarningsCheck(Models::ArtworkMetadata *i
 #endif
 
     for (int i = 0; i < count; ++i) {
-        Common::IServiceBase<Warnings::IWarningsCheckable> *checker = m_WarningsCheckers.at(i);
+        Common::IServiceBase<Common::IBasicArtwork> *checker = m_WarningsCheckers.at(i);
         if (checker->isAvailable()) {
             checker->submitItem(item, flags);
         }
@@ -459,21 +469,27 @@ void Commands::CommandManager::submitForWarningsCheck(Models::ArtworkMetadata *i
 }
 
 void Commands::CommandManager::submitForWarningsCheck(const QVector<Models::ArtworkMetadata *> &items) const {
-    QVector<Warnings::IWarningsCheckable*> itemsToSubmit;
-    int count = items.length();
-    itemsToSubmit.reserve(count);
-
-    for (int i = 0; i < count; ++i) {
-        itemsToSubmit << items.at(i);
+    if (m_WarningsService != NULL) {
+        m_WarningsService->submitItems(items);
     }
 
-    this->submitForWarningsCheck(itemsToSubmit);
+    if (!m_WarningsCheckers.isEmpty()) {
+        QVector<Common::IBasicArtwork *> itemsToSubmit;
+        int count = items.length();
+        itemsToSubmit.reserve(count);
+
+        for (int i = 0; i < count; ++i) {
+            itemsToSubmit << items.at(i);
+        }
+
+        this->submitForWarningsCheck(itemsToSubmit);
+    }
 }
 
-void Commands::CommandManager::submitForWarningsCheck(const QVector<Warnings::IWarningsCheckable *> &items) const {
+void Commands::CommandManager::submitForWarningsCheck(const QVector<Common::IBasicArtwork *> &items) const {
     int count = m_WarningsCheckers.length();
     for (int i = 0; i < count; ++i) {
-        Common::IServiceBase<Warnings::IWarningsCheckable> *checker = m_WarningsCheckers.at(i);
+        Common::IServiceBase<Common::IBasicArtwork> *checker = m_WarningsCheckers.at(i);
         if (checker->isAvailable()) {
             checker->submitItems(items);
         }
@@ -481,6 +497,7 @@ void Commands::CommandManager::submitForWarningsCheck(const QVector<Warnings::IW
 }
 
 void Commands::CommandManager::saveArtworkBackup(Models::ArtworkMetadata *metadata) const {
+    Q_ASSERT(metadata != NULL);
     if ((m_SettingsModel != NULL) && m_SettingsModel->getSaveBackups() && m_MetadataSaverService != NULL) {
         m_MetadataSaverService->saveArtwork(metadata);
     }

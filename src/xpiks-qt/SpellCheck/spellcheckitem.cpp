@@ -26,6 +26,7 @@
 #include "ispellcheckable.h"
 #include "../Common/flags.h"
 #include "../Common/defines.h"
+#include "../Common/basickeywordsmodel.h"
 
 namespace SpellCheck {
     SpellCheckItemBase::~SpellCheckItemBase() {
@@ -48,13 +49,16 @@ namespace SpellCheck {
         m_QueryItems.append(item);
     }
 
-    SpellCheckItem::SpellCheckItem(ISpellCheckable *spellCheckable, int spellCheckFlags, int keywordIndex) :
+    SpellCheckItem::SpellCheckItem(Common::BasicKeywordsModel *spellCheckable, int spellCheckFlags, int keywordIndex) :
         SpellCheckItemBase(),
         m_SpellCheckable(spellCheckable),
         m_SpellCheckFlags(spellCheckFlags),
         m_OnlyOneKeyword(true)
     {
         Q_ASSERT(Common::HasFlag(spellCheckFlags, Common::SpellCheckKeywords));
+        Q_ASSERT(spellCheckable != NULL);
+
+        spellCheckable->acquire();
 
         QString keyword = m_SpellCheckable->retrieveKeyword(keywordIndex);
         if (!keyword.contains(QChar::Space)) {
@@ -70,12 +74,15 @@ namespace SpellCheck {
         }
     }
 
-    SpellCheckItem::SpellCheckItem(ISpellCheckable *spellCheckable, int spellCheckFlags) :
+    SpellCheckItem::SpellCheckItem(Common::BasicKeywordsModel *spellCheckable, int spellCheckFlags) :
         SpellCheckItemBase(),
         m_SpellCheckable(spellCheckable),
         m_SpellCheckFlags(spellCheckFlags),
         m_OnlyOneKeyword(false)
     {
+        Q_ASSERT(spellCheckable != NULL);
+        spellCheckable->acquire();
+
         if (Common::HasFlag(spellCheckFlags, Common::SpellCheckKeywords)) {
             QStringList keywords = spellCheckable->getKeywords();
             reserve(keywords.length());
@@ -92,6 +99,12 @@ namespace SpellCheck {
             QStringList titleWords = spellCheckable->getTitleWords();
             reserve(titleWords.length());
             addWords(titleWords, 100000);
+        }
+    }
+
+    SpellCheckItem::~SpellCheckItem() {
+        if (m_SpellCheckable->release()) {
+            LOG_WARNING << "Item could have been removed";
         }
     }
 
@@ -133,10 +146,5 @@ namespace SpellCheck {
 
         int index = m_OnlyOneKeyword ? items.first()->m_Index : -1;
         emit resultsReady(m_SpellCheckFlags, index);
-
-        bool releaseResult = m_SpellCheckable->release();
-        if (releaseResult) {
-            LOG_WARNING << "item was locked for removal";
-        }
     }
 }

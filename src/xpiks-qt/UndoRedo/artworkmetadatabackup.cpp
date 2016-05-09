@@ -21,14 +21,18 @@
 
 #include "artworkmetadatabackup.h"
 #include "../Models/artworkmetadata.h"
+#include "../Models/imageartwork.h"
+#include "../Common/defines.h"
 
 UndoRedo::ArtworkMetadataBackup::ArtworkMetadataBackup(Models::ArtworkMetadata *metadata) {
     m_Description = metadata->getDescription();
     m_Title = metadata->getTitle();
     m_KeywordsList = metadata->getKeywords();
     m_IsModified = metadata->isModified();
-    if (metadata->hasVectorAttached()) {
-        m_AttachedVector = metadata->getAttachedVectorPath();
+
+    Models::ImageArtwork *image = dynamic_cast<Models::ImageArtwork *>(metadata);
+    if (image != NULL && image->hasVectorAttached()) {
+        m_AttachedVector = image->getAttachedVectorPath();
     }
 }
 
@@ -40,6 +44,11 @@ void UndoRedo::ArtworkMetadataBackup::restore(Models::ArtworkMetadata *metadata)
     else { metadata->resetModified(); }
 
     if (!m_AttachedVector.isEmpty()) {
-        metadata->attachVector(m_AttachedVector);
+        Models::ImageArtwork *image = dynamic_cast<Models::ImageArtwork *>(metadata);
+        if (image != NULL) {
+            image->attachVector(m_AttachedVector);
+        } else {
+            LOG_WARNING << "Inconsistency for attached vector";
+        }
     }
 }

@@ -35,6 +35,7 @@
 #include "../Common/flags.h"
 #include "../SpellCheck/spellcheckiteminfo.h"
 #include "../Helpers/ifilenotavailablemodel.h"
+#include "../Common/hold.h"
 
 namespace Models {
     class ArtItemInfo;
@@ -63,7 +64,7 @@ namespace Models {
         void initArtworks(const QVector<ArtItemInfo *> &artworks);
 
     private:
-        void initKeywords(const QStringList &ek) { m_CommonKeywordsModel.resetKeywords(ek); m_AreKeywordsModified = false; }
+        void initKeywords(const QStringList &ek) { m_CommonKeywordsModel.setKeywords(ek); m_AreKeywordsModified = false; }
         void initDescription(const QString &description) { setDescription(description); m_IsDescriptionModified = false; }
         void initTitle(const QString &title) { setTitle(title); m_IsTitleModified = false; }
 
@@ -74,8 +75,8 @@ namespace Models {
         virtual void acceptSuggestedKeywords(const QStringList &keywords);
 
     public:
-        void setKeywords(const QStringList& keywords) { m_CommonKeywordsModel.resetKeywords(keywords); }
-        const QString &getDescription() const { return m_CommonKeywordsModel.getDescription(); }
+        void setKeywords(const QStringList& keywords) { m_CommonKeywordsModel.setKeywords(keywords); }
+        QString getDescription() { return m_CommonKeywordsModel.getDescription(); }
         void setDescription(const QString &value) {
             if (m_CommonKeywordsModel.setDescription(value)) {
                 emit descriptionChanged();
@@ -83,7 +84,7 @@ namespace Models {
             }
         }
 
-        const QString &getTitle() const { return m_CommonKeywordsModel.getTitle(); }
+        QString getTitle() { return m_CommonKeywordsModel.getTitle(); }
         void setTitle(const QString &value) {
             if (m_CommonKeywordsModel.setTitle(value)) {
                 emit titleChanged();
@@ -91,7 +92,7 @@ namespace Models {
             }
         }
 
-        int getKeywordsCount() const { return m_CommonKeywordsModel.getKeywordsCount(); }
+        int getKeywordsCount() { return m_CommonKeywordsModel.getKeywordsCount(); }
 
         bool getChangeDescription() const { return Common::HasFlag(m_EditFlags, Common::EditDesctiption); }
         void setChangeDescription(bool value);
@@ -119,6 +120,7 @@ namespace Models {
         void requestCloseWindow();
         void itemsNumberChanged();
         void completionsAvailable();
+        void aboutToBeRemoved();
 
     public:
         int getSelectedArtworksCount() const;
@@ -130,7 +132,7 @@ namespace Models {
 #endif
 
 #ifdef CORE_TESTS
-        const QStringList &getKeywords() const;
+        QStringList getKeywords();
         bool getAreKeywordsModified() const { return m_AreKeywordsModified; }
         bool getIsDescriptionModified() const { return m_IsDescriptionModified; }
 #endif
@@ -143,7 +145,7 @@ namespace Models {
         Q_INVOKABLE void pasteKeywords(const QStringList &keywords);
         Q_INVOKABLE void setArtworksSelected(int index, bool newState);
         Q_INVOKABLE void removeSelectedArtworks();
-        Q_INVOKABLE void saveEdits() const;
+        Q_INVOKABLE void saveEdits();
         Q_INVOKABLE void resetModelData();
         Q_INVOKABLE void clearKeywords();
         Q_INVOKABLE QString getKeywordsString() { return m_CommonKeywordsModel.getKeywordsString(); }
@@ -160,7 +162,7 @@ namespace Models {
         Q_INVOKABLE void assignFromSelected();
 
     private:
-        void processCombinedEditCommand() const;
+        void processCombinedEditCommand();
         void enableAllFields();
         void assignFromOneArtwork();
         void assignFromManyArtworks();
@@ -189,6 +191,7 @@ namespace Models {
 
     private:
         QVector<ArtItemInfo*> m_ArtworksList;
+        Common::Hold m_HoldPlaceholder;
         Common::BasicKeywordsModel m_CommonKeywordsModel;
         SpellCheck::SpellCheckItemInfo m_SpellCheckInfo;
         int m_EditFlags;

@@ -30,6 +30,7 @@
 #include "../Commands/commandmanager.h"
 #include "../Common/flags.h"
 #include "../Common/defines.h"
+#include "../Common/basickeywordsmodel.h"
 
 namespace SpellCheck {
 
@@ -128,7 +129,7 @@ namespace SpellCheck {
         }
     }
 
-    void SpellCheckSuggestionModel::setupModel(SpellCheck::ISpellCheckable *item, int index, int flags) {
+    void SpellCheckSuggestionModel::setupModel(Common::BasicKeywordsModel *item, int index, int flags) {
         Q_ASSERT(item != NULL);
         LOG_INFO << "flags =" << flags;
         QVector<SpellSuggestionsItem*> requests;

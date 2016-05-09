@@ -74,6 +74,8 @@ namespace AutoComplete {
         LOG_DEBUG << "#";
         if (m_AutoCompleteWorker != NULL) {
             m_AutoCompleteWorker->stopWorking();
+        } else {
+            LOG_WARNING << "AutoComplete Worker was NULL";
         }
     }
 

@@ -1418,7 +1418,8 @@ ApplicationWindow {
                                     objectName: "artworkDelegate"
                                     property bool isHighlighted: isselected || wrappersScope.GridView.isCurrentItem
                                     color: isHighlighted ? Colors.selectedImageBackground : Colors.artworkImageBackground
-                                    property var artworkModel: artItemsModel.getArtworkItself(rowWrapper.getIndex())
+                                    property var artworkModel: filteredArtItemsModel.getArtworkMetadata(index)
+                                    property var keywordsModel: filteredArtItemsModel.getKeywordsModel(index)
                                     property int delegateIndex: index
                                     anchors.fill: parent
 
@@ -1454,21 +1455,26 @@ ApplicationWindow {
                                     Connections {
                                         target: rowWrapper.artworkModel
 
+                                        onFocusRequested: {
+                                            if (directionSign === +1) {
+                                                descriptionTextInput.forceActiveFocus()
+                                                descriptionTextInput.cursorPosition = descriptionTextInput.text.length
+                                            } else {
+                                                flv.activateEdit()
+                                            }
+
+                                            artworksHost.positionViewAtIndex(rowWrapper.delegateIndex, GridView.Contain)
+                                        }
+                                    }
+
+                                    Connections {
+                                        target: rowWrapper.keywordsModel
+
                                         onSpellCheckResultsReady: {
                                             descriptionTextInput.deselect()
                                             if (columnLayout.isWideEnough) {
                                                 titleTextInput.deselect()
                                             }
-                                        }
-
-                                        onFocusRequested: {
-                                            if (directionSign === +1) {
-                                                rowWrapper.focusDescription()
-                                            } else {
-                                                flv.activateEdit()
-                                            }
-
-                                            artworksHost.positionViewAtIndex(rowWrapper.delegateIndex, ListView.Contain)
                                         }
 
                                         onCompletionsAvailable: {
@@ -1937,7 +1943,7 @@ ApplicationWindow {
 
                                                     EditableTags {
                                                         id: flv
-                                                        model: rowWrapper.artworkModel
+                                                        model: rowWrapper.keywordsModel
                                                         anchors.fill: parent
                                                         property int keywordHeight: 20 * settingsModel.keywordSizeScale + (settingsModel.keywordSizeScale - 1)*10
                                                         scrollStep: keywordHeight
@@ -1968,7 +1974,7 @@ ApplicationWindow {
                                                                                     {
                                                                                         callbackObject: callbackObject,
                                                                                         previousKeyword: keyword,
-                                                                                        keywordsModel: artItemsModel.getArtworkItself(rowWrapper.getIndex())
+                                                                                        keywordsModel: filteredArtItemsModel.getArtworkMetadata(rowWrapper.delegateIndex)
                                                                                     })
                                                             }
                                                         }
@@ -2057,7 +2063,7 @@ ApplicationWindow {
                                                                                     {
                                                                                         callbackObject: callbackObject,
                                                                                         keywordsText: keywordsstring,
-                                                                                        keywordsModel: artItemsModel.getArtworkItself(rowWrapper.getIndex())
+                                                                                        keywordsModel: filteredArtItemsModel.getArtworkMetadata(rowWrapper.delegateIndex)
 
                                                                                     });
                                                             }
@@ -2071,7 +2077,7 @@ ApplicationWindow {
                                                     StyledText {
                                                         id: fixSpellingText
                                                         text: i18.n + qsTr("Fix spelling")
-                                                        enabled: rowWrapper.artworkModel ? rowWrapper.artworkModel.hasSpellErrors : false
+                                                        enabled: rowWrapper.keywordsModel ? rowWrapper.keywordsModel.hasSpellErrors : false
                                                         color: enabled ? (fixSpellingMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor)  : (rowWrapper.isHighlighted ? Colors.labelActiveForeground : Colors.labelInactiveForeground)
 
                                                         MouseArea {

@@ -39,6 +39,7 @@
 #include "../Commands/combinededitcommand.h"
 #include "../Common/defines.h"
 #include "../QMLExtensions/colorsmodel.h"
+#include "imageartwork.h"
 
 namespace Models {
     ArtItemsModel::ArtItemsModel(QObject *parent):
@@ -54,7 +55,7 @@ namespace Models {
 
     ArtworkMetadata *ArtItemsModel::createMetadata(const QString &filepath) {
         int id = m_LastID++;
-        return new ArtworkMetadata(filepath, id);
+        return new ImageArtwork(filepath, id);
     }
 
     void ArtItemsModel::deleteAllItems() {
@@ -68,8 +69,13 @@ namespace Models {
             if (metadata->release()) {
                 delete metadata;
             } else {
-                metadata->disconnect();
                 LOG_DEBUG << "Metadata at index" << i << "is locked. Postponing destruction...";
+
+                metadata->disconnect();
+                Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
+                keywordsModel->disconnect();
+                keywordsModel->clearModel();
+
                 m_FinalizationList.append(metadata);
             }
         }
@@ -166,7 +172,9 @@ namespace Models {
             if (metadata->appendKeyword(keyword)) {
                 QModelIndex index = this->index(metadataIndex);
                 emit dataChanged(index, index, QVector<int>() << IsModifiedRole << KeywordsCountRole);
-                m_CommandManager->submitKeywordForSpellCheck(metadata, metadata->rowCount() - 1);
+                Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
+
+                m_CommandManager->submitKeywordForSpellCheck(keywordsModel, keywordsModel->getKeywordsCount() - 1);
                 m_CommandManager->submitKeywordsForWarningsCheck(metadata);
                 metadata->requestBackup();
             }
@@ -236,7 +244,9 @@ namespace Models {
             Common::SetFlag(flags, Common::CorrectDescription);
             Common::SetFlag(flags, Common::CorrectTitle);
             Common::SetFlag(flags, Common::CorrectKeywords);
-            m_CommandManager->setupSpellCheckSuggestions(m_ArtworkList.at(metadataIndex), metadataIndex, flags);
+            ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
+            Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
+            m_CommandManager->setupSpellCheckSuggestions(keywordsModel, metadataIndex, flags);
         }
     }
 
@@ -323,7 +333,7 @@ namespace Models {
         m_CommandManager->writeMetadata(modifiedSelectedArtworks, useBackups);
     }
 
-    QObject *ArtItemsModel::getArtworkItself(int index) const {
+    ArtworkMetadata *ArtItemsModel::getArtworkMetadata(int index) const {
         ArtworkMetadata *item = NULL;
 
         if (0 <= index && index < m_ArtworkList.length()) {
@@ -334,16 +344,31 @@ namespace Models {
         return item;
     }
 
+    Common::BasicKeywordsModel *ArtItemsModel::getKeywordsModel(int index) const {
+        Common::BasicKeywordsModel *keywordsModel = NULL;
+
+        if (0 <= index && index < m_ArtworkList.length()) {
+            keywordsModel = m_ArtworkList.at(index)->getKeywordsModel();
+            QQmlEngine::setObjectOwnership(keywordsModel, QQmlEngine::CppOwnership);
+        }
+
+        return keywordsModel;
+    }
+
     QSize ArtItemsModel::retrieveImageSize(int metadataIndex) const {
         if (metadataIndex < 0 || metadataIndex >= m_ArtworkList.length()) { return QSize(); }
 
         ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
+        ImageArtwork *image = dynamic_cast<ImageArtwork*>(metadata);
+
+        if (image == NULL) { return QSize(); }
+
         QSize size;
 
-        if (metadata->isInitialized()) {
-            size = metadata->getImageSize();
+        if (image->isInitialized()) {
+            size = image->getImageSize();
         } else {
-            QImageReader reader(metadata->getFilepath());
+            QImageReader reader(image->getFilepath());
             size = reader.size();
             //metadata->setSize(size);
         }
@@ -388,14 +413,24 @@ namespace Models {
         if (metadataIndex < 0 || metadataIndex >= m_ArtworkList.length()) { return QLatin1String(""); }
 
         ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
-        return metadata->getDateTaken();
+        ImageArtwork *image = dynamic_cast<ImageArtwork*>(metadata);
+        if (image != NULL) {
+            return image->getDateTaken();
+        } else {
+            return QLatin1String("");
+        }
     }
 
     QString ArtItemsModel::getAttachedVectorPath(int metadataIndex) const {
         if (metadataIndex < 0 || metadataIndex >= m_ArtworkList.length()) { return QLatin1String(""); }
 
         ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
-        return metadata->getAttachedVectorPath();
+        ImageArtwork *image = dynamic_cast<ImageArtwork*>(metadata);
+        if (image != NULL) {
+            return image->getAttachedVectorPath();
+        } else {
+            return QLatin1String("");
+        }
     }
 
     int ArtItemsModel::addRecentDirectory(const QString &directory) {
@@ -407,20 +442,22 @@ namespace Models {
     void ArtItemsModel::initDescriptionHighlighting(int metadataIndex, QQuickTextDocument *document) {
         if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
-            SpellCheck::SpellCheckItemInfo *info = metadata->getSpellCheckInfo();
+            Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
+            SpellCheck::SpellCheckItemInfo *info = keywordsModel->getSpellCheckInfo();
             QMLExtensions::ColorsModel *colorsModel = m_CommandManager->getColorsModel();
-            info->createHighlighterForDescription(document->textDocument(), colorsModel, metadata);
-            metadata->notifySpellCheckResults(Common::SpellCheckDescription);
+            info->createHighlighterForDescription(document->textDocument(), colorsModel, keywordsModel);
+            keywordsModel->notifySpellCheckResults(Common::SpellCheckDescription);
         }
     }
 
     void ArtItemsModel::initTitleHighlighting(int metadataIndex, QQuickTextDocument *document) {
         if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
-            SpellCheck::SpellCheckItemInfo *info = metadata->getSpellCheckInfo();
+            Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
+            SpellCheck::SpellCheckItemInfo *info = keywordsModel->getSpellCheckInfo();
             QMLExtensions::ColorsModel *colorsModel = m_CommandManager->getColorsModel();
-            info->createHighlighterForTitle(document->textDocument(), colorsModel, metadata);
-            metadata->notifySpellCheckResults(Common::SpellCheckTitle);
+            info->createHighlighterForTitle(document->textDocument(), colorsModel, keywordsModel);
+            keywordsModel->notifySpellCheckResults(Common::SpellCheckTitle);
         }
     }
 
@@ -428,7 +465,8 @@ namespace Models {
         if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
             if (metadata->editKeyword(keywordIndex, replacement)) {
-                m_CommandManager->submitKeywordForSpellCheck(metadata, keywordIndex);
+                Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
+                m_CommandManager->submitKeywordForSpellCheck(keywordsModel, keywordIndex);
                 m_CommandManager->submitKeywordsForWarningsCheck(metadata);
                 metadata->requestBackup();
             }
@@ -461,14 +499,25 @@ namespace Models {
     }
 
     void ArtItemsModel::detachVectorsFromSelected(const QVector<int> &selectedIndices) {
-        LOG_DEBUG << selectedIndices.length() << "item(s) affected";
+        QVector<int> indicesToUpdate;
+        indicesToUpdate.reserve(selectedIndices.length());
+
         foreach (int index, selectedIndices) {
-            m_ArtworkList.at(index)->detachVector();
+            ArtworkMetadata *metadata = m_ArtworkList.at(index);
+            ImageArtwork *image = dynamic_cast<ImageArtwork *>(metadata);
+            if (image != NULL) {
+                image->detachVector();
+                indicesToUpdate.append(index);
+            }
         }
 
-        QVector<QPair<int, int> > rangesToUpdate;
-        Helpers::indicesToRanges(selectedIndices, rangesToUpdate);
-        AbstractListModel::updateItemsInRanges(rangesToUpdate, QVector<int>() << HasVectorAttachedRole);
+        LOG_DEBUG << indicesToUpdate.length() << "item(s) affected";
+
+        if (!indicesToUpdate.isEmpty()) {
+            QVector<QPair<int, int> > rangesToUpdate;
+            Helpers::indicesToRanges(indicesToUpdate, rangesToUpdate);
+            AbstractListModel::updateItemsInRanges(rangesToUpdate, QVector<int>() << HasVectorAttachedRole);
+        }
     }
 
     int ArtItemsModel::rowCount(const QModelIndex &parent) const {
@@ -490,16 +539,22 @@ namespace Models {
             return metadata->getFilepath();
         case ArtworkTitleRole:
             return metadata->getTitle();
-        case KeywordsStringRole:
-            return metadata->getKeywordsString();
+        case KeywordsStringRole: {
+                Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
+                return keywordsModel->getKeywordsString();
+            }
         case IsModifiedRole:
             return metadata->isModified();
         case IsSelectedRole:
             return metadata->isSelected();
-        case KeywordsCountRole:
-            return metadata->getKeywordsCount();
-        case HasVectorAttachedRole:
-            return metadata->hasVectorAttached();
+        case KeywordsCountRole: {
+                Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
+                return keywordsModel->getKeywordsCount();
+            }
+        case HasVectorAttachedRole: {
+                ImageArtwork *image = dynamic_cast<ImageArtwork*>(metadata);
+                return (image != NULL) && image->hasVectorAttached();
+            }
         default:
             return QVariant();
         }
@@ -589,7 +644,13 @@ namespace Models {
         LOG_DEBUG << "#";
 #endif
         ArtworkMetadata *item = qobject_cast<ArtworkMetadata*>(sender());
-        m_CommandManager->submitForWarningsCheck(item, Common::WarningsCheckSpelling);
+
+#ifndef QT_DEBUG
+        if (item != NULL)
+#endif
+        {
+            m_CommandManager->submitForWarningsCheck(item, Common::WarningsCheckSpelling);
+        }
     }
 
     void ArtItemsModel::removeItemsAtIndices(const QVector<QPair<int, int> > &ranges) {
@@ -680,7 +741,10 @@ namespace Models {
 
         for (int i = 0; i < size; ++i) {
             ArtworkMetadata *metadata = m_ArtworkList.at(i);
-            const QString &filepath = metadata->getFilepath();
+            ImageArtwork *image = dynamic_cast<ImageArtwork*>(metadata);
+            if (image == NULL) { continue; }
+
+            const QString &filepath = image->getFilepath();
             QFileInfo fi(filepath);
 
             const QString &directory = fi.absolutePath();
@@ -691,7 +755,7 @@ namespace Models {
 
                 QString vectorsPath = innerHash.value(filename, defaultPath);
                 if (!vectorsPath.isEmpty()) {
-                    metadata->attachVector(vectorsPath);
+                    image->attachVector(vectorsPath);
                     indicesToUpdate.append(i);
                     attachedVectors++;
                 }
@@ -833,8 +897,13 @@ namespace Models {
         if (metadata->release()) {
             delete metadata;
         } else {
-            metadata->disconnect();
             LOG_DEBUG << "Metadata at index" << row << "is locked. Postponing destruction...";
+
+            metadata->disconnect();
+            Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
+            keywordsModel->disconnect();
+            keywordsModel->clearModel();
+
             m_FinalizationList.append(metadata);
         }
     }
@@ -877,14 +946,15 @@ namespace Models {
 
         for (int i = 0; i < count; ++i) {
             ArtworkMetadata* artwork = m_ArtworkList.at(i);
+            ImageArtwork *image = dynamic_cast<ImageArtwork*>(artwork);
             const QString &path = artwork->getFilepath();
             if (artworksRepository->isFileUnavailable(path)) {
                 artwork->setUnavailable();
                 anyArtworkUnavailable = true;
-            } else if (artwork->hasVectorAttached()) {
-                const QString &vectorPath = artwork->getAttachedVectorPath();
+            } else if (image != NULL && image->hasVectorAttached()) {
+                const QString &vectorPath = image->getAttachedVectorPath();
                 if (artworksRepository->isFileUnavailable(vectorPath)) {
-                    artwork->detachVector();
+                    image->detachVector();
                     anyVectorUnavailable = true;
                 }
             }

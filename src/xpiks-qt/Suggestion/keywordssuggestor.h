@@ -32,6 +32,7 @@
 #include "../Common/basickeywordsmodel.h"
 #include "shutterstockqueryengine.h"
 #include "suggestionartwork.h"
+#include "../Common/hold.h"
 
 namespace Suggestion {
     class LocalLibrary;
@@ -66,8 +67,8 @@ namespace Suggestion {
         }
 
     public:
-        int getSuggestedKeywordsCount() const { return m_SuggestedKeywords.rowCount(); }
-        int getOtherKeywordsCount() const { return m_AllOtherKeywords.rowCount(); }
+        int getSuggestedKeywordsCount() { return m_SuggestedKeywords.rowCount(); }
+        int getOtherKeywordsCount() { return m_AllOtherKeywords.rowCount(); }
         bool getIsInProgress() const { return m_IsInProgress; }
         int getSelectedArtworksCount() const { return m_SelectedArtworksCount; }
         const QString &getLastErrorString() const { return m_LastErrorString; }
@@ -101,7 +102,7 @@ namespace Suggestion {
         Q_INVOKABLE void searchArtworks(const QString &searchTerm);
         Q_INVOKABLE void cancelSearch();
         Q_INVOKABLE void close() { clear(); }
-        Q_INVOKABLE QStringList getSuggestedKeywords() const { return m_SuggestedKeywords.getKeywords(); }
+        Q_INVOKABLE QStringList getSuggestedKeywords() { return m_SuggestedKeywords.getKeywords(); }
         Q_INVOKABLE QStringList getEngineNames() const { return m_QueryEnginesNames; }
 
         Q_INVOKABLE QObject *getSuggestedKeywordsModel() {
@@ -141,6 +142,7 @@ namespace Suggestion {
         LocalLibrary *m_LocalLibrary;
         QStringList m_QueryEnginesNames;
         QString m_LastErrorString;
+        Common::Hold m_HoldPlaceholder;
         Common::BasicKeywordsModel m_SuggestedKeywords;
         Common::BasicKeywordsModel m_AllOtherKeywords;
         int m_SelectedArtworksCount;

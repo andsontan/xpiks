@@ -25,15 +25,25 @@
 #include "../Models/artitemsmodel.h"
 #include "../Models/artworkmetadata.h"
 #include "../Common/flags.h"
+#include "../Models/imageartwork.h"
+#include "../Common/basickeywordsmodel.h"
 
 namespace Warnings {
     void describeWarningFlags(int warningsFlags, Models::ArtworkMetadata *metadata, QStringList &descriptions) {
 
         if (Common::HasFlag(warningsFlags, Common::WarningTypeSizeLessThanMinimum)) {
-            QSize size = metadata->getImageSize();
-            int x = size.width();
-            int y = size.height();
-            descriptions.append(QObject::tr("Image size %1 x %2 is less than minimal").arg(x).arg(y));
+            Models::ImageArtwork *image = dynamic_cast<Models::ImageArtwork*>(metadata);
+#ifdef QT_DEBUG
+            Q_ASSERT(image != NULL);
+            {
+#else
+            if (image != NULL) {
+#endif
+                QSize size = image->getImageSize();
+                int x = size.width();
+                int y = size.height();
+                descriptions.append(QObject::tr("Image size %1 x %2 is less than minimal").arg(x).arg(y));
+            }
         }
 
         if (Common::HasFlag(warningsFlags, Common::WarningTypeNoKeywords)) {
@@ -45,7 +55,8 @@ namespace Warnings {
         }
 
         if (Common::HasFlag(warningsFlags, Common::WarningTypeTooManyKeywords)) {
-            descriptions.append(QObject::tr("There are too many keywords (%1)").arg(metadata->getKeywordsCount()));
+            Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
+            descriptions.append(QObject::tr("There are too many keywords (%1)").arg(keywordsModel->getKeywordsCount()));
         }
 
         if (Common::HasFlag(warningsFlags, Common::WarningTypeDescriptionIsEmpty)) {

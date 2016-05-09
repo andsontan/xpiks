@@ -75,25 +75,26 @@ namespace SpellCheck {
         LOG_DEBUG << "#";
         if (m_SpellCheckWorker != NULL) {
             m_SpellCheckWorker->stopWorking();
+        } else {
+            LOG_WARNING << "SpellCheckWorker is NULL";
         }
     }
 
-    void SpellCheckerService::submitItem(ISpellCheckable *itemToCheck) {
+    void SpellCheckerService::submitItem(Common::BasicKeywordsModel *itemToCheck) {
         this->submitItem(itemToCheck, Common::SpellCheckAll);
     }
 
-    void SpellCheckerService::submitItem(ISpellCheckable *itemToCheck, int flags) {
+    void SpellCheckerService::submitItem(Common::BasicKeywordsModel *itemToCheck, int flags) {
         if (m_SpellCheckWorker == NULL) { return; }
 
         LOG_INFO << "flags:" << flags;
 
-        itemToCheck->acquire();
         SpellCheckItem *item = new SpellCheckItem(itemToCheck, flags);
         itemToCheck->connectSignals(item);
         m_SpellCheckWorker->submitItem(item);
     }
 
-    void SpellCheckerService::submitItems(const QVector<ISpellCheckable *> &itemsToCheck) {
+    void SpellCheckerService::submitItems(const QVector<Common::BasicKeywordsModel *> &itemsToCheck) {
         if (m_SpellCheckWorker == NULL) { return; }
 
         QVector<SpellCheckItemBase *> items;
@@ -102,8 +103,7 @@ namespace SpellCheck {
         items.reserve(length);
 
         for (int i = 0; i < length; ++i) {
-            SpellCheck::ISpellCheckable *itemToCheck = itemsToCheck.at(i);
-            itemToCheck->acquire();
+            Common::BasicKeywordsModel *itemToCheck = itemsToCheck.at(i);
             SpellCheckItem *item = new SpellCheckItem(itemToCheck, Common::SpellCheckAll);
             itemToCheck->connectSignals(item);
             items.append(item);
@@ -115,10 +115,9 @@ namespace SpellCheck {
         m_SpellCheckWorker->submitItem(new SpellCheckSeparatorItem());
     }
 
-    void SpellCheckerService::submitKeyword(SpellCheck::ISpellCheckable *itemToCheck, int keywordIndex) {
+    void SpellCheckerService::submitKeyword(Common::BasicKeywordsModel *itemToCheck, int keywordIndex) {
         if (m_SpellCheckWorker == NULL) { return; }
 
-        itemToCheck->acquire();
         SpellCheckItem *item = new SpellCheckItem(itemToCheck, Common::SpellCheckKeywords, keywordIndex);
         itemToCheck->connectSignals(item);
         m_SpellCheckWorker->submitItem(item);

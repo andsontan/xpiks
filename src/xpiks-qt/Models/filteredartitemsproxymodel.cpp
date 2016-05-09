@@ -243,11 +243,13 @@ namespace Models {
             int originalIndex = getOriginalIndex(index);
             ArtItemsModel *artItemsModel = getArtItemsModel();
             ArtworkMetadata *metadata = artItemsModel->getArtwork(originalIndex);
+            Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
+
             if (!metadata->getDescription().trimmed().isEmpty()) {
-                m_CommandManager->submitItemForSpellCheck(metadata, Common::SpellCheckDescription);
+                m_CommandManager->submitItemForSpellCheck(keywordsModel, Common::SpellCheckDescription);
             } else {
                 LOG_INFO << "description is empty";
-                metadata->notifySpellCheckResults(Common::SpellCheckDescription);
+                keywordsModel->notifySpellCheckResults(Common::SpellCheckDescription);
             }
 
             m_CommandManager->submitForWarningsCheck(metadata, Common::WarningsCheckDescription);
@@ -260,11 +262,13 @@ namespace Models {
             int originalIndex = getOriginalIndex(index);
             ArtItemsModel *artItemsModel = getArtItemsModel();
             ArtworkMetadata *metadata = artItemsModel->getArtwork(originalIndex);
+            Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
+
             if (!metadata->getTitle().trimmed().isEmpty()) {
-                m_CommandManager->submitItemForSpellCheck(metadata, Common::SpellCheckTitle);
+                m_CommandManager->submitItemForSpellCheck(keywordsModel, Common::SpellCheckTitle);
             } else {
                 LOG_INFO << "title is empty";
-                metadata->notifySpellCheckResults(Common::SpellCheckTitle);
+                keywordsModel->notifySpellCheckResults(Common::SpellCheckTitle);
             }
 
             m_CommandManager->submitForWarningsCheck(metadata, Common::WarningsCheckTitle);
@@ -294,6 +298,20 @@ namespace Models {
         QVector<int> indices = getSelectedOriginalIndices();
         ArtItemsModel *artItemsModel = getArtItemsModel();
         artItemsModel->detachVectorsFromSelected(indices);
+    }
+
+    QObject *FilteredArtItemsProxyModel::getArtworkMetadata(int index) {
+        int originalIndex = getOriginalIndex(index);
+        ArtItemsModel *artItemsModel = getArtItemsModel();
+        QObject *item = artItemsModel->getArtworkMetadata(originalIndex);
+        return item;
+    }
+
+    QObject *FilteredArtItemsProxyModel::getKeywordsModel(int index) {
+        int originalIndex = getOriginalIndex(index);
+        ArtItemsModel *artItemsModel = getArtItemsModel();
+        QObject *item = artItemsModel->getKeywordsModel(originalIndex);
+        return item;
     }
 
     void FilteredArtItemsProxyModel::itemSelectedChanged(bool value) {

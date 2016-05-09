@@ -35,7 +35,7 @@ namespace Models {
     CombinedArtworksModel::CombinedArtworksModel(QObject *parent) :
         AbstractListModel(parent),
         Common::BaseEntity(),
-        m_CommonKeywordsModel(this),
+        m_CommonKeywordsModel(m_HoldPlaceholder, this),
         m_EditFlags(0),
         m_AreKeywordsModified(false),
         m_IsDescriptionModified(false),
@@ -51,10 +51,11 @@ namespace Models {
     CombinedArtworksModel::~CombinedArtworksModel() { qDeleteAll(m_ArtworksList); }
 
     void CombinedArtworksModel::initArtworks(const QVector<ArtItemInfo *> &artworks) {
-        int innerLength = m_ArtworksList.length();
-        int start = innerLength == 0 ? 0 : innerLength - 1;
         int paramLength = artworks.length();
+
         if (paramLength > 0) {
+            int innerLength = m_ArtworksList.length();
+            int start = innerLength == 0 ? 0 : innerLength - 1;
             beginInsertRows(QModelIndex(), start, start + paramLength - 1);
             m_ArtworksList << artworks;
             endInsertRows();
@@ -67,6 +68,7 @@ namespace Models {
 
     void CombinedArtworksModel::recombineArtworks() {
         LOG_DEBUG << m_ArtworksList.length() << "artwork(s)";
+        if (m_ArtworksList.isEmpty()) { return; }
 
         if (m_ArtworksList.length() == 1) {
             assignFromOneArtwork();
@@ -128,7 +130,7 @@ namespace Models {
     }
 
 #ifdef CORE_TESTS
-        const QStringList &CombinedArtworksModel::getKeywords() const {
+        QStringList CombinedArtworksModel::getKeywords() {
             return m_CommonKeywordsModel.getKeywords();
         }
 #endif
@@ -208,7 +210,7 @@ namespace Models {
         emit artworksCountChanged();
     }
 
-    void CombinedArtworksModel::saveEdits() const {
+    void CombinedArtworksModel::saveEdits() {
         bool needToSave = false;
 
         if (getChangeTitle() ||
@@ -325,7 +327,7 @@ namespace Models {
         }
     }
 
-    void CombinedArtworksModel::processCombinedEditCommand() const {
+    void CombinedArtworksModel::processCombinedEditCommand() {
         Commands::CombinedEditCommand *combinedEditCommand = new Commands::CombinedEditCommand(
                     m_EditFlags,
                     m_ArtworksList,
@@ -361,12 +363,14 @@ namespace Models {
 
         if (!m_IsDescriptionModified && !m_IsTitleModified) {
             // TODO: would be better to merge errors instead of assignment
-            m_CommonKeywordsModel.setSpellCheckInfo(metadata->getSpellCheckInfo());
+            Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
+            m_CommonKeywordsModel.setSpellCheckInfo(keywordsModel->getSpellCheckInfo());
         }
 
         if (!m_AreKeywordsModified) {
             initKeywords(metadata->getKeywords());
-            m_CommonKeywordsModel.setSpellStatuses(metadata->getSpellStatuses());
+            Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
+            m_CommonKeywordsModel.setSpellStatuses(keywordsModel);
         }
     }
 
@@ -391,8 +395,8 @@ namespace Models {
                 continue;
             }
 
-            const QString &currDescription = metadata->getDescription();
-            const QString &currTitle = metadata->getTitle();
+            QString currDescription = metadata->getDescription();
+            QString currTitle = metadata->getTitle();
             descriptionsDiffer = descriptionsDiffer || description != currDescription;
             titleDiffer = titleDiffer || title != currTitle;
             commonKeywords.intersect(metadata->getKeywordsSet());
@@ -456,7 +460,7 @@ namespace Models {
     }
 
     void CombinedArtworksModel::generateAboutToBeRemoved() {
-         m_CommonKeywordsModel.generateAboutToBeRemoved();
+         emit aboutToBeRemoved();
     }
 
     void CombinedArtworksModel::removeUnavailableItems() {

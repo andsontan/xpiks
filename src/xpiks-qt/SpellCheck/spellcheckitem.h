@@ -27,6 +27,10 @@
 #include <QObject>
 #include <QHash>
 
+namespace Common {
+    class BasicKeywordsModel;
+}
+
 namespace SpellCheck {
     class ISpellCheckable;
 
@@ -89,8 +93,9 @@ namespace SpellCheck {
     class SpellCheckItem : public SpellCheckItemBase {
         Q_OBJECT
     public:
-        SpellCheckItem(ISpellCheckable *spellCheckable, int spellCheckFlags, int keywordIndex);
-        SpellCheckItem(ISpellCheckable *spellCheckable, int spellCheckFlags);
+        SpellCheckItem(Common::BasicKeywordsModel *spellCheckable, int spellCheckFlags, int keywordIndex);
+        SpellCheckItem(Common::BasicKeywordsModel *spellCheckable, int spellCheckFlags);
+        virtual ~SpellCheckItem();
 
     private:
         void addWords(const QStringList &words, int startingIndex);
@@ -103,7 +108,7 @@ namespace SpellCheck {
         bool getIsOnlyOneKeyword() const { return m_OnlyOneKeyword; }
 
     private:
-        ISpellCheckable *m_SpellCheckable;
+        Common::BasicKeywordsModel *m_SpellCheckable;
         int m_SpellCheckFlags;
         volatile bool m_OnlyOneKeyword;
     };

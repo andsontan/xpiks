@@ -20,6 +20,9 @@
  */
 
 #include "basickeywordsmodel.h"
+#include <QReadWriteLock>
+#include <QReadLocker>
+#include <QWriteLocker>
 #include "../SpellCheck/spellcheckitem.h"
 #include "../SpellCheck/spellsuggestionsitem.h"
 #include "../SpellCheck/spellcheckiteminfo.h"
@@ -29,15 +32,28 @@
 #include "../Common/defines.h"
 
 namespace Common {
-    BasicKeywordsModel::BasicKeywordsModel(QObject *parent):
+    BasicKeywordsModel::BasicKeywordsModel(Hold &hold, QObject *parent):
         QAbstractListModel(parent),
-        m_SpellCheckInfo(NULL),
-        m_RefCount(1),
-        m_WarningsFlags(Common::WarningTypeNoWarnings)
+        m_Hold(hold),
+        m_SpellCheckInfo(NULL)
     {
     }
 
+    int BasicKeywordsModel::rowCount(const QModelIndex &parent) const {
+        Q_UNUSED(parent);
+
+        //QReadLocker readLocker(&m_KeywordsLock);
+        //Q_UNUSED(readLocker);
+        // due to the qt limitations, pray the keyword will be there
+
+        return m_KeywordsList.length();
+    }
+
     QVariant BasicKeywordsModel::data(const QModelIndex &index, int role) const {
+        //QReadLocker readLocker(&m_KeywordsLock);
+        //Q_UNUSED(readLocker);
+        // due to the qt limitations, pray the keyword will be there
+
         int row = index.row();
         if (row < 0 || row >= m_KeywordsList.length()) {
             return QVariant();
@@ -53,11 +69,139 @@ namespace Common {
         }
     }
 
+    QString BasicKeywordsModel::getDescription() {
+        QReadLocker readLocker(&m_DescriptionLock);
+        Q_UNUSED(readLocker);
+
+        return m_Description;
+    }
+
+    QString BasicKeywordsModel::getTitle() {
+        QReadLocker readLocker(&m_TitleLock);
+        Q_UNUSED(readLocker);
+
+        return m_Title;
+    }
+
+    int BasicKeywordsModel::getKeywordsCount() {
+        QReadLocker readLocker(&m_KeywordsLock);
+        Q_UNUSED(readLocker);
+
+        return m_KeywordsSet.count();
+    }
+
+    QSet<QString> BasicKeywordsModel::getKeywordsSet() {
+        QReadLocker readLocker(&m_KeywordsLock);
+        Q_UNUSED(readLocker);
+
+        return m_KeywordsSet;
+    }
+
+    QString BasicKeywordsModel::getKeywordsString() {
+        QReadLocker readLocker(&m_KeywordsLock);
+        Q_UNUSED(readLocker);
+
+        return m_KeywordsList.join(", ");
+    }
+
     bool BasicKeywordsModel::appendKeyword(const QString &keyword) {
+        QWriteLocker writeLocker(&m_KeywordsLock);
+        Q_UNUSED(writeLocker);
+
+        return appendKeywordUnsafe(keyword);
+    }
+
+    bool BasicKeywordsModel::takeKeywordAt(int index, QString &removedKeyword) {
+        bool wasCorrect = false, result = false;
+
+        m_KeywordsLock.lockForWrite();
+        {
+            result = takeKeywordAtUnsafe(index, removedKeyword, wasCorrect);
+        }
+        m_KeywordsLock.unlock();
+
+        if (!wasCorrect) {
+            emit spellCheckErrorsChanged();
+        }
+
+        return result;
+    }
+
+    bool BasicKeywordsModel::takeLastKeyword(QString &removedKeyword) {
+        bool wasCorrect = false, result = false;
+
+        m_KeywordsLock.lockForWrite();
+        {
+            result = takeKeywordAtUnsafe(m_KeywordsList.length() - 1, removedKeyword, wasCorrect);
+        }
+        m_KeywordsLock.unlock();
+
+        if (!wasCorrect) {
+            emit spellCheckErrorsChanged();
+        }
+
+        return result;
+    }
+
+    void BasicKeywordsModel::setKeywords(const QStringList &keywordsList) {
+        QWriteLocker writeLocker(&m_KeywordsLock);
+        Q_UNUSED(writeLocker);
+
+        setKeywordsUnsafe(keywordsList);
+    }
+
+    int BasicKeywordsModel::appendKeywords(const QStringList &keywordsList) {
+        QWriteLocker writeLocker(&m_KeywordsLock);
+        Q_UNUSED(writeLocker);
+
+        return appendKeywordsUnsafe(keywordsList);
+    }
+
+    bool BasicKeywordsModel::editKeyword(int index, const QString &replacement) {
+        bool result = false;
+
+        m_KeywordsLock.lockForWrite();
+        {
+            result = editKeywordUnsafe(index, replacement);
+        }
+        m_KeywordsLock.unlock();
+
+        if (result) {
+            QModelIndex i = this->index(index);
+            emit dataChanged(i, i, QVector<int>() << KeywordRole);
+        }
+
+        return result;
+    }
+
+    bool BasicKeywordsModel::clearKeywords() {
+        bool result = false;
+
+        m_KeywordsLock.lockForWrite();
+        {
+            result = clearKeywordsUnsafe();
+        }
+        m_KeywordsLock.unlock();
+
+        if (result) {
+            emit spellCheckErrorsChanged();
+        }
+
+        return result;
+    }
+
+    bool BasicKeywordsModel::areKeywordsEmpty() {
+        QReadLocker readLocker(&m_KeywordsLock);
+        Q_UNUSED(readLocker);
+
+        return m_KeywordsList.isEmpty();
+    }
+
+    bool BasicKeywordsModel::appendKeywordUnsafe(const QString &keyword) {
         bool added = false;
         const QString &sanitizedKeyword = keyword.simplified();
 
-        if (canBeAdded(sanitizedKeyword)) {
+        if (canBeAddedUnsafe(sanitizedKeyword)) {
             int keywordsCount = m_KeywordsList.length();
 
             m_KeywordsSet.insert(sanitizedKeyword.toLower());
@@ -72,7 +216,7 @@ namespace Common {
         return added;
     }
 
-    bool BasicKeywordsModel::takeKeywordAt(int index, QString &removedKeyword) {
+    bool BasicKeywordsModel::takeKeywordAtUnsafe(int index, QString &removedKeyword, bool &wasCorrect) {
         bool removed = false;
 
         if (0 <= index && index < m_KeywordsList.length()) {
@@ -82,12 +226,8 @@ namespace Common {
 
             beginRemoveRows(QModelIndex(), index, index);
             removedKeyword = m_KeywordsList.takeAt(index);
-            bool wasCorrect = m_SpellCheckResults.takeAt(index);
+            wasCorrect = m_SpellCheckResults.takeAt(index);
             endRemoveRows();
-
-            if (!wasCorrect) {
-                emit spellCheckErrorsChanged();
-            }
 
             removed = true;
         }
@@ -95,12 +235,12 @@ namespace Common {
         return removed;
     }
 
-    void BasicKeywordsModel::setKeywords(const QStringList &keywordsList) {
-        clearKeywords();
-        appendKeywords(keywordsList);
+    void BasicKeywordsModel::setKeywordsUnsafe(const QStringList &keywordsList) {
+        clearKeywordsUnsafe();
+        appendKeywordsUnsafe(keywordsList);
     }
 
-    int BasicKeywordsModel::appendKeywords(const QStringList &keywordsList) {
+    int BasicKeywordsModel::appendKeywordsUnsafe(const QStringList &keywordsList) {
         QStringList keywordsToAdd;
         int appendedCount = 0, size = keywordsList.length();
         keywordsToAdd.reserve(size);
@@ -111,7 +251,7 @@ namespace Common {
             const QString &sanitizedKeyword = keyword.simplified();
             const QString &lowerCased = sanitizedKeyword.toLower();
 
-            if (canBeAdded(sanitizedKeyword) && !accountedKeywords.contains(lowerCased)) {
+            if (canBeAddedUnsafe(sanitizedKeyword) && !accountedKeywords.contains(lowerCased)) {
                 keywordsToAdd.append(sanitizedKeyword);
                 accountedKeywords.insert(lowerCased);
                 appendedCount++;
@@ -138,7 +278,7 @@ namespace Common {
         return appendedCount;
     }
 
-    bool BasicKeywordsModel::editKeyword(int index, const QString &replacement) {
+    bool BasicKeywordsModel::editKeywordUnsafe(int index, const QString &replacement) {
         bool result = false;
 
         if (0 <= index && index < m_KeywordsList.length()) {
@@ -153,17 +293,12 @@ namespace Common {
                     m_KeywordsSet.insert(lowerCasedNew);
                     m_KeywordsList[index] = sanitized;
                     m_KeywordsSet.remove(lowerCasedExisting);
-
-                    QModelIndex i = this->index(index);
-                    emit dataChanged(i, i, QVector<int>() << KeywordRole);
                     LOG_DEBUG << "common case edit";
 
                     result = true;
                 } else if (lowerCasedNew == lowerCasedExisting) {
                     LOG_DEBUG << "changing case in same keyword";
                     m_KeywordsList[index] = sanitized;
-                    QModelIndex i = this->index(index);
-                    emit dataChanged(i, i, QVector<int>() << KeywordRole);
 
                     result = true;
                 }
@@ -178,31 +313,53 @@ namespace Common {
         return result;
     }
 
-    bool BasicKeywordsModel::setDescription(const QString &value) {
-        bool result = value != m_Description;
-        if (result) { m_Description = value; }
+    bool BasicKeywordsModel::replaceKeywordUnsafe(int index, const QString &existing, const QString &replacement) {
+        bool result = false;
+
+        LOG_DEBUG << "Replacing" << existing << "to" << replacement << "with index" << index;
+        if (0 <= index && index < m_KeywordsList.length()) {
+            const QString &internal = m_KeywordsList.at(index);
+            if (internal == existing) {
+                this->editKeywordUnsafe(index, replacement);
+                m_SpellCheckResults[index] = true;
+                result = true;
+            } else if (internal.contains(existing) && internal.contains(QChar::Space)) {
+                LOG_DEBUG << "Replacing composite keyword";
+                QString existingFixed = internal;
+                existingFixed.replace(existing, replacement);
+                this->editKeywordUnsafe(index, existingFixed);
+                // TODO: reimplement this someday
+                // no need to mark keyword as correct
+                // if we replace only part of it
+                m_SpellCheckResults[index] = true;
+                result = true;
+            }
+        } else {
+            LOG_DEBUG << "Failure. Index is negative or exceeds count" << m_KeywordsList.length();
+        }
+
         return result;
     }
 
-    bool BasicKeywordsModel::setTitle(const QString &value) {
-        bool result = value != m_Title;
-        if (result) { m_Title = value; }
-        return result;
+    bool BasicKeywordsModel::clearKeywordsUnsafe() {
+        bool anyKeywords = !m_KeywordsList.isEmpty();
+
+        if (anyKeywords) {
+            beginResetModel();
+            m_KeywordsList.clear();
+            endResetModel();
+
+            m_SpellCheckResults.clear();
+            m_KeywordsSet.clear();
+        } else {
+            Q_ASSERT(m_KeywordsSet.isEmpty());
+            Q_ASSERT(m_SpellCheckResults.isEmpty());
+        }
+
+        return anyKeywords;
     }
 
-    bool BasicKeywordsModel::isEmpty() const {
-        return m_KeywordsList.isEmpty() || m_Description.trimmed().isEmpty();
-    }
-
-    bool BasicKeywordsModel::isTitleEmpty() const {
-        return m_Title.trimmed().isEmpty();
-    }
-
-    bool BasicKeywordsModel::isDescriptionEmpty() const {
-        return m_Description.trimmed().isEmpty();
-    }
-
-    bool BasicKeywordsModel::containsKeyword(const QString &searchTerm, bool exactMatch) {
+    bool BasicKeywordsModel::containsKeywordUnsafe(const QString &searchTerm, bool exactMatch) {
         bool hasMatch = false;
         int length = m_KeywordsList.length();
 
@@ -225,7 +382,7 @@ namespace Common {
         return hasMatch;
     }
 
-    bool BasicKeywordsModel::hasKeywordsSpellError() const {
+    bool BasicKeywordsModel::hasKeywordsSpellErrorUnsafe() const {
         bool anyError = false;
         int length = m_SpellCheckResults.length();
 
@@ -239,7 +396,63 @@ namespace Common {
         return anyError;
     }
 
-    bool BasicKeywordsModel::hasDescriptionSpellError() const {
+    bool BasicKeywordsModel::setDescription(const QString &value) {
+        QWriteLocker writeLocker(&m_DescriptionLock);
+        Q_UNUSED(writeLocker);
+
+        bool result = value != m_Description;
+        if (result) { m_Description = value; }
+        return result;
+    }
+
+    bool BasicKeywordsModel::setTitle(const QString &value) {
+        QWriteLocker writeLocker(&m_TitleLock);
+        Q_UNUSED(writeLocker);
+
+        bool result = value != m_Title;
+        if (result) { m_Title = value; }
+        return result;
+    }
+
+    bool BasicKeywordsModel::isEmpty() {
+        QReadLocker readKeywordsLock(&m_KeywordsLock);
+        Q_UNUSED(readKeywordsLock);
+
+        QReadLocker readDescriptionLock(&m_DescriptionLock);
+        Q_UNUSED(readDescriptionLock);
+
+        return m_KeywordsList.isEmpty() || m_Description.trimmed().isEmpty();
+    }
+
+    bool BasicKeywordsModel::isTitleEmpty() {
+        QReadLocker readLocker(&m_TitleLock);
+        Q_UNUSED(readLocker);
+
+        return m_Title.trimmed().isEmpty();
+    }
+
+    bool BasicKeywordsModel::isDescriptionEmpty() {
+        QReadLocker readLocker(&m_DescriptionLock);
+        Q_UNUSED(readLocker);
+
+        return m_Description.trimmed().isEmpty();
+    }
+
+    bool BasicKeywordsModel::containsKeyword(const QString &searchTerm, bool exactMatch) {
+        QReadLocker readLocker(&m_KeywordsLock);
+        Q_UNUSED(readLocker);
+
+        return containsKeywordUnsafe(searchTerm, exactMatch);
+    }
+
+    bool BasicKeywordsModel::hasKeywordsSpellError() {
+        QReadLocker readLocker(&m_KeywordsLock);
+        Q_UNUSED(readLocker);
+
+        return hasKeywordsSpellErrorUnsafe();
+    }
+
+    bool BasicKeywordsModel::hasDescriptionSpellError() {
         bool anyError = false;
 
         const QStringList &descriptionWords = getDescriptionWords();
@@ -253,7 +466,7 @@ namespace Common {
         return anyError;
     }
 
-    bool BasicKeywordsModel::hasTitleSpellError() const {
+    bool BasicKeywordsModel::hasTitleSpellError() {
         bool anyError = false;
 
         const QStringList &titleWords = getTitleWords();
@@ -267,47 +480,39 @@ namespace Common {
         return anyError;
     }
 
-    bool BasicKeywordsModel::hasSpellErrors() const {
+    bool BasicKeywordsModel::hasSpellErrors() {
         bool hasErrors = hasDescriptionSpellError() ||
                 hasTitleSpellError() ||
                 hasKeywordsSpellError();
         return hasErrors;
     }
 
-    void BasicKeywordsModel::setSpellStatuses(const QVector<bool> &statuses) {
-        // sync issue between adding/removing/undo/spellcheck
-        Q_ASSERT(statuses.length() == m_SpellCheckResults.length());
+    void BasicKeywordsModel::setSpellStatuses(BasicKeywordsModel *keywordsModel) {
+        QWriteLocker writeLocker(&m_KeywordsLock);
+        Q_UNUSED(writeLocker);
 
-        int size = statuses.length();
-        for (int i = 0; i < size; ++i) {
-            m_SpellCheckResults[i] = statuses[i];
+        keywordsModel->lockKeywordsRead();
+        {
+            const QVector<bool> &spellStatuses = keywordsModel->getSpellStatusesUnsafe();
+
+#ifdef QT_DEBUG
+            // sync issue between adding/removing/undo/spellcheck
+            Q_ASSERT(spellStatuses.length() == m_SpellCheckResults.length());
+#endif
+
+            int size = qMin(spellStatuses.length(), m_SpellCheckResults.length());
+
+            for (int i = 0; i < size; ++i) {
+                m_SpellCheckResults[i] = spellStatuses[i];
+            }
         }
+        keywordsModel->unlockKeywords();
     }
 
     void BasicKeywordsModel::clearModel() {
         setDescription("");
         setTitle("");
         clearKeywords();
-    }
-
-    bool BasicKeywordsModel::clearKeywords() {
-        bool result = !m_KeywordsList.isEmpty();
-
-        beginResetModel();
-        m_KeywordsList.clear();
-        endResetModel();
-
-        m_SpellCheckResults.clear();
-        m_KeywordsSet.clear();
-
-        emit spellCheckErrorsChanged();
-
-        return result;
-    }
-
-    void BasicKeywordsModel::resetKeywords(const QStringList &keywords) {
-        clearKeywords();
-        appendKeywords(keywords);
     }
 
     void BasicKeywordsModel::notifySpellCheckResults(int flags) {
@@ -343,7 +548,7 @@ namespace Common {
         m_SpellCheckInfo->setTitleErrors(titleErrors);
     }
 
-    void BasicKeywordsModel::resetSpellCheckResults() {
+    void BasicKeywordsModel::resetSpellCheckResultsUnsafe() {
         int size = m_SpellCheckResults.length();
         // TODO: use smth like memset
         for (int i = 0; i < size; ++i) {
@@ -351,13 +556,23 @@ namespace Common {
         }
     }
 
-    bool BasicKeywordsModel::canBeAdded(const QString &keyword) const {
+    bool BasicKeywordsModel::canBeAddedUnsafe(const QString &keyword) const {
         bool isValid = Helpers::isValidKeyword(keyword);
         bool result = isValid && !m_KeywordsSet.contains(keyword.toLower());
         return result;
     }
 
+    bool BasicKeywordsModel::hasKeyword(const QString &keyword) {
+        QReadLocker readLocker(&m_KeywordsLock);
+        Q_UNUSED(readLocker);
+
+        return canBeAddedUnsafe(keyword.simplified());
+    }
+
     QString BasicKeywordsModel::retrieveKeyword(int wordIndex) {
+        QReadLocker readLocker(&m_KeywordsLock);
+        Q_UNUSED(readLocker);
+
         QString keyword;
         if (0 <= wordIndex && wordIndex < m_KeywordsList.length()) {
             keyword = m_KeywordsList.at(wordIndex);
@@ -366,7 +581,17 @@ namespace Common {
         return keyword;
     }
 
+    QStringList BasicKeywordsModel::getKeywords() {
+        QReadLocker readLocker(&m_KeywordsLock);
+        Q_UNUSED(readLocker);
+
+        return m_KeywordsList;
+    }
+
     void BasicKeywordsModel::setSpellCheckResults(const QVector<SpellCheck::SpellCheckQueryItem *> &items, bool onlyOneKeyword) {
+        QWriteLocker writeLocker(&m_KeywordsLock);
+        Q_UNUSED(writeLocker);
+
 #ifdef INTEGRATION_TESTS
         if (m_KeywordsList.length() != m_SpellCheckResults.length()) {
             LOG_DEBUG << "Current keywords list length:" << m_KeywordsList.length();
@@ -377,7 +602,7 @@ namespace Common {
         Q_ASSERT(m_KeywordsList.length() == m_SpellCheckResults.length());
 
         if (!onlyOneKeyword) {
-            resetSpellCheckResults();
+            resetSpellCheckResultsUnsafe();
         } else {
             Q_ASSERT(!items.isEmpty());
             int index = items.first()->m_Index;
@@ -409,6 +634,9 @@ namespace Common {
     }
 
     QVector<SpellCheck::SpellSuggestionsItem *> BasicKeywordsModel::createKeywordsSuggestionsList() {
+        QReadLocker readLocker(&m_KeywordsLock);
+        Q_UNUSED(readLocker);
+
         QVector<SpellCheck::SpellSuggestionsItem *> spellCheckSuggestions;
         int length = m_KeywordsList.length();
         spellCheckSuggestions.reserve(length/2);
@@ -471,40 +699,29 @@ namespace Common {
     }
 
     void BasicKeywordsModel::replaceKeyword(int index, const QString &existing, const QString &replacement) {
-        LOG_DEBUG << "Replacing" << existing << "to" << replacement << "with index" << index;
-        if (0 <= index && index < m_KeywordsList.length()) {
-            const QString &internal = m_KeywordsList.at(index);
-            if (internal == existing) {
-                this->editKeyword(index, replacement);
-                m_SpellCheckResults[index] = true;
-                QModelIndex i = this->index(index);
-                emit dataChanged(i, i, QVector<int>() << IsCorrectRole);
+        bool result = false;
 
-            } else if (internal.contains(existing) && internal.contains(QChar::Space)) {
-                LOG_DEBUG << "Replacing composite keyword";
-                QString existingFixed = internal;
-                existingFixed.replace(existing, replacement);
-                this->editKeyword(index, existingFixed);
-                // TODO: reimplement this someday
-                // no need to mark keyword as correct
-                // if we replace only part of it
-                m_SpellCheckResults[index] = true;
-                QModelIndex i = this->index(index);
-                emit dataChanged(i, i, QVector<int>() << IsCorrectRole);
-            }
-        } else {
-            LOG_DEBUG << "Failure. Index is negative or exceeds count" << m_KeywordsList.length();
+        m_KeywordsLock.lockForWrite();
+        {
+            result = replaceKeywordUnsafe(index, existing, replacement);
+        }
+        m_KeywordsLock.unlock();
+
+        if (result) {
+            QModelIndex i = this->index(index);
+            // combined roles from legacy editKeyword() and replace()
+            emit dataChanged(i, i, QVector<int>() << KeywordRole << IsCorrectRole);
         }
     }
 
     void BasicKeywordsModel::replaceWordInDescription(const QString &word, const QString &replacement) {
-        QString description = m_Description;
+        QString description = getDescription();
         description.replace(word, replacement);
         setDescription(description);
     }
 
     void BasicKeywordsModel::replaceWordInTitle(const QString &word, const QString &replacement) {
-        QString title = m_Title;
+        QString title = getTitle();
         title.replace(word, replacement);
         setTitle(title);
     }
@@ -517,13 +734,19 @@ namespace Common {
         QObject::connect(item, SIGNAL(resultsReady(int, int)), this, SLOT(spellCheckRequestReady(int, int)));
     }
 
-    QStringList BasicKeywordsModel::getDescriptionWords() const {
+    QStringList BasicKeywordsModel::getDescriptionWords() {
+        QReadLocker readLocker(&m_DescriptionLock);
+        Q_UNUSED(readLocker);
+
         QStringList words;
         Helpers::splitText(m_Description, words);
         return words;
     }
 
-    QStringList BasicKeywordsModel::getTitleWords() const {
+    QStringList BasicKeywordsModel::getTitleWords() {
+        QReadLocker readLocker(&m_TitleLock);
+        Q_UNUSED(readLocker);
+
         QStringList words;
         Helpers::splitText(m_Title, words);
         return words;
@@ -559,34 +782,5 @@ namespace Common {
         roles[KeywordRole] = "keyword";
         roles[IsCorrectRole] = "iscorrect";
         return roles;
-    }
-
-    void BasicKeywordsModel::resetKeywords() {
-        m_KeywordsList.clear();
-        m_KeywordsSet.clear();
-        m_SpellCheckResults.clear();
-    }
-
-    void BasicKeywordsModel::addKeywords(const QStringList &rawKeywords) {
-        int size = rawKeywords.size();
-
-        for (int i = 0; i < size; ++i) {
-            const QString &keyword = rawKeywords.at(i).simplified();
-            QString invariant = keyword.toLower();
-
-            if (!m_KeywordsSet.contains(invariant)) {
-                m_KeywordsList.append(keyword);
-                m_SpellCheckResults.append(true);
-                m_KeywordsSet.insert(invariant);
-            } else {
-                LOG_WARNING << "Skipping duplicates in keywords...";
-            }
-        }
-    }
-
-    void BasicKeywordsModel::freeSpellCheckInfo() {
-        if (m_SpellCheckInfo != NULL) {
-            delete m_SpellCheckInfo;
-        }
     }
 }

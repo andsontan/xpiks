@@ -107,12 +107,8 @@ namespace Common {
 
                 T *stopItem = NULL;
 
-                bool wasEmpty = m_Queue.isEmpty();
                 m_Queue.append(stopItem);
-
-                if (wasEmpty) {
-                    m_WaitAnyItem.wakeOne();
-                }
+                m_WaitAnyItem.wakeOne();
             }
             m_QueueMutex.unlock();
         }
@@ -150,13 +146,14 @@ namespace Common {
 
                 if (item == NULL) { break; }
 
-                bool canDelete = true;
+                bool canDelete = false;
 
                 try {
                     canDelete = processOneItem(item);
                 }
                 catch (...) {
                     LOG_WARNING << "Exception while processing item!";
+                    canDelete = true;
                 }
 
                 if (canDelete) {

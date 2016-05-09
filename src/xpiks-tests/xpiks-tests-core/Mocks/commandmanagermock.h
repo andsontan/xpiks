@@ -5,6 +5,7 @@
 #include "../../xpiks-qt/Models/artitemsmodel.h"
 #include "../../xpiks-qt/Models/artworksrepository.h"
 #include "../../xpiks-qt/Models/artworkmetadata.h"
+#include "../../xpiks-qt/Models/imageartwork.h"
 
 namespace Mocks {
     class CommandManagerMock : public Commands::CommandManager
@@ -36,9 +37,10 @@ namespace Mocks {
 
                 if (artworksRepository->accountFile(filename)) {
                     Models::ArtworkMetadata *metadata = artItemsModel->createMetadata(filename);
+                    Models::ImageArtwork *image = dynamic_cast<Models::ImageArtwork*>(metadata);
 
                     if (withVector) {
-                        metadata->attachVector(vectorname);
+                        image->attachVector(vectorname);
                     }
 
                     artItemsModel->appendMetadata(metadata);

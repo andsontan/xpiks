@@ -85,9 +85,11 @@ int SpellingProducesWarningsTest::doTest() {
         }
     }
 
-    VERIFY(metadata->hasDescriptionSpellError(), "Description spell error not detected");
-    VERIFY(metadata->hasTitleSpellError(), "Title spell error not detected");
-    VERIFY(metadata->hasKeywordsSpellError(), "Keywords spell error not detected");
+    Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
+
+    VERIFY(keywordsModel->hasDescriptionSpellError(), "Description spell error not detected");
+    VERIFY(keywordsModel->hasTitleSpellError(), "Title spell error not detected");
+    VERIFY(keywordsModel->hasKeywordsSpellError(), "Keywords spell error not detected");
 
     VERIFY(Common::HasFlag(metadata->getWarningsFlags(), Common::WarningTypeSpellErrorsInTitle),
            "Warning was not produced for title spelling error");

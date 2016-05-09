@@ -30,6 +30,10 @@ namespace Models {
     class ArtworkMetadata;
 }
 
+namespace Common {
+    class BasicKeywordsModel;
+}
+
 namespace SpellCheck {
     class SpellSuggestionsItem;
     class SpellCheckerService;
@@ -58,7 +62,7 @@ namespace SpellCheck {
         void selectAllChanged();
 
     public:
-        void setupModel(SpellCheck::ISpellCheckable *item, int index, int flags);
+        void setupModel(Common::BasicKeywordsModel *item, int index, int flags);
 #ifdef INTEGRATION_TESTS
         SpellSuggestionsItem *getItem(int i) const { return m_SuggestionsList.at(i); }
 #endif
@@ -75,7 +79,7 @@ namespace SpellCheck {
 
     private:
         QVector<SpellSuggestionsItem*> m_SuggestionsList;
-        ISpellCheckable *m_CurrentItem;
+        Common::BasicKeywordsModel *m_CurrentItem;
         int m_ItemIndex;
     };
 }

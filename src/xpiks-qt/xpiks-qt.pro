@@ -92,7 +92,8 @@ SOURCES += main.cpp \
     Suggestion/gettyqueryengine.cpp \
     Models/abstractconfigupdatermodel.cpp \
     AutoComplete/stocksftplistmodel.cpp \
-    AutoComplete/stringfilterproxymodel.cpp
+    AutoComplete/stringfilterproxymodel.cpp \
+    Models/imageartwork.cpp
 
 RESOURCES += qml.qrc
 
@@ -185,7 +186,6 @@ HEADERS += \
     Conectivity/telemetryservice.h \
     Conectivity/updatescheckerworker.h \
     Warnings/warningscheckingworker.h \
-    Warnings/iwarningscheckable.h \
     Warnings/warningsitem.h \
     MetadataIO/saverworkerjobitem.h \
     MetadataIO/metadatareadingworker.h \
@@ -197,7 +197,6 @@ HEADERS += \
     Conectivity/uploadcontext.h \
     Conectivity/testconnection.h \
     Conectivity/ftphelpers.h \
-    Common/isafepointer.h \
     Plugins/xpiksplugininterface.h \
     Commands/icommandmanager.h \
     Commands/icommandbase.h \
@@ -238,7 +237,9 @@ HEADERS += \
     Suggestion/gettyqueryengine.h \
     Models/abstractconfigupdatermodel.h \
     AutoComplete/stocksftplistmodel.h \
-    AutoComplete/stringfilterproxymodel.h
+    AutoComplete/stringfilterproxymodel.h \
+    Models/imageartwork.h \
+    Common/hold.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

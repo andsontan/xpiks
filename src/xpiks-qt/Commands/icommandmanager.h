@@ -23,7 +23,7 @@
 #define ICOMMANDMANAGER_H
 
 #include "../Common/iservicebase.h"
-#include "../Warnings/iwarningscheckable.h"
+#include "../Common/ibasicartwork.h"
 
 namespace Commands {
     class ICommandBase;
@@ -39,7 +39,7 @@ namespace Commands {
 #endif
         = 0;
 
-        virtual void addWarningsService(Common::IServiceBase<Warnings::IWarningsCheckable> *service) = 0;
+        virtual void addWarningsService(Common::IServiceBase<Common::IBasicArtwork> *service) = 0;
     };
 }
 

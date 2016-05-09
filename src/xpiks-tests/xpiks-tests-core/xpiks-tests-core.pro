@@ -136,6 +136,7 @@ SOURCES += main.cpp \
     ../../xpiks-qt/AutoComplete/stocksftplistmodel.cpp \
     ../../xpiks-qt/AutoComplete/stringfilterproxymodel.cpp \
     ../../xpiks-qt/Models/abstractconfigupdatermodel.cpp \
+    ../../xpiks-qt/Models/imageartwork.cpp \
     recentdirectories_tests.cpp
 
 HEADERS += \
@@ -209,7 +210,6 @@ HEADERS += \
     ../../xpiks-qt/Common/defines.h \
     ../../xpiks-qt/Common/iartworkssource.h \
     ../../xpiks-qt/Common/ibasicartwork.h \
-    ../../xpiks-qt/Common/isafepointer.h \
     ../../xpiks-qt/Common/iservicebase.h \
     ../../xpiks-qt/Common/version.h \
     ../../xpiks-qt/Commands/icommandbase.h \
@@ -233,5 +233,7 @@ HEADERS += \
     ../../xpiks-qt/AutoComplete/stocksftplistmodel.h \
     ../../xpiks-qt/AutoComplete/stringfilterproxymodel.h \
     ../../xpiks-qt/Models/abstractconfigupdatermodel.h \
-    recentdirectories_tests.h
+    ../../xpiks-qt/Models/imageartwork.h \
+    ../../xpiks-qt/Common/hold.h \
+    recentdirectories_tests.h \
     removefilesfs_tests.h

@@ -25,7 +25,7 @@
 
 namespace Helpers {
     UpdateService::UpdateService(bool start) {
-        m_StartWorker=start;
+        m_StartWorker = start;
         m_UpdatesCheckerWorker = new Conectivity::UpdatesCheckerWorker();
     }
 

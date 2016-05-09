@@ -22,10 +22,14 @@
 #include "filterhelpers.h"
 #include <QString>
 #include "../Models/artworkmetadata.h"
+#include "../Models/imageartwork.h"
+#include "../Common/basickeywordsmodel.h"
 
 namespace Helpers {
-    bool fitsSpecialKeywords(const QString &searchTerm, const Models::ArtworkMetadata *metadata) {
+    bool fitsSpecialKeywords(const QString &searchTerm, Models::ArtworkMetadata *metadata) {
         bool hasMatch = false;
+
+        const Models::ImageArtwork *image = dynamic_cast<const Models::ImageArtwork*>(metadata);
 
         if (searchTerm == QLatin1String("x:modified")) {
             hasMatch = metadata->isModified();
@@ -34,9 +38,9 @@ namespace Helpers {
         } else if (searchTerm == QLatin1String("x:selected")) {
             hasMatch = metadata->isSelected();
         } else if (searchTerm == QLatin1String("x:vector")) {
-            hasMatch = metadata->hasVectorAttached();
+            hasMatch = image != NULL && image->hasVectorAttached();
         } else if (searchTerm == QLatin1String("x:image")) {
-            hasMatch = !metadata->hasVectorAttached();
+            hasMatch = image != NULL && !image->hasVectorAttached();
         }
 
         return hasMatch;
@@ -46,11 +50,13 @@ namespace Helpers {
         bool hasMatch = false;
         QStringList searchTerms = mainSearchTerm.split(QChar::Space, QString::SkipEmptyParts);
 
-        const QString &description = metadata->getDescription();
-        const QString &title = metadata->getTitle();
+        QString description = metadata->getDescription();
+        QString title = metadata->getTitle();
         const QString &filepath = metadata->getFilepath();
 
         int length = searchTerms.length();
+
+        Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
 
         for (int i = 0; i < length; ++i) {
             const QString &searchTerm = searchTerms.at(i);
@@ -82,7 +88,7 @@ namespace Helpers {
                     searchTerm.remove(0, 1);
                 }
 
-                hasMatch = metadata->containsKeyword(searchTerm, strictMatch);
+                hasMatch = keywordsModel->containsKeyword(searchTerm, strictMatch);
                 if (hasMatch) { break; }
             }
         }
@@ -94,12 +100,14 @@ namespace Helpers {
         bool hasMatch = false;
         QStringList searchTerms = mainSearchTerm.split(QChar::Space, QString::SkipEmptyParts);
 
-        const QString &description = metadata->getDescription();
-        const QString &title = metadata->getTitle();
+        QString description = metadata->getDescription();
+        QString title = metadata->getTitle();
         const QString &filepath = metadata->getFilepath();
 
         bool anyError = false;
         int length = searchTerms.length();
+
+        Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
 
         for (int i = 0; i < length; ++i) {
             QString searchTerm = searchTerms[i];
@@ -126,7 +134,7 @@ namespace Helpers {
                     searchTerm.remove(0, 1);
                 }
 
-                anyContains = metadata->containsKeyword(searchTerm, strictMatch);
+                anyContains = keywordsModel->containsKeyword(searchTerm, strictMatch);
             }
 
             if (!anyContains) {

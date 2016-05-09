@@ -78,6 +78,8 @@ namespace Models {
         Q_INVOKABLE void spellCheckTitle(int index);
         Q_INVOKABLE void toggleSorted();
         Q_INVOKABLE void detachVectorFromSelected();
+        Q_INVOKABLE QObject *getArtworkMetadata(int index);
+        Q_INVOKABLE QObject *getKeywordsModel(int index);
 
     public slots:
         void itemSelectedChanged(bool value);

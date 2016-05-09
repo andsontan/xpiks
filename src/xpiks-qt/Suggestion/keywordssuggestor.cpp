@@ -37,8 +37,8 @@ namespace Suggestion {
         QAbstractListModel(parent),
         Common::BaseEntity(),
         m_LocalLibrary(library),
-        m_SuggestedKeywords(this),
-        m_AllOtherKeywords(this),
+        m_SuggestedKeywords(m_HoldPlaceholder, this),
+        m_AllOtherKeywords(m_HoldPlaceholder, this),
         m_SelectedArtworksCount(0),
         m_SelectedSourceIndex(0),
         m_IsInProgress(false)
@@ -296,8 +296,8 @@ namespace Suggestion {
             }
         }
 
-        m_SuggestedKeywords.resetKeywords(suggestedKeywords);
-        m_AllOtherKeywords.resetKeywords(otherKeywords);
+        m_SuggestedKeywords.setKeywords(suggestedKeywords);
+        m_AllOtherKeywords.setKeywords(otherKeywords);
 
         emit suggestedKeywordsCountChanged();
         emit otherKeywordsCountChanged();

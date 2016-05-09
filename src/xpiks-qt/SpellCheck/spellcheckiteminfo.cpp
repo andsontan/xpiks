@@ -20,11 +20,42 @@
  */
 
 #include "spellcheckiteminfo.h"
+#include <QReadLocker>
+#include <QWriteLocker>
+#include <QReadWriteLock>
 #include "spellcheckerrorshighlighter.h"
 #include "../Common/basickeywordsmodel.h"
 #include "../QMLExtensions/colorsmodel.h"
 
 namespace SpellCheck {
+    bool SpellCheckErrorsInfo::hasWrongSpelling(const QString &word) {
+        QReadLocker readLocker(&m_ErrorsLock);
+        Q_UNUSED(readLocker);
+
+        return m_WordsWithErrors.contains(word);
+    }
+
+    void SpellCheckErrorsInfo::setErrorWords(const QSet<QString> &errors) {
+        QWriteLocker writeLocker(&m_ErrorsLock);
+        Q_UNUSED(writeLocker);
+
+        /*m_WordsWithErrors.clear();*/ m_WordsWithErrors.unite(errors);
+    }
+
+    bool SpellCheckErrorsInfo::anyError() {
+        QReadLocker readLocker(&m_ErrorsLock);
+        Q_UNUSED(readLocker);
+
+        return !m_WordsWithErrors.isEmpty();
+    }
+
+    QStringList SpellCheckErrorsInfo::toList() {
+        QReadLocker readLocker(&m_ErrorsLock);
+        Q_UNUSED(readLocker);
+
+        return QStringList::fromSet(m_WordsWithErrors);
+    }
+
     void SpellCheckItemInfo::setDescriptionErrors(const QSet<QString> &errors) {
         m_DescriptionErrors.setErrorWords(errors);
     }

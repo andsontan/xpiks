@@ -11,7 +11,7 @@ git:
 
 env:
   - XPIKS_BINARY=binary
-  - XPIKS_TESTS=tests
+  - XPIKS_TESTS=tests QT_FATAL_WARNINGS=true
 
 before_install:
   - if [ "$CXX" = "g++" ]; then sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y; fi

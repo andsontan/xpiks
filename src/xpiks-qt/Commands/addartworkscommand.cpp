@@ -30,6 +30,7 @@
 #include "../UndoRedo/addartworksitem.h"
 #include "../Common/defines.h"
 #include "../Helpers/filenameshelpers.h"
+#include "../Models/imageartwork.h"
 
 int findAndAttachVectors(const QVector<Models::ArtworkMetadata*> &artworksList, QVector<int> &modifiedIndices) {
     LOG_DEBUG << "#";
@@ -39,18 +40,22 @@ int findAndAttachVectors(const QVector<Models::ArtworkMetadata*> &artworksList, 
 
     for (int i = 0; i < size; ++i) {
         Models::ArtworkMetadata *metadata = artworksList.at(i);
-        if (metadata->hasVectorAttached()) {
+        Models::ImageArtwork *image = dynamic_cast<Models::ImageArtwork *>(metadata);
+
+        if (image == NULL) { continue; }
+
+        if (image->hasVectorAttached()) {
             attachedCount++;
             modifiedIndices.append(i);
             continue;
         }
 
-        const QString &filepath = metadata->getFilepath();
+        const QString &filepath = image->getFilepath();
         QStringList vectors = Helpers::convertToVectorFilenames(QStringList() << filepath);
 
         foreach (const QString &item, vectors) {
             if (QFileInfo(item).exists()) {
-                metadata->attachVector(item);
+                image->attachVector(item);
                 attachedCount++;
                 modifiedIndices.append(i);
                 break;

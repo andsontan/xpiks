@@ -116,6 +116,7 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Helpers/localconfig.cpp \
     ../../xpiks-qt/Helpers/remoteconfig.cpp \
     autocompletebasictest.cpp \
+    ../../xpiks-qt/Models/imageartwork.cpp \
     spellingproduceswarningstest.cpp
 
 RESOURCES +=
@@ -141,7 +142,6 @@ HEADERS += \
     ../../xpiks-qt/Common/flags.h \
     ../../xpiks-qt/Common/iartworkssource.h \
     ../../xpiks-qt/Common/ibasicartwork.h \
-    ../../xpiks-qt/Common/isafepointer.h \
     ../../xpiks-qt/Common/iservicebase.h \
     ../../xpiks-qt/Common/itemprocessingworker.h \
     ../../xpiks-qt/Common/version.h \
@@ -226,7 +226,6 @@ HEADERS += \
     ../../xpiks-qt/UndoRedo/modifyartworkshistoryitem.h \
     ../../xpiks-qt/UndoRedo/removeartworksitem.h \
     ../../xpiks-qt/UndoRedo/undoredomanager.h \
-    ../../xpiks-qt/Warnings/iwarningscheckable.h \
     ../../xpiks-qt/Warnings/warningscheckingworker.h \
     ../../xpiks-qt/Warnings/warningsitem.h \
     ../../xpiks-qt/Warnings/warningsmodel.h \
@@ -258,6 +257,8 @@ HEADERS += \
     ../../xpiks-qt/Helpers/localconfig.h \
     ../../xpiks-qt/Helpers/remoteconfig.h \
     autocompletebasictest.h \
+    ../../xpiks-qt/Common/hold.h \
+    ../../xpiks-qt/Models/imageartwork.h
     spellingproduceswarningstest.h
 
 INCLUDEPATH += ../../tiny-aes

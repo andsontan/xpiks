@@ -30,6 +30,7 @@
 #include "../Helpers/indiceshelper.h"
 #include "../UndoRedo/removeartworksitem.h"
 #include "../Common/defines.h"
+#include "../Models/imageartwork.h"
 
 namespace Commands {
     CommandResult *RemoveArtworksCommand::execute(const ICommandManager *commandManagerInterface) const {
@@ -62,8 +63,10 @@ namespace Commands {
                         const QString &filepath = metadata->getFilepath();
                         removedItemsFilepathes.append(filepath);
 
-                        if (metadata->hasVectorAttached()) {
-                            removedAttachedVectors.append(metadata->getAttachedVectorPath());
+                        Models::ImageArtwork *image = dynamic_cast<Models::ImageArtwork*>(metadata);
+
+                        if (image != NULL && image->hasVectorAttached()) {
+                            removedAttachedVectors.append(image->getAttachedVectorPath());
                         } else {
                             removedAttachedVectors.append("");
                         }

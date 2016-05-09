@@ -22,20 +22,22 @@
 #ifndef IBASICARTWORK
 #define IBASICARTWORK
 
-#include "isafepointer.h"
 #include <QtGlobal>
+#include <QStringList>
+#include <QSet>
+#include <QString>
 
 namespace Common {
-    class IBasicArtwork : public ISafePointer {
+    class IBasicArtwork {
     public:
         virtual ~IBasicArtwork() {}
 
-        virtual const QSet<QString> &getKeywordsSet() const = 0;
-        virtual const QStringList &getKeywords() const = 0;
-        virtual bool isEmpty() const = 0;
+        virtual QSet<QString> getKeywordsSet() = 0;
+        virtual QStringList getKeywords() = 0;
+        virtual bool isEmpty() = 0;
 
-        virtual const QString &getDescription() const = 0;
-        virtual const QString &getTitle() const = 0;
+        virtual QString getDescription() = 0;
+        virtual QString getTitle() = 0;
         virtual const QString &getFilepath() const = 0;
 
         virtual qint64 getItemID() const { return -1; }
