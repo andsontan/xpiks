@@ -223,7 +223,10 @@ int main(int argc, char *argv[]) {
     Models::LogsModel logsModel(&colorsModel);
     logsModel.startLogging();
 
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
     qSetMessagePattern("%{time hh:mm:ss.zzz} %{type} T#%{threadid} %{function} - %{message}");
+#endif
+
     qInstallMessageHandler(myMessageHandler);
 
     LOG_INFO << "Log started. Today is" << QDateTime::currentDateTimeUtc().toString("dd.MM.yyyy");
