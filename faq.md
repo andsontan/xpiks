@@ -36,6 +36,13 @@ permalink: /faq/
 
 <div>
   <ul>
+    <li><strong>Replace misspelled keywords does nothing</strong></li>
+    <li>If you happen to have two keywords in your list, say, <i>"colour"</i> and <i>"color"</i> and then you hit "Fix spelling", select <i>"colour"</i> -> <i>"colour"</i> and hit "Replace". When Xpiks tries to replace <i>"colour"</i> to <i>"colour"</i> (as you chose) it sees that you already have <i>"color"</i> and replacement will create two <i>"colour"</i> keywords. There is an ambiguity in this situation since it's not clear if you were to remove the misspelled word or the original duplicate of it so Xpiks leaves everything as is.</li>
+  </ul>
+</div>
+
+<div>
+  <ul>
     <li><strong>Xpiks closes shortly after start in Windows</strong></li>
     <li>It's possible that your antivirus (Avast?) detected Xpiks as malware and quarantined it. Xpiks is not a malware and it's source code is <a href="https://github.com/ribtoks/xpiks" target="_blank">available at GitHub</a>. You can check either by yourself or by third-parties that Xpiks does not contain viruses.</li>
   </ul>
@@ -51,7 +58,7 @@ permalink: /faq/
 <div>
   <ul>
     <li><strong>I can't upload via FTP to my favorite stock XYZ</strong></li>
-    <li>First of all, check if you didn't make a typo in a Host, Username and Password field. Use "Show Password" checkbox to see if you typed it correctly. Try to use "Test connection" button before upload and see if it works. Try to login with and without Passive Mode (in the Advanced tab).</li>
+    <li>First of all, check if you didn't make a typo in a Host, Username and Password field. Use "Show Password" checkbox to see if you typed it correctly. Try to use "Test connection" button before upload and see if it works. Try to login with and without Passive Mode (in the Advanced tab). Read help in your stock XYZ about how to upload artworks.</li>
   </ul>
 </div>
 
