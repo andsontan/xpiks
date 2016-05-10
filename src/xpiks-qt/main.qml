@@ -2007,7 +2007,7 @@ ApplicationWindow {
 
                                                         onCompletionRequested: {
                                                             helpersWrapper.autoCompleteKeyword(prefix,
-                                                                                               rowWrapper.artworkModel)
+                                                                                               rowWrapper.keywordsModel)
                                                         }
 
                                                         onEditActivated: {
