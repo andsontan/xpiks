@@ -31,6 +31,7 @@
 #include <QByteArray>
 #include <QHash>
 #include <QSize>
+#include "importdataresult.h"
 
 namespace Models {
     class ArtworkMetadata;
@@ -39,17 +40,6 @@ namespace Models {
 
 namespace MetadataIO {
     class BackupSaverService;
-
-    struct ImportDataResult {
-        QString FilePath;
-        QString Title;
-        QString Description;
-        QStringList Keywords;
-        QSize ImageSize;
-        qint64 FileSize;
-        QHash<QString, QString> BackupDict;
-        QString DateTaken;
-    };
 
     class MetadataReadingWorker : public QObject
     {

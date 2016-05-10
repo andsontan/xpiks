@@ -93,7 +93,9 @@ SOURCES += main.cpp \
     Models/abstractconfigupdatermodel.cpp \
     AutoComplete/stocksftplistmodel.cpp \
     AutoComplete/stringfilterproxymodel.cpp \
-    Models/imageartwork.cpp
+    Models/imageartwork.cpp \
+    MetadataIO/exiv2readingworker.cpp \
+    MetadataIO/readingorchestrator.cpp
 
 RESOURCES += qml.qrc
 
@@ -239,7 +241,10 @@ HEADERS += \
     AutoComplete/stocksftplistmodel.h \
     AutoComplete/stringfilterproxymodel.h \
     Models/imageartwork.h \
-    Common/hold.h
+    Common/hold.h \
+    MetadataIO/exiv2readingworker.h \
+    MetadataIO/importdataresult.h \
+    MetadataIO/readingorchestrator.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
@@ -336,6 +341,7 @@ macx {
     INCLUDEPATH += "../hunspell-1.3.3/src"
     INCLUDEPATH += "../quazip"
     INCLUDEPATH += "../../libcurl/include"
+    INCLUDEPATH += ../exiv2-0.25/include
 
     HUNSPELL_DICT_FILES.files = deps/dict/en_US.aff deps/dict/en_US.dic deps/dict/license.txt deps/dict/README_en_US.txt
     HUNSPELL_DICT_FILES.path = Contents/Resources
