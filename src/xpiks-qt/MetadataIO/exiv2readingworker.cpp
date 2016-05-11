@@ -26,6 +26,10 @@
 #include <exiv2/exiv2.hpp>
 
 namespace MetadataIO {
+    QString retrieveDescription(Exiv2::XmpData &xmpData, Exiv2::ExifData &exifData, Exiv2::IptcData &iptcData) {
+
+    }
+
     Exiv2ReadingWorker::Exiv2ReadingWorker(int index, QVector<Models::ArtworkMetadata *> itemsToRead, QObject *parent):
         QObject(parent),
         m_ItemsToRead(itemsToRead),
@@ -79,6 +83,17 @@ namespace MetadataIO {
     }
 
     bool Exiv2ReadingWorker::readMetadata(Models::ArtworkMetadata *artwork, ImportDataResult &importResult) {
+        const QString &filepath = artwork->getFilepath();
+
+        Exiv2::Image::AutoPtr image = Exiv2::ImageFactory::open(filepath.toStdWString());
+        image->readMetadata();
+
+        Exiv2::XmpData &xmpData = image->xmpData();
+        Exiv2::ExifData &exifData = image->exifData();
+        Exiv2::IptcData &iptcData = image->iptcData();
+
+        importResult.Description = retrieveDescription(xmpData, exifData, iptcData);
+
         // BUMP
         return false;
     }
