@@ -244,7 +244,8 @@ HEADERS += \
     Common/hold.h \
     MetadataIO/exiv2readingworker.h \
     MetadataIO/importdataresult.h \
-    MetadataIO/readingorchestrator.h
+    MetadataIO/readingorchestrator.h \
+    MetadataIO/imetadatareader.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
@@ -374,6 +375,7 @@ win32 {
     INCLUDEPATH += "../hunspell-1.3.3/src"
     INCLUDEPATH += "../quazip"
     INCLUDEPATH += "../libcurl/include"
+    INCLUDEPATH += ../exiv2-0.25/include
     LIBS -= -lcurl
 
     CONFIG(debug, debug|release) {
@@ -387,6 +389,8 @@ win32 {
     }
 
     LIBS += -lmman
+    LIBS += -llibexpat
+    LIBS += -llibexiv2
 
     copywhatsnew.commands = $(COPY_FILE) \"$$shell_path($$PWD/deps/whatsnew.txt)\" \"$$shell_path($$OUT_PWD/$$EXE_DIR/)\"
     copyterms.commands = $(COPY_FILE) \"$$shell_path($$PWD/deps/terms_and_conditions.txt)\" \"$$shell_path($$OUT_PWD/$$EXE_DIR/)\"

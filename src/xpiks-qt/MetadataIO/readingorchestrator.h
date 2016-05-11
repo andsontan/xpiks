@@ -27,20 +27,25 @@
 #include <QAtomicInt>
 #include <QMutex>
 #include "importdataresult.h"
+#include "imetadatareader.h"
 
 namespace Models {
     class ArtworkMetadata;
 }
 
 namespace MetadataIO {
-    class ReadingOrchestrator : public QObject
+    class ReadingOrchestrator : public QObject, public IMetadataReader
     {
         Q_OBJECT
     public:
-        explicit ReadingOrchestrator(const QVector<Models::ArtworkMetadata *> &itemsToRead, QObject *parent = 0);
+        explicit ReadingOrchestrator(const QVector<Models::ArtworkMetadata *> &itemsToRead,
+                                     const QVector<QPair<int, int> > &rangesToUpdate,
+                                     QObject *parent = 0);
 
     public:
-        const QHash<QString, ImportDataResult> &getImportResult() const { return m_ImportResult; }
+        virtual const QHash<QString, ImportDataResult> &getImportResult() const { return m_ImportResult; }
+        virtual const QVector<Models::ArtworkMetadata *> &getItemsToRead() const { return m_ItemsToRead; }
+        virtual const QVector<QPair<int, int> > &getRangesToUpdate() const { return m_RangesToUpdate; }
 
     public:
         void startReading();
@@ -49,11 +54,16 @@ namespace MetadataIO {
         void allStarted();
         void allFinished(bool anyError);
 
+    public slots:
+        void dismiss();
+
     private slots:
         void onWorkerFinished(bool anyError);
 
     private:
-        QVector<QVector<Models::ArtworkMetadata *> > m_ItemsToRead;
+        QVector<Models::ArtworkMetadata *> m_ItemsToRead;
+        QVector<QVector<Models::ArtworkMetadata *> > m_SlicedItemsToRead;
+        QVector<QPair<int, int> > m_RangesToUpdate;
         QMutex m_ImportMutex;
         QHash<QString, ImportDataResult> m_ImportResult;
         int m_ThreadsCount;

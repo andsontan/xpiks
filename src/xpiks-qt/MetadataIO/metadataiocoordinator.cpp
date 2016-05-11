@@ -36,6 +36,7 @@
 #include "../Models/settingsmodel.h"
 #include "../Common/defines.h"
 #include "../Models/imageartwork.h"
+#include "readingorchestrator.h"
 
 namespace MetadataIO {
     bool tryGetExiftoolVersion(const QString &path, QString &version) {
@@ -111,29 +112,47 @@ namespace MetadataIO {
 
     void MetadataIOCoordinator::readMetadata(const QVector<Models::ArtworkMetadata *> &artworksToRead,
                                              const QVector<QPair<int, int> > &rangesToUpdate) {
-        m_ReadingWorker = new MetadataReadingWorker(artworksToRead,
+        Q_ASSERT(m_ReadingWorker == NULL);
+
+        MetadataReadingWorker *readingWorker = new MetadataReadingWorker(artworksToRead,
                                                     m_CommandManager->getSettingsModel(),
                                                     rangesToUpdate);
         QThread *thread = new QThread();
-        m_ReadingWorker->moveToThread(thread);
+        readingWorker->moveToThread(thread);
 
-        QObject::connect(thread, SIGNAL(started()), m_ReadingWorker, SLOT(process()));
-        QObject::connect(m_ReadingWorker, SIGNAL(stopped()), thread, SLOT(quit()));
+        QObject::connect(thread, SIGNAL(started()), readingWorker, SLOT(process()));
+        QObject::connect(readingWorker, SIGNAL(stopped()), thread, SLOT(quit()));
 
-        QObject::connect(m_ReadingWorker, SIGNAL(stopped()), m_ReadingWorker, SLOT(deleteLater()));
+        QObject::connect(readingWorker, SIGNAL(stopped()), readingWorker, SLOT(deleteLater()));
         QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
 
-        QObject::connect(m_ReadingWorker, SIGNAL(finished(bool)), this, SLOT(readingWorkerFinished(bool)));
-        QObject::connect(this, SIGNAL(metadataReadingFinished()), m_ReadingWorker, SIGNAL(stopped()));
-        QObject::connect(this, SIGNAL(discardReadingSignal()), m_ReadingWorker, SLOT(cancel()));
+        QObject::connect(readingWorker, SIGNAL(finished(bool)), this, SLOT(readingWorkerFinished(bool)));
+        QObject::connect(this, SIGNAL(metadataReadingFinished()), readingWorker, SIGNAL(stopped()));
+        QObject::connect(this, SIGNAL(discardReadingSignal()), readingWorker, SLOT(cancel()));
 
-        m_CanProcessResults = false;
-        m_IgnoreBackupsAtImport = false;
-        m_IsImportInProgress = true;
-        setProcessingItemsCount(artworksToRead.length());
+        initializeImport(artworksToRead.count());
 
         LOG_DEBUG << "Starting thread...";
         thread->start();
+
+        m_ReadingWorker = readingWorker;
+    }
+
+    void MetadataIOCoordinator::readMetadataExiv2(const QVector<Models::ArtworkMetadata *> &artworksToRead,
+                                                  const QVector<QPair<int, int> > &rangesToUpdate) {
+        Q_ASSERT(m_ReadingWorker == NULL);
+
+        ReadingOrchestrator *readingOrchestrator = new ReadingOrchestrator(artworksToRead, rangesToUpdate);
+
+        QObject::connect(readingOrchestrator, SIGNAL(allFinished(bool)), this, SLOT(readingWorkerFinished(bool)));
+        QObject::connect(this, SIGNAL(metadataReadingFinished()), readingOrchestrator, SLOT(dismiss()));
+        QObject::connect(this, SIGNAL(discardReadingSignal()), readingOrchestrator, SLOT(dismiss()));
+
+        initializeImport(artworksToRead.count());
+
+        readingOrchestrator->startReading();
+
+        m_ReadingWorker = readingOrchestrator;
     }
 
     void MetadataIOCoordinator::writeMetadata(const QVector<Models::ArtworkMetadata *> &artworksToWrite, bool useBackups) {
@@ -186,7 +205,7 @@ namespace MetadataIO {
         LOG_DEBUG << "Setting technical data";
 
         const QHash<QString, ImportDataResult> &importResult = m_ReadingWorker->getImportResult();
-        const QVector<Models::ArtworkMetadata*> &itemsToRead = m_ReadingWorker->getArtworksToImport();
+        const QVector<Models::ArtworkMetadata*> &itemsToRead = m_ReadingWorker->getItemsToRead();
 
         int size = itemsToRead.size();
         for (int i = 0; i < size; ++i) {
@@ -207,12 +226,19 @@ namespace MetadataIO {
         }
     }
 
+    void MetadataIOCoordinator::initializeImport(int itemsCount) {
+        m_CanProcessResults = false;
+        m_IgnoreBackupsAtImport = false;
+        m_IsImportInProgress = true;
+        setProcessingItemsCount(itemsCount);
+    }
+
     void MetadataIOCoordinator::readingFinishedHandler(bool ignoreBackups) {
         Q_ASSERT(m_CanProcessResults);
         m_CanProcessResults = false;
 
         const QHash<QString, ImportDataResult> &importResult = m_ReadingWorker->getImportResult();
-        const QVector<Models::ArtworkMetadata*> &itemsToRead = m_ReadingWorker->getArtworksToImport();
+        const QVector<Models::ArtworkMetadata*> &itemsToRead = m_ReadingWorker->getItemsToRead();
 
         LOG_DEBUG  << "Setting imported metadata...";
         int size = itemsToRead.size();

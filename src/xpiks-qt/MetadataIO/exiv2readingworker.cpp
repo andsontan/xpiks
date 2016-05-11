@@ -80,5 +80,6 @@ namespace MetadataIO {
 
     bool Exiv2ReadingWorker::readMetadata(Models::ArtworkMetadata *artwork, ImportDataResult &importResult) {
         // BUMP
+        return false;
     }
 }

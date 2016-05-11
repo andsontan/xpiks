@@ -33,8 +33,11 @@
 
 namespace MetadataIO {
     ReadingOrchestrator::ReadingOrchestrator(const QVector<Models::ArtworkMetadata *> &itemsToRead,
+                                             const QVector<QPair<int, int> > &rangesToUpdate,
                                              QObject *parent) :
         QObject(parent),
+        m_ItemsToRead(itemsToRead),
+        m_RangesToUpdate(rangesToUpdate),
         m_ThreadsCount(MIN_READING_THREADS),
         m_FinishedCount(0),
         m_AnyError(false)
@@ -42,15 +45,16 @@ namespace MetadataIO {
         int size = itemsToRead.size();
         if (size >= MIN_SPLIT_COUNT) {
             m_ThreadsCount = qMin(qMax(QThread::idealThreadCount(), MIN_READING_THREADS), MAX_READING_THREADS);
-            int chunkSize = size / m_ThreadsCount;
+            int chunkSize = size / m_ThreadsCount;            
+            m_SlicedItemsToRead.reserve(m_ThreadsCount);
 
             int left = chunkSize;
             while (left < size) {
-                m_ItemsToRead.push_back(itemsToRead.mid(left - chunkSize, chunkSize));
+                m_SlicedItemsToRead.push_back(itemsToRead.mid(left - chunkSize, chunkSize));
                 left += chunkSize;
             }
         } else {
-            m_ItemsToRead.push_back(itemsToRead);
+            m_SlicedItemsToRead.push_back(itemsToRead);
         }
 
         LOG_INFO << "Using" << m_ThreadsCount << "threads for" << size << "items to read";
@@ -59,9 +63,9 @@ namespace MetadataIO {
     void ReadingOrchestrator::startReading() {
         LOG_DEBUG << "#";
 
-        int size = m_ItemsToRead.size();
+        int size = m_SlicedItemsToRead.size();
         for (int i = 0; i < size; ++i) {
-            const QVector<Models::ArtworkMetadata *> &itemsToRead = m_ItemsToRead.at(i);
+            const QVector<Models::ArtworkMetadata *> &itemsToRead = m_SlicedItemsToRead.at(i);
 
             Exiv2ReadingWorker *worker = new Exiv2ReadingWorker(i, itemsToRead);
 
@@ -82,6 +86,10 @@ namespace MetadataIO {
         }
 
         emit allStarted();
+    }
+
+    void ReadingOrchestrator::dismiss() {
+        this->deleteLater();
     }
 
     void ReadingOrchestrator::onWorkerFinished(bool anyError) {
