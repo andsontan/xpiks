@@ -26,15 +26,25 @@
 #include <exiv2/exiv2.hpp>
 
 namespace MetadataIO {
-    Exiv2ReadingWorker::Exiv2ReadingWorker(QVector<Models::ArtworkMetadata *> itemsToRead, QObject *parent):
+    Exiv2ReadingWorker::Exiv2ReadingWorker(int index, QVector<Models::ArtworkMetadata *> itemsToRead, QObject *parent):
         QObject(parent),
         m_ItemsToRead(itemsToRead),
+        m_WorkerIndex(index),
         m_Stopped(false)
     {
         Q_ASSERT(!itemsToRead.isEmpty());
+        LOG_INFO << itemsToRead.size() << "items to read";
+    }
+
+    Exiv2ReadingWorker::~Exiv2ReadingWorker() {
+        LOG_DEBUG << "Reading worker" << m_WorkerIndex << "destroyed";
     }
 
     void Exiv2ReadingWorker::process() {
+        LOG_DEBUG << "Worker #" << m_WorkerIndex << "started";
+
+        bool anyError = false;
+
         int size = m_ItemsToRead.size();
         for (int i = 0; i < size; ++i) {
             if (m_Stopped) { break; }
@@ -50,14 +60,18 @@ namespace MetadataIO {
                 }
             }
             catch(Exiv2::Error &error) {
-                LOG_WARNING << "Exiv2 error:" << error.what();
+                anyError = true;
+                LOG_WARNING << "Worker" << m_WorkerIndex << "Exiv2 error:" << error.what();
             }
             catch(...) {
-                LOG_WARNING << "Reading error for item" << filepath;
+                anyError = true;
+                LOG_WARNING << "Worker" << m_WorkerIndex << "Reading error for item" << filepath;
             }
         }
 
-        emit finished();
+        LOG_INFO << "Worker #" << m_WorkerIndex << "finished";
+
+        emit finished(anyError);
     }
 
     void Exiv2ReadingWorker::cancel() {

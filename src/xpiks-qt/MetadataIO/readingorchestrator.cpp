@@ -22,7 +22,10 @@
 #include "readingorchestrator.h"
 #include <QThread>
 #include <QVector>
+#include <QMutexLocker>
 #include "../xpiks-qt/Models/artworkmetadata.h"
+#include "../xpiks-qt/Common/defines.h"
+#include "exiv2readingworker.h"
 
 #define MIN_SPLIT_COUNT 10
 #define MAX_READING_THREADS 10
@@ -33,20 +36,71 @@ namespace MetadataIO {
                                              QObject *parent) :
         QObject(parent),
         m_ThreadsCount(MIN_READING_THREADS),
-        m_FinishedCount(0)
+        m_FinishedCount(0),
+        m_AnyError(false)
     {
         int size = itemsToRead.size();
-        if (size > MIN_SPLIT_COUNT) {
+        if (size >= MIN_SPLIT_COUNT) {
             m_ThreadsCount = qMin(qMax(QThread::idealThreadCount(), MIN_READING_THREADS), MAX_READING_THREADS);
             int chunkSize = size / m_ThreadsCount;
 
-            int left = 0;
+            int left = chunkSize;
             while (left < size) {
-                m_ItemsToRead.push_back(itemsToRead.mid(left, chunkSize));
+                m_ItemsToRead.push_back(itemsToRead.mid(left - chunkSize, chunkSize));
                 left += chunkSize;
             }
         } else {
             m_ItemsToRead.push_back(itemsToRead);
+        }
+
+        LOG_INFO << "Using" << m_ThreadsCount << "threads for" << size << "items to read";
+    }
+
+    void ReadingOrchestrator::startReading() {
+        LOG_DEBUG << "#";
+
+        int size = m_ItemsToRead.size();
+        for (int i = 0; i < size; ++i) {
+            const QVector<Models::ArtworkMetadata *> &itemsToRead = m_ItemsToRead.at(i);
+
+            Exiv2ReadingWorker *worker = new Exiv2ReadingWorker(i, itemsToRead);
+
+            QThread *thread = new QThread();
+            worker->moveToThread(thread);
+
+            QObject::connect(thread, SIGNAL(started()), worker, SLOT(process()));
+            QObject::connect(worker, SIGNAL(stopped()), thread, SLOT(quit()));
+
+            QObject::connect(worker, SIGNAL(stopped()), worker, SLOT(deleteLater()));
+            QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+
+            QObject::connect(worker, SIGNAL(finished(bool)), this, SLOT(onWorkerFinished(bool)));
+
+            thread->start();
+
+            LOG_INFO << "Started worker" << i;
+        }
+
+        emit allStarted();
+    }
+
+    void ReadingOrchestrator::onWorkerFinished(bool anyError) {
+        Exiv2ReadingWorker *worker = qobject_cast<Exiv2ReadingWorker *>(sender());
+        Q_ASSERT(worker != NULL);
+
+        LOG_INFO << "#" << worker->getWorkerIndex() << "anyError:" << anyError;
+
+        {
+            QMutexLocker locker(&m_ImportMutex);
+            m_ImportResult.unite(worker->getImportResult());
+            m_AnyError = m_AnyError || anyError;
+        }
+
+        worker->dismiss();
+
+        if (m_FinishedCount.fetchAndAddOrdered(1) == (m_ThreadsCount - 1)) {
+            LOG_DEBUG << "Last worker finished";
+            emit allFinished(m_AnyError);
         }
     }
 }

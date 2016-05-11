@@ -25,6 +25,8 @@
 #include <QObject>
 #include <QVector>
 #include <QAtomicInt>
+#include <QMutex>
+#include "importdataresult.h"
 
 namespace Models {
     class ArtworkMetadata;
@@ -38,19 +40,25 @@ namespace MetadataIO {
         explicit ReadingOrchestrator(const QVector<Models::ArtworkMetadata *> &itemsToRead, QObject *parent = 0);
 
     public:
+        const QHash<QString, ImportDataResult> &getImportResult() const { return m_ImportResult; }
+
+    public:
         void startReading();
 
     signals:
         void allStarted();
-        void allFinished();
+        void allFinished(bool anyError);
 
     private slots:
-        void onWorkerFinished();
+        void onWorkerFinished(bool anyError);
 
     private:
         QVector<QVector<Models::ArtworkMetadata *> > m_ItemsToRead;
+        QMutex m_ImportMutex;
+        QHash<QString, ImportDataResult> m_ImportResult;
         int m_ThreadsCount;
         QAtomicInt m_FinishedCount;
+        volatile bool m_AnyError;
     };
 }
 

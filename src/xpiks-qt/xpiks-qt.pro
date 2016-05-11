@@ -343,6 +343,8 @@ macx {
     INCLUDEPATH += "../../libcurl/include"
     INCLUDEPATH += ../exiv2-0.25/include
 
+    LIBS += -lexiv2
+
     HUNSPELL_DICT_FILES.files = deps/dict/en_US.aff deps/dict/en_US.dic deps/dict/license.txt deps/dict/README_en_US.txt
     HUNSPELL_DICT_FILES.path = Contents/Resources
     QMAKE_BUNDLE_DATA += HUNSPELL_DICT_FILES

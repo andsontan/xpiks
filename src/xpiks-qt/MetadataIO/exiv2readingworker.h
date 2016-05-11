@@ -23,6 +23,8 @@
 #define EXIV2READINGWORKER_H
 
 #include <QObject>
+#include <QVector>
+#include <QHash>
 #include "importdataresult.h"
 
 namespace Models {
@@ -34,7 +36,15 @@ namespace MetadataIO {
     {
         Q_OBJECT
     public:
-        explicit Exiv2ReadingWorker(QVector<Models::ArtworkMetadata *> itemsToRead, QObject *parent = 0);
+        explicit Exiv2ReadingWorker(int index, QVector<Models::ArtworkMetadata *> itemsToRead, QObject *parent = 0);
+        virtual ~Exiv2ReadingWorker();
+
+    public:
+        const QHash<QString, ImportDataResult> &getImportResult() const { return m_ImportResult; }
+        int getWorkerIndex() const { return m_WorkerIndex; }
+
+    public:
+        void dismiss() { emit stopped(); }
 
     public slots:
         void process();
@@ -42,7 +52,7 @@ namespace MetadataIO {
 
     signals:
         void stopped();
-        void finished();
+        void finished(bool anyError);
 
     private:
         bool readMetadata(Models::ArtworkMetadata *artwork, ImportDataResult &importResult);
@@ -50,6 +60,7 @@ namespace MetadataIO {
     private:
         QVector<Models::ArtworkMetadata *> m_ItemsToRead;
         QHash<QString, ImportDataResult> m_ImportResult;
+        int m_WorkerIndex;
         volatile bool m_Stopped;
     };
 }
