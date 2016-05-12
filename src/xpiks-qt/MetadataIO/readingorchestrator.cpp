@@ -27,7 +27,7 @@
 #include "../xpiks-qt/Common/defines.h"
 #include "exiv2readingworker.h"
 
-#define MIN_SPLIT_COUNT 10
+#define MIN_SPLIT_COUNT 100
 #define MAX_READING_THREADS 10
 #define MIN_READING_THREADS 1
 

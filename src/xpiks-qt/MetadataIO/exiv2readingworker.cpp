@@ -21,16 +21,69 @@
 
 #include "exiv2readingworker.h"
 #include <QVector>
+#include <QTextCodec>
 #include <sstream>
 #include "../xpiks-qt/Models/artworkmetadata.h"
 #include "../xpiks-qt/Common/defines.h"
+#include "../xpiks-qt/Helpers/stringhelper.h"
 #include <exiv2/exiv2.hpp>
 
 namespace MetadataIO {
+    QString getIptcCharset(Exiv2::IptcData &iptcData) {
+        const char *charsetPtr = iptcData.detectCharset();
+        QString iptcCharset = "";
+        if (charsetPtr != NULL) {
+            iptcCharset = QString::fromLatin1(charsetPtr).toUpper();
+        }
+
+        return iptcCharset;
+    }
+
+    Helpers::ExifEncoding getExifEncoding(Exiv2::ExifData &exifData) {
+        Helpers::ExifEncoding encoding = Helpers::ExifEncodingUnknown;
+
+        Exiv2::ExifKey key("Exif.Photo.UserComment");
+        Exiv2::ExifData::iterator it = exifData.findKey(key);
+        if (it != exifData.end()) {
+            const Exiv2::Exifdatum& exifDatum = *it;
+
+            std::string comment;
+            std::string charset;
+
+            comment = exifDatum.toString();
+
+            // libexiv2 will prepend "charset=\"SomeCharset\" " if charset is specified
+            // Before conversion to QString, we must know the charset, so we stay with std::string for a while
+            if (comment.length() > 8 && comment.substr(0, 8) == "charset=") {
+                // the prepended charset specification is followed by a blank
+                std::string::size_type pos = comment.find_first_of(' ');
+
+                if (pos != std::string::npos) {
+                    // extract string between the = and the blank
+                    charset = comment.substr(8, pos-8);
+                    // get the rest of the string after the charset specification
+                    comment = comment.substr(pos+1);
+                }
+            }
+
+            if (charset == "\"Unicode\"") {
+                encoding = Helpers::ExifEncodingUtf8;
+            }
+            else if (charset == "\"Jis\"") {
+                encoding = Helpers::ExifEncodingJis;
+            }
+            else if (charset == "\"Ascii\"") {
+                encoding = Helpers::ExifEncodingAscii;
+            }
+        }
+
+        return encoding;
+    }
+
     bool getXmpDescription(Exiv2::XmpData &xmpData, const QString &langAlt, QString &description) {
         bool anyFound = false;
 
-        Exiv2::XmpKey key("XMP.dc.description");
+        Exiv2::XmpKey key("Xmp.dc.description");
         Exiv2::XmpData::iterator it = xmpData.findKey(key);
         if (it != xmpData.end()) {
             Q_ASSERT(it->typeId() == Exiv2::langAlt);
@@ -65,7 +118,7 @@ namespace MetadataIO {
         }
 
         if (!anyFound || description.isEmpty()) {
-            Exiv2::XmpKey psKey("XMP.photoshop.Headline");
+            Exiv2::XmpKey psKey("Xmp.photoshop.Headline");
             Exiv2::XmpData::iterator xmpIt = xmpData.findKey(psKey);
             if (xmpIt != xmpData.end()) {
                 const Exiv2::XmpTextValue &value = static_cast<const Exiv2::XmpTextValue &>(xmpIt->value());
@@ -81,9 +134,88 @@ namespace MetadataIO {
         return anyFound;
     }
 
-    QString retrieveDescription(Exiv2::XmpData &xmpData, Exiv2::ExifData &exifData, Exiv2::IptcData &iptcData) {
+    bool getIptcDescription(Exiv2::IptcData &iptcData, const QString &charset, QString &description) {
+        bool foundDesc = false;
+
+        Exiv2::IptcKey key("Iptc.Application2.Caption");
+
+        Exiv2::IptcData::iterator it = iptcData.findKey(key);
+        if (it != iptcData.end()) {
+            std::ostringstream os;
+            os << *it;
+            std::string str = os.str();
+
+            QString value;
+
+            if (charset == QLatin1String("UTF-8") ||
+                    charset == QLatin1String("UTF8") ||
+                    Helpers::isUtf8(str.c_str())) {
+                value = QString::fromUtf8(str.c_str()).trimmed();
+            } else {
+                value = QString::fromLocal8Bit(str.c_str()).trimmed();
+            }
+
+            if (!value.isEmpty()) {
+                description = value;
+                foundDesc = true;
+            }
+        }
+
+        return foundDesc;
+    }
+
+    bool getExifDescription(Exiv2::ExifData &exifData, Helpers::ExifEncoding exifEncoding, QString &description) {
+        bool foundDesc = false;
+
+        QString value;
+
+        Exiv2::ExifKey key("Exif.Image.ImageDescription");
+        Exiv2::ExifData::iterator it = exifData.findKey(key);
+
+        if (it != exifData.end()) {
+            std::ostringstream os;
+            os << *it;
+            std::string str = os.str();
+
+            switch (exifEncoding) {
+                case Helpers::ExifEncodingUtf8: {
+                    value = QString::fromUtf8(str.c_str()).trimmed();
+                    break;
+                }
+                case Helpers::ExifEncodingJis: {
+                    QTextCodec* const codec = QTextCodec::codecForName("JIS7");
+                    value = codec->toUnicode(str.c_str());
+                    break;
+                }
+                case Helpers::ExifEncodingAscii: {
+                    value = QString::fromLatin1(str.c_str()).trimmed();
+                    break;
+                }
+                default: {
+                    if (Helpers::isUtf8(str.c_str())) {
+                        value = QString::fromUtf8(str.c_str()).trimmed();
+                    } else {
+                        value = QString::fromLocal8Bit(str.c_str()).trimmed();
+                    }
+                }
+            }
+
+            if (!value.isEmpty()) {
+                description = value;
+                foundDesc = true;
+            }
+        }
+
+        return foundDesc;
+    }
+
+    QString retrieveDescription(Exiv2::XmpData &xmpData, Exiv2::ExifData &exifData, Exiv2::IptcData &iptcData,
+                                const QString &iptcEncoding, Helpers::ExifEncoding exifEncoding) {
         QString description;
-        getXmpDescription(xmpData, QString(), description);
+        bool success = false;
+        success = getXmpDescription(xmpData, QString(), description);
+        success = success || getIptcDescription(iptcData, iptcEncoding, description);
+        success = success || getExifDescription(exifData, exifEncoding, description);
         return description;
     }
 
@@ -94,7 +226,7 @@ namespace MetadataIO {
         m_Stopped(false)
     {
         Q_ASSERT(!itemsToRead.isEmpty());
-        LOG_INFO << itemsToRead.size() << "items to read";
+        LOG_INFO << "Worker [" << index << "]:" << itemsToRead.size() << "items to read";
     }
 
     Exiv2ReadingWorker::~Exiv2ReadingWorker() {
@@ -149,7 +281,13 @@ namespace MetadataIO {
         Exiv2::ExifData &exifData = image->exifData();
         Exiv2::IptcData &iptcData = image->iptcData();
 
-        importResult.Description = retrieveDescription(xmpData, exifData, iptcData);
+        QString iptcEncoding = getIptcCharset(iptcData);
+        Helpers::ExifEncoding exifEncoding = getExifEncoding(exifData);
+
+        importResult.FilePath = filepath;
+        importResult.Description = retrieveDescription(xmpData, exifData, iptcData, iptcEncoding, exifEncoding);
+
+        m_ImportResult.insert(importResult.FilePath, importResult);
 
         // BUMP
         return false;

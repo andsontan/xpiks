@@ -26,9 +26,17 @@ class QString;
 class QStringList;
 
 namespace Helpers {
+    enum ExifEncoding {
+        ExifEncodingUnknown,
+        ExifEncodingUtf8,
+        ExifEncodingJis,
+        ExifEncodingAscii
+    };
+
     QString getLastNLines(const QString &text, int N);
     void splitText(const QString &text, QStringList &parts);
     int levensteinDistance(const QString &s1, const QString &s2);
+    bool isUtf8(const char* const buffer);
 }
 
 #endif // STRINGHELPER
