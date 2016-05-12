@@ -141,8 +141,9 @@ namespace Helpers {
         register unsigned char c;
         bool gotone = false;
 
-        if (!buffer)
+        if (!buffer) {
             return true;
+        }
 
         // character never appears in text
 #define F 0
@@ -176,68 +177,58 @@ namespace Helpers {
             I, I, I, I, I, I, I, I, I, I, I, I, I, I, I, I   // 0xfX
         };
 
-        for (i = 0; (c = buffer[i]); ++i)
-        {
-            if ((c & 0x80) == 0)
-            {
+        for (i = 0; (c = buffer[i]); ++i) {
+            if ((c & 0x80) == 0) {
                 // 0xxxxxxx is plain ASCII
 
                 // Even if the whole file is valid UTF-8 sequences,
                 // still reject it if it uses weird control characters.
 
-                if (text_chars[c] != T)
+                if (text_chars[c] != T) {
                     return false;
+                }
 
             }
-            else if ((c & 0x40) == 0)
-            {
+            else if ((c & 0x40) == 0) {
                 // 10xxxxxx never 1st byte
                 return false;
             }
-            else
-            {
+            else {
                 // 11xxxxxx begins UTF-8
                 int following = 0;
 
-                if ((c & 0x20) == 0)
-                {
+                if ((c & 0x20) == 0) {
                     // 110xxxxx
                     following = 1;
                 }
-                else if ((c & 0x10) == 0)
-                {
+                else if ((c & 0x10) == 0) {
                     // 1110xxxx
                     following = 2;
                 }
-                else if ((c & 0x08) == 0)
-                {
+                else if ((c & 0x08) == 0) {
                     // 11110xxx
                     following = 3;
                 }
-                else if ((c & 0x04) == 0)
-                {
+                else if ((c & 0x04) == 0) {
                     // 111110xx
                     following = 4;
                 }
-                else if ((c & 0x02) == 0)
-                {
+                else if ((c & 0x02) == 0) {
                     // 1111110x
                     following = 5;
                 }
-                else
-                {
+                else {
                     return false;
                 }
 
-                for (n = 0; n < following; ++n)
-                {
+                for (n = 0; n < following; ++n) {
                     i++;
 
-                    if (!(c = buffer[i]))
-                        goto done;
+                    if (!(c = buffer[i])) { goto done; }
 
-                    if ((c & 0x80) == 0 || (c & 0x40))
+                    if ((c & 0x80) == 0 || (c & 0x40)) {
                         return false;
+                    }
                 }
 
                 gotone = true;
@@ -245,7 +236,6 @@ namespace Helpers {
         }
 
 done:
-
         return gotone;   // don't claim it's UTF-8 if it's all 7-bit.
     }
 
