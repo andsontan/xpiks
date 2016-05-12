@@ -140,7 +140,7 @@ namespace MetadataIO {
 
     void MetadataIOCoordinator::readMetadataExiv2(const QVector<Models::ArtworkMetadata *> &artworksToRead,
                                                   const QVector<QPair<int, int> > &rangesToUpdate) {
-        Q_ASSERT(m_ReadingWorker == NULL);
+        //Q_ASSERT(m_ReadingWorker == NULL);
 
         ReadingOrchestrator *readingOrchestrator = new ReadingOrchestrator(artworksToRead, rangesToUpdate);
 

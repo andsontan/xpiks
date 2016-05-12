@@ -339,11 +339,15 @@ CONFIG(debug, debug|release)  {
 }
 
 macx {
+    LIBS += -liconv
+    LIBS += -lexpat
+
     INCLUDEPATH += "../hunspell-1.3.3/src"
     INCLUDEPATH += "../quazip"
     INCLUDEPATH += "../../libcurl/include"
     INCLUDEPATH += ../exiv2-0.25/include
 
+    LIBS += -lxmpsdk
     LIBS += -lexiv2
 
     HUNSPELL_DICT_FILES.files = deps/dict/en_US.aff deps/dict/en_US.dic deps/dict/license.txt deps/dict/README_en_US.txt

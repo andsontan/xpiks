@@ -274,7 +274,11 @@ namespace MetadataIO {
     bool Exiv2ReadingWorker::readMetadata(Models::ArtworkMetadata *artwork, ImportDataResult &importResult) {
         const QString &filepath = artwork->getFilepath();
 
+#if defined(Q_OS_WIN)
         Exiv2::Image::AutoPtr image = Exiv2::ImageFactory::open(filepath.toStdWString());
+#else
+        Exiv2::Image::AutoPtr image = Exiv2::ImageFactory::open(filepath.toStdString());
+#endif
         image->readMetadata();
 
         Exiv2::XmpData &xmpData = image->xmpData();

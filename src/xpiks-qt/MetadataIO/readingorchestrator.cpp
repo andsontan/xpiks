@@ -60,6 +60,10 @@ namespace MetadataIO {
         LOG_INFO << "Using" << m_ThreadsCount << "threads for" << size << "items to read";
     }
 
+    ReadingOrchestrator::~ReadingOrchestrator() {
+        LOG_DEBUG << "destroyed";
+    }
+
     void ReadingOrchestrator::startReading() {
         LOG_DEBUG << "#";
 
@@ -108,7 +112,7 @@ namespace MetadataIO {
 
         if (m_FinishedCount.fetchAndAddOrdered(1) == (m_ThreadsCount - 1)) {
             LOG_DEBUG << "Last worker finished";
-            emit allFinished(m_AnyError);
+            emit allFinished(!m_AnyError);
         }
     }
 }
