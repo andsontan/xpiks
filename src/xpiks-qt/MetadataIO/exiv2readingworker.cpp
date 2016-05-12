@@ -21,13 +21,70 @@
 
 #include "exiv2readingworker.h"
 #include <QVector>
+#include <sstream>
 #include "../xpiks-qt/Models/artworkmetadata.h"
 #include "../xpiks-qt/Common/defines.h"
 #include <exiv2/exiv2.hpp>
 
 namespace MetadataIO {
-    QString retrieveDescription(Exiv2::XmpData &xmpData, Exiv2::ExifData &exifData, Exiv2::IptcData &iptcData) {
+    bool getXmpDescription(Exiv2::XmpData &xmpData, const QString &langAlt, QString &description) {
+        bool anyFound = false;
 
+        Exiv2::XmpKey key("XMP.dc.description");
+        Exiv2::XmpData::iterator it = xmpData.findKey(key);
+        if (it != xmpData.end()) {
+            Q_ASSERT(it->typeId() == Exiv2::langAlt);
+            const Exiv2::LangAltValue &value = static_cast<const Exiv2::LangAltValue &>(it->value());
+
+            QString anyValue;
+
+            Exiv2::LangAltValue::ValueType::const_iterator it2 = value.value_.begin();
+            Exiv2::LangAltValue::ValueType::const_iterator end = value.value_.end();
+            for (; it2 != end; ++it2) {
+                QString lang = QString::fromUtf8(it2->first.c_str());
+
+                if (langAlt == lang) {
+                    QString text = QString::fromUtf8(it2->second.c_str()).trimmed();
+                    if (!text.isEmpty()) {
+                        anyFound = true;
+                        description = text.trimmed();
+                        break;
+                    }
+                }
+
+                if (anyValue.isEmpty()) {
+                    QString text = QString::fromUtf8(it2->second.c_str());
+                    anyValue = text.trimmed();
+                }
+            }
+
+            if (!anyFound && !anyValue.isEmpty()) {
+                anyFound = true;
+                description = anyValue;
+            }
+        }
+
+        if (!anyFound || description.isEmpty()) {
+            Exiv2::XmpKey psKey("XMP.photoshop.Headline");
+            Exiv2::XmpData::iterator xmpIt = xmpData.findKey(psKey);
+            if (xmpIt != xmpData.end()) {
+                const Exiv2::XmpTextValue &value = static_cast<const Exiv2::XmpTextValue &>(xmpIt->value());
+                QString headline = QString::fromUtf8(value.value_.c_str()).trimmed();
+
+                if (!headline.isEmpty()) {
+                    anyFound = true;
+                    description = headline;
+                }
+            }
+        }
+
+        return anyFound;
+    }
+
+    QString retrieveDescription(Exiv2::XmpData &xmpData, Exiv2::ExifData &exifData, Exiv2::IptcData &iptcData) {
+        QString description;
+        getXmpDescription(xmpData, QString(), description);
+        return description;
     }
 
     Exiv2ReadingWorker::Exiv2ReadingWorker(int index, QVector<Models::ArtworkMetadata *> itemsToRead, QObject *parent):
