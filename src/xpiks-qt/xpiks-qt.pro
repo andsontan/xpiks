@@ -421,11 +421,11 @@ travis-ci {
     message("for Travis CI")
     LIBS -= -lz
     LIBS += /usr/lib/x86_64-linux-gnu/libz.so
+
+    LIBS += -lexiv2
 }
 
 linux-g++-64 {
-    LIBS += -liconv
-    LIBS += -lexpat
     LIBS += -lexiv2
 
     message("for Linux")
@@ -447,14 +447,14 @@ linux-g++-64 {
 }
 
 linux-qtcreator {
-        message("in QtCreator")
-        LIBS += -L/usr/lib64/
-        LIBS += -L/lib/x86_64-linux-gnu/
-        BUILDNO = $$system(od -An -N8 -tx8 </dev/urandom)
+    message("in QtCreator")
+    LIBS += -L/usr/lib64/
+    LIBS += -L/lib/x86_64-linux-gnu/
+    BUILDNO = $$system(od -An -N8 -tx8 </dev/urandom)
         
-        copywhatsnew.commands = $(COPY_FILE) "$$PWD/deps/whatsnew.txt" "$$OUT_PWD/"
-        copyterms.commands = $(COPY_FILE) "$$PWD/deps/terms_and_conditions.txt" "$$OUT_PWD/"
-        QMAKE_EXTRA_TARGETS += copywhatsnew copyterms
+    copywhatsnew.commands = $(COPY_FILE) "$$PWD/deps/whatsnew.txt" "$$OUT_PWD/"
+    copyterms.commands = $(COPY_FILE) "$$PWD/deps/terms_and_conditions.txt" "$$OUT_PWD/"
+    QMAKE_EXTRA_TARGETS += copywhatsnew copyterms
 	POST_TARGETDEPS += copywhatsnew copyterms
 }
 
