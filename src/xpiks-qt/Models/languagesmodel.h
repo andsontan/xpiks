@@ -51,6 +51,7 @@ namespace Models {
 
     public:
         void initFirstLanguage();
+        QString getCurrentLanguage() const;
         Q_INVOKABLE void loadLanguages();
         Q_INVOKABLE void switchLanguage(int index);
 

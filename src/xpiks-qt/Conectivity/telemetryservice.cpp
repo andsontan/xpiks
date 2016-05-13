@@ -39,6 +39,7 @@ namespace Conectivity {
         QObject(parent),
         m_NetworkManager(this),
         m_UserAgentId(userId),
+        m_InterfaceLanguage("en_US"),
         m_TelemetryEnabled(telemetryEnabled)
     {
         QObject::connect(&m_NetworkManager, SIGNAL(finished(QNetworkReply*)),
@@ -93,15 +94,19 @@ namespace Conectivity {
         query.addQueryItem(QLatin1String("m"), QString::number(userEvent.getMinute()));
         query.addQueryItem(QLatin1String("s"), QString::number(userEvent.getSecond()));
         query.addQueryItem(QLatin1String("send_image"), QLatin1String("0"));
+
+        QString customVarsStr = QString::fromLatin1("{\"1\":[\"OS_type\",\"%1\"],\"2\":[\"OS_version\",\"%2\"],\"3\":[\"Xpiks_version\",\"%3\"],\"4\":[\"UI_language\",\"%4\"]}");
+
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
         query.addQueryItem(QLatin1String("_cvar"),
-                           QString("{\"1\":[\"OS_type\",\"%1\"],\"2\":[\"OS_version\",\"%2\"],\"3\":[\"Xpiks_version\",\"%3\"]}")
+                           customVarsStr
                            .arg(QSysInfo::productType())
                            .arg(QSysInfo::productVersion())
-                           .arg(XPIKS_VERSION_STRING));
+                           .arg(XPIKS_VERSION_STRING)
+                           .arg(m_InterfaceLanguage));
 #else
         query.addQueryItem(QLatin1String("_cvar"),
-                           QString("{\"1\":[\"OS_type\",\"%1\"],\"2\":[\"OS_version\",\"%2\"],\"3\":[\"Xpiks_version\",\"%3\"]}")
+                           customVarsStr
 #ifdef Q_OS_WIN
                            .arg(QString("windows"))
 #elsif Q_OS_DARWIN
@@ -110,7 +115,8 @@ namespace Conectivity {
                            .arg(QString("Linux QT<5.4"))
 #endif
                            .arg(QString("-"))
-                           .arg(XPIKS_VERSION_STRING));
+                           .arg(XPIKS_VERSION_STRING)
+                           .arg(m_InterfaceLanguage));
 #endif
 
         QUrl reportingUrl;

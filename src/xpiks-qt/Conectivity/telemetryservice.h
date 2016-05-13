@@ -37,6 +37,7 @@ namespace Conectivity {
     public:
         void reportAction(UserAction action);
         void setEndpoint(const QString &endpoint);
+        void setInterfaceLanguage(const QString &language) { m_InterfaceLanguage = language; }
 
     public slots:
         void changeReporting(bool value);
@@ -55,6 +56,7 @@ namespace Conectivity {
         QNetworkAccessManager m_NetworkManager;
         QString m_ReportingEndpoint;
         QString m_UserAgentId;
+        QString m_InterfaceLanguage;
         volatile bool m_TelemetryEnabled;
     };
 }

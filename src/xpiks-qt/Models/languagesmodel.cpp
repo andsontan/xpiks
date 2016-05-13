@@ -86,6 +86,14 @@ namespace Models {
         emit languageChanged();
     }
 
+    QString LanguagesModel::getCurrentLanguage() const {
+        if (0 <= m_CurrentLanguageIndex && m_CurrentLanguageIndex < m_LanguagesList.length()) {
+            return m_LanguagesList[m_CurrentLanguageIndex].first;
+        } else {
+            return QString();
+        }
+    }
+
     void LanguagesModel::loadLanguages() {
         Models::SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
         QString selectedLocale = settingsModel->getSelectedLocale();
