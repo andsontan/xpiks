@@ -197,11 +197,11 @@ int main(int argc, char *argv[]) {
             if (testResult == 0) {
                 qInfo("Test %s PASSED", test->testName().toStdString().c_str());
             } else {
-                qWarning("Test %s FAILED", test->testName().toStdString().c_str());
+                qInfo("Test %s FAILED", test->testName().toStdString().c_str());
             }
         }
         catch (...) {
-            qWarning("Test %s CRASHED", test->testName().toStdString().c_str());
+            qInfo("Test %s CRASHED", test->testName().toStdString().c_str());
             result += 1;
         }
 
