@@ -83,10 +83,11 @@ namespace MetadataIO {
         return result;
     }
 
-    bool getXmpDescription(Exiv2::XmpData &xmpData, const QString &langAlt, QString &description) {
+    bool getXmpLangAltValue(Exiv2::XmpData &xmpData, const char *propertyName,
+                            const QString &langAlt, QString &resultValue) {
         bool anyFound = false;
 
-        Exiv2::XmpKey key("Xmp.dc.description");
+        Exiv2::XmpKey key(propertyName);
         Exiv2::XmpData::iterator it = xmpData.findKey(key);
         if (it != xmpData.end()) {
             Q_ASSERT(it->typeId() == Exiv2::langAlt);
@@ -103,7 +104,7 @@ namespace MetadataIO {
                     QString text = QString::fromUtf8(it2->second.c_str()).trimmed();
                     if (!text.isEmpty()) {
                         anyFound = true;
-                        description = text.trimmed();
+                        resultValue = text.trimmed();
                         break;
                     }
                 }
@@ -116,9 +117,17 @@ namespace MetadataIO {
 
             if (!anyFound && !anyValue.isEmpty()) {
                 anyFound = true;
-                description = anyValue;
+                resultValue = anyValue;
             }
         }
+
+        return anyFound;
+    }
+
+    bool getXmpDescription(Exiv2::XmpData &xmpData, const QString &langAlt, QString &description) {
+        bool anyFound = false;
+
+        anyFound = getXmpLangAltValue(xmpData, "Xmp.dc.description", langAlt, description);
 
         if (!anyFound || description.isEmpty()) {
             Exiv2::XmpKey psKey("Xmp.photoshop.Headline");
@@ -137,10 +146,15 @@ namespace MetadataIO {
         return anyFound;
     }
 
-    bool getIptcDescription(Exiv2::IptcData &iptcData, const QString &charset, QString &description) {
-        bool foundDesc = false;
+    bool getXmpTitle(Exiv2::XmpData &xmpData, const QString &langAlt, QString &title) {
+        bool anyFound = getXmpLangAltValue(xmpData, "Xmp.dc.title", langAlt, title);
+        return anyFound;
+    }
 
-        Exiv2::IptcKey key("Iptc.Application2.Caption");
+    bool getIptcString(Exiv2::IptcData &iptcData, const char *propertyName, const QString &charset, QString &resultValue) {
+        bool anyFound = false;
+
+        Exiv2::IptcKey key(propertyName);
 
         Exiv2::IptcData::iterator it = iptcData.findKey(key);
         if (it != iptcData.end()) {
@@ -159,12 +173,20 @@ namespace MetadataIO {
             }
 
             if (!value.isEmpty()) {
-                description = value;
-                foundDesc = true;
+                resultValue = value;
+                anyFound = true;
             }
         }
 
-        return foundDesc;
+        return anyFound;
+    }
+
+    bool getIptcDescription(Exiv2::IptcData &iptcData, const QString &charset, QString &description) {
+        return getIptcString(iptcData, "Iptc.Application2.Caption", charset, description);
+    }
+
+    bool getIptcTitle(Exiv2::IptcData &iptcData, const QString &charset, QString &title) {
+        return getIptcString(iptcData, "Iptc.Application2.ObjectName", charset, title);
     }
 
     bool getExifDescription(Exiv2::ExifData &exifData, QString &description) {
@@ -195,10 +217,20 @@ namespace MetadataIO {
                                 const QString &iptcEncoding) {
         QString description;
         bool success = false;
-        success = getXmpDescription(xmpData, QString(), description);
+        success = getXmpDescription(xmpData, QString::fromLatin1("x-default"), description);
         success = success || getIptcDescription(iptcData, iptcEncoding, description);
         success = success || getExifDescription(exifData, description);
         return description;
+    }
+
+    QString retrieveTitle(Exiv2::XmpData &xmpData, Exiv2::ExifData &exifData, Exiv2::IptcData &iptcData,
+                          const QString &iptcEncoding) {
+        QString title;
+        bool success = false;
+        success = getXmpTitle(xmpData, QString::fromLatin1("x-default"), title);
+        success = success || getIptcTitle(iptcData, iptcEncoding, title);
+        Q_UNUSED(exifData);
+        return title;
     }
 
     Exiv2ReadingWorker::Exiv2ReadingWorker(int index, QVector<Models::ArtworkMetadata *> itemsToRead, QObject *parent):
@@ -271,6 +303,7 @@ namespace MetadataIO {
 
         importResult.FilePath = filepath;
         importResult.Description = retrieveDescription(xmpData, exifData, iptcData, iptcEncoding);
+        importResult.Title = retrieveTitle(xmpData, exifData, iptcData, iptcEncoding);
 
         m_ImportResult.insert(importResult.FilePath, importResult);
 
