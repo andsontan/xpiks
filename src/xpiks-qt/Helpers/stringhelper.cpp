@@ -243,4 +243,23 @@ done:
 #undef T
 #undef I
 #undef X
+
+    // copy-paste code from libkexiv2
+    QString detectEncodingAndDecode(const std::string &value) {
+        if (value.empty()) {
+            return QString();
+        }
+
+        if (isUtf8(value.c_str())) {
+            return QString::fromUtf8(value.c_str());
+        }
+
+        // Utf8 has a pretty unique byte pattern.
+        // Thats not true for ASCII, it is not possible
+        // to reliably autodetect different ISO-8859 charsets.
+        // So we can use either local encoding, or latin1.
+
+        //TODO: KDE4PORT: check for regression of #134999 (very probably no regression!)
+        return QString::fromLocal8Bit(value.c_str());
+    }
 }

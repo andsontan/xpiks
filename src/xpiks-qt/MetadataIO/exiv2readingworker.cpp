@@ -39,8 +39,8 @@ namespace MetadataIO {
         return iptcCharset;
     }
 
-    Helpers::ExifEncoding getExifEncoding(Exiv2::ExifData &exifData) {
-        Helpers::ExifEncoding encoding = Helpers::ExifEncodingUnknown;
+    QString getExifUserComment(Exiv2::ExifData &exifData) {
+        QString result;
 
         Exiv2::ExifKey key("Exif.Photo.UserComment");
         Exiv2::ExifData::iterator it = exifData.findKey(key);
@@ -67,17 +67,20 @@ namespace MetadataIO {
             }
 
             if (charset == "\"Unicode\"") {
-                encoding = Helpers::ExifEncodingUtf8;
+                result = QString::fromUtf8(comment.data());
             }
             else if (charset == "\"Jis\"") {
-                encoding = Helpers::ExifEncodingJis;
+                QTextCodec* const codec = QTextCodec::codecForName("JIS7");
+                result = codec->toUnicode(comment.c_str());
             }
             else if (charset == "\"Ascii\"") {
-                encoding = Helpers::ExifEncodingAscii;
+                result = QString::fromLatin1(comment.c_str());
+            } else {
+                result = Helpers::detectEncodingAndDecode(comment);
             }
         }
 
-        return encoding;
+        return result;
     }
 
     bool getXmpDescription(Exiv2::XmpData &xmpData, const QString &langAlt, QString &description) {
@@ -164,58 +167,37 @@ namespace MetadataIO {
         return foundDesc;
     }
 
-    bool getExifDescription(Exiv2::ExifData &exifData, Helpers::ExifEncoding exifEncoding, QString &description) {
+    bool getExifDescription(Exiv2::ExifData &exifData, QString &description) {
         bool foundDesc = false;
-
-        QString value;
 
         Exiv2::ExifKey key("Exif.Image.ImageDescription");
         Exiv2::ExifData::iterator it = exifData.findKey(key);
 
+        QString value;
+
         if (it != exifData.end()) {
             std::ostringstream os;
             os << *it;
-            std::string str = os.str();
+            value = QString::fromLatin1(os.str().c_str());
+        } else {
+            value = getExifUserComment(exifData);
+        }
 
-            switch (exifEncoding) {
-                case Helpers::ExifEncodingUtf8: {
-                    value = QString::fromUtf8(str.c_str()).trimmed();
-                    break;
-                }
-                case Helpers::ExifEncodingJis: {
-                    QTextCodec* const codec = QTextCodec::codecForName("JIS7");
-                    value = codec->toUnicode(str.c_str());
-                    break;
-                }
-                case Helpers::ExifEncodingAscii: {
-                    value = QString::fromLatin1(str.c_str()).trimmed();
-                    break;
-                }
-                default: {
-                    if (Helpers::isUtf8(str.c_str())) {
-                        value = QString::fromUtf8(str.c_str()).trimmed();
-                    } else {
-                        value = QString::fromLocal8Bit(str.c_str()).trimmed();
-                    }
-                }
-            }
-
-            if (!value.isEmpty()) {
-                description = value;
-                foundDesc = true;
-            }
+        if (!value.isEmpty()) {
+            description = value;
+            foundDesc = true;
         }
 
         return foundDesc;
     }
 
     QString retrieveDescription(Exiv2::XmpData &xmpData, Exiv2::ExifData &exifData, Exiv2::IptcData &iptcData,
-                                const QString &iptcEncoding, Helpers::ExifEncoding exifEncoding) {
+                                const QString &iptcEncoding) {
         QString description;
         bool success = false;
         success = getXmpDescription(xmpData, QString(), description);
         success = success || getIptcDescription(iptcData, iptcEncoding, description);
-        success = success || getExifDescription(exifData, exifEncoding, description);
+        success = success || getExifDescription(exifData, description);
         return description;
     }
 
@@ -286,10 +268,9 @@ namespace MetadataIO {
         Exiv2::IptcData &iptcData = image->iptcData();
 
         QString iptcEncoding = getIptcCharset(iptcData);
-        Helpers::ExifEncoding exifEncoding = getExifEncoding(exifData);
 
         importResult.FilePath = filepath;
-        importResult.Description = retrieveDescription(xmpData, exifData, iptcData, iptcEncoding, exifEncoding);
+        importResult.Description = retrieveDescription(xmpData, exifData, iptcData, iptcEncoding);
 
         m_ImportResult.insert(importResult.FilePath, importResult);
 
