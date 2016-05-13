@@ -89,8 +89,7 @@ namespace MetadataIO {
 
         Exiv2::XmpKey key(propertyName);
         Exiv2::XmpData::iterator it = xmpData.findKey(key);
-        if (it != xmpData.end()) {
-            Q_ASSERT(it->typeId() == Exiv2::langAlt);
+        if ((it != xmpData.end()) && (it->typeId() == Exiv2::langAlt)) {
             const Exiv2::LangAltValue &value = static_cast<const Exiv2::LangAltValue &>(it->value());
 
             QString anyValue;
@@ -149,6 +148,25 @@ namespace MetadataIO {
     bool getXmpTitle(Exiv2::XmpData &xmpData, const QString &langAlt, QString &title) {
         bool anyFound = getXmpLangAltValue(xmpData, "Xmp.dc.title", langAlt, title);
         return anyFound;
+    }
+
+    QStringList getXmpTagStringBag(Exiv2::XmpData &xmpData, const char *propertyName) {
+        QStringList bag;
+
+        Exiv2::XmpKey key(propertyName);
+        Exiv2::XmpData::iterator it = xmpData.findKey(key);
+
+        if ((it != xmpData.end()) && (it->typeId() == Exiv2::xmpBag)) {
+            int count = it->count();
+            bag.reserve(count);
+
+            for (int i = 0; i < count; i++) {
+                QString bagValue = QString::fromUtf8(it->toString(i).c_str());
+                bag.append(bagValue);
+            }
+        }
+
+        return bag;
     }
 
     bool getIptcString(Exiv2::IptcData &iptcData, const char *propertyName, const QString &charset, QString &resultValue) {
@@ -211,6 +229,30 @@ namespace MetadataIO {
         }
 
         return foundDesc;
+    }
+
+    QStringList getXmpKeywords(Exiv2::XmpData &xmpData) {
+        return getXmpTagStringBag(xmpData, "Xmp.dc.subject");
+    }
+
+    QStringList getIptcKeywords(Exiv2::IptcData &iptcData) {
+        QStringList keywords;
+        QString keywordsTagName = QString::fromLatin1("Iptc.Application2.Keywords");
+
+        for (Exiv2::IptcData::iterator it = iptcData.begin(); it != iptcData.end(); ++it) {
+            QString key = QString::fromLocal8Bit(it->key().c_str());
+
+            if (key == keywordsTagName) {
+                QString val = QString::fromUtf8(it->toString().c_str());
+                keywords.append(val);
+            }
+        }
+
+        return keywords;
+    }
+
+    QStringList getExifKeywords(Exiv2::ExifData &exifData) {
+
     }
 
     QString retrieveDescription(Exiv2::XmpData &xmpData, Exiv2::ExifData &exifData, Exiv2::IptcData &iptcData,
