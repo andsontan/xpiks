@@ -86,7 +86,9 @@ namespace MetadataIO {
 
     public:
         void readMetadata(const QVector<Models::ArtworkMetadata*> &artworksToRead, const QVector<QPair<int, int> > &rangesToUpdate);
+#ifndef CORE_TESTS
         void readMetadataExiv2(const QVector<Models::ArtworkMetadata*> &artworksToRead, const QVector<QPair<int, int> > &rangesToUpdate);
+#endif
         void writeMetadata(const QVector<Models::ArtworkMetadata*> &artworksToWrite, bool useBackups);
         void autoDiscoverExiftool();
         Q_INVOKABLE void discardReading();

@@ -138,6 +138,7 @@ namespace MetadataIO {
         m_ReadingWorker = readingWorker;
     }
 
+#ifndef CORE_TESTS
     void MetadataIOCoordinator::readMetadataExiv2(const QVector<Models::ArtworkMetadata *> &artworksToRead,
                                                   const QVector<QPair<int, int> > &rangesToUpdate) {
         //Q_ASSERT(m_ReadingWorker == NULL);
@@ -154,6 +155,7 @@ namespace MetadataIO {
 
         m_ReadingWorker = readingOrchestrator;
     }
+#endif
 
     void MetadataIOCoordinator::writeMetadata(const QVector<Models::ArtworkMetadata *> &artworksToWrite, bool useBackups) {
         m_WritingWorker = new MetadataWritingWorker(artworksToWrite,

@@ -43,6 +43,12 @@ win32 {
     #LIBS += -llibcurl_debug
 }
 
+travis-ci {
+    message("for Travis CI")
+    LIBS += -lexiv2
+    DEFINES += TRAVIS_CI
+}
+
 linux-g++-64 {
     target.path=/usr/bin/
     QML_IMPORT_PATH += /usr/lib/x86_64-linux-gnu/qt5/imports/

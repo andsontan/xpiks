@@ -347,9 +347,14 @@ void Commands::CommandManager::connectArtworkSignals(Models::ArtworkMetadata *me
 
 void Commands::CommandManager::readMetadata(const QVector<Models::ArtworkMetadata *> &artworks,
                                             const QVector<QPair<int, int> > &rangesToUpdate) const {
+#if !defined(CORE_TESTS) && !defined(INTEGRATION_TESTS)
     if (m_MetadataIOCoordinator) {
         m_MetadataIOCoordinator->readMetadataExiv2(artworks, rangesToUpdate);
     }
+#else
+    Q_UNUSED(artworks);
+    Q_UNUSED(rangesToUpdate);
+#endif
 }
 
 void Commands::CommandManager::writeMetadata(const QVector<Models::ArtworkMetadata *> &artworks, bool useBackups) const {
