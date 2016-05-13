@@ -24,6 +24,7 @@ install:
   - sudo apt-get install -qq qt55base; source /opt/qt55/bin/qt55-env.sh
   - sudo apt-get install qt55base qt55quickcontrols qt55svg qt55declarative libcurl4-openssl-dev libhunspell-dev libquazip0-dev zlib1g-dev libimage-exiftool-perl
   - sudo apt-get install -y gdb
+  - sudo apt-get install -y libexiv2-dev expat
 
 before_script:
   - ulimit -c unlimited -S       # enable core dumps
