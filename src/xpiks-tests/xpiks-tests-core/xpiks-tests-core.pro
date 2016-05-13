@@ -45,7 +45,6 @@ win32 {
 
 travis-ci {
     message("for Travis CI")
-    LIBS += -lexiv2
     DEFINES += TRAVIS_CI
 }
 
