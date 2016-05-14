@@ -150,13 +150,14 @@ namespace MetadataIO {
         return anyFound;
     }
 
-    QStringList getXmpTagStringBag(Exiv2::XmpData &xmpData, const char *propertyName) {
-        QStringList bag;
+    bool getXmpTagStringBag(Exiv2::XmpData &xmpData, const char *propertyName, QStringList &bag) {
+        bool found = false;
 
         Exiv2::XmpKey key(propertyName);
         Exiv2::XmpData::iterator it = xmpData.findKey(key);
 
         if ((it != xmpData.end()) && (it->typeId() == Exiv2::xmpBag)) {
+            found = true;
             int count = it->count();
             bag.reserve(count);
 
@@ -166,10 +167,10 @@ namespace MetadataIO {
             }
         }
 
-        return bag;
+        return found;
     }
 
-    bool getIptcString(Exiv2::IptcData &iptcData, const char *propertyName, const QString &charset, QString &resultValue) {
+    bool getIptcString(Exiv2::IptcData &iptcData, const char *propertyName, bool isIptcUtf8, QString &resultValue) {
         bool anyFound = false;
 
         Exiv2::IptcKey key(propertyName);
@@ -182,9 +183,7 @@ namespace MetadataIO {
 
             QString value;
 
-            if (charset == QLatin1String("UTF-8") ||
-                    charset == QLatin1String("UTF8") ||
-                    Helpers::isUtf8(str.c_str())) {
+            if (isIptcUtf8 || Helpers::isUtf8(str.c_str())) {
                 value = QString::fromUtf8(str.c_str()).trimmed();
             } else {
                 value = QString::fromLocal8Bit(str.c_str()).trimmed();
@@ -199,12 +198,12 @@ namespace MetadataIO {
         return anyFound;
     }
 
-    bool getIptcDescription(Exiv2::IptcData &iptcData, const QString &charset, QString &description) {
-        return getIptcString(iptcData, "Iptc.Application2.Caption", charset, description);
+    bool getIptcDescription(Exiv2::IptcData &iptcData, bool isIptcUtf8, QString &description) {
+        return getIptcString(iptcData, "Iptc.Application2.Caption", isIptcUtf8, description);
     }
 
-    bool getIptcTitle(Exiv2::IptcData &iptcData, const QString &charset, QString &title) {
-        return getIptcString(iptcData, "Iptc.Application2.ObjectName", charset, title);
+    bool getIptcTitle(Exiv2::IptcData &iptcData, bool isIptcUtf8, QString &title) {
+        return getIptcString(iptcData, "Iptc.Application2.ObjectName", isIptcUtf8, title);
     }
 
     bool getExifDescription(Exiv2::ExifData &exifData, QString &description) {
@@ -231,48 +230,61 @@ namespace MetadataIO {
         return foundDesc;
     }
 
-    QStringList getXmpKeywords(Exiv2::XmpData &xmpData) {
-        return getXmpTagStringBag(xmpData, "Xmp.dc.subject");
+    bool getXmpKeywords(Exiv2::XmpData &xmpData, QStringList &keywords) {
+        return getXmpTagStringBag(xmpData, "Xmp.dc.subject", keywords);
     }
 
-    QStringList getIptcKeywords(Exiv2::IptcData &iptcData) {
-        QStringList keywords;
+    bool getIptcKeywords(Exiv2::IptcData &iptcData, bool isIptcUtf8, QStringList &keywords) {
+        bool anyAdded = false;
         QString keywordsTagName = QString::fromLatin1("Iptc.Application2.Keywords");
 
         for (Exiv2::IptcData::iterator it = iptcData.begin(); it != iptcData.end(); ++it) {
             QString key = QString::fromLocal8Bit(it->key().c_str());
 
             if (key == keywordsTagName) {
-                QString val = QString::fromUtf8(it->toString().c_str());
-                keywords.append(val);
+                QString tag;
+                if (isIptcUtf8) {
+                    tag = QString::fromUtf8(it->toString().c_str());
+                } else {
+                    tag = QString::fromLocal8Bit(it->toString().c_str());
+                }
+
+                keywords.append(tag);
+                anyAdded = true;
             }
         }
 
-        return keywords;
-    }
-
-    QStringList getExifKeywords(Exiv2::ExifData &exifData) {
-
+        return anyAdded;
     }
 
     QString retrieveDescription(Exiv2::XmpData &xmpData, Exiv2::ExifData &exifData, Exiv2::IptcData &iptcData,
-                                const QString &iptcEncoding) {
+                                bool isIptcUtf8) {
         QString description;
         bool success = false;
         success = getXmpDescription(xmpData, QString::fromLatin1("x-default"), description);
-        success = success || getIptcDescription(iptcData, iptcEncoding, description);
+        success = success || getIptcDescription(iptcData, isIptcUtf8, description);
         success = success || getExifDescription(exifData, description);
         return description;
     }
 
     QString retrieveTitle(Exiv2::XmpData &xmpData, Exiv2::ExifData &exifData, Exiv2::IptcData &iptcData,
-                          const QString &iptcEncoding) {
+                          bool isIptcUtf8) {
         QString title;
         bool success = false;
         success = getXmpTitle(xmpData, QString::fromLatin1("x-default"), title);
-        success = success || getIptcTitle(iptcData, iptcEncoding, title);
+        success = success || getIptcTitle(iptcData, isIptcUtf8, title);
         Q_UNUSED(exifData);
         return title;
+    }
+
+    QStringList retrieveKeywords(Exiv2::XmpData &xmpData, Exiv2::ExifData &exifData, Exiv2::IptcData &iptcData,
+                                 bool isIptcUtf8) {
+        QStringList keywords;
+        bool success = false;
+        success = getXmpKeywords(xmpData, keywords);
+        success = success || getIptcKeywords(iptcData, isIptcUtf8, keywords);
+        Q_UNUSED(exifData);
+        return keywords;
     }
 
     Exiv2ReadingWorker::Exiv2ReadingWorker(int index, QVector<Models::ArtworkMetadata *> itemsToRead, QObject *parent):
@@ -341,11 +353,13 @@ namespace MetadataIO {
         Exiv2::ExifData &exifData = image->exifData();
         Exiv2::IptcData &iptcData = image->iptcData();
 
-        QString iptcEncoding = getIptcCharset(iptcData);
+        QString iptcEncoding = getIptcCharset(iptcData).toUpper();
+        bool isIptcUtf8 = (iptcEncoding == QLatin1String("UTF-8")) || (iptcEncoding == QLatin1String("UTF8"));
 
         importResult.FilePath = filepath;
-        importResult.Description = retrieveDescription(xmpData, exifData, iptcData, iptcEncoding);
-        importResult.Title = retrieveTitle(xmpData, exifData, iptcData, iptcEncoding);
+        importResult.Description = retrieveDescription(xmpData, exifData, iptcData, isIptcUtf8);
+        importResult.Title = retrieveTitle(xmpData, exifData, iptcData, isIptcUtf8);
+        importResult.Keywords = retrieveKeywords(xmpData, exifData, iptcData, isIptcUtf8);
 
         m_ImportResult.insert(importResult.FilePath, importResult);
 
