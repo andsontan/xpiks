@@ -206,6 +206,7 @@ int main(int argc, char *argv[]) {
         }
 
         qDebug("\n");
+        QThread::msleep(500);
     }
 
     qDeleteAll(integrationTests);
