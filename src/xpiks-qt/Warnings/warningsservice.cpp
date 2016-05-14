@@ -70,6 +70,11 @@ namespace Warnings {
         }
     }
 
+    bool WarningsService::isBusy() const {
+        bool isBusy = (m_WarningsWorker != NULL) && (m_WarningsWorker->hasPendingJobs());
+        return isBusy;
+    }
+
     void WarningsService::submitItem(Models::ArtworkMetadata *item) {
         if (m_WarningsWorker == NULL) { return; }
 
@@ -101,7 +106,7 @@ namespace Warnings {
             itemsToSubmit.append(itemToSubmit);
         }
 
-        LOG_INFO << "Submitting" << length << "items";
+        LOG_INFO << "Submitting" << length << "item(s)";
         m_WarningsWorker->submitItems(itemsToSubmit);
     }
 

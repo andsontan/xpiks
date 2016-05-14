@@ -45,6 +45,7 @@ namespace Warnings {
         virtual void stopService();
 
         virtual bool isAvailable() const { return true; }
+        virtual bool isBusy() const;
 
         virtual void submitItem(Models::ArtworkMetadata *item);
         virtual void submitItem(Models::ArtworkMetadata *item, int flags);

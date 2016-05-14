@@ -61,9 +61,6 @@ int SpellingProducesWarningsTest::doTest() {
     metadata->appendKeyword("correct part " + wrongWord);
     metadata->setIsSelected(true);
 
-    // wait for after-add spellchecking
-    QThread::sleep(1);
-
     Models::FilteredArtItemsProxyModel *filteredModel = m_CommandManager->getFilteredArtItemsModel();
     SpellCheck::SpellCheckerService *spellCheckService = m_CommandManager->getSpellCheckerService();
     QObject::connect(spellCheckService, SIGNAL(spellCheckQueueIsEmpty()), &waiter, SIGNAL(finished()));
@@ -72,6 +69,16 @@ int SpellingProducesWarningsTest::doTest() {
     Warnings::WarningsService *warningsService = m_CommandManager->getWarningsService();
     SignalWaiter warningsQueueWaiter;
     QObject::connect(warningsService, SIGNAL(queueIsEmpty()), &warningsQueueWaiter, SIGNAL(finished()));
+
+    if (spellCheckService->isBusy()) {
+        LOG_INFO << "Waiting for prev spelling to finish...";
+        waiter.wait(2);
+    }
+
+    if (warningsService->isBusy()) {
+        LOG_INFO << "Waiting for prev warnings to finish...";
+        warningsQueueWaiter.wait(2);
+    }
 
     filteredModel->spellCheckSelected();
 

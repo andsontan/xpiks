@@ -49,6 +49,7 @@ namespace SpellCheck {
         virtual void stopService();
 
         virtual bool isAvailable() const { return true; }
+        virtual bool isBusy() const;
 
         virtual void submitItem(Common::BasicKeywordsModel *itemToCheck);
         virtual void submitItem(Common::BasicKeywordsModel *itemToCheck, int flags);
