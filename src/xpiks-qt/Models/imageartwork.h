@@ -25,6 +25,7 @@
 #include "artworkmetadata.h"
 #include <QSize>
 #include <QString>
+#include <QDateTime>
 #include "../Common/flags.h"
 
 namespace Models {
@@ -45,9 +46,9 @@ namespace Models {
     public:
         QSize getImageSize() const { return m_ImageSize; }
         void setImageSize(const QSize &size) { m_ImageSize = size; }
-        void setDateTaken(const QString &date) { m_DateTaken = date; }
+        void setDateTimeOriginal(const QDateTime &dateTime) { m_DateTimeOriginal = dateTime; }
         const QString &getAttachedVectorPath() const { return m_AttachedVector; }
-        const QString &getDateTaken() const { return m_DateTaken; }
+        QString getDateTaken() const { return m_DateTimeOriginal.toString(); }
         bool hasVectorAttached() const { return getHasVectorAttachedFlag(); }
 
     public:
@@ -57,7 +58,7 @@ namespace Models {
     private:
         QSize m_ImageSize;
         QString m_AttachedVector;
-        QString m_DateTaken;
+        QDateTime m_DateTimeOriginal;
         volatile int m_ImageFlags;
     };
 }

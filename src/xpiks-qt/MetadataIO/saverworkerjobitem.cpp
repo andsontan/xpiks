@@ -24,6 +24,7 @@
 #include <QDataStream>
 #include "../Helpers/constants.h"
 #include "../Common/basickeywordsmodel.h"
+#include "../Common/defines.h"
 
 namespace MetadataIO {
     MetadataSavingCopy::MetadataSavingCopy(Models::ArtworkMetadata *metadata):
@@ -66,12 +67,16 @@ namespace MetadataIO {
             QHash<QString, QString> dict;
 
             QDataStream in(&file);   // read the data
-            in >> dict;
+            try {
+                in >> dict;
+                m_MetadataInfo.swap(dict);
+                success = true;
+            }
+            catch (...) {
+                LOG_WARNING << "Exception while reading backup";
+            }
+
             file.close();
-
-            success = true;
-
-            m_MetadataInfo.swap(dict);
         }
 
         return success;

@@ -22,10 +22,12 @@
 #include "exiv2readingworker.h"
 #include <QVector>
 #include <QTextCodec>
+#include <QDateTime>
 #include <sstream>
 #include "../xpiks-qt/Models/artworkmetadata.h"
 #include "../xpiks-qt/Common/defines.h"
 #include "../xpiks-qt/Helpers/stringhelper.h"
+#include "saverworkerjobitem.h"
 #include <exiv2/exiv2.hpp>
 
 namespace MetadataIO {
@@ -37,50 +39,6 @@ namespace MetadataIO {
         }
 
         return iptcCharset;
-    }
-
-    QString getExifUserComment(Exiv2::ExifData &exifData) {
-        QString result;
-
-        Exiv2::ExifKey key("Exif.Photo.UserComment");
-        Exiv2::ExifData::iterator it = exifData.findKey(key);
-        if (it != exifData.end()) {
-            const Exiv2::Exifdatum& exifDatum = *it;
-
-            std::string comment;
-            std::string charset;
-
-            comment = exifDatum.toString();
-
-            // libexiv2 will prepend "charset=\"SomeCharset\" " if charset is specified
-            // Before conversion to QString, we must know the charset, so we stay with std::string for a while
-            if (comment.length() > 8 && comment.substr(0, 8) == "charset=") {
-                // the prepended charset specification is followed by a blank
-                std::string::size_type pos = comment.find_first_of(' ');
-
-                if (pos != std::string::npos) {
-                    // extract string between the = and the blank
-                    charset = comment.substr(8, pos-8);
-                    // get the rest of the string after the charset specification
-                    comment = comment.substr(pos+1);
-                }
-            }
-
-            if (charset == "\"Unicode\"") {
-                result = QString::fromUtf8(comment.data());
-            }
-            else if (charset == "\"Jis\"") {
-                QTextCodec* const codec = QTextCodec::codecForName("JIS7");
-                result = codec->toUnicode(comment.c_str());
-            }
-            else if (charset == "\"Ascii\"") {
-                result = QString::fromLatin1(comment.c_str());
-            } else {
-                result = Helpers::detectEncodingAndDecode(comment);
-            }
-        }
-
-        return result;
     }
 
     bool getXmpLangAltValue(Exiv2::XmpData &xmpData, const char *propertyName,
@@ -170,6 +128,24 @@ namespace MetadataIO {
         return found;
     }
 
+    bool getXmpDateTime(Exiv2::XmpData &xmpData, QDateTime &dateTime) {
+        bool found = false;
+
+        Exiv2::XmpKey psKey("Xmp.photoshop.DateCreated");
+        Exiv2::XmpData::iterator xmpIt = xmpData.findKey(psKey);
+
+        if (xmpIt != xmpData.end()) {
+            dateTime = QDateTime::fromString(QString::fromLatin1(xmpIt->toString().c_str()), Qt::ISODate);
+            found = dateTime.isValid();
+        }
+
+        return found;
+    }
+
+    bool getXmpKeywords(Exiv2::XmpData &xmpData, QStringList &keywords) {
+        return getXmpTagStringBag(xmpData, "Xmp.dc.subject", keywords);
+    }
+
     bool getIptcString(Exiv2::IptcData &iptcData, const char *propertyName, bool isIptcUtf8, QString &resultValue) {
         bool anyFound = false;
 
@@ -206,6 +182,73 @@ namespace MetadataIO {
         return getIptcString(iptcData, "Iptc.Application2.ObjectName", isIptcUtf8, title);
     }
 
+    bool getIptcKeywords(Exiv2::IptcData &iptcData, bool isIptcUtf8, QStringList &keywords) {
+        bool anyAdded = false;
+        QString keywordsTagName = QString::fromLatin1("Iptc.Application2.Keywords");
+
+        for (Exiv2::IptcData::iterator it = iptcData.begin(); it != iptcData.end(); ++it) {
+            QString key = QString::fromLocal8Bit(it->key().c_str());
+
+            if (key == keywordsTagName) {
+                QString tag;
+                if (isIptcUtf8) {
+                    tag = QString::fromUtf8(it->toString().c_str());
+                } else {
+                    tag = QString::fromLocal8Bit(it->toString().c_str());
+                }
+
+                keywords.append(tag);
+                anyAdded = true;
+            }
+        }
+
+        return anyAdded;
+    }
+
+    QString getExifUserComment(Exiv2::ExifData &exifData) {
+        QString result;
+
+        Exiv2::ExifKey key("Exif.Photo.UserComment");
+        Exiv2::ExifData::iterator it = exifData.findKey(key);
+        if (it != exifData.end()) {
+            const Exiv2::Exifdatum& exifDatum = *it;
+
+            std::string comment;
+            std::string charset;
+
+            comment = exifDatum.toString();
+
+            // libexiv2 will prepend "charset=\"SomeCharset\" " if charset is specified
+            // Before conversion to QString, we must know the charset, so we stay with std::string for a while
+            if (comment.length() > 8 && comment.substr(0, 8) == "charset=") {
+                // the prepended charset specification is followed by a blank
+                std::string::size_type pos = comment.find_first_of(' ');
+
+                if (pos != std::string::npos) {
+                    // extract string between the = and the blank
+                    charset = comment.substr(8, pos-8);
+                    // get the rest of the string after the charset specification
+                    comment = comment.substr(pos+1);
+                }
+            }
+
+            if (charset == "\"Unicode\"") {
+                result = QString::fromUtf8(comment.data());
+            }
+            else if (charset == "\"Jis\"") {
+                QTextCodec* const codec = QTextCodec::codecForName("JIS7");
+                result = codec->toUnicode(comment.c_str());
+            }
+            else if (charset == "\"Ascii\"") {
+                result = QString::fromLatin1(comment.c_str());
+            } else {
+                result = Helpers::detectEncodingAndDecode(comment);
+            }
+        }
+
+        return result;
+    }
+
     bool getExifDescription(Exiv2::ExifData &exifData, QString &description) {
         bool foundDesc = false;
 
@@ -230,31 +273,26 @@ namespace MetadataIO {
         return foundDesc;
     }
 
-    bool getXmpKeywords(Exiv2::XmpData &xmpData, QStringList &keywords) {
-        return getXmpTagStringBag(xmpData, "Xmp.dc.subject", keywords);
-    }
+    bool getExifDateTime(Exiv2::ExifData &exifData, QDateTime &dateTime) {
+        bool found = false;
 
-    bool getIptcKeywords(Exiv2::IptcData &iptcData, bool isIptcUtf8, QStringList &keywords) {
-        bool anyAdded = false;
-        QString keywordsTagName = QString::fromLatin1("Iptc.Application2.Keywords");
+        Exiv2::ExifKey key("Exif.Photo.DateTimeOriginal");
+        Exiv2::ExifData::iterator it = exifData.findKey(key);
+        if (it != exifData.end()) {
+            dateTime = QDateTime::fromString(QString::fromLatin1(it->toString().c_str()), Qt::ISODate);
+            found = dateTime.isValid();
+        }
 
-        for (Exiv2::IptcData::iterator it = iptcData.begin(); it != iptcData.end(); ++it) {
-            QString key = QString::fromLocal8Bit(it->key().c_str());
-
-            if (key == keywordsTagName) {
-                QString tag;
-                if (isIptcUtf8) {
-                    tag = QString::fromUtf8(it->toString().c_str());
-                } else {
-                    tag = QString::fromLocal8Bit(it->toString().c_str());
-                }
-
-                keywords.append(tag);
-                anyAdded = true;
+        if (!found) {
+            Exiv2::ExifKey imageKey("Exif.Image.DateTimeOriginal");
+            Exiv2::ExifData::iterator imageIt = exifData.findKey(imageKey);
+            if (imageIt != exifData.end()) {
+                dateTime = QDateTime::fromString(QString::fromLatin1(imageIt->toString().c_str()), Qt::ISODate);
+                found = dateTime.isValid();
             }
         }
 
-        return anyAdded;
+        return found;
     }
 
     QString retrieveDescription(Exiv2::XmpData &xmpData, Exiv2::ExifData &exifData, Exiv2::IptcData &iptcData,
@@ -285,6 +323,18 @@ namespace MetadataIO {
         success = success || getIptcKeywords(iptcData, isIptcUtf8, keywords);
         Q_UNUSED(exifData);
         return keywords;
+    }
+
+    QDateTime retrieveDateTime(Exiv2::XmpData &xmpData, Exiv2::ExifData &exifData, Exiv2::IptcData &iptcData,
+                               bool isIptcUtf8) {
+        Q_UNUSED(iptcData);
+        Q_UNUSED(isIptcUtf8);
+
+        QDateTime dateTime;
+        bool success = false;
+        success = getXmpDateTime(xmpData, dateTime);
+        success = success || getExifDateTime(exifData, dateTime);
+        return dateTime;
     }
 
     Exiv2ReadingWorker::Exiv2ReadingWorker(int index, QVector<Models::ArtworkMetadata *> itemsToRead, QObject *parent):
@@ -360,6 +410,15 @@ namespace MetadataIO {
         importResult.Description = retrieveDescription(xmpData, exifData, iptcData, isIptcUtf8);
         importResult.Title = retrieveTitle(xmpData, exifData, iptcData, isIptcUtf8);
         importResult.Keywords = retrieveKeywords(xmpData, exifData, iptcData, isIptcUtf8);
+        importResult.DateTimeOriginal = retrieveDateTime(xmpData, exifData, iptcData, isIptcUtf8);
+
+        MetadataSavingCopy copy(artwork);
+        if (copy.readFromFile()) {
+            importResult.BackupDict = copy.getInfo();
+        }
+
+        QFileInfo fi(filepath);
+        importResult.FileSize = fi.size();
 
         m_ImportResult.insert(importResult.FilePath, importResult);
 

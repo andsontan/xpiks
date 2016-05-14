@@ -220,7 +220,7 @@ namespace MetadataIO {
                 Models::ImageArtwork *image = dynamic_cast<Models::ImageArtwork*>(metadata);
                 if (image != NULL) {
                     image->setImageSize(importResultItem.ImageSize);
-                    image->setDateTaken(importResultItem.DateTaken);
+                    image->setDateTimeOriginal(importResultItem.DateTimeOriginal);
                 }
 
                 metadata->setFileSize(importResultItem.FileSize);
@@ -257,7 +257,7 @@ namespace MetadataIO {
                 Models::ImageArtwork *image = dynamic_cast<Models::ImageArtwork*>(metadata);
                 if (image != NULL) {
                     image->setImageSize(importResultItem.ImageSize);
-                    image->setDateTaken(importResultItem.DateTaken);
+                    image->setDateTimeOriginal(importResultItem.DateTimeOriginal);
                 }
 
                 metadata->setFileSize(importResultItem.FileSize);

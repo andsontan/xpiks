@@ -115,12 +115,8 @@ namespace MetadataIO {
         }
 
         if (object.contains(DATETAKEN)) {
-            result.DateTaken = object.value(DATETAKEN).toString();
-            if (object.contains(TIMEZONE)) {
-                int timeZoneOffset = parseTimeZoneOffset(object);
-                QLatin1Char signChar = (timeZoneOffset < 0) ? QLatin1Char('-') : QLatin1Char('+');
-                result.DateTaken.append(QString(" GMT%1%2").arg(signChar).arg(qAbs(timeZoneOffset)));
-            }
+            QString dateTime = object.value(DATETAKEN).toString();
+            result.DateTimeOriginal = QDateTime::fromString(dateTime, Qt::ISODate);
         }
 
         bool keywordsSet = false;

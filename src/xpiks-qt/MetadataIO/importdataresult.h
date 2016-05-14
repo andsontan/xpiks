@@ -26,6 +26,7 @@
 #include <QString>
 #include <QSize>
 #include <QHash>
+#include <QDateTime>
 
 namespace MetadataIO {
     struct ImportDataResult {
@@ -36,7 +37,7 @@ namespace MetadataIO {
         QSize ImageSize;
         qint64 FileSize;
         QHash<QString, QString> BackupDict;
-        QString DateTaken;
+        QDateTime DateTimeOriginal;
     };
 }
 
