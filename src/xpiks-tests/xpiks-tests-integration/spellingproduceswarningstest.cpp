@@ -49,6 +49,8 @@ int SpellingProducesWarningsTest::doTest() {
 
     VERIFY(!ioCoordinator->getHasErrors(), "Errors in IO Coordinator while reading");
 
+    QThread::sleep(3);
+
     Models::ArtworkMetadata *metadata = artItemsModel->getArtwork(0);
 
     VERIFY(!Common::HasFlag(metadata->getWarningsFlags(), Common::WarningTypeSpellErrorsInTitle), "Error for reading title");
@@ -69,16 +71,6 @@ int SpellingProducesWarningsTest::doTest() {
     Warnings::WarningsService *warningsService = m_CommandManager->getWarningsService();
     SignalWaiter warningsQueueWaiter;
     QObject::connect(warningsService, SIGNAL(queueIsEmpty()), &warningsQueueWaiter, SIGNAL(finished()));
-
-    if (spellCheckService->isBusy()) {
-        LOG_INFO << "Waiting for prev spelling to finish...";
-        waiter.wait(2);
-    }
-
-    if (warningsService->isBusy()) {
-        LOG_INFO << "Waiting for prev warnings to finish...";
-        warningsQueueWaiter.wait(2);
-    }
 
     filteredModel->spellCheckSelected();
 
