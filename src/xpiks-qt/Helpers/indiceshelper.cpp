@@ -20,6 +20,7 @@
  */
 
 #include "indiceshelper.h"
+#include <cmath>
 
 namespace Models {
     class ArtworkMetadata;
@@ -28,10 +29,16 @@ namespace Models {
 namespace Helpers {
     template<class T>
     void splitIntoChunks(const QVector<T> &items, int chunksCount, QVector<QVector<T> > &chunks) {
-        if (items.isEmpty()) { return; }
         int size = items.size();
 
-        int chunkSize = size / chunksCount;
+        if (items.isEmpty() || (chunksCount == 0) || (chunksCount > size)) { return; }
+
+        if (chunksCount == 1) {
+            chunks << items;
+            return;
+        }
+
+        int chunkSize = ceil((size + 0.0) / chunksCount);
 
         int left = chunkSize;
         while (left < size) {
@@ -47,6 +54,11 @@ namespace Helpers {
     template
     void splitIntoChunks<Models::ArtworkMetadata*>(const QVector<Models::ArtworkMetadata*> &items,
     int chunksCount, QVector<QVector<Models::ArtworkMetadata*> > &chunks);
+
+#ifdef CORE_TESTS
+    template
+    void splitIntoChunks<int>(const QVector<int> &items, int chunksCount, QVector<QVector<int> > &chunks);
+#endif
 
     void indicesToRanges(const QVector<int> &indices, QVector<QPair<int, int> > &ranges) {
         if (indices.empty()) { return; }
