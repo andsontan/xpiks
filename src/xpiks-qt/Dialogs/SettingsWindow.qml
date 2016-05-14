@@ -563,6 +563,22 @@ ApplicationWindow {
                     anchors.rightMargin: 20
                     anchors.topMargin: 20
                     anchors.bottomMargin: 10
+                    spacing: 20
+
+                    StyledCheckbox {
+                        id: useExifToolCheckbox
+                        text: i18.n + qsTr("Use ExifTool")
+                        onCheckedChanged: {
+                            settingsModel.useExifTool = checked
+                        }
+                        function onResetRequested()  {
+                            checked = settingsModel.useExifTool
+                        }
+                        Component.onCompleted: {
+                            checked = settingsModel.useExifTool
+                            extTab.resetRequested.connect(useExifToolCheckbox.onResetRequested)
+                        }
+                    }
 
                     GridLayout {
                         width: parent.width

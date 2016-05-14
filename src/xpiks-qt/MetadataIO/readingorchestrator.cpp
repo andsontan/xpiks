@@ -25,9 +25,15 @@
 #include <QMutexLocker>
 #include "../xpiks-qt/Models/artworkmetadata.h"
 #include "../xpiks-qt/Common/defines.h"
+#include "../xpiks-qt/Helpers/indiceshelper.h"
 #include "exiv2readingworker.h"
 
+#if defined(TRAVIS_CI)
 #define MIN_SPLIT_COUNT 100
+#else
+#define MIN_SPLIT_COUNT 1
+#endif
+
 #define MAX_READING_THREADS 10
 #define MIN_READING_THREADS 1
 
@@ -45,14 +51,9 @@ namespace MetadataIO {
         int size = itemsToRead.size();
         if (size >= MIN_SPLIT_COUNT) {
             m_ThreadsCount = qMin(qMax(QThread::idealThreadCount(), MIN_READING_THREADS), MAX_READING_THREADS);
-            int chunkSize = size / m_ThreadsCount;            
-            m_SlicedItemsToRead.reserve(m_ThreadsCount);
+            m_ThreadsCount = qMin(size, m_ThreadsCount);
 
-            int left = chunkSize;
-            while (left < size) {
-                m_SlicedItemsToRead.push_back(itemsToRead.mid(left - chunkSize, chunkSize));
-                left += chunkSize;
-            }
+            Helpers::splitIntoChunks<Models::ArtworkMetadata*>(itemsToRead, m_ThreadsCount, m_SlicedItemsToRead);
         } else {
             m_SlicedItemsToRead.push_back(itemsToRead);
         }

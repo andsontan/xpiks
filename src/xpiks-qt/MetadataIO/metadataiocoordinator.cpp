@@ -110,7 +110,7 @@ namespace MetadataIO {
         }
     }
 
-    void MetadataIOCoordinator::readMetadata(const QVector<Models::ArtworkMetadata *> &artworksToRead,
+    void MetadataIOCoordinator::readMetadataExifTool(const QVector<Models::ArtworkMetadata *> &artworksToRead,
                                              const QVector<QPair<int, int> > &rangesToUpdate) {
         Q_ASSERT(m_ReadingWorker == NULL);
 

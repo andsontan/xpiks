@@ -58,6 +58,7 @@
 #define DEFAULT_LOCALE "en_US"
 #define DEFAULT_SELECTED_THEME_INDEX 0
 #define DEFAULT_USE_AUTO_COMPLETE true
+#define DEFAULT_USE_EXIFTOOL false
 
 namespace Models {
     SettingsModel::SettingsModel(QObject *parent) :
@@ -132,6 +133,7 @@ namespace Models {
         appSettings.setValue(appSettings.getAutoFindVectorsKey(), m_AutoFindVectors);
         appSettings.setValue(appSettings.getSelectedThemeIndexKey(), m_SelectedThemeIndex);
         appSettings.setValue(appSettings.getUseAutoCompleteKey(), m_UseAutoComplete);
+        appSettings.setValue(appSettings.getUseExifToolKey(), m_UseExifTool);
 
         if (!m_MustUseMasterPassword) {
             appSettings.setValue(appSettings.getMasterPasswordHashKey(), "");
@@ -189,6 +191,7 @@ namespace Models {
         setSelectedLocale(appSettings.value(appSettings.getSelectedLocaleKey(), DEFAULT_LOCALE).toString());
         setSelectedThemeIndex(appSettings.value(appSettings.getSelectedThemeIndexKey(), DEFAULT_SELECTED_THEME_INDEX).toInt());
         setUseAutoComplete(appSettings.boolValue(appSettings.getUseAutoCompleteKey(), DEFAULT_USE_AUTO_COMPLETE));
+        setUseExifTool(appSettings.boolValue(appSettings.getUseExifToolKey(), DEFAULT_USE_EXIFTOOL));
     }
 
     void SettingsModel::resetToDefault() {
@@ -216,6 +219,7 @@ namespace Models {
         setSelectedLocale(DEFAULT_LOCALE);
         setSelectedThemeIndex(DEFAULT_SELECTED_THEME_INDEX);
         setUseAutoComplete(DEFAULT_USE_AUTO_COMPLETE);
+        setUseExifTool(DEFAULT_USE_EXIFTOOL);
 
         Helpers::AppSettings appSettings;
 #if defined(QT_DEBUG)

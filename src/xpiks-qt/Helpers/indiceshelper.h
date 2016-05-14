@@ -25,8 +25,10 @@
 #include <QVector>
 #include <QPair>
 
-namespace Helpers
-{
+namespace Helpers {
+    template<class T>
+    void splitIntoChunks(const QVector<T> &items, int chunksCount, QVector<QVector<T> > &chunks);
+
     void indicesToRanges(const QVector<int> &indices, QVector<QPair<int, int> > &ranges);
     int getRangesLength(const QVector<QPair<int, int> > &ranges);
 }

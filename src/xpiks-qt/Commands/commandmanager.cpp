@@ -349,7 +349,12 @@ void Commands::CommandManager::readMetadata(const QVector<Models::ArtworkMetadat
                                             const QVector<QPair<int, int> > &rangesToUpdate) const {
 #ifndef CORE_TESTS
     if (m_MetadataIOCoordinator) {
-        m_MetadataIOCoordinator->readMetadataExiv2(artworks, rangesToUpdate);
+        if ((m_SettingsModel != NULL) && !m_SettingsModel->getUseExifTool()) {
+            m_MetadataIOCoordinator->readMetadataExiv2(artworks, rangesToUpdate);
+        } else {
+            // fallback
+            m_MetadataIOCoordinator->readMetadataExifTool(artworks, rangesToUpdate);
+        }
     }
 #else
     Q_UNUSED(artworks);
