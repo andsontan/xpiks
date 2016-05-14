@@ -296,7 +296,6 @@ win32 {
     LIBS -= -lcurl
     LIBS += -lmman
 
-    LIBS += -lmman
     LIBS += -llibexpat
     LIBS += -llibexiv2
 

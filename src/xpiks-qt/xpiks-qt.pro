@@ -379,7 +379,7 @@ win32 {
     INCLUDEPATH += "../hunspell-1.3.3/src"
     INCLUDEPATH += "../quazip"
     INCLUDEPATH += "../libcurl/include"
-    INCLUDEPATH += ../exiv2-0.25/include
+    INCLUDEPATH += "../exiv2-0.25/include"
     LIBS -= -lcurl
 
     CONFIG(debug, debug|release) {
