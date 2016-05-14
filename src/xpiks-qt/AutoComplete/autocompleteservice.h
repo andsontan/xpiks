@@ -43,6 +43,7 @@ namespace AutoComplete {
         virtual void stopService();
 
         virtual bool isAvailable() const { return true; }
+        virtual bool isBusy() const;
 
     protected:
         virtual void submitItem(QString *item);
