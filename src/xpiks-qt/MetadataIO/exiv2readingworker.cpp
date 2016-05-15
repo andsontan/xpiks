@@ -504,11 +504,11 @@ namespace MetadataIO {
 
             Models::ArtworkMetadata *artwork = m_ItemsToRead.at(i);
             const QString &filepath = artwork->getFilepath();
-            Q_ASSERT(!m_ImportResult.contains(filepath));
             ImportDataResult importResult;
 
             try {
                 if (readMetadata(artwork, importResult)) {
+                    Q_ASSERT(!m_ImportResult.contains(filepath));
                     m_ImportResult.insert(filepath, importResult);
                 }
             }
@@ -561,8 +561,6 @@ namespace MetadataIO {
 
         QFileInfo fi(filepath);
         importResult.FileSize = fi.size();
-
-        m_ImportResult.insert(importResult.FilePath, importResult);
 
         return true;
     }

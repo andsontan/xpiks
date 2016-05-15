@@ -55,7 +55,7 @@ namespace MetadataIO {
         void finished(bool anyError);
 
     private:
-        void readMetadata(Models::ArtworkMetadata *artwork, ImportDataResult &importResult);
+        bool readMetadata(Models::ArtworkMetadata *artwork, ImportDataResult &importResult);
 
     private:
         QVector<Models::ArtworkMetadata *> m_ItemsToRead;
