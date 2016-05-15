@@ -249,7 +249,9 @@ HEADERS += \
     MetadataIO/readingorchestrator.h \
     MetadataIO/imetadatareader.h \
     MetadataIO/exiv2writingworker.h \
-    MetadataIO/writingorchestrator.h
+    MetadataIO/writingorchestrator.h \
+    MetadataIO/exiv2tagnames.h \
+    MetadataIO/imetadatawriter.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

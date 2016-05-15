@@ -37,6 +37,7 @@
 #include "../Common/defines.h"
 #include "../Models/imageartwork.h"
 #include "readingorchestrator.h"
+#include "writingorchestrator.h"
 
 namespace MetadataIO {
     bool tryGetExiftoolVersion(const QString &path, QString &version) {
@@ -90,7 +91,7 @@ namespace MetadataIO {
     void MetadataIOCoordinator::writingWorkerFinished(bool success) {
         LOG_INFO << success;
         setHasErrors(!success);
-        const QVector<Models::ArtworkMetadata*> &artworksToWrite = m_WritingWorker->getArtworksToExport();
+        const QVector<Models::ArtworkMetadata*> &artworksToWrite = m_WritingWorker->getItemsToWrite();
         m_CommandManager->addToLibrary(artworksToWrite);
         emit metadataWritingFinished();
     }
@@ -150,33 +151,46 @@ namespace MetadataIO {
         QObject::connect(this, SIGNAL(discardReadingSignal()), readingOrchestrator, SLOT(dismiss()));
 
         initializeImport(artworksToRead.count());
+        m_ReadingWorker = readingOrchestrator;
 
         readingOrchestrator->startReading();
-
-        m_ReadingWorker = readingOrchestrator;
     }
 #endif
 
-    void MetadataIOCoordinator::writeMetadata(const QVector<Models::ArtworkMetadata *> &artworksToWrite, bool useBackups) {
-        m_WritingWorker = new MetadataWritingWorker(artworksToWrite,
+    void MetadataIOCoordinator::writeMetadataExifTool(const QVector<Models::ArtworkMetadata *> &artworksToWrite, bool useBackups) {
+        MetadataWritingWorker *writingWorker = new MetadataWritingWorker(artworksToWrite,
                                                     m_CommandManager->getSettingsModel(),
                                                     useBackups);
         QThread *thread = new QThread();
-        m_WritingWorker->moveToThread(thread);
+        writingWorker->moveToThread(thread);
 
-        QObject::connect(thread, SIGNAL(started()), m_WritingWorker, SLOT(process()));
-        QObject::connect(m_WritingWorker, SIGNAL(stopped()), thread, SLOT(quit()));
+        QObject::connect(thread, SIGNAL(started()), writingWorker, SLOT(process()));
+        QObject::connect(writingWorker, SIGNAL(stopped()), thread, SLOT(quit()));
 
-        QObject::connect(m_WritingWorker, SIGNAL(stopped()), m_WritingWorker, SLOT(deleteLater()));
+        QObject::connect(writingWorker, SIGNAL(stopped()), writingWorker, SLOT(deleteLater()));
         QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
 
-        QObject::connect(m_WritingWorker, SIGNAL(finished(bool)), this, SLOT(writingWorkerFinished(bool)));
-        QObject::connect(this, SIGNAL(metadataWritingFinished()), m_WritingWorker, SIGNAL(stopped()));
+        QObject::connect(writingWorker, SIGNAL(finished(bool)), this, SLOT(writingWorkerFinished(bool)));
+        QObject::connect(this, SIGNAL(metadataWritingFinished()), writingWorker, SIGNAL(stopped()));
         setProcessingItemsCount(artworksToWrite.length());
 
         LOG_DEBUG << "Starting thread...";
+        m_WritingWorker = writingWorker;
         thread->start();
     }
+
+#ifndef CORE_TESTS
+    void MetadataIOCoordinator::writeMetadataExiv2(const QVector<Models::ArtworkMetadata *> &artworksToWrite) {
+        WritingOrchestrator *writingOrchestrator = new WritingOrchestrator(artworksToWrite);
+
+        QObject::connect(writingOrchestrator, SIGNAL(allFinished(bool)), this, SLOT(writingWorkerFinished(bool)));
+        QObject::connect(this, SIGNAL(metadataWritingFinished()), writingOrchestrator, SLOT(dismiss()));
+
+        m_WritingWorker = writingOrchestrator;
+
+        writingOrchestrator->startWriting();
+    }
+#endif
 
     void MetadataIOCoordinator::autoDiscoverExiftool() {
         Models::SettingsModel *settingsModel = m_CommandManager->getSettingsModel();

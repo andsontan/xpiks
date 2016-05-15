@@ -34,6 +34,7 @@ namespace Models {
 
 namespace MetadataIO {
     class IMetadataReader;
+    class IMetadataWriter;
     class MetadataWritingWorker;
 
     class MetadataIOCoordinator : public QObject, public Common::BaseEntity
@@ -89,7 +90,10 @@ namespace MetadataIO {
 #ifndef CORE_TESTS
         void readMetadataExiv2(const QVector<Models::ArtworkMetadata*> &artworksToRead, const QVector<QPair<int, int> > &rangesToUpdate);
 #endif
-        void writeMetadata(const QVector<Models::ArtworkMetadata*> &artworksToWrite, bool useBackups);
+        void writeMetadataExifTool(const QVector<Models::ArtworkMetadata*> &artworksToWrite, bool useBackups);
+#ifndef CORE_TESTS
+        void writeMetadataExiv2(const QVector<Models::ArtworkMetadata*> &artworksToWrite);
+#endif
         void autoDiscoverExiftool();
         Q_INVOKABLE void discardReading();
         Q_INVOKABLE void continueReading(bool ignoreBackups);
@@ -103,7 +107,7 @@ namespace MetadataIO {
 
     private:
         IMetadataReader *m_ReadingWorker;
-        MetadataWritingWorker *m_WritingWorker;
+        IMetadataWriter *m_WritingWorker;
         QFutureWatcher<void> *m_ExiftoolDiscoveryFuture;
         QString m_RecommendedExiftoolPath;
         int m_ProcessingItemsCount;

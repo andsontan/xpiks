@@ -24,6 +24,7 @@
 #include <QTextStream>
 #include <QStringRef>
 #include <QVector>
+#include <QByteArray>
 #include <QString>
 #include <QtGlobal>
 #include <vector>
@@ -113,7 +114,7 @@ namespace Helpers {
     }
 
     int levensteinDistance(const QString &s1, const QString &s2) {
-        const int len1 = s1.size(), len2 = s2.size();
+        const unsigned int len1 = s1.size(), len2 = s2.size();
         std::vector<unsigned int> col(len2 + 1), prevCol(len2 + 1);
 
         for (unsigned int i = 0; i < prevCol.size(); i++) {
@@ -261,5 +262,20 @@ done:
 
         //TODO: KDE4PORT: check for regression of #134999 (very probably no regression!)
         return QString::fromLocal8Bit(value.c_str());
+    }
+
+    bool is7BitAscii(const QByteArray &s) {
+        bool anyFault = false;
+        const int size = s.size();
+
+        for (int i = 0; i < size; i++) {
+            int c = s[i];
+            if (c < 0 || c >= 128) {
+                anyFault = true;
+                break;
+            }
+        }
+
+        return !anyFault;
     }
 }

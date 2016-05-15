@@ -19,23 +19,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef STRINGHELPER
-#define STRINGHELPER
+#ifndef EXIV2TAGNAMES_H
+#define EXIV2TAGNAMES_H
 
-#include <string>
+#define XMP_DESCRIPTION "Xmp.dc.description"
+#define XMP_PS_HEADLINE "Xmp.photoshop.Headline"
+#define XMP_TITLE "Xmp.dc.title"
+#define XMP_PS_DATECREATED "Xmp.photoshop.DateCreated"
+#define XMP_KEYWORDS "Xmp.dc.subject"
 
-class QString;
-class QStringList;
-class QByteArray;
+#define IPTC_DESCRIPTION "Iptc.Application2.Caption"
+#define IPTC_TITLE "Iptc.Application2.ObjectName"
+#define IPTC_KEYWORDS "Iptc.Application2.Keywords"
+#define IPTC_CHARSET "Iptc.Envelope.CharacterSet"
 
-namespace Helpers {
-    QString getLastNLines(const QString &text, int N);
-    void splitText(const QString &text, QStringList &parts);
-    int levensteinDistance(const QString &s1, const QString &s2);
-    bool isUtf8(const char* const buffer);
-    QString detectEncodingAndDecode(const std::string &value);
-    bool is7BitAscii(const QByteArray &s);
-}
+#define EXIF_USERCOMMENT "Exif.Photo.UserComment"
+#define EXIF_DESCRIPTION "Exif.Image.ImageDescription"
+#define EXIF_PHOTO_DATETIMEORIGINAL "Exif.Photo.DateTimeOriginal"
+#define EXIF_IMAGE_DATETIMEORIGINAL "Exif.Image.DateTimeOriginal"
 
-#endif // STRINGHELPER
-
+#endif // EXIV2TAGNAMES_H

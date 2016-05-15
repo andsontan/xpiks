@@ -29,6 +29,7 @@
 #include "../Common/defines.h"
 #include "../Helpers/stringhelper.h"
 #include "saverworkerjobitem.h"
+#include "exiv2tagnames.h"
 #include <exiv2/exiv2.hpp>
 
 #define X_DEFAULT QString::fromLatin1("x-default")
@@ -94,10 +95,10 @@ namespace MetadataIO {
         bool anyFound = false;
 
         try {
-            anyFound = getXmpLangAltValue(xmpData, "Xmp.dc.description", langAlt, description);
+            anyFound = getXmpLangAltValue(xmpData, XMP_DESCRIPTION, langAlt, description);
 
             if (!anyFound || description.isEmpty()) {
-                Exiv2::XmpKey psKey("Xmp.photoshop.Headline");
+                Exiv2::XmpKey psKey(XMP_PS_HEADLINE);
                 Exiv2::XmpData::iterator xmpIt = xmpData.findKey(psKey);
                 if (xmpIt != xmpData.end()) {
                     const Exiv2::XmpTextValue &value = static_cast<const Exiv2::XmpTextValue &>(xmpIt->value());
@@ -129,7 +130,7 @@ namespace MetadataIO {
         bool anyFound = false;
 
         try {
-            anyFound = getXmpLangAltValue(xmpData, "Xmp.dc.title", langAlt, title);
+            anyFound = getXmpLangAltValue(xmpData, XMP_TITLE, langAlt, title);
         }
         catch (Exiv2::Error &e) {
             LOG_WARNING << "Exiv2 error:" << e.what();
@@ -170,7 +171,7 @@ namespace MetadataIO {
         bool anyFound = false;
 
         try {
-            Exiv2::XmpKey psKey("Xmp.photoshop.DateCreated");
+            Exiv2::XmpKey psKey(XMP_PS_DATECREATED);
             Exiv2::XmpData::iterator xmpIt = xmpData.findKey(psKey);
 
             if (xmpIt != xmpData.end()) {
@@ -197,7 +198,7 @@ namespace MetadataIO {
         bool anyFound = false;
 
         try {
-            anyFound = getXmpTagStringBag(xmpData, "Xmp.dc.subject", keywords);
+            anyFound = getXmpTagStringBag(xmpData, XMP_KEYWORDS, keywords);
         }
         catch (Exiv2::Error &e) {
             LOG_WARNING << "Exiv2 error:" << e.what();
@@ -246,7 +247,7 @@ namespace MetadataIO {
         bool anyFound = false;
 
         try {
-            anyFound = getIptcString(iptcData, "Iptc.Application2.Caption", isIptcUtf8, description);
+            anyFound = getIptcString(iptcData, IPTC_DESCRIPTION, isIptcUtf8, description);
         }
         catch (Exiv2::Error &e) {
             LOG_WARNING << "Exiv2 error:" << e.what();
@@ -267,7 +268,7 @@ namespace MetadataIO {
         bool anyFound = false;
 
         try {
-            anyFound = getIptcString(iptcData, "Iptc.Application2.ObjectName", isIptcUtf8, title);
+            anyFound = getIptcString(iptcData, IPTC_TITLE, isIptcUtf8, title);
         }
         catch (Exiv2::Error &e) {
             LOG_WARNING << "Exiv2 error:" << e.what();
@@ -288,7 +289,7 @@ namespace MetadataIO {
         bool anyAdded = false;
 
         try {
-            QString keywordsTagName = QString::fromLatin1("Iptc.Application2.Keywords");
+            QString keywordsTagName = QString::fromLatin1(IPTC_KEYWORDS);
 
             for (Exiv2::IptcData::iterator it = iptcData.begin(); it != iptcData.end(); ++it) {
                 QString key = QString::fromLocal8Bit(it->key().c_str());
@@ -324,7 +325,7 @@ namespace MetadataIO {
     QString getExifUserComment(Exiv2::ExifData &exifData) {
         QString result;
 
-        Exiv2::ExifKey key("Exif.Photo.UserComment");
+        Exiv2::ExifKey key(EXIF_USERCOMMENT);
         Exiv2::ExifData::iterator it = exifData.findKey(key);
         if (it != exifData.end()) {
             const Exiv2::Exifdatum& exifDatum = *it;
@@ -369,7 +370,7 @@ namespace MetadataIO {
         bool foundDesc = false;
 
         try {
-            Exiv2::ExifKey key("Exif.Image.ImageDescription");
+            Exiv2::ExifKey key(EXIF_DESCRIPTION);
             Exiv2::ExifData::iterator it = exifData.findKey(key);
 
             QString value;
@@ -406,7 +407,7 @@ namespace MetadataIO {
         bool anyFound = false;
 
         try {
-            Exiv2::ExifKey key("Exif.Photo.DateTimeOriginal");
+            Exiv2::ExifKey key(EXIF_PHOTO_DATETIMEORIGINAL);
             Exiv2::ExifData::iterator it = exifData.findKey(key);
             if (it != exifData.end()) {
                 dateTime = QDateTime::fromString(QString::fromLatin1(it->toString().c_str()), Qt::ISODate);
@@ -414,7 +415,7 @@ namespace MetadataIO {
             }
 
             if (!anyFound) {
-                Exiv2::ExifKey imageKey("Exif.Image.DateTimeOriginal");
+                Exiv2::ExifKey imageKey(EXIF_IMAGE_DATETIMEORIGINAL);
                 Exiv2::ExifData::iterator imageIt = exifData.findKey(imageKey);
                 if (imageIt != exifData.end()) {
                     dateTime = QDateTime::fromString(QString::fromLatin1(imageIt->toString().c_str()), Qt::ISODate);
@@ -539,6 +540,7 @@ namespace MetadataIO {
 #else
         Exiv2::Image::AutoPtr image = Exiv2::ImageFactory::open(filepath.toStdString());
 #endif
+        Q_ASSERT(image.get() != NULL);
         image->readMetadata();
 
         Exiv2::XmpData &xmpData = image->xmpData();

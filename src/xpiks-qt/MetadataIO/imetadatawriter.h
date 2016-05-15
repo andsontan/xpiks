@@ -19,47 +19,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef WRITINGORCHESTRATOR_H
-#define WRITINGORCHESTRATOR_H
+#ifndef IMETADATAWRITER_H
+#define IMETADATAWRITER_H
 
-#include <QObject>
 #include <QVector>
-#include <QAtomicInt>
-#include "imetadatawriter.h"
 
 namespace Models {
     class ArtworkMetadata;
 }
 
 namespace MetadataIO {
-    class WritingOrchestrator : public QObject, public IMetadataWriter
-    {
-        Q_OBJECT
+    class IMetadataWriter {
     public:
-        explicit WritingOrchestrator(const QVector<Models::ArtworkMetadata*> &itemsToWrite, QObject *parent = 0);
-        virtual ~WritingOrchestrator();
+        virtual ~IMetadataWriter() {}
 
-    public:
-        virtual const QVector<Models::ArtworkMetadata *> &getItemsToWrite() const { return m_ItemsToWrite; }
-        void startWriting();
-
-    signals:
-        void allStarted();
-        void allFinished(bool anyError);
-
-    public slots:
-        void dismiss();
-
-    private slots:
-        void onWorkerFinished(bool anyError);
-
-    private:
-        QVector<Models::ArtworkMetadata*> m_ItemsToWrite;
-        QVector<QVector<Models::ArtworkMetadata *> > m_SlicedItemsToWrite;
-        int m_ThreadsCount;
-        QAtomicInt m_FinishedCount;
-        volatile bool m_AnyError;
+        virtual const QVector<Models::ArtworkMetadata *> &getItemsToWrite() const = 0;
     };
 }
 
-#endif // WRITINGORCHESTRATOR_H
+#endif // IMETADATAWRITER_H

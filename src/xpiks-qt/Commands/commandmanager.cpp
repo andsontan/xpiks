@@ -363,9 +363,19 @@ void Commands::CommandManager::readMetadata(const QVector<Models::ArtworkMetadat
 }
 
 void Commands::CommandManager::writeMetadata(const QVector<Models::ArtworkMetadata *> &artworks, bool useBackups) const {
+#ifndef CORE_TESTS
     if (m_MetadataIOCoordinator) {
-        m_MetadataIOCoordinator->writeMetadata(artworks, useBackups);
+        if ((m_SettingsModel != NULL) && !m_SettingsModel->getUseExifTool()) {
+            m_MetadataIOCoordinator->writeMetadataExiv2(artworks);
+        } else {
+            // fallback
+            m_MetadataIOCoordinator->writeMetadataExifTool(artworks, useBackups);
+        }
     }
+#else
+    Q_UNUSED(artworks);
+    Q_UNUSED(useBackups);
+#endif
 }
 
 void Commands::CommandManager::addToLibrary(const QVector<Models::ArtworkMetadata *> &artworks) const {

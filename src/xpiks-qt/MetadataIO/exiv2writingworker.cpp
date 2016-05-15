@@ -21,12 +21,17 @@
 
 #include "exiv2writingworker.h"
 #include <QStringList>
+#include <QTextCodec>
 #include "../Models/artworkmetadata.h"
 #include "../Common/defines.h"
+#include "../Helpers/stringhelper.h"
+#include "exiv2tagnames.h"
 #include <exiv2/exiv2.hpp>
 #include <string>
 
 #define X_DEFAULT QString::fromLatin1("x-default")
+#define IPTC_MAX_DESCRIPTION_LEN 2000
+#define IPTC_MAX_TITLE_LEN 64
 
 namespace MetadataIO {
     typedef QMap<QString, QString> AltLangMap;
@@ -102,7 +107,7 @@ namespace MetadataIO {
 
     void setXmpKeywords(Exiv2::XmpData &xmpData, const QStringList &keywords) {
         try {
-            setXmpTagStringBag(xmpData, "Xmp.dc.subject", keywords);
+            setXmpTagStringBag(xmpData, XMP_KEYWORDS, keywords);
         }
         catch (Exiv2::Error &e) {
             LOG_WARNING << "Exiv2 error:" << e.what();
@@ -117,7 +122,7 @@ namespace MetadataIO {
 
     void setXmpDescription(Exiv2::XmpData &xmpData, const QString &description) {
         try {
-            setXmpTagStringLangAlt(xmpData, "Xmp.dc.description", X_DEFAULT, description);
+            setXmpTagStringLangAlt(xmpData, XMP_DESCRIPTION, X_DEFAULT, description);
         }
         catch (Exiv2::Error &e) {
             LOG_WARNING << "Exiv2 error:" << e.what();
@@ -132,7 +137,7 @@ namespace MetadataIO {
 
     void setXmpTitle(Exiv2::XmpData &xmpData, const QString &title) {
         try {
-            setXmpTagStringLangAlt(xmpData, "Xmp.dc.title", X_DEFAULT, title);
+            setXmpTagStringLangAlt(xmpData, XMP_TITLE, X_DEFAULT, title);
         }
         catch (Exiv2::Error &e) {
             LOG_WARNING << "Exiv2 error:" << e.what();
@@ -155,12 +160,157 @@ namespace MetadataIO {
     }
 
     void setIptcEncodingUtf8(Exiv2::IptcData &iptcData) {
-        iptcData["Iptc.Envelope.CharacterSet"] = "\33%G";
+        iptcData[IPTC_CHARSET] = "\33%G";
     }
 
     void setIptcString(Exiv2::IptcData &iptcData, const char *propertyName, const QString &value) {
         iptcData[propertyName] = std::string(value.toUtf8().constData());
         setIptcEncodingUtf8(iptcData);
+    }
+
+    void setIptcDescription(Exiv2::IptcData &iptcData, const QString &description) {
+        try {
+            setIptcString(iptcData, IPTC_DESCRIPTION, description.mid(0, IPTC_MAX_DESCRIPTION_LEN));
+        }
+        catch (Exiv2::Error &e) {
+            LOG_WARNING << "Exiv2 error:" << e.what();
+        }
+        catch (...) {
+            LOG_WARNING << "Exception";
+#ifdef QT_DEBUG
+            throw;
+#endif
+        }
+    }
+
+    void setIptcTitle(Exiv2::IptcData &iptcData, const QString &title) {
+        try {
+            setIptcString(iptcData, IPTC_TITLE, title.mid(0, IPTC_MAX_TITLE_LEN));
+        }
+        catch (Exiv2::Error &e) {
+            LOG_WARNING << "Exiv2 error:" << e.what();
+        }
+        catch (...) {
+            LOG_WARNING << "Exception";
+#ifdef QT_DEBUG
+            throw;
+#endif
+        }
+    }
+
+    void removeExistingIptcKeywords(Exiv2::IptcData &iptcData) {
+        Exiv2::IptcData::iterator it = iptcData.begin();
+
+        while (it != iptcData.end()) {
+            QString key = QString::fromLocal8Bit(it->key().c_str());
+
+            if ( key == QString::fromLatin1(IPTC_KEYWORDS)) {
+                it = iptcData.erase(it);
+            } else {
+                ++it;
+            }
+        }
+    }
+
+    void addIptcKeywords(Exiv2::IptcData &iptcData, const QStringList &keywords) {
+        Exiv2::IptcKey keywordsKey(IPTC_KEYWORDS);
+        int size = keywords.size();
+
+        for (int i = 0; i < size; ++i) {
+            QString key = keywords.at(i);
+            key.truncate(64);
+
+            Exiv2::Value::AutoPtr iptcKeyword = Exiv2::Value::create(Exiv2::string);
+            iptcKeyword->read(key.toUtf8().constData());
+            iptcData.add(keywordsKey, iptcKeyword.get());
+        }
+
+        setIptcEncodingUtf8(iptcData);
+    }
+
+    void setIptcKeywords(Exiv2::IptcData &iptcData, const QStringList &keywords) {
+        try {
+            removeExistingIptcKeywords(iptcData);
+            addIptcKeywords(iptcData, keywords);
+        }
+        catch (Exiv2::Error &e) {
+            LOG_WARNING << "Exiv2 error:" << e.what();
+        }
+        catch (...) {
+            LOG_WARNING << "Exception";
+#ifdef QT_DEBUG
+            throw;
+#endif
+        }
+    }
+
+    void setExifLatin1String(Exiv2::ExifData &exifData, const char *propertyName, const QString &value) {
+        exifData[propertyName] = std::string(value.toLatin1().constData());
+    }
+
+    void setExifUserComment(Exiv2::ExifData &exifData, const QString &comment) {
+        // Write as Unicode only when necessary.
+        QTextCodec* latin1Codec = QTextCodec::codecForName("iso8859-1");
+
+        bool dataWritten = false;
+
+        if (latin1Codec->canEncode(comment)) {
+            // We know it's in the ISO-8859-1 8bit range.
+            // Check if it's in the ASCII 7bit range
+            if (Helpers::is7BitAscii(comment.toLatin1())) {
+                // write as ASCII
+                std::string exifComment("charset=\"Ascii\" ");
+                exifComment += comment.toLatin1().constData();
+                exifData[EXIF_USERCOMMENT] = exifComment;
+                dataWritten = true;
+            }
+        }
+
+        if (!dataWritten) {
+            // write as Unicode (UCS-2)
+            std::string exifComment("charset=\"Unicode\" ");
+            exifComment += comment.toUtf8().constData();
+
+            exifData[EXIF_USERCOMMENT] = exifComment;
+            dataWritten = true;
+        }
+    }
+
+    void setExifDescription(Exiv2::ExifData &exifData, const QString &description) {
+        try {
+            setExifLatin1String(exifData, EXIF_DESCRIPTION, description);
+            setExifUserComment(exifData, description);
+        }
+        catch (Exiv2::Error &e) {
+            LOG_WARNING << "Exiv2 error:" << e.what();
+        }
+        catch (...) {
+            LOG_WARNING << "Exception";
+#ifdef QT_DEBUG
+            throw;
+#endif
+        }
+    }
+
+    void setArtworkDescription(Exiv2::XmpData &xmpData, Exiv2::ExifData &exifData,
+                             Exiv2::IptcData &iptcData, const QString &description) {
+        setXmpDescription(xmpData, description);
+        setIptcDescription(iptcData, description);
+        setExifDescription(exifData, description);
+    }
+
+    void setArtworkTitle(Exiv2::XmpData &xmpData, Exiv2::ExifData &exifData,
+                         Exiv2::IptcData &iptcData, const QString &title) {
+        setXmpTitle(xmpData, title);
+        setIptcTitle(iptcData, title);
+        Q_UNUSED(exifData);
+    }
+
+    void setArtworkKeywords(Exiv2::XmpData &xmpData, Exiv2::ExifData &exifData,
+                            Exiv2::IptcData &iptcData, const QStringList &keywords) {
+        setXmpKeywords(xmpData, keywords);
+        setIptcKeywords(iptcData, keywords);
+        Q_UNUSED(exifData);
     }
 
     Exiv2WritingWorker::Exiv2WritingWorker(int index, QVector<Models::ArtworkMetadata *> itemsToWrite, QObject *parent) :
@@ -170,7 +320,7 @@ namespace MetadataIO {
         m_Stopped(false)
     {
         Q_ASSERT(!itemsToWrite.isEmpty());
-        LOG_INFO << "Worker [" << index << "]:" << itemsToWrite.size() << "items to read";
+        LOG_INFO << "Worker [" << index << "]:" << itemsToWrite.size() << "items to write";
     }
 
     void Exiv2WritingWorker::process() {
@@ -205,6 +355,29 @@ namespace MetadataIO {
     }
 
     void Exiv2WritingWorker::writeMetadata(Models::ArtworkMetadata *artwork) {
+        const QString &filepath = artwork->getFilepath();
+#if defined(Q_OS_WIN)
+        Exiv2::Image::AutoPtr image = Exiv2::ImageFactory::open(filepath.toStdWString());
+#else
+        Exiv2::Image::AutoPtr image = Exiv2::ImageFactory::open(filepath.toStdString());
+#endif
+        Q_ASSERT(image.get() != NULL);
 
+        image->readMetadata();
+
+        Exiv2::XmpData &xmpData = image->xmpData();
+        Exiv2::ExifData &exifData = image->exifData();
+        Exiv2::IptcData &iptcData = image->iptcData();
+
+        QString description = artwork->getDescription();
+        setArtworkDescription(xmpData, exifData, iptcData, description);
+
+        QString title = artwork->getTitle();
+        setArtworkTitle(xmpData, exifData, iptcData, title);
+
+        QStringList keywords = artwork->getKeywords();
+        setArtworkKeywords(xmpData, exifData, iptcData, keywords);
+
+        image->writeMetadata();
     }
 }
