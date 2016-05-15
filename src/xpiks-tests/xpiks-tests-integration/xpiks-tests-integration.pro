@@ -120,7 +120,8 @@ SOURCES += main.cpp \
     spellingproduceswarningstest.cpp \
     undoaddwithvectorstest.cpp \
     ../../xpiks-qt/MetadataIO/exiv2readingworker.cpp \
-    ../../xpiks-qt/MetadataIO/readingorchestrator.cpp
+    ../../xpiks-qt/MetadataIO/readingorchestrator.cpp \
+    ../../xpiks-qt/MetadataIO/exiv2writingworker.cpp
 
 RESOURCES +=
 
@@ -266,7 +267,9 @@ HEADERS += \
     ../../xpiks-qt/MetadataIO/exiv2readingworker.h \
     ../../xpiks-qt/MetadataIO/imetadatareader.h \
     ../../xpiks-qt/MetadataIO/importdataresult.h \
-    ../../xpiks-qt/MetadataIO/readingorchestrator.h
+    ../../xpiks-qt/MetadataIO/readingorchestrator.h \
+    ../../xpiks-qt/MetadataIO/exiv2writingworker.h \
+    ../../xpiks-qt/MetadataIO/imetadatawriter.h
     spellingproduceswarningstest.h
 
 INCLUDEPATH += ../../tiny-aes
@@ -283,6 +286,13 @@ macx {
     INCLUDEPATH += "../../hunspell-1.3.3/src"
     INCLUDEPATH += "../../quazip"
     INCLUDEPATH += "../../../libcurl/include"
+    INCLUDEPATH += "../../exiv2-0.25/include"
+
+    LIBS += -liconv
+    LIBS += -lexpat
+
+    LIBS += -lxmpsdk
+    LIBS += -lexiv2
 }
 
 win32 {
