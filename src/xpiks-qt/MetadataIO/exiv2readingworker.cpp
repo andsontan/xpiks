@@ -24,6 +24,7 @@
 #include <QTextCodec>
 #include <QDateTime>
 #include <sstream>
+#include <string>
 #include "../Models/artworkmetadata.h"
 #include "../Common/defines.h"
 #include "../Helpers/stringhelper.h"
@@ -34,10 +35,16 @@
 
 namespace MetadataIO {
     QString getIptcCharset(Exiv2::IptcData &iptcData) {
-        const char *charsetPtr = iptcData.detectCharset();
         QString iptcCharset = "";
-        if (charsetPtr != NULL) {
-            iptcCharset = QString::fromLatin1(charsetPtr).toUpper();
+
+        try {
+            const char *charsetPtr = iptcData.detectCharset();
+            if (charsetPtr != NULL) {
+                iptcCharset = QString::fromLatin1(charsetPtr).toUpper();
+            }
+        }
+        catch (Exiv2::Error &e) {
+            LOG_WARNING << "Exiv2 error:" << e.what();
         }
 
         return iptcCharset;
@@ -110,6 +117,9 @@ namespace MetadataIO {
         catch (...) {
             LOG_WARNING << "Exception";
             anyFound = false;
+#ifdef QT_DEBUG
+            throw;
+#endif
         }
 
         return anyFound;
@@ -128,6 +138,9 @@ namespace MetadataIO {
         catch (...) {
             LOG_WARNING << "Exception";
             anyFound = false;
+#ifdef QT_DEBUG
+            throw;
+#endif
         }
 
         return anyFound;
@@ -172,6 +185,9 @@ namespace MetadataIO {
         catch (...) {
             LOG_WARNING << "Exception";
             anyFound = false;
+#ifdef QT_DEBUG
+            throw;
+#endif
         }
 
         return anyFound;
@@ -190,6 +206,9 @@ namespace MetadataIO {
         catch (...) {
             LOG_WARNING << "Exception";
             anyFound = false;
+#ifdef QT_DEBUG
+            throw;
+#endif
         }
 
         return anyFound;
@@ -236,6 +255,9 @@ namespace MetadataIO {
         catch (...) {
             LOG_WARNING << "Exception";
             anyFound = false;
+#ifdef QT_DEBUG
+            throw;
+#endif
         }
 
         return anyFound;
@@ -254,6 +276,9 @@ namespace MetadataIO {
         catch (...) {
             LOG_WARNING << "Exception";
             anyFound = false;
+#ifdef QT_DEBUG
+            throw;
+#endif
         }
 
         return anyFound;
@@ -288,6 +313,9 @@ namespace MetadataIO {
         catch (...) {
             LOG_WARNING << "Exception";
             anyAdded = false;
+#ifdef QT_DEBUG
+            throw;
+#endif
         }
 
         return anyAdded;
@@ -366,6 +394,9 @@ namespace MetadataIO {
         catch (...) {
             LOG_WARNING << "Exception";
             foundDesc = false;
+#ifdef QT_DEBUG
+            throw;
+#endif
         }
 
         return foundDesc;
@@ -398,6 +429,9 @@ namespace MetadataIO {
         catch (...) {
             LOG_WARNING << "Exception";
             anyFound = false;
+#ifdef QT_DEBUG
+            throw;
+#endif
         }
 
         return anyFound;

@@ -24,14 +24,15 @@
 #include "../Models/artworkmetadata.h"
 #include "../Common/defines.h"
 #include <exiv2/exiv2.hpp>
+#include <string>
 
 #define X_DEFAULT QString::fromLatin1("x-default")
 
 namespace MetadataIO {
     typedef QMap<QString, QString> AltLangMap;
 
-    void removeXmpTag(Exiv2::XmpData &xmpData, const char* xmpTagName) {
-        Exiv2::XmpKey xmpKey(xmpTagName);
+    void removeXmpTag(Exiv2::XmpData &xmpData, const char* propertyName) {
+        Exiv2::XmpKey xmpKey(propertyName);
         Exiv2::XmpData::iterator it = xmpData.findKey(xmpKey);
 
         if (it != xmpData.end()) {
@@ -39,9 +40,9 @@ namespace MetadataIO {
         }
     }
 
-    void setXmpTagStringBag(Exiv2::XmpData &xmpData, const char* xmpTagName, const QStringList& bag) {
+    void setXmpTagStringBag(Exiv2::XmpData &xmpData, const char* propertyName, const QStringList& bag) {
         if (bag.isEmpty()) {
-            removeXmpTag(xmpData, xmpTagName);
+            removeXmpTag(xmpData, propertyName);
         } else {
             Exiv2::Value::AutoPtr xmpTxtBag = Exiv2::Value::create(Exiv2::xmpBag);
             QStringList::const_iterator end = bag.constEnd();
@@ -50,13 +51,13 @@ namespace MetadataIO {
                 xmpTxtBag->read(txt);
             }
 
-            xmpData[xmpTagName].setValue(xmpTxtBag.get());
+            xmpData[propertyName].setValue(xmpTxtBag.get());
         }
     }
 
-    bool getXmpTagStringListLangAlt(Exiv2::XmpData &xmpData, const char* xmpTagName, AltLangMap &map) {
+    bool getXmpTagStringListLangAlt(Exiv2::XmpData &xmpData, const char* propertyName, AltLangMap &map) {
         bool success = false;
-        Exiv2::XmpKey xmpKey(xmpTagName);
+        Exiv2::XmpKey xmpKey(propertyName);
         Exiv2::XmpData::iterator it = xmpData.findKey(xmpKey);
 
         if (it != xmpData.end()) {
@@ -75,12 +76,13 @@ namespace MetadataIO {
         return success;
     }
 
-    void setXmpTagStringLangAlt(Exiv2::XmpData &xmpData, const char* xmpTagName, const QString& langAlt, const QString& text) {
+    void setXmpTagStringLangAlt(Exiv2::XmpData &xmpData, const char* propertyName,
+                                const QString& langAlt, const QString& text) {
         Exiv2::Value::AutoPtr xmpTxtVal = Exiv2::Value::create(Exiv2::langAlt);
 
         AltLangMap map;
 
-        if (getXmpTagStringListLangAlt(xmpData, xmpTagName, map)) {
+        if (getXmpTagStringListLangAlt(xmpData, propertyName, map)) {
             AltLangMap::iterator end = map.end();
             for (AltLangMap::iterator it = map.begin(); it != end; ++it) {
                 if (it.key() != langAlt) {
@@ -94,16 +96,71 @@ namespace MetadataIO {
         const std::string &txt(txtLangAlt.toUtf8().constData());
         xmpTxtVal->read(txt);
 
-        removeXmpTag(xmpData, xmpTagName);
-        xmpData.add(Exiv2::XmpKey(xmpTagName), xmpTxtVal.get());
+        removeXmpTag(xmpData, propertyName);
+        xmpData.add(Exiv2::XmpKey(propertyName), xmpTxtVal.get());
     }
 
     void setXmpKeywords(Exiv2::XmpData &xmpData, const QStringList &keywords) {
-        setXmpTagStringBag(xmpData, "Xmp.dc.subject", keywords);
+        try {
+            setXmpTagStringBag(xmpData, "Xmp.dc.subject", keywords);
+        }
+        catch (Exiv2::Error &e) {
+            LOG_WARNING << "Exiv2 error:" << e.what();
+        }
+        catch (...) {
+            LOG_WARNING << "Exception";
+#ifdef QT_DEBUG
+            throw;
+#endif
+        }
     }
 
     void setXmpDescription(Exiv2::XmpData &xmpData, const QString &description) {
-        setXmpTagStringLangAlt(xmpData, "Xmp.dc.description", X_DEFAULT, description);
+        try {
+            setXmpTagStringLangAlt(xmpData, "Xmp.dc.description", X_DEFAULT, description);
+        }
+        catch (Exiv2::Error &e) {
+            LOG_WARNING << "Exiv2 error:" << e.what();
+        }
+        catch (...) {
+            LOG_WARNING << "Exception";
+#ifdef QT_DEBUG
+            throw;
+#endif
+        }
+    }
+
+    void setXmpTitle(Exiv2::XmpData &xmpData, const QString &title) {
+        try {
+            setXmpTagStringLangAlt(xmpData, "Xmp.dc.title", X_DEFAULT, title);
+        }
+        catch (Exiv2::Error &e) {
+            LOG_WARNING << "Exiv2 error:" << e.what();
+        }
+        catch (...) {
+            LOG_WARNING << "Exception";
+#ifdef QT_DEBUG
+            throw;
+#endif
+        }
+    }
+
+    void removeIptcTag(Exiv2::IptcData &iptcData, const char *propertyName) {
+        Exiv2::IptcKey key(propertyName);
+
+        Exiv2::IptcData::iterator it = iptcData.findKey(key);
+        if (it != iptcData.end()) {
+            iptcData.erase(it);
+        }
+    }
+
+    void setIptcEncodingUtf8(Exiv2::IptcData &iptcData) {
+        iptcData["Iptc.Envelope.CharacterSet"] = "\33%G";
+    }
+
+    void setIptcString(Exiv2::IptcData &iptcData, const char *propertyName, const QString &value) {
+        iptcData[propertyName] = std::string(value.toUtf8().constData());
+        setIptcEncodingUtf8(iptcData);
     }
 
     Exiv2WritingWorker::Exiv2WritingWorker(int index, QVector<Models::ArtworkMetadata *> itemsToWrite, QObject *parent) :
