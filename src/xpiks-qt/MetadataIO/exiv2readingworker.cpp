@@ -504,12 +504,13 @@ namespace MetadataIO {
 
             Models::ArtworkMetadata *artwork = m_ItemsToRead.at(i);
             const QString &filepath = artwork->getFilepath();
+            Q_ASSERT(!m_ImportResult.contains(filepath));
             ImportDataResult importResult;
 
             try {
-                readMetadata(artwork, importResult);
-                Q_ASSERT(!m_ImportResult.contains(filepath));
-                m_ImportResult.insert(filepath, importResult);
+                if (readMetadata(artwork, importResult)) {
+                    m_ImportResult.insert(filepath, importResult);
+                }
             }
             catch(Exiv2::Error &error) {
                 anyError = true;
@@ -530,7 +531,7 @@ namespace MetadataIO {
         m_Stopped = true;
     }
 
-    void Exiv2ReadingWorker::readMetadata(Models::ArtworkMetadata *artwork, ImportDataResult &importResult) {
+    bool Exiv2ReadingWorker::readMetadata(Models::ArtworkMetadata *artwork, ImportDataResult &importResult) {
         const QString &filepath = artwork->getFilepath();
 
 #if defined(Q_OS_WIN)
@@ -562,5 +563,7 @@ namespace MetadataIO {
         importResult.FileSize = fi.size();
 
         m_ImportResult.insert(importResult.FilePath, importResult);
+
+        return true;
     }
 }
