@@ -30,6 +30,8 @@
 #include "saverworkerjobitem.h"
 #include <exiv2/exiv2.hpp>
 
+#define X_DEFAULT QString::fromLatin1("x-default")
+
 namespace MetadataIO {
     QString getIptcCharset(Exiv2::IptcData &iptcData) {
         const char *charsetPtr = iptcData.detectCharset();
@@ -84,27 +86,50 @@ namespace MetadataIO {
     bool getXmpDescription(Exiv2::XmpData &xmpData, const QString &langAlt, QString &description) {
         bool anyFound = false;
 
-        anyFound = getXmpLangAltValue(xmpData, "Xmp.dc.description", langAlt, description);
+        try {
+            anyFound = getXmpLangAltValue(xmpData, "Xmp.dc.description", langAlt, description);
 
-        if (!anyFound || description.isEmpty()) {
-            Exiv2::XmpKey psKey("Xmp.photoshop.Headline");
-            Exiv2::XmpData::iterator xmpIt = xmpData.findKey(psKey);
-            if (xmpIt != xmpData.end()) {
-                const Exiv2::XmpTextValue &value = static_cast<const Exiv2::XmpTextValue &>(xmpIt->value());
-                QString headline = QString::fromUtf8(value.value_.c_str()).trimmed();
+            if (!anyFound || description.isEmpty()) {
+                Exiv2::XmpKey psKey("Xmp.photoshop.Headline");
+                Exiv2::XmpData::iterator xmpIt = xmpData.findKey(psKey);
+                if (xmpIt != xmpData.end()) {
+                    const Exiv2::XmpTextValue &value = static_cast<const Exiv2::XmpTextValue &>(xmpIt->value());
+                    QString headline = QString::fromUtf8(value.value_.c_str()).trimmed();
 
-                if (!headline.isEmpty()) {
-                    anyFound = true;
-                    description = headline;
+                    if (!headline.isEmpty()) {
+                        anyFound = true;
+                        description = headline;
+                    }
                 }
             }
+        }
+        catch (Exiv2::Error &e) {
+            LOG_WARNING << "Exiv2 error:" << e.what();
+            anyFound = false;
+        }
+        catch (...) {
+            LOG_WARNING << "Exception";
+            anyFound = false;
         }
 
         return anyFound;
     }
 
     bool getXmpTitle(Exiv2::XmpData &xmpData, const QString &langAlt, QString &title) {
-        bool anyFound = getXmpLangAltValue(xmpData, "Xmp.dc.title", langAlt, title);
+        bool anyFound = false;
+
+        try {
+            anyFound = getXmpLangAltValue(xmpData, "Xmp.dc.title", langAlt, title);
+        }
+        catch (Exiv2::Error &e) {
+            LOG_WARNING << "Exiv2 error:" << e.what();
+            anyFound = false;
+        }
+        catch (...) {
+            LOG_WARNING << "Exception";
+            anyFound = false;
+        }
+
         return anyFound;
     }
 
@@ -129,21 +154,45 @@ namespace MetadataIO {
     }
 
     bool getXmpDateTime(Exiv2::XmpData &xmpData, QDateTime &dateTime) {
-        bool found = false;
+        bool anyFound = false;
 
-        Exiv2::XmpKey psKey("Xmp.photoshop.DateCreated");
-        Exiv2::XmpData::iterator xmpIt = xmpData.findKey(psKey);
+        try {
+            Exiv2::XmpKey psKey("Xmp.photoshop.DateCreated");
+            Exiv2::XmpData::iterator xmpIt = xmpData.findKey(psKey);
 
-        if (xmpIt != xmpData.end()) {
-            dateTime = QDateTime::fromString(QString::fromLatin1(xmpIt->toString().c_str()), Qt::ISODate);
-            found = dateTime.isValid();
+            if (xmpIt != xmpData.end()) {
+                dateTime = QDateTime::fromString(QString::fromLatin1(xmpIt->toString().c_str()), Qt::ISODate);
+                anyFound = dateTime.isValid();
+            }
+        }
+        catch (Exiv2::Error &e) {
+            LOG_WARNING << "Exiv2 error:" << e.what();
+            anyFound = false;
+        }
+        catch (...) {
+            LOG_WARNING << "Exception";
+            anyFound = false;
         }
 
-        return found;
+        return anyFound;
     }
 
     bool getXmpKeywords(Exiv2::XmpData &xmpData, QStringList &keywords) {
-        return getXmpTagStringBag(xmpData, "Xmp.dc.subject", keywords);
+        bool anyFound = false;
+
+        try {
+            anyFound = getXmpTagStringBag(xmpData, "Xmp.dc.subject", keywords);
+        }
+        catch (Exiv2::Error &e) {
+            LOG_WARNING << "Exiv2 error:" << e.what();
+            anyFound = false;
+        }
+        catch (...) {
+            LOG_WARNING << "Exception";
+            anyFound = false;
+        }
+
+        return anyFound;
     }
 
     bool getIptcString(Exiv2::IptcData &iptcData, const char *propertyName, bool isIptcUtf8, QString &resultValue) {
@@ -175,31 +224,70 @@ namespace MetadataIO {
     }
 
     bool getIptcDescription(Exiv2::IptcData &iptcData, bool isIptcUtf8, QString &description) {
-        return getIptcString(iptcData, "Iptc.Application2.Caption", isIptcUtf8, description);
+        bool anyFound = false;
+
+        try {
+            anyFound = getIptcString(iptcData, "Iptc.Application2.Caption", isIptcUtf8, description);
+        }
+        catch (Exiv2::Error &e) {
+            LOG_WARNING << "Exiv2 error:" << e.what();
+            anyFound = false;
+        }
+        catch (...) {
+            LOG_WARNING << "Exception";
+            anyFound = false;
+        }
+
+        return anyFound;
     }
 
     bool getIptcTitle(Exiv2::IptcData &iptcData, bool isIptcUtf8, QString &title) {
-        return getIptcString(iptcData, "Iptc.Application2.ObjectName", isIptcUtf8, title);
+        bool anyFound = false;
+
+        try {
+            anyFound = getIptcString(iptcData, "Iptc.Application2.ObjectName", isIptcUtf8, title);
+        }
+        catch (Exiv2::Error &e) {
+            LOG_WARNING << "Exiv2 error:" << e.what();
+            anyFound = false;
+        }
+        catch (...) {
+            LOG_WARNING << "Exception";
+            anyFound = false;
+        }
+
+        return anyFound;
     }
 
     bool getIptcKeywords(Exiv2::IptcData &iptcData, bool isIptcUtf8, QStringList &keywords) {
         bool anyAdded = false;
-        QString keywordsTagName = QString::fromLatin1("Iptc.Application2.Keywords");
 
-        for (Exiv2::IptcData::iterator it = iptcData.begin(); it != iptcData.end(); ++it) {
-            QString key = QString::fromLocal8Bit(it->key().c_str());
+        try {
+            QString keywordsTagName = QString::fromLatin1("Iptc.Application2.Keywords");
 
-            if (key == keywordsTagName) {
-                QString tag;
-                if (isIptcUtf8) {
-                    tag = QString::fromUtf8(it->toString().c_str());
-                } else {
-                    tag = QString::fromLocal8Bit(it->toString().c_str());
+            for (Exiv2::IptcData::iterator it = iptcData.begin(); it != iptcData.end(); ++it) {
+                QString key = QString::fromLocal8Bit(it->key().c_str());
+
+                if (key == keywordsTagName) {
+                    QString tag;
+                    if (isIptcUtf8) {
+                        tag = QString::fromUtf8(it->toString().c_str());
+                    } else {
+                        tag = QString::fromLocal8Bit(it->toString().c_str());
+                    }
+
+                    keywords.append(tag);
+                    anyAdded = true;
                 }
-
-                keywords.append(tag);
-                anyAdded = true;
             }
+        }
+        catch (Exiv2::Error &e) {
+            LOG_WARNING << "Exiv2 error:" << e.what();
+            anyAdded = false;
+        }
+        catch (...) {
+            LOG_WARNING << "Exception";
+            anyAdded = false;
         }
 
         return anyAdded;
@@ -252,54 +340,74 @@ namespace MetadataIO {
     bool getExifDescription(Exiv2::ExifData &exifData, QString &description) {
         bool foundDesc = false;
 
-        Exiv2::ExifKey key("Exif.Image.ImageDescription");
-        Exiv2::ExifData::iterator it = exifData.findKey(key);
+        try {
+            Exiv2::ExifKey key("Exif.Image.ImageDescription");
+            Exiv2::ExifData::iterator it = exifData.findKey(key);
 
-        QString value;
+            QString value;
 
-        if (it != exifData.end()) {
-            std::ostringstream os;
-            os << *it;
-            value = QString::fromLatin1(os.str().c_str());
-        } else {
-            value = getExifUserComment(exifData);
+            if (it != exifData.end()) {
+                std::ostringstream os;
+                os << *it;
+                value = QString::fromLatin1(os.str().c_str());
+            } else {
+                value = getExifUserComment(exifData);
+            }
+
+            if (!value.isEmpty()) {
+                description = value;
+                foundDesc = true;
+            }
         }
-
-        if (!value.isEmpty()) {
-            description = value;
-            foundDesc = true;
+        catch (Exiv2::Error &e) {
+            LOG_WARNING << "Exiv2 error:" << e.what();
+            foundDesc = false;
+        }
+        catch (...) {
+            LOG_WARNING << "Exception";
+            foundDesc = false;
         }
 
         return foundDesc;
     }
 
     bool getExifDateTime(Exiv2::ExifData &exifData, QDateTime &dateTime) {
-        bool found = false;
+        bool anyFound = false;
 
-        Exiv2::ExifKey key("Exif.Photo.DateTimeOriginal");
-        Exiv2::ExifData::iterator it = exifData.findKey(key);
-        if (it != exifData.end()) {
-            dateTime = QDateTime::fromString(QString::fromLatin1(it->toString().c_str()), Qt::ISODate);
-            found = dateTime.isValid();
-        }
+        try {
+            Exiv2::ExifKey key("Exif.Photo.DateTimeOriginal");
+            Exiv2::ExifData::iterator it = exifData.findKey(key);
+            if (it != exifData.end()) {
+                dateTime = QDateTime::fromString(QString::fromLatin1(it->toString().c_str()), Qt::ISODate);
+                anyFound = dateTime.isValid();
+            }
 
-        if (!found) {
-            Exiv2::ExifKey imageKey("Exif.Image.DateTimeOriginal");
-            Exiv2::ExifData::iterator imageIt = exifData.findKey(imageKey);
-            if (imageIt != exifData.end()) {
-                dateTime = QDateTime::fromString(QString::fromLatin1(imageIt->toString().c_str()), Qt::ISODate);
-                found = dateTime.isValid();
+            if (!anyFound) {
+                Exiv2::ExifKey imageKey("Exif.Image.DateTimeOriginal");
+                Exiv2::ExifData::iterator imageIt = exifData.findKey(imageKey);
+                if (imageIt != exifData.end()) {
+                    dateTime = QDateTime::fromString(QString::fromLatin1(imageIt->toString().c_str()), Qt::ISODate);
+                    anyFound = dateTime.isValid();
+                }
             }
         }
+        catch (Exiv2::Error &e) {
+            LOG_WARNING << "Exiv2 error:" << e.what();
+            anyFound = false;
+        }
+        catch (...) {
+            LOG_WARNING << "Exception";
+            anyFound = false;
+        }
 
-        return found;
+        return anyFound;
     }
 
     QString retrieveDescription(Exiv2::XmpData &xmpData, Exiv2::ExifData &exifData, Exiv2::IptcData &iptcData,
                                 bool isIptcUtf8) {
         QString description;
         bool success = false;
-        success = getXmpDescription(xmpData, QString::fromLatin1("x-default"), description);
+        success = getXmpDescription(xmpData, X_DEFAULT, description);
         success = success || getIptcDescription(iptcData, isIptcUtf8, description);
         success = success || getExifDescription(exifData, description);
         return description;
@@ -309,7 +417,7 @@ namespace MetadataIO {
                           bool isIptcUtf8) {
         QString title;
         bool success = false;
-        success = getXmpTitle(xmpData, QString::fromLatin1("x-default"), title);
+        success = getXmpTitle(xmpData, X_DEFAULT, title);
         success = success || getIptcTitle(iptcData, isIptcUtf8, title);
         Q_UNUSED(exifData);
         return title;
@@ -365,10 +473,9 @@ namespace MetadataIO {
             ImportDataResult importResult;
 
             try {
-                if (readMetadata(artwork, importResult)) {
-                    Q_ASSERT(!m_ImportResult.contains(filepath));
-                    m_ImportResult.insert(filepath, importResult);
-                }
+                readMetadata(artwork, importResult);
+                Q_ASSERT(!m_ImportResult.contains(filepath));
+                m_ImportResult.insert(filepath, importResult);
             }
             catch(Exiv2::Error &error) {
                 anyError = true;
@@ -389,7 +496,7 @@ namespace MetadataIO {
         m_Stopped = true;
     }
 
-    bool Exiv2ReadingWorker::readMetadata(Models::ArtworkMetadata *artwork, ImportDataResult &importResult) {
+    void Exiv2ReadingWorker::readMetadata(Models::ArtworkMetadata *artwork, ImportDataResult &importResult) {
         const QString &filepath = artwork->getFilepath();
 
 #if defined(Q_OS_WIN)
@@ -421,8 +528,5 @@ namespace MetadataIO {
         importResult.FileSize = fi.size();
 
         m_ImportResult.insert(importResult.FilePath, importResult);
-
-        // BUMP
-        return false;
     }
 }
