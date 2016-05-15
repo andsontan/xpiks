@@ -1,6 +1,8 @@
 TEMPLATE = app
 TARGET = xpiks-tests-integration
 
+QMAKE_MAC_SDK = macosx10.11
+
 QT += qml quick widgets concurrent svg
 QT -= gui
 
@@ -121,7 +123,8 @@ SOURCES += main.cpp \
     undoaddwithvectorstest.cpp \
     ../../xpiks-qt/MetadataIO/exiv2readingworker.cpp \
     ../../xpiks-qt/MetadataIO/readingorchestrator.cpp \
-    ../../xpiks-qt/MetadataIO/exiv2writingworker.cpp
+    ../../xpiks-qt/MetadataIO/exiv2writingworker.cpp \
+    ../../xpiks-qt/MetadataIO/writingorchestrator.cpp
 
 RESOURCES +=
 
@@ -269,7 +272,9 @@ HEADERS += \
     ../../xpiks-qt/MetadataIO/importdataresult.h \
     ../../xpiks-qt/MetadataIO/readingorchestrator.h \
     ../../xpiks-qt/MetadataIO/exiv2writingworker.h \
-    ../../xpiks-qt/MetadataIO/imetadatawriter.h
+    ../../xpiks-qt/MetadataIO/imetadatawriter.h \
+    ../../xpiks-qt/MetadataIO/exiv2tagnames.h \
+    ../../xpiks-qt/MetadataIO/writingorchestrator.h
     spellingproduceswarningstest.h
 
 INCLUDEPATH += ../../tiny-aes
