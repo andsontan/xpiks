@@ -95,7 +95,9 @@ SOURCES += main.cpp \
     AutoComplete/stringfilterproxymodel.cpp \
     Models/imageartwork.cpp \
     MetadataIO/exiv2readingworker.cpp \
-    MetadataIO/readingorchestrator.cpp
+    MetadataIO/readingorchestrator.cpp \
+    MetadataIO/exiv2writingworker.cpp \
+    MetadataIO/writingorchestrator.cpp
 
 RESOURCES += qml.qrc
 
@@ -245,7 +247,9 @@ HEADERS += \
     MetadataIO/exiv2readingworker.h \
     MetadataIO/importdataresult.h \
     MetadataIO/readingorchestrator.h \
-    MetadataIO/imetadatareader.h
+    MetadataIO/imetadatareader.h \
+    MetadataIO/exiv2writingworker.h \
+    MetadataIO/writingorchestrator.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

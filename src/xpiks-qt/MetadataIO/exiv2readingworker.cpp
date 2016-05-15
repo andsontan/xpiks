@@ -24,9 +24,9 @@
 #include <QTextCodec>
 #include <QDateTime>
 #include <sstream>
-#include "../xpiks-qt/Models/artworkmetadata.h"
-#include "../xpiks-qt/Common/defines.h"
-#include "../xpiks-qt/Helpers/stringhelper.h"
+#include "../Models/artworkmetadata.h"
+#include "../Common/defines.h"
+#include "../Helpers/stringhelper.h"
 #include "saverworkerjobitem.h"
 #include <exiv2/exiv2.hpp>
 

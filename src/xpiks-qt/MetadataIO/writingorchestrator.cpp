@@ -19,14 +19,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "readingorchestrator.h"
-#include <QThread>
+#include "writingorchestrator.h"
 #include <QVector>
-#include <QMutexLocker>
+#include <QThread>
+#include "../Helpers/indiceshelper.h"
 #include "../Models/artworkmetadata.h"
 #include "../Common/defines.h"
-#include "../Helpers/indiceshelper.h"
-#include "exiv2readingworker.h"
+#include "exiv2writingworker.h"
 
 #if defined(TRAVIS_CI)
 #define MIN_SPLIT_COUNT 100
@@ -34,45 +33,43 @@
 #define MIN_SPLIT_COUNT 1
 #endif
 
-#define MAX_READING_THREADS 10
-#define MIN_READING_THREADS 1
+#define MAX_WRITING_THREADS 10
+#define MIN_WRITING_THREADS 1
 
 namespace MetadataIO {
-    ReadingOrchestrator::ReadingOrchestrator(const QVector<Models::ArtworkMetadata *> &itemsToRead,
-                                             const QVector<QPair<int, int> > &rangesToUpdate,
+    WritingOrchestrator::WritingOrchestrator(const QVector<Models::ArtworkMetadata *> &itemsToWrite,
                                              QObject *parent) :
         QObject(parent),
-        m_ItemsToRead(itemsToRead),
-        m_RangesToUpdate(rangesToUpdate),
-        m_ThreadsCount(MIN_READING_THREADS),
+        m_ItemsToWrite(itemsToWrite),
+        m_ThreadsCount(MIN_WRITING_THREADS),
         m_FinishedCount(0),
         m_AnyError(false)
     {
-        int size = itemsToRead.size();
+        int size = itemsToWrite.size();
         if (size >= MIN_SPLIT_COUNT) {
-            int idealThreadCount = qMin(qMax(QThread::idealThreadCount(), MIN_READING_THREADS), MAX_READING_THREADS);
+            int idealThreadCount = qMin(qMax(QThread::idealThreadCount(), MIN_WRITING_THREADS), MAX_WRITING_THREADS);
             m_ThreadsCount = qMin(size, idealThreadCount);
 
-            Helpers::splitIntoChunks<Models::ArtworkMetadata*>(itemsToRead, m_ThreadsCount, m_SlicedItemsToRead);
+            Helpers::splitIntoChunks<Models::ArtworkMetadata*>(itemsToWrite, m_ThreadsCount, m_SlicedItemsToWrite);
         } else {
-            m_SlicedItemsToRead.push_back(itemsToRead);
+            m_SlicedItemsToWrite.push_back(itemsToWrite);
         }
 
         LOG_INFO << "Using" << m_ThreadsCount << "threads for" << size << "items to read";
     }
 
-    ReadingOrchestrator::~ReadingOrchestrator() {
+    WritingOrchestrator::~WritingOrchestrator() {
         LOG_DEBUG << "destroyed";
     }
 
-    void ReadingOrchestrator::startReading() {
+    void WritingOrchestrator::startWriting() {
         LOG_DEBUG << "#";
 
-        int size = m_SlicedItemsToRead.size();
+        int size = m_SlicedItemsToWrite.size();
         for (int i = 0; i < size; ++i) {
-            const QVector<Models::ArtworkMetadata *> &itemsToRead = m_SlicedItemsToRead.at(i);
+            const QVector<Models::ArtworkMetadata *> &itemsToWrite = m_SlicedItemsToWrite.at(i);
 
-            Exiv2ReadingWorker *worker = new Exiv2ReadingWorker(i, itemsToRead);
+            Exiv2WritingWorker *worker = new Exiv2WritingWorker(i, itemsToWrite);
 
             QThread *thread = new QThread();
             worker->moveToThread(thread);
@@ -93,21 +90,15 @@ namespace MetadataIO {
         emit allStarted();
     }
 
-    void ReadingOrchestrator::dismiss() {
+    void WritingOrchestrator::dismiss() {
         this->deleteLater();
     }
 
-    void ReadingOrchestrator::onWorkerFinished(bool anyError) {
-        Exiv2ReadingWorker *worker = qobject_cast<Exiv2ReadingWorker *>(sender());
+    void WritingOrchestrator::onWorkerFinished(bool anyError) {
+        Exiv2WritingWorker *worker = qobject_cast<Exiv2WritingWorker *>(sender());
         Q_ASSERT(worker != NULL);
 
         LOG_INFO << "#" << worker->getWorkerIndex() << "anyError:" << anyError;
-
-        {
-            QMutexLocker locker(&m_ImportMutex);
-            m_ImportResult.unite(worker->getImportResult());
-            m_AnyError = m_AnyError || anyError;
-        }
 
         worker->dismiss();
 

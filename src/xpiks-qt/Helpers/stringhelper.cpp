@@ -113,7 +113,7 @@ namespace Helpers {
     }
 
     int levensteinDistance(const QString &s1, const QString &s2) {
-        const std::size_t len1 = s1.size(), len2 = s2.size();
+        const int len1 = s1.size(), len2 = s2.size();
         std::vector<unsigned int> col(len2 + 1), prevCol(len2 + 1);
 
         for (unsigned int i = 0; i < prevCol.size(); i++) {

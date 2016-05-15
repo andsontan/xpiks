@@ -78,6 +78,8 @@ int SpellingProducesWarningsTest::doTest() {
         VERIFY(false, "Timeout for waiting for first spellcheck results");
     }
 
+    LOG_INFO << "Spellchecking finished. Waiting for warnings...";
+
     if (!warningsQueueWaiter.wait(5)) {
         if (metadata->getWarningsFlags() == 0) {
             VERIFY(false, "Timeout for waiting for warnings checker");
