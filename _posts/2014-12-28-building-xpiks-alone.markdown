@@ -17,7 +17,7 @@ date: 2014-12-28T09:54:01+02:00
 - build <a href="#libface">cpp-libface</a> library (instructions below)
 - <span class="gray">[Windows]</span> build <a href="#libcurl">libcurl</a> library (instructions below)
 - build <a href="#exiv2">Exiv2</a> library (instructions below)
-- open xpiks-qt.pro file with Qt Creator installed with Qt
+- open `xpiks-qt.pro` file with Qt Creator installed with Qt
 - select build target Release, press "Run qmake" and then "Build"
 - now you can use xpiks-qt on your computer
 
@@ -79,7 +79,7 @@ The RELEASE procedure for OS X, Windows:
 
 - build Xpiks for Release using procedure described above
 - use *deployqt tool (described above) to make Xpiks standalone
-- [Windows] copy the exiftool to the directory with Xpiks binaries
+- [Windows] copy the exiftool to the directory with Xpiks binaries (this is not needed anymore starting from Xpiks 1.3.1)
 - create the archive and that's it
 
 Xpiks uses English dictionaries from [Libreoffice collection](http://cgit.freedesktop.org/libreoffice/dictionaries/tree/). In Windows they are stored in the `dict/` subdirectory, in OS X they are in the `Resources/` directory of a bundle. As of Xpiks 1.1 these files are copied automatically.
