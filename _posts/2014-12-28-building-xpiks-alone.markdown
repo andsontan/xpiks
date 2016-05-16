@@ -16,7 +16,7 @@ date: 2014-12-28T09:54:01+02:00
 - build <a href="#hunspell">Hunspell</a> and <a href="#quazip">Quazip</a> libraries (instructions below)
 - build <a href="#libface">cpp-libface</a> library (instructions below)
 - <span class="gray">[Windows]</span> build <a href="#libcurl">libcurl</a> library (instructions below)
-- build <a href="#exiv2">Exiv2</a> library
+- build <a href="#exiv2">Exiv2</a> library (instructions below)
 - open xpiks-qt.pro file with Qt Creator installed with Qt
 - select build target Release, press "Run qmake" and then "Build"
 - now you can use xpiks-qt on your computer
@@ -37,7 +37,7 @@ date: 2014-12-28T09:54:01+02:00
 
 - open project `src/quazip/quazip/quazip.pro` in Qt Creator, select `Release`, execute `Run qmake`, execute `Build`
 - copy built library (e.g. `libquazip.a`, `quazip.lib`) from the build directory to the `src/libs` directory
-- 
+
 ***<span id="libface">To build libface do the following:</span>***
 
 - open file `src/cpp-libface/README.md` and follow instructions for your platform
@@ -51,7 +51,7 @@ date: 2014-12-28T09:54:01+02:00
 
 ***<span id="exiv2">To build Exiv2 in Visual Studio 2015 do the following:</span>***
 
-- download **exiv2 v0.25** library from http://www.exiv2.org/ and extract it somewhere
+- download **exiv2 v0.25** library from <a href="http://www.exiv2.org/">official website</a> and extract it somewhere
 - open `msvc2005\exiv2.sln` and upgrade all projects
 - from each project remove file `localtime.c`
 - open file `include\exiv2\exv_msvs.h` and enable unicode support, disable png, curl and ssh (alternatively, you can overwrite this file with the one in the _Xpiks_ repository via path `src/exiv2-0.25/include/exiv2/exv_msvs.h`)
