@@ -51,7 +51,7 @@ date: 2014-12-28T09:54:01+02:00
 
 ***<span id="exiv2">To build Exiv2 in Visual Studio 2015 do the following:</span>***
 
-- download **exiv2 v0.25** library from <a href="http://www.exiv2.org/">official website</a> and extract it somewhere
+- download **exiv2 v0.25** library from <a href="http://www.exiv2.org/" target="_blanc">official website</a> and extract it somewhere
 - open `msvc2005\exiv2.sln` and upgrade all projects
 - from each project remove file `localtime.c`
 - open file `include\exiv2\exv_msvs.h` and enable unicode support, disable png, curl and ssh (alternatively, you can overwrite this file with the one in the _Xpiks_ repository via path `src/exiv2-0.25/include/exiv2/exv_msvs.h`)
