@@ -2,6 +2,8 @@ TARGET = z            # The name of the output library - can be whatever you wan
 TEMPLATE = lib        # Tells Qt that we are compiling a library so the output will be bundled into a .a or .so file
 CONFIG += staticlib   # Tells Qt that we want a static library, so a .a file. Remove this and you will get a .so file
 
+CONFIG += c++11
+
 QMAKE_CFLAGS_WARN_ON -= -Wall   # Optional - disable warnings when compiling this library
 QMAKE_CXXFLAGS_WARN_ON -= -Wall # Optional - disable warnings when compiling this library
 

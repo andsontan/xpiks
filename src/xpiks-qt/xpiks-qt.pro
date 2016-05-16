@@ -4,6 +4,7 @@ QMAKE_MAC_SDK = macosx10.11
 
 QT += qml quick widgets concurrent svg
 CONFIG += qtquickcompiler
+CONFIG += c++11
 
 SOURCES += main.cpp \
     Models/artitemsmodel.cpp \
