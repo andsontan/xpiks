@@ -566,8 +566,8 @@ namespace MetadataIO {
         QFileInfo fi(filepath);
         importResult.FileSize = fi.size();
 
-        Models::ImageArtwork *image = dynamic_cast<Models::ImageArtwork*>(artwork);
-        if (image != NULL) {
+        Models::ImageArtwork *imageArtwork = dynamic_cast<Models::ImageArtwork*>(artwork);
+        if (imageArtwork != NULL) {
             QImageReader reader(filepath);
             importResult.ImageSize = reader.size();
         }
