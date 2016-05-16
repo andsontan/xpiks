@@ -112,19 +112,34 @@ namespace Conectivity {
         FILE *f;
         long uploaded_len = 0;
         CURLcode r = CURLE_GOT_NOTHING;
+#ifdef Q_OS_WIN
+        struct _stat64i32 file_info;
+#else
         struct stat file_info;
+#endif
         int c;
         curl_off_t fsize;
 
         /* get the file size of the local file */
+#ifdef Q_OS_WIN
+        if (_wstat(filepath.toStdWString().c_str(), &file_info)) {
+            LOG_WARNING << "Failed to stat file" << filepath;
+            return result;
+        }
+#else
         if (stat(filepath.toLocal8Bit().data(), &file_info)) {
             LOG_WARNING << "Failed to stat file" << filepath;
             return result;
         }
+#endif
 
         fsize = (curl_off_t) file_info.st_size;
 
+#ifdef Q_OS_WIN
+        f = _wfopen(filepath.toStdWString().c_str(), L"rb");
+#else
         f = fopen(filepath.toLocal8Bit().data(), "rb");
+#endif
         if (f == NULL) {
             LOG_WARNING << "Failed to open file" << filepath;
             return result;

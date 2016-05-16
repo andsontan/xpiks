@@ -1994,8 +1994,10 @@ ApplicationWindow {
                                                         onBackTabPressed: {
                                                             if (columnLayout.isWideEnough) {
                                                                 titleTextInput.forceActiveFocus()
+                                                                titleTextInput.cursorPosition = titleTextInput.text.length
                                                             } else {
                                                                 descriptionTextInput.forceActiveFocus()
+                                                                descriptionTextInput.cursorPosition = descriptionTextInput.text.length
                                                             }
                                                         }
 

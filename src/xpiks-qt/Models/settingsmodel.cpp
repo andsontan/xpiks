@@ -85,7 +85,8 @@ namespace Models {
         m_CheckForUpdates(DEFAULT_UPDATE_SERVICE),
         m_DictsPathChanged(false),
         m_AutoFindVectors(DEFAULT_AUTO_FIND_VECTORS),
-        m_UseAutoComplete(DEFAULT_USE_AUTO_COMPLETE)
+        m_UseAutoComplete(DEFAULT_USE_AUTO_COMPLETE),
+        m_UseExifTool(DEFAULT_USE_EXIFTOOL)
     {
     }
 

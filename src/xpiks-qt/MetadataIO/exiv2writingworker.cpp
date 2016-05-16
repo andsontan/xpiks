@@ -160,7 +160,7 @@ namespace MetadataIO {
     }
 
     void setIptcEncodingUtf8(Exiv2::IptcData &iptcData) {
-        iptcData[IPTC_CHARSET] = std::string("\033%G");
+        iptcData[IPTC_CHARSET] = "\033%G";
     }
 
     void setIptcString(Exiv2::IptcData &iptcData, const char *propertyName, const QString &value) {
