@@ -13,9 +13,10 @@ date: 2014-12-28T09:54:01+02:00
 - download source code or initialize the repository of tiny-AES (`git submodule init` and `git submodule update`)
 - rename `tiny-AES/aes.c` to `tiny-AES/aes.cpp` for correct build
 - <span class="gray">[Windows]</span> if you're building for Windows, build Zlib first (<a href="#zlib">see instructions below</a>)
-- build <a href="#hunspell">Hunspell</a> and <a href="#quazip">Quazip</a> (instructions below)
-- build <a href="#libface">cpp-libface</a> (instructions below)
-- <span class="gray">[Windows]</span> build <a href="#libcurl">libcurl</a> (instructions below)
+- build <a href="#hunspell">Hunspell</a> and <a href="#quazip">Quazip</a> libraries (instructions below)
+- build <a href="#libface">cpp-libface</a> library (instructions below)
+- <span class="gray">[Windows]</span> build <a href="#libcurl">libcurl</a> library (instructions below)
+- build <a href="#exiv2">Exiv2</a> library
 - open xpiks-qt.pro file with Qt Creator installed with Qt
 - select build target Release, press "Run qmake" and then "Build"
 - now you can use xpiks-qt on your computer
@@ -47,6 +48,16 @@ date: 2014-12-28T09:54:01+02:00
 
 - open git bash and type `git clone https://github.com/blackrosezy/build-libcurl-windows.git`
 - execute `build.bat` and after if finishes, copy contents of `lib/dll-debug-x64` to the `src/libs/` directory
+
+***<span id="exiv2">To build Exiv2 in Visual Studio 2015 do the following:</span>***
+
+- download **exiv2 v0.25** library from http://www.exiv2.org/ and extract it somewhere
+- open `msvc2005\exiv2.sln` and upgrade all projects
+- from each project remove file `localtime.c`
+- open file `include\exiv2\exv_msvs.h` and enable unicode support, disable png, curl and ssh (alternatively, you can overwrite this file with the one in the _Xpiks_ repository via path `src/exiv2-0.25/include/exiv2/exv_msvs.h`)
+- in Visual Studio select `"Build" -> "Batch build"` and mark all _DebugDLL_ and _ReleaseDLL_ builds for your platform (x64 or x86)
+- press "Build"
+- copy build artifacts (`libexiv2.dll`, `libexiv2.lib`, `libexpat.dll`, `libexpat.lib`) to `src/libs` directory in _Xpiks_ repository
 
 ***Redistribution***
 
