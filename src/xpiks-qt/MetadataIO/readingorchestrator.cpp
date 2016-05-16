@@ -31,7 +31,11 @@
 #if defined(TRAVIS_CI)
 #define MIN_SPLIT_COUNT 100
 #else
+#ifdef QT_DEBUG
 #define MIN_SPLIT_COUNT 1
+#else
+#define MIN_SPLIT_COUNT 15
+#endif
 #endif
 
 #define MAX_READING_THREADS 10
@@ -53,7 +57,7 @@ namespace MetadataIO {
             int idealThreadCount = qMin(qMax(QThread::idealThreadCount(), MIN_READING_THREADS), MAX_READING_THREADS);
             m_ThreadsCount = qMin(size, idealThreadCount);
 
-            Helpers::splitIntoChunks<Models::ArtworkMetadata*>(itemsToRead, m_ThreadsCount, m_SlicedItemsToRead);
+            m_ThreadsCount = Helpers::splitIntoChunks<Models::ArtworkMetadata*>(itemsToRead, m_ThreadsCount, m_SlicedItemsToRead);
         } else {
             m_SlicedItemsToRead.push_back(itemsToRead);
         }

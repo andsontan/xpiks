@@ -13,6 +13,7 @@ QT       -= gui
 TARGET = xpiks-tests-core
 CONFIG   += console
 CONFIG   -= app_bundle
+CONFIG   += c++11
 
 win32:QT += winextras
 
