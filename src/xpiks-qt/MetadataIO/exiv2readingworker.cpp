@@ -23,9 +23,11 @@
 #include <QVector>
 #include <QTextCodec>
 #include <QDateTime>
+#include <QImageReader>
 #include <sstream>
 #include <string>
 #include "../Models/artworkmetadata.h"
+#include "../Models/imageartwork.h"
 #include "../Common/defines.h"
 #include "../Helpers/stringhelper.h"
 #include "saverworkerjobitem.h"
@@ -563,6 +565,12 @@ namespace MetadataIO {
 
         QFileInfo fi(filepath);
         importResult.FileSize = fi.size();
+
+        Models::ImageArtwork *image = dynamic_cast<Models::ImageArtwork*>(artwork);
+        if (image != NULL) {
+            QImageReader reader(filepath);
+            importResult.ImageSize = reader.size();
+        }
 
         return true;
     }
