@@ -28,10 +28,10 @@
 - download **exiv2 v0.25** library from http://www.exiv2.org/ and extract it somewhere
 - open `msvc2005\exiv2.sln` and upgrade all projects
 - from each project remove file `localtime.c`
-- open file `include\exiv2\exv_msvs.h` and enable unicode support, disable curl and ssh (alternatively, you can overwrite this file with the one in the _xpiks_ repository via path `src/exiv2-0.25/include/exiv2/exv_msvs.h`)
-- in Visual Studio select `"Build" -> "Batch build"` and mark DebugDLL and ReleaseDLL builds for your platform (x64 or x86)
+- open file `include\exiv2\exv_msvs.h` and enable unicode support, disable png, curl and ssh (alternatively, you can overwrite this file with the one in the _Xpiks_ repository via path `src/exiv2-0.25/include/exiv2/exv_msvs.h`)
+- in Visual Studio select `"Build" -> "Batch build"` and mark all _DebugDLL_ and _ReleaseDLL_ builds for your platform (x64 or x86)
 - press "Build"
-- copy build artifacts (`libexiv2.dll`, `libexiv2.lib`, `libexpat.dll`, `libexpat.lib`) to `src/libs` directory in Xpiks repo
+- copy build artifacts (`libexiv2.dll`, `libexiv2.lib`, `libexpat.dll`, `libexpat.lib`) to `src/libs` directory in _Xpiks_ repository
 
 ***Manual build***
 - install Qt 5.4 or later from official website (or 5.2 or later from repository in case of Linux)
