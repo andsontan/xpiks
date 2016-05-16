@@ -52,7 +52,7 @@ namespace MetadataIO {
             Exiv2::Value::AutoPtr xmpTxtBag = Exiv2::Value::create(Exiv2::xmpBag);
             QStringList::const_iterator end = bag.constEnd();
             for (QStringList::const_iterator it = bag.constBegin(); it != end; ++it) {
-                const std::string &txt((*it).toUtf8().constData());
+                std::string txt((*it).toUtf8().constData());
                 xmpTxtBag->read(txt);
             }
 
@@ -91,14 +91,14 @@ namespace MetadataIO {
             AltLangMap::iterator end = map.end();
             for (AltLangMap::iterator it = map.begin(); it != end; ++it) {
                 if (it.key() != langAlt) {
-                    const std::string &val((*it).toUtf8().constData());
+                    std::string val((*it).toUtf8().constData());
                     xmpTxtVal->read(val);
                 }
             }
         }
 
-        QString txtLangAlt = QString(QString::fromLatin1("lang=%1 %2")).arg(langAlt).arg(text);
-        const std::string &txt(txtLangAlt.toUtf8().constData());
+        QString txtLangAlt = QString("lang=%1 %2").arg(langAlt).arg(text);
+        std::string txt(txtLangAlt.toUtf8().constData());
         xmpTxtVal->read(txt);
 
         removeXmpTag(xmpData, propertyName);
@@ -160,7 +160,7 @@ namespace MetadataIO {
     }
 
     void setIptcEncodingUtf8(Exiv2::IptcData &iptcData) {
-        iptcData[IPTC_CHARSET] = "\33%G";
+        iptcData[IPTC_CHARSET] = std::string("\033%G");
     }
 
     void setIptcString(Exiv2::IptcData &iptcData, const char *propertyName, const QString &value) {
@@ -199,12 +199,13 @@ namespace MetadataIO {
     }
 
     void removeExistingIptcKeywords(Exiv2::IptcData &iptcData) {
-        Exiv2::IptcData::iterator it = iptcData.begin();
+        Exiv2::IptcData::iterator it = iptcData.begin();        
+        QString keywordsKey = QString::fromLatin1(IPTC_KEYWORDS);
 
         while (it != iptcData.end()) {
             QString key = QString::fromLocal8Bit(it->key().c_str());
 
-            if ( key == QString::fromLatin1(IPTC_KEYWORDS)) {
+            if (key == keywordsKey) {
                 it = iptcData.erase(it);
             } else {
                 ++it;
@@ -248,7 +249,11 @@ namespace MetadataIO {
         exifData[propertyName] = std::string(value.toLatin1().constData());
     }
 
-    void setExifUserComment(Exiv2::ExifData &exifData, const QString &comment) {
+    void setExifUtf8String(Exiv2::ExifData &exifData, const char *propertyName, const QString &value) {
+        exifData[propertyName] = std::string(value.toUtf8().constData());
+    }
+
+    void setExifCommentValue(Exiv2::ExifData &exifData, const char *propertyName, const QString &comment) {
         // Write as Unicode only when necessary.
         QTextCodec* latin1Codec = QTextCodec::codecForName("iso8859-1");
 
@@ -261,7 +266,7 @@ namespace MetadataIO {
                 // write as ASCII
                 std::string exifComment("charset=\"Ascii\" ");
                 exifComment += comment.toLatin1().constData();
-                exifData[EXIF_USERCOMMENT] = exifComment;
+                exifData[propertyName] = exifComment;
                 dataWritten = true;
             }
         }
@@ -271,15 +276,15 @@ namespace MetadataIO {
             std::string exifComment("charset=\"Unicode\" ");
             exifComment += comment.toUtf8().constData();
 
-            exifData[EXIF_USERCOMMENT] = exifComment;
+            exifData[propertyName] = exifComment;
             dataWritten = true;
         }
     }
 
     void setExifDescription(Exiv2::ExifData &exifData, const QString &description) {
         try {
-            setExifLatin1String(exifData, EXIF_DESCRIPTION, description);
-            setExifUserComment(exifData, description);
+            setExifUtf8String(exifData, EXIF_DESCRIPTION, description);
+            setExifCommentValue(exifData, EXIF_USERCOMMENT, description);
         }
         catch (Exiv2::Error &e) {
             LOG_WARNING << "Exiv2 error:" << e.what();

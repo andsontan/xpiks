@@ -324,10 +324,10 @@ namespace MetadataIO {
         return anyAdded;
     }
 
-    QString getExifUserComment(Exiv2::ExifData &exifData) {
+    QString getExifCommentValue(Exiv2::ExifData &exifData, const char *propertyName) {
         QString result;
 
-        Exiv2::ExifKey key(EXIF_USERCOMMENT);
+        Exiv2::ExifKey key(propertyName);
         Exiv2::ExifData::iterator it = exifData.findKey(key);
         if (it != exifData.end()) {
             const Exiv2::Exifdatum& exifDatum = *it;
@@ -372,17 +372,10 @@ namespace MetadataIO {
         bool foundDesc = false;
 
         try {
-            Exiv2::ExifKey key(EXIF_DESCRIPTION);
-            Exiv2::ExifData::iterator it = exifData.findKey(key);
+            QString value = getExifCommentValue(exifData, EXIF_DESCRIPTION).trimmed();
 
-            QString value;
-
-            if (it != exifData.end()) {
-                std::ostringstream os;
-                os << *it;
-                value = QString::fromLatin1(os.str().c_str());
-            } else {
-                value = getExifUserComment(exifData);
+            if (value.isEmpty()) {
+                value = getExifCommentValue(exifData, EXIF_USERCOMMENT).trimmed();
             }
 
             if (!value.isEmpty()) {
