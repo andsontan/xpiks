@@ -22,13 +22,19 @@
 #ifndef STRINGHELPER
 #define STRINGHELPER
 
+#include <string>
+
 class QString;
 class QStringList;
+class QByteArray;
 
 namespace Helpers {
     QString getLastNLines(const QString &text, int N);
     void splitText(const QString &text, QStringList &parts);
     int levensteinDistance(const QString &s1, const QString &s2);
+    bool isUtf8(const char* const buffer);
+    QString detectEncodingAndDecode(const std::string &value);
+    bool is7BitAscii(const QByteArray &s);
 }
 
 #endif // STRINGHELPER

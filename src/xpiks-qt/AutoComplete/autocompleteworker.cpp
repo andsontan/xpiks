@@ -97,7 +97,7 @@ namespace AutoComplete {
         QStringList completionsList;
         QSet<QString> completionsSet;
 
-        size_t size = completions.size(), i = 0;
+        int size = completions.size(), i = 0;
         completions.reserve(size);
         completionsSet.reserve(size);
 

@@ -19,6 +19,16 @@ private slots:
     void separateRangesWithOneItemInTheMiddleTest();
     void separateRangesWithOneItemInTheEndTest();
     void combinedTest();
+    void emptyArrayToChunksTest();
+    void trivialArrayToChunksTest();
+    void splitWithOneItemInChunkTest();
+    void splitEvenEasyCaseTest();
+    void splitOddEasyCaseTest();
+    void splitIntoOnePieceTest();
+    void splitIntoZeroPiecesTest();
+    void splitIntoMoreThanASizeTest();
+    void splitIntoTwoUnevenChunksTest();
+    void splitIntoMoreThanAHalfTest();
 };
 
 #endif // INDICESTORANGES_TESTS_H

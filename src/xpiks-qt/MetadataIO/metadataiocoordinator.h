@@ -33,7 +33,8 @@ namespace Models {
 }
 
 namespace MetadataIO {
-    class MetadataReadingWorker;
+    class IMetadataReader;
+    class IMetadataWriter;
     class MetadataWritingWorker;
 
     class MetadataIOCoordinator : public QObject, public Common::BaseEntity
@@ -85,21 +86,28 @@ namespace MetadataIO {
         }
 
     public:
-        void readMetadata(const QVector<Models::ArtworkMetadata*> &artworksToRead, const QVector<QPair<int, int> > &rangesToUpdate);
-        void writeMetadata(const QVector<Models::ArtworkMetadata*> &artworksToWrite, bool useBackups);
+        void readMetadataExifTool(const QVector<Models::ArtworkMetadata*> &artworksToRead, const QVector<QPair<int, int> > &rangesToUpdate);
+#ifndef CORE_TESTS
+        void readMetadataExiv2(const QVector<Models::ArtworkMetadata*> &artworksToRead, const QVector<QPair<int, int> > &rangesToUpdate);
+#endif
+        void writeMetadataExifTool(const QVector<Models::ArtworkMetadata*> &artworksToWrite, bool useBackups);
+#ifndef CORE_TESTS
+        void writeMetadataExiv2(const QVector<Models::ArtworkMetadata*> &artworksToWrite);
+#endif
         void autoDiscoverExiftool();
         Q_INVOKABLE void discardReading();
         Q_INVOKABLE void continueReading(bool ignoreBackups);
         Q_INVOKABLE void continueWithoutReading();
 
     private:
+        void initializeImport(int itemsCount);
         void readingFinishedHandler(bool ignoreBackups);
         void afterImportHandler(const QVector<Models::ArtworkMetadata*> &itemsToRead, bool ignoreBackups);
         void tryToLaunchExiftool(const QString &settingsExiftoolPath);
 
     private:
-        MetadataReadingWorker *m_ReadingWorker;
-        MetadataWritingWorker *m_WritingWorker;
+        IMetadataReader *m_ReadingWorker;
+        IMetadataWriter *m_WritingWorker;
         QFutureWatcher<void> *m_ExiftoolDiscoveryFuture;
         QString m_RecommendedExiftoolPath;
         int m_ProcessingItemsCount;

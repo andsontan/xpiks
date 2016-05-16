@@ -347,15 +347,35 @@ void Commands::CommandManager::connectArtworkSignals(Models::ArtworkMetadata *me
 
 void Commands::CommandManager::readMetadata(const QVector<Models::ArtworkMetadata *> &artworks,
                                             const QVector<QPair<int, int> > &rangesToUpdate) const {
+#ifndef CORE_TESTS
     if (m_MetadataIOCoordinator) {
-        m_MetadataIOCoordinator->readMetadata(artworks, rangesToUpdate);
+        if ((m_SettingsModel != NULL) && !m_SettingsModel->getUseExifTool()) {
+            m_MetadataIOCoordinator->readMetadataExiv2(artworks, rangesToUpdate);
+        } else {
+            // fallback
+            m_MetadataIOCoordinator->readMetadataExifTool(artworks, rangesToUpdate);
+        }
     }
+#else
+    Q_UNUSED(artworks);
+    Q_UNUSED(rangesToUpdate);
+#endif
 }
 
 void Commands::CommandManager::writeMetadata(const QVector<Models::ArtworkMetadata *> &artworks, bool useBackups) const {
+#ifndef CORE_TESTS
     if (m_MetadataIOCoordinator) {
-        m_MetadataIOCoordinator->writeMetadata(artworks, useBackups);
+        if ((m_SettingsModel != NULL) && !m_SettingsModel->getUseExifTool()) {
+            m_MetadataIOCoordinator->writeMetadataExiv2(artworks);
+        } else {
+            // fallback
+            m_MetadataIOCoordinator->writeMetadataExifTool(artworks, useBackups);
+        }
     }
+#else
+    Q_UNUSED(artworks);
+    Q_UNUSED(useBackups);
+#endif
 }
 
 void Commands::CommandManager::addToLibrary(const QVector<Models::ArtworkMetadata *> &artworks) const {

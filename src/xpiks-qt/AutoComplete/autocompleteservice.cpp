@@ -79,6 +79,11 @@ namespace AutoComplete {
         }
     }
 
+    bool AutoCompleteService::isBusy() const {
+        bool isBusy = (m_AutoCompleteWorker != NULL) && m_AutoCompleteWorker->hasPendingJobs();
+        return isBusy;
+    }
+
     void AutoCompleteService::submitItem(QString *item) {
         Q_UNUSED(item);
     }

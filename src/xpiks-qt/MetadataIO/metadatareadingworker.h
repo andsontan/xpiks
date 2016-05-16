@@ -31,6 +31,8 @@
 #include <QByteArray>
 #include <QHash>
 #include <QSize>
+#include "importdataresult.h"
+#include "imetadatareader.h"
 
 namespace Models {
     class ArtworkMetadata;
@@ -40,18 +42,7 @@ namespace Models {
 namespace MetadataIO {
     class BackupSaverService;
 
-    struct ImportDataResult {
-        QString FilePath;
-        QString Title;
-        QString Description;
-        QStringList Keywords;
-        QSize ImageSize;
-        qint64 FileSize;
-        QHash<QString, QString> BackupDict;
-        QString DateTaken;
-    };
-
-    class MetadataReadingWorker : public QObject
+    class MetadataReadingWorker : public QObject, public IMetadataReader
     {
         Q_OBJECT
     public:
@@ -71,9 +62,9 @@ namespace MetadataIO {
         void innerProcessFinished(int exitCode, QProcess::ExitStatus exitStatus);
 
     public:
-        const QHash<QString, ImportDataResult> &getImportResult() const { return m_ImportResult; }
-        const QVector<Models::ArtworkMetadata *> &getArtworksToImport() const { return m_ItemsToRead; }
-        const QVector<QPair<int, int> > &getRangesToUpdate() const { return m_RangesToUpdate; }
+        virtual const QHash<QString, ImportDataResult> &getImportResult() const { return m_ImportResult; }
+        virtual const QVector<Models::ArtworkMetadata *> &getItemsToRead() const { return m_ItemsToRead; }
+        virtual const QVector<QPair<int, int> > &getRangesToUpdate() const { return m_RangesToUpdate; }
 
     private:
         void initWorker();

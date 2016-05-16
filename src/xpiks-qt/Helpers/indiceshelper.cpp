@@ -20,8 +20,48 @@
  */
 
 #include "indiceshelper.h"
+#include <cmath>
+
+namespace Models {
+    class ArtworkMetadata;
+}
 
 namespace Helpers {
+    template<class T>
+    int splitIntoChunks(const QVector<T> &items, int chunksCount, QVector<QVector<T> > &chunks) {
+        int size = items.size();
+
+        if (items.isEmpty() || (chunksCount == 0) || (chunksCount > size)) { return 0; }
+
+        if (chunksCount == 1) {
+            chunks << items;
+            return 1;
+        }
+
+        int chunkSize = ceil((size + 0.0) / chunksCount);
+
+        int left = chunkSize;
+        while (left < size) {
+            chunks.push_back(items.mid(left - chunkSize, chunkSize));
+            left += chunkSize;
+        }
+
+        if (left - chunkSize < size) {
+            chunks.push_back(items.mid(left - chunkSize, chunkSize));
+        }
+
+        return chunks.length();
+    }
+
+    template
+    int splitIntoChunks<Models::ArtworkMetadata*>(const QVector<Models::ArtworkMetadata*> &items,
+    int chunksCount, QVector<QVector<Models::ArtworkMetadata*> > &chunks);
+
+#ifdef CORE_TESTS
+    template
+    int splitIntoChunks<int>(const QVector<int> &items, int chunksCount, QVector<QVector<int> > &chunks);
+#endif
+
     void indicesToRanges(const QVector<int> &indices, QVector<QPair<int, int> > &ranges) {
         if (indices.empty()) { return; }
 

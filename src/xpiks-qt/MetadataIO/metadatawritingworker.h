@@ -25,6 +25,7 @@
 #include <QObject>
 #include <QVector>
 #include <QProcess>
+#include "imetadatawriter.h"
 
 namespace Models {
     class ArtworkMetadata;
@@ -32,7 +33,7 @@ namespace Models {
 }
 
 namespace MetadataIO {
-    class MetadataWritingWorker : public QObject
+    class MetadataWritingWorker : public QObject, public IMetadataWriter
     {
         Q_OBJECT
     public:
@@ -46,7 +47,7 @@ namespace MetadataIO {
         void finished(bool success);
 
     public:
-        const QVector<Models::ArtworkMetadata *> &getArtworksToExport() const { return m_ItemsToWrite; }
+        virtual const QVector<Models::ArtworkMetadata *> &getItemsToWrite() const { return m_ItemsToWrite; }
 
     public slots:
         void process();

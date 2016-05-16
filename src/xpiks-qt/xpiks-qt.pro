@@ -4,6 +4,7 @@ QMAKE_MAC_SDK = macosx10.11
 
 QT += qml quick widgets concurrent svg
 CONFIG += qtquickcompiler
+CONFIG += c++11
 
 SOURCES += main.cpp \
     Models/artitemsmodel.cpp \
@@ -93,7 +94,11 @@ SOURCES += main.cpp \
     Models/abstractconfigupdatermodel.cpp \
     AutoComplete/stocksftplistmodel.cpp \
     AutoComplete/stringfilterproxymodel.cpp \
-    Models/imageartwork.cpp
+    Models/imageartwork.cpp \
+    MetadataIO/exiv2readingworker.cpp \
+    MetadataIO/readingorchestrator.cpp \
+    MetadataIO/exiv2writingworker.cpp \
+    MetadataIO/writingorchestrator.cpp
 
 RESOURCES += qml.qrc
 
@@ -239,7 +244,15 @@ HEADERS += \
     AutoComplete/stocksftplistmodel.h \
     AutoComplete/stringfilterproxymodel.h \
     Models/imageartwork.h \
-    Common/hold.h
+    Common/hold.h \
+    MetadataIO/exiv2readingworker.h \
+    MetadataIO/importdataresult.h \
+    MetadataIO/readingorchestrator.h \
+    MetadataIO/imetadatareader.h \
+    MetadataIO/exiv2writingworker.h \
+    MetadataIO/writingorchestrator.h \
+    MetadataIO/exiv2tagnames.h \
+    MetadataIO/imetadatawriter.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
@@ -333,9 +346,16 @@ CONFIG(debug, debug|release)  {
 }
 
 macx {
+    LIBS += -liconv
+    LIBS += -lexpat
+
     INCLUDEPATH += "../hunspell-1.3.3/src"
     INCLUDEPATH += "../quazip"
     INCLUDEPATH += "../../libcurl/include"
+    INCLUDEPATH += ../exiv2-0.25/include
+
+    LIBS += -lxmpsdk
+    LIBS += -lexiv2
 
     HUNSPELL_DICT_FILES.files = deps/dict/en_US.aff deps/dict/en_US.dic deps/dict/license.txt deps/dict/README_en_US.txt
     HUNSPELL_DICT_FILES.path = Contents/Resources
@@ -366,6 +386,7 @@ win32 {
     INCLUDEPATH += "../hunspell-1.3.3/src"
     INCLUDEPATH += "../quazip"
     INCLUDEPATH += "../libcurl/include"
+    INCLUDEPATH += "../exiv2-0.25/include"
     LIBS -= -lcurl
 
     CONFIG(debug, debug|release) {
@@ -379,6 +400,8 @@ win32 {
     }
 
     LIBS += -lmman
+    LIBS += -llibexpat
+    LIBS += -llibexiv2
 
     copywhatsnew.commands = $(COPY_FILE) \"$$shell_path($$PWD/deps/whatsnew.txt)\" \"$$shell_path($$OUT_PWD/$$EXE_DIR/)\"
     copyterms.commands = $(COPY_FILE) \"$$shell_path($$PWD/deps/terms_and_conditions.txt)\" \"$$shell_path($$OUT_PWD/$$EXE_DIR/)\"
@@ -405,9 +428,13 @@ travis-ci {
     message("for Travis CI")
     LIBS -= -lz
     LIBS += /usr/lib/x86_64-linux-gnu/libz.so
+
+    LIBS += -lexiv2
 }
 
 linux-g++-64 {
+    LIBS += -lexiv2
+
     message("for Linux")
     target.path=/usr/bin/
     QML_IMPORT_PATH += /usr/lib/x86_64-linux-gnu/qt5/imports/
@@ -427,14 +454,14 @@ linux-g++-64 {
 }
 
 linux-qtcreator {
-        message("in QtCreator")
-        LIBS += -L/usr/lib64/
-        LIBS += -L/lib/x86_64-linux-gnu/
-        BUILDNO = $$system(od -An -N8 -tx8 </dev/urandom)
+    message("in QtCreator")
+    LIBS += -L/usr/lib64/
+    LIBS += -L/lib/x86_64-linux-gnu/
+    BUILDNO = $$system(od -An -N8 -tx8 </dev/urandom)
         
-        copywhatsnew.commands = $(COPY_FILE) "$$PWD/deps/whatsnew.txt" "$$OUT_PWD/"
-        copyterms.commands = $(COPY_FILE) "$$PWD/deps/terms_and_conditions.txt" "$$OUT_PWD/"
-        QMAKE_EXTRA_TARGETS += copywhatsnew copyterms
+    copywhatsnew.commands = $(COPY_FILE) "$$PWD/deps/whatsnew.txt" "$$OUT_PWD/"
+    copyterms.commands = $(COPY_FILE) "$$PWD/deps/terms_and_conditions.txt" "$$OUT_PWD/"
+    QMAKE_EXTRA_TARGETS += copywhatsnew copyterms
 	POST_TARGETDEPS += copywhatsnew copyterms
 }
 

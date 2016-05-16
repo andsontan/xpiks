@@ -36,6 +36,8 @@ namespace Common {
         // if service is provided via plugin it can be turned off
         virtual bool isAvailable() const = 0;
 
+        virtual bool isBusy() const = 0;
+
         virtual void submitItem(T *item) = 0;
         virtual void submitItem(T *item, int flags) = 0;
         virtual void submitItems(const QVector<T*> &items) = 0;

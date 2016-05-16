@@ -70,10 +70,15 @@ namespace Warnings {
         }
     }
 
+    bool WarningsService::isBusy() const {
+        bool isBusy = (m_WarningsWorker != NULL) && (m_WarningsWorker->hasPendingJobs());
+        return isBusy;
+    }
+
     void WarningsService::submitItem(Models::ArtworkMetadata *item) {
         if (m_WarningsWorker == NULL) { return; }
 
-        item->acquire();
+        LOG_INFO << "Submitting one item";
 
         WarningsItem *wItem = new WarningsItem(item);
         m_WarningsWorker->submitItem(wItem);
@@ -81,8 +86,7 @@ namespace Warnings {
 
     void WarningsService::submitItem(Models::ArtworkMetadata *item, int flags) {
         if (m_WarningsWorker == NULL) { return; }
-
-        item->acquire();
+        LOG_INFO << "Submitting item with flags" << flags;
 
         WarningsItem *wItem = new WarningsItem(item, flags);
         m_WarningsWorker->submitItem(wItem);
@@ -102,7 +106,7 @@ namespace Warnings {
             itemsToSubmit.append(itemToSubmit);
         }
 
-        LOG_INFO << "Submitting" << length << "items";
+        LOG_INFO << "Submitting" << length << "item(s)";
         m_WarningsWorker->submitItems(itemsToSubmit);
     }
 

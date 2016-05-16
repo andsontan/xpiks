@@ -13,6 +13,7 @@ QT       -= gui
 TARGET = xpiks-tests-core
 CONFIG   += console
 CONFIG   -= app_bundle
+CONFIG   += c++11
 
 win32:QT += winextras
 
@@ -41,6 +42,11 @@ win32 {
     #INCLUDEPATH += "../libcurl/include"
     #LIBS -= -lcurl
     #LIBS += -llibcurl_debug
+}
+
+travis-ci {
+    message("for Travis CI")
+    DEFINES += TRAVIS_CI
 }
 
 linux-g++-64 {

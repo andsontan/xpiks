@@ -49,6 +49,8 @@ int SpellingProducesWarningsTest::doTest() {
 
     VERIFY(!ioCoordinator->getHasErrors(), "Errors in IO Coordinator while reading");
 
+    QThread::sleep(3);
+
     Models::ArtworkMetadata *metadata = artItemsModel->getArtwork(0);
 
     VERIFY(!Common::HasFlag(metadata->getWarningsFlags(), Common::WarningTypeSpellErrorsInTitle), "Error for reading title");
@@ -60,9 +62,6 @@ int SpellingProducesWarningsTest::doTest() {
     metadata->setTitle(metadata->getTitle() + ' ' + wrongWord);
     metadata->appendKeyword("correct part " + wrongWord);
     metadata->setIsSelected(true);
-
-    // wait for after-add spellchecking
-    QThread::sleep(1);
 
     Models::FilteredArtItemsProxyModel *filteredModel = m_CommandManager->getFilteredArtItemsModel();
     SpellCheck::SpellCheckerService *spellCheckService = m_CommandManager->getSpellCheckerService();
@@ -78,6 +77,8 @@ int SpellingProducesWarningsTest::doTest() {
     if (!waiter.wait(5)) {
         VERIFY(false, "Timeout for waiting for first spellcheck results");
     }
+
+    LOG_INFO << "Spellchecking finished. Waiting for warnings...";
 
     if (!warningsQueueWaiter.wait(5)) {
         if (metadata->getWarningsFlags() == 0) {

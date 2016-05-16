@@ -10,6 +10,8 @@
 typedef QPair<int, int> Pair;
 typedef QVector<Pair > Pairs;
 typedef QVector<int> Indices;
+typedef QVector<int> IntArray;
+typedef QVector<IntArray > ChunksArray;
 
 Pairs MAKE_PAIRS(int length, ...) {
     Pairs pairs;
@@ -56,8 +58,7 @@ void COMPARE_PAIRS(const Pairs &actual, const Pairs &expected) {
     }
 }
 
-void IndicesToRangesTests::noItemsToEmptyIndicesTest()
-{
+void IndicesToRangesTests::noItemsToEmptyIndicesTest() {
     Indices indices;
     Pairs actualPairs;
     Helpers::indicesToRanges(indices, actualPairs);
@@ -67,8 +68,7 @@ void IndicesToRangesTests::noItemsToEmptyIndicesTest()
     COMPARE_PAIRS(actualPairs, expectedPairs);
 }
 
-void IndicesToRangesTests::allRangeIndicesTest()
-{
+void IndicesToRangesTests::allRangeIndicesTest() {
     Indices indices = Indices() << 0 << 1 << 2 << 3 << 4 << 5;
     Pairs actualPairs;
     Helpers::indicesToRanges(indices, actualPairs);
@@ -77,8 +77,7 @@ void IndicesToRangesTests::allRangeIndicesTest()
     COMPARE_PAIRS(actualPairs, expectedPairs);
 }
 
-void IndicesToRangesTests::allRangeNotFromZeroTest()
-{
+void IndicesToRangesTests::allRangeNotFromZeroTest() {
     Indices indices = Indices() << 1 << 2 << 3 << 4 << 5;
     Pairs actualPairs;
     Helpers::indicesToRanges(indices, actualPairs);
@@ -87,8 +86,7 @@ void IndicesToRangesTests::allRangeNotFromZeroTest()
     COMPARE_PAIRS(actualPairs, expectedPairs);
 }
 
-void IndicesToRangesTests::allRangeOnlyTwoItemsTest()
-{
+void IndicesToRangesTests::allRangeOnlyTwoItemsTest() {
     Indices indices = Indices() << 4 << 5;
     Pairs actualPairs;
     Helpers::indicesToRanges(indices, actualPairs);
@@ -97,8 +95,7 @@ void IndicesToRangesTests::allRangeOnlyTwoItemsTest()
     COMPARE_PAIRS(actualPairs, expectedPairs);
 }
 
-void IndicesToRangesTests::allRangeOnlyOneItemNotZeroTest()
-{
+void IndicesToRangesTests::allRangeOnlyOneItemNotZeroTest() {
     Indices indices = Indices() << 4;
     Pairs actualPairs;
     Helpers::indicesToRanges(indices, actualPairs);
@@ -107,8 +104,7 @@ void IndicesToRangesTests::allRangeOnlyOneItemNotZeroTest()
     COMPARE_PAIRS(actualPairs, expectedPairs);
 }
 
-void IndicesToRangesTests::allRangeOnlyOneItemZeroTest()
-{
+void IndicesToRangesTests::allRangeOnlyOneItemZeroTest() {
     Indices indices = Indices() << 0;
     Pairs actualPairs;
     Helpers::indicesToRanges(indices, actualPairs);
@@ -117,8 +113,7 @@ void IndicesToRangesTests::allRangeOnlyOneItemZeroTest()
     COMPARE_PAIRS(actualPairs, expectedPairs);
 }
 
-void IndicesToRangesTests::separateRangesSimpleTest()
-{
+void IndicesToRangesTests::separateRangesSimpleTest() {
     Indices indices = Indices() << 1 << 2 << 4 << 5;
     Pairs actualPairs;
     Helpers::indicesToRanges(indices, actualPairs);
@@ -127,8 +122,7 @@ void IndicesToRangesTests::separateRangesSimpleTest()
     COMPARE_PAIRS(actualPairs, expectedPairs);
 }
 
-void IndicesToRangesTests::separateRangesWithOneItemInTheBeginningTest()
-{
+void IndicesToRangesTests::separateRangesWithOneItemInTheBeginningTest() {
     Indices indices = Indices() << 1 << 4 << 5;
     Pairs actualPairs;
     Helpers::indicesToRanges(indices, actualPairs);
@@ -137,8 +131,7 @@ void IndicesToRangesTests::separateRangesWithOneItemInTheBeginningTest()
     COMPARE_PAIRS(actualPairs, expectedPairs);
 }
 
-void IndicesToRangesTests::separateRangesWithOneItemInTheMiddleTest()
-{
+void IndicesToRangesTests::separateRangesWithOneItemInTheMiddleTest() {
     Indices indices = Indices() << 0 << 1 << 3 << 5 << 6;
     Pairs actualPairs;
     Helpers::indicesToRanges(indices, actualPairs);
@@ -147,8 +140,7 @@ void IndicesToRangesTests::separateRangesWithOneItemInTheMiddleTest()
     COMPARE_PAIRS(actualPairs, expectedPairs);
 }
 
-void IndicesToRangesTests::separateRangesWithOneItemInTheEndTest()
-{
+void IndicesToRangesTests::separateRangesWithOneItemInTheEndTest() {
     Indices indices = Indices() << 0 << 1 << 2 << 3 << 6;
     Pairs actualPairs;
     Helpers::indicesToRanges(indices, actualPairs);
@@ -157,12 +149,141 @@ void IndicesToRangesTests::separateRangesWithOneItemInTheEndTest()
     COMPARE_PAIRS(actualPairs, expectedPairs);
 }
 
-void IndicesToRangesTests::combinedTest()
-{
+void IndicesToRangesTests::combinedTest() {
     Indices indices = Indices() << 0 << 1 << 2 << 4 << 6 << 7 << 10 << 13;
     Pairs actualPairs;
     Helpers::indicesToRanges(indices, actualPairs);
 
     Pairs expectedPairs = MAKE_PAIRS(5, 0, 2, 4, 4, 6, 7, 10, 10, 13, 13);
     COMPARE_PAIRS(actualPairs, expectedPairs);
+}
+
+void IndicesToRangesTests::emptyArrayToChunksTest() {
+    IntArray array;
+    ChunksArray chunks;
+    int result = Helpers::splitIntoChunks<int>(array, 3, chunks);
+    QCOMPARE(result, chunks.size());
+
+    QVERIFY(chunks.isEmpty());
+}
+
+void IndicesToRangesTests::trivialArrayToChunksTest() {
+    IntArray array = IntArray() << 0;
+    ChunksArray chunks;
+    int result = Helpers::splitIntoChunks<int>(array, 1, chunks);
+    QCOMPARE(result, chunks.size());
+
+    QVERIFY(chunks.length() == 1);
+    QVERIFY(chunks[0] == array);
+}
+
+void IndicesToRangesTests::splitWithOneItemInChunkTest() {
+    IntArray array = IntArray() << 0 << 1 << 2 << 4 << 6 << 7 << 10 << 13;
+    ChunksArray chunks;
+    int result = Helpers::splitIntoChunks<int>(array, array.size(), chunks);
+    QCOMPARE(result, chunks.size());
+
+    QCOMPARE(chunks.size(), array.size());
+    for (int i = 0; i < array.size(); ++i) {
+        QVERIFY(chunks[i].size() == 1);
+        QCOMPARE(chunks[i][0], array[i]);
+    }
+}
+
+void IndicesToRangesTests::splitEvenEasyCaseTest() {
+    IntArray array = IntArray() << 0 << 1 << 2 << 3 << 4 << 5 << 6 << 7;
+    ChunksArray chunks;
+    int result = Helpers::splitIntoChunks<int>(array, 4, chunks);
+    QCOMPARE(result, chunks.size());
+
+    QCOMPARE(chunks.size(), 4);
+    for (int i = 0; i < 4; ++i) {
+        QVERIFY(chunks[i].size() == 2);
+
+        QCOMPARE(chunks[i][0], i*2);
+        QCOMPARE(chunks[i][1], i*2 + 1);
+    }
+}
+
+void IndicesToRangesTests::splitOddEasyCaseTest() {
+    IntArray array = IntArray() << 0 << 1 << 2 << 3 << 4 << 5 << 6;
+    ChunksArray chunks;
+    int result = Helpers::splitIntoChunks<int>(array, 4, chunks);
+    QCOMPARE(result, chunks.size());
+
+    QCOMPARE(chunks.size(), 4);
+    for (int i = 0; i < 3; ++i) {
+        QVERIFY(chunks[i].size() == 2);
+
+        QCOMPARE(chunks[i][0], i*2);
+        QCOMPARE(chunks[i][1], i*2 + 1);
+    }
+
+    QVERIFY(chunks[3].size() == 1);
+    QCOMPARE(chunks[3][0], 6);
+}
+
+void IndicesToRangesTests::splitIntoOnePieceTest() {
+    IntArray array = IntArray() << 0 << 1 << 2 << 4 << 6 << 7 << 10 << 13;
+    ChunksArray chunks;
+    int result = Helpers::splitIntoChunks<int>(array, 1, chunks);
+    QCOMPARE(result, chunks.size());
+
+    QCOMPARE(chunks.size(), 1);
+    for (int i = 0; i < array.size(); ++i) {
+        QCOMPARE(chunks[0][i], array[i]);
+    }
+}
+
+void IndicesToRangesTests::splitIntoZeroPiecesTest() {
+    IntArray array = IntArray() << 0 << 1 << 2 << 4 << 6 << 7 << 10 << 13;
+    ChunksArray chunks;
+    int result = Helpers::splitIntoChunks<int>(array, 0, chunks);
+    QCOMPARE(result, chunks.size());
+
+    QCOMPARE(chunks.size(), 0);
+}
+
+void IndicesToRangesTests::splitIntoMoreThanASizeTest() {
+    IntArray array = IntArray() << 0 << 1 << 2 << 4 << 6 << 7 << 10 << 13;
+    ChunksArray chunks;
+    int result = Helpers::splitIntoChunks<int>(array, array.size() + 1, chunks);
+    QCOMPARE(result, chunks.size());
+
+    QCOMPARE(chunks.size(), 0);
+}
+
+void IndicesToRangesTests::splitIntoTwoUnevenChunksTest() {
+    IntArray array = IntArray() << 0 << 1 << 2 << 3 << 4 << 5 << 6;
+    ChunksArray chunks;
+    int result = Helpers::splitIntoChunks<int>(array, 2, chunks);
+    QCOMPARE(result, chunks.size());
+
+    QCOMPARE(chunks.size(), 2);
+
+    QCOMPARE(chunks[0].size(), 4);
+    for (int i = 0; i < 4; ++i) {
+        QCOMPARE(chunks[0][i], array[i]);
+    }
+
+    QCOMPARE(chunks[1].size(), 3);
+    for (int i = 4; i < array.size(); ++i) {
+        QCOMPARE(chunks[1][i - 4], array[i]);
+    }
+}
+
+void IndicesToRangesTests::splitIntoMoreThanAHalfTest() {
+    IntArray array = IntArray() << 0 << 1 << 2 << 3 << 4 << 5;
+    ChunksArray chunks;
+    int result = Helpers::splitIntoChunks<int>(array, 4, chunks);
+    QCOMPARE(result, chunks.size());
+
+    QCOMPARE(chunks.size(), 3);
+
+    for (int i = 0; i < 3; ++i) {
+        QVERIFY(chunks[i].size() == 2);
+
+        QCOMPARE(chunks[i][0], i*2);
+        QCOMPARE(chunks[i][1], i*2 + 1);
+    }
 }

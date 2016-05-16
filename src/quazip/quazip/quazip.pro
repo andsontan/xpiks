@@ -9,6 +9,7 @@ INCLUDEPATH += "$$PWD/../../zlib-1.2.8/"
 }
 
 CONFIG += staticlib
+CONFIG += c++11
 
 # The ABI version.
 

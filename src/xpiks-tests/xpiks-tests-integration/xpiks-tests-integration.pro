@@ -1,6 +1,8 @@
 TEMPLATE = app
 TARGET = xpiks-tests-integration
 
+QMAKE_MAC_SDK = macosx10.11
+
 QT += qml quick widgets concurrent svg
 QT -= gui
 
@@ -118,7 +120,11 @@ SOURCES += main.cpp \
     autocompletebasictest.cpp \
     ../../xpiks-qt/Models/imageartwork.cpp \
     spellingproduceswarningstest.cpp \
-    undoaddwithvectorstest.cpp
+    undoaddwithvectorstest.cpp \
+    ../../xpiks-qt/MetadataIO/exiv2readingworker.cpp \
+    ../../xpiks-qt/MetadataIO/readingorchestrator.cpp \
+    ../../xpiks-qt/MetadataIO/exiv2writingworker.cpp \
+    ../../xpiks-qt/MetadataIO/writingorchestrator.cpp
 
 RESOURCES +=
 
@@ -260,7 +266,15 @@ HEADERS += \
     autocompletebasictest.h \
     ../../xpiks-qt/Common/hold.h \
     ../../xpiks-qt/Models/imageartwork.h \
-    undoaddwithvectorstest.h
+    undoaddwithvectorstest.h \
+    ../../xpiks-qt/MetadataIO/exiv2readingworker.h \
+    ../../xpiks-qt/MetadataIO/imetadatareader.h \
+    ../../xpiks-qt/MetadataIO/importdataresult.h \
+    ../../xpiks-qt/MetadataIO/readingorchestrator.h \
+    ../../xpiks-qt/MetadataIO/exiv2writingworker.h \
+    ../../xpiks-qt/MetadataIO/imetadatawriter.h \
+    ../../xpiks-qt/MetadataIO/exiv2tagnames.h \
+    ../../xpiks-qt/MetadataIO/writingorchestrator.h
     spellingproduceswarningstest.h
 
 INCLUDEPATH += ../../tiny-aes
@@ -277,16 +291,28 @@ macx {
     INCLUDEPATH += "../../hunspell-1.3.3/src"
     INCLUDEPATH += "../../quazip"
     INCLUDEPATH += "../../../libcurl/include"
+    INCLUDEPATH += "../../exiv2-0.25/include"
+
+    LIBS += -liconv
+    LIBS += -lexpat
+
+    LIBS += -lxmpsdk
+    LIBS += -lexiv2
 }
 
 win32 {
+    DEFINES += QT_NO_PROCESS_COMBINED_ARGUMENT_START
     QT += winextras
     INCLUDEPATH += "../../zlib-1.2.8"
     INCLUDEPATH += "../../hunspell-1.3.3/src"
     INCLUDEPATH += "../../quazip"
     INCLUDEPATH += "../../libcurl/include"
+    INCLUDEPATH += "../../exiv2-0.25/include"
     LIBS -= -lcurl
     LIBS += -lmman
+
+    LIBS += -llibexpat
+    LIBS += -llibexiv2
 
     CONFIG(debug, debug|release) {
         EXE_DIR = debug
@@ -300,6 +326,8 @@ win32 {
 }
 
 linux-g++-64 {
+    LIBS += -lexiv2
+
     message("for Linux")
     target.path=/usr/bin/
     QML_IMPORT_PATH += /usr/lib/x86_64-linux-gnu/qt5/imports/
@@ -320,6 +348,7 @@ travis-ci {
     message("for Travis CI")
     LIBS -= -lz
     LIBS += /usr/lib/x86_64-linux-gnu/libz.so
+    LIBS += -lexiv2
     DEFINES += TRAVIS_CI
 }
 
