@@ -9,6 +9,7 @@
 #include "../../xpiks-qt/MetadataIO/metadataiocoordinator.h"
 #include "../../xpiks-qt/Models/artworkmetadata.h"
 #include "../../xpiks-qt/Models/settingsmodel.h"
+#include "../../xpiks-qt/Models/imageartwork.h"
 
 QString AddFilesBasicTest::testName() {
     return QLatin1String("AddFilesBasicTest");
@@ -45,7 +46,11 @@ int AddFilesBasicTest::doTest() {
 
     QStringList expectedKeywords = QString("abstract,art,black,blue,creative,dark,decor,decoration,decorative,design,dot,drops,elegance,element,geometric,interior,light,modern,old,ornate,paper,pattern,purple,retro,seamless,style,textile,texture,vector,wall,wallpaper").split(',');
 
+    Models::ImageArtwork *image = dynamic_cast<Models::ImageArtwork*>(metadata);
+
     VERIFY(expectedKeywords == keywords, "Keywords are not the same!");
+    VERIFY(image->getImageSize().width() == 4167, "Image width was read incorrectly");
+    VERIFY(image->getImageSize().height() == 4167, "Image height was read incorrectly");
 
     return 0;
 }

@@ -10,6 +10,7 @@
 #include "../../xpiks-qt/Models/artworkmetadata.h"
 #include "../../xpiks-qt/Models/settingsmodel.h"
 #include "../../xpiks-qt/Models/filteredartitemsproxymodel.h"
+#include "../../xpiks-qt/Models/imageartwork.h"
 
 QString SaveFileBasicTest::testName() {
     return QLatin1String("SaveFileBasicTest");
@@ -40,6 +41,11 @@ int SaveFileBasicTest::doTest() {
     VERIFY(!ioCoordinator->getHasErrors(), "Errors in IO Coordinator while reading");
 
     Models::ArtworkMetadata *metadata = artItemsModel->getArtwork(0);
+    Models::ImageArtwork *image = dynamic_cast<Models::ImageArtwork*>(metadata);
+
+    VERIFY(image->getImageSize().width() == 1920, "Image width was read incorrectly");
+    VERIFY(image->getImageSize().height() == 1272, "Image height was read incorrectly");
+
     QStringList keywords; keywords << "picture" << "seagull" << "bird";
     metadata->setDescription("Brand new description");
     metadata->setTitle("Brand new title");
