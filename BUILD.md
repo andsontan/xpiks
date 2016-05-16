@@ -21,12 +21,22 @@
 - copy built library (e.g. `libquazip.a`) from the build directory to the `src/libs` directory
 - [windows] do `git clone https://github.com/blackrosezy/build-libcurl-windows.git` and execute `build.bat`
 - [windows] copy contests of `lib/dll-debug-x64` contents to the `src/libs/` directory
+- [windows] build exiv2 library (see steps below)
 
+***Visual Studio 2015 build of exiv2 library***
+
+- download **exiv2 v0.25** library from http://www.exiv2.org/ and extract it somewhere
+- open `msvc2005\exiv2.sln` and upgrade all projects
+- from each project remove file `localtime.c`
+- open file `include\exiv2\exv_msvs.h` and enable unicode support, disable curl and ssh (alternatively, you can overwrite this file with the one in the _xpiks_ repository via path `src/exiv2-0.25/include/exiv2/exv_msvs.h`)
+- in Visual Studio select `"Build" -> "Batch build"` and mark DebugDLL and ReleaseDLL builds for your platform (x64 or x86)
+- press "Build"
+- copy build artifacts (`libexiv2.dll`, `libexiv2.lib`, `libexpat.dll`, `libexpat.lib`) to `src/libs` directory in Xpiks repo
 
 ***Manual build***
 - install Qt 5.4 or later from official website (or 5.2 or later from repository in case of Linux)
-- [linux] install development packages for `lubcurl`, `hunspell`, `quazip`, `zlib`
-- [linux] install `exiftool`
+- [linux] install development packages for `libcurl`, `hunspell`, `quazip`, `zlib`, `libexiv`
+- [linux] install `exiftool` (this **is not** necessary since Xpiks 1.3.1) and `expat` (this **is** necessary since Xpiks 1.3.1)
 - open main project in Qt Creator, execute `Run qmake`, execute `Build`
 - you can open, build and run tests project (`src/xpiks-tests/xpiks-tests.pro`) additionally
 
@@ -38,7 +48,7 @@ This chapter assumes that you have installed generic development packages for yo
 
 ***Additional requirements***
 
-In some cases you neet to install `libcurl-devel`, `hunspell-devel`, `quazip-devel` packages (they can have slightly different names in your distribution) if it is not installed as a build requirement.
+In some cases you neet to install `libcurl-devel`, `hunspell-devel`, `quazip-devel`, `libexiv-devel` packages (they can have slightly different names in your distribution) if it is not installed as a build requirement.
 
 ***Debian package build***
 
