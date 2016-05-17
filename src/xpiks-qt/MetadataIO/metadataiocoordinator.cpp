@@ -53,7 +53,7 @@ namespace MetadataIO {
                 (exitStatus == QProcess::NormalExit);
 
         if (success) {
-            version = process.readAll();
+            version = QString::fromUtf8(process.readAll());
         }
 
         return success;

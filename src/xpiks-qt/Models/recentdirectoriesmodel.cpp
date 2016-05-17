@@ -35,7 +35,7 @@ namespace Models {
         QByteArray raw;
         QDataStream ds(&raw, QIODevice::WriteOnly);
         ds << m_RecentDirectories;
-        return raw.toBase64();
+        return QString::fromLatin1(raw.toBase64());
     }
 
     void RecentDirectoriesModel::deserializeFromSettings(const QString &serialized) {

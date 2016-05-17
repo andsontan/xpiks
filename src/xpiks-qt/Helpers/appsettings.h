@@ -159,7 +159,7 @@ namespace Helpers {
 #endif
             QFile file(path);
             if (file.open(QIODevice::ReadOnly)) {
-                text = file.readAll();
+                text = QString::fromUtf8(file.readAll());
                 file.close();
             } else {
                 LOG_WARNING << "whatsnew.txt file is not found on path" << path;
@@ -168,7 +168,7 @@ namespace Helpers {
 
                 QFile currDirFile(path);
                 if (currDirFile.open(QIODevice::ReadOnly)) {
-                    text = currDirFile.readAll();
+                    text = QString::fromUtf8(currDirFile.readAll());
                     currDirFile.close();
                 }
             }
@@ -290,7 +290,7 @@ namespace Helpers {
 #endif
             QFile file(path);
             if (file.open(QIODevice::ReadOnly)) {
-                text = file.readAll();
+                text = QString::fromUtf8(file.readAll());
                 file.close();
             } else {
                 LOG_WARNING << "terms_and_conditions.txt file is not found on path" << path;
@@ -299,7 +299,7 @@ namespace Helpers {
 
                 QFile currDirFile(path);
                 if (currDirFile.open(QIODevice::ReadOnly)) {
-                    text = currDirFile.readAll();
+                    text = QString::fromUtf8(currDirFile.readAll());
                     currDirFile.close();
                 }
             }

@@ -825,7 +825,7 @@ namespace Models {
         foreach (const QString &filepath, rawFilenames) {
             QImageReader imageReader(filepath);
 
-            QString format = imageReader.format().toLower();
+            QString format = QString::fromLatin1(imageReader.format().toLower());
 
             if (format == QLatin1String("jpeg") ||
                     format == QLatin1String("tiff")) {

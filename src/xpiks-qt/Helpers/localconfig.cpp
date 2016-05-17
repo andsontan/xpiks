@@ -32,7 +32,7 @@ namespace Helpers {
         QFile file(m_FilePath);
 
         if (file.open(QIODevice::ReadOnly)) {
-            QString text = file.readAll();
+            QString text = QString::fromUtf8(file.readAll());
             file.close();
             m_Config = QJsonDocument::fromJson(text.toUtf8());
         } else {

@@ -400,7 +400,7 @@ int main(int argc, char *argv[]) {
     if (argc > 1) {
         QStringList pathes;
         for (int i = 1; i < argc; ++i) {
-            pathes.append(QString(argv[i]));
+            pathes.append(QString::fromLatin1(argv[i]));
         }
 
         commandManager.addInitialArtworks(pathes, QStringList());

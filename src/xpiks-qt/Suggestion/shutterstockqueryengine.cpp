@@ -52,7 +52,7 @@ namespace Suggestion {
         QString decodedClientSecret = Encryption::decodeText(m_ClientSecret, "MasterPassword");
 
         QString authStr = QString("%1:%2").arg(decodedClientId).arg(decodedClientSecret);
-        QString headerData = "Basic " + authStr.toLocal8Bit().toBase64();
+        QString headerData = "Basic " + QString::fromLatin1(authStr.toLocal8Bit().toBase64());
         request.setRawHeader("Authorization", headerData.toLocal8Bit());
 
         QNetworkReply *reply = m_NetworkManager.get(request);

@@ -249,7 +249,7 @@ namespace MetadataIO {
         LOG_DEBUG << "Exiftool finished with exitcode" << exitCode;
 
         QByteArray stderrByteArray = m_ExiftoolProcess->readAllStandardError();
-        QString stderrText(stderrByteArray);
+        QString stderrText = QString::fromUtf8(stderrByteArray);
         LOG_DEBUG << "STDERR [Exiftool]:" << stderrText;
     }
 

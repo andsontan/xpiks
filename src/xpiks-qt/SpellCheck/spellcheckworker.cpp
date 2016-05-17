@@ -104,7 +104,7 @@ namespace SpellCheck {
                                           dicPath.toUtf8().constData());
                 LOG_DEBUG << "Hunspell with AFF" << affPath << "and DIC" << dicPath;
                 initResult = true;
-                m_Encoding = m_Hunspell->get_dic_encoding();
+                m_Encoding = QString::fromLatin1(m_Hunspell->get_dic_encoding());
                 m_Codec = QTextCodec::codecForName(m_Encoding.toLatin1().constData());
             }
             catch(...) {

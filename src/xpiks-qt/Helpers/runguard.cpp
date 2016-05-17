@@ -31,7 +31,7 @@ namespace Helpers {
         data.append( salt.toUtf8() );
         data = QCryptographicHash::hash( data, QCryptographicHash::Sha1 ).toHex();
 
-        return data;
+        return QString::fromLatin1(data);
     }
 
     RunGuard::RunGuard( const QString &key )

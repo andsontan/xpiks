@@ -29,6 +29,8 @@
 #include <QByteArray>
 #include <cmath>
 
+#define BOOL_TO_STR(condition) ((condition) ? QLatin1String("true") : QLatin1String("false"))
+
 namespace Models {
     class UploadInfo : public QObject {
         Q_OBJECT
@@ -130,9 +132,9 @@ namespace Models {
             hash[HostField] = m_Host;
             hash[UsernameField] = m_Username;
             hash[PasswordField] = m_EncodedPassword;
-            hash[ZipPreviewAndVectorField] = m_ZipBeforeUpload ? "true" : "false";
-            hash[DisableFtpPassiveModeField] = m_DisableFtpPassiveMode ? "true" : "false";
-            hash[IsSelectedField] = m_IsSelected ? "true" : "false";
+            hash[ZipPreviewAndVectorField] = BOOL_TO_STR(m_ZipBeforeUpload);
+            hash[DisableFtpPassiveModeField] = BOOL_TO_STR(m_DisableFtpPassiveMode);
+            hash[IsSelectedField] = BOOL_TO_STR(m_IsSelected);
             return hash;
         }
 
