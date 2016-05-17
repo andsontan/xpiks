@@ -249,7 +249,9 @@ namespace Models {
     }
 
     void CombinedArtworksModel::clearKeywords() {
-        m_AreKeywordsModified = m_CommonKeywordsModel.clearKeywords();
+        if (m_CommonKeywordsModel.clearKeywords()) {
+            m_AreKeywordsModified = true;
+        }
     }
 
     void CombinedArtworksModel::suggestCorrections() {
