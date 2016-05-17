@@ -267,6 +267,7 @@ void UndoRedoTests::undoPasteCommandTest() {
         QCOMPARE(artItemsMock.getArtwork(i)->getDescription(), originalDescription);
         QCOMPARE(artItemsMock.getArtwork(i)->getTitle(), originalTitle);
         QCOMPARE(artItemsMock.getArtwork(i)->getKeywords(), merged);
+        QVERIFY(artItemsMock.getArtwork(i)->isModified());
     }
 
     bool undoStatus = undoRedoManager.undoLastAction();
@@ -276,6 +277,7 @@ void UndoRedoTests::undoPasteCommandTest() {
         QCOMPARE(artItemsMock.getArtwork(i)->getDescription(), originalDescription);
         QCOMPARE(artItemsMock.getArtwork(i)->getTitle(), originalTitle);
         QCOMPARE(artItemsMock.getArtwork(i)->getKeywords(), originalKeywords);
+        QVERIFY(!artItemsMock.getArtwork(i)->isModified());
     }
 }
 
@@ -309,6 +311,7 @@ void UndoRedoTests::undoClearAllTest() {
         QVERIFY(keywordsModel->isDescriptionEmpty());
         QVERIFY(keywordsModel->isTitleEmpty());
         QVERIFY(keywordsModel->areKeywordsEmpty());
+        QVERIFY(artItemsMock.getArtwork(i)->isModified());
     }
 
     bool undoStatus = undoRedoManager.undoLastAction();
@@ -318,6 +321,7 @@ void UndoRedoTests::undoClearAllTest() {
         QCOMPARE(artItemsMock.getArtwork(i)->getDescription(), originalDescription);
         QCOMPARE(artItemsMock.getArtwork(i)->getTitle(), originalTitle);
         QCOMPARE(artItemsMock.getArtwork(i)->getKeywords(), originalKeywords);
+        QVERIFY(!artItemsMock.getArtwork(i)->isModified());
     }
 }
 
@@ -350,6 +354,7 @@ void UndoRedoTests::undoClearKeywordsTest() {
         QCOMPARE(artItemsMock.getArtwork(i)->getDescription(), originalDescription);
         QCOMPARE(artItemsMock.getArtwork(i)->getTitle(), originalTitle);
         QVERIFY(artItemsMock.getArtwork(i)->getKeywordsModel()->areKeywordsEmpty());
+        QVERIFY(artItemsMock.getArtwork(i)->isModified());
     }
 
     bool undoStatus = undoRedoManager.undoLastAction();
@@ -359,5 +364,6 @@ void UndoRedoTests::undoClearKeywordsTest() {
         QCOMPARE(artItemsMock.getArtwork(i)->getDescription(), originalDescription);
         QCOMPARE(artItemsMock.getArtwork(i)->getTitle(), originalTitle);
         QCOMPARE(artItemsMock.getArtwork(i)->getKeywords(), originalKeywords);
+        QVERIFY(!artItemsMock.getArtwork(i)->isModified());
     }
 }
