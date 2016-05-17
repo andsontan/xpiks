@@ -78,7 +78,7 @@ namespace Models {
             // 1000 - do not load the UI
             // advanced users will open logs it notepad
             int numberOfLines = moreLogs ? 1000 : 100;
-            QString text = f.readAll();
+            QString text = QString::fromUtf8(f.readAll());
             result = Helpers::getLastNLines(text, numberOfLines);
             f.close();
         }
