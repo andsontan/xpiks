@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
     QTEST_CLASS(EncryptionTests, et, result);
     QTEST_CLASS(IndicesToRangesTests, itrt, result);
     QTEST_CLASS(AddCommandTests, act, result);
-    QTEST_CLASS(RemoveCommand_Tests, rct, result);
+    QTEST_CLASS(RemoveCommandTests, rct, result);
     QTEST_CLASS(VectorFileNamesTests, vfnt, result);
     QTEST_CLASS(ArtworkMetadataTests, amt, result);
     QTEST_CLASS(BasicKeywordsModelTests, bkt, result);

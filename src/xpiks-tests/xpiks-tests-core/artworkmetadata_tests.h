@@ -33,6 +33,8 @@ private slots:
     void isNotInParentsDirectoryTest();
     void isNotInOtherDirectoryTest();
     void isNotInEmptyDirectoryTest();
+    void clearKeywordsMarksAsModifiedTest();
+    void clearEmptyKeywordsDoesNotMarkModifiedTest();
 };
 
 #endif // ARTWORKMETADATA_TESTS_H

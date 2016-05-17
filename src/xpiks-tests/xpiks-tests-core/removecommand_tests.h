@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QtTest/QtTest>
 
-class RemoveCommand_Tests : public QObject
+class RemoveCommandTests : public QObject
 {
     Q_OBJECT
 

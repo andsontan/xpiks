@@ -425,6 +425,27 @@ void CombinedModelTests::isModifiedAfterKeywordsClearTest() {
     freeArtworks(items);
 }
 
+void CombinedModelTests::isNotModifiedAfterEmptyKeywordsClearTest() {
+    Models::CombinedArtworksModel combinedModel;
+    combinedModel.setCommandManager(&m_CommandManagerMock);
+
+    QVector<Models::ArtItemInfo *> items;
+    items << createArtworkMetadata("Description1", "title1", QStringList() << "Keyword1", 0);
+    items << createArtworkMetadata("Description2", "title2", QStringList() << "Keyword2", 1);
+    items << createArtworkMetadata("Description3", "title3", QStringList() << "Keyword3", 2);
+
+    combinedModel.initArtworks(items);
+    combinedModel.recombineArtworks();
+
+    QCOMPARE(combinedModel.getAreKeywordsModified(), false);
+
+    combinedModel.clearKeywords();
+
+    QCOMPARE(combinedModel.getAreKeywordsModified(), false);
+
+    freeArtworks(items);
+}
+
 void CombinedModelTests::initArtworksEmitsRowsInsertTest() {
     Models::CombinedArtworksModel combinedModel;
     combinedModel.setCommandManager(&m_CommandManagerMock);

@@ -443,3 +443,20 @@ void ArtworkMetadataTests::isNotInEmptyDirectoryTest() {
     Mocks::ArtworkMetadataMock metadata(info.absoluteFilePath());
     QVERIFY(!metadata.isInDirectory(QDir(otherDir).absolutePath()));
 }
+
+void ArtworkMetadataTests::clearKeywordsMarksAsModifiedTest() {
+    Mocks::ArtworkMetadataMock metadata("file.jpg");
+    metadata.appendKeywords(QStringList() << "keyword1" << "keyword2");
+    metadata.resetModified();
+
+    metadata.clearKeywords();
+    QVERIFY(metadata.isModified());
+}
+
+void ArtworkMetadataTests::clearEmptyKeywordsDoesNotMarkModifiedTest() {
+    Mocks::ArtworkMetadataMock metadata("file.jpg");
+    QVERIFY(!metadata.isModified());
+
+    metadata.clearKeywords();
+    QVERIFY(!metadata.isModified());
+}

@@ -10,6 +10,7 @@
 #include "../../xpiks-qt/UndoRedo/undoredomanager.h"
 #include "../../xpiks-qt/Common/flags.h"
 #include "../../xpiks-qt/Models/artiteminfo.h"
+#include "../../xpiks-qt/Commands/pastekeywordscommand.h"
 
 #define SETUP_TEST \
     Mocks::CommandManagerMock commandManagerMock;\
@@ -67,6 +68,43 @@ void UndoRedoTests::undoUndoAddCommandTest() {
     for (int i = 0; i < filenames.length(); ++i) {
         QCOMPARE(artItemsMock.getArtworkFilepath(i), filenames[i]);
     }
+}
+
+void UndoRedoTests::undoUndoAddWithVectorsTest() {
+    SETUP_TEST;
+
+    QStringList filenames, vectors;
+    filenames << "/path/to/test/image1.jpg" << "/path/to/test/image2.jpg" << "/path/to/test/image3.jpg";
+    vectors << "/path/to/test/image3.jpg" << "/path/to/test/image1.eps";
+
+    Commands::AddArtworksCommand *addArtworksCommand = new Commands::AddArtworksCommand(filenames, vectors, false);
+    Commands::ICommandResult *result = commandManagerMock.processCommand(addArtworksCommand);
+    Commands::AddArtworksCommandResult *addArtworksResult = static_cast<Commands::AddArtworksCommandResult*>(result);
+    int newFilesCount = addArtworksResult->m_NewFilesAdded;
+    delete result;
+
+    QCOMPARE(newFilesCount, filenames.length());
+    QCOMPARE(artItemsMock.getArtworksCount(), filenames.length());
+
+    bool undoSucceeded = undoRedoManager.undoLastAction();
+    QVERIFY(undoSucceeded);
+
+    undoSucceeded = undoRedoManager.undoLastAction();
+    QVERIFY(undoSucceeded);
+
+    QCOMPARE(newFilesCount, filenames.length());
+    QCOMPARE(artItemsMock.getArtworksCount(), filenames.length());
+
+    Models::ImageArtwork *image1 = artItemsMock.getMockArtwork(0);
+    QVERIFY(image1->hasVectorAttached());
+    QCOMPARE(image1->getAttachedVectorPath(), vectors[1]);
+
+    Models::ImageArtwork *image2 = artItemsMock.getMockArtwork(1);
+    QVERIFY(!image2->hasVectorAttached());
+
+    Models::ImageArtwork *image3 = artItemsMock.getMockArtwork(2);
+    QVERIFY(image3->hasVectorAttached());
+    QCOMPARE(image3->getAttachedVectorPath(), vectors[0]);
 }
 
 void UndoRedoTests::undoRemoveItemsTest() {
@@ -195,4 +233,131 @@ void UndoRedoTests::undoUndoModifyCommandTest() {
 
     undoStatus = undoRedoManager.undoLastAction();
     QVERIFY(!undoStatus);
+}
+
+void UndoRedoTests::undoPasteCommandTest() {
+    SETUP_TEST;
+    int itemsToAdd = 5;
+    commandManagerMock.generateAndAddArtworks(itemsToAdd);
+
+    QString originalTitle = "title";
+    QString originalDescription = "some description here";
+    QStringList originalKeywords = QString("test1,test2,test3").split(',');
+    QVector<Models::ArtItemInfo*> infos;
+
+    for (int i = 0; i < itemsToAdd; ++i) {
+        artItemsMock.getArtwork(i)->initialize(originalTitle, originalDescription, originalKeywords);
+        infos.append(new Models::ArtItemInfo(artItemsMock.getArtwork(i), i));
+    }
+
+    QStringList keywordsToPaste = QStringList() << "keyword1" << "keyword2" << "keyword3";
+
+    Commands::PasteKeywordsCommand *pasteCommand = new Commands::PasteKeywordsCommand(infos, keywordsToPaste);
+    Commands::ICommandResult *result = commandManagerMock.processCommand(pasteCommand);
+    Commands::PasteKeywordsCommandResult *pasteCommandResult = static_cast<Commands::PasteKeywordsCommandResult*>(result);
+    QVector<int> indices = pasteCommandResult->m_IndicesToUpdate;
+    delete result;
+
+    QCOMPARE(indices.length(), itemsToAdd);
+
+    QStringList merged = originalKeywords;
+    merged += keywordsToPaste;
+
+    for (int i = 0; i < itemsToAdd; ++i) {
+        QCOMPARE(artItemsMock.getArtwork(i)->getDescription(), originalDescription);
+        QCOMPARE(artItemsMock.getArtwork(i)->getTitle(), originalTitle);
+        QCOMPARE(artItemsMock.getArtwork(i)->getKeywords(), merged);
+    }
+
+    bool undoStatus = undoRedoManager.undoLastAction();
+    QVERIFY(undoStatus);
+
+    for (int i = 0; i < itemsToAdd; ++i) {
+        QCOMPARE(artItemsMock.getArtwork(i)->getDescription(), originalDescription);
+        QCOMPARE(artItemsMock.getArtwork(i)->getTitle(), originalTitle);
+        QCOMPARE(artItemsMock.getArtwork(i)->getKeywords(), originalKeywords);
+    }
+}
+
+void UndoRedoTests::undoClearAllTest() {
+    SETUP_TEST;
+    int itemsToAdd = 5;
+    commandManagerMock.generateAndAddArtworks(itemsToAdd);
+
+    QString originalTitle = "title";
+    QString originalDescription = "some description here";
+    QStringList originalKeywords = QString("test1,test2,test3").split(',');
+    QVector<Models::ArtItemInfo*> infos;
+
+    for (int i = 0; i < itemsToAdd; ++i) {
+        artItemsMock.getArtwork(i)->initialize(originalTitle, originalDescription, originalKeywords);
+        infos.append(new Models::ArtItemInfo(artItemsMock.getArtwork(i), i));
+    }
+
+    int flags = Common::Clear | Common::EditEverything;
+
+    Commands::CombinedEditCommand *combinedEditCommand = new Commands::CombinedEditCommand(flags, infos, "", "", QStringList());
+    Commands::ICommandResult *result = commandManagerMock.processCommand(combinedEditCommand);
+    Commands::CombinedEditCommandResult *combinedEditCommandResult = static_cast<Commands::CombinedEditCommandResult*>(result);
+    QVector<int> indices = combinedEditCommandResult->m_IndicesToUpdate;
+    delete result;
+
+    QCOMPARE(indices.length(), itemsToAdd);
+
+    for (int i = 0; i < itemsToAdd; ++i) {
+        Common::BasicKeywordsModel *keywordsModel = artItemsMock.getArtwork(i)->getKeywordsModel();
+        QVERIFY(keywordsModel->isDescriptionEmpty());
+        QVERIFY(keywordsModel->isTitleEmpty());
+        QVERIFY(keywordsModel->areKeywordsEmpty());
+    }
+
+    bool undoStatus = undoRedoManager.undoLastAction();
+    QVERIFY(undoStatus);
+
+    for (int i = 0; i < itemsToAdd; ++i) {
+        QCOMPARE(artItemsMock.getArtwork(i)->getDescription(), originalDescription);
+        QCOMPARE(artItemsMock.getArtwork(i)->getTitle(), originalTitle);
+        QCOMPARE(artItemsMock.getArtwork(i)->getKeywords(), originalKeywords);
+    }
+}
+
+void UndoRedoTests::undoClearKeywordsTest() {
+    SETUP_TEST;
+    int itemsToAdd = 2;
+    commandManagerMock.generateAndAddArtworks(itemsToAdd);
+
+    QString originalTitle = "title";
+    QString originalDescription = "some description here";
+    QStringList originalKeywords = QString("test1,test2,test3").split(',');
+    QVector<Models::ArtItemInfo*> infos;
+
+    for (int i = 0; i < itemsToAdd; ++i) {
+        artItemsMock.getArtwork(i)->initialize(originalTitle, originalDescription, originalKeywords);
+        infos.append(new Models::ArtItemInfo(artItemsMock.getArtwork(i), i));
+    }
+
+    int flags = Common::Clear | Common::EditKeywords;
+
+    Commands::CombinedEditCommand *combinedEditCommand = new Commands::CombinedEditCommand(flags, infos, "", "", QStringList());
+    Commands::ICommandResult *result = commandManagerMock.processCommand(combinedEditCommand);
+    Commands::CombinedEditCommandResult *combinedEditCommandResult = static_cast<Commands::CombinedEditCommandResult*>(result);
+    QVector<int> indices = combinedEditCommandResult->m_IndicesToUpdate;
+    delete result;
+
+    QCOMPARE(indices.length(), itemsToAdd);
+
+    for (int i = 0; i < itemsToAdd; ++i) {
+        QCOMPARE(artItemsMock.getArtwork(i)->getDescription(), originalDescription);
+        QCOMPARE(artItemsMock.getArtwork(i)->getTitle(), originalTitle);
+        QVERIFY(artItemsMock.getArtwork(i)->getKeywordsModel()->areKeywordsEmpty());
+    }
+
+    bool undoStatus = undoRedoManager.undoLastAction();
+    QVERIFY(undoStatus);
+
+    for (int i = 0; i < itemsToAdd; ++i) {
+        QCOMPARE(artItemsMock.getArtwork(i)->getDescription(), originalDescription);
+        QCOMPARE(artItemsMock.getArtwork(i)->getTitle(), originalTitle);
+        QCOMPARE(artItemsMock.getArtwork(i)->getKeywords(), originalKeywords);
+    }
 }

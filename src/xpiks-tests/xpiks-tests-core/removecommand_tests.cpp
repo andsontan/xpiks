@@ -7,7 +7,7 @@
 #include "../../xpiks-qt/Commands/removeartworkscommand.h"
 #include "../../xpiks-qt/Models/artworksrepository.h"
 
-void RemoveCommand_Tests::removeArtworksFromEmptyRepository() {
+void RemoveCommandTests::removeArtworksFromEmptyRepository() {
     Mocks::CommandManagerMock commandManagerMock;
     Mocks::ArtItemsModelMock artItemsMock;
 
@@ -48,7 +48,7 @@ void RemoveCommand_Tests::removeArtworksFromEmptyRepository() {
     QCOMPARE(modifiedFilesChanged.count(), 0);
 }
 
-void RemoveCommand_Tests::removeAllArtworksFromRepository() {
+void RemoveCommandTests::removeAllArtworksFromRepository() {
     Mocks::CommandManagerMock commandManagerMock;
     Mocks::ArtItemsModelMock artItemsMock;
 

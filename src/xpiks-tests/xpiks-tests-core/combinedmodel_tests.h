@@ -7,6 +7,7 @@
 
 class CombinedModelTests : public QObject {
     Q_OBJECT
+
 private slots:
     void initTestCase();
     void trivialCombineNoItemsTest();
@@ -25,6 +26,7 @@ private slots:
     void isModifiedAfterKeywordRemovalTest();
     void isModifiedAfterKeywordEditTest();
     void isModifiedAfterKeywordsClearTest();
+    void isNotModifiedAfterEmptyKeywordsClearTest();
     void initArtworksEmitsRowsInsertTest();
     void initEmptyArtworksDoesNotEmitTest();
     void initOneArtworkEnablesAllFields();
@@ -42,6 +44,7 @@ private slots:
     void savedAfterModifiedTitleTest();
     void savedAfterKeywordsModifiedTest();
     void savedIfMoreThanOneButNotModifiedTest();
+
 private:
     Mocks::CommandManagerMock m_CommandManagerMock;
     Models::SettingsModel m_SettingsModel;
