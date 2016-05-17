@@ -149,6 +149,12 @@ namespace Models {
             m_DictsPathChanged = false;
         }
 #endif
+
+#ifdef Q_OS_MAC
+        if (m_UseExifTool) {
+            m_CommandManager->autoDiscoverExiftool();
+        }
+#endif
     }
 
     void SettingsModel::clearMasterPasswordSettings() {

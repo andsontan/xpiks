@@ -196,6 +196,7 @@ namespace Commands {
         void updateArtworks(const QVector<int> &indices) const;
         void updateArtworks(const QVector<QPair<int, int> > &rangesToUpdate) const;
         void addToRecentDirectories(const QString &path) const;
+        void autoDiscoverExiftool() const;
 #ifdef QT_DEBUG
     private:
         void openInitialFiles();

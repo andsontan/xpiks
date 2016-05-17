@@ -402,6 +402,12 @@ void Commands::CommandManager::addToRecentDirectories(const QString &path) const
     }
 }
 
+void Commands::CommandManager::autoDiscoverExiftool() const {
+    if (m_MetadataIOCoordinator) {
+        m_MetadataIOCoordinator->autoDiscoverExiftool();
+    }
+}
+
 #ifdef QT_DEBUG
 void Commands::CommandManager::openInitialFiles() {
     if (m_InitialImagesToOpen.isEmpty()) { return; }

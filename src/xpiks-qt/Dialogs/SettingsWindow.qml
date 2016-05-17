@@ -592,6 +592,8 @@ ApplicationWindow {
                             Layout.column: 0
                             Layout.fillWidth: true
                             Layout.maximumWidth: 80
+                            enabled: settingsModel.useExifTool
+                            color: Colors.labelActiveForeground
 
                             horizontalAlignment: Text.AlignRight
                             text: i18.n + qsTr("ExifTool path:")
@@ -606,6 +608,7 @@ ApplicationWindow {
                             width: 165
                             height: 24
                             clip: true
+                            enabled: settingsModel.useExifTool
 
                             StyledTextInput {
                                 id: exifToolText
@@ -633,6 +636,7 @@ ApplicationWindow {
                             text: i18.n + qsTr("Select...")
                             width: 100
                             onClicked: exifToolFileDialog.open()
+                            enabled: settingsModel.useExifTool
                         }
 
                         StyledButton {
@@ -641,6 +645,7 @@ ApplicationWindow {
                             text: i18.n + qsTr("Reset")
                             width: 100
                             onClicked: settingsModel.resetExifTool()
+                            enabled: settingsModel.useExifTool
                         }
 
                         StyledText {

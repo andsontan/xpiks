@@ -43,7 +43,7 @@ namespace MetadataIO {
     bool tryGetExiftoolVersion(const QString &path, QString &version) {
         QProcess process;
         process.start(path, QStringList() << "-ver");
-        bool success = process.waitForFinished(2000);
+        bool success = process.waitForFinished(3000);
 
         int exitCode = process.exitCode();
         QProcess::ExitStatus exitStatus = process.exitStatus();
