@@ -118,6 +118,9 @@ namespace Models {
     void ArtItemsModel::removeArtworksDirectory(int index) {
         LOG_DEBUG << "Remove artworks directory at" << index;
         const QString &directory = m_CommandManager->getArtworksRepository()->getDirectory(index);
+#ifdef CORE_TESTS
+        LOG_DEBUG << "Removing directory:" << directory;
+#endif
         QDir dir(directory);
         QString directoryAbsolutePath = dir.absolutePath();
 

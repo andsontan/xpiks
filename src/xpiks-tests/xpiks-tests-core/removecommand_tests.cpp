@@ -61,6 +61,8 @@ void RemoveCommandTests::removeAllArtworksFromRepository() {
     int itemsToAdd = 5;
     commandManagerMock.generateAndAddArtworks(itemsToAdd);
 
+    int dirsCount = artworksRepository.getArtworksSourcesCount();
+
     QVector<QPair<int, int> > indicesToRemove;
     indicesToRemove.append(qMakePair(0, itemsToAdd - 1));
     Commands::RemoveArtworksCommand *removeArtworkCommand = new Commands::RemoveArtworksCommand(indicesToRemove);
@@ -95,12 +97,12 @@ void RemoveCommandTests::removeAllArtworksFromRepository() {
     QCOMPARE(rowsRemovedRepositoryStart.count(), 1);
     QList<QVariant> repositoriesRemovedSpyArguments = rowsRemovedRepositoryStart.takeFirst();
     QCOMPARE(repositoriesRemovedSpyArguments.at(1).toInt(), 0);
-    QCOMPARE(repositoriesRemovedSpyArguments.at(2).toInt(), 0);
+    QCOMPARE(repositoriesRemovedSpyArguments.at(2).toInt(), dirsCount - 1);
 
     QCOMPARE(rowsRemovedRepositoryEnd.count(), 1);
     QList<QVariant> repositoriesRemovedFinishedSpyArguments = rowsRemovedRepositoryEnd.takeFirst();
     QCOMPARE(repositoriesRemovedFinishedSpyArguments.at(1).toInt(), 0);
-    QCOMPARE(repositoriesRemovedFinishedSpyArguments.at(2).toInt(), 0);
+    QCOMPARE(repositoriesRemovedFinishedSpyArguments.at(2).toInt(), dirsCount - 1);
 
     QCOMPARE(dataChangedInRepository.count(), 1);
     QList<QVariant> dataChangedSpyArguments = dataChangedInRepository.takeFirst();

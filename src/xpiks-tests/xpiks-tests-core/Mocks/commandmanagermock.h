@@ -7,6 +7,14 @@
 #include "../../xpiks-qt/Models/artworkmetadata.h"
 #include "../../xpiks-qt/Models/imageartwork.h"
 
+#ifdef Q_OS_WIN
+#define ARTWORK_PATH "C:/path/to/somedirectory_%1/artwork%2.jpg"
+#define VECTOR_PATH "C:/path/to/somedirectory_%1/artwork%2.eps"
+#else
+#define ARTWORK_PATH "/path/to/somedirectory_%1/artwork%2.jpg"
+#define VECTOR_PATH "/path/to/somedirectory_%1/artwork%2.eps"
+#endif
+
 namespace Mocks {
     class CommandManagerMock : public Commands::CommandManager
     {
@@ -23,8 +31,6 @@ namespace Mocks {
         void mockAcceptDeletion() {Commands::CommandManager::removeUnavailableFiles();}
 
     public:
-        virtual void connectArtworkSignals(Models::ArtworkMetadata *metadata) const { Q_UNUSED(metadata); /*DO NOTHING*/ }
-
         void generateAndAddArtworks(int count, bool withVector=true) {
             Q_ASSERT(count >= 0);
             int i = 0;
@@ -32,12 +38,14 @@ namespace Mocks {
             Models::ArtItemsModel *artItemsModel = getArtItemsModel();
 
             while (i < count) {
-                QString filename = QString("/path/to/somedirectory/artwork%1.jpg").arg(i);
-                QString vectorname = QString("/path/to/somedirectory/artwork%1.eps").arg(i);
+                QString filename = QString(ARTWORK_PATH).arg(i%2).arg(i);
+                QString vectorname = QString(VECTOR_PATH).arg(i%2).arg(i);
 
                 if (artworksRepository->accountFile(filename)) {
                     Models::ArtworkMetadata *metadata = artItemsModel->createMetadata(filename);
                     Models::ImageArtwork *image = dynamic_cast<Models::ImageArtwork*>(metadata);
+
+                    this->connectArtworkSignals(metadata);
 
                     if (withVector) {
                         image->attachVector(vectorname);
@@ -59,11 +67,11 @@ namespace Mocks {
             }
         }
 
-     void mockDeletion(int count) {
-       for (int i =0; i < count; ++i) {
-            CommandManager::getArtItemsModel()->getArtwork(i)->setUnavailable();
-       }
-     }
+        void mockDeletion(int count) {
+            for (int i = 0; i < count; ++i) {
+                CommandManager::getArtItemsModel()->getArtwork(i)->setUnavailable();
+            }
+        }
 
     private:
         bool m_AnyCommandProcessed;

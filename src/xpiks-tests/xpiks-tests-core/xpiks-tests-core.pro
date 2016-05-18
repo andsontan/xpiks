@@ -144,7 +144,8 @@ SOURCES += main.cpp \
     ../../xpiks-qt/AutoComplete/stringfilterproxymodel.cpp \
     ../../xpiks-qt/Models/abstractconfigupdatermodel.cpp \
     ../../xpiks-qt/Models/imageartwork.cpp \
-    recentdirectories_tests.cpp
+    recentdirectories_tests.cpp \
+    artitemsmodel_tests.cpp
 
 HEADERS += \
     encryption_tests.h \
@@ -243,4 +244,5 @@ HEADERS += \
     ../../xpiks-qt/Models/imageartwork.h \
     ../../xpiks-qt/Common/hold.h \
     recentdirectories_tests.h \
-    removefilesfs_tests.h
+    removefilesfs_tests.h \
+    artitemsmodel_tests.h
