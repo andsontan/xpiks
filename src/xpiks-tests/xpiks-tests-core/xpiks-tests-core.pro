@@ -145,7 +145,8 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Models/abstractconfigupdatermodel.cpp \
     ../../xpiks-qt/Models/imageartwork.cpp \
     recentdirectories_tests.cpp \
-    artitemsmodel_tests.cpp
+    artitemsmodel_tests.cpp \
+    ../../xpiks-qt/Common/flags.cpp
 
 HEADERS += \
     encryption_tests.h \
