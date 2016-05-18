@@ -126,7 +126,8 @@ SOURCES += main.cpp \
     ../../xpiks-qt/MetadataIO/exiv2readingworker.cpp \
     ../../xpiks-qt/MetadataIO/readingorchestrator.cpp \
     ../../xpiks-qt/MetadataIO/exiv2writingworker.cpp \
-    ../../xpiks-qt/MetadataIO/writingorchestrator.cpp
+    ../../xpiks-qt/MetadataIO/writingorchestrator.cpp \
+    ../../xpiks-qt/Common/flags.cpp
 
 RESOURCES +=
 

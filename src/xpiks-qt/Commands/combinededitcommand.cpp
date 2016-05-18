@@ -21,6 +21,8 @@
 
 #include "combinededitcommand.h"
 #include <QVector>
+#include <QString>
+#include <QStringList>
 #include "../Commands/commandmanager.h"
 #include "../UndoRedo/artworkmetadatabackup.h"
 #include "../UndoRedo/modifyartworkshistoryitem.h"
@@ -30,8 +32,33 @@
 #include "../Models/settingsmodel.h"
 #include "../Common/defines.h"
 
+QString combinedFlagsToString(int flags) {
+    if (flags == Common::EditEverything) {
+        return "EditEverything";
+    }
+
+    QStringList flagsStr;
+    if (Common::HasFlag(flags, Common::EditDesctiption)) {
+        flagsStr.append("EditDescription");
+    }
+
+    if (Common::HasFlag(flags, Common::EditTitle)) {
+        flagsStr.append("EditTitle");
+    }
+
+    if (Common::HasFlag(flags, Common::EditKeywords)) {
+        flagsStr.append("EditKeywords");
+    }
+
+    if (Common::HasFlag(flags, Common::Clear)) {
+        flagsStr.append("Clear");
+    }
+
+    return flagsStr.join('|');
+}
+
 Commands::CommandResult *Commands::CombinedEditCommand::execute(const ICommandManager *commandManagerInterface) const {
-    LOG_INFO << "flags =" << m_EditFlags << "artworks count =" << m_ArtItemInfos.length();
+    LOG_INFO << "flags =" << combinedFlagsToString(m_EditFlags) << ", artworks count =" << m_ArtItemInfos.length();
     QVector<int> indicesToUpdate;
     QVector<UndoRedo::ArtworkMetadataBackup*> artworksBackups;
     QVector<Models::ArtworkMetadata *> itemsToSave;
