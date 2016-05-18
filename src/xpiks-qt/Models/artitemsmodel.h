@@ -55,7 +55,6 @@ namespace Models {
         Q_PROPERTY(int modifiedArtworksCount READ getModifiedArtworksCount NOTIFY modifiedArtworksCountChanged)
     public:
         ArtItemsModel(QObject *parent = 0);
-
         virtual ~ArtItemsModel();
 
     public:
@@ -122,8 +121,8 @@ namespace Models {
         /*Q_INVOKABLE*/ void detachVectorsFromSelected(const QVector<int> &selectedIndices);
 
     public:
-        virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
-        virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+        virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
+        virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
         virtual Qt::ItemFlags flags(const QModelIndex &index) const;
         virtual bool setData(const QModelIndex &index, const QVariant & value, int role = Qt::EditRole);
 
@@ -189,6 +188,11 @@ namespace Models {
 
     private:
         void fillStandardRoles(QVector<int> &roles) const;
+
+#ifdef CORE_TESTS
+    public:
+        const QVector<ArtworkMetadata*> &getFinaliazationList() const { return m_FinalizationList; }
+#endif
 
     private:
         QVector<ArtworkMetadata*> m_ArtworkList;

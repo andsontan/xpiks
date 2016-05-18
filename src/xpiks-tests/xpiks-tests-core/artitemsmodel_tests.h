@@ -12,6 +12,13 @@ private slots:
     void unselectAllTest();
     void modificationChangesModifiedCountTest();
     void removeArtworkDirectorySimpleTest();
+    void setAllSavedResetsModifiedCountTest();
+    void removingLockedArtworksTest();
+    void plainTextEditToEmptyKeywordsTest();
+    void plainTextEditToOneKeywordTest();
+    void plainTextEditToSeveralKeywordsTest();
+    void plainTextEditToAlmostEmptyTest();
+    void plainTextEditToMixedTest();
 };
 
 #endif // ARTITEMSMODELTESTS_H

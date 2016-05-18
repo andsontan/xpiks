@@ -74,3 +74,91 @@ void ArtItemsModelTests::removeArtworkDirectorySimpleTest() {
     artItemsModelMock.removeArtworksDirectory(indexToRemove);
     QCOMPARE(artItemsModelMock.getArtworksCount(), count - firstDirCount);
 }
+
+void ArtItemsModelTests::setAllSavedResetsModifiedCountTest() {
+    const int count = 10;
+    DECLARE_MODELS_AND_GENERATE(count, false);
+    QVector<int> selectedItems;
+
+    for (int i = 0; i < count; ++i) {
+        if (i%3 == 0) {
+            artItemsModelMock.getArtwork(i)->setModified();
+            selectedItems.append(i);
+        }
+    }
+
+    QCOMPARE(artItemsModelMock.getModifiedArtworksCount(), selectedItems.count());
+
+    artItemsModelMock.setSelectedItemsSaved(selectedItems);
+    QCOMPARE(artItemsModelMock.getModifiedArtworksCount(), 0);
+}
+
+void ArtItemsModelTests::removingLockedArtworksTest() {
+    const int count = 10;
+    DECLARE_MODELS_AND_GENERATE(count, false);
+
+    for (int i = 0; i < count; ++i) {
+        artItemsModelMock.getArtwork(i)->acquire();
+    }
+
+    QCOMPARE(artItemsModelMock.getFinaliazationList().count(), 0);
+    artItemsModelMock.deleteAllItems();
+    QCOMPARE(artItemsModelMock.getFinaliazationList().count(), count);
+}
+
+void ArtItemsModelTests::plainTextEditToEmptyKeywordsTest() {
+    const int count = 1;
+    DECLARE_MODELS_AND_GENERATE(count, false);
+    artItemsModelMock.getMockArtwork(0)->appendKeywords(QStringList() << "test" << "keywords" << "here");
+
+    artItemsModelMock.plainTextEdit(0, "");
+    QCOMPARE(artItemsModelMock.getMockArtwork(0)->getKeywords().length(), 0);
+}
+
+void ArtItemsModelTests::plainTextEditToOneKeywordTest() {
+    const int count = 1;
+    DECLARE_MODELS_AND_GENERATE(count, false);
+    artItemsModelMock.getMockArtwork(0)->appendKeywords(QStringList() << "test" << "keywords" << "here");
+
+    QString keywords = "new keyword";
+    QStringList result = QStringList() << keywords;
+
+    artItemsModelMock.plainTextEdit(0, keywords);
+    QCOMPARE(artItemsModelMock.getMockArtwork(0)->getKeywords(), result);
+}
+
+void ArtItemsModelTests::plainTextEditToSeveralKeywordsTest() {
+    const int count = 1;
+    DECLARE_MODELS_AND_GENERATE(count, false);
+    artItemsModelMock.getMockArtwork(0)->appendKeywords(QStringList() << "test" << "keywords" << "here");
+
+    QString keywords = "new keyword, another one, new";
+    QStringList result = QStringList() << "new keyword" << "another one" << "new";
+
+    artItemsModelMock.plainTextEdit(0, keywords);
+    QCOMPARE(artItemsModelMock.getMockArtwork(0)->getKeywords(), result);
+}
+
+void ArtItemsModelTests::plainTextEditToAlmostEmptyTest() {
+    const int count = 1;
+    DECLARE_MODELS_AND_GENERATE(count, false);
+    artItemsModelMock.getMockArtwork(0)->appendKeywords(QStringList() << "test" << "keywords" << "here");
+
+    QString keywords = ",,, , , , , ,,,,   ";
+    QStringList result = QStringList();
+
+    artItemsModelMock.plainTextEdit(0, keywords);
+    QCOMPARE(artItemsModelMock.getMockArtwork(0)->getKeywords(), result);
+}
+
+void ArtItemsModelTests::plainTextEditToMixedTest() {
+    const int count = 1;
+    DECLARE_MODELS_AND_GENERATE(count, false);
+    artItemsModelMock.getMockArtwork(0)->appendKeywords(QStringList() << "test" << "keywords" << "here");
+
+    QString keywords = ",,, , ,word here , , ,,,,   ";
+    QStringList result = QStringList() << "word here";
+
+    artItemsModelMock.plainTextEdit(0, keywords);
+    QCOMPARE(artItemsModelMock.getMockArtwork(0)->getKeywords(), result);
+}

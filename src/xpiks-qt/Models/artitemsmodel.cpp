@@ -140,6 +140,34 @@ namespace Models {
         emit modifiedArtworksCountChanged();
     }
 
+    void ArtItemsModel::removeUnavailableItems() {
+        LOG_DEBUG << "#";
+        QVector<int> indicesToRemove;
+        QVector<QPair<int, int> > rangesToRemove;
+
+        int count = m_ArtworkList.length();
+        for (int i = 0; i < count; ++i) {
+            if (m_ArtworkList.at(i)->isUnavailable()) {
+                indicesToRemove.append(i);
+                emit fileWithIndexUnavailable(i);
+            }
+        }
+
+        Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
+        doRemoveItemsInRanges(rangesToRemove);
+    }
+
+    void ArtItemsModel::generateAboutToBeRemoved() {
+        int count = m_ArtworkList.length();
+        for (int i = 0; i < count; ++i) {
+            ArtworkMetadata *metadata = m_ArtworkList.at(i);
+
+            if (metadata->isUnavailable()) {
+                metadata->generateAboutToBeRemoved();
+            }
+        }
+    }
+
     void ArtItemsModel::removeKeywordAt(int metadataIndex, int keywordIndex) {
         LOG_DEBUG << "metadata index" << metadataIndex << "| keyword index" << keywordIndex;
         if (0 <= metadataIndex && metadataIndex < m_ArtworkList.length()) {
@@ -986,33 +1014,5 @@ namespace Models {
                 m_FinalizationList.clear();
             }
         }
-    }
-
-    void ArtItemsModel::generateAboutToBeRemoved() {
-        int count = m_ArtworkList.length();
-        for (int i = 0; i < count; ++i) {
-            ArtworkMetadata *metadata = m_ArtworkList.at(i);
-
-            if (metadata->isUnavailable()) {
-                metadata->generateAboutToBeRemoved();
-            }
-        }
-    }
-
-    void ArtItemsModel::removeUnavailableItems() {
-        LOG_DEBUG << "#";
-        QVector<int> indicesToRemove;
-        QVector<QPair<int, int> > rangesToRemove;
-
-        int count = m_ArtworkList.length();
-        for (int i = 0; i < count; ++i) {
-            if (m_ArtworkList.at(i)->isUnavailable()) {
-                indicesToRemove.append(i);
-                emit fileWithIndexUnavailable(i);
-            }
-        }
-
-        Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
-        doRemoveItemsInRanges(rangesToRemove);
     }
 }
