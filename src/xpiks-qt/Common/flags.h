@@ -100,6 +100,13 @@ namespace Common {
         WarningsCheckSpelling = 4
     };
 
+    static const char *WarningsEnumStrings[] = {"WarningsCheckAll",
+                                                "WarningsCheckKeywords",
+                                                "WarningsCheckTitle",
+                                                "WarningsCheckDescription",
+                                                "WarningsCheckSpelling"};
+    const char *warningsFlagToString(int flags);
+
     template<typename FlagType>
     bool HasFlag(int value, FlagType flag) {
         int intFlag = static_cast<int>(flag);

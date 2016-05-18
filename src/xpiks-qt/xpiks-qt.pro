@@ -98,7 +98,8 @@ SOURCES += main.cpp \
     MetadataIO/exiv2readingworker.cpp \
     MetadataIO/readingorchestrator.cpp \
     MetadataIO/exiv2writingworker.cpp \
-    MetadataIO/writingorchestrator.cpp
+    MetadataIO/writingorchestrator.cpp \
+    Common/flags.cpp
 
 RESOURCES += qml.qrc
 

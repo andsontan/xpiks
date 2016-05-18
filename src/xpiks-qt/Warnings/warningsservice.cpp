@@ -25,6 +25,7 @@
 #include "warningscheckingworker.h"
 #include "../Commands/commandmanager.h"
 #include "warningsitem.h"
+#include "../Common/flags.h"
 
 namespace Warnings {
     WarningsService::WarningsService(QObject *parent) :
@@ -86,7 +87,7 @@ namespace Warnings {
 
     void WarningsService::submitItem(Models::ArtworkMetadata *item, int flags) {
         if (m_WarningsWorker == NULL) { return; }
-        LOG_INFO << "Submitting item with flags" << flags;
+        LOG_INFO << "Submitting one item with flags" << Common::warningsFlagToString(flags);
 
         WarningsItem *wItem = new WarningsItem(item, flags);
         m_WarningsWorker->submitItem(wItem);

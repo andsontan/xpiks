@@ -477,7 +477,7 @@ void Commands::CommandManager::submitForWarningsCheck(Models::ArtworkMetadata *i
     Q_ASSERT(item != NULL);
 
     if (m_WarningsService != NULL) {
-        m_WarningsService->submitItem(item);
+        m_WarningsService->submitItem(item, flags);
     }
 
     int count = m_WarningsCheckers.length();
