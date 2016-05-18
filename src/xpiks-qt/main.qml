@@ -1640,13 +1640,31 @@ ApplicationWindow {
 
                                                     MouseArea {
                                                         anchors.fill: parent
-                                                        onClicked: {
-                                                            rowWrapper.switchChecked()
-                                                            rowWrapper.focusIfNeeded()
+                                                        propagateComposedEvents: true
+
+                                                        function dblClickHandler() {
+                                                            Common.launchItemEditing(rowWrapper.getIndex(), applicationWindow, {
+                                                                                         applyCallback: function() {}
+                                                                                     })
                                                         }
-                                                        onDoubleClicked: Common.launchItemEditing(rowWrapper.getIndex(), applicationWindow, {
-                                                                                                      applyCallback: function() {}
-                                                                                                  })
+
+                                                        Timer {
+                                                            id: dblClickTimer
+                                                            interval: 200
+                                                            onTriggered: {
+                                                                rowWrapper.switchChecked()
+                                                                rowWrapper.focusIfNeeded()
+                                                            }
+                                                        }
+
+                                                        onClicked: {
+                                                            if (dblClickTimer.running) {
+                                                                dblClickTimer.stop()
+                                                                dblClickHandler()
+                                                            } else {
+                                                                dblClickTimer.restart()
+                                                            }
+                                                        }
                                                     }
                                                 }
 

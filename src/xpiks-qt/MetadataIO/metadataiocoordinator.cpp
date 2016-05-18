@@ -113,8 +113,6 @@ namespace MetadataIO {
 
     void MetadataIOCoordinator::readMetadataExifTool(const QVector<Models::ArtworkMetadata *> &artworksToRead,
                                              const QVector<QPair<int, int> > &rangesToUpdate) {
-        Q_ASSERT(m_ReadingWorker == NULL);
-
         MetadataReadingWorker *readingWorker = new MetadataReadingWorker(artworksToRead,
                                                     m_CommandManager->getSettingsModel(),
                                                     rangesToUpdate);
@@ -142,8 +140,6 @@ namespace MetadataIO {
 #ifndef CORE_TESTS
     void MetadataIOCoordinator::readMetadataExiv2(const QVector<Models::ArtworkMetadata *> &artworksToRead,
                                                   const QVector<QPair<int, int> > &rangesToUpdate) {
-        //Q_ASSERT(m_ReadingWorker == NULL);
-
         ReadingOrchestrator *readingOrchestrator = new ReadingOrchestrator(artworksToRead, rangesToUpdate);
 
         QObject::connect(readingOrchestrator, SIGNAL(allFinished(bool)), this, SLOT(readingWorkerFinished(bool)));
