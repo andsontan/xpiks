@@ -34,7 +34,7 @@
 
 QString combinedFlagsToString(int flags) {
     if (flags == Common::EditEverything) {
-        return "EditEverything";
+        return QLatin1String("EditEverything");
     }
 
     QStringList flagsStr;
