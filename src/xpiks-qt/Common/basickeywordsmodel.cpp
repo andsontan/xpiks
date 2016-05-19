@@ -52,6 +52,9 @@ namespace Common {
         this->takeKeywordAtUnsafe(row, removedKeyword, wasCorrect);
 #ifdef INTEGRATION_TESTS
         LOG_DEBUG << "keyword:" << removedKeyword << "was correct:" << wasCorrect;
+#else
+        Q_UNUSED(removedKeyword);
+        Q_UNUSED(wasCorrect);
 #endif
     }
 

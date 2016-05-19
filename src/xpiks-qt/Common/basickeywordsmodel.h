@@ -62,6 +62,7 @@ namespace Common {
         virtual void removeItemsAtIndices(const QVector<QPair<int, int> > &ranges);
 
     protected:
+        // UNSAFE
         virtual void removeInnerItem(int row);
 
     public:
