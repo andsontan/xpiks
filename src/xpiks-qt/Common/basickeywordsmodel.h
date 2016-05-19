@@ -33,6 +33,7 @@
 #include "baseentity.h"
 #include "hold.h"
 #include "../SpellCheck/ispellcheckable.h"
+#include "../Common/flags.h"
 
 namespace SpellCheck {
     class SpellCheckQueryItem;
@@ -146,7 +147,8 @@ namespace Common {
         virtual QVector<SpellCheck::SpellSuggestionsItem *> createKeywordsSuggestionsList();
         virtual QVector<SpellCheck::SpellSuggestionsItem*> createDescriptionSuggestionsList();
         virtual QVector<SpellCheck::SpellSuggestionsItem*> createTitleSuggestionsList();
-        virtual bool replaceKeyword(int index, const QString &existing, const QString &replacement);
+        virtual Common::KeywordReplaceResult replaceKeyword(int index, const QString &existing, const QString &replacement);
+        virtual void processFailedKeywordReplacements(const QVector<SpellCheck::KeywordSpellSuggestions *> &candidatesForRemoval);
         virtual void replaceWordInDescription(const QString &word, const QString &replacement);
         virtual void replaceWordInTitle(const QString &word, const QString &replacement);
         virtual void afterReplaceCallback();

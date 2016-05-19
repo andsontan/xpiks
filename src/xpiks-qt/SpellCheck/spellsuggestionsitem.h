@@ -26,6 +26,7 @@
 #include <QStringList>
 #include <QAbstractListModel>
 #include <QVector>
+#include "../Common/flags.h"
 
 namespace SpellCheck {
     class ISpellCheckable;
@@ -98,6 +99,7 @@ namespace SpellCheck {
 
     public:
         int getOriginalIndex() const { return m_OriginalIndex; }
+        bool isPotentialDuplicate() const { return m_ReplaceResult == Common::KeywordReplaceFailedDuplicate; }
         virtual void replaceToSuggested(ISpellCheckable *item);
 
         // TODO: fix this back in future when c++ will be normal language
@@ -106,6 +108,7 @@ namespace SpellCheck {
 
     private:
         int m_OriginalIndex;
+        Common::KeywordReplaceResult m_ReplaceResult;
     };
 
     class DescriptionSpellSuggestions: public SpellSuggestionsItem
@@ -141,6 +144,7 @@ namespace SpellCheck {
         virtual ~CombinedSpellSuggestions();
 
     public:
+        QVector<KeywordSpellSuggestions *> getKeywordsDuplicateSuggestions() const;
         virtual void replaceToSuggested(ISpellCheckable *item);
 
     //protected:

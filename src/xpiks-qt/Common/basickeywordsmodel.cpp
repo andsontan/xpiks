@@ -30,6 +30,8 @@
 #include "../Helpers/stringhelper.h"
 #include "flags.h"
 #include "../Common/defines.h"
+#include "../Helpers/indiceshelper.h"
+#include "../Common/flags.h"
 
 namespace Common {
     BasicKeywordsModel::BasicKeywordsModel(Hold &hold, QObject *parent):
@@ -40,6 +42,8 @@ namespace Common {
     }
 
     void BasicKeywordsModel::removeItemsAtIndices(const QVector<QPair<int, int> > &ranges) {
+        LOG_INFO << "#";
+
         QWriteLocker writeLocker(&m_KeywordsLock);
         Q_UNUSED(writeLocker);
 
@@ -711,27 +715,72 @@ namespace Common {
         return spellCheckSuggestions;
     }
 
-    bool BasicKeywordsModel::replaceKeyword(int index, const QString &existing, const QString &replacement) {
-        bool result = false;
+    Common::KeywordReplaceResult BasicKeywordsModel::replaceKeyword(int index, const QString &existing, const QString &replacement) {
+        Common::KeywordReplaceResult result;
 
         m_KeywordsLock.lockForWrite();
         {
             LOG_DEBUG << "Replacing" << existing << "to" << replacement << "with index" << index;
             if (0 <= index && index < m_KeywordsList.length()) {
-                result = replaceKeywordUnsafe(index, existing, replacement);
+                if (replaceKeywordUnsafe(index, existing, replacement)) {
+                    result = Common::KeywordReplaceSucceeded;
+                } else {
+                    result = Common::KeywordReplaceFailedDuplicate;
+                }
             } else {
                 LOG_DEBUG << "Failure. Index is negative or exceeds count" << m_KeywordsList.length();
+                result = Common::KeywordReplaceFailedIndex;
             }
         }
         m_KeywordsLock.unlock();
 
-        if (result) {
+        if (result == Common::KeywordReplaceSucceeded) {
             QModelIndex i = this->index(index);
             // combined roles from legacy editKeyword() and replace()
             emit dataChanged(i, i, QVector<int>() << KeywordRole << IsCorrectRole);
         }
 
         return result;
+    }
+
+    void BasicKeywordsModel::processFailedKeywordReplacements(const QVector<SpellCheck::KeywordSpellSuggestions *> &candidatesForRemoval) {
+        LOG_DEBUG << candidatesForRemoval.size() << "candidates to remove";
+        if (candidatesForRemoval.isEmpty()) { return; }
+
+        QWriteLocker writeLocker(&m_KeywordsLock);
+
+        QVector<int> indicesToRemove;
+        int size = candidatesForRemoval.size();
+        indicesToRemove.reserve(size);
+
+        for (int i = 0; i < size; ++i) {
+            SpellCheck::KeywordSpellSuggestions *item = candidatesForRemoval.at(i);
+
+            int index = item->getOriginalIndex();
+            if (index < 0 || index >= m_KeywordsList.length()) { continue; }
+
+            const QString &existingCurrent = m_KeywordsList.at(index);
+            const QString &existingPrev = item->getWord();
+
+            if (existingCurrent == existingPrev) {
+                QString sanitized = Helpers::doSanitizeKeyword(item->getReplacement());
+
+                if (m_KeywordsSet.contains(sanitized.toLower())) {
+                    indicesToRemove.append(index);
+                    LOG_DEBUG << "safe to remove [" << existingCurrent << "] at index" << index;
+                }
+            } else {
+                LOG_DEBUG << existingCurrent << "is now instead of" << existingPrev << "at index" << index;
+            }
+        }
+
+        LOG_INFO << "confirmed" << indicesToRemove.size() << "duplicates to remove";
+
+        if (!indicesToRemove.isEmpty()) {
+            QVector<QPair<int, int> > rangesToRemove;
+            Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
+            AbstractListModel::removeItemsAtIndices(rangesToRemove);
+        }
     }
 
     void BasicKeywordsModel::replaceWordInDescription(const QString &word, const QString &replacement) {

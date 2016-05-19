@@ -26,11 +26,15 @@
 #include <QStringList>
 #include <QVector>
 #include <QHash>
+#include <QPair>
 #include "spellcheckitem.h"
 #include "spellsuggestionsitem.h"
 #include "../Common/ibasicartwork.h"
+#include "../Common/flags.h"
 
 namespace SpellCheck {
+    class KeywordSpellSuggestions;
+
     class ISpellCheckable {
     public:
         virtual ~ISpellCheckable() {}
@@ -41,7 +45,8 @@ namespace SpellCheck {
         virtual QVector<SpellSuggestionsItem*> createKeywordsSuggestionsList() = 0;
         virtual QVector<SpellSuggestionsItem*> createDescriptionSuggestionsList() = 0;
         virtual QVector<SpellSuggestionsItem*> createTitleSuggestionsList() = 0;
-        virtual bool replaceKeyword(int index, const QString &existing, const QString &replacement) = 0;
+        virtual Common::KeywordReplaceResult replaceKeyword(int index, const QString &existing, const QString &replacement) = 0;
+        virtual void processFailedKeywordReplacements(const QVector<KeywordSpellSuggestions *> &candidatesForRemoval) = 0;
         virtual void replaceWordInDescription(const QString &word, const QString &replacement) = 0;
         virtual void replaceWordInTitle(const QString &word, const QString &replacement) = 0;
         virtual void afterReplaceCallback() = 0;

@@ -46,6 +46,12 @@ namespace Common {
         SpellCheckAll = 7
     };
 
+    enum KeywordReplaceResult {
+        KeywordReplaceSucceeded = 0,
+        KeywordReplaceFailedIndex = 1,
+        KeywordReplaceFailedDuplicate = 2
+    };
+
     enum WarningType {
         WarningTypeNoWarnings = 0,
         WarningTypeSizeLessThanMinimum = 1 << 0,

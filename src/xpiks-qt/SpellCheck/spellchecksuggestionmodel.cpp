@@ -116,6 +116,8 @@ namespace SpellCheck {
             }
         }
 
+        processFailedReplacements(failedItems);
+
         m_CurrentItem->afterReplaceCallback();
 
         if (m_ItemIndex != -1) {
@@ -170,6 +172,32 @@ namespace SpellCheck {
         endResetModel();
 
         m_ItemIndex = index;
+    }
+
+    void SpellCheckSuggestionModel::processFailedReplacements(const QVector<SpellSuggestionsItem *> &failedReplacements) const {
+        LOG_DEBUG << failedReplacements.size() << "failed items";
+
+        QVector<KeywordSpellSuggestions *> candidatesToRemove;
+        int size = failedReplacements.size();
+
+        for (int i = 0; i < size; ++i) {
+            SpellSuggestionsItem *item = failedReplacements.at(i);
+            KeywordSpellSuggestions *keywordsItem = dynamic_cast<KeywordSpellSuggestions*>(item);
+
+            if (keywordsItem != NULL) {
+                if (keywordsItem->isPotentialDuplicate()) {
+                    candidatesToRemove.append(keywordsItem);
+                }
+            } else {
+                CombinedSpellSuggestions *combinedItem = dynamic_cast<CombinedSpellSuggestions*>(item);
+                if (combinedItem != NULL) {
+                    QVector<KeywordSpellSuggestions*> keywordsItems = combinedItem->getKeywordsDuplicateSuggestions();
+                    candidatesToRemove += keywordsItems;
+                }
+            }
+        }
+
+        m_CurrentItem->processFailedKeywordReplacements(candidatesToRemove);
     }
 
     QVector<SpellSuggestionsItem *> SpellCheckSuggestionModel::setupSuggestions(const QVector<SpellSuggestionsItem *> &items) {

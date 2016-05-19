@@ -68,6 +68,7 @@ namespace SpellCheck {
 #endif
 
     private:
+        void processFailedReplacements(const QVector<SpellSuggestionsItem *> &failedReplacements) const;
         QVector<SpellSuggestionsItem *> setupSuggestions(const QVector<SpellSuggestionsItem *> &items);
 
     public:

@@ -157,8 +157,9 @@ namespace SpellCheck {
 
     void KeywordSpellSuggestions::replaceToSuggested(ISpellCheckable *item, const QString &word, const QString &replacement) {
         LOG_INFO << word << "-->" << replacement;
-        bool result = item->replaceKeyword(m_OriginalIndex, word, replacement);
-        setReplacementSucceeded(result);
+        Common::KeywordReplaceResult result = item->replaceKeyword(m_OriginalIndex, word, replacement);
+        setReplacementSucceeded(result == Common::KeywordReplaceSucceeded);
+        m_ReplaceResult = result;
     }
 
     DescriptionSpellSuggestions::DescriptionSpellSuggestions(const QString &word):
@@ -208,6 +209,21 @@ namespace SpellCheck {
 
     CombinedSpellSuggestions::~CombinedSpellSuggestions() {
         qDeleteAll(m_SpellSuggestions);
+    }
+
+    QVector<KeywordSpellSuggestions *> CombinedSpellSuggestions::getKeywordsDuplicateSuggestions() const {
+        QVector<KeywordSpellSuggestions *> keywordsSuggestions;
+
+        int size = m_SpellSuggestions.length();
+        for (int i = 0; i < size; ++i) {
+            SpellSuggestionsItem *suggestionItem = m_SpellSuggestions.at(i);
+            KeywordSpellSuggestions *keywordsItem = dynamic_cast<KeywordSpellSuggestions *>(suggestionItem);
+            if (keywordsItem != NULL && keywordsItem->isPotentialDuplicate()) {
+                keywordsSuggestions.append(keywordsItem);
+            }
+        }
+
+        return keywordsSuggestions;
     }
 
     void CombinedSpellSuggestions::replaceToSuggested(ISpellCheckable *item) {
