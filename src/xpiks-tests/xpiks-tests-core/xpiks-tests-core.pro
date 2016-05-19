@@ -155,6 +155,7 @@ HEADERS += \
     indicestoranges_tests.h \
     ../../xpiks-qt/Helpers/indiceshelper.h \
     Mocks/commandmanagermock.h \
+    ../../xpiks-qt/Common/abstractlistmodel.h \
     ../../xpiks-qt/Commands/commandmanager.h \
     ../../xpiks-qt/Models/artworkmetadata.h \
     ../../xpiks-qt/Models/artworksrepository.h \

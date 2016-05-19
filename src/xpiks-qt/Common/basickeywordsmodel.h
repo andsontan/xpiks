@@ -22,7 +22,7 @@
 #ifndef BASICKEYWORDSMODEL_H
 #define BASICKEYWORDSMODEL_H
 
-#include <QAbstractListModel>
+#include "abstractlistmodel.h"
 #include <QStringList>
 #include <QVariant>
 #include <QByteArray>
@@ -43,7 +43,7 @@ namespace SpellCheck {
 
 namespace Common {
     class BasicKeywordsModel :
-            public QAbstractListModel,
+            public AbstractListModel,
             public SpellCheck::ISpellCheckable
     {
         Q_OBJECT
@@ -57,6 +57,12 @@ namespace Common {
             KeywordRole = Qt::UserRole + 1,
             IsCorrectRole
         };
+
+    public:
+        virtual void removeItemsAtIndices(const QVector<QPair<int, int> > &ranges);
+
+    protected:
+        virtual void removeInnerItem(int row);
 
     public:
         virtual int rowCount(const QModelIndex &parent=QModelIndex()) const;

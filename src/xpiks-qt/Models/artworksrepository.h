@@ -28,12 +28,12 @@
 #include <QPair>
 #include <QSet>
 #include <QTimer>
-#include "abstractlistmodel.h"
+#include "../Common/abstractlistmodel.h"
 #include "../Common/baseentity.h"
 #include <QFileSystemWatcher>
 
 namespace Models {
-    class ArtworksRepository : public AbstractListModel, public Common::BaseEntity {
+    class ArtworksRepository : public Common::AbstractListModel, public Common::BaseEntity {
         Q_OBJECT
         Q_PROPERTY(int artworksSourcesCount READ getArtworksSourcesCount NOTIFY artworksSourcesCountChanged)
     public:

@@ -191,7 +191,7 @@ HEADERS += \
     ../../xpiks-qt/MetadataIO/metadatareadingworker.h \
     ../../xpiks-qt/MetadataIO/metadatawritingworker.h \
     ../../xpiks-qt/MetadataIO/saverworkerjobitem.h \
-    ../../xpiks-qt/Models/abstractlistmodel.h \
+    ../../xpiks-qt/Common/abstractlistmodel.h \
     ../../xpiks-qt/Models/artiteminfo.h \
     ../../xpiks-qt/Models/artitemsmodel.h \
     ../../xpiks-qt/Models/artworkmetadata.h \

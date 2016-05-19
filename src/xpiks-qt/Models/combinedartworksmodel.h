@@ -29,7 +29,7 @@
 #include <QList>
 #include <QSet>
 #include <QQuickTextDocument>
-#include "abstractlistmodel.h"
+#include "../Common/abstractlistmodel.h"
 #include "../Common/baseentity.h"
 #include "../Common/basickeywordsmodel.h"
 #include "../Common/flags.h"
@@ -41,7 +41,7 @@ namespace Models {
     class ArtItemInfo;
 
     class CombinedArtworksModel :
-            public AbstractListModel,
+            public Common::AbstractListModel,
             public Common::BaseEntity,
             public Helpers::IFileNotAvailableModel
     {

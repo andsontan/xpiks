@@ -33,10 +33,26 @@
 
 namespace Common {
     BasicKeywordsModel::BasicKeywordsModel(Hold &hold, QObject *parent):
-        QAbstractListModel(parent),
+        AbstractListModel(parent),
         m_Hold(hold),
         m_SpellCheckInfo(NULL)
     {
+    }
+
+    void BasicKeywordsModel::removeItemsAtIndices(const QVector<QPair<int, int> > &ranges) {
+        QWriteLocker writeLocker(&m_KeywordsLock);
+        Q_UNUSED(writeLocker);
+
+        AbstractListModel::doRemoveItemsAtIndices(ranges);
+    }
+
+    void BasicKeywordsModel::removeInnerItem(int row) {
+        QString removedKeyword;
+        bool wasCorrect = false;
+        this->takeKeywordAtUnsafe(row, removedKeyword, wasCorrect);
+#ifdef INTEGRATION_TESTS
+        LOG_DEBUG << "keyword:" << removedKeyword << "was correct:" << wasCorrect;
+#endif
     }
 
     int BasicKeywordsModel::rowCount(const QModelIndex &parent) const {

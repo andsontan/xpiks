@@ -31,7 +31,7 @@
 #include <QHash>
 #include <QQuickTextDocument>
 #include <QVector>
-#include "abstractlistmodel.h"
+#include "../Common/abstractlistmodel.h"
 #include "../Common/baseentity.h"
 #include "../Common/ibasicartwork.h"
 #include "../Common/iartworkssource.h"
@@ -46,7 +46,7 @@ namespace Models {
     class ArtItemInfo;
 
     class ArtItemsModel :
-            public AbstractListModel,
+            public Common::AbstractListModel,
             public Common::BaseEntity,
             public Common::IArtworksSource,
             public Helpers::IFileNotAvailableModel

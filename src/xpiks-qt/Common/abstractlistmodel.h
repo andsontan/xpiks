@@ -27,27 +27,16 @@
 #include <QVector>
 #include <QList>
 
-namespace Models {
+namespace Common {
     class AbstractListModel : public QAbstractListModel {
+        Q_OBJECT
     public:
         AbstractListModel(QObject *parent = 0) : QAbstractListModel(parent) {}
         virtual ~AbstractListModel() {}
 
     public:
         virtual void removeItemsAtIndices(const QVector<QPair<int, int> > &ranges) {
-            int removedCount = 0;
-            int rangesCount = ranges.count();
-            for (int i = 0; i < rangesCount; ++i) {
-                int startRow = ranges[i].first - removedCount;
-                int endRow = ranges[i].second - removedCount;
-
-                beginRemoveRows(QModelIndex(), startRow, endRow);
-                int count = endRow - startRow + 1;
-                for (int j = 0; j < count; ++j) { removeInnerItem(startRow); }
-                endRemoveRows();
-
-                removedCount += (endRow - startRow + 1);
-            }
+            doRemoveItemsAtIndices(ranges);
         }
 
     protected:
@@ -64,6 +53,22 @@ namespace Models {
         }
 
         virtual void removeInnerItem(int row) = 0;
+
+        void doRemoveItemsAtIndices(const QVector<QPair<int, int> > &ranges) {
+            int removedCount = 0;
+            int rangesCount = ranges.count();
+            for (int i = 0; i < rangesCount; ++i) {
+                int startRow = ranges[i].first - removedCount;
+                int endRow = ranges[i].second - removedCount;
+
+                beginRemoveRows(QModelIndex(), startRow, endRow);
+                int count = endRow - startRow + 1;
+                for (int j = 0; j < count; ++j) { removeInnerItem(startRow); }
+                endRemoveRows();
+
+                removedCount += (endRow - startRow + 1);
+            }
+        }
     };
 }
 #endif // ABSTRACTLISTMODEL
