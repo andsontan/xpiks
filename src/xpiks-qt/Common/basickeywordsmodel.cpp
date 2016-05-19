@@ -711,6 +711,8 @@ namespace Common {
             // combined roles from legacy editKeyword() and replace()
             emit dataChanged(i, i, QVector<int>() << KeywordRole << IsCorrectRole);
         }
+
+        return result;
     }
 
     void BasicKeywordsModel::replaceWordInDescription(const QString &word, const QString &replacement) {
