@@ -1511,13 +1511,13 @@ They will be detached automatically.</source>
     <message>
       <location filename="../../main.qml" line="866"/>
       <source>Add directory</source>
-      <translation>Ajouter le répertoire</translation>
+      <translation>Ajout répertoire</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="876"/>
       <source>Add files</source>
       <comment>button</comment>
-      <translation>Ajouter des fichiers</translation>
+      <translation>Ajout fichiers</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="1024"/>
@@ -1618,7 +1618,7 @@ They will be detached automatically.</source>
       <location filename="../../main.qml" line="2194"/>
       <source>Add files</source>
       <comment>link</comment>
-      <translation>Ajouter des fichiers</translation>
+      <translation>Ajout fichiers</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="2206"/>
