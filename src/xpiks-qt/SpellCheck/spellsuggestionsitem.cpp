@@ -28,7 +28,8 @@ namespace SpellCheck {
         QAbstractListModel(),
         m_Word(word),
         m_ReplacementOrigin(origin),
-        m_ReplacementIndex(-1)
+        m_ReplacementIndex(-1),
+        m_ReplacementSucceeded(false)
     {
     }
 
@@ -36,7 +37,8 @@ namespace SpellCheck {
         QAbstractListModel(),
         m_Word(word),
         m_ReplacementOrigin(word),
-        m_ReplacementIndex(-1)
+        m_ReplacementIndex(-1),
+        m_ReplacementSucceeded(false)
     {
     }
 
@@ -155,7 +157,8 @@ namespace SpellCheck {
 
     void KeywordSpellSuggestions::replaceToSuggested(ISpellCheckable *item, const QString &word, const QString &replacement) {
         LOG_INFO << word << "-->" << replacement;
-        item->replaceKeyword(m_OriginalIndex, word, replacement);
+        bool result = item->replaceKeyword(m_OriginalIndex, word, replacement);
+        setReplacementSucceeded(result);
     }
 
     DescriptionSpellSuggestions::DescriptionSpellSuggestions(const QString &word):
@@ -174,6 +177,7 @@ namespace SpellCheck {
     void DescriptionSpellSuggestions::replaceToSuggested(ISpellCheckable *item, const QString &word, const QString &replacement) {
         LOG_INFO << word << "-->" << replacement;
         item->replaceWordInDescription(word, replacement);
+        setReplacementSucceeded(true);
     }
 
     TitleSpellSuggestions::TitleSpellSuggestions(const QString &word):
@@ -192,6 +196,7 @@ namespace SpellCheck {
     void TitleSpellSuggestions::replaceToSuggested(ISpellCheckable *item, const QString &word, const QString &replacement) {
         LOG_INFO << word << "-->" << replacement;
         item->replaceWordInTitle(word, replacement);
+        setReplacementSucceeded(true);
     }
 
     CombinedSpellSuggestions::CombinedSpellSuggestions(const QString &word, const QVector<SpellSuggestionsItem *> &suggestions):
@@ -216,10 +221,17 @@ namespace SpellCheck {
     void CombinedSpellSuggestions::replaceToSuggested(ISpellCheckable *item, const QString &word, const QString &replacement) {
         int size = m_SpellSuggestions.length();
         LOG_INFO << size << "item(s)";
+        bool anyFault = false;
 
         for (int i = 0; i < size; ++i) {
             SpellSuggestionsItem *suggestionItem = m_SpellSuggestions.at(i);
             suggestionItem->replaceToSuggested(item, word, replacement);
+
+            if (!suggestionItem->getReplacementSucceeded()) {
+                anyFault = true;
+            }
         }
+
+        setReplacementSucceeded(!anyFault);
     }
 }

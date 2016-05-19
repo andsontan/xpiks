@@ -116,7 +116,10 @@ namespace Common {
 
         m_KeywordsLock.lockForWrite();
         {
-            result = takeKeywordAtUnsafe(index, removedKeyword, wasCorrect);
+            if (0 <= index && index < m_KeywordsList.length()) {
+                takeKeywordAtUnsafe(index, removedKeyword, wasCorrect);
+                result = true;
+            }
         }
         m_KeywordsLock.unlock();
 
@@ -132,7 +135,10 @@ namespace Common {
 
         m_KeywordsLock.lockForWrite();
         {
-            result = takeKeywordAtUnsafe(m_KeywordsList.length() - 1, removedKeyword, wasCorrect);
+            if (m_KeywordsList.length() > 0) {
+                takeKeywordAtUnsafe(m_KeywordsList.length() - 1, removedKeyword, wasCorrect);
+                result = true;
+            }
         }
         m_KeywordsLock.unlock();
 
@@ -162,7 +168,11 @@ namespace Common {
 
         m_KeywordsLock.lockForWrite();
         {
-            result = editKeywordUnsafe(index, replacement);
+            if (0 <= index && index < m_KeywordsList.length()) {
+                result = editKeywordUnsafe(index, replacement);
+            } else {
+                LOG_WARNING << "Failed to edit keyword with index" << index;
+            }
         }
         m_KeywordsLock.unlock();
 
@@ -216,23 +226,15 @@ namespace Common {
         return added;
     }
 
-    bool BasicKeywordsModel::takeKeywordAtUnsafe(int index, QString &removedKeyword, bool &wasCorrect) {
-        bool removed = false;
+    void BasicKeywordsModel::takeKeywordAtUnsafe(int index, QString &removedKeyword, bool &wasCorrect) {
+        const QString &keyword = m_KeywordsList.at(index);
+        QString invariant = keyword.toLower();
+        m_KeywordsSet.remove(invariant);
 
-        if (0 <= index && index < m_KeywordsList.length()) {
-            const QString &keyword = m_KeywordsList.at(index);
-            QString invariant = keyword.toLower();
-            m_KeywordsSet.remove(invariant);
-
-            beginRemoveRows(QModelIndex(), index, index);
-            removedKeyword = m_KeywordsList.takeAt(index);
-            wasCorrect = m_SpellCheckResults.takeAt(index);
-            endRemoveRows();
-
-            removed = true;
-        }
-
-        return removed;
+        beginRemoveRows(QModelIndex(), index, index);
+        removedKeyword = m_KeywordsList.takeAt(index);
+        wasCorrect = m_SpellCheckResults.takeAt(index);
+        endRemoveRows();
     }
 
     void BasicKeywordsModel::setKeywordsUnsafe(const QStringList &keywordsList) {
@@ -280,34 +282,29 @@ namespace Common {
 
     bool BasicKeywordsModel::editKeywordUnsafe(int index, const QString &replacement) {
         bool result = false;
+        QString sanitized = Helpers::doSanitizeKeyword(replacement);
 
-        if (0 <= index && index < m_KeywordsList.length()) {
-            QString sanitized = Helpers::doSanitizeKeyword(replacement);
+        QString existing = m_KeywordsList.at(index);
+        if (existing != sanitized && Helpers::isValidKeyword(sanitized)) {
+            QString lowerCasedNew = sanitized.toLower();
+            QString lowerCasedExisting = existing.toLower();
 
-            QString existing = m_KeywordsList.at(index);
-            if (existing != sanitized && Helpers::isValidKeyword(sanitized)) {
-                QString lowerCasedNew = sanitized.toLower();
-                QString lowerCasedExisting = existing.toLower();
+            if (!m_KeywordsSet.contains(lowerCasedNew)) {
+                m_KeywordsSet.insert(lowerCasedNew);
+                m_KeywordsList[index] = sanitized;
+                m_KeywordsSet.remove(lowerCasedExisting);
+                LOG_DEBUG << "common case edit";
 
-                if (!m_KeywordsSet.contains(lowerCasedNew)) {
-                    m_KeywordsSet.insert(lowerCasedNew);
-                    m_KeywordsList[index] = sanitized;
-                    m_KeywordsSet.remove(lowerCasedExisting);
-                    LOG_DEBUG << "common case edit";
+                result = true;
+            } else if (lowerCasedNew == lowerCasedExisting) {
+                LOG_DEBUG << "changing case in same keyword";
+                m_KeywordsList[index] = sanitized;
 
-                    result = true;
-                } else if (lowerCasedNew == lowerCasedExisting) {
-                    LOG_DEBUG << "changing case in same keyword";
-                    m_KeywordsList[index] = sanitized;
-
-                    result = true;
-                }
-                else {
-                    LOG_WARNING << "Attempt to rename keyword to existing one. Use remove instead!";
-                }
+                result = true;
             }
-        } else {
-            LOG_WARNING << "Failed to edit keyword with index" << index;
+            else {
+                LOG_WARNING << "Attempt to rename keyword to existing one. Use remove instead!";
+            }
         }
 
         return result;
@@ -316,26 +313,23 @@ namespace Common {
     bool BasicKeywordsModel::replaceKeywordUnsafe(int index, const QString &existing, const QString &replacement) {
         bool result = false;
 
-        LOG_DEBUG << "Replacing" << existing << "to" << replacement << "with index" << index;
-        if (0 <= index && index < m_KeywordsList.length()) {
-            const QString &internal = m_KeywordsList.at(index);
-            if (internal == existing) {
-                this->editKeywordUnsafe(index, replacement);
+        const QString &internal = m_KeywordsList.at(index);
+        if (internal == existing) {
+            if (this->editKeywordUnsafe(index, replacement)) {
                 m_SpellCheckResults[index] = true;
                 result = true;
-            } else if (internal.contains(existing) && internal.contains(QChar::Space)) {
-                LOG_DEBUG << "Replacing composite keyword";
-                QString existingFixed = internal;
-                existingFixed.replace(existing, replacement);
-                this->editKeywordUnsafe(index, existingFixed);
+            }
+        } else if (internal.contains(existing) && internal.contains(QChar::Space)) {
+            LOG_DEBUG << "Replacing composite keyword";
+            QString existingFixed = internal;
+            existingFixed.replace(existing, replacement);
+            if (this->editKeywordUnsafe(index, existingFixed)) {
                 // TODO: reimplement this someday
                 // no need to mark keyword as correct
                 // if we replace only part of it
                 m_SpellCheckResults[index] = true;
                 result = true;
             }
-        } else {
-            LOG_DEBUG << "Failure. Index is negative or exceeds count" << m_KeywordsList.length();
         }
 
         return result;
@@ -698,12 +692,17 @@ namespace Common {
         return spellCheckSuggestions;
     }
 
-    void BasicKeywordsModel::replaceKeyword(int index, const QString &existing, const QString &replacement) {
+    bool BasicKeywordsModel::replaceKeyword(int index, const QString &existing, const QString &replacement) {
         bool result = false;
 
         m_KeywordsLock.lockForWrite();
         {
-            result = replaceKeywordUnsafe(index, existing, replacement);
+            LOG_DEBUG << "Replacing" << existing << "to" << replacement << "with index" << index;
+            if (0 <= index && index < m_KeywordsList.length()) {
+                result = replaceKeywordUnsafe(index, existing, replacement);
+            } else {
+                LOG_DEBUG << "Failure. Index is negative or exceeds count" << m_KeywordsList.length();
+            }
         }
         m_KeywordsLock.unlock();
 

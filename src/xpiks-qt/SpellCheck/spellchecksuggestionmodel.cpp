@@ -102,10 +102,17 @@ namespace SpellCheck {
         LOG_DEBUG << "#";
         bool anyChanged = false;
 
+        QVector<SpellSuggestionsItem *> failedItems;
+
         foreach (SpellSuggestionsItem *item, m_SuggestionsList) {
             if (item->anyReplacementSelected()) {
                 item->replaceToSuggested(m_CurrentItem);
-                anyChanged = true;
+
+                if (!item->getReplacementSucceeded()) {
+                    failedItems.append(item);
+                } else {
+                    anyChanged = true;
+                }
             }
         }
 

@@ -81,7 +81,7 @@ namespace Common {
 
     private:
         bool appendKeywordUnsafe(const QString &keyword);
-        bool takeKeywordAtUnsafe(int index, QString &removedKeyword, bool &wasCorrect);
+        void takeKeywordAtUnsafe(int index, QString &removedKeyword, bool &wasCorrect);
         void setKeywordsUnsafe(const QStringList &keywordsList);
         int appendKeywordsUnsafe(const QStringList &keywordsList);
         bool editKeywordUnsafe(int index, const QString &replacement);
@@ -139,7 +139,7 @@ namespace Common {
         virtual QVector<SpellCheck::SpellSuggestionsItem *> createKeywordsSuggestionsList();
         virtual QVector<SpellCheck::SpellSuggestionsItem*> createDescriptionSuggestionsList();
         virtual QVector<SpellCheck::SpellSuggestionsItem*> createTitleSuggestionsList();
-        virtual void replaceKeyword(int index, const QString &existing, const QString &replacement);
+        virtual bool replaceKeyword(int index, const QString &existing, const QString &replacement);
         virtual void replaceWordInDescription(const QString &word, const QString &replacement);
         virtual void replaceWordInTitle(const QString &word, const QString &replacement);
         virtual void afterReplaceCallback();

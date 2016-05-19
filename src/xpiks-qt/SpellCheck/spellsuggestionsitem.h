@@ -58,6 +58,8 @@ namespace SpellCheck {
         const QString &getReplacementOrigin() const { return m_ReplacementOrigin; }
         bool anyReplacementSelected() const { return m_ReplacementIndex != -1; }
 
+        bool getReplacementSucceeded() const { return m_ReplacementSucceeded; }
+
     public:
         virtual void replaceToSuggested(ISpellCheckable *item) = 0;
 
@@ -77,12 +79,14 @@ namespace SpellCheck {
 
     protected:
         virtual QHash<int, QByteArray> roleNames() const;
+        void setReplacementSucceeded(bool succeeded) { m_ReplacementSucceeded = succeeded; }
 
     private:
         QStringList m_Suggestions;
         QString m_Word;
         QString m_ReplacementOrigin;
         int m_ReplacementIndex;
+        bool m_ReplacementSucceeded;
     };
 
     class KeywordSpellSuggestions: public SpellSuggestionsItem
