@@ -137,13 +137,15 @@ namespace SpellCheck {
 
     KeywordSpellSuggestions::KeywordSpellSuggestions(const QString &keyword, int originalIndex, const QString &origin) :
         SpellSuggestionsItem(keyword, origin),
-        m_OriginalIndex(originalIndex)
+        m_OriginalIndex(originalIndex),
+        m_ReplaceResult(Common::KeywordReplaceUnknown)
     {
     }
 
     KeywordSpellSuggestions::KeywordSpellSuggestions(const QString &keyword, int originalIndex):
         SpellSuggestionsItem(keyword),
-        m_OriginalIndex(originalIndex)
+        m_OriginalIndex(originalIndex),
+        m_ReplaceResult(Common::KeywordReplaceUnknown)
     {
     }
 

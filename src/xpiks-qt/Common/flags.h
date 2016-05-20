@@ -49,7 +49,8 @@ namespace Common {
     enum KeywordReplaceResult {
         KeywordReplaceSucceeded = 0,
         KeywordReplaceFailedIndex = 1,
-        KeywordReplaceFailedDuplicate = 2
+        KeywordReplaceFailedDuplicate = 2,
+        KeywordReplaceUnknown = 1 << 20
     };
 
     enum WarningType {
