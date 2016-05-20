@@ -24,6 +24,12 @@
 #include <QStringList>
 
 namespace Common {
+    static const char *WarningsEnumStrings[] = {"WarningsCheckAll",
+                                                "WarningsCheckKeywords",
+                                                "WarningsCheckTitle",
+                                                "WarningsCheckDescription",
+                                                "WarningsCheckSpelling"};
+
     const char *warningsFlagToString(int flags) {
         return WarningsEnumStrings[flags];
     }
