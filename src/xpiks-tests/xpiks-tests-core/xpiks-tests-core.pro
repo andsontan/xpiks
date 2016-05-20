@@ -146,7 +146,8 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Models/imageartwork.cpp \
     recentdirectories_tests.cpp \
     artitemsmodel_tests.cpp \
-    ../../xpiks-qt/Common/flags.cpp
+    ../../xpiks-qt/Common/flags.cpp \
+    fixspelling_tests.cpp
 
 HEADERS += \
     encryption_tests.h \
@@ -247,4 +248,6 @@ HEADERS += \
     ../../xpiks-qt/Common/hold.h \
     recentdirectories_tests.h \
     removefilesfs_tests.h \
-    artitemsmodel_tests.h
+    artitemsmodel_tests.h \
+    fixspelling_tests.h \
+    Mocks/spellcheckservicemock.h

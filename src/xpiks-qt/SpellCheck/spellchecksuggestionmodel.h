@@ -63,7 +63,7 @@ namespace SpellCheck {
 
     public:
         void setupModel(Common::BasicKeywordsModel *item, int index, int flags);
-#ifdef INTEGRATION_TESTS
+#if defined(INTEGRATION_TESTS) || defined(CORE_TESTS)
         SpellSuggestionsItem *getItem(int i) const { return m_SuggestionsList.at(i); }
 #endif
 

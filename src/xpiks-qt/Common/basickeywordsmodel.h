@@ -60,6 +60,10 @@ namespace Common {
         };
 
     public:
+#ifdef CORE_TESTS
+        void initialize(const QString &title, const QString &description, const QString &rawKeywords);
+        QVector<bool> &getSpellCheckResults() { return m_SpellCheckResults; }
+#endif
         virtual void removeItemsAtIndices(const QVector<QPair<int, int> > &ranges);
 
     protected:

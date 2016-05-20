@@ -41,6 +41,14 @@ namespace Common {
     {
     }
 
+#ifdef CORE_TESTS
+    void BasicKeywordsModel::initialize(const QString &title, const QString &description, const QString &rawKeywords) {
+        setTitle(title);
+        setDescription(description);
+        setKeywords(rawKeywords.split(',', QString::SkipEmptyParts));
+    }
+#endif
+
     void BasicKeywordsModel::removeItemsAtIndices(const QVector<QPair<int, int> > &ranges) {
         LOG_INFO << "#";
 

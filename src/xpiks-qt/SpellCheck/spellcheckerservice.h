@@ -55,7 +55,7 @@ namespace SpellCheck {
         virtual void submitItem(Common::BasicKeywordsModel *itemToCheck, int flags);
         virtual void submitItems(const QVector<Common::BasicKeywordsModel *> &itemsToCheck);
         void submitKeyword(Common::BasicKeywordsModel *itemToCheck, int keywordIndex);
-        QStringList suggestCorrections(const QString &word) const;
+        virtual QStringList suggestCorrections(const QString &word) const;
         void restartWorker();
 
     public:
