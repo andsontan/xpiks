@@ -26,6 +26,8 @@
 ***Visual Studio 2015 build of exiv2 library***
 
 - download **exiv2 v0.25** library from http://www.exiv2.org/ and extract it somewhere
+- download **expat-2.1.1** library from https://sourceforge.net/projects/expat/ and extract it on same level as exiv2
+- rename directory `expat-2.1.1/` to `expat\`
 - open `msvc2005\exiv2.sln` and upgrade all projects
 - from each project remove file `localtime.c`
 - open file `include\exiv2\exv_msvs.h` and enable unicode support, disable png, curl and ssh (alternatively, you can overwrite this file with the one in the _Xpiks_ repository via path `src/exiv2-0.25/include/exiv2/exv_msvs.h`)
