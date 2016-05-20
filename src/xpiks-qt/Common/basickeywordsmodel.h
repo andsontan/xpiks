@@ -152,7 +152,7 @@ namespace Common {
         virtual QVector<SpellCheck::SpellSuggestionsItem*> createDescriptionSuggestionsList();
         virtual QVector<SpellCheck::SpellSuggestionsItem*> createTitleSuggestionsList();
         virtual Common::KeywordReplaceResult replaceKeyword(int index, const QString &existing, const QString &replacement);
-        virtual void processFailedKeywordReplacements(const QVector<SpellCheck::KeywordSpellSuggestions *> &candidatesForRemoval);
+        virtual bool processFailedKeywordReplacements(const QVector<SpellCheck::KeywordSpellSuggestions *> &candidatesForRemoval);
         virtual void replaceWordInDescription(const QString &word, const QString &replacement);
         virtual void replaceWordInTitle(const QString &word, const QString &replacement);
         virtual void afterReplaceCallback();
@@ -169,22 +169,24 @@ namespace Common {
          void spellCheckRequestReady(int flags, int index);
 
     private:
-        void emitSpellCheckChanged(int index=-1);
+         bool isReplacedADuplicateUnsafe(int index, const QString &existingPrev,
+                                         const QString &replacement) const;
+         void emitSpellCheckChanged(int index=-1);
 
     protected:
-        virtual QHash<int, QByteArray> roleNames() const;
+         virtual QHash<int, QByteArray> roleNames() const;
 
     private:
-        Common::Hold &m_Hold;
-        QStringList m_KeywordsList;
-        QSet<QString> m_KeywordsSet;
-        QReadWriteLock m_KeywordsLock;
-        QReadWriteLock m_DescriptionLock;
-        QReadWriteLock m_TitleLock;
-        QVector<bool> m_SpellCheckResults;
-        SpellCheck::SpellCheckItemInfo *m_SpellCheckInfo;
-        QString m_Description;
-        QString m_Title;
+         Common::Hold &m_Hold;
+         QStringList m_KeywordsList;
+         QSet<QString> m_KeywordsSet;
+         QReadWriteLock m_KeywordsLock;
+         QReadWriteLock m_DescriptionLock;
+         QReadWriteLock m_TitleLock;
+         QVector<bool> m_SpellCheckResults;
+         SpellCheck::SpellCheckItemInfo *m_SpellCheckInfo;
+         QString m_Description;
+         QString m_Title;
     };
 }
 

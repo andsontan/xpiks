@@ -46,7 +46,7 @@ namespace SpellCheck {
         virtual QVector<SpellSuggestionsItem*> createDescriptionSuggestionsList() = 0;
         virtual QVector<SpellSuggestionsItem*> createTitleSuggestionsList() = 0;
         virtual Common::KeywordReplaceResult replaceKeyword(int index, const QString &existing, const QString &replacement) = 0;
-        virtual void processFailedKeywordReplacements(const QVector<KeywordSpellSuggestions *> &candidatesForRemoval) = 0;
+        virtual bool processFailedKeywordReplacements(const QVector<KeywordSpellSuggestions *> &candidatesForRemoval) = 0;
         virtual void replaceWordInDescription(const QString &word, const QString &replacement) = 0;
         virtual void replaceWordInTitle(const QString &word, const QString &replacement) = 0;
         virtual void afterReplaceCallback() = 0;

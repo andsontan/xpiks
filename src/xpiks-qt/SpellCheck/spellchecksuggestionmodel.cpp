@@ -116,16 +116,17 @@ namespace SpellCheck {
             }
         }
 
-        processFailedReplacements(failedItems);
-
-        m_CurrentItem->afterReplaceCallback();
-
-        if (m_ItemIndex != -1) {
-            m_CommandManager->updateArtworks(QVector<int>() << m_ItemIndex);
+        if (processFailedReplacements(failedItems)) {
+            anyChanged = true;
         }
 
         if (anyChanged) {
+            m_CurrentItem->afterReplaceCallback();
             m_CommandManager->submitItemForSpellCheck(m_CurrentItem);
+        }
+
+        if (m_ItemIndex != -1) {
+            m_CommandManager->updateArtworks(QVector<int>() << m_ItemIndex);
         }
     }
 
@@ -153,7 +154,7 @@ namespace SpellCheck {
             requests << titleSuggestionsRequests;
         }
 
-        if (Common::HasFlag(flags, Common::CorrectKeywords)) {
+        if (Common::HasFlag(flags, Common::CorrectDescription)) {
             QVector<SpellSuggestionsItem*> descriptionSuggestionsRequests = item->createDescriptionSuggestionsList();
             requests << descriptionSuggestionsRequests;
         }
@@ -163,6 +164,12 @@ namespace SpellCheck {
 
         QVector<SpellSuggestionsItem*> executedRequests = setupSuggestions(combinedRequests);
         LOG_INFO << executedRequests.length() << "executed request(s)";
+
+#if defined(CORE_TESTS) || defined(INTEGRATION_TESTS)
+        foreach(SpellSuggestionsItem *item, executedRequests) {
+            LOG_INFO << item->toDebugString();
+        }
+#endif
 
         beginResetModel();
         m_CurrentItem = item;
@@ -174,7 +181,7 @@ namespace SpellCheck {
         m_ItemIndex = index;
     }
 
-    void SpellCheckSuggestionModel::processFailedReplacements(const QVector<SpellSuggestionsItem *> &failedReplacements) const {
+    bool SpellCheckSuggestionModel::processFailedReplacements(const QVector<SpellSuggestionsItem *> &failedReplacements) const {
         LOG_DEBUG << failedReplacements.size() << "failed items";
 
         QVector<KeywordSpellSuggestions *> candidatesToRemove;
@@ -197,7 +204,8 @@ namespace SpellCheck {
             }
         }
 
-        m_CurrentItem->processFailedKeywordReplacements(candidatesToRemove);
+        bool anyReplaced = m_CurrentItem->processFailedKeywordReplacements(candidatesToRemove);
+        return anyReplaced;
     }
 
     QVector<SpellSuggestionsItem *> SpellCheckSuggestionModel::setupSuggestions(const QVector<SpellSuggestionsItem *> &items) {

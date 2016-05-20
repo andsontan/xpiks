@@ -751,9 +751,11 @@ namespace Common {
         return result;
     }
 
-    void BasicKeywordsModel::processFailedKeywordReplacements(const QVector<SpellCheck::KeywordSpellSuggestions *> &candidatesForRemoval) {
+    bool BasicKeywordsModel::processFailedKeywordReplacements(const QVector<SpellCheck::KeywordSpellSuggestions *> &candidatesForRemoval) {
         LOG_DEBUG << candidatesForRemoval.size() << "candidates to remove";
-        if (candidatesForRemoval.isEmpty()) { return; }
+        bool anyReplaced = false;
+
+        if (candidatesForRemoval.isEmpty()) { return anyReplaced; }
 
         QWriteLocker writeLocker(&m_KeywordsLock);
 
@@ -765,20 +767,16 @@ namespace Common {
             SpellCheck::KeywordSpellSuggestions *item = candidatesForRemoval.at(i);
 
             int index = item->getOriginalIndex();
-            if (index < 0 || index >= m_KeywordsList.length()) { continue; }
+            if (index < 0 || index >= m_KeywordsList.length()) {
+                LOG_DEBUG << "index is out of range";
+                continue;
+            }
 
-            const QString &existingCurrent = m_KeywordsList.at(index);
             const QString &existingPrev = item->getWord();
+            QString sanitized = Helpers::doSanitizeKeyword(item->getReplacement());
 
-            if (existingCurrent == existingPrev) {
-                QString sanitized = Helpers::doSanitizeKeyword(item->getReplacement());
-
-                if (m_KeywordsSet.contains(sanitized.toLower())) {
-                    indicesToRemove.append(index);
-                    LOG_DEBUG << "safe to remove [" << existingCurrent << "] at index" << index;
-                }
-            } else {
-                LOG_DEBUG << existingCurrent << "is now instead of" << existingPrev << "at index" << index;
+            if (isReplacedADuplicateUnsafe(index, existingPrev, sanitized)) {
+                indicesToRemove.append(index);
             }
         }
 
@@ -788,7 +786,10 @@ namespace Common {
             QVector<QPair<int, int> > rangesToRemove;
             Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
             AbstractListModel::removeItemsAtIndices(rangesToRemove);
+            anyReplaced = true;
         }
+
+        return anyReplaced;
     }
 
     void BasicKeywordsModel::replaceWordInDescription(const QString &word, const QString &replacement) {
@@ -835,6 +836,35 @@ namespace Common {
         }
 
         notifySpellCheckResults(flags);
+    }
+
+    bool BasicKeywordsModel::isReplacedADuplicateUnsafe(int index, const QString &existingPrev,
+                                                        const QString &replacement) const {
+        bool isDuplicate = false;
+        const QString &existingCurrent = m_KeywordsList.at(index);
+
+        if (existingCurrent == existingPrev) {
+            if (m_KeywordsSet.contains(replacement.toLower())) {
+                isDuplicate = true;
+                LOG_DEBUG << "safe to remove duplicate [" << existingCurrent << "] at index" << index;
+            } else {
+                LOG_DEBUG << replacement << "was not found";
+            }
+        } else if (existingCurrent.contains(existingPrev) && existingCurrent.contains(QChar::Space)) {
+            QString existingFixed = existingCurrent;
+            existingFixed.replace(existingPrev, replacement);
+
+            if (m_KeywordsSet.contains(existingFixed.toLower())) {
+                isDuplicate = true;
+                LOG_DEBUG << "safe to remove composite duplicate [" << existingCurrent << "] at index" << index;
+            } else {
+                LOG_DEBUG << existingFixed << "was not found";
+            }
+        } else {
+            LOG_DEBUG << existingCurrent << "is now instead of" << existingPrev << "at index" << index;
+        }
+
+        return isDuplicate;
     }
 
     void BasicKeywordsModel::emitSpellCheckChanged(int index) {

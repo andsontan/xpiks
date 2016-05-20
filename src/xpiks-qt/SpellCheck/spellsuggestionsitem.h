@@ -48,6 +48,9 @@ namespace SpellCheck {
         };
 
     public:
+#if defined(CORE_TESTS) || defined(INTEGRATION_TESTS)
+        virtual QString toDebugString() const { return QString("%1 -> (%2)").arg(m_Word).arg(m_Suggestions.join(", ")); }
+#endif
         const QString &getWord() const { return m_Word; }
         int getReplacementIndex() const { return m_ReplacementIndex; }
 
@@ -81,6 +84,7 @@ namespace SpellCheck {
     protected:
         virtual QHash<int, QByteArray> roleNames() const;
         void setReplacementSucceeded(bool succeeded) { m_ReplacementSucceeded = succeeded; }
+        const QStringList &getSuggestions() const { return m_Suggestions; }
 
     private:
         QStringList m_Suggestions;
@@ -98,6 +102,9 @@ namespace SpellCheck {
         KeywordSpellSuggestions(const QString &keyword, int originalIndex);
 
     public:
+#if defined(CORE_TESTS) || defined(INTEGRATION_TESTS)
+        virtual QString toDebugString() const { return QString("KeywordReplace: %1 -> (%2)").arg(getWord()).arg(getSuggestions().join(", ")); }
+#endif
         int getOriginalIndex() const { return m_OriginalIndex; }
         bool isPotentialDuplicate() const { return m_ReplaceResult == Common::KeywordReplaceFailedDuplicate; }
         virtual void replaceToSuggested(ISpellCheckable *item);
@@ -118,6 +125,9 @@ namespace SpellCheck {
         DescriptionSpellSuggestions(const QString &word);
 
     public:
+#if defined(CORE_TESTS) || defined(INTEGRATION_TESTS)
+        virtual QString toDebugString() const { return "DescReplace: " + SpellSuggestionsItem::toDebugString(); }
+#endif
         virtual void replaceToSuggested(ISpellCheckable *item);
 
     //protected:
@@ -131,6 +141,9 @@ namespace SpellCheck {
         TitleSpellSuggestions(const QString &word);
 
     public:
+#if defined(CORE_TESTS) || defined(INTEGRATION_TESTS)
+        virtual QString toDebugString() const { return "TitleReplace: " + SpellSuggestionsItem::toDebugString(); }
+#endif
         virtual void replaceToSuggested(ISpellCheckable *item);
 
     //protected:
@@ -144,6 +157,9 @@ namespace SpellCheck {
         virtual ~CombinedSpellSuggestions();
 
     public:
+#if defined(CORE_TESTS) || defined(INTEGRATION_TESTS)
+        virtual QString toDebugString() const { return "Multireplace: " + SpellSuggestionsItem::toDebugString(); }
+#endif
         QVector<KeywordSpellSuggestions *> getKeywordsDuplicateSuggestions() const;
         virtual void replaceToSuggested(ISpellCheckable *item);
 
