@@ -201,6 +201,12 @@ namespace Helpers {
             return result;
         }
 
+        Q_INVOKABLE bool needToShowTextWhatsNew() {
+            int lastVersion = intValue(getInstalledVersionKey(), 0);
+            bool result = (XPIKS_VERSION_INT > lastVersion) && (qAbs(XPIKS_VERSION_INT - lastVersion) < 10);
+            return result;
+        }
+
         Q_INVOKABLE void saveCurrentVersion() {
             LOG_DEBUG << "Saving current xpiks version";
             setValue(getInstalledVersionKey(), XPIKS_VERSION_INT);

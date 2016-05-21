@@ -318,7 +318,8 @@ DISTFILES += \
     Graphics/localization.png \
     Graphics/newtheme.png \
     Graphics/predefinedftp.png \
-    Graphics/suggestion.png
+    Graphics/suggestion.png \
+    Dialogs/WhatsNewMinorDialog.qml
 
 lupdate_only {
 SOURCES += *.qml \

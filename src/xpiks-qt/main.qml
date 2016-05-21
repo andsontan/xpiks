@@ -127,9 +127,11 @@ ApplicationWindow {
             helpersWrapper.setProgressIndicator(applicationWindow)
 
             if (appSettings.needToShowWhatsNew()) {
+                Common.launchDialog("Dialogs/WhatsNewDialog.qml", applicationWindow, {})
+            } else if (appSettings.needToShowTextWhatsNew()) {
                 var text = appSettings.whatsNewText;
                 if (text.length > 0) {
-                    Common.launchDialog("Dialogs/WhatsNewDialog.qml",
+                    Common.launchDialog("Dialogs/WhatsNewMinorDialog.qml",
                                         applicationWindow,
                                         {
                                             whatsNewText: text
@@ -606,9 +608,16 @@ ApplicationWindow {
             MenuItem {
                 text: "What's new dialog"
                 onTriggered: {
+                    Common.launchDialog("Dialogs/WhatsNewDialog.qml", applicationWindow, {})
+                }
+            }
+
+            MenuItem {
+                text: "Legacy what's new dialog"
+                onTriggered: {
                     var text = appSettings.whatsNewText;
                     if (text.length > 0) {
-                        Common.launchDialog("Dialogs/WhatsNewDialog.qml",
+                        Common.launchDialog("Dialogs/WhatsNewMinorDialog.qml",
                                             applicationWindow,
                                             {
                                                 whatsNewText: text

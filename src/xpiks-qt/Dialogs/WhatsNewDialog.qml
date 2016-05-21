@@ -32,7 +32,6 @@ import "../StyledControls"
 
 Item {
     id: whatsNewComponent
-    property string whatsNewText
     anchors.fill: parent
 
     z: 10000
