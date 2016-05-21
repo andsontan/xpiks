@@ -24,6 +24,7 @@
 #include <QTextCodec>
 #include <QDateTime>
 #include <QImageReader>
+#include <QStringList>
 #include <sstream>
 #include <string>
 #include "../Models/artworkmetadata.h"
@@ -37,6 +38,10 @@
 #define X_DEFAULT QString::fromLatin1("x-default")
 
 namespace MetadataIO {
+    QStringList decomposeKeyword(const QString &keyword) {
+        return keyword.split(',', QString::SkipEmptyParts);
+    }
+
     QString getIptcCharset(Exiv2::IptcData &iptcData) {
         QString iptcCharset = "";
 
@@ -160,9 +165,19 @@ namespace MetadataIO {
             int count = it->count();
             bag.reserve(count);
 
-            for (int i = 0; i < count; i++) {
-                QString bagValue = QString::fromUtf8(it->toString(i).c_str());
-                bag.append(bagValue);
+            if (count == 1) {
+                QString bagValue = QString::fromUtf8(it->toString(0).c_str());
+                if (bagValue.contains(',')) {
+                    LOG_DEBUG << "processing legacy saved keywords";
+                    bag += decomposeKeyword(bagValue);
+                } else {
+                    bag.append(bagValue);
+                }
+            } else {
+                for (int i = 0; i < count; i++) {
+                    QString bagValue = QString::fromUtf8(it->toString(i).c_str());
+                    bag.append(bagValue);
+                }
             }
         }
 
@@ -307,6 +322,13 @@ namespace MetadataIO {
                     keywords.append(tag);
                     anyAdded = true;
                 }
+            }
+
+            if (keywords.length() == 1 && keywords[0].contains(',')) {
+                LOG_DEBUG << "processing legacy saved keywords";
+                QString composite = keywords[0];
+                keywords.clear();
+                keywords += decomposeKeyword(composite);
             }
         }
         catch (Exiv2::Error &e) {

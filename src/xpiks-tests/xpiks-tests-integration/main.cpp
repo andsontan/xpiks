@@ -54,6 +54,7 @@
 #include "autocompletebasictest.h"
 #include "spellingproduceswarningstest.h"
 #include "undoaddwithvectorstest.h"
+#include "readlegacysavedtest.h"
 
 #if defined(WITH_LOGS)
 #undef WITH_LOGS
@@ -181,10 +182,13 @@ int main(int argc, char *argv[]) {
     integrationTests.append(new AutoCompleteBasicTest(&commandManager));
     integrationTests.append(new SpellingProducesWarningsTest(&commandManager));
     integrationTests.append(new UndoAddWithVectorsTest(&commandManager));
+    integrationTests.append(new ReadLegacySavedTest(&commandManager));
 
     qDebug("\n");
 
     foreach (IntegrationTestBase *test, integrationTests) {
+        QThread::msleep(500);
+
         qDebug("---------------------------------------------------------");
         qInfo("Running test: %s", test->testName().toStdString().c_str());
 
@@ -206,7 +210,6 @@ int main(int argc, char *argv[]) {
         }
 
         qDebug("\n");
-        QThread::msleep(500);
     }
 
     qDeleteAll(integrationTests);

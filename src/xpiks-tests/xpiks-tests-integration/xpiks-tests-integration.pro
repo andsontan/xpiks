@@ -127,7 +127,8 @@ SOURCES += main.cpp \
     ../../xpiks-qt/MetadataIO/readingorchestrator.cpp \
     ../../xpiks-qt/MetadataIO/exiv2writingworker.cpp \
     ../../xpiks-qt/MetadataIO/writingorchestrator.cpp \
-    ../../xpiks-qt/Common/flags.cpp
+    ../../xpiks-qt/Common/flags.cpp \
+    readlegacysavedtest.cpp
 
 RESOURCES +=
 
@@ -277,7 +278,8 @@ HEADERS += \
     ../../xpiks-qt/MetadataIO/exiv2writingworker.h \
     ../../xpiks-qt/MetadataIO/imetadatawriter.h \
     ../../xpiks-qt/MetadataIO/exiv2tagnames.h \
-    ../../xpiks-qt/MetadataIO/writingorchestrator.h
+    ../../xpiks-qt/MetadataIO/writingorchestrator.h \
+    readlegacysavedtest.h
     spellingproduceswarningstest.h
 
 INCLUDEPATH += ../../tiny-aes
