@@ -65,7 +65,8 @@
 }
 
 .site-footer, .wrap:after {
-  height: $footer-height; 
+  height: $footer-height;
+  padding-top: 15px;
 }
 .site-footer {
   background: $footer-color;
