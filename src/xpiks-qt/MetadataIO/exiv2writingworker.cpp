@@ -284,7 +284,8 @@ namespace MetadataIO {
     void setExifDescription(Exiv2::ExifData &exifData, const QString &description) {
         try {
             setExifUtf8String(exifData, EXIF_DESCRIPTION, description);
-            setExifCommentValue(exifData, EXIF_USERCOMMENT, description);
+            // do not overwrite comment with description for now
+            // setExifCommentValue(exifData, EXIF_USERCOMMENT, description);
         }
         catch (Exiv2::Error &e) {
             LOG_WARNING << "Exiv2 error:" << e.what();
