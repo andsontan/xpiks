@@ -102,7 +102,7 @@ namespace Models {
         int getFilesCountForDirectory(const QString &directory) const { return m_DirectoriesHash[directory]; }
         int getFilesCountForDirectory(int index) const { return m_DirectoriesHash[m_DirectoriesList[index]]; }
 #endif
-        bool isFileUnavailable(const QString &filepath) const { return m_UnavailableFiles.contains(filepath); }
+        bool isFileUnavailable(const QString &filepath) const;
 
 #ifdef INTEGRATION_TESTS
         void resetEverything();

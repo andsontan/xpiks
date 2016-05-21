@@ -204,6 +204,23 @@ namespace Models {
         m_LastUnavailableFilesCount = 0;
     }
 
+    bool ArtworksRepository::isFileUnavailable(const QString &filepath) const {
+        bool isUnavailable = false;
+
+        if (m_UnavailableFiles.contains(filepath)) {
+#if defined(CORE_TESTS) || defined(INTEGRATION_TESTS)
+            {
+#else
+            if(!QFileInfo(filepath).exists()) {
+#endif
+
+                isUnavailable = true;
+            }
+        }
+
+        return isUnavailable;
+    }
+
 #ifdef INTEGRATION_TESTS
     void ArtworksRepository::resetEverything() {
         m_DirectoriesHash.clear();
