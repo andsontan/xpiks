@@ -148,8 +148,8 @@ OBJECTIF PARTICULIER</translation>
     </message>
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="1045"/>
-      <source>Select changes to save using checkboxes above</source>
-      <translation>Sélectionnez les modifications à enregistrer en utilisant les cases à cocher ci-dessus</translation>
+           <source>Select changes to save using checkboxes above</source>
+      <translation>Sélectionnez les champs à modifier par les cases à cocher</translation>
     </message>
     <message>
       <location filename="../../Dialogs/CombinedArtworksDialog.qml" line="1053"/>
@@ -311,7 +311,7 @@ OBJECTIF PARTICULIER</translation>
     <message>
       <location filename="../../Dialogs/EnterMasterPasswordDialog.qml" line="165"/>
       <source>Show password</source>
-      <translation>Afficher le mot de passe</translation>
+      <translation>Afficher le m.d.p</translation>
     </message>
     <message>
       <location filename="../../Dialogs/EnterMasterPasswordDialog.qml" line="175"/>
@@ -338,7 +338,7 @@ OBJECTIF PARTICULIER</translation>
     </message>
     <message>
       <location filename="../../Dialogs/ExportMetadata.qml" line="166"/>
-      <source>Export metadata</source>
+           <source>Export metadata</source>
       <translation>Exporter les métadonnées</translation>
     </message>
     <message>
@@ -448,7 +448,7 @@ OBJECTIF PARTICULIER</translation>
       <location filename="../../Dialogs/KeywordsSuggestion.qml" line="482"/>
       <location filename="../../Dialogs/KeywordsSuggestion.qml" line="489"/>
       <source>Add suggested keywords</source>
-      <translation>Ajouter des mots clés suggérés</translation>
+      <translation>Ajouter</translation>
     </message>
     <message>
       <location filename="../../Dialogs/KeywordsSuggestion.qml" line="494"/>
@@ -839,7 +839,7 @@ OBJECTIF PARTICULIER</translation>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="708"/>
       <source>Minimum megapixels:</source>
-      <translation>Megapixels minimum :</translation>
+      <translation>Megapixels min. :</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="753"/>
@@ -849,7 +849,7 @@ OBJECTIF PARTICULIER</translation>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="764"/>
       <source>Max keywords count:</source>
-      <translation>Nombre maximaple de mots-clés de:</translation>
+      <translation>Nombre max. de mots-clés :</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="808"/>
@@ -859,7 +859,7 @@ OBJECTIF PARTICULIER</translation>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="819"/>
       <source>Max description length:</source>
-      <translation>Longueur maxmale de la description :</translation>
+      <translation>Longueur max. de la description :</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="862"/>
@@ -879,7 +879,7 @@ OBJECTIF PARTICULIER</translation>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="947"/>
       <source>Max parallel uploads:</source>
-      <translation>Max téléversements parallèles :</translation>
+      <translation>Max. téléversements parallèles :</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="989"/>
@@ -899,7 +899,7 @@ OBJECTIF PARTICULIER</translation>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="1052"/>
       <source>Change Master password</source>
-      <translation>Modifier le m. de p. principal</translation>
+      <translation>Modifier le m.d.p. principal</translation>
     </message>
     <message>
       <location filename="../../Dialogs/SettingsWindow.qml" line="1068"/>
@@ -1083,7 +1083,7 @@ All upload hosts' passwords will be purged.</source>
     <message>
       <location filename="../../Dialogs/UpdateWindow.qml" line="73"/>
       <source>&lt;u&gt;Download Xpiks update&lt;/u&gt;</source>
-      <translation>&lt;u&gt;Télécharger la mise à jour de Xpiks&lt;/u&gt;</translation>
+      <translation>&lt;u&gt;Télécharger la mise à jour&lt;/u&gt;</translation>
     </message>
   </context>
   <context>
@@ -1158,7 +1158,7 @@ All upload hosts' passwords will be purged.</source>
     <message>
       <location filename="../../Dialogs/UploadArtworks.qml" line="704"/>
       <source>Show password</source>
-      <translation>Afficher le mot de passe</translation>
+      <translation>Afficher le m.d.p</translation>
     </message>
     <message>
       <location filename="../../Dialogs/UploadArtworks.qml" line="722"/>
@@ -1306,7 +1306,7 @@ All upload hosts' passwords will be purged.</source>
       <location filename="../../Dialogs/ZipArtworksDialog.qml" line="182"/>
       <location filename="../../Dialogs/ZipArtworksDialog.qml" line="193"/>
       <source>Start Zipping</source>
-      <translation>Commencer la compression</translation>
+      <translation>Compresser</translation>
     </message>
     <message>
       <location filename="../../Dialogs/ZipArtworksDialog.qml" line="185"/>
