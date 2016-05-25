@@ -197,13 +197,18 @@ namespace Helpers {
 
         Q_INVOKABLE bool needToShowWhatsNew() {
             int lastVersion = intValue(getInstalledVersionKey(), 0);
-            bool result = XPIKS_VERSION_INT > lastVersion;
+            int installedMajorPart = lastVersion / 10;
+            int currentMajorPart = XPIKS_VERSION_INT / 10;
+            bool result = currentMajorPart > installedMajorPart;
             return result;
         }
 
         Q_INVOKABLE bool needToShowTextWhatsNew() {
             int lastVersion = intValue(getInstalledVersionKey(), 0);
-            bool result = (XPIKS_VERSION_INT > lastVersion) && (qAbs(XPIKS_VERSION_INT - lastVersion) < 10);
+            int installedMajorPart = lastVersion / 10;
+            int currentMajorPart = XPIKS_VERSION_INT / 10;
+            bool result = (currentMajorPart == installedMajorPart) &&
+                    (XPIKS_VERSION_INT > lastVersion);
             return result;
         }
 
