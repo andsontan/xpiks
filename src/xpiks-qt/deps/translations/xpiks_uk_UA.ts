@@ -604,7 +604,7 @@
     <message>
       <location filename="../../UndoRedo/removeartworksitem.h" line="53"/>
       <source>%1 items removed</source>
-      <translation>(%1)  1 файл видалено</translation>
+      <translation>%1 файлів видалено</translation>
     </message>
     <message>
       <location filename="../../UndoRedo/removeartworksitem.h" line="54"/>
@@ -1518,12 +1518,12 @@ They will be detached automatically.</source>
     <message>
       <location filename="../../main.qml" line="792"/>
       <source>%1 vectors attached</source>
-      <translation>%1 векторів додано</translation>
+      <translation>%1 векторів прикріплено</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="792"/>
       <source>1 vector attached</source>
-      <translation>1 вектор додано</translation>
+      <translation>1 вектор прикріплено</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="875"/>
@@ -1635,7 +1635,7 @@ They will be detached automatically.</source>
       <location filename="../../main.qml" line="2229"/>
       <source>Add files</source>
       <comment>link</comment>
-      <translation>Додайте файли</translation>
+      <translation>Додати файли</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="2241"/>
