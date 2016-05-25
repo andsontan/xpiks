@@ -20,7 +20,7 @@ Xpiks 1.3 release.
 It provides following features:
 
 - autocompletion for keywords
-- localization to 6 languages (Ukrainian, Portugese, Spanish, Catalan, Russian, French, German)
+- localization to 6 languages (Ukrainian, Spanish, Catalan, Russian, French, German)
 - keywords suggestion from iStock and Fotolia
 - brand new color theme
 - dozen of predefined FTP addresses of stocks
