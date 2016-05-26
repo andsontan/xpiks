@@ -1635,7 +1635,7 @@ They will be detached automatically.</source>
       <location filename="../../main.qml" line="2229"/>
       <source>Add files</source>
       <comment>link</comment>
-      <translation>Додати файли</translation>
+      <translation>Додайте файли</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="2241"/>
