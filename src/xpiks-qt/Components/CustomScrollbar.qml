@@ -37,14 +37,14 @@ Item {
     property Flickable flickable               : null;
     property int       handleSize              : 10;
 
-   Binding {
+    Binding {
         target: handle;
         property: "y";
         value: (flickable.contentY * clicker.drag.maximumY / (flickable.contentHeight - flickable.height));
         when: (!clicker.drag.active);
     }
 
-   Binding {
+    Binding {
         target: flickable;
         property: "contentY";
         value: (handle.y * (flickable.contentHeight - flickable.height) / clicker.drag.maximumY);

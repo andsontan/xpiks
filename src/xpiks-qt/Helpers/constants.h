@@ -71,6 +71,8 @@ namespace Constants {
     const char SELECTED_THEME_INDEX[] = "SELECTED_THEME_INDEX";
     const char USE_AUTO_COMPLETE[] = "USE_AUTO_COMPLETE";
     const char USE_EXIFTOOL[] = "USE_EXIFTOOL";
+    const char IMAGES_CACHE_DIR[] = "imagescache";
+    const char IMAGES_CACHE_INDEX[] = "imagescache.index";
 #else
     const char MAX_KEYWORD_COUNT[] = "DEBUG_MAX_KEYWORD_COUNT";
     const char MAX_DESCRIPTION_LENGTH[] = "DEBUG_MAX_DESCRIPTION_LENGTH";
@@ -87,6 +89,8 @@ namespace Constants {
     const char FTP_STOCKS_FILENAME[] = "stocks_ftp.json";
     const char USE_AUTO_COMPLETE[] = "DEBUG_USE_AUTO_COMPLETE";
     const char USE_EXIFTOOL[] = "DEBUG_USE_EXIFTOOL";
+    const char IMAGES_CACHE_DIR[] = "debug_imagescache";
+    const char IMAGES_CACHE_INDEX[] = "debug_imagescache.index";
 
 #ifdef INTEGRATION_TESTS
     const char LIBRARY_FILENAME[] = "xpiks.integration.library";

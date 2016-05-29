@@ -1632,7 +1632,8 @@ ApplicationWindow {
                                                         sourceSize.height: 150
                                                         fillMode: settingsModel.fitSmallPreview ? Image.PreserveAspectFit : Image.PreserveAspectCrop
                                                         asynchronous: true
-                                                        cache: true
+                                                        // caching is implemented on different level
+                                                        cache: false
                                                     }
 
                                                     Image {
@@ -2205,6 +2206,7 @@ ApplicationWindow {
                         }
 
                         CustomScrollbar {
+                            id: mainScrollBar
                             anchors.topMargin: 0
                             anchors.bottomMargin: 0
                             anchors.rightMargin: -10

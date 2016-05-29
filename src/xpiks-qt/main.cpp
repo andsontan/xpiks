@@ -39,6 +39,7 @@
 //-------------------------------------
 #include "SpellCheck/spellchecksuggestionmodel.h"
 #include "Models/filteredartitemsproxymodel.h"
+#include "QMLExtensions/imagecachingservice.h"
 #include "MetadataIO/metadataiocoordinator.h"
 #include "AutoComplete/autocompleteservice.h"
 #include "Conectivity/analyticsuserevent.h"
@@ -284,6 +285,7 @@ int main(int argc, char *argv[]) {
     Models::LanguagesModel languagesModel;
     AutoComplete::AutoCompleteModel autoCompleteModel;
     AutoComplete::AutoCompleteService autoCompleteService(&autoCompleteModel);
+    QMLExtensions::ImageCachingService imageCachingService;
 
     bool checkForUpdates = appSettings.value(Constants::CHECK_FOR_UPDATES, true).toBool();
     Helpers::UpdateService updateService(checkForUpdates);
@@ -328,6 +330,7 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&languagesModel);
     commandManager.InjectDependency(&colorsModel);
     commandManager.InjectDependency(&autoCompleteService);
+    commandManager.InjectDependency(&imageCachingService);
 
     commandManager.ensureDependenciesInjected();
 
@@ -348,6 +351,7 @@ int main(int argc, char *argv[]) {
 
     QQmlApplicationEngine engine;
     Helpers::GlobalImageProvider *globalProvider = new Helpers::GlobalImageProvider(QQmlImageProviderBase::Image);
+    globalProvider->setImageCachingService(&imageCachingService);
 
     Helpers::HelpersQmlWrapper helpersQmlWrapper(&commandManager);
 

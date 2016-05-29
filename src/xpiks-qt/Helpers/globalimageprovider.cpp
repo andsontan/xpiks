@@ -20,38 +20,37 @@
  */
 
 #include "globalimageprovider.h"
+#include "../Common/defines.h"
+#include "../QMLExtensions/imagecachingservice.h"
 
 namespace Helpers {
     QImage GlobalImageProvider::requestImage(const QString &id, QSize *size, const QSize &requestedSize) {
-        QImage image(id);
-        QImage result;
+        QString cachedPath;
+        bool needsUpdate = false;
 
-        if (requestedSize.isValid()) {
-            result = image.scaled(requestedSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        if (m_ImageCachingService->tryGetCachedImage(id, requestedSize, cachedPath, needsUpdate)) {
+            QImage image(cachedPath);
+            *size = image.size();
+
+            if (needsUpdate) {
+                m_ImageCachingService->cacheImage(id, requestedSize);
+            }
+
+            return image;
+        } else {
+            QImage image(id);
+            QImage result;
+
+            if (requestedSize.isValid()) {
+                m_ImageCachingService->cacheImage(id, requestedSize);
+                result = image.scaled(requestedSize, Qt::KeepAspectRatio, Qt::FastTransformation);
+            }
+            else {
+                result = image;
+            }
+
+            *size = result.size();
+            return result;
         }
-        else {
-            result = image;
-        }
-
-        const QSize &originalSize = image.size();
-        m_OriginalSizes.insert(id, QSize(originalSize.width(), originalSize.height()));
-
-        *size = result.size();
-        return result;
-    }
-
-    QPixmap GlobalImageProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize) {
-        QPixmap image(id);
-        QPixmap result;
-
-        if (requestedSize.isValid()) {
-            result = image.scaled(requestedSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-        }
-        else {
-            result = image;
-        }
-
-        *size = result.size();
-        return result;
     }
 }

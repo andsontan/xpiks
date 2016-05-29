@@ -51,7 +51,7 @@ namespace SpellCheck {
 
     protected:
         virtual void notifyQueueIsEmpty() { emit queueIsEmpty(); }
-        virtual void notifyStopped() { emit stopped(); }
+        virtual void workerStopped() { emit stopped(); }
 
     public slots:
         void process() { doWork(); }

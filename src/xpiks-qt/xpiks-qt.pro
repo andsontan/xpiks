@@ -99,7 +99,9 @@ SOURCES += main.cpp \
     MetadataIO/readingorchestrator.cpp \
     MetadataIO/exiv2writingworker.cpp \
     MetadataIO/writingorchestrator.cpp \
-    Common/flags.cpp
+    Common/flags.cpp \
+    QMLExtensions/imagecachingworker.cpp \
+    QMLExtensions/imagecachingservice.cpp
 
 RESOURCES += qml.qrc
 
@@ -254,7 +256,10 @@ HEADERS += \
     MetadataIO/exiv2writingworker.h \
     MetadataIO/writingorchestrator.h \
     MetadataIO/exiv2tagnames.h \
-    MetadataIO/imetadatawriter.h
+    MetadataIO/imetadatawriter.h \
+    QMLExtensions/imagecachingworker.h \
+    QMLExtensions/imagecacherequest.h \
+    QMLExtensions/imagecachingservice.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

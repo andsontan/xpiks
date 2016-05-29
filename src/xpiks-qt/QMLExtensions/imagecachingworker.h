@@ -19,24 +19,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef BACKUPSAVERWORKER_H
-#define BACKUPSAVERWORKER_H
+#ifndef IMAGECACHINGWORKER_H
+#define IMAGECACHINGWORKER_H
 
-#include <QObject>
 #include "../Common/itemprocessingworker.h"
-#include "saverworkerjobitem.h"
+#include <QString>
+#include <QHash>
+#include <QDateTime>
+#include <QSize>
+#include <QReadWriteLock>
+#include "imagecacherequest.h"
 
-namespace MetadataIO {
-    class BackupSaverWorker : public QObject, public Common::ItemProcessingWorker<SaverWorkerJobItem>
+namespace QMLExtensions {
+    struct CachedImage {
+        QDateTime m_LastModified;
+        QString m_Filename;
+        QSize m_Size;
+    };
+
+    QDataStream &operator<<(QDataStream &out, const CachedImage &v);
+    QDataStream &operator>>(QDataStream &in, CachedImage &v);
+
+    class ImageCachingWorker : public QObject, public Common::ItemProcessingWorker<ImageCacheRequest>
     {
         Q_OBJECT
     protected:
         virtual bool initWorker();
-        virtual bool processOneItem(SaverWorkerJobItem *item);
+        virtual bool processOneItem(ImageCacheRequest *item);
 
     protected:
         virtual void notifyQueueIsEmpty() { emit queueIsEmpty(); }
-        virtual void workerStopped() { emit stopped(); }
+        virtual void workerStopped() { saveIndex(); emit stopped(); }
 
     public slots:
         void process() { doWork(); }
@@ -45,7 +58,23 @@ namespace MetadataIO {
     signals:
         void stopped();
         void queueIsEmpty();
+
+    public:
+        bool tryGetCachedImage(const QString &key, const QSize &requestedSize,
+                               QString &cached, bool &needsUpdate);
+
+    private:
+        void readIndex();
+        void saveIndex();
+        bool isProcessed(ImageCacheRequest *item);
+
+    private:
+        volatile int m_ProcessedItemsCount;
+        QString m_ImagesCacheDir;
+        QString m_IndexFilepath;
+        QReadWriteLock m_CacheLock;
+        QHash<QString, CachedImage> m_CacheIndex;
     };
 }
 
-#endif // BACKUPSAVERWORKER_H
+#endif // IMAGECACHINGWORKER_H

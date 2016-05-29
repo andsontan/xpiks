@@ -98,6 +98,7 @@ namespace Warnings {
 
 namespace QMLExtensions {
     class ColorsModel;
+    class ImageCachingService;
 }
 
 namespace AutoComplete {
@@ -134,6 +135,7 @@ namespace Commands {
             m_LanguagesModel(NULL),
             m_ColorsModel(NULL),
             m_AutoCompleteService(NULL),
+            m_ImageCachingService(NULL),
             m_AfterInitCalled(false)
         { }
 
@@ -165,6 +167,7 @@ namespace Commands {
         void InjectDependency(Models::LanguagesModel *languagesModel);
         void InjectDependency(QMLExtensions::ColorsModel *colorsModel);
         void InjectDependency(AutoComplete::AutoCompleteService *autoCompleteService);
+        void InjectDependency(QMLExtensions::ImageCachingService *imageCachingService);
 
     public:
         virtual ICommandResult *processCommand(ICommandBase *command)
@@ -206,6 +209,7 @@ namespace Commands {
 #endif
 
     public:
+        void generatePreviews(const QVector<Models::ArtworkMetadata*> &items) const;
         void submitKeywordForSpellCheck(Common::BasicKeywordsModel *item, int keywordIndex) const;
         void submitForSpellCheck(const QVector<Models::ArtworkMetadata*> &items) const;
         void submitForSpellCheck(const QVector<Common::BasicKeywordsModel *> &items) const;
@@ -285,6 +289,7 @@ namespace Commands {
         Models::LanguagesModel *m_LanguagesModel;
         QMLExtensions::ColorsModel *m_ColorsModel;
         AutoComplete::AutoCompleteService *m_AutoCompleteService;
+        QMLExtensions::ImageCachingService *m_ImageCachingService;
 
         QVector<Common::IServiceBase<Common::IBasicArtwork> *> m_WarningsCheckers;
         QVector<Helpers::IFileNotAvailableModel*> m_AvailabilityListeners;

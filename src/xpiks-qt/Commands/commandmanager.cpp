@@ -51,7 +51,10 @@
 #include "../Warnings/warningsservice.h"
 #include "../Models/languagesmodel.h"
 #include "../AutoComplete/autocompleteservice.h"
+#ifndef CORE_TESTS
 #include <exiv2/xmp.hpp>
+#endif
+#include "../QMLExtensions/imagecachingservice.h"
 
 void Commands::CommandManager::InjectDependency(Models::ArtworksRepository *artworkRepository) {
     Q_ASSERT(artworkRepository != NULL); m_ArtworksRepository = artworkRepository;
@@ -173,6 +176,10 @@ void Commands::CommandManager::InjectDependency(AutoComplete::AutoCompleteServic
     Q_ASSERT(autoCompleteService != NULL); m_AutoCompleteService = autoCompleteService;
 }
 
+void Commands::CommandManager::InjectDependency(QMLExtensions::ImageCachingService *imageCachingService) {
+    Q_ASSERT(imageCachingService != NULL); m_ImageCachingService = imageCachingService;
+}
+
 Commands::ICommandResult *Commands::CommandManager::processCommand(ICommandBase *command)
 #ifndef CORE_TESTS
 const
@@ -262,6 +269,7 @@ void Commands::CommandManager::ensureDependenciesInjected() {
     Q_ASSERT(m_LanguagesModel != NULL);
     Q_ASSERT(m_ColorsModel != NULL);
     Q_ASSERT(m_AutoCompleteService != NULL);
+    Q_ASSERT(m_ImageCachingService != NULL);
 }
 
 void Commands::CommandManager::recodePasswords(const QString &oldMasterPassword,
@@ -421,6 +429,16 @@ void Commands::CommandManager::addInitialArtworks(const QList<QUrl> &filePaths) 
 }
 #endif
 
+void Commands::CommandManager::generatePreviews(const QVector<Models::ArtworkMetadata *> &items) const {
+    if (m_ImageCachingService != NULL) {
+#ifndef CORE_TESTS
+        m_ImageCachingService->generatePreviews(items);
+#else
+        Q_UNUSED(items);
+#endif
+    }
+}
+
 void Commands::CommandManager::submitKeywordForSpellCheck(Common::BasicKeywordsModel *item, int keywordIndex) const {
     Q_ASSERT(item != NULL);
     if ((m_SettingsModel != NULL) && m_SettingsModel->getUseSpellCheck() && (m_SpellCheckerService != NULL)) {
@@ -554,6 +572,9 @@ void Commands::CommandManager::afterConstructionCallback()  {
 
     m_AfterInitCalled = true;
 
+#ifndef CORE_TESTS
+    m_ImageCachingService->startService();
+#endif
     m_SpellCheckerService->startService();
     m_WarningsService->startService();
     m_MetadataSaverService->startSaving();
@@ -600,6 +621,9 @@ void Commands::CommandManager::beforeDestructionCallback() const {
     m_ArtItemsModel->deleteAllItems();
     m_FilteredItemsModel->disconnect();
 
+#ifndef CORE_TESTS
+    m_ImageCachingService->stopService();
+#endif
     m_SpellCheckerService->stopService();
     m_WarningsService->stopService();
     m_MetadataSaverService->stopSaving();

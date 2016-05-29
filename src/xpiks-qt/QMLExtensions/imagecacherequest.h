@@ -19,37 +19,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef GLOBALIMAGEPROVIDER_H
-#define GLOBALIMAGEPROVIDER_H
+#ifndef IMAGECACHEREQUEST_H
+#define IMAGECACHEREQUEST_H
 
-#include <QQuickImageProvider>
-#include <QHash>
+#include <QString>
+#include <QSize>
 
 namespace QMLExtensions {
-    class ImageCachingService;
-}
-
-namespace Helpers {
-    class GlobalImageProvider : public QObject, public QQuickImageProvider
-    {
-        Q_OBJECT
+    class ImageCacheRequest {
     public:
-        GlobalImageProvider(ImageType type, Flags flags = 0) :
-            QQuickImageProvider(type, flags),
-            m_ImageCachingService(NULL)
-        {}
-
-        virtual ~GlobalImageProvider() {}
-
-        virtual QImage requestImage(const QString &id, QSize *size, const QSize& requestedSize);
-
-    public:
-        void setImageCachingService(QMLExtensions::ImageCachingService *cachingService) {
-            m_ImageCachingService = cachingService;
+        ImageCacheRequest(const QString &filepath, const QSize &requestedSize):
+            m_Filepath(filepath),
+            m_RequestedSize(requestedSize)
+        {
         }
 
+    public:
+        const QString &getFilepath() const { return m_Filepath; }
+        const QSize &getRequestedSize() const { return m_RequestedSize; }
+
     private:
-        QMLExtensions::ImageCachingService *m_ImageCachingService;
+        QString m_Filepath;
+        QSize m_RequestedSize;
     };
 }
-#endif // GLOBALIMAGEPROVIDER_H
+
+#endif // IMAGECACHEREQUEST_H

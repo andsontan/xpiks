@@ -19,37 +19,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef GLOBALIMAGEPROVIDER_H
-#define GLOBALIMAGEPROVIDER_H
+#ifndef IMAGECACHINGSERVICE_H
+#define IMAGECACHINGSERVICE_H
 
-#include <QQuickImageProvider>
-#include <QHash>
+#include <QObject>
+#include <QString>
+#include <QVector>
 
-namespace QMLExtensions {
-    class ImageCachingService;
+namespace Models {
+    class ArtworkMetadata;
 }
 
-namespace Helpers {
-    class GlobalImageProvider : public QObject, public QQuickImageProvider
+namespace QMLExtensions {
+    class ImageCachingWorker;
+
+    class ImageCachingService : public QObject
     {
         Q_OBJECT
     public:
-        GlobalImageProvider(ImageType type, Flags flags = 0) :
-            QQuickImageProvider(type, flags),
-            m_ImageCachingService(NULL)
-        {}
-
-        virtual ~GlobalImageProvider() {}
-
-        virtual QImage requestImage(const QString &id, QSize *size, const QSize& requestedSize);
+        explicit ImageCachingService(QObject *parent = 0);
 
     public:
-        void setImageCachingService(QMLExtensions::ImageCachingService *cachingService) {
-            m_ImageCachingService = cachingService;
-        }
+        void startService();
+        void stopService();
+
+    public:
+        void cacheImage(const QString &key, const QSize &requestedSize);
+        void generatePreviews(const QVector<Models::ArtworkMetadata *> &items);
+        bool tryGetCachedImage(const QString &key, const QSize &requestedSize, QString &cached, bool &needsUpdate);
 
     private:
-        QMLExtensions::ImageCachingService *m_ImageCachingService;
+        ImageCachingWorker *m_CachingWorker;
     };
 }
-#endif // GLOBALIMAGEPROVIDER_H
+
+#endif // IMAGECACHINGSERVICE_H

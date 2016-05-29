@@ -94,7 +94,7 @@ namespace Common {
                 m_Cancel = true;
             }
 
-            notifyStopped();
+            workerStopped();
         }
 
         void stopWorking() {
@@ -117,7 +117,7 @@ namespace Common {
         virtual bool initWorker() = 0;
         virtual bool processOneItem(T *item) = 0;
         virtual void notifyQueueIsEmpty() = 0;
-        virtual void notifyStopped() = 0;
+        virtual void workerStopped() = 0;
 
         void runWorkerLoop() {
             for (;;) {
