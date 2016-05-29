@@ -51,6 +51,7 @@
 #include "../Warnings/warningsservice.h"
 #include "../Models/languagesmodel.h"
 #include "../AutoComplete/autocompleteservice.h"
+#include <exiv2/xmp.hpp>
 
 void Commands::CommandManager::InjectDependency(Models::ArtworksRepository *artworkRepository) {
     Q_ASSERT(artworkRepository != NULL); m_ArtworksRepository = artworkRepository;
@@ -410,15 +411,13 @@ void Commands::CommandManager::autoDiscoverExiftool() const {
 
 #ifdef QT_DEBUG
 void Commands::CommandManager::openInitialFiles() {
-    if (m_InitialImagesToOpen.isEmpty()) { return; }
-    Commands::AddArtworksCommand *command = new Commands::AddArtworksCommand(m_InitialImagesToOpen, m_InitialVectorsToOpen, false);
-    ICommandResult *result = this->processCommand(command);
-    delete result;
+    if (m_InitialFilesToOpen.isEmpty()) { return; }
+
+    m_ArtItemsModel->dropFiles(m_InitialFilesToOpen);
 }
 
-void Commands::CommandManager::addInitialArtworks(const QStringList &artworksFilepathes, const QStringList &vectors) {
-    m_InitialImagesToOpen = artworksFilepathes;
-    m_InitialVectorsToOpen = vectors;
+void Commands::CommandManager::addInitialArtworks(const QList<QUrl> &filePaths) {
+    m_InitialFilesToOpen = filePaths;
 }
 #endif
 
@@ -580,6 +579,10 @@ void Commands::CommandManager::afterConstructionCallback()  {
     m_MetadataIOCoordinator->autoDiscoverExiftool();
 #endif
 
+    if (!Exiv2::XmpParser::initialize()) {
+        LOG_WARNING << "Failed to initialize XMP toolkit!";
+    }
+
 #ifdef QT_DEBUG
     openInitialFiles();
 #endif
@@ -599,6 +602,8 @@ void Commands::CommandManager::beforeDestructionCallback() const {
     m_WarningsService->stopService();
     m_MetadataSaverService->stopSaving();
     m_AutoCompleteService->stopService();
+
+    Exiv2::XmpParser::terminate();
 
 #ifndef CORE_TESTS
 #ifdef WITH_PLUGINS

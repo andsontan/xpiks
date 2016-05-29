@@ -21,6 +21,7 @@
 
 #include <iostream>
 
+#include <QUrl>
 #include <QDir>
 #include <QtQml>
 #include <QFile>
@@ -398,12 +399,12 @@ int main(int argc, char *argv[]) {
 
 #ifdef QT_DEBUG
     if (argc > 1) {
-        QStringList pathes;
+        QList<QUrl> pathes;
         for (int i = 1; i < argc; ++i) {
-            pathes.append(QString::fromLatin1(argv[i]));
+            pathes.append(QUrl::fromLocalFile(QString::fromUtf8(argv[i])));
         }
 
-        commandManager.addInitialArtworks(pathes, QStringList());
+        commandManager.addInitialArtworks(pathes);
     }
 #endif
 

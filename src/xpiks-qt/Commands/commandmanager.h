@@ -24,6 +24,7 @@
 
 #include <QStringList>
 #include <QList>
+#include <QUrl>
 #include <QVector>
 #include <QObject>
 #include "../UndoRedo/ihistoryitem.h"
@@ -201,7 +202,7 @@ namespace Commands {
     private:
         void openInitialFiles();
     public:
-        void addInitialArtworks(const QStringList &artworksFilepathes, const QStringList &vectors);
+        void addInitialArtworks(const QList<QUrl> &filePaths);
 #endif
 
     public:
@@ -288,8 +289,7 @@ namespace Commands {
         QVector<Common::IServiceBase<Common::IBasicArtwork> *> m_WarningsCheckers;
         QVector<Helpers::IFileNotAvailableModel*> m_AvailabilityListeners;
 #ifdef QT_DEBUG
-        QStringList m_InitialImagesToOpen;
-        QStringList m_InitialVectorsToOpen;
+        QList<QUrl> m_InitialFilesToOpen;
 #endif
 
         volatile bool m_AfterInitCalled;

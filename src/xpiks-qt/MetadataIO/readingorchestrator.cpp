@@ -54,8 +54,12 @@ namespace MetadataIO {
     {
         int size = itemsToRead.size();
         if (size >= MIN_SPLIT_COUNT) {
+#ifdef QT_DEBUG
+            m_ThreadsCount = size;
+#else
             int idealThreadCount = qMin(qMax(QThread::idealThreadCount(), MIN_READING_THREADS), MAX_READING_THREADS);
             m_ThreadsCount = qMin(size, idealThreadCount);
+#endif
 
             m_ThreadsCount = Helpers::splitIntoChunks<Models::ArtworkMetadata*>(itemsToRead, m_ThreadsCount, m_SlicedItemsToRead);
         } else {
