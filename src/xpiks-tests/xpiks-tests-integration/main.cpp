@@ -4,6 +4,7 @@
 
 #include "../../xpiks-qt/SpellCheck/spellchecksuggestionmodel.h"
 #include "../../xpiks-qt/Models/filteredartitemsproxymodel.h"
+#include "../../xpiks-qt/QMLExtensions/imagecachingservice.h"
 #include "../../xpiks-qt/MetadataIO/metadataiocoordinator.h"
 #include "../../xpiks-qt/AutoComplete/autocompleteservice.h"
 #include "../../xpiks-qt/Conectivity/analyticsuserevent.h"
@@ -121,6 +122,7 @@ int main(int argc, char *argv[]) {
     Models::LanguagesModel languagesModel;
     AutoComplete::AutoCompleteModel autoCompleteModel;
     AutoComplete::AutoCompleteService autoCompleteService(&autoCompleteModel);
+    QMLExtensions::ImageCachingService imageCachingService;
 
     Helpers::UpdateService updateService(false);
 
@@ -154,6 +156,7 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&languagesModel);
     commandManager.InjectDependency(&colorsModel);
     commandManager.InjectDependency(&autoCompleteService);
+    commandManager.InjectDependency(&imageCachingService);
 
     commandManager.ensureDependenciesInjected();
 
