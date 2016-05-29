@@ -579,9 +579,11 @@ void Commands::CommandManager::afterConstructionCallback()  {
     m_MetadataIOCoordinator->autoDiscoverExiftool();
 #endif
 
+#ifndef CORE_TESTS
     if (!Exiv2::XmpParser::initialize()) {
         LOG_WARNING << "Failed to initialize XMP toolkit!";
     }
+#endif
 
 #ifdef QT_DEBUG
     openInitialFiles();
@@ -603,7 +605,9 @@ void Commands::CommandManager::beforeDestructionCallback() const {
     m_MetadataSaverService->stopSaving();
     m_AutoCompleteService->stopService();
 
+#ifndef CORE_TESTS
     Exiv2::XmpParser::terminate();
+#endif
 
 #ifndef CORE_TESTS
 #ifdef WITH_PLUGINS
