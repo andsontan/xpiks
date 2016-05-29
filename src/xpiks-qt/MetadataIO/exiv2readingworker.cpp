@@ -33,6 +33,10 @@
 #include "../Helpers/stringhelper.h"
 #include "saverworkerjobitem.h"
 #include "exiv2tagnames.h"
+
+#ifdef Q_OS_WIN32
+#define _X86_
+#endif
 #include <exiv2/exiv2.hpp>
 
 #define X_DEFAULT QString::fromLatin1("x-default")

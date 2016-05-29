@@ -26,8 +26,12 @@
 #include "../Common/defines.h"
 #include "../Helpers/stringhelper.h"
 #include "exiv2tagnames.h"
-#include <exiv2/exiv2.hpp>
 #include <string>
+
+#ifdef Q_OS_WIN32
+#define _X86_
+#endif
+#include <exiv2/exiv2.hpp>
 
 #define X_DEFAULT QString::fromLatin1("x-default")
 #define IPTC_MAX_DESCRIPTION_LEN 2000

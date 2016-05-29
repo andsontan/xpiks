@@ -23,6 +23,13 @@
 - [windows] copy contests of `lib/dll-debug-x64` contents to the `src/libs/` directory
 - [windows] build exiv2 library (see steps below)
 
+***OS X build of exiv2 library***
+
+- open Terminal in the directory of exiv2 sources and do the following
+- `mkdir build-Debug && cd build-Debug`
+- `/Applications/CMake.app/Contents/bin/cmake .. -DEXIV2_ENABLE_SHARED=off -DCMAKE_BUILD_TYPE=Debug -DCMAKE_OSX_DEPLOYMENT_TARGET=10.7 -DCMAKE_CXX_STANDARD=11`
+- `make`
+
 ***Visual Studio 2015 build of exiv2 library***
 
 - download **exiv2 v0.25** library from http://www.exiv2.org/ and extract it somewhere
