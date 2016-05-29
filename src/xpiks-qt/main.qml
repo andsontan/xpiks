@@ -1132,6 +1132,8 @@ ApplicationWindow {
                                 anchors.left: parent.left
                                 anchors.leftMargin: 5
                                 enabled: artworkRepository.artworksSourcesCount > 0
+                                selectionColor: Colors.inputInactiveForeground
+                                selectedTextColor: Colors.whiteColor
 
                                 onAccepted: {
                                     filteredArtItemsModel.searchTerm = text
