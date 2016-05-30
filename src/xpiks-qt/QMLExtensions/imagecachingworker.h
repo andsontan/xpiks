@@ -35,6 +35,9 @@ namespace QMLExtensions {
         QDateTime m_LastModified;
         QString m_Filename;
         QSize m_Size;
+        quint64 m_RequestsServed;
+        // reserved for future demands
+        QHash<qint32, QByteArray> m_AdditionalData;
     };
 
     QDataStream &operator<<(QDataStream &out, const CachedImage &v);
@@ -43,6 +46,9 @@ namespace QMLExtensions {
     class ImageCachingWorker : public QObject, public Common::ItemProcessingWorker<ImageCacheRequest>
     {
         Q_OBJECT
+    public:
+        ImageCachingWorker(QObject *parent=0);
+
     protected:
         virtual bool initWorker();
         virtual bool processOneItem(ImageCacheRequest *item);

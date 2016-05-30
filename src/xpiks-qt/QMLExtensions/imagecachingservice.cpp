@@ -62,11 +62,13 @@ namespace QMLExtensions {
     }
 
     void ImageCachingService::cacheImage(const QString &key, const QSize &requestedSize, bool recache) {
+        Q_ASSERT(m_CachingWorker != NULL);
         ImageCacheRequest *request = new ImageCacheRequest(key, requestedSize, recache);
         m_CachingWorker->submitItem(request);
     }
 
     void ImageCachingService::generatePreviews(const QVector<Models::ArtworkMetadata *> &items) {
+        Q_ASSERT(m_CachingWorker != NULL);
         LOG_INFO << "generating for" << items.size() << "items";
         QVector<ImageCacheRequest *> requests;
         int size = items.size();

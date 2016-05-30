@@ -40,13 +40,19 @@ namespace QMLExtensions {
     }
 
     QDataStream &operator<<(QDataStream &out, const CachedImage &v) {
-        out << v.m_Filename << v.m_LastModified << v.m_Size;
+        out << v.m_Filename << v.m_LastModified << v.m_Size << v.m_RequestsServed << v.m_AdditionalData;
         return out;
     }
 
     QDataStream &operator>>(QDataStream &in, CachedImage &v) {
-        in >> v.m_Filename >> v.m_LastModified >> v.m_Size;
+        in >> v.m_Filename >> v.m_LastModified >> v.m_Size >> v.m_RequestsServed >> v.m_AdditionalData;
         return in;
+    }
+
+    ImageCachingWorker::ImageCachingWorker(QObject *parent):
+        QObject(parent),
+        m_ProcessedItemsCount(0)
+    {
     }
 
     bool ImageCachingWorker::initWorker() {
@@ -110,6 +116,12 @@ namespace QMLExtensions {
                 QWriteLocker locker(&m_CacheLock);
                 Q_UNUSED(locker);
 
+                if (m_CacheIndex.contains(originalPath)) {
+                    cachedImage.m_RequestsServed = m_CacheIndex[originalPath].m_RequestsServed + 1;
+                } else {
+                    cachedImage.m_RequestsServed = 1;
+                }
+
                 m_CacheIndex.insert(originalPath, cachedImage);
             }
 
@@ -132,12 +144,13 @@ namespace QMLExtensions {
         Q_UNUSED(locker);
 
         if (m_CacheIndex.contains(key)) {
-            const CachedImage &cachedImage = m_CacheIndex[key];
+            CachedImage &cachedImage = m_CacheIndex[key];
             QString cachedValue = QDir::cleanPath(m_ImagesCacheDir + QDir::separator() + cachedImage.m_Filename);
 
             QFileInfo fi(cachedValue);
 
             if (fi.exists()) {
+                cachedImage.m_RequestsServed++;
                 cachedPath = cachedValue;
                 needsUpdate = (fi.lastModified() >= cachedImage.m_LastModified) || (cachedImage.m_Size != requestedSize);
                 found = true;
@@ -184,14 +197,14 @@ namespace QMLExtensions {
         const QString &originalPath = item->getFilepath();
         const QSize &requestedSize = item->getRequestedSize();
 
-        bool isDone = false;
+        bool isAlreadyProcessed = false;
 
         QString cachedPath;
         bool needsUpdate = false;
         if (this->tryGetCachedImage(originalPath, requestedSize, cachedPath, needsUpdate)) {
-            isDone = !needsUpdate;
+            isAlreadyProcessed = !needsUpdate;
         }
 
-        return isDone;
+        return isAlreadyProcessed;
     }
 }
