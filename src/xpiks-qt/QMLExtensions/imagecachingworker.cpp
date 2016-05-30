@@ -84,7 +84,7 @@ namespace QMLExtensions {
         QSize requestedSize = item->getRequestedSize();
 
         if (!requestedSize.isValid()) {
-            LOG_WARNING << "Invalid requestedSize";
+            LOG_WARNING << "Invalid requestedSize for" << originalPath;
             requestedSize.setHeight(300);
             requestedSize.setWidth(300);
         }
@@ -99,7 +99,7 @@ namespace QMLExtensions {
         if (resizedImage.save(cachedFilepath)) {
             CachedImage cachedImage;
             cachedImage.m_Filename = pathHash;
-            cachedImage.m_LastModified = QFileInfo(originalPath).lastModified();
+            cachedImage.m_LastModified = fi.lastModified();
             cachedImage.m_Size = requestedSize;
 
             {
