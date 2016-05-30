@@ -175,6 +175,8 @@ namespace QMLExtensions {
     }
 
     bool ImageCachingWorker::isProcessed(ImageCacheRequest *item) {
+        if (item->getNeedRecache()) { return false; }
+
         const QString &originalPath = item->getFilepath();
         const QSize &requestedSize = item->getRequestedSize();
 

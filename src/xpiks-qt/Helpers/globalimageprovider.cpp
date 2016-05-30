@@ -23,6 +23,8 @@
 #include "../Common/defines.h"
 #include "../QMLExtensions/imagecachingservice.h"
 
+#define RECACHE true
+
 namespace Helpers {
     QImage GlobalImageProvider::requestImage(const QString &id, QSize *size, const QSize &requestedSize) {
         QString cachedPath;
@@ -33,7 +35,8 @@ namespace Helpers {
             *size = image.size();
 
             if (needsUpdate) {
-                m_ImageCachingService->cacheImage(id, requestedSize);
+                LOG_INFO << "Recaching image" << id;
+                m_ImageCachingService->cacheImage(id, requestedSize, RECACHE);
             }
 
             return image;

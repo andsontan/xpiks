@@ -28,19 +28,22 @@
 namespace QMLExtensions {
     class ImageCacheRequest {
     public:
-        ImageCacheRequest(const QString &filepath, const QSize &requestedSize):
+        ImageCacheRequest(const QString &filepath, const QSize &requestedSize, bool recache):
             m_Filepath(filepath),
-            m_RequestedSize(requestedSize)
+            m_RequestedSize(requestedSize),
+            m_Recache(recache)
         {
         }
 
     public:
         const QString &getFilepath() const { return m_Filepath; }
         const QSize &getRequestedSize() const { return m_RequestedSize; }
+        bool getNeedRecache() const { return m_Recache; }
 
     private:
         QString m_Filepath;
         QSize m_RequestedSize;
+        bool m_Recache;
     };
 }
 

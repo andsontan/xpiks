@@ -61,8 +61,8 @@ namespace QMLExtensions {
         }
     }
 
-    void ImageCachingService::cacheImage(const QString &key, const QSize &requestedSize) {
-        ImageCacheRequest *request = new ImageCacheRequest(key, requestedSize);
+    void ImageCachingService::cacheImage(const QString &key, const QSize &requestedSize, bool recache) {
+        ImageCacheRequest *request = new ImageCacheRequest(key, requestedSize, recache);
         m_CachingWorker->submitItem(request);
     }
 
@@ -74,7 +74,8 @@ namespace QMLExtensions {
         for (int i = 0; i < size; ++i) {
             Models::ArtworkMetadata *artwork = items.at(i);
             ImageCacheRequest *request = new ImageCacheRequest(artwork->getFilepath(),
-                                                               QSize(DEFAULT_THUMB_WIDTH, DEFAULT_THUMB_HEIGHT));
+                                                               QSize(DEFAULT_THUMB_WIDTH, DEFAULT_THUMB_HEIGHT),
+                                                               false);
             requests.append(request);
         }
 

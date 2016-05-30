@@ -44,7 +44,7 @@ namespace QMLExtensions {
         void stopService();
 
     public:
-        void cacheImage(const QString &key, const QSize &requestedSize);
+        void cacheImage(const QString &key, const QSize &requestedSize, bool recache=false);
         void generatePreviews(const QVector<Models::ArtworkMetadata *> &items);
         bool tryGetCachedImage(const QString &key, const QSize &requestedSize, QString &cached, bool &needsUpdate);
 
