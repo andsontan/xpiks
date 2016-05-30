@@ -94,22 +94,25 @@ namespace QMLExtensions {
 
         QFileInfo fi(originalPath);
         QString pathHash = getPathHash(originalPath) + "." + fi.completeSuffix();
-        QString cachedFilename = QDir::cleanPath(m_ImagesCacheDir + QDir::separator() + pathHash);
-        resizedImage.save(cachedFilename);
+        QString cachedFilepath = QDir::cleanPath(m_ImagesCacheDir + QDir::separator() + pathHash);
 
-        CachedImage cachedImage;
-        cachedImage.m_Filename = pathHash;
-        cachedImage.m_LastModified = QFileInfo(originalPath).lastModified();
-        cachedImage.m_Size = requestedSize;
+        if (resizedImage.save(cachedFilepath)) {
+            CachedImage cachedImage;
+            cachedImage.m_Filename = pathHash;
+            cachedImage.m_LastModified = QFileInfo(originalPath).lastModified();
+            cachedImage.m_Size = requestedSize;
 
-        {
-            QWriteLocker locker(&m_CacheLock);
-            Q_UNUSED(locker);
+            {
+                QWriteLocker locker(&m_CacheLock);
+                Q_UNUSED(locker);
 
-            m_CacheIndex.insert(originalPath, cachedImage);
+                m_CacheIndex.insert(originalPath, cachedImage);
+            }
+
+            m_ProcessedItemsCount++;
+        } else {
+            LOG_WARNING << "Failed to save image. Path:" << cachedFilepath << "size" << requestedSize;
         }
-
-        m_ProcessedItemsCount++;
 
         if (m_ProcessedItemsCount % 50 == 0) {
             saveIndex();

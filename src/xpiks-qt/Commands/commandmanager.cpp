@@ -596,8 +596,10 @@ void Commands::CommandManager::afterConstructionCallback()  {
     m_ArtworkUploader->initializeStocksList();
 
 #ifdef Q_OS_MAC
-    QCoreApplication::processEvents();
-    m_MetadataIOCoordinator->autoDiscoverExiftool();
+    if (m_SettingsModel->getUseExifTool()) {
+        QCoreApplication::processEvents();
+        m_MetadataIOCoordinator->autoDiscoverExiftool();
+    }
 #endif
 
 #ifndef CORE_TESTS
