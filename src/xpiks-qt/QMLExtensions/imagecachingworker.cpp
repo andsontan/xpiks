@@ -83,6 +83,10 @@ namespace QMLExtensions {
         const QString &originalPath = item->getFilepath();
         QSize requestedSize = item->getRequestedSize();
 
+#ifdef INTEGRATION_TESTS
+        LOG_INFO << originalPath << requestedSize;
+#endif
+
         if (!requestedSize.isValid()) {
             LOG_WARNING << "Invalid requestedSize for" << originalPath;
             requestedSize.setHeight(300);
