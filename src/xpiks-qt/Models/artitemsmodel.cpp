@@ -914,7 +914,11 @@ namespace Models {
     }
 
     bool ArtItemsModel::shouldRemoveInRanges(int rangesLength) const {
-        return rangesLength > 5;
+#ifdef QT_DEBUG
+        return rangesLength > 10;
+#else
+        return rangesLength > 50;
+#endif
     }
 
     void ArtItemsModel::removeInnerItem(int row) {

@@ -30,7 +30,7 @@ namespace QMLExtensions {
         QString cachedPath;
         bool needsUpdate = false;
 
-        /*if (m_ImageCachingService->tryGetCachedImage(id, requestedSize, cachedPath, needsUpdate)) {
+        if (m_ImageCachingService->tryGetCachedImage(id, requestedSize, cachedPath, needsUpdate)) {
             QImage image(cachedPath);
             *size = image.size();
 
@@ -40,7 +40,7 @@ namespace QMLExtensions {
             }
 
             return image;
-        } else */{
+        } else {
             QImage image(id);
             QImage result;
 
