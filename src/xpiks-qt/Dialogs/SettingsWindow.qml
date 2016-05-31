@@ -351,7 +351,7 @@ ApplicationWindow {
 
             Tab {
                 id: uxTab
-                property double sizeSliderValue: settingsModel.keywordSizeScale
+                property real sizeSliderValue: settingsModel.keywordSizeScale
                 property int themeIndex: settingsModel.selectedThemeIndex
                 title: i18.n + qsTr("Interface")
                 signal resetRequested()
@@ -404,9 +404,11 @@ ApplicationWindow {
                         StyledCheckbox {
                             id: fitArtworksCheckbox
                             text: i18.n + qsTr("Fit artwork's preview")
+
                             onCheckedChanged: {
                                 settingsModel.fitSmallPreview = checked
                             }
+
                             function onResetRequested()  {
                                 checked =  settingsModel.fitSmallPreview
                             }
@@ -439,14 +441,20 @@ ApplicationWindow {
                                 maximumValue: 1.2
                                 stepSize: 0.0001
                                 orientation: Qt.Horizontal
-                                onValueChanged: uxTab.sizeSliderValue = value
+
                                 Component.onCompleted: {
-                                    value = uxTab.sizeSliderValue
+                                    keywordSizeSlider.value = uxTab.sizeSliderValue
                                     uxTab.resetRequested.connect(keywordSizeSlider.onResetRequested)
+                                    // do not use direct onValueChanged because of glitch with reassignning min. value
+                                    keywordSizeSlider.onValueChanged.connect(keywordSizeSlider.valueChangedHandler)
                                 }
 
                                 function onResetRequested()  {
                                     value = settingsModel.keywordSizeScale
+                                    uxTab.sizeSliderValue = value
+                                }
+
+                                function valueChangedHandler() {
                                     uxTab.sizeSliderValue = value
                                 }
                             }
