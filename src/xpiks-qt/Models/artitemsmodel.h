@@ -195,7 +195,7 @@ namespace Models {
 
 #ifdef CORE_TESTS
     public:
-        std::deque<ArtworkMetadata *> &getFinalizationList() const { return m_FinalizationList; }
+        const std::deque<ArtworkMetadata *> &getFinalizationList() const { return m_FinalizationList; }
 #endif
 
     private:
