@@ -141,6 +141,8 @@ namespace Models {
         void beginAccountingFiles(int filesCount);
         void beginAccountingFiles(int start, int end);
         void endAccountingFiles();
+        void beginAccountingManyFiles();
+        void endAccountingManyFiles();
 
     public:
         void insertArtwork(int index, ArtworkMetadata *metadata);

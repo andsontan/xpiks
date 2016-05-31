@@ -45,14 +45,22 @@ void UndoRedo::RemoveArtworksHistoryItem::undo(const Commands::ICommandManager *
     artworksToImport.reserve(m_RemovedArtworksIndices.length());
 
     bool filesWereAccounted = artworksRepository->beginAccountingFiles(m_RemovedArtworksPathes);
+    bool willResetModel = m_RemovedArtworksPathes.length() > 50;
 
     int usedCount = 0, attachedVectors = 0;
     int rangesCount = ranges.count();
+
+    if (willResetModel) {
+        artItemsModel->beginAccountingManyFiles();
+    }
+
     for (int i = 0; i < rangesCount; ++i) {
         int startRow = ranges[i].first;
         int endRow = ranges[i].second;
 
-        artItemsModel->beginAccountingFiles(startRow, endRow);
+        if (!willResetModel) {
+            artItemsModel->beginAccountingFiles(startRow, endRow);
+        }
 
         int count = endRow - startRow + 1;
         for (int j = 0; j < count; ++j) {
@@ -79,9 +87,15 @@ void UndoRedo::RemoveArtworksHistoryItem::undo(const Commands::ICommandManager *
             }
         }
 
-        artItemsModel->endAccountingFiles();
+        if (!willResetModel) {
+            artItemsModel->endAccountingFiles();
+        }
 
         usedCount += (endRow - startRow + 1);
+    }
+
+    if (willResetModel) {
+        artItemsModel->endAccountingManyFiles();
     }
 
     artworksRepository->endAccountingFiles(filesWereAccounted);

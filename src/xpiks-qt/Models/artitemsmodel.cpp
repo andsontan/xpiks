@@ -702,6 +702,14 @@ namespace Models {
         endInsertRows();
     }
 
+    void ArtItemsModel::beginAccountingManyFiles() {
+        beginResetModel();
+    }
+
+    void ArtItemsModel::endAccountingManyFiles() {
+        endResetModel();
+    }
+
     void ArtItemsModel::insertArtwork(int index, ArtworkMetadata *metadata) {
         Q_ASSERT(index >= 0 && index <= getArtworksCount());
         Q_ASSERT(metadata != NULL);
