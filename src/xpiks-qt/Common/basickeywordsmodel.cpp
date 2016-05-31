@@ -549,6 +549,14 @@ namespace Common {
         emit spellCheckErrorsChanged();
     }
 
+    void BasicKeywordsModel::notifyDescriptionSpellCheck() {
+        emit spellCheckResultsReady();
+    }
+
+    void BasicKeywordsModel::notifyTitleSpellCheck() {
+        emit spellCheckResultsReady();
+    }
+
     void BasicKeywordsModel::updateDescriptionSpellErrors(const QHash<QString, bool> &results) {
         QSet<QString> descriptionErrors;
         QStringList descriptionWords = getDescriptionWords();

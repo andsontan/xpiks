@@ -269,7 +269,7 @@ namespace Models {
 
         QMLExtensions::ColorsModel *colorsModel = m_CommandManager->getColorsModel();
         info->createHighlighterForDescription(document->textDocument(), colorsModel, &m_CommonKeywordsModel);
-        m_CommonKeywordsModel.notifySpellCheckResults(Common::SpellCheckDescription);
+        m_CommonKeywordsModel.notifyDescriptionSpellCheck();
     }
 
     void CombinedArtworksModel::initTitleHighlighting(QQuickTextDocument *document) {
@@ -283,7 +283,7 @@ namespace Models {
 
         QMLExtensions::ColorsModel *colorsModel = m_CommandManager->getColorsModel();
         info->createHighlighterForTitle(document->textDocument(), colorsModel, &m_CommonKeywordsModel);
-        m_CommonKeywordsModel.notifySpellCheckResults(Common::SpellCheckTitle);
+        m_CommonKeywordsModel.notifyTitleSpellCheck();
     }
 
     void CombinedArtworksModel::spellCheckDescription() {

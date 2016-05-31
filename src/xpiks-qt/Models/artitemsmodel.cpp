@@ -477,7 +477,7 @@ namespace Models {
             SpellCheck::SpellCheckItemInfo *info = keywordsModel->getSpellCheckInfo();
             QMLExtensions::ColorsModel *colorsModel = m_CommandManager->getColorsModel();
             info->createHighlighterForDescription(document->textDocument(), colorsModel, keywordsModel);
-            keywordsModel->notifySpellCheckResults(Common::SpellCheckDescription);
+            keywordsModel->notifyDescriptionSpellCheck();
         }
     }
 
@@ -488,7 +488,7 @@ namespace Models {
             SpellCheck::SpellCheckItemInfo *info = keywordsModel->getSpellCheckInfo();
             QMLExtensions::ColorsModel *colorsModel = m_CommandManager->getColorsModel();
             info->createHighlighterForTitle(document->textDocument(), colorsModel, keywordsModel);
-            keywordsModel->notifySpellCheckResults(Common::SpellCheckTitle);
+            keywordsModel->notifyTitleSpellCheck();
         }
     }
 

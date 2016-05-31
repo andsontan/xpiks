@@ -128,6 +128,8 @@ namespace Common {
         SpellCheck::SpellCheckItemInfo *getSpellCheckInfo() const { return m_SpellCheckInfo; }
         void setSpellCheckInfo(SpellCheck::SpellCheckItemInfo *info) { m_SpellCheckInfo = info; }
         void notifySpellCheckResults(int flags);
+        void notifyDescriptionSpellCheck();
+        void notifyTitleSpellCheck();
 
     public:
         void acquire() { m_Hold.acquire(); }

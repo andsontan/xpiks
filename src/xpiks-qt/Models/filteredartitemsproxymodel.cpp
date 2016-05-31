@@ -326,6 +326,7 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::onSpellCheckerAvailable(bool afterRestart) {
+        LOG_INFO << "after restart:" << afterRestart;
         if (afterRestart) {
             this->spellCheckAllItems();
         }
