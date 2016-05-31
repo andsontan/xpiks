@@ -543,8 +543,8 @@ ApplicationWindow {
                                 }
 
                                 validator: IntValidator {
-                                    bottom: 5
-                                    top: 20
+                                    bottom: 1
+                                    top: 100
                                 }
                             }
                         }

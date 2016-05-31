@@ -206,7 +206,7 @@ namespace Models {
             if (m_DismissDuration == value)
                 return;
 
-            m_DismissDuration = ensureInBounds(value, 5, 20);
+            m_DismissDuration = ensureInBounds(value, 1, 100);
             emit dismissDurationChanged(m_DismissDuration);
         }
 

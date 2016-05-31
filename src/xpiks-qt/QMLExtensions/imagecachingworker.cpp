@@ -89,7 +89,7 @@ namespace QMLExtensions {
         const QString &originalPath = item->getFilepath();
         QSize requestedSize = item->getRequestedSize();
 
-        LOG_DEBUG << "Caching" << originalPath << "with size" << requestedSize;
+        LOG_DEBUG << (item->getNeedRecache() ? "Recaching" : "Caching") << originalPath << "with size" << requestedSize;
 
         if (!requestedSize.isValid()) {
             LOG_WARNING << "Invalid requestedSize for" << originalPath;
@@ -133,6 +133,7 @@ namespace QMLExtensions {
         }
 
         if (item->getWithDelay()) {
+            // force context switch for more imporant tasks
             QThread::msleep(500);
         }
 
@@ -169,6 +170,8 @@ namespace QMLExtensions {
         int size = allRequests.size();
         if (size == 0) { return; }
 
+        LOG_DEBUG << "#";
+
         QReadLocker locker(&m_CacheLock);
         Q_UNUSED(locker);
 
@@ -196,7 +199,7 @@ namespace QMLExtensions {
             file.close();
 
             m_CacheIndex.swap(cacheIndex);
-            LOG_DEBUG << "Images cache index read";
+            LOG_INFO << "Images cache index read:" << m_CacheIndex.size() << "entries";
         } else {
             LOG_WARNING << "File not found:" << m_IndexFilepath;
         }
@@ -214,6 +217,7 @@ namespace QMLExtensions {
             QDataStream out(&file);   // write the data
             out << m_CacheIndex;
             file.close();
+            LOG_INFO << "Images cache index saved:" << m_CacheIndex.size() << "entries";
         }
     }
 
