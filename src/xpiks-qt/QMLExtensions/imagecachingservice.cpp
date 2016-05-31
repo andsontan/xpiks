@@ -48,8 +48,8 @@ namespace QMLExtensions {
         QObject::connect(m_CachingWorker, SIGNAL(stopped()), m_CachingWorker, SLOT(deleteLater()));
         QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
 
-        LOG_DEBUG << "starting thread...";
-        thread->start();
+        LOG_DEBUG << "starting low priority thread...";
+        thread->start(QThread::LowPriority);
     }
 
     void ImageCachingService::stopService() {
@@ -76,15 +76,19 @@ namespace QMLExtensions {
 
         Q_ASSERT(m_CachingWorker != NULL);
         LOG_INFO << "generating for" << items.size() << "items";
+
         QVector<ImageCacheRequest *> requests;
         int size = items.size();
         requests.reserve(size);
+        const bool recache = false;
+
         for (int i = 0; i < size; ++i) {
+            bool withDelay = i % 2;
             Models::ArtworkMetadata *artwork = items.at(i);
             ImageCacheRequest *request = new ImageCacheRequest(artwork->getFilepath(),
                                                                QSize(DEFAULT_THUMB_WIDTH, DEFAULT_THUMB_HEIGHT),
-                                                               false,
-                                                               true);
+                                                               recache,
+                                                               withDelay);
             requests.append(request);
         }
 

@@ -40,7 +40,10 @@ namespace Common {
 
     public:
         void submitItem(T *item) {
-            if (m_Cancel) { return; }
+            if (m_Cancel) {
+                deleteItem(item);
+                return;
+            }
 
             m_QueueMutex.lock();
             {
@@ -55,7 +58,10 @@ namespace Common {
         }
 
         void submitFirst(T *item) {
-            if (m_Cancel) { return; }
+            if (m_Cancel) {
+                deleteItem(item);
+                return;
+            }
 
             m_QueueMutex.lock();
             {
@@ -70,7 +76,10 @@ namespace Common {
         }
 
         void submitItems(const QVector<T*> &items) {
-            if (m_Cancel) { return; }
+            if (m_Cancel) {
+                deleteItems(items);
+                return;
+            }
 
             m_QueueMutex.lock();
             {
@@ -90,7 +99,10 @@ namespace Common {
         }
 
         void submitFirst(const QVector<T*> &items) {
-            if (m_Cancel) { return; }
+            if (m_Cancel) {
+                deleteItems(items);
+                return;
+            }
 
             m_QueueMutex.lock();
             {
@@ -212,6 +224,15 @@ namespace Common {
 
         virtual void deleteItem(T* item) const {
             delete item;
+        }
+
+    private:
+        void deleteItems(const QVector<T*> &items) {
+            int size = items.size();
+            for (int i = 0; i < size; ++i) {
+                T *item = items.at(i);
+                deleteItem(item);
+            }
         }
 
     private:
