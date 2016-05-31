@@ -88,6 +88,10 @@ namespace Common {
                     endRemoveRows();
                 }
             }
+
+            if (willResetModel) {
+                endResetModel();
+            }
         }
     };
 }

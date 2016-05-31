@@ -54,7 +54,7 @@ namespace MetadataIO {
     {
         int size = itemsToRead.size();
         if (size >= MIN_SPLIT_COUNT) {
-#ifndef QT_DEBUG
+#ifdef QT_DEBUG
             m_ThreadsCount = size;
 #else
             int idealThreadCount = qMin(qMax(QThread::idealThreadCount(), MIN_READING_THREADS), MAX_READING_THREADS);
