@@ -5,7 +5,7 @@ Maintainer: Artiom.M <a.mv@gmx.fr>
 
 Package: xpiks
 Architecture: amd64
-Depends: libc6 (>=2.14), libqt5concurrent5 (>= 5.2), libqt5core5a (>= 5.2.0~alpha1), libqt5gui5 (>= 5.2), libqt5network5 (>= 5.2), libqt5qml5 (>= 5.2), libqt5quick5 (>= 5.2), libqt5widgets5 (>= 5.2),libqt5svg5 (>= 5.2),  zlib1g (>= 1:1.1.4), libcurl3 (>=7.4), exiftool
+Depends: libc6 (>=2.14), libqt5concurrent5 (>= 5.2), libqt5core5a (>= 5.2.0~alpha1), libqt5gui5 (>= 5.2), libqt5network5 (>= 5.2), libqt5qml5 (>= 5.2), libqt5quick5 (>= 5.2), libqt5widgets5 (>= 5.2),libqt5svg5 (>= 5.2),  zlib1g (>= 1:1.1.4), libcurl3 (>=7.4), libexiv2-13
 Recommends: libhunspell-1.3-0, hunspell-en-us
 Section: graphics
 Priority: optional

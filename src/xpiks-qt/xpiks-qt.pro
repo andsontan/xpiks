@@ -345,8 +345,9 @@ LIBS += -lz
 LIBS += -lcurl
 LIBS += -lquazip
 LIBS += -lface
+LIBS += -lexiv2
+BUILDNO=$$system(git log -n 1 --pretty=format:"%h")
 
-BUILDNO = $$system(git log -n 1 --pretty=format:"%H")
 
 CONFIG(debug, debug|release)  {
     message("Building debug")
@@ -365,7 +366,6 @@ macx {
     INCLUDEPATH += ../exiv2-0.25/include
 
     LIBS += -lxmpsdk
-    LIBS += -lexiv2
 
     HUNSPELL_DICT_FILES.files = deps/dict/en_US.aff deps/dict/en_US.dic deps/dict/license.txt deps/dict/README_en_US.txt
     HUNSPELL_DICT_FILES.path = Contents/Resources
@@ -398,7 +398,6 @@ win32 {
     INCLUDEPATH += "../libcurl/include"
     INCLUDEPATH += "../exiv2-0.25/include"
     LIBS -= -lcurl
-
     CONFIG(debug, debug|release) {
 	EXE_DIR = debug
         LIBS += -llibcurl_debug
@@ -439,17 +438,15 @@ travis-ci {
     LIBS -= -lz
     LIBS += /usr/lib/x86_64-linux-gnu/libz.so
 
-    LIBS += -lexiv2
 }
 
 linux-g++-64 {
-    LIBS += -lexiv2
-
     message("for Linux")
     target.path=/usr/bin/
     QML_IMPORT_PATH += /usr/lib/x86_64-linux-gnu/qt5/imports/
     LIBS += -L/lib/x86_64-linux-gnu/
-    BUILDNO = $$system(od -An -N8 -tx8 </dev/urandom)
+    BUILDNO = $$system($$PWD/buildno.sh)
+
     #DEFINES -= TELEMETRY_ENABLED
 
     UNAME = $$system(cat /proc/version | tr -d \'()\')
@@ -465,14 +462,13 @@ linux-g++-64 {
 
 linux-qtcreator {
     message("in QtCreator")
+    BUILDNO = $$system($$PWD/buildno.sh)
     LIBS += -L/usr/lib64/
     LIBS += -L/lib/x86_64-linux-gnu/
-    BUILDNO = $$system(od -An -N8 -tx8 </dev/urandom)
-        
     copywhatsnew.commands = $(COPY_FILE) "$$PWD/deps/whatsnew.txt" "$$OUT_PWD/"
     copyterms.commands = $(COPY_FILE) "$$PWD/deps/terms_and_conditions.txt" "$$OUT_PWD/"
     QMAKE_EXTRA_TARGETS += copywhatsnew copyterms
-	POST_TARGETDEPS += copywhatsnew copyterms
+    POST_TARGETDEPS += copywhatsnew copyterms
 }
 
 linux-static {

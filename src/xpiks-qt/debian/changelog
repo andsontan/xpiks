@@ -1,25 +1,23 @@
-xpiks (1.3-1) UNRELEASED; urgency=medium
+xpiks (1.3.1-1) UNRELEASED; urgency=medium
 
-    **Major features of this release:**
+    This release is highly polished and refactored in terms of thread-safety 
+    Xpiks 1.3 with almost no new features, but switch from exiftool to exiv2.
 
-    - autocompletion for keywords
-    - localization to 6 languages (Ukrainian, Portugese, Spanish, Catalan, Russian, French, German)
-    - keywords suggestion from iStock and Fotolia
-    - brand new color theme
-    - dozen of predefined FTP addresses of stocks
-    - basic hotkeys support
-    - watching for removal of images and vectors on disk
-    - improvements for keywords suggestion algorithm
-    - fixes in the UI (unification, effects for popups)
+    **In this release:**
 
-    **And bugfixes:**
+    - full support for non-latin paths in Windows
+    - Exiftool is not used by default anymore (but is optionally possible)
+    - Portuguese and French localizations of interface
+    - removing keywords duplicates when replacing with spelling suggestions
+    - lots of improvements in thread-safety
 
-    - scrolling jumps
-    - incorrect warnings for non-existent properties
-    - preliminary fix for paths with unicode characters in Windows
+    **Bugfixes:**
 
- -- Artiom.M <a.mv@gmx.fr>  Sat, 7 May 2016 08:00:00 +0200
+    - uploading of file with unicode path via curl
+    - fix for selecting and double-clicking an image
 
+
+ -- Artiom <a.mv@gmx.fr>  Mon, 30 May 2016 13:37:06 +0200
 
 xpiks (1.2-1) UNRELEASED; urgency=medium
 
