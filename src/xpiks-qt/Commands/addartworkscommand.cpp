@@ -129,7 +129,6 @@ Commands::CommandResult *Commands::AddArtworksCommand::execute(const ICommandMan
         QVector<QPair<int, int> > ranges;
         ranges << qMakePair(start, end);
         commandManager->readMetadata(artworksToImport, ranges);
-        commandManager->generatePreviews(artworksToImport);
 
         artworksRepository->updateCountsForExistingDirectories();
 

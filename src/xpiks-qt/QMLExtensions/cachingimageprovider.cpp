@@ -46,7 +46,7 @@ namespace QMLExtensions {
 
             if (requestedSize.isValid()) {
                 m_ImageCachingService->cacheImage(id, requestedSize);
-                result = image.scaled(requestedSize, Qt::KeepAspectRatio, Qt::FastTransformation);
+                result = image.scaled(requestedSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
             }
             else {
                 result = image;

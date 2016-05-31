@@ -68,6 +68,9 @@ namespace QMLExtensions {
     public:
         bool tryGetCachedImage(const QString &key, const QSize &requestedSize,
                                QString &cached, bool &needsUpdate);
+        void splitToCachedAndNot(const QVector<ImageCacheRequest *> allRequests,
+                                 QVector<ImageCacheRequest *> &unknownRequests,
+                                 QVector<ImageCacheRequest *> &knownRequests);
 
     private:
         void readIndex();

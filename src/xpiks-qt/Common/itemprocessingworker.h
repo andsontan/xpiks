@@ -24,7 +24,7 @@
 
 #include <QWaitCondition>
 #include <QMutex>
-#include <QVector>
+#include <deque>
 #include "../Common/defines.h"
 
 namespace Common {
@@ -42,8 +42,21 @@ namespace Common {
         void submitItem(T *item) {
             m_QueueMutex.lock();
             {
-                bool wasEmpty = m_Queue.isEmpty();
-                m_Queue.append(item);
+                bool wasEmpty = m_Queue.empty();
+                m_Queue.push_back(item);
+
+                if (wasEmpty) {
+                    m_WaitAnyItem.wakeOne();
+                }
+            }
+            m_QueueMutex.unlock();
+        }
+
+        void submitFirst(T *item) {
+            m_QueueMutex.lock();
+            {
+                bool wasEmpty = m_Queue.empty();
+                m_Queue.push_front(item);
 
                 if (wasEmpty) {
                     m_WaitAnyItem.wakeOne();
@@ -55,8 +68,31 @@ namespace Common {
         void submitItems(const QVector<T*> &items) {
             m_QueueMutex.lock();
             {
-                bool wasEmpty = m_Queue.isEmpty();
-                m_Queue << items;
+                bool wasEmpty = m_Queue.empty();
+
+                int size = items.size();
+                for (int i = 0; i < size; ++i) {
+                    T *item = items.at(i);
+                    m_Queue.push_back(item);
+                }
+
+                if (wasEmpty) {
+                    m_WaitAnyItem.wakeOne();
+                }
+            }
+            m_QueueMutex.unlock();
+        }
+
+        void submitFirst(const QVector<T*> &items) {
+            m_QueueMutex.lock();
+            {
+                bool wasEmpty = m_Queue.empty();
+
+                int size = items.size();
+                for (int i = 0; i < size; ++i) {
+                    T *item = items.at(i);
+                    m_Queue.push_front(item);
+                }
 
                 if (wasEmpty) {
                     m_WaitAnyItem.wakeOne();
@@ -78,7 +114,7 @@ namespace Common {
 
         bool hasPendingJobs() {
             QMutexLocker locker(&m_QueueMutex);
-            bool isEmpty = m_Queue.isEmpty();
+            bool isEmpty = m_Queue.empty();
             return !isEmpty;
         }
 
@@ -107,7 +143,7 @@ namespace Common {
 
                 T *stopItem = NULL;
 
-                m_Queue.append(stopItem);
+                m_Queue.push_back(stopItem);
                 m_WaitAnyItem.wakeOne();
             }
             m_QueueMutex.unlock();
@@ -130,17 +166,17 @@ namespace Common {
 
                 m_QueueMutex.lock();
 
-                while (m_Queue.isEmpty()) {
+                while (m_Queue.empty()) {
                     bool waitResult = m_WaitAnyItem.wait(&m_QueueMutex);
                     if (!waitResult) {
                         LOG_WARNING << "Waiting failed for new items";
                     }
                 }
 
-                T *item = m_Queue.first();
-                m_Queue.removeFirst();
+                T *item = m_Queue.front();
+                m_Queue.pop_front();
 
-                noMoreItems = m_Queue.isEmpty();
+                noMoreItems = m_Queue.empty();
 
                 m_QueueMutex.unlock();
 
@@ -173,7 +209,7 @@ namespace Common {
     private:
         QWaitCondition m_WaitAnyItem;
         QMutex m_QueueMutex;
-        QVector<T *> m_Queue;
+        std::deque<T *> m_Queue;
         volatile bool m_Cancel;
         volatile bool m_IsRunning;
     };

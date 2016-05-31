@@ -79,6 +79,9 @@ namespace MetadataIO {
         LOG_INFO << "Success:" << success;
         setHasErrors(!success);
 
+        const QVector<Models::ArtworkMetadata*> &itemsToRead = m_ReadingWorker->getItemsToRead();
+        m_CommandManager->generatePreviews(itemsToRead);
+
         if (m_CanProcessResults) {
             readingFinishedHandler(m_IgnoreBackupsAtImport);
         } else {

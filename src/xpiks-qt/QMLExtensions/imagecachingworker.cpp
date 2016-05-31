@@ -89,9 +89,7 @@ namespace QMLExtensions {
         const QString &originalPath = item->getFilepath();
         QSize requestedSize = item->getRequestedSize();
 
-#ifdef INTEGRATION_TESTS
-        LOG_INFO << originalPath << requestedSize;
-#endif
+        LOG_DEBUG << "Caching" << originalPath << "with size" << requestedSize;
 
         if (!requestedSize.isValid()) {
             LOG_WARNING << "Invalid requestedSize for" << originalPath;
@@ -134,6 +132,10 @@ namespace QMLExtensions {
             saveIndex();
         }
 
+        if (item->getWithDelay()) {
+            QThread::msleep(500);
+        }
+
         return true;
     }
 
@@ -152,12 +154,36 @@ namespace QMLExtensions {
             if (fi.exists()) {
                 cachedImage.m_RequestsServed++;
                 cachedPath = cachedValue;
-                needsUpdate = (fi.lastModified() >= cachedImage.m_LastModified) || (cachedImage.m_Size != requestedSize);
+                needsUpdate = (QFileInfo(key).lastModified() > cachedImage.m_LastModified) || (cachedImage.m_Size != requestedSize);
+
                 found = true;
             }
         }
 
         return found;
+    }
+
+    void ImageCachingWorker::splitToCachedAndNot(const QVector<ImageCacheRequest *> allRequests,
+                                                 QVector<ImageCacheRequest *> &unknownRequests,
+                                                 QVector<ImageCacheRequest *> &knownRequests) {
+        int size = allRequests.size();
+        if (size == 0) { return; }
+
+        QReadLocker locker(&m_CacheLock);
+        Q_UNUSED(locker);
+
+        knownRequests.reserve(size);
+        unknownRequests.reserve(size);
+
+        for (int i = 0; i < size; ++i) {
+            ImageCacheRequest *item = allRequests.at(i);
+
+            if (m_CacheIndex.contains(item->getFilepath())) {
+                knownRequests.append(item);
+            } else {
+                unknownRequests.append(item);
+            }
+        }
     }
 
     void ImageCachingWorker::readIndex() {

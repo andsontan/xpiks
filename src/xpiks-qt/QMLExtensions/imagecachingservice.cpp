@@ -25,8 +25,8 @@
 #include "imagecacherequest.h"
 #include "../Models/artworkmetadata.h"
 
-#define DEFAULT_THUMB_HEIGHT 300
-#define DEFAULT_THUMB_WIDTH 300
+#define DEFAULT_THUMB_HEIGHT 150
+#define DEFAULT_THUMB_WIDTH 150
 
 namespace QMLExtensions {
     ImageCachingService::ImageCachingService(QObject *parent) :
@@ -64,7 +64,7 @@ namespace QMLExtensions {
     void ImageCachingService::cacheImage(const QString &key, const QSize &requestedSize, bool recache) {
         Q_ASSERT(m_CachingWorker != NULL);
         ImageCacheRequest *request = new ImageCacheRequest(key, requestedSize, recache);
-        m_CachingWorker->submitItem(request);
+        m_CachingWorker->submitFirst(request);
     }
 
     void ImageCachingService::generatePreviews(const QVector<Models::ArtworkMetadata *> &items) {
@@ -77,11 +77,17 @@ namespace QMLExtensions {
             Models::ArtworkMetadata *artwork = items.at(i);
             ImageCacheRequest *request = new ImageCacheRequest(artwork->getFilepath(),
                                                                QSize(DEFAULT_THUMB_WIDTH, DEFAULT_THUMB_HEIGHT),
-                                                               false);
+                                                               false,
+                                                               true);
             requests.append(request);
         }
 
-        m_CachingWorker->submitItems(requests);
+        QVector<ImageCacheRequest *> knownRequests;
+        QVector<ImageCacheRequest *> unknownRequests;
+        m_CachingWorker->splitToCachedAndNot(requests, unknownRequests, knownRequests);
+
+        m_CachingWorker->submitFirst(unknownRequests);
+        m_CachingWorker->submitItems(knownRequests);
     }
 
     bool ImageCachingService::tryGetCachedImage(const QString &key, const QSize &requestedSize,
