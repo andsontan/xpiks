@@ -165,7 +165,7 @@ Item {
 
                                             Image {
                                                 anchors.fill: parent
-                                                source: "image://global/" + filename
+                                                source: "image://cached/" + filename
                                                 sourceSize.width: 150
                                                 sourceSize.height: 150
                                                 fillMode: settingsModel.fitSmallPreview ? Image.PreserveAspectFit : Image.PreserveAspectCrop

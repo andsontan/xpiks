@@ -130,7 +130,8 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Common/flags.cpp \
     readlegacysavedtest.cpp \
     ../../xpiks-qt/QMLExtensions/imagecachingservice.cpp \
-    ../../xpiks-qt/QMLExtensions/imagecachingworker.cpp
+    ../../xpiks-qt/QMLExtensions/imagecachingworker.cpp \
+    ../../xpiks-qt/QMLExtensions/cachingimageprovider.cpp
 
 RESOURCES +=
 
@@ -284,7 +285,8 @@ HEADERS += \
     readlegacysavedtest.h \
     ../../xpiks-qt/QMLExtensions/imagecacherequest.h \
     ../../xpiks-qt/QMLExtensions/imagecachingservice.h \
-    ../../xpiks-qt/QMLExtensions/imagecachingworker.h
+    ../../xpiks-qt/QMLExtensions/imagecachingworker.h \
+    ../../xpiks-qt/QMLExtensions/cachingimageprovider.h
     spellingproduceswarningstest.h
 
 INCLUDEPATH += ../../tiny-aes

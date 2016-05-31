@@ -101,7 +101,8 @@ SOURCES += main.cpp \
     MetadataIO/writingorchestrator.cpp \
     Common/flags.cpp \
     QMLExtensions/imagecachingworker.cpp \
-    QMLExtensions/imagecachingservice.cpp
+    QMLExtensions/imagecachingservice.cpp \
+    QMLExtensions/cachingimageprovider.cpp
 
 RESOURCES += qml.qrc
 
@@ -259,7 +260,8 @@ HEADERS += \
     MetadataIO/imetadatawriter.h \
     QMLExtensions/imagecachingworker.h \
     QMLExtensions/imagecacherequest.h \
-    QMLExtensions/imagecachingservice.h
+    QMLExtensions/imagecachingservice.h \
+    QMLExtensions/cachingimageprovider.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

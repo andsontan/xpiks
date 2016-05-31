@@ -174,6 +174,8 @@ Item {
                     onComboIndexChanged: {
                         keywordsSuggestor.selectedSourceIndex = sourceComboBox.selectedIndex
                     }
+
+                    Component.onCompleted: selectedIndex = keywordsSuggestor.selectedSourceIndex
                 }
             }
 

@@ -20,40 +20,20 @@
  */
 
 #include "globalimageprovider.h"
-#include "../Common/defines.h"
-#include "../QMLExtensions/imagecachingservice.h"
-
-#define RECACHE true
 
 namespace Helpers {
     QImage GlobalImageProvider::requestImage(const QString &id, QSize *size, const QSize &requestedSize) {
-        QString cachedPath;
-        bool needsUpdate = false;
+        QImage image(id);
+        QImage result;
 
-        if (m_ImageCachingService->tryGetCachedImage(id, requestedSize, cachedPath, needsUpdate)) {
-            QImage image(cachedPath);
-            *size = image.size();
-
-            if (needsUpdate) {
-                LOG_INFO << "Recaching image" << id;
-                m_ImageCachingService->cacheImage(id, requestedSize, RECACHE);
-            }
-
-            return image;
-        } else {
-            QImage image(id);
-            QImage result;
-
-            if (requestedSize.isValid()) {
-                m_ImageCachingService->cacheImage(id, requestedSize);
-                result = image.scaled(requestedSize, Qt::KeepAspectRatio, Qt::FastTransformation);
-            }
-            else {
-                result = image;
-            }
-
-            *size = result.size();
-            return result;
+        if (requestedSize.isValid()) {
+            result = image.scaled(requestedSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
         }
+        else {
+            result = image;
+        }
+
+        *size = result.size();
+        return result;
     }
 }

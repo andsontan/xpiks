@@ -36,7 +36,7 @@ namespace Suggestion {
             m_IsSelected(false)
         {
             if (isLocal) {
-                m_Url = QLatin1String("image://global/") + url;
+                m_Url = QLatin1String("image://cached/") + url;
             } else {
                 m_Url = url;
             }

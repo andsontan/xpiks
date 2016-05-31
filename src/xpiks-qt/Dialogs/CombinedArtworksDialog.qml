@@ -345,7 +345,7 @@ CloseRequested")
                                     Image {
                                         anchors.fill: parent
                                         anchors.margins: 1
-                                        source: "image://global/" + path
+                                        source: "image://cached/" + path
                                         sourceSize.width: 150
                                         sourceSize.height: 150
                                         fillMode: settingsModel.fitSmallPreview ? Image.PreserveAspectFit : Image.PreserveAspectCrop

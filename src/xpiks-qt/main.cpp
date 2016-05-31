@@ -38,6 +38,7 @@
 #include <QDesktopWidget>
 //-------------------------------------
 #include "SpellCheck/spellchecksuggestionmodel.h"
+#include "QMLExtensions/cachingimageprovider.h"
 #include "Models/filteredartitemsproxymodel.h"
 #include "QMLExtensions/imagecachingservice.h"
 #include "MetadataIO/metadataiocoordinator.h"
@@ -351,7 +352,8 @@ int main(int argc, char *argv[]) {
 
     QQmlApplicationEngine engine;
     Helpers::GlobalImageProvider *globalProvider = new Helpers::GlobalImageProvider(QQmlImageProviderBase::Image);
-    globalProvider->setImageCachingService(&imageCachingService);
+    QMLExtensions::CachingImageProvider *cachingProvider = new QMLExtensions::CachingImageProvider(QQmlImageProviderBase::Image);
+    cachingProvider->setImageCachingService(&imageCachingService);
 
     Helpers::HelpersQmlWrapper helpersQmlWrapper(&commandManager);
 
@@ -393,6 +395,8 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("debug", isDebug);
 
     engine.addImageProvider("global", globalProvider);
+    engine.addImageProvider("cached", cachingProvider);
+
     LOG_DEBUG << "About to load main view...";
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     LOG_DEBUG << "Main view loaded";

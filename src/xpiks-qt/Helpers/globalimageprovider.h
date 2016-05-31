@@ -23,11 +23,6 @@
 #define GLOBALIMAGEPROVIDER_H
 
 #include <QQuickImageProvider>
-#include <QHash>
-
-namespace QMLExtensions {
-    class ImageCachingService;
-}
 
 namespace Helpers {
     class GlobalImageProvider : public QObject, public QQuickImageProvider
@@ -35,21 +30,12 @@ namespace Helpers {
         Q_OBJECT
     public:
         GlobalImageProvider(ImageType type, Flags flags = 0) :
-            QQuickImageProvider(type, flags),
-            m_ImageCachingService(NULL)
+            QQuickImageProvider(type, flags)
         {}
 
         virtual ~GlobalImageProvider() {}
 
         virtual QImage requestImage(const QString &id, QSize *size, const QSize& requestedSize);
-
-    public:
-        void setImageCachingService(QMLExtensions::ImageCachingService *cachingService) {
-            m_ImageCachingService = cachingService;
-        }
-
-    private:
-        QMLExtensions::ImageCachingService *m_ImageCachingService;
     };
 }
 #endif // GLOBALIMAGEPROVIDER_H
