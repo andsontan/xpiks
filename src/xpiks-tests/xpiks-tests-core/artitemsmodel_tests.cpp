@@ -101,9 +101,9 @@ void ArtItemsModelTests::removingLockedArtworksTest() {
         artItemsModelMock.getArtwork(i)->acquire();
     }
 
-    QCOMPARE(artItemsModelMock.getFinaliazationList().count(), 0);
+    QCOMPARE(artItemsModelMock.getFinalizationList().size(), 0);
     artItemsModelMock.deleteAllItems();
-    QCOMPARE(artItemsModelMock.getFinaliazationList().count(), count);
+    QCOMPARE((int)artItemsModelMock.getFinalizationList().size(), count);
 }
 
 void ArtItemsModelTests::plainTextEditToEmptyKeywordsTest() {
