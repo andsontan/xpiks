@@ -206,9 +206,10 @@ namespace Models {
         ArtItemsModel *artItemsModel = getArtItemsModel();
         int originalIndex = getOriginalIndex(index);
         ArtworkMetadata *metadata = artItemsModel->getArtwork(originalIndex);
-        Q_ASSERT(metadata != NULL);
-        ArtItemInfo *info = new ArtItemInfo(metadata, originalIndex);
-        removeKeywordsInItem(info);
+        if (metadata != NULL) {
+            ArtItemInfo *info = new ArtItemInfo(metadata, originalIndex);
+            removeKeywordsInItem(info);
+        }
     }
 
     void FilteredArtItemsProxyModel::focusNextItem(int index) {
@@ -243,16 +244,18 @@ namespace Models {
             int originalIndex = getOriginalIndex(index);
             ArtItemsModel *artItemsModel = getArtItemsModel();
             ArtworkMetadata *metadata = artItemsModel->getArtwork(originalIndex);
-            Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
+            if (metadata != NULL) {
+                Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
 
-            if (!metadata->getDescription().trimmed().isEmpty()) {
-                m_CommandManager->submitItemForSpellCheck(keywordsModel, Common::SpellCheckDescription);
-            } else {
-                LOG_INFO << "description is empty";
-                keywordsModel->notifySpellCheckResults(Common::SpellCheckDescription);
+                if (!metadata->getDescription().trimmed().isEmpty()) {
+                    m_CommandManager->submitItemForSpellCheck(keywordsModel, Common::SpellCheckDescription);
+                } else {
+                    LOG_INFO << "description is empty";
+                    keywordsModel->notifySpellCheckResults(Common::SpellCheckDescription);
+                }
+
+                m_CommandManager->submitForWarningsCheck(metadata, Common::WarningsCheckDescription);
             }
-
-            m_CommandManager->submitForWarningsCheck(metadata, Common::WarningsCheckDescription);
         }
     }
 
@@ -262,16 +265,18 @@ namespace Models {
             int originalIndex = getOriginalIndex(index);
             ArtItemsModel *artItemsModel = getArtItemsModel();
             ArtworkMetadata *metadata = artItemsModel->getArtwork(originalIndex);
-            Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
+            if (metadata != NULL) {
+                Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
 
-            if (!metadata->getTitle().trimmed().isEmpty()) {
-                m_CommandManager->submitItemForSpellCheck(keywordsModel, Common::SpellCheckTitle);
-            } else {
-                LOG_INFO << "title is empty";
-                keywordsModel->notifySpellCheckResults(Common::SpellCheckTitle);
+                if (!metadata->getTitle().trimmed().isEmpty()) {
+                    m_CommandManager->submitItemForSpellCheck(keywordsModel, Common::SpellCheckTitle);
+                } else {
+                    LOG_INFO << "title is empty";
+                    keywordsModel->notifySpellCheckResults(Common::SpellCheckTitle);
+                }
+
+                m_CommandManager->submitForWarningsCheck(metadata, Common::WarningsCheckTitle);
             }
-
-            m_CommandManager->submitForWarningsCheck(metadata, Common::WarningsCheckTitle);
         }
     }
 
@@ -320,8 +325,8 @@ namespace Models {
         emit selectedArtworksCountChanged();
     }
 
-    void FilteredArtItemsProxyModel::onSelectedArtworksRemoved() {
-        m_SelectedArtworksCount--;
+    void FilteredArtItemsProxyModel::onSelectedArtworksRemoved(int value) {
+        m_SelectedArtworksCount -= value;
         emit selectedArtworksCountChanged();
     }
 
@@ -365,9 +370,10 @@ namespace Models {
 
             int index = originalIndex.row();
             ArtworkMetadata *metadata = artItemsModel->getArtwork(index);
-            Q_ASSERT(metadata != NULL);
-            metadata->setIsSelected(selected);
-            indices << index;
+            if (metadata != NULL) {
+                metadata->setIsSelected(selected);
+                indices << index;
+            }
         }
 
         artItemsModel->updateItems(indices, QVector<int>() << ArtItemsModel::IsSelectedRole);
@@ -387,9 +393,10 @@ namespace Models {
 
             int index = originalIndex.row();
             ArtworkMetadata *metadata = artItemsModel->getArtwork(index);
-            Q_ASSERT(metadata != NULL);
-            metadata->invertSelection();
-            indices << index;
+            if (metadata != NULL) {
+                metadata->invertSelection();
+                indices << index;
+            }
         }
 
         artItemsModel->updateItems(indices, QVector<int>() << ArtItemsModel::IsSelectedRole);
@@ -526,10 +533,15 @@ namespace Models {
         ArtItemsModel *artItemsModel = getArtItemsModel();
         ArtworkMetadata *metadata = artItemsModel->getArtwork(sourceRow);
 
-        SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
-        bool searchUsingAnd = settingsModel->getSearchUsingAnd();
+        bool hasMatch = false;
 
-        bool hasMatch = Helpers::containsPartsSearch(m_SearchTerm, metadata, searchUsingAnd);
+        if (metadata != NULL) {
+            SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
+            bool searchUsingAnd = settingsModel->getSearchUsingAnd();
+
+            hasMatch = Helpers::containsPartsSearch(m_SearchTerm, metadata, searchUsingAnd);
+        }
+
         return hasMatch;
     }
 
@@ -543,22 +555,25 @@ namespace Models {
         ArtworkMetadata *leftMetadata = artItemsModel->getArtwork(sourceLeft.row());
         ArtworkMetadata *rightMetadata = artItemsModel->getArtwork(sourceRight.row());
 
-        const QString &leftFilepath = leftMetadata->getFilepath();
-        const QString &rightFilepath = rightMetadata->getFilepath();
-
-        QFileInfo leftFI(leftFilepath);
-        QFileInfo rightFI(rightFilepath);
-
-        QString leftFilename = leftFI.fileName();
-        QString rightFilename = rightFI.fileName();
-
-        int filenamesResult = QString::compare(leftFilename, rightFilename);
         bool result = false;
 
-        if (filenamesResult == 0) {
-            result = QString::compare(leftFilepath, rightFilepath) < 0;
-        } else {
-            result = filenamesResult < 0;
+        if (leftMetadata != NULL && rightMetadata != NULL) {
+            const QString &leftFilepath = leftMetadata->getFilepath();
+            const QString &rightFilepath = rightMetadata->getFilepath();
+
+            QFileInfo leftFI(leftFilepath);
+            QFileInfo rightFI(rightFilepath);
+
+            QString leftFilename = leftFI.fileName();
+            QString rightFilename = rightFI.fileName();
+
+            int filenamesResult = QString::compare(leftFilename, rightFilename);
+
+            if (filenamesResult == 0) {
+                result = QString::compare(leftFilepath, rightFilepath) < 0;
+            } else {
+                result = filenamesResult < 0;
+            }
         }
 
         return result;

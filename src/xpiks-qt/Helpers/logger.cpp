@@ -86,6 +86,8 @@ namespace Helpers {
             const QString &line = logItems->at(i);
             std::cout << line.toLocal8Bit().data() << std::endl;
         }
+
+        std::cout.flush();
 #endif
         logItems->clear();
     }

@@ -22,6 +22,8 @@
 #include <QVector>
 #include <QPair>
 #include <QString>
+#include <QDateTime>
+#include <iostream>
 #include "removeartworkscommand.h"
 #include "commandmanager.h"
 #include "../Models/artworksrepository.h"

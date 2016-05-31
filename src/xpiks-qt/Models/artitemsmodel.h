@@ -31,6 +31,7 @@
 #include <QHash>
 #include <QQuickTextDocument>
 #include <QVector>
+#include <deque>
 #include "../Common/abstractlistmodel.h"
 #include "../Common/baseentity.h"
 #include "../Common/ibasicartwork.h"
@@ -155,7 +156,7 @@ namespace Models {
     public:
         // IARTWORKSSOURCE
         virtual Common::IBasicArtwork *getBasicArtwork(int index) const;
-        virtual int getArtworksCount() const { return m_ArtworkList.length(); }
+        virtual int getArtworksCount() const { return (int)m_ArtworkList.size(); }
 
     private:
         void updateItemAtIndex(int metadataIndex);
@@ -170,7 +171,7 @@ namespace Models {
         void modifiedArtworksCountChanged();
         void artworksChanged(bool needToMoveCurrentItem);
         void artworksAdded(int imagesCount, int vectorsCount);
-        void selectedArtworkRemoved();
+        void selectedArtworksRemoved(int count);
         void fileWithIndexUnavailable(int index);
         void unavailableArtworksFound();
         void unavailableVectorsFound();
@@ -179,9 +180,12 @@ namespace Models {
        virtual QHash<int, QByteArray> roleNames() const;
 
     protected:
-        void removeInnerItem(int row);
+        virtual bool shouldRemoveInRanges(int rangesLength) const;
+        virtual void removeInnerItem(int row);
+        virtual void removeInnerItemRange(int start, int end);
 
     private:
+        void destroyInnerItem(ArtworkMetadata *metadata);
         void doRemoveItemsAtIndices(QVector<int> &indicesToRemove);
         void doRemoveItemsInRanges(const QVector<QPair<int, int> > &rangesToRemove);
         void getSelectedItemsIndices(QVector<int> &indices);
@@ -195,8 +199,8 @@ namespace Models {
 #endif
 
     private:
-        QVector<ArtworkMetadata*> m_ArtworkList;
-        QVector<ArtworkMetadata*> m_FinalizationList;
+        std::deque<ArtworkMetadata *> m_ArtworkList;
+        std::deque<ArtworkMetadata *> m_FinalizationList;
         qint64 m_LastID;
     };
 }

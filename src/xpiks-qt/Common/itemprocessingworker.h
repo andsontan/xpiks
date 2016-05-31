@@ -40,6 +40,8 @@ namespace Common {
 
     public:
         void submitItem(T *item) {
+            if (m_Cancel) { return; }
+
             m_QueueMutex.lock();
             {
                 bool wasEmpty = m_Queue.empty();
@@ -53,6 +55,8 @@ namespace Common {
         }
 
         void submitFirst(T *item) {
+            if (m_Cancel) { return; }
+
             m_QueueMutex.lock();
             {
                 bool wasEmpty = m_Queue.empty();
@@ -66,6 +70,8 @@ namespace Common {
         }
 
         void submitItems(const QVector<T*> &items) {
+            if (m_Cancel) { return; }
+
             m_QueueMutex.lock();
             {
                 bool wasEmpty = m_Queue.empty();
@@ -84,6 +90,8 @@ namespace Common {
         }
 
         void submitFirst(const QVector<T*> &items) {
+            if (m_Cancel) { return; }
+
             m_QueueMutex.lock();
             {
                 bool wasEmpty = m_Queue.empty();

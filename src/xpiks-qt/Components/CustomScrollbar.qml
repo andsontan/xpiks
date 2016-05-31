@@ -73,7 +73,7 @@ Item {
 
         Item {
             id: handle;
-            height: flickable.visibleArea.heightRatio * groove.height
+            height: Math.max(flickable.visibleArea.heightRatio * groove.height, 10)
             width: 10
             anchors {
                 left: parent.left;

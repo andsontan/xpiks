@@ -26,6 +26,7 @@
 
 #include <QVector>
 #include <QList>
+#include "../Helpers/indiceshelper.h"
 
 namespace Common {
     class AbstractListModel : public QAbstractListModel {
@@ -36,7 +37,8 @@ namespace Common {
 
     public:
         virtual void removeItemsAtIndices(const QVector<QPair<int, int> > &ranges) {
-            doRemoveItemsAtIndices(ranges);
+            int rangesLength = Helpers::getRangesLength(ranges);
+            doRemoveItemsAtIndices(ranges, rangesLength);
         }
 
     protected:
@@ -54,19 +56,37 @@ namespace Common {
 
         virtual void removeInnerItem(int row) = 0;
 
-        void doRemoveItemsAtIndices(const QVector<QPair<int, int> > &ranges) {
+        virtual bool shouldRemoveInRanges(int rangesLength) const { return rangesLength > 50; }
+
+        virtual void removeInnerItemRange(int startRow, int endRow) {
+            int count = endRow - startRow + 1;
+            for (int j = 0; j < count; ++j) { removeInnerItem(startRow); }
+        }
+
+        void doRemoveItemsAtIndices(const QVector<QPair<int, int> > &ranges, int rangesLength) {
             int removedCount = 0;
             int rangesCount = ranges.count();
+
+            bool willResetModel = shouldRemoveInRanges(rangesLength);
+
+            if (willResetModel) {
+                beginResetModel();
+            }
+
             for (int i = 0; i < rangesCount; ++i) {
                 int startRow = ranges[i].first - removedCount;
                 int endRow = ranges[i].second - removedCount;
 
-                beginRemoveRows(QModelIndex(), startRow, endRow);
-                int count = endRow - startRow + 1;
-                for (int j = 0; j < count; ++j) { removeInnerItem(startRow); }
-                endRemoveRows();
+                if (!willResetModel) {
+                    beginRemoveRows(QModelIndex(), startRow, endRow);
+                }
 
+                removeInnerItemRange(startRow, endRow);
                 removedCount += (endRow - startRow + 1);
+
+                if (!willResetModel) {
+                    endRemoveRows();
+                }
             }
         }
     };

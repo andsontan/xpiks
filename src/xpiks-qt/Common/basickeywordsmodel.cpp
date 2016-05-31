@@ -55,7 +55,8 @@ namespace Common {
         QWriteLocker writeLocker(&m_KeywordsLock);
         Q_UNUSED(writeLocker);
 
-        AbstractListModel::doRemoveItemsAtIndices(ranges);
+        int rangesLength = Helpers::getRangesLength(ranges);
+        AbstractListModel::doRemoveItemsAtIndices(ranges, rangesLength);
     }
 
     void BasicKeywordsModel::removeInnerItem(int row) {

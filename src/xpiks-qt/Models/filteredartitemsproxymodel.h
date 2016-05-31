@@ -83,7 +83,7 @@ namespace Models {
 
     public slots:
         void itemSelectedChanged(bool value);
-        void onSelectedArtworksRemoved();
+        void onSelectedArtworksRemoved(int value);
         void onSpellCheckerAvailable(bool afterRestart);
 
     signals:

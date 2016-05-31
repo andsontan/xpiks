@@ -50,6 +50,7 @@ namespace QMLExtensions {
 
     private:
         ImageCachingWorker *m_CachingWorker;
+        volatile bool m_IsCancelled;
     };
 }
 

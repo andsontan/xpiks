@@ -31,7 +31,8 @@
 namespace QMLExtensions {
     ImageCachingService::ImageCachingService(QObject *parent) :
         QObject(parent),
-        m_CachingWorker(NULL)
+        m_CachingWorker(NULL),
+        m_IsCancelled(false)
     {
     }
 
@@ -55,6 +56,7 @@ namespace QMLExtensions {
         LOG_DEBUG << "#";
 
         if (m_CachingWorker != NULL) {
+            m_IsCancelled = true;
             m_CachingWorker->stopWorking();
         } else {
             LOG_WARNING << "Caching Worker was NULL";
@@ -62,12 +64,16 @@ namespace QMLExtensions {
     }
 
     void ImageCachingService::cacheImage(const QString &key, const QSize &requestedSize, bool recache) {
+        if (m_IsCancelled) { return; }
+
         Q_ASSERT(m_CachingWorker != NULL);
         ImageCacheRequest *request = new ImageCacheRequest(key, requestedSize, recache);
         m_CachingWorker->submitFirst(request);
     }
 
     void ImageCachingService::generatePreviews(const QVector<Models::ArtworkMetadata *> &items) {
+        if (m_IsCancelled) { return; }
+
         Q_ASSERT(m_CachingWorker != NULL);
         LOG_INFO << "generating for" << items.size() << "items";
         QVector<ImageCacheRequest *> requests;
@@ -92,6 +98,8 @@ namespace QMLExtensions {
 
     bool ImageCachingService::tryGetCachedImage(const QString &key, const QSize &requestedSize,
                                                 QString &cached, bool &needsUpdate) {
+        if (m_IsCancelled) { return false; }
+
         if (m_CachingWorker != NULL) {
             return m_CachingWorker->tryGetCachedImage(key, requestedSize, cached, needsUpdate);
         } else {

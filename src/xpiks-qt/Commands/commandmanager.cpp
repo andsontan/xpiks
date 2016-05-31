@@ -213,8 +213,8 @@ void Commands::CommandManager::connectEntitiesSignalsSlots() const {
     }
 
     if (m_ArtItemsModel != NULL && m_FilteredItemsModel != NULL) {
-        QObject::connect(m_ArtItemsModel, SIGNAL(selectedArtworkRemoved()),
-                         m_FilteredItemsModel, SLOT(onSelectedArtworksRemoved()));
+        QObject::connect(m_ArtItemsModel, SIGNAL(selectedArtworksRemoved(int)),
+                         m_FilteredItemsModel, SLOT(onSelectedArtworksRemoved(int)));
     }
 
     if (m_SettingsModel != NULL && m_TelemetryService != NULL) {

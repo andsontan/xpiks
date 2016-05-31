@@ -133,8 +133,10 @@ namespace Warnings {
             int row = originalIndex.row();
             Models::ArtworkMetadata *metadata = artItemsModel->getArtwork(row);
 
-            int warningsFlags = metadata->getWarningsFlags();
-            describeWarningFlags(warningsFlags, metadata, descriptions);
+            if (metadata != NULL) {
+                int warningsFlags = metadata->getWarningsFlags();
+                describeWarningFlags(warningsFlags, metadata, descriptions);
+            }
         }
 
         return descriptions;
@@ -171,13 +173,17 @@ namespace Warnings {
         Q_ASSERT(artItemsModel != NULL);
         Models::ArtworkMetadata *metadata = artItemsModel->getArtwork(sourceRow);
 
-        int warningsFlags = metadata->getWarningsFlags();
-        bool anyWarnings = warningsFlags != Common::WarningTypeNoWarnings;
+        bool rowIsOk = false;
 
-        bool rowIsOk = anyWarnings;
+        if (metadata != NULL) {
+            int warningsFlags = metadata->getWarningsFlags();
+            bool anyWarnings = warningsFlags != Common::WarningTypeNoWarnings;
 
-        if (m_ShowOnlySelected) {
-            rowIsOk = metadata->isSelected() && anyWarnings;
+            rowIsOk = anyWarnings;
+
+            if (m_ShowOnlySelected) {
+                rowIsOk = metadata->isSelected() && anyWarnings;
+            }
         }
 
         return rowIsOk;
