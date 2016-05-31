@@ -102,9 +102,7 @@ namespace QMLExtensions {
 
     bool ImageCachingService::tryGetCachedImage(const QString &key, const QSize &requestedSize,
                                                 QString &cached, bool &needsUpdate) {
-        if (m_IsCancelled) { return false; }
-
-        if (m_CachingWorker != NULL) {
+        if (!m_IsCancelled && m_CachingWorker != NULL) {
             return m_CachingWorker->tryGetCachedImage(key, requestedSize, cached, needsUpdate);
         } else {
             return false;
