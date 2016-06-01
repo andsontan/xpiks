@@ -1,4 +1,4 @@
-#include "savefilebasictest.h"
+#include "clearmetadatatest.h"
 #include <QUrl>
 #include <QFileInfo>
 #include <QStringList>
@@ -9,20 +9,22 @@
 #include "../../xpiks-qt/MetadataIO/metadataiocoordinator.h"
 #include "../../xpiks-qt/Models/artworkmetadata.h"
 #include "../../xpiks-qt/Models/settingsmodel.h"
-#include "../../xpiks-qt/Models/filteredartitemsproxymodel.h"
 #include "../../xpiks-qt/Models/imageartwork.h"
+#include "../../xpiks-qt/Models/filteredartitemsproxymodel.h"
 
-QString SaveFileBasicTest::testName() {
-    return QLatin1String("SaveFileBasicTest");
+QString ClearMetadataTest::testName() {
+    return QLatin1String("ClearMetadataTest");
 }
 
-void SaveFileBasicTest::setup() {
+void ClearMetadataTest::setup() {
+    Models::SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
+    settingsModel->setAutoFindVectors(false);
 }
 
-int SaveFileBasicTest::doTest() {
+int ClearMetadataTest::doTest() {
     Models::ArtItemsModel *artItemsModel = m_CommandManager->getArtItemsModel();
     QList<QUrl> files;
-    files << QUrl::fromLocalFile(QFileInfo("images-for-tests/pixmap/seagull.jpg").absoluteFilePath());
+    files << QUrl::fromLocalFile(QFileInfo("images-for-tests/pixmap/seagull-for-clear.jpg").absoluteFilePath());
 
     int addedCount = artItemsModel->addLocalArtworks(files);
 
@@ -41,20 +43,22 @@ int SaveFileBasicTest::doTest() {
     VERIFY(!ioCoordinator->getHasErrors(), "Errors in IO Coordinator while reading");
 
     Models::ArtworkMetadata *metadata = artItemsModel->getArtwork(0);
-    Models::ImageArtwork *image = dynamic_cast<Models::ImageArtwork*>(metadata);
+    const QStringList &keywords = metadata->getKeywords();
 
-    VERIFY(image->getImageSize().width() == 1920, "Image width was read incorrectly");
-    VERIFY(image->getImageSize().height() == 1272, "Image height was read incorrectly");
+    QStringList expectedKeywords = QString("picture,seagull,bird").split(',');
 
-    QStringList keywords; keywords << "picture" << "seagull" << "bird";
-    metadata->setDescription("Brand new description");
-    metadata->setTitle("Brand new title");
-    metadata->getKeywordsModel()->setKeywords(keywords);
+    VERIFY(expectedKeywords == keywords, "Keywords are not the same!");
+    VERIFY(metadata->getDescription() == "Seagull description", "Description is not the same!");
+    VERIFY(metadata->getTitle() == "Seagull title", "Title is not the same!");
+
+    Models::FilteredArtItemsProxyModel *filteredModel = m_CommandManager->getFilteredArtItemsModel();
     metadata->setIsSelected(true);
 
-    bool doOverwrite = true, dontSaveBackups = false;
+    filteredModel->removeMetadataInSelected();
 
+    bool doOverwrite = true, dontSaveBackups = false;
     QObject::connect(ioCoordinator, SIGNAL(metadataWritingFinished()), &waiter, SIGNAL(finished()));
+
     artItemsModel->saveSelectedArtworks(QVector<int>() << 0, doOverwrite, dontSaveBackups);
 
     if (!waiter.wait(20)) {
@@ -63,13 +67,11 @@ int SaveFileBasicTest::doTest() {
 
     VERIFY(!ioCoordinator->getHasErrors(), "Errors in IO Coordinator while writing");
 
-    artItemsModel->removeSelectedArtworks(QVector<int>() << 0);
-
+    filteredModel->removeSelectedArtworks();
     addedCount = artItemsModel->addLocalArtworks(files);
 
-    VERIFY(addedCount == 1, "Failed to add file");
+    VERIFY(addedCount == files.length(), "Failed to add file after removal");
 
-    QObject::connect(ioCoordinator, SIGNAL(metadataReadingFinished()), &waiter, SIGNAL(finished()));
     ioCoordinator->continueReading(true);
 
     if (!waiter.wait(20)) {
@@ -79,10 +81,12 @@ int SaveFileBasicTest::doTest() {
     VERIFY(!ioCoordinator->getHasErrors(), "Errors in IO Coordinator while reading");
 
     metadata = artItemsModel->getArtwork(0);
-    const QStringList &actualKeywords = metadata->getKeywords();
 
-    VERIFY(actualKeywords == keywords, "Read keywords are not the same");
+    VERIFY(metadata->getKeywordsModel()->isDescriptionEmpty(), "Description was not empty");
+    VERIFY(metadata->getKeywordsModel()->isTitleEmpty(), "Title was not empty");
+    VERIFY(metadata->getKeywordsModel()->areKeywordsEmpty(), "Keywords were not empty");
 
     return 0;
 }
+
 

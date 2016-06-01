@@ -56,6 +56,7 @@
 #include "spellingproduceswarningstest.h"
 #include "undoaddwithvectorstest.h"
 #include "readlegacysavedtest.h"
+#include "clearmetadatatest.h"
 
 #if defined(WITH_LOGS)
 #undef WITH_LOGS
@@ -186,6 +187,7 @@ int main(int argc, char *argv[]) {
     integrationTests.append(new SpellingProducesWarningsTest(&commandManager));
     integrationTests.append(new UndoAddWithVectorsTest(&commandManager));
     integrationTests.append(new ReadLegacySavedTest(&commandManager));
+    integrationTests.append(new ClearMetadataTest(&commandManager));
 
     qDebug("\n");
 
