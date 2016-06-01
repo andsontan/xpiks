@@ -24,10 +24,10 @@ configuration:
 # - release
 
 # Do not build on tags (GitHub only)
-skip_tags: true
+skip_tags: false
 
 skip_commits:
-  message: /.*\[skip\]/       # Regex for matching commit message
+  message: /.*\[ci skip\]/       # Regex for matching commit message
 
 # clone directory
 clone_folder: c:\projects\xpiks
