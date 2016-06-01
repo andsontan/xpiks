@@ -346,8 +346,8 @@ LIBS += -lcurl
 LIBS += -lquazip
 LIBS += -lface
 LIBS += -lexiv2
-BUILDNO=$$system(git log -n 1 --pretty=format:"%h")
 
+BUILDNO=$$system(git log -n 1 --pretty=format:"%h")
 
 CONFIG(debug, debug|release)  {
     message("Building debug")
@@ -397,7 +397,10 @@ win32 {
     INCLUDEPATH += "../quazip"
     INCLUDEPATH += "../libcurl/include"
     INCLUDEPATH += "../exiv2-0.25/include"
+
     LIBS -= -lcurl
+    LIBS -= -lexiv2
+
     CONFIG(debug, debug|release) {
 	EXE_DIR = debug
         LIBS += -llibcurl_debug
