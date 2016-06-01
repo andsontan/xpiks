@@ -60,6 +60,12 @@
 #define DEFAULT_USE_AUTO_COMPLETE true
 #define DEFAULT_USE_EXIFTOOL false
 
+#ifndef INTEGRATION_TESTS
+#define DEFAULT_AUTO_CACHE_IMAGES true
+#else
+#define DEFAULT_AUTO_CACHE_IMAGES false
+#endif
+
 namespace Models {
     SettingsModel::SettingsModel(QObject *parent) :
         QObject(parent),
@@ -86,7 +92,8 @@ namespace Models {
         m_DictsPathChanged(false),
         m_AutoFindVectors(DEFAULT_AUTO_FIND_VECTORS),
         m_UseAutoComplete(DEFAULT_USE_AUTO_COMPLETE),
-        m_UseExifTool(DEFAULT_USE_EXIFTOOL)
+        m_UseExifTool(DEFAULT_USE_EXIFTOOL),
+        m_AutoCacheImages(DEFAULT_AUTO_CACHE_IMAGES)
     {
     }
 
@@ -135,6 +142,7 @@ namespace Models {
         appSettings.setValue(appSettings.getSelectedThemeIndexKey(), m_SelectedThemeIndex);
         appSettings.setValue(appSettings.getUseAutoCompleteKey(), m_UseAutoComplete);
         appSettings.setValue(appSettings.getUseExifToolKey(), m_UseExifTool);
+        appSettings.setValue(appSettings.getCacheImagesKey(), m_AutoCacheImages);
 
         if (!m_MustUseMasterPassword) {
             appSettings.setValue(appSettings.getMasterPasswordHashKey(), "");
@@ -199,6 +207,7 @@ namespace Models {
         setSelectedThemeIndex(appSettings.value(appSettings.getSelectedThemeIndexKey(), DEFAULT_SELECTED_THEME_INDEX).toInt());
         setUseAutoComplete(appSettings.boolValue(appSettings.getUseAutoCompleteKey(), DEFAULT_USE_AUTO_COMPLETE));
         setUseExifTool(appSettings.boolValue(appSettings.getUseExifToolKey(), DEFAULT_USE_EXIFTOOL));
+        setAutoCacheImages(appSettings.boolValue(appSettings.getCacheImagesKey(), DEFAULT_AUTO_CACHE_IMAGES));
     }
 
     void SettingsModel::resetToDefault() {
@@ -227,6 +236,7 @@ namespace Models {
         setSelectedThemeIndex(DEFAULT_SELECTED_THEME_INDEX);
         setUseAutoComplete(DEFAULT_USE_AUTO_COMPLETE);
         setUseExifTool(DEFAULT_USE_EXIFTOOL);
+        setAutoCacheImages(DEFAULT_AUTO_CACHE_IMAGES);
 
         Helpers::AppSettings appSettings;
 #if defined(QT_DEBUG)

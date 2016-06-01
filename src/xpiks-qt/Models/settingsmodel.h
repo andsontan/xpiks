@@ -60,6 +60,7 @@ namespace Models {
         Q_PROPERTY(int selectedThemeIndex READ getSelectedThemeIndex WRITE setSelectedThemeIndex NOTIFY selectedThemeIndexChanged)
         Q_PROPERTY(bool useAutoComplete READ getUseAutoComplete WRITE setUseAutoComplete NOTIFY useAutoCompleteChanged)
         Q_PROPERTY(bool useExifTool READ getUseExifTool WRITE setUseExifTool NOTIFY useExifToolChanged)
+        Q_PROPERTY(bool autoCacheImages READ getAutoCacheImages WRITE setAutoCacheImages NOTIFY autoCacheImagesChanged)
 
     public:
         explicit SettingsModel(QObject *parent = 0);
@@ -102,6 +103,7 @@ namespace Models {
         int getSelectedThemeIndex() const { return m_SelectedThemeIndex; }
         bool getUseAutoComplete() const { return m_UseAutoComplete; }
         bool getUseExifTool() const { return m_UseExifTool; }
+        bool getAutoCacheImages() const { return m_AutoCacheImages; }
 
     signals:
         void settingsReset();
@@ -128,6 +130,7 @@ namespace Models {
         void selectedThemeIndexChanged(int value);
         void useAutoCompleteChanged(bool value);
         void useExifToolChanged(bool value);
+        void autoCacheImagesChanged(bool value);
 
     public:
         void setExifToolPath(QString exifToolPath) {
@@ -310,6 +313,13 @@ namespace Models {
             }
         }
 
+        void setAutoCacheImages(bool value) {
+            if (value != m_AutoCacheImages) {
+                m_AutoCacheImages = value;
+                emit autoCacheImagesChanged(value);
+            }
+        }
+
 #ifndef INTEGRATION_TESTS
     private:
 #else
@@ -342,6 +352,7 @@ namespace Models {
         bool m_AutoFindVectors;
         bool m_UseAutoComplete;
         bool m_UseExifTool;
+        bool m_AutoCacheImages;
     };
 }
 

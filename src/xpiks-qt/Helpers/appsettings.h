@@ -140,6 +140,9 @@ namespace Helpers {
         Q_PROPERTY(QString useExifToolKey READ getUseExifToolKey CONSTANT)
         QString getUseExifToolKey() const { return QLatin1String(Constants::USE_EXIFTOOL); }
 
+        Q_PROPERTY(QString cacheImagesKey READ getCacheImagesKey CONSTANT)
+        QString getCacheImagesKey() const { return QLatin1String(Constants::CACHE_IMAGES_AUTOMATICALLY); }
+
         Q_PROPERTY(QString whatsNewText READ getWhatsNewText CONSTANT)
         QString getWhatsNewText() const {
             QString text;

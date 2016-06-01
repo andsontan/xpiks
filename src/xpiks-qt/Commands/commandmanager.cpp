@@ -430,13 +430,15 @@ void Commands::CommandManager::addInitialArtworks(const QList<QUrl> &filePaths) 
 #endif
 
 void Commands::CommandManager::generatePreviews(const QVector<Models::ArtworkMetadata *> &items) const {
-    if (m_ImageCachingService != NULL) {
 #ifndef CORE_TESTS
+    if (m_SettingsModel != NULL &&
+            m_SettingsModel->getAutoCacheImages() &&
+            m_ImageCachingService != NULL) {
         m_ImageCachingService->generatePreviews(items);
+    }
 #else
         Q_UNUSED(items);
 #endif
-    }
 }
 
 void Commands::CommandManager::submitKeywordForSpellCheck(Common::BasicKeywordsModel *item, int keywordIndex) const {
