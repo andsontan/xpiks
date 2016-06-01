@@ -72,6 +72,7 @@ namespace Helpers {
         QFile outFile(m_LogFilepath);
         if (outFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append)) {
             QTextStream ts(&outFile);
+            ts.setCodec("UTF-8");
 
             int size = logItems->size();
             for (int i = 0; i < size; ++i) {
