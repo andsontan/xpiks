@@ -241,7 +241,7 @@ namespace Models {
             if (qAbs(m_ScrollSpeedScale - value) <= SETTINGS_EPSILON)
                 return;
 
-            m_ScrollSpeedScale = ensureInBounds(value, 1.0, 6.0);
+            m_ScrollSpeedScale = ensureInBounds(value, 0.1, 2.0);
             emit scrollSpeedScaleChanged(m_ScrollSpeedScale);
         }
 

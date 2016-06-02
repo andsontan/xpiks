@@ -102,7 +102,7 @@ namespace Helpers {
         QString getSearchUsingAndKey() const { return QLatin1String(Constants::SEARCH_USING_AND); }
 
         Q_PROPERTY(QString scrollSpeedScaleKey READ getScrollSpeedScaleKey CONSTANT)
-        QString getScrollSpeedScaleKey() const { return QLatin1String(Constants::SCROLL_SPEED_SCALE); }
+        QString getScrollSpeedScaleKey() const { return QLatin1String(Constants::SCROLL_SPEED_SENSIVITY); }
 
         Q_PROPERTY(QString autoSpellCheckKey READ getUseSpellCheckKey CONSTANT)
         QString getUseSpellCheckKey() const { return QLatin1String(Constants::USE_SPELL_CHECK); }

@@ -1378,7 +1378,7 @@ ApplicationWindow {
                             highlightFollowsCurrentItem: false
                             currentIndex: -1
                             focus: true
-                            flickDeceleration: 5000
+                            flickDeceleration: 1500/settingsModel.scrollSpeedScale
 
                             function forceUpdateArtworks(needToMoveCurrentItem) {
                                 console.debug("UI::forceUpdateArtworks # updating main listview")

@@ -35,7 +35,7 @@ ApplicationWindow {
     modality: "ApplicationModal"
     title: i18.n + qsTr("Settings")
     width: 550
-    height: 280
+    height: 300
     minimumWidth: width
     maximumWidth: width
     minimumHeight: height
@@ -352,6 +352,7 @@ ApplicationWindow {
             Tab {
                 id: uxTab
                 property real sizeSliderValue: settingsModel.keywordSizeScale
+                property real scrollSpeedScale: settingsModel.scrollSpeedScale
                 property int themeIndex: settingsModel.selectedThemeIndex
                 title: i18.n + qsTr("Interface")
                 signal resetRequested()
@@ -502,6 +503,46 @@ ApplicationWindow {
                                     height: 14*uxTab.sizeSliderValue
                                     isActive: true
                                     anchors.centerIn: parent
+                                }
+                            }
+                        }
+                    }
+
+                    Item {
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        height: childrenRect.height
+
+                        RowLayout {
+                            anchors.left: parent.left
+                            spacing: 10
+
+                            StyledText {
+                                text: i18.n + qsTr("Scroll sensivity")
+                            }
+
+                            StyledSlider {
+                                id: scrollSensivitySlider
+                                width: 150
+                                minimumValue: 0.1
+                                maximumValue: 2.0
+                                stepSize: 0.01
+                                orientation: Qt.Horizontal
+
+                                Component.onCompleted: {
+                                    scrollSensivitySlider.value = uxTab.scrollSpeedScale
+                                    uxTab.resetRequested.connect(scrollSensivitySlider.onResetRequested)
+                                    // do not use direct onValueChanged because of glitch with reassignning min. value
+                                    scrollSensivitySlider.onValueChanged.connect(scrollSensivitySlider.valueChangedHandler)
+                                }
+
+                                function onResetRequested()  {
+                                    value = settingsModel.scrollSpeedScale
+                                    uxTab.scrollSpeedScale = value
+                                }
+
+                                function valueChangedHandler() {
+                                    uxTab.scrollSpeedScale = value
                                 }
                             }
                         }
@@ -1233,6 +1274,7 @@ ApplicationWindow {
                 width: 100
                 onClicked: {
                     settingsModel.keywordSizeScale = uxTab.sizeSliderValue
+                    settingsModel.scrollSpeedScale = uxTab.scrollSpeedScale
                     settingsModel.selectedThemeIndex = uxTab.themeIndex
                     settingsModel.userStatistic = secTab.useStatistics
                     settingsModel.saveAllValues()

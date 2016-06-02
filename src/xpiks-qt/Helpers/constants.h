@@ -36,7 +36,6 @@ namespace Constants {
     const char DISMISS_DURATION[] = "DISMISS_DURATION";
     const char FIT_SMALL_PREVIEW[] = "FIT_SMALL_PREVIEW";
     const char SEARCH_USING_AND[] = "SEARCH_USING_AND";
-    const char SCROLL_SPEED_SCALE[] = "SCROLL_SPEED_SCALE";
     const char WHATS_NEW_FILENAME[] = "whatsnew.txt";
     const char TERMS_AND_CONDITIONS_FILENAME[] = "terms_and_conditions.txt";
     const char DICT_PATH[] = "DICT_PATH";
@@ -74,6 +73,7 @@ namespace Constants {
     const char IMAGES_CACHE_DIR[] = "imagescache";
     const char IMAGES_CACHE_INDEX[] = "imagescache.index";
     const char CACHE_IMAGES_AUTOMATICALLY[] = "CACHE_IMAGES_AUTOMATICALLY";
+    const char SCROLL_SPEED_SENSIVITY[] = "SCROLL_SPEED_SENSIVITY";
 #else
     const char MAX_KEYWORD_COUNT[] = "DEBUG_MAX_KEYWORD_COUNT";
     const char MAX_DESCRIPTION_LENGTH[] = "DEBUG_MAX_DESCRIPTION_LENGTH";
@@ -92,6 +92,7 @@ namespace Constants {
     const char USE_EXIFTOOL[] = "DEBUG_USE_EXIFTOOL";
     const char IMAGES_CACHE_DIR[] = "debug_imagescache";
     const char IMAGES_CACHE_INDEX[] = "debug_imagescache.index";
+    const char SCROLL_SPEED_SENSIVITY[] = "DEBUG_SCROLL_SPEED_SENSIVITY";
 
 #ifdef INTEGRATION_TESTS
     const char LIBRARY_FILENAME[] = "xpiks.integration.library";
