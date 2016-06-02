@@ -1585,7 +1585,7 @@ They will be detached automatically.</source>
     <message>
       <location filename="../../main.qml" line="1302"/>
       <source>Dismiss (%1)</source>
-      <translation>Rejeter (%1)</translation>
+      <translation>D'accord (%1)</translation>
     </message>
     <message>
       <location filename="../../main.qml" line="1728"/>
