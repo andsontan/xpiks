@@ -132,7 +132,8 @@ SOURCES += main.cpp \
     ../../xpiks-qt/QMLExtensions/imagecachingservice.cpp \
     ../../xpiks-qt/QMLExtensions/imagecachingworker.cpp \
     ../../xpiks-qt/QMLExtensions/cachingimageprovider.cpp \
-    clearmetadatatest.cpp
+    clearmetadatatest.cpp \
+    savewithemptytitletest.cpp
 
 RESOURCES +=
 
@@ -288,7 +289,8 @@ HEADERS += \
     ../../xpiks-qt/QMLExtensions/imagecachingservice.h \
     ../../xpiks-qt/QMLExtensions/imagecachingworker.h \
     ../../xpiks-qt/QMLExtensions/cachingimageprovider.h \
-    clearmetadatatest.h
+    clearmetadatatest.h \
+    savewithemptytitletest.h
     spellingproduceswarningstest.h
 
 INCLUDEPATH += ../../tiny-aes

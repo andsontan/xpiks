@@ -57,6 +57,7 @@
 #include "undoaddwithvectorstest.h"
 #include "readlegacysavedtest.h"
 #include "clearmetadatatest.h"
+#include "savewithemptytitletest.h"
 
 #if defined(WITH_LOGS)
 #undef WITH_LOGS
@@ -188,6 +189,7 @@ int main(int argc, char *argv[]) {
     integrationTests.append(new UndoAddWithVectorsTest(&commandManager));
     integrationTests.append(new ReadLegacySavedTest(&commandManager));
     integrationTests.append(new ClearMetadataTest(&commandManager));
+    integrationTests.append(new SaveWithEmptyTitleTest(&commandManager));
 
     qDebug("\n");
 
