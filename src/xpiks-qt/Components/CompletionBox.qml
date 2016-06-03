@@ -148,6 +148,7 @@ Item {
             visible: dropDownItems.count > maxCount
             anchors.rightMargin: -13
             anchors.topMargin: -2
+            anchors.bottomMargin: -2
             flickable: dropDownItems
         }
     }
