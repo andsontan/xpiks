@@ -93,8 +93,8 @@ namespace QMLExtensions {
 
         if (!requestedSize.isValid()) {
             LOG_WARNING << "Invalid requestedSize for" << originalPath;
-            requestedSize.setHeight(300);
-            requestedSize.setWidth(300);
+            requestedSize.setHeight(150);
+            requestedSize.setWidth(150);
         }
 
         QImage img(originalPath);
