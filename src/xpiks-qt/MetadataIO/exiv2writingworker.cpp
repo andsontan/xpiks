@@ -383,6 +383,9 @@ namespace MetadataIO {
         setArtworkDescription(xmpData, exifData, iptcData, description);
 
         QString title = artwork->getTitle();
+        if (title.trimmed().isEmpty()) {
+            title = description;
+        }
         setArtworkTitle(xmpData, exifData, iptcData, title);
 
         QStringList keywords = artwork->getKeywords();
