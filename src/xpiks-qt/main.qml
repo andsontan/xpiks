@@ -1382,6 +1382,7 @@ ApplicationWindow {
 
                             function forceUpdateArtworks(needToMoveCurrentItem) {
                                 console.debug("UI::forceUpdateArtworks # updating main listview")
+                                artworksHost.returnToBounds()
                                 artworksHost.forceLayout()
                                 artworksHost.update()
 
@@ -1433,6 +1434,7 @@ ApplicationWindow {
                                     property var artworkModel: filteredArtItemsModel.getArtworkMetadata(index)
                                     property var keywordsModel: filteredArtItemsModel.getKeywordsModel(index)
                                     property int delegateIndex: index
+                                    property bool isItemSelected: isselected
                                     anchors.fill: parent
 
                                     function getIndex() {
@@ -1589,10 +1591,11 @@ ApplicationWindow {
                                                 activeFocusOnPress: false
                                                 onClicked: editisselected = checked
                                                 Component.onCompleted: itemCheckedCheckbox.checked = isselected
+
                                                 Connections {
                                                     target: filteredArtItemsModel
                                                     onAllItemsSelectedChanged: {
-                                                        itemCheckedCheckbox.checked = isselected
+                                                        itemCheckedCheckbox.checked = rowWrapper.isItemSelected
                                                     }
                                                 }
                                             }
@@ -2204,7 +2207,10 @@ ApplicationWindow {
 
                             Connections {
                                 target: filteredArtItemsModel
-                                onAfterInvalidateFilter: artworksHost.forceUpdateArtworks()
+                                onAfterInvalidateFilter: {
+                                    artworksHost.forceUpdateArtworks(true)
+                                    artworksHost.positionViewAtBeginning()
+                                }
                             }
                         }
 

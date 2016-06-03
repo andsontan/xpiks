@@ -40,7 +40,7 @@ Item {
     Binding {
         target: handle;
         property: "y";
-        value: (flickable.contentY * clicker.drag.maximumY / (flickable.contentHeight - flickable.height));
+        value: Math.min(flickable.visibleArea.yPosition * flickable.height, clicker.drag.maximumY)
         when: (!clicker.drag.active);
     }
 
@@ -73,8 +73,8 @@ Item {
 
         Item {
             id: handle;
-            height: Math.max(flickable.visibleArea.heightRatio * groove.height, 10)
-            width: 10
+            height: Math.max(flickable.visibleArea.heightRatio * flickable.height, 10)
+            width: scrollbar.handleSize
             anchors {
                 left: parent.left;
                 right: parent.right;

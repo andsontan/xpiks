@@ -147,6 +147,7 @@ Item {
             id: scrollBar
             visible: dropDownItems.count > maxCount
             anchors.rightMargin: -13
+            anchors.topMargin: -2
             flickable: dropDownItems
         }
     }
