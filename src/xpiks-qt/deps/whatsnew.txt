@@ -8,7 +8,11 @@ In this release:
 - Fix for scrolling in main window
 - Fix for empty title not filled from description
 
-This is Xpiks 1.3.1 bugfix release.
+
+
+Previous releases:
+
+Xpiks 1.3.1 bugfix release.
 
 In this release:
 
@@ -21,9 +25,6 @@ Bugfixes:
 
 - uploading of file with unicode path via curl
 - fix for selecting and double-clickin an image
-
-
-
 
 Xpiks 1.3 release. 
 
