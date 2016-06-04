@@ -518,7 +518,7 @@ ApplicationWindow {
                             spacing: 10
 
                             StyledText {
-                                text: i18.n + qsTr("Scroll sensivity")
+                                text: i18.n + qsTr("Scroll sensitivity")
                             }
 
                             StyledSlider {
