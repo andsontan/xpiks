@@ -420,38 +420,38 @@
       <translation>Cercar</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/KeywordsSuggestion.qml" line="317"/>
+      <location filename="../../Dialogs/KeywordsSuggestion.qml" line="319"/>
       <source>Suggested keywords:</source>
       <translation>Paraules clau suggerides:</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/KeywordsSuggestion.qml" line="390"/>
+      <location filename="../../Dialogs/KeywordsSuggestion.qml" line="392"/>
       <source>Other keywords:</source>
       <translation>Altres paraules clau:</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/KeywordsSuggestion.qml" line="468"/>
+      <location filename="../../Dialogs/KeywordsSuggestion.qml" line="470"/>
       <source>%1 selected items</source>
       <translation>%1 elements seleccionats</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/KeywordsSuggestion.qml" line="468"/>
+      <location filename="../../Dialogs/KeywordsSuggestion.qml" line="470"/>
       <source>1 selected item</source>
       <translation>1 element seleccionat</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/KeywordsSuggestion.qml" line="482"/>
-      <location filename="../../Dialogs/KeywordsSuggestion.qml" line="489"/>
+      <location filename="../../Dialogs/KeywordsSuggestion.qml" line="484"/>
+      <location filename="../../Dialogs/KeywordsSuggestion.qml" line="491"/>
       <source>Add suggested keywords</source>
       <translation>Afegir paraules clau suggerides</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/KeywordsSuggestion.qml" line="494"/>
+      <location filename="../../Dialogs/KeywordsSuggestion.qml" line="496"/>
       <source>Added!</source>
       <translation>Afegides!</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/KeywordsSuggestion.qml" line="502"/>
+      <location filename="../../Dialogs/KeywordsSuggestion.qml" line="504"/>
       <source>Close</source>
       <translation>Tancar</translation>
     </message>
@@ -763,177 +763,182 @@
       <translation>Auto-completar paraules clau</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/SettingsWindow.qml" line="356"/>
+      <location filename="../../Dialogs/SettingsWindow.qml" line="357"/>
       <source>Interface</source>
       <translation>Interfície</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/SettingsWindow.qml" line="374"/>
+      <location filename="../../Dialogs/SettingsWindow.qml" line="375"/>
       <source>Theme:</source>
       <translation>Tema:</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/SettingsWindow.qml" line="406"/>
+      <location filename="../../Dialogs/SettingsWindow.qml" line="407"/>
       <source>Fit artwork's preview</source>
       <translation>Ajustar vista prèvia d'arxiu</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/SettingsWindow.qml" line="432"/>
+      <location filename="../../Dialogs/SettingsWindow.qml" line="435"/>
       <source>Keywords size</source>
       <translation>Mida de paraula clau</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/SettingsWindow.qml" line="479"/>
+      <location filename="../../Dialogs/SettingsWindow.qml" line="488"/>
       <source>keyword</source>
       <comment>standalone</comment>
       <translation>paraula clau</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/SettingsWindow.qml" line="508"/>
+      <location filename="../../Dialogs/SettingsWindow.qml" line="521"/>
+      <source>Scroll sensitivity</source>
+      <translation>Desplaçament</translation>
+    </message>
+    <message>
+      <location filename="../../Dialogs/SettingsWindow.qml" line="557"/>
       <source>Undo dismiss duration:</source>
       <translation>Temps per desfer:</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/SettingsWindow.qml" line="545"/>
-      <location filename="../../Dialogs/SettingsWindow.qml" line="956"/>
+      <location filename="../../Dialogs/SettingsWindow.qml" line="594"/>
+      <location filename="../../Dialogs/SettingsWindow.qml" line="1005"/>
       <source>(seconds)</source>
       <translation>(segons)</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/SettingsWindow.qml" line="557"/>
+      <location filename="../../Dialogs/SettingsWindow.qml" line="606"/>
       <source>External</source>
       <translation>Aplicacions</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/SettingsWindow.qml" line="570"/>
+      <location filename="../../Dialogs/SettingsWindow.qml" line="619"/>
       <source>Use ExifTool</source>
       <translation>utilitzar Exiftool</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/SettingsWindow.qml" line="599"/>
+      <location filename="../../Dialogs/SettingsWindow.qml" line="648"/>
       <source>ExifTool path:</source>
       <translation>ExifTool:</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/SettingsWindow.qml" line="636"/>
-      <location filename="../../Dialogs/SettingsWindow.qml" line="687"/>
+      <location filename="../../Dialogs/SettingsWindow.qml" line="685"/>
+      <location filename="../../Dialogs/SettingsWindow.qml" line="736"/>
       <source>Select...</source>
       <translation>Seleccionar...</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/SettingsWindow.qml" line="645"/>
-      <location filename="../../Dialogs/SettingsWindow.qml" line="696"/>
+      <location filename="../../Dialogs/SettingsWindow.qml" line="694"/>
+      <location filename="../../Dialogs/SettingsWindow.qml" line="745"/>
       <source>Reset</source>
       <translation>Restablir</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/SettingsWindow.qml" line="657"/>
+      <location filename="../../Dialogs/SettingsWindow.qml" line="706"/>
       <source>Dictionary path:</source>
       <translation>Ruta del diccionari:</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/SettingsWindow.qml" line="711"/>
+      <location filename="../../Dialogs/SettingsWindow.qml" line="760"/>
       <source>Warnings</source>
       <translation>Avisos</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/SettingsWindow.qml" line="729"/>
+      <location filename="../../Dialogs/SettingsWindow.qml" line="778"/>
       <source>Minimum megapixels:</source>
       <translation>Megapíxels. Mínim:</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/SettingsWindow.qml" line="774"/>
+      <location filename="../../Dialogs/SettingsWindow.qml" line="823"/>
       <source>(can be real)</source>
       <translation>(pot ser real)</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/SettingsWindow.qml" line="785"/>
+      <location filename="../../Dialogs/SettingsWindow.qml" line="834"/>
       <source>Max keywords count:</source>
       <translation>Paraules clau. Màxim:</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/SettingsWindow.qml" line="829"/>
+      <location filename="../../Dialogs/SettingsWindow.qml" line="878"/>
       <source>(keywords)</source>
       <translation>(paraules clau)</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/SettingsWindow.qml" line="840"/>
+      <location filename="../../Dialogs/SettingsWindow.qml" line="889"/>
       <source>Max description length:</source>
       <translation>Descripció. Màxim:</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/SettingsWindow.qml" line="883"/>
+      <location filename="../../Dialogs/SettingsWindow.qml" line="932"/>
       <source>(characters)</source>
       <translation>(caràcters)</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/SettingsWindow.qml" line="895"/>
+      <location filename="../../Dialogs/SettingsWindow.qml" line="944"/>
       <source>Upload</source>
       <translation>Pujades</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/SettingsWindow.qml" line="913"/>
+      <location filename="../../Dialogs/SettingsWindow.qml" line="962"/>
       <source>File upload timeout:</source>
       <translation>Temps d'espera. Màxim:</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/SettingsWindow.qml" line="968"/>
+      <location filename="../../Dialogs/SettingsWindow.qml" line="1017"/>
       <source>Max parallel uploads:</source>
       <translation>Concurrència. Màxim:</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/SettingsWindow.qml" line="1010"/>
+      <location filename="../../Dialogs/SettingsWindow.qml" line="1059"/>
       <source>(takes effect after relaunch)</source>
       <translation>(tindrà efecte després de reiniciar)</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/SettingsWindow.qml" line="1022"/>
+      <location filename="../../Dialogs/SettingsWindow.qml" line="1071"/>
       <source>Security</source>
       <translation>Securetat</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/SettingsWindow.qml" line="1037"/>
+      <location filename="../../Dialogs/SettingsWindow.qml" line="1086"/>
       <source>Use Master password</source>
       <translation>Utilitzar Contrasenya Mestra</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/SettingsWindow.qml" line="1073"/>
+      <location filename="../../Dialogs/SettingsWindow.qml" line="1122"/>
       <source>Change Master password</source>
       <translation>Canviar la Contrasenya Mestra</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/SettingsWindow.qml" line="1089"/>
+      <location filename="../../Dialogs/SettingsWindow.qml" line="1138"/>
       <source>Reset Master password</source>
       <translation>Restablir la Contrasenya Mestra</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/SettingsWindow.qml" line="1107"/>
-      <location filename="../../Dialogs/SettingsWindow.qml" line="1119"/>
+      <location filename="../../Dialogs/SettingsWindow.qml" line="1156"/>
+      <location filename="../../Dialogs/SettingsWindow.qml" line="1168"/>
       <source>More...</source>
       <translation>Més...</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/SettingsWindow.qml" line="1123"/>
+      <location filename="../../Dialogs/SettingsWindow.qml" line="1172"/>
       <source>Less...</source>
       <translation>Menys...</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/SettingsWindow.qml" line="1156"/>
+      <location filename="../../Dialogs/SettingsWindow.qml" line="1205"/>
       <source>Collect usage statistics</source>
       <translation>Recollir informació</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/SettingsWindow.qml" line="1174"/>
+      <location filename="../../Dialogs/SettingsWindow.qml" line="1223"/>
       <source>(simple statistics of feature usage)</source>
       <translation>(estadístiques d'ús)</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/SettingsWindow.qml" line="1224"/>
+      <location filename="../../Dialogs/SettingsWindow.qml" line="1273"/>
       <source>Save</source>
       <translation>Desar</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/SettingsWindow.qml" line="1204"/>
+      <location filename="../../Dialogs/SettingsWindow.qml" line="1253"/>
       <source>Reset to defaults</source>
       <translation>Valors per defecte</translation>
     </message>
@@ -952,7 +957,7 @@ All upload hosts' passwords will be purged.</source>
 Totes les contrasenyes de les agències seran esborrades.</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/SettingsWindow.qml" line="1241"/>
+      <location filename="../../Dialogs/SettingsWindow.qml" line="1291"/>
       <source>Close</source>
       <translation>Tancar</translation>
     </message>
@@ -1565,144 +1570,144 @@ They will be detached automatically.</source>
       <translation>Cancel·lar la selecció</translation>
     </message>
     <message>
-      <location filename="../../main.qml" line="1157"/>
+      <location filename="../../main.qml" line="1159"/>
       <source>Search...   x:empty  x:modified</source>
       <translation>Cercant... x:buit x:modificat</translation>
     </message>
     <message>
-      <location filename="../../main.qml" line="1179"/>
+      <location filename="../../main.qml" line="1181"/>
       <source>Search</source>
       <translation>Cercar</translation>
     </message>
     <message>
-      <location filename="../../main.qml" line="1286"/>
+      <location filename="../../main.qml" line="1288"/>
       <source>Undo</source>
       <translation>Desfer</translation>
     </message>
     <message>
-      <location filename="../../main.qml" line="1302"/>
+      <location filename="../../main.qml" line="1304"/>
       <source>Dismiss (%1)</source>
       <translation>Descartar (%1)</translation>
     </message>
     <message>
-      <location filename="../../main.qml" line="1728"/>
+      <location filename="../../main.qml" line="1735"/>
       <source>Description:</source>
       <translation>Descripció:</translation>
     </message>
     <message>
-      <location filename="../../main.qml" line="1737"/>
+      <location filename="../../main.qml" line="1744"/>
       <source>Title:</source>
       <translation>Títol:</translation>
     </message>
     <message>
-      <location filename="../../main.qml" line="1932"/>
+      <location filename="../../main.qml" line="1939"/>
       <source>Keywords:</source>
       <translation>Paraules clau:</translation>
     </message>
     <message>
-      <location filename="../../main.qml" line="2066"/>
+      <location filename="../../main.qml" line="2073"/>
       <source>&lt;u&gt;edit in plain text&lt;/u&gt;</source>
       <translation>&lt;u&gt;Editar en text pla&lt;/u&gt;</translation>
     </message>
     <message>
-      <location filename="../../main.qml" line="2108"/>
+      <location filename="../../main.qml" line="2115"/>
       <source>Fix spelling</source>
       <translation>Ortografia</translation>
     </message>
     <message>
-      <location filename="../../main.qml" line="2133"/>
+      <location filename="../../main.qml" line="2140"/>
       <source>Suggest</source>
       <translation>Suggerir</translation>
     </message>
     <message>
-      <location filename="../../main.qml" line="2161"/>
+      <location filename="../../main.qml" line="2168"/>
       <source>Copy</source>
       <translation>Copiar</translation>
     </message>
     <message>
-      <location filename="../../main.qml" line="2179"/>
+      <location filename="../../main.qml" line="2186"/>
       <source>Clear</source>
       <translation>Esborrar</translation>
     </message>
     <message>
-      <location filename="../../main.qml" line="2224"/>
+      <location filename="../../main.qml" line="2235"/>
       <source>No items available.</source>
       <translation>No hi ha elements.</translation>
     </message>
     <message>
-      <location filename="../../main.qml" line="2229"/>
+      <location filename="../../main.qml" line="2240"/>
       <source>Add files</source>
       <comment>link</comment>
       <translation>Afegir arxius</translation>
     </message>
     <message>
-      <location filename="../../main.qml" line="2241"/>
+      <location filename="../../main.qml" line="2252"/>
       <source>or</source>
       <translation>o</translation>
     </message>
     <message>
-      <location filename="../../main.qml" line="2246"/>
+      <location filename="../../main.qml" line="2257"/>
       <source>clear the filter</source>
       <translation>treure el filtre</translation>
     </message>
     <message>
-      <location filename="../../main.qml" line="2279"/>
+      <location filename="../../main.qml" line="2290"/>
       <source>Show logs</source>
       <translation>Mostrar Logs</translation>
     </message>
     <message>
-      <location filename="../../main.qml" line="2303"/>
+      <location filename="../../main.qml" line="2314"/>
       <source>Check warnings</source>
       <translation>Comprovar avisos</translation>
     </message>
     <message>
-      <location filename="../../main.qml" line="2330"/>
+      <location filename="../../main.qml" line="2341"/>
       <source>Update available!</source>
       <translation>Actualització disponible!</translation>
     </message>
     <message>
-      <location filename="../../main.qml" line="2349"/>
-      <location filename="../../main.qml" line="2358"/>
+      <location filename="../../main.qml" line="2360"/>
+      <location filename="../../main.qml" line="2369"/>
       <source>No items available</source>
       <translation>No hi ha elements</translation>
     </message>
     <message>
-      <location filename="../../main.qml" line="2356"/>
+      <location filename="../../main.qml" line="2367"/>
       <source>%1 items available</source>
       <translation>%1 elements disponibles</translation>
     </message>
     <message>
-      <location filename="../../main.qml" line="2356"/>
+      <location filename="../../main.qml" line="2367"/>
       <source>1 item available</source>
       <translation>1 element disponible</translation>
     </message>
     <message>
-      <location filename="../../main.qml" line="2387"/>
+      <location filename="../../main.qml" line="2398"/>
       <source>%1 selected items</source>
       <translation>%1 elements seleccionats</translation>
     </message>
     <message>
-      <location filename="../../main.qml" line="2387"/>
+      <location filename="../../main.qml" line="2398"/>
       <source>1 selected item</source>
       <translation>1 element seleccionat</translation>
     </message>
     <message>
-      <location filename="../../main.qml" line="2387"/>
+      <location filename="../../main.qml" line="2398"/>
       <source>No selected items</source>
       <translation>Cap element seleccionat</translation>
     </message>
     <message>
-      <location filename="../../main.qml" line="2414"/>
+      <location filename="../../main.qml" line="2425"/>
       <source>%1 modified items</source>
       <translation>%1 elements modificats</translation>
     </message>
     <message>
-      <location filename="../../main.qml" line="2414"/>
+      <location filename="../../main.qml" line="2425"/>
       <source>1 modified item</source>
       <translation>1 element modificat</translation>
     </message>
     <message>
-      <location filename="../../main.qml" line="2414"/>
+      <location filename="../../main.qml" line="2425"/>
       <source>No modified items</source>
       <translation>Cap element modificat</translation>
     </message>
