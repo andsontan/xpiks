@@ -8,20 +8,20 @@ In order to build Xpiks, you would need to build it's dependencies first.
 
 # Build instructions for your desktop platform:
 
-## 1. Environment:
+### 1. Environment:
 
 - download Qt 5.2 or higher for your platform from <a href="http://qt.io/">official website</a>
 - while installing, add Qt bin directory to your PATH (Environmental variables)
 - download latest Git client for your desktop
 - make sure you also have Git bin directory in your PATH
 
-## 2. Obtaining source code:
+### 2. Obtaining source code:
 
 - check out Xpiks repository with Git `git clone https://github.com/Ribtoks/xpiks.git`
 - check out submodules `git submodules init` and `git submodules update`
 - rename `tiny-AES/aes.c` to `tiny-AES/aes.cpp`
 
-## 3. Building the dependencies:
+### 3. Building the dependencies:
 
 - <span class="gray">[Windows]</span> if you're building for Windows, build Zlib first (<a href="#zlib">see instructions below</a>)
 - build <a href="#hunspell">Hunspell</a> and <a href="#quazip">Quazip</a> libraries (instructions below)
@@ -29,7 +29,7 @@ In order to build Xpiks, you would need to build it's dependencies first.
 - <span class="gray">[Windows]</span> build <a href="#libcurl">libcurl</a> library (instructions below)
 - build <a href="#exiv2">Exiv2</a> library (instructions below)
 
-## 4. Building main application:
+### 4. Building main application:
 
 - open `src\xpiks-qt\xpiks-qt.pro` file with Qt Creator installed with Qt
 - select build target [Debug\Release], press "Run qmake" and then "Build"
@@ -89,7 +89,7 @@ In order to build Xpiks, you would need to build it's dependencies first.
 
 &nbsp;
 
-**Redistribution**
+# Redistribution
 
 If you builded for Release and you wish to redistribute it for similar desktop platforms to yours, follow next steps:
 
