@@ -4,9 +4,7 @@ title: "How to build xpiks for your platform"
 date: 2014-12-28T09:54:01+02:00
 ---
 
-In order to build Xpiks, you would need to build it's dependencies first.
-
-# Build instructions for your desktop platform:
+# Build instructions:
 
 ### 1. Environment:
 
@@ -19,7 +17,7 @@ In order to build Xpiks, you would need to build it's dependencies first.
 
 - check out Xpiks repository with Git `git clone https://github.com/Ribtoks/xpiks.git`
 - check out submodules `git submodules init` and `git submodules update`
-- rename `tiny-AES/aes.c` to `tiny-AES/aes.cpp`
+- rename `src/tiny-AES/aes.c` to `src/tiny-AES/aes.cpp`
 
 ### 3. Building the dependencies:
 
@@ -31,8 +29,8 @@ In order to build Xpiks, you would need to build it's dependencies first.
 
 ### 4. Building main application:
 
-- open `src\xpiks-qt\xpiks-qt.pro` file with Qt Creator installed with Qt
-- select build target [Debug\Release], press "Run qmake" and then "Build"
+- open `src/xpiks-qt/xpiks-qt.pro` file with Qt Creator installed with Qt
+- select build target [Debug/Release], press "Run qmake" and then "Build"
 - now you can use xpiks-qt on your computer
 
 &nbsp;
@@ -46,7 +44,7 @@ In order to build Xpiks, you would need to build it's dependencies first.
 ***<span id="zlib">To build zlib under Windows for Xpiks, do the following:</span>***
 
 - download zlib (1.2.8) source code and extract to `scr/zlib-1.2.8`
-- open `src\zlib-project\zlib.pro` in Qt Creator, select `Release`, execute `Run qmake`, execute `Build`
+- open `src/zlib-project/zlib.pro` in Qt Creator, select `Release`, execute `Run qmake`, execute `Build`
 - copy built library `.lib` (and z.pdb if you builded for Debug) to `src/libs` directory
 
 ***<span id="hunspell">To build Hunspell do the following:</span>***
@@ -75,10 +73,10 @@ In order to build Xpiks, you would need to build it's dependencies first.
 
 - download **exiv2 v0.25** library from <a href="http://www.exiv2.org/" target="_blanc">official website</a> and extract it somewhere
 - download **expat-2.1.1** library from <a href="https://sourceforge.net/projects/expat/">official website</a> and extract it on same level as exiv2
-- rename directory `expat-2.1.1/` to `expat\`
-- open `msvc2005\exiv2.sln` and upgrade all projects
+- rename directory `expat-2.1.1/` to `expat/`
+- open `msvc2005/exiv2.sln` and upgrade all projects
 - from each project remove file `localtime.c`
-- open file `include\exiv2\exv_msvs.h` and enable unicode support, disable png, curl and ssh (alternatively, you can overwrite this file with the one in the _Xpiks_ repository via path `src/exiv2-0.25/include/exiv2/exv_msvs.h`)
+- open file `include/exiv2/exv_msvs.h` and enable unicode support, disable png, curl and ssh (alternatively, you can overwrite this file with the one in the _Xpiks_ repository via path `src/exiv2-0.25/include/exiv2/exv_msvs.h`)
 - in Visual Studio select `"Build" -> "Batch build"` and mark all _DebugDLL_ and _ReleaseDLL_ builds for your platform (x64 or x86)
 - press "Build"
 - copy build artifacts (`libexiv2.dll`, `libexiv2.lib`, `libexpat.dll`, `libexpat.lib`) to `src/libs` directory in _Xpiks_ repository
