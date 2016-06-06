@@ -35,7 +35,9 @@ In order to build Xpiks, you would need to build it's dependencies first.
 - select build target [Debug\Release], press "Run qmake" and then "Build"
 - now you can use xpiks-qt on your computer
 
-
+&nbsp;
+&nbsp;
+&nbsp;
 
 ***Instructions to build dependencies:***
 
@@ -79,8 +81,9 @@ In order to build Xpiks, you would need to build it's dependencies first.
 - press "Build"
 - copy build artifacts (`libexiv2.dll`, `libexiv2.lib`, `libexpat.dll`, `libexpat.lib`) to `src/libs` directory in _Xpiks_ repository
 
-
-
+&nbsp;
+&nbsp;
+&nbsp;
 
 ***Redistribution***
 
