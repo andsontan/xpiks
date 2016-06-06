@@ -30,6 +30,7 @@ In order to build Xpiks, you would need to build it's dependencies first.
 - build <a href="#exiv2">Exiv2</a> library (instructions below)
 
 **Building main application:**
+
 - open `src\xpiks-qt\xpiks-qt.pro` file with Qt Creator installed with Qt
 - select build target [Debug\Release], press "Run qmake" and then "Build"
 - now you can use xpiks-qt on your computer
