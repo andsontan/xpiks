@@ -35,6 +35,10 @@ In order to build Xpiks, you would need to build it's dependencies first.
 - select build target [Debug\Release], press "Run qmake" and then "Build"
 - now you can use xpiks-qt on your computer
 
+
+
+***Instructions to build dependencies:***
+
 ***<span id="zlib">To build zlib under Windows for Xpiks, do the following:</span>***
 
 - download zlib (1.2.8) source code and extract to `scr/zlib-1.2.8`
@@ -74,6 +78,9 @@ In order to build Xpiks, you would need to build it's dependencies first.
 - in Visual Studio select `"Build" -> "Batch build"` and mark all _DebugDLL_ and _ReleaseDLL_ builds for your platform (x64 or x86)
 - press "Build"
 - copy build artifacts (`libexiv2.dll`, `libexiv2.lib`, `libexpat.dll`, `libexpat.lib`) to `src/libs` directory in _Xpiks_ repository
+
+
+
 
 ***Redistribution***
 
