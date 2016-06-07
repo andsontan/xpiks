@@ -150,7 +150,7 @@ ApplicationWindow {
 
     MessageDialog {
         id: masterPasswordOffWarningDialog
-        title: ii18.n + qsTr("Warning")
+        title: i18.n + qsTr("Warning")
         text: i18.n + qsTr("Switching off master password will make your passwords storage less secure. Continue?")
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
@@ -179,7 +179,7 @@ ApplicationWindow {
 
     MessageDialog {
         id: resetSettingsDialog
-        title: ii18.n + qsTr("Warning")
+        title: i18.n + qsTr("Warning")
         text: i18.n + qsTr("Are you sure you want to reset all settings? \nThis action cannot be undone.")
         standardButtons: StandardButton.Yes | StandardButton.No
 
@@ -191,7 +191,7 @@ ApplicationWindow {
 
     MessageDialog {
         id: resetMPDialog
-        title: ii18.n + qsTr("Warning")
+        title: i18.n + qsTr("Warning")
         text: i18.n + qsTr("Are you sure you want to reset Master password? \nAll upload hosts' passwords will be purged.")
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {

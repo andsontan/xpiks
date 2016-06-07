@@ -57,7 +57,7 @@ Item {
 
     MessageDialog {
         id: invalidPort
-        title: ii18.n + qsTr("Warning")
+        title: i18.n + qsTr("Warning")
         text: i18.n + qsTr("Please, enter proxy port")
         standardButtons: StandardButton.Ok
     }
