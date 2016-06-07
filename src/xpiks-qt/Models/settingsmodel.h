@@ -65,7 +65,7 @@ namespace Models {
         Q_PROPERTY(QString proxyAddress READ getProxyAddress NOTIFY proxyAddressChanged)
         Q_PROPERTY(QString proxyUser READ getProxyUser NOTIFY proxyUserChanged)
         Q_PROPERTY(QString proxyPassword READ getProxyPassword NOTIFY proxyPasswordChanged)
-        Q_PROPERTY(QString proxyPort READ getProxyPort NOTIFY proxyPortChanged)
+        Q_PROPERTY(int proxyPort READ getProxyPort NOTIFY proxyPortChanged)
         Q_PROPERTY(bool autoCacheImages READ getAutoCacheImages WRITE setAutoCacheImages NOTIFY autoCacheImagesChanged)
 
     public:
@@ -114,7 +114,7 @@ namespace Models {
         QString getProxyAddress() const { return m_ProxySettings.m_Address; }
         QString getProxyUser() const { return m_ProxySettings.m_User; }
         QString getProxyPassword() const { return m_ProxySettings.m_Password; }
-        QString getProxyPort() const { return m_ProxySettings.m_Port; }
+        int getProxyPort() const { return m_ProxySettings.m_Port; }
         ProxySettings * getProxySettings() { return &m_ProxySettings; }
         bool getAutoCacheImages() const { return m_AutoCacheImages; }
 
