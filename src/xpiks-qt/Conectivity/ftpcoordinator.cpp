@@ -60,11 +60,17 @@ namespace Conectivity {
             return;
         }
 
+        Models::SettingsModel *settings = m_CommandManager->getSettingsModel();
+        bool useProxy = settings->getUseProxy();
+        Models::ProxySettings *proxySettings = settings->getProxySettings();
+
         Encryption::SecretsManager *secretsManager = m_CommandManager->getSecretsManager();
         QVector<UploadBatch*> batches = generateUploadBatches(artworksToUpload,
                                                               uploadInfos,
                                                               secretsManager,
-                                                              m_SecondsTimeout);
+                                                              m_SecondsTimeout,
+                                                              useProxy,
+                                                              proxySettings);
 
         Q_ASSERT(batches.size() == uploadInfos.size());
 

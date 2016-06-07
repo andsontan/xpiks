@@ -80,6 +80,7 @@
 #include "Helpers/logger.h"
 #include "Common/version.h"
 #include "Common/defines.h"
+#include "Models/proxysettings.h"
 
 void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg) {
     Q_UNUSED(context);
@@ -185,7 +186,7 @@ int main(int argc, char *argv[]) {
     }
 
     const char *highDpiEnvironmentVariable = setHighDpiEnvironmentVariable();
-
+    qRegisterMetaTypeStreamOperators<Models::ProxySettings>("ProxySettings");
     initQSettings();
     Helpers::AppSettings appSettings;
     ensureUserIdExists(&appSettings);

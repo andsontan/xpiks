@@ -100,6 +100,7 @@ SOURCES += main.cpp \
     MetadataIO/exiv2writingworker.cpp \
     MetadataIO/writingorchestrator.cpp \
     Common/flags.cpp \
+    Models/proxysettings.cpp \
     QMLExtensions/imagecachingworker.cpp \
     QMLExtensions/imagecachingservice.cpp \
     QMLExtensions/cachingimageprovider.cpp
@@ -258,6 +259,7 @@ HEADERS += \
     MetadataIO/writingorchestrator.h \
     MetadataIO/exiv2tagnames.h \
     MetadataIO/imetadatawriter.h \
+    Models/proxysettings.h \
     QMLExtensions/imagecachingworker.h \
     QMLExtensions/imagecacherequest.h \
     QMLExtensions/imagecachingservice.h \
@@ -326,6 +328,7 @@ DISTFILES += \
     Graphics/newtheme.png \
     Graphics/predefinedftp.png \
     Graphics/suggestion.png \
+    Dialogs/ProxySetupDialog.qml \
     Dialogs/WhatsNewMinorDialog.qml
 
 lupdate_only {

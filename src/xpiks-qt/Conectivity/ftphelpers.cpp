@@ -24,50 +24,50 @@
 #include <cstdio>
 #include <cstdlib>
 #include <curl/curl.h>
+#include "../Models/proxysettings.h"
 
 namespace Conectivity {
     /* The MinGW headers are missing a few Win32 function definitions,
        you shouldn't need this if you use VC++ */
 #if defined(__MINGW32__) && !defined(__MINGW64__)
-    int __cdecl _snscanf(const char * input, size_t length, const char * format, ...);
+    int __cdecl _snscanf(const char *input, size_t length, const char *format, ...);
+
 #endif
 
-
     /* parse headers for Content-Length */
-    size_t getcontentlengthfunc(void *ptr, size_t size, size_t nmemb, void *stream)
-    {
+    size_t getcontentlengthfunc(void *ptr, size_t size, size_t nmemb, void *stream) {
         int r;
         long len = 0;
 
 #if defined(Q_OS_WIN)
         /* _snscanf() is Win32 specific */
-        r = _snscanf((const char*)ptr, size * nmemb, "Content-Length: %ld\n", &len);
+        r = _snscanf((const char *)ptr, size * nmemb, "Content-Length: %ld\n", &len);
 #else
-        r = std::sscanf((const char*)ptr, "Content-Length: %ld\n", &len);
+        r = std::sscanf((const char *)ptr, "Content-Length: %ld\n", &len);
 #endif
 
-        if (r) /* Microsoft: we don't read the specs */
-            *((long *) stream) = len;
+        if (r) { /* Microsoft: we don't read the specs */
+            *((long *)stream) = len;
+        }
 
         return size * nmemb;
     }
 
     /* discard downloaded data */
-    size_t discardfunc(void *ptr, size_t size, size_t nmemb, void *stream)
-    {
+    size_t discardfunc(void *ptr, size_t size, size_t nmemb, void *stream) {
         Q_UNUSED(stream);
         Q_UNUSED(ptr);
         return size * nmemb;
     }
 
     /* read data to upload */
-    size_t readfunc(void *ptr, size_t size, size_t nmemb, void *stream)
-    {
-        FILE *f = (FILE*)stream;
+    size_t readfunc(void *ptr, size_t size, size_t nmemb, void *stream) {
+        FILE *f = (FILE *)stream;
         size_t n;
 
-        if (ferror(f))
+        if (ferror(f)) {
             return CURL_READFUNC_ABORT;
+        }
 
         n = fread(ptr, size, nmemb, f) * size;
 
@@ -91,6 +91,24 @@ namespace Conectivity {
 
         curl_easy_setopt(curlHandle, CURLOPT_READFUNCTION, readfunc);
 
+        if (context->m_UseProxy) {
+            Models::ProxySettings *proxySettings = context->m_ProxySettings;
+
+            curl_easy_setopt(curlHandle, CURLOPT_PROXY, proxySettings->m_Address.toLocal8Bit().data());
+
+            QString proxyUser = proxySettings->m_User;
+            if (!proxyUser.isEmpty()) {
+                curl_easy_setopt(curlHandle, CURLOPT_PROXYUSERNAME, proxyUser.toLocal8Bit().data());
+
+                QString proxyPassword = proxySettings->m_Password;
+                if (!proxyPassword.isEmpty()) {
+                    curl_easy_setopt(curlHandle, CURLOPT_PROXYPASSWORD, proxyPassword.toLocal8Bit().data());
+                }
+            }
+
+            curl_easy_setopt(curlHandle, CURLOPT_PROXYPORT, proxySettings->m_Port.toLocal8Bit().data());
+        }
+
         if (!context->m_UsePassiveMode) {
             curl_easy_setopt(curlHandle, CURLOPT_FTPPORT, "-"); /* disable passive mode */
         }
@@ -100,12 +118,13 @@ namespace Conectivity {
         QString host = inputHost;
 
         const QChar slash('/');
+
         if (!host.endsWith(slash)) {
             host.append(slash);
         }
 
         if (!host.startsWith(QLatin1String("ftp.")) &&
-                !host.startsWith(QLatin1String("ftp://"))) {
+            !host.startsWith(QLatin1String("ftp://"))) {
             host = QLatin1String("ftp://") + host;
         }
 

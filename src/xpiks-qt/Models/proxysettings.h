@@ -18,36 +18,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#ifndef PROXYSETTINGS_H
+#define PROXYSETTINGS_H
 
-#ifndef UPLOADCONTEXT
-#define UPLOADCONTEXT
-
-#include <QString>
+#include <QDataStream>
 #include "../Common/defines.h"
+#include <QObject>
+
+class QString;
 
 namespace Models {
-    struct ProxySettings;
-}
-namespace Conectivity {
-    class UploadContext {
-    public:
-        ~UploadContext() {
-            LOG_DEBUG << "destructor for host" << m_Host;
-        }
-
-    public:
-        QString m_Host;
-        QString m_Username;
+    struct ProxySettings {
+        QString m_Address;
+        QString m_User;
         QString m_Password;
-        QString m_DirForVectors;
-        QString m_DirForImages;
-        bool m_UsePassiveMode;
-        int m_RetriesCount;
-        int m_TimeoutSeconds;
-        bool m_UseProxy;
-        Models::ProxySettings *m_ProxySettings;
+        QString m_Port;
     };
+
+    QDataStream &operator<<(QDataStream &out, const ProxySettings &v);
+    QDataStream &operator>>(QDataStream &in, ProxySettings &v);
 }
-
-#endif // UPLOADCONTEXT
-
+Q_DECLARE_METATYPE(Models::ProxySettings)
+#endif // PROXYSETTINGS_H

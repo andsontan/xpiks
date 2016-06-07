@@ -43,6 +43,7 @@ ApplicationWindow {
     flags: Qt.Dialog
 
     signal dialogDestruction();
+    signal refreshProxy();
 
     onClosing: dialogDestruction();
 
@@ -62,6 +63,20 @@ ApplicationWindow {
         settingsModel.mustUseMasterPassword = true
     }
 
+    function onProxySettingsSet() {
+        console.log('UI:SettingWindow # Proxy settings changed')
+        settingsModel.useProxy = true
+        settingsWindow.refreshProxy()
+    }
+
+    function onProxySettingNotSet(firstTimeParam){
+        if (firstTimeParam) {
+            console.log('UI:SettingWindow # Proxy settings not set. Disabling UseProxy')
+            settingsModel.useProxy=false
+            settingsWindow.refreshProxy()
+        }
+    }
+
     function openMasterPasswordDialog(firstTimeParam) {
         var callbackObject = {
             onCancel: onCancelMP,
@@ -69,6 +84,20 @@ ApplicationWindow {
         }
 
         Common.launchDialog("Dialogs/MasterPasswordSetupDialog.qml",
+                            settingsWindow,
+                            {
+                                componentParent: settingsWindow,
+                                firstTime: firstTimeParam,
+                                callbackObject: callbackObject
+                            });
+    }
+
+    function openProxyDialog(firstTimeParam) {
+        var callbackObject = {
+            onSuccess:  onProxySettingsSet,
+            onCancel:   onProxySettingNotSet
+        }
+        Common.launchDialog("Dialogs/ProxySetupDialog.qml",
                             settingsWindow,
                             {
                                 componentParent: settingsWindow,
@@ -985,7 +1014,7 @@ ApplicationWindow {
                                 }
 
                                 function onResetRequested()  {
-                                    value =  settingsModel.uploadTimeout
+                                    var value =  settingsModel.uploadTimeout
                                     text = value
                                 }
 
@@ -1040,7 +1069,7 @@ ApplicationWindow {
                                 }
 
                                 function onResetRequested()  {
-                                    value =  settingsModel.maxParallelUploads
+                                    var value =  settingsModel.maxParallelUploads
                                     text = value
                                 }
 
@@ -1058,6 +1087,36 @@ ApplicationWindow {
                         StyledText {
                             text: i18.n + qsTr("(takes effect after relaunch)")
                         }
+                    }
+
+                    RowLayout{
+                        StyledCheckbox {
+                            id: useProxyCheckbox
+                            text: i18.n + qsTr("Use Proxy")
+                            onClicked: {
+                                if (checked)
+                                    openProxyDialog(true)
+                             }
+                            function refreshProxyHandler() {
+                                checked = settingsModel.useProxy
+                            }
+
+                            Component.onCompleted: {
+                                uploadTab.resetRequested.connect(refreshProxyHandler)
+                                checked = settingsModel.useProxy
+                                settingsWindow.refreshProxy.connect(refreshProxyHandler)
+                            }
+                         }
+
+                         StyledButton {
+                                width: 190
+                                text: i18.n + qsTr("Change Proxy Settings")
+                                enabled: useProxyCheckbox.checked
+
+                                onClicked: {
+                                     openProxyDialog(false)
+                                }
+                         }
                     }
 
                     Item {

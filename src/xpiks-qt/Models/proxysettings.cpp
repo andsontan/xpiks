@@ -19,35 +19,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef UPLOADCONTEXT
-#define UPLOADCONTEXT
-
-#include <QString>
-#include "../Common/defines.h"
+#include "proxysettings.h"
 
 namespace Models {
-    struct ProxySettings;
+    QDataStream &operator<<(QDataStream &out, const ProxySettings &v) {
+        out << v.m_Address << v.m_User << v.m_Password << v.m_Port;
+        return out;
+    }
+
+    QDataStream &operator>>(QDataStream &in, ProxySettings &v) {
+        in >> v.m_Address >> v.m_User >> v.m_Password >> v.m_Port;
+        return in;
+    }
 }
-namespace Conectivity {
-    class UploadContext {
-    public:
-        ~UploadContext() {
-            LOG_DEBUG << "destructor for host" << m_Host;
-        }
-
-    public:
-        QString m_Host;
-        QString m_Username;
-        QString m_Password;
-        QString m_DirForVectors;
-        QString m_DirForImages;
-        bool m_UsePassiveMode;
-        int m_RetriesCount;
-        int m_TimeoutSeconds;
-        bool m_UseProxy;
-        Models::ProxySettings *m_ProxySettings;
-    };
-}
-
-#endif // UPLOADCONTEXT
-

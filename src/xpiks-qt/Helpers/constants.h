@@ -47,6 +47,8 @@ namespace Constants {
     const char APP_WINDOW_X[] = "WINDOW_POSITION_X";
     const char APP_WINDOW_Y[] = "WINDOW_POSITION_Y";
     const char AUTO_FIND_VECTORS[] = "AUTO_FIND_VECTORS";
+    const char USE_PROXY[] = "USE_PROXY";
+    const char PROXY_HOST[] = "PROXY_HOST_HASH";
 
     // different for DEBUG and RELEASE
 

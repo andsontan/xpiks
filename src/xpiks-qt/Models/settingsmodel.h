@@ -26,6 +26,7 @@
 #include <QObject>
 #include <QString>
 #include "../Common/baseentity.h"
+#include "../Models/proxysettings.h"
 
 #define SETTINGS_EPSILON 1e-9
 
@@ -60,6 +61,11 @@ namespace Models {
         Q_PROPERTY(int selectedThemeIndex READ getSelectedThemeIndex WRITE setSelectedThemeIndex NOTIFY selectedThemeIndexChanged)
         Q_PROPERTY(bool useAutoComplete READ getUseAutoComplete WRITE setUseAutoComplete NOTIFY useAutoCompleteChanged)
         Q_PROPERTY(bool useExifTool READ getUseExifTool WRITE setUseExifTool NOTIFY useExifToolChanged)
+        Q_PROPERTY(bool useProxy READ getUseProxy WRITE setUseProxy NOTIFY useProxyChanged)
+        Q_PROPERTY(QString proxyAddress READ getProxyAddress NOTIFY proxyAddressChanged)
+        Q_PROPERTY(QString proxyUser READ getProxyUser NOTIFY proxyUserChanged)
+        Q_PROPERTY(QString proxyPassword READ getProxyPassword NOTIFY proxyPasswordChanged)
+        Q_PROPERTY(QString proxyPort READ getProxyPort NOTIFY proxyPortChanged)
         Q_PROPERTY(bool autoCacheImages READ getAutoCacheImages WRITE setAutoCacheImages NOTIFY autoCacheImagesChanged)
 
     public:
@@ -78,7 +84,7 @@ namespace Models {
         Q_INVOKABLE void resetDictPath();
         Q_INVOKABLE void readAllValues();
         Q_INVOKABLE void raiseMasterPasswordSignal() { emit mustUseMasterPasswordChanged(m_MustUseMasterPassword); }
-
+        Q_INVOKABLE void saveProxySetting(const QString &address, const QString &user, const QString &password, const QString &port);
     public:
         QString getExifToolPath() const { return m_ExifToolPath; }
         double getMinMegapixelCount() const { return m_MinMegapixelCount; }
@@ -103,6 +109,12 @@ namespace Models {
         int getSelectedThemeIndex() const { return m_SelectedThemeIndex; }
         bool getUseAutoComplete() const { return m_UseAutoComplete; }
         bool getUseExifTool() const { return m_UseExifTool; }
+        bool getUseProxy() const { return m_UseProxy; }
+        QString getProxyAddress() const { return m_ProxySettings.m_Address; }
+        QString getProxyUser() const { return m_ProxySettings.m_User; }
+        QString getProxyPassword() const { return m_ProxySettings.m_Password; }
+        QString getProxyPort() const { return m_ProxySettings.m_Port; }
+        ProxySettings * getProxySettings() { return &m_ProxySettings; }
         bool getAutoCacheImages() const { return m_AutoCacheImages; }
 
     signals:
@@ -130,6 +142,11 @@ namespace Models {
         void selectedThemeIndexChanged(int value);
         void useAutoCompleteChanged(bool value);
         void useExifToolChanged(bool value);
+        void useProxyChanged(bool value);
+        void proxyAddressChanged(QString value);
+        void proxyUserChanged(QString value);
+        void proxyPasswordChanged(QString value);
+        void proxyPortChanged(QString value);
         void autoCacheImagesChanged(bool value);
 
     public:
@@ -305,6 +322,12 @@ namespace Models {
                 emit useAutoCompleteChanged(value);
             }
         }
+        void setUseProxy(bool value) {
+            if (value != m_UseProxy) {
+                m_UseProxy = value;
+                emit useProxyChanged(value);
+            }
+         }
 
         void setUseExifTool(bool value) {
             if (value != m_UseExifTool) {
@@ -326,7 +349,8 @@ namespace Models {
     public:
 #endif
         void resetToDefault();
-
+    private:
+        void resetProxySetting();
     private:
         QString m_ExifToolPath;
         QString m_DictPath;
@@ -352,6 +376,8 @@ namespace Models {
         bool m_AutoFindVectors;
         bool m_UseAutoComplete;
         bool m_UseExifTool;
+        bool m_UseProxy;
+        ProxySettings m_ProxySettings;
         bool m_AutoCacheImages;
     };
 }

@@ -59,6 +59,7 @@
 #define DEFAULT_SELECTED_THEME_INDEX 0
 #define DEFAULT_USE_AUTO_COMPLETE true
 #define DEFAULT_USE_EXIFTOOL false
+#define DEFAULT_USE_PROXY false
 
 #ifndef INTEGRATION_TESTS
 #define DEFAULT_AUTO_CACHE_IMAGES true
@@ -93,6 +94,7 @@ namespace Models {
         m_AutoFindVectors(DEFAULT_AUTO_FIND_VECTORS),
         m_UseAutoComplete(DEFAULT_USE_AUTO_COMPLETE),
         m_UseExifTool(DEFAULT_USE_EXIFTOOL),
+        m_UseProxy(DEFAULT_USE_PROXY),
         m_AutoCacheImages(DEFAULT_AUTO_CACHE_IMAGES)
     {
     }
@@ -142,6 +144,8 @@ namespace Models {
         appSettings.setValue(appSettings.getSelectedThemeIndexKey(), m_SelectedThemeIndex);
         appSettings.setValue(appSettings.getUseAutoCompleteKey(), m_UseAutoComplete);
         appSettings.setValue(appSettings.getUseExifToolKey(), m_UseExifTool);
+        appSettings.setValue(appSettings.getUseProxyKey(),m_UseProxy);
+        appSettings.setValue(appSettings.getproxyHashKey(),QVariant::fromValue(m_ProxySettings));
         appSettings.setValue(appSettings.getCacheImagesKey(), m_AutoCacheImages);
 
         if (!m_MustUseMasterPassword) {
@@ -207,6 +211,10 @@ namespace Models {
         setSelectedThemeIndex(appSettings.value(appSettings.getSelectedThemeIndexKey(), DEFAULT_SELECTED_THEME_INDEX).toInt());
         setUseAutoComplete(appSettings.boolValue(appSettings.getUseAutoCompleteKey(), DEFAULT_USE_AUTO_COMPLETE));
         setUseExifTool(appSettings.boolValue(appSettings.getUseExifToolKey(), DEFAULT_USE_EXIFTOOL));
+        setUseProxy(appSettings.boolValue(appSettings.getUseProxyKey(), DEFAULT_USE_PROXY));
+
+        QVariant qvalue = appSettings.value(Constants::PROXY_HOST, "");
+        m_ProxySettings = qvalue.value<ProxySettings>();
         setAutoCacheImages(appSettings.boolValue(appSettings.getCacheImagesKey(), DEFAULT_AUTO_CACHE_IMAGES));
     }
 
@@ -236,6 +244,8 @@ namespace Models {
         setSelectedThemeIndex(DEFAULT_SELECTED_THEME_INDEX);
         setUseAutoComplete(DEFAULT_USE_AUTO_COMPLETE);
         setUseExifTool(DEFAULT_USE_EXIFTOOL);
+        setUseProxy(DEFAULT_USE_PROXY);
+        resetProxySetting();
         setAutoCacheImages(DEFAULT_AUTO_CACHE_IMAGES);
 
         Helpers::AppSettings appSettings;
@@ -283,6 +293,34 @@ namespace Models {
         }
 
         return value;
+    }
+
+    void SettingsModel::saveProxySetting(const QString &address, const QString &user, const QString &password, const QString &port){
+        QString tAddress = address.trimmed();
+        QString tUser = user.trimmed();
+        QString tPassword = password.trimmed();
+        QString tPort = port.trimmed();
+        if (tAddress != m_ProxySettings.m_Address){
+            m_ProxySettings.m_Address = tAddress;
+            emit proxyAddressChanged(tAddress);
+       }
+       if (tUser != m_ProxySettings.m_User){
+            m_ProxySettings.m_User = tUser;
+            emit proxyUserChanged(tUser);
+       }
+       if (tPassword != m_ProxySettings.m_Password){
+            m_ProxySettings.m_Password = tPassword;
+            emit proxyPasswordChanged(tPassword);
+       }
+       if (tPort != m_ProxySettings.m_Port){
+            m_ProxySettings.m_Port = tPort;
+            emit proxyPortChanged(tPort);
+       }
+    }
+
+    void SettingsModel::resetProxySetting(){
+        QString empty="";
+        SettingsModel::saveProxySetting(empty,empty,empty,empty);
     }
 }
 

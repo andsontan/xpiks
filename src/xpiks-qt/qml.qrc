@@ -62,6 +62,7 @@
         <file>Graphics/newtheme.png</file>
         <file>Graphics/predefinedftp.png</file>
         <file>Graphics/suggestion.png</file>
+        <file>Dialogs/ProxySetupDialog.qml</file>
         <file>Dialogs/WhatsNewMinorDialog.qml</file>
     </qresource>
 </RCC>

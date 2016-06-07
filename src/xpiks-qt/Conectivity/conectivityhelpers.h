@@ -29,6 +29,7 @@
 namespace Models {
     class ArtworkMetadata;
     class UploadInfo;
+    struct ProxySettings;
 }
 
 namespace Encryption {
@@ -45,12 +46,16 @@ namespace Conectivity {
     void generateUploadContexts(const QVector<Models::UploadInfo *> &uploadInfos,
                                 QVector<QSharedPointer<UploadContext> > &contexts,
                                 Encryption::SecretsManager *secretsManager,
-                                int timeoutSeconds);
+                                int timeoutSeconds,
+                                bool useProxy,
+                                Models::ProxySettings * proxySettings);
 
     QVector<UploadBatch*> generateUploadBatches(const QVector<Models::ArtworkMetadata *> &artworksToUpload,
                                                 const QVector<Models::UploadInfo *> &uploadInfos,
                                                 Encryption::SecretsManager *secretsManager,
-                                                int timeoutSeconds);
+                                                int timeoutSeconds,
+                                                bool useProxy,
+                                                Models::ProxySettings * proxySettings);
 }
 
 #endif // CONECTIVITYHELPERS_H

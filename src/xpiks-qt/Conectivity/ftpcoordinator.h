@@ -29,10 +29,12 @@
 #include "iftpcoordinator.h"
 #include <QAtomicInt>
 #include <QMutex>
+#include "../Models/settingsmodel.h"
 
 namespace Models {
     class ArtworkMetadata;
     class UploadInfo;
+    struct ProxySettings;
 }
 
 namespace Conectivity {

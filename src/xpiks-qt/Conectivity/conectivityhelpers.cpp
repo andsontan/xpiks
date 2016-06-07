@@ -29,6 +29,7 @@
 #include "uploadbatch.h"
 #include "../Helpers/filenameshelpers.h"
 #include "../Models/imageartwork.h"
+#include "../Commands/commandmanager.h"
 
 #define TIMEOUT_SECONDS 10
 #define RETRIES_COUNT 3
@@ -64,7 +65,9 @@ namespace Conectivity {
     void generateUploadContexts(const QVector<Models::UploadInfo *> &uploadInfos,
                                 QVector<QSharedPointer<UploadContext> > &contexts,
                                 Encryption::SecretsManager *secretsManager,
-                                int timeoutSeconds) {
+                                int timeoutSeconds,
+                                bool useProxy,
+                                Models::ProxySettings * proxySettings) {
         int size = uploadInfos.size();
         contexts.reserve(size);
 
@@ -76,7 +79,8 @@ namespace Conectivity {
             context->m_Username = info->getUsername();
             context->m_Password = secretsManager->decodePassword(info->getPassword());
             context->m_UsePassiveMode = !info->getDisableFtpPassiveMode();
-
+            context->m_UseProxy = useProxy;
+            context->m_ProxySettings = proxySettings;
             // TODO: move to configs/options
             context->m_TimeoutSeconds = timeoutSeconds;
             context->m_RetriesCount = RETRIES_COUNT;
@@ -97,7 +101,9 @@ namespace Conectivity {
     QVector<UploadBatch*> generateUploadBatches(const QVector<Models::ArtworkMetadata *> &artworksToUpload,
                                                 const QVector<Models::UploadInfo *> &uploadInfos,
                                                 Encryption::SecretsManager *secretsManager,
-                                                int timeoutSeconds) {
+                                                int timeoutSeconds,
+                                                bool useProxy,
+                                                Models::ProxySettings * proxySettings) {
         LOG_DEBUG << artworksToUpload.length() << "file(s)";
         QVector<UploadBatch*> batches;
 
@@ -106,7 +112,7 @@ namespace Conectivity {
         extractFilePathes(artworksToUpload, filePathes, zipFilePathes);
 
         QVector<QSharedPointer<UploadContext> > contexts;
-        generateUploadContexts(uploadInfos, contexts, secretsManager, timeoutSeconds);
+        generateUploadContexts(uploadInfos, contexts, secretsManager, timeoutSeconds, useProxy, proxySettings);
 
         int size = contexts.size();
         batches.reserve(size);
