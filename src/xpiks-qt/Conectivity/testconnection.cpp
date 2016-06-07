@@ -90,6 +90,7 @@ namespace Conectivity {
 
             //ss << "\n";
         }
+
         LOG_DEBUG << QString::fromStdString(ss.str()).trimmed();
     }
 

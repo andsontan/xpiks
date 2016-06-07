@@ -989,7 +989,7 @@ ApplicationWindow {
 
                         Rectangle {
                             color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
-                            border.width: timeoutMinutes.activeFocus ? 1 : 0
+                            border.width: timeoutSeconds.activeFocus ? 1 : 0
                             border.color: Colors.artworkActiveColor
                             width: 115
                             height: UIConfig.textInputHeight
@@ -1070,7 +1070,7 @@ ApplicationWindow {
                                 Component.onCompleted: {
                                     uploadTab.resetRequested.connect(maxParallelUploads.onResetRequested)
                                 }
-                                KeyNavigation.backtab: timeoutMinutes
+                                KeyNavigation.backtab: timeoutSeconds
                                 validator: IntValidator {
                                     bottom: 1
                                     top: 4
