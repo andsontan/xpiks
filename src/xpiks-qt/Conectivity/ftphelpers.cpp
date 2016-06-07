@@ -78,6 +78,22 @@ namespace Conectivity {
     }
 
     static
+    QString sanitizeCurlLogline(const std::string &str) {
+        QString logline = QString::fromStdString(str).trimmed();
+#ifndef QT_DEBUG
+        if (!logline.contains("PASS "))
+#endif
+        {
+            return logline;
+        }
+#ifndef QT_DEBUG
+        else {
+            return QLatin1String("Password token hidden here");
+        }
+#endif
+    }
+
+    static
     void dump(const char *text,
               unsigned char *ptr, size_t size) {
         std::stringstream ss;
@@ -112,7 +128,7 @@ namespace Conectivity {
             //ss << "\n";
         }
 
-        LOG_DEBUG << QString::fromStdString(ss.str()).trimmed();
+        LOG_DEBUG << sanitizeCurlLogline(ss.str());
     }
 
     static
@@ -125,7 +141,7 @@ namespace Conectivity {
 
       switch (type) {
       case CURLINFO_TEXT:
-          LOG_INFO << QString::fromStdString(Helpers::string_format("== Info: %s", data)).trimmed();
+          LOG_INFO << sanitizeCurlLogline(Helpers::string_format("== Info: %s", data));
       default: /* in case a new one is introduced to shock us */
           return 0;
 
