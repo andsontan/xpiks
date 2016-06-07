@@ -94,8 +94,8 @@ ApplicationWindow {
 
     function openProxyDialog(firstTimeParam) {
         var callbackObject = {
-            onSuccess:  onProxySettingsSet,
-            onCancel:   onProxySettingNotSet
+            onSuccess: onProxySettingsSet,
+            onCancel: onProxySettingNotSet
         }
         Common.launchDialog("Dialogs/ProxySetupDialog.qml",
                             settingsWindow,
@@ -249,7 +249,7 @@ ApplicationWindow {
                             onCheckedChanged: {
                                 settingsModel.updateService = checked
                             }
-                            function onResetRequested()  {
+                            function onResetRequested() {
                                 checked = settingsModel.updateService
                             }
 
@@ -265,7 +265,7 @@ ApplicationWindow {
                             onCheckedChanged: {
                                 settingsModel.mustUseConfirmations = checked
                             }
-                            function onResetRequested()  {
+                            function onResetRequested() {
                                 checked = settingsModel.mustUseConfirmations
                             }
 
@@ -282,7 +282,7 @@ ApplicationWindow {
                             onCheckedChanged: {
                                 settingsModel.searchUsingAnd = checked
                             }
-                            function onResetRequested()  {
+                            function onResetRequested() {
                                 checked = settingsModel.searchUsingAnd
                             }
                             Component.onCompleted: {
@@ -313,7 +313,7 @@ ApplicationWindow {
                             onCheckedChanged: {
                                 settingsModel.autoFindVectors = checked
                             }
-                            function onResetRequested()  {
+                            function onResetRequested() {
                                 checked = settingsModel.autoFindVectors
                             }
 
@@ -329,7 +329,7 @@ ApplicationWindow {
                             onCheckedChanged: {
                                 settingsModel.saveBackups = checked
                             }
-                            function onResetRequested()  {
+                            function onResetRequested() {
                                 checked = settingsModel.saveBackups
                             }
 
@@ -345,7 +345,7 @@ ApplicationWindow {
                             onCheckedChanged: {
                                 settingsModel.useSpellCheck = checked
                             }
-                            function onResetRequested()  {
+                            function onResetRequested() {
                                 checked = settingsModel.useSpellCheck
                             }
 
@@ -361,7 +361,7 @@ ApplicationWindow {
                             onCheckedChanged: {
                                 settingsModel.useAutoComplete = checked
                             }
-                            function onResetRequested()  {
+                            function onResetRequested() {
                                 checked = settingsModel.useAutoComplete
                             }
 
@@ -415,7 +415,7 @@ ApplicationWindow {
                                 uxTab.themeIndex = themeComboBox.selectedIndex
                             }
 
-                            function onResetRequested()  {
+                            function onResetRequested() {
                                 selectedIndex  = settingsModel.selectedThemeIndex
                             }
 
@@ -439,7 +439,7 @@ ApplicationWindow {
                                 settingsModel.fitSmallPreview = checked
                             }
 
-                            function onResetRequested()  {
+                            function onResetRequested() {
                                 checked =  settingsModel.fitSmallPreview
                             }
 
@@ -479,7 +479,7 @@ ApplicationWindow {
                                     keywordSizeSlider.onValueChanged.connect(keywordSizeSlider.valueChangedHandler)
                                 }
 
-                                function onResetRequested()  {
+                                function onResetRequested() {
                                     value = settingsModel.keywordSizeScale
                                     uxTab.sizeSliderValue = value
                                 }
@@ -565,7 +565,7 @@ ApplicationWindow {
                                     scrollSensivitySlider.onValueChanged.connect(scrollSensivitySlider.valueChangedHandler)
                                 }
 
-                                function onResetRequested()  {
+                                function onResetRequested() {
                                     value = settingsModel.scrollSpeedScale
                                     uxTab.scrollSpeedScale = value
                                 }
@@ -591,7 +591,7 @@ ApplicationWindow {
                             border.color: Colors.artworkActiveColor
                             border.width: dismissDuration.activeFocus ? 1 : 0
                             width: 115
-                            height: 24
+                            height: UIConfig.textInputHeight
                             clip: true
 
                             StyledTextInput {
@@ -608,7 +608,7 @@ ApplicationWindow {
                                     }
                                 }
 
-                                function onResetRequested()  {
+                                function onResetRequested() {
                                     text = settingsModel.dismissDuration
                                 }
 
@@ -649,7 +649,7 @@ ApplicationWindow {
                         onCheckedChanged: {
                             settingsModel.useExifTool = checked
                         }
-                        function onResetRequested()  {
+                        function onResetRequested() {
                             checked = settingsModel.useExifTool
                         }
                         Component.onCompleted: {
@@ -684,7 +684,7 @@ ApplicationWindow {
                             Layout.row: 0
                             Layout.column: 1
                             width: 165
-                            height: 24
+                            height: UIConfig.textInputHeight
                             clip: true
                             enabled: settingsModel.useExifTool
 
@@ -698,9 +698,8 @@ ApplicationWindow {
                                 anchors.verticalCenter: parent.verticalCenter
                                 onTextChanged: settingsModel.exifToolPath = text
 
-                                function onResetRequested()  {
-                                    value =  settingsModel.exifToolPath
-                                    text = value
+                                function onResetRequested() {
+                                    text = settingsModel.exifToolPath
                                 }
                                 Component.onCompleted: {
                                     extTab.resetRequested.connect(exifToolText.onResetRequested)
@@ -743,7 +742,7 @@ ApplicationWindow {
                             Layout.row: 2
                             Layout.column: 1
                             width: 165
-                            height: 24
+                            height: UIConfig.textInputHeight
                             clip: true
                             visible: Qt.platform.os === "linux"
 
@@ -812,7 +811,7 @@ ApplicationWindow {
                             border.width: megapixelsCount.activeFocus ? 1 : 0
                             border.color: Colors.artworkActiveColor
                             width: 115
-                            height: 24
+                            height: UIConfig.textInputHeight
                             clip: true
 
                             StyledTextInput {
@@ -830,9 +829,8 @@ ApplicationWindow {
                                     }
                                 }
 
-                                function onResetRequested()  {
-                                    value =  settingsModel.minMegapixelCount
-                                    text = value
+                                function onResetRequested() {
+                                    text = settingsModel.minMegapixelCount
                                 }
 
                                 Component.onCompleted: {
@@ -868,7 +866,7 @@ ApplicationWindow {
                             border.color: Colors.artworkActiveColor
                             border.width: keywordsCount.activeFocus ? 1 : 0
                             width: 115
-                            height: 24
+                            height: UIConfig.textInputHeight
                             clip: true
 
                             StyledTextInput {
@@ -887,9 +885,8 @@ ApplicationWindow {
                                     }
                                 }
 
-                                function onResetRequested()  {
-                                    value =  settingsModel.maxKeywordsCount
-                                    text = value
+                                function onResetRequested() {
+                                    text = settingsModel.maxKeywordsCount
                                 }
 
                                 Component.onCompleted: {
@@ -923,7 +920,7 @@ ApplicationWindow {
                             border.width: descriptionLength.activeFocus ? 1 : 0
                             border.color: Colors.artworkActiveColor
                             width: 115
-                            height: 24
+                            height: UIConfig.textInputHeight
                             clip: true
 
                             StyledTextInput {
@@ -941,9 +938,8 @@ ApplicationWindow {
                                     }
                                 }
 
-                                function onResetRequested()  {
-                                    value =  settingsModel.maxDescriptionLength
-                                    text = value
+                                function onResetRequested() {
+                                    text = settingsModel.maxDescriptionLength
                                 }
 
                                 Component.onCompleted: {
@@ -969,7 +965,7 @@ ApplicationWindow {
             }
 
             Tab {
-                id:uploadTab
+                id: uploadTab
                 title: i18.n + qsTr("Upload")
                 signal resetRequested()
 
@@ -996,7 +992,7 @@ ApplicationWindow {
                             border.width: timeoutMinutes.activeFocus ? 1 : 0
                             border.color: Colors.artworkActiveColor
                             width: 115
-                            height: 24
+                            height: UIConfig.textInputHeight
                             clip: true
 
                             StyledTextInput {
@@ -1013,9 +1009,8 @@ ApplicationWindow {
                                     }
                                 }
 
-                                function onResetRequested()  {
-                                    var value =  settingsModel.uploadTimeout
-                                    text = value
+                                function onResetRequested() {
+                                    text = settingsModel.uploadTimeout
                                 }
 
                                 Component.onCompleted: {
@@ -1051,7 +1046,7 @@ ApplicationWindow {
                             border.width: maxParallelUploads.activeFocus ? 1 : 0
                             border.color: Colors.artworkActiveColor
                             width: 115
-                            height: 24
+                            height: UIConfig.textInputHeight
                             clip: true
 
                             StyledTextInput {
@@ -1068,9 +1063,8 @@ ApplicationWindow {
                                     }
                                 }
 
-                                function onResetRequested()  {
-                                    var value =  settingsModel.maxParallelUploads
-                                    text = value
+                                function onResetRequested() {
+                                    text = settingsModel.maxParallelUploads
                                 }
 
                                 Component.onCompleted: {
@@ -1089,14 +1083,20 @@ ApplicationWindow {
                         }
                     }
 
-                    RowLayout{
+                    RowLayout {
+                        width: parent.width
+                        spacing: 10
+
                         StyledCheckbox {
                             id: useProxyCheckbox
                             text: i18.n + qsTr("Use Proxy")
+
                             onClicked: {
-                                if (checked)
+                                if (checked) {
                                     openProxyDialog(true)
-                             }
+                                }
+                            }
+
                             function refreshProxyHandler() {
                                 checked = settingsModel.useProxy
                             }
@@ -1106,17 +1106,21 @@ ApplicationWindow {
                                 checked = settingsModel.useProxy
                                 settingsWindow.refreshProxy.connect(refreshProxyHandler)
                             }
-                         }
+                        }
 
-                         StyledButton {
-                                width: 190
-                                text: i18.n + qsTr("Change Proxy Settings")
-                                enabled: useProxyCheckbox.checked
+                        Item {
+                            Layout.fillWidth: true
+                        }
 
-                                onClicked: {
-                                     openProxyDialog(false)
-                                }
-                         }
+                        StyledButton {
+                            width: 190
+                            text: i18.n + qsTr("Change Proxy Settings")
+                            enabled: useProxyCheckbox.checked
+
+                            onClicked: {
+                                openProxyDialog(false)
+                            }
+                        }
                     }
 
                     Item {
@@ -1167,8 +1171,8 @@ ApplicationWindow {
 
                             }
 
-                            function onResetRequested()  {
-                                checked =  settingsModel.mustUseMasterPassword
+                            function onResetRequested() {
+                                checked = settingsModel.mustUseMasterPassword
                             }
                         }
 
@@ -1263,7 +1267,7 @@ ApplicationWindow {
                                     id: userStatisticCheckBox
                                     text: i18.n + qsTr("Collect usage statistics")
 
-                                    function onResetRequested()  {
+                                    function onResetRequested() {
                                         checked = settingsModel.userStatistics
                                     }
 

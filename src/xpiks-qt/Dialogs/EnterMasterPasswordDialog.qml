@@ -27,6 +27,7 @@ import "../Constants"
 import "../Common.js" as Common;
 import "../Components"
 import "../StyledControls"
+import "../Constants/UIConfig.js" as UIConfig
 
 Item {
     id: enterPasswordComponent
@@ -128,7 +129,7 @@ Item {
 
                 Rectangle {
                     width: 220
-                    height: 24
+                    height: UIConfig.textInputHeight
                     anchors.left: parent.left
                     color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
                     border.width: masterPassword.activeFocus ? 1 : 0

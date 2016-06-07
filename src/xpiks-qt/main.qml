@@ -1122,12 +1122,12 @@ ApplicationWindow {
                             anchors.verticalCenter: parent.verticalCenter
                             color: Colors.defaultDarkColor
                             width: (artworkRepository.artworksSourcesCount > 0 && mainScrollView.areScrollbarsVisible) ? 288 : 298
-                            height: 24
+                            height: UIConfig.textInputHeight
 
                             StyledTextInput {
                                 id: filterText
                                 width: (artworkRepository.artworksSourcesCount > 0 && mainScrollView.areScrollbarsVisible) ? 250 : 260
-                                height: 24
+                                height: UIConfig.textInputHeight
                                 clip: true
                                 anchors.left: parent.left
                                 anchors.leftMargin: 5

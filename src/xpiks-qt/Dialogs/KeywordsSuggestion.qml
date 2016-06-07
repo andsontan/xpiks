@@ -29,6 +29,7 @@ import "../Constants"
 import "../Common.js" as Common;
 import "../Components"
 import "../StyledControls"
+import "../Constants/UIConfig.js" as UIConfig
 
 Item {
     id: keywordsSuggestionComponent
@@ -137,7 +138,7 @@ Item {
                     border.width: queryText.activeFocus ? 1 : 0
                     border.color: Colors.artworkActiveColor
                     width: 300
-                    height: 24
+                    height: UIConfig.textInputHeight
                     clip: true
                     Layout.row: 0
                     Layout.column: 1

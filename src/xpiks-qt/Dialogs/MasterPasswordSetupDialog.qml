@@ -27,6 +27,7 @@ import "../Constants"
 import "../Common.js" as Common;
 import "../Components"
 import "../StyledControls"
+import "../Constants/UIConfig.js" as UIConfig
 
 Item {
     id: masterPasswordComponent
@@ -172,7 +173,7 @@ Item {
                         border.width: (currentPassword.activeFocus || emptyMP) ? 1 : 0
                         border.color: (emptyMP || wrongMP) ? Colors.artworkModifiedColor : Colors.artworkActiveColor
                         width: 135
-                        height: 24
+                        height: UIConfig.textInputHeight
                         clip: true
 
                         StyledTextInput {
@@ -217,7 +218,7 @@ Item {
                         border.width: newMasterPassword.activeFocus ? 1 : 0
                         border.color: Colors.artworkActiveColor
                         width: 135
-                        height: 24
+                        height: UIConfig.textInputHeight
                         clip: true
 
                         StyledTextInput {
@@ -259,7 +260,7 @@ Item {
                         border.color: repeatMasterPassword.text == newMasterPassword.text ? Colors.artworkActiveColor : Colors.artworkModifiedColor
                         color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
                         width: 135
-                        height: 24
+                        height: UIConfig.textInputHeight
                         clip: true
 
                         StyledTextInput {

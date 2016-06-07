@@ -27,18 +27,19 @@ import "../Constants"
 import "../Common.js" as Common
 import "../Components"
 import "../StyledControls"
+import "../Constants/UIConfig.js" as UIConfig
 
 Item {
     id: proxySetupComponent
     property bool firstTime
-    anchors.fill: parent
     property var callbackObject
+    anchors.fill: parent
 
     function closePopup() {
         proxySetupComponent.destroy()
     }
 
-    function saveProxySettings(){
+    function saveProxySettings() {
         settingsModel.saveProxySetting(proxyAddress.text,proxyUser.text,proxyPassword.text,proxyPort.text)
     }
 
@@ -55,7 +56,6 @@ Item {
         text: i18.n + qsTr("Please, enter proxy port")
         standardButtons: StandardButton.Ok
     }
-
 
     PropertyAnimation {
         target: proxySetupComponent
@@ -122,7 +122,7 @@ Item {
         Rectangle {
             id: dialogWindow
             width: 360
-            height: 220
+            height: 240
             color: Colors.selectedImageBackground
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
@@ -132,18 +132,20 @@ Item {
                 anchors.margins: 20
                 spacing: 10
 
+                StyledText {
+                    anchors.left: parent.left
+                    text: i18.n + qsTr("Proxy settings:")
+                }
+
                 RowLayout {
                     id: proxyAddressRow
                     width: parent.width
-                    height: 20
                     spacing: 10
 
                     StyledText {
-                        Layout.fillWidth: true
                         Layout.preferredWidth: 130
                         horizontalAlignment: Text.AlignRight
-                        text: i18.n + qsTr("Proxy Address:")
-                        color: Colors.labelActiveForeground
+                        text: i18.n + qsTr("Hostname:")
                     }
 
                     Rectangle {
@@ -151,7 +153,7 @@ Item {
                         border.width: (proxyAddress.activeFocus) ? 1 : 0
                         border.color: Colors.artworkModifiedColor
                         width: 135
-                        height: 24
+                        height: UIConfig.textInputHeight
                         clip: true
 
                         StyledTextInput {
@@ -176,8 +178,7 @@ Item {
                         Layout.fillWidth: true
                         Layout.preferredWidth: 130
                         horizontalAlignment: Text.AlignRight
-                        text: i18.n + qsTr("Proxy User:")
-                        color: Colors.labelActiveForeground
+                        text: i18.n + qsTr("Username:")
                     }
 
                     Rectangle {
@@ -185,7 +186,7 @@ Item {
                         border.width: (proxyUser.activeFocus) ? 1 : 0
                         border.color: Colors.artworkModifiedColor
                         width: 135
-                        height: 24
+                        height: UIConfig.textInputHeight
                         clip: true
 
                         StyledTextInput {
@@ -212,7 +213,7 @@ Item {
                         Layout.fillWidth: true
                         Layout.preferredWidth: 130
                         horizontalAlignment: Text.AlignRight
-                        text: i18.n + qsTr("Proxy Password:")
+                        text: i18.n + qsTr("Password:")
                         color: Colors.labelActiveForeground
                     }
 
@@ -221,7 +222,7 @@ Item {
                         border.width: (proxyPassword.activeFocus) ? 1 : 0
                         border.color: Colors.artworkModifiedColor
                         width: 135
-                        height: 24
+                        height: UIConfig.textInputHeight
                         clip: true
 
                         StyledTextInput {
@@ -249,7 +250,7 @@ Item {
                         Layout.fillWidth: true
                         Layout.preferredWidth: 130
                         horizontalAlignment: Text.AlignRight
-                        text: i18.n + qsTr("Proxy Port:")
+                        text: i18.n + qsTr("Port:")
                         color: Colors.labelActiveForeground
                     }
 
@@ -258,7 +259,7 @@ Item {
                         border.width: (proxyPort.activeFocus) ? 1 : 0
                         border.color: Colors.artworkModifiedColor
                         width: 135
-                        height: 24
+                        height: UIConfig.textInputHeight
                         clip: true
 
                         StyledTextInput {
