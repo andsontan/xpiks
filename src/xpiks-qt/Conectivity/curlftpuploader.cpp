@@ -152,6 +152,13 @@ namespace Conectivity {
                              (curl_off_t)fsize);
         curl_easy_setopt(curlHandle, CURLOPT_HEADERDATA, &uploaded_len);
 
+        // TODO: make this optional
+        //curl_easy_setopt(curlHandle, CURLOPT_FTP_USE_EPSV, 0L);
+
+#ifdef QT_DEBUG
+        curl_easy_setopt(curlHandle, CURLOPT_VERBOSE, 1L);
+#endif
+
         for (c = 0; (r != CURLE_OK) && (c < context->m_RetriesCount); c++) {
             QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
 

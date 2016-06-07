@@ -23,8 +23,11 @@
 #include "uploadcontext.h"
 #include <cstdio>
 #include <cstdlib>
+#include <sstream>
+#include <string>
 #include <curl/curl.h>
 #include "../Models/proxysettings.h"
+#include "../Helpers/stringhelper.h"
 
 namespace Conectivity {
     /* The MinGW headers are missing a few Win32 function definitions,
@@ -74,6 +77,82 @@ namespace Conectivity {
         return n;
     }
 
+    static
+    void dump(const char *text,
+              unsigned char *ptr, size_t size) {
+        std::stringstream ss;
+        size_t i;
+        size_t c;
+        unsigned int width = 0x10;
+
+        ss << Helpers::string_format("%s, %10.10ld bytes (0x%8.8lx)\n",
+                text, (long)size, (long)size);
+
+        if (size > 256) {
+            return;
+        }
+
+        for (i = 0; i < size; i += width) {
+            //ss << string_format("%4.4lx: ", (long)i);
+
+            /* show hex to the left
+            for (c = 0; c < width; c++) {
+                if (i + c < size)
+                    ss << string_format("%02x ", ptr[i+c]);
+                else
+                    ss << "   ";
+            }*/
+
+            /* show data on the right */
+            for(c = 0; (c < width) && (i+c < size); c++) {
+                char x = (ptr[i+c] >= 0x20 && ptr[i+c] < 0x80) ? ptr[i+c] : '.';
+                ss << x;
+            }
+
+            //ss << "\n";
+        }
+
+        LOG_DEBUG << QString::fromStdString(ss.str()).trimmed();
+    }
+
+    static
+    int my_trace(CURL *handle, curl_infotype type,
+                 char *data, size_t size,
+                 void *userp) {
+      const char *text;
+      (void)handle; /* prevent compiler warning */
+      (void)userp;
+
+      switch (type) {
+      case CURLINFO_TEXT:
+          LOG_INFO << QString::fromStdString(Helpers::string_format("== Info: %s", data)).trimmed();
+      default: /* in case a new one is introduced to shock us */
+          return 0;
+
+      case CURLINFO_HEADER_OUT:
+          text = "=> Send header";
+          break;
+      case CURLINFO_DATA_OUT:
+          text = "=> Send data";
+          break;
+      case CURLINFO_SSL_DATA_OUT:
+          text = "=> Send SSL data";
+          break;
+      case CURLINFO_HEADER_IN:
+          text = "<= Recv header";
+          break;
+      case CURLINFO_DATA_IN:
+          text = "<= Recv data";
+          break;
+      case CURLINFO_SSL_DATA_IN:
+          text = "<= Recv SSL data";
+          break;
+      }
+
+      dump(text, (unsigned char *)data, size);
+      return 0;
+    }
+
     void fillCurlOptions(void *curlHandle, UploadContext *context, const QString &remoteUrl) {
         curl_easy_setopt(curlHandle, CURLOPT_UPLOAD, 1L);
 
@@ -86,10 +165,10 @@ namespace Conectivity {
         }
 
         curl_easy_setopt(curlHandle, CURLOPT_HEADERFUNCTION, getcontentlengthfunc);
-
         curl_easy_setopt(curlHandle, CURLOPT_WRITEFUNCTION, discardfunc);
-
         curl_easy_setopt(curlHandle, CURLOPT_READFUNCTION, readfunc);
+
+        curl_easy_setopt(curlHandle, CURLOPT_DEBUGFUNCTION, my_trace);
 
         if (!context->m_UsePassiveMode) {
             curl_easy_setopt(curlHandle, CURLOPT_FTPPORT, "-"); /* disable passive mode */
