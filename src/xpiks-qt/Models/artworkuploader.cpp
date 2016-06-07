@@ -128,6 +128,10 @@ namespace Models {
         context->m_TimeoutSeconds = 10;
         context->m_UsePassiveMode = !disablePassiveMode;
 
+        Models::SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
+        context->m_UseProxy = settingsModel->getUseProxy();
+        context->m_ProxySettings = settingsModel->getProxySettings();
+
         m_TestingCredentialWatcher->setFuture(QtConcurrent::run(Conectivity::isContextValid, context));
     }
 #endif

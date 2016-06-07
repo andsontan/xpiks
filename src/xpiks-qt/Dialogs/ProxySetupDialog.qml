@@ -40,25 +40,16 @@ Item {
     }
 
     function saveProxySettings() {
-        var port = parseInt(proxyPort.text)
-
         settingsModel.saveProxySetting(proxyAddress.text,
                                        proxyUser.text,
                                        proxyPassword.text,
-                                       port)
+                                       proxyPort.text)
     }
 
     MessageDialog {
         id: invalidAddress
         title: i18.n + qsTr("Warning")
         text: i18.n + qsTr("Please, enter proxy address")
-        standardButtons: StandardButton.Ok
-    }
-
-    MessageDialog {
-        id: invalidPort
-        title: i18.n + qsTr("Warning")
-        text: i18.n + qsTr("Please, enter proxy port")
         standardButtons: StandardButton.Ok
     }
 
@@ -267,6 +258,7 @@ Item {
                             text: settingsModel.proxyPort
                             validator: IntValidator {
                                 bottom: 0
+                                top: 65536
                             }
                             anchors.left: parent.left
                             anchors.right: parent.right
@@ -295,13 +287,9 @@ Item {
                             if (proxyAddress.text.length == 0){
                                 invalidAddress.open()
                             } else {
-                                if (proxyPort.text.length == 0){
-                                    invalidPort.open()
-                                } else {
-                                    saveProxySettings()
-                                    callbackObject.onSuccess()
-                                    closePopup()
-                                }
+                                saveProxySettings()
+                                callbackObject.onSuccess()
+                                closePopup()
                             }
                         }
                     }

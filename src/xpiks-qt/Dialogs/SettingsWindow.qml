@@ -1094,6 +1094,8 @@ ApplicationWindow {
                             onClicked: {
                                 if (checked) {
                                     openProxyDialog(true)
+                                } else {
+                                    settingsModel.useProxy = false
                                 }
                             }
 

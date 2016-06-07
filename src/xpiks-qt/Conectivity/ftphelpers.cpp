@@ -95,24 +95,7 @@ namespace Conectivity {
             curl_easy_setopt(curlHandle, CURLOPT_FTPPORT, "-"); /* disable passive mode */
         }
 
-        if (context->m_UseProxy) {
-            Models::ProxySettings *proxySettings = context->m_ProxySettings;
-            Q_ASSERT(proxySettings != NULL);
-
-            curl_easy_setopt(curlHandle, CURLOPT_PROXY, proxySettings->m_Address.toLocal8Bit().data());
-
-            const QString &proxyUser = proxySettings->m_User;
-            if (!proxyUser.isEmpty()) {
-                curl_easy_setopt(curlHandle, CURLOPT_PROXYUSERNAME, proxyUser.toLocal8Bit().data());
-
-                const QString &proxyPassword = proxySettings->m_Password;
-                if (!proxyPassword.isEmpty()) {
-                    curl_easy_setopt(curlHandle, CURLOPT_PROXYPASSWORD, proxyPassword.toLocal8Bit().data());
-                }
-            }
-
-            curl_easy_setopt(curlHandle, CURLOPT_PROXYPORT, proxySettings->m_Port);
-        }
+        fillProxySettings(curlHandle, context);
     }
 
     QString sanitizeHost(const QString &inputHost) {
@@ -130,5 +113,36 @@ namespace Conectivity {
         }
 
         return host;
+    }
+
+    void fillProxySettings(void *curlHandle, UploadContext *context) {
+        if (context->m_UseProxy) {
+            Models::ProxySettings *proxySettings = context->m_ProxySettings;
+            Q_ASSERT(proxySettings != NULL);
+
+            curl_easy_setopt(curlHandle, CURLOPT_PROXY, proxySettings->m_Address.toLocal8Bit().data());
+            LOG_DEBUG << "Using proxy:" << proxySettings->m_Address;
+
+            const QString &proxyUser = proxySettings->m_User;
+            if (!proxyUser.isEmpty()) {
+                curl_easy_setopt(curlHandle, CURLOPT_PROXYUSERNAME, proxyUser.toLocal8Bit().data());
+
+                const QString &proxyPassword = proxySettings->m_Password;
+                if (!proxyPassword.isEmpty()) {
+                    curl_easy_setopt(curlHandle, CURLOPT_PROXYPASSWORD, proxyPassword.toLocal8Bit().data());
+                }
+            }
+
+            if (!proxySettings->m_Port.isEmpty()) {
+                bool isOk = false;
+                int port = proxySettings->m_Port.toInt(&isOk);
+                if (isOk && (port != 0)) {
+                    LOG_DEBUG << "Using proxy port:" << port;
+                    curl_easy_setopt(curlHandle, CURLOPT_PROXYPORT, port);
+                } else {
+                    LOG_DEBUG << "Failed to parse port:" << proxySettings->m_Port;
+                }
+            }
+        }
     }
 }

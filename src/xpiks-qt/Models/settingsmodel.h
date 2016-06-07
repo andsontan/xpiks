@@ -65,7 +65,7 @@ namespace Models {
         Q_PROPERTY(QString proxyAddress READ getProxyAddress NOTIFY proxyAddressChanged)
         Q_PROPERTY(QString proxyUser READ getProxyUser NOTIFY proxyUserChanged)
         Q_PROPERTY(QString proxyPassword READ getProxyPassword NOTIFY proxyPasswordChanged)
-        Q_PROPERTY(int proxyPort READ getProxyPort NOTIFY proxyPortChanged)
+        Q_PROPERTY(QString proxyPort READ getProxyPort NOTIFY proxyPortChanged)
         Q_PROPERTY(bool autoCacheImages READ getAutoCacheImages WRITE setAutoCacheImages NOTIFY autoCacheImagesChanged)
 
     public:
@@ -84,7 +84,7 @@ namespace Models {
         Q_INVOKABLE void resetDictPath();
         Q_INVOKABLE void readAllValues();
         Q_INVOKABLE void raiseMasterPasswordSignal() { emit mustUseMasterPasswordChanged(m_MustUseMasterPassword); }
-        Q_INVOKABLE void saveProxySetting(const QString &address, const QString &user, const QString &password, int port);
+        Q_INVOKABLE void saveProxySetting(const QString &address, const QString &user, const QString &password, const QString &port);
 
     public:
         QString getExifToolPath() const { return m_ExifToolPath; }
@@ -114,7 +114,7 @@ namespace Models {
         QString getProxyAddress() const { return m_ProxySettings.m_Address; }
         QString getProxyUser() const { return m_ProxySettings.m_User; }
         QString getProxyPassword() const { return m_ProxySettings.m_Password; }
-        int getProxyPort() const { return m_ProxySettings.m_Port; }
+        QString getProxyPort() const { return m_ProxySettings.m_Port; }
         ProxySettings * getProxySettings() { return &m_ProxySettings; }
         bool getAutoCacheImages() const { return m_AutoCacheImages; }
 
@@ -147,7 +147,7 @@ namespace Models {
         void proxyAddressChanged(QString value);
         void proxyUserChanged(QString value);
         void proxyPasswordChanged(QString value);
-        void proxyPortChanged(int value);
+        void proxyPortChanged(QString value);
         void autoCacheImagesChanged(bool value);
 
     public:

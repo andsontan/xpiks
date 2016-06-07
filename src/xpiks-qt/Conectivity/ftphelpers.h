@@ -29,6 +29,7 @@ namespace Conectivity {
 
     void fillCurlOptions(void *curlHandle, UploadContext *context, const QString &remoteUrl);
     QString sanitizeHost(const QString &inputHost);
+    void fillProxySettings(void *curlHandle, UploadContext *context);
 }
 
 #endif // CONECTIVITYHELPERS_H
