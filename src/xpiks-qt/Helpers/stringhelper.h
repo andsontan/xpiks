@@ -23,6 +23,7 @@
 #define STRINGHELPER
 
 #include <string>
+#include <stdarg.h>
 
 class QString;
 class QStringList;
@@ -35,6 +36,7 @@ namespace Helpers {
     bool isUtf8(const char* const buffer);
     QString detectEncodingAndDecode(const std::string &value);
     bool is7BitAscii(const QByteArray &s);
+    std::string string_format(const std::string fmt, ...);
 }
 
 #endif // STRINGHELPER
