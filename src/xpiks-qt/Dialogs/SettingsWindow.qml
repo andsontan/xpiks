@@ -996,7 +996,7 @@ ApplicationWindow {
                             clip: true
 
                             StyledTextInput {
-                                id: timeoutMinutes
+                                id: timeoutSeconds
                                 text: settingsModel.uploadTimeout
                                 anchors.left: parent.left
                                 anchors.right: parent.right
@@ -1014,13 +1014,13 @@ ApplicationWindow {
                                 }
 
                                 Component.onCompleted: {
-                                    uploadTab.resetRequested.connect(timeoutMinutes.onResetRequested)
+                                    uploadTab.resetRequested.connect(timeoutSeconds.onResetRequested)
                                 }
 
                                 KeyNavigation.tab: maxParallelUploads
                                 validator: IntValidator {
-                                    bottom: 1
-                                    top: 30
+                                    bottom: 0
+                                    top: 300
                                 }
                             }
                         }

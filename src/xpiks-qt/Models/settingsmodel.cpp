@@ -295,32 +295,36 @@ namespace Models {
         return value;
     }
 
-    void SettingsModel::saveProxySetting(const QString &address, const QString &user, const QString &password, const QString &port){
+    void SettingsModel::saveProxySetting(const QString &address, const QString &user,
+                                         const QString &password, int port) {
         QString tAddress = address.trimmed();
         QString tUser = user.trimmed();
         QString tPassword = password.trimmed();
-        QString tPort = port.trimmed();
-        if (tAddress != m_ProxySettings.m_Address){
+
+        if (tAddress != m_ProxySettings.m_Address) {
             m_ProxySettings.m_Address = tAddress;
             emit proxyAddressChanged(tAddress);
-       }
-       if (tUser != m_ProxySettings.m_User){
+        }
+
+        if (tUser != m_ProxySettings.m_User) {
             m_ProxySettings.m_User = tUser;
             emit proxyUserChanged(tUser);
-       }
-       if (tPassword != m_ProxySettings.m_Password){
+        }
+
+        if (tPassword != m_ProxySettings.m_Password) {
             m_ProxySettings.m_Password = tPassword;
             emit proxyPasswordChanged(tPassword);
-       }
-       if (tPort != m_ProxySettings.m_Port){
-            m_ProxySettings.m_Port = tPort;
-            emit proxyPortChanged(tPort);
-       }
+        }
+
+        if (port != m_ProxySettings.m_Port) {
+            m_ProxySettings.m_Port = port;
+            emit proxyPortChanged(port);
+        }
     }
 
-    void SettingsModel::resetProxySetting(){
-        QString empty="";
-        SettingsModel::saveProxySetting(empty,empty,empty,empty);
+    void SettingsModel::resetProxySetting() {
+        QString empty = "";
+        SettingsModel::saveProxySetting(empty, empty, empty, 0);
     }
 }
 

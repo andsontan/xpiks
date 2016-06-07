@@ -30,8 +30,9 @@
 #include "../Helpers/filenameshelpers.h"
 #include "../Models/imageartwork.h"
 #include "../Commands/commandmanager.h"
+#include "../Models/settingsmodel.h"
+#include "../Models/proxysettings.h"
 
-#define TIMEOUT_SECONDS 10
 #define RETRIES_COUNT 3
 
 namespace Conectivity {
@@ -65,11 +66,13 @@ namespace Conectivity {
     void generateUploadContexts(const QVector<Models::UploadInfo *> &uploadInfos,
                                 QVector<QSharedPointer<UploadContext> > &contexts,
                                 Encryption::SecretsManager *secretsManager,
-                                int timeoutSeconds,
-                                bool useProxy,
-                                Models::ProxySettings * proxySettings) {
+                                Models::SettingsModel *settingsModel) {
         int size = uploadInfos.size();
         contexts.reserve(size);
+
+        Models::ProxySettings *proxySettings = settingsModel->getProxySettings();
+        int timeoutSeconds = settingsModel->getUploadTimeout();
+        bool useProxy = settingsModel->getUseProxy();
 
         for (int i = 0; i < size; ++i) {
             UploadContext *context = new UploadContext();
@@ -81,8 +84,8 @@ namespace Conectivity {
             context->m_UsePassiveMode = !info->getDisableFtpPassiveMode();
             context->m_UseProxy = useProxy;
             context->m_ProxySettings = proxySettings;
-            // TODO: move to configs/options
             context->m_TimeoutSeconds = timeoutSeconds;
+            // TODO: move to configs/options
             context->m_RetriesCount = RETRIES_COUNT;
 
             if (context->m_Host.contains("dreamstime")) {
@@ -101,9 +104,7 @@ namespace Conectivity {
     QVector<UploadBatch*> generateUploadBatches(const QVector<Models::ArtworkMetadata *> &artworksToUpload,
                                                 const QVector<Models::UploadInfo *> &uploadInfos,
                                                 Encryption::SecretsManager *secretsManager,
-                                                int timeoutSeconds,
-                                                bool useProxy,
-                                                Models::ProxySettings * proxySettings) {
+                                                Models::SettingsModel *settingsModel) {
         LOG_DEBUG << artworksToUpload.length() << "file(s)";
         QVector<UploadBatch*> batches;
 
@@ -112,7 +113,7 @@ namespace Conectivity {
         extractFilePathes(artworksToUpload, filePathes, zipFilePathes);
 
         QVector<QSharedPointer<UploadContext> > contexts;
-        generateUploadContexts(uploadInfos, contexts, secretsManager, timeoutSeconds, useProxy, proxySettings);
+        generateUploadContexts(uploadInfos, contexts, secretsManager, settingsModel);
 
         int size = contexts.size();
         batches.reserve(size);

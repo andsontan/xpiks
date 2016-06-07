@@ -91,26 +91,27 @@ namespace Conectivity {
 
         curl_easy_setopt(curlHandle, CURLOPT_READFUNCTION, readfunc);
 
+        if (!context->m_UsePassiveMode) {
+            curl_easy_setopt(curlHandle, CURLOPT_FTPPORT, "-"); /* disable passive mode */
+        }
+
         if (context->m_UseProxy) {
             Models::ProxySettings *proxySettings = context->m_ProxySettings;
+            Q_ASSERT(proxySettings != NULL);
 
             curl_easy_setopt(curlHandle, CURLOPT_PROXY, proxySettings->m_Address.toLocal8Bit().data());
 
-            QString proxyUser = proxySettings->m_User;
+            const QString &proxyUser = proxySettings->m_User;
             if (!proxyUser.isEmpty()) {
                 curl_easy_setopt(curlHandle, CURLOPT_PROXYUSERNAME, proxyUser.toLocal8Bit().data());
 
-                QString proxyPassword = proxySettings->m_Password;
+                const QString &proxyPassword = proxySettings->m_Password;
                 if (!proxyPassword.isEmpty()) {
                     curl_easy_setopt(curlHandle, CURLOPT_PROXYPASSWORD, proxyPassword.toLocal8Bit().data());
                 }
             }
 
-            curl_easy_setopt(curlHandle, CURLOPT_PROXYPORT, proxySettings->m_Port.toLocal8Bit().data());
-        }
-
-        if (!context->m_UsePassiveMode) {
-            curl_easy_setopt(curlHandle, CURLOPT_FTPPORT, "-"); /* disable passive mode */
+            curl_easy_setopt(curlHandle, CURLOPT_PROXYPORT, proxySettings->m_Port);
         }
     }
 

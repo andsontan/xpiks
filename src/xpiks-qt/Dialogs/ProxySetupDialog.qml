@@ -40,7 +40,12 @@ Item {
     }
 
     function saveProxySettings() {
-        settingsModel.saveProxySetting(proxyAddress.text,proxyUser.text,proxyPassword.text,proxyPort.text)
+        var port = parseInt(proxyPort.text)
+
+        settingsModel.saveProxySetting(proxyAddress.text,
+                                       proxyUser.text,
+                                       proxyPassword.text,
+                                       port)
     }
 
     MessageDialog {

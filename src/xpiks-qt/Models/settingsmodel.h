@@ -84,7 +84,8 @@ namespace Models {
         Q_INVOKABLE void resetDictPath();
         Q_INVOKABLE void readAllValues();
         Q_INVOKABLE void raiseMasterPasswordSignal() { emit mustUseMasterPasswordChanged(m_MustUseMasterPassword); }
-        Q_INVOKABLE void saveProxySetting(const QString &address, const QString &user, const QString &password, const QString &port);
+        Q_INVOKABLE void saveProxySetting(const QString &address, const QString &user, const QString &password, int port);
+
     public:
         QString getExifToolPath() const { return m_ExifToolPath; }
         double getMinMegapixelCount() const { return m_MinMegapixelCount; }
@@ -146,7 +147,7 @@ namespace Models {
         void proxyAddressChanged(QString value);
         void proxyUserChanged(QString value);
         void proxyPasswordChanged(QString value);
-        void proxyPortChanged(QString value);
+        void proxyPortChanged(int value);
         void autoCacheImagesChanged(bool value);
 
     public:
@@ -186,7 +187,7 @@ namespace Models {
             if (m_UploadTimeout == uploadTimeout)
                 return;
 
-            m_UploadTimeout = ensureInBounds(uploadTimeout, 5, 30);
+            m_UploadTimeout = ensureInBounds(uploadTimeout, 1, 300);
             emit uploadTimeoutChanged(m_UploadTimeout);
         }
 
@@ -360,7 +361,7 @@ namespace Models {
         double m_ScrollSpeedScale;
         int m_MaxDescriptionLength;
         int m_MaxKeywordsCount;
-        int m_UploadTimeout; // in minutes
+        int m_UploadTimeout; // in seconds
         int m_DismissDuration;
         int m_MaxParallelUploads;
         int m_SelectedThemeIndex;

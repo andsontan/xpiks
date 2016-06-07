@@ -28,6 +28,7 @@
 #include "../Helpers/filenameshelpers.h"
 #include "../Encryption/secretsmanager.h"
 #include "../Commands/commandmanager.h"
+#include "../Models/settingsmodel.h"
 #include "curlftpuploader.h"
 #include "uploadcontext.h"
 #include "ftpuploaderworker.h"
@@ -37,11 +38,9 @@
 #include <curl/curl.h>
 
 namespace Conectivity {
-    FtpCoordinator::FtpCoordinator(int maxParallelUploads, int secondsTimeout, QObject *parent) :
+    FtpCoordinator::FtpCoordinator(int maxParallelUploads, QObject *parent) :
         QObject(parent),
         m_UploadSemaphore(maxParallelUploads),
-        m_MaxParallelUploads(maxParallelUploads),
-        m_SecondsTimeout(secondsTimeout),
         m_OverallProgress(0.0),
         m_FinishedWorkersCount(0),
         m_AllWorkersCount(0),
@@ -60,17 +59,12 @@ namespace Conectivity {
             return;
         }
 
-        Models::SettingsModel *settings = m_CommandManager->getSettingsModel();
-        bool useProxy = settings->getUseProxy();
-        Models::ProxySettings *proxySettings = settings->getProxySettings();
-
         Encryption::SecretsManager *secretsManager = m_CommandManager->getSecretsManager();
+        Models::SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
         QVector<UploadBatch*> batches = generateUploadBatches(artworksToUpload,
                                                               uploadInfos,
                                                               secretsManager,
-                                                              m_SecondsTimeout,
-                                                              useProxy,
-                                                              proxySettings);
+                                                              settingsModel);
 
         Q_ASSERT(batches.size() == uploadInfos.size());
 

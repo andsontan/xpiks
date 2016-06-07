@@ -47,7 +47,7 @@ namespace Conectivity {
     {
         Q_OBJECT
     public:
-        explicit FtpCoordinator(int maxParallelUploads, int secondsTimeout, QObject *parent = 0);
+        explicit FtpCoordinator(int maxParallelUploads, QObject *parent = 0);
 
     public:
         // IFTPCOORDINATOR
@@ -73,8 +73,6 @@ namespace Conectivity {
     private:
         QMutex m_WorkerMutex;
         QSemaphore m_UploadSemaphore;
-        int m_MaxParallelUploads;
-        int m_SecondsTimeout;
         double m_OverallProgress;
         QAtomicInt m_FinishedWorkersCount;
         volatile int m_AllWorkersCount;
