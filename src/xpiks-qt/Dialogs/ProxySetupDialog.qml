@@ -45,14 +45,14 @@ Item {
 
     MessageDialog {
         id: invalidAddress
-        title: "Warning"
+        title: i18.n + qsTr("Warning")
         text: i18.n + qsTr("Please, enter proxy address")
         standardButtons: StandardButton.Ok
     }
 
     MessageDialog {
         id: invalidPort
-        title: "Warning"
+        title: ii18.n + qsTr("Warning")
         text: i18.n + qsTr("Please, enter proxy port")
         standardButtons: StandardButton.Ok
     }
@@ -121,8 +121,8 @@ Item {
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
-            width: 360
-            height: 240
+            width: 280
+            height: 280
             color: Colors.selectedImageBackground
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
@@ -130,7 +130,7 @@ Item {
             ColumnLayout {
                 anchors.fill: parent
                 anchors.margins: 20
-                spacing: 10
+                spacing: 20
 
                 StyledText {
                     anchors.left: parent.left
@@ -143,7 +143,7 @@ Item {
                     spacing: 10
 
                     StyledText {
-                        Layout.preferredWidth: 130
+                        Layout.fillWidth: true
                         horizontalAlignment: Text.AlignRight
                         text: i18.n + qsTr("Hostname:")
                     }
@@ -151,7 +151,7 @@ Item {
                     Rectangle {
                         color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
                         border.width: (proxyAddress.activeFocus) ? 1 : 0
-                        border.color: Colors.artworkModifiedColor
+                        border.color: Colors.artworkActiveColor
                         width: 135
                         height: UIConfig.textInputHeight
                         clip: true
@@ -176,7 +176,6 @@ Item {
 
                     StyledText {
                         Layout.fillWidth: true
-                        Layout.preferredWidth: 130
                         horizontalAlignment: Text.AlignRight
                         text: i18.n + qsTr("Username:")
                     }
@@ -184,7 +183,7 @@ Item {
                     Rectangle {
                         color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
                         border.width: (proxyUser.activeFocus) ? 1 : 0
-                        border.color: Colors.artworkModifiedColor
+                        border.color: Colors.artworkActiveColor
                         width: 135
                         height: UIConfig.textInputHeight
                         clip: true
@@ -211,16 +210,14 @@ Item {
 
                     StyledText {
                         Layout.fillWidth: true
-                        Layout.preferredWidth: 130
                         horizontalAlignment: Text.AlignRight
                         text: i18.n + qsTr("Password:")
-                        color: Colors.labelActiveForeground
                     }
 
                     Rectangle {
                         color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
                         border.width: (proxyPassword.activeFocus) ? 1 : 0
-                        border.color: Colors.artworkModifiedColor
+                        border.color: Colors.artworkActiveColor
                         width: 135
                         height: UIConfig.textInputHeight
                         clip: true
@@ -248,16 +245,14 @@ Item {
 
                     StyledText {
                         Layout.fillWidth: true
-                        Layout.preferredWidth: 130
                         horizontalAlignment: Text.AlignRight
                         text: i18.n + qsTr("Port:")
-                        color: Colors.labelActiveForeground
                     }
 
                     Rectangle {
                         color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
                         border.width: (proxyPort.activeFocus) ? 1 : 0
-                        border.color: Colors.artworkModifiedColor
+                        border.color: Colors.artworkActiveColor
                         width: 135
                         height: UIConfig.textInputHeight
                         clip: true
@@ -282,7 +277,7 @@ Item {
                     anchors.left: parent.left
                     anchors.right: parent.right
                     height: 24
-                    spacing: 10
+                    spacing: 20
 
                     Item {
                         Layout.fillWidth: true
@@ -295,9 +290,9 @@ Item {
                             if (proxyAddress.text.length == 0){
                                 invalidAddress.open()
                             } else {
-                                if(proxyPort.text.length ==0){
+                                if (proxyPort.text.length == 0){
                                     invalidPort.open()
-                                } else{
+                                } else {
                                     saveProxySettings()
                                     callbackObject.onSuccess()
                                     closePopup()

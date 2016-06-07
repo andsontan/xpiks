@@ -645,7 +645,7 @@ ApplicationWindow {
     MessageDialog {
         id: configExitDialog
 
-        title: "Confirmation"
+        title: ii18.n + qsTr("Confirmation")
         text: i18.n + qsTr("You have some artworks modified. Really exit?")
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: shutdownEverything()
@@ -653,7 +653,7 @@ ApplicationWindow {
 
     MessageDialog {
         id: unavailableArtworksDialog
-        title: "Warning"
+        title: ii18.n + qsTr("Warning")
         text: qsTr("Some files are not available anymore.\nThey will be removed from the workflow.")
         standardButtons: StandardButton.Ok
         onAccepted: {
@@ -663,7 +663,7 @@ ApplicationWindow {
 
     MessageDialog {
         id: unavailableVectorsDialog
-        title: "Warning"
+        title: ii18.n + qsTr("Warning")
         text: qsTr("Some vectors are not available anymore.\nThey will be detached automatically.")
         standardButtons: StandardButton.Ok
     }
@@ -671,7 +671,7 @@ ApplicationWindow {
     MessageDialog {
         id: removeMetadataDialog
 
-        title: "Confirmation"
+        title: ii18.n + qsTr("Confirmation")
         text: i18.n + qsTr("Remove metadata from selected artworks?")
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
@@ -682,7 +682,7 @@ ApplicationWindow {
     MessageDialog {
         id: confirmRemoveSelectedDialog
         property int itemsCount
-        title: "Confirmation"
+        title: ii18.n + qsTr("Confirmation")
         text: i18.n + qsTr("Are you sure you want to remove %1 item(s)?").arg(itemsCount)
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
@@ -705,7 +705,7 @@ ApplicationWindow {
     MessageDialog {
         id: confirmRemoveDirectoryDialog
         property int directoryIndex
-        title: "Confirmation"
+        title: ii18.n + qsTr("Confirmation")
         text: i18.n + qsTr("Are you sure you want to remove this directory?")
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
@@ -763,31 +763,31 @@ ApplicationWindow {
 
     MessageDialog {
         id: mustSaveWarning
-        title: "Warning"
+        title: ii18.n + qsTr("Warning")
         text: i18.n + qsTr("Please, save selected items before upload")
     }
 
     MessageDialog {
         id: mustSelectDialog
-        title: "Warning"
+        title: ii18.n + qsTr("Warning")
         text: i18.n + qsTr("Please, select some artworks first")
     }
 
     MessageDialog {
         id: noNewFilesDialog
-        title: "Information"
+        title: ii18.n + qsTr("Information")
         text: i18.n + qsTr("No new files were added")
     }
 
     MessageDialog {
         id: alreadySavedDialog
-        title: "Information"
+        title: ii18.n + qsTr("Information")
         text: i18.n + qsTr("All selected items are already saved")
     }
 
     MessageDialog {
         id: vectorsAttachedDialog
-        title: "Information"
+        title: ii18.n + qsTr("Information")
         property int vectorsAttached: 0
         property string originalText: vectorsAttached > 1 ? qsTr("%1 vectors attached").arg(vectorsAttached) : qsTr("1 vector attached")
         text: i18.n + originalText

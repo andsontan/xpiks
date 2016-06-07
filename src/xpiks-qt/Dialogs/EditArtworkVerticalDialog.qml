@@ -95,7 +95,7 @@ Item {
     MessageDialog {
         id: clearKeywordsDialog
 
-        title: "Confirmation"
+        title: ii18.n + qsTr("Confirmation")
         text: i18.n + qsTr("Clear all keywords?")
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: combinedArtworks.clearKeywords()

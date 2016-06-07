@@ -74,7 +74,7 @@ CloseRequested")
     MessageDialog {
         id: confirmRemoveArtworksDialog
         property int itemsCount
-        title: "Confirmation"
+        title: ii18.n + qsTr("Confirmation")
         text: i18.n + qsTr("Are you sure you want to remove %1 item(s)?").arg(itemsCount)
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
@@ -107,7 +107,7 @@ CloseRequested")
     MessageDialog {
         id: clearKeywordsDialog
 
-        title: "Confirmation"
+        title: ii18.n + qsTr("Confirmation")
         text: i18.n + qsTr("Clear all keywords?")
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: combinedArtworks.clearKeywords()

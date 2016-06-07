@@ -114,7 +114,7 @@ Item {
     MessageDialog {
         id: confirmRemoveItemDialog
         property int itemIndex
-        title: "Confirmation"
+        title: ii18.n + qsTr("Confirmation")
         text: i18.n + qsTr("Are you sure you want to remove this item?")
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
@@ -133,7 +133,7 @@ Item {
     MessageDialog {
         id: noPasswordDialog
         property string agenciesList
-        title: "Warning"
+        title: ii18.n + qsTr("Warning")
         text: i18.n + qsTr("Some agencies (%1) miss FTP credentials. Start upload anyway?").arg(agenciesList)
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
@@ -143,7 +143,7 @@ Item {
 
     MessageDialog {
         id: selectHostsMessageBox
-        title: "Warning"
+        title: ii18.n + qsTr("Warning")
         text: i18.n + qsTr("Please, select some hosts first")
     }
 

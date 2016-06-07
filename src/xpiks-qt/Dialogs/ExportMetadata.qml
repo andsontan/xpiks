@@ -53,7 +53,7 @@ Item {
 
     MessageDialog {
         id: errorsNotification
-        title: "Warning"
+        title: ii18.n + qsTr("Warning")
         text: i18.n + qsTr("Export finished with errors. See logs for details.")
 
         onAccepted: {
