@@ -80,7 +80,7 @@ ApplicationWindow {
                     cursorShape: Qt.PointingHandCursor
                     hoverEnabled: true
                     onClicked: {
-                        Qt.openUrlExternally("http://ribtoks.github.io/xpiks/")
+                        Qt.openUrlExternally("https://ribtoks.github.io/xpiks/")
                     }
                 }
             }

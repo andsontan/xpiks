@@ -22,16 +22,16 @@
 #include "updatescheckerworker.h"
 
 #if defined(Q_OS_DARWIN)
-#define UPDATE_JSON_URL "http://ribtoks.github.io/xpiks/api/v1/update-osx.json"
+#define UPDATE_JSON_URL "https://ribtoks.github.io/xpiks/api/v1/update-osx.json"
 #elif defined(Q_OS_WIN64)
-#define UPDATE_JSON_URL "http://ribtoks.github.io/xpiks/api/v1/update-windows.json"
+#define UPDATE_JSON_URL "https://ribtoks.github.io/xpiks/api/v1/update-windows.json"
 #elif defined(Q_OS_WIN32)
-#define UPDATE_JSON_URL "http://ribtoks.github.io/xpiks/api/v1/update-windows-32.json"
+#define UPDATE_JSON_URL "https://ribtoks.github.io/xpiks/api/v1/update-windows-32.json"
 #else
-#define UPDATE_JSON_URL "http://ribtoks.github.io/xpiks/api/v1/update.json"
+#define UPDATE_JSON_URL "https://ribtoks.github.io/xpiks/api/v1/update.json"
 #endif
 
-#define DEFAULT_UPDATE_URL "http://ribtoks.github.io/xpiks/downloads/"
+#define DEFAULT_UPDATE_URL "https://ribtoks.github.io/xpiks/downloads/"
 #define UPDATE_JSON_MAJOR_VERSION "major_version"
 #define UPDATE_JSON_MINOR_VERSION "minor_version"
 #define UPDATE_JSON_FIX_VERSION "fix_version"
