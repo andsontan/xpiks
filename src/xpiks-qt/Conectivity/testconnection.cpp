@@ -24,6 +24,8 @@
 #include "ftphelpers.h"
 #include <curl/curl.h>
 #include "../Common/defines.h"
+#include "../Models/proxysettings.h"
+#include "../Helpers/stringhelper.h"
 
 namespace Conectivity {
     static size_t throw_away(void *ptr, size_t size, size_t nmemb, void *data) {
@@ -46,9 +48,12 @@ namespace Conectivity {
         CURLcode r = CURLE_GOT_NOTHING;
 
         fillCurlOptions(curlHandle, context, remoteUrl);
+
         curl_easy_setopt(curlHandle, CURLOPT_UPLOAD, 0L);
         curl_easy_setopt(curlHandle, CURLOPT_DIRLISTONLY, 1L);
         curl_easy_setopt(curlHandle, CURLOPT_HEADERFUNCTION, throw_away);
+        curl_easy_setopt(curlHandle, CURLOPT_FTP_USE_EPSV, 0L);
+        curl_easy_setopt(curlHandle, CURLOPT_VERBOSE, 1L);
 
         LOG_DEBUG << "About to check credentials for" << host;
         r = curl_easy_perform(curlHandle);

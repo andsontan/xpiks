@@ -84,7 +84,7 @@ namespace Models {
         Q_INVOKABLE void resetDictPath();
         Q_INVOKABLE void readAllValues();
         Q_INVOKABLE void raiseMasterPasswordSignal() { emit mustUseMasterPasswordChanged(m_MustUseMasterPassword); }
-        Q_INVOKABLE void saveProxySetting(const QString &address, const QString &user, const QString &password, int port);
+        Q_INVOKABLE void saveProxySetting(const QString &address, const QString &user, const QString &password, const QString &port);
 
     public:
         QString getExifToolPath() const { return m_ExifToolPath; }
@@ -147,7 +147,7 @@ namespace Models {
         void proxyAddressChanged(QString value);
         void proxyUserChanged(QString value);
         void proxyPasswordChanged(QString value);
-        void proxyPortChanged(int value);
+        void proxyPortChanged(QString value);
         void autoCacheImagesChanged(bool value);
 
     public:

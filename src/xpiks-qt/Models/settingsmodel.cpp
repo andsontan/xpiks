@@ -296,10 +296,11 @@ namespace Models {
     }
 
     void SettingsModel::saveProxySetting(const QString &address, const QString &user,
-                                         const QString &password, int port) {
+                                         const QString &password, const QString &port) {
         QString tAddress = address.trimmed();
         QString tUser = user.trimmed();
         QString tPassword = password.trimmed();
+        QString tPort = port.trimmed();
 
         if (tAddress != m_ProxySettings.m_Address) {
             m_ProxySettings.m_Address = tAddress;
@@ -316,15 +317,15 @@ namespace Models {
             emit proxyPasswordChanged(tPassword);
         }
 
-        if (port != m_ProxySettings.m_Port) {
-            m_ProxySettings.m_Port = port;
-            emit proxyPortChanged(port);
+        if (tPort != m_ProxySettings.m_Port) {
+            m_ProxySettings.m_Port = tPort;
+            emit proxyPortChanged(tPort);
         }
     }
 
     void SettingsModel::resetProxySetting() {
         QString empty = "";
-        SettingsModel::saveProxySetting(empty, empty, empty, 0);
+        SettingsModel::saveProxySetting(empty, empty, empty, empty);
     }
 }
 

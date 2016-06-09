@@ -57,7 +57,7 @@ Item {
 
     MessageDialog {
         id: errorsNotification
-        title: ii18.n + qsTr("Warning")
+        title: i18.n + qsTr("Warning")
         text: i18.n + qsTr("Import finished with errors. See logs for details.")
 
         onAccepted: {
@@ -67,7 +67,7 @@ Item {
 
     MessageDialog {
         id: installExiftoolDialog
-        title: ii18.n + qsTr("Warning")
+        title: i18.n + qsTr("Warning")
         text: i18.n + qsTr("Please install Exiftool to import metadata")
         informativeText: i18.n + qsTr('<a href="http://www.sno.phy.queensu.ca/~phil/exiftool/">Official Exiftool website</a>')
         standardButtons: StandardButton.Abort | StandardButton.Ignore

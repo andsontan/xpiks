@@ -89,14 +89,14 @@ Item {
 
     MessageDialog {
         id: notEqualPasswordsDialog
-        title: ii18.n + qsTr("Warning")
+        title: i18.n + qsTr("Warning")
         text: i18.n + qsTr("Passwords are not equal")
         standardButtons: StandardButton.Ok
     }
 
     MessageDialog {
         id: wrongCurrentMPDialog
-        title: ii18.n + qsTr("Warning")
+        title: i18.n + qsTr("Warning")
         text: i18.n + qsTr("Please, enter correct current master password")
         standardButtons: StandardButton.Ok
         onAccepted: {

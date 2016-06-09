@@ -31,7 +31,7 @@ namespace Models {
         QString m_Address;
         QString m_User;
         QString m_Password;
-        int m_Port;
+        QString m_Port;
     };
 
     QDataStream &operator<<(QDataStream &out, const ProxySettings &v);

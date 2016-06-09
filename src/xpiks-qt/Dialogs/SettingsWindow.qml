@@ -150,7 +150,7 @@ ApplicationWindow {
 
     MessageDialog {
         id: masterPasswordOffWarningDialog
-        title: ii18.n + qsTr("Warning")
+        title: i18.n + qsTr("Warning")
         text: i18.n + qsTr("Switching off master password will make your passwords storage less secure. Continue?")
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
@@ -179,7 +179,7 @@ ApplicationWindow {
 
     MessageDialog {
         id: resetSettingsDialog
-        title: ii18.n + qsTr("Warning")
+        title: i18.n + qsTr("Warning")
         text: i18.n + qsTr("Are you sure you want to reset all settings? \nThis action cannot be undone.")
         standardButtons: StandardButton.Yes | StandardButton.No
 
@@ -191,7 +191,7 @@ ApplicationWindow {
 
     MessageDialog {
         id: resetMPDialog
-        title: ii18.n + qsTr("Warning")
+        title: i18.n + qsTr("Warning")
         text: i18.n + qsTr("Are you sure you want to reset Master password? \nAll upload hosts' passwords will be purged.")
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
@@ -989,7 +989,7 @@ ApplicationWindow {
 
                         Rectangle {
                             color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
-                            border.width: timeoutMinutes.activeFocus ? 1 : 0
+                            border.width: timeoutSeconds.activeFocus ? 1 : 0
                             border.color: Colors.artworkActiveColor
                             width: 115
                             height: UIConfig.textInputHeight
@@ -1070,7 +1070,7 @@ ApplicationWindow {
                                 Component.onCompleted: {
                                     uploadTab.resetRequested.connect(maxParallelUploads.onResetRequested)
                                 }
-                                KeyNavigation.backtab: timeoutMinutes
+                                KeyNavigation.backtab: timeoutSeconds
                                 validator: IntValidator {
                                     bottom: 1
                                     top: 4
@@ -1094,6 +1094,8 @@ ApplicationWindow {
                             onClicked: {
                                 if (checked) {
                                     openProxyDialog(true)
+                                } else {
+                                    settingsModel.useProxy = false
                                 }
                             }
 
