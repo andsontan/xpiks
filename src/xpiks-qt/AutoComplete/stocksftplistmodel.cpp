@@ -30,7 +30,7 @@
 #include "../Helpers/localconfig.h"
 
 #define OVERWRITE_STOCKS_CONFIG false
-#define STOCKS_LIST_URL "http://ribtoks.github.io/xpiks/api/v1/stocks_ftp.json"
+#define STOCKS_LIST_URL "https://ribtoks.github.io/xpiks/api/v1/stocks_ftp.json"
 #define LOCAL_STOCKS_LIST_FILE QLatin1String("stocks_ftp.json")
 
 #define OVERWRITE_KEY QLatin1String("overwrite")

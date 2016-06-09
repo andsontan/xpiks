@@ -562,17 +562,17 @@ ApplicationWindow {
 
             MenuItem {
                 text: i18.n + qsTr("&Video tutorials")
-                onTriggered: Qt.openUrlExternally("http://ribtoks.github.io/xpiks/blog/2016/videos")
+                onTriggered: Qt.openUrlExternally("https://ribtoks.github.io/xpiks/blog/2016/videos")
             }
 
             MenuItem {
                 text: i18.n + qsTr("&FAQ")
-                onTriggered: Qt.openUrlExternally("http://ribtoks.github.io/xpiks/faq/")
+                onTriggered: Qt.openUrlExternally("https://ribtoks.github.io/xpiks/faq/")
             }
 
             MenuItem {
                 text: i18.n + qsTr("&Support")
-                onTriggered: Qt.openUrlExternally("http://ribtoks.github.io/xpiks/support/")
+                onTriggered: Qt.openUrlExternally("https://ribtoks.github.io/xpiks/support/")
             }
         }
 
@@ -600,7 +600,7 @@ ApplicationWindow {
                 text: "Update window"
                 onTriggered: {
                     Common.launchDialog("Dialogs/UpdateWindow.qml",
-                                        applicationWindow, {updateUrl: "http://ribtoks.github.io/xpiks/downloads/"},
+                                        applicationWindow, {updateUrl: "https://ribtoks.github.io/xpiks/downloads/"},
                                         function(wnd) {wnd.show();});
                 }
             }
@@ -2346,7 +2346,7 @@ ApplicationWindow {
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
-                        Qt.openUrlExternally("http://ribtoks.github.io/xpiks/downloads/")
+                        Qt.openUrlExternally("https://ribtoks.github.io/xpiks/downloads/")
                     }
                 }
             }
