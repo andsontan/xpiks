@@ -1,5 +1,14 @@
 #include "deleteoldlogstest.h"
 
+qint64 getFilesSize(const QVector<Helpers::FileInfoHolder> &files) {
+    qint64 sum = 0;
+    int size = files.size();
+    for (int i = 0; i < size; ++i) {
+        sum += files[i].m_SizeBytes;
+    }
+    return sum;
+}
+
 void DeleteOldLogsTest::deleteNoLogsTest() {
     QVector<Helpers::FileInfoHolder> logsToDelete;
 
@@ -15,15 +24,15 @@ void DeleteOldLogsTest::dontDeleteTest() {
     QVector<Helpers::FileInfoHolder> logs;
 
     logs = createOldLogs(49, 50);
-    Helpers::getFilesToDelete(logs, 12345, logsToDelete);
+    Helpers::getFilesToDelete(logs, getFilesSize(logs), logsToDelete);
     QCOMPARE(logsToDelete.size(), 0);
 
     logs = createBigLogs(9);
-    Helpers::getFilesToDelete(logs, 9*(1*1024*1024), logsToDelete);
+    Helpers::getFilesToDelete(logs, getFilesSize(logs), logsToDelete);
     QCOMPARE(logsToDelete.size(), 0);
 
     logs = createTooManyLogs(99);
-    Helpers::getFilesToDelete(logs, 12345, logsToDelete);
+    Helpers::getFilesToDelete(logs, getFilesSize(logs), logsToDelete);
     QCOMPARE(logsToDelete.size(), 0);
 }
 
@@ -31,7 +40,7 @@ void DeleteOldLogsTest::deleteOldTest() {
     QVector<Helpers::FileInfoHolder> logsToDelete;
 
     QVector<Helpers::FileInfoHolder> logs = createOldLogs(100, 50);
-    Helpers::getFilesToDelete(logs, 12345, logsToDelete);
+    Helpers::getFilesToDelete(logs, getFilesSize(logs), logsToDelete);
 
     QCOMPARE(logsToDelete.size(), logs.size() - 50);
 }
@@ -40,7 +49,7 @@ void DeleteOldLogsTest::deleteLargeTest() {
     QVector<Helpers::FileInfoHolder> logsToDelete;
 
     QVector<Helpers::FileInfoHolder> logs = createBigLogs(12);
-    Helpers::getFilesToDelete(logs, 12345, logsToDelete);
+    Helpers::getFilesToDelete(logs, getFilesSize(logs), logsToDelete);
 
     QCOMPARE(logsToDelete.size(), logs.size() - 2);
 }
@@ -49,7 +58,7 @@ void DeleteOldLogsTest::deleteManyTest() {
     QVector<Helpers::FileInfoHolder> logsToDelete;
 
     QVector<Helpers::FileInfoHolder> logs = createTooManyLogs(113);
-    Helpers::getFilesToDelete(logs, 12345, logsToDelete);
+    Helpers::getFilesToDelete(logs, getFilesSize(logs), logsToDelete);
 
     QCOMPARE(logsToDelete.size(), logs.size() - 13);
 }
@@ -58,7 +67,7 @@ void DeleteOldLogsTest::deleteCombinedTest() {
     QVector<Helpers::FileInfoHolder> logsToDelete, logs;
 
     logs << createTooManyLogs(113) << createBigLogs(12) << createOldLogs(100, 50);
-    Helpers::getFilesToDelete(logs, 12345, logsToDelete);
+    Helpers::getFilesToDelete(logs, getFilesSize(logs), logsToDelete);
 
     QCOMPARE(logsToDelete.size(), logs.size() - (13 + 12 + 50));
 }
