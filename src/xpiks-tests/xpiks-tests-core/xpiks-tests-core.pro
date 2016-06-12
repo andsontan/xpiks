@@ -136,7 +136,6 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Models/artworkuploader.cpp \
     ../../xpiks-qt/Models/ziparchiver.cpp \
     removefilesfs_tests.cpp \
-    jsonmerge_tests.cpp \
     ../../xpiks-qt/Helpers/jsonhelper.cpp \
     ../../xpiks-qt/Helpers/localconfig.cpp \
     ../../xpiks-qt/Helpers/remoteconfig.cpp \
@@ -147,7 +146,9 @@ SOURCES += main.cpp \
     recentdirectories_tests.cpp \
     artitemsmodel_tests.cpp \
     ../../xpiks-qt/Common/flags.cpp \
-    fixspelling_tests.cpp
+    fixspelling_tests.cpp \
+    deleteoldlogstest.cpp \
+    ../../xpiks-qt/Helpers/deletelogshelper.cpp
 
 HEADERS += \
     encryption_tests.h \
@@ -237,7 +238,6 @@ HEADERS += \
     ../../xpiks-qt/Models/ziparchiver.h \
     removefilesfs_tests.h \
     Mocks/artworksrepositorymock.h \
-    jsonmerge_tests.h \
     ../../xpiks-qt/Helpers/jsonhelper.h \
     ../../xpiks-qt/Helpers/localconfig.h \
     ../../xpiks-qt/Helpers/remoteconfig.h \
@@ -245,9 +245,12 @@ HEADERS += \
     ../../xpiks-qt/AutoComplete/stringfilterproxymodel.h \
     ../../xpiks-qt/Models/abstractconfigupdatermodel.h \
     ../../xpiks-qt/Models/imageartwork.h \
+    deleteoldlogstest.h \
     ../../xpiks-qt/Common/hold.h \
     recentdirectories_tests.h \
     removefilesfs_tests.h \
     artitemsmodel_tests.h \
     fixspelling_tests.h \
-    Mocks/spellcheckservicemock.h
+    Mocks/spellcheckservicemock.h \
+    ../../xpiks-qt/Helpers/deletelogshelper.h
+

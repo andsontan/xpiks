@@ -1,13 +1,24 @@
 #include "jsonmerge_tests.h"
+#include <QDir>
 #include "../../xpiks-qt/Common/defines.h"
 #include "../../xpiks-qt/Helpers/jsonhelper.h"
 #include "../../xpiks-qt/Helpers/localconfig.h"
 
-void JsonMergeTests::initTestCase() {
+QString JsonMergeTests::testName() {
+    return QLatin1String("jsonmergetests");
+}
+
+void JsonMergeTests::setup() {
     LOG_DEBUG << "App path: " << QDir::currentPath();
 }
 
-void JsonMergeTests::mergeTwoFilesObjects() {
+int JsonMergeTests::doTest() {
+    mergeTwoFilesObjects();
+    mergeTwoFilesStrings();
+    return 0;
+}
+
+int JsonMergeTests::mergeTwoFilesObjects() {
     QFileInfo infoOld("jsons-for-tests/old.json");
     QFileInfo infoNew("jsons-for-tests/new.json");
     QFileInfo infoGold("jsons-for-tests/gold.json");
@@ -16,9 +27,9 @@ void JsonMergeTests::mergeTwoFilesObjects() {
     QString pathWith = infoNew.absoluteFilePath();
     QString pathGold = infoGold.absoluteFilePath();
 
-    QVERIFY(infoOld.exists());
-    QVERIFY(infoNew.exists());
-    QVERIFY(infoGold.exists());
+    VERIFY(infoOld.exists(),"infoOld does not exist");
+    VERIFY(infoNew.exists(),"infoNew does not exist");
+    VERIFY(infoGold.exists(),"infoGold does not exist");
 
     Helpers::LocalConfig localConfigWith;
     Helpers::LocalConfig localConfigTo;
@@ -30,10 +41,11 @@ void JsonMergeTests::mergeTwoFilesObjects() {
 
     Helpers::mergeJson(localConfigWith.getConfig(), localConfigTo.getConfig(), 0, *this);
 
-    QVERIFY(localConfigGold.getConfig() == localConfigTo.getConfig());
+    VERIFY(localConfigGold.getConfig() == localConfigTo.getConfig(),"generated json does not equal localConfigGold");
+    return 0;
 }
 
-void JsonMergeTests::mergeTwoFilesStrings() {
+int JsonMergeTests::mergeTwoFilesStrings() {
     QFileInfo infoOld("jsons-for-tests/oldS.json");
     QFileInfo infoNew("jsons-for-tests/newS.json");
     QFileInfo infoGold("jsons-for-tests/goldS.json");
@@ -42,9 +54,9 @@ void JsonMergeTests::mergeTwoFilesStrings() {
     QString pathWith = infoNew.absoluteFilePath();
     QString pathGold = infoGold.absoluteFilePath();
 
-    QVERIFY(infoOld.exists());
-    QVERIFY(infoNew.exists());
-    QVERIFY(infoGold.exists());
+    VERIFY(infoOld.exists(),"infoOld does not exist");
+    VERIFY(infoNew.exists(),"infoNew does not exist");
+    VERIFY(infoGold.exists(),"infoGold does not exist");
 
     Helpers::LocalConfig localConfigWith;
     Helpers::LocalConfig localConfigTo;
@@ -67,13 +79,14 @@ void JsonMergeTests::mergeTwoFilesStrings() {
     int goldSize = goldArray.size();
     int testSize = testArray.size();
 
-    for (int i = 0; i < goldSize; i++ ){
+    for (int i = 0; i < goldSize; i++) {
         goldSet.insert(goldArray[i].toString());
     }
 
-    for (int i = 0; i < testSize; i++ ){
+    for (int i = 0; i < testSize; i++) {
         testSet.insert(testArray[i].toString());
     }
 
-    QVERIFY(testSet == goldSet);
+    VERIFY(testSet == goldSet,"goldSet does not equal testSet");
+    return 0;
 }

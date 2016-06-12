@@ -103,7 +103,8 @@ SOURCES += main.cpp \
     Models/proxysettings.cpp \
     QMLExtensions/imagecachingworker.cpp \
     QMLExtensions/imagecachingservice.cpp \
-    QMLExtensions/cachingimageprovider.cpp
+    QMLExtensions/cachingimageprovider.cpp \
+    Helpers/deletelogshelper.cpp
 
 RESOURCES += qml.qrc
 
@@ -263,7 +264,8 @@ HEADERS += \
     QMLExtensions/imagecachingworker.h \
     QMLExtensions/imagecacherequest.h \
     QMLExtensions/imagecachingservice.h \
-    QMLExtensions/cachingimageprovider.h
+    QMLExtensions/cachingimageprovider.h \
+    Helpers/deletelogshelper.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
