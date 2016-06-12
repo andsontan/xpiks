@@ -39,6 +39,7 @@ namespace Helpers {
         deleteLogsFilesFromList(filesToDelete);
     }
 
+    // logFiles vector is supposed to be sorted by age and then by size
     void getFilesToDelete(const QVector<FileInfoHolder> &logFiles, qint64 overallSizeBytes,
                           QVector<FileInfoHolder> &filesToDelete) {
         int size = logFiles.size();
@@ -46,13 +47,14 @@ namespace Helpers {
         for (int i = size - 1; i >= 0; --i) {
             const FileInfoHolder &info = logFiles.at(i);
 
-            bool shouldDelete = false;
-            shouldDelete = shouldDelete || (i >= MAX_LOGS_NUMBER);
-            shouldDelete = shouldDelete || (info.m_AgeDays >= MAX_LOGS_AGE_DAYS);
-            shouldDelete = shouldDelete || (overallSizeBytes >= MAX_LOGS_SIZE_BYTES);
+            bool tooMany = (i >= MAX_LOGS_NUMBER);
+            bool tooOld = (info.m_AgeDays >= MAX_LOGS_AGE_DAYS);
+            bool tooBig = (overallSizeBytes >= MAX_LOGS_SIZE_BYTES);
 
-            if (shouldDelete) {
-                LOG_DEBUG << "Log file" << info.m_Filepath << "marked for deletion";
+            if (tooMany || tooOld || tooBig) {
+#ifndef CORE_TESTS
+                LOG_DEBUG << info.m_Filepath << "too many:" << tooMany << "| too old:" << tooOld << "| too big:" << tooBig;
+#endif
                 filesToDelete.append(info);
                 overallSizeBytes -= info.m_SizeBytes;
                 Q_ASSERT(overallSizeBytes >= 0);

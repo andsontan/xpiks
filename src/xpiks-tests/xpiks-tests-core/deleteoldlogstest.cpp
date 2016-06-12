@@ -23,7 +23,7 @@ void DeleteOldLogsTest::dontDeleteTest() {
 
     QVector<Helpers::FileInfoHolder> logs;
 
-    logs = createOldLogs(49, 50);
+    logs = createOldLogs(60, 0);
     Helpers::getFilesToDelete(logs, getFilesSize(logs), logsToDelete);
     QCOMPARE(logsToDelete.size(), 0);
 
@@ -39,10 +39,10 @@ void DeleteOldLogsTest::dontDeleteTest() {
 void DeleteOldLogsTest::deleteOldTest() {
     QVector<Helpers::FileInfoHolder> logsToDelete;
 
-    QVector<Helpers::FileInfoHolder> logs = createOldLogs(100, 50);
+    QVector<Helpers::FileInfoHolder> logs = createOldLogs(121, 0);
     Helpers::getFilesToDelete(logs, getFilesSize(logs), logsToDelete);
 
-    QCOMPARE(logsToDelete.size(), logs.size() - 50);
+    QCOMPARE(logsToDelete.size(), logs.size() - 60);
 }
 
 void DeleteOldLogsTest::deleteLargeTest() {
@@ -51,7 +51,7 @@ void DeleteOldLogsTest::deleteLargeTest() {
     QVector<Helpers::FileInfoHolder> logs = createBigLogs(12);
     Helpers::getFilesToDelete(logs, getFilesSize(logs), logsToDelete);
 
-    QCOMPARE(logsToDelete.size(), logs.size() - 2);
+    QCOMPARE(logsToDelete.size(), 3);
 }
 
 void DeleteOldLogsTest::deleteManyTest() {
@@ -60,16 +60,18 @@ void DeleteOldLogsTest::deleteManyTest() {
     QVector<Helpers::FileInfoHolder> logs = createTooManyLogs(113);
     Helpers::getFilesToDelete(logs, getFilesSize(logs), logsToDelete);
 
-    QCOMPARE(logsToDelete.size(), logs.size() - 13);
+    QCOMPARE(logsToDelete.size(), 13);
 }
 
 void DeleteOldLogsTest::deleteCombinedTest() {
     QVector<Helpers::FileInfoHolder> logsToDelete, logs;
 
-    logs << createTooManyLogs(113) << createBigLogs(12) << createOldLogs(100, 50);
+    logs << createTooManyLogs(100) << createBigLogs(12) << createOldLogs(70, 60);
+    std::sort(logs.begin(), logs.end());
     Helpers::getFilesToDelete(logs, getFilesSize(logs), logsToDelete);
 
-    QCOMPARE(logsToDelete.size(), logs.size() - (13 + 12 + 50));
+    // logs removed until few big logs are removed
+    QCOMPARE(logsToDelete.size(), (100 + 70 + 3));
 }
 
 QVector<Helpers::FileInfoHolder> DeleteOldLogsTest::createTooManyLogs(int logsCount) {
@@ -78,9 +80,9 @@ QVector<Helpers::FileInfoHolder> DeleteOldLogsTest::createTooManyLogs(int logsCo
 
     while (logsCount--) {
         logs.append({
-                        QString("xpiks-qt-01022015-%1.log").arg(N - 1 - logsCount), // m_FilePath
-                        12345, // m_SizeBytes
-                        0 // m_AgeDays
+                        QString("xpiks-qt-01022015-%1-many.log").arg(N - 1 - logsCount), // m_FilePath
+                        1, // m_SizeBytes
+                        1 // m_AgeDays
                     });
     }
 
@@ -94,8 +96,8 @@ QVector<Helpers::FileInfoHolder> DeleteOldLogsTest::createOldLogs(int logsCount,
     while (logsCount--) {
         int index = N - 1 - logsCount;
         logs.append({
-                        QString("xpiks-qt-01022015-%1.log").arg(index), // m_FilePath
-                        12345, // m_SizeBytes
+                        QString("xpiks-qt-01022015-%1-old.log").arg(index), // m_FilePath
+                        1, // m_SizeBytes
                         startDay + index // m_AgeDays
                     });
     }
@@ -109,7 +111,7 @@ QVector<Helpers::FileInfoHolder> DeleteOldLogsTest::createBigLogs(int logsCount)
 
     while (logsCount--) {
         logs.append({
-                        QString("xpiks-qt-01022015-%1.log").arg(N - 1 - logsCount), // m_FilePath
+                        QString("xpiks-qt-01022015-%1-big.log").arg(N - 1 - logsCount), // m_FilePath
                         1 * 1024 * 1024, // m_SizeBytes
                         0 // m_AgeDays
                     });
