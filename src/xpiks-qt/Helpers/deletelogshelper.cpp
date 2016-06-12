@@ -3,7 +3,7 @@
 #include <QFileInfo>
 #include <QtConcurrent>
 #include <QVector>
-#include <QtAlgorithms>
+#include <algorithm>
 #include "../Helpers/logger.h"
 #include "../Common/defines.h"
 
@@ -12,10 +12,11 @@ namespace Helpers {
     QDateTime getDateFromName(const QString &name);
     void deleteLogsFilesFromList(const QVector<FileInfoHolder> &files);
     void deleteLogFile(const QString &fileNameFull);
-    int initFileInfo(const QString &logsDir, QVector<FileInfoHolder> &files);
+    qint64 findLogFiles(const QString &logsDir, QVector<FileInfoHolder> &logFiles);
 
     bool operator <(const FileInfoHolder &arg1, const FileInfoHolder &arg2) {
-        return arg1.days < arg2.days || ((arg1.days == arg2.days) && (arg1.size < arg2.size));
+        return arg1.m_AgeDays < arg2.m_AgeDays ||
+                ((arg1.m_AgeDays == arg2.m_AgeDays) && (arg1.m_SizeBytes < arg2.m_SizeBytes));
     }
 
     void performCleanLogs() {
@@ -27,64 +28,78 @@ namespace Helpers {
     }
 
     void cleanLogsLogic(const QString &logsDir) {
-        QVector<FileInfoHolder> files;
+        QVector<FileInfoHolder> logFiles;
+
+        qint64 overallSizeBytes = findLogFiles(logsDir, logFiles);
+        std::sort(logFiles.begin(), logFiles.end());
+
         QVector<FileInfoHolder> filesToDelete;
-        int sizeFolderB = initFileInfo(logsDir, files);
-        filesToDelete = getFilesToDelete(files, sizeFolderB);
+        getFilesToDelete(logFiles, overallSizeBytes, filesToDelete);
+
+        deleteLogsFilesFromList(filesToDelete);
     }
 
-    QVector<FileInfoHolder> getFilesToDelete(const QVector<FileInfoHolder> &files, int sizeFolderB) {
-        QVector<FileInfoHolder> filesToDelete;
-        int N = files.size();
-        int i = N - 1;
+    void getFilesToDelete(const QVector<FileInfoHolder> &logFiles, qint64 overallSizeBytes,
+                          QVector<FileInfoHolder> &filesToDelete) {
+        int size = logFiles.size();
 
-        while ((i >= criticalLogsNumber) || (sizeFolderB >= criticalLogsSizeB) ||
-            ((i >= 0) && (files[i].days >= critialLogsAgeDays))) {
-            sizeFolderB -= files[i].size;
-            LOG_DEBUG << "log file " << files[i].name << "marked for deletion";
-            filesToDelete.append(files[i]);
-            i--;
+        for (int i = size - 1; i >= 0; --i) {
+            const FileInfoHolder &info = logFiles.at(i);
+
+            bool shouldDelete = false;
+            shouldDelete = shouldDelete || (i >= MAX_LOGS_NUMBER);
+            shouldDelete = shouldDelete || (info.m_AgeDays >= MAX_LOGS_AGE_DAYS);
+            shouldDelete = shouldDelete || (overallSizeBytes >= MAX_LOGS_SIZE_BYTES);
+
+            if (shouldDelete) {
+                LOG_DEBUG << "Log file" << info.m_Filepath << "marked for deletion";
+                filesToDelete.append(info);
+                overallSizeBytes -= info.m_SizeBytes;
+                Q_ASSERT(overallSizeBytes >= 0);
+            } else {
+                break;
+            }
         }
-
-        return filesToDelete;
     }
 
-    int initFileInfo(const QString &logsDir, QVector<FileInfoHolder> &files) {
+    qint64 findLogFiles(const QString &logsDir, QVector<FileInfoHolder> &logFiles) {
         Helpers::Logger &logger = Helpers::Logger::getInstance();
         QString logFilePath = logger.getLogFilePath();
         QDirIterator it(logsDir, QStringList() << "xpiks-qt-*.log", QDir::Files);
         QDateTime currentTime = QDateTime::currentDateTime();
-        int logsSizeB = 0;
+        qint64 logsSizeBytes = 0;
 
         while (it.hasNext()) {
             QString fileNameFull = it.next();
+
             if (fileNameFull == logFilePath) {
                 continue;
             }
 
             QFileInfo fileInfo(fileNameFull);
-            int size = fileInfo.size();
-            logsSizeB += size;
+            qint64 fileSize = fileInfo.size();
             QString fileName = fileInfo.fileName();
+
+            logsSizeBytes += fileSize;
             QDateTime createTime = getDateFromName(fileName);
             int deltaTimeDays = createTime.daysTo(currentTime);
-            FileInfoHolder temp;
-            temp.days = deltaTimeDays;
-            temp.size = size;
-            temp.name = fileNameFull;
-            files.append(temp);
+
+            logFiles.append({
+                             fileNameFull, // m_FilePath
+                             fileSize, // m_SizeBytes
+                             deltaTimeDays, // m_AgeDays
+                         });
         }
 
-        qSort(files.begin(), files.end());
-
-        return logsSizeB;
+        return logsSizeBytes;
     }
 
     void deleteLogsFilesFromList(const QVector<FileInfoHolder> &files) {
+        LOG_INFO << files.size() << "logs to delete";
         int size = files.size();
 
         for (int i = 0; i < size; i++) {
-            deleteLogFile(files[i].name);
+            deleteLogFile(files[i].m_Filepath);
         }
     }
 
@@ -93,7 +108,15 @@ namespace Helpers {
 
         if (file.exists()) {
             LOG_DEBUG << "Removing log file " << fileNameFull;
-            if (!file.remove()) {
+            bool removed = false;
+
+            try {
+                removed = file.remove();
+            } catch(...) {
+                removed = false;
+            }
+
+            if (!removed) {
                 LOG_WARNING << "Failed to delete file " << fileNameFull;
             }
         }
@@ -101,7 +124,6 @@ namespace Helpers {
 
     QDateTime getDateFromName(const QString &name) {
         QString createDateStr = name.mid(9, 8);
-
         return QDateTime::fromString(createDateStr, "ddMMyyyy");
     }
 }

@@ -1,134 +1,110 @@
 #include "deleteoldlogstest.h"
-#include <QtAlgorithms>
 
-int size = criticalLogsNumber / 10 + 1;
-bool operator ==(const Helpers::FileInfoHolder &arg1, const Helpers::FileInfoHolder &arg2);
+void DeleteOldLogsTest::deleteNoLogsTest() {
+    QVector<Helpers::FileInfoHolder> logsToDelete;
 
-void DeleteOldLogsTest::TestEmptyToDelete() {
-    DeleteOldLogsTest::setupVector(0, 0, 0);
+    QVector<Helpers::FileInfoHolder> logs;
+    Helpers::getFilesToDelete(logs, 0, logsToDelete);
 
-    QVector<Helpers::FileInfoHolder> deletedFiles = Helpers::getFilesToDelete(m_Logs, m_TotalSizeB);
-    int size = deletedFiles.size();
-    QCOMPARE(size, m_LogsToDelete.size());
-    qSort(deletedFiles.begin(), deletedFiles.end());
-    for (int i = 0; i < size; i++) {
-        QCOMPARE(deletedFiles[i], m_LogsToDelete[i]);
-    }
+    QCOMPARE(logsToDelete.size(), 0);
 }
 
-void DeleteOldLogsTest::TestAllToDelete() {
-    DeleteOldLogsTest::setupVector(0, criticalLogsNumber / 2 + 1, criticalLogsNumber / 2 + 1);
+void DeleteOldLogsTest::dontDeleteTest() {
+    QVector<Helpers::FileInfoHolder> logsToDelete;
 
-    QVector<Helpers::FileInfoHolder> deletedFiles = Helpers::getFilesToDelete(m_Logs, m_TotalSizeB);
-    int size = deletedFiles.size();
-    QCOMPARE(size, m_LogsToDelete.size());
-    qSort(deletedFiles.begin(), deletedFiles.end());
-    for (int i = 0; i < size; i++) {
-        QCOMPARE(deletedFiles[i], m_LogsToDelete[i]);
-    }
+    QVector<Helpers::FileInfoHolder> logs;
+
+    logs = createOldLogs(49, 50);
+    Helpers::getFilesToDelete(logs, 12345, logsToDelete);
+    QCOMPARE(logsToDelete.size(), 0);
+
+    logs = createBigLogs(9);
+    Helpers::getFilesToDelete(logs, 9*(1*1024*1024), logsToDelete);
+    QCOMPARE(logsToDelete.size(), 0);
+
+    logs = createTooManyLogs(99);
+    Helpers::getFilesToDelete(logs, 12345, logsToDelete);
+    QCOMPARE(logsToDelete.size(), 0);
 }
 
-void DeleteOldLogsTest::TestNoToDelete() {
-    DeleteOldLogsTest::setupVector(size, 0, 0);
+void DeleteOldLogsTest::deleteOldTest() {
+    QVector<Helpers::FileInfoHolder> logsToDelete;
 
-    QVector<Helpers::FileInfoHolder> deletedFiles = Helpers::getFilesToDelete(m_Logs, m_TotalSizeB);
-    int size = deletedFiles.size();
-    QCOMPARE(size, m_LogsToDelete.size());
-    qSort(deletedFiles.begin(), deletedFiles.end());
-    for (int i = 0; i < size; i++) {
-        QCOMPARE(deletedFiles[i], m_LogsToDelete[i]);
-    }
+    QVector<Helpers::FileInfoHolder> logs = createOldLogs(100, 50);
+    Helpers::getFilesToDelete(logs, 12345, logsToDelete);
+
+    QCOMPARE(logsToDelete.size(), logs.size() - 50);
 }
 
-void DeleteOldLogsTest::TestOldToDelete() {
-    DeleteOldLogsTest::setupVector(size, size, 0);
+void DeleteOldLogsTest::deleteLargeTest() {
+    QVector<Helpers::FileInfoHolder> logsToDelete;
 
-    QVector<Helpers::FileInfoHolder> deletedFiles = Helpers::getFilesToDelete(m_Logs, m_TotalSizeB);
-    int size = deletedFiles.size();
-    QCOMPARE(size, m_LogsToDelete.size());
-    qSort(deletedFiles.begin(), deletedFiles.end());
-    for (int i = 0; i < size; i++) {
-        QCOMPARE(deletedFiles[i], m_LogsToDelete[i]);
-    }
+    QVector<Helpers::FileInfoHolder> logs = createBigLogs(12);
+    Helpers::getFilesToDelete(logs, 12345, logsToDelete);
+
+    QCOMPARE(logsToDelete.size(), logs.size() - 2);
 }
 
-void DeleteOldLogsTest::TestLargeToDelete() {
-    DeleteOldLogsTest::setupVector(size, 0, size);
+void DeleteOldLogsTest::deleteManyTest() {
+    QVector<Helpers::FileInfoHolder> logsToDelete;
 
-    QVector<Helpers::FileInfoHolder> deletedFiles = Helpers::getFilesToDelete(m_Logs, m_TotalSizeB);
-    int size = deletedFiles.size();
-    QCOMPARE(size, m_LogsToDelete.size());
-    qSort(deletedFiles.begin(), deletedFiles.end());
-    for (int i = 0; i < size; i++) {
-        QCOMPARE(deletedFiles[i], m_LogsToDelete[i]);
-    }
+    QVector<Helpers::FileInfoHolder> logs = createTooManyLogs(113);
+    Helpers::getFilesToDelete(logs, 12345, logsToDelete);
+
+    QCOMPARE(logsToDelete.size(), logs.size() - 13);
 }
 
-void DeleteOldLogsTest::TestManyToDelete() {
-    DeleteOldLogsTest::setupVector(criticalLogsNumber + size, 0, 0);
+void DeleteOldLogsTest::deleteCombinedTest() {
+    QVector<Helpers::FileInfoHolder> logsToDelete, logs;
 
-    QVector<Helpers::FileInfoHolder> deletedFiles = Helpers::getFilesToDelete(m_Logs, m_TotalSizeB);
-    int size = deletedFiles.size();
-    QCOMPARE(size, m_LogsToDelete.size());
-    qSort(deletedFiles.begin(), deletedFiles.end());
-    for (int i = 0; i < size; i++) {
-        QCOMPARE(deletedFiles[i], m_LogsToDelete[i]);
-    }
+    logs << createTooManyLogs(113) << createBigLogs(12) << createOldLogs(100, 50);
+    Helpers::getFilesToDelete(logs, 12345, logsToDelete);
+
+    QCOMPARE(logsToDelete.size(), logs.size() - (13 + 12 + 50));
 }
 
-void DeleteOldLogsTest::TestCombinedToDelete() {
-    DeleteOldLogsTest::setupVector(size, size, size);
+QVector<Helpers::FileInfoHolder> DeleteOldLogsTest::createTooManyLogs(int logsCount) {
+    QVector<Helpers::FileInfoHolder> logs;
+    int N = logsCount;
 
-    QVector<Helpers::FileInfoHolder> deletedFiles = Helpers::getFilesToDelete(m_Logs, m_TotalSizeB);
-    int size = deletedFiles.size();
-    QCOMPARE(size, m_LogsToDelete.size());
-    qSort(deletedFiles.begin(), deletedFiles.end());
-    for (int i = 0; i < size; i++) {
-        QCOMPARE(deletedFiles[i], m_LogsToDelete[i]);
+    while (logsCount--) {
+        logs.append({
+                        QString("xpiks-qt-01022015-%1.log").arg(N - 1 - logsCount), // m_FilePath
+                        12345, // m_SizeBytes
+                        0 // m_AgeDays
+                    });
     }
+
+    return logs;
 }
 
-void DeleteOldLogsTest::setupVector(int N_new, int N_old, int N_large) {
-    Helpers::FileInfoHolder file;
+QVector<Helpers::FileInfoHolder> DeleteOldLogsTest::createOldLogs(int logsCount, int startDay) {
+    QVector<Helpers::FileInfoHolder> logs;
+    int N = logsCount;
 
-    m_TotalSizeB = 0;
-    m_LogsToDelete.resize(0);
-    m_Logs.resize(0);
-
-    for (int i = 0; i < N_old; i++) {
-        file.days = critialLogsAgeDays + 1;
-        file.size = i;
-        file.name = QStringLiteral("fileD%1").arg(i);
-        m_LogsToDelete.append(file);
-        m_Logs.append(file);
-        m_TotalSizeB += file.size;
+    while (logsCount--) {
+        int index = N - 1 - logsCount;
+        logs.append({
+                        QString("xpiks-qt-01022015-%1.log").arg(index), // m_FilePath
+                        12345, // m_SizeBytes
+                        startDay + index // m_AgeDays
+                    });
     }
 
-    for (int i = 0; i < N_large; i++) {
-        file.days = i;
-        file.size = criticalLogsSizeB + 1;
-        file.name = QStringLiteral("fileD%1").arg(i + N_old);
-        m_LogsToDelete.append(file);
-        m_Logs.append(file);
-        m_TotalSizeB += file.size;
-    }
-
-    for (int i = 0; i < N_new; i++) {
-        file.days = 0;
-        file.size = 0;
-        file.name = "fileH";
-        m_Logs.append(file);
-        if ((i + N_large + N_old) >= criticalLogsNumber) {
-            m_LogsToDelete.append(file);
-        }
-
-        m_TotalSizeB += file.size;
-    }
-
-    qSort(m_Logs.begin(), m_Logs.end());
-    qSort(m_LogsToDelete.begin(), m_LogsToDelete.end());
+    return logs;
 }
 
-bool operator ==(const Helpers::FileInfoHolder &arg1, const Helpers::FileInfoHolder &arg2) {
-    return ((arg1.days == arg2.days) && (arg1.name == arg2.name) && (arg1.size == arg2.size));
+QVector<Helpers::FileInfoHolder> DeleteOldLogsTest::createBigLogs(int logsCount) {
+    QVector<Helpers::FileInfoHolder> logs;
+    int N = logsCount;
+
+    while (logsCount--) {
+        logs.append({
+                        QString("xpiks-qt-01022015-%1.log").arg(N - 1 - logsCount), // m_FilePath
+                        1 * 1024 * 1024, // m_SizeBytes
+                        0 // m_AgeDays
+                    });
+    }
+
+    return logs;
 }

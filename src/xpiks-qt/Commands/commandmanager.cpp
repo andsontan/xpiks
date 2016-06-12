@@ -187,7 +187,6 @@ const
 #endif
 {
     Commands::ICommandResult *result = command->execute(this);
-
     delete command;
     return result;
 }
@@ -275,8 +274,8 @@ void Commands::CommandManager::ensureDependenciesInjected() {
 }
 
 void Commands::CommandManager::recodePasswords(const QString &oldMasterPassword,
-    const QString                                            &newMasterPassword,
-    const QVector<Models::UploadInfo *>                      &uploadInfos) const {
+                                               const QString &newMasterPassword,
+                                               const QVector<Models::UploadInfo *> &uploadInfos) const {
     if (m_SecretsManager) {
         LOG_DEBUG << uploadInfos.length() << "item(s)";
         foreach(Models::UploadInfo * info, uploadInfos) {
@@ -592,8 +591,8 @@ void Commands::CommandManager::afterConstructionCallback() {
 
     QCoreApplication::processEvents();
 
-    const QString reportingEndpoint = QLatin1String(
-        "cc39a47f60e1ed812e2403b33678dd1c529f1cc43f66494998ec478a4d13496269a3dfa01f882941766dba246c76b12b2a0308e20afd84371c41cf513260f8eb8b71f8c472cafb1abf712c071938ec0791bbf769ab9625c3b64827f511fa3fbb");
+    const QString reportingEndpoint =
+            QLatin1String("cc39a47f60e1ed812e2403b33678dd1c529f1cc43f66494998ec478a4d13496269a3dfa01f882941766dba246c76b12b2a0308e20afd84371c41cf513260f8eb8b71f8c472cafb1abf712c071938ec0791bbf769ab9625c3b64827f511fa3fbb");
     QString endpoint = Encryption::decodeText(reportingEndpoint, "reporting");
     m_TelemetryService->setEndpoint(endpoint);
 
@@ -611,14 +610,12 @@ void Commands::CommandManager::afterConstructionCallback() {
         QCoreApplication::processEvents();
         m_MetadataIOCoordinator->autoDiscoverExiftool();
     }
-
 #endif
 
 #ifndef CORE_TESTS
     if (!Exiv2::XmpParser::initialize()) {
         LOG_WARNING << "Failed to initialize XMP toolkit!";
     }
-
 #endif
 
 #ifdef QT_DEBUG

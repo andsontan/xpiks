@@ -52,7 +52,7 @@ int main(int argc, char *argv[]) {
     QTEST_CLASS(RecentDirectoriesTests, rdt, result);
     QTEST_CLASS(ArtItemsModelTests, aimt, result);
     QTEST_CLASS(FixSpellingTests, fst, result);
-    QTEST_CLASS(DeleteOldLogsTest, dol, result);
+    QTEST_CLASS(DeleteOldLogsTest, dolt, result);
 
     QThread::sleep(1);
 

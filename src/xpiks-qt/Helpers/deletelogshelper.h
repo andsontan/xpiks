@@ -2,22 +2,23 @@
 #define DELETELOGSHELPER_H
 
 #include <QString>
+#include <QVector>
 
-#define criticalLogsSizeMB 10
-#define criticalLogsSizeB criticalLogsSizeMB * 1024 * 1024
-#define critialLogsAgeDays 60
-#define criticalLogsNumber 100
+#define MAX_LOGS_SIZE_MB 10
+#define MAX_LOGS_SIZE_BYTES (MAX_LOGS_SIZE_MB * 1024 * 1024)
+#define MAX_LOGS_AGE_DAYS 60
+#define MAX_LOGS_NUMBER 100
 
 namespace Helpers {
     struct FileInfoHolder {
-        int days;
-        int size;
-        QString name;
+        QString m_Filepath;
+        qint64 m_SizeBytes;
+        int m_AgeDays;
     };
 
     void performCleanLogs();
-
-    QVector<FileInfoHolder> getFilesToDelete(const QVector<FileInfoHolder> &files, int sizeFolderB);
+    void getFilesToDelete(const QVector<FileInfoHolder> &logFiles, qint64 overallSizeBytes,
+                          QVector<FileInfoHolder> &filesToDelete);
     bool operator <(const FileInfoHolder &arg1, const FileInfoHolder &arg2);
 }
 #endif // DELETELOGSHELPER_H

@@ -5,22 +5,22 @@
 #include <QtTest/QtTest>
 #include "../xpiks-qt/Helpers/deletelogshelper.h"
 
-class DeleteOldLogsTest:
-    public QObject
+class DeleteOldLogsTest: public QObject
 {
-Q_OBJECT
-
+    Q_OBJECT
 private slots:
-    void TestEmptyToDelete();
-    void TestAllToDelete();
-    void TestNoToDelete();
-    void TestOldToDelete();
-    void TestLargeToDelete();
-    void TestManyToDelete();
-    void TestCombinedToDelete();
+    void deleteNoLogsTest();
+    void dontDeleteTest();
+    void deleteOldTest();
+    void deleteLargeTest();
+    void deleteManyTest();
+    void deleteCombinedTest();
 
 private:
-    void setupVector(int N_new, int N_old, int N_large);
+    QVector<Helpers::FileInfoHolder> createTooManyLogs(int logsCount);
+    QVector<Helpers::FileInfoHolder> createOldLogs(int logsCount, int startDay);
+    QVector<Helpers::FileInfoHolder> createBigLogs(int logsCount);
+    QVector<Helpers::FileInfoHolder> createLogs(int freshLogsCount, int oldLogsCount, int largeLogsCount);
 
 private:
     QVector<Helpers::FileInfoHolder> m_Logs;
