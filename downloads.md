@@ -18,7 +18,7 @@ permalink: /downloads/
 </a>
 </div>
 
-<p class="download-description">Download the Xpiks package from the link on the left, unpack and drag'n'drop it to the Applications. Also you can use <a href="http://owl.phy.queensu.ca/%7Ephil/exiftool/">Exiftool</a> with Xpiks</p>
+<p class="download-description">Download the Xpiks package from the link on the left, unpack and drag'n'drop it to the Applications. Also you can use <a href="http://owl.phy.queensu.ca/%7Ephil/exiftool/">Exiftool</a> with Xpiks</p> (Settings -> External).
 
 <div style="clear:both; height: 25px;">&nbsp;</div>
 
