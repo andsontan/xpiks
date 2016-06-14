@@ -4,12 +4,15 @@
 
 To install Xpiks in OS X do the following:
 
-- download and install Exiftool (http://www.sno.phy.queensu.ca/~phil/exiftool/)
 - unpack Xpiks from dmg and drag'n'drop it to the Applications
+
+Optionally you can download and install Exiftool (http://www.sno.phy.queensu.ca/~phil/exiftool/) and enable it in Xpiks Settings in the External tab.
 
 **Windows intallation**
 
-Exiftool and curl are packed inside the zip archive. Download and extract Xpiks wherever you want. Launch xpiks-qt.exe.
+- extract Xpiks archive wherever you want. Launch xpiks-qt.exe
+
+Also you can use the distribution of Xpiks as portable installation.
 
 **Debian installation**
 
@@ -38,7 +41,6 @@ List of QML plugins to be installed manually (from standard repository):
 Also there is an issue with application menu in Qt for Ubuntu which requires a workaround:
 
 `sudo apt-get remove --purge appmenu-qt5`
-
 
 **OpenSuse installation**
 

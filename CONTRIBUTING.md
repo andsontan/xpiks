@@ -1,6 +1,6 @@
 Project guidelines:
 
-- Before you push your commits ensure that project builds without errors and warnings and all tests are passing
+- After you create a pull request ensure continuous integration bindings are green (build is compilable and tests are passing across all platforms)
 
 Coding guidelines:
 
@@ -13,8 +13,12 @@ Coding guidelines:
 - try to move as much includes from the header to implementation as possible
 - methods should be separated by 1 empty line as well as all files should have 1 last empty line
 - always put space around assignments, after comma, before curly bracket etc.
+- in the cpp file first include should be appropriate header, then system Qt headers, then system standard C++ headers and only then local headers followed by third-party libs headers
+- you can use Uncrustify withe the config in `src/xpiks-qt/` directory for code formatting to ensure you comply with project rules
 
-Take a look at the [Xpiks Wiki pages](https://github.com/Ribtoks/xpiks/wiki). They contain a lot of topics of how to develop this or that feature.
+Xpiks architecture:
+
+- take a look at the [Xpiks Wiki pages](https://github.com/Ribtoks/xpiks/wiki). They contain a lot of topics of how to develop this or that feature as well as architecture overview.
 
 How to contribute:
 - [Fork](http://help.github.com/forking/) Xpiks repository on GitHub
