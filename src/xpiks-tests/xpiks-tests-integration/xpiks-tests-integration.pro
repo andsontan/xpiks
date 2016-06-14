@@ -133,7 +133,8 @@ SOURCES += main.cpp \
     ../../xpiks-qt/QMLExtensions/imagecachingworker.cpp \
     ../../xpiks-qt/QMLExtensions/cachingimageprovider.cpp \
     clearmetadatatest.cpp \
-    savewithemptytitletest.cpp
+    savewithemptytitletest.cpp \
+    jsonmerge_tests.cpp
 
 RESOURCES +=
 
@@ -290,8 +291,10 @@ HEADERS += \
     ../../xpiks-qt/QMLExtensions/imagecachingworker.h \
     ../../xpiks-qt/QMLExtensions/cachingimageprovider.h \
     clearmetadatatest.h \
-    savewithemptytitletest.h
-    spellingproduceswarningstest.h
+    savewithemptytitletest.h \
+    spellingproduceswarningstest.h \
+    ../../xpiks-qt/Helpers/comparevaluesjson.h \
+    jsonmerge_tests.h
 
 INCLUDEPATH += ../../tiny-aes
 INCLUDEPATH += ../../cpp-libface

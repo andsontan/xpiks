@@ -18,10 +18,10 @@
 #include "undoredo_tests.h"
 #include "artworkfilter_tests.h"
 #include "removefilesfs_tests.h"
-#include "jsonmerge_tests.h"
 #include "recentdirectories_tests.h"
 #include "artitemsmodel_tests.h"
 #include "fixspelling_tests.h"
+#include "deleteoldlogstest.h"
 
 #define QTEST_CLASS(TestObject, vName, result) \
     TestObject vName; \
@@ -49,10 +49,10 @@ int main(int argc, char *argv[]) {
     QTEST_CLASS(UndoRedoTests, urt, result);
     QTEST_CLASS(ArtworkFilterTests, aft, result);
     QTEST_CLASS(RemoveFilesFsTests, del,result);
-    QTEST_CLASS(JsonMergeTests, jmerge, result);
     QTEST_CLASS(RecentDirectoriesTests, rdt, result);
     QTEST_CLASS(ArtItemsModelTests, aimt, result);
     QTEST_CLASS(FixSpellingTests, fst, result);
+    QTEST_CLASS(DeleteOldLogsTest, dolt, result);
 
     QThread::sleep(1);
 

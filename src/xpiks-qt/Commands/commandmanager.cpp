@@ -51,6 +51,7 @@
 #include "../Warnings/warningsservice.h"
 #include "../Models/languagesmodel.h"
 #include "../AutoComplete/autocompleteservice.h"
+#include "../Helpers/deletelogshelper.h"
 #ifndef CORE_TESTS
 #include <exiv2/xmp.hpp>
 #endif
@@ -205,41 +206,41 @@ void Commands::CommandManager::recordHistoryItem(UndoRedo::IHistoryItem *history
 
 void Commands::CommandManager::connectEntitiesSignalsSlots() const {
     if (m_SecretsManager != NULL && m_UploadInfoRepository != NULL) {
-        QObject::connect(m_SecretsManager, SIGNAL(beforeMasterPasswordChange(QString,QString)),
-                         m_UploadInfoRepository, SLOT(onBeforeMasterPasswordChanged(QString,QString)));
+        QObject::connect(m_SecretsManager, SIGNAL(beforeMasterPasswordChange(QString, QString)),
+            m_UploadInfoRepository, SLOT(onBeforeMasterPasswordChanged(QString, QString)));
 
         QObject::connect(m_SecretsManager, SIGNAL(afterMasterPasswordReset()),
-                         m_UploadInfoRepository, SLOT(onAfterMasterPasswordReset()));
+            m_UploadInfoRepository, SLOT(onAfterMasterPasswordReset()));
     }
 
     if (m_ArtItemsModel != NULL && m_FilteredItemsModel != NULL) {
         QObject::connect(m_ArtItemsModel, SIGNAL(selectedArtworksRemoved(int)),
-                         m_FilteredItemsModel, SLOT(onSelectedArtworksRemoved(int)));
+            m_FilteredItemsModel, SLOT(onSelectedArtworksRemoved(int)));
     }
 
     if (m_SettingsModel != NULL && m_TelemetryService != NULL) {
         QObject::connect(m_SettingsModel, SIGNAL(userStatisticsChanged(bool)),
-                         m_TelemetryService, SLOT(changeReporting(bool)));
+            m_TelemetryService, SLOT(changeReporting(bool)));
     }
 
     if (m_SpellCheckerService != NULL && m_FilteredItemsModel != NULL) {
         QObject::connect(m_SpellCheckerService, SIGNAL(serviceAvailable(bool)),
-                         m_FilteredItemsModel, SLOT(onSpellCheckerAvailable(bool)));
+            m_FilteredItemsModel, SLOT(onSpellCheckerAvailable(bool)));
     }
 
     if (m_ArtworksRepository != NULL && m_ArtItemsModel != NULL) {
         QObject::connect(m_ArtworksRepository, SIGNAL(filesUnavailable()),
-                         m_ArtItemsModel, SLOT(onFilesUnavailableHandler()));
+            m_ArtItemsModel, SLOT(onFilesUnavailableHandler()));
     }
 
     if (m_ArtItemsModel != NULL && m_UndoRedoManager != NULL) {
         QObject::connect(m_UndoRedoManager, SIGNAL(undoStackEmpty()),
-                         m_ArtItemsModel, SLOT(onUndoStackEmpty()));
+            m_ArtItemsModel, SLOT(onUndoStackEmpty()));
     }
 
     if (m_LanguagesModel != NULL && m_KeywordsSuggestor != NULL) {
         QObject::connect(m_LanguagesModel, SIGNAL(languageChanged()),
-                         m_KeywordsSuggestor, SLOT(onLanguageChanged()));
+            m_KeywordsSuggestor, SLOT(onLanguageChanged()));
     }
 }
 
@@ -273,14 +274,14 @@ void Commands::CommandManager::ensureDependenciesInjected() {
 }
 
 void Commands::CommandManager::recodePasswords(const QString &oldMasterPassword,
-                                                  const QString &newMasterPassword,
-                                                  const QVector<Models::UploadInfo *> &uploadInfos) const {
+                                               const QString &newMasterPassword,
+                                               const QVector<Models::UploadInfo *> &uploadInfos) const {
     if (m_SecretsManager) {
         LOG_DEBUG << uploadInfos.length() << "item(s)";
-        foreach (Models::UploadInfo *info, uploadInfos) {
+        foreach(Models::UploadInfo * info, uploadInfos) {
             if (info->hasPassword()) {
                 QString newPassword = m_SecretsManager->recodePassword(
-                            info->getPassword(), oldMasterPassword, newMasterPassword);
+                    info->getPassword(), oldMasterPassword, newMasterPassword);
                 info->setPassword(newPassword);
             }
         }
@@ -292,7 +293,7 @@ void Commands::CommandManager::combineArtwork(Models::ArtItemInfo *itemInfo) con
     LOG_DEBUG << "one item with index" << itemInfo->getOriginalIndex();
     if (m_CombinedArtworksModel) {
         m_CombinedArtworksModel->resetModelData();
-        m_CombinedArtworksModel->initArtworks(QVector<Models::ArtItemInfo*>() << itemInfo);
+        m_CombinedArtworksModel->initArtworks(QVector<Models::ArtItemInfo *>() << itemInfo);
         m_CombinedArtworksModel->recombineArtworks();
     }
 }
@@ -305,7 +306,6 @@ void Commands::CommandManager::combineArtworks(const QVector<Models::ArtItemInfo
         m_CombinedArtworksModel->recombineArtworks();
     }
 }
-
 
 void Commands::CommandManager::setArtworksForUpload(const QVector<Models::ArtworkMetadata *> &artworks) const {
     if (m_ArtworkUploader) {
@@ -327,35 +327,35 @@ void Commands::CommandManager::connectArtworkSignals(Models::ArtworkMetadata *me
 #endif
 
         QObject::connect(metadata, SIGNAL(modifiedChanged(bool)),
-                         m_ArtItemsModel, SLOT(itemModifiedChanged(bool)));
+            m_ArtItemsModel, SLOT(itemModifiedChanged(bool)));
 
         QObject::connect(metadata, SIGNAL(spellCheckErrorsChanged()),
-                         m_ArtItemsModel, SLOT(spellCheckErrorsChanged()));
+            m_ArtItemsModel, SLOT(spellCheckErrorsChanged()));
 
         QObject::connect(metadata, SIGNAL(backupRequired()),
-                         m_ArtItemsModel, SLOT(artworkBackupRequested()));
+            m_ArtItemsModel, SLOT(artworkBackupRequested()));
     }
-    
+
     if (m_FilteredItemsModel) {
 #ifdef INTEGRATION_TESTS
         LOG_DEBUG << "Connecting to FilteredItemsModel...";
 #endif
 
         QObject::connect(metadata, SIGNAL(selectedChanged(bool)),
-                         m_FilteredItemsModel, SLOT(itemSelectedChanged(bool)));
+            m_FilteredItemsModel, SLOT(itemSelectedChanged(bool)));
     }
 
     if (m_ArtworksRepository) {
 #ifdef INTEGRATION_TESTS
         LOG_DEBUG << "Connecting to ArtworksRepository...";
 #endif
-        //QObject::connect(metadata, SIGNAL(fileSelectedChanged(QString,bool)),
+        // QObject::connect(metadata, SIGNAL(fileSelectedChanged(QString,bool)),
         //                 m_ArtworksRepository, SLOT(fileSelectedChanged(QString,bool)));
     }
 }
 
 void Commands::CommandManager::readMetadata(const QVector<Models::ArtworkMetadata *> &artworks,
-                                            const QVector<QPair<int, int> > &rangesToUpdate) const {
+    const QVector<QPair<int, int> > &rangesToUpdate) const {
 #ifndef CORE_TESTS
     if (m_MetadataIOCoordinator) {
         if ((m_SettingsModel != NULL) && !m_SettingsModel->getUseExifTool()) {
@@ -365,6 +365,7 @@ void Commands::CommandManager::readMetadata(const QVector<Models::ArtworkMetadat
             m_MetadataIOCoordinator->readMetadataExifTool(artworks, rangesToUpdate);
         }
     }
+
 #else
     Q_UNUSED(artworks);
     Q_UNUSED(rangesToUpdate);
@@ -381,6 +382,7 @@ void Commands::CommandManager::writeMetadata(const QVector<Models::ArtworkMetada
             m_MetadataIOCoordinator->writeMetadataExifTool(artworks, useBackups);
         }
     }
+
 #else
     Q_UNUSED(artworks);
     Q_UNUSED(useBackups);
@@ -419,7 +421,9 @@ void Commands::CommandManager::autoDiscoverExiftool() const {
 
 #ifdef QT_DEBUG
 void Commands::CommandManager::openInitialFiles() {
-    if (m_InitialFilesToOpen.isEmpty()) { return; }
+    if (m_InitialFilesToOpen.isEmpty()) {
+        return;
+    }
 
     m_ArtItemsModel->dropFiles(m_InitialFilesToOpen);
 }
@@ -427,17 +431,19 @@ void Commands::CommandManager::openInitialFiles() {
 void Commands::CommandManager::addInitialArtworks(const QList<QUrl> &filePaths) {
     m_InitialFilesToOpen = filePaths;
 }
+
 #endif
 
 void Commands::CommandManager::generatePreviews(const QVector<Models::ArtworkMetadata *> &items) const {
 #ifndef CORE_TESTS
     if (m_SettingsModel != NULL &&
-            m_SettingsModel->getAutoCacheImages() &&
-            m_ImageCachingService != NULL) {
+        m_SettingsModel->getAutoCacheImages() &&
+        m_ImageCachingService != NULL) {
         m_ImageCachingService->generatePreviews(items);
     }
+
 #else
-        Q_UNUSED(items);
+    Q_UNUSED(items);
 #endif
 }
 
@@ -450,9 +456,9 @@ void Commands::CommandManager::submitKeywordForSpellCheck(Common::BasicKeywordsM
 
 void Commands::CommandManager::submitForSpellCheck(const QVector<Models::ArtworkMetadata *> &items) const {
     if ((m_SettingsModel != NULL) &&
-            m_SettingsModel->getUseSpellCheck() &&
-            (m_SpellCheckerService != NULL) &&
-            !items.isEmpty()) {
+        m_SettingsModel->getUseSpellCheck() &&
+        (m_SpellCheckerService != NULL) &&
+        !items.isEmpty()) {
         QVector<Common::BasicKeywordsModel *> itemsToSubmit;
         int count = items.length();
         itemsToSubmit.reserve(count);
@@ -533,6 +539,7 @@ void Commands::CommandManager::submitForWarningsCheck(const QVector<Models::Artw
 
 void Commands::CommandManager::submitForWarningsCheck(const QVector<Common::IBasicArtwork *> &items) const {
     int count = m_WarningsCheckers.length();
+
     for (int i = 0; i < count; ++i) {
         Common::IServiceBase<Common::IBasicArtwork> *checker = m_WarningsCheckers.at(i);
         if (checker->isAvailable()) {
@@ -548,7 +555,7 @@ void Commands::CommandManager::saveArtworkBackup(Models::ArtworkMetadata *metada
     }
 }
 
-void Commands::CommandManager::saveArtworksBackups(const QVector<Models::ArtworkMetadata*> &artworks) const {
+void Commands::CommandManager::saveArtworksBackups(const QVector<Models::ArtworkMetadata *> &artworks) const {
     if ((m_SettingsModel != NULL) && m_SettingsModel->getSaveBackups() && m_MetadataSaverService != NULL) {
         m_MetadataSaverService->saveArtworks(artworks);
     }
@@ -566,7 +573,7 @@ void Commands::CommandManager::cleanupLocalLibraryAsync() const {
     }
 }
 
-void Commands::CommandManager::afterConstructionCallback()  {
+void Commands::CommandManager::afterConstructionCallback() {
     if (m_AfterInitCalled) {
         LOG_WARNING << "Attempt to call afterConstructionCallback() second time";
         return;
@@ -584,7 +591,8 @@ void Commands::CommandManager::afterConstructionCallback()  {
 
     QCoreApplication::processEvents();
 
-    const QString reportingEndpoint = QLatin1String("cc39a47f60e1ed812e2403b33678dd1c529f1cc43f66494998ec478a4d13496269a3dfa01f882941766dba246c76b12b2a0308e20afd84371c41cf513260f8eb8b71f8c472cafb1abf712c071938ec0791bbf769ab9625c3b64827f511fa3fbb");
+    const QString reportingEndpoint =
+            QLatin1String("cc39a47f60e1ed812e2403b33678dd1c529f1cc43f66494998ec478a4d13496269a3dfa01f882941766dba246c76b12b2a0308e20afd84371c41cf513260f8eb8b71f8c472cafb1abf712c071938ec0791bbf769ab9625c3b64827f511fa3fbb");
     QString endpoint = Encryption::decodeText(reportingEndpoint, "reporting");
     m_TelemetryService->setEndpoint(endpoint);
 
@@ -613,11 +621,17 @@ void Commands::CommandManager::afterConstructionCallback()  {
 #ifdef QT_DEBUG
     openInitialFiles();
 #endif
+
+#if !defined(CORE_TESTS) && !defined(INTEGRATION_TESTS)
+   Helpers::performCleanLogs();
+#endif
 }
 
 void Commands::CommandManager::beforeDestructionCallback() const {
     LOG_DEBUG << "Shutting down...";
-    if (!m_AfterInitCalled) { return; }
+    if (!m_AfterInitCalled) {
+        return;
+    }
 
     m_ArtworksRepository->stopListeningToUnavailableFiles();
 
@@ -660,6 +674,7 @@ void Commands::CommandManager::autoCompleteKeyword(const QString &keyword, QObje
         m_AutoCompleteService->findKeywordCompletions(keyword, notifyObject);
     }
 }
+
 #endif
 
 void Commands::CommandManager::removeUnavailableFiles() {
@@ -698,4 +713,5 @@ void Commands::CommandManager::cleanup() {
     m_ArtItemsModel->deleteAllItems();
     m_SettingsModel->resetToDefault();
 }
+
 #endif
