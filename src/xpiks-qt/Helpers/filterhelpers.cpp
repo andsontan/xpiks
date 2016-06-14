@@ -24,6 +24,7 @@
 #include "../Models/artworkmetadata.h"
 #include "../Models/imageartwork.h"
 #include "../Common/basickeywordsmodel.h"
+#include "../Common/flags.h"
 
 namespace Helpers {
     bool fitsSpecialKeywords(const QString &searchTerm, Models::ArtworkMetadata *metadata) {
@@ -46,13 +47,20 @@ namespace Helpers {
         return hasMatch;
     }
 
-    bool containsAnyPartsSearch(const QString &mainSearchTerm, Models::ArtworkMetadata *metadata) {
+    bool containsAnyPartsSearch(const QString &mainSearchTerm, Models::ArtworkMetadata *metadata, int searchFlags) {
         bool hasMatch = false;
         QStringList searchTerms = mainSearchTerm.split(QChar::Space, QString::SkipEmptyParts);
 
-        QString description = metadata->getDescription();
-        QString title = metadata->getTitle();
+        const QString description = metadata->getDescription();
+        const QString title = metadata->getTitle();
         const QString &filepath = metadata->getFilepath();
+
+        const bool needToCheckDescription = Common::HasFlag(searchFlags, Common::SearchFlagSearchDescription);
+        const bool needToCheckTitle = Common::HasFlag(searchFlags, Common::SearchFlagSearchTitle);
+        const bool needToCheckSpecial = Common::HasFlag(searchFlags, Common::SearchFlagReservedTerms);
+        const bool needToCheckFilepath = Common::HasFlag(searchFlags, Common::SearchFlagSearchFilepath);
+        const bool caseSensitive = Common::HasFlag(searchFlags, Common::SearchFlagCaseSensitive);
+        Qt::CaseSensitivity caseSensitivity = caseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive;
 
         int length = searchTerms.length();
 
@@ -61,24 +69,29 @@ namespace Helpers {
         for (int i = 0; i < length; ++i) {
             const QString &searchTerm = searchTerms.at(i);
 
-            hasMatch = fitsSpecialKeywords(searchTerm, metadata);
-
-            if (!hasMatch) {
-                hasMatch = description.contains(searchTerm, Qt::CaseInsensitive);
+            if (needToCheckSpecial) {
+                hasMatch = fitsSpecialKeywords(searchTerm, metadata);
             }
 
-            if (!hasMatch) {
-                hasMatch = title.contains(searchTerm, Qt::CaseInsensitive);
+            if (!hasMatch && needToCheckDescription) {
+                hasMatch = description.contains(searchTerm, caseSensitivity);
             }
 
-            if (!hasMatch) {
-                hasMatch = filepath.contains(searchTerm, Qt::CaseInsensitive);
+            if (!hasMatch && needToCheckTitle) {
+                hasMatch = title.contains(searchTerm, caseSensitivity);
+            }
+
+            if (!hasMatch && needToCheckFilepath) {
+                hasMatch = filepath.contains(searchTerm, caseSensitivity);
             }
 
             if (hasMatch) { break; }
         }
 
-        if (!hasMatch) {
+
+        const bool needToCheckKeywords = Common::HasFlag(searchFlags, Common::SearchFlagSearchKeywords);
+
+        if (!hasMatch && needToCheckKeywords) {
             for (int i = 0; i < length; ++i) {
                 QString searchTerm = searchTerms[i];
                 bool strictMatch = false;
@@ -88,7 +101,7 @@ namespace Helpers {
                     searchTerm.remove(0, 1);
                 }
 
-                hasMatch = keywordsModel->containsKeyword(searchTerm, strictMatch);
+                hasMatch = keywordsModel->containsKeyword(searchTerm, (strictMatch || caseSensitive));
                 if (hasMatch) { break; }
             }
         }
@@ -96,13 +109,20 @@ namespace Helpers {
         return hasMatch;
     }
 
-    bool containsAllPartsSearch(const QString &mainSearchTerm, Models::ArtworkMetadata *metadata) {
+    bool containsAllPartsSearch(const QString &mainSearchTerm, Models::ArtworkMetadata *metadata, int searchFlags) {
         bool hasMatch = false;
         QStringList searchTerms = mainSearchTerm.split(QChar::Space, QString::SkipEmptyParts);
 
-        QString description = metadata->getDescription();
-        QString title = metadata->getTitle();
+        const QString description = metadata->getDescription();
+        const QString title = metadata->getTitle();
         const QString &filepath = metadata->getFilepath();
+
+        const bool needToCheckDescription = Common::HasFlag(searchFlags, Common::SearchFlagSearchDescription);
+        const bool needToCheckTitle = Common::HasFlag(searchFlags, Common::SearchFlagSearchTitle);
+        const bool needToCheckSpecial = Common::HasFlag(searchFlags, Common::SearchFlagReservedTerms);
+        const bool needToCheckFilepath = Common::HasFlag(searchFlags, Common::SearchFlagSearchFilepath);
+        const bool caseSensitive = Common::HasFlag(searchFlags, Common::SearchFlagCaseSensitive);
+        Qt::CaseSensitivity caseSensitivity = caseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive;
 
         bool anyError = false;
         int length = searchTerms.length();
@@ -114,27 +134,31 @@ namespace Helpers {
             bool anyContains = false;
             bool strictMatch = false;
 
-            anyContains = fitsSpecialKeywords(searchTerm, metadata);
-
-            if (!anyContains) {
-                anyContains = description.contains(searchTerm, Qt::CaseInsensitive);
+            if (needToCheckSpecial) {
+                anyContains = fitsSpecialKeywords(searchTerm, metadata);
             }
 
-            if (!anyContains) {
-                anyContains = title.contains(searchTerm, Qt::CaseInsensitive);
+            if (!anyContains && needToCheckDescription) {
+                anyContains = description.contains(searchTerm, caseSensitivity);
             }
 
-            if (!anyContains) {
-                anyContains = filepath.contains(searchTerm, Qt::CaseInsensitive);
+            if (!anyContains && needToCheckTitle) {
+                anyContains = title.contains(searchTerm, caseSensitivity);
             }
 
-            if (!anyContains) {
+            if (!anyContains && needToCheckFilepath) {
+                anyContains = filepath.contains(searchTerm, caseSensitivity);
+            }
+
+            const bool needToCheckKeywords = Common::HasFlag(searchFlags, Common::SearchFlagSearchKeywords);
+
+            if (!anyContains && needToCheckKeywords) {
                 if ((searchTerm.length() > 1) && searchTerm[0] == QChar('!')) {
                     strictMatch = true;
                     searchTerm.remove(0, 1);
                 }
 
-                anyContains = keywordsModel->containsKeyword(searchTerm, strictMatch);
+                anyContains = keywordsModel->containsKeyword(searchTerm, (strictMatch || caseSensitive));
             }
 
             if (!anyContains) {
@@ -148,14 +172,25 @@ namespace Helpers {
     }
 
     bool containsPartsSearch(const QString &mainSearchTerm, Models::ArtworkMetadata *metadata, bool searchUsingAnd) {
+        // default search is not case sensitive
+        int searchFlags = searchUsingAnd ? Common::SearchFlagSearchAllTermsEverything :
+                                           Common::SearchFlagSearchAnyTermsEverything;
+        bool hasMatch = searchHasMatch(mainSearchTerm, metadata, searchFlags);
+        return hasMatch;
+    }
+
+    bool searchHasMatch(const QString &searchTerm, Models::ArtworkMetadata *metadata, int searchFlags) {
         bool hasMatch = false;
 
+        bool searchUsingAnd = Common::HasFlag(searchFlags, Common::SearchFlagAllSearchTerms);
+
         if (searchUsingAnd) {
-            hasMatch = containsAllPartsSearch(mainSearchTerm, metadata);
+            hasMatch = containsAllPartsSearch(searchTerm, metadata, searchFlags);
         } else {
-            hasMatch = containsAnyPartsSearch(mainSearchTerm, metadata);
+            hasMatch = containsAnyPartsSearch(searchTerm, metadata, searchFlags);
         }
 
         return hasMatch;
     }
+
 }
