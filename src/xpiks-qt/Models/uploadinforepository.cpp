@@ -54,6 +54,7 @@ namespace Models {
 
     void UploadInfoRepository::addItem() {
         int lastIndex = m_UploadInfos.length();
+
         LOG_INFO << lastIndex;
         beginInsertRows(QModelIndex(), lastIndex, lastIndex);
         m_UploadInfos.append(new UploadInfo());
@@ -66,7 +67,7 @@ namespace Models {
         // bad type QList instead of QVector
         // but users already have this
         QList<QHash<int, QString> > items;
-        foreach (UploadInfo *info, m_UploadInfos) {
+        foreach(UploadInfo * info, m_UploadInfos) {
             if (!info->isEmpty()) {
                 items.append(info->toHash());
             }
@@ -84,6 +85,7 @@ namespace Models {
     int UploadInfoRepository::getSelectedInfosCount() const {
         int count = m_UploadInfos.length();
         int selectedCount = 0;
+
         for (int i = 0; i < count; ++i) {
             if (m_UploadInfos.at(i)->getIsSelected()) {
                 selectedCount++;
@@ -95,7 +97,8 @@ namespace Models {
 
     QString UploadInfoRepository::getAgenciesWithMissingDetails() {
         QStringList items;
-        foreach (UploadInfo *info, m_UploadInfos) {
+
+        foreach(UploadInfo * info, m_UploadInfos) {
             if (info->getIsSelected() && info->isSomethingMissing()) {
                 items.append(info->getTitle());
             }
@@ -125,14 +128,14 @@ namespace Models {
     }
 
     void UploadInfoRepository::backupAndDropRealPasswords() {
-        foreach (UploadInfo *info, m_UploadInfos) {
+        foreach(UploadInfo * info, m_UploadInfos) {
             info->backupPassword();
             info->dropPassword();
         }
     }
 
     void UploadInfoRepository::restoreRealPasswords() {
-        foreach (UploadInfo *info, m_UploadInfos) {
+        foreach(UploadInfo * info, m_UploadInfos) {
             info->restorePassword();
         }
     }
@@ -143,14 +146,16 @@ namespace Models {
 
     void UploadInfoRepository::resetPercents() {
         LOG_DEBUG << "#";
-        foreach (UploadInfo *info, m_UploadInfos) { info->resetPercent(); }
+        foreach(UploadInfo * info, m_UploadInfos) {
+            info->resetPercent();
+        }
     }
 
     QVector<UploadInfo *> UploadInfoRepository::retrieveSelectedUploadInfos() const {
-        QVector<UploadInfo*> uploadInfos;
+        QVector<UploadInfo *> uploadInfos;
         uploadInfos.reserve(m_UploadInfos.size());
 
-        foreach (UploadInfo *info, m_UploadInfos) {
+        foreach(UploadInfo * info, m_UploadInfos) {
             if (info->getIsSelected()) {
                 uploadInfos.append(info);
             }
@@ -166,8 +171,10 @@ namespace Models {
 
     QVariant UploadInfoRepository::data(const QModelIndex &index, int role) const {
         int row = index.row();
-        if (row < 0 || row >= m_UploadInfos.count())
+
+        if (row < 0 || row >= m_UploadInfos.count()) {
             return QVariant();
+        }
 
         UploadInfo *uploadInfo = m_UploadInfos.at(row);
 
@@ -193,6 +200,8 @@ namespace Models {
                 return uploadInfo->getFtpPassiveMode();*/
             case DisableFtpPassiveModeRole:
                 return uploadInfo->getDisableFtpPassiveMode();
+            case DisableEPSVRole:
+                return uploadInfo->getDisableEPSV();
             default:
                 return QVariant();
         }
@@ -200,6 +209,7 @@ namespace Models {
 
     Qt::ItemFlags UploadInfoRepository::flags(const QModelIndex &index) const {
         int row = index.row();
+
         if (row < 0 || row >= m_UploadInfos.length()) {
             return Qt::ItemIsEnabled;
         }
@@ -209,6 +219,7 @@ namespace Models {
 
     bool UploadInfoRepository::setData(const QModelIndex &index, const QVariant &value, int role) {
         int row = index.row();
+
         if (row < 0 || row >= m_UploadInfos.length()) {
             return false;
         }
@@ -227,6 +238,7 @@ namespace Models {
                     needToUpdate = true;
                     roleToUpdate = ZipBeforeUploadRole;
                 }
+
                 break;
             case EditHostRole:
                 roleToUpdate = HostRole;
@@ -258,6 +270,9 @@ namespace Models {
             case EditDisableFtpPassiveModeRole:
                 roleToUpdate = DisableFtpPassiveModeRole;
                 needToUpdate = uploadInfo->setDisableFtpPassiveMode(value.toBool());
+            case EditDisableEPSVRole:
+                roleToUpdate = DisableEPSVRole;
+                needToUpdate = uploadInfo->setDisableEPSV(value.toBool());
             default:
                 return false;
         }
@@ -277,7 +292,7 @@ namespace Models {
 
     void UploadInfoRepository::onAfterMasterPasswordReset() {
         LOG_INFO << "#";
-        foreach (UploadInfo *info, m_UploadInfos) {
+        foreach(UploadInfo * info, m_UploadInfos) {
             info->dropPassword();
         }
     }
@@ -298,14 +313,17 @@ namespace Models {
         roles[EditZipBeforeUploadRole] = "editzipbeforeupload";
         roles[PercentRole] = "percent";
         /*roles[FtpPassiveModeRole] = "ftppassivemode";
-        roles[EditFtpPassiveModeRole] = "editftppassivemode";*/
+           roles[EditFtpPassiveModeRole] = "editftppassivemode";*/
         roles[DisableFtpPassiveModeRole] = "disablepassivemode";
         roles[EditDisableFtpPassiveModeRole] = "editdisablepassivemode";
+        roles[DisableEPSVRole] = "disableEPSV";
+        roles[EditDisableEPSVRole] = "editdisableEPSV";
         return roles;
     }
 
     void UploadInfoRepository::removeInnerItem(int row) {
         UploadInfo *info = m_UploadInfos.takeAt(row);
+
         delete info;
     }
 }

@@ -42,6 +42,7 @@ namespace Conectivity {
         QString m_DirForVectors;
         QString m_DirForImages;
         bool m_UsePassiveMode;
+        bool m_UseEPSV;
         int m_RetriesCount;
         int m_TimeoutSeconds;
         bool m_UseProxy;

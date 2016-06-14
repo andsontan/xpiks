@@ -45,7 +45,8 @@ namespace Models {
             ZipPreviewAndVectorField = 5,
             /*DEPRECATED*/FtpPassiveModeField = 6,
             DisableFtpPassiveModeField = 7,
-            IsSelectedField = 8
+            IsSelectedField = 8,
+            DisableEPSVField = 9
         };
 
     public:
@@ -53,7 +54,8 @@ namespace Models {
             m_Percent(0),
             m_ZipBeforeUpload(false),
             m_IsSelected(false),
-            m_DisableFtpPassiveMode(false)
+            m_DisableFtpPassiveMode(false),
+            m_DisableEPSV(false)
         {
             m_Title = QObject::tr("Untitled");
         }
@@ -88,6 +90,7 @@ namespace Models {
                     (m_Title.isEmpty() || m_Title == QObject::tr("Untitled")); }
         double getPercent() const { return m_Percent; }
         bool getDisableFtpPassiveMode() const { return m_DisableFtpPassiveMode; }
+        bool getDisableEPSV() const { return m_DisableEPSV; }
 
     public:
         bool setTitle(const QString &value) { bool result = m_Title != value; m_Title = value; return result; }
@@ -124,6 +127,11 @@ namespace Models {
             m_DisableFtpPassiveMode = value;
             return result;
         }
+        bool setDisableEPSV(bool value) {
+            bool result = m_DisableEPSV != value;
+            m_DisableEPSV = value;
+            return result;
+        }
 
     public:
         QHash<int, QString> toHash() {
@@ -134,6 +142,7 @@ namespace Models {
             hash[PasswordField] = m_EncodedPassword;
             hash[ZipPreviewAndVectorField] = BOOL_TO_STR(m_ZipBeforeUpload);
             hash[DisableFtpPassiveModeField] = BOOL_TO_STR(m_DisableFtpPassiveMode);
+            hash[DisableEPSVField] = BOOL_TO_STR(m_DisableEPSV);
             hash[IsSelectedField] = BOOL_TO_STR(m_IsSelected);
             return hash;
         }
@@ -150,6 +159,7 @@ namespace Models {
         bool m_ZipBeforeUpload;
         bool m_IsSelected;
         bool m_DisableFtpPassiveMode;
+        bool m_DisableEPSV;
     };
 }
 

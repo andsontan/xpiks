@@ -189,6 +189,9 @@ namespace Conectivity {
         if (!context->m_UsePassiveMode) {
             curl_easy_setopt(curlHandle, CURLOPT_FTPPORT, "-"); /* disable passive mode */
         }
+        if (!context->m_UseEPSV) {
+            curl_easy_setopt(curlHandle, CURLOPT_FTP_USE_EPSV, 0L);
+        }
 
         fillProxySettings(curlHandle, context);
     }

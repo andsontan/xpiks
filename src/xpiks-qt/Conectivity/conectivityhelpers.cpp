@@ -82,6 +82,7 @@ namespace Conectivity {
             context->m_Username = info->getUsername();
             context->m_Password = secretsManager->decodePassword(info->getPassword());
             context->m_UsePassiveMode = !info->getDisableFtpPassiveMode();
+            context->m_UseEPSV = !info->getDisableEPSV();
             context->m_UseProxy = useProxy;
             context->m_ProxySettings = proxySettings;
             context->m_TimeoutSeconds = timeoutSeconds;

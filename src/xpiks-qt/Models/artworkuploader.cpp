@@ -120,13 +120,14 @@ namespace Models {
     void ArtworkUploader::uploadArtworks() { doUploadArtworks(getArtworkList()); }
 
     void ArtworkUploader::checkCredentials(const QString &host, const QString &username,
-                                           const QString &password, bool disablePassiveMode) const {
+                                           const QString &password, bool disablePassiveMode, bool disableEPSV) const {
         Conectivity::UploadContext *context = new Conectivity::UploadContext();
         context->m_Host = host;
         context->m_Username = username;
         context->m_Password = password;
         context->m_TimeoutSeconds = 10;
         context->m_UsePassiveMode = !disablePassiveMode;
+        context->m_UseEPSV = !disableEPSV;
 
         Models::SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
         context->m_UseProxy = settingsModel->getUseProxy();

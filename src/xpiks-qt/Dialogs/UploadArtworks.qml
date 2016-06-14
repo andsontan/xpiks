@@ -730,7 +730,8 @@ Item {
                                                 testButton.enabled = false
                                                 credentialsStatus.enabled = false
                                                 var disablePassiveMode = uploadHostsListView.currentItem.myData.disablepassivemode
-                                                artworkUploader.checkCredentials(ftpHost.text, ftpUsername.text, ftpPassword.text, disablePassiveMode)
+                                                var disableEPSV = uploadHostsListView.currentItem.myData.disableEPSV
+                                                artworkUploader.checkCredentials(ftpHost.text, ftpUsername.text, ftpPassword.text, disablePassiveMode, disableEPSV)
                                             }
 
                                             Connections {
@@ -796,6 +797,25 @@ Item {
                                             target: uploadInfos
                                             onDataChanged: {
                                                 ftpPassiveModeCheckBox.checked = uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.disablepassivemode : false
+                                            }
+                                        }
+                                    }
+
+                                    StyledCheckbox {
+                                        id: epsvCheckBox
+                                        text: i18.n + qsTr("Disable extended passive mode")
+                                        Component.onCompleted: checked = uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.disableEPSV : false
+
+                                        onClicked: {
+                                            if (uploadHostsListView.currentItem) {
+                                                uploadHostsListView.currentItem.myData.editdisableEPSV = checked
+                                            }
+                                        }
+
+                                        Connections {
+                                            target: uploadInfos
+                                            onDataChanged: {
+                                                epsvCheckBox.checked = uploadHostsListView.currentItem ? uploadHostsListView.currentItem.myData.disableEPSV : false
                                             }
                                         }
                                     }

@@ -32,12 +32,14 @@
 namespace Models {
     class UploadInfo;
 
-    class UploadInfoRepository : public QAbstractListModel, public Common::BaseEntity
+    class UploadInfoRepository:
+        public QAbstractListModel, public Common::BaseEntity
     {
-        Q_OBJECT
-        Q_PROPERTY(int infosCount READ getInfosCount NOTIFY infosCountChanged)
+    Q_OBJECT
+    Q_PROPERTY(int infosCount READ getInfosCount NOTIFY infosCountChanged)
+
     public:
-        UploadInfoRepository(QObject *parent = 0) :
+        UploadInfoRepository(QObject *parent = 0):
             QAbstractListModel(parent),
             Common::BaseEntity(),
             m_EmptyPasswordsMode(false)
@@ -63,10 +65,12 @@ namespace Models {
             EditZipBeforeUploadRole,
             EditUploadDirectoryRole,
             PercentRole,
-            /*DEPRECATED*/FtpPassiveModeRole,
-            /*DEPRECATED*/EditFtpPassiveModeRole,
+            /*DEPRECATED*/ FtpPassiveModeRole,
+            /*DEPRECATED*/ EditFtpPassiveModeRole,
             DisableFtpPassiveModeRole,
-            EditDisableFtpPassiveModeRole
+            EditDisableFtpPassiveModeRole,
+            DisableEPSVRole,
+            EditDisableEPSVRole
         };
 
         int getInfosCount() const { return m_UploadInfos.length(); }
@@ -90,6 +94,7 @@ namespace Models {
 
         Q_INVOKABLE void initializeAccounts(bool mpIsCorrectOrEmpty);
         Q_INVOKABLE void finalizeAccounts();
+
         Q_INVOKABLE bool isMasterPasswordCorrectOrEmpty() const { return !m_EmptyPasswordsMode; }
 
     public:
@@ -102,14 +107,14 @@ namespace Models {
         void resetPercents();
 
     public:
-        const QVector<UploadInfo*> &getUploadInfos() const { return m_UploadInfos; }
-        QVector<UploadInfo*> retrieveSelectedUploadInfos() const;
+        const QVector<UploadInfo *> &getUploadInfos() const { return m_UploadInfos; }
+        QVector<UploadInfo *> retrieveSelectedUploadInfos() const;
 
     public:
-        virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
-        virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+        virtual int rowCount(const QModelIndex &parent=QModelIndex()) const;
+        virtual QVariant data(const QModelIndex &index, int role=Qt::DisplayRole) const;
         virtual Qt::ItemFlags flags(const QModelIndex &index) const;
-        virtual bool setData(const QModelIndex &index, const QVariant & value, int role = Qt::EditRole);
+        virtual bool setData(const QModelIndex &index, const QVariant &value, int role=Qt::EditRole);
 
     public slots:
         void onBeforeMasterPasswordChanged(const QString &oldMasterPassword, const QString &newMasterPassword);
@@ -121,7 +126,7 @@ namespace Models {
         void removeInnerItem(int row);
 
     private:
-        QVector<UploadInfo*> m_UploadInfos;
+        QVector<UploadInfo *> m_UploadInfos;
         // when MP is cancelled before Upload dialog
         // all passwords should be empty
         bool m_EmptyPasswordsMode;
