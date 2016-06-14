@@ -27,24 +27,24 @@ permalink: /downloads/
 <div class="download-package">
 <a href="https://github.com/Ribtoks/xpiks/releases/download/v1.3.2/xpiks-qt-v1.3.2.zip">
 <div><img src="{{site.url}}/images/windows_installer.jpg" style="vertical-align: middle;width:70px;" />
-<span style="vertical-align: middle;">Archive for Win x64</span>
+<span style="vertical-align: middle;">Archive for Win 64-bit</span>
 </div>
 </a>
 </div>
 
-<p class="download-description">Download the Xpiks zip archive from the link on the left, unpack it where you want and it's ready to go. Please, note that this build does work <strong>only for Windows 7 x64 and later with x64 architecture</strong>.</p>
+<p class="download-description">Download the Xpiks zip archive from the link on the left, unpack it where you want and it's ready to go. Please, note that this build does work <strong>only for Windows 7 and later with x86_64 architecture</strong>.</p>
 
 <div style="clear:both;">&nbsp;</div>
 
 <div class="download-package">
 <a href="https://github.com/Ribtoks/xpiks/releases/download/v1.3.2/xpiks-qt-32-v1.3.2.zip">
 <div><img src="{{site.url}}/images/windows_installer.jpg" style="vertical-align: middle;width:70px;" />
-<span style="vertical-align: middle;">Archive for Win x32</span>
+<span style="vertical-align: middle;">Archive for Win 32-bit</span>
 </div>
 </a>
 </div>
 
-<p class="download-description">Download the Xpiks zip archive from the link on the left, unpack it where you want and it's ready to go. Please, note that this build does work <strong>only for Windows 7 x32 and later with x32 architecture</strong>.</p>
+<p class="download-description">Download the Xpiks zip archive from the link on the left, unpack it where you want and it's ready to go. Please, note that this build does work <strong>only for Windows 7 and later with x86 architecture</strong>.</p>
 
 <!--
 <div style="clear:both;">&nbsp;</div>
