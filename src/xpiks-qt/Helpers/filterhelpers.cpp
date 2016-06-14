@@ -25,12 +25,14 @@
 #include "../Models/imageartwork.h"
 #include "../Common/basickeywordsmodel.h"
 #include "../Common/flags.h"
+#include "../Common/defines.h"
 
 namespace Helpers {
     bool fitsSpecialKeywords(const QString &searchTerm, Models::ArtworkMetadata *metadata) {
         bool hasMatch = false;
 
         const Models::ImageArtwork *image = dynamic_cast<const Models::ImageArtwork*>(metadata);
+        if (image == NULL) { return hasMatch; }
 
         if (searchTerm == QLatin1String("x:modified")) {
             hasMatch = metadata->isModified();
@@ -94,14 +96,18 @@ namespace Helpers {
         if (!hasMatch && needToCheckKeywords) {
             for (int i = 0; i < length; ++i) {
                 QString searchTerm = searchTerms[i];
-                bool strictMatch = false;
+                int keywordsFlags = Common::SearchFlagSearchKeywords;
 
-                if ((searchTerm.length() > 1) && searchTerm[0] == QChar('!')) {
-                    strictMatch = true;
+                if ((searchTerm.length() > 1) && searchTerm[0] == QLatin1Char('!')) {
+                    Common::SetFlag(keywordsFlags, Common::SearchFlagExactMatch);
                     searchTerm.remove(0, 1);
                 }
 
-                hasMatch = keywordsModel->containsKeyword(searchTerm, (strictMatch || caseSensitive));
+                if (caseSensitive) {
+                    Common::SetFlag(keywordsFlags, Common::SearchFlagCaseSensitive);
+                }
+
+                hasMatch = keywordsModel->containsKeyword(searchTerm, keywordsFlags);
                 if (hasMatch) { break; }
             }
         }
@@ -132,7 +138,6 @@ namespace Helpers {
         for (int i = 0; i < length; ++i) {
             QString searchTerm = searchTerms[i];
             bool anyContains = false;
-            bool strictMatch = false;
 
             if (needToCheckSpecial) {
                 anyContains = fitsSpecialKeywords(searchTerm, metadata);
@@ -153,12 +158,18 @@ namespace Helpers {
             const bool needToCheckKeywords = Common::HasFlag(searchFlags, Common::SearchFlagSearchKeywords);
 
             if (!anyContains && needToCheckKeywords) {
-                if ((searchTerm.length() > 1) && searchTerm[0] == QChar('!')) {
-                    strictMatch = true;
+                int keywordsFlags = Common::SearchFlagSearchKeywords;
+
+                if ((searchTerm.length() > 1) && searchTerm[0] == QLatin1Char('!')) {
+                    Common::SetFlag(keywordsFlags, Common::SearchFlagExactMatch);
                     searchTerm.remove(0, 1);
                 }
 
-                anyContains = keywordsModel->containsKeyword(searchTerm, (strictMatch || caseSensitive));
+                if (caseSensitive) {
+                    Common::SetFlag(keywordsFlags, Common::SearchFlagCaseSensitive);
+                }
+
+                anyContains = keywordsModel->containsKeyword(searchTerm, keywordsFlags);
             }
 
             if (!anyContains) {
@@ -175,14 +186,18 @@ namespace Helpers {
         // default search is not case sensitive
         int searchFlags = searchUsingAnd ? Common::SearchFlagSearchAllTermsEverything :
                                            Common::SearchFlagSearchAnyTermsEverything;
-        bool hasMatch = searchHasMatch(mainSearchTerm, metadata, searchFlags);
+        bool hasMatch = hasSearchMatch(mainSearchTerm, metadata, searchFlags);
         return hasMatch;
     }
 
-    bool searchHasMatch(const QString &searchTerm, Models::ArtworkMetadata *metadata, int searchFlags) {
+    bool hasSearchMatch(const QString &searchTerm, Models::ArtworkMetadata *metadata, int searchFlags) {
         bool hasMatch = false;
 
         bool searchUsingAnd = Common::HasFlag(searchFlags, Common::SearchFlagAllSearchTerms);
+#ifdef CORE_TESTS
+        LOG_DEBUG << "Search using AND:" << searchUsingAnd;
+        LOG_DEBUG << "Case sensitive:" << Common::HasFlag(searchFlags, Common::SearchFlagCaseSensitive);
+#endif
 
         if (searchUsingAnd) {
             hasMatch = containsAllPartsSearch(searchTerm, metadata, searchFlags);

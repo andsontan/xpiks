@@ -99,7 +99,7 @@ namespace Common {
         bool editKeywordUnsafe(int index, const QString &replacement);
         bool replaceKeywordUnsafe(int index, const QString &existing, const QString &replacement);
         bool clearKeywordsUnsafe();
-        bool containsKeywordUnsafe(const QString &searchTerm, bool exactMatch=false);
+        bool containsKeywordUnsafe(const QString &searchTerm, int searchFlags=Common::SearchFlagSearchKeywords);
         bool hasKeywordsSpellErrorUnsafe() const;
         void lockKeywordsRead() { m_KeywordsLock.lockForRead(); }
         void unlockKeywords() { m_KeywordsLock.unlock(); }
@@ -113,7 +113,7 @@ namespace Common {
         bool isEmpty();
         bool isTitleEmpty();
         bool isDescriptionEmpty();
-        bool containsKeyword(const QString &searchTerm, bool exactMatch=false);
+        bool containsKeyword(const QString &searchTerm, int searchFlags=Common::SearchFlagSearchKeywords);
 
         bool hasKeywordsSpellError();
         bool hasDescriptionSpellError();

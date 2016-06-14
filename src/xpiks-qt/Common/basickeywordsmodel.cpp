@@ -385,9 +385,10 @@ namespace Common {
         return anyKeywords;
     }
 
-    bool BasicKeywordsModel::containsKeywordUnsafe(const QString &searchTerm, bool exactMatch) {
+    bool BasicKeywordsModel::containsKeywordUnsafe(const QString &searchTerm, int searchFlags) {
         bool hasMatch = false;
         int length = m_KeywordsList.length();
+        const bool exactMatch = Common::HasFlag(searchFlags, Common::SearchFlagExactMatch);
 
         if (exactMatch) {
             for (int i = 0; i < length; ++i) {
@@ -397,8 +398,11 @@ namespace Common {
                 }
             }
         } else {
+            const bool caseSensitive = Common::HasFlag(searchFlags, Common::SearchFlagCaseSensitive);
+            Qt::CaseSensitivity caseSensitity = caseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive;
+
             for (int i = 0; i < length; ++i) {
-                if (m_KeywordsList.at(i).contains(searchTerm, Qt::CaseInsensitive)) {
+                if (m_KeywordsList.at(i).contains(searchTerm, caseSensitity)) {
                     hasMatch = true;
                     break;
                 }
@@ -464,11 +468,11 @@ namespace Common {
         return m_Description.trimmed().isEmpty();
     }
 
-    bool BasicKeywordsModel::containsKeyword(const QString &searchTerm, bool exactMatch) {
+    bool BasicKeywordsModel::containsKeyword(const QString &searchTerm, int searchFlags) {
         QReadLocker readLocker(&m_KeywordsLock);
         Q_UNUSED(readLocker);
 
-        return containsKeywordUnsafe(searchTerm, exactMatch);
+        return containsKeywordUnsafe(searchTerm, searchFlags);
     }
 
     bool BasicKeywordsModel::hasKeywordsSpellError() {

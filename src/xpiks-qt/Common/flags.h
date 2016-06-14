@@ -54,13 +54,14 @@ namespace Common {
     };
 
     enum SearchFlags {
-        SearchFlagCaseSensitive = 0,
-        SearchFlagSearchDescription = 1 << 0,
-        SearchFlagSearchTitle = 1 << 1,
-        SearchFlagSearchKeywords = 1 << 2,
-        SearchFlagReservedTerms = 1 << 3, // include reserved terms like "x:empty"
-        SearchFlagAllSearchTerms = 1 << 4, // all of the search terms included in the result
-        SearchFlagSearchFilepath = 1 << 5,
+        SearchFlagCaseSensitive = 1 << 0,
+        SearchFlagSearchDescription = 1 << 1,
+        SearchFlagSearchTitle = 1 << 2,
+        SearchFlagSearchKeywords = 1 << 3,
+        SearchFlagReservedTerms = 1 << 4, // include reserved terms like "x:empty"
+        SearchFlagAllSearchTerms = 1 << 5, // all of the search terms included in the result
+        SearchFlagSearchFilepath = 1 << 6,
+        SearchFlagExactMatch = 1 << 7,
 
         SearchFlagSearchMetadata = SearchFlagSearchDescription |
             SearchFlagSearchTitle |

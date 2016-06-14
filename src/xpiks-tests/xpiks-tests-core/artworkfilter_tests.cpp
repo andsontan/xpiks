@@ -1,6 +1,7 @@
 #include "artworkfilter_tests.h"
 #include "Mocks/artworkmetadatamock.h"
 #include "../../xpiks-qt/Helpers/filterhelpers.h"
+#include "../../xpiks-qt/Common/flags.h"
 
 void ArtworkFilterTests::searchImageVectorTest() {
     Mocks::ArtworkMetadataMock metadata("/path/to/file.jpg");
@@ -59,4 +60,14 @@ void ArtworkFilterTests::strictSearchTest() {
 
     metadata.appendKeyword("!");
     QVERIFY(Helpers::containsPartsSearch("!", &metadata, false));
+}
+
+void ArtworkFilterTests::caseSensitiveKeywordSearchTest() {
+    Mocks::ArtworkMetadataMock metadata("/path/to/file.jpg");
+    metadata.setKeywords(QStringList() << "keYwOrd" << "keYword");
+
+    int flags = Common::SearchFlagSearchKeywords | Common::SearchFlagCaseSensitive;
+
+    QVERIFY(Helpers::hasSearchMatch("YwO", &metadata, flags));
+    QVERIFY(!Helpers::hasSearchMatch("ywO", &metadata, flags));
 }

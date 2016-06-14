@@ -30,7 +30,7 @@ namespace Models {
 
 namespace Helpers {
     bool containsPartsSearch(const QString &mainSearchTerm, Models::ArtworkMetadata *metadata, bool searchUsingAnd);
-    bool searchHasMatch(const QString &searchTerm, Models::ArtworkMetadata *metadata, int searchFlags);
+    bool hasSearchMatch(const QString &searchTerm, Models::ArtworkMetadata *metadata, int searchFlags);
 }
 
 #endif // FILTERHELPERS_H
