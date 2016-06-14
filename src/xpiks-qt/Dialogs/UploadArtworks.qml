@@ -422,7 +422,7 @@ Item {
                         anchors.left: uploadInfosStack.right
                         anchors.right: parent.right
                         width: 290
-                        height: Qt.platform.os == "windows" ? parent.height + 10 : parent.height
+                        height: (Qt.platform.os == "osx") ? parent.height : parent.height + 10
 
                         StyledTabView {
                             id: tabView
