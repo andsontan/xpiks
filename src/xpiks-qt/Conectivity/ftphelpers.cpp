@@ -187,9 +187,12 @@ namespace Conectivity {
         curl_easy_setopt(curlHandle, CURLOPT_DEBUGFUNCTION, my_trace);
 
         if (!context->m_UsePassiveMode) {
+            LOG_DEBUG << "Passive mode disabled";
             curl_easy_setopt(curlHandle, CURLOPT_FTPPORT, "-"); /* disable passive mode */
         }
+
         if (!context->m_UseEPSV) {
+            LOG_DEBUG << "EPSV mode disabled";
             curl_easy_setopt(curlHandle, CURLOPT_FTP_USE_EPSV, 0L);
         }
 

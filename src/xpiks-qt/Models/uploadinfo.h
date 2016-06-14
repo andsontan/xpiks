@@ -72,6 +72,7 @@ namespace Models {
             m_ZipBeforeUpload = items.value(ZipPreviewAndVectorField, "false") == QLatin1String("true");
             m_DisableFtpPassiveMode = items.value(DisableFtpPassiveModeField, "false") == QLatin1String("true");
             m_IsSelected = items.value(IsSelectedField, "false") == QLatin1String("true");
+            m_DisableEPSV = items.value(DisableFtpPassiveModeField, "false") == QLatin1String("true");
         }
 
     signals:
