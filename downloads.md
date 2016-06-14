@@ -18,7 +18,7 @@ permalink: /downloads/
 </a>
 </div>
 
-<p class="download-description">Download the Xpiks package from the link on the left, unpack and drag'n'drop it to the Applications. <strong>You will need to install the Exiftool to use Xpiks.</strong> Download and install <i>Exiftool</i> from the <a href="http://owl.phy.queensu.ca/%7Ephil/exiftool/">official website</a>.</p>
+<p class="download-description">Download the Xpiks package from the link on the left, unpack and drag'n'drop it to the Applications. Also you can use <a href="http://owl.phy.queensu.ca/%7Ephil/exiftool/">Exiftool</a> with Xpiks</p>
 
 <div style="clear:both; height: 25px;">&nbsp;</div>
 
