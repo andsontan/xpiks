@@ -159,7 +159,7 @@ namespace SpellCheck {
 
     void KeywordSpellSuggestions::replaceToSuggested(ISpellCheckable *item, const QString &word, const QString &replacement) {
         LOG_INFO << word << "-->" << replacement;
-        Common::KeywordReplaceResult result = item->replaceKeyword(m_OriginalIndex, word, replacement);
+        Common::KeywordReplaceResult result = item->fixKeywordSpelling(m_OriginalIndex, word, replacement);
         setReplacementSucceeded(result == Common::KeywordReplaceSucceeded);
         m_ReplaceResult = result;
     }
@@ -179,7 +179,7 @@ namespace SpellCheck {
 
     void DescriptionSpellSuggestions::replaceToSuggested(ISpellCheckable *item, const QString &word, const QString &replacement) {
         LOG_INFO << word << "-->" << replacement;
-        item->replaceWordInDescription(word, replacement);
+        item->fixDescriptionSpelling(word, replacement);
         setReplacementSucceeded(true);
     }
 
@@ -198,7 +198,7 @@ namespace SpellCheck {
 
     void TitleSpellSuggestions::replaceToSuggested(ISpellCheckable *item, const QString &word, const QString &replacement) {
         LOG_INFO << word << "-->" << replacement;
-        item->replaceWordInTitle(word, replacement);
+        item->fixTitleSpelling(word, replacement);
         setReplacementSucceeded(true);
     }
 

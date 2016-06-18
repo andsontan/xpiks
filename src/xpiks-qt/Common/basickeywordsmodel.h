@@ -90,6 +90,7 @@ namespace Common {
         bool editKeyword(int index, const QString &replacement);
         bool clearKeywords();
         bool areKeywordsEmpty();
+        void replace(const QString &replaceWhat, const QString &replaceTo, int flags);
 
     private:
         bool appendKeywordUnsafe(const QString &keyword);
@@ -105,7 +106,13 @@ namespace Common {
         void unlockKeywords() { m_KeywordsLock.unlock(); }
 
     private:
-        const QVector<bool> &getSpellStatusesUnsafe() const { return m_SpellCheckResults; }
+        void removeKeywordsAtIndicesUnsafe(const QVector<int> &indices);
+        void replaceInDescription(const QString &replaceWhat, const QString &replaceTo,
+                                  Qt::CaseSensitivity caseSensivity=Qt::CaseInsensitive);
+        void replaceInTitle(const QString &replaceWhat, const QString &replaceTo,
+                                  Qt::CaseSensitivity caseSensivity=Qt::CaseInsensitive);
+        void replaceInKeywordsUnsafe(const QString &replaceWhat, const QString &replaceTo,
+                                     Qt::CaseSensitivity caseSensivity=Qt::CaseInsensitive);
 
     public:
         bool setDescription(const QString &value);
@@ -136,6 +143,7 @@ namespace Common {
         bool release() { return m_Hold.release(); }
 
     private:
+        const QVector<bool> &getSpellStatusesUnsafe() const { return m_SpellCheckResults; }
         void updateDescriptionSpellErrors(const QHash<QString, bool> &results);
         void updateTitleSpellErrors(const QHash<QString, bool> &results);
         void resetSpellCheckResultsUnsafe();
@@ -153,10 +161,10 @@ namespace Common {
         virtual QVector<SpellCheck::SpellSuggestionsItem *> createKeywordsSuggestionsList();
         virtual QVector<SpellCheck::SpellSuggestionsItem*> createDescriptionSuggestionsList();
         virtual QVector<SpellCheck::SpellSuggestionsItem*> createTitleSuggestionsList();
-        virtual Common::KeywordReplaceResult replaceKeyword(int index, const QString &existing, const QString &replacement);
+        virtual Common::KeywordReplaceResult fixKeywordSpelling(int index, const QString &existing, const QString &replacement);
         virtual bool processFailedKeywordReplacements(const QVector<SpellCheck::KeywordSpellSuggestions *> &candidatesForRemoval);
-        virtual void replaceWordInDescription(const QString &word, const QString &replacement);
-        virtual void replaceWordInTitle(const QString &word, const QString &replacement);
+        virtual void fixDescriptionSpelling(const QString &word, const QString &replacement);
+        virtual void fixTitleSpelling(const QString &word, const QString &replacement);
         virtual void afterReplaceCallback();
         virtual void connectSignals(SpellCheck::SpellCheckItem *item);
         virtual QStringList getDescriptionWords();
