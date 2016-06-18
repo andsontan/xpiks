@@ -114,6 +114,6 @@ void ArtworkFilterTests::cantFindWithFilterSpecialTest() {
 
     int flags = Common::SearchFlagSearchDescription | Common::SearchFlagSearchTitle | Common::SearchFlagSearchKeywords;
 
-    QVERIFY(!Helpers::hasSearchMatch("x:empty", &metadata, flags));
-    QVERIFY(Helpers::hasSearchMatch("x:empty", &metadata, flags | Common::SearchFlagReservedTerms));
+    QVERIFY(!Helpers::hasSearchMatch("x:modified", &metadata, flags));
+    QVERIFY(Helpers::hasSearchMatch("x:modified", &metadata, flags | Common::SearchFlagReservedTerms));
 }
