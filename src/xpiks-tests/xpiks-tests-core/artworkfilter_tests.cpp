@@ -71,3 +71,49 @@ void ArtworkFilterTests::caseSensitiveKeywordSearchTest() {
     QVERIFY(Helpers::hasSearchMatch("YwO", &metadata, flags));
     QVERIFY(!Helpers::hasSearchMatch("ywO", &metadata, flags));
 }
+
+void ArtworkFilterTests::cantFindWithFilterDescriptionTest() {
+    Mocks::ArtworkMetadataMock metadata("/path/to/file.jpg");
+    metadata.setDescription("token between here");
+    metadata.setKeywords(QStringList() << "some keyword" << "another stuff");
+
+    int flags = Common::SearchFlagSearchKeywords | Common::SearchFlagSearchTitle;
+
+    QVERIFY(!Helpers::hasSearchMatch("between", &metadata, flags));
+    QVERIFY(Helpers::hasSearchMatch("between", &metadata, flags | Common::SearchFlagSearchDescription));
+}
+
+void ArtworkFilterTests::cantFindWithFilterTitleTest() {
+    Mocks::ArtworkMetadataMock metadata("/path/to/file.jpg");
+    metadata.setTitle("token between here");
+    metadata.setKeywords(QStringList() << "some keyword" << "another stuff");
+
+    int flags = Common::SearchFlagSearchDescription | Common::SearchFlagSearchKeywords;
+
+    QVERIFY(!Helpers::hasSearchMatch("between", &metadata, flags));
+    QVERIFY(Helpers::hasSearchMatch("between", &metadata, flags | Common::SearchFlagSearchTitle));
+}
+
+void ArtworkFilterTests::cantFindWithFilterKeywordsTest() {
+    Mocks::ArtworkMetadataMock metadata("/path/to/file.jpg");
+    metadata.setDescription("another keyword in description");
+    metadata.setTitle("token between here");
+    metadata.setKeywords(QStringList() << "some keyword" << "another stuff");
+
+    int flags = Common::SearchFlagSearchDescription | Common::SearchFlagSearchTitle;
+
+    QVERIFY(!Helpers::hasSearchMatch("stuff", &metadata, flags));
+    QVERIFY(Helpers::hasSearchMatch("stuff", &metadata, flags | Common::SearchFlagSearchKeywords));
+}
+
+void ArtworkFilterTests::cantFindWithFilterSpecialTest() {
+    Mocks::ArtworkMetadataMock metadata("/path/to/file.jpg");
+    metadata.setDescription("another keyword in description");
+    metadata.setTitle("token between here");
+    metadata.setKeywords(QStringList() << "some keyword" << "another stuff");
+
+    int flags = Common::SearchFlagSearchDescription | Common::SearchFlagSearchTitle | Common::SearchFlagSearchKeywords;
+
+    QVERIFY(!Helpers::hasSearchMatch("x:empty", &metadata, flags));
+    QVERIFY(Helpers::hasSearchMatch("x:empty", &metadata, flags | Common::SearchFlagReservedTerms));
+}

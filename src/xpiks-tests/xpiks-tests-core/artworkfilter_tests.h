@@ -14,6 +14,10 @@ private slots:
     void searchByDescriptionTest();
     void strictSearchTest();
     void caseSensitiveKeywordSearchTest();
+    void cantFindWithFilterDescriptionTest();
+    void cantFindWithFilterTitleTest();
+    void cantFindWithFilterKeywordsTest();
+    void cantFindWithFilterSpecialTest();
 };
 
 #endif // ARTWORKFILTERTESTS_H
