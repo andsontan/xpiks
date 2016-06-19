@@ -214,10 +214,10 @@ void BasicKeywordsModelTests::containsKeywordStrictTest() {
     keywords << "something_keyword1" << "keyword2" << "keyword3";
     basicModel.appendKeywords(keywords);
 
-    bool exactMatch = true;
-    QVERIFY(basicModel.containsKeyword("keyword1", exactMatch) == false);
-    QVERIFY(basicModel.containsKeyword("keyword2", exactMatch) == true);
-    QVERIFY(basicModel.containsKeyword("kEyworD3", exactMatch) == false);
+    int flags = Common::SearchFlagExactMatch;
+    QVERIFY(basicModel.containsKeyword("keyword1", flags) == false);
+    QVERIFY(basicModel.containsKeyword("keyword2", flags) == true);
+    QVERIFY(basicModel.containsKeyword("kEyworD3", flags) == false);
 }
 
 void BasicKeywordsModelTests::containsKeywordFuzzyTest() {
