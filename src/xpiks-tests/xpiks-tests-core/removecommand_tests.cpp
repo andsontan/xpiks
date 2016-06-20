@@ -19,7 +19,7 @@ void RemoveCommandTests::removeArtworksFromEmptyRepository() {
 
     QVector<QPair<int, int> > indicesToRemove;
     indicesToRemove.append(qMakePair(0, 2));
-    Commands::RemoveArtworksCommand *removeArtworkCommand = new Commands::RemoveArtworksCommand(indicesToRemove);
+    QSharedPointer<Commands::RemoveArtworksCommand> removeArtworkCommand(new Commands::RemoveArtworksCommand(indicesToRemove));
 
     QSignalSpy rowsRemovedItemsStart(&artItemsMock, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)));
     QSignalSpy rowsRemovedItemsEnd(&artItemsMock, SIGNAL(rowsRemoved(QModelIndex,int,int)));
@@ -31,10 +31,9 @@ void RemoveCommandTests::removeArtworksFromEmptyRepository() {
 
     QSignalSpy modifiedFilesChanged(&artItemsMock, SIGNAL(modifiedArtworksCountChanged()));
 
-    Commands::ICommandResult *result = commandManagerMock.processCommand(removeArtworkCommand);
-    Commands::RemoveArtworksCommandResult *removeArtworksResult = static_cast<Commands::RemoveArtworksCommandResult*>(result);
+    auto result = commandManagerMock.processCommand(removeArtworkCommand);
+    auto removeArtworksResult = result.dynamicCast<Commands::RemoveArtworksCommandResult>();
     int artworksRemovedCount = removeArtworksResult->m_RemovedArtworksCount;
-    delete result;
 
     QCOMPARE(artworksRemovedCount, 0);
 
@@ -65,7 +64,7 @@ void RemoveCommandTests::removeAllArtworksFromRepository() {
 
     QVector<QPair<int, int> > indicesToRemove;
     indicesToRemove.append(qMakePair(0, itemsToAdd - 1));
-    Commands::RemoveArtworksCommand *removeArtworkCommand = new Commands::RemoveArtworksCommand(indicesToRemove);
+    QSharedPointer<Commands::RemoveArtworksCommand> removeArtworkCommand(new Commands::RemoveArtworksCommand(indicesToRemove));
 
     QSignalSpy rowsRemovedItemsStart(&artItemsMock, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)));
     QSignalSpy rowsRemovedItemsEnd(&artItemsMock, SIGNAL(rowsRemoved(QModelIndex,int,int)));
@@ -77,10 +76,9 @@ void RemoveCommandTests::removeAllArtworksFromRepository() {
 
     QSignalSpy modifiedFilesChanged(&artItemsMock, SIGNAL(modifiedArtworksCountChanged()));
 
-    Commands::ICommandResult *result = commandManagerMock.processCommand(removeArtworkCommand);
-    Commands::RemoveArtworksCommandResult *removeArtworksResult = static_cast<Commands::RemoveArtworksCommandResult*>(result);
+    auto result = commandManagerMock.processCommand(removeArtworkCommand);
+    auto removeArtworksResult = result.dynamicCast<Commands::RemoveArtworksCommandResult>();
     int artworksRemovedCount = removeArtworksResult->m_RemovedArtworksCount;
-    delete result;
 
     QCOMPARE(artworksRemovedCount, itemsToAdd);
 

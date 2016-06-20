@@ -329,18 +329,14 @@ namespace Models {
     }
 
     void CombinedArtworksModel::processCombinedEditCommand() {
-        Commands::CombinedEditCommand *combinedEditCommand = new Commands::CombinedEditCommand(
+        QSharedPointer<Commands::CombinedEditCommand> combinedEditCommand(new Commands::CombinedEditCommand(
                     m_EditFlags,
                     m_ArtworksList,
                     m_CommonKeywordsModel.getDescription(),
                     m_CommonKeywordsModel.getTitle(),
-                    m_CommonKeywordsModel.getKeywords());
+                    m_CommonKeywordsModel.getKeywords()));
 
-        Commands::ICommandResult *result = m_CommandManager->processCommand(combinedEditCommand);
-        Commands::CombinedEditCommandResult *combinedResult = static_cast<Commands::CombinedEditCommandResult*>(result);
-        m_CommandManager->updateArtworks(combinedResult->m_IndicesToUpdate);
-
-        delete combinedResult;
+        m_CommandManager->processCommand(combinedEditCommand);
     }
 
     void CombinedArtworksModel::enableAllFields() {

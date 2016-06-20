@@ -22,13 +22,15 @@
 #ifndef ICOMMANDBASE_H
 #define ICOMMANDBASE_H
 
+#include <QSharedPointer>
+
 namespace Commands {
     class ICommandManager;
 
     class ICommandResult {
     public:
         virtual ~ICommandResult() {}
-
+        virtual void afterExecCallback(const ICommandManager *commandManager) const { Q_UNUSED(commandManager); }
         virtual int getStatus() const = 0;
     };
 
@@ -36,7 +38,7 @@ namespace Commands {
     public:
         virtual ~ICommandBase() {}
 
-        virtual ICommandResult *execute(const ICommandManager *commandManager) const = 0;
+        virtual QSharedPointer<ICommandResult> execute(const ICommandManager *commandManager) const = 0;
         virtual int getCommandType() const = 0;
     };
 }

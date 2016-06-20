@@ -22,6 +22,7 @@
 #include <QFileInfo>
 #include <QVector>
 #include <QHash>
+#include <QSharedPointer>
 #include "addartworkscommand.h"
 #include "commandmanager.h"
 #include "../Models/artworksrepository.h"
@@ -66,7 +67,11 @@ int findAndAttachVectors(const QVector<Models::ArtworkMetadata*> &artworksList, 
     return attachedCount;
 }
 
-Commands::CommandResult *Commands::AddArtworksCommand::execute(const ICommandManager *commandManagerInterface) const {
+Commands::AddArtworksCommand::~AddArtworksCommand() {
+    LOG_DEBUG << "#";
+}
+
+QSharedPointer<Commands::ICommandResult> Commands::AddArtworksCommand::execute(const ICommandManager *commandManagerInterface) const {
     LOG_DEBUG << m_FilePathes.length() << "images," << m_VectorsPathes.length() << "vectors";
     CommandManager *commandManager = (CommandManager*)commandManagerInterface;
 
@@ -140,7 +145,7 @@ Commands::CommandResult *Commands::AddArtworksCommand::execute(const ICommandMan
 
     artItemsModel->raiseArtworksAdded(newFilesCount, attachedCount);
 
-    AddArtworksCommandResult *result = new AddArtworksCommandResult(newFilesCount);
+    QSharedPointer<AddArtworksCommandResult> result(new AddArtworksCommandResult(newFilesCount));
     return result;
 }
 

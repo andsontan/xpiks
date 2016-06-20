@@ -58,12 +58,12 @@ namespace Mocks {
             }
         }
 
-        virtual Commands::ICommandResult *processCommand(Commands::ICommandBase *command) {
+        virtual QSharedPointer<Commands::ICommandResult> processCommand(const QSharedPointer<Commands::ICommandBase> &command) {
             m_AnyCommandProcessed = true;
             if (m_CanExecuteCommands) {
                 return Commands::CommandManager::processCommand(command);
             } else {
-                return NULL;
+                return QSharedPointer<Commands::ICommandResult>();
             }
         }
 

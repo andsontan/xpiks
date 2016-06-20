@@ -339,15 +339,11 @@ namespace Models {
 
     void FilteredArtItemsProxyModel::removeMetadataInItems(const QVector<ArtItemInfo *> &itemsToClear, int flags) const {
         LOG_DEBUG << itemsToClear.length() << "item(s) with flags =" << flags;
-        Commands::CombinedEditCommand *combinedEditCommand = new Commands::CombinedEditCommand(
+        QSharedPointer<Commands::CombinedEditCommand> combinedEditCommand(new Commands::CombinedEditCommand(
                     flags,
-                    itemsToClear);
+                    itemsToClear));
 
-        Commands::ICommandResult *result = m_CommandManager->processCommand(combinedEditCommand);
-        Commands::CombinedEditCommandResult *combinedResult = static_cast<Commands::CombinedEditCommandResult*>(result);
-        m_CommandManager->updateArtworks(combinedResult->m_IndicesToUpdate);
-
-        delete combinedResult;
+        m_CommandManager->processCommand(combinedEditCommand);
         qDeleteAll(itemsToClear);
     }
 

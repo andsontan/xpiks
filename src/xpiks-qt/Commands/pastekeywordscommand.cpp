@@ -26,12 +26,14 @@
 #include "../Models/artiteminfo.h"
 #include "../Commands/commandmanager.h"
 #include "../Common/defines.h"
+#include "../Models/artitemsmodel.h"
 
 Commands::PasteKeywordsCommand::~PasteKeywordsCommand() {
+    LOG_DEBUG << "#";
     qDeleteAll(m_ArtItemInfos);
 }
 
-Commands::CommandResult *Commands::PasteKeywordsCommand::execute(const ICommandManager *commandManagerInterface) const {
+QSharedPointer<Commands::ICommandResult> Commands::PasteKeywordsCommand::execute(const ICommandManager *commandManagerInterface) const {
     LOG_INFO << "Pasting" << m_KeywordsList.length() << "keywords to" << m_ArtItemInfos.length() << "item(s)";
 
     CommandManager *commandManager = (CommandManager*)commandManagerInterface;
@@ -68,6 +70,15 @@ Commands::CommandResult *Commands::PasteKeywordsCommand::execute(const ICommandM
         LOG_WARNING << "Pasted zero real words!";
     }
 
-    PasteKeywordsCommandResult *result = new PasteKeywordsCommandResult(indicesToUpdate);
+    QSharedPointer<PasteKeywordsCommandResult> result(new PasteKeywordsCommandResult(indicesToUpdate));
     return result;
+}
+
+void Commands::PasteKeywordsCommandResult::afterExecCallback(const Commands::ICommandManager *commandManagerInterface) const {
+    CommandManager *commandManager = (CommandManager*)commandManagerInterface;
+    Models::ArtItemsModel *artItemsModel = commandManager->getArtItemsModel();
+    artItemsModel->updateItems(m_IndicesToUpdate,
+                               QVector<int>() <<
+                               Models::ArtItemsModel::IsModifiedRole <<
+                               Models::ArtItemsModel::KeywordsCountRole);
 }

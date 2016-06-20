@@ -38,7 +38,7 @@ namespace Commands {
         }
 
     public:
-        virtual CommandResult *execute(const ICommandManager *commandManagerInterface) const;
+        virtual QSharedPointer<ICommandResult> execute(const ICommandManager *commandManagerInterface) const;
 
     private:
         QVector<QPair<int, int> > m_RangesToRemove;

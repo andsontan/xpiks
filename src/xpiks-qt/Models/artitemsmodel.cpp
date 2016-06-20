@@ -24,6 +24,7 @@
 #include <QImageReader>
 #include <QList>
 #include <QHash>
+#include <QSharedPointer>
 #include "artitemsmodel.h"
 #include "artiteminfo.h"
 #include "../Helpers/indiceshelper.h"
@@ -241,11 +242,8 @@ namespace Models {
                 artItemInfos.append(item);
             }
 
-            Commands::PasteKeywordsCommand *pasteCommand = new Commands::PasteKeywordsCommand(artItemInfos, keywords);
-            Commands::ICommandResult *result = m_CommandManager->processCommand(pasteCommand);
-            Commands::PasteKeywordsCommandResult *pasteResult = static_cast<Commands::PasteKeywordsCommandResult*>(result);
-            updateItems(pasteResult->m_IndicesToUpdate, QVector<int>() << IsModifiedRole << KeywordsCountRole);
-            delete pasteResult;
+            QSharedPointer<Commands::PasteKeywordsCommand> pasteCommand(new Commands::PasteKeywordsCommand(artItemInfos, keywords));
+            m_CommandManager->processCommand(pasteCommand);
         }
     }
 
@@ -261,11 +259,8 @@ namespace Models {
             ArtItemInfo *item = new ArtItemInfo(metadata, metadataIndex);
             artItemInfos.append(item);
 
-            Commands::PasteKeywordsCommand *pasteCommand = new Commands::PasteKeywordsCommand(artItemInfos, keywords);
-            Commands::ICommandResult *result = m_CommandManager->processCommand(pasteCommand);
-            Commands::PasteKeywordsCommandResult *pasteResult = static_cast<Commands::PasteKeywordsCommandResult*>(result);
-            updateItems(pasteResult->m_IndicesToUpdate, QVector<int>() << IsModifiedRole << KeywordsCountRole);
-            delete pasteResult;
+            QSharedPointer<Commands::PasteKeywordsCommand> pasteCommand(new Commands::PasteKeywordsCommand(artItemInfos, keywords));
+            m_CommandManager->processCommand(pasteCommand);
         }
     }
 
@@ -514,17 +509,14 @@ namespace Models {
 
             int flags = 0;
             Common::SetFlag(flags, Common::EditKeywords);
-            Commands::CombinedEditCommand *combinedEditCommand = new Commands::CombinedEditCommand(
+            QSharedPointer<Commands::CombinedEditCommand> combinedEditCommand(new Commands::CombinedEditCommand(
                         flags,
                         QVector<ArtItemInfo*>() << itemInfo,
                         "", "",
-                        keywords);
+                        keywords));
 
-            Commands::ICommandResult *result = m_CommandManager->processCommand(combinedEditCommand);
-            Commands::CombinedEditCommandResult *combinedResult = static_cast<Commands::CombinedEditCommandResult*>(result);
+            m_CommandManager->processCommand(combinedEditCommand);
             updateItemAtIndex(metadataIndex);
-
-            delete combinedResult;
             delete itemInfo;
         }
     }
@@ -884,12 +876,11 @@ namespace Models {
         Models::SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
         bool autoFindVectors = settingsModel->getAutoFindVectors();
 
-        Commands::AddArtworksCommand *addArtworksCommand = new Commands::AddArtworksCommand(filenames, vectors, autoFindVectors);
-        Commands::ICommandResult *result = m_CommandManager->processCommand(addArtworksCommand);
-        Commands::AddArtworksCommandResult *addArtworksResult = static_cast<Commands::AddArtworksCommandResult*>(result);
-        int newFilesCount = addArtworksResult->m_NewFilesAdded;
-        delete result;
+        QSharedPointer<Commands::AddArtworksCommand> addArtworksCommand(new Commands::AddArtworksCommand(filenames, vectors, autoFindVectors));
+        QSharedPointer<Commands::ICommandResult> result = m_CommandManager->processCommand(addArtworksCommand);
+        QSharedPointer<Commands::AddArtworksCommandResult> addArtworksResult = result.dynamicCast<Commands::AddArtworksCommandResult>();
 
+        int newFilesCount = addArtworksResult->m_NewFilesAdded;
         return newFilesCount;
     }
 
@@ -997,9 +988,8 @@ namespace Models {
     }
 
     void ArtItemsModel::doRemoveItemsInRanges(const QVector<QPair<int, int> > &rangesToRemove) {
-        Commands::RemoveArtworksCommand *removeArtworksCommand = new Commands::RemoveArtworksCommand(rangesToRemove);
-        Commands::ICommandResult *result = m_CommandManager->processCommand(removeArtworksCommand);
-        delete result;
+        QSharedPointer<Commands::RemoveArtworksCommand> removeArtworksCommand(new Commands::RemoveArtworksCommand(rangesToRemove));
+        m_CommandManager->processCommand(removeArtworksCommand);
     }
 
     void ArtItemsModel::getSelectedItemsIndices(QVector<int> &indices) {

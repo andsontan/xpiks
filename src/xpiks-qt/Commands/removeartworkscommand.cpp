@@ -33,7 +33,7 @@
 #include "../Models/imageartwork.h"
 
 namespace Commands {
-    CommandResult *RemoveArtworksCommand::execute(const ICommandManager *commandManagerInterface) const {
+    QSharedPointer<ICommandResult> RemoveArtworksCommand::execute(const ICommandManager *commandManagerInterface) const {
         LOG_INFO << "removing" << m_RangesToRemove.length() << "ranges received";
         CommandManager *commandManager = (CommandManager*)commandManagerInterface;
 
@@ -104,7 +104,7 @@ namespace Commands {
         }
 
         // TODO: to be filled with useful return data in future
-        RemoveArtworksCommandResult *result = new RemoveArtworksCommandResult(artworksToRemoveCount);
+        QSharedPointer<ICommandResult> result(new RemoveArtworksCommandResult(artworksToRemoveCount));
         return result;
     }
 }

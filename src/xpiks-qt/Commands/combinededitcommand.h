@@ -58,10 +58,10 @@ namespace Commands {
             m_EditFlags(editFlags)
         { }
 
-        virtual ~CombinedEditCommand() {}
+        virtual ~CombinedEditCommand();
 
     public:
-        virtual CommandResult *execute(const ICommandManager *commandManagerInterface) const;
+        virtual QSharedPointer<ICommandResult> execute(const ICommandManager *commandManagerInterface) const;
 
     private:
         void setKeywords(Models::ArtworkMetadata *metadata) const;
@@ -78,14 +78,26 @@ namespace Commands {
 
     class CombinedEditCommandResult : public CommandResult {
     public:
-        CombinedEditCommandResult(const QVector<int> &indicesToUpdate) :
+        CombinedEditCommandResult(const QVector<Models::ArtworkMetadata *> &affectedItems,
+                                  const QVector<Models::ArtworkMetadata *> &itemsToSave,
+                                  const QVector<int> &indicesToUpdate) :
+            m_AffectedItems(affectedItems),
+            m_ItemsToSave(itemsToSave),
             m_IndicesToUpdate(indicesToUpdate)
         {
         }
 
     public:
+        virtual void afterExecCallback(const ICommandManager *commandManagerInterface) const;
+
+#ifndef CORE_TESTS
+    private:
+#else
+    public:
+#endif
+        QVector<Models::ArtworkMetadata *> m_AffectedItems;
+        QVector<Models::ArtworkMetadata *> m_ItemsToSave;
         QVector<int> m_IndicesToUpdate;
-        // list of Ids to update!
     };
 }
 

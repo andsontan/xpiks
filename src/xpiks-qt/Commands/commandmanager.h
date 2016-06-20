@@ -27,6 +27,7 @@
 #include <QUrl>
 #include <QVector>
 #include <QObject>
+#include <QSharedPointer>
 #include "../UndoRedo/ihistoryitem.h"
 #include "commandbase.h"
 #include "../Conectivity/analyticsuserevent.h"
@@ -170,7 +171,7 @@ namespace Commands {
         void InjectDependency(QMLExtensions::ImageCachingService *imageCachingService);
 
     public:
-        virtual ICommandResult *processCommand(ICommandBase *command)
+        virtual QSharedPointer<Commands::ICommandResult> processCommand(const QSharedPointer<ICommandBase> &command)
 #ifndef CORE_TESTS
         const
 #endif

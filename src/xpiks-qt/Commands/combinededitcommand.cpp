@@ -57,11 +57,15 @@ QString combinedFlagsToString(int flags) {
     return flagsStr.join('|');
 }
 
-Commands::CommandResult *Commands::CombinedEditCommand::execute(const ICommandManager *commandManagerInterface) const {
+Commands::CombinedEditCommand::~CombinedEditCommand() {
+    LOG_DEBUG << "#";
+}
+
+QSharedPointer<Commands::ICommandResult> Commands::CombinedEditCommand::execute(const ICommandManager *commandManagerInterface) const {
     LOG_INFO << "flags =" << combinedFlagsToString(m_EditFlags) << ", artworks count =" << m_ArtItemInfos.length();
     QVector<int> indicesToUpdate;
     QVector<UndoRedo::ArtworkMetadataBackup*> artworksBackups;
-    QVector<Models::ArtworkMetadata *> itemsToSave;
+    QVector<Models::ArtworkMetadata *> itemsToSave, affectedItems;
 
     CommandManager *commandManager = (CommandManager*)commandManagerInterface;
 
@@ -69,6 +73,7 @@ Commands::CommandResult *Commands::CombinedEditCommand::execute(const ICommandMa
     indicesToUpdate.reserve(size);
     artworksBackups.reserve(size);
     itemsToSave.reserve(size);
+    affectedItems.reserve(size);
 
     bool needToClear = Common::HasFlag(m_EditFlags, Common::Clear);
 
@@ -89,18 +94,16 @@ Commands::CommandResult *Commands::CombinedEditCommand::execute(const ICommandMa
         if (!needToClear) {
             itemsToSave.append(metadata);
         }
-    }
 
-    commandManager->saveArtworksBackups(itemsToSave);
-    commandManager->submitForSpellCheck(itemsToSave);
-    commandManager->submitForWarningsCheck(itemsToSave);
+        affectedItems.append(metadata);
+    }
 
     UndoRedo::ModifyArtworksHistoryItem *modifyArtworksItem =
             new UndoRedo::ModifyArtworksHistoryItem(artworksBackups, indicesToUpdate,
                                                     UndoRedo::CombinedEditModificationType);
     commandManager->recordHistoryItem(modifyArtworksItem);
 
-    CombinedEditCommandResult *result = new CombinedEditCommandResult(indicesToUpdate);
+    QSharedPointer<ICommandResult> result(new CombinedEditCommandResult(affectedItems, itemsToSave, indicesToUpdate));
     return result;
 }
 
@@ -136,5 +139,22 @@ void Commands::CombinedEditCommand::setTitle(Models::ArtworkMetadata *metadata) 
         } else {
             metadata->setTitle(m_ArtworkTitle);
         }
+    }
+}
+
+void Commands::CombinedEditCommandResult::afterExecCallback(const Commands::ICommandManager *commandManagerInterface) const {
+    CommandManager *commandManager = (CommandManager*)commandManagerInterface;
+
+    if (!m_IndicesToUpdate.isEmpty()) {
+        commandManager->updateArtworks(m_IndicesToUpdate);
+    }
+
+    if (!m_ItemsToSave.isEmpty()) {
+        commandManager->saveArtworksBackups(m_ItemsToSave);
+    }
+
+    if (!m_AffectedItems.isEmpty()) {
+        commandManager->submitForSpellCheck(m_AffectedItems);
+        commandManager->submitForWarningsCheck(m_AffectedItems);
     }
 }

@@ -181,13 +181,13 @@ void Commands::CommandManager::InjectDependency(QMLExtensions::ImageCachingServi
     Q_ASSERT(imageCachingService != NULL); m_ImageCachingService = imageCachingService;
 }
 
-Commands::ICommandResult *Commands::CommandManager::processCommand(ICommandBase *command)
+QSharedPointer<Commands::ICommandResult> Commands::CommandManager::processCommand(const QSharedPointer<ICommandBase> &command)
 #ifndef CORE_TESTS
 const
 #endif
 {
-    Commands::ICommandResult *result = command->execute(this);
-    delete command;
+    QSharedPointer<Commands::ICommandResult> result = command->execute(this);
+    result->afterExecCallback(this);
     return result;
 }
 

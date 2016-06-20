@@ -37,10 +37,10 @@ namespace Commands {
             m_AutoDetectVectors(autoDetectVectors)
         {}
 
-        virtual ~AddArtworksCommand() {}
+        virtual ~AddArtworksCommand();
 
     public:
-        virtual CommandResult *execute(const ICommandManager *commandManagerInterface) const;
+        virtual QSharedPointer<ICommandResult> execute(const ICommandManager *commandManagerInterface) const;
 
     private:
         void decomposeVectors(QHash<QString, QHash<QString, QString> > &vectors) const;

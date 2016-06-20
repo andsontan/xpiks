@@ -26,7 +26,10 @@
 #include <QStringList>
 #include "commandbase.h"
 
-namespace Models { class ArtItemInfo; }
+namespace Models {
+    class ArtItemInfo;
+    class ArtworkMetadata;
+}
 
 namespace Commands {
     class PasteKeywordsCommand : public CommandBase
@@ -42,7 +45,7 @@ namespace Commands {
         virtual ~PasteKeywordsCommand();
 
     public:
-        virtual CommandResult *execute(const ICommandManager *commandManagerInterface) const;
+        virtual QSharedPointer<ICommandResult> execute(const ICommandManager *commandManagerInterface) const;
 
     private:
         QVector<Models::ArtItemInfo*> m_ArtItemInfos;
@@ -57,8 +60,15 @@ namespace Commands {
         }
 
     public:
+        virtual void afterExecCallback(const ICommandManager *commandManagerInterface) const;
+
+#ifndef CORE_TESTS
+    private:
+#else
+    public:
+#endif
+        QVector<Models::ArtworkMetadata *> m_AffectedItems;
         QVector<int> m_IndicesToUpdate;
-        // list of Ids to update!
     };
 }
 
