@@ -36,6 +36,7 @@
 #include "../Common/ibasicartwork.h"
 #include "../Common/hold.h"
 #include "../SpellCheck/spellcheckiteminfo.h"
+#include "../UndoRedo/artworkmetadatabackup.h"
 
 class QTextDocument;
 
@@ -147,12 +148,15 @@ namespace Models {
 
     public:
         void markModified();
-        void setModified() { setIsModifiedFlag(true); }
         void setUnavailable() { setIsUnavailableFlag(true); }
         void resetModified() { setIsModifiedFlag(false); }
         void requestFocus(int directionSign) { emit focusRequested(directionSign); }
         void requestBackup() { m_BackupTimer.start(1000); }
         void generateAboutToBeRemoved() { emit aboutToBeRemoved(); }
+
+    private:
+        void setModified() { setIsModifiedFlag(true); }
+        friend class UndoRedo::ArtworkMetadataBackup;
 
     signals:
          void modifiedChanged(bool newValue);
