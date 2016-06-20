@@ -421,32 +421,18 @@ namespace Models {
     }
 
     QVector<ArtItemInfo *> FilteredArtItemsProxyModel::getSelectedOriginalItemsWithIndices() const {
-        ArtItemsModel *artItemsModel = getArtItemsModel();
-        QVector<ArtItemInfo *> selectedArtworks;
-        int size = this->rowCount();
-        selectedArtworks.reserve(size);
-
-        for (int row = 0; row < size; ++row) {
-            QModelIndex proxyIndex = this->index(row, 0);
-            QModelIndex originalIndex = this->mapToSource(proxyIndex);
-
-            int index = originalIndex.row();
-            ArtworkMetadata *metadata = artItemsModel->getArtwork(index);
-
-            if (metadata != NULL && metadata->isSelected()) {
-                ArtItemInfo *info = new ArtItemInfo(metadata, index);
-                selectedArtworks.append(info);
-            }
-        }
-
-        return selectedArtworks;
+        return getFilteredOriginalItemsWithIndices([](ArtworkMetadata *artwork) { return artwork->isSelected(); });
     }
 
     QVector<ArtItemInfo *> FilteredArtItemsProxyModel::getAllItemsWithIndices() const {
+        return getFilteredOriginalItemsWithIndices([](ArtworkMetadata *) { return true; });
+    }
+
+    QVector<ArtItemInfo *> FilteredArtItemsProxyModel::getFilteredOriginalItemsWithIndices(bool (*pred)(ArtworkMetadata *)) const {
         ArtItemsModel *artItemsModel = getArtItemsModel();
-        QVector<ArtItemInfo *> selectedArtworks;
+        QVector<ArtItemInfo *> filteredArtworks;
         int size = this->rowCount();
-        selectedArtworks.reserve(size);
+        filteredArtworks.reserve(size);
 
         for (int row = 0; row < size; ++row) {
             QModelIndex proxyIndex = this->index(row, 0);
@@ -455,13 +441,13 @@ namespace Models {
             int index = originalIndex.row();
             ArtworkMetadata *metadata = artItemsModel->getArtwork(index);
 
-            if (metadata != NULL) {
+            if (metadata != NULL && pred(metadata)) {
                 ArtItemInfo *info = new ArtItemInfo(metadata, index);
-                selectedArtworks.append(info);
+                filteredArtworks.append(info);
             }
         }
 
-        return selectedArtworks;
+        return filteredArtworks;
     }
 
     QVector<ArtworkMetadata *> FilteredArtItemsProxyModel::getAllOriginalItems() const {

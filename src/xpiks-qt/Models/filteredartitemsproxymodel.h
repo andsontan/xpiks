@@ -100,6 +100,7 @@ namespace Models {
         QVector<ArtworkMetadata *> getSelectedOriginalItems() const;
         QVector<ArtItemInfo *> getSelectedOriginalItemsWithIndices() const;
         QVector<ArtItemInfo *> getAllItemsWithIndices() const;
+        QVector<ArtItemInfo *> getFilteredOriginalItemsWithIndices(bool (*pred)(ArtworkMetadata*)) const;
         QVector<ArtworkMetadata *> getAllOriginalItems() const;
         QVector<int> getSelectedOriginalIndices() const;
         void forceUnselectAllItems();
