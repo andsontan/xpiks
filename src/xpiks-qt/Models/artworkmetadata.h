@@ -154,7 +154,11 @@ namespace Models {
         void requestBackup() { m_BackupTimer.start(1000); }
         void generateAboutToBeRemoved() { emit aboutToBeRemoved(); }
 
+#ifndef CORE_TESTS
     private:
+#else
+    public:
+#endif
         void setModified() { setIsModifiedFlag(true); }
         friend class UndoRedo::ArtworkMetadataBackup;
 
