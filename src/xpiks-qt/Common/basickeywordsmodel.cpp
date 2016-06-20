@@ -244,31 +244,40 @@ namespace Common {
         return m_KeywordsList.isEmpty();
     }
 
-    void BasicKeywordsModel::replace(const QString &replaceWhat, const QString &replaceTo, int flags) {
+    bool BasicKeywordsModel::replace(const QString &replaceWhat, const QString &replaceTo, int flags) {
         LOG_INFO << replaceWhat << "->" << replaceTo << "with flags:" << flags;
         Q_ASSERT(!replaceWhat.isEmpty());
         Q_ASSERT(!replaceTo.isEmpty());
         Q_ASSERT((flags & Common::SearchFlagSearchMetadata) != 0);
+        bool anyChanged = false;
 
         bool isCaseSensitive = Common::HasFlag(flags, Common::SearchFlagCaseSensitive);
         Qt::CaseSensitivity caseSensivity = isCaseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive;
 
         const bool needToCheckDescription = Common::HasFlag(flags, Common::SearchFlagSearchDescription);
         if (needToCheckDescription) {
-            this->replaceInDescription(replaceWhat, replaceTo, caseSensivity);
+            if (this->replaceInDescription(replaceWhat, replaceTo, caseSensivity)) {
+                anyChanged = true;
+            }
         }
 
         const bool needToCheckTitle = Common::HasFlag(flags, Common::SearchFlagSearchTitle);
         if (needToCheckTitle) {
-            this->replaceInTitle(replaceWhat, replaceTo, caseSensivity);
+            if (this->replaceInTitle(replaceWhat, replaceTo, caseSensivity)) {
+                anyChanged = true;
+            }
         }
 
         const bool needToCheckKeywords = Common::HasFlag(flags, Common::SearchFlagSearchKeywords);
         if (needToCheckKeywords) {
             QWriteLocker locker(&m_KeywordsLock);
             Q_UNUSED(locker);
-            this->replaceInKeywordsUnsafe(replaceWhat, replaceTo, caseSensivity);
+            if (this->replaceInKeywordsUnsafe(replaceWhat, replaceTo, caseSensivity)) {
+                anyChanged = true;
+            }
         }
+
+        return anyChanged;
     }
 
     bool BasicKeywordsModel::appendKeywordUnsafe(const QString &keyword) {
@@ -460,22 +469,25 @@ namespace Common {
         AbstractListModel::removeItemsAtIndices(rangesToRemove);
     }
 
-    void BasicKeywordsModel::replaceInDescription(const QString &replaceWhat, const QString &replaceTo,
+    bool BasicKeywordsModel::replaceInDescription(const QString &replaceWhat, const QString &replaceTo,
                                                   Qt::CaseSensitivity caseSensivity) {
         QString description = getDescription();
         description.replace(replaceWhat, replaceTo, caseSensivity);
-        setDescription(description);
+        bool result = setDescription(description);
+        return result;
     }
 
-    void BasicKeywordsModel::replaceInTitle(const QString &replaceWhat, const QString &replaceTo,
+    bool BasicKeywordsModel::replaceInTitle(const QString &replaceWhat, const QString &replaceTo,
                                             Qt::CaseSensitivity caseSensivity) {
         QString title = getTitle();
         title.replace(replaceWhat, replaceTo, caseSensivity);
-        setTitle(title);
+        bool result = setTitle(title);
+        return result;
     }
 
-    void BasicKeywordsModel::replaceInKeywordsUnsafe(const QString &replaceWhat, const QString &replaceTo,
+    bool BasicKeywordsModel::replaceInKeywordsUnsafe(const QString &replaceWhat, const QString &replaceTo,
                                                      Qt::CaseSensitivity caseSensivity) {
+        bool anyChanged = false;
         QVector<int> indicesToRemove;
 
         int size = m_KeywordsList.length();
@@ -489,6 +501,8 @@ namespace Common {
                         m_KeywordsSet.contains(replacement)) {
                     LOG_INFO << "Replacing" << internal << "to" << replacement << "creates a duplicate";
                     indicesToRemove.append(i);
+                } else {
+                    anyChanged = true;
                 }
             }
         }
@@ -496,6 +510,8 @@ namespace Common {
         if (!indicesToRemove.isEmpty()) {
             this->removeKeywordsAtIndicesUnsafe(indicesToRemove);
         }
+
+        return anyChanged;
     }
 
     bool BasicKeywordsModel::setDescription(const QString &value) {

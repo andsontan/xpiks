@@ -90,7 +90,7 @@ namespace Common {
         bool editKeyword(int index, const QString &replacement);
         bool clearKeywords();
         bool areKeywordsEmpty();
-        void replace(const QString &replaceWhat, const QString &replaceTo, int flags);
+        bool replace(const QString &replaceWhat, const QString &replaceTo, int flags);
 
     private:
         bool appendKeywordUnsafe(const QString &keyword);
@@ -107,11 +107,11 @@ namespace Common {
 
     private:
         void removeKeywordsAtIndicesUnsafe(const QVector<int> &indices);
-        void replaceInDescription(const QString &replaceWhat, const QString &replaceTo,
+        bool replaceInDescription(const QString &replaceWhat, const QString &replaceTo,
                                   Qt::CaseSensitivity caseSensivity=Qt::CaseInsensitive);
-        void replaceInTitle(const QString &replaceWhat, const QString &replaceTo,
+        bool replaceInTitle(const QString &replaceWhat, const QString &replaceTo,
                                   Qt::CaseSensitivity caseSensivity=Qt::CaseInsensitive);
-        void replaceInKeywordsUnsafe(const QString &replaceWhat, const QString &replaceTo,
+        bool replaceInKeywordsUnsafe(const QString &replaceWhat, const QString &replaceTo,
                                      Qt::CaseSensitivity caseSensivity=Qt::CaseInsensitive);
 
     public:

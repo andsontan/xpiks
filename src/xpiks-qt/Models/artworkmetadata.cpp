@@ -113,6 +113,12 @@ namespace Models {
         return result;
     }
 
+    bool ArtworkMetadata::replace(const QString &replaceWhat, const QString &replaceTo, int flags) {
+        bool result = m_KeywordsModel.replace(replaceWhat, replaceTo, flags);
+        if (result) { markModified(); }
+        return result;
+    }
+
     bool ArtworkMetadata::setIsSelected(bool value) {
         bool result = getIsSelectedFlag() != value;
         if (result) {
