@@ -43,8 +43,11 @@ class QTextDocument;
 namespace Models {
     class SettingsModel;
 
-    class ArtworkMetadata : public QObject, public Common::IBasicArtwork {
-        Q_OBJECT
+    class ArtworkMetadata:
+        public QObject, public Common::IBasicArtwork
+    {
+    Q_OBJECT
+
     public:
         ArtworkMetadata(const QString &filepath, qint64 ID);
         virtual ~ArtworkMetadata();
@@ -69,12 +72,13 @@ namespace Models {
 
     public:
         bool initialize(const QString &title,
-                        const QString &description, const QStringList &rawKeywords, bool overwrite = true);
+                        const QString &description, const QStringList &rawKeywords, bool overwrite=true);
 
     public:
         virtual const QString &getFilepath() const { return m_ArtworkFilepath; }
         virtual QString getDirectory() const { QFileInfo fi(m_ArtworkFilepath); return fi.absolutePath(); }
         bool isInDirectory(const QString &directoryAbsolutePath) const;
+
         bool isModified() const { return getIsModifiedFlag(); }
         bool isSelected() const { return getIsSelectedFlag(); }
         bool isUnavailable() const { return getIsUnavailableFlag(); }
@@ -100,13 +104,17 @@ namespace Models {
     public:
         virtual bool setDescription(const QString &value) {
             bool result = m_KeywordsModel.setDescription(value);
+
             if (result) { markModified(); }
+
             return result;
         }
 
         virtual bool setTitle(const QString &value) {
             bool result = m_KeywordsModel.setTitle(value);
+
             if (result) { markModified(); }
+
             return result;
         }
 
@@ -122,7 +130,7 @@ namespace Models {
         void resetSelected() {
             if (getIsSelectedFlag()) {
                 setIsSelectedFlag(false);
-                //emit fileSelectedChanged(m_ArtworkFilepath, false);
+                // emit fileSelectedChanged(m_ArtworkFilepath, false);
             }
         }
 
@@ -139,12 +147,12 @@ namespace Models {
         bool release() { return m_Hold.release(); }
 
     public:
-         // IBasicArtwork interface
-         virtual QSet<QString> getKeywordsSet() { return m_KeywordsModel.getKeywordsSet(); }
-         virtual QStringList getKeywords() { return m_KeywordsModel.getKeywords(); }
-         virtual bool isEmpty() { return m_KeywordsModel.isEmpty(); }
-         virtual QString getDescription() { return m_KeywordsModel.getDescription(); }
-         virtual QString getTitle() { return m_KeywordsModel.getTitle(); }
+        // IBasicArtwork interface
+        virtual QSet<QString> getKeywordsSet() { return m_KeywordsModel.getKeywordsSet(); }
+        virtual QStringList getKeywords() { return m_KeywordsModel.getKeywords(); }
+        virtual bool isEmpty() { return m_KeywordsModel.isEmpty(); }
+        virtual QString getDescription() { return m_KeywordsModel.getDescription(); }
+        virtual QString getTitle() { return m_KeywordsModel.getTitle(); }
 
     public:
         void markModified();
@@ -163,30 +171,30 @@ namespace Models {
         friend class UndoRedo::ArtworkMetadataBackup;
 
     signals:
-         void modifiedChanged(bool newValue);
-         void selectedChanged(bool newValue);
-         void fileSelectedChanged(const QString &filepath, bool newValue);
-         void focusRequested(int directionSign);
-         void backupRequired();
-         void aboutToBeRemoved();
-         void spellCheckErrorsChanged();
+        void modifiedChanged(bool newValue);
+        void selectedChanged(bool newValue);
+        void fileSelectedChanged(const QString &filepath, bool newValue);
+        void focusRequested(int directionSign);
+        void backupRequired();
+        void aboutToBeRemoved();
+        void spellCheckErrorsChanged();
 
     private slots:
-         void backupTimerTriggered() { emit backupRequired(); }
+        void backupTimerTriggered() { emit backupRequired(); }
 
     private:
-         Common::Hold m_Hold;
-         SpellCheck::SpellCheckItemInfo m_SpellCheckInfo;
-         Common::BasicKeywordsModel m_KeywordsModel;
-         qint64 m_FileSize; // in bytes
-         QString m_ArtworkFilepath;
-         QTimer m_BackupTimer;
-         qint64 m_ID;
-         volatile int m_MetadataFlags;
-         volatile int m_WarningsFlags;
+        Common::Hold m_Hold;
+        SpellCheck::SpellCheckItemInfo m_SpellCheckInfo;
+        Common::BasicKeywordsModel m_KeywordsModel;
+        qint64 m_FileSize;  // in bytes
+        QString m_ArtworkFilepath;
+        QTimer m_BackupTimer;
+        qint64 m_ID;
+        volatile int m_MetadataFlags;
+        volatile int m_WarningsFlags;
     };
 }
 
-Q_DECLARE_METATYPE(Models::ArtworkMetadata*)
+Q_DECLARE_METATYPE(Models::ArtworkMetadata *)
 
 #endif // IMAGEMETADATA_H

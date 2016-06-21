@@ -38,8 +38,7 @@ namespace Common {
         AbstractListModel(parent),
         m_Hold(hold),
         m_SpellCheckInfo(NULL)
-    {
-    }
+    {}
 
 #ifdef CORE_TESTS
     void BasicKeywordsModel::initialize(const QString &title, const QString &description, const QString &rawKeywords) {
@@ -62,6 +61,7 @@ namespace Common {
     void BasicKeywordsModel::removeInnerItem(int row) {
         QString removedKeyword;
         bool wasCorrect = false;
+
         this->takeKeywordAtUnsafe(row, removedKeyword, wasCorrect);
 #ifdef INTEGRATION_TESTS
         LOG_DEBUG << "keyword:" << removedKeyword << "was correct:" << wasCorrect;
@@ -74,35 +74,37 @@ namespace Common {
     int BasicKeywordsModel::rowCount(const QModelIndex &parent) const {
         Q_UNUSED(parent);
 
-        //QReadLocker readLocker(&m_KeywordsLock);
-        //Q_UNUSED(readLocker);
+        // QReadLocker readLocker(&m_KeywordsLock);
+        // Q_UNUSED(readLocker);
         // due to the qt limitations, pray the keyword will be there
 
         return m_KeywordsList.length();
     }
 
     QVariant BasicKeywordsModel::data(const QModelIndex &index, int role) const {
-        //QReadLocker readLocker(&m_KeywordsLock);
-        //Q_UNUSED(readLocker);
+        // QReadLocker readLocker(&m_KeywordsLock);
+        // Q_UNUSED(readLocker);
         // due to the qt limitations, pray the keyword will be there
 
         int row = index.row();
+
         if (row < 0 || row >= m_KeywordsList.length()) {
             return QVariant();
         }
 
         switch (role) {
-        case KeywordRole:
-            return m_KeywordsList.at(index.row());
-        case IsCorrectRole:
-            return m_SpellCheckResults.at(index.row());
-        default:
-            return QVariant();
+            case KeywordRole:
+                return m_KeywordsList.at(index.row());
+            case IsCorrectRole:
+                return m_SpellCheckResults.at(index.row());
+            default:
+                return QVariant();
         }
     }
 
     QString BasicKeywordsModel::getDescription() {
         QReadLocker readLocker(&m_DescriptionLock);
+
         Q_UNUSED(readLocker);
 
         return m_Description;
@@ -110,6 +112,7 @@ namespace Common {
 
     QString BasicKeywordsModel::getTitle() {
         QReadLocker readLocker(&m_TitleLock);
+
         Q_UNUSED(readLocker);
 
         return m_Title;
@@ -117,6 +120,7 @@ namespace Common {
 
     int BasicKeywordsModel::getKeywordsCount() {
         QReadLocker readLocker(&m_KeywordsLock);
+
         Q_UNUSED(readLocker);
 
         return m_KeywordsSet.count();
@@ -124,6 +128,7 @@ namespace Common {
 
     QSet<QString> BasicKeywordsModel::getKeywordsSet() {
         QReadLocker readLocker(&m_KeywordsLock);
+
         Q_UNUSED(readLocker);
 
         return m_KeywordsSet;
@@ -131,6 +136,7 @@ namespace Common {
 
     QString BasicKeywordsModel::getKeywordsString() {
         QReadLocker readLocker(&m_KeywordsLock);
+
         Q_UNUSED(readLocker);
 
         return m_KeywordsList.join(", ");
@@ -138,6 +144,7 @@ namespace Common {
 
     bool BasicKeywordsModel::appendKeyword(const QString &keyword) {
         QWriteLocker writeLocker(&m_KeywordsLock);
+
         Q_UNUSED(writeLocker);
 
         return appendKeywordUnsafe(keyword);
@@ -188,6 +195,7 @@ namespace Common {
 
     void BasicKeywordsModel::setKeywords(const QStringList &keywordsList) {
         QWriteLocker writeLocker(&m_KeywordsLock);
+
         Q_UNUSED(writeLocker);
 
         setKeywordsUnsafe(keywordsList);
@@ -195,6 +203,7 @@ namespace Common {
 
     int BasicKeywordsModel::appendKeywords(const QStringList &keywordsList) {
         QWriteLocker writeLocker(&m_KeywordsLock);
+
         Q_UNUSED(writeLocker);
 
         return appendKeywordsUnsafe(keywordsList);
@@ -239,6 +248,7 @@ namespace Common {
 
     bool BasicKeywordsModel::areKeywordsEmpty() {
         QReadLocker readLocker(&m_KeywordsLock);
+
         Q_UNUSED(readLocker);
 
         return m_KeywordsList.isEmpty();
@@ -302,6 +312,7 @@ namespace Common {
     void BasicKeywordsModel::takeKeywordAtUnsafe(int index, QString &removedKeyword, bool &wasCorrect) {
         const QString &keyword = m_KeywordsList.at(index);
         QString invariant = keyword.toLower();
+
         m_KeywordsSet.remove(invariant);
 
         removedKeyword = m_KeywordsList.takeAt(index);
@@ -316,6 +327,7 @@ namespace Common {
     int BasicKeywordsModel::appendKeywordsUnsafe(const QStringList &keywordsList) {
         QStringList keywordsToAdd;
         int appendedCount = 0, size = keywordsList.length();
+
         keywordsToAdd.reserve(size);
         QSet<QString> accountedKeywords;
 
@@ -356,6 +368,7 @@ namespace Common {
         QString sanitized = Helpers::doSanitizeKeyword(replacement);
 
         QString existing = m_KeywordsList.at(index);
+
         if (existing != sanitized && Helpers::isValidKeyword(sanitized)) {
             QString lowerCasedNew = sanitized.toLower();
             QString lowerCasedExisting = existing.toLower();
@@ -384,6 +397,7 @@ namespace Common {
         bool result = false;
 
         const QString &internal = m_KeywordsList.at(index);
+
         if (internal == existing) {
             if (this->editKeywordUnsafe(index, replacement)) {
                 result = true;
@@ -516,24 +530,33 @@ namespace Common {
 
     bool BasicKeywordsModel::setDescription(const QString &value) {
         QWriteLocker writeLocker(&m_DescriptionLock);
+
         Q_UNUSED(writeLocker);
 
         bool result = value != m_Description;
-        if (result) { m_Description = value; }
+        if (result) {
+            m_Description = value;
+        }
+
         return result;
     }
 
     bool BasicKeywordsModel::setTitle(const QString &value) {
         QWriteLocker writeLocker(&m_TitleLock);
+
         Q_UNUSED(writeLocker);
 
         bool result = value != m_Title;
-        if (result) { m_Title = value; }
+        if (result) {
+            m_Title = value;
+        }
+
         return result;
     }
 
     bool BasicKeywordsModel::isEmpty() {
         QReadLocker readKeywordsLock(&m_KeywordsLock);
+
         Q_UNUSED(readKeywordsLock);
 
         QReadLocker readDescriptionLock(&m_DescriptionLock);
@@ -544,6 +567,7 @@ namespace Common {
 
     bool BasicKeywordsModel::isTitleEmpty() {
         QReadLocker readLocker(&m_TitleLock);
+
         Q_UNUSED(readLocker);
 
         return m_Title.trimmed().isEmpty();
@@ -551,6 +575,7 @@ namespace Common {
 
     bool BasicKeywordsModel::isDescriptionEmpty() {
         QReadLocker readLocker(&m_DescriptionLock);
+
         Q_UNUSED(readLocker);
 
         return m_Description.trimmed().isEmpty();
@@ -558,6 +583,7 @@ namespace Common {
 
     bool BasicKeywordsModel::containsKeyword(const QString &searchTerm, int searchFlags) {
         QReadLocker readLocker(&m_KeywordsLock);
+
         Q_UNUSED(readLocker);
 
         return containsKeywordUnsafe(searchTerm, searchFlags);
@@ -565,6 +591,7 @@ namespace Common {
 
     bool BasicKeywordsModel::hasKeywordsSpellError() {
         QReadLocker readLocker(&m_KeywordsLock);
+
         Q_UNUSED(readLocker);
 
         return hasKeywordsSpellErrorUnsafe();
@@ -574,7 +601,8 @@ namespace Common {
         bool anyError = false;
 
         const QStringList &descriptionWords = getDescriptionWords();
-        foreach (const QString &word, descriptionWords) {
+
+        foreach(const QString &word, descriptionWords) {
             if (m_SpellCheckInfo->hasDescriptionError(word)) {
                 anyError = true;
                 break;
@@ -588,7 +616,8 @@ namespace Common {
         bool anyError = false;
 
         const QStringList &titleWords = getTitleWords();
-        foreach (const QString &word, titleWords) {
+
+        foreach(const QString &word, titleWords) {
             if (m_SpellCheckInfo->hasTitleError(word)) {
                 anyError = true;
                 break;
@@ -600,13 +629,15 @@ namespace Common {
 
     bool BasicKeywordsModel::hasSpellErrors() {
         bool hasErrors = hasDescriptionSpellError() ||
-                hasTitleSpellError() ||
-                hasKeywordsSpellError();
+                         hasTitleSpellError() ||
+                         hasKeywordsSpellError();
+
         return hasErrors;
     }
 
     void BasicKeywordsModel::setSpellStatuses(BasicKeywordsModel *keywordsModel) {
         QWriteLocker writeLocker(&m_KeywordsLock);
+
         Q_UNUSED(writeLocker);
 
         keywordsModel->lockKeywordsRead();
@@ -635,10 +666,10 @@ namespace Common {
 
     void BasicKeywordsModel::notifySpellCheckResults(int flags) {
         if (Common::HasFlag(flags, Common::SpellCheckDescription) ||
-                Common::HasFlag(flags, Common::SpellCheckTitle)) {
+            Common::HasFlag(flags, Common::SpellCheckTitle)) {
             emit spellCheckResultsReady();
         }
-        
+
         emit spellCheckErrorsChanged();
     }
 
@@ -653,7 +684,7 @@ namespace Common {
     void BasicKeywordsModel::updateDescriptionSpellErrors(const QHash<QString, bool> &results) {
         QSet<QString> descriptionErrors;
         QStringList descriptionWords = getDescriptionWords();
-        foreach (const QString &word, descriptionWords) {
+        foreach(const QString &word, descriptionWords) {
             if (results.value(word, true) == false) {
                 descriptionErrors.insert(word);
             }
@@ -665,7 +696,7 @@ namespace Common {
     void BasicKeywordsModel::updateTitleSpellErrors(const QHash<QString, bool> &results) {
         QSet<QString> titleErrors;
         QStringList titleWords = getTitleWords();
-        foreach (const QString &word, titleWords) {
+        foreach(const QString &word, titleWords) {
             if (results.value(word, true) == false) {
                 titleErrors.insert(word);
             }
@@ -676,6 +707,7 @@ namespace Common {
 
     void BasicKeywordsModel::resetSpellCheckResultsUnsafe() {
         int size = m_SpellCheckResults.length();
+
         // TODO: use smth like memset
         for (int i = 0; i < size; ++i) {
             m_SpellCheckResults[i] = true;
@@ -685,11 +717,13 @@ namespace Common {
     bool BasicKeywordsModel::canBeAddedUnsafe(const QString &keyword) const {
         bool isValid = Helpers::isValidKeyword(keyword);
         bool result = isValid && !m_KeywordsSet.contains(keyword.toLower());
+
         return result;
     }
 
     bool BasicKeywordsModel::hasKeyword(const QString &keyword) {
         QReadLocker readLocker(&m_KeywordsLock);
+
         Q_UNUSED(readLocker);
 
         return canBeAddedUnsafe(keyword.simplified());
@@ -697,6 +731,7 @@ namespace Common {
 
     QString BasicKeywordsModel::retrieveKeyword(int wordIndex) {
         QReadLocker readLocker(&m_KeywordsLock);
+
         Q_UNUSED(readLocker);
 
         QString keyword;
@@ -709,6 +744,7 @@ namespace Common {
 
     QStringList BasicKeywordsModel::getKeywords() {
         QReadLocker readLocker(&m_KeywordsLock);
+
         Q_UNUSED(readLocker);
 
         return m_KeywordsList;
@@ -716,6 +752,7 @@ namespace Common {
 
     void BasicKeywordsModel::setSpellCheckResults(const QVector<SpellCheck::SpellCheckQueryItem *> &items, bool onlyOneKeyword) {
         QWriteLocker writeLocker(&m_KeywordsLock);
+
         Q_UNUSED(writeLocker);
 
 #ifdef INTEGRATION_TESTS
@@ -723,6 +760,7 @@ namespace Common {
             LOG_DEBUG << "Current keywords list length:" << m_KeywordsList.length();
             LOG_DEBUG << "SpellCheck list length:" << m_SpellCheckResults.length();
         }
+
 #endif
         // sync issue between adding/removing/undo/spellcheck
         Q_ASSERT(m_KeywordsList.length() == m_SpellCheckResults.length());
@@ -761,6 +799,7 @@ namespace Common {
 
     QVector<SpellCheck::SpellSuggestionsItem *> BasicKeywordsModel::createKeywordsSuggestionsList() {
         QReadLocker readLocker(&m_KeywordsLock);
+
         Q_UNUSED(readLocker);
 
         QVector<SpellCheck::SpellSuggestionsItem *> spellCheckSuggestions;
@@ -776,9 +815,10 @@ namespace Common {
                     spellCheckSuggestions.append(suggestionsItem);
                 } else {
                     QStringList items = keyword.split(QChar::Space, QString::SkipEmptyParts);
-                    foreach (const QString &item, items) {
+                    foreach(const QString &item, items) {
                         SpellCheck::KeywordSpellSuggestions *suggestionsItem =
-                                new SpellCheck::KeywordSpellSuggestions(item, i, keyword);
+                            new SpellCheck::KeywordSpellSuggestions(item, i, keyword);
+
                         spellCheckSuggestions.append(suggestionsItem);
                     }
                 }
@@ -910,6 +950,7 @@ namespace Common {
 
     QStringList BasicKeywordsModel::getDescriptionWords() {
         QReadLocker readLocker(&m_DescriptionLock);
+
         Q_UNUSED(readLocker);
 
         QStringList words;
@@ -919,6 +960,7 @@ namespace Common {
 
     QStringList BasicKeywordsModel::getTitleWords() {
         QReadLocker readLocker(&m_TitleLock);
+
         Q_UNUSED(readLocker);
 
         QStringList words;

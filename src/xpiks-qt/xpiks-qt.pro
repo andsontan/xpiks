@@ -104,7 +104,8 @@ SOURCES += main.cpp \
     QMLExtensions/imagecachingworker.cpp \
     QMLExtensions/imagecachingservice.cpp \
     QMLExtensions/cachingimageprovider.cpp \
-    Helpers/deletelogshelper.cpp
+    Helpers/deletelogshelper.cpp \
+    Commands/findandreplacecommand.cpp
 
 RESOURCES += qml.qrc
 
@@ -265,7 +266,8 @@ HEADERS += \
     QMLExtensions/imagecacherequest.h \
     QMLExtensions/imagecachingservice.h \
     QMLExtensions/cachingimageprovider.h \
-    Helpers/deletelogshelper.h
+    Helpers/deletelogshelper.h \
+    Commands/findandreplacecommand.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

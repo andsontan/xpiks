@@ -30,7 +30,8 @@ namespace Commands {
         AddArtworksCommandType = 0,
         RemoveArtworksCommandType = 1,
         CombinedEditCommandType = 2,
-        PasteKeywordsCommandType = 3
+        PasteKeywordsCommandType = 3,
+        FindAndReplaceCommandType = 4
     };
 
     class CommandResult;

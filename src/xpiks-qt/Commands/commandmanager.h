@@ -253,10 +253,10 @@ namespace Commands {
         virtual MetadataIO::BackupSaverService *getBackupSaverService() const { return m_MetadataSaverService; }
         virtual UndoRedo::UndoRedoManager *getUndoRedoManager() const { return m_UndoRedoManager; }
         virtual QMLExtensions::ColorsModel *getColorsModel() const { return m_ColorsModel; }
+        virtual Models::FilteredArtItemsProxyModel *getFilteredArtItemsModel() const { return m_FilteredItemsModel; }
 
 #ifdef INTEGRATION_TESTS
         virtual MetadataIO::MetadataIOCoordinator *getMetadataIOCoordinator() const { return m_MetadataIOCoordinator; }
-        virtual Models::FilteredArtItemsProxyModel *getFilteredArtItemsModel() const { return m_FilteredItemsModel; }
         virtual SpellCheck::SpellCheckSuggestionModel *getSpellSuggestionsModel() const { return m_SpellCheckSuggestionModel; }
         virtual Models::CombinedArtworksModel *getCombinedArtworksModel() const { return m_CombinedArtworksModel; }
         virtual Models::ZipArchiver *getZipArchiver() const { return m_ZipArchiver; }

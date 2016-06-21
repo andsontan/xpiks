@@ -18,6 +18,7 @@ private slots:
     void undoPasteCommandTest();
     void undoClearAllTest();
     void undoClearKeywordsTest();
+    void undoReplaceCommandTest();
 };
 
 #endif // UNDOREDOTESTS_H

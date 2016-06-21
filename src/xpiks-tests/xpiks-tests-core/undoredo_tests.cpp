@@ -11,15 +11,17 @@
 #include "../../xpiks-qt/Common/flags.h"
 #include "../../xpiks-qt/Models/artiteminfo.h"
 #include "../../xpiks-qt/Commands/pastekeywordscommand.h"
+#include "../../xpiks-qt/Commands/findandreplacecommand.h"
+#include "../../xpiks-qt/Models/filteredartitemsproxymodel.h"
 
 #define SETUP_TEST \
-    Mocks::CommandManagerMock commandManagerMock;\
-    Mocks::ArtItemsModelMock artItemsMock;\
-    Models::ArtworksRepository artworksRepository;\
-    commandManagerMock.InjectDependency(&artworksRepository);\
-    Models::ArtItemsModel *artItemsModel = &artItemsMock;\
-    commandManagerMock.InjectDependency(artItemsModel);\
-    UndoRedo::UndoRedoManager undoRedoManager;\
+    Mocks::CommandManagerMock commandManagerMock; \
+    Mocks::ArtItemsModelMock artItemsMock; \
+    Models::ArtworksRepository artworksRepository; \
+    commandManagerMock.InjectDependency(&artworksRepository); \
+    Models::ArtItemsModel *artItemsModel = &artItemsMock; \
+    commandManagerMock.InjectDependency(artItemsModel); \
+    UndoRedo::UndoRedoManager undoRedoManager; \
     commandManagerMock.InjectDependency(&undoRedoManager);
 
 void UndoRedoTests::undoAddCommandTest() {
@@ -155,7 +157,7 @@ void UndoRedoTests::undoModifyCommandTest() {
     QString originalTitle = "title";
     QString originalDescription = "some description here";
     QStringList originalKeywords = QString("test1,test2,test3").split(',');
-    QVector<Models::ArtItemInfo*> infos;
+    QVector<Models::ArtItemInfo *> infos;
 
     for (int i = 0; i < itemsToAdd; ++i) {
         artItemsMock.getArtwork(i)->initialize(originalTitle, originalDescription, originalKeywords);
@@ -169,7 +171,7 @@ void UndoRedoTests::undoModifyCommandTest() {
     QString otherTitle = "other title";
     QStringList otherKeywords = QString("another,keywords,here").split(',');
     QSharedPointer<Commands::CombinedEditCommand> combinedEditCommand(
-                new Commands::CombinedEditCommand(flags, infos, otherDescription, otherTitle, otherKeywords));
+        new Commands::CombinedEditCommand(flags, infos, otherDescription, otherTitle, otherKeywords));
     auto result = commandManagerMock.processCommand(combinedEditCommand);
     auto combinedEditResult = result.dynamicCast<Commands::CombinedEditCommandResult>();
     QVector<int> indices = combinedEditResult->m_IndicesToUpdate;
@@ -200,7 +202,7 @@ void UndoRedoTests::undoUndoModifyCommandTest() {
     QString originalTitle = "title";
     QString originalDescription = "some description here";
     QStringList originalKeywords = QString("test1,test2,test3").split(',');
-    QVector<Models::ArtItemInfo*> infos;
+    QVector<Models::ArtItemInfo *> infos;
 
     for (int i = 0; i < itemsToAdd; ++i) {
         artItemsMock.getArtwork(i)->initialize(originalTitle, originalDescription, originalKeywords);
@@ -214,7 +216,7 @@ void UndoRedoTests::undoUndoModifyCommandTest() {
     QString otherTitle = "other title";
     QStringList otherKeywords = QString("another,keywords,here").split(',');
     QSharedPointer<Commands::CombinedEditCommand> combinedEditCommand(
-            new Commands::CombinedEditCommand(flags, infos, otherDescription, otherTitle, otherKeywords));
+        new Commands::CombinedEditCommand(flags, infos, otherDescription, otherTitle, otherKeywords));
     auto result = commandManagerMock.processCommand(combinedEditCommand);
     auto combinedEditResult = result.dynamicCast<Commands::CombinedEditCommandResult>();
     QVector<int> indices = combinedEditResult->m_IndicesToUpdate;
@@ -236,7 +238,7 @@ void UndoRedoTests::undoPasteCommandTest() {
     QString originalTitle = "title";
     QString originalDescription = "some description here";
     QStringList originalKeywords = QString("test1,test2,test3").split(',');
-    QVector<Models::ArtItemInfo*> infos;
+    QVector<Models::ArtItemInfo *> infos;
 
     for (int i = 0; i < itemsToAdd; ++i) {
         artItemsMock.getArtwork(i)->initialize(originalTitle, originalDescription, originalKeywords);
@@ -281,7 +283,7 @@ void UndoRedoTests::undoClearAllTest() {
     QString originalTitle = "title";
     QString originalDescription = "some description here";
     QStringList originalKeywords = QString("test1,test2,test3").split(',');
-    QVector<Models::ArtItemInfo*> infos;
+    QVector<Models::ArtItemInfo *> infos;
 
     for (int i = 0; i < itemsToAdd; ++i) {
         artItemsMock.getArtwork(i)->initialize(originalTitle, originalDescription, originalKeywords);
@@ -324,7 +326,7 @@ void UndoRedoTests::undoClearKeywordsTest() {
     QString originalTitle = "title";
     QString originalDescription = "some description here";
     QStringList originalKeywords = QString("test1,test2,test3").split(',');
-    QVector<Models::ArtItemInfo*> infos;
+    QVector<Models::ArtItemInfo *> infos;
 
     for (int i = 0; i < itemsToAdd; ++i) {
         artItemsMock.getArtwork(i)->initialize(originalTitle, originalDescription, originalKeywords);
@@ -354,6 +356,42 @@ void UndoRedoTests::undoClearKeywordsTest() {
         QCOMPARE(artItemsMock.getArtwork(i)->getDescription(), originalDescription);
         QCOMPARE(artItemsMock.getArtwork(i)->getTitle(), originalTitle);
         QCOMPARE(artItemsMock.getArtwork(i)->getKeywords(), originalKeywords);
+        QVERIFY(!artItemsMock.getArtwork(i)->isModified());
+    }
+}
+
+void UndoRedoTests::undoReplaceCommandTest() {
+    SETUP_TEST;
+    int itemsToAdd = 5;
+    Models::FilteredArtItemsProxyModel filteredItemsModel;
+    filteredItemsModel.setSourceModel(artItemsModel);
+    commandManagerMock.InjectDependency(&filteredItemsModel);
+    commandManagerMock.generateAndAddArtworks(itemsToAdd);
+    QString originalDescription = "ReplaceMe";
+    QString originalTitle = "ReplaceMe";
+    QStringList originalKeywords = {"ReplaceMe"};
+
+    for (int i = 0; i < itemsToAdd; i++) {
+        Models::ArtworkMetadata *metadata = artItemsModel->getArtwork(i);
+        metadata->initialize(originalDescription, originalTitle, originalKeywords);
+    }
+
+    QString replaceTo = "Replaced";
+    QString replaceFrom = "Replace";
+    int flags = Common::SearchFlagCaseSensitive |Common::SearchFlagSearchDescription |
+                Common::SearchFlagSearchTitle | Common::SearchFlagSearchKeywords;
+    QVector<Models::ArtItemInfo *> artWorksInfo = filteredItemsModel.getSearchableOriginalItemsWithIndices(replaceFrom, flags);
+    QSharedPointer<Commands::FindAndReplaceCommand> replaceCommand(new Commands::FindAndReplaceCommand(artWorksInfo, replaceFrom, replaceTo, flags) );
+    auto result = commandManagerMock.processCommand(replaceCommand);
+
+    bool undoStatus = undoRedoManager.undoLastAction();
+    QVERIFY(undoStatus);
+
+    for (int i = 0; i < itemsToAdd; ++i) {
+        Models::ArtworkMetadata *metadata = artItemsMock.getArtwork(i);
+        QCOMPARE(metadata->getDescription(), originalDescription);
+        QCOMPARE(metadata->getTitle(), originalTitle);
+        QCOMPARE(metadata->getKeywords(), originalKeywords);
         QVERIFY(!artItemsMock.getArtwork(i)->isModified());
     }
 }

@@ -26,31 +26,40 @@
 #include <QString>
 #include <QList>
 #include "../Common/baseentity.h"
+#include <functional>
 
 namespace Models {
     class ArtworkMetadata;
     class ArtItemInfo;
     class ArtItemsModel;
 
-    class FilteredArtItemsProxyModel : public QSortFilterProxyModel, public Common::BaseEntity
+    class FilteredArtItemsProxyModel:
+        public QSortFilterProxyModel, public Common::BaseEntity
     {
-        Q_OBJECT
-        Q_PROPERTY(QString searchTerm READ getSearchTerm WRITE setSearchTerm NOTIFY searchTermChanged)
-        Q_PROPERTY(int selectedArtworksCount READ getSelectedArtworksCount NOTIFY selectedArtworksCountChanged)
+    Q_OBJECT
+    Q_PROPERTY(QString searchTerm READ getSearchTerm WRITE setSearchTerm NOTIFY searchTermChanged)
+    Q_PROPERTY(int selectedArtworksCount READ getSelectedArtworksCount NOTIFY selectedArtworksCountChanged)
+
     public:
         FilteredArtItemsProxyModel(QObject *parent=0);
 
     public:
         const QString &getSearchTerm() const { return m_SearchTerm; }
         void setSearchTerm(const QString &value);
+
         int getSelectedArtworksCount() const { return m_SelectedArtworksCount; }
         void spellCheckAllItems();
+
+        QVector<ArtItemInfo *> getSearchableOriginalItemsWithIndices(const QString &searchTerm, int flags) const;
+
 #ifdef CORE_TESTS
         int retrieveNumberOfSelectedItems();
+
 #endif
 
     public:
         Q_INVOKABLE int getOriginalIndex(int index);
+
         Q_INVOKABLE void invertSelectionArtworks() { invertFilteredItemsSelected(); }
         Q_INVOKABLE void selectFilteredArtworks() { setFilteredItemsSelected(true); }
         Q_INVOKABLE void unselectFilteredArtworks() { setFilteredItemsSelected(false); }
@@ -66,11 +75,13 @@ namespace Models {
         Q_INVOKABLE void spellCheckSelected();
         Q_INVOKABLE int getModifiedSelectedCount(bool overwriteAll=false) const;
         Q_INVOKABLE void removeArtworksDirectory(int index);
+
         Q_INVOKABLE int getItemsCount() const { return rowCount(); }
         Q_INVOKABLE void reimportMetadataForSelected();
         Q_INVOKABLE int findSelectedItemIndex() const;
         Q_INVOKABLE void removeMetadataInSelected() const;
         Q_INVOKABLE void clearKeywords(int index);
+
         Q_INVOKABLE void updateFilter() { invalidateFilter(); emit afterInvalidateFilter(); }
         Q_INVOKABLE void focusNextItem(int index);
         Q_INVOKABLE void focusPreviousItem(int index);
@@ -97,18 +108,24 @@ namespace Models {
         void removeKeywordsInItem(Models::ArtItemInfo *itemToClear);
         void setFilteredItemsSelected(bool selected);
         void invertFilteredItemsSelected();
+
         QVector<ArtworkMetadata *> getSelectedOriginalItems() const;
+
         QVector<ArtItemInfo *> getSelectedOriginalItemsWithIndices() const;
+
         QVector<ArtItemInfo *> getAllItemsWithIndices() const;
-        QVector<ArtItemInfo *> getFilteredOriginalItemsWithIndices(bool (*pred)(ArtworkMetadata*)) const;
+
+        QVector<ArtItemInfo *> getFilteredOriginalItemsWithIndices(std::function<bool (ArtworkMetadata *)> pred) const;
+
         QVector<ArtworkMetadata *> getAllOriginalItems() const;
+
         QVector<int> getSelectedOriginalIndices() const;
         void forceUnselectAllItems();
         ArtItemsModel *getArtItemsModel() const;
 
     protected:
         virtual bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
-        virtual bool lessThan(const QModelIndex & sourceLeft, const QModelIndex & sourceRight) const;
+        virtual bool lessThan(const QModelIndex &sourceLeft, const QModelIndex &sourceRight) const;
 
     private:
         // ignore default regexp from proxymodel

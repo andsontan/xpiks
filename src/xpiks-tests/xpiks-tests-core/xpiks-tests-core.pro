@@ -76,6 +76,7 @@ SOURCES += main.cpp \
     indicestoranges_tests.cpp \
     ../../xpiks-qt/Helpers/indiceshelper.cpp \
     ../../xpiks-qt/Commands/commandmanager.cpp \
+    ../../xpiks-qt/Commands/findandreplacecommand.cpp \
     ../../xpiks-qt/Models/artworkmetadata.cpp \
     ../../xpiks-qt/Models/artworksrepository.cpp \
     addcommand_tests.cpp \
@@ -148,7 +149,8 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Common/flags.cpp \
     fixspelling_tests.cpp \
     deleteoldlogstest.cpp \
-    ../../xpiks-qt/Helpers/deletelogshelper.cpp
+    ../../xpiks-qt/Helpers/deletelogshelper.cpp \
+    replacetest.cpp
 
 HEADERS += \
     encryption_tests.h \
@@ -159,6 +161,7 @@ HEADERS += \
     Mocks/commandmanagermock.h \
     ../../xpiks-qt/Common/abstractlistmodel.h \
     ../../xpiks-qt/Commands/commandmanager.h \
+    ../../xpiks-qt/Commands/findandreplacecommand.h \
     ../../xpiks-qt/Models/artworkmetadata.h \
     ../../xpiks-qt/Models/artworksrepository.h \
     addcommand_tests.h \
@@ -252,5 +255,6 @@ HEADERS += \
     artitemsmodel_tests.h \
     fixspelling_tests.h \
     Mocks/spellcheckservicemock.h \
-    ../../xpiks-qt/Helpers/deletelogshelper.h
+    ../../xpiks-qt/Helpers/deletelogshelper.h \
+    replacetest.h
 
