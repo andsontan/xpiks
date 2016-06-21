@@ -65,7 +65,9 @@ int SpellingProducesWarningsTest::doTest() {
 
     Models::FilteredArtItemsProxyModel *filteredModel = m_CommandManager->getFilteredArtItemsModel();
     SpellCheck::SpellCheckerService *spellCheckService = m_CommandManager->getSpellCheckerService();
-    QObject::connect(spellCheckService, SIGNAL(spellCheckQueueIsEmpty()), &waiter, SIGNAL(finished()));
+
+    SignalWaiter spellingWaiter;
+    QObject::connect(spellCheckService, SIGNAL(spellCheckQueueIsEmpty()), &spellingWaiter, SIGNAL(finished()));
 
     // wait for checking warnings
     Warnings::WarningsService *warningsService = m_CommandManager->getWarningsService();
@@ -74,7 +76,7 @@ int SpellingProducesWarningsTest::doTest() {
 
     filteredModel->spellCheckSelected();
 
-    if (!waiter.wait(5)) {
+    if (!spellingWaiter.wait(5)) {
         VERIFY(false, "Timeout for waiting for first spellcheck results");
     }
 

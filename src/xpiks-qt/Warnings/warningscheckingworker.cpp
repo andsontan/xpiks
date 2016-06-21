@@ -97,6 +97,9 @@ namespace Warnings {
     }
 
     int WarningsCheckingWorker::checkDimensions(WarningsItem *wi) const {
+#ifdef INTEGRATION_TESTS
+        LOG_DEBUG << "#";
+#endif
         Models::ArtworkMetadata *item = wi->getCheckableItem();
         int warningsInfo = 0;
 
@@ -133,6 +136,9 @@ namespace Warnings {
     }
 
     int WarningsCheckingWorker::checkKeywords(WarningsItem *wi) const {
+#ifdef INTEGRATION_TESTS
+        LOG_DEBUG << "#";
+#endif
         int warningsInfo = 0;
         Models::ArtworkMetadata *item = wi->getCheckableItem();
         Common::BasicKeywordsModel *keywordsModel = item->getKeywordsModel();
@@ -159,6 +165,9 @@ namespace Warnings {
     }
 
     int WarningsCheckingWorker::checkDescription(WarningsItem *wi) const {
+#ifdef INTEGRATION_TESTS
+        LOG_DEBUG << "#";
+#endif
         int warningsInfo = 0;
         Models::ArtworkMetadata *item = wi->getCheckableItem();
 
@@ -196,6 +205,9 @@ namespace Warnings {
     }
 
     int WarningsCheckingWorker::checkTitle(WarningsItem *wi) const {
+#ifdef INTEGRATION_TESTS
+        LOG_DEBUG << "#";
+#endif
         int warningsInfo = 0;
         Models::ArtworkMetadata *item = wi->getCheckableItem();
 
@@ -233,19 +245,31 @@ namespace Warnings {
     }
 
     int WarningsCheckingWorker::checkSpelling(WarningsItem *wi) const {
+#ifdef INTEGRATION_TESTS
+        LOG_DEBUG << "#";
+#endif
         int warningsInfo = 0;
         Models::ArtworkMetadata *item = wi->getCheckableItem();
         Common::BasicKeywordsModel *keywordsModel = item->getKeywordsModel();
 
         if (keywordsModel->hasKeywordsSpellError()) {
+#ifdef INTEGRATION_TESTS
+            LOG_INFO << "Detected keywords spell error";
+#endif
             Common::SetFlag(warningsInfo, Common::WarningTypeSpellErrorsInKeywords);
         }
 
         if (keywordsModel->hasDescriptionSpellError()) {
+#ifdef INTEGRATION_TESTS
+            LOG_INFO << "Detected description spell error";
+#endif
             Common::SetFlag(warningsInfo, Common::WarningTypeSpellErrorsInDescription);
         }
 
         if (keywordsModel->hasTitleSpellError()) {
+#ifdef INTEGRATION_TESTS
+            LOG_INFO << "Detected title spell error";
+#endif
             Common::SetFlag(warningsInfo, Common::WarningTypeSpellErrorsInTitle);
         }
 

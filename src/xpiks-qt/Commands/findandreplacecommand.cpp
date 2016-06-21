@@ -18,9 +18,11 @@ namespace Commands {
         QVector<UndoRedo::ArtworkMetadataBackup *> artworksBackups;
         QVector<int> indicesToUpdate;
         QVector<Models::ArtworkMetadata *> itemsToSave;
+
         int size = m_ArtItemInfos.size();
         itemsToSave.reserve(size);
         indicesToUpdate.reserve(size);
+
         for (int i = 0; i < size; i++) {
             Models::ArtworkMetadata *metadata = m_ArtItemInfos[i]->getOrigin();
             int index = m_ArtItemInfos[i]->getOriginalIndex();

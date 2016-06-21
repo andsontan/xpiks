@@ -587,8 +587,7 @@ namespace Models {
 
     QVector<ArtItemInfo *> FilteredArtItemsProxyModel::getSearchableOriginalItemsWithIndices(const QString &searchTerm, int flags) const {
         return getFilteredOriginalItemsWithIndices([&searchTerm, flags](ArtworkMetadata *artwork) {
-            return Helpers::hasSearchMatch(searchTerm,
-                                           artwork, flags);
+            return Helpers::hasSearchMatch(searchTerm, artwork, flags);
         });
     }
 }
