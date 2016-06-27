@@ -151,7 +151,6 @@ namespace Models {
         void resetModified() { setIsModifiedFlag(false); }
         void requestFocus(int directionSign) { emit focusRequested(directionSign); }
         void requestBackup() { m_BackupTimer.start(1000); }
-        void generateAboutToBeRemoved() { emit aboutToBeRemoved(); }
 
     signals:
          void modifiedChanged(bool newValue);

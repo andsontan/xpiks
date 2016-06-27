@@ -600,7 +600,7 @@ namespace Common {
         QReadLocker readLocker(&m_KeywordsLock);
         Q_UNUSED(readLocker);
 
-        return canBeAddedUnsafe(keyword.simplified());
+        return !canBeAddedUnsafe(keyword.simplified());
     }
 
     QString BasicKeywordsModel::retrieveKeyword(int wordIndex) {
