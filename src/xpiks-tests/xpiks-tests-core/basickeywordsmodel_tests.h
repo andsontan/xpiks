@@ -29,6 +29,7 @@ private slots:
     void editKeywordToSameTest();
     void addRemoveAddUpperCaseWordTest();
     void editToUpperCaseTest();
+    void hasKeywordTest();
 
 private:
     Common::Hold m_FakeHold;
