@@ -457,7 +457,7 @@ namespace Models {
     }
 
     void CombinedArtworksModel::generateAboutToBeRemoved() {
-         emit aboutToBeRemoved();
+         m_CommonKeywordsModel.notifyAboutToBeRemoved();
     }
 
     void CombinedArtworksModel::removeUnavailableItems() {

@@ -168,7 +168,7 @@ Item {
 
                         onTextChanged: {
                             editKeywordComponent.anyError = keywordsModel.hasKeyword(text) &&
-                                    (previousKeyword !== text)
+                                    (previousKeyword !== text.trim());
                         }
                     }
                 }

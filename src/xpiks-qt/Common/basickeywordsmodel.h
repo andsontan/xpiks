@@ -138,6 +138,7 @@ namespace Common {
         void notifySpellCheckResults(int flags);
         void notifyDescriptionSpellCheck();
         void notifyTitleSpellCheck();
+        void notifyAboutToBeRemoved() { emit aboutToBeRemoved(); }
 
     public:
         void acquire() { m_Hold.acquire(); }
@@ -175,6 +176,7 @@ namespace Common {
         void spellCheckResultsReady();
         void spellCheckErrorsChanged();
         void completionsAvailable();
+        void aboutToBeRemoved();
 
     protected slots:
          void spellCheckRequestReady(int flags, int index);

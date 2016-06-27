@@ -726,7 +726,7 @@ namespace Common {
 
         Q_UNUSED(readLocker);
 
-        return canBeAddedUnsafe(keyword.simplified());
+        return !canBeAddedUnsafe(keyword.simplified());
     }
 
     QString BasicKeywordsModel::retrieveKeyword(int wordIndex) {

@@ -164,7 +164,8 @@ namespace Models {
             ArtworkMetadata *metadata = m_ArtworkList.at(i);
 
             if (metadata->isUnavailable()) {
-                metadata->generateAboutToBeRemoved();
+                Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
+                keywordsModel->notifyAboutToBeRemoved();
             }
         }
     }

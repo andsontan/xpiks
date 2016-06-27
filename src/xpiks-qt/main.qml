@@ -2008,7 +2008,7 @@ ApplicationWindow {
                                                                                     {
                                                                                         callbackObject: callbackObject,
                                                                                         previousKeyword: keyword,
-                                                                                        keywordsModel: filteredArtItemsModel.getArtworkMetadata(rowWrapper.delegateIndex)
+                                                                                        keywordsModel: filteredArtItemsModel.getKeywordsModel(rowWrapper.delegateIndex)
                                                                                     })
                                                             }
                                                         }
@@ -2099,7 +2099,7 @@ ApplicationWindow {
                                                                                     {
                                                                                         callbackObject: callbackObject,
                                                                                         keywordsText: keywordsstring,
-                                                                                        keywordsModel: filteredArtItemsModel.getArtworkMetadata(rowWrapper.delegateIndex)
+                                                                                        keywordsModel: filteredArtItemsModel.getKeywordsModel(rowWrapper.delegateIndex)
 
                                                                                     });
                                                             }
