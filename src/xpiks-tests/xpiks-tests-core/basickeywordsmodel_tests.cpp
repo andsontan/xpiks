@@ -321,3 +321,19 @@ void BasicKeywordsModelTests::editToUpperCaseTest() {
     QCOMPARE(editOtherResult, false);
 }
 
+void BasicKeywordsModelTests::hasKeywordTest() {
+    Common::BasicKeywordsModel basicModel(m_FakeHold);
+
+    QStringList keywords;
+    keywords << "keyword1" << "keyword2" << "keyword3";
+    basicModel.appendKeywords(keywords);
+
+    QVERIFY(basicModel.hasKeyword("keyword1"));
+    QVERIFY(basicModel.hasKeyword("keYwoRd1  "));
+    QVERIFY(basicModel.hasKeyword("   kEyword1"));
+    QVERIFY(basicModel.hasKeyword("KEYWORD1"));
+
+    QVERIFY(!basicModel.hasKeyword("keyword1+"));
+    QVERIFY(!basicModel.hasKeyword("keyword4+"));
+}
+
