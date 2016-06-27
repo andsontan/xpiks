@@ -878,6 +878,8 @@ namespace Models {
                 if (suffix == QLatin1String("eps") ||
                         suffix == QLatin1String("ai")) {
                     vectors.append(filepath);
+                } else {
+                    LOG_WARNING << "Unsupported format:" << format << "of file" << filepath;
                 }
             }
         }
