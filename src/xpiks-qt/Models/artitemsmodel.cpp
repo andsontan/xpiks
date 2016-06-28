@@ -868,6 +868,7 @@ namespace Models {
             QString format = QString::fromLatin1(imageReader.format().toLower());
 
             if (format == QLatin1String("jpeg") ||
+                    format == QLatin1String("jpg") ||
                     format == QLatin1String("tiff")) {
                 filenames.append(filepath);
             } else if (format == QLatin1String("png")) {
