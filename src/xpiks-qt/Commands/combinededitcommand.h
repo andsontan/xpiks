@@ -28,7 +28,7 @@
 #include "commandbase.h"
 
 namespace Models {
-    class ArtItemInfo;
+    class MetadataElement;
     class ArtworkMetadata;
 }
 
@@ -40,11 +40,11 @@ namespace Commands {
     {
     public:
         CombinedEditCommand(int editFlags,
-                            const QVector<Models::ArtItemInfo*> &infos,
+                            const QVector<Models::MetadataElement*> &infos,
                             const QString &description, const QString &title,
                             const QStringList &keywords) :
             CommandBase(CombinedEditCommandType),
-            m_ArtItemInfos(infos),
+            m_MetadataElements(infos),
             m_ArtworkDescription(description),
             m_ArtworkTitle(title),
             m_Keywords(keywords),
@@ -52,9 +52,9 @@ namespace Commands {
         { }
 
         CombinedEditCommand(int editFlags,
-                            const QVector<Models::ArtItemInfo*> &infos) :
+                            const QVector<Models::MetadataElement*> &infos) :
             CommandBase(CombinedEditCommandType),
-            m_ArtItemInfos(infos),
+            m_MetadataElements(infos),
             m_EditFlags(editFlags)
         { }
 
@@ -69,7 +69,7 @@ namespace Commands {
         void setTitle(Models::ArtworkMetadata *metadata) const;
 
     private:
-        QVector<Models::ArtItemInfo*> m_ArtItemInfos;
+        QVector<Models::MetadataElement*> m_MetadataElements;
         QString m_ArtworkDescription;
         QString m_ArtworkTitle;
         QStringList m_Keywords;

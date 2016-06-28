@@ -36,7 +36,7 @@ void ReplaceTest::replaceTrivialTest() {
         metadata->initialize(initString, initString, QStringList() <<initString);
     }
 
-    QVector<Models::ArtItemInfo *> artWorksInfo = filteredItemsModel.getSearchableOriginalItemsWithIndices(replaceFrom, flags);
+    QVector<Models::MetadataElement *> artWorksInfo = filteredItemsModel.getSearchableOriginalItemsWithIndices(replaceFrom, flags);
     QSharedPointer<Commands::FindAndReplaceCommand> replaceCommand(new Commands::FindAndReplaceCommand(artWorksInfo, replaceFrom, replaceTo, flags) );
     auto result = commandManagerMock.processCommand(replaceCommand);
 
@@ -65,7 +65,7 @@ void ReplaceTest::noReplaceTrivialTest() {
         metadata->initialize(initString, initString, QStringList() << initString);
     }
 
-    QVector<Models::ArtItemInfo *> artWorksInfo = filteredItemsModel.getSearchableOriginalItemsWithIndices(replaceFrom, flags);
+    QVector<Models::MetadataElement *> artWorksInfo = filteredItemsModel.getSearchableOriginalItemsWithIndices(replaceFrom, flags);
     QSharedPointer<Commands::FindAndReplaceCommand> replaceCommand(new Commands::FindAndReplaceCommand(artWorksInfo, replaceFrom, replaceTo, flags) );
     auto result = commandManagerMock.processCommand(replaceCommand);
 
@@ -92,7 +92,7 @@ void ReplaceTest::caseSensitiveTest() {
         metadata->initialize(initString, initString, QStringList() << initString);
     }
 
-    QVector<Models::ArtItemInfo *> artWorksInfo = filteredItemsModel.getSearchableOriginalItemsWithIndices(replaceFrom, flags);
+    QVector<Models::MetadataElement *> artWorksInfo = filteredItemsModel.getSearchableOriginalItemsWithIndices(replaceFrom, flags);
     QSharedPointer<Commands::FindAndReplaceCommand> replaceCommand(new Commands::FindAndReplaceCommand(artWorksInfo, replaceFrom, replaceTo, flags) );
     auto result = commandManagerMock.processCommand(replaceCommand);
 
@@ -118,7 +118,7 @@ void ReplaceTest::categoryTest() {
         Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
         metadata->initialize(initString, initString, QStringList() << initString);
     }
-    QVector<Models::ArtItemInfo *> artWorksInfo = filteredItemsModel.getSearchableOriginalItemsWithIndices(replaceFrom, flags);
+    QVector<Models::MetadataElement *> artWorksInfo = filteredItemsModel.getSearchableOriginalItemsWithIndices(replaceFrom, flags);
     QSharedPointer<Commands::FindAndReplaceCommand> replaceCommand(new Commands::FindAndReplaceCommand(artWorksInfo, replaceFrom, replaceTo, flags) );
     auto result = commandManagerMock.processCommand(replaceCommand);
 

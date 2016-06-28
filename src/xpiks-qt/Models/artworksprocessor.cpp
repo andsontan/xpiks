@@ -41,10 +41,10 @@ namespace Models {
         QVector<Models::ArtworkMetadata*> artworksListNew;
         int size = artworksListOld.size();
         for (int i = 0; i < size; ++i) {
-            Models::ArtworkMetadata* artItemInfoElement = artworksListOld.at(i);
+            Models::ArtworkMetadata* item = artworksListOld.at(i);
 
-            if (!artItemInfoElement->isUnavailable()) {
-                artworksListNew.append(artItemInfoElement);
+            if (!item->isUnavailable()) {
+                artworksListNew.append(item);
             }
         }
 

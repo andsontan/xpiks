@@ -44,7 +44,7 @@ namespace Common {
 
 namespace Models {
     class ArtworkMetadata;
-    class ArtItemInfo;
+    class MetadataElement;
 
     class ArtItemsModel :
             public Common::AbstractListModel,

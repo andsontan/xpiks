@@ -23,31 +23,31 @@
 #include "pastekeywordscommand.h"
 #include "../UndoRedo/modifyartworkshistoryitem.h"
 #include "../UndoRedo/artworkmetadatabackup.h"
-#include "../Models/artiteminfo.h"
+#include "../Models/metadataelement.h"
 #include "../Commands/commandmanager.h"
 #include "../Common/defines.h"
 #include "../Models/artitemsmodel.h"
 
 Commands::PasteKeywordsCommand::~PasteKeywordsCommand() {
     LOG_DEBUG << "#";
-    qDeleteAll(m_ArtItemInfos);
+    qDeleteAll(m_MetadataElements);
 }
 
 QSharedPointer<Commands::ICommandResult> Commands::PasteKeywordsCommand::execute(const ICommandManager *commandManagerInterface) const {
-    LOG_INFO << "Pasting" << m_KeywordsList.length() << "keywords to" << m_ArtItemInfos.length() << "item(s)";
+    LOG_INFO << "Pasting" << m_KeywordsList.length() << "keywords to" << m_MetadataElements.length() << "item(s)";
 
     CommandManager *commandManager = (CommandManager*)commandManagerInterface;
 
     QVector<int> indicesToUpdate;
     QVector<UndoRedo::ArtworkMetadataBackup*> artworksBackups;
     QVector<Models::ArtworkMetadata*> itemsToSave;
-    int size = m_ArtItemInfos.length();
+    int size = m_MetadataElements.length();
     indicesToUpdate.reserve(size);
     artworksBackups.reserve(size);
     itemsToSave.reserve(size);
 
     for (int i = 0; i < size; ++i) {
-        Models::ArtItemInfo *itemInfo = m_ArtItemInfos.at(i);
+        Models::MetadataElement *itemInfo = m_MetadataElements.at(i);
         Models::ArtworkMetadata *metadata = itemInfo->getOrigin();
 
         indicesToUpdate.append(itemInfo->getOriginalIndex());

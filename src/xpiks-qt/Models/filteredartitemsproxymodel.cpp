@@ -24,7 +24,7 @@
 #include "artitemsmodel.h"
 #include "artworkmetadata.h"
 #include "artworksrepository.h"
-#include "artiteminfo.h"
+#include "metadataelement.h"
 #include "settingsmodel.h"
 #include "../Commands/commandmanager.h"
 #include "../Commands/combinededitcommand.h"
@@ -100,7 +100,7 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::combineSelectedArtworks() {
-        QVector<ArtItemInfo *> artworksList = getSelectedOriginalItemsWithIndices();
+        QVector<MetadataElement *> artworksList = getSelectedOriginalItemsWithIndices();
         m_CommandManager->combineArtworks(artworksList);
     }
 
@@ -197,7 +197,7 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::removeMetadataInSelected() const {
-        QVector<ArtItemInfo *> selectedArtworks = getSelectedOriginalItemsWithIndices();
+        QVector<MetadataElement *> selectedArtworks = getSelectedOriginalItemsWithIndices();
         int flags = 0;
         Common::SetFlag(flags, Common::EditDesctiption);
         Common::SetFlag(flags, Common::EditKeywords);
@@ -212,7 +212,7 @@ namespace Models {
         ArtworkMetadata *metadata = artItemsModel->getArtwork(originalIndex);
 
         if (metadata != NULL) {
-            ArtItemInfo *info = new ArtItemInfo(metadata, originalIndex);
+            MetadataElement *info = new MetadataElement(metadata, originalIndex);
             removeKeywordsInItem(info);
         }
     }
@@ -345,7 +345,7 @@ namespace Models {
         }
     }
 
-    void FilteredArtItemsProxyModel::removeMetadataInItems(const QVector<ArtItemInfo *> &itemsToClear, int flags) const {
+    void FilteredArtItemsProxyModel::removeMetadataInItems(const QVector<MetadataElement *> &itemsToClear, int flags) const {
         LOG_DEBUG << itemsToClear.length() << "item(s) with flags =" << flags;
         QSharedPointer<Commands::CombinedEditCommand> combinedEditCommand(new Commands::CombinedEditCommand(
                 flags,
@@ -355,12 +355,12 @@ namespace Models {
         qDeleteAll(itemsToClear);
     }
 
-    void FilteredArtItemsProxyModel::removeKeywordsInItem(ArtItemInfo *itemToClear) {
+    void FilteredArtItemsProxyModel::removeKeywordsInItem(MetadataElement *itemToClear) {
         int flags = 0;
         Common::SetFlag(flags, Common::EditKeywords);
         Common::SetFlag(flags, Common::Clear);
 
-        removeMetadataInItems(QVector<ArtItemInfo *>() << itemToClear, flags);
+        removeMetadataInItems(QVector<MetadataElement *>() << itemToClear, flags);
     }
 
     void FilteredArtItemsProxyModel::setFilteredItemsSelected(bool selected) {
@@ -431,18 +431,18 @@ namespace Models {
         return selectedArtworks;
     }
 
-    QVector<ArtItemInfo *> FilteredArtItemsProxyModel::getSelectedOriginalItemsWithIndices() const {
+    QVector<MetadataElement *> FilteredArtItemsProxyModel::getSelectedOriginalItemsWithIndices() const {
         return getFilteredOriginalItemsWithIndices([](ArtworkMetadata *artwork) { return artwork->isSelected(); });
     }
 
-    QVector<ArtItemInfo *> FilteredArtItemsProxyModel::getAllItemsWithIndices() const {
+    QVector<MetadataElement *> FilteredArtItemsProxyModel::getAllItemsWithIndices() const {
         return getFilteredOriginalItemsWithIndices([](ArtworkMetadata *) { return true; });
     }
 
-    QVector<ArtItemInfo *> FilteredArtItemsProxyModel::getFilteredOriginalItemsWithIndices(std::function<bool (ArtworkMetadata *)> pred) const {
+    QVector<MetadataElement *> FilteredArtItemsProxyModel::getFilteredOriginalItemsWithIndices(std::function<bool (ArtworkMetadata *)> pred) const {
         ArtItemsModel *artItemsModel = getArtItemsModel();
 
-        QVector<ArtItemInfo *> filteredArtworks;
+        QVector<MetadataElement *> filteredArtworks;
         int size = this->rowCount();
         filteredArtworks.reserve(size);
 
@@ -454,7 +454,7 @@ namespace Models {
             ArtworkMetadata *metadata = artItemsModel->getArtwork(index);
 
             if (metadata != NULL && pred(metadata)) {
-                ArtItemInfo *info = new ArtItemInfo(metadata, index);
+                MetadataElement *info = new MetadataElement(metadata, index);
                 filteredArtworks.append(info);
             }
         }
@@ -585,7 +585,7 @@ namespace Models {
 
 #endif
 
-    QVector<ArtItemInfo *> FilteredArtItemsProxyModel::getSearchableOriginalItemsWithIndices(const QString &searchTerm, int flags) const {
+    QVector<MetadataElement *> FilteredArtItemsProxyModel::getSearchableOriginalItemsWithIndices(const QString &searchTerm, int flags) const {
         return getFilteredOriginalItemsWithIndices([&searchTerm, flags](ArtworkMetadata *artwork) {
             return Helpers::hasSearchMatch(searchTerm, artwork, flags);
         });

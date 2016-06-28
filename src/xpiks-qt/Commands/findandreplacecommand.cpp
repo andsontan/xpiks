@@ -3,7 +3,7 @@
 #include "commandmanager.h"
 #include "../Models/filteredartitemsproxymodel.h"
 #include "../Models/artworkmetadata.h"
-#include "../Models/artiteminfo.h"
+#include "../Models/metadataelement.h"
 #include "../UndoRedo/artworkmetadatabackup.h"
 #include "../UndoRedo/modifyartworkshistoryitem.h"
 #include "../Common/defines.h"
@@ -19,13 +19,13 @@ namespace Commands {
         QVector<int> indicesToUpdate;
         QVector<Models::ArtworkMetadata *> itemsToSave;
 
-        int size = m_ArtItemInfos.size();
+        int size = m_MetadataElements.size();
         itemsToSave.reserve(size);
         indicesToUpdate.reserve(size);
 
         for (int i = 0; i < size; i++) {
-            Models::ArtworkMetadata *metadata = m_ArtItemInfos[i]->getOrigin();
-            int index = m_ArtItemInfos[i]->getOriginalIndex();
+            Models::ArtworkMetadata *metadata = m_MetadataElements[i]->getOrigin();
+            int index = m_MetadataElements[i]->getOriginalIndex();
             UndoRedo::ArtworkMetadataBackup *backup = new UndoRedo::ArtworkMetadataBackup(metadata);
             metadata->replace(m_ReplaceWhat, m_ReplaceTo, m_Flags);
             itemsToSave.append(metadata);

@@ -38,7 +38,7 @@
 #include "../Common/hold.h"
 
 namespace Models {
-    class ArtItemInfo;
+    class MetadataElement;
 
     class CombinedArtworksModel :
             public Common::AbstractListModel,
@@ -61,7 +61,7 @@ namespace Models {
         virtual ~CombinedArtworksModel();
 
     public:
-        void initArtworks(const QVector<ArtItemInfo *> &artworks);
+        void initArtworks(const QVector<MetadataElement *> &artworks);
 
     private:
         void initKeywords(const QStringList &ek) { m_CommonKeywordsModel.setKeywords(ek); m_AreKeywordsModified = false; }
@@ -189,7 +189,7 @@ namespace Models {
         void removeInnerItem(int row);
 
     private:
-        QVector<ArtItemInfo*> m_ArtworksList;
+        QVector<MetadataElement*> m_ArtworksList;
         Common::Hold m_HoldPlaceholder;
         Common::BasicKeywordsModel m_CommonKeywordsModel;
         SpellCheck::SpellCheckItemInfo m_SpellCheckInfo;

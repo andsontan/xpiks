@@ -27,7 +27,7 @@
 #include "commandbase.h"
 
 namespace Models {
-    class ArtItemInfo;
+    class MetadataElement;
     class ArtworkMetadata;
 }
 
@@ -35,10 +35,10 @@ namespace Commands {
     class PasteKeywordsCommand : public CommandBase
     {
     public:
-        PasteKeywordsCommand(const QVector<Models::ArtItemInfo*> &artItemInfos,
+        PasteKeywordsCommand(const QVector<Models::MetadataElement*> &metadataElements,
                              const QStringList &keywords) :
             CommandBase(PasteKeywordsCommandType),
-            m_ArtItemInfos(artItemInfos),
+            m_MetadataElements(metadataElements),
             m_KeywordsList(keywords)
         {}
 
@@ -48,7 +48,7 @@ namespace Commands {
         virtual QSharedPointer<ICommandResult> execute(const ICommandManager *commandManagerInterface) const;
 
     private:
-        QVector<Models::ArtItemInfo*> m_ArtItemInfos;
+        QVector<Models::MetadataElement*> m_MetadataElements;
         QStringList m_KeywordsList;
     };
 

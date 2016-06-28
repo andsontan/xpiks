@@ -8,7 +8,7 @@
 #include "../../xpiks-qt/Models/filteredartitemsproxymodel.h"
 #include "../../xpiks-qt/Models/artworksrepository.h"
 #include "../../xpiks-qt/Models/artworkuploader.h"
-#include "../../xpiks-qt/Models/artiteminfo.h"
+#include "../../xpiks-qt/Models/metadataelement.h"
 #include "../../xpiks-qt/Models/combinedartworksmodel.h"
 #include "../../xpiks-qt/Models/ziparchiver.h"
 #include "../../xpiks-qt/Models/settingsmodel.h"
@@ -62,12 +62,12 @@ void RemoveFilesFsTests::removeArtworksNumberItems() {
 
     combinedModel.resetModelData();
 
-    QVector<Models::ArtItemInfo *> itemInfos;
+    QVector<Models::MetadataElement *> itemInfos;
     QVector<Models::ArtworkMetadata *> artworksList;
 
     for (int i = 0; i < itemsToAdd; i++) {
          Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
-         itemInfos.append(new Models::ArtItemInfo(metadata, i));
+         itemInfos.append(new Models::MetadataElement(metadata, i));
          artworksList.append(metadata);
     }
 
@@ -98,12 +98,12 @@ void RemoveFilesFsTests::removeArtworksAllItems() {
     DECLARE_MODELS_AND_GENERATE_(itemsToAdd);
 
     combinedModel.resetModelData();
-    QVector<Models::ArtItemInfo *> itemInfos;
+    QVector<Models::MetadataElement *> itemInfos;
     QVector<Models::ArtworkMetadata *> artworksList;
 
     for (int i = 0; i < itemsToAdd; i++) {
          Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
-         itemInfos.append(new Models::ArtItemInfo(metadata, i));
+         itemInfos.append(new Models::MetadataElement(metadata, i));
          artworksList.append(metadata);
     }
 

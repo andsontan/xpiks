@@ -26,7 +26,7 @@
 #include <QHash>
 #include <QSharedPointer>
 #include "artitemsmodel.h"
-#include "artiteminfo.h"
+#include "metadataelement.h"
 #include "../Helpers/indiceshelper.h"
 #include "../Commands/addartworkscommand.h"
 #include "../Commands/removeartworkscommand.h"
@@ -219,7 +219,7 @@ namespace Models {
         if (metadataIndex >= 0
                 && metadataIndex < getArtworksCount()
                 && !keywords.empty()) {
-            QVector<ArtItemInfo*> artItemInfos;
+            QVector<MetadataElement*> metadataElements;
             QVector<int> selectedIndices;
 
             // TODO: to be changed in future to the dialog
@@ -228,7 +228,7 @@ namespace Models {
             selectedIndices.append(metadataIndex);
             // }
 
-            artItemInfos.reserve(selectedIndices.length());
+            metadataElements.reserve(selectedIndices.length());
 
             bool onlyOneKeyword = keywords.length() == 1;
 
@@ -239,11 +239,11 @@ namespace Models {
 
             foreach (int index, selectedIndices) {
                 ArtworkMetadata *metadata = m_ArtworkList.at(index);
-                ArtItemInfo *item = new ArtItemInfo(metadata, index);
-                artItemInfos.append(item);
+                MetadataElement *item = new MetadataElement(metadata, index);
+                metadataElements.append(item);
             }
 
-            QSharedPointer<Commands::PasteKeywordsCommand> pasteCommand(new Commands::PasteKeywordsCommand(artItemInfos, keywords));
+            QSharedPointer<Commands::PasteKeywordsCommand> pasteCommand(new Commands::PasteKeywordsCommand(metadataElements, keywords));
             m_CommandManager->processCommand(pasteCommand);
         }
     }
@@ -254,13 +254,13 @@ namespace Models {
                 && metadataIndex < getArtworksCount()
                 && !keywords.empty()) {
 
-            QVector<ArtItemInfo*> artItemInfos;
+            QVector<MetadataElement*> metadataElements;
 
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
-            ArtItemInfo *item = new ArtItemInfo(metadata, metadataIndex);
-            artItemInfos.append(item);
+            MetadataElement *item = new MetadataElement(metadata, metadataIndex);
+            metadataElements.append(item);
 
-            QSharedPointer<Commands::PasteKeywordsCommand> pasteCommand(new Commands::PasteKeywordsCommand(artItemInfos, keywords));
+            QSharedPointer<Commands::PasteKeywordsCommand> pasteCommand(new Commands::PasteKeywordsCommand(metadataElements, keywords));
             m_CommandManager->processCommand(pasteCommand);
         }
     }
@@ -504,7 +504,7 @@ namespace Models {
         LOG_DEBUG << "Plain text edit for item" << metadataIndex;
         if (0 <= metadataIndex && metadataIndex < getArtworksCount()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
-            ArtItemInfo *itemInfo = new ArtItemInfo(metadata, metadataIndex);
+            MetadataElement *itemInfo = new MetadataElement(metadata, metadataIndex);
 
             QStringList keywords = rawKeywords.trimmed().split(QChar(','), QString::SkipEmptyParts);
 
@@ -512,7 +512,7 @@ namespace Models {
             Common::SetFlag(flags, Common::EditKeywords);
             QSharedPointer<Commands::CombinedEditCommand> combinedEditCommand(new Commands::CombinedEditCommand(
                         flags,
-                        QVector<ArtItemInfo*>() << itemInfo,
+                        QVector<MetadataElement*>() << itemInfo,
                         "", "",
                         keywords));
 
@@ -894,7 +894,7 @@ namespace Models {
             //QModelIndex qmIndex = this->index(index);
             //emit dataChanged(qmIndex, qmIndex, QVector<int>() << IsSelectedRole);
 
-            ArtItemInfo *info = new ArtItemInfo(metadata, index);
+            MetadataElement *info = new MetadataElement(metadata, index);
             m_CommandManager->combineArtwork(info);
         }
     }

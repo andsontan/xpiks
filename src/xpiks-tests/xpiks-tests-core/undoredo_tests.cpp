@@ -9,7 +9,7 @@
 #include "../../xpiks-qt/Models/settingsmodel.h"
 #include "../../xpiks-qt/UndoRedo/undoredomanager.h"
 #include "../../xpiks-qt/Common/flags.h"
-#include "../../xpiks-qt/Models/artiteminfo.h"
+#include "../../xpiks-qt/Models/metadataelement.h"
 #include "../../xpiks-qt/Commands/pastekeywordscommand.h"
 #include "../../xpiks-qt/Commands/findandreplacecommand.h"
 #include "../../xpiks-qt/Models/filteredartitemsproxymodel.h"
@@ -157,11 +157,11 @@ void UndoRedoTests::undoModifyCommandTest() {
     QString originalTitle = "title";
     QString originalDescription = "some description here";
     QStringList originalKeywords = QString("test1,test2,test3").split(',');
-    QVector<Models::ArtItemInfo *> infos;
+    QVector<Models::MetadataElement *> infos;
 
     for (int i = 0; i < itemsToAdd; ++i) {
         artItemsMock.getArtwork(i)->initialize(originalTitle, originalDescription, originalKeywords);
-        infos.append(new Models::ArtItemInfo(artItemsMock.getArtwork(i), i));
+        infos.append(new Models::MetadataElement(artItemsMock.getArtwork(i), i));
     }
 
     artItemsMock.getArtwork(0)->setModified();
@@ -202,11 +202,11 @@ void UndoRedoTests::undoUndoModifyCommandTest() {
     QString originalTitle = "title";
     QString originalDescription = "some description here";
     QStringList originalKeywords = QString("test1,test2,test3").split(',');
-    QVector<Models::ArtItemInfo *> infos;
+    QVector<Models::MetadataElement *> infos;
 
     for (int i = 0; i < itemsToAdd; ++i) {
         artItemsMock.getArtwork(i)->initialize(originalTitle, originalDescription, originalKeywords);
-        infos.append(new Models::ArtItemInfo(artItemsMock.getArtwork(i), i));
+        infos.append(new Models::MetadataElement(artItemsMock.getArtwork(i), i));
     }
 
     artItemsMock.getArtwork(0)->setModified();
@@ -238,11 +238,11 @@ void UndoRedoTests::undoPasteCommandTest() {
     QString originalTitle = "title";
     QString originalDescription = "some description here";
     QStringList originalKeywords = QString("test1,test2,test3").split(',');
-    QVector<Models::ArtItemInfo *> infos;
+    QVector<Models::MetadataElement *> infos;
 
     for (int i = 0; i < itemsToAdd; ++i) {
         artItemsMock.getArtwork(i)->initialize(originalTitle, originalDescription, originalKeywords);
-        infos.append(new Models::ArtItemInfo(artItemsMock.getArtwork(i), i));
+        infos.append(new Models::MetadataElement(artItemsMock.getArtwork(i), i));
     }
 
     QStringList keywordsToPaste = QStringList() << "keyword1" << "keyword2" << "keyword3";
@@ -283,11 +283,11 @@ void UndoRedoTests::undoClearAllTest() {
     QString originalTitle = "title";
     QString originalDescription = "some description here";
     QStringList originalKeywords = QString("test1,test2,test3").split(',');
-    QVector<Models::ArtItemInfo *> infos;
+    QVector<Models::MetadataElement *> infos;
 
     for (int i = 0; i < itemsToAdd; ++i) {
         artItemsMock.getArtwork(i)->initialize(originalTitle, originalDescription, originalKeywords);
-        infos.append(new Models::ArtItemInfo(artItemsMock.getArtwork(i), i));
+        infos.append(new Models::MetadataElement(artItemsMock.getArtwork(i), i));
     }
 
     int flags = Common::Clear | Common::EditEverything;
@@ -326,11 +326,11 @@ void UndoRedoTests::undoClearKeywordsTest() {
     QString originalTitle = "title";
     QString originalDescription = "some description here";
     QStringList originalKeywords = QString("test1,test2,test3").split(',');
-    QVector<Models::ArtItemInfo *> infos;
+    QVector<Models::MetadataElement *> infos;
 
     for (int i = 0; i < itemsToAdd; ++i) {
         artItemsMock.getArtwork(i)->initialize(originalTitle, originalDescription, originalKeywords);
-        infos.append(new Models::ArtItemInfo(artItemsMock.getArtwork(i), i));
+        infos.append(new Models::MetadataElement(artItemsMock.getArtwork(i), i));
     }
 
     int flags = Common::Clear | Common::EditKeywords;
@@ -380,7 +380,7 @@ void UndoRedoTests::undoReplaceCommandTest() {
     QString replaceFrom = "Replace";
     int flags = Common::SearchFlagCaseSensitive |Common::SearchFlagSearchDescription |
                 Common::SearchFlagSearchTitle | Common::SearchFlagSearchKeywords;
-    QVector<Models::ArtItemInfo *> artWorksInfo = filteredItemsModel.getSearchableOriginalItemsWithIndices(replaceFrom, flags);
+    QVector<Models::MetadataElement *> artWorksInfo = filteredItemsModel.getSearchableOriginalItemsWithIndices(replaceFrom, flags);
     QSharedPointer<Commands::FindAndReplaceCommand> replaceCommand(new Commands::FindAndReplaceCommand(artWorksInfo, replaceFrom, replaceTo, flags) );
     auto result = commandManagerMock.processCommand(replaceCommand);
 

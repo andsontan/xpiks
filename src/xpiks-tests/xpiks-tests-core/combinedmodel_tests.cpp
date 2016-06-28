@@ -5,20 +5,20 @@
 #include "../../xpiks-qt/Models/combinedartworksmodel.h"
 #include "Mocks/artitemsmodelmock.h"
 #include "Mocks/commandmanagermock.h"
-#include "../../xpiks-qt/Models/artiteminfo.h"
+#include "../../xpiks-qt/Models/metadataelement.h"
 #include "../../xpiks-qt/Common/basickeywordsmodel.h"
 #include "../../xpiks-qt/Models/settingsmodel.h"
 
-Models::ArtItemInfo *createArtworkMetadata(const QString &desc, const QString &title, const QStringList &keywords, int index=0) {
+Models::MetadataElement *createArtworkMetadata(const QString &desc, const QString &title, const QStringList &keywords, int index=0) {
     Mocks::ArtworkMetadataMock *metadata = new Mocks::ArtworkMetadataMock("/random/file/path.jpg");
     metadata->appendKeywords(keywords);
     metadata->setTitle(title);
     metadata->setDescription(desc);
-    Models::ArtItemInfo *info = new Models::ArtItemInfo(metadata, index);
+    Models::MetadataElement *info = new Models::MetadataElement(metadata, index);
     return info;
 }
 
-void freeArtworks(QVector<Models::ArtItemInfo*> &items) {
+void freeArtworks(QVector<Models::MetadataElement*> &items) {
     int size = items.size();
     for (int i = 0; i < size; ++i) {
         Models::ArtworkMetadata *mock = items[i]->getOrigin();
@@ -37,7 +37,7 @@ void CombinedModelTests::trivialCombineNoItemsTest() {
     combinedModel.setCommandManager(&m_CommandManagerMock);
 
     combinedModel.resetModelData();
-    combinedModel.initArtworks(QVector<Models::ArtItemInfo*>());
+    combinedModel.initArtworks(QVector<Models::MetadataElement*>());
     combinedModel.recombineArtworks();
 
     QCOMPARE(combinedModel.getArtworksCount(), 0);
@@ -59,8 +59,8 @@ void CombinedModelTests::trivialcombineOneItemTest() {
     QStringList keywords;
     keywords << "keyword1" << "keyword2" << "keyword3";
 
-    QVector<Models::ArtItemInfo *> items;
-    Models::ArtItemInfo *item = createArtworkMetadata(desc, title, keywords);
+    QVector<Models::MetadataElement *> items;
+    Models::MetadataElement *item = createArtworkMetadata(desc, title, keywords);
     items << item;
 
     combinedModel.initArtworks(items);
@@ -84,10 +84,10 @@ void CombinedModelTests::combineSeveralSameItemsTest() {
     QStringList keywords;
     keywords << "keyword1" << "keyword2" << "keyword3";
 
-    QVector<Models::ArtItemInfo *> items;
+    QVector<Models::MetadataElement *> items;
     int numberOfItems = 5;
     while (numberOfItems--) {
-        Models::ArtItemInfo *item = createArtworkMetadata(desc, title, keywords);
+        Models::MetadataElement *item = createArtworkMetadata(desc, title, keywords);
         items << item;
     }
 
@@ -107,7 +107,7 @@ void CombinedModelTests::combineAllDifferentItemsTest() {
     Models::CombinedArtworksModel combinedModel;
     combinedModel.setCommandManager(&m_CommandManagerMock);
 
-    QVector<Models::ArtItemInfo *> items;
+    QVector<Models::MetadataElement *> items;
     items << createArtworkMetadata("Description1", "title1", QStringList() << "Keyword1", 0);
     items << createArtworkMetadata("Description2", "title2", QStringList() << "Keyword2", 1);
     items << createArtworkMetadata("Description3", "title3", QStringList() << "Keyword3", 2);
@@ -130,7 +130,7 @@ void CombinedModelTests::combineCommonInKeywordsTest() {
 
     QString commonKeyword = "a common keyword";
 
-    QVector<Models::ArtItemInfo *> items;
+    QVector<Models::MetadataElement *> items;
     items << createArtworkMetadata("Description1", "title1", QStringList() << "Keyword1" << commonKeyword, 0);
     items << createArtworkMetadata("Description2", "title2", QStringList() << "Keyword2" << commonKeyword, 1);
     items << createArtworkMetadata("Description3", "title3", QStringList() << "Keyword3" << commonKeyword, 2);
@@ -154,7 +154,7 @@ void CombinedModelTests::combineCommonInTitleTest() {
 
     QString commonTitle = "a common title";
 
-    QVector<Models::ArtItemInfo *> items;
+    QVector<Models::MetadataElement *> items;
     items << createArtworkMetadata("Description1", commonTitle, QStringList() << "Keyword1", 0);
     items << createArtworkMetadata("Description2", commonTitle, QStringList() << "Keyword2", 1);
     items << createArtworkMetadata("Description3", commonTitle, QStringList() << "Keyword3", 2);
@@ -177,7 +177,7 @@ void CombinedModelTests::combineCommonInDescriptionTest() {
 
     QString commonDescription = "a common Description1";
 
-    QVector<Models::ArtItemInfo *> items;
+    QVector<Models::MetadataElement *> items;
     items << createArtworkMetadata(commonDescription, "title1", QStringList() << "Keyword1", 0);
     items << createArtworkMetadata(commonDescription, "title2", QStringList() << "Keyword2", 1);
     items << createArtworkMetadata(commonDescription, "title3", QStringList() << "Keyword3", 2);
@@ -201,7 +201,7 @@ void CombinedModelTests::recombineAfterRemoveDifferentTest() {
     QString commonDescription = "a common Description1";
     QString commonKeyword = "keyword";
 
-    QVector<Models::ArtItemInfo *> items;
+    QVector<Models::MetadataElement *> items;
     items << createArtworkMetadata(commonDescription, "title1", QStringList() << "Keyword1" << commonKeyword, 0);
     items << createArtworkMetadata(commonDescription, "title2", QStringList() << "Keyword2" << commonKeyword, 1);
     items << createArtworkMetadata("Different description", "title3", QStringList() << "Keyword3", 2);
@@ -227,7 +227,7 @@ void CombinedModelTests::recombineAfterRemoveAllButOneTest() {
     Models::CombinedArtworksModel combinedModel;
     combinedModel.setCommandManager(&m_CommandManagerMock);
 
-    QVector<Models::ArtItemInfo *> items;
+    QVector<Models::MetadataElement *> items;
     items << createArtworkMetadata("Description1", "title1", QStringList() << "Keyword1" << "adfafdaf", 0);
     items << createArtworkMetadata("Description2", "title2", QStringList() << "Keyword2" << "21345425421", 1);
     items << createArtworkMetadata("Description3", "title3", QStringList() << "Keyword3" << "(*&^*&^*&&^%", 2);
@@ -256,7 +256,7 @@ void CombinedModelTests::recombineAfterChangesTest() {
     Models::CombinedArtworksModel combinedModel;
     combinedModel.setCommandManager(&m_CommandManagerMock);
 
-    QVector<Models::ArtItemInfo *> items;
+    QVector<Models::MetadataElement *> items;
     items << createArtworkMetadata("Description1", "title1", QStringList() << "Keyword1" << "adfafdaf", 0);
     items << createArtworkMetadata("Description2", "title2", QStringList() << "Keyword2" << "21345425421", 1);
     items << createArtworkMetadata("Description3", "title3", QStringList() << "Keyword3" << "(*&^*&^*&&^%", 2);
@@ -292,7 +292,7 @@ void CombinedModelTests::twoTimesInARowRecombineTest() {
     QString commonDescription = "a common Description1";
     QString commonKeyword = "keyword";
 
-    QVector<Models::ArtItemInfo *> items;
+    QVector<Models::MetadataElement *> items;
     items << createArtworkMetadata(commonDescription, "title1", QStringList() << "Keyword1" << commonKeyword, 0);
     items << createArtworkMetadata(commonDescription, "title2", QStringList() << "Keyword2" << commonKeyword, 1);
     items << createArtworkMetadata("Different description", "title3", QStringList() << "Keyword3", 2);
@@ -314,7 +314,7 @@ void CombinedModelTests::isNotModifiedAfterTitleDescEditTest() {
 
     QString commonDescription = "a common Description1";
 
-    QVector<Models::ArtItemInfo *> items;
+    QVector<Models::MetadataElement *> items;
     items << createArtworkMetadata(commonDescription, "title1", QStringList() << "Keyword1", 0);
     items << createArtworkMetadata(commonDescription, "title2", QStringList() << "Keyword2", 1);
     items << createArtworkMetadata(commonDescription, "title3", QStringList() << "Keyword3", 2);
@@ -339,7 +339,7 @@ void CombinedModelTests::isModifiedAfterKeywordsAppendTest() {
 
     QString commonDescription = "a common Description1";
 
-    QVector<Models::ArtItemInfo *> items;
+    QVector<Models::MetadataElement *> items;
     items << createArtworkMetadata(commonDescription, "title1", QStringList() << "Keyword1", 0);
     items << createArtworkMetadata(commonDescription, "title2", QStringList() << "Keyword2", 1);
     items << createArtworkMetadata(commonDescription, "title3", QStringList() << "Keyword3", 2);
@@ -362,7 +362,7 @@ void CombinedModelTests::isModifiedAfterKeywordRemovalTest() {
 
     QString commonKeyword = "a common keyword";
 
-    QVector<Models::ArtItemInfo *> items;
+    QVector<Models::MetadataElement *> items;
     items << createArtworkMetadata("Description1", "title1", QStringList() << "Keyword1" << commonKeyword, 0);
     items << createArtworkMetadata("Description2", "title2", QStringList() << "Keyword2" << commonKeyword, 1);
     items << createArtworkMetadata("Description3", "title3", QStringList() << "Keyword3" << commonKeyword, 2);
@@ -385,7 +385,7 @@ void CombinedModelTests::isModifiedAfterKeywordEditTest() {
 
     QString commonKeyword = "a common keyword";
 
-    QVector<Models::ArtItemInfo *> items;
+    QVector<Models::MetadataElement *> items;
     items << createArtworkMetadata("Description1", "title1", QStringList() << "Keyword1" << commonKeyword, 0);
     items << createArtworkMetadata("Description2", "title2", QStringList() << "Keyword2" << commonKeyword, 1);
     items << createArtworkMetadata("Description3", "title3", QStringList() << "Keyword3" << commonKeyword, 2);
@@ -408,7 +408,7 @@ void CombinedModelTests::isModifiedAfterKeywordsClearTest() {
 
     QString commonKeyword = "a common keyword";
 
-    QVector<Models::ArtItemInfo *> items;
+    QVector<Models::MetadataElement *> items;
     items << createArtworkMetadata("Description1", "title1", QStringList() << "Keyword1" << commonKeyword, 0);
     items << createArtworkMetadata("Description2", "title2", QStringList() << "Keyword2" << commonKeyword, 1);
     items << createArtworkMetadata("Description3", "title3", QStringList() << "Keyword3" << commonKeyword, 2);
@@ -429,7 +429,7 @@ void CombinedModelTests::isNotModifiedAfterEmptyKeywordsClearTest() {
     Models::CombinedArtworksModel combinedModel;
     combinedModel.setCommandManager(&m_CommandManagerMock);
 
-    QVector<Models::ArtItemInfo *> items;
+    QVector<Models::MetadataElement *> items;
     items << createArtworkMetadata("Description1", "title1", QStringList() << "Keyword1", 0);
     items << createArtworkMetadata("Description2", "title2", QStringList() << "Keyword2", 1);
     items << createArtworkMetadata("Description3", "title3", QStringList() << "Keyword3", 2);
@@ -450,7 +450,7 @@ void CombinedModelTests::isModifiedStatusNotResetWithOtherTest() {
     Models::CombinedArtworksModel combinedModel;
     combinedModel.setCommandManager(&m_CommandManagerMock);
 
-    QVector<Models::ArtItemInfo *> items;
+    QVector<Models::MetadataElement *> items;
     items << createArtworkMetadata("Description1", "title1", QStringList() << "Keyword1", 0);
     items << createArtworkMetadata("Description2", "title2", QStringList() << "Keyword2", 1);
     items << createArtworkMetadata("Description3", "title3", QStringList() << "Keyword3", 2);
@@ -476,7 +476,7 @@ void CombinedModelTests::initArtworksEmitsRowsInsertTest() {
 
     QString commonKeyword = "a common keyword";
 
-    QVector<Models::ArtItemInfo *> items;
+    QVector<Models::MetadataElement *> items;
     items << createArtworkMetadata("Description1", "title1", QStringList() << "Keyword1" << commonKeyword, 0);
     items << createArtworkMetadata("Description2", "title2", QStringList() << "Keyword2" << commonKeyword, 1);
     items << createArtworkMetadata("Description3", "title3", QStringList() << "Keyword3" << commonKeyword, 2);
@@ -500,7 +500,7 @@ void CombinedModelTests::initEmptyArtworksDoesNotEmitTest() {
 
     QSignalSpy addSpy(&combinedModel, SIGNAL(rowsInserted(QModelIndex,int,int)));
 
-    combinedModel.initArtworks(QVector<Models::ArtItemInfo *>());
+    combinedModel.initArtworks(QVector<Models::MetadataElement *>());
 
     QCOMPARE(combinedModel.getAreKeywordsModified(), false);
     QCOMPARE(addSpy.count(), 0);
@@ -513,7 +513,7 @@ void CombinedModelTests::initOneArtworkEnablesAllFields() {
     Models::CombinedArtworksModel combinedModel;
     combinedModel.setCommandManager(&m_CommandManagerMock);
 
-    QVector<Models::ArtItemInfo *> items;
+    QVector<Models::MetadataElement *> items;
     items << createArtworkMetadata("Description1", "title1", QStringList() << "Keyword1", 0);
 
     combinedModel.initArtworks(items);
@@ -530,7 +530,7 @@ void CombinedModelTests::initManyArtworksDoesNotEnableAllFields() {
     Models::CombinedArtworksModel combinedModel;
     combinedModel.setCommandManager(&m_CommandManagerMock);
 
-    QVector<Models::ArtItemInfo *> items;
+    QVector<Models::MetadataElement *> items;
     items << createArtworkMetadata("Description1", "title1", QStringList() << "Keyword1", 0);
     items << createArtworkMetadata("Description2", "title2", QStringList() << "Keyword2", 1);
     items << createArtworkMetadata("Description3", "title3", QStringList() << "Keyword3", 2);
@@ -549,7 +549,7 @@ void CombinedModelTests::resetModelClearsEverythingTest() {
     Models::CombinedArtworksModel combinedModel;
     combinedModel.setCommandManager(&m_CommandManagerMock);
 
-    QVector<Models::ArtItemInfo *> items;
+    QVector<Models::MetadataElement *> items;
     items << createArtworkMetadata("Description1", "title1", QStringList() << "Keyword1", 0);
     items << createArtworkMetadata("Description2", "title2", QStringList() << "Keyword2", 1);
     items << createArtworkMetadata("Description3", "title3", QStringList() << "Keyword3", 2);
@@ -644,7 +644,7 @@ void CombinedModelTests::notSavedAfterAllDisabledTest() {
 
     QString commonDescription = "a common Description1";
 
-    QVector<Models::ArtItemInfo *> items;
+    QVector<Models::MetadataElement *> items;
     items << createArtworkMetadata(commonDescription, "title1", QStringList() << "Keyword1" << "keyword2", 0);
     items << createArtworkMetadata(commonDescription, "title2", QStringList() << "Keyword2", 0);
 
@@ -676,7 +676,7 @@ void CombinedModelTests::notSavedAfterNothingModifiedTest() {
 
     QString commonDescription = "a common Description1";
 
-    QVector<Models::ArtItemInfo *> items;
+    QVector<Models::MetadataElement *> items;
     items << createArtworkMetadata(commonDescription, "title1", QStringList() << "Keyword1", 0);
 
     combinedModel.resetModelData();
@@ -697,7 +697,7 @@ void CombinedModelTests::notSavedAfterModifiedDisabledTest() {
 
     QString commonDescription = "a common Description1";
 
-    QVector<Models::ArtItemInfo *> items;
+    QVector<Models::MetadataElement *> items;
     items << createArtworkMetadata(commonDescription, "title1", QStringList() << "Keyword1", 0);
 
     combinedModel.resetModelData();
@@ -724,7 +724,7 @@ void CombinedModelTests::savedAfterModifiedDescriptionTest() {
 
     QString commonDescription = "a common Description1";
 
-    QVector<Models::ArtItemInfo *> items;
+    QVector<Models::MetadataElement *> items;
     items << createArtworkMetadata(commonDescription, "title1", QStringList() << "Keyword1", 0);
 
     combinedModel.resetModelData();
@@ -745,7 +745,7 @@ void CombinedModelTests::savedAfterModifiedTitleTest() {
 
     QString commonDescription = "a common Description1";
 
-    QVector<Models::ArtItemInfo *> items;
+    QVector<Models::MetadataElement *> items;
     items << createArtworkMetadata(commonDescription, "title1", QStringList() << "Keyword1", 0);
 
     combinedModel.resetModelData();
@@ -766,7 +766,7 @@ void CombinedModelTests::savedAfterKeywordsModifiedTest() {
 
     QString commonDescription = "a common Description1";
 
-    QVector<Models::ArtItemInfo *> items;
+    QVector<Models::MetadataElement *> items;
     items << createArtworkMetadata(commonDescription, "title1", QStringList() << "Keyword1", 0);
 
     combinedModel.resetModelData();
@@ -787,7 +787,7 @@ void CombinedModelTests::savedIfMoreThanOneButNotModifiedTest() {
 
     QString commonDescription = "a common Description1";
 
-    QVector<Models::ArtItemInfo *> items;
+    QVector<Models::MetadataElement *> items;
     items << createArtworkMetadata(commonDescription, "title1", QStringList() << "Keyword1", 0);
     items << createArtworkMetadata(commonDescription, "title2", QStringList() << "Keyword2", 1);
     items << createArtworkMetadata(commonDescription, "title3", QStringList() << "Keyword3", 2);

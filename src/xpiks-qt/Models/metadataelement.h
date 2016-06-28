@@ -19,24 +19,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ARTITEMINFO_H
-#define ARTITEMINFO_H
+#ifndef METADATAELEMENT_H
+#define METADATAELEMENT_H
 
 #include <QString>
 #include <QSet>
 #include "artworkmetadata.h"
 
 namespace Models {
-    class ArtItemInfo
+    class MetadataElement
     {
     public:
-        ArtItemInfo(ArtworkMetadata *metadata, int index) :
+        MetadataElement(ArtworkMetadata *metadata, int index) :
             m_ArtworkMetadata(metadata),
             m_OriginalIndex(index),
             m_IsSelected(false)
         {}
 
-        virtual ~ArtItemInfo() {}
+        virtual ~MetadataElement() {}
 
     public:        
         bool isSelected() const { return m_IsSelected; }
@@ -53,4 +53,4 @@ namespace Models {
     };
 }
 
-#endif // ARTITEMINFO_H
+#endif // METADATAELEMENT_H

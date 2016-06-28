@@ -35,7 +35,7 @@
 #include "../Commands/addartworkscommand.h"
 #include "../Models/filteredartitemsproxymodel.h"
 #include "../Models/recentdirectoriesmodel.h"
-#include "../Models/artiteminfo.h"
+#include "../Models/metadataelement.h"
 #include "../SpellCheck/spellcheckerservice.h"
 #include "../Models/settingsmodel.h"
 #include "../SpellCheck/spellchecksuggestionmodel.h"
@@ -288,17 +288,17 @@ void Commands::CommandManager::recodePasswords(const QString &oldMasterPassword,
     }
 }
 
-void Commands::CommandManager::combineArtwork(Models::ArtItemInfo *itemInfo) const {
+void Commands::CommandManager::combineArtwork(Models::MetadataElement *itemInfo) const {
     Q_ASSERT(itemInfo != NULL);
     LOG_DEBUG << "one item with index" << itemInfo->getOriginalIndex();
     if (m_CombinedArtworksModel) {
         m_CombinedArtworksModel->resetModelData();
-        m_CombinedArtworksModel->initArtworks(QVector<Models::ArtItemInfo *>() << itemInfo);
+        m_CombinedArtworksModel->initArtworks(QVector<Models::MetadataElement *>() << itemInfo);
         m_CombinedArtworksModel->recombineArtworks();
     }
 }
 
-void Commands::CommandManager::combineArtworks(const QVector<Models::ArtItemInfo *> &artworks) const {
+void Commands::CommandManager::combineArtworks(const QVector<Models::MetadataElement *> &artworks) const {
     LOG_DEBUG << artworks.length() << "artworks";
     if (m_CombinedArtworksModel) {
         m_CombinedArtworksModel->resetModelData();

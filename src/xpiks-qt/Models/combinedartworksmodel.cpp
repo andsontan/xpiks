@@ -26,7 +26,7 @@
 #include "../Commands/commandbase.h"
 #include "../Suggestion/keywordssuggestor.h"
 #include "artworkmetadata.h"
-#include "artiteminfo.h"
+#include "metadataelement.h"
 #include "../SpellCheck/spellcheckiteminfo.h"
 #include "../Common/defines.h"
 #include "../QMLExtensions/colorsmodel.h"
@@ -50,7 +50,7 @@ namespace Models {
 
     CombinedArtworksModel::~CombinedArtworksModel() { qDeleteAll(m_ArtworksList); }
 
-    void CombinedArtworksModel::initArtworks(const QVector<ArtItemInfo *> &artworks) {
+    void CombinedArtworksModel::initArtworks(const QVector<MetadataElement *> &artworks) {
         int paramLength = artworks.length();
 
         if (paramLength > 0) {
@@ -196,7 +196,7 @@ namespace Models {
         indicesToRemove.reserve(count);
 
         for (int i = 0; i < count; ++i) {
-            ArtItemInfo *item = m_ArtworksList[i];
+            MetadataElement *item = m_ArtworksList[i];
             if (item->isSelected()) {
                 indicesToRemove.append(i);
             }
@@ -305,7 +305,7 @@ namespace Models {
     void CombinedArtworksModel::assignFromSelected() {
         int selectedCount = 0;
         int count = m_ArtworksList.length();
-        ArtItemInfo *firstSelected = NULL;
+        MetadataElement *firstSelected = NULL;
         for (int i = 0; i < count; ++i) {
             if (m_ArtworksList.at(i)->isSelected()) {
                 selectedCount++;
@@ -347,7 +347,7 @@ namespace Models {
 
     void CombinedArtworksModel::assignFromOneArtwork() {
         Q_ASSERT(m_ArtworksList.length() == 1);
-        ArtItemInfo *info = m_ArtworksList.at(0);
+        MetadataElement *info = m_ArtworksList.at(0);
         ArtworkMetadata *metadata = info->getOrigin();
 
         if (!m_IsDescriptionModified) {
@@ -381,7 +381,7 @@ namespace Models {
 
         int artworksCount = m_ArtworksList.length();
         for (int i = 0; i < artworksCount; ++i) {
-            ArtItemInfo *info = m_ArtworksList[i];
+            MetadataElement *info = m_ArtworksList[i];
             ArtworkMetadata *metadata = info->getOrigin();
 
             if (!anyItemsProcessed) {
@@ -431,13 +431,13 @@ namespace Models {
         if (index.row() < 0 || index.row() >= m_ArtworksList.count())
             return QVariant();
 
-        ArtItemInfo *artItemInfo = m_ArtworksList.at(index.row());
+        MetadataElement *item = m_ArtworksList.at(index.row());
 
         switch (role) {
         case PathRole:
-            return artItemInfo->getOrigin()->getFilepath();
+            return item->getOrigin()->getFilepath();
         case IsSelectedRole:
-            return artItemInfo->isSelected();
+            return item->isSelected();
         default:
             return QVariant();
         }
@@ -451,7 +451,7 @@ namespace Models {
     }
 
     void CombinedArtworksModel::removeInnerItem(int row) {
-        ArtItemInfo *info = m_ArtworksList[row];
+        MetadataElement *info = m_ArtworksList[row];
         delete info;
         m_ArtworksList.removeAt(row);
     }
@@ -465,9 +465,9 @@ namespace Models {
         QVector<int> indicesToRemove;
         int size = m_ArtworksList.size();
         for (int i = 0; i < size; i++) {
-            ArtItemInfo *artItemInfoElement = m_ArtworksList.at(i);
+            MetadataElement *item = m_ArtworksList.at(i);
 
-            if (artItemInfoElement->getOrigin()->isUnavailable()) {
+            if (item->getOrigin()->isUnavailable()) {
                 indicesToRemove.append(i);
             }
         }

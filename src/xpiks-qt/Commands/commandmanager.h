@@ -52,7 +52,7 @@ namespace Models {
     class ArtworksRepository;
     class ArtItemsModel;
     class FilteredArtItemsProxyModel;
-    class ArtItemInfo;
+    class MetadataElement;
     class CombinedArtworksModel;
     class ArtworkUploader;
     class UploadInfoRepository;
@@ -189,8 +189,8 @@ namespace Commands {
                                 const QString &newMasterPassword,
                                 const QVector<Models::UploadInfo*> &uploadInfos) const;
 
-        void combineArtwork(Models::ArtItemInfo* itemInfo) const;
-        void combineArtworks(const QVector<Models::ArtItemInfo*> &artworks) const;
+        void combineArtwork(Models::MetadataElement* itemInfo) const;
+        void combineArtworks(const QVector<Models::MetadataElement*> &artworks) const;
         void setArtworksForUpload(const QVector<Models::ArtworkMetadata*> &artworks) const;
         void setArtworksForZipping(const QVector<Models::ArtworkMetadata*> &artworks) const;
         virtual void connectArtworkSignals(Models::ArtworkMetadata *metadata) const;

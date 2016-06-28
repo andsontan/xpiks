@@ -136,7 +136,6 @@ HEADERS += \
     Helpers/indiceshelper.h \
     Helpers/clipboardhelper.h \
     Models/combinedartworksmodel.h \
-    Models/artiteminfo.h \
     Common/abstractlistmodel.h \
     Helpers/constants.h \
     Helpers/appsettings.h \
@@ -267,7 +266,8 @@ HEADERS += \
     QMLExtensions/imagecachingservice.h \
     QMLExtensions/cachingimageprovider.h \
     Helpers/deletelogshelper.h \
-    Commands/findandreplacecommand.h
+    Commands/findandreplacecommand.h \
+    Models/metadataelement.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

@@ -30,7 +30,7 @@
 
 namespace Models {
     class ArtworkMetadata;
-    class ArtItemInfo;
+    class MetadataElement;
     class ArtItemsModel;
 
     class FilteredArtItemsProxyModel:
@@ -50,7 +50,7 @@ namespace Models {
         int getSelectedArtworksCount() const { return m_SelectedArtworksCount; }
         void spellCheckAllItems();
 
-        QVector<ArtItemInfo *> getSearchableOriginalItemsWithIndices(const QString &searchTerm, int flags) const;
+        QVector<MetadataElement *> getSearchableOriginalItemsWithIndices(const QString &searchTerm, int flags) const;
 
 #ifdef CORE_TESTS
         int retrieveNumberOfSelectedItems();
@@ -104,18 +104,18 @@ namespace Models {
         void allItemsSelectedChanged();
 
     private:
-        void removeMetadataInItems(const QVector<Models::ArtItemInfo *> &itemsToClear, int flags) const;
-        void removeKeywordsInItem(Models::ArtItemInfo *itemToClear);
+        void removeMetadataInItems(const QVector<Models::MetadataElement *> &itemsToClear, int flags) const;
+        void removeKeywordsInItem(Models::MetadataElement *itemToClear);
         void setFilteredItemsSelected(bool selected);
         void invertFilteredItemsSelected();
 
         QVector<ArtworkMetadata *> getSelectedOriginalItems() const;
 
-        QVector<ArtItemInfo *> getSelectedOriginalItemsWithIndices() const;
+        QVector<MetadataElement *> getSelectedOriginalItemsWithIndices() const;
 
-        QVector<ArtItemInfo *> getAllItemsWithIndices() const;
+        QVector<MetadataElement *> getAllItemsWithIndices() const;
 
-        QVector<ArtItemInfo *> getFilteredOriginalItemsWithIndices(std::function<bool (ArtworkMetadata *)> pred) const;
+        QVector<MetadataElement *> getFilteredOriginalItemsWithIndices(std::function<bool (ArtworkMetadata *)> pred) const;
 
         QVector<ArtworkMetadata *> getAllOriginalItems() const;
 
