@@ -1,4 +1,15 @@
-This is Xpiks 1.3.2 bugfix release.
+This is Xpiks 1.3.3 bugfix release.
+
+In this release:
+
+- Fix for unable to edit keyword issue
+- Fix for API move to https
+
+
+
+Previous releases:
+
+Xpiks 1.3.2 bugfix release.
 
 In this release:
 
@@ -8,9 +19,6 @@ In this release:
 - Fix for scrolling in main window
 - Fix for empty title not filled from description
 
-
-
-Previous releases:
 
 Xpiks 1.3.1 bugfix release.
 
