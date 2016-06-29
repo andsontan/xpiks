@@ -51,6 +51,7 @@ namespace Conectivity {
         curl_easy_setopt(curlHandle, CURLOPT_UPLOAD, 0L);
         curl_easy_setopt(curlHandle, CURLOPT_DIRLISTONLY, 1L);
         curl_easy_setopt(curlHandle, CURLOPT_HEADERFUNCTION, throw_away);
+        curl_easy_setopt(curlHandle, CURLOPT_VERBOSE, 1L);
 
         LOG_DEBUG << "About to check credentials for" << host;
         r = curl_easy_perform(curlHandle);
