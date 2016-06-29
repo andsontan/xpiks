@@ -126,7 +126,7 @@ namespace Models {
 
         QVector<int> indicesToRemove;
         size_t size = m_ArtworkList.size();
-        indicesToRemove.reserve(size);
+        indicesToRemove.reserve((int)size);
 
         for (size_t i = 0; i < size; ++i) {
             ArtworkMetadata *metadata = m_ArtworkList.at(i);
@@ -145,8 +145,8 @@ namespace Models {
         QVector<int> indicesToRemove;
         QVector<QPair<int, int> > rangesToRemove;
 
-        size_t size = m_ArtworkList.size();
-        for (size_t i = 0; i < size; ++i) {
+        int size = (int)m_ArtworkList.size();
+        for (int i = 0; i < size; ++i) {
             if (m_ArtworkList.at(i)->isUnavailable()) {
                 indicesToRemove.append(i);
                 emit fileWithIndexUnavailable(i);
@@ -1008,10 +1008,10 @@ namespace Models {
 
     void ArtItemsModel::getSelectedItemsIndices(QVector<int> &indices) {
         size_t size = m_ArtworkList.size();
-        indices.reserve(size / 3);
+        indices.reserve((int)size / 3);
         for (size_t i = 0; i < size; ++i) {
             if (m_ArtworkList.at(i)->isSelected()) {
-                indices.append(i);
+                indices.append((int)i);
             }
         }
     }
