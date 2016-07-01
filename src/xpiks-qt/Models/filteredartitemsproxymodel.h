@@ -115,7 +115,9 @@ namespace Models {
 
         QVector<MetadataElement *> getAllItemsWithIndices() const;
 
-        QVector<MetadataElement *> getFilteredOriginalItemsWithIndices(std::function<bool (ArtworkMetadata *)> pred) const;
+        template<typename T>
+        QVector<T *> getFilteredOriginalItemsWithIndices(std::function<bool (ArtworkMetadata *)> pred,
+                                                         std::function<T *(ArtworkMetadata*, int)> mapper) const;
 
         QVector<ArtworkMetadata *> getAllOriginalItems() const;
 

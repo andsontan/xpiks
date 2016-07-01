@@ -432,17 +432,23 @@ namespace Models {
     }
 
     QVector<MetadataElement *> FilteredArtItemsProxyModel::getSelectedOriginalItemsWithIndices() const {
-        return getFilteredOriginalItemsWithIndices([](ArtworkMetadata *artwork) { return artwork->isSelected(); });
+        return getFilteredOriginalItemsWithIndices<MetadataElement>(
+                    [](ArtworkMetadata *artwork) { return artwork->isSelected(); },
+        [] (ArtworkMetadata *metadata, int index) { return new MetadataElement(metadata, index); });
     }
 
     QVector<MetadataElement *> FilteredArtItemsProxyModel::getAllItemsWithIndices() const {
-        return getFilteredOriginalItemsWithIndices([](ArtworkMetadata *) { return true; });
+        return getFilteredOriginalItemsWithIndices<MetadataElement>(
+                    [](ArtworkMetadata *) { return true; },
+        [] (ArtworkMetadata *metadata, int index) { return new MetadataElement(metadata, index); });
     }
 
-    QVector<MetadataElement *> FilteredArtItemsProxyModel::getFilteredOriginalItemsWithIndices(std::function<bool (ArtworkMetadata *)> pred) const {
+    template<typename T>
+    QVector<T *> FilteredArtItemsProxyModel::getFilteredOriginalItemsWithIndices(std::function<bool (ArtworkMetadata *)> pred,
+                                                                                 std::function<T *(ArtworkMetadata *, int)> mapper) const {
         ArtItemsModel *artItemsModel = getArtItemsModel();
 
-        QVector<MetadataElement *> filteredArtworks;
+        QVector<T *> filteredArtworks;
         int size = this->rowCount();
         filteredArtworks.reserve(size);
 
@@ -454,7 +460,7 @@ namespace Models {
             ArtworkMetadata *metadata = artItemsModel->getArtwork(index);
 
             if (metadata != NULL && pred(metadata)) {
-                MetadataElement *info = new MetadataElement(metadata, index);
+                T *info = mapper(metadata, index);
                 filteredArtworks.append(info);
             }
         }
@@ -586,8 +592,10 @@ namespace Models {
 #endif
 
     QVector<MetadataElement *> FilteredArtItemsProxyModel::getSearchableOriginalItemsWithIndices(const QString &searchTerm, int flags) const {
-        return getFilteredOriginalItemsWithIndices([&searchTerm, flags](ArtworkMetadata *artwork) {
+        return getFilteredOriginalItemsWithIndices<MetadataElement>(
+                    [&searchTerm, flags](ArtworkMetadata *artwork) {
             return Helpers::hasSearchMatch(searchTerm, artwork, flags);
-        });
+        },
+        [] (ArtworkMetadata *metadata, int index) { return new MetadataElement(metadata, index); });
     }
 }
