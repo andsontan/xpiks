@@ -2,11 +2,11 @@
 #define REPLACETEST_H
 
 #include <QObject>
+#include <QtTest/QtTest>
 
 class ReplaceTest: public QObject
 {
     Q_OBJECT
-
 private slots:
     void replaceTrivialTest();
     void noReplaceTrivialTest();

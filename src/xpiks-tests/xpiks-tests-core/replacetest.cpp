@@ -1,12 +1,11 @@
 #include "replacetest.h"
+#include <QString>
 #include "Mocks/artitemsmodelmock.h"
-#include "../../xpiks-qt/Commands/findandreplacecommand.h"
 #include "Mocks/commandmanagermock.h"
+#include "../../xpiks-qt/Commands/findandreplacecommand.h"
 #include "../../xpiks-qt/Models/filteredartitemsproxymodel.h"
 #include "../../xpiks-qt/Models/artworksrepository.h"
 #include "../../xpiks-qt/Common/flags.h"
-#include <QtTest/QTest>
-#include <QString>
 
 #define DECLARE_MODELS_AND_GENERATE(count) \
     Mocks::CommandManagerMock commandManagerMock; \
