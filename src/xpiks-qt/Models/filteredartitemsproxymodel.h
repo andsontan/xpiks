@@ -50,7 +50,7 @@ namespace Models {
         int getSelectedArtworksCount() const { return m_SelectedArtworksCount; }
         void spellCheckAllItems();
 
-        QVector<MetadataElement *> getSearchableOriginalItemsWithIndices(const QString &searchTerm, int flags) const;
+        QVector<MetadataElement *> getSearchableOriginalItems(const QString &searchTerm, int flags) const;
 
 #ifdef CORE_TESTS
         int retrieveNumberOfSelectedItems();

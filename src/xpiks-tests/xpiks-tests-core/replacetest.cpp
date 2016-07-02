@@ -20,7 +20,9 @@
     commandManagerMock.generateAndAddArtworks(count);
 
 void ReplaceTest::replaceTrivialTest() {
-    DECLARE_MODELS_AND_GENERATE(10);
+    const int itemsToGenerate = 10;
+    DECLARE_MODELS_AND_GENERATE(itemsToGenerate);
+
     QString replaceFrom = "Replace";
     QString replaceTo = "Replaced";
     QString initString = "ReplaceMe";
@@ -31,102 +33,115 @@ void ReplaceTest::replaceTrivialTest() {
                 Common::SearchFlagSearchTitle |
                 Common::SearchFlagSearchKeywords;
 
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < itemsToGenerate; i++) {
         Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
-        metadata->initialize(initString, initString, QStringList() <<initString);
+        metadata->initialize(initString, initString, QStringList() << initString);
     }
 
-    QVector<Models::MetadataElement *> artWorksInfo = filteredItemsModel.getSearchableOriginalItemsWithIndices(replaceFrom, flags);
-    QSharedPointer<Commands::FindAndReplaceCommand> replaceCommand(new Commands::FindAndReplaceCommand(artWorksInfo, replaceFrom, replaceTo, flags) );
+    auto artWorksInfo = filteredItemsModel.getSearchableOriginalItems(replaceFrom, flags);
+    QSharedPointer<Commands::FindAndReplaceCommand> replaceCommand(
+                new Commands::FindAndReplaceCommand(artWorksInfo, replaceFrom, replaceTo, flags));
     auto result = commandManagerMock.processCommand(replaceCommand);
 
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < itemsToGenerate; i++) {
         Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
         QCOMPARE(metadata->getDescription(), finalString);
         QCOMPARE(metadata->getTitle(), finalString);
         QCOMPARE(metadata->getKeywords()[0], finalString);
-        QVERIFY(artItemsModelMock.getArtwork(i)->isModified());
+        QVERIFY(metadata->isModified());
     }
 }
 
 void ReplaceTest::noReplaceTrivialTest() {
-    DECLARE_MODELS_AND_GENERATE(10);
+    const int itemsToGenerate = 10;
+    DECLARE_MODELS_AND_GENERATE(itemsToGenerate);
+
     QString replaceFrom = "Noreplace";
     QString replaceTo = "Replaced";
     QString initString = "ReplaceMe";
     QString finalString = "ReplaceMe";
+
     int flags = Common::SearchFlagCaseSensitive |
                 Common::SearchFlagSearchDescription |
                 Common::SearchFlagSearchTitle |
                 Common::SearchFlagSearchKeywords;
 
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < itemsToGenerate; i++) {
         Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
         metadata->initialize(initString, initString, QStringList() << initString);
     }
 
-    QVector<Models::MetadataElement *> artWorksInfo = filteredItemsModel.getSearchableOriginalItemsWithIndices(replaceFrom, flags);
-    QSharedPointer<Commands::FindAndReplaceCommand> replaceCommand(new Commands::FindAndReplaceCommand(artWorksInfo, replaceFrom, replaceTo, flags) );
+    auto artWorksInfo = filteredItemsModel.getSearchableOriginalItems(replaceFrom, flags);
+    QSharedPointer<Commands::FindAndReplaceCommand> replaceCommand(
+                new Commands::FindAndReplaceCommand(artWorksInfo, replaceFrom, replaceTo, flags));
     auto result = commandManagerMock.processCommand(replaceCommand);
 
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < itemsToGenerate; i++) {
         Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
         QCOMPARE(metadata->getDescription(), finalString);
         QCOMPARE(metadata->getTitle(), finalString);
         QCOMPARE(metadata->getKeywords()[0], finalString);
-        QVERIFY(!artItemsModelMock.getArtwork(i)->isModified());
+        QVERIFY(!metadata->isModified());
     }
 }
 
 void ReplaceTest::caseSensitiveTest() {
-    DECLARE_MODELS_AND_GENERATE(10);
+    const int itemsToGenerate = 10;
+    DECLARE_MODELS_AND_GENERATE(itemsToGenerate);
+
     QString replaceFrom = "rePLace";
     QString replaceTo = "Replaced";
     QString initString = "ReplaceMe";
     QString finalString = "ReplacedMe";
+
     int flags = Common::SearchFlagSearchDescription |
                 Common::SearchFlagSearchTitle | Common::SearchFlagSearchKeywords;
 
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < itemsToGenerate; i++) {
         Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
         metadata->initialize(initString, initString, QStringList() << initString);
     }
 
-    QVector<Models::MetadataElement *> artWorksInfo = filteredItemsModel.getSearchableOriginalItemsWithIndices(replaceFrom, flags);
-    QSharedPointer<Commands::FindAndReplaceCommand> replaceCommand(new Commands::FindAndReplaceCommand(artWorksInfo, replaceFrom, replaceTo, flags) );
+    auto artWorksInfo = filteredItemsModel.getSearchableOriginalItems(replaceFrom, flags);
+    QSharedPointer<Commands::FindAndReplaceCommand> replaceCommand(
+                new Commands::FindAndReplaceCommand(artWorksInfo, replaceFrom, replaceTo, flags));
     auto result = commandManagerMock.processCommand(replaceCommand);
 
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < itemsToGenerate; i++) {
         Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
         QCOMPARE(metadata->getDescription(), finalString);
         QCOMPARE(metadata->getTitle(), finalString);
         QCOMPARE(metadata->getKeywords()[0], finalString);
-        QVERIFY(artItemsModelMock.getArtwork(i)->isModified());
+        QVERIFY(metadata->isModified());
     }
 }
 
 void ReplaceTest::categoryTest() {
-    DECLARE_MODELS_AND_GENERATE(10);
+    const int itemsToGenerate = 10;
+    DECLARE_MODELS_AND_GENERATE(itemsToGenerate);
 
     QString replaceFrom = "Replace";
     QString replaceTo = "Replaced";
     QString initString = "ReplaceMe";
     QString finalString = "ReplacedMe";
-    int flags = Common::SearchFlagCaseSensitive |Common::SearchFlagSearchTitle;
 
-    for (int i = 0; i < 10; i++) {
+    int flags = Common::SearchFlagCaseSensitive | Common::SearchFlagSearchTitle;
+
+    for (int i = 0; i < itemsToGenerate; i++) {
         Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
         metadata->initialize(initString, initString, QStringList() << initString);
     }
-    QVector<Models::MetadataElement *> artWorksInfo = filteredItemsModel.getSearchableOriginalItemsWithIndices(replaceFrom, flags);
-    QSharedPointer<Commands::FindAndReplaceCommand> replaceCommand(new Commands::FindAndReplaceCommand(artWorksInfo, replaceFrom, replaceTo, flags) );
+
+    auto artWorksInfo = filteredItemsModel.getSearchableOriginalItems(replaceFrom, flags);
+    QSharedPointer<Commands::FindAndReplaceCommand> replaceCommand(
+                new Commands::FindAndReplaceCommand(artWorksInfo, replaceFrom, replaceTo, flags));
     auto result = commandManagerMock.processCommand(replaceCommand);
 
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < itemsToGenerate; i++) {
         Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
         QCOMPARE(metadata->getDescription(), initString);
         QCOMPARE(metadata->getTitle(), finalString);
         QCOMPARE(metadata->getKeywords()[0], initString);
-        QVERIFY(artItemsModelMock.getArtwork(i)->isModified());
+        QVERIFY(metadata->isModified());
     }
 }

@@ -3,10 +3,9 @@
 
 #include <QObject>
 
-class ReplaceTest:
-    public QObject
+class ReplaceTest: public QObject
 {
-Q_OBJECT
+    Q_OBJECT
 
 private slots:
     void replaceTrivialTest();

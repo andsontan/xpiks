@@ -592,7 +592,7 @@ namespace Models {
 
 #endif
 
-    QVector<MetadataElement *> FilteredArtItemsProxyModel::getSearchableOriginalItemsWithIndices(const QString &searchTerm, int flags) const {
+    QVector<MetadataElement *> FilteredArtItemsProxyModel::getSearchableOriginalItems(const QString &searchTerm, int flags) const {
         return getFilteredOriginalItems<MetadataElement>(
                     [&searchTerm, flags](ArtworkMetadata *artwork) {
             return Helpers::hasSearchMatch(searchTerm, artwork, flags);
@@ -608,7 +608,7 @@ namespace Models {
         Common::ApplyFlag(flags, searchKeywords, Common::SearchFlagSearchKeywords);
         Common::ApplyFlag(flags, caseSensitive, Common::SearchFlagCaseSensitive);
 
-        QVector<MetadataElement *> artWorksInfo = getSearchableOriginalItemsWithIndices(replaceFrom, flags);
+        QVector<MetadataElement *> artWorksInfo = getSearchableOriginalItems(replaceFrom, flags);
         QSharedPointer<Commands::FindAndReplaceCommand> replaceCommand(new Commands::FindAndReplaceCommand(artWorksInfo, replaceFrom, replaceTo,
                                                                                                            flags));
         m_CommandManager->processCommand(replaceCommand);

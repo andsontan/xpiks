@@ -380,7 +380,7 @@ void UndoRedoTests::undoReplaceCommandTest() {
     QString replaceFrom = "Replace";
     int flags = Common::SearchFlagCaseSensitive |Common::SearchFlagSearchDescription |
                 Common::SearchFlagSearchTitle | Common::SearchFlagSearchKeywords;
-    QVector<Models::MetadataElement *> artWorksInfo = filteredItemsModel.getSearchableOriginalItemsWithIndices(replaceFrom, flags);
+    QVector<Models::MetadataElement *> artWorksInfo = filteredItemsModel.getSearchableOriginalItems(replaceFrom, flags);
     QSharedPointer<Commands::FindAndReplaceCommand> replaceCommand(new Commands::FindAndReplaceCommand(artWorksInfo, replaceFrom, replaceTo, flags) );
     auto result = commandManagerMock.processCommand(replaceCommand);
 
