@@ -134,7 +134,8 @@ SOURCES += main.cpp \
     ../../xpiks-qt/QMLExtensions/cachingimageprovider.cpp \
     clearmetadatatest.cpp \
     savewithemptytitletest.cpp \
-    jsonmerge_tests.cpp
+    jsonmerge_tests.cpp \
+    ../../xpiks-qt/Commands/findandreplacecommand.cpp
 
 RESOURCES +=
 
@@ -294,7 +295,8 @@ HEADERS += \
     savewithemptytitletest.h \
     spellingproduceswarningstest.h \
     ../../xpiks-qt/Helpers/comparevaluesjson.h \
-    jsonmerge_tests.h
+    jsonmerge_tests.h \
+    ../../xpiks-qt/Commands/findandreplacecommand.h
 
 INCLUDEPATH += ../../tiny-aes
 INCLUDEPATH += ../../cpp-libface

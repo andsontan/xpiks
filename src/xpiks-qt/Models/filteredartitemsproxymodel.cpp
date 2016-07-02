@@ -609,10 +609,8 @@ namespace Models {
         Common::ApplyFlag(flags, caseSensitive, Common::SearchFlagCaseSensitive);
 
         QVector<MetadataElement *> artWorksInfo = getSearchableOriginalItemsWithIndices(replaceFrom, flags);
-#ifndef INTEGRATION_TESTS
         QSharedPointer<Commands::FindAndReplaceCommand> replaceCommand(new Commands::FindAndReplaceCommand(artWorksInfo, replaceFrom, replaceTo,
                                                                                                            flags));
         m_CommandManager->processCommand(replaceCommand);
-#endif
     }
 }

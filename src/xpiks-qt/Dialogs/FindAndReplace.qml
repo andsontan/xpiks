@@ -18,6 +18,7 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 import QtQuick 2.2
 import QtQuick.Dialogs 1.1
 import QtQuick.Controls 1.1
@@ -46,19 +47,19 @@ Item {
         var caseSensitiveFlag = caseSensitive.checkedState
         var replaceToStr = replaceTo.text.trim()
         var replaceFromStr = replaceFrom.text.trim()
-        filteredArtItemsModel.findAndReplace(titleFlag,descriptionFlag,keywordsFlag,
-                                             caseSensitiveFlag,
-                                             replaceFromStr,replaceToStr)
+
+        filteredArtItemsModel.findAndReplace(titleFlag, descriptionFlag, keywordsFlag, caseSensitiveFlag,
+                                             replaceFromStr, replaceToStr)
     }
 
-    function isSearchValid(){
+    function isSearchValid() {
         var titleFlag = searchInTitle.checkedState
         var descriptionFlag = searchInDescription.checkedState
         var keywordsFlag = searchInKeywords.checkedState
         var anyFlag = titleFlag || descriptionFlag || keywordsFlag
-        var replaceFromNotEmpty = ( replaceFrom.text.trim().length > 0 )
-        var replaceToNotEmpty = ( replaceTo.text.trim().length > 0 )
-        var result = (replaceFromNotEmpty && anyFlag && replaceToNotEmpty )
+        var replaceFromNotEmpty = (replaceFrom.text.trim().length > 0)
+        var replaceToNotEmpty = (replaceTo.text.trim().length > 0)
+        var result = (replaceFromNotEmpty && anyFlag && replaceToNotEmpty)
         return result
     }
 
@@ -118,7 +119,8 @@ Item {
         Rectangle {
             id: dialogWindow
             width: 450
-            height: 300
+            height: 220
+            property int inputsWidth: 200
             color: Colors.selectedImageBackground
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
@@ -126,127 +128,139 @@ Item {
             ColumnLayout {
                 anchors.fill: parent
                 anchors.margins: 20
-                spacing: 10
+                spacing: 20
 
-                RowLayout {
-                    id: replaceFromRow
-                    width: parent.width
-                    spacing: 5
-                    Layout.topMargin : 20
+                Item {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: childrenRect.height
 
-                    StyledText {
-                        Layout.fillWidth: true
-                        horizontalAlignment: Text.AlignRight
-                        text: i18.n + qsTr("Find:")
-                    }
+                    ColumnLayout {
+                        id: inputsRow
+                        anchors.left: parent.left
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        width: dialogWindow.inputsWidth
+                        spacing: 0
 
-                    Rectangle {
-                        color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
-                        border.width: (replaceFrom.activeFocus) ? 1 : 0
-                        border.color: Colors.artworkActiveColor
-                        width: 350
-                        height: UIConfig.textInputHeight
-                        clip: true
+                        StyledText {
+                            text: i18.n + qsTr("Find:")
+                        }
 
-                        StyledTextInput {
-                            id: replaceFrom
-                            anchors.left: parent.left
-                            anchors.right: parent.right
-                            width: parent.width
-                            anchors.leftMargin: 5
-                            anchors.rightMargin: 5
-                            anchors.verticalCenter: parent.verticalCenter
-                            KeyNavigation.tab: replaceTo
-                            onTextChanged: {
-                                replaceSetupComponent.conditionsChanged()
+                        Item {
+                            height: 5
+                        }
+
+                        Rectangle {
+                            color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
+                            border.width: (replaceFrom.activeFocus) ? 1 : 0
+                            border.color: Colors.artworkActiveColor
+                            width: dialogWindow.inputsWidth
+                            height: UIConfig.textInputHeight
+                            clip: true
+
+                            StyledTextInput {
+                                id: replaceFrom
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                anchors.leftMargin: 5
+                                anchors.rightMargin: 5
+                                anchors.verticalCenter: parent.verticalCenter
+                                KeyNavigation.tab: replaceTo
+                                onTextChanged: {
+                                    replaceSetupComponent.conditionsChanged()
+                                }
+                            }
+                        }
+
+                        Item {
+                            height: 42
+                        }
+
+                        StyledText {
+                            text: i18.n + qsTr("Replace:")
+                        }
+
+                        Item {
+                            height: 5
+                        }
+
+                        Rectangle {
+                            color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
+                            border.width: (replaceTo.activeFocus) ? 1 : 0
+                            border.color: Colors.artworkActiveColor
+                            width: dialogWindow.inputsWidth
+                            height: UIConfig.textInputHeight
+                            clip: true
+
+                            StyledTextInput {
+                                id: replaceTo
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                anchors.leftMargin: 5
+                                anchors.rightMargin: 5
+                                anchors.verticalCenter: parent.verticalCenter
+                                KeyNavigation.backtab: replaceFrom
+                                onTextChanged: {
+                                    replaceSetupComponent.conditionsChanged()
+                                }
                             }
                         }
                     }
-                }
-                RowLayout {
-                    id: replaceToRow
-                    width: parent.width
-                    height: 20
-                    spacing: 10
 
-                    StyledText {
-                        Layout.fillWidth: true
-                        horizontalAlignment: Text.AlignRight
-                        text: i18.n + qsTr("Replace:")
-                    }
+                    ColumnLayout {
+                        id: checkboxesRow
+                        anchors.left: inputsRow.right
+                        anchors.leftMargin: 30
+                        anchors.right: parent.right
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        spacing: 20
 
-                    Rectangle {
-                        color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
-                        border.width: (replaceTo.activeFocus) ? 1 : 0
-                        border.color: Colors.artworkActiveColor
-                        width: 350
-                        height: UIConfig.textInputHeight
-                        clip: true
+                        StyledCheckbox {
+                            id: searchInTitle
+                            text: i18.n + qsTr("Search in title")
 
-                        StyledTextInput {
-                            id: replaceTo
-                            anchors.left: parent.left
-                            anchors.right: parent.right
-                            width: parent.width
-                            anchors.leftMargin: 5
-                            anchors.rightMargin: 5
-                            anchors.verticalCenter: parent.verticalCenter
-                            KeyNavigation.backtab: replaceFrom
-                            onTextChanged: {
+                            onClicked: {
                                 replaceSetupComponent.conditionsChanged()
                             }
                         }
+
+                        StyledCheckbox {
+                            id: searchInDescription
+                            text: i18.n + qsTr("Search in description")
+
+                            onClicked: {
+                                replaceSetupComponent.conditionsChanged()
+                            }
+                        }
+
+                        StyledCheckbox {
+                            id: searchInKeywords
+                            text: i18.n + qsTr("Search in keywords")
+
+                            onClicked: {
+                                replaceSetupComponent.conditionsChanged()
+                            }
+                        }
+
+                        StyledCheckbox {
+                            id: caseSensitive
+                            text: i18.n + qsTr("Case sensitive")
+                        }
                     }
                 }
 
-                GridLayout {
-                    id: grid
-                    columns: 2
-                    rowSpacing: 20
-                    columnSpacing: 80
-                    Layout.topMargin : 20
-
-                    StyledCheckbox {
-                        id: searchInTitle
-                        text: i18.n + qsTr("Search in title")
-
-                        onClicked: {
-                            replaceSetupComponent.conditionsChanged()
-                        }
-                    }
-
-                    StyledCheckbox {
-                        id: searchInDescription
-                        text: i18.n + qsTr("Search in description")
-
-                        onClicked: {
-                            replaceSetupComponent.conditionsChanged()
-                        }
-                    }
-
-                    StyledCheckbox {
-                        id: searchInKeywords
-                        text: i18.n + qsTr("Search in keywords")
-
-                        onClicked: {
-                            replaceSetupComponent.conditionsChanged()
-                        }
-                    }
-
-                    StyledCheckbox {
-                        id: caseSensitive
-                        text: i18.n + qsTr("Case sensitive")
-                    }
-
+                Item {
+                    Layout.fillHeight: true
                 }
-
 
                 RowLayout {
+                    id: submitRow
                     anchors.left: parent.left
                     anchors.right: parent.right
                     height: 24
                     spacing: 20
-                    Layout.topMargin : 20
 
                     Item {
                         Layout.fillWidth: true
@@ -256,20 +270,22 @@ Item {
                         id: replaceButton
                         enabled: isSearchValid()
                         text: i18.n + qsTr("Replace")
-                        width: 80
+                        width: 100
+
                         onClicked: {
                             replace()
                             closePopup()
                         }
+
                         Connections{
                             target: replaceSetupComponent
-                            onConditionsChanged: replaceButton.enabled = isValid()
+                            onConditionsChanged: replaceButton.enabled = isSearchValid()
                         }
                     }
 
                     StyledButton {
                         text: i18.n + qsTr("Cancel")
-                        width: 80
+                        width: 100
                         onClicked: {
                             closePopup()
                         }
