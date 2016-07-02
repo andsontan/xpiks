@@ -30,6 +30,13 @@ private slots:
     void addRemoveAddUpperCaseWordTest();
     void editToUpperCaseTest();
     void hasKeywordTest();
+    void simpleReplaceTest();
+    void descriptionReplaceTest();
+    void titleReplaceTest();
+    void keywordsReplaceTest();
+    void noReplaceCaseSensitiveTest();
+    void replaceCaseSensitiveTest();
+    void replaceKeywordsWithRemoveTest();
 
 private:
     Common::Hold m_FakeHold;

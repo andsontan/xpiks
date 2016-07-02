@@ -377,7 +377,7 @@ namespace Common {
                 m_KeywordsSet.insert(lowerCasedNew);
                 m_KeywordsList[index] = sanitized;
                 m_KeywordsSet.remove(lowerCasedExisting);
-                LOG_DEBUG << "common case edit";
+                LOG_INFO << "common case edit:" << existing << "->" << sanitized;
 
                 result = true;
             } else if (lowerCasedNew == lowerCasedExisting) {
@@ -512,7 +512,7 @@ namespace Common {
                 QString replacement = Helpers::doSanitizeKeyword(replaced);
 
                 if (!this->editKeywordUnsafe(i, replacement) &&
-                        m_KeywordsSet.contains(replacement)) {
+                        m_KeywordsSet.contains(replacement.toLower())) {
                     LOG_INFO << "Replacing" << internal << "to" << replacement << "creates a duplicate";
                     indicesToRemove.append(i);
                 } else {

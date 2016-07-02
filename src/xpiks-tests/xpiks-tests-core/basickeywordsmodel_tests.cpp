@@ -1,6 +1,7 @@
 #include "basickeywordsmodel_tests.h"
 #include <QSignalSpy>
 #include "../../xpiks-qt/Common/basickeywordsmodel.h"
+#include "../../xpiks-qt/Common/flags.h"
 
 void BasicKeywordsModelTests::constructEmptyTest() {
     Common::BasicKeywordsModel basicModel(m_FakeHold);
@@ -335,5 +336,162 @@ void BasicKeywordsModelTests::hasKeywordTest() {
 
     QVERIFY(!basicModel.hasKeyword("keyword1+"));
     QVERIFY(!basicModel.hasKeyword("keyword4+"));
+}
+
+void BasicKeywordsModelTests::simpleReplaceTest() {
+    Common::BasicKeywordsModel basicModel(m_FakeHold);
+
+    QString originalTitle = "Test title here";
+    QString originalDescription = "Test description";
+    QStringList originalKeywords;
+    originalKeywords << "Test keyword1" << "keywTestord2" << "keyword3 Test";
+
+    basicModel.setTitle(originalTitle);
+    basicModel.setDescription(originalDescription);
+    basicModel.appendKeywords(originalKeywords);
+
+    int flags = Common::SearchFlagSearchMetadata;
+
+    bool replaceSucceeded = basicModel.replace("Test", "Replaced", flags);
+    QVERIFY(replaceSucceeded);
+    QCOMPARE(basicModel.getTitle(), QLatin1String("Replaced title here"));
+    QCOMPARE(basicModel.getDescription(), QLatin1String("Replaced description"));
+    QCOMPARE(basicModel.getKeywordAt(0), QLatin1String("Replaced keyword1"));
+    QCOMPARE(basicModel.getKeywordAt(1), QLatin1String("keywReplacedord2"));
+    QCOMPARE(basicModel.getKeywordAt(2), QLatin1String("keyword3 Replaced"));
+}
+
+void BasicKeywordsModelTests::descriptionReplaceTest() {
+    Common::BasicKeywordsModel basicModel(m_FakeHold);
+
+    QString originalTitle = "Test title here";
+    QString originalDescription = "Test description";
+    QStringList originalKeywords;
+    originalKeywords << "Test keyword1" << "keywTestord2" << "keyword3 Test";
+
+    basicModel.setTitle(originalTitle);
+    basicModel.setDescription(originalDescription);
+    basicModel.appendKeywords(originalKeywords);
+
+    int flags = Common::SearchFlagSearchDescription;
+
+    bool replaceSucceeded = basicModel.replace("Test", "Replaced", flags);
+    QVERIFY(replaceSucceeded);
+    QCOMPARE(basicModel.getTitle(), originalTitle);
+    QCOMPARE(basicModel.getDescription(), QLatin1String("Replaced description"));
+    QCOMPARE(basicModel.getKeywordAt(0), originalKeywords[0]);
+    QCOMPARE(basicModel.getKeywordAt(1), originalKeywords[1]);
+    QCOMPARE(basicModel.getKeywordAt(2), originalKeywords[2]);
+}
+
+void BasicKeywordsModelTests::titleReplaceTest() {
+    Common::BasicKeywordsModel basicModel(m_FakeHold);
+
+    QString originalTitle = "Test title here";
+    QString originalDescription = "Test description";
+    QStringList originalKeywords;
+    originalKeywords << "Test keyword1" << "keywTestord2" << "keyword3 Test";
+
+    basicModel.setTitle(originalTitle);
+    basicModel.setDescription(originalDescription);
+    basicModel.appendKeywords(originalKeywords);
+
+    int flags = Common::SearchFlagSearchTitle;
+
+    bool replaceSucceeded = basicModel.replace("Test", "Replaced", flags);
+    QVERIFY(replaceSucceeded);
+    QCOMPARE(basicModel.getTitle(), QLatin1String("Replaced title here"));
+    QCOMPARE(basicModel.getDescription(), originalDescription);
+    QCOMPARE(basicModel.getKeywordAt(0), originalKeywords[0]);
+    QCOMPARE(basicModel.getKeywordAt(1), originalKeywords[1]);
+    QCOMPARE(basicModel.getKeywordAt(2), originalKeywords[2]);
+}
+
+void BasicKeywordsModelTests::keywordsReplaceTest() {
+    Common::BasicKeywordsModel basicModel(m_FakeHold);
+
+    QString originalTitle = "Test title here";
+    QString originalDescription = "Test description";
+    QStringList originalKeywords;
+    originalKeywords << "Test keyword1" << "keywTestord2" << "keyword3 Test";
+
+    basicModel.setTitle(originalTitle);
+    basicModel.setDescription(originalDescription);
+    basicModel.appendKeywords(originalKeywords);
+
+    int flags = Common::SearchFlagSearchKeywords;
+
+    bool replaceSucceeded = basicModel.replace("Test", "Replaced", flags);
+    QVERIFY(replaceSucceeded);
+    QCOMPARE(basicModel.getTitle(), originalTitle);
+    QCOMPARE(basicModel.getDescription(), originalDescription);
+    QCOMPARE(basicModel.getKeywordAt(0), QLatin1String("Replaced keyword1"));
+    QCOMPARE(basicModel.getKeywordAt(1), QLatin1String("keywReplacedord2"));
+    QCOMPARE(basicModel.getKeywordAt(2), QLatin1String("keyword3 Replaced"));
+}
+
+void BasicKeywordsModelTests::noReplaceCaseSensitiveTest() {
+    Common::BasicKeywordsModel basicModel(m_FakeHold);
+
+    QString originalTitle = "Test title here";
+    QString originalDescription = "Test description";
+    QStringList originalKeywords;
+    originalKeywords << "Test keyword1" << "keywTestord2" << "keyword3 Test";
+
+    basicModel.setTitle(originalTitle);
+    basicModel.setDescription(originalDescription);
+    basicModel.appendKeywords(originalKeywords);
+
+    int flags = Common::SearchFlagSearchMetadata | Common::SearchFlagCaseSensitive;
+
+    bool replaceSucceeded = basicModel.replace("test", "Replaced", flags);
+    QVERIFY(!replaceSucceeded);
+}
+
+void BasicKeywordsModelTests::replaceCaseSensitiveTest() {
+    Common::BasicKeywordsModel basicModel(m_FakeHold);
+
+    QString originalTitle = "Test title test here";
+    QString originalDescription = "Test description test";
+    QStringList originalKeywords;
+    originalKeywords << "Test keyword1" << "keywtestord2" << "keyTestword3 test";
+
+    basicModel.setTitle(originalTitle);
+    basicModel.setDescription(originalDescription);
+    basicModel.appendKeywords(originalKeywords);
+
+    int flags = Common::SearchFlagSearchMetadata | Common::SearchFlagCaseSensitive;
+
+    bool replaceSucceeded = basicModel.replace("test", "Replaced", flags);
+    QVERIFY(replaceSucceeded);
+    QCOMPARE(basicModel.getTitle(), QLatin1String("Test title Replaced here"));
+    QCOMPARE(basicModel.getDescription(), QLatin1String("Test description Replaced"));
+    QCOMPARE(basicModel.getKeywordAt(0), originalKeywords[0]);
+    QCOMPARE(basicModel.getKeywordAt(1), QLatin1String("keywReplacedord2"));
+    QCOMPARE(basicModel.getKeywordAt(2), QLatin1String("keyTestword3 Replaced"));
+}
+
+void BasicKeywordsModelTests::replaceKeywordsWithRemoveTest() {
+    Common::BasicKeywordsModel basicModel(m_FakeHold);
+
+    QString originalTitle = "Test title here";
+    QString originalDescription = "Test description";
+    QStringList originalKeywords;
+    originalKeywords << "Test keyword1" << "keywTestord2" << "keyword3 Test" << "Replaced keyword1";
+
+    basicModel.setTitle(originalTitle);
+    basicModel.setDescription(originalDescription);
+    basicModel.appendKeywords(originalKeywords);
+
+    int flags = Common::SearchFlagSearchMetadata;
+
+    bool replaceSucceeded = basicModel.replace("Test", "Replaced", flags);
+    QVERIFY(replaceSucceeded);
+    QCOMPARE(basicModel.getTitle(), QLatin1String("Replaced title here"));
+    QCOMPARE(basicModel.getDescription(), QLatin1String("Replaced description"));
+    QCOMPARE(basicModel.getKeywordsCount(), originalKeywords.length() - 1);
+    QCOMPARE(basicModel.getKeywordAt(0), QLatin1String("keywReplacedord2"));
+    QCOMPARE(basicModel.getKeywordAt(1), QLatin1String("keyword3 Replaced"));
+    QCOMPARE(basicModel.getKeywordAt(2), QLatin1String("Replaced keyword1"));
 }
 
