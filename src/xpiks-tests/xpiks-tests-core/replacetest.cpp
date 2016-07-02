@@ -95,7 +95,8 @@ void ReplaceTest::caseSensitiveTest() {
     QString finalString = "ReplacedMe";
 
     int flags = Common::SearchFlagSearchDescription |
-                Common::SearchFlagSearchTitle | Common::SearchFlagSearchKeywords;
+            Common::SearchFlagSearchTitle |
+            Common::SearchFlagSearchKeywords;
 
     for (int i = 0; i < itemsToGenerate; i++) {
         Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
@@ -116,7 +117,7 @@ void ReplaceTest::caseSensitiveTest() {
     }
 }
 
-void ReplaceTest::categoryTest() {
+void ReplaceTest::replaceTitleTest() {
     const int itemsToGenerate = 10;
     DECLARE_MODELS_AND_GENERATE(itemsToGenerate);
 
