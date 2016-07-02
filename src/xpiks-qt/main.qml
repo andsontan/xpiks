@@ -196,6 +196,11 @@ ApplicationWindow {
                             })
     }
 
+    function openFindAndReplaceDialog() {
+        Common.launchDialog("Dialogs/FindAndReplace.qml", applicationWindow,{})
+
+    }
+
     function clearFilter() {
         filteredArtItemsModel.searchTerm = ''
         if (filterText.length > 0) {
@@ -391,6 +396,14 @@ ApplicationWindow {
             title: i18.n + qsTr("&Edit")
             enabled: applicationWindow.openedDialogsCount == 0
 
+            MenuItem {
+                text: i18.n + qsTr("&Find and replace")
+                enabled: artworksHost.count > 0
+                onTriggered: {
+                    console.info("Find and replace triggered")
+                    openFindAndReplaceDialog()
+                }
+            }
             MenuItem {
                 text: i18.n + qsTr("&Invert selection")
                 enabled: artworksHost.count > 0

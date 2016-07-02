@@ -91,6 +91,8 @@ namespace Models {
         Q_INVOKABLE void detachVectorFromSelected();
         Q_INVOKABLE QObject *getArtworkMetadata(int index);
         Q_INVOKABLE QObject *getKeywordsModel(int index);
+        Q_INVOKABLE void findAndReplace(bool searchTitle, bool searchDescription, bool searchKeywords, bool caseSensitive, const QString &replaceFrom,
+                                        const QString &replaceTo);
 
     public slots:
         void itemSelectedChanged(bool value);

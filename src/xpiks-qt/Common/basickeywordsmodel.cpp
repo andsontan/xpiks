@@ -516,6 +516,8 @@ namespace Common {
                     LOG_INFO << "Replacing" << internal << "to" << replacement << "creates a duplicate";
                     indicesToRemove.append(i);
                 } else {
+                    QModelIndex j = this->index(i);
+                    emit dataChanged(j, j, QVector<int>() << KeywordRole);
                     anyChanged = true;
                 }
             }

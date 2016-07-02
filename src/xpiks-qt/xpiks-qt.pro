@@ -333,7 +333,8 @@ DISTFILES += \
     Graphics/predefinedftp.png \
     Graphics/suggestion.png \
     Dialogs/ProxySetupDialog.qml \
-    Dialogs/WhatsNewMinorDialog.qml
+    Dialogs/WhatsNewMinorDialog.qml \
+    Dialogs/FindAndReplace.qml
 
 lupdate_only {
 SOURCES += *.qml \

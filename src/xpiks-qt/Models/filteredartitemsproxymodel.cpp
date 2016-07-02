@@ -28,6 +28,7 @@
 #include "settingsmodel.h"
 #include "../Commands/commandmanager.h"
 #include "../Commands/combinededitcommand.h"
+#include "../Commands/findandreplacecommand.h"
 #include "../Common/flags.h"
 #include "../SpellCheck/ispellcheckable.h"
 #include "../Helpers/indiceshelper.h"
@@ -597,5 +598,21 @@ namespace Models {
             return Helpers::hasSearchMatch(searchTerm, artwork, flags);
         },
         [] (ArtworkMetadata *metadata, int index) { return new MetadataElement(metadata, index); });
+    }
+
+    void FilteredArtItemsProxyModel::findAndReplace(bool searchTitle, bool searchDescription, bool searchKeywords, bool caseSensitive, const
+                                                    QString &replaceFrom, const QString &replaceTo) {
+        int flags = 0;
+        Common::ApplyFlag(flags, searchDescription, Common::SearchFlagSearchDescription);
+        Common::ApplyFlag(flags, searchTitle, Common::SearchFlagSearchTitle);
+        Common::ApplyFlag(flags, searchKeywords, Common::SearchFlagSearchKeywords);
+        Common::ApplyFlag(flags, caseSensitive, Common::SearchFlagCaseSensitive);
+
+        QVector<MetadataElement *> artWorksInfo = getSearchableOriginalItemsWithIndices(replaceFrom, flags);
+#ifndef INTEGRATION_TESTS
+        QSharedPointer<Commands::FindAndReplaceCommand> replaceCommand(new Commands::FindAndReplaceCommand(artWorksInfo, replaceFrom, replaceTo,
+                                                                                                           flags));
+        m_CommandManager->processCommand(replaceCommand);
+#endif
     }
 }

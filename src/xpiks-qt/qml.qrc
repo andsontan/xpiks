@@ -64,5 +64,6 @@
         <file>Graphics/suggestion.png</file>
         <file>Dialogs/ProxySetupDialog.qml</file>
         <file>Dialogs/WhatsNewMinorDialog.qml</file>
+        <file>Dialogs/FindAndReplace.qml</file>
     </qresource>
 </RCC>
