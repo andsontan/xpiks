@@ -91,8 +91,8 @@ namespace Models {
         Q_INVOKABLE void detachVectorFromSelected();
         Q_INVOKABLE QObject *getArtworkMetadata(int index);
         Q_INVOKABLE QObject *getKeywordsModel(int index);
-        Q_INVOKABLE void findAndReplace(bool searchTitle, bool searchDescription, bool searchKeywords, bool caseSensitive, const QString &replaceFrom,
-                                        const QString &replaceTo);
+        Q_INVOKABLE void findAndReplace(bool searchTitle, bool searchDescription, bool searchKeywords, bool caseSensitive,
+                                        const QString &replaceFrom, const QString &replaceTo);
 
     public slots:
         void itemSelectedChanged(bool value);
@@ -118,7 +118,7 @@ namespace Models {
         QVector<MetadataElement *> getAllItemsWithIndices() const;
 
         template<typename T>
-        QVector<T *> getFilteredOriginalItemsWithIndices(std::function<bool (ArtworkMetadata *)> pred,
+        QVector<T *> getFilteredOriginalItems(std::function<bool (ArtworkMetadata *)> pred,
                                                          std::function<T *(ArtworkMetadata*, int)> mapper) const;
 
         QVector<ArtworkMetadata *> getAllOriginalItems() const;

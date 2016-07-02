@@ -433,19 +433,19 @@ namespace Models {
     }
 
     QVector<MetadataElement *> FilteredArtItemsProxyModel::getSelectedOriginalItemsWithIndices() const {
-        return getFilteredOriginalItemsWithIndices<MetadataElement>(
+        return getFilteredOriginalItems<MetadataElement>(
                     [](ArtworkMetadata *artwork) { return artwork->isSelected(); },
         [] (ArtworkMetadata *metadata, int index) { return new MetadataElement(metadata, index); });
     }
 
     QVector<MetadataElement *> FilteredArtItemsProxyModel::getAllItemsWithIndices() const {
-        return getFilteredOriginalItemsWithIndices<MetadataElement>(
+        return getFilteredOriginalItems<MetadataElement>(
                     [](ArtworkMetadata *) { return true; },
         [] (ArtworkMetadata *metadata, int index) { return new MetadataElement(metadata, index); });
     }
 
     template<typename T>
-    QVector<T *> FilteredArtItemsProxyModel::getFilteredOriginalItemsWithIndices(std::function<bool (ArtworkMetadata *)> pred,
+    QVector<T *> FilteredArtItemsProxyModel::getFilteredOriginalItems(std::function<bool (ArtworkMetadata *)> pred,
                                                                                  std::function<T *(ArtworkMetadata *, int)> mapper) const {
         ArtItemsModel *artItemsModel = getArtItemsModel();
 
@@ -593,15 +593,15 @@ namespace Models {
 #endif
 
     QVector<MetadataElement *> FilteredArtItemsProxyModel::getSearchableOriginalItemsWithIndices(const QString &searchTerm, int flags) const {
-        return getFilteredOriginalItemsWithIndices<MetadataElement>(
+        return getFilteredOriginalItems<MetadataElement>(
                     [&searchTerm, flags](ArtworkMetadata *artwork) {
             return Helpers::hasSearchMatch(searchTerm, artwork, flags);
         },
         [] (ArtworkMetadata *metadata, int index) { return new MetadataElement(metadata, index); });
     }
 
-    void FilteredArtItemsProxyModel::findAndReplace(bool searchTitle, bool searchDescription, bool searchKeywords, bool caseSensitive, const
-                                                    QString &replaceFrom, const QString &replaceTo) {
+    void FilteredArtItemsProxyModel::findAndReplace(bool searchTitle, bool searchDescription, bool searchKeywords, bool caseSensitive,
+                                                    const QString &replaceFrom, const QString &replaceTo) {
         int flags = 0;
         Common::ApplyFlag(flags, searchDescription, Common::SearchFlagSearchDescription);
         Common::ApplyFlag(flags, searchTitle, Common::SearchFlagSearchTitle);
