@@ -73,6 +73,8 @@ namespace MetadataIO {
         m_ExiftoolDiscoveryFuture = new QFutureWatcher<void>(this);
         QObject::connect(m_ExiftoolDiscoveryFuture, SIGNAL(finished()),
                          this, SLOT(exiftoolDiscoveryFinished()));
+
+        LOG_DEBUG << "Supported image formats:" << QImageReader::supportedImageFormats();
     }
 
     void MetadataIOCoordinator::readingWorkerFinished(bool success) {
