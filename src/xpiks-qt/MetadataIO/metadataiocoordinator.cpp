@@ -25,6 +25,7 @@
 #include <QtConcurrent>
 #include <QFileInfo>
 #include <QProcess>
+#include <QImageReader>
 #include "metadatareadingworker.h"
 #include "metadatawritingworker.h"
 #include "backupsaverservice.h"
