@@ -55,36 +55,36 @@ namespace MetadataIO {
     }
 
     void BackupSaverService::saveArtwork(Models::ArtworkMetadata *metadata) const {
-        SaverWorkerJobItem *jobItem = new SaverWorkerJobItem(metadata, JobTypeWrite);
+        std::shared_ptr<SaverWorkerJobItem> jobItem(new SaverWorkerJobItem(metadata, JobTypeWrite));
         m_BackupWorker->submitItem(jobItem);
     }
 
     void BackupSaverService::saveArtworks(const QVector<Models::ArtworkMetadata *> &artworks) const {
         LOG_DEBUG << artworks.size() << "artwork(s)";
-        QVector<SaverWorkerJobItem *> jobs;
+        std::vector<std::shared_ptr<SaverWorkerJobItem> > jobs;
         jobs.reserve(artworks.length());
 
         int size = artworks.size();
         for (int i = 0; i < size; ++i) {
-            jobs.append(new SaverWorkerJobItem(artworks.at(i), JobTypeWrite));
+            jobs.push_back(std::shared_ptr<SaverWorkerJobItem>(new SaverWorkerJobItem(artworks.at(i), JobTypeWrite)));
         }
 
         m_BackupWorker->submitItems(jobs);
     }
 
     void BackupSaverService::readArtwork(Models::ArtworkMetadata *metadata) const {
-        SaverWorkerJobItem *jobItem = new SaverWorkerJobItem(metadata, JobTypeRead);
+        std::shared_ptr<SaverWorkerJobItem> jobItem(new SaverWorkerJobItem(metadata, JobTypeRead));
         m_BackupWorker->submitItem(jobItem);
     }
 
     void BackupSaverService::readArtworks(const QVector<Models::ArtworkMetadata *> &artworks) const {
         LOG_DEBUG << artworks.size() << "artwork(s)";
-        QVector<SaverWorkerJobItem *> jobs;
+        std::vector<std::shared_ptr<SaverWorkerJobItem> > jobs;
         jobs.reserve(artworks.length());
 
         int size = artworks.size();
         for (int i = 0; i < size; ++i) {
-            jobs.append(new SaverWorkerJobItem(artworks.at(i), JobTypeRead));
+            jobs.push_back(std::shared_ptr<SaverWorkerJobItem>(new SaverWorkerJobItem(artworks.at(i), JobTypeRead)));
         }
 
         m_BackupWorker->submitItems(jobs);

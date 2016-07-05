@@ -39,7 +39,7 @@ namespace AutoComplete {
 
     protected:
         virtual bool initWorker();
-        virtual bool processOneItem(CompletionQuery *item);
+        virtual void processOneItem(std::shared_ptr<CompletionQuery> &item);
         virtual void deleteItem(CompletionQuery* item) const;
 
     protected:

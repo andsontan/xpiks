@@ -81,7 +81,7 @@ namespace Warnings {
 
         LOG_INFO << "Submitting one item";
 
-        WarningsItem *wItem = new WarningsItem(item);
+        std::shared_ptr<WarningsItem> wItem(new WarningsItem(item));
         m_WarningsWorker->submitItem(wItem);
     }
 
@@ -89,7 +89,7 @@ namespace Warnings {
         if (m_WarningsWorker == NULL) { return; }
         LOG_INFO << "Submitting one item with flags" << Common::warningsFlagToString(flags);
 
-        WarningsItem *wItem = new WarningsItem(item, flags);
+        std::shared_ptr<WarningsItem> wItem(new WarningsItem(item, flags));
         m_WarningsWorker->submitItem(wItem);
     }
 
@@ -98,13 +98,13 @@ namespace Warnings {
 
         int length = items.length();
 
-        QVector<WarningsItem*> itemsToSubmit;
+        std::vector<std::shared_ptr<WarningsItem> > itemsToSubmit;
         itemsToSubmit.reserve(length);
 
         for (int i = 0; i < length; ++i) {
             Models::ArtworkMetadata *item = items.at(i);
-            WarningsItem *itemToSubmit = new WarningsItem(item);
-            itemsToSubmit.append(itemToSubmit);
+            std::shared_ptr<WarningsItem> itemToSubmit(new WarningsItem(item));
+            itemsToSubmit.push_back(itemToSubmit);
         }
 
         LOG_INFO << "Submitting" << length << "item(s)";

@@ -46,8 +46,7 @@ namespace SpellCheck {
 
     protected:
         virtual bool initWorker();
-        virtual bool processOneItem(SpellCheckItemBase *item);
-        virtual void deleteItem(SpellCheckItemBase *item) const;
+        virtual void processOneItem(std::shared_ptr<SpellCheckItemBase> &item);
 
     protected:
         virtual void notifyQueueIsEmpty() { emit queueIsEmpty(); }

@@ -51,7 +51,7 @@ namespace QMLExtensions {
 
     protected:
         virtual bool initWorker();
-        virtual bool processOneItem(ImageCacheRequest *item);
+        virtual void processOneItem(std::shared_ptr<ImageCacheRequest> &item);
 
     protected:
         virtual void notifyQueueIsEmpty() { emit queueIsEmpty(); }
@@ -68,14 +68,14 @@ namespace QMLExtensions {
     public:
         bool tryGetCachedImage(const QString &key, const QSize &requestedSize,
                                QString &cached, bool &needsUpdate);
-        void splitToCachedAndNot(const QVector<ImageCacheRequest *> allRequests,
-                                 QVector<ImageCacheRequest *> &unknownRequests,
-                                 QVector<ImageCacheRequest *> &knownRequests);
+        void splitToCachedAndNot(const std::vector<std::shared_ptr<ImageCacheRequest> > allRequests,
+                                 std::vector<std::shared_ptr<ImageCacheRequest> > &unknownRequests,
+                                 std::vector<std::shared_ptr<ImageCacheRequest> > &knownRequests);
 
     private:
         void readIndex();
         void saveIndex();
-        bool isProcessed(ImageCacheRequest *item);
+        bool isProcessed(std::shared_ptr<ImageCacheRequest> &item);
 
     private:
         volatile int m_ProcessedItemsCount;

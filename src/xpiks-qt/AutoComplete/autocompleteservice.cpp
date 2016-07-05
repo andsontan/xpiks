@@ -114,13 +114,14 @@ namespace AutoComplete {
         }
 
         LOG_INFO << "Requested for" << prefix;
-        CompletionQuery *query = new CompletionQuery(prefix, m_AutoCompleteModel);
+        std::shared_ptr<CompletionQuery> query(new CompletionQuery(prefix, m_AutoCompleteModel),
+                                               [](CompletionQuery *cq) { cq->deleteLater(); });
 
         Common::BasicKeywordsModel *basicKeywordsModel = qobject_cast<Common::BasicKeywordsModel*>(notifyObject);
         Q_ASSERT(basicKeywordsModel != NULL);
 
-        QObject::connect(query, SIGNAL(completionsAvailable()), basicKeywordsModel, SIGNAL(completionsAvailable()));
-        QObject::connect(query, SIGNAL(completionsAvailable()), m_AutoCompleteModel, SLOT(completionsArrived()));
+        QObject::connect(query.get(), SIGNAL(completionsAvailable()), basicKeywordsModel, SIGNAL(completionsAvailable()));
+        QObject::connect(query.get(), SIGNAL(completionsAvailable()), m_AutoCompleteModel, SLOT(completionsArrived()));
 
         m_AutoCompleteWorker->submitItem(query);
     }

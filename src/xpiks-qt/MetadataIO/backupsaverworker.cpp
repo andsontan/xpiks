@@ -30,9 +30,7 @@ namespace MetadataIO {
         return true;
     }
 
-    bool BackupSaverWorker::processOneItem(SaverWorkerJobItem *item) {
-        Q_ASSERT(item != NULL);
-
+    void BackupSaverWorker::processOneItem(std::shared_ptr<SaverWorkerJobItem> &item) {
         SaverWorkerJobType jobType = item->getJobType();
         MetadataSavingCopy copy(item->getMetadata());
 
@@ -43,7 +41,5 @@ namespace MetadataIO {
             copy.readFromFile();
             copy.saveToMetadata();
         }
-
-        return true;
     }
 }

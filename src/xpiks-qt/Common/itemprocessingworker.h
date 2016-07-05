@@ -25,6 +25,8 @@
 #include <QWaitCondition>
 #include <QMutex>
 #include <deque>
+#include <memory>
+#include <vector>
 #include "../Common/defines.h"
 
 namespace Common {
@@ -36,12 +38,12 @@ namespace Common {
             m_Cancel(false),
             m_IsRunning(false)
         { }
-        virtual ~ItemProcessingWorker() { qDeleteAll(m_Queue); }
+
+        virtual ~ItemProcessingWorker() { }
 
     public:
-        void submitItem(T *item) {
+        void submitItem(const std::shared_ptr<T> &item) {
             if (m_Cancel) {
-                deleteItem(item);
                 return;
             }
 
@@ -57,9 +59,8 @@ namespace Common {
             m_QueueMutex.unlock();
         }
 
-        void submitFirst(T *item) {
+        void submitFirst(const std::shared_ptr<T> &item) {
             if (m_Cancel) {
-                deleteItem(item);
                 return;
             }
 
@@ -75,9 +76,8 @@ namespace Common {
             m_QueueMutex.unlock();
         }
 
-        void submitItems(const QVector<T*> &items) {
+        void submitItems(const std::vector<std::shared_ptr<T> > &items) {
             if (m_Cancel) {
-                deleteItems(items);
                 return;
             }
 
@@ -85,9 +85,9 @@ namespace Common {
             {
                 bool wasEmpty = m_Queue.empty();
 
-                int size = items.size();
-                for (int i = 0; i < size; ++i) {
-                    T *item = items.at(i);
+                size_t size = items.size();
+                for (size_t i = 0; i < size; ++i) {
+                    auto &item = items.at(i);
                     m_Queue.push_back(item);
                 }
 
@@ -98,9 +98,8 @@ namespace Common {
             m_QueueMutex.unlock();
         }
 
-        void submitFirst(const QVector<T*> &items) {
+        void submitFirst(const std::vector<std::shared_ptr<T> > &items) {
             if (m_Cancel) {
-                deleteItems(items);
                 return;
             }
 
@@ -108,9 +107,9 @@ namespace Common {
             {
                 bool wasEmpty = m_Queue.empty();
 
-                int size = items.size();
-                for (int i = 0; i < size; ++i) {
-                    T *item = items.at(i);
+                size_t size = items.size();
+                for (size_t i = 0; i < size; ++i) {
+                    auto &item = items.at(i);
                     m_Queue.push_front(item);
                 }
 
@@ -124,7 +123,6 @@ namespace Common {
         void cancelCurrentBatch() {
             m_QueueMutex.lock();
             {
-                qDeleteAll(m_Queue);
                 m_Queue.clear();
             }
             m_QueueMutex.unlock();
@@ -158,12 +156,9 @@ namespace Common {
 
             m_QueueMutex.lock();
             {
-                qDeleteAll(m_Queue);
                 m_Queue.clear();
 
-                T *stopItem = NULL;
-
-                m_Queue.push_back(stopItem);
+                m_Queue.emplace_back(std::shared_ptr<T>());
                 m_WaitAnyItem.wakeOne();
             }
             m_QueueMutex.unlock();
@@ -171,7 +166,7 @@ namespace Common {
 
     protected:
         virtual bool initWorker() = 0;
-        virtual bool processOneItem(T *item) = 0;
+        virtual void processOneItem(std::shared_ptr<T> &item) = 0;
         virtual void notifyQueueIsEmpty() = 0;
         virtual void workerStopped() = 0;
 
@@ -193,27 +188,20 @@ namespace Common {
                     }
                 }
 
-                T *item = m_Queue.front();
+                std::shared_ptr<T> item = m_Queue.front();
                 m_Queue.pop_front();
 
                 noMoreItems = m_Queue.empty();
 
                 m_QueueMutex.unlock();
 
-                if (item == NULL) { break; }
-
-                bool canDelete = false;
+                if (item.get() == nullptr) { break; }
 
                 try {
-                    canDelete = processOneItem(item);
+                    processOneItem(item);
                 }
                 catch (...) {
                     LOG_WARNING << "Exception while processing item!";
-                    canDelete = true;
-                }
-
-                if (canDelete) {
-                    deleteItem(item);
                 }
 
                 if (noMoreItems) {
@@ -222,23 +210,10 @@ namespace Common {
             }
         }
 
-        virtual void deleteItem(T* item) const {
-            delete item;
-        }
-
-    private:
-        void deleteItems(const QVector<T*> &items) {
-            int size = items.size();
-            for (int i = 0; i < size; ++i) {
-                T *item = items.at(i);
-                deleteItem(item);
-            }
-        }
-
     private:
         QWaitCondition m_WaitAnyItem;
         QMutex m_QueueMutex;
-        std::deque<T *> m_Queue;
+        std::deque<std::shared_ptr<T> > m_Queue;
         volatile bool m_Cancel;
         volatile bool m_IsRunning;
     };

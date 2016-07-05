@@ -94,37 +94,41 @@ namespace SpellCheck {
 
         LOG_INFO << "flags:" << flags;
 
-        SpellCheckItem *item = new SpellCheckItem(itemToCheck, flags);
-        itemToCheck->connectSignals(item);
+        std::shared_ptr<SpellCheckItem> item(new SpellCheckItem(itemToCheck, flags),
+                                             [](SpellCheckItem *spi) { spi->deleteLater(); });
+        itemToCheck->connectSignals(item.get());
         m_SpellCheckWorker->submitItem(item);
     }
 
     void SpellCheckerService::submitItems(const QVector<Common::BasicKeywordsModel *> &itemsToCheck) {
         if (m_SpellCheckWorker == NULL) { return; }
 
-        QVector<SpellCheckItemBase *> items;
+        std::vector<std::shared_ptr<SpellCheckItemBase> > items;
         int length = itemsToCheck.length();
 
         items.reserve(length);
+        auto deleter = [](SpellCheckItem *item) { item->deleteLater(); };
 
         for (int i = 0; i < length; ++i) {
             Common::BasicKeywordsModel *itemToCheck = itemsToCheck.at(i);
-            SpellCheckItem *item = new SpellCheckItem(itemToCheck, Common::SpellCheckAll);
-            itemToCheck->connectSignals(item);
-            items.append(item);
+            std::shared_ptr<SpellCheckItem> item(new SpellCheckItem(itemToCheck, Common::SpellCheckAll),
+                                                 deleter);
+            itemToCheck->connectSignals(item.get());
+            items.push_back(item);
         }
 
         LOG_INFO << length << "item(s)";
 
         m_SpellCheckWorker->submitItems(items);
-        m_SpellCheckWorker->submitItem(new SpellCheckSeparatorItem());
+        m_SpellCheckWorker->submitItem(std::shared_ptr<SpellCheckItemBase>(new SpellCheckSeparatorItem()));
     }
 
     void SpellCheckerService::submitKeyword(Common::BasicKeywordsModel *itemToCheck, int keywordIndex) {
         if (m_SpellCheckWorker == NULL) { return; }
 
-        SpellCheckItem *item = new SpellCheckItem(itemToCheck, Common::SpellCheckKeywords, keywordIndex);
-        itemToCheck->connectSignals(item);
+        std::shared_ptr<SpellCheckItem> item(new SpellCheckItem(itemToCheck, Common::SpellCheckKeywords, keywordIndex),
+                                             [](SpellCheckItem *spi) { spi->deleteLater(); });
+        itemToCheck->connectSignals(item.get());
         m_SpellCheckWorker->submitItem(item);
     }
 

@@ -54,9 +54,7 @@ namespace Warnings {
         return true;
     }
 
-    bool WarningsCheckingWorker::processOneItem(WarningsItem *item) {
-        Q_ASSERT(item != NULL);
-
+    void WarningsCheckingWorker::processOneItem(std::shared_ptr<WarningsItem> &item) {
         int warningsFlags = 0;
 
         initValuesFromSettings();
@@ -86,8 +84,6 @@ namespace Warnings {
         }
 
         item->submitWarnings(warningsFlags);
-
-        return true;
     }
 
     void WarningsCheckingWorker::initValuesFromSettings() {
@@ -96,7 +92,7 @@ namespace Warnings {
         m_MaximumKeywordsCount = m_SettingsModel->getMaxKeywordsCount();
     }
 
-    int WarningsCheckingWorker::checkDimensions(WarningsItem *wi) const {
+    int WarningsCheckingWorker::checkDimensions(std::shared_ptr<WarningsItem> &wi) const {
 #ifdef INTEGRATION_TESTS
         LOG_DEBUG << "#";
 #endif
@@ -135,7 +131,7 @@ namespace Warnings {
         return warningsInfo;
     }
 
-    int WarningsCheckingWorker::checkKeywords(WarningsItem *wi) const {
+    int WarningsCheckingWorker::checkKeywords(std::shared_ptr<WarningsItem> &wi) const {
 #ifdef INTEGRATION_TESTS
         LOG_DEBUG << "#";
 #endif
@@ -164,7 +160,7 @@ namespace Warnings {
         return warningsInfo;
     }
 
-    int WarningsCheckingWorker::checkDescription(WarningsItem *wi) const {
+    int WarningsCheckingWorker::checkDescription(std::shared_ptr<WarningsItem> &wi) const {
 #ifdef INTEGRATION_TESTS
         LOG_DEBUG << "#";
 #endif
@@ -204,7 +200,7 @@ namespace Warnings {
         return warningsInfo;
     }
 
-    int WarningsCheckingWorker::checkTitle(WarningsItem *wi) const {
+    int WarningsCheckingWorker::checkTitle(std::shared_ptr<WarningsItem> &wi) const {
 #ifdef INTEGRATION_TESTS
         LOG_DEBUG << "#";
 #endif
@@ -244,7 +240,7 @@ namespace Warnings {
         return warningsInfo;
     }
 
-    int WarningsCheckingWorker::checkSpelling(WarningsItem *wi) const {
+    int WarningsCheckingWorker::checkSpelling(std::shared_ptr<WarningsItem> &wi) const {
 #ifdef INTEGRATION_TESTS
         LOG_DEBUG << "#";
 #endif
@@ -276,7 +272,7 @@ namespace Warnings {
         return warningsInfo;
     }
 
-    int WarningsCheckingWorker::checkDuplicates(WarningsItem *wi) const {
+    int WarningsCheckingWorker::checkDuplicates(std::shared_ptr<WarningsItem> &wi) const {
         int warningsInfo = 0;
         Models::ArtworkMetadata *item = wi->getCheckableItem();
         Common::BasicKeywordsModel *keywordsModel = item->getKeywordsModel();

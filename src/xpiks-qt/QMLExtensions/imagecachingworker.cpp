@@ -83,8 +83,8 @@ namespace QMLExtensions {
         return true;
     }
 
-    bool ImageCachingWorker::processOneItem(ImageCacheRequest *item) {
-        if (isProcessed(item)) { return true; }
+    void ImageCachingWorker::processOneItem(std::shared_ptr<ImageCacheRequest> &item) {
+        if (isProcessed(item)) { return; }
 
         const QString &originalPath = item->getFilepath();
         QSize requestedSize = item->getRequestedSize();
@@ -136,8 +136,6 @@ namespace QMLExtensions {
             // force context switch for more imporant tasks
             QThread::msleep(500);
         }
-
-        return true;
     }
 
     bool ImageCachingWorker::tryGetCachedImage(const QString &key, const QSize &requestedSize,
@@ -164,10 +162,10 @@ namespace QMLExtensions {
         return found;
     }
 
-    void ImageCachingWorker::splitToCachedAndNot(const QVector<ImageCacheRequest *> allRequests,
-                                                 QVector<ImageCacheRequest *> &unknownRequests,
-                                                 QVector<ImageCacheRequest *> &knownRequests) {
-        int size = allRequests.size();
+    void ImageCachingWorker::splitToCachedAndNot(const std::vector<std::shared_ptr<ImageCacheRequest> > allRequests,
+                                                 std::vector<std::shared_ptr<ImageCacheRequest> > &unknownRequests,
+                                                 std::vector<std::shared_ptr<ImageCacheRequest> > &knownRequests) {
+        size_t size = allRequests.size();
         if (size == 0) { return; }
 
         LOG_DEBUG << "#";
@@ -178,13 +176,13 @@ namespace QMLExtensions {
         knownRequests.reserve(size);
         unknownRequests.reserve(size);
 
-        for (int i = 0; i < size; ++i) {
-            ImageCacheRequest *item = allRequests.at(i);
+        for (size_t i = 0; i < size; ++i) {
+            auto &item = allRequests.at(i);
 
             if (m_CacheIndex.contains(item->getFilepath())) {
-                knownRequests.append(item);
+                knownRequests.push_back(item);
             } else {
-                unknownRequests.append(item);
+                unknownRequests.push_back(item);
             }
         }
     }
@@ -221,7 +219,7 @@ namespace QMLExtensions {
         }
     }
 
-    bool ImageCachingWorker::isProcessed(ImageCacheRequest *item) {
+    bool ImageCachingWorker::isProcessed(std::shared_ptr<ImageCacheRequest> &item) {
         if (item->getNeedRecache()) { return false; }
 
         const QString &originalPath = item->getFilepath();

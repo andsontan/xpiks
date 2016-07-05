@@ -89,7 +89,7 @@ namespace AutoComplete {
         return importResult;
     }
 
-    bool AutoCompleteWorker::processOneItem(CompletionQuery *item) {
+    void AutoCompleteWorker::processOneItem(std::shared_ptr<CompletionQuery> &item) {
         const QString &prefix = item->getPrefix();
 
         vp_t completions = m_Soufleur->prompt(prefix.toStdString(), m_CompletionsCount);
@@ -114,8 +114,6 @@ namespace AutoComplete {
         if (!completionsList.isEmpty()) {
             item->setCompletions(completionsList);
         }
-
-        return true;
     }
 
     void AutoCompleteWorker::deleteItem(CompletionQuery *item) const {

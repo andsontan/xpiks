@@ -32,7 +32,7 @@ namespace MetadataIO {
         Q_OBJECT
     protected:
         virtual bool initWorker();
-        virtual bool processOneItem(SaverWorkerJobItem *item);
+        virtual void processOneItem(std::shared_ptr<SaverWorkerJobItem> &item);
 
     protected:
         virtual void notifyQueueIsEmpty() { emit queueIsEmpty(); }

@@ -67,7 +67,7 @@ namespace QMLExtensions {
         if (m_IsCancelled) { return; }
 
         Q_ASSERT(m_CachingWorker != NULL);
-        ImageCacheRequest *request = new ImageCacheRequest(key, requestedSize, recache);
+        std::shared_ptr<ImageCacheRequest> request(new ImageCacheRequest(key, requestedSize, recache));
         m_CachingWorker->submitFirst(request);
     }
 
@@ -77,7 +77,7 @@ namespace QMLExtensions {
         Q_ASSERT(m_CachingWorker != NULL);
         LOG_INFO << "generating for" << items.size() << "items";
 
-        QVector<ImageCacheRequest *> requests;
+        std::vector<std::shared_ptr<ImageCacheRequest> > requests;
         int size = items.size();
         requests.reserve(size);
         const bool recache = false;
@@ -85,15 +85,15 @@ namespace QMLExtensions {
         for (int i = 0; i < size; ++i) {
             bool withDelay = i % 2;
             Models::ArtworkMetadata *artwork = items.at(i);
-            ImageCacheRequest *request = new ImageCacheRequest(artwork->getFilepath(),
-                                                               QSize(DEFAULT_THUMB_WIDTH, DEFAULT_THUMB_HEIGHT),
-                                                               recache,
-                                                               withDelay);
-            requests.append(request);
+            std::shared_ptr<ImageCacheRequest> request(new ImageCacheRequest(artwork->getFilepath(),
+                                                                             QSize(DEFAULT_THUMB_WIDTH, DEFAULT_THUMB_HEIGHT),
+                                                                             recache,
+                                                                             withDelay));
+            requests.push_back(request);
         }
 
-        QVector<ImageCacheRequest *> knownRequests;
-        QVector<ImageCacheRequest *> unknownRequests;
+        std::vector<std::shared_ptr<ImageCacheRequest> > knownRequests;
+        std::vector<std::shared_ptr<ImageCacheRequest> > unknownRequests;
         m_CachingWorker->splitToCachedAndNot(requests, unknownRequests, knownRequests);
 
         m_CachingWorker->submitFirst(unknownRequests);

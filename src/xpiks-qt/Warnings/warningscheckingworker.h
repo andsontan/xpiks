@@ -39,7 +39,7 @@ namespace Warnings {
 
     protected:
         virtual bool initWorker();
-        virtual bool processOneItem(WarningsItem *item);
+        virtual void processOneItem(std::shared_ptr<WarningsItem> &item);
 
     private:
         void initValuesFromSettings();
@@ -57,12 +57,12 @@ namespace Warnings {
         void queueIsEmpty();
 
     private:
-        int checkDimensions(WarningsItem *wi) const;
-        int checkKeywords(WarningsItem *wi) const;
-        int checkDescription(WarningsItem *wi) const;
-        int checkTitle(WarningsItem *wi) const;
-        int checkSpelling(WarningsItem *wi) const;
-        int checkDuplicates(WarningsItem *wi) const;
+        int checkDimensions(std::shared_ptr<WarningsItem> &wi) const;
+        int checkKeywords(std::shared_ptr<WarningsItem> &wi) const;
+        int checkDescription(std::shared_ptr<WarningsItem> &wi) const;
+        int checkTitle(std::shared_ptr<WarningsItem> &wi) const;
+        int checkSpelling(std::shared_ptr<WarningsItem> &wi) const;
+        int checkDuplicates(std::shared_ptr<WarningsItem> &wi) const;
 
     private:
         Models::SettingsModel *m_SettingsModel;

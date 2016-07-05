@@ -118,12 +118,10 @@ namespace SpellCheck {
         return initResult;
     }
 
-    bool SpellCheckWorker::processOneItem(SpellCheckItemBase *item) {
-        Q_ASSERT(item != NULL);
-
-        if (dynamic_cast<SpellCheckSeparatorItem*>(item)) {
+    void SpellCheckWorker::processOneItem(std::shared_ptr<SpellCheckItemBase> &item) {
+        if (std::dynamic_pointer_cast<SpellCheckSeparatorItem>(item)) {
             emit queueIsEmpty();
-            return true;
+            return;
         }
 
         bool neededSuggestions = item->needsSuggestions();
@@ -148,20 +146,10 @@ namespace SpellCheck {
             }
         }
 
-        bool canDelete = false;
-
         if (anyWrong) {
             item->requestSuggestions();
             this->submitItem(item);
-        } else {
-            canDelete = true;
         }
-
-        return canDelete;
-    }
-
-    void SpellCheckWorker::deleteItem(SpellCheckItemBase *item) const {
-        item->deleteLater();
     }
 
     QStringList SpellCheckWorker::retrieveCorrections(const QString &word) {
