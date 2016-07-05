@@ -34,8 +34,10 @@ void CombinedModelTests::trivialCombineNoItemsTest() {
     Models::CombinedArtworksModel combinedModel;
     combinedModel.setCommandManager(&m_CommandManagerMock);
 
+    std::vector<Models::MetadataElement> items;
+
     combinedModel.resetModelData();
-    combinedModel.initArtworks(std::vector<Models::MetadataElement>());
+    combinedModel.initArtworks(items);
     combinedModel.recombineArtworks();
 
     QCOMPARE(combinedModel.getArtworksCount(), (size_t)0);
@@ -497,7 +499,8 @@ void CombinedModelTests::initEmptyArtworksDoesNotEmitTest() {
 
     QSignalSpy addSpy(&combinedModel, SIGNAL(rowsInserted(QModelIndex,int,int)));
 
-    combinedModel.initArtworks(std::vector<Models::MetadataElement>());
+    std::vector<Models::MetadataElement> items;
+    combinedModel.initArtworks(items);
 
     QCOMPARE(combinedModel.getAreKeywordsModified(), false);
     QCOMPARE(addSpy.count(), 0);
