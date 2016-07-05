@@ -10,6 +10,7 @@ Coding guidelines:
 - class fields should go last
 - class fields variables should be private except very special cases when they can be protected
 - class fields should be named using the `m_CamelCase` style (starting with "m_" and then the name starting with the capital letter)
+- use STL containers for custom classes and Qt containers for Qt classes
 - try to move as much includes from the header to implementation as possible
 - methods should be separated by 1 empty line as well as all files should have 1 last empty line
 - always put space around assignments, after comma, before curly bracket etc.

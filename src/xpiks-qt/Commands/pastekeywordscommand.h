@@ -23,11 +23,12 @@
 #define PASTEKEYWORDSCOMMAND_H
 
 #include <QVector>
+#include <vector>
 #include <QStringList>
 #include "commandbase.h"
+#include "../Models/metadataelement.h"
 
 namespace Models {
-    class MetadataElement;
     class ArtworkMetadata;
 }
 
@@ -35,20 +36,20 @@ namespace Commands {
     class PasteKeywordsCommand : public CommandBase
     {
     public:
-        PasteKeywordsCommand(const QVector<Models::MetadataElement*> &metadataElements,
+        PasteKeywordsCommand(std::vector<Models::MetadataElement> &metadataElements,
                              const QStringList &keywords) :
             CommandBase(PasteKeywordsCommandType),
-            m_MetadataElements(metadataElements),
+            m_MetadataElements(std::move(metadataElements)),
             m_KeywordsList(keywords)
         {}
 
         virtual ~PasteKeywordsCommand();
 
     public:
-        virtual QSharedPointer<ICommandResult> execute(const ICommandManager *commandManagerInterface) const;
+        virtual std::shared_ptr<ICommandResult> execute(const ICommandManager *commandManagerInterface) const;
 
     private:
-        QVector<Models::MetadataElement*> m_MetadataElements;
+        std::vector<Models::MetadataElement> m_MetadataElements;
         QStringList m_KeywordsList;
     };
 

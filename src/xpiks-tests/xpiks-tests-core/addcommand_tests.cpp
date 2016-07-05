@@ -23,9 +23,9 @@ void AddCommandTests::addNoArtworksToEmptyRepositoryTest() {
 
     QStringList filenames;
 
-    QSharedPointer<Commands::AddArtworksCommand> addArtworksCommand(new Commands::AddArtworksCommand(filenames, QStringList(), false));
+    std::shared_ptr<Commands::AddArtworksCommand> addArtworksCommand(new Commands::AddArtworksCommand(filenames, QStringList(), false));
     auto result = commandManagerMock.processCommand(addArtworksCommand);
-    auto addArtworksResult = result.dynamicCast<Commands::AddArtworksCommandResult>();
+    auto addArtworksResult = std::dynamic_pointer_cast<Commands::AddArtworksCommandResult>(result);
     int newFilesCount = addArtworksResult->m_NewFilesAdded;
 
     QCOMPARE(newFilesCount, 0);
@@ -54,9 +54,9 @@ void AddCommandTests::addOneArtworkToEmptyRepositoryTest() {
     QStringList filenames;
     filenames.append("somefile.jpg");
 
-    QSharedPointer<Commands::AddArtworksCommand> addArtworksCommand(new Commands::AddArtworksCommand(filenames, QStringList(), false));
+    std::shared_ptr<Commands::AddArtworksCommand> addArtworksCommand(new Commands::AddArtworksCommand(filenames, QStringList(), false));
     auto result = commandManagerMock.processCommand(addArtworksCommand);
-    auto addArtworksResult = result.dynamicCast<Commands::AddArtworksCommandResult>();
+    auto addArtworksResult = std::dynamic_pointer_cast<Commands::AddArtworksCommandResult>(result);
     int newFilesCount = addArtworksResult->m_NewFilesAdded;
 
     QCOMPARE(newFilesCount, 1);
@@ -96,9 +96,9 @@ void AddCommandTests::addAndAttachVectorsTest() {
     filenames << "/path/to/somefile.jpg" << "/another/path/to/some/other/file.jpg";
     vectors << "/path/to/somefile.eps" << "/another/path/to/some/other/file.eps";
 
-    QSharedPointer<Commands::AddArtworksCommand> addArtworksCommand(new Commands::AddArtworksCommand(filenames, vectors, false));
+    std::shared_ptr<Commands::AddArtworksCommand> addArtworksCommand(new Commands::AddArtworksCommand(filenames, vectors, false));
     auto result = commandManagerMock.processCommand(addArtworksCommand);
-    auto addArtworksResult = result.dynamicCast<Commands::AddArtworksCommandResult>();
+    auto addArtworksResult = std::dynamic_pointer_cast<Commands::AddArtworksCommandResult>(result);
     int newFilesCount = addArtworksResult->m_NewFilesAdded;
 
     QCOMPARE(newFilesCount, 2);
@@ -122,9 +122,9 @@ void AddCommandTests::addAndAttachVectorsLaterTest() {
     filenames << "/path/to/somefile.jpg" << "/another/path/to/some/other/file.jpg";
     vectors << "/path/to/somefile.eps" << "/another/path/to/some/other/file.eps";
 
-    QSharedPointer<Commands::AddArtworksCommand> addArtworksCommand(new Commands::AddArtworksCommand(filenames, QStringList(), false));
+    std::shared_ptr<Commands::AddArtworksCommand> addArtworksCommand(new Commands::AddArtworksCommand(filenames, QStringList(), false));
     auto result = commandManagerMock.processCommand(addArtworksCommand);
-    auto addArtworksResult = result.dynamicCast<Commands::AddArtworksCommandResult>();
+    auto addArtworksResult = std::dynamic_pointer_cast<Commands::AddArtworksCommandResult>(result);
     int newFilesCount = addArtworksResult->m_NewFilesAdded;
 
     QCOMPARE(newFilesCount, 2);
@@ -133,9 +133,9 @@ void AddCommandTests::addAndAttachVectorsLaterTest() {
         QVERIFY(!artItemsModel->getMockArtwork(i)->hasVectorAttached());
     }
 
-    QSharedPointer<Commands::AddArtworksCommand> anotherAddArtworksCommand(new Commands::AddArtworksCommand(QStringList(), vectors, false));
+    std::shared_ptr<Commands::AddArtworksCommand> anotherAddArtworksCommand(new Commands::AddArtworksCommand(QStringList(), vectors, false));
     result = commandManagerMock.processCommand(anotherAddArtworksCommand);
-    addArtworksResult = result.dynamicCast<Commands::AddArtworksCommandResult>();
+    addArtworksResult = std::dynamic_pointer_cast<Commands::AddArtworksCommandResult>(result);
     newFilesCount = addArtworksResult->m_NewFilesAdded;
 
     QCOMPARE(newFilesCount, 0);
@@ -159,9 +159,9 @@ void AddCommandTests::addAndDontAttachVectorsOtherDirTest() {
     filenames << "/path/to/somefile.jpg" << "/another/path/to/some/other/file.jpg";
     vectors << "/another/path/to/somefile.eps" << "/path/to/some/other/file.eps";
 
-    QSharedPointer<Commands::AddArtworksCommand> addArtworksCommand(new Commands::AddArtworksCommand(filenames, vectors, false));
+    std::shared_ptr<Commands::AddArtworksCommand> addArtworksCommand(new Commands::AddArtworksCommand(filenames, vectors, false));
     auto result = commandManagerMock.processCommand(addArtworksCommand);
-    auto addArtworksResult = result.dynamicCast<Commands::AddArtworksCommandResult>();
+    auto addArtworksResult = std::dynamic_pointer_cast<Commands::AddArtworksCommandResult>(result);
     int newFilesCount = addArtworksResult->m_NewFilesAdded;
 
     QCOMPARE(newFilesCount, 2);
@@ -185,9 +185,9 @@ void AddCommandTests::addAndDontAttachVectorsEmptyDirTest() {
     filenames << "/path/to/somefile.jpg" << "/another/path/to/some/other/file.jpg";
     vectors << "somefile.eps" << "file.eps";
 
-    QSharedPointer<Commands::AddArtworksCommand> addArtworksCommand(new Commands::AddArtworksCommand(filenames, vectors, false));
+    std::shared_ptr<Commands::AddArtworksCommand> addArtworksCommand(new Commands::AddArtworksCommand(filenames, vectors, false));
     auto result = commandManagerMock.processCommand(addArtworksCommand);
-    auto addArtworksResult = result.dynamicCast<Commands::AddArtworksCommandResult>();
+    auto addArtworksResult = std::dynamic_pointer_cast<Commands::AddArtworksCommandResult>(result);
     int newFilesCount = addArtworksResult->m_NewFilesAdded;
 
     QCOMPARE(newFilesCount, 2);
@@ -211,9 +211,9 @@ void AddCommandTests::addAndDontAttachVectorsStartsWithTest() {
     filenames << "/path/to/somefile.jpg" << "/another/path/to/some/other/file.jpg";
     vectors << "/to/somefile.eps" << "/path/to/some/other/file.eps";
 
-    QSharedPointer<Commands::AddArtworksCommand> addArtworksCommand(new Commands::AddArtworksCommand(filenames, vectors, false));
+    std::shared_ptr<Commands::AddArtworksCommand> addArtworksCommand(new Commands::AddArtworksCommand(filenames, vectors, false));
     auto result = commandManagerMock.processCommand(addArtworksCommand);
-    auto addArtworksResult = result.dynamicCast<Commands::AddArtworksCommandResult>();
+    auto addArtworksResult = std::dynamic_pointer_cast<Commands::AddArtworksCommandResult>(result);
     int newFilesCount = addArtworksResult->m_NewFilesAdded;
 
     QCOMPARE(newFilesCount, 2);
@@ -237,9 +237,9 @@ void AddCommandTests::addAndAttachFromSingleDirectoryTest() {
     filenames << "/path/to/somefile1.jpg" << "/path/to/somefile2.jpg" << "/another/path/to/somefile1.jpg" << "/another/path/to/somefile2.jpg";
     vectors << "/path/to/somefile1.eps" << "/path/to/somefile2.eps" << "/another/path/to/somefile1.eps" << "/another/path/to/somefile2.eps";
 
-    QSharedPointer<Commands::AddArtworksCommand> addArtworksCommand(new Commands::AddArtworksCommand(filenames, vectors, false));
+    std::shared_ptr<Commands::AddArtworksCommand> addArtworksCommand(new Commands::AddArtworksCommand(filenames, vectors, false));
     auto result = commandManagerMock.processCommand(addArtworksCommand);
-    auto addArtworksResult = result.dynamicCast<Commands::AddArtworksCommandResult>();
+    auto addArtworksResult = std::dynamic_pointer_cast<Commands::AddArtworksCommandResult>(result);
     int newFilesCount = addArtworksResult->m_NewFilesAdded;
 
     QCOMPARE(newFilesCount, filenames.length());
@@ -263,9 +263,9 @@ void AddCommandTests::addSingleDirectoryAndAttachLaterTest() {
     filenames << "/path/to/somefile1.jpg" << "/path/to/somefile2.jpg" << "/another/path/to/somefile1.jpg" << "/another/path/to/somefile2.jpg";
     vectors << "/path/to/somefile1.eps" << "/path/to/somefile2.eps" << "/another/path/to/somefile1.eps" << "/another/path/to/somefile2.eps";
 
-    QSharedPointer<Commands::AddArtworksCommand> addArtworksCommand(new Commands::AddArtworksCommand(filenames, QStringList(), false));
+    std::shared_ptr<Commands::AddArtworksCommand> addArtworksCommand(new Commands::AddArtworksCommand(filenames, QStringList(), false));
     auto result = commandManagerMock.processCommand(addArtworksCommand);
-    auto addArtworksResult = result.dynamicCast<Commands::AddArtworksCommandResult>();
+    auto addArtworksResult = std::dynamic_pointer_cast<Commands::AddArtworksCommandResult>(result);
     int newFilesCount = addArtworksResult->m_NewFilesAdded;
 
     QCOMPARE(newFilesCount, filenames.length());
@@ -274,9 +274,9 @@ void AddCommandTests::addSingleDirectoryAndAttachLaterTest() {
         QVERIFY(!artItemsModel->getMockArtwork(i)->hasVectorAttached());
     }
 
-    QSharedPointer<Commands::AddArtworksCommand> anotherAddArtworksCommand(new Commands::AddArtworksCommand(QStringList(), vectors, false));
+    std::shared_ptr<Commands::AddArtworksCommand> anotherAddArtworksCommand(new Commands::AddArtworksCommand(QStringList(), vectors, false));
     result = commandManagerMock.processCommand(anotherAddArtworksCommand);
-    addArtworksResult = result.dynamicCast<Commands::AddArtworksCommandResult>();
+    addArtworksResult = std::dynamic_pointer_cast<Commands::AddArtworksCommandResult>(result);
     newFilesCount = addArtworksResult->m_NewFilesAdded;
 
     QCOMPARE(newFilesCount, 0);

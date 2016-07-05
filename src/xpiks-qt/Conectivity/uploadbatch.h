@@ -22,29 +22,27 @@
 #ifndef UPLOADBATCH_H
 #define UPLOADBATCH_H
 
-#include <QSharedPointer>
+#include <memory>
 #include <QStringList>
 #include "uploadcontext.h"
 
 namespace Conectivity {
     class UploadBatch {
     public:
-        UploadBatch(const QSharedPointer<UploadContext> &context, const QStringList &filesList):
+        UploadBatch(const std::shared_ptr<UploadContext> &context, const QStringList &filesList):
             m_FilesList(filesList),
             m_UploadContext(context)
         {}
 
-        ~UploadBatch() {
-            m_UploadContext.clear();
-        }
+        virtual ~UploadBatch() { }
 
     public:
         const QStringList &getFilesToUpload() const { return m_FilesList; }
-        UploadContext *getContext() const { return m_UploadContext.data(); }
+        UploadContext *getContext() const { return m_UploadContext.get(); }
 
     private:
         QStringList m_FilesList;
-        QSharedPointer<UploadContext> m_UploadContext;
+        std::shared_ptr<UploadContext> m_UploadContext;
     };
 }
 

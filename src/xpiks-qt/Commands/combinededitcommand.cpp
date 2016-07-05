@@ -61,29 +61,28 @@ Commands::CombinedEditCommand::~CombinedEditCommand() {
     LOG_DEBUG << "#";
 }
 
-QSharedPointer<Commands::ICommandResult> Commands::CombinedEditCommand::execute(const ICommandManager *commandManagerInterface) const {
-    LOG_INFO << "flags =" << combinedFlagsToString(m_EditFlags) << ", artworks count =" << m_MetadataElements.length();
+std::shared_ptr<Commands::ICommandResult> Commands::CombinedEditCommand::execute(const ICommandManager *commandManagerInterface) const {
+    LOG_INFO << "flags =" << combinedFlagsToString(m_EditFlags) << ", artworks count =" << m_MetadataElements.size();
     QVector<int> indicesToUpdate;
-    QVector<UndoRedo::ArtworkMetadataBackup*> artworksBackups;
+    std::vector<UndoRedo::ArtworkMetadataBackup> artworksBackups;
     QVector<Models::ArtworkMetadata *> itemsToSave, affectedItems;
 
     CommandManager *commandManager = (CommandManager*)commandManagerInterface;
 
-    int size = m_MetadataElements.length();
-    indicesToUpdate.reserve(size);
-    artworksBackups.reserve(size);
-    itemsToSave.reserve(size);
-    affectedItems.reserve(size);
+    size_t size = m_MetadataElements.size();
+    indicesToUpdate.reserve((int)size);
+    artworksBackups.reserve((int)size);
+    itemsToSave.reserve((int)size);
+    affectedItems.reserve((int)size);
 
     bool needToClear = Common::HasFlag(m_EditFlags, Common::Clear);
 
-    for (int i = 0; i < size; ++i) {
-        Models::MetadataElement* info = m_MetadataElements[i];
-        Models::ArtworkMetadata *metadata = info->getOrigin();
+    for (size_t i = 0; i < size; ++i) {
+        const Models::MetadataElement &info = m_MetadataElements.at(i);
+        Models::ArtworkMetadata *metadata = info.getOrigin();
 
-        UndoRedo::ArtworkMetadataBackup *backup = new UndoRedo::ArtworkMetadataBackup(metadata);
-        artworksBackups.append(backup);
-        indicesToUpdate.append(info->getOriginalIndex());
+        artworksBackups.emplace_back(metadata);
+        indicesToUpdate.append(info.getOriginalIndex());
 
         setKeywords(metadata);
         setDescription(metadata);
@@ -98,12 +97,11 @@ QSharedPointer<Commands::ICommandResult> Commands::CombinedEditCommand::execute(
         affectedItems.append(metadata);
     }
 
-    UndoRedo::ModifyArtworksHistoryItem *modifyArtworksItem =
-            new UndoRedo::ModifyArtworksHistoryItem(artworksBackups, indicesToUpdate,
-                                                    UndoRedo::CombinedEditModificationType);
+    std::unique_ptr<UndoRedo::IHistoryItem> modifyArtworksItem(new UndoRedo::ModifyArtworksHistoryItem(artworksBackups, indicesToUpdate,
+                                                                                                       UndoRedo::CombinedEditModificationType));
     commandManager->recordHistoryItem(modifyArtworksItem);
 
-    QSharedPointer<ICommandResult> result(new CombinedEditCommandResult(affectedItems, itemsToSave, indicesToUpdate));
+    std::shared_ptr<ICommandResult> result(new CombinedEditCommandResult(affectedItems, itemsToSave, indicesToUpdate));
     return result;
 }
 

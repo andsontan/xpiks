@@ -22,19 +22,19 @@
 #include "undoredomanager.h"
 #include "../Common/defines.h"
 
-UndoRedo::UndoRedoManager::~UndoRedoManager() { qDeleteAll(m_HistoryStack); }
+UndoRedo::UndoRedoManager::~UndoRedoManager() { }
 
-void UndoRedo::UndoRedoManager::recordHistoryItem(UndoRedo::IHistoryItem *historyItem) {
+void UndoRedo::UndoRedoManager::recordHistoryItem(std::unique_ptr<IHistoryItem> &historyItem) {
     LOG_INFO << "History item about to be recorded:" << historyItem->getActionType();
 
     QMutexLocker locker(&m_Mutex);
 
     if (!m_HistoryStack.empty()) {
-        IHistoryItem *oldItem = m_HistoryStack.pop();
-        delete oldItem;
+        m_HistoryStack.pop();
+        Q_ASSERT(m_HistoryStack.empty());
     }
 
-    m_HistoryStack.append(historyItem);
+    m_HistoryStack.push(std::move(historyItem));
     emit canUndoChanged();
     emit itemRecorded();
     emit undoDescriptionChanged();
@@ -48,13 +48,13 @@ bool UndoRedo::UndoRedoManager::undoLastAction() {
     anyItem = !m_HistoryStack.empty();
 
     if (anyItem) {
-        IHistoryItem *historyItem = m_HistoryStack.pop();
+        std::unique_ptr<UndoRedo::IHistoryItem> historyItem(std::move(m_HistoryStack.top()));
+        m_HistoryStack.pop();
         m_Mutex.unlock();
 
         emit canUndoChanged();
         emit undoDescriptionChanged();
         historyItem->undo(m_CommandManager);
-        delete historyItem;
     } else {
         m_Mutex.unlock();
         LOG_WARNING << "No item for undo";
@@ -71,12 +71,11 @@ void UndoRedo::UndoRedoManager::discardLastAction() {
     anyItem = !m_HistoryStack.empty();
 
     if (anyItem) {
-        IHistoryItem *historyItem = m_HistoryStack.pop();
-        bool isNowEmpty = m_HistoryStack.isEmpty();
+        std::unique_ptr<UndoRedo::IHistoryItem> historyItem(std::move(m_HistoryStack.top()));
+        m_HistoryStack.pop();
+        bool isNowEmpty = m_HistoryStack.empty();
 
         m_Mutex.unlock();
-
-        delete historyItem;
 
         emit canUndoChanged();
         emit undoDescriptionChanged();

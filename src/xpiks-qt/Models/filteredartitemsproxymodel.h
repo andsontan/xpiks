@@ -50,7 +50,7 @@ namespace Models {
         int getSelectedArtworksCount() const { return m_SelectedArtworksCount; }
         void spellCheckAllItems();
 
-        QVector<MetadataElement *> getSearchableOriginalItems(const QString &searchTerm, int flags) const;
+        std::vector<MetadataElement> getSearchableOriginalItems(const QString &searchTerm, int flags) const;
 
 #ifdef CORE_TESTS
         int retrieveNumberOfSelectedItems();
@@ -106,20 +106,20 @@ namespace Models {
         void allItemsSelectedChanged();
 
     private:
-        void removeMetadataInItems(const QVector<Models::MetadataElement *> &itemsToClear, int flags) const;
-        void removeKeywordsInItem(Models::MetadataElement *itemToClear);
+        void removeMetadataInItems(std::vector<MetadataElement> &itemsToClear, int flags) const;
+        void removeKeywordsInItem(ArtworkMetadata *metadata, int originalIndex);
         void setFilteredItemsSelected(bool selected);
         void invertFilteredItemsSelected();
 
         QVector<ArtworkMetadata *> getSelectedOriginalItems() const;
 
-        QVector<MetadataElement *> getSelectedOriginalItemsWithIndices() const;
+        std::vector<MetadataElement> getSelectedOriginalItemsWithIndices() const;
 
-        QVector<MetadataElement *> getAllItemsWithIndices() const;
+        std::vector<MetadataElement> getAllItemsWithIndices() const;
 
         template<typename T>
-        QVector<T *> getFilteredOriginalItems(std::function<bool (ArtworkMetadata *)> pred,
-                                                         std::function<T *(ArtworkMetadata*, int)> mapper) const;
+        std::vector<T> getFilteredOriginalItems(std::function<bool (ArtworkMetadata *)> pred,
+                                                std::function<T (ArtworkMetadata *, int)> mapper) const;
 
         QVector<ArtworkMetadata *> getAllOriginalItems() const;
 

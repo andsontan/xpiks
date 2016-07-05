@@ -20,7 +20,7 @@
  */
 
 #include "conectivityhelpers.h"
-#include <QSharedPointer>
+#include <memory>
 #include <QVector>
 #include "../Models/artworkmetadata.h"
 #include "../Models/uploadinfo.h"
@@ -64,7 +64,7 @@ namespace Conectivity {
     }
 
     void generateUploadContexts(const QVector<Models::UploadInfo *> &uploadInfos,
-                                QVector<QSharedPointer<UploadContext> > &contexts,
+                                QVector<std::shared_ptr<UploadContext> > &contexts,
                                 Encryption::SecretsManager *secretsManager,
                                 Models::SettingsModel *settingsModel) {
         int size = uploadInfos.size();
@@ -98,7 +98,7 @@ namespace Conectivity {
                 context->m_DirForVectors = "Vector";
             }
 
-            contexts.append(QSharedPointer<UploadContext>(context));
+            contexts.append(std::shared_ptr<UploadContext>(context));
         }
     }
 
@@ -113,7 +113,7 @@ namespace Conectivity {
         QStringList zipFilePathes;
         extractFilePathes(artworksToUpload, filePathes, zipFilePathes);
 
-        QVector<QSharedPointer<UploadContext> > contexts;
+        QVector<std::shared_ptr<UploadContext> > contexts;
         generateUploadContexts(uploadInfos, contexts, secretsManager, settingsModel);
 
         int size = contexts.size();
@@ -121,7 +121,7 @@ namespace Conectivity {
 
         for (int i = 0; i < size; ++i) {
             UploadBatch *batch;
-            const QSharedPointer<UploadContext> &context = contexts.at(i);
+            const std::shared_ptr<UploadContext> &context = contexts.at(i);
 
             if (uploadInfos[i]->getZipBeforeUpload()) {
                 batch = new UploadBatch(context, zipFilePathes);

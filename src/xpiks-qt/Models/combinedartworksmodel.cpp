@@ -48,17 +48,13 @@ namespace Models {
                          this, SIGNAL(completionsAvailable()));
     }
 
-    CombinedArtworksModel::~CombinedArtworksModel() { qDeleteAll(m_ArtworksList); }
-
-    void CombinedArtworksModel::initArtworks(const QVector<MetadataElement *> &artworks) {
-        int paramLength = artworks.length();
+    void CombinedArtworksModel::initArtworks(std::vector<MetadataElement> &artworks) {
+        size_t paramLength = artworks.size();
 
         if (paramLength > 0) {
-            int innerLength = m_ArtworksList.length();
-            int start = innerLength == 0 ? 0 : innerLength - 1;
-            beginInsertRows(QModelIndex(), start, start + paramLength - 1);
-            m_ArtworksList << artworks;
-            endInsertRows();
+            beginResetModel();
+            m_ArtworksList = std::move(artworks);
+            endResetModel();
         }
 
         if (paramLength == 1) {
@@ -67,10 +63,10 @@ namespace Models {
     }
 
     void CombinedArtworksModel::recombineArtworks() {
-        LOG_DEBUG << m_ArtworksList.length() << "artwork(s)";
-        if (m_ArtworksList.isEmpty()) { return; }
+        LOG_DEBUG << m_ArtworksList.size() << "artwork(s)";
+        if (m_ArtworksList.empty()) { return; }
 
-        if (m_ArtworksList.length() == 1) {
+        if (m_ArtworksList.size() == 1) {
             assignFromOneArtwork();
         } else {
             assignFromManyArtworks();
@@ -119,9 +115,9 @@ namespace Models {
 
     int CombinedArtworksModel::getSelectedArtworksCount() const {
         int selectedCount = 0;
-        int count = m_ArtworksList.length();
-        for (int i = 0; i < count; ++i) {
-            if (m_ArtworksList.at(i)->isSelected()) {
+        size_t count = m_ArtworksList.size();
+        for (size_t i = 0; i < count; ++i) {
+            if (m_ArtworksList.at(i).isSelected()) {
                 selectedCount++;
             }
         }
@@ -180,24 +176,24 @@ namespace Models {
     }
 
     void CombinedArtworksModel::setArtworksSelected(int index, bool newState) {
-        if (index < 0 || index >= m_ArtworksList.length()) {
+        if (index < 0 || index >= (int)m_ArtworksList.size()) {
             return;
         }
 
-        m_ArtworksList.at(index)->setSelected(newState);
+        m_ArtworksList.at(index).setSelected(newState);
         QModelIndex qIndex = this->index(index);
         emit dataChanged(qIndex, qIndex, QVector<int>() << IsSelectedRole);
         emit selectedArtworksCountChanged();
     }
 
     void CombinedArtworksModel::removeSelectedArtworks() {
-        int count = m_ArtworksList.length();
+        int count = (int)m_ArtworksList.size();
         QVector<int> indicesToRemove;
         indicesToRemove.reserve(count);
 
         for (int i = 0; i < count; ++i) {
-            MetadataElement *item = m_ArtworksList[i];
-            if (item->isSelected()) {
+            const MetadataElement &item = m_ArtworksList.at(i);
+            if (item.isSelected()) {
                 indicesToRemove.append(i);
             }
         }
@@ -216,7 +212,7 @@ namespace Models {
         if (getChangeTitle() ||
                 getChangeDescription() ||
                 getChangeKeywords()) {
-            needToSave = m_ArtworksList.length() > 1;
+            needToSave = m_ArtworksList.size() > 1;
             needToSave = needToSave || (getChangeKeywords() && m_AreKeywordsModified);
             needToSave = needToSave || (getChangeTitle() && m_IsTitleModified);
             needToSave = needToSave || (getChangeDescription() && m_IsDescriptionModified);
@@ -229,7 +225,6 @@ namespace Models {
 
     void CombinedArtworksModel::resetModelData() {
         beginResetModel();
-        qDeleteAll(m_ArtworksList);
         m_ArtworksList.clear();
         endResetModel();
 
@@ -304,22 +299,23 @@ namespace Models {
 
     void CombinedArtworksModel::assignFromSelected() {
         int selectedCount = 0;
-        int count = m_ArtworksList.length();
-        MetadataElement *firstSelected = NULL;
-        for (int i = 0; i < count; ++i) {
-            if (m_ArtworksList.at(i)->isSelected()) {
+        size_t count = m_ArtworksList.size();
+        int firstSelectedIndex = -1;
+        for (size_t i = 0; i < count; ++i) {
+            if (m_ArtworksList.at(i).isSelected()) {
                 selectedCount++;
 
-                if (firstSelected == NULL) {
-                    firstSelected = m_ArtworksList.at(i);
+                if (firstSelectedIndex == -1) {
+                    firstSelectedIndex = (int)i;
                 }
             }
         }
 
         if (selectedCount == 1) {
-            Q_ASSERT(firstSelected != NULL);
+            Q_ASSERT(firstSelectedIndex != -1);
             LOG_DEBUG << "Assigning fields";
-            ArtworkMetadata *metadata = firstSelected->getOrigin();
+            MetadataElement &firstSelected = m_ArtworksList.at(firstSelectedIndex);
+            ArtworkMetadata *metadata = firstSelected.getOrigin();
             setTitle(metadata->getTitle());
             setDescription(metadata->getDescription());
             setKeywords(metadata->getKeywords());
@@ -329,7 +325,7 @@ namespace Models {
     }
 
     void CombinedArtworksModel::processCombinedEditCommand() {
-        QSharedPointer<Commands::CombinedEditCommand> combinedEditCommand(new Commands::CombinedEditCommand(
+        std::shared_ptr<Commands::CombinedEditCommand> combinedEditCommand(new Commands::CombinedEditCommand(
                     m_EditFlags,
                     m_ArtworksList,
                     m_CommonKeywordsModel.getDescription(),
@@ -346,9 +342,9 @@ namespace Models {
     }
 
     void CombinedArtworksModel::assignFromOneArtwork() {
-        Q_ASSERT(m_ArtworksList.length() == 1);
-        MetadataElement *info = m_ArtworksList.at(0);
-        ArtworkMetadata *metadata = info->getOrigin();
+        Q_ASSERT(m_ArtworksList.size() == 1);
+        MetadataElement &info = m_ArtworksList.at(0);
+        ArtworkMetadata *metadata = info.getOrigin();
 
         if (!m_IsDescriptionModified) {
             initDescription(metadata->getDescription());
@@ -379,10 +375,10 @@ namespace Models {
         QString title;
         QSet<QString> commonKeywords;
 
-        int artworksCount = m_ArtworksList.length();
-        for (int i = 0; i < artworksCount; ++i) {
-            MetadataElement *info = m_ArtworksList[i];
-            ArtworkMetadata *metadata = info->getOrigin();
+        size_t artworksCount = m_ArtworksList.size();
+        for (size_t i = 0; i < artworksCount; ++i) {
+            MetadataElement &info = m_ArtworksList.at(i);
+            ArtworkMetadata *metadata = info.getOrigin();
 
             if (!anyItemsProcessed) {
                 description = metadata->getDescription();
@@ -424,20 +420,20 @@ namespace Models {
 
     int CombinedArtworksModel::rowCount(const QModelIndex &parent) const {
         Q_UNUSED(parent);
-        return m_ArtworksList.count();
+        return (int)m_ArtworksList.size();
     }
 
     QVariant CombinedArtworksModel::data(const QModelIndex &index, int role) const {
-        if (index.row() < 0 || index.row() >= m_ArtworksList.count())
+        if (index.row() < 0 || index.row() >= (int)m_ArtworksList.size())
             return QVariant();
 
-        MetadataElement *item = m_ArtworksList.at(index.row());
+        const MetadataElement &item = m_ArtworksList.at(index.row());
 
         switch (role) {
         case PathRole:
-            return item->getOrigin()->getFilepath();
+            return item.getOrigin()->getFilepath();
         case IsSelectedRole:
-            return item->isSelected();
+            return item.isSelected();
         default:
             return QVariant();
         }
@@ -451,9 +447,7 @@ namespace Models {
     }
 
     void CombinedArtworksModel::removeInnerItem(int row) {
-        MetadataElement *info = m_ArtworksList[row];
-        delete info;
-        m_ArtworksList.removeAt(row);
+        m_ArtworksList.erase(m_ArtworksList.begin() + row);
     }
 
     void CombinedArtworksModel::generateAboutToBeRemoved() {
@@ -463,12 +457,12 @@ namespace Models {
     void CombinedArtworksModel::removeUnavailableItems() {
         LOG_DEBUG << "#";
         QVector<int> indicesToRemove;
-        int size = m_ArtworksList.size();
-        for (int i = 0; i < size; i++) {
-            MetadataElement *item = m_ArtworksList.at(i);
+        size_t size = m_ArtworksList.size();
+        for (size_t i = 0; i < size; i++) {
+            MetadataElement &item = m_ArtworksList.at(i);
 
-            if (item->getOrigin()->isUnavailable()) {
-                indicesToRemove.append(i);
+            if (item.getOrigin()->isUnavailable()) {
+                indicesToRemove.append((int)i);
             }
         }
 
@@ -478,7 +472,7 @@ namespace Models {
         removeItemsAtIndices(rangesToRemove);
         recombineArtworks();
 
-        if (m_ArtworksList.isEmpty()) {
+        if (m_ArtworksList.empty()) {
             emit requestCloseWindow();
         }
 

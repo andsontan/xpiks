@@ -27,7 +27,7 @@
 #include <QUrl>
 #include <QVector>
 #include <QObject>
-#include <QSharedPointer>
+#include <memory>
 #include "../UndoRedo/ihistoryitem.h"
 #include "commandbase.h"
 #include "../Conectivity/analyticsuserevent.h"
@@ -35,6 +35,7 @@
 #include "icommandmanager.h"
 #include "../Common/iservicebase.h"
 #include "../Helpers/ifilenotavailablemodel.h"
+#include "../Models/metadataelement.h"
 
 namespace Encryption {
     class SecretsManager;
@@ -52,7 +53,6 @@ namespace Models {
     class ArtworksRepository;
     class ArtItemsModel;
     class FilteredArtItemsProxyModel;
-    class MetadataElement;
     class CombinedArtworksModel;
     class ArtworkUploader;
     class UploadInfoRepository;
@@ -171,7 +171,7 @@ namespace Commands {
         void InjectDependency(QMLExtensions::ImageCachingService *imageCachingService);
 
     public:
-        virtual QSharedPointer<Commands::ICommandResult> processCommand(const QSharedPointer<ICommandBase> &command)
+        virtual std::shared_ptr<Commands::ICommandResult> processCommand(const std::shared_ptr<ICommandBase> &command)
 #ifndef CORE_TESTS
         const
 #endif
@@ -179,7 +179,7 @@ namespace Commands {
         virtual void addWarningsService(Common::IServiceBase<Common::IBasicArtwork> *service);
 
     public:
-        void recordHistoryItem(UndoRedo::IHistoryItem *historyItem) const;
+        void recordHistoryItem(std::unique_ptr<UndoRedo::IHistoryItem> &historyItem) const;
         void connectEntitiesSignalsSlots() const;
         void ensureDependenciesInjected();
         void removeUnavailableFiles();
@@ -189,8 +189,8 @@ namespace Commands {
                                 const QString &newMasterPassword,
                                 const QVector<Models::UploadInfo*> &uploadInfos) const;
 
-        void combineArtwork(Models::MetadataElement* itemInfo) const;
-        void combineArtworks(const QVector<Models::MetadataElement*> &artworks) const;
+        void combineArtwork(Models::ArtworkMetadata *metadata, int index) const;
+        void combineArtworks(std::vector<Models::MetadataElement> &artworks) const;
         void setArtworksForUpload(const QVector<Models::ArtworkMetadata*> &artworks) const;
         void setArtworksForZipping(const QVector<Models::ArtworkMetadata*> &artworks) const;
         virtual void connectArtworkSignals(Models::ArtworkMetadata *metadata) const;

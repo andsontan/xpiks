@@ -31,9 +31,9 @@ namespace Mocks {
         void mockAcceptDeletion() {Commands::CommandManager::removeUnavailableFiles();}
 
     public:
-        void generateAndAddArtworks(int count, bool withVector=true) {
+        void generateAndAddArtworks(size_t count, bool withVector=true) {
             Q_ASSERT(count >= 0);
-            int i = 0;
+            size_t i = 0;
             Models::ArtworksRepository *artworksRepository = getArtworksRepository();
             Models::ArtItemsModel *artItemsModel = getArtItemsModel();
 
@@ -58,12 +58,12 @@ namespace Mocks {
             }
         }
 
-        virtual QSharedPointer<Commands::ICommandResult> processCommand(const QSharedPointer<Commands::ICommandBase> &command) {
+        virtual std::shared_ptr<Commands::ICommandResult> processCommand(const std::shared_ptr<Commands::ICommandBase> &command) {
             m_AnyCommandProcessed = true;
             if (m_CanExecuteCommands) {
                 return Commands::CommandManager::processCommand(command);
             } else {
-                return QSharedPointer<Commands::ICommandResult>();
+                return std::shared_ptr<Commands::ICommandResult>();
             }
         }
 

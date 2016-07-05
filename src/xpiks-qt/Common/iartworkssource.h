@@ -30,7 +30,7 @@ namespace Common {
         virtual ~IArtworksSource() {}
 
         virtual IBasicArtwork *getBasicArtwork(int index) const = 0;
-        virtual int getArtworksCount() const = 0;
+        virtual size_t getArtworksCount() const = 0;
     };
 }
 

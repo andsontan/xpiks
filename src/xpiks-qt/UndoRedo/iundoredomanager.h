@@ -23,12 +23,13 @@
 #define IUNDOREDOMANAGER_H
 
 #include "ihistoryitem.h"
+#include <memory>
 
 namespace UndoRedo {
     class IUndoRedoManager {
     public:
         virtual ~IUndoRedoManager() {}
-        virtual void recordHistoryItem(IHistoryItem *historyItem) = 0;
+        virtual void recordHistoryItem(std::unique_ptr<IHistoryItem> &historyItem) = 0;
     };
 }
 

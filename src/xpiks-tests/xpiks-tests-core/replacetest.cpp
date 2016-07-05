@@ -38,7 +38,7 @@ void ReplaceTest::replaceTrivialTest() {
     }
 
     auto artWorksInfo = filteredItemsModel.getSearchableOriginalItems(replaceFrom, flags);
-    QSharedPointer<Commands::FindAndReplaceCommand> replaceCommand(
+    std::shared_ptr<Commands::FindAndReplaceCommand> replaceCommand(
                 new Commands::FindAndReplaceCommand(artWorksInfo, replaceFrom, replaceTo, flags));
     auto result = commandManagerMock.processCommand(replaceCommand);
 
@@ -71,7 +71,7 @@ void ReplaceTest::noReplaceTrivialTest() {
     }
 
     auto artWorksInfo = filteredItemsModel.getSearchableOriginalItems(replaceFrom, flags);
-    QSharedPointer<Commands::FindAndReplaceCommand> replaceCommand(
+    std::shared_ptr<Commands::FindAndReplaceCommand> replaceCommand(
                 new Commands::FindAndReplaceCommand(artWorksInfo, replaceFrom, replaceTo, flags));
     auto result = commandManagerMock.processCommand(replaceCommand);
 
@@ -103,7 +103,7 @@ void ReplaceTest::caseSensitiveTest() {
     }
 
     auto artWorksInfo = filteredItemsModel.getSearchableOriginalItems(replaceFrom, flags);
-    QSharedPointer<Commands::FindAndReplaceCommand> replaceCommand(
+    std::shared_ptr<Commands::FindAndReplaceCommand> replaceCommand(
                 new Commands::FindAndReplaceCommand(artWorksInfo, replaceFrom, replaceTo, flags));
     auto result = commandManagerMock.processCommand(replaceCommand);
 
@@ -133,7 +133,7 @@ void ReplaceTest::replaceTitleTest() {
     }
 
     auto artWorksInfo = filteredItemsModel.getSearchableOriginalItems(replaceFrom, flags);
-    QSharedPointer<Commands::FindAndReplaceCommand> replaceCommand(
+    std::shared_ptr<Commands::FindAndReplaceCommand> replaceCommand(
                 new Commands::FindAndReplaceCommand(artWorksInfo, replaceFrom, replaceTo, flags));
     auto result = commandManagerMock.processCommand(replaceCommand);
 

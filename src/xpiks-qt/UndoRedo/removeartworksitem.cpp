@@ -100,7 +100,7 @@ void UndoRedo::RemoveArtworksHistoryItem::undo(const Commands::ICommandManager *
 
     artworksRepository->endAccountingFiles(filesWereAccounted);
 
-    AddArtworksHistoryItem *addArtworksItem = new AddArtworksHistoryItem(ranges);
+    std::unique_ptr<IHistoryItem> addArtworksItem(new AddArtworksHistoryItem(ranges));
     commandManager->recordHistoryItem(addArtworksItem);
 
     commandManager->readMetadata(artworksToImport, ranges);

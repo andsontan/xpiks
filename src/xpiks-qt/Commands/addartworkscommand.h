@@ -40,7 +40,7 @@ namespace Commands {
         virtual ~AddArtworksCommand();
 
     public:
-        virtual QSharedPointer<ICommandResult> execute(const ICommandManager *commandManagerInterface) const;
+        virtual std::shared_ptr<ICommandResult> execute(const ICommandManager *commandManagerInterface) const;
 
     private:
         void decomposeVectors(QHash<QString, QHash<QString, QString> > &vectors) const;

@@ -23,8 +23,9 @@
 #define MODIFYARTWORKHISTORYITEM_H
 
 #include <QObject>
-#include <QVector>
+#include <vector>
 #include <QString>
+#include <QVector>
 #include "historyitem.h"
 #include "artworkmetadatabackup.h"
 
@@ -39,26 +40,26 @@ namespace UndoRedo {
     class ModifyArtworksHistoryItem : public HistoryItem
     {
     public:
-        ModifyArtworksHistoryItem(QVector<ArtworkMetadataBackup*> backups,
-                                  QVector<int> indices,
+        ModifyArtworksHistoryItem(const std::vector<ArtworkMetadataBackup> &backups,
+                                  const QVector<int> &indices,
                                   ModificationType modificationType) :
             HistoryItem(ModifyArtworksActionType),
             m_ArtworksBackups(backups),
             m_Indices(indices),
             m_ModificationType(modificationType)
         {
-            Q_ASSERT(backups.length() == indices.length());
+            Q_ASSERT((int)backups.size() == indices.length());
             Q_ASSERT(!backups.empty());
         }
 
-        virtual ~ModifyArtworksHistoryItem() { qDeleteAll(m_ArtworksBackups); }
+        virtual ~ModifyArtworksHistoryItem() { }
 
     public:
          virtual void undo(const Commands::ICommandManager *commandManagerInterface) const;
 
     public:
          virtual QString getDescription() const {
-             int count = m_ArtworksBackups.count();
+             size_t count = m_ArtworksBackups.size();
              QString typeStr = getModificationTypeDescription(m_ModificationType);
              return count > 1 ? QObject::tr("(%1)  %2 items modified").arg(typeStr).arg(count) :
                                   QObject::tr("(%1)  1 item modified").arg(typeStr);
@@ -66,7 +67,7 @@ namespace UndoRedo {
 
 
     private:
-        QVector<ArtworkMetadataBackup*> m_ArtworksBackups;
+        std::vector<ArtworkMetadataBackup> m_ArtworksBackups;
         QVector<int> m_Indices;
         ModificationType m_ModificationType;
     };

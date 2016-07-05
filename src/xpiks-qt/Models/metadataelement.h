@@ -27,16 +27,45 @@
 #include "artworkmetadata.h"
 
 namespace Models {
+    // kind of smart pointer over ArtworkMetadata
     class MetadataElement
     {
     public:
-        MetadataElement(ArtworkMetadata *metadata, int index) :
+        MetadataElement(ArtworkMetadata *metadata, int index):
             m_ArtworkMetadata(metadata),
             m_OriginalIndex(index),
             m_IsSelected(false)
-        {}
+        {
+            if (m_ArtworkMetadata != nullptr) {
+                m_ArtworkMetadata->acquire();
+            }
+        }
 
-        virtual ~MetadataElement() {}
+        MetadataElement(MetadataElement &&other):
+            m_ArtworkMetadata(other.m_ArtworkMetadata),
+            m_OriginalIndex(other.m_OriginalIndex),
+            m_IsSelected(other.m_IsSelected)
+        {
+            other.m_ArtworkMetadata = nullptr;
+        }
+
+        MetadataElement &operator=(MetadataElement &&other) {
+            if (this != &other) {
+                releaseArtwork();
+
+                m_ArtworkMetadata = other.m_ArtworkMetadata;
+                m_OriginalIndex = other.m_OriginalIndex;
+                m_IsSelected = other.m_IsSelected;
+
+                other.m_ArtworkMetadata = nullptr;
+            }
+
+            return *this;
+        }
+
+        virtual ~MetadataElement() {
+            releaseArtwork();
+        }
 
     public:        
         bool isSelected() const { return m_IsSelected; }
@@ -45,6 +74,26 @@ namespace Models {
     public:
         ArtworkMetadata *getOrigin() const { return m_ArtworkMetadata; }
         int getOriginalIndex() const { return m_OriginalIndex; }
+
+#ifdef CORE_TESTS
+        void freeMetadata() {
+            if (m_ArtworkMetadata != nullptr) {
+                m_ArtworkMetadata->release();
+                delete m_ArtworkMetadata;
+                m_ArtworkMetadata = nullptr;
+            }
+        }
+#endif
+
+    private:
+        void releaseArtwork() {
+            if (m_ArtworkMetadata != nullptr) {
+                m_ArtworkMetadata->release();
+            }
+        }
+
+        MetadataElement &operator=(const MetadataElement &);
+        MetadataElement(const MetadataElement &);
 
     private:
         ArtworkMetadata *m_ArtworkMetadata;

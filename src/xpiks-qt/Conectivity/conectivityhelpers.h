@@ -24,6 +24,7 @@
 
 #include <QStringList>
 #include <QVector>
+#include <memory>
 #include "uploadcontext.h"
 
 namespace Models {
@@ -45,7 +46,7 @@ namespace Conectivity {
                            QStringList &zipsPathes);
 
     void generateUploadContexts(const QVector<Models::UploadInfo *> &uploadInfos,
-                                QVector<QSharedPointer<UploadContext> > &contexts,
+                                QVector<std::shared_ptr<UploadContext> > &contexts,
                                 Encryption::SecretsManager *secretsManager,
                                 Models::SettingsModel *settingsModel);
 

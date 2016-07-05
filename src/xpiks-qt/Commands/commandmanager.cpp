@@ -181,12 +181,12 @@ void Commands::CommandManager::InjectDependency(QMLExtensions::ImageCachingServi
     Q_ASSERT(imageCachingService != NULL); m_ImageCachingService = imageCachingService;
 }
 
-QSharedPointer<Commands::ICommandResult> Commands::CommandManager::processCommand(const QSharedPointer<ICommandBase> &command)
+std::shared_ptr<Commands::ICommandResult> Commands::CommandManager::processCommand(const std::shared_ptr<ICommandBase> &command)
 #ifndef CORE_TESTS
 const
 #endif
 {
-    QSharedPointer<Commands::ICommandResult> result = command->execute(this);
+    std::shared_ptr<Commands::ICommandResult> result = command->execute(this);
     result->afterExecCallback(this);
     return result;
 }
@@ -198,7 +198,7 @@ void Commands::CommandManager::addWarningsService(Common::IServiceBase<Common::I
     }
 }
 
-void Commands::CommandManager::recordHistoryItem(UndoRedo::IHistoryItem *historyItem) const {
+void Commands::CommandManager::recordHistoryItem(std::unique_ptr<UndoRedo::IHistoryItem> &historyItem) const {
     if (m_UndoRedoManager) {
         m_UndoRedoManager->recordHistoryItem(historyItem);
     }
@@ -288,18 +288,20 @@ void Commands::CommandManager::recodePasswords(const QString &oldMasterPassword,
     }
 }
 
-void Commands::CommandManager::combineArtwork(Models::MetadataElement *itemInfo) const {
-    Q_ASSERT(itemInfo != NULL);
-    LOG_DEBUG << "one item with index" << itemInfo->getOriginalIndex();
+void Commands::CommandManager::combineArtwork(Models::ArtworkMetadata *metadata, int index) const {
+    LOG_DEBUG << "one item with index" << index;
     if (m_CombinedArtworksModel) {
+        std::vector<Models::MetadataElement> items;
+        items.emplace_back(metadata, index);
+
         m_CombinedArtworksModel->resetModelData();
-        m_CombinedArtworksModel->initArtworks(QVector<Models::MetadataElement *>() << itemInfo);
+        m_CombinedArtworksModel->initArtworks(items);
         m_CombinedArtworksModel->recombineArtworks();
     }
 }
 
-void Commands::CommandManager::combineArtworks(const QVector<Models::MetadataElement *> &artworks) const {
-    LOG_DEBUG << artworks.length() << "artworks";
+void Commands::CommandManager::combineArtworks(std::vector<Models::MetadataElement> &artworks) const {
+    LOG_DEBUG << artworks.size() << "artworks";
     if (m_CombinedArtworksModel) {
         m_CombinedArtworksModel->resetModelData();
         m_CombinedArtworksModel->initArtworks(artworks);

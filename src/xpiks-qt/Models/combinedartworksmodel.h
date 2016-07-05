@@ -29,6 +29,8 @@
 #include <QList>
 #include <QSet>
 #include <QQuickTextDocument>
+#include <memory>
+#include <vector>
 #include "../Common/abstractlistmodel.h"
 #include "../Common/baseentity.h"
 #include "../Common/basickeywordsmodel.h"
@@ -36,10 +38,9 @@
 #include "../SpellCheck/spellcheckiteminfo.h"
 #include "../Helpers/ifilenotavailablemodel.h"
 #include "../Common/hold.h"
+#include "../Models/metadataelement.h"
 
 namespace Models {
-    class MetadataElement;
-
     class CombinedArtworksModel :
             public Common::AbstractListModel,
             public Common::BaseEntity,
@@ -58,10 +59,10 @@ namespace Models {
 
     public:
         CombinedArtworksModel(QObject *parent = 0);
-        virtual ~CombinedArtworksModel();
+        virtual ~CombinedArtworksModel() {}
 
     public:
-        void initArtworks(const QVector<MetadataElement *> &artworks);
+        void initArtworks(std::vector<MetadataElement> &artworks);
 
     private:
         void initKeywords(const QStringList &ek) { m_CommonKeywordsModel.setKeywords(ek); m_AreKeywordsModified = false; }
@@ -123,7 +124,7 @@ namespace Models {
 
     public:
         int getSelectedArtworksCount() const;
-        int getArtworksCount() const { return m_ArtworksList.length(); }
+        size_t getArtworksCount() const { return m_ArtworksList.size(); }
         void generateAboutToBeRemoved();
 
 #ifdef INTEGRATION_TESTS
@@ -134,6 +135,7 @@ namespace Models {
         QStringList getKeywords();
         bool getAreKeywordsModified() const { return m_AreKeywordsModified; }
         bool getIsDescriptionModified() const { return m_IsDescriptionModified; }
+        std::vector<MetadataElement> &getItems() { return m_ArtworksList; }
 #endif
 
     public:
@@ -189,7 +191,7 @@ namespace Models {
         void removeInnerItem(int row);
 
     private:
-        QVector<MetadataElement*> m_ArtworksList;
+        std::vector<MetadataElement> m_ArtworksList;
         Common::Hold m_HoldPlaceholder;
         Common::BasicKeywordsModel m_CommonKeywordsModel;
         SpellCheck::SpellCheckItemInfo m_SpellCheckInfo;

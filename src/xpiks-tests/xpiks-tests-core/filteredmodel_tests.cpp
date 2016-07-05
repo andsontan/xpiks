@@ -29,11 +29,11 @@ void FilteredModelTests::invertSelectionForEmptyTest(){
     QCOMPARE(selected, allItemsCount);
 }
 
-void FilteredModelTests::invertSelectionForAllSelectedTest(){
+void FilteredModelTests::invertSelectionForAllSelectedTest() {
     DECLARE_MODELS_AND_GENERATE(10);
 
     int allItemsCount = filteredItemsModel.getItemsCount();
-    for (int i =0; i < allItemsCount; i++) {
+    for (int i = 0; i < allItemsCount; i++) {
         artItemsModelMock.getArtwork(i)->setIsSelected(true);
     }
 
@@ -70,11 +70,11 @@ void FilteredModelTests::invertSelectionForHalfSelectedTest(){
     QCOMPARE(selected, (allItemsCount - allItemsCount/2));
 }
 
-void FilteredModelTests::invertSelectionForEvenCountTest(){
+void FilteredModelTests::invertSelectionForEvenCountTest() {
     DECLARE_MODELS_AND_GENERATE(10);
 
     int allItemsCount = filteredItemsModel.getItemsCount();
-    for (int i =0; i<allItemsCount; i++) {
+    for (int i = 0; i < allItemsCount; i++) {
         artItemsModelMock.getArtwork(i)->setIsSelected(i < allItemsCount/3);
     }
 

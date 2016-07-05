@@ -30,28 +30,27 @@
 
 Commands::PasteKeywordsCommand::~PasteKeywordsCommand() {
     LOG_DEBUG << "#";
-    qDeleteAll(m_MetadataElements);
 }
 
-QSharedPointer<Commands::ICommandResult> Commands::PasteKeywordsCommand::execute(const ICommandManager *commandManagerInterface) const {
-    LOG_INFO << "Pasting" << m_KeywordsList.length() << "keywords to" << m_MetadataElements.length() << "item(s)";
+std::shared_ptr<Commands::ICommandResult> Commands::PasteKeywordsCommand::execute(const ICommandManager *commandManagerInterface) const {
+    LOG_INFO << "Pasting" << m_KeywordsList.length() << "keywords to" << m_MetadataElements.size() << "item(s)";
 
     CommandManager *commandManager = (CommandManager*)commandManagerInterface;
 
     QVector<int> indicesToUpdate;
-    QVector<UndoRedo::ArtworkMetadataBackup*> artworksBackups;
+    std::vector<UndoRedo::ArtworkMetadataBackup> artworksBackups;
     QVector<Models::ArtworkMetadata*> itemsToSave;
-    int size = m_MetadataElements.length();
+    size_t size = m_MetadataElements.size();
     indicesToUpdate.reserve(size);
     artworksBackups.reserve(size);
     itemsToSave.reserve(size);
 
-    for (int i = 0; i < size; ++i) {
-        Models::MetadataElement *itemInfo = m_MetadataElements.at(i);
-        Models::ArtworkMetadata *metadata = itemInfo->getOrigin();
+    for (size_t i = 0; i < size; ++i) {
+        const Models::MetadataElement &element = m_MetadataElements.at(i);
+        Models::ArtworkMetadata *metadata = element.getOrigin();
 
-        indicesToUpdate.append(itemInfo->getOriginalIndex());
-        artworksBackups.append(new UndoRedo::ArtworkMetadataBackup(metadata));
+        indicesToUpdate.append(element.getOriginalIndex());
+        artworksBackups.emplace_back(metadata);
 
         metadata->appendKeywords(m_KeywordsList);
         itemsToSave.append(metadata);
@@ -62,15 +61,14 @@ QSharedPointer<Commands::ICommandResult> Commands::PasteKeywordsCommand::execute
         commandManager->submitForWarningsCheck(itemsToSave);
         commandManager->saveArtworksBackups(itemsToSave);
 
-        UndoRedo::ModifyArtworksHistoryItem *modifyArtworksItem =
-                new UndoRedo::ModifyArtworksHistoryItem(artworksBackups, indicesToUpdate,
-                                                        UndoRedo::PasteModificationType);
+        std::unique_ptr<UndoRedo::IHistoryItem> modifyArtworksItem(new UndoRedo::ModifyArtworksHistoryItem(artworksBackups, indicesToUpdate,
+                                                                                                           UndoRedo::PasteModificationType));
         commandManager->recordHistoryItem(modifyArtworksItem);
     } else {
         LOG_WARNING << "Pasted zero real words!";
     }
 
-    QSharedPointer<PasteKeywordsCommandResult> result(new PasteKeywordsCommandResult(indicesToUpdate));
+    std::shared_ptr<PasteKeywordsCommandResult> result(new PasteKeywordsCommandResult(indicesToUpdate));
     return result;
 }
 

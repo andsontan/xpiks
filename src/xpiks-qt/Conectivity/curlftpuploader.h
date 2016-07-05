@@ -26,7 +26,7 @@
 #include <QString>
 #include <QStringList>
 #include <QVector>
-#include <QSharedPointer>
+#include <memory>
 #include "uploadcontext.h"
 
 namespace Conectivity {

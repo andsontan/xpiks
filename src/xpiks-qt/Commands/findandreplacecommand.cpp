@@ -10,37 +10,39 @@
 #include "../Helpers/filterhelpers.h"
 
 namespace Commands {
-    FindAndReplaceCommand::~FindAndReplaceCommand() {}
+    FindAndReplaceCommand::~FindAndReplaceCommand() { LOG_DEBUG << "#"; }
 
-    QSharedPointer<Commands::ICommandResult> FindAndReplaceCommand::execute(const ICommandManager *commandManagerInterface) const {
+    std::shared_ptr<Commands::ICommandResult> FindAndReplaceCommand::execute(const ICommandManager *commandManagerInterface) const {
         CommandManager *commandManager = (CommandManager *)commandManagerInterface;
 
-        QVector<UndoRedo::ArtworkMetadataBackup *> artworksBackups;
+        std::vector<UndoRedo::ArtworkMetadataBackup> artworksBackups;
         QVector<int> indicesToUpdate;
         QVector<Models::ArtworkMetadata *> itemsToSave;
 
-        int size = m_MetadataElements.size();
-        itemsToSave.reserve(size);
-        indicesToUpdate.reserve(size);
+        size_t size = m_MetadataElements.size();
+        itemsToSave.reserve((int)size);
+        indicesToUpdate.reserve((int)size);
 
-        for (int i = 0; i < size; i++) {
-            Models::ArtworkMetadata *metadata = m_MetadataElements[i]->getOrigin();
-            int index = m_MetadataElements[i]->getOriginalIndex();
-            UndoRedo::ArtworkMetadataBackup *backup = new UndoRedo::ArtworkMetadataBackup(metadata);
+        for (size_t i = 0; i < size; i++) {
+            const Models::MetadataElement &element = m_MetadataElements.at(i);
+            Models::ArtworkMetadata *metadata = element.getOrigin();
+            int index = element.getOriginalIndex();
+
+            artworksBackups.emplace_back(metadata);
+
             metadata->replace(m_ReplaceWhat, m_ReplaceTo, m_Flags);
+
             itemsToSave.append(metadata);
-            artworksBackups.append(backup);
             indicesToUpdate.append(index);
         }
 
         if (indicesToUpdate.size() != 0) {
-            UndoRedo::ModifyArtworksHistoryItem *modifyArtworksItem =
-                new UndoRedo::ModifyArtworksHistoryItem(artworksBackups, indicesToUpdate,
-                                                        UndoRedo::CombinedEditModificationType);
+            std::unique_ptr<UndoRedo::IHistoryItem> modifyArtworksItem(new UndoRedo::ModifyArtworksHistoryItem(artworksBackups, indicesToUpdate,
+                                                                                                               UndoRedo::CombinedEditModificationType));
             commandManager->recordHistoryItem(modifyArtworksItem);
         }
 
-        QSharedPointer<ICommandResult> result(new FindAndReplaceCommandResult(itemsToSave, indicesToUpdate));
+        std::shared_ptr<ICommandResult> result(new FindAndReplaceCommandResult(itemsToSave, indicesToUpdate));
         return result;
     }
 

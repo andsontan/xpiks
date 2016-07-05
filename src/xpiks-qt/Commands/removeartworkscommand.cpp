@@ -33,7 +33,7 @@
 #include "../Models/imageartwork.h"
 
 namespace Commands {
-    QSharedPointer<ICommandResult> RemoveArtworksCommand::execute(const ICommandManager *commandManagerInterface) const {
+    std::shared_ptr<ICommandResult> RemoveArtworksCommand::execute(const ICommandManager *commandManagerInterface) const {
         LOG_INFO << "removing" << m_RangesToRemove.length() << "ranges received";
         CommandManager *commandManager = (CommandManager*)commandManagerInterface;
 
@@ -92,10 +92,10 @@ namespace Commands {
             artItemsModel->updateModifiedCount();
 
             if (!removedItemsFilepathes.empty()) {
-                UndoRedo::RemoveArtworksHistoryItem *removeArtworksItem =
+                std::unique_ptr<UndoRedo::IHistoryItem> removeArtworksItem(
                         new UndoRedo::RemoveArtworksHistoryItem(removedItemsIndices,
                                                             removedItemsFilepathes,
-                                                            removedAttachedVectors);
+                                                            removedAttachedVectors));
                 commandManager->recordHistoryItem(removeArtworksItem);
             }
 
@@ -104,7 +104,7 @@ namespace Commands {
         }
 
         // TODO: to be filled with useful return data in future
-        QSharedPointer<ICommandResult> result(new RemoveArtworksCommandResult(artworksToRemoveCount));
+        std::shared_ptr<ICommandResult> result(new RemoveArtworksCommandResult(artworksToRemoveCount));
         return result;
     }
 }

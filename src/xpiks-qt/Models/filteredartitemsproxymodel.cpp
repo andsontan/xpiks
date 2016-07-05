@@ -101,7 +101,7 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::combineSelectedArtworks() {
-        QVector<MetadataElement *> artworksList = getSelectedOriginalItemsWithIndices();
+        auto artworksList = getSelectedOriginalItemsWithIndices();
         m_CommandManager->combineArtworks(artworksList);
     }
 
@@ -198,7 +198,7 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::removeMetadataInSelected() const {
-        QVector<MetadataElement *> selectedArtworks = getSelectedOriginalItemsWithIndices();
+        auto selectedArtworks = getSelectedOriginalItemsWithIndices();
         int flags = 0;
         Common::SetFlag(flags, Common::EditDesctiption);
         Common::SetFlag(flags, Common::EditKeywords);
@@ -213,8 +213,7 @@ namespace Models {
         ArtworkMetadata *metadata = artItemsModel->getArtwork(originalIndex);
 
         if (metadata != NULL) {
-            MetadataElement *info = new MetadataElement(metadata, originalIndex);
-            removeKeywordsInItem(info);
+            removeKeywordsInItem(metadata, originalIndex);
         }
     }
 
@@ -346,22 +345,24 @@ namespace Models {
         }
     }
 
-    void FilteredArtItemsProxyModel::removeMetadataInItems(const QVector<MetadataElement *> &itemsToClear, int flags) const {
-        LOG_DEBUG << itemsToClear.length() << "item(s) with flags =" << flags;
-        QSharedPointer<Commands::CombinedEditCommand> combinedEditCommand(new Commands::CombinedEditCommand(
+    void FilteredArtItemsProxyModel::removeMetadataInItems(std::vector<MetadataElement> &itemsToClear, int flags) const {
+        LOG_DEBUG << itemsToClear.size() << "item(s) with flags =" << flags;
+        std::shared_ptr<Commands::CombinedEditCommand> combinedEditCommand(new Commands::CombinedEditCommand(
                 flags,
                 itemsToClear));
 
         m_CommandManager->processCommand(combinedEditCommand);
-        qDeleteAll(itemsToClear);
     }
 
-    void FilteredArtItemsProxyModel::removeKeywordsInItem(MetadataElement *itemToClear) {
+    void FilteredArtItemsProxyModel::removeKeywordsInItem(ArtworkMetadata *metadata, int originalIndex) {
         int flags = 0;
         Common::SetFlag(flags, Common::EditKeywords);
         Common::SetFlag(flags, Common::Clear);
 
-        removeMetadataInItems(QVector<MetadataElement *>() << itemToClear, flags);
+        std::vector<MetadataElement> items;
+        items.emplace_back(metadata, originalIndex);
+
+        removeMetadataInItems(items, flags);
     }
 
     void FilteredArtItemsProxyModel::setFilteredItemsSelected(bool selected) {
@@ -411,45 +412,31 @@ namespace Models {
     }
 
     QVector<ArtworkMetadata *> FilteredArtItemsProxyModel::getSelectedOriginalItems() const {
-        ArtItemsModel *artItemsModel = getArtItemsModel();
+        std::vector<ArtworkMetadata*> items = getFilteredOriginalItems<ArtworkMetadata*>(
+                    [](ArtworkMetadata *metadata) { return metadata->isSelected(); },
+                [] (ArtworkMetadata *metadata, int) { return metadata; });
 
-        QVector<ArtworkMetadata *> selectedArtworks;
-        int size = this->rowCount();
-        selectedArtworks.reserve(size);
-
-        for (int row = 0; row < size; ++row) {
-            QModelIndex proxyIndex = this->index(row, 0);
-            QModelIndex originalIndex = this->mapToSource(proxyIndex);
-
-            int index = originalIndex.row();
-            ArtworkMetadata *metadata = artItemsModel->getArtwork(index);
-
-            if (metadata != NULL && metadata->isSelected()) {
-                selectedArtworks.append(metadata);
-            }
-        }
-
-        return selectedArtworks;
+        return QVector<ArtworkMetadata*>::fromStdVector(items);
     }
 
-    QVector<MetadataElement *> FilteredArtItemsProxyModel::getSelectedOriginalItemsWithIndices() const {
+    std::vector<MetadataElement> FilteredArtItemsProxyModel::getSelectedOriginalItemsWithIndices() const {
         return getFilteredOriginalItems<MetadataElement>(
                     [](ArtworkMetadata *artwork) { return artwork->isSelected(); },
-        [] (ArtworkMetadata *metadata, int index) { return new MetadataElement(metadata, index); });
+        [] (ArtworkMetadata *metadata, int index) { return MetadataElement(metadata, index); });
     }
 
-    QVector<MetadataElement *> FilteredArtItemsProxyModel::getAllItemsWithIndices() const {
+    std::vector<MetadataElement> FilteredArtItemsProxyModel::getAllItemsWithIndices() const {
         return getFilteredOriginalItems<MetadataElement>(
                     [](ArtworkMetadata *) { return true; },
-        [] (ArtworkMetadata *metadata, int index) { return new MetadataElement(metadata, index); });
+        [] (ArtworkMetadata *metadata, int index) { return MetadataElement(metadata, index); });
     }
 
     template<typename T>
-    QVector<T *> FilteredArtItemsProxyModel::getFilteredOriginalItems(std::function<bool (ArtworkMetadata *)> pred,
-                                                                                 std::function<T *(ArtworkMetadata *, int)> mapper) const {
+    std::vector<T> FilteredArtItemsProxyModel::getFilteredOriginalItems(std::function<bool (ArtworkMetadata *)> pred,
+                                                                        std::function<T (ArtworkMetadata *, int)> mapper) const {
         ArtItemsModel *artItemsModel = getArtItemsModel();
 
-        QVector<T *> filteredArtworks;
+        std::vector<T> filteredArtworks;
         int size = this->rowCount();
         filteredArtworks.reserve(size);
 
@@ -461,8 +448,7 @@ namespace Models {
             ArtworkMetadata *metadata = artItemsModel->getArtwork(index);
 
             if (metadata != NULL && pred(metadata)) {
-                T *info = mapper(metadata, index);
-                filteredArtworks.append(info);
+                filteredArtworks.push_back(mapper(metadata, index));
             }
         }
 
@@ -470,47 +456,19 @@ namespace Models {
     }
 
     QVector<ArtworkMetadata *> FilteredArtItemsProxyModel::getAllOriginalItems() const {
-        ArtItemsModel *artItemsModel = getArtItemsModel();
+        std::vector<ArtworkMetadata*> items = getFilteredOriginalItems<ArtworkMetadata*>(
+                    [](ArtworkMetadata *) { return true; },
+                [] (ArtworkMetadata *metadata, int) { return metadata; });
 
-        QVector<ArtworkMetadata *> allArtworks;
-        int size = this->rowCount();
-        allArtworks.reserve(size);
-
-        for (int row = 0; row < size; ++row) {
-            QModelIndex proxyIndex = this->index(row, 0);
-            QModelIndex originalIndex = this->mapToSource(proxyIndex);
-
-            int index = originalIndex.row();
-            ArtworkMetadata *metadata = artItemsModel->getArtwork(index);
-
-            if (metadata != NULL) {
-                allArtworks.append(metadata);
-            }
-        }
-
-        return allArtworks;
+        return QVector<ArtworkMetadata*>::fromStdVector(items);
     }
 
     QVector<int> FilteredArtItemsProxyModel::getSelectedOriginalIndices() const {
-        ArtItemsModel *artItemsModel = getArtItemsModel();
+        std::vector<int> items = getFilteredOriginalItems<int>(
+                    [](ArtworkMetadata *metadata) { return metadata->isSelected(); },
+                [] (ArtworkMetadata *, int index) { return index; });
 
-        QVector<int> selectedIndices;
-        int size = this->rowCount();
-        selectedIndices.reserve(size);
-
-        for (int row = 0; row < size; ++row) {
-            QModelIndex proxyIndex = this->index(row, 0);
-            QModelIndex originalIndex = this->mapToSource(proxyIndex);
-
-            int index = originalIndex.row();
-            ArtworkMetadata *metadata = artItemsModel->getArtwork(index);
-
-            if (metadata != NULL && metadata->isSelected()) {
-                selectedIndices.append(index);
-            }
-        }
-
-        return selectedIndices;
+        return QVector<int>::fromStdVector(items);
     }
 
     void FilteredArtItemsProxyModel::forceUnselectAllItems() {
@@ -592,12 +550,12 @@ namespace Models {
 
 #endif
 
-    QVector<MetadataElement *> FilteredArtItemsProxyModel::getSearchableOriginalItems(const QString &searchTerm, int flags) const {
+    std::vector<MetadataElement> FilteredArtItemsProxyModel::getSearchableOriginalItems(const QString &searchTerm, int flags) const {
         return getFilteredOriginalItems<MetadataElement>(
                     [&searchTerm, flags](ArtworkMetadata *artwork) {
             return Helpers::hasSearchMatch(searchTerm, artwork, flags);
         },
-        [] (ArtworkMetadata *metadata, int index) { return new MetadataElement(metadata, index); });
+        [] (ArtworkMetadata *metadata, int index) { return MetadataElement(metadata, index); });
     }
 
     void FilteredArtItemsProxyModel::findAndReplace(bool searchTitle, bool searchDescription, bool searchKeywords, bool caseSensitive,
@@ -608,8 +566,8 @@ namespace Models {
         Common::ApplyFlag(flags, searchKeywords, Common::SearchFlagSearchKeywords);
         Common::ApplyFlag(flags, caseSensitive, Common::SearchFlagCaseSensitive);
 
-        QVector<MetadataElement *> artWorksInfo = getSearchableOriginalItems(replaceFrom, flags);
-        QSharedPointer<Commands::FindAndReplaceCommand> replaceCommand(new Commands::FindAndReplaceCommand(artWorksInfo, replaceFrom, replaceTo,
+        std::vector<MetadataElement> artWorksInfo = getSearchableOriginalItems(replaceFrom, flags);
+        std::shared_ptr<Commands::FindAndReplaceCommand> replaceCommand(new Commands::FindAndReplaceCommand(artWorksInfo, replaceFrom, replaceTo,
                                                                                                            flags));
         m_CommandManager->processCommand(replaceCommand);
     }

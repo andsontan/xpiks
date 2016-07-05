@@ -42,8 +42,8 @@ void UndoRedo::ModifyArtworksHistoryItem::undo(const Commands::ICommandManager *
         int index = m_Indices[i];
         Models::ArtworkMetadata *metadata = artItemsModel->getArtwork(index);
         if (metadata != NULL) {
-            ArtworkMetadataBackup *backup = m_ArtworksBackups[i];
-            backup->restore(metadata);
+            const ArtworkMetadataBackup &backup = m_ArtworksBackups.at(i);
+            backup.restore(metadata);
             itemsToSave.append(metadata);
         }
     }
@@ -57,9 +57,9 @@ void UndoRedo::ModifyArtworksHistoryItem::undo(const Commands::ICommandManager *
 QString UndoRedo::getModificationTypeDescription(UndoRedo::ModificationType type) {
     switch (type) {
     case PasteModificationType:
-        return QLatin1String("Paste");
+        return QObject::tr("Paste");
     case CombinedEditModificationType:
-        return QLatin1String("Multiple edit");
+        return QObject::tr("Multiple edit");
     default:
         return QLatin1String("");
     }

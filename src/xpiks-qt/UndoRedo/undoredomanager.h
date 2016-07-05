@@ -23,7 +23,8 @@
 #define UNDOREDOMANAGER_H
 
 #include <QObject>
-#include <QStack>
+#include <stack>
+#include <memory>
 #include <QMutex>
 #include "../Commands/commandmanager.h"
 #include "../Common/baseentity.h"
@@ -61,13 +62,13 @@ namespace UndoRedo {
         QString getUndoDescription() const { return m_HistoryStack.empty() ? "" : m_HistoryStack.top()->getDescription(); }
 
     public:
-        virtual void recordHistoryItem(IHistoryItem *historyItem);
+        virtual void recordHistoryItem(std::unique_ptr<UndoRedo::IHistoryItem> &historyItem);
         Q_INVOKABLE bool undoLastAction();
         Q_INVOKABLE void discardLastAction();
 
     private:
         // stack for future todos
-        QStack<IHistoryItem*> m_HistoryStack;
+        std::stack<std::unique_ptr<IHistoryItem> > m_HistoryStack;
         QMutex m_Mutex;
     };
 }

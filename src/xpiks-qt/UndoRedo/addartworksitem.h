@@ -27,9 +27,9 @@
 #include <QPair>
 #include "historyitem.h"
 #include "../Helpers/indiceshelper.h"
+#include "../Common/defines.h"
 
 namespace UndoRedo {
-
    class AddArtworksHistoryItem : public HistoryItem
     {
     public:
@@ -47,7 +47,7 @@ namespace UndoRedo {
             Q_ASSERT(!rangesAdded.empty());
         }
 
-       virtual ~AddArtworksHistoryItem() { }
+       virtual ~AddArtworksHistoryItem() { LOG_DEBUG << "#"; }
 
    public:
         virtual void undo(const Commands::ICommandManager *commandManagerInterface) const;

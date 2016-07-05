@@ -22,7 +22,7 @@
 #ifndef ICOMMANDBASE_H
 #define ICOMMANDBASE_H
 
-#include <QSharedPointer>
+#include <memory>
 
 namespace Commands {
     class ICommandManager;
@@ -38,7 +38,7 @@ namespace Commands {
     public:
         virtual ~ICommandBase() {}
 
-        virtual QSharedPointer<ICommandResult> execute(const ICommandManager *commandManager) const = 0;
+        virtual std::shared_ptr<ICommandResult> execute(const ICommandManager *commandManager) const = 0;
         virtual int getCommandType() const = 0;
     };
 }

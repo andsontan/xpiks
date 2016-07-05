@@ -22,7 +22,7 @@
 #ifndef ICOMMANDMANAGER_H
 #define ICOMMANDMANAGER_H
 
-#include <QSharedPointer>
+#include <memory>
 
 #include "../Common/iservicebase.h"
 #include "../Common/ibasicartwork.h"
@@ -35,7 +35,7 @@ namespace Commands {
     public:
         virtual ~ICommandManager() {}
 
-        virtual QSharedPointer<Commands::ICommandResult> processCommand(const QSharedPointer<ICommandBase> &command)
+        virtual std::shared_ptr<Commands::ICommandResult> processCommand(const std::shared_ptr<ICommandBase> &command)
 #ifndef CORE_TESTS
         const
 #endif

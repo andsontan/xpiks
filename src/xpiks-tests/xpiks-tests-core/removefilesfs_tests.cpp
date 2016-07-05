@@ -62,12 +62,12 @@ void RemoveFilesFsTests::removeArtworksNumberItems() {
 
     combinedModel.resetModelData();
 
-    QVector<Models::MetadataElement *> itemInfos;
+    std::vector<Models::MetadataElement> itemInfos;
     QVector<Models::ArtworkMetadata *> artworksList;
 
     for (int i = 0; i < itemsToAdd; i++) {
          Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
-         itemInfos.append(new Models::MetadataElement(metadata, i));
+         itemInfos.emplace_back(metadata, i);
          artworksList.append(metadata);
     }
 
@@ -86,8 +86,8 @@ void RemoveFilesFsTests::removeArtworksNumberItems() {
     commandManagerMock.mockAcceptDeletion();
 
 //items
-    QCOMPARE(artItemsModelMock.getArtworksCount(), itemsToAdd - itemsToDelete);
-    QCOMPARE(combinedModel.getArtworksCount(), itemsToAdd - itemsToDelete);
+    QCOMPARE(artItemsModelMock.getArtworksCount(), (size_t)(itemsToAdd - itemsToDelete));
+    QCOMPARE(combinedModel.getArtworksCount(), (size_t)(itemsToAdd - itemsToDelete));
     QCOMPARE(filteredItemsModel.getItemsCount(), itemsToAdd - itemsToDelete);
     QCOMPARE(zipArchive.getItemsCount(), itemsToAdd - itemsToDelete);
     QCOMPARE(artworkUpload.getItemsCount(), itemsToAdd - itemsToDelete);
@@ -98,12 +98,12 @@ void RemoveFilesFsTests::removeArtworksAllItems() {
     DECLARE_MODELS_AND_GENERATE_(itemsToAdd);
 
     combinedModel.resetModelData();
-    QVector<Models::MetadataElement *> itemInfos;
+    std::vector<Models::MetadataElement> itemInfos;
     QVector<Models::ArtworkMetadata *> artworksList;
 
     for (int i = 0; i < itemsToAdd; i++) {
          Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
-         itemInfos.append(new Models::MetadataElement(metadata, i));
+         itemInfos.emplace_back(metadata, i);
          artworksList.append(metadata);
     }
 
@@ -122,8 +122,8 @@ void RemoveFilesFsTests::removeArtworksAllItems() {
     commandManagerMock.mockAcceptDeletion();
 
 //items
-    QCOMPARE(artItemsModelMock.getArtworksCount(), itemsToAdd - itemsToDelete);
-    QCOMPARE(combinedModel.getArtworksCount(), itemsToAdd - itemsToDelete);
+    QCOMPARE(artItemsModelMock.getArtworksCount(), (size_t)(itemsToAdd - itemsToDelete));
+    QCOMPARE(combinedModel.getArtworksCount(), (size_t)(itemsToAdd - itemsToDelete));
     QCOMPARE(filteredItemsModel.getItemsCount(), itemsToAdd - itemsToDelete);
     QCOMPARE(zipArchive.getItemsCount(), itemsToAdd - itemsToDelete);
     QCOMPARE(artworkUpload.getItemsCount(), itemsToAdd - itemsToDelete);

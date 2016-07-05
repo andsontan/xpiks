@@ -24,15 +24,14 @@
 
 #include <QStringList>
 #include <QString>
+#include <vector>
 #include <QVector>
 #include "commandbase.h"
+#include "../Models/metadataelement.h"
 
 namespace Models {
-    class MetadataElement;
     class ArtworkMetadata;
 }
-
-namespace UndoRedo { class ArtworkMetadataBackup; }
 
 namespace Commands {
 
@@ -40,11 +39,11 @@ namespace Commands {
     {
     public:
         CombinedEditCommand(int editFlags,
-                            const QVector<Models::MetadataElement*> &infos,
+                            std::vector<Models::MetadataElement> &infos,
                             const QString &description, const QString &title,
                             const QStringList &keywords) :
             CommandBase(CombinedEditCommandType),
-            m_MetadataElements(infos),
+            m_MetadataElements(std::move(infos)),
             m_ArtworkDescription(description),
             m_ArtworkTitle(title),
             m_Keywords(keywords),
@@ -52,16 +51,16 @@ namespace Commands {
         { }
 
         CombinedEditCommand(int editFlags,
-                            const QVector<Models::MetadataElement*> &infos) :
+                            std::vector<Models::MetadataElement> &infos) :
             CommandBase(CombinedEditCommandType),
-            m_MetadataElements(infos),
+            m_MetadataElements(std::move(infos)),
             m_EditFlags(editFlags)
         { }
 
         virtual ~CombinedEditCommand();
 
     public:
-        virtual QSharedPointer<ICommandResult> execute(const ICommandManager *commandManagerInterface) const;
+        virtual std::shared_ptr<ICommandResult> execute(const ICommandManager *commandManagerInterface) const;
 
     private:
         void setKeywords(Models::ArtworkMetadata *metadata) const;
@@ -69,7 +68,7 @@ namespace Commands {
         void setTitle(Models::ArtworkMetadata *metadata) const;
 
     private:
-        QVector<Models::MetadataElement*> m_MetadataElements;
+        std::vector<Models::MetadataElement> m_MetadataElements;
         QString m_ArtworkDescription;
         QString m_ArtworkTitle;
         QStringList m_Keywords;

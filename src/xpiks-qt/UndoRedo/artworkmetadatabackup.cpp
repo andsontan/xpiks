@@ -36,6 +36,15 @@ UndoRedo::ArtworkMetadataBackup::ArtworkMetadataBackup(Models::ArtworkMetadata *
     }
 }
 
+UndoRedo::ArtworkMetadataBackup::ArtworkMetadataBackup(const UndoRedo::ArtworkMetadataBackup &copy):
+    m_Description(copy.m_Description),
+    m_Title(copy.m_Title),
+    m_AttachedVector(copy.m_AttachedVector),
+    m_KeywordsList(copy.m_KeywordsList),
+    m_IsModified(copy.m_IsModified)
+{
+}
+
 void UndoRedo::ArtworkMetadataBackup::restore(Models::ArtworkMetadata *metadata) const {
     metadata->setDescription(m_Description);
     metadata->setTitle(m_Title);

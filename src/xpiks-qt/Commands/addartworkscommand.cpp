@@ -22,7 +22,7 @@
 #include <QFileInfo>
 #include <QVector>
 #include <QHash>
-#include <QSharedPointer>
+#include <memory>
 #include "addartworkscommand.h"
 #include "commandmanager.h"
 #include "../Models/artworksrepository.h"
@@ -71,7 +71,7 @@ Commands::AddArtworksCommand::~AddArtworksCommand() {
     LOG_DEBUG << "#";
 }
 
-QSharedPointer<Commands::ICommandResult> Commands::AddArtworksCommand::execute(const ICommandManager *commandManagerInterface) const {
+std::shared_ptr<Commands::ICommandResult> Commands::AddArtworksCommand::execute(const ICommandManager *commandManagerInterface) const {
     LOG_DEBUG << m_FilePathes.length() << "images," << m_VectorsPathes.length() << "vectors";
     CommandManager *commandManager = (CommandManager*)commandManagerInterface;
 
@@ -137,7 +137,7 @@ QSharedPointer<Commands::ICommandResult> Commands::AddArtworksCommand::execute(c
 
         artworksRepository->updateCountsForExistingDirectories();
 
-        UndoRedo::AddArtworksHistoryItem *addArtworksItem = new UndoRedo::AddArtworksHistoryItem(initialCount, newFilesCount);
+        std::unique_ptr<UndoRedo::IHistoryItem> addArtworksItem(new UndoRedo::AddArtworksHistoryItem(initialCount, newFilesCount));
         commandManager->recordHistoryItem(addArtworksItem);
     } else if (attachedCount > 0) {
         artItemsModel->updateItems(modifiedIndices, QVector<int>() << Models::ArtItemsModel::HasVectorAttachedRole);
@@ -145,7 +145,7 @@ QSharedPointer<Commands::ICommandResult> Commands::AddArtworksCommand::execute(c
 
     artItemsModel->raiseArtworksAdded(newFilesCount, attachedCount);
 
-    QSharedPointer<AddArtworksCommandResult> result(new AddArtworksCommandResult(newFilesCount));
+    std::shared_ptr<AddArtworksCommandResult> result(new AddArtworksCommandResult(newFilesCount));
     return result;
 }
 

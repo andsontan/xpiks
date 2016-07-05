@@ -63,7 +63,7 @@ void ArtItemsModelTests::modificationChangesModifiedCountTest() {
 }
 
 void ArtItemsModelTests::removeArtworkDirectorySimpleTest() {
-    const int count = 11;
+    const size_t count = 11;
     DECLARE_MODELS_AND_GENERATE(count, false);
 
     int indexToRemove = 1;
@@ -94,7 +94,7 @@ void ArtItemsModelTests::setAllSavedResetsModifiedCountTest() {
 }
 
 void ArtItemsModelTests::removingLockedArtworksTest() {
-    const int count = 10;
+    const size_t count = 10;
     DECLARE_MODELS_AND_GENERATE(count, false);
 
     for (int i = 0; i < count; ++i) {
@@ -103,7 +103,7 @@ void ArtItemsModelTests::removingLockedArtworksTest() {
 
     QCOMPARE(artItemsModelMock.getFinalizationList().size(), (size_t)0);
     artItemsModelMock.deleteAllItems();
-    QCOMPARE(artItemsModelMock.getFinalizationList().size(), (size_t)count);
+    QCOMPARE(artItemsModelMock.getFinalizationList().size(), count);
 }
 
 void ArtItemsModelTests::plainTextEditToEmptyKeywordsTest() {

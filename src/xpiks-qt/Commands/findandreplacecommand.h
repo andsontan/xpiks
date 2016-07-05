@@ -15,20 +15,22 @@ namespace Commands {
         public CommandBase
     {
     public:
-        FindAndReplaceCommand(const QVector<Models::MetadataElement *> &metadataElements, const QString &replaceWhat, const QString &replaceTo, int flags):
+        FindAndReplaceCommand(std::vector<Models::MetadataElement> &metadataElements,
+                              const QString &replaceWhat, const QString &replaceTo, int flags):
             CommandBase(FindAndReplaceCommandType),
-            m_MetadataElements(metadataElements),
+            m_MetadataElements(std::move(metadataElements)),
             m_ReplaceWhat(replaceWhat),
             m_ReplaceTo(replaceTo),
             m_Flags(flags)
         {}
+
         virtual ~FindAndReplaceCommand();
 
     public:
-        QSharedPointer<Commands::ICommandResult> execute(const ICommandManager *commandManagerInterface) const;
+        std::shared_ptr<Commands::ICommandResult> execute(const ICommandManager *commandManagerInterface) const;
 
     private:
-        QVector<Models::MetadataElement *>  m_MetadataElements;
+        std::vector<Models::MetadataElement> m_MetadataElements;
         QString m_ReplaceWhat;
         QString m_ReplaceTo;
         int m_Flags;

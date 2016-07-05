@@ -30,18 +30,18 @@ void UndoRedoTests::undoAddCommandTest() {
     QStringList filenames;
     filenames << "/path/to/test/image1.jpg";
 
-    QSharedPointer<Commands::AddArtworksCommand> addArtworksCommand(new Commands::AddArtworksCommand(filenames, QStringList(), false));
+    std::shared_ptr<Commands::AddArtworksCommand> addArtworksCommand(new Commands::AddArtworksCommand(filenames, QStringList(), false));
     auto result = commandManagerMock.processCommand(addArtworksCommand);
-    auto addArtworksResult = result.dynamicCast<Commands::AddArtworksCommandResult>();
+    auto addArtworksResult = std::dynamic_pointer_cast<Commands::AddArtworksCommandResult>(result);
     int newFilesCount = addArtworksResult->m_NewFilesAdded;
 
     QCOMPARE(newFilesCount, filenames.length());
-    QCOMPARE(artItemsMock.getArtworksCount(), filenames.length());
+    QCOMPARE(artItemsMock.getArtworksCount(), (size_t)filenames.length());
 
     bool undoSucceeded = undoRedoManager.undoLastAction();
     QVERIFY(undoSucceeded);
 
-    QCOMPARE(artItemsMock.getArtworksCount(), 0);
+    QCOMPARE(artItemsMock.getArtworksCount(), (size_t)0);
 }
 
 void UndoRedoTests::undoUndoAddCommandTest() {
@@ -50,13 +50,13 @@ void UndoRedoTests::undoUndoAddCommandTest() {
     QStringList filenames;
     filenames << "/path/to/test/image1.jpg";
 
-    QSharedPointer<Commands::AddArtworksCommand> addArtworksCommand(new Commands::AddArtworksCommand(filenames, QStringList(), false));
+    std::shared_ptr<Commands::AddArtworksCommand> addArtworksCommand(new Commands::AddArtworksCommand(filenames, QStringList(), false));
     auto result = commandManagerMock.processCommand(addArtworksCommand);
-    auto addArtworksResult = result.dynamicCast<Commands::AddArtworksCommandResult>();
+    auto addArtworksResult = std::dynamic_pointer_cast<Commands::AddArtworksCommandResult>(result);
     int newFilesCount = addArtworksResult->m_NewFilesAdded;
 
     QCOMPARE(newFilesCount, filenames.length());
-    QCOMPARE(artItemsMock.getArtworksCount(), filenames.length());
+    QCOMPARE(artItemsMock.getArtworksCount(), (size_t)filenames.length());
 
     bool undoSucceeded = undoRedoManager.undoLastAction();
     QVERIFY(undoSucceeded);
@@ -64,7 +64,7 @@ void UndoRedoTests::undoUndoAddCommandTest() {
     undoSucceeded = undoRedoManager.undoLastAction();
     QVERIFY(undoSucceeded);
 
-    QCOMPARE(artItemsMock.getArtworksCount(), filenames.length());
+    QCOMPARE(artItemsMock.getArtworksCount(), (size_t)filenames.length());
     for (int i = 0; i < filenames.length(); ++i) {
         QCOMPARE(artItemsMock.getArtworkFilepath(i), filenames[i]);
     }
@@ -77,13 +77,13 @@ void UndoRedoTests::undoUndoAddWithVectorsTest() {
     filenames << "/path/to/test/image1.jpg" << "/path/to/test/image2.jpg" << "/path/to/test/image3.jpg";
     vectors << "/path/to/test/image3.jpg" << "/path/to/test/image1.eps";
 
-    QSharedPointer<Commands::AddArtworksCommand> addArtworksCommand(new Commands::AddArtworksCommand(filenames, vectors, false));
+    std::shared_ptr<Commands::AddArtworksCommand> addArtworksCommand(new Commands::AddArtworksCommand(filenames, vectors, false));
     auto result = commandManagerMock.processCommand(addArtworksCommand);
-    auto addArtworksResult = result.dynamicCast<Commands::AddArtworksCommandResult>();
+    auto addArtworksResult = std::dynamic_pointer_cast<Commands::AddArtworksCommandResult>(result);
     int newFilesCount = addArtworksResult->m_NewFilesAdded;
 
     QCOMPARE(newFilesCount, filenames.length());
-    QCOMPARE(artItemsMock.getArtworksCount(), filenames.length());
+    QCOMPARE(artItemsMock.getArtworksCount(), (size_t)filenames.length());
 
     bool undoSucceeded = undoRedoManager.undoLastAction();
     QVERIFY(undoSucceeded);
@@ -92,7 +92,7 @@ void UndoRedoTests::undoUndoAddWithVectorsTest() {
     QVERIFY(undoSucceeded);
 
     QCOMPARE(newFilesCount, filenames.length());
-    QCOMPARE(artItemsMock.getArtworksCount(), filenames.length());
+    QCOMPARE(artItemsMock.getArtworksCount(), (size_t)filenames.length());
 
     Models::ImageArtwork *image1 = artItemsMock.getMockArtwork(0);
     QVERIFY(image1->hasVectorAttached());
@@ -108,14 +108,14 @@ void UndoRedoTests::undoUndoAddWithVectorsTest() {
 
 void UndoRedoTests::undoRemoveItemsTest() {
     SETUP_TEST;
-    int itemsToAdd = 5;
+    size_t itemsToAdd = 5;
     commandManagerMock.generateAndAddArtworks(itemsToAdd);
 
     QVector<QPair<int, int> > indicesToRemove;
     indicesToRemove.append(qMakePair(1, 3));
-    QSharedPointer<Commands::RemoveArtworksCommand> removeArtworkCommand(new Commands::RemoveArtworksCommand(indicesToRemove));
+    std::shared_ptr<Commands::RemoveArtworksCommand> removeArtworkCommand(new Commands::RemoveArtworksCommand(indicesToRemove));
     auto result = commandManagerMock.processCommand(removeArtworkCommand);
-    auto removeArtworksResult = result.dynamicCast<Commands::RemoveArtworksCommandResult>();
+    auto removeArtworksResult = std::dynamic_pointer_cast<Commands::RemoveArtworksCommandResult>(result);
     int artworksRemovedCount = removeArtworksResult->m_RemovedArtworksCount;
 
     QCOMPARE(artworksRemovedCount, 3);
@@ -133,9 +133,9 @@ void UndoRedoTests::undoUndoRemoveItemsTest() {
 
     QVector<QPair<int, int> > indicesToRemove;
     indicesToRemove.append(qMakePair(1, 3));
-    QSharedPointer<Commands::RemoveArtworksCommand> removeArtworkCommand(new Commands::RemoveArtworksCommand(indicesToRemove));
+    std::shared_ptr<Commands::RemoveArtworksCommand> removeArtworkCommand(new Commands::RemoveArtworksCommand(indicesToRemove));
     auto result = commandManagerMock.processCommand(removeArtworkCommand);
-    auto removeArtworksResult = result.dynamicCast<Commands::RemoveArtworksCommandResult>();
+    auto removeArtworksResult = std::dynamic_pointer_cast<Commands::RemoveArtworksCommandResult>(result);
     int artworksRemovedCount = removeArtworksResult->m_RemovedArtworksCount;
 
     QCOMPARE(artworksRemovedCount, 3);
@@ -146,7 +146,7 @@ void UndoRedoTests::undoUndoRemoveItemsTest() {
     undoStatus = undoRedoManager.undoLastAction();
     QVERIFY(undoStatus);
 
-    QCOMPARE(artItemsMock.getArtworksCount(), 2);
+    QCOMPARE(artItemsMock.getArtworksCount(), (size_t)2);
 }
 
 void UndoRedoTests::undoModifyCommandTest() {
@@ -157,11 +157,11 @@ void UndoRedoTests::undoModifyCommandTest() {
     QString originalTitle = "title";
     QString originalDescription = "some description here";
     QStringList originalKeywords = QString("test1,test2,test3").split(',');
-    QVector<Models::MetadataElement *> infos;
+    std::vector<Models::MetadataElement> infos;
 
     for (int i = 0; i < itemsToAdd; ++i) {
         artItemsMock.getArtwork(i)->initialize(originalTitle, originalDescription, originalKeywords);
-        infos.append(new Models::MetadataElement(artItemsMock.getArtwork(i), i));
+        infos.emplace_back(artItemsMock.getArtwork(i), i);
     }
 
     artItemsMock.getArtwork(0)->setModified();
@@ -170,10 +170,10 @@ void UndoRedoTests::undoModifyCommandTest() {
     QString otherDescription = "brand new description";
     QString otherTitle = "other title";
     QStringList otherKeywords = QString("another,keywords,here").split(',');
-    QSharedPointer<Commands::CombinedEditCommand> combinedEditCommand(
+    std::shared_ptr<Commands::CombinedEditCommand> combinedEditCommand(
         new Commands::CombinedEditCommand(flags, infos, otherDescription, otherTitle, otherKeywords));
     auto result = commandManagerMock.processCommand(combinedEditCommand);
-    auto combinedEditResult = result.dynamicCast<Commands::CombinedEditCommandResult>();
+    auto combinedEditResult = std::dynamic_pointer_cast<Commands::CombinedEditCommandResult>(result);
     QVector<int> indices = combinedEditResult->m_IndicesToUpdate;
 
     QCOMPARE(indices.length(), itemsToAdd);
@@ -202,11 +202,11 @@ void UndoRedoTests::undoUndoModifyCommandTest() {
     QString originalTitle = "title";
     QString originalDescription = "some description here";
     QStringList originalKeywords = QString("test1,test2,test3").split(',');
-    QVector<Models::MetadataElement *> infos;
+    std::vector<Models::MetadataElement> infos;
 
     for (int i = 0; i < itemsToAdd; ++i) {
         artItemsMock.getArtwork(i)->initialize(originalTitle, originalDescription, originalKeywords);
-        infos.append(new Models::MetadataElement(artItemsMock.getArtwork(i), i));
+        infos.emplace_back(artItemsMock.getArtwork(i), i);
     }
 
     artItemsMock.getArtwork(0)->setModified();
@@ -215,10 +215,10 @@ void UndoRedoTests::undoUndoModifyCommandTest() {
     QString otherDescription = "brand new description";
     QString otherTitle = "other title";
     QStringList otherKeywords = QString("another,keywords,here").split(',');
-    QSharedPointer<Commands::CombinedEditCommand> combinedEditCommand(
+    std::shared_ptr<Commands::CombinedEditCommand> combinedEditCommand(
         new Commands::CombinedEditCommand(flags, infos, otherDescription, otherTitle, otherKeywords));
     auto result = commandManagerMock.processCommand(combinedEditCommand);
-    auto combinedEditResult = result.dynamicCast<Commands::CombinedEditCommandResult>();
+    auto combinedEditResult = std::dynamic_pointer_cast<Commands::CombinedEditCommandResult>(result);
     QVector<int> indices = combinedEditResult->m_IndicesToUpdate;
 
     QCOMPARE(indices.length(), itemsToAdd);
@@ -238,18 +238,18 @@ void UndoRedoTests::undoPasteCommandTest() {
     QString originalTitle = "title";
     QString originalDescription = "some description here";
     QStringList originalKeywords = QString("test1,test2,test3").split(',');
-    QVector<Models::MetadataElement *> infos;
+    std::vector<Models::MetadataElement> infos;
 
     for (int i = 0; i < itemsToAdd; ++i) {
         artItemsMock.getArtwork(i)->initialize(originalTitle, originalDescription, originalKeywords);
-        infos.append(new Models::MetadataElement(artItemsMock.getArtwork(i), i));
+        infos.emplace_back(artItemsMock.getArtwork(i), i);
     }
 
     QStringList keywordsToPaste = QStringList() << "keyword1" << "keyword2" << "keyword3";
 
-    QSharedPointer<Commands::PasteKeywordsCommand> pasteCommand(new Commands::PasteKeywordsCommand(infos, keywordsToPaste));
+    std::shared_ptr<Commands::PasteKeywordsCommand> pasteCommand(new Commands::PasteKeywordsCommand(infos, keywordsToPaste));
     auto result = commandManagerMock.processCommand(pasteCommand);
-    auto pasteCommandResult = result.dynamicCast<Commands::PasteKeywordsCommandResult>();
+    auto pasteCommandResult = std::dynamic_pointer_cast<Commands::PasteKeywordsCommandResult>(result);
     QVector<int> indices = pasteCommandResult->m_IndicesToUpdate;
 
     QCOMPARE(indices.length(), itemsToAdd);
@@ -283,18 +283,18 @@ void UndoRedoTests::undoClearAllTest() {
     QString originalTitle = "title";
     QString originalDescription = "some description here";
     QStringList originalKeywords = QString("test1,test2,test3").split(',');
-    QVector<Models::MetadataElement *> infos;
+    std::vector<Models::MetadataElement> infos;
 
     for (int i = 0; i < itemsToAdd; ++i) {
         artItemsMock.getArtwork(i)->initialize(originalTitle, originalDescription, originalKeywords);
-        infos.append(new Models::MetadataElement(artItemsMock.getArtwork(i), i));
+        infos.emplace_back(artItemsMock.getArtwork(i), i);
     }
 
     int flags = Common::Clear | Common::EditEverything;
 
-    QSharedPointer<Commands::CombinedEditCommand> combinedEditCommand(new Commands::CombinedEditCommand(flags, infos, "", "", QStringList()));
+    std::shared_ptr<Commands::CombinedEditCommand> combinedEditCommand(new Commands::CombinedEditCommand(flags, infos, "", "", QStringList()));
     auto result = commandManagerMock.processCommand(combinedEditCommand);
-    auto combinedEditCommandResult = result.dynamicCast<Commands::CombinedEditCommandResult>();
+    auto combinedEditCommandResult = std::dynamic_pointer_cast<Commands::CombinedEditCommandResult>(result);
     QVector<int> indices = combinedEditCommandResult->m_IndicesToUpdate;
 
     QCOMPARE(indices.length(), itemsToAdd);
@@ -326,18 +326,18 @@ void UndoRedoTests::undoClearKeywordsTest() {
     QString originalTitle = "title";
     QString originalDescription = "some description here";
     QStringList originalKeywords = QString("test1,test2,test3").split(',');
-    QVector<Models::MetadataElement *> infos;
+    std::vector<Models::MetadataElement> infos;
 
     for (int i = 0; i < itemsToAdd; ++i) {
         artItemsMock.getArtwork(i)->initialize(originalTitle, originalDescription, originalKeywords);
-        infos.append(new Models::MetadataElement(artItemsMock.getArtwork(i), i));
+        infos.emplace_back(artItemsMock.getArtwork(i), i);
     }
 
     int flags = Common::Clear | Common::EditKeywords;
 
-    QSharedPointer<Commands::CombinedEditCommand> combinedEditCommand(new Commands::CombinedEditCommand(flags, infos, "", "", QStringList()));
+    std::shared_ptr<Commands::CombinedEditCommand> combinedEditCommand(new Commands::CombinedEditCommand(flags, infos, "", "", QStringList()));
     auto result = commandManagerMock.processCommand(combinedEditCommand);
-    auto combinedEditCommandResult = result.dynamicCast<Commands::CombinedEditCommandResult>();
+    auto combinedEditCommandResult = std::dynamic_pointer_cast<Commands::CombinedEditCommandResult>(result);
     QVector<int> indices = combinedEditCommandResult->m_IndicesToUpdate;
 
     QCOMPARE(indices.length(), itemsToAdd);
@@ -380,8 +380,8 @@ void UndoRedoTests::undoReplaceCommandTest() {
     QString replaceFrom = "Replace";
     int flags = Common::SearchFlagCaseSensitive |Common::SearchFlagSearchDescription |
                 Common::SearchFlagSearchTitle | Common::SearchFlagSearchKeywords;
-    QVector<Models::MetadataElement *> artWorksInfo = filteredItemsModel.getSearchableOriginalItems(replaceFrom, flags);
-    QSharedPointer<Commands::FindAndReplaceCommand> replaceCommand(new Commands::FindAndReplaceCommand(artWorksInfo, replaceFrom, replaceTo, flags) );
+    std::vector<Models::MetadataElement> artWorksInfo = filteredItemsModel.getSearchableOriginalItems(replaceFrom, flags);
+    std::shared_ptr<Commands::FindAndReplaceCommand> replaceCommand(new Commands::FindAndReplaceCommand(artWorksInfo, replaceFrom, replaceTo, flags) );
     auto result = commandManagerMock.processCommand(replaceCommand);
 
     bool undoStatus = undoRedoManager.undoLastAction();

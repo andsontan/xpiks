@@ -24,7 +24,7 @@
 #include <QImageReader>
 #include <QList>
 #include <QHash>
-#include <QSharedPointer>
+#include <memory>
 #include "artitemsmodel.h"
 #include "metadataelement.h"
 #include "../Helpers/indiceshelper.h"
@@ -127,7 +127,7 @@ namespace Models {
 
         QVector<int> indicesToRemove;
         size_t size = m_ArtworkList.size();
-        indicesToRemove.reserve(size);
+        indicesToRemove.reserve((int)size);
 
         for (size_t i = 0; i < size; ++i) {
             ArtworkMetadata *metadata = m_ArtworkList.at(i);
@@ -149,8 +149,8 @@ namespace Models {
         size_t size = m_ArtworkList.size();
         for (size_t i = 0; i < size; ++i) {
             if (m_ArtworkList.at(i)->isUnavailable()) {
-                indicesToRemove.append(i);
-                emit fileWithIndexUnavailable(i);
+                indicesToRemove.append((int)i);
+                emit fileWithIndexUnavailable((int)i);
             }
         }
 
@@ -219,7 +219,7 @@ namespace Models {
         if (metadataIndex >= 0
                 && metadataIndex < getArtworksCount()
                 && !keywords.empty()) {
-            QVector<MetadataElement*> metadataElements;
+            std::vector<MetadataElement> metadataElements;
             QVector<int> selectedIndices;
 
             // TODO: to be changed in future to the dialog
@@ -239,11 +239,10 @@ namespace Models {
 
             foreach (int index, selectedIndices) {
                 ArtworkMetadata *metadata = m_ArtworkList.at(index);
-                MetadataElement *item = new MetadataElement(metadata, index);
-                metadataElements.append(item);
+                metadataElements.emplace_back(metadata, index);
             }
 
-            QSharedPointer<Commands::PasteKeywordsCommand> pasteCommand(new Commands::PasteKeywordsCommand(metadataElements, keywords));
+            std::shared_ptr<Commands::PasteKeywordsCommand> pasteCommand(new Commands::PasteKeywordsCommand(metadataElements, keywords));
             m_CommandManager->processCommand(pasteCommand);
         }
     }
@@ -254,13 +253,12 @@ namespace Models {
                 && metadataIndex < getArtworksCount()
                 && !keywords.empty()) {
 
-            QVector<MetadataElement*> metadataElements;
+            std::vector<MetadataElement> metadataElements;
 
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
-            MetadataElement *item = new MetadataElement(metadata, metadataIndex);
-            metadataElements.append(item);
+            metadataElements.emplace_back(metadata, metadataIndex);
 
-            QSharedPointer<Commands::PasteKeywordsCommand> pasteCommand(new Commands::PasteKeywordsCommand(metadataElements, keywords));
+            std::shared_ptr<Commands::PasteKeywordsCommand> pasteCommand(new Commands::PasteKeywordsCommand(metadataElements, keywords));
             m_CommandManager->processCommand(pasteCommand);
         }
     }
@@ -504,21 +502,21 @@ namespace Models {
         LOG_DEBUG << "Plain text edit for item" << metadataIndex;
         if (0 <= metadataIndex && metadataIndex < getArtworksCount()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
-            MetadataElement *itemInfo = new MetadataElement(metadata, metadataIndex);
 
             QStringList keywords = rawKeywords.trimmed().split(QChar(','), QString::SkipEmptyParts);
+            std::vector<MetadataElement> items;
+            items.emplace_back(metadata, metadataIndex);
 
             int flags = 0;
             Common::SetFlag(flags, Common::EditKeywords);
-            QSharedPointer<Commands::CombinedEditCommand> combinedEditCommand(new Commands::CombinedEditCommand(
+            std::shared_ptr<Commands::CombinedEditCommand> combinedEditCommand(new Commands::CombinedEditCommand(
                         flags,
-                        QVector<MetadataElement*>() << itemInfo,
+                        items,
                         "", "",
                         keywords));
 
             m_CommandManager->processCommand(combinedEditCommand);
             updateItemAtIndex(metadataIndex);
-            delete itemInfo;
         }
     }
 
@@ -546,7 +544,7 @@ namespace Models {
 
     int ArtItemsModel::rowCount(const QModelIndex &parent) const {
         Q_UNUSED(parent);
-        return getArtworksCount();
+        return (int)getArtworksCount();
     }
 
     QVariant ArtItemsModel::data(const QModelIndex &index, int role) const {
@@ -749,15 +747,16 @@ namespace Models {
 
     void ArtItemsModel::setAllItemsSelected(bool selected) {
         LOG_DEBUG << selected;
-        int length = getArtworksCount();
-        for (int i = 0; i < length; ++i) {
+        size_t length = getArtworksCount();
+
+        for (size_t i = 0; i < length; ++i) {
             ArtworkMetadata *metadata = m_ArtworkList.at(i);
             metadata->setIsSelected(selected);
         }
 
         if (length > 0) {
             QModelIndex startIndex = index(0);
-            QModelIndex endIndex = index(length - 1);
+            QModelIndex endIndex = index((int)length - 1);
             emit dataChanged(startIndex, endIndex, QVector<int>() << IsSelectedRole);
         }
     }
@@ -768,10 +767,10 @@ namespace Models {
         int attachedVectors = 0;
         QString defaultPath;
 
-        int size = getArtworksCount();
-        indicesToUpdate.reserve(size);
+        size_t size = getArtworksCount();
+        indicesToUpdate.reserve((int)size);
 
-        for (int i = 0; i < size; ++i) {
+        for (size_t i = 0; i < size; ++i) {
             ArtworkMetadata *metadata = m_ArtworkList.at(i);
             ImageArtwork *image = dynamic_cast<ImageArtwork*>(metadata);
             if (image == NULL) { continue; }
@@ -788,7 +787,7 @@ namespace Models {
                 QString vectorsPath = innerHash.value(filename, defaultPath);
                 if (!vectorsPath.isEmpty()) {
                     image->attachVector(vectorsPath);
-                    indicesToUpdate.append(i);
+                    indicesToUpdate.append((int)i);
                     attachedVectors++;
                 }
             }
@@ -879,9 +878,9 @@ namespace Models {
         Models::SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
         bool autoFindVectors = settingsModel->getAutoFindVectors();
 
-        QSharedPointer<Commands::AddArtworksCommand> addArtworksCommand(new Commands::AddArtworksCommand(filenames, vectors, autoFindVectors));
-        QSharedPointer<Commands::ICommandResult> result = m_CommandManager->processCommand(addArtworksCommand);
-        QSharedPointer<Commands::AddArtworksCommandResult> addArtworksResult = result.dynamicCast<Commands::AddArtworksCommandResult>();
+        std::shared_ptr<Commands::AddArtworksCommand> addArtworksCommand(new Commands::AddArtworksCommand(filenames, vectors, autoFindVectors));
+        std::shared_ptr<Commands::ICommandResult> result = m_CommandManager->processCommand(addArtworksCommand);
+        std::shared_ptr<Commands::AddArtworksCommandResult> addArtworksResult = std::dynamic_pointer_cast<Commands::AddArtworksCommandResult>(result);
 
         int newFilesCount = addArtworksResult->m_NewFilesAdded;
         return newFilesCount;
@@ -894,8 +893,7 @@ namespace Models {
             //QModelIndex qmIndex = this->index(index);
             //emit dataChanged(qmIndex, qmIndex, QVector<int>() << IsSelectedRole);
 
-            MetadataElement *info = new MetadataElement(metadata, index);
-            m_CommandManager->combineArtwork(info);
+            m_CommandManager->combineArtwork(metadata, index);
         }
     }
 
@@ -991,16 +989,16 @@ namespace Models {
     }
 
     void ArtItemsModel::doRemoveItemsInRanges(const QVector<QPair<int, int> > &rangesToRemove) {
-        QSharedPointer<Commands::RemoveArtworksCommand> removeArtworksCommand(new Commands::RemoveArtworksCommand(rangesToRemove));
+        std::shared_ptr<Commands::RemoveArtworksCommand> removeArtworksCommand(new Commands::RemoveArtworksCommand(rangesToRemove));
         m_CommandManager->processCommand(removeArtworksCommand);
     }
 
     void ArtItemsModel::getSelectedItemsIndices(QVector<int> &indices) {
         size_t size = m_ArtworkList.size();
-        indices.reserve(size / 3);
+        indices.reserve((int)size / 3);
         for (size_t i = 0; i < size; ++i) {
             if (m_ArtworkList.at(i)->isSelected()) {
-                indices.append(i);
+                indices.append((int)i);
             }
         }
     }
@@ -1013,15 +1011,16 @@ namespace Models {
     void ArtItemsModel::onFilesUnavailableHandler() {
         LOG_DEBUG << "#";
         Models::ArtworksRepository *artworksRepository = m_CommandManager->getArtworksRepository();
-        int count = getArtworksCount();
+        size_t count = getArtworksCount();
 
         bool anyArtworkUnavailable = false;
         bool anyVectorUnavailable = false;
 
-        for (int i = 0; i < count; ++i) {
+        for (size_t i = 0; i < count; ++i) {
             ArtworkMetadata* artwork = m_ArtworkList.at(i);
             ImageArtwork *image = dynamic_cast<ImageArtwork*>(artwork);
             const QString &path = artwork->getFilepath();
+
             if (artworksRepository->isFileUnavailable(path)) {
                 artwork->setUnavailable();
                 anyArtworkUnavailable = true;
