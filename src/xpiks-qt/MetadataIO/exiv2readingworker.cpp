@@ -577,8 +577,8 @@ namespace MetadataIO {
         importResult.Keywords = retrieveKeywords(xmpData, exifData, iptcData, isIptcUtf8);
         importResult.DateTimeOriginal = retrieveDateTime(xmpData, exifData, iptcData, isIptcUtf8);
 
-        MetadataSavingCopy copy(artwork);
-        if (copy.readFromFile()) {
+        MetadataSavingCopy copy;
+        if (copy.readFromFile(filepath)) {
             importResult.BackupDict = copy.getInfo();
         }
 

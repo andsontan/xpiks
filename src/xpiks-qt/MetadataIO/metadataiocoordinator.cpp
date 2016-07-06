@@ -300,8 +300,8 @@ namespace MetadataIO {
 
                 if (importResult.contains(filepath)) {
                     const ImportDataResult &importResultItem = importResult.value(filepath);
-                    MetadataSavingCopy copy(metadata, importResultItem.BackupDict);
-                    copy.saveToMetadata();
+                    MetadataSavingCopy copy(importResultItem.BackupDict);
+                    copy.saveToMetadata(metadata);
                 }
             }
         } else {

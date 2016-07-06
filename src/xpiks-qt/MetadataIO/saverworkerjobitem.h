@@ -24,46 +24,46 @@
 
 #include <QHash>
 #include <QString>
-#include "../Models/artworkmetadata.h"
+
+namespace Common {
+    class BasicKeywordsModel;
+}
+
+namespace Models {
+    class ArtworkMetadata;
+}
 
 namespace MetadataIO {
     class MetadataSavingCopy {
     public:
-        MetadataSavingCopy(Models::ArtworkMetadata *metadata);
-        MetadataSavingCopy(Models::ArtworkMetadata *metadata, const QHash<QString, QString> &dict);
+        MetadataSavingCopy() {}
+        MetadataSavingCopy(Common::BasicKeywordsModel *keywordsModel);
+        MetadataSavingCopy(const QHash<QString, QString> &dict);
 
     public:
-        const QString &getFilepath() const { return m_Filepath; }
         const QHash<QString, QString> &getInfo() const { return m_MetadataInfo; }
 
-        void readFromMetadata();
-        void saveToFile() const;
-        bool readFromFile();
-        void saveToMetadata() const;
+        void saveToFile(const QString &filepath) const;
+        bool readFromFile(const QString &filepath);
+        void saveToMetadata(Models::ArtworkMetadata *artworkMetadata) const;
+
+    private:
+        void readFromMetadata(Common::BasicKeywordsModel *keywordsModel);
 
     private:
         QHash<QString, QString> m_MetadataInfo;
-        QString m_Filepath;
-        Models::ArtworkMetadata *m_Metadata;
     };
-
-    enum SaverWorkerJobType { JobTypeRead, JobTypeWrite };
 
     class SaverWorkerJobItem {
     public:
-        SaverWorkerJobItem(Models::ArtworkMetadata *metadata, SaverWorkerJobType jobType):
-            m_ArtworkMetadata(metadata),
-            m_JobType(jobType)
-        {
-        }
+        SaverWorkerJobItem(Models::ArtworkMetadata *metadata);
+        virtual ~SaverWorkerJobItem();
 
     public:
-        SaverWorkerJobType getJobType() const { return m_JobType; }
         Models::ArtworkMetadata *getMetadata() const { return m_ArtworkMetadata; }
 
     private:
         Models::ArtworkMetadata *m_ArtworkMetadata;
-        SaverWorkerJobType m_JobType;
     };
 }
 

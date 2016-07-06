@@ -36,6 +36,7 @@ namespace AutoComplete {
             m_Prefix(prefix),
             m_AutoCompleteModel(autoCompleteModel)
         {
+            Q_ASSERT(autoCompleteModel != nullptr);
         }
 
         const QString &getPrefix() const { return m_Prefix; }

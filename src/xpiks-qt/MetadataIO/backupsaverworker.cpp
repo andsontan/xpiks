@@ -22,6 +22,7 @@
 #include "backupsaverworker.h"
 #include <QFile>
 #include "../Helpers/constants.h"
+#include "../Models/artworkmetadata.h"
 #include "../Common/defines.h"
 
 namespace MetadataIO {
@@ -31,15 +32,8 @@ namespace MetadataIO {
     }
 
     void BackupSaverWorker::processOneItem(std::shared_ptr<SaverWorkerJobItem> &item) {
-        SaverWorkerJobType jobType = item->getJobType();
-        MetadataSavingCopy copy(item->getMetadata());
-
-        if (jobType == JobTypeWrite) {
-            copy.readFromMetadata();
-            copy.saveToFile();
-        } else if (jobType == JobTypeRead) {
-            copy.readFromFile();
-            copy.saveToMetadata();
-        }
+        Models::ArtworkMetadata *metadata = item->getMetadata();
+        MetadataSavingCopy copy(metadata->getKeywordsModel());
+        copy.saveToFile(metadata->getFilepath());
     }
 }

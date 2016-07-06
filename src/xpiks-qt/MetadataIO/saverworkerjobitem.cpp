@@ -24,32 +24,21 @@
 #include <QDataStream>
 #include "../Helpers/constants.h"
 #include "../Common/basickeywordsmodel.h"
+#include "../Models/artworkmetadata.h"
 #include "../Common/defines.h"
 
 namespace MetadataIO {
-    MetadataSavingCopy::MetadataSavingCopy(Models::ArtworkMetadata *metadata):
-        m_Filepath(metadata->getFilepath()),
-        m_Metadata(metadata)
+    MetadataSavingCopy::MetadataSavingCopy(Common::BasicKeywordsModel *keywordsModel) {
+        readFromMetadata(keywordsModel);
+    }
+
+    MetadataSavingCopy::MetadataSavingCopy(const QHash<QString, QString> &dict):
+        m_MetadataInfo(dict)
     {
     }
 
-    MetadataSavingCopy::MetadataSavingCopy(Models::ArtworkMetadata *metadata, const QHash<QString, QString> &dict):
-        m_MetadataInfo(dict),
-        m_Filepath(metadata->getFilepath()),
-        m_Metadata(metadata)
-    {
-    }
-
-    void MetadataSavingCopy::readFromMetadata() {
-        m_MetadataInfo["title"] = m_Metadata->getTitle();
-        m_MetadataInfo["description"] = m_Metadata->getDescription();
-
-        Common::BasicKeywordsModel *keywordsModel = m_Metadata->getKeywordsModel();
-        m_MetadataInfo["keywords"] = keywordsModel->getKeywordsString();
-    }
-
-    void MetadataSavingCopy::saveToFile() const {
-        QString path = m_Filepath + QLatin1String(Constants::METADATA_BACKUP_EXTENSION);
+    void MetadataSavingCopy::saveToFile(const QString &filepath) const {
+        QString path = filepath + QLatin1String(Constants::METADATA_BACKUP_EXTENSION);
         const QHash<QString, QString> &dict = m_MetadataInfo;
         QFile file(path);
         if (file.open(QIODevice::WriteOnly)) {
@@ -59,9 +48,9 @@ namespace MetadataIO {
         }
     }
 
-    bool MetadataSavingCopy::readFromFile() {
+    bool MetadataSavingCopy::readFromFile(const QString &filepath) {
         bool success = false;
-        QString path = m_Filepath + Constants::METADATA_BACKUP_EXTENSION;
+        QString path = filepath + Constants::METADATA_BACKUP_EXTENSION;
         QFile file(path);
         if (file.exists() && file.open(QIODevice::ReadOnly)) {
             QHash<QString, QString> dict;
@@ -82,18 +71,38 @@ namespace MetadataIO {
         return success;
     }
 
-    void MetadataSavingCopy::saveToMetadata() const {
+    void MetadataSavingCopy::saveToMetadata(Models::ArtworkMetadata *artworkMetadata) const {
         const QHash<QString, QString> &dict = m_MetadataInfo;
 
         QString keywordsString = dict.value("keywords", "");
         QStringList keywords = keywordsString.split(QChar(','), QString::SkipEmptyParts);
 
-        if (m_Metadata->initialize(
+        if (artworkMetadata->initialize(
                 dict.value("title", ""),
                 dict.value("description", ""),
                 keywords,
                 false)) {
-            m_Metadata->markModified();
+            artworkMetadata->markModified();
+        }
+    }
+
+    void MetadataSavingCopy::readFromMetadata(Common::BasicKeywordsModel *keywordsModel) {
+        m_MetadataInfo["title"] = keywordsModel->getTitle();
+        m_MetadataInfo["description"] = keywordsModel->getDescription();
+        m_MetadataInfo["keywords"] = keywordsModel->getKeywordsString();
+    }
+
+    SaverWorkerJobItem::SaverWorkerJobItem(Models::ArtworkMetadata *metadata):
+        m_ArtworkMetadata(metadata)
+    {
+        if (m_ArtworkMetadata != nullptr) {
+            m_ArtworkMetadata->acquire();
+        }
+    }
+
+    SaverWorkerJobItem::~SaverWorkerJobItem() {
+        if (m_ArtworkMetadata != nullptr) {
+            m_ArtworkMetadata->release();
         }
     }
 }

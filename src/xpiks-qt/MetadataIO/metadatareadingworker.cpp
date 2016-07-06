@@ -317,8 +317,8 @@ namespace MetadataIO {
             Models::ArtworkMetadata *metadata = m_ItemsToRead.at(i);
             const QString &filepath = metadata->getFilepath();
 
-            MetadataSavingCopy copy(metadata);
-            if (copy.readFromFile()) {
+            MetadataSavingCopy copy;
+            if (copy.readFromFile(filepath)) {
                 if (exiftoolSuccess) {
                     Q_ASSERT(m_ImportResult.contains(filepath));
                 }
