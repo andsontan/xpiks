@@ -194,8 +194,8 @@ namespace Suggestion {
     }
 
     QVariant KeywordsSuggestor::data(const QModelIndex &index, int role) const {
-        size_t row = index.row();
-        if (row < 0 || row >= m_Suggestions.size()) { return QVariant(); }
+        int row = index.row();
+        if (row < 0 || (size_t)row >= m_Suggestions.size()) { return QVariant(); }
 
         auto &suggestionArtwork = m_Suggestions.at(row);
 

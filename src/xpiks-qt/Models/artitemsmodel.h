@@ -158,7 +158,7 @@ namespace Models {
     public:
         // IARTWORKSSOURCE
         virtual Common::IBasicArtwork *getBasicArtwork(int index) const;
-        virtual size_t getArtworksCount() const { return m_ArtworkList.size(); }
+        virtual int getArtworksCount() const { return (int)m_ArtworkList.size(); }
 
     private:
         void updateItemAtIndex(int metadataIndex);
