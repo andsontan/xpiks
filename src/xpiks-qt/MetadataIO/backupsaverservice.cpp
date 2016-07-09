@@ -66,7 +66,7 @@ namespace MetadataIO {
 
         int size = artworks.size();
         for (int i = 0; i < size; ++i) {
-            jobs.push_back(std::shared_ptr<SaverWorkerJobItem>(new SaverWorkerJobItem(artworks.at(i))));
+            jobs.emplace_back(new SaverWorkerJobItem(artworks.at(i)));
         }
 
         m_BackupWorker->submitItems(jobs);

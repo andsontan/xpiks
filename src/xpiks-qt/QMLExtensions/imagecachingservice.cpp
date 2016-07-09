@@ -85,11 +85,10 @@ namespace QMLExtensions {
         for (int i = 0; i < size; ++i) {
             bool withDelay = i % 2;
             Models::ArtworkMetadata *artwork = items.at(i);
-            std::shared_ptr<ImageCacheRequest> request(new ImageCacheRequest(artwork->getFilepath(),
-                                                                             QSize(DEFAULT_THUMB_WIDTH, DEFAULT_THUMB_HEIGHT),
-                                                                             recache,
-                                                                             withDelay));
-            requests.push_back(request);
+            requests.emplace_back(new ImageCacheRequest(artwork->getFilepath(),
+                                                        QSize(DEFAULT_THUMB_WIDTH, DEFAULT_THUMB_HEIGHT),
+                                                        recache,
+                                                        withDelay));
         }
 
         std::vector<std::shared_ptr<ImageCacheRequest> > knownRequests;

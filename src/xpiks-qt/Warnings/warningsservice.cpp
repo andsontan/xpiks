@@ -103,8 +103,7 @@ namespace Warnings {
 
         for (int i = 0; i < length; ++i) {
             Models::ArtworkMetadata *item = items.at(i);
-            std::shared_ptr<WarningsItem> itemToSubmit(new WarningsItem(item));
-            itemsToSubmit.push_back(itemToSubmit);
+            itemsToSubmit.emplace_back(new WarningsItem(item));
         }
 
         LOG_INFO << "Submitting" << length << "item(s)";

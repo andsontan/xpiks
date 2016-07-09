@@ -114,7 +114,7 @@ namespace SpellCheck {
             std::shared_ptr<SpellCheckItem> item(new SpellCheckItem(itemToCheck, Common::SpellCheckAll),
                                                  deleter);
             itemToCheck->connectSignals(item.get());
-            items.push_back(item);
+            items.emplace_back(item);
         }
 
         LOG_INFO << length << "item(s)";
