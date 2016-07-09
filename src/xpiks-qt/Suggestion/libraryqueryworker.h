@@ -23,7 +23,8 @@
 #define LIBRARYQUERYWORKER_H
 
 #include <QObject>
-#include <QVector>
+#include <vector>
+#include <memory>
 #include <QStringList>
 
 namespace Suggestion {

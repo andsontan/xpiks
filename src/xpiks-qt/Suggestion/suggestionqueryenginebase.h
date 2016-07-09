@@ -23,7 +23,8 @@
 #define ISUGGESTIONQUERYENGINE_H
 
 #include <QStringList>
-#include <QVector>
+#include <vector>
+#include <memory>
 #include <QObject>
 #include "suggestionartwork.h"
 

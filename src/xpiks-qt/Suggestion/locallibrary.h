@@ -22,6 +22,8 @@
 #ifndef LOCALLIBRARY_H
 #define LOCALLIBRARY_H
 
+#include <memory>
+#include <vector>
 #include <QHash>
 #include <QString>
 #include <QList>
