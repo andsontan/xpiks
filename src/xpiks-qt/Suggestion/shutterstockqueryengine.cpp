@@ -68,7 +68,7 @@ namespace Suggestion {
             QJsonValue dataValue = jsonObject["data"];
 
             if (dataValue.isArray()) {
-                QVector<SuggestionArtwork*> suggestionArtworks;
+                std::vector<std::shared_ptr<SuggestionArtwork> > suggestionArtworks;
                 parseResponse(dataValue.toArray(), suggestionArtworks);
                 setResults(suggestionArtworks);
                 emit resultsAvailable();
@@ -82,7 +82,7 @@ namespace Suggestion {
     }
 
     void ShutterstockQueryEngine::parseResponse(const QJsonArray &jsonArray,
-                                                QVector<SuggestionArtwork*> &suggestionArtworks) {
+                                                std::vector<std::shared_ptr<SuggestionArtwork> > &suggestionArtworks) {
         LOG_DEBUG << "#";
         foreach (const QJsonValue &value, jsonArray) {
             QJsonObject imageResult = value.toObject();
@@ -101,8 +101,7 @@ namespace Suggestion {
                             }
                         }
 
-                        SuggestionArtwork *artwork = new SuggestionArtwork(url, keywordsList, false);
-                        suggestionArtworks.append(artwork);
+                        suggestionArtworks.emplace_back(new SuggestionArtwork(url, keywordsList, false));
                     }
                 }
             }

@@ -36,7 +36,7 @@ namespace Suggestion {
         m_LocalLibrary->searchArtworks(m_Query, m_Results, m_MaxResults);
 
         if (m_Cancel) {
-            qDeleteAll(m_Results);
+            m_Results.clear();
             doShutdown();
         } else {
             emit resultsFound();

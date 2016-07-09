@@ -64,7 +64,7 @@ namespace Suggestion {
 
             if (!nbResultsValue.isUndefined()) {
                 int resultsNumber = nbResultsValue.toInt();
-                QVector<SuggestionArtwork*> suggestionArtworks;
+                std::vector<std::shared_ptr<SuggestionArtwork> > suggestionArtworks;
                 parseResponse(jsonObject, resultsNumber, suggestionArtworks);
                 setResults(suggestionArtworks);
                 emit resultsAvailable();
@@ -78,7 +78,7 @@ namespace Suggestion {
     }
 
     void FotoliaQueryEngine::parseResponse(const QJsonObject &jsonObject, int count,
-                                           QVector<SuggestionArtwork *> &suggestionArtworks) {
+                                           std::vector<std::shared_ptr<SuggestionArtwork> > &suggestionArtworks) {
         LOG_DEBUG << "#";
         for (int i = 0; i < count; ++i) {
             QJsonValue item = jsonObject[QString::number(i)];
@@ -93,8 +93,7 @@ namespace Suggestion {
 
             QStringList keywordsList = keywords.toString().split(',');
 
-            SuggestionArtwork *artwork = new SuggestionArtwork(url.toString(), keywordsList, false);
-            suggestionArtworks.append(artwork);
+            suggestionArtworks.emplace_back(new SuggestionArtwork(url.toString(), keywordsList, false));
         }
     }
 

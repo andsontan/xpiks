@@ -67,7 +67,7 @@ namespace Suggestion {
 
             if (!nbResultsValue.isUndefined()) {
                 int resultsNumber = nbResultsValue.toInt();
-                QVector<SuggestionArtwork*> suggestionArtworks;
+                std::vector<std::shared_ptr<SuggestionArtwork> > suggestionArtworks;
                 parseResponse(jsonObject, resultsNumber, suggestionArtworks);
                 setResults(suggestionArtworks);
                 emit resultsAvailable();
@@ -81,7 +81,7 @@ namespace Suggestion {
     }
 
     void GettyQueryEngine::parseResponse(const QJsonObject &jsonObject, int count,
-                                         QVector<SuggestionArtwork *> &suggestionArtworks) {
+                                         std::vector<std::shared_ptr<SuggestionArtwork> > &suggestionArtworks) {
         LOG_DEBUG << "#";
         Q_UNUSED(count);
         if (!jsonObject.contains("images")) { return; }
@@ -107,8 +107,7 @@ namespace Suggestion {
                     parseKeywords(item["keywords"], keywords);
                 }
 
-                SuggestionArtwork *artwork = new SuggestionArtwork(url, keywords, false);
-                suggestionArtworks.append(artwork);
+                suggestionArtworks.emplace_back(new SuggestionArtwork(url, keywords, false));
             }
         }
     }

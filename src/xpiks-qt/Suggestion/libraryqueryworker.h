@@ -37,7 +37,7 @@ namespace Suggestion {
         LibraryQueryWorker(Suggestion::LocalLibrary *localLibrary, const QStringList &query, int maxResults);
 
         void doShutdown() { emit stopped(); }
-        const QVector<SuggestionArtwork*> &getResults() const { return m_Results; }
+        const std::vector<std::shared_ptr<SuggestionArtwork> > &getResults() const { return m_Results; }
 
     signals:
         void stopped();
@@ -49,7 +49,7 @@ namespace Suggestion {
 
     private:
         Suggestion::LocalLibrary *m_LocalLibrary;
-        QVector<SuggestionArtwork *> m_Results;
+        std::vector<std::shared_ptr<SuggestionArtwork> > m_Results;
         QStringList m_Query;
         int m_MaxResults;
         volatile bool m_Cancel;

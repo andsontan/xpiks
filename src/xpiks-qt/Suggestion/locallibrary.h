@@ -50,7 +50,9 @@ namespace Suggestion {
         void swap(QHash<QString, QStringList> &hash);
         void saveToFile();
         void loadLibraryAsync();
-        void searchArtworks(const QStringList &query, QVector<SuggestionArtwork *> &searchResults, int maxResults);
+        void searchArtworks(const QStringList &query,
+                            std::vector<std::shared_ptr<SuggestionArtwork> > &searchResults,
+                            size_t maxResults);
         void cleanupLocalLibraryAsync();
         void cleanupTrash();
 

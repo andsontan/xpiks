@@ -39,11 +39,10 @@ namespace Suggestion {
 
     public:
         void cancelQueries() { emit cancelAllQueries(); }
-        const QVector<SuggestionArtwork *> &getLastResults() const { return m_LastResults; }
+        const std::vector<std::shared_ptr<SuggestionArtwork> > &getLastResults() const { return m_LastResults; }
 
-        void setResults(const QVector<SuggestionArtwork *> &results) {
-            m_LastResults.clear();
-            m_LastResults += results;
+        void setResults(const std::vector<std::shared_ptr<SuggestionArtwork> > &results) {
+            m_LastResults = std::move(results);
         }
 
     signals:
@@ -52,7 +51,7 @@ namespace Suggestion {
         void errorReceived(const QString &error);
 
     private:
-        QVector<SuggestionArtwork *> m_LastResults;
+        std::vector<std::shared_ptr<SuggestionArtwork> > m_LastResults;
     };
 }
 

@@ -63,16 +63,14 @@ namespace Suggestion {
         }
     }
 
-    void KeywordsSuggestor::setSuggestedArtworks(const QVector<SuggestionArtwork *> &suggestedArtworks) {
-        LOG_DEBUG << suggestedArtworks.length() << "item(s)";
+    void KeywordsSuggestor::setSuggestedArtworks(const std::vector<std::shared_ptr<SuggestionArtwork> > &suggestedArtworks) {
+        LOG_DEBUG << suggestedArtworks.size() << "item(s)";
         m_SelectedArtworksCount = 0;
         m_KeywordsHash.clear();
         m_SuggestedKeywords.clearModel();
         m_AllOtherKeywords.clearModel();
         beginResetModel();
-        qDeleteAll(m_Suggestions);
-        m_Suggestions.clear();
-        m_Suggestions << suggestedArtworks;
+        m_Suggestions = std::move(suggestedArtworks);
         endResetModel();
         unsetInProgress();
         emit suggestionArrived();
@@ -88,7 +86,6 @@ namespace Suggestion {
         m_SuggestedKeywords.clearModel();
         m_AllOtherKeywords.clearModel();
         beginResetModel();
-        qDeleteAll(m_Suggestions);
         m_Suggestions.clear();
         endResetModel();
         unsetInProgress();
@@ -111,7 +108,7 @@ namespace Suggestion {
     void KeywordsSuggestor::resultsAvailableHandler() {
         unsetInProgress();
         SuggestionQueryEngineBase *engine = m_QueryEngines.at(m_SelectedSourceIndex);
-        const QVector<SuggestionArtwork*> &results = engine->getLastResults();
+        auto &results = engine->getLastResults();
         setSuggestedArtworks(results);
         qsrand(QTime::currentTime().msec());
     }
@@ -150,11 +147,11 @@ namespace Suggestion {
     }
 
     void KeywordsSuggestor::setArtworkSelected(int index, bool newState) {
-        if (index < 0 || index >= m_Suggestions.length()) {
+        if (index < 0 || (size_t)index >= m_Suggestions.size()) {
             return;
         }
 
-        SuggestionArtwork *suggestionArtwork = m_Suggestions.at(index);
+        auto &suggestionArtwork = m_Suggestions.at(index);
         suggestionArtwork->setIsSelected(newState);
 
         int sign = newState ? +1 : -1;
@@ -193,14 +190,14 @@ namespace Suggestion {
 
     int KeywordsSuggestor::rowCount(const QModelIndex &parent) const {
         Q_UNUSED(parent);
-        return m_Suggestions.length();
+        return (int)m_Suggestions.size();
     }
 
     QVariant KeywordsSuggestor::data(const QModelIndex &index, int role) const {
-        int row = index.row();
-        if (row < 0 || row >= m_Suggestions.length()) { return QVariant(); }
+        size_t row = index.row();
+        if (row < 0 || row >= m_Suggestions.size()) { return QVariant(); }
 
-        SuggestionArtwork *suggestionArtwork = m_Suggestions.at(row);
+        auto &suggestionArtwork = m_Suggestions.at(row);
 
         switch (role) {
         case UrlRole:
@@ -231,10 +228,10 @@ namespace Suggestion {
 
     QSet<QString> KeywordsSuggestor::getSelectedArtworksKeywords() const {
         QSet<QString> allKeywords;
-        int size = m_Suggestions.length();
+        size_t size = m_Suggestions.size();
 
-        for (int i = 0; i < size; ++i) {
-            SuggestionArtwork *artwork = m_Suggestions.at(i);
+        for (size_t i = 0; i < size; ++i) {
+            auto &artwork = m_Suggestions.at(i);
 
             if (artwork->getIsSelected()) {
                 const QSet<QString> &currentKeywords = artwork->getKeywordsSet();

@@ -80,7 +80,9 @@ namespace Suggestion {
         performAsync(LibraryLoaderWorker::Load);
     }
 
-    void LocalLibrary::searchArtworks(const QStringList &query, QVector<SuggestionArtwork*> &searchResults, int maxResults) {
+    void LocalLibrary::searchArtworks(const QStringList &query,
+                                      std::vector<std::shared_ptr<SuggestionArtwork> > &searchResults,
+                                      size_t maxResults) {
         LOG_DEBUG << "max results" << maxResults;
         QMutexLocker locker(&m_Mutex);
 
@@ -110,10 +112,9 @@ namespace Suggestion {
 
             if (!anyError) {
                 if (QFile(i.key()).exists()) {
-                    SuggestionArtwork *artwork = new SuggestionArtwork(i.key(), keywords);
-                    searchResults.append(artwork);
+                    searchResults.emplace_back(new SuggestionArtwork(i.key(), keywords));
 
-                    if (searchResults.length() >= maxResults) {
+                    if (searchResults.size() >= maxResults) {
                         break;
                     }
                 }

@@ -50,10 +50,10 @@ namespace Suggestion {
 
     public:
         KeywordsSuggestor(LocalLibrary *library, QObject *parent=NULL);
-        virtual ~KeywordsSuggestor() { qDeleteAll(m_Suggestions); }
+        virtual ~KeywordsSuggestor() { }
 
     public:
-        void setSuggestedArtworks(const QVector<SuggestionArtwork *> &suggestedArtworks);
+        void setSuggestedArtworks(const std::vector<std::shared_ptr<SuggestionArtwork> > &suggestedArtworks);
         void clear();
 
         int getSelectedSourceIndex() const { return m_SelectedSourceIndex; }
@@ -137,7 +137,7 @@ namespace Suggestion {
 
     private:
         QHash<QString, int> m_KeywordsHash;
-        QVector<SuggestionArtwork *> m_Suggestions;
+        std::vector<std::shared_ptr<SuggestionArtwork> > m_Suggestions;
         QVector<SuggestionQueryEngineBase*> m_QueryEngines;
         LocalLibrary *m_LocalLibrary;
         QStringList m_QueryEnginesNames;

@@ -41,7 +41,8 @@ namespace Suggestion {
         void replyReceived(QNetworkReply *networkReply);
 
     private:
-        void parseResponse(const QJsonObject &jsonObject, int count, QVector<SuggestionArtwork *> &suggestionArtworks);
+        void parseResponse(const QJsonObject &jsonObject, int count,
+                           std::vector<std::shared_ptr<SuggestionArtwork> > &suggestionArtworks);
         QUrl buildQuery(const QString &apiKey, const QStringList &queryKeywords) const;
 
     private:
