@@ -45,6 +45,7 @@ Item {
 
     function closePopup() {
         dialogComponent.destroy()
+        combinedArtworks.resetModelData()
     }
 
     function mustUseConfirmation() {

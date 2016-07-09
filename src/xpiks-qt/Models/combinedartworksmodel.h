@@ -171,7 +171,6 @@ namespace Models {
     private slots:
         void spellCheckErrorsChangedHandler();
 
-
     public:
         enum CombinedArtworksModelRoles {
             PathRole = Qt::UserRole + 1,
@@ -182,7 +181,6 @@ namespace Models {
         virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
         virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
         virtual void removeUnavailableItems();
-
 
     protected:
         virtual QHash<int, QByteArray> roleNames() const;
