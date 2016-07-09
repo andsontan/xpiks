@@ -124,7 +124,7 @@ namespace Models {
 
     public:
         int getSelectedArtworksCount() const;
-        size_t getArtworksCount() const { return m_ArtworksList.size(); }
+        int getArtworksCount() const { return (int)m_ArtworksList.size(); }
         void generateAboutToBeRemoved();
 
 #ifdef INTEGRATION_TESTS
