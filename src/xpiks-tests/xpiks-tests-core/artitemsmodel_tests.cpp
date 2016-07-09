@@ -63,7 +63,7 @@ void ArtItemsModelTests::modificationChangesModifiedCountTest() {
 }
 
 void ArtItemsModelTests::removeArtworkDirectorySimpleTest() {
-    const size_t count = 11;
+    const int count = 11;
     DECLARE_MODELS_AND_GENERATE(count, false);
 
     int indexToRemove = 1;

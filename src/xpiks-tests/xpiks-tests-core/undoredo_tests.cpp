@@ -36,12 +36,12 @@ void UndoRedoTests::undoAddCommandTest() {
     int newFilesCount = addArtworksResult->m_NewFilesAdded;
 
     QCOMPARE(newFilesCount, filenames.length());
-    QCOMPARE(artItemsMock.getArtworksCount(), (size_t)filenames.length());
+    QCOMPARE(artItemsMock.getArtworksCount(), filenames.length());
 
     bool undoSucceeded = undoRedoManager.undoLastAction();
     QVERIFY(undoSucceeded);
 
-    QCOMPARE(artItemsMock.getArtworksCount(), (size_t)0);
+    QCOMPARE(artItemsMock.getArtworksCount(), 0);
 }
 
 void UndoRedoTests::undoUndoAddCommandTest() {
@@ -56,7 +56,7 @@ void UndoRedoTests::undoUndoAddCommandTest() {
     int newFilesCount = addArtworksResult->m_NewFilesAdded;
 
     QCOMPARE(newFilesCount, filenames.length());
-    QCOMPARE(artItemsMock.getArtworksCount(), (size_t)filenames.length());
+    QCOMPARE(artItemsMock.getArtworksCount(), filenames.length());
 
     bool undoSucceeded = undoRedoManager.undoLastAction();
     QVERIFY(undoSucceeded);
@@ -64,7 +64,7 @@ void UndoRedoTests::undoUndoAddCommandTest() {
     undoSucceeded = undoRedoManager.undoLastAction();
     QVERIFY(undoSucceeded);
 
-    QCOMPARE(artItemsMock.getArtworksCount(), (size_t)filenames.length());
+    QCOMPARE(artItemsMock.getArtworksCount(), filenames.length());
     for (int i = 0; i < filenames.length(); ++i) {
         QCOMPARE(artItemsMock.getArtworkFilepath(i), filenames[i]);
     }
@@ -83,7 +83,7 @@ void UndoRedoTests::undoUndoAddWithVectorsTest() {
     int newFilesCount = addArtworksResult->m_NewFilesAdded;
 
     QCOMPARE(newFilesCount, filenames.length());
-    QCOMPARE(artItemsMock.getArtworksCount(), (size_t)filenames.length());
+    QCOMPARE(artItemsMock.getArtworksCount(), filenames.length());
 
     bool undoSucceeded = undoRedoManager.undoLastAction();
     QVERIFY(undoSucceeded);
@@ -92,7 +92,7 @@ void UndoRedoTests::undoUndoAddWithVectorsTest() {
     QVERIFY(undoSucceeded);
 
     QCOMPARE(newFilesCount, filenames.length());
-    QCOMPARE(artItemsMock.getArtworksCount(), (size_t)filenames.length());
+    QCOMPARE(artItemsMock.getArtworksCount(), filenames.length());
 
     Models::ImageArtwork *image1 = artItemsMock.getMockArtwork(0);
     QVERIFY(image1->hasVectorAttached());
@@ -108,7 +108,7 @@ void UndoRedoTests::undoUndoAddWithVectorsTest() {
 
 void UndoRedoTests::undoRemoveItemsTest() {
     SETUP_TEST;
-    size_t itemsToAdd = 5;
+    int itemsToAdd = 5;
     commandManagerMock.generateAndAddArtworks(itemsToAdd);
 
     QVector<QPair<int, int> > indicesToRemove;
@@ -146,7 +146,7 @@ void UndoRedoTests::undoUndoRemoveItemsTest() {
     undoStatus = undoRedoManager.undoLastAction();
     QVERIFY(undoStatus);
 
-    QCOMPARE(artItemsMock.getArtworksCount(), (size_t)2);
+    QCOMPARE(artItemsMock.getArtworksCount(), 2);
 }
 
 void UndoRedoTests::undoModifyCommandTest() {

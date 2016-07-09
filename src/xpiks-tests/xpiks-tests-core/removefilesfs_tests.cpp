@@ -86,8 +86,8 @@ void RemoveFilesFsTests::removeArtworksNumberItems() {
     commandManagerMock.mockAcceptDeletion();
 
 //items
-    QCOMPARE(artItemsModelMock.getArtworksCount(), (size_t)(itemsToAdd - itemsToDelete));
-    QCOMPARE(combinedModel.getArtworksCount(), (size_t)(itemsToAdd - itemsToDelete));
+    QCOMPARE(artItemsModelMock.getArtworksCount(), itemsToAdd - itemsToDelete);
+    QCOMPARE(combinedModel.getArtworksCount(), itemsToAdd - itemsToDelete);
     QCOMPARE(filteredItemsModel.getItemsCount(), itemsToAdd - itemsToDelete);
     QCOMPARE(zipArchive.getItemsCount(), itemsToAdd - itemsToDelete);
     QCOMPARE(artworkUpload.getItemsCount(), itemsToAdd - itemsToDelete);
@@ -122,8 +122,8 @@ void RemoveFilesFsTests::removeArtworksAllItems() {
     commandManagerMock.mockAcceptDeletion();
 
 //items
-    QCOMPARE(artItemsModelMock.getArtworksCount(), (size_t)(itemsToAdd - itemsToDelete));
-    QCOMPARE(combinedModel.getArtworksCount(), (size_t)(itemsToAdd - itemsToDelete));
+    QCOMPARE(artItemsModelMock.getArtworksCount(), itemsToAdd - itemsToDelete);
+    QCOMPARE(combinedModel.getArtworksCount(), itemsToAdd - itemsToDelete);
     QCOMPARE(filteredItemsModel.getItemsCount(), itemsToAdd - itemsToDelete);
     QCOMPARE(zipArchive.getItemsCount(), itemsToAdd - itemsToDelete);
     QCOMPARE(artworkUpload.getItemsCount(), itemsToAdd - itemsToDelete);

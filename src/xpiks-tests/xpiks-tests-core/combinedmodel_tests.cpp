@@ -40,7 +40,7 @@ void CombinedModelTests::trivialCombineNoItemsTest() {
     combinedModel.initArtworks(items);
     combinedModel.recombineArtworks();
 
-    QCOMPARE(combinedModel.getArtworksCount(), (size_t)0);
+    QCOMPARE(combinedModel.getArtworksCount(), 0);
     QVERIFY(combinedModel.getDescription().isEmpty());
     QVERIFY(combinedModel.getTitle().isEmpty());
     QCOMPARE(combinedModel.getKeywordsCount(), 0);
@@ -65,7 +65,7 @@ void CombinedModelTests::trivialcombineOneItemTest() {
     combinedModel.initArtworks(items);
     combinedModel.recombineArtworks();
 
-    QCOMPARE(combinedModel.getArtworksCount(), (size_t)1);
+    QCOMPARE(combinedModel.getArtworksCount(), 1);
     QCOMPARE(combinedModel.getDescription(), desc);
     QCOMPARE(combinedModel.getTitle(), title);
     QCOMPARE(combinedModel.getKeywordsCount(), keywords.count());
@@ -84,7 +84,7 @@ void CombinedModelTests::combineSeveralSameItemsTest() {
     keywords << "keyword1" << "keyword2" << "keyword3";
 
     std::vector<Models::MetadataElement> items;
-    const size_t itemsToGenerate = 5;
+    const int itemsToGenerate = 5;
     int numberOfItems = itemsToGenerate;
     while (numberOfItems--) {
         items.push_back(createArtworkMetadata(desc, title, keywords));
@@ -111,7 +111,7 @@ void CombinedModelTests::combineAllDifferentItemsTest() {
     items.push_back(createArtworkMetadata("Description2", "title2", QStringList() << "Keyword2", 1));
     items.push_back(createArtworkMetadata("Description3", "title3", QStringList() << "Keyword3", 2));
 
-    size_t size = items.size();
+    int size = (int)items.size();
 
     combinedModel.initArtworks(items);
     combinedModel.recombineArtworks();
@@ -136,7 +136,7 @@ void CombinedModelTests::combineCommonInKeywordsTest() {
     items.push_back(createArtworkMetadata("Description2", "title2", QStringList() << "Keyword2" << commonKeyword, 1));
     items.push_back(createArtworkMetadata("Description3", "title3", QStringList() << "Keyword3" << commonKeyword, 2));
 
-    size_t size = items.size();
+    int size = (int)items.size();
     combinedModel.initArtworks(items);
     combinedModel.recombineArtworks();
 
@@ -161,7 +161,7 @@ void CombinedModelTests::combineCommonInTitleTest() {
     items.push_back(createArtworkMetadata("Description2", commonTitle, QStringList() << "Keyword2", 1));
     items.push_back(createArtworkMetadata("Description3", commonTitle, QStringList() << "Keyword3", 2));
 
-    size_t size = items.size();
+    int size = (int)items.size();
     combinedModel.initArtworks(items);
     combinedModel.recombineArtworks();
 
@@ -185,7 +185,7 @@ void CombinedModelTests::combineCommonInDescriptionTest() {
     items.push_back(createArtworkMetadata(commonDescription, "title2", QStringList() << "Keyword2", 1));
     items.push_back(createArtworkMetadata(commonDescription, "title3", QStringList() << "Keyword3", 2));
 
-    size_t size = items.size();
+    int size = (int)items.size();
     combinedModel.initArtworks(items);
     combinedModel.recombineArtworks();
 
@@ -210,7 +210,7 @@ void CombinedModelTests::recombineAfterRemoveDifferentTest() {
     items.push_back(createArtworkMetadata(commonDescription, "title2", QStringList() << "Keyword2" << commonKeyword, 1));
     items.push_back(createArtworkMetadata("Different description", "title3", QStringList() << "Keyword3", 2));
 
-    size_t size = items.size();
+    int size = (int)items.size();
 
     combinedModel.initArtworks(items);
     combinedModel.recombineArtworks();
@@ -245,7 +245,7 @@ void CombinedModelTests::recombineAfterRemoveAllButOneTest() {
     combinedModel.removeSelectedArtworks();
     Models::ArtworkMetadata *first = combinedModel.getItems().front().getOrigin();
 
-    QCOMPARE(combinedModel.getArtworksCount(), (size_t)1);
+    QCOMPARE(combinedModel.getArtworksCount(), 1);
     QCOMPARE(combinedModel.getTitle(), first->getTitle());
     QCOMPARE(combinedModel.getDescription(), first->getDescription());
     QCOMPARE(combinedModel.getKeywordsCount(), first->getKeywordsModel()->getKeywordsCount());
@@ -276,7 +276,7 @@ void CombinedModelTests::recombineAfterChangesTest() {
     combinedModel.removeSelectedArtworks();
     Models::ArtworkMetadata *first = combinedModel.getItems().front().getOrigin();
 
-    QCOMPARE(combinedModel.getArtworksCount(), (size_t)1);
+    QCOMPARE(combinedModel.getArtworksCount(), 1);
     QVERIFY(combinedModel.getTitle() != first->getTitle());
     QVERIFY(combinedModel.getDescription() != first->getDescription());
     QVERIFY(combinedModel.getKeywordsCount() != first->getKeywordsModel()->getKeywordsCount());
@@ -298,7 +298,7 @@ void CombinedModelTests::twoTimesInARowRecombineTest() {
     items.push_back(createArtworkMetadata(commonDescription, "title2", QStringList() << "Keyword2" << commonKeyword, 1));
     items.push_back(createArtworkMetadata("Different description", "title3", QStringList() << "Keyword3", 2));
 
-    size_t size = items.size();
+    int size = (int)items.size();
     combinedModel.initArtworks(items);
     combinedModel.recombineArtworks();
     combinedModel.recombineArtworks();
@@ -559,7 +559,7 @@ void CombinedModelTests::resetModelClearsEverythingTest() {
 
     combinedModel.resetModelData();
 
-    QCOMPARE(combinedModel.getArtworksCount(), (size_t)0);
+    QCOMPARE(combinedModel.getArtworksCount(), 0);
     QVERIFY(combinedModel.getDescription().isEmpty());
     QVERIFY(combinedModel.getTitle().isEmpty());
     QCOMPARE(combinedModel.getKeywordsCount(), 0);
