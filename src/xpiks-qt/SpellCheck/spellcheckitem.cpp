@@ -30,12 +30,11 @@
 
 namespace SpellCheck {
     SpellCheckItemBase::~SpellCheckItemBase() {
-        qDeleteAll(m_QueryItems);
     }
 
     void SpellCheckItemBase::accountResultAt(int index) {
-        if (0 <= index && index < m_QueryItems.length()) {
-            SpellCheckQueryItem *item = m_QueryItems.at(index);
+        if (0 <= index && (size_t)index < m_QueryItems.size()) {
+            auto &item = m_QueryItems.at(index);
             m_SpellCheckResults[item->m_Word] = item->m_IsCorrect;
         }
     }
@@ -45,8 +44,8 @@ namespace SpellCheck {
         return result;
     }
 
-    void SpellCheckItemBase::appendItem(SpellCheckQueryItem *item) {
-        m_QueryItems.append(item);
+    void SpellCheckItemBase::appendItem(const std::shared_ptr<SpellCheckQueryItem> &item) {
+        m_QueryItems.push_back(item);
     }
 
     SpellCheckItem::SpellCheckItem(Common::BasicKeywordsModel *spellCheckable, int spellCheckFlags, int keywordIndex) :
@@ -62,13 +61,13 @@ namespace SpellCheck {
 
         QString keyword = m_SpellCheckable->retrieveKeyword(keywordIndex);
         if (!keyword.contains(QChar::Space)) {
-            SpellCheckQueryItem *queryItem = new SpellCheckQueryItem(keywordIndex, keyword);
+            std::shared_ptr<SpellCheckQueryItem> queryItem(new SpellCheckQueryItem(keywordIndex, keyword));
             appendItem(queryItem);
         } else {
             QStringList parts = keyword.split(QChar::Space, QString::SkipEmptyParts);
             foreach (const QString &part, parts) {
                 QString item = part.trimmed();
-                SpellCheckQueryItem *queryItem = new SpellCheckQueryItem(keywordIndex, item);
+                std::shared_ptr<SpellCheckQueryItem> queryItem(new SpellCheckQueryItem(keywordIndex, item));
                 appendItem(queryItem);
             }
         }
@@ -113,14 +112,14 @@ namespace SpellCheck {
 
         foreach (const QString &word, words) {
             if (!word.contains(QChar::Space)) {
-                SpellCheckQueryItem *queryItem = new SpellCheckQueryItem(index, word);
+                std::shared_ptr<SpellCheckQueryItem> queryItem(new SpellCheckQueryItem(index, word));
                 appendItem(queryItem);
             } else {
                 QStringList parts = word.split(QChar::Space, QString::SkipEmptyParts);
                 foreach (const QString &part, parts) {
                     QString item = part.trimmed();
                     if (item.length() >= 2) {
-                        SpellCheckQueryItem *queryItem = new SpellCheckQueryItem(index, item);
+                        std::shared_ptr<SpellCheckQueryItem> queryItem(new SpellCheckQueryItem(index, item));
                         appendItem(queryItem);
                     }
                 }
@@ -132,10 +131,10 @@ namespace SpellCheck {
 
     /*virtual */
     void SpellCheckItem::submitSpellCheckResult() {
-        const QVector<SpellCheckQueryItem*> &items = getQueries();
+        const std::vector<std::shared_ptr<SpellCheckQueryItem> > &items = getQueries();
 
         // can be empty in case of clear command
-        if (Common::HasFlag(m_SpellCheckFlags, Common::SpellCheckKeywords) && !items.isEmpty()) {
+        if (Common::HasFlag(m_SpellCheckFlags, Common::SpellCheckKeywords) && !items.empty()) {
             m_SpellCheckable->setSpellCheckResults(items, m_OnlyOneKeyword);
         }
 
@@ -144,7 +143,7 @@ namespace SpellCheck {
             m_SpellCheckable->setSpellCheckResults(getHash(), m_SpellCheckFlags);
         }
 
-        int index = m_OnlyOneKeyword ? items.first()->m_Index : -1;
+        int index = m_OnlyOneKeyword ? items.front()->m_Index : -1;
         emit resultsReady(m_SpellCheckFlags, index);
     }
 }

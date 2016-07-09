@@ -159,7 +159,8 @@ namespace Common {
         // ISPELLCHECKABLE
         virtual QString retrieveKeyword(int wordIndex);
         virtual QStringList getKeywords();
-        virtual void setSpellCheckResults(const QVector<SpellCheck::SpellCheckQueryItem*> &items, bool onlyOneKeyword);
+        virtual void setSpellCheckResults(const std::vector<std::shared_ptr<SpellCheck::SpellCheckQueryItem> > &items,
+                                          bool onlyOneKeyword);
         virtual void setSpellCheckResults(const QHash<QString, bool> &results, int flags);
         virtual QVector<SpellCheck::SpellSuggestionsItem *> createKeywordsSuggestionsList();
         virtual QVector<SpellCheck::SpellSuggestionsItem*> createDescriptionSuggestionsList();

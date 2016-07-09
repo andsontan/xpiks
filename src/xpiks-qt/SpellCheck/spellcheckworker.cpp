@@ -125,13 +125,13 @@ namespace SpellCheck {
         }
 
         bool neededSuggestions = item->needsSuggestions();
-        const QVector<SpellCheckQueryItem*> &queryItems = item->getQueries();
+        auto &queryItems = item->getQueries();
         bool anyWrong = false;
 
         if (!neededSuggestions) {
-            int length = queryItems.length();
-            for (int i = 0; i < length; ++i) {
-                SpellCheckQueryItem *queryItem = queryItems.at(i);
+            size_t size = queryItems.size();
+            for (size_t i = 0; i < size; ++i) {
+                auto &queryItem = queryItems.at(i);
                 bool isOk = checkWordSpelling(queryItem);
                 item->accountResultAt(i);
                 anyWrong = anyWrong || !isOk;
@@ -139,7 +139,7 @@ namespace SpellCheck {
 
             item->submitSpellCheckResult();
         } else {
-            foreach (SpellCheckQueryItem *queryItem, queryItems) {
+            for (auto &queryItem: queryItems) {
                 if (!queryItem->m_IsCorrect) {
                     findSuggestions(queryItem->m_Word);
                 }
@@ -189,7 +189,7 @@ namespace SpellCheck {
         return suggestions;
     }
 
-    bool SpellCheckWorker::checkWordSpelling(SpellCheckQueryItem *queryItem) {
+    bool SpellCheckWorker::checkWordSpelling(const std::shared_ptr<SpellCheckQueryItem> &queryItem) {
         bool isOk = false;
 
         const QString &word = queryItem->m_Word;

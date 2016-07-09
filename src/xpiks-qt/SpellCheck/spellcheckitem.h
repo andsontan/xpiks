@@ -22,7 +22,8 @@
 #ifndef SPELLCHECKITEM_H
 #define SPELLCHECKITEM_H
 
-#include <QVector>
+#include <vector>
+#include <memory>
 #include <QStringList>
 #include <QObject>
 #include <QHash>
@@ -66,7 +67,7 @@ namespace SpellCheck {
             m_NeedsSuggestions(false) { }
 
     public:
-        const QVector<SpellCheckQueryItem*> &getQueries() const { return m_QueryItems; }
+        const std::vector<std::shared_ptr<SpellCheckQueryItem> > &getQueries() const { return m_QueryItems; }
         const QHash<QString, bool> &getHash() const { return m_SpellCheckResults; }
         virtual void submitSpellCheckResult() = 0;
         bool needsSuggestions() const { return m_NeedsSuggestions; }
@@ -75,11 +76,11 @@ namespace SpellCheck {
         bool getIsCorrect(const QString &word) const;
 
     protected:
-        void reserve(int n) { m_QueryItems.reserve(m_QueryItems.length() + n); }
-        void appendItem(SpellCheckQueryItem *item);
+        void reserve(int n) { m_QueryItems.reserve(m_QueryItems.size() + n); }
+        void appendItem(const std::shared_ptr<SpellCheckQueryItem> &item);
 
     private:
-        QVector<SpellCheckQueryItem*> m_QueryItems;
+        std::vector<std::shared_ptr<SpellCheckQueryItem> > m_QueryItems;
         QHash<QString, bool> m_SpellCheckResults;
         volatile bool m_NeedsSuggestions;
     };

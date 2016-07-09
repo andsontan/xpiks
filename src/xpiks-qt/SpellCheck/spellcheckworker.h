@@ -63,7 +63,7 @@ namespace SpellCheck {
     private:
         void detectAffEncoding();
         QStringList suggestCorrections(const QString &word);
-        bool checkWordSpelling(SpellCheckQueryItem *queryItem);
+        bool checkWordSpelling(const std::shared_ptr<SpellCheckQueryItem> &queryItem);
         bool isHunspellSpellingCorrect(const QString &word) const;
         void findSuggestions(const QString &word);
 
