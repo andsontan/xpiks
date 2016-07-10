@@ -83,17 +83,7 @@ namespace Conectivity {
         LOG_INFO << "Reporting action" << userEvent.getActionString();
 
         QUrlQuery query;
-        query.addQueryItem(QLatin1String("idsite"), QLatin1String("1"));
-        query.addQueryItem(QLatin1String("rec"), QLatin1String("1"));
-        query.addQueryItem(QLatin1String("url"), QString("/client/%1").arg(userEvent.getActionString()));
-        query.addQueryItem(QLatin1String("action_name"), userEvent.getActionString());
-        query.addQueryItem(QLatin1String("_id"), m_UserAgentId);
-        query.addQueryItem(QLatin1String("rand"), QString::number(qrand()));
-        query.addQueryItem(QLatin1String("apiv"), QLatin1String("1"));
-        query.addQueryItem(QLatin1String("h"), QString::number(userEvent.getHour()));
-        query.addQueryItem(QLatin1String("m"), QString::number(userEvent.getMinute()));
-        query.addQueryItem(QLatin1String("s"), QString::number(userEvent.getSecond()));
-        query.addQueryItem(QLatin1String("send_image"), QLatin1String("0"));
+        buildQuery(userEvent, query);
 
         QString customVarsStr = QString::fromLatin1("{\"1\":[\"OS_type\",\"%1\"],\"2\":[\"OS_version\",\"%2\"],\"3\":[\"Xpiks_version\",\"%3\"],\"4\":[\"UI_language\",\"%4\"]}");
 
@@ -148,6 +138,20 @@ namespace Conectivity {
         QNetworkReply *reply = m_NetworkManager.get(request);
         QObject::connect(this, SIGNAL(cancelAllQueries()),
                          reply, SLOT(abort()));
+    }
+
+    void TelemetryService::buildQuery(AnalyticsUserEvent &userEvent, QUrlQuery &query) {
+        query.addQueryItem(QLatin1String("idsite"), QLatin1String("1"));
+        query.addQueryItem(QLatin1String("rec"), QLatin1String("1"));
+        query.addQueryItem(QLatin1String("url"), QString("/client/%1").arg(userEvent.getActionString()));
+        query.addQueryItem(QLatin1String("action_name"), userEvent.getActionString());
+        query.addQueryItem(QLatin1String("_id"), m_UserAgentId);
+        query.addQueryItem(QLatin1String("rand"), QString::number(qrand()));
+        query.addQueryItem(QLatin1String("apiv"), QLatin1String("1"));
+        query.addQueryItem(QLatin1String("h"), QString::number(userEvent.getHour()));
+        query.addQueryItem(QLatin1String("m"), QString::number(userEvent.getMinute()));
+        query.addQueryItem(QLatin1String("s"), QString::number(userEvent.getSecond()));
+        query.addQueryItem(QLatin1String("send_image"), QLatin1String("0"));
     }
 
     void TelemetryService::replyReceived(QNetworkReply *networkReply) {

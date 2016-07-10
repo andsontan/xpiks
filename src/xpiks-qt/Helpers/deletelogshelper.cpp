@@ -28,6 +28,7 @@ namespace Helpers {
     }
 
     void cleanLogsLogic(const QString &logsDir) {
+        LOG_DEBUG << "#";
         QVector<FileInfoHolder> logFiles;
 
         qint64 overallSizeBytes = findLogFiles(logsDir, logFiles);
@@ -92,6 +93,8 @@ namespace Helpers {
                              deltaTimeDays, // m_AgeDays
                          });
         }
+
+        LOG_INFO << "Found" << logFiles.size() << "log file(s)";
 
         return logsSizeBytes;
     }

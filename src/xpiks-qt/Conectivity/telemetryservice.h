@@ -25,6 +25,7 @@
 #include <QObject>
 #include <QNetworkAccessManager>
 #include <QString>
+#include <QUrlQuery>
 #include "../Helpers/appsettings.h"
 #include "analyticsuserevent.h"
 
@@ -44,6 +45,7 @@ namespace Conectivity {
 
     private:
         void doReportAction(UserAction action);
+        void buildQuery(AnalyticsUserEvent &userEvent, QUrlQuery &urlQuery);
 
     signals:
         void cancelAllQueries();

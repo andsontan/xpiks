@@ -37,8 +37,9 @@ namespace Models {
     void ArtworksProcessor::removeUnavailableItems() {
         LOG_DEBUG << "#";
 
-        const QVector<Models::ArtworkMetadata*> & artworksListOld = getArtworkList();
+        const QVector<Models::ArtworkMetadata*> &artworksListOld = getArtworkList();
         QVector<Models::ArtworkMetadata*> artworksListNew;
+
         int size = artworksListOld.size();
         for (int i = 0; i < size; ++i) {
             Models::ArtworkMetadata* item = artworksListOld.at(i);
