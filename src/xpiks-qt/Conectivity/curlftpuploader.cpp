@@ -277,7 +277,7 @@ namespace Conectivity {
         LOG_DEBUG << "Cancelled in the progress reporter...";
     }
 
-    CurlFtpUploader::CurlFtpUploader(UploadBatch *batchToUpload, QObject *parent) :
+    CurlFtpUploader::CurlFtpUploader(const std::shared_ptr<UploadBatch> &batchToUpload, QObject *parent) :
         QObject(parent),
         m_BatchToUpload(batchToUpload),
         m_UploadedCount(0),

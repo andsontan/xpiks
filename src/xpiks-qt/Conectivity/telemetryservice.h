@@ -45,7 +45,7 @@ namespace Conectivity {
 
     private:
         void doReportAction(UserAction action);
-        void buildQuery(AnalyticsUserEvent &userEvent, QUrlQuery &urlQuery);
+        void buildQuery(AnalyticsUserEvent &userEvent, QUrlQuery &query);
 
     signals:
         void cancelAllQueries();

@@ -63,20 +63,20 @@ namespace Conectivity {
         }
     }
 
-    void generateUploadContexts(const QVector<Models::UploadInfo *> &uploadInfos,
-                                QVector<std::shared_ptr<UploadContext> > &contexts,
+    void generateUploadContexts(const std::vector<std::shared_ptr<Models::UploadInfo> > &uploadInfos,
+                                std::vector<std::shared_ptr<UploadContext> > &contexts,
                                 Encryption::SecretsManager *secretsManager,
                                 Models::SettingsModel *settingsModel) {
-        int size = uploadInfos.size();
+        size_t size = uploadInfos.size();
         contexts.reserve(size);
 
         Models::ProxySettings *proxySettings = settingsModel->getProxySettings();
         int timeoutSeconds = settingsModel->getUploadTimeout();
         bool useProxy = settingsModel->getUseProxy();
 
-        for (int i = 0; i < size; ++i) {
-            UploadContext *context = new UploadContext();
-            Models::UploadInfo *info = uploadInfos.at(i);
+        for (size_t i = 0; i < size; ++i) {
+            std::shared_ptr<UploadContext> context(new UploadContext());
+            auto &info = uploadInfos.at(i);
 
             context->m_Host = info->getHost();
             context->m_Username = info->getUsername();
@@ -98,38 +98,35 @@ namespace Conectivity {
                 context->m_DirForVectors = "Vector";
             }
 
-            contexts.append(std::shared_ptr<UploadContext>(context));
+            contexts.emplace_back(context);
         }
     }
 
-    QVector<UploadBatch*> generateUploadBatches(const QVector<Models::ArtworkMetadata *> &artworksToUpload,
-                                                const QVector<Models::UploadInfo *> &uploadInfos,
+    std::vector<std::shared_ptr<UploadBatch> > generateUploadBatches(const QVector<Models::ArtworkMetadata *> &artworksToUpload,
+                                                const std::vector<std::shared_ptr<Models::UploadInfo> > &uploadInfos,
                                                 Encryption::SecretsManager *secretsManager,
                                                 Models::SettingsModel *settingsModel) {
         LOG_DEBUG << artworksToUpload.length() << "file(s)";
-        QVector<UploadBatch*> batches;
+        std::vector<std::shared_ptr<UploadBatch> > batches;
 
         QStringList filePathes;
         QStringList zipFilePathes;
         extractFilePathes(artworksToUpload, filePathes, zipFilePathes);
 
-        QVector<std::shared_ptr<UploadContext> > contexts;
+        std::vector<std::shared_ptr<UploadContext> > contexts;
         generateUploadContexts(uploadInfos, contexts, secretsManager, settingsModel);
 
-        int size = contexts.size();
+        size_t size = contexts.size();
         batches.reserve(size);
 
-        for (int i = 0; i < size; ++i) {
-            UploadBatch *batch;
-            const std::shared_ptr<UploadContext> &context = contexts.at(i);
+        for (size_t i = 0; i < size; ++i) {
+            auto &context = contexts.at(i);
 
             if (uploadInfos[i]->getZipBeforeUpload()) {
-                batch = new UploadBatch(context, zipFilePathes);
+                batches.emplace_back(new UploadBatch(context, zipFilePathes));
             } else {
-                batch = new UploadBatch(context, filePathes);
+                batches.emplace_back(new UploadBatch(context, filePathes));
             }
-
-            batches.append(batch);
         }
 
         return batches;

@@ -26,7 +26,7 @@
 #include "../Common/defines.h"
 
 namespace Models {
-    UploadInfoRepository::~UploadInfoRepository() { qDeleteAll(m_UploadInfos); m_UploadInfos.clear();  }
+    UploadInfoRepository::~UploadInfoRepository() { m_UploadInfos.clear();  }
 
     void UploadInfoRepository::initFromString(const QString &savedString) {
         LOG_DEBUG << "#";
@@ -44,30 +44,29 @@ namespace Models {
         m_UploadInfos.reserve(length);
 
         for (int i = 0; i < length; ++i) {
-            const QHash<int, QString> &hash = items.at(i);
-            UploadInfo *info = new UploadInfo(hash);
-            m_UploadInfos.append(info);
+            auto &hash = items.at(i);
+            m_UploadInfos.emplace_back(new UploadInfo(hash));
         }
 
         LOG_INFO << length << "item(s) found";
     }
 
     void UploadInfoRepository::addItem() {
-        int lastIndex = m_UploadInfos.length();
+        int lastIndex = (int)m_UploadInfos.size();
 
         LOG_INFO << lastIndex;
         beginInsertRows(QModelIndex(), lastIndex, lastIndex);
-        m_UploadInfos.append(new UploadInfo());
+        m_UploadInfos.emplace_back(new UploadInfo());
         endInsertRows();
         emit infosCountChanged();
     }
 
     QString UploadInfoRepository::getInfoString() const {
-        LOG_DEBUG << "Serializing" << m_UploadInfos.length() << "info(s)";
+        LOG_DEBUG << "Serializing" << m_UploadInfos.size() << "info(s)";
         // bad type QList instead of QVector
         // but users already have this
         QList<QHash<int, QString> > items;
-        foreach(UploadInfo * info, m_UploadInfos) {
+        for (auto &info: m_UploadInfos) {
             if (!info->isEmpty()) {
                 items.append(info->toHash());
             }
@@ -83,11 +82,10 @@ namespace Models {
     }
 
     int UploadInfoRepository::getSelectedInfosCount() const {
-        int count = m_UploadInfos.length();
         int selectedCount = 0;
 
-        for (int i = 0; i < count; ++i) {
-            if (m_UploadInfos.at(i)->getIsSelected()) {
+        for (auto &info: m_UploadInfos) {
+            if (info->getIsSelected()) {
                 selectedCount++;
             }
         }
@@ -98,7 +96,7 @@ namespace Models {
     QString UploadInfoRepository::getAgenciesWithMissingDetails() {
         QStringList items;
 
-        foreach(UploadInfo * info, m_UploadInfos) {
+        for (auto &info: m_UploadInfos) {
             if (info->getIsSelected() && info->isSomethingMissing()) {
                 items.append(info->getTitle());
             }
@@ -128,36 +126,36 @@ namespace Models {
     }
 
     void UploadInfoRepository::backupAndDropRealPasswords() {
-        foreach(UploadInfo * info, m_UploadInfos) {
+        for (auto &info: m_UploadInfos) {
             info->backupPassword();
             info->dropPassword();
         }
     }
 
     void UploadInfoRepository::restoreRealPasswords() {
-        foreach(UploadInfo * info, m_UploadInfos) {
+        for (auto &info: m_UploadInfos) {
             info->restorePassword();
         }
     }
 
     void UploadInfoRepository::updatePercentages() {
-        emit dataChanged(index(0), index(m_UploadInfos.count() - 1), QVector<int>() << PercentRole);
+        emit dataChanged(index(0), index((int)m_UploadInfos.size() - 1), QVector<int>() << PercentRole);
     }
 
     void UploadInfoRepository::resetPercents() {
         LOG_DEBUG << "#";
-        foreach(UploadInfo * info, m_UploadInfos) {
+        for (auto &info: m_UploadInfos) {
             info->resetPercent();
         }
     }
 
-    QVector<UploadInfo *> UploadInfoRepository::retrieveSelectedUploadInfos() const {
-        QVector<UploadInfo *> uploadInfos;
+    std::vector<std::shared_ptr<UploadInfo> > UploadInfoRepository::retrieveSelectedUploadInfos() const {
+        std::vector<std::shared_ptr<UploadInfo> > uploadInfos;
         uploadInfos.reserve(m_UploadInfos.size());
 
-        foreach(UploadInfo * info, m_UploadInfos) {
+        for (auto &info: m_UploadInfos) {
             if (info->getIsSelected()) {
-                uploadInfos.append(info);
+                uploadInfos.push_back(info);
             }
         }
 
@@ -166,17 +164,17 @@ namespace Models {
 
     int UploadInfoRepository::rowCount(const QModelIndex &parent) const {
         Q_UNUSED(parent);
-        return m_UploadInfos.count();
+        return (int)m_UploadInfos.size();
     }
 
     QVariant UploadInfoRepository::data(const QModelIndex &index, int role) const {
         int row = index.row();
 
-        if (row < 0 || row >= m_UploadInfos.count()) {
+        if (row < 0 || (size_t)row >= m_UploadInfos.size()) {
             return QVariant();
         }
 
-        UploadInfo *uploadInfo = m_UploadInfos.at(row);
+        auto &uploadInfo = m_UploadInfos.at(row);
 
         switch (role) {
             case TitleRole:
@@ -210,7 +208,7 @@ namespace Models {
     Qt::ItemFlags UploadInfoRepository::flags(const QModelIndex &index) const {
         int row = index.row();
 
-        if (row < 0 || row >= m_UploadInfos.length()) {
+        if (row < 0 || (size_t)row >= m_UploadInfos.size()) {
             return Qt::ItemIsEnabled;
         }
 
@@ -220,14 +218,15 @@ namespace Models {
     bool UploadInfoRepository::setData(const QModelIndex &index, const QVariant &value, int role) {
         int row = index.row();
 
-        if (row < 0 || row >= m_UploadInfos.length()) {
+        if (row < 0 || (size_t)row >= m_UploadInfos.size()) {
             return false;
         }
 
-        UploadInfo *uploadInfo = m_UploadInfos.at(row);
+        auto &uploadInfo = m_UploadInfos.at(row);
         QString title;
         int roleToUpdate = 0;
         bool needToUpdate = false;
+
         switch (role) {
             case EditTitleRole:
                 roleToUpdate = TitleRole;
@@ -292,7 +291,7 @@ namespace Models {
 
     void UploadInfoRepository::onAfterMasterPasswordReset() {
         LOG_INFO << "#";
-        foreach(UploadInfo * info, m_UploadInfos) {
+        for (auto &info: m_UploadInfos) {
             info->dropPassword();
         }
     }
@@ -322,8 +321,6 @@ namespace Models {
     }
 
     void UploadInfoRepository::removeInnerItem(int row) {
-        UploadInfo *info = m_UploadInfos.takeAt(row);
-
-        delete info;
+        m_UploadInfos.erase(m_UploadInfos.begin() + row);
     }
 }

@@ -22,6 +22,8 @@
 #ifndef IFTPCOORDINATOR_H
 #define IFTPCOORDINATOR_H
 
+#include <vector>
+#include <memory>
 #include <QVector>
 
 namespace Models {
@@ -35,7 +37,7 @@ namespace Conectivity {
         virtual ~IFtpCoordinator() {}
 
         virtual void uploadArtworks(const QVector<Models::ArtworkMetadata *> &artworksToUpload,
-                            const QVector<Models::UploadInfo *> &uploadInfos) = 0;
+                            const std::vector<std::shared_ptr<Models::UploadInfo> > &uploadInfos) = 0;
         virtual void cancelUpload() = 0;
     };
 }

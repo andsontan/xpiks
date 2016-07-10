@@ -275,10 +275,11 @@ void Commands::CommandManager::ensureDependenciesInjected() {
 
 void Commands::CommandManager::recodePasswords(const QString &oldMasterPassword,
                                                const QString &newMasterPassword,
-                                               const QVector<Models::UploadInfo *> &uploadInfos) const {
+                                               const std::vector<std::shared_ptr<Models::UploadInfo> > &uploadInfos) const {
     if (m_SecretsManager) {
-        LOG_DEBUG << uploadInfos.length() << "item(s)";
-        foreach(Models::UploadInfo * info, uploadInfos) {
+        LOG_DEBUG << uploadInfos.size() << "item(s)";
+
+        for (auto &info: uploadInfos) {
             if (info->hasPassword()) {
                 QString newPassword = m_SecretsManager->recodePassword(
                     info->getPassword(), oldMasterPassword, newMasterPassword);

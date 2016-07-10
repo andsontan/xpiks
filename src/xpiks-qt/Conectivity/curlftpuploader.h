@@ -60,7 +60,7 @@ namespace Conectivity {
     {
         Q_OBJECT
     public:
-        explicit CurlFtpUploader(UploadBatch *batchToUpload, QObject *parent = 0);
+        explicit CurlFtpUploader(const std::shared_ptr<UploadBatch> &batchToUpload, QObject *parent = 0);
 
     public:
         void uploadBatch();
@@ -79,7 +79,7 @@ namespace Conectivity {
         void reportCurrentFileProgress(double percent);
 
     private:
-        UploadBatch *m_BatchToUpload;
+        std::shared_ptr<UploadBatch> m_BatchToUpload;
         volatile int m_UploadedCount;
         volatile bool m_Cancel;
         double m_LastPercentage;

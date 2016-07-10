@@ -25,6 +25,7 @@
 #include <QObject>
 #include <QVector>
 #include <QString>
+#include <memory>
 
 class QSemaphore;
 
@@ -44,8 +45,8 @@ namespace Conectivity {
         Q_OBJECT
     public:
         explicit FtpUploaderWorker(QSemaphore *uploadSemaphore,
-                                   UploadBatch *batch,
-                                   Models::UploadInfo *uploadInfo,
+                                   const std::shared_ptr<UploadBatch> &batch,
+                                   const std::shared_ptr<Models::UploadInfo> &uploadInfo,
                                    QObject *parent = 0);
 
         virtual ~FtpUploaderWorker();
@@ -67,8 +68,8 @@ namespace Conectivity {
 
     private:
         QSemaphore *m_UploadSemaphore;
-        UploadBatch *m_UploadBatch;
-        Models::UploadInfo *m_UploadInfo;
+        std::shared_ptr<UploadBatch> m_UploadBatch;
+        std::shared_ptr<Models::UploadInfo> m_UploadInfo;
         QVector<QString> m_FailedTransfers;
     };
 }

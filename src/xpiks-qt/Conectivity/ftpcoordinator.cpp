@@ -49,22 +49,21 @@ namespace Conectivity {
     }
 
     void FtpCoordinator::uploadArtworks(const QVector<Models::ArtworkMetadata *> &artworksToUpload,
-                                        const QVector<Models::UploadInfo *> &uploadInfos) {
+                                        const std::vector<std::shared_ptr<Models::UploadInfo> > &uploadInfos) {
         LOG_INFO << "Trying to upload" << artworksToUpload.size() <<
                    "file(s) to" << uploadInfos.size() << "host(s)";
 
-
-        if (artworksToUpload.isEmpty() || uploadInfos.isEmpty()) {
+        if (artworksToUpload.empty() || uploadInfos.empty()) {
             LOG_WARNING << "Nothing or nowhere to upload. Skipping...";
             return;
         }
 
         Encryption::SecretsManager *secretsManager = m_CommandManager->getSecretsManager();
         Models::SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
-        QVector<UploadBatch*> batches = generateUploadBatches(artworksToUpload,
-                                                              uploadInfos,
-                                                              secretsManager,
-                                                              settingsModel);
+        std::vector<std::shared_ptr<UploadBatch> > batches = std::move(generateUploadBatches(artworksToUpload,
+                                                                                             uploadInfos,
+                                                                                             secretsManager,
+                                                                                             settingsModel));
 
         Q_ASSERT(batches.size() == uploadInfos.size());
 

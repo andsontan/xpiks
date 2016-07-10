@@ -28,6 +28,7 @@
 #include <QVector>
 #include <QObject>
 #include <memory>
+#include <vector>
 #include "../UndoRedo/ihistoryitem.h"
 #include "commandbase.h"
 #include "../Conectivity/analyticsuserevent.h"
@@ -187,7 +188,7 @@ namespace Commands {
     public:
         void recodePasswords(const QString &oldMasterPassword,
                                 const QString &newMasterPassword,
-                                const QVector<Models::UploadInfo*> &uploadInfos) const;
+                                const std::vector<std::shared_ptr<Models::UploadInfo> > &uploadInfos) const;
 
         void combineArtwork(Models::ArtworkMetadata *metadata, int index) const;
         void combineArtworks(std::vector<Models::MetadataElement> &artworks) const;

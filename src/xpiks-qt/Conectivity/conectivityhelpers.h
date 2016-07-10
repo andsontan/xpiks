@@ -25,6 +25,7 @@
 #include <QStringList>
 #include <QVector>
 #include <memory>
+#include <vector>
 #include "uploadcontext.h"
 
 namespace Models {
@@ -45,13 +46,13 @@ namespace Conectivity {
                            QStringList &filePathes,
                            QStringList &zipsPathes);
 
-    void generateUploadContexts(const QVector<Models::UploadInfo *> &uploadInfos,
-                                QVector<std::shared_ptr<UploadContext> > &contexts,
+    void generateUploadContexts(const std::vector<std::shared_ptr<Models::UploadInfo> > &uploadInfos,
+                                std::vector<std::shared_ptr<UploadContext> > &contexts,
                                 Encryption::SecretsManager *secretsManager,
                                 Models::SettingsModel *settingsModel);
 
-    QVector<UploadBatch*> generateUploadBatches(const QVector<Models::ArtworkMetadata *> &artworksToUpload,
-                                                const QVector<Models::UploadInfo *> &uploadInfos,
+    std::vector<std::shared_ptr<UploadBatch> > generateUploadBatches(const QVector<Models::ArtworkMetadata *> &artworksToUpload,
+                                                const std::vector<std::shared_ptr<Models::UploadInfo> > &uploadInfos,
                                                 Encryption::SecretsManager *secretsManager,
                                                 Models::SettingsModel *settingsModel);
 }

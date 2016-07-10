@@ -29,8 +29,8 @@
 
 namespace Conectivity {
     FtpUploaderWorker::FtpUploaderWorker(QSemaphore *uploadSemaphore,
-                                         UploadBatch *batch,
-                                         Models::UploadInfo *uploadInfo,
+                                         const std::shared_ptr<UploadBatch> &batch,
+                                         const std::shared_ptr<Models::UploadInfo> &uploadInfo,
                                          QObject *parent) :
         QObject(parent),
         m_UploadSemaphore(uploadSemaphore),
@@ -40,7 +40,6 @@ namespace Conectivity {
     }
 
     FtpUploaderWorker::~FtpUploaderWorker() {
-        delete m_UploadBatch;
     }
 
     void FtpUploaderWorker::process() {

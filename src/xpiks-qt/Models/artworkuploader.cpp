@@ -140,8 +140,8 @@ namespace Models {
     bool ArtworkUploader::needCreateArchives() const {
         bool anyZipNeeded = false;
         const UploadInfoRepository *uploadInfoRepository = m_CommandManager->getUploadInfoRepository();
-        const QVector<Models::UploadInfo *> &infos = uploadInfoRepository->getUploadInfos();
-        foreach (Models::UploadInfo *info, infos) {
+        auto &infos = uploadInfoRepository->getUploadInfos();
+        for (auto &info: infos) {
             if (info->getIsSelected() && info->getZipBeforeUpload()) {
                 anyZipNeeded = true;
                 LOG_DEBUG << "at least for" << info->getHost();
@@ -184,7 +184,7 @@ namespace Models {
         }
 
         UploadInfoRepository *uploadInfoRepository = m_CommandManager->getUploadInfoRepository();
-        QVector<Models::UploadInfo *> selectedInfos = uploadInfoRepository->retrieveSelectedUploadInfos();
+        std::vector<std::shared_ptr<Models::UploadInfo> > selectedInfos = std::move(uploadInfoRepository->retrieveSelectedUploadInfos());
 
         uploadInfoRepository->resetPercents();
         uploadInfoRepository->updatePercentages();
