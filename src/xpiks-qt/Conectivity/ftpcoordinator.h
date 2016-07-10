@@ -67,7 +67,7 @@ namespace Conectivity {
         void workerFinished(bool anyErrors);
 
     private:
-        void initUpload(int uploadBatchesCount);
+        void initUpload(size_t uploadBatchesCount);
         void finalizeUpload();
 
     private:
@@ -75,7 +75,7 @@ namespace Conectivity {
         QSemaphore m_UploadSemaphore;
         double m_OverallProgress;
         QAtomicInt m_FinishedWorkersCount;
-        volatile int m_AllWorkersCount;
+        volatile size_t m_AllWorkersCount;
         volatile bool m_AnyFailed;
     };
 }

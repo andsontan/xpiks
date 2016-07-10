@@ -67,12 +67,12 @@ namespace Conectivity {
 
         Q_ASSERT(batches.size() == uploadInfos.size());
 
-        int size = batches.size();
+        size_t size = batches.size();
 
         initUpload(size);
         emit uploadStarted();
 
-        for (int i = 0; i < size; ++i) {
+        for (size_t i = 0; i < size; ++i) {
             FtpUploaderWorker *worker = new FtpUploaderWorker(&m_UploadSemaphore,
                                                               batches.at(i), uploadInfos.at(i));
             QThread *thread = new QThread();
@@ -121,14 +121,14 @@ namespace Conectivity {
 
         int workersDone = m_FinishedWorkersCount.fetchAndAddOrdered(1) + 1;
 
-        if (workersDone == m_AllWorkersCount) {
+        if ((size_t)workersDone == m_AllWorkersCount) {
             finalizeUpload();
             emit uploadFinished(m_AnyFailed);
             emit overallProgressChanged(100.0);
         }
     }
 
-    void FtpCoordinator::initUpload(int uploadBatchesCount) {
+    void FtpCoordinator::initUpload(size_t uploadBatchesCount) {
         m_AnyFailed = false;
         m_AllWorkersCount = uploadBatchesCount;
         m_FinishedWorkersCount = 0;
