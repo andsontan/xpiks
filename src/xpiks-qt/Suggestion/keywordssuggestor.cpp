@@ -63,7 +63,7 @@ namespace Suggestion {
         }
     }
 
-    void KeywordsSuggestor::setSuggestedArtworks(const std::vector<std::shared_ptr<SuggestionArtwork> > &suggestedArtworks) {
+    void KeywordsSuggestor::setSuggestedArtworks(std::vector<std::shared_ptr<SuggestionArtwork> > &suggestedArtworks) {
         LOG_DEBUG << suggestedArtworks.size() << "item(s)";
         m_SelectedArtworksCount = 0;
         m_KeywordsHash.clear();

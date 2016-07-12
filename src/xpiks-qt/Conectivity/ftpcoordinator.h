@@ -52,7 +52,7 @@ namespace Conectivity {
     public:
         // IFTPCOORDINATOR
         virtual void uploadArtworks(const QVector<Models::ArtworkMetadata *> &artworksToUpload,
-                            const std::vector<std::shared_ptr<Models::UploadInfo> > &uploadInfos);
+                            std::vector<std::shared_ptr<Models::UploadInfo> > &uploadInfos);
         virtual void cancelUpload();
 
     signals:

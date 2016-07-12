@@ -49,7 +49,7 @@ namespace Conectivity {
     }
 
     void FtpCoordinator::uploadArtworks(const QVector<Models::ArtworkMetadata *> &artworksToUpload,
-                                        const std::vector<std::shared_ptr<Models::UploadInfo> > &uploadInfos) {
+                                        std::vector<std::shared_ptr<Models::UploadInfo> > &uploadInfos) {
         LOG_INFO << "Trying to upload" << artworksToUpload.size() <<
                    "file(s) to" << uploadInfos.size() << "host(s)";
 
@@ -139,7 +139,7 @@ namespace Conectivity {
     }
 
     void FtpCoordinator::finalizeUpload() {
-        Q_ASSERT(m_FinishedWorkersCount == m_AllWorkersCount);
+        Q_ASSERT((size_t)m_FinishedWorkersCount == m_AllWorkersCount);
         curl_global_cleanup();
         LOG_DEBUG << "Cleaning up CURL";
     }

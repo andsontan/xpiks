@@ -53,7 +53,7 @@ namespace Suggestion {
         virtual ~KeywordsSuggestor() { }
 
     public:
-        void setSuggestedArtworks(const std::vector<std::shared_ptr<SuggestionArtwork> > &suggestedArtworks);
+        void setSuggestedArtworks(std::vector<std::shared_ptr<SuggestionArtwork> > &suggestedArtworks);
         void clear();
 
         int getSelectedSourceIndex() const { return m_SelectedSourceIndex; }

@@ -40,9 +40,9 @@ namespace Suggestion {
 
     public:
         void cancelQueries() { emit cancelAllQueries(); }
-        const std::vector<std::shared_ptr<SuggestionArtwork> > &getLastResults() const { return m_LastResults; }
+        std::vector<std::shared_ptr<SuggestionArtwork> > &getLastResults() { return m_LastResults; }
 
-        void setResults(const std::vector<std::shared_ptr<SuggestionArtwork> > &results) {
+        void setResults(std::vector<std::shared_ptr<SuggestionArtwork> > &results) {
             m_LastResults = std::move(results);
         }
 
