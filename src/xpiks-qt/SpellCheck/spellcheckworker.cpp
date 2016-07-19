@@ -133,7 +133,7 @@ namespace SpellCheck {
             for (size_t i = 0; i < size; ++i) {
                 auto &queryItem = queryItems.at(i);
                 bool isOk = checkWordSpelling(queryItem);
-                item->accountResultAt(i);
+                item->accountResultAt((int)i);
                 anyWrong = anyWrong || !isOk;
             }
 

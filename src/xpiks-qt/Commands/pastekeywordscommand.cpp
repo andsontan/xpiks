@@ -41,9 +41,9 @@ std::shared_ptr<Commands::ICommandResult> Commands::PasteKeywordsCommand::execut
     std::vector<UndoRedo::ArtworkMetadataBackup> artworksBackups;
     QVector<Models::ArtworkMetadata*> itemsToSave;
     size_t size = m_MetadataElements.size();
-    indicesToUpdate.reserve(size);
+    indicesToUpdate.reserve((int)size);
     artworksBackups.reserve(size);
-    itemsToSave.reserve(size);
+    itemsToSave.reserve((int)size);
 
     for (size_t i = 0; i < size; ++i) {
         const Models::MetadataElement &element = m_MetadataElements.at(i);
