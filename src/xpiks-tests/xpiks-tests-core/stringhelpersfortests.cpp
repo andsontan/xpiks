@@ -1,6 +1,8 @@
 #include "stringhelpersfortests.h"
+#include <QDebug>
 
 QString getRandomString(int length) {
+    qDebug() << "Random length:" << length;
     QByteArray qbr;
     qbr.reserve(length);
     const char chars[] = "/!@#$% \\^&*()_+=|";

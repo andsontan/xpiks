@@ -5,7 +5,7 @@
 
 void ReplacePreviewTests::noTructationTest() {
     QString textTest = getRandomString(PREVIEWOFFSET/4 + 1);
-    QString keyword = "keyword";
+    const QString keyword = "keyword";
     textTest += keyword;
     textTest += getRandomString(PREVIEWOFFSET/4 + 1);
     QVERIFY(textTest.size() < 2*PREVIEWOFFSET);
@@ -14,13 +14,13 @@ void ReplacePreviewTests::noTructationTest() {
     int pos = textTest.indexOf(keyword);
     hits.push_back(pos);
 
-    QString result = Helpers::getReplacementSubstrings(textTest,hits, keyword.size());
+    QString result = Helpers::getReplacementSubstrings(textTest, hits, keyword.size());
     QCOMPARE(result, textTest);
 }
 
 void ReplacePreviewTests::simpleTructationTest() {
     QString textTest = getRandomString(PREVIEWOFFSET/4 + 1);
-    QString keyword = "keyword";
+    const QString keyword = "keyword";
     textTest += keyword;
     textTest += getRandomString(2*PREVIEWOFFSET);
     QVERIFY(textTest.size() > 2*PREVIEWOFFSET);
@@ -28,15 +28,15 @@ void ReplacePreviewTests::simpleTructationTest() {
     std::vector<int> hits;
     int pos = textTest.indexOf(keyword);
     hits.push_back(pos);
-    QString result = Helpers::getReplacementSubstrings(textTest,hits, keyword.size());
-    QString gold = textTest.mid(std::max(pos-PREVIEWOFFSET,0),2*PREVIEWOFFSET);
+    QString result = Helpers::getReplacementSubstrings(textTest, hits, keyword.size());
+    QString gold = textTest.mid(std::max(pos - PREVIEWOFFSET, 0), 2*PREVIEWOFFSET);
 
     QCOMPARE(result,gold);
 }
 
 void ReplacePreviewTests::doubleTructationTest() {
-    QString textTest = getRandomString(PREVIEWOFFSET/4+1);
-    QString keyword = "keyword";
+    QString textTest = getRandomString(PREVIEWOFFSET/4 + 1);
+    const QString keyword = "keyword";
     textTest += keyword;
     textTest += getRandomString(2*PREVIEWOFFSET);
     textTest += keyword;
@@ -59,9 +59,9 @@ void ReplacePreviewTests::doubleTructationTest() {
 
 void ReplacePreviewTests::advancedTructationTest() {
     QString textTest = getRandomString(PREVIEWOFFSET/4 + 1);
-    QString keyword = "keyword";
+    const QString keyword = "keyword";
     textTest += keyword;
-    textTest += getRandomString(2*PREVIEWOFFSET - keyword.size() - PREVIEWOFFSET/4 + 1 - 4);
+    textTest += getRandomString(2*PREVIEWOFFSET - keyword.size() - (PREVIEWOFFSET/4 + 1) - 4);
     textTest += keyword;
     QVERIFY(textTest.size() > 2*PREVIEWOFFSET);
 
