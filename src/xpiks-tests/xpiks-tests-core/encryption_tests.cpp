@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <QTime>
 #include "../../xpiks-qt/Encryption/aes-qt.h"
+#include "stringhelpersfortests.h"
 
 void EncryptionTests::simpleEncodeDecodeTest() {
     QString text = QString::fromUtf8("simple text");
@@ -69,30 +70,6 @@ void EncryptionTests::realTest()
     QString decoded = Encryption::decodeText(encoded, key);
 
     QCOMPARE(decoded, text);
-}
-
-QString getRandomString(int length) {
-    QByteArray qbr;
-    qbr.reserve(length);
-    const char chars[] = "/!@#$% \\^&*()_+=|";
-    int charsLength = sizeof(chars);
-    while (length--) {
-        qbr.append('a' + qrand()%26);
-
-        if (qrand() % 3 == 0) {
-            qbr.append(chars[qrand() % charsLength]);
-        }
-
-        if (qrand() % 11 == 0) {
-            qbr.append('0' + qrand()%10);
-        }
-
-        if (qrand() % 13 == 0) {
-            qbr.append('A' + qrand()%26);
-        }
-    }
-
-    return QString::fromLatin1(qbr);
 }
 
 void EncryptionTests::bigRandomTest()

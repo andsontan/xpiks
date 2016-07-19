@@ -1,9 +1,7 @@
 #include "replacepreview_tests.h"
 #include "../../xpiks-qt/Helpers/stringhelper.h"
 #include"../../xpiks-qt/Common/defines.h"
-#include <QString>
-
-QString getRandomString(int randomStringLength);
+#include "stringhelpersfortests.h"
 
 void ReplacePreviewTests::noTructationTest() {
     QString textTest = getRandomString(PREVIEWOFFSET/4 + 1);
@@ -81,16 +79,3 @@ void ReplacePreviewTests::advancedTructationTest() {
     QCOMPARE(result, gold);
 }
 
-QString getRandomString(int randomStringLength){
-    const QString possibleCharacters("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
-
-    QString randomString;
-
-    for (int i = 0; i < randomStringLength; ++i) {
-        int index = qrand() % possibleCharacters.length();
-        QChar nextChar = possibleCharacters.at(index);
-        randomString.append(nextChar);
-    }
-
-    return randomString;
-}

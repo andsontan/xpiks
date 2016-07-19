@@ -152,7 +152,8 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Helpers/deletelogshelper.cpp \
     ../../xpiks-qt/Models/findandreplacemodel.cpp \
     replacepreview_tests.cpp \
-    replace_tests.cpp
+    replace_tests.cpp \
+    stringhelpersfortests.cpp
 
 HEADERS += \
     encryption_tests.h \
@@ -260,5 +261,6 @@ HEADERS += \
     ../../xpiks-qt/Helpers/deletelogshelper.h \
     ../../xpiks-qt/Models/findandreplacemodel.h \
     replacepreview_tests.h \
-    replace_tests.h
+    replace_tests.h \
+    stringhelpersfortests.h
 

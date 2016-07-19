@@ -22,7 +22,7 @@
 #include "artitemsmodel_tests.h"
 #include "fixspelling_tests.h"
 #include "deleteoldlogstest.h"
-#include "replacetest.h"
+#include "replace_tests.h"
 #include "replacepreview_tests.h"
 
 #define QTEST_CLASS(TestObject, vName, result) \
@@ -55,8 +55,8 @@ int main(int argc, char *argv[]) {
     QTEST_CLASS(ArtItemsModelTests, aimt, result);
     QTEST_CLASS(FixSpellingTests, fst, result);
     QTEST_CLASS(DeleteOldLogsTest, dolt, result);
-    QTEST_CLASS(ReplaceTest, rpl, result);
-    QTEST_CLASS(ReplacePreviewTest, rplp, result);
+    QTEST_CLASS(ReplaceTests, rpl, result);
+    QTEST_CLASS(ReplacePreviewTests, rplp, result);
 
     QThread::sleep(1);
 
