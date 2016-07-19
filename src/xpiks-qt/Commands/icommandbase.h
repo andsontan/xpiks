@@ -23,6 +23,7 @@
 #define ICOMMANDBASE_H
 
 #include <memory>
+#include <QtGlobal>
 
 namespace Commands {
     class ICommandManager;
