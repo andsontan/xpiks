@@ -28,6 +28,7 @@
 #include <QString>
 #include <QtGlobal>
 #include <vector>
+#include "../Common/defines.h"
 
 namespace Helpers {
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
@@ -299,5 +300,39 @@ done:
         }
 
         return !anyFault;
+    }
+
+    QString getReplacementSubstrings(const QString &text, const std::vector<int> &hits, int size) {
+        QString result;
+        QVector<QPair<int, int> > positions;
+        Q_ASSERT(!hits.empty());
+        int start = (hits[0] > PREVIEWOFFSET) ? (hits[0] - PREVIEWOFFSET) : 0;
+        int end = hits[0] + PREVIEWOFFSET;
+
+        positions.push_back(qMakePair(start, 2*PREVIEWOFFSET));
+
+        int i = 0;
+        for (int el: hits) {
+            if ((el - PREVIEWOFFSET) > end) {
+                start = el - PREVIEWOFFSET;
+                end = el + PREVIEWOFFSET;
+                positions.push_back(qMakePair(start, 2*PREVIEWOFFSET));
+                i++;
+            } else {
+                int delta = (el + size) - end;
+                if (delta > 0) {
+                    positions[i].second += delta;
+                    end += delta;
+                }
+            }
+        }
+
+        result.reserve(positions.size());
+
+        for (auto &element: positions) {
+            result.append(text.mid(element.first, element.second));
+        }
+
+        return result;
     }
 }

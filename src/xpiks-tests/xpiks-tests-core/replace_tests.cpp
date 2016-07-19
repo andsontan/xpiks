@@ -1,4 +1,4 @@
-#include "replacetest.h"
+#include "replace_tests.h"
 #include <QString>
 #include <QtAlgorithms>
 #include "Mocks/artitemsmodelmock.h"
@@ -20,7 +20,7 @@
     commandManagerMock.InjectDependency(&filteredItemsModel); \
     commandManagerMock.generateAndAddArtworks(count);
 
-void ReplaceTest::replaceTrivialTest() {
+void ReplaceTests::replaceTrivialTest() {
     const int itemsToGenerate = 10;
     DECLARE_MODELS_AND_GENERATE(itemsToGenerate);
 
@@ -53,7 +53,7 @@ void ReplaceTest::replaceTrivialTest() {
     }
 }
 
-void ReplaceTest::noReplaceTrivialTest() {
+void ReplaceTests::noReplaceTrivialTest() {
     const int itemsToGenerate = 10;
     DECLARE_MODELS_AND_GENERATE(itemsToGenerate);
 
@@ -86,7 +86,7 @@ void ReplaceTest::noReplaceTrivialTest() {
     }
 }
 
-void ReplaceTest::caseSensitiveTest() {
+void ReplaceTests::caseSensitiveTest() {
     const int itemsToGenerate = 10;
     DECLARE_MODELS_AND_GENERATE(itemsToGenerate);
 
@@ -118,7 +118,7 @@ void ReplaceTest::caseSensitiveTest() {
     }
 }
 
-void ReplaceTest::replaceTitleTest() {
+void ReplaceTests::replaceTitleTest() {
     const int itemsToGenerate = 10;
     DECLARE_MODELS_AND_GENERATE(itemsToGenerate);
 
@@ -148,8 +148,7 @@ void ReplaceTest::replaceTitleTest() {
     }
 }
 
-
-void ReplaceTest::replaceKeywordsTest() {
+void ReplaceTests::replaceKeywordsTest() {
     const int itemsToGenerate = 10;
     DECLARE_MODELS_AND_GENERATE(itemsToGenerate);
 
@@ -164,7 +163,8 @@ void ReplaceTest::replaceKeywordsTest() {
 
     for (int i = 0; i < itemsToGenerate; i++) {
         Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
-        metadata->initialize(QString("title"), QString("description"), QStringList() << replaceToLower<<"dummyKey"<<replaceFrom);
+        metadata->initialize(QString("title"), QString("description"),
+                             QStringList() << replaceToLower << "dummyKey" << replaceFrom);
     }
 
     auto artWorksInfo = filteredItemsModel.getSearchablePreviewOriginalItems(replaceFrom, flags);
@@ -176,11 +176,14 @@ void ReplaceTest::replaceKeywordsTest() {
         Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
         QCOMPARE(metadata->getDescription(), QString("description"));
         QCOMPARE(metadata->getTitle(), QString("title"));
+
         QStringList test = metadata->getKeywords();
         QStringList gold;
-        gold<<replaceToLower<<"dummyKey";
-        qSort(gold.begin(),gold.end());
-        qSort(test.begin(),test.end());
+
+        gold << replaceToLower << "dummyKey";
+        qSort(gold.begin(), gold.end());
+        qSort(test.begin(), test.end());
+
         QCOMPARE(gold, test);
         QVERIFY(metadata->isModified());
     }

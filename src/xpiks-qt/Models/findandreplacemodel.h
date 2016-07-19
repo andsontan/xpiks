@@ -1,3 +1,24 @@
+/*
+ * This file is a part of Xpiks - cross platform application for
+ * keywording and uploading images for microstocks
+ * Copyright (C) 2014-2016 Taras Kushnir <kushnirTV@gmail.com>
+ *
+ * Xpiks is distributed under the GNU General Public License, version 3.0
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #ifndef FINDANDREPLACEMODEL_H
 #define FINDANDREPLACEMODEL_H
 
@@ -7,23 +28,19 @@
 #include "../Models/previewmetadataelement.h"
 #include "../Common/flags.h"
 
-// namespace Models {
-// class PreviewMetadataElement;
-// }
-
 namespace Models {
     class FindAndReplaceModel:
         public QAbstractListModel,
         public Common::BaseEntity
     {
-    Q_OBJECT
-    Q_PROPERTY(QString replaceFrom READ getReplaceFrom WRITE setReplaceFrom NOTIFY replaceFromChanged)
-    Q_PROPERTY(QString replaceTo READ getReplaceTo WRITE setReplaceTo NOTIFY replaceToChanged)
-    Q_PROPERTY(bool searchInTitle READ getSearchInTitle WRITE setSearchInTitle NOTIFY searchInTitleChanged)
-    Q_PROPERTY(bool searchInDescription READ getSearchInDescription WRITE setSearchInDescription NOTIFY searchInDescriptionChanged)
-    Q_PROPERTY(bool searchInKeywords READ getSearchInKeywords WRITE setSearchInKeywords NOTIFY searchInKeywordsChanged)
-    Q_PROPERTY(bool caseSensitive READ getCaseSensitive WRITE setCaseSensitive NOTIFY caseSensitiveChanged)
-    Q_PROPERTY(int count READ getCount NOTIFY countChanged)
+        Q_OBJECT
+        Q_PROPERTY(QString replaceFrom READ getReplaceFrom WRITE setReplaceFrom NOTIFY replaceFromChanged)
+        Q_PROPERTY(QString replaceTo READ getReplaceTo WRITE setReplaceTo NOTIFY replaceToChanged)
+        Q_PROPERTY(bool searchInTitle READ getSearchInTitle WRITE setSearchInTitle NOTIFY searchInTitleChanged)
+        Q_PROPERTY(bool searchInDescription READ getSearchInDescription WRITE setSearchInDescription NOTIFY searchInDescriptionChanged)
+        Q_PROPERTY(bool searchInKeywords READ getSearchInKeywords WRITE setSearchInKeywords NOTIFY searchInKeywordsChanged)
+        Q_PROPERTY(bool caseSensitive READ getCaseSensitive WRITE setCaseSensitive NOTIFY caseSensitiveChanged)
+        Q_PROPERTY(int count READ getCount NOTIFY countChanged)
 
     public:
         FindAndReplaceModel(QMLExtensions::ColorsModel *colorsModel, QObject *parent=0);
@@ -94,7 +111,7 @@ namespace Models {
             }
         }
 
-        int getCount() {return (int)m_ArtworksList.size(); }
+        int getCount() const { return (int)m_ArtworksList.size(); }
 
     public:
         enum FindAndReplaceModelRoles {
@@ -130,14 +147,6 @@ namespace Models {
 
     private:
         QString filterText(const QString &text);
-
-#ifdef CORE_TESTS
-
-    public:
-        static
-#endif
-
-        QString getSubstrings(const QString &text, const std::vector<int> &hits, int size);
 
     private:
         std::vector<Models::PreviewMetadataElement> m_ArtworksList;

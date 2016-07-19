@@ -519,13 +519,13 @@ namespace Common {
                 } else {
                     QModelIndex j = this->index(i);
                     emit dataChanged(j, j, QVector<int>() << KeywordRole);
-                    anyChanged = true;
                 }
             }
         }
 
         if (!indicesToRemove.isEmpty()) {
             this->removeKeywordsAtIndicesUnsafe(indicesToRemove);
+            anyChanged = true;
         }
 
         return anyChanged;

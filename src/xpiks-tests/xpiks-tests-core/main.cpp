@@ -23,7 +23,7 @@
 #include "fixspelling_tests.h"
 #include "deleteoldlogstest.h"
 #include "replacetest.h"
-#include "replacepreview.h"
+#include "replacepreview_tests.h"
 
 #define QTEST_CLASS(TestObject, vName, result) \
     TestObject vName; \

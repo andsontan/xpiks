@@ -23,6 +23,8 @@
 #define STRINGHELPER
 
 #include <string>
+#include <vector>
+#include <QString>
 #include <stdarg.h>
 
 class QString;
@@ -37,6 +39,7 @@ namespace Helpers {
     QString detectEncodingAndDecode(const std::string &value);
     bool is7BitAscii(const QByteArray &s);
     std::string string_format(const std::string fmt, ...);
+    QString getReplacementSubstrings(const QString &text, const std::vector<int> &hits, int size);
 }
 
 #endif // STRINGHELPER
