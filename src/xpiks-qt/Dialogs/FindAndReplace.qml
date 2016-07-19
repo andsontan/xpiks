@@ -40,16 +40,20 @@ Item {
         replaceSetupComponent.destroy()
     }
 
-    function replace() {
+    function initReplace() {
         var titleFlag = searchInTitle.checkedState
         var descriptionFlag = searchInDescription.checkedState
         var keywordsFlag = searchInKeywords.checkedState
         var caseSensitiveFlag = caseSensitive.checkedState
         var replaceToStr = replaceTo.text.trim()
         var replaceFromStr = replaceFrom.text.trim()
-
-        filteredArtItemsModel.findAndReplace(titleFlag, descriptionFlag, keywordsFlag, caseSensitiveFlag,
-                                             replaceFromStr, replaceToStr)
+        replaceModel.searchInTitle = titleFlag
+        replaceModel.searchInDescription = descriptionFlag
+        replaceModel.searchInKeywords = keywordsFlag
+        replaceModel.caseSensitive = caseSensitiveFlag
+        replaceModel.replaceFrom = replaceFromStr
+        replaceModel.replaceTo = replaceToStr
+        replaceModel.initArtworksList()
     }
 
     function isSearchValid() {
@@ -273,8 +277,11 @@ Item {
                         width: 100
 
                         onClicked: {
-                            replace()
-                            closePopup()
+                            initReplace()
+                            Common.launchDialog("Dialogs/ReplacePreview.qml",
+                                                replaceSetupComponent,
+                                                {componentParent: replaceSetupComponent
+                                                })
                         }
 
                         Connections{

@@ -3,7 +3,7 @@
 #include "commandmanager.h"
 #include "../Models/filteredartitemsproxymodel.h"
 #include "../Models/artworkmetadata.h"
-#include "../Models/metadataelement.h"
+#include "../Models/previewmetadataelement.h"
 #include "../UndoRedo/artworkmetadatabackup.h"
 #include "../UndoRedo/modifyartworkshistoryitem.h"
 #include "../Common/defines.h"

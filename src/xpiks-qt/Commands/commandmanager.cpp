@@ -56,6 +56,7 @@
 #include <exiv2/xmp.hpp>
 #endif
 #include "../QMLExtensions/imagecachingservice.h"
+#include "../Models/findandreplacemodel.h"
 
 void Commands::CommandManager::InjectDependency(Models::ArtworksRepository *artworkRepository) {
     Q_ASSERT(artworkRepository != NULL); m_ArtworksRepository = artworkRepository;
@@ -179,6 +180,10 @@ void Commands::CommandManager::InjectDependency(AutoComplete::AutoCompleteServic
 
 void Commands::CommandManager::InjectDependency(QMLExtensions::ImageCachingService *imageCachingService) {
     Q_ASSERT(imageCachingService != NULL); m_ImageCachingService = imageCachingService;
+}
+
+void Commands::CommandManager::InjectDependency(Models::FindAndReplaceModel *replacePreview) {
+    Q_ASSERT(replacePreview != NULL); replacePreview->setCommandManager(this);
 }
 
 std::shared_ptr<Commands::ICommandResult> Commands::CommandManager::processCommand(const std::shared_ptr<ICommandBase> &command)

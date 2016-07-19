@@ -12,6 +12,7 @@ private slots:
     void noReplaceTrivialTest();
     void caseSensitiveTest();
     void replaceTitleTest();
+    void replaceKeywordsTest();
 };
 
 #endif // REPLACETEST_H

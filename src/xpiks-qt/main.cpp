@@ -81,6 +81,8 @@
 #include "Common/version.h"
 #include "Common/defines.h"
 #include "Models/proxysettings.h"
+#include "Models/findandreplacemodel.h"
+#include "Models/previewmetadataelement.h"
 
 void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg) {
     Q_UNUSED(context);
@@ -287,6 +289,7 @@ int main(int argc, char *argv[]) {
     AutoComplete::AutoCompleteModel autoCompleteModel;
     AutoComplete::AutoCompleteService autoCompleteService(&autoCompleteModel);
     QMLExtensions::ImageCachingService imageCachingService;
+    Models::FindAndReplaceModel replaceModel(&colorsModel);
 
     bool checkForUpdates = appSettings.value(Constants::CHECK_FOR_UPDATES, true).toBool();
     Helpers::UpdateService updateService(checkForUpdates);
@@ -332,6 +335,7 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&colorsModel);
     commandManager.InjectDependency(&autoCompleteService);
     commandManager.InjectDependency(&imageCachingService);
+    commandManager.InjectDependency(&replaceModel);
 
     commandManager.ensureDependenciesInjected();
 
@@ -386,6 +390,7 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("acSource", &autoCompleteModel);
     rootContext->setContextProperty("autoCompleteService", &autoCompleteService);
     rootContext->setContextProperty("ftpListAC", artworkUploader.getStocksCompletionSource());
+    rootContext->setContextProperty("replaceModel", &replaceModel);
 
 #ifdef QT_DEBUG
     QVariant isDebug(true);

@@ -64,6 +64,7 @@ namespace Models {
     class RecentDirectoriesModel;
     class LogsModel;
     class LanguagesModel;
+    class FindAndReplaceModel;
 }
 
 namespace Suggestion {
@@ -170,6 +171,7 @@ namespace Commands {
         void InjectDependency(QMLExtensions::ColorsModel *colorsModel);
         void InjectDependency(AutoComplete::AutoCompleteService *autoCompleteService);
         void InjectDependency(QMLExtensions::ImageCachingService *imageCachingService);
+        void InjectDependency(Models::FindAndReplaceModel *replacePreview);
 
     public:
         virtual std::shared_ptr<Commands::ICommandResult> processCommand(const std::shared_ptr<ICommandBase> &command)

@@ -31,6 +31,7 @@
 namespace Models {
     class ArtworkMetadata;
     class MetadataElement;
+    class PreviewMetadataElement;
     class ArtItemsModel;
 
     class FilteredArtItemsProxyModel:
@@ -51,7 +52,7 @@ namespace Models {
         void spellCheckAllItems();
 
         std::vector<MetadataElement> getSearchableOriginalItems(const QString &searchTerm, int flags) const;
-
+        std::vector<PreviewMetadataElement> getSearchablePreviewOriginalItems(const QString &searchTerm, int flags) const;
 #ifdef CORE_TESTS
         int retrieveNumberOfSelectedItems();
 
@@ -91,8 +92,6 @@ namespace Models {
         Q_INVOKABLE void detachVectorFromSelected();
         Q_INVOKABLE QObject *getArtworkMetadata(int index);
         Q_INVOKABLE QObject *getKeywordsModel(int index);
-        Q_INVOKABLE void findAndReplace(bool searchTitle, bool searchDescription, bool searchKeywords, bool caseSensitive,
-                                        const QString &replaceFrom, const QString &replaceTo);
 
     public slots:
         void itemSelectedChanged(bool value);

@@ -28,12 +28,12 @@
 #include "settingsmodel.h"
 #include "../Commands/commandmanager.h"
 #include "../Commands/combinededitcommand.h"
-#include "../Commands/findandreplacecommand.h"
 #include "../Common/flags.h"
 #include "../SpellCheck/ispellcheckable.h"
 #include "../Helpers/indiceshelper.h"
 #include "../Common/defines.h"
 #include "../Helpers/filterhelpers.h"
+#include "../Models/previewmetadataelement.h"
 
 namespace Models {
     FilteredArtItemsProxyModel::FilteredArtItemsProxyModel(QObject *parent):
@@ -558,17 +558,11 @@ namespace Models {
         [] (ArtworkMetadata *metadata, int index) { return MetadataElement(metadata, index); });
     }
 
-    void FilteredArtItemsProxyModel::findAndReplace(bool searchTitle, bool searchDescription, bool searchKeywords, bool caseSensitive,
-                                                    const QString &replaceFrom, const QString &replaceTo) {
-        int flags = 0;
-        Common::ApplyFlag(flags, searchDescription, Common::SearchFlagSearchDescription);
-        Common::ApplyFlag(flags, searchTitle, Common::SearchFlagSearchTitle);
-        Common::ApplyFlag(flags, searchKeywords, Common::SearchFlagSearchKeywords);
-        Common::ApplyFlag(flags, caseSensitive, Common::SearchFlagCaseSensitive);
-
-        std::vector<MetadataElement> artWorksInfo = getSearchableOriginalItems(replaceFrom, flags);
-        std::shared_ptr<Commands::FindAndReplaceCommand> replaceCommand(new Commands::FindAndReplaceCommand(artWorksInfo, replaceFrom, replaceTo,
-                                                                                                           flags));
-        m_CommandManager->processCommand(replaceCommand);
+    std::vector<PreviewMetadataElement> FilteredArtItemsProxyModel::getSearchablePreviewOriginalItems(const QString &searchTerm, int flags) const {
+        return getFilteredOriginalItems<PreviewMetadataElement>(
+                    [&searchTerm, flags](ArtworkMetadata *artwork) {
+            return Helpers::hasSearchMatch(searchTerm, artwork, flags);
+        },
+        [] (ArtworkMetadata *metadata, int index) { return PreviewMetadataElement(metadata, index); });
     }
 }

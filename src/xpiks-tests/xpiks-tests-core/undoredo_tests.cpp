@@ -10,6 +10,7 @@
 #include "../../xpiks-qt/UndoRedo/undoredomanager.h"
 #include "../../xpiks-qt/Common/flags.h"
 #include "../../xpiks-qt/Models/metadataelement.h"
+#include "../../xpiks-qt/Models/previewmetadataelement.h"
 #include "../../xpiks-qt/Commands/pastekeywordscommand.h"
 #include "../../xpiks-qt/Commands/findandreplacecommand.h"
 #include "../../xpiks-qt/Models/filteredartitemsproxymodel.h"
@@ -380,7 +381,7 @@ void UndoRedoTests::undoReplaceCommandTest() {
     QString replaceFrom = "Replace";
     int flags = Common::SearchFlagCaseSensitive |Common::SearchFlagSearchDescription |
                 Common::SearchFlagSearchTitle | Common::SearchFlagSearchKeywords;
-    std::vector<Models::MetadataElement> artWorksInfo = filteredItemsModel.getSearchableOriginalItems(replaceFrom, flags);
+    std::vector<Models::PreviewMetadataElement> artWorksInfo = filteredItemsModel.getSearchablePreviewOriginalItems(replaceFrom, flags);
     std::shared_ptr<Commands::FindAndReplaceCommand> replaceCommand(new Commands::FindAndReplaceCommand(artWorksInfo, replaceFrom, replaceTo, flags) );
     auto result = commandManagerMock.processCommand(replaceCommand);
 

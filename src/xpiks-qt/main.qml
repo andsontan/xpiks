@@ -197,7 +197,7 @@ ApplicationWindow {
     }
 
     function openFindAndReplaceDialog() {
-        Common.launchDialog("Dialogs/FindAndReplace.qml", applicationWindow,{})
+        Common.launchDialog("Dialogs/FindAndReplace.qml", applicationWindow, {componentParent: applicationWindow})
 
     }
 

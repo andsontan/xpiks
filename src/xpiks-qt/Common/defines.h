@@ -59,5 +59,8 @@
 #define XPIKS_USERDATA_PATH QStandardPaths::writableLocation(QStandardPaths::DataLocation);
 #endif
 
+
+#define PREVIEWOFFSET 25
+
 #endif // DEFINES
 

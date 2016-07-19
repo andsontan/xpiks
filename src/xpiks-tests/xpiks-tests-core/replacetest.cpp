@@ -1,10 +1,12 @@
 #include "replacetest.h"
 #include <QString>
+#include <QtAlgorithms>
 #include "Mocks/artitemsmodelmock.h"
 #include "Mocks/commandmanagermock.h"
 #include "../../xpiks-qt/Commands/findandreplacecommand.h"
 #include "../../xpiks-qt/Models/filteredartitemsproxymodel.h"
 #include "../../xpiks-qt/Models/artworksrepository.h"
+#include "../../xpiks-qt/Models/previewmetadataelement.h"
 #include "../../xpiks-qt/Common/flags.h"
 
 #define DECLARE_MODELS_AND_GENERATE(count) \
@@ -37,7 +39,7 @@ void ReplaceTest::replaceTrivialTest() {
         metadata->initialize(initString, initString, QStringList() << initString);
     }
 
-    auto artWorksInfo = filteredItemsModel.getSearchableOriginalItems(replaceFrom, flags);
+    auto artWorksInfo = filteredItemsModel.getSearchablePreviewOriginalItems(replaceFrom, flags);
     std::shared_ptr<Commands::FindAndReplaceCommand> replaceCommand(
                 new Commands::FindAndReplaceCommand(artWorksInfo, replaceFrom, replaceTo, flags));
     auto result = commandManagerMock.processCommand(replaceCommand);
@@ -70,7 +72,7 @@ void ReplaceTest::noReplaceTrivialTest() {
         metadata->initialize(initString, initString, QStringList() << initString);
     }
 
-    auto artWorksInfo = filteredItemsModel.getSearchableOriginalItems(replaceFrom, flags);
+    auto artWorksInfo = filteredItemsModel.getSearchablePreviewOriginalItems(replaceFrom, flags);
     std::shared_ptr<Commands::FindAndReplaceCommand> replaceCommand(
                 new Commands::FindAndReplaceCommand(artWorksInfo, replaceFrom, replaceTo, flags));
     auto result = commandManagerMock.processCommand(replaceCommand);
@@ -102,7 +104,7 @@ void ReplaceTest::caseSensitiveTest() {
         metadata->initialize(initString, initString, QStringList() << initString);
     }
 
-    auto artWorksInfo = filteredItemsModel.getSearchableOriginalItems(replaceFrom, flags);
+    auto artWorksInfo = filteredItemsModel.getSearchablePreviewOriginalItems(replaceFrom, flags);
     std::shared_ptr<Commands::FindAndReplaceCommand> replaceCommand(
                 new Commands::FindAndReplaceCommand(artWorksInfo, replaceFrom, replaceTo, flags));
     auto result = commandManagerMock.processCommand(replaceCommand);
@@ -132,7 +134,7 @@ void ReplaceTest::replaceTitleTest() {
         metadata->initialize(initString, initString, QStringList() << initString);
     }
 
-    auto artWorksInfo = filteredItemsModel.getSearchableOriginalItems(replaceFrom, flags);
+    auto artWorksInfo = filteredItemsModel.getSearchablePreviewOriginalItems(replaceFrom, flags);
     std::shared_ptr<Commands::FindAndReplaceCommand> replaceCommand(
                 new Commands::FindAndReplaceCommand(artWorksInfo, replaceFrom, replaceTo, flags));
     auto result = commandManagerMock.processCommand(replaceCommand);
@@ -145,3 +147,42 @@ void ReplaceTest::replaceTitleTest() {
         QVERIFY(metadata->isModified());
     }
 }
+
+
+void ReplaceTest::replaceKeywordsTest() {
+    const int itemsToGenerate = 10;
+    DECLARE_MODELS_AND_GENERATE(itemsToGenerate);
+
+    QString replaceFrom = "keywordOld";
+    QString replaceTo = "keywordNew";
+    QString replaceToLower = replaceTo.toLower();
+
+    int flags = Common::SearchFlagCaseSensitive |
+                Common::SearchFlagSearchDescription |
+                Common::SearchFlagSearchTitle |
+                Common::SearchFlagSearchKeywords;
+
+    for (int i = 0; i < itemsToGenerate; i++) {
+        Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
+        metadata->initialize(QString("title"), QString("description"), QStringList() << replaceToLower<<"dummyKey"<<replaceFrom);
+    }
+
+    auto artWorksInfo = filteredItemsModel.getSearchablePreviewOriginalItems(replaceFrom, flags);
+    std::shared_ptr<Commands::FindAndReplaceCommand> replaceCommand(
+                new Commands::FindAndReplaceCommand(artWorksInfo, replaceFrom, replaceTo, flags));
+    auto result = commandManagerMock.processCommand(replaceCommand);
+
+    for (int i = 0; i < itemsToGenerate; i++) {
+        Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
+        QCOMPARE(metadata->getDescription(), QString("description"));
+        QCOMPARE(metadata->getTitle(), QString("title"));
+        QStringList test = metadata->getKeywords();
+        QStringList gold;
+        gold<<replaceToLower<<"dummyKey";
+        qSort(gold.begin(),gold.end());
+        qSort(test.begin(),test.end());
+        QCOMPARE(gold, test);
+        QVERIFY(metadata->isModified());
+    }
+}
+

@@ -23,6 +23,7 @@
 #include "fixspelling_tests.h"
 #include "deleteoldlogstest.h"
 #include "replacetest.h"
+#include "replacepreview.h"
 
 #define QTEST_CLASS(TestObject, vName, result) \
     TestObject vName; \
@@ -55,6 +56,7 @@ int main(int argc, char *argv[]) {
     QTEST_CLASS(FixSpellingTests, fst, result);
     QTEST_CLASS(DeleteOldLogsTest, dolt, result);
     QTEST_CLASS(ReplaceTest, rpl, result);
+    QTEST_CLASS(ReplacePreviewTest, rplp, result);
 
     QThread::sleep(1);
 

@@ -6,7 +6,7 @@
 #include <QVector>
 
 namespace Models {
-    class MetadataElement;
+    class PreviewMetadataElement;
     class ArtworkMetadata;
 }
 
@@ -15,7 +15,7 @@ namespace Commands {
         public CommandBase
     {
     public:
-        FindAndReplaceCommand(std::vector<Models::MetadataElement> &metadataElements,
+        FindAndReplaceCommand(std::vector<Models::PreviewMetadataElement> &metadataElements,
                               const QString &replaceWhat, const QString &replaceTo, int flags):
             CommandBase(FindAndReplaceCommandType),
             m_MetadataElements(std::move(metadataElements)),
@@ -30,7 +30,7 @@ namespace Commands {
         std::shared_ptr<Commands::ICommandResult> execute(const ICommandManager *commandManagerInterface) const;
 
     private:
-        std::vector<Models::MetadataElement> m_MetadataElements;
+        std::vector<Models::PreviewMetadataElement> m_MetadataElements;
         QString m_ReplaceWhat;
         QString m_ReplaceTo;
         int m_Flags;

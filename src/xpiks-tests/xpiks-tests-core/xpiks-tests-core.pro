@@ -150,7 +150,9 @@ SOURCES += main.cpp \
     fixspelling_tests.cpp \
     deleteoldlogstest.cpp \
     ../../xpiks-qt/Helpers/deletelogshelper.cpp \
-    replacetest.cpp
+    replacetest.cpp \
+    replacepreview.cpp \
+    ../../xpiks-qt/Models/findandreplacemodel.cpp
 
 HEADERS += \
     encryption_tests.h \
@@ -256,5 +258,7 @@ HEADERS += \
     fixspelling_tests.h \
     Mocks/spellcheckservicemock.h \
     ../../xpiks-qt/Helpers/deletelogshelper.h \
-    replacetest.h
+    replacetest.h \
+    replacepreview.h \
+    ../../xpiks-qt/Models/findandreplacemodel.h
 

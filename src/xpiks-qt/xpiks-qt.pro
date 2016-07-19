@@ -105,7 +105,9 @@ SOURCES += main.cpp \
     QMLExtensions/imagecachingservice.cpp \
     QMLExtensions/cachingimageprovider.cpp \
     Helpers/deletelogshelper.cpp \
-    Commands/findandreplacecommand.cpp
+    Commands/findandreplacecommand.cpp \
+    Helpers/metadatahighlighter.cpp \
+    Models/findandreplacemodel.cpp
 
 RESOURCES += qml.qrc
 
@@ -267,7 +269,10 @@ HEADERS += \
     QMLExtensions/cachingimageprovider.h \
     Helpers/deletelogshelper.h \
     Commands/findandreplacecommand.h \
-    Models/metadataelement.h
+    Models/metadataelement.h \
+    Models/previewmetadataelement.h \
+    Helpers/metadatahighlighter.h \
+    Models/findandreplacemodel.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
@@ -334,7 +339,8 @@ DISTFILES += \
     Graphics/suggestion.png \
     Dialogs/ProxySetupDialog.qml \
     Dialogs/WhatsNewMinorDialog.qml \
-    Dialogs/FindAndReplace.qml
+    Dialogs/FindAndReplace.qml \
+    Dialogs/ReplacePreview.qml
 
 lupdate_only {
 SOURCES += *.qml \
