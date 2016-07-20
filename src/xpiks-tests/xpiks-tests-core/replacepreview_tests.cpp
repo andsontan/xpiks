@@ -40,7 +40,8 @@ void ReplacePreviewTests::doubleTructationTest() {
     textTest += keyword;
     textTest += getRandomString(2*PREVIEWOFFSET);
     textTest += keyword;
-    QVERIFY(textTest.size()>2*PREVIEWOFFSET);
+    LOG_DEBUG << "length of random text is" << textTest.length();
+    QVERIFY(textTest.size() > 2*PREVIEWOFFSET);
 
     std::vector<int> hits;
     int pos = 0;
@@ -63,6 +64,7 @@ void ReplacePreviewTests::advancedTructationTest() {
     textTest += keyword;
     textTest += getRandomString(2*PREVIEWOFFSET - keyword.size() - (PREVIEWOFFSET/4 + 1) - 4);
     textTest += keyword;
+    LOG_DEBUG << "length of random text is" << textTest.length();
     QVERIFY(textTest.size() > 2*PREVIEWOFFSET);
 
     std::vector<int> hits;
