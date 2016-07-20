@@ -3,6 +3,6 @@
 
 #include <QString>
 
-QString getRandomString(int length);
+QString getRandomString(int length, bool exactSize=false);
 
 #endif // STRINGHELPERSFORTESTS_H

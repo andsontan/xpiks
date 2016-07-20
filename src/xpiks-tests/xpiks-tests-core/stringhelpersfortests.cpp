@@ -1,11 +1,11 @@
 #include "stringhelpersfortests.h"
 
-QString getRandomString(int length) {
+QString getRandomString(int length, bool exactSize) {
     if (length <= 0) { return QString(); }
     
     QByteArray qbr;
     qbr.reserve(length);
-    const char chars[] = "/!@#$% \\^&*()_+=|";
+    const char chars[] = "/!@#$% ^&*()_+=|";
     int charsLength = sizeof(chars);
     while (length--) {
         qbr.append('a' + qrand()%26);
@@ -23,5 +23,5 @@ QString getRandomString(int length) {
         }
     }
 
-    return QString::fromLatin1(qbr);
+    return QString::fromLatin1(qbr, exactSize ? length : -1);
 }

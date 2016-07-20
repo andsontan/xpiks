@@ -4,10 +4,10 @@
 #include "stringhelpersfortests.h"
 
 void ReplacePreviewTests::noTructationTest() {
-    QString textTest = getRandomString(PREVIEWOFFSET/4 + 1);
+    QString textTest = getRandomString(PREVIEWOFFSET/4 + 1, true);
     const QString keyword = "keyword";
     textTest += keyword;
-    textTest += getRandomString(PREVIEWOFFSET/4 + 1);
+    textTest += getRandomString(PREVIEWOFFSET/4 + 1, true);
     QVERIFY(textTest.size() < 2*PREVIEWOFFSET);
 
     std::vector<int> hits;
@@ -19,13 +19,10 @@ void ReplacePreviewTests::noTructationTest() {
 }
 
 void ReplacePreviewTests::simpleTructationTest() {
-    QString textTest = getRandomString(PREVIEWOFFSET/4 + 1);
-    LOG_DEBUG << "Returned random string of length" << textTest.size();
-    QString midPart = getRandomString(2*PREVIEWOFFSET);
-    LOG_DEBUG << "MidPart is of length" << midPart.length();
+    QString textTest = getRandomString(PREVIEWOFFSET/4 + 1, true);
     const QString keyword = "keyword";
     textTest += keyword;
-    textTest += midPart;
+    textTest += getRandomString(2*PREVIEWOFFSET, true);
     QVERIFY(textTest.size() > 2*PREVIEWOFFSET);
 
     std::vector<int> hits;
@@ -38,12 +35,11 @@ void ReplacePreviewTests::simpleTructationTest() {
 }
 
 void ReplacePreviewTests::doubleTructationTest() {
-    QString textTest = getRandomString(PREVIEWOFFSET/4 + 1);
+    QString textTest = getRandomString(PREVIEWOFFSET/4 + 1, true);
     const QString keyword = "keyword";
     textTest += keyword;
-    textTest += getRandomString(2*PREVIEWOFFSET);
+    textTest += getRandomString(2*PREVIEWOFFSET, true);
     textTest += keyword;
-    LOG_DEBUG << "length of random text is" << textTest.length();
     QVERIFY(textTest.size() > 2*PREVIEWOFFSET);
 
     std::vector<int> hits;
@@ -62,19 +58,12 @@ void ReplacePreviewTests::doubleTructationTest() {
 }
 
 void ReplacePreviewTests::advancedTructationTest() {
-    QString textTest = getRandomString(PREVIEWOFFSET/4 + 1);
+    QString textTest = getRandomString(PREVIEWOFFSET/4 + 1, true);
     const QString keyword = "keyword";
 
-    LOG_DEBUG << "Returned random string of length" << textTest.length();
-    int sizeToAdd = 2*PREVIEWOFFSET - keyword.size() - (PREVIEWOFFSET/4 + 1) - 4;
-    LOG_DEBUG << "Middle part requested:" << sizeToAdd;
-    QString middlePart = getRandomString(sizeToAdd);
-    LOG_DEBUG << "Middle part received:" << middlePart.length();
-
     textTest += keyword;
-    textTest += middlePart;
+    textTest += getRandomString(2*PREVIEWOFFSET - keyword.size() - (PREVIEWOFFSET/4 + 1) - 4, true);
     textTest += keyword;
-    LOG_DEBUG << "length of random text is" << textTest.length();
     QVERIFY(textTest.size() > 2*PREVIEWOFFSET);
 
     std::vector<int> hits;
