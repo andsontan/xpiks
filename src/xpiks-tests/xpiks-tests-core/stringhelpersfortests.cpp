@@ -23,5 +23,9 @@ QString getRandomString(int length, bool exactSize) {
         }
     }
 
-    return QString::fromLatin1(qbr, exactSize ? length : -1);
+    if (exactSize) {
+        qbr.truncate(length);
+    }
+
+    return QString::fromLatin1(qbr);
 }
