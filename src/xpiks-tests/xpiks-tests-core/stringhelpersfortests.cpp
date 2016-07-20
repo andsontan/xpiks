@@ -6,7 +6,8 @@ QString getRandomString(int length, bool exactSize) {
     QByteArray qbr;
     qbr.reserve(length);
     const char chars[] = "/!@#$% ^&*()_+=|";
-    int charsLength = sizeof(chars);
+    int charsLength = sizeof(chars) - 1;
+
     while (length--) {
         qbr.append('a' + qrand()%26);
 
