@@ -1,7 +1,7 @@
 #include "stringhelpersfortests.h"
 
 QString getRandomString(int length) {
-    if (length < 0) { return QString(); }
+    if (length <= 0) { return QString(); }
     
     QByteArray qbr;
     qbr.reserve(length);

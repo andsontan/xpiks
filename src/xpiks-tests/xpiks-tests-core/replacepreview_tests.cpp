@@ -60,9 +60,14 @@ void ReplacePreviewTests::doubleTructationTest() {
 
 void ReplacePreviewTests::advancedTructationTest() {
     QString textTest = getRandomString(PREVIEWOFFSET/4 + 1);
+    LOG_DEBUG << "Returned random string of length" << textTest.length();
+    int sizeToAdd = 2*PREVIEWOFFSET - keyword.size() - (PREVIEWOFFSET/4 + 1) - 4;
+    LOG_DEBUG << "Middle part requested:" << sizeToAdd;
+    QString middlePart = getRandomString(sizeToAdd);
+    LOG_DEBUG << "Middle part received:" << middlePart.length();
     const QString keyword = "keyword";
     textTest += keyword;
-    textTest += getRandomString(2*PREVIEWOFFSET - keyword.size() - (PREVIEWOFFSET/4 + 1) - 4);
+    textTest += middlePart;
     textTest += keyword;
     LOG_DEBUG << "length of random text is" << textTest.length();
     QVERIFY(textTest.size() > 2*PREVIEWOFFSET);
