@@ -20,9 +20,12 @@ void ReplacePreviewTests::noTructationTest() {
 
 void ReplacePreviewTests::simpleTructationTest() {
     QString textTest = getRandomString(PREVIEWOFFSET/4 + 1);
+    LOG_DEBUG << "Returned random string of length" << textTest.size();
+    QString midPart = getRandomString(2*PREVIEWOFFSET);
+    LOG_DEBUG << "MidPart is of length" << midPart.length();
     const QString keyword = "keyword";
     textTest += keyword;
-    textTest += getRandomString(2*PREVIEWOFFSET);
+    textTest += midPart;
     QVERIFY(textTest.size() > 2*PREVIEWOFFSET);
 
     std::vector<int> hits;
