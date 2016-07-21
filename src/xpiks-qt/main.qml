@@ -397,14 +397,6 @@ ApplicationWindow {
             enabled: applicationWindow.openedDialogsCount == 0
 
             MenuItem {
-                text: i18.n + qsTr("&Find and replace")
-                enabled: artworksHost.count > 0
-                onTriggered: {
-                    console.info("Find and replace triggered")
-                    openFindAndReplaceDialog()
-                }
-            }
-            MenuItem {
                 text: i18.n + qsTr("&Invert selection")
                 enabled: artworksHost.count > 0
                 onTriggered: {
@@ -420,6 +412,15 @@ ApplicationWindow {
                 onToggled: {
                     console.info("Sort by filename")
                     filteredArtItemsModel.toggleSorted();
+                }
+            }
+
+            MenuItem {
+                text: i18.n + qsTr("&Find and replace")
+                enabled: artworksHost.count > 0
+                onTriggered: {
+                    console.info("Find and replace triggered")
+                    openFindAndReplaceDialog()
                 }
             }
 

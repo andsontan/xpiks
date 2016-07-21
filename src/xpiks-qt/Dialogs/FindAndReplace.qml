@@ -122,7 +122,7 @@ Item {
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
-            width: 450
+            width: 480
             height: 220
             property int inputsWidth: 200
             color: Colors.selectedImageBackground
@@ -280,7 +280,8 @@ Item {
                             initReplace()
                             Common.launchDialog("Dialogs/ReplacePreview.qml",
                                                 replaceSetupComponent,
-                                                {componentParent: replaceSetupComponent
+                                                {
+                                                    componentParent: replaceSetupComponent
                                                 })
                         }
 
