@@ -50,7 +50,7 @@ namespace Suggestion {
 
     public:
         KeywordsSuggestor(LocalLibrary *library, QObject *parent=NULL);
-        virtual ~KeywordsSuggestor() { }
+        virtual ~KeywordsSuggestor() { qDeleteAll(m_QueryEngines); }
 
     public:
         void setSuggestedArtworks(std::vector<std::shared_ptr<SuggestionArtwork> > &suggestedArtworks);
