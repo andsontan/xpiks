@@ -37,7 +37,7 @@ namespace Commands {
     {
     public:
         FindAndReplaceCommand(std::vector<Models::PreviewMetadataElement> &metadataElements,
-                              const QString &replaceWhat, const QString &replaceTo, int flags):
+        const QString &replaceWhat, const QString &replaceTo, int flags):
             CommandBase(FindAndReplaceCommandType),
             m_MetadataElements(std::move(metadataElements)),
             m_ReplaceWhat(replaceWhat),
@@ -72,8 +72,10 @@ namespace Commands {
         virtual void afterExecCallback(const ICommandManager *commandManagerInterface) const;
 
 #ifndef CORE_TESTS
+
     private:
 #else
+
     public:
 #endif
         QVector<Models::ArtworkMetadata *> m_ItemsToSave;

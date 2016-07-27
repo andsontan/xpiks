@@ -209,4 +209,13 @@ namespace Models {
 
         return result;
     }
+
+
+    void FindAndReplaceModel::setReplacableState(int index, bool state){
+        if (index < 0 || index >= (int)m_ArtworksList.size()) {
+            return;
+        }
+
+        m_ArtworksList[index].setIsReplacable(state);
+    }
 }

@@ -37,6 +37,7 @@ namespace Commands {
         CommandManager *commandManager = (CommandManager *)commandManagerInterface;
 
         std::vector<UndoRedo::ArtworkMetadataBackup> artworksBackups;
+
         QVector<int> indicesToUpdate;
         QVector<Models::ArtworkMetadata *> itemsToSave;
 
@@ -45,7 +46,11 @@ namespace Commands {
         indicesToUpdate.reserve((int)size);
 
         for (size_t i = 0; i < size; i++) {
-            const Models::MetadataElement &element = m_MetadataElements.at(i);
+            const Models::PreviewMetadataElement &element = m_MetadataElements.at(i);
+            if (element.isReplacable() == false) {
+                continue;
+            }
+
             Models::ArtworkMetadata *metadata = element.getOrigin();
             int index = element.getOriginalIndex();
 

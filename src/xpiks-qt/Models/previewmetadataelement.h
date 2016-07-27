@@ -25,29 +25,33 @@
 #include "metadataelement.h"
 
 namespace Models {
-    class PreviewMetadataElement: public MetadataElement
+    class PreviewMetadataElement:
+        public MetadataElement
     {
     public:
         PreviewMetadataElement(ArtworkMetadata *metadata, int index):
             MetadataElement(metadata, index),
             m_ShowTitle(false),
             m_ShowDescription(false),
-            m_ShowKeywords(false)
+            m_ShowKeywords(false),
+            m_IsReplacable(true)
         {}
 
         PreviewMetadataElement(PreviewMetadataElement &&other):
             MetadataElement(std::move(other)),
             m_ShowTitle(false),
             m_ShowDescription(false),
-            m_ShowKeywords(false)
+            m_ShowKeywords(false),
+            m_IsReplacable(true)
         {}
 
         PreviewMetadataElement &operator=(PreviewMetadataElement &&other) {
             m_ShowTitle = other.m_ShowTitle;
             m_ShowDescription = other.m_ShowDescription;
             m_ShowKeywords = other.m_ShowKeywords;
+            m_IsReplacable = other.m_IsReplacable;
 
-            return static_cast<PreviewMetadataElement &>( MetadataElement::operator=(std::move(other)));
+            return static_cast<PreviewMetadataElement &>(MetadataElement::operator=(std::move(other)));
         }
 
         virtual ~PreviewMetadataElement() {}
@@ -56,14 +60,17 @@ namespace Models {
         bool isDescriptionShowable() const { return m_ShowDescription; }
         bool isTitleShowable() const { return m_ShowTitle; }
         bool isKeywordsShowable() const { return m_ShowKeywords; }
+        bool isReplacable() const { return m_IsReplacable; }
         void setShowTitle(bool show) { m_ShowTitle = show; }
         void setShowDescription(bool show) { m_ShowDescription = show; }
         void setShowKeywords(bool show) { m_ShowKeywords = show; }
+        void setIsReplacable(bool replace) { m_IsReplacable = replace; }
 
     private:
         bool m_ShowTitle;
         bool m_ShowDescription;
         bool m_ShowKeywords;
+        bool m_IsReplacable;
     };
 }
 
