@@ -211,11 +211,11 @@ namespace Models {
     }
 
 
-    void FindAndReplaceModel::setReplacableState(int index, bool state){
+    void FindAndReplaceModel::setIsSelected(int index, bool isSelected) {
         if (index < 0 || index >= (int)m_ArtworksList.size()) {
             return;
         }
 
-        m_ArtworksList[index].setIsReplacable(state);
+        m_ArtworksList.at(index).setIsSelected(isSelected);
     }
 }

@@ -47,7 +47,7 @@ namespace Commands {
 
         for (size_t i = 0; i < size; i++) {
             const Models::PreviewMetadataElement &element = m_MetadataElements.at(i);
-            if (element.isReplacable() == false) {
+            if (!element.isSelected()) {
                 continue;
             }
 

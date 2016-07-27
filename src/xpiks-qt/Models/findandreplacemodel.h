@@ -128,7 +128,7 @@ namespace Models {
         Q_INVOKABLE QString getSearchDescription(int index);
         Q_INVOKABLE QString getSearchKeywords(int index);
         Q_INVOKABLE void replace();
-        Q_INVOKABLE void setReplacableState(int index, bool state);
+        Q_INVOKABLE void setIsSelected(int index, bool isSelected);
 
     public:
         virtual int rowCount(const QModelIndex &parent=QModelIndex()) const;

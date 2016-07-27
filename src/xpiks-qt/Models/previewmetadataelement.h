@@ -34,22 +34,22 @@ namespace Models {
             m_ShowTitle(false),
             m_ShowDescription(false),
             m_ShowKeywords(false),
-            m_IsReplacable(true)
+            m_IsSelected(true)
         {}
 
         PreviewMetadataElement(PreviewMetadataElement &&other):
             MetadataElement(std::move(other)),
-            m_ShowTitle(false),
-            m_ShowDescription(false),
-            m_ShowKeywords(false),
-            m_IsReplacable(true)
+            m_ShowTitle(other.m_ShowTitle),
+            m_ShowDescription(m_ShowDescription),
+            m_ShowKeywords(m_ShowKeywords),
+            m_IsSelected(other.m_IsSelected)
         {}
 
         PreviewMetadataElement &operator=(PreviewMetadataElement &&other) {
             m_ShowTitle = other.m_ShowTitle;
             m_ShowDescription = other.m_ShowDescription;
             m_ShowKeywords = other.m_ShowKeywords;
-            m_IsReplacable = other.m_IsReplacable;
+            m_IsSelected = other.m_IsSelected;
 
             return static_cast<PreviewMetadataElement &>(MetadataElement::operator=(std::move(other)));
         }
@@ -60,17 +60,17 @@ namespace Models {
         bool isDescriptionShowable() const { return m_ShowDescription; }
         bool isTitleShowable() const { return m_ShowTitle; }
         bool isKeywordsShowable() const { return m_ShowKeywords; }
-        bool isReplacable() const { return m_IsReplacable; }
+        bool isSelected() const { return m_IsSelected; }
         void setShowTitle(bool show) { m_ShowTitle = show; }
         void setShowDescription(bool show) { m_ShowDescription = show; }
         void setShowKeywords(bool show) { m_ShowKeywords = show; }
-        void setIsReplacable(bool replace) { m_IsReplacable = replace; }
+        void setIsSelected(bool value) { m_IsSelected = value; }
 
     private:
         bool m_ShowTitle;
         bool m_ShowDescription;
         bool m_ShowKeywords;
-        bool m_IsReplacable;
+        bool m_IsSelected;
     };
 }
 
