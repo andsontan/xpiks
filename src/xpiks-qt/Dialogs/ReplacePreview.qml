@@ -142,18 +142,22 @@ Item {
                                 anchors.left: parent.left
                                 anchors.right: parent.right
                                 anchors.rightMargin: 10
-                                height: childrenRect.height
+                                height: columnRectangle.height
                                 radius: 2
 
                                 StyledCheckbox {
                                     id: applyReplaceCheckBox
+                                    anchors.leftMargin: 10
+                                    anchors.left: parent.left
+                                    anchors.verticalCenter: parent.verticalCenter
                                     onClicked: editisselected = checked
                                     Component.onCompleted: applyReplaceCheckBox.checked = isselected
                                 }
 
                                 Item {
                                     id: imageItem
-                                    anchors.left: parent.left
+                                    anchors.leftMargin: 10
+                                    anchors.left: applyReplaceCheckBox.right
                                     anchors.top: parent.top
                                     width: 120
                                     height: parent.height
@@ -215,13 +219,11 @@ Item {
                                             height: 30
                                         }
 
-
                                         StyledText {
                                             id: titleHit
                                             text: i18.n + qsTr("Title:")
                                             visible: replaceModel.searchInTitle
                                         }
-
 
                                         Rectangle {
                                             height:  childrenRect.height
@@ -246,7 +248,6 @@ Item {
                                             }
                                         }
 
-
                                         Item {
                                             height: 10
                                         }
@@ -256,8 +257,6 @@ Item {
                                             text: i18.n + qsTr("Description:")
                                             visible: replaceModel.searchInDescription
                                         }
-
-
 
                                         Rectangle {
                                             id: descriptionRectangle
@@ -290,12 +289,14 @@ Item {
                                             text: i18.n + qsTr("Keywords:")
                                             visible: replaceModel.searchInKeywords
                                         }
+
                                         Rectangle {
                                             color: Colors.inputInactiveBackground
                                             height:  childrenRect.height
                                             anchors.right: parent.right
                                             anchors.left: parent.left
                                             visible: replaceModel.searchInKeywords
+
                                             StyledTextEdit {
                                                 id: keywordsText
                                                 anchors.right: parent.right
@@ -305,6 +306,7 @@ Item {
                                                 wrapMode: TextEdit.Wrap
                                                 text: i18.n + replaceModel.getSearchKeywords(imageWrapper.delegateIndex)
                                                 readOnly: true
+
                                                 Component.onCompleted: {
                                                     replaceModel.initHighlighting(keywordsText.textDocument)
                                                 }

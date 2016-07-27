@@ -58,21 +58,21 @@ namespace Models {
                 flags = initialFlag;
                 Common::ApplyFlag(flags, true, Common::SearchFlagSearchTitle);
                 value = Helpers::hasSearchMatch(m_ReplaceFrom, metadata, flags);
-                preview.setShowTitle(value);
+                preview.setHasTitleMatch(value);
             }
 
             if (FindAndReplaceModel::getSearchInDescription()) {
                 flags = initialFlag;
                 Common::ApplyFlag(flags, true, Common::SearchFlagSearchDescription);
                 value = Helpers::hasSearchMatch(m_ReplaceFrom, metadata, flags);
-                preview.setShowDescription(value);
+                preview.setHasDescriptionMatch(value);
             }
 
             if (FindAndReplaceModel::getSearchInKeywords()) {
                 flags = initialFlag;
                 Common::ApplyFlag(flags, true, Common::SearchFlagSearchKeywords);
                 value = Helpers::hasSearchMatch(m_ReplaceFrom, metadata, flags);
-                preview.setShowKeywords(value);
+                preview.setHasKeywordsMatch(value);
             }
         }
     }
@@ -156,12 +156,11 @@ namespace Models {
         }
 
         Models::PreviewMetadataElement const &item = m_ArtworksList.at(index);
-        if (!(item.isTitleShowable())) {
-            return text;
+        if (item.hasTitleMatch()) {
+            Models::ArtworkMetadata *metadata = item.getOrigin();
+            text = filterText(metadata->getTitle());
         }
 
-        Models::ArtworkMetadata *metadata = item.getOrigin();
-        text = filterText(metadata->getTitle());
         return text;
     }
 
@@ -173,12 +172,11 @@ namespace Models {
         }
 
         Models::PreviewMetadataElement const &item = m_ArtworksList.at(index);
-        if (!(item.isDescriptionShowable())) {
-            return text;
+        if (item.hasDescriptionMatch()) {
+            Models::ArtworkMetadata *metadata = item.getOrigin();
+            text = filterText(metadata->getDescription());
         }
 
-        Models::ArtworkMetadata *metadata = item.getOrigin();
-        text = filterText(metadata->getDescription());
         return text;
     }
 
@@ -190,21 +188,20 @@ namespace Models {
         }
 
         Models::PreviewMetadataElement const &item = m_ArtworksList.at(index);
-        if (!(item.isKeywordsShowable())) {
-            return text;
-        }
+        if (item.hasKeywordsMatch()) {
+            Models::ArtworkMetadata *metadata = item.getOrigin();
+            QStringList list = metadata->getKeywords();
+            Qt::CaseSensitivity caseSensitivity = FindAndReplaceModel::getCaseSensitive() ? Qt::CaseSensitive : Qt::CaseInsensitive;
 
-        Models::ArtworkMetadata *metadata = item.getOrigin();
-        QStringList list = metadata->getKeywords();
-        Qt::CaseSensitivity caseSensitivity = FindAndReplaceModel::getCaseSensitive() ? Qt::CaseSensitive : Qt::CaseInsensitive;
-        QStringList listNew;
-        for (QString el : list) {
-            if (el.contains(m_ReplaceFrom, caseSensitivity)) {
-                listNew.append(el);
+            QStringList listNew;
+            for (auto &el: list) {
+                if (el.contains(m_ReplaceFrom, caseSensitivity)) {
+                    listNew.append(el);
+                }
             }
-        }
 
-        text.append(listNew.join(','));
+            text.append(listNew.join(','));
+        }
 
         return text;
     }

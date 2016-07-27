@@ -31,46 +31,56 @@ namespace Models {
     public:
         PreviewMetadataElement(ArtworkMetadata *metadata, int index):
             MetadataElement(metadata, index),
-            m_ShowTitle(false),
-            m_ShowDescription(false),
-            m_ShowKeywords(false),
-            m_IsSelected(true)
-        {}
+            m_Flags(0)
+        {
+            setIsSelected(true);
+        }
 
         PreviewMetadataElement(PreviewMetadataElement &&other):
             MetadataElement(std::move(other)),
-            m_ShowTitle(other.m_ShowTitle),
-            m_ShowDescription(m_ShowDescription),
-            m_ShowKeywords(m_ShowKeywords),
-            m_IsSelected(other.m_IsSelected)
+            m_Flags(other.m_Flags)
         {}
 
         PreviewMetadataElement &operator=(PreviewMetadataElement &&other) {
-            m_ShowTitle = other.m_ShowTitle;
-            m_ShowDescription = other.m_ShowDescription;
-            m_ShowKeywords = other.m_ShowKeywords;
-            m_IsSelected = other.m_IsSelected;
+            m_Flags = other.m_Flags;
 
             return static_cast<PreviewMetadataElement &>(MetadataElement::operator=(std::move(other)));
         }
 
         virtual ~PreviewMetadataElement() {}
 
+    private:
+        enum PreviewFlags {
+            FlagIsSelected = 1 << 0,
+            FlagHasTitleMatch = 1 << 1,
+            FlagHasDescriptionMatch = 1 << 2,
+            FlagHasKeywordsMatch = 1 << 3
+        };
+
+        inline bool getIsSelectedFlag() const { return Common::HasFlag(m_Flags, FlagIsSelected); }
+        inline bool getHasTitleMatchFlag() const { return Common::HasFlag(m_Flags, FlagHasTitleMatch); }
+        inline bool getHasDescriptionMatchFlag() const { return Common::HasFlag(m_Flags, FlagHasDescriptionMatch); }
+        inline bool getHasKeywordsMatchFlag() const { return Common::HasFlag(m_Flags, FlagHasKeywordsMatch); }
+
+        inline void setIsSelectedFlag(bool value) { Common::ApplyFlag(m_Flags, value, FlagIsSelected); }
+        inline void setHasTitleMatchFlag(bool value) { Common::ApplyFlag(m_Flags, value, FlagHasTitleMatch); }
+        inline void setHasDescriptionMatchFlag(bool value) { Common::ApplyFlag(m_Flags, value, FlagHasDescriptionMatch); }
+        inline void setHasKeywordsMatchFlag(bool value) { Common::ApplyFlag(m_Flags, value, FlagHasKeywordsMatch); }
+
     public:
-        bool isDescriptionShowable() const { return m_ShowDescription; }
-        bool isTitleShowable() const { return m_ShowTitle; }
-        bool isKeywordsShowable() const { return m_ShowKeywords; }
-        bool isSelected() const { return m_IsSelected; }
-        void setShowTitle(bool show) { m_ShowTitle = show; }
-        void setShowDescription(bool show) { m_ShowDescription = show; }
-        void setShowKeywords(bool show) { m_ShowKeywords = show; }
-        void setIsSelected(bool value) { m_IsSelected = value; }
+        bool getIsSelected() const { return getIsSelectedFlag(); }
+        bool hasTitleMatch() const { return getHasTitleMatchFlag(); }
+        bool hasDescriptionMatch() const { return getHasDescriptionMatchFlag(); }
+        bool hasKeywordsMatch() const { return getHasKeywordsMatchFlag(); }
+
+    public:
+        void setIsSelected(bool value) { setIsSelectedFlag(value); }
+        void setHasTitleMatch(bool value) { setHasTitleMatchFlag(value); }
+        void setHasDescriptionMatch(bool value) { setHasDescriptionMatchFlag(value); }
+        void setHasKeywordsMatch(bool value) { setHasKeywordsMatchFlag(value); }
 
     private:
-        bool m_ShowTitle;
-        bool m_ShowDescription;
-        bool m_ShowKeywords;
-        bool m_IsSelected;
+        int m_Flags;
     };
 }
 
