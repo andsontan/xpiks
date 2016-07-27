@@ -119,7 +119,7 @@ namespace Models {
 
         switch (role) {
             case EditIsSelectedRole:
-                m_ArtworksList.at(indexRow).setIsSelected(value.toBool());
+                m_ArtworksList.at(indexRow).setSelected(value.toBool());
                 roleToUpdate = IsSelectedRole;
                 break;
             default:

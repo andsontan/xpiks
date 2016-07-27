@@ -33,7 +33,7 @@ namespace Models {
             MetadataElement(metadata, index),
             m_Flags(0)
         {
-            setIsSelected(true);
+            setSelected(true);
         }
 
         PreviewMetadataElement(PreviewMetadataElement &&other):
@@ -51,30 +51,25 @@ namespace Models {
 
     private:
         enum PreviewFlags {
-            FlagIsSelected = 1 << 0,
-            FlagHasTitleMatch = 1 << 1,
-            FlagHasDescriptionMatch = 1 << 2,
-            FlagHasKeywordsMatch = 1 << 3
+            FlagHasTitleMatch = 1 << 0,
+            FlagHasDescriptionMatch = 1 << 1,
+            FlagHasKeywordsMatch = 1 << 2
         };
 
-        inline bool getIsSelectedFlag() const { return Common::HasFlag(m_Flags, FlagIsSelected); }
         inline bool getHasTitleMatchFlag() const { return Common::HasFlag(m_Flags, FlagHasTitleMatch); }
         inline bool getHasDescriptionMatchFlag() const { return Common::HasFlag(m_Flags, FlagHasDescriptionMatch); }
         inline bool getHasKeywordsMatchFlag() const { return Common::HasFlag(m_Flags, FlagHasKeywordsMatch); }
 
-        inline void setIsSelectedFlag(bool value) { Common::ApplyFlag(m_Flags, value, FlagIsSelected); }
         inline void setHasTitleMatchFlag(bool value) { Common::ApplyFlag(m_Flags, value, FlagHasTitleMatch); }
         inline void setHasDescriptionMatchFlag(bool value) { Common::ApplyFlag(m_Flags, value, FlagHasDescriptionMatch); }
         inline void setHasKeywordsMatchFlag(bool value) { Common::ApplyFlag(m_Flags, value, FlagHasKeywordsMatch); }
 
     public:
-        bool getIsSelected() const { return getIsSelectedFlag(); }
         bool hasTitleMatch() const { return getHasTitleMatchFlag(); }
         bool hasDescriptionMatch() const { return getHasDescriptionMatchFlag(); }
         bool hasKeywordsMatch() const { return getHasKeywordsMatchFlag(); }
 
     public:
-        void setIsSelected(bool value) { setIsSelectedFlag(value); }
         void setHasTitleMatch(bool value) { setHasTitleMatchFlag(value); }
         void setHasDescriptionMatch(bool value) { setHasDescriptionMatchFlag(value); }
         void setHasKeywordsMatch(bool value) { setHasKeywordsMatchFlag(value); }
