@@ -116,6 +116,8 @@ namespace Models {
     public:
         enum FindAndReplaceModelRoles {
             PathRole = Qt::UserRole + 1,
+            IsSelectedRole,
+            EditIsSelectedRole
         };
 
     public:
@@ -128,11 +130,12 @@ namespace Models {
         Q_INVOKABLE QString getSearchDescription(int index);
         Q_INVOKABLE QString getSearchKeywords(int index);
         Q_INVOKABLE void replace();
-        Q_INVOKABLE void setIsSelected(int index, bool isSelected);
 
     public:
         virtual int rowCount(const QModelIndex &parent=QModelIndex()) const;
         virtual QVariant data(const QModelIndex &index, int role=Qt::DisplayRole) const;
+        virtual Qt::ItemFlags flags(const QModelIndex &index) const;
+        virtual bool setData(const QModelIndex &index, const QVariant &value, int role=Qt::EditRole);
 
     protected:
         virtual QHash<int, QByteArray> roleNames() const;

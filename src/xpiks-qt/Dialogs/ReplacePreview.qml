@@ -147,10 +147,8 @@ Item {
 
                                 StyledCheckbox {
                                     id: applyReplaceCheckBox
-                                    checked: true
-                                    onCheckedChanged: {
-                                        replaceModel.setIsSelected(imageWrapper.delegateIndex, applyReplaceCheckBox.checked)
-                                    }
+                                    onClicked: editisselected = checked
+                                    Component.onCompleted: applyReplaceCheckBox.checked = isselected
                                 }
 
                                 Item {

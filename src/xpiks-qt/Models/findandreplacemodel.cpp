@@ -88,19 +88,53 @@ namespace Models {
             return QVariant();
         }
 
-        Models::PreviewMetadataElement const &item = m_ArtworksList.at(indexRow);
+        const Models::PreviewMetadataElement &item = m_ArtworksList.at(indexRow);
 
         switch (role) {
             case PathRole:
                 return item.getOrigin()->getFilepath();
+            case IsSelectedRole:
+                return item.isSelected();
             default:
                 return QVariant();
         }
     }
 
+    Qt::ItemFlags FindAndReplaceModel::flags(const QModelIndex &index) const {
+        int row = index.row();
+        if (row < 0 || row >= (int)m_ArtworksList.size()) {
+            return Qt::ItemIsEnabled;
+        }
+
+        return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
+    }
+
+    bool FindAndReplaceModel::setData(const QModelIndex &index, const QVariant &value, int role) {
+        int indexRow = index.row();
+        if (indexRow < 0 || indexRow >= (int)m_ArtworksList.size()) {
+            return false;
+        }
+
+        int roleToUpdate = 0;
+
+        switch (role) {
+            case EditIsSelectedRole:
+                m_ArtworksList.at(indexRow).setIsSelected(value.toBool());
+                roleToUpdate = IsSelectedRole;
+                break;
+            default:
+                return false;
+        }
+
+        emit dataChanged(index, index, QVector<int>() << roleToUpdate);
+        return true;
+    }
+
     QHash<int, QByteArray> FindAndReplaceModel::roleNames() const {
         QHash<int, QByteArray> roles;
         roles[PathRole] = "path";
+        roles[IsSelectedRole] = "isselected";
+        roles[EditIsSelectedRole] = "editisselected";
         return roles;
     }
 
@@ -208,14 +242,5 @@ namespace Models {
         }
 
         return result;
-    }
-
-
-    void FindAndReplaceModel::setIsSelected(int index, bool isSelected) {
-        if (index < 0 || index >= (int)m_ArtworksList.size()) {
-            return;
-        }
-
-        m_ArtworksList.at(index).setIsSelected(isSelected);
     }
 }
