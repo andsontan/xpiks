@@ -37,6 +37,8 @@ private slots:
     void noReplaceCaseSensitiveTest();
     void replaceCaseSensitiveTest();
     void replaceKeywordsWithRemoveTest();
+    void removeKeywordsFromSetTest();
+    void noneKeywordsRemovedFromSetTest();
 
 private:
     Common::Hold m_FakeHold;

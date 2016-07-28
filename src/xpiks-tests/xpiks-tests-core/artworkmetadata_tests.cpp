@@ -460,3 +460,17 @@ void ArtworkMetadataTests::clearEmptyKeywordsDoesNotMarkModifiedTest() {
     metadata.clearKeywords();
     QVERIFY(!metadata.isModified());
 }
+
+void ArtworkMetadataTests::removeKeywordsMarksModifiedTest() {
+    Mocks::ArtworkMetadataMock metadata("file.jpg");
+    metadata.appendKeywords(QStringList() << "keyword1" << "keyword2");
+    metadata.resetModified();
+
+    bool result = metadata.removeKeywords(QSet<QString>() << "keyword3");
+    QVERIFY(!result);
+    QVERIFY(!metadata.isModified());
+
+    result = metadata.removeKeywords(QSet<QString>() << "keyword2");
+    QVERIFY(result);
+    QVERIFY(metadata.isModified());
+}

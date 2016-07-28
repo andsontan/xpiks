@@ -92,6 +92,7 @@ namespace Common {
         bool clearKeywords();
         bool areKeywordsEmpty();
         bool replace(const QString &replaceWhat, const QString &replaceTo, int flags);
+        bool removeKeywords(const QSet<QString> &keywords);
 
     private:
         bool appendKeywordUnsafe(const QString &keyword);
@@ -103,6 +104,7 @@ namespace Common {
         bool clearKeywordsUnsafe();
         bool containsKeywordUnsafe(const QString &searchTerm, int searchFlags=Common::SearchFlagSearchKeywords);
         bool hasKeywordsSpellErrorUnsafe() const;
+        bool removeKeywordsUnsafe(const QSet<QString> &keywordsToRemove);
         void lockKeywordsRead() { m_KeywordsLock.lockForRead(); }
         void unlockKeywords() { m_KeywordsLock.unlock(); }
 

@@ -157,6 +157,13 @@ namespace Models {
         return result;
     }
 
+    bool ArtworkMetadata::removeKeywords(const QSet<QString> &keywordsSet) {
+        bool result = m_KeywordsModel.removeKeywords(keywordsSet);
+        LOG_DEBUG << "Removed keywords:" << result;
+        if (result) { markModified(); }
+        return result;
+    }
+
     void ArtworkMetadata::markModified() {
         if (!getIsModifiedFlag()) {
             setIsModifiedFlag(true);

@@ -290,6 +290,15 @@ namespace Common {
         return anyChanged;
     }
 
+    bool BasicKeywordsModel::removeKeywords(const QSet<QString> &keywords) {
+        QWriteLocker writeLocker(&m_KeywordsLock);
+
+        Q_UNUSED(writeLocker);
+
+        bool result = removeKeywordsUnsafe(keywords);
+        return result;
+    }
+
     bool BasicKeywordsModel::appendKeywordUnsafe(const QString &keyword) {
         bool added = false;
         const QString &sanitizedKeyword = keyword.simplified();
@@ -474,6 +483,26 @@ namespace Common {
         }
     
         return anyError;
+    }
+
+    bool BasicKeywordsModel::removeKeywordsUnsafe(const QSet<QString> &keywordsToRemove) {
+        int size = m_KeywordsList.size();
+
+        QVector<int> indicesToRemove;
+        indicesToRemove.reserve(size/2);
+
+        for (int i = 0; i < size; ++i) {
+            const QString &keyword = m_KeywordsList.at(i);
+
+            if (keywordsToRemove.contains(keyword.toLower())) {
+                indicesToRemove.append(i);
+            }
+        }
+
+        bool anythingRemoved = !indicesToRemove.empty();
+        removeKeywordsAtIndicesUnsafe(indicesToRemove);
+
+        return anythingRemoved;
     }
 
     void BasicKeywordsModel::removeKeywordsAtIndicesUnsafe(const QVector<int> &indices) {

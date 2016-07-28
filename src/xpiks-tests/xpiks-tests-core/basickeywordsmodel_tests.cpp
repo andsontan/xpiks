@@ -495,3 +495,30 @@ void BasicKeywordsModelTests::replaceKeywordsWithRemoveTest() {
     QCOMPARE(basicModel.getKeywordAt(2), QLatin1String("Replaced keyword1"));
 }
 
+void BasicKeywordsModelTests::removeKeywordsFromSetTest() {
+    Common::BasicKeywordsModel basicModel(m_FakeHold);
+
+    QStringList originalKeywords;
+    originalKeywords << "keyword1" << "keyword2" << "keyword3 Test";
+    basicModel.appendKeywords(originalKeywords);
+
+    bool removed = basicModel.removeKeywords(QSet<QString>() << "keyword1" << "keyword2" << "keyword3");
+    QVERIFY(removed);
+
+    QCOMPARE(basicModel.getKeywordsCount(), 1);
+    QCOMPARE(basicModel.getKeywordAt(0), originalKeywords.back());
+}
+
+void BasicKeywordsModelTests::noneKeywordsRemovedFromSetTest() {
+    Common::BasicKeywordsModel basicModel(m_FakeHold);
+
+    QStringList originalKeywords;
+    originalKeywords << "akeyword1" << "keyword2_" << "keyword3 Test";
+    basicModel.appendKeywords(originalKeywords);
+
+    bool removed = basicModel.removeKeywords(QSet<QString>() << "keyword1" << "keyword2" << "keyword3");
+    QVERIFY(!removed);
+
+    QCOMPARE(basicModel.getKeywordsCount(), originalKeywords.length());
+}
+

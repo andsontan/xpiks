@@ -35,6 +35,7 @@ private slots:
     void isNotInEmptyDirectoryTest();
     void clearKeywordsMarksAsModifiedTest();
     void clearEmptyKeywordsDoesNotMarkModifiedTest();
+    void removeKeywordsMarksModifiedTest();
 };
 
 #endif // ARTWORKMETADATA_TESTS_H
