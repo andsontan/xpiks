@@ -31,7 +31,8 @@ namespace Commands {
         RemoveArtworksCommandType = 1,
         CombinedEditCommandType = 2,
         PasteKeywordsCommandType = 3,
-        FindAndReplaceCommandType = 4
+        FindAndReplaceCommandType = 4,
+        DeleteKeywordsCommandType = 5
     };
 
     class CommandResult;

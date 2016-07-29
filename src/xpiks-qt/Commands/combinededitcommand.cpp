@@ -71,7 +71,7 @@ std::shared_ptr<Commands::ICommandResult> Commands::CombinedEditCommand::execute
 
     size_t size = m_MetadataElements.size();
     indicesToUpdate.reserve((int)size);
-    artworksBackups.reserve((int)size);
+    artworksBackups.reserve(size);
     itemsToSave.reserve((int)size);
     affectedItems.reserve((int)size);
 
