@@ -108,7 +108,8 @@ SOURCES += main.cpp \
     Commands/findandreplacecommand.cpp \
     Helpers/metadatahighlighter.cpp \
     Models/findandreplacemodel.cpp \
-    Commands/deletekeywordscommand.cpp
+    Commands/deletekeywordscommand.cpp \
+    Models/deletekeywordsviewmodel.cpp
 
 RESOURCES += qml.qrc
 
@@ -274,7 +275,8 @@ HEADERS += \
     Models/previewmetadataelement.h \
     Helpers/metadatahighlighter.h \
     Models/findandreplacemodel.h \
-    Commands/deletekeywordscommand.h
+    Commands/deletekeywordscommand.h \
+    Models/deletekeywordsviewmodel.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
