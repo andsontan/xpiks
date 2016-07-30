@@ -36,8 +36,8 @@ void CombinedModelTests::trivialCombineNoItemsTest() {
 
     std::vector<Models::MetadataElement> items;
 
-    combinedModel.resetModelData();
-    combinedModel.initArtworks(items);
+    combinedModel.resetModel();
+    combinedModel.setArtworks(items);
     combinedModel.recombineArtworks();
 
     QCOMPARE(combinedModel.getArtworksCount(), 0);
@@ -62,7 +62,7 @@ void CombinedModelTests::trivialcombineOneItemTest() {
     std::vector<Models::MetadataElement> items;
     items.push_back(createArtworkMetadata(desc, title, keywords));
 
-    combinedModel.initArtworks(items);
+    combinedModel.setArtworks(items);
     combinedModel.recombineArtworks();
 
     QCOMPARE(combinedModel.getArtworksCount(), 1);
@@ -90,7 +90,7 @@ void CombinedModelTests::combineSeveralSameItemsTest() {
         items.push_back(createArtworkMetadata(desc, title, keywords));
     }
 
-    combinedModel.initArtworks(items);
+    combinedModel.setArtworks(items);
     combinedModel.recombineArtworks();
 
     QCOMPARE(combinedModel.getArtworksCount(), itemsToGenerate);
@@ -113,7 +113,7 @@ void CombinedModelTests::combineAllDifferentItemsTest() {
 
     int size = (int)items.size();
 
-    combinedModel.initArtworks(items);
+    combinedModel.setArtworks(items);
     combinedModel.recombineArtworks();
 
     QCOMPARE(combinedModel.getArtworksCount(), size);
@@ -137,7 +137,7 @@ void CombinedModelTests::combineCommonInKeywordsTest() {
     items.push_back(createArtworkMetadata("Description3", "title3", QStringList() << "Keyword3" << commonKeyword, 2));
 
     int size = (int)items.size();
-    combinedModel.initArtworks(items);
+    combinedModel.setArtworks(items);
     combinedModel.recombineArtworks();
 
     QCOMPARE(combinedModel.getArtworksCount(), size);
@@ -162,7 +162,7 @@ void CombinedModelTests::combineCommonInTitleTest() {
     items.push_back(createArtworkMetadata("Description3", commonTitle, QStringList() << "Keyword3", 2));
 
     int size = (int)items.size();
-    combinedModel.initArtworks(items);
+    combinedModel.setArtworks(items);
     combinedModel.recombineArtworks();
 
     QCOMPARE(combinedModel.getArtworksCount(), size);
@@ -186,7 +186,7 @@ void CombinedModelTests::combineCommonInDescriptionTest() {
     items.push_back(createArtworkMetadata(commonDescription, "title3", QStringList() << "Keyword3", 2));
 
     int size = (int)items.size();
-    combinedModel.initArtworks(items);
+    combinedModel.setArtworks(items);
     combinedModel.recombineArtworks();
 
     QCOMPARE(combinedModel.getArtworksCount(), size);
@@ -212,10 +212,10 @@ void CombinedModelTests::recombineAfterRemoveDifferentTest() {
 
     int size = (int)items.size();
 
-    combinedModel.initArtworks(items);
+    combinedModel.setArtworks(items);
     combinedModel.recombineArtworks();
 
-    combinedModel.getItems().back().setSelected(true);
+    combinedModel.getArtworksList().back().setSelected(true);
     combinedModel.removeSelectedArtworks();
 
     QCOMPARE(combinedModel.getArtworksCount(), size - 1);
@@ -237,13 +237,13 @@ void CombinedModelTests::recombineAfterRemoveAllButOneTest() {
     items.push_back(createArtworkMetadata("Description2", "title2", QStringList() << "Keyword2" << "21345425421", 1));
     items.push_back(createArtworkMetadata("Description3", "title3", QStringList() << "Keyword3" << "(*&^*&^*&&^%", 2));
 
-    combinedModel.initArtworks(items);
+    combinedModel.setArtworks(items);
     combinedModel.recombineArtworks();
 
-    combinedModel.getItems()[1].setSelected(true);
-    combinedModel.getItems()[2].setSelected(true);
+    combinedModel.getArtworksList()[1].setSelected(true);
+    combinedModel.getArtworksList()[2].setSelected(true);
     combinedModel.removeSelectedArtworks();
-    Models::ArtworkMetadata *first = combinedModel.getItems().front().getOrigin();
+    Models::ArtworkMetadata *first = combinedModel.getArtworksList().front().getOrigin();
 
     QCOMPARE(combinedModel.getArtworksCount(), 1);
     QCOMPARE(combinedModel.getTitle(), first->getTitle());
@@ -264,17 +264,17 @@ void CombinedModelTests::recombineAfterChangesTest() {
     items.push_back(createArtworkMetadata("Description2", "title2", QStringList() << "Keyword2" << "21345425421", 1));
     items.push_back(createArtworkMetadata("Description3", "title3", QStringList() << "Keyword3" << "(*&^*&^*&&^%", 2));
 
-    combinedModel.initArtworks(items);
+    combinedModel.setArtworks(items);
     combinedModel.recombineArtworks();
 
     combinedModel.appendKeyword("brand new keyword");
     combinedModel.setDescription(combinedModel.getDescription() + " new stuff here");
     combinedModel.setTitle(combinedModel.getTitle() + " new stuff here");
 
-    combinedModel.getItems()[1].setSelected(true);
-    combinedModel.getItems()[2].setSelected(true);
+    combinedModel.getArtworksList()[1].setSelected(true);
+    combinedModel.getArtworksList()[2].setSelected(true);
     combinedModel.removeSelectedArtworks();
-    Models::ArtworkMetadata *first = combinedModel.getItems().front().getOrigin();
+    Models::ArtworkMetadata *first = combinedModel.getArtworksList().front().getOrigin();
 
     QCOMPARE(combinedModel.getArtworksCount(), 1);
     QVERIFY(combinedModel.getTitle() != first->getTitle());
@@ -299,7 +299,7 @@ void CombinedModelTests::twoTimesInARowRecombineTest() {
     items.push_back(createArtworkMetadata("Different description", "title3", QStringList() << "Keyword3", 2));
 
     int size = (int)items.size();
-    combinedModel.initArtworks(items);
+    combinedModel.setArtworks(items);
     combinedModel.recombineArtworks();
     combinedModel.recombineArtworks();
 
@@ -321,7 +321,7 @@ void CombinedModelTests::isNotModifiedAfterTitleDescEditTest() {
     items.push_back(createArtworkMetadata(commonDescription, "title2", QStringList() << "Keyword2", 1));
     items.push_back(createArtworkMetadata(commonDescription, "title3", QStringList() << "Keyword3", 2));
 
-    combinedModel.initArtworks(items);
+    combinedModel.setArtworks(items);
     combinedModel.recombineArtworks();
 
     QCOMPARE(combinedModel.getAreKeywordsModified(), false);
@@ -346,7 +346,7 @@ void CombinedModelTests::isModifiedAfterKeywordsAppendTest() {
     items.push_back(createArtworkMetadata(commonDescription, "title2", QStringList() << "Keyword2", 1));
     items.push_back(createArtworkMetadata(commonDescription, "title3", QStringList() << "Keyword3", 2));
 
-    combinedModel.initArtworks(items);
+    combinedModel.setArtworks(items);
     combinedModel.recombineArtworks();
 
     QCOMPARE(combinedModel.getAreKeywordsModified(), false);
@@ -369,7 +369,7 @@ void CombinedModelTests::isModifiedAfterKeywordRemovalTest() {
     items.push_back(createArtworkMetadata("Description2", "title2", QStringList() << "Keyword2" << commonKeyword, 1));
     items.push_back(createArtworkMetadata("Description3", "title3", QStringList() << "Keyword3" << commonKeyword, 2));
 
-    combinedModel.initArtworks(items);
+    combinedModel.setArtworks(items);
     combinedModel.recombineArtworks();
 
     QCOMPARE(combinedModel.getAreKeywordsModified(), false);
@@ -392,7 +392,7 @@ void CombinedModelTests::isModifiedAfterKeywordEditTest() {
     items.push_back(createArtworkMetadata("Description2", "title2", QStringList() << "Keyword2" << commonKeyword, 1));
     items.push_back(createArtworkMetadata("Description3", "title3", QStringList() << "Keyword3" << commonKeyword, 2));
 
-    combinedModel.initArtworks(items);
+    combinedModel.setArtworks(items);
     combinedModel.recombineArtworks();
 
     QCOMPARE(combinedModel.getAreKeywordsModified(), false);
@@ -415,7 +415,7 @@ void CombinedModelTests::isModifiedAfterKeywordsClearTest() {
     items.push_back(createArtworkMetadata("Description2", "title2", QStringList() << "Keyword2" << commonKeyword, 1));
     items.push_back(createArtworkMetadata("Description3", "title3", QStringList() << "Keyword3" << commonKeyword, 2));
 
-    combinedModel.initArtworks(items);
+    combinedModel.setArtworks(items);
     combinedModel.recombineArtworks();
 
     QCOMPARE(combinedModel.getAreKeywordsModified(), false);
@@ -436,7 +436,7 @@ void CombinedModelTests::isNotModifiedAfterEmptyKeywordsClearTest() {
     items.push_back(createArtworkMetadata("Description2", "title2", QStringList() << "Keyword2", 1));
     items.push_back(createArtworkMetadata("Description3", "title3", QStringList() << "Keyword3", 2));
 
-    combinedModel.initArtworks(items);
+    combinedModel.setArtworks(items);
     combinedModel.recombineArtworks();
 
     QCOMPARE(combinedModel.getAreKeywordsModified(), false);
@@ -457,7 +457,7 @@ void CombinedModelTests::isModifiedStatusNotResetWithOtherTest() {
     items.push_back(createArtworkMetadata("Description2", "title2", QStringList() << "Keyword2", 1));
     items.push_back(createArtworkMetadata("Description3", "title3", QStringList() << "Keyword3", 2));
 
-    combinedModel.initArtworks(items);
+    combinedModel.setArtworks(items);
     combinedModel.recombineArtworks();
 
     QCOMPARE(combinedModel.getAreKeywordsModified(), false);
@@ -485,7 +485,7 @@ void CombinedModelTests::initArtworksEmitsRowsInsertTest() {
 
     QSignalSpy resetSpy(&combinedModel, SIGNAL(modelReset()));
 
-    combinedModel.initArtworks(items);
+    combinedModel.setArtworks(items);
 
     QCOMPARE(combinedModel.getAreKeywordsModified(), false);
     QCOMPARE(resetSpy.count(), 1);
@@ -500,7 +500,7 @@ void CombinedModelTests::initEmptyArtworksDoesNotEmitTest() {
     QSignalSpy addSpy(&combinedModel, SIGNAL(rowsInserted(QModelIndex,int,int)));
 
     std::vector<Models::MetadataElement> items;
-    combinedModel.initArtworks(items);
+    combinedModel.setArtworks(items);
 
     QCOMPARE(combinedModel.getAreKeywordsModified(), false);
     QCOMPARE(addSpy.count(), 0);
@@ -516,7 +516,7 @@ void CombinedModelTests::initOneArtworkEnablesAllFields() {
     std::vector<Models::MetadataElement> items;
     items.push_back(createArtworkMetadata("Description1", "title1", QStringList() << "Keyword1", 0));
 
-    combinedModel.initArtworks(items);
+    combinedModel.setArtworks(items);
 
     QCOMPARE(combinedModel.getAreKeywordsModified(), false);
     QCOMPARE(combinedModel.getChangeDescription(), true);
@@ -535,7 +535,7 @@ void CombinedModelTests::initManyArtworksDoesNotEnableAllFields() {
     items.push_back(createArtworkMetadata("Description2", "title2", QStringList() << "Keyword2", 1));
     items.push_back(createArtworkMetadata("Description3", "title3", QStringList() << "Keyword3", 2));
 
-    combinedModel.initArtworks(items);
+    combinedModel.setArtworks(items);
 
     QCOMPARE(combinedModel.getAreKeywordsModified(), false);
     QCOMPARE(combinedModel.getChangeDescription(), false);
@@ -554,10 +554,10 @@ void CombinedModelTests::resetModelClearsEverythingTest() {
     items.push_back(createArtworkMetadata("Description2", "title2", QStringList() << "Keyword2", 1));
     items.push_back(createArtworkMetadata("Description3", "title3", QStringList() << "Keyword3", 2));
 
-    combinedModel.initArtworks(items);
+    combinedModel.setArtworks(items);
     combinedModel.recombineArtworks();
 
-    combinedModel.resetModelData();
+    combinedModel.resetModel();
 
     QCOMPARE(combinedModel.getArtworksCount(), 0);
     QVERIFY(combinedModel.getDescription().isEmpty());
@@ -648,8 +648,8 @@ void CombinedModelTests::notSavedAfterAllDisabledTest() {
     items.push_back(createArtworkMetadata(commonDescription, "title1", QStringList() << "Keyword1" << "keyword2", 0));
     items.push_back(createArtworkMetadata(commonDescription, "title2", QStringList() << "Keyword2", 0));
 
-    combinedModel.resetModelData();
-    combinedModel.initArtworks(items);
+    combinedModel.resetModel();
+    combinedModel.setArtworks(items);
     combinedModel.recombineArtworks();
 
     QCOMPARE(combinedModel.getAreKeywordsModified(), false);
@@ -679,8 +679,8 @@ void CombinedModelTests::notSavedAfterNothingModifiedTest() {
     std::vector<Models::MetadataElement> items;
     items.push_back(createArtworkMetadata(commonDescription, "title1", QStringList() << "Keyword1", 0));
 
-    combinedModel.resetModelData();
-    combinedModel.initArtworks(items);
+    combinedModel.resetModel();
+    combinedModel.setArtworks(items);
     combinedModel.recombineArtworks();
 
     combinedModel.saveEdits();
@@ -700,8 +700,8 @@ void CombinedModelTests::notSavedAfterModifiedDisabledTest() {
     std::vector<Models::MetadataElement> items;
     items.push_back(createArtworkMetadata(commonDescription, "title1", QStringList() << "Keyword1", 0));
 
-    combinedModel.resetModelData();
-    combinedModel.initArtworks(items);
+    combinedModel.resetModel();
+    combinedModel.setArtworks(items);
     combinedModel.recombineArtworks();
 
     combinedModel.setDescription("Brand new description");
@@ -727,8 +727,8 @@ void CombinedModelTests::savedAfterModifiedDescriptionTest() {
     std::vector<Models::MetadataElement> items;
     items.push_back(createArtworkMetadata(commonDescription, "title1", QStringList() << "Keyword1", 0));
 
-    combinedModel.resetModelData();
-    combinedModel.initArtworks(items);
+    combinedModel.resetModel();
+    combinedModel.setArtworks(items);
     combinedModel.recombineArtworks();
 
     combinedModel.setDescription("Brand new description");
@@ -748,8 +748,8 @@ void CombinedModelTests::savedAfterModifiedTitleTest() {
     std::vector<Models::MetadataElement> items;
     items.push_back(createArtworkMetadata(commonDescription, "title1", QStringList() << "Keyword1", 0));
 
-    combinedModel.resetModelData();
-    combinedModel.initArtworks(items);
+    combinedModel.resetModel();
+    combinedModel.setArtworks(items);
     combinedModel.recombineArtworks();
 
     combinedModel.setTitle("Brand new title");
@@ -769,8 +769,8 @@ void CombinedModelTests::savedAfterKeywordsModifiedTest() {
     std::vector<Models::MetadataElement> items;
     items.push_back(createArtworkMetadata(commonDescription, "title1", QStringList() << "Keyword1", 0));
 
-    combinedModel.resetModelData();
-    combinedModel.initArtworks(items);
+    combinedModel.resetModel();
+    combinedModel.setArtworks(items);
     combinedModel.recombineArtworks();
 
     combinedModel.appendKeyword("Brand new keyword");
@@ -792,8 +792,8 @@ void CombinedModelTests::savedIfMoreThanOneButNotModifiedTest() {
     items.push_back(createArtworkMetadata(commonDescription, "title2", QStringList() << "Keyword2", 1));
     items.push_back(createArtworkMetadata(commonDescription, "title3", QStringList() << "Keyword3", 2));
 
-    combinedModel.resetModelData();
-    combinedModel.initArtworks(items);
+    combinedModel.resetModel();
+    combinedModel.setArtworks(items);
     combinedModel.recombineArtworks();
 
     combinedModel.saveEdits();

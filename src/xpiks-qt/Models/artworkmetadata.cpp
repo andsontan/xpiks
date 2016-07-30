@@ -24,7 +24,7 @@
 #include <QWriteLocker>
 #include <QStringBuilder>
 #include <QDir>
-#include "../Helpers/keywordvalidator.h"
+#include "../Helpers/keywordshelpers.h"
 #include "settingsmodel.h"
 #include "../SpellCheck/spellsuggestionsitem.h"
 #include "../SpellCheck/spellcheckitem.h"

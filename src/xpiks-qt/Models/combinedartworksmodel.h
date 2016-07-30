@@ -123,7 +123,6 @@ namespace Models {
         QStringList getKeywords();
         bool getAreKeywordsModified() const { return m_AreKeywordsModified; }
         bool getIsDescriptionModified() const { return m_IsDescriptionModified; }
-        std::vector<MetadataElement> &getItems() { return m_ArtworksList; }
 #endif
 
     public:

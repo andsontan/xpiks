@@ -60,7 +60,7 @@ void RemoveFilesFsTests::removeArtworksNumberItems() {
     int itemsToAdd = 10, itemsToDelete = 5;
     DECLARE_MODELS_AND_GENERATE_(itemsToAdd);
 
-    combinedModel.resetModelData();
+    combinedModel.resetModel();
 
     std::vector<Models::MetadataElement> itemInfos;
     QVector<Models::ArtworkMetadata *> artworksList;
@@ -71,8 +71,8 @@ void RemoveFilesFsTests::removeArtworksNumberItems() {
          artworksList.append(metadata);
     }
 
-    combinedModel.resetModelData();
-    combinedModel.initArtworks(itemInfos);
+    combinedModel.resetModel();
+    combinedModel.setArtworks(itemInfos);
     combinedModel.recombineArtworks();
 
     zipArchive.setArtworks(artworksList);
@@ -97,7 +97,7 @@ void RemoveFilesFsTests::removeArtworksAllItems() {
     int itemsToAdd = 10, itemsToDelete = 10;
     DECLARE_MODELS_AND_GENERATE_(itemsToAdd);
 
-    combinedModel.resetModelData();
+    combinedModel.resetModel();
     std::vector<Models::MetadataElement> itemInfos;
     QVector<Models::ArtworkMetadata *> artworksList;
 
@@ -107,8 +107,8 @@ void RemoveFilesFsTests::removeArtworksAllItems() {
          artworksList.append(metadata);
     }
 
-    combinedModel.resetModelData();
-    combinedModel.initArtworks(itemInfos);
+    combinedModel.resetModel();
+    combinedModel.setArtworks(itemInfos);
     combinedModel.recombineArtworks();
 
     zipArchive.setArtworks(artworksList);

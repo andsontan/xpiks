@@ -47,7 +47,7 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Helpers/globalimageprovider.cpp \
     ../../xpiks-qt/Helpers/helpersqmlwrapper.cpp \
     ../../xpiks-qt/Helpers/indiceshelper.cpp \
-    ../../xpiks-qt/Helpers/keywordvalidator.cpp \
+    ../../xpiks-qt/Helpers/keywordshelpers.cpp \
     ../../xpiks-qt/Helpers/logger.cpp \
     ../../xpiks-qt/Helpers/loggingworker.cpp \
     ../../xpiks-qt/Helpers/loghighlighter.cpp \
@@ -135,7 +135,8 @@ SOURCES += main.cpp \
     clearmetadatatest.cpp \
     savewithemptytitletest.cpp \
     jsonmerge_tests.cpp \
-    ../../xpiks-qt/Commands/findandreplacecommand.cpp
+    ../../xpiks-qt/Commands/findandreplacecommand.cpp \
+    ../../xpiks-qt/Models/artworksviewmodel.cpp
 
 RESOURCES +=
 
@@ -185,7 +186,7 @@ HEADERS += \
     ../../xpiks-qt/Helpers/globalimageprovider.h \
     ../../xpiks-qt/Helpers/helpersqmlwrapper.h \
     ../../xpiks-qt/Helpers/indiceshelper.h \
-    ../../xpiks-qt/Helpers/keywordvalidator.h \
+    ../../xpiks-qt/Helpers/keywordshelpers.h \
     ../../xpiks-qt/Helpers/logger.h \
     ../../xpiks-qt/Helpers/loggingworker.h \
     ../../xpiks-qt/Helpers/loghighlighter.h \
@@ -296,7 +297,8 @@ HEADERS += \
     spellingproduceswarningstest.h \
     ../../xpiks-qt/Helpers/comparevaluesjson.h \
     jsonmerge_tests.h \
-    ../../xpiks-qt/Commands/findandreplacecommand.h
+    ../../xpiks-qt/Commands/findandreplacecommand.h \
+    ../../xpiks-qt/Models/artworksviewmodel.h
 
 INCLUDEPATH += ../../tiny-aes
 INCLUDEPATH += ../../cpp-libface

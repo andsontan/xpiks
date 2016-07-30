@@ -345,11 +345,14 @@ namespace Models {
     }
 
     bool CombinedArtworksModel::doRemoveSelectedArtworks() {
-        if (ArtworksViewModel::doRemoveSelectedArtworks()) {
+        bool anyRemoved = ArtworksViewModel::doRemoveSelectedArtworks();
+        if (anyRemoved) {
             if (!isEmpty()) {
                 recombineArtworks();
             }
         }
+
+        return anyRemoved;
     }
 
     void CombinedArtworksModel::doResetModel() {
@@ -371,11 +374,14 @@ namespace Models {
     }
 
     bool CombinedArtworksModel::removeUnavailableItems() {
-        if (ArtworksViewModel::removeUnavailableItems()) {
+        bool anyRemoved = ArtworksViewModel::removeUnavailableItems();
+        if (anyRemoved) {
             if (!isEmpty()) {
                 recombineArtworks();
             }
         }
+
+        return anyRemoved;
     }
 
     void CombinedArtworksModel::generateAboutToBeRemoved() {

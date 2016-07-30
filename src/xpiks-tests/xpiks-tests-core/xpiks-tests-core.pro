@@ -100,7 +100,7 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Helpers/filenameshelpers.cpp \
     ../../xpiks-qt/Helpers/helpersqmlwrapper.cpp \
     ../../xpiks-qt/Models/recentdirectoriesmodel.cpp \
-    ../../xpiks-qt/Helpers/keywordvalidator.cpp \
+    ../../xpiks-qt/Helpers/keywordshelpers.cpp \
     ../../xpiks-qt/SpellCheck/spellcheckerservice.cpp \
     ../../xpiks-qt/SpellCheck/spellcheckitem.cpp \
     ../../xpiks-qt/SpellCheck/spellcheckworker.cpp \
@@ -153,7 +153,8 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Models/findandreplacemodel.cpp \
     replacepreview_tests.cpp \
     replace_tests.cpp \
-    stringhelpersfortests.cpp
+    stringhelpersfortests.cpp \
+    ../../xpiks-qt/Models/artworksviewmodel.cpp
 
 HEADERS += \
     encryption_tests.h \
@@ -192,7 +193,7 @@ HEADERS += \
     ../../xpiks-qt/Helpers/filenameshelpers.h \
     ../../xpiks-qt/Helpers/helpersqmlwrapper.h \
     ../../xpiks-qt/Models/recentdirectoriesmodel.h \
-    ../../xpiks-qt/Helpers/keywordvalidator.h \
+    ../../xpiks-qt/Helpers/keywordshelpers.h \
     ../../xpiks-qt/Common/flags.h \
     ../../xpiks-qt/SpellCheck/spellcheckerservice.h \
     ../../xpiks-qt/SpellCheck/spellcheckitem.h \
@@ -262,5 +263,6 @@ HEADERS += \
     ../../xpiks-qt/Models/findandreplacemodel.h \
     replacepreview_tests.h \
     replace_tests.h \
-    stringhelpersfortests.h
+    stringhelpersfortests.h \
+    ../../xpiks-qt/Models/artworksviewmodel.h
 

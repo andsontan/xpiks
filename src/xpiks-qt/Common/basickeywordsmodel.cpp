@@ -26,7 +26,7 @@
 #include "../SpellCheck/spellcheckitem.h"
 #include "../SpellCheck/spellsuggestionsitem.h"
 #include "../SpellCheck/spellcheckiteminfo.h"
-#include "../Helpers/keywordvalidator.h"
+#include "../Helpers/keywordshelpers.h"
 #include "../Helpers/stringhelper.h"
 #include "flags.h"
 #include "../Common/defines.h"
