@@ -109,7 +109,6 @@ namespace Models {
         void changeTitleChanged();
         void appendKeywordsChanged();
         void artworkUnavailable(int index);
-        void itemsNumberChanged();
         void completionsAvailable();
 
     public:

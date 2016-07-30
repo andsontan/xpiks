@@ -177,7 +177,7 @@ CloseRequested")
                         Connections {
                             target: deleteKeywordsModel
                             onArtworksCountChanged: {
-                               textItemsAvailable.originalText = textItemsAvailable.getOriginalText();
+                               var originalText = textItemsAvailable.getOriginalText();
                                textItemsAvailable.text = i18.n + originalText
                             }
                         }
@@ -294,7 +294,7 @@ CloseRequested")
                                         anchors.fill: parent
                                         hoverEnabled: true
                                         onClicked: {
-                                            combinedArtworks.setArtworksSelected(delegateIndex, !isselected)
+                                            combinedArtworks.setArtworkSelected(delegateIndex, !isselected)
                                         }
                                     }
                                 }

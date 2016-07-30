@@ -45,7 +45,7 @@ Item {
 
     function closePopup() {
         dialogComponent.destroy()
-        combinedArtworks.resetModelData()
+        combinedArtworks.resetModel()
     }
 
     function mustUseConfirmation() {
@@ -85,9 +85,6 @@ CloseRequested")
 
     function doRemoveSelectedArtworks() {
         combinedArtworks.removeSelectedArtworks()
-        if (combinedArtworks.artworksCount === 0) {
-            closePopup()
-        }
     }
 
     // This rectange is the a overlay to partially show the parent through it
@@ -243,8 +240,8 @@ CloseRequested")
 
                         Connections {
                             target: combinedArtworks
-                            onItemsNumberChanged: {
-                               textItemsAvailable.originalText = textItemsAvailable.getOriginalText()
+                            onArtworksCountChanged: {
+                               var originalText = textItemsAvailable.getOriginalText()
                                textItemsAvailable.text = i18.n + originalText
                             }
                         }
@@ -345,7 +342,7 @@ CloseRequested")
                                     Image {
                                         anchors.fill: parent
                                         anchors.margins: 1
-                                        source: "image://cached/" + path
+                                        source: "image://cached/" + filepath
                                         sourceSize.width: 150
                                         sourceSize.height: 150
                                         fillMode: settingsModel.fitSmallPreview ? Image.PreserveAspectFit : Image.PreserveAspectCrop
@@ -371,7 +368,7 @@ CloseRequested")
                                         anchors.fill: parent
                                         hoverEnabled: true
                                         onClicked: {
-                                            combinedArtworks.setArtworksSelected(delegateIndex, !isselected)
+                                            combinedArtworks.setArtworkSelected(delegateIndex, !isselected)
                                         }
                                     }
                                 }
