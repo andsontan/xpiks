@@ -57,6 +57,7 @@
 #endif
 #include "../QMLExtensions/imagecachingservice.h"
 #include "../Models/findandreplacemodel.h"
+#include "../Models/deletekeywordsviewmodel.h"
 
 void Commands::CommandManager::InjectDependency(Models::ArtworksRepository *artworkRepository) {
     Q_ASSERT(artworkRepository != NULL); m_ArtworksRepository = artworkRepository;
@@ -186,6 +187,11 @@ void Commands::CommandManager::InjectDependency(Models::FindAndReplaceModel *rep
     Q_ASSERT(replacePreview != NULL); replacePreview->setCommandManager(this);
 }
 
+void Commands::CommandManager::InjectDependency(Models::DeleteKeywordsViewModel *deleteKeywordsViewModel) {
+    Q_ASSERT(deleteKeywordsViewModel != NULL); m_DeleteKeywordsViewModel = deleteKeywordsViewModel;
+    m_DeleteKeywordsViewModel->setCommandManager(this);
+}
+
 std::shared_ptr<Commands::ICommandResult> Commands::CommandManager::processCommand(const std::shared_ptr<ICommandBase> &command)
 #ifndef CORE_TESTS
 const
@@ -276,6 +282,7 @@ void Commands::CommandManager::ensureDependenciesInjected() {
     Q_ASSERT(m_ColorsModel != NULL);
     Q_ASSERT(m_AutoCompleteService != NULL);
     Q_ASSERT(m_ImageCachingService != NULL);
+    Q_ASSERT(m_DeleteKeywordsViewModel != NULL);
 }
 
 void Commands::CommandManager::recodePasswords(const QString &oldMasterPassword,
@@ -300,8 +307,8 @@ void Commands::CommandManager::combineArtwork(Models::ArtworkMetadata *metadata,
         std::vector<Models::MetadataElement> items;
         items.emplace_back(metadata, index);
 
-        m_CombinedArtworksModel->resetModelData();
-        m_CombinedArtworksModel->initArtworks(items);
+        m_CombinedArtworksModel->resetModel();
+        m_CombinedArtworksModel->setArtworks(items);
         m_CombinedArtworksModel->recombineArtworks();
     }
 }
@@ -309,9 +316,16 @@ void Commands::CommandManager::combineArtwork(Models::ArtworkMetadata *metadata,
 void Commands::CommandManager::combineArtworks(std::vector<Models::MetadataElement> &artworks) const {
     LOG_DEBUG << artworks.size() << "artworks";
     if (m_CombinedArtworksModel) {
-        m_CombinedArtworksModel->resetModelData();
-        m_CombinedArtworksModel->initArtworks(artworks);
+        m_CombinedArtworksModel->resetModel();
+        m_CombinedArtworksModel->setArtworks(artworks);
         m_CombinedArtworksModel->recombineArtworks();
+    }
+}
+
+void Commands::CommandManager::deleteKeywordsFromArtworks(std::vector<Models::MetadataElement> &artworks) const {
+    LOG_DEBUG << artworks.size() << "artworks";
+    if (m_DeleteKeywordsViewModel != NULL) {
+        m_DeleteKeywordsViewModel->setArtworks(artworks);
     }
 }
 

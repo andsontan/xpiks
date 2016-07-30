@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "keywordvalidator.h"
+#include "keywordshelpers.h"
 #include <QRegularExpression>
 
 #define ALLOWED_SYMBOLS "@#%&!?"

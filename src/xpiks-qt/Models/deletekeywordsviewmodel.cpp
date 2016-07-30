@@ -29,47 +29,46 @@
 
 namespace Models {
     DeleteKeywordsViewModel::DeleteKeywordsViewModel(QObject *parent):
-        Common::AbstractListModel(parent),
+        Models::ArtworksViewModel(parent),
         m_KeywordsToDeleteModel(m_HoldPlaceholder),
         m_CommonKeywordsModel(m_HoldPlaceholder)
     {
     }
 
     void DeleteKeywordsViewModel::setArtworks(std::vector<MetadataElement> &artworks) {
-        size_t paramLength = artworks.size();
-
-        if (paramLength > 0) {
-            beginResetModel();
-            m_ArtworksList = std::move(artworks);
-            endResetModel();
-
-            recombineKeywords();
-        }
+        ArtworksViewModel::setArtworks(artworks);
+        recombineKeywords();
     }
 
-    void DeleteKeywordsViewModel::removeUnavailableItems() {
-        LOG_DEBUG << "#";
-        QVector<int> indicesToRemove;
-        size_t size = m_ArtworksList.size();
-        for (size_t i = 0; i < size; i++) {
-            MetadataElement &item = m_ArtworksList.at(i);
+    bool DeleteKeywordsViewModel::removeUnavailableItems() {
+        bool anyRemoved = ArtworksViewModel::removeUnavailableItems();
 
-            if (item.getOrigin()->isUnavailable()) {
-                indicesToRemove.append((int)i);
+        if (anyRemoved) {
+            if (!isEmpty()) {
+                recombineKeywords();
             }
         }
 
-        QVector<QPair<int, int> > rangesToRemove;
-        Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
+        return anyRemoved;
+    }
 
-        removeItemsAtIndices(rangesToRemove);
-        recombineKeywords();
+    bool DeleteKeywordsViewModel::doRemoveSelectedArtworks() {
+        bool anyRemoved = ArtworksViewModel::doRemoveSelectedArtworks();
 
-        if (m_ArtworksList.empty()) {
-            emit requestCloseWindow();
+        if (anyRemoved) {
+            if (!isEmpty()) {
+                recombineKeywords();
+            }
         }
 
-        emit artworksCountChanged();
+        return anyRemoved;
+    }
+
+    void DeleteKeywordsViewModel::doResetModel() {
+        ArtworksViewModel::doResetModel();
+
+        m_CommonKeywordsModel.clearModel();
+        m_KeywordsToDeleteModel.clearModel();
     }
 
     void DeleteKeywordsViewModel::removeKeywordToDeleteAt(int keywordIndex) {
@@ -105,73 +104,12 @@ namespace Models {
         }
     }
 
-    void DeleteKeywordsViewModel::removeSelectedArtworks() {
-        LOG_DEBUG << "#";
-
-        int count = (int)m_ArtworksList.size();
-        QVector<int> indicesToRemove;
-        indicesToRemove.reserve(count);
-
-        for (int i = 0; i < count; ++i) {
-            const MetadataElement &item = m_ArtworksList.at(i);
-            if (item.isSelected()) {
-                indicesToRemove.append(i);
-            }
-        }
-
-        if (!indicesToRemove.empty()) {
-            LOG_INFO << "Removing" << indicesToRemove.size() << "item(s)";
-
-            QVector<QPair<int, int> > rangesToRemove;
-            Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
-            removeItemsAtIndices(rangesToRemove);
-
-            recombineKeywords();
-            emit artworksCountChanged();
-        }
-    }
-
     void DeleteKeywordsViewModel::deleteKeywords() {
         LOG_INFO << "#";
+        auto &artworksList = getArtworksList();
         std::shared_ptr<Commands::DeleteKeywordsCommand> deleteKeywordsCommand(
-                    new Commands::DeleteKeywordsCommand(m_ArtworksList, m_KeywordsToDeleteModel.getKeywords()));
+                    new Commands::DeleteKeywordsCommand(artworksList, m_KeywordsToDeleteModel.getKeywords()));
         m_CommandManager->processCommand(deleteKeywordsCommand);
-    }
-
-    void DeleteKeywordsViewModel::resetModel() {
-        LOG_DEBUG << "#";
-        beginResetModel();
-        m_ArtworksList.clear();
-        endResetModel();
-
-        m_CommonKeywordsModel.clearModel();
-        m_KeywordsToDeleteModel.clearModel();
-    }
-
-    int DeleteKeywordsViewModel::rowCount(const QModelIndex &parent) const {
-        Q_UNUSED(parent);
-        return (int)m_ArtworksList.size();
-    }
-
-    QVariant DeleteKeywordsViewModel::data(const QModelIndex &index, int role) const {
-        int row = index.row();
-        if (row < 0 || row >= (int)m_ArtworksList.size()) { return QVariant(); }
-
-        auto &item = m_ArtworksList.at(row);
-        auto *artwork = item.getOrigin();
-
-        switch (role) {
-        case FilepathRole: return artwork->getFilepath();
-        case IsSelectedRole: return item.isSelected();
-        default: return QVariant();
-        }
-    }
-
-    QHash<int, QByteArray> DeleteKeywordsViewModel::roleNames() const {
-        QHash<int, QByteArray> names = QAbstractListModel::roleNames();
-        names[FilepathRole] = "filepath";
-        names[IsSelectedRole] = "isselected";
-        return names;
     }
 
     void DeleteKeywordsViewModel::recombineKeywords() {
@@ -209,14 +147,15 @@ namespace Models {
             if (commonKeywords.size() > maxSize) { break; }
         }
 
+        LOG_INFO << "Found" << commonKeywords.size() << "common keywords";
         m_CommonKeywordsModel.setKeywords(commonKeywords);
         emit commonKeywordsCountChanged();
     }
 
     void DeleteKeywordsViewModel::fillKeywordsHash(QHash<QString, int> &keywordsHash) {
-        for (auto &item: m_ArtworksList) {
-            auto *origin = item.getOrigin();
-            const auto &keywordsSet = origin->getKeywordsSet();
+        processArtworks([](const MetadataElement&) { return true; },
+        [&keywordsHash](int, ArtworkMetadata *metadata) {
+            const auto &keywordsSet = metadata->getKeywordsSet();
 
             for (auto &keyword: keywordsSet) {
                 if (keywordsHash.contains(keyword)) {
@@ -225,6 +164,6 @@ namespace Models {
                     keywordsHash.insert(keyword, 1);
                 }
             }
-        }
+        });
     }
 }

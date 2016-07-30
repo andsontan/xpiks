@@ -83,7 +83,7 @@ namespace Models {
         void updateItems(const QVector<int> &indices, const QVector<int> &roles);
         void forceUnselectAllItems() const;
         void updateAllItems();
-        virtual void removeUnavailableItems();
+        virtual bool removeUnavailableItems();
         void generateAboutToBeRemoved();
 
     public:

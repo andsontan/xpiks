@@ -87,7 +87,7 @@ namespace Models {
         void setArtworks(const QVector<ArtworkMetadata*> &artworkList) { resetArtworks(); addArtworks(artworkList); }
         void addArtworks(const QVector<Models::ArtworkMetadata*> &artworkList) { m_ArtworkList << artworkList; emit itemsCountChanged(); }
         void resetArtworks() { m_ArtworkList.clear(); }
-        virtual void removeUnavailableItems();
+        virtual bool removeUnavailableItems();
 
 #ifdef CORE_TESTS
     public:

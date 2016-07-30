@@ -40,7 +40,6 @@ SOURCES += main.cpp \
     Models/logsmodel.cpp \
     Models/filteredartitemsproxymodel.cpp \
     Helpers/filenameshelpers.cpp \
-    Helpers/keywordvalidator.cpp \
     Helpers/helpersqmlwrapper.cpp \
     Models/recentdirectoriesmodel.cpp \
     Suggestion/locallibrary.cpp \
@@ -109,7 +108,9 @@ SOURCES += main.cpp \
     Helpers/metadatahighlighter.cpp \
     Models/findandreplacemodel.cpp \
     Commands/deletekeywordscommand.cpp \
-    Models/deletekeywordsviewmodel.cpp
+    Models/deletekeywordsviewmodel.cpp \
+    Models/artworksviewmodel.cpp \
+    Helpers/keywordshelpers.cpp
 
 RESOURCES += qml.qrc
 
@@ -179,7 +180,6 @@ HEADERS += \
     Models/filteredartitemsproxymodel.h \
     Helpers/filenameshelpers.h \
     Common/flags.h \
-    Helpers/keywordvalidator.h \
     Helpers/helpersqmlwrapper.h \
     Models/recentdirectoriesmodel.h \
     Common/version.h \
@@ -276,7 +276,9 @@ HEADERS += \
     Helpers/metadatahighlighter.h \
     Models/findandreplacemodel.h \
     Commands/deletekeywordscommand.h \
-    Models/deletekeywordsviewmodel.h
+    Models/deletekeywordsviewmodel.h \
+    Models/artworksviewmodel.h \
+    Helpers/keywordshelpers.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
@@ -344,7 +346,8 @@ DISTFILES += \
     Dialogs/ProxySetupDialog.qml \
     Dialogs/WhatsNewMinorDialog.qml \
     Dialogs/FindAndReplace.qml \
-    Dialogs/ReplacePreview.qml
+    Dialogs/ReplacePreview.qml \
+    Dialogs/DeleteKeywordsDialog.qml
 
 lupdate_only {
 SOURCES += *.qml \

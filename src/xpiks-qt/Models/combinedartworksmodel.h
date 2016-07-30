@@ -31,27 +31,20 @@
 #include <QQuickTextDocument>
 #include <memory>
 #include <vector>
-#include "../Common/abstractlistmodel.h"
-#include "../Common/baseentity.h"
+#include "artworksviewmodel.h"
 #include "../Common/basickeywordsmodel.h"
 #include "../Common/flags.h"
 #include "../SpellCheck/spellcheckiteminfo.h"
-#include "../Helpers/ifilenotavailablemodel.h"
 #include "../Common/hold.h"
 #include "../Models/metadataelement.h"
 
 namespace Models {
-    class CombinedArtworksModel :
-            public Common::AbstractListModel,
-            public Common::BaseEntity,
-            public Helpers::IFileNotAvailableModel
+    class CombinedArtworksModel: public ArtworksViewModel
     {
         Q_OBJECT
         Q_PROPERTY(QString description READ getDescription WRITE setDescription NOTIFY descriptionChanged)
         Q_PROPERTY(QString title READ getTitle WRITE setTitle NOTIFY titleChanged)
         Q_PROPERTY(int keywordsCount READ getKeywordsCount NOTIFY keywordsCountChanged)
-        Q_PROPERTY(int selectedArtworksCount READ getSelectedArtworksCount NOTIFY selectedArtworksCountChanged)
-        Q_PROPERTY(int artworksCount READ getArtworksCount NOTIFY artworksCountChanged)
         Q_PROPERTY(bool changeDescription READ getChangeDescription WRITE setChangeDescription NOTIFY changeDescriptionChanged)
         Q_PROPERTY(bool changeTitle READ getChangeTitle WRITE setChangeTitle NOTIFY changeTitleChanged)
         Q_PROPERTY(bool changeKeywords READ getChangeKeywords WRITE setChangeKeywords NOTIFY changeKeywordsChanged)
@@ -62,7 +55,7 @@ namespace Models {
         virtual ~CombinedArtworksModel() {}
 
     public:
-        void initArtworks(std::vector<MetadataElement> &artworks);
+        virtual void setArtworks(std::vector<MetadataElement> &artworks);
 
     private:
         void initKeywords(const QStringList &ek) { m_CommonKeywordsModel.setKeywords(ek); m_AreKeywordsModified = false; }
@@ -111,20 +104,15 @@ namespace Models {
         void descriptionChanged();
         void titleChanged();
         void keywordsCountChanged();
-        void selectedArtworksCountChanged();
-        void artworksCountChanged();
         void changeDescriptionChanged();
         void changeKeywordsChanged();
         void changeTitleChanged();
         void appendKeywordsChanged();
         void artworkUnavailable(int index);
-        void requestCloseWindow();
         void itemsNumberChanged();
         void completionsAvailable();
 
     public:
-        int getSelectedArtworksCount() const;
-        int getArtworksCount() const { return (int)m_ArtworksList.size(); }
         void generateAboutToBeRemoved();
 
 #ifdef INTEGRATION_TESTS
@@ -144,10 +132,7 @@ namespace Models {
         Q_INVOKABLE void removeLastKeyword();
         Q_INVOKABLE void appendKeyword(const QString &keyword);
         Q_INVOKABLE void pasteKeywords(const QStringList &keywords);
-        Q_INVOKABLE void setArtworksSelected(int index, bool newState);
-        Q_INVOKABLE void removeSelectedArtworks();
         Q_INVOKABLE void saveEdits();
-        Q_INVOKABLE void resetModelData();
         Q_INVOKABLE void clearKeywords();
         Q_INVOKABLE QString getKeywordsString() { return m_CommonKeywordsModel.getKeywordsString(); }
         Q_INVOKABLE QObject *getKeywordsModel() {
@@ -171,25 +156,14 @@ namespace Models {
     private slots:
         void spellCheckErrorsChangedHandler();
 
-    public:
-        enum CombinedArtworksModelRoles {
-            PathRole = Qt::UserRole + 1,
-            IsSelectedRole
-        };
+    protected:
+        virtual bool doRemoveSelectedArtworks();
+        virtual void doResetModel();
 
     public:
-        virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
-        virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
-        virtual void removeUnavailableItems();
-
-    protected:
-        virtual QHash<int, QByteArray> roleNames() const;
-
-    protected:
-        void removeInnerItem(int row);
+        virtual bool removeUnavailableItems();
 
     private:
-        std::vector<MetadataElement> m_ArtworksList;
         Common::Hold m_HoldPlaceholder;
         Common::BasicKeywordsModel m_CommonKeywordsModel;
         SpellCheck::SpellCheckItemInfo m_SpellCheckInfo;

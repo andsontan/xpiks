@@ -33,8 +33,7 @@
 
 namespace Models {
     CombinedArtworksModel::CombinedArtworksModel(QObject *parent) :
-        AbstractListModel(parent),
-        Common::BaseEntity(),
+        ArtworksViewModel(parent),
         m_CommonKeywordsModel(m_HoldPlaceholder, this),
         m_EditFlags(0),
         m_AreKeywordsModified(false),
@@ -48,25 +47,19 @@ namespace Models {
                          this, SIGNAL(completionsAvailable()));
     }
 
-    void CombinedArtworksModel::initArtworks(std::vector<MetadataElement> &artworks) {
-        size_t paramLength = artworks.size();
+    void CombinedArtworksModel::setArtworks(std::vector<MetadataElement> &artworks) {
+        ArtworksViewModel::setArtworks(artworks);
 
-        if (paramLength > 0) {
-            beginResetModel();
-            m_ArtworksList = std::move(artworks);
-            endResetModel();
-        }
-
-        if (paramLength == 1) {
+        if (artworks.size() == 1) {
             enableAllFields();
         }
     }
 
     void CombinedArtworksModel::recombineArtworks() {
-        LOG_DEBUG << m_ArtworksList.size() << "artwork(s)";
-        if (m_ArtworksList.empty()) { return; }
+        LOG_DEBUG << getArtworksCount() << "artwork(s)";
+        if (isEmpty()) { return; }
 
-        if (m_ArtworksList.size() == 1) {
+        if (getArtworksCount() == 1) {
             assignFromOneArtwork();
         } else {
             assignFromManyArtworks();
@@ -111,18 +104,6 @@ namespace Models {
             Common::ApplyFlag(m_EditFlags, value, Common::AppendKeywords);
             emit appendKeywordsChanged();
         }
-    }
-
-    int CombinedArtworksModel::getSelectedArtworksCount() const {
-        int selectedCount = 0;
-        size_t count = m_ArtworksList.size();
-        for (size_t i = 0; i < count; ++i) {
-            if (m_ArtworksList.at(i).isSelected()) {
-                selectedCount++;
-            }
-        }
-
-        return selectedCount;
     }
 
 #ifdef CORE_TESTS
@@ -175,44 +156,13 @@ namespace Models {
         }
     }
 
-    void CombinedArtworksModel::setArtworksSelected(int index, bool newState) {
-        if (index < 0 || index >= (int)m_ArtworksList.size()) {
-            return;
-        }
-
-        m_ArtworksList.at(index).setSelected(newState);
-        QModelIndex qIndex = this->index(index);
-        emit dataChanged(qIndex, qIndex, QVector<int>() << IsSelectedRole);
-        emit selectedArtworksCountChanged();
-    }
-
-    void CombinedArtworksModel::removeSelectedArtworks() {
-        int count = (int)m_ArtworksList.size();
-        QVector<int> indicesToRemove;
-        indicesToRemove.reserve(count);
-
-        for (int i = 0; i < count; ++i) {
-            const MetadataElement &item = m_ArtworksList.at(i);
-            if (item.isSelected()) {
-                indicesToRemove.append(i);
-            }
-        }
-
-        QVector<QPair<int, int> > rangesToRemove;
-        Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
-        removeItemsAtIndices(rangesToRemove);
-
-        recombineArtworks();
-        emit artworksCountChanged();
-    }
-
     void CombinedArtworksModel::saveEdits() {
         bool needToSave = false;
 
         if (getChangeTitle() ||
                 getChangeDescription() ||
                 getChangeKeywords()) {
-            needToSave = m_ArtworksList.size() > 1;
+            needToSave = getArtworksCount() > 1;
             needToSave = needToSave || (getChangeKeywords() && m_AreKeywordsModified);
             needToSave = needToSave || (getChangeTitle() && m_IsTitleModified);
             needToSave = needToSave || (getChangeDescription() && m_IsDescriptionModified);
@@ -221,26 +171,6 @@ namespace Models {
         if (needToSave) {
             processCombinedEditCommand();
         }
-    }
-
-    void CombinedArtworksModel::resetModelData() {
-        beginResetModel();
-        m_ArtworksList.clear();
-        endResetModel();
-
-        m_AreKeywordsModified = false;
-        m_IsDescriptionModified = false;
-        m_IsTitleModified = false;
-
-        // TEMPORARY (enable everything on initial launch) --
-        m_EditFlags = 0;
-        enableAllFields();
-        // TEMPORARY (enable everything on initial launch) --
-
-        m_CommonKeywordsModel.setSpellCheckInfo(NULL);
-        initDescription("");
-        initTitle("");
-        initKeywords(QStringList());
     }
 
     void CombinedArtworksModel::clearKeywords() {
@@ -299,35 +229,35 @@ namespace Models {
 
     void CombinedArtworksModel::assignFromSelected() {
         int selectedCount = 0;
-        size_t count = m_ArtworksList.size();
         int firstSelectedIndex = -1;
-        for (size_t i = 0; i < count; ++i) {
-            if (m_ArtworksList.at(i).isSelected()) {
-                selectedCount++;
 
-                if (firstSelectedIndex == -1) {
-                    firstSelectedIndex = (int)i;
-                }
+        processArtworks([](const MetadataElement &item) { return item.isSelected(); },
+        [&selectedCount, &firstSelectedIndex](int index, ArtworkMetadata *) {
+            selectedCount++;
+
+            if (firstSelectedIndex == -1) {
+                firstSelectedIndex = index;
             }
-        }
+        });
 
         if (selectedCount == 1) {
             Q_ASSERT(firstSelectedIndex != -1);
             LOG_DEBUG << "Assigning fields";
-            MetadataElement &firstSelected = m_ArtworksList.at(firstSelectedIndex);
-            ArtworkMetadata *metadata = firstSelected.getOrigin();
+            ArtworkMetadata *metadata = getArtworkMetadata(firstSelectedIndex);
             setTitle(metadata->getTitle());
             setDescription(metadata->getDescription());
             setKeywords(metadata->getKeywords());
         } else {
-            LOG_WARNING << "Method called with" << count << "items selected";
+            LOG_WARNING << "Method called with" << getArtworksCount() << "items selected";
         }
     }
 
     void CombinedArtworksModel::processCombinedEditCommand() {
+        auto &artworksList = getArtworksList();
+
         std::shared_ptr<Commands::CombinedEditCommand> combinedEditCommand(new Commands::CombinedEditCommand(
                     m_EditFlags,
-                    m_ArtworksList,
+                    artworksList,
                     m_CommonKeywordsModel.getDescription(),
                     m_CommonKeywordsModel.getTitle(),
                     m_CommonKeywordsModel.getKeywords()));
@@ -342,9 +272,8 @@ namespace Models {
     }
 
     void CombinedArtworksModel::assignFromOneArtwork() {
-        Q_ASSERT(m_ArtworksList.size() == 1);
-        MetadataElement &info = m_ArtworksList.at(0);
-        ArtworkMetadata *metadata = info.getOrigin();
+        Q_ASSERT(getArtworksCount() == 1);
+        ArtworkMetadata *metadata = getArtworkMetadata(0);
 
         if (!m_IsDescriptionModified) {
             initDescription(metadata->getDescription());
@@ -375,17 +304,14 @@ namespace Models {
         QString title;
         QSet<QString> commonKeywords;
 
-        size_t artworksCount = m_ArtworksList.size();
-        for (size_t i = 0; i < artworksCount; ++i) {
-            MetadataElement &info = m_ArtworksList.at(i);
-            ArtworkMetadata *metadata = info.getOrigin();
-
+        processArtworks([](const MetadataElement &) { return true; },
+        [&](int, ArtworkMetadata *metadata) {
             if (!anyItemsProcessed) {
                 description = metadata->getDescription();
                 title = metadata->getTitle();
                 commonKeywords.unite(metadata->getKeywordsSet());
                 anyItemsProcessed = true;
-                continue;
+                return;
             }
 
             QString currDescription = metadata->getDescription();
@@ -393,9 +319,9 @@ namespace Models {
             descriptionsDiffer = descriptionsDiffer || description != currDescription;
             titleDiffer = titleDiffer || title != currTitle;
             commonKeywords.intersect(metadata->getKeywordsSet());
-        }
+        });
 
-        if (artworksCount > 0) {
+        if (!isEmpty()) {
             if (descriptionsDiffer) {
                 description = "";
             }
@@ -418,64 +344,41 @@ namespace Models {
         emit titleChanged();
     }
 
-    int CombinedArtworksModel::rowCount(const QModelIndex &parent) const {
-        Q_UNUSED(parent);
-        return (int)m_ArtworksList.size();
-    }
-
-    QVariant CombinedArtworksModel::data(const QModelIndex &index, int role) const {
-        if (index.row() < 0 || index.row() >= (int)m_ArtworksList.size())
-            return QVariant();
-
-        const MetadataElement &item = m_ArtworksList.at(index.row());
-
-        switch (role) {
-        case PathRole:
-            return item.getOrigin()->getFilepath();
-        case IsSelectedRole:
-            return item.isSelected();
-        default:
-            return QVariant();
+    bool CombinedArtworksModel::doRemoveSelectedArtworks() {
+        if (ArtworksViewModel::doRemoveSelectedArtworks()) {
+            if (!isEmpty()) {
+                recombineArtworks();
+            }
         }
     }
 
-    QHash<int, QByteArray> CombinedArtworksModel::roleNames() const {
-        QHash<int, QByteArray> roles;
-        roles[PathRole] = "path";
-        roles[IsSelectedRole] = "isselected";
-        return roles;
+    void CombinedArtworksModel::doResetModel() {
+        ArtworksViewModel::doResetModel();
+
+        m_AreKeywordsModified = false;
+        m_IsDescriptionModified = false;
+        m_IsTitleModified = false;
+
+        // TEMPORARY (enable everything on initial launch) --
+        m_EditFlags = 0;
+        enableAllFields();
+        // TEMPORARY (enable everything on initial launch) --
+
+        m_CommonKeywordsModel.setSpellCheckInfo(NULL);
+        initDescription("");
+        initTitle("");
+        initKeywords(QStringList());
     }
 
-    void CombinedArtworksModel::removeInnerItem(int row) {
-        m_ArtworksList.erase(m_ArtworksList.begin() + row);
+    bool CombinedArtworksModel::removeUnavailableItems() {
+        if (ArtworksViewModel::removeUnavailableItems()) {
+            if (!isEmpty()) {
+                recombineArtworks();
+            }
+        }
     }
 
     void CombinedArtworksModel::generateAboutToBeRemoved() {
          m_CommonKeywordsModel.notifyAboutToBeRemoved();
-    }
-
-    void CombinedArtworksModel::removeUnavailableItems() {
-        LOG_DEBUG << "#";
-        QVector<int> indicesToRemove;
-        size_t size = m_ArtworksList.size();
-        for (size_t i = 0; i < size; i++) {
-            MetadataElement &item = m_ArtworksList.at(i);
-
-            if (item.getOrigin()->isUnavailable()) {
-                indicesToRemove.append((int)i);
-            }
-        }
-
-        QVector<QPair<int, int> > rangesToRemove;
-        Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
-
-        removeItemsAtIndices(rangesToRemove);
-        recombineArtworks();
-
-        if (m_ArtworksList.empty()) {
-            emit requestCloseWindow();
-        }
-
-        emit itemsNumberChanged();
     }
 }

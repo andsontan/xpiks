@@ -65,6 +65,7 @@ namespace Models {
     class LogsModel;
     class LanguagesModel;
     class FindAndReplaceModel;
+    class DeleteKeywordsViewModel;
 }
 
 namespace Suggestion {
@@ -139,6 +140,7 @@ namespace Commands {
             m_ColorsModel(NULL),
             m_AutoCompleteService(NULL),
             m_ImageCachingService(NULL),
+            m_DeleteKeywordsViewModel(NULL),
             m_AfterInitCalled(false)
         { }
 
@@ -172,6 +174,7 @@ namespace Commands {
         void InjectDependency(AutoComplete::AutoCompleteService *autoCompleteService);
         void InjectDependency(QMLExtensions::ImageCachingService *imageCachingService);
         void InjectDependency(Models::FindAndReplaceModel *replacePreview);
+        void InjectDependency(Models::DeleteKeywordsViewModel *deleteKeywordsViewModel);
 
     public:
         virtual std::shared_ptr<Commands::ICommandResult> processCommand(const std::shared_ptr<ICommandBase> &command)
@@ -194,6 +197,7 @@ namespace Commands {
 
         void combineArtwork(Models::ArtworkMetadata *metadata, int index) const;
         void combineArtworks(std::vector<Models::MetadataElement> &artworks) const;
+        void deleteKeywordsFromArtworks(std::vector<Models::MetadataElement> &artworks) const;
         void setArtworksForUpload(const QVector<Models::ArtworkMetadata*> &artworks) const;
         void setArtworksForZipping(const QVector<Models::ArtworkMetadata*> &artworks) const;
         virtual void connectArtworkSignals(Models::ArtworkMetadata *metadata) const;
@@ -294,6 +298,7 @@ namespace Commands {
         QMLExtensions::ColorsModel *m_ColorsModel;
         AutoComplete::AutoCompleteService *m_AutoCompleteService;
         QMLExtensions::ImageCachingService *m_ImageCachingService;
+        Models::DeleteKeywordsViewModel *m_DeleteKeywordsViewModel;
 
         QVector<Common::IServiceBase<Common::IBasicArtwork> *> m_WarningsCheckers;
         QVector<Helpers::IFileNotAvailableModel*> m_AvailabilityListeners;

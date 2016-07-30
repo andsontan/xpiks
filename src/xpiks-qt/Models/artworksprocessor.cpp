@@ -34,7 +34,7 @@ namespace Models {
         updateProgress();
     }
 
-    void ArtworksProcessor::removeUnavailableItems() {
+    bool ArtworksProcessor::removeUnavailableItems() {
         LOG_DEBUG << "#";
 
         const QVector<Models::ArtworkMetadata*> &artworksListOld = getArtworkList();
@@ -49,6 +49,8 @@ namespace Models {
             }
         }
 
+        bool anyUnavailable = artworksListNew.size() != m_ArtworkList.size();
+
         setArtworks(artworksListNew);
 
         if (artworksListNew.isEmpty()) {
@@ -56,6 +58,8 @@ namespace Models {
         }
 
         emit itemsNumberChanged();
+
+        return anyUnavailable;
     }
 
     void ArtworksProcessor::beginProcessing() {

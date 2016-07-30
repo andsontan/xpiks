@@ -26,7 +26,7 @@
 #include <QQuickWindow>
 #include <QSysInfo>
 #include <QCoreApplication>
-#include "keywordvalidator.h"
+#include "keywordshelpers.h"
 #include "../Commands/commandmanager.h"
 #include "logger.h"
 #include "../Common/defines.h"

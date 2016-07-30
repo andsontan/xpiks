@@ -46,6 +46,7 @@
 #include "Conectivity/analyticsuserevent.h"
 #include "SpellCheck/spellcheckerservice.h"
 #include "AutoComplete/autocompletemodel.h"
+#include "Models/deletekeywordsviewmodel.h"
 #include "Models/recentdirectoriesmodel.h"
 #include "MetadataIO/backupsaverservice.h"
 #include "QMLExtensions/triangleelement.h"
@@ -290,6 +291,7 @@ int main(int argc, char *argv[]) {
     AutoComplete::AutoCompleteService autoCompleteService(&autoCompleteModel);
     QMLExtensions::ImageCachingService imageCachingService;
     Models::FindAndReplaceModel replaceModel(&colorsModel);
+    Models::DeleteKeywordsViewModel deleteKeywordsModel;
 
     bool checkForUpdates = appSettings.value(Constants::CHECK_FOR_UPDATES, true).toBool();
     Helpers::UpdateService updateService(checkForUpdates);
@@ -336,6 +338,7 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&autoCompleteService);
     commandManager.InjectDependency(&imageCachingService);
     commandManager.InjectDependency(&replaceModel);
+    commandManager.InjectDependency(&deleteKeywordsModel);
 
     commandManager.ensureDependenciesInjected();
 
@@ -391,6 +394,7 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("autoCompleteService", &autoCompleteService);
     rootContext->setContextProperty("ftpListAC", artworkUploader.getStocksCompletionSource());
     rootContext->setContextProperty("replaceModel", &replaceModel);
+    rootContext->setContextProperty("deleteKeywordsModel", &deleteKeywordsModel);
 
 #ifdef QT_DEBUG
     QVariant isDebug(true);

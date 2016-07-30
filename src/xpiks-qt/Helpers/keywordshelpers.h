@@ -19,10 +19,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QString>
-
 #ifndef KEYWORDVALIDATOR
 #define KEYWORDVALIDATOR
+
+#include <QString>
 
 namespace Helpers {
     bool isValidKeyword(const QString &keyword);

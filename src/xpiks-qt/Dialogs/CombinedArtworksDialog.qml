@@ -83,7 +83,6 @@ CloseRequested")
         }
     }
 
-
     function doRemoveSelectedArtworks() {
         combinedArtworks.removeSelectedArtworks()
         if (combinedArtworks.artworksCount === 0) {
@@ -245,8 +244,8 @@ CloseRequested")
                         Connections {
                             target: combinedArtworks
                             onItemsNumberChanged: {
-                               textItemsAvailable.originalText = combinedArtworks.artworksCount == 1 ? qsTr("1 artwork being edited") : qsTr("%1 artworks being edited").arg(combinedArtworks.artworksCount)
-                               textItemsAvailable.text=i18.n + originalText
+                               textItemsAvailable.originalText = textItemsAvailable.getOriginalText()
+                               textItemsAvailable.text = i18.n + originalText
                             }
                         }
                     }

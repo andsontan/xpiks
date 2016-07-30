@@ -141,7 +141,7 @@ namespace Models {
         emit modifiedArtworksCountChanged();
     }
 
-    void ArtItemsModel::removeUnavailableItems() {
+    bool ArtItemsModel::removeUnavailableItems() {
         LOG_DEBUG << "#";
         QVector<int> indicesToRemove;
         QVector<QPair<int, int> > rangesToRemove;
@@ -156,6 +156,8 @@ namespace Models {
 
         Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
         doRemoveItemsInRanges(rangesToRemove);
+
+        return !indicesToRemove.empty();
     }
 
     void ArtItemsModel::generateAboutToBeRemoved() {
