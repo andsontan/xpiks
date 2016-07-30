@@ -49,6 +49,7 @@ namespace Models {
 
     public:
         void setArtworks(std::vector<MetadataElement> &artworks);
+        virtual void removeUnavailableItems();
 
     public:
         int getCommonKeywordsCount() { return m_CommonKeywordsModel.getKeywordsCount(); }
@@ -58,6 +59,7 @@ namespace Models {
         void commonKeywordsCountChanged();
         void keywordsToDeleteCountChanged();
         void artworksCountChanged();
+        void requestCloseWindow();
 
     public:
         Q_INVOKABLE QObject *getCommonKeywordsModel() {

@@ -47,6 +47,31 @@ namespace Models {
         }
     }
 
+    void DeleteKeywordsViewModel::removeUnavailableItems() {
+        LOG_DEBUG << "#";
+        QVector<int> indicesToRemove;
+        size_t size = m_ArtworksList.size();
+        for (size_t i = 0; i < size; i++) {
+            MetadataElement &item = m_ArtworksList.at(i);
+
+            if (item.getOrigin()->isUnavailable()) {
+                indicesToRemove.append((int)i);
+            }
+        }
+
+        QVector<QPair<int, int> > rangesToRemove;
+        Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
+
+        removeItemsAtIndices(rangesToRemove);
+        recombineKeywords();
+
+        if (m_ArtworksList.empty()) {
+            emit requestCloseWindow();
+        }
+
+        emit artworksCountChanged();
+    }
+
     void DeleteKeywordsViewModel::removeKeywordToDeleteAt(int keywordIndex) {
         QString keyword;
         if (m_KeywordsToDeleteModel.takeKeywordAt(keywordIndex, keyword)) {
@@ -107,12 +132,14 @@ namespace Models {
     }
 
     void DeleteKeywordsViewModel::deleteKeywords() {
+        LOG_INFO << "#";
         std::shared_ptr<Commands::DeleteKeywordsCommand> deleteKeywordsCommand(
                     new Commands::DeleteKeywordsCommand(m_ArtworksList, m_KeywordsToDeleteModel.getKeywords()));
         m_CommandManager->processCommand(deleteKeywordsCommand);
     }
 
     void DeleteKeywordsViewModel::resetModel() {
+        LOG_DEBUG << "#";
         beginResetModel();
         m_ArtworksList.clear();
         endResetModel();
@@ -148,6 +175,7 @@ namespace Models {
     }
 
     void DeleteKeywordsViewModel::recombineKeywords() {
+        LOG_DEBUG << "#";
         QHash<QString, int> keywordsHash;
         fillKeywordsHash(keywordsHash);
 
