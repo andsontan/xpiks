@@ -35,27 +35,27 @@ int main(int argc, char *argv[]) {
 
     int result = 0;
 
-//    QTEST_CLASS(EncryptionTests, et, result);
-//    QTEST_CLASS(IndicesToRangesTests, itrt, result);
-//    QTEST_CLASS(AddCommandTests, act, result);
-//    QTEST_CLASS(RemoveCommandTests, rct, result);
-//    QTEST_CLASS(VectorFileNamesTests, vfnt, result);
-//    QTEST_CLASS(ArtworkMetadataTests, amt, result);
-//    QTEST_CLASS(BasicKeywordsModelTests, bkt, result);
-//    QTEST_CLASS(CombinedModelTests, cmt, result);
-//    QTEST_CLASS(StringHelpersTests, sht, result);
-//    QTEST_CLASS(KeywordValidationTests, kvt, result);
-//    QTEST_CLASS(ArtworkRepositoryTests, art, result);
-//    QTEST_CLASS(FilteredModelTests, fil, result);
-//    QTEST_CLASS(ConectivityHelpersTests, cht, result);
-//    QTEST_CLASS(UndoRedoTests, urt, result);
-//    QTEST_CLASS(ArtworkFilterTests, aft, result);
-//    QTEST_CLASS(RemoveFilesFsTests, del,result);
-//    QTEST_CLASS(RecentDirectoriesTests, rdt, result);
-//    QTEST_CLASS(ArtItemsModelTests, aimt, result);
-//    QTEST_CLASS(FixSpellingTests, fst, result);
-//    QTEST_CLASS(DeleteOldLogsTest, dolt, result);
-//    QTEST_CLASS(ReplaceTests, rpl, result);
+    QTEST_CLASS(EncryptionTests, et, result);
+    QTEST_CLASS(IndicesToRangesTests, itrt, result);
+    QTEST_CLASS(AddCommandTests, act, result);
+    QTEST_CLASS(RemoveCommandTests, rct, result);
+    QTEST_CLASS(VectorFileNamesTests, vfnt, result);
+    QTEST_CLASS(ArtworkMetadataTests, amt, result);
+    QTEST_CLASS(BasicKeywordsModelTests, bkt, result);
+    QTEST_CLASS(CombinedModelTests, cmt, result);
+    QTEST_CLASS(StringHelpersTests, sht, result);
+    QTEST_CLASS(KeywordValidationTests, kvt, result);
+    QTEST_CLASS(ArtworkRepositoryTests, art, result);
+    QTEST_CLASS(FilteredModelTests, fil, result);
+    QTEST_CLASS(ConectivityHelpersTests, cht, result);
+    QTEST_CLASS(UndoRedoTests, urt, result);
+    QTEST_CLASS(ArtworkFilterTests, aft, result);
+    QTEST_CLASS(RemoveFilesFsTests, del,result);
+    QTEST_CLASS(RecentDirectoriesTests, rdt, result);
+    QTEST_CLASS(ArtItemsModelTests, aimt, result);
+    QTEST_CLASS(FixSpellingTests, fst, result);
+    QTEST_CLASS(DeleteOldLogsTest, dolt, result);
+    QTEST_CLASS(ReplaceTests, rpl, result);
     QTEST_CLASS(ReplacePreviewTests, rplp, result);
 
     QThread::sleep(1);
