@@ -46,22 +46,24 @@ int CombinedEditFixSpellingTest::doTest() {
 
     VERIFY(!ioCoordinator->getHasErrors(), "Errors in IO Coordinator while reading");
 
+    // wait for after-add spellchecking
+    QThread::sleep(1);
+
     QString wrongWord = "abbreviatioe";
 
-    Models::CombinedArtworksModel *combinedModel = m_CommandManager->getCombinedArtworksModel();
-    Common::BasicKeywordsModel *basicModel = combinedModel->getBasicKeywordsModel();
-
-    QObject::connect(basicModel, SIGNAL(spellCheckErrorsChanged()),
-                     &waiter, SIGNAL(finished()));
+    Models::FilteredArtItemsProxyModel *filteredModel = m_CommandManager->getFilteredArtItemsModel();
+    Common::BasicKeywordsModel *basicModel = qobject_cast<Common::BasicKeywordsModel*>(filteredModel->getKeywordsModel(0));
 
     QString nextDescription = basicModel->getDescription() + ' ' + wrongWord;
     basicModel->setDescription(nextDescription);
 
-    // wait for after-add spellchecking
-    QThread::sleep(1);
+    QObject::connect(basicModel, SIGNAL(spellCheckErrorsChanged()),
+                     &waiter, SIGNAL(finished()));
+
+    m_CommandManager->submitItemForSpellCheck(basicModel);
 
     if (!waiter.wait(5)) {
-        VERIFY(false, "Timeout for waiting for spellcheck results");
+        VERIFY(false, "Timeout for waiting for initial spellcheck results");
     }
 
     // wait for finding suggestions
@@ -69,10 +71,10 @@ int CombinedEditFixSpellingTest::doTest() {
 
     VERIFY(basicModel->hasDescriptionSpellError(), "Description spell error not detected");
 
-    Models::FilteredArtItemsProxyModel *filteredModel = m_CommandManager->getFilteredArtItemsModel();
     filteredModel->selectFilteredArtworks();
     filteredModel->combineSelectedArtworks();
 
+    Models::CombinedArtworksModel *combinedModel = m_CommandManager->getCombinedArtworksModel();
     combinedModel->suggestCorrections();
 
     SpellCheck::SpellCheckSuggestionModel *spellSuggestor = m_CommandManager->getSpellSuggestionsModel();
@@ -85,17 +87,25 @@ int CombinedEditFixSpellingTest::doTest() {
         suggestionsItem->setReplacementIndex(0);
     }
 
+    Common::BasicKeywordsModel *combinedKeywordsModel = combinedModel->getBasicKeywordsModel();
+    VERIFY(combinedKeywordsModel->hasDescriptionSpellError(), "Description spell error was not propagated");
+
+    SignalWaiter combinedEditWaiter;
+    QObject::connect(combinedKeywordsModel, SIGNAL(spellCheckErrorsChanged()),
+                     &combinedEditWaiter, SIGNAL(finished()));
+
     spellSuggestor->submitCorrections();
 
-    if (!waiter.wait(5)) {
-        VERIFY(false, "Timeout for waiting for corrected spellcheck results");
+    if (!combinedEditWaiter.wait(5)) {
+        VERIFY(false, "Timeout for waiting for corrected spellcheck results after replace");
     }
 
-    VERIFY(!basicModel->hasDescriptionSpellError(), "Description spell error was not fixed");
+    VERIFY(!combinedKeywordsModel->hasDescriptionSpellError(), "Description spell error was not fixed");
 
+    QString correctDescription = combinedKeywordsModel->getDescription();
     combinedModel->saveEdits();
 
-    VERIFY(basicModel->getDescription() == nextDescription, "Description was not saved");
+    VERIFY(basicModel->getDescription() == correctDescription, "Description was not saved");
 
     return 0;
 }
