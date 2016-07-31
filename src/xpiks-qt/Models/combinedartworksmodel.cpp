@@ -50,7 +50,9 @@ namespace Models {
     void CombinedArtworksModel::setArtworks(std::vector<MetadataElement> &artworks) {
         ArtworksViewModel::setArtworks(artworks);
 
-        if (artworks.size() == 1) {
+        recombineArtworks();
+
+        if (getArtworksCount() == 1) {
             enableAllFields();
         }
     }

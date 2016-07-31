@@ -20,7 +20,6 @@ private slots:
     void recombineAfterRemoveDifferentTest();
     void recombineAfterRemoveAllButOneTest();
     void recombineAfterChangesTest();
-    void twoTimesInARowRecombineTest();
     void isNotModifiedAfterTitleDescEditTest();
     void isModifiedAfterKeywordsAppendTest();
     void isModifiedAfterKeywordRemovalTest();

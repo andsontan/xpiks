@@ -73,7 +73,6 @@ void RemoveFilesFsTests::removeArtworksNumberItems() {
 
     combinedModel.resetModel();
     combinedModel.setArtworks(itemInfos);
-    combinedModel.recombineArtworks();
 
     zipArchive.setArtworks(artworksList);
 
@@ -109,7 +108,6 @@ void RemoveFilesFsTests::removeArtworksAllItems() {
 
     combinedModel.resetModel();
     combinedModel.setArtworks(itemInfos);
-    combinedModel.recombineArtworks();
 
     zipArchive.setArtworks(artworksList);
 

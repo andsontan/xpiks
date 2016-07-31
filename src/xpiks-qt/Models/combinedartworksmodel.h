@@ -61,8 +61,6 @@ namespace Models {
         void initKeywords(const QStringList &ek) { m_CommonKeywordsModel.setKeywords(ek); m_AreKeywordsModified = false; }
         void initDescription(const QString &description) { setDescription(description); m_IsDescriptionModified = false; }
         void initTitle(const QString &title) { setTitle(title); m_IsTitleModified = false; }
-
-    public:
         void recombineArtworks();
 
     public:

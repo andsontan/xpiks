@@ -309,7 +309,6 @@ void Commands::CommandManager::combineArtwork(Models::ArtworkMetadata *metadata,
 
         m_CombinedArtworksModel->resetModel();
         m_CombinedArtworksModel->setArtworks(items);
-        m_CombinedArtworksModel->recombineArtworks();
     }
 }
 
@@ -318,7 +317,6 @@ void Commands::CommandManager::combineArtworks(std::vector<Models::MetadataEleme
     if (m_CombinedArtworksModel) {
         m_CombinedArtworksModel->resetModel();
         m_CombinedArtworksModel->setArtworks(artworks);
-        m_CombinedArtworksModel->recombineArtworks();
     }
 }
 

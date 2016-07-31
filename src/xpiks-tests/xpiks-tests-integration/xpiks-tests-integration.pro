@@ -136,7 +136,9 @@ SOURCES += main.cpp \
     savewithemptytitletest.cpp \
     jsonmerge_tests.cpp \
     ../../xpiks-qt/Commands/findandreplacecommand.cpp \
-    ../../xpiks-qt/Models/artworksviewmodel.cpp
+    ../../xpiks-qt/Models/artworksviewmodel.cpp \
+    ../../xpiks-qt/Models/deletekeywordsviewmodel.cpp \
+    ../../xpiks-qt/Commands/deletekeywordscommand.cpp
 
 RESOURCES +=
 
@@ -298,7 +300,9 @@ HEADERS += \
     ../../xpiks-qt/Helpers/comparevaluesjson.h \
     jsonmerge_tests.h \
     ../../xpiks-qt/Commands/findandreplacecommand.h \
-    ../../xpiks-qt/Models/artworksviewmodel.h
+    ../../xpiks-qt/Models/artworksviewmodel.h \
+    ../../xpiks-qt/Models/deletekeywordsviewmodel.h \
+    ../../xpiks-qt/Commands/deletekeywordscommand.h
 
 INCLUDEPATH += ../../tiny-aes
 INCLUDEPATH += ../../cpp-libface
