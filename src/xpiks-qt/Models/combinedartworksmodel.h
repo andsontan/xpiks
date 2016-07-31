@@ -75,15 +75,16 @@ namespace Models {
         inline void setKeywordsModifiedFlag(bool value) { Common::ApplyFlag(m_ModifiedFlags, value, FlagKeywordsModified); }
         inline void setSpellingFixedFlag(bool value) { Common::ApplyFlag(m_ModifiedFlags, value, FlagSpellingFixed); }
 
-        bool isTitleModified() const { return getTitleModifiedFlag(); }
-        bool isDescriptionModified() const { return getDescriptionModifiedFlag(); }
-        bool areKeywordsModified() const { return getKeywordsModifiedFlag(); }
-        bool isSpellingFixed() const { return getSpellingFixedFlag(); }
-
         void setTitleModified(bool value) { setTitleModifiedFlag(value); }
         void setDescriptionModified(bool value) { setDescriptionModifiedFlag(value); }
         void setKeywordsModified(bool value) { setKeywordsModifiedFlag(value); }
         void setSpellingFixed(bool value) { setSpellingFixedFlag(value); }
+
+    public:
+        bool isTitleModified() const { return getTitleModifiedFlag(); }
+        bool isDescriptionModified() const { return getDescriptionModifiedFlag(); }
+        bool areKeywordsModified() const { return getKeywordsModifiedFlag(); }
+        bool isSpellingFixed() const { return getSpellingFixedFlag(); }
 
     private:
         void initKeywords(const QStringList &ek) { m_CommonKeywordsModel.setKeywords(ek); setKeywordsModified(false); }
@@ -146,8 +147,6 @@ namespace Models {
 
 #ifdef CORE_TESTS
         QStringList getKeywords();
-        bool getAreKeywordsModified() const { return m_AreKeywordsModified; }
-        bool getIsDescriptionModified() const { return m_IsDescriptionModified; }
 #endif
 
     public:
