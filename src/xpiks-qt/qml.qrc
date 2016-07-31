@@ -66,5 +66,6 @@
         <file>Dialogs/WhatsNewMinorDialog.qml</file>
         <file>Dialogs/FindAndReplace.qml</file>
         <file>Dialogs/ReplacePreview.qml</file>
+        <file>Dialogs/DeleteKeywordsDialog.qml</file>
     </qresource>
 </RCC>

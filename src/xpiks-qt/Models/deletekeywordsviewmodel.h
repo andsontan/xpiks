@@ -70,6 +70,8 @@ namespace Models {
         }
 
         Q_INVOKABLE void removeKeywordToDeleteAt(int keywordIndex);
+        Q_INVOKABLE void removeLastKeywordToDelete();
+        Q_INVOKABLE void clearKeywordsToDelete();
         Q_INVOKABLE QString removeCommonKeywordAt(int keywordIndex);
         Q_INVOKABLE void appendKeywordToDelete(const QString &keyword);
         Q_INVOKABLE void pasteKeywordsToDelete(const QStringList &keywords);

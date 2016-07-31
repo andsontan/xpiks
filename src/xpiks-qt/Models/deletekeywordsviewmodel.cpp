@@ -72,13 +72,25 @@ namespace Models {
     }
 
     void DeleteKeywordsViewModel::removeKeywordToDeleteAt(int keywordIndex) {
+        LOG_DEBUG << "#";
         QString keyword;
         if (m_KeywordsToDeleteModel.takeKeywordAt(keywordIndex, keyword)) {
             emit keywordsToDeleteCountChanged();
         }
     }
 
+    void DeleteKeywordsViewModel::removeLastKeywordToDelete() {
+        LOG_DEBUG << "#";
+        removeKeywordToDeleteAt(getKeywordsToDeleteCount() - 1);
+    }
+
+    void DeleteKeywordsViewModel::clearKeywordsToDelete() {
+        LOG_DEBUG << "#";
+        m_KeywordsToDeleteModel.clearKeywords();
+    }
+
     QString DeleteKeywordsViewModel::removeCommonKeywordAt(int keywordIndex) {
+        LOG_DEBUG << "index:" << keywordIndex;
         QString keyword;
         if (m_CommonKeywordsModel.takeKeywordAt(keywordIndex, keyword)) {
             emit commonKeywordsCountChanged();

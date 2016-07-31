@@ -197,8 +197,11 @@ ApplicationWindow {
     }
 
     function openFindAndReplaceDialog() {
-        Common.launchDialog("Dialogs/FindAndReplace.qml", applicationWindow, {componentParent: applicationWindow})
+        Common.launchDialog("Dialogs/FindAndReplace.qml", applicationWindow, { componentParent: applicationWindow })
+    }
 
+    function openDeleteKeywordsDialog() {
+        Common.launchDialog("Dialogs/DeleteKeywordsDialog.qml", applicationWindow, { componentParent: applicationWindow })
     }
 
     function clearFilter() {
@@ -421,6 +424,16 @@ ApplicationWindow {
                 onTriggered: {
                     console.info("Find and replace triggered")
                     openFindAndReplaceDialog()
+                }
+            }
+
+            MenuItem {
+                text: i18.n + qsTr("&Delete keywords from selected")
+                enabled: filteredArtItemsModel.selectedArtworksCount > 0
+                onTriggered: {
+                    console.info("Delete keywords from selected triggered")
+                    filteredArtItemsModel.deleteKeywordsFromSelected()
+                    openDeleteKeywordsDialog()
                 }
             }
 

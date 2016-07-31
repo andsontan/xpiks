@@ -76,6 +76,7 @@ namespace Models {
         Q_INVOKABLE void spellCheckSelected();
         Q_INVOKABLE int getModifiedSelectedCount(bool overwriteAll=false) const;
         Q_INVOKABLE void removeArtworksDirectory(int index);
+        Q_INVOKABLE void deleteKeywordsFromSelected();
 
         Q_INVOKABLE int getItemsCount() const { return rowCount(); }
         Q_INVOKABLE void reimportMetadataForSelected();

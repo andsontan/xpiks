@@ -176,6 +176,11 @@ namespace Models {
         emit selectedArtworksCountChanged();
     }
 
+    void FilteredArtItemsProxyModel::deleteKeywordsFromSelected() {
+        auto selectedItems = getSelectedOriginalItemsWithIndices();
+        m_CommandManager->deleteKeywordsFromArtworks(selectedItems);
+    }
+
     void FilteredArtItemsProxyModel::reimportMetadataForSelected() {
         QVector<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
         QVector<QPair<int, int> > ranges;
