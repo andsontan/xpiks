@@ -60,6 +60,7 @@
 #include "clearmetadatatest.h"
 #include "savewithemptytitletest.h"
 #include "jsonmerge_tests.h"
+#include "combinededitfixspellingtest.h"
 
 #if defined(WITH_LOGS)
 #undef WITH_LOGS
@@ -194,6 +195,7 @@ int main(int argc, char *argv[]) {
     integrationTests.append(new ClearMetadataTest(&commandManager));
     integrationTests.append(new SaveWithEmptyTitleTest(&commandManager));
     integrationTests.append(new JsonMergeTests(&commandManager));
+    integrationTests.append(new CombinedEditFixSpellingTest(&commandManager));
 
     qDebug("\n");
 
