@@ -44,6 +44,8 @@ private slots:
     void savedAfterModifiedTitleTest();
     void savedAfterKeywordsModifiedTest();
     void savedIfMoreThanOneButNotModifiedTest();
+    void caseIsPreservedForOneItemTest();
+    void caseIsPreservedForSeveralItemsTest();
 
 private:
     Mocks::CommandManagerMock m_CommandManagerMock;

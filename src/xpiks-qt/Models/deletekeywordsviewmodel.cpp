@@ -123,7 +123,7 @@ namespace Models {
 
         auto &artworksList = getArtworksList();
         std::shared_ptr<Commands::DeleteKeywordsCommand> deleteKeywordsCommand(
-                    new Commands::DeleteKeywordsCommand(artworksList, m_KeywordsToDeleteModel.getKeywordsSet()));
+                    new Commands::DeleteKeywordsCommand(artworksList, m_KeywordsToDeleteModel.getKeywords()));
         m_CommandManager->processCommand(deleteKeywordsCommand);
     }
 
@@ -170,9 +170,9 @@ namespace Models {
     void DeleteKeywordsViewModel::fillKeywordsHash(QHash<QString, int> &keywordsHash) {
         processArtworks([](const MetadataElement&) { return true; },
         [&keywordsHash](int, ArtworkMetadata *metadata) {
-            const auto &keywordsSet = metadata->getKeywordsSet();
+            const auto &keywords = metadata->getKeywords();
 
-            for (auto &keyword: keywordsSet) {
+            for (auto &keyword: keywords) {
                 if (keywordsHash.contains(keyword)) {
                     keywordsHash[keyword]++;
                 } else {

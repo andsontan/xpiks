@@ -494,7 +494,7 @@ namespace Common {
         for (int i = 0; i < size; ++i) {
             const QString &keyword = m_KeywordsList.at(i);
 
-            if (keywordsToRemove.contains(keyword.toLower())) {
+            if (keywordsToRemove.contains(keyword)) {
                 indicesToRemove.append(i);
             }
         }

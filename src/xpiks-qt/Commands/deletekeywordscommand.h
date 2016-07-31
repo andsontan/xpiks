@@ -38,7 +38,7 @@ namespace Commands {
     {
     public:
         DeleteKeywordsCommand(std::vector<Models::MetadataElement> &infos,
-                              const QSet<QString> &keywordsSet);
+                              const QStringList &keywordsList);
         virtual ~DeleteKeywordsCommand() {}
 
     public:

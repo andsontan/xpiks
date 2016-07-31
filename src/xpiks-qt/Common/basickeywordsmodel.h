@@ -123,7 +123,7 @@ namespace Common {
         bool isEmpty();
         bool isTitleEmpty();
         bool isDescriptionEmpty();
-        bool containsKeyword(const QString &searchTerm, int searchFlags=Common::SearchFlagSearchKeywords);
+        bool containsKeyword(const QString &searchTerm, int searchFlags=Common::SearchFlagExactKeywords);
 
         bool hasKeywordsSpellError();
         bool hasDescriptionSpellError();

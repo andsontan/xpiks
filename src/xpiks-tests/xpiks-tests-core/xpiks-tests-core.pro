@@ -154,7 +154,10 @@ SOURCES += main.cpp \
     replacepreview_tests.cpp \
     replace_tests.cpp \
     stringhelpersfortests.cpp \
-    ../../xpiks-qt/Models/artworksviewmodel.cpp
+    ../../xpiks-qt/Models/artworksviewmodel.cpp \
+    deletekeywords_tests.cpp \
+    ../../xpiks-qt/Models/deletekeywordsviewmodel.cpp \
+    ../../xpiks-qt/Commands/deletekeywordscommand.cpp
 
 HEADERS += \
     encryption_tests.h \
@@ -264,5 +267,8 @@ HEADERS += \
     replacepreview_tests.h \
     replace_tests.h \
     stringhelpersfortests.h \
-    ../../xpiks-qt/Models/artworksviewmodel.h
+    ../../xpiks-qt/Models/artworksviewmodel.h \
+    deletekeywords_tests.h \
+    ../../xpiks-qt/Models/deletekeywordsviewmodel.h \
+    ../../xpiks-qt/Commands/deletekeywordscommand.h
 

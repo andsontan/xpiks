@@ -313,7 +313,8 @@ namespace Models {
             if (!anyItemsProcessed) {
                 description = metadata->getDescription();
                 title = metadata->getTitle();
-                commonKeywords.unite(metadata->getKeywordsSet());
+                // preserve case with List to Set convertion
+                commonKeywords.unite(metadata->getKeywords().toSet());
                 anyItemsProcessed = true;
                 return;
             }
@@ -322,7 +323,8 @@ namespace Models {
             QString currTitle = metadata->getTitle();
             descriptionsDiffer = descriptionsDiffer || description != currDescription;
             titleDiffer = titleDiffer || title != currTitle;
-            commonKeywords.intersect(metadata->getKeywordsSet());
+            // preserve case with List to Set convertion
+            commonKeywords.intersect(metadata->getKeywords().toSet());
         });
 
         if (!isEmpty()) {

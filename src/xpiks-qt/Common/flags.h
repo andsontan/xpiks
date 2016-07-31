@@ -67,6 +67,9 @@ namespace Common {
             SearchFlagSearchTitle |
             SearchFlagSearchKeywords,
 
+        SearchFlagExactKeywords = SearchFlagExactMatch |
+            SearchFlagSearchKeywords,
+
         SearchFlagsSearchMetadataCaseSensitive = SearchFlagSearchMetadata | SearchFlagCaseSensitive,
 
         SearchFlagSearchEverything = SearchFlagSearchMetadata | SearchFlagSearchFilepath | SearchFlagReservedTerms,

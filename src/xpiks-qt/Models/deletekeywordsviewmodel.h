@@ -52,6 +52,11 @@ namespace Models {
         virtual void setArtworks(std::vector<MetadataElement> &artworks);
         virtual bool removeUnavailableItems();
 
+#ifdef CORE_TESTS
+    public:
+        bool containsCommonKeyword(const QString &keyword) { return m_CommonKeywordsModel.containsKeyword(keyword); }
+#endif
+
     protected:
         virtual bool doRemoveSelectedArtworks();
         virtual void doResetModel();

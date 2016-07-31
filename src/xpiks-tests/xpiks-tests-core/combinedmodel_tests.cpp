@@ -753,3 +753,32 @@ void CombinedModelTests::savedIfMoreThanOneButNotModifiedTest() {
 
     freeArtworks(items);
 }
+
+void CombinedModelTests::caseIsPreservedForOneItemTest() {
+    Models::CombinedArtworksModel combinedModel;
+    combinedModel.setCommandManager(&m_CommandManagerMock);
+
+    QStringList keywords = QStringList() << "Keyword1" << "keyworD2";
+
+    std::vector<Models::MetadataElement> items;
+    items.push_back(createArtworkMetadata("Description1", "title1", keywords, 0));
+
+    combinedModel.resetModel();
+    combinedModel.setArtworks(items);
+
+    QCOMPARE(combinedModel.getKeywords(), keywords);
+}
+
+void CombinedModelTests::caseIsPreservedForSeveralItemsTest() {
+    Models::CombinedArtworksModel combinedModel;
+    combinedModel.setCommandManager(&m_CommandManagerMock);
+
+    std::vector<Models::MetadataElement> items;
+    items.push_back(createArtworkMetadata("Description1", "title1", QStringList() << "Keyword1" << "keyworD2", 0));
+    items.push_back(createArtworkMetadata("Description2", "title2", QStringList() << "keyworD1" << "Keyword2", 1));
+
+    combinedModel.resetModel();
+    combinedModel.setArtworks(items);
+
+    QCOMPARE(combinedModel.getKeywordsCount(), 0);
+}

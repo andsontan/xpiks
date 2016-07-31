@@ -24,6 +24,7 @@
 #include "deleteoldlogstest.h"
 #include "replace_tests.h"
 #include "replacepreview_tests.h"
+#include "deletekeywords_tests.h"
 
 #define QTEST_CLASS(TestObject, vName, result) \
     TestObject vName; \
@@ -57,6 +58,7 @@ int main(int argc, char *argv[]) {
     QTEST_CLASS(DeleteOldLogsTest, dolt, result);
     QTEST_CLASS(ReplaceTests, rpl, result);
     QTEST_CLASS(ReplacePreviewTests, rplp, result);
+    QTEST_CLASS(DeleteKeywordsTests, dkt, result);
 
     QThread::sleep(1);
 

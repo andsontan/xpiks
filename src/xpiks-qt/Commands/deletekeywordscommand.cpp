@@ -26,10 +26,10 @@
 
 namespace Commands {
     DeleteKeywordsCommand::DeleteKeywordsCommand(std::vector<Models::MetadataElement> &infos,
-                                                 const QSet<QString> &keywordsSet):
+                                                 const QStringList &keywordsList):
         CommandBase(DeleteKeywordsCommandType),
         m_MetadataElements(std::move(infos)),
-        m_KeywordsSet(keywordsSet)
+        m_KeywordsSet(keywordsList.toSet())
     {
     }
 
@@ -60,9 +60,11 @@ namespace Commands {
             }
         }
 
-        std::unique_ptr<UndoRedo::IHistoryItem> modifyArtworksItem(new UndoRedo::ModifyArtworksHistoryItem(artworksBackups, indicesToUpdate,
-                                                                                                           UndoRedo::CombinedEditModificationType));
-        commandManager->recordHistoryItem(modifyArtworksItem);
+        if (!artworksBackups.empty()) {
+            std::unique_ptr<UndoRedo::IHistoryItem> modifyArtworksItem(new UndoRedo::ModifyArtworksHistoryItem(artworksBackups, indicesToUpdate,
+                                                                                                               UndoRedo::CombinedEditModificationType));
+            commandManager->recordHistoryItem(modifyArtworksItem);
+        }
 
         std::shared_ptr<ICommandResult> result(new DeleteKeywordsCommandResult(affectedItems, indicesToUpdate));
         return result;

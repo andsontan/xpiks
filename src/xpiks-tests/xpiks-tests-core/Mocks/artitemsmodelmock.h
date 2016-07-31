@@ -3,6 +3,7 @@
 
 #include <QVector>
 #include <QPair>
+#include <functional>
 #include "../../xpiks-qt/Models/artitemsmodel.h"
 #include "../../xpiks-qt/Models/artworkmetadata.h"
 #include "artworkmetadatamock.h"
@@ -27,6 +28,14 @@ namespace Mocks {
 
         virtual void updateItemsAtIndices(const QVector<int> &indices) {  Q_UNUSED(indices); /* DO NOTHING */ }
         virtual void updateItemsInRanges(const QVector<QPair<int, int> > &ranges) { Q_UNUSED(ranges); /* DO NOTHING */ }
+
+        void foreachArtwork(std::function<void (int index, ArtworkMetadataMock *metadata)> action) {
+            int size = getArtworksCount();
+            for (int i = 0; i < size; ++i) {
+                auto *item = dynamic_cast<ArtworkMetadataMock*>(getArtwork(i));
+                action(i, item);
+            }
+        }
     };
 }
 
