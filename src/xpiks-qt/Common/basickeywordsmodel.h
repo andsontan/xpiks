@@ -181,6 +181,7 @@ namespace Common {
         void spellCheckErrorsChanged();
         void completionsAvailable();
         void aboutToBeRemoved();
+        void afterSpellingErrorsFixed();
 
     protected slots:
          void spellCheckRequestReady(int flags, int index);

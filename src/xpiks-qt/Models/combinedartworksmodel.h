@@ -58,9 +58,37 @@ namespace Models {
         virtual void setArtworks(std::vector<MetadataElement> &artworks);
 
     private:
-        void initKeywords(const QStringList &ek) { m_CommonKeywordsModel.setKeywords(ek); m_AreKeywordsModified = false; }
-        void initDescription(const QString &description) { setDescription(description); m_IsDescriptionModified = false; }
-        void initTitle(const QString &title) { setTitle(title); m_IsTitleModified = false; }
+        enum CombinedEditModifiedFlags {
+            FlagTitleModified = 1 << 0,
+            FlagDescriptionModified = 1 << 1,
+            FlagKeywordsModified = 1 << 2,
+            FlagSpellingFixed = 1 << 3
+        };
+
+        inline bool getTitleModifiedFlag() const { return Common::HasFlag(m_ModifiedFlags, FlagTitleModified); }
+        inline bool getDescriptionModifiedFlag() const { return Common::HasFlag(m_ModifiedFlags, FlagDescriptionModified); }
+        inline bool getKeywordsModifiedFlag() const { return Common::HasFlag(m_ModifiedFlags, FlagKeywordsModified); }
+        inline bool getSpellingFixedFlag() const { return Common::HasFlag(m_ModifiedFlags, FlagSpellingFixed); }
+
+        inline void setTitleModifiedFlag(bool value) { Common::ApplyFlag(m_ModifiedFlags, value, FlagTitleModified); }
+        inline void setDescriptionModifiedFlag(bool value) { Common::ApplyFlag(m_ModifiedFlags, value, FlagDescriptionModified); }
+        inline void setKeywordsModifiedFlag(bool value) { Common::ApplyFlag(m_ModifiedFlags, value, FlagKeywordsModified); }
+        inline void setSpellingFixedFlag(bool value) { Common::ApplyFlag(m_ModifiedFlags, value, FlagSpellingFixed); }
+
+        bool isTitleModified() const { return getTitleModifiedFlag(); }
+        bool isDescriptionModified() const { return getDescriptionModifiedFlag(); }
+        bool areKeywordsModified() const { return getKeywordsModifiedFlag(); }
+        bool isSpellingFixed() const { return getSpellingFixedFlag(); }
+
+        void setTitleModified(bool value) { setTitleModifiedFlag(value); }
+        void setDescriptionModified(bool value) { setDescriptionModifiedFlag(value); }
+        void setKeywordsModified(bool value) { setKeywordsModifiedFlag(value); }
+        void setSpellingFixed(bool value) { setSpellingFixedFlag(value); }
+
+    private:
+        void initKeywords(const QStringList &ek) { m_CommonKeywordsModel.setKeywords(ek); setKeywordsModified(false); }
+        void initDescription(const QString &description) { setDescription(description); setDescriptionModified(false); }
+        void initTitle(const QString &title) { setTitle(title); setTitleModified(false); }
         void recombineArtworks();
 
     public:
@@ -72,7 +100,7 @@ namespace Models {
         void setDescription(const QString &value) {
             if (m_CommonKeywordsModel.setDescription(value)) {
                 emit descriptionChanged();
-                m_IsDescriptionModified = true;
+                setDescriptionModified(true);
             }
         }
 
@@ -80,7 +108,7 @@ namespace Models {
         void setTitle(const QString &value) {
             if (m_CommonKeywordsModel.setTitle(value)) {
                 emit titleChanged();
-                m_IsTitleModified = true;
+                setTitleModified(true);
             }
         }
 
@@ -151,6 +179,7 @@ namespace Models {
 
     private slots:
         void spellCheckErrorsChangedHandler();
+        void spellCheckErrorsFixedHandler();
 
     protected:
         virtual bool doRemoveSelectedArtworks();
@@ -164,9 +193,7 @@ namespace Models {
         Common::BasicKeywordsModel m_CommonKeywordsModel;
         SpellCheck::SpellCheckItemInfo m_SpellCheckInfo;
         int m_EditFlags;
-        bool m_AreKeywordsModified;
-        bool m_IsDescriptionModified;
-        bool m_IsTitleModified;
+        int m_ModifiedFlags;
     };
 }
 

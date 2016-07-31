@@ -975,6 +975,7 @@ namespace Common {
 
     void BasicKeywordsModel::afterReplaceCallback() {
         emit spellCheckErrorsChanged();
+        emit afterSpellingErrorsFixed();
     }
 
     void BasicKeywordsModel::connectSignals(SpellCheck::SpellCheckItem *item) {
