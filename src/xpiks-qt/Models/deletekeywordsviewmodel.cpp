@@ -117,10 +117,13 @@ namespace Models {
     }
 
     void DeleteKeywordsViewModel::deleteKeywords() {
-        LOG_INFO << "#";
+        LOG_INFO << "keywords to delete:" << m_KeywordsToDeleteModel.getKeywordsCount();
+
+        if (m_KeywordsToDeleteModel.getKeywordsCount() == 0) { return; }
+
         auto &artworksList = getArtworksList();
         std::shared_ptr<Commands::DeleteKeywordsCommand> deleteKeywordsCommand(
-                    new Commands::DeleteKeywordsCommand(artworksList, m_KeywordsToDeleteModel.getKeywords()));
+                    new Commands::DeleteKeywordsCommand(artworksList, m_KeywordsToDeleteModel.getKeywordsSet()));
         m_CommandManager->processCommand(deleteKeywordsCommand);
     }
 

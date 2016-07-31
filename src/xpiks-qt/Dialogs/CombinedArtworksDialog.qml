@@ -1008,7 +1008,11 @@ CloseRequested")
                                             id: clearKeywordsMA
                                             anchors.fill: parent
                                             cursorShape: Qt.PointingHandCursor
-                                            onClicked: clearKeywordsDialog.open()
+                                            onClicked: {
+                                                if (combinedArtworks.keywordsCount > 0) {
+                                                    clearKeywordsDialog.open()
+                                                }
+                                            }
                                         }
                                     }
                                 }

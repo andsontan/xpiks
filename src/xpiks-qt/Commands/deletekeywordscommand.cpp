@@ -25,10 +25,11 @@
 #include "../Common/defines.h"
 
 namespace Commands {
-    DeleteKeywordsCommand::DeleteKeywordsCommand(std::vector<Models::MetadataElement> &infos, const QStringList &keywords):
+    DeleteKeywordsCommand::DeleteKeywordsCommand(std::vector<Models::MetadataElement> &infos,
+                                                 const QSet<QString> &keywordsSet):
         CommandBase(DeleteKeywordsCommandType),
         m_MetadataElements(std::move(infos)),
-        m_KeywordsSet(keywords.toSet())
+        m_KeywordsSet(keywordsSet)
     {
     }
 

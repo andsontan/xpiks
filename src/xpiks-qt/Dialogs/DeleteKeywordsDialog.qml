@@ -148,7 +148,7 @@ CloseRequested")
         Rectangle {
             id: dialogWindow
             width: 730
-            height: 620
+            height: 600
             color: Colors.selectedImageBackground
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
@@ -158,11 +158,12 @@ CloseRequested")
                 anchors.leftMargin: 20
                 anchors.rightMargin: 20
                 anchors.topMargin: 20
-                anchors.bottomMargin: 10
-                spacing: 3
+                anchors.bottomMargin: 20
+                spacing: 0
 
                 RowLayout {
-                    width: parent.width
+                    anchors.left: parent.left
+                    anchors.right: parent.right
 
                     StyledText {
                         text: i18.n + qsTr("Delete keywords")
@@ -191,12 +192,13 @@ CloseRequested")
                 }
 
                 Item {
-                    height: 10
+                    height: 15
                 }
 
                 RowLayout {
                     spacing: 5
-                    width: parent.width
+                    anchors.left: parent.left
+                    anchors.right: parent.right
                     height: 40
 
                     Item {
@@ -220,12 +222,13 @@ CloseRequested")
                 }
 
                 Item {
-                    height: 1
+                    height: 10
                 }
 
                 Item {
                     height: 130
-                    width: parent.width
+                    anchors.left: parent.left
+                    anchors.right: parent.right
 
                     Rectangle {
                         anchors.fill: parent
@@ -310,7 +313,7 @@ CloseRequested")
                 }
 
                 Item {
-                    height: 15
+                    Layout.fillHeight: true
                 }
 
                 Item {
@@ -320,7 +323,7 @@ CloseRequested")
 
                     ColumnLayout {
                         anchors.fill: parent
-                        anchors.margins: 3
+                        anchors.margins: 0
                         spacing: 0
 
                         RowLayout {
@@ -427,7 +430,7 @@ CloseRequested")
                             }
                         }
 
-                        Item { height: 3 }
+                        Item { height: 5 }
 
                         Item {
                             anchors.left: parent.left
@@ -485,7 +488,11 @@ CloseRequested")
                                         id: clearKeywordsMA
                                         anchors.fill: parent
                                         cursorShape: Qt.PointingHandCursor
-                                        onClicked: clearKeywordsDialog.open()
+                                        onClicked: {
+                                            if (deleteKeywordsModel.keywordsToDeleteCount > 0) {
+                                                clearKeywordsDialog.open()
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -504,7 +511,7 @@ CloseRequested")
 
                     ColumnLayout {
                         anchors.fill: parent
-                        anchors.margins: 3
+                        anchors.margins: 0
                         spacing: 5
 
                         RowLayout {
@@ -527,8 +534,7 @@ CloseRequested")
 
                         Rectangle {
                             id: commonKeywordsWrapper
-                            border.color: Colors.artworkActiveColor
-                            border.width: flvCommon.isFocused ? 1 : 0
+                            border.width: 0
                             height: 155
                             anchors.rightMargin: 20
                             Layout.fillWidth: true
@@ -600,12 +606,13 @@ CloseRequested")
                 }
 
                 Item {
-                    width: parent.width
+                    anchors.left: parent.left
+                    anchors.right: parent.right
                     height: 24
 
                     RowLayout {
                         anchors.fill: parent
-                        spacing: 10
+                        spacing: 20
 
                         Item {
                             Layout.fillWidth: true
@@ -621,10 +628,6 @@ CloseRequested")
                             }
                         }
 
-                        Item {
-                            width: 1
-                        }
-
                         StyledButton {
                             text: i18.n + qsTr("Cancel")
                             width: 100
@@ -635,10 +638,6 @@ CloseRequested")
                             tooltip: "Exit with no changes"
                         }
                     }
-                }
-
-                Item {
-                    Layout.fillHeight: true
                 }
             }
         }
