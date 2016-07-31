@@ -494,7 +494,7 @@ CloseRequested")
                 }
 
                 Item {
-                    height: 15
+                    height: 10
                 }
 
                 Item {
@@ -596,7 +596,7 @@ CloseRequested")
                 }
 
                 Item {
-                    height: 15
+                    height: 20
                 }
 
                 Item {
