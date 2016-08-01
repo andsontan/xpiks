@@ -141,7 +141,7 @@ namespace Models {
         bool removeLastKeyword();
         virtual bool appendKeyword(const QString &keyword);
         virtual int appendKeywords(const QStringList &keywordsList);
-        bool removeKeywords(const QSet<QString> &keywordsSet);
+        bool removeKeywords(const QSet<QString> &keywordsSet, bool caseSensitive=true);
 
     public:
         void acquire() { m_Hold.acquire(); }

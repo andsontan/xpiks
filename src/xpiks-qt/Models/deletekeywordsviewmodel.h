@@ -35,6 +35,7 @@ namespace Models {
         Q_OBJECT
         Q_PROPERTY(int commonKeywordsCount READ getCommonKeywordsCount NOTIFY commonKeywordsCountChanged)
         Q_PROPERTY(int keywordsToDeleteCount READ getKeywordsToDeleteCount NOTIFY keywordsToDeleteCountChanged)
+        Q_PROPERTY(bool caseSensitive READ getCaseSensitive WRITE setCaseSensitive NOTIFY caseSensitiveChanged)
 
     public:
         DeleteKeywordsViewModel(QObject *parent=nullptr);
@@ -43,10 +44,18 @@ namespace Models {
     public:
         int getCommonKeywordsCount() { return m_CommonKeywordsModel.getKeywordsCount(); }
         int getKeywordsToDeleteCount() { return m_KeywordsToDeleteModel.getKeywordsCount(); }
+        bool getCaseSensitive() const { return m_CaseSensitive; }
+        void setCaseSensitive(bool value) {
+            if (m_CaseSensitive != value) {
+                m_CaseSensitive = value;
+                emit caseSensitiveChanged();
+            }
+        }
 
     signals:
         void commonKeywordsCountChanged();
         void keywordsToDeleteCountChanged();
+        void caseSensitiveChanged();
 
     public:
         virtual void setArtworks(std::vector<MetadataElement> &artworks);
@@ -90,6 +99,7 @@ namespace Models {
         Common::Hold m_HoldPlaceholder;
         Common::BasicKeywordsModel m_KeywordsToDeleteModel;
         Common::BasicKeywordsModel m_CommonKeywordsModel;
+        bool m_CaseSensitive;
     };
 }
 

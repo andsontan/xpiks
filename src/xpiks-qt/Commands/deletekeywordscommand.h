@@ -38,7 +38,8 @@ namespace Commands {
     {
     public:
         DeleteKeywordsCommand(std::vector<Models::MetadataElement> &infos,
-                              const QStringList &keywordsList);
+                              const QSet<QString> &keywordsSet,
+                              bool caseSensitive);
         virtual ~DeleteKeywordsCommand() {}
 
     public:
@@ -47,6 +48,7 @@ namespace Commands {
     private:
         std::vector<Models::MetadataElement> m_MetadataElements;
         QSet<QString> m_KeywordsSet;
+        bool m_CaseSensitive;
     };
 
     class DeleteKeywordsCommandResult : public CommandResult {

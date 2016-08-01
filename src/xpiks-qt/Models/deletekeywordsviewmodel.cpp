@@ -31,7 +31,8 @@ namespace Models {
     DeleteKeywordsViewModel::DeleteKeywordsViewModel(QObject *parent):
         Models::ArtworksViewModel(parent),
         m_KeywordsToDeleteModel(m_HoldPlaceholder),
-        m_CommonKeywordsModel(m_HoldPlaceholder)
+        m_CommonKeywordsModel(m_HoldPlaceholder),
+        m_CaseSensitive(false)
     {
     }
 
@@ -69,6 +70,8 @@ namespace Models {
 
         m_CommonKeywordsModel.clearModel();
         m_KeywordsToDeleteModel.clearModel();
+
+        setCaseSensitive(false);
     }
 
     void DeleteKeywordsViewModel::removeKeywordToDeleteAt(int keywordIndex) {
@@ -122,8 +125,18 @@ namespace Models {
         if (m_KeywordsToDeleteModel.getKeywordsCount() == 0) { return; }
 
         auto &artworksList = getArtworksList();
+        auto keywordsList = m_KeywordsToDeleteModel.getKeywords();
+
+        if (m_CaseSensitive) {
+            for (auto &keyword: keywordsList) {
+                keyword = keyword.toLower();
+            }
+        }
+
+        auto keywordsSet = keywordsList.toSet();
+
         std::shared_ptr<Commands::DeleteKeywordsCommand> deleteKeywordsCommand(
-                    new Commands::DeleteKeywordsCommand(artworksList, m_KeywordsToDeleteModel.getKeywords()));
+                    new Commands::DeleteKeywordsCommand(artworksList, keywordsSet, m_CaseSensitive));
         m_CommandManager->processCommand(deleteKeywordsCommand);
     }
 

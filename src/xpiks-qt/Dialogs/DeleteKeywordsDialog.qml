@@ -614,6 +614,15 @@ CloseRequested")
                         anchors.fill: parent
                         spacing: 20
 
+                        StyledCheckbox {
+                            id: caseSensitiveCheckbox
+                            text: qsTr("Case sensitive")
+                            Component.onCompleted: caseSensitiveCheckbox.checked = deleteKeywordsModel.caseSensitive
+                            onClicked: {
+                                deleteKeywordsModel.caseSensitive = caseSensitiveCheckbox.checked
+                            }
+                        }
+
                         Item {
                             Layout.fillWidth: true
                         }

@@ -157,8 +157,8 @@ namespace Models {
         return result;
     }
 
-    bool ArtworkMetadata::removeKeywords(const QSet<QString> &keywordsSet) {
-        bool result = m_KeywordsModel.removeKeywords(keywordsSet);
+    bool ArtworkMetadata::removeKeywords(const QSet<QString> &keywordsSet, bool caseSensitive) {
+        bool result = m_KeywordsModel.removeKeywords(keywordsSet, caseSensitive);
         LOG_DEBUG << "Removed keywords:" << result;
         if (result) { markModified(); }
         return result;

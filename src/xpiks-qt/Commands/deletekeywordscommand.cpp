@@ -26,15 +26,17 @@
 
 namespace Commands {
     DeleteKeywordsCommand::DeleteKeywordsCommand(std::vector<Models::MetadataElement> &infos,
-                                                 const QStringList &keywordsList):
+                                                 const QSet<QString> &keywordsSet, bool caseSensitive):
         CommandBase(DeleteKeywordsCommandType),
         m_MetadataElements(std::move(infos)),
-        m_KeywordsSet(keywordsList.toSet())
+        m_KeywordsSet(keywordsSet),
+        m_CaseSensitive(caseSensitive)
     {
     }
 
     std::shared_ptr<ICommandResult> DeleteKeywordsCommand::execute(const ICommandManager *commandManagerInterface) const {
         LOG_INFO << m_KeywordsSet.size() << "keyword(s) to remove from" << m_MetadataElements.size() << "item(s)";
+        LOG_INFO << "Case sensitive:" << m_CaseSensitive;
         QVector<int> indicesToUpdate;
         std::vector<UndoRedo::ArtworkMetadataBackup> artworksBackups;
         QVector<Models::ArtworkMetadata *> affectedItems;
@@ -52,7 +54,7 @@ namespace Commands {
 
             artworksBackups.emplace_back(metadata);
 
-            if (metadata->removeKeywords(m_KeywordsSet)) {
+            if (metadata->removeKeywords(m_KeywordsSet, m_CaseSensitive)) {
                 indicesToUpdate.append(info.getOriginalIndex());
                 affectedItems.append(metadata);
             } else {
