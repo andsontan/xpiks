@@ -127,7 +127,7 @@ namespace Models {
         auto &artworksList = getArtworksList();
         auto keywordsList = m_KeywordsToDeleteModel.getKeywords();
 
-        if (m_CaseSensitive) {
+        if (!m_CaseSensitive) {
             for (auto &keyword: keywordsList) {
                 keyword = keyword.toLower();
             }

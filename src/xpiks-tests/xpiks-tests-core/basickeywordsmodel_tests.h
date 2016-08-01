@@ -39,6 +39,7 @@ private slots:
     void replaceKeywordsWithRemoveTest();
     void removeKeywordsFromSetTest();
     void noneKeywordsRemovedFromSetTest();
+    void removeKeywordsCaseSensitiveTest();
 
 private:
     Common::Hold m_FakeHold;

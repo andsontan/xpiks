@@ -81,6 +81,7 @@ void DeleteKeywordsTests::doesNotDeleteOtherCaseTest() {
     filteredItemsModel.selectFilteredArtworks();
     filteredItemsModel.deleteKeywordsFromSelected();
     deleteKeywordsModel.appendKeywordToDelete(keywordToDelete.toUpper());
+    deleteKeywordsModel.setCaseSensitive(true);
     deleteKeywordsModel.deleteKeywords();
 
     artItemsModelMock.foreachArtwork([&](int, Mocks::ArtworkMetadataMock *metadata) {
@@ -109,5 +110,29 @@ void DeleteKeywordsTests::doesNotDeleteNoKeywordsTest() {
         auto *keywordsModel = metadata->getKeywordsModel();
         QCOMPARE(keywordsModel->getKeywordsCount(), 2);
         QVERIFY(keywordsModel->containsKeyword(keywordToDelete));
+    });
+}
+
+void DeleteKeywordsTests::deleteCaseInsensitiveTest() {
+    DECLARE_MODELS_AND_GENERATE(5);
+
+    const QString keywordToDelete = "keywordToDelete";
+
+    artItemsModelMock.foreachArtwork([&](int index, Mocks::ArtworkMetadataMock *metadata) {
+        metadata->clearKeywords();
+        metadata->appendKeyword("keyword" + QString::number(index));
+        metadata->appendKeyword(index % 2 == 0 ? keywordToDelete.toLower() : keywordToDelete.toUpper());
+    });
+
+    filteredItemsModel.selectFilteredArtworks();
+    filteredItemsModel.deleteKeywordsFromSelected();
+    deleteKeywordsModel.appendKeywordToDelete(keywordToDelete);
+    deleteKeywordsModel.setCaseSensitive(false);
+    deleteKeywordsModel.deleteKeywords();
+
+    artItemsModelMock.foreachArtwork([&](int, Mocks::ArtworkMetadataMock *metadata) {
+        auto *keywordsModel = metadata->getKeywordsModel();
+        QCOMPARE(keywordsModel->getKeywordsCount(), 1);
+        QVERIFY(!keywordsModel->containsKeyword(keywordToDelete));
     });
 }

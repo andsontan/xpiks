@@ -12,6 +12,7 @@ private slots:
     void keywordsCombinedTest();
     void doesNotDeleteOtherCaseTest();
     void doesNotDeleteNoKeywordsTest();
+    void deleteCaseInsensitiveTest();
 };
 
 #endif // DELETEKEYWORDSTESTS_H

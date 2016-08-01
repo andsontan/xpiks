@@ -501,8 +501,9 @@ void BasicKeywordsModelTests::removeKeywordsFromSetTest() {
     QStringList originalKeywords;
     originalKeywords << "keyword1" << "keyword2" << "keyword3 Test";
     basicModel.appendKeywords(originalKeywords);
+    const bool caseSensitive = false;
 
-    bool removed = basicModel.removeKeywords(QSet<QString>() << "keyword1" << "keyword2" << "keyword3");
+    bool removed = basicModel.removeKeywords(QSet<QString>() << "keyword1" << "keyword2" << "keyword3", caseSensitive);
     QVERIFY(removed);
 
     QCOMPARE(basicModel.getKeywordsCount(), 1);
@@ -515,10 +516,25 @@ void BasicKeywordsModelTests::noneKeywordsRemovedFromSetTest() {
     QStringList originalKeywords;
     originalKeywords << "akeyword1" << "keyword2_" << "keyword3 Test";
     basicModel.appendKeywords(originalKeywords);
+    const bool caseSensitive = false;
 
-    bool removed = basicModel.removeKeywords(QSet<QString>() << "keyword1" << "keyword2" << "keyword3");
+    bool removed = basicModel.removeKeywords(QSet<QString>() << "keyword1" << "keyword2" << "keyword3", caseSensitive);
     QVERIFY(!removed);
 
     QCOMPARE(basicModel.getKeywordsCount(), originalKeywords.length());
+}
+
+void BasicKeywordsModelTests::removeKeywordsCaseSensitiveTest() {
+    Common::BasicKeywordsModel basicModel(m_FakeHold);
+
+    QStringList originalKeywords;
+    originalKeywords << "Keyword1" << "keyworD2" << "keyWord3";
+    basicModel.appendKeywords(originalKeywords);
+    const bool caseSensitive = true;
+
+    bool removed = basicModel.removeKeywords(QSet<QString>() << "keyword1" << "keyword2" << "keyWord3", caseSensitive);
+    QVERIFY(removed);
+
+    QCOMPARE(basicModel.getKeywordsCount(), originalKeywords.length() - 1);
 }
 
