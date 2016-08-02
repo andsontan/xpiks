@@ -269,9 +269,11 @@ namespace Models {
             case EditDisableFtpPassiveModeRole:
                 roleToUpdate = DisableFtpPassiveModeRole;
                 needToUpdate = uploadInfo->setDisableFtpPassiveMode(value.toBool());
+                break;
             case EditDisableEPSVRole:
                 roleToUpdate = DisableEPSVRole;
                 needToUpdate = uploadInfo->setDisableEPSV(value.toBool());
+                break;
             default:
                 return false;
         }

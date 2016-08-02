@@ -298,6 +298,13 @@ ApplicationWindow {
     }
 
     Action {
+        id: searchAndReplaceAction
+        shortcut: "Shift+Ctrl+F"
+        onTriggered: openFindAndReplaceDialog()
+        enabled: artworksHost.count > 0
+    }
+
+    Action {
         id: selectAllAction
         shortcut: StandardKey.SelectAll
         enabled: (artworkRepository.artworksSourcesCount > 0) && (applicationWindow.openedDialogsCount == 0)
@@ -420,11 +427,7 @@ ApplicationWindow {
 
             MenuItem {
                 text: i18.n + qsTr("&Find and replace")
-                enabled: artworksHost.count > 0
-                onTriggered: {
-                    console.info("Find and replace triggered")
-                    openFindAndReplaceDialog()
-                }
+                action: searchAndReplaceAction
             }
 
             MenuItem {

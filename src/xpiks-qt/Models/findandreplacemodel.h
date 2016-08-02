@@ -117,7 +117,10 @@ namespace Models {
         enum FindAndReplaceModelRoles {
             PathRole = Qt::UserRole + 1,
             IsSelectedRole,
-            EditIsSelectedRole
+            EditIsSelectedRole,
+            HasTitleMatchRole,
+            HasDescriptionMatchRole,
+            HasKeywordsMatchRole
         };
 
     public:
@@ -130,6 +133,8 @@ namespace Models {
         Q_INVOKABLE QString getSearchDescription(int index);
         Q_INVOKABLE QString getSearchKeywords(int index);
         Q_INVOKABLE void replace();
+        Q_INVOKABLE void selectAll() { setAllSelected(true); }
+        Q_INVOKABLE void unselectAll() { setAllSelected(false); }
 
     public:
         virtual int rowCount(const QModelIndex &parent=QModelIndex()) const;
@@ -148,16 +153,18 @@ namespace Models {
         void searchInKeywordsChanged(bool value);
         void caseSensitiveChanged(bool value);
         void countChanged(int value);
+        void allSelectedChanged();
 
     private:
         QString filterText(const QString &text);
+        void setAllSelected(bool isSelected);
 
     private:
         std::vector<Models::PreviewMetadataElement> m_ArtworksList;
         QString m_ReplaceFrom;
         QString m_ReplaceTo;
-        int m_Flags;
         QMLExtensions::ColorsModel *m_ColorsModel;
+        int m_Flags;
     };
 }
 #endif // FINDANDREPLACEMODEL_H

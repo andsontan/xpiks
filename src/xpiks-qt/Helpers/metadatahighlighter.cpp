@@ -26,18 +26,19 @@ namespace Helpers {
     MetadataHighlighter::MetadataHighlighter(const QString &replaceFrom, bool caseSensitive, QMLExtensions::ColorsModel *colorsModel,
                                              QTextDocument *document):
         QSyntaxHighlighter(document),
+        m_ColorsModel(colorsModel),
         m_ReplaceFrom(replaceFrom),
-        m_CaseSensitive(caseSensitive),
-        m_ColorsModel(colorsModel)
+        m_CaseSensitive(caseSensitive)
     {
-        QColor highlighColor = m_ColorsModel->artworkModifiedColor();
-        m_Format.setBackground(highlighColor);
     }
 
     void MetadataHighlighter::highlightBlock(const QString &text) {
         int pos = 0;
         int size = m_ReplaceFrom.size();
         Qt::CaseSensitivity caseSensitivity = m_CaseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive;
+
+        QColor highlighColor = m_ColorsModel->artworkModifiedColor();
+        m_Format.setBackground(highlighColor);
 
         while (pos != -1) {
             pos = text.indexOf(m_ReplaceFrom, pos, caseSensitivity);

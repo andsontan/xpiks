@@ -117,8 +117,24 @@ Item {
                 anchors.fill: parent
                 anchors.margins: 20
 
-                StyledText {
-                    text: i18.n + qsTr("Items for replacement")
+                RowLayout {
+                    spacing: 5
+
+                    StyledText {
+                        text: i18.n + qsTr("Replace")
+                    }
+
+                    StyledText {
+                        text: '"' + replaceModel.replaceFrom + '"'
+                    }
+
+                    StyledText {
+                        text: i18.n + qsTr("to")
+                    }
+
+                    StyledText {
+                        text: '"' + replaceModel.replaceTo + '"'
+                    }
                 }
 
                 Rectangle {
@@ -133,30 +149,37 @@ Item {
                         ListView {
                             id: replacePreviewList
                             model: replaceModel
-                            spacing: 10
+                            spacing: 5
 
                             delegate: Rectangle {
                                 id: imageWrapper
                                 property int delegateIndex: index
-                                color: Colors.defaultDarkColor
+                                color: isselected ? Colors.selectedImageBackground : Colors.artworkImageBackground
                                 anchors.left: parent.left
                                 anchors.right: parent.right
                                 anchors.rightMargin: 10
                                 height: columnRectangle.height
-                                radius: 2
 
                                 StyledCheckbox {
                                     id: applyReplaceCheckBox
-                                    anchors.leftMargin: 10
+                                    anchors.leftMargin: 14
                                     anchors.left: parent.left
+                                    width: 20
                                     anchors.verticalCenter: parent.verticalCenter
                                     onClicked: editisselected = checked
                                     Component.onCompleted: applyReplaceCheckBox.checked = isselected
+
+                                    Connections {
+                                        target: replaceModel
+                                        onAllSelectedChanged: {
+                                            applyReplaceCheckBox.checked = isselected
+                                        }
+                                    }
                                 }
 
                                 Item {
                                     id: imageItem
-                                    anchors.leftMargin: 10
+                                    anchors.leftMargin: 0
                                     anchors.left: applyReplaceCheckBox.right
                                     anchors.top: parent.top
                                     width: 120
@@ -169,8 +192,9 @@ Item {
                                         width: 110
 
                                         Item {
-                                            width: 90
-                                            height: 60
+                                            id: imageContainer
+                                            width: 100
+                                            height: 100
                                             anchors.horizontalCenter: parent.horizontalCenter
 
                                             Image {
@@ -182,6 +206,14 @@ Item {
                                                 asynchronous: true
                                                 cache: false
                                             }
+
+                                            MouseArea {
+                                                anchors.fill: parent
+                                                onClicked: {
+                                                    editisselected = !isselected
+                                                    applyReplaceCheckBox.checked = isselected
+                                                }
+                                            }
                                         }
 
                                         StyledText {
@@ -189,7 +221,7 @@ Item {
                                             elide: Text.ElideMiddle
                                             horizontalAlignment: Text.AlignHCenter
                                             text: path.split(/[\\/]/).pop()
-                                            font.pixelSize: 11
+                                            font.pixelSize: UIConfig.fontPixelSize
                                         }
 
                                         Item {
@@ -203,38 +235,38 @@ Item {
                                     anchors.left: imageItem.right
                                     anchors.top: parent.top
                                     anchors.right: parent.right
-                                    height: (childrenRect.height < 80) ? 100 : (childrenRect.height + 20)
-                                    color: Colors.artworkBackground
+                                    height: (childrenRect.height < 130) ? 150 : (childrenRect.height + 20)
+                                    color: isselected ? Colors.selectedArtworkBackground : Colors.artworkBackground
 
-                                    Column{
+                                    Column {
                                         id: replaceHitText
-                                        spacing: 2
+                                        spacing: 3
+                                        anchors.top: parent.top
                                         anchors.left: parent.left
                                         anchors.right: parent.right
                                         anchors.leftMargin: 10
                                         anchors.rightMargin: 10
-                                        anchors.topMargin: 5
-
-                                        Item {
-                                            height: 30
-                                        }
+                                        anchors.topMargin: 10
 
                                         StyledText {
                                             id: titleHit
                                             text: i18.n + qsTr("Title:")
-                                            visible: replaceModel.searchInTitle
+                                            visible: hastitle
+                                            isActive: isselected
                                         }
 
                                         Rectangle {
-                                            height:  childrenRect.height
-                                            color: Colors.inputInactiveBackground
+                                            id: titleRectangle
+                                            height: childrenRect.height + 10
+                                            color: isselected ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
                                             anchors.right: parent.right
                                             anchors.left: parent.left
-                                            id:titleRectangle
-                                            visible: replaceModel.searchInTitle
+                                            visible: hastitle
 
                                             StyledTextEdit {
                                                 id: titleText
+                                                anchors.top: parent.top
+                                                anchors.topMargin: 5
                                                 anchors.right: parent.right
                                                 anchors.left: parent.left
                                                 anchors.leftMargin: 5
@@ -242,6 +274,9 @@ Item {
                                                 wrapMode: TextEdit.Wrap
                                                 text: i18.n + replaceModel.getSearchTitle(imageWrapper.delegateIndex)
                                                 readOnly: true
+                                                selectByKeyboard: false
+                                                selectByMouse: false
+                                                isActive: isselected
                                                 Component.onCompleted: {
                                                     replaceModel.initHighlighting(titleText.textDocument)
                                                 }
@@ -249,56 +284,68 @@ Item {
                                         }
 
                                         Item {
-                                            height: 10
+                                            width: 10
+                                            height: 1
                                         }
 
                                         StyledText {
                                             id: descriptionHit
                                             text: i18.n + qsTr("Description:")
-                                            visible: replaceModel.searchInDescription
+                                            visible: hasdescription
+                                            isActive: isselected
                                         }
 
                                         Rectangle {
                                             id: descriptionRectangle
-                                            color: Colors.inputInactiveBackground
-                                            height:  childrenRect.height
+                                            color: isselected ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
+                                            height: childrenRect.height + 10
                                             anchors.right: parent.right
                                             anchors.left: parent.left
-                                            visible: replaceModel.searchInDescription
+                                            visible: hasdescription
 
                                             StyledTextEdit {
                                                 id: descriptionText
                                                 wrapMode: TextEdit.Wrap
+                                                anchors.top: parent.top
+                                                anchors.topMargin: 5
                                                 anchors.right: parent.right
                                                 anchors.left: parent.left
                                                 anchors.leftMargin: 5
                                                 anchors.rightMargin: 5
                                                 text: i18.n + replaceModel.getSearchDescription(imageWrapper.delegateIndex).trim()
                                                 readOnly: true
+                                                selectByKeyboard: false
+                                                selectByMouse: false
+                                                isActive: isselected
                                                 Component.onCompleted: {
                                                     replaceModel.initHighlighting(descriptionText.textDocument)
                                                 }
                                             }
                                         }
+
                                         Item {
-                                            height: 10
+                                            width: 10
+                                            height: 1
                                         }
 
                                         StyledText {
                                             id: keywordsHit
                                             text: i18.n + qsTr("Keywords:")
-                                            visible: replaceModel.searchInKeywords
+                                            visible: haskeywords
+                                            isActive: isselected
                                         }
 
                                         Rectangle {
-                                            color: Colors.inputInactiveBackground
-                                            height:  childrenRect.height
+                                            color: isselected ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
+                                            height: childrenRect.height + 10
                                             anchors.right: parent.right
                                             anchors.left: parent.left
-                                            visible: replaceModel.searchInKeywords
+                                            visible: haskeywords
 
                                             StyledTextEdit {
                                                 id: keywordsText
+                                                anchors.top: parent.top
+                                                anchors.topMargin: 5
                                                 anchors.right: parent.right
                                                 anchors.left: parent.left
                                                 anchors.leftMargin: 5
@@ -306,6 +353,9 @@ Item {
                                                 wrapMode: TextEdit.Wrap
                                                 text: i18.n + replaceModel.getSearchKeywords(imageWrapper.delegateIndex)
                                                 readOnly: true
+                                                selectByKeyboard: false
+                                                selectByMouse: false
+                                                isActive: isselected
 
                                                 Component.onCompleted: {
                                                     replaceModel.initHighlighting(keywordsText.textDocument)
@@ -337,6 +387,22 @@ Item {
                 RowLayout {
                     spacing: 20
                     height: 24
+
+                    StyledButton {
+                        text: i18.n + qsTr("Select all")
+                        width: 100
+                        onClicked: {
+                            replaceModel.selectAll();
+                        }
+                    }
+
+                    StyledButton {
+                        text: i18.n + qsTr("Unselect all")
+                        width: 100
+                        onClicked: {
+                            replaceModel.unselectAll();
+                        }
+                    }
 
                     Item {
                         Layout.fillWidth: true

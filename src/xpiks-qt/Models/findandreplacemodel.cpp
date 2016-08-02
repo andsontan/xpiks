@@ -37,23 +37,24 @@ namespace Models {
     FindAndReplaceModel::FindAndReplaceModel(QMLExtensions::ColorsModel *colorsModel, QObject *parent):
         QAbstractListModel(parent),
         Common::BaseEntity(),
-        m_ColorsModel(colorsModel)
-    {}
+        m_ColorsModel(colorsModel),
+        m_Flags(0)
+    { }
 
     void FindAndReplaceModel::initArtworksList() {
         m_ArtworksList.clear();
 
         Models::FilteredArtItemsProxyModel *filteredItemsModel = m_CommandManager->getFilteredArtItemsModel();
-
         m_ArtworksList = std::move(filteredItemsModel->getSearchablePreviewOriginalItems(m_ReplaceFrom, m_Flags));
+
         int initialFlag = 0;
         Common::ApplyFlag(initialFlag, getCaseSensitive(), Common::SearchFlagCaseSensitive);
-        int size = (int)m_ArtworksList.size();
-        for (int i = 0; i < size; i++) {
-            Models::PreviewMetadataElement &preview = m_ArtworksList[i];
+
+        for (auto &preview: m_ArtworksList) {
             Models::ArtworkMetadata *metadata = preview.getOrigin();
             int flags = initialFlag;
             bool value = false;
+
             if (FindAndReplaceModel::getSearchInTitle()) {
                 flags = initialFlag;
                 Common::ApplyFlag(flags, true, Common::SearchFlagSearchTitle);
@@ -91,12 +92,18 @@ namespace Models {
         const Models::PreviewMetadataElement &item = m_ArtworksList.at(indexRow);
 
         switch (role) {
-            case PathRole:
-                return item.getOrigin()->getFilepath();
-            case IsSelectedRole:
-                return item.isSelected();
-            default:
-                return QVariant();
+        case PathRole:
+            return item.getOrigin()->getFilepath();
+        case IsSelectedRole:
+            return item.isSelected();
+        case HasTitleMatchRole:
+            return item.hasTitleMatch();
+        case HasDescriptionMatchRole:
+            return item.hasDescriptionMatch();
+        case HasKeywordsMatchRole:
+            return item.hasKeywordsMatch();
+        default:
+            return QVariant();
         }
     }
 
@@ -135,6 +142,9 @@ namespace Models {
         roles[PathRole] = "path";
         roles[IsSelectedRole] = "isselected";
         roles[EditIsSelectedRole] = "editisselected";
+        roles[HasTitleMatchRole] = "hastitle";
+        roles[HasDescriptionMatchRole] = "hasdescription";
+        roles[HasKeywordsMatchRole] = "haskeywords";
         return roles;
     }
 
@@ -200,7 +210,7 @@ namespace Models {
                 }
             }
 
-            text.append(listNew.join(','));
+            text.append(listNew.join(", "));
         }
 
         return text;
@@ -239,5 +249,17 @@ namespace Models {
         }
 
         return result;
+    }
+
+    void FindAndReplaceModel::setAllSelected(bool isSelected) {
+        for (auto &item: m_ArtworksList) {
+            item.setSelected(isSelected);
+        }
+
+        auto first = this->index(0);
+        auto last = this->index(this->rowCount() - 1);
+        emit dataChanged(first, last, QVector<int>() << IsSelectedRole);
+
+        emit allSelectedChanged();
     }
 }

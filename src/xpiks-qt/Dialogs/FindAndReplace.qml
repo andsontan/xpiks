@@ -40,6 +40,8 @@ Item {
         replaceSetupComponent.destroy()
     }
 
+    Keys.onEscapePressed: closePopup()
+
     function initReplace() {
         var titleFlag = searchInTitle.checkedState
         var descriptionFlag = searchInDescription.checkedState
@@ -67,6 +69,14 @@ Item {
         return result
     }
 
+    function launchReplacePreview() {
+        initReplace()
+        Common.launchDialog("Dialogs/ReplacePreview.qml",
+                            replaceSetupComponent,
+                            {
+                                componentParent: replaceSetupComponent
+                            })
+    }
 
     // This rectange is the a overlay to partially show the parent through it
     // and clicking outside of the 'dialog' popup will do 'nothing'
@@ -205,9 +215,8 @@ Item {
                                 anchors.rightMargin: 5
                                 anchors.verticalCenter: parent.verticalCenter
                                 KeyNavigation.backtab: replaceFrom
-                                onTextChanged: {
-                                    replaceSetupComponent.conditionsChanged()
-                                }
+                                onTextChanged: replaceSetupComponent.conditionsChanged()
+                                onAccepted: launchReplacePreview()
                             }
                         }
                     }
@@ -276,16 +285,9 @@ Item {
                         text: i18.n + qsTr("Replace")
                         width: 100
 
-                        onClicked: {
-                            initReplace()
-                            Common.launchDialog("Dialogs/ReplacePreview.qml",
-                                                replaceSetupComponent,
-                                                {
-                                                    componentParent: replaceSetupComponent
-                                                })
-                        }
+                        onClicked: launchReplacePreview()
 
-                        Connections{
+                        Connections {
                             target: replaceSetupComponent
                             onConditionsChanged: replaceButton.enabled = isSearchValid()
                         }
