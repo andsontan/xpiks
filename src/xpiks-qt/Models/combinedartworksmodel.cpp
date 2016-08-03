@@ -180,6 +180,7 @@ namespace Models {
     void CombinedArtworksModel::clearKeywords() {
         if (m_CommonKeywordsModel.clearKeywords()) {
             setKeywordsModified(true);
+            emit keywordsCountChanged();
         }
     }
 
