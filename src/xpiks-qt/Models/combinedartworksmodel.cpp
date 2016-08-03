@@ -42,6 +42,8 @@ namespace Models {
         m_IsTitleModified(false),
         m_IsSpellingFixed(false)
     {
+        m_CommonKeywordsModel.setSpellCheckInfo(&m_SpellCheckInfo);
+
         QObject::connect(&m_CommonKeywordsModel, SIGNAL(spellCheckErrorsChanged()),
                          this, SLOT(spellCheckErrorsChangedHandler()));
 
@@ -78,10 +80,6 @@ namespace Models {
             assignFromOneArtwork();
         } else {
             assignFromManyArtworks();
-        }
-
-        if (m_CommonKeywordsModel.getSpellCheckInfo() == NULL) {
-            m_CommonKeywordsModel.setSpellCheckInfo(&m_SpellCheckInfo);
         }
 
         m_CommandManager->submitItemForSpellCheck(&m_CommonKeywordsModel);
@@ -238,6 +236,8 @@ namespace Models {
         m_ArtworksList.clear();
         endResetModel();
 
+        m_SpellCheckInfo.clear();
+
         m_AreKeywordsModified = false;
         m_IsDescriptionModified = false;
         m_IsTitleModified = false;
@@ -248,7 +248,6 @@ namespace Models {
         enableAllFields();
         // TEMPORARY (enable everything on initial launch) --
 
-        m_CommonKeywordsModel.setSpellCheckInfo(NULL);
         initDescription("");
         initTitle("");
         initKeywords(QStringList());
@@ -369,16 +368,8 @@ namespace Models {
             initTitle(metadata->getTitle());
         }
 
-        if (!m_IsDescriptionModified && !m_IsTitleModified) {
-            // TODO: would be better to merge errors instead of assignment
-            Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
-            m_CommonKeywordsModel.setSpellCheckInfo(keywordsModel->getSpellCheckInfo());
-        }
-
         if (!m_AreKeywordsModified) {
             initKeywords(metadata->getKeywords());
-            Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
-            m_CommonKeywordsModel.setSpellStatuses(keywordsModel);
         }
     }
 
@@ -429,6 +420,7 @@ namespace Models {
     }
 
     void CombinedArtworksModel::spellCheckErrorsChangedHandler() {
+        LOG_DEBUG << "#";
         emit descriptionChanged();
         emit titleChanged();
     }

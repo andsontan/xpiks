@@ -44,6 +44,7 @@ namespace SpellCheck {
     public:
         bool hasWrongSpelling(const QString& word);
         void setErrorWords(const QSet<QString> &errors);
+        void clear();
         bool anyError();
         QStringList toList();
 
@@ -63,6 +64,7 @@ namespace SpellCheck {
                                        Common::BasicKeywordsModel *basicKeywordsModel);
         bool hasDescriptionError(const QString &word) { return m_DescriptionErrors.hasWrongSpelling(word); }
         bool hasTitleError(const QString &word) { return m_TitleErrors.hasWrongSpelling(word); }
+        void clear() { m_TitleErrors.clear(); m_DescriptionErrors.clear(); }
 
     private:
         SpellCheckErrorsInfo m_DescriptionErrors;
