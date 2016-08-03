@@ -1,13 +1,23 @@
-This is Xpiks 1.3.3 bugfix release.
+This is Xpiks 1.3.4 bugfix release.
+
+In this release:
+
+- Fix for Combined Edit not saved if only Fix Spelling performed
+- Fix for hang while reading metadata in files (exiv2 issue)
+- Fix for "Disable passive mode" checkbox not updated on click
+- Fix for keywords case issue in Combined Edit dialog
+
+
+
+Previous releases:
+
+Xpiks 1.3.3 bugfix release.
 
 In this release:
 
 - Fix for unable to edit keyword issue
 - Fix for API move to https
 
-
-
-Previous releases:
 
 Xpiks 1.3.2 bugfix release.
 
@@ -33,6 +43,7 @@ Bugfixes:
 
 - uploading of file with unicode path via curl
 - fix for selecting and double-clickin an image
+
 
 Xpiks 1.3 release. 
 
