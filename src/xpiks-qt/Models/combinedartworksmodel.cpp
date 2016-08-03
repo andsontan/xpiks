@@ -39,13 +39,17 @@ namespace Models {
         m_EditFlags(0),
         m_AreKeywordsModified(false),
         m_IsDescriptionModified(false),
-        m_IsTitleModified(false)
+        m_IsTitleModified(false),
+        m_IsSpellingFixed(false)
     {
         QObject::connect(&m_CommonKeywordsModel, SIGNAL(spellCheckErrorsChanged()),
                          this, SLOT(spellCheckErrorsChangedHandler()));
 
         QObject::connect(&m_CommonKeywordsModel, SIGNAL(completionsAvailable()),
                          this, SIGNAL(completionsAvailable()));
+
+        QObject::connect(&m_CommonKeywordsModel, SIGNAL(afterSpellingErrorsFixed()),
+                         this, SLOT(spellCheckErrorsFixedHandler()));
     }
 
     CombinedArtworksModel::~CombinedArtworksModel() { qDeleteAll(m_ArtworksList); }
@@ -218,6 +222,7 @@ namespace Models {
                 getChangeKeywords()) {
             needToSave = m_ArtworksList.length() > 1;
             needToSave = needToSave || (getChangeKeywords() && m_AreKeywordsModified);
+            needToSave = needToSave || m_IsSpellingFixed;
             needToSave = needToSave || (getChangeTitle() && m_IsTitleModified);
             needToSave = needToSave || (getChangeDescription() && m_IsDescriptionModified);
         }
@@ -236,6 +241,7 @@ namespace Models {
         m_AreKeywordsModified = false;
         m_IsDescriptionModified = false;
         m_IsTitleModified = false;
+        m_IsSpellingFixed = false;
 
         // TEMPORARY (enable everything on initial launch) --
         m_EditFlags = 0;
@@ -391,7 +397,7 @@ namespace Models {
             if (!anyItemsProcessed) {
                 description = metadata->getDescription();
                 title = metadata->getTitle();
-                commonKeywords.unite(metadata->getKeywordsSet());
+                commonKeywords.unite(metadata->getKeywords().toSet());
                 anyItemsProcessed = true;
                 continue;
             }
@@ -400,7 +406,7 @@ namespace Models {
             QString currTitle = metadata->getTitle();
             descriptionsDiffer = descriptionsDiffer || description != currDescription;
             titleDiffer = titleDiffer || title != currTitle;
-            commonKeywords.intersect(metadata->getKeywordsSet());
+            commonKeywords.intersect(metadata->getKeywords().toSet());
         }
 
         if (artworksCount > 0) {
@@ -424,6 +430,10 @@ namespace Models {
     void CombinedArtworksModel::spellCheckErrorsChangedHandler() {
         emit descriptionChanged();
         emit titleChanged();
+    }
+
+    void CombinedArtworksModel::spellCheckErrorsFixedHandler() {
+        m_IsSpellingFixed = true;
     }
 
     int CombinedArtworksModel::rowCount(const QModelIndex &parent) const {

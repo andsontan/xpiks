@@ -168,7 +168,7 @@ namespace Models {
 
     private slots:
         void spellCheckErrorsChangedHandler();
-
+        void spellCheckErrorsFixedHandler();
 
     public:
         enum CombinedArtworksModelRoles {
@@ -197,6 +197,7 @@ namespace Models {
         bool m_AreKeywordsModified;
         bool m_IsDescriptionModified;
         bool m_IsTitleModified;
+        bool m_IsSpellingFixed;
     };
 }
 

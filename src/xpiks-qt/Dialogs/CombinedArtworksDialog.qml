@@ -45,6 +45,7 @@ Item {
 
     function closePopup() {
         dialogComponent.destroy()
+        combinedArtworks.resetModelData()
     }
 
     function mustUseConfirmation() {
@@ -244,8 +245,8 @@ CloseRequested")
                         Connections {
                             target: combinedArtworks
                             onItemsNumberChanged: {
-                               textItemsAvailable.originalText = combinedArtworks.artworksCount == 1 ? qsTr("1 artwork being edited") : qsTr("%1 artworks being edited").arg(combinedArtworks.artworksCount)
-                               textItemsAvailable.text=i18.n + originalText
+                                var originalText = textItemsAvailable.getOriginalText()
+                                textItemsAvailable.text = i18.n + originalText
                             }
                         }
                     }
@@ -350,6 +351,7 @@ CloseRequested")
                                         sourceSize.height: 150
                                         fillMode: settingsModel.fitSmallPreview ? Image.PreserveAspectFit : Image.PreserveAspectCrop
                                         asynchronous: true
+                                        cache: false
                                     }
 
                                     Rectangle {
@@ -1010,7 +1012,11 @@ CloseRequested")
                                             id: clearKeywordsMA
                                             anchors.fill: parent
                                             cursorShape: Qt.PointingHandCursor
-                                            onClicked: clearKeywordsDialog.open()
+                                            onClicked: {
+                                                if (combinedArtworks.keywordsCount > 0) {
+                                                    clearKeywordsDialog.open()
+                                                }
+                                            }
                                         }
                                     }
                                 }
