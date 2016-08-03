@@ -782,3 +782,24 @@ void CombinedModelTests::caseIsPreservedForSeveralItemsTest() {
 
     QCOMPARE(combinedModel.getKeywordsCount(), 0);
 }
+
+void CombinedModelTests::clearKeywordsFiresKeywordsCountTest() {
+    Models::CombinedArtworksModel combinedModel;
+    combinedModel.setCommandManager(&m_CommandManagerMock);
+
+    std::vector<Models::MetadataElement> items;
+    items.push_back(createArtworkMetadata("Description1", "title1", QStringList(), 0));
+
+    combinedModel.resetModel();
+    combinedModel.setArtworks(items);
+
+    QSignalSpy keywordsCountChangedSpy(&combinedModel, SIGNAL(keywordsCountChanged()));
+    combinedModel.clearKeywords();
+
+    QCOMPARE(keywordsCountChangedSpy.count(), 0);
+
+    combinedModel.appendKeyword("test");
+    keywordsCountChangedSpy.clear();
+    combinedModel.clearKeywords();
+    QCOMPARE(keywordsCountChangedSpy.count(), 1);
+}
