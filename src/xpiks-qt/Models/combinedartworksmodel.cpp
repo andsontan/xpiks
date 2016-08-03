@@ -257,6 +257,7 @@ namespace Models {
     void CombinedArtworksModel::clearKeywords() {
         if (m_CommonKeywordsModel.clearKeywords()) {
             m_AreKeywordsModified = true;
+            emit keywordsCountChanged();
         }
     }
 
