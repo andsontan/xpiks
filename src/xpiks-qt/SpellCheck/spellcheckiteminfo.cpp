@@ -49,6 +49,13 @@ namespace SpellCheck {
         return !m_WordsWithErrors.isEmpty();
     }
 
+    void SpellCheckErrorsInfo::clear() {
+        QWriteLocker writeLocker(&m_ErrorsLock);
+        Q_UNUSED(writeLocker);
+
+        m_WordsWithErrors.clear();
+    }
+
     QStringList SpellCheckErrorsInfo::toList() {
         QReadLocker readLocker(&m_ErrorsLock);
         Q_UNUSED(readLocker);

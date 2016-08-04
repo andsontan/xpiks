@@ -38,6 +38,8 @@ namespace Models {
         m_EditFlags(0),
         m_ModifiedFlags(0)
     {
+        m_CommonKeywordsModel.setSpellCheckInfo(&m_SpellCheckInfo);
+
         QObject::connect(&m_CommonKeywordsModel, SIGNAL(spellCheckErrorsChanged()),
                          this, SLOT(spellCheckErrorsChangedHandler()));
 
@@ -66,10 +68,6 @@ namespace Models {
             assignFromOneArtwork();
         } else {
             assignFromManyArtworks();
-        }
-
-        if (m_CommonKeywordsModel.getSpellCheckInfo() == NULL) {
-            m_CommonKeywordsModel.setSpellCheckInfo(&m_SpellCheckInfo);
         }
 
         m_CommandManager->submitItemForSpellCheck(&m_CommonKeywordsModel);
@@ -288,16 +286,8 @@ namespace Models {
             initTitle(metadata->getTitle());
         }
 
-        if (!isDescriptionModified() && !isTitleModified()) {
-            // TODO: would be better to merge errors instead of assignment
-            Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
-            m_CommonKeywordsModel.setSpellCheckInfo(keywordsModel->getSpellCheckInfo());
-        }
-
         if (!areKeywordsModified()) {
             initKeywords(metadata->getKeywords());
-            Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
-            m_CommonKeywordsModel.setSpellStatuses(keywordsModel);
         }
     }
 
@@ -368,6 +358,8 @@ namespace Models {
 
     void CombinedArtworksModel::doResetModel() {
         ArtworksViewModel::doResetModel();
+
+        m_SpellCheckInfo.clear();
 
         // TEMPORARY (enable everything on initial launch) --
         m_ModifiedFlags = 0;
