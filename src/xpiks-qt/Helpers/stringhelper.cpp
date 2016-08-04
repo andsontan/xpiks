@@ -327,7 +327,7 @@ done:
 
     std::pair<int, int> getSegmentFromHit(const QString &text, int hit, int radius) {
         int left = hit;
-        Q_ASSERT(isLeftWordBound(text, left));
+        while (!isLeftWordBound(text, left)) { left--; }
 
         int right = hit;
         const int lastIndex = text.size() - 1;

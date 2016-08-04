@@ -30,3 +30,10 @@ void ReplacePreviewTests::advancedEntryTest() {
     QString united = Helpers::getUnitedHitsString(text, {0, 19, text.size() - QLatin1String("keyword").size()}, 7);
     QCOMPARE(united, QLatin1String("keyword 0123456789 keyword 0123456789 ... 0123456789 keyword"));
 }
+
+void ReplacePreviewTests::hitInTheMiddleTest() {
+    QString text = "0123456789 keyword 0123456789 0123456789 keyword";
+
+    QString united = Helpers::getUnitedHitsString(text, {14, text.size() - QLatin1String("word").size()}, 3);
+    QCOMPARE(united, QLatin1String("0123456789 keyword 0123456789 ... 0123456789 keyword"));
+}

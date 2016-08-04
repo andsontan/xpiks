@@ -12,6 +12,7 @@ private slots:
     void simpleEntryTest();
     void overlappingEntryTest();
     void advancedEntryTest();
+    void hitInTheMiddleTest();
 };
 
 #endif // REPLACEPREVIEW_H
