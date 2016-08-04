@@ -301,7 +301,7 @@ ApplicationWindow {
         id: searchAndReplaceAction
         shortcut: "Shift+Ctrl+F"
         onTriggered: openFindAndReplaceDialog()
-        enabled: artworksHost.count > 0
+        enabled: (artworkRepository.artworksSourcesCount > 0) && (applicationWindow.openedDialogsCount == 0)
     }
 
     Action {
