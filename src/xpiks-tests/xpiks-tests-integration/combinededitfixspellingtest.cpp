@@ -66,6 +66,9 @@ int CombinedEditFixSpellingTest::doTest() {
         VERIFY(false, "Timeout for waiting for initial spellcheck results");
     }
 
+    // wait for finding suggestions
+    QThread::sleep(1);
+
     VERIFY(basicModel->hasDescriptionSpellError(), "Description spell error not detected");
 
     filteredModel->selectFilteredArtworks();
