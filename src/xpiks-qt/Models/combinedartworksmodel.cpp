@@ -367,7 +367,6 @@ namespace Models {
         enableAllFields();
         // TEMPORARY (enable everything on initial launch) --
 
-        m_CommonKeywordsModel.setSpellCheckInfo(NULL);
         initDescription("");
         initTitle("");
         initKeywords(QStringList());
