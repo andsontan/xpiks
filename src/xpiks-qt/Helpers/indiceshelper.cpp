@@ -21,6 +21,7 @@
 
 #include "indiceshelper.h"
 #include <cmath>
+#include <algorithm>
 
 namespace Models {
     class ArtworkMetadata;
@@ -89,5 +90,48 @@ namespace Helpers {
         }
 
         return sum;
+    }
+
+    bool segmentsOverlap(const std::pair<int, int> &a, const std::pair<int, int> &b) {
+        if (a.first <= b.first) {
+            return b.first <= a.second;
+        } else {
+            return a.first <= b.second;
+        }
+    }
+
+    std::pair<int, int> unionOverlappingSegments(const std::pair<int, int> &a, const std::pair<int, int> &b) {
+        Q_ASSERT(segmentsOverlap(a, b));
+        return std::make_pair(std::min(a.first, b.first), std::max(a.second, b.second));
+    }
+
+    RangesVector unionRanges(RangesVector &ranges) {
+        if (ranges.size() <= 1) { return ranges; }
+
+        std::sort(std::begin(ranges), std::end(ranges),
+                  [](const std::pair<int, int> &a, const std::pair<int, int> &b) {
+            return (a.first == b.first) ? (a.second < b.second) : (a.first < b.first);
+        });
+
+        auto prev = ranges.at(0);
+        size_t size = ranges.size();
+
+        RangesVector results;
+        results.reserve(size);
+
+        for (size_t i = 1; i < size; ++i) {
+            auto &curr = ranges.at(i);
+
+            if (segmentsOverlap(prev, curr)) {
+                prev = unionOverlappingSegments(prev, curr);
+            } else {
+                results.emplace_back(prev);
+                prev = curr;
+            }
+        }
+
+        results.emplace_back(prev);
+
+        return results;
     }
 }

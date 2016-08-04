@@ -39,7 +39,7 @@ namespace Helpers {
     QString detectEncodingAndDecode(const std::string &value);
     bool is7BitAscii(const QByteArray &s);
     std::string string_format(const std::string fmt, ...);
-    QString getReplacementSubstrings(const QString &text, const std::vector<int> &hits, int size);
+    QString getUnitedHitsString(const QString &text, const std::vector<int> &hits, int radius);
 }
 
 #endif // STRINGHELPER

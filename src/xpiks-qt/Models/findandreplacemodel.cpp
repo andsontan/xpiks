@@ -227,9 +227,11 @@ namespace Models {
     QString FindAndReplaceModel::filterText(const QString &text) {
         int size = m_ReplaceFrom.size();
 
+#ifndef QT_DEBUG
         if (text.size() <= 2*PREVIEWOFFSET) {
             return text;
         }
+#endif
 
         QString result;
         Qt::CaseSensitivity caseSensitivity = FindAndReplaceModel::getCaseSensitive() ? Qt::CaseSensitive : Qt::CaseInsensitive;
@@ -245,7 +247,7 @@ namespace Models {
         }
 
         if (!hits.empty()) {
-            result = Helpers::getReplacementSubstrings(text, hits, size);
+            result = Helpers::getUnitedHitsString(text, hits, PREVIEWOFFSET);
         }
 
         return result;

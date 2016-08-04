@@ -3,80 +3,30 @@
 #include"../../xpiks-qt/Common/defines.h"
 #include "stringhelpersfortests.h"
 
-void ReplacePreviewTests::noTructationTest() {
-    QString textTest = getRandomString(PREVIEWOFFSET/4 + 1, true);
-    const QString keyword = "keyword";
-    textTest += keyword;
-    textTest += getRandomString(PREVIEWOFFSET/4 + 1, true);
-    QVERIFY(textTest.size() < 2*PREVIEWOFFSET);
+void ReplacePreviewTests::smokeTest() {
+    QString text = "  keyword  ";
 
-    std::vector<int> hits;
-    int pos = textTest.indexOf(keyword);
-    hits.push_back(pos);
-
-    QString result = Helpers::getReplacementSubstrings(textTest, hits, keyword.size());
-    QCOMPARE(result, textTest);
+    QString united = Helpers::getUnitedHitsString(text, {2}, 10);
+    QCOMPARE(united, text);
 }
 
-void ReplacePreviewTests::simpleTructationTest() {
-    QString textTest = getRandomString(PREVIEWOFFSET/4 + 1, true);
-    const QString keyword = "keyword";
-    textTest += keyword;
-    textTest += getRandomString(2*PREVIEWOFFSET, true);
-    QVERIFY(textTest.size() > 2*PREVIEWOFFSET);
+void ReplacePreviewTests::simpleEntryTest() {
+    QString text = "0123456789 keyword 0123456789 0123456789 keyword";
 
-    std::vector<int> hits;
-    int pos = textTest.indexOf(keyword);
-    hits.push_back(pos);
-    QString result = Helpers::getReplacementSubstrings(textTest, hits, keyword.size());
-    QString gold = textTest.mid(std::max(pos - PREVIEWOFFSET, 0), 2*PREVIEWOFFSET);
-
-    QCOMPARE(result,gold);
+    QString united = Helpers::getUnitedHitsString(text, {11, text.size() - QLatin1String("keyword").size()}, 5);
+    QCOMPARE(united, QLatin1String("0123456789 keyword 0123456789 ... 0123456789 keyword"));
 }
 
-void ReplacePreviewTests::doubleTructationTest() {
-    QString textTest = getRandomString(PREVIEWOFFSET/4 + 1, true);
-    const QString keyword = "keyword";
-    textTest += keyword;
-    textTest += getRandomString(2*PREVIEWOFFSET, true);
-    textTest += keyword;
-    QVERIFY(textTest.size() > 2*PREVIEWOFFSET);
+void ReplacePreviewTests::overlappingEntryTest() {
+    QString text = "keyword 0123456789 keyword";
 
-    std::vector<int> hits;
-    int pos = 0;
-    pos = textTest.indexOf(keyword,pos);
-    hits.push_back(pos);
-    pos += keyword.size();
-    pos = textTest.indexOf(keyword,pos);
-    hits.push_back(pos);
-
-    QString result = Helpers::getReplacementSubstrings(textTest,hits, keyword.size());
-    QString gold = textTest.mid(std::max(hits[0] - PREVIEWOFFSET, 0), 2*PREVIEWOFFSET) +
-            textTest.mid(hits[1] - PREVIEWOFFSET, 2*PREVIEWOFFSET);
-
-    QCOMPARE(result, gold);
+    QString united = Helpers::getUnitedHitsString(text, {0, text.size() - QLatin1String("keyword").size()}, 7);
+    QCOMPARE(united, text);
 }
 
-void ReplacePreviewTests::advancedTructationTest() {
-    QString textTest = getRandomString(PREVIEWOFFSET/4 + 1, true);
-    const QString keyword = "keyword";
+void ReplacePreviewTests::advancedEntryTest() {
+    QString text = "keyword 0123456789 keyword 0123456789 0123456789 keyword";
 
-    textTest += keyword;
-    textTest += getRandomString(2*PREVIEWOFFSET - keyword.size() - (PREVIEWOFFSET/4 + 1) - 4, true);
-    textTest += keyword;
-    QVERIFY(textTest.size() > 2*PREVIEWOFFSET);
-
-    std::vector<int> hits;
-    int pos = 0;
-    pos = textTest.indexOf(keyword, pos);
-    hits.push_back(pos);
-    pos += keyword.size();
-    pos = textTest.indexOf(keyword, pos);
-    hits.push_back(pos);
-
-    QString result = Helpers::getReplacementSubstrings(textTest, hits, keyword.size());
-    int start = std::max(hits[0] - PREVIEWOFFSET, 0);
-    QString gold = textTest.mid(start, hits[1] - start) + keyword;
-    QCOMPARE(result, gold);
+    QString united = Helpers::getUnitedHitsString(text, {0, 19, text.size() - QLatin1String("keyword").size()}, 7);
+    QCOMPARE(united, QLatin1String("keyword 0123456789 keyword 0123456789 ... 0123456789 keyword"));
 }
-

@@ -28,7 +28,10 @@
 #include <QString>
 #include <QtGlobal>
 #include <vector>
+#include <utility>
+#include <algorithm>
 #include "../Common/defines.h"
+#include "../Helpers/indiceshelper.h"
 
 namespace Helpers {
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
@@ -302,37 +305,63 @@ done:
         return !anyFault;
     }
 
-    QString getReplacementSubstrings(const QString &text, const std::vector<int> &hits, int size) {
-        QString result;
-        QVector<QPair<int, int> > positions;
-        Q_ASSERT(!hits.empty());
-        int start = (hits[0] > PREVIEWOFFSET) ? (hits[0] - PREVIEWOFFSET) : 0;
-        int end = hits[0] + PREVIEWOFFSET;
+    bool isLeftWordBound(const QString &text, int index) {
+        return (index == 0) || ((text[index] != ' ') && (text[index - 1] == ' '));
+    }
 
-        positions.push_back(qMakePair(start, 2*PREVIEWOFFSET));
+    bool isRightWordBound(const QString &text, int lastIndex, int index) {
+        return (index == lastIndex) || ((text[index] != ' ') && (text[index + 1] == ' '));
+    }
 
-        int i = 0;
-        for (int el: hits) {
-            if ((el - PREVIEWOFFSET) > end) {
-                start = el - PREVIEWOFFSET;
-                end = el + PREVIEWOFFSET;
-                positions.push_back(qMakePair(start, 2*PREVIEWOFFSET));
-                i++;
-            } else {
-                int delta = (el + size) - end;
-                if (delta > 0) {
-                    positions[i].second += delta;
-                    end += delta;
-                }
-            }
+    void extendSegmentToWordBoundaries(const QString &text, std::pair<int, int> &segment) {
+        int left = segment.first;
+        while (!isLeftWordBound(text, left)) { left--; }
+
+        int right = segment.second;
+        const int lastIndex = text.size() - 1;
+        while (!isRightWordBound(text, lastIndex, right)) { right++; }
+
+        segment.first = left;
+        segment.second = right;
+    }
+
+    std::pair<int, int> getSegmentFromHit(const QString &text, int hit, int radius) {
+        int left = hit;
+        Q_ASSERT(isLeftWordBound(text, left));
+
+        int right = hit;
+        const int lastIndex = text.size() - 1;
+        while (!isRightWordBound(text, lastIndex, right)) { right++; }
+
+        int first = std::max(0, left - radius);
+        int second = std::min(lastIndex, right + radius);
+        return std::make_pair(first, second);
+    }
+
+    QString getUnitedHitsString(const QString &text, const std::vector<int> &hits, int radius) {
+        std::vector<std::pair<int, int> > segments;
+        segments.resize(hits.size());
+
+        // create segment from each hit
+        std::transform(hits.begin(), hits.end(), segments.begin(),
+                       [&text, radius](int hit) {
+            return getSegmentFromHit(text, hit, radius);
+        });
+
+        for (auto &item: segments) {
+            extendSegmentToWordBoundaries(text, item);
         }
 
-        result.reserve(positions.size());
+        auto unitedSegments = Helpers::unionRanges(segments);
 
-        for (auto &element: positions) {
-            result.append(text.mid(element.first, element.second));
+        QStringList entries;
+        entries.reserve((int)unitedSegments.size());
+
+        for (auto &element: unitedSegments) {
+            entries.append(text.mid(element.first, element.second - element.first + 1));
         }
 
+        QString result = entries.join(" ... ");
         return result;
     }
 }
