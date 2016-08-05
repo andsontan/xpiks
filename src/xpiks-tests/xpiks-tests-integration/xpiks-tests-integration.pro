@@ -304,7 +304,8 @@ HEADERS += \
     ../../xpiks-qt/Models/artworksviewmodel.h \
     ../../xpiks-qt/Models/deletekeywordsviewmodel.h \
     ../../xpiks-qt/Commands/deletekeywordscommand.h \
-    combinededitfixspellingtest.h
+    combinededitfixspellingtest.h \
+    ../../xpiks-qt/Common/iflagsprovider.h
 
 INCLUDEPATH += ../../tiny-aes
 INCLUDEPATH += ../../cpp-libface

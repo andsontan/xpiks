@@ -270,5 +270,6 @@ HEADERS += \
     ../../xpiks-qt/Models/artworksviewmodel.h \
     deletekeywords_tests.h \
     ../../xpiks-qt/Models/deletekeywordsviewmodel.h \
-    ../../xpiks-qt/Commands/deletekeywordscommand.h
+    ../../xpiks-qt/Commands/deletekeywordscommand.h \
+    ../../xpiks-qt/Common/iflagsprovider.h
 
