@@ -211,7 +211,7 @@ Item {
                                 KeyNavigation.backtab: replaceFromTextInput
                                 onTextChanged: replaceModel.replaceTo = text
                                 onAccepted: launchReplacePreview()
-                                Component.onCompleted: replaceFromTextInput.text = replaceModel.replaceTo
+                                Component.onCompleted: replaceToTextInput.text = replaceModel.replaceTo
                             }
                         }
                     }
