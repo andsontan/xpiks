@@ -128,7 +128,7 @@ Item {
         Rectangle {
             id: dialogWindow
             width: 480
-            height: 220
+            height: 240
             property int inputsWidth: 200
             color: Colors.selectedImageBackground
             anchors.centerIn: parent
@@ -223,7 +223,7 @@ Item {
                         anchors.right: parent.right
                         anchors.top: parent.top
                         anchors.bottom: parent.bottom
-                        spacing: 20
+                        spacing: 15
 
                         StyledCheckbox {
                             id: searchInTitleCheckbox
@@ -258,6 +258,15 @@ Item {
                             Component.onCompleted: caseSensitiveCheckbox.checked = replaceModel.caseSensitive
                             onClicked: {
                                 replaceModel.caseSensitive = caseSensitiveCheckbox.checked
+                            }
+                        }
+
+                        StyledCheckbox {
+                            id: wholeWordsCheckbox
+                            text: i18.n + qsTr("Whole words only")
+                            Component.onCompleted: wholeWordsCheckbox.checked = replaceModel.searchWholeWords
+                            onClicked: {
+                                replaceModel.searchWholeWords = wholeWordsCheckbox.checked
                             }
                         }
                     }

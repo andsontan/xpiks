@@ -25,6 +25,7 @@
 #include <QString>
 #include "spellcheckiteminfo.h"
 #include "../QMLExtensions/colorsmodel.h"
+#include "../Helpers/stringhelper.h"
 
 namespace SpellCheck {
     SpellCheckErrorsHighlighter::SpellCheckErrorsHighlighter(QTextDocument *document, QMLExtensions::ColorsModel *colorsModel,
@@ -38,39 +39,13 @@ namespace SpellCheck {
     void SpellCheckErrorsHighlighter::highlightBlock(const QString &text) {
         if (!m_SpellCheckErrors->anyError()) { return; }
 
-        int i = 0;
-        int size = text.size();
-        int lastStart = -1;
-
         QColor destructiveColor = m_ColorsModel->destructiveColor();
 
-        while (i < size) {
-            QChar c = text[i];
-            if (c.isSpace() || c.isPunct()) {
-                if (lastStart != -1) {
-                    int wordLength = i - lastStart;
-                    QString word = text.mid(lastStart, wordLength);
-                    if (m_SpellCheckErrors->hasWrongSpelling(word)) {
-                        setFormat(lastStart, wordLength, destructiveColor);
-                    }
-
-                    lastStart = -1;
-                }
-            } else {
-                if (lastStart == -1) {
-                    lastStart = i;
-                }
-            }
-
-            i++;
-        }
-
-        if (lastStart != -1) {
-            int wordLength = size - lastStart;
-            QString word = text.mid(lastStart, wordLength);
-            if (m_SpellCheckErrors->hasWrongSpelling(word)) {
-                setFormat(lastStart, wordLength, destructiveColor);
-            }
-        }
+        Helpers::foreachWord(text,
+                             [this](const QString &word) {
+            return this->m_SpellCheckErrors->hasWrongSpelling(word); },
+        [this, &destructiveColor](int start, int length, const QString &) {
+            this->setFormat(start, length, destructiveColor); }
+        );
     }
 }

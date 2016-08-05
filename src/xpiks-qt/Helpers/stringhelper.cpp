@@ -34,6 +34,46 @@
 #include "../Helpers/indiceshelper.h"
 
 namespace Helpers {
+    void foreachWord(const QString &text,
+            const std::function<bool (const QString &word)> &pred,
+            const std::function<void (int start, int length, const QString &word)> &action)
+    {
+        int i = 0;
+        int size = text.size();
+        int lastStart = -1;
+
+        while (i < size) {
+            QChar c = text[i];
+            if (c.isSpace() || c.isPunct()) {
+                if (lastStart != -1) {
+                    int wordLength = i - lastStart;
+                    QString word = text.mid(lastStart, wordLength);
+
+                    if (pred(word)) {
+                        action(lastStart, wordLength, word);
+                    }
+
+                    lastStart = -1;
+                }
+            } else {
+                if (lastStart == -1) {
+                    lastStart = i;
+                }
+            }
+
+            i++;
+        }
+
+        if (lastStart != -1) {
+            int wordLength = size - lastStart;
+            QString word = text.mid(lastStart, wordLength);
+
+            if (pred(word)) {
+                action(lastStart, wordLength, word);
+            }
+        }
+    }
+
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
     QString getLastNLines(const QString &text, int N) {
         QString result;
@@ -87,34 +127,9 @@ namespace Helpers {
 #endif
 
     void splitText(const QString &text, QStringList &parts) {
-        int i = 0;
-        int size = text.size();
-        int lastStart = -1;
-
-        while (i < size) {
-            QChar c = text[i];
-            if (c.isSpace() || c.isPunct()) {
-                if (lastStart != -1) {
-                    int wordLength = i - lastStart;
-                    QString word = text.mid(lastStart, wordLength);
-                    parts.append(word);
-
-                    lastStart = -1;
-                }
-            } else {
-                if (lastStart == -1) {
-                    lastStart = i;
-                }
-            }
-
-            i++;
-        }
-
-        if (lastStart != -1) {
-            int wordLength = size - lastStart;
-            QString word = text.mid(lastStart, wordLength);
-            parts.append(word);
-        }
+        foreachWord(text,
+                    [](const QString&) { return true; },
+        [&parts](int, int, const QString &word) { parts.append(word); });
     }
 
     std::string string_format(const std::string fmt, ...) {
@@ -364,4 +379,5 @@ done:
         QString result = entries.join(" ... ");
         return result;
     }
+
 }

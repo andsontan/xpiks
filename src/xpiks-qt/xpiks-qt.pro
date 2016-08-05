@@ -278,7 +278,8 @@ HEADERS += \
     Commands/deletekeywordscommand.h \
     Models/deletekeywordsviewmodel.h \
     Models/artworksviewmodel.h \
-    Helpers/keywordshelpers.h
+    Helpers/keywordshelpers.h \
+    Common/iflagsprovider.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

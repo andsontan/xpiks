@@ -21,31 +21,49 @@
 
 #include "metadatahighlighter.h"
 #include "../QMLExtensions/colorsmodel.h"
+#include "../Helpers/stringhelper.h"
+#include "../Common/flags.h"
 
 namespace Helpers {
-    MetadataHighlighter::MetadataHighlighter(const QString &replaceFrom, bool caseSensitive, QMLExtensions::ColorsModel *colorsModel,
+    MetadataHighlighter::MetadataHighlighter(const QString &replaceFrom, Common::IFlagsProvider *flagsProvider,
+                                             QMLExtensions::ColorsModel *colorsModel,
                                              QTextDocument *document):
         QSyntaxHighlighter(document),
         m_ColorsModel(colorsModel),
         m_ReplaceFrom(replaceFrom),
-        m_CaseSensitive(caseSensitive)
+        m_FlagsProvider(flagsProvider)
     {
+        Q_ASSERT(flagsProvider != nullptr);
+        Q_ASSERT(colorsModel != nullptr);
     }
 
     void MetadataHighlighter::highlightBlock(const QString &text) {
         int pos = 0;
         int size = m_ReplaceFrom.size();
-        Qt::CaseSensitivity caseSensitivity = m_CaseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive;
+        int flags = m_FlagsProvider->getFlags();
+        Qt::CaseSensitivity caseSensitivity = Common::HasFlag(flags, Common::SearchFlagCaseSensitive) ?
+                    Qt::CaseSensitive : Qt::CaseInsensitive;
+        const bool wholeWords = Common::HasFlag(flags, Common::SearchFlagExactMatch);
 
         QColor highlighColor = m_ColorsModel->artworkModifiedColor();
         m_Format.setBackground(highlighColor);
 
-        while (pos != -1) {
-            pos = text.indexOf(m_ReplaceFrom, pos, caseSensitivity);
-            if (pos >= 0) {
-                setFormat(pos, size, m_Format);
-                pos += size;
+        if (!wholeWords) {
+            while (pos != -1) {
+                pos = text.indexOf(m_ReplaceFrom, pos, caseSensitivity);
+                if (pos >= 0) {
+                    setFormat(pos, size, m_Format);
+                    pos += size;
+                }
             }
+        } else {
+            Helpers::foreachWord(text,
+                                 [this, &caseSensitivity](const QString &word) {
+                return (QString::compare(this->m_ReplaceFrom, word, caseSensitivity) == 0);
+            },
+            [this](int start, int length, const QString&) {
+                this->setFormat(start, length, this->m_Format);
+            });
         }
     }
 }

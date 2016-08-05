@@ -27,11 +27,13 @@
 #include <QQuickTextDocument>
 #include "../Models/previewmetadataelement.h"
 #include "../Common/flags.h"
+#include "../Common/iflagsprovider.h"
 
 namespace Models {
     class FindAndReplaceModel:
         public QAbstractListModel,
-        public Common::BaseEntity
+        public Common::BaseEntity,
+        public Common::IFlagsProvider
     {
         Q_OBJECT
         Q_PROPERTY(QString replaceFrom READ getReplaceFrom WRITE setReplaceFrom NOTIFY replaceFromChanged)
@@ -40,6 +42,7 @@ namespace Models {
         Q_PROPERTY(bool searchInDescription READ getSearchInDescription WRITE setSearchInDescription NOTIFY searchInDescriptionChanged)
         Q_PROPERTY(bool searchInKeywords READ getSearchInKeywords WRITE setSearchInKeywords NOTIFY searchInKeywordsChanged)
         Q_PROPERTY(bool caseSensitive READ getCaseSensitive WRITE setCaseSensitive NOTIFY caseSensitiveChanged)
+        Q_PROPERTY(bool searchWholeWords READ getSearchWholeWords WRITE setSearchWholeWords NOTIFY searchWholeWordsChanged)
         Q_PROPERTY(int count READ getCount NOTIFY countChanged)
 
     public:
@@ -48,6 +51,7 @@ namespace Models {
         virtual ~FindAndReplaceModel() {}
 
     public:
+        virtual int getFlags() const { return m_Flags; }
         const QString &getReplaceFrom() const { return m_ReplaceFrom; }
         const QString &getReplaceTo() const { return m_ReplaceTo; }
         int getCount() const { return (int)m_ArtworksList.size(); }
@@ -115,6 +119,17 @@ namespace Models {
             }
         }
 
+        bool getSearchWholeWords() const {
+            return Common::HasFlag(m_Flags, Common::SearchFlagExactMatch);
+        }
+
+        void setSearchWholeWords(bool value) {
+            if (value != getSearchWholeWords()) {
+                Common::ApplyFlag(m_Flags, value, Common::SearchFlagExactMatch);
+                emit searchWholeWordsChanged(value);
+            }
+        }
+
     public:
         enum FindAndReplaceModelRoles {
             PathRole = Qt::UserRole + 1,
@@ -156,6 +171,7 @@ namespace Models {
         void searchInDescriptionChanged(bool value);
         void searchInKeywordsChanged(bool value);
         void caseSensitiveChanged(bool value);
+        void searchWholeWordsChanged(bool value);
         void countChanged(int value);
         void allSelectedChanged();
         void replaceSucceeded();

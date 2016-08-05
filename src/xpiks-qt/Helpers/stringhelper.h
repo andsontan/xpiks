@@ -26,12 +26,16 @@
 #include <vector>
 #include <QString>
 #include <stdarg.h>
+#include <functional>
 
 class QString;
 class QStringList;
 class QByteArray;
 
 namespace Helpers {
+    void foreachWord(const QString &text,
+                     const std::function<bool (const QString &word)> &pred,
+                     const std::function<void (int start, int length, const QString &word)> &action);
     QString getLastNLines(const QString &text, int N);
     void splitText(const QString &text, QStringList &parts);
     int levensteinDistance(const QString &s1, const QString &s2);

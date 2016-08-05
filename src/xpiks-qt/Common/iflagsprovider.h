@@ -19,35 +19,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef METADATAHIGHLIGHTER_H
-#define METADATAHIGHLIGHTER_H
+#ifndef IFLAGSPROVIDER_H
+#define IFLAGSPROVIDER_H
 
-#include <QSyntaxHighlighter>
-#include <QString>
-#include <QTextDocument>
-#include "../Common/iflagsprovider.h"
-
-namespace QMLExtensions {
-    class ColorsModel;
-}
-
-namespace Helpers {
-    class MetadataHighlighter:
-        public QSyntaxHighlighter
-    {
+namespace Common {
+    class IFlagsProvider {
     public:
-        MetadataHighlighter(const QString &replaceFrom, Common::IFlagsProvider *flagsProvider,
-                            QMLExtensions::ColorsModel *colorsModel, QTextDocument *document=0);
+        virtual ~IFlagsProvider() {}
 
-    protected:
-        void highlightBlock(const QString &text);
-
-    private:
-        QMLExtensions::ColorsModel *m_ColorsModel;
-        QString m_ReplaceFrom;
-        Common::IFlagsProvider *m_FlagsProvider;
-        QTextCharFormat m_Format;
+        virtual int getFlags() const = 0;
     };
 }
 
-#endif // METADATAHIGHLIGHTER_H
+#endif // IFLAGSPROVIDER_H
