@@ -166,9 +166,17 @@ namespace Models {
         }
 
         Models::PreviewMetadataElement const &item = m_ArtworksList.at(index);
+        Models::ArtworkMetadata *metadata = item.getOrigin();
+
         if (item.hasTitleMatch()) {
-            Models::ArtworkMetadata *metadata = item.getOrigin();
             text = filterText(metadata->getTitle());
+        } else {
+            auto title = metadata->getTitle();
+            if (title.size() > PREVIEWOFFSET*2) {
+                text = title.left(PREVIEWOFFSET*2) + " ...";
+            } else {
+                text = title;
+            }
         }
 
         return text;
@@ -182,9 +190,17 @@ namespace Models {
         }
 
         Models::PreviewMetadataElement const &item = m_ArtworksList.at(index);
+        Models::ArtworkMetadata *metadata = item.getOrigin();
+
         if (item.hasDescriptionMatch()) {
-            Models::ArtworkMetadata *metadata = item.getOrigin();
             text = filterText(metadata->getDescription());
+        } else {
+            auto description = metadata->getDescription();
+            if (description.size() > PREVIEWOFFSET*2) {
+                text = description.left(PREVIEWOFFSET*2) + " ...";
+            } else {
+                text = description;
+            }
         }
 
         return text;
@@ -198,9 +214,10 @@ namespace Models {
         }
 
         Models::PreviewMetadataElement const &item = m_ArtworksList.at(index);
+        Models::ArtworkMetadata *metadata = item.getOrigin();
+        QStringList list = metadata->getKeywords();
+
         if (item.hasKeywordsMatch()) {
-            Models::ArtworkMetadata *metadata = item.getOrigin();
-            QStringList list = metadata->getKeywords();
             Qt::CaseSensitivity caseSensitivity = FindAndReplaceModel::getCaseSensitive() ? Qt::CaseSensitive : Qt::CaseInsensitive;
 
             QStringList listNew;
@@ -211,6 +228,13 @@ namespace Models {
             }
 
             text.append(listNew.join(", "));
+        } else {
+            if (list.length() > PREVIEWKEYWORDSCOUNT) {
+                auto part = list.mid(0, PREVIEWKEYWORDSCOUNT);
+                text = part.join(", ") + " ...";
+            } else {
+                text = list.join(", ");
+            }
         }
 
         return text;

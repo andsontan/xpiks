@@ -60,6 +60,7 @@
 #endif
 
 #define PREVIEWOFFSET 25
+#define PREVIEWKEYWORDSCOUNT 5
 
 #endif // DEFINES
 
