@@ -34,48 +34,43 @@ Item {
     id: replaceSetupComponent
     property var filteredModel
     anchors.fill: parent
-    signal conditionsChanged()
 
     function closePopup() {
+        replaceModel.resetModel();
         replaceSetupComponent.destroy()
     }
 
     Keys.onEscapePressed: closePopup()
 
-    function initReplace() {
-        var titleFlag = searchInTitle.checkedState
-        var descriptionFlag = searchInDescription.checkedState
-        var keywordsFlag = searchInKeywords.checkedState
-        var caseSensitiveFlag = caseSensitive.checkedState
-        var replaceToStr = replaceTo.text.trim()
-        var replaceFromStr = replaceFrom.text.trim()
-        replaceModel.searchInTitle = titleFlag
-        replaceModel.searchInDescription = descriptionFlag
-        replaceModel.searchInKeywords = keywordsFlag
-        replaceModel.caseSensitive = caseSensitiveFlag
-        replaceModel.replaceFrom = replaceFromStr
-        replaceModel.replaceTo = replaceToStr
-        replaceModel.initArtworksList()
-    }
-
-    function isSearchValid() {
-        var titleFlag = searchInTitle.checkedState
-        var descriptionFlag = searchInDescription.checkedState
-        var keywordsFlag = searchInKeywords.checkedState
-        var anyFlag = titleFlag || descriptionFlag || keywordsFlag
-        var replaceFromNotEmpty = (replaceFrom.text.trim().length > 0)
-        var replaceToNotEmpty = (replaceTo.text.trim().length > 0)
-        var result = (replaceFromNotEmpty && anyFlag && replaceToNotEmpty)
-        return result
+    Connections {
+        target: replaceModel
+        onReplaceSucceeded: closePopup()
     }
 
     function launchReplacePreview() {
-        initReplace()
+        if (!replaceModel.anySearchDestination()) {
+            noSearchDestinationMsgDialog.open()
+            return
+        }
+
+        replaceModel.initArtworksList()
         Common.launchDialog("Dialogs/ReplacePreview.qml",
                             replaceSetupComponent,
                             {
                                 componentParent: replaceSetupComponent
                             })
+    }
+
+    function onDialogClosed() {
+        replaceToTextInput.forceActiveFocus()
+        replaceToTextInput.cursorPosition = replaceToTextInput.length
+    }
+
+    MessageDialog {
+        id: noSearchDestinationMsgDialog
+        title: i18.n + qsTr("Warning")
+        text: qsTr("Please select where to search for")
+        standardButtons: StandardButton.Ok
     }
 
     // This rectange is the a overlay to partially show the parent through it
@@ -158,7 +153,7 @@ Item {
                         spacing: 0
 
                         StyledText {
-                            text: i18.n + qsTr("Find:")
+                            text: i18.n + qsTr("Search for:")
                         }
 
                         Item {
@@ -167,23 +162,22 @@ Item {
 
                         Rectangle {
                             color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
-                            border.width: (replaceFrom.activeFocus) ? 1 : 0
+                            border.width: (replaceFromTextInput.activeFocus) ? 1 : 0
                             border.color: Colors.artworkActiveColor
                             width: dialogWindow.inputsWidth
                             height: UIConfig.textInputHeight
                             clip: true
 
                             StyledTextInput {
-                                id: replaceFrom
+                                id: replaceFromTextInput
                                 anchors.left: parent.left
                                 anchors.right: parent.right
                                 anchors.leftMargin: 5
                                 anchors.rightMargin: 5
                                 anchors.verticalCenter: parent.verticalCenter
-                                KeyNavigation.tab: replaceTo
-                                onTextChanged: {
-                                    replaceSetupComponent.conditionsChanged()
-                                }
+                                KeyNavigation.tab: replaceToTextInput
+                                onTextChanged: replaceModel.replaceFrom = text
+                                Component.onCompleted: replaceFromTextInput.text = replaceModel.replaceFrom
                             }
                         }
 
@@ -192,7 +186,7 @@ Item {
                         }
 
                         StyledText {
-                            text: i18.n + qsTr("Replace:")
+                            text: i18.n + qsTr("Replace with:")
                         }
 
                         Item {
@@ -201,28 +195,29 @@ Item {
 
                         Rectangle {
                             color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
-                            border.width: (replaceTo.activeFocus) ? 1 : 0
+                            border.width: (replaceToTextInput.activeFocus) ? 1 : 0
                             border.color: Colors.artworkActiveColor
                             width: dialogWindow.inputsWidth
                             height: UIConfig.textInputHeight
                             clip: true
 
                             StyledTextInput {
-                                id: replaceTo
+                                id: replaceToTextInput
                                 anchors.left: parent.left
                                 anchors.right: parent.right
                                 anchors.leftMargin: 5
                                 anchors.rightMargin: 5
                                 anchors.verticalCenter: parent.verticalCenter
-                                KeyNavigation.backtab: replaceFrom
-                                onTextChanged: replaceSetupComponent.conditionsChanged()
+                                KeyNavigation.backtab: replaceFromTextInput
+                                onTextChanged: replaceModel.replaceTo = text
                                 onAccepted: launchReplacePreview()
+                                Component.onCompleted: replaceFromTextInput.text = replaceModel.replaceTo
                             }
                         }
                     }
 
                     ColumnLayout {
-                        id: checkboxesRow
+                        id: checkboxesColumn
                         anchors.left: inputsRow.right
                         anchors.leftMargin: 30
                         anchors.right: parent.right
@@ -231,35 +226,39 @@ Item {
                         spacing: 20
 
                         StyledCheckbox {
-                            id: searchInTitle
+                            id: searchInTitleCheckbox
                             text: i18.n + qsTr("Search in title")
-
+                            Component.onCompleted: searchInTitleCheckbox.checked = replaceModel.searchInTitle
                             onClicked: {
-                                replaceSetupComponent.conditionsChanged()
+                                replaceModel.searchInTitle = searchInTitleCheckbox.checked
                             }
                         }
 
                         StyledCheckbox {
-                            id: searchInDescription
+                            id: searchInDescriptionCheckbox
                             text: i18.n + qsTr("Search in description")
-
+                            Component.onCompleted: searchInDescriptionCheckbox.checked = replaceModel.searchInDescription
                             onClicked: {
-                                replaceSetupComponent.conditionsChanged()
+                                replaceModel.searchInDescription = searchInDescriptionCheckbox.checked
                             }
                         }
 
                         StyledCheckbox {
-                            id: searchInKeywords
+                            id: searchInKeywordsCheckbox
                             text: i18.n + qsTr("Search in keywords")
-
+                            Component.onCompleted: searchInKeywordsCheckbox.checked = replaceModel.searchInKeywords
                             onClicked: {
-                                replaceSetupComponent.conditionsChanged()
+                                replaceModel.searchInKeywords = searchInKeywordsCheckbox.checked
                             }
                         }
 
                         StyledCheckbox {
-                            id: caseSensitive
+                            id: caseSensitiveCheckbox
                             text: i18.n + qsTr("Case sensitive")
+                            Component.onCompleted: caseSensitiveCheckbox.checked = replaceModel.caseSensitive
+                            onClicked: {
+                                replaceModel.caseSensitive = caseSensitiveCheckbox.checked
+                            }
                         }
                     }
                 }
@@ -281,15 +280,11 @@ Item {
 
                     StyledButton {
                         id: replaceButton
-                        enabled: isSearchValid()
-                        text: i18.n + qsTr("Replace")
-                        width: 100
-
-                        onClicked: launchReplacePreview()
-
-                        Connections {
-                            target: replaceSetupComponent
-                            onConditionsChanged: replaceButton.enabled = isSearchValid()
+                        text: i18.n + qsTr("Find and replace")
+                        enabled: (replaceFromTextInput.length > 0) && (replaceToTextInput.length > 0)
+                        width: 150
+                        onClicked: {
+                            launchReplacePreview()
                         }
                     }
 
@@ -307,6 +302,6 @@ Item {
 
     Component.onCompleted: {
         focus = true
-        replaceFrom.forceActiveFocus()
+        replaceFromTextInput.forceActiveFocus()
     }
 }

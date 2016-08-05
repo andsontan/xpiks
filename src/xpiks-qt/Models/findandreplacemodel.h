@@ -47,7 +47,11 @@ namespace Models {
 
         virtual ~FindAndReplaceModel() {}
 
+    public:
         const QString &getReplaceFrom() const { return m_ReplaceFrom; }
+        const QString &getReplaceTo() const { return m_ReplaceTo; }
+        int getCount() const { return (int)m_ArtworksList.size(); }
+
         void setReplaceFrom(const QString &value) {
             QString valueTrimmed = value.trimmed();
 
@@ -57,7 +61,6 @@ namespace Models {
             }
         }
 
-        const QString &getReplaceTo() const { return m_ReplaceTo; }
         void setReplaceTo(const QString &value) {
             QString valueTrimmed = value.trimmed();
 
@@ -67,7 +70,8 @@ namespace Models {
             }
         }
 
-        bool inline getSearchInTitle() const {
+    public:
+        bool getSearchInTitle() const {
             return Common::HasFlag(m_Flags, Common::SearchFlagSearchTitle);
         }
 
@@ -78,7 +82,7 @@ namespace Models {
             }
         }
 
-        bool inline getSearchInDescription() const {
+        bool getSearchInDescription() const {
             return Common::HasFlag(m_Flags, Common::SearchFlagSearchDescription);
         }
 
@@ -89,7 +93,7 @@ namespace Models {
             }
         }
 
-        bool inline getSearchInKeywords() const {
+        bool getSearchInKeywords() const {
             return Common::HasFlag(m_Flags, Common::SearchFlagSearchKeywords);
         }
 
@@ -100,7 +104,7 @@ namespace Models {
             }
         }
 
-        bool inline getCaseSensitive() const {
+        bool getCaseSensitive() const {
             return Common::HasFlag(m_Flags, Common::SearchFlagCaseSensitive);
         }
 
@@ -110,8 +114,6 @@ namespace Models {
                 emit caseSensitiveChanged(value);
             }
         }
-
-        int getCount() const { return (int)m_ArtworksList.size(); }
 
     public:
         enum FindAndReplaceModelRoles {
@@ -135,6 +137,8 @@ namespace Models {
         Q_INVOKABLE void replace();
         Q_INVOKABLE void selectAll() { setAllSelected(true); }
         Q_INVOKABLE void unselectAll() { setAllSelected(false); }
+        Q_INVOKABLE bool anySearchDestination() const;
+        Q_INVOKABLE void resetModel();
 
     public:
         virtual int rowCount(const QModelIndex &parent=QModelIndex()) const;
@@ -154,10 +158,12 @@ namespace Models {
         void caseSensitiveChanged(bool value);
         void countChanged(int value);
         void allSelectedChanged();
+        void replaceSucceeded();
 
     private:
         QString filterText(const QString &text);
         void setAllSelected(bool isSelected);
+        void initDefaultFlags();
 
     private:
         std::vector<Models::PreviewMetadataElement> m_ArtworksList;

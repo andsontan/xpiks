@@ -47,6 +47,11 @@ Item {
     Component.onCompleted: focus = true
     Keys.onEscapePressed: closePopup()
 
+    Connections {
+        target: replaceModel
+        onReplaceSucceeded: closePopup()
+    }
+
     PropertyAnimation { target: replacePreviewComponent; property: "opacity";
         duration: 400; from: 0; to: 1;
         easing.type: Easing.InOutQuad ; running: true }
@@ -378,7 +383,7 @@ Item {
                         visible: replaceModel.count == 0
 
                         StyledText {
-                            text: i18.n + qsTr("There are no items to replace")
+                            text: i18.n + qsTr("Nothing found")
                             anchors.centerIn: parent
                             color: Colors.selectedArtworkBackground
                         }
@@ -396,6 +401,7 @@ Item {
                     StyledButton {
                         text: i18.n + qsTr("Select all")
                         width: 100
+                        enabled: replaceModel.count > 0
                         onClicked: {
                             replaceModel.selectAll();
                         }
@@ -404,6 +410,7 @@ Item {
                     StyledButton {
                         text: i18.n + qsTr("Unselect all")
                         width: 100
+                        enabled: replaceModel.count > 0
                         onClicked: {
                             replaceModel.unselectAll();
                         }
@@ -415,11 +422,10 @@ Item {
 
                     StyledButton {
                         text: i18.n + qsTr("Replace")
+                        enabled: replaceModel.count > 0
                         width: 100
                         onClicked: {
                             replaceModel.replace()
-                            // replacePreviewComponent.closePopup()
-                            componentParent.closePopup()
                         }
                     }
 
@@ -427,7 +433,7 @@ Item {
                         text: i18.n + qsTr("Close")
                         width: 100
                         onClicked: {
-                            replacePreviewComponent.closePopup()
+                            closePopup()
                         }
                     }
                 }
