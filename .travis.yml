@@ -49,8 +49,8 @@ script:
   - if [ -n "$CORE_TESTS" ]; then qmake "CONFIG+=debug travis-ci" xpiks-tests-core.pro; fi
   - if [ -n "$INTEGRATION_TESTS" ]; then qmake "CONFIG+=debug travis-ci" xpiks-tests-integration.pro; fi
   - make
-  - if [ -n "$CORE_TESTS" ]; then xpiks-tests-core; fi
-  - if [ -n "$INTEGRATION_TESTS" ]; then xpiks-tests-integration; fi
+  - if [ -n "$CORE_TESTS" ]; then ./xpiks-tests-core; fi
+  - if [ -n "$INTEGRATION_TESTS" ]; then ./xpiks-tests-integration; fi
 
 after_failure:
   - if [ -n "$CORE_TESTS" ]; then for i in $(find ./ -maxdepth 1 -name 'core*' -print); do gdb $(pwd)/xpiks-tests-core core* -ex "thread apply all bt" -ex "set pagination 0" -batch; done; fi
