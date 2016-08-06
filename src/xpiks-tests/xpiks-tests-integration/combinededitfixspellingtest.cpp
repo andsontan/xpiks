@@ -28,7 +28,7 @@ void CombinedEditFixSpellingTest::setup() {
 int CombinedEditFixSpellingTest::doTest() {
     Models::ArtItemsModel *artItemsModel = m_CommandManager->getArtItemsModel();
     QList<QUrl> files;
-    files << QUrl::fromLocalFile(QFileInfo("images-for-tests/pixmap/seagull.jpg").absoluteFilePath());
+    files << getImagePathForTest("images-for-tests/pixmap/seagull.jpg");
 
     int addedCount = artItemsModel->addLocalArtworks(files);
 

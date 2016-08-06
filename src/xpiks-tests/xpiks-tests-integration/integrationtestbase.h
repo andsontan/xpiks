@@ -24,6 +24,23 @@ public:
     virtual void teardown() { m_CommandManager->cleanup(); }
 
 protected:
+    QUrl getImagePathForTest(const QString &prefix) {
+        QFileInfo fi(prefix);
+        int tries = 6;
+        QStringList parents;
+        while (tries--) {
+            if (!fi.exists()) {
+                parents.append("..");
+                fi.setFile(parents.join('/') + "/" + prefix);
+            } else {
+                return QUrl::fromLocalFile(fi.absoluteFilePath());
+            }
+        }
+
+        return QUrl::fromLocalFile(QFileInfo(prefix).absoluteFilePath());
+    }
+
+protected:
     Commands::CommandManager *m_CommandManager;
 };
 

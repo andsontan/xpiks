@@ -24,7 +24,7 @@ void ClearMetadataTest::setup() {
 int ClearMetadataTest::doTest() {
     Models::ArtItemsModel *artItemsModel = m_CommandManager->getArtItemsModel();
     QList<QUrl> files;
-    files << QUrl::fromLocalFile(QFileInfo("images-for-tests/pixmap/seagull-for-clear.jpg").absoluteFilePath());
+    files << getImagePathForTest("images-for-tests/pixmap/seagull-for-clear.jpg");
 
     int addedCount = artItemsModel->addLocalArtworks(files);
 

@@ -24,9 +24,9 @@ void UndoAddWithVectorsTest::setup() {
 int UndoAddWithVectorsTest::doTest() {
     Models::ArtItemsModel *artItemsModel = m_CommandManager->getArtItemsModel();
     QList<QUrl> files;
-    files << QUrl::fromLocalFile(QFileInfo("images-for-tests/mixed/026.jpg").absoluteFilePath());
-    files << QUrl::fromLocalFile(QFileInfo("images-for-tests/mixed/0267.jpg").absoluteFilePath());
-    files << QUrl::fromLocalFile(QFileInfo("images-for-tests/mixed/027.jpg").absoluteFilePath());
+    files << getImagePathForTest("images-for-tests/mixed/026.jpg");
+    files << getImagePathForTest("images-for-tests/mixed/0267.jpg");
+    files << getImagePathForTest("images-for-tests/mixed/027.jpg");
 
     int addedCount = artItemsModel->addLocalArtworks(files);
 

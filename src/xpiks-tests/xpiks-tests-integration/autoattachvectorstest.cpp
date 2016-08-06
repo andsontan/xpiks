@@ -23,8 +23,8 @@ void AutoAttachVectorsTest::setup() {
 int AutoAttachVectorsTest::doTest() {
     Models::ArtItemsModel *artItemsModel = m_CommandManager->getArtItemsModel();
     QList<QUrl> files;
-    files << QUrl::fromLocalFile(QFileInfo("images-for-tests/vector/026.jpg").absoluteFilePath());
-    files << QUrl::fromLocalFile(QFileInfo("images-for-tests/vector/027.jpg").absoluteFilePath());
+    files << getImagePathForTest("images-for-tests/vector/026.jpg");
+    files << getImagePathForTest("images-for-tests/vector/027.jpg");
 
     int addedCount = artItemsModel->addLocalArtworks(files);
 
