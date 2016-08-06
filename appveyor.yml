@@ -98,6 +98,7 @@ before_test:
   - if defined CORE_TESTS copy libs\*.dll .
   - if defined INTEGRATION_TESTS copy libs\*.dll .
 
+# tests
 test_script:
   - cmd: 'echo %cd%'
   - if defined CORE_TESTS %configuration%\xpiks-tests-core.exe
