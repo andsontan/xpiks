@@ -1002,11 +1002,17 @@ namespace Common {
     }
 
     void BasicKeywordsModel::fixDescriptionSpelling(const QString &word, const QString &replacement) {
-        replaceInDescription(word, replacement);
+        int flags = 0;
+        Common::SetFlag(flags, Common::SearchFlagCaseSensitive);
+        Common::SetFlag(flags, Common::SearchFlagSearchDescription);
+        replaceInDescription(word, replacement, flags);
     }
 
     void BasicKeywordsModel::fixTitleSpelling(const QString &word, const QString &replacement) {
-        replaceInTitle(word, replacement);
+        int flags = 0;
+        Common::SetFlag(flags, Common::SearchFlagCaseSensitive);
+        Common::SetFlag(flags, Common::SearchFlagSearchDescription);
+        replaceInTitle(word, replacement, flags);
     }
 
     void BasicKeywordsModel::afterReplaceCallback() {

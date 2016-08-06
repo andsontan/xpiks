@@ -16,6 +16,7 @@ Coding guidelines:
 - always put space around assignments, after comma, before curly bracket etc.
 - in the cpp file first include should be appropriate header, then system Qt headers, then system standard C++ headers and only then local headers followed by third-party libs headers
 - you can use Uncrustify withe the config in `src/xpiks-qt/` directory for code formatting to ensure you comply with project rules
+- log using INFO when you have useful parameters and using DEBUG when just marking execution place
 
 Xpiks architecture:
 
