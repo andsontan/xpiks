@@ -115,7 +115,7 @@ namespace Common {
         bool replaceInTitle(const QString &replaceWhat, const QString &replaceTo,
                                   Qt::CaseSensitivity caseSensivity=Qt::CaseInsensitive);
         bool replaceInKeywordsUnsafe(const QString &replaceWhat, const QString &replaceTo,
-                                     Qt::CaseSensitivity caseSensivity=Qt::CaseInsensitive);
+                                     int flags);
 
     public:
         bool setDescription(const QString &value);

@@ -182,7 +182,7 @@ Item {
                         }
 
                         Item {
-                            height: 42
+                            height: 40
                         }
 
                         StyledText {

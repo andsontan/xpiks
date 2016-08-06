@@ -34,6 +34,7 @@ namespace Commands {
     FindAndReplaceCommand::~FindAndReplaceCommand() { LOG_DEBUG << "#"; }
 
     std::shared_ptr<Commands::ICommandResult> FindAndReplaceCommand::execute(const ICommandManager *commandManagerInterface) const {
+        LOG_INFO << "Replacing" << m_ReplaceWhat << "to" << m_ReplaceTo << "in" << m_MetadataElements.size() << "item(s)";
         CommandManager *commandManager = (CommandManager *)commandManagerInterface;
 
         std::vector<UndoRedo::ArtworkMetadataBackup> artworksBackups;
@@ -56,10 +57,13 @@ namespace Commands {
 
             artworksBackups.emplace_back(metadata);
 
-            metadata->replace(m_ReplaceWhat, m_ReplaceTo, m_Flags);
-
-            itemsToSave.append(metadata);
-            indicesToUpdate.append(index);
+            bool succeeded = metadata->replace(m_ReplaceWhat, m_ReplaceTo, m_Flags);
+            if (succeeded) {
+                itemsToSave.append(metadata);
+                indicesToUpdate.append(index);
+            } else {
+                LOG_INFO << "Failed to replace [" << m_ReplaceWhat << "] to [" << m_ReplaceTo << "] in" << metadata->getFilepath();
+            }
         }
 
         if (indicesToUpdate.size() != 0) {

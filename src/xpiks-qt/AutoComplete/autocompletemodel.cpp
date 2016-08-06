@@ -32,7 +32,7 @@ namespace AutoComplete {
 
     void AutoCompleteModel::setCompletions(const QStringList &completions) {
         Q_ASSERT(!completions.isEmpty());
-        LOG_DEBUG << completions.length() << "completions";
+        LOG_INFO << completions.length() << "completions";
         m_LastGeneratedCompletions = completions;
     }
 
