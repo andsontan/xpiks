@@ -72,7 +72,7 @@ Commands::AddArtworksCommand::~AddArtworksCommand() {
 }
 
 std::shared_ptr<Commands::ICommandResult> Commands::AddArtworksCommand::execute(const ICommandManager *commandManagerInterface) const {
-    LOG_DEBUG << m_FilePathes.length() << "images," << m_VectorsPathes.length() << "vectors";
+    LOG_INFO << m_FilePathes.length() << "images," << m_VectorsPathes.length() << "vectors";
     CommandManager *commandManager = (CommandManager*)commandManagerInterface;
 
     Models::ArtworksRepository *artworksRepository = commandManager->getArtworksRepository();

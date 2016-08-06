@@ -291,7 +291,7 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::toggleSorted() {
-        LOG_DEBUG << "current sorted is" << m_SortingEnabled;
+        LOG_INFO << "current sorted is" << m_SortingEnabled;
         forceUnselectAllItems();
 
         if (!m_SortingEnabled) {
@@ -351,7 +351,7 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::removeMetadataInItems(std::vector<MetadataElement> &itemsToClear, int flags) const {
-        LOG_DEBUG << itemsToClear.size() << "item(s) with flags =" << flags;
+        LOG_INFO << itemsToClear.size() << "item(s) with flags =" << flags;
         std::shared_ptr<Commands::CombinedEditCommand> combinedEditCommand(new Commands::CombinedEditCommand(
                 flags,
                 itemsToClear));

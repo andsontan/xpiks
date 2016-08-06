@@ -238,10 +238,10 @@ namespace Conectivity {
                 bool isOk = false;
                 int port = proxySettings->m_Port.toInt(&isOk);
                 if (isOk && (port != 0)) {
-                    LOG_DEBUG << "Using proxy port:" << port;
+                    LOG_INFO << "Using proxy port:" << port;
                     curl_easy_setopt(curlHandle, CURLOPT_PROXYPORT, port);
                 } else {
-                    LOG_DEBUG << "Failed to parse port:" << proxySettings->m_Port;
+                    LOG_INFO << "Failed to parse port:" << proxySettings->m_Port;
                 }
             }
         }

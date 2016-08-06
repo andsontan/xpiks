@@ -62,7 +62,7 @@ namespace Models {
     }
 
     QString UploadInfoRepository::getInfoString() const {
-        LOG_DEBUG << "Serializing" << m_UploadInfos.size() << "info(s)";
+        LOG_INFO << "Serializing" << m_UploadInfos.size() << "info(s)";
         // bad type QList instead of QVector
         // but users already have this
         QList<QHash<int, QString> > items;

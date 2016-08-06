@@ -289,7 +289,7 @@ void Commands::CommandManager::recodePasswords(const QString &oldMasterPassword,
                                                const QString &newMasterPassword,
                                                const std::vector<std::shared_ptr<Models::UploadInfo> > &uploadInfos) const {
     if (m_SecretsManager) {
-        LOG_DEBUG << uploadInfos.size() << "item(s)";
+        LOG_INFO << uploadInfos.size() << "item(s)";
 
         for (auto &info: uploadInfos) {
             if (info->hasPassword()) {
@@ -302,7 +302,7 @@ void Commands::CommandManager::recodePasswords(const QString &oldMasterPassword,
 }
 
 void Commands::CommandManager::combineArtwork(Models::ArtworkMetadata *metadata, int index) const {
-    LOG_DEBUG << "one item with index" << index;
+    LOG_INFO << "one item with index" << index;
     if (m_CombinedArtworksModel) {
         std::vector<Models::MetadataElement> items;
         items.emplace_back(metadata, index);
@@ -313,7 +313,7 @@ void Commands::CommandManager::combineArtwork(Models::ArtworkMetadata *metadata,
 }
 
 void Commands::CommandManager::combineArtworks(std::vector<Models::MetadataElement> &artworks) const {
-    LOG_DEBUG << artworks.size() << "artworks";
+    LOG_INFO << artworks.size() << "artworks";
     if (m_CombinedArtworksModel) {
         m_CombinedArtworksModel->resetModel();
         m_CombinedArtworksModel->setArtworks(artworks);
@@ -321,7 +321,7 @@ void Commands::CommandManager::combineArtworks(std::vector<Models::MetadataEleme
 }
 
 void Commands::CommandManager::deleteKeywordsFromArtworks(std::vector<Models::MetadataElement> &artworks) const {
-    LOG_DEBUG << artworks.size() << "artworks";
+    LOG_INFO << artworks.size() << "artworks";
     if (m_DeleteKeywordsViewModel != NULL) {
         m_DeleteKeywordsViewModel->setArtworks(artworks);
     }

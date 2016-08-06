@@ -61,7 +61,7 @@ namespace Models {
     }
 
     void CombinedArtworksModel::recombineArtworks() {
-        LOG_DEBUG << getArtworksCount() << "artwork(s)";
+        LOG_INFO << getArtworksCount() << "artwork(s)";
         if (isEmpty()) { return; }
 
         if (getArtworksCount() == 1) {
@@ -148,7 +148,7 @@ namespace Models {
     }
 
     void CombinedArtworksModel::pasteKeywords(const QStringList &keywords) {
-        LOG_DEBUG << keywords.length() << "keyword(s)";
+        LOG_INFO << keywords.length() << "keyword(s)" << "|" << keywords;
         if (m_CommonKeywordsModel.appendKeywords(keywords) > 0) {
             emit keywordsCountChanged();
             setKeywordsModified(true);

@@ -45,7 +45,7 @@ namespace AutoComplete {
     }
 
     void StringFilterProxyModel::setStrings(const QStringList &list) {
-        LOG_DEBUG << "Adding" << list.length() << "values";
+        LOG_INFO << "Adding" << list.length() << "values";
         m_StringsList = list;
         m_StringsModel.setStringList(m_StringsList);
     }

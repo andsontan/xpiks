@@ -68,7 +68,7 @@ namespace QMLExtensions {
 
             QDir imagesCacheDir(m_ImagesCacheDir);
             if (!imagesCacheDir.exists()) {
-                LOG_DEBUG << "Creating cache dir" << m_ImagesCacheDir;
+                LOG_INFO << "Creating cache dir" << m_ImagesCacheDir;
                 QDir().mkpath(m_ImagesCacheDir);
             }
         } else {
@@ -89,7 +89,7 @@ namespace QMLExtensions {
         const QString &originalPath = item->getFilepath();
         QSize requestedSize = item->getRequestedSize();
 
-        LOG_DEBUG << (item->getNeedRecache() ? "Recaching" : "Caching") << originalPath << "with size" << requestedSize;
+        LOG_INFO << (item->getNeedRecache() ? "Recaching" : "Caching") << originalPath << "with size" << requestedSize;
 
         if (!requestedSize.isValid()) {
             LOG_WARNING << "Invalid requestedSize for" << originalPath;

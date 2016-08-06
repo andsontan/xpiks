@@ -111,7 +111,7 @@ namespace Models {
     }
 
     void DeleteKeywordsViewModel::pasteKeywordsToDelete(const QStringList &keywords) {
-        LOG_DEBUG << keywords.length() << "keyword(s)";
+        LOG_INFO << keywords.length() << "keyword(s)" << "|" << keywords;
         if (m_KeywordsToDeleteModel.appendKeywords(keywords) > 0) {
             emit keywordsToDeleteCountChanged();
 

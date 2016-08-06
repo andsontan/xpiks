@@ -60,7 +60,7 @@ namespace MetadataIO {
     }
 
     void BackupSaverService::saveArtworks(const QVector<Models::ArtworkMetadata *> &artworks) const {
-        LOG_DEBUG << artworks.size() << "artwork(s)";
+        LOG_INFO << artworks.size() << "artwork(s)";
         std::vector<std::shared_ptr<SaverWorkerJobItem> > jobs;
         jobs.reserve(artworks.length());
 

@@ -294,7 +294,7 @@ namespace Models {
 
     void ArtworksRepository::onAvailabilityTimer() {
         int currentUnavailableSize = m_UnavailableFiles.size();
-        LOG_DEBUG << "Current:" << currentUnavailableSize << "Last:" << m_LastUnavailableFilesCount;
+        LOG_INFO << "Current:" << currentUnavailableSize << "Last:" << m_LastUnavailableFilesCount;
         if ( currentUnavailableSize > m_LastUnavailableFilesCount ) {
             m_LastUnavailableFilesCount = currentUnavailableSize;
             emit filesUnavailable();

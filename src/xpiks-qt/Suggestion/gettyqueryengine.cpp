@@ -44,7 +44,7 @@ namespace Suggestion {
     }
 
     void GettyQueryEngine::submitQuery(const QStringList &queryKeywords) {
-        LOG_DEBUG << queryKeywords;
+        LOG_INFO << queryKeywords;
         QUrl url = buildQuery(queryKeywords);
         QNetworkRequest request(url);
 

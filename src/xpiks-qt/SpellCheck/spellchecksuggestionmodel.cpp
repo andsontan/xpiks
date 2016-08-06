@@ -182,7 +182,7 @@ namespace SpellCheck {
     }
 
     bool SpellCheckSuggestionModel::processFailedReplacements(const QVector<SpellSuggestionsItem *> &failedReplacements) const {
-        LOG_DEBUG << failedReplacements.size() << "failed items";
+        LOG_INFO << failedReplacements.size() << "failed items";
 
         QVector<KeywordSpellSuggestions *> candidatesToRemove;
         int size = failedReplacements.size();
@@ -209,7 +209,7 @@ namespace SpellCheck {
     }
 
     QVector<SpellSuggestionsItem *> SpellCheckSuggestionModel::setupSuggestions(const QVector<SpellSuggestionsItem *> &items) {
-        LOG_DEBUG << items.length() << "item(s)";
+        LOG_INFO << items.length() << "item(s)";
         SpellCheckerService *service = m_CommandManager->getSpellCheckerService();
         // another vector for requests with available suggestions
         QVector<SpellSuggestionsItem*> executedRequests;

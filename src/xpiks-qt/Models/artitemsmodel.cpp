@@ -70,7 +70,7 @@ namespace Models {
             if (metadata->release()) {
                 delete metadata;
             } else {
-                LOG_DEBUG << "Metadata at index" << i << "is locked. Postponing destruction...";
+                LOG_INFO << "Metadata at index" << i << "is locked. Postponing destruction...";
 
                 metadata->disconnect();
                 Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
@@ -117,7 +117,7 @@ namespace Models {
     }
 
     void ArtItemsModel::removeArtworksDirectory(int index) {
-        LOG_DEBUG << "Remove artworks directory at" << index;
+        LOG_INFO << "Remove artworks directory at" << index;
         const QString &directory = m_CommandManager->getArtworksRepository()->getDirectory(index);
 #ifdef CORE_TESTS
         LOG_DEBUG << "Removing directory:" << directory;
@@ -173,7 +173,7 @@ namespace Models {
     }
 
     void ArtItemsModel::removeKeywordAt(int metadataIndex, int keywordIndex) {
-        LOG_DEBUG << "metadata index" << metadataIndex << "| keyword index" << keywordIndex;
+        LOG_INFO << "metadata index" << metadataIndex << "| keyword index" << keywordIndex;
         if (0 <= metadataIndex && metadataIndex < getArtworksCount()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
 
@@ -187,7 +187,7 @@ namespace Models {
     }
 
     void ArtItemsModel::removeLastKeyword(int metadataIndex) {
-        LOG_DEBUG << "index" << metadataIndex;
+        LOG_INFO << "index" << metadataIndex;
         if (0 <= metadataIndex && metadataIndex < getArtworksCount()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
 
@@ -201,7 +201,7 @@ namespace Models {
     }
 
     void ArtItemsModel::appendKeyword(int metadataIndex, const QString &keyword) {
-        LOG_DEBUG << "metadata index" << metadataIndex << "| keyword" << keyword;
+        LOG_INFO << "metadata index" << metadataIndex << "| keyword" << keyword;
         if (0 <= metadataIndex && metadataIndex < getArtworksCount()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
             if (metadata->appendKeyword(keyword)) {
@@ -217,7 +217,7 @@ namespace Models {
     }
 
     void ArtItemsModel::pasteKeywords(int metadataIndex, const QStringList &keywords) {
-        LOG_DEBUG << "item index" << metadataIndex;
+        LOG_INFO << "item index" << metadataIndex << "|" << keywords;
         if (metadataIndex >= 0
                 && metadataIndex < getArtworksCount()
                 && !keywords.empty()) {
@@ -235,7 +235,7 @@ namespace Models {
             bool onlyOneKeyword = keywords.length() == 1;
 
             if (onlyOneKeyword) {
-                LOG_DEBUG << "Pasting only one keyword. Leaving it in the edit box.";
+                LOG_INFO << "Pasting only one keyword. Leaving it in the edit box.";
                 return;
             }
 
@@ -285,7 +285,7 @@ namespace Models {
     }
 
     int ArtItemsModel::dropFiles(const QList<QUrl> &urls) {
-        LOG_DEBUG << "Dropped" << urls.count() << "items(s)";
+        LOG_INFO << "Dropped" << urls.count() << "items(s)";
         QList<QUrl> directories, files;
         directories.reserve(urls.count()/2);
         files.reserve(urls.count());
@@ -315,7 +315,7 @@ namespace Models {
     }
 
     void ArtItemsModel::setSelectedItemsSaved(const QVector<int> &selectedIndices) {
-        LOG_DEBUG << "Setting selected" << selectedIndices.length() << "item(s) saved";
+        LOG_INFO << "Setting selected" << selectedIndices.length() << "item(s) saved";
         foreach (int index, selectedIndices) {
             m_ArtworkList.at(index)->resetModified();
         }
@@ -535,7 +535,7 @@ namespace Models {
             }
         }
 
-        LOG_DEBUG << indicesToUpdate.length() << "item(s) affected";
+        LOG_INFO << indicesToUpdate.length() << "item(s) affected";
 
         if (!indicesToUpdate.isEmpty()) {
             QVector<QPair<int, int> > rangesToUpdate;
@@ -730,7 +730,7 @@ namespace Models {
 
     void ArtItemsModel::raiseArtworksAdded(int imagesCount, int vectorsCount) {
         emit artworksAdded(imagesCount, vectorsCount);
-        LOG_DEBUG << imagesCount << "images" << vectorsCount << "vectors";
+        LOG_INFO << imagesCount << "images" << vectorsCount << "vectors";
     }
 
     void ArtItemsModel::updateItemsAtIndices(const QVector<int> &indices) {
@@ -850,7 +850,7 @@ namespace Models {
     }
 
     int ArtItemsModel::addFiles(const QStringList &rawFilenames) {
-        LOG_DEBUG << rawFilenames.length() << "file(s)";
+        LOG_INFO << rawFilenames.length() << "file(s)";
         QStringList filenames, vectors;
         filenames.reserve(rawFilenames.length());
         vectors.reserve(rawFilenames.length());

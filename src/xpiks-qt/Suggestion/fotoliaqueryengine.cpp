@@ -43,7 +43,7 @@ namespace Suggestion {
     }
 
     void FotoliaQueryEngine::submitQuery(const QStringList &queryKeywords) {
-        LOG_DEBUG << queryKeywords;
+        LOG_INFO << queryKeywords;
 
         QString decodedAPIKey = Encryption::decodeText(m_FotoliaAPIKey, "MasterPassword");
 

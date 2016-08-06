@@ -70,7 +70,7 @@ namespace Conectivity {
             }
         }
 #else
-        LOG_DEBUG << "Setting telemetry to" << value << "but it is disabled at compile time";
+        LOG_INFO << "Setting telemetry to" << value << "but it is disabled at compile time";
 #endif
     }
 

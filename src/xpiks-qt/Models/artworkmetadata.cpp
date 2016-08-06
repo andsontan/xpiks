@@ -53,7 +53,7 @@ namespace Models {
     bool ArtworkMetadata::initialize(const QString &title,
                                      const QString &description, const QStringList &rawKeywords, bool overwrite) {
 #ifdef INTEGRATION_TESTS
-        LOG_DEBUG << title << description << rawKeywords << overwrite;
+        LOG_INFO << title << description << rawKeywords << overwrite;
 #endif
 
         bool anythingModified = false;
@@ -152,14 +152,14 @@ namespace Models {
 
     int ArtworkMetadata::appendKeywords(const QStringList &keywordsList) {
         int result = m_KeywordsModel.appendKeywords(keywordsList);
-        LOG_DEBUG << "Appended" << result << "keywords out of" << keywordsList.length();
+        LOG_INFO << "Appended" << result << "keywords out of" << keywordsList.length();
         if (result > 0) { markModified(); }
         return result;
     }
 
     bool ArtworkMetadata::removeKeywords(const QSet<QString> &keywordsSet, bool caseSensitive) {
         bool result = m_KeywordsModel.removeKeywords(keywordsSet, caseSensitive);
-        LOG_DEBUG << "Removed keywords:" << result;
+        LOG_INFO << "Removed keywords:" << result;
         if (result) { markModified(); }
         return result;
     }

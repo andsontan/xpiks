@@ -390,7 +390,7 @@ namespace Common {
 
                 result = true;
             } else if (lowerCasedNew == lowerCasedExisting) {
-                LOG_DEBUG << "changing case in same keyword";
+                LOG_INFO << "changing case in same keyword";
                 m_KeywordsList[index] = sanitized;
 
                 result = true;
@@ -412,7 +412,7 @@ namespace Common {
                 result = true;
             }
         } else if (internal.contains(existing) && internal.contains(QChar::Space)) {
-            LOG_DEBUG << "Replacing composite keyword";
+            LOG_INFO << "Replacing composite keyword";
             QString existingFixed = internal;
             existingFixed.replace(existing, replacement);
             if (this->editKeywordUnsafe(index, existingFixed)) {
@@ -923,7 +923,7 @@ namespace Common {
 
         m_KeywordsLock.lockForWrite();
         {
-            LOG_DEBUG << "Replacing" << existing << "to" << replacement << "with index" << index;
+            LOG_INFO << "Replacing" << existing << "to" << replacement << "with index" << index;
             if (0 <= index && index < m_KeywordsList.length()) {
                 if (replaceKeywordUnsafe(index, existing, replacement)) {
                     m_SpellCheckResults[index] = true;
@@ -932,7 +932,7 @@ namespace Common {
                     result = Common::KeywordReplaceFailedDuplicate;
                 }
             } else {
-                LOG_DEBUG << "Failure. Index is negative or exceeds count" << m_KeywordsList.length();
+                LOG_INFO << "Failure. Index is negative or exceeds count" << m_KeywordsList.length();
                 result = Common::KeywordReplaceFailedIndex;
             }
         }
@@ -948,7 +948,7 @@ namespace Common {
     }
 
     bool BasicKeywordsModel::processFailedKeywordReplacements(const QVector<SpellCheck::KeywordSpellSuggestions *> &candidatesForRemoval) {
-        LOG_DEBUG << candidatesForRemoval.size() << "candidates to remove";
+        LOG_INFO << candidatesForRemoval.size() << "candidates to remove";
         bool anyReplaced = false;
 
         if (candidatesForRemoval.isEmpty()) { return anyReplaced; }
@@ -1039,9 +1039,9 @@ namespace Common {
         if (existingCurrent == existingPrev) {
             if (m_KeywordsSet.contains(replacement.toLower())) {
                 isDuplicate = true;
-                LOG_DEBUG << "safe to remove duplicate [" << existingCurrent << "] at index" << index;
+                LOG_INFO << "safe to remove duplicate [" << existingCurrent << "] at index" << index;
             } else {
-                LOG_DEBUG << replacement << "was not found";
+                LOG_INFO << replacement << "was not found";
             }
         } else if (existingCurrent.contains(existingPrev) && existingCurrent.contains(QChar::Space)) {
             QString existingFixed = existingCurrent;
@@ -1049,12 +1049,12 @@ namespace Common {
 
             if (m_KeywordsSet.contains(existingFixed.toLower())) {
                 isDuplicate = true;
-                LOG_DEBUG << "safe to remove composite duplicate [" << existingCurrent << "] at index" << index;
+                LOG_INFO << "safe to remove composite duplicate [" << existingCurrent << "] at index" << index;
             } else {
-                LOG_DEBUG << existingFixed << "was not found";
+                LOG_INFO << existingFixed << "was not found";
             }
         } else {
-            LOG_DEBUG << existingCurrent << "is now instead of" << existingPrev << "at index" << index;
+            LOG_INFO << existingCurrent << "is now instead of" << existingPrev << "at index" << index;
         }
 
         return isDuplicate;

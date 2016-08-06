@@ -106,7 +106,7 @@ namespace Conectivity {
 
     bool uploadFile(CURL *curlHandle, UploadContext *context, CurlProgressReporter *progressReporter,
                     const QString &filepath, const QString &remoteUrl) {
-        LOG_DEBUG << filepath << "-->" << remoteUrl;
+        LOG_INFO << filepath << "-->" << remoteUrl;
         bool result = false;
 
         FILE *f;
@@ -166,7 +166,7 @@ namespace Conectivity {
 
             /* are we resuming? */
             if (c) { /* yes */
-                LOG_DEBUG << "Attempting to resume upload" << uploaded_len << "try #" << c;
+                LOG_INFO << "Attempting to resume upload" << uploaded_len << "try #" << c;
                 /* determine the length of the file already written */
                 /*
                * With NOBODY and NOHEADER, libcurl will issue a SIZE
@@ -274,7 +274,7 @@ namespace Conectivity {
 
     void CurlProgressReporter::cancelHandler() {
         m_Cancel = true;
-        LOG_DEBUG << "Cancelled in the progress reporter...";
+        LOG_INFO << "Cancelled in the progress reporter...";
     }
 
     CurlFtpUploader::CurlFtpUploader(const std::shared_ptr<UploadBatch> &batchToUpload, QObject *parent) :
@@ -313,7 +313,7 @@ namespace Conectivity {
 
         // temporary do not emit started signal: not used
         //emit uploadStarted();
-        LOG_DEBUG << "Uploading" << size << "file(s) started for" << host << "Passive mode =" << context->m_UsePassiveMode;
+        LOG_INFO << "Uploading" << size << "file(s) started for" << host << "Passive mode =" << context->m_UsePassiveMode;
 
         for (int i = 0; i < size; ++i) {
 
@@ -348,7 +348,7 @@ namespace Conectivity {
         reportCurrentFileProgress(0.0);
 
         emit uploadFinished(anyErrors);
-        LOG_DEBUG << "Uploading finished for" << host;
+        LOG_INFO << "Uploading finished for" << host;
 
         curl_easy_cleanup(curlHandle);
         // curl_global_cleanup should be done from coordinator

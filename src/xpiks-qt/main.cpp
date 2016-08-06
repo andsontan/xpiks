@@ -253,7 +253,7 @@ int main(int argc, char *argv[]) {
 
     QApplication app(argc, argv);
 
-    LOG_DEBUG << "Working directory of Xpiks is:" << QDir::currentPath();
+    LOG_INFO << "Working directory of Xpiks is:" << QDir::currentPath();
     LOG_DEBUG << "Extra files search locations:" << QStandardPaths::standardLocations(XPIKS_DATA_LOCATION_TYPE);
 
     if (highDpiEnvironmentVariable) {

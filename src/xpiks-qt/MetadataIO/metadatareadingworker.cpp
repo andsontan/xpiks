@@ -165,7 +165,7 @@ namespace MetadataIO {
         QTemporaryFile argumentsFile;
 
         if (argumentsFile.open()) {
-            LOG_DEBUG << "Created arguments file" << argumentsFile.fileName();
+            LOG_INFO << "Created arguments file" << argumentsFile.fileName();
 
             QStringList exiftoolArguments = createArgumentsList();
             foreach (const QString &line, exiftoolArguments) {
@@ -206,7 +206,7 @@ namespace MetadataIO {
             */
 #endif
             arguments << "-@" << argumentsFile.fileName();
-            LOG_DEBUG << "Starting exiftool process:" << exiftoolPath;
+            LOG_INFO << "Starting exiftool process:" << exiftoolPath;
             m_ExiftoolProcess->start(exiftoolPath, arguments);
 
             success = m_ExiftoolProcess->waitForFinished();

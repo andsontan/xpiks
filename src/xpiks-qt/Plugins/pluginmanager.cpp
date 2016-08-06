@@ -62,7 +62,7 @@ namespace Plugins {
             return;
         }
 
-        LOG_DEBUG<< "Plugins dir:" << pluginsDir.absolutePath();
+        LOG_INFO<< "Plugins dir:" << pluginsDir.absolutePath();
 
         beginResetModel();
         m_PluginsList.clear();
@@ -121,7 +121,7 @@ namespace Plugins {
     }
 
     void PluginManager::triggerPluginAction(int pluginID, int actionID) const {
-        LOG_DEBUG << "Plugin ID" << pluginID << "action ID" << actionID;
+        LOG_INFO << "Plugin ID" << pluginID << "action ID" << actionID;
         PluginWrapper *pluginWrapper = m_PluginsDict.value(pluginID, NULL);
         if (pluginWrapper != NULL) {
             pluginWrapper->triggerActionSafe(actionID);
