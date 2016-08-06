@@ -95,7 +95,8 @@ after_build:
 
 before_test:
   - cmd: 'echo %cd%'
-  - cmd: 'copy ..\..\libs\*.dll .'
+  - if defined CORE_TESTS copy libs\*.dll .
+  - if defined INTEGRATION_TESTS copy libs\*.dll .
 
 test_script:
   - cmd: 'echo %cd%'
