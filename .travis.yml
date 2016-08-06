@@ -11,7 +11,7 @@ git:
 
 env:
   - XPIKS_BINARY=binary
-  - CORE_TESTS=tests QT_FATAL_WARNINGS=true
+  - CORE_TESTS=tests
   - INTEGRATION_TESTS=tests QT_FATAL_WARNINGS=true
 
 before_install:
