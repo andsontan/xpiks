@@ -68,3 +68,51 @@ void StringHelpersTests::splitSeveralWordsWithPunctuationTest() {
 
     QCOMPARE(result, expected);
 }
+
+void StringHelpersTests::replaceWholeSmokeTest() {
+    QString text = "Word";
+    QString replaced = Helpers::replaceWholeWords(text, "word", "Bob");
+    QCOMPARE(replaced, QLatin1String("Bob"));
+}
+
+void StringHelpersTests::replaceWholeTrivialTest() {
+    QString text = "a whole  Word  heWordre";
+    QString replaced = Helpers::replaceWholeWords(text, "Word", "Bob");
+    QCOMPARE(replaced, QLatin1String("a whole  Bob  heWordre"));
+}
+
+void StringHelpersTests::replaceWholeTrivialCaseSensitiveTest() {
+    QString text = "a whwordole  Word word heWordre";
+    QString replaced = Helpers::replaceWholeWords(text, "word", "Bob", Qt::CaseSensitive);
+    QCOMPARE(replaced, QLatin1String("a whwordole  Word Bob heWordre"));
+}
+
+void StringHelpersTests::replaceWholePrefixTest() {
+    QString text = "Word whole  Words heWordre";
+    QString replaced = Helpers::replaceWholeWords(text, "Word", "Bob");
+    QCOMPARE(replaced, QLatin1String("Bob whole  Words heWordre"));
+}
+
+void StringHelpersTests::replaceWholeSuffixTest() {
+    QString text = "Word whole Words word";
+    QString replaced = Helpers::replaceWholeWords(text, "word", "Bob", Qt::CaseSensitive);
+    QCOMPARE(replaced, QLatin1String("Word whole Words Bob"));
+}
+
+void StringHelpersTests::replaceWholeWithPunctuationTest() {
+    QString text = "Word whole, Words word";
+    QString replaced = Helpers::replaceWholeWords(text, "whole", "Bob");
+    QCOMPARE(replaced, QLatin1String("Word Bob, Words word"));
+}
+
+void StringHelpersTests::replaceWholeWithSpaceTest() {
+    QString text = "Word whole  Words word";
+    QString replaced = Helpers::replaceWholeWords(text, "whole ", "Bob");
+    QCOMPARE(replaced, QLatin1String("Word Bob Words word"));
+}
+
+void StringHelpersTests::replaceWholeWithCommaTest() {
+    QString text = "Word whole;, Words word";
+    QString replaced = Helpers::replaceWholeWords(text, "whole;", "Bob");
+    QCOMPARE(replaced, QLatin1String("Word Bob, Words word"));
+}

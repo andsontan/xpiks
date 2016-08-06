@@ -39,7 +39,7 @@ namespace Helpers {
 
     void MetadataHighlighter::highlightBlock(const QString &text) {
         int pos = 0;
-        int size = m_ReplaceFrom.size();
+        const int size = m_ReplaceFrom.size();
         int flags = m_FlagsProvider->getFlags();
         Qt::CaseSensitivity caseSensitivity = Common::HasFlag(flags, Common::SearchFlagCaseSensitive) ?
                     Qt::CaseSensitive : Qt::CaseInsensitive;

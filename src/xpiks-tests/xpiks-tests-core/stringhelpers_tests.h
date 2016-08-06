@@ -14,6 +14,14 @@ private slots:
     void splitSeveralWordsWithSpacesTest();
     void splitOneLetterWordTest();
     void splitSeveralWordsWithPunctuationTest();
+    void replaceWholeSmokeTest();
+    void replaceWholeTrivialTest();
+    void replaceWholeTrivialCaseSensitiveTest();
+    void replaceWholePrefixTest();
+    void replaceWholeSuffixTest();
+    void replaceWholeWithPunctuationTest();
+    void replaceWholeWithSpaceTest();
+    void replaceWholeWithCommaTest();
 };
 
 #endif // STRINGHELPERSTESTS_H

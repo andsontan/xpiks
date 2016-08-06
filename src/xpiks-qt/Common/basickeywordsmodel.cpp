@@ -523,7 +523,7 @@ namespace Common {
         if (!wholeWords) {
             description.replace(replaceWhat, replaceTo, caseSensivity);
         } else {
-            description = Helpers::replaceWholeWords(description, replaceWhat, replaceTo);
+            description = Helpers::replaceWholeWords(description, replaceWhat, replaceTo, caseSensivity);
         }
 
         bool result = setDescription(description);
@@ -540,7 +540,7 @@ namespace Common {
         if (!wholeWords) {
             title.replace(replaceWhat, replaceTo, caseSensivity);
         } else {
-            title = Helpers::replaceWholeWords(title, replaceWhat, replaceTo);
+            title = Helpers::replaceWholeWords(title, replaceWhat, replaceTo, caseSensivity);
         }
 
         bool result = setTitle(title);

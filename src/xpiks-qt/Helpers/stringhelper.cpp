@@ -39,7 +39,7 @@ namespace Helpers {
             const std::function<void (int start, int length, const QString &word)> &action)
     {
         int i = 0;
-        int size = text.size();
+        const int size = text.size();
         int lastStart = -1;
 
         while (i < size) {
@@ -74,8 +74,78 @@ namespace Helpers {
         }
     }
 
-    QString replaceWholeWords(const QString &text, const QString &replaceWhat, const QString &replaceTo) {
-        return text;
+    bool isLeftWordBound(const QString &text, int index, bool skipWordBounds=false) {
+        if (index == 0) { return true; }
+
+        QChar curr = text[index];
+        QChar prev = text[index - 1];
+
+        const bool currIsSeparator = curr.isPunct() || curr.isSpace();
+        const bool prevIsSeparator = prev.isPunct() || prev.isSpace();
+
+        return (skipWordBounds || !currIsSeparator) && (prevIsSeparator);
+    }
+
+    bool isRightWordBound(const QString &text, int lastIndex, int index, bool skipWordBounds=false) {
+        if (index == lastIndex) { return true; }
+
+        QChar curr = text[index];
+        QChar next = text[index + 1];
+
+        const bool currIsSeparator = curr.isPunct() || curr.isSpace();
+        const bool nextIsSeparator = next.isPunct() || next.isSpace();
+
+        return (skipWordBounds || !currIsSeparator) && (nextIsSeparator);
+    }
+
+    bool isAWholeWord(const QString &text, int start, int length, bool onlyCheckBounds=false) {
+        if (text.isEmpty()) { return false; }
+
+        if (!isLeftWordBound(text, start, onlyCheckBounds)) { return false; }
+        const int lastIndex = text.size() - 1;
+        if (!isRightWordBound(text, lastIndex, start + length - 1, onlyCheckBounds)) { return false; }
+
+        return true;
+    }
+
+    QString replaceWholeWords(const QString &text, const QString &replaceWhat,
+                              const QString &replaceTo, Qt::CaseSensitivity caseSensitivity) {
+        int pos = 0;
+        const int size = replaceWhat.size();
+        std::vector<std::pair<int, int> > hits;
+        hits.reserve(std::max(text.length() / replaceWhat.length(), 10));
+
+        while (pos != -1) {
+            pos = text.indexOf(replaceWhat, pos, caseSensitivity);
+            if (pos >= 0) {
+                if (isAWholeWord(text, pos, size, true)) {
+                    hits.emplace_back(std::make_pair(pos, size));
+                }
+
+                pos += size;
+            }
+        }
+
+        if (hits.empty()) { return text; }
+
+        QString result;
+        result.reserve(text.length());
+
+        int lastStart = 0;
+        for (auto &hit: hits) {
+            if (hit.first > lastStart) {
+                result.append(text.mid(lastStart, hit.first - lastStart));
+            }
+
+            result.append(replaceTo);
+            lastStart = hit.first + hit.second;
+        }
+
+        if (lastStart < text.length() - 1) {
+            result.append(text.mid(lastStart));
+        }
+
+        return result;
     }
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
@@ -84,7 +154,7 @@ namespace Helpers {
 
         QVector<QStringRef> items = text.splitRef(QRegExp("[\r\n]"), QString::SkipEmptyParts);
 
-        int length = items.length();
+        const int length = items.length();
 
         if (length > 0) {
             int startIndex = length - N;
@@ -322,14 +392,6 @@ done:
         }
 
         return !anyFault;
-    }
-
-    bool isLeftWordBound(const QString &text, int index) {
-        return (index == 0) || ((text[index] != ' ') && (text[index - 1] == ' '));
-    }
-
-    bool isRightWordBound(const QString &text, int lastIndex, int index) {
-        return (index == lastIndex) || ((text[index] != ' ') && (text[index + 1] == ' '));
     }
 
     void extendSegmentToWordBoundaries(const QString &text, std::pair<int, int> &segment) {
