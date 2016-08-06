@@ -11,14 +11,15 @@ git:
 
 env:
   - XPIKS_BINARY=binary
-  - XPIKS_TESTS=tests QT_FATAL_WARNINGS=true
+  - CORE_TESTS=tests QT_FATAL_WARNINGS=true
+  - INTEGRATION_TESTS=tests QT_FATAL_WARNINGS=true
 
 before_install:
   - if [ "$CXX" = "g++" ]; then sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y; fi
   - sudo add-apt-repository ppa:beineri/opt-qt551 -y
   - sudo add-apt-repository ppa:kubuntu-ppa/backports -y
   - sudo apt-get update -qq
-  
+
 install:
   - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++ gcc; export CXX="g++" CC="gcc"; $CXX --version; fi
   - sudo apt-get install -qq qt55base; source /opt/qt55/bin/qt55-env.sh
@@ -28,7 +29,7 @@ install:
 
 before_script:
   - ulimit -c unlimited -S       # enable core dumps
-  
+
 script:
   - cd src/
   - cd quazip/quazip/
@@ -42,13 +43,15 @@ script:
   - cp libface.a ../libs/
   - cd ../
   - if [ -n "$XPIKS_BINARY" ]; then cd xpiks-qt/; fi
-  - if [ -n "$XPIKS_TESTS" ]; then cd xpiks-tests/; fi
+  - if [ -n "$CORE_TESTS" ]; then cd xpiks-tests/xpiks-tests-core; fi
+  - if [ -n "$INTEGRATION_TESTS" ]; then cd xpiks-tests/xpiks-tests-integration; fi
   - if [ -n "$XPIKS_BINARY" ]; then qmake "CONFIG+= debug travis-ci" xpiks-qt.pro; fi
-  - if [ -n "$XPIKS_TESTS" ]; then qmake "CONFIG+=debug travis-ci" xpiks-tests.pro; fi
+  - if [ -n "$CORE_TESTS" ]; then qmake "CONFIG+=debug travis-ci" xpiks-tests-core.pro; fi
+  - if [ -n "$INTEGRATION_TESTS" ]; then qmake "CONFIG+=debug travis-ci" xpiks-tests-integration.pro; fi
   - make
-  - if [ -n "$XPIKS_TESTS" ]; then xpiks-tests-core/xpiks-tests-core; fi
-  - if [ -n "$XPIKS_TESTS" ]; then xpiks-tests-integration/xpiks-tests-integration; fi
+  - if [ -n "$CORE_TESTS" ]; then xpiks-tests-core; fi
+  - if [ -n "$INTEGRATION_TESTS" ]; then xpiks-tests-integration; fi
 
 after_failure:
-  - if [ -n "$XPIKS_TESTS" ]; then for i in $(find ./ -maxdepth 1 -name 'core*' -print); do gdb $(pwd)/xpiks-tests-core/xpiks-tests-core core* -ex "thread apply all bt" -ex "set pagination 0" -batch; done; fi
-  - if [ -n "$XPIKS_TESTS" ]; then for i in $(find ./ -maxdepth 1 -name 'core*' -print); do gdb $(pwd)/xpiks-tests-integration/xpiks-tests-integration core* -ex "thread apply all bt" -ex "set pagination 0" -batch; done; fi
+  - if [ -n "$CORE_TESTS" ]; then for i in $(find ./ -maxdepth 1 -name 'core*' -print); do gdb $(pwd)/xpiks-tests-core core* -ex "thread apply all bt" -ex "set pagination 0" -batch; done; fi
+  - if [ -n "$INTEGRATION_TESTS" ]; then for i in $(find ./ -maxdepth 1 -name 'core*' -print); do gdb $(pwd)/xpiks-tests-integration core* -ex "thread apply all bt" -ex "set pagination 0" -batch; done; fi
