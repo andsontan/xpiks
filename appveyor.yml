@@ -95,7 +95,7 @@ after_build:
 
 before_test:
   - cmd: 'echo %cd%'
-  - cmd: 'copy ..\libs\*.dll .'
+  - cmd: 'copy ..\..\libs\*.dll .'
 
 test_script:
   - cmd: 'echo %cd%'
