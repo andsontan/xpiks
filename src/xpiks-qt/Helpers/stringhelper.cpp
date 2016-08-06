@@ -148,6 +148,27 @@ namespace Helpers {
         return result;
     }
 
+    bool containsWholeWords(const QString &haystack, const QString &needle, Qt::CaseSensitivity caseSensitivity) {
+        bool anyHit = false;
+
+        int pos = 0;
+        const int size = needle.size();
+
+        while (pos != -1) {
+            pos = haystack.indexOf(needle, pos, caseSensitivity);
+            if (pos >= 0) {
+                if (isAWholeWord(haystack, pos, size, true)) {
+                    anyHit = true;
+                    break;
+                }
+
+                pos += size;
+            }
+        }
+
+        return anyHit;
+    }
+
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
     QString getLastNLines(const QString &text, int N) {
         QString result;

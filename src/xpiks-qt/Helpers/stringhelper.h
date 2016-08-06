@@ -38,6 +38,7 @@ namespace Helpers {
                      const std::function<void (int start, int length, const QString &word)> &action);
     QString replaceWholeWords(const QString &text, const QString &replaceWhat,
                               const QString &replaceTo, Qt::CaseSensitivity caseSensitivity=Qt::CaseInsensitive);
+    bool containsWholeWords(const QString &haystack, const QString &needle, Qt::CaseSensitivity caseSensitivity=Qt::CaseInsensitive);
     QString getLastNLines(const QString &text, int N);
     void splitText(const QString &text, QStringList &parts);
     int levensteinDistance(const QString &s1, const QString &s2);

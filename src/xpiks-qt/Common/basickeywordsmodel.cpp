@@ -556,35 +556,29 @@ namespace Common {
         const bool wholeWords = Common::HasFlag(flags, Common::SearchFlagExactMatch);
         const Qt::CaseSensitivity caseSensivity = caseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive;
 
-        int size = m_KeywordsList.length();
+        const int size = m_KeywordsList.size();
         for (int i = 0; i < size; ++i) {
             QString internal = m_KeywordsList.at(i);
-            QString replacement;
-            bool foundMatch = false;
+            const bool hasMatch = wholeWords ?
+                        Helpers::containsWholeWords(internal, replaceWhat, caseSensivity) :
+                        internal.contains(replaceWhat, caseSensivity);
 
-            if (!wholeWords) {
-                if (internal.contains(replaceWhat, caseSensivity)) {
-                    foundMatch = true;
-                    QString replaced = internal.replace(replaceWhat, replaceTo, caseSensivity);
-                    replacement = Helpers::doSanitizeKeyword(replaced);
+            if (hasMatch) {
+                QString replaced = wholeWords ?
+                            Helpers::replaceWholeWords(internal, replaceWhat, replaceTo, caseSensivity) :
+                            internal.replace(replaceWhat, replaceTo, caseSensivity);
+
+                QString replacement = Helpers::doSanitizeKeyword(replaced);
+
+                if (!this->editKeywordUnsafe(i, replacement) &&
+                        m_KeywordsSet.contains(replacement.toLower())) {
+                    LOG_INFO << "Replacing" << internal << "to" << replacement << "creates a duplicate";
+                    indicesToRemove.append(i);
+                } else {
+                    QModelIndex j = this->index(i);
+                    emit dataChanged(j, j, QVector<int>() << KeywordRole);
+                    anyChanged = true;
                 }
-            } else {
-                if (QString::compare(internal, replaceWhat, caseSensivity) == 0) {
-                    foundMatch = true;
-                    replacement = replaceTo;
-                }
-            }
-
-            if (!foundMatch) { continue; }
-
-            if (!this->editKeywordUnsafe(i, replacement) &&
-                    m_KeywordsSet.contains(replacement.toLower())) {
-                LOG_INFO << "Replacing" << internal << "to" << replacement << "creates a duplicate";
-                indicesToRemove.append(i);
-            } else {
-                QModelIndex j = this->index(i);
-                emit dataChanged(j, j, QVector<int>() << KeywordRole);
-                anyChanged = true;
             }
         }
 

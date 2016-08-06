@@ -476,8 +476,7 @@ void BasicKeywordsModelTests::replaceWholeWordsTest() {
 
     QString originalTitle = "Test title test here";
     QString originalDescription = "Testdescription test";
-    QStringList originalKeywords;
-    originalKeywords << "Test keyword1" << "keywTestord2" << "keyTestword3 test";
+    const QStringList originalKeywords(QStringList() << "Test keyword1" << "keywTestord2" << "keyTestword3 test");
 
     basicModel.setTitle(originalTitle);
     basicModel.setDescription(originalDescription);

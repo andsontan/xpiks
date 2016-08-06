@@ -22,6 +22,8 @@ private slots:
     void replaceWholeWithPunctuationTest();
     void replaceWholeWithSpaceTest();
     void replaceWholeWithCommaTest();
+    void replaceWholeNoCaseHitTest();
+    void replaceWholeNoHitTest();
 };
 
 #endif // STRINGHELPERSTESTS_H

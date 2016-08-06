@@ -116,3 +116,15 @@ void StringHelpersTests::replaceWholeWithCommaTest() {
     QString replaced = Helpers::replaceWholeWords(text, "whole;", "Bob");
     QCOMPARE(replaced, QLatin1String("Word Bob, Words word"));
 }
+
+void StringHelpersTests::replaceWholeNoCaseHitTest() {
+    QString text = "Word inWord and the Wordend";
+    QString replaced = Helpers::replaceWholeWords(text, "word", "Bob", Qt::CaseSensitive);
+    QCOMPARE(replaced, text);
+}
+
+void StringHelpersTests::replaceWholeNoHitTest() {
+    QString text = "Word inWord and the Wordend";
+    QString replaced = Helpers::replaceWholeWords(text, "whole", "Bob");
+    QCOMPARE(replaced, text);
+}
