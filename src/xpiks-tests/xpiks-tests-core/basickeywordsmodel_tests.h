@@ -36,6 +36,7 @@ private slots:
     void keywordsReplaceTest();
     void noReplaceCaseSensitiveTest();
     void replaceCaseSensitiveTest();
+    void replaceWholeWordsTest();
     void replaceKeywordsWithRemoveTest();
     void removeKeywordsFromSetTest();
     void noneKeywordsRemovedFromSetTest();

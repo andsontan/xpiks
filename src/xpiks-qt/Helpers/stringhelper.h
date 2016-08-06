@@ -36,6 +36,7 @@ namespace Helpers {
     void foreachWord(const QString &text,
                      const std::function<bool (const QString &word)> &pred,
                      const std::function<void (int start, int length, const QString &word)> &action);
+    QString replaceWholeWords(const QString &text, const QString &replaceWhat, const QString &replaceTo);
     QString getLastNLines(const QString &text, int N);
     void splitText(const QString &text, QStringList &parts);
     int levensteinDistance(const QString &s1, const QString &s2);

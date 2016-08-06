@@ -111,9 +111,9 @@ namespace Common {
     private:
         void removeKeywordsAtIndicesUnsafe(const QVector<int> &indices);
         bool replaceInDescription(const QString &replaceWhat, const QString &replaceTo,
-                                  Qt::CaseSensitivity caseSensivity=Qt::CaseInsensitive);
+                                  int flags);
         bool replaceInTitle(const QString &replaceWhat, const QString &replaceTo,
-                                  Qt::CaseSensitivity caseSensivity=Qt::CaseInsensitive);
+                                  int flags);
         bool replaceInKeywordsUnsafe(const QString &replaceWhat, const QString &replaceTo,
                                      int flags);
 

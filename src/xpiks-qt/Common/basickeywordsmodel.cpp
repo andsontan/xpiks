@@ -261,19 +261,16 @@ namespace Common {
         Q_ASSERT((flags & Common::SearchFlagSearchMetadata) != 0);
         bool anyChanged = false;
 
-        bool isCaseSensitive = Common::HasFlag(flags, Common::SearchFlagCaseSensitive);
-        Qt::CaseSensitivity caseSensivity = isCaseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive;
-
         const bool needToCheckDescription = Common::HasFlag(flags, Common::SearchFlagSearchDescription);
         if (needToCheckDescription) {
-            if (this->replaceInDescription(replaceWhat, replaceTo, caseSensivity)) {
+            if (this->replaceInDescription(replaceWhat, replaceTo, flags)) {
                 anyChanged = true;
             }
         }
 
         const bool needToCheckTitle = Common::HasFlag(flags, Common::SearchFlagSearchTitle);
         if (needToCheckTitle) {
-            if (this->replaceInTitle(replaceWhat, replaceTo, caseSensivity)) {
+            if (this->replaceInTitle(replaceWhat, replaceTo, flags)) {
                 anyChanged = true;
             }
         }
@@ -517,17 +514,35 @@ namespace Common {
     }
 
     bool BasicKeywordsModel::replaceInDescription(const QString &replaceWhat, const QString &replaceTo,
-                                                  Qt::CaseSensitivity caseSensivity) {
+                                                  int flags) {
+        const bool wholeWords = Common::HasFlag(flags, Common::SearchFlagExactMatch);
+        const bool caseSensitive = Common::HasFlag(flags, Common::SearchFlagCaseSensitive);
+        const Qt::CaseSensitivity caseSensivity = caseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive;
+
         QString description = getDescription();
-        description.replace(replaceWhat, replaceTo, caseSensivity);
+        if (!wholeWords) {
+            description.replace(replaceWhat, replaceTo, caseSensivity);
+        } else {
+            description = Helpers::replaceWholeWords(description, replaceWhat, replaceTo);
+        }
+
         bool result = setDescription(description);
         return result;
     }
 
     bool BasicKeywordsModel::replaceInTitle(const QString &replaceWhat, const QString &replaceTo,
-                                            Qt::CaseSensitivity caseSensivity) {
+                                            int flags) {
+        const bool wholeWords = Common::HasFlag(flags, Common::SearchFlagExactMatch);
+        const bool caseSensitive = Common::HasFlag(flags, Common::SearchFlagCaseSensitive);
+        const Qt::CaseSensitivity caseSensivity = caseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive;
+
         QString title = getTitle();
-        title.replace(replaceWhat, replaceTo, caseSensivity);
+        if (!wholeWords) {
+            title.replace(replaceWhat, replaceTo, caseSensivity);
+        } else {
+            title = Helpers::replaceWholeWords(title, replaceWhat, replaceTo);
+        }
+
         bool result = setTitle(title);
         return result;
     }

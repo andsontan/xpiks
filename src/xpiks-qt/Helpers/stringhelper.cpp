@@ -74,6 +74,10 @@ namespace Helpers {
         }
     }
 
+    QString replaceWholeWords(const QString &text, const QString &replaceWhat, const QString &replaceTo) {
+        return text;
+    }
+
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
     QString getLastNLines(const QString &text, int N) {
         QString result;
@@ -379,5 +383,4 @@ done:
         QString result = entries.join(" ... ");
         return result;
     }
-
 }

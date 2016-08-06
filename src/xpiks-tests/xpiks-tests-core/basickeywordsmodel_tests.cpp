@@ -471,6 +471,29 @@ void BasicKeywordsModelTests::replaceCaseSensitiveTest() {
     QCOMPARE(basicModel.getKeywordAt(2), QLatin1String("keyTestword3 Replaced"));
 }
 
+void BasicKeywordsModelTests::replaceWholeWordsTest() {
+    Common::BasicKeywordsModel basicModel(m_FakeHold);
+
+    QString originalTitle = "Test title test here";
+    QString originalDescription = "Testdescription test";
+    QStringList originalKeywords;
+    originalKeywords << "Test keyword1" << "keywTestord2" << "keyTestword3 test";
+
+    basicModel.setTitle(originalTitle);
+    basicModel.setDescription(originalDescription);
+    basicModel.appendKeywords(originalKeywords);
+
+    int flags = Common::SearchFlagSearchMetadata | Common::SearchFlagExactMatch;
+
+    bool replaceSucceeded = basicModel.replace("test", "Replaced", flags);
+    QVERIFY(replaceSucceeded);
+    QCOMPARE(basicModel.getTitle(), QLatin1String("Replaced title Replaced here"));
+    QCOMPARE(basicModel.getDescription(), QLatin1String("Testdescription Replaced"));
+    QCOMPARE(basicModel.getKeywordAt(0), QLatin1String("Replaced keyword1"));
+    QCOMPARE(basicModel.getKeywordAt(1), originalKeywords[1]);
+    QCOMPARE(basicModel.getKeywordAt(2), QLatin1String("keyTestword3 Replaced"));
+}
+
 void BasicKeywordsModelTests::replaceKeywordsWithRemoveTest() {
     Common::BasicKeywordsModel basicModel(m_FakeHold);
 
