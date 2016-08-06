@@ -11,7 +11,8 @@ environment:
   QT_FATAL_WARNINGS: true
   matrix:
     - XPIKS_BINARY: true
-    - XPIKS_TESTS: true
+    - CORE_TESTS: true
+    - INTEGRATION_TESTS: true
 
 branches:
   # blacklist
@@ -73,9 +74,11 @@ build_script:
   - cmd: 'copy %configuration%\face.lib ..\..\libs'
   - cmd: 'cd ..\..'
   - if defined XPIKS_BINARY cd xpiks-qt
-  - if defined XPIKS_TESTS cd xpiks-tests
+  - if defined CORE_TESTS cd xpiks-tests\xpiks-tests-core
+  - if defined INTEGRATION_TESTS cd xpiks-tests\xpiks-tests-integration
   - if defined XPIKS_BINARY qmake "CONFIG+=%configuration% appveyor" xpiks-qt.pro
-  - if defined XPIKS_TESTS qmake "CONFIG+=%configuration% appveyor" xpiks-tests.pro
+  - if defined CORE_TESTS qmake "CONFIG+=%configuration% appveyor" xpiks-tests-core.pro
+  - if defined INTEGRATION_TESTS qmake "CONFIG+=%configuration% appveyor" xpiks-tests-integration.pro
   - nmake.exe
 
 after_build:
@@ -96,5 +99,5 @@ before_test:
 
 test_script:
   - cmd: 'echo %cd%'
-  - if defined XPIKS_TESTS xpiks-tests-core\%configuration%\xpiks-tests-core.exe
-  - if defined XPIKS_TESTS xpiks-tests-integration\%configuration%\xpiks-tests-integration.exe
+  - if defined CORE_TESTS %configuration%\xpiks-tests-core.exe
+  - if defined INTEGRATION_TESTS %configuration%\xpiks-tests-integration.exe
