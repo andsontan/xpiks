@@ -363,8 +363,8 @@ int main(int argc, char *argv[]) {
     cachingProvider->setImageCachingService(&imageCachingService);
 
     Helpers::HelpersQmlWrapper helpersQmlWrapper(&commandManager);
-    QObject::connect(&updateService, SIGNAL(updateAvailable()),
-                     &helpersQmlWrapper, SIGNAL(updateAvailable()));
+    QObject::connect(&updateService, SIGNAL(updateAvailable(QString)),
+                     &helpersQmlWrapper, SIGNAL(updateAvailable(QString)));
 
     QQmlContext *rootContext = engine.rootContext();
     rootContext->setContextProperty("artItemsModel", &artItemsModel);

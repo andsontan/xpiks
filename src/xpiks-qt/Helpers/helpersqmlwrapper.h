@@ -72,7 +72,7 @@ namespace Helpers {
 
     signals:
         void globalCloseRequested();
-        void updateAvailable();
+        void updateAvailable(QString updateLink);
 
     private:
         Commands::CommandManager *m_CommandManager;
