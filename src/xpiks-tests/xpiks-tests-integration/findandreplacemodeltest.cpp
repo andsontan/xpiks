@@ -45,6 +45,8 @@ int FindAndReplaceModelTest::doTest() {
 
     VERIFY(!ioCoordinator->getHasErrors(), "Errors in IO Coordinator while reading");
 
+    artItemsModel->getArtwork(0)->setDescription("wall inside the Wall is not a wall");
+
     Models::FilteredArtItemsProxyModel *filteredModel = m_CommandManager->getFilteredArtItemsModel();
     filteredModel->selectFilteredArtworks();
 
@@ -64,6 +66,7 @@ int FindAndReplaceModelTest::doTest() {
 
     VERIFY(artItemsModel->getKeywordsModel(0)->getKeywordsCount() == (keywordsCount - 1), "Keyword duplicate wasn't removed");
     VERIFY(artItemsModel->getKeywordsModel(0)->getKeywords().last() == "wallpaper", "Keyword wasn't replaced");
+    VERIFY(artItemsModel->getKeywordsModel(0)->getDescription() == "wallpaper inside the Wall is not a wallpaper", "Description wasn't replaced");
 
     return 0;
 }
