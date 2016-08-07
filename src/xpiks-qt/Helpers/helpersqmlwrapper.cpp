@@ -26,8 +26,16 @@
 #include <QQuickWindow>
 #include <QSysInfo>
 #include <QCoreApplication>
+#include <QQmlEngine>
 #include "keywordshelpers.h"
 #include "../Commands/commandmanager.h"
+#include "../Models/logsmodel.h"
+#include "../Models/artworkuploader.h"
+#include "../AutoComplete/stringfilterproxymodel.h"
+#include "../Models/ziparchiver.h"
+#include "../SpellCheck/spellcheckerservice.h"
+#include "../Models/deletekeywordsviewmodel.h"
+#include "../Models/uploadinforepository.h"
 #include "logger.h"
 #include "../Common/defines.h"
 
@@ -158,6 +166,49 @@ namespace Helpers {
         Q_UNUSED(keyword);
         Q_UNUSED(notifyObject);
 #endif
+    }
+
+    QObject *HelpersQmlWrapper::getLogsModel() {
+        Models::LogsModel *model = m_CommandManager->getLogsModel();
+        QQmlEngine::setObjectOwnership(model, QQmlEngine::CppOwnership);
+        return model;
+    }
+
+    QObject *HelpersQmlWrapper::getFtpACList() {
+        auto *artworkUploader = m_CommandManager->getArtworkUploader();
+        AutoComplete::StringFilterProxyModel *model = artworkUploader->getStocksCompletionSource();
+        QQmlEngine::setObjectOwnership(model, QQmlEngine::CppOwnership);
+        return model;
+    }
+
+    QObject *HelpersQmlWrapper::getArtworkUploader() {
+        auto *model = m_CommandManager->getArtworkUploader();
+        QQmlEngine::setObjectOwnership(model, QQmlEngine::CppOwnership);
+        return model;
+    }
+
+    QObject *HelpersQmlWrapper::getZipArchiver() {
+        auto *model = m_CommandManager->getZipArchiver();
+        QQmlEngine::setObjectOwnership(model, QQmlEngine::CppOwnership);
+        return model;
+    }
+
+    QObject *HelpersQmlWrapper::getSpellCheckerService() {
+        auto *service = m_CommandManager->getSpellCheckerService();
+        QQmlEngine::setObjectOwnership(service, QQmlEngine::CppOwnership);
+        return service;
+    }
+
+    QObject *HelpersQmlWrapper::getDeleteKeywordsModel() {
+        auto *model = m_CommandManager->getDeleteKeywordsModel();
+        QQmlEngine::setObjectOwnership(model, QQmlEngine::CppOwnership);
+        return model;
+    }
+
+    QObject *HelpersQmlWrapper::getUploadInfos() {
+        auto *model = m_CommandManager->getUploadInfoRepository();
+        QQmlEngine::setObjectOwnership(model, QQmlEngine::CppOwnership);
+        return model;
     }
 }
 

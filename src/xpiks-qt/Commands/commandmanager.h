@@ -262,12 +262,15 @@ namespace Commands {
         virtual UndoRedo::UndoRedoManager *getUndoRedoManager() const { return m_UndoRedoManager; }
         virtual QMLExtensions::ColorsModel *getColorsModel() const { return m_ColorsModel; }
         virtual Models::FilteredArtItemsProxyModel *getFilteredArtItemsModel() const { return m_FilteredItemsModel; }
+        virtual Models::LogsModel *getLogsModel() const { return m_LogsModel; }
+        virtual Models::ArtworkUploader *getArtworkUploader() const { return m_ArtworkUploader; }
+        virtual Models::ZipArchiver *getZipArchiver() const { return m_ZipArchiver; }
+        virtual Models::DeleteKeywordsViewModel *getDeleteKeywordsModel() const { return m_DeleteKeywordsViewModel; }
 
 #ifdef INTEGRATION_TESTS
         virtual MetadataIO::MetadataIOCoordinator *getMetadataIOCoordinator() const { return m_MetadataIOCoordinator; }
         virtual SpellCheck::SpellCheckSuggestionModel *getSpellSuggestionsModel() const { return m_SpellCheckSuggestionModel; }
         virtual Models::CombinedArtworksModel *getCombinedArtworksModel() const { return m_CombinedArtworksModel; }
-        virtual Models::ZipArchiver *getZipArchiver() const { return m_ZipArchiver; }
         virtual AutoComplete::AutoCompleteService *getAutoCompleteService() const { return m_AutoCompleteService; }
         virtual Warnings::WarningsService *getWarningsService() const { return m_WarningsService; }
         virtual Models::FindAndReplaceModel *getFindAndReplaceModel() const { return m_FindAndReplaceModel; }

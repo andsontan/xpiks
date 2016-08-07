@@ -37,6 +37,7 @@ Item {
     anchors.fill: parent
 
     property variant componentParent
+    property var deleteKeywordsModel: helpersWrapper.getDeleteKeywordsModel()
 
     signal dialogDestruction();
     Component.onDestruction: dialogDestruction();

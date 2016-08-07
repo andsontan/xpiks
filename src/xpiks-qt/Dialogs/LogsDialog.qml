@@ -35,6 +35,7 @@ Item {
     id: logsComponent
     property string logText
     anchors.fill: parent
+    property var logsModel: helpersWrapper.getLogsModel()
 
     signal dialogDestruction();
     Component.onDestruction: dialogDestruction();

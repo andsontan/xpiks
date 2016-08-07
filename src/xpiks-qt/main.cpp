@@ -369,19 +369,14 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("artworkRepository", &artworkRepository);
     rootContext->setContextProperty("combinedArtworks", &combinedArtworksModel);
     rootContext->setContextProperty("appSettings", &appSettings);
-    rootContext->setContextProperty("artworkUploader", &artworkUploader);
-    rootContext->setContextProperty("uploadInfos", &uploadInfoRepository);
-    rootContext->setContextProperty("logsModel", &logsModel);
     rootContext->setContextProperty("secretsManager", &secretsManager);
     rootContext->setContextProperty("undoRedoManager", &undoRedoManager);
-    rootContext->setContextProperty("zipArchiver", &zipArchiver);
     rootContext->setContextProperty("keywordsSuggestor", &keywordsSuggestor);
     rootContext->setContextProperty("settingsModel", &settingsModel);
     rootContext->setContextProperty("filteredArtItemsModel", &filteredArtItemsModel);
     rootContext->setContextProperty("helpersWrapper", &helpersQmlWrapper);
     rootContext->setContextProperty("recentDirectories", &recentDirectorieModel);
     rootContext->setContextProperty("updateService", &updateService);
-    rootContext->setContextProperty("spellCheckerService", &spellCheckerService);
     rootContext->setContextProperty("spellCheckSuggestionModel", &spellCheckSuggestionModel);
     rootContext->setContextProperty("metadataIOCoordinator", &metadataIOCoordinator);
     rootContext->setContextProperty("pluginManager", &pluginManager);
@@ -391,10 +386,7 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("i18", &languagesModel);
     rootContext->setContextProperty("Colors", &colorsModel);
     rootContext->setContextProperty("acSource", &autoCompleteModel);
-    rootContext->setContextProperty("autoCompleteService", &autoCompleteService);
-    rootContext->setContextProperty("ftpListAC", artworkUploader.getStocksCompletionSource());
     rootContext->setContextProperty("replaceModel", &replaceModel);
-    rootContext->setContextProperty("deleteKeywordsModel", &deleteKeywordsModel);
 
 #ifdef QT_DEBUG
     QVariant isDebug(true);

@@ -35,6 +35,7 @@ Item {
     property bool immediateProcessing: false
     property var callbackObject
     anchors.fill: parent
+    property var zipArchiver: helpersWrapper.getZipArchiver();
 
     signal dialogDestruction();
     Component.onDestruction: dialogDestruction();

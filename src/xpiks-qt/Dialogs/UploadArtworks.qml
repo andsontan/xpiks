@@ -40,6 +40,9 @@ Item {
     property bool skipUploadItems: false
     property variant componentParent
     property bool uploadEnabled: (artworkRepository.artworksSourcesCount > 0) && (filteredArtItemsModel.selectedArtworksCount > 0)
+    property var ftpListAC: helpersWrapper.getFtpACList()
+    property var artworkUploader: helpersWrapper.getArtworkUploader()
+    property var uploadInfos: helpersWrapper.getUploadInfos();
 
     signal dialogDestruction();
     Component.onDestruction: dialogDestruction();

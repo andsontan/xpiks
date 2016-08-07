@@ -180,6 +180,7 @@ ApplicationWindow {
     }
 
     function doOpenUploadDialog(masterPasswordCorrectOrEmpty, skipUploadItems) {
+        var artworkUploader = helpersWrapper.getArtworkUploader()
         artworkUploader.resetModel()
 
         if (!skipUploadItems) {
@@ -187,6 +188,7 @@ ApplicationWindow {
             warningsModel.setShowSelected()
         }
 
+        var uploadInfos = helpersWrapper.getUploadInfos();
         uploadInfos.initializeAccounts(masterPasswordCorrectOrEmpty)
         Common.launchDialog("Dialogs/UploadArtworks.qml",
                             applicationWindow,
@@ -2325,10 +2327,12 @@ ApplicationWindow {
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
+                        var logsModel = helpersWrapper.getLogsModel()
+                        var allText = logsModel.getAllLogsText()
                         Common.launchDialog("Dialogs/LogsDialog.qml",
                                             applicationWindow,
                                             {
-                                                logText: logsModel.getAllLogsText()
+                                                logText: allText
                                             });
                     }
                 }

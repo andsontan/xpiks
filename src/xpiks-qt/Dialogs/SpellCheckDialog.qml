@@ -34,6 +34,7 @@ Item {
     id: spellCheckDialog
     anchors.fill: parent
     property bool canClose: false
+    property var spellCheckerService: helpersWrapper.getSpellCheckerService()
 
     signal dialogDestruction();
     Component.onDestruction: dialogDestruction();
