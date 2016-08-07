@@ -183,8 +183,9 @@ void Commands::CommandManager::InjectDependency(QMLExtensions::ImageCachingServi
     Q_ASSERT(imageCachingService != NULL); m_ImageCachingService = imageCachingService;
 }
 
-void Commands::CommandManager::InjectDependency(Models::FindAndReplaceModel *replacePreview) {
-    Q_ASSERT(replacePreview != NULL); replacePreview->setCommandManager(this);
+void Commands::CommandManager::InjectDependency(Models::FindAndReplaceModel *findAndReplaceModel) {
+    Q_ASSERT(findAndReplaceModel != NULL); m_FindAndReplaceModel = findAndReplaceModel;
+    m_FindAndReplaceModel->setCommandManager(this);
 }
 
 void Commands::CommandManager::InjectDependency(Models::DeleteKeywordsViewModel *deleteKeywordsViewModel) {
@@ -282,6 +283,7 @@ void Commands::CommandManager::ensureDependenciesInjected() {
     Q_ASSERT(m_ColorsModel != NULL);
     Q_ASSERT(m_AutoCompleteService != NULL);
     Q_ASSERT(m_ImageCachingService != NULL);
+    Q_ASSERT(m_FindAndReplaceModel != NULL);
     Q_ASSERT(m_DeleteKeywordsViewModel != NULL);
 }
 

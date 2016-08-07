@@ -19,6 +19,7 @@
 #include "../../xpiks-qt/Helpers/globalimageprovider.h"
 #include "../../xpiks-qt/Models/uploadinforepository.h"
 #include "../../xpiks-qt/Conectivity/ftpcoordinator.h"
+#include "../../xpiks-qt/Models/findandreplacemodel.h"
 #include "../../xpiks-qt/Helpers/helpersqmlwrapper.h"
 #include "../../xpiks-qt/Encryption/secretsmanager.h"
 #include "../../xpiks-qt/Models/artworksrepository.h"
@@ -61,6 +62,7 @@
 #include "savewithemptytitletest.h"
 #include "jsonmerge_tests.h"
 #include "combinededitfixspellingtest.h"
+#include "findandreplacemodeltest.h"
 
 #if defined(WITH_LOGS)
 #undef WITH_LOGS
@@ -127,6 +129,7 @@ int main(int argc, char *argv[]) {
     AutoComplete::AutoCompleteModel autoCompleteModel;
     AutoComplete::AutoCompleteService autoCompleteService(&autoCompleteModel);
     QMLExtensions::ImageCachingService imageCachingService;
+    Models::FindAndReplaceModel findAndReplaceModel(&colorsModel);
     Models::DeleteKeywordsViewModel deleteKeywordsModel;
 
     Helpers::UpdateService updateService(false);
@@ -162,6 +165,7 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&colorsModel);
     commandManager.InjectDependency(&autoCompleteService);
     commandManager.InjectDependency(&imageCachingService);
+    commandManager.InjectDependency(&findAndReplaceModel);
     commandManager.InjectDependency(&deleteKeywordsModel);
 
     commandManager.ensureDependenciesInjected();
@@ -196,8 +200,11 @@ int main(int argc, char *argv[]) {
     integrationTests.append(new SaveWithEmptyTitleTest(&commandManager));
     integrationTests.append(new JsonMergeTests(&commandManager));
     integrationTests.append(new CombinedEditFixSpellingTest(&commandManager));
+    integrationTests.append(new FindAndReplaceModelTest(&commandManager));
 
     qDebug("\n");
+    int succeededTestsCount = 0, failedTestsCount = 0;
+    QStringList failedTests;
 
     foreach (IntegrationTestBase *test, integrationTests) {
         QThread::msleep(500);
@@ -212,9 +219,12 @@ int main(int argc, char *argv[]) {
 
             result += testResult;
             if (testResult == 0) {
+                succeededTestsCount++;
                 qInfo("Test %s PASSED", test->testName().toStdString().c_str());
             } else {
+                failedTestsCount++;
                 qInfo("Test %s FAILED", test->testName().toStdString().c_str());
+                failedTests.append(test->testName());
             }
         }
         catch (...) {
@@ -228,6 +238,15 @@ int main(int argc, char *argv[]) {
     qDeleteAll(integrationTests);
 
     commandManager.beforeDestructionCallback();
+
+    qInfo() << "--------------------------";
+    qInfo() << "Integration Tests Results:" << succeededTestsCount << "succeeded," << failedTestsCount << "failed";
+
+    if (!failedTests.empty()) {
+        qInfo() << "FAILED TESTS:" << failedTests.join(", ");
+    }
+
+    qInfo() << "--------------------------";
 
     // for the logs to appear
     app.processEvents();

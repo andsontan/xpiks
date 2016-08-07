@@ -139,7 +139,9 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Models/artworksviewmodel.cpp \
     ../../xpiks-qt/Models/deletekeywordsviewmodel.cpp \
     ../../xpiks-qt/Commands/deletekeywordscommand.cpp \
-    combinededitfixspellingtest.cpp
+    combinededitfixspellingtest.cpp \
+    findandreplacemodeltest.cpp \
+    ../../xpiks-qt/Models/findandreplacemodel.cpp
 
 RESOURCES +=
 
@@ -305,7 +307,9 @@ HEADERS += \
     ../../xpiks-qt/Models/deletekeywordsviewmodel.h \
     ../../xpiks-qt/Commands/deletekeywordscommand.h \
     combinededitfixspellingtest.h \
-    ../../xpiks-qt/Common/iflagsprovider.h
+    ../../xpiks-qt/Common/iflagsprovider.h \
+    findandreplacemodeltest.h \
+    ../../xpiks-qt/Models/findandreplacemodel.h
 
 INCLUDEPATH += ../../tiny-aes
 INCLUDEPATH += ../../cpp-libface

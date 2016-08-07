@@ -70,7 +70,7 @@ namespace Models {
             if (metadata->release()) {
                 delete metadata;
             } else {
-                LOG_INFO << "Metadata at index" << i << "is locked. Postponing destruction...";
+                LOG_WARNING << "Metadata at index" << i << "is locked. Postponing destruction...";
 
                 metadata->disconnect();
                 Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();

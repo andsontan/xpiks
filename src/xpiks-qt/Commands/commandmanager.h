@@ -141,6 +141,7 @@ namespace Commands {
             m_AutoCompleteService(NULL),
             m_ImageCachingService(NULL),
             m_DeleteKeywordsViewModel(NULL),
+            m_FindAndReplaceModel(NULL),
             m_AfterInitCalled(false)
         { }
 
@@ -173,7 +174,7 @@ namespace Commands {
         void InjectDependency(QMLExtensions::ColorsModel *colorsModel);
         void InjectDependency(AutoComplete::AutoCompleteService *autoCompleteService);
         void InjectDependency(QMLExtensions::ImageCachingService *imageCachingService);
-        void InjectDependency(Models::FindAndReplaceModel *replacePreview);
+        void InjectDependency(Models::FindAndReplaceModel *findAndReplaceModel);
         void InjectDependency(Models::DeleteKeywordsViewModel *deleteKeywordsViewModel);
 
     public:
@@ -269,6 +270,7 @@ namespace Commands {
         virtual Models::ZipArchiver *getZipArchiver() const { return m_ZipArchiver; }
         virtual AutoComplete::AutoCompleteService *getAutoCompleteService() const { return m_AutoCompleteService; }
         virtual Warnings::WarningsService *getWarningsService() const { return m_WarningsService; }
+        virtual Models::FindAndReplaceModel *getFindAndReplaceModel() const { return m_FindAndReplaceModel; }
 #endif
 
     private:
@@ -299,6 +301,7 @@ namespace Commands {
         AutoComplete::AutoCompleteService *m_AutoCompleteService;
         QMLExtensions::ImageCachingService *m_ImageCachingService;
         Models::DeleteKeywordsViewModel *m_DeleteKeywordsViewModel;
+        Models::FindAndReplaceModel *m_FindAndReplaceModel;
 
         QVector<Common::IServiceBase<Common::IBasicArtwork> *> m_WarningsCheckers;
         QVector<Helpers::IFileNotAvailableModel*> m_AvailabilityListeners;

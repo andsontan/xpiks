@@ -457,6 +457,8 @@ namespace Models {
             }
         }
 
+        LOG_INFO << "Filtered" << filteredArtworks.size() << "item(s)";
+
         return filteredArtworks;
     }
 

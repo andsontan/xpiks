@@ -82,6 +82,8 @@ namespace Models {
         Models::FilteredArtItemsProxyModel *filteredItemsModel = m_CommandManager->getFilteredArtItemsModel();
         m_ArtworksList = std::move(filteredItemsModel->getSearchablePreviewOriginalItems(m_ReplaceFrom, m_Flags));
 
+        LOG_INFO << "Found" << m_ArtworksList.size() << "item(s)";
+
         for (auto &preview: m_ArtworksList) {
             Models::ArtworkMetadata *metadata = preview.getOrigin();
             bool hasMatch = false;
@@ -186,7 +188,7 @@ namespace Models {
         return roles;
     }
 
-#ifndef CORE_TESTS
+#if !defined(CORE_TESTS) && !defined(INTEGRATION_TESTS)
     void FindAndReplaceModel::initHighlighting(QQuickTextDocument *document) {
         Helpers::MetadataHighlighter *highlighter = new Helpers::MetadataHighlighter(m_ReplaceFrom,
                                                                                      this,

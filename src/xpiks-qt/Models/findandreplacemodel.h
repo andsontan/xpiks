@@ -43,7 +43,7 @@ namespace Models {
         Q_PROPERTY(bool searchInKeywords READ getSearchInKeywords WRITE setSearchInKeywords NOTIFY searchInKeywordsChanged)
         Q_PROPERTY(bool caseSensitive READ getCaseSensitive WRITE setCaseSensitive NOTIFY caseSensitiveChanged)
         Q_PROPERTY(bool searchWholeWords READ getSearchWholeWords WRITE setSearchWholeWords NOTIFY searchWholeWordsChanged)
-        Q_PROPERTY(int count READ getCount NOTIFY countChanged)
+        Q_PROPERTY(int count READ getArtworksCount NOTIFY countChanged)
 
     public:
         FindAndReplaceModel(QMLExtensions::ColorsModel *colorsModel, QObject *parent=0);
@@ -54,7 +54,7 @@ namespace Models {
         virtual int getFlags() const { return m_Flags; }
         const QString &getReplaceFrom() const { return m_ReplaceFrom; }
         const QString &getReplaceTo() const { return m_ReplaceTo; }
-        int getCount() const { return (int)m_ArtworksList.size(); }
+        int getArtworksCount() const { return (int)m_ArtworksList.size(); }
 
         void setReplaceFrom(const QString &value) {
             QString valueTrimmed = value.trimmed();
@@ -143,7 +143,7 @@ namespace Models {
     public:
         Q_INVOKABLE void initArtworksList();
 
-#ifndef CORE_TESTS
+#if !defined(CORE_TESTS) && !defined(INTEGRATION_TESTS)
         Q_INVOKABLE void initHighlighting(QQuickTextDocument *document);
 #endif
         Q_INVOKABLE QString getSearchTitle(int index);
@@ -154,6 +154,13 @@ namespace Models {
         Q_INVOKABLE void unselectAll() { setAllSelected(false); }
         Q_INVOKABLE bool anySearchDestination() const;
         Q_INVOKABLE void resetModel();
+
+#ifdef INTEGRATION_TESTS
+        void setItemSelected(int index, bool selected) {
+            m_ArtworksList[index].setSelected(selected);
+        }
+
+#endif
 
     public:
         virtual int rowCount(const QModelIndex &parent=QModelIndex()) const;
