@@ -66,7 +66,6 @@ namespace Common {
         LOG_INTEGRATION_TESTS << "keyword:" << removedKeyword << "was correct:" << wasCorrect;
         Q_UNUSED(removedKeyword);
         Q_UNUSED(wasCorrect);
-#endif
     }
 
     int BasicKeywordsModel::rowCount(const QModelIndex &parent) const {
