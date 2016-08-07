@@ -46,8 +46,9 @@
 #endif
 
 namespace Helpers {
-    HelpersQmlWrapper::HelpersQmlWrapper(Commands::CommandManager *commandManager) {
-        m_CommandManager = commandManager;
+    HelpersQmlWrapper::HelpersQmlWrapper(Commands::CommandManager *commandManager):
+        m_CommandManager(commandManager)
+    {
 #ifdef Q_OS_WIN
         m_WinTaskbarButtonApplicable = QSysInfo::windowsVersion() >= QSysInfo::WV_WINDOWS7;
         if (m_WinTaskbarButtonApplicable) {

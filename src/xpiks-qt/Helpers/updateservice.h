@@ -46,7 +46,7 @@ namespace Helpers {
         void updateAvailable(QString updateLink);
 
     private:
-        bool    m_StartWorker;
+        bool m_StartWorker;
         Conectivity::UpdatesCheckerWorker *m_UpdatesCheckerWorker;
     };
 }

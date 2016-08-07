@@ -363,6 +363,8 @@ int main(int argc, char *argv[]) {
     cachingProvider->setImageCachingService(&imageCachingService);
 
     Helpers::HelpersQmlWrapper helpersQmlWrapper(&commandManager);
+    QObject::connect(&updateService, SIGNAL(updateAvailable()),
+                     &helpersQmlWrapper, SIGNAL(updateAvailable()));
 
     QQmlContext *rootContext = engine.rootContext();
     rootContext->setContextProperty("artItemsModel", &artItemsModel);
@@ -376,7 +378,6 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("filteredArtItemsModel", &filteredArtItemsModel);
     rootContext->setContextProperty("helpersWrapper", &helpersQmlWrapper);
     rootContext->setContextProperty("recentDirectories", &recentDirectorieModel);
-    rootContext->setContextProperty("updateService", &updateService);
     rootContext->setContextProperty("metadataIOCoordinator", &metadataIOCoordinator);
     rootContext->setContextProperty("pluginManager", &pluginManager);
     rootContext->setContextProperty("pluginsWithActions", &pluginsWithActions);

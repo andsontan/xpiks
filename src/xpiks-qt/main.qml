@@ -858,7 +858,7 @@ ApplicationWindow {
     }
 
     Connections {
-        target: updateService
+        target: helpersWrapper
         onUpdateAvailable: {
             Common.launchDialog("Dialogs/UpdateWindow.qml",
                                 applicationWindow, {updateUrl: updateLink},

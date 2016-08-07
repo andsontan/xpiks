@@ -72,6 +72,7 @@ namespace Helpers {
 
     signals:
         void globalCloseRequested();
+        void updateAvailable();
 
     private:
         Commands::CommandManager *m_CommandManager;
