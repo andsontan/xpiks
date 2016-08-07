@@ -377,7 +377,6 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("helpersWrapper", &helpersQmlWrapper);
     rootContext->setContextProperty("recentDirectories", &recentDirectorieModel);
     rootContext->setContextProperty("updateService", &updateService);
-    rootContext->setContextProperty("spellCheckSuggestionModel", &spellCheckSuggestionModel);
     rootContext->setContextProperty("metadataIOCoordinator", &metadataIOCoordinator);
     rootContext->setContextProperty("pluginManager", &pluginManager);
     rootContext->setContextProperty("pluginsWithActions", &pluginsWithActions);

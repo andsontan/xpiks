@@ -36,6 +36,7 @@
 #include "../SpellCheck/spellcheckerservice.h"
 #include "../Models/deletekeywordsviewmodel.h"
 #include "../Models/uploadinforepository.h"
+#include "../SpellCheck/spellchecksuggestionmodel.h"
 #include "logger.h"
 #include "../Common/defines.h"
 
@@ -207,6 +208,12 @@ namespace Helpers {
 
     QObject *HelpersQmlWrapper::getUploadInfos() {
         auto *model = m_CommandManager->getUploadInfoRepository();
+        QQmlEngine::setObjectOwnership(model, QQmlEngine::CppOwnership);
+        return model;
+    }
+
+    QObject *HelpersQmlWrapper::getSpellCheckSuggestionsModel() {
+        auto *model = m_CommandManager->getSpellSuggestionsModel();
         QQmlEngine::setObjectOwnership(model, QQmlEngine::CppOwnership);
         return model;
     }

@@ -36,6 +36,7 @@ Item {
     anchors.fill: parent
     property var callbackObject
     property bool initialized: false
+    property var spellCheckSuggestionModel: helpersWrapper.getSpellCheckSuggestionsModel()
 
     signal dialogDestruction();
     Component.onDestruction: dialogDestruction();

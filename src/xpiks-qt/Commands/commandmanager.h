@@ -266,10 +266,10 @@ namespace Commands {
         virtual Models::ArtworkUploader *getArtworkUploader() const { return m_ArtworkUploader; }
         virtual Models::ZipArchiver *getZipArchiver() const { return m_ZipArchiver; }
         virtual Models::DeleteKeywordsViewModel *getDeleteKeywordsModel() const { return m_DeleteKeywordsViewModel; }
+        virtual SpellCheck::SpellCheckSuggestionModel *getSpellSuggestionsModel() const { return m_SpellCheckSuggestionModel; }
 
 #ifdef INTEGRATION_TESTS
         virtual MetadataIO::MetadataIOCoordinator *getMetadataIOCoordinator() const { return m_MetadataIOCoordinator; }
-        virtual SpellCheck::SpellCheckSuggestionModel *getSpellSuggestionsModel() const { return m_SpellCheckSuggestionModel; }
         virtual Models::CombinedArtworksModel *getCombinedArtworksModel() const { return m_CombinedArtworksModel; }
         virtual AutoComplete::AutoCompleteService *getAutoCompleteService() const { return m_AutoCompleteService; }
         virtual Warnings::WarningsService *getWarningsService() const { return m_WarningsService; }

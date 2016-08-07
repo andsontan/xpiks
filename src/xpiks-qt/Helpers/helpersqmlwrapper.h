@@ -65,6 +65,7 @@ namespace Helpers {
         Q_INVOKABLE QObject *getSpellCheckerService();
         Q_INVOKABLE QObject *getDeleteKeywordsModel();
         Q_INVOKABLE QObject *getUploadInfos();
+        Q_INVOKABLE QObject *getSpellCheckSuggestionsModel();
 
     public:
         bool getPluginsAvailable() const;
