@@ -57,7 +57,11 @@ namespace AutoComplete {
         resourcesPath = QCoreApplication::applicationDirPath();
 
 #if defined(Q_OS_MAC)
+#if defined(INTEGRATION_TESTS)
+        resourcesPath += "/../../../xpiks-qt/deps/";
+#else
         resourcesPath += "/../Resources/";
+#endif
 #elif  defined(APPVEYOR)
         resourcesPath += "/../../../xpiks-qt/deps/";
 #elif defined(Q_OS_WIN)

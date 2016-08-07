@@ -93,9 +93,7 @@ namespace Warnings {
     }
 
     int WarningsCheckingWorker::checkDimensions(std::shared_ptr<WarningsItem> &wi) const {
-#ifdef INTEGRATION_TESTS
-        LOG_DEBUG << "#";
-#endif
+        LOG_INTEGRATION_TESTS << "#";
         Models::ArtworkMetadata *item = wi->getCheckableItem();
         int warningsInfo = 0;
 
@@ -132,9 +130,7 @@ namespace Warnings {
     }
 
     int WarningsCheckingWorker::checkKeywords(std::shared_ptr<WarningsItem> &wi) const {
-#ifdef INTEGRATION_TESTS
-        LOG_DEBUG << "#";
-#endif
+        LOG_INTEGRATION_TESTS << "#";
         int warningsInfo = 0;
         Models::ArtworkMetadata *item = wi->getCheckableItem();
         Common::BasicKeywordsModel *keywordsModel = item->getKeywordsModel();
@@ -161,9 +157,8 @@ namespace Warnings {
     }
 
     int WarningsCheckingWorker::checkDescription(std::shared_ptr<WarningsItem> &wi) const {
-#ifdef INTEGRATION_TESTS
-        LOG_DEBUG << "#";
-#endif
+        LOG_INTEGRATION_TESTS << "#";
+
         int warningsInfo = 0;
         Models::ArtworkMetadata *item = wi->getCheckableItem();
 
@@ -201,9 +196,8 @@ namespace Warnings {
     }
 
     int WarningsCheckingWorker::checkTitle(std::shared_ptr<WarningsItem> &wi) const {
-#ifdef INTEGRATION_TESTS
-        LOG_DEBUG << "#";
-#endif
+        LOG_INTEGRATION_TESTS << "#";
+
         int warningsInfo = 0;
         Models::ArtworkMetadata *item = wi->getCheckableItem();
 
@@ -241,31 +235,24 @@ namespace Warnings {
     }
 
     int WarningsCheckingWorker::checkSpelling(std::shared_ptr<WarningsItem> &wi) const {
-#ifdef INTEGRATION_TESTS
-        LOG_DEBUG << "#";
-#endif
+        LOG_INTEGRATION_TESTS << "#";
+
         int warningsInfo = 0;
         Models::ArtworkMetadata *item = wi->getCheckableItem();
         Common::BasicKeywordsModel *keywordsModel = item->getKeywordsModel();
 
         if (keywordsModel->hasKeywordsSpellError()) {
-#ifdef INTEGRATION_TESTS
-            LOG_INFO << "Detected keywords spell error";
-#endif
+            LOG_INTEGRATION_TESTS << "Detected keywords spell error";
             Common::SetFlag(warningsInfo, Common::WarningTypeSpellErrorsInKeywords);
         }
 
         if (keywordsModel->hasDescriptionSpellError()) {
-#ifdef INTEGRATION_TESTS
-            LOG_INFO << "Detected description spell error";
-#endif
+            LOG_INTEGRATION_TESTS << "Detected description spell error";
             Common::SetFlag(warningsInfo, Common::WarningTypeSpellErrorsInDescription);
         }
 
         if (keywordsModel->hasTitleSpellError()) {
-#ifdef INTEGRATION_TESTS
-            LOG_INFO << "Detected title spell error";
-#endif
+            LOG_INTEGRATION_TESTS << "Detected title spell error";
             Common::SetFlag(warningsInfo, Common::WarningTypeSpellErrorsInTitle);
         }
 

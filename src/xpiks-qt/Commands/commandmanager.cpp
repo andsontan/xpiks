@@ -342,9 +342,7 @@ void Commands::CommandManager::setArtworksForZipping(const QVector<Models::Artwo
 /*virtual*/
 void Commands::CommandManager::connectArtworkSignals(Models::ArtworkMetadata *metadata) const {
     if (m_ArtItemsModel) {
-#ifdef INTEGRATION_TESTS
-        LOG_DEBUG << "Connecting to ArtItemsModel...";
-#endif
+        LOG_INTEGRATION_TESTS << "Connecting to ArtItemsModel...";
 
         QObject::connect(metadata, SIGNAL(modifiedChanged(bool)),
             m_ArtItemsModel, SLOT(itemModifiedChanged(bool)));
@@ -357,18 +355,14 @@ void Commands::CommandManager::connectArtworkSignals(Models::ArtworkMetadata *me
     }
 
     if (m_FilteredItemsModel) {
-#ifdef INTEGRATION_TESTS
-        LOG_DEBUG << "Connecting to FilteredItemsModel...";
-#endif
+        LOG_INTEGRATION_TESTS << "Connecting to FilteredItemsModel...";
 
         QObject::connect(metadata, SIGNAL(selectedChanged(bool)),
             m_FilteredItemsModel, SLOT(itemSelectedChanged(bool)));
     }
 
     if (m_ArtworksRepository) {
-#ifdef INTEGRATION_TESTS
-        LOG_DEBUG << "Connecting to ArtworksRepository...";
-#endif
+        LOG_INTEGRATION_TESTS << "Connecting to ArtworksRepository...";
         // QObject::connect(metadata, SIGNAL(fileSelectedChanged(QString,bool)),
         //                 m_ArtworksRepository, SLOT(fileSelectedChanged(QString,bool)));
     }
@@ -527,9 +521,7 @@ void Commands::CommandManager::submitForWarningsCheck(Models::ArtworkMetadata *i
 
     int count = m_WarningsCheckers.length();
 
-#ifdef INTEGRATION_TESTS
-    LOG_DEBUG << count << "checkers available";
-#endif
+    LOG_INTEGRATION_TESTS << count << "checkers available";
 
     for (int i = 0; i < count; ++i) {
         Common::IServiceBase<Common::IBasicArtwork> *checker = m_WarningsCheckers.at(i);

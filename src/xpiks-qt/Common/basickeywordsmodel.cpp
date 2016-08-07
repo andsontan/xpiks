@@ -63,9 +63,7 @@ namespace Common {
         bool wasCorrect = false;
 
         this->takeKeywordAtUnsafe(row, removedKeyword, wasCorrect);
-#ifdef INTEGRATION_TESTS
-        LOG_DEBUG << "keyword:" << removedKeyword << "was correct:" << wasCorrect;
-#else
+        LOG_INTEGRATION_TESTS << "keyword:" << removedKeyword << "was correct:" << wasCorrect;
         Q_UNUSED(removedKeyword);
         Q_UNUSED(wasCorrect);
 #endif
@@ -818,13 +816,11 @@ namespace Common {
 
         Q_UNUSED(writeLocker);
 
-#ifdef INTEGRATION_TESTS
         if (m_KeywordsList.length() != m_SpellCheckResults.length()) {
-            LOG_DEBUG << "Current keywords list length:" << m_KeywordsList.length();
-            LOG_DEBUG << "SpellCheck list length:" << m_SpellCheckResults.length();
+            LOG_INTEGRATION_TESTS << "Current keywords list length:" << m_KeywordsList.length();
+            LOG_INTEGRATION_TESTS << "SpellCheck list length:" << m_SpellCheckResults.length();
         }
 
-#endif
         // sync issue between adding/removing/undo/spellcheck
         Q_ASSERT(m_KeywordsList.length() == m_SpellCheckResults.length());
 

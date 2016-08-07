@@ -194,10 +194,8 @@ namespace Helpers {
         bool hasMatch = false;
 
         bool searchUsingAnd = Common::HasFlag(searchFlags, Common::SearchFlagAllSearchTerms);
-#ifdef CORE_TESTS
-        LOG_DEBUG << "Search using AND:" << searchUsingAnd;
-        LOG_DEBUG << "Case sensitive:" << Common::HasFlag(searchFlags, Common::SearchFlagCaseSensitive);
-#endif
+        LOG_CORE_TESTS << "Search using AND:" << searchUsingAnd;
+        LOG_CORE_TESTS << "Case sensitive:" << Common::HasFlag(searchFlags, Common::SearchFlagCaseSensitive);
 
         if (searchUsingAnd) {
             hasMatch = containsAllPartsSearch(searchTerm, metadata, searchFlags);

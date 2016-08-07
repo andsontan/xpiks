@@ -52,9 +52,7 @@ namespace Models {
 
     bool ArtworkMetadata::initialize(const QString &title,
                                      const QString &description, const QStringList &rawKeywords, bool overwrite) {
-#ifdef INTEGRATION_TESTS
-        LOG_INFO << title << description << rawKeywords << overwrite;
-#endif
+        LOG_INTEGRATION_TESTS << title << description << rawKeywords << overwrite;
 
         bool anythingModified = false;
 

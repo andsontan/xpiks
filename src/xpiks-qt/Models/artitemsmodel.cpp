@@ -119,9 +119,8 @@ namespace Models {
     void ArtItemsModel::removeArtworksDirectory(int index) {
         LOG_INFO << "Remove artworks directory at" << index;
         const QString &directory = m_CommandManager->getArtworksRepository()->getDirectory(index);
-#ifdef CORE_TESTS
-        LOG_DEBUG << "Removing directory:" << directory;
-#endif
+        LOG_CORE_TESTS << "Removing directory:" << directory;
+
         QDir dir(directory);
         QString directoryAbsolutePath = dir.absolutePath();
 
@@ -664,9 +663,7 @@ namespace Models {
     }
 
     void ArtItemsModel::spellCheckErrorsChanged() {
-#ifdef INTEGRATION_TESTS
-        LOG_DEBUG << "#";
-#endif
+        LOG_INTEGRATION_TESTS << "#";
         ArtworkMetadata *item = qobject_cast<ArtworkMetadata*>(sender());
 
 #ifndef QT_DEBUG

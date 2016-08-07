@@ -245,9 +245,7 @@ namespace SpellCheck {
             SpellSuggestionsItem *suggestionItem = m_SpellSuggestions.at(i);
             suggestionItem->replaceToSuggested(item, word, replacement);
 
-#ifdef INTEGRATION_TESTS
-            LOG_DEBUG << i << "item's result is:" << suggestionItem->getReplacementSucceeded();
-#endif
+            LOG_INTEGRATION_TESTS << i << "item's result is:" << suggestionItem->getReplacementSucceeded();
 
             if (!suggestionItem->getReplacementSucceeded()) {
                 anyFault = true;
