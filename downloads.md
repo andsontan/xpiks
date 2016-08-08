@@ -65,7 +65,7 @@ permalink: /downloads/
 <h2><strong>Linux instructions</strong></h2>
 
 <div class="download-package">
-<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.3.2/xpiks_1.3.2_amd64.deb">
+<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.3.4/xpiks_1.3.4-1_amd64.deb">
 <div><img src="{{site.url}}/images/linux_installer.jpg" style="vertical-align: middle;width:70px;" />
 <span style="vertical-align: middle;">Package for Debian</span>
 </div>
@@ -77,7 +77,7 @@ permalink: /downloads/
 <div style="clear:both;height: 30px;">&nbsp;</div>
 
 <div class="download-package">
-<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.3.2/xpiks-1.3.2-1.x86_64.rpm">
+<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.3.4/xpiks-1.3.4-1.x86_64.rpm">
 <div><img src="{{site.url}}/images/rpm.png" style="vertical-align: middle;width:70px;" />
 <span style="vertical-align: middle;">Package for SUSE</span>
 </div>
