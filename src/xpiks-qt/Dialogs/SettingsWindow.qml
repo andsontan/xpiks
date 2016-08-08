@@ -1341,7 +1341,7 @@ ApplicationWindow {
                     settingsModel.keywordSizeScale = uxTab.sizeSliderValue
                     settingsModel.scrollSpeedScale = uxTab.scrollSpeedScale
                     settingsModel.selectedThemeIndex = uxTab.themeIndex
-                    settingsModel.userStatistic = secTab.useStatistics
+                    settingsModel.userStatistics = secTab.useStatistics
                     settingsModel.saveAllValues()
                     closeSettings()
                     Colors.applyTheme(settingsModel.selectedThemeIndex)
