@@ -173,12 +173,17 @@ static const char *setHighDpiEnvironmentVariable()
 }
 
 int main(int argc, char *argv[]) {
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    
+    QString userName=env.value("USER");
+    if (userName.isEmpty())
+        userName = env.value("USERNAME");
 #ifdef QT_NO_DEBUG
     const QString runGuardName = "xpiks";
 #else
     const QString runGuardName = "xpiks-debug";
 #endif
-    Helpers::RunGuard guard(runGuardName);
+    Helpers::RunGuard guard(runGuardName+"_"+userName);
     if (!guard.tryToRun()) {
         std::cerr << "Xpiks is already running";
         return -1;

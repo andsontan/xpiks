@@ -1,6 +1,20 @@
-xpiks (1.3.2) UNRELEASED; urgency=medium
+xpiks (1.3.4-1) UNRELEASED; urgency=medium
 
+    This is a bugfix release for a couple of bugs:
 
+    - Fix spelling does not save changes in Combined Edit dialogs #325
+    - UI not updated when checking "Disable FTP passive mode" in the 
+      upload dialog "Advanced" Tab
+    - Deadlock in exiv2 v0.25 library fix
+    - Combined Edit dialog case issue when combining keywords
+    - Keywords count not updated in CombinedEdit-based dialogs on 
+      "Clear keywords" action
+    - Description/Title spelling errors not updates when removing 
+      all but one in CombinedEdit-based
+
+ -- Artiom <a.mv@gmx.fr>  Sun, 07 Aug 2016 10:58:57 +0200
+
+xpiks (1.3.2-1) UNRELEASED; urgency=medium
 
     This is a bugfix release for a couple of UI bugs and bugs in exiv2 library.
 
@@ -15,8 +29,28 @@ xpiks (1.3.2) UNRELEASED; urgency=medium
     - scrolling in main window
     - empty title not filled from description
 
-
  -- Artiom <a.mv@gmx.fr>  Wed, 15 Jun 2016 14:16:08 +0200
+
+xpiks (1.3.1-1) UNRELEASED; urgency=medium
+
+    This release is highly polished and refactored in terms of thread-safety 
+    Xpiks 1.3 with almost no new features, but switch from exiftool to exiv2.
+
+    **In this release:**
+
+    - full support for non-latin paths in Windows
+    - Exiftool is not used by default anymore (but is optionally possible)
+    - Portuguese and French localizations of interface
+    - removing keywords duplicates when replacing with spelling suggestions
+    - lots of improvements in thread-safety
+
+    **Bugfixes:**
+
+    - uploading of file with unicode path via curl
+    - fix for selecting and double-clicking an image
+
+
+ -- Artiom <a.mv@gmx.fr>  Mon, 30 May 2016 13:37:06 +0200
 
 xpiks (1.2-1) UNRELEASED; urgency=medium
 
