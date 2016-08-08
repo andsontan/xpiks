@@ -217,7 +217,7 @@ namespace Models {
         int originalIndex = getOriginalIndex(index);
         ArtworkMetadata *metadata = artItemsModel->getArtwork(originalIndex);
 
-        if (metadata != NULL) {
+        if ((metadata != NULL) && (!metadata->areKeywordsEmpty())) {
             removeKeywordsInItem(metadata, originalIndex);
         }
     }

@@ -137,6 +137,7 @@ namespace Models {
         void setFileSize(qint64 size) { m_FileSize = size; }
 
     public:
+        bool areKeywordsEmpty() { return m_KeywordsModel.areKeywordsEmpty(); }
         bool removeKeywordAt(int index);
         bool removeLastKeyword();
         virtual bool appendKeyword(const QString &keyword);

@@ -451,3 +451,13 @@ void FilteredModelTests::filterTitleAndKeywordsTest() {
     filteredItemsModel.setSearchTerm("!keyword2 title");
     QCOMPARE(filteredItemsModel.getItemsCount(), 5);
 }
+
+void FilteredModelTests::clearEmptyKeywordsTest() {
+    DECLARE_MODELS_AND_GENERATE(1);
+    Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(0);
+    metadata->clearKeywords();
+
+    commandManagerMock.resetAnyCommandProcessed();
+    filteredItemsModel.clearKeywords(0);
+    QVERIFY(!commandManagerMock.anyCommandProcessed());
+}
