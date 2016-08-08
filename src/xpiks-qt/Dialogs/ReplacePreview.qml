@@ -41,6 +41,7 @@ Item {
     Component.onDestruction: dialogDestruction();
 
     function closePopup() {
+        replaceModel.clearArtworks()
         replacePreviewComponent.destroy()
     }
 

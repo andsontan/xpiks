@@ -154,6 +154,7 @@ namespace Models {
         Q_INVOKABLE void unselectAll() { setAllSelected(false); }
         Q_INVOKABLE bool anySearchDestination() const;
         Q_INVOKABLE void resetModel();
+        Q_INVOKABLE void clearArtworks();
 
 #ifdef INTEGRATION_TESTS
         void setItemSelected(int index, bool selected) {

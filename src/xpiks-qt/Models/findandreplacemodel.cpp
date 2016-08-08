@@ -309,9 +309,16 @@ namespace Models {
         LOG_DEBUG << "#";
 
         initDefaultFlags();
-        m_ArtworksList.clear();
+        clearArtworks();
         m_ReplaceFrom.clear();
         m_ReplaceTo.clear();
+    }
+
+    void FindAndReplaceModel::clearArtworks() {
+        LOG_DEBUG << "#";
+        beginResetModel();
+        m_ArtworksList.clear();
+        endResetModel();
     }
 
     QString FindAndReplaceModel::filterText(const QString &text) {
