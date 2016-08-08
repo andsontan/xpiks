@@ -46,6 +46,7 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::setSearchTerm(const QString &value) {
+        LOG_INFO << value;
         bool anyChangesNeeded = value != m_SearchTerm;
 
         if (anyChangesNeeded) {
@@ -59,6 +60,7 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::spellCheckAllItems() {
+        LOG_DEBUG << "#";
         QVector<ArtworkMetadata *> allArtworks = getAllOriginalItems();
         m_CommandManager->submitForSpellCheck(allArtworks);
         m_CommandManager->reportUserAction(Conectivity::UserActionSpellCheck);
@@ -72,6 +74,8 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::selectDirectory(int directoryIndex) {
+        LOG_DEBUG << "directory index:" << directoryIndex;
+
         QVector<int> directoryItems;
         int size = this->rowCount();
         directoryItems.reserve(size);
@@ -79,6 +83,9 @@ namespace Models {
         ArtItemsModel *artItemsModel = getArtItemsModel();
         const ArtworksRepository *artworksRepository = m_CommandManager->getArtworksRepository();
         const QString &directory = artworksRepository->getDirectory(directoryIndex);
+
+        LOG_DEBUG << directory;
+
         QDir dir(directory);
         QString directoryAbsolutePath = dir.absolutePath();
 
@@ -101,17 +108,20 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::combineSelectedArtworks() {
+        LOG_DEBUG << "#";
         auto artworksList = getSelectedOriginalItemsWithIndices();
         m_CommandManager->combineArtworks(artworksList);
     }
 
     void FilteredArtItemsProxyModel::setSelectedItemsSaved() {
+        LOG_DEBUG << "#";
         QVector<int> indices = getSelectedOriginalIndices();
         ArtItemsModel *artItemsModel = getArtItemsModel();
         artItemsModel->setSelectedItemsSaved(indices);
     }
 
     void FilteredArtItemsProxyModel::removeSelectedArtworks() {
+        LOG_DEBUG << "#";
         QVector<int> indices = getSelectedOriginalIndices();
         ArtItemsModel *artItemsModel = getArtItemsModel();
         artItemsModel->removeSelectedArtworks(indices);
@@ -119,12 +129,14 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::updateSelectedArtworks() {
+        LOG_DEBUG << "#";
         QVector<int> indices = getSelectedOriginalIndices();
         ArtItemsModel *artItemsModel = getArtItemsModel();
         artItemsModel->updateSelectedArtworks(indices);
     }
 
     void FilteredArtItemsProxyModel::saveSelectedArtworks(bool overwriteAll, bool useBackups) {
+        LOG_INFO << "ovewriteAll:" << overwriteAll << "useBackups:" << useBackups;
         // former patchSelectedArtworks
         QVector<int> indices = getSelectedOriginalIndices();
         ArtItemsModel *artItemsModel = getArtItemsModel();
@@ -132,6 +144,7 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::setSelectedForUpload() {
+        LOG_DEBUG << "#";
         QVector<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
         m_CommandManager->setArtworksForUpload(selectedArtworks);
     }
@@ -145,7 +158,6 @@ namespace Models {
 
     bool FilteredArtItemsProxyModel::areSelectedArtworksSaved() {
         int modifiedSelectedCount = getModifiedSelectedCount();
-
         return modifiedSelectedCount == 0;
     }
 
@@ -170,6 +182,7 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::removeArtworksDirectory(int index) {
+        LOG_DEBUG << "#";
         ArtItemsModel *artItemsModel = getArtItemsModel();
 
         artItemsModel->removeArtworksDirectory(index);
@@ -182,6 +195,7 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::reimportMetadataForSelected() {
+        LOG_DEBUG << "#";
         QVector<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
         QVector<QPair<int, int> > ranges;
         Helpers::indicesToRanges(getSelectedOriginalIndices(), ranges);
@@ -203,6 +217,7 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::removeMetadataInSelected() const {
+        LOG_DEBUG << "#";
         auto selectedArtworks = getSelectedOriginalItemsWithIndices();
         int flags = 0;
         Common::SetFlag(flags, Common::EditDesctiption);
@@ -213,6 +228,7 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::clearKeywords(int index) {
+        LOG_INFO << "index:" << index;
         ArtItemsModel *artItemsModel = getArtItemsModel();
         int originalIndex = getOriginalIndex(index);
         ArtworkMetadata *metadata = artItemsModel->getArtwork(originalIndex);
@@ -223,6 +239,7 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::focusNextItem(int index) {
+        LOG_INFO << "index:" << index;
         if (0 <= index && index < rowCount() - 1) {
             QModelIndex nextQIndex = this->index(index + 1, 0);
             QModelIndex sourceIndex = mapToSource(nextQIndex);
@@ -236,6 +253,7 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::focusPreviousItem(int index) {
+        LOG_INFO << "index:" << index;
         if (0 < index && index < rowCount()) {
             QModelIndex nextQIndex = this->index(index - 1, 0);
             QModelIndex sourceIndex = mapToSource(nextQIndex);
@@ -310,6 +328,7 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::detachVectorFromSelected() {
+        LOG_DEBUG << "#";
         QVector<int> indices = getSelectedOriginalIndices();
         ArtItemsModel *artItemsModel = getArtItemsModel();
         artItemsModel->detachVectorsFromSelected(indices);
@@ -371,6 +390,7 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::setFilteredItemsSelected(bool selected) {
+        LOG_INFO << selected;
         ArtItemsModel *artItemsModel = getArtItemsModel();
 
         QVector<int> indices;

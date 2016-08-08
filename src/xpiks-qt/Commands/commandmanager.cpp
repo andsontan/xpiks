@@ -330,12 +330,14 @@ void Commands::CommandManager::deleteKeywordsFromArtworks(std::vector<Models::Me
 }
 
 void Commands::CommandManager::setArtworksForUpload(const QVector<Models::ArtworkMetadata *> &artworks) const {
+    LOG_INFO << artworks.size() << "artworks";
     if (m_ArtworkUploader) {
         m_ArtworkUploader->setArtworks(artworks);
     }
 }
 
 void Commands::CommandManager::setArtworksForZipping(const QVector<Models::ArtworkMetadata *> &artworks) const {
+    LOG_INFO << artworks.size() << "artworks";
     if (m_ZipArchiver) {
         m_ZipArchiver->setArtworks(artworks);
     }

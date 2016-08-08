@@ -44,6 +44,7 @@ namespace Models {
     }
 
     void AbstractConfigUpdaterModel::processRemoteConfig(const QJsonDocument &remoteDocument, bool overwriteLocal) {
+        LOG_DEBUG << "#";
         QJsonDocument &localDocument = m_LocalConfig.getConfig();
         Helpers::mergeJson(remoteDocument, localDocument, overwriteLocal, *this);
         m_LocalConfig.saveToFile();

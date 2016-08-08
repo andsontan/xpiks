@@ -368,6 +368,7 @@ namespace Common {
 
     bool BasicKeywordsModel::editKeywordUnsafe(int index, const QString &replacement) {
         bool result = false;
+        LOG_INFO << "index:" << index << "replacement:" << replacement;
         QString sanitized = Helpers::doSanitizeKeyword(replacement);
 
         QString existing = m_KeywordsList.at(index);
@@ -512,6 +513,7 @@ namespace Common {
 
     bool BasicKeywordsModel::replaceInDescription(const QString &replaceWhat, const QString &replaceTo,
                                                   int flags) {
+        LOG_DEBUG << "#";
         const bool wholeWords = Common::HasFlag(flags, Common::SearchFlagExactMatch);
         const bool caseSensitive = Common::HasFlag(flags, Common::SearchFlagCaseSensitive);
         const Qt::CaseSensitivity caseSensivity = caseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive;
@@ -529,6 +531,7 @@ namespace Common {
 
     bool BasicKeywordsModel::replaceInTitle(const QString &replaceWhat, const QString &replaceTo,
                                             int flags) {
+        LOG_DEBUG << "#";
         const bool wholeWords = Common::HasFlag(flags, Common::SearchFlagExactMatch);
         const bool caseSensitive = Common::HasFlag(flags, Common::SearchFlagCaseSensitive);
         const Qt::CaseSensitivity caseSensivity = caseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive;
@@ -887,6 +890,7 @@ namespace Common {
     }
 
     QVector<SpellCheck::SpellSuggestionsItem *> BasicKeywordsModel::createDescriptionSuggestionsList() {
+        LOG_DEBUG << "#";
         QStringList descriptionWords = getDescriptionWords();
         int length = descriptionWords.length();
 
@@ -905,6 +909,7 @@ namespace Common {
     }
 
     QVector<SpellCheck::SpellSuggestionsItem *> BasicKeywordsModel::createTitleSuggestionsList() {
+        LOG_DEBUG << "#";
         QStringList titleWords = getTitleWords();
         int length = titleWords.length();
 

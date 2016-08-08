@@ -31,6 +31,7 @@ namespace Models {
     }
 
     void ArtworksViewModel::setArtworks(std::vector<MetadataElement> &artworks) {
+        LOG_INFO << artworks.size() << "artworks";
         size_t paramLength = artworks.size();
 
         if (paramLength > 0) {
@@ -114,6 +115,7 @@ namespace Models {
 
     void ArtworksViewModel::processArtworks(std::function<bool (const MetadataElement &)> pred,
                                             std::function<void (int, ArtworkMetadata *)> action) const {
+        LOG_DEBUG << "#";
         int index = 0;
 
         for (auto &item: m_ArtworksList) {

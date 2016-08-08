@@ -488,6 +488,7 @@ namespace Models {
     }
 
     void ArtItemsModel::editKeyword(int metadataIndex, int keywordIndex, const QString &replacement) {
+        LOG_INFO << "metadata index:" << metadataIndex;
         if (0 <= metadataIndex && metadataIndex < getArtworksCount()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
             if (metadata->editKeyword(keywordIndex, replacement)) {
@@ -815,6 +816,7 @@ namespace Models {
     }
 
     int ArtItemsModel::addDirectories(const QStringList &directories) {
+        LOG_INFO << directories;
         int filesCount = 0;
         QStringList files;
 
@@ -1048,6 +1050,7 @@ namespace Models {
     }
 
     void ArtItemsModel::onUndoStackEmpty() {
+        LOG_DEBUG << "#";
         if (m_ArtworkList.empty()) {
             if (!m_FinalizationList.empty()) {
                 LOG_DEBUG << "Clearing the finalization list";

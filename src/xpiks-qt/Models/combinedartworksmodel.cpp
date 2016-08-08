@@ -74,12 +74,14 @@ namespace Models {
     }
 
     void CombinedArtworksModel::acceptSuggestedKeywords(const QStringList &keywords)  {
+        LOG_INFO << keywords.size() << "keyword(s)";
         foreach (const QString &keyword, keywords) {
             this->appendKeyword(keyword);
         }
     }
 
     void CombinedArtworksModel::setChangeDescription(bool value)  {
+        LOG_INFO << value;
         if (Common::HasFlag(m_EditFlags, Common::EditDesctiption) != value) {
             Common::ApplyFlag(m_EditFlags, value, Common::EditDesctiption);
             emit changeDescriptionChanged();
@@ -87,6 +89,7 @@ namespace Models {
     }
 
     void CombinedArtworksModel::setChangeTitle(bool value) {
+        LOG_INFO << value;
         if (Common::HasFlag(m_EditFlags, Common::EditTitle) != value) {
             Common::ApplyFlag(m_EditFlags, value, Common::EditTitle);
             emit changeTitleChanged();
@@ -94,6 +97,7 @@ namespace Models {
     }
 
     void CombinedArtworksModel::setChangeKeywords(bool value) {
+        LOG_INFO << value;
         if (Common::HasFlag(m_EditFlags, Common::EditKeywords) != value) {
             Common::ApplyFlag(m_EditFlags, value, Common::EditKeywords);
             emit changeKeywordsChanged();
@@ -101,6 +105,7 @@ namespace Models {
     }
 
     void CombinedArtworksModel::setAppendKeywords(bool value) {
+        LOG_INFO << value;
         if (Common::HasFlag(m_EditFlags, Common::AppendKeywords) != value) {
             Common::ApplyFlag(m_EditFlags, value, Common::AppendKeywords);
             emit appendKeywordsChanged();
@@ -114,6 +119,7 @@ namespace Models {
 #endif
 
     void CombinedArtworksModel::editKeyword(int index, const QString &replacement) {
+        LOG_INFO << "index:" << index;
         if (m_CommonKeywordsModel.editKeyword(index, replacement)) {
             setKeywordsModified(true);
             m_CommandManager->submitKeywordForSpellCheck(&m_CommonKeywordsModel, index);
@@ -121,6 +127,7 @@ namespace Models {
     }
 
     QString CombinedArtworksModel::removeKeywordAt(int keywordIndex) {
+        LOG_INFO << "keyword index:" << keywordIndex;
         QString keyword;
         if (m_CommonKeywordsModel.takeKeywordAt(keywordIndex, keyword)) {
             emit keywordsCountChanged();
@@ -131,6 +138,7 @@ namespace Models {
     }
 
     void CombinedArtworksModel::removeLastKeyword() {
+        LOG_DEBUG << "#";
         QString keyword;
         if (m_CommonKeywordsModel.takeLastKeyword(keyword)) {
             emit keywordsCountChanged();
@@ -139,6 +147,7 @@ namespace Models {
     }
 
     void CombinedArtworksModel::appendKeyword(const QString &keyword) {
+        LOG_INFO << keyword;
         if (m_CommonKeywordsModel.appendKeyword(keyword)) {
             emit keywordsCountChanged();
             setKeywordsModified(true);
@@ -158,6 +167,7 @@ namespace Models {
     }
 
     void CombinedArtworksModel::saveEdits() {
+        LOG_INFO << "edit flags:" << m_EditFlags << "modified flags:" << m_ModifiedFlags;
         bool needToSave = false;
 
         if (getChangeTitle() ||
@@ -172,10 +182,13 @@ namespace Models {
 
         if (needToSave) {
             processCombinedEditCommand();
+        } else {
+            LOG_DEBUG << "nothing to save";
         }
     }
 
     void CombinedArtworksModel::clearKeywords() {
+        LOG_DEBUG << "#";
         if (m_CommonKeywordsModel.clearKeywords()) {
             setKeywordsModified(true);
             emit keywordsCountChanged();
@@ -183,6 +196,7 @@ namespace Models {
     }
 
     void CombinedArtworksModel::suggestCorrections() {
+        LOG_DEBUG << "#";
         m_CommandManager->setupSpellCheckSuggestions(&m_CommonKeywordsModel, -1, Common::CorrectAll);
     }
 
@@ -215,6 +229,7 @@ namespace Models {
     }
 
     void CombinedArtworksModel::spellCheckDescription() {
+        LOG_DEBUG << "#";
         if (!m_CommonKeywordsModel.getDescription().trimmed().isEmpty()) {
             m_CommandManager->submitItemForSpellCheck(&m_CommonKeywordsModel, Common::SpellCheckDescription);
         } else {
@@ -223,6 +238,7 @@ namespace Models {
     }
 
     void CombinedArtworksModel::spellCheckTitle() {
+        LOG_DEBUG << "#";
         if (!m_CommonKeywordsModel.getTitle().trimmed().isEmpty()) {
             m_CommandManager->submitItemForSpellCheck(&m_CommonKeywordsModel, Common::SpellCheckTitle);
         } else {
@@ -275,6 +291,7 @@ namespace Models {
     }
 
     void CombinedArtworksModel::assignFromOneArtwork() {
+        LOG_DEBUG << "#";
         Q_ASSERT(getArtworksCount() == 1);
         ArtworkMetadata *metadata = getArtworkMetadata(0);
 
@@ -292,6 +309,7 @@ namespace Models {
     }
 
     void CombinedArtworksModel::assignFromManyArtworks() {
+        LOG_DEBUG << "#";
         bool anyItemsProcessed = false;
         bool descriptionsDiffer = false;
         bool titleDiffer = false;
@@ -346,6 +364,7 @@ namespace Models {
     }
 
     bool CombinedArtworksModel::doRemoveSelectedArtworks() {
+        LOG_DEBUG << "#";
         bool anyRemoved = ArtworksViewModel::doRemoveSelectedArtworks();
         if (anyRemoved) {
             if (!isEmpty()) {
@@ -357,6 +376,7 @@ namespace Models {
     }
 
     void CombinedArtworksModel::doResetModel() {
+        LOG_DEBUG << "#";
         ArtworksViewModel::doResetModel();
 
         m_SpellCheckInfo.clear();
@@ -373,6 +393,7 @@ namespace Models {
     }
 
     bool CombinedArtworksModel::removeUnavailableItems() {
+        LOG_DEBUG << "#";
         bool anyRemoved = ArtworksViewModel::removeUnavailableItems();
         if (anyRemoved) {
             if (!isEmpty()) {
@@ -384,6 +405,7 @@ namespace Models {
     }
 
     void CombinedArtworksModel::generateAboutToBeRemoved() {
+        LOG_DEBUG << "#";
          m_CommonKeywordsModel.notifyAboutToBeRemoved();
     }
 }

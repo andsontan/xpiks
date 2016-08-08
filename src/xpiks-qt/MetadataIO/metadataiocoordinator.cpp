@@ -195,6 +195,7 @@ namespace MetadataIO {
 #endif
 
     void MetadataIOCoordinator::autoDiscoverExiftool() {
+        LOG_DEBUG << "#";
         Models::SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
         QString existingExiftoolPath = settingsModel->getExifToolPath();
         m_ExiftoolDiscoveryFuture->setFuture(QtConcurrent::run(this,

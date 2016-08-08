@@ -53,6 +53,8 @@ function isInComponent(point, component) {
 }
 
 function launchDialog(componentName, directParent, options, functor) {
+    console.debug("Opening dialog " + componentName + " ...");
+
     var component = Qt.createComponent(componentName);
     if (component.status !== Component.Ready) {
         console.debug("Component Error: " + component.errorString());
@@ -62,7 +64,7 @@ function launchDialog(componentName, directParent, options, functor) {
         if (typeof instance.dialogDestruction !== "undefined") {
             if (typeof directParent.openedDialogsCount !== "undefined") {
                 directParent.openedDialogsCount += 1
-                console.debug("Opened dialog " + componentName + ". Opened dialogs count is " + directParent.openedDialogsCount);
+                console.info("Opened dialog " + componentName + ". Opened dialogs count is " + directParent.openedDialogsCount);
             }
 
             if (typeof directParent.onDialogClosed !== "undefined") {
