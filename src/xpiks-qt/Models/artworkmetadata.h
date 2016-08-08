@@ -78,6 +78,7 @@ namespace Models {
         bool isSelected() const { return getIsSelectedFlag(); }
         bool isUnavailable() const { return getIsUnavailableFlag(); }
         bool isInitialized() const { return getIsInitializedFlag(); }
+        bool areKeywordsEmpty() { return m_KeywordsModel.areKeywordsEmpty(); }
         virtual qint64 getFileSize() const { return m_FileSize; }
         virtual qint64 getItemID() const { return m_ID; }
 

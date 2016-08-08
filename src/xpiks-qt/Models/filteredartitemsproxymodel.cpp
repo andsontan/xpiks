@@ -206,7 +206,7 @@ namespace Models {
         ArtItemsModel *artItemsModel = getArtItemsModel();
         int originalIndex = getOriginalIndex(index);
         ArtworkMetadata *metadata = artItemsModel->getArtwork(originalIndex);
-        if (metadata != NULL) {
+        if ((metadata != NULL) && (!metadata->areKeywordsEmpty())) {
             ArtItemInfo *info = new ArtItemInfo(metadata, originalIndex);
             removeKeywordsInItem(info);
         }
