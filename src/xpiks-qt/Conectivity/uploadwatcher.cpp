@@ -9,21 +9,14 @@ namespace Conectivity {
     {}
 
     void UploadWatcher::resetModel() {
-        LOG_INFO << "Resetting UploadWatcher..";
+        LOG_DEBUG << "Resetting UploadWatcher..";
+
         beginResetModel();
         m_FtpInfo.clear();
-        m_FailedImagesCount = 0;
         endResetModel();
+
+        m_FailedImagesCount = 0;
         emit failedImagesCountChanged();
-    }
-
-    QStringList UploadWatcher::getFailedImages(int row) {
-        if (row < 0 || row >= (int)m_FtpInfo.size()) {
-            return QStringList();
-        }
-
-        auto &item = m_FtpInfo.at(row);
-        return item.second;
     }
 
     int UploadWatcher::rowCount(const QModelIndex &parent) const {

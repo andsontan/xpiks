@@ -16,11 +16,10 @@ namespace Conectivity {
         UploadWatcher(QObject *parent=0);
 
     public:
-        void resetModel();
         int getFailedImagesCount() const { return m_FailedImagesCount; }
 
     public:
-        Q_INVOKABLE QStringList getFailedImages(int row);
+        Q_INVOKABLE void resetModel();
 
     public:
         enum UploadWatcher_Roles {

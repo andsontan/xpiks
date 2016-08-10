@@ -115,9 +115,26 @@ Item {
                 anchors.margins: 20
                 spacing: 20
 
-                StyledText {
+                RowLayout {
                     anchors.left: parent.left
-                    text: i18.n + qsTr("Failed uploads")
+                    anchors.right: parent.right
+
+                    StyledText {
+                        text: i18.n + qsTr("Failed uploads")
+                    }
+
+                    Item {
+                        Layout.fillWidth: true
+                    }
+
+                    StyledText {
+                        text: i18.n + getCaption()
+
+                        function getCaption() {
+                            return uploadWatcher.failedImagesCount === 1 ? qsTr("1 item") :
+                                                                           qsTr("%1 items").arg(uploadWatcher.failedImagesCount)
+                        }
+                    }
                 }
 
                 Rectangle {

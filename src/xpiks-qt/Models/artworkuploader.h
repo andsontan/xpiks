@@ -96,10 +96,6 @@ namespace Models {
             return model;
         }
 
-        Q_INVOKABLE void resetUploadModel() {
-            m_UploadWatcher.resetModel();
-        }
-
         void initializeStocksList();
 
     private:

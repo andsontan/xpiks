@@ -67,6 +67,7 @@ Item {
         uploadInfos.finalizeAccounts()
         saveSettings()
         uploadArtworksComponent.destroy()
+        uploadWatcher.resetModel()
     }
 
     function saveSettings() {
@@ -923,7 +924,6 @@ Item {
                                 if (uploadInfos.getSelectedInfosCount() === 0) {
                                     selectHostsMessageBox.open()
                                 } else {
-                                    artworkUploader.resetUploadModel()
                                     var agencies = uploadInfos.getAgenciesWithMissingDetails();
                                     if (agencies.length !== 0) {
                                         noPasswordDialog.agenciesList = agencies
