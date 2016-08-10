@@ -32,18 +32,20 @@ import "../StyledControls"
 import "../Constants/UIConfig.js" as UIConfig
 
 Item {
-
-    id: failedUploadArtworks
-    Keys.onEscapePressed: closePopup()
+    id: failedUploadsComponent
     anchors.fill: parent
-    property variant modelUploader
+
+    property var artworkUploader: helpersWrapper.getArtworkUploader()
+    property var uploadWatcher: artworkUploader.getUploadWatcher()
 
     function closePopup() {
-        failedUploadArtworks.destroy();
+        failedUploadsComponent.destroy();
     }
 
+    Keys.onEscapePressed: closePopup()
     Component.onCompleted: focus = true
-    PropertyAnimation { target: failedUploadArtworks; property: "opacity";
+
+    PropertyAnimation { target: failedUploadsComponent; property: "opacity";
         duration: 400; from: 0; to: 1;
         easing.type: Easing.InOutQuad ; running: true }
 
@@ -73,7 +75,7 @@ Item {
             property real old_y : 0
 
             onPressed: {
-                var tmp = mapToItem(failedUploadArtworks, mouse.x, mouse.y);
+                var tmp = mapToItem(failedUploadsComponent, mouse.x, mouse.y);
                 old_x = tmp.x;
                 old_y = tmp.y;
 
@@ -84,7 +86,7 @@ Item {
             }
 
             onPositionChanged: {
-                var old_xy = Common.movePopupInsideComponent(failedUploadArtworks, dialogWindow, mouse, old_x, old_y);
+                var old_xy = Common.movePopupInsideComponent(failedUploadsComponent, dialogWindow, mouse, old_x, old_y);
                 old_x = old_xy[0]; old_y = old_xy[1];
             }
         }
@@ -113,84 +115,164 @@ Item {
                 anchors.margins: 20
                 spacing: 20
 
+                StyledText {
+                    anchors.left: parent.left
+                    text: i18.n + qsTr("Failed uploads")
+                }
+
                 Rectangle {
-                    Layout.fillWidth: true
+                    anchors.left: parent.left
+                    anchors.right: parent.right
                     Layout.fillHeight: true
                     color: Colors.defaultDarkerColor
-                    anchors.fill: parent
 
-                    StyledScrollView {
+                    ListView {
+                        id: warningsListView
+                        model: uploadWatcher
                         anchors.fill: parent
-                        anchors.margins: 10
+                        boundsBehavior: Flickable.StopAtBounds
+                        spacing: 20
+                        clip: true
 
-                        ListView {
-                            id: warningsListView
-                            model: modelUploader
-                            anchors.fill:parent
-                            spacing : 10
+                        header: Item {
+                            height: 10
+                        }
 
-                            delegate: Rectangle {
-                                property int delegateIndex: index
-                                color: Colors.defaultDarkColor
-                                id: hostRectangleWrapper
-                                anchors.margins: 10
+                        footer: Item {
+                            height: 10
+                        }
+
+                        delegate: Rectangle {
+                            property int delegateIndex: index
+                            color: Colors.defaultDarkColor
+                            id: hostRectangleWrapper
+                            anchors.margins: 10
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            height: childrenRect.height + 20
+
+                            RowLayout {
+                                id: header
+                                anchors.top: parent.top
                                 anchors.left: parent.left
                                 anchors.right: parent.right
-                                height: hostAddress.height + flow.height + 30
+                                anchors.topMargin: 10
+                                anchors.leftMargin: 10
+                                anchors.rightMargin: 10
+                                spacing: 5
+
+                                Rectangle {
+                                    height: 5
+                                    width: height
+                                    radius: height/2
+                                    color: Colors.labelActiveForeground
+                                }
 
                                 StyledText {
-                                    anchors.top: parent.top
-                                    anchors.left: parent.left
-                                    anchors.leftMargin: 10
                                     id: hostAddress
                                     text: artworkUploader.getFtpName(ftpaddress)
-                                    font.pixelSize: 30
                                     color: Colors.artworkActiveColor
+                                    font.bold: true
+                                    font.pixelSize: UIConfig.fontPixelSize + 3
+                                }
+
+                                Item {
+                                    Layout.fillWidth: true
                                 }
 
                                 StyledText {
-                                    anchors.topMargin: 10 //difference in fonts
-                                    anchors.top: parent.top
-                                    anchors.right : parent.right
-                                    anchors.left: hostAddress.right
-                                    anchors.rightMargin: 10
-                                    horizontalAlignment: Text.AlignRight
                                     id: hostName
-                                    text: ftpaddress
-                                    font.pixelSize: 20
-                                    color: Colors.artworkActiveColor
+                                    text: '(' + ftpaddress + ')'
                                 }
+                            }
 
-                                Flow {
-                                    id: flow
-                                    spacing: 20
-                                    anchors.top: hostAddress.bottom
-                                    anchors.left: parent.left
-                                    anchors.right: parent.right
-                                    anchors.margins: 20
+                            Flow {
+                                id: flow
+                                spacing: 20
+                                anchors.topMargin: 20
+                                anchors.leftMargin: 10
+                                anchors.rightMargin: 10
+                                anchors.top: header.bottom
+                                anchors.left: parent.left
+                                anchors.right: parent.right
 
-                                    Repeater {
-                                        id: photosGrid
-                                        model: modelUploader.getFailedImages(delegateIndex)
-                                        delegate: Item{
-                                            id: imageItem
-                                            width: 120
-                                            height: 80
-                                            property string delegateData: modelData
+                                Repeater {
+                                    id: photosGrid
+                                    model: failedimages
+
+                                    delegate: Item {
+                                        id: imageItem
+                                        width: 100
+                                        height: 120
+                                        property string delegateData: modelData
+
+                                        Item {
+                                            id: imageHost
+                                            height: 100
+                                            anchors.left: parent.left
+                                            anchors.top: parent.top
+                                            anchors.right: parent.right
 
                                             Image {
+                                                id: artworkImage
                                                 anchors.fill: parent
-                                                source: "image://cached/" + imageItem.delegateData
+                                                source: "image://cached/" + helpersWrapper.toImagePath(imageItem.delegateData)
                                                 sourceSize.width: 150
                                                 sourceSize.height: 150
                                                 fillMode: settingsModel.fitSmallPreview ? Image.PreserveAspectFit : Image.PreserveAspectCrop
                                                 asynchronous: true
+                                                cache: false
                                             }
+
+                                            Image {
+                                                id: imageTypeIcon
+                                                property bool isVector: helpersWrapper.isVector(imageItem.delegateData)
+                                                visible: isVector
+                                                enabled: isVector
+                                                source: "qrc:/Graphics/vector-icon.svg"
+                                                sourceSize.width: 20
+                                                sourceSize.height: 20
+                                                anchors.left: artworkImage.left
+                                                anchors.bottom: artworkImage.bottom
+                                                cache: true
+                                            }
+                                        }
+
+                                        StyledText {
+                                            anchors.top: imageHost.bottom
+                                            anchors.topMargin: 5
+                                            text: imageItem.delegateData.split(/[\\/]/).pop()
+                                            width: parent.width
+                                            elide: Text.ElideMiddle
+                                            horizontalAlignment: Text.AlignHCenter
                                         }
                                     }
                                 }
                             }
                         }
+                    }
+
+                    CustomScrollbar {
+                        id: mainScrollBar
+                        anchors.topMargin: 0
+                        anchors.bottomMargin: 0
+                        anchors.rightMargin: -17
+                        flickable: warningsListView
+                    }
+                }
+
+                RowLayout {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+
+                    Item {
+                        Layout.fillWidth: true
+                    }
+
+                    StyledButton {
+                        text: i18.n + qsTr("Close")
+                        width: 80
+                        onClicked: closePopup()
                     }
                 }
             }

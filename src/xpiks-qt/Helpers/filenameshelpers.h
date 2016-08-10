@@ -26,6 +26,7 @@
 
 namespace Helpers {
     QStringList convertToVectorFilenames(const QStringList &items);
+    QString getImagePath(const QString &path);
     QString getArchivePath(const QString &artworkPath);
 }
 

@@ -36,7 +36,6 @@ namespace Conectivity {
         }
 
     public:
-        QString m_Title;
         QString m_Host;
         QString m_Username;
         QString m_Password;

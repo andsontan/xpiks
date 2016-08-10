@@ -56,6 +56,8 @@ namespace Helpers {
         Q_INVOKABLE void turnTaskbarProgressOff();
         Q_INVOKABLE void removeUnavailableFiles();
         Q_INVOKABLE void autoCompleteKeyword(const QString &keyword, QObject *notifyObject);
+        Q_INVOKABLE bool isVector(const QString &path) const;
+        Q_INVOKABLE QString toImagePath(const QString &path) const;
 
     public:
         Q_INVOKABLE QObject *getLogsModel();

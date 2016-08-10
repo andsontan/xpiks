@@ -14,18 +14,18 @@ namespace Conectivity {
 
     public:
         UploadWatcher(QObject *parent=0);
-        void resetModel();
 
-        int getFailedImagesCount() {
-            return m_FailedImagesCount;
-        }
+    public:
+        void resetModel();
+        int getFailedImagesCount() const { return m_FailedImagesCount; }
 
     public:
         Q_INVOKABLE QStringList getFailedImages(int row);
 
     public:
         enum UploadWatcher_Roles {
-            FtpAddress = Qt::UserRole + 1
+            FtpAddressRole = Qt::UserRole + 1,
+            FailedImagesRole
         };
 
     public:

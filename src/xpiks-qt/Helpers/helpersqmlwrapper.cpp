@@ -39,6 +39,7 @@
 #include "../SpellCheck/spellchecksuggestionmodel.h"
 #include "logger.h"
 #include "../Common/defines.h"
+#include "../Helpers/filenameshelpers.h"
 
 #ifdef Q_OS_WIN
 #include <QWinTaskbarButton>
@@ -168,6 +169,15 @@ namespace Helpers {
         Q_UNUSED(keyword);
         Q_UNUSED(notifyObject);
 #endif
+    }
+
+    bool HelpersQmlWrapper::isVector(const QString &path) const {
+        return path.endsWith("eps", Qt::CaseInsensitive) ||
+                path.endsWith("ai", Qt::CaseInsensitive);
+    }
+
+    QString HelpersQmlWrapper::toImagePath(const QString &path) const {
+        return Helpers::getImagePath(path);
     }
 
     QObject *HelpersQmlWrapper::getLogsModel() {

@@ -43,8 +43,8 @@ Item {
     property bool uploadEnabled: (artworkRepository.artworksSourcesCount > 0) && (filteredArtItemsModel.selectedArtworksCount > 0)
     property var ftpListAC: helpersWrapper.getFtpACList()
     property var artworkUploader: helpersWrapper.getArtworkUploader()
+    property var uploadWatcher: artworkUploader.getUploadWatcher()
     property var uploadInfos: helpersWrapper.getUploadInfos();
-    property bool launchedUpload: false
 
     signal dialogDestruction();
     Component.onDestruction: dialogDestruction();
@@ -837,7 +837,7 @@ Item {
                             anchors.fill: parent
                             color: Colors.selectedImageBackground
                             opacity: 0.6
-                            visible: (uploadInfos.infosCount == 0) || artworkUploader.inProgress
+                            visible: (uploadInfos.infosCount === 0) || artworkUploader.inProgress
                         }
                     }
                 }
@@ -856,7 +856,7 @@ Item {
                     spacing: 20
 
                     StyledText {
-                        visible: !skipUploadItems && !launchedUpload
+                        visible: !skipUploadItems && (!artworkUploader.inProgress) && (uploadWatcher.failedImagesCount === 0)
                         enabled: uploadArtworksComponent.uploadEnabled && !skipUploadItems
                         text: i18.n + getOriginalText()
                         color: uploadWarmingsMA.pressed ? Colors.linkClickedColor : warningsModel.warningsCount > 0 ? Colors.artworkModifiedColor : Colors.labelActiveForeground
@@ -882,40 +882,36 @@ Item {
                             }
                         }
                     }
+
                     StyledText {
-
                         id: failedArtworksStatus
-                        property var modelUploader: artworkUploader.getUploadWatcher()
-                        visible: launchedUpload
-                        enabled:modelUploader.failedImagesCount > 0
-                        text:  i18.n + getOriginalText(modelUploader.failedImagesCount)
-                        color: getColor(modelUploader.failedImagesCount)
+                        visible: !skipUploadItems && (uploadWatcher.failedImagesCount > 0)
+                        enabled: uploadArtworksComponent.uploadEnabled && !skipUploadItems && (uploadWatcher.failedImagesCount > 0)
+                        text: i18.n + getOriginalText()
+                        color: showFailedArtworksMA.pressed ? Colors.linkClickedColor : Colors.artworkModifiedColor
 
-                        function getOriginalText(count) {
-                            return count === 1 ? qsTr("1 failed upload") : qsTr("%1 failed uploads").arg(count)
-                        }
-
-                        function getColor(count) {
-                            return count > 0 ?  Colors.destructiveColor : Colors.labelActiveForeground
+                        function getOriginalText() {
+                            return uploadWatcher.failedImagesCount === 1 ?
+                                        qsTr("1 failed upload") :
+                                        qsTr("%1 failed uploads").arg(uploadWatcher.failedImagesCount)
                         }
 
                         MouseArea {
-                            id: showFailedArtworks
+                            id: showFailedArtworksMA
                             anchors.fill: parent
-                            cursorShape: warningsModel.warningsCount > 0 ? Qt.PointingHandCursor : Qt.ArrowCursor
-                            enabled: warningsModel.warningsCount > 0
+                            cursorShape: uploadWatcher.failedImagesCount > 0 ? Qt.PointingHandCursor : Qt.ArrowCursor
+                            enabled: uploadWatcher.failedImagesCount > 0
                             onClicked: {
                                 Common.launchDialog("Dialogs/FailedUploadArtworks.qml",
                                                     uploadArtworksComponent.componentParent,
-                                                    {
-                                                        componentParent: uploadArtworksComponent.componentParent,
-                                                        modelUploader: failedArtworksStatus.modelUploader,
-                                                        isRestricted: true
-                                                    });
+                                                    {})
                             }
                         }
                     }
 
+                    Item {
+                        Layout.fillWidth: true
+                    }
 
                     StyledButton {
                         id: uploadButton
@@ -928,7 +924,6 @@ Item {
                                     selectHostsMessageBox.open()
                                 } else {
                                     artworkUploader.resetUploadModel()
-                                    launchedUpload = true
                                     var agencies = uploadInfos.getAgenciesWithMissingDetails();
                                     if (agencies.length !== 0) {
                                         noPasswordDialog.agenciesList = agencies

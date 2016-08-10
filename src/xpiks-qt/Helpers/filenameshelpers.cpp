@@ -54,3 +54,12 @@ QString Helpers::getArchivePath(const QString &artworkPath) {
     QString archivePath = dir.filePath(archiveName);
     return archivePath;
 }
+
+QString Helpers::getImagePath(const QString &path) {
+    QString result = path;
+
+    QRegExp regExp("(.*)[.](ai|eps|zip)", Qt::CaseInsensitive);
+    result.replace(regExp, "\\1.jpg");
+
+    return result;
+}

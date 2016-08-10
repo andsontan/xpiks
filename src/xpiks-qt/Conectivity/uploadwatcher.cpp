@@ -28,21 +28,23 @@ namespace Conectivity {
 
     int UploadWatcher::rowCount(const QModelIndex &parent) const {
         Q_UNUSED(parent);
-        return (int)m_FtpInfo.size();
+        return m_FtpInfo.size();
     }
 
     QVariant UploadWatcher::data(const QModelIndex &index, int role) const {
         int row = index.row();
 
-        if (row < 0 || row >= (int)m_FtpInfo.size()) {
+        if (row < 0 || row >= m_FtpInfo.size()) {
             return QVariant();
         }
 
         auto &item = m_FtpInfo.at(row);
 
         switch (role) {
-            case FtpAddress:
+            case FtpAddressRole:
                 return item.first;
+            case FailedImagesRole:
+                return item.second;
             default:
                 return QVariant();
         }
@@ -50,31 +52,32 @@ namespace Conectivity {
 
     QHash<int, QByteArray> UploadWatcher::roleNames() const {
         QHash<int, QByteArray> names = QAbstractListModel::roleNames();
-        names[FtpAddress] = "ftpaddress";
+        names[FtpAddressRole] = "ftpaddress";
+        names[FailedImagesRole] = "failedimages";
         return names;
     }
 
     void UploadWatcher::reportUploadErrorHandler(const QString &filepath, const QString &host) {
         LOG_WARNING << "Upload failed for file [" << filepath << "] to host {" << host << "}";
-        if (QFileInfo(filepath).completeSuffix().toLower() == "eps") {
-            LOG_INFO << "Skipping" << filepath;
-            return;
-        }
 
-        bool found = false;
+        bool hostExists = false;
         int size = m_FtpInfo.size();
 
         for (int i = 0; i < size; i++) {
             if (m_FtpInfo[i].first == host) {
                 m_FtpInfo[i].second.append(filepath);
-                found = true;
+                auto modelIndex = this->index(i);
+                emit dataChanged(modelIndex, modelIndex, QVector<int>() << FailedImagesRole);
+                hostExists = true;
                 break;
             }
         }
 
-        if (!found) {
+        if (!hostExists) {
+            LOG_INFO << "Registering new host:" << host;
+            beginInsertRows(QModelIndex(), size, size);
             m_FtpInfo.append(QPair<QString, QStringList>(host, QStringList(filepath)));
-            LOG_INFO << "Creating new entry for" << host;
+            endInsertRows();
         }
 
         m_FailedImagesCount++;

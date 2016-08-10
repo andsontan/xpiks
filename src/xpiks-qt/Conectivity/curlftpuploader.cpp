@@ -302,7 +302,6 @@ namespace Conectivity {
         int size = filesToUpload.size();
 
         QString host = sanitizeHost(context->m_Host);
-        QString title = context->m_Title;
 
         // curl_global_init should be done from coordinator
         curlHandle = curl_easy_init();
