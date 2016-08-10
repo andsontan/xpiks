@@ -27,6 +27,7 @@
 #include <QVector>
 #include <QList>
 #include "../Helpers/indiceshelper.h"
+#include "../Common/defines.h"
 
 namespace Common {
     class AbstractListModel : public QAbstractListModel {
