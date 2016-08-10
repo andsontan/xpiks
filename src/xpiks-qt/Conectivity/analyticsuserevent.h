@@ -35,7 +35,9 @@ namespace Conectivity {
         UserActionSuggestionRemote,
         UserActionSuggestionLocal,
         UserActionWarningsCheck,
-        UserActionTurnOffTelemetry
+        UserActionTurnOffTelemetry,
+        UserActionFindAndReplace,
+        UserActionDeleteKeywords
     };
 
     class AnalyticsUserEvent {
@@ -57,6 +59,8 @@ namespace Conectivity {
             case UserActionSuggestionLocal: return QLatin1String("SuggestionLocal");
             case UserActionWarningsCheck: return QLatin1String("WarningsCheck");
             case UserActionTurnOffTelemetry: return QLatin1String("TurnOffTelemetry");
+            case UserActionFindAndReplace: return QLatin1String("UserActionFindAndReplace");
+            case UserActionDeleteKeywords: return QLatin1String("UserActionDeleteKeywords");
             default: return QLatin1String("Unknown");
             }
         }

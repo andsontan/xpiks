@@ -37,11 +37,13 @@ namespace Models {
     }
 
     void DeleteKeywordsViewModel::setArtworks(std::vector<MetadataElement> &artworks) {
+        LOG_DEBUG << "#";
         ArtworksViewModel::setArtworks(artworks);
         recombineKeywords();
     }
 
     bool DeleteKeywordsViewModel::removeUnavailableItems() {
+        LOG_DEBUG << "#";
         bool anyRemoved = ArtworksViewModel::removeUnavailableItems();
 
         if (anyRemoved) {
@@ -55,6 +57,8 @@ namespace Models {
 
     bool DeleteKeywordsViewModel::doRemoveSelectedArtworks() {
         bool anyRemoved = ArtworksViewModel::doRemoveSelectedArtworks();
+
+        LOG_INFO << "Any removed:" << anyRemoved;
 
         if (anyRemoved) {
             if (!isEmpty()) {
@@ -89,7 +93,9 @@ namespace Models {
 
     void DeleteKeywordsViewModel::clearKeywordsToDelete() {
         LOG_DEBUG << "#";
-        m_KeywordsToDeleteModel.clearKeywords();
+        if (m_KeywordsToDeleteModel.clearKeywords()) {
+            emit keywordsToDeleteCountChanged();
+        }
     }
 
     QString DeleteKeywordsViewModel::removeCommonKeywordAt(int keywordIndex) {
@@ -103,6 +109,7 @@ namespace Models {
     }
 
     void DeleteKeywordsViewModel::appendKeywordToDelete(const QString &keyword) {
+        LOG_INFO << keyword;
         if (m_KeywordsToDeleteModel.appendKeyword(keyword)) {
             emit keywordsToDeleteCountChanged();
 
@@ -144,6 +151,7 @@ namespace Models {
         LOG_DEBUG << "#";
         QHash<QString, int> keywordsHash;
         fillKeywordsHash(keywordsHash);
+        LOG_INFO << "Found" << keywordsHash.size() << "keyword(s)";
 
         QMultiMap<int, QString> selectedKeywords;
 
@@ -181,6 +189,7 @@ namespace Models {
     }
 
     void DeleteKeywordsViewModel::fillKeywordsHash(QHash<QString, int> &keywordsHash) {
+        LOG_DEBUG << "#";
         processArtworks([](const MetadataElement&) { return true; },
         [&keywordsHash](int, ArtworkMetadata *metadata) {
             const auto &keywords = metadata->getKeywords();

@@ -38,6 +38,7 @@ namespace Common {
     public:
         virtual void removeItemsAtIndices(const QVector<QPair<int, int> > &ranges) {
             int rangesLength = Helpers::getRangesLength(ranges);
+            LOG_INFO << "Ranges length:" << rangesLength;
             doRemoveItemsAtIndices(ranges, rangesLength);
         }
 

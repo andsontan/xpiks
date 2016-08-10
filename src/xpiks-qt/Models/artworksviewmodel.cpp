@@ -170,6 +170,7 @@ namespace Models {
         }
 
         if (anyUnavailable) {
+            LOG_INFO << "Found" << indicesToRemove.length() << "unavailable item(s)";
             QVector<QPair<int, int> > rangesToRemove;
             Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
 
