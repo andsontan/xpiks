@@ -60,9 +60,9 @@ namespace Conectivity {
         void cancelAll();
         void uploadFinished(bool anyError);
         void overallProgressChanged(double percentDone);
+        void transferFailed(const QString &filepath, const QString &host);
 
     private slots:
-        void transferFailed(const QString &filepath, const QString &host);
         void workerProgressChanged(double oldPercents, double newPercents);
         void workerFinished(bool anyErrors);
 

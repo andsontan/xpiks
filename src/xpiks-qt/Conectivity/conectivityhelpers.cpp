@@ -78,6 +78,7 @@ namespace Conectivity {
             std::shared_ptr<UploadContext> context(new UploadContext());
             auto &info = uploadInfos.at(i);
 
+            context->m_Title = info->getTitle();
             context->m_Host = info->getHost();
             context->m_Username = info->getUsername();
             context->m_Password = secretsManager->decodePassword(info->getPassword());

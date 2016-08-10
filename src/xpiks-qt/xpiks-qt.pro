@@ -110,7 +110,8 @@ SOURCES += main.cpp \
     Commands/deletekeywordscommand.cpp \
     Models/deletekeywordsviewmodel.cpp \
     Models/artworksviewmodel.cpp \
-    Helpers/keywordshelpers.cpp
+    Helpers/keywordshelpers.cpp \
+    Conectivity/uploadwatcher.cpp
 
 RESOURCES += qml.qrc
 
@@ -279,6 +280,7 @@ HEADERS += \
     Models/deletekeywordsviewmodel.h \
     Models/artworksviewmodel.h \
     Helpers/keywordshelpers.h \
+    Conectivity/uploadwatcher.h \
     Common/iflagsprovider.h
 
 DISTFILES += \
@@ -348,7 +350,8 @@ DISTFILES += \
     Dialogs/WhatsNewMinorDialog.qml \
     Dialogs/FindAndReplace.qml \
     Dialogs/ReplacePreview.qml \
-    Dialogs/DeleteKeywordsDialog.qml
+    Dialogs/DeleteKeywordsDialog.qml \
+    Dialogs/FailedUploadArtworks.qml
 
 lupdate_only {
 SOURCES += *.qml \

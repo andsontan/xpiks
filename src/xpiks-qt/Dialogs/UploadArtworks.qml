@@ -34,6 +34,7 @@ import "../StyledControls"
 Item {
     id: uploadArtworksComponent
     anchors.fill: parent
+
     property string uploadhostskey: appSettings.uploadHostsKey
     // if MasterPassword wasn't entered do not show passwords
     property bool emptyPasswords: false
@@ -43,6 +44,7 @@ Item {
     property var ftpListAC: helpersWrapper.getFtpACList()
     property var artworkUploader: helpersWrapper.getArtworkUploader()
     property var uploadInfos: helpersWrapper.getUploadInfos();
+    property bool launchedUpload: false
 
     signal dialogDestruction();
     Component.onDestruction: dialogDestruction();
@@ -233,8 +235,8 @@ Item {
                         Connections {
                             target: artworkUploader
                             onItemsNumberChanged: {
-                               textItemsAvailable.originalText = artworkUploader.itemsCount === 1 ? qsTr("1 artwork selected") : qsTr("%1 artworks selected").arg(artworkUploader.itemsCount)
-                               textItemsAvailable.text=i18.n + originalText
+                                textItemsAvailable.originalText = artworkUploader.itemsCount === 1 ? qsTr("1 artwork selected") : qsTr("%1 artworks selected").arg(artworkUploader.itemsCount)
+                                textItemsAvailable.text=i18.n + originalText
                             }
                         }
                     }
@@ -854,7 +856,7 @@ Item {
                     spacing: 20
 
                     StyledText {
-                        visible: !skipUploadItems
+                        visible: !skipUploadItems && !launchedUpload
                         enabled: uploadArtworksComponent.uploadEnabled && !skipUploadItems
                         text: i18.n + getOriginalText()
                         color: uploadWarmingsMA.pressed ? Colors.linkClickedColor : warningsModel.warningsCount > 0 ? Colors.artworkModifiedColor : Colors.labelActiveForeground
@@ -880,10 +882,40 @@ Item {
                             }
                         }
                     }
+                    StyledText {
 
-                    Item {
-                        Layout.fillWidth: true
+                        id: failedArtworksStatus
+                        property var modelUploader: artworkUploader.getUploadWatcher()
+                        visible: launchedUpload
+                        enabled:modelUploader.failedImagesCount > 0
+                        text:  i18.n + getOriginalText(modelUploader.failedImagesCount)
+                        color: getColor(modelUploader.failedImagesCount)
+
+                        function getOriginalText(count) {
+                            return count === 1 ? qsTr("1 failed upload") : qsTr("%1 failed uploads").arg(count)
+                        }
+
+                        function getColor(count) {
+                            return count > 0 ?  Colors.destructiveColor : Colors.labelActiveForeground
+                        }
+
+                        MouseArea {
+                            id: showFailedArtworks
+                            anchors.fill: parent
+                            cursorShape: warningsModel.warningsCount > 0 ? Qt.PointingHandCursor : Qt.ArrowCursor
+                            enabled: warningsModel.warningsCount > 0
+                            onClicked: {
+                                Common.launchDialog("Dialogs/FailedUploadArtworks.qml",
+                                                    uploadArtworksComponent.componentParent,
+                                                    {
+                                                        componentParent: uploadArtworksComponent.componentParent,
+                                                        modelUploader: failedArtworksStatus.modelUploader,
+                                                        isRestricted: true
+                                                    });
+                            }
+                        }
                     }
+
 
                     StyledButton {
                         id: uploadButton
@@ -895,6 +927,8 @@ Item {
                                 if (uploadInfos.getSelectedInfosCount() === 0) {
                                     selectHostsMessageBox.open()
                                 } else {
+                                    artworkUploader.resetUploadModel()
+                                    launchedUpload = true
                                     var agencies = uploadInfos.getAgenciesWithMissingDetails();
                                     if (agencies.length !== 0) {
                                         noPasswordDialog.agenciesList = agencies
