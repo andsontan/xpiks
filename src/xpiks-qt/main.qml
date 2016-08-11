@@ -674,6 +674,16 @@ ApplicationWindow {
         }
     }
 
+
+    Menu {
+        id: openFileMenu
+        property string filename
+        enabled: false
+        MenuItem {
+            text: qsTr("Show in folder")
+            onTriggered:  helpersWrapper.revealArtworkFile(openFileMenu.filename);
+        }
+    }
     MessageDialog {
         id: configExitDialog
 
@@ -824,6 +834,7 @@ ApplicationWindow {
         property string originalText: vectorsAttached > 1 ? qsTr("%1 vectors attached").arg(vectorsAttached) : qsTr("1 vector attached")
         text: i18.n + originalText
     }
+
 
     Connections {
         target: artItemsModel
@@ -1621,7 +1632,9 @@ ApplicationWindow {
                                                 anchors.left: parent.left
                                                 anchors.verticalCenter: parent.verticalCenter
                                                 activeFocusOnPress: false
-                                                onClicked: editisselected = checked
+                                                onClicked: {
+                                                    editisselected = checked;
+                                                }
                                                 Component.onCompleted: itemCheckedCheckbox.checked = isselected
 
                                                 Connections {
@@ -1689,6 +1702,7 @@ ApplicationWindow {
                                                     MouseArea {
                                                         anchors.fill: parent
                                                         propagateComposedEvents: true
+                                                        acceptedButtons: Qt.LeftButton | Qt.RightButton
 
                                                         function dblClickHandler() {
                                                             Common.launchItemEditing(rowWrapper.getIndex(), applicationWindow, {
@@ -1706,11 +1720,18 @@ ApplicationWindow {
                                                         }
 
                                                         onClicked: {
-                                                            if (dblClickTimer.running) {
-                                                                dblClickTimer.stop()
-                                                                dblClickHandler()
+                                                            if (mouse.button == Qt.RightButton) {
+                                                                openFileMenu.filename = filename;
+                                                                openFileMenu.popup()
+                                                                console.log("Right")
                                                             } else {
-                                                                dblClickTimer.restart()
+
+                                                                if (dblClickTimer.running) {
+                                                                    dblClickTimer.stop()
+                                                                    dblClickHandler()
+                                                                } else {
+                                                                    dblClickTimer.restart()
+                                                                }
                                                             }
                                                         }
                                                     }
