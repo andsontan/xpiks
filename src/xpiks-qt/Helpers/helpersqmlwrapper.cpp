@@ -230,9 +230,9 @@ namespace Helpers {
 #endif
 
 #ifdef Q_OS_WIN
-    QStringList args;
-    args << "/select," << QDir::toNativeSeparators(path);
-    QProcess::startDetached("explorer", args);
+        QStringList args;
+        args << "/select," << QDir::toNativeSeparators(path);
+        QProcess::startDetached("explorer", args);
 #endif
     }
 }
