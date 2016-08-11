@@ -674,16 +674,16 @@ ApplicationWindow {
         }
     }
 
-
     Menu {
-        id: openFileMenu
+        id: artworkContextMenu
         property string filename
-        enabled: false
+
         MenuItem {
             text: qsTr("Show in folder")
-            onTriggered:  helpersWrapper.revealArtworkFile(openFileMenu.filename);
+            onTriggered: helpersWrapper.revealArtworkFile(artworkContextMenu.filename);
         }
     }
+
     MessageDialog {
         id: configExitDialog
 
@@ -1632,9 +1632,7 @@ ApplicationWindow {
                                                 anchors.left: parent.left
                                                 anchors.verticalCenter: parent.verticalCenter
                                                 activeFocusOnPress: false
-                                                onClicked: {
-                                                    editisselected = checked;
-                                                }
+                                                onClicked: editisselected = checked
                                                 Component.onCompleted: itemCheckedCheckbox.checked = isselected
 
                                                 Connections {
@@ -1721,11 +1719,10 @@ ApplicationWindow {
 
                                                         onClicked: {
                                                             if (mouse.button == Qt.RightButton) {
-                                                                openFileMenu.filename = filename;
-                                                                openFileMenu.popup()
-                                                                console.log("Right")
+                                                                console.log("Context menu for artwork")
+                                                                artworkContextMenu.filename = filename;
+                                                                artworkContextMenu.popup()
                                                             } else {
-
                                                                 if (dblClickTimer.running) {
                                                                     dblClickTimer.stop()
                                                                     dblClickHandler()
