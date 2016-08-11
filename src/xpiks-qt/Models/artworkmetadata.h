@@ -77,6 +77,7 @@ namespace Models {
     public:
         virtual const QString &getFilepath() const { return m_ArtworkFilepath; }
         virtual QString getDirectory() const { QFileInfo fi(m_ArtworkFilepath); return fi.absolutePath(); }
+        QString getBaseFilename() const;
         bool isInDirectory(const QString &directoryAbsolutePath) const;
 
         bool isModified() const { return getIsModifiedFlag(); }

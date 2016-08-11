@@ -80,6 +80,11 @@ namespace Models {
         return anythingModified;
     }
 
+    QString ArtworkMetadata::getBaseFilename() const {
+        QFileInfo fi(m_ArtworkFilepath);
+        return fi.fileName();
+    }
+
     bool ArtworkMetadata::isInDirectory(const QString &directoryAbsolutePath) const {
         bool isInDir = false;
         Q_ASSERT(directoryAbsolutePath == QDir(directoryAbsolutePath).absolutePath());

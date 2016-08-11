@@ -1723,7 +1723,7 @@ ApplicationWindow {
                                                     elide: Text.ElideMiddle
                                                     color: moreInfoMA.pressed ? Colors.linkClickedColor : Colors.labelActiveForeground
                                                     horizontalAlignment: Text.AlignHCenter
-                                                    text: filename.split(/[\\/]/).pop()
+                                                    text: basefilename
 
                                                     MouseArea {
                                                         id: moreInfoMA

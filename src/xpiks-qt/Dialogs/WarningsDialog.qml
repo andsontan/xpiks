@@ -177,7 +177,7 @@ Item {
                                             Layout.fillWidth: true
                                             elide: Text.ElideMiddle
                                             horizontalAlignment: Text.AlignHCenter
-                                            text: filename.split(/[\\/]/).pop()
+                                            text: basefilename
                                             font.pixelSize: 11
                                         }
 
