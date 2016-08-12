@@ -259,7 +259,7 @@ namespace Models {
         QStringList list = metadata->getKeywords();
 
         if (item.hasKeywordsMatch()) {
-            Qt::CaseSensitivity caseSensitivity = FindAndReplaceModel::getCaseSensitive() ? Qt::CaseSensitive : Qt::CaseInsensitive;
+            Qt::CaseSensitivity caseSensitivity = getCaseSensitive() ? Qt::CaseSensitive : Qt::CaseInsensitive;
             const bool wholeWords = getSearchWholeWords();
 
             QStringList listNew;
@@ -331,7 +331,7 @@ namespace Models {
 #endif
 
         QString result;
-        Qt::CaseSensitivity caseSensitivity = FindAndReplaceModel::getCaseSensitive() ? Qt::CaseSensitive : Qt::CaseInsensitive;
+        Qt::CaseSensitivity caseSensitivity = getCaseSensitive() ? Qt::CaseSensitive : Qt::CaseInsensitive;
         int pos = 0;
         std::vector<int> hits;
 
