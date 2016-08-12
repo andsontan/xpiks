@@ -111,7 +111,8 @@ SOURCES += main.cpp \
     Models/deletekeywordsviewmodel.cpp \
     Models/artworksviewmodel.cpp \
     Helpers/keywordshelpers.cpp \
-    Conectivity/uploadwatcher.cpp
+    Conectivity/uploadwatcher.cpp \
+    Conectivity/telemetryworker.cpp
 
 RESOURCES += qml.qrc
 
@@ -120,7 +121,6 @@ DEFINES += QT_NO_CAST_TO_ASCII \
            QT_NO_CAST_FROM_BYTEARRAY
 DEFINES += QUAZIP_STATIC
 DEFINES += HUNSPELL_STATIC
-DEFINES += TELEMETRY_ENABLED
 DEFINES += LIBFACE_STATIC
 DEFINES += QT_MESSAGELOGCONTEXT
 
@@ -281,7 +281,8 @@ HEADERS += \
     Models/artworksviewmodel.h \
     Helpers/keywordshelpers.h \
     Conectivity/uploadwatcher.h \
-    Common/iflagsprovider.h
+    Common/iflagsprovider.h \
+    Conectivity/telemetryworker.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
@@ -465,7 +466,7 @@ travis-ci {
     message("for Travis CI")
     LIBS -= -lz
     LIBS += /usr/lib/x86_64-linux-gnu/libz.so
-
+    DEFINES += TRAVIS_CI
 }
 
 linux-g++-64 {
@@ -475,7 +476,7 @@ linux-g++-64 {
     LIBS += -L/lib/x86_64-linux-gnu/
     BUILDNO = $$system($$PWD/buildno.sh)
 
-    #DEFINES -= TELEMETRY_ENABLED
+    #DEFINES += TELEMETRY_DISABLED
 
     UNAME = $$system(cat /proc/version | tr -d \'()\')
     contains( UNAME, Debian ) {

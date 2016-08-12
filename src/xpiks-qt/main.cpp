@@ -297,10 +297,11 @@ int main(int argc, char *argv[]) {
     Helpers::UpdateService updateService(checkForUpdates);
 
     MetadataIO::MetadataIOCoordinator metadataIOCoordinator;
-#ifdef TELEMETRY_ENABLED
-    bool telemetryEnabled = appSettings.value(Constants::USER_STATISTICS, true).toBool();
+
+#if defined(QT_NO_DEBUG) && !defined(TELEMETRY_DISABLED)
+    const bool telemetryEnabled = appSettings.value(Constants::USER_STATISTICS, true).toBool();
 #else
-    bool telemetryEnabled = appSettings.value(Constants::USER_STATISTICS, false).toBool();
+    const bool telemetryEnabled = false;
 #endif
     Conectivity::TelemetryService telemetryService(userId, telemetryEnabled);
 

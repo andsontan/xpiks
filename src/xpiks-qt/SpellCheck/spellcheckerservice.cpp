@@ -34,6 +34,9 @@ namespace SpellCheck {
     }
 
     SpellCheckerService::~SpellCheckerService() {
+        if (m_SpellCheckWorker != nullptr) {
+
+        }
     }
 
     void SpellCheckerService::startService() {

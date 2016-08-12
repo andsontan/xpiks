@@ -151,12 +151,14 @@ namespace Common {
             workerStopped();
         }
 
-        void stopWorking() {
+        void stopWorking(bool immediately=true) {
             m_Cancel = true;
 
             m_QueueMutex.lock();
             {
-                m_Queue.clear();
+                if (immediately) {
+                    m_Queue.clear();
+                }
 
                 m_Queue.emplace_back(std::shared_ptr<T>());
                 m_WaitAnyItem.wakeOne();

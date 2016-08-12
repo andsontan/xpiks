@@ -19,149 +19,106 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <QTime>
-#include <QSettings>
-#include <QRegExp>
-#include <QUrl>
-#include <QUrlQuery>
-#include <QSysInfo>
-#include <QNetworkRequest>
-#include <QByteArray>
-#include <QNetworkReply>
 #include "telemetryservice.h"
-#include "analyticsuserevent.h"
+#include <QThread>
+#include "telemetryworker.h"
 #include "../Common/defines.h"
-#include "../Models/settingsmodel.h"
 #include "../Common/version.h"
 
 namespace Conectivity {
     TelemetryService::TelemetryService(const QString &userId, bool telemetryEnabled, QObject *parent) :
         QObject(parent),
-        m_NetworkManager(this),
+        m_TelemetryWorker(nullptr),
         m_UserAgentId(userId),
         m_InterfaceLanguage("en_US"),
-        m_TelemetryEnabled(telemetryEnabled)
+        m_TelemetryEnabled(telemetryEnabled),
+        m_RestartRequired(false)
     {
-        QObject::connect(&m_NetworkManager, SIGNAL(finished(QNetworkReply*)),
-                         this, SLOT(replyReceived(QNetworkReply*)));
+        LOG_INFO << "Enabled:" << telemetryEnabled;
+    }
+
+    void TelemetryService::startReporting() {
+        if (m_TelemetryEnabled) {
+            doStartReporting();
+        } else {
+            LOG_WARNING << "Telemetry is disabled";
+        }
+    }
+
+    void TelemetryService::stopReporting(bool immediately) {
+        LOG_DEBUG << "#";
+
+        if (m_TelemetryWorker != nullptr) {
+            m_TelemetryWorker->stopWorking(immediately);
+        } else {
+            LOG_WARNING << "TelemetryWorker is NULL";
+        }
+    }
+
+    void TelemetryService::doStartReporting() {
+        Q_ASSERT(m_TelemetryWorker == nullptr);
+        LOG_DEBUG << "#";
+
+        m_TelemetryWorker = new TelemetryWorker(m_UserAgentId, m_ReportingEndpoint, m_InterfaceLanguage);
+
+        QThread *thread = new QThread();
+        m_TelemetryWorker->moveToThread(thread);
+
+        QObject::connect(thread, SIGNAL(started()), m_TelemetryWorker, SLOT(process()));
+        QObject::connect(m_TelemetryWorker, SIGNAL(stopped()), thread, SLOT(quit()));
+
+        QObject::connect(m_TelemetryWorker, SIGNAL(stopped()), m_TelemetryWorker, SLOT(deleteLater()));
+        QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+
+        QObject::connect(this, SIGNAL(cancelAllQueries()), m_TelemetryWorker, SIGNAL(cancelAllQueries()));
+
+        thread->start();
     }
 
     void TelemetryService::reportAction(UserAction action) {
-#if defined(QT_NO_DEBUG) && defined(TELEMETRY_ENABLED)
-        if (m_TelemetryEnabled)
-        {
-            doReportAction(action);
+        if (m_TelemetryEnabled) {
+            if (m_TelemetryWorker != nullptr) {
+                std::shared_ptr<AnalyticsUserEvent> item(new AnalyticsUserEvent(action));
+                m_TelemetryWorker->submitItem(item);
+            } else {
+                LOG_WARNING << "Worker is null";
+            }
+        } else {
+            LOG_DEBUG << "Telemetry disabled";
         }
-        else
-#endif
-            Q_UNUSED(action);
     }
 
     void TelemetryService::changeReporting(bool value) {
-#if defined(QT_NO_DEBUG) && defined(TELEMETRY_ENABLED)
+        LOG_INFO << value;
+
         if (m_TelemetryEnabled != value) {
             m_TelemetryEnabled = value;
 
             if (m_TelemetryEnabled) {
-                LOG_DEBUG << "Telemetry enabled by setting";
+                LOG_DEBUG << "Telemetry enabled";
+                startReporting();
             } else {
-                LOG_DEBUG << "Telemetry disabled by setting";
-                doReportAction(UserActionTurnOffTelemetry);
+                LOG_DEBUG << "Telemetry disabled";
+                reportAction(UserActionTurnOffTelemetry);
+                stopReporting(false);
             }
         }
-#else
-        LOG_INFO << "Setting telemetry to" << value << "but it is disabled at compile time";
-#endif
+    }
+
+    void TelemetryService::workerDestroyed(QObject *object) {
+        Q_UNUSED(object);
+        LOG_DEBUG << "#";
+        m_TelemetryWorker = nullptr;
+
+        if (m_RestartRequired) {
+            LOG_INFO << "Restarting worker...";
+            startReporting();
+            m_RestartRequired = false;
+        }
     }
 
     void TelemetryService::setEndpoint(const QString &endpoint) {
         m_ReportingEndpoint = endpoint;
-    }
-
-    void TelemetryService::doReportAction(UserAction action) {
-        AnalyticsUserEvent userEvent(action);
-        LOG_INFO << "Reporting action" << userEvent.getActionString();
-
-        QUrlQuery query;
-        buildQuery(userEvent, query);
-
-        QString customVarsStr = QString::fromLatin1("{\"1\":[\"OS_type\",\"%1\"],\"2\":[\"OS_version\",\"%2\"],\"3\":[\"Xpiks_version\",\"%3\"],\"4\":[\"UI_language\",\"%4\"]}");
-
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
-        query.addQueryItem(QLatin1String("_cvar"),
-                           customVarsStr
-                           .arg(QSysInfo::productType())
-                           .arg(QSysInfo::productVersion())
-                           .arg(XPIKS_VERSION_STRING)
-                           .arg(m_InterfaceLanguage));
-#else
-        query.addQueryItem(QLatin1String("_cvar"),
-                           customVarsStr
-#ifdef Q_OS_WIN
-                           .arg(QString("windows"))
-#elsif Q_OS_DARWIN
-                           .arg(QString("osx"))
-#else
-                           .arg(QString("Linux QT<5.4"))
-#endif
-                           .arg(QString("-"))
-                           .arg(XPIKS_VERSION_STRING)
-                           .arg(m_InterfaceLanguage));
-#endif
-
-        QUrl reportingUrl;
-        reportingUrl.setUrl(m_ReportingEndpoint);
-        reportingUrl.setQuery(query);
-
-
-#ifdef QT_DEBUG
-        LOG_DEBUG << "Telemetry request" << reportingUrl;
-#endif
-
-        QNetworkRequest request(reportingUrl);
-
-#if defined(Q_OS_DARWIN)
-        request.setRawHeader(QString("User-Agent").toLocal8Bit(), QString("Mozilla/5.0 (Macintosh; Mac OS X %2; rv:1.1) Qt Xpiks/1.1")
-                .arg(QSysInfo::productVersion()).toLocal8Bit());
-#elif defined(Q_OS_WIN)
-        request.setRawHeader(QString("User-Agent").toLocal8Bit(), QString("Mozilla/5.0 (Windows %2; rv:1.1) Qt Xpiks/1.1")
-                .arg(QSysInfo::productVersion()).toLocal8Bit());
-#elif defined(Q_OS_LINUX)
-        request.setRawHeader(QString("User-Agent").toLocal8Bit(), QString("Mozilla/5.0 (Linux %2; rv:1.1) Qt Xpiks/1.1")
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
-                .arg(QSysInfo::productVersion()).toLocal8Bit());
-#else
-                .arg("?").toLocal8Bit());
-#endif
-#endif
-
-        QNetworkReply *reply = m_NetworkManager.get(request);
-        QObject::connect(this, SIGNAL(cancelAllQueries()),
-                         reply, SLOT(abort()));
-    }
-
-    void TelemetryService::buildQuery(AnalyticsUserEvent &userEvent, QUrlQuery &query) {
-        query.addQueryItem(QLatin1String("idsite"), QLatin1String("1"));
-        query.addQueryItem(QLatin1String("rec"), QLatin1String("1"));
-        query.addQueryItem(QLatin1String("url"), QString("/client/%1").arg(userEvent.getActionString()));
-        query.addQueryItem(QLatin1String("action_name"), userEvent.getActionString());
-        query.addQueryItem(QLatin1String("_id"), m_UserAgentId);
-        query.addQueryItem(QLatin1String("rand"), QString::number(qrand()));
-        query.addQueryItem(QLatin1String("apiv"), QLatin1String("1"));
-        query.addQueryItem(QLatin1String("h"), QString::number(userEvent.getHour()));
-        query.addQueryItem(QLatin1String("m"), QString::number(userEvent.getMinute()));
-        query.addQueryItem(QLatin1String("s"), QString::number(userEvent.getSecond()));
-        query.addQueryItem(QLatin1String("send_image"), QLatin1String("0"));
-    }
-
-    void TelemetryService::replyReceived(QNetworkReply *networkReply) {
-        if (networkReply->error() != QNetworkReply::NoError) {
-            // TODO: add tracking of failed items
-
-            LOG_WARNING << "Failed to process a telemetry report." << networkReply->errorString();;
-        }
-
-        networkReply->deleteLater();
     }
 }
 

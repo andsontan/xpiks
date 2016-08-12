@@ -23,17 +23,23 @@
 #define TELEMETRYSERVICE_H
 
 #include <QObject>
-#include <QNetworkAccessManager>
 #include <QString>
-#include <QUrlQuery>
-#include "../Helpers/appsettings.h"
 #include "analyticsuserevent.h"
 
 namespace Conectivity {
+    class TelemetryWorker;
+
     class TelemetryService : public QObject {
         Q_OBJECT
     public:
         TelemetryService(const QString &userId, bool telemetryEnabled, QObject *parent=NULL);
+
+    public:
+        void startReporting();
+        void stopReporting(bool immediately=true);
+
+    private:
+        void doStartReporting();
 
     public:
         void reportAction(UserAction action);
@@ -43,23 +49,19 @@ namespace Conectivity {
     public slots:
         void changeReporting(bool value);
 
-    private:
-        void doReportAction(UserAction action);
-        void buildQuery(AnalyticsUserEvent &userEvent, QUrlQuery &query);
+    private slots:
+        void workerDestroyed(QObject* object);
 
     signals:
         void cancelAllQueries();
 
-    private slots:
-        void replyReceived(QNetworkReply *reply);
-
     private:
-        Helpers::AppSettings appSettings;
-        QNetworkAccessManager m_NetworkManager;
+        TelemetryWorker *m_TelemetryWorker;
         QString m_ReportingEndpoint;
         QString m_UserAgentId;
         QString m_InterfaceLanguage;
         volatile bool m_TelemetryEnabled;
+        volatile bool m_RestartRequired;
     };
 }
 
