@@ -158,7 +158,8 @@ SOURCES += main.cpp \
     deletekeywords_tests.cpp \
     ../../xpiks-qt/Models/deletekeywordsviewmodel.cpp \
     ../../xpiks-qt/Commands/deletekeywordscommand.cpp \
-    ../../xpiks-qt/Conectivity/uploadwatcher.cpp
+    ../../xpiks-qt/Conectivity/uploadwatcher.cpp \
+    ../../xpiks-qt/Conectivity/telemetryworker.cpp
 
 HEADERS += \
     encryption_tests.h \
@@ -273,5 +274,6 @@ HEADERS += \
     ../../xpiks-qt/Models/deletekeywordsviewmodel.h \
     ../../xpiks-qt/Commands/deletekeywordscommand.h \
     ../../xpiks-qt/Common/iflagsprovider.h \
-    ../../xpiks-qt/Conectivity/uploadwatcher.h
+    ../../xpiks-qt/Conectivity/uploadwatcher.h \
+    ../../xpiks-qt/Conectivity/telemetryworker.h
 
