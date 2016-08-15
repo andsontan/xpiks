@@ -383,6 +383,7 @@ linux-g++-64 {
 
 travis-ci {
     message("for Travis CI")
+    INCLUDEPATH += "../../quazip"
     LIBS -= -lz
     LIBS += /usr/lib/x86_64-linux-gnu/libz.so
     LIBS += -lexiv2
