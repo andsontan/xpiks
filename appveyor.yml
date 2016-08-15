@@ -63,15 +63,10 @@ before_build:
 build_script:
   - cmd: 'echo %cd%'
   - cmd: 'cd src'
-  - cmd: 'cd quazip/quazip'
-  - qmake "CONFIG+=%configuration%" quazip.pro
-  - nmake.exe
-  - cmd: 'copy %configuration%\quazip.lib ..\..\libs'
-  - cmd: 'cd ..\..'
   - cmd: 'cd cpp-libface\libface-project'
   - qmake "CONFIG+=%configuration%" libface.pro
   - nmake.exe
-  - cmd: 'copy %configuration%\face.lib ..\..\libs'
+  - cmd: 'copy %configuration%\face.* ..\..\libs'
   - cmd: 'cd ..\..'
   - if defined XPIKS_BINARY cd xpiks-qt
   - if defined CORE_TESTS cd xpiks-tests\xpiks-tests-core
@@ -87,6 +82,8 @@ after_build:
   - if defined XPIKS_BINARY windeployqt.exe --qmldir=../../xpiks-qt/Components/ --qmldir=../../xpiks-qt/Constants/ --qmldir=../../xpiks-qt/Dialogs/ --qmldir=../../xpiks-qt/StyledControls/ xpiks-qt.exe
   - if defined XPIKS_BINARY xcopy /Y /s c:\projects\xpiks\src\xpiks-qt\deps .
   - if defined XPIKS_BINARY copy /Y ..\..\libs\libcurl*.dll .
+  - if defined XPIKS_BINARY copy /Y ..\..\libs\quazip.dll .
+  - if defined XPIKS_BINARY copy /Y ..\..\libs\z.dll .
   - if defined XPIKS_BINARY del *.obj
   - if defined XPIKS_BINARY del *.cpp
   - if defined XPIKS_BINARY cd ..
