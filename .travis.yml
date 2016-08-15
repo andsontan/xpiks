@@ -42,6 +42,7 @@ script:
   - make lib-face
   - cp libface.a ../libs/
   - cd ../
+  - ls -la libs/
   - if [ -n "$XPIKS_BINARY" ]; then cd xpiks-qt/; fi
   - if [ -n "$CORE_TESTS" ]; then cd xpiks-tests/xpiks-tests-core; fi
   - if [ -n "$INTEGRATION_TESTS" ]; then cd xpiks-tests/xpiks-tests-integration; fi
