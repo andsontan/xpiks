@@ -81,6 +81,7 @@ after_build:
   - if defined XPIKS_BINARY cd %configuration%
   - if defined XPIKS_BINARY windeployqt.exe --qmldir=../../xpiks-qt/Components/ --qmldir=../../xpiks-qt/Constants/ --qmldir=../../xpiks-qt/Dialogs/ --qmldir=../../xpiks-qt/StyledControls/ xpiks-qt.exe
   - if defined XPIKS_BINARY xcopy /Y /s c:\projects\xpiks\src\xpiks-qt\deps .
+  - if defined XPIKS_BINARY copy /Y ..\..\libs\libexiv2.dll .
   - if defined XPIKS_BINARY copy /Y ..\..\libs\libcurl*.dll .
   - if defined XPIKS_BINARY copy /Y ..\..\libs\quazip.dll .
   - if defined XPIKS_BINARY copy /Y ..\..\libs\z.dll .
