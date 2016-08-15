@@ -466,7 +466,7 @@ travis-ci {
     LIBS -= -lz
     LIBS += /usr/lib/x86_64-linux-gnu/libz.so
     DEFINES += TRAVIS_CI
-    INCLUDEPATH += "../../quazip"
+    INCLUDEPATH += "../../quazip/quazip"
 }
 
 linux-g++-64 {
