@@ -37,9 +37,9 @@ script:
   - make
   - cp libquazip.so.1.0.0 ../../libs/
   - cd ../../
-  - ln -s libs/libquazip.so.1.0.0 libs/libquazip.so
-  - ln -s libs/libquazip.so.1.0.0 libs/libquazip.so.1
-  - ln -s libs/libquazip.so.1.0.0 libs/libquazip.so.1.0
+  - ln -s libquazip.so.1.0.0 libs/libquazip.so
+  - ln -s libquazip.so.1.0.0 libs/libquazip.so.1
+  - ln -s libquazip.so.1.0.0 libs/libquazip.so.1.0
   - mv tiny-aes/aes.c tiny-aes/aes.cpp
   - cd cpp-libface
   - make lib-face
