@@ -8,7 +8,7 @@ LIBS += -L"$$PWD/../../libs/" -lz
 INCLUDEPATH += "$$PWD/../../zlib-1.2.8/"
 }
 
-CONFIG += staticlib
+#CONFIG += staticlib
 CONFIG += c++11
 
 # The ABI version.

@@ -18,7 +18,6 @@ DEFINES += QT_NO_CAST_TO_ASCII \
            QT_RESTRICTED_CAST_FROM_ASCII \
            QT_NO_CAST_FROM_BYTEARRAY
 
-DEFINES += QUAZIP_STATIC
 DEFINES += HUNSPELL_STATIC
 DEFINES += TELEMETRY_ENABLED
 DEFINES += LIBFACE_STATIC
@@ -375,7 +374,7 @@ linux-g++-64 {
     contains( UNAME, Debian ) {
         message("distribution : Debian")
         LIBS -= -lquazip # temporary static link
-        LIBS += /usr/lib/x86_64-linux-gnu/libquazip-qt5.a
+        LIBS += /usr/lib/x86_64-linux-gnu/libquazip-qt5.so
     }
     contains( UNAME, SUSE ) {
         message("distribution : SUSE")

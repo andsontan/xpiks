@@ -1,6 +1,6 @@
 TARGET = z            # The name of the output library - can be whatever you want
 TEMPLATE = lib        # Tells Qt that we are compiling a library so the output will be bundled into a .a or .so file
-CONFIG += staticlib   # Tells Qt that we want a static library, so a .a file. Remove this and you will get a .so file
+# CONFIG += staticlib   # Tells Qt that we want a static library, so a .a file. Remove this and you will get a .so file
 
 CONFIG += c++11
 
