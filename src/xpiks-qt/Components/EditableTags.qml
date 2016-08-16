@@ -149,6 +149,8 @@ Flickable {
 
     function submitCurrentKeyword() {
         var tagText = getEditedText();
+        console.debug("Submit current keyword: " + tagText)
+
         if (raiseAddTag(tagText)) {
             nextTagTextInput.text = '';
         }
@@ -342,6 +344,7 @@ Flickable {
                 }
 
                 onEditingFinished: {
+                    console.log("Editing finished for EditableTags")
                     submitCurrentKeyword()
                     completionCancel()
                 }

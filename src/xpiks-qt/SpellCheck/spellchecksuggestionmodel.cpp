@@ -147,16 +147,19 @@ namespace SpellCheck {
         if (Common::HasFlag(flags, Common::CorrectKeywords)) {
             QVector<SpellSuggestionsItem*> keywordsSuggestionsRequests = item->createKeywordsSuggestionsList();
             requests << keywordsSuggestionsRequests;
+            LOG_DEBUG << keywordsSuggestionsRequests.size() << "keywords requests";
         }
 
         if (Common::HasFlag(flags, Common::CorrectTitle)) {
             QVector<SpellSuggestionsItem*> titleSuggestionsRequests = item->createTitleSuggestionsList();
             requests << titleSuggestionsRequests;
+            LOG_DEBUG << titleSuggestionsRequests.size() << "title requests";
         }
 
         if (Common::HasFlag(flags, Common::CorrectDescription)) {
             QVector<SpellSuggestionsItem*> descriptionSuggestionsRequests = item->createDescriptionSuggestionsList();
             requests << descriptionSuggestionsRequests;
+            LOG_DEBUG << descriptionSuggestionsRequests.size() << "description requests";
         }
 
         QVector<SpellSuggestionsItem*> combinedRequests = combineSuggestionRequests(requests);

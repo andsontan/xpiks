@@ -62,6 +62,11 @@ namespace Models {
 
     void CombinedArtworksModel::recombineArtworks() {
         LOG_INFO << getArtworksCount() << "artwork(s)";
+
+        LOG_DEBUG << "Before recombine description:" << getDescription();
+        LOG_DEBUG << "Before recombine title:" << getTitle();
+        LOG_DEBUG << "Before recombine keywords:" << getKeywordsString();
+
         if (isEmpty()) { return; }
 
         if (getArtworksCount() == 1) {
@@ -69,6 +74,10 @@ namespace Models {
         } else {
             assignFromManyArtworks();
         }
+
+        LOG_DEBUG << "After recombine description:" << getDescription();
+        LOG_DEBUG << "After recombine title:" << getTitle();
+        LOG_DEBUG << "After recombine keywords:" << getKeywordsString();
 
         m_CommandManager->submitItemForSpellCheck(&m_CommonKeywordsModel);
     }
@@ -80,7 +89,7 @@ namespace Models {
         }
     }
 
-    void CombinedArtworksModel::setChangeDescription(bool value)  {
+    void CombinedArtworksModel::setChangeDescription(bool value) {
         LOG_INFO << value;
         if (Common::HasFlag(m_EditFlags, Common::EditDesctiption) != value) {
             Common::ApplyFlag(m_EditFlags, value, Common::EditDesctiption);
@@ -119,10 +128,12 @@ namespace Models {
 #endif
 
     void CombinedArtworksModel::editKeyword(int index, const QString &replacement) {
-        LOG_INFO << "index:" << index;
+        LOG_INFO << "index:" << index << "replacement:" << replacement;
         if (m_CommonKeywordsModel.editKeyword(index, replacement)) {
             setKeywordsModified(true);
             m_CommandManager->submitKeywordForSpellCheck(&m_CommonKeywordsModel, index);
+        } else {
+            LOG_INFO << "Failed to edit to" << replacement;
         }
     }
 
@@ -132,6 +143,7 @@ namespace Models {
         if (m_CommonKeywordsModel.takeKeywordAt(keywordIndex, keyword)) {
             emit keywordsCountChanged();
             setKeywordsModified(true);
+            LOG_INFO << "Removed keyword:" << keyword << "keywords count:" << getKeywordsCount();
         }
 
         return keyword;
@@ -143,6 +155,7 @@ namespace Models {
         if (m_CommonKeywordsModel.takeLastKeyword(keyword)) {
             emit keywordsCountChanged();
             setKeywordsModified(true);
+            LOG_INFO << "Removed keyword:" << keyword << "keywords count:" << getKeywordsCount();
         }
     }
 
@@ -153,12 +166,17 @@ namespace Models {
             setKeywordsModified(true);
 
             m_CommandManager->submitKeywordForSpellCheck(&m_CommonKeywordsModel, m_CommonKeywordsModel.rowCount() - 1);
+        } else {
+            LOG_INFO << "Failed to append:" << keyword;
         }
     }
 
     void CombinedArtworksModel::pasteKeywords(const QStringList &keywords) {
         LOG_INFO << keywords.length() << "keyword(s)" << "|" << keywords;
-        if (m_CommonKeywordsModel.appendKeywords(keywords) > 0) {
+        int appendedCount = m_CommonKeywordsModel.appendKeywords(keywords);
+        LOG_INFO << "Appended" << appendedCount << "keywords";
+
+        if (appendedCount > 0) {
             emit keywordsCountChanged();
             setKeywordsModified(true);
 

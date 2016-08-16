@@ -187,6 +187,8 @@ namespace Common {
          void spellCheckRequestReady(int flags, int index);
 
     private:
+         void setSpellCheckResultsUnsafe(const std::vector<std::shared_ptr<SpellCheck::SpellCheckQueryItem> > &items,
+                                         bool onlyOneKeyword);
          bool isReplacedADuplicateUnsafe(int index, const QString &existingPrev,
                                          const QString &replacement) const;
          void emitSpellCheckChanged(int index=-1);
