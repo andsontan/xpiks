@@ -38,7 +38,6 @@ namespace Models {
         Q_PROPERTY(int artworksSourcesCount READ getArtworksSourcesCount NOTIFY artworksSourcesCountChanged)
     public:
         ArtworksRepository(QObject *parent = 0);
-
         virtual ~ArtworksRepository() {}
 
     public:
@@ -70,18 +69,9 @@ namespace Models {
         void filesUnavailable();
 
 #ifdef CORE_TESTS
-    public:
-        void removeFileAndEmitSignal() {
-            m_UnavailableFiles.insert(*m_FilesSet.begin());
-            emit filesUnavailable();
-        }
-
-        void removeVectorAndEmitSignal() {
-            QString vector = *m_FilesSet.begin();
-            vector.replace(".jpg", ".eps");
-            m_UnavailableFiles.insert(vector);
-            emit filesUnavailable();
-        }
+    protected:
+        void insertIntoUnavailable(const QString &value) { m_UnavailableFiles.insert(value); }
+        const QSet<QString> &getFilesSet() const { return m_FilesSet; }
 #endif
 
     public slots:

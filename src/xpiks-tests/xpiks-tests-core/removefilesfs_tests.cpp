@@ -49,7 +49,7 @@ void RemoveFilesFsTests::removeArtworksSignals() {
 
     commandManagerMock.generateAndAddArtworks(itemsToAdd);
     commandManagerMock.connectEntitiesSignalsSlots();
-    artworksRepositoryMock.publicRemoveFileAndEmitSignal();
+    artworksRepositoryMock.removeFileAndEmitSignal();
 
 // signals
     QCOMPARE(artRepositoryFileDeleted.count(), 1);
@@ -145,7 +145,7 @@ void RemoveFilesFsTests::removeVectorSmokeTest() {
     commandManagerMock.generateAndAddArtworks(itemsToAdd);
     commandManagerMock.connectEntitiesSignalsSlots();
 
-    artworksRepositoryMock.publicRemoveVectorAndEmitSignal();
+    artworksRepositoryMock.removeVectorAndEmitSignal();
 
 // signals
     QCOMPARE(artRepositoryFileDeleted.count(), 1);

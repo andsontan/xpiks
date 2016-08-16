@@ -10,14 +10,19 @@ namespace Mocks {
     public:
         ArtworksRepositoryMock() {}
 
-        void publicRemoveFileAndEmitSignal() {
-            Models::ArtworksRepository::removeFileAndEmitSignal();
+        void removeFileAndEmitSignal() {
+            insertIntoUnavailable(*getFilesSet().begin());
+            emit filesUnavailable();
         }
 
-        void publicRemoveVectorAndEmitSignal() {
-            Models::ArtworksRepository::removeVectorAndEmitSignal();
+        void removeVectorAndEmitSignal() {
+            QString vector = *getFilesSet().begin();
+            vector.replace(".jpg", ".eps");
+            insertIntoUnavailable(vector);
+            emit filesUnavailable();
         }
     };
 }
+
 #endif // ARTWORKSREPOSITORYMOCK_H
 

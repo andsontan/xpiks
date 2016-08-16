@@ -281,21 +281,20 @@ namespace Models {
     }
 
     void ArtworksRepository::checkFileUnavailable(const QString &path) {
+        LOG_INFO << "File changed:" << path;
         QFileInfo fi(path);
         if (!fi.exists()) {
             LOG_INFO << "File become unavailable:" << path;
             m_UnavailableFiles.insert(fi.absoluteFilePath());
-            if (!m_Timer.isActive()) {
-                LOG_DEBUG << "Starting availability timer...";
-                m_Timer.start();
-            }
+            LOG_DEBUG << "Starting availability timer...";
+            m_Timer.start();
         }
     }
 
     void ArtworksRepository::onAvailabilityTimer() {
         int currentUnavailableSize = m_UnavailableFiles.size();
         LOG_INFO << "Current:" << currentUnavailableSize << "Last:" << m_LastUnavailableFilesCount;
-        if ( currentUnavailableSize > m_LastUnavailableFilesCount ) {
+        if (currentUnavailableSize > m_LastUnavailableFilesCount ) {
             m_LastUnavailableFilesCount = currentUnavailableSize;
             emit filesUnavailable();
         }
