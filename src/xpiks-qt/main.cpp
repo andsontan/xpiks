@@ -176,12 +176,25 @@ static const char *setHighDpiEnvironmentVariable()
     return envVarName;
 }
 
-int main(int argc, char *argv[]) {
+QString getRunGuardName() {
 #ifdef QT_NO_DEBUG
-    const QString runGuardName = "xpiks";
+    QString runGuardName = "xpiks_";
 #else
-    const QString runGuardName = "xpiks-debug";
+    QString runGuardName = "xpiks-debug_";
 #endif
+
+    QString username = QString::fromLocal8Bit(qgetenv("USER"));
+    if (username.isEmpty()) {
+        username = QString::fromLocal8Bit(qgetenv("USERNAME"));
+    }
+
+    username.remove(QChar::Space);
+
+    return (runGuardName + username);
+}
+
+int main(int argc, char *argv[]) {
+    const QString runGuardName = getRunGuardName();
     Helpers::RunGuard guard(runGuardName);
     if (!guard.tryToRun()) {
         std::cerr << "Xpiks is already running";
