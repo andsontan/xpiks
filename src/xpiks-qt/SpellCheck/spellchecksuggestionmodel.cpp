@@ -34,7 +34,7 @@
 
 namespace SpellCheck {
 
-    std::vector<std::shared_ptr<SpellSuggestionsItem> > combineSuggestionRequests(const std::vector<std::shared_ptr<SpellSuggestionsItem> > &items) {
+    std::vector<std::shared_ptr<SpellSuggestionsItem> > combineSuggestionRequests(const SuggestionsVector &items) {
         QHash<QString, SuggestionsVector > dict;
 
         size_t size = items.size();
@@ -160,8 +160,8 @@ namespace SpellCheck {
         m_ItemIndex = index;
     }
 
-    std::vector<std::shared_ptr<SpellSuggestionsItem> > SpellCheckSuggestionModel::createSuggestionsRequests(Common::BasicKeywordsModel *item, int flags) {
-        std::vector<std::shared_ptr<SpellSuggestionsItem> > requests;
+    SuggestionsVector SpellCheckSuggestionModel::createSuggestionsRequests(Common::BasicKeywordsModel *item, int flags) {
+        SuggestionsVector requests;
 
         if (Common::HasFlag(flags, Common::CorrectKeywords)) {
             auto subrequests = item->createKeywordsSuggestionsList();
