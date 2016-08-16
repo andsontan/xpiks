@@ -72,6 +72,7 @@ namespace SpellCheck {
 #endif
 
     private:
+        std::vector<std::shared_ptr<SpellSuggestionsItem> > createSuggestionsRequests(Common::BasicKeywordsModel *item, int flags);
         bool processFailedReplacements(const SuggestionsVector &failedReplacements) const;
         SuggestionsVector setupSuggestions(const SuggestionsVector &items);
 

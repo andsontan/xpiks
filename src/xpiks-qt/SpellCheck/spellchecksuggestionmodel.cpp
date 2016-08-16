@@ -137,25 +137,7 @@ namespace SpellCheck {
     void SpellCheckSuggestionModel::setupModel(Common::BasicKeywordsModel *item, int index, int flags) {
         Q_ASSERT(item != NULL);
         LOG_INFO << "flags =" << flags;
-        std::vector<std::shared_ptr<SpellSuggestionsItem> > requests;
-
-        if (Common::HasFlag(flags, Common::CorrectKeywords)) {
-            auto subrequests = item->createKeywordsSuggestionsList();
-            requests.insert(requests.end(), subrequests.begin(), subrequests.end());
-            LOG_DEBUG << subrequests.size() << "keywords requests";
-        }
-
-        if (Common::HasFlag(flags, Common::CorrectTitle)) {
-            auto subrequests = item->createTitleSuggestionsList();
-            requests.insert(requests.end(), subrequests.begin(), subrequests.end());
-            LOG_DEBUG << subrequests.size() << "title requests";
-        }
-
-        if (Common::HasFlag(flags, Common::CorrectDescription)) {
-            auto subrequests = item->createDescriptionSuggestionsList();
-            requests.insert(requests.end(), subrequests.begin(), subrequests.end());
-            LOG_DEBUG << subrequests.size() << "description requests";
-        }
+        auto requests = createSuggestionsRequests(item, flags);
 
         auto combinedRequests = combineSuggestionRequests(requests);
         LOG_INFO << combinedRequests.size() << "combined request(s)";
@@ -176,6 +158,30 @@ namespace SpellCheck {
         endResetModel();
 
         m_ItemIndex = index;
+    }
+
+    std::vector<std::shared_ptr<SpellSuggestionsItem> > SpellCheckSuggestionModel::createSuggestionsRequests(Common::BasicKeywordsModel *item, int flags) {
+        std::vector<std::shared_ptr<SpellSuggestionsItem> > requests;
+
+        if (Common::HasFlag(flags, Common::CorrectKeywords)) {
+            auto subrequests = item->createKeywordsSuggestionsList();
+            requests.insert(requests.end(), subrequests.begin(), subrequests.end());
+            LOG_DEBUG << subrequests.size() << "keywords requests";
+        }
+
+        if (Common::HasFlag(flags, Common::CorrectTitle)) {
+            auto subrequests = item->createTitleSuggestionsList();
+            requests.insert(requests.end(), subrequests.begin(), subrequests.end());
+            LOG_DEBUG << subrequests.size() << "title requests";
+        }
+
+        if (Common::HasFlag(flags, Common::CorrectDescription)) {
+            auto subrequests = item->createDescriptionSuggestionsList();
+            requests.insert(requests.end(), subrequests.begin(), subrequests.end());
+            LOG_DEBUG << subrequests.size() << "description requests";
+        }
+
+        return requests;
     }
 
     bool SpellCheckSuggestionModel::processFailedReplacements(const SuggestionsVector &failedReplacements) const {
