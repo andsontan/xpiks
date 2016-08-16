@@ -4,8 +4,12 @@ QT -= gui
 
 
 win32 {
-LIBS += -L"$$PWD/../../libs/" -lz
-INCLUDEPATH += "$$PWD/../../zlib-1.2.8/"
+    LIBS += -L"$$PWD/../../libs/" -lz
+    INCLUDEPATH += "$$PWD/../../zlib-1.2.8/"
+}
+
+macx {
+    LIBS += -lz
 }
 
 #CONFIG += staticlib
