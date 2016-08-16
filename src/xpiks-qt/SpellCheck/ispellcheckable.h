@@ -42,11 +42,11 @@ namespace SpellCheck {
         virtual QString retrieveKeyword(int wordIndex) = 0;
         virtual void setSpellCheckResults(const std::vector<std::shared_ptr<SpellCheckQueryItem> > &items, bool onlyOneKeyword) = 0;
         virtual void setSpellCheckResults(const QHash<QString, bool> &results, int flags) = 0;
-        virtual QVector<SpellSuggestionsItem*> createKeywordsSuggestionsList() = 0;
-        virtual QVector<SpellSuggestionsItem*> createDescriptionSuggestionsList() = 0;
-        virtual QVector<SpellSuggestionsItem*> createTitleSuggestionsList() = 0;
+        virtual std::vector<std::shared_ptr<SpellSuggestionsItem> > createKeywordsSuggestionsList() = 0;
+        virtual std::vector<std::shared_ptr<SpellSuggestionsItem> > createDescriptionSuggestionsList() = 0;
+        virtual std::vector<std::shared_ptr<SpellSuggestionsItem> > createTitleSuggestionsList() = 0;
         virtual Common::KeywordReplaceResult fixKeywordSpelling(int index, const QString &existing, const QString &replacement) = 0;
-        virtual bool processFailedKeywordReplacements(const QVector<KeywordSpellSuggestions *> &candidatesForRemoval) = 0;
+        virtual bool processFailedKeywordReplacements(const std::vector<std::shared_ptr<SpellCheck::KeywordSpellSuggestions> > &candidatesForRemoval) = 0;
         virtual void fixDescriptionSpelling(const QString &word, const QString &replacement) = 0;
         virtual void fixTitleSpelling(const QString &word, const QString &replacement) = 0;
         virtual void afterReplaceCallback() = 0;

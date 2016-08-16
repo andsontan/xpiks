@@ -26,6 +26,8 @@
 #include <QStringList>
 #include <QAbstractListModel>
 #include <QVector>
+#include <vector>
+#include <memory>
 #include "../Common/flags.h"
 
 namespace SpellCheck {
@@ -154,21 +156,21 @@ namespace SpellCheck {
     class CombinedSpellSuggestions: public SpellSuggestionsItem {
         Q_OBJECT
     public:
-        CombinedSpellSuggestions(const QString &word, const QVector<SpellSuggestionsItem*> &suggestions);
+        CombinedSpellSuggestions(const QString &word, std::vector<std::shared_ptr<SpellSuggestionsItem> > &suggestions);
         virtual ~CombinedSpellSuggestions();
 
     public:
 #if defined(CORE_TESTS) || defined(INTEGRATION_TESTS)
         virtual QString toDebugString() const { return "Multireplace: " + SpellSuggestionsItem::toDebugString(); }
 #endif
-        QVector<KeywordSpellSuggestions *> getKeywordsDuplicateSuggestions() const;
+        std::vector<std::shared_ptr<KeywordSpellSuggestions> > getKeywordsDuplicateSuggestions() const;
         virtual void replaceToSuggested(ISpellCheckable *item);
 
     //protected:
         virtual void replaceToSuggested(ISpellCheckable *item, const QString &word, const QString &replacement);
 
     private:
-        QVector<SpellSuggestionsItem*> m_SpellSuggestions;
+        std::vector<std::shared_ptr<SpellSuggestionsItem> > m_SpellSuggestions;
     };
 }
 

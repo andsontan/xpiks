@@ -202,26 +202,23 @@ namespace SpellCheck {
         setReplacementSucceeded(true);
     }
 
-    CombinedSpellSuggestions::CombinedSpellSuggestions(const QString &word, const QVector<SpellSuggestionsItem *> &suggestions):
+    CombinedSpellSuggestions::CombinedSpellSuggestions(const QString &word, std::vector<std::shared_ptr<SpellSuggestionsItem> > &suggestions):
         SpellSuggestionsItem(word, tr("multireplace")),
-        m_SpellSuggestions(suggestions)
+        m_SpellSuggestions(std::move(suggestions))
     {
-        Q_ASSERT(!suggestions.isEmpty());
+        Q_ASSERT(!suggestions.empty());
     }
 
     CombinedSpellSuggestions::~CombinedSpellSuggestions() {
-        qDeleteAll(m_SpellSuggestions);
     }
 
-    QVector<KeywordSpellSuggestions *> CombinedSpellSuggestions::getKeywordsDuplicateSuggestions() const {
-        QVector<KeywordSpellSuggestions *> keywordsSuggestions;
+    std::vector<std::shared_ptr<KeywordSpellSuggestions> > CombinedSpellSuggestions::getKeywordsDuplicateSuggestions() const {
+        std::vector<std::shared_ptr<KeywordSpellSuggestions> > keywordsSuggestions;
 
-        int size = m_SpellSuggestions.length();
-        for (int i = 0; i < size; ++i) {
-            SpellSuggestionsItem *suggestionItem = m_SpellSuggestions.at(i);
-            KeywordSpellSuggestions *keywordsItem = dynamic_cast<KeywordSpellSuggestions *>(suggestionItem);
-            if (keywordsItem != NULL && keywordsItem->isPotentialDuplicate()) {
-                keywordsSuggestions.append(keywordsItem);
+        for (auto &item: m_SpellSuggestions) {
+            std::shared_ptr<KeywordSpellSuggestions> keywordsItem = std::dynamic_pointer_cast<KeywordSpellSuggestions>(item);
+            if (keywordsItem && keywordsItem->isPotentialDuplicate()) {
+                keywordsSuggestions.push_back(keywordsItem);
             }
         }
 
@@ -237,12 +234,12 @@ namespace SpellCheck {
     }
 
     void CombinedSpellSuggestions::replaceToSuggested(ISpellCheckable *item, const QString &word, const QString &replacement) {
-        int size = m_SpellSuggestions.length();
+        size_t size = m_SpellSuggestions.size();
         LOG_INFO << size << "item(s)";
         bool anyFault = false;
 
-        for (int i = 0; i < size; ++i) {
-            SpellSuggestionsItem *suggestionItem = m_SpellSuggestions.at(i);
+        for (size_t i = 0; i < size; ++i) {
+            auto &suggestionItem = m_SpellSuggestions.at(i);
             suggestionItem->replaceToSuggested(item, word, replacement);
 
             LOG_INTEGRATION_TESTS << i << "item's result is:" << suggestionItem->getReplacementSucceeded();

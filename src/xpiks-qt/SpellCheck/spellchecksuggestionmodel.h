@@ -24,6 +24,8 @@
 
 #include <QAbstractListModel>
 #include <QList>
+#include <vector>
+#include <memory>
 #include "../Common/baseentity.h"
 
 namespace Models {
@@ -38,6 +40,8 @@ namespace SpellCheck {
     class SpellSuggestionsItem;
     class SpellCheckerService;
     class ISpellCheckable;
+
+    typedef std::vector<std::shared_ptr<SpellSuggestionsItem> > SuggestionsVector;
 
     class SpellCheckSuggestionModel : public QAbstractListModel, public Common::BaseEntity {
         Q_OBJECT
@@ -64,12 +68,12 @@ namespace SpellCheck {
     public:
         void setupModel(Common::BasicKeywordsModel *item, int index, int flags);
 #if defined(INTEGRATION_TESTS) || defined(CORE_TESTS)
-        SpellSuggestionsItem *getItem(int i) const { return m_SuggestionsList.at(i); }
+        SpellSuggestionsItem *getItem(int i) const { return m_SuggestionsList.at(i).get(); }
 #endif
 
     private:
-        bool processFailedReplacements(const QVector<SpellSuggestionsItem *> &failedReplacements) const;
-        QVector<SpellSuggestionsItem *> setupSuggestions(const QVector<SpellSuggestionsItem *> &items);
+        bool processFailedReplacements(const SuggestionsVector &failedReplacements) const;
+        SuggestionsVector setupSuggestions(const SuggestionsVector &items);
 
     public:
         virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
@@ -79,7 +83,7 @@ namespace SpellCheck {
         virtual QHash<int, QByteArray> roleNames() const;
 
     private:
-        QVector<SpellSuggestionsItem*> m_SuggestionsList;
+        std::vector<std::shared_ptr<SpellSuggestionsItem> > m_SuggestionsList;
         Common::BasicKeywordsModel *m_CurrentItem;
         int m_ItemIndex;
     };

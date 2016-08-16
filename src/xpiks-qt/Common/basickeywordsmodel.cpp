@@ -833,12 +833,12 @@ namespace Common {
         }
     }
 
-    QVector<SpellCheck::SpellSuggestionsItem *> BasicKeywordsModel::createKeywordsSuggestionsList() {
+    std::vector<std::shared_ptr<SpellCheck::SpellSuggestionsItem> > BasicKeywordsModel::createKeywordsSuggestionsList() {
         QReadLocker readLocker(&m_KeywordsLock);
 
         Q_UNUSED(readLocker);
 
-        QVector<SpellCheck::SpellSuggestionsItem *> spellCheckSuggestions;
+        std::vector<std::shared_ptr<SpellCheck::SpellSuggestionsItem> > spellCheckSuggestions;
         int length = m_KeywordsList.length();
         spellCheckSuggestions.reserve(length/2);
 
@@ -848,15 +848,11 @@ namespace Common {
                 LOG_DEBUG << keyword << "has wrong spelling";
 
                 if (!keyword.contains(QChar::Space)) {
-                    SpellCheck::KeywordSpellSuggestions *suggestionsItem = new SpellCheck::KeywordSpellSuggestions(keyword, i);
-                    spellCheckSuggestions.append(suggestionsItem);
+                    spellCheckSuggestions.emplace_back(new SpellCheck::KeywordSpellSuggestions(keyword, i));
                 } else {
                     QStringList items = keyword.split(QChar::Space, QString::SkipEmptyParts);
                     foreach(const QString &item, items) {
-                        SpellCheck::KeywordSpellSuggestions *suggestionsItem =
-                            new SpellCheck::KeywordSpellSuggestions(item, i, keyword);
-
-                        spellCheckSuggestions.append(suggestionsItem);
+                        spellCheckSuggestions.emplace_back(new SpellCheck::KeywordSpellSuggestions(item, i, keyword));
                     }
                 }
             }
@@ -865,12 +861,12 @@ namespace Common {
         return spellCheckSuggestions;
     }
 
-    QVector<SpellCheck::SpellSuggestionsItem *> BasicKeywordsModel::createDescriptionSuggestionsList() {
+    std::vector<std::shared_ptr<SpellCheck::SpellSuggestionsItem> > BasicKeywordsModel::createDescriptionSuggestionsList() {
         LOG_DEBUG << "#";
         QStringList descriptionWords = getDescriptionWords();
         int length = descriptionWords.length();
 
-        QVector<SpellCheck::SpellSuggestionsItem *> spellCheckSuggestions;
+        std::vector<std::shared_ptr<SpellCheck::SpellSuggestionsItem> > spellCheckSuggestions;
         spellCheckSuggestions.reserve(length / 3);
 
         for (int i = 0; i < length; ++i) {
@@ -878,20 +874,19 @@ namespace Common {
             if (m_SpellCheckInfo->hasDescriptionError(word)) {
                 LOG_DEBUG << word << "has wrong spelling";
 
-                SpellCheck::DescriptionSpellSuggestions *suggestionsItem = new SpellCheck::DescriptionSpellSuggestions(word);
-                spellCheckSuggestions.append(suggestionsItem);
+                spellCheckSuggestions.emplace_back(new SpellCheck::DescriptionSpellSuggestions(word));
             }
         }
 
         return spellCheckSuggestions;
     }
 
-    QVector<SpellCheck::SpellSuggestionsItem *> BasicKeywordsModel::createTitleSuggestionsList() {
+    std::vector<std::shared_ptr<SpellCheck::SpellSuggestionsItem> > BasicKeywordsModel::createTitleSuggestionsList() {
         LOG_DEBUG << "#";
         QStringList titleWords = getTitleWords();
         int length = titleWords.length();
 
-        QVector<SpellCheck::SpellSuggestionsItem *> spellCheckSuggestions;
+        std::vector<std::shared_ptr<SpellCheck::SpellSuggestionsItem> > spellCheckSuggestions;
         spellCheckSuggestions.reserve(length / 3);
 
         for (int i = 0; i < length; ++i) {
@@ -899,8 +894,7 @@ namespace Common {
             if (m_SpellCheckInfo->hasTitleError(word)) {
                 LOG_DEBUG << word << "has wrong spelling";
 
-                SpellCheck::TitleSpellSuggestions *suggestionsItem = new SpellCheck::TitleSpellSuggestions(word);
-                spellCheckSuggestions.append(suggestionsItem);
+                spellCheckSuggestions.emplace_back(new SpellCheck::TitleSpellSuggestions(word));
             }
         }
 
@@ -937,20 +931,20 @@ namespace Common {
         return result;
     }
 
-    bool BasicKeywordsModel::processFailedKeywordReplacements(const QVector<SpellCheck::KeywordSpellSuggestions *> &candidatesForRemoval) {
+    bool BasicKeywordsModel::processFailedKeywordReplacements(const std::vector<std::shared_ptr<SpellCheck::KeywordSpellSuggestions> > &candidatesForRemoval) {
         LOG_INFO << candidatesForRemoval.size() << "candidates to remove";
         bool anyReplaced = false;
 
-        if (candidatesForRemoval.isEmpty()) { return anyReplaced; }
+        if (candidatesForRemoval.empty()) { return anyReplaced; }
 
         QVector<int> indicesToRemove;
-        int size = candidatesForRemoval.size();
+        size_t size = candidatesForRemoval.size();
         indicesToRemove.reserve(size);
 
         QWriteLocker writeLocker(&m_KeywordsLock);
 
-        for (int i = 0; i < size; ++i) {
-            SpellCheck::KeywordSpellSuggestions *item = candidatesForRemoval.at(i);
+        for (size_t i = 0; i < size; ++i) {
+            auto &item = candidatesForRemoval.at(i);
 
             int index = item->getOriginalIndex();
             if (index < 0 || index >= m_KeywordsList.length()) {
