@@ -206,7 +206,7 @@ namespace SpellCheck {
         SpellSuggestionsItem(word, tr("multireplace")),
         m_SpellSuggestions(std::move(suggestions))
     {
-        Q_ASSERT(!suggestions.empty());
+        Q_ASSERT(!m_SpellSuggestions.empty());
     }
 
     CombinedSpellSuggestions::~CombinedSpellSuggestions() {
