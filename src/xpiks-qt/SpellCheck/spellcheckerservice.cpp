@@ -132,7 +132,7 @@ namespace SpellCheck {
         std::shared_ptr<SpellCheckItem> item(new SpellCheckItem(itemToCheck, Common::SpellCheckKeywords, keywordIndex),
                                              [](SpellCheckItem *spi) { spi->deleteLater(); });
         itemToCheck->connectSignals(item.get());
-        m_SpellCheckWorker->submitItem(item);
+        m_SpellCheckWorker->submitFirst(item);
     }
 
     QStringList SpellCheckerService::suggestCorrections(const QString &word) const {
