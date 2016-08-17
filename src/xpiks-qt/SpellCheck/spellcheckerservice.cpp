@@ -106,7 +106,7 @@ namespace SpellCheck {
     void SpellCheckerService::submitItems(const QVector<Common::BasicKeywordsModel *> &itemsToCheck) {
         if (m_SpellCheckWorker == NULL) { return; }
 
-        std::vector<std::shared_ptr<SpellCheckItemBase> > items;
+        std::vector<std::shared_ptr<ISpellCheckItem> > items;
         int length = itemsToCheck.length();
 
         items.reserve(length);
@@ -117,13 +117,13 @@ namespace SpellCheck {
             std::shared_ptr<SpellCheckItem> item(new SpellCheckItem(itemToCheck, Common::SpellCheckAll),
                                                  deleter);
             itemToCheck->connectSignals(item.get());
-            items.emplace_back(item);
+            items.emplace_back(std::dynamic_pointer_cast<ISpellCheckItem>(item));
         }
 
         LOG_INFO << length << "item(s)";
 
         m_SpellCheckWorker->submitItems(items);
-        m_SpellCheckWorker->submitItem(std::shared_ptr<SpellCheckItemBase>(new SpellCheckSeparatorItem()));
+        m_SpellCheckWorker->submitItem(std::shared_ptr<ISpellCheckItem>(new SpellCheckSeparatorItem()));
     }
 
     void SpellCheckerService::submitKeyword(Common::BasicKeywordsModel *itemToCheck, int keywordIndex) {

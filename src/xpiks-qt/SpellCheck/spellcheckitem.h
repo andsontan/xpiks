@@ -56,7 +56,12 @@ namespace SpellCheck {
         QStringList m_Suggestions;
     };
 
-    class SpellCheckItemBase : public QObject {
+    class ISpellCheckItem {
+    public:
+        virtual ~ISpellCheckItem() {}
+    };
+
+    class SpellCheckItemBase : public QObject, public ISpellCheckItem {
         Q_OBJECT
     public:
         virtual ~SpellCheckItemBase();
@@ -85,10 +90,9 @@ namespace SpellCheck {
         volatile bool m_NeedsSuggestions;
     };
 
-    class SpellCheckSeparatorItem : public SpellCheckItemBase {
-        Q_OBJECT
+    class SpellCheckSeparatorItem : public ISpellCheckItem {
     public:
-        virtual void submitSpellCheckResult() { /*BUMP*/ }
+        virtual ~SpellCheckSeparatorItem() {}
     };
 
     class SpellCheckItem : public SpellCheckItemBase {

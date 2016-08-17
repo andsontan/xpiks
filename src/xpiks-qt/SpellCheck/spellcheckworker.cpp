@@ -118,12 +118,23 @@ namespace SpellCheck {
         return initResult;
     }
 
-    void SpellCheckWorker::processOneItem(std::shared_ptr<SpellCheckItemBase> &item) {
-        if (std::dynamic_pointer_cast<SpellCheckSeparatorItem>(item)) {
-            emit queueIsEmpty();
-            return;
-        }
+    void SpellCheckWorker::processOneItem(std::shared_ptr<ISpellCheckItem> &item) {
+        auto separatorItem = std::dynamic_pointer_cast<SpellCheckSeparatorItem>(item);
+        auto queryItem = std::dynamic_pointer_cast<SpellCheckItem>(item);
 
+        if (queryItem) {
+            processQueryItem(queryItem);
+        } else if (separatorItem) {
+            processSeparatorItem(separatorItem);
+        }
+    }
+
+    void SpellCheckWorker::processSeparatorItem(std::shared_ptr<SpellCheckSeparatorItem> &item) {
+        Q_UNUSED(item);
+        emit queueIsEmpty();
+    }
+
+    void SpellCheckWorker::processQueryItem(std::shared_ptr<SpellCheckItem> &item) {
         bool neededSuggestions = item->needsSuggestions();
         auto &queryItems = item->getQueries();
         bool anyWrong = false;

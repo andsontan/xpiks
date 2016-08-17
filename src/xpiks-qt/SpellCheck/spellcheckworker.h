@@ -34,7 +34,7 @@ class Hunspell;
 class QTextCodec;
 
 namespace SpellCheck {
-    class SpellCheckWorker : public QObject, public Common::ItemProcessingWorker<SpellCheckItemBase>
+    class SpellCheckWorker : public QObject, public Common::ItemProcessingWorker<ISpellCheckItem>
     {
         Q_OBJECT
     public:
@@ -46,7 +46,11 @@ namespace SpellCheck {
 
     protected:
         virtual bool initWorker();
-        virtual void processOneItem(std::shared_ptr<SpellCheckItemBase> &item);
+        virtual void processOneItem(std::shared_ptr<ISpellCheckItem> &item);
+
+    private:
+        void processSeparatorItem(std::shared_ptr<SpellCheckSeparatorItem> &item);
+        void processQueryItem(std::shared_ptr<SpellCheckItem> &item);
 
     protected:
         virtual void notifyQueueIsEmpty() { emit queueIsEmpty(); }
