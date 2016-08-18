@@ -322,7 +322,6 @@ DISTFILES += \
     Dialogs/EditArtworkVerticalDialog.qml \
     Dialogs/EditArtworkHorizontalDialog.qml \
     Dialogs/UpdateWindow.qml \
-    Dialogs/SpellCheckDialog.qml \
     Dialogs/SpellCheckSuggestionsDialog.qml \
     Components/SuggestionWrapper.qml \
     Dialogs/EditKeywordDialog.qml \

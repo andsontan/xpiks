@@ -576,17 +576,6 @@ ApplicationWindow {
                     Common.launchDialog("Dialogs/ExportMetadata.qml", applicationWindow, {overwriteAll: true})
                 }
             }
-
-            MenuItem {
-                text: i18.n + qsTr("&Check spelling in selected")
-                enabled: filteredArtItemsModel.selectedArtworksCount > 0
-                onTriggered: {
-                    console.info("Spell check in selected")
-                    filteredArtItemsModel.spellCheckSelected()
-                    Common.launchDialog("Dialogs/SpellCheckDialog.qml",
-                                        applicationWindow, {});
-                }
-            }
         }
 
         Menu {
