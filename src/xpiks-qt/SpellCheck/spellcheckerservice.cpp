@@ -127,6 +127,7 @@ namespace SpellCheck {
     }
 
     void SpellCheckerService::submitKeyword(Common::BasicKeywordsModel *itemToCheck, int keywordIndex) {
+        LOG_INFO << "index:" << keywordIndex;
         if (m_SpellCheckWorker == NULL) { return; }
 
         std::shared_ptr<SpellCheckItem> item(new SpellCheckItem(itemToCheck, Common::SpellCheckKeywords, keywordIndex),

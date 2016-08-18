@@ -50,6 +50,9 @@ int SpellCheckCombinedModelTest::doTest() {
     filteredModel->selectFilteredArtworks();
     filteredModel->combineSelectedArtworks();
 
+    // wait for after-add spellchecking
+    QThread::sleep(1);
+
     Models::CombinedArtworksModel *combinedModel = m_CommandManager->getCombinedArtworksModel();
     Common::BasicKeywordsModel *basicModel = combinedModel->getBasicKeywordsModel();
     QObject::connect(basicModel, SIGNAL(spellCheckErrorsChanged()),
@@ -61,9 +64,6 @@ int SpellCheckCombinedModelTest::doTest() {
 
     combinedModel->spellCheckDescription();
     combinedModel->spellCheckTitle();
-
-    // wait for after-add spellchecking
-    QThread::sleep(1);
 
     if (!waiter.wait(5)) {
         VERIFY(false, "Timeout for waiting for spellcheck results");
