@@ -511,6 +511,13 @@ void Commands::CommandManager::setupSpellCheckSuggestions(Common::BasicKeywordsM
     }
 }
 
+void Commands::CommandManager::submitForSpellCheck(const QVector<Common::BasicKeywordsModel *> &items,
+                                                   const QString &wordToCheck) const {
+    if ((m_SettingsModel != NULL) && m_SettingsModel->getUseSpellCheck() && m_SpellCheckerService != NULL) {
+        m_SpellCheckerService->submitItems(items, wordToCheck);
+    }
+}
+
 void Commands::CommandManager::submitKeywordsForWarningsCheck(Models::ArtworkMetadata *item) const {
     Q_ASSERT(item != NULL);
     this->submitForWarningsCheck(item, Common::WarningsCheckKeywords);

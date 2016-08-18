@@ -27,6 +27,7 @@
 #include <QStringList>
 #include <QObject>
 #include <QHash>
+#include <functional>
 
 namespace Common {
     class BasicKeywordsModel;
@@ -100,10 +101,11 @@ namespace SpellCheck {
     public:
         SpellCheckItem(Common::BasicKeywordsModel *spellCheckable, int spellCheckFlags, int keywordIndex);
         SpellCheckItem(Common::BasicKeywordsModel *spellCheckable, int spellCheckFlags);
+        SpellCheckItem(Common::BasicKeywordsModel *spellCheckable, const QString &keywordToCheck);
         virtual ~SpellCheckItem();
 
     private:
-        void addWords(const QStringList &words, int startingIndex);
+        void addWords(const QStringList &words, int startingIndex, const std::function<bool (const QString &word)> &pred);
 
     signals:
         void resultsReady(int flags, int index);
