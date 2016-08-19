@@ -112,25 +112,25 @@ namespace SpellCheck {
         Q_ASSERT(spellCheckable != NULL);
         spellCheckable->acquire();
 
-        std::function<bool (const QString &word)> sameKeywordFunc = [&keywordToCheck](const QString &word) {
-            return QString::compare(word, keywordToCheck, Qt::CaseInsensitive) == 0;
+        std::function<bool (const QString &word)> containsFunc = [&keywordToCheck](const QString &word) {
+            return word.contains(keywordToCheck, Qt::CaseInsensitive);
         };
 
         QStringList keywords = spellCheckable->getKeywords();
         reserve(keywords.length());
-        addWords(keywords, 0, sameKeywordFunc);
+        addWords(keywords, 0, containsFunc);
+
+        std::function<bool (const QString &word)> sameKeywordFunc = [&keywordToCheck](const QString &word) {
+            return QString::compare(word, keywordToCheck, Qt::CaseInsensitive) == 0;
+        };
 
         QStringList descriptionWords = spellCheckable->getDescriptionWords();
         reserve(descriptionWords.length());
         addWords(descriptionWords, 100000, sameKeywordFunc);
 
-        std::function<bool (const QString &word)> containsFunc = [&keywordToCheck](const QString &word) {
-            return word.contains(keywordToCheck, Qt::CaseInsensitive);
-        };
-
         QStringList titleWords = spellCheckable->getTitleWords();
         reserve(titleWords.length());
-        addWords(titleWords, 100000, containsFunc);
+        addWords(titleWords, 100000, sameKeywordFunc);
     }
 
     SpellCheckItem::~SpellCheckItem() {
