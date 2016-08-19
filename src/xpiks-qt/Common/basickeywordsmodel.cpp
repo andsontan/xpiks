@@ -1031,8 +1031,9 @@ namespace Common {
         Q_ASSERT(m_KeywordsList.length() == m_SpellCheckResults.length());
 
         const size_t size = items.size();
-        const size_t keywordsLength = m_KeywordsList.length();
+        const int keywordsLength = m_KeywordsList.length();
 
+        // reset relative items
         for (size_t i = 0; i < size; ++i) {
             auto &item = items.at(i);
             int index = item->m_Index;

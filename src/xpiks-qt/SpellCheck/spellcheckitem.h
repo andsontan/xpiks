@@ -101,7 +101,7 @@ namespace SpellCheck {
     public:
         SpellCheckItem(Common::BasicKeywordsModel *spellCheckable, int spellCheckFlags, int keywordIndex);
         SpellCheckItem(Common::BasicKeywordsModel *spellCheckable, int spellCheckFlags);
-        SpellCheckItem(Common::BasicKeywordsModel *spellCheckable, const QString &keywordToCheck);
+        SpellCheckItem(Common::BasicKeywordsModel *spellCheckable, const QStringList &keywordsToCheck);
         virtual ~SpellCheckItem();
 
     private:

@@ -103,7 +103,7 @@ namespace SpellCheck {
         }
     }
 
-    SpellCheckItem::SpellCheckItem(Common::BasicKeywordsModel *spellCheckable, const QString &keywordToCheck) :
+    SpellCheckItem::SpellCheckItem(Common::BasicKeywordsModel *spellCheckable, const QStringList &keywordsToCheck) :
         SpellCheckItemBase(),
         m_SpellCheckable(spellCheckable),
         m_SpellCheckFlags(Common::SpellCheckAll),
@@ -112,16 +112,32 @@ namespace SpellCheck {
         Q_ASSERT(spellCheckable != NULL);
         spellCheckable->acquire();
 
-        std::function<bool (const QString &word)> containsFunc = [&keywordToCheck](const QString &word) {
-            return word.contains(keywordToCheck, Qt::CaseInsensitive);
+        std::function<bool (const QString &word)> containsFunc = [&keywordsToCheck](const QString &word) {
+            bool contains = false;
+            for (auto &item: keywordsToCheck) {
+                if (word.contains(item, Qt::CaseInsensitive)) {
+                    contains = true;
+                    break;
+                }
+            }
+
+            return contains;
         };
 
         QStringList keywords = spellCheckable->getKeywords();
         reserve(keywords.length());
         addWords(keywords, 0, containsFunc);
 
-        std::function<bool (const QString &word)> sameKeywordFunc = [&keywordToCheck](const QString &word) {
-            return QString::compare(word, keywordToCheck, Qt::CaseInsensitive) == 0;
+        std::function<bool (const QString &word)> sameKeywordFunc = [&keywordsToCheck](const QString &word) {
+            bool match = false;
+            for (auto &item: keywordsToCheck) {
+                if (QString::compare(word, item, Qt::CaseInsensitive) == 0) {
+                    match = true;
+                    break;
+                }
+            }
+
+            return match;
         };
 
         QStringList descriptionWords = spellCheckable->getDescriptionWords();
