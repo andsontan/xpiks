@@ -813,14 +813,13 @@ namespace Common {
         return m_KeywordsList;
     }
 
-    void BasicKeywordsModel::setSpellCheckResults(const std::vector<std::shared_ptr<SpellCheck::SpellCheckQueryItem> > &items,
-                                                  bool onlyOneKeyword) {
+    void BasicKeywordsModel::setSpellCheckResults(const std::vector<std::shared_ptr<SpellCheck::SpellCheckQueryItem> > &items) {
         LOG_DEBUG << items.size() << "results";
 
         QWriteLocker writeLocker(&m_KeywordsLock);
         Q_UNUSED(writeLocker);
 
-        setSpellCheckResultsUnsafe(items, onlyOneKeyword);
+        setSpellCheckResultsUnsafe(items);
     }
 
     void BasicKeywordsModel::setSpellCheckResults(const QHash<QString, bool> &results, int flags) {
@@ -1022,8 +1021,7 @@ namespace Common {
         notifySpellCheckResults(flags);
     }
 
-    void BasicKeywordsModel::setSpellCheckResultsUnsafe(const std::vector<std::shared_ptr<SpellCheck::SpellCheckQueryItem> > &items,
-                                                        bool onlyOneKeyword) {
+    void BasicKeywordsModel::setSpellCheckResultsUnsafe(const std::vector<std::shared_ptr<SpellCheck::SpellCheckQueryItem> > &items) {
         if (m_KeywordsList.length() != m_SpellCheckResults.length()) {
             LOG_INTEGRATION_TESTS << "Current keywords list length:" << m_KeywordsList.length();
             LOG_INTEGRATION_TESTS << "SpellCheck list length:" << m_SpellCheckResults.length();
@@ -1032,25 +1030,33 @@ namespace Common {
         // sync issue between adding/removing/undo/spellcheck
         Q_ASSERT(m_KeywordsList.length() == m_SpellCheckResults.length());
 
-        if (!onlyOneKeyword) {
-            resetSpellCheckResultsUnsafe();
-        } else {
-            Q_ASSERT(!items.empty());
-            int index = items.front()->m_Index;
-            m_SpellCheckResults[index] = true;
-        }
+        const size_t size = items.size();
+        const size_t keywordsLength = m_KeywordsList.length();
 
-        size_t size = items.size();
         for (size_t i = 0; i < size; ++i) {
             auto &item = items.at(i);
             int index = item->m_Index;
-            if (0 <= index && index < m_KeywordsList.length()) {
+            if (0 <= index && index < keywordsLength) {
+                m_SpellCheckResults[index] = true;
+            }
+
+            if (index >= keywordsLength) { break; }
+        }
+
+        for (size_t i = 0; i < size; ++i) {
+            auto &item = items.at(i);
+            int index = item->m_Index;
+            Q_ASSERT(keywordsLength == m_KeywordsList.length());
+
+            if (0 <= index && index < keywordsLength) {
                 if (m_KeywordsList[index].contains(item->m_Word)) {
                     // if keyword contains several words, there would be
                     // several queryitems and there's error if any has error
                     m_SpellCheckResults[index] = m_SpellCheckResults[index] && item->m_IsCorrect;
                 }
             }
+
+            if (index >= keywordsLength) { break; }
         }
     }
 

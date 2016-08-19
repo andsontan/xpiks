@@ -143,13 +143,10 @@ namespace SpellCheck {
         int index = startingIndex;
 
         foreach (const QString &word, words) {
-            bool added = false;
-
             if (!word.contains(QChar::Space)) {
                 if (pred(word)) {
                     std::shared_ptr<SpellCheckQueryItem> queryItem(new SpellCheckQueryItem(index, word));
                     appendItem(queryItem);
-                    added = true;
                 }
             } else {
                 QStringList parts = word.split(QChar::Space, QString::SkipEmptyParts);
@@ -159,15 +156,12 @@ namespace SpellCheck {
                         if (pred(item)) {
                             std::shared_ptr<SpellCheckQueryItem> queryItem(new SpellCheckQueryItem(index, item));
                             appendItem(queryItem);
-                            added = true;
                         }
                     }
                 }
             }
 
-            if (added) {
-                index++;
-            }
+            index++;
         }
     }
 
@@ -177,7 +171,7 @@ namespace SpellCheck {
 
         // can be empty in case of clear command
         if (Common::HasFlag(m_SpellCheckFlags, Common::SpellCheckKeywords) && !items.empty()) {
-            m_SpellCheckable->setSpellCheckResults(items, m_OnlyOneKeyword);
+            m_SpellCheckable->setSpellCheckResults(items);
         }
 
         if (Common::HasFlag(m_SpellCheckFlags, Common::SpellCheckDescription) ||
