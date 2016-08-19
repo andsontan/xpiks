@@ -4,6 +4,9 @@ TEMPLATE = lib        # Tells Qt that we are compiling a library so the output w
 
 CONFIG += c++11
 
+DEFINES += ZLIB_WINAPI \
+           ZLIB_DLL
+
 QMAKE_CFLAGS_WARN_ON -= -Wall   # Optional - disable warnings when compiling this library
 QMAKE_CXXFLAGS_WARN_ON -= -Wall # Optional - disable warnings when compiling this library
 

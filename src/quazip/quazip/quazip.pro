@@ -2,10 +2,11 @@ TEMPLATE = lib
 CONFIG += qt warn_on
 QT -= gui
 
-
 win32 {
-    LIBS += -L"$$PWD/../../libs/" -lz
+    LIBS += -L"$$PWD/../../libs" -lz
     INCLUDEPATH += "$$PWD/../../zlib-1.2.8/"
+    DEFINES += ZLIB_WINAPI \
+               ZLIB_DLL
 }
 
 macx {
@@ -53,8 +54,7 @@ unix:!symbian {
     INSTALLS += headers target
 
 	OBJECTS_DIR=.obj
-	MOC_DIR=.moc
-	
+	MOC_DIR=.moc	
 }
 
 win32 {
@@ -65,7 +65,6 @@ win32 {
     # workaround for qdatetime.h macro bug
     DEFINES += NOMINMAX
 }
-
 
 symbian {
 
