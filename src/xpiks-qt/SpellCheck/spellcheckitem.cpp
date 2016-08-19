@@ -124,9 +124,13 @@ namespace SpellCheck {
         reserve(descriptionWords.length());
         addWords(descriptionWords, 100000, sameKeywordFunc);
 
+        std::function<bool (const QString &word)> containsFunc = [&keywordToCheck](const QString &word) {
+            return word.contains(keywordToCheck, Qt::CaseInsensitive);
+        };
+
         QStringList titleWords = spellCheckable->getTitleWords();
         reserve(titleWords.length());
-        addWords(titleWords, 100000, sameKeywordFunc);
+        addWords(titleWords, 100000, containsFunc);
     }
 
     SpellCheckItem::~SpellCheckItem() {
