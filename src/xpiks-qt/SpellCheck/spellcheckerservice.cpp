@@ -127,7 +127,8 @@ namespace SpellCheck {
     }
 
     // used for spellchecking after adding a word to user dictionary
-    void SpellCheckerService::submitItems(const QVector<Common::BasicKeywordsModel *> &itemsToCheck, const QString &wordToCheck) {
+    void SpellCheckerService::submitItems(const QVector<Common::BasicKeywordsModel *> &itemsToCheck,
+                                          const QStringList &wordsToCheck) {
         if (m_SpellCheckWorker == NULL) { return; }
 
         std::vector<std::shared_ptr<ISpellCheckItem> > items;
@@ -138,7 +139,7 @@ namespace SpellCheck {
 
         for (int i = 0; i < length; ++i) {
             Common::BasicKeywordsModel *itemToCheck = itemsToCheck.at(i);
-            std::shared_ptr<SpellCheckItem> item(new SpellCheckItem(itemToCheck, wordToCheck),
+            std::shared_ptr<SpellCheckItem> item(new SpellCheckItem(itemToCheck, wordsToCheck),
                                                  deleter);
             itemToCheck->connectSignals(item.get());
             items.emplace_back(std::dynamic_pointer_cast<ISpellCheckItem>(item));

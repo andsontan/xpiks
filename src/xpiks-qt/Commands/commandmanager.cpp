@@ -512,9 +512,9 @@ void Commands::CommandManager::setupSpellCheckSuggestions(Common::BasicKeywordsM
 }
 
 void Commands::CommandManager::submitForSpellCheck(const QVector<Common::BasicKeywordsModel *> &items,
-                                                   const QString &wordToCheck) const {
+                                                   const QStringList &wordsToCheck) const {
     if ((m_SettingsModel != NULL) && m_SettingsModel->getUseSpellCheck() && m_SpellCheckerService != NULL) {
-        m_SpellCheckerService->submitItems(items, wordToCheck);
+        m_SpellCheckerService->submitItems(items, wordsToCheck);
     }
 }
 
