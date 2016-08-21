@@ -52,7 +52,7 @@ namespace Suggestion {
         LOG_DEBUG << "Loading library...";
 
         QFile file(m_Filepath);
-        if (file.exists() && file.open(QIODevice::ReadOnly)) {
+        if (file.open(QIODevice::ReadOnly)) {
             QHash<QString, QStringList> dict;
 
             QDataStream in(&file);   // read the data

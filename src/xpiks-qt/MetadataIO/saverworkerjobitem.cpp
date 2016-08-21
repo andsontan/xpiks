@@ -52,7 +52,7 @@ namespace MetadataIO {
         bool success = false;
         QString path = filepath + Constants::METADATA_BACKUP_EXTENSION;
         QFile file(path);
-        if (file.exists() && file.open(QIODevice::ReadOnly)) {
+        if (file.open(QIODevice::ReadOnly)) {
             QHash<QString, QString> dict;
 
             QDataStream in(&file);   // read the data

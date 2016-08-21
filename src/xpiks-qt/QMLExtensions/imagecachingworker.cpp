@@ -189,7 +189,7 @@ namespace QMLExtensions {
 
     void ImageCachingWorker::readIndex() {
         QFile file(m_IndexFilepath);
-        if (file.exists() && file.open(QIODevice::ReadOnly)) {
+        if (file.open(QIODevice::ReadOnly)) {
             QHash<QString, CachedImage> cacheIndex;
 
             QDataStream in(&file);   // read the data
