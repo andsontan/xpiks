@@ -256,7 +256,7 @@ namespace Common {
         LOG_INFO << replaceWhat << "->" << replaceTo << "with flags:" << flags;
         Q_ASSERT(!replaceWhat.isEmpty());
         Q_ASSERT(!replaceTo.isEmpty());
-        Q_ASSERT((flags &Common::SearchFlagSearchMetadata) != 0);
+        Q_ASSERT((flags & Common::SearchFlagSearchMetadata) != 0);
         bool anyChanged = false;
 
         const bool needToCheckDescription = Common::HasFlag(flags, Common::SearchFlagSearchDescription);

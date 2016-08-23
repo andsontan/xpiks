@@ -791,10 +791,17 @@ ApplicationWindow {
                     RowLayout {
                         spacing : 100
                         width: parent.width
+
                         StyledText {
                             Layout.maximumWidth: parent.width/2
                             horizontalAlignment: Text.AlignLeft
-                            text: i18.n + qsTr("Number of words in user dictionary: ") + helpersWrapper.getSpellCheckerService().userDictWordsNumber
+                            text: i18.n + getOriginText()
+
+                            function getOriginText() {
+                                var spellCheckerService = helpersWrapper.getSpellCheckerService()
+                                var result = qsTr("Number of words in user dictionary: %1").arg(spellCheckerService.userDictWordsNumber)
+                                return result
+                            }
                         }
 
                         StyledButton {

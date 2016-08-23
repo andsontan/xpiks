@@ -52,7 +52,7 @@ namespace SpellCheck {
     private:
         void processSeparatorItem(std::shared_ptr<SpellCheckSeparatorItem> &item);
         void processQueryItem(std::shared_ptr<SpellCheckItem> &item);
-        void processChangeUserDict(std::shared_ptr<AddWordItem> &item);
+        void processChangeUserDict(std::shared_ptr<AddWordToUserDictItem> &item);
 
     protected:
         virtual void notifyQueueIsEmpty() { emit queueIsEmpty(); }
@@ -67,17 +67,18 @@ namespace SpellCheck {
         void queueIsEmpty();
         void wordsNumberChanged(int number);
         void userDictUpdate(const QStringList &keywords);
-        void userDictUpdate();
+        void userDictCleared();
 
     private:
         void detectAffEncoding();
         QStringList suggestCorrections(const QString &word);
         bool checkWordSpelling(const std::shared_ptr<SpellCheckQueryItem> &queryItem);
+        bool checkWordSpelling(const QString &word) const;
         bool isHunspellSpellingCorrect(const QString &word) const;
         void findSuggestions(const QString &word);
         void initFromUserDict();
         void cleanUserDict();
-        void addWordUserDict(const QStringList &words);
+        void addWordToUserDict(const QStringList &words);
 
     private:
         QHash<QString, QStringList> m_Suggestions;
@@ -88,7 +89,7 @@ namespace SpellCheck {
         Hunspell *m_Hunspell;
         // Coded does not need destruction
         QTextCodec *m_Codec;
-        QString m_UserDictionary;
+        QString m_UserDictionaryPath;
         int m_UserDictionaryWordsNumber;
     };
 }

@@ -62,15 +62,16 @@ namespace SpellCheck {
 
         QObject::connect(m_SpellCheckWorker, SIGNAL(stopped()),
                          this, SLOT(workerFinished()));
-
         QObject::connect(m_SpellCheckWorker, SIGNAL(destroyed(QObject *)),
                          this, SLOT(workerDestroyed(QObject *)));
+
+        // user dict
         QObject::connect(m_SpellCheckWorker, SIGNAL(wordsNumberChanged(int)),
                          this, SLOT(wordsNumberChangedHandler(int)));
         QObject::connect(m_SpellCheckWorker, SIGNAL(userDictUpdate(QStringList)),
                          this, SIGNAL(userDictUpdate(QStringList)));
-        QObject::connect(m_SpellCheckWorker, SIGNAL(userDictUpdate()),
-                         this, SIGNAL(userDictUpdate()));
+        QObject::connect(m_SpellCheckWorker, SIGNAL(userDictCleared()),
+                         this, SIGNAL(userDictCleared()));
 
         LOG_DEBUG << "starting thread...";
         thread->start();
@@ -190,7 +191,7 @@ namespace SpellCheck {
     }
 
     void SpellCheckerService::cancelCurrentBatch() {
-        LOG_INFO << "#";
+        LOG_DEBUG << "#";
 
         if (m_SpellCheckWorker == NULL) {
             return;
@@ -210,17 +211,17 @@ namespace SpellCheck {
     }
 
     void SpellCheckerService::addUserWordToDictionary(const QString &word) {
-        LOG_INFO << "#";
-        m_SpellCheckWorker->submitItem(std::shared_ptr<ISpellCheckItem>(new AddWordItem(word)));
+        LOG_DEBUG << "#";
+        m_SpellCheckWorker->submitItem(std::shared_ptr<ISpellCheckItem>(new AddWordToUserDictItem(word)));
     }
 
     void SpellCheckerService::clearUserDictionary() {
-        LOG_INFO << "#";
-        m_SpellCheckWorker->submitItem(std::shared_ptr<ISpellCheckItem>(new AddWordItem(true)));
+        LOG_DEBUG << "#";
+        m_SpellCheckWorker->submitItem(std::shared_ptr<ISpellCheckItem>(new AddWordToUserDictItem(true)));
     }
 
     void SpellCheckerService::workerFinished() {
-        LOG_INFO << "#";
+        LOG_DEBUG << "#";
     }
 
     void SpellCheckerService::workerDestroyed(QObject *object) {
@@ -236,7 +237,7 @@ namespace SpellCheck {
     }
 
     void SpellCheckerService::wordsNumberChangedHandler(int number) {
-        LOG_DEBUG << "number of words in user dictonary " << number;
+        LOG_INFO << "number of words in user dictonary " << number;
         m_UserDictWordsNumber = number;
         emit userDictWordsNumberChanged();
     }

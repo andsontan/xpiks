@@ -1111,10 +1111,10 @@ namespace Models {
             itemsToCheck.append(keywordsModel);
         }
 
-        m_CommandManager->submitForSpellCheck(itemsToCheck);
+        m_CommandManager->submitForSpellCheck(itemsToCheck, keywords);
     }
 
-    void ArtItemsModel::userDictUpdateHandler( ) {
+    void ArtItemsModel::userDictClearedHandler() {
         int size = m_ArtworkList.size();
         QVector<Common::BasicKeywordsModel *> itemsToCheck;
         itemsToCheck.reserve(size);

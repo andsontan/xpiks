@@ -201,21 +201,15 @@ namespace SpellCheck {
         emit resultsReady(m_SpellCheckFlags, index);
     }
 
-    AddWordItem::AddWordItem(const QString &keyword):
-        m_KeyWords(QStringList()),
-        m_ClearFlag(false) {
-        Helpers::splitText(keyword, m_KeyWords);
-
-        m_KeyWords.removeDuplicates();
+    AddWordToUserDictItem::AddWordToUserDictItem(const QString &keyword):
+        m_KeywordsToAdd(QStringList()),
+        m_ClearFlag(false)
+    {
+        Helpers::splitText(keyword, m_KeywordsToAdd);
+        m_KeywordsToAdd.removeDuplicates();
     }
 
-    AddWordItem::AddWordItem(bool clearFlag):
+    AddWordToUserDictItem::AddWordToUserDictItem(bool clearFlag):
         m_ClearFlag(clearFlag)
-    {}
-
-    AddWordItem::~AddWordItem()
-    {}
-
-    void AddWordItem::submitSpellCheckResult()
-    {}
+    { }
 }

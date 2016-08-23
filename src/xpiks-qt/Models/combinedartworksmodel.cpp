@@ -432,19 +432,17 @@ namespace Models {
     }
 
     void CombinedArtworksModel::userDictUpdateHandler(const QStringList &keywords) {
+        LOG_DEBUG << "#";
         Q_ASSERT(!keywords.isEmpty());
+
         SpellCheck::SpellCheckItemInfo *info = m_CommonKeywordsModel.getSpellCheckInfo();
         info->removeWordsFromErrors(keywords);
-        QVector<Common::BasicKeywordsModel *> vec;
-        vec.append(&m_CommonKeywordsModel);
 
-        m_CommandManager->submitForSpellCheck(vec, keywords);
+        m_CommandManager->submitForSpellCheck(QVector<Common::BasicKeywordsModel *>() << (&m_CommonKeywordsModel), keywords);
     }
 
-    void CombinedArtworksModel::userDictUpdateHandler() {
-        QVector<Common::BasicKeywordsModel *> vec;
-        vec.append(&m_CommonKeywordsModel);
-
+    void CombinedArtworksModel::userDictClearedHandler() {
+        LOG_DEBUG << "#";
         m_CommandManager->submitItemForSpellCheck(&m_CommonKeywordsModel);
     }
 }

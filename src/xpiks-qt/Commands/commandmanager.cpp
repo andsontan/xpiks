@@ -257,13 +257,17 @@ void Commands::CommandManager::connectEntitiesSignalsSlots() const {
     }
 
     if (m_SpellCheckerService != NULL && m_ArtItemsModel != NULL) {
-        QObject::connect(m_SpellCheckerService, SIGNAL(userDictUpdate(QStringList)), m_ArtItemsModel, SLOT(userDictUpdateHandler(QStringList)));
-        QObject::connect(m_SpellCheckerService, SIGNAL(userDictUpdate()), m_ArtItemsModel, SLOT(userDictUpdateHandler()));
+        QObject::connect(m_SpellCheckerService, SIGNAL(userDictUpdate(QStringList)),
+                         m_ArtItemsModel, SLOT(userDictUpdateHandler(QStringList)));
+        QObject::connect(m_SpellCheckerService, SIGNAL(userDictCleared()),
+                         m_ArtItemsModel, SLOT(userDictClearedHandler()));
     }
 
     if (m_SpellCheckerService != NULL && m_CombinedArtworksModel != NULL) {
-        QObject::connect(m_SpellCheckerService, SIGNAL(userDictUpdate(QStringList)), m_CombinedArtworksModel, SLOT(userDictUpdateHandler(QStringList)));
-        QObject::connect(m_SpellCheckerService, SIGNAL(userDictUpdate()), m_CombinedArtworksModel, SLOT(userDictUpdateHandler()));
+        QObject::connect(m_SpellCheckerService, SIGNAL(userDictUpdate(QStringList)),
+                         m_CombinedArtworksModel, SLOT(userDictUpdateHandler(QStringList)));
+        QObject::connect(m_SpellCheckerService, SIGNAL(userDictCleared()),
+                         m_CombinedArtworksModel, SLOT(userDictClearedHandler()));
     }
 }
 

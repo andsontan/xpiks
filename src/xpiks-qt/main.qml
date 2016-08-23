@@ -47,7 +47,7 @@ ApplicationWindow {
     property bool needToCenter: true
     property bool listLayout: true
     property bool initializedColors: false
-    property var spellCheckService : helpersWrapper.getSpellCheckerService()
+    property var spellCheckService: helpersWrapper.getSpellCheckerService()
 
     onBeforeRendering: {
         if (!initializedColors) {

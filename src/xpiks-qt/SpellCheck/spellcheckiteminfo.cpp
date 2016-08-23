@@ -84,7 +84,7 @@ namespace SpellCheck {
     }
 
     void SpellCheckItemInfo::removeWordsFromErrors(const QStringList &words) {
-        for (const QString &word : words) {
+        for (const QString &word: words) {
             m_TitleErrors.removeWordFromSet(word);
             m_DescriptionErrors.removeWordFromSet(word);
         }

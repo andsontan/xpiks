@@ -188,7 +188,7 @@ namespace Models {
 
     public slots:
         void userDictUpdateHandler(const QStringList &keywords);
-        void userDictUpdateHandler();
+        void userDictClearedHandler();
 
     protected:
         virtual bool doRemoveSelectedArtworks();

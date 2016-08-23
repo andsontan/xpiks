@@ -132,24 +132,20 @@ namespace SpellCheck {
         volatile bool m_OnlyOneKeyword;
     };
 
-    class AddWordItem:
-        public SpellCheckItemBase
+    class AddWordToUserDictItem:
+        public ISpellCheckItem
     {
-    Q_OBJECT
+    public:
+        AddWordToUserDictItem(const QString &keyword);
+        AddWordToUserDictItem(bool clearFlag);
+        virtual ~AddWordToUserDictItem() {}
 
     public:
-        AddWordItem(const QString &keyword);
-        AddWordItem(bool clearFlag);
-        virtual ~AddWordItem();
-
-    public:
-        virtual void submitSpellCheckResult();
-
-        const QStringList &getKeywords() const { return m_KeyWords; }
-        bool getClearFlag() { return m_ClearFlag; }
+        const QStringList &getKeywordsToAdd() const { return m_KeywordsToAdd; }
+        bool getClearFlag() const { return m_ClearFlag; }
 
     private:
-        QStringList m_KeyWords;
+        QStringList m_KeywordsToAdd;
         bool m_ClearFlag;
     };
 }
