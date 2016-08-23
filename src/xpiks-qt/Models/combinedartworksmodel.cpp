@@ -32,12 +32,11 @@
 #include "../QMLExtensions/colorsmodel.h"
 
 namespace Models {
-    CombinedArtworksModel::CombinedArtworksModel(QObject *parent) :
+    CombinedArtworksModel::CombinedArtworksModel(QObject *parent):
         ArtworksViewModel(parent),
         m_CommonKeywordsModel(m_HoldPlaceholder, this),
         m_EditFlags(0),
-        m_ModifiedFlags(0)
-    {
+        m_ModifiedFlags(0) {
         m_CommonKeywordsModel.setSpellCheckInfo(&m_SpellCheckInfo);
 
         QObject::connect(&m_CommonKeywordsModel, SIGNAL(spellCheckErrorsChanged()),
@@ -67,7 +66,9 @@ namespace Models {
         LOG_DEBUG << "Before recombine title:" << getTitle();
         LOG_DEBUG << "Before recombine keywords:" << getKeywordsString();
 
-        if (isEmpty()) { return; }
+        if (isEmpty()) {
+            return;
+        }
 
         if (getArtworksCount() == 1) {
             assignFromOneArtwork();
@@ -82,9 +83,9 @@ namespace Models {
         m_CommandManager->submitItemForSpellCheck(&m_CommonKeywordsModel);
     }
 
-    void CombinedArtworksModel::acceptSuggestedKeywords(const QStringList &keywords)  {
+    void CombinedArtworksModel::acceptSuggestedKeywords(const QStringList &keywords) {
         LOG_INFO << keywords.size() << "keyword(s)";
-        foreach (const QString &keyword, keywords) {
+        foreach(const QString &keyword, keywords) {
             this->appendKeyword(keyword);
         }
     }
@@ -122,9 +123,10 @@ namespace Models {
     }
 
 #ifdef CORE_TESTS
-        QStringList CombinedArtworksModel::getKeywords() {
-            return m_CommonKeywordsModel.getKeywords();
-        }
+    QStringList CombinedArtworksModel::getKeywords() {
+        return m_CommonKeywordsModel.getKeywords();
+    }
+
 #endif
 
     void CombinedArtworksModel::editKeyword(int index, const QString &replacement) {
@@ -189,8 +191,8 @@ namespace Models {
         bool needToSave = false;
 
         if (getChangeTitle() ||
-                getChangeDescription() ||
-                getChangeKeywords()) {
+            getChangeDescription() ||
+            getChangeKeywords()) {
             needToSave = getArtworksCount() > 1;
             needToSave = needToSave || (getChangeKeywords() && areKeywordsModified());
             needToSave = needToSave || isSpellingFixed();
@@ -220,6 +222,7 @@ namespace Models {
 
     void CombinedArtworksModel::initDescriptionHighlighting(QQuickTextDocument *document) {
         SpellCheck::SpellCheckItemInfo *info = m_CommonKeywordsModel.getSpellCheckInfo();
+
         if (info == NULL) {
             Q_ASSERT(false);
             // OneItem edits will use artwork's spellcheckinfo
@@ -234,6 +237,7 @@ namespace Models {
 
     void CombinedArtworksModel::initTitleHighlighting(QQuickTextDocument *document) {
         SpellCheck::SpellCheckItemInfo *info = m_CommonKeywordsModel.getSpellCheckInfo();
+
         if (info == NULL) {
             Q_ASSERT(false);
             // OneItem edits will use artwork's spellcheckinfo
@@ -269,7 +273,7 @@ namespace Models {
         int firstSelectedIndex = -1;
 
         processArtworks([](const MetadataElement &item) { return item.isSelected(); },
-        [&selectedCount, &firstSelectedIndex](int index, ArtworkMetadata *) {
+                        [&selectedCount, &firstSelectedIndex](int index, ArtworkMetadata *) {
             selectedCount++;
 
             if (firstSelectedIndex == -1) {
@@ -293,11 +297,11 @@ namespace Models {
         auto &artworksList = getArtworksList();
 
         std::shared_ptr<Commands::CombinedEditCommand> combinedEditCommand(new Commands::CombinedEditCommand(
-                    m_EditFlags,
-                    artworksList,
-                    m_CommonKeywordsModel.getDescription(),
-                    m_CommonKeywordsModel.getTitle(),
-                    m_CommonKeywordsModel.getKeywords()));
+                m_EditFlags,
+                artworksList,
+                m_CommonKeywordsModel.getDescription(),
+                m_CommonKeywordsModel.getTitle(),
+                m_CommonKeywordsModel.getKeywords()));
 
         m_CommandManager->processCommand(combinedEditCommand);
     }
@@ -336,7 +340,7 @@ namespace Models {
         QSet<QString> commonKeywords;
 
         processArtworks([](const MetadataElement &) { return true; },
-        [&](int, ArtworkMetadata *metadata) {
+                        [&](int, ArtworkMetadata *metadata) {
             if (!anyItemsProcessed) {
                 description = metadata->getDescription();
                 title = metadata->getTitle();
@@ -424,6 +428,23 @@ namespace Models {
 
     void CombinedArtworksModel::generateAboutToBeRemoved() {
         LOG_DEBUG << "#";
-         m_CommonKeywordsModel.notifyAboutToBeRemoved();
+        m_CommonKeywordsModel.notifyAboutToBeRemoved();
+    }
+
+    void CombinedArtworksModel::userDictUpdateHandler(const QStringList &keywords) {
+        Q_ASSERT(!keywords.isEmpty());
+        SpellCheck::SpellCheckItemInfo *info = m_CommonKeywordsModel.getSpellCheckInfo();
+        info->removeWordsFromErrors(keywords);
+        QVector<Common::BasicKeywordsModel *> vec;
+        vec.append(&m_CommonKeywordsModel);
+
+        m_CommandManager->submitForSpellCheck(vec, keywords);
+    }
+
+    void CombinedArtworksModel::userDictUpdateHandler() {
+        QVector<Common::BasicKeywordsModel *> vec;
+        vec.append(&m_CommonKeywordsModel);
+
+        m_CommandManager->submitItemForSpellCheck(&m_CommonKeywordsModel);
     }
 }

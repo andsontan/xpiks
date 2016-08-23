@@ -37,6 +37,7 @@ Rectangle {
 
     signal removeClicked();
     signal actionDoubleClicked();
+    signal actionRightClicked();
     signal spellSuggestionRequested();
 
     color: isHighlighted ? Colors.inputForegroundColor : Colors.labelInactiveForeground
@@ -67,7 +68,15 @@ Rectangle {
 
             MouseArea {
                 anchors.fill: keywordText
+                acceptedButtons: Qt.LeftButton | Qt.RightButton
                 onDoubleClicked: actionDoubleClicked()
+                onClicked: {
+                    if (mouse.button == Qt.RightButton) {
+                        console.log("Click in keyword registered")
+                        actionRightClicked()
+                    }
+                }
+
                 preventStealing: true
                 propagateComposedEvents: true
             }

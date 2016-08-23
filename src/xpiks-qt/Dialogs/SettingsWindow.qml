@@ -190,6 +190,17 @@ ApplicationWindow {
     }
 
     MessageDialog {
+        id: clearDictionaryDialog
+        title: i18.n + qsTr("Warning")
+        text: i18.n + qsTr("Are you sure you want to clear user dictionary? \nThis action cannot be undone.")
+        standardButtons: StandardButton.Yes | StandardButton.No
+
+        onYes: {
+            spellCheckService.clearUserDictionary()
+        }
+    }
+
+    MessageDialog {
         id: resetMPDialog
         title: i18.n + qsTr("Warning")
         text: i18.n + qsTr("Are you sure you want to reset Master password? \nAll upload hosts' passwords will be purged.")
@@ -777,6 +788,24 @@ ApplicationWindow {
                         }
                     }
 
+                    RowLayout {
+                        spacing : 100
+                        width: parent.width
+                        StyledText {
+                            Layout.maximumWidth: parent.width/2
+                            horizontalAlignment: Text.AlignLeft
+                            text: i18.n + qsTr("Number of words in user dictionary: ") + helpersWrapper.getSpellCheckerService().userDictWordsNumber
+                        }
+
+                        StyledButton {
+                            Layout.maximumWidth: parent.width/2
+                            text: i18.n + qsTr("Clear dictionary")
+                            width: 100
+                            onClicked: clearDictionaryDialog.open()
+
+                        }
+
+                    }
                     Item {
                         Layout.fillHeight: true
                     }

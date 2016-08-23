@@ -35,13 +35,16 @@ namespace Models {
 namespace SpellCheck {
     class SpellCheckWorker;
 
-    class SpellCheckerService :
-            public QObject,
-            public Common::IServiceBase<Common::BasicKeywordsModel>
+    class SpellCheckerService:
+        public QObject,
+        public Common::IServiceBase<Common::BasicKeywordsModel>
     {
-        Q_OBJECT
+    Q_OBJECT
+    Q_PROPERTY(int userDictWordsNumber READ getUserDictWordsNumber NOTIFY userDictWordsNumberChanged)
+
     public:
         SpellCheckerService();
+
         virtual ~SpellCheckerService();
 
     public:
@@ -58,24 +61,32 @@ namespace SpellCheck {
         void submitKeyword(Common::BasicKeywordsModel *itemToCheck, int keywordIndex);
         virtual QStringList suggestCorrections(const QString &word) const;
         void restartWorker();
+        int getUserDictWordsNumber();
 
     public:
         Q_INVOKABLE void cancelCurrentBatch();
         Q_INVOKABLE bool hasAnyPending();
+        Q_INVOKABLE void addUserWordToDictionary(const QString &word);
+        Q_INVOKABLE void clearUserDictionary();
 
     signals:
         void cancelSpellChecking();
         void spellCheckQueueIsEmpty();
         void serviceAvailable(bool afterRestart);
+        void userDictWordsNumberChanged();
+        void userDictUpdate(const QStringList &keywords);
+        void userDictUpdate();
 
     private slots:
         void workerFinished();
-        void workerDestroyed(QObject* object);
+        void workerDestroyed(QObject *object);
+        void wordsNumberChangedHandler(int number);
 
     private:
         SpellCheckWorker *m_SpellCheckWorker;
         volatile bool m_RestartRequired;
         QString m_DictionariesPath;
+        int m_UserDictWordsNumber;
     };
 }
 

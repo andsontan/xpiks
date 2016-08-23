@@ -36,7 +36,8 @@ class QTextCodec;
 namespace SpellCheck {
     class SpellCheckWorker : public QObject, public Common::ItemProcessingWorker<ISpellCheckItem>
     {
-        Q_OBJECT
+    Q_OBJECT
+
     public:
         SpellCheckWorker(QObject *parent=0);
         virtual ~SpellCheckWorker();
@@ -51,6 +52,7 @@ namespace SpellCheck {
     private:
         void processSeparatorItem(std::shared_ptr<SpellCheckSeparatorItem> &item);
         void processQueryItem(std::shared_ptr<SpellCheckItem> &item);
+        void processChangeUserDict(std::shared_ptr<AddWordItem> &item);
 
     protected:
         virtual void notifyQueueIsEmpty() { emit queueIsEmpty(); }
@@ -63,6 +65,9 @@ namespace SpellCheck {
     signals:
         void stopped();
         void queueIsEmpty();
+        void wordsNumberChanged(int number);
+        void userDictUpdate(const QStringList &keywords);
+        void userDictUpdate();
 
     private:
         void detectAffEncoding();
@@ -70,15 +75,21 @@ namespace SpellCheck {
         bool checkWordSpelling(const std::shared_ptr<SpellCheckQueryItem> &queryItem);
         bool isHunspellSpellingCorrect(const QString &word) const;
         void findSuggestions(const QString &word);
+        void initFromUserDict();
+        void cleanUserDict();
+        void addWordUserDict(const QStringList &words);
 
     private:
         QHash<QString, QStringList> m_Suggestions;
         QSet<QString> m_WrongWords;
+        QSet<QString> m_UserWords;
         QReadWriteLock m_SuggestionsLock;
         QString m_Encoding;
         Hunspell *m_Hunspell;
         // Coded does not need destruction
         QTextCodec *m_Codec;
+        QString m_UserDictionary;
+        int m_UserDictionaryWordsNumber;
     };
 }
 

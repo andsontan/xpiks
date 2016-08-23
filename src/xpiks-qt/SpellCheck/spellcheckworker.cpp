@@ -38,12 +38,13 @@
 #define EN_HUNSPELL_AFF "en_US.aff"
 
 namespace SpellCheck {
-    SpellCheckWorker::SpellCheckWorker(QObject *parent) :
+    SpellCheckWorker::SpellCheckWorker(QObject *parent):
         QObject(parent),
         m_Hunspell(NULL),
-        m_Codec(NULL)
-    {
-    }
+        m_Codec(NULL),
+        m_UserDictionary(""),
+        m_UserDictionaryWordsNumber(0)
+    {}
 
     SpellCheckWorker::~SpellCheckWorker() {
         if (m_Hunspell != NULL) {
@@ -88,6 +89,7 @@ namespace SpellCheck {
             affPath = resourcesDirectory.absoluteFilePath(EN_HUNSPELL_AFF);
             dicPath = resourcesDirectory.absoluteFilePath(EN_HUNSPELL_DIC);
         }
+
 #endif
 
         bool initResult = false;
@@ -106,8 +108,7 @@ namespace SpellCheck {
                 initResult = true;
                 m_Encoding = QString::fromLatin1(m_Hunspell->get_dic_encoding());
                 m_Codec = QTextCodec::codecForName(m_Encoding.toLatin1().constData());
-            }
-            catch(...) {
+            } catch (...) {
                 LOG_DEBUG << "Error in Hunspell with AFF" << affPath << "and DIC" << dicPath;
                 m_Hunspell = NULL;
             }
@@ -115,17 +116,22 @@ namespace SpellCheck {
             LOG_WARNING << "DIC or AFF file not found." << dicPath << "||" << affPath;
         }
 
+        initFromUserDict();
+
         return initResult;
     }
 
     void SpellCheckWorker::processOneItem(std::shared_ptr<ISpellCheckItem> &item) {
         auto separatorItem = std::dynamic_pointer_cast<SpellCheckSeparatorItem>(item);
         auto queryItem = std::dynamic_pointer_cast<SpellCheckItem>(item);
+        auto addWordItem = std::dynamic_pointer_cast<AddWordItem>(item);
 
         if (queryItem) {
             processQueryItem(queryItem);
         } else if (separatorItem) {
             processSeparatorItem(separatorItem);
+        } else if (addWordItem) {
+            processChangeUserDict(addWordItem);
         }
     }
 
@@ -163,6 +169,22 @@ namespace SpellCheck {
         }
     }
 
+    void SpellCheckWorker::processChangeUserDict(std::shared_ptr<AddWordItem> &item) {
+        if (m_UserDictionary.isEmpty()) {
+            qWarning() << "User dictionary not set.";
+            return;
+        }
+
+        if (item->getClearFlag()) {
+            cleanUserDict();
+        } else {
+            QStringList words = item->getKeywords();
+            addWordUserDict(words);
+        }
+
+        emit wordsNumberChanged(m_UserDictionaryWordsNumber);
+    }
+
     QStringList SpellCheckWorker::retrieveCorrections(const QString &word) {
         QReadLocker locker(&m_SuggestionsLock);
         QStringList result;
@@ -192,11 +214,9 @@ namespace SpellCheck {
 
                 free(suggestWordList[i]);
             }
-        }
-        catch (...) {
+        } catch (...) {
             LOG_WARNING << "Error for keyword:" << word;
         }
-
         return suggestions;
     }
 
@@ -205,8 +225,11 @@ namespace SpellCheck {
 
         const QString &word = queryItem->m_Word;
         bool isCached = m_WrongWords.contains(word);
+        bool isCachedUser = m_UserWords.contains(word);
 
-        if (!isCached) {
+        isOk = isCachedUser;
+
+        if (!isCached && !isCachedUser) {
             isOk = isHunspellSpellingCorrect(word);
 
             if (!isOk) {
@@ -230,10 +253,10 @@ namespace SpellCheck {
 
     bool SpellCheckWorker::isHunspellSpellingCorrect(const QString &word) const {
         bool isOk = false;
+
         try {
             isOk = m_Hunspell->spell(m_Codec->fromUnicode(word).constData()) != 0;
-        }
-        catch (...) {
+        } catch (...) {
             isOk = false;
         }
         return isOk;
@@ -253,4 +276,72 @@ namespace SpellCheck {
             m_SuggestionsLock.unlock();
         }
     }
+
+    void SpellCheckWorker::initFromUserDict() {
+        LOG_DEBUG << "#";
+        QString appDataPath = XPIKS_USERDATA_PATH;
+        QDir dir(appDataPath);
+
+        m_UserDictionary = dir.filePath(QString(Constants::USER_DICT_FILENAME));
+        QFile userDictonaryFile(m_UserDictionary);
+
+        if (userDictonaryFile.open(QIODevice::ReadOnly)) {
+            QTextStream stream(&userDictonaryFile);
+            for (QString word = stream.readLine(); !word.isEmpty(); word = stream.readLine()) {
+                m_UserWords.insert(word);
+            }
+
+            m_UserDictionaryWordsNumber = m_UserWords.size();
+            emit wordsNumberChanged(m_UserDictionaryWordsNumber);
+        } else {
+            LOG_WARNING << "User dictionary in " << m_UserDictionary << "could not be opened";
+        }
+    }
+
+
+    void SpellCheckWorker::cleanUserDict() {
+        QFile userDictonaryFile(m_UserDictionary);
+
+        if (!userDictonaryFile.open(QIODevice::ReadWrite)) {
+            qWarning() << "Unable to open user dictionary";
+            return;
+        }
+
+        qInfo() <<  "Cleaning user dictionary";
+        m_UserWords.clear();
+        m_UserDictionaryWordsNumber = 0;
+        userDictonaryFile.resize(0);
+        emit userDictUpdate();
+    }
+
+    void SpellCheckWorker::addWordUserDict(const QStringList &words) {
+        QFile userDictonaryFile(m_UserDictionary);
+
+        if (!userDictonaryFile.open(QIODevice::Append)) {
+            qWarning() << "Unable to open user dictionary";
+            return;
+        }
+
+        QTextStream stream(&userDictonaryFile);
+        QSet<QString> newWords;
+        for (const QString &word: words) {
+            bool isCached = m_WrongWords.contains(word);
+            if (!isCached) {
+                continue;
+            }
+
+            LOG_INFO << "adding word "<<word<<" to dictionary";
+            if (!m_WrongWords.contains(word)) {
+                continue;
+            }
+
+            newWords.insert(word);
+            stream << word << endl;
+            m_UserDictionaryWordsNumber++;
+        }
+
+        m_UserWords.unite(newWords);
+        emit userDictUpdate(newWords.toList());
+    }
+
 }

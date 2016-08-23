@@ -40,10 +40,12 @@ namespace QMLExtensions {
 namespace SpellCheck {
     class SpellCheckErrorsHighlighter;
 
-    class SpellCheckErrorsInfo {
+    class SpellCheckErrorsInfo
+    {
     public:
-        bool hasWrongSpelling(const QString& word);
+        bool hasWrongSpelling(const QString &word);
         void setErrorWords(const QSet<QString> &errors);
+        bool removeWordFromSet(const QString &word);
         bool anyError();
         void clear();
         QStringList toList();
@@ -58,10 +60,12 @@ namespace SpellCheck {
     public:
         void setDescriptionErrors(const QSet<QString> &errors);
         void setTitleErrors(const QSet<QString> &errors);
+        void removeWordsFromErrors(const QStringList &words);
         void createHighlighterForDescription(QTextDocument *document, QMLExtensions::ColorsModel *colorsModel,
                                              Common::BasicKeywordsModel *basicKeywordsModel);
         void createHighlighterForTitle(QTextDocument *document, QMLExtensions::ColorsModel *colorsModel,
                                        Common::BasicKeywordsModel *basicKeywordsModel);
+
         bool hasDescriptionError(const QString &word) { return m_DescriptionErrors.hasWrongSpelling(word); }
         bool hasTitleError(const QString &word) { return m_TitleErrors.hasWrongSpelling(word); }
         void clear() { m_DescriptionErrors.clear(); m_TitleErrors.clear(); }

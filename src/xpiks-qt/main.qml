@@ -47,6 +47,7 @@ ApplicationWindow {
     property bool needToCenter: true
     property bool listLayout: true
     property bool initializedColors: false
+    property var spellCheckService : helpersWrapper.getSpellCheckerService()
 
     onBeforeRendering: {
         if (!initializedColors) {
@@ -670,6 +671,16 @@ ApplicationWindow {
         MenuItem {
             text: qsTr("Show in folder")
             onTriggered: helpersWrapper.revealArtworkFile(artworkContextMenu.filename);
+        }
+    }
+
+    Menu {
+        id: addWordContextMenu
+        property string word
+
+        MenuItem {
+            text: qsTr("Add to dictionary")
+            onTriggered: spellCheckService.addUserWordToDictionary(addWordContextMenu.word);
         }
     }
 
@@ -1707,7 +1718,7 @@ ApplicationWindow {
                                                         }
 
                                                         onClicked: {
-                                                            if (mouse.button == Qt.RightButton) {
+                                                            if (mouse.button == Qt.RightButton && openedDialogsCount == 0) {
                                                                 console.log("Context menu for artwork")
                                                                 artworkContextMenu.filename = filename;
                                                                 artworkContextMenu.popup()
@@ -2049,6 +2060,14 @@ ApplicationWindow {
                                                                                         previousKeyword: keyword,
                                                                                         keywordsModel: filteredArtItemsModel.getKeywordsModel(rowWrapper.delegateIndex)
                                                                                     })
+                                                            }
+
+                                                            onActionRightClicked: {
+                                                                if (!iscorrect) {
+                                                                    console.log("Context menu for add word")
+                                                                    addWordContextMenu.word = kw.keywordText;
+                                                                    addWordContextMenu.popup()
+                                                                }
                                                             }
                                                         }
 

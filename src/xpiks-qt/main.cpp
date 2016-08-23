@@ -36,7 +36,7 @@
 #include <QStandardPaths>
 #include <QQmlApplicationEngine>
 #include <QDesktopWidget>
-//-------------------------------------
+// -------------------------------------
 #include "SpellCheck/spellchecksuggestionmodel.h"
 #include "QMLExtensions/cachingimageprovider.h"
 #include "Models/filteredartitemsproxymodel.h"
@@ -93,30 +93,31 @@ void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const Q
 #else
     QString msgType;
     switch (type) {
-    case QtDebugMsg:
-        msgType = "debug";
-        break;
-    case QtWarningMsg:
-        msgType = "warning";
-        break;
-    case QtCriticalMsg:
-        msgType = "critical";
-        break;
-    case QtFatalMsg:
-        msgType = "fatal";
-        break;
+        case QtDebugMsg:
+            msgType = "debug";
+            break;
+        case QtWarningMsg:
+            msgType = "warning";
+            break;
+        case QtCriticalMsg:
+            msgType = "critical";
+            break;
+        case QtFatalMsg:
+            msgType = "fatal";
+            break;
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 1))
-    case QtInfoMsg:
-        msgType = "info";
-        break;
+        case QtInfoMsg:
+            msgType = "info";
+            break;
 #endif
     }
+
     // %{time hh:mm:ss.zzz} %{type} T#%{threadid} %{function} - %{message}
     QString time = QDateTime::currentDateTimeUtc().toString("hh:mm:ss.zzz");
     QString logLine = QString("%1 %2 T#%3 %4 - %5")
-            .arg(time).arg(msgType)
-            .arg(0).arg(context.function)
-            .arg(msg);
+                          .arg(time).arg(msgType)
+                          .arg(0).arg(context.function)
+                          .arg(msg);
 #endif
 
     Helpers::Logger &logger = Helpers::Logger::getInstance();
@@ -141,15 +142,15 @@ void initQSettings() {
 
 void ensureUserIdExists(Helpers::AppSettings *settings) {
     QLatin1String userIdKey = QLatin1String(Constants::USER_AGENT_ID);
+
     if (!settings->contains(userIdKey)) {
         QUuid uuid = QUuid::createUuid();
         settings->setValue(userIdKey, uuid.toString());
     }
 }
 
-static const char *setHighDpiEnvironmentVariable()
-{
-    const char* envVarName = 0;
+static const char *setHighDpiEnvironmentVariable() {
+    const char *envVarName = 0;
     static const char ENV_VAR_QT_DEVICE_PIXEL_RATIO[] = "QT_DEVICE_PIXEL_RATIO";
 
 #ifdef Q_OS_WIN
@@ -160,18 +161,20 @@ static const char *setHighDpiEnvironmentVariable()
 
 #if (QT_VERSION < QT_VERSION_CHECK(5, 6, 0))
     if (isWindows
-            && !qEnvironmentVariableIsSet(ENV_VAR_QT_DEVICE_PIXEL_RATIO)) {
+        && !qEnvironmentVariableIsSet(ENV_VAR_QT_DEVICE_PIXEL_RATIO)) {
         envVarName = ENV_VAR_QT_DEVICE_PIXEL_RATIO;
         qputenv(envVarName, "auto");
     }
+
 #else
     if (isWindows
-            && !qEnvironmentVariableIsSet(ENV_VAR_QT_DEVICE_PIXEL_RATIO) // legacy in 5.6, but still functional
-            && !qEnvironmentVariableIsSet("QT_AUTO_SCREEN_SCALE_FACTOR")
-            && !qEnvironmentVariableIsSet("QT_SCALE_FACTOR")
-            && !qEnvironmentVariableIsSet("QT_SCREEN_SCALE_FACTORS")) {
+        && !qEnvironmentVariableIsSet(ENV_VAR_QT_DEVICE_PIXEL_RATIO)     // legacy in 5.6, but still functional
+        && !qEnvironmentVariableIsSet("QT_AUTO_SCREEN_SCALE_FACTOR")
+        && !qEnvironmentVariableIsSet("QT_SCALE_FACTOR")
+        && !qEnvironmentVariableIsSet("QT_SCREEN_SCALE_FACTORS")) {
         QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     }
+
 #endif // < Qt 5.6
     return envVarName;
 }
@@ -417,7 +420,7 @@ int main(int argc, char *argv[]) {
     LOG_DEBUG << "Main view loaded";
 
     pluginManager.getUIProvider()->setQmlEngine(&engine);
-    QQuickWindow *window = qobject_cast<QQuickWindow*>(engine.rootObjects().at(0));
+    QQuickWindow *window = qobject_cast<QQuickWindow *>(engine.rootObjects().at(0));
     pluginManager.getUIProvider()->setRoot(window->contentItem());
 
 #ifdef QT_DEBUG
@@ -429,6 +432,7 @@ int main(int argc, char *argv[]) {
 
         commandManager.addInitialArtworks(pathes);
     }
+
 #endif
 
     commandManager.afterConstructionCallback();

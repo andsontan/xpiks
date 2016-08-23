@@ -4,13 +4,17 @@
 #include "../../xpiks-qt/SpellCheck/spellcheckerservice.h"
 
 namespace Mocks {
-    class SpellCheckServiceMock: public SpellCheck::SpellCheckerService
+    class SpellCheckServiceMock:
+        public SpellCheck::SpellCheckerService
     {
-        Q_OBJECT
+    Q_OBJECT
+
     public:
-        SpellCheckServiceMock() : SpellCheck::SpellCheckerService() {}
+        SpellCheckServiceMock():
+            SpellCheck::SpellCheckerService() {}
 
         // SpellCheckerService interface
+
     public:
         virtual QStringList suggestCorrections(const QString &word) const {
             Q_UNUSED(word);

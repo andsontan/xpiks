@@ -46,16 +46,18 @@ namespace Models {
     class ArtworkMetadata;
     class MetadataElement;
 
-    class ArtItemsModel :
-            public Common::AbstractListModel,
-            public Common::BaseEntity,
-            public Common::IArtworksSource,
-            public Helpers::IFileNotAvailableModel
+    class ArtItemsModel:
+        public Common::AbstractListModel,
+        public Common::BaseEntity,
+        public Common::IArtworksSource,
+        public Helpers::IFileNotAvailableModel
     {
-        Q_OBJECT
-        Q_PROPERTY(int modifiedArtworksCount READ getModifiedArtworksCount NOTIFY modifiedArtworksCountChanged)
+    Q_OBJECT
+    Q_PROPERTY(int modifiedArtworksCount READ getModifiedArtworksCount NOTIFY modifiedArtworksCountChanged)
+
     public:
-        ArtItemsModel(QObject *parent = 0);
+        ArtItemsModel(QObject *parent=0);
+
         virtual ~ArtItemsModel();
 
     public:
@@ -80,6 +82,7 @@ namespace Models {
 
     public:
         int getModifiedArtworksCount();
+
         void updateModifiedCount() { emit modifiedArtworksCountChanged(); }
         void updateItems(const QVector<int> &indices, const QVector<int> &roles);
         void forceUnselectAllItems() const;
@@ -96,15 +99,20 @@ namespace Models {
         Q_INVOKABLE void addSuggestedKeywords(int metadataIndex, const QStringList &keywords);
         Q_INVOKABLE void suggestCorrections(int metadataIndex);
         Q_INVOKABLE void backupItem(int metadataIndex);
+
         Q_INVOKABLE void combineArtwork(int index) { doCombineArtwork(index); }
         Q_INVOKABLE int dropFiles(const QList<QUrl> &urls);
 
         /*Q_INVOKABLE*/ void setSelectedItemsSaved(const QVector<int> &selectedIndices);
+
         /*Q_INVOKABLE*/ void removeSelectedArtworks(QVector<int> &selectedIndices);
+
         /*Q_INVOKABLE*/ void updateSelectedArtworks(const QVector<int> &selectedIndices);
+
         /*Q_INVOKABLE*/ void saveSelectedArtworks(const QVector<int> &selectedIndices, bool overwriteAll, bool useBackups);
 
         /*Q_INVOKABLE*/ ArtworkMetadata *getArtworkMetadata(int index) const;
+
         /*Q_INVOKABLE*/ Common::BasicKeywordsModel *getKeywordsModel(int index) const;
 
         Q_INVOKABLE QSize retrieveImageSize(int metadataIndex) const;
@@ -123,19 +131,22 @@ namespace Models {
         /*Q_INVOKABLE*/ void detachVectorsFromSelected(const QVector<int> &selectedIndices);
 
     public:
-        virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
-        virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+        virtual int rowCount(const QModelIndex &parent=QModelIndex()) const;
+        virtual QVariant data(const QModelIndex &index, int role=Qt::DisplayRole) const;
         virtual Qt::ItemFlags flags(const QModelIndex &index) const;
-        virtual bool setData(const QModelIndex &index, const QVariant & value, int role = Qt::EditRole);
+        virtual bool setData(const QModelIndex &index, const QVariant &value, int role=Qt::EditRole);
 
     public slots:
         int addLocalArtworks(const QList<QUrl> &artworksPaths);
         int addLocalDirectories(const QList<QUrl> &directories);
+
         void itemModifiedChanged(bool) { updateModifiedCount(); }
         void spellCheckErrorsChanged();
         void onFilesUnavailableHandler();
         void artworkBackupRequested();
         void onUndoStackEmpty();
+        void userDictUpdateHandler(const QStringList &keywords);
+        void userDictUpdateHandler();
 
     public:
         virtual void removeItemsAtIndices(const QVector<QPair<int, int> > &ranges);
@@ -159,6 +170,7 @@ namespace Models {
     public:
         // IARTWORKSSOURCE
         virtual Common::IBasicArtwork *getBasicArtwork(int index) const;
+
         virtual int getArtworksCount() const { return (int)m_ArtworkList.size(); }
 
     private:
@@ -178,9 +190,10 @@ namespace Models {
         void fileWithIndexUnavailable(int index);
         void unavailableArtworksFound();
         void unavailableVectorsFound();
+        void userDictUpdate(const QString &word);
 
     protected:
-       virtual QHash<int, QByteArray> roleNames() const;
+        virtual QHash<int, QByteArray> roleNames() const;
 
     protected:
         virtual bool shouldRemoveInRanges(int rangesLength) const;
@@ -197,6 +210,7 @@ namespace Models {
         void fillStandardRoles(QVector<int> &roles) const;
 
 #ifdef CORE_TESTS
+
     public:
         const std::deque<ArtworkMetadata *> &getFinalizationList() const { return m_FinalizationList; }
 #endif

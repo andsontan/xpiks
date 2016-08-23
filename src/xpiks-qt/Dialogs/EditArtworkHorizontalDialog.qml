@@ -530,6 +530,14 @@ Item {
                                                         keywordsModel: combinedArtworks.getKeywordsModel()
                                                     })
                             }
+
+                            onActionRightClicked: {
+                                if (!iscorrect) {
+                                    console.log("Context menu for add word")
+                                    addWordContextMenu.word = kw.keywordText;
+                                    addWordContextMenu.popup()
+                                }
+                            }
                         }
 
                         onTagAdded: {

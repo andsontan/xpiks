@@ -43,15 +43,17 @@ namespace SpellCheck {
 }
 
 namespace Common {
-    class BasicKeywordsModel :
-            public AbstractListModel,
-            public SpellCheck::ISpellCheckable
+    class BasicKeywordsModel:
+        public AbstractListModel,
+        public SpellCheck::ISpellCheckable
     {
-        Q_OBJECT
-        Q_PROPERTY(bool hasSpellErrors READ hasSpellErrors NOTIFY spellCheckErrorsChanged)
+    Q_OBJECT
+    Q_PROPERTY(bool hasSpellErrors READ hasSpellErrors NOTIFY spellCheckErrorsChanged)
+
     public:
         BasicKeywordsModel(Common::Hold &hold, QObject *parent=0);
-        virtual ~BasicKeywordsModel() { }
+
+        virtual ~BasicKeywordsModel() {}
 
     public:
         enum BasicKeywordsModellRoles {
@@ -62,6 +64,7 @@ namespace Common {
     public:
 #ifdef CORE_TESTS
         void initialize(const QString &title, const QString &description, const QString &rawKeywords);
+
         QVector<bool> &getSpellCheckResults() { return m_SpellCheckResults; }
         const QString &getKeywordAt(int index) const { return m_KeywordsList.at(index); }
 #endif
@@ -79,6 +82,7 @@ namespace Common {
         QString getDescription();
         QString getTitle();
         int getKeywordsCount();
+
         QSet<QString> getKeywordsSet();
         QString getKeywordsString();
 
@@ -105,6 +109,7 @@ namespace Common {
         bool containsKeywordUnsafe(const QString &searchTerm, int searchFlags=Common::SearchFlagSearchKeywords);
         bool hasKeywordsSpellErrorUnsafe() const;
         bool removeKeywordsUnsafe(const QSet<QString> &keywordsToRemove, bool caseSensitive);
+
         void lockKeywordsRead() { m_KeywordsLock.lockForRead(); }
         void unlockKeywords() { m_KeywordsLock.unlock(); }
 
@@ -113,7 +118,7 @@ namespace Common {
         bool replaceInDescription(const QString &replaceWhat, const QString &replaceTo,
                                   int flags);
         bool replaceInTitle(const QString &replaceWhat, const QString &replaceTo,
-                                  int flags);
+                            int flags);
         bool replaceInKeywordsUnsafe(const QString &replaceWhat, const QString &replaceTo,
                                      int flags);
 
@@ -134,13 +139,13 @@ namespace Common {
 
         void clearModel();
 
-
     public:
         SpellCheck::SpellCheckItemInfo *getSpellCheckInfo() const { return m_SpellCheckInfo; }
         void setSpellCheckInfo(SpellCheck::SpellCheckItemInfo *info) { m_SpellCheckInfo = info; }
         void notifySpellCheckResults(int flags);
         void notifyDescriptionSpellCheck();
         void notifyTitleSpellCheck();
+
         void notifyAboutToBeRemoved() { emit aboutToBeRemoved(); }
 
     public:
@@ -163,8 +168,11 @@ namespace Common {
         virtual QStringList getKeywords();
         virtual void setSpellCheckResults(const std::vector<std::shared_ptr<SpellCheck::SpellCheckQueryItem> > &items);
         virtual void setSpellCheckResults(const QHash<QString, bool> &results, int flags);
+
         virtual std::vector<std::shared_ptr<SpellCheck::SpellSuggestionsItem> > createKeywordsSuggestionsList();
+
         virtual std::vector<std::shared_ptr<SpellCheck::SpellSuggestionsItem> > createDescriptionSuggestionsList();
+
         virtual std::vector<std::shared_ptr<SpellCheck::SpellSuggestionsItem> > createTitleSuggestionsList();
         virtual Common::KeywordReplaceResult fixKeywordSpelling(int index, const QString &existing, const QString &replacement);
         virtual bool processFailedKeywordReplacements(const std::vector<std::shared_ptr<SpellCheck::KeywordSpellSuggestions> > &candidatesForRemoval);
@@ -183,7 +191,7 @@ namespace Common {
         void afterSpellingErrorsFixed();
 
     protected slots:
-         void spellCheckRequestReady(int flags, int index);
+        void spellCheckRequestReady(int flags, int index);
 
     private:
          void setSpellCheckResultsUnsafe(const std::vector<std::shared_ptr<SpellCheck::SpellCheckQueryItem> > &items);
@@ -192,22 +200,22 @@ namespace Common {
          void emitSpellCheckChanged(int index=-1);
 
     protected:
-         virtual QHash<int, QByteArray> roleNames() const;
+        virtual QHash<int, QByteArray> roleNames() const;
 
     private:
-         Common::Hold &m_Hold;
-         QStringList m_KeywordsList;
-         QSet<QString> m_KeywordsSet;
-         QReadWriteLock m_KeywordsLock;
-         QReadWriteLock m_DescriptionLock;
-         QReadWriteLock m_TitleLock;
-         QVector<bool> m_SpellCheckResults;
-         SpellCheck::SpellCheckItemInfo *m_SpellCheckInfo;
-         QString m_Description;
-         QString m_Title;
+        Common::Hold &m_Hold;
+        QStringList m_KeywordsList;
+        QSet<QString> m_KeywordsSet;
+        QReadWriteLock m_KeywordsLock;
+        QReadWriteLock m_DescriptionLock;
+        QReadWriteLock m_TitleLock;
+        QVector<bool> m_SpellCheckResults;
+        SpellCheck::SpellCheckItemInfo *m_SpellCheckInfo;
+        QString m_Description;
+        QString m_Title;
     };
 }
 
-Q_DECLARE_METATYPE(Common::BasicKeywordsModel*)
+Q_DECLARE_METATYPE(Common::BasicKeywordsModel *)
 
 #endif // BASICKEYWORDSMODEL_H

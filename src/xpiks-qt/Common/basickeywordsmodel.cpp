@@ -46,6 +46,7 @@ namespace Common {
         setDescription(description);
         setKeywords(rawKeywords.split(',', QString::SkipEmptyParts));
     }
+
 #endif
 
     void BasicKeywordsModel::removeItemsAtIndices(const QVector<QPair<int, int> > &ranges) {
@@ -255,7 +256,7 @@ namespace Common {
         LOG_INFO << replaceWhat << "->" << replaceTo << "with flags:" << flags;
         Q_ASSERT(!replaceWhat.isEmpty());
         Q_ASSERT(!replaceTo.isEmpty());
-        Q_ASSERT((flags & Common::SearchFlagSearchMetadata) != 0);
+        Q_ASSERT((flags &Common::SearchFlagSearchMetadata) != 0);
         bool anyChanged = false;
 
         const bool needToCheckDescription = Common::HasFlag(flags, Common::SearchFlagSearchDescription);
@@ -368,6 +369,7 @@ namespace Common {
 
     bool BasicKeywordsModel::editKeywordUnsafe(int index, const QString &replacement) {
         bool result = false;
+
         LOG_INFO << "index:" << index << "replacement:" << replacement;
         QString sanitized = Helpers::doSanitizeKeyword(replacement);
 
@@ -476,7 +478,7 @@ namespace Common {
                 break;
             }
         }
-    
+
         return anyError;
     }
 
@@ -550,6 +552,7 @@ namespace Common {
     bool BasicKeywordsModel::replaceInKeywordsUnsafe(const QString &replaceWhat, const QString &replaceTo,
                                                      int flags) {
         bool anyChanged = false;
+
         QVector<int> indicesToRemove;
 
         const bool caseSensitive = Common::HasFlag(flags, Common::SearchFlagCaseSensitive);
@@ -560,18 +563,18 @@ namespace Common {
         for (int i = 0; i < size; ++i) {
             QString internal = m_KeywordsList.at(i);
             const bool hasMatch = wholeWords ?
-                        Helpers::containsWholeWords(internal, replaceWhat, caseSensivity) :
-                        internal.contains(replaceWhat, caseSensivity);
+                                  Helpers::containsWholeWords(internal, replaceWhat, caseSensivity) :
+                                  internal.contains(replaceWhat, caseSensivity);
 
             if (hasMatch) {
                 QString replaced = wholeWords ?
-                            Helpers::replaceWholeWords(internal, replaceWhat, replaceTo, caseSensivity) :
-                            internal.replace(replaceWhat, replaceTo, caseSensivity);
+                                   Helpers::replaceWholeWords(internal, replaceWhat, replaceTo, caseSensivity) :
+                                   internal.replace(replaceWhat, replaceTo, caseSensivity);
 
                 QString replacement = Helpers::doSanitizeKeyword(replaced);
 
                 if (!this->editKeywordUnsafe(i, replacement) &&
-                        m_KeywordsSet.contains(replacement.toLower())) {
+                    m_KeywordsSet.contains(replacement.toLower())) {
                     LOG_INFO << "Replacing" << internal << "to" << replacement << "creates a duplicate";
                     indicesToRemove.append(i);
                 } else {
@@ -727,7 +730,6 @@ namespace Common {
     }
 
     void BasicKeywordsModel::notifySpellCheckResults(int flags) {
-        LOG_DEBUG << "flags:" << flags;
         if (Common::HasFlag(flags, Common::SpellCheckDescription) ||
             Common::HasFlag(flags, Common::SpellCheckTitle)) {
             emit spellCheckResultsReady();
@@ -747,7 +749,7 @@ namespace Common {
     void BasicKeywordsModel::updateDescriptionSpellErrors(const QHash<QString, bool> &results) {
         QSet<QString> descriptionErrors;
         QStringList descriptionWords = getDescriptionWords();
-        foreach (const QString &word, descriptionWords) {
+        foreach(const QString &word, descriptionWords) {
             if (results.value(word, true) == false) {
                 descriptionErrors.insert(word);
             }
@@ -759,7 +761,7 @@ namespace Common {
     void BasicKeywordsModel::updateTitleSpellErrors(const QHash<QString, bool> &results) {
         QSet<QString> titleErrors;
         QStringList titleWords = getTitleWords();
-        foreach (const QString &word, titleWords) {
+        foreach(const QString &word, titleWords) {
             if (results.value(word, true) == false) {
                 titleErrors.insert(word);
             }
@@ -930,15 +932,19 @@ namespace Common {
         return result;
     }
 
-    bool BasicKeywordsModel::processFailedKeywordReplacements(const std::vector<std::shared_ptr<SpellCheck::KeywordSpellSuggestions> > &candidatesForRemoval) {
+    bool BasicKeywordsModel::processFailedKeywordReplacements(const
+                                                              std::vector<std::shared_ptr<SpellCheck::KeywordSpellSuggestions> > &candidatesForRemoval)
+    {
         LOG_INFO << candidatesForRemoval.size() << "candidates to remove";
         bool anyReplaced = false;
 
-        if (candidatesForRemoval.empty()) { return anyReplaced; }
+        if (candidatesForRemoval.empty()) {
+            return anyReplaced;
+        }
 
         QVector<int> indicesToRemove;
         size_t size = candidatesForRemoval.size();
-        indicesToRemove.reserve(size);
+        indicesToRemove.reserve((int)size);
 
         QWriteLocker writeLocker(&m_KeywordsLock);
 
@@ -973,6 +979,7 @@ namespace Common {
         int flags = 0;
         Common::SetFlag(flags, Common::SearchFlagCaseSensitive);
         Common::SetFlag(flags, Common::SearchFlagSearchDescription);
+
         replaceInDescription(word, replacement, flags);
     }
 
@@ -980,6 +987,7 @@ namespace Common {
         int flags = 0;
         Common::SetFlag(flags, Common::SearchFlagCaseSensitive);
         Common::SetFlag(flags, Common::SearchFlagSearchDescription);
+
         replaceInTitle(word, replacement, flags);
     }
 
@@ -1041,7 +1049,9 @@ namespace Common {
                 m_SpellCheckResults[index] = true;
             }
 
-            if (index >= keywordsLength) { break; }
+            if (index >= keywordsLength) {
+                break;
+            }
         }
 
         for (size_t i = 0; i < size; ++i) {
@@ -1057,7 +1067,9 @@ namespace Common {
                 }
             }
 
-            if (index >= keywordsLength) { break; }
+            if (index >= keywordsLength) {
+                break;
+            }
         }
     }
 

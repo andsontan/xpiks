@@ -30,6 +30,7 @@
 namespace SpellCheck {
     bool SpellCheckErrorsInfo::hasWrongSpelling(const QString &word) {
         QReadLocker readLocker(&m_ErrorsLock);
+
         Q_UNUSED(readLocker);
 
         return m_WordsWithErrors.contains(word);
@@ -37,13 +38,22 @@ namespace SpellCheck {
 
     void SpellCheckErrorsInfo::setErrorWords(const QSet<QString> &errors) {
         QWriteLocker writeLocker(&m_ErrorsLock);
+
         Q_UNUSED(writeLocker);
 
         /*m_WordsWithErrors.clear();*/ m_WordsWithErrors.unite(errors);
     }
 
+    bool SpellCheckErrorsInfo::removeWordFromSet(const QString &word) {
+        QWriteLocker writeLocker(&m_ErrorsLock);
+
+        Q_UNUSED(writeLocker);
+        return m_WordsWithErrors.remove(word);
+    }
+
     bool SpellCheckErrorsInfo::anyError() {
         QReadLocker readLocker(&m_ErrorsLock);
+
         Q_UNUSED(readLocker);
 
         return !m_WordsWithErrors.isEmpty();
@@ -51,6 +61,7 @@ namespace SpellCheck {
 
     void SpellCheckErrorsInfo::clear() {
         QWriteLocker writeLocker(&m_ErrorsLock);
+
         Q_UNUSED(writeLocker);
 
         m_WordsWithErrors.clear();
@@ -58,6 +69,7 @@ namespace SpellCheck {
 
     QStringList SpellCheckErrorsInfo::toList() {
         QReadLocker readLocker(&m_ErrorsLock);
+
         Q_UNUSED(readLocker);
 
         return QStringList::fromSet(m_WordsWithErrors);
@@ -69,6 +81,13 @@ namespace SpellCheck {
 
     void SpellCheckItemInfo::setTitleErrors(const QSet<QString> &errors) {
         m_TitleErrors.setErrorWords(errors);
+    }
+
+    void SpellCheckItemInfo::removeWordsFromErrors(const QStringList &words) {
+        for (const QString &word : words) {
+            m_TitleErrors.removeWordFromSet(word);
+            m_DescriptionErrors.removeWordFromSet(word);
+        }
     }
 
     void SpellCheckItemInfo::createHighlighterForDescription(QTextDocument *document, QMLExtensions::ColorsModel *colorsModel,
@@ -91,4 +110,3 @@ namespace SpellCheck {
                          highlighter, SLOT(rehighlight()));
     }
 }
-

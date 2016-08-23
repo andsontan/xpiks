@@ -39,19 +39,21 @@
 #include "../Models/metadataelement.h"
 
 namespace Models {
-    class CombinedArtworksModel: public ArtworksViewModel
+    class CombinedArtworksModel:
+        public ArtworksViewModel
     {
-        Q_OBJECT
-        Q_PROPERTY(QString description READ getDescription WRITE setDescription NOTIFY descriptionChanged)
-        Q_PROPERTY(QString title READ getTitle WRITE setTitle NOTIFY titleChanged)
-        Q_PROPERTY(int keywordsCount READ getKeywordsCount NOTIFY keywordsCountChanged)
-        Q_PROPERTY(bool changeDescription READ getChangeDescription WRITE setChangeDescription NOTIFY changeDescriptionChanged)
-        Q_PROPERTY(bool changeTitle READ getChangeTitle WRITE setChangeTitle NOTIFY changeTitleChanged)
-        Q_PROPERTY(bool changeKeywords READ getChangeKeywords WRITE setChangeKeywords NOTIFY changeKeywordsChanged)
-        Q_PROPERTY(bool appendKeywords READ getAppendKeywords WRITE setAppendKeywords NOTIFY appendKeywordsChanged)
+    Q_OBJECT
+    Q_PROPERTY(QString description READ getDescription WRITE setDescription NOTIFY descriptionChanged)
+    Q_PROPERTY(QString title READ getTitle WRITE setTitle NOTIFY titleChanged)
+    Q_PROPERTY(int keywordsCount READ getKeywordsCount NOTIFY keywordsCountChanged)
+    Q_PROPERTY(bool changeDescription READ getChangeDescription WRITE setChangeDescription NOTIFY changeDescriptionChanged)
+    Q_PROPERTY(bool changeTitle READ getChangeTitle WRITE setChangeTitle NOTIFY changeTitleChanged)
+    Q_PROPERTY(bool changeKeywords READ getChangeKeywords WRITE setChangeKeywords NOTIFY changeKeywordsChanged)
+    Q_PROPERTY(bool appendKeywords READ getAppendKeywords WRITE setAppendKeywords NOTIFY appendKeywordsChanged)
 
     public:
-        CombinedArtworksModel(QObject *parent = 0);
+        CombinedArtworksModel(QObject *parent=0);
+
         virtual ~CombinedArtworksModel() {}
 
     public:
@@ -96,7 +98,7 @@ namespace Models {
         virtual void acceptSuggestedKeywords(const QStringList &keywords);
 
     public:
-        void setKeywords(const QStringList& keywords) { m_CommonKeywordsModel.setKeywords(keywords); }
+        void setKeywords(const QStringList &keywords) { m_CommonKeywordsModel.setKeywords(keywords); }
         QString getDescription() { return m_CommonKeywordsModel.getDescription(); }
         void setDescription(const QString &value) {
             if (m_CommonKeywordsModel.setDescription(value)) {
@@ -147,6 +149,7 @@ namespace Models {
 
 #ifdef CORE_TESTS
         QStringList getKeywords();
+
 #endif
 
     public:
@@ -157,12 +160,15 @@ namespace Models {
         Q_INVOKABLE void pasteKeywords(const QStringList &keywords);
         Q_INVOKABLE void saveEdits();
         Q_INVOKABLE void clearKeywords();
+
         Q_INVOKABLE QString getKeywordsString() { return m_CommonKeywordsModel.getKeywordsString(); }
         Q_INVOKABLE QObject *getKeywordsModel() {
             QObject *item = &m_CommonKeywordsModel;
             QQmlEngine::setObjectOwnership(item, QQmlEngine::CppOwnership);
+
             return item;
         }
+
         Q_INVOKABLE void suggestCorrections();
         Q_INVOKABLE void initDescriptionHighlighting(QQuickTextDocument *document);
         Q_INVOKABLE void initTitleHighlighting(QQuickTextDocument *document);
@@ -179,6 +185,10 @@ namespace Models {
     private slots:
         void spellCheckErrorsChangedHandler();
         void spellCheckErrorsFixedHandler();
+
+    public slots:
+        void userDictUpdateHandler(const QStringList &keywords);
+        void userDictUpdateHandler();
 
     protected:
         virtual bool doRemoveSelectedArtworks();

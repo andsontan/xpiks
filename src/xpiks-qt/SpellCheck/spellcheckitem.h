@@ -36,20 +36,21 @@ namespace Common {
 namespace SpellCheck {
     class ISpellCheckable;
 
-    class SpellCheckQueryItem {
+    class SpellCheckQueryItem
+    {
     public:
-        SpellCheckQueryItem(int index, const QString &word) :
+        SpellCheckQueryItem(int index, const QString &word):
             m_Word(word),
             m_Index(index),
             m_IsCorrect(true)
-        { }
+        {}
 
-        SpellCheckQueryItem(const SpellCheckQueryItem &copy) :
+        SpellCheckQueryItem(const SpellCheckQueryItem &copy):
             m_Word(copy.m_Word),
             m_Index(copy.m_Index),
             m_IsCorrect(copy.m_IsCorrect),
             m_Suggestions(copy.m_Suggestions)
-        { }
+        {}
 
         QString m_Word;
         int m_Index;
@@ -57,25 +58,30 @@ namespace SpellCheck {
         QStringList m_Suggestions;
     };
 
-    class ISpellCheckItem {
+    class ISpellCheckItem
+    {
     public:
         virtual ~ISpellCheckItem() {}
     };
 
-    class SpellCheckItemBase : public QObject, public ISpellCheckItem {
-        Q_OBJECT
+    class SpellCheckItemBase:
+        public QObject, public ISpellCheckItem
+    {
+    Q_OBJECT
+
     public:
         virtual ~SpellCheckItemBase();
 
     protected:
-        SpellCheckItemBase() :
+        SpellCheckItemBase():
             QObject(),
-            m_NeedsSuggestions(false) { }
+            m_NeedsSuggestions(false) {}
 
     public:
         const std::vector<std::shared_ptr<SpellCheckQueryItem> > &getQueries() const { return m_QueryItems; }
         const QHash<QString, bool> &getHash() const { return m_SpellCheckResults; }
         virtual void submitSpellCheckResult() = 0;
+
         bool needsSuggestions() const { return m_NeedsSuggestions; }
         void requestSuggestions() { m_NeedsSuggestions = true; }
         void accountResultAt(int index);
@@ -91,13 +97,18 @@ namespace SpellCheck {
         volatile bool m_NeedsSuggestions;
     };
 
-    class SpellCheckSeparatorItem : public ISpellCheckItem {
+    class SpellCheckSeparatorItem:
+        public ISpellCheckItem
+    {
     public:
         virtual ~SpellCheckSeparatorItem() {}
     };
 
-    class SpellCheckItem : public SpellCheckItemBase {
-        Q_OBJECT
+    class SpellCheckItem:
+        public SpellCheckItemBase
+    {
+    Q_OBJECT
+
     public:
         SpellCheckItem(Common::BasicKeywordsModel *spellCheckable, int spellCheckFlags, int keywordIndex);
         SpellCheckItem(Common::BasicKeywordsModel *spellCheckable, int spellCheckFlags);
@@ -112,12 +123,34 @@ namespace SpellCheck {
 
     public:
         virtual void submitSpellCheckResult();
+
         bool getIsOnlyOneKeyword() const { return m_OnlyOneKeyword; }
 
     private:
         Common::BasicKeywordsModel *m_SpellCheckable;
         int m_SpellCheckFlags;
         volatile bool m_OnlyOneKeyword;
+    };
+
+    class AddWordItem:
+        public SpellCheckItemBase
+    {
+    Q_OBJECT
+
+    public:
+        AddWordItem(const QString &keyword);
+        AddWordItem(bool clearFlag);
+        virtual ~AddWordItem();
+
+    public:
+        virtual void submitSpellCheckResult();
+
+        const QStringList &getKeywords() const { return m_KeyWords; }
+        bool getClearFlag() { return m_ClearFlag; }
+
+    private:
+        QStringList m_KeyWords;
+        bool m_ClearFlag;
     };
 }
 

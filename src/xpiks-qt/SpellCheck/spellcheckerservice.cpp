@@ -29,14 +29,12 @@
 namespace SpellCheck {
     SpellCheckerService::SpellCheckerService():
         m_SpellCheckWorker(NULL),
-        m_RestartRequired(false)
-    {
-    }
+        m_RestartRequired(false),
+        m_UserDictWordsNumber(0)
+    {}
 
     SpellCheckerService::~SpellCheckerService() {
-        if (m_SpellCheckWorker != nullptr) {
-
-        }
+        if (m_SpellCheckWorker != nullptr) {}
     }
 
     void SpellCheckerService::startService() {
@@ -65,8 +63,14 @@ namespace SpellCheck {
         QObject::connect(m_SpellCheckWorker, SIGNAL(stopped()),
                          this, SLOT(workerFinished()));
 
-        QObject::connect(m_SpellCheckWorker, SIGNAL(destroyed(QObject*)),
-                         this, SLOT(workerDestroyed(QObject*)));
+        QObject::connect(m_SpellCheckWorker, SIGNAL(destroyed(QObject *)),
+                         this, SLOT(workerDestroyed(QObject *)));
+        QObject::connect(m_SpellCheckWorker, SIGNAL(wordsNumberChanged(int)),
+                         this, SLOT(wordsNumberChangedHandler(int)));
+        QObject::connect(m_SpellCheckWorker, SIGNAL(userDictUpdate(QStringList)),
+                         this, SIGNAL(userDictUpdate(QStringList)));
+        QObject::connect(m_SpellCheckWorker, SIGNAL(userDictUpdate()),
+                         this, SIGNAL(userDictUpdate()));
 
         LOG_DEBUG << "starting thread...";
         thread->start();
@@ -85,6 +89,7 @@ namespace SpellCheck {
 
     bool SpellCheckerService::isBusy() const {
         bool isBusy = (m_SpellCheckWorker != NULL) && (m_SpellCheckWorker->hasPendingJobs());
+
         return isBusy;
     }
 
@@ -93,18 +98,22 @@ namespace SpellCheck {
     }
 
     void SpellCheckerService::submitItem(Common::BasicKeywordsModel *itemToCheck, int flags) {
-        if (m_SpellCheckWorker == NULL) { return; }
+        if (m_SpellCheckWorker == NULL) {
+            return;
+        }
 
         LOG_INFO << "flags:" << flags;
 
         std::shared_ptr<SpellCheckItem> item(new SpellCheckItem(itemToCheck, flags),
-                                             [](SpellCheckItem *spi) { spi->deleteLater(); });
+            [](SpellCheckItem *spi) { spi->deleteLater(); });
         itemToCheck->connectSignals(item.get());
         m_SpellCheckWorker->submitItem(item);
     }
 
     void SpellCheckerService::submitItems(const QVector<Common::BasicKeywordsModel *> &itemsToCheck) {
-        if (m_SpellCheckWorker == NULL) { return; }
+        if (m_SpellCheckWorker == NULL) {
+            return;
+        }
 
         std::vector<std::shared_ptr<ISpellCheckItem> > items;
         int length = itemsToCheck.length();
@@ -115,7 +124,7 @@ namespace SpellCheck {
         for (int i = 0; i < length; ++i) {
             Common::BasicKeywordsModel *itemToCheck = itemsToCheck.at(i);
             std::shared_ptr<SpellCheckItem> item(new SpellCheckItem(itemToCheck, Common::SpellCheckAll),
-                                                 deleter);
+                deleter);
             itemToCheck->connectSignals(item.get());
             items.emplace_back(std::dynamic_pointer_cast<ISpellCheckItem>(item));
         }
@@ -153,16 +162,20 @@ namespace SpellCheck {
 
     void SpellCheckerService::submitKeyword(Common::BasicKeywordsModel *itemToCheck, int keywordIndex) {
         LOG_INFO << "index:" << keywordIndex;
-        if (m_SpellCheckWorker == NULL) { return; }
+        if (m_SpellCheckWorker == NULL) {
+            return;
+        }
 
         std::shared_ptr<SpellCheckItem> item(new SpellCheckItem(itemToCheck, Common::SpellCheckKeywords, keywordIndex),
-                                             [](SpellCheckItem *spi) { spi->deleteLater(); });
+            [](SpellCheckItem *spi) { spi->deleteLater(); });
         itemToCheck->connectSignals(item.get());
         m_SpellCheckWorker->submitFirst(item);
     }
 
     QStringList SpellCheckerService::suggestCorrections(const QString &word) const {
-        if (m_SpellCheckWorker == NULL) { return QStringList(); }
+        if (m_SpellCheckWorker == NULL) {
+            return QStringList();
+        }
 
         return m_SpellCheckWorker->retrieveCorrections(word);
     }
@@ -172,10 +185,16 @@ namespace SpellCheck {
         stopService();
     }
 
+    int SpellCheckerService::getUserDictWordsNumber() {
+        return m_UserDictWordsNumber;
+    }
+
     void SpellCheckerService::cancelCurrentBatch() {
         LOG_INFO << "#";
 
-        if (m_SpellCheckWorker == NULL) { return; }
+        if (m_SpellCheckWorker == NULL) {
+            return;
+        }
 
         m_SpellCheckWorker->cancelCurrentBatch();
     }
@@ -188,6 +207,16 @@ namespace SpellCheck {
         }
 
         return hasPending;
+    }
+
+    void SpellCheckerService::addUserWordToDictionary(const QString &word) {
+        LOG_INFO << "#";
+        m_SpellCheckWorker->submitItem(std::shared_ptr<ISpellCheckItem>(new AddWordItem(word)));
+    }
+
+    void SpellCheckerService::clearUserDictionary() {
+        LOG_INFO << "#";
+        m_SpellCheckWorker->submitItem(std::shared_ptr<ISpellCheckItem>(new AddWordItem(true)));
     }
 
     void SpellCheckerService::workerFinished() {
@@ -204,5 +233,11 @@ namespace SpellCheck {
             startService();
             m_RestartRequired = false;
         }
+    }
+
+    void SpellCheckerService::wordsNumberChangedHandler(int number) {
+        LOG_DEBUG << "number of words in user dictonary " << number;
+        m_UserDictWordsNumber = number;
+        emit userDictWordsNumberChanged();
     }
 }

@@ -199,6 +199,7 @@ const
 #endif
 {
     std::shared_ptr<Commands::ICommandResult> result = command->execute(this);
+
     result->afterExecCallback(this);
     return result;
 }
@@ -219,40 +220,50 @@ void Commands::CommandManager::recordHistoryItem(std::unique_ptr<UndoRedo::IHist
 void Commands::CommandManager::connectEntitiesSignalsSlots() const {
     if (m_SecretsManager != NULL && m_UploadInfoRepository != NULL) {
         QObject::connect(m_SecretsManager, SIGNAL(beforeMasterPasswordChange(QString, QString)),
-            m_UploadInfoRepository, SLOT(onBeforeMasterPasswordChanged(QString, QString)));
+                         m_UploadInfoRepository, SLOT(onBeforeMasterPasswordChanged(QString, QString)));
 
         QObject::connect(m_SecretsManager, SIGNAL(afterMasterPasswordReset()),
-            m_UploadInfoRepository, SLOT(onAfterMasterPasswordReset()));
+                         m_UploadInfoRepository, SLOT(onAfterMasterPasswordReset()));
     }
 
     if (m_ArtItemsModel != NULL && m_FilteredItemsModel != NULL) {
         QObject::connect(m_ArtItemsModel, SIGNAL(selectedArtworksRemoved(int)),
-            m_FilteredItemsModel, SLOT(onSelectedArtworksRemoved(int)));
+                         m_FilteredItemsModel, SLOT(onSelectedArtworksRemoved(int)));
     }
 
     if (m_SettingsModel != NULL && m_TelemetryService != NULL) {
         QObject::connect(m_SettingsModel, SIGNAL(userStatisticsChanged(bool)),
-            m_TelemetryService, SLOT(changeReporting(bool)));
+                         m_TelemetryService, SLOT(changeReporting(bool)));
     }
 
     if (m_SpellCheckerService != NULL && m_FilteredItemsModel != NULL) {
         QObject::connect(m_SpellCheckerService, SIGNAL(serviceAvailable(bool)),
-            m_FilteredItemsModel, SLOT(onSpellCheckerAvailable(bool)));
+                         m_FilteredItemsModel, SLOT(onSpellCheckerAvailable(bool)));
     }
 
     if (m_ArtworksRepository != NULL && m_ArtItemsModel != NULL) {
         QObject::connect(m_ArtworksRepository, SIGNAL(filesUnavailable()),
-            m_ArtItemsModel, SLOT(onFilesUnavailableHandler()));
+                         m_ArtItemsModel, SLOT(onFilesUnavailableHandler()));
     }
 
     if (m_ArtItemsModel != NULL && m_UndoRedoManager != NULL) {
         QObject::connect(m_UndoRedoManager, SIGNAL(undoStackEmpty()),
-            m_ArtItemsModel, SLOT(onUndoStackEmpty()));
+                         m_ArtItemsModel, SLOT(onUndoStackEmpty()));
     }
 
     if (m_LanguagesModel != NULL && m_KeywordsSuggestor != NULL) {
         QObject::connect(m_LanguagesModel, SIGNAL(languageChanged()),
-            m_KeywordsSuggestor, SLOT(onLanguageChanged()));
+                         m_KeywordsSuggestor, SLOT(onLanguageChanged()));
+    }
+
+    if (m_SpellCheckerService != NULL && m_ArtItemsModel != NULL) {
+        QObject::connect(m_SpellCheckerService, SIGNAL(userDictUpdate(QStringList)), m_ArtItemsModel, SLOT(userDictUpdateHandler(QStringList)));
+        QObject::connect(m_SpellCheckerService, SIGNAL(userDictUpdate()), m_ArtItemsModel, SLOT(userDictUpdateHandler()));
+    }
+
+    if (m_SpellCheckerService != NULL && m_CombinedArtworksModel != NULL) {
+        QObject::connect(m_SpellCheckerService, SIGNAL(userDictUpdate(QStringList)), m_CombinedArtworksModel, SLOT(userDictUpdateHandler(QStringList)));
+        QObject::connect(m_SpellCheckerService, SIGNAL(userDictUpdate()), m_CombinedArtworksModel, SLOT(userDictUpdateHandler()));
     }
 }
 
@@ -349,20 +360,20 @@ void Commands::CommandManager::connectArtworkSignals(Models::ArtworkMetadata *me
         LOG_INTEGRATION_TESTS << "Connecting to ArtItemsModel...";
 
         QObject::connect(metadata, SIGNAL(modifiedChanged(bool)),
-            m_ArtItemsModel, SLOT(itemModifiedChanged(bool)));
+                         m_ArtItemsModel, SLOT(itemModifiedChanged(bool)));
 
         QObject::connect(metadata, SIGNAL(spellCheckErrorsChanged()),
-            m_ArtItemsModel, SLOT(spellCheckErrorsChanged()));
+                         m_ArtItemsModel, SLOT(spellCheckErrorsChanged()));
 
         QObject::connect(metadata, SIGNAL(backupRequired()),
-            m_ArtItemsModel, SLOT(artworkBackupRequested()));
+                         m_ArtItemsModel, SLOT(artworkBackupRequested()));
     }
 
     if (m_FilteredItemsModel) {
         LOG_INTEGRATION_TESTS << "Connecting to FilteredItemsModel...";
 
         QObject::connect(metadata, SIGNAL(selectedChanged(bool)),
-            m_FilteredItemsModel, SLOT(itemSelectedChanged(bool)));
+                         m_FilteredItemsModel, SLOT(itemSelectedChanged(bool)));
     }
 
     if (m_ArtworksRepository) {
@@ -373,7 +384,7 @@ void Commands::CommandManager::connectArtworkSignals(Models::ArtworkMetadata *me
 }
 
 void Commands::CommandManager::readMetadata(const QVector<Models::ArtworkMetadata *> &artworks,
-    const QVector<QPair<int, int> > &rangesToUpdate) const {
+                                            const QVector<QPair<int, int> > &rangesToUpdate) const {
 #ifndef CORE_TESTS
     if (m_MetadataIOCoordinator) {
         if ((m_SettingsModel != NULL) && !m_SettingsModel->getUseExifTool()) {
@@ -615,7 +626,8 @@ void Commands::CommandManager::afterConstructionCallback() {
     QCoreApplication::processEvents();
 
     const QString reportingEndpoint =
-            QLatin1String("cc39a47f60e1ed812e2403b33678dd1c529f1cc43f66494998ec478a4d13496269a3dfa01f882941766dba246c76b12b2a0308e20afd84371c41cf513260f8eb8b71f8c472cafb1abf712c071938ec0791bbf769ab9625c3b64827f511fa3fbb");
+        QLatin1String(
+            "cc39a47f60e1ed812e2403b33678dd1c529f1cc43f66494998ec478a4d13496269a3dfa01f882941766dba246c76b12b2a0308e20afd84371c41cf513260f8eb8b71f8c472cafb1abf712c071938ec0791bbf769ab9625c3b64827f511fa3fbb");
     QString endpoint = Encryption::decodeText(reportingEndpoint, "reporting");
     m_TelemetryService->setEndpoint(endpoint);
 
@@ -634,12 +646,14 @@ void Commands::CommandManager::afterConstructionCallback() {
         QCoreApplication::processEvents();
         m_MetadataIOCoordinator->autoDiscoverExiftool();
     }
+
 #endif
 
 #ifndef CORE_TESTS
     if (!Exiv2::XmpParser::initialize()) {
         LOG_WARNING << "Failed to initialize XMP toolkit!";
     }
+
 #endif
 
 #ifdef QT_DEBUG
@@ -647,7 +661,7 @@ void Commands::CommandManager::afterConstructionCallback() {
 #endif
 
 #if !defined(CORE_TESTS) && !defined(INTEGRATION_TESTS)
-   Helpers::performCleanLogs();
+    Helpers::performCleanLogs();
 #endif
 }
 
