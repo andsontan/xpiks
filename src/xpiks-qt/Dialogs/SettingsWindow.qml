@@ -789,7 +789,7 @@ ApplicationWindow {
                     }
 
                     RowLayout {
-                        spacing : 100
+                        spacing: 100
                         width: parent.width
 
                         StyledText {
@@ -799,20 +799,22 @@ ApplicationWindow {
 
                             function getOriginText() {
                                 var spellCheckerService = helpersWrapper.getSpellCheckerService()
-                                var result = qsTr("Number of words in user dictionary: %1").arg(spellCheckerService.userDictWordsNumber)
+                                var result = qsTr("User dictionary size: %1").arg(spellCheckerService.userDictWordsNumber)
                                 return result
                             }
                         }
 
+                        Item {
+                            Layout.fillWidth: true
+                        }
+
                         StyledButton {
-                            Layout.maximumWidth: parent.width/2
                             text: i18.n + qsTr("Clear dictionary")
                             width: 100
                             onClicked: clearDictionaryDialog.open()
-
                         }
-
                     }
+
                     Item {
                         Layout.fillHeight: true
                     }

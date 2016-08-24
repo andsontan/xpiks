@@ -680,7 +680,7 @@ ApplicationWindow {
 
         MenuItem {
             text: qsTr("Add to dictionary")
-            onTriggered: spellCheckService.addUserWordToDictionary(addWordContextMenu.word);
+            onTriggered: spellCheckService.addWordToUserDictionary(addWordContextMenu.word);
         }
     }
 

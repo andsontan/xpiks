@@ -202,7 +202,6 @@ namespace SpellCheck {
     }
 
     AddWordToUserDictItem::AddWordToUserDictItem(const QString &keyword):
-        m_KeywordsToAdd(QStringList()),
         m_ClearFlag(false)
     {
         Helpers::splitText(keyword, m_KeywordsToAdd);

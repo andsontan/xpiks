@@ -210,7 +210,7 @@ namespace SpellCheck {
         return hasPending;
     }
 
-    void SpellCheckerService::addUserWordToDictionary(const QString &word) {
+    void SpellCheckerService::addWordToUserDictionary(const QString &word) {
         LOG_DEBUG << "#";
         m_SpellCheckWorker->submitItem(std::shared_ptr<ISpellCheckItem>(new AddWordToUserDictItem(word)));
     }
@@ -237,7 +237,7 @@ namespace SpellCheck {
     }
 
     void SpellCheckerService::wordsNumberChangedHandler(int number) {
-        LOG_INFO << "number of words in user dictonary " << number;
+        LOG_INFO << "Size of dictionary:" << number << "word(s)";
         m_UserDictWordsNumber = number;
         emit userDictWordsNumberChanged();
     }

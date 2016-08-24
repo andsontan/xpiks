@@ -66,7 +66,7 @@ namespace SpellCheck {
     public:
         Q_INVOKABLE void cancelCurrentBatch();
         Q_INVOKABLE bool hasAnyPending();
-        Q_INVOKABLE void addUserWordToDictionary(const QString &word);
+        Q_INVOKABLE void addWordToUserDictionary(const QString &word);
         Q_INVOKABLE void clearUserDictionary();
 
     signals:

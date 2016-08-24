@@ -42,8 +42,7 @@ namespace SpellCheck {
         QObject(parent),
         m_Hunspell(NULL),
         m_Codec(NULL),
-        m_UserDictionaryPath(""),
-        m_UserDictionaryWordsNumber(0)
+        m_UserDictionaryPath("")
     {}
 
     SpellCheckWorker::~SpellCheckWorker() {
@@ -116,7 +115,7 @@ namespace SpellCheck {
             LOG_WARNING << "DIC or AFF file not found." << dicPath << "||" << affPath;
         }
 
-        initFromUserDict();
+        initUserDictionary();
 
         return initResult;
     }
@@ -172,7 +171,6 @@ namespace SpellCheck {
     void SpellCheckWorker::processChangeUserDict(std::shared_ptr<AddWordToUserDictItem> &item) {
         if (m_UserDictionaryPath.isEmpty()) {
             LOG_WARNING << "User dictionary not set.";
-            return;
         }
 
         if (item->getClearFlag()) {
@@ -182,7 +180,7 @@ namespace SpellCheck {
             addWordToUserDict(words);
         }
 
-        emit wordsNumberChanged(m_UserDictionaryWordsNumber);
+        signalUserDictWordsCount();
     }
 
     QStringList SpellCheckWorker::retrieveCorrections(const QString &word) {
@@ -224,14 +222,10 @@ namespace SpellCheck {
         bool isOk = false;
 
         const QString &word = queryItem->m_Word;
-        const bool isInUserDict = m_UserWords.contains(word);
+        const bool isInUserDict = m_UserDictionary.contains(word);
 
         isOk = isInUserDict || checkWordSpelling(word);
         queryItem->m_IsCorrect = isOk;
-
-        if (!isOk) {
-            m_WrongWords.insert(word);
-        }
 
         return isOk;
     }
@@ -252,6 +246,10 @@ namespace SpellCheck {
                     isOk = true;
                 }
             }
+        }
+
+        if (!isOk) {
+            m_WrongWords.insert(word);
         }
 
         return isOk;
@@ -283,57 +281,57 @@ namespace SpellCheck {
         }
     }
 
-    void SpellCheckWorker::initFromUserDict() {
+    void SpellCheckWorker::initUserDictionary() {
         LOG_DEBUG << "#";
         QString appDataPath = XPIKS_USERDATA_PATH;
         QDir dir(appDataPath);
 
-        m_UserDictionaryPath = dir.filePath(QString(Constants::USER_DICT_FILENAME));
+        m_UserDictionaryPath = dir.filePath(QLatin1String(Constants::USER_DICT_FILENAME));
         QFile userDictonaryFile(m_UserDictionaryPath);
 
         if (userDictonaryFile.open(QIODevice::ReadOnly)) {
             QTextStream stream(&userDictonaryFile);
             for (QString word = stream.readLine(); !word.isEmpty(); word = stream.readLine()) {
-                m_UserWords.insert(word);
+                m_UserDictionary.insert(word);
             }
 
-            m_UserDictionaryWordsNumber = m_UserWords.size();
-            emit wordsNumberChanged(m_UserDictionaryWordsNumber);
+            signalUserDictWordsCount();
         } else {
             LOG_WARNING << "Cannot open" << m_UserDictionaryPath;
         }
+
+        LOG_INFO << "User Dictionary contains:" << m_UserDictionary.size() << "item(s)";
     }
 
 
     void SpellCheckWorker::cleanUserDict() {
-        LOG_INFO << "Cleaning user dictionary";
+        LOG_DEBUG << "#";
 
-        m_UserWords.clear();
-        m_UserDictionaryWordsNumber = 0;
+        m_UserDictionary.clear();
         emit userDictCleared();
+        signalUserDictWordsCount();
 
         QFile userDictonaryFile(m_UserDictionaryPath);
         if (userDictonaryFile.open(QIODevice::ReadWrite)) {
             userDictonaryFile.resize(0);
         } else {
-            LOG_INFO << "Unable to trunkate user dictionary:" << m_UserDictionaryPath;
+            LOG_INFO << "Unable to trunkate user dictionary file:" << m_UserDictionaryPath;
         }
     }
 
     void SpellCheckWorker::addWordToUserDict(const QStringList &words) {
         LOG_INFO << "Words to add:" << words;
 
-        QSet<QString> newWords;
+        QSet<QString> wordsToAdd;
         for (auto &word: words) {
             const bool isOk = checkWordSpelling(word);
             if (!isOk) {
-                newWords.insert(word);
+                wordsToAdd.insert(word);
             }
         }
 
-        m_UserWords.unite(newWords);
-        m_UserDictionaryWordsNumber += newWords.size();
-        auto newWordsList = newWords.toList();
+        m_UserDictionary.unite(wordsToAdd);
+        auto newWordsList = wordsToAdd.toList();
         emit userDictUpdate(newWordsList);
 
         QFile userDictonaryFile(m_UserDictionaryPath);
@@ -346,5 +344,9 @@ namespace SpellCheck {
         } else {
             LOG_WARNING << "Unable to open user dictionary";
         }
+    }
+
+    void SpellCheckWorker::signalUserDictWordsCount() {
+        emit wordsNumberChanged(m_UserDictionary.size());
     }
 }
