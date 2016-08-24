@@ -230,7 +230,7 @@ namespace SpellCheck {
         return isOk;
     }
 
-    bool SpellCheckWorker::checkWordSpelling(const QString &word) const {
+    bool SpellCheckWorker::checkWordSpelling(const QString &word) {
         bool isOk = false;
 
         const bool isCached = m_WrongWords.contains(word);
