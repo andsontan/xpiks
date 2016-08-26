@@ -206,6 +206,7 @@ int main(int argc, char *argv[]) {
 
     const char *highDpiEnvironmentVariable = setHighDpiEnvironmentVariable();
     qRegisterMetaTypeStreamOperators<Models::ProxySettings>("ProxySettings");
+    qRegisterMetaType<Common::SpellCheckFlags>("Common::SpellCheckFlags");
     initQSettings();
     Helpers::AppSettings appSettings;
     ensureUserIdExists(&appSettings);
