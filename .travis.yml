@@ -34,6 +34,8 @@ addons:
     - g++-4.8
 
 before_script:
+  - export COMPILER=g++-4.8
+  - g++ --version
   - ulimit -c unlimited -S       # enable core dumps
 
 script:
