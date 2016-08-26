@@ -49,12 +49,12 @@ namespace SpellCheck {
         m_QueryItems.push_back(item);
     }
 
-    SpellCheckItem::SpellCheckItem(Common::BasicKeywordsModel *spellCheckable, int spellCheckFlags, int keywordIndex):
+    SpellCheckItem::SpellCheckItem(Common::BasicKeywordsModel *spellCheckable, Common::SpellCheckFlags spellCheckFlags, int keywordIndex):
         SpellCheckItemBase(),
         m_SpellCheckable(spellCheckable),
         m_SpellCheckFlags(spellCheckFlags),
         m_OnlyOneKeyword(true) {
-        Q_ASSERT(Common::HasFlag(spellCheckFlags, Common::SpellCheckKeywords));
+        Q_ASSERT(Common::HasFlag(spellCheckFlags, Common::SpellCheckFlags::Keywords));
         Q_ASSERT(spellCheckable != NULL);
 
         spellCheckable->acquire();
@@ -74,7 +74,7 @@ namespace SpellCheck {
         }
     }
 
-    SpellCheckItem::SpellCheckItem(Common::BasicKeywordsModel *spellCheckable, int spellCheckFlags):
+    SpellCheckItem::SpellCheckItem(Common::BasicKeywordsModel *spellCheckable, Common::SpellCheckFlags spellCheckFlags):
         SpellCheckItemBase(),
         m_SpellCheckable(spellCheckable),
         m_SpellCheckFlags(spellCheckFlags),
@@ -84,19 +84,19 @@ namespace SpellCheck {
 
         std::function<bool (const QString &word)> alwaysTrue = [](const QString &) {return true; };
 
-        if (Common::HasFlag(spellCheckFlags, Common::SpellCheckKeywords)) {
+        if (Common::HasFlag(spellCheckFlags, Common::SpellCheckFlags::Keywords)) {
             QStringList keywords = spellCheckable->getKeywords();
             reserve(keywords.length());
             addWords(keywords, 0, alwaysTrue);
         }
 
-        if (Common::HasFlag(spellCheckFlags, Common::SpellCheckDescription)) {
+        if (Common::HasFlag(spellCheckFlags, Common::SpellCheckFlags::Description)) {
             QStringList descriptionWords = spellCheckable->getDescriptionWords();
             reserve(descriptionWords.length());
             addWords(descriptionWords, 100000, alwaysTrue);
         }
 
-        if (Common::HasFlag(spellCheckFlags, Common::SpellCheckTitle)) {
+        if (Common::HasFlag(spellCheckFlags, Common::SpellCheckFlags::Title)) {
             QStringList titleWords = spellCheckable->getTitleWords();
             reserve(titleWords.length());
             addWords(titleWords, 100000, alwaysTrue);
@@ -106,8 +106,9 @@ namespace SpellCheck {
     SpellCheckItem::SpellCheckItem(Common::BasicKeywordsModel *spellCheckable, const QStringList &keywordsToCheck):
         SpellCheckItemBase(),
         m_SpellCheckable(spellCheckable),
-        m_SpellCheckFlags(Common::SpellCheckAll),
-        m_OnlyOneKeyword(false) {
+        m_SpellCheckFlags(Common::SpellCheckFlags::All),
+        m_OnlyOneKeyword(false)
+    {
         Q_ASSERT(spellCheckable != NULL);
         spellCheckable->acquire();
 
@@ -188,12 +189,12 @@ namespace SpellCheck {
         const std::vector<std::shared_ptr<SpellCheckQueryItem> > &items = getQueries();
 
         // can be empty in case of clear command
-        if (Common::HasFlag(m_SpellCheckFlags, Common::SpellCheckKeywords) && !items.empty()) {
+        if (Common::HasFlag(m_SpellCheckFlags, Common::SpellCheckFlags::Keywords) && !items.empty()) {
             m_SpellCheckable->setSpellCheckResults(items);
         }
 
-        if (Common::HasFlag(m_SpellCheckFlags, Common::SpellCheckDescription) ||
-            Common::HasFlag(m_SpellCheckFlags, Common::SpellCheckTitle)) {
+        if (Common::HasFlag(m_SpellCheckFlags, Common::SpellCheckFlags::Description) ||
+            Common::HasFlag(m_SpellCheckFlags, Common::SpellCheckFlags::Title)) {
             m_SpellCheckable->setSpellCheckResults(getHash(), m_SpellCheckFlags);
         }
 

@@ -27,6 +27,7 @@
 #include <QVector>
 #include "../Common/basickeywordsmodel.h"
 #include "../Common/iservicebase.h"
+#include "../Common/flags.h"
 
 namespace Models {
     class ArtworkMetadata;
@@ -37,7 +38,7 @@ namespace SpellCheck {
 
     class SpellCheckerService:
         public QObject,
-        public Common::IServiceBase<Common::BasicKeywordsModel>
+        public Common::IServiceBase<Common::BasicKeywordsModel, Common::SpellCheckFlags>
     {
     Q_OBJECT
     Q_PROPERTY(int userDictWordsNumber READ getUserDictWordsNumber NOTIFY userDictWordsNumberChanged)
@@ -55,7 +56,7 @@ namespace SpellCheck {
         virtual bool isBusy() const;
 
         virtual void submitItem(Common::BasicKeywordsModel *itemToCheck);
-        virtual void submitItem(Common::BasicKeywordsModel *itemToCheck, int flags);
+        virtual void submitItem(Common::BasicKeywordsModel *itemToCheck, Common::SpellCheckFlags flags);
         virtual void submitItems(const QVector<Common::BasicKeywordsModel *> &itemsToCheck);
         void submitItems(const QVector<Common::BasicKeywordsModel *> &itemsToCheck, const QStringList &wordsToCheck);
         void submitKeyword(Common::BasicKeywordsModel *itemToCheck, int keywordIndex);

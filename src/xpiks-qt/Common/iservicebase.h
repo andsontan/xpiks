@@ -25,7 +25,7 @@
 #include <QVector>
 
 namespace Common {
-    template<typename T>
+    template<typename T, typename FlagsType=int>
     class IServiceBase {
     public:
         virtual ~IServiceBase() {}
@@ -39,7 +39,7 @@ namespace Common {
         virtual bool isBusy() const = 0;
 
         virtual void submitItem(T *item) = 0;
-        virtual void submitItem(T *item, int flags) = 0;
+        virtual void submitItem(T *item, FlagsType flags) = 0;
         virtual void submitItems(const QVector<T*> &items) = 0;
     };
 }

@@ -270,13 +270,14 @@ namespace Models {
 
     void ArtItemsModel::suggestCorrections(int metadataIndex) {
         if (0 <= metadataIndex && metadataIndex < getArtworksCount()) {
+            using namespace Common;
             int flags = 0;
-            Common::SetFlag(flags, Common::CorrectDescription);
-            Common::SetFlag(flags, Common::CorrectTitle);
-            Common::SetFlag(flags, Common::CorrectKeywords);
+            Common::SetFlag(flags, SuggestionFlags::Description);
+            Common::SetFlag(flags, SuggestionFlags::Title);
+            Common::SetFlag(flags, SuggestionFlags::Keywords);
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
             Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
-            m_CommandManager->setupSpellCheckSuggestions(keywordsModel, metadataIndex, flags);
+            m_CommandManager->setupSpellCheckSuggestions(keywordsModel, metadataIndex, (SuggestionFlags)flags);
         }
     }
 
@@ -1096,14 +1097,14 @@ namespace Models {
     }
 
     void ArtItemsModel::userDictUpdateHandler(const QStringList &keywords) {
-        int size = m_ArtworkList.size();
+        size_t size = m_ArtworkList.size();
 
         Q_ASSERT(!keywords.isEmpty());
 
         QVector<Common::BasicKeywordsModel *> itemsToCheck;
         itemsToCheck.reserve(size);
 
-        for (int i = 0; i < size; i++) {
+        for (size_t i = 0; i < size; i++) {
             ArtworkMetadata *metadata = m_ArtworkList.at(i);
             Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
             SpellCheck::SpellCheckItemInfo *info = keywordsModel->getSpellCheckInfo();

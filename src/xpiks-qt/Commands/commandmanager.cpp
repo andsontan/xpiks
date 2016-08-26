@@ -511,14 +511,14 @@ void Commands::CommandManager::submitForSpellCheck(const QVector<Common::BasicKe
     }
 }
 
-void Commands::CommandManager::submitItemForSpellCheck(Common::BasicKeywordsModel *item, int flags) const {
+void Commands::CommandManager::submitItemForSpellCheck(Common::BasicKeywordsModel *item, Common::SpellCheckFlags flags) const {
     Q_ASSERT(item != NULL);
     if ((m_SettingsModel != NULL) && m_SettingsModel->getUseSpellCheck() && (m_SpellCheckerService != NULL)) {
         m_SpellCheckerService->submitItem(item, flags);
     }
 }
 
-void Commands::CommandManager::setupSpellCheckSuggestions(Common::BasicKeywordsModel *item, int index, int flags) {
+void Commands::CommandManager::setupSpellCheckSuggestions(Common::BasicKeywordsModel *item, int index, Common::SuggestionFlags flags) {
     Q_ASSERT(item != NULL);
     if (m_SpellCheckSuggestionModel) {
         m_SpellCheckSuggestionModel->setupModel(item, index, flags);

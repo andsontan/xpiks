@@ -142,7 +142,7 @@ namespace Common {
     public:
         SpellCheck::SpellCheckItemInfo *getSpellCheckInfo() const { return m_SpellCheckInfo; }
         void setSpellCheckInfo(SpellCheck::SpellCheckItemInfo *info) { m_SpellCheckInfo = info; }
-        void notifySpellCheckResults(int flags);
+        void notifySpellCheckResults(SpellCheckFlags flags);
         void notifyDescriptionSpellCheck();
         void notifyTitleSpellCheck();
 
@@ -167,7 +167,7 @@ namespace Common {
         virtual QString retrieveKeyword(int wordIndex);
         virtual QStringList getKeywords();
         virtual void setSpellCheckResults(const std::vector<std::shared_ptr<SpellCheck::SpellCheckQueryItem> > &items);
-        virtual void setSpellCheckResults(const QHash<QString, bool> &results, int flags);
+        virtual void setSpellCheckResults(const QHash<QString, bool> &results, SpellCheckFlags flags);
 
         virtual std::vector<std::shared_ptr<SpellCheck::SpellSuggestionsItem> > createKeywordsSuggestionsList();
 
@@ -191,7 +191,7 @@ namespace Common {
         void afterSpellingErrorsFixed();
 
     protected slots:
-        void spellCheckRequestReady(int flags, int index);
+        void spellCheckRequestReady(SpellCheckFlags flags, int index);
 
     private:
          void setSpellCheckResultsUnsafe(const std::vector<std::shared_ptr<SpellCheck::SpellCheckQueryItem> > &items);

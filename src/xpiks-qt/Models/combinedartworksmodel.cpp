@@ -186,7 +186,7 @@ namespace Models {
             emit keywordsCountChanged();
             setKeywordsModified(true);
 
-            m_CommandManager->submitItemForSpellCheck(&m_CommonKeywordsModel, Common::SpellCheckKeywords);
+            m_CommandManager->submitItemForSpellCheck(&m_CommonKeywordsModel, Common::SpellCheckFlags::Keywords);
         }
     }
 
@@ -221,7 +221,7 @@ namespace Models {
 
     void CombinedArtworksModel::suggestCorrections() {
         LOG_DEBUG << "#";
-        m_CommandManager->setupSpellCheckSuggestions(&m_CommonKeywordsModel, -1, Common::CorrectAll);
+        m_CommandManager->setupSpellCheckSuggestions(&m_CommonKeywordsModel, -1, Common::SuggestionFlags::All);
     }
 
     void CombinedArtworksModel::initDescriptionHighlighting(QQuickTextDocument *document) {
@@ -257,18 +257,18 @@ namespace Models {
     void CombinedArtworksModel::spellCheckDescription() {
         LOG_DEBUG << "#";
         if (!m_CommonKeywordsModel.getDescription().trimmed().isEmpty()) {
-            m_CommandManager->submitItemForSpellCheck(&m_CommonKeywordsModel, Common::SpellCheckDescription);
+            m_CommandManager->submitItemForSpellCheck(&m_CommonKeywordsModel, Common::SpellCheckFlags::Description);
         } else {
-            m_CommonKeywordsModel.notifySpellCheckResults(Common::SpellCheckDescription);
+            m_CommonKeywordsModel.notifySpellCheckResults(Common::SpellCheckFlags::Description);
         }
     }
 
     void CombinedArtworksModel::spellCheckTitle() {
         LOG_DEBUG << "#";
         if (!m_CommonKeywordsModel.getTitle().trimmed().isEmpty()) {
-            m_CommandManager->submitItemForSpellCheck(&m_CommonKeywordsModel, Common::SpellCheckTitle);
+            m_CommandManager->submitItemForSpellCheck(&m_CommonKeywordsModel, Common::SpellCheckFlags::Title);
         } else {
-            m_CommonKeywordsModel.notifySpellCheckResults(Common::SpellCheckTitle);
+            m_CommonKeywordsModel.notifySpellCheckResults(Common::SpellCheckFlags::Title);
         }
     }
 

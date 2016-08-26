@@ -32,18 +32,19 @@ namespace Common {
         EditEverything = EditTitle | EditDesctiption | EditKeywords
     };
 
-    enum SuggestCorrectionsFlags {
-        CorrectTitle = 1,
-        CorrectDescription = 2,
-        CorrectKeywords = 4,
-        CorrectAll = 7
+    enum struct SuggestionFlags {
+        None = 0,
+        Title = 1 << 0,
+        Description = 1 << 1,
+        Keywords = 1 << 2,
+        All = Title | Description | Keywords
     };
 
-    enum SpellCheckFlags {
-        SpellCheckTitle = 1,
-        SpellCheckDescription = 2,
-        SpellCheckKeywords = 4,
-        SpellCheckAll = 7
+    enum struct SpellCheckFlags {
+        Title = 1 << 0,
+        Description = 1 << 1,
+        Keywords = 1 << 2,
+        All = Title | Description | Keywords
     };
 
     enum KeywordReplaceResult {
@@ -137,6 +138,14 @@ namespace Common {
     bool HasFlag(int value, FlagType flag) {
         int intFlag = static_cast<int>(flag);
         bool result = (value & intFlag) == intFlag;
+        return result;
+    }
+
+    template<typename FlagType>
+    bool HasFlag(FlagType value, FlagType flag) {
+        int intValue = static_cast<int>(value);
+        int intFlag = static_cast<int>(flag);
+        bool result = (intValue & intFlag) == intFlag;
         return result;
     }
 

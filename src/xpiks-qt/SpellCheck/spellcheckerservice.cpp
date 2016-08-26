@@ -95,15 +95,15 @@ namespace SpellCheck {
     }
 
     void SpellCheckerService::submitItem(Common::BasicKeywordsModel *itemToCheck) {
-        this->submitItem(itemToCheck, Common::SpellCheckAll);
+        this->submitItem(itemToCheck, Common::SpellCheckFlags::All);
     }
 
-    void SpellCheckerService::submitItem(Common::BasicKeywordsModel *itemToCheck, int flags) {
+    void SpellCheckerService::submitItem(Common::BasicKeywordsModel *itemToCheck, Common::SpellCheckFlags flags) {
         if (m_SpellCheckWorker == NULL) {
             return;
         }
 
-        LOG_INFO << "flags:" << flags;
+        LOG_INFO << "flags:" << (int)flags;
 
         std::shared_ptr<SpellCheckItem> item(new SpellCheckItem(itemToCheck, flags),
             [](SpellCheckItem *spi) { spi->deleteLater(); });
@@ -124,7 +124,7 @@ namespace SpellCheck {
 
         for (int i = 0; i < length; ++i) {
             Common::BasicKeywordsModel *itemToCheck = itemsToCheck.at(i);
-            std::shared_ptr<SpellCheckItem> item(new SpellCheckItem(itemToCheck, Common::SpellCheckAll),
+            std::shared_ptr<SpellCheckItem> item(new SpellCheckItem(itemToCheck, Common::SpellCheckFlags::All),
                 deleter);
             itemToCheck->connectSignals(item.get());
             items.emplace_back(std::dynamic_pointer_cast<ISpellCheckItem>(item));
@@ -167,7 +167,7 @@ namespace SpellCheck {
             return;
         }
 
-        std::shared_ptr<SpellCheckItem> item(new SpellCheckItem(itemToCheck, Common::SpellCheckKeywords, keywordIndex),
+        std::shared_ptr<SpellCheckItem> item(new SpellCheckItem(itemToCheck, Common::SpellCheckFlags::Keywords, keywordIndex),
             [](SpellCheckItem *spi) { spi->deleteLater(); });
         itemToCheck->connectSignals(item.get());
         m_SpellCheckWorker->submitFirst(item);

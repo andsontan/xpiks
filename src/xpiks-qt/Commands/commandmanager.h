@@ -222,8 +222,8 @@ namespace Commands {
         void submitKeywordForSpellCheck(Common::BasicKeywordsModel *item, int keywordIndex) const;
         void submitForSpellCheck(const QVector<Models::ArtworkMetadata*> &items) const;
         void submitForSpellCheck(const QVector<Common::BasicKeywordsModel *> &items) const;
-        void submitItemForSpellCheck(Common::BasicKeywordsModel *item, int flags = Common::SpellCheckAll) const;
-        void setupSpellCheckSuggestions(Common::BasicKeywordsModel *item, int index, int flags);
+        void submitItemForSpellCheck(Common::BasicKeywordsModel *item, Common::SpellCheckFlags flags = Common::SpellCheckFlags::All) const;
+        void setupSpellCheckSuggestions(Common::BasicKeywordsModel *item, int index, Common::SuggestionFlags flags);
         void submitForSpellCheck(const QVector<Common::BasicKeywordsModel *> &items, const QStringList &wordsToCheck) const;
 
     public:

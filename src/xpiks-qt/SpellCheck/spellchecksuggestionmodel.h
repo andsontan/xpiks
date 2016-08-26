@@ -27,6 +27,7 @@
 #include <vector>
 #include <memory>
 #include "../Common/baseentity.h"
+#include "../Common/flags.h"
 
 namespace Models {
     class ArtworkMetadata;
@@ -66,13 +67,13 @@ namespace SpellCheck {
         void selectAllChanged();
 
     public:
-        void setupModel(Common::BasicKeywordsModel *item, int index, int flags);
+        void setupModel(Common::BasicKeywordsModel *item, int index, Common::SuggestionFlags flags);
 #if defined(INTEGRATION_TESTS) || defined(CORE_TESTS)
         SpellSuggestionsItem *getItem(int i) const { return m_SuggestionsList.at(i).get(); }
 #endif
 
     private:
-        SuggestionsVector createSuggestionsRequests(Common::BasicKeywordsModel *item, int flags);
+        SuggestionsVector createSuggestionsRequests(Common::BasicKeywordsModel *item, Common::SuggestionFlags flags);
         bool processFailedReplacements(const SuggestionsVector &failedReplacements) const;
         SuggestionsVector setupSuggestions(const SuggestionsVector &items);
 

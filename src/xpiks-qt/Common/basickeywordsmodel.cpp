@@ -729,9 +729,9 @@ namespace Common {
         clearKeywords();
     }
 
-    void BasicKeywordsModel::notifySpellCheckResults(int flags) {
-        if (Common::HasFlag(flags, Common::SpellCheckDescription) ||
-            Common::HasFlag(flags, Common::SpellCheckTitle)) {
+    void BasicKeywordsModel::notifySpellCheckResults(Common::SpellCheckFlags flags) {
+        if (Common::HasFlag(flags, Common::SpellCheckFlags::Description) ||
+            Common::HasFlag(flags, Common::SpellCheckFlags::Title)) {
             emit spellCheckResultsReady();
         }
 
@@ -824,12 +824,12 @@ namespace Common {
         setSpellCheckResultsUnsafe(items);
     }
 
-    void BasicKeywordsModel::setSpellCheckResults(const QHash<QString, bool> &results, int flags) {
-        if (Common::HasFlag(flags, Common::SpellCheckDescription)) {
+    void BasicKeywordsModel::setSpellCheckResults(const QHash<QString, bool> &results, Common::SpellCheckFlags flags) {
+        if (Common::HasFlag(flags, Common::SpellCheckFlags::Description)) {
             updateDescriptionSpellErrors(results);
         }
 
-        if (Common::HasFlag(flags, Common::SpellCheckTitle)) {
+        if (Common::HasFlag(flags, Common::SpellCheckFlags::Title)) {
             updateTitleSpellErrors(results);
         }
     }
@@ -998,7 +998,8 @@ namespace Common {
     }
 
     void BasicKeywordsModel::connectSignals(SpellCheck::SpellCheckItem *item) {
-        QObject::connect(item, SIGNAL(resultsReady(int, int)), this, SLOT(spellCheckRequestReady(int, int)));
+        QObject::connect(item, SIGNAL(resultsReady(Common::SpellCheckFlags, int)),
+                         this, SLOT(spellCheckRequestReady(Common::SpellCheckFlags, int)));
     }
 
     QStringList BasicKeywordsModel::getDescriptionWords() {
@@ -1021,8 +1022,8 @@ namespace Common {
         return words;
     }
 
-    void BasicKeywordsModel::spellCheckRequestReady(int flags, int index) {
-        if (Common::HasFlag(flags, Common::SpellCheckKeywords)) {
+    void BasicKeywordsModel::spellCheckRequestReady(Common::SpellCheckFlags flags, int index) {
+        if (Common::HasFlag(flags, Common::SpellCheckFlags::Keywords)) {
             emitSpellCheckChanged(index);
         }
 

@@ -122,7 +122,7 @@ namespace Models {
         if (m_KeywordsToDeleteModel.appendKeywords(keywords) > 0) {
             emit keywordsToDeleteCountChanged();
 
-            m_CommandManager->submitItemForSpellCheck(&m_KeywordsToDeleteModel, Common::SpellCheckKeywords);
+            m_CommandManager->submitItemForSpellCheck(&m_KeywordsToDeleteModel, Common::SpellCheckFlags::Keywords);
         }
     }
 

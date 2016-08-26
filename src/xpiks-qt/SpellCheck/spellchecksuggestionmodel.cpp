@@ -134,9 +134,9 @@ namespace SpellCheck {
         }
     }
 
-    void SpellCheckSuggestionModel::setupModel(Common::BasicKeywordsModel *item, int index, int flags) {
+    void SpellCheckSuggestionModel::setupModel(Common::BasicKeywordsModel *item, int index, Common::SuggestionFlags flags) {
         Q_ASSERT(item != NULL);
-        LOG_INFO << "flags =" << flags;
+        LOG_INFO << "flags =" << (int)flags;
         auto requests = createSuggestionsRequests(item, flags);
 
         auto combinedRequests = combineSuggestionRequests(requests);
@@ -160,22 +160,24 @@ namespace SpellCheck {
         m_ItemIndex = index;
     }
 
-    SuggestionsVector SpellCheckSuggestionModel::createSuggestionsRequests(Common::BasicKeywordsModel *item, int flags) {
+    SuggestionsVector SpellCheckSuggestionModel::createSuggestionsRequests(Common::BasicKeywordsModel *item, Common::SuggestionFlags flags) {
         SuggestionsVector requests;
 
-        if (Common::HasFlag(flags, Common::CorrectKeywords)) {
+        using namespace Common;
+
+        if (Common::HasFlag(flags, SuggestionFlags::Keywords)) {
             auto subrequests = item->createKeywordsSuggestionsList();
             requests.insert(requests.end(), subrequests.begin(), subrequests.end());
             LOG_DEBUG << subrequests.size() << "keywords requests";
         }
 
-        if (Common::HasFlag(flags, Common::CorrectTitle)) {
+        if (Common::HasFlag(flags, SuggestionFlags::Title)) {
             auto subrequests = item->createTitleSuggestionsList();
             requests.insert(requests.end(), subrequests.begin(), subrequests.end());
             LOG_DEBUG << subrequests.size() << "title requests";
         }
 
-        if (Common::HasFlag(flags, Common::CorrectDescription)) {
+        if (Common::HasFlag(flags, SuggestionFlags::Description)) {
             auto subrequests = item->createDescriptionSuggestionsList();
             requests.insert(requests.end(), subrequests.begin(), subrequests.end());
             LOG_DEBUG << subrequests.size() << "description requests";

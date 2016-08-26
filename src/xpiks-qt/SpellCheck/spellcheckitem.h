@@ -28,6 +28,7 @@
 #include <QObject>
 #include <QHash>
 #include <functional>
+#include "../Common/flags.h"
 
 namespace Common {
     class BasicKeywordsModel;
@@ -110,8 +111,8 @@ namespace SpellCheck {
     Q_OBJECT
 
     public:
-        SpellCheckItem(Common::BasicKeywordsModel *spellCheckable, int spellCheckFlags, int keywordIndex);
-        SpellCheckItem(Common::BasicKeywordsModel *spellCheckable, int spellCheckFlags);
+        SpellCheckItem(Common::BasicKeywordsModel *spellCheckable, Common::SpellCheckFlags spellCheckFlags, int keywordIndex);
+        SpellCheckItem(Common::BasicKeywordsModel *spellCheckable, Common::SpellCheckFlags spellCheckFlags);
         SpellCheckItem(Common::BasicKeywordsModel *spellCheckable, const QStringList &keywordsToCheck);
         virtual ~SpellCheckItem();
 
@@ -119,7 +120,7 @@ namespace SpellCheck {
         void addWords(const QStringList &words, int startingIndex, const std::function<bool (const QString &word)> &pred);
 
     signals:
-        void resultsReady(int flags, int index);
+        void resultsReady(Common::SpellCheckFlags flags, int index);
 
     public:
         virtual void submitSpellCheckResult();
@@ -128,7 +129,7 @@ namespace SpellCheck {
 
     private:
         Common::BasicKeywordsModel *m_SpellCheckable;
-        int m_SpellCheckFlags;
+        Common::SpellCheckFlags m_SpellCheckFlags;
         volatile bool m_OnlyOneKeyword;
     };
 

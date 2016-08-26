@@ -277,10 +277,10 @@ namespace Models {
                 Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
 
                 if (!metadata->getDescription().trimmed().isEmpty()) {
-                    m_CommandManager->submitItemForSpellCheck(keywordsModel, Common::SpellCheckDescription);
+                    m_CommandManager->submitItemForSpellCheck(keywordsModel, Common::SpellCheckFlags::Description);
                 } else {
                     LOG_INFO << "description is empty";
-                    keywordsModel->notifySpellCheckResults(Common::SpellCheckDescription);
+                    keywordsModel->notifySpellCheckResults(Common::SpellCheckFlags::Description);
                 }
 
                 m_CommandManager->submitForWarningsCheck(metadata, Common::WarningsCheckDescription);
@@ -298,10 +298,10 @@ namespace Models {
                 Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
 
                 if (!metadata->getTitle().trimmed().isEmpty()) {
-                    m_CommandManager->submitItemForSpellCheck(keywordsModel, Common::SpellCheckTitle);
+                    m_CommandManager->submitItemForSpellCheck(keywordsModel, Common::SpellCheckFlags::Title);
                 } else {
                     LOG_INFO << "title is empty";
-                    keywordsModel->notifySpellCheckResults(Common::SpellCheckTitle);
+                    keywordsModel->notifySpellCheckResults(Common::SpellCheckFlags::Title);
                 }
 
                 m_CommandManager->submitForWarningsCheck(metadata, Common::WarningsCheckTitle);
