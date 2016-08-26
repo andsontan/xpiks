@@ -69,6 +69,11 @@ namespace Warnings {
                 case Common::WarningsCheckFlags::Spelling:
                     flagsToDrop = Common::WarningFlags::SpellingGroup;
                     break;
+                case Common::WarningsCheckFlags::All:
+                    // to make compiler happy
+                    break;
+                default:
+                    break;
                 }
 
                 m_CheckableItem->dropWarningsFlags(flagsToDrop);

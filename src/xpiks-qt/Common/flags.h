@@ -254,7 +254,7 @@ namespace Common {
     }
 }
 
-Q_DECLARE_METATYPE(Common::SearchFlags)
+Q_DECLARE_METATYPE(Common::SpellCheckFlags)
 
 #endif // FLAGS
 

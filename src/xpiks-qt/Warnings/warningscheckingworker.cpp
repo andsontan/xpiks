@@ -80,6 +80,9 @@ namespace Warnings {
             case Common::WarningsCheckFlags::Spelling:
                 warningsFlags |= checkSpelling(item);
                 break;
+            case Common::WarningsCheckFlags::All:
+                // to make compiler happy
+                break;
             }
         }
 

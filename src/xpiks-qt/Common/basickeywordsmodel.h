@@ -191,7 +191,7 @@ namespace Common {
         void afterSpellingErrorsFixed();
 
     protected slots:
-        void spellCheckRequestReady(SpellCheckFlags flags, int index);
+        void spellCheckRequestReady(Common::SpellCheckFlags flags, int index);
 
     private:
          void setSpellCheckResultsUnsafe(const std::vector<std::shared_ptr<SpellCheck::SpellCheckQueryItem> > &items);
