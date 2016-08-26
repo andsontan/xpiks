@@ -53,9 +53,9 @@ int SpellingProducesWarningsTest::doTest() {
 
     Models::ArtworkMetadata *metadata = artItemsModel->getArtwork(0);
 
-    VERIFY(!Common::HasFlag(metadata->getWarningsFlags(), Common::WarningTypeSpellErrorsInTitle), "Error for reading title");
-    VERIFY(!Common::HasFlag(metadata->getWarningsFlags(), Common::WarningTypeSpellErrorsInDescription), "Error for reading description");
-    VERIFY(!Common::HasFlag(metadata->getWarningsFlags(), Common::WarningTypeSpellErrorsInKeywords), "Error for reading keywords");
+    VERIFY(!Common::HasFlag(metadata->getWarningsFlags(), Common::WarningFlags::SpellErrorsInTitle), "Error for reading title");
+    VERIFY(!Common::HasFlag(metadata->getWarningsFlags(), Common::WarningFlags::SpellErrorsInDescription), "Error for reading description");
+    VERIFY(!Common::HasFlag(metadata->getWarningsFlags(), Common::WarningFlags::SpellErrorsInKeywords), "Error for reading keywords");
 
     QString wrongWord = "abbreviatioe";
     metadata->setDescription(metadata->getDescription() + ' ' + wrongWord);
@@ -83,7 +83,7 @@ int SpellingProducesWarningsTest::doTest() {
     LOG_INFO << "Spellchecking finished. Waiting for warnings...";
 
     if (!warningsQueueWaiter.wait(5)) {
-        if (metadata->getWarningsFlags() == 0) {
+        if (metadata->getWarningsFlags() == Common::WarningFlags::None) {
             VERIFY(false, "Timeout for waiting for warnings checker");
         }
     }
@@ -94,11 +94,11 @@ int SpellingProducesWarningsTest::doTest() {
     VERIFY(keywordsModel->hasTitleSpellError(), "Title spell error not detected");
     VERIFY(keywordsModel->hasKeywordsSpellError(), "Keywords spell error not detected");
 
-    VERIFY(Common::HasFlag(metadata->getWarningsFlags(), Common::WarningTypeSpellErrorsInTitle),
+    VERIFY(Common::HasFlag(metadata->getWarningsFlags(), Common::WarningFlags::SpellErrorsInTitle),
            "Warning was not produced for title spelling error");
-    VERIFY(Common::HasFlag(metadata->getWarningsFlags(), Common::WarningTypeSpellErrorsInDescription),
+    VERIFY(Common::HasFlag(metadata->getWarningsFlags(), Common::WarningFlags::SpellErrorsInDescription),
            "Warning was not produced for description spelling error");
-    VERIFY(Common::HasFlag(metadata->getWarningsFlags(), Common::WarningTypeSpellErrorsInKeywords),
+    VERIFY(Common::HasFlag(metadata->getWarningsFlags(), Common::WarningFlags::SpellErrorsInKeywords),
            "Warning was not produced for keywords spelling error");
 
     return 0;
