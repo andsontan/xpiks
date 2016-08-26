@@ -23,6 +23,7 @@
 #define FLAGS
 
 #include <type_traits>
+#include <QObject>
 
 namespace Common {
     template<typename FlagType>
@@ -253,7 +254,7 @@ namespace Common {
     }
 }
 
-Q_DECLARE_METATYPE(Common::SearchFlags);
+Q_DECLARE_METATYPE(Common::SearchFlags)
 
 #endif // FLAGS
 
