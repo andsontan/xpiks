@@ -26,6 +26,7 @@
 #include "../Common/baseentity.h"
 #include "../Common/iservicebase.h"
 #include "../Models/artworkmetadata.h"
+#include "../Common/flags.h"
 
 namespace Warnings {
     class WarningsCheckingWorker;
@@ -33,7 +34,7 @@ namespace Warnings {
     class WarningsService :
             public QObject,
             public Common::BaseEntity,
-            public Common::IServiceBase<Models::ArtworkMetadata>
+            public Common::IServiceBase<Models::ArtworkMetadata, Common::WarningsCheckFlags>
     {
         Q_OBJECT
     public:
@@ -48,7 +49,7 @@ namespace Warnings {
         virtual bool isBusy() const;
 
         virtual void submitItem(Models::ArtworkMetadata *item);
-        virtual void submitItem(Models::ArtworkMetadata *item, int flags);
+        virtual void submitItem(Models::ArtworkMetadata *item, Common::WarningsCheckFlags flags);
         virtual void submitItems(const QVector<Models::ArtworkMetadata*> &items);
 
     private slots:

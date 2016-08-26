@@ -22,8 +22,30 @@
 #ifndef FLAGS
 #define FLAGS
 
+#include <type_traits>
+
 namespace Common {
-    enum struct CombinedEditFlags {
+    template<typename FlagType>
+    struct enable_bitmask_operators {
+        static constexpr bool enable=false;
+    };
+
+    template<typename FlagType>
+    typename std::enable_if<enable_bitmask_operators<FlagType>::enable, FlagType>::type
+    operator|(FlagType a, FlagType b) {
+        typedef typename std::underlying_type<FlagType>::type underlying;
+        return static_cast<FlagType>(static_cast<underlying>(a) | static_cast<underlying>(b));
+    }
+
+    template<typename FlagType>
+    typename std::enable_if<enable_bitmask_operators<FlagType>::enable, FlagType>::type
+    &operator|=(FlagType &a, FlagType b) {
+        typedef typename std::underlying_type<FlagType>::type underlying;
+        a = static_cast<FlagType>(static_cast<underlying>(a) | static_cast<underlying>(b));
+        return a;
+    }
+
+    enum struct CombinedEditFlags: int {
         EditTitle = 1 << 0,
         EditDesctiption = 1 << 1,
         EditKeywords = 1 << 2,
@@ -32,7 +54,7 @@ namespace Common {
         EditEverything = EditTitle | EditDesctiption | EditKeywords
     };
 
-    enum struct SuggestionFlags {
+    enum struct SuggestionFlags: int {
         None = 0,
         Title = 1 << 0,
         Description = 1 << 1,
@@ -40,14 +62,14 @@ namespace Common {
         All = Title | Description | Keywords
     };
 
-    enum struct SpellCheckFlags {
+    enum struct SpellCheckFlags: int {
         Title = 1 << 0,
         Description = 1 << 1,
         Keywords = 1 << 2,
         All = Title | Description | Keywords
     };
 
-    enum struct KeywordReplaceResult {
+    enum struct KeywordReplaceResult: int {
         Succeeded = 0,
         FailedIndex = 1,
         FailedDuplicate = 2,
@@ -74,61 +96,66 @@ namespace Common {
         AnyTermsEverything = Everything
     };
 
-    enum WarningType {
-        WarningTypeNoWarnings = 0,
-        WarningTypeSizeLessThanMinimum = 1 << 0,
-        WarningTypeNoKeywords = 1 << 1,
-        WarningTypeTooFewKeywords = 1 << 2,
-        WarningTypeTooManyKeywords = 1 << 3,
-        WarningTypeDescriptionIsEmpty = 1 << 4,
-        WarningTypeDescriptionNotEnoughWords = 1 << 5,
-        WarningTypeDescriptionTooBig = 1 << 6,
-        WarningTypeTitleIsEmpty = 1 << 7,
-        WarningTypeTitleNotEnoughWords = 1 << 8,
-        WarningTypeTitleTooManyWords = 1 << 9,
-        WarningTypeTitleTooBig = 1 << 10,
-        WarningTypeSpellErrorsInKeywords = 1 << 11,
-        WarningTypeSpellErrorsInDescription = 1 << 12,
-        WarningTypeSpellErrorsInTitle = 1 << 13,
-        WarningTypeFileIsTooBig = 1 << 14,
-        WarningTypeKeywordsInDescription = 1 << 15,
-        WarningTypeKeywordsInTitle = 1 << 16,
-        WarningTypeFilenameSymbols = 1 << 17,
+    enum struct WarningFlags: int {
+        None = 0,
+        SizeLessThanMinimum = 1 << 0,
+        NoKeywords = 1 << 1,
+        TooFewKeywords = 1 << 2,
+        TooManyKeywords = 1 << 3,
+        DescriptionIsEmpty = 1 << 4,
+        DescriptionNotEnoughWords = 1 << 5,
+        DescriptionTooBig = 1 << 6,
+        TitleIsEmpty = 1 << 7,
+        TitleNotEnoughWords = 1 << 8,
+        TitleTooManyWords = 1 << 9,
+        TitleTooBig = 1 << 10,
+        SpellErrorsInKeywords = 1 << 11,
+        SpellErrorsInDescription = 1 << 12,
+        SpellErrorsInTitle = 1 << 13,
+        FileIsTooBig = 1 << 14,
+        KeywordsInDescription = 1 << 15,
+        KeywordsInTitle = 1 << 16,
+        FilenameSymbols = 1 << 17,
 
-        WarningTypeDescriptionGroup = WarningTypeDescriptionIsEmpty |
-            WarningTypeDescriptionNotEnoughWords |
-            WarningTypeDescriptionTooBig |
-            WarningTypeSpellErrorsInDescription |
-            WarningTypeKeywordsInDescription,
+        DescriptionGroup = DescriptionIsEmpty |
+            DescriptionNotEnoughWords |
+            DescriptionTooBig |
+            SpellErrorsInDescription |
+            KeywordsInDescription,
 
-        WarningTypeTitleGroup = WarningTypeTitleIsEmpty |
-            WarningTypeTitleNotEnoughWords |
-            WarningTypeTitleTooManyWords |
-            WarningTypeTitleTooBig |
-            WarningTypeSpellErrorsInTitle |
-            WarningTypeKeywordsInTitle,
+        TitleGroup = TitleIsEmpty |
+            TitleNotEnoughWords |
+            TitleTooManyWords |
+            TitleTooBig |
+            SpellErrorsInTitle |
+            KeywordsInTitle,
 
-        WarningTypeKeywordsGroup = WarningTypeNoKeywords |
-            WarningTypeTooFewKeywords |
-            WarningTypeTooManyKeywords |
-            WarningTypeSpellErrorsInKeywords |
-            WarningTypeKeywordsInDescription |
-            WarningTypeKeywordsInTitle,
+        KeywordsGroup = NoKeywords |
+            TooFewKeywords |
+            TooManyKeywords |
+            SpellErrorsInKeywords |
+            KeywordsInDescription |
+            KeywordsInTitle,
 
-        WarningTypeSpellingGroup = WarningTypeSpellErrorsInKeywords |
-            WarningTypeSpellErrorsInDescription |
-            WarningTypeSpellErrorsInTitle
+        SpellingGroup = SpellErrorsInKeywords |
+            SpellErrorsInDescription |
+            SpellErrorsInTitle
     };
 
-    enum WarningsCheckFlags {
-        WarningsCheckAll = 0,
-        WarningsCheckKeywords = 1,
-        WarningsCheckTitle = 2,
-        WarningsCheckDescription = 3,
-        WarningsCheckSpelling = 4
+    template<>
+    struct enable_bitmask_operators<WarningFlags>{
+        static constexpr bool enable = true;
     };
 
-    const char *warningsFlagToString(int flags);
+    enum struct WarningsCheckFlags {
+        All = 0,
+        Keywords = 1,
+        Title = 2,
+        Description = 3,
+        Spelling = 4
+    };
+
+    const char *warningsFlagToString(WarningsCheckFlags flags);
 
     template<typename FlagType>
     bool HasFlag(int value, FlagType flag) {
@@ -161,6 +188,11 @@ namespace Common {
     }
 
     template<typename FlagType>
+    void SetFlag(volatile FlagType &value, FlagType flag) {
+        value = static_cast<FlagType>(static_cast<int>(value) | static_cast<int>(flag));
+    }
+
+    template<typename FlagType>
     void UnsetFlag(int &value, FlagType flag) {
         value &= ~(static_cast<int>(flag));
     }
@@ -173,6 +205,11 @@ namespace Common {
     template<typename FlagType>
     void UnsetFlag(volatile int &value, FlagType flag) {
         value &= ~(static_cast<int>(flag));
+    }
+
+    template<typename FlagType>
+    void UnsetFlag(volatile FlagType &value, FlagType flag) {
+        value = static_cast<FlagType>(static_cast<int>(value) & (~(static_cast<int>(flag))));
     }
 
     template<typename FlagType>

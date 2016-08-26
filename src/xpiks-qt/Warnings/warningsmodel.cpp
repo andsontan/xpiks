@@ -29,9 +29,9 @@
 #include "../Common/basickeywordsmodel.h"
 
 namespace Warnings {
-    void describeWarningFlags(int warningsFlags, Models::ArtworkMetadata *metadata, QStringList &descriptions) {
+    void describeWarningFlags(Common::WarningFlags warningsFlags, Models::ArtworkMetadata *metadata, QStringList &descriptions) {
 
-        if (Common::HasFlag(warningsFlags, Common::WarningTypeSizeLessThanMinimum)) {
+        if (Common::HasFlag(warningsFlags, Common::WarningFlags::SizeLessThanMinimum)) {
             Models::ImageArtwork *image = dynamic_cast<Models::ImageArtwork*>(metadata);
 #ifdef QT_DEBUG
             Q_ASSERT(image != NULL);
@@ -46,72 +46,72 @@ namespace Warnings {
             }
         }
 
-        if (Common::HasFlag(warningsFlags, Common::WarningTypeNoKeywords)) {
+        if (Common::HasFlag(warningsFlags, Common::WarningFlags::NoKeywords)) {
             descriptions.append(QObject::tr("Item has no keywords"));
         }
 
-        if (Common::HasFlag(warningsFlags, Common::WarningTypeTooFewKeywords)) {
+        if (Common::HasFlag(warningsFlags, Common::WarningFlags::TooFewKeywords)) {
             descriptions.append(QObject::tr("There's less than 7 keywords"));
         }
 
-        if (Common::HasFlag(warningsFlags, Common::WarningTypeTooManyKeywords)) {
+        if (Common::HasFlag(warningsFlags, Common::WarningFlags::TooManyKeywords)) {
             Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
             descriptions.append(QObject::tr("There are too many keywords (%1)").arg(keywordsModel->getKeywordsCount()));
         }
 
-        if (Common::HasFlag(warningsFlags, Common::WarningTypeDescriptionIsEmpty)) {
+        if (Common::HasFlag(warningsFlags, Common::WarningFlags::DescriptionIsEmpty)) {
             descriptions.append(QObject::tr("Description is empty"));
         }
 
-        if (Common::HasFlag(warningsFlags, Common::WarningTypeDescriptionNotEnoughWords)) {
+        if (Common::HasFlag(warningsFlags, Common::WarningFlags::DescriptionNotEnoughWords)) {
             descriptions.append(QObject::tr("Description should have more than 2 words"));
         }
 
-        if (Common::HasFlag(warningsFlags, Common::WarningTypeDescriptionTooBig)) {
+        if (Common::HasFlag(warningsFlags, Common::WarningFlags::DescriptionTooBig)) {
             descriptions.append(QObject::tr("Description is too long (%1 symbols)").arg(metadata->getDescription().length()));
         }
 
-        if (Common::HasFlag(warningsFlags, Common::WarningTypeTitleIsEmpty)) {
+        if (Common::HasFlag(warningsFlags, Common::WarningFlags::TitleIsEmpty)) {
             descriptions.append(QObject::tr("Title is empty"));
         }
 
-        if (Common::HasFlag(warningsFlags, Common::WarningTypeTitleNotEnoughWords)) {
+        if (Common::HasFlag(warningsFlags, Common::WarningFlags::TitleNotEnoughWords)) {
             descriptions.append(QObject::tr("Title should have more than 2 words"));
         }
 
-        if (Common::HasFlag(warningsFlags, Common::WarningTypeTitleTooManyWords)) {
+        if (Common::HasFlag(warningsFlags, Common::WarningFlags::TitleTooManyWords)) {
             descriptions.append(QObject::tr("Title has too many words"));
         }
 
-        if (Common::HasFlag(warningsFlags, Common::WarningTypeTitleTooBig)) {
+        if (Common::HasFlag(warningsFlags, Common::WarningFlags::TitleTooBig)) {
             descriptions.append(QObject::tr("Title is too long (%1 symbols)").arg(metadata->getTitle().length()));
         }
 
-        if (Common::HasFlag(warningsFlags, Common::WarningTypeSpellErrorsInKeywords)) {
+        if (Common::HasFlag(warningsFlags, Common::WarningFlags::SpellErrorsInKeywords)) {
             descriptions.append(QObject::tr("Keywords have spelling error(s)"));
         }
 
-        if (Common::HasFlag(warningsFlags, Common::WarningTypeSpellErrorsInDescription)) {
+        if (Common::HasFlag(warningsFlags, Common::WarningFlags::SpellErrorsInDescription)) {
             descriptions.append(QObject::tr("Description has spelling error(s)"));
         }
 
-        if (Common::HasFlag(warningsFlags, Common::WarningTypeSpellErrorsInTitle)) {
+        if (Common::HasFlag(warningsFlags, Common::WarningFlags::SpellErrorsInTitle)) {
             descriptions.append(QObject::tr("Title has spelling error(s)"));
         }
 
-        if (Common::HasFlag(warningsFlags, Common::WarningTypeFileIsTooBig)) {
+        if (Common::HasFlag(warningsFlags, Common::WarningFlags::FileIsTooBig)) {
             descriptions.append(QObject::tr("File is larger than 15 MB"));
         }
 
-        if (Common::HasFlag(warningsFlags, Common::WarningTypeKeywordsInDescription)) {
+        if (Common::HasFlag(warningsFlags, Common::WarningFlags::KeywordsInDescription)) {
             descriptions.append(QObject::tr("Description contains some of the keywords"));
         }
 
-        if (Common::HasFlag(warningsFlags, Common::WarningTypeKeywordsInTitle)) {
+        if (Common::HasFlag(warningsFlags, Common::WarningFlags::KeywordsInTitle)) {
             descriptions.append(QObject::tr("Title contains some of the keywords"));
         }
 
-        if (Common::HasFlag(warningsFlags, Common::WarningTypeFilenameSymbols)) {
+        if (Common::HasFlag(warningsFlags, Common::WarningFlags::FilenameSymbols)) {
             descriptions.append(QObject::tr("Filename contains special characters or spaces"));
         }
     }
@@ -134,7 +134,7 @@ namespace Warnings {
             Models::ArtworkMetadata *metadata = artItemsModel->getArtwork(row);
 
             if (metadata != NULL) {
-                int warningsFlags = metadata->getWarningsFlags();
+                Common::WarningFlags warningsFlags = metadata->getWarningsFlags();
                 describeWarningFlags(warningsFlags, metadata, descriptions);
             }
         }
@@ -176,8 +176,8 @@ namespace Warnings {
         bool rowIsOk = false;
 
         if (metadata != NULL) {
-            int warningsFlags = metadata->getWarningsFlags();
-            bool anyWarnings = warningsFlags != Common::WarningTypeNoWarnings;
+            Common::WarningFlags warningsFlags = metadata->getWarningsFlags();
+            bool anyWarnings = warningsFlags != Common::WarningFlags::None;
 
             rowIsOk = anyWarnings;
 

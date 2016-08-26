@@ -85,7 +85,7 @@ namespace Warnings {
         m_WarningsWorker->submitItem(wItem);
     }
 
-    void WarningsService::submitItem(Models::ArtworkMetadata *item, int flags) {
+    void WarningsService::submitItem(Models::ArtworkMetadata *item, Common::WarningsCheckFlags flags) {
         if (m_WarningsWorker == NULL) { return; }
         LOG_INFO << "Submitting one item with flags" << Common::warningsFlagToString(flags);
 

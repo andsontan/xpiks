@@ -183,7 +183,7 @@ namespace Commands {
         const
 #endif
         ;
-        virtual void addWarningsService(Common::IServiceBase<Common::IBasicArtwork> *service);
+        virtual void addWarningsService(Common::IServiceBase<Common::IBasicArtwork, Common::WarningsCheckFlags> *service);
 
     public:
         void recordHistoryItem(std::unique_ptr<UndoRedo::IHistoryItem> &historyItem) const;
@@ -228,7 +228,7 @@ namespace Commands {
 
     public:
         void submitKeywordsForWarningsCheck(Models::ArtworkMetadata *item) const;
-        void submitForWarningsCheck(Models::ArtworkMetadata *item, int flags = Common::WarningsCheckAll) const;
+        void submitForWarningsCheck(Models::ArtworkMetadata *item, Common::WarningsCheckFlags flags = Common::WarningsCheckFlags::All) const;
         void submitForWarningsCheck(const QVector<Models::ArtworkMetadata*> &items) const;
 
     private:
@@ -307,7 +307,7 @@ namespace Commands {
         Models::DeleteKeywordsViewModel *m_DeleteKeywordsViewModel;
         Models::FindAndReplaceModel *m_FindAndReplaceModel;
 
-        QVector<Common::IServiceBase<Common::IBasicArtwork> *> m_WarningsCheckers;
+        QVector<Common::IServiceBase<Common::IBasicArtwork, Common::WarningsCheckFlags> *> m_WarningsCheckers;
         QVector<Helpers::IFileNotAvailableModel*> m_AvailabilityListeners;
 #ifdef QT_DEBUG
         QList<QUrl> m_InitialFilesToOpen;

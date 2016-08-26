@@ -33,7 +33,7 @@
 namespace Warnings {
     class WarningsItem {
     public:
-        WarningsItem(Models::ArtworkMetadata *checkableItem, int checkingFlags = Common::WarningsCheckAll):
+        WarningsItem(Models::ArtworkMetadata *checkableItem, Common::WarningsCheckFlags checkingFlags = Common::WarningsCheckFlags::All):
             m_CheckableItem(checkableItem),
             m_CheckingFlags(checkingFlags)
         {
@@ -50,24 +50,24 @@ namespace Warnings {
         }
 
     public:
-        void submitWarnings(int warningsFlags) {
-            if (m_CheckingFlags == Common::WarningsCheckAll) {
+        void submitWarnings(Common::WarningFlags warningsFlags) {
+            if (m_CheckingFlags == Common::WarningsCheckFlags::All) {
                 m_CheckableItem->setWarningsFlags(warningsFlags);
             } else {
-                int flagsToDrop = 0;
+                Common::WarningFlags flagsToDrop = Common::WarningFlags::None;
 
                 switch (m_CheckingFlags) {
-                case Common::WarningsCheckDescription:
-                    flagsToDrop = Common::WarningTypeDescriptionGroup;
+                case Common::WarningsCheckFlags::Description:
+                    flagsToDrop = Common::WarningFlags::DescriptionGroup;
                     break;
-                case Common::WarningsCheckKeywords:
-                    flagsToDrop = Common::WarningTypeKeywordsGroup;
+                case Common::WarningsCheckFlags::Keywords:
+                    flagsToDrop = Common::WarningFlags::KeywordsGroup;
                     break;
-                case Common::WarningsCheckTitle:
-                    flagsToDrop = Common::WarningTypeTitleGroup;
+                case Common::WarningsCheckFlags::Title:
+                    flagsToDrop = Common::WarningFlags::TitleGroup;
                     break;
-                case Common::WarningsCheckSpelling:
-                    flagsToDrop = Common::WarningTypeSpellingGroup;
+                case Common::WarningsCheckFlags::Spelling:
+                    flagsToDrop = Common::WarningFlags::SpellingGroup;
                     break;
                 }
 
@@ -76,8 +76,8 @@ namespace Warnings {
             }
         }
 
-        bool needCheckAll() const { return m_CheckingFlags == Common::WarningsCheckAll; }
-        int getCheckingFlags() const { return m_CheckingFlags; }
+        bool needCheckAll() const { return m_CheckingFlags == Common::WarningsCheckFlags::All; }
+        Common::WarningsCheckFlags getCheckingFlags() const { return m_CheckingFlags; }
         const QString &getDescription() const { return m_Description; }
         const QString &getTitle() const { return m_Title; }
         const QSet<QString> &getKeywordsSet() const { return m_KeywordsSet; }
@@ -101,7 +101,7 @@ namespace Warnings {
         QString m_Description;
         QString m_Title;
         QSet<QString> m_KeywordsSet;
-        int m_CheckingFlags;
+        Common::WarningsCheckFlags m_CheckingFlags;
     };
 }
 

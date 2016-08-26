@@ -283,7 +283,7 @@ namespace Models {
                     keywordsModel->notifySpellCheckResults(Common::SpellCheckFlags::Description);
                 }
 
-                m_CommandManager->submitForWarningsCheck(metadata, Common::WarningsCheckDescription);
+                m_CommandManager->submitForWarningsCheck(metadata, Common::WarningsCheckFlags::Description);
             }
         }
     }
@@ -304,7 +304,7 @@ namespace Models {
                     keywordsModel->notifySpellCheckResults(Common::SpellCheckFlags::Title);
                 }
 
-                m_CommandManager->submitForWarningsCheck(metadata, Common::WarningsCheckTitle);
+                m_CommandManager->submitForWarningsCheck(metadata, Common::WarningsCheckFlags::Title);
             }
         }
     }

@@ -204,7 +204,7 @@ const
     return result;
 }
 
-void Commands::CommandManager::addWarningsService(Common::IServiceBase<Common::IBasicArtwork> *service) {
+void Commands::CommandManager::addWarningsService(Common::IServiceBase<Common::IBasicArtwork, Common::WarningsCheckFlags> *service) {
     if (service != NULL) {
         // TODO: check if we don't have such checker
         m_WarningsCheckers.append(service);
@@ -535,10 +535,10 @@ void Commands::CommandManager::submitForSpellCheck(const QVector<Common::BasicKe
 
 void Commands::CommandManager::submitKeywordsForWarningsCheck(Models::ArtworkMetadata *item) const {
     Q_ASSERT(item != NULL);
-    this->submitForWarningsCheck(item, Common::WarningsCheckKeywords);
+    this->submitForWarningsCheck(item, Common::WarningsCheckFlags::Keywords);
 }
 
-void Commands::CommandManager::submitForWarningsCheck(Models::ArtworkMetadata *item, int flags) const {
+void Commands::CommandManager::submitForWarningsCheck(Models::ArtworkMetadata *item, Common::WarningsCheckFlags flags) const {
     Q_ASSERT(item != NULL);
 
     if (m_WarningsService != NULL) {
@@ -550,7 +550,7 @@ void Commands::CommandManager::submitForWarningsCheck(Models::ArtworkMetadata *i
     LOG_INTEGRATION_TESTS << count << "checkers available";
 
     for (int i = 0; i < count; ++i) {
-        Common::IServiceBase<Common::IBasicArtwork> *checker = m_WarningsCheckers.at(i);
+        Common::IServiceBase<Common::IBasicArtwork, Common::WarningsCheckFlags> *checker = m_WarningsCheckers.at(i);
         if (checker->isAvailable()) {
             checker->submitItem(item, flags);
         }
@@ -579,7 +579,7 @@ void Commands::CommandManager::submitForWarningsCheck(const QVector<Common::IBas
     int count = m_WarningsCheckers.length();
 
     for (int i = 0; i < count; ++i) {
-        Common::IServiceBase<Common::IBasicArtwork> *checker = m_WarningsCheckers.at(i);
+        Common::IServiceBase<Common::IBasicArtwork, Common::WarningsCheckFlags> *checker = m_WarningsCheckers.at(i);
         if (checker->isAvailable()) {
             checker->submitItems(items);
         }

@@ -696,7 +696,7 @@ namespace Models {
         if (item != NULL)
 #endif
         {
-            m_CommandManager->submitForWarningsCheck(item, Common::WarningsCheckSpelling);
+            m_CommandManager->submitForWarningsCheck(item, Common::WarningsCheckFlags::Spelling);
         }
     }
 

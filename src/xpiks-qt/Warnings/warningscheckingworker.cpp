@@ -55,7 +55,7 @@ namespace Warnings {
     }
 
     void WarningsCheckingWorker::processOneItem(std::shared_ptr<WarningsItem> &item) {
-        int warningsFlags = 0;
+        Common::WarningFlags warningsFlags = Common::WarningFlags::None;
 
         initValuesFromSettings();
 
@@ -65,19 +65,19 @@ namespace Warnings {
             warningsFlags |= checkTitle(item);
             warningsFlags |= checkKeywords(item);
         } else {
-            int checkingFlags = item->getCheckingFlags();
+            auto checkingFlags = item->getCheckingFlags();
             switch (checkingFlags) {
-            case Common::WarningsCheckDescription:
+            case Common::WarningsCheckFlags::Description:
                 warningsFlags |= checkDescription(item);
                 break;
-            case Common::WarningsCheckKeywords:
+            case Common::WarningsCheckFlags::Keywords:
                 warningsFlags |= checkKeywords(item);
                 warningsFlags |= checkDuplicates(item);
                 break;
-            case Common::WarningsCheckTitle:
+            case Common::WarningsCheckFlags::Title:
                 warningsFlags |= checkTitle(item);
                 break;
-            case Common::WarningsCheckSpelling:
+            case Common::WarningsCheckFlags::Spelling:
                 warningsFlags |= checkSpelling(item);
                 break;
             }
@@ -92,10 +92,10 @@ namespace Warnings {
         m_MaximumKeywordsCount = m_SettingsModel->getMaxKeywordsCount();
     }
 
-    int WarningsCheckingWorker::checkDimensions(std::shared_ptr<WarningsItem> &wi) const {
+    Common::WarningFlags WarningsCheckingWorker::checkDimensions(std::shared_ptr<WarningsItem> &wi) const {
         LOG_INTEGRATION_TESTS << "#";
         Models::ArtworkMetadata *item = wi->getCheckableItem();
-        int warningsInfo = 0;
+        Common::WarningFlags warningsInfo = Common::WarningFlags::None;
 
         Models::ImageArtwork *image = dynamic_cast<Models::ImageArtwork *>(item);
         if (image != NULL) {
@@ -103,14 +103,14 @@ namespace Warnings {
 
             double currentProd = size.width() * size.height() / 1000000.0;
             if (currentProd < m_MinimumMegapixels) {
-                Common::SetFlag(warningsInfo, Common::WarningTypeSizeLessThanMinimum);
+                Common::SetFlag(warningsInfo, Common::WarningFlags::SizeLessThanMinimum);
             }
         }
 
         qint64 filesize = item->getFileSize();
         const qint64 maxSize = 15*1024*1024; // 15 MB
         if (filesize >= maxSize) {
-            Common::SetFlag(warningsInfo, Common::WarningTypeFileIsTooBig);
+            Common::SetFlag(warningsInfo, Common::WarningFlags::FileIsTooBig);
         }
 
         QFileInfo fi(item->getFilepath());
@@ -121,7 +121,7 @@ namespace Warnings {
             bool isOk = c.isLetter() || c.isDigit() ||
                     m_AllowedFilenameCharacters.contains(c);
             if (!isOk) {
-                Common::SetFlag(warningsInfo, Common::WarningTypeFilenameSymbols);
+                Common::SetFlag(warningsInfo, Common::WarningFlags::FilenameSymbols);
                 break;
             }
         }
@@ -129,82 +129,82 @@ namespace Warnings {
         return warningsInfo;
     }
 
-    int WarningsCheckingWorker::checkKeywords(std::shared_ptr<WarningsItem> &wi) const {
+    Common::WarningFlags WarningsCheckingWorker::checkKeywords(std::shared_ptr<WarningsItem> &wi) const {
         LOG_INTEGRATION_TESTS << "#";
-        int warningsInfo = 0;
+        Common::WarningFlags warningsInfo = Common::WarningFlags::None;
         Models::ArtworkMetadata *item = wi->getCheckableItem();
         Common::BasicKeywordsModel *keywordsModel = item->getKeywordsModel();
 
         int keywordsCount = keywordsModel->getKeywordsCount();
 
         if (keywordsCount == 0) {
-            Common::SetFlag(warningsInfo, Common::WarningTypeNoKeywords);
+            Common::SetFlag(warningsInfo, Common::WarningFlags::NoKeywords);
         } else {
             if (keywordsCount < 7) {
-                Common::SetFlag(warningsInfo, Common::WarningTypeTooFewKeywords);
+                Common::SetFlag(warningsInfo, Common::WarningFlags::TooFewKeywords);
             }
 
             if (keywordsCount > m_MaximumKeywordsCount) {
-                Common::SetFlag(warningsInfo, Common::WarningTypeTooManyKeywords);
+                Common::SetFlag(warningsInfo, Common::WarningFlags::TooManyKeywords);
             }
 
             if (keywordsModel->hasKeywordsSpellError()) {
-                Common::SetFlag(warningsInfo, Common::WarningTypeSpellErrorsInKeywords);
+                Common::SetFlag(warningsInfo, Common::WarningFlags::SpellErrorsInKeywords);
             }
         }
 
         return warningsInfo;
     }
 
-    int WarningsCheckingWorker::checkDescription(std::shared_ptr<WarningsItem> &wi) const {
+    Common::WarningFlags WarningsCheckingWorker::checkDescription(std::shared_ptr<WarningsItem> &wi) const {
         LOG_INTEGRATION_TESTS << "#";
 
-        int warningsInfo = 0;
+        Common::WarningFlags warningsInfo = Common::WarningFlags::None;
         Models::ArtworkMetadata *item = wi->getCheckableItem();
 
         int descriptionLength = wi->getDescription().length();
 
         if (descriptionLength == 0) {
-            Common::SetFlag(warningsInfo, Common::WarningTypeDescriptionIsEmpty);
+            Common::SetFlag(warningsInfo, Common::WarningFlags::DescriptionIsEmpty);
         } else {
             Common::BasicKeywordsModel *keywordsModel = item->getKeywordsModel();
 
             if (descriptionLength > m_MaximumDescriptionLength) {
-                Common::SetFlag(warningsInfo, Common::WarningTypeDescriptionTooBig);
+                Common::SetFlag(warningsInfo, Common::WarningFlags::DescriptionTooBig);
             }
 
             QStringList descriptionWords = wi->getDescriptionWords();
 
             int wordsLength = descriptionWords.length();
             if (wordsLength < 3) {
-                Common::SetFlag(warningsInfo, Common::WarningTypeDescriptionNotEnoughWords);
+                Common::SetFlag(warningsInfo, Common::WarningFlags::DescriptionNotEnoughWords);
             }
 
             if (keywordsModel->hasDescriptionSpellError()) {
-                Common::SetFlag(warningsInfo, Common::WarningTypeSpellErrorsInDescription);
+                Common::SetFlag(warningsInfo, Common::WarningFlags::SpellErrorsInDescription);
             }
 
             QSet<QString> descriptionWordsSet = toLowerSet(descriptionWords);
             QSet<QString> intersection = descriptionWordsSet.intersect(item->getKeywordsSet());
 
             if (!intersection.isEmpty()) {
-                Common::SetFlag(warningsInfo, Common::WarningTypeKeywordsInDescription);
+                Common::SetFlag(warningsInfo, Common::WarningFlags::KeywordsInDescription);
             }
         }
 
         return warningsInfo;
     }
 
-    int WarningsCheckingWorker::checkTitle(std::shared_ptr<WarningsItem> &wi) const {
+    Common::WarningFlags WarningsCheckingWorker::checkTitle(std::shared_ptr<WarningsItem> &wi) const {
         LOG_INTEGRATION_TESTS << "#";
 
-        int warningsInfo = 0;
+        Common::WarningFlags warningsInfo = Common::WarningFlags::None;
         Models::ArtworkMetadata *item = wi->getCheckableItem();
 
         int titleLength = wi->getTitle().length();
 
         if (titleLength == 0) {
-            Common::SetFlag(warningsInfo, Common::WarningTypeTitleIsEmpty);
+            Common::SetFlag(warningsInfo, Common::WarningFlags::TitleIsEmpty);
         } else {
             Common::BasicKeywordsModel *keywordsModel = item->getKeywordsModel();
 
@@ -212,55 +212,55 @@ namespace Warnings {
             int partsLength = titleWords.length();
 
             if (partsLength < 3) {
-                Common::SetFlag(warningsInfo, Common::WarningTypeTitleNotEnoughWords);
+                Common::SetFlag(warningsInfo, Common::WarningFlags::TitleNotEnoughWords);
             }
 
             if (partsLength > 10) {
-                Common::SetFlag(warningsInfo, Common::WarningTypeTitleTooManyWords);
+                Common::SetFlag(warningsInfo, Common::WarningFlags::TitleTooManyWords);
             }
 
             if (keywordsModel->hasTitleSpellError()) {
-                Common::SetFlag(warningsInfo, Common::WarningTypeSpellErrorsInTitle);
+                Common::SetFlag(warningsInfo, Common::WarningFlags::SpellErrorsInTitle);
             }
 
             QSet<QString> titleWordsSet = toLowerSet(titleWords);
             QSet<QString> intersection = titleWordsSet.intersect(item->getKeywordsSet());
 
             if (!intersection.isEmpty()) {
-                Common::SetFlag(warningsInfo, Common::WarningTypeKeywordsInTitle);
+                Common::SetFlag(warningsInfo, Common::WarningFlags::KeywordsInTitle);
             }
         }
 
         return warningsInfo;
     }
 
-    int WarningsCheckingWorker::checkSpelling(std::shared_ptr<WarningsItem> &wi) const {
+    Common::WarningFlags WarningsCheckingWorker::checkSpelling(std::shared_ptr<WarningsItem> &wi) const {
         LOG_INTEGRATION_TESTS << "#";
 
-        int warningsInfo = 0;
+        Common::WarningFlags warningsInfo = Common::WarningFlags::None;
         Models::ArtworkMetadata *item = wi->getCheckableItem();
         Common::BasicKeywordsModel *keywordsModel = item->getKeywordsModel();
 
         if (keywordsModel->hasKeywordsSpellError()) {
             LOG_INTEGRATION_TESTS << "Detected keywords spell error";
-            Common::SetFlag(warningsInfo, Common::WarningTypeSpellErrorsInKeywords);
+            Common::SetFlag(warningsInfo, Common::WarningFlags::SpellErrorsInKeywords);
         }
 
         if (keywordsModel->hasDescriptionSpellError()) {
             LOG_INTEGRATION_TESTS << "Detected description spell error";
-            Common::SetFlag(warningsInfo, Common::WarningTypeSpellErrorsInDescription);
+            Common::SetFlag(warningsInfo, Common::WarningFlags::SpellErrorsInDescription);
         }
 
         if (keywordsModel->hasTitleSpellError()) {
             LOG_INTEGRATION_TESTS << "Detected title spell error";
-            Common::SetFlag(warningsInfo, Common::WarningTypeSpellErrorsInTitle);
+            Common::SetFlag(warningsInfo, Common::WarningFlags::SpellErrorsInTitle);
         }
 
         return warningsInfo;
     }
 
-    int WarningsCheckingWorker::checkDuplicates(std::shared_ptr<WarningsItem> &wi) const {
-        int warningsInfo = 0;
+    Common::WarningFlags WarningsCheckingWorker::checkDuplicates(std::shared_ptr<WarningsItem> &wi) const {
+        Common::WarningFlags warningsInfo = Common::WarningFlags::None;
         Models::ArtworkMetadata *item = wi->getCheckableItem();
         Common::BasicKeywordsModel *keywordsModel = item->getKeywordsModel();
 
@@ -274,7 +274,7 @@ namespace Warnings {
             QSet<QString> intersection = titleWordsSet.intersect(keywordsSet);
 
             if (!intersection.isEmpty()) {
-                Common::SetFlag(warningsInfo, Common::WarningTypeKeywordsInTitle);
+                Common::SetFlag(warningsInfo, Common::WarningFlags::KeywordsInTitle);
             }
         }
 
@@ -284,7 +284,7 @@ namespace Warnings {
             QSet<QString> intersection = descriptionWordsSet.intersect(keywordsSet);
 
             if (!intersection.isEmpty()) {
-                Common::SetFlag(warningsInfo, Common::WarningTypeKeywordsInDescription);
+                Common::SetFlag(warningsInfo, Common::WarningFlags::KeywordsInDescription);
             }
         }
 

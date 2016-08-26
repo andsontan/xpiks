@@ -30,7 +30,7 @@ namespace Common {
                                                 "WarningsCheckDescription",
                                                 "WarningsCheckSpelling"};
 
-    const char *warningsFlagToString(int flags) {
-        return WarningsEnumStrings[flags];
+    const char *warningsFlagToString(Common::WarningsCheckFlags flags) {
+        return WarningsEnumStrings[(int)flags];
     }
 }

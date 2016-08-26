@@ -26,6 +26,7 @@
 
 #include "../Common/iservicebase.h"
 #include "../Common/ibasicartwork.h"
+#include "../Common/flags.h"
 
 namespace Commands {
     class ICommandBase;
@@ -41,7 +42,7 @@ namespace Commands {
 #endif
         = 0;
 
-        virtual void addWarningsService(Common::IServiceBase<Common::IBasicArtwork> *service) = 0;
+        virtual void addWarningsService(Common::IServiceBase<Common::IBasicArtwork, Common::WarningsCheckFlags> *service) = 0;
     };
 }
 

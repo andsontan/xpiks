@@ -57,12 +57,12 @@ namespace Warnings {
         void queueIsEmpty();
 
     private:
-        int checkDimensions(std::shared_ptr<WarningsItem> &wi) const;
-        int checkKeywords(std::shared_ptr<WarningsItem> &wi) const;
-        int checkDescription(std::shared_ptr<WarningsItem> &wi) const;
-        int checkTitle(std::shared_ptr<WarningsItem> &wi) const;
-        int checkSpelling(std::shared_ptr<WarningsItem> &wi) const;
-        int checkDuplicates(std::shared_ptr<WarningsItem> &wi) const;
+        Common::WarningFlags checkDimensions(std::shared_ptr<WarningsItem> &wi) const;
+        Common::WarningFlags checkKeywords(std::shared_ptr<WarningsItem> &wi) const;
+        Common::WarningFlags checkDescription(std::shared_ptr<WarningsItem> &wi) const;
+        Common::WarningFlags checkTitle(std::shared_ptr<WarningsItem> &wi) const;
+        Common::WarningFlags checkSpelling(std::shared_ptr<WarningsItem> &wi) const;
+        Common::WarningFlags checkDuplicates(std::shared_ptr<WarningsItem> &wi) const;
 
     private:
         Models::SettingsModel *m_SettingsModel;

@@ -88,10 +88,10 @@ namespace Models {
         virtual qint64 getItemID() const { return m_ID; }
 
     public:
-        int getWarningsFlags() const { return m_WarningsFlags; }
-        void setWarningsFlags(int flags) { m_WarningsFlags = flags; }
-        void addWarningsFlags(int flags) { m_WarningsFlags |= flags; }
-        void dropWarningsFlags(int flagsToDrop) { m_WarningsFlags &= (~flagsToDrop); }
+        Common::WarningFlags getWarningsFlags() const { return m_WarningsFlags; }
+        void setWarningsFlags(Common::WarningFlags flags) { m_WarningsFlags = flags; }
+        void addWarningsFlags(Common::WarningFlags flags) { Common::SetFlag(m_WarningsFlags, flags); }
+        void dropWarningsFlags(Common::WarningFlags flagsToDrop) { Common::UnsetFlag(m_WarningsFlags, flagsToDrop); }
 
     public:
         Common::BasicKeywordsModel *getKeywordsModel() { return &m_KeywordsModel; }
@@ -193,7 +193,7 @@ namespace Models {
         QTimer m_BackupTimer;
         qint64 m_ID;
         volatile int m_MetadataFlags;
-        volatile int m_WarningsFlags;
+        volatile Common::WarningFlags m_WarningsFlags;
     };
 }
 
