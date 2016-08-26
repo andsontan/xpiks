@@ -33,24 +33,26 @@
 #include "../Common/defines.h"
 
 QString combinedFlagsToString(int flags) {
-    if (flags == Common::EditEverything) {
+    using namespace Common;
+
+    if (flags == (int)CombinedEditFlags::EditEverything) {
         return QLatin1String("EditEverything");
     }
 
     QStringList flagsStr;
-    if (Common::HasFlag(flags, Common::EditDesctiption)) {
+    if (Common::HasFlag(flags, CombinedEditFlags::EditDesctiption)) {
         flagsStr.append("EditDescription");
     }
 
-    if (Common::HasFlag(flags, Common::EditTitle)) {
+    if (Common::HasFlag(flags, CombinedEditFlags::EditTitle)) {
         flagsStr.append("EditTitle");
     }
 
-    if (Common::HasFlag(flags, Common::EditKeywords)) {
+    if (Common::HasFlag(flags, CombinedEditFlags::EditKeywords)) {
         flagsStr.append("EditKeywords");
     }
 
-    if (Common::HasFlag(flags, Common::Clear)) {
+    if (Common::HasFlag(flags, CombinedEditFlags::Clear)) {
         flagsStr.append("Clear");
     }
 
@@ -75,7 +77,7 @@ std::shared_ptr<Commands::ICommandResult> Commands::CombinedEditCommand::execute
     itemsToSave.reserve((int)size);
     affectedItems.reserve((int)size);
 
-    bool needToClear = Common::HasFlag(m_EditFlags, Common::Clear);
+    bool needToClear = Common::HasFlag(m_EditFlags, Common::CombinedEditFlags::Clear);
 
     for (size_t i = 0; i < size; ++i) {
         const Models::MetadataElement &info = m_MetadataElements.at(i);
@@ -106,12 +108,12 @@ std::shared_ptr<Commands::ICommandResult> Commands::CombinedEditCommand::execute
 }
 
 void Commands::CombinedEditCommand::setKeywords(Models::ArtworkMetadata *metadata) const {
-    if (Common::HasFlag(m_EditFlags, Common::EditKeywords)) {
-        if (Common::HasFlag(m_EditFlags, Common::AppendKeywords)) {
+    if (Common::HasFlag(m_EditFlags, Common::CombinedEditFlags::EditKeywords)) {
+        if (Common::HasFlag(m_EditFlags, Common::CombinedEditFlags::AppendKeywords)) {
             metadata->appendKeywords(m_Keywords);
         }
         else {
-            if (Common::HasFlag(m_EditFlags, Common::Clear)) {
+            if (Common::HasFlag(m_EditFlags,Common:: CombinedEditFlags::Clear)) {
                 metadata->clearKeywords();
             } else {
                 metadata->setKeywords(m_Keywords);
@@ -121,8 +123,8 @@ void Commands::CombinedEditCommand::setKeywords(Models::ArtworkMetadata *metadat
 }
 
 void Commands::CombinedEditCommand::setDescription(Models::ArtworkMetadata *metadata) const {
-    if (Common::HasFlag(m_EditFlags, Common::EditDesctiption)) {
-        if (Common::HasFlag(m_EditFlags, Common::Clear)) {
+    if (Common::HasFlag(m_EditFlags, Common::CombinedEditFlags::EditDesctiption)) {
+        if (Common::HasFlag(m_EditFlags, Common::CombinedEditFlags::Clear)) {
             metadata->setDescription("");
         } else {
             metadata->setDescription(m_ArtworkDescription);
@@ -131,8 +133,8 @@ void Commands::CombinedEditCommand::setDescription(Models::ArtworkMetadata *meta
 }
 
 void Commands::CombinedEditCommand::setTitle(Models::ArtworkMetadata *metadata) const {
-    if (Common::HasFlag(m_EditFlags, Common::EditTitle)) {
-        if (Common::HasFlag(m_EditFlags, Common::Clear)) {
+    if (Common::HasFlag(m_EditFlags, Common::CombinedEditFlags::EditTitle)) {
+        if (Common::HasFlag(m_EditFlags, Common::CombinedEditFlags::Clear)) {
             metadata->setTitle("");
         } else {
             metadata->setTitle(m_ArtworkTitle);

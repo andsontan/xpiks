@@ -23,12 +23,12 @@
 #define FLAGS
 
 namespace Common {
-    enum CombinedEditFlags {
-        EditTitle = 1,
-        EditDesctiption = 2,
-        EditKeywords = 4,
-        AppendKeywords = 8,
-        Clear = 16,
+    enum struct CombinedEditFlags {
+        EditTitle = 1 << 0,
+        EditDesctiption = 1 << 1,
+        EditKeywords = 1 << 2,
+        AppendKeywords = 1 << 3,
+        Clear = 1 << 4,
         EditEverything = EditTitle | EditDesctiption | EditKeywords
     };
 

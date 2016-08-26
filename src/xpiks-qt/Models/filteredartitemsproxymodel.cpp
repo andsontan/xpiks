@@ -220,10 +220,11 @@ namespace Models {
         LOG_DEBUG << "#";
         auto selectedArtworks = getSelectedOriginalItemsWithIndices();
         int flags = 0;
-        Common::SetFlag(flags, Common::EditDesctiption);
-        Common::SetFlag(flags, Common::EditKeywords);
-        Common::SetFlag(flags, Common::EditTitle);
-        Common::SetFlag(flags, Common::Clear);
+        using namespace Common;
+        Common::SetFlag(flags, CombinedEditFlags::EditDesctiption);
+        Common::SetFlag(flags, CombinedEditFlags::EditKeywords);
+        Common::SetFlag(flags, CombinedEditFlags::EditTitle);
+        Common::SetFlag(flags, CombinedEditFlags::Clear);
         removeMetadataInItems(selectedArtworks, flags);
     }
 
@@ -380,8 +381,8 @@ namespace Models {
 
     void FilteredArtItemsProxyModel::removeKeywordsInItem(ArtworkMetadata *metadata, int originalIndex) {
         int flags = 0;
-        Common::SetFlag(flags, Common::EditKeywords);
-        Common::SetFlag(flags, Common::Clear);
+        Common::SetFlag(flags, Common::CombinedEditFlags::EditKeywords);
+        Common::SetFlag(flags, Common::CombinedEditFlags::Clear);
 
         std::vector<MetadataElement> items;
         items.emplace_back(metadata, originalIndex);

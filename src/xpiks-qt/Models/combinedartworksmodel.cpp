@@ -92,32 +92,36 @@ namespace Models {
 
     void CombinedArtworksModel::setChangeDescription(bool value) {
         LOG_INFO << value;
-        if (Common::HasFlag(m_EditFlags, Common::EditDesctiption) != value) {
-            Common::ApplyFlag(m_EditFlags, value, Common::EditDesctiption);
+        auto flag = Common::CombinedEditFlags::EditDesctiption;
+        if (Common::HasFlag(m_EditFlags, flag) != value) {
+            Common::ApplyFlag(m_EditFlags, value, flag);
             emit changeDescriptionChanged();
         }
     }
 
     void CombinedArtworksModel::setChangeTitle(bool value) {
         LOG_INFO << value;
-        if (Common::HasFlag(m_EditFlags, Common::EditTitle) != value) {
-            Common::ApplyFlag(m_EditFlags, value, Common::EditTitle);
+        auto flag = Common::CombinedEditFlags::EditTitle;
+        if (Common::HasFlag(m_EditFlags, flag) != value) {
+            Common::ApplyFlag(m_EditFlags, value, flag);
             emit changeTitleChanged();
         }
     }
 
     void CombinedArtworksModel::setChangeKeywords(bool value) {
         LOG_INFO << value;
-        if (Common::HasFlag(m_EditFlags, Common::EditKeywords) != value) {
-            Common::ApplyFlag(m_EditFlags, value, Common::EditKeywords);
+        auto flag = Common::CombinedEditFlags::EditKeywords;
+        if (Common::HasFlag(m_EditFlags, flag) != value) {
+            Common::ApplyFlag(m_EditFlags, value, flag);
             emit changeKeywordsChanged();
         }
     }
 
     void CombinedArtworksModel::setAppendKeywords(bool value) {
         LOG_INFO << value;
-        if (Common::HasFlag(m_EditFlags, Common::AppendKeywords) != value) {
-            Common::ApplyFlag(m_EditFlags, value, Common::AppendKeywords);
+        auto flag = Common::CombinedEditFlags::AppendKeywords;
+        if (Common::HasFlag(m_EditFlags, flag) != value) {
+            Common::ApplyFlag(m_EditFlags, value, flag);
             emit appendKeywordsChanged();
         }
     }

@@ -528,7 +528,7 @@ namespace Models {
             items.emplace_back(metadata, metadataIndex);
 
             int flags = 0;
-            Common::SetFlag(flags, Common::EditKeywords);
+            Common::SetFlag(flags, Common::CombinedEditFlags::EditKeywords);
             std::shared_ptr<Commands::CombinedEditCommand> combinedEditCommand(new Commands::CombinedEditCommand(
                     flags,
                     items,
