@@ -109,7 +109,7 @@ namespace SpellCheck {
         virtual QString toDebugString() const { return QString("KeywordReplace: %1 -> (%2)").arg(getWord()).arg(getSuggestions().join(", ")); }
 #endif
         int getOriginalIndex() const { return m_OriginalIndex; }
-        bool isPotentialDuplicate() const { return m_ReplaceResult == Common::KeywordReplaceFailedDuplicate; }
+        bool isPotentialDuplicate() const { return m_ReplaceResult == Common::KeywordReplaceResult::FailedDuplicate; }
         virtual void replaceToSuggested(ISpellCheckable *item);
 
         // TODO: fix this back in future when c++ will be normal language (see comments in base class)

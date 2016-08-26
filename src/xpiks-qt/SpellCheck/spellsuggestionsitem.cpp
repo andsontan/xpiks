@@ -138,14 +138,14 @@ namespace SpellCheck {
     KeywordSpellSuggestions::KeywordSpellSuggestions(const QString &keyword, int originalIndex, const QString &origin) :
         SpellSuggestionsItem(keyword, origin),
         m_OriginalIndex(originalIndex),
-        m_ReplaceResult(Common::KeywordReplaceUnknown)
+        m_ReplaceResult(Common::KeywordReplaceResult::Unknown)
     {
     }
 
     KeywordSpellSuggestions::KeywordSpellSuggestions(const QString &keyword, int originalIndex):
         SpellSuggestionsItem(keyword),
         m_OriginalIndex(originalIndex),
-        m_ReplaceResult(Common::KeywordReplaceUnknown)
+        m_ReplaceResult(Common::KeywordReplaceResult::Unknown)
     {
     }
 
@@ -160,7 +160,7 @@ namespace SpellCheck {
     void KeywordSpellSuggestions::replaceToSuggested(ISpellCheckable *item, const QString &word, const QString &replacement) {
         LOG_INFO << word << "-->" << replacement;
         Common::KeywordReplaceResult result = item->fixKeywordSpelling(m_OriginalIndex, word, replacement);
-        setReplacementSucceeded(result == Common::KeywordReplaceSucceeded);
+        setReplacementSucceeded(result == Common::KeywordReplaceResult::Succeeded);
         m_ReplaceResult = result;
     }
 

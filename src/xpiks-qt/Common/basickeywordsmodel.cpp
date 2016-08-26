@@ -912,18 +912,18 @@ namespace Common {
             if (0 <= index && index < m_KeywordsList.length()) {
                 if (replaceKeywordUnsafe(index, existing, replacement)) {
                     m_SpellCheckResults[index] = true;
-                    result = Common::KeywordReplaceSucceeded;
+                    result = Common::KeywordReplaceResult::Succeeded;
                 } else {
-                    result = Common::KeywordReplaceFailedDuplicate;
+                    result = Common::KeywordReplaceResult::FailedDuplicate;
                 }
             } else {
                 LOG_INFO << "Failure. Index is negative or exceeds count" << m_KeywordsList.length();
-                result = Common::KeywordReplaceFailedIndex;
+                result = Common::KeywordReplaceResult::FailedIndex;
             }
         }
         m_KeywordsLock.unlock();
 
-        if (result == Common::KeywordReplaceSucceeded) {
+        if (result == Common::KeywordReplaceResult::Succeeded) {
             QModelIndex i = this->index(index);
             // combined roles from legacy editKeyword() and replace()
             emit dataChanged(i, i, QVector<int>() << KeywordRole << IsCorrectRole);

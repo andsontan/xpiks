@@ -47,11 +47,11 @@ namespace Common {
         All = Title | Description | Keywords
     };
 
-    enum KeywordReplaceResult {
-        KeywordReplaceSucceeded = 0,
-        KeywordReplaceFailedIndex = 1,
-        KeywordReplaceFailedDuplicate = 2,
-        KeywordReplaceUnknown = 1 << 20
+    enum struct KeywordReplaceResult {
+        Succeeded = 0,
+        FailedIndex = 1,
+        FailedDuplicate = 2,
+        Unknown = 1 << 20
     };
 
     enum SearchFlags {
