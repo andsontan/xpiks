@@ -34,14 +34,14 @@ namespace UndoRedo {
     {
     public:
         AddArtworksHistoryItem(int firstIndex, int count) :
-           HistoryItem(AddArtworksActionType)
+           HistoryItem(HistoryActionType::AddArtworks)
         {
             Q_ASSERT(count > 0);
             m_AddedRanges.append(qMakePair(firstIndex, firstIndex + count - 1));
         }
 
         AddArtworksHistoryItem(const QVector<QPair<int, int> > &rangesAdded) :
-           HistoryItem(AddArtworksActionType),
+           HistoryItem(HistoryActionType::AddArtworks),
            m_AddedRanges(rangesAdded)
         {
             Q_ASSERT(!rangesAdded.empty());

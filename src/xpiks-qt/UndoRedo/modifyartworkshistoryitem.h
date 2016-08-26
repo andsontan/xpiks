@@ -43,7 +43,7 @@ namespace UndoRedo {
         ModifyArtworksHistoryItem(const std::vector<ArtworkMetadataBackup> &backups,
                                   const QVector<int> &indices,
                                   ModificationType modificationType) :
-            HistoryItem(ModifyArtworksActionType),
+            HistoryItem(HistoryActionType::ModifyArtworks),
             m_ArtworksBackups(backups),
             m_Indices(indices),
             m_ModificationType(modificationType)

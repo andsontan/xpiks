@@ -32,10 +32,10 @@ namespace Commands {
 
 namespace UndoRedo {
 
-    enum HistoryActionType {
-        AddArtworksActionType,
-        RemovedArtworksActionType,
-        ModifyArtworksActionType
+    enum struct HistoryActionType {
+        AddArtworks,
+        RemovedArtworks,
+        ModifyArtworks
     };
 
     class HistoryItem : public IHistoryItem

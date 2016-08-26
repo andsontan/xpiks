@@ -36,7 +36,7 @@ namespace UndoRedo {
         RemoveArtworksHistoryItem(const QVector<int> &removedArtworksIndices,
                                   const QStringList &removedArtworksFilepathes,
                                   const QStringList &removedAttachedVectors):
-            HistoryItem(RemovedArtworksActionType),
+            HistoryItem(HistoryActionType::RemovedArtworks),
             m_RemovedArtworksIndices(removedArtworksIndices),
             m_RemovedArtworksPathes(removedArtworksFilepathes),
             m_RemovedAttachedVectors(removedAttachedVectors)

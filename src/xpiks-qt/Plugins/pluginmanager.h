@@ -41,7 +41,7 @@ namespace Plugins {
         virtual ~PluginManager();
 
     public:
-        enum UploadInfoRepositoryRoles {
+        enum UploadInfoRepository_Roles {
             PrettyNameRole = Qt::UserRole + 1,
             VersionRole,
             AuthorRole,
