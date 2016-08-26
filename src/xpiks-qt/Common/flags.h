@@ -253,5 +253,7 @@ namespace Common {
     }
 }
 
+Q_DECLARE_METATYPE(Common::SearchFlags);
+
 #endif // FLAGS
 
