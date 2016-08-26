@@ -54,28 +54,24 @@ namespace Common {
         Unknown = 1 << 20
     };
 
-    enum SearchFlags {
-        SearchFlagCaseSensitive = 1 << 0,
-        SearchFlagSearchDescription = 1 << 1,
-        SearchFlagSearchTitle = 1 << 2,
-        SearchFlagSearchKeywords = 1 << 3,
-        SearchFlagReservedTerms = 1 << 4, // include reserved terms like "x:empty"
-        SearchFlagAllSearchTerms = 1 << 5, // all of the search terms included in the result
-        SearchFlagSearchFilepath = 1 << 6,
-        SearchFlagExactMatch = 1 << 7,
+    enum struct SearchFlags: int {
+        None = 0,
+        CaseSensitive = 1 << 0,
+        Description = 1 << 1,
+        Title = 1 << 2,
+        Keywords = 1 << 3,
+        ReservedTerms = 1 << 4, // include reserved terms like "x:empty"
+        AllTerms = 1 << 5, // all of the search terms included in the result
+        Filepath = 1 << 6,
+        ExactMatch = 1 << 7,
 
-        SearchFlagSearchMetadata = SearchFlagSearchDescription |
-            SearchFlagSearchTitle |
-            SearchFlagSearchKeywords,
+        Metadata = Description | Title | Keywords,
+        ExactKeywords = ExactMatch | Keywords,
+        MetadataCaseSensitive = Metadata | CaseSensitive,
 
-        SearchFlagExactKeywords = SearchFlagExactMatch |
-            SearchFlagSearchKeywords,
-
-        SearchFlagsSearchMetadataCaseSensitive = SearchFlagSearchMetadata | SearchFlagCaseSensitive,
-
-        SearchFlagSearchEverything = SearchFlagSearchMetadata | SearchFlagSearchFilepath | SearchFlagReservedTerms,
-        SearchFlagSearchAllTermsEverything = SearchFlagSearchEverything | SearchFlagAllSearchTerms,
-        SearchFlagSearchAnyTermsEverything = SearchFlagSearchEverything
+        Everything = Metadata | Filepath | ReservedTerms,
+        AllTermsEverything = Everything | AllTerms,
+        AnyTermsEverything = Everything
     };
 
     enum WarningType {
@@ -155,6 +151,11 @@ namespace Common {
     }
 
     template<typename FlagType>
+    void SetFlag(FlagType &value, FlagType flag) {
+        value = static_cast<FlagType>(static_cast<int>(value) | static_cast<int>(flag));
+    }
+
+    template<typename FlagType>
     void SetFlag(volatile int &value, FlagType flag) {
         value |= static_cast<int>(flag);
     }
@@ -165,12 +166,26 @@ namespace Common {
     }
 
     template<typename FlagType>
+    void UnsetFlag(FlagType &value, FlagType flag) {
+        value = static_cast<FlagType>(static_cast<int>(value) & (~(static_cast<int>(flag))));
+    }
+
+    template<typename FlagType>
     void UnsetFlag(volatile int &value, FlagType flag) {
         value &= ~(static_cast<int>(flag));
     }
 
     template<typename FlagType>
     void ApplyFlag(int &value, bool applySwitch, FlagType flag) {
+        if (applySwitch) {
+            SetFlag(value, flag);
+        } else {
+            UnsetFlag(value, flag);
+        }
+    }
+
+    template<typename FlagType>
+    void ApplyFlag(FlagType &value, bool applySwitch, FlagType flag) {
         if (applySwitch) {
             SetFlag(value, flag);
         } else {

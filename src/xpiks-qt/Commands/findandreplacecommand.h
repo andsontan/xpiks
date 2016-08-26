@@ -25,6 +25,7 @@
 #include "commandbase.h"
 #include <QString>
 #include <QVector>
+#include "../Common/flags.h"
 
 namespace Models {
     class PreviewMetadataElement;
@@ -37,7 +38,7 @@ namespace Commands {
     {
     public:
         FindAndReplaceCommand(std::vector<Models::PreviewMetadataElement> &metadataElements,
-        const QString &replaceWhat, const QString &replaceTo, int flags):
+        const QString &replaceWhat, const QString &replaceTo, Common::SearchFlags flags):
             CommandBase(FindAndReplaceCommandType),
             m_MetadataElements(std::move(metadataElements)),
             m_ReplaceWhat(replaceWhat),
@@ -54,7 +55,7 @@ namespace Commands {
         std::vector<Models::PreviewMetadataElement> m_MetadataElements;
         QString m_ReplaceWhat;
         QString m_ReplaceTo;
-        int m_Flags;
+        Common::SearchFlags m_Flags;
     };
 
     class FindAndReplaceCommandResult:

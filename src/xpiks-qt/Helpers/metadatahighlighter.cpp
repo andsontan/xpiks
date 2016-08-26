@@ -41,9 +41,9 @@ namespace Helpers {
         int pos = 0;
         const int size = m_ReplaceFrom.size();
         int flags = m_FlagsProvider->getFlags();
-        Qt::CaseSensitivity caseSensitivity = Common::HasFlag(flags, Common::SearchFlagCaseSensitive) ?
+        Qt::CaseSensitivity caseSensitivity = Common::HasFlag(flags, Common::SearchFlags::CaseSensitive) ?
                     Qt::CaseSensitive : Qt::CaseInsensitive;
-        const bool wholeWords = Common::HasFlag(flags, Common::SearchFlagExactMatch);
+        const bool wholeWords = Common::HasFlag(flags, Common::SearchFlags::ExactMatch);
 
         QColor highlighColor = m_ColorsModel->artworkModifiedColor();
         m_Format.setBackground(highlighColor);

@@ -100,7 +100,7 @@ namespace Models {
         virtual void clearModel();
         virtual bool clearKeywords();
         virtual bool editKeyword(int index, const QString &replacement);
-        virtual bool replace(const QString &replaceWhat, const QString &replaceTo, int flags);
+        virtual bool replace(const QString &replaceWhat, const QString &replaceTo, Common::SearchFlags flags);
 
     public:
         virtual bool setDescription(const QString &value) {

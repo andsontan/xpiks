@@ -51,7 +51,7 @@ namespace Models {
         virtual ~FindAndReplaceModel() {}
 
     public:
-        virtual int getFlags() const { return m_Flags; }
+        virtual int getFlags() const { return (int)m_Flags; }
         const QString &getReplaceFrom() const { return m_ReplaceFrom; }
         const QString &getReplaceTo() const { return m_ReplaceTo; }
         int getArtworksCount() const { return (int)m_ArtworksList.size(); }
@@ -76,56 +76,56 @@ namespace Models {
 
     public:
         bool getSearchInTitle() const {
-            return Common::HasFlag(m_Flags, Common::SearchFlagSearchTitle);
+            return Common::HasFlag(m_Flags, Common::SearchFlags::Title);
         }
 
         void setSearchInTitle(bool value) {
             if (value != getSearchInTitle()) {
-                Common::ApplyFlag(m_Flags, value, Common::SearchFlagSearchTitle);
+                Common::ApplyFlag(m_Flags, value, Common::SearchFlags::Title);
                 emit searchInTitleChanged(value);
             }
         }
 
         bool getSearchInDescription() const {
-            return Common::HasFlag(m_Flags, Common::SearchFlagSearchDescription);
+            return Common::HasFlag(m_Flags, Common::SearchFlags::Description);
         }
 
         void setSearchInDescription(bool value) {
             if (value != getSearchInDescription()) {
-                Common::ApplyFlag(m_Flags, value, Common::SearchFlagSearchDescription);
+                Common::ApplyFlag(m_Flags, value, Common::SearchFlags::Description);
                 emit searchInDescriptionChanged(value);
             }
         }
 
         bool getSearchInKeywords() const {
-            return Common::HasFlag(m_Flags, Common::SearchFlagSearchKeywords);
+            return Common::HasFlag(m_Flags, Common::SearchFlags::Keywords);
         }
 
         void setSearchInKeywords(bool value) {
             if (value != getSearchInKeywords()) {
-                Common::ApplyFlag(m_Flags, value, Common::SearchFlagSearchKeywords);
+                Common::ApplyFlag(m_Flags, value, Common::SearchFlags::Keywords);
                 emit searchInKeywordsChanged(value);
             }
         }
 
         bool getCaseSensitive() const {
-            return Common::HasFlag(m_Flags, Common::SearchFlagCaseSensitive);
+            return Common::HasFlag(m_Flags, Common::SearchFlags::CaseSensitive);
         }
 
         void setCaseSensitive(bool value) {
             if (value != getCaseSensitive()) {
-                Common::ApplyFlag(m_Flags, value, Common::SearchFlagCaseSensitive);
+                Common::ApplyFlag(m_Flags, value, Common::SearchFlags::CaseSensitive);
                 emit caseSensitiveChanged(value);
             }
         }
 
         bool getSearchWholeWords() const {
-            return Common::HasFlag(m_Flags, Common::SearchFlagExactMatch);
+            return Common::HasFlag(m_Flags, Common::SearchFlags::ExactMatch);
         }
 
         void setSearchWholeWords(bool value) {
             if (value != getSearchWholeWords()) {
-                Common::ApplyFlag(m_Flags, value, Common::SearchFlagExactMatch);
+                Common::ApplyFlag(m_Flags, value, Common::SearchFlags::ExactMatch);
                 emit searchWholeWordsChanged(value);
             }
         }
@@ -194,7 +194,7 @@ namespace Models {
         QString m_ReplaceFrom;
         QString m_ReplaceTo;
         QMLExtensions::ColorsModel *m_ColorsModel;
-        int m_Flags;
+        Common::SearchFlags m_Flags;
     };
 }
 #endif // FINDANDREPLACEMODEL_H

@@ -116,7 +116,7 @@ namespace Models {
         return result;
     }
 
-    bool ArtworkMetadata::replace(const QString &replaceWhat, const QString &replaceTo, int flags) {
+    bool ArtworkMetadata::replace(const QString &replaceWhat, const QString &replaceTo, Common::SearchFlags flags) {
         bool result = m_KeywordsModel.replace(replaceWhat, replaceTo, flags);
         if (result) { markModified(); }
         return result;

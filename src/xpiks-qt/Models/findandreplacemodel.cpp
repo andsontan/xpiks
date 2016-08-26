@@ -33,32 +33,32 @@
 #include "../Common/defines.h"
 #include "../Helpers/stringhelper.h"
 
-QString searchFlagsToString(int flags) {
+QString searchFlagsToString(Common::SearchFlags flags) {
     QStringList items;
     items.reserve(10);
 
-    if (Common::HasFlag(flags, Common::SearchFlagCaseSensitive)) {
-        items.append("SearchFlagCaseSensitive");
+    if (Common::HasFlag(flags, Common::SearchFlags::CaseSensitive)) {
+        items.append("CaseSensitive");
     }
 
-    if (Common::HasFlag(flags, Common::SearchFlagSearchDescription)) {
-        items.append("SearchFlagSearchDescription");
+    if (Common::HasFlag(flags, Common::SearchFlags::Description)) {
+        items.append("Description");
     }
 
-    if (Common::HasFlag(flags, Common::SearchFlagSearchTitle)) {
-        items.append("SearchFlagSearchTitle");
+    if (Common::HasFlag(flags, Common::SearchFlags::Title)) {
+        items.append("Title");
     }
 
-    if (Common::HasFlag(flags, Common::SearchFlagSearchKeywords)) {
-        items.append("SearchFlagSearchKeywords");
+    if (Common::HasFlag(flags, Common::SearchFlags::Keywords)) {
+        items.append("Keywords");
     }
 
-    if (Common::HasFlag(flags, Common::SearchFlagExactMatch)) {
-        items.append("SearchFlagExactMatch");
+    if (Common::HasFlag(flags, Common::SearchFlags::ExactMatch)) {
+        items.append("ExactMatch");
     }
 
-    if (Common::HasFlag(flags, Common::SearchFlagAllSearchTerms)) {
-        items.append("SearchFlagAllSearchTerms");
+    if (Common::HasFlag(flags, Common::SearchFlags::AllTerms)) {
+        items.append("AllTerms");
     }
 
     return items.join(" | ");
@@ -69,7 +69,7 @@ namespace Models {
         QAbstractListModel(parent),
         Common::BaseEntity(),
         m_ColorsModel(colorsModel),
-        m_Flags(0)
+        m_Flags(Common::SearchFlags::None)
     {
         Q_ASSERT(colorsModel != nullptr);
         initDefaultFlags();
@@ -87,12 +87,12 @@ namespace Models {
         for (auto &preview: m_ArtworksList) {
             Models::ArtworkMetadata *metadata = preview.getOrigin();
             bool hasMatch = false;
-            int flags = 0;
+            Common::SearchFlags flags = Common::SearchFlags::None;
 
             if (getSearchInTitle()) {
                 flags = m_Flags;
-                Common::UnsetFlag(flags, Common::SearchFlagSearchDescription);
-                Common::UnsetFlag(flags, Common::SearchFlagSearchKeywords);
+                Common::UnsetFlag(flags, Common::SearchFlags::Description);
+                Common::UnsetFlag(flags, Common::SearchFlags::Keywords);
 
                 hasMatch = Helpers::hasSearchMatch(m_ReplaceFrom, metadata, flags);
                 preview.setHasTitleMatch(hasMatch);
@@ -100,8 +100,8 @@ namespace Models {
 
             if (getSearchInDescription()) {
                 flags = m_Flags;
-                Common::UnsetFlag(flags, Common::SearchFlagSearchTitle);
-                Common::UnsetFlag(flags, Common::SearchFlagSearchKeywords);
+                Common::UnsetFlag(flags, Common::SearchFlags::Title);
+                Common::UnsetFlag(flags, Common::SearchFlags::Keywords);
 
                 hasMatch = Helpers::hasSearchMatch(m_ReplaceFrom, metadata, flags);
                 preview.setHasDescriptionMatch(hasMatch);
@@ -109,8 +109,8 @@ namespace Models {
 
             if (getSearchInKeywords()) {
                 flags = m_Flags;
-                Common::UnsetFlag(flags, Common::SearchFlagSearchDescription);
-                Common::UnsetFlag(flags, Common::SearchFlagSearchTitle);
+                Common::UnsetFlag(flags, Common::SearchFlags::Description);
+                Common::UnsetFlag(flags, Common::SearchFlags::Title);
 
                 hasMatch = Helpers::hasSearchMatch(m_ReplaceFrom, metadata, flags);
                 preview.setHasKeywordsMatch(hasMatch);
@@ -365,11 +365,11 @@ namespace Models {
     }
 
     void FindAndReplaceModel::initDefaultFlags() {
-        m_Flags = 0;
-        Common::SetFlag(m_Flags, Common::SearchFlagCaseSensitive);
-        Common::SetFlag(m_Flags, Common::SearchFlagSearchTitle);
-        Common::SetFlag(m_Flags, Common::SearchFlagSearchDescription);
-        Common::SetFlag(m_Flags, Common::SearchFlagSearchKeywords);
-        // Common::SetFlag(m_Flags, Common::SearchFlagExactMatch);
+        m_Flags = Common::SearchFlags::None;
+        Common::SetFlag(m_Flags, Common::SearchFlags::CaseSensitive);
+        Common::SetFlag(m_Flags, Common::SearchFlags::Title);
+        Common::SetFlag(m_Flags, Common::SearchFlags::Description);
+        Common::SetFlag(m_Flags, Common::SearchFlags::Keywords);
+        // Common::SetFlag(m_Flags, Common::SearchFlags::ExactMatch);
     }
 }

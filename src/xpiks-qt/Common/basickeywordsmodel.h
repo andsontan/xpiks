@@ -95,7 +95,7 @@ namespace Common {
         bool editKeyword(int index, const QString &replacement);
         bool clearKeywords();
         bool areKeywordsEmpty();
-        bool replace(const QString &replaceWhat, const QString &replaceTo, int flags);
+        bool replace(const QString &replaceWhat, const QString &replaceTo, Common::SearchFlags flags);
         bool removeKeywords(const QSet<QString> &keywords, bool caseSensitive);
 
     private:
@@ -106,7 +106,7 @@ namespace Common {
         bool editKeywordUnsafe(int index, const QString &replacement);
         bool replaceKeywordUnsafe(int index, const QString &existing, const QString &replacement);
         bool clearKeywordsUnsafe();
-        bool containsKeywordUnsafe(const QString &searchTerm, int searchFlags=Common::SearchFlagSearchKeywords);
+        bool containsKeywordUnsafe(const QString &searchTerm, Common::SearchFlags searchFlags=Common::SearchFlags::Keywords);
         bool hasKeywordsSpellErrorUnsafe() const;
         bool removeKeywordsUnsafe(const QSet<QString> &keywordsToRemove, bool caseSensitive);
 
@@ -116,11 +116,11 @@ namespace Common {
     private:
         void removeKeywordsAtIndicesUnsafe(const QVector<int> &indices);
         bool replaceInDescription(const QString &replaceWhat, const QString &replaceTo,
-                                  int flags);
+                                  Common::SearchFlags flags);
         bool replaceInTitle(const QString &replaceWhat, const QString &replaceTo,
-                            int flags);
+                            SearchFlags flags);
         bool replaceInKeywordsUnsafe(const QString &replaceWhat, const QString &replaceTo,
-                                     int flags);
+                                     Common::SearchFlags flags);
 
     public:
         bool setDescription(const QString &value);
@@ -128,7 +128,7 @@ namespace Common {
         bool isEmpty();
         bool isTitleEmpty();
         bool isDescriptionEmpty();
-        bool containsKeyword(const QString &searchTerm, int searchFlags=Common::SearchFlagExactKeywords);
+        bool containsKeyword(const QString &searchTerm, SearchFlags searchFlags);
 
         bool hasKeywordsSpellError();
         bool hasDescriptionSpellError();

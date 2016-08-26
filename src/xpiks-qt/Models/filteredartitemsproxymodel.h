@@ -25,8 +25,9 @@
 #include <QSortFilterProxyModel>
 #include <QString>
 #include <QList>
-#include "../Common/baseentity.h"
 #include <functional>
+#include "../Common/flags.h"
+#include "../Common/baseentity.h"
 
 namespace Models {
     class ArtworkMetadata;
@@ -51,8 +52,8 @@ namespace Models {
         int getSelectedArtworksCount() const { return m_SelectedArtworksCount; }
         void spellCheckAllItems();
 
-        std::vector<MetadataElement> getSearchableOriginalItems(const QString &searchTerm, int flags) const;
-        std::vector<PreviewMetadataElement> getSearchablePreviewOriginalItems(const QString &searchTerm, int flags) const;
+        std::vector<MetadataElement> getSearchableOriginalItems(const QString &searchTerm, Common::SearchFlags flags) const;
+        std::vector<PreviewMetadataElement> getSearchablePreviewOriginalItems(const QString &searchTerm, Common::SearchFlags flags) const;
 #ifdef CORE_TESTS
         int retrieveNumberOfSelectedItems();
 

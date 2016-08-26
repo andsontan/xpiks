@@ -23,6 +23,7 @@
 #define FILTERHELPERS_H
 
 #include <QString>
+#include "../Common/flags.h"
 
 namespace Models {
     class ArtworkMetadata;
@@ -30,7 +31,7 @@ namespace Models {
 
 namespace Helpers {
     bool containsPartsSearch(const QString &mainSearchTerm, Models::ArtworkMetadata *metadata, bool searchUsingAnd);
-    bool hasSearchMatch(const QString &searchTerm, Models::ArtworkMetadata *metadata, int searchFlags);
+    bool hasSearchMatch(const QString &searchTerm, Models::ArtworkMetadata *metadata, Common::SearchFlags searchFlags);
 }
 
 #endif // FILTERHELPERS_H

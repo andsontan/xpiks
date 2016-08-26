@@ -578,7 +578,7 @@ namespace Models {
 
 #endif
 
-    std::vector<MetadataElement> FilteredArtItemsProxyModel::getSearchableOriginalItems(const QString &searchTerm, int flags) const {
+    std::vector<MetadataElement> FilteredArtItemsProxyModel::getSearchableOriginalItems(const QString &searchTerm, Common::SearchFlags flags) const {
         return getFilteredOriginalItems<MetadataElement>(
                     [&searchTerm, flags](ArtworkMetadata *artwork) {
             return Helpers::hasSearchMatch(searchTerm, artwork, flags);
@@ -586,7 +586,7 @@ namespace Models {
         [] (ArtworkMetadata *metadata, int index) { return MetadataElement(metadata, index); });
     }
 
-    std::vector<PreviewMetadataElement> FilteredArtItemsProxyModel::getSearchablePreviewOriginalItems(const QString &searchTerm, int flags) const {
+    std::vector<PreviewMetadataElement> FilteredArtItemsProxyModel::getSearchablePreviewOriginalItems(const QString &searchTerm, Common::SearchFlags flags) const {
         return getFilteredOriginalItems<PreviewMetadataElement>(
                     [&searchTerm, flags](ArtworkMetadata *artwork) {
             return Helpers::hasSearchMatch(searchTerm, artwork, flags);
