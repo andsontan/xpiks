@@ -32,10 +32,10 @@
 #include "../Models/settingsmodel.h"
 #include "../Common/defines.h"
 
-QString combinedFlagsToString(int flags) {
+QString combinedFlagsToString(Common::CombinedEditFlags flags) {
     using namespace Common;
 
-    if (flags == (int)CombinedEditFlags::EditEverything) {
+    if (flags == CombinedEditFlags::EditEverything) {
         return QLatin1String("EditEverything");
     }
 
@@ -77,7 +77,7 @@ std::shared_ptr<Commands::ICommandResult> Commands::CombinedEditCommand::execute
     itemsToSave.reserve((int)size);
     affectedItems.reserve((int)size);
 
-    bool needToClear = Common::HasFlag(m_EditFlags, Common::CombinedEditFlags::Clear);
+    const bool needToClear = Common::HasFlag(m_EditFlags, Common::CombinedEditFlags::Clear);
 
     for (size_t i = 0; i < size; ++i) {
         const Models::MetadataElement &info = m_MetadataElements.at(i);

@@ -29,10 +29,10 @@ void ReplaceTests::replaceTrivialTest() {
     QString initString = "ReplaceMe";
     QString finalString = "ReplacedMe";
 
-    int flags = Common::SearchFlagCaseSensitive |
-                Common::SearchFlagSearchDescription |
-                Common::SearchFlagSearchTitle |
-                Common::SearchFlagSearchKeywords;
+    auto flags = Common::SearchFlags::CaseSensitive |
+                Common::SearchFlags::Description |
+                Common::SearchFlags::Title |
+                Common::SearchFlags::Keywords;
 
     for (int i = 0; i < itemsToGenerate; i++) {
         Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
@@ -62,10 +62,10 @@ void ReplaceTests::noReplaceTrivialTest() {
     QString initString = "ReplaceMe";
     QString finalString = "ReplaceMe";
 
-    int flags = Common::SearchFlagCaseSensitive |
-                Common::SearchFlagSearchDescription |
-                Common::SearchFlagSearchTitle |
-                Common::SearchFlagSearchKeywords;
+    auto flags = Common::SearchFlags::CaseSensitive |
+                Common::SearchFlags::Description |
+                Common::SearchFlags::Title |
+                Common::SearchFlags::Keywords;
 
     for (int i = 0; i < itemsToGenerate; i++) {
         Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
@@ -95,9 +95,9 @@ void ReplaceTests::caseSensitiveTest() {
     QString initString = "ReplaceMe";
     QString finalString = "ReplacedMe";
 
-    int flags = Common::SearchFlagSearchDescription |
-            Common::SearchFlagSearchTitle |
-            Common::SearchFlagSearchKeywords;
+    auto flags = Common::SearchFlags::Description |
+            Common::SearchFlags::Title |
+            Common::SearchFlags::Keywords;
 
     for (int i = 0; i < itemsToGenerate; i++) {
         Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
@@ -127,7 +127,7 @@ void ReplaceTests::replaceTitleTest() {
     QString initString = "ReplaceMe";
     QString finalString = "ReplacedMe";
 
-    int flags = Common::SearchFlagCaseSensitive | Common::SearchFlagSearchTitle;
+    auto flags = Common::SearchFlags::CaseSensitive | Common::SearchFlags::Title;
 
     for (int i = 0; i < itemsToGenerate; i++) {
         Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
@@ -156,10 +156,10 @@ void ReplaceTests::replaceKeywordsTest() {
     QString replaceTo = "keywordNew";
     QString replaceToLower = replaceTo.toLower();
 
-    int flags = Common::SearchFlagCaseSensitive |
-                Common::SearchFlagSearchDescription |
-                Common::SearchFlagSearchTitle |
-                Common::SearchFlagSearchKeywords;
+    auto flags = Common::SearchFlags::CaseSensitive |
+                Common::SearchFlags::Description |
+                Common::SearchFlags::Title |
+                Common::SearchFlags::Keywords;
 
     for (int i = 0; i < itemsToGenerate; i++) {
         Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);

@@ -66,7 +66,7 @@ void ArtworkFilterTests::caseSensitiveKeywordSearchTest() {
     Mocks::ArtworkMetadataMock metadata("/path/to/file.jpg");
     metadata.setKeywords(QStringList() << "keYwOrd" << "keYword");
 
-    int flags = Common::SearchFlagSearchKeywords | Common::SearchFlagCaseSensitive;
+    auto flags = Common::SearchFlags::Keywords | Common::SearchFlags::CaseSensitive;
 
     QVERIFY(Helpers::hasSearchMatch("YwO", &metadata, flags));
     QVERIFY(!Helpers::hasSearchMatch("ywO", &metadata, flags));
@@ -77,10 +77,10 @@ void ArtworkFilterTests::cantFindWithFilterDescriptionTest() {
     metadata.setDescription("token between here");
     metadata.setKeywords(QStringList() << "some keyword" << "another stuff");
 
-    int flags = Common::SearchFlagSearchKeywords | Common::SearchFlagSearchTitle;
+    auto flags = Common::SearchFlags::Keywords | Common::SearchFlags::Title;
 
     QVERIFY(!Helpers::hasSearchMatch("between", &metadata, flags));
-    QVERIFY(Helpers::hasSearchMatch("between", &metadata, flags | Common::SearchFlagSearchDescription));
+    QVERIFY(Helpers::hasSearchMatch("between", &metadata, flags | Common::SearchFlags::Description));
 }
 
 void ArtworkFilterTests::cantFindWithFilterTitleTest() {
@@ -88,10 +88,10 @@ void ArtworkFilterTests::cantFindWithFilterTitleTest() {
     metadata.setTitle("token between here");
     metadata.setKeywords(QStringList() << "some keyword" << "another stuff");
 
-    int flags = Common::SearchFlagSearchDescription | Common::SearchFlagSearchKeywords;
+    auto flags = Common::SearchFlags::Description | Common::SearchFlags::Keywords;
 
     QVERIFY(!Helpers::hasSearchMatch("between", &metadata, flags));
-    QVERIFY(Helpers::hasSearchMatch("between", &metadata, flags | Common::SearchFlagSearchTitle));
+    QVERIFY(Helpers::hasSearchMatch("between", &metadata, flags | Common::SearchFlags::Title));
 }
 
 void ArtworkFilterTests::cantFindWithFilterKeywordsTest() {
@@ -100,10 +100,10 @@ void ArtworkFilterTests::cantFindWithFilterKeywordsTest() {
     metadata.setTitle("token between here");
     metadata.setKeywords(QStringList() << "some keyword" << "another stuff");
 
-    int flags = Common::SearchFlagSearchDescription | Common::SearchFlagSearchTitle;
+    auto flags = Common::SearchFlags::Description | Common::SearchFlags::Title;
 
     QVERIFY(!Helpers::hasSearchMatch("stuff", &metadata, flags));
-    QVERIFY(Helpers::hasSearchMatch("stuff", &metadata, flags | Common::SearchFlagSearchKeywords));
+    QVERIFY(Helpers::hasSearchMatch("stuff", &metadata, flags | Common::SearchFlags::Keywords));
 }
 
 void ArtworkFilterTests::cantFindWithFilterSpecialTest() {
@@ -112,8 +112,8 @@ void ArtworkFilterTests::cantFindWithFilterSpecialTest() {
     metadata.setTitle("token between here");
     metadata.setKeywords(QStringList() << "some keyword" << "another stuff");
 
-    int flags = Common::SearchFlagSearchDescription | Common::SearchFlagSearchTitle | Common::SearchFlagSearchKeywords;
+    auto flags = Common::SearchFlags::Description | Common::SearchFlags::Title | Common::SearchFlags::Keywords;
 
     QVERIFY(!Helpers::hasSearchMatch("x:modified", &metadata, flags));
-    QVERIFY(Helpers::hasSearchMatch("x:modified", &metadata, flags | Common::SearchFlagReservedTerms));
+    QVERIFY(Helpers::hasSearchMatch("x:modified", &metadata, flags | Common::SearchFlags::ReservedTerms));
 }

@@ -35,7 +35,7 @@ namespace Models {
     CombinedArtworksModel::CombinedArtworksModel(QObject *parent):
         ArtworksViewModel(parent),
         m_CommonKeywordsModel(m_HoldPlaceholder, this),
-        m_EditFlags(0),
+        m_EditFlags(Common::CombinedEditFlags::None),
         m_ModifiedFlags(0) {
         m_CommonKeywordsModel.setSpellCheckInfo(&m_SpellCheckInfo);
 
@@ -191,7 +191,7 @@ namespace Models {
     }
 
     void CombinedArtworksModel::saveEdits() {
-        LOG_INFO << "edit flags:" << m_EditFlags << "modified flags:" << m_ModifiedFlags;
+        LOG_INFO << "edit flags:" << (int)m_EditFlags << "modified flags:" << m_ModifiedFlags;
         bool needToSave = false;
 
         if (getChangeTitle() ||
@@ -409,7 +409,7 @@ namespace Models {
 
         // TEMPORARY (enable everything on initial launch) --
         m_ModifiedFlags = 0;
-        m_EditFlags = 0;
+        m_EditFlags = Common::CombinedEditFlags::None;
         enableAllFields();
         // TEMPORARY (enable everything on initial launch) --
 

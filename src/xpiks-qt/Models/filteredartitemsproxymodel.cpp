@@ -219,7 +219,7 @@ namespace Models {
     void FilteredArtItemsProxyModel::removeMetadataInSelected() const {
         LOG_DEBUG << "#";
         auto selectedArtworks = getSelectedOriginalItemsWithIndices();
-        int flags = 0;
+        Common::CombinedEditFlags flags = Common::CombinedEditFlags::None;
         using namespace Common;
         Common::SetFlag(flags, CombinedEditFlags::EditDesctiption);
         Common::SetFlag(flags, CombinedEditFlags::EditKeywords);
@@ -370,8 +370,8 @@ namespace Models {
         }
     }
 
-    void FilteredArtItemsProxyModel::removeMetadataInItems(std::vector<MetadataElement> &itemsToClear, int flags) const {
-        LOG_INFO << itemsToClear.size() << "item(s) with flags =" << flags;
+    void FilteredArtItemsProxyModel::removeMetadataInItems(std::vector<MetadataElement> &itemsToClear, Common::CombinedEditFlags flags) const {
+        LOG_INFO << itemsToClear.size() << "item(s) with flags =" << (int)flags;
         std::shared_ptr<Commands::CombinedEditCommand> combinedEditCommand(new Commands::CombinedEditCommand(
                 flags,
                 itemsToClear));
@@ -380,7 +380,7 @@ namespace Models {
     }
 
     void FilteredArtItemsProxyModel::removeKeywordsInItem(ArtworkMetadata *metadata, int originalIndex) {
-        int flags = 0;
+        Common::CombinedEditFlags flags = Common::CombinedEditFlags::None;
         Common::SetFlag(flags, Common::CombinedEditFlags::EditKeywords);
         Common::SetFlag(flags, Common::CombinedEditFlags::Clear);
 

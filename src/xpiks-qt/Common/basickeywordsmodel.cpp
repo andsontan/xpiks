@@ -648,7 +648,6 @@ namespace Common {
 
     bool BasicKeywordsModel::containsKeyword(const QString &searchTerm, Common::SearchFlags searchFlags) {
         QReadLocker readLocker(&m_KeywordsLock);
-
         Q_UNUSED(readLocker);
 
         return containsKeywordUnsafe(searchTerm, searchFlags);

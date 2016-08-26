@@ -215,7 +215,7 @@ void BasicKeywordsModelTests::containsKeywordStrictTest() {
     keywords << "something_keyword1" << "keyword2" << "keyword3";
     basicModel.appendKeywords(keywords);
 
-    int flags = Common::SearchFlagExactMatch;
+    Common::SearchFlags flags = Common::SearchFlags::ExactMatch;
     QVERIFY(basicModel.containsKeyword("keyword1", flags) == false);
     QVERIFY(basicModel.containsKeyword("keyword2", flags) == true);
     QVERIFY(basicModel.containsKeyword("kEyworD3", flags) == false);
@@ -228,10 +228,10 @@ void BasicKeywordsModelTests::containsKeywordFuzzyTest() {
     keywords << "something_keyword1" << "keyword2" << "KeyworD3";
     basicModel.appendKeywords(keywords);
 
-    bool fuzzyMatch = false;
-    QVERIFY(basicModel.containsKeyword("keyword1", fuzzyMatch) == true);
-    QVERIFY(basicModel.containsKeyword("keyword2", fuzzyMatch) == true);
-    QVERIFY(basicModel.containsKeyword("keyword3", fuzzyMatch) == true);
+    Common::SearchFlags notFuzzyMatchFlags = Common::SearchFlags::ExactKeywords;
+    QVERIFY(basicModel.containsKeyword("keyword1", notFuzzyMatchFlags) == true);
+    QVERIFY(basicModel.containsKeyword("keyword2", notFuzzyMatchFlags) == true);
+    QVERIFY(basicModel.containsKeyword("keyword3", notFuzzyMatchFlags) == true);
 }
 
 void BasicKeywordsModelTests::doesNotContainKeywordTest() {
@@ -241,10 +241,12 @@ void BasicKeywordsModelTests::doesNotContainKeywordTest() {
     keywords << "keyword1" << "keyword2" << "keyword3";
     basicModel.appendKeywords(keywords);
 
-    QVERIFY(basicModel.containsKeyword("keyword4", true) == false);
-    QVERIFY(basicModel.containsKeyword("keyword4", false) == false);
-    QVERIFY(basicModel.containsKeyword("keyword11", true) == false);
-    QVERIFY(basicModel.containsKeyword("keyword11", false) == false);
+    auto notFuzzyMatchFlags = Common::SearchFlags::ExactKeywords;
+    auto fuzzyMatchFlags = Common::SearchFlags::Keywords;
+    QVERIFY(basicModel.containsKeyword("keyword4", fuzzyMatchFlags) == false);
+    QVERIFY(basicModel.containsKeyword("keyword4", notFuzzyMatchFlags) == false);
+    QVERIFY(basicModel.containsKeyword("keyword11", fuzzyMatchFlags) == false);
+    QVERIFY(basicModel.containsKeyword("keyword11", notFuzzyMatchFlags) == false);
 }
 
 void BasicKeywordsModelTests::setSameTitleTest() {
@@ -350,7 +352,7 @@ void BasicKeywordsModelTests::simpleReplaceTest() {
     basicModel.setDescription(originalDescription);
     basicModel.appendKeywords(originalKeywords);
 
-    int flags = Common::SearchFlagSearchMetadata;
+    Common::SearchFlags flags = Common::SearchFlags::Metadata;
 
     bool replaceSucceeded = basicModel.replace("Test", "Replaced", flags);
     QVERIFY(replaceSucceeded);
@@ -373,7 +375,7 @@ void BasicKeywordsModelTests::descriptionReplaceTest() {
     basicModel.setDescription(originalDescription);
     basicModel.appendKeywords(originalKeywords);
 
-    int flags = Common::SearchFlagSearchDescription;
+    Common::SearchFlags flags = Common::SearchFlags::Description;
 
     bool replaceSucceeded = basicModel.replace("Test", "Replaced", flags);
     QVERIFY(replaceSucceeded);
@@ -396,7 +398,7 @@ void BasicKeywordsModelTests::titleReplaceTest() {
     basicModel.setDescription(originalDescription);
     basicModel.appendKeywords(originalKeywords);
 
-    int flags = Common::SearchFlagSearchTitle;
+    Common::SearchFlags flags = Common::SearchFlags::Title;
 
     bool replaceSucceeded = basicModel.replace("Test", "Replaced", flags);
     QVERIFY(replaceSucceeded);
@@ -419,7 +421,7 @@ void BasicKeywordsModelTests::keywordsReplaceTest() {
     basicModel.setDescription(originalDescription);
     basicModel.appendKeywords(originalKeywords);
 
-    int flags = Common::SearchFlagSearchKeywords;
+    Common::SearchFlags flags = Common::SearchFlags::Keywords;
 
     bool replaceSucceeded = basicModel.replace("Test", "Replaced", flags);
     QVERIFY(replaceSucceeded);
@@ -442,7 +444,7 @@ void BasicKeywordsModelTests::noReplaceCaseSensitiveTest() {
     basicModel.setDescription(originalDescription);
     basicModel.appendKeywords(originalKeywords);
 
-    int flags = Common::SearchFlagSearchMetadata | Common::SearchFlagCaseSensitive;
+    Common::SearchFlags flags = Common::SearchFlags::MetadataCaseSensitive;
 
     bool replaceSucceeded = basicModel.replace("test", "Replaced", flags);
     QVERIFY(!replaceSucceeded);
@@ -460,7 +462,7 @@ void BasicKeywordsModelTests::replaceCaseSensitiveTest() {
     basicModel.setDescription(originalDescription);
     basicModel.appendKeywords(originalKeywords);
 
-    int flags = Common::SearchFlagSearchMetadata | Common::SearchFlagCaseSensitive;
+    auto flags = Common::SearchFlags::MetadataCaseSensitive;
 
     bool replaceSucceeded = basicModel.replace("test", "Replaced", flags);
     QVERIFY(replaceSucceeded);
@@ -482,7 +484,7 @@ void BasicKeywordsModelTests::replaceWholeWordsTest() {
     basicModel.setDescription(originalDescription);
     basicModel.appendKeywords(originalKeywords);
 
-    int flags = Common::SearchFlagSearchMetadata | Common::SearchFlagExactMatch;
+    auto flags = Common::SearchFlags::Metadata | Common::SearchFlags::ExactMatch;
 
     bool replaceSucceeded = basicModel.replace("test", "Replaced", flags);
     QVERIFY(replaceSucceeded);
@@ -505,7 +507,7 @@ void BasicKeywordsModelTests::replaceKeywordsWithRemoveTest() {
     basicModel.setDescription(originalDescription);
     basicModel.appendKeywords(originalKeywords);
 
-    int flags = Common::SearchFlagSearchMetadata;
+    auto flags = Common::SearchFlags::Metadata;
 
     bool replaceSucceeded = basicModel.replace("Test", "Replaced", flags);
     QVERIFY(replaceSucceeded);

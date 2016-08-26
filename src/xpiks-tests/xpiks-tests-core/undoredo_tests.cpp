@@ -167,7 +167,7 @@ void UndoRedoTests::undoModifyCommandTest() {
 
     artItemsMock.getArtwork(0)->setModified();
 
-    int flags = Common::EditEverything;
+    auto flags = Common::CombinedEditFlags::EditEverything;
     QString otherDescription = "brand new description";
     QString otherTitle = "other title";
     QStringList otherKeywords = QString("another,keywords,here").split(',');
@@ -212,7 +212,7 @@ void UndoRedoTests::undoUndoModifyCommandTest() {
 
     artItemsMock.getArtwork(0)->setModified();
 
-    int flags = Common::EditEverything;
+    auto flags = Common::CombinedEditFlags::EditEverything;
     QString otherDescription = "brand new description";
     QString otherTitle = "other title";
     QStringList otherKeywords = QString("another,keywords,here").split(',');
@@ -291,7 +291,7 @@ void UndoRedoTests::undoClearAllTest() {
         infos.emplace_back(artItemsMock.getArtwork(i), i);
     }
 
-    int flags = Common::Clear | Common::EditEverything;
+    auto flags = Common::CombinedEditFlags::Clear | Common::CombinedEditFlags::EditEverything;
 
     std::shared_ptr<Commands::CombinedEditCommand> combinedEditCommand(new Commands::CombinedEditCommand(flags, infos, "", "", QStringList()));
     auto result = commandManagerMock.processCommand(combinedEditCommand);
@@ -334,7 +334,7 @@ void UndoRedoTests::undoClearKeywordsTest() {
         infos.emplace_back(artItemsMock.getArtwork(i), i);
     }
 
-    int flags = Common::Clear | Common::EditKeywords;
+    auto flags = Common::CombinedEditFlags::Clear | Common::CombinedEditFlags::EditKeywords;
 
     std::shared_ptr<Commands::CombinedEditCommand> combinedEditCommand(new Commands::CombinedEditCommand(flags, infos, "", "", QStringList()));
     auto result = commandManagerMock.processCommand(combinedEditCommand);
@@ -379,8 +379,8 @@ void UndoRedoTests::undoReplaceCommandTest() {
 
     QString replaceTo = "Replaced";
     QString replaceFrom = "Replace";
-    int flags = Common::SearchFlagCaseSensitive |Common::SearchFlagSearchDescription |
-                Common::SearchFlagSearchTitle | Common::SearchFlagSearchKeywords;
+    auto flags = Common::SearchFlags::CaseSensitive |Common::SearchFlags::Description |
+                Common::SearchFlags::Title | Common::SearchFlags::Keywords;
     std::vector<Models::PreviewMetadataElement> artWorksInfo = filteredItemsModel.getSearchablePreviewOriginalItems(replaceFrom, flags);
     std::shared_ptr<Commands::FindAndReplaceCommand> replaceCommand(new Commands::FindAndReplaceCommand(artWorksInfo, replaceFrom, replaceTo, flags) );
     auto result = commandManagerMock.processCommand(replaceCommand);

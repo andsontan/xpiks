@@ -107,7 +107,7 @@ namespace Models {
         void allItemsSelectedChanged();
 
     private:
-        void removeMetadataInItems(std::vector<MetadataElement> &itemsToClear, int flags) const;
+        void removeMetadataInItems(std::vector<MetadataElement> &itemsToClear, Common::CombinedEditFlags flags) const;
         void removeKeywordsInItem(ArtworkMetadata *metadata, int originalIndex);
         void setFilteredItemsSelected(bool selected);
         void invertFilteredItemsSelected();

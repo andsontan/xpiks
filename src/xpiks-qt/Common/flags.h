@@ -46,6 +46,7 @@ namespace Common {
     }
 
     enum struct CombinedEditFlags: int {
+        None = 0,
         EditTitle = 1 << 0,
         EditDesctiption = 1 << 1,
         EditKeywords = 1 << 2,
@@ -96,6 +97,18 @@ namespace Common {
         AnyTermsEverything = Everything
     };
 
+#ifdef CORE_TESTS
+    template<>
+    struct enable_bitmask_operators<SearchFlags> {
+        static constexpr bool enable = true;
+    };
+
+    template<>
+    struct enable_bitmask_operators<CombinedEditFlags> {
+        static constexpr bool enable = true;
+    };
+#endif
+
     enum struct WarningFlags: int {
         None = 0,
         SizeLessThanMinimum = 1 << 0,
@@ -143,7 +156,7 @@ namespace Common {
     };
 
     template<>
-    struct enable_bitmask_operators<WarningFlags>{
+    struct enable_bitmask_operators<WarningFlags> {
         static constexpr bool enable = true;
     };
 

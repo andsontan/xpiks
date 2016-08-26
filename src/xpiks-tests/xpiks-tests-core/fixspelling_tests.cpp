@@ -25,7 +25,7 @@ void FixSpellingTests::fixKeywordsSmokeTest() {
 
     basicModel.initialize("title", "description", "keyword1, keyword2");
     basicModel.getSpellCheckResults()[0] = false;
-    suggestionModel.setupModel(&basicModel, 0, Common::CorrectAll);
+    suggestionModel.setupModel(&basicModel, 0, Common::SuggestionFlags::All);
 
     SpellCheck::SpellSuggestionsItem *suggestionItem = suggestionModel.getItem(0);
     QString itemToReplace = "item1";
@@ -46,7 +46,7 @@ void FixSpellingTests::noReplacementsSelectedTest() {
     basicModel.initialize("title", "description", "keyword1, keyword2");
     basicModel.getSpellCheckResults()[0] = false;
 
-    suggestionModel.setupModel(&basicModel, 0, Common::CorrectAll);
+    suggestionModel.setupModel(&basicModel, 0, Common::SuggestionFlags::All);
 
     suggestionModel.submitCorrections();
 
@@ -63,7 +63,7 @@ void FixSpellingTests::fixAndRemoveDuplicatesTest() {
     basicModel.getSpellCheckResults()[0] = false;
     basicModel.getSpellCheckResults()[1] = false;
 
-    suggestionModel.setupModel(&basicModel, 0, Common::CorrectAll);
+    suggestionModel.setupModel(&basicModel, 0, Common::SuggestionFlags::All);
 
     QCOMPARE(basicModel.getKeywordsCount(), 2);
 
@@ -89,7 +89,7 @@ void FixSpellingTests::fixAndRemoveDuplicatesCombinedTest() {
     basicModel.getSpellCheckResults()[0] = false;
     basicModel.getSpellCheckResults()[2] = false;
 
-    suggestionModel.setupModel(&basicModel, 0, Common::CorrectKeywords);
+    suggestionModel.setupModel(&basicModel, 0, Common::SuggestionFlags::Keywords);
 
     QCOMPARE(basicModel.getKeywordsCount(), 3);
     qDebug() << basicModel.getKeywords();
@@ -119,7 +119,7 @@ void FixSpellingTests::multiReplaceWithCorrectAllTest() {
     spellCheckInfo.setDescriptionErrors(QSet<QString>() << "wordtoreplace");
     spellCheckInfo.setTitleErrors(QSet<QString>() << "wordtoreplace");
 
-    suggestionModel.setupModel(&basicModel, 0, Common::CorrectAll);
+    suggestionModel.setupModel(&basicModel, 0, Common::SuggestionFlags::All);
 
     QCOMPARE(suggestionModel.rowCount(), 3);
     for (int i = 0; i < suggestionModel.rowCount(); ++i) {
@@ -150,7 +150,7 @@ void FixSpellingTests::replaceWithCorrectDescriptionTest() {
     spellCheckInfo.setDescriptionErrors(QSet<QString>() << "wordtoreplace");
     spellCheckInfo.setTitleErrors(QSet<QString>() << "wordtoreplace");
 
-    suggestionModel.setupModel(&basicModel, 0, Common::CorrectDescription);
+    suggestionModel.setupModel(&basicModel, 0, Common::SuggestionFlags::Description);
 
     QCOMPARE(suggestionModel.rowCount(), 1);
     SpellCheck::SpellSuggestionsItem *suggestionItem = suggestionModel.getItem(0);
@@ -176,7 +176,7 @@ void FixSpellingTests::replaceWithCorrectTitleTest() {
     spellCheckInfo.setDescriptionErrors(QSet<QString>() << "wordtoreplace");
     spellCheckInfo.setTitleErrors(QSet<QString>() << "wordtoreplace");
 
-    suggestionModel.setupModel(&basicModel, 0, Common::CorrectTitle);
+    suggestionModel.setupModel(&basicModel, 0, Common::SuggestionFlags::Title);
 
     QCOMPARE(suggestionModel.rowCount(), 1);
     SpellCheck::SpellSuggestionsItem *suggestionItem = suggestionModel.getItem(0);
@@ -202,7 +202,7 @@ void FixSpellingTests::replaceWithCorrectKeywordsTest() {
     spellCheckInfo.setDescriptionErrors(QSet<QString>() << "wordtoreplace");
     spellCheckInfo.setTitleErrors(QSet<QString>() << "wordtoreplace");
 
-    suggestionModel.setupModel(&basicModel, 0, Common::CorrectKeywords);
+    suggestionModel.setupModel(&basicModel, 0, Common::SuggestionFlags::Keywords);
 
     QCOMPARE(suggestionModel.rowCount(), 3);
     for (int i = 0; i < suggestionModel.rowCount(); ++i) {

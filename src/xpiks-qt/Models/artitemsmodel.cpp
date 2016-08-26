@@ -271,7 +271,7 @@ namespace Models {
     void ArtItemsModel::suggestCorrections(int metadataIndex) {
         if (0 <= metadataIndex && metadataIndex < getArtworksCount()) {
             using namespace Common;
-            int flags = 0;
+            auto flags = 0;
             Common::SetFlag(flags, SuggestionFlags::Description);
             Common::SetFlag(flags, SuggestionFlags::Title);
             Common::SetFlag(flags, SuggestionFlags::Keywords);
@@ -528,7 +528,7 @@ namespace Models {
             std::vector<MetadataElement> items;
             items.emplace_back(metadata, metadataIndex);
 
-            int flags = 0;
+            Common::CombinedEditFlags flags = Common::CombinedEditFlags::None;
             Common::SetFlag(flags, Common::CombinedEditFlags::EditKeywords);
             std::shared_ptr<Commands::CombinedEditCommand> combinedEditCommand(new Commands::CombinedEditCommand(
                     flags,

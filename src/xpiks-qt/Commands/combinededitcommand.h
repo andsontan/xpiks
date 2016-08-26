@@ -28,6 +28,7 @@
 #include <QVector>
 #include "commandbase.h"
 #include "../Models/metadataelement.h"
+#include "../Common/flags.h"
 
 namespace Models {
     class ArtworkMetadata;
@@ -38,7 +39,7 @@ namespace Commands {
     class CombinedEditCommand: public CommandBase
     {
     public:
-        CombinedEditCommand(int editFlags,
+        CombinedEditCommand(Common::CombinedEditFlags editFlags,
                             std::vector<Models::MetadataElement> &infos,
                             const QString &description, const QString &title,
                             const QStringList &keywords) :
@@ -50,7 +51,7 @@ namespace Commands {
             m_EditFlags(editFlags)
         { }
 
-        CombinedEditCommand(int editFlags,
+        CombinedEditCommand(Common::CombinedEditFlags editFlags,
                             std::vector<Models::MetadataElement> &infos) :
             CommandBase(CombinedEditCommandType),
             m_MetadataElements(std::move(infos)),
@@ -72,7 +73,7 @@ namespace Commands {
         QString m_ArtworkDescription;
         QString m_ArtworkTitle;
         QStringList m_Keywords;
-        int m_EditFlags;
+        Common::CombinedEditFlags m_EditFlags;
     };
 
     class CombinedEditCommandResult : public CommandResult {

@@ -201,7 +201,7 @@ namespace Models {
         Common::Hold m_HoldPlaceholder;
         Common::BasicKeywordsModel m_CommonKeywordsModel;
         SpellCheck::SpellCheckItemInfo m_SpellCheckInfo;
-        int m_EditFlags;
+        Common::CombinedEditFlags m_EditFlags;
         int m_ModifiedFlags;
     };
 }
