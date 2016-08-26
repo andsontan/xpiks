@@ -41,7 +41,7 @@ namespace Models {
         virtual ~ArtworksRepository() {}
 
     public:
-        enum ArtworksDirectoriesRoles {
+        enum ArtworksRepository_Roles {
             PathRole = Qt::UserRole + 1,
             UsedImagesCountRole,
             IsSelectedRole

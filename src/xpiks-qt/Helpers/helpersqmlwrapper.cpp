@@ -90,7 +90,7 @@ namespace Helpers {
     }
 
     void Helpers::HelpersQmlWrapper::reportOpen() {
-        m_CommandManager->reportUserAction(Conectivity::UserActionOpen);
+        m_CommandManager->reportUserAction(Conectivity::UserAction::Open);
     }
 
     void Helpers::HelpersQmlWrapper::cleanupLocalLibrary() const {

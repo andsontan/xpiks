@@ -43,7 +43,7 @@ namespace Commands {
                             std::vector<Models::MetadataElement> &infos,
                             const QString &description, const QString &title,
                             const QStringList &keywords) :
-            CommandBase(CombinedEditCommandType),
+            CommandBase(CommandType::CombinedEdit),
             m_MetadataElements(std::move(infos)),
             m_ArtworkDescription(description),
             m_ArtworkTitle(title),
@@ -53,7 +53,7 @@ namespace Commands {
 
         CombinedEditCommand(Common::CombinedEditFlags editFlags,
                             std::vector<Models::MetadataElement> &infos) :
-            CommandBase(CombinedEditCommandType),
+            CommandBase(CommandType::CombinedEdit),
             m_MetadataElements(std::move(infos)),
             m_EditFlags(editFlags)
         { }

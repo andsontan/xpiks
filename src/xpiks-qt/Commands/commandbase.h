@@ -26,13 +26,13 @@
 
 namespace Commands {
 
-    enum CommandType {
-        AddArtworksCommandType = 0,
-        RemoveArtworksCommandType = 1,
-        CombinedEditCommandType = 2,
-        PasteKeywordsCommandType = 3,
-        FindAndReplaceCommandType = 4,
-        DeleteKeywordsCommandType = 5
+    enum struct CommandType {
+        AddArtworks = 0,
+        RemoveArtworks = 1,
+        CombinedEdit = 2,
+        PasteKeywords = 3,
+        FindAndReplace = 4,
+        DeleteKeywords = 5
     };
 
     class CommandResult;

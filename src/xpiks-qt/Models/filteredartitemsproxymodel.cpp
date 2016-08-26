@@ -63,7 +63,7 @@ namespace Models {
         LOG_DEBUG << "#";
         QVector<ArtworkMetadata *> allArtworks = getAllOriginalItems();
         m_CommandManager->submitForSpellCheck(allArtworks);
-        m_CommandManager->reportUserAction(Conectivity::UserActionSpellCheck);
+        m_CommandManager->reportUserAction(Conectivity::UserAction::SpellCheck);
     }
 
     int FilteredArtItemsProxyModel::getOriginalIndex(int index) {
@@ -165,7 +165,7 @@ namespace Models {
         LOG_DEBUG << "#";
         QVector<ArtworkMetadata *> selectedArtworks = getSelectedOriginalItems();
         m_CommandManager->submitForSpellCheck(selectedArtworks);
-        m_CommandManager->reportUserAction(Conectivity::UserActionSpellCheck);
+        m_CommandManager->reportUserAction(Conectivity::UserAction::SpellCheck);
     }
 
     int FilteredArtItemsProxyModel::getModifiedSelectedCount(bool overwriteAll) const {

@@ -27,7 +27,7 @@
 namespace Commands {
     DeleteKeywordsCommand::DeleteKeywordsCommand(std::vector<Models::MetadataElement> &infos,
                                                  const QSet<QString> &keywordsSet, bool caseSensitive):
-        CommandBase(DeleteKeywordsCommandType),
+        CommandBase(CommandType::DeleteKeywords),
         m_MetadataElements(std::move(infos)),
         m_KeywordsSet(keywordsSet),
         m_CaseSensitive(caseSensitive)

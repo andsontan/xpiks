@@ -38,7 +38,7 @@ namespace Commands {
     public:
         PasteKeywordsCommand(std::vector<Models::MetadataElement> &metadataElements,
                              const QStringList &keywords) :
-            CommandBase(PasteKeywordsCommandType),
+            CommandBase(CommandType::PasteKeywords),
             m_MetadataElements(std::move(metadataElements)),
             m_KeywordsList(keywords)
         {}

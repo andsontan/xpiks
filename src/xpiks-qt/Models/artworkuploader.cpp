@@ -200,7 +200,7 @@ namespace Models {
         uploadInfoRepository->updatePercentages();
 
         m_FtpCoordinator->uploadArtworks(artworkList, selectedInfos);
-        m_CommandManager->reportUserAction(Conectivity::UserActionUpload);
+        m_CommandManager->reportUserAction(Conectivity::UserAction::Upload);
     }
 
 #endif

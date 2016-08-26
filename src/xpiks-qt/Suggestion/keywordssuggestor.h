@@ -118,7 +118,7 @@ namespace Suggestion {
         }
 
     public:
-        enum KeywordsSuggestorRoles {
+        enum KeywordsSuggestor_Roles {
             UrlRole = Qt::UserRole + 1,
             IsSelectedRole
         };

@@ -131,7 +131,7 @@ namespace Models {
         }
 
     public:
-        enum FindAndReplaceModelRoles {
+        enum FindAndReplaceModel_Roles {
             PathRole = Qt::UserRole + 1,
             IsSelectedRole,
             EditIsSelectedRole,

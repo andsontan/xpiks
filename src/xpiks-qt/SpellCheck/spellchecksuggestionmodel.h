@@ -51,7 +51,7 @@ namespace SpellCheck {
         virtual ~SpellCheckSuggestionModel();
 
     public:
-        enum KeywordSpellSuggestionsRoles {
+        enum KeywordSpellSuggestions_Roles {
             WordRole = Qt::UserRole + 1,
             ReplacementIndexRole,
             ReplacementOriginRole

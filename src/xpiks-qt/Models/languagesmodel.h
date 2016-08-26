@@ -40,7 +40,7 @@ namespace Models {
         LanguagesModel(QObject *parent=0);
 
     public:
-        enum LanguagesModelRoles {
+        enum LanguagesModel_Roles {
             IsCurrentRole = Qt::UserRole + 1
         };
 

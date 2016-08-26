@@ -61,7 +61,7 @@ namespace Models {
         virtual ~ArtItemsModel();
 
     public:
-        enum ArtItemsRoles {
+        enum ArtItemsModel_Roles {
             ArtworkDescriptionRole = Qt::UserRole + 1,
             EditArtworkDescriptionRole,
             ArtworkFilenameRole,

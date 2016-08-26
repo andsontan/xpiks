@@ -56,7 +56,7 @@ namespace Common {
         virtual ~BasicKeywordsModel() {}
 
     public:
-        enum BasicKeywordsModellRoles {
+        enum BasicKeywordsModel_Roles {
             KeywordRole = Qt::UserRole + 1,
             IsCorrectRole
         };

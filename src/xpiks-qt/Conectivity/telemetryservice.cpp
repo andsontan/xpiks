@@ -99,7 +99,7 @@ namespace Conectivity {
                 startReporting();
             } else {
                 LOG_DEBUG << "Telemetry disabled";
-                reportAction(UserActionTurnOffTelemetry);
+                reportAction(UserAction::TurnOffTelemetry);
                 stopReporting(false);
             }
         }
@@ -121,4 +121,3 @@ namespace Conectivity {
         m_ReportingEndpoint = endpoint;
     }
 }
-

@@ -522,7 +522,7 @@ void Commands::CommandManager::setupSpellCheckSuggestions(Common::BasicKeywordsM
     Q_ASSERT(item != NULL);
     if (m_SpellCheckSuggestionModel) {
         m_SpellCheckSuggestionModel->setupModel(item, index, flags);
-        reportUserAction(Conectivity::UserActionSpellSuggestions);
+        reportUserAction(Conectivity::UserAction::SpellSuggestions);
     }
 }
 
@@ -701,7 +701,7 @@ void Commands::CommandManager::beforeDestructionCallback() const {
 #endif
 
     // we have a second for important stuff
-    m_TelemetryService->reportAction(Conectivity::UserActionClose);
+    m_TelemetryService->reportAction(Conectivity::UserAction::Close);
     m_TelemetryService->stopReporting();
 }
 

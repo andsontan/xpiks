@@ -176,9 +176,9 @@ namespace Suggestion {
 
 
             if (dynamic_cast<LocalLibraryQueryEngine*>(engine) == NULL) {
-                m_CommandManager->reportUserAction(Conectivity::UserActionSuggestionRemote);
+                m_CommandManager->reportUserAction(Conectivity::UserAction::SuggestionRemote);
             } else {
-                m_CommandManager->reportUserAction(Conectivity::UserActionSuggestionLocal);
+                m_CommandManager->reportUserAction(Conectivity::UserAction::SuggestionLocal);
             }
         }
     }

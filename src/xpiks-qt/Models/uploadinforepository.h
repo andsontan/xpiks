@@ -52,7 +52,7 @@ namespace Models {
         void initFromString(const QString &savedString);
 
     public:
-        enum UploadInfoRepositoryRoles {
+        enum UploadInfoRepository_Roles {
             TitleRole = Qt::UserRole + 1,
             EditTitleRole,
             HostRole,

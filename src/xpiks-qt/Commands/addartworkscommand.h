@@ -31,7 +31,7 @@ namespace Commands {
     {
     public:
         AddArtworksCommand(const QStringList &pathes, const QStringList &vectorPathes, bool autoDetectVectors) :
-            CommandBase(AddArtworksCommandType),
+            CommandBase(CommandType::AddArtworks),
             m_FilePathes(pathes),
             m_VectorsPathes(vectorPathes),
             m_AutoDetectVectors(autoDetectVectors)

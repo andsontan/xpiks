@@ -26,18 +26,18 @@
 #include <QString>
 
 namespace Conectivity {
-    enum UserAction {
-        UserActionOpen,
-        UserActionClose,
-        UserActionUpload,
-        UserActionSpellCheck,
-        UserActionSpellSuggestions,
-        UserActionSuggestionRemote,
-        UserActionSuggestionLocal,
-        UserActionWarningsCheck,
-        UserActionTurnOffTelemetry,
-        UserActionFindAndReplace,
-        UserActionDeleteKeywords
+    enum struct UserAction {
+        Open,
+        Close,
+        Upload,
+        SpellCheck,
+        SpellSuggestions,
+        SuggestionRemote,
+        SuggestionLocal,
+        WarningsCheck,
+        TurnOffTelemetry,
+        FindAndReplace,
+        DeleteKeywords
     };
 
     class AnalyticsUserEvent {
@@ -50,17 +50,17 @@ namespace Conectivity {
 
         QString getActionString() const {
             switch (m_Action) {
-            case UserActionOpen: return QLatin1String("Open");
-            case UserActionClose: return QLatin1String("Close");
-            case UserActionUpload: return QLatin1String("Upload");
-            case UserActionSpellCheck: return QLatin1String("SpellCheck");
-            case UserActionSpellSuggestions: return QLatin1String("SpellSuggestions");
-            case UserActionSuggestionRemote: return QLatin1String("SuggestionRemote");
-            case UserActionSuggestionLocal: return QLatin1String("SuggestionLocal");
-            case UserActionWarningsCheck: return QLatin1String("WarningsCheck");
-            case UserActionTurnOffTelemetry: return QLatin1String("TurnOffTelemetry");
-            case UserActionFindAndReplace: return QLatin1String("UserActionFindAndReplace");
-            case UserActionDeleteKeywords: return QLatin1String("UserActionDeleteKeywords");
+            case UserAction::Open: return QLatin1String("Open");
+            case UserAction::Close: return QLatin1String("Close");
+            case UserAction::Upload: return QLatin1String("Upload");
+            case UserAction::SpellCheck: return QLatin1String("SpellCheck");
+            case UserAction::SpellSuggestions: return QLatin1String("SpellSuggestions");
+            case UserAction::SuggestionRemote: return QLatin1String("SuggestionRemote");
+            case UserAction::SuggestionLocal: return QLatin1String("SuggestionLocal");
+            case UserAction::WarningsCheck: return QLatin1String("WarningsCheck");
+            case UserAction::TurnOffTelemetry: return QLatin1String("TurnOffTelemetry");
+            case UserAction::FindAndReplace: return QLatin1String("UserActionFindAndReplace");
+            case UserAction::DeleteKeywords: return QLatin1String("UserActionDeleteKeywords");
             default: return QLatin1String("Unknown");
             }
         }

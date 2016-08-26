@@ -39,7 +39,7 @@ namespace Commands {
     public:
         FindAndReplaceCommand(std::vector<Models::PreviewMetadataElement> &metadataElements,
         const QString &replaceWhat, const QString &replaceTo, Common::SearchFlags flags):
-            CommandBase(FindAndReplaceCommandType),
+            CommandBase(CommandType::FindAndReplace),
             m_MetadataElements(std::move(metadataElements)),
             m_ReplaceWhat(replaceWhat),
             m_ReplaceTo(replaceTo),

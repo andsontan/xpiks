@@ -32,7 +32,7 @@ namespace Commands {
     {
     public:
         RemoveArtworksCommand(const QVector<QPair<int, int> > &rangesToRemove):
-            CommandBase(RemoveArtworksCommandType),
+            CommandBase(CommandType::RemoveArtworks),
             m_RangesToRemove(rangesToRemove)
         {
         }

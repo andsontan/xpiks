@@ -41,7 +41,7 @@ namespace SpellCheck {
         virtual ~SpellSuggestionsItem() {}
 
     public:
-        enum KeywordSpellSuggestionsRoles {
+        enum KeywordSpellSuggestions_Roles {
             SuggestionRole = Qt::UserRole + 1,
             // not same as inner m_IsSelected
             // used for selected replacement

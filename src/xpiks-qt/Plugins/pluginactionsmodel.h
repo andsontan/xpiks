@@ -35,7 +35,7 @@ namespace Plugins {
         PluginActionsModel(const QVector<IPluginAction *> &actions, int pluginID, QObject *parent=0);
 
     public:
-        enum PluginActionsModelRoles {
+        enum PluginActionsModel_Roles {
             ActionNameRole = Qt::UserRole + 1,
             ActionCodeRole,
             PluginIDRole
