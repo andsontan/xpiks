@@ -228,7 +228,7 @@ void BasicKeywordsModelTests::containsKeywordFuzzyTest() {
     keywords << "something_keyword1" << "keyword2" << "KeyworD3";
     basicModel.appendKeywords(keywords);
 
-    Common::SearchFlags notFuzzyMatchFlags = Common::SearchFlags::ExactKeywords;
+    Common::SearchFlags notFuzzyMatchFlags = Common::SearchFlags::Keywords;
     QVERIFY(basicModel.containsKeyword("keyword1", notFuzzyMatchFlags) == true);
     QVERIFY(basicModel.containsKeyword("keyword2", notFuzzyMatchFlags) == true);
     QVERIFY(basicModel.containsKeyword("keyword3", notFuzzyMatchFlags) == true);

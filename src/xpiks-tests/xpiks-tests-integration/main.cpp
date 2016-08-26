@@ -80,6 +80,7 @@ int main(int argc, char *argv[]) {
     std::cout << "Initialized application" << std::endl;
 
     qSetMessagePattern("%{time hh:mm:ss.zzz} %{type} T#%{threadid} %{function} - %{message}");
+    qRegisterMetaType<Common::SearchFlags>("Common::SearchFlags");
 
     Helpers::AppSettings appSettings;
     Suggestion::LocalLibrary localLibrary;
