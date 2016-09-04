@@ -187,6 +187,7 @@ namespace SpellCheck {
     }
 
     int SpellCheckerService::getUserDictWordsNumber() {
+        LOG_DEBUG<<m_UserDictWordsNumber;
         return m_UserDictWordsNumber;
     }
 

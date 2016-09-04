@@ -347,6 +347,7 @@ namespace SpellCheck {
     }
 
     void SpellCheckWorker::signalUserDictWordsCount() {
+        LOG_DEBUG << m_UserDictionary.size();
         emit wordsNumberChanged(m_UserDictionary.size());
     }
 }

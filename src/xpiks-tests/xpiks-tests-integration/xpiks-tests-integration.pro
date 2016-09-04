@@ -142,7 +142,8 @@ SOURCES += main.cpp \
     findandreplacemodeltest.cpp \
     ../../xpiks-qt/Models/findandreplacemodel.cpp \
     ../../xpiks-qt/Conectivity/uploadwatcher.cpp \
-    ../../xpiks-qt/Conectivity/telemetryworker.cpp
+    ../../xpiks-qt/Conectivity/telemetryworker.cpp \
+    addtouserdictionarytest.cpp
 
 RESOURCES +=
 
@@ -312,7 +313,8 @@ HEADERS += \
     findandreplacemodeltest.h \
     ../../xpiks-qt/Models/findandreplacemodel.h \
     ../../xpiks-qt/Conectivity/uploadwatcher.h \
-    ../../xpiks-qt/Conectivity/telemetryworker.h
+    ../../xpiks-qt/Conectivity/telemetryworker.h \
+    addtouserdictionarytest.h
 
 INCLUDEPATH += ../../tiny-aes
 INCLUDEPATH += ../../cpp-libface
