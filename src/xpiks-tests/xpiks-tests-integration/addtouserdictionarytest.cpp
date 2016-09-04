@@ -16,7 +16,6 @@ QString AddToUserDictionaryTest::testName() {
 
 void AddToUserDictionaryTest::setup() {
     Models::SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
-
     settingsModel->setUseSpellCheck(true);
 }
 
@@ -46,6 +45,7 @@ int AddToUserDictionaryTest::doTest() {
 
     // wait for after-add spellchecking
     QThread::sleep(1);
+
     Common::BasicKeywordsModel *basicKeywordsModel = metadata->getKeywordsModel();
 
     QString wrongWord = "abbreviatioe";
@@ -71,21 +71,22 @@ int AddToUserDictionaryTest::doTest() {
     VERIFY(basicKeywordsModel->hasTitleSpellError(), "Title spell error not detected");
     VERIFY(basicKeywordsModel->hasKeywordsSpellError(), "Keywords spell error not detected");
 
-    spellCheckService->addWordToUserDictionary("correct part " + wrongWord);
+    spellCheckService->addWordToUserDictionary(wrongWord);
 
-    SignalWaiter waiterSpell;
-    QObject::connect(spellCheckService, SIGNAL(spellCheckQueueIsEmpty()), &waiterSpell, SIGNAL(finished()));
+    SignalWaiter spellingWaiter;
+    QObject::connect(spellCheckService, SIGNAL(spellCheckQueueIsEmpty()), &spellingWaiter, SIGNAL(finished()));
 
     QCoreApplication::processEvents(QEventLoop::AllEvents);
 
     // wait add user word to finish
-    if (!waiterSpell.wait(5)) {
+    if (!spellingWaiter.wait(5)) {
         VERIFY(false, "Timeout for waiting for spellcheck results");
     }
 
     QThread::sleep(5);
 
     int userDictWords = spellCheckService->getUserDictWordsNumber();
+    LOG_DEBUG << "User dict words count:" << userDictWords;
 
     VERIFY(userDictWords == 1, "Wrong number of words in user dictionary");
     VERIFY(!basicKeywordsModel->hasDescriptionSpellError(), "After adding word. Description spell error is still present");
