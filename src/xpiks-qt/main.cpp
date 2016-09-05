@@ -20,7 +20,8 @@
  */
 
 #include <iostream>
-
+#include <memory>
+// -------------------------------------
 #include <QUrl>
 #include <QDir>
 #include <QtQml>
@@ -34,8 +35,8 @@
 #include <QApplication>
 #include <QQuickWindow>
 #include <QStandardPaths>
-#include <QQmlApplicationEngine>
 #include <QDesktopWidget>
+#include <QQmlApplicationEngine>
 // -------------------------------------
 #include "SpellCheck/spellchecksuggestionmodel.h"
 #include "QMLExtensions/cachingimageprovider.h"
@@ -84,6 +85,17 @@
 #include "Models/proxysettings.h"
 #include "Models/findandreplacemodel.h"
 #include "Models/previewmetadataelement.h"
+
+#ifdef Q_OS_MAC
+#include "AutoUpdater/CocoaInitializer.h"
+#include "AutoUpdater/SparkleAutoUpdater.h"
+
+#ifdef QT_DEBUG
+#define SPARKLE_APPCAST_URL "https://ribtoks.github.io/xpiks/api/testing/xpiksappcast.xml"
+#else
+#define SPARKLE_APPCAST_URL "https://ribtoks.github.io/xpiks/api/v1/xpiksappcast.xml"
+#endif
+#endif
 
 void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg) {
     Q_UNUSED(context);
@@ -435,6 +447,15 @@ int main(int argc, char *argv[]) {
     }
 
 #endif
+
+    std::shared_ptr<AutoUpdater> updaterForOSX;
+#ifdef Q_OS_MAC
+    CocoaInitializer initializer;
+    updaterForOSX.reset(new SparkleAutoUpdater(SPARKLE_APPCAST_URL));
+#endif
+    if (updaterForOSX) {
+        updaterForOSX->checkForUpdates();
+    }
 
     commandManager.afterConstructionCallback();
 

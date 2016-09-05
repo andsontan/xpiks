@@ -112,7 +112,8 @@ SOURCES += main.cpp \
     Models/artworksviewmodel.cpp \
     Helpers/keywordshelpers.cpp \
     Conectivity/uploadwatcher.cpp \
-    Conectivity/telemetryworker.cpp
+    Conectivity/telemetryworker.cpp \
+    AutoUpdater/AutoUpdater.cpp
 
 RESOURCES += qml.qrc
 
@@ -281,7 +282,8 @@ HEADERS += \
     Helpers/keywordshelpers.h \
     Conectivity/uploadwatcher.h \
     Common/iflagsprovider.h \
-    Conectivity/telemetryworker.h
+    Conectivity/telemetryworker.h \
+    AutoUpdater/AutoUpdater.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
@@ -390,6 +392,18 @@ macx {
     INCLUDEPATH += ../exiv2-0.25/include
 
     LIBS += -lxmpsdk
+
+    HEADERS += AutoUpdater/SparkleAutoUpdater.h \
+               AutoUpdater/CocoaInitializer.h
+
+    OBJECTIVE_SOURCES += AutoUpdater/SparkleAutoUpdater.mm \
+                         AutoUpdater/CocoaInitializer.mm
+
+    QMAKE_LFLAGS += -F"$$PWD/../libs/"
+    QMAKE_CXXFLAGS += -F"$$PWD/../libs/"
+    QMAKE_CFLAGS += -F"$$PWD/../libs/"
+    QMAKE_OBJECTIVE_CFLAGS += -F"$$PWD/../libs/"
+    LIBS += -framework Sparkle -framework AppKit
 
     HUNSPELL_DICT_FILES.files = deps/dict/en_US.aff deps/dict/en_US.dic deps/dict/license.txt deps/dict/README_en_US.txt
     HUNSPELL_DICT_FILES.path = Contents/Resources
