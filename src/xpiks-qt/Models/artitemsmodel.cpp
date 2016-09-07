@@ -544,13 +544,16 @@ namespace Models {
     void ArtItemsModel::detachVectorsFromSelected(const QVector<int> &selectedIndices) {
         QVector<int> indicesToUpdate;
         indicesToUpdate.reserve(selectedIndices.length());
+        Models::ArtworksRepository *artworksRepository = m_CommandManager->getArtworksRepository();
 
         foreach(int index, selectedIndices) {
             ArtworkMetadata *metadata = m_ArtworkList.at(index);
             ImageArtwork *image = dynamic_cast<ImageArtwork *>(metadata);
 
             if (image != NULL) {
+                const QString vectorPath = image->getAttachedVectorPath();
                 image->detachVector();
+                artworksRepository->removeVector(vectorPath);
                 indicesToUpdate.append(index);
             }
         }
@@ -794,6 +797,7 @@ namespace Models {
 
         int attachedVectors = 0;
         QString defaultPath;
+        Models::ArtworksRepository *artworksRepository = m_CommandManager->getArtworksRepository();
 
         size_t size = getArtworksCount();
         indicesToUpdate.reserve((int)size);
@@ -817,6 +821,7 @@ namespace Models {
                 QString vectorsPath = innerHash.value(filename, defaultPath);
                 if (!vectorsPath.isEmpty()) {
                     image->attachVector(vectorsPath);
+                    artworksRepository->accountVector(vectorsPath);
                     indicesToUpdate.append((int)i);
                     attachedVectors++;
                 }
@@ -958,8 +963,13 @@ namespace Models {
         Q_ASSERT(row >= 0 && row < getArtworksCount());
         ArtworkMetadata *metadata = m_ArtworkList.at(row);
         m_ArtworkList.erase(m_ArtworkList.begin() + row);
-        ArtworksRepository *artworkRepository = m_CommandManager->getArtworksRepository();
-        artworkRepository->removeFile(metadata->getFilepath(), metadata->getDirectory());
+        ArtworksRepository *artworksRepository = m_CommandManager->getArtworksRepository();
+        artworksRepository->removeFile(metadata->getFilepath(), metadata->getDirectory());
+
+        ImageArtwork *image = dynamic_cast<ImageArtwork*>(metadata);
+        if ((image != nullptr) && image->hasVectorAttached()) {
+            artworksRepository->removeVector(image->getAttachedVectorPath());
+        }
 
         if (metadata->isSelected()) {
             emit selectedArtworksRemoved(1);

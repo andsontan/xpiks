@@ -68,6 +68,8 @@ int findAndAttachVectors(const QVector<Models::ArtworkMetadata*> &artworksList, 
 }
 
 void accountVectors(Models::ArtworksRepository *artworksRepository, const QVector<Models::ArtworkMetadata*> &artworks) {
+    LOG_DEBUG << "#";
+
     int size = artworks.size();
     for (int i = 0; i < size; ++i) {
         Models::ArtworkMetadata *metadata = artworks.at(i);
@@ -149,7 +151,7 @@ std::shared_ptr<Commands::ICommandResult> Commands::AddArtworksCommand::execute(
         QVector<QPair<int, int> > ranges;
         ranges << qMakePair(start, end);
         commandManager->readMetadata(artworksToImport, ranges);
-
+        accountVectors(artworksRepository, artworksToImport);
         artworksRepository->updateCountsForExistingDirectories();
 
         std::unique_ptr<UndoRedo::IHistoryItem> addArtworksItem(new UndoRedo::AddArtworksHistoryItem(initialCount, newFilesCount));

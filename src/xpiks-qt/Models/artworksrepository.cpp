@@ -156,9 +156,7 @@ namespace Models {
                 occurances = m_DirectoriesHash[absolutePath];
             }
 
-#ifndef CORE_TESTS
-            m_FilesWatcher.addPath(filepath);
-#endif
+            watchFilePath(filepath);
             m_FilesSet.insert(filepath);
             m_DirectoriesHash[absolutePath] = occurances + 1;
             wasModified = true;
@@ -168,9 +166,7 @@ namespace Models {
     }
 
     void ArtworksRepository::accountVector(const QString &vectorPath) {
-#ifndef CORE_TESTS
-            m_FilesWatcher.addPath(vectorPath);
-#endif
+        watchFilePath(vectorPath);
     }
 
     bool ArtworksRepository::removeFile(const QString &filepath, const QString &fileDirectory) {
@@ -188,6 +184,10 @@ namespace Models {
         }
 
         return result;
+    }
+
+    void ArtworksRepository::removeVector(const QString &vectorPath) {
+        m_FilesWatcher.removePath(vectorPath);
     }
 
     void ArtworksRepository::setFileSelected(const QString &filepath, bool selected) {
@@ -208,6 +208,12 @@ namespace Models {
         LOG_DEBUG << "#";
         m_UnavailableFiles.clear();
         m_LastUnavailableFilesCount = 0;
+    }
+
+    void ArtworksRepository::watchFilePath(const QString &filepath) {
+#ifndef CORE_TESTS
+        m_FilesWatcher.addPath(filepath);
+#endif
     }
 
     bool ArtworksRepository::isFileUnavailable(const QString &filepath) const {
