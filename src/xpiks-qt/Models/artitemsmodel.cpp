@@ -69,7 +69,7 @@ namespace Models {
         for (size_t i = 0; i < size; ++i) {
             ArtworkMetadata *metadata = m_ArtworkList.at(i);
             if (metadata->release()) {
-                delete metadata;
+                metadata->deleteLater();
             } else {
                 LOG_WARNING << "Metadata at index" << i << "is locked. Postponing destruction...";
 
@@ -1003,7 +1003,7 @@ namespace Models {
 
     void ArtItemsModel::destroyInnerItem(ArtworkMetadata *metadata) {
         if (metadata->release()) {
-            delete metadata;
+            metadata->deleteLater();
         } else {
             LOG_DEBUG << "Metadata is locked. Postponing destruction...";
 
@@ -1090,7 +1090,9 @@ namespace Models {
         if (m_ArtworkList.empty()) {
             if (!m_FinalizationList.empty()) {
                 LOG_DEBUG << "Clearing the finalization list";
-                qDeleteAll(m_FinalizationList);
+                for (auto *item: m_FinalizationList) {
+                    item->deleteLater();
+                }
                 m_FinalizationList.clear();
             }
         }
@@ -1102,7 +1104,7 @@ namespace Models {
         Q_ASSERT(!keywords.isEmpty());
 
         QVector<Common::BasicKeywordsModel *> itemsToCheck;
-        itemsToCheck.reserve(size);
+        itemsToCheck.reserve((int)size);
 
         for (size_t i = 0; i < size; i++) {
             ArtworkMetadata *metadata = m_ArtworkList.at(i);
@@ -1116,11 +1118,11 @@ namespace Models {
     }
 
     void ArtItemsModel::userDictClearedHandler() {
-        int size = m_ArtworkList.size();
+        size_t size = m_ArtworkList.size();
         QVector<Common::BasicKeywordsModel *> itemsToCheck;
-        itemsToCheck.reserve(size);
+        itemsToCheck.reserve((int)size);
 
-        for (int i = 0; i < size; i++) {
+        for (size_t i = 0; i < size; i++) {
             ArtworkMetadata *metadata = m_ArtworkList.at(i);
             Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
             itemsToCheck.append(keywordsModel);

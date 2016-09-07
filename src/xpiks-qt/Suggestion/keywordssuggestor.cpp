@@ -45,10 +45,11 @@ namespace Suggestion {
     {
         setLastErrorString(tr("No results found"));
 
-        m_QueryEngines.append(new ShutterstockQueryEngine());
-        m_QueryEngines.append(new GettyQueryEngine());
-        m_QueryEngines.append(new FotoliaQueryEngine());
-        m_QueryEngines.append(new LocalLibraryQueryEngine(m_LocalLibrary));
+        int id = 0;
+        m_QueryEngines.append(new ShutterstockQueryEngine(id++));
+        m_QueryEngines.append(new GettyQueryEngine(id++));
+        m_QueryEngines.append(new FotoliaQueryEngine(id++));
+        m_QueryEngines.append(new LocalLibraryQueryEngine(id++, m_LocalLibrary));
 
         int length = m_QueryEngines.length();
         for (int i = 0; i < length; ++i) {
@@ -61,6 +62,8 @@ namespace Suggestion {
             QObject::connect(engine, SIGNAL(errorReceived(QString)),
                              this, SLOT(errorsReceivedHandler(QString)));
         }
+
+        qsrand(QTime::currentTime().msec());
     }
 
     void KeywordsSuggestor::setSuggestedArtworks(std::vector<std::shared_ptr<SuggestionArtwork> > &suggestedArtworks) {
@@ -106,11 +109,17 @@ namespace Suggestion {
     }
 
     void KeywordsSuggestor::resultsAvailableHandler() {
+        Q_ASSERT(0 <= m_SelectedSourceIndex && m_SelectedSourceIndex < m_QueryEngines.length());
+        SuggestionQueryEngineBase *currentEngine = m_QueryEngines.at(m_SelectedSourceIndex);
+        SuggestionQueryEngineBase *senderEngine = qobject_cast<SuggestionQueryEngineBase *>(sender());
+
+        if ((senderEngine == nullptr) || (senderEngine->getID() != currentEngine->getID())) {
+            qInfo() << "Received results from another engine:" << senderEngine->getID() << "current:" << currentEngine->getID();
+        }
+
         unsetInProgress();
-        SuggestionQueryEngineBase *engine = m_QueryEngines.at(m_SelectedSourceIndex);
-        auto &results = engine->getLastResults();
+        auto &results = currentEngine->getLastResults();
         setSuggestedArtworks(results);
-        qsrand(QTime::currentTime().msec());
     }
 
     void KeywordsSuggestor::errorsReceivedHandler(const QString &error) {
@@ -131,17 +140,24 @@ namespace Suggestion {
     }
 
     QString KeywordsSuggestor::removeSuggestedKeywordAt(int keywordIndex) {
+        LOG_INFO << "Index:" << keywordIndex;
+
         QString keyword;
         if (m_SuggestedKeywords.takeKeywordAt(keywordIndex, keyword)) {
             emit suggestedKeywordsCountChanged();
+            LOG_INFO << "Removed:" << keyword;
         }
+
         return keyword;
     }
 
     QString KeywordsSuggestor::removeOtherKeywordAt(int keywordIndex) {
+        LOG_INFO << "Index:" << keywordIndex;
+
         QString keyword;
         if (m_AllOtherKeywords.takeKeywordAt(keywordIndex, keyword)) {
             emit otherKeywordsCountChanged();
+            LOG_INFO << "Removed:" << keyword;
         }
         return keyword;
     }
@@ -166,6 +182,7 @@ namespace Suggestion {
 
     void KeywordsSuggestor::searchArtworks(const QString &searchTerm) {
         LOG_DEBUG << searchTerm;
+
         if (!m_IsInProgress && !searchTerm.trimmed().isEmpty()) {
             setInProgress();
 
@@ -173,7 +190,6 @@ namespace Suggestion {
 
             SuggestionQueryEngineBase *engine = m_QueryEngines.at(m_SelectedSourceIndex);
             engine->submitQuery(searchTerms);
-
 
             if (dynamic_cast<LocalLibraryQueryEngine*>(engine) == NULL) {
                 m_CommandManager->reportUserAction(Conectivity::UserAction::SuggestionRemote);
@@ -184,6 +200,7 @@ namespace Suggestion {
     }
 
     void KeywordsSuggestor::cancelSearch() {
+        LOG_DEBUG << "#";
         SuggestionQueryEngineBase *engine = m_QueryEngines.at(m_SelectedSourceIndex);
         engine->cancelQueries();
     }

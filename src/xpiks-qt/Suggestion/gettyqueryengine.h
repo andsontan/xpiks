@@ -31,7 +31,7 @@ namespace Suggestion {
     {
         Q_OBJECT
     public:
-        GettyQueryEngine();
+        GettyQueryEngine(int engineID);
 
     public:
         virtual void submitQuery(const QStringList &queryKeywords);

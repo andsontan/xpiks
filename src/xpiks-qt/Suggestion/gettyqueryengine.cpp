@@ -34,7 +34,8 @@
 #include "suggestionartwork.h"
 
 namespace Suggestion {
-    GettyQueryEngine::GettyQueryEngine():
+    GettyQueryEngine::GettyQueryEngine(int engineID):
+        SuggestionQueryEngineBase(engineID),
         m_NetworkManager(this)
     {
         m_GettyImagesAPIKey = QLatin1String("17a45639c3bf88f7a6d549759af398090c3f420e53a61a06d7a2a2b153c89fc9470b2365dae8c6d92203287dc6f69f55b230835a8fb2a70b24e806771b750690");

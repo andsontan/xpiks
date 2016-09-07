@@ -59,7 +59,7 @@ namespace Conectivity {
 
     UpdatesCheckerWorker::~UpdatesCheckerWorker() {
         if (m_NetworkManager != NULL) {
-            delete m_NetworkManager;
+            m_NetworkManager->deleteLater();
         }
     }
 

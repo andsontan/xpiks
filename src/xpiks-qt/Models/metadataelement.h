@@ -79,7 +79,7 @@ namespace Models {
         void freeMetadata() {
             if (m_ArtworkMetadata != nullptr) {
                 m_ArtworkMetadata->release();
-                delete m_ArtworkMetadata;
+                m_ArtworkMetadata->deleteLater();
                 m_ArtworkMetadata = nullptr;
             }
         }

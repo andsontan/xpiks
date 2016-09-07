@@ -37,6 +37,8 @@ namespace Suggestion {
     }
 
     void LibraryLoaderWorker::process() {
+        LOG_DEBUG << "#";
+
         if (m_Option == Save) {
             write();
         } else if (m_Option == Load) {
@@ -49,7 +51,7 @@ namespace Suggestion {
     }
 
     void LibraryLoaderWorker::read() {
-        LOG_DEBUG << "Loading library...";
+        LOG_DEBUG << "#";
 
         QFile file(m_Filepath);
         if (file.open(QIODevice::ReadOnly)) {
@@ -60,11 +62,13 @@ namespace Suggestion {
             file.close();
 
             m_LocalLibrary->swap(dict);
+        } else {
+            LOG_WARNING << "Failed to open" << m_Filepath;
         }
     }
 
     void LibraryLoaderWorker::write() {
-        LOG_DEBUG << "Saving library...";
+        LOG_DEBUG << "#";
 
         m_LocalLibrary->saveToFile();
     }

@@ -33,7 +33,7 @@ namespace Suggestion {
     {
         Q_OBJECT
     public:
-        LocalLibraryQueryEngine(LocalLibrary *localLibrary);
+        LocalLibraryQueryEngine(int engineID, LocalLibrary *localLibrary);
 
         // ISuggestionQueryEngine interface
     public:

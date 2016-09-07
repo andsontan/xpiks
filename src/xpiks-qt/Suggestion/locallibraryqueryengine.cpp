@@ -27,7 +27,8 @@
 #define MAX_LOCAL_RESULTS 100
 
 namespace Suggestion {
-    LocalLibraryQueryEngine::LocalLibraryQueryEngine(LocalLibrary *localLibrary):
+    LocalLibraryQueryEngine::LocalLibraryQueryEngine(int engineID, LocalLibrary *localLibrary):
+        SuggestionQueryEngineBase(engineID),
         m_LocalLibrary(localLibrary)
     {
     }

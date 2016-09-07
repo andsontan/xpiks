@@ -31,7 +31,7 @@ namespace Suggestion {
     {
         Q_OBJECT
     public:
-        FotoliaQueryEngine();
+        FotoliaQueryEngine(int engineID);
 
     public:
         virtual void submitQuery(const QStringList &queryKeywords);

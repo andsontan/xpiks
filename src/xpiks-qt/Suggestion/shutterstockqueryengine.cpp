@@ -33,7 +33,8 @@
 #include "../Common/defines.h"
 
 namespace Suggestion {
-    ShutterstockQueryEngine::ShutterstockQueryEngine():
+    ShutterstockQueryEngine::ShutterstockQueryEngine(int engineID):
+        SuggestionQueryEngineBase(engineID),
         m_NetworkManager(this)
     {
         m_ClientId = "28a2a9b917961a0cbc343c81b2dd0f6618377f9210aa3182e5cc9f5588f914d918ede1533c9e06b91769c89e80909743";

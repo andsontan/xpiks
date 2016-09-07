@@ -282,6 +282,7 @@ namespace Models {
 
     void ArtworksRepository::checkFileUnavailable(const QString &path) {
         LOG_INFO << "File changed:" << path;
+
         QFileInfo fi(path);
         if (!fi.exists()) {
             LOG_INFO << "File become unavailable:" << path;
@@ -294,7 +295,8 @@ namespace Models {
     void ArtworksRepository::onAvailabilityTimer() {
         int currentUnavailableSize = m_UnavailableFiles.size();
         LOG_INFO << "Current:" << currentUnavailableSize << "Last:" << m_LastUnavailableFilesCount;
-        if (currentUnavailableSize > m_LastUnavailableFilesCount ) {
+
+        if (currentUnavailableSize > m_LastUnavailableFilesCount) {
             m_LastUnavailableFilesCount = currentUnavailableSize;
             emit filesUnavailable();
         }

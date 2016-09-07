@@ -33,7 +33,8 @@
 #include "suggestionartwork.h"
 
 namespace Suggestion {
-    FotoliaQueryEngine::FotoliaQueryEngine():
+    FotoliaQueryEngine::FotoliaQueryEngine(int engineID):
+        SuggestionQueryEngineBase(engineID),
         m_NetworkManager(this)
     {
         m_FotoliaAPIKey = "ad2954b4ee1e9686fbf8446f85e0c26edfae6003f51f49ca5559aed915879e733bbaf2003b3575bc0b96e682a30a69907c612865ec8f4ec2522131108a4a9f24467f1f83befc3d80201e5f906c761341";

@@ -33,12 +33,18 @@ namespace Suggestion {
     class SuggestionQueryEngineBase: public QObject {
         Q_OBJECT
     public:
+        SuggestionQueryEngineBase(int ID, QObject *parent = 0):
+            QObject(parent),
+            m_EngineID(ID)
+        { }
+
         virtual ~SuggestionQueryEngineBase() { }
 
         virtual void submitQuery(const QStringList &queryKeywords) = 0;
         virtual QString getName() const = 0;
 
     public:
+        int getID() const { return m_EngineID; }
         void cancelQueries() { emit cancelAllQueries(); }
         std::vector<std::shared_ptr<SuggestionArtwork> > &getLastResults() { return m_LastResults; }
 
@@ -53,6 +59,7 @@ namespace Suggestion {
 
     private:
         std::vector<std::shared_ptr<SuggestionArtwork> > m_LastResults;
+        int m_EngineID;
     };
 }
 

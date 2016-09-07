@@ -38,7 +38,7 @@ namespace Suggestion {
     {
         Q_OBJECT
     public:
-        ShutterstockQueryEngine();
+        ShutterstockQueryEngine(int engineID);
 
     public:
         virtual void submitQuery(const QStringList &queryKeywords);

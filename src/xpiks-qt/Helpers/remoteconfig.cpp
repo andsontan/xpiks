@@ -30,7 +30,7 @@ namespace Helpers {
     }
 
     RemoteConfig::~RemoteConfig() {
-        delete m_NetworkManager;
+        m_NetworkManager->deleteLater();
     }
 
     void RemoteConfig::requestInitConfig(const QString &configUrl) {
