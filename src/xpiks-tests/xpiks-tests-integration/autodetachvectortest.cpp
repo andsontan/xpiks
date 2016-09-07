@@ -54,9 +54,13 @@ int AutoDetachVectorTest::doTest() {
     VERIFY(vectorFile.remove(), "Failed to remove vector");
     qDebug() << "Removed vector file" << vectorPath;
 
-    // 4 seconds timer delay for artworks repository filesystemwatcher
-    QThread::sleep(4+1);
-    QCoreApplication::processEvents();
+    SignalWaiter unavailableVectorsWaiter;
+    QObject::connect(artItemsModel, SIGNAL(unavailableVectorsFound()),
+                     &unavailableVectorsWaiter, SIGNAL(finished()));
+
+    if (!unavailableVectorsWaiter.wait(5)) {
+        VERIFY(false, "Timeout exceeded for unavailable vectors");
+    }
 
     VERIFY(!image->hasVectorAttached(), "Vector should not be attached!");
 
