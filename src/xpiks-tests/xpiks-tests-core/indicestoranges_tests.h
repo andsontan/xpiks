@@ -29,6 +29,8 @@ private slots:
     void splitIntoMoreThanASizeTest();
     void splitIntoTwoUnevenChunksTest();
     void splitIntoMoreThanAHalfTest();
+    void sameNumbersTest();
+    void allSameNumbersTest();
 };
 
 #endif // INDICESTORANGES_TESTS_H

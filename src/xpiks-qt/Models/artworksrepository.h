@@ -83,6 +83,7 @@ namespace Models {
 
     public:
         bool accountFile(const QString &filepath);
+        void accountVector(const QString &vectorPath);
         bool removeFile(const QString &filepath, const QString &fileDirectory);
         void setFileSelected(const QString &filepath, bool selected);
         void purgeUnavailableFiles();

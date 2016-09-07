@@ -67,6 +67,17 @@ int findAndAttachVectors(const QVector<Models::ArtworkMetadata*> &artworksList, 
     return attachedCount;
 }
 
+void accountVectors(Models::ArtworksRepository *artworksRepository, const QVector<Models::ArtworkMetadata*> &artworks) {
+    int size = artworks.size();
+    for (int i = 0; i < size; ++i) {
+        Models::ArtworkMetadata *metadata = artworks.at(i);
+        Models::ImageArtwork *imageArtwork = dynamic_cast<Models::ImageArtwork *>(metadata);
+        if ((imageArtwork != nullptr) && imageArtwork->hasVectorAttached()) {
+            artworksRepository->accountVector(imageArtwork->getAttachedVectorPath());
+        }
+    }
+}
+
 Commands::AddArtworksCommand::~AddArtworksCommand() {
     LOG_DEBUG << "#";
 }
@@ -87,7 +98,7 @@ std::shared_ptr<Commands::ICommandResult> Commands::AddArtworksCommand::execute(
 
     if (newFilesCount > 0) {
         LOG_INFO << newFilesCount << "new files found";
-        LOG_INFO << "Current files count is" << artItemsModel->getArtworksCount();
+        LOG_INFO << "Current files count is" << initialCount;
         artItemsModel->beginAccountingFiles(newFilesCount);
 
         int count = m_FilePathes.count();
@@ -124,8 +135,12 @@ std::shared_ptr<Commands::ICommandResult> Commands::AddArtworksCommand::execute(
     int attachedCount = artItemsModel->attachVectors(vectorsHash, modifiedIndices);
 
     if (m_AutoDetectVectors) {
-        modifiedIndices.clear();
-        attachedCount = findAndAttachVectors(artworksToImport, modifiedIndices);
+        QVector<int> autoAttachedIndices;
+        attachedCount = findAndAttachVectors(artworksToImport, autoAttachedIndices);
+
+        foreach (int index, autoAttachedIndices) {
+            modifiedIndices.append(initialCount + index);
+        }
     }
 
     if (newFilesCount > 0) {
@@ -139,11 +154,10 @@ std::shared_ptr<Commands::ICommandResult> Commands::AddArtworksCommand::execute(
 
         std::unique_ptr<UndoRedo::IHistoryItem> addArtworksItem(new UndoRedo::AddArtworksHistoryItem(initialCount, newFilesCount));
         commandManager->recordHistoryItem(addArtworksItem);
-    } else if (attachedCount > 0) {
-        artItemsModel->updateItems(modifiedIndices, QVector<int>() << Models::ArtItemsModel::HasVectorAttachedRole);
     }
 
     artItemsModel->raiseArtworksAdded(newFilesCount, attachedCount);
+    artItemsModel->updateItems(modifiedIndices, QVector<int>() << Models::ArtItemsModel::HasVectorAttachedRole);
 
     std::shared_ptr<AddArtworksCommandResult> result(new AddArtworksCommandResult(newFilesCount));
     return result;

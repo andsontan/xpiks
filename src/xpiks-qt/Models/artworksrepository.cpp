@@ -167,6 +167,12 @@ namespace Models {
         return wasModified;
     }
 
+    void ArtworksRepository::accountVector(const QString &vectorPath) {
+#ifndef CORE_TESTS
+            m_FilesWatcher.addPath(vectorPath);
+#endif
+    }
+
     bool ArtworksRepository::removeFile(const QString &filepath, const QString &fileDirectory) {
         bool result = false;
 

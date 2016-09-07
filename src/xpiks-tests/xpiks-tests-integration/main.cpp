@@ -64,6 +64,7 @@
 #include "combinededitfixspellingtest.h"
 #include "findandreplacemodeltest.h"
 #include "addtouserdictionarytest.h"
+#include "autodetachvectortest.h"
 
 #if defined(WITH_LOGS)
 #undef WITH_LOGS
@@ -204,6 +205,7 @@ int main(int argc, char *argv[]) {
     integrationTests.append(new CombinedEditFixSpellingTest(&commandManager));
     integrationTests.append(new FindAndReplaceModelTest(&commandManager));
     integrationTests.append(new AddToUserDictionaryTest(&commandManager));
+    integrationTests.append(new AutoDetachVectorTest(&commandManager));
 
     qDebug("\n");
     int succeededTestsCount = 0, failedTestsCount = 0;

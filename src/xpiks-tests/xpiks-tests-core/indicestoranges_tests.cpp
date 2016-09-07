@@ -287,3 +287,21 @@ void IndicesToRangesTests::splitIntoMoreThanAHalfTest() {
         QCOMPARE(chunks[i][1], i*2 + 1);
     }
 }
+
+void IndicesToRangesTests::sameNumbersTest() {
+    Indices indices = Indices() << 0 << 1 << 1 << 1 << 6;
+    Pairs actualPairs;
+    Helpers::indicesToRanges(indices, actualPairs);
+
+    Pairs expectedPairs = MAKE_PAIRS(2, 0, 1, 6, 6);
+    COMPARE_PAIRS(actualPairs, expectedPairs);
+}
+
+void IndicesToRangesTests::allSameNumbersTest() {
+    Indices indices = Indices() << 0 << 0 << 0 << 0 << 0;
+    Pairs actualPairs;
+    Helpers::indicesToRanges(indices, actualPairs);
+
+    Pairs expectedPairs = MAKE_PAIRS(1, 0, 0);
+    COMPARE_PAIRS(actualPairs, expectedPairs);
+}

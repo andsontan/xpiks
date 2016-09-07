@@ -137,7 +137,7 @@ void RemoveFilesFsTests::removeVectorSmokeTest() {
     commandManagerMock.InjectDependency(artItemsModel);
     commandManagerMock.InjectDependency(artworksRepository);
 
-    int itemsToAdd = 5;
+    const int itemsToAdd = 5;
     QSignalSpy artRepositoryFileDeleted(artworksRepository, SIGNAL(filesUnavailable()));
     QSignalSpy vectorRemovedSpy(artItemsModel, SIGNAL(unavailableVectorsFound()));
     QSignalSpy artworkRemovedSpy(artItemsModel, SIGNAL(unavailableArtworksFound()));
