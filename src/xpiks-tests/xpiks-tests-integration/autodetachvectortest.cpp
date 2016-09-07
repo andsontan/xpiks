@@ -25,7 +25,7 @@ void AutoDetachVectorTest::setup() {
 int AutoDetachVectorTest::doTest() {
     Models::ArtItemsModel *artItemsModel = m_CommandManager->getArtItemsModel();
     QList<QUrl> files;
-    files << getImagePathForTest("images-for-tests/items-to-remove/vector/026.jpg");
+    files << getImagePathForTest("images-for-tests/items-to-remove/026.jpg");
 
     int addedCount = artItemsModel->addLocalArtworks(files);
 
