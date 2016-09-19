@@ -50,7 +50,8 @@
 #define DEFAULT_USE_SPELL_CHECK true
 #define DEFAULT_HAVE_USER_CONSENT false
 #define DEFAULT_COLLECT_USER_STATISTICS true
-#define DEFAULT_UPDATE_SERVICE true
+#define DEFAULT_CHECK_FOR_UPDATES true
+#define DEFAULT_AUTO_DOWNLOAD_UPDATES true
 #define DEFAULT_APP_WIDTH 900
 #define DEFAULT_APP_HEIGHT 725
 #define DEFAULT_APP_POSITION -1
@@ -89,7 +90,8 @@ namespace Models {
         m_SearchUsingAnd(DEFAULT_SEARCH_USING_AND),
         m_UseSpellCheck(DEFAULT_USE_SPELL_CHECK),
         m_UserStatistics(DEFAULT_COLLECT_USER_STATISTICS),
-        m_CheckForUpdates(DEFAULT_UPDATE_SERVICE),
+        m_CheckForUpdates(DEFAULT_CHECK_FOR_UPDATES),
+        m_AutoDownloadUpdates(DEFAULT_AUTO_DOWNLOAD_UPDATES),
         m_DictsPathChanged(false),
         m_AutoFindVectors(DEFAULT_AUTO_FIND_VECTORS),
         m_UseAutoComplete(DEFAULT_USE_AUTO_COMPLETE),
@@ -139,7 +141,8 @@ namespace Models {
         appSettings.setValue(appSettings.getScrollSpeedScaleKey(), m_ScrollSpeedScale);
         appSettings.setValue(appSettings.getUseSpellCheckKey(), m_UseSpellCheck);
         appSettings.setValue(appSettings.getUserStatisticsKey(), m_UserStatistics);
-        appSettings.setValue(appSettings.getUpdateServiceKey(), m_CheckForUpdates);
+        appSettings.setValue(appSettings.getCheckForUpdatesKey(), m_CheckForUpdates);
+        appSettings.setValue(appSettings.getAutoDownloadUpdatesKey(), m_AutoDownloadUpdates);
         appSettings.setValue(appSettings.getAutoFindVectorsKey(), m_AutoFindVectors);
         appSettings.setValue(appSettings.getSelectedThemeIndexKey(), m_SelectedThemeIndex);
         appSettings.setValue(appSettings.getUseAutoCompleteKey(), m_UseAutoComplete);
@@ -205,7 +208,8 @@ namespace Models {
         setScrollSpeedScale(appSettings.doubleValue(appSettings.getScrollSpeedScaleKey(), DEFAULT_SCROLL_SPEED_SCALE));
         setUseSpellCheck(appSettings.boolValue(appSettings.getUseSpellCheckKey(), DEFAULT_USE_SPELL_CHECK));
         setUserStatistics(appSettings.boolValue(appSettings.getUserStatisticsKey(), DEFAULT_COLLECT_USER_STATISTICS));
-        setUpdateService(appSettings.boolValue(appSettings.getUpdateServiceKey(), DEFAULT_UPDATE_SERVICE));
+        setCheckForUpdates(appSettings.boolValue(appSettings.getCheckForUpdatesKey(), DEFAULT_CHECK_FOR_UPDATES));
+        setAutoDownloadUpdates(appSettings.boolValue(appSettings.getAutoDownloadUpdatesKey(), DEFAULT_AUTO_DOWNLOAD_UPDATES));
         setAutoFindVectors(appSettings.boolValue(appSettings.getAutoFindVectorsKey(), DEFAULT_AUTO_FIND_VECTORS));
         setSelectedLocale(appSettings.value(appSettings.getSelectedLocaleKey(), DEFAULT_LOCALE).toString());
         setSelectedThemeIndex(appSettings.value(appSettings.getSelectedThemeIndexKey(), DEFAULT_SELECTED_THEME_INDEX).toInt());
@@ -238,7 +242,8 @@ namespace Models {
         setScrollSpeedScale(DEFAULT_SCROLL_SPEED_SCALE);
         setUseSpellCheck(DEFAULT_USE_SPELL_CHECK);
         setUserStatistics(DEFAULT_COLLECT_USER_STATISTICS);
-        setUpdateService(DEFAULT_UPDATE_SERVICE);
+        setCheckForUpdates(DEFAULT_CHECK_FOR_UPDATES);
+        setAutoDownloadUpdates(DEFAULT_AUTO_DOWNLOAD_UPDATES);
         setAutoFindVectors(DEFAULT_AUTO_FIND_VECTORS);
         setSelectedLocale(DEFAULT_LOCALE);
         setSelectedThemeIndex(DEFAULT_SELECTED_THEME_INDEX);

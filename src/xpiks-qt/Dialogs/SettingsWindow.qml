@@ -258,14 +258,14 @@ ApplicationWindow {
                             id: checkForUpdatesCheckbox
                             text: i18.n + qsTr("Check for updates")
                             onCheckedChanged: {
-                                settingsModel.updateService = checked
+                                settingsModel.checkForUpdates = checked
                             }
                             function onResetRequested() {
-                                checked = settingsModel.updateService
+                                checked = settingsModel.checkForUpdates
                             }
 
                             Component.onCompleted: {
-                                checked = settingsModel.updateService
+                                checked = settingsModel.checkForUpdates
                                 behaviorTab.resetRequested.connect(checkForUpdatesCheckbox.onResetRequested)
                             }
                         }

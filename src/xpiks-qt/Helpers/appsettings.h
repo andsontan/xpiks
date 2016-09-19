@@ -119,8 +119,8 @@ namespace Helpers {
         Q_PROPERTY(QString userStatisticsKey READ getUserStatisticsKey CONSTANT)
         QString getUserStatisticsKey() const { return QLatin1String(Constants::USER_STATISTICS); }
 
-        Q_PROPERTY(QString updateServiceKey READ getUpdateServiceKey CONSTANT)
-        QString getUpdateServiceKey() const { return QLatin1String(Constants::CHECK_FOR_UPDATES); }
+        Q_PROPERTY(QString checkForUpdatesKey READ getCheckForUpdatesKey CONSTANT)
+        QString getCheckForUpdatesKey() const { return QLatin1String(Constants::CHECK_FOR_UPDATES); }
 
         Q_PROPERTY(QString numberOfLaunchesKey READ getNumberOfLaunchesKey CONSTANT)
         QString getNumberOfLaunchesKey() const { return QLatin1String(Constants::NUMBER_OF_LAUNCHES); }
@@ -145,8 +145,12 @@ namespace Helpers {
 
         Q_PROPERTY(QString proxyHashKey READ getproxyHashKey CONSTANT)
         QString getproxyHashKey() const { return QLatin1String(Constants::PROXY_HOST); }
+
         Q_PROPERTY(QString cacheImagesKey READ getCacheImagesKey CONSTANT)
         QString getCacheImagesKey() const { return QLatin1String(Constants::CACHE_IMAGES_AUTOMATICALLY); }
+
+        Q_PROPERTY(QString autoDownloadUpdatesKey READ getAutoDownloadUpdatesKey CONSTANT)
+        QString getAutoDownloadUpdatesKey() const { return QLatin1String(Constants::AUTO_DOWNLOAD_UPDATES); }
 
         Q_PROPERTY(QString whatsNewText READ getWhatsNewText CONSTANT)
         QString getWhatsNewText() const {

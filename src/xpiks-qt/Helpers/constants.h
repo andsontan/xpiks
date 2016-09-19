@@ -77,6 +77,7 @@ namespace Constants {
     const char IMAGES_CACHE_INDEX[] = "imagescache.index";
     const char CACHE_IMAGES_AUTOMATICALLY[] = "CACHE_IMAGES_AUTOMATICALLY";
     const char SCROLL_SPEED_SENSIVITY[] = "SCROLL_SPEED_SENSIVITY";
+    const char AUTO_DOWNLOAD_UPDATES[] = "AUTO_DOWNLOAD_UPDATES";
 #else
     const char MAX_KEYWORD_COUNT[] = "DEBUG_MAX_KEYWORD_COUNT";
     const char MAX_DESCRIPTION_LENGTH[] = "DEBUG_MAX_DESCRIPTION_LENGTH";
@@ -96,6 +97,7 @@ namespace Constants {
     const char IMAGES_CACHE_DIR[] = "debug_imagescache";
     const char IMAGES_CACHE_INDEX[] = "debug_imagescache.index";
     const char SCROLL_SPEED_SENSIVITY[] = "DEBUG_SCROLL_SPEED_SENSIVITY";
+    const char AUTO_DOWNLOAD_UPDATES[] = "DEBUG_AUTO_DOWNLOAD_UPDATES";
 
 #ifdef INTEGRATION_TESTS
     const char LIBRARY_FILENAME[] = "xpiks.integration.library";

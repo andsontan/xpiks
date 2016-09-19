@@ -54,7 +54,8 @@ namespace Models {
         Q_PROPERTY(double scrollSpeedScale READ getScrollSpeedScale WRITE setScrollSpeedScale NOTIFY scrollSpeedScaleChanged)
         Q_PROPERTY(bool useSpellCheck READ getUseSpellCheck WRITE setUseSpellCheck NOTIFY useSpellCheckChanged)
         Q_PROPERTY(bool userStatistics READ getUserStatistics WRITE setUserStatistics NOTIFY userStatisticsChanged)
-        Q_PROPERTY(bool updateService READ getUpdateService WRITE setUpdateService NOTIFY updateServiceChanged)
+        Q_PROPERTY(bool checkForUpdates READ getCheckForUpdates WRITE setCheckForUpdates NOTIFY checkForUpdatesChanged)
+        Q_PROPERTY(bool autoDownloadUpdates READ getAutoDownloadUpdates WRITE setAutoDownloadUpdates NOTIFY autoDownloadUpdatesChanged)
         Q_PROPERTY(QString dictionaryPath READ getDictionaryPath WRITE setDictionaryPath NOTIFY dictionaryPathChanged)
         Q_PROPERTY(bool autoFindVectors READ getAutoFindVectors WRITE setAutoFindVectors NOTIFY autoFindVectorsChanged)
         Q_PROPERTY(QString selectedLocale READ getSelectedLocale WRITE setSelectedLocale NOTIFY selectedLocaleChanged)
@@ -103,7 +104,8 @@ namespace Models {
         double getScrollSpeedScale() const { return m_ScrollSpeedScale; }
         bool getUseSpellCheck() const { return m_UseSpellCheck; }
         bool getUserStatistics() const { return m_UserStatistics; }
-        bool getUpdateService() const { return m_CheckForUpdates; }
+        bool getCheckForUpdates() const { return m_CheckForUpdates; }
+        bool getAutoDownloadUpdates() const { return m_AutoDownloadUpdates; }
         QString getDictionaryPath() const { return m_DictPath; }
         bool getAutoFindVectors() const { return m_AutoFindVectors; }
         QString getSelectedLocale() const { return m_SelectedLocale; }
@@ -136,7 +138,8 @@ namespace Models {
         void scrollSpeedScaleChanged(double value);
         void useSpellCheckChanged(bool value);
         void userStatisticsChanged(bool value);
-        void updateServiceChanged(bool value);
+        void checkForUpdatesChanged(bool value);
+        void autoDownloadUpdatesChanged(bool value);
         void dictionaryPathChanged(QString path);
         void autoFindVectorsChanged(bool value);
         void selectedLocaleChanged(QString value);
@@ -279,12 +282,20 @@ namespace Models {
             emit userStatisticsChanged(value);
         }
 
-        void setUpdateService(bool value) {
+        void setCheckForUpdates(bool value) {
             if (m_CheckForUpdates == value)
                 return;
 
             m_CheckForUpdates = value;
-            emit updateServiceChanged(value);
+            emit checkForUpdatesChanged(value);
+        }
+
+        void setAutoDownloadUpdates(bool value) {
+            if (m_AutoDownloadUpdates == value)
+                return;
+
+            m_AutoDownloadUpdates = value;
+            emit autoDownloadUpdatesChanged(value);
         }
 
         void setDictionaryPath(QString path) {
@@ -350,8 +361,10 @@ namespace Models {
     public:
 #endif
         void resetToDefault();
+
     private:
         void resetProxySetting();
+
     private:
         QString m_ExifToolPath;
         QString m_DictPath;
@@ -373,6 +386,7 @@ namespace Models {
         bool m_UseSpellCheck;
         bool m_UserStatistics;
         bool m_CheckForUpdates;
+        bool m_AutoDownloadUpdates;
         bool m_DictsPathChanged;
         bool m_AutoFindVectors;
         bool m_UseAutoComplete;
