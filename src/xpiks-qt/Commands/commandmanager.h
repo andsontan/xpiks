@@ -78,10 +78,6 @@ namespace MetadataIO {
     class MetadataIOCoordinator;
 }
 
-namespace Helpers {
-    class UpdateService;
-}
-
 namespace SpellCheck {
     class SpellCheckerService;
     class SpellCheckSuggestionModel;
@@ -90,6 +86,7 @@ namespace SpellCheck {
 
 namespace Conectivity {
     class TelemetryService;
+    class UpdateService;
 }
 
 namespace Plugins {
@@ -165,7 +162,7 @@ namespace Commands {
         void InjectDependency(SpellCheck::SpellCheckSuggestionModel *spellCheckSuggestionModel);
         void InjectDependency(MetadataIO::BackupSaverService *backupSaverService);
         void InjectDependency(Conectivity::TelemetryService *telemetryService);
-        void InjectDependency(Helpers::UpdateService *updateService);
+        void InjectDependency(Conectivity::UpdateService *updateService);
         void InjectDependency(Models::LogsModel *logsModel);
         void InjectDependency(MetadataIO::MetadataIOCoordinator *metadataIOCoordinator);
         void InjectDependency(Suggestion::LocalLibrary *localLibrary);
@@ -295,7 +292,7 @@ namespace Commands {
         SpellCheck::SpellCheckSuggestionModel *m_SpellCheckSuggestionModel;
         MetadataIO::BackupSaverService *m_MetadataSaverService;
         Conectivity::TelemetryService *m_TelemetryService;
-        Helpers::UpdateService *m_UpdateService;
+        Conectivity::UpdateService *m_UpdateService;
         Models::LogsModel *m_LogsModel;
         Suggestion::LocalLibrary *m_LocalLibrary;
         MetadataIO::MetadataIOCoordinator *m_MetadataIOCoordinator;

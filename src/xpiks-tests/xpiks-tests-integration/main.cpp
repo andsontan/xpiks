@@ -34,7 +34,7 @@
 #include "../../xpiks-qt/Plugins/pluginmanager.h"
 #include "../../xpiks-qt/Helpers/loggingworker.h"
 #include "../../xpiks-qt/Models/languagesmodel.h"
-#include "../../xpiks-qt/Helpers/updateservice.h"
+#include "../../xpiks-qt/Conectivity/updateservice.h"
 #include "../../xpiks-qt/Models/artitemsmodel.h"
 #include "../../xpiks-qt/Models/settingsmodel.h"
 #include "../../xpiks-qt/Helpers/appsettings.h"
@@ -135,7 +135,7 @@ int main(int argc, char *argv[]) {
     Models::FindAndReplaceModel findAndReplaceModel(&colorsModel);
     Models::DeleteKeywordsViewModel deleteKeywordsModel;
 
-    Helpers::UpdateService updateService(false);
+    Conectivity::UpdateService updateService(&settingsModel);
 
     MetadataIO::MetadataIOCoordinator metadataIOCoordinator;
     Conectivity::TelemetryService telemetryService("1234567890", false);

@@ -60,6 +60,7 @@
 #include "Encryption/secretsmanager.h"
 #include "Models/artworksrepository.h"
 #include "QMLExtensions/colorsmodel.h"
+#include "Conectivity/updateservice.h"
 #include "Warnings/warningsservice.h"
 #include "UndoRedo/undoredomanager.h"
 #include "Helpers/clipboardhelper.h"
@@ -70,7 +71,6 @@
 #include "Plugins/pluginmanager.h"
 #include "Helpers/loggingworker.h"
 #include "Models/languagesmodel.h"
-#include "Helpers/updateservice.h"
 #include "Models/artitemsmodel.h"
 #include "Models/settingsmodel.h"
 #include "Helpers/appsettings.h"
@@ -310,8 +310,7 @@ int main(int argc, char *argv[]) {
     Models::FindAndReplaceModel replaceModel(&colorsModel);
     Models::DeleteKeywordsViewModel deleteKeywordsModel;
 
-    bool checkForUpdates = appSettings.value(Constants::CHECK_FOR_UPDATES, true).toBool();
-    Helpers::UpdateService updateService(checkForUpdates);
+    Conectivity::UpdateService updateService(&settingsModel);
 
     MetadataIO::MetadataIOCoordinator metadataIOCoordinator;
 

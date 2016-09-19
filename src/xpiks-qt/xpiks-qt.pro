@@ -45,7 +45,7 @@ SOURCES += main.cpp \
     Suggestion/locallibrary.cpp \
     Suggestion/libraryqueryworker.cpp \
     Suggestion/libraryloaderworker.cpp \
-    Helpers/updateservice.cpp \
+    Conectivity/updateservice.cpp \
     SpellCheck/spellcheckerservice.cpp \
     SpellCheck/spellcheckitem.cpp \
     SpellCheck/spellcheckworker.cpp \
@@ -186,7 +186,7 @@ HEADERS += \
     Suggestion/locallibrary.h \
     Suggestion/libraryqueryworker.h \
     Suggestion/libraryloaderworker.h \
-    Helpers/updateservice.h \
+    Conectivity/updateservice.h \
     SpellCheck/spellcheckerservice.h \
     SpellCheck/spellcheckitem.h \
     SpellCheck/spellcheckworker.h \

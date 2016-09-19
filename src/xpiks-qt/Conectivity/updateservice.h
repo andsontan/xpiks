@@ -24,16 +24,18 @@
 
 #include <QObject>
 
-namespace Conectivity {
-    class UpdatesCheckerWorker;
+namespace Models {
+    class SettingsModel;
 }
 
-namespace Helpers {
+namespace Conectivity {
+    class UpdatesCheckerWorker;
+
     class UpdateService : public QObject
     {
         Q_OBJECT
     public:
-        UpdateService(bool start);
+        UpdateService(Models::SettingsModel *settingsModel);
 
     public:
         void startChecking();
@@ -46,11 +48,11 @@ namespace Helpers {
         void updateAvailable(QString updateLink);
 
     private:
-        bool m_StartWorker;
         Conectivity::UpdatesCheckerWorker *m_UpdatesCheckerWorker;
+        Models::SettingsModel *m_SettingsModel;
     };
 }
 
-Q_DECLARE_METATYPE(Helpers::UpdateService*)
+Q_DECLARE_METATYPE(Conectivity::UpdateService*)
 
 #endif // UPDATESERVICE_H

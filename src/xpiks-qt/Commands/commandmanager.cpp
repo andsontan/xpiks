@@ -42,7 +42,7 @@
 #include "../SpellCheck/ispellcheckable.h"
 #include "../MetadataIO/backupsaverservice.h"
 #include "../Conectivity/telemetryservice.h"
-#include "../Helpers/updateservice.h"
+#include "../Conectivity/updateservice.h"
 #include "../Models/logsmodel.h"
 #include "../Encryption/aes-qt.h"
 #include "../MetadataIO/metadataiocoordinator.h"
@@ -144,7 +144,7 @@ void Commands::CommandManager::InjectDependency(Conectivity::TelemetryService *t
     Q_ASSERT(telemetryService != NULL); m_TelemetryService = telemetryService;
 }
 
-void Commands::CommandManager::InjectDependency(Helpers::UpdateService *updateService) {
+void Commands::CommandManager::InjectDependency(Conectivity::UpdateService *updateService) {
     Q_ASSERT(updateService != NULL); m_UpdateService = updateService;
 }
 

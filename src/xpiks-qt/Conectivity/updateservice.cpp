@@ -20,17 +20,23 @@
  */
 
 #include "updateservice.h"
-#include "../Conectivity/updatescheckerworker.h"
+#include "updatescheckerworker.h"
 #include "../Common/defines.h"
+#include "../Models/settingsmodel.h"
 
-namespace Helpers {
-    UpdateService::UpdateService(bool start) {
-        m_StartWorker = start;
-        m_UpdatesCheckerWorker = new Conectivity::UpdatesCheckerWorker();
+namespace Conectivity {
+    UpdateService::UpdateService(Models::SettingsModel *settingsModel):
+        m_UpdatesCheckerWorker(nullptr),
+        m_SettingsModel(settingsModel)
+    {
+        Q_ASSERT(settingsModel != nullptr);
     }
 
     void UpdateService::startChecking() {
-        if (m_StartWorker) {
+        const bool startWorker = m_SettingsModel->getCheckForUpdates();
+
+        if (startWorker) {
+            m_UpdatesCheckerWorker = new UpdatesCheckerWorker();
             QThread *thread = new QThread();
             m_UpdatesCheckerWorker->moveToThread(thread);
 
