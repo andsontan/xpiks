@@ -65,6 +65,10 @@ namespace Helpers {
         flushStream(m_QueueFlushFrom);
     }
 
+    void Logger::stop() {
+        m_Stopped = true;
+    }
+
     void Logger::flushStream(QStringList *logItems) {
         Q_ASSERT(logItems->length() > 0);
 

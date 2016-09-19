@@ -47,6 +47,7 @@ namespace Models {
     public:
         void startLogging();
         void stopLogging();
+        void prepareShutdown();
 
     public:
         Q_INVOKABLE QString getAllLogsText(bool moreLogs=false);

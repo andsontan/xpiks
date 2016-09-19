@@ -28,6 +28,7 @@
 #include <QDateTime>
 #include <QTextStream>
 #include <QStandardPaths>
+#include <QEventLoop>
 #include "../Helpers/stringhelper.h"
 #include "../Helpers/logger.h"
 #include "../Helpers/loghighlighter.h"
@@ -64,7 +65,15 @@ namespace Models {
     }
 
     void LogsModel::stopLogging() {
+        QEventLoop waitLoop;
+        QObject::connect(m_LoggingWorker, SIGNAL(stopped()), &waitLoop, SLOT(quit()));
+
         m_LoggingWorker->cancel();
+        waitLoop.exec();
+    }
+
+    void LogsModel::prepareShutdown() {
+        m_LoggingWorker->prepareShutdown();
     }
 
     QString LogsModel::getAllLogsText(bool moreLogs) {

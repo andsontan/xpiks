@@ -675,6 +675,10 @@ void Commands::CommandManager::beforeDestructionCallback() const {
         return;
     }
 
+#ifndef CORE_TESTS
+    m_LogsModel->prepareShutdown();
+#endif
+
     m_ArtworksRepository->stopListeningToUnavailableFiles();
 
     m_ArtItemsModel->disconnect();
@@ -693,16 +697,17 @@ void Commands::CommandManager::beforeDestructionCallback() const {
     Exiv2::XmpParser::terminate();
 #endif
 
-#ifndef CORE_TESTS
 #ifdef WITH_PLUGINS
     m_PluginManager->unloadPlugins();
-#endif
-    m_LogsModel->stopLogging();
 #endif
 
     // we have a second for important stuff
     m_TelemetryService->reportAction(Conectivity::UserAction::Close);
     m_TelemetryService->stopReporting();
+
+#ifndef CORE_TESTS
+    m_LogsModel->stopLogging();
+#endif
 }
 
 void Commands::CommandManager::restartSpellChecking() {
