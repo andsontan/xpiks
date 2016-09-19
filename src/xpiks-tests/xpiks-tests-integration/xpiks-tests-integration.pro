@@ -144,7 +144,8 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Conectivity/uploadwatcher.cpp \
     ../../xpiks-qt/Conectivity/telemetryworker.cpp \
     addtouserdictionarytest.cpp \
-    autodetachvectortest.cpp
+    autodetachvectortest.cpp \
+    removefromuserdictionarytest.cpp
 
 RESOURCES +=
 
@@ -316,7 +317,8 @@ HEADERS += \
     ../../xpiks-qt/Conectivity/uploadwatcher.h \
     ../../xpiks-qt/Conectivity/telemetryworker.h \
     addtouserdictionarytest.h \
-    autodetachvectortest.h
+    autodetachvectortest.h \
+    removefromuserdictionarytest.h
 
 INCLUDEPATH += ../../tiny-aes
 INCLUDEPATH += ../../cpp-libface
