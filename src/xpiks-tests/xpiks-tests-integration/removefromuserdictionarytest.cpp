@@ -8,6 +8,7 @@
 #include "../../xpiks-qt/Models/combinedartworksmodel.h"
 #include "../../xpiks-qt/Common/basickeywordsmodel.h"
 #include "signalwaiter.h"
+#include "testshelpers.h"
 #include <QObject>
 
 QString RemoveFromUserDictionaryTest::testName() {
@@ -16,7 +17,6 @@ QString RemoveFromUserDictionaryTest::testName() {
 
 void RemoveFromUserDictionaryTest::setup() {
     Models::SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
-
     settingsModel->setUseSpellCheck(true);
 }
 
@@ -50,8 +50,8 @@ int RemoveFromUserDictionaryTest::doTest() {
     Common::BasicKeywordsModel *basicKeywordsModel = metadata->getKeywordsModel();
 
     QString wrongWord = "abbreviatioe";
-    metadata->setDescription(metadata->getDescription() + ' ' + wrongWord);
-    metadata->setTitle(metadata->getTitle() + ' ' + wrongWord);
+    metadata->setDescription(metadata->getDescription() + " " + wrongWord);
+    metadata->setTitle(metadata->getTitle() + " " + wrongWord);
     metadata->appendKeyword("correct part " + wrongWord);
     metadata->setIsSelected(true);
 
@@ -84,7 +84,11 @@ int RemoveFromUserDictionaryTest::doTest() {
         VERIFY(false, "Timeout for waiting for spellcheck results");
     }
 
-    QThread::sleep(5);
+    sleepWait(5, [=]() {
+        return !basicKeywordsModel->hasDescriptionSpellError() &&
+                !basicKeywordsModel->hasTitleSpellError() &&
+                !basicKeywordsModel->hasKeywordsSpellError();
+    });
 
     int userDictWords = spellCheckService->getUserDictWordsNumber();
 
@@ -95,28 +99,32 @@ int RemoveFromUserDictionaryTest::doTest() {
 
     // now clean user dict
 
+    SignalWaiter clearWaiter;
+    QObject::connect(spellCheckService, SIGNAL(spellCheckQueueIsEmpty()), &clearWaiter, SIGNAL(finished()));
+
     spellCheckService->clearUserDictionary();
 
     // wait clear user dict to finish
 
-    SignalWaiter clearWaiter;
-    QObject::connect(spellCheckService, SIGNAL(spellCheckQueueIsEmpty()), &clearWaiter, SIGNAL(finished()));
-
     QCoreApplication::processEvents(QEventLoop::AllEvents);
 
-    // wait add user word to finish
+    // wait clear user word to finish
     if (!clearWaiter.wait(5)) {
         VERIFY(false, "Timeout for waiting for spellcheck results");
     }
 
-    QThread::sleep(5);
+    sleepWait(5, [=]() {
+        return basicKeywordsModel->hasDescriptionSpellError() &&
+                basicKeywordsModel->hasTitleSpellError() &&
+                basicKeywordsModel->hasKeywordsSpellError();
+    });
 
     userDictWords = spellCheckService->getUserDictWordsNumber();
 
     VERIFY(userDictWords == 0, "Wrong number of words in user dictionary");
-    VERIFY(basicKeywordsModel->hasDescriptionSpellError(), "Description spell error not detected");
-    VERIFY(basicKeywordsModel->hasTitleSpellError(), "Title spell error not detected");
-    VERIFY(basicKeywordsModel->hasKeywordsSpellError(), "Keywords spell error not detected");
+    VERIFY(basicKeywordsModel->hasDescriptionSpellError(), "Description spell error not detected again");
+    VERIFY(basicKeywordsModel->hasTitleSpellError(), "Title spell error not detected again");
+    VERIFY(basicKeywordsModel->hasKeywordsSpellError(), "Keywords spell error not detected again");
 
     return 0;
 }

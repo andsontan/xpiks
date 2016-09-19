@@ -8,6 +8,7 @@
 #include "../../xpiks-qt/Models/combinedartworksmodel.h"
 #include "../../xpiks-qt/Common/basickeywordsmodel.h"
 #include "signalwaiter.h"
+#include "testshelpers.h"
 #include <QObject>
 
 QString AddToUserDictionaryTest::testName() {
@@ -83,7 +84,11 @@ int AddToUserDictionaryTest::doTest() {
         VERIFY(false, "Timeout for waiting for spellcheck results");
     }
 
-    QThread::sleep(5);
+    sleepWait(5, [=]() {
+        return !basicKeywordsModel->hasDescriptionSpellError() &&
+                !basicKeywordsModel->hasTitleSpellError() &&
+                !basicKeywordsModel->hasKeywordsSpellError();
+    });
 
     int userDictWords = spellCheckService->getUserDictWordsNumber();
     LOG_DEBUG << "User dict words count:" << userDictWords;

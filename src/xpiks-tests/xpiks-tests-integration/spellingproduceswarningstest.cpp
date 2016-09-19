@@ -18,6 +18,7 @@
 #include "../../xpiks-qt/Common/flags.h"
 #include "../../xpiks-qt/Warnings/warningsservice.h"
 #include "../../xpiks-qt/SpellCheck/spellcheckerservice.h"
+#include "testshelpers.h"
 
 QString SpellingProducesWarningsTest::testName() {
     return QLatin1String("SpellingProducesWarningsTest");
@@ -49,9 +50,13 @@ int SpellingProducesWarningsTest::doTest() {
 
     VERIFY(!ioCoordinator->getHasErrors(), "Errors in IO Coordinator while reading");
 
-    QThread::sleep(3);
-
     Models::ArtworkMetadata *metadata = artItemsModel->getArtwork(0);
+
+    sleepWait(3, [metadata]() {
+        return !Common::HasFlag(metadata->getWarningsFlags(), Common::WarningFlags::SpellErrorsInTitle) &&
+                !Common::HasFlag(metadata->getWarningsFlags(), Common::WarningFlags::SpellErrorsInDescription) &&
+                !Common::HasFlag(metadata->getWarningsFlags(), Common::WarningFlags::SpellErrorsInKeywords);
+    });
 
     VERIFY(!Common::HasFlag(metadata->getWarningsFlags(), Common::WarningFlags::SpellErrorsInTitle), "Error for reading title");
     VERIFY(!Common::HasFlag(metadata->getWarningsFlags(), Common::WarningFlags::SpellErrorsInDescription), "Error for reading description");
