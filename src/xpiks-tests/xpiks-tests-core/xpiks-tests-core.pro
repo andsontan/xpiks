@@ -108,7 +108,7 @@ SOURCES += main.cpp \
     ../../xpiks-qt/MetadataIO/backupsaverservice.cpp \
     ../../xpiks-qt/MetadataIO/backupsaverworker.cpp \
     ../../xpiks-qt/Conectivity/telemetryservice.cpp \
-    ../../xpiks-qt/Helpers/updateservice.cpp \
+    ../../xpiks-qt/Conectivity/updateservice.cpp \
     ../../xpiks-qt/SpellCheck/spellcheckiteminfo.cpp \
     ../../xpiks-qt/SpellCheck/spellsuggestionsitem.cpp \
     ../../xpiks-qt/Common/basickeywordsmodel.cpp \
@@ -208,7 +208,7 @@ HEADERS += \
     ../../xpiks-qt/MetadataIO/backupsaverworker.h \
     ../../xpiks-qt/Conectivity/analyticsuserevent.h \
     ../../xpiks-qt/Conectivity/telemetryservice.h \
-    ../../xpiks-qt/Helpers/updateservice.h \
+    ../../xpiks-qt/Conectivity/updateservice.h \
     ../../xpiks-qt/SpellCheck/ispellcheckable.h \
     ../../xpiks-qt/SpellCheck/spellcheckiteminfo.h \
     ../../xpiks-qt/SpellCheck/spellsuggestionsitem.h \

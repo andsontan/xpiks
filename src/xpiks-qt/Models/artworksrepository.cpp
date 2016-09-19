@@ -213,6 +213,8 @@ namespace Models {
     void ArtworksRepository::watchFilePath(const QString &filepath) {
 #ifndef CORE_TESTS
         m_FilesWatcher.addPath(filepath);
+#else
+        Q_UNUSED(filepath);
 #endif
     }
 

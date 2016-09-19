@@ -97,7 +97,7 @@ void ArtItemsModelTests::removingLockedArtworksTest() {
     const size_t count = 10;
     DECLARE_MODELS_AND_GENERATE(count, false);
 
-    for (size_t i = 0; i < count; ++i) {
+    for (int i = 0; i < (int)count; ++i) {
         artItemsModelMock.getArtwork(i)->acquire();
     }
 
