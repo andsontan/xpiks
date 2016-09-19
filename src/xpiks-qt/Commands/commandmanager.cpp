@@ -675,10 +675,6 @@ void Commands::CommandManager::beforeDestructionCallback() const {
         return;
     }
 
-#ifndef CORE_TESTS
-    m_LogsModel->prepareShutdown();
-#endif
-
     m_ArtworksRepository->stopListeningToUnavailableFiles();
 
     m_ArtItemsModel->disconnect();

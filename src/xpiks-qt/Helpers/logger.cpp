@@ -42,14 +42,14 @@
 
 namespace Helpers {
     void Logger::log(const QString &message) {
-        if (m_Stopped) { return; }
-
-        QMutexLocker locker(&m_LogMutex);
-        m_QueueLogTo->append(message);
-        m_AnyLogsToFlush.wakeOne();
+        if (!m_Stopped) {
+            doLog(message);
+        }
     }
 
     void Logger::flush() {
+        if (m_Stopped) { return; }
+
         QMutexLocker flushLocker(&m_FlushMutex);
 
         while (m_QueueFlushFrom->isEmpty()) {
@@ -62,15 +62,39 @@ namespace Helpers {
             }
         }
 
+        Q_ASSERT(m_QueueFlushFrom->length() > 0);
         flushStream(m_QueueFlushFrom);
     }
 
     void Logger::stop() {
         m_Stopped = true;
+
+        // will make waiting flush() call unblocked if any
+        doLog("Stop message");
+
+        QMutexLocker flushLocker(&m_FlushMutex);
+        flushStream(m_QueueFlushFrom);
+
+        {
+            QMutexLocker logLocker(&m_LogMutex);
+
+            if (!m_QueueLogTo->isEmpty()) {
+                qSwap(m_QueueLogTo, m_QueueFlushFrom);
+            }
+        }
+
+        flushStream(m_QueueFlushFrom);
+    }
+
+    void Logger::doLog(const QString &message) {
+        QMutexLocker locker(&m_LogMutex);
+        m_QueueLogTo->append(message);
+        m_AnyLogsToFlush.wakeOne();
     }
 
     void Logger::flushStream(QStringList *logItems) {
-        Q_ASSERT(logItems->length() > 0);
+        Q_ASSERT(logItems != nullptr);
+        if (logItems->empty()) { return; }
 
 #ifdef WITH_LOGS
         QFile outFile(m_LogFilepath);

@@ -32,9 +32,6 @@ namespace Helpers {
         explicit LoggingWorker(QObject *parent = 0);
         virtual ~LoggingWorker() {}
 
-    public:
-        void prepareShutdown();
-
     signals:
         void stopped();
 
@@ -44,7 +41,6 @@ namespace Helpers {
 
     private:
         volatile bool m_Cancel;
-        volatile int m_MillisecondsToSleep;
     };
 }
 

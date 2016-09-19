@@ -27,34 +27,26 @@
 namespace Helpers {
     LoggingWorker::LoggingWorker(QObject *parent) :
         QObject(parent),
-        m_Cancel(false),
-        m_MillisecondsToSleep(1000)
+        m_Cancel(false)
     {
-    }
-
-    void LoggingWorker::prepareShutdown() {
-        m_MillisecondsToSleep = 330;
     }
 
     void LoggingWorker::process() {
         Logger &logger = Logger::getInstance();
+        const int sleepTimeout = 1000;
 
         while (!m_Cancel) {
             logger.flush();
-            QThread::usleep(m_MillisecondsToSleep);
+            QThread::usleep(sleepTimeout);
         }
-
-        logger.log("Logging is off now");
-        logger.stop();
-        logger.flush();
 
         emit stopped();
     }
 
     void LoggingWorker::cancel() {
         m_Cancel = true;
-        LOG_INFO << "#";
+
         Logger &logger = Logger::getInstance();
-        logger.log("StopMessage");
+        logger.stop();
     }
 }
