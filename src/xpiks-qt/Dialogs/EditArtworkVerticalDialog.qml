@@ -656,16 +656,14 @@ Item {
                         }
                     }
 
-
-                    StyledText {
-                        text: "|"
-                        verticalAlignment: Text.AlignVCenter
+                    Item {
+                        Layout.fillWidth: true
                     }
 
                     StyledText {
                         id: plainTextText
-                        text: i18.n + qsTr("Edit in plain text")
-                        color: plainTextMA.containsMouse ? Colors.linkClickedColor : Colors.artworkActiveColor
+                        text: i18.n + qsTr("<u>edit in plain text</u>")
+                        color: plainTextMA.containsMouse ? Colors.linkClickedColor : Colors.labelActiveForeground
 
                         MouseArea {
                             id: plainTextMA
@@ -690,14 +688,9 @@ Item {
                                                         callbackObject: callbackObject,
                                                         keywordsText: combinedArtworks.getKeywordsString(),
                                                         keywordsModel: combinedArtworks.getKeywordsModel()
-
                                                     });
                             }
                         }
-                    }
-
-                    Item {
-                        Layout.fillWidth: true
                     }
                 }
 
