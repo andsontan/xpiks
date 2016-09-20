@@ -74,11 +74,6 @@ int SpellingProducesWarningsTest::doTest() {
     SignalWaiter spellingWaiter;
     QObject::connect(spellCheckService, SIGNAL(spellCheckQueueIsEmpty()), &spellingWaiter, SIGNAL(finished()));
 
-    // wait for checking warnings
-    Warnings::WarningsService *warningsService = m_CommandManager->getWarningsService();
-    SignalWaiter warningsQueueWaiter;
-    QObject::connect(warningsService, SIGNAL(queueIsEmpty()), &warningsQueueWaiter, SIGNAL(finished()));
-
     filteredModel->spellCheckSelected();
 
     if (!spellingWaiter.wait(5)) {
@@ -87,11 +82,11 @@ int SpellingProducesWarningsTest::doTest() {
 
     LOG_INFO << "Spellchecking finished. Waiting for warnings...";
 
-    if (!warningsQueueWaiter.wait(5)) {
-        if (metadata->getWarningsFlags() == Common::WarningFlags::None) {
-            VERIFY(false, "Timeout for waiting for warnings checker");
-        }
-    }
+    sleepWait(5, [=]() {
+        return keywordsModel->hasDescriptionSpellError() &&
+                keywordsModel->hasTitleSpellError() &&
+                keywordsModel->hasKeywordsSpellError();
+    });
 
     Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
 
