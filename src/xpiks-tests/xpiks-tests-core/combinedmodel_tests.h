@@ -17,6 +17,7 @@ private slots:
     void combineCommonInKeywordsTest();
     void combineCommonInTitleTest();
     void combineCommonInDescriptionTest();
+    void editSeveralWithSameKeywordsTest();
     void recombineAfterRemoveDifferentTest();
     void recombineAfterRemoveAllButOneTest();
     void recombineAfterChangesTest();

@@ -28,6 +28,7 @@ namespace Mocks {
         bool anyCommandProcessed() const { return m_AnyCommandProcessed; }
         void resetAnyCommandProcessed() { m_AnyCommandProcessed = false; }
         void disableCommands() { m_CanExecuteCommands = false; }
+        void enableCommands() { m_CanExecuteCommands = true; }
         void mockAcceptDeletion() {Commands::CommandManager::removeUnavailableFiles();}
 
     public:

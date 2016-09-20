@@ -191,6 +191,42 @@ void CombinedModelTests::combineCommonInDescriptionTest() {
     freeArtworks(items);
 }
 
+void CombinedModelTests::editSeveralWithSameKeywordsTest() {
+    Models::CombinedArtworksModel combinedModel;
+    combinedModel.setCommandManager(&m_CommandManagerMock);
+    m_CommandManagerMock.enableCommands();
+
+    const QString commonDescription = "a common Description1";
+    const QString commonTitle = "a common Title";
+    const QStringList commonKeywords = QStringList() << "fox" << "dog" << "pastel" << "art";
+
+    std::vector<Models::ArtworkMetadata*> artworks;
+
+    std::vector<Models::MetadataElement> items;
+    items.push_back(createArtworkMetadata(commonDescription, commonTitle, commonKeywords, 0));
+    items.push_back(createArtworkMetadata(commonDescription, commonTitle, commonKeywords, 1));
+    items.push_back(createArtworkMetadata(commonDescription, commonTitle, commonKeywords, 2));
+
+    for (auto &item: items) {
+        artworks.push_back(item.getOrigin());
+    }
+
+    combinedModel.setArtworks(items);
+    combinedModel.pasteKeywords(QStringList() << "outdoors" << "tilt" << "pet");
+    combinedModel.setChangeKeywords(true);
+    combinedModel.saveEdits();
+
+    LOG_DEBUG << "Checking" << artworks.size() << "items";
+
+    for (auto &metadata: artworks) {
+        QStringList keywordsSlice = metadata->getKeywords().mid(0, 4);
+        QCOMPARE(keywordsSlice, commonKeywords);
+    }
+
+    freeArtworks(items);
+    m_CommandManagerMock.disableCommands();
+}
+
 void CombinedModelTests::recombineAfterRemoveDifferentTest() {
     Models::CombinedArtworksModel combinedModel;
     combinedModel.setCommandManager(&m_CommandManagerMock);
