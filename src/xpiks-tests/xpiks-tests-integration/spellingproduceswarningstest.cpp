@@ -82,13 +82,13 @@ int SpellingProducesWarningsTest::doTest() {
 
     LOG_INFO << "Spellchecking finished. Waiting for warnings...";
 
-    Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
-
     sleepWait(5, [=]() {
-        return keywordsModel->hasDescriptionSpellError() &&
-                keywordsModel->hasTitleSpellError() &&
-                keywordsModel->hasKeywordsSpellError();
+        return Common::HasFlag(metadata->getWarningsFlags(), Common::WarningFlags::SpellErrorsInTitle) &&
+                Common::HasFlag(metadata->getWarningsFlags(), Common::WarningFlags::SpellErrorsInDescription) &&
+                Common::HasFlag(metadata->getWarningsFlags(), Common::WarningFlags::SpellErrorsInKeywords);
     });
+
+    Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
 
     VERIFY(keywordsModel->hasDescriptionSpellError(), "Description spell error not detected");
     VERIFY(keywordsModel->hasTitleSpellError(), "Title spell error not detected");
