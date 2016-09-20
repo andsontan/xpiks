@@ -656,6 +656,46 @@ Item {
                         }
                     }
 
+
+                    StyledText {
+                        text: "|"
+                        verticalAlignment: Text.AlignVCenter
+                    }
+
+                    StyledText {
+                        id: plainTextText
+                        text: i18.n + qsTr("Edit in plain text")
+                        color: plainTextMA.containsMouse ? Colors.linkClickedColor : Colors.artworkActiveColor
+
+                        MouseArea {
+                            id: plainTextMA
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: {
+                                // strange bug with clicking on the keywords field
+                                if (!containsMouse) { return; }
+
+                                var callbackObject = {
+                                    onSuccess: function(text) {
+                                        combinedArtworks.plainTextEdit(text)
+                                    },
+                                    onClose: function() {
+                                        flv.activateEdit()
+                                    }
+                                }
+
+                                Common.launchDialog("Dialogs/PlainTextKeywordsDialog.qml",
+                                                    applicationWindow,
+                                                    {
+                                                        callbackObject: callbackObject,
+                                                        keywordsText: combinedArtworks.getKeywordsString(),
+                                                        keywordsModel: combinedArtworks.getKeywordsModel()
+
+                                                    });
+                            }
+                        }
+                    }
+
                     Item {
                         Layout.fillWidth: true
                     }

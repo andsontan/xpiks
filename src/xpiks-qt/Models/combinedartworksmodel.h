@@ -175,6 +175,7 @@ namespace Models {
         Q_INVOKABLE void spellCheckDescription();
         Q_INVOKABLE void spellCheckTitle();
         Q_INVOKABLE void assignFromSelected();
+        Q_INVOKABLE void plainTextEdit(const QString &rawKeywords);
 
     private:
         void processCombinedEditCommand();
