@@ -27,9 +27,8 @@
 #include <QByteArray>
 #include <QTime>
 #include <QRegExp>
-#include <QNetworkRequest>
-#include <QNetworkReply>
-#include <QEventLoop>
+#include <curl/curl.h>
+#include <string>
 #include "../Common/version.h"
 
 void buildQuery(std::shared_ptr<Conectivity::AnalyticsUserEvent> &userEvent, const QString &userAgent, QUrlQuery &query) {
@@ -48,18 +47,13 @@ void buildQuery(std::shared_ptr<Conectivity::AnalyticsUserEvent> &userEvent, con
 
 namespace Conectivity {
     TelemetryWorker::TelemetryWorker(const QString &userAgent, const QString &reportingEndpoint, const QString &interfaceLanguage):
-        m_NetworkManager(this),
         m_UserAgentId(userAgent),
         m_ReportingEndpoint(reportingEndpoint),
         m_InterfaceLanguage(interfaceLanguage)
     {
-        QObject::connect(&m_NetworkManager, SIGNAL(finished(QNetworkReply*)),
-                         this, SLOT(replyReceived(QNetworkReply*)));
     }
 
     bool TelemetryWorker::initWorker() {
-        // to make sure network manager does it's tricks localy
-        m_NetworkManager.moveToThread(QThread::currentThread());
         return true;
     }
 
@@ -93,49 +87,64 @@ namespace Conectivity {
                            .arg(m_InterfaceLanguage));
 #endif
 
-        QUrl reportingUrl;
-        reportingUrl.setUrl(m_ReportingEndpoint);
-        reportingUrl.setQuery(query);
-
 #ifdef QT_DEBUG
-        LOG_DEBUG << "Telemetry request:" << reportingUrl;
+        LOG_DEBUG << "Telemetry request:" << m_ReportingEndpoint << query.toString();
 #endif
 
-        QNetworkRequest request(reportingUrl);
-
-#if defined(Q_OS_DARWIN)
-        request.setRawHeader(QString("User-Agent").toLocal8Bit(), QString("Mozilla/5.0 (Macintosh; Mac OS X %2; rv:1.1) Qt Xpiks/1.1")
-                .arg(QSysInfo::productVersion()).toLocal8Bit());
-#elif defined(Q_OS_WIN)
-        request.setRawHeader(QString("User-Agent").toLocal8Bit(), QString("Mozilla/5.0 (Windows %2; rv:1.1) Qt Xpiks/1.1")
-                .arg(QSysInfo::productVersion()).toLocal8Bit());
-#elif defined(Q_OS_LINUX)
-        request.setRawHeader(QString("User-Agent").toLocal8Bit(), QString("Mozilla/5.0 (Linux %2; rv:1.1) Qt Xpiks/1.1")
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
-                .arg(QSysInfo::productVersion()).toLocal8Bit());
-#else
-                .arg("?").toLocal8Bit());
-#endif
-#endif
-
-        QNetworkReply *reply = m_NetworkManager.get(request);
-        QObject::connect(this, SIGNAL(cancelAllQueries()),
-                         reply, SLOT(abort()));
-
-        QEventLoop loop;
-        QObject::connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
-        loop.exec();
+        sendOneReport(m_ReportingEndpoint, query.toString());
     }
 
-    void TelemetryWorker::replyReceived(QNetworkReply *reply) {
-        LOG_DEBUG << "Reply received";
+    bool TelemetryWorker::sendOneReport(const QString &resource, const QString &payload) {
+        CURL *curl_handle;
+        CURLcode res;
 
-        if (reply->error() != QNetworkReply::NoError) {
-            // TODO: add tracking of failed items
+        /* init the curl session */
+        curl_handle = curl_easy_init();
 
-            LOG_WARNING << "Failed to process a telemetry report." << reply->errorString();;
+        std::string resourceString = resource.toStdString();
+        const char *url = resourceString.data();
+        /* specify URL to get */
+        curl_easy_setopt(curl_handle, CURLOPT_URL, url);
+
+        /* some servers don't like requests that are made without a user-agent
+             field, so we provide one */
+        QString userAgent;
+#if defined(Q_OS_DARWIN)
+        userAgent = QString("Mozilla/5.0 (Macintosh; Mac OS X %2; rv:1.1) Qt Xpiks/1.1")
+                .arg(QSysInfo::productVersion());
+#elif defined(Q_OS_WIN)
+        userAgent = QString("Mozilla/5.0 (Windows %2; rv:1.1) Qt Xpiks/1.1")
+                .arg(QSysInfo::productVersion());
+#elif defined(Q_OS_LINUX)
+        userAgent = QString("Mozilla/5.0 (Linux %2; rv:1.1) Qt Xpiks/1.1")
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
+                .arg(QSysInfo::productVersion());
+#else
+                .arg("?");
+#endif
+#endif
+        std::string userAgentString = userAgent.toStdString();
+        const char *userAgentData = userAgentString.data();
+        curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, userAgentData);
+
+        std::string postString = payload.toStdString();
+        const char *postData = postString.data();
+        /* Now specify the POST data */
+        curl_easy_setopt(curl_handle, CURLOPT_POSTFIELDS, postData);
+
+        /* get it! */
+        res = curl_easy_perform(curl_handle);
+
+        const bool success = (CURLE_OK == res);
+
+        /* check for errors */
+        if(!success) {
+            LOG_WARNING << "curl_easy_perform() failed" << curl_easy_strerror(res);
         }
 
-        reply->deleteLater();
+        /* cleanup curl stuff */
+        curl_easy_cleanup(curl_handle);
+
+        return success;
     }
 }

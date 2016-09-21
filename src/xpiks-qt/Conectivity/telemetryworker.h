@@ -23,7 +23,6 @@
 #define TELEMETRYWORKER_H
 
 #include <QObject>
-#include <QNetworkAccessManager>
 #include "../Common/itemprocessingworker.h"
 #include "analyticsuserevent.h"
 
@@ -40,6 +39,9 @@ namespace Conectivity {
         virtual bool initWorker();
         virtual void processOneItem(std::shared_ptr<AnalyticsUserEvent> &item);
 
+    private:
+        bool sendOneReport(const QString &resource, const QString &payload);
+
     protected:
         virtual void notifyQueueIsEmpty() { emit queueIsEmpty(); }
         virtual void workerStopped() { emit stopped(); }
@@ -48,16 +50,12 @@ namespace Conectivity {
         void process() { doWork(); }
         void cancel() { stopWorking(); }
 
-    private slots:
-        void replyReceived(QNetworkReply *reply);
-
     signals:
         void stopped();
         void queueIsEmpty();
         void cancelAllQueries();
 
     private:
-        QNetworkAccessManager m_NetworkManager;
         QString m_UserAgentId;
         QString m_ReportingEndpoint;
         QString m_InterfaceLanguage;
