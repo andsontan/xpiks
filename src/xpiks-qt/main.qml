@@ -41,7 +41,7 @@ ApplicationWindow {
     height: appSettings.getAppHeight(725)
     minimumHeight: 725
     minimumWidth: 930
-    title: i18.n + qsTr("Xpiks")
+    title: i18.n + (debug ? "Xpiks (Devel)" : qsTr("Xpiks"))
     property int openedDialogsCount: 0
     property bool showUpdateLink: false
     property bool needToCenter: true
