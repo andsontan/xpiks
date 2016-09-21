@@ -31,7 +31,7 @@ namespace Conectivity {
     {
         Q_OBJECT
     public:
-        explicit SimpleCurlRequest(const QString &resource, QObject *parent = 0);
+        explicit SimpleCurlRequest(const QString &resource, bool verifySSL=false, QObject *parent = 0);
 
     public:
         const QByteArray &getResponseData() const { return m_ResponseData; }
@@ -47,6 +47,7 @@ namespace Conectivity {
     private:
         QString m_RemoteResource;
         QByteArray m_ResponseData;
+        bool m_VerifySSL;
     };
 }
 
