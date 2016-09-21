@@ -57,6 +57,12 @@
 #define LOG_INTEGRATION_TESTS if (1) {} else qDebug()
 #endif
 
+#if defined(INTEGRATION_TESTS) || defined(QT_DEBUG)
+#define LOG_INTEGR_TESTS_OR_DEBUG qDebug()
+#else
+#define LOG_INTEGR_TESTS_OR_DEBUG if (1) {} else qDebug()
+#endif
+
 #if defined(INTEGRATION_TESTS) || defined(CORE_TESTS)
 #define LOG_WARNING qInfo() << "FAKE_WARNING"
 #else

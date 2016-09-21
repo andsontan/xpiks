@@ -19,35 +19,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef RemoteConfig_H
-#define RemoteConfig_H
+#ifndef SimpleCurlRequest_H
+#define SimpleCurlRequest_H
 
 #include <QObject>
 #include <QString>
-#include <QJsonDocument>
-#include "../Common/defines.h"
+#include <QByteArray>
 
-namespace Helpers {
-    class RemoteConfig : public QObject {
+namespace Conectivity {
+    class SimpleCurlRequest : public QObject
+    {
         Q_OBJECT
     public:
-        RemoteConfig(QObject *parent=0);
-        virtual ~RemoteConfig();
+        explicit SimpleCurlRequest(const QString &resource, QObject *parent = 0);
 
     public:
-        void requestInitConfig(const QString &configUrl);
-        const QJsonDocument& getConfig() const { return m_Config; }
+        const QByteArray &getResponseData() const { return m_ResponseData; }
+        void dispose() { emit stopped(); }
+
+    public slots:
+        void process();
 
     signals:
-        void configArrived();
-
-    private slots:
-        void requestFinishedHandler(bool success);
+        void requestFinished(bool success);
+        void stopped();
 
     private:
-        QString m_ConfigUrl;
-        QJsonDocument m_Config;
+        QString m_RemoteResource;
+        QByteArray m_ResponseData;
     };
 }
 
-#endif // RemoteConfig_H
+#endif // SimpleCurlRequest_H
