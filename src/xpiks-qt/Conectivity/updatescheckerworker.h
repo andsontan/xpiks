@@ -23,8 +23,6 @@
 #define UPDATESCHECKERWORKER_H
 
 #include <QObject>
-#include <QNetworkAccessManager>
-#include <QEventLoop>
 
 namespace Conectivity {
     class UpdatesCheckerWorker : public QObject
@@ -45,12 +43,6 @@ namespace Conectivity {
         void stopped();
         void updateAvailable(QString updateLink);
         void requestFinished();
-
-    private slots:
-        void replyReceived(QNetworkReply *networkReply);
-
-    private:
-        QNetworkAccessManager *m_NetworkManager;
     };
 }
 

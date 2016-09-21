@@ -40,54 +40,32 @@
 #include <QString>
 #include <QUrl>
 #include <QThread>
-#include <QNetworkReply>
-#include <QNetworkRequest>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QtGlobal>
-#include <QEventLoop>
+#include "../Conectivity/simplecurlrequest.h"
 #include "../Common/defines.h"
 #include "../Common/version.h"
 #include "../Common/defines.h"
 
 namespace Conectivity {
-
-    UpdatesCheckerWorker::UpdatesCheckerWorker():
-        m_NetworkManager(NULL)
+    UpdatesCheckerWorker::UpdatesCheckerWorker()
     {
     }
 
     UpdatesCheckerWorker::~UpdatesCheckerWorker() {
-        if (m_NetworkManager != NULL) {
-            m_NetworkManager->deleteLater();
-        }
     }
 
     void UpdatesCheckerWorker::initWorker() {
-        m_NetworkManager = new QNetworkAccessManager();
-        QObject::connect(m_NetworkManager, SIGNAL(finished(QNetworkReply*)),
-                         this, SLOT(replyReceived(QNetworkReply*)));
     }
 
     void UpdatesCheckerWorker::processOneItem() {
         LOG_INFO << "Update service: checking for updates...";
         QString queryString = QString(UPDATE_JSON_URL);
-        QUrl url;
-        url.setUrl(queryString);
 
-        QNetworkRequest request(url);
-        QNetworkReply *reply = m_NetworkManager->get(request);
-        Q_UNUSED(reply);
-    }
-
-    void UpdatesCheckerWorker::process() {
-        initWorker();
-        processOneItem();
-    }
-
-    void UpdatesCheckerWorker::replyReceived(QNetworkReply *networkReply) {
-        if (networkReply->error() == QNetworkReply::NoError) {
-            QJsonDocument document = QJsonDocument::fromJson(networkReply->readAll());
+        Conectivity::SimpleCurlRequest request(queryString);
+        if (request.sendRequestSync()) {
+            QJsonDocument document = QJsonDocument::fromJson(request.getResponseData());
 
             QJsonObject jsonObject = document.object();
 
@@ -113,14 +91,16 @@ namespace Conectivity {
                     emit updateAvailable(updateUrl);
                 }
             }
-        } else {
-            LOG_WARNING << "Update check failed:" << networkReply->errorString();
         }
 
-        networkReply->deleteLater();
         emit stopped();
         emit requestFinished();
 
         LOG_INFO << "Updates checking loop finished";
+    }
+
+    void UpdatesCheckerWorker::process() {
+        initWorker();
+        processOneItem();
     }
 }

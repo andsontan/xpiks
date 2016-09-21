@@ -56,7 +56,16 @@ namespace Conectivity {
     {
     }
 
+    bool SimpleCurlRequest::sendRequestSync() {
+        return doRequest();
+    }
+
     void SimpleCurlRequest::process() {
+        bool success = doRequest();
+        emit requestFinished(success);
+    }
+
+    bool SimpleCurlRequest::doRequest() {
         // https://curl.haxx.se/libcurl/c/getinmemory.html
         CURL *curl_handle;
         CURLcode res;
@@ -108,11 +117,12 @@ namespace Conectivity {
         /* get it! */
         res = curl_easy_perform(curl_handle);
 
+        const bool success = (CURLE_OK == res);
+
         /* check for errors */
-        if(res != CURLE_OK) {
+        if(!success) {
             LOG_WARNING << "curl_easy_perform() failed" << curl_easy_strerror(res);
-        }
-        else {
+        } else {
             /*
              * Now, our chunk.memory points to a memory block that is chunk.size
              * bytes big and contains the remote file.
@@ -129,6 +139,6 @@ namespace Conectivity {
 
         free(chunk.memory);
 
-        emit requestFinished(CURLE_OK == res);
+        return success;
     }
 }

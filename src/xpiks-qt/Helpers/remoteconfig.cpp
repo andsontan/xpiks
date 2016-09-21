@@ -55,7 +55,7 @@ namespace Helpers {
     }
 
     void RemoteConfig::requestFinishedHandler(bool success) {
-        LOG_DEBUG << "#";
+        LOG_INFO << "success:" << success;
 
         Conectivity::SimpleCurlRequest *request = qobject_cast<Conectivity::SimpleCurlRequest *>(sender());
 

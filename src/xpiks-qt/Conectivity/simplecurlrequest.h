@@ -36,6 +36,7 @@ namespace Conectivity {
     public:
         const QByteArray &getResponseData() const { return m_ResponseData; }
         void dispose() { emit stopped(); }
+        bool sendRequestSync();
 
     public slots:
         void process();
@@ -43,6 +44,9 @@ namespace Conectivity {
     signals:
         void requestFinished(bool success);
         void stopped();
+
+    private:
+        bool doRequest();
 
     private:
         QString m_RemoteResource;
