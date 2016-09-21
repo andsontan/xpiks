@@ -32,7 +32,7 @@ namespace Helpers {
     class RemoteConfig : public QObject {
         Q_OBJECT
     public:
-        RemoteConfig();
+        RemoteConfig(QObject *parent=0);
         virtual ~RemoteConfig();
 
     public:
@@ -47,7 +47,7 @@ namespace Helpers {
 
     private:
         QString m_ConfigUrl;
-        QNetworkAccessManager *m_NetworkManager;
+        QNetworkAccessManager m_NetworkManager;
         QJsonDocument m_Config;
     };
 }

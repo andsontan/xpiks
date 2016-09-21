@@ -22,8 +22,10 @@
 #include "abstractconfigupdatermodel.h"
 
 namespace Models {
-    AbstractConfigUpdaterModel::AbstractConfigUpdaterModel(bool forceOverwrite):
-        m_ForceOverwrite(forceOverwrite)
+    AbstractConfigUpdaterModel::AbstractConfigUpdaterModel(bool forceOverwrite, QObject *parent):
+        QObject(parent),
+        m_ForceOverwrite(forceOverwrite),
+        m_RemoteConfig(this)
     {
         QObject::connect(&m_RemoteConfig, SIGNAL(configArrived()), this, SLOT(remoteConfigArrived()));
     }

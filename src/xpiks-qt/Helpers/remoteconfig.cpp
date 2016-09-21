@@ -23,15 +23,15 @@
 #include "../Common/defines.h"
 
 namespace Helpers {
-    RemoteConfig::RemoteConfig() {
-        m_NetworkManager = new QNetworkAccessManager();
-
-        QObject::connect(m_NetworkManager, SIGNAL(finished(QNetworkReply*)),
+    RemoteConfig::RemoteConfig(QObject *parent):
+        QObject(parent),
+        m_NetworkManager(this)
+    {
+        QObject::connect(&m_NetworkManager, SIGNAL(finished(QNetworkReply*)),
                          this, SLOT(replyReceived(QNetworkReply*)));
     }
 
     RemoteConfig::~RemoteConfig() {
-        m_NetworkManager->deleteLater();
     }
 
     void RemoteConfig::requestInitConfig(const QString &configUrl) {
@@ -43,7 +43,7 @@ namespace Helpers {
         url.setUrl(m_ConfigUrl);
 
         QNetworkRequest request(url);
-        QNetworkReply *reply = m_NetworkManager->get(request);
+        QNetworkReply *reply = m_NetworkManager.get(request);
         Q_UNUSED(reply);
     }
 

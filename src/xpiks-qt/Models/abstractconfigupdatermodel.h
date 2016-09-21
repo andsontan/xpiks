@@ -34,7 +34,7 @@ namespace Models {
     {
         Q_OBJECT
     public:
-        AbstractConfigUpdaterModel(bool forceOverwrite);
+        AbstractConfigUpdaterModel(bool forceOverwrite, QObject *parent=nullptr);
         virtual ~AbstractConfigUpdaterModel() {}
 
     public:
