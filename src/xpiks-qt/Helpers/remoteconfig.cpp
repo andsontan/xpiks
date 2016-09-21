@@ -20,6 +20,7 @@
  */
 
 #include "remoteconfig.h"
+#include "../Common/defines.h"
 
 namespace Helpers {
     RemoteConfig::RemoteConfig() {
@@ -51,7 +52,11 @@ namespace Helpers {
 
         if (networkReply->error() == QNetworkReply::NoError) {
             QJsonParseError error;
-            m_Config = QJsonDocument::fromJson(networkReply->readAll(), &error);
+
+            auto replyData = networkReply->readAll();
+            LOG_INTEGRATION_TESTS << replyData;
+
+            m_Config = QJsonDocument::fromJson(replyData, &error);
 
             if (error.error == QJsonParseError::NoError) {
                 emit configArrived();
