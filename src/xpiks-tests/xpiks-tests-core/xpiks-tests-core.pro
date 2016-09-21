@@ -107,7 +107,6 @@ SOURCES += main.cpp \
     ../../xpiks-qt/SpellCheck/spellchecksuggestionmodel.cpp \
     ../../xpiks-qt/MetadataIO/backupsaverservice.cpp \
     ../../xpiks-qt/MetadataIO/backupsaverworker.cpp \
-    ../../xpiks-qt/Conectivity/telemetryservice.cpp \
     ../../xpiks-qt/SpellCheck/spellcheckiteminfo.cpp \
     ../../xpiks-qt/SpellCheck/spellsuggestionsitem.cpp \
     ../../xpiks-qt/Common/basickeywordsmodel.cpp \
@@ -151,8 +150,7 @@ SOURCES += main.cpp \
     deletekeywords_tests.cpp \
     ../../xpiks-qt/Models/deletekeywordsviewmodel.cpp \
     ../../xpiks-qt/Commands/deletekeywordscommand.cpp \
-    ../../xpiks-qt/Conectivity/uploadwatcher.cpp \
-    ../../xpiks-qt/Conectivity/telemetryworker.cpp
+    ../../xpiks-qt/Conectivity/uploadwatcher.cpp
 
 HEADERS += \
     encryption_tests.h \
@@ -200,7 +198,6 @@ HEADERS += \
     ../../xpiks-qt/MetadataIO/backupsaverservice.h \
     ../../xpiks-qt/MetadataIO/backupsaverworker.h \
     ../../xpiks-qt/Conectivity/analyticsuserevent.h \
-    ../../xpiks-qt/Conectivity/telemetryservice.h \
     ../../xpiks-qt/SpellCheck/ispellcheckable.h \
     ../../xpiks-qt/SpellCheck/spellcheckiteminfo.h \
     ../../xpiks-qt/SpellCheck/spellsuggestionsitem.h \
@@ -260,6 +257,5 @@ HEADERS += \
     ../../xpiks-qt/Models/deletekeywordsviewmodel.h \
     ../../xpiks-qt/Commands/deletekeywordscommand.h \
     ../../xpiks-qt/Common/iflagsprovider.h \
-    ../../xpiks-qt/Conectivity/uploadwatcher.h \
-    ../../xpiks-qt/Conectivity/telemetryworker.h
+    ../../xpiks-qt/Conectivity/uploadwatcher.h
 
