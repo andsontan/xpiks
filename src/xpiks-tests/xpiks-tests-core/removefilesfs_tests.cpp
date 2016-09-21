@@ -27,7 +27,8 @@
     Models::CombinedArtworksModel combinedModel; \
     commandManagerMock.InjectDependency(&combinedModel);\
     Models::ZipArchiver zipArchive; \
-    commandManagerMock.InjectDependency(&zipArchive);
+    commandManagerMock.InjectDependency(&zipArchive); \
+    commandManagerMock.generateAndAddArtworks(10);
 
 void RemoveFilesFsTests::removeArtworksSignals() {
     Mocks::CommandManagerMock commandManagerMock;
