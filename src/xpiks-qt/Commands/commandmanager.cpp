@@ -600,9 +600,13 @@ void Commands::CommandManager::saveArtworksBackups(const QVector<Models::Artwork
 }
 
 void Commands::CommandManager::reportUserAction(Conectivity::UserAction userAction) const {
+#ifndef CORE_TESTS
     if (m_TelemetryService) {
         m_TelemetryService->reportAction(userAction);
     }
+#else
+    Q_UNUSED(userAction);
+#endif
 }
 
 void Commands::CommandManager::cleanupLocalLibraryAsync() const {
@@ -629,13 +633,13 @@ void Commands::CommandManager::afterConstructionCallback() {
 
     QCoreApplication::processEvents();
 
+#ifndef CORE_TESTS
     const QString reportingEndpoint =
         QLatin1String(
             "cc39a47f60e1ed812e2403b33678dd1c529f1cc43f66494998ec478a4d13496269a3dfa01f882941766dba246c76b12b2a0308e20afd84371c41cf513260f8eb8b71f8c472cafb1abf712c071938ec0791bbf769ab9625c3b64827f511fa3fbb");
     QString endpoint = Encryption::decodeText(reportingEndpoint, "reporting");
     m_TelemetryService->setEndpoint(endpoint);
 
-#ifndef CORE_TESTS
 #ifdef WITH_PLUGINS
     m_PluginManager->loadPlugins();
 #endif
@@ -697,11 +701,12 @@ void Commands::CommandManager::beforeDestructionCallback() const {
     m_PluginManager->unloadPlugins();
 #endif
 
+
+#ifndef CORE_TESTS
     // we have a second for important stuff
     m_TelemetryService->reportAction(Conectivity::UserAction::Close);
     m_TelemetryService->stopReporting();
 
-#ifndef CORE_TESTS
     m_LogsModel->stopLogging();
 #endif
 }
