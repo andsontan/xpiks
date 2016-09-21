@@ -134,15 +134,10 @@ SOURCES += main.cpp \
     undoredo_tests.cpp \
     ../../xpiks-qt/Helpers/filterhelpers.cpp \
     artworkfilter_tests.cpp \
-    ../../xpiks-qt/Models/artworkuploader.cpp \
     ../../xpiks-qt/Models/ziparchiver.cpp \
     removefilesfs_tests.cpp \
     ../../xpiks-qt/Helpers/jsonhelper.cpp \
-    ../../xpiks-qt/Helpers/localconfig.cpp \
-    ../../xpiks-qt/Helpers/remoteconfig.cpp \
-    ../../xpiks-qt/AutoComplete/stocksftplistmodel.cpp \
     ../../xpiks-qt/AutoComplete/stringfilterproxymodel.cpp \
-    ../../xpiks-qt/Models/abstractconfigupdatermodel.cpp \
     ../../xpiks-qt/Models/imageartwork.cpp \
     recentdirectories_tests.cpp \
     artitemsmodel_tests.cpp \
@@ -159,8 +154,7 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Models/deletekeywordsviewmodel.cpp \
     ../../xpiks-qt/Commands/deletekeywordscommand.cpp \
     ../../xpiks-qt/Conectivity/uploadwatcher.cpp \
-    ../../xpiks-qt/Conectivity/telemetryworker.cpp \
-    ../../xpiks-qt/Conectivity/simplecurlrequest.cpp
+    ../../xpiks-qt/Conectivity/telemetryworker.cpp
 
 HEADERS += \
     encryption_tests.h \
@@ -246,17 +240,12 @@ HEADERS += \
     undoredo_tests.h \
     ../../xpiks-qt/Helpers/filterhelpers.h \
     artworkfilter_tests.h \
-    ../../xpiks-qt/Models/artworkuploader.h \
     ../../xpiks-qt/Conectivity/iftpcoordinator.h \
     ../../xpiks-qt/Models/ziparchiver.h \
     removefilesfs_tests.h \
     Mocks/artworksrepositorymock.h \
     ../../xpiks-qt/Helpers/jsonhelper.h \
-    ../../xpiks-qt/Helpers/localconfig.h \
-    ../../xpiks-qt/Helpers/remoteconfig.h \
-    ../../xpiks-qt/AutoComplete/stocksftplistmodel.h \
     ../../xpiks-qt/AutoComplete/stringfilterproxymodel.h \
-    ../../xpiks-qt/Models/abstractconfigupdatermodel.h \
     ../../xpiks-qt/Models/imageartwork.h \
     deleteoldlogstest.h \
     ../../xpiks-qt/Common/hold.h \
@@ -276,6 +265,5 @@ HEADERS += \
     ../../xpiks-qt/Commands/deletekeywordscommand.h \
     ../../xpiks-qt/Common/iflagsprovider.h \
     ../../xpiks-qt/Conectivity/uploadwatcher.h \
-    ../../xpiks-qt/Conectivity/telemetryworker.h \
-    ../../xpiks-qt/Conectivity/simplecurlrequest.h
+    ../../xpiks-qt/Conectivity/telemetryworker.h
 

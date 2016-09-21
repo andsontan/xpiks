@@ -643,7 +643,10 @@ void Commands::CommandManager::afterConstructionCallback() {
 
     m_TelemetryService->startReporting();
     m_UpdateService->startChecking();
+
+#ifndef CORE_TESTS
     m_ArtworkUploader->initializeStocksList();
+#endif
 
 #ifdef Q_OS_MAC
     if (m_SettingsModel->getUseExifTool()) {

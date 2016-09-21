@@ -46,10 +46,9 @@ namespace Commands {
 namespace Models {
     class ArtworkMetadata;
 
-    class ArtworkUploader:
-        public ArtworksProcessor
+    class ArtworkUploader: public ArtworksProcessor
     {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
         ArtworkUploader(Conectivity::IFtpCoordinator *ftpCoordinator, QObject *parent=0);
@@ -76,19 +75,14 @@ namespace Models {
         void stocksListUpdated();
 
     public:
-#ifndef CORE_TESTS
         Q_INVOKABLE void uploadArtworks();
         Q_INVOKABLE void checkCredentials(const QString &host, const QString &username,
                                           const QString &password, bool disablePassiveMode, bool disableEPSV) const;
-
-#endif
         Q_INVOKABLE bool needCreateArchives() const;
 
         Q_INVOKABLE QString getFtpAddress(const QString &stockName) const { return m_StocksFtpList.getFtpAddress(stockName); }
-#ifndef CORE_TESTS
         Q_INVOKABLE QString getFtpName(const QString &stockAddress) const;
 
-#endif
         Q_INVOKABLE QObject *getUploadWatcher() {
             auto *model = &m_UploadWatcher;
             QQmlEngine::setObjectOwnership(model, QQmlEngine::CppOwnership);
@@ -99,10 +93,7 @@ namespace Models {
         void initializeStocksList();
 
     private:
-#ifndef CORE_TESTS
         void doUploadArtworks(const QVector<ArtworkMetadata *> &artworkList);
-
-#endif
 
     protected:
         virtual void cancelProcessing();
@@ -114,9 +105,7 @@ namespace Models {
         Conectivity::IFtpCoordinator *m_FtpCoordinator;
         AutoComplete::StringFilterProxyModel m_StocksCompletionSource;
         AutoComplete::StocksFtpListModel m_StocksFtpList;
-#ifndef CORE_TESTS
         QFutureWatcher<Conectivity::ContextValidationResult> *m_TestingCredentialWatcher;
-#endif
         int m_Percent;
     };
 }

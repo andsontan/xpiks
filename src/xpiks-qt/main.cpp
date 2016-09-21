@@ -56,6 +56,7 @@
 #include "Helpers/globalimageprovider.h"
 #include "Models/uploadinforepository.h"
 #include "Conectivity/ftpcoordinator.h"
+#include "Conectivity/curlinithelper.h"
 #include "Helpers/helpersqmlwrapper.h"
 #include "Encryption/secretsmanager.h"
 #include "Models/artworksrepository.h"
@@ -203,6 +204,9 @@ int main(int argc, char *argv[]) {
         std::cerr << "Xpiks is already running";
         return -1;
     }
+
+    // will call curl_global_init and cleanup
+    Conectivity::CurlInitHelper curlInitHelper;
 
     const char *highDpiEnvironmentVariable = setHighDpiEnvironmentVariable();
     qRegisterMetaTypeStreamOperators<Models::ProxySettings>("ProxySettings");

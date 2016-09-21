@@ -42,7 +42,8 @@ namespace Conectivity {
         QString host = sanitizeHost(context->m_Host);
         const QString &remoteUrl = host;
 
-        curl_global_init(CURL_GLOBAL_ALL);
+        // should be called in main() using helper
+        //curl_global_init(CURL_GLOBAL_ALL);
         curlHandle = curl_easy_init();
 
         CURLcode r = CURLE_GOT_NOTHING;
@@ -65,7 +66,8 @@ namespace Conectivity {
         }
 
         curl_easy_cleanup(curlHandle);
-        curl_global_cleanup();
+        // should be called in main()
+        //curl_global_cleanup();
 
         LOG_INFO << "Credentials checking finished" << host;
         delete context;

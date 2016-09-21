@@ -113,7 +113,8 @@ SOURCES += main.cpp \
     Helpers/keywordshelpers.cpp \
     Conectivity/uploadwatcher.cpp \
     Conectivity/telemetryworker.cpp \
-    Conectivity/simplecurlrequest.cpp
+    Conectivity/simplecurlrequest.cpp \
+    Conectivity/curlinithelper.cpp
 
 RESOURCES += qml.qrc
 
@@ -283,7 +284,8 @@ HEADERS += \
     Conectivity/uploadwatcher.h \
     Common/iflagsprovider.h \
     Conectivity/telemetryworker.h \
-    Conectivity/simplecurlrequest.h
+    Conectivity/simplecurlrequest.h \
+    Conectivity/curlinithelper.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

@@ -19,7 +19,8 @@ private slots:
     void findSelectedIndexTest();
     void clearKeywordsTest();
     void detachVectorFromSelectedTest();
-    void setSelectedForUploadTest();
+    // TODO: reimplement in integration-tests
+    //void setSelectedForUploadTest();
     void setSelectedForZippingTest();
     void filterModifiedItemsTest();
     void filterEmptyItemsTest();

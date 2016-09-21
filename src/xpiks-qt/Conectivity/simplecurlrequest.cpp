@@ -84,7 +84,7 @@ namespace Conectivity {
              * default bundle, then the CURLOPT_CAPATH option might come handy for
              * you.
             */
-            curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+            curl_easy_setopt(curl_handle, CURLOPT_SSL_VERIFYPEER, 0L);
 
             /*
              * If the site you're connecting to uses a different host name that what
@@ -92,7 +92,7 @@ namespace Conectivity {
              * subjectAltName) fields, libcurl will refuse to connect. You can skip
              * this check, but this will make the connection less secure.
             */
-            curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
+            curl_easy_setopt(curl_handle, CURLOPT_SSL_VERIFYHOST, 0L);
         }
 
         /* send all data to this function  */

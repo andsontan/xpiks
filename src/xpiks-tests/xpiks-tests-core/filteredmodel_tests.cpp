@@ -175,6 +175,8 @@ void FilteredModelTests::detachVectorFromSelectedTest() {
     }
 }
 
+/*
+ * TODO: reimplement in integration-tests
 void FilteredModelTests::setSelectedForUploadTest() {
     DECLARE_MODELS_AND_GENERATE(10);
     Models::ArtworkUploader uploader(NULL);
@@ -194,6 +196,7 @@ void FilteredModelTests::setSelectedForUploadTest() {
     const QVector<Models::ArtworkMetadata*> &artworks = uploader.getArtworkList();
     QCOMPARE(artworks.length(), 5);
 }
+*/
 
 void FilteredModelTests::setSelectedForZippingTest() {
     DECLARE_MODELS_AND_GENERATE(10);

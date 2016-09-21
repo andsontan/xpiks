@@ -20,7 +20,9 @@
 #include "../../xpiks-qt/Models/uploadinforepository.h"
 #include "../../xpiks-qt/Conectivity/ftpcoordinator.h"
 #include "../../xpiks-qt/Models/findandreplacemodel.h"
+#include "../../xpiks-qt/Conectivity/curlinithelper.h"
 #include "../../xpiks-qt/Helpers/helpersqmlwrapper.h"
+#include "../../xpiks-qt/Conectivity/updateservice.h"
 #include "../../xpiks-qt/Encryption/secretsmanager.h"
 #include "../../xpiks-qt/Models/artworksrepository.h"
 #include "../../xpiks-qt/QMLExtensions/colorsmodel.h"
@@ -34,7 +36,6 @@
 #include "../../xpiks-qt/Plugins/pluginmanager.h"
 #include "../../xpiks-qt/Helpers/loggingworker.h"
 #include "../../xpiks-qt/Models/languagesmodel.h"
-#include "../../xpiks-qt/Conectivity/updateservice.h"
 #include "../../xpiks-qt/Models/artitemsmodel.h"
 #include "../../xpiks-qt/Models/settingsmodel.h"
 #include "../../xpiks-qt/Helpers/appsettings.h"
@@ -77,6 +78,9 @@
 
 int main(int argc, char *argv[]) {
     std::cout << "Started integration tests" << std::endl;
+
+    // will call curl_global_init and cleanup
+    Conectivity::CurlInitHelper curlInitHelper;
 
     QCoreApplication app(argc, argv);
 

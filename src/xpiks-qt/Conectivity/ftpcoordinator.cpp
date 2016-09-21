@@ -128,14 +128,14 @@ namespace Conectivity {
         m_AllWorkersCount = uploadBatchesCount;
         m_FinishedWorkersCount = 0;
         m_OverallProgress = 0.0;
-        LOG_DEBUG << "Initializing CURL";
 
-        curl_global_init(CURL_GLOBAL_ALL);
+        // should be called in main() using initHelper
+        //curl_global_init(CURL_GLOBAL_ALL);
     }
 
     void FtpCoordinator::finalizeUpload() {
         Q_ASSERT((size_t)m_FinishedWorkersCount == m_AllWorkersCount);
-        curl_global_cleanup();
-        LOG_DEBUG << "Cleaning up CURL";
+        // should be called in main() using initHelper
+        // curl_global_cleanup();
     }
 }
