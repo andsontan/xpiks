@@ -67,6 +67,7 @@
 #include "addtouserdictionarytest.h"
 #include "autodetachvectortest.h"
 #include "removefromuserdictionarytest.h"
+#include "artworkuploaderbasictest.h"
 
 #if defined(WITH_LOGS)
 #undef WITH_LOGS
@@ -212,6 +213,7 @@ int main(int argc, char *argv[]) {
     integrationTests.append(new AddToUserDictionaryTest(&commandManager));
     integrationTests.append(new AutoDetachVectorTest(&commandManager));
     integrationTests.append(new RemoveFromUserDictionaryTest(&commandManager));
+    integrationTests.append(new ArtworkUploaderBasicTest(&commandManager));
 
     qDebug("\n");
     int succeededTestsCount = 0, failedTestsCount = 0;

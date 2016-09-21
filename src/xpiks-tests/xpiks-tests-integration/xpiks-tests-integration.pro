@@ -148,7 +148,8 @@ SOURCES += main.cpp \
     removefromuserdictionarytest.cpp \
     testshelpers.cpp \
     ../../xpiks-qt/Conectivity/simplecurlrequest.cpp \
-    ../../xpiks-qt/Conectivity/curlinithelper.cpp
+    ../../xpiks-qt/Conectivity/curlinithelper.cpp \
+    artworkuploaderbasictest.cpp
 
 RESOURCES +=
 
@@ -324,7 +325,8 @@ HEADERS += \
     removefromuserdictionarytest.h \
     testshelpers.h \
     ../../xpiks-qt/Conectivity/simplecurlrequest.h \
-    ../../xpiks-qt/Conectivity/curlinithelper.h
+    ../../xpiks-qt/Conectivity/curlinithelper.h \
+    artworkuploaderbasictest.h
 
 INCLUDEPATH += ../../tiny-aes
 INCLUDEPATH += ../../cpp-libface

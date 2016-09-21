@@ -49,7 +49,6 @@ namespace Models {
     class ArtworkUploader: public ArtworksProcessor
     {
         Q_OBJECT
-
     public:
         ArtworkUploader(Conectivity::IFtpCoordinator *ftpCoordinator, QObject *parent=0);
         virtual ~ArtworkUploader();
