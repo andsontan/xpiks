@@ -146,7 +146,8 @@ SOURCES += main.cpp \
     addtouserdictionarytest.cpp \
     autodetachvectortest.cpp \
     removefromuserdictionarytest.cpp \
-    testshelpers.cpp
+    testshelpers.cpp \
+    ../../xpiks-qt/Conectivity/simplecurlrequest.cpp
 
 RESOURCES +=
 
@@ -320,7 +321,8 @@ HEADERS += \
     addtouserdictionarytest.h \
     autodetachvectortest.h \
     removefromuserdictionarytest.h \
-    testshelpers.h
+    testshelpers.h \
+    ../../xpiks-qt/Conectivity/simplecurlrequest.h
 
 INCLUDEPATH += ../../tiny-aes
 INCLUDEPATH += ../../cpp-libface
