@@ -108,7 +108,6 @@ SOURCES += main.cpp \
     ../../xpiks-qt/MetadataIO/backupsaverservice.cpp \
     ../../xpiks-qt/MetadataIO/backupsaverworker.cpp \
     ../../xpiks-qt/Conectivity/telemetryservice.cpp \
-    ../../xpiks-qt/Conectivity/updateservice.cpp \
     ../../xpiks-qt/SpellCheck/spellcheckiteminfo.cpp \
     ../../xpiks-qt/SpellCheck/spellsuggestionsitem.cpp \
     ../../xpiks-qt/Common/basickeywordsmodel.cpp \
@@ -121,7 +120,6 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Helpers/stringhelper.cpp \
     keywordvalidation_tests.cpp \
     artworkrepository_tests.cpp \
-    ../../xpiks-qt/Conectivity/updatescheckerworker.cpp \
     ../../xpiks-qt/MetadataIO/metadataiocoordinator.cpp \
     ../../xpiks-qt/MetadataIO/metadatareadingworker.cpp \
     ../../xpiks-qt/MetadataIO/saverworkerjobitem.cpp \
@@ -203,7 +201,6 @@ HEADERS += \
     ../../xpiks-qt/MetadataIO/backupsaverworker.h \
     ../../xpiks-qt/Conectivity/analyticsuserevent.h \
     ../../xpiks-qt/Conectivity/telemetryservice.h \
-    ../../xpiks-qt/Conectivity/updateservice.h \
     ../../xpiks-qt/SpellCheck/ispellcheckable.h \
     ../../xpiks-qt/SpellCheck/spellcheckiteminfo.h \
     ../../xpiks-qt/SpellCheck/spellsuggestionsitem.h \
@@ -216,7 +213,6 @@ HEADERS += \
     stringhelpers_tests.h \
     keywordvalidation_tests.h \
     artworkrepository_tests.h \
-    ../../xpiks-qt/Conectivity/updatescheckerworker.h \
     ../../xpiks-qt/Common/itemprocessingworker.h \
     ../../xpiks-qt/MetadataIO/metadataiocoordinator.h \
     ../../xpiks-qt/MetadataIO/metadatareadingworker.h \

@@ -639,12 +639,9 @@ void Commands::CommandManager::afterConstructionCallback() {
 #ifdef WITH_PLUGINS
     m_PluginManager->loadPlugins();
 #endif
-#endif
 
     m_TelemetryService->startReporting();
     m_UpdateService->startChecking();
-
-#ifndef CORE_TESTS
     m_ArtworkUploader->initializeStocksList();
 #endif
 
