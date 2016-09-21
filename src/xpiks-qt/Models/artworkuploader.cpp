@@ -182,7 +182,9 @@ namespace Models {
     }
 
     void ArtworkUploader::initializeStocksList() {
-        m_StocksFtpList.initializeConfigs();
+        QTimer::singleShot(1000, [&]() {
+            m_StocksFtpList.initializeConfigs();
+        });
     }
 
 #ifndef CORE_TESTS

@@ -44,6 +44,8 @@ namespace AutoComplete {
     { }
 
     void StocksFtpListModel::initializeConfigs() {
+        LOG_DEBUG << "#";
+
         QString localConfigPath;
 
         QString appDataPath = XPIKS_USERDATA_PATH;

@@ -49,7 +49,7 @@ ApplicationWindow {
     property bool initializedColors: false
     property var spellCheckService: helpersWrapper.getSpellCheckerService()
 
-    onBeforeRendering: {
+    onVisibleChanged: {
         if (!initializedColors) {
             initializedColors = true
 
@@ -58,9 +58,7 @@ ApplicationWindow {
 
             Colors.applyTheme(settingsModel.selectedThemeIndex)
         }
-    }
 
-    onVisibleChanged: {
         if (needToCenter) {
             needToCenter = false
             applicationWindow.x = appSettings.getAppPosX((Screen.width - applicationWindow.width) / 2)
@@ -834,7 +832,6 @@ ApplicationWindow {
         property string originalText: vectorsAttached > 1 ? qsTr("%1 vectors attached").arg(vectorsAttached) : qsTr("1 vector attached")
         text: i18.n + originalText
     }
-
 
     Connections {
         target: artItemsModel
