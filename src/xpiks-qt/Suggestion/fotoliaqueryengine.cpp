@@ -21,26 +21,21 @@
 
 #include "fotoliaqueryengine.h"
 #include <QObject>
-#include <QNetworkRequest>
-#include <QNetworkReply>
-#include <QNetworkAccessManager>
 #include <QUrl>
+#include <QThread>
 #include <QUrlQuery>
 #include <QJsonObject>
 #include <QJsonDocument>
 #include "../Encryption/aes-qt.h"
+#include "../Conectivity/simplecurlrequest.h"
 #include "../Common/defines.h"
 #include "suggestionartwork.h"
 
 namespace Suggestion {
     FotoliaQueryEngine::FotoliaQueryEngine(int engineID):
-        SuggestionQueryEngineBase(engineID),
-        m_NetworkManager(this)
+        SuggestionQueryEngineBase(engineID)
     {
         m_FotoliaAPIKey = "ad2954b4ee1e9686fbf8446f85e0c26edfae6003f51f49ca5559aed915879e733bbaf2003b3575bc0b96e682a30a69907c612865ec8f4ec2522131108a4a9f24467f1f83befc3d80201e5f906c761341";
-
-        QObject::connect(&m_NetworkManager, SIGNAL(finished(QNetworkReply*)),
-                         this, SLOT(replyReceived(QNetworkReply*)));
     }
 
     void FotoliaQueryEngine::submitQuery(const QStringList &queryKeywords) {
@@ -49,33 +44,53 @@ namespace Suggestion {
         QString decodedAPIKey = Encryption::decodeText(m_FotoliaAPIKey, "MasterPassword");
 
         QUrl url = buildQuery(decodedAPIKey, queryKeywords);
-        QNetworkRequest request(url);
 
-        QNetworkReply *reply = m_NetworkManager.get(request);
-        QObject::connect(this, SIGNAL(cancelAllQueries()),
-                         reply, SLOT(abort()));
+        QString resourceUrl = QString::fromLocal8Bit(url.toEncoded());
+        Conectivity::SimpleCurlRequest *request = new Conectivity::SimpleCurlRequest(resourceUrl);
+
+        QThread *thread = new QThread();
+
+        request->moveToThread(thread);
+
+        QObject::connect(thread, SIGNAL(started()), request, SLOT(process()));
+        QObject::connect(request, SIGNAL(stopped()), thread, SLOT(quit()));
+
+        QObject::connect(request, SIGNAL(stopped()), request, SLOT(deleteLater()));
+        QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+
+        QObject::connect(request, SIGNAL(requestFinished(bool)), this, SLOT(requestFinishedHandler(bool)));
+
+        thread->start();
     }
 
-    void FotoliaQueryEngine::replyReceived(QNetworkReply *networkReply) {
-        LOG_DEBUG << "#";
-        if (networkReply->error() == QNetworkReply::NoError) {
-            QJsonDocument document = QJsonDocument::fromJson(networkReply->readAll());
-            QJsonObject jsonObject = document.object();
-            QJsonValue nbResultsValue = jsonObject["nb_results"];
+    void FotoliaQueryEngine::requestFinishedHandler(bool success) {
+        LOG_INFO << "success:" << success;
 
-            if (!nbResultsValue.isUndefined()) {
-                int resultsNumber = nbResultsValue.toInt();
-                std::vector<std::shared_ptr<SuggestionArtwork> > suggestionArtworks;
-                parseResponse(jsonObject, resultsNumber, suggestionArtworks);
-                setResults(suggestionArtworks);
-                emit resultsAvailable();
+        Conectivity::SimpleCurlRequest *request = qobject_cast<Conectivity::SimpleCurlRequest *>(sender());
+
+        if (success) {
+            QJsonParseError error;
+            QJsonDocument document = QJsonDocument::fromJson(request->getResponseData(), &error);
+
+            if (error.error == QJsonParseError::NoError) {
+                QJsonObject jsonObject = document.object();
+                QJsonValue nbResultsValue = jsonObject["nb_results"];
+
+                if (!nbResultsValue.isUndefined()) {
+                    int resultsNumber = nbResultsValue.toInt();
+                    std::vector<std::shared_ptr<SuggestionArtwork> > suggestionArtworks;
+                    parseResponse(jsonObject, resultsNumber, suggestionArtworks);
+                    setResults(suggestionArtworks);
+                    emit resultsAvailable();
+                }
+            } else {
+                LOG_WARNING << "parsing error:" << error.errorString();
+                emit errorReceived(tr("Can't parse the response"));
             }
         } else {
-            LOG_WARNING << "error:" << networkReply->errorString();
-            emit errorReceived(networkReply->errorString());
+            LOG_WARNING << "error:" << request->getErrorString();
+            emit errorReceived(request->getErrorString());
         }
-
-        networkReply->deleteLater();
     }
 
     void FotoliaQueryEngine::parseResponse(const QJsonObject &jsonObject, int count,

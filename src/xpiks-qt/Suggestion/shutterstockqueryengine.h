@@ -28,8 +28,6 @@
 #include "suggestionqueryenginebase.h"
 
 namespace Suggestion {
-    class KeywordsSuggestor;
-    class LocalLibrary;
     class SuggestionArtwork;
 
     class ShutterstockQueryEngine : public SuggestionQueryEngineBase

@@ -23,7 +23,6 @@
 #define FOTOLIAQUERYENGINE_H
 
 #include <QString>
-#include <QNetworkAccessManager>
 #include "suggestionqueryenginebase.h"
 
 namespace Suggestion {
@@ -38,7 +37,7 @@ namespace Suggestion {
         virtual QString getName() const { return tr("Fotolia"); }
 
     private slots:
-        void replyReceived(QNetworkReply *networkReply);
+        void requestFinishedHandler(bool success);
 
     private:
         void parseResponse(const QJsonObject &jsonObject, int count,
@@ -46,7 +45,6 @@ namespace Suggestion {
         QUrl buildQuery(const QString &apiKey, const QStringList &queryKeywords) const;
 
     private:
-        QNetworkAccessManager m_NetworkManager;
         QString m_FotoliaAPIKey;
     };
 }
