@@ -23,8 +23,6 @@
 #define SUGGESTIONQUERYENGINE_H
 
 #include <QObject>
-#include <QNetworkAccessManager>
-#include <QNetworkReply>
 #include <QStringList>
 #include <QJsonArray>
 #include "suggestionqueryenginebase.h"
@@ -45,7 +43,7 @@ namespace Suggestion {
         virtual QString getName() const { return tr("Shutterstock"); }
 
     private slots:
-        void replyReceived(QNetworkReply *networkReply);
+        void requestFinishedHandler(bool success);
 
     private:
         void parseResponse(const QJsonArray &jsonArray,
@@ -53,7 +51,6 @@ namespace Suggestion {
         QUrl buildQuery(const QStringList &queryKeywords) const;
 
     private:
-        QNetworkAccessManager m_NetworkManager;
         QString m_ClientId;
         QString m_ClientSecret;
     };

@@ -24,62 +24,83 @@
 #include <QJsonObject>
 #include <QByteArray>
 #include <QString>
+#include <QThread>
 #include "shutterstockqueryengine.h"
 #include "suggestionartwork.h"
 #include "keywordssuggestor.h"
 #include "../Encryption/aes-qt.h"
 #include "libraryqueryworker.h"
 #include "locallibrary.h"
+#include "../Conectivity/simplecurlrequest.h"
 #include "../Common/defines.h"
 
 namespace Suggestion {
     ShutterstockQueryEngine::ShutterstockQueryEngine(int engineID):
-        SuggestionQueryEngineBase(engineID),
-        m_NetworkManager(this)
+        SuggestionQueryEngineBase(engineID)
     {
         m_ClientId = "28a2a9b917961a0cbc343c81b2dd0f6618377f9210aa3182e5cc9f5588f914d918ede1533c9e06b91769c89e80909743";
         m_ClientSecret = "5092d9a967c2f19b57aac29bc09ac3b9e6ae5baec1a371331b73ff24f1625d95c4f3fef90bdacfbe9b0b3803b48c269192bc55f14bb9c2b5a16d650cd641b746eb384fcf9dbd53a96f1f81215921b04409f3635ecf846ffdf01ee04ba76624c9";
-
-        QObject::connect(&m_NetworkManager, SIGNAL(finished(QNetworkReply*)),
-                         this, SLOT(replyReceived(QNetworkReply*)));
     }
 
     void ShutterstockQueryEngine::submitQuery(const QStringList &queryKeywords) {
         LOG_INFO << queryKeywords;
         QUrl url = buildQuery(queryKeywords);
-        QNetworkRequest request(url);
 
         QString decodedClientId = Encryption::decodeText(m_ClientId, "MasterPassword");
         QString decodedClientSecret = Encryption::decodeText(m_ClientSecret, "MasterPassword");
 
         QString authStr = QString("%1:%2").arg(decodedClientId).arg(decodedClientSecret);
         QString headerData = "Basic " + QString::fromLatin1(authStr.toLocal8Bit().toBase64());
-        request.setRawHeader("Authorization", headerData.toLocal8Bit());
 
-        QNetworkReply *reply = m_NetworkManager.get(request);
-        QObject::connect(this, SIGNAL(cancelAllQueries()),
-                         reply, SLOT(abort()));
+        QString resourceUrl = url.toString(QUrl::FullyEncoded);
+        Conectivity::SimpleCurlRequest *request = new Conectivity::SimpleCurlRequest(resourceUrl);
+        request->setRawHeaders(QStringList() << "Authorization: " + headerData);
+
+        QThread *thread = new QThread();
+
+        request->moveToThread(thread);
+
+        QObject::connect(thread, SIGNAL(started()), request, SLOT(process()));
+        QObject::connect(request, SIGNAL(stopped()), thread, SLOT(quit()));
+
+        QObject::connect(request, SIGNAL(stopped()), request, SLOT(deleteLater()));
+        QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+
+        QObject::connect(request, SIGNAL(requestFinished(bool)), this, SLOT(requestFinishedHandler(bool)));
+
+        thread->start();
     }
 
-    void ShutterstockQueryEngine::replyReceived(QNetworkReply *networkReply) {
-        LOG_DEBUG << "#";
-        if (networkReply->error() == QNetworkReply::NoError) {
-            QJsonDocument document = QJsonDocument::fromJson(networkReply->readAll());
-            QJsonObject jsonObject = document.object();
-            QJsonValue dataValue = jsonObject["data"];
+    void ShutterstockQueryEngine::requestFinishedHandler(bool success) {
+        LOG_INFO << "success:" << success;
 
-            if (dataValue.isArray()) {
-                std::vector<std::shared_ptr<SuggestionArtwork> > suggestionArtworks;
-                parseResponse(dataValue.toArray(), suggestionArtworks);
-                setResults(suggestionArtworks);
-                emit resultsAvailable();
+        Conectivity::SimpleCurlRequest *request = qobject_cast<Conectivity::SimpleCurlRequest *>(sender());
+
+        if (success) {
+            QJsonParseError error;
+
+            QJsonDocument document = QJsonDocument::fromJson(request->getResponseData(), &error);
+
+            if (error.error == QJsonParseError::NoError) {
+                QJsonObject jsonObject = document.object();
+                QJsonValue dataValue = jsonObject["data"];
+
+                if (dataValue.isArray()) {
+                    std::vector<std::shared_ptr<SuggestionArtwork> > suggestionArtworks;
+                    parseResponse(dataValue.toArray(), suggestionArtworks);
+                    setResults(suggestionArtworks);
+                    emit resultsAvailable();
+                }
+            } else {
+                LOG_WARNING << "parsing error:" << error.errorString();
+                emit errorReceived(tr("Can't parse the response"));
             }
         } else {
-            LOG_WARNING << "error:" << networkReply->errorString();
-            emit errorReceived(networkReply->errorString());
+            LOG_WARNING << "error:" << request->getErrorString();
+            emit errorReceived(request->getErrorString());
         }
 
-        networkReply->deleteLater();
+        request->dispose();
     }
 
     void ShutterstockQueryEngine::parseResponse(const QJsonArray &jsonArray,
