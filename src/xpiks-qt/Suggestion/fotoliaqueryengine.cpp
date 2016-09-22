@@ -91,6 +91,8 @@ namespace Suggestion {
             LOG_WARNING << "error:" << request->getErrorString();
             emit errorReceived(request->getErrorString());
         }
+
+        request->dispose();
     }
 
     void FotoliaQueryEngine::parseResponse(const QJsonObject &jsonObject, int count,

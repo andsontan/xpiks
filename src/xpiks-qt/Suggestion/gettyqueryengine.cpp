@@ -21,64 +21,78 @@
 
 #include "gettyqueryengine.h"
 #include <QObject>
-#include <QNetworkRequest>
-#include <QNetworkReply>
-#include <QNetworkAccessManager>
 #include <QUrl>
 #include <QUrlQuery>
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include "../Encryption/aes-qt.h"
+#include "../Conectivity/simplecurlrequest.h"
 #include "../Common/defines.h"
 #include "suggestionartwork.h"
 
 namespace Suggestion {
     GettyQueryEngine::GettyQueryEngine(int engineID):
-        SuggestionQueryEngineBase(engineID),
-        m_NetworkManager(this)
+        SuggestionQueryEngineBase(engineID)
     {
         m_GettyImagesAPIKey = QLatin1String("17a45639c3bf88f7a6d549759af398090c3f420e53a61a06d7a2a2b153c89fc9470b2365dae8c6d92203287dc6f69f55b230835a8fb2a70b24e806771b750690");
-
-        QObject::connect(&m_NetworkManager, SIGNAL(finished(QNetworkReply*)),
-                         this, SLOT(replyReceived(QNetworkReply*)));
     }
 
     void GettyQueryEngine::submitQuery(const QStringList &queryKeywords) {
         LOG_INFO << queryKeywords;
         QUrl url = buildQuery(queryKeywords);
-        QNetworkRequest request(url);
-
 
         QString decodedAPIKey = Encryption::decodeText(m_GettyImagesAPIKey, "MasterPassword");
-        LOG_INFO << decodedAPIKey;
-        request.setRawHeader("Api-Key", decodedAPIKey.toLocal8Bit());
 
-        QNetworkReply *reply = m_NetworkManager.get(request);
-        QObject::connect(this, SIGNAL(cancelAllQueries()),
-                         reply, SLOT(abort()));
+        QString resourceUrl = QString::fromLocal8Bit(url.toEncoded());
+        Conectivity::SimpleCurlRequest *request = new Conectivity::SimpleCurlRequest(resourceUrl);
+        request->setRawHeaders(QStringList() << "Api-Key: " + decodedAPIKey);
+
+        QThread *thread = new QThread();
+
+        request->moveToThread(thread);
+
+        QObject::connect(thread, SIGNAL(started()), request, SLOT(process()));
+        QObject::connect(request, SIGNAL(stopped()), thread, SLOT(quit()));
+
+        QObject::connect(request, SIGNAL(stopped()), request, SLOT(deleteLater()));
+        QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+
+        QObject::connect(request, SIGNAL(requestFinished(bool)), this, SLOT(requestFinishedHandler(bool)));
+
+        thread->start();
     }
 
-    void GettyQueryEngine::replyReceived(QNetworkReply *networkReply) {
-        LOG_DEBUG << "#";
-        if (networkReply->error() == QNetworkReply::NoError) {
-            QJsonDocument document = QJsonDocument::fromJson(networkReply->readAll());
-            QJsonObject jsonObject = document.object();
-            QJsonValue nbResultsValue = jsonObject["result_count"];
+    void GettyQueryEngine::requestFinishedHandler(bool success) {
+        LOG_INFO << "success:" << success;
 
-            if (!nbResultsValue.isUndefined()) {
-                int resultsNumber = nbResultsValue.toInt();
-                std::vector<std::shared_ptr<SuggestionArtwork> > suggestionArtworks;
-                parseResponse(jsonObject, resultsNumber, suggestionArtworks);
-                setResults(suggestionArtworks);
-                emit resultsAvailable();
+        Conectivity::SimpleCurlRequest *request = qobject_cast<Conectivity::SimpleCurlRequest *>(sender());
+
+        if (success) {
+            QJsonParseError error;
+
+            QJsonDocument document = QJsonDocument::fromJson(request->getResponseData(), &error);
+            if (error.error == QJsonParseError::NoError) {
+                QJsonObject jsonObject = document.object();
+                QJsonValue nbResultsValue = jsonObject["result_count"];
+
+                if (!nbResultsValue.isUndefined()) {
+                    int resultsNumber = nbResultsValue.toInt();
+                    std::vector<std::shared_ptr<SuggestionArtwork> > suggestionArtworks;
+                    parseResponse(jsonObject, resultsNumber, suggestionArtworks);
+                    setResults(suggestionArtworks);
+                    emit resultsAvailable();
+                }
+            } else {
+                LOG_WARNING << "parsing error:" << error.errorString();
+                emit errorReceived(tr("Can't parse the response"));
             }
         } else {
-            LOG_WARNING << "error:" << networkReply->errorString();
-            emit errorReceived(networkReply->errorString());
+            LOG_WARNING << "error:" << request->getErrorString();
+            emit errorReceived(request->getErrorString());
         }
 
-        networkReply->deleteLater();
+        request->dispose();
     }
 
     void GettyQueryEngine::parseResponse(const QJsonObject &jsonObject, int count,

@@ -23,7 +23,6 @@
 #define GETTYQUERYENGINE_H
 
 #include <QString>
-#include <QNetworkAccessManager>
 #include "suggestionqueryenginebase.h"
 
 namespace Suggestion {
@@ -38,7 +37,7 @@ namespace Suggestion {
         virtual QString getName() const { return tr("iStock"); }
 
     private slots:
-        void replyReceived(QNetworkReply *networkReply);
+        void requestFinishedHandler(bool success);
 
     private:
         void parseResponse(const QJsonObject &jsonObject, int count,
@@ -48,7 +47,6 @@ namespace Suggestion {
         QUrl buildQuery(const QStringList &queryKeywords) const;
 
     private:
-        QNetworkAccessManager m_NetworkManager;
         QString m_GettyImagesAPIKey;
     };
 }
