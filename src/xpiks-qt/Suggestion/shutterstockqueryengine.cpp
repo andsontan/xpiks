@@ -52,7 +52,7 @@ namespace Suggestion {
         QString authStr = QString("%1:%2").arg(decodedClientId).arg(decodedClientSecret);
         QString headerData = "Basic " + QString::fromLatin1(authStr.toLocal8Bit().toBase64());
 
-        QString resourceUrl = url.toString(QUrl::FullyEncoded);
+        QString resourceUrl = QString::fromLocal8Bit(url.toEncoded());
         Conectivity::SimpleCurlRequest *request = new Conectivity::SimpleCurlRequest(resourceUrl);
         request->setRawHeaders(QStringList() << "Authorization: " + headerData);
 

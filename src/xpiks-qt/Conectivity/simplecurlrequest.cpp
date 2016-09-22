@@ -148,7 +148,7 @@ namespace Conectivity {
              */
 
             LOG_INFO << chunk.size << "bytes received";
-            m_ResponseData.setRawData(chunk.memory, chunk.size);
+            m_ResponseData = QByteArray(chunk.memory, (uint)chunk.size);
         }
 
         /* cleanup curl stuff */
