@@ -60,6 +60,10 @@ namespace Conectivity {
         return doRequest();
     }
 
+    void SimpleCurlRequest::setRawHeaders(const QStringList &headers) {
+        m_RawHeaders = headers;
+    }
+
     void SimpleCurlRequest::process() {
         bool success = doRequest();
         emit requestFinished(success);
@@ -73,6 +77,8 @@ namespace Conectivity {
         MemoryStruct chunk;
         chunk.memory = nullptr;
         chunk.size = 0;
+
+        struct curl_slist *curl_headers = NULL;
 
         /* init the curl session */
         curl_handle = curl_easy_init();
@@ -114,6 +120,16 @@ namespace Conectivity {
              field, so we provide one */
         curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");
 
+        if (!m_RawHeaders.empty()) {
+            foreach (const QString &header, m_RawHeaders) {
+                std::string headerString = header.toStdString();
+                curl_headers = curl_slist_append(curl_headers, headerString.data());
+            }
+
+            /* set our custom set of headers */
+            curl_easy_setopt(curl_handle, CURLOPT_HTTPHEADER, curl_headers);
+        }
+
         /* get it! */
         res = curl_easy_perform(curl_handle);
 
@@ -121,7 +137,8 @@ namespace Conectivity {
 
         /* check for errors */
         if(!success) {
-            LOG_WARNING << "curl_easy_perform() failed" << curl_easy_strerror(res);
+            m_ErrorString = QString::fromLatin1(curl_easy_strerror(res));
+            LOG_WARNING << "curl_easy_perform() failed" << m_ErrorString;
         } else {
             /*
              * Now, our chunk.memory points to a memory block that is chunk.size
@@ -136,6 +153,11 @@ namespace Conectivity {
 
         /* cleanup curl stuff */
         curl_easy_cleanup(curl_handle);
+
+        /* free the custom headers */
+        if (curl_headers != NULL) {
+            curl_slist_free_all(curl_headers);
+        }
 
         free(chunk.memory);
 

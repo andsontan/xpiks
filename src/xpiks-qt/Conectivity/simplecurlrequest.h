@@ -25,6 +25,7 @@
 #include <QObject>
 #include <QString>
 #include <QByteArray>
+#include <QStringList>
 
 namespace Conectivity {
     class SimpleCurlRequest : public QObject
@@ -35,8 +36,12 @@ namespace Conectivity {
 
     public:
         const QByteArray &getResponseData() const { return m_ResponseData; }
+        const QString &getErrorString() const { return m_ErrorString; }
+
+    public:
         void dispose() { emit stopped(); }
         bool sendRequestSync();
+        void setRawHeaders(const QStringList &headers);
 
     public slots:
         void process();
@@ -50,7 +55,9 @@ namespace Conectivity {
 
     private:
         QString m_RemoteResource;
+        QStringList m_RawHeaders;
         QByteArray m_ResponseData;
+        QString m_ErrorString;
         bool m_VerifySSL;
     };
 }
