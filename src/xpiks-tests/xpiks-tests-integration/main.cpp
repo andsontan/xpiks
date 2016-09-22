@@ -21,6 +21,7 @@
 #include "../../xpiks-qt/Conectivity/ftpcoordinator.h"
 #include "../../xpiks-qt/Models/findandreplacemodel.h"
 #include "../../xpiks-qt/Conectivity/curlinithelper.h"
+#include "../../xpiks-qt/MetadataIO/exiv2inithelper.h"
 #include "../../xpiks-qt/Helpers/helpersqmlwrapper.h"
 #include "../../xpiks-qt/Conectivity/updateservice.h"
 #include "../../xpiks-qt/Encryption/secretsmanager.h"
@@ -82,6 +83,10 @@ int main(int argc, char *argv[]) {
 
     // will call curl_global_init and cleanup
     Conectivity::CurlInitHelper curlInitHelper;
+    Q_UNUSED(curlInitHelper);
+
+    MetadataIO::Exiv2InitHelper exiv2InitHelper;
+    Q_UNUSED(exiv2InitHelper);
 
     QCoreApplication app(argc, argv);
 

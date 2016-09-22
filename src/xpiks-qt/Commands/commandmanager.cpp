@@ -52,9 +52,6 @@
 #include "../Models/languagesmodel.h"
 #include "../AutoComplete/autocompleteservice.h"
 #include "../Helpers/deletelogshelper.h"
-#ifndef CORE_TESTS
-#include <exiv2/xmp.hpp>
-#endif
 #include "../QMLExtensions/imagecachingservice.h"
 #include "../Models/findandreplacemodel.h"
 #include "../Models/deletekeywordsviewmodel.h"
@@ -657,13 +654,6 @@ void Commands::CommandManager::afterConstructionCallback() {
 
 #endif
 
-#ifndef CORE_TESTS
-    if (!Exiv2::XmpParser::initialize()) {
-        LOG_WARNING << "Failed to initialize XMP toolkit!";
-    }
-
-#endif
-
 #ifdef QT_DEBUG
     openInitialFiles();
 #endif
@@ -692,10 +682,6 @@ void Commands::CommandManager::beforeDestructionCallback() const {
     m_WarningsService->stopService();
     m_MetadataSaverService->stopSaving();
     m_AutoCompleteService->stopService();
-
-#ifndef CORE_TESTS
-    Exiv2::XmpParser::terminate();
-#endif
 
 #ifdef WITH_PLUGINS
     m_PluginManager->unloadPlugins();

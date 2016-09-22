@@ -83,6 +83,7 @@
 #include "Common/version.h"
 #include "Common/defines.h"
 #include "Models/proxysettings.h"
+#include "MetadataIO/exiv2inithelper.h"
 #include "Models/findandreplacemodel.h"
 #include "Models/previewmetadataelement.h"
 
@@ -207,6 +208,11 @@ int main(int argc, char *argv[]) {
 
     // will call curl_global_init and cleanup
     Conectivity::CurlInitHelper curlInitHelper;
+    Q_UNUSED(curlInitHelper);
+
+    // will init thread-unsafe XMP toolkit
+    MetadataIO::Exiv2InitHelper exiv2InitHelper;
+    Q_UNUSED(exiv2InitHelper);
 
     const char *highDpiEnvironmentVariable = setHighDpiEnvironmentVariable();
     qRegisterMetaTypeStreamOperators<Models::ProxySettings>("ProxySettings");

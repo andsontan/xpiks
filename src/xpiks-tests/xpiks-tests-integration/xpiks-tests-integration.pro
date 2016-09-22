@@ -149,7 +149,8 @@ SOURCES += main.cpp \
     testshelpers.cpp \
     ../../xpiks-qt/Conectivity/simplecurlrequest.cpp \
     ../../xpiks-qt/Conectivity/curlinithelper.cpp \
-    artworkuploaderbasictest.cpp
+    artworkuploaderbasictest.cpp \
+    ../../xpiks-qt/MetadataIO/exiv2inithelper.cpp
 
 RESOURCES +=
 
@@ -326,7 +327,8 @@ HEADERS += \
     testshelpers.h \
     ../../xpiks-qt/Conectivity/simplecurlrequest.h \
     ../../xpiks-qt/Conectivity/curlinithelper.h \
-    artworkuploaderbasictest.h
+    artworkuploaderbasictest.h \
+    ../../xpiks-qt/MetadataIO/exiv2inithelper.h
 
 INCLUDEPATH += ../../tiny-aes
 INCLUDEPATH += ../../cpp-libface
