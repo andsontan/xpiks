@@ -37,7 +37,7 @@ namespace Conectivity {
 
     public:
         const QString &getErrorString() const { return m_ErrorString; }
-        const QString &getDownloadedPath() const { return m_TempFile.fileName(); }
+        QString getDownloadedPath() const { return m_TempFile.fileName(); }
 
     public:
         void dispose() { emit stopped(); }
