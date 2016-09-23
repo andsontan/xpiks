@@ -132,6 +132,8 @@ namespace Conectivity {
         /* Now specify the POST data */
         curl_easy_setopt(curl_handle, CURLOPT_POSTFIELDS, postData);
 
+        curl_easy_setopt(curl_handle, CURLOPT_POSTFIELDSIZE, (long)postString.size());
+
         /* get it! */
         res = curl_easy_perform(curl_handle);
 
