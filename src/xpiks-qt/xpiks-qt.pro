@@ -115,7 +115,8 @@ SOURCES += main.cpp \
     Conectivity/telemetryworker.cpp \
     Conectivity/simplecurlrequest.cpp \
     Conectivity/curlinithelper.cpp \
-    MetadataIO/exiv2inithelper.cpp
+    MetadataIO/exiv2inithelper.cpp \
+    Conectivity/simplecurldownloader.cpp
 
 RESOURCES += qml.qrc
 
@@ -287,7 +288,8 @@ HEADERS += \
     Conectivity/telemetryworker.h \
     Conectivity/simplecurlrequest.h \
     Conectivity/curlinithelper.h \
-    MetadataIO/exiv2inithelper.h
+    MetadataIO/exiv2inithelper.h \
+    Conectivity/simplecurldownloader.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

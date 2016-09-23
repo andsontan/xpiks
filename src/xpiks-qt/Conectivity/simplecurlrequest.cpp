@@ -71,7 +71,7 @@ namespace Conectivity {
 
     bool SimpleCurlRequest::doRequest() {
         // https://curl.haxx.se/libcurl/c/getinmemory.html
-        CURL *curl_handle;
+        CURL *curl_handle = nullptr;
         CURLcode res;
 
         MemoryStruct chunk;
@@ -82,6 +82,10 @@ namespace Conectivity {
 
         /* init the curl session */
         curl_handle = curl_easy_init();
+
+        if (!curl_handle) {
+            return false;
+        }
 
         std::string resourceString = m_RemoteResource.toStdString();
         const char *url = resourceString.data();
@@ -136,7 +140,7 @@ namespace Conectivity {
         const bool success = (CURLE_OK == res);
 
         /* check for errors */
-        if(!success) {
+        if (!success) {
             m_ErrorString = QString::fromLatin1(curl_easy_strerror(res));
             LOG_WARNING << "curl_easy_perform() failed" << m_ErrorString;
         } else {
