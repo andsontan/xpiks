@@ -25,6 +25,8 @@
 #include <cstdio>
 #include <curl/curl.h>
 #include "../Common/defines.h"
+#include "../Models/proxysettings.h"
+#include "ftphelpers.h"
 
 static size_t write_file(void *buffer, size_t size, size_t nmemb, void *param) {
     QFile *out = (QFile *)param;
@@ -51,6 +53,10 @@ namespace Conectivity {
 
     bool SimpleCurlDownloader::downloadFileSync() {
         return doDownloadFile();
+    }
+
+    void SimpleCurlDownloader::setProxySettings(Models::ProxySettings *proxySettings) {
+        m_ProxySettings = proxySettings;
     }
 
     void SimpleCurlDownloader::process() {
@@ -121,6 +127,10 @@ namespace Conectivity {
 
             /* set our custom set of headers */
             curl_easy_setopt(curl_handle, CURLOPT_HTTPHEADER, curl_headers);
+        }
+
+        if (m_ProxySettings != nullptr) {
+            fillProxySettings(curl_handle, m_ProxySettings);
         }
 
         /* get it! */

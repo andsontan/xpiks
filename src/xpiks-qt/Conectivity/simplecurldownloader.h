@@ -27,6 +27,10 @@
 #include <QStringList>
 #include <QTemporaryFile>
 
+namespace Models {
+    class ProxySettings;
+}
+
 namespace Conectivity {
     class SimpleCurlDownloader : public QObject
     {
@@ -43,6 +47,7 @@ namespace Conectivity {
         void dispose() { emit stopped(); }
         bool downloadFileSync();
         void setRawHeaders(const QStringList &headers);
+        void setProxySettings(Models::ProxySettings *proxySettings);
 
     public slots:
         void process();
@@ -59,6 +64,7 @@ namespace Conectivity {
         QString m_RemoteResource;
         QStringList m_RawHeaders;
         QString m_ErrorString;
+        Models::ProxySettings *m_ProxySettings;
         bool m_VerifySSL;
     };
 }
