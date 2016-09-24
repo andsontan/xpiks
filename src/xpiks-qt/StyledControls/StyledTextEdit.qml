@@ -24,6 +24,8 @@ import "../Constants"
 import "../Constants/UIConfig.js" as UIConfig
 
 TextEdit {
+    signal actionRightClicked();
+    property string rightClickedWord;
     property bool isActive: true
     font.family: Qt.platform.os === "windows" ? "Arial" : "Helvetica"
     font.pixelSize: UIConfig.fontPixelSize * settingsModel.keywordSizeScale
@@ -36,5 +38,70 @@ TextEdit {
     wrapMode: TextEdit.NoWrap
     activeFocusOnPress: true
     color: (enabled && isActive) ? Colors.inputForegroundColor : Colors.inputInactiveForeground
+
+    MouseArea{
+
+        anchors.fill: parent
+        acceptedButtons: Qt.RightButton
+        propagateComposedEvents: true
+
+        onClicked: {
+
+            if (mouse.button == Qt.RightButton) {
+                var textPosition = positionAt(mouse.x, mouse.y);
+                parent.rightClickedWord = getWordByPosition(textPosition);
+                console.log("Detected word under click: " + parent.rightClickedWord);
+                if (parent.rightClickedWord !== "") {
+                    actionRightClicked();
+                }
+            }
+        }
+
+        function getSymbol(position){
+            return getText(position,position+1);
+        }
+
+        function isSeparator(position){
+            var separators = " ,.:;/\\|<>()";
+            return (separators.indexOf(getSymbol(position)) >= 0);
+        }
+
+        function isRightBound(position){
+            if (position >= (length -1 )) {
+                return true;
+            }
+            return !isSeparator(position) && isSeparator(position+1);
+        }
+
+        function getRightBound(position) {
+            var cur = position;
+            while (!isRightBound(cur)){
+                cur++;
+            }
+            return cur + 1;
+        }
+
+        function isLeftBound(position){
+            if ( ( position === 0) ){
+                return true;
+            }
+            return !isSeparator(position) && isSeparator(position-1);
+        }
+
+        function getLeftBound(position) {
+            var cur = position;
+            while (!isLeftBound(cur)){
+                cur--;
+            }
+            return cur;
+        }
+
+        function getWordByPosition(textPosition){
+            var leftBound = getLeftBound(textPosition);
+            var rightBound = getRightBound(textPosition);
+            //console.log("left: " + leftBound + " right: " + rightBound);
+            return getText(leftBound, rightBound);
+        }
+    }
 }
 

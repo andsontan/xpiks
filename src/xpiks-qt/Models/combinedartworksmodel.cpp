@@ -297,8 +297,17 @@ namespace Models {
         }
     }
 
+    bool CombinedArtworksModel::hasTitleWordSpellError(const QString &word) {
+        return m_CommonKeywordsModel.hasTitleWordSpellError(word);
+    }
+
+    bool CombinedArtworksModel::hasDescriptionWordSpellError(const QString &word) {
+        return m_CommonKeywordsModel.hasDescriptionWordSpellError(word);
+    }
+
     void CombinedArtworksModel::plainTextEdit(const QString &rawKeywords) {
         QStringList keywords = rawKeywords.trimmed().split(QChar(','), QString::SkipEmptyParts);
+
         m_CommonKeywordsModel.setKeywords(keywords);
         setKeywordsModified(true);
         emit keywordsCountChanged();
@@ -376,7 +385,7 @@ namespace Models {
 
             // used to detect if all items have same keywords
             if ((currentSet.count() == firstItemKeywordsCount) &&
-                    (unitedKeywords.count() <= firstItemKeywordsCount)) {
+                (unitedKeywords.count() <= firstItemKeywordsCount)) {
                 unitedKeywords.unite(currentSet);
             }
         });

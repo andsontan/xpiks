@@ -53,7 +53,9 @@ namespace Models {
         void spellCheckAllItems();
 
         std::vector<MetadataElement> getSearchableOriginalItems(const QString &searchTerm, Common::SearchFlags flags) const;
+
         std::vector<PreviewMetadataElement> getSearchablePreviewOriginalItems(const QString &searchTerm, Common::SearchFlags flags) const;
+
 #ifdef CORE_TESTS
         int retrieveNumberOfSelectedItems();
 
@@ -95,6 +97,9 @@ namespace Models {
         Q_INVOKABLE QObject *getArtworkMetadata(int index);
         Q_INVOKABLE QObject *getKeywordsModel(int index);
 
+        Q_INVOKABLE bool hasTitleWordSpellError(int index, const QString &word);
+        Q_INVOKABLE bool hasDescriptionWordSpellError(int index, const QString &word);
+
     public slots:
         void itemSelectedChanged(bool value);
         void onSelectedArtworksRemoved(int value);
@@ -120,7 +125,7 @@ namespace Models {
 
         template<typename T>
         std::vector<T> getFilteredOriginalItems(std::function<bool (ArtworkMetadata *)> pred,
-                                                std::function<T (ArtworkMetadata *, int)> mapper) const;
+                                                std::function<T(ArtworkMetadata *, int)> mapper) const;
 
         QVector<ArtworkMetadata *> getAllOriginalItems() const;
 

@@ -292,6 +292,14 @@ Item {
                             text: combinedArtworks.title
                             onTextChanged: combinedArtworks.title = text
 
+                            onActionRightClicked: {
+                                if (combinedArtworks.hasTitleWordSpellError(rightClickedWord)) {
+                                    console.log("Context menu for add word " + rightClickedWord)
+                                    addWordContextMenu.word = rightClickedWord
+                                    addWordContextMenu.popup()
+                                }
+                            }
+
                             Keys.onBacktabPressed: {
                                 event.accepted = true
                             }
@@ -400,6 +408,14 @@ Item {
 
                                 previousText = text
                                 combinedArtworks.description = text
+                            }
+
+                            onActionRightClicked: {
+                                if (combinedArtworks.hasDescriptionWordSpellError(rightClickedWord)) {
+                                    console.log("Context menu for add word " + rightClickedWord)
+                                    addWordContextMenu.word = rightClickedWord
+                                    addWordContextMenu.popup()
+                                }
                             }
 
                             wrapMode: TextEdit.Wrap
