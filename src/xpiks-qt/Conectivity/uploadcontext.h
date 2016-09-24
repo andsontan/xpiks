@@ -26,8 +26,9 @@
 #include "../Common/defines.h"
 
 namespace Models {
-    struct ProxySettings;
+    class ProxySettings;
 }
+
 namespace Conectivity {
     class UploadContext {
     public:

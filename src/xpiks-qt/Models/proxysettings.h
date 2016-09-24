@@ -27,7 +27,8 @@
 #include "../Common/defines.h"
 
 namespace Models {
-    struct ProxySettings {
+    class ProxySettings {
+    public:
         QString m_Address;
         QString m_User;
         QString m_Password;

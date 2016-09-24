@@ -24,12 +24,16 @@
 
 #include <QObject>
 
+namespace Models {
+    class SettingsModel;
+}
+
 namespace Conectivity {
     class UpdatesCheckerWorker : public QObject
     {
         Q_OBJECT
     public:
-        UpdatesCheckerWorker();
+        UpdatesCheckerWorker(Models::SettingsModel *settingsModel);
         virtual ~UpdatesCheckerWorker();
 
     private:
@@ -43,6 +47,9 @@ namespace Conectivity {
         void stopped();
         void updateAvailable(QString updateLink);
         void requestFinished();
+
+    private:
+        Models::SettingsModel *m_SettingsModel;
     };
 }
 

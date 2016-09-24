@@ -28,12 +28,13 @@
 #include <QJsonDocument>
 #include "../Encryption/aes-qt.h"
 #include "../Conectivity/simplecurlrequest.h"
+#include "../Models/settingsmodel.h"
 #include "../Common/defines.h"
 #include "suggestionartwork.h"
 
 namespace Suggestion {
-    GettyQueryEngine::GettyQueryEngine(int engineID):
-        SuggestionQueryEngineBase(engineID)
+    GettyQueryEngine::GettyQueryEngine(int engineID, Models::SettingsModel *settingsModel):
+        SuggestionQueryEngineBase(engineID, settingsModel)
     {
         m_GettyImagesAPIKey = QLatin1String("17a45639c3bf88f7a6d549759af398090c3f420e53a61a06d7a2a2b153c89fc9470b2365dae8c6d92203287dc6f69f55b230835a8fb2a70b24e806771b750690");
     }
@@ -44,9 +45,13 @@ namespace Suggestion {
 
         QString decodedAPIKey = Encryption::decodeText(m_GettyImagesAPIKey, "MasterPassword");
 
+        auto *settings = getSettingsModel();
+        auto *proxySettings = settings->retrieveProxySettings();
+
         QString resourceUrl = QString::fromLocal8Bit(url.toEncoded());
         Conectivity::SimpleCurlRequest *request = new Conectivity::SimpleCurlRequest(resourceUrl);
         request->setRawHeaders(QStringList() << "Api-Key: " + decodedAPIKey);
+        request->setProxySettings(proxySettings);
 
         QThread *thread = new QThread();
 

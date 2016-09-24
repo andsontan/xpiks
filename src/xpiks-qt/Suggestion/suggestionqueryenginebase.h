@@ -28,15 +28,20 @@
 #include <QObject>
 #include "suggestionartwork.h"
 
-namespace Suggestion {
+namespace Models {
+    class SettingsModel;
+}
 
+namespace Suggestion {
     class SuggestionQueryEngineBase: public QObject {
         Q_OBJECT
     public:
-        SuggestionQueryEngineBase(int ID, QObject *parent = 0):
+        SuggestionQueryEngineBase(int ID, Models::SettingsModel *settingsModel = 0, QObject *parent = 0):
             QObject(parent),
+            m_SettingsModel(settingsModel),
             m_EngineID(ID)
-        { }
+        {
+        }
 
         virtual ~SuggestionQueryEngineBase() { }
 
@@ -57,8 +62,12 @@ namespace Suggestion {
         void cancelAllQueries();
         void errorReceived(const QString &error);
 
+    protected:
+        Models::SettingsModel *getSettingsModel() const { return m_SettingsModel; }
+
     private:
         std::vector<std::shared_ptr<SuggestionArtwork> > m_LastResults;
+        Models::SettingsModel *m_SettingsModel;
         int m_EngineID;
     };
 }

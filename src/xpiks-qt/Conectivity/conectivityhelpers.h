@@ -31,7 +31,7 @@
 namespace Models {
     class ArtworkMetadata;
     class UploadInfo;
-    struct ProxySettings;
+    class ProxySettings;
     class SettingsModel;
 }
 

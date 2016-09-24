@@ -27,6 +27,10 @@
 #include <QJsonArray>
 #include "suggestionqueryenginebase.h"
 
+namespace Models {
+    class SettingsModel;
+}
+
 namespace Suggestion {
     class SuggestionArtwork;
 
@@ -34,7 +38,7 @@ namespace Suggestion {
     {
         Q_OBJECT
     public:
-        ShutterstockQueryEngine(int engineID);
+        ShutterstockQueryEngine(int engineID, Models::SettingsModel *settingsModel);
 
     public:
         virtual void submitQuery(const QStringList &queryKeywords);

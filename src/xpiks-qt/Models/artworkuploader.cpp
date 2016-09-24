@@ -72,6 +72,8 @@ namespace Models {
         Conectivity::FtpCoordinator *coordinator = dynamic_cast<Conectivity::FtpCoordinator *>(m_FtpCoordinator);
         Q_ASSERT(coordinator != NULL);
         coordinator->setCommandManager(commandManager);
+
+        m_StocksFtpList.setCommandManager(commandManager);
     }
 
     void ArtworkUploader::onUploadStarted() {

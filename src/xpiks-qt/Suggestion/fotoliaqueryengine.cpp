@@ -28,12 +28,13 @@
 #include <QJsonDocument>
 #include "../Encryption/aes-qt.h"
 #include "../Conectivity/simplecurlrequest.h"
+#include "../Models/settingsmodel.h"
 #include "../Common/defines.h"
 #include "suggestionartwork.h"
 
 namespace Suggestion {
-    FotoliaQueryEngine::FotoliaQueryEngine(int engineID):
-        SuggestionQueryEngineBase(engineID)
+    FotoliaQueryEngine::FotoliaQueryEngine(int engineID, Models::SettingsModel *settingsModel):
+        SuggestionQueryEngineBase(engineID, settingsModel)
     {
         m_FotoliaAPIKey = "ad2954b4ee1e9686fbf8446f85e0c26edfae6003f51f49ca5559aed915879e733bbaf2003b3575bc0b96e682a30a69907c612865ec8f4ec2522131108a4a9f24467f1f83befc3d80201e5f906c761341";
     }
@@ -45,8 +46,12 @@ namespace Suggestion {
 
         QUrl url = buildQuery(decodedAPIKey, queryKeywords);
 
+        auto *settings = getSettingsModel();
+        auto *proxySettings = settings->getProxySettings();
+
         QString resourceUrl = QString::fromLocal8Bit(url.toEncoded());
         Conectivity::SimpleCurlRequest *request = new Conectivity::SimpleCurlRequest(resourceUrl);
+        request->setProxySettings(proxySettings);
 
         QThread *thread = new QThread();
 

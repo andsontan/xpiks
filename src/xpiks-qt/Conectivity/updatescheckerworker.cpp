@@ -47,10 +47,14 @@
 #include "../Common/defines.h"
 #include "../Common/version.h"
 #include "../Common/defines.h"
+#include "../Models/settingsmodel.h"
+#include "../Models/proxysettings.h"
 
 namespace Conectivity {
-    UpdatesCheckerWorker::UpdatesCheckerWorker()
+    UpdatesCheckerWorker::UpdatesCheckerWorker(Models::SettingsModel *settingsModel):
+        m_SettingsModel(settingsModel)
     {
+        Q_ASSERT(settingsModel != nullptr);
     }
 
     UpdatesCheckerWorker::~UpdatesCheckerWorker() {
@@ -63,7 +67,11 @@ namespace Conectivity {
         LOG_INFO << "Update service: checking for updates...";
         QString queryString = QString(UPDATE_JSON_URL);
 
+        Models::ProxySettings *proxySettings = m_SettingsModel->retrieveProxySettings();
+
         Conectivity::SimpleCurlRequest request(queryString);
+        request.setProxySettings(proxySettings);
+
         if (request.sendRequestSync()) {
             QJsonDocument document = QJsonDocument::fromJson(request.getResponseData());
 

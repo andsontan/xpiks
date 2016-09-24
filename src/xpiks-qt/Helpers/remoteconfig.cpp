@@ -23,6 +23,7 @@
 #include <QThread>
 #include "../Common/defines.h"
 #include "../Conectivity/simplecurlrequest.h"
+#include "../Models/proxysettings.h"
 
 namespace Helpers {
     RemoteConfig::RemoteConfig(QObject *parent):
@@ -33,11 +34,13 @@ namespace Helpers {
     RemoteConfig::~RemoteConfig() {
     }
 
-    void RemoteConfig::requestInitConfig(const QString &configUrl) {
+    void RemoteConfig::requestInitConfig(const QString &configUrl, Models::ProxySettings *proxySettings) {
         m_ConfigUrl = configUrl;
         LOG_DEBUG << m_ConfigUrl;
 
         Conectivity::SimpleCurlRequest *request = new Conectivity::SimpleCurlRequest(configUrl);
+        request->setProxySettings(proxySettings);
+
         QThread *thread = new QThread();
 
         request->moveToThread(thread);

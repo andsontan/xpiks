@@ -24,12 +24,16 @@
 
 #include <QString>
 
+namespace Models {
+    class ProxySettings;
+}
+
 namespace Conectivity {
     class UploadContext;
 
     void fillCurlOptions(void *curlHandle, UploadContext *context, const QString &remoteUrl);
     QString sanitizeHost(const QString &inputHost);
-    void fillProxySettings(void *curlHandle, UploadContext *context);
+    void fillProxySettings(void *curlHandle, Models::ProxySettings *proxySettings);
 }
 
 #endif // CONECTIVITYHELPERS_H

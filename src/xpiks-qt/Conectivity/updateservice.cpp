@@ -36,7 +36,7 @@ namespace Conectivity {
         const bool startWorker = m_SettingsModel->getCheckForUpdates();
 
         if (startWorker) {
-            m_UpdatesCheckerWorker = new UpdatesCheckerWorker();
+            m_UpdatesCheckerWorker = new UpdatesCheckerWorker(m_SettingsModel);
             QThread *thread = new QThread();
             m_UpdatesCheckerWorker->moveToThread(thread);
 

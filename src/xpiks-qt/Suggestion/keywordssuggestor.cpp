@@ -44,11 +44,17 @@ namespace Suggestion {
         m_IsInProgress(false)
     {
         setLastErrorString(tr("No results found"));
+        qsrand(QTime::currentTime().msec());
+    }
+
+    void KeywordsSuggestor::initSuggestionEngines() {
+        Q_ASSERT(m_CommandManager != NULL);
+        auto *settingsModel = m_CommandManager->getSettingsModel();
 
         int id = 0;
-        m_QueryEngines.append(new ShutterstockQueryEngine(id++));
-        m_QueryEngines.append(new GettyQueryEngine(id++));
-        m_QueryEngines.append(new FotoliaQueryEngine(id++));
+        m_QueryEngines.append(new ShutterstockQueryEngine(id++, settingsModel));
+        m_QueryEngines.append(new GettyQueryEngine(id++, settingsModel));
+        m_QueryEngines.append(new FotoliaQueryEngine(id++, settingsModel));
         m_QueryEngines.append(new LocalLibraryQueryEngine(id++, m_LocalLibrary));
 
         int length = m_QueryEngines.length();
@@ -62,8 +68,6 @@ namespace Suggestion {
             QObject::connect(engine, SIGNAL(errorReceived(QString)),
                              this, SLOT(errorsReceivedHandler(QString)));
         }
-
-        qsrand(QTime::currentTime().msec());
     }
 
     void KeywordsSuggestor::setSuggestedArtworks(std::vector<std::shared_ptr<SuggestionArtwork> > &suggestedArtworks) {

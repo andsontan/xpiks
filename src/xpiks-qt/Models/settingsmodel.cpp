@@ -113,6 +113,16 @@ namespace Models {
         appSettings.setValue(appSettings.getSelectedLocaleKey(), m_SelectedLocale);
     }
 
+    ProxySettings *SettingsModel::retrieveProxySettings() {
+        ProxySettings *result = nullptr;
+
+        if (getUseProxy()) {
+            result = &m_ProxySettings;
+        }
+
+        return result;
+    }
+
     void SettingsModel::resetAllValues() {
         LOG_DEBUG << "#";
         resetToDefault();
@@ -147,7 +157,7 @@ namespace Models {
         appSettings.setValue(appSettings.getSelectedThemeIndexKey(), m_SelectedThemeIndex);
         appSettings.setValue(appSettings.getUseAutoCompleteKey(), m_UseAutoComplete);
         appSettings.setValue(appSettings.getUseExifToolKey(), m_UseExifTool);
-        appSettings.setValue(appSettings.getUseProxyKey(),m_UseProxy);
+        appSettings.setValue(appSettings.getUseProxyKey(), m_UseProxy);
         appSettings.setValue(appSettings.getproxyHashKey(),QVariant::fromValue(m_ProxySettings));
         appSettings.setValue(appSettings.getCacheImagesKey(), m_AutoCacheImages);
 

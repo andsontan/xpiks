@@ -25,12 +25,16 @@
 #include <QString>
 #include "suggestionqueryenginebase.h"
 
+namespace Models {
+    class SettingsModel;
+}
+
 namespace Suggestion {
     class GettyQueryEngine : public SuggestionQueryEngineBase
     {
         Q_OBJECT
     public:
-        GettyQueryEngine(int engineID);
+        GettyQueryEngine(int engineID, Models::SettingsModel *settingsModel);
 
     public:
         virtual void submitQuery(const QStringList &queryKeywords);

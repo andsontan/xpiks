@@ -78,6 +78,9 @@ namespace Models {
         void saveLocale();
 
     public:
+        ProxySettings *retrieveProxySettings();
+
+    public:
         Q_INVOKABLE void resetAllValues();
         Q_INVOKABLE void saveAllValues();
         Q_INVOKABLE void clearMasterPasswordSettings();
@@ -117,7 +120,7 @@ namespace Models {
         QString getProxyUser() const { return m_ProxySettings.m_User; }
         QString getProxyPassword() const { return m_ProxySettings.m_Password; }
         QString getProxyPort() const { return m_ProxySettings.m_Port; }
-        ProxySettings * getProxySettings() { return &m_ProxySettings; }
+        ProxySettings *getProxySettings() { return &m_ProxySettings; }
         bool getAutoCacheImages() const { return m_AutoCacheImages; }
 
     signals:

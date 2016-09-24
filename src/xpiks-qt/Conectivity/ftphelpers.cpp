@@ -196,7 +196,9 @@ namespace Conectivity {
             curl_easy_setopt(curlHandle, CURLOPT_FTP_USE_EPSV, 0L);
         }
 
-        fillProxySettings(curlHandle, context);
+        if (context->m_UseProxy) {
+            fillProxySettings(curlHandle, context->m_ProxySettings);
+        }
     }
 
     QString sanitizeHost(const QString &inputHost) {
@@ -216,11 +218,8 @@ namespace Conectivity {
         return host;
     }
 
-    void fillProxySettings(void *curlHandle, UploadContext *context) {
-        if (context->m_UseProxy) {
-            Models::ProxySettings *proxySettings = context->m_ProxySettings;
-            Q_ASSERT(proxySettings != NULL);
-
+    void fillProxySettings(void *curlHandle, Models::ProxySettings *proxySettings) {
+        if (proxySettings != nullptr) {
             curl_easy_setopt(curlHandle, CURLOPT_PROXY, proxySettings->m_Address.toLocal8Bit().data());
             LOG_DEBUG << "Using proxy:" << proxySettings->m_Address;
 

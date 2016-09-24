@@ -27,6 +27,10 @@
 #include <QJsonDocument>
 #include "../Common/defines.h"
 
+namespace Models {
+    class ProxySettings;
+}
+
 namespace Helpers {
     class RemoteConfig : public QObject {
         Q_OBJECT
@@ -35,7 +39,7 @@ namespace Helpers {
         virtual ~RemoteConfig();
 
     public:
-        void requestInitConfig(const QString &configUrl);
+        void requestInitConfig(const QString &configUrl, Models::ProxySettings *proxySettings=nullptr);
         const QJsonDocument& getConfig() const { return m_Config; }
 
     signals:

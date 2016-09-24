@@ -25,12 +25,16 @@
 #include <QString>
 #include "suggestionqueryenginebase.h"
 
+namespace Models {
+    class SettingsModel;
+}
+
 namespace Suggestion {
     class FotoliaQueryEngine : public SuggestionQueryEngineBase
     {
         Q_OBJECT
     public:
-        FotoliaQueryEngine(int engineID);
+        FotoliaQueryEngine(int engineID, Models::SettingsModel *settingsModel);
 
     public:
         virtual void submitQuery(const QStringList &queryKeywords);

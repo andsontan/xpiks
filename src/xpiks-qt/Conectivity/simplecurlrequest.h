@@ -27,6 +27,10 @@
 #include <QByteArray>
 #include <QStringList>
 
+namespace Models {
+    class ProxySettings;
+}
+
 namespace Conectivity {
     class SimpleCurlRequest : public QObject
     {
@@ -42,6 +46,7 @@ namespace Conectivity {
         void dispose() { emit stopped(); }
         bool sendRequestSync();
         void setRawHeaders(const QStringList &headers);
+        void setProxySettings(Models::ProxySettings *proxySettings);
 
     public slots:
         void process();
@@ -58,6 +63,7 @@ namespace Conectivity {
         QStringList m_RawHeaders;
         QByteArray m_ResponseData;
         QString m_ErrorString;
+        Models::ProxySettings *m_ProxySettings;
         bool m_VerifySSL;
     };
 }

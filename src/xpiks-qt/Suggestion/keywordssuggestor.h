@@ -53,6 +53,7 @@ namespace Suggestion {
         virtual ~KeywordsSuggestor() { qDeleteAll(m_QueryEngines); }
 
     public:
+        void initSuggestionEngines();
         void setSuggestedArtworks(std::vector<std::shared_ptr<SuggestionArtwork> > &suggestedArtworks);
         void clear();
 

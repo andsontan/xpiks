@@ -24,7 +24,9 @@
 #include <string>
 #include <cstring>
 #include <cstdlib>
+#include "../Models/proxysettings.h"
 #include "../Common/defines.h"
+#include "ftphelpers.h"
 
 struct MemoryStruct {
     char *memory;
@@ -52,6 +54,7 @@ namespace Conectivity {
     SimpleCurlRequest::SimpleCurlRequest(const QString &resource, bool verifySSL, QObject *parent) :
         QObject(parent),
         m_RemoteResource(resource),
+        m_ProxySettings(nullptr),
         m_VerifySSL(verifySSL)
     {
     }
@@ -62,6 +65,10 @@ namespace Conectivity {
 
     void SimpleCurlRequest::setRawHeaders(const QStringList &headers) {
         m_RawHeaders = headers;
+    }
+
+    void SimpleCurlRequest::setProxySettings(Models::ProxySettings *proxySettings) {
+        m_ProxySettings = proxySettings;
     }
 
     void SimpleCurlRequest::process() {
@@ -132,6 +139,10 @@ namespace Conectivity {
 
             /* set our custom set of headers */
             curl_easy_setopt(curl_handle, CURLOPT_HTTPHEADER, curl_headers);
+        }
+
+        if (m_ProxySettings != nullptr) {
+            fillProxySettings(curl_handle, m_ProxySettings);
         }
 
         /* get it! */
