@@ -42,7 +42,7 @@ TextEdit {
     color: (enabled && isActive) ? Colors.inputForegroundColor : Colors.inputInactiveForeground
 
     function isSeparator(position) {
-        var separators = " ,.:;/\\|<>()";
+        var separators = " ,.:;/\\|<>()-";
         var symbol = text[position];
         return (separators.indexOf(symbol) >= 0);
     }
