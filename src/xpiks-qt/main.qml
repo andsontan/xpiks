@@ -1836,6 +1836,7 @@ ApplicationWindow {
                                                             focus: true
                                                             isActive: rowWrapper.isHighlighted
                                                             onTextChanged: model.editdescription = text
+                                                            userDictEnabled: true
 
                                                             onActionRightClicked: {
                                                                 if (filteredArtItemsModel.hasDescriptionWordSpellError(rowWrapper.delegateIndex, rightClickedWord)){
@@ -1941,7 +1942,7 @@ ApplicationWindow {
                                                             focus: true
                                                             isActive: rowWrapper.isHighlighted
                                                             onTextChanged: model.edittitle = text
-
+                                                            userDictEnabled: true
 
                                                             onActionRightClicked: {
                                                                 if (filteredArtItemsModel.hasTitleWordSpellError(rowWrapper.delegateIndex, rightClickedWord)){

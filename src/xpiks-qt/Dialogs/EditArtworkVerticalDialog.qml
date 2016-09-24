@@ -291,6 +291,7 @@ Item {
                             focus: true
                             text: combinedArtworks.title
                             onTextChanged: combinedArtworks.title = text
+                            userDictEnabled: true
 
                             onActionRightClicked: {
                                 if (combinedArtworks.hasTitleWordSpellError(rightClickedWord)) {
@@ -393,6 +394,7 @@ Item {
                             width: descriptionFlick.width
                             height: descriptionFlick.height
                             focus: true
+                            userDictEnabled: true
                             property string previousText: text
                             property int maximumLength: 280
                             onTextChanged: {

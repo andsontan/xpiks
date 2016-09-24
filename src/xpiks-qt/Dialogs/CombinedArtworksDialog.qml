@@ -492,6 +492,7 @@ CloseRequested")
                                         height: titleFlick.height
                                         text: combinedArtworks.title
                                         onTextChanged: combinedArtworks.title = text
+                                        userDictEnabled: true
 
                                         onActionRightClicked: {
                                             if (combinedArtworks.hasTitleWordSpellError(rightClickedWord)) {
@@ -665,6 +666,7 @@ CloseRequested")
                                         height: descriptionFlick.height
                                         text: combinedArtworks.description
                                         focus: true
+                                        userDictEnabled: true
                                         property string previousText: text
                                         property int maximumLength: 280
                                         onTextChanged: {
@@ -885,6 +887,7 @@ CloseRequested")
                                                                     keywordsModel: keywordsWrapper.keywordsModel
                                                                 })
                                         }
+
                                         onActionRightClicked: {
                                             if (!iscorrect) {
                                                 console.log("Context menu for add word")
