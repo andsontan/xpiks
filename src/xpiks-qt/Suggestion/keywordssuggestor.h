@@ -30,7 +30,6 @@
 #include <QSet>
 #include "../Common/baseentity.h"
 #include "../Common/basickeywordsmodel.h"
-#include "shutterstockqueryengine.h"
 #include "suggestionartwork.h"
 #include "../Common/hold.h"
 
@@ -50,7 +49,7 @@ namespace Suggestion {
 
     public:
         KeywordsSuggestor(LocalLibrary *library, QObject *parent=NULL);
-        virtual ~KeywordsSuggestor() { qDeleteAll(m_QueryEngines); }
+        virtual ~KeywordsSuggestor();
 
     public:
         void initSuggestionEngines();

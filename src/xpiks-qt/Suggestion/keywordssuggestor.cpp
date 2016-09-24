@@ -47,6 +47,10 @@ namespace Suggestion {
         qsrand(QTime::currentTime().msec());
     }
 
+    KeywordsSuggestor::~KeywordsSuggestor() {
+         qDeleteAll(m_QueryEngines);
+    }
+
     void KeywordsSuggestor::initSuggestionEngines() {
         Q_ASSERT(m_CommandManager != NULL);
         auto *settingsModel = m_CommandManager->getSettingsModel();

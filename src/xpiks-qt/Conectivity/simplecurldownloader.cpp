@@ -42,7 +42,8 @@ static size_t write_file(void *buffer, size_t size, size_t nmemb, void *param) {
 namespace Conectivity {
     SimpleCurlDownloader::SimpleCurlDownloader(const QString &resource, QObject *parent) :
         QObject(parent),
-        m_RemoteResource(resource)
+        m_RemoteResource(resource),
+        m_ProxySettings(nullptr)
     {
         m_TempFile.setAutoRemove(false);
     }
