@@ -66,5 +66,17 @@ int AutoCompleteBasicTest::doTest() {
     VERIFY(acModel->getCount() > 0, "AC model didn't receive the completions");
     VERIFY(acModel->containsWord("test"), "AC model has irrelevant results");
 
+    m_CommandManager->autoCompleteKeyword("Tes", metadata->getKeywordsModel());
+
+    if (!completionWaiter.wait(10)) {
+        VERIFY(false, "Timeout while waiting for the completion");
+    }
+
+    qInfo() << "Generated" << acModel->getCount() << "completions";
+    qInfo() << "Completions:" << acModel->getLastGeneratedCompletions();
+
+    VERIFY(acModel->getCount() > 0, "AC model didn't receive the completions second time");
+    VERIFY(acModel->containsWord("test"), "AC model has irrelevant results");
+
     return 0;
 }

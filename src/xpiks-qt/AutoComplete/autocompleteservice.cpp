@@ -114,7 +114,9 @@ namespace AutoComplete {
         }
 
         LOG_INFO << "Requested for" << prefix;
-        std::shared_ptr<CompletionQuery> query(new CompletionQuery(prefix, m_AutoCompleteModel),
+        QString requestPrefix = prefix.toLower();
+        LOG_INFO << "Requesting for" << requestPrefix;
+        std::shared_ptr<CompletionQuery> query(new CompletionQuery(requestPrefix, m_AutoCompleteModel),
                                                [](CompletionQuery *cq) { cq->deleteLater(); });
 
         Common::BasicKeywordsModel *basicKeywordsModel = qobject_cast<Common::BasicKeywordsModel*>(notifyObject);
