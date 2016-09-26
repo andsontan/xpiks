@@ -29,6 +29,11 @@ namespace Models {
 }
 
 namespace Conectivity {
+    struct UpdateCheckResult {
+        QString m_UpdateURL;
+        QString m_Checksum;
+    };
+
     class UpdatesCheckerWorker : public QObject
     {
         Q_OBJECT
@@ -39,6 +44,7 @@ namespace Conectivity {
     private:
         void initWorker();
         void processOneItem();
+        bool checkForUpdates(UpdateCheckResult &result);
 
     public slots:
         void process();
@@ -46,10 +52,12 @@ namespace Conectivity {
     signals:
         void stopped();
         void updateAvailable(QString updateLink);
+        void updateDownloaded(QString updatePath);
         void requestFinished();
 
     private:
         Models::SettingsModel *m_SettingsModel;
+        QString m_UpdatesDirectory;
     };
 }
 

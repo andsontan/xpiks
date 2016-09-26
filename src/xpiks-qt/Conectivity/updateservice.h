@@ -46,6 +46,7 @@ namespace Conectivity {
 
     signals:
         void updateAvailable(QString updateLink);
+        void updateDownloaded(QString updatePath);
 
     private:
         Conectivity::UpdatesCheckerWorker *m_UpdatesCheckerWorker;

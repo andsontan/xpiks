@@ -48,6 +48,8 @@ namespace Conectivity {
 
             QObject::connect(m_UpdatesCheckerWorker, SIGNAL(updateAvailable(QString)),
                              this, SIGNAL(updateAvailable(QString)));
+            QObject::connect(m_UpdatesCheckerWorker, SIGNAL(updateDownloaded(QString)),
+                             this, SIGNAL(updateDownloaded(QString)));
 
             QObject::connect(m_UpdatesCheckerWorker, SIGNAL(stopped()),
                              this, SLOT(workerFinished()));
