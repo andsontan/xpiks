@@ -148,6 +148,7 @@ SOURCES += main.cpp \
     removefromuserdictionarytest.cpp \
     testshelpers.cpp \
     ../../xpiks-qt/Conectivity/simplecurlrequest.cpp \
+    ../../xpiks-qt/Conectivity/simplecurldownloader.cpp \
     ../../xpiks-qt/Conectivity/curlinithelper.cpp \
     artworkuploaderbasictest.cpp \
     ../../xpiks-qt/MetadataIO/exiv2inithelper.cpp
@@ -326,6 +327,7 @@ HEADERS += \
     removefromuserdictionarytest.h \
     testshelpers.h \
     ../../xpiks-qt/Conectivity/simplecurlrequest.h \
+    ../../xpiks-qt/Conectivity/simplecurldownloader.h \
     ../../xpiks-qt/Conectivity/curlinithelper.h \
     artworkuploaderbasictest.h \
     ../../xpiks-qt/MetadataIO/exiv2inithelper.h
