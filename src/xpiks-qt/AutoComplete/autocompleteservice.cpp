@@ -113,7 +113,7 @@ namespace AutoComplete {
             return;
         }
 
-        LOG_INFO << "Requested for" << prefix;
+        LOG_INFO << "Received:" << prefix;
         QString requestPrefix = prefix.toLower();
         LOG_INFO << "Requesting for" << requestPrefix;
         std::shared_ptr<CompletionQuery> query(new CompletionQuery(requestPrefix, m_AutoCompleteModel),
