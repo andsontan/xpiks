@@ -55,6 +55,7 @@
 #include "../QMLExtensions/imagecachingservice.h"
 #include "../Models/findandreplacemodel.h"
 #include "../Models/deletekeywordsviewmodel.h"
+#include "../Helpers/helpersqmlwrapper.h"
 
 void Commands::CommandManager::InjectDependency(Models::ArtworksRepository *artworkRepository) {
     Q_ASSERT(artworkRepository != NULL); m_ArtworksRepository = artworkRepository;
@@ -190,6 +191,11 @@ void Commands::CommandManager::InjectDependency(Models::DeleteKeywordsViewModel 
     m_DeleteKeywordsViewModel->setCommandManager(this);
 }
 
+void Commands::CommandManager::InjectDependency(Helpers::HelpersQmlWrapper *helpersQmlWrapper) {
+    Q_ASSERT(helpersQmlWrapper != NULL); m_HelpersQmlWrapper = helpersQmlWrapper;
+    m_HelpersQmlWrapper->setCommandManager(this);
+}
+
 std::shared_ptr<Commands::ICommandResult> Commands::CommandManager::processCommand(const std::shared_ptr<ICommandBase> &command)
 #ifndef CORE_TESTS
 const
@@ -297,6 +303,10 @@ void Commands::CommandManager::ensureDependenciesInjected() {
     Q_ASSERT(m_ImageCachingService != NULL);
     Q_ASSERT(m_FindAndReplaceModel != NULL);
     Q_ASSERT(m_DeleteKeywordsViewModel != NULL);
+
+#ifndef INTEGRATION_TESTS
+    Q_ASSERT(m_HelpersQmlWrapper != NULL);
+#endif
 }
 
 void Commands::CommandManager::recodePasswords(const QString &oldMasterPassword,
@@ -695,6 +705,12 @@ void Commands::CommandManager::beforeDestructionCallback() const {
 
     m_LogsModel->stopLogging();
 #endif
+}
+
+void Commands::CommandManager::requestCloseApplication() const {
+    if (m_HelpersQmlWrapper != NULL) {
+        m_HelpersQmlWrapper->requestCloseApplication();
+    }
 }
 
 void Commands::CommandManager::restartSpellChecking() {
