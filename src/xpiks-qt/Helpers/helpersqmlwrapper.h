@@ -77,7 +77,7 @@ namespace Helpers {
         void revealFile(const QString &path);
 
     signals:
-        void globalCloseRequested();
+        void globalBeforeDestruction();
         void updateAvailable(QString updateLink);
 
     private:

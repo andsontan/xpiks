@@ -56,8 +56,8 @@ Item {
 
     Connections {
         target: helpersWrapper
-        onGlobalCloseRequested: {
-            console.debug("UI:EditArtworkHorizontalDialog # globalCloseRequested")
+        onGlobalBeforeDestruction: {
+            console.debug("UI:EditArtworkHorizontalDialog # globalBeforeDestruction")
             closePopup()
         }
     }

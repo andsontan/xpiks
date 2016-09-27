@@ -74,7 +74,7 @@ namespace Helpers {
 
     void HelpersQmlWrapper::beforeDestruction() {
         LOG_DEBUG << "emitting signal";
-        emit globalCloseRequested();
+        emit globalBeforeDestruction();
         QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
         m_CommandManager->beforeDestructionCallback();
     }

@@ -54,7 +54,7 @@ Item {
 
     Connections {
         target: helpersWrapper
-        onGlobalCloseRequested: {
+        onGlobalBeforeDestruction: {
             console.debug("UI:CombinedArtworksDialog # global
 CloseRequested")
             closePopup()
