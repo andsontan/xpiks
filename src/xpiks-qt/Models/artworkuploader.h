@@ -72,6 +72,7 @@ namespace Models {
     private slots:
         void uploaderPercentChanged(double percent);
         void stocksListUpdated();
+        void updateStocksList();
 
     public:
         Q_INVOKABLE void uploadArtworks();

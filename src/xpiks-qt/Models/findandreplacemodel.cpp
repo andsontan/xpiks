@@ -276,7 +276,7 @@ namespace Models {
             text.append(listNew.join(", "));
         } else {
             if (list.length() > PREVIEWKEYWORDSCOUNT) {
-                auto part = list.mid(0, PREVIEWKEYWORDSCOUNT);
+                QStringList part = list.mid(0, PREVIEWKEYWORDSCOUNT);
                 text = part.join(", ") + " ...";
             } else {
                 text = list.join(", ");
