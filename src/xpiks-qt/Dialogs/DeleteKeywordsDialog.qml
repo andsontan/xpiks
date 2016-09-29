@@ -55,7 +55,7 @@ Item {
 
     Connections {
         target: helpersWrapper
-        onGlobalCloseRequested: {
+        onGlobalBeforeDestruction: {
             console.debug("UI:DeleteKeywordsDialog # global
 CloseRequested")
             closePopup()

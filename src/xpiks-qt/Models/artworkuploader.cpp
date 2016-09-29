@@ -112,6 +112,10 @@ namespace Models {
         m_StocksCompletionSource.setStrings(stocks);
     }
 
+    void ArtworkUploader::updateStocksList() {
+        m_StocksFtpList.initializeConfigs();
+    }
+
     void ArtworkUploader::uploadArtworks() { doUploadArtworks(getArtworkList()); }
 
     void ArtworkUploader::checkCredentials(const QString &host, const QString &username,
@@ -172,9 +176,7 @@ namespace Models {
     }
 
     void ArtworkUploader::initializeStocksList() {
-        QTimer::singleShot(1000, [&]() {
-            m_StocksFtpList.initializeConfigs();
-        });
+        QTimer::singleShot(1000, this, SLOT(updateStocksList()));
     }
 
     void ArtworkUploader::doUploadArtworks(const QVector<ArtworkMetadata *> &artworkList) {

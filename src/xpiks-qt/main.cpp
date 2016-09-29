@@ -335,6 +335,8 @@ int main(int argc, char *argv[]) {
     Plugins::PluginsWithActionsModel pluginsWithActions;
     pluginsWithActions.setSourceModel(&pluginManager);
 
+    Helpers::HelpersQmlWrapper helpersQmlWrapper;
+
     LOG_INFO << "Models created";
 
     Commands::CommandManager commandManager;
@@ -366,6 +368,7 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&imageCachingService);
     commandManager.InjectDependency(&replaceModel);
     commandManager.InjectDependency(&deleteKeywordsModel);
+    commandManager.InjectDependency(&helpersQmlWrapper);
 
     commandManager.ensureDependenciesInjected();
 
@@ -391,7 +394,6 @@ int main(int argc, char *argv[]) {
     QMLExtensions::CachingImageProvider *cachingProvider = new QMLExtensions::CachingImageProvider(QQmlImageProviderBase::Image);
     cachingProvider->setImageCachingService(&imageCachingService);
 
-    Helpers::HelpersQmlWrapper helpersQmlWrapper(&commandManager);
     QObject::connect(&updateService, SIGNAL(updateAvailable(QString)),
                      &helpersQmlWrapper, SIGNAL(updateAvailable(QString)));
 

@@ -47,8 +47,7 @@
 #endif
 
 namespace Helpers {
-    HelpersQmlWrapper::HelpersQmlWrapper(Commands::CommandManager *commandManager):
-        m_CommandManager(commandManager)
+    HelpersQmlWrapper::HelpersQmlWrapper()
     {
 #ifdef Q_OS_WIN
         m_WinTaskbarButtonApplicable = QSysInfo::windowsVersion() >= QSysInfo::WV_WINDOWS7;
@@ -74,7 +73,7 @@ namespace Helpers {
 
     void HelpersQmlWrapper::beforeDestruction() {
         LOG_DEBUG << "emitting signal";
-        emit globalCloseRequested();
+        emit globalBeforeDestruction();
         QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
         m_CommandManager->beforeDestructionCallback();
     }

@@ -55,8 +55,8 @@ Item {
 
     Connections {
         target: helpersWrapper
-        onGlobalCloseRequested: {
-            console.debug("UI:UploadArtworks # globalCloseRequested")
+        onGlobalBeforeDestruction: {
+            console.debug("UI:UploadArtworks # globalBeforeDestruction")
             closePopup()
         }
     }

@@ -77,8 +77,8 @@ Item {
 
     Connections {
         target: helpersWrapper
-        onGlobalCloseRequested: {
-            console.debug("UI:EditArtworkVerticalDialog # globalCloseRequested")
+        onGlobalBeforeDestruction: {
+            console.debug("UI:EditArtworkVerticalDialog # globalBeforeDestruction")
             closePopup()
         }
     }

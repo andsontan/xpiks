@@ -24,6 +24,7 @@
 
 #include <QObject>
 #include <QString>
+#include "../Common/baseentity.h"
 
 namespace Commands {
     class CommandManager;
@@ -35,12 +36,12 @@ class QWinTaskbarButton;
 #endif
 
 namespace Helpers {
-    class HelpersQmlWrapper : public QObject
+    class HelpersQmlWrapper : public QObject, public Common::BaseEntity
     {
         Q_OBJECT
         Q_PROPERTY(bool pluginsAvailable READ getPluginsAvailable CONSTANT)
     public:
-        HelpersQmlWrapper(Commands::CommandManager *commandManager);
+        HelpersQmlWrapper();
 
     public:
         Q_INVOKABLE bool isKeywordValid(const QString &keyword) const;
@@ -61,6 +62,9 @@ namespace Helpers {
         Q_INVOKABLE QString toImagePath(const QString &path) const;
 
     public:
+        void requestCloseApplication() { emit globalCloseRequested(); }
+
+    public:
         Q_INVOKABLE QObject *getLogsModel();
         Q_INVOKABLE QObject *getFtpACList();
         Q_INVOKABLE QObject *getArtworkUploader();
@@ -78,10 +82,10 @@ namespace Helpers {
 
     signals:
         void globalCloseRequested();
+        void globalBeforeDestruction();
         void updateAvailable(QString updateLink);
 
     private:
-        Commands::CommandManager *m_CommandManager;
 #ifdef Q_OS_WIN
         QWinTaskbarButton *m_TaskbarButton;
         bool m_WinTaskbarButtonApplicable;
