@@ -23,11 +23,14 @@
 #include "updatescheckerworker.h"
 #include "../Common/defines.h"
 #include "../Models/settingsmodel.h"
+#include "../Helpers/appsettings.h"
 
 namespace Conectivity {
     UpdateService::UpdateService(Models::SettingsModel *settingsModel):
         m_UpdatesCheckerWorker(nullptr),
-        m_SettingsModel(settingsModel)
+        m_SettingsModel(settingsModel),
+        m_AvailableVersion(0),
+        m_UpdateDownloaded(false)
     {
         Q_ASSERT(settingsModel != nullptr);
     }
@@ -48,8 +51,8 @@ namespace Conectivity {
 
             QObject::connect(m_UpdatesCheckerWorker, SIGNAL(updateAvailable(QString)),
                              this, SIGNAL(updateAvailable(QString)));
-            QObject::connect(m_UpdatesCheckerWorker, SIGNAL(updateDownloaded(QString)),
-                             this, SIGNAL(updateDownloaded(QString)));
+            QObject::connect(m_UpdatesCheckerWorker, SIGNAL(updateDownloaded(QString, int)),
+                             this, SLOT(updateDownloadedHandler(QString, int)));
 
             QObject::connect(m_UpdatesCheckerWorker, SIGNAL(stopped()),
                              this, SLOT(workerFinished()));
@@ -60,7 +63,30 @@ namespace Conectivity {
         }
     }
 
+    void UpdateService::stopChecking() {
+        LOG_DEBUG << "#";
+    }
+
     void UpdateService::workerFinished() {
         LOG_DEBUG << "#";
+    }
+
+    void UpdateService::updateDownloadedHandler(const QString &updatePath, int version) {
+        LOG_DEBUG << "#";
+        m_UpdateDownloaded = true;
+        m_PathToUpdate = updatePath;
+        m_AvailableVersion = version;
+
+        saveUpdateInfo();
+
+        emit updateDownloaded();
+    }
+
+    void UpdateService::saveUpdateInfo() const {
+        Q_ASSERT(m_UpdateDownloaded);
+
+        Helpers::AppSettings appSettings;
+        appSettings.setValue(appSettings.getAvailableUpdateVersionKey(), m_AvailableVersion);
+        appSettings.setValue(appSettings.getPathToUpdateKey(), m_PathToUpdate);
     }
 }

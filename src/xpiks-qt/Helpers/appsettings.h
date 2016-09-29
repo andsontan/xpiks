@@ -152,6 +152,12 @@ namespace Helpers {
         Q_PROPERTY(QString autoDownloadUpdatesKey READ getAutoDownloadUpdatesKey CONSTANT)
         QString getAutoDownloadUpdatesKey() const { return QLatin1String(Constants::AUTO_DOWNLOAD_UPDATES); }
 
+        Q_PROPERTY(QString pathToUpdateKey READ getPathToUpdateKey CONSTANT)
+        QString getPathToUpdateKey() const { return QLatin1String(Constants::PATH_TO_UPDATE); }
+
+        Q_PROPERTY(QString availableUpdateVersionKey READ getAvailableUpdateVersionKey CONSTANT)
+        QString getAvailableUpdateVersionKey() const { return QLatin1String(Constants::AVAILABLE_UPDATE_VERSION); }
+
         Q_PROPERTY(QString whatsNewText READ getWhatsNewText CONSTANT)
         QString getWhatsNewText() const {
             QString text;

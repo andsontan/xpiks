@@ -32,6 +32,7 @@ namespace Conectivity {
     struct UpdateCheckResult {
         QString m_UpdateURL;
         QString m_Checksum;
+        int m_Version;
     };
 
     class UpdatesCheckerWorker : public QObject
@@ -52,7 +53,7 @@ namespace Conectivity {
     signals:
         void stopped();
         void updateAvailable(QString updateLink);
-        void updateDownloaded(QString updatePath);
+        void updateDownloaded(const QString &updatePath, int version);
         void requestFinished();
 
     private:

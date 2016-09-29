@@ -43,14 +43,21 @@ namespace Conectivity {
 
     private slots:
         void workerFinished();
+        void updateDownloadedHandler(const QString &updatePath, int version);
 
     signals:
         void updateAvailable(QString updateLink);
-        void updateDownloaded(QString updatePath);
+        void updateDownloaded();
+
+    private:
+        void saveUpdateInfo() const;
 
     private:
         Conectivity::UpdatesCheckerWorker *m_UpdatesCheckerWorker;
         Models::SettingsModel *m_SettingsModel;
+        QString m_PathToUpdate;
+        int m_AvailableVersion;
+        volatile bool m_UpdateDownloaded;
     };
 }
 

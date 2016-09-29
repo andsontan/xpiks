@@ -79,6 +79,8 @@ namespace Constants {
     const char SCROLL_SPEED_SENSIVITY[] = "SCROLL_SPEED_SENSIVITY";
     const char AUTO_DOWNLOAD_UPDATES[] = "AUTO_DOWNLOAD_UPDATES";
     const char USER_DICT_FILENAME[] = "userdict.dic";
+    const char PATH_TO_UPDATE[] = "PATH_TO_UPDATE";
+    const char AVAILABLE_UPDATE_VERSION[] = "AVAILABLE_UPDATE_VERSION";
 #else
     const char MAX_KEYWORD_COUNT[] = "DEBUG_MAX_KEYWORD_COUNT";
     const char MAX_DESCRIPTION_LENGTH[] = "DEBUG_MAX_DESCRIPTION_LENGTH";
@@ -99,6 +101,8 @@ namespace Constants {
     const char IMAGES_CACHE_INDEX[] = "debug_imagescache.index";
     const char SCROLL_SPEED_SENSIVITY[] = "DEBUG_SCROLL_SPEED_SENSIVITY";
     const char AUTO_DOWNLOAD_UPDATES[] = "DEBUG_AUTO_DOWNLOAD_UPDATES";
+    const char PATH_TO_UPDATE[] = "DEBUG_PATH_TO_UPDATE";
+    const char AVAILABLE_UPDATE_VERSION[] = "DEBUG_AVAILABLE_UPDATE_VERSION";
 
 #ifdef INTEGRATION_TESTS
     const char LIBRARY_FILENAME[] = "xpiks.integration.library";

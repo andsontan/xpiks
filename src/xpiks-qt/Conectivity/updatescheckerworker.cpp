@@ -131,7 +131,7 @@ namespace Conectivity {
                         QString updatePath = updatesDir.filePath(filename);
 
                         if (moveFile(downloader.getDownloadedPath(), updatePath)) {
-                            emit updateDownloaded(updatePath);
+                            emit updateDownloaded(updatePath, updateCheckResult.m_Version);
                         } else {
                             LOG_WARNING << "Failed to move the file";
                         }
@@ -193,6 +193,7 @@ namespace Conectivity {
 
                     result.m_UpdateURL = updateUrl;
                     result.m_Checksum = checksum;
+                    result.m_Version = availableVersion;
                     anyUpdateAvailable = true;
                 }
             }
