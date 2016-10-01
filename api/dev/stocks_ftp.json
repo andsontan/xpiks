@@ -1,0 +1,57 @@
+{
+    "overwrite": false,
+    "stocks_ftp": [
+        {
+            "name": "Shutterstock",
+            "ftp": "ftp.shutterstock.com"
+        },
+        {
+            "name": "Fotolia",
+            "ftp": "ftp://submit.fotolia.com"
+        },
+        {
+            "name": "Depositphotos",
+            "ftp": "ftp.depositphotos.com"
+        },
+        {
+            "name": "123rf",
+            "ftp": "ftp.123rf.com"
+        },
+        {
+            "name": "BigStock",
+            "ftp": "ftp.bigstockphoto.com"
+        },
+        {
+            "name": "Dreamtimes",
+            "ftp": "ftp://upload.dreamstime.com"
+        },
+        {
+            "name": "CanStock",
+            "ftp": "ftp.canstockphoto.com"
+        },
+        {
+            "name": "ColourBox",
+            "ftp": "ftp.skyfish.com"
+        },
+        {
+            "name": "Alamy",
+            "ftp": "ftp://upload.alamy.com"
+        },
+        {
+            "name": "iClipart",
+            "ftp": "ftp.iclipart.com"
+        },
+        {
+            "name": "Yaymicro",
+            "ftp": "ftp.yaymicro.com"
+        },
+        {
+            "name": "Mostphotos",
+            "ftp": "ftp.mostphotos.com"
+        },
+        {
+            "name": "Crestock",
+            "ftp": "ftp.crestock.com"
+        }
+    ]
+}
