@@ -28,9 +28,9 @@
 #include "../Models/abstractconfigupdatermodel.h"
 #include "../Common/defines.h"
 #include "../Helpers/localconfig.h"
+#include "../Conectivity/apimanager.h"
 
 #define OVERWRITE_STOCKS_CONFIG false
-#define STOCKS_LIST_URL "https://ribtoks.github.io/xpiks/api/v1/stocks_ftp.json"
 #define LOCAL_STOCKS_LIST_FILE QLatin1String("stocks_ftp.json")
 
 #define OVERWRITE_KEY QLatin1String("overwrite")
@@ -56,7 +56,9 @@ namespace AutoComplete {
             localConfigPath = LOCAL_STOCKS_LIST_FILE;
         }
 
-        AbstractConfigUpdaterModel::initializeConfigs(STOCKS_LIST_URL, localConfigPath);
+        auto &apiManager = Conectivity::ApiManager::getInstance();
+        QString remoteAddress = apiManager.getStocksACSourceAddr();
+        AbstractConfigUpdaterModel::initializeConfigs(remoteAddress, localConfigPath);
 
         const Helpers::LocalConfig &localConfig = getLocalConfig();
         const QJsonDocument &localDocument = localConfig.getConfig();
