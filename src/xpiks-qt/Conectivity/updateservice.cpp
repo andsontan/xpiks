@@ -24,13 +24,14 @@
 #include "../Common/defines.h"
 #include "../Models/settingsmodel.h"
 #include "../Helpers/appsettings.h"
+#include "../Common/version.h"
 
 namespace Conectivity {
     UpdateService::UpdateService(Models::SettingsModel *settingsModel):
         m_UpdatesCheckerWorker(nullptr),
         m_SettingsModel(settingsModel),
         m_AvailableVersion(0),
-        m_UpdateDownloaded(false)
+        m_UpdateAvailable(false)
     {
         Q_ASSERT(settingsModel != nullptr);
     }
@@ -39,25 +40,8 @@ namespace Conectivity {
         const bool startWorker = m_SettingsModel->getCheckForUpdates();
 
         if (startWorker) {
-            m_UpdatesCheckerWorker = new UpdatesCheckerWorker(m_SettingsModel);
-            QThread *thread = new QThread();
-            m_UpdatesCheckerWorker->moveToThread(thread);
-
-            QObject::connect(thread, SIGNAL(started()), m_UpdatesCheckerWorker, SLOT(process()));
-            QObject::connect(m_UpdatesCheckerWorker, SIGNAL(stopped()), thread, SLOT(quit()));
-
-            QObject::connect(m_UpdatesCheckerWorker, SIGNAL(stopped()), m_UpdatesCheckerWorker, SLOT(deleteLater()));
-            QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
-
-            QObject::connect(m_UpdatesCheckerWorker, SIGNAL(updateAvailable(QString)),
-                             this, SIGNAL(updateAvailable(QString)));
-            QObject::connect(m_UpdatesCheckerWorker, SIGNAL(updateDownloaded(QString, int)),
-                             this, SLOT(updateDownloadedHandler(QString, int)));
-
-            QObject::connect(m_UpdatesCheckerWorker, SIGNAL(stopped()),
-                             this, SLOT(workerFinished()));
-
-            thread->start();
+            updateSettings();
+            doStartChecking();
         } else {
             LOG_INFO << "Update service disabled";
         }
@@ -67,13 +51,52 @@ namespace Conectivity {
         LOG_DEBUG << "#";
     }
 
+    void UpdateService::doStartChecking() {
+        m_UpdatesCheckerWorker = new UpdatesCheckerWorker(m_SettingsModel, m_PathToUpdate);
+        QThread *thread = new QThread();
+        m_UpdatesCheckerWorker->moveToThread(thread);
+
+        QObject::connect(thread, SIGNAL(started()), m_UpdatesCheckerWorker, SLOT(process()));
+        QObject::connect(m_UpdatesCheckerWorker, SIGNAL(stopped()), thread, SLOT(quit()));
+
+        QObject::connect(m_UpdatesCheckerWorker, SIGNAL(stopped()), m_UpdatesCheckerWorker, SLOT(deleteLater()));
+        QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+
+        QObject::connect(m_UpdatesCheckerWorker, SIGNAL(updateAvailable(QString)),
+                         this, SIGNAL(updateAvailable(QString)));
+        QObject::connect(m_UpdatesCheckerWorker, SIGNAL(updateDownloaded(QString, int)),
+                         this, SLOT(updateDownloadedHandler(QString, int)));
+
+        QObject::connect(m_UpdatesCheckerWorker, SIGNAL(stopped()),
+                         this, SLOT(workerFinished()));
+
+        thread->start();
+    }
+
+    void UpdateService::updateSettings() {
+        LOG_DEBUG << "#";
+        Helpers::AppSettings appSettings;
+
+        int availableValue = appSettings.intValue(appSettings.getAvailableUpdateVersionKey(), 0);
+
+        if ((0 < availableValue) && (availableValue <= XPIKS_VERSION_INT)) {
+            LOG_DEBUG << "Flushing available update settings values";
+            appSettings.setValue(appSettings.getPathToUpdateKey(), "");
+            appSettings.setValue(appSettings.getAvailableUpdateVersionKey(), 0);
+        } else {
+            m_PathToUpdate = appSettings.value(appSettings.getPathToUpdateKey()).toString();
+            m_AvailableVersion = appSettings.intValue(appSettings.getAvailableUpdateVersionKey(), 0);
+            LOG_INFO << "Available:" << m_PathToUpdate << "version:" << m_AvailableVersion;
+        }
+    }
+
     void UpdateService::workerFinished() {
         LOG_DEBUG << "#";
     }
 
     void UpdateService::updateDownloadedHandler(const QString &updatePath, int version) {
         LOG_DEBUG << "#";
-        m_UpdateDownloaded = true;
+        m_UpdateAvailable = true;
         m_PathToUpdate = updatePath;
         m_AvailableVersion = version;
 
@@ -83,7 +106,7 @@ namespace Conectivity {
     }
 
     void UpdateService::saveUpdateInfo() const {
-        Q_ASSERT(m_UpdateDownloaded);
+        Q_ASSERT(m_UpdateAvailable);
 
         Helpers::AppSettings appSettings;
         appSettings.setValue(appSettings.getAvailableUpdateVersionKey(), m_AvailableVersion);

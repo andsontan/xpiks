@@ -41,6 +41,10 @@ namespace Conectivity {
         void startChecking();
         void stopChecking();
 
+    private:
+        void doStartChecking();
+        void updateSettings();
+
     private slots:
         void workerFinished();
         void updateDownloadedHandler(const QString &updatePath, int version);
@@ -57,7 +61,7 @@ namespace Conectivity {
         Models::SettingsModel *m_SettingsModel;
         QString m_PathToUpdate;
         int m_AvailableVersion;
-        volatile bool m_UpdateDownloaded;
+        volatile bool m_UpdateAvailable;
     };
 }
 

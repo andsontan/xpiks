@@ -39,13 +39,15 @@ namespace Conectivity {
     {
         Q_OBJECT
     public:
-        UpdatesCheckerWorker(Models::SettingsModel *settingsModel);
+        UpdatesCheckerWorker(Models::SettingsModel *settingsModel, const QString &availableUpdatePath);
         virtual ~UpdatesCheckerWorker();
 
     private:
         void initWorker();
         void processOneItem();
         bool checkForUpdates(UpdateCheckResult &result);
+        bool downloadUpdate(const UpdateCheckResult &updateCheckResult, QString &pathToUpdate);
+        bool checkAvailableUpdate(const UpdateCheckResult &updateCheckResult);
 
     public slots:
         void process();
@@ -59,6 +61,7 @@ namespace Conectivity {
     private:
         Models::SettingsModel *m_SettingsModel;
         QString m_UpdatesDirectory;
+        QString m_AvailableUpdatePath;
     };
 }
 
