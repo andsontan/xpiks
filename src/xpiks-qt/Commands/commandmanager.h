@@ -143,6 +143,7 @@ namespace Commands {
             m_ImageCachingService(NULL),
             m_DeleteKeywordsViewModel(NULL),
             m_FindAndReplaceModel(NULL),
+            m_HelpersQmlWrapper(NULL),
             m_AfterInitCalled(false)
         { }
 
