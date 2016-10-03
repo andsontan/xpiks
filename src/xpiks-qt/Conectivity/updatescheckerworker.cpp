@@ -21,7 +21,6 @@
 
 #include "updatescheckerworker.h"
 
-#define DEFAULT_UPDATE_URL "https://ribtoks.github.io/xpiks/downloads/"
 #define UPDATE_JSON_MAJOR_VERSION "major_version"
 #define UPDATE_JSON_MINOR_VERSION "minor_version"
 #define UPDATE_JSON_FIX_VERSION "fix_version"
@@ -154,7 +153,7 @@ namespace Conectivity {
                 LOG_INFO << "Update service: available =" << availableVersion << "current =" << currVersion;
 
                 if (availableVersion > currVersion) {
-                    QString updateUrl = DEFAULT_UPDATE_URL;
+                    QString updateUrl = apiManager.getDefaultUpdateAddr();
                     if (jsonObject.contains(UPDATE_JSON_UPDATE_URL)) {
                         updateUrl = jsonObject.value(UPDATE_JSON_UPDATE_URL).toString();
                     }

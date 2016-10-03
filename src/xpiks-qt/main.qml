@@ -659,6 +659,13 @@ ApplicationWindow {
                                         {callbackObject: callbackObject})
                 }
             }
+
+            MenuItem {
+                text: "Install update"
+                onTriggered: {
+                    Common.launchDialog("Dialogs/InstallUpdateDialog.qml", applicationWindow, {})
+                }
+            }
         }
     }
 

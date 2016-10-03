@@ -67,5 +67,6 @@
         <file>Dialogs/ReplacePreview.qml</file>
         <file>Dialogs/DeleteKeywordsDialog.qml</file>
         <file>Dialogs/FailedUploadArtworks.qml</file>
+        <file>Dialogs/InstallUpdateDialog.qml</file>
     </qresource>
 </RCC>

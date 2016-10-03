@@ -50,6 +50,10 @@ namespace Conectivity {
             return m_BaseUrl + QLatin1String(UPDATE_JSON_URL_SUFFIX);
         }
 
+        QString getDefaultUpdateAddr() const {
+            return m_BaseUrl + "update.json";
+        }
+
         QString getStocksACSourceAddr() const {
             return m_BaseUrl + "stocks_ftp.json";
         }
