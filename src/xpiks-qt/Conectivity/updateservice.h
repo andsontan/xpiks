@@ -51,7 +51,7 @@ namespace Conectivity {
 
     signals:
         void updateAvailable(QString updateLink);
-        void updateDownloaded();
+        void updateDownloaded(QString pathToUpdate);
 
     private:
         void saveUpdateInfo() const;

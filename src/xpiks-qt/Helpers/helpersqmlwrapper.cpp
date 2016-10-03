@@ -40,6 +40,7 @@
 #include "logger.h"
 #include "../Common/defines.h"
 #include "../Helpers/filenameshelpers.h"
+#include "../Helpers/updatehelpers.h"
 
 #ifdef Q_OS_WIN
 #include <QWinTaskbarButton>
@@ -78,6 +79,11 @@ namespace Helpers {
         emit globalBeforeDestruction();
         QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
         m_CommandManager->beforeDestructionCallback();
+
+        if (m_IsUpdateDownloaded && m_HaveUpgradeConsent) {
+            LOG_INFO << "Installing update" << m_PathToUpdate;
+            Helpers::installUpdate(m_PathToUpdate);
+        }
     }
 
     void HelpersQmlWrapper::revealLogFile() {
@@ -246,8 +252,9 @@ namespace Helpers {
 #endif
     }
 
-    void HelpersQmlWrapper::updateIsDownloaded() {
+    void HelpersQmlWrapper::updateIsDownloaded(QString pathToUpdate) {
         m_IsUpdateDownloaded = true;
+        m_PathToUpdate = pathToUpdate;
         emit updateDownloadedChanged(true);
         emit updateDownloaded();
     }

@@ -104,7 +104,7 @@ namespace Conectivity {
 
         saveUpdateInfo();
 
-        emit updateDownloaded();
+        emit updateDownloaded(m_PathToUpdate);
     }
 
     void UpdateService::saveUpdateInfo() const {

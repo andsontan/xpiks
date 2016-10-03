@@ -277,8 +277,8 @@ void Commands::CommandManager::connectEntitiesSignalsSlots() const {
         QObject::connect(m_UpdateService, SIGNAL(updateAvailable(QString)),
                          m_HelpersQmlWrapper, SIGNAL(updateAvailable(QString)));
 
-        QObject::connect(m_UpdateService, SIGNAL(updateDownloaded()),
-                         m_HelpersQmlWrapper, SLOT(updateIsDownloaded()));
+        QObject::connect(m_UpdateService, SIGNAL(updateDownloaded(QString)),
+                         m_HelpersQmlWrapper, SLOT(updateIsDownloaded(QString)));
     }
 }
 

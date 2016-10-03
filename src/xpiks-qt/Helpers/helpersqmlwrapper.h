@@ -86,7 +86,7 @@ namespace Helpers {
         void revealFile(const QString &path);
 
     public slots:
-        void updateIsDownloaded();
+        void updateIsDownloaded(QString pathToUpdate);
 
     signals:
         void globalCloseRequested();
@@ -103,6 +103,7 @@ namespace Helpers {
 #endif
         bool m_IsUpdateDownloaded;
         bool m_HaveUpgradeConsent;
+        QString m_PathToUpdate;
     };
 }
 
