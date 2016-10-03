@@ -47,7 +47,9 @@
 #endif
 
 namespace Helpers {
-    HelpersQmlWrapper::HelpersQmlWrapper()
+    HelpersQmlWrapper::HelpersQmlWrapper():
+        m_IsUpdateDownloaded(false),
+        m_HaveUpgradeConsent(false)
     {
 #ifdef Q_OS_WIN
         m_WinTaskbarButtonApplicable = QSysInfo::windowsVersion() >= QSysInfo::WV_WINDOWS7;
@@ -166,6 +168,15 @@ namespace Helpers {
         return Helpers::getImagePath(path);
     }
 
+    void HelpersQmlWrapper::setUpgradeConsent() {
+        m_HaveUpgradeConsent = true;
+    }
+
+    void HelpersQmlWrapper::upgradeNow() {
+        setUpgradeConsent();
+        emit upgradeInitiated();
+    }
+
     QObject *HelpersQmlWrapper::getLogsModel() {
         Models::LogsModel *model = m_CommandManager->getLogsModel();
         QQmlEngine::setObjectOwnership(model, QQmlEngine::CppOwnership);
@@ -234,6 +245,10 @@ namespace Helpers {
         QProcess::startDetached("explorer", args);
 #endif
     }
+
+    void HelpersQmlWrapper::updateIsDownloaded() {
+        m_IsUpdateDownloaded = true;
+        emit updateDownloadedChanged(true);
+        emit updateDownloaded();
+    }
 }
-
-

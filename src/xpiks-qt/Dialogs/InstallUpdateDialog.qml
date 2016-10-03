@@ -128,6 +128,10 @@ Item {
                         width: 100
                         isDefault: true
                         text: qsTr("Upgrade")
+                        onClicked: {
+                            helpersWrapper.upgradeNow()
+                            closePopup()
+                        }
                     }
 
                     Item {
@@ -136,7 +140,7 @@ Item {
 
                     StyledButton {
                         width: 100
-                        text: qsTr("Not now")
+                        text: qsTr("Later")
                         onClicked: {
                             closePopup()
                         }

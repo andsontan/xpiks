@@ -272,6 +272,11 @@ void Commands::CommandManager::connectEntitiesSignalsSlots() const {
         QObject::connect(m_SpellCheckerService, SIGNAL(userDictCleared()),
                          m_CombinedArtworksModel, SLOT(userDictClearedHandler()));
     }
+
+    if (m_HelpersQmlWrapper != NULL && m_UpdateService != NULL) {
+        QObject::connect(m_UpdateService, SIGNAL(updateDownloaded()),
+                         m_HelpersQmlWrapper, SLOT(updateIsDownloaded()));
+    }
 }
 
 void Commands::CommandManager::ensureDependenciesInjected() {
@@ -696,7 +701,6 @@ void Commands::CommandManager::beforeDestructionCallback() const {
 #ifdef WITH_PLUGINS
     m_PluginManager->unloadPlugins();
 #endif
-
 
 #ifndef CORE_TESTS
     // we have a second for important stuff

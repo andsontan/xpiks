@@ -104,6 +104,7 @@ namespace Conectivity {
 
         UpdateCheckResult updateCheckResult;
         if (checkForUpdates(updateCheckResult)) {
+#ifndef Q_OS_LINUX
             if (checkAvailableUpdate(updateCheckResult)) {
                 LOG_INFO << "Update is already downloaded:" << m_AvailableUpdatePath;
                 emit updateDownloaded(m_AvailableUpdatePath, updateCheckResult.m_Version);
@@ -113,7 +114,9 @@ namespace Conectivity {
                 if (downloadUpdate(updateCheckResult, pathToUpdate)) {
                     emit updateDownloaded(pathToUpdate, updateCheckResult.m_Version);
                 }
-            } else {
+            } else
+#endif
+            {
                 emit updateAvailable(updateCheckResult.m_UpdateURL);
             }
         }
