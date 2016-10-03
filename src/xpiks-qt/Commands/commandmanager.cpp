@@ -274,6 +274,9 @@ void Commands::CommandManager::connectEntitiesSignalsSlots() const {
     }
 
     if (m_HelpersQmlWrapper != NULL && m_UpdateService != NULL) {
+        QObject::connect(m_UpdateService, SIGNAL(updateAvailable(QString)),
+                         m_HelpersQmlWrapper, SIGNAL(updateAvailable(QString)));
+
         QObject::connect(m_UpdateService, SIGNAL(updateDownloaded()),
                          m_HelpersQmlWrapper, SLOT(updateIsDownloaded()));
     }

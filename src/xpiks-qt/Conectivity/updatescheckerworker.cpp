@@ -78,6 +78,17 @@ bool moveFile(const QString &from, const QString &to) {
     return success;
 }
 
+QString urlFilename(const QString &url) {
+    QString filename;
+
+    int pos = url.lastIndexOf(QLatin1Char('/'));
+    if (pos != -1) {
+        filename = url.mid(pos + 1);
+    }
+
+    return filename;
+}
+
 namespace Conectivity {
     UpdatesCheckerWorker::UpdatesCheckerWorker(Models::SettingsModel *settingsModel, const QString &availableUpdatePath):
         m_SettingsModel(settingsModel),
@@ -92,6 +103,11 @@ namespace Conectivity {
     void UpdatesCheckerWorker::initWorker() {
         QString appDataPath = XPIKS_USERDATA_PATH;
         if (!appDataPath.isEmpty()) {
+            QDir appDir(appDataPath);
+            if (appDir.mkdir(QLatin1String(Constants::UPDATES_DIRECTORY))) {
+                LOG_INFO << "Created updates directory";
+            }
+
             m_UpdatesDirectory = QDir::cleanPath(appDataPath + QDir::separator() + Constants::UPDATES_DIRECTORY);
         } else {
             LOG_WARNING << "Can't get to the updates directory. Using temporary...";
@@ -194,8 +210,11 @@ namespace Conectivity {
                 LOG_INFO << "Update checksum confirmed";
 
                 QDir updatesDir(m_UpdatesDirectory);
+                Q_ASSERT(updatesDir.exists());
+
                 QString filename = QFileInfo(downloadedPath).fileName();
-                QString updatePath = updatesDir.filePath(filename);
+                QString realFilename = urlFilename(updateCheckResult.m_UpdateURL);
+                QString updatePath = updatesDir.filePath(realFilename);
 
                 if (moveFile(downloader.getDownloadedPath(), updatePath)) {
                     pathToUpdate = updatePath;

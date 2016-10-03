@@ -394,9 +394,6 @@ int main(int argc, char *argv[]) {
     QMLExtensions::CachingImageProvider *cachingProvider = new QMLExtensions::CachingImageProvider(QQmlImageProviderBase::Image);
     cachingProvider->setImageCachingService(&imageCachingService);
 
-    QObject::connect(&updateService, SIGNAL(updateAvailable(QString)),
-                     &helpersQmlWrapper, SIGNAL(updateAvailable(QString)));
-
     QQmlContext *rootContext = engine.rootContext();
     rootContext->setContextProperty("artItemsModel", &artItemsModel);
     rootContext->setContextProperty("artworkRepository", &artworkRepository);

@@ -45,6 +45,9 @@ namespace Conectivity {
         m_RemoteResource(resource),
         m_ProxySettings(nullptr)
     {
+#ifdef QT_DEBUG
+        LOG_DEBUG << resource;
+#endif
         m_TempFile.setAutoRemove(false);
     }
 
@@ -111,6 +114,9 @@ namespace Conectivity {
             curl_easy_setopt(curl_handle, CURLOPT_SSL_VERIFYHOST, 0L);
         }
 
+        /* follow redirects */
+        curl_easy_setopt(curl_handle, CURLOPT_FOLLOWLOCATION, 1L);
+
         /* send all data to this function  */
         curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, write_file);
 
@@ -147,6 +153,9 @@ namespace Conectivity {
 
         /* cleanup curl stuff */
         curl_easy_cleanup(curl_handle);
+
+        m_TempFile.close();
+        LOG_INFO << m_TempFile.size() << "bytes downloaded";
 
         return success;
     }

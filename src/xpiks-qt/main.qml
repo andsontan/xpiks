@@ -900,6 +900,7 @@ ApplicationWindow {
             if (applicationWindow.openedDialogsCount == 0) {
                 Common.launchDialog("Dialogs/InstallUpdateDialog.qml", applicationWindow, {})
             } else {
+                console.debug("Opened dialogs found. Postponing upgrade flow...");
                 upgradeTimer.start()
             }
         }
