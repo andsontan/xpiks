@@ -27,6 +27,7 @@ private slots:
     void setSameDescriptionTest();
     void editKeywordToAnotherTest();
     void editKeywordToSameTest();
+    void editKeywordAnotherCaseTest();
     void addRemoveAddUpperCaseWordTest();
     void editToUpperCaseTest();
     void hasKeywordTest();
