@@ -34,6 +34,7 @@ Item {
     property var callbackObject
     property string previousKeyword: ''
     property var keywordsModel
+    property int keywordIndex
     property bool anyError: false
     anchors.fill: parent
 
@@ -167,7 +168,7 @@ Item {
                         }
 
                         onTextChanged: {
-                            editKeywordComponent.anyError = keywordsModel.hasKeyword(text) &&
+                            editKeywordComponent.anyError = !keywordsModel.canEditKeyword(keywordIndex, text) &&
                                     (previousKeyword !== text.trim());
                         }
                     }

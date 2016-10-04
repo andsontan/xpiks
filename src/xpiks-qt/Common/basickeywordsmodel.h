@@ -103,6 +103,7 @@ namespace Common {
         void takeKeywordAtUnsafe(int index, QString &removedKeyword, bool &wasCorrect);
         void setKeywordsUnsafe(const QStringList &keywordsList);
         int appendKeywordsUnsafe(const QStringList &keywordsList);
+        bool canEditKeywordUnsafe(int index, const QString &replacement) const;
         bool editKeywordUnsafe(int index, const QString &replacement);
         bool replaceKeywordUnsafe(int index, const QString &existing, const QString &replacement);
         bool clearKeywordsUnsafe();
@@ -163,6 +164,7 @@ namespace Common {
 
     public:
         Q_INVOKABLE bool hasKeyword(const QString &keyword);
+        Q_INVOKABLE bool canEditKeyword(int index, const QString &replacement);
 
     public:
         // ISPELLCHECKABLE

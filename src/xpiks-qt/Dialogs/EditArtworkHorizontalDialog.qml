@@ -546,6 +546,7 @@ Item {
                                                     {
                                                         callbackObject: callbackObject,
                                                         previousKeyword: keyword,
+                                                        keywordIndex: kw.delegateIndex,
                                                         keywordsModel: combinedArtworks.getKeywordsModel()
                                                     })
                             }

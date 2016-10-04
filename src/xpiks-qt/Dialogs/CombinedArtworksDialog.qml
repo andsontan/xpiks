@@ -884,6 +884,7 @@ CloseRequested")
                                                                 {
                                                                     callbackObject: callbackObject,
                                                                     previousKeyword: keyword,
+                                                                    keywordIndex: kw.delegateIndex,
                                                                     keywordsModel: keywordsWrapper.keywordsModel
                                                                 })
                                         }

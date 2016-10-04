@@ -2125,6 +2125,7 @@ ApplicationWindow {
                                                                                     {
                                                                                         callbackObject: callbackObject,
                                                                                         previousKeyword: keyword,
+                                                                                        keywordIndex: kw.delegateIndex,
                                                                                         keywordsModel: filteredArtItemsModel.getKeywordsModel(rowWrapper.delegateIndex)
                                                                                     })
                                                             }
