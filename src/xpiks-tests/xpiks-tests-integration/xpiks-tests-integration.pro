@@ -152,7 +152,7 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Conectivity/curlinithelper.cpp \
     artworkuploaderbasictest.cpp \
     ../../xpiks-qt/MetadataIO/exiv2inithelper.cpp \
-    ../../xpiks-qt/AutoComplete/warningssettingsmodel.cpp \
+    ../../xpiks-qt/Warnings/warningssettingsmodel.cpp \
     ../../xpiks-qt/Helpers/updatehelpers.cpp
 
 RESOURCES +=
@@ -333,7 +333,7 @@ HEADERS += \
     ../../xpiks-qt/Conectivity/curlinithelper.h \
     artworkuploaderbasictest.h \
     ../../xpiks-qt/MetadataIO/exiv2inithelper.h \
-    ../../xpiks-qt/AutoComplete/warningssettingsmodel.h \
+    ../../xpiks-qt/Warnings/warningssettingsmodel.h \
     ../../xpiks-qt/Conectivity/apimanager.h \
     ../../xpiks-qt/Helpers/updatehelpers.h
 
