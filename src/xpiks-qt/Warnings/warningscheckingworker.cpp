@@ -27,6 +27,7 @@
 #include "../Common/flags.h"
 #include "../Models/artworkmetadata.h"
 #include "../Models/imageartwork.h"
+#include "warningssettingsmodel.h"
 
 namespace Warnings {
     QSet<QString> toLowerSet(const QStringList &from) {
@@ -38,10 +39,12 @@ namespace Warnings {
         return result;
     }
 
-    WarningsCheckingWorker::WarningsCheckingWorker(AutoComplete::WarningsSettingsModel *warningsSettingsModel, QObject *parent):
+    WarningsCheckingWorker::WarningsCheckingWorker(WarningsSettingsModel *warningsSettingsModel,
+                                                   QObject *parent):
         QObject(parent),
-        m_WarningsSettingsModel(warningsSettingsModel) {
-        Q_ASSERT(m_WarningsSettingsModel != nullptr);
+        m_WarningsSettingsModel(warningsSettingsModel)
+    {
+        Q_ASSERT(warningsSettingsModel != nullptr);
     }
 
     bool WarningsCheckingWorker::initWorker() {
@@ -84,8 +87,9 @@ namespace Warnings {
 
     Common::WarningFlags WarningsCheckingWorker::checkDimensions(std::shared_ptr<WarningsItem> &wi) const {
         LOG_INTEGRATION_TESTS << "#";
-        QString allowedFilenameCharacters = m_WarningsSettingsModel->getAllowedFilenameCharacters();
+        const QString &allowedFilenameCharacters = m_WarningsSettingsModel->getAllowedFilenameCharacters();
         double minimumMegapixels = m_WarningsSettingsModel->getMinMegapixels();
+
         Models::ArtworkMetadata *item = wi->getCheckableItem();
         Common::WarningFlags warningsInfo = Common::WarningFlags::None;
 
@@ -100,8 +104,10 @@ namespace Warnings {
         }
 
         qint64 filesize = item->getFileSize();
-        const qint64 maxSize = 15*1024*1024; // 15 MB
-        if (filesize >= maxSize) {
+        double filesizeMB = (double)filesize;
+        filesizeMB /= (1024.0*1024.0);
+        double maxFileSizeMB = m_WarningsSettingsModel->getMaxFilesizeMB();
+        if (filesizeMB >= maxFileSizeMB) {
             Common::SetFlag(warningsInfo, Common::WarningFlags::FileIsTooBig);
         }
 
@@ -123,6 +129,7 @@ namespace Warnings {
 
     Common::WarningFlags WarningsCheckingWorker::checkKeywords(std::shared_ptr<WarningsItem> &wi) const {
         LOG_INTEGRATION_TESTS << "#";
+        int minimumKeywordsCount = m_WarningsSettingsModel->getMinKeywordsCount();
         int maximumKeywordsCount = m_WarningsSettingsModel->getMaxKeywordsCount();
         Common::WarningFlags warningsInfo = Common::WarningFlags::None;
         Models::ArtworkMetadata *item = wi->getCheckableItem();
@@ -133,7 +140,7 @@ namespace Warnings {
         if (keywordsCount == 0) {
             Common::SetFlag(warningsInfo, Common::WarningFlags::NoKeywords);
         } else {
-            if (keywordsCount < 7) {
+            if (keywordsCount < minimumKeywordsCount) {
                 Common::SetFlag(warningsInfo, Common::WarningFlags::TooFewKeywords);
             }
 

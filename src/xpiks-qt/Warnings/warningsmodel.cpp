@@ -27,9 +27,13 @@
 #include "../Common/flags.h"
 #include "../Models/imageartwork.h"
 #include "../Common/basickeywordsmodel.h"
+#include "warningssettingsmodel.h"
 
 namespace Warnings {
-    void describeWarningFlags(Common::WarningFlags warningsFlags, Models::ArtworkMetadata *metadata, QStringList &descriptions) {
+    void describeWarningFlags(Common::WarningFlags warningsFlags,
+                              Models::ArtworkMetadata *metadata,
+                              const WarningsSettingsModel *settingsModel,
+                              QStringList &descriptions) {
 
         if (Common::HasFlag(warningsFlags, Common::WarningFlags::SizeLessThanMinimum)) {
             Models::ImageArtwork *image = dynamic_cast<Models::ImageArtwork*>(metadata);
@@ -51,7 +55,8 @@ namespace Warnings {
         }
 
         if (Common::HasFlag(warningsFlags, Common::WarningFlags::TooFewKeywords)) {
-            descriptions.append(QObject::tr("There's less than 7 keywords"));
+            int minKeywordsCount = settingsModel->getMinKeywordsCount();
+            descriptions.append(QObject::tr("There's less than %1 keywords").arg(minKeywordsCount));
         }
 
         if (Common::HasFlag(warningsFlags, Common::WarningFlags::TooManyKeywords)) {
@@ -64,7 +69,8 @@ namespace Warnings {
         }
 
         if (Common::HasFlag(warningsFlags, Common::WarningFlags::DescriptionNotEnoughWords)) {
-            descriptions.append(QObject::tr("Description should have more than 2 words"));
+            int minWordsCount = settingsModel->getMinWordsCount();
+            descriptions.append(QObject::tr("Description should not have less than %1 words").arg(minWordsCount));
         }
 
         if (Common::HasFlag(warningsFlags, Common::WarningFlags::DescriptionTooBig)) {
@@ -76,7 +82,8 @@ namespace Warnings {
         }
 
         if (Common::HasFlag(warningsFlags, Common::WarningFlags::TitleNotEnoughWords)) {
-            descriptions.append(QObject::tr("Title should have more than 2 words"));
+            int minWordsCount = settingsModel->getMinWordsCount();
+            descriptions.append(QObject::tr("Title should not have less than %1 words").arg(minWordsCount));
         }
 
         if (Common::HasFlag(warningsFlags, Common::WarningFlags::TitleTooManyWords)) {
@@ -100,7 +107,9 @@ namespace Warnings {
         }
 
         if (Common::HasFlag(warningsFlags, Common::WarningFlags::FileIsTooBig)) {
-            descriptions.append(QObject::tr("File is larger than 15 MB"));
+            double filesizeMB = settingsModel->getMaxFilesizeMB();
+            QString formattedSize = QString::number(filesizeMB, 'f', 1);
+            descriptions.append(QObject::tr("File size is larger than %1 MB").arg(formattedSize));
         }
 
         if (Common::HasFlag(warningsFlags, Common::WarningFlags::KeywordsInDescription)) {
@@ -118,11 +127,13 @@ namespace Warnings {
 
     WarningsModel::WarningsModel(QObject *parent):
         QSortFilterProxyModel(parent),
-        m_ShowOnlySelected(false)
+        m_ShowOnlySelected(false),
+        m_WarningsSettingsModel(nullptr)
     {
     }
 
     QStringList WarningsModel::describeWarnings(int index) const {
+        Q_ASSERT(m_WarningsSettingsModel != nullptr);
         QStringList descriptions;
 
         if (0 <= index && index < rowCount()) {
@@ -135,7 +146,7 @@ namespace Warnings {
 
             if (metadata != NULL) {
                 Common::WarningFlags warningsFlags = metadata->getWarningsFlags();
-                describeWarningFlags(warningsFlags, metadata, descriptions);
+                describeWarningFlags(warningsFlags, metadata, m_WarningsSettingsModel, descriptions);
             }
         }
 

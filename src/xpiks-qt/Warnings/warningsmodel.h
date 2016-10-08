@@ -27,12 +27,20 @@
 #include "../Common/baseentity.h"
 
 namespace Warnings {
+    class WarningsSettingsModel;
+
     class WarningsModel: public QSortFilterProxyModel, public Common::BaseEntity
     {
         Q_OBJECT
         Q_PROPERTY(int warningsCount READ getWarningsCount NOTIFY warningsCountChanged)
     public:
         WarningsModel(QObject *parent=0);
+
+    public:
+        void setWarningsSettingsModel(const WarningsSettingsModel *warningsSettingsModel) {
+            m_WarningsSettingsModel = warningsSettingsModel;
+            Q_ASSERT(warningsSettingsModel != nullptr);
+        }
 
     public:
         int getWarningsCount() const { return rowCount(); }
@@ -60,6 +68,7 @@ namespace Warnings {
 
     private:
         bool m_ShowOnlySelected;
+        const WarningsSettingsModel *m_WarningsSettingsModel;
     };
 }
 

@@ -662,6 +662,7 @@ void Commands::CommandManager::afterConstructionCallback() {
     m_TelemetryService->startReporting();
     m_UpdateService->startChecking();
     m_ArtworkUploader->initializeStocksList();
+    m_WarningsService->initWarningsSettings();
 #endif
 
 #ifdef Q_OS_MAC
@@ -678,10 +679,6 @@ void Commands::CommandManager::afterConstructionCallback() {
 
 #if !defined(CORE_TESTS) && !defined(INTEGRATION_TESTS)
     Helpers::performCleanLogs();
-#endif
-
-#if !defined(CORE_TESTS)
-    m_WarningsService->initWarningsSettings();
 #endif
 }
 

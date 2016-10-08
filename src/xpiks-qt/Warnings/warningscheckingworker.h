@@ -25,16 +25,17 @@
 #include <QObject>
 #include "../Common/itemprocessingworker.h"
 #include "warningsitem.h"
-#include "../AutoComplete/warningssettingsmodel.h"
 
 namespace Warnings {
+    class WarningsSettingsModel;
+
     class WarningsCheckingWorker:
         public QObject, public Common::ItemProcessingWorker<WarningsItem>
     {
     Q_OBJECT
 
     public:
-        WarningsCheckingWorker(AutoComplete::WarningsSettingsModel *warningsSettingsModel, QObject *parent=0);
+        WarningsCheckingWorker(WarningsSettingsModel *warningsSettingsModel, QObject *parent=0);
 
     protected:
         virtual bool initWorker();
@@ -64,7 +65,7 @@ namespace Warnings {
         Common::WarningFlags checkDuplicates(std::shared_ptr<WarningsItem> &wi) const;
 
     private:
-        AutoComplete::WarningsSettingsModel *m_WarningsSettingsModel;
+        WarningsSettingsModel *m_WarningsSettingsModel;
     };
 }
 

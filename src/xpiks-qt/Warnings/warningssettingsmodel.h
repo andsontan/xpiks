@@ -26,7 +26,7 @@
 #include <QJsonArray>
 #include "../Models/abstractconfigupdatermodel.h"
 
-namespace AutoComplete {
+namespace Warnings {
     class WarningsSettingsModel:
         public Models::AbstractConfigUpdaterModel
     {
@@ -38,24 +38,28 @@ namespace AutoComplete {
 
         const QString &getAllowedFilenameCharacters() const { return m_AllowedFilenameCharacters; }
         double getMinMegapixels() const { return m_MinMegapixels; }
+        double getMaxFilesizeMB() const { return m_MaxFilesizeMB; }
+        int getMinKeywordsCount() const { return m_MinKeywordsCount; }
         int getMaxKeywordsCount() const { return m_MaxKeywordsCount; }
+        int getMinWordsCount() const { return m_MinWordsCount; }
         int getMaxDescriptionLength() const { return m_MaxDescriptionLength; }
 
         // AbstractConfigUpdaterModel interface
-
     protected:
         virtual void processRemoteConfig(const QJsonDocument &remoteDocument, bool overwriteLocal);
         virtual bool parseConfig(const QJsonDocument &document);
 
         // CompareValuesJson interface
-
     public:
         virtual int operator ()(const QJsonObject &val1, const QJsonObject &val2);
 
     private:
         QString m_AllowedFilenameCharacters;
         double m_MinMegapixels;
+        double m_MaxFilesizeMB;
+        int m_MinKeywordsCount;
         int m_MaxKeywordsCount;
+        int m_MinWordsCount;
         int m_MaxDescriptionLength;
     };
 }

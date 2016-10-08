@@ -59,7 +59,7 @@ namespace Conectivity {
         }
 
         QString getWarningSettingsAddr() const {
-            return m_BaseUrl + "warning_settings.json";
+            return m_BaseUrl + "warnings_settings.json";
         }
 
     private:

@@ -28,22 +28,35 @@
 
 #define OVERWRITE_KEY QLatin1String("overwrite")
 #define SETTINGS_KEY QLatin1String("settings")
-#define ALLOWED_CHARACTERS QLatin1String("chars")
-#define MIN_MPIXELS QLatin1String("min_mpixels")
+#define ALLOWED_CHARACTERS QLatin1String("additional_allowed_chars")
+#define MIN_MEGAPIXELS QLatin1String("min_megapixels")
+#define MAX_FILESIZE_MB QLatin1String("max_filesize_mb")
+#define MIN_KEYWORDS_COUNT QLatin1String("min_keywords_count")
 #define MAX_KEYWORDS_COUNT QLatin1String("max_keywords_count")
+#define MIN_WORDS_COUNT QLatin1String("min_words_count")
 #define MAX_DESCRIPTION_LENGTH QLatin1String("max_description_length")
 
-namespace  AutoComplete {
+#define DEFAULT_MIN_MEGAPIXELS 4.0
+#define DEFAULT_MAX_FILESIZE_MB 25.0
+#define DEFAULT_MIN_KEYWORDS_COUNT 7
+#define DEFAULT_MAX_KEYWORDS_COUNT 50
+#define DEFAULT_MIN_WORDS_COUNT 3
+#define DEFAULT_MAX_DESCRIPTION_LENGTH 200
+
+namespace Warnings {
     WarningsSettingsModel::WarningsSettingsModel():
         Models::AbstractConfigUpdaterModel(OVERWRITE_WARNINGS_CONFIG),
-        m_AllowedFilenameCharacters(".,_-@ "),
-        m_MinMegapixels(4),
-        m_MaxKeywordsCount(50),
-        m_MaxDescriptionLength(200)
+        m_AllowedFilenameCharacters("._-@#"),
+        m_MinMegapixels(DEFAULT_MIN_MEGAPIXELS),
+        m_MaxFilesizeMB(DEFAULT_MAX_FILESIZE_MB),
+        m_MinKeywordsCount(DEFAULT_MIN_KEYWORDS_COUNT),
+        m_MaxKeywordsCount(DEFAULT_MAX_KEYWORDS_COUNT),
+        m_MinWordsCount(DEFAULT_MIN_WORDS_COUNT),
+        m_MaxDescriptionLength(DEFAULT_MAX_DESCRIPTION_LENGTH)
     {}
 
     void WarningsSettingsModel::initializeConfigs() {
-        LOG_DEBUG <<'#';
+        LOG_DEBUG << '#';
         QString localConfigPath;
 
         QString appDataPath = XPIKS_USERDATA_PATH;
@@ -86,7 +99,9 @@ namespace  AutoComplete {
     }
 
     bool WarningsSettingsModel::parseConfig(const QJsonDocument &document) {
-        LOG_DEBUG<<document;
+#ifdef QT_DEBUG
+        LOG_DEBUG << document;
+#endif
         bool anyError = false;
 
         do {
@@ -121,14 +136,33 @@ namespace  AutoComplete {
 
             m_AllowedFilenameCharacters = allowedCharacters.toString();
 
-            QJsonValue minMPixels = settingsObject[MIN_MPIXELS];
+            QJsonValue minMPixels = settingsObject[MIN_MEGAPIXELS];
             if (!minMPixels.isDouble()) {
-                LOG_WARNING << "MIN_MPIXELS value is not number";
+                LOG_WARNING << "MIN_MEGAPIXELS value is not number";
                 anyError = true;
                 break;
             }
 
-            m_MinMegapixels = minMPixels.toDouble();
+            m_MinMegapixels = minMPixels.toDouble(DEFAULT_MIN_MEGAPIXELS);
+
+            QJsonValue maxFilesizeMB = settingsObject[MAX_FILESIZE_MB];
+            if (!maxFilesizeMB.isDouble()) {
+                LOG_WARNING << "MAX_FILESIZE_MB value is not number";
+                anyError = true;
+                break;
+            }
+
+            m_MaxFilesizeMB = maxFilesizeMB.toDouble(DEFAULT_MAX_FILESIZE_MB);
+
+            QJsonValue minKeywordsCount = settingsObject[MIN_KEYWORDS_COUNT];
+            if (!minKeywordsCount.isDouble()) {
+                LOG_WARNING << "MIN_KEYWORDS_COUNT value is not number";
+                anyError = true;
+                break;
+            }
+
+            m_MinKeywordsCount = minKeywordsCount.toInt(DEFAULT_MIN_KEYWORDS_COUNT);
+
             QJsonValue maxKeywordsCount = settingsObject[MAX_KEYWORDS_COUNT];
             if (!maxKeywordsCount.isDouble()) {
                 LOG_WARNING << "MAX_KEYWORDS_COUNT value is not number";
@@ -136,7 +170,17 @@ namespace  AutoComplete {
                 break;
             }
 
-            m_MaxKeywordsCount = maxKeywordsCount.toInt();
+            m_MaxKeywordsCount = maxKeywordsCount.toInt(DEFAULT_MAX_KEYWORDS_COUNT);
+
+            QJsonValue minWordsCount = settingsObject[MIN_WORDS_COUNT];
+            if (!minWordsCount.isDouble()) {
+                LOG_WARNING << "MIN_WORDS_COUNT value is not number";
+                anyError = true;
+                break;
+            }
+
+            m_MinWordsCount = minWordsCount.toInt(DEFAULT_MIN_WORDS_COUNT);
+
             QJsonValue maxDescriptionCount = settingsObject[MAX_DESCRIPTION_LENGTH];
             if (!maxDescriptionCount.isDouble()) {
                 LOG_WARNING << "MAX_DESCRIPTION_LENGTH value is not number";
@@ -144,10 +188,9 @@ namespace  AutoComplete {
                 break;
             }
 
-            m_MaxDescriptionLength = maxDescriptionCount.toInt();
+            m_MaxDescriptionLength = maxDescriptionCount.toInt(DEFAULT_MAX_DESCRIPTION_LENGTH);
         } while (false);
 
-        LOG_DEBUG<<anyError;
         return anyError;
     }
 

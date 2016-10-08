@@ -137,6 +137,7 @@ namespace Warnings {
     }
 
     void WarningsService::updateWarningsSettings() {
+        LOG_DEBUG << "#";
         m_WarningsSettingsModel.initializeConfigs();
     }
 }

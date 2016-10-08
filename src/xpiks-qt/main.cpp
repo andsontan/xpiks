@@ -313,6 +313,7 @@ int main(int argc, char *argv[]) {
     MetadataIO::BackupSaverService metadataSaverService;
     Warnings::WarningsModel warningsModel;
     warningsModel.setSourceModel(&artItemsModel);
+    warningsModel.setWarningsSettingsModel(warningsService.getWarningsSettingsModel());
     Models::LanguagesModel languagesModel;
     AutoComplete::AutoCompleteModel autoCompleteModel;
     AutoComplete::AutoCompleteService autoCompleteService(&autoCompleteModel);
